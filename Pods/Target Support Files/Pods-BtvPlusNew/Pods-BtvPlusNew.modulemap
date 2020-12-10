@@ -1,0 +1,6 @@
+framework module Pods_BtvPlusNew {
+  umbrella header "Pods-BtvPlusNew-umbrella.h"
+
+  export *
+  module * { export * }
+}

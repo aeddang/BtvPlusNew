@@ -2,6 +2,68 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>ApiEMS</key>
+	<string>$(API_EMS)</string>
+	<key>ApiEPS</key>
+	<string>$(API_EPS)</string>
+	<key>ApiEUXP</key>
+	<string>$(API_EUXP)</string>
+	<key>ApiEVENT</key>
+	<string>$(API_EVENT)</string>
+	<key>ApiIIP</key>
+	<string>$(API_IIP)</string>
+	<key>ApiIMAGE</key>
+	<string>$(API_IMAGE)</string>
+	<key>ApiKMS</key>
+	<string>$(API_KMS)</string>
+	<key>ApiLGS</key>
+	<string>$(API_LGS)</string>
+	<key>ApiME</key>
+	<string>$(API_ME)</string>
+	<key>ApiMETV</key>
+	<string>$(API_METV)</string>
+	<key>ApiMETV2</key>
+	<string>$(API_METV2)</string>
+	<key>ApiNAVILOG</key>
+	<string>$(API_NAVILOG)</string>
+	<key>ApiNAVILOG_NPI</key>
+	<string>$(API_NAVILOG_NPI)</string>
+	<key>ApiNF</key>
+	<string>$(API_NF)</string>
+	<key>ApiNPS</key>
+	<string>$(API_NPS)</string>
+	<key>ApiNPS_V5</key>
+	<string>$(API_NPS_V5)</string>
+	<key>ApiNSUTIL</key>
+	<string>$(API_NSUTIL)</string>
+	<key>ApiPSS</key>
+	<string>$(API_PSS)</string>
+	<key>ApiPUCR</key>
+	<string>$(API_PUCR)</string>
+	<key>ApiPUSH</key>
+	<string>$(API_PUSH)</string>
+	<key>ApiRVS</key>
+	<string>$(API_RVS)</string>
+	<key>ApiRVS2</key>
+	<string>$(API_RVS2)</string>
+	<key>ApiSCS2</key>
+	<string>$(API_SCS2)</string>
+	<key>ApiSMD</key>
+	<string>$(API_SMD)</string>
+	<key>ApiSRCXPG</key>
+	<string>$(API_SRCXPG)</string>
+	<key>ApiSTACM</key>
+	<string>$(API_STACM)</string>
+	<key>ApiUPMC</key>
+	<string>$(API_UPMC)</string>
+	<key>ApiVLS</key>
+	<string>$(API_VLS)</string>
+	<key>ApiVMS</key>
+	<string>$(API_VMS)</string>
+	<key>ApiWEB</key>
+	<string>$(API_WEB)</string>
+	<key>ApiWEPG</key>
+	<string>$(API_WEPG)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -20,28 +82,28 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-    <key>NSAppTransportSecurity</key>
-    <dict>
-        <key>NSAllowsArbitraryLoads</key>
-        <true/>
-    </dict>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>UIApplicationSceneManifest</key>
-    <dict>
-        <key>UIApplicationSupportsMultipleScenes</key>
-        <false/>
-        <key>UISceneConfigurations</key>
-        <dict>
-            <key>UIWindowSceneSessionRoleApplication</key>
-            <array>
-                <dict>
-                    <key>UISceneConfigurationName</key>
-                    <string>Default Configuration</string>
-                    <key>UISceneDelegateClassName</key>
-                    <string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
-                </dict>
-            </array>
-        </dict>
-    </dict>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneConfigurationName</key>
+					<string>Default Configuration</string>
+					<key>UISceneDelegateClassName</key>
+					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
@@ -51,6 +113,8 @@
 	</array>
 	<key>UILaunchScreen</key>
 	<dict/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
@@ -68,68 +132,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-    
-    <key>ApiWEB</key>
-    <string>$(API_WEB)</string>
-    <key>ApiNPS</key>
-    <string>$(API_NPS)</string>
-    <key>ApiNPS_V5</key>
-    <string>$(API_NPS_V5)</string>
-    <key>ApiPSS</key>
-    <string>$(API_PSS)</string>
-    <key>ApiRVS</key>
-    <string>$(API_RVS)</string>
-    <key>ApiWEPG</key>
-    <string>$(API_WEPG)</string>
-    <key>ApiVMS</key>
-    <string>$(API_VMS)</string>
-    <key>ApiSTACM</key>
-    <string>$(API_STACM)</string>
-    <key>ApiSRCXPG</key>
-    <string>$(API_SRCXPG)</string>
-    <key>ApiUPMC</key>
-    <string>$(API_UPMC)</string>
-    <key>ApiME</key>
-    <string>$(API_ME)</string>
-    <key>ApiEVENT</key>
-    <string>$(API_EVENT)</string>
-    <key>ApiEMS</key>
-    <string>$(API_EMS)</string>
-    <key>ApiLGS</key>
-    <string>$(API_LGS)</string>
-    <key>ApiMETV</key>
-    <string>$(API_METV)</string>
-    <key>ApiIMAGE</key>
-    <string>$(API_IMAGE)</string>
-    <key>ApiNAVILOG</key>
-    <string>$(API_NAVILOG)</string>
-    <key>ApiNAVILOG_NPI</key>
-    <string>$(API_NAVILOG_NPI)</string>
-    <key>ApiEUXP</key>
-    <string>$(API_EUXP)</string>
-    <key>ApiSMD</key>
-    <string>$(API_SMD)</string>
-    <key>ApiIIP</key>
-    <string>$(API_IIP)</string>
-    <key>ApiMETV2</key>
-    <string>$(API_METV2)</string>
-    <key>ApiSCS2</key>
-    <string>$(API_SCS2)</string>
-    <key>ApiEPS</key>
-    <string>$(API_EPS)</string>
-    <key>ApiNF</key>
-    <string>$(API_NF)</string>
-    <key>ApiRVS2</key>
-    <string>$(API_RVS2)</string>
-    <key>ApiVLS</key>
-    <string>$(API_VLS)</string>
-    <key>ApiKMS</key>
-    <string>$(API_KMS)</string>
-    <key>ApiNSUTIL</key>
-    <string>$(API_NSUTIL)</string>
-    <key>ApiPUCR</key>
-    <string>$(API_PUCR)</string>
-    <key>ApiPUSH</key>
-    <string>$(API_PUSH)</string>
 </dict>
 </plist>

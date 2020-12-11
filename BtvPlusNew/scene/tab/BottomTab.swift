@@ -51,7 +51,6 @@ struct BottomTab: PageComponent{
         .onAppear(){
         
         }
-        
     }
     
     func checkCategory(pageID:PageID) -> Bool {

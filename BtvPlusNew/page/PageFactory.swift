@@ -10,6 +10,7 @@ import Foundation
 extension PageID{
     static let intro:PageID = "intro"
     static let home:PageID = "home"
+    static let oeean:PageID = "oeean"
 }
 
 struct PageProvider {
@@ -33,6 +34,15 @@ struct PageProvider {
            default : return  false
         }
     }
+    
+    static func getApiKey(_ pageID:PageID)-> String {
+        switch pageID {
+            case .home : return  "NM2000002444"
+            case .oeean : return  "NM2000009601"
+            default : return ""
+        }
+    }
+    
     static func getPageIdx(_ pageID:PageID)-> Int {
         switch pageID {
             case .intro : return 1
@@ -68,7 +78,7 @@ extension PageEventType {
 struct PageFactory{
     static func getPage(_ pageObject:PageObject) -> PageViewProtocol{
         switch pageObject.pageID {
-            case .home : return PageTest()
+            case .home : return PageHome()
             default : return PageTest()
         }
     }

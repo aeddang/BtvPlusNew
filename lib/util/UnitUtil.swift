@@ -8,6 +8,7 @@
 
 import SwiftUI
 import UIKit
+import CryptoKit
 
 extension Double {
     func toInt() -> Int {
@@ -26,6 +27,35 @@ extension Double {
     
     func millisecToSec() -> Double {
         return self/1000.0
+    }
+}
+
+extension Date{
+    func localDate() -> Date {
+        let nowUTC = Date()
+        let timeZoneOffset = Double(TimeZone.current.secondsFromGMT(for: nowUTC))
+        guard let localDate = Calendar.current.date(byAdding: .second, value: Int(timeZoneOffset), to: nowUTC) else {return Date()}
+
+        return localDate
+    }
+    func currentTimeMillis() -> Double {
+        return Double(self.timeIntervalSince1970 * 1000)
+    }
+    
+    func toTimestamp(dateFormat:String = "yyyy-MM-dd'T'HH:mm:ssZ",
+                     local:String="en_US_POSIX") -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: local) // set locale to reliable US_POSIX
+        dateFormatter.dateFormat = dateFormat
+        return dateFormatter.string(from:self)
+    }
+}
+
+extension Digest {
+    var bytes: [UInt8] { Array(makeIterator()) }
+    var data: Data { Data(bytes) }
+    var hexStr: String {
+        bytes.map { String(format: "%02X", $0) }.joined()
     }
 }
 
@@ -77,6 +107,13 @@ extension String{
         return attributedText
     }
     
+    func toBool() -> Bool {
+        if self.uppercased() == "TRUE" {return true}
+        if self.uppercased() == "Y" {return true}
+        if self == "1" {return true}
+        return false
+    }
+    
     //let isoDate = "2016-04-14T10:44:00+0000"
     func toDate(
         dateFormat:String = "yyyy-MM-dd'T'HH:mm:ssZ",
@@ -88,6 +125,13 @@ extension String{
         let date = dateFormatter.date(from:self)
         return date
     }
+    
+    func toSHA256() -> String {
+        let inputData = Data(self.utf8)
+        let hashed = CryptoKit.SHA256.hash(data: inputData)
+        return hashed.hexStr
+    }
+    
     
     func isEmailType() -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"

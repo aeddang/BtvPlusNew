@@ -42,7 +42,7 @@ struct AppLayout: PageComponent{
         
         .onReceive(self.pagePresenter.$currentTopPage){ page in
             guard let cPage = page else { return }
-            ComponentLog.d("currentTopPage " + cPage.pageID.debugDescription, tag:self.tag)
+            PageLog.d("currentTopPage " + cPage.pageID.debugDescription, tag:self.tag)
             self.sceneObserver.useTop = PageSceneModel.needTopTab(cPage)
             self.sceneObserver.useBottom = PageSceneModel.needBottomTab(cPage)
             if PageSceneModel.needKeyboard(cPage) {

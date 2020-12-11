@@ -12,7 +12,7 @@ struct SystemEnvironment {
     static let model:String = AppUtil.model
     static let systemVersion:String = UIDevice.current.systemVersion
     static let bundleVersion:String = AppUtil.version
-    static let osId:String = UIDevice.current.identifierForVendor?.uuidString ?? UUID.init().uuidString
+    static let deviceId:String = UIDevice.current.identifierForVendor?.uuidString ?? UUID.init().uuidString
     
     static var firstLaunch :Bool = false
     static var serverConfig: [String:String] = [String:String]()

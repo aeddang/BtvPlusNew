@@ -20,7 +20,10 @@ class ApiManager :PageProtocol, ObservableObject{
     
     private var apiQ :[ ApiQ ] = []
     private let vms:Vms = Vms(network: VmsNetwork())
-    private lazy var vms2:Vms = Vms(network: VmsNetwork())
+    private lazy var euxp:Euxp = Euxp(network: EuxpNetwork())
+    init() {
+        self.initateApi()
+    }
     
     func clear(){
         self.apiQ.removeAll()
@@ -50,7 +53,6 @@ class ApiManager :PageProtocol, ObservableObject{
     }
     private func initApi()
     {
-        self.vms2 = Vms(network: VmsNetwork())
         self.status = .ready
         self.executeQ()
     }
@@ -75,7 +77,10 @@ class ApiManager :PageProtocol, ObservableObject{
         let error = {err in self.onError(id: apiID, type: type, e: err, isOptional: isOptional)}
         switch type {
             case .versionCheck : self.vms.versionCheck(
-                completion:{res in self.complated(id: apiID, type: type, res: res)},
+                completion: {res in self.complated(id: apiID, type: type, res: res)},
+                error:error)
+            case .getGnb : self.euxp.getGnbBlock(
+                completion: {res in self.complated(id: apiID, type: type, res: res)},
                 error:error)
         }
         return apiID

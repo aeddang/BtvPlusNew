@@ -16,11 +16,16 @@ struct ApiError :Error,Identifiable{
 }
 
 struct ApiQ :Identifiable{
-    let id:String
+    var id:String = ""
     let type:ApiType
     var action:ApiAction? = nil
     var isOptional:Bool = false
     var isLock:Bool = false
+    
+    func copy(newId:String? = nil) -> ApiQ {
+        let nid = newId ?? id
+        return ApiQ(id: nid, type: type, action: action, isOptional: isOptional, isLock: isLock)
+    }
 }
 
 struct ApiResultResponds:Identifiable{
@@ -37,5 +42,6 @@ struct ApiResultError :Identifiable{
 
 
 enum ApiType{
-    case versionCheck
+    case versionCheck,
+         getGnb
 }

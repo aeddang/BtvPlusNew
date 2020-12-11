@@ -56,7 +56,6 @@ class Repository:ObservableObject, PageProtocol{
             switch res.type {
                 default: do{}
             }
-            
             DispatchQueue.main.async {
                 self.dataProvider.result = res
                 self.sceneObserver?.isApiLoading = false
@@ -93,6 +92,9 @@ class Repository:ObservableObject, PageProtocol{
         self.setting.retryPushToken = token
     }
     
-    
+    func reflashBandsData(){
+        self.dataProvider.bands.resetData()
+        self.dataProvider.requestData(q: .init(type: .getGnb))
+    }
     
 }

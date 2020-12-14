@@ -26,6 +26,7 @@ class ApiManager :PageProtocol, ObservableObject{
     }
     
     func clear(){
+        self.euxp.clear()
         self.apiQ.removeAll()
     }
     

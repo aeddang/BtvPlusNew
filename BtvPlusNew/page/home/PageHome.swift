@@ -16,43 +16,47 @@ struct PageHome: PageView {
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel:PageDataProviderModel = PageDataProviderModel()
    
-    
+    @State var blocks:Array<Block> = []
+    @State var menuId:String = ""
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
             viewModel : self.viewModel
         ){
-            VStack(alignment: .center)
-            {
+            if self.blocks.isEmpty {
                 Spacer()
-            }//VStack
-           // .modifier(MatchParent())
-            .background(Color.app.white)
+            }else{
+                VStack(alignment: .center)
+                {
+                    ForEach(self.blocks, id: \.id) {data in
+                        Text(data.name)
+                            .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.grey))
+                    }
+                }//VStack
+            }
         }
+        .background(Color.brand.bg)
         .onAppear{
-            //self.viewModel.initate()
+            guard let obj = self.pageObject  else { return }
+            self.menuId = (obj.getParamValue(key: .id) as? String) ?? self.menuId
+            self.setupBlocks()
         }
-        .onReceive(self.viewModel.$event){ evt in
+        .onReceive(self.dataProvider.bands.$event){ evt in
             guard let evt = evt else { return }
             switch evt {
-            case .willRequest(let progress):
-                switch progress {
-                case 0 : self.viewModel.requestProgress(qs: [.init(type: .getGnb),.init(type: .getGnb)])
-                case 1 : self.viewModel.requestProgress(q: .init(type: .getGnb))
-                case 2 : self.viewModel.requestProgress(q: .init(type: .getGnb))
-                case 3 : self.viewModel.requestProgress(q: .init(type: .getGnb))
-                default : do{}
-                }
-            case .onResult(let progress, let res, let count):
-                PageLog.d("success progress : " + progress.description + " count: " + count.description, tag: self.tag)
-            
-            case .onError(let progress,  let err, let count):
-                PageLog.d("error progress : " + progress.description + " count: " + count.description, tag: self.tag)
+            case .updated: self.setupBlocks()
             default: do{}
             }
         }
         
     }//body
+    
+    private func setupBlocks(){
+        guard let blocksData = self.dataProvider.bands.getData(menuId: self.menuId)?.blocks else {return}
+        self.blocks = blocksData.map{ data in
+            Block().setDate(data)
+        }
+    }
     
 }
 

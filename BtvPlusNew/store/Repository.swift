@@ -54,6 +54,7 @@ class Repository:ObservableObject, PageProtocol{
         self.apiManager.$result.sink(receiveValue: { res in
             guard let res = res else { return }
             switch res.type {
+                case .getGnb :  self.setupBandsData(res: res)
                 default: do{}
             }
             DispatchQueue.main.async {
@@ -82,19 +83,30 @@ class Repository:ObservableObject, PageProtocol{
         
     }
 
+    
+    // MultiBandBlock
+    func initBandsData(){
+        if self.dataProvider.bands.status == .initate {
+            self.dataProvider.requestData(q: .init(type: .getGnb))
+        }
+    }
+    func requestBandsData(){
+        self.dataProvider.bands.resetData()
+        self.dataProvider.requestData(q: .init(type: .getGnb))
+    }
+    private func setupBandsData(res:ApiResultResponds){
+        self.dataProvider.bands.setDate(res.data as? GnbBlock)
+    }
+    
+    
+    // PushToken
     func retryRegisterPushToken(){
         if self.setting.retryPushToken != "" {
             self.registerPushToken(self.setting.retryPushToken)
         }
     }
-    
     func registerPushToken(_ token:String) {
         self.setting.retryPushToken = token
-    }
-    
-    func reflashBandsData(){
-        self.dataProvider.bands.resetData()
-        self.dataProvider.requestData(q: .init(type: .getGnb))
     }
     
 }

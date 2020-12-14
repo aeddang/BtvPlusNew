@@ -11,53 +11,74 @@ import SwiftUI
 import Combine
 struct PageSelecterble : SelecterbleProtocol{
     let key = UUID().uuidString
-    var id:PageID = ""
+    var id:PageID = PageID.home
     var on:String = ""
     var off:String = ""
     var text:String = ""
-    
+    var menuId:PageID = ""
 }
 
 struct BottomTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var dataProvider:DataProvider
+    @State var pages:[PageSelecterble] = []
     @State var selectedPage:PageObject? = nil
-    @State var pages:[PageSelecterble] = [
-        PageSelecterble(id: .home, on: Asset.gnbBottom.homeOn , off: Asset.gnbBottom.homeOff, text:String.pageTitle.home),
-        PageSelecterble(id: .home, on: Asset.gnbBottom.oceanOn , off: Asset.gnbBottom.oceanOff, text:String.pageTitle.ocean),
-        PageSelecterble(id: .home, on: Asset.gnbBottom.paymentOn , off: Asset.gnbBottom.paymentOff, text:String.pageTitle.payment),
-        PageSelecterble(id: .home, on: Asset.gnbBottom.categoryOn , off: Asset.gnbBottom.categoryOff, text:String.pageTitle.category),
-        PageSelecterble(id: .home, on: Asset.gnbBottom.freeOn , off: Asset.gnbBottom.freeOff, text:String.pageTitle.free)
-    ]
-    
+    @State var selectedMenuId:String? = nil
     var body: some View {
         ZStack(alignment: .bottom){
             HStack( spacing:0){
-                ForEach(self.pages, id: \.key) {selecter in
-                    ImageButton(
-                        defaultImage: selecter.off,
-                        activeImage:selecter.on,
-                        text: selecter.text,
-                        isSelected: Binding<Bool>(get: { self.checkCategory(pageID: selecter.id) }, set: { _ in }) )
-                    {_ in
-                        self.pagePresenter.changePage(PageProvider.getPageObject(selecter.id))
-                    }.frame(width:SceneObserver.screenSize.width/CGFloat(self.pages.count))
+                ForEach(self.pages, id: \.key) {band in
+                    ImageViewButton(
+                        isSelected:Binding<Bool>(get: { self.checkCategory(pageID: band.id, menuId: band.menuId) }, set: { _ in }),
+                        defaultImage: band.off,
+                        activeImage:band.on,
+                        text: band.text
+                    ){
+                        self.pagePresenter.changePage(
+                            PageProvider
+                                .getPageObject(band.id)
+                                .addParam(key: .id, value: band.menuId)
+                                .addParam(key: UUID().uuidString , value: "")
+                        )
+                        self.selectedMenuId = band.menuId
+                    }
+                    .frame(width:SceneObserver.screenSize.width/CGFloat(self.pages.count))
                 }
             }
         }
         .offset(y: PageSceneObserver.safeAreaBottom )
         .onReceive (self.pagePresenter.$currentPage) { page in
+            if let id = page?.getParamValue(key: .id) as? String {
+                self.selectedMenuId = id
+            }
             self.selectedPage = page
+            
         }
+        .onReceive(self.dataProvider.bands.$event){ evt in
+            guard let evt = evt else { return }
+            switch evt {
+                case .updated :
+                    self.pages = self.dataProvider.bands.datas.map{ band in
+                        PageSelecterble(
+                            on: band.activeIcon, off: band.defaultIcon,
+                            text: band.name, menuId: band.menuId)
+                    }
+                default : do{}
+            }
+            
+        }
+        
         .onAppear(){
         
         }
     }
     
-    func checkCategory(pageID:PageID) -> Bool {
-        guard let page = self.selectedPage else { return false }
-        let idx = floor( Double(PageProvider.getPageIdx(pageID)) / 100.0 )
-        let cidx = floor( Double(page.pageIDX) / 100.0 )
-        return idx == cidx
+    func checkCategory(pageID:PageID, menuId:String) -> Bool {
+        if pageID == .home {
+            return self.selectedMenuId == menuId
+        } else {
+            return self.selectedPage?.pageID == pageID
+        }
     }
     
 }

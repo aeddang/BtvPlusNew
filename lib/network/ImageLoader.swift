@@ -30,11 +30,11 @@ class ImageLoader: ObservableObject, PageProtocol{
         }
         if url == "" { return UIImage.from(color: Color.app.greyLight.uiColor() ) }
         guard let _ = url.firstIndex(of: ":") else{
-            //DataLog.d("asset " + url , tag:self.tag)
+            DataLog.d("asset " + url , tag:self.tag)
             return UIImage(named: url) ?? UIImage.from(color: Color.app.greyLight.uiColor() )
         }
         guard let targetUrl = URL(string:url) else {
-             //DataLog.d("targetUrl error " + url , tag:self.tag)
+             DataLog.e("targetUrl error " + url , tag:self.tag)
             return UIImage.from(color: Color.app.greyLight.uiColor())
         }
         guard let image = image else {
@@ -57,7 +57,7 @@ class ImageLoader: ObservableObject, PageProtocol{
                     self.image = value.image
                 case .failure(let error):
                     print(error.localizedDescription)
-                   // DataLog.d("cached error" + key , tag:self.tag)
+                    DataLog.e("cached error" + key , tag:self.tag)
                 }
             }
         } else {
@@ -67,10 +67,10 @@ class ImageLoader: ObservableObject, PageProtocol{
                 case .success(let value):
                     self.cache.storeToDisk(value.originalData, forKey: url.absoluteString)
                     self.image = value.image
-                    DataLog.d("loaded" + key , tag:self.tag)
+                    //DataLog.d("loaded" + key , tag:self.tag)
                 case .failure(let error):
                     print(error.localizedDescription)
-                    DataLog.d("loaded error" + key , tag:self.tag)
+                    DataLog.e("loaded error " + key , tag:self.tag)
                 }
             }
         }

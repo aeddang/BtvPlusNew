@@ -12,6 +12,7 @@ import SwiftUI
 struct AppLayout: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var repository:Repository
+    @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appObserver:AppObserver
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var keyboardObserver:KeyboardObserver
@@ -53,7 +54,7 @@ struct AppLayout: PageComponent{
             }
         }
         .onReceive (self.appObserver.$page) { iwg in
-            if self.isInit == false { return }
+            if !self.isInit { return }
             if self.appObserver.apns != nil {
                 self.sceneObserver.alert = .recivedApns
                 return
@@ -65,7 +66,15 @@ struct AppLayout: PageComponent{
             guard let token = token else { return }
             self.repository.registerPushToken(token)
         }
-    
+        .onReceive(self.dataProvider.bands.$event){ evt in
+            guard let evt = evt else { return }
+            switch evt {
+            case .updated:
+                if self.isInit { return }
+                self.onPageInit()
+            default: do{}
+            }
+        }
         .onAppear(){
             UITableView.appearance().separatorStyle = .none
             /*
@@ -73,14 +82,21 @@ struct AppLayout: PageComponent{
                 let names = UIFont.fontNames(forFamilyName: family)
                 PageLog.d("Family: \(family) Font names: \(names)")
             }
-             */
-            //self.isInit = true
-            if !self.appObserverMove(self.appObserver.page) {
-                self.pagePresenter.changePage(PageProvider.getPageObject(.home))
-            }
-            self.isInit = true
+            */
+            self.repository.initBandsData()
         }
     }
+    func onPageInit(){
+        self.isInit = true
+        if !self.appObserverMove(self.appObserver.page) {
+            let initMenuId = self.dataProvider.bands.datas.first?.menuId
+            self.pagePresenter.changePage(
+                PageProvider.getPageObject(.home)
+                    .addParam(key: .id, value: initMenuId)
+            )
+        }
+    }
+    
     
     @discardableResult
     func appObserverMove(_ iwg:IwillGo? = nil) -> Bool {

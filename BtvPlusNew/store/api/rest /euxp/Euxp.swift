@@ -15,10 +15,10 @@ struct EuxpNetwork : Network{
 
         #if DEBUG
         authorizationRequest.addValue(
-            "l7xx159a8ca72966400b886a93895ec9e2e3", forHTTPHeaderField: "Api_Key")
+            Self.DEBUG_API_KEY, forHTTPHeaderField: "Api_Key")
         #else
         authorizationRequest.addValue(
-            "l7xx851d12cc66dc4d2e86a461fb5a530f4a", forHTTPHeaderField: "Api_Key")
+            Self.API_KEY, forHTTPHeaderField: "Api_Key")
         #endif
         
         let timestamp = Date().toTimestamp(dateFormat: "yyyyMMddHHmmss.SSS", local: "en_US_POSIX")
@@ -48,6 +48,14 @@ struct EuxpNetwork : Network{
     }
 }
 
+extension EuxpNetwork{
+    static let API_KEY = "l7xx851d12cc66dc4d2e86a461fb5a530f4a"
+    static let DEBUG_API_KEY = "l7xx159a8ca72966400b886a93895ec9e2e3"
+    static let RESPONSE_FORMET = "json"
+    static let MENU_STB_SVC_ID = "BTVMOBV521"
+    static let APP_TYPE_CD = "BTVPLUS"
+}
+
 class Euxp: Rest{
     /**
      * 빅배너/이벤트 정보 (IF-EUXP-007)
@@ -58,9 +66,9 @@ class Euxp: Rest{
         completion: @escaping (EventBanners) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         var params = [String:String]()
-        params["response_format"] = "json"
+        params["response_format"] = EuxpNetwork.RESPONSE_FORMET
+        params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
         params["IF"] = "IF-EUXP-007"
-        params["menu_stb_svc_id"] = "BTVMOBV521"
         params["menu_id"] = menuId
         params["seg_id"] = segId
         params["bnr_typ_cd"] = bnrTypCd
@@ -78,9 +86,9 @@ class Euxp: Rest{
         completion: @escaping (Synopsis) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         var params = [String:String]()
-        params["response_format"] = "json"
+        params["response_format"] = EuxpNetwork.RESPONSE_FORMET
+        params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
         params["IF"] = "IF-EUXP-010"
-        params["menu_stb_svc_id"] = "BTVMOBV521"
         params["sris_id"] = srisId
         params["epsd_id"] = epsdId
         params["epsd_rslu_id"] = epsdRsluId
@@ -102,9 +110,9 @@ class Euxp: Rest{
         completion: @escaping (GatewaySynopsis) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         var params = [String:String]()
-        params["response_format"] = "json"
+        params["response_format"] = EuxpNetwork.RESPONSE_FORMET
+        params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
         params["IF"] = "IF-EUXP-014"
-        params["menu_stb_svc_id"] = "BTVMOBV521"
         params["sris_id"] = srisId
         params["epsd_id"] = epsdId
         params["prd_prc_id"] = prdPrcId
@@ -125,9 +133,9 @@ class Euxp: Rest{
         completion: @escaping (RelationContents) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         var params = [String:String]()
-        params["response_format"] = "json"
+        params["response_format"] = EuxpNetwork.RESPONSE_FORMET
+        params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
         params["IF"] = "IF-EUXP-012"
-        params["menu_stb_svc_id"] = "BTVMOBV521"
         params["menu_id"] = menuId
         params["cw_call_id"] = cwCallId
         params["epsd_id"] = epsdId
@@ -146,9 +154,9 @@ class Euxp: Rest{
         completion: @escaping (InsideInfo) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         var params = [String:String]()
-        params["response_format"] = "json"
+        params["response_format"] = EuxpNetwork.RESPONSE_FORMET
+        params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
         params["IF"] = "IF-EUXP-019"
-        params["menu_stb_svc_id"] = "BTVMOBV521"
         params["epsd_id"] = epsdId
         fetch(route: EuxpInsideInfo(query: params), completion: completion, error:error)
     }
@@ -159,10 +167,10 @@ class Euxp: Rest{
     func getGnbBlock(
         completion: @escaping (GnbBlock) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
-        params["response_format"] = "json"
+        params["response_format"] = EuxpNetwork.RESPONSE_FORMET
+        params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
+        params["app_typ_cd"] = EuxpNetwork.APP_TYPE_CD
         params["IF"] = "IF-EUXP-030"
-        params["menu_stb_svc_id"] = "BTVMOBV521"
-        params["app_typ_cd"] = "BTVPLUS"
         fetch(route: EuxpGnbBlock(query: params), completion: completion, error:error)
     }
     
@@ -177,9 +185,9 @@ class Euxp: Rest{
         menuId:String, page:Int, pageCnt:Int, version:String,
         completion: @escaping (GridPreview) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
-        params["response_format"] = "json"
+        params["response_format"] = EuxpNetwork.RESPONSE_FORMET
+        params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
         params["IF"] = "IF-EUXP-031"
-        params["menu_stb_svc_id"] = "BTVMOBV521"
         params["menu_id"] = menuId
         params["page_no"] = page.description
         params["page_cnt"] = pageCnt.description
@@ -199,9 +207,9 @@ class Euxp: Rest{
         menuId:String, sortType:String, page:Int, pageCnt:Int, version:String,
         completion: @escaping (GridEvent) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
-        params["response_format"] = "json"
+        params["response_format"] = EuxpNetwork.RESPONSE_FORMET
+        params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
         params["IF"] = "IF-EUXP-024"
-        params["menu_stb_svc_id"] = "BTVMOBV521"
         params["menu_id"] = menuId
         params["page_no"] = page.description
         params["page_cnt"] = pageCnt.description
@@ -215,10 +223,11 @@ class Euxp: Rest{
         menuId:String, cwCallId:String, stbId:String,
         completion: @escaping (CWGrid) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
-        params["response_format"] = "json"
+        params["response_format"] = EuxpNetwork.RESPONSE_FORMET
+        params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
+        params["app_typ_cd"] = EuxpNetwork.APP_TYPE_CD
         params["IF"] = "IF-EUXP-009"
-        params["menu_stb_svc_id"] = "BTVMOBV521"
-        params["app_typ_cd"] = "BTVPLUS"
+        
         params["menu_id"] = menuId
         params["stb_id"] = stbId
         params["sort_typ_cd"] = ""
@@ -284,6 +293,8 @@ struct EuxpCWGrid:NetworkRoute{
    var path: String = "/euxp/v5/inter/cwgrid/mobilebtv"
    var query: [String : String]? = nil
 }
+
+
 
 
 

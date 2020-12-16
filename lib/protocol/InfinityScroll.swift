@@ -138,7 +138,6 @@ extension InfinityScrollViewProtocol {
     
     func onMove(pos:CGFloat){
         //ComponentLog.d("onMove  " + pos.description , tag: "InfinityScrollViewProtocol")
-        
         let diff = self.prevPosition - pos
         
         if pos >= 30 {
@@ -163,7 +162,6 @@ extension InfinityScrollViewProtocol {
             }
             self.onDown()
         }
-        
     }
     
     func onBottom(){

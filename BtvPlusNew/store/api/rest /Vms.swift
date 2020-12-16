@@ -14,12 +14,13 @@ struct VmsNetwork : Network{
 class Vms: Rest{
     func versionCheck(completion: @escaping (Version) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:Any]()
-        params["response_format"] = "json"
-        params["IF"] = "IF-BVMS-001"
-        params["ver"] = "1.0"
-        params["x-os-info"] = ApiPrefix.iphone+"/"+SystemEnvironment.systemVersion
-        params["x-svc-info"] = ApiPrefix.service+"/"+SystemEnvironment.systemVersion
+        params["x-svc-info"] = ApiPrefix.service+"/"+SystemEnvironment.bundleVersion
         params["x-virgin-flag"] = SystemEnvironment.firstLaunch ? "yes" : "no"
+        params["IF"] = "IF-BVMS-001"
+        params["response_format"] = "json"
+        params["x-os-info"] = ApiPrefix.iphone+"/"+SystemEnvironment.systemVersion
+        params["ver"] = "1.0"
+        
         fetch(route: VmsVersionCheck(body: params), completion: completion, error:error)
     }
 }

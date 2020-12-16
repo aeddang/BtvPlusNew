@@ -14,8 +14,17 @@ class SettingStorage {
         static let accountId = "accountId"
         static let pushAble = "pushAble"
         static let retryPushToken = "retryPushToken"
+        
+        static let serverConfig = "serverConfig"
     }
     let defaults = UserDefaults.standard
+    
+    func setServerConfig(configKey:String, path:String){
+        defaults.set(path, forKey: Keys.serverConfig + configKey)
+    }
+    func getServerConfig(configKey:String)->String?{
+        return defaults.string(forKey: Keys.serverConfig + configKey)
+    }
     
     var retryPushToken:String{
         set(newVal){

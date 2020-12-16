@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct Synopsis : Decodable {
+struct Synopsis : Codable {
     private(set) var contents: SynopsisContentsItem? = nil
     private(set) var purchares: Array<EventBanner>? = nil
     private(set) var series: Array<EventBanner>? = nil
 }
 
-struct SynopsisContentsItem : Decodable {
+struct SynopsisContentsItem : Codable {
     private(set) var title_img_path:String? = nil   // 타이틀 이미지 경로(대표 하나만)
     private(set) var next_sris_id:String? = nil // 다음 시즌 시리즈 ID
     private(set) var sris_sales_vas_svc_id:String? = nil    // 세일즈 VAS 서비스 ID
@@ -135,7 +135,7 @@ struct SynopsisContentsItem : Decodable {
     private(set) var epsd_sales_vas_itm_id:String? = nil
 }
 
-struct EpsdRsluInfo: Decodable {
+struct EpsdRsluInfo: Codable {
     private(set) var epsd_rslu_id:String? = nil   // 에피소드 해상도 ID
     private(set) var rslu_typ_cd:String? = nil   // 해상도 유형 코드
     private(set) var lag_capt_typ_cd:String? = nil   // 언어자막유형코드
@@ -152,7 +152,7 @@ struct EpsdRsluInfo: Decodable {
     //private(set) var capt_lans:Array<Any>? = nil   // 다중자막 언어 목록
 }
 
-struct PeoplesItem : Decodable{
+struct PeoplesItem : Codable{
     private(set) var prs_id:String? = nil   // 인물ID
     private(set) var img_path:String? = nil   // 인물 사진 이미지 경로
     private(set) var prs_nm:String? = nil   // 인물명
@@ -163,25 +163,25 @@ struct PeoplesItem : Decodable{
     private(set) var prs_role_cd:String? = nil   // 인물역할코드
 }
 
-struct SiteReviewItem : Decodable{
+struct SiteReviewItem : Codable{
     private(set) var sris_id:String? = nil   // 시리즈ID
     private(set) var sites:Array<SiteReviewSitesItem>? = nil  // 평점사이트 목록
     private(set) var btv_pnt_info:Array<SiteReviewBtvPntInfoItem>? = nil
     private(set) var prize_history:Array<SiteReviewPrizeHistoryItem>? = nil    // 수상정보
 }
 
-struct SiteReviewSitesReviewsItem : Decodable{
+struct SiteReviewSitesReviewsItem : Codable{
     private(set) var prs_nm:String? = nil   // 인물명
     private(set) var pnt:Double? = nil   // 평점
     private(set) var review_ctsc:String? = nil  // 리뷰 내용
 }
 
-struct SiteReviewSitesDistInfoItem : Decodable{
+struct SiteReviewSitesDistInfoItem : Codable{
     private(set) var pnt:Double? = nil   // 평점
     private(set) var dist_rate:Double? = nil   // 분포율
 }
 
-struct SiteReviewSitesItem : Decodable{
+struct SiteReviewSitesItem : Codable{
     private(set) var bas_pnt:String? = nil   // 기준평점
     private(set) var site_cd:String? = nil   // 평점사이트 코드
     private(set) var review_cnt:String? = nil   // 평가자 수
@@ -191,7 +191,7 @@ struct SiteReviewSitesItem : Decodable{
     private(set) var site_nm:String? = nil   // 평점사이트 명
 }
 
-struct SiteReviewBtvPntInfoItem : Decodable{
+struct SiteReviewBtvPntInfoItem : Codable{
     private(set) var btv_like_ncnt:Double? = nil   // 좋아요 카운트
     private(set) var btv_like_rate:Double? = nil   // 좋아요 비율
     private(set) var btv_ngood_ncnt:Double? = nil   // 별로에요 카운트
@@ -199,14 +199,14 @@ struct SiteReviewBtvPntInfoItem : Decodable{
     private(set) var btv_pnt:Double? = nil   // Btv 포인트
 }
 
-struct SiteReviewPrizeHistoryItem : Decodable{
+struct SiteReviewPrizeHistoryItem : Codable{
     private(set) var awrdc_nm:String? = nil    // 시상식명(시상식 회차 포함)
     private(set) var prize_yr:String? = nil    // 시상년도
     private(set) var prize_dts_cts:String? = nil    // 수상내역
     private(set) var rep_yn:String? = nil    // 대표여부
 }
 
-struct PreviewItem : Decodable{
+struct PreviewItem : Codable{
     private(set) var prd_prc_id:String? = nil   // 상품가격ID
     private(set) var pcim_addn_typ_nm:String? = nil   // 예고편 분류명
     private(set) var epsd_rslu_id:String? = nil   // 에피소드 해상도 ID
@@ -216,7 +216,7 @@ struct PreviewItem : Decodable{
 }
 
 
-struct ProductItem : Decodable{
+struct ProductItem : Codable{
     private(set) var epsd_id:String? = nil   // 에피소드ID
     private(set) var epsd_rslu_id:String? = nil   // 에피소드 해상도 ID
     private(set) var rslu_typ_cd:String? = nil   // 해상도 유형 코드
@@ -247,7 +247,7 @@ struct ProductItem : Decodable{
 }
 
 
-struct CornersItem : Decodable{
+struct CornersItem : Codable{
     private(set) var cnr_id:String? = nil   // 코너 ID
     private(set) var cnr_nm:String? = nil   // 코너 명
     private(set) var epsd_rslu_id:String? = nil   // 에피소드 해상도 ID
@@ -260,7 +260,7 @@ struct CornersItem : Decodable{
     private(set) var cnr_typ_cd:String? = nil     // 코너 유형 코드(1.코너, 3.OCR코드)
 }
 
-struct SeriesInfoItem : Decodable{
+struct SeriesInfoItem : Codable{
 
     private(set) var poster_filename_h:String? = nil    // 가로 포스터
     private(set) var poster_filename_v:String? = nil    // 세로 포스터

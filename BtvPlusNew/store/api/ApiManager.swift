@@ -8,13 +8,13 @@
 
 import Foundation
 import Combine
-enum ApiStatus:String{
-    case initate, ready, reflash
+enum ApiStatus{
+    case initate, ready
 }
 
 class ApiManager :PageProtocol, ObservableObject{
     
-    var status:ApiStatus = .initate
+    @Published var status:ApiStatus = .initate
     @Published var result:ApiResultResponds? = nil {didSet{ if result != nil { result = nil} }}
     @Published var error:ApiResultError? = nil {didSet{ if error != nil { error = nil} }}
     

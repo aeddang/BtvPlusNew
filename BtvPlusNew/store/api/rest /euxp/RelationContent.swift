@@ -6,12 +6,12 @@
 //
 
 import Foundation
-struct RelationContents : Decodable {
+struct RelationContents : Codable {
     private(set) var status_code: String? = nil
     private(set) var banners: Array<RelatedInfo>? = nil
     private(set) var menu_stb_svc_id: String? = nil
 }
-struct RelatedInfo : Decodable {
+struct RelatedInfo : Codable {
     private(set) var t_cnt: String? = nil  // 그리드 전체 배열 개수
     private(set) var sub_title: String? = nil  // 부제목
     private(set) var cw_call_id: String? = nil  // CW Call ID (IF-EUXP-010 호출 시 요청 파라미터로 넘겨준다.)
@@ -21,7 +21,7 @@ struct RelatedInfo : Decodable {
     private(set) var btrack_id: String? = nil  // 트랙아이디(CW 관리정보)
 }
 
-struct CWBlockItem : Decodable {
+struct CWBlockItem : Codable {
     private(set) var titleString: String? = nil  // 제목
     private(set) var poster_filename_hString: String? = nil  // 포스터파일명(가로)
     private(set) var sris_idString: String? = nil  // 시리즈ID

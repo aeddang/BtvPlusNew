@@ -6,13 +6,13 @@
 //
 
 import Foundation
-struct CWGrid : Decodable {
+struct CWGrid : Codable {
     private(set) var total_count:Int? = 0 // 카운트 값과 상관없이 전체 그리드 개수
     private(set) var grid:Array<GridsItem>? = nil // 빅배너 목록
     private(set) var result:String? = nil
 }
 
-struct GridsItem : Decodable {
+struct GridsItem : Codable {
     private(set) var block_cnt:Double? = 0 // 메타 서브 유형 코드 (00501: 일반, 00502 캐릭터 AI) (null일경우 일반으로 처리)
     private(set) var sub_title:String? = nil // 동화 그리기 노출 여부
     private(set) var cw_call_id:String? = nil // 동화 역할놀이 노출 여부

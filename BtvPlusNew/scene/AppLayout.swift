@@ -66,12 +66,10 @@ struct AppLayout: PageComponent{
             guard let token = token else { return }
             self.repository.registerPushToken(token)
         }
-        .onReceive(self.dataProvider.bands.$event){ evt in
-            guard let evt = evt else { return }
-            switch evt {
-            case .updated:
-                if self.isInit { return }
-                self.onPageInit()
+        
+        .onReceive(self.repository.$status){ status in
+            switch status {
+            case .ready: self.onPageInit()
             default: do{}
             }
         }
@@ -83,7 +81,7 @@ struct AppLayout: PageComponent{
                 PageLog.d("Family: \(family) Font names: \(names)")
             }
             */
-            self.repository.initBandsData()
+    
         }
     }
     func onPageInit(){

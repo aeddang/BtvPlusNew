@@ -104,4 +104,43 @@ enum ApiServer:String{
             }
         }
     }
+    
+    static func getType(_ value:String) -> ApiServer?{
+        switch value {
+        case "stacm": return .STACM
+        case "pucr": return .PUCR
+        case "image": return .IMAGE
+        case "navilognpi": return .NAVILOG_NPI
+        case "navilog": return .NAVILOG
+        case "upmc": return .UPMC
+        case "euxp": return .EUXP
+        case "ems": return .EMS
+        case "event": return .EVENT
+        case "pss": return .PSS
+        case "iip": return .IIP
+        case "rvs2": return .RVS2
+        case "me": return .ME
+        case "lgs": return .LGS
+        case "scs2": return .SCS2
+        case "eps": return .EPS
+        case "metv": return .METV
+        case "rvs": return .RVS
+        case "push": return .PUSH
+        case "nps": return .NPS
+        case "wepg": return .WEPG
+        case "npsv5": return .NPS_V5
+        case "metv2": return .METV2
+        case "nf": return .NF
+        case "vls": return .VLS
+        // vms not define
+        case "web": return .WEB
+        case "vms": return .VMS
+        case "srcxpg": return .SRCXPG
+        case "smd": return .SMD
+        case "kms": return .KMS
+        case "nsutil":return .NSUTIL
+        default : return nil
+        }
+        
+    }
 }

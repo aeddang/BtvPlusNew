@@ -6,11 +6,11 @@
 //
 
 import Foundation
-struct GatewaySynopsis : Decodable {
+struct GatewaySynopsis : Codable {
     private(set) var package: PackageInfo? = nil
 }
 
-struct PackageInfo : Decodable {
+struct PackageInfo : Codable {
     private(set) var sale_prc_vat:String? = nil   // 판매가격 부가세 포함
     private(set) var prd_prc_id:String? = nil     // 상품ID
     private(set) var sale_prc:String? = nil   // 판매가격
@@ -35,7 +35,7 @@ struct PackageInfo : Decodable {
     private(set) var mbtv_bg_img_path:String? = nil    // 모바일 BTV 배경 이미지
 }
 
-struct PackageContentsItem : Decodable {
+struct PackageContentsItem : Codable {
     private(set) var sris_id:String? = nil   // 시리즈ID
     private(set) var poster_filename_v:String? = nil // 포스터이미지경로(세로)
     private(set) var wat_lvl_cd:String? = nil// 시청등급코드

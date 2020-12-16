@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct ContentItem : Decodable {
+struct ContentItem : Codable {
     private(set) var sris_id:String? = nil // 시리즈 ID
     private(set) var sort_seq:String? = nil // 정렬순서
     private(set) var brcast_tseq_nm:String? = nil // 방송회차
@@ -52,10 +52,11 @@ struct ContentItem : Decodable {
 
     private(set) var i_img_cd:String? = nil // 벳지 이미지
     // private(set) var quiz_yn:String? = nil // JSON 데이타로는 넘어오는데 스펙에는 없슴.
-
+    init(json: [String:Any]) throws {}
 }
 
 
-struct ImagePathItem : Decodable {
+struct ImagePathItem : Codable {
     private(set) var img_path:String? = nil
+    init(json: [String:Any]) throws {}
 }

@@ -12,8 +12,10 @@ class DataProvider : ObservableObject {
     let bands:Bands = Bands()
     
     @Published private(set) var event:ApiQ? = nil
-    @Published var result:ApiResultResponds? = nil {didSet{ if result != nil { result = nil} }}
-    @Published var error:ApiResultError? = nil {didSet{ if error != nil { error = nil} }}
+    @Published var result:ApiResultResponds? = nil
+        {didSet{ if result != nil { result = nil} }}
+    @Published var error:ApiResultError? = nil
+        {didSet{ if error != nil { error = nil} }}
     
     func requestData(q:ApiQ){
         self.event = q

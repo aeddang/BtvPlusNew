@@ -36,8 +36,9 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                     ZStack(alignment: self.axes == .vertical ? .top : .leading) {
                         if self.isTracking {
                             GeometryReader { insideProxy in
-                                Color.clear
-                                    .preference(key: ScrollOffsetPreferenceKey.self, value: [self.calculateContentOffset(fromOutsideProxy: outsideProxy, insideProxy: insideProxy)])
+                                Color.clear.preference(
+                                    key: OffsetKey.self,
+                                    value: self.calculateContentOffset(fromOutsideProxy: outsideProxy, insideProxy: insideProxy))
                             }
                         }
                         if self.axes == .vertical {
@@ -50,31 +51,40 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                             }
                         }
                     }
-                }.coordinateSpace(name: self.tag)
-                
-                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                }
+                .coordinateSpace(name: self.tag)
+                .onPreferenceChange(OffsetKey.self) { value in
                     if  !self.isTracking { return }
-                    let contentOffset = value[0]
+                    let contentOffset = value
                     self.onMove(pos: contentOffset)
                     self.prevPosition = contentOffset
                 }
-                
                 .onAppear(){
                     self.isTracking = true
-                    
                 }
                 
             }else{
                 ZStack(alignment: self.axes == .vertical ? .top : .leading) {
-                   List{
+                    List{
                        self.content
-                   }
+                    }
+                    if self.isTracking {
+                        GeometryReader { insideProxy in
+                            Color.clear.preference(
+                                key: OffsetKey.self,
+                                value: insideProxy.frame(in: .named(self.tag)).minY)
+                        }
+                    }
                 }
-                
-                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                    let contentOffset = value[0]
+                .coordinateSpace(name: self.tag)
+                .onPreferenceChange(OffsetKey.self) { value in
+                    if  !self.isTracking { return }
+                    let contentOffset = value
                     self.onMove(pos: contentOffset)
                     self.prevPosition = contentOffset
+                }
+                .onAppear(){
+                    self.isTracking = true
                 }
             }
         }
@@ -87,16 +97,6 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                 return insideProxy.frame(in: .named(self.tag)).minX
             }
     }
-    
-   
 }
 
-struct ScrollOffsetPreferenceKey: PreferenceKey {
-    typealias Value = [CGFloat]
 
-    static var defaultValue: [CGFloat] = [0]
-
-    static func reduce(value: inout [CGFloat], nextValue: () -> [CGFloat]) {
-        value.append(contentsOf: nextValue())
-    }
-}

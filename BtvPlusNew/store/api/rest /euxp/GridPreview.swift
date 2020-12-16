@@ -6,14 +6,14 @@
 //
 
 import Foundation
-struct GridPreview : Decodable {
+struct GridPreview : Codable {
     private(set) var total_count:Int? = 0 // 카운트 값과 상관없이 전체 그리드 개수
     private(set) var contents:Array<PreviewContentsItem>? = nil // 메뉴 ID(콘텐츠 블럭을 가진 메뉴ID)
     private(set) var menu_id:String? = nil // 메뉴 ID
 }
 
 
-struct PreviewContentsItem : Decodable {
+struct PreviewContentsItem : Codable {
     private(set) var sris_id:String? = nil    // 시리즈 ID
     private(set) var sort_seq:Int? = 0   // 정렬순서
     private(set) var title:String? = nil  // 제목

@@ -6,11 +6,11 @@
 //
 
 import Foundation
-struct InsideInfo : Decodable {
+struct InsideInfo : Codable {
     private(set) var inside_info: InsideInfoData? = nil
 }
 
-struct InsideInfoData : Decodable {
+struct InsideInfoData : Codable {
     private(set) var epsd_id:String? = nil         // 에피소드 아이디
     private(set) var meta_id:String? = nil         // 메타 아이디
     private(set) var people_scenes:Array<InsidePeopleSceneItem>? = nil // 인물 등장 정보
@@ -19,7 +19,7 @@ struct InsideInfoData : Decodable {
 
 }
 
-struct InsidePeopleSceneItem : Decodable {
+struct InsidePeopleSceneItem : Codable {
     private(set) var prs_id:String? = nil     // 아이디
     private(set) var img_path:String? = nil   // 이미지 경로
     private(set) var img_file_nm:String? = nil    // 이미지 파일명
@@ -27,7 +27,7 @@ struct InsidePeopleSceneItem : Decodable {
 }
 
 
-struct InsidePersonSceneItem : Decodable {
+struct InsidePersonSceneItem : Codable {
     private(set) var scene_id:String? = nil   // 장면ID
     private(set) var prs_scne_dts_seq:String? = nil   // 장면순번
     private(set) var tmtag_fr_tmsc:String? = nil  // 장면시작시간
@@ -37,7 +37,7 @@ struct InsidePersonSceneItem : Decodable {
 }
 
 
-struct InsideSceneItem : Decodable {
+struct InsideSceneItem : Codable {
     private(set) var scene_id:String? = nil       // 장면ID
     private(set) var tmtag_to_tmsc:String? = nil  // 장면순번
     private(set) var scne_dts_seq:String? = nil   // 장면시작시간
@@ -47,7 +47,7 @@ struct InsideSceneItem : Decodable {
     private(set) var img_file_nm:String? = nil    // 쿠키영상 이미지 명
 }
 
-struct InsideMusicInfoItem : Decodable {
+struct InsideMusicInfoItem : Codable {
 
     private(set) var music_id:String? = nil       // 음원 아이디
     private(set) var music_title:String? = nil    // 음원 제목
@@ -60,7 +60,7 @@ struct InsideMusicInfoItem : Decodable {
 
 }
 
-struct InsideMusicSceneItem : Decodable {
+struct InsideMusicSceneItem : Codable {
     private(set) var scene_id:String? = nil   // 장면ID
     private(set) var music_scne_dts_seq:String? = nil // 장면 순번
     private(set) var tmtag_fr_tmsc:String? = nil  // 장면시작시간

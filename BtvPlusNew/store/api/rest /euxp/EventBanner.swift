@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct EventBanners : Decodable {
+struct EventBanners : Codable {
     private(set) var total_count: Int? = nil
     private(set) var banners: Array<EventBanner>? = nil
 }
 
-struct EventBanner : Decodable {
+struct EventBanner : Codable {
     private(set) var menu_id: String? = nil  // 메뉴 ID
     private(set) var menu_nm: String? = nil   // 메뉴명
     private(set) var gnb_typ_cd: String? = nil // GNB 유형 코드(KIDS, PPM 등)

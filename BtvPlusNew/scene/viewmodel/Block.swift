@@ -43,7 +43,6 @@ class Block:Identifiable {
         return self
     }
     
-    
     private func findType(_ data:BlockItem) -> CardType {
         if data.scn_mthd_cd == "504" { return .watched }
         else if data.svc_prop_cd == "501" { return .bookmarked }

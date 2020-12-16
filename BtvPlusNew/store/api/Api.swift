@@ -44,4 +44,11 @@ struct ApiResultError :Identifiable{
 enum ApiType{
     case versionCheck,
          getGnb
+    
+    func coreDataKey() -> String? {
+        switch self {
+        case .getGnb : return "getGnb"
+        default : return nil
+        }
+    }
 }

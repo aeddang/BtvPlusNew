@@ -11,11 +11,17 @@ import UIKit
 import SwiftUI
 import Combine
 
+enum RepositoryStatus{
+    case initate, ready
+}
+
 class Repository:ObservableObject, PageProtocol{
-    let setting = SettingStorage()
+    @Published var status:ApiStatus = .initate
     let sceneObserver:PageSceneObserver?
     let pagePresenter:PagePresenter?
     let dataProvider:DataProvider
+    private let setting = SettingStorage()
+    private let apiCoreDataManager = ApiCoreDataManager()
     private let apiManager:ApiManager
     private var anyCancellable = Set<AnyCancellable>()
     
@@ -24,7 +30,6 @@ class Repository:ObservableObject, PageProtocol{
         pagePresenter:PagePresenter? = nil,
         sceneObserver:PageSceneObserver? = nil
     ) {
-        
         if !setting.initate {
             setting.initate = true
             SystemEnvironment.firstLaunch = true
@@ -43,25 +48,30 @@ class Repository:ObservableObject, PageProtocol{
         
         self.dataProvider.$event.sink(receiveValue: { evt in
             guard let apiQ = evt else { return }
-            self.apiManager.load(q: apiQ)
             if apiQ.isLock {
                 self.pagePresenter?.isLoading = true
             }else{
                 self.sceneObserver?.isApiLoading = true
             }
+            if let coreDatakey = apiQ.type.coreDataKey(){
+                self.requestApi(apiQ, coreDatakey:coreDatakey)
+            }else{
+                self.apiManager.load(q: apiQ)
+            }
+            
         }).store(in: &anyCancellable)
         
         self.apiManager.$result.sink(receiveValue: { res in
             guard let res = res else { return }
-            switch res.type {
-                case .getGnb :  self.setupBandsData(res: res)
-                default: do{}
+            if let coreDatakey = res.type.coreDataKey(){
+                self.respondApi(res, coreDatakey:coreDatakey)
             }
             DispatchQueue.main.async {
                 self.dataProvider.result = res
                 self.sceneObserver?.isApiLoading = false
                 self.pagePresenter?.isLoading = false
             }
+            
     
         }).store(in: &anyCancellable)
         
@@ -81,24 +91,72 @@ class Repository:ObservableObject, PageProtocol{
             self.registerPushToken(self.setting.retryPushToken)
         }
         
+        self.apiManager.$status.sink(receiveValue: { status in
+            if status == .ready { self.onReadyApiManager() }
+        }).store(in: &anyCancellable)
     }
-
     
-    // MultiBandBlock
-    func initBandsData(){
-        if self.dataProvider.bands.status == .initate {
-            self.dataProvider.requestData(q: .init(type: .getGnb))
+    private func requestApi(_ apiQ:ApiQ, coreDatakey:String){
+        DispatchQueue.global().async(){
+            var coreData:Codable? = nil
+            switch apiQ.type {
+                case .getGnb :
+                    if let savedData:GnbBlock = self.apiCoreDataManager.getData(key: coreDatakey){
+                        coreData = savedData
+                        DispatchQueue.main.async {
+                            self.onReadyRepository(gnbData: savedData)
+                        }
+                    }
+                default: do{}
+            }
+            DispatchQueue.main.async {
+                if let coreData = coreData {
+                    self.dataProvider.result = ApiResultResponds(id: apiQ.id, type: apiQ.type, data: coreData)
+                    self.sceneObserver?.isApiLoading = false
+                    self.pagePresenter?.isLoading = false
+                }else{
+                    self.apiManager.load(q: apiQ)
+                }
+            }
         }
     }
+    
+    private func respondApi(_ res:ApiResultResponds, coreDatakey:String){
+        switch res.type {
+        case .getGnb :
+            if let data = res.data as? GnbBlock {
+                self.apiCoreDataManager.setData(key: coreDatakey, data: res.data as? GnbBlock)
+                self.onReadyRepository(gnbData: data)
+            }
+        default: do{}
+        }
+    }
+    
+    private func onReadyApiManager(){
+        SystemEnvironment.serverConfig.filter{ config in
+            config.value.hasPrefix("http")
+        }.forEach{ config in
+            guard let server = ApiServer.getType(config.key) else { return }
+            if let savedPath = self.setting.getServerConfig(configKey: config.key){
+                if savedPath == config.value { return }
+                self.setting.setServerConfig(configKey: config.key, path: config.value)
+                self.apiCoreDataManager.clearData(server: server)
+            }
+        }
+        self.dataProvider.requestData(q: .init(type: .getGnb))
+    }
+    
+    private func onReadyRepository(gnbData:GnbBlock){
+        self.dataProvider.bands.setDate(gnbData)
+        if self.status == .initate {self.status = .ready}
+    }
+    
+    
     func requestBandsData(){
         self.dataProvider.bands.resetData()
         self.dataProvider.requestData(q: .init(type: .getGnb))
     }
-    private func setupBandsData(res:ApiResultResponds){
-        self.dataProvider.bands.setDate(res.data as? GnbBlock)
-    }
-    
-    
+   
     // PushToken
     func retryRegisterPushToken(){
         if self.setting.retryPushToken != "" {

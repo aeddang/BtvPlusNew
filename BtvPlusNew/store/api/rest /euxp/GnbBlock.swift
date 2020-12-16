@@ -6,12 +6,13 @@
 //
 
 import Foundation
-struct GnbBlock : Decodable {
+
+struct GnbBlock : Codable {
     private(set) var total_count:Int? = 0 // 전체 개수
     private(set) var gnbs:Array<GnbItem>? = nil // GNB 목록
 }
 
-struct GnbItem : Decodable {
+struct GnbItem : Codable {
 
     private(set) var scn_mthd_cd:String? = nil    // 상영방식 코드
     private(set) var menu_exps_prop_cd:String? = nil  // 메뉴 노출 속성코드
@@ -47,10 +48,10 @@ struct GnbItem : Decodable {
     private(set) var evt_use_yn:String? = nil // 이벤트호출여부
     private(set) var last_evt_dist_to_dt:String? = nil    // 마지막이벤트배포종료일
     private(set) var blocks:Array<BlockItem>? = nil // 블록배열
-
+    init(json: [String:Any]) throws {}
 }
 
-struct BlockItem  : Decodable {
+struct BlockItem  : Codable {
     private(set) var menu_id:String? = nil    // 메뉴 ID(콘텐츠 블럭을 가진 메뉴ID)
     private(set) var menu_nm:String? = nil    // 메뉴명
     private(set) var menu_expl:String? = nil  // "메뉴설명(월정액에서 사용)M BTV에서 부가설명에서도 사용"
@@ -83,11 +84,11 @@ struct BlockItem  : Decodable {
     private(set) var asis_prd_typ_cd:String? = nil    // ASIS 상품유형코드
     private(set) var is_compound_prd:String? = nil    // 복합상품여부
     private(set) var prd_prc_id:String? = nil // 상품가격ID(VAS ID에 저장되어 있던 값)
-    private(set) var prd_prc:DynamicValue? = nil    // 상품가격(원가격)
-    private(set) var prd_prc_vat:DynamicValue? = nil    // 상품가격(원가격) 부가세 포함
+    private(set) var prd_prc:Double? = nil    // 상품가격(원가격)
+    private(set) var prd_prc_vat:Double? = nil    // 상품가격(원가격) 부가세 포함
     private(set) var prd_typ_cd:String? = nil // 상품유형코드
-    private(set) var sale_prc:DynamicValue? = nil   // 판매가격
-    private(set) var sale_prc_vat:DynamicValue? = nil   // 판매가격 부가세 포함
+    private(set) var sale_prc:Double? = nil   // 판매가격
+    private(set) var sale_prc_vat:Double? = nil   // 판매가격 부가세 포함
     private(set) var cnts_typ_cd:String? = nil    // 콘텐츠 유형 코드
     private(set) var shcut_epsd_id:String? = nil  // 바로가기 에피소드 ID
     private(set) var shcut_sris_id:String? = nil  // 바로가기 시리즈 ID
@@ -116,4 +117,5 @@ struct BlockItem  : Decodable {
     private(set) var menu_off_img_path2:String? = nil  // 메뉴 아이콘/뱃지2(Normal)
     private(set) var menu_selected_img_path2:String? = nil // 메뉴 아이콘/뱃지2(Selected)
     private(set) var blocks:Array<BlockItem>? = nil // 블록 목록
+    init(json: [String:Any]) throws {}
 }

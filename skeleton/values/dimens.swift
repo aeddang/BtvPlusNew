@@ -15,25 +15,22 @@ struct Dimen{
         public static let medium:CGFloat = 26
         public static let regular:CGFloat = 20
         public static let light:CGFloat = 14
+        public static let lightExtra:CGFloat = 12
         public static let thin:CGFloat = 10
-        public static let thinExtra:CGFloat = 6
-        public static let thinUltra:CGFloat = 4
-        public static let thinUltraExtra:CGFloat = 2
-        
+        public static let thinExtra:CGFloat = 8
+        public static let tiny:CGFloat = 2
         public static let header:CGFloat = 50
         public static let footer:CGFloat = 42
-        
         public static let listBottom:CGFloat = 25
     }
 
     struct icon {
         public static let heavy:CGFloat = 50
-        public static let regularExtra:CGFloat = 38
         public static let regular:CGFloat = 36
+        public static let regularExtra:CGFloat = 38
         public static let light:CGFloat = 25
-        public static let lightExtra:CGFloat = 14
         public static let thin:CGFloat = 12
-        public static let thinExtra:CGFloat = 8
+        public static let tiny:CGFloat = 8
     }
     
     struct tab {

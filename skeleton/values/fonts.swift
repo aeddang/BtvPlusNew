@@ -32,17 +32,11 @@ extension Font{
         public static let heavy:CGFloat = 40
         public static let black:CGFloat = 36
         public static let bold:CGFloat = 26
-        public static let boldExtra:CGFloat = 24
-        public static let medium:CGFloat = 18
-        public static let mediumExtra:CGFloat = 20
+        public static let medium:CGFloat = 20
+        public static let mediumExtra:CGFloat = 18
         public static let regular:CGFloat = 16
-        public static let regularExtra:CGFloat = 17
-        
         public static let light:CGFloat = 15
-        public static let lightExtra:CGFloat = 14
         public static let thin:CGFloat = 13
-        public static let thinExtra:CGFloat = 10
-        
     }
 
 }

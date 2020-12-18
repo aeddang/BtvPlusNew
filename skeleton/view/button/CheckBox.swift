@@ -17,7 +17,7 @@ struct CheckBox: View, SelecterbleProtocol {
     
     
     var body: some View {
-        HStack(alignment: .top, spacing: Dimen.margin.thinExtra){
+        HStack(alignment: .top, spacing: Dimen.margin.thin){
            ImageButton(
                 defaultImage: Asset.shape.checkBoxOff,
                 activeImage: Asset.shape.checkBoxOn,
@@ -28,7 +28,7 @@ struct CheckBox: View, SelecterbleProtocol {
                         self.action!(self.isChecked)
                     }
             }
-            VStack(alignment: .leading, spacing: Dimen.margin.thinExtra){
+            VStack(alignment: .leading, spacing: Dimen.margin.tiny){
                 if self.text != nil {
                     Text(self.text!)
                         .modifier(MediumTextStyle(

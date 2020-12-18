@@ -61,7 +61,7 @@ struct StrokeRectButton: View, SelecterbleProtocol{
             self.action(self.index)
         }) {
             ZStack{
-                HStack(spacing:Dimen.margin.thinExtra){
+                HStack(spacing:Dimen.margin.tiny){
                     if self.icon != nil {
                         Image(self.icon!)
                             .renderingMode(.original).resizable()

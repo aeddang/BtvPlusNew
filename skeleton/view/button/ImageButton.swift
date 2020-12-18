@@ -48,7 +48,7 @@ struct ImageButton: View, SelecterbleProtocol{
         Button(action: {
             self.action(self.index)
         }) {
-            VStack(spacing:Dimen.margin.thinExtra){
+            VStack(spacing:Dimen.margin.thin){
                 Image(self.isSelected ?
                         self.activeImage : self.defaultImage)
                     .renderingMode(.original).resizable()

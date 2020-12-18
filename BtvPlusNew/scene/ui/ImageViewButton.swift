@@ -23,7 +23,7 @@ struct ImageViewButton: View{
         Button(action: {
             self.action()
         }) {
-            VStack(spacing:Dimen.margin.thinExtra){
+            VStack(spacing:Dimen.margin.tiny){
                 if !self.isSelected {
                     ImageView(url: self.activeImage)
                         .frame(width: size.width, height: size.height)

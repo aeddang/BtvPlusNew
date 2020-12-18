@@ -17,16 +17,27 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     let axes: Axis.Set
     let showIndicators: Bool
     let content: Content
+    
+    let marginVertical: CGFloat
+    let marginHorizontal: CGFloat
+    let spacing: CGFloat
+   
     init(
         viewModel: InfinityScrollModel,
         axes: Axis.Set = .vertical,
         showIndicators: Bool = false,
+        marginVertical: CGFloat = Dimen.margin.regular,
+        marginHorizontal: CGFloat = Dimen.margin.regular,
+        spacing: CGFloat = Dimen.margin.lightExtra,
         @ViewBuilder content: () -> Content) {
         
         self.viewModel = viewModel
         self.axes = axes
         self.showIndicators = showIndicators
         self.content = content()
+        self.marginVertical = marginVertical
+        self.marginHorizontal = marginHorizontal
+        self.spacing = spacing
     }
 
     var body: some View {
@@ -42,54 +53,86 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                             }
                         }
                         if self.axes == .vertical {
-                            LazyVStack(alignment: .leading, spacing: 0){
+                            LazyVStack(alignment: .leading, spacing: self.spacing){
                                 self.content
                             }
+                            .padding(.vertical, self.marginVertical)
+                            .padding(.horizontal, self.marginHorizontal)
                         }else{
-                            LazyHStack (alignment: .top, spacing: 0){
+                            LazyHStack (alignment: .top, spacing: self.spacing){
                                 self.content
                             }
+                            .padding(.vertical, self.marginVertical)
+                            .padding(.horizontal, self.marginHorizontal)
                         }
                     }
                 }
                 .coordinateSpace(name: self.tag)
                 .onPreferenceChange(OffsetKey.self) { value in
-                    if  !self.isTracking { return }
-                    let contentOffset = value
-                    self.onMove(pos: contentOffset)
-                    self.prevPosition = contentOffset
+                    self.onPreferenceChange(value: value)
                 }
                 .onAppear(){
                     self.isTracking = true
                 }
                 
             }else{
-                ZStack(alignment: self.axes == .vertical ? .top : .leading) {
-                    List{
-                       self.content
-                    }
-                    if self.isTracking {
-                        GeometryReader { insideProxy in
-                            Color.clear.preference(
-                                key: OffsetKey.self,
-                                value: insideProxy.frame(in: .named(self.tag)).minY)
+                if self.axes == .vertical {
+                    ZStack(alignment: .top){
+                        List {
+                            if self.isTracking {
+                                GeometryReader { insideProxy in
+                                    Color.clear.preference(
+                                        key: OffsetKey.self,
+                                        value: insideProxy.frame(in: .named(self.tag)).minY)
+                                }
+                            }
+                            self.content
+                            .padding(.vertical, self.marginVertical)
+                            .padding(.horizontal, self.marginHorizontal)
                         }
                     }
-                }
-                .coordinateSpace(name: self.tag)
-                .onPreferenceChange(OffsetKey.self) { value in
-                    if  !self.isTracking { return }
-                    let contentOffset = value
-                    self.onMove(pos: contentOffset)
-                    self.prevPosition = contentOffset
-                }
-                .onAppear(){
-                    self.isTracking = true
+                    .coordinateSpace(name: self.tag)
+                    .onPreferenceChange(OffsetKey.self) { value in
+                        self.onPreferenceChange(value: value)
+                    }
+                    .onAppear(){
+                        self.isTracking = true
+                        UITableView.appearance().separatorStyle = .none
+                    }
+                }else{
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        ZStack(alignment: .leading) {
+                            HStack(spacing:self.spacing){
+                                self.content
+                            }
+                            if self.isTracking {
+                                GeometryReader { insideProxy in
+                                    Color.clear.preference(
+                                        key: OffsetKey.self,
+                                        value: insideProxy.frame(in: .named(self.tag)).minX)
+                                }
+                            }
+                        }
+                    }
+                    .coordinateSpace(name: self.tag)
+                    .onPreferenceChange(OffsetKey.self) { value in
+                        self.onPreferenceChange(value: value)
+                    }
+                    .onAppear(){
+                        self.isTracking = true
+                    }
                 }
             }
         }
     }
 
+    private func onPreferenceChange(value:CGFloat){
+        if  !self.isTracking { return }
+        let contentOffset = value
+        self.onMove(pos: contentOffset)
+        self.prevPosition = contentOffset
+    }
+    
     private func calculateContentOffset(fromOutsideProxy outsideProxy: GeometryProxy, insideProxy: GeometryProxy) -> CGFloat {
             if axes == .vertical {
                 return insideProxy.frame(in: .named(self.tag)).minY

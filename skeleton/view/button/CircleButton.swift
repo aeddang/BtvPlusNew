@@ -28,7 +28,7 @@ struct CircleButton: View, SelecterbleProtocol {
             self.action( self.index )
         }) {
             Circle()
-               .frame(width: Dimen.icon.thinExtra, height: Dimen.icon.thinExtra)
+               .frame(width: Dimen.icon.thin, height: Dimen.icon.tiny)
                 .foregroundColor(self.isSelected ? Color.app.white : Color.app.white.opacity(0.4))
         }
     }

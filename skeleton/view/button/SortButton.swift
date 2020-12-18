@@ -12,7 +12,7 @@ struct SortButton: View{
     @Binding var text:String
     var textModifier:TextModifier = TextModifier(
         family: Font.family.bold,
-        size: Font.size.lightExtra,
+        size: Font.size.light,
         color: Color.app.grey
     )
     var size:CGFloat = Dimen.button.light
@@ -26,7 +26,7 @@ struct SortButton: View{
             self.action()
         }) {
             ZStack{
-                HStack(spacing:Dimen.margin.thinExtra){
+                HStack(spacing:Dimen.margin.thin){
                     Text(self.text)
                     .font(.custom(textModifier.family, size: textModifier.size))
                     .foregroundColor(textModifier.color)

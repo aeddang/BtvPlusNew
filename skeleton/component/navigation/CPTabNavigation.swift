@@ -31,7 +31,7 @@ struct CPTabNavigation : PageComponent {
                             self.createButton(btn)
                         }
                     }
-                    Spacer().frame(height:Dimen.margin.thinExtra)
+                    Spacer().frame(height:Dimen.margin.thin)
                     if self.useSpacer {
                         Spacer()
                         .frame(
@@ -48,7 +48,7 @@ struct CPTabNavigation : PageComponent {
                     }
                     Divider().background(Color.app.whiteDeep)
                 }
-                .padding(.top, Dimen.margin.thinExtra)
+                .padding(.top, Dimen.margin.thin)
                 .frame(alignment: .leading)
             }
             .content

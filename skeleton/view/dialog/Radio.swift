@@ -78,7 +78,7 @@ struct Radio<Presenting>: View where Presenting: View {
                         }
                     }
                 }
-                .modifier(BottomFunctionTab())
+                //.modifier(BottomFunctionTab())
                 .offset(y: self.isShowing ? 0 : 300)
             }else {
                 if #available(iOS 14.0, *) {
@@ -98,7 +98,7 @@ struct Radio<Presenting>: View where Presenting: View {
                             }
                         }
                     }
-                    .modifier(BottomFunctionTab())
+                    //.modifier(BottomFunctionTab())
                     .frame(height:300)
                     .offset(y: self.isShowing ? 0 : 300)
                 }else{
@@ -114,7 +114,7 @@ struct Radio<Presenting>: View where Presenting: View {
                             }
                         }
                     }
-                    .modifier(BottomFunctionTab())
+                    //.modifier(BottomFunctionTab())
                     .frame(height:300)
                     .offset(y: self.isShowing ? 0 : 300)
                 }

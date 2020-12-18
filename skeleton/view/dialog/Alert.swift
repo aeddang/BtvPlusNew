@@ -119,7 +119,7 @@ struct Alert<Presenting>: View where Presenting: View {
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     if !self.checks.isEmpty {
-                        Spacer().frame(height:Dimen.margin.thinExtra)
+                        Spacer().frame(height:Dimen.margin.thin)
                         VStack(alignment: .leading){
                             ForEach(self.checks, id:\.id) { check in
                                 CheckBox(
@@ -130,7 +130,7 @@ struct Alert<Presenting>: View where Presenting: View {
                             }
                         }
                     }
-                    Spacer().frame(height:Dimen.margin.thinExtra)
+                    Spacer().frame(height:Dimen.margin.thin)
                     HStack{
                         ForEach(self.buttons) { btn in
                             FillButton(

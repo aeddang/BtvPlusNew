@@ -120,7 +120,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     
     class CustomHostingController<ContentView> : UIHostingController<ContentView> where ContentView : View {
         override dynamic open var preferredStatusBarStyle: UIStatusBarStyle {
-            .darkContent
+            .lightContent
         }
     }
     private func setupRootViewController(_ window: UIWindow){

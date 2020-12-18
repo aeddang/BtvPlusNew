@@ -15,7 +15,7 @@ struct RadioButton: View, SelecterbleProtocol {
     
     
     var body: some View {
-        HStack(alignment: .top, spacing: Dimen.margin.thinExtra){
+        HStack(alignment: .top, spacing: Dimen.margin.thin){
             if self.text != nil {
                 Button(action: {
                     self.isChecked.toggle()

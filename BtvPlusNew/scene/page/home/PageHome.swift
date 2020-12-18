@@ -26,16 +26,18 @@ struct PageHome: PageView {
             if self.blocks.isEmpty {
                 Spacer()
             }else{
-                VStack(alignment: .center)
+                VStack(alignment: .leading)
                 {
                     ForEach(self.blocks, id: \.id) {data in
                         Text(data.name)
-                            .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.grey))
+                            .modifier(MediumTextStyle(size: Font.size.thin, color: Color.app.grey))
                     }
+                    Spacer()
                 }//VStack
+                
             }
         }
-        .background(Color.brand.bg)
+        .modifier(PageFull())
         .onAppear{
             guard let obj = self.pageObject  else { return }
             self.menuId = (obj.getParamValue(key: .id) as? String) ?? self.menuId

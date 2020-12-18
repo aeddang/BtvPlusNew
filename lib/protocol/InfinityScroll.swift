@@ -134,8 +134,6 @@ protocol InfinityScrollViewProtocol :PageProtocol{
     func onPull(pos:CGFloat)
 }
 extension InfinityScrollViewProtocol {
-   
-    
     func onMove(pos:CGFloat){
         //ComponentLog.d("onMove  " + pos.description , tag: "InfinityScrollViewProtocol")
         let diff = self.prevPosition - pos
@@ -190,70 +188,6 @@ extension InfinityScrollViewProtocol {
     
     func onPull(pos:CGFloat){
         self.viewModel.onPull(pos: pos)
-    }
-    
-   
-}
-
-
-protocol InfinityListViewProtocol :PageProtocol{
-    var viewModel:InfinityScrollModel {get set}
-    var allDatas:[InfinityData] {get}
-    var appearDatas:[InfinityData] {get set}
-    var prevIndex:Int {get set}
-    var initScrollMove:Bool {get set}
-    func onItemAppear()->Int
-    func onBottom()
-    func onTop()
-    func onUp()
-    func onDown()
-}
-extension InfinityListViewProtocol {
-    func onItemAppear()->Int{
-        if allDatas.count <= 3 { return 0 }
-        if !initScrollMove { return 0 }
-        let sorted = appearDatas.sorted { $0.index < $1.index}
-        guard let first = sorted.first else { return 0 }
-        //ComponentLog.d("index " + sorted.reduce("", {$0 + "\n" + $1.index.description}), tag: self.tag)
-        if prevIndex != first.index {
-            if first == allDatas.first {
-                self.onTop()
-                return first.index
-            }
-            if sorted.last == allDatas.last {
-                self.onBottom()
-                return first.index
-            }
-        }
-        
-       // ComponentLog.d("index " + first.index.description, tag: self.tag)
-        //if abs(prevIndex - first.index) > 1 { return first.index }
-        if prevIndex > first.index { self.onUp() }
-        else if prevIndex < first.index { self.onDown() }
-        return first.index
-    }
-    
-    func onBottom(){
-        self.viewModel.event = .bottom
-        ComponentLog.d("onBottom", tag: self.tag)
-    }
-    
-    func onTop(){
-        self.viewModel.event = .top
-        self.viewModel.event = .pullCompleted
-        ComponentLog.d("onTop", tag: self.tag)
-    }
-    
-    func onUp(){
-        if self.viewModel.event == .up { return }
-        self.viewModel.event = .up
-        ComponentLog.d("onUp", tag: self.tag)
-    }
-    
-    func onDown(){
-        if self.viewModel.event == .down { return }
-        self.viewModel.event = .down
-        ComponentLog.d("onDown", tag: self.tag)
     }
 }
 

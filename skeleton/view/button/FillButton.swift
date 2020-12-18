@@ -57,7 +57,7 @@ struct FillButton: View, SelecterbleProtocol{
         Button(action: {
             self.action(self.index)
         }) {
-            HStack(spacing:Dimen.margin.thinExtra){
+            HStack(spacing:Dimen.margin.tiny){
                 if self.image != nil {
                     Image(self.isSelected ? self.imageOn! : self.image!)
                     .renderingMode(.original).resizable()

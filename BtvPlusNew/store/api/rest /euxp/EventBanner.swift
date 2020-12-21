@@ -57,10 +57,10 @@ struct EventBanner : Codable {
     private(set) var prd_prc_id:String? = nil // 상품ID
     private(set) var prd_typ_cd:String? = nil // 상품유형코드
     private(set) var asis_prd_typ_cd:String? = nil    // ASIS 상품유형코드
-    private(set) var sale_prc:String? = nil   // 판매가격
-    private(set) var sale_prc_vat:String? = nil   // 판매가격 부가세 포함
-    private(set) var prd_prc:String? = nil    // 상품가격(원가격)
-    private(set) var prd_prc_vat:String? = nil    // 상품가격(원가격) 부가세 포함
+    private(set) var sale_prc:Double? = nil   // 판매가격
+    private(set) var sale_prc_vat:Double? = nil   // 판매가격 부가세 포함
+    private(set) var prd_prc:Double? = nil    // 상품가격(원가격)
+    private(set) var prd_prc_vat:Double? = nil    // 상품가격(원가격) 부가세 포함
     private(set) var is_compound_prd:String? = nil    // 복합상품여부
     private(set) var img_dist_yn:String? = nil    // 배너이미지배포여부
     private(set) var mmtf_home_exps_yn:String? = nil  // 월정액 홈 노출여부

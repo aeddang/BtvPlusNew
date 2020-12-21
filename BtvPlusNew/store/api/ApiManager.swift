@@ -68,21 +68,29 @@ class ApiManager :PageProtocol, ObservableObject{
     
     @discardableResult
     func load(_ type:ApiType, action:ApiAction? = nil,
-              resultId:String? = nil, isOptional:Bool = false, isLock:Bool = false)->String
+              resultId:String = "", isOptional:Bool = false, isLock:Bool = false)->String
     {
-        let apiID = (resultId == nil) ? UUID().uuidString : (resultId! + UUID().uuidString)
+        let apiID = resultId //+ UUID().uuidString
         if status != .ready{
-            self.apiQ.append(ApiQ(id: apiID, type: type, action: action, isOptional: isOptional, isLock: isLock))
+            self.apiQ.append(ApiQ(id: resultId, type: type, action: action, isOptional: isOptional, isLock: isLock))
             return apiID
         }
         let error = {err in self.onError(id: apiID, type: type, e: err, isOptional: isOptional)}
         switch type {
-            case .versionCheck : self.vms.versionCheck(
-                completion: {res in self.complated(id: apiID, type: type, res: res)},
-                error:error)
-            case .getGnb : self.euxp.getGnbBlock(
-                completion: {res in self.complated(id: apiID, type: type, res: res)},
-                error:error)
+        case .versionCheck : self.vms.versionCheck(
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getGnb : self.euxp.getGnbBlock(
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getCWGrid(let menuId, let cwCallId) : self.euxp.getCWGrid(
+            menuId: menuId, cwCallId: cwCallId,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getGridEvent(let menuId, let sort, let page, let count) : self.euxp.getGridEvent(
+            menuId: menuId, sortType: sort, page: page, pageCnt: count, version: nil,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         }
         return apiID
     }

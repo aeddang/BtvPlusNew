@@ -28,7 +28,7 @@ struct LayoutBotttom: ViewModifier {
     var height:CGFloat = 0
     var margin:CGFloat = 0
     func body(content: Content) -> some View {
-        let pos = ((geometry.size.height - height)/2.0) + margin
+        let pos = ((geometry.size.height + height)/2.0) + margin
         return content
             .frame(height:height)
             .offset(y:pos)

@@ -16,7 +16,7 @@ struct ApiError :Error,Identifiable{
 }
 
 struct ApiQ :Identifiable{
-    var id:String = ""
+    var id:String = UUID().uuidString
     let type:ApiType
     var action:ApiAction? = nil
     var isOptional:Bool = false
@@ -42,8 +42,10 @@ struct ApiResultError :Identifiable{
 
 
 enum ApiType{
-    case versionCheck,
-         getGnb
+    case versionCheck        // VMS
+    case getGnb,
+         getCWGrid(String?, String?),
+         getGridEvent(String?, EuxpNetwork.SortType? = Optional.none, Int? = 1, Int? = EuxpNetwork.PAGE_COUNT)  //EUXP
     
     func coreDataKey() -> String? {
         switch self {

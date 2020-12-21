@@ -10,12 +10,13 @@ import Foundation
 
 class SettingStorage {
     struct Keys {
-        static let initate = "initate"
-        static let accountId = "accountId"
-        static let pushAble = "pushAble"
-        static let retryPushToken = "retryPushToken"
+        static let VS = "1.0"
+        static let initate = "initate" + VS
+        static let accountId = "accountId" + VS
+        static let pushAble = "pushAble" + VS
+        static let retryPushToken = "retryPushToken" + VS
         
-        static let serverConfig = "serverConfig"
+        static let serverConfig = "serverConfig" + VS
     }
     let defaults = UserDefaults.standard
     

@@ -54,7 +54,26 @@ extension EuxpNetwork{
     static let RESPONSE_FORMET = "json"
     static let MENU_STB_SVC_ID = "BTVMOBV521"
     static let APP_TYPE_CD = "BTVPLUS"
+    static let VERSION = "0"
+    static let PAGE_COUNT = 30
+    
+    enum SortType: String {
+        case none = "10" // 기본, 사용자 정의
+        case last = "20" // 최신순
+        case title = "30" // 타이틀
+        case price = "40" // 가격
+    }
+    
+    enum GnbTypeCode: String {
+        case GNB_HOME = "BP_01"  // 홈
+        case GNB_MONTHLY = "BP_02"  // 월정액
+        case GNB_CATEGORY = "BP_03"  // 카테고리
+        case GNB_FREE = "BP_04"  // 무료
+        case GNB_SCHEDULED = "BP_05"  // 공개 예정
+        case GNB_OCEAN = "BP_08"  // 오션 월정액
+    }
 }
+
 
 class Euxp: Rest{
     /**
@@ -182,16 +201,16 @@ class Euxp: Rest{
      * @param version 버전정보
      */
     func getGridPreview(
-        menuId:String, page:Int, pageCnt:Int, version:String,
+        menuId:String?, page:Int?, pageCnt:Int?, version:String?,
         completion: @escaping (GridPreview) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
         params["IF"] = "IF-EUXP-031"
-        params["menu_id"] = menuId
-        params["page_no"] = page.description
-        params["page_cnt"] = pageCnt.description
-        params["version"] = version
+        params["menu_id"] = menuId ?? ""
+        params["page_no"] = page?.description ?? "1"
+        params["page_cnt"] = pageCnt?.description ?? EuxpNetwork.PAGE_COUNT.description
+        params["version"] = version ?? EuxpNetwork.VERSION
         fetch(route: EuxpGridPreview(query: params), completion: completion, error:error)
     }
     
@@ -204,23 +223,23 @@ class Euxp: Rest{
     * @param version 버전정보
     */
     func getGridEvent(
-        menuId:String, sortType:String, page:Int, pageCnt:Int, version:String,
+        menuId:String?, sortType:EuxpNetwork.SortType?, page:Int?, pageCnt:Int?, version:String?,
         completion: @escaping (GridEvent) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
         params["IF"] = "IF-EUXP-024"
-        params["menu_id"] = menuId
-        params["page_no"] = page.description
-        params["page_cnt"] = pageCnt.description
-        params["sort_typ_cd"] = sortType
-        params["version"] = version
+        params["menu_id"] = menuId ?? ""
+        params["page_no"] = page?.description ?? "1"
+        params["page_cnt"] = pageCnt?.description ?? EuxpNetwork.PAGE_COUNT.description
+        params["sort_typ_cd"] = sortType?.rawValue ?? EuxpNetwork.SortType.none.rawValue
+        params["version"] = version ?? EuxpNetwork.VERSION
         fetch(route: EuxpGridEvent(query: params), completion: completion, error:error)
     }
     
     
     func getCWGrid(
-        menuId:String, cwCallId:String, stbId:String,
+        menuId:String?, cwCallId:String?, stbId:String = "",
         completion: @escaping (CWGrid) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
@@ -228,15 +247,18 @@ class Euxp: Rest{
         params["app_typ_cd"] = EuxpNetwork.APP_TYPE_CD
         params["IF"] = "IF-EUXP-009"
         
-        params["menu_id"] = menuId
-        params["stb_id"] = stbId
+        params["menu_id"] = menuId ?? ""
+        params["stb_id"] = "00000000-0000-0000-0000-000000000000"  // PairingManager.sharedObject().getStbId()
         params["sort_typ_cd"] = ""
         params["rslu_typ_cd"] = "20"
         params["inspect_yn"] = "Y"
-        params["cw_call_id"] = cwCallId
+        params["cw_call_id"] = cwCallId ?? ""
         params["type"] = "all"
         fetch(route: EuxpCWGrid(query: params), completion: completion, error:error)
     }
+    
+    
+
 }
 
 

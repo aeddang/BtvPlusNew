@@ -25,8 +25,8 @@ struct BottomTab: PageComponent{
     @State var selectedPage:PageObject? = nil
     @State var selectedMenuId:String? = nil
     var body: some View {
-        ZStack(alignment: .bottom){
-            HStack( spacing:0){
+        ZStack(alignment: .top){
+            HStack( alignment: .top, spacing:0 ){
                 ForEach(self.pages, id: \.key) {band in
                     ImageViewButton(
                         isSelected:Binding<Bool>(get: { self.checkCategory(pageID: band.id, menuId: band.menuId) }, set: { _ in }),
@@ -45,8 +45,11 @@ struct BottomTab: PageComponent{
                     .frame(width:SceneObserver.screenSize.width/CGFloat(self.pages.count))
                 }
             }
+            .padding(.bottom, PageSceneObserver.safeAreaBottom + Dimen.margin.thin)
         }
-        .offset(y: PageSceneObserver.safeAreaBottom )
+        .modifier(MatchParent())
+        .background(Color.brand.bg)
+        
         .onReceive (self.pagePresenter.$currentPage) { page in
             if let id = page?.getParamValue(key: .id) as? String {
                 self.selectedMenuId = id

@@ -14,12 +14,27 @@ class PosterData:InfinityData{
     private(set) var subTitle: String? = nil
     private(set) var type:PosterType = .small
     
+    func setData(data:ContentItem, cardType:Block.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
+        switch cardType {
+        case .bigPoster: type = .big
+        case .smallPoster: type = .small
+        default: type = .small
+        }
+    
+        title = data.title
+        if let poster = data.poster_filename_v {
+            image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
+        }
+        index = idx
+        return self
+    }
     func setDummy(_ idx:Int = -1) -> PosterData {
         title = "[Q&A] 이민?레나채널 삭제 안하는 이유?외국인남친?"
         subTitle = "subTitlesubTitlesubTitle"
         index = idx
         return self
     }
+    
     func setDummyBig(_ idx:Int = -1) -> PosterData {
         title = "[Q&A] 이민?레나채널 삭제 안하는 이유?외국인남친?"
         subTitle = "subTitlesubTitlesubTitle"
@@ -27,6 +42,7 @@ class PosterData:InfinityData{
         type = .big
         return self
     }
+    
     func setDummyBanner(_ idx:Int = -1) -> PosterData {
         index = idx
         type = .banner
@@ -58,8 +74,6 @@ enum PosterType {
     }
 }
 
-
-
 struct PosterList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
@@ -68,11 +82,12 @@ struct PosterList: PageComponent{
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
-            axes: .horizontal ){
+            axes: .horizontal,
+            marginVertical: 0,
+            marginHorizontal: Dimen.margin.thin){
             ForEach(self.datas) { data in
                 PosterItem( data:data )
                 .onTapGesture {
-                   
                 }
             }
         }
@@ -101,6 +116,7 @@ struct PosterItem: PageView {
             width: self.data.type.size.width,
             height: self.data.type.size.height)
         .background(Color.app.blueLight)
+        .clipped()
         
     }
     

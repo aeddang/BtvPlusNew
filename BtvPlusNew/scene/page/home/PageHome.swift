@@ -7,14 +7,13 @@
 
 import Foundation
 import SwiftUI
-
 struct PageHome: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
-    
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel:PageDataProviderModel = PageDataProviderModel()
+   
    
     @State var blocks:Array<Block> = []
     @State var menuId:String = ""
@@ -26,15 +25,7 @@ struct PageHome: PageView {
             if self.blocks.isEmpty {
                 Spacer()
             }else{
-                VStack(alignment: .leading)
-                {
-                    ForEach(self.blocks, id: \.id) {data in
-                        Text(data.name)
-                            .modifier(MediumTextStyle(size: Font.size.thin, color: Color.app.grey))
-                    }
-                    Spacer()
-                }//VStack
-                
+                MultiBlock(datas: self.$blocks)
             }
         }
         .modifier(PageFull())
@@ -58,6 +49,14 @@ struct PageHome: PageView {
         self.blocks = blocksData.map{ data in
             Block().setDate(data)
         }
+        .filter{ block in
+            switch block.dataType {
+            case .cwGrid : return block.menuId != nil && block.cwCallId != nil
+            case .grid : return block.menuId != nil
+            default : return true
+            }
+        }
+        
     }
     
 }

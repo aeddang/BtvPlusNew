@@ -25,24 +25,25 @@ class ImageLoader: ObservableObject, PageProtocol{
     
 
     func image(url: String?) -> UIImage {
+       
         guard let url = url else {
-            return UIImage.from(color: Color.app.greyLight.uiColor() )
+            return UIImage.from(color: Color.clear )
         }
-        if url == "" { return UIImage.from(color: Color.app.greyLight.uiColor() ) }
+        if url == "" { return UIImage.from(color: Color.clear ) }
         guard let _ = url.firstIndex(of: ":") else{
             DataLog.d("asset " + url , tag:self.tag)
-            return UIImage(named: url) ?? UIImage.from(color: Color.app.greyLight.uiColor() )
+            return UIImage(named: url) ?? UIImage.from(color: Color.clear )
         }
         guard let targetUrl = URL(string:url) else {
              DataLog.e("targetUrl error " + url , tag:self.tag)
-            return UIImage.from(color: Color.app.greyLight.uiColor())
+            return UIImage.from(color: Color.clear)
         }
         guard let image = image else {
             //DataLog.d("targetUrl " + url , tag:self.tag)
             load(url: targetUrl)
-            return UIImage.from(color: Color.app.greyLight.uiColor() )
+            return UIImage.from(color: Color.clear)
         }
-       
+        
         return image
     }
 
@@ -55,8 +56,8 @@ class ImageLoader: ObservableObject, PageProtocol{
                 case .success(let value):
                     //DataLog.d("cached " + key , tag:self.tag)
                     self.image = value.image
-                case .failure(let error):
-                    print(error.localizedDescription)
+                case .failure(_):
+                    //print(error.localizedDescription)
                     DataLog.e("cached error" + key , tag:self.tag)
                 }
             }
@@ -69,7 +70,7 @@ class ImageLoader: ObservableObject, PageProtocol{
                     self.image = value.image
                     //DataLog.d("loaded" + key , tag:self.tag)
                 case .failure(let error):
-                    print(error.localizedDescription)
+                    DataLog.d(error.localizedDescription, tag:self.tag)
                     DataLog.e("loaded error " + key , tag:self.tag)
                 }
             }

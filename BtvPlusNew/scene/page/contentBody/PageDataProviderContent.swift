@@ -44,11 +44,11 @@ class PageDataProviderModel:ObservableObject{
     }
     
     fileprivate func onResult(_ result:ApiResultResponds) {
-        if result.type == request?.type {
+        if result.id == request?.id {
             self.event = .onResult(-1, result, -1)
         }
         guard let apis = self.requests else { return }
-        guard let _ = apis.firstIndex(where: { $0.type == result.type }) else { return }
+        guard let _ = apis.firstIndex(where: { $0.id == result.id }) else { return }
         
         self.completedCount += 1
         self.event = .onResult(progress, result, completedCount)
@@ -56,11 +56,11 @@ class PageDataProviderModel:ObservableObject{
     }
     
     fileprivate func onError(_ err:ApiResultError) {
-        if err.type == request?.type {
+        if err.id == request?.id {
             self.event = .onError(-1, err, -1)
         }
         guard let apis = self.requests else { return }
-        guard let _ = apis.firstIndex(where: { $0.type == err.type }) else { return }
+        guard let _ = apis.firstIndex(where: { $0.id == err.id }) else { return }
         
         self.completedCount += 1
         self.event = .onError(progress, err, completedCount)

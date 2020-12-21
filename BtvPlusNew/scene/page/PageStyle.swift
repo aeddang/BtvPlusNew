@@ -73,12 +73,18 @@ struct PageTitle: ViewModifier {
     }
 }
 
+struct BlockTitle: ViewModifier {
+    func body(content: Content) -> some View {
+        return content
+            .modifier(BoldTextStyle())
+            .modifier(ContentHorizontalEdges())
+    }
+}
 
 struct ContentTitle: ViewModifier {
     func body(content: Content) -> some View {
         return content
-            .modifier(BlackTextStyle(size: Font.size.regular))
-            .modifier(ContentHorizontalEdges())
+            .modifier(BoldTextStyle())
     }
 }
 

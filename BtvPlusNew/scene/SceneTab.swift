@@ -33,7 +33,7 @@ struct SceneTab: PageComponent{
                     .modifier(
                         LayoutBotttom(
                             geometry: geometry,
-                            height:Dimen.app.bottom,
+                            height:Dimen.app.bottom + PageSceneObserver.safeAreaBottom,
                             margin: self.positionBottom )
                     )
                 

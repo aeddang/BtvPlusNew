@@ -14,6 +14,23 @@ class ThemaData:InfinityData{
     private(set) var subTitle: String? = nil
     private(set) var count: String = "0"
     private(set) var type:ThemaType = .square
+    
+    func setData(data:ContentItem, cardType:Block.CardType = .squareThema, idx:Int = -1) -> ThemaData {
+        
+        switch cardType {
+        case .circleTheme: type = .small
+        case .bigTheme: type = .big
+        default: type = .square
+        }
+        
+        title = data.title
+        if let thumb = data.poster_filename_h {
+            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.thumb.size)
+        }
+        index = idx
+        return self
+    }
+    
     func setDummy(_ idx:Int = -1) -> ThemaData {
         title = "THEMA"
         subTitle = "subTitlesubTitlesubTitle"
@@ -37,7 +54,7 @@ enum ThemaType {
             switch self {
             case .small: return ListItem.thema.type01
             case .big: return ListItem.thema.type02
-            case .square: return ListItem.thema.type02
+            case .square: return ListItem.thema.type03
             }
         }
     }
@@ -62,7 +79,9 @@ struct ThemaList: PageComponent{
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
-            axes: .horizontal ){
+            axes: .horizontal,
+            marginVertical: 0,
+            marginHorizontal: Dimen.margin.thin){
             ForEach(self.datas) { data in
                 ThemaItem( data:data )
                 .onTapGesture {
@@ -97,6 +116,7 @@ struct ThemaItem: PageView {
         .frame(
             width: self.data.type.size.width,
             height: self.data.type.size.height)
+        .clipped()
         
     }
 }

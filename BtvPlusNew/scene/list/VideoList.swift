@@ -14,6 +14,23 @@ class VideoData:InfinityData{
     private(set) var subTitle: String? = nil
     private(set) var count: String = "0"
     private(set) var type:VideoType = .nomal
+    
+    
+    func setData(data:ContentItem, cardType:Block.CardType = .video, idx:Int = -1) -> VideoData {
+        
+        switch cardType {
+        case .watchedVideo: type = .watching
+        default: type = .nomal
+        }
+        
+        title = data.title
+        if let thumb = data.poster_filename_h {
+            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.thumb.size)
+        }
+        index = idx
+        return self
+    }
+    
     func setDummy(_ idx:Int = -1) -> VideoData {
         title = "[Q&A] 이민?레나채널 삭제 안하는 이유?외국인남친?"
         subTitle = "subTitlesubTitlesubTitle"
@@ -43,7 +60,9 @@ struct VideoList: PageComponent{
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
-            axes: .horizontal ){
+            axes: .horizontal,
+            marginVertical: 0,
+            marginHorizontal: Dimen.margin.thin){
             ForEach(self.datas) { data in
                 VideoItem( data:data )
                 .onTapGesture {
@@ -67,18 +86,18 @@ struct VideoItem: PageView {
                 }
             }
             .frame(
-                width: ListItem.thumb.type01.width,
-                height: ListItem.thumb.type01.height)
-            
-
+                width: ListItem.thumb.size.width,
+                height: ListItem.thumb.size.height)
+            .clipped()
             if self.data.title != nil {
                 Text(self.data.title!)
                     .modifier(MediumTextStyle(size: Font.size.medium))
                     .padding(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/, Dimen.margin.thin)
-                    .frame(width: ListItem.thumb.type01.width)
+                    .frame(width: ListItem.thumb.size.width)
             }
         }
         .background(Color.app.blueLight)
+        
     }
     
 }

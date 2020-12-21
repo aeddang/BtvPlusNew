@@ -13,7 +13,7 @@ struct ImageViewButton: View{
     var activeImage:String? = Asset.noImg1_1
     var size:CGSize = CGSize(width: Dimen.icon.light, height: Dimen.icon.light)
     var text:String? = nil
-    var textSize:CGFloat = Font.size.thin
+    var textSize:CGFloat = Font.size.tiny
     var defaultTextColor:Color = Color.app.whiteDeep
     var activeTextColor:Color = Color.app.white
     

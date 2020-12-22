@@ -8,20 +8,29 @@
 import Foundation
 import SwiftUI
 
-class Block:Identifiable {
+enum BlockStatus:String{
+    case initate, active, passive
+}
+
+
+
+class Block:Identifiable, ObservableObject, Equatable{
     private(set) var id = UUID().uuidString
     private(set) var name:String = ""
     private(set) var menuId:String? = nil
     private(set) var cwCallId:String? = nil
     private(set) var cardType:CardType = .none
     private(set) var dataType:DataType = .none
-    private(set) var hasDatas:Bool = false
+    @Published private(set) var status:BlockStatus = .initate
+    
+    public static func == (l:Block, r:Block)-> Bool {
+        return l.id == r.id
+    }
     
     func setDate(_ data:BlockItem) -> Block{
         name = data.menu_nm ?? ""
         menuId = data.menu_id
         cwCallId = data.cw_call_id_val
-        
         cardType = findType(data)
         dataType = findDataType(data)
         return self
@@ -30,26 +39,40 @@ class Block:Identifiable {
     
     var posters:[PosterData]? = nil {
         didSet{
-            if posters != nil { hasDatas = true }
+            if posters != nil {
+                status = posters!.isEmpty ? .passive : .active
+                ComponentLog.d(name + " " + posters!.count.description + " " + status.rawValue, tag: "BlockProtocol")
+            }
+            
         }
     }
     var videos:[VideoData]? = nil {
         didSet{
-            if videos != nil { hasDatas = true }
+            if videos != nil {
+                status = videos!.isEmpty ? .passive : .active
+                ComponentLog.d(name + " " + videos!.count.description + " " + status.rawValue, tag: "BlockProtocol")
+            }
         }
     }
     var themas:[ThemaData]? = nil {
         didSet{
-            if themas != nil { hasDatas = true }
+            if themas != nil {
+                status = themas!.isEmpty ? .passive : .active
+                ComponentLog.d(name + " " + themas!.count.description + " " + status.rawValue, tag: "BlockProtocol")
+            }
         }
     }
     
+    func setRequestFail(){
+        status = .passive
+    }
+    
     func setBlank(){
-        hasDatas = true
+        status = .passive
     }
     
     func setError(_ err:ApiResultError?){
-        hasDatas = true
+        status = .passive
     }
     
     

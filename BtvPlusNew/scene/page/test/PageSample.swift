@@ -21,7 +21,7 @@ struct PageSample: PageView {
                 Text("sample")
             }
         }//geo
-        .modifier(PageEdges())
+        .modifier(PageFull())
         .onAppear{
             
         }

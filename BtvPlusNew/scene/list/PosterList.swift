@@ -98,7 +98,7 @@ struct PosterItem: PageView {
     var data:PosterData
     var body: some View {
         ZStack{
-            ImageView(url: self.data.image, contentMode: .fill)
+            ImageView(url: self.data.image, contentMode: .fit, noImg: Asset.noImg9_16)
                 .modifier(MatchParent())
             VStack(spacing:0){
                 if self.data.title != nil {

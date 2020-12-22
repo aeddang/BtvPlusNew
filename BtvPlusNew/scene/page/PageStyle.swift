@@ -11,38 +11,11 @@ struct PageFull: ViewModifier {
     var bgColor:Color = Color.brand.bg
     func body(content: Content) -> some View {
         return content
-            .padding(.top, PageSceneObserver.safeAreaTop)
-            .background(bgColor)
-    }
-}
-struct PageEdges: ViewModifier {
-    var bgColor:Color = Color.brand.bg
-    func body(content: Content) -> some View {
-        return content
-            .padding(.bottom, PageSceneObserver.safeAreaBottom)
-            .padding(.top, Dimen.app.top + PageSceneObserver.safeAreaTop)
-            .background(bgColor)
-    }
-}
-struct PageEdgeTop: ViewModifier {
-    var bgColor:Color = Color.brand.bg
-    func body(content: Content) -> some View {
-        return content
-            .padding(.top, Dimen.app.top + PageSceneObserver.safeAreaTop)
-            .padding(.bottom, PageSceneObserver.safeAreaBottom)
+            //.padding(.top, PageSceneObserver.safeAreaTop)
             .background(bgColor)
     }
 }
 
-struct PageEdgeBottom: ViewModifier {
-    var bgColor:Color = Color.brand.bg
-    func body(content: Content) -> some View {
-        return content
-            .padding(.top, PageSceneObserver.safeAreaTop)
-            .padding(.bottom, PageSceneObserver.safeAreaBottom)
-            .background(bgColor)
-    }
-}
 struct ContentEdges: ViewModifier {
     var margin:CGFloat = Dimen.margin.thin
     func body(content: Content) -> some View {

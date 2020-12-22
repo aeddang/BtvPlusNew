@@ -64,8 +64,8 @@ struct Dimen{
     }
     
     struct app {
-       public static let bottom:CGFloat = 70
-       public static let top:CGFloat = 50
+       public static let bottom:CGFloat = 60
+       public static let top:CGFloat = 60
     }
     
 }

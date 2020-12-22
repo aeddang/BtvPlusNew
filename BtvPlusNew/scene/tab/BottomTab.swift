@@ -21,12 +21,13 @@ struct PageSelecterble : SelecterbleProtocol{
 struct BottomTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var sceneObserver:SceneObserver
     @State var pages:[PageSelecterble] = []
     @State var selectedPage:PageObject? = nil
     @State var selectedMenuId:String? = nil
     var body: some View {
-        ZStack(alignment: .top){
-            HStack( alignment: .top, spacing:0 ){
+        ZStack{
+            HStack( alignment: .center, spacing:0 ){
                 ForEach(self.pages, id: \.key) {band in
                     ImageViewButton(
                         isSelected:Binding<Bool>(get: { self.checkCategory(pageID: band.id, menuId: band.menuId) }, set: { _ in }),
@@ -42,10 +43,11 @@ struct BottomTab: PageComponent{
                         )
                         self.selectedMenuId = band.menuId
                     }
-                    .frame(width:SceneObserver.screenSize.width/CGFloat(self.pages.count))
+                    .modifier(MatchParent())
                 }
             }
-            .padding(.bottom, PageSceneObserver.safeAreaBottom + Dimen.margin.thin)
+            .padding(.bottom, self.sceneObserver.safeAreaBottom)
+            
         }
         .modifier(MatchParent())
         .background(Color.brand.bg)

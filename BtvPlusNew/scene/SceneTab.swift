@@ -12,12 +12,16 @@ import SwiftUI
 struct SceneTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appObserver:AppObserver
-    @EnvironmentObject var sceneObserver:PageSceneObserver
-    @State var positionTop:CGFloat = 0
-    @State var positionBottom:CGFloat = Dimen.app.bottom
+    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @State var positionTop:CGFloat = -Dimen.app.top
+    @State var positionBottom:CGFloat = -Dimen.app.bottom
     @State var positionLoading:CGFloat = -Dimen.app.bottom
     @State var isDimed:Bool = false
     @State var isLoading:Bool = false
+    
+    @State var safeAreaTop:CGFloat = 0
+    @State var safeAreaBottom:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
             ZStack{
@@ -25,21 +29,21 @@ struct SceneTab: PageComponent{
                     .modifier(
                         LayoutTop(
                             geometry: geometry,
-                            height:Dimen.app.top,
-                            margin: self.positionTop )
+                            height:Dimen.app.top + self.safeAreaTop,
+                            margin: self.positionTop)
                     )
                 
                 BottomTab()
                     .modifier(
                         LayoutBotttom(
                             geometry: geometry,
-                            height:Dimen.app.bottom + PageSceneObserver.safeAreaBottom,
+                            height:Dimen.app.bottom + self.safeAreaBottom,
                             margin: self.positionBottom )
                     )
                 
                 if self.isDimed {
                     Button(action: {
-                        self.sceneObserver.cancelAll()
+                        self.pageSceneObserver.cancelAll()
                     }) {
                         Spacer().modifier(MatchParent())
                             .background(Color.transparent.black45)
@@ -58,41 +62,57 @@ struct SceneTab: PageComponent{
                 
             }
             .modifier(MatchParent())
-            .onAppear(){
-                PageLog.d("safeAreaTop " + PageSceneObserver.safeAreaTop.description , tag:self.tag)
-                PageLog.d("safeAreaBottom " + PageSceneObserver.safeAreaBottom.description , tag:self.tag)
-                
-            }
-            .onReceive(self.pagePresenter.$currentTopPage){ page in
-                PageSceneObserver.screenSize = geometry.size
-            }
-            
-            .onReceive (self.sceneObserver.$isApiLoading) { loading in
+            .onReceive (self.pageSceneObserver.$isApiLoading) { loading in
                 DispatchQueue.main.async {
                     withAnimation{
                         self.isLoading = loading
                     }
                 }
             }
-            .onReceive (self.sceneObserver.$useTop) { use in
-                withAnimation{
-                    self.positionTop = use ? PageSceneObserver.safeAreaTop : -(Dimen.app.top + Dimen.margin.heavy)
+            .onReceive (self.sceneObserver.$safeAreaTop){ pos in
+                if self.safeAreaTop != pos {
+                    self.safeAreaTop = pos
+                    self.updateTopPos()
                 }
             }
-            .onReceive (self.sceneObserver.$useBottom) { use in
-                withAnimation{
-                    self.positionBottom = use
-                        ? -(PageSceneObserver.safeAreaBottom * 2)
-                        : (Dimen.app.bottom - PageSceneObserver.safeAreaBottom + 70)
-                    
-                    self.positionLoading = use
-                        ? -(Dimen.app.bottom + Dimen.margin.heavy + PageSceneObserver.safeAreaBottom)
-                        : -PageSceneObserver.safeAreaBottom
+            .onReceive (self.sceneObserver.$safeAreaBottom){ pos in
+                if self.safeAreaBottom != pos {
+                    self.safeAreaBottom = pos
+                    self.updateBottomPos()
                 }
+            }
+            .onReceive (self.pageSceneObserver.$useTop) { use in
+                self.updateTopPos()
+            }
+            .onReceive (self.pageSceneObserver.$useBottom) { use in
+                self.updateBottomPos()
             }
         }//geometry
         
     }
+    func updateTopPos(){
+        withAnimation{
+            withAnimation{
+                self.positionTop = self.pageSceneObserver.useTop
+                    ? 0
+                    : -(Dimen.app.top+self.safeAreaTop)
+            }
+        }
+    }
+    func updateBottomPos(){
+        withAnimation{
+            self.positionBottom = self.pageSceneObserver.useBottom
+                ? 0
+                : -(Dimen.app.bottom+self.safeAreaBottom)
+            
+            self.positionLoading = self.pageSceneObserver.useBottom
+                ? (Dimen.app.bottom + Dimen.margin.heavy + self.safeAreaBottom)
+                : self.safeAreaBottom
+        }
+    }
+    
+    
+    
 }
 
 #if DEBUG
@@ -102,6 +122,7 @@ struct SceneTab_Previews: PreviewProvider {
         Form{
             SceneTab()
             .environmentObject(AppObserver())
+            .environmentObject(SceneObserver())
             .environmentObject(PageSceneObserver())
             .environmentObject(PagePresenter())
                 .frame(width:340,height:300)

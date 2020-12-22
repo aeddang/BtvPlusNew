@@ -21,7 +21,7 @@ struct PageContentController: View{
     @ObservedObject var pageControllerObservable:PageControllerObservable = PageControllerObservable()
     @ObservedObject internal var pageObservable: PageObservable = PageObservable()
     @EnvironmentObject var pagePresenter:PagePresenter
-    
+    @EnvironmentObject var sceneObserver:SceneObserver
     var currnetPage:PageViewProtocol?{
         get{
             return pageControllerObservable.pages.first
@@ -41,6 +41,10 @@ struct PageContentController: View{
         }
     }
     
+    let orientationChanged = NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)
+            .makeConnectable()
+            .autoconnect()
+   
     var body: some View {
         GeometryReader { geometry in
             ZStack{
@@ -55,12 +59,19 @@ struct PageContentController: View{
             }
             
             .onAppear(){
-                PageSceneObserver.safeAreaBottom = geometry.safeAreaInsets.bottom
-                PageSceneObserver.safeAreaTop = geometry.safeAreaInsets.top
-                PageSceneObserver.screenSize = geometry.size
+                sceneObserver.update(geometry: geometry)
+            }
+            .onDisappear(){
+                
             }
             .edgesIgnoringSafeArea(.all)
             .background(backgroundBody)
+            .onReceive(self.pagePresenter.$currentTopPage){ page in
+                sceneObserver.update(geometry: geometry)
+            }
+            .onReceive(self.orientationChanged){ _ in
+                sceneObserver.update(geometry: geometry)
+            }
         }
     }
     

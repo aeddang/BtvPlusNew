@@ -77,11 +77,18 @@ open class PageObservable: ObservableObject  {
     @Published var isBackground:Bool = false
     @Published var isAnimationComplete:Bool = false
 }
-open class SceneObserver: ObservableObject, PageProtocol {
-    static var safeAreaBottom:CGFloat = 0
-    static var safeAreaTop:CGFloat = 0
-    static var screenSize:CGSize = CGSize()
-    func cancelAll(){}
+open class SceneObserver: ObservableObject{
+    @Published private(set) var safeAreaBottom:CGFloat = 0
+    @Published private(set) var safeAreaTop:CGFloat = 0
+    @Published private(set) var screenSize:CGSize = CGSize()
+    @Published var isUpdated:Bool = false
+        {didSet{ if isUpdated { isUpdated = false} }}
+    func update(geometry:GeometryProxy) {
+        self.safeAreaBottom = geometry.safeAreaInsets.bottom
+        self.safeAreaTop = geometry.safeAreaInsets.top
+        self.screenSize = geometry.size
+        self.isUpdated = true
+    }
 }
 
 protocol PageProtocol {}

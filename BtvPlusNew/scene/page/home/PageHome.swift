@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 struct PageHome: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var repository:Repository
@@ -14,9 +15,9 @@ struct PageHome: PageView {
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel:PageDataProviderModel = PageDataProviderModel()
    
-   
     @State var blocks:Array<Block> = []
     @State var menuId:String = ""
+    @State var anyCancellable = Set<AnyCancellable>()
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -46,7 +47,7 @@ struct PageHome: PageView {
     
     private func setupBlocks(){
         guard let blocksData = self.dataProvider.bands.getData(menuId: self.menuId)?.blocks else {return}
-        self.blocks = blocksData.map{ data in
+        let blocks = blocksData.map{ data in
             Block().setDate(data)
         }
         .filter{ block in
@@ -57,6 +58,23 @@ struct PageHome: PageView {
             }
         }
         
+        blocks.forEach{ block in
+            block.$status.sink(receiveValue: { stat in
+                if stat == .passive {
+                    self.removeBlock(block)
+                }
+            }).store(in: &anyCancellable)
+        }
+        withAnimation {
+            self.blocks = blocks
+        }
+    }
+    
+    private func removeBlock(_ block:Block){
+        guard let find = self.blocks.firstIndex(of: block) else { return }
+        withAnimation {
+            self.blocks.remove(at: find)
+        }
     }
     
 }

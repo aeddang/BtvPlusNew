@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 struct MultiBlock:PageComponent {
+    @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     @Binding var datas:[Block]
 
@@ -18,7 +19,9 @@ struct MultiBlock:PageComponent {
             axes: .vertical,
             marginVertical : Dimen.app.bottom,
             marginHorizontal : 0,
-            spacing: 0 ){
+            spacing: Dimen.margin.light,
+            isRecycle : false
+            ){
             
             ForEach(self.datas) { data in
                 switch data.cardType {
@@ -31,6 +34,15 @@ struct MultiBlock:PageComponent {
                 default: Text(data.name).modifier(BlockTitle())
                 }
                
+            }
+        }
+        .onReceive(self.viewModel.$event){evt in
+            ComponentLog.d("evt " + evt.debugDescription, tag: self.tag)
+            guard let evt = evt else {return}
+            switch evt {
+            case .top : self.pageSceneObserver.useTop = true
+            case .down, .up : self.pageSceneObserver.useTop = false
+            default : do{}
             }
         }
     }

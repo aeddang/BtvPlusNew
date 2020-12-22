@@ -10,6 +10,7 @@ import SwiftUI
 
 struct VideoBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
+    @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var data: Block
     @State var datas:[VideoData] = []
     @State var listHeight:CGFloat = 0
@@ -17,17 +18,19 @@ struct VideoBlock:BlockProtocol, PageComponent {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             if !self.datas.isEmpty {
                 Text(data.name).modifier(BlockTitle())
-                VideoList(datas: self.$datas)
-                    .modifier(MatchHorizontal(height: self.listHeight))
-            }else{
-                Spacer().frame(width: 0, height: 0)
             }
+            VideoList(viewModel:self.viewModel, datas: self.$datas)
+                .modifier(MatchHorizontal(height: self.listHeight))
+            
         }
         .onAppear{
+            if let datas = data.videos {
+                self.datas = datas
+                self.updateListSize()
+            }
             if let apiQ = self.getRequestApi() {
                 dataProvider.requestData(q: apiQ)
             }
-            if let datas = data.videos { self.datas = datas }
         }
         .onReceive(dataProvider.$result) { res in
             if res?.id != data.id { return }
@@ -36,6 +39,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
             case .cwGrid:
                 guard let resData = res?.data as? CWGrid else {return onBlank()}
                 guard let grid = resData.grid else {return onBlank()}
+                if grid.isEmpty {return onBlank()}
                 grid.forEach{ g in
                     if let blocks = g.block {
                         let addDatas = blocks.map{ d in
@@ -54,9 +58,10 @@ struct VideoBlock:BlockProtocol, PageComponent {
                 
             default: do {}
             }
+           
             self.datas = allDatas
+            self.updateListSize()
             self.data.videos = allDatas
-            if !self.datas.isEmpty { self.listHeight = ListItem.thumb.height }
             ComponentLog.d(allDatas.count.description, tag: self.tag)
             
         }
@@ -66,5 +71,8 @@ struct VideoBlock:BlockProtocol, PageComponent {
             ComponentLog.d(err.debugDescription, tag: self.tag)
         }
     }
-    
+    func updateListSize(){
+        if !self.datas.isEmpty { self.listHeight = ListItem.thumb.height }
+        else { onBlank() }
+    }
 }

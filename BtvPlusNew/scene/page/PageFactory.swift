@@ -98,8 +98,8 @@ struct PageSceneModel: PageModel {
     var currentPageObject: PageObject? = nil
     func getPageOrientation(_ pageObject:PageObject ) -> UIInterfaceOrientationMask? {
         switch pageObject.pageID {
-        case .home : return UIInterfaceOrientationMask.portrait
-            default : return UIInterfaceOrientationMask.portrait
+        case .home : return UIInterfaceOrientationMask.all
+        default : return UIInterfaceOrientationMask.all
         }
     }
     func getCloseExceptions() -> [PageID]? {
@@ -113,7 +113,9 @@ struct PageSceneModel: PageModel {
         }
     }
     
+   
     static func needTopTab(_ pageObject:PageObject) -> Bool{
+        
         switch pageObject.pageID {
         case .home: return true
         default : return false

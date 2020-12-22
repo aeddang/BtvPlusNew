@@ -90,6 +90,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     fileprivate var historys:[PageObject] = []
     fileprivate var popups:[PageObject] = []
     let pagePresenter = PagePresenter()
+    let sceneObserver = SceneObserver()
     private(set) lazy var pageModel:PageModel = getPageModel()
     
     private var changeSubscription:AnyCancellable?
@@ -124,9 +125,12 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         }
     }
     private func setupRootViewController(_ window: UIWindow){
+        
         contentController = PageContentController()
         onInitController(controller: contentController!)
-        let view = contentController?.environmentObject(pagePresenter)
+        let view = contentController?
+            .environmentObject(pagePresenter)
+            .environmentObject(sceneObserver)
         window.rootViewController = CustomHostingController(rootView: adjustEnvironmentObjects(view))
         window.overrideUserInterfaceStyle = .light
     }

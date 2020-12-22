@@ -10,6 +10,7 @@ import SwiftUI
 
 struct PosterBlock:PageComponent, BlockProtocol {
     @EnvironmentObject var dataProvider:DataProvider
+    @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var data: Block
     @State var datas:[PosterData] = []
     @State var listHeight:CGFloat = 0
@@ -17,15 +18,23 @@ struct PosterBlock:PageComponent, BlockProtocol {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             if !self.datas.isEmpty {
                 Text(data.name).modifier(BlockTitle())
-                PosterList(datas: self.$datas)
-                    .modifier(MatchHorizontal(height: self.listHeight))
             }
+            PosterList(viewModel:self.viewModel, datas: self.$datas)
+                .modifier(MatchHorizontal(height: self.listHeight))
+           
         }
         .onAppear{
+            if let datas = data.posters {
+                self.datas = datas
+                self.updateListSize()
+                ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
+                
+            }
             if let apiQ = self.getRequestApi() {
                 dataProvider.requestData(q: apiQ)
             }
-            if let datas = data.posters { self.datas = datas }
+        }
+        .onDisappear{
         }
         
         .onReceive(dataProvider.$result) { res in
@@ -54,16 +63,23 @@ struct PosterBlock:PageComponent, BlockProtocol {
             default: do {}
             }
             self.datas = allDatas
-            if !self.datas.isEmpty { self.listHeight = self.datas.first!.type.size.height }
+            self.updateListSize()
             self.data.posters = allDatas
-            ComponentLog.d(allDatas.count.description, tag: self.tag)
-            
+            ComponentLog.d("Remote " + data.name, tag: "BlockProtocol")
         }
         .onReceive(dataProvider.$error) { err in
             if err?.id != data.id { return }
             onError(err)
-            ComponentLog.d(err.debugDescription, tag: self.tag)
+            
         }
     }
+    
+    func updateListSize(){
+        if !self.datas.isEmpty {
+            self.listHeight = self.datas.first!.type.size.height
+        }
+        else { onBlank() }
+    }
+    
     
 }

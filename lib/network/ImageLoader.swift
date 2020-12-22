@@ -19,31 +19,27 @@ class ImageLoader: ObservableObject, PageProtocol{
     @Published var image: UIImage? = nil
     
     deinit {
-        //DataLog.d("deinit " , tag:self.tag)
         task?.cancel()
     }
     
-
-    func image(url: String?) -> UIImage {
-       
+    func image(url: String?) -> UIImage? {
         guard let url = url else {
-            return UIImage.from(color: Color.clear )
+            return nil
         }
         if url == "" { return UIImage.from(color: Color.clear ) }
         guard let _ = url.firstIndex(of: ":") else{
             DataLog.d("asset " + url , tag:self.tag)
-            return UIImage(named: url) ?? UIImage.from(color: Color.clear )
+            return nil
         }
         guard let targetUrl = URL(string:url) else {
              DataLog.e("targetUrl error " + url , tag:self.tag)
-            return UIImage.from(color: Color.clear)
+            return nil
         }
         guard let image = image else {
             //DataLog.d("targetUrl " + url , tag:self.tag)
             load(url: targetUrl)
-            return UIImage.from(color: Color.clear)
+            return nil
         }
-        
         return image
     }
 

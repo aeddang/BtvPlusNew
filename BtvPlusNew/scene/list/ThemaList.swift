@@ -97,11 +97,11 @@ struct ThemaItem: PageView {
     var body: some View {
         ZStack{
             if self.data.type.isCircle {
-                ImageView(url: self.data.image, contentMode: .fill)
+                ImageView(url: self.data.image, contentMode: .fit, noImg: Asset.noImg1_1)
                     .modifier(MatchParent())
                     .clipShape(Circle())
             }else{
-                ImageView(url: self.data.image, contentMode: .fill)
+                ImageView(url: self.data.image, contentMode: .fit, noImg: Asset.noImg1_1)
                     .modifier(MatchParent())
                     .clipShape(Rectangle())
             }

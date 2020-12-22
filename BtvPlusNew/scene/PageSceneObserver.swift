@@ -13,7 +13,7 @@ enum SceneEvent:String {
     case activePlayer, passivePlayer
 }
 
-class PageSceneObserver: SceneObserver {
+class PageSceneObserver:ObservableObject{
     @Published var useTop = false
     @Published var useBottom = false
     @Published var isApiLoading = false
@@ -30,8 +30,7 @@ class PageSceneObserver: SceneObserver {
     
     @Published var event:SceneEvent? = nil {didSet{ if event != nil { event = nil} }}
     
-    
-    override func cancelAll(){
+    func cancelAll(){
 
     }
 }

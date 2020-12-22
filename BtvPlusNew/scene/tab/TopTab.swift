@@ -13,7 +13,7 @@ struct TopTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     
     var body: some View {
-        HStack(spacing:Dimen.margin.tiny){
+        HStack(alignment: .bottom ,spacing:Dimen.margin.tiny){
             Button(action: {
                 
             }) {

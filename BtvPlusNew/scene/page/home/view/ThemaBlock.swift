@@ -10,6 +10,7 @@ import SwiftUI
 
 struct ThemaBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
+    @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var data: Block
     @State var datas:[ThemaData] = []
     @State var listHeight:CGFloat = 0
@@ -17,17 +18,20 @@ struct ThemaBlock:BlockProtocol, PageComponent {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             if !self.datas.isEmpty {
                 Text(data.name).modifier(BlockTitle())
-                ThemaList(datas: self.$datas)
-                    .modifier(MatchHorizontal(height: self.listHeight))
-            }else{
-                Spacer().frame(width: 0, height: 0)
             }
+            ThemaList(viewModel:self.viewModel, datas: self.$datas)
+                .modifier(MatchHorizontal(height: self.listHeight))
+            
         }
         .onAppear{
+            self.datas = []
+            if let datas = data.themas {
+                self.datas = datas
+                self.updateListSize()
+            }
             if let apiQ = self.getRequestApi() {
                 dataProvider.requestData(q: apiQ)
             }
-            if let datas = data.themas { self.datas = datas }
         }
         .onReceive(dataProvider.$result) { res in
             if res?.id != data.id { return }
@@ -54,9 +58,11 @@ struct ThemaBlock:BlockProtocol, PageComponent {
                 
             default: do {}
             }
+           
             self.datas = allDatas
+            self.updateListSize()
+            
             self.data.themas = allDatas
-            if !self.datas.isEmpty { self.listHeight = self.datas.first!.type.size.height }
             ComponentLog.d(allDatas.count.description, tag: self.tag)
             
         }
@@ -65,6 +71,10 @@ struct ThemaBlock:BlockProtocol, PageComponent {
             onError(err)
             ComponentLog.d(err.debugDescription, tag: self.tag)
         }
+    }
+    func updateListSize(){
+        if !self.datas.isEmpty { self.listHeight = self.datas.first!.type.size.height }
+        else { onBlank() }
     }
     
 }

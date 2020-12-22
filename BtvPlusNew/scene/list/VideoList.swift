@@ -78,7 +78,7 @@ struct VideoItem: PageView {
     var body: some View {
         VStack(spacing:0){
             ZStack{
-                ImageView(url: self.data.image, contentMode: .fill)
+                ImageView(url: self.data.image, contentMode: .fit, noImg: Asset.noImg16_9)
                     .modifier(MatchParent())
                 if self.data.subTitle != nil {
                     Text(self.data.subTitle!)

@@ -15,9 +15,11 @@ struct PageHome: PageView {
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel:PageDataProviderModel = PageDataProviderModel()
    
+    @State var originBlocks:Array<Block> = []
     @State var blocks:Array<Block> = []
     @State var menuId:String = ""
     @State var anyCancellable = Set<AnyCancellable>()
+    
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -58,23 +60,48 @@ struct PageHome: PageView {
             }
         }
         
+        self.originBlocks = blocks
         blocks.forEach{ block in
             block.$status.sink(receiveValue: { stat in
-                if stat == .passive {
-                    self.removeBlock(block)
-                }
+               self.onBlock(stat:stat, block:block)
             }).store(in: &anyCancellable)
         }
+        self.addBlock()
+        
+    }
+    
+    private let setNum = 5
+    @State var completedNum = 0
+    private func onBlock(stat:BlockStatus, block:Block){
+        switch stat {
+        case .passive: self.removeBlock(block)
+        case .active: break
+        default: return
+        }
+        completedNum += 1
+        ComponentLog.d("completedNum " + completedNum.description, tag: "BlockProtocol")
+        if completedNum == setNum {
+            completedNum = 0
+            addBlock()
+        }
+        
+    }
+    
+    private func addBlock(){
+        let max = min(setNum, self.originBlocks.count)
+        if max == 0 {return}
+        let set = self.originBlocks[..<max]
+        self.originBlocks.removeSubrange(..<max)
+        ComponentLog.d("addBlock" + set.debugDescription, tag: "BlockProtocol")
+        if set.isEmpty { return }
         withAnimation {
-            self.blocks = blocks
+            self.blocks.append(contentsOf: set)
         }
     }
     
     private func removeBlock(_ block:Block){
         guard let find = self.blocks.firstIndex(of: block) else { return }
-        withAnimation {
-            self.blocks.remove(at: find)
-        }
+        self.blocks.remove(at: find)
     }
     
 }

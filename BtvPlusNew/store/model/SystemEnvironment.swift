@@ -16,5 +16,8 @@ struct SystemEnvironment {
     
     static var firstLaunch :Bool = false
     static var serverConfig: [String:String] = [String:String]()
+    
+    //"cfb87121-4f7b-4d88-99ff-2b446c00e1c4"
+    //"8LrhdsQYra5WG/o15zaCpsKz9uyy/WuqT2qTqo2oix340pJIxMFFwx+7smR8iEsL"
 }
 

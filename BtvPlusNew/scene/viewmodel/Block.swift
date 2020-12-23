@@ -41,7 +41,7 @@ class Block:Identifiable, ObservableObject, Equatable{
         didSet{
             if posters != nil {
                 status = posters!.isEmpty ? .passive : .active
-                ComponentLog.d(name + " " + posters!.count.description + " " + status.rawValue, tag: "BlockProtocol")
+                //ComponentLog.d(name + " " + posters!.count.description + " " + status.rawValue, tag: "BlockProtocol")
             }
             
         }
@@ -50,7 +50,7 @@ class Block:Identifiable, ObservableObject, Equatable{
         didSet{
             if videos != nil {
                 status = videos!.isEmpty ? .passive : .active
-                ComponentLog.d(name + " " + videos!.count.description + " " + status.rawValue, tag: "BlockProtocol")
+                //ComponentLog.d(name + " " + videos!.count.description + " " + status.rawValue, tag: "BlockProtocol")
             }
         }
     }
@@ -58,7 +58,7 @@ class Block:Identifiable, ObservableObject, Equatable{
         didSet{
             if themas != nil {
                 status = themas!.isEmpty ? .passive : .active
-                ComponentLog.d(name + " " + themas!.count.description + " " + status.rawValue, tag: "BlockProtocol")
+               //ComponentLog.d(name + " " + themas!.count.description + " " + status.rawValue, tag: "BlockProtocol")
             }
         }
     }

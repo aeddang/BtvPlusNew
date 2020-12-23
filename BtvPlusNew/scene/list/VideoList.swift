@@ -17,12 +17,7 @@ class VideoData:InfinityData{
     
     
     func setData(data:ContentItem, cardType:Block.CardType = .video, idx:Int = -1) -> VideoData {
-        
-        switch cardType {
-        case .watchedVideo: type = .watching
-        default: type = .nomal
-        }
-        
+        setCardType(cardType)
         title = data.title
         if let thumb = data.poster_filename_h {
             image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.thumb.size)
@@ -30,6 +25,25 @@ class VideoData:InfinityData{
         index = idx
         return self
     }
+    
+    func setData(data:BookMarkItem, cardType:Block.CardType = .video, idx:Int = -1) -> VideoData {
+        setCardType(cardType)
+        title = data.title
+        if let thumb = data.poster {
+            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.thumb.size)
+        }
+        index = idx
+        return self
+    }
+    
+    
+    private func setCardType(_ cardType:Block.CardType){
+        switch cardType {
+        case .watchedVideo: type = .watching
+        default: type = .nomal
+        }
+    }
+    
     
     func setDummy(_ idx:Int = -1) -> VideoData {
         title = "[Q&A] 이민?레나채널 삭제 안하는 이유?외국인남친?"

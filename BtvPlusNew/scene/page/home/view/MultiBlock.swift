@@ -31,7 +31,8 @@ struct MultiBlock:PageComponent {
                     VideoBlock(data: data)
                 case .circleTheme, .bigTheme, .squareThema :
                     ThemaBlock(data: data)
-                default: Text(data.name).modifier(BlockTitle())
+                default:
+                    ThemaBlock(data: data)
                 }
                
             }

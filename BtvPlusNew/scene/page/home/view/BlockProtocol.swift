@@ -18,9 +18,10 @@ protocol BlockProtocol {
 extension BlockProtocol {
     func getRequestApi() -> ApiQ? {
         if data.status != .initate  { return nil }
-        ComponentLog.d("Request " + data.name, tag: "BlockProtocol")
+        
         switch data.dataType {
         case .cwGrid:
+            ComponentLog.d("Request cwGrid" + data.name, tag: "BlockProtocol")
             return .init(
                 id: data.id,
                 type: .getCWGrid(
@@ -28,9 +29,17 @@ extension BlockProtocol {
                     data.cwCallId),
                 isOptional: true)
         case .grid:
+            ComponentLog.d("Request grid" + data.name, tag: "BlockProtocol")
             return .init(
                 id: data.id,
                 type: .getGridEvent(data.menuId), 
+                isOptional: true)
+            
+        case .bookMark:
+            ComponentLog.d("Request bookMark" + data.name, tag: "BlockProtocol")
+            return .init(
+                id: data.id,
+                type: .getBookMark(),
                 isOptional: true)
         default:
             ComponentLog.d("onRequestFail " + data.name, tag: "BlockProtocol")

@@ -21,6 +21,7 @@ class ApiManager :PageProtocol, ObservableObject{
     private var apiQ :[ ApiQ ] = []
     private let vms:Vms = Vms(network: VmsNetwork())
     private lazy var euxp:Euxp = Euxp(network: EuxpNetwork())
+    private lazy var metv:Metv = Metv(network: MetvNetwork())
     init() {
         self.initateApi()
     }
@@ -89,6 +90,11 @@ class ApiManager :PageProtocol, ObservableObject{
             error:error)
         case .getGridEvent(let menuId, let sort, let page, let count) : self.euxp.getGridEvent(
             menuId: menuId, sortType: sort, page: page, pageCnt: count, version: nil,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        //METV
+        case .getBookMark(let page, let count) : self.metv.getBookMark(
+            page: page, pageCnt: count,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         }

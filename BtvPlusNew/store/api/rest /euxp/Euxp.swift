@@ -9,48 +9,11 @@ import Foundation
 struct EuxpNetwork : Network{
     var enviroment: NetworkEnvironment = ApiPath.getRestApiPath(.EUXP)
     func onRequestIntercepter(request: URLRequest) -> URLRequest {
-        var authorizationRequest = request
-        authorizationRequest.addValue(
-            "application/json;charset=utf-8", forHTTPHeaderField: "Accept")
-
-        #if DEBUG
-        authorizationRequest.addValue(
-            Self.DEBUG_API_KEY, forHTTPHeaderField: "Api_Key")
-        #else
-        authorizationRequest.addValue(
-            Self.API_KEY, forHTTPHeaderField: "Api_Key")
-        #endif
-        
-        let timestamp = Date().toTimestamp(dateFormat: "yyyyMMddHHmmss.SSS", local: "en_US_POSIX")
-        authorizationRequest.addValue( timestamp, forHTTPHeaderField: "TimeStamp")
-        authorizationRequest.addValue( timestamp.toSHA256(), forHTTPHeaderField: "Auth_Val")
-        authorizationRequest.addValue(
-            "{00000000-0000-0000-0000-000000000000}", forHTTPHeaderField: "Client_ID")
-       
-        /*
-        authorizationRequest.addValue(
-            SystemEnvironment.model+"/"+SystemEnvironment.systemVersion, forHTTPHeaderField: "x-device-info")
-        
-        authorizationRequest.addValue(
-            ApiPrefix.iphone+"/"+SystemEnvironment.systemVersion, forHTTPHeaderField: "x-os-info")
-        
-        authorizationRequest.addValue(
-            ApiPrefix.service+"/"+SystemEnvironment.systemVersion, forHTTPHeaderField: "x-service-info")
-        
-        authorizationRequest.addValue(
-            SystemEnvironment.deviceId, forHTTPHeaderField: "x-did-info")
-        
-        authorizationRequest.addValue(
-            "", forHTTPHeaderField: "x-auth-info")
-        */
-        DataLog.d("authorizationRequest : " + authorizationRequest.debugDescription, tag: self.tag)
-        return authorizationRequest
+        return ApiGateway.setGatewayheader(request: request)
     }
 }
 
 extension EuxpNetwork{
-    static let API_KEY = "l7xx851d12cc66dc4d2e86a461fb5a530f4a"
-    static let DEBUG_API_KEY = "l7xx159a8ca72966400b886a93895ec9e2e3"
     static let RESPONSE_FORMET = "json"
     static let MENU_STB_SVC_ID = "BTVMOBV521"
     static let APP_TYPE_CD = "BTVPLUS"

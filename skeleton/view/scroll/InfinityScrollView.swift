@@ -87,7 +87,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                 }
                 .coordinateSpace(name: self.tag)
                 .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                    ComponentLog.d("value " + value.description, tag: self.tag)
+                    //ComponentLog.d("value " + value.description, tag: self.tag)
                     self.onPreferenceChange(value: value)
                 }
                 .onAppear(){

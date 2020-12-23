@@ -58,7 +58,6 @@ struct ThemaBlock:BlockProtocol, PageComponent {
                 
             default: do {}
             }
-           
             self.datas = allDatas
             self.updateListSize()
             

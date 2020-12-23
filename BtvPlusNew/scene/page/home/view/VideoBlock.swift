@@ -56,9 +56,16 @@ struct VideoBlock:BlockProtocol, PageComponent {
                 }
                 allDatas.append(contentsOf: addDatas)
                 
+            case .bookMark:
+                guard let resData = res?.data as? BookMark else {return onBlank()}
+                guard let blocks = resData.bookmarkList else {return onBlank()}
+                let addDatas = blocks.map{ d in
+                    VideoData().setData(data: d, cardType: data.cardType)
+                }
+                allDatas.append(contentsOf: addDatas)
+                
             default: do {}
             }
-           
             self.datas = allDatas
             self.updateListSize()
             self.data.videos = allDatas

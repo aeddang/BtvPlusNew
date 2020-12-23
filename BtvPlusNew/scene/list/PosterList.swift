@@ -15,12 +15,7 @@ class PosterData:InfinityData{
     private(set) var type:PosterType = .small
     
     func setData(data:ContentItem, cardType:Block.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
-        switch cardType {
-        case .bigPoster: type = .big
-        case .smallPoster: type = .small
-        default: type = .small
-        }
-    
+        setCardType(cardType)
         title = data.title
         if let poster = data.poster_filename_v {
             image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
@@ -28,6 +23,25 @@ class PosterData:InfinityData{
         index = idx
         return self
     }
+    
+    func setData(data:BookMarkItem, cardType:Block.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
+        setCardType(cardType)
+        title = data.title
+        if let poster = data.poster {
+            image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
+        }
+        index = idx
+        return self
+    }
+    
+    private func setCardType(_ cardType:Block.CardType){
+        switch cardType {
+        case .bigPoster: type = .big
+        case .smallPoster: type = .small
+        default: type = .small
+        }
+    }
+    
     func setDummy(_ idx:Int = -1) -> PosterData {
         title = "[Q&A] 이민?레나채널 삭제 안하는 이유?외국인남친?"
         subTitle = "subTitlesubTitlesubTitle"

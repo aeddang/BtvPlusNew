@@ -131,6 +131,36 @@ extension String{
         let hashed = CryptoKit.SHA256.hash(data: inputData)
         return hashed.hexStr
     }
+    /*
+    NSMutableString *auth = [[NSMutableString alloc] init];
+    [auth appendString:timestamp];
+    NSData* data = [auth dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableData *sha256Data = [NSMutableData dataWithLength:CC_SHA256_DIGEST_LENGTH];
+    CC_SHA256([data bytes], (CC_LONG)[data length], [sha256Data mutableBytes]);
+    return [sha256Data base64EncodedStringWithOptions:0];
+    
+    
+    NSString *_pInput = nil;
+    if (strSTBId == nil || !([strSTBId length] > 0)) {
+        _pInput = @"{00000000-0000-0000-0000-000000000000}";
+    } else {
+        _pInput = strSTBId;
+    }
+    NSData *data = [self SHAx:_pInput];
+    NSString *hash = [self hexEncode:data];
+    
+    + (NSData *)SHAx:(NSString *)text
+    {
+        const char *s = [text cStringUsingEncoding:NSUTF8StringEncoding];
+        NSData *keyData=[NSData dataWithBytes:s length:strlen(s)];
+        
+        uint8_t digest[CC_SHA256_DIGEST_LENGTH]={0};
+        CC_SHA256(keyData.bytes, (CC_LONG)keyData.length, digest);
+        NSData *result = [NSData dataWithBytes:digest length:CC_SHA256_DIGEST_LENGTH];
+        
+        return result;
+    }
+    */
     
     func isEmailType() -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"

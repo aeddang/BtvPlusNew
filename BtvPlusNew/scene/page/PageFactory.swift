@@ -11,6 +11,7 @@ extension PageID{
     static let intro:PageID = "intro"
     static let home:PageID = "home"
     static let oeean:PageID = "oeean"
+    static let pairing:PageID = "pairing"
 }
 
 struct PageProvider {
@@ -78,8 +79,9 @@ extension PageEventType {
 struct PageFactory{
     static func getPage(_ pageObject:PageObject) -> PageViewProtocol{
         switch pageObject.pageID {
-            case .home : return PageHome()
-            default : return PageTest()
+        case .home : return PageHome()
+        case .pairing : return PagePairing()
+        default : return PageTest()
         }
     }
    

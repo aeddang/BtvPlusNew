@@ -35,13 +35,12 @@ class Metv: Rest{
         params["ver"] = MetvNetwork.VERSION
         params["IF"] = "IF-ME-011"
         
-        let stbId = "00000000-0000-0000-0000-000000000000"
-        params["stb_id"] = stbId  //pairingManager?.getStbId()
+        params["stb_id"] = ApiManager.stbId //pairingManager?.getStbId()
         params["group"] = "VOD"
         params["ch_type"] = ""
         params["page_no"] = page?.description ?? "1"
         params["entry_no"] = pageCnt?.description ?? MetvNetwork.PAGE_COUNT.description
-        params["hash_id"] = stbId.toSHA256()
+        params["hash_id"] = ApiManager.stbId.toSHA256().lowercased()
         params["svc_code"] = MetvNetwork.SVC_CODE
         
         fetch(route: MetvBookMark(query: params), completion: completion, error:error)

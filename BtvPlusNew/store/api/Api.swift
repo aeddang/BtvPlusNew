@@ -45,9 +45,9 @@ enum ApiType{
     case versionCheck        // VMS
     case getGnb,
          getCWGrid(String?, String?),
-         getGridEvent(String?, EuxpNetwork.SortType? = Optional.none, Int? = 1, Int? = EuxpNetwork.PAGE_COUNT) //EUXP
+         getGridEvent(String?, EuxpNetwork.SortType? = Optional.none, Int? = nil, Int? = nil) //EUXP
     
-    case getBookMark(Int? = 1, Int? = MetvNetwork.PAGE_COUNT)
+    case getBookMark(Int? = nil , Int? = nil)
         
     func coreDataKey() -> String? {
         switch self {

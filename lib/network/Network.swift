@@ -36,7 +36,8 @@ extension NetworkRoute {
     var contentType:String? { get{nil} set{contentType = nil} }
     
     func create(for enviroment:NetworkEnvironment) -> URLRequest {
-        var request = URLRequest(url: URL(string:getURL(enviroment))!)
+        let path = getURL(enviroment).addingPercentEncoding( withAllowedCharacters: .urlQueryAllowed)
+        var request = URLRequest(url: URL(string:path!)!)
         if let type = contentType { request.addValue(type, forHTTPHeaderField: "Content-type") }
         else {  request.addValue("application/json", forHTTPHeaderField: "Content-type") }
         request.allHTTPHeaderFields = headers
@@ -51,7 +52,8 @@ extension NetworkRoute {
                 multipartFormData constructingBlock: @escaping (_ formData: MultipartFormData) -> Void,
                 encoding: String.Encoding = .utf8)  -> URLRequest
     {
-        var request = URLRequest(url: URL(string:getURL(enviroment))!)
+        let path = getURL(enviroment).addingPercentEncoding( withAllowedCharacters: .urlQueryAllowed)
+        var request = URLRequest(url: URL(string:path!)!)
         request.allHTTPHeaderFields = headers
         request.httpMethod = method.rawValue.uppercased()
         request.httpBody = Data()
@@ -125,6 +127,7 @@ extension Network {
     func fetch<T: Decodable>(route: NetworkRoute) -> AnyPublisher<T, Error> {
         var request:URLRequest = route.create(for: enviroment)
         request = self.onRequestIntercepter(request: request)
+        self.debug(request: request)
         return URLSession.shared
             .dataTaskPublisher(for: request)
             .tryCompactMap { result in
@@ -153,6 +156,7 @@ extension Network {
                             multipartFormData constructingBlock: @escaping (_ formData: MultipartFormData) -> Void
     ) -> AnyPublisher<T, Error> {
         var request:URLRequest = route.create(for: enviroment, multipartFormData: constructingBlock, encoding: encoding)
+        self.debug(request: request)
         self.debug(data: request.httpBody)
         request = self.onRequestIntercepter(request: request)
         return URLSession.shared
@@ -196,7 +200,15 @@ extension Network {
             .eraseToAnyPublisher()
     }
     
-    
+    private func debug(request:URLRequest){
+        #if DEBUG
+        guard let headers = request.allHTTPHeaderFields else { return }
+        let str = headers.reduce("headers :"){
+            $0 + " " + $1.key + " : " + $1.value
+        }
+        DataLog.d(str, tag: self.tag)
+        #endif
+    }
     private func debug(data:Data?){
         #if DEBUG
             guard let data = data else {

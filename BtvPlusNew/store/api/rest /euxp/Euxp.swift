@@ -202,7 +202,7 @@ class Euxp: Rest{
     
     
     func getCWGrid(
-        menuId:String?, cwCallId:String?, stbId:String = "",
+        menuId:String?, cwCallId:String?,
         completion: @escaping (CWGrid) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
@@ -211,7 +211,7 @@ class Euxp: Rest{
         params["IF"] = "IF-EUXP-009"
         
         params["menu_id"] = menuId ?? ""
-        params["stb_id"] = "00000000-0000-0000-0000-000000000000"  // PairingManager.sharedObject().getStbId()
+        params["stb_id"] = ApiManager.stbId
         params["sort_typ_cd"] = ""
         params["rslu_typ_cd"] = "20"
         params["inspect_yn"] = "Y"

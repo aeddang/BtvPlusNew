@@ -44,9 +44,7 @@ struct ApiGateway{
         authorizationRequest.addValue( timestamp, forHTTPHeaderField: "TimeStamp")
         authorizationRequest.addValue( timestamp.toSHA256(), forHTTPHeaderField: "Auth_Val")
         authorizationRequest.addValue(
-            "{00000000-0000-0000-0000-000000000000}", forHTTPHeaderField: "Client_ID")
-        
-        DataLog.d("authorizationRequest : " + authorizationRequest.debugDescription, tag: "ApiGateway")
+            ApiManager.stbId, forHTTPHeaderField: "Client_ID")
         return authorizationRequest
     }
     

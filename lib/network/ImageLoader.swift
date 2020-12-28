@@ -53,7 +53,7 @@ class ImageLoader: ObservableObject, PageProtocol{
                     //DataLog.d("cached " + key , tag:self.tag)
                     self.image = value.image
                 case .failure(_):
-                    //print(error.localizedDescription)
+                    //DataLog.d(error.localizedDescription, tag:self.tag)
                     DataLog.e("cached error" + key , tag:self.tag)
                 }
             }
@@ -66,7 +66,7 @@ class ImageLoader: ObservableObject, PageProtocol{
                     self.image = value.image
                     //DataLog.d("loaded" + key , tag:self.tag)
                 case .failure(let error):
-                    DataLog.d(error.localizedDescription, tag:self.tag)
+                    //DataLog.d(error.localizedDescription, tag:self.tag)
                     DataLog.e("loaded error " + key , tag:self.tag)
                 }
             }

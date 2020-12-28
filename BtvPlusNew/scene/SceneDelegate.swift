@@ -23,9 +23,11 @@ class SceneDelegate: PageSceneDelegate {
     {
         let sceneObserver = PageSceneObserver()
         let dataProvider = DataProvider()
+        let pairing = Pairing()
         self.pagePresenter.bodyColor = Color.app.white
         let res = Repository(
             dataProvider:dataProvider,
+            pairing:pairing,
             pagePresenter: self.pagePresenter,
             sceneObserver:sceneObserver
         )
@@ -37,6 +39,7 @@ class SceneDelegate: PageSceneDelegate {
             .environmentObject(AppDelegate.appObserver)
             .environmentObject(res)
             .environmentObject(dataProvider)
+            .environmentObject(pairing)
             .environmentObject(networkObserver)
             .environmentObject(sceneObserver)
             .environmentObject(keyboardObserver)

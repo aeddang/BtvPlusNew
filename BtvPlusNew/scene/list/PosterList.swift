@@ -102,6 +102,9 @@ struct PosterList: PageComponent{
             ForEach(self.datas) { data in
                 PosterItem( data:data )
                 .onTapGesture {
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.pairing)
+                    )
                 }
             }
         }

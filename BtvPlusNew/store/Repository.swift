@@ -20,25 +20,25 @@ class Repository:ObservableObject, PageProtocol{
     let sceneObserver:PageSceneObserver?
     let pagePresenter:PagePresenter?
     let dataProvider:DataProvider
+    let pairing:Pairing
     private let setting = SettingStorage()
     private let apiCoreDataManager = ApiCoreDataManager()
+    private let mdnsPairingManager = MdnsPairingManager()
     private let apiManager:ApiManager
     private var anyCancellable = Set<AnyCancellable>()
     
     init(
         dataProvider:DataProvider? = nil,
+        pairing:Pairing? = nil,
         pagePresenter:PagePresenter? = nil,
         sceneObserver:PageSceneObserver? = nil
     ) {
-        if !setting.initate {
-            setting.initate = true
-            SystemEnvironment.firstLaunch = true
-        }
-        
-        self.apiManager = ApiManager()
         self.dataProvider = dataProvider ?? DataProvider()
+        self.pairing = pairing ?? Pairing()
+        self.apiManager = ApiManager(pairing:self.pairing)
         self.sceneObserver = sceneObserver
         self.pagePresenter = pagePresenter
+        
         self.pagePresenter?.$currentPage.sink(receiveValue: { evt in
             self.apiManager.clear()
             self.sceneObserver?.isApiLoading = false
@@ -46,8 +46,29 @@ class Repository:ObservableObject, PageProtocol{
             self.retryRegisterPushToken()
         }).store(in: &anyCancellable)
         
-        self.dataProvider.$event.sink(receiveValue: { evt in
-            guard let apiQ = evt else { return }
+        self.setupDataProvider()
+        self.setupSetting()
+        self.setupPairing()
+    }
+    
+    private func setupPairing(){
+        self.pairing.$request.sink(receiveValue: { req in
+            guard let requestPairing = req else { return }
+            switch requestPairing{
+            case .wifi :
+                //self.pagePresenter?.isLoading = true
+                self.mdnsPairingManager.requestPairing(requestPairing)
+            default: do{}
+            }
+            
+        }).store(in: &anyCancellable)
+        
+        
+    }
+    
+    private func setupDataProvider(){
+       self.dataProvider.$request.sink(receiveValue: { req in
+            guard let apiQ = req else { return }
             if apiQ.isLock {
                 self.pagePresenter?.isLoading = true
             }else{
@@ -60,6 +81,7 @@ class Repository:ObservableObject, PageProtocol{
             }
             
         }).store(in: &anyCancellable)
+        
         
         self.apiManager.$result.sink(receiveValue: { res in
             guard let res = res else { return }
@@ -87,13 +109,23 @@ class Repository:ObservableObject, PageProtocol{
             }
         }).store(in: &anyCancellable)
         
-        if self.setting.retryPushToken != "" {
-            self.registerPushToken(self.setting.retryPushToken)
-        }
-        
         self.apiManager.$status.sink(receiveValue: { status in
             if status == .ready { self.onReadyApiManager() }
         }).store(in: &anyCancellable)
+        
+        
+        
+    }
+    
+    private func setupSetting(){
+        if !self.setting.initate {
+            self.setting.initate = true
+            SystemEnvironment.firstLaunch = true
+        }
+        
+        if self.setting.retryPushToken != "" {
+            self.registerPushToken(self.setting.retryPushToken)
+        }
     }
     
     private func requestApi(_ apiQ:ApiQ, coreDatakey:String){

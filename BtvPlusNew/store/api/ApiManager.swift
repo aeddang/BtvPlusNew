@@ -13,17 +13,24 @@ enum ApiStatus{
 }
 
 class ApiManager :PageProtocol, ObservableObject{
-    
+    static private(set) var stbId:String = "{00000000-0000-0000-0000-000000000000}"
     @Published var status:ApiStatus = .initate
     @Published var result:ApiResultResponds? = nil {didSet{ if result != nil { result = nil} }}
     @Published var error:ApiResultError? = nil {didSet{ if error != nil { error = nil} }}
     
+    private var anyCancellable = Set<AnyCancellable>()
     private var apiQ :[ ApiQ ] = []
     private let vms:Vms = Vms(network: VmsNetwork())
     private lazy var euxp:Euxp = Euxp(network: EuxpNetwork())
     private lazy var metv:Metv = Metv(network: MetvNetwork())
-    init() {
+    private var stbId:String
+    init(pairing:Pairing) {
+        self.stbId = pairing.stbId
         self.initateApi()
+        pairing.$event.sink(receiveValue: { evt in
+            Self.stbId = pairing.stbId
+        
+        }).store(in: &anyCancellable)
     }
     
     func clear(){

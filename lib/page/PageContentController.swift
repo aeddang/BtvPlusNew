@@ -48,13 +48,8 @@ struct PageContentController: View{
     var body: some View {
         GeometryReader { geometry in
             ZStack{
-                VStack{
-                    ZStack( alignment: .top ){
-                        ForEach(self.pageControllerObservable.pages, id: \.id) { page in page.contentBody }
-                        ForEach(self.pageControllerObservable.popups, id: \.id) { popup in popup.contentBody }
-                    }
-                    Spacer()
-                }
+                ForEach(self.pageControllerObservable.pages, id: \.id) { page in page.contentBody }
+                ForEach(self.pageControllerObservable.popups, id: \.id) { popup in popup.contentBody }
                 self.pageControllerObservable.overlayView?.contentBody
             }
             
@@ -66,6 +61,7 @@ struct PageContentController: View{
             }
             .edgesIgnoringSafeArea(.all)
             .background(backgroundBody)
+            
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 sceneObserver.update(geometry: geometry)
             }

@@ -19,6 +19,11 @@ struct PageBackgroundBody: View {
     }
 }
 
+extension PageContentBody{
+    static let pageMoveAmount:CGFloat = -100.0
+}
+
+
 struct PageContentBody: PageView  {
     var childViews:[PageViewProtocol] = []
     @EnvironmentObject var pageChanger:PagePresenter
@@ -26,6 +31,10 @@ struct PageContentBody: PageView  {
     @State var offsetX:CGFloat = 0
     @State var offsetY:CGFloat = 0
     @State var opacity:Double = 1.0
+    @State var pageOffsetX:CGFloat = 0.0
+    @State var pageOffsetY:CGFloat = 0.0
+    @State var isTop:Bool = true
+    @State var topPageType:PageAnimationType = .none
     var body: some View {
         ZStack(){
             if self.pageObject?.isDimed == true{
@@ -41,22 +50,53 @@ struct PageContentBody: PageView  {
             }
         }
         .frame(alignment: .topLeading)
+        .offset(x:  self.pageOffsetX, y:  self.pageOffsetY )
+        .onReceive(self.pageChanger.$currentTopPage){ page in
+            self.isTop = true
+            self.topPageType = page?.animationType ?? .none
+            guard let pageObject = self.pageObject else { return }
+            if pageObject.zIndex != 0 { return }
+            if self.offsetX != 0 || self.offsetY != 0 { return }
+            if pageObject == page {
+                withAnimation{
+                    self.pageOffsetX = 0.0
+                    self.pageOffsetY = 0.0
+                }
+                return
+            }
+            self.isTop = false
+            withAnimation{
+                switch self.topPageType {
+                case .horizental :  self.pageOffsetX = Self.pageMoveAmount
+                case .vertical :  self.pageOffsetY = Self.pageMoveAmount
+                default : do{}
+                }
+            }
+            
+        }
         .onReceive(self.pageObservable.$pagePosition){ pos in
             if self.pageObservable.status == .initate{
                 self.offsetX = pos.x
                 self.offsetY = pos.y
-                //PageLog.log("onInitate " + pos.debugDescription,tag:self.pageID)
             }else{
                 if self.pageObject?.isAnimation == true {
                     withAnimation{
                         self.offsetX = pos.x
                         self.offsetY = pos.y
-                        //PageLog.log("onAppear " + pos.debugDescription,tag:self.pageID)
                     }
                 }else{
                     self.offsetX = pos.x
                     self.offsetY = pos.y
                 }
+            }
+        }
+        .onReceive(self.pageChanger.$dragOpercity){ opacity in
+            if self.isTop {return}
+            let amount = Self.pageMoveAmount * CGFloat(opacity)
+            switch self.topPageType {
+            case .horizental :  self.pageOffsetX = amount
+            case .vertical :  self.pageOffsetY = amount
+            default : do{}
             }
         }
         .onReceive(self.pageObservable.$pageOpacity){ opacity in
@@ -66,7 +106,6 @@ struct PageContentBody: PageView  {
         }
         .onAppear{
             PageLog.log("onAppear",tag:self.pageID)
-            //PageLog.d("onAppear " + self.pageObservable.pagePosition.debugDescription, tag: self.tag)
             self.childViews.forEach({ $0.appear() })
             self.offsetX = self.pageObservable.pagePosition.x
             self.offsetY = self.pageObservable.pagePosition.y

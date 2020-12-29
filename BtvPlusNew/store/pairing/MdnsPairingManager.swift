@@ -7,35 +7,111 @@
 
 import Foundation
 
+
+struct MdnsDevice : Codable {
+    private(set) var stb_mac_address:String? = nil
+    private(set) var ui_app_ver:String? = nil
+    private(set) var adult:String? = nil
+    private(set) var stb_patch_ver:String? = nil
+    private(set) var rcu_agent_ver:String? = nil
+    private(set) var eros:String? = nil
+    private(set) var stbid:String? = nil
+    private(set) var stb_mac_view:String? = nil
+    private(set) var restricted_age:String? = nil
+    private(set) var port:String? = nil
+    private(set) var address:String? = nil
+    init(json: [String:Any]) throws {}
+}
+
 class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtocol{
     private var client:MDNSServiceProxyClient? = nil
     let serviceName = "com.skb.btvplus"
     let querytime:Int32 = 60
+    let searchLimitedTime:Int = 10
+    
+    
+    private var found:(([MdnsDevice]) -> Void)? = nil
+    private var notFound: (() -> Void)? = nil
     
     private func removeClient(){
+        searchLimited??.cancel()
+        searchLimited = nil
         client?.stopSearching()
         client?.delegate = nil
         client = nil
     }
     
     func mdnsServiceFound(_ serviceJsonString: UnsafeMutablePointer<Int8>) {
-        let data = String(cString: serviceJsonString)
         removeClient()
+        let mdnsData = String(cString: serviceJsonString)
+        guard let data = mdnsData.data(using: .utf8) else {
+            ComponentLog.e("foundDevice : jsonString data error", tag: self.tag)
+            notFound?()
+            return
+        }
+        do {
+            let findDevice = try JSONDecoder().decode(MdnsDevice.self, from: data)
+            ComponentLog.d("stb_mac_address :" + (findDevice.stb_mac_address ?? ""), tag: self.tag)
+            ComponentLog.d("stbid :" + (findDevice.stbid ?? ""), tag: self.tag)
+            ComponentLog.d("rcu_agent_ver :" + (findDevice.rcu_agent_ver ?? ""), tag: self.tag)
+            found?([findDevice])
+        } catch {
+            ComponentLog.e("foundDevice : JSONDecoder " + error.localizedDescription, tag: self.tag)
+        }
+        /*
+        do{
+            let value = try JSONSerialization.jsonObject(with: data , options: [])
+            guard let dictionary = value as? [String: Any] else {
+                ComponentLog.e("foundDevice : dictionary error", tag: self.tag)
+                notFound?()
+                return
+            }
+             ComponentLog.d("foundDevice :" + dictionary.debugDescription, tag: self.tag)
+   
+        } catch {
+            ComponentLog.e("foundDevice : JSONSerialization " + error.localizedDescription, tag: self.tag)
+            notFound?()
+            return
+        }
+        */
+        
     }
     
-    func requestPairing(_ request:PairingRequest){
-        switch request {
-        case .wifi:
-            let client = MDNSServiceProxyClient()
-            client.delegate = self
-            if let ip = self.getIPAddress() {
-                client.startSearching(
-                    ip,
-                    serviceName: UnsafeMutablePointer(mutating: (serviceName as NSString).utf8String),
-                    querytime: querytime)
+    private func mdnsServiceNotFound() {
+        removeClient()
+        notFound?()
+    }
+    
+   
+    private var searchLimited:DispatchWorkItem?? = nil
+    private func mdnsServiceFindStart() {
+        let client = MDNSServiceProxyClient()
+        client.delegate = self
+        if let ip = self.getIPAddress() {
+            client.startSearching(
+                ip,
+                serviceName: UnsafeMutablePointer(mutating: (serviceName as NSString).utf8String),
+                querytime: querytime)
+            
+        }
+        self.client = client
+        self.searchLimited = DispatchWorkItem { // Set the work item with the block you want to execute
+            DispatchQueue.main.async {
+               //self.mdnsServiceNotFound()
             }
-            self.client = client
-        case .cancel: removeClient()
+        }
+        DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(self.searchLimitedTime), execute: self.searchLimited!!)
+    }
+    
+    func requestPairing(_ request:PairingRequest,
+                        found:(([MdnsDevice]) -> Void)? = nil,
+                        notFound: (() -> Void)? = nil){
+        removeClient()
+        self.found = found
+        self.notFound = notFound
+        switch request {
+        case .wifi: self.mdnsServiceFindStart()
+        case .cancel: do{}
         }
     }
     

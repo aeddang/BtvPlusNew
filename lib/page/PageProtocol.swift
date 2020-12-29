@@ -10,6 +10,11 @@ import SwiftUI
 
 typealias PageID = String
 typealias PageParam = String
+
+enum PageAnimationType {
+    case none, vertical, horizental, opacity
+}
+
 class PageObject : Equatable, Identifiable{
     let pageID: PageID
     var pageIDX:Int
@@ -18,7 +23,8 @@ class PageObject : Equatable, Identifiable{
     var zIndex:Int = 0
     var isDimed:Bool
     var isHome:Bool = false
-    var isAnimation:Bool = true
+    var isAnimation:Bool = false
+    var animationType:PageAnimationType = .horizental
     let id:String
     init(
         pageID:PageID,
@@ -153,10 +159,8 @@ extension PageContentProtocol {
     
     //super func
     @discardableResult
-    func setPageObject(_ page:PageObject, offSetX:CGFloat = 0, offSetY:CGFloat = 0)->PageViewProtocol?{
+    func setPageObject(_ page:PageObject)->PageViewProtocol?{
         pageObservable.pageObject = page
-        pageObservable.pagePosition.x = offSetX
-        pageObservable.pagePosition.y = offSetY
         childViews.forEach{ $0.setPageObject(page)}
         onSetPageObject(page)
         return self as? PageViewProtocol

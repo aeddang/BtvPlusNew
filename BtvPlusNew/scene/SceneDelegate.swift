@@ -24,7 +24,7 @@ class SceneDelegate: PageSceneDelegate {
         let sceneObserver = PageSceneObserver()
         let dataProvider = DataProvider()
         let pairing = Pairing()
-        self.pagePresenter.bodyColor = Color.app.white
+        self.pagePresenter.bodyColor = Color.brand.bg
         let res = Repository(
             dataProvider:dataProvider,
             pairing:pairing,

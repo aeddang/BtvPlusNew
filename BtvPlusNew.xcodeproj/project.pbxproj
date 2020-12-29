@@ -891,8 +891,8 @@
 		D56C6A72257DA4C700CF9AB8 /* page */ = {
 			isa = PBXGroup;
 			children = (
-				D51AA9E52599A2200035CD51 /* pairing */,
 				D5717865258300C000BF2612 /* contentBody */,
+				D51AA9E52599A2200035CD51 /* pairing */,
 				D571785C2582D87F00BF2612 /* home */,
 				D56C6B63257DB78400CF9AB8 /* test */,
 				D56C6B53257DB24C00CF9AB8 /* PageFactory.swift */,

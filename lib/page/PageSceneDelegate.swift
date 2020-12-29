@@ -70,6 +70,7 @@ final class PagePresenter:ObservableObject{
     @Published fileprivate(set) var currentTopPage:PageObject? = nil
     @Published var isLoading:Bool = false
     @Published var bodyColor:Color = Color.white
+    @Published var dragOpercity:Double = 0.0
     @Published fileprivate(set) var isBusy:Bool = false
     @Published fileprivate(set) var hasPopup:Bool = false
 }
@@ -183,13 +184,14 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                     
                 }
             }
-            prevPage?.isAnimation = newPage.isAnimation
+            prevPage?.isAnimation = newPage.isAnimation 
             prevContent?.removeAnimationStart()
             prevContent?.pageObservable.pagePosition.x = -pageOffset
             
         }
         let nextContent = getPageContentBody(newPage)
-        nextContent.setPageObject(newPage, offSetX:pageOffset)
+        nextContent.setPageObject(newPage)
+        nextContent.pageObservable.pagePosition.x = pageOffset
         onWillChangePage(prevPage: prevPage, nextPage: newPage)
         contentController?.addPage(nextContent)
         if pageModel.isChangedCategory(prevPage: prevPage, nextPage: newPage) { nextContent.categoryChanged(prevPage) }
@@ -220,12 +222,23 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         popups.append(popup)
         pagePresenter.hasPopup = true
         let popupContent = getPageContentBody(popup)
-        popupContent.setPageObject(popup, offSetY:UIScreen.main.bounds.height)
+        popupContent.setPageObject(popup)
         onWillChangePage(prevPage: nil, nextPage: popup)
-        popupContent.pageObservable.pagePosition.y = UIScreen.main.bounds.height
+       
+        var delay = self.changeDelay
+        if let pageObject = popupContent.pageObject {
+            delay = pageObject.animationType == .none ? self.changeDelay : self.changeAniDelay
+            let opacity = pageObject.animationType == .none ? 1.0 : 0.0
+            switch  pageObject.animationType {
+            case .vertical:
+                popupContent.pageObservable.pagePosition.y = UIScreen.main.bounds.height
+            case .horizental:
+                popupContent.pageObservable.pagePosition.x = UIScreen.main.bounds.width
+            default: do{}
+            }
+            popupContent.pageObservable.pageOpacity = opacity
+        }
         contentController?.addPopup(popupContent)
-        
-        let delay = popup.isAnimation ? self.changeAniDelay : self.changeDelay
         let key = popup.id
         let subscription = Timer.publish(
             every: delay,
@@ -249,16 +262,28 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         popups.remove(at: findIdx)
         pagePresenter.hasPopup = !popups.isEmpty
         guard let popupContent = contentController?.getPopup(id) else { return }
+       
         popupContent.removeAnimationStart()
-        popupContent.pageObservable.pagePosition.y = UIScreen.main.bounds.height
-        popupContent.pageObservable.pageOpacity = 0.0
+        var delay = self.changeDelay
+        if let pageObject = popupContent.pageObject {
+            delay = pageObject.animationType == .none ? self.changeDelay : self.changeAniDelay
+            let opacity = pageObject.animationType == .none ? 1.0 : 0.0
+            switch  pageObject.animationType {
+            case .vertical:
+                popupContent.pageObservable.pagePosition.y = UIScreen.main.bounds.height
+            case .horizental:
+                popupContent.pageObservable.pagePosition.x = UIScreen.main.bounds.width
+            default: do{}
+            }
+            popupContent.pageObservable.pageOpacity = opacity
+        }
         let next = popups.isEmpty
             ? contentController?.currnetPage?.pageObject
             : popups.last
         onWillChangePage(prevPage: nil, nextPage: next)
         
         let subscription = Timer.publish(
-            every: self.changeAniDelay,
+            every: delay,
             on: .current,
             in: .common)
             .autoconnect()
@@ -285,6 +310,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         
         pagePresenter.hasPopup = !popups.isEmpty
         self.popupSubscriptions[key]?.cancel()
+        var delay = self.changeDelay
         contentController?.pageControllerObservable.popups.forEach{  pop in
             let key = pop.pageObject?.id
             var remove = true
@@ -295,6 +321,18 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
             if remove {
                 PageLog.d("closeAllPopup remove " + pop.pageID, tag:self.tag)
                 pop.removeAnimationStart()
+                if let pageObject =  pop.pageObject {
+                    delay = pageObject.animationType != .none ? self.changeAniDelay : delay
+                    let opacity = pageObject.animationType == .none ? 1.0 : 0.0
+                    switch  pageObject.animationType {
+                    case .vertical:
+                        pop.pageObservable.pagePosition.y = UIScreen.main.bounds.height
+                    case .horizental:
+                        pop.pageObservable.pagePosition.x = UIScreen.main.bounds.width
+                    default: do{}
+                    }
+                    pop.pageObservable.pageOpacity = opacity
+                }
                 pop.pageObservable.pagePosition.y = UIScreen.main.bounds.height
                 pop.pageObservable.pageOpacity = 0.0
             }
@@ -302,7 +340,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         onWillChangePage(prevPage: nil, nextPage: contentController?.currnetPage?.pageObservable.pageObject)
         
         let subscription = Timer.publish(
-            every: self.changeAniDelay,
+            every: delay,
             on: .current,
             in: .common)
             .autoconnect()

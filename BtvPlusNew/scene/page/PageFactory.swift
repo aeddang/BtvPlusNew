@@ -21,6 +21,7 @@ struct PageProvider {
         pobj.isHome = isHome(pageID)
         pobj.isAnimation = !pobj.isHome
         pobj.isDimed = getDimed(pageID)
+        pobj.animationType = getType(pageID)
         pobj.zIndex = isTop(pageID) ? 1 : 0
         return pobj
     }
@@ -30,19 +31,18 @@ struct PageProvider {
            default : return  false
         }
     }
+    static func getType(_ pageID:PageID)-> PageAnimationType{
+        switch pageID {
+        case .home : return  .vertical
+        default : return  .horizental
+        }
+    }
     static func isTop(_ pageID:PageID)-> Bool{
         switch pageID{
            default : return  false
         }
     }
     
-    static func getApiKey(_ pageID:PageID)-> String {
-        switch pageID {
-            case .home : return  "NM2000002444"
-            case .oeean : return  "NM2000009601"
-            default : return ""
-        }
-    }
     
     static func getPageIdx(_ pageID:PageID)-> Int {
         switch pageID {

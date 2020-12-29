@@ -29,4 +29,11 @@ class Pairing:ObservableObject, PageProtocol {
     func requestPairing(_ request:PairingRequest){
         self.request = request
     }
+    
+    func foundDevice(_ mdnsData:[MdnsDevice]){
+        
+    }
+    func notFoundDevice(){
+        
+    }
 }

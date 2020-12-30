@@ -8,7 +8,7 @@
 import Foundation
 
 enum PairingRequest{
-    case wifi , cancel
+    case wifi , btv, user, cancel
 }
 
 enum PairingStatus{

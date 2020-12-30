@@ -50,7 +50,7 @@ struct PageContentBody: PageView  {
             }
         }
         .frame(alignment: .topLeading)
-        .offset(x:  self.pageOffsetX, y:  self.pageOffsetY )
+        .offset(x:  self.pageOffsetX, y:  -self.pageOffsetY )
         .onReceive(self.pageChanger.$currentTopPage){ page in
             self.isTop = true
             self.topPageType = page?.animationType ?? .none
@@ -67,13 +67,29 @@ struct PageContentBody: PageView  {
             self.isTop = false
             withAnimation{
                 switch self.topPageType {
-                case .horizental :  self.pageOffsetX = Self.pageMoveAmount
-                case .vertical :  self.pageOffsetY = Self.pageMoveAmount
+                case .horizental :
+                    self.pageOffsetX = Self.pageMoveAmount
+                    self.pageOffsetY = 0
+                
+                case .vertical :
+                    self.pageOffsetY = Self.pageMoveAmount
+                    self.pageOffsetX = 0
+                
                 default : do{}
                 }
             }
             
         }
+        .onReceive(self.pageChanger.$dragOpercity){ opacity in
+            if self.isTop {return}
+            let amount = Self.pageMoveAmount * CGFloat(opacity)
+            switch self.topPageType {
+            case .horizental :  self.pageOffsetX = amount
+            case .vertical :  self.pageOffsetY = amount
+            default : do{}
+            }
+        }
+        
         .onReceive(self.pageObservable.$pagePosition){ pos in
             if self.pageObservable.status == .initate{
                 self.offsetX = pos.x
@@ -88,15 +104,6 @@ struct PageContentBody: PageView  {
                     self.offsetX = pos.x
                     self.offsetY = pos.y
                 }
-            }
-        }
-        .onReceive(self.pageChanger.$dragOpercity){ opacity in
-            if self.isTop {return}
-            let amount = Self.pageMoveAmount * CGFloat(opacity)
-            switch self.topPageType {
-            case .horizental :  self.pageOffsetX = amount
-            case .vertical :  self.pageOffsetY = amount
-            default : do{}
             }
         }
         .onReceive(self.pageObservable.$pageOpacity){ opacity in

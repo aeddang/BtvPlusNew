@@ -11,26 +11,47 @@ import SwiftUI
 struct PageTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @Binding var title:String?
+    var isBack:Bool = false
+    var isClose:Bool = false
+        
     var body: some View {
-        HStack(alignment: .center ,spacing:0){
-            Button(action: {
-                self.pagePresenter.goBack()
-                
-            }) {
-                Image(Asset.icon.back)
-                    .renderingMode(.original)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: Dimen.icon.regular,
-                           height: Dimen.icon.regular)
-            }
+        ZStack(alignment: .leading){
             if self.title != nil {
-                Spacer()
                 Text(self.title!)
                     .modifier(BoldTextStyle(size: Font.size.mediumExtra, color: Color.app.white))
                     .modifier(ContentHorizontalEdges())
+                    .frame(maxWidth: .infinity)
             }
-            Spacer()
+            HStack{
+                if self.isBack {
+                    Button(action: {
+                        self.pagePresenter.goBack()
+                        
+                    }) {
+                        Image(Asset.icon.back)
+                            .renderingMode(.original)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: Dimen.icon.regular,
+                                   height: Dimen.icon.regular)
+                    }
+                }
+                Spacer()
+                if self.isClose {
+                    Button(action: {
+                        self.pagePresenter.goBack()
+                        
+                    }) {
+                        Image(Asset.icon.close)
+                            .renderingMode(.original)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: Dimen.icon.regular,
+                                   height: Dimen.icon.regular)
+                    }
+                }
+            }
+            .padding(.horizontal, Dimen.margin.tiny)
             
         }
         .modifier(MatchHorizontal(height: Dimen.app.pageTop))

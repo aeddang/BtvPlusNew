@@ -4,7 +4,6 @@
 //
 //  Created by KimJeongCheol on 2020/12/28.
 //
-
 import Foundation
 import SwiftUI
 struct PagePairing: PageView {
@@ -19,63 +18,97 @@ struct PagePairing: PageView {
                 viewModel:self.pageDragingModel,
                 axis:.horizontal
             ) {
-                VStack(){
-                    PageTab(title: .constant("B tv 연결하기"))
-                        .padding(.top, self.sceneObserver.safeAreaTop)
+                VStack(spacing:0){
+                    PageTab(
+                        title: .constant(String.pageTitle.connectBtv),
+                        isBack : true
+                    )
+                    .padding(.top, self.sceneObserver.safeAreaTop)
                     ScrollView{
-                        VStack{
+                        VStack(alignment:.leading , spacing:0) {
+                            VStack(alignment:.leading , spacing:0) {
+                                Text(String.pageText.pairingText1)
+                                    .modifier(MediumTextStyle( size: Font.size.bold ))
+                                    .padding(.top, Dimen.margin.light)
+                                
+                                ZStack{
+                                    Text(String.pageText.pairingText2_1)
+                                        .font(.custom(Font.family.bold, size: Font.size.light))
+                                        .foregroundColor(Color.brand.primary)
+                                    + Text(String.pageText.pairingText2_2)
+                                        .font(.custom(Font.family.bold, size: Font.size.light))
+                                        .foregroundColor(Color.app.whiteDeep)
+                                }
+                                .padding(.top, Dimen.margin.lightExtra)
+                                Text(String.pageText.pairingText2_3)
+                                    .font(.custom(Font.family.bold, size: Font.size.light))
+                                    .foregroundColor(Color.app.whiteDeep)
+                                Text(String.pageText.pairingText2_4)
+                                    .font(.custom(Font.family.bold, size: Font.size.light))
+                                    .foregroundColor(Color.app.whiteDeep)
+                                
+                                
+                                MoreInfoButton(
+                                    title: String.pageText.pairingBtnGuide
+                                ){
+                                    
+                                }
+                                .padding(.top, Dimen.margin.regularExtra)
+                            }.modifier(ContentHorizontalEdges())
+                            
+                            Text(String.pageText.pairingTitle1)
+                                .modifier(MediumTextStyle(
+                                    size:Font.size.light,
+                                    color: Color.brand.primary
+                                ))
+                                .padding(.top, Dimen.margin.heavy)
+                            
                             ConnectButton(
-                                image: Asset.test, title: "WIFI", text: "wify"
+                                image: Asset.icon.pairingWifi,
+                                title: String.pageText.pairingBtnWifi,
+                                text: String.pageText.pairingBtnWifiSub
                             ){
-                                pairing.requestPairing(.wifi)
+                                //pairing.requestPairing(.wifi)
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(.pairingSetupUser)
+                                        .addParam(key: PageParam.type, value: PairingRequest.wifi)
+                                )
                             }
+                            .padding(.top, Dimen.margin.lightExtra)
+                            
                             ConnectButton(
-                                image: Asset.test, title: "WIFI", text: "wify"
+                                image: Asset.icon.pairingBtv,
+                                title: String.pageText.pairingBtnBtvCertification,
+                                text: String.pageText.pairingBtnBtvCertificationSub
                             ){
-                                pairing.requestPairing(.wifi)
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(.pairingSetupUser)
+                                        .addParam(key: PageParam.type, value: PairingRequest.btv)
+                                )
                             }
+                            .padding(.top, Dimen.margin.thin)
+                            
+                            Text(String.pageText.pairingTitle2)
+                                .modifier(MediumTextStyle(
+                                    size:Font.size.light,
+                                    color: Color.brand.primary
+                                ))
+                                .padding(.top, Dimen.margin.lightExtra)
+                            
                             ConnectButton(
-                                image: Asset.test, title: "WIFI", text: "wify"
+                                image: Asset.icon.pairingUser,
+                                title: String.pageText.pairingBtnUserCertification,
+                                text: String.pageText.pairingBtnUserCertificationSub
                             ){
-                                pairing.requestPairing(.wifi)
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(.pairingSetupUser)
+                                        .addParam(key: PageParam.type, value: PairingRequest.user)
+                                )
                             }
-                            ConnectButton(
-                                image: Asset.test, title: "WIFI", text: "wify"
-                            ){
-                                pairing.requestPairing(.wifi)
-                            }
-                            ConnectButton(
-                                image: Asset.test, title: "WIFI", text: "wify"
-                            ){
-                                pairing.requestPairing(.wifi)
-                            }
-                            ConnectButton(
-                                image: Asset.test, title: "WIFI", text: "wify"
-                            ){
-                                pairing.requestPairing(.wifi)
-                            }
-                            ConnectButton(
-                                image: Asset.test, title: "WIFI", text: "wify"
-                            ){
-                                pairing.requestPairing(.wifi)
-                            }
-                            ConnectButton(
-                                image: Asset.test, title: "WIFI", text: "wify"
-                            ){
-                                pairing.requestPairing(.wifi)
-                            }
-                            ConnectButton(
-                                image: Asset.test, title: "WIFI", text: "wify"
-                            ){
-                                pairing.requestPairing(.wifi)
-                            }
-                            ConnectButton(
-                                image: Asset.test, title: "WIFI", text: "wify"
-                            ){
-                                pairing.requestPairing(.wifi)
-                            }
+                            .padding(.vertical, Dimen.margin.lightExtra)
                         }
                     }
+                    .modifier(ContentHorizontalEdges())
                     .modifier(MatchParent())
                 }
                 .highPriorityGesture(
@@ -100,3 +133,17 @@ struct PagePairing: PageView {
     }//body
 
 }
+
+#if DEBUG
+struct PagePairing_Previews: PreviewProvider {
+    static var previews: some View {
+        Form{
+            PagePairing().contentBody
+                .environmentObject(PagePresenter())
+                .environmentObject(SceneObserver())
+                .environmentObject(Pairing())
+                .frame(width: 375, height: 640, alignment: .center)
+        }
+    }
+}
+#endif

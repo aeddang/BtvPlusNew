@@ -5,7 +5,6 @@
 //  Created by JeongCheol Kim on 2020/08/06.
 //  Copyright © 2020 JeongCheol Kim. All rights reserved.
 //
-
 import Foundation
 import SwiftUI
 import Combine
@@ -87,7 +86,6 @@ struct BottomTab: PageComponent{
     }
     
 }
-
 
 #if DEBUG
 struct ComponentBottomTab_Previews: PreviewProvider {

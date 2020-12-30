@@ -4,10 +4,7 @@
 //
 //  Created by KimJeongCheol on 2020/12/23.
 //
-
 import Foundation
-
-
 struct MdnsDevice : Codable {
     private(set) var stb_mac_address:String? = nil
     private(set) var ui_app_ver:String? = nil
@@ -28,8 +25,7 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
     let serviceName = "com.skb.btvplus"
     let querytime:Int32 = 60
     let searchLimitedTime:Int = 10
-    
-    
+        
     private var found:(([MdnsDevice]) -> Void)? = nil
     private var notFound: (() -> Void)? = nil
     
@@ -97,7 +93,7 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
         self.client = client
         self.searchLimited = DispatchWorkItem { // Set the work item with the block you want to execute
             DispatchQueue.main.async {
-               //self.mdnsServiceNotFound()
+               self.mdnsServiceNotFound()
             }
         }
         DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(self.searchLimitedTime), execute: self.searchLimited!!)
@@ -112,6 +108,7 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
         switch request {
         case .wifi: self.mdnsServiceFindStart()
         case .cancel: do{}
+        default : do{}
         }
     }
     

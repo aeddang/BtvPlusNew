@@ -21,7 +21,7 @@ extension Asset {
     public static let test = "test"
 }
 extension Asset{
-    
+
     struct bland {
         public static let logoLauncher =  "icLauncherSIos"
         public static let logoSplash =  "imgSplashLogo"
@@ -54,7 +54,13 @@ extension Asset{
         public static let sort = "icArrowDownG"
         public static let back = "icTopBack"
         public static let more = "icArrowRight"
+        public static let moreSmall = "icArrowRightWhite"
         public static let close = "icTopClose"
+       
+        public static let alertSmall = "icAlertS"
+        public static let pairingWifi = "icPairing03"
+        public static let pairingBtv = "icPairing02"
+        public static let pairingUser = "icPairing01"
         
     }
     
@@ -63,7 +69,44 @@ extension Asset{
         public static let radioBtnOff = "icRadioSOn"
         public static let checkBoxOn = "icCheckboxOn"
         public static let checkBoxOff = "icCheckboxOff"
-        
-        
     }
+    
+    static let characterList = [
+        "imgProfile01.png",
+        "imgProfile02.png",
+        "imgProfile03.png",
+        "imgProfile04.png",
+        "imgProfile05.png",
+        "imgProfile06.png",
+        "imgProfile07.png",
+        "imgProfile08.png",
+        "imgProfile09.png",
+        "imgProfile10.png",
+        "imgProfile11.png",
+        "imgProfile12.png",
+        "imgProfile13.png",
+        "imgProfile14.png",
+        "imgProfile15.png",
+        "imgProfile16.png",
+        "imgProfile17.png",
+        "imgProfile18.png",
+        "imgProfile19.png",
+        "imgProfile20.png",
+        "imgProfile21.png",
+        "imgProfile22.png",
+        "imgProfile23.png",
+        "imgProfile24.png",
+        "imgProfile25.png",
+        "imgProfile26.png",
+        "imgProfile27.png",
+        "imgProfile28.png",
+        "imgProfile29.png",
+        "imgProfile30.png",
+        "imgProfile31.png",
+        "imgProfile32.png",
+        "imgProfile33.png",
+        "imgProfile34.png",
+        "imgProfile35.png",
+        "imgProfile36.png"
+    ]
 }

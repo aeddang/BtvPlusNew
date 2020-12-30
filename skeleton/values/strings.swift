@@ -9,31 +9,54 @@
 import Foundation
 
 extension String {
-    public static let appName = "BtvPlus"
-    public static let corfirm = "확인"
-    public static let cancel = "취소"
-    public static let retry = "다시시도"
+    func loaalized() -> String {
+        return NSLocalizedString(self, comment: "")
+    }
+    public static let appName = "appName".loaalized()
+    public static let corfirm = "corfirm".loaalized()
+    public static let cancel = "cancel".loaalized()
+    public static let retry = "retry".loaalized()
     
     struct alert {
-        public static var apns = "알림"
-        public static var api = "알림"
-        public static var apiErrorServer = "접속이 지연되고 있습니다. 잠시 후 다시 이용해 주세요."
-        public static var apiErrorClient = "네트워크 연결 상태를 확인하시고 다시 시도해 주세요."
+        public static var apns = "apns".loaalized()
+        public static var api = "api".loaalized()
+        public static var apiErrorServer = "apiErrorServer".loaalized()
+        public static var apiErrorClient = "apiErrorClient".loaalized()
     }
     
     struct button {
-        public static var next = "다음"
-        public static var complete = "완료"
-        public static var share = "공유하기"
-        public static var more = "더 보기"
-        public static var delete = "지우기"
+        public static var next = "next".loaalized()
+        public static var complete = "complete".loaalized()
+        public static var share = "share".loaalized()
+        public static var more = "more".loaalized()
+        public static var delete = "delete".loaalized()
     }
     
     struct pageTitle {
-        public static var home = "홈"
-        public static var ocean  = "OCEAN"
-        public static var payment = "월정액"
-        public static var category = "카테고리"
-        public static var free = "무료"
+        public static let connectBtv = "connectBtv".loaalized()
+        public static let connectWifi = "connectWifi".loaalized()
+        public static let connectCertificationBtv = "connectCertificationBtv".loaalized()
+        public static let connectCertificationUser = "connectCertificationUser".loaalized()
     }
+    
+    struct pageText {
+        public static let pairingText1 = "pairingText1".loaalized()
+        public static let pairingText2_1 = "pairingText2_1".loaalized()
+        public static let pairingText2_2 = "pairingText2_2".loaalized()
+        public static let pairingText2_3 = "pairingText2_3".loaalized()
+        public static let pairingText2_4 = "pairingText2_4".loaalized()
+        
+        public static let pairingTitle1 = "pairingTitle1".loaalized()
+        public static let pairingTitle2 = "pairingTitle2".loaalized()
+        
+        public static let pairingBtnGuide = "pairingBtnGuide".loaalized()
+        
+        public static let pairingBtnWifi = "pairingBtnWifi".loaalized()
+        public static let pairingBtnWifiSub = "pairingBtnWifiSub".loaalized()
+        public static let pairingBtnBtvCertification = "pairingBtnBtvCertification".loaalized()
+        public static let pairingBtnBtvCertificationSub = "pairingBtnBtvCertificationSub".loaalized()
+        public static let pairingBtnUserCertification = "pairingBtnUserCertification".loaalized()
+        public static let pairingBtnUserCertificationSub = "pairingBtnUserCertificationSub".loaalized()
+    }
+    
 }

@@ -1,0 +1,63 @@
+/* 
+  Localizable.strings
+  BtvPlusNew
+
+  Created by KimJeongCheol on 2020/12/30.
+  
+*/
+"appName" = "모바일 Btv";
+"corfirm" = "확인";
+"cancel" = "취소";
+"retry" = "다시시도";
+
+
+/*
+  Button
+*/
+"next" = "다음";
+"complete" = "완료";
+"share" = "공유하기";
+"more" = "더 보기";
+"delete" = "지우기";
+
+/*
+  Alert
+*/
+"apns" = "알림";
+"api" = "알림";
+"apiErrorServer" = "접속이 지연되고 있습니다. 잠시 후 다시 이용해 주세요.";
+"apiErrorClient" = "네트워크 연결 상태를 확인하시고 다시 시도해 주세요.";
+
+
+/*
+ PageTitle
+*/
+"connectBtv" = "B tv 연결하기";
+"connectWifi" = "Wi-Fi로 연결하기";
+"connectCertificationBtv" = "B tv 인증번호로 연결하기";
+"connectCertificationUser" = "가입자 확인 후 연결하기";
+
+/*
+ PagePairing
+*/
+"pairingText1" = "가족과 함께 B tv를 모바일로\n편리하게 즐겨 보세요.";
+"pairingText2_1" = "최대 4대의 스마트 기기";
+"pairingText2_2" = "를 우리집 B tv에 연결하여";
+"pairingText2_3" = "보던 콘텐츠를 이어보고 구매도 하실 수 있어요.";
+"pairingText2_4" = "리모컨, 편성표 등 B tv를 더 편리하게 이용해 보세요.";
+
+"pairingTitle1" = "집 안에서 쉽게 B tv 연결하기";
+"pairingTitle2" = "집 밖에서 TV 없이  간편하게 연결하기";
+
+"pairingBtnGuide" = "B tv 연결 방법 안내";
+
+"pairingBtnWifi" = "Wi-Fi로 연결하기";
+"pairingBtnWifiSub" = "B tv와 동일한 네트워크 연결이 필요합니다.";
+"pairingBtnBtvCertification" = "B tv 인증번호로 연결하기";
+"pairingBtnBtvCertificationSub" = "B tv에서 확인한 인증번호를 입력합니다.";
+"pairingBtnUserCertification" = "가입자 인증으로 연결하기";
+"pairingBtnUserCertificationSub" = "B tv 가입자의 휴대폰 인증이 필요합니다.";
+
+
+
+

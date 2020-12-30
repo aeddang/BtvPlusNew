@@ -12,6 +12,7 @@ extension PageID{
     static let home:PageID = "home"
     static let oeean:PageID = "oeean"
     static let pairing:PageID = "pairing"
+    static let pairingSetupUser:PageID = "pairingSetupUser"
 }
 
 struct PageProvider {
@@ -33,7 +34,9 @@ struct PageProvider {
     }
     static func getType(_ pageID:PageID)-> PageAnimationType{
         switch pageID {
-        case .home : return  .vertical
+        case .home,
+             .pairingSetupUser : return  .vertical
+        
         default : return  .horizental
         }
     }
@@ -67,6 +70,8 @@ struct PageProvider {
 extension PageParam {
    static let id = "id"
    static let data = "data"
+   static let type = "type"
+   static let title = "title"
    static let viewPagerModel = "viewPagerModel"
    static let infinityScrollModel = "infinityScrollModel"
 }
@@ -81,6 +86,7 @@ struct PageFactory{
         switch pageObject.pageID {
         case .home : return PageHome()
         case .pairing : return PagePairing()
+        case .pairingSetupUser : return PagePairingSetupUser()
         default : return PageTest()
         }
     }

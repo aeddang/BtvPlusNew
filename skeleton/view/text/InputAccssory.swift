@@ -23,3 +23,14 @@ struct InputAccessory: UIViewRepresentable  {
     func updateUIView(_ uiView: UITextField, context: Context) {
     }
 }
+
+#if DEBUG
+struct InputAccessory_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        Form{
+            InputAccessory()
+        }
+    }
+}
+#endif

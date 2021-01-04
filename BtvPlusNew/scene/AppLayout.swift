@@ -27,6 +27,7 @@ struct AppLayout: PageComponent{
             SceneTab()
             SceneRadioController()
             SceneSelectController()
+            ScenePickerController()
             SceneAlertController()
             if self.isLoading {
                 Spacer().modifier(MatchParent()).background(Color.transparent.black15)

@@ -13,6 +13,7 @@ extension PageID{
     static let oeean:PageID = "oeean"
     static let pairing:PageID = "pairing"
     static let pairingSetupUser:PageID = "pairingSetupUser"
+    static let pairingBtv:PageID = "pairingBtv"
 }
 
 struct PageProvider {
@@ -35,7 +36,7 @@ struct PageProvider {
     static func getType(_ pageID:PageID)-> PageAnimationType{
         switch pageID {
         case .home,
-             .pairingSetupUser : return  .vertical
+             .pairingSetupUser, .pairingBtv : return  .vertical
         
         default : return  .horizental
         }
@@ -87,6 +88,7 @@ struct PageFactory{
         case .home : return PageHome()
         case .pairing : return PagePairing()
         case .pairingSetupUser : return PagePairingSetupUser()
+        case .pairingBtv : return PagePairingBtv()
         default : return PageTest()
         }
     }
@@ -132,6 +134,7 @@ struct PageSceneModel: PageModel {
     
     static func needKeyboard(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
+        case .pairingSetupUser, .pairingBtv: return true
         default : return false
         }
     }

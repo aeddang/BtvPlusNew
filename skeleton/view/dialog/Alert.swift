@@ -21,8 +21,8 @@ extension View {
                action: @escaping (_ idx:Int, _ userChecks:[Bool]) -> Void) -> some View {
         
         let btns = buttons ?? [
-            String.cancel,
-            String.corfirm
+            String.app.cancel,
+            String.app.corfirm
         ]
         let chks:[String] = checks ?? []
        

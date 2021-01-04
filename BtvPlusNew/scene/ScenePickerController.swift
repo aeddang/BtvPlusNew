@@ -9,42 +9,13 @@
 import Foundation
 import SwiftUI
 
-
-
-enum SceneSelect:Equatable {
-    case select((String,[String])), picker((String,[String]),Int)
-    
-    func check(key:String)-> Bool{
-        switch (self) {
-           case let .select(v):
-                return v.0 == key
-           case let .picker(v, _):
-                return v.0 == key
-        }
-    }
-    
-    static func ==(lhs: SceneSelect, rhs: SceneSelect) -> Bool {
-        switch (lhs, rhs) {
-            case (let .select(lh), let .select(rh)):
-                return lh.0 == rh.0
-            case (let .picker(lh,_), let .picker(rh,_)):
-                return lh.0 == rh.0
-        default : return false
-        }
-    }
-}
-enum SceneSelectResult {
-    case complete(SceneSelect,Int)
-}
-
-
-struct SceneSelectController: PageComponent{
+struct ScenePickerController: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var sceneObserver:PageSceneObserver
     
     @State var isShow = false
-    @State var title:String? = nil
+    @State var selected:Int = 0
     @State var buttons:[SelectBtnData] = []
     @State var currentSelect:SceneSelect? = nil
         
@@ -52,13 +23,14 @@ struct SceneSelectController: PageComponent{
         Form{
             Spacer()
         }
-        .select(
+        .picker(
             isShowing: self.$isShow,
-            title: self.$title,
-            buttons: self.$buttons)
+            title: .constant(""),
+            buttons: self.$buttons,
+            selected: self.$selected)
         { idx in
             switch self.currentSelect {
-                case .select(let data) : self.selectedSelect(idx ,data:data)
+                case .picker(let data, _) : self.selectedPicker(idx ,data:data)
                 default: do { return }
             }
             withAnimation{
@@ -72,7 +44,7 @@ struct SceneSelectController: PageComponent{
         .onReceive(self.sceneObserver.$select){ select in
             self.currentSelect = select
             switch select{
-                case .select(let data) : self.setupSelect(data:data)
+            case .picker(let data, let idx): self.setupPicker(data:data, idx:idx)
                 default: do { return }
             }
             withAnimation{
@@ -87,16 +59,14 @@ struct SceneSelectController: PageComponent{
         self.currentSelect = nil
     }
     
-    
-    
-    func setupSelect(data:(String,[String])) {
-        self.title = data.0
+    func setupPicker(data:(String,[String]), idx:Int) {
+        self.selected = idx
         let range = 0 ..< data.1.count
         self.buttons = zip(range, data.1).map {index, text in
             SelectBtnData(title: text, index: index)
         }
     }
-    func selectedSelect(_ idx:Int, data:(String,[String])) {
+    func selectedPicker(_ idx:Int, data:(String,[String])) {
         self.sceneObserver.selectResult = .complete(.select(data), idx)
         self.sceneObserver.selectResult = nil
     }

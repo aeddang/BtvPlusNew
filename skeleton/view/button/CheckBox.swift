@@ -12,6 +12,7 @@ struct CheckBox: View, SelecterbleProtocol {
     @Binding var isChecked: Bool
     var text:String? = nil
     var subText:String? = nil
+    var isStrong:Bool = false
     var more: (() -> Void)? = nil
     var action: ((_ check:Bool) -> Void)? = nil
     
@@ -20,8 +21,10 @@ struct CheckBox: View, SelecterbleProtocol {
         HStack(alignment: .top, spacing: Dimen.margin.thin){
            ImageButton(
                 defaultImage: Asset.shape.checkBoxOff,
-                activeImage: Asset.shape.checkBoxOn,
-                isSelected: self.$isChecked
+            activeImage: self.isStrong
+                ? Asset.shape.checkBoxOn : Asset.shape.checkBoxOn2,
+                isSelected: self.$isChecked,
+                size: CGSize(width: Dimen.icon.thinExtra, height: Dimen.icon.thinExtra)
                 ){_ in
                     self.isChecked.toggle()
                     if self.action != nil {
@@ -30,26 +33,40 @@ struct CheckBox: View, SelecterbleProtocol {
             }
             VStack(alignment: .leading, spacing: Dimen.margin.tiny){
                 if self.text != nil {
-                    Text(self.text!)
-                        .modifier(MediumTextStyle(
-                            size: Font.size.light,
-                            color: Color.app.greyDeep))
+                    if self.isStrong {
+                        Text(self.text!)
+                            .modifier( BoldTextStyle(
+                                    size: Font.size.lightExtra,
+                                    color: Color.app.white)
+                            )
+                    }else{
+                        Text(self.text!)
+                            .modifier( MediumTextStyle(
+                                    size: Font.size.thin,
+                                    color: Color.app.white)
+                            )
+                    }
+
                 }
                 if self.subText != nil {
                     Text(self.subText!)
                         .modifier(MediumTextStyle(
-                            size: Font.size.light,
+                            size: Font.size.thin,
                             color: Color.app.greyLight))
                 }
             }.offset(y:3)
             Spacer()
             if more != nil {
-                ImageButton(
-                    defaultImage: Asset.icon.more,
-                    size: CGSize(width:Dimen.icon.light,height:Dimen.icon.light)
-                    ){_ in
-                       self.more!()
-                    }
+                TextButton(
+                    defaultText: String.button.view,
+                    textModifier:TextModifier(
+                        family:Font.family.medium,
+                        size:Font.size.thinExtra,
+                        color: Color.app.white),
+                    isUnderLine: true)
+                {_ in
+                    self.more!()
+                }
             }
         }
     }
@@ -71,7 +88,9 @@ struct CheckBox_Previews: PreviewProvider {
                 }
             )
             .frame( alignment: .center)
+            .background(Color.brand.bg)
         }
+        
     }
 }
 #endif

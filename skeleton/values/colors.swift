@@ -26,7 +26,7 @@ extension Color {
         public static let secondary = Color.init(red: 82/255, green:165/255, blue: 255/255)
         public static let thirdly = Color.init(red: 190/255, green:25/255, blue: 25/255)
         public static let accent =  app.blue
-        public static let bg =  app.blue
+        public static let bg =  app.blueDeep
     }
     struct app {
         

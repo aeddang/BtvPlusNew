@@ -10,17 +10,16 @@ import Foundation
 import SwiftUI
 struct SortButton: View{
     @Binding var text:String
+    var isFocus:Bool = false
     var textModifier:TextModifier = TextModifier(
         family: Font.family.bold,
-        size: Font.size.light,
-        color: Color.app.grey
+        size: Font.size.lightExtra,
+        color: Color.app.white
     )
-    var size:CGFloat = Dimen.button.light
+    var size:CGFloat = Dimen.tab.regular
     var padding:CGFloat = Dimen.margin.thin
-    var cornerRadius = Dimen.radius.regular
+    var cornerRadius:CGFloat = 0
     let action: () -> Void
-    
-
     var body: some View {
         Button(action: {
             self.action()
@@ -39,11 +38,14 @@ struct SortButton: View{
                 .padding(.horizontal, self.padding)
             }
             .frame(height:self.size)
-            .background(Color.app.white)
-            .clipShape(RoundedRectangle(cornerRadius: self.cornerRadius))
+            .background(Color.app.blueLight)
+            .clipShape(
+                RoundedRectangle(cornerRadius: self.cornerRadius))
             .overlay(
                 RoundedRectangle(cornerRadius: self.cornerRadius)
-                    .stroke(Color.app.greyLightExtra,lineWidth: 1)
+                        .stroke(
+                            self.isFocus ? Color.app.white : Color.app.blueLight,
+                            lineWidth: 3)
             )
         }
     }
@@ -54,7 +56,9 @@ struct SortButtonButton_Previews: PreviewProvider {
     static var previews: some View {
         Form{
             SortButton(
-                text: .constant("test"))
+                text: .constant("test")
+                //isFocus: .constant(true)
+            )
             {
                 
             }

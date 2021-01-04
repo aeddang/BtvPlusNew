@@ -176,13 +176,8 @@ extension String{
     
     func isNickNameType() -> Bool {
         let n = self.count
-        if n < 2 { return false }
-        if n > 10 { return false }
-        let ruleEng = "[a-zA-Z]"
-        let resultEng = self.getArrayAfterRegex(regex: ruleEng )
-        if resultEng.count == n {
-            if n < 3 { return false }
-        }
+        if n < 1 { return false }
+        if n > 8 { return false }
         let ruleNum = "[0-9]"
         let resultNum = self.getArrayAfterRegex(regex: ruleNum )
         if resultNum.count == n { return false }
@@ -192,9 +187,12 @@ extension String{
         if result.count == n { return true}
         return false
     }
-    
     func isPhoneNumberType() -> Bool {
         if self.count < 7 { return false }
+        return Int(self) != nil
+    }
+    func isCertificationNumberType() -> Bool {
+        if self.count < 6 { return false }
         return Int(self) != nil
     }
     

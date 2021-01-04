@@ -34,8 +34,8 @@ struct MultiBlock:PageComponent {
                 default:
                     ThemaBlock(data: data)
                 }
-               
             }
+            Spacer().frame(height:Dimen.margin.heavy)
         }
         .onReceive(self.viewModel.$event){evt in
             ComponentLog.d("evt " + evt.debugDescription, tag: self.tag)

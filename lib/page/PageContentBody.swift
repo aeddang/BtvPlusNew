@@ -37,13 +37,11 @@ struct PageContentBody: PageView  {
     @State var topPageType:PageAnimationType = .none
     var body: some View {
         ZStack(){
-            if self.pageObject?.isDimed == true{
-                Spacer().modifier(MatchParent()).background(Color.transparent.black70)
-                    .opacity(self.opacity)
-                    .onTapGesture {
-                        self.pageChanger.goBack()
-                    }
-            }
+            Spacer().modifier(MatchParent()).background(Color.transparent.black70)
+                .opacity(self.opacity)
+                .onTapGesture {
+                    self.pageChanger.goBack()
+                }
             ForEach(childViews, id: \.pageID) { page in
                 page.contentBody
                 .offset(x:  self.offsetX, y:self.offsetY)
@@ -81,6 +79,7 @@ struct PageContentBody: PageView  {
             
         }
         .onReceive(self.pageChanger.$dragOpercity){ opacity in
+            self.opacity = opacity
             if self.isTop {return}
             let amount = Self.pageMoveAmount * CGFloat(opacity)
             switch self.topPageType {

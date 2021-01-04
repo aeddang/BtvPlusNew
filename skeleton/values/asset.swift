@@ -21,6 +21,8 @@ extension Asset {
     public static let test = "test"
 }
 extension Asset{
+    
+    
 
     struct bland {
         public static let logoLauncher =  "icLauncherSIos"
@@ -65,48 +67,54 @@ extension Asset{
     }
     
     struct shape {
-        public static let radioBtnOn = "icRadioSOff"
-        public static let radioBtnOff = "icRadioSOn"
+        public static let radioBtnOn = "icRadioSOn"
+        public static let radioBtnOff = "icRadioSOff"
         public static let checkBoxOn = "icCheckboxOn"
+        public static let checkBoxOn2 = "icCheckboxOn02"
         public static let checkBoxOff = "icCheckboxOff"
     }
     
+    struct source {
+        public static let pairingTutorial =  "pairingTutorialS"
+    }
+    
+    
     static let characterList = [
-        "imgProfile01.png",
-        "imgProfile02.png",
-        "imgProfile03.png",
-        "imgProfile04.png",
-        "imgProfile05.png",
-        "imgProfile06.png",
-        "imgProfile07.png",
-        "imgProfile08.png",
-        "imgProfile09.png",
-        "imgProfile10.png",
-        "imgProfile11.png",
-        "imgProfile12.png",
-        "imgProfile13.png",
-        "imgProfile14.png",
-        "imgProfile15.png",
-        "imgProfile16.png",
-        "imgProfile17.png",
-        "imgProfile18.png",
-        "imgProfile19.png",
-        "imgProfile20.png",
-        "imgProfile21.png",
-        "imgProfile22.png",
-        "imgProfile23.png",
-        "imgProfile24.png",
-        "imgProfile25.png",
-        "imgProfile26.png",
-        "imgProfile27.png",
-        "imgProfile28.png",
-        "imgProfile29.png",
-        "imgProfile30.png",
-        "imgProfile31.png",
-        "imgProfile32.png",
-        "imgProfile33.png",
-        "imgProfile34.png",
-        "imgProfile35.png",
-        "imgProfile36.png"
+        "imgProfile01",
+        "imgProfile02",
+        "imgProfile03",
+        "imgProfile04",
+        "imgProfile05",
+        "imgProfile06",
+        "imgProfile07",
+        "imgProfile08",
+        "imgProfile09",
+        "imgProfile10",
+        "imgProfile11",
+        "imgProfile12",
+        "imgProfile13",
+        "imgProfile14",
+        "imgProfile15",
+        "imgProfile16",
+        "imgProfile17",
+        "imgProfile18",
+        "imgProfile19",
+        "imgProfile20",
+        "imgProfile21",
+        "imgProfile22",
+        "imgProfile23",
+        "imgProfile24",
+        "imgProfile25",
+        "imgProfile26",
+        "imgProfile27",
+        "imgProfile28",
+        "imgProfile29",
+        "imgProfile30",
+        "imgProfile31",
+        "imgProfile32",
+        "imgProfile33",
+        "imgProfile34",
+        "imgProfile35",
+        "imgProfile36"
     ]
 }

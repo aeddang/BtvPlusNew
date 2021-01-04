@@ -50,5 +50,14 @@ struct AppUtil{
           }
         }
     }
+    
+    static func getYearRange(len:Int , offset:Int = 0 )->[Int]{
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year], from: Date())
+        let range = 0...len
+        let year  = (components.year ?? 2020) - offset
+        let ranges = range.map{ (year - $0) }
+        return ranges
+    }
 }
 

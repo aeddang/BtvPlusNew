@@ -32,6 +32,12 @@ struct ListItem{
        
     }
     
+    struct character {
+        static let size:CGSize = CGSize(width: 62, height: 62)
+    }
+    
+    
+    
     struct tablet {
         struct poster {
             static let type01:CGSize = CGSize(width: 158, height: 224)

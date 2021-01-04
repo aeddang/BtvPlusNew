@@ -101,12 +101,12 @@ struct SceneAlertController: PageComponent{
         self.subText = alert["body"] as String? ?? ""
         if (self.appObserver.page?.page) != nil {
             self.buttons = [
-                AlertBtnData(title: String.cancel, index: 0),
-                AlertBtnData(title: String.corfirm, index: 1)
+                AlertBtnData(title: String.app.cancel, index: 0), 
+                AlertBtnData(title: String.app.corfirm, index: 1)
             ]
         }else{
             self.buttons = [
-                AlertBtnData(title: String.corfirm, index: 0)
+                AlertBtnData(title: String.app.corfirm, index: 0)
             ]
         }
         return true
@@ -138,7 +138,7 @@ struct SceneAlertController: PageComponent{
             }
         }
         self.buttons = [
-            AlertBtnData(title: String.corfirm, index: 0),
+            AlertBtnData(title: String.app.corfirm, index: 0),
         ]
     }
     func selectedApi(_ idx:Int, data:ApiResultError) {}

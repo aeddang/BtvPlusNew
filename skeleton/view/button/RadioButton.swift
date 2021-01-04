@@ -12,27 +12,8 @@ struct RadioButton: View, SelecterbleProtocol {
     @Binding var isChecked: Bool
     var text:String? = nil
     var action: ((_ check:Bool) -> Void)? = nil
-    
-    
     var body: some View {
-        HStack(alignment: .top, spacing: Dimen.margin.thin){
-            if self.text != nil {
-                Button(action: {
-                    self.isChecked.toggle()
-                    if self.action != nil {
-                        self.action!(self.isChecked)
-                    }
-                    
-                }) {
-                    Text(self.text!)
-                        .modifier(BoldTextStyle(
-                            size: Font.size.regular,
-                            color: Color.app.black
-                        ))
-                    
-                }
-            }
-            Spacer()
+        HStack(alignment: .center, spacing: Dimen.margin.thinExtra){
             ImageButton(
                 defaultImage: Asset.shape.radioBtnOff,
                 activeImage: Asset.shape.radioBtnOn,
@@ -44,7 +25,21 @@ struct RadioButton: View, SelecterbleProtocol {
                     }
             }
             .buttonStyle(BorderlessButtonStyle())
-            
+            if self.text != nil {
+                Button(action: {
+                    self.isChecked.toggle()
+                    if self.action != nil {
+                        self.action!(self.isChecked)
+                    }
+                    
+                }) {
+                    Text(self.text!)
+                        .modifier(BoldTextStyle(
+                            size: Font.size.lightExtra
+                        ))
+                    
+                }
+            }
         }
     }
 }
@@ -59,7 +54,9 @@ struct RadioButton_Previews: PreviewProvider {
                 text:"asdafafsd"
             )
             .frame( alignment: .center)
+            .background(Color.brand.bg)
         }
+        
     }
 }
 #endif

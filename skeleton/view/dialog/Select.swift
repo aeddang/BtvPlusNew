@@ -85,7 +85,7 @@ struct Select<Presenting>: View where Presenting: View {
                             }
                         }
                         FillButton(
-                            text: String.cancel,
+                            text: String.app.cancel,
                             isSelected:.constant( false )
                         ){idx in
                             withAnimation{

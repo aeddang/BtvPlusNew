@@ -27,7 +27,6 @@ class PageSceneObserver:ObservableObject{
     @Published var select:SceneSelect? = nil
     @Published var selectResult:SceneSelectResult? = nil {didSet{ if selectResult != nil { selectResult = nil} }}
     
-    
     @Published var event:SceneEvent? = nil {didSet{ if event != nil { event = nil} }}
     
     func cancelAll(){

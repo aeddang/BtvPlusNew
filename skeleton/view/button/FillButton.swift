@@ -27,9 +27,9 @@ struct FillButton: View, SelecterbleProtocol{
         imageOn:String? = nil,
         isSelected:Binding<Bool>? = nil,
         textModifier:TextModifier? = nil,
-        size:CGFloat = Dimen.button.heavy,
+        size:CGFloat = Dimen.button.medium,
         imageSize:CGFloat =  Dimen.icon.light,
-        bgColor:Color = Color.app.whiteDeep,
+        bgColor:Color = Color.brand.primaryLight,
         action:@escaping (_ idx:Int) -> Void
     )
     {
@@ -44,8 +44,8 @@ struct FillButton: View, SelecterbleProtocol{
         self.textModifier = textModifier ??
             TextModifier(
                 family: Font.family.bold,
-                size: Font.size.light,
-                color: Color.app.greyDeep,
+                size: Font.size.regular,
+                color: Color.app.white,
                 activeColor: Color.app.white
             )
         self.action = action
@@ -57,20 +57,24 @@ struct FillButton: View, SelecterbleProtocol{
         Button(action: {
             self.action(self.index)
         }) {
-            HStack(spacing:Dimen.margin.tiny){
-                if self.image != nil {
-                    Image(self.isSelected ? self.imageOn! : self.image!)
-                    .renderingMode(.original).resizable()
-                    .scaledToFit()
-                    .frame(width: self.imageSize, height: self.imageSize)
+            ZStack{
+                HStack(spacing:Dimen.margin.tiny){
+                    if self.image != nil {
+                        Image(self.isSelected ? self.imageOn! : self.image!)
+                        .renderingMode(.original).resizable()
+                        .scaledToFit()
+                        .frame(width: self.imageSize, height: self.imageSize)
+                    }
+                    Text(self.text)
+                        .font(.custom(textModifier.family, size: textModifier.size))
+                        .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
                 }
-                Text(self.text)
-                    .font(.custom(textModifier.family, size: textModifier.size))
-                    .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+                if !self.isSelected {
+                    Spacer().modifier(MatchParent()).background(Color.transparent.black45)
+                }
             }
             .modifier( MatchHorizontal(height: self.size) )
-            .background(self.isSelected ? Color.brand.primary : self.bgColor)
-            .clipShape(RoundRectMask(radius: Dimen.radius.light))
+            .background(Color.brand.primary )
         }
         
         

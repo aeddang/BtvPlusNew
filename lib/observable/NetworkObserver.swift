@@ -16,7 +16,7 @@ class NetworkObserver: ObservableObject {
     }
     @Published private(set) var status: Status = .none
     
-    private let reachability = try! Reachability()
+    let reachability = try! Reachability()
     init() {
         reachability.whenReachable = { reachability in
             if reachability.connection == .wifi {

@@ -58,6 +58,15 @@ enum ThemaType {
             }
         }
     }
+    var spacing:CGFloat {
+        get{
+            switch self {
+            case .small: return Dimen.margin.thinExtra
+            case .big: return Dimen.margin.lightExtra
+            case .square: return Dimen.margin.tiny
+            }
+        }
+    }
     var isCircle:Bool {
         get{
             switch self {
@@ -80,8 +89,10 @@ struct ThemaList: PageComponent{
         InfinityScrollView(
             viewModel: self.viewModel,
             axes: .horizontal,
-            marginVertical: 0,
-            marginHorizontal: Dimen.margin.thin){
+            marginVertical: .constant(0),
+            marginHorizontal: .constant(0) ,
+            spacing: .constant(datas.isEmpty ? 0 : datas[0].type.spacing)
+            ){
             ForEach(self.datas) { data in
                 ThemaItem( data:data )
                 .onTapGesture {

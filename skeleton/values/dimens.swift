@@ -19,7 +19,7 @@ struct Dimen{
         public static let lightExtra:CGFloat = 12 //*
         public static let thin:CGFloat = 10 //*
         public static let thinExtra:CGFloat = 8 //*
-        public static let tiny:CGFloat = 5 //*
+        public static let tiny:CGFloat = 6 //*
         public static let tinyExtra:CGFloat = 2 //*
         
         public static let header:CGFloat = 50 //*
@@ -49,7 +49,7 @@ struct Dimen{
        
         public static let heavy:CGFloat = 80
         public static let medium:CGFloat = 50 //*
-        public static let regular:CGFloat = 38
+        public static let regular:CGFloat = 40 //*
         public static let light:CGFloat = 31
         public static let thin:CGFloat = 28
     }
@@ -77,7 +77,7 @@ struct Dimen{
     
     struct app {
        public static let bottom:CGFloat = 60
-       public static let top:CGFloat = 60
+       public static let top:CGFloat = 80
        public static let pageTop:CGFloat = 62
     }
     

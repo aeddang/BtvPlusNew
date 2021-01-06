@@ -21,7 +21,6 @@ struct VideoBlock:BlockProtocol, PageComponent {
             }
             VideoList(viewModel:self.viewModel, datas: self.$datas)
                 .modifier(MatchHorizontal(height: self.listHeight))
-            
         }
         .onAppear{
             if let datas = data.videos {

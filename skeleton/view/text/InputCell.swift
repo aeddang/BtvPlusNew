@@ -49,7 +49,7 @@ struct InputCell: PageView {
                                 placeholder: "",
                                 text:self.$input,
                                 isfocusAble: .constant(true),
-                                fontSize:Self.inputHeight,
+                                textModifier:RegularTextStyle(size: Self.inputFontSize).textModifier,
                                 usefocusAble: false,
                                 inputChanged: {text , size in
                                     //self.input = text

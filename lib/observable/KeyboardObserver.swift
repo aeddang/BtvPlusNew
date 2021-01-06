@@ -13,8 +13,6 @@ enum KeyboardObserverEvent {
     case cancel
 }
 class KeyboardObserver: ObservableObject {
-    
-    
     private var cancellable: AnyCancellable?
     @Published var event: KeyboardObserverEvent? = nil
     {
@@ -65,6 +63,7 @@ class KeyboardObserver: ObservableObject {
 
     
       func start(){
+        self.isOn = self.keyboardHeight != 0
         if cancellable != nil { return }
            cancellable = Publishers.Merge(keyboardWillShow, keyboardWillHide)
                    .subscribe(on: RunLoop.main)
@@ -77,6 +76,7 @@ class KeyboardObserver: ObservableObject {
           cancellable?.cancel()
           cancellable = nil
           keyboardHeight = 0
+          self.isOn = false
       }
         
       deinit {

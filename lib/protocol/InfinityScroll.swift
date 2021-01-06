@@ -71,7 +71,7 @@ class InfinityScrollModel:ComponentObservable, PageProtocol, Identifiable{
         self.pullPosition = pos
         if self.event == .pull { return }
         self.event = .pull
-        DataLog.d("onPull" , tag:self.tag)
+        //DataLog.d("onPull" , tag:self.tag)
         self.increasePull?.cancel()
         self.increasePull = Timer.publish(
             every: 0.05, on: .current, in: .common)
@@ -135,11 +135,13 @@ protocol InfinityScrollViewProtocol :PageProtocol{
 }
 extension InfinityScrollViewProtocol {
     func onMove(pos:CGFloat){
-        //ComponentLog.d("onMove  " + pos.description , tag: "InfinityScrollViewProtocol")
+        ComponentLog.d("onMove  " + pos.description , tag: "InfinityScrollViewProtocol")
         let diff = self.prevPosition - pos
         
         if pos >= 30 {
-            onPull(pos:pos)
+            //ComponentLog.d("diff " + diff.description , tag: "InfinityScrollViewProtocol")
+            if diff > 5 {self.viewModel.onPullCancel()}
+            else { onPull(pos:pos) }
             return
         }
         if pos >= 1 && pos < 5 {
@@ -149,15 +151,11 @@ extension InfinityScrollViewProtocol {
         }
         
         if diff < 0 {
-            if pos >= 0 {
-                return
-            }
+            if pos >= 0 { return }
             self.onUp()
         }
         else if  diff > 0 {
-            if pos >= 0 {
-                return
-            }
+            if pos >= 0 { return }
             self.onDown()
         }
     }

@@ -35,6 +35,7 @@ class ApiManager :PageProtocol, ObservableObject{
     
     func clear(){
         self.euxp.clear()
+        self.metv.clear()
         self.apiQ.removeAll()
     }
     

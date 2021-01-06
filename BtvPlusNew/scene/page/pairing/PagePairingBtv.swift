@@ -13,69 +13,82 @@ struct PagePairingBtv: PageView {
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
+    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     
     @State var input:String = ""
     @State var safeAreaBottom:CGFloat = 0
     @State var isInput = false
+    @State var isFocus = false
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
                 viewModel:self.pageDragingModel,
-                axis:.horizontal
+                axis:.vertical
             ) {
                 VStack(spacing:0){
                     PageTab(
                         title: .constant(String.pageTitle.connectCertificationBtv),
-                        isBack : true
+                        isClose: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    ScrollView{
-                        VStack(alignment:.leading , spacing:0) {
-                            if !self.isInput {
-                                VStack(alignment:.leading , spacing:0) {
-                                    Text(String.pageText.pairingBtvText1)
-                                        .modifier(MediumTextStyle( size: Font.size.bold ))
-                                        .padding(.top, Dimen.margin.light)
-                                    Text(String.pageText.pairingBtvText2)
-                                        .modifier(MediumTextStyle( size: Font.size.light ))
-                                        .padding(.top, Dimen.margin.regular)
-                                    Text(String.pageText.pairingBtvText3)
-                                        .modifier(MediumTextStyle( size: Font.size.thin ))
-                                    Text(String.pageText.pairingBtvText4)
-                                        .modifier(MediumTextStyle( size: Font.size.thin ))
-                                    Text(String.pageText.pairingBtvText5)
-                                        .modifier(MediumTextStyle( size: Font.size.thin ))
-                                    
-                                }
-                                .padding(.horizontal, Dimen.margin.regular)
+                    InfinityScrollView( viewModel: self.infinityScrollModel ){
+                        if !self.isInput {
+                            VStack(alignment:.leading , spacing:0) {
+                                Text(String.pageText.pairingBtvText1)
+                                    .modifier(MediumTextStyle( size: Font.size.bold ))
+                                    .padding(.top, Dimen.margin.light)
+                                Text(String.pageText.pairingBtvText2)
+                                    .modifier(MediumTextStyle( size: Font.size.light ))
+                                    .padding(.top, Dimen.margin.regular)
+                                Text(String.pageText.pairingBtvText3)
+                                    .modifier(MediumTextStyle( size: Font.size.thin ))
+                                Text(String.pageText.pairingBtvText4)
+                                    .modifier(MediumTextStyle( size: Font.size.thin ))
+                                Text(String.pageText.pairingBtvText5)
+                                    .modifier(MediumTextStyle( size: Font.size.thin ))
+                                
                             }
-                            VStack(alignment:.center , spacing:Dimen.margin.regularExtra) {
-                                Image(Asset.source.pairingTutorial)
-                                    .renderingMode(.original)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(height:200)
-                                    
-                                HStack(alignment:.center, spacing:Dimen.margin.light){
-                                    Text(String.app.certificationNumber)
-                                        .modifier(BoldTextStyle(size: Font.size.light))
-                                    VStack(alignment: .center, spacing:0){
-                                        TextField(String.app.certificationNumberHolder, text: self.$input)
-                                            
-                                            .keyboardType(.numberPad)
-                                            .modifier(BoldTextStyle(
-                                                        size: Font.size.black))
-                                        Spacer().modifier(MatchHorizontal(height: 1))
-                                            .background(Color.app.white)
-                                    }
-                                    .frame(width:173)
-                                }
-                            }
-                            .modifier(MatchParent())
+                            .padding(.vertical, Dimen.margin.regularExtra)
+                            .padding(.horizontal, Dimen.margin.regular)
+                        }else{
+                            Spacer().frame(height:Dimen.margin.regularExtra)
                         }
-                        .padding(.top, Dimen.margin.regularExtra)
+                        VStack(alignment:.center , spacing:Dimen.margin.regularExtra) {
+                            Image(Asset.source.pairingTutorial)
+                                .renderingMode(.original)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height:200)
+                                
+                            HStack(alignment:.center, spacing:Dimen.margin.light){
+                                Text(String.app.certificationNumber)
+                                    .modifier(BoldTextStyle(size: Font.size.light))
+                                VStack(alignment: .center, spacing:0){
+                                    FocusableTextField(
+                                        keyboardType: .numberPad, returnVal: .done,
+                                        placeholder: String.app.certificationNumberHolder,
+                                        textModifier: BoldTextStyle( size: Font.size.black ).textModifier,
+                                        isfocusAble: self.$isFocus,
+                                        inputChanged: { text in
+                                            self.input = text
+                                        },
+                                        inputCopmpleted: { text in
+                                            self.isFocus = false
+                                        })
+                        
+                                    Spacer().modifier(MatchHorizontal(height: 1))
+                                        .background(Color.app.white)
+                                }
+                                .frame(width:173)
+                            }
+                        }
+                        .modifier(MatchParent())
+                        
                     }
                     .modifier(MatchParent())
+                    .onTapGesture {
+                        self.isFocus = false
+                    }
                     FillButton(
                         text: String.button.connect,
                         isSelected: self.isInputCompleted()
@@ -94,11 +107,22 @@ struct PagePairingBtv: PageView {
                             self.pageDragingModel.uiEvent = .draged(geometry)
                         })
                 )
+                .onReceive(self.infinityScrollModel.$event){evt in
+                    guard let evt = evt else {return}
+                    switch evt {
+                    case .down, .up :
+                        self.pageDragingModel.uiEvent = .pulled(geometry)
+                    case .pullCancel :
+                        self.pageDragingModel.uiEvent = .pulled(geometry)
+                    default : do{}
+                    }
+                }
+                .onReceive(self.infinityScrollModel.$pullPosition){ pos in
+                    self.pageDragingModel.uiEvent = .pull(geometry, pos)
+                }
                 .modifier(PageFull())
             }
-            .onTapGesture {
-                AppUtil.hideKeyboard()
-            }
+            
             .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
                 if self.isInput {return}
                 self.safeAreaBottom = pos
@@ -106,12 +130,18 @@ struct PagePairingBtv: PageView {
             .onReceive(self.keyboardObserver.$isOn){ on in
                 withAnimation{
                     self.isInput = on
+                    if self.isFocus != on { self.isFocus = on }
                     self.safeAreaBottom = on
                         ? self.keyboardObserver.keyboardHeight : self.sceneObserver.safeAreaBottom
                 }
             }
+            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                if ani {
+                    self.isFocus = true
+                }
+            }
             .onAppear{
-               
+                
             }
             .onDisappear{
             }

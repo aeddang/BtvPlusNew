@@ -76,7 +76,9 @@ struct VideoList: PageComponent{
             viewModel: self.viewModel,
             axes: .horizontal,
             marginVertical: 0,
-            marginHorizontal: Dimen.margin.thin){
+            marginHorizontal: Dimen.margin.thin,
+            spacing: Dimen.margin.tiny
+        ){
             ForEach(self.datas) { data in
                 VideoItem( data:data )
                 .onTapGesture {

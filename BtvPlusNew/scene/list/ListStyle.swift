@@ -36,6 +36,9 @@ struct ListItem{
         static let size:CGSize = CGSize(width: 62, height: 62)
     }
     
+    struct stb {
+        static let size:CGSize = CGSize(width: 52, height: 52)
+    }
     
     
     struct tablet {

@@ -20,7 +20,7 @@ struct PageBackgroundBody: View {
 }
 
 extension PageContentBody{
-    static let pageMoveAmount:CGFloat = -100.0
+    static let pageMoveAmount:CGFloat = -70.0
 }
 
 
@@ -35,6 +35,8 @@ struct PageContentBody: PageView  {
     @State var pageOffsetY:CGFloat = 0.0
     @State var isTop:Bool = true
     @State var topPageType:PageAnimationType = .none
+
+    @State var isReady:Bool = false
     var body: some View {
         ZStack(){
             Spacer().modifier(MatchParent()).background(Color.transparent.black70)
@@ -50,6 +52,8 @@ struct PageContentBody: PageView  {
         .frame(alignment: .topLeading)
         .offset(x:  self.pageOffsetX, y:  -self.pageOffsetY )
         .onReceive(self.pageChanger.$currentTopPage){ page in
+            if !self.isReady  {return}
+            //PageLog.log("currentTopPage",tag:self.pageID)
             self.isTop = true
             self.topPageType = page?.animationType ?? .none
             guard let pageObject = self.pageObject else { return }
@@ -79,6 +83,8 @@ struct PageContentBody: PageView  {
             
         }
         .onReceive(self.pageChanger.$dragOpercity){ opacity in
+            if !self.isReady  {return}
+            //PageLog.log("dragOpercity",tag:self.pageID)
             self.opacity = opacity
             if self.isTop {return}
             let amount = Self.pageMoveAmount * CGFloat(opacity)
@@ -90,6 +96,8 @@ struct PageContentBody: PageView  {
         }
         
         .onReceive(self.pageObservable.$pagePosition){ pos in
+            if !self.isReady  {return}
+            // PageLog.log("pagePosition",tag:self.pageID)
             if self.pageObservable.status == .initate{
                 self.offsetX = pos.x
                 self.offsetY = pos.y
@@ -106,22 +114,26 @@ struct PageContentBody: PageView  {
             }
         }
         .onReceive(self.pageObservable.$pageOpacity){ opacity in
+            if !self.isReady {return}
             withAnimation{
                 self.opacity = opacity
             }
         }
         .onAppear{
             PageLog.log("onAppear",tag:self.pageID)
-            self.childViews.forEach({ $0.appear() })
             self.offsetX = self.pageObservable.pagePosition.x
             self.offsetY = self.pageObservable.pagePosition.y
             self.opacity = 0
-            self.pageObservable.status = .appear
-
-            self.pageObservable.pagePosition.x = 0
-            self.pageObservable.pagePosition.y = 0
-            self.pageObservable.pageOpacity = 1.0
             
+            DispatchQueue.main.async {
+                self.isReady = true
+                
+                self.pageObservable.status = .appear
+                self.pageObservable.pagePosition.x = 0
+                self.pageObservable.pagePosition.y = 0
+                self.pageObservable.pageOpacity = 1.0
+                self.childViews.forEach({ $0.appear() })
+            }
         }
         .onDisappear{
             self.childViews.forEach({ $0.disAppear() })

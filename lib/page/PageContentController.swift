@@ -20,6 +20,7 @@ struct PageContentController: View{
     var backgroundBody: AnyView = AnyView(PageBackgroundBody())
     @ObservedObject var pageControllerObservable:PageControllerObservable = PageControllerObservable()
     @ObservedObject internal var pageObservable: PageObservable = PageObservable()
+    @EnvironmentObject var keyboardObserver:KeyboardObserver
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
     var currnetPage:PageViewProtocol?{
@@ -61,7 +62,9 @@ struct PageContentController: View{
             }
             .edgesIgnoringSafeArea(.all)
             .background(backgroundBody)
-            
+            .onReceive(self.keyboardObserver.$isOn){ on in
+                sceneObserver.update(geometry: geometry)
+            }
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 sceneObserver.update(geometry: geometry)
             }

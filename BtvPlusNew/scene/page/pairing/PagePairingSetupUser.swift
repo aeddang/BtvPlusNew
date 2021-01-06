@@ -10,7 +10,6 @@ struct PagePairingSetupUser: PageView {
     enum EditType {
         case nickName, birth, none
     }
-
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
@@ -18,7 +17,7 @@ struct PagePairingSetupUser: PageView {
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
-    
+    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @State var title:String? = nil
     @State var pairingType:PairingRequest = .wifi
     @State var editType:EditType = .none
@@ -32,6 +31,7 @@ struct PagePairingSetupUser: PageView {
     @State var isAgree2:Bool = true
     @State var isAgree3:Bool = true
     @State var safeAreaBottom:CGFloat = 0
+     
     let birthList = AppUtil.getYearRange(len: 100, offset:0).map{
         $0.description + String.app.year
     }
@@ -48,78 +48,81 @@ struct PagePairingSetupUser: PageView {
                         isClose: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    ScrollView{
+                    InfinityScrollView( viewModel: self.infinityScrollModel ){
                         VStack(alignment:.leading , spacing:0) {
-                            VStack(alignment:.leading , spacing:0) {
-                                Text(String.pageText.pairingSetupUserText1)
-                                    .modifier(MediumTextStyle( size: Font.size.bold ))
-                                    .padding(.top, Dimen.margin.light)
-                                
-                                Text(String.pageText.pairingSetupUserText2)
-                                    .modifier(
-                                        MediumTextStyle( size: Font.size.light, color: Color.app.whiteDeep))
-                                    .padding(.top, Dimen.margin.light)
-                                    .fixedSize(horizontal: false, vertical:true)
-                                
-                                InputCell(
-                                    title: String.app.nickName,
-                                    input: self.$nickName,
-                                    isFocus: self.editType == .nickName,
-                                    placeHolder: String.app.nickNameHolder
-                                )
-                                .padding(.top, Dimen.margin.heavy)
-                                
-                                Text(self.nickName.isNickNameType()
-                                    ? String.app.nickNameValidation
-                                    : String.app.nickNameInvalidation)
-                                    .modifier(MediumTextStyle(
-                                        size: Font.size.tiny, color: Color.brand.primary
-                                    ))
-                                    .padding(.leading, Dimen.tab.titleWidth)
-                                    .padding(.top, Dimen.margin.tiny)
-                                
-                                HStack(alignment:.center, spacing:0){
-                                    Text(String.app.birth)
-                                        .modifier(MediumTextStyle(size: Font.size.light))
-                                        .frame(width:Dimen.tab.titleWidth, alignment: .leading)
-                                        .multilineTextAlignment(.leading)
-                                    SortButton(
-                                        text: self.$birth,
-                                        isFocus: self.editType == .birth){
-                                        self.doBirthSelect()
-                                    }
-                                    Text(String.app.gender)
-                                        .modifier(MediumTextStyle(size: Font.size.light))
-                                        .padding(.horizontal, Dimen.margin.thin)
-                        
-                                    HStack(spacing:Dimen.margin.thin){
-                                        RadioButton(
-                                            isChecked: .constant(self.gender == .mail),
-                                            text: String.app.mail
-                                        ){idx in
-                                            self.onGenderSelected(.mail)
-                                        }
-                                        RadioButton(
-                                            isChecked: .constant(self.gender == .femail),
-                                            text: String.app.femail
-                                        ){idx in
-                                            self.onGenderSelected(.femail)
-                                        }
-                                    }
-                                    .padding(.horizontal, Dimen.margin.thin)
-                                    .modifier(MatchHorizontal(height: Dimen.tab.regular))
-                                    .background(Color.app.blueLight)
+                          
+                            Text(String.pageText.pairingSetupUserText1)
+                                .modifier(MediumTextStyle( size: Font.size.bold ))
+                                .padding(.top, Dimen.margin.light)
+                            
+                            Text(String.pageText.pairingSetupUserText2)
+                                .modifier(
+                                    MediumTextStyle( size: Font.size.light, color: Color.app.whiteDeep))
+                                .padding(.top, Dimen.margin.light)
+                                .fixedSize(horizontal: false, vertical:true)
+                            
+                            InputCell(
+                                title: String.app.nickName,
+                                input: self.$nickName,
+                                isFocus: self.editType == .nickName,
+                                placeHolder: String.app.nickNameHolder
+                            )
+                            .padding(.top, Dimen.margin.heavy)
+                            
+                            Text(self.nickName.isNickNameType()
+                                ? String.app.nickNameValidation
+                                : String.app.nickNameInvalidation)
+                                .modifier(MediumTextStyle(
+                                    size: Font.size.tiny, color: Color.brand.primary
+                                ))
+                                .padding(.leading, Dimen.tab.titleWidth)
+                                .padding(.top, Dimen.margin.tiny)
+                            
+                            HStack(alignment:.center, spacing:0){
+                                Text(String.app.birth)
+                                    .modifier(MediumTextStyle(size: Font.size.light))
+                                    .frame(width:Dimen.tab.titleWidth, alignment: .leading)
+                                    .multilineTextAlignment(.leading)
+                                SortButton(
+                                    text: self.$birth,
+                                    isFocus: self.editType == .birth){
+                                    self.doBirthSelect()
                                 }
-                                .padding(.top, Dimen.margin.thin)
+                                Text(String.app.gender)
+                                    .modifier(MediumTextStyle(size: Font.size.light))
+                                    .padding(.horizontal, Dimen.margin.thin)
+                    
+                                HStack(spacing:Dimen.margin.thin){
+                                    RadioButton(
+                                        isChecked: .constant(self.gender == .mail),
+                                        text: String.app.mail
+                                    ){idx in
+                                        self.onGenderSelected(.mail)
+                                    }
+                                    RadioButton(
+                                        isChecked: .constant(self.gender == .femail),
+                                        text: String.app.femail
+                                    ){idx in
+                                        self.onGenderSelected(.femail)
+                                    }
+                                }
+                                .padding(.horizontal, Dimen.margin.thin)
+                                .modifier(MatchHorizontal(height: Dimen.tab.regular))
+                                .background(Color.app.blueLight)
                             }
-                            .padding(.horizontal, Dimen.margin.regular)
-                            CharacterSelectBox(
-                                data:CharacterRowData(),
-                                selectIdx: self.$characterIdx )
-                                .padding(.vertical, Dimen.margin.medium)
+                            .padding(.top, Dimen.margin.thin)
+                            
                         }
+                        .padding(.horizontal, Dimen.margin.regular)
+                        
+                        CharacterSelectBox(
+                            data:CharacterRowData(),
+                            selectIdx: self.$characterIdx )
+                            .padding(.vertical, Dimen.margin.medium)
+                        
                     }//scroll
                     .modifier(MatchParent())
+                    
                     VStack{
                         CheckBox(
                             isChecked: .constant(
@@ -164,6 +167,7 @@ struct PagePairingSetupUser: PageView {
                     }
                     .padding(.bottom, self.safeAreaBottom)
                 }
+                
                 .highPriorityGesture(
                     DragGesture(minimumDistance: 20, coordinateSpace: .local)
                         .onChanged({ value in
@@ -173,8 +177,24 @@ struct PagePairingSetupUser: PageView {
                             self.pageDragingModel.uiEvent = .draged(geometry)
                         })
                 )
+                .onReceive(self.infinityScrollModel.$event){evt in
+                    guard let evt = evt else {return}
+                    switch evt {
+                    case .down, .up :
+                        self.pageDragingModel.uiEvent = .pulled(geometry)
+                    case .pullCancel :
+                        self.pageDragingModel.uiEvent = .pulled(geometry)
+                    default : do{}
+                    }
+                }
+                /*
+                .onReceive(self.infinityScrollModel.$pullPosition){ pos in
+                    self.pageDragingModel.uiEvent = .pull(geometry, pos)
+                }
+                */
                 .modifier(PageFull())
             }
+            
             .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
                 if self.editType == .nickName {return}
                 self.safeAreaBottom = pos
@@ -202,6 +222,7 @@ struct PagePairingSetupUser: PageView {
                 AppUtil.hideKeyboard()
             }
             .onAppear{
+                //UIScrollView.appearance().bounces = false
                 guard let obj = self.pageObject  else { return }
                 self.birth = self.birthList[20]
                 self.pairingType = (obj.getParamValue(key: .type) as? PairingRequest) ?? self.pairingType
@@ -221,6 +242,7 @@ struct PagePairingSetupUser: PageView {
                     self.isAgree2 = user.isAgree2
                     self.isAgree3 = user.isAgree3
                 }
+
             }
             .onDisappear{
             
@@ -229,7 +251,6 @@ struct PagePairingSetupUser: PageView {
         }//geo
     }//body
 
-    
     func isInputCompleted() -> Binding<Bool> {
         var complete = false
         if self.nickName.isNickNameType() && self.isAgree1 && self.isAgree2 {
@@ -249,9 +270,16 @@ struct PagePairingSetupUser: PageView {
             nickName: self.nickName, characterIdx: self.characterIdx, gender: self.gender, birth: self.birth, isAgree1: self.isAgree1, isAgree2: self.isAgree2, isAgree3: self.isAgree3
         )
         self.pagePresenter.goBack()
-        self.pagePresenter.openPopup(
-            PageProvider.getPageObject(.pairingBtv)
-        )
+        if self.pairingType == .btv {
+            self.pagePresenter.openPopup(
+                PageProvider.getPageObject(.pairingBtv)
+            )
+        }else {
+            self.pagePresenter.openPopup(
+                PageProvider.getPageObject(.pairingDevice)
+                    .addParam(key: .type, value: self.pairingType)
+            )
+        }
     }
     
     private func onGenderSelected(_ gen:Gender){

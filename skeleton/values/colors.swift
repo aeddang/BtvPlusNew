@@ -23,7 +23,7 @@ extension Color {
     struct brand {
         public static let primary = Color.init(red: 244/255, green: 101/255, blue: 52/255)
         public static let primaryLight = Color.init(red: 255/255, green: 237/255, blue: 236/255)
-        public static let secondary = Color.init(red: 82/255, green:165/255, blue: 255/255)
+        public static let secondary = Color.init(red: 60/255, green:61/255, blue: 83/255)
         public static let thirdly = Color.init(red: 190/255, green:25/255, blue: 25/255)
         public static let accent =  app.blue
         public static let bg =  app.blueDeep
@@ -33,6 +33,7 @@ extension Color {
         public static let black =  Color.black
        
         public static let grey = Color.init(red: 136/255, green: 136/255, blue: 136/255)
+        public static let greyExtra = Color.init(red: 153/255, green: 153/255, blue: 153/255)
         public static let greyDeep = Color.init(red: 170/255, green: 170/255, blue: 170/255)
         public static let greyLight = Color.init(red: 212/255, green: 212/255, blue: 212/255)
         public static let greyLightExtra = Color.init(red: 204/255, green: 204/255, blue: 204/255)

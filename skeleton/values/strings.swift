@@ -31,31 +31,39 @@ extension String {
         
         public static let certificationNumber = "certificationNumber".loaalized()
         public static let certificationNumberHolder = "certificationNumberHolder".loaalized()
+        public static let macAdress = "macAdress".loaalized()
     }
     
     struct alert {
-        public static var apns = "apns".loaalized()
-        public static var api = "api".loaalized()
-        public static var apiErrorServer = "apiErrorServer".loaalized()
-        public static var apiErrorClient = "apiErrorClient".loaalized()
-        public static var connectError = "connectError".loaalized()
+        public static var apns = "alertApns".loaalized()
+        public static var api = "alertApi".loaalized()
+        public static var apiErrorServer = "alertApiErrorServer".loaalized()
+        public static var apiErrorClient = "alertApiErrorClient".loaalized()
+        
+        
+        public static var connect = "alertConnect".loaalized()
+        public static var connectWifi = "alertConnectWifi".loaalized()
+        public static var connectWifiSub = "alertConnectWifiSub".loaalized()
+        public static var connectError = "alertConnectError".loaalized()
+        public static var connectNotFound = "alertConnectNotFound".loaalized()
+        public static var connectNotFoundSub = "alertConnectNotFoundSub".loaalized()
     }
     
     struct button {
-        public static var next = "next".loaalized()
-        public static var complete = "complete".loaalized()
-        public static var share = "share".loaalized()
-        public static var more = "more".loaalized()
-        public static var delete = "delete".loaalized()
-        public static let view = "view".loaalized()
-        public static let connect = "connect".loaalized()
+        public static var next = "btnNext".loaalized()
+        public static var complete = "btnComplete".loaalized()
+        public static var share = "btnShare".loaalized()
+        public static var more = "btnMore".loaalized()
+        public static var delete = "btnDelete".loaalized()
+        public static let view = "btnView".loaalized()
+        public static let connect = "btnConnect".loaalized()
     }
     
     struct pageTitle {
-        public static let connectBtv = "connectBtv".loaalized()
-        public static let connectWifi = "connectWifi".loaalized()
-        public static let connectCertificationBtv = "connectCertificationBtv".loaalized()
-        public static let connectCertificationUser = "connectCertificationUser".loaalized()
+        public static let connectBtv = "titleConnectBtv".loaalized()
+        public static let connectWifi = "titleConnectWifi".loaalized()
+        public static let connectCertificationBtv = "titleConnectCertificationBtv".loaalized()
+        public static let connectCertificationUser = "titleConnectCertificationUser".loaalized()
     }
     
     struct pageText {
@@ -82,11 +90,18 @@ extension String {
         public static let pairingSetupUserAgreement2 = "pairingSetupUserAgreement2".loaalized()
         public static let pairingSetupUserAgreement3 = "pairingSetupUserAgreement3".loaalized()
         
+        public static let pairingDeviceText1 = "pairingDeviceText1".loaalized()
+        public static let pairingDeviceText2 = "pairingDeviceText2".loaalized()
+        public static let pairingDeviceText3 = "pairingDeviceText3".loaalized()
+        public static let pairingDeviceText4 = "pairingDeviceText4".loaalized()
+        
         public static let pairingBtvText1 = "pairingBtvText1".loaalized()
         public static let pairingBtvText2 = "pairingBtvText2".loaalized()
         public static let pairingBtvText3 = "pairingBtvText3".loaalized()
         public static let pairingBtvText4 = "pairingBtvText4".loaalized()
         public static let pairingBtvText5 = "pairingBtvText5".loaalized()
+        
+        
     }
     
 }

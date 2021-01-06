@@ -14,7 +14,7 @@ struct FocusableTextView: UIViewRepresentable {
     var placeholder: String = ""
     @Binding var text:String
     @Binding var isfocusAble:Bool
-    var fontSize:CGFloat = Font.size.regular
+    var textModifier:TextModifier = RegularTextStyle().textModifier
     var usefocusAble:Bool = true
     var limitedSize: Int = -1
     var inputChange: ((_ text:String, _ size:CGSize) -> Void)? = nil
@@ -23,7 +23,8 @@ struct FocusableTextView: UIViewRepresentable {
     
     func makeUIView(context: Context) -> UITextView {
         let textView = UITextView(frame: .zero)
-        textView.font = UIFont.systemFont(ofSize: self.fontSize)
+        textView.textColor = textModifier.color.uiColor()
+        textView.font = UIFont(name: textModifier.family, size: textModifier.size)
         textView.keyboardType = self.keyboardType
         textView.returnKeyType = self.returnVal
         textView.delegate = context.coordinator

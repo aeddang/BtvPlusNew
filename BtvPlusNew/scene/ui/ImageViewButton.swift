@@ -25,10 +25,10 @@ struct ImageViewButton: View{
         }) {
             VStack(spacing:Dimen.margin.tiny){
                 if !self.isSelected {
-                    ImageView(url: self.activeImage)
+                    DynamicImageView(url: self.activeImage)
                         .frame(width: size.width, height: size.height)
                 }else{
-                    ImageView(url: self.defaultImage)
+                    DynamicImageView(url: self.defaultImage)
                         .frame(width: size.width, height: size.height)
                 }
                 

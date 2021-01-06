@@ -56,13 +56,13 @@ class Repository:ObservableObject, PageProtocol{
             guard let requestPairing = req else { return }
             switch requestPairing{
             case .wifi :
-                self.pagePresenter?.isLoading = true
+                //self.pagePresenter?.isLoading = true
                 self.mdnsPairingManager.requestPairing( requestPairing,
                    found: { data in
-                        self.pagePresenter?.isLoading = false
+                        //self.pagePresenter?.isLoading = false
                         self.pairing.foundDevice(data)
                    },notFound: {
-                        self.pagePresenter?.isLoading = false
+                        //self.pagePresenter?.isLoading = false
                         self.pairing.notFoundDevice()
                    })
             default: do{}

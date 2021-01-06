@@ -29,7 +29,7 @@ struct FillButton: View, SelecterbleProtocol{
         textModifier:TextModifier? = nil,
         size:CGFloat = Dimen.button.medium,
         imageSize:CGFloat =  Dimen.icon.light,
-        bgColor:Color = Color.brand.primaryLight,
+        bgColor:Color = Color.brand.primary,
         action:@escaping (_ idx:Int) -> Void
     )
     {
@@ -74,7 +74,7 @@ struct FillButton: View, SelecterbleProtocol{
                 }
             }
             .modifier( MatchHorizontal(height: self.size) )
-            .background(Color.brand.primary )
+            .background(self.bgColor )
         }
         
         

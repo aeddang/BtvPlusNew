@@ -98,7 +98,8 @@ struct PosterList: PageComponent{
             viewModel: self.viewModel,
             axes: .horizontal,
             marginVertical: 0,
-            marginHorizontal: Dimen.margin.thin){
+            marginHorizontal: Dimen.margin.thin,
+            spacing: Dimen.margin.tiny){
             ForEach(self.datas) { data in
                 PosterItem( data:data )
                 .onTapGesture {

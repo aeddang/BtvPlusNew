@@ -1,9 +1,7 @@
 /* 
   Localizable.strings
   BtvPlusNew
-
   Created by KimJeongCheol on 2020/12/30.
-  
 */
 "appName" = "모바일 Btv";
 "corfirm" = "확인";
@@ -22,33 +20,40 @@
 "year" = "년";
 "certificationNumber" = "인증번호";
 "certificationNumberHolder" = "000000";
+"macAdress" = "MAC 주소";
 /*
   Button
 */
-"next" = "다음";
-"complete" = "완료";
-"share" = "공유하기";
-"more" = "더 보기";
-"view" = "보기";
-"delete" = "지우기";
-"connect" = "연결하기";
+"btnNext" = "다음";
+"btnComplete" = "완료";
+"btnShare" = "공유하기";
+"btnMore" = "더 보기";
+"btnView" = "보기";
+"btnDelete" = "지우기";
+"btnConnect" = "연결하기";
 /*
   Alert
 */
-"apns" = "알림";
-"api" = "알림";
-"apiErrorServer" = "접속이 지연되고 있습니다. 잠시 후 다시 이용해 주세요.";
-"apiErrorClient" = "네트워크 연결 상태를 확인하시고 다시 시도해 주세요.";
+"alertApns" = "알림";
 
-"connectError" = "B tv 연결에 실패하였습니다.\n계속 연결 불가한 경우\n고객센터(국번 없이 106)로\n문의해 주세요.";
+"alertApi" = "알림";
+"alertApiErrorServer" = "접속이 지연되고 있습니다. 잠시 후 다시 이용해 주세요.";
+"alertApiErrorClient" = "네트워크 연결 상태를 확인하시고 다시 시도해 주세요.";
+
+"alertConnect" = "B tv 연결알림";
+"alertConnectWifi" = "Wi-Fi 네트워크에 연결해 주세요.";
+"alertConnectWifiSub" = "기기의 [설정 > Wi-Fi] 메뉴에서\nWi-Fi활성화 후 다시 시도해 주세요.";
+"alertConnectNotFound" = "연결가능한 B tv가 없습니다.";
+"alertConnectNotFoundSub" = "다시 조회를 시도하시거나\n다른연결방법을 이용해 주세요.";
+"alertConnectError" = "B tv 연결에 실패하였습니다.\n계속 연결 불가한 경우\n고객센터(국번 없이 106)로\n문의해 주세요.";
 
 /*
  PageTitle
 */
-"connectBtv" = "B tv 연결하기";
-"connectWifi" = "Wi-Fi로 연결하기";
-"connectCertificationBtv" = "B tv 인증번호로 연결하기";
-"connectCertificationUser" = "가입자 확인 후 연결하기";
+"titleConnectBtv" = "B tv 연결하기";
+"titleConnectWifi" = "Wi-Fi로 연결하기";
+"titleConnectCertificationBtv" = "B tv 인증번호로 연결하기";
+"titleConnectCertificationUser" = "가입자 확인 후 연결하기";
 
 /*
  PagePairing
@@ -84,9 +89,16 @@
 "pairingSetupUserAgreement2" = "모바일 B tv 개인정보 수집 이용 동의(필수)";
 "pairingSetupUserAgreement3" = "인기, 무료 콘텐츠 소식/혜택 및 업데이트 알림을 받고, 이를 위한 개인정보 수집/이용에 동의(선택)";
 
+"pairingDeviceText1" = "연결할 B tv를 선택해 주세요.";
+"pairingDeviceText2" = "연결된 Wi-Fi 공유기: ";
+"pairingDeviceText3" = "이용 중 B tv";
+"pairingDeviceText4" = "대";
+
 "pairingBtvText1" = "B tv에서 인증번호 6자리를\n확인 후 입력해 주세요.";
 "pairingBtvText2" = "인증번호 확인 방법";
 "pairingBtvText3" = "B tv에서 채널 777번으로 진입";
 "pairingBtvText4" = "B tv에서 [홈 > MY > 설정 > 모바일 B tv 연결] 선택";
 "pairingBtvText5" = "셋톱박스의 채널버튼을 3초간 누르기";
+
+
 

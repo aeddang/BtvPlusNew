@@ -16,7 +16,7 @@ enum PairingStatus{
 }
 
 enum PairingEvent{
-    case connected, disConnected, error
+    case connected, disConnected, error, findMdnsDevice([MdnsDevice]) , notFoundDevice
 }
 enum Gender {
     case mail, femail
@@ -34,10 +34,51 @@ class Pairing:ObservableObject, PageProtocol {
     }
     
     func foundDevice(_ mdnsData:[MdnsDevice]){
-        
+        self.event = .findMdnsDevice(mdnsData)
     }
     func notFoundDevice(){
-        
+        self.event = .notFoundDevice
+    }
+    
+    static func getSTBImage(stbModel: String?) -> String {
+        switch stbModel {
+        case "BKO-AI700":
+            return "imgStb01"
+        case "BID-AI100":
+            return "imgStb02"
+        case "BIP-AI100":
+            return "imgStb02"
+        case "BKO-S200":
+            return "imgStb03"
+        case "BHX-S100":
+            return "imgStb03"
+        case "BDS-S200":
+            return "imgStb04"
+        case "BKO-UH400":
+            return "imgStb05"
+        case "BHX-UH400":
+            return "imgStb05"
+        case "BDS-S100":
+            return "imgStb06"
+        case "BKO-100":
+            return "imgStb07"
+        case "BKO-UH600":
+            return "imgStb08"
+        case "BHX-UH600":
+            return "imgStb08"
+        case "BHX-UH200":
+            return "imgStb09"
+        case "BKO-UA500":
+            return "imgStb10"
+        case "BKO-AT800":
+            return "imgStb11"
+        case "BAS-AT800":
+            return "imgStb11"
+        case "BFX-AT100":
+            return "imgStb12"
+        default:
+            return "imgStbDefault"
+        }
     }
 }
 

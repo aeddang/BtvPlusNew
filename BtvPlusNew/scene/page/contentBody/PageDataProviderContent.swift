@@ -89,6 +89,7 @@ struct PageDataProviderContent<Content>: PageComponent  where Content: View{
         ZStack(alignment: .top){
             self.content.modifier(MatchParent())
         }//z
+    
         .onReceive(self.viewModel.$request){ apiQ in
             guard let apiQ = apiQ else { return }
             //apiQ.copy(newId: self.tag)

@@ -35,6 +35,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
             }
         }
         .onDisappear{
+            
         }
         
         .onReceive(dataProvider.$result) { res in

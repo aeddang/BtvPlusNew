@@ -21,6 +21,7 @@ class SceneDelegate: PageSceneDelegate {
     override func getPageModel() -> PageModel { return PageSceneModel()}
     override func adjustEnvironmentObjects<T>(_ view: T) -> AnyView where T : View
     {
+        
         let sceneObserver = PageSceneObserver()
         let dataProvider = DataProvider()
         let pairing = Pairing()

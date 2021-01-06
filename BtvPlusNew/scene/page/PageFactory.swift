@@ -13,6 +13,7 @@ extension PageID{
     static let oeean:PageID = "oeean"
     static let pairing:PageID = "pairing"
     static let pairingSetupUser:PageID = "pairingSetupUser"
+    static let pairingDevice:PageID = "pairingDevice"
     static let pairingBtv:PageID = "pairingBtv"
 }
 
@@ -36,7 +37,7 @@ struct PageProvider {
     static func getType(_ pageID:PageID)-> PageAnimationType{
         switch pageID {
         case .home,
-             .pairingSetupUser, .pairingBtv : return  .vertical
+             .pairingSetupUser, .pairingBtv, .pairingDevice : return  .vertical
         
         default : return  .horizental
         }
@@ -88,6 +89,7 @@ struct PageFactory{
         case .home : return PageHome()
         case .pairing : return PagePairing()
         case .pairingSetupUser : return PagePairingSetupUser()
+        case .pairingDevice : return PagePairingDevice()
         case .pairingBtv : return PagePairingBtv()
         default : return PageTest()
         }
@@ -123,7 +125,6 @@ struct PageSceneModel: PageModel {
         }
     }
     
-   
     static func needTopTab(_ pageObject:PageObject) -> Bool{
         
         switch pageObject.pageID {

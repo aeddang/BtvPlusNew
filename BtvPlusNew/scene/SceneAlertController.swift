@@ -11,16 +11,18 @@ import SwiftUI
 import Combine
 
 enum SceneAlert:Equatable {
-    case recivedApns, apiError(ApiResultError)
+    case recivedApns, apiError(ApiResultError), connectWifi , notFoundDevice
     static func ==(lhs: SceneAlert, rhs: SceneAlert) -> Bool {
         switch (lhs, rhs) {
+        case ( .connectWifi, .connectWifi):return true
+        case ( .notFoundDevice, .notFoundDevice):return true
         default: return false
         }
     }
-    
+
 }
 enum SceneAlertResult {
-    case complete(SceneAlert), error(SceneAlert)
+    case complete(SceneAlert), error(SceneAlert) , cancel(SceneAlert), retry(SceneAlert)
 }
 struct DeclarationData:Identifiable {
     let id = UUID.init().uuidString
@@ -31,7 +33,7 @@ struct SceneAlertController: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var networkObserver:NetworkObserver
     @EnvironmentObject var repository:Repository
-    @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var appObserver:AppObserver
     
     @State var isShow = false
@@ -39,7 +41,6 @@ struct SceneAlertController: PageComponent{
     @State var image:UIImage? = nil
     @State var text:String = ""
     @State var subText:String? = nil
-    @State var checks:[CheckBoxData] = []
     @State var buttons:[AlertBtnData] = []
     @State var currentAlert:SceneAlert? = nil
     @State var delayReset:AnyCancellable? = nil
@@ -53,28 +54,31 @@ struct SceneAlertController: PageComponent{
             image: self.$image,
             text: self.$text,
             subText: self.$subText,
-            checks: self.$checks,
             buttons: self.$buttons
-        ){ idx, _ in
+        ){ idx in
             switch self.currentAlert {
-                case .apiError(let data): self.selectedApi(idx, data:data)
-                case .recivedApns: self.selectedRecivedApns(idx)
-                default: do { return }
+            case .apiError(let data): self.selectedApi(idx, data:data)
+            case .connectWifi: self.selectedConnectWifi(idx)
+            case .notFoundDevice : self.selectedNotFoundDevice(idx)
+            case .recivedApns: self.selectedRecivedApns(idx)
+            default: do { return }
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.reset()
             }
         
         }
-        .onReceive(self.sceneObserver.$alert){ alert in
+        .onReceive(self.pageSceneObserver.$alert){ alert in
             self.reset()
             self.currentAlert = alert
             switch alert{
-                case .apiError(let data): self.setupApi(data:data)
-                case .recivedApns:
-                    let enable = self.setupRecivedApns()
-                    if !enable { return }
-                default: do { return }
+            case .apiError(let data): self.setupApi(data:data)
+            case .connectWifi: self.setupConnectWifi()
+            case .notFoundDevice: self.setupNotFoundDevice()
+            case .recivedApns:
+                let enable = self.setupRecivedApns()
+                if !enable { return }
+            default: do { return }
             }
             withAnimation{
                 self.isShow = true
@@ -88,7 +92,6 @@ struct SceneAlertController: PageComponent{
         self.image = nil
         self.text = ""
         self.subText = nil
-        self.checks = []
         self.buttons = []
         self.currentAlert = nil
     }
@@ -142,6 +145,40 @@ struct SceneAlertController: PageComponent{
         ]
     }
     func selectedApi(_ idx:Int, data:ApiResultError) {}
+    
+    func setupConnectWifi() {
+        self.title = String.alert.connect
+        self.text = String.alert.connectWifi
+        self.subText = String.alert.connectWifiSub
+        self.buttons = [
+            AlertBtnData(title: String.app.retry, index: 0),
+            AlertBtnData(title: String.app.corfirm, index: 1)
+        ]
+    }
+    func selectedConnectWifi(_ idx:Int){
+        if idx == 0 {
+            self.pageSceneObserver.alertResult = .retry(.connectWifi)
+        }else {
+            self.pageSceneObserver.alertResult = .cancel(.connectWifi)
+        }
+    }
+    
+    func setupNotFoundDevice() {
+        self.title = String.alert.connect
+        self.text = String.alert.connectNotFound
+        self.subText = String.alert.connectNotFoundSub
+        self.buttons = [
+            AlertBtnData(title: String.app.retry, index: 0),
+            AlertBtnData(title: String.app.corfirm, index: 1)
+        ]
+    }
+    func selectedNotFoundDevice(_ idx:Int) {
+        if idx == 0 {
+            self.pageSceneObserver.alertResult = .retry(.notFoundDevice)
+        }else {
+            self.pageSceneObserver.alertResult = .cancel(.notFoundDevice)
+        }
+    }
 }
 
 

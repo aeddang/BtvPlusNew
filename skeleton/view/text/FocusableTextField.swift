@@ -12,6 +12,7 @@ struct FocusableTextField: UIViewRepresentable {
     var keyboardType: UIKeyboardType = .default
     var returnVal: UIReturnKeyType = .default
     var placeholder: String = ""
+    var textModifier:TextModifier = RegularTextStyle().textModifier
     @Binding var isfocusAble:Bool
     var inputChanged: ((_ text:String) -> Void)? = nil
     var inputCopmpleted: ((_ text:String) -> Void)? = nil
@@ -24,6 +25,9 @@ struct FocusableTextField: UIViewRepresentable {
         textField.placeholder = self.placeholder
         textField.autocorrectionType = .no
         textField.adjustsFontSizeToFitWidth = true
+        textField.textAlignment = .center
+        textField.textColor = self.textModifier.color.uiColor()
+        textField.font = UIFont(name: self.textModifier.family, size: self.textModifier.size)
         return textField
     }
 

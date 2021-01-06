@@ -16,16 +16,14 @@ extension View {
                image: UIImage? = nil,
                text: String,
                subText: String? = nil,
-               checks: [String]? = nil,
                buttons:[String]? = nil,
-               action: @escaping (_ idx:Int, _ userChecks:[Bool]) -> Void) -> some View {
+               action: @escaping (_ idx:Int) -> Void ) -> some View {
         
         let btns = buttons ?? [
             String.app.cancel,
             String.app.corfirm
         ]
-        let chks:[String] = checks ?? []
-       
+        
         let range = 0 ..< btns.count
         return Alert(
             isShowing: isShowing,
@@ -34,10 +32,6 @@ extension View {
             image:Binding.constant(image),
             text: Binding.constant(text),
             subText: Binding.constant(subText),
-            checks:.constant(
-                chks.map{text in
-                    CheckBoxData(text: text)
-            }),
             buttons:.constant(
                 zip(range,btns).map {index, text in
                     AlertBtnData(title: text, index: index)
@@ -49,9 +43,8 @@ extension View {
                image: Binding<UIImage?>,
                text: Binding<String>,
                subText: Binding<String?>,
-               checks: Binding<[CheckBoxData]>,
                buttons:Binding<[AlertBtnData]>,
-               action: @escaping (_ idx:Int, _ userChecks:[Bool]) -> Void) -> some View {
+               action: @escaping (_ idx:Int) -> Void ) -> some View {
         
        return Alert(
             isShowing: isShowing,
@@ -60,7 +53,6 @@ extension View {
             image:image,
             text:text,
             subText:subText,
-            checks:checks ,
             buttons:buttons,
             action:action)
     }
@@ -71,14 +63,6 @@ struct AlertBtnData:Identifiable, Equatable{
     let index:Int
 }
 
-class CheckBoxData:Identifiable{
-    let id = UUID.init()
-    var text:String? = nil
-    var isCheck:Bool = false
-    init(text:String? = nil){
-        self.text = text
-    }
-}
 
 struct Alert<Presenting>: View where Presenting: View {
     @Binding var isShowing: Bool
@@ -87,59 +71,59 @@ struct Alert<Presenting>: View where Presenting: View {
     @Binding var image: UIImage?
     @Binding var text: String
     @Binding var subText: String?
-    @Binding var checks: [CheckBoxData]
     @Binding var buttons: [AlertBtnData]
-    let action: (_ idx:Int, _ userChecks:[Bool]) -> Void
+    let action: (_ idx:Int) -> Void
     
     var body: some View {
         ZStack(alignment: .center) {
             VStack{
-                VStack (alignment: .leading, spacing:Dimen.margin.light){
-                    if self.title != nil{
-                        Text(self.title!)
-                            .modifier(BoldTextStyle(size: Font.size.medium))
+                VStack (alignment: .center, spacing:0){
+                    VStack (alignment: .center, spacing:0){
+                        if self.title != nil{
+                            Text(self.title!)
+                                .modifier(BoldTextStyle(size: Font.size.regular))
+                                .fixedSize(horizontal: false, vertical: true)
+                                .padding(.bottom, Dimen.margin.medium)
+                        }
+                        if self.image != nil{
+                            Image(uiImage: self.image!)
+                                .renderingMode(.original)
+                                .resizable()
+                                .scaledToFit()
+                                .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
+                                .padding(.bottom, Dimen.margin.light)
+                                
+                        }
+                        Text(self.text)
+                            .modifier(MediumTextStyle(size: Font.size.lightExtra))
                             .fixedSize(horizontal: false, vertical: true)
-                    }
-                    if self.image != nil{
-                        Image(uiImage: self.image!)
-                           .renderingMode(.original)
-                           .resizable()
-                           .scaledToFit()
-                            .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
-                            
-                    }
-                    Text(self.text)
-                        .modifier(BoldTextStyle(size: Font.size.light, color: Color.app.greyDeep))
-                        .lineLimit(nil)
-                        .fixedSize(horizontal: false, vertical: true)
-                    if self.subText != nil{
-                        Text(self.subText!)
-                            .modifier(MediumTextStyle(size: Font.size.light, color: Color.app.grey))
-                            .lineLimit(nil)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                    if !self.checks.isEmpty {
-                        Spacer().frame(height:Dimen.margin.thin)
-                        VStack(alignment: .leading){
-                            ForEach(self.checks, id:\.id) { check in
-                                CheckBox(
-                                    isChecked: .constant(true),
-                                    text:check.text, action: { isck in
-                                        check.isCheck = isck
-                                    })
-                            }
+                        if self.subText != nil{
+                            Text(self.subText!)
+                                .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyDeep))
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .padding(.top, Dimen.margin.tiny)
                         }
                     }
-                    Spacer().frame(height:Dimen.margin.thin)
-                    HStack{
+                    .padding(.top, Dimen.margin.regular)
+                    .padding(.bottom, Dimen.margin.medium)
+                    .padding(.horizontal, Dimen.margin.regular)
+                    HStack(spacing:0){
                         ForEach(self.buttons) { btn in
                             FillButton(
                                 text: btn.title,
                                 index: btn.index,
-                                isSelected:.constant( btn == self.buttons.last ),
-                                size: Dimen.button.medium
+                                isSelected:.constant( true ),
+                                textModifier: TextModifier(
+                                    family: Font.family.bold,
+                                    size: Font.size.lightExtra,
+                                    color: Color.app.white,
+                                    activeColor: Color.app.white
+                                ),
+                                size: Dimen.button.regular,
+                                bgColor: (btn.index % 2 == 1) ? Color.brand.primary  : Color.brand.secondary
                             ){idx in
-                                self.action(idx, self.checks.map{c in c.isCheck})
+                                self.action(idx)
                                 withAnimation{
                                     self.isShowing = false
                                 }
@@ -148,9 +132,7 @@ struct Alert<Presenting>: View where Presenting: View {
                         }
                     }
                 }
-                .padding(.all, Dimen.margin.heavy)
-                .background(Color.app.white)
-                .cornerRadius(Dimen.radius.light)
+                .background(Color.app.blue)
                 
             }
             .padding(.all, Dimen.margin.heavy)
@@ -177,7 +159,7 @@ struct Alert_Previews: PreviewProvider {
             buttons: [
                 "test","test1"
             ]
-        ){ _, _ in
+        ){ _ in
         
         }
 

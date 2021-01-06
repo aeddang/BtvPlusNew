@@ -65,6 +65,7 @@ struct CharacterList: PageComponent{
                             
                     }
                 }
+                .frame(height: ListItem.character.size.height)
             }
         }
         

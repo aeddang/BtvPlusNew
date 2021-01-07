@@ -13,13 +13,11 @@ import Combine
 
 
 class InfinityScrollModel:ComponentObservable, PageProtocol, Identifiable{
-    @Published var uiEvent:InfinityScrollUIEvent? = nil
-    {
-        didSet{
-            self.uiEvent = nil
-        }
+    @Published var uiEvent:InfinityScrollUIEvent? = nil {
+        didSet{if self.uiEvent != nil { self.uiEvent = nil}}
     }
     @Published var event:InfinityScrollEvent? = nil
+    @Published var scrollStatus:InfinityScrollStatus = .scroll
     @Published var itemEvent:InfinityScrollItemEvent? = nil
     @Published private(set) var isCompleted = false
     @Published private(set) var isLoading = false
@@ -107,6 +105,9 @@ enum InfinityScrollUIEvent {
 enum InfinityScrollEvent {
     case up, down, bottom, top, pull, pullCompleted, pullCancel
 }
+enum InfinityScrollStatus: String{
+    case scroll, pull, pullCancel
+}
 enum InfinityScrollItemEvent {
     case select(InfinityData), delete(InfinityData), declaration(InfinityData)
 }
@@ -135,17 +136,26 @@ protocol InfinityScrollViewProtocol :PageProtocol{
 }
 extension InfinityScrollViewProtocol {
     func onMove(pos:CGFloat){
-        ComponentLog.d("onMove  " + pos.description , tag: "InfinityScrollViewProtocol")
+        //ComponentLog.d("onMove  " + pos.description , tag: "InfinityScrollViewProtocol")
         let diff = self.prevPosition - pos
-        
-        if pos >= 30 {
-            //ComponentLog.d("diff " + diff.description , tag: "InfinityScrollViewProtocol")
-            if diff > 5 {self.viewModel.onPullCancel()}
-            else { onPull(pos:pos) }
+        //ComponentLog.d(" diff  " + diff.description , tag: "InfinityScrollViewProtocol")
+        //ComponentLog.d(" scrollStatus  " + self.viewModel.scrollStatus.rawValue , tag: "InfinityScrollViewProtocol")
+        if pos >= 30 && self.viewModel.scrollStatus != .pullCancel {
+            if diff > 5 && self.viewModel.scrollStatus == .pull {
+                self.viewModel.onPullCancel()
+                self.viewModel.scrollStatus = .pullCancel
+                ComponentLog.d("onPullCancel " + diff.description , tag: "InfinityScrollViewProtocol")
+            }
+            else {
+                self.onPull(pos:pos)
+            }
             return
         }
-        if pos >= 1 && pos < 5 {
-            self.viewModel.onPullCancel()
+        if pos >= 0 && pos < 5 {
+            if self.viewModel.scrollStatus == .pull {
+                self.viewModel.onPullCancel()
+            }
+            self.viewModel.scrollStatus = .scroll
             onTop()
             return
         }
@@ -158,34 +168,36 @@ extension InfinityScrollViewProtocol {
             if pos >= 0 { return }
             self.onDown()
         }
+        self.viewModel.scrollStatus = .scroll
     }
     
     func onBottom(){
         if self.viewModel.event == .bottom { return }
         self.viewModel.event = .bottom
-        //ComponentLog.d("onBottom", tag: "InfinityScrollViewProtocol")
+        ComponentLog.d("onBottom", tag: "InfinityScrollViewProtocol")
     }
     
     func onTop(){
         if self.viewModel.event == .top { return }
         self.viewModel.event = .top
-       // ComponentLog.d("onTop", tag: "InfinityScrollViewProtocol")
+        ComponentLog.d("onTop", tag: "InfinityScrollViewProtocol")
     }
     
     func onUp(){
         if self.viewModel.event == .up { return }
         self.viewModel.event = .up
-        //ComponentLog.d("onUp", tag: "InfinityScrollViewProtocol")
+        ComponentLog.d("onUp", tag: "InfinityScrollViewProtocol")
     }
     
     func onDown(){
         if self.viewModel.event == .down { return }
         self.viewModel.event = .down
-        //ComponentLog.d("onDown", tag: "InfinityScrollViewProtocol")
+        ComponentLog.d("onDown", tag: "InfinityScrollViewProtocol")
     }
     
     func onPull(pos:CGFloat){
         self.viewModel.onPull(pos: pos)
+        self.viewModel.scrollStatus = .pull
     }
 }
 

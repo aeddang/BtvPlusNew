@@ -22,6 +22,7 @@ struct PageHome: PageView {
     @State var anyCancellable = Set<AnyCancellable>()
     
     @State var reloadDegree:Double = 0
+    @State var useTracking:Bool = false
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -37,7 +38,7 @@ struct PageHome: PageView {
                     .padding(.top, Dimen.app.pageTop)
                     Spacer()
                 }
-                MultiBlock(viewModel: self.infinityScrollModel, datas: self.$blocks)
+                MultiBlock(viewModel: self.infinityScrollModel, datas: self.$blocks, useTracking:self.useTracking)
             }
         }
         .modifier(PageFull())
@@ -77,7 +78,7 @@ struct PageHome: PageView {
         }
         .onReceive(self.infinityScrollModel.$pullPosition){ pos in
             PageLog.d("infinityScrollModel " + pos.description, tag: self.tag)
-            if pos < 30 { return }
+            if pos < 30 && pos > 120{ return }
             if self.reloadDegree >= ReflashSpinner.DEGREE_MAX
                 && Double(pos) < self.reloadDegree
             {
@@ -87,6 +88,9 @@ struct PageHome: PageView {
                 self.reloadDegree = Double(pos)
                 PageLog.d("self.reloadDegree " + self.reloadDegree.description, tag: self.tag)
             }
+        }
+        .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+            self.useTracking = ani
         }
         .onDisappear{
             self.anyCancellable.forEach{$0.cancel()}

@@ -8,6 +8,8 @@
 
 import Foundation
 import UIKit
+import SystemConfiguration.CaptiveNetwork
+
 struct AppUtil{
     static var version: String {
         guard let dictionary = Bundle.main.infoDictionary,
@@ -58,6 +60,26 @@ struct AppUtil{
         let year  = (components.year ?? 2020) - offset
         let ranges = range.map{ (year - $0) }
         return ranges
+    }
+    
+    static func getSSID() -> String? {
+        let interfaces = CNCopySupportedInterfaces()
+        if interfaces == nil { return nil }
+        guard let interfacesArray = interfaces as? [String] else { return nil }
+        if interfacesArray.count <= 0 { return nil }
+        for interfaceName in interfacesArray where interfaceName == "en0" {
+            let unsafeInterfaceData = CNCopyCurrentNetworkInfo(interfaceName as CFString)
+            if unsafeInterfaceData == nil { return nil }
+            guard let interfaceData = unsafeInterfaceData as? [String: AnyObject] else { return nil }
+            return interfaceData["SSID"] as? String
+        }
+        return nil
+    }
+    
+    static func goLocationSettings() {
+        if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
+        }
     }
 }
 

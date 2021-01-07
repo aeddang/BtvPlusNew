@@ -47,6 +47,10 @@ extension String {
         public static var connectError = "alertConnectError".loaalized()
         public static var connectNotFound = "alertConnectNotFound".loaalized()
         public static var connectNotFoundSub = "alertConnectNotFoundSub".loaalized()
+        
+        public static var alertLocation = "alertLocation".loaalized()
+        public static var alertLocationSub = "alertLocationSub".loaalized()
+        public static var alertLocationBtn = "alertLocationBtn".loaalized()
     }
     
     struct button {
@@ -100,6 +104,7 @@ extension String {
         public static let pairingBtvText3 = "pairingBtvText3".loaalized()
         public static let pairingBtvText4 = "pairingBtvText4".loaalized()
         public static let pairingBtvText5 = "pairingBtvText5".loaalized()
+        
         
         
     }

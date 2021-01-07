@@ -6,11 +6,14 @@
 //
 import Foundation
 import SwiftUI
+import CoreLocation
+
 struct PagePairingDevice: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var networkObserver:NetworkObserver
+    @EnvironmentObject var locationObserver:LocationObserver
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -22,6 +25,7 @@ struct PagePairingDevice: PageView {
     @State var textAvailableWifi:String? = nil
     @State var datas:[StbData] = []
     @State var isReady:Bool = false
+    @State var useTracking:Bool = false
    
     var body: some View {
         GeometryReader { geometry in
@@ -35,11 +39,15 @@ struct PagePairingDevice: PageView {
                         isClose: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    InfinityScrollView( viewModel: self.infinityScrollModel ){
+                    InfinityScrollView(
+                        viewModel: self.infinityScrollModel,
+                        useTracking:self.useTracking){
+                        
                         VStack(alignment:.leading , spacing:0) {
                             Text(String.pageText.pairingDeviceText1)
                                 .modifier(MediumTextStyle( size: Font.size.bold ))
                                 .padding(.top, Dimen.margin.light)
+                                .fixedSize(horizontal: false, vertical:true)
                             if self.textAvailableWifi != nil {
                                 Text(self.textAvailableWifi!)
                                     .modifier(MediumTextStyle( size: Font.size.light ))
@@ -59,9 +67,11 @@ struct PagePairingDevice: PageView {
                         .padding(.top, Dimen.margin.heavy)
                         
                     }
+                    .modifier(PageFull())
                     .modifier(MatchParent())
                     
                 }
+                .modifier(PageFull())
                 .highPriorityGesture(
                     DragGesture(minimumDistance: 20, coordinateSpace: .local)
                         .onChanged({ value in
@@ -75,7 +85,7 @@ struct PagePairingDevice: PageView {
                     guard let evt = evt else {return}
                     switch evt {
                     case .down, .up :
-                        self.pageDragingModel.uiEvent = .pulled(geometry)
+                        self.pageDragingModel.uiEvent = .dragCancel(geometry)
                     case .pullCancel :
                         self.pageDragingModel.uiEvent = .pulled(geometry)
                     default : do{}
@@ -84,9 +94,7 @@ struct PagePairingDevice: PageView {
                 .onReceive(self.infinityScrollModel.$pullPosition){ pos in
                     self.pageDragingModel.uiEvent = .pull(geometry, pos)
                 }
-                .modifier(PageFull())
             }
-            
             .onReceive(self.pairing.$event){ evt in
                 if !self.isReady { return }
                 guard let evt = evt else { return }
@@ -125,6 +133,26 @@ struct PagePairingDevice: PageView {
                 default : do{}
                 }
             }
+            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                self.useTracking = ani
+            }
+            .onReceive(self.pageObservable.$status){ status in
+                switch status {
+                case .enterForeground :
+                    if self.isLocationRequest { self.findSSID() }
+                default : do{}
+                }
+            }
+            .onReceive(self.locationObserver.$event){ evt in
+                guard let evt = evt else {return}
+                switch evt {
+                case .updateAuthorization(let auth) :
+                    if auth == .authorizedWhenInUse || auth == .authorizedAlways { self.updateSSID() }
+                default : do{}
+                }
+                
+            }
+            
             .onAppear{
                 guard let obj = self.pageObject  else { return }
                 self.pairingType = (obj.getParamValue(key: .type) as? PairingRequest) ?? self.pairingType
@@ -135,18 +163,40 @@ struct PagePairingDevice: PageView {
             
                 case .wifi :
                     self.title = String.pageTitle.connectWifi
-                    self.textAvailableWifi = String.pageText.pairingDeviceText2 + self.networkObserver.reachability.connection.description
                     self.findDevice()
                 default : do{}
                 }
                 self.isReady = true
+                self.findSSID()
             }
+            
             .onDisappear{
                 self.pairing.requestPairing(.cancel)
             }
             
         }//geo
     }//body
+    
+    @State var isLocationRequest:Bool = false
+    func findSSID() {
+        let status = self.locationObserver.status
+        if status == .authorizedWhenInUse || status == .authorizedAlways {
+            self.updateSSID()
+        } else if status == .denied {
+            self.isLocationRequest = true
+        } else {
+            self.locationObserver.requestWhenInUseAuthorization()
+        }
+    }
+    
+    func updateSSID() {
+        self.isLocationRequest = false
+        if let ssid = AppUtil.getSSID(){
+            self.textAvailableWifi = String.pageText.pairingDeviceText2 + ssid
+        } else {
+            self.textAvailableWifi = ""
+        }
+    }
     
     private func findDevice(){
         switch  self.pairingType {
@@ -159,6 +209,8 @@ struct PagePairingDevice: PageView {
     }
 
 }
+
+
 
 #if DEBUG
 struct PagePairingDevice_Previews: PreviewProvider {

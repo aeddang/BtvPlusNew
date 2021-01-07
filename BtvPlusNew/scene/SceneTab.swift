@@ -22,6 +22,9 @@ struct SceneTab: PageComponent{
     
     @State var safeAreaTop:CGFloat = 0
     @State var safeAreaBottom:CGFloat = 0
+    
+    @State var useBottom:Bool = false
+    @State var useTop:Bool = false
     var body: some View {
         GeometryReader { geometry in
             ZStack{
@@ -32,6 +35,7 @@ struct SceneTab: PageComponent{
                             height:Dimen.app.top + self.safeAreaTop,
                             margin: self.positionTop)
                     )
+                    .opacity(self.useTop ? 1 : 0)
                 
                 BottomTab()
                     .modifier(
@@ -40,6 +44,7 @@ struct SceneTab: PageComponent{
                             height:Dimen.app.bottom + self.safeAreaBottom,
                             margin: self.positionBottom )
                     )
+                    .opacity(self.useBottom ? 1 : 0)
                 
                 if self.isDimed {
                     Button(action: {
@@ -82,13 +87,18 @@ struct SceneTab: PageComponent{
                 }
             }
             .onReceive (self.pageSceneObserver.$useTop) { use in
+                withAnimation{
+                    self.useTop = use
+                }
                 self.updateTopPos()
             }
             .onReceive (self.pageSceneObserver.$useBottom) { use in
+                withAnimation{
+                    self.useBottom = use
+                }
                 self.updateBottomPos()
             }
         }//geometry
-        
     }
     func updateTopPos(){
         withAnimation{

@@ -12,7 +12,7 @@ struct MultiBlock:PageComponent {
     @EnvironmentObject var sceneObserver:SceneObserver
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     @Binding var datas:[Block]
-
+    var useTracking:Bool = false
     var body :some View {
         InfinityScrollView(
             viewModel: self.viewModel,
@@ -20,7 +20,8 @@ struct MultiBlock:PageComponent {
             marginVertical : .constant(Dimen.app.bottom + sceneObserver.safeAreaTop),
             marginHorizontal : .constant(0),
             spacing: .constant(Dimen.margin.medium),
-            isRecycle : false){
+            isRecycle : false,
+            useTracking:self.useTracking){
             
             ForEach(self.datas) { data in
                 switch data.cardType {

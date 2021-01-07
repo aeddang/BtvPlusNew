@@ -8,11 +8,21 @@
 import Foundation
 import SwiftUI
 struct PageFull: ViewModifier {
+    @EnvironmentObject var sceneObserver:SceneObserver
     var bgColor:Color = Color.brand.bg
+    @State var marginStart:CGFloat = 0
+    @State var marginEnd:CGFloat = 0
     func body(content: Content) -> some View {
         return content
             //.padding(.top, PageSceneObserver.safeAreaTop)
+            .padding(.leading, self.marginStart)
+            .padding(.trailing, self.marginEnd)
             .background(bgColor)
+            .onReceive(self.sceneObserver.$isUpdated){ update in
+                if !update {return}
+                self.marginStart = self.sceneObserver.safeAreaStart
+                self.marginEnd = self.sceneObserver.safeAreaEnd
+            }
     }
 }
 

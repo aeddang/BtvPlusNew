@@ -35,7 +35,7 @@ class SceneDelegate: PageSceneDelegate {
         self.repository = res
         let networkObserver = NetworkObserver()
         let keyboardObserver = KeyboardObserver()
-        
+        let locationObserver = LocationObserver()
         let environmentView = view
             .environmentObject(AppDelegate.appObserver)
             .environmentObject(res)
@@ -44,6 +44,7 @@ class SceneDelegate: PageSceneDelegate {
             .environmentObject(networkObserver)
             .environmentObject(sceneObserver)
             .environmentObject(keyboardObserver)
+            .environmentObject(locationObserver)
         return AnyView(environmentView)
     }
     

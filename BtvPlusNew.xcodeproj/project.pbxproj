@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		310D7E2425A42B72000BE173 /* PagePairingDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310D7E2325A42B72000BE173 /* PagePairingDevice.swift */; };
 		310D7E2C25A42D05000BE173 /* StbList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310D7E2B25A42D05000BE173 /* StbList.swift */; };
+		3158232925A704F800E4E9C8 /* LocationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3158232825A704F800E4E9C8 /* LocationObserver.swift */; };
 		3192317225A3FDBE00020388 /* coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192317125A3FDBE00020388 /* coordinator.swift */; };
 		3192318025A40A7D00020388 /* ReflashSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192317F25A40A7D00020388 /* ReflashSpinner.swift */; };
 		4624169650CBC1A8EF5A5678 /* Pods_BtvPlusNewTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 422A939031A7D25F7E469FCB /* Pods_BtvPlusNewTests.framework */; };
@@ -194,6 +195,7 @@
 		01E5590AFE81BD86D6657D56 /* Pods-BtvPlusNew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BtvPlusNew.release.xcconfig"; path = "Target Support Files/Pods-BtvPlusNew/Pods-BtvPlusNew.release.xcconfig"; sourceTree = "<group>"; };
 		310D7E2325A42B72000BE173 /* PagePairingDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePairingDevice.swift; sourceTree = "<group>"; };
 		310D7E2B25A42D05000BE173 /* StbList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StbList.swift; sourceTree = "<group>"; };
+		3158232825A704F800E4E9C8 /* LocationObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationObserver.swift; sourceTree = "<group>"; };
 		3192317125A3FDBE00020388 /* coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = coordinator.swift; sourceTree = "<group>"; };
 		3192317F25A40A7D00020388 /* ReflashSpinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflashSpinner.swift; sourceTree = "<group>"; };
 		348DCDB744BAB8587ED219D4 /* Pods-BtvPlusNewTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BtvPlusNewTests.release.xcconfig"; path = "Target Support Files/Pods-BtvPlusNewTests/Pods-BtvPlusNewTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -661,6 +663,7 @@
 			children = (
 				D56C699B257DA09E00CF9AB8 /* KeyboardObserver.swift */,
 				D56C699C257DA09E00CF9AB8 /* NetworkObserver.swift */,
+				3158232825A704F800E4E9C8 /* LocationObserver.swift */,
 			);
 			path = observable;
 			sourceTree = "<group>";
@@ -1392,6 +1395,7 @@
 				D5DC475625820DC3007EDD86 /* GatewaySynopsis.swift in Sources */,
 				D56C69AF257DA09E00CF9AB8 /* DynamicLinkManager.swift in Sources */,
 				D56C69AD257DA09E00CF9AB8 /* InfinityScroll.swift in Sources */,
+				3158232925A704F800E4E9C8 /* LocationObserver.swift in Sources */,
 				D56C6A61257DA0C700CF9AB8 /* FocusableTextView.swift in Sources */,
 				D56C69AC257DA09E00CF9AB8 /* SelecterbleView.swift in Sources */,
 				D56C69B5257DA09E00CF9AB8 /* NetworkObserver.swift in Sources */,

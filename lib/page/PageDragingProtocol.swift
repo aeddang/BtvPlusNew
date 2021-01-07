@@ -83,7 +83,7 @@ extension PageDragingView{
             : abs(self.gestureOffset) / CGFloat(t) / 200
         
         spd = min(spd, 5.0)
-        ComponentLog.d("onScrollEnd " + spd.description)
+        //ComponentLog.d("onScrollEnd " + spd.description)
         let inertia = self.gestureOffset * spd
         var willPos = self.isBodyDraging ? 0 :  (self.scrollOffset + self.gestureOffset)
         willPos += inertia
@@ -135,6 +135,7 @@ extension PageDragingView{
             ? self.bodyOffset + value.translation.height - modifyOffset
             : self.bodyOffset + value.translation.width - modifyOffset
         self.moveOffset(offset, geometry:geometry)
+        
     }
     
     func onDragEnd(geometry:GeometryProxy) {
@@ -144,6 +145,8 @@ extension PageDragingView{
             : (self.isBottom ? geometry.size.width*0.66 : geometry.size.width*0.2)
         var offset = self.bodyOffset
         var isBottom = false
+        //ComponentLog.d("half " + half.description , tag: self.tag)
+        //ComponentLog.d("offset " + offset.description , tag: self.tag)
         if offset > half {
             offset =  (self.axis == .vertical) ? geometry.size.height : geometry.size.width
             isBottom = true
@@ -159,6 +162,7 @@ extension PageDragingView{
 class PageDragingModel: ObservableObject, PageProtocol, Identifiable{
     @Published var uiEvent:PageDragingUIEvent? = nil
     @Published var event:PageDragingEvent? = nil
+    @Published var status:PageDragingStatus = .none
     
 }
 enum PageDragingUIEvent {
@@ -168,6 +172,7 @@ enum PageDragingUIEvent {
          pulled(GeometryProxy),
          drag(GeometryProxy, DragGesture.Value, CGFloat? = nil), 
          draged(GeometryProxy),
+         dragCancel(GeometryProxy),
          scrollBodyOffset(CGFloat),
          scrollContentRange(CGFloat),
          scrollTop,
@@ -181,7 +186,9 @@ enum PageDragingEvent {
          drag(CGFloat, Double),
          draged(Bool,CGFloat)
 }
-
+enum PageDragingStatus {
+    case none,drag,pull
+}
 
 struct PageDragingBody<Content>: PageDragingView  where Content: View{
     @EnvironmentObject var pagePresenter:PagePresenter
@@ -229,21 +236,35 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
             case .scroll(let geo, let value) : self.onScrolling(geometry: geo, value: value)
             case .scrolled(let geo) : self.onScrollEnd(geometry: geo)
             case .pull(let geo, let value, let offset) :
-                if value < self.minPullAmount { return }
-                let diff =  value - self.pullOffset
-                if self.pullOffset == self.minPullAmount {
-                    withAnimation{
-                        self.bodyOffset = self.minPullAmount
+                if #available(iOS 14.0, *) {
+                    //if self.viewModel.status == .drag { return }
+                    if value < self.minPullAmount { return }
+                    let diff =  value - self.pullOffset
+                    if self.pullOffset == self.minPullAmount {
+                        withAnimation{
+                            self.bodyOffset = self.minPullAmount
+                        }
+                    } else {
+                        self.onPull(geometry: geo, value: diff, modifyOffset: offset ?? 0)
                     }
+                    self.pullOffset = value
+                    self.viewModel.status = .pull
                 }
-                self.onPull(geometry: geo, value: diff, modifyOffset: offset ?? 0) 
-                self.pullOffset = value
             case .pulled(let geo) :
-                self.pullOffset = self.minPullAmount
-                self.onPulled(geometry: geo)
+                if #available(iOS 14.0, *) {
+                    if self.viewModel.status == .drag { return }
+                    self.pullOffset = self.minPullAmount
+                    self.onPulled(geometry: geo)
+                    self.viewModel.status = .none
+                }
+                
             case .drag(let geo, let value, let offset) :
                 self.onDraging(geometry: geo, value: value, modifyOffset: offset ?? 0)
             case .draged(let geo) : self.onDragEnd(geometry: geo)
+            case .dragCancel(let geo) :
+                if self.viewModel.status == .drag { return }
+                self.onDragEnd(geometry: geo)
+                
             case .scrollContentRange(let range) :
                 self.contentRange = range 
             case .scrollBodyOffset(let offset) :
@@ -291,6 +312,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
            self.isDraging = true
         }
         self.viewModel.event = .dragInit
+        self.viewModel.status = .drag
     }
     
     func onDragingAction(offset: CGFloat, dragOpacity: Double) {
@@ -301,6 +323,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
 
     func onDragEndAction(isBottom: Bool, offset: CGFloat) {
         if !self.isDraging { return }
+        self.viewModel.status = .none
         withAnimation{
             self.isDraging = false
             if !isBottom {

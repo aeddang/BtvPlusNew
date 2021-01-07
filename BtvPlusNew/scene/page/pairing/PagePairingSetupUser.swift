@@ -31,6 +31,8 @@ struct PagePairingSetupUser: PageView {
     @State var isAgree2:Bool = true
     @State var isAgree3:Bool = true
     @State var safeAreaBottom:CGFloat = 0
+    
+    @State var useTracking:Bool = false
      
     let birthList = AppUtil.getYearRange(len: 100, offset:0).map{
         $0.description + String.app.year
@@ -48,9 +50,12 @@ struct PagePairingSetupUser: PageView {
                         isClose: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    InfinityScrollView( viewModel: self.infinityScrollModel ){
+                    
+                    InfinityScrollView(
+                        viewModel: self.infinityScrollModel,
+                        useTracking: self.useTracking
+                        ){
                         VStack(alignment:.leading , spacing:0) {
-                          
                             Text(String.pageText.pairingSetupUserText1)
                                 .modifier(MediumTextStyle( size: Font.size.bold ))
                                 .padding(.top, Dimen.margin.light)
@@ -114,7 +119,7 @@ struct PagePairingSetupUser: PageView {
                             
                         }
                         .padding(.horizontal, Dimen.margin.regular)
-                        
+                    
                         CharacterSelectBox(
                             data:CharacterRowData(),
                             selectIdx: self.$characterIdx )
@@ -167,7 +172,7 @@ struct PagePairingSetupUser: PageView {
                     }
                     .padding(.bottom, self.safeAreaBottom)
                 }
-                
+                .modifier(PageFull())
                 .highPriorityGesture(
                     DragGesture(minimumDistance: 20, coordinateSpace: .local)
                         .onChanged({ value in
@@ -180,21 +185,19 @@ struct PagePairingSetupUser: PageView {
                 .onReceive(self.infinityScrollModel.$event){evt in
                     guard let evt = evt else {return}
                     switch evt {
-                    case .down, .up :
-                        self.pageDragingModel.uiEvent = .pulled(geometry)
-                    case .pullCancel :
-                        self.pageDragingModel.uiEvent = .pulled(geometry)
+                    case .down, .up : self.pageDragingModel.uiEvent = .dragCancel(geometry)
+                    case .pullCancel : self.pageDragingModel.uiEvent = .pulled(geometry)
                     default : do{}
                     }
                 }
-                /*
                 .onReceive(self.infinityScrollModel.$pullPosition){ pos in
                     self.pageDragingModel.uiEvent = .pull(geometry, pos)
                 }
-                */
-                .modifier(PageFull())
+                
             }
-            
+            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                self.useTracking = ani
+            }
             .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
                 if self.editType == .nickName {return}
                 self.safeAreaBottom = pos
@@ -325,7 +328,7 @@ struct PagePairingSetupUser_Previews: PreviewProvider {
                 .environmentObject(PageSceneObserver())
                 .environmentObject(KeyboardObserver())
                 .environmentObject(Pairing())
-                .frame(width: 375, height: 640, alignment: .center)
+                .frame(width: 565, height: 640, alignment: .center)
         }
     }
 }

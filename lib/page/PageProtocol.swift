@@ -75,6 +75,10 @@ enum SceneStatus:String {
     enterBackground
 }
 
+enum SceneOrientation {
+    case portrait, landscape
+}
+
 open class PageObservable: ObservableObject  {
     @Published var status:SceneStatus = SceneStatus.initate
     @Published var pageObject:PageObject?
@@ -83,7 +87,11 @@ open class PageObservable: ObservableObject  {
     @Published var isBackground:Bool = false
     @Published var isAnimationComplete:Bool = false
 }
+
 open class SceneObserver: ObservableObject{
+    
+    @Published private(set) var safeAreaStart:CGFloat = 0
+    @Published private(set) var safeAreaEnd:CGFloat = 0
     @Published private(set) var safeAreaBottom:CGFloat = 0
     @Published private(set) var safeAreaTop:CGFloat = 0
     @Published private(set) var screenSize:CGSize = CGSize()
@@ -92,9 +100,21 @@ open class SceneObserver: ObservableObject{
     func update(geometry:GeometryProxy) {
         self.safeAreaBottom = geometry.safeAreaInsets.bottom
         self.safeAreaTop = geometry.safeAreaInsets.top
+        self.safeAreaStart = geometry.safeAreaInsets.leading
+        self.safeAreaEnd = geometry.safeAreaInsets.trailing
         self.screenSize = geometry.size
         self.isUpdated = true
     }
+    
+    var sceneOrientation: SceneOrientation {
+        get{
+            return self.screenSize.width > self.screenSize.height
+                        ? .landscape
+                        : .portrait
+            //return UIDevice.current.orientation.isLandscape ? .landscape : .portrait
+        }
+    }
+    
 }
 
 protocol PageProtocol {}

@@ -24,8 +24,8 @@ extension Color {
         public static let primary = Color.init(red: 244/255, green: 101/255, blue: 52/255)
         public static let primaryLight = Color.init(red: 255/255, green: 237/255, blue: 236/255)
         public static let secondary = Color.init(red: 60/255, green:61/255, blue: 83/255)
-        public static let thirdly = Color.init(red: 190/255, green:25/255, blue: 25/255)
-        public static let accent =  app.blue
+        public static let thirdly = Color.init(red: 82/255, green:165/255, blue: 255/255)
+        public static let accent =  Color.init(red: 190/255, green:25/255, blue: 25/255)
         public static let bg =  app.blueDeep
     }
     struct app {

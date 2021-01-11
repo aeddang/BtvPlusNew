@@ -17,6 +17,7 @@ struct MdnsDevice : Codable {
     private(set) var restricted_age:String? = nil
     private(set) var port:String? = nil
     private(set) var address:String? = nil
+    private(set) var isAdultSafetyMode:Bool? = nil
     init(json: [String:Any]) throws {}
 }
 

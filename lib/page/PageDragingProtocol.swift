@@ -237,14 +237,13 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
             case .scrolled(let geo) : self.onScrollEnd(geometry: geo)
             case .pull(let geo, let value, let offset) :
                 if #available(iOS 14.0, *) {
-                    //if self.viewModel.status == .drag { return }
                     if value < self.minPullAmount { return }
-                    let diff =  value - self.pullOffset
                     if self.pullOffset == self.minPullAmount {
                         withAnimation{
-                            self.bodyOffset = self.minPullAmount
+                            self.bodyOffset = self.minPullAmount * 2
                         }
                     } else {
+                        let diff =  value - self.pullOffset
                         self.onPull(geometry: geo, value: diff, modifyOffset: offset ?? 0)
                     }
                     self.pullOffset = value
@@ -275,7 +274,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
             }
         }
         .onAppear(){
-            
+            self.pullOffset = self.minPullAmount
         }
         .onDisappear(){
             
@@ -308,9 +307,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     }
     
     func onDragInit() {
-        withAnimation{
-           self.isDraging = true
-        }
+        self.isDraging = true
         self.viewModel.event = .dragInit
         self.viewModel.status = .drag
     }
@@ -318,14 +315,14 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     func onDragingAction(offset: CGFloat, dragOpacity: Double) {
         self.bodyOffset = offset
         self.viewModel.event = .drag(offset, dragOpacity)
-        self.pagePresenter.dragOpercity = dragOpacity 
+        self.pagePresenter.dragOpercity = dragOpacity
     }
 
     func onDragEndAction(isBottom: Bool, offset: CGFloat) {
         if !self.isDraging { return }
         self.viewModel.status = .none
+        self.isDraging = false
         withAnimation{
-            self.isDraging = false
             if !isBottom {
                 self.bodyOffset = 0
                 self.scrollOffset = 0

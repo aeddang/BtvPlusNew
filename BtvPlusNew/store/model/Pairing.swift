@@ -7,6 +7,8 @@
 
 import Foundation
 
+
+
 enum PairingRequest{
     case wifi , btv, user, cancel
 }
@@ -23,6 +25,8 @@ enum Gender {
 }
 
 class Pairing:ObservableObject, PageProtocol {
+    static let LIMITED_DEVICE_NUM = 4
+    
     @Published private(set) var request:PairingRequest? = nil
     @Published var event:PairingEvent? = nil
     @Published var status:PairingStatus = .disConnect

@@ -21,8 +21,9 @@ class ApiManager :PageProtocol, ObservableObject{
     private var anyCancellable = Set<AnyCancellable>()
     private var apiQ :[ ApiQ ] = []
     private let vms:Vms = Vms(network: VmsNetwork())
-    private lazy var euxp:Euxp = Euxp(network: EuxpNetwork())
-    private lazy var metv:Metv = Metv(network: MetvNetwork())
+    private lazy var euxp = Euxp(network: EuxpNetwork())
+    private lazy var metv = Metv(network: MetvNetwork())
+    private lazy var nps = Nps(network: NpsNetwork())
     private var stbId:String
     init(pairing:Pairing) {
         self.stbId = pairing.stbId
@@ -36,6 +37,7 @@ class ApiManager :PageProtocol, ObservableObject{
     func clear(){
         self.euxp.clear()
         self.metv.clear()
+        self.nps.clear()
         self.apiQ.removeAll()
     }
     
@@ -71,9 +73,21 @@ class ApiManager :PageProtocol, ObservableObject{
         self.apiQ.removeAll()
     }
     
+    private var transition = [String : ApiQ]()
     func load(q:ApiQ){
+        switch q.type {
+        case .postAuthPairing, .postDevicePairingInfo, .postDevicePairing :
+            if NpsNetwork.sessionId == "" {
+                transition[q.id] = q
+                self.load(.postHello, action: q.action, resultId: q.id, isOptional: q.isOptional)
+                return
+            }
+        default : do{}
+        }
         self.load(q.type, action: q.action, resultId: q.id, isOptional: q.isOptional)
     }
+    
+    
     
     @discardableResult
     func load(_ type:ApiType, action:ApiAction? = nil,
@@ -105,18 +119,64 @@ class ApiManager :PageProtocol, ObservableObject{
             page: page, pageCnt: count,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
-        }
+        //NPS
+        case .postHello : self.nps.postHello(
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .postDevicePairingInfo (let authcode, let hostDeviceid) : self.nps.postDevicePairingInfo(
+            authcode:authcode, hostDeviceid:hostDeviceid,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .postDevicePairing (let user, let device) : self.nps.postDevicePairing(
+            user: user, device: device,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .postAuthPairing (let user, let authcode) : self.nps.postAuthPairing(
+            user: user, authcode: authcode,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .postHostDeviceInfo : self.nps.postHostDeviceInfo(
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        } 
         return apiID
     }
     
     private func complated<T:Decodable>(id:String, type:ApiType, res:T){
-        self.result = .init(id: id, type:type, data: res)
+        let result:ApiResultResponds = .init(id: id, type:type, data: res)
+        switch type {
+        case .postHello :
+            if let path = NpsNetwork.hello(res: result) {
+                nps = Nps(network: NpsNetwork(enviroment: path))
+            }
+        default: do{}
+        }
+        if let trans = transition[result.id] {
+            transition.removeValue(forKey: result.id)
+            self.load(q:trans)
+        }else{
+            self.result = .init(id: id, type:type, data: res)
+        }
     }
+    
     private func complated(id:String, type:ApiType, res:Blank){
-        self.result = .init(id: id, type:type, data: res)
+        let result:ApiResultResponds = .init(id: id, type:type, data: res)
+        if let trans = transition[result.id] {
+            transition.removeValue(forKey: result.id)
+            self.load(q:trans)
+        }else{
+            self.result = .init(id: id, type:type, data: res)
+        }
     }
+    
     private func onError(id:String, type:ApiType, e:Error,isOptional:Bool = false){
-        self.error = .init(id: id, type:type, error: e, isOptional:isOptional)
+        if let trans = transition[id] {
+            transition.removeValue(forKey: id)
+            self.error = .init(id: id, type:trans.type, error: e, isOptional:isOptional)
+        }else{
+            self.error = .init(id: id, type:type, error: e, isOptional:isOptional)
+        }
+        
     }
 
     

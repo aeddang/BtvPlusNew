@@ -18,6 +18,8 @@ class PageSceneObserver:ObservableObject{
     @Published var useBottom = false
     @Published var isApiLoading = false
     
+    @Published var loadingInfo:[String]? = nil
+    
     @Published var alert:SceneAlert? = nil
     @Published var alertResult:SceneAlertResult? = nil {didSet{ if alertResult != nil { alertResult = nil} }}
     

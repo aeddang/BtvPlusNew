@@ -12,8 +12,10 @@ class StbData:InfinityData{
     private(set) var image: String = Asset.noImg1_1
     private(set) var title: String? = nil
     private(set) var subTitle: String? = nil
+    private(set) var device:MdnsDevice? = nil
     
     func setData(data:MdnsDevice) -> StbData {
+        device = data
         title = data.stb_mac_view
         if let mac = data.stb_mac_address {
             subTitle = String.app.macAdress + " : " + mac
@@ -70,7 +72,10 @@ struct StbItem: PageView {
                 }
             }
             .padding(.all, Dimen.margin.light)
-            Spacer().modifier(MatchHorizontal(height: 1)).background(Color.app.greyExtra)
+            Spacer()
+                .modifier(MatchHorizontal(height: 1))
+                .background(Color.app.greyExtra)
+                .opacity(0.1)
         }
     
     }

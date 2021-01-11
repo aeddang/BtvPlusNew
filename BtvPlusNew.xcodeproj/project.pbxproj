@@ -9,7 +9,13 @@
 /* Begin PBXBuildFile section */
 		310D7E2425A42B72000BE173 /* PagePairingDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310D7E2325A42B72000BE173 /* PagePairingDevice.swift */; };
 		310D7E2C25A42D05000BE173 /* StbList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310D7E2B25A42D05000BE173 /* StbList.swift */; };
+		314C7ECB25ABC32200C489FC /* Hello.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314C7ECA25ABC32200C489FC /* Hello.swift */; };
+		314C7EE125AC13C600C489FC /* HostDeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */; };
 		3158232925A704F800E4E9C8 /* LocationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3158232825A704F800E4E9C8 /* LocationObserver.swift */; };
+		315B55D225A7E2DC00B5B351 /* Nps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315B55D125A7E2DC00B5B351 /* Nps.swift */; };
+		315B55D725A8006B00B5B351 /* NpsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315B55D625A8006B00B5B351 /* NpsModel.swift */; };
+		315B55DC25A8026700B5B351 /* DevicePairingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315B55DB25A8026700B5B351 /* DevicePairingInfo.swift */; };
+		315B55E725A84B0900B5B351 /* DevicePairing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315B55E625A84B0900B5B351 /* DevicePairing.swift */; };
 		3192317225A3FDBE00020388 /* coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192317125A3FDBE00020388 /* coordinator.swift */; };
 		3192318025A40A7D00020388 /* ReflashSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192317F25A40A7D00020388 /* ReflashSpinner.swift */; };
 		4624169650CBC1A8EF5A5678 /* Pods_BtvPlusNewTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 422A939031A7D25F7E469FCB /* Pods_BtvPlusNewTests.framework */; };
@@ -195,7 +201,14 @@
 		01E5590AFE81BD86D6657D56 /* Pods-BtvPlusNew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BtvPlusNew.release.xcconfig"; path = "Target Support Files/Pods-BtvPlusNew/Pods-BtvPlusNew.release.xcconfig"; sourceTree = "<group>"; };
 		310D7E2325A42B72000BE173 /* PagePairingDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePairingDevice.swift; sourceTree = "<group>"; };
 		310D7E2B25A42D05000BE173 /* StbList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StbList.swift; sourceTree = "<group>"; };
+		314C7ECA25ABC32200C489FC /* Hello.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hello.swift; sourceTree = "<group>"; };
+		314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostDeviceInfo.swift; sourceTree = "<group>"; };
 		3158232825A704F800E4E9C8 /* LocationObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationObserver.swift; sourceTree = "<group>"; };
+		315B55C625A7C85900B5B351 /* BtvPlusNew.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BtvPlusNew.entitlements; sourceTree = "<group>"; };
+		315B55D125A7E2DC00B5B351 /* Nps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nps.swift; sourceTree = "<group>"; };
+		315B55D625A8006B00B5B351 /* NpsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NpsModel.swift; sourceTree = "<group>"; };
+		315B55DB25A8026700B5B351 /* DevicePairingInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicePairingInfo.swift; sourceTree = "<group>"; };
+		315B55E625A84B0900B5B351 /* DevicePairing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicePairing.swift; sourceTree = "<group>"; };
 		3192317125A3FDBE00020388 /* coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = coordinator.swift; sourceTree = "<group>"; };
 		3192317F25A40A7D00020388 /* ReflashSpinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflashSpinner.swift; sourceTree = "<group>"; };
 		348DCDB744BAB8587ED219D4 /* Pods-BtvPlusNewTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BtvPlusNewTests.release.xcconfig"; path = "Target Support Files/Pods-BtvPlusNewTests/Pods-BtvPlusNewTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -415,6 +428,52 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		315B55D025A7E24700B5B351 /* nps */ = {
+			isa = PBXGroup;
+			children = (
+				315B55E225A8065E00B5B351 /* model */,
+				315B55D125A7E2DC00B5B351 /* Nps.swift */,
+			);
+			path = nps;
+			sourceTree = "<group>";
+		};
+		315B55E025A8064900B5B351 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				D5DC477D25821DFA007EDD86 /* CWGrid.swift */,
+				D5DC4775258219CF007EDD86 /* GridEvent.swift */,
+				D5DC476D25821824007EDD86 /* GridPreview.swift */,
+				D5DC47652582131E007EDD86 /* GnbBlock.swift */,
+				D5DC475A25820FC3007EDD86 /* InsideInfo.swift */,
+				D5DC475525820DC3007EDD86 /* GatewaySynopsis.swift */,
+				D5DC474D25820A02007EDD86 /* RelationContent.swift */,
+				D50AB9032580772A00649C4A /* EventBanner.swift */,
+				D50AB90B2580779500649C4A /* Synopsis.swift */,
+				D50AB91025807AAA00649C4A /* EuxpModel.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		315B55E125A8065500B5B351 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				D56C5FE725930060009AE769 /* BookMark.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		315B55E225A8065E00B5B351 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				315B55D625A8006B00B5B351 /* NpsModel.swift */,
+				315B55DB25A8026700B5B351 /* DevicePairingInfo.swift */,
+				315B55E625A84B0900B5B351 /* DevicePairing.swift */,
+				314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */,
+				314C7ECA25ABC32200C489FC /* Hello.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
 		3192317025A3FD6200020388 /* value */ = {
 			isa = PBXGroup;
 			children = (
@@ -449,17 +508,8 @@
 		D50AB9022580770500649C4A /* euxp */ = {
 			isa = PBXGroup;
 			children = (
+				315B55E025A8064900B5B351 /* model */,
 				D50AB8FD25806FB900649C4A /* Euxp.swift */,
-				D5DC477D25821DFA007EDD86 /* CWGrid.swift */,
-				D5DC4775258219CF007EDD86 /* GridEvent.swift */,
-				D5DC476D25821824007EDD86 /* GridPreview.swift */,
-				D5DC47652582131E007EDD86 /* GnbBlock.swift */,
-				D5DC475A25820FC3007EDD86 /* InsideInfo.swift */,
-				D5DC475525820DC3007EDD86 /* GatewaySynopsis.swift */,
-				D5DC474D25820A02007EDD86 /* RelationContent.swift */,
-				D50AB9032580772A00649C4A /* EventBanner.swift */,
-				D50AB90B2580779500649C4A /* Synopsis.swift */,
-				D50AB91025807AAA00649C4A /* EuxpModel.swift */,
 			);
 			path = euxp;
 			sourceTree = "<group>";
@@ -488,7 +538,7 @@
 		D56C5FE12592F49A009AE769 /* metv */ = {
 			isa = PBXGroup;
 			children = (
-				D56C5FE725930060009AE769 /* BookMark.swift */,
+				315B55E125A8065500B5B351 /* model */,
 				D56C5FE22592F693009AE769 /* Metv.swift */,
 			);
 			path = metv;
@@ -540,6 +590,7 @@
 		D56C6925257D9EE500CF9AB8 /* BtvPlusNew */ = {
 			isa = PBXGroup;
 			children = (
+				315B55C625A7C85900B5B351 /* BtvPlusNew.entitlements */,
 				D568891E259C24A200F2F67A /* Localizable.strings */,
 				D56C6A70257DA4AD00CF9AB8 /* scene */,
 				D56C6A71257DA4BF00CF9AB8 /* store */,
@@ -986,6 +1037,7 @@
 		D56C6B25257DACD800CF9AB8 /* rest  */ = {
 			isa = PBXGroup;
 			children = (
+				315B55D025A7E24700B5B351 /* nps */,
 				D56C5FE12592F49A009AE769 /* metv */,
 				D50AB9022580770500649C4A /* euxp */,
 				D5469F4825834BAA009CED2D /* DynamicValue.swift */,
@@ -1344,8 +1396,11 @@
 				D57178582582D87500BF2612 /* PageHome.swift in Sources */,
 				D56C6A43257DA0C700CF9AB8 /* LayoutAlignment.swift in Sources */,
 				D56C69B1257DA09E00CF9AB8 /* IndexMap.swift in Sources */,
+				314C7EE125AC13C600C489FC /* HostDeviceInfo.swift in Sources */,
 				D56C6A2B257DA0C700CF9AB8 /* CustomCaptureSession.swift in Sources */,
+				315B55DC25A8026700B5B351 /* DevicePairingInfo.swift in Sources */,
 				D56C6A5C257DA0C700CF9AB8 /* StrokeRectButton.swift in Sources */,
+				315B55E725A84B0900B5B351 /* DevicePairing.swift in Sources */,
 				D56C69A3257DA09E00CF9AB8 /* Log.swift in Sources */,
 				D56C6A4A257DA0C700CF9AB8 /* Swipper.swift in Sources */,
 				D56C6A5B257DA0C700CF9AB8 /* CheckBox.swift in Sources */,
@@ -1404,6 +1459,7 @@
 				D56C6B0F257DAADE00CF9AB8 /* SceneRadioController.swift in Sources */,
 				D5DC474E25820A02007EDD86 /* RelationContent.swift in Sources */,
 				D5E27EEA258751A200B2CD5D /* Block.swift in Sources */,
+				315B55D225A7E2DC00B5B351 /* Nps.swift in Sources */,
 				D56C6AFF257DAAC000CF9AB8 /* AppDelegate.swift in Sources */,
 				D5469F5725835231009CED2D /* Bands.swift in Sources */,
 				D56C6A24257DA0C600CF9AB8 /* strings.swift in Sources */,
@@ -1423,6 +1479,7 @@
 				D56C6A26257DA0C600CF9AB8 /* dimens.swift in Sources */,
 				D56C69AB257DA09E00CF9AB8 /* Resource.swift in Sources */,
 				D56C6B33257DACD800CF9AB8 /* SettingStorage.swift in Sources */,
+				314C7ECB25ABC32200C489FC /* Hello.swift in Sources */,
 				D5DC4776258219CF007EDD86 /* GridEvent.swift in Sources */,
 				D56C69A6257DA09E00CF9AB8 /* AppUtil.swift in Sources */,
 				D50AB8FE25806FB900649C4A /* Euxp.swift in Sources */,
@@ -1453,6 +1510,7 @@
 				D56C6A2D257DA0C700CF9AB8 /* ImagePicker.swift in Sources */,
 				D573784325A2852900EC571F /* CharacterList.swift in Sources */,
 				3192318025A40A7D00020388 /* ReflashSpinner.swift in Sources */,
+				315B55D725A8006B00B5B351 /* NpsModel.swift in Sources */,
 				D56C6A62257DA0C700CF9AB8 /* SearchBar.swift in Sources */,
 				D57298E5259D6EC100ED2CE6 /* ScenePickerController.swift in Sources */,
 				D56C6A36257DA0C700CF9AB8 /* CPTabNavigation.swift in Sources */,
@@ -1677,6 +1735,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
@@ -1738,6 +1797,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;

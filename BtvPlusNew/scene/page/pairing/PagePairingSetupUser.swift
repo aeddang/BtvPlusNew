@@ -199,17 +199,13 @@ struct PagePairingSetupUser: PageView {
                 self.useTracking = ani
             }
             .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
-                if self.editType == .nickName {return}
-                self.safeAreaBottom = pos
+                //if self.editType == .nickName {return}
+                withAnimation{
+                    self.safeAreaBottom = pos
+                }
             }
             .onReceive(self.keyboardObserver.$isOn){ on in
-                withAnimation{
-                    self.editType = on
-                        ? .nickName
-                        : self.editType == .nickName ? .none : self.editType
-                    self.safeAreaBottom = on
-                        ? self.keyboardObserver.keyboardHeight : self.sceneObserver.safeAreaBottom
-                }
+                self.updatekeyboardStatus(on:on)
             }
             .onReceive(self.pageSceneObserver.$selectResult){ result in
                 guard let result = result else { return }
@@ -245,6 +241,7 @@ struct PagePairingSetupUser: PageView {
                     self.isAgree2 = user.isAgree2
                     self.isAgree3 = user.isAgree3
                 }
+                self.updatekeyboardStatus(on:self.keyboardObserver.isOn)
 
             }
             .onDisappear{
@@ -253,6 +250,16 @@ struct PagePairingSetupUser: PageView {
             
         }//geo
     }//body
+    
+    func updatekeyboardStatus(on:Bool) {
+        withAnimation{
+            self.editType = on
+                ? .nickName
+                : self.editType == .nickName ? .none : self.editType
+            self.safeAreaBottom = on
+                ? self.keyboardObserver.keyboardHeight : self.sceneObserver.safeAreaBottom
+        }
+    }
 
     func isInputCompleted() -> Binding<Bool> {
         var complete = false

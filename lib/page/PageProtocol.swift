@@ -103,6 +103,7 @@ open class SceneObserver: ObservableObject{
         self.safeAreaStart = geometry.safeAreaInsets.leading
         self.safeAreaEnd = geometry.safeAreaInsets.trailing
         self.screenSize = geometry.size
+        //ComponentLog.d("safeAreaBottom " + safeAreaBottom.description, tag: "SceneObserver")
         self.isUpdated = true
     }
     

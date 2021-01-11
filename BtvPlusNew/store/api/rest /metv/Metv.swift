@@ -29,7 +29,6 @@ class Metv: Rest{
     func getBookMark(
         page:Int?, pageCnt:Int?,
         completion: @escaping (BookMark) -> Void, error: ((_ e:Error) -> Void)? = nil){
-        
         var params = [String:String]()
         params["response_format"] = MetvNetwork.RESPONSE_FORMET
         params["ver"] = MetvNetwork.VERSION

@@ -48,9 +48,23 @@ extension String {
         public static var connectNotFound = "alertConnectNotFound".loaalized()
         public static var connectNotFoundSub = "alertConnectNotFoundSub".loaalized()
         
-        public static var alertLocation = "alertLocation".loaalized()
-        public static var alertLocationSub = "alertLocationSub".loaalized()
-        public static var alertLocationBtn = "alertLocationBtn".loaalized()
+        public static var location = "alertLocation".loaalized()
+        public static var locationSub = "alertLocationSub".loaalized()
+        public static var locationBtn = "alertLocationBtn".loaalized()
+        
+        public static var findDevice = "alertFindDevice".loaalized()
+        public static var findDeviceSub = "alertFindDeviceSub".loaalized()
+        
+        public static var limitedDevice = "alertLimitedDevice".loaalized()
+        public static var limitedDeviceSub = "alertLimitedDeviceSub".loaalized()
+        public static var limitedDeviceTip = "alertLimitedDeviceTip".loaalized()
+        public static var limitedDeviceReference = "alertLimitedDeviceReference".loaalized()
+        
+        public static var authcodeInvalid = "alertAuthcodeInvalid".loaalized()
+        public static var authcodeWrong = "alertAuthcodeWrong".loaalized()
+        public static var authcodeTimeout = "alertAuthcodeTimeout".loaalized()
+        public static var limitedConnect = "alertLimitedConnect".loaalized()
+        public static var stbConnectFail = "alertStbConnectFail".loaalized()
     }
     
     struct button {

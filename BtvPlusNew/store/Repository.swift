@@ -69,8 +69,6 @@ class Repository:ObservableObject, PageProtocol{
             }
             
         }).store(in: &anyCancellable)
-        
-        
     }
     
     private func setupDataProvider(){

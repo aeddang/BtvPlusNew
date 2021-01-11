@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import SystemConfiguration.CaptiveNetwork
+import NetworkExtension
 
 struct AppUtil{
     static var version: String {
@@ -62,6 +63,46 @@ struct AppUtil{
         return ranges
     }
     
+    
+    
+    static func goLocationSettings() {
+        if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
+        }
+    }
+    
+    static func getNetworkInfo(compleationHandler: @escaping ([String: Any])->Void){
+        var currentWirelessInfo: [String: Any] = [:]
+        if #available(iOS 14.0, *) {
+            NEHotspotNetwork.fetchCurrent { network in
+                guard let network = network else {
+                    compleationHandler([:])
+                    return
+                }
+                let bssid = network.bssid
+                let ssid = network.ssid
+                currentWirelessInfo = ["BSSID ": bssid, "SSID": ssid, "SSIDDATA": "<54656e64 615f3443 38354430>"]
+                compleationHandler(currentWirelessInfo)
+            }
+        }
+        else {
+            #if !TARGET_IPHONE_SIMULATOR
+            guard let interfaceNames = CNCopySupportedInterfaces() as? [String] else {
+                compleationHandler([:])
+                return
+            }
+            guard let name = interfaceNames.first, let info = CNCopyCurrentNetworkInfo(name as CFString) as? [String: Any] else {
+                compleationHandler([:])
+                return
+            }
+            currentWirelessInfo = info
+            #else
+            currentWirelessInfo = ["BSSID ": "c8:3a:35:4c:85:d0", "SSID": "Tenda_4C85D0", "SSIDDATA": "<54656e64 615f3443 38354430>"]
+            #endif
+            compleationHandler(currentWirelessInfo)
+        }
+    }
+    
     static func getSSID() -> String? {
         let interfaces = CNCopySupportedInterfaces()
         if interfaces == nil { return nil }
@@ -75,11 +116,6 @@ struct AppUtil{
         }
         return nil
     }
-    
-    static func goLocationSettings() {
-        if let appSettings = URL(string: UIApplication.openSettingsURLString) {
-            UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
-        }
-    }
+
 }
 

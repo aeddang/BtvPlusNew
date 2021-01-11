@@ -51,6 +51,19 @@
 "alertLocationSub" = "애플의 정책에 따라 공유기 이름 정보를 확인하기 위해서 위치 접근 권한을 허용하셔야 이용이 가능합니다.";
 "alertLocationBtn" = "위치 접근 허용 하러 가기";
 
+"alertFindDevice" = "B tv 연결을 위해";
+"alertFindDeviceSub" = "잠시만 기다려주세요.";
+
+"alertLimitedDevice" = "이미 %s대의 디바이스가\n연결되어 있습니다.";
+"alertLimitedDeviceSub" = "1대의 B tv에는 최대 %s대의 스마트 기기 연결이 가능합니다. B tv에서 현재 연결 중인 기기를 조정 후 다시 연결해 주세요.";
+"alertLimitedDeviceTip" = "상위 요금제로 변경 시 %s대까지 연결 가능합니다.";
+"alertLimitedDeviceReference" = "*요금제 변경 문의 : 국번없이 106";
+
+"alertAuthcodeInvalid" = "인증번호가 만료되어 연결할 수 없습니다.";
+"alertAuthcodeWrong" = "인증코드가 일치하지 않아 연결할 수 없습니다.";
+"alertAuthcodeTimeout" = "연결 확인 시간이 초과되었습니다.";
+"alertLimitedConnect" = "연결 가능한 개수를 초과하였습니다.";
+"alertStbConnectFail" = "셋톱박스와 연결에 실패하였습니다.";
 
 /*
  PageTitle

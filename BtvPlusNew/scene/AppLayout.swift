@@ -14,12 +14,14 @@ struct AppLayout: PageComponent{
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appObserver:AppObserver
-    @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var keyboardObserver:KeyboardObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     
     @State var positionTop:CGFloat = 0
     @State var positionBottom:CGFloat = 50
+    
+    @State var loadingInfo:[String]? = nil
     @State var isLoading = false
     @State var isInit = false
     var body: some View {
@@ -30,8 +32,20 @@ struct AppLayout: PageComponent{
             ScenePickerController()
             SceneAlertController()
             if self.isLoading {
-                Spacer().modifier(MatchParent()).background(Color.transparent.black15)
-                ActivityIndicator(isAnimating: self.$isLoading)
+                Spacer().modifier(MatchParent()).background(Color.transparent.black70)
+                if self.loadingInfo != nil {
+                    VStack {
+                        VStack(spacing:0){
+                            ForEach(self.loadingInfo!, id: \.self ) { text in
+                                Text( text )
+                                    .modifier(MediumTextStyle( size: Font.size.bold ))
+                            }
+                        }
+                        .modifier(MatchParent())
+                        Spacer().modifier(MatchParent())
+                    }
+                }
+                ActivityIndicator(isAnimating: self.$isLoading, style: .large)
             }
         }
         .onReceive(self.pagePresenter.$isLoading){ loading in
@@ -41,12 +55,17 @@ struct AppLayout: PageComponent{
                 }
             }
         }
-        
+        .onReceive(self.pageSceneObserver.$loadingInfo){ loadingInfo in
+            self.loadingInfo = loadingInfo
+            withAnimation{
+                self.isLoading = loadingInfo == nil ? false : true
+            }
+        }
         .onReceive(self.pagePresenter.$currentTopPage){ page in
             guard let cPage = page else { return }
             PageLog.d("currentTopPage " + cPage.pageID.debugDescription, tag:self.tag)
-            self.sceneObserver.useTop = PageSceneModel.needTopTab(cPage)
-            self.sceneObserver.useBottom = PageSceneModel.needBottomTab(cPage)
+            self.pageSceneObserver.useTop = PageSceneModel.needTopTab(cPage)
+            self.pageSceneObserver.useBottom = PageSceneModel.needBottomTab(cPage)
             if PageSceneModel.needKeyboard(cPage) {
                 self.keyboardObserver.start()
             }else{
@@ -57,7 +76,7 @@ struct AppLayout: PageComponent{
         .onReceive (self.appObserver.$page) { iwg in
             if !self.isInit { return }
             if self.appObserver.apns != nil {
-                self.sceneObserver.alert = .recivedApns
+                self.pageSceneObserver.alert = .recivedApns
                 return
             }
             PageLog.d("onReceive : \(self.pageObservable.status)" , tag : self.tag)
@@ -75,7 +94,7 @@ struct AppLayout: PageComponent{
             }
         }
         .onAppear(){
-            UITableView.appearance().separatorStyle = .none
+            //UITableView.appearance().separatorStyle = .none
             /*
             for family in UIFont.familyNames.sorted() {
                 let names = UIFont.fontNames(forFamilyName: family)

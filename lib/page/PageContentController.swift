@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 final class PageControllerObservable: ObservableObject  {
     @Published var pages:[PageViewProtocol] = []
@@ -63,7 +64,7 @@ struct PageContentController: View{
             .edgesIgnoringSafeArea(.all)
             .background(backgroundBody)
             .onReceive(self.keyboardObserver.$isOn){ on in
-                sceneObserver.update(geometry: geometry)
+                delaySafeAreaUpdate(geometry: geometry)
             }
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 sceneObserver.update(geometry: geometry)
@@ -73,6 +74,19 @@ struct PageContentController: View{
             }
         }
     }
+    
+    @State var safeAreaUpdateSubscription:AnyCancellable?
+    func delaySafeAreaUpdate(geometry:GeometryProxy) {
+        self.safeAreaUpdateSubscription?.cancel()
+        self.safeAreaUpdateSubscription = Timer.publish(
+            every: 0.01, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                self.safeAreaUpdateSubscription?.cancel()
+                sceneObserver.update(geometry: geometry)
+        }
+    }
+    
     
     func addPage(_ page:PageViewProtocol){
         pageControllerObservable.pages.append(page)

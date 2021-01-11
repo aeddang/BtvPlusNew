@@ -60,6 +60,13 @@ extension Digest {
 }
 
 extension String{
+    func replace(_ originalString:String, with newString:String) -> String {
+        return self.replacingOccurrences(of: originalString, with: newString)
+    }
+    func replace(_ newString:String) -> String {
+        return self.replacingOccurrences(of: "%s" , with: newString)
+    }
+    
     func getArrayAfterRegex(regex: String) -> [String] {
         do {
             let regex = try NSRegularExpression(pattern: regex)
@@ -130,6 +137,15 @@ extension String{
         let inputData = Data(self.utf8)
         let hashed = CryptoKit.SHA256.hash(data: inputData)
         return hashed.hexStr
+    }
+    
+    func toAES(key:String , iv:String, pass:String = "") -> String {
+        let key = SymmetricKey(data: SHA256.hash(data: pass.data(using: .utf8)!))
+        //let ivData = Data(iv.utf8)
+        let inputData = Data(self.utf8)
+        let iv = AES.GCM.Nonce()
+        let sealedBox = try? AES.GCM.seal(inputData, using: key, nonce: iv)
+        return sealedBox?.combined?.base64EncodedString() ?? ""
     }
     /*
     NSMutableString *auth = [[NSMutableString alloc] init];

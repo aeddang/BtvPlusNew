@@ -15,6 +15,13 @@ struct ApiPath {
         if let vmsPath = SystemEnvironment.serverConfig[server.configKey] {
             if vmsPath != "" { return vmsPath }
         }
+        if server == .VMS {
+            return "http://mobilebtv.com:9080"
+        }
+        if server == .NPS_V5 {
+            return "http://nps.hanafostv.com:9090"
+        }
+    
         if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
             let dictRoot = NSDictionary(contentsOfFile: path)
             if let dict = dictRoot {
@@ -74,31 +81,15 @@ struct ApiPrefix {
     static let service = "btvplus"
 }
 
-enum ApiCode:String{
-    case invalidToken, notFound
-    var code:String {
-        get {
-            switch self {
-            case .invalidToken: return "C008"
-            case .notFound: return "C005"
-            //default: return ""
-            }
-        }
-    }
-}
 
 let ApiPageSize = 20
 
 enum ApiAction:String{
-    case password, accesstoken,
-    shortcuts, like
+    case password
 }
 
 enum ApiValue:String{
-    case video, creator, product, brand, ranking, random,
-    vallanotice, serviceterms, privacypolicy,
-    zzim, tagging, myview, ddaravallapicture,ddaravalla,
-    all, mine, siderightbottom, multiband, like, comment, latest
+    case video
 }
 
 enum ApiServer:String{

@@ -42,17 +42,34 @@ struct ApiResultError :Identifiable{
 
 
 enum ApiType{
-    case versionCheck        // VMS
+    // VMS
+    case versionCheck
+    
+    //EUXP
     case getGnb,
          getCWGrid(String?, String?),
          getGridEvent(String?, EuxpNetwork.SortType? = Optional.none, Int? = nil, Int? = nil) //EUXP
     
+    //METV
     case getBookMark(Int? = nil , Int? = nil)
+    
+    //NPS
+    case postHello,
+         postDevicePairingInfo(String?, String?),
+         postDevicePairing(User?, MdnsDevice?),
+         postAuthPairing(User?, String?),
+         postHostDeviceInfo
         
     func coreDataKey() -> String? {
         switch self {
         case .getGnb : return "getGnb"
         default : return nil
+        }
+    }
+    func transitionKey() -> String {
+        switch self {
+        case .postHello : return "postHello"
+        default : return ""
         }
     }
 }

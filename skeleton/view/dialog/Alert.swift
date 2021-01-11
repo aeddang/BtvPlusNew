@@ -16,6 +16,8 @@ extension View {
                image: UIImage? = nil,
                text: String,
                subText: String? = nil,
+               tipText: String? = nil,
+               referenceText: String? = nil,
                buttons:[String]? = nil,
                action: @escaping (_ idx:Int) -> Void ) -> some View {
         
@@ -32,6 +34,8 @@ extension View {
             image:Binding.constant(image),
             text: Binding.constant(text),
             subText: Binding.constant(subText),
+            tipText: Binding.constant(tipText),
+            referenceText: Binding.constant(referenceText),
             buttons:.constant(
                 zip(range,btns).map {index, text in
                     AlertBtnData(title: text, index: index)
@@ -43,6 +47,8 @@ extension View {
                image: Binding<UIImage?>,
                text: Binding<String>,
                subText: Binding<String?>,
+               tipText: Binding<String?>,
+               referenceText: Binding<String?>,
                buttons:Binding<[AlertBtnData]>,
                action: @escaping (_ idx:Int) -> Void ) -> some View {
         
@@ -53,6 +59,8 @@ extension View {
             image:image,
             text:text,
             subText:subText,
+            tipText:tipText,
+            referenceText:referenceText,
             buttons:buttons,
             action:action)
     }
@@ -71,6 +79,8 @@ struct Alert<Presenting>: View where Presenting: View {
     @Binding var image: UIImage?
     @Binding var text: String
     @Binding var subText: String?
+    @Binding var tipText: String?
+    @Binding var referenceText: String?
     @Binding var buttons: [AlertBtnData]
     let action: (_ idx:Int) -> Void
     
@@ -95,11 +105,29 @@ struct Alert<Presenting>: View where Presenting: View {
                                 
                         }
                         Text(self.text)
+                            .multilineTextAlignment(.center)
                             .modifier(MediumTextStyle(size: Font.size.lightExtra))
                             .fixedSize(horizontal: false, vertical: true)
                         if self.subText != nil{
                             Text(self.subText!)
+                                .multilineTextAlignment(.center)
                                 .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyDeep))
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .padding(.top, Dimen.margin.tiny)
+                        }
+                        if self.tipText != nil{
+                            Text(self.tipText!)
+                                .multilineTextAlignment(.center)
+                                .modifier(MediumTextStyle(size: Font.size.tiny, color: Color.brand.primary))
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .padding(.top, Dimen.margin.regular)
+                        }
+                        if self.referenceText != nil{
+                            Text(self.referenceText!)
+                                .multilineTextAlignment(.center)
+                                .modifier(MediumTextStyle(size: Font.size.tiny, color: Color.app.greyLight))
                                 .lineLimit(nil)
                                 .fixedSize(horizontal: false, vertical: true)
                                 .padding(.top, Dimen.margin.tiny)
@@ -121,7 +149,9 @@ struct Alert<Presenting>: View where Presenting: View {
                                     activeColor: Color.app.white
                                 ),
                                 size: Dimen.button.regular,
-                                bgColor: (btn.index % 2 == 1) ? Color.brand.primary  : Color.brand.secondary
+                                bgColor: self.buttons.count == 1
+                                    ? Color.brand.primary
+                                    :(btn.index % 2 == 1) ? Color.brand.primary  : Color.brand.secondary
                             ){idx in
                                 self.action(idx)
                                 withAnimation{

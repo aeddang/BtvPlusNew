@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 struct BookMark : Codable {
     private(set) var ver: String?    // 인터페이스 버전
     private(set) var svc_name: String?   // 서비스이름

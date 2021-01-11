@@ -66,7 +66,7 @@ class ImageLoader: ObservableObject, PageProtocol{
                     self.image = value.image
                     //DataLog.d("loaded" + key , tag:self.tag)
                 case .failure(let error):
-                    DataLog.e(error.localizedDescription, tag:self.tag)
+                    //DataLog.e(error.localizedDescription, tag:self.tag)
                     DataLog.e("loaded error " + key , tag:self.tag)
                 }
             }

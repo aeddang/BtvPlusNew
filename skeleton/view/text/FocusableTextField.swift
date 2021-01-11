@@ -12,7 +12,10 @@ struct FocusableTextField: UIViewRepresentable {
     var keyboardType: UIKeyboardType = .default
     var returnVal: UIReturnKeyType = .default
     var placeholder: String = ""
+    var maxLength: Int = -1
+    var kern: Int = 10
     var textModifier:TextModifier = RegularTextStyle().textModifier
+    
     @Binding var isfocusAble:Bool
     var inputChanged: ((_ text:String) -> Void)? = nil
     var inputCopmpleted: ((_ text:String) -> Void)? = nil
@@ -26,7 +29,9 @@ struct FocusableTextField: UIViewRepresentable {
         textField.autocorrectionType = .no
         textField.adjustsFontSizeToFitWidth = true
         textField.textAlignment = .center
-        textField.textColor = self.textModifier.color.uiColor()
+        textField.textColor = UIColor.white
+        textField.defaultTextAttributes.updateValue(self.kern, forKey: .kern)
+        textField.attributedPlaceholder = NSAttributedString(string: self.placeholder , attributes: [ NSAttributedString.Key.kern: self.kern])
         textField.font = UIFont(name: self.textModifier.family, size: self.textModifier.size)
         return textField
     }
@@ -58,11 +63,12 @@ struct FocusableTextField: UIViewRepresentable {
             if let text = textField.text,
                 let textRange = Range(range, in: text) {
                 let updatedText = text.replacingCharacters(in: textRange, with: string)
-
+                if parent.maxLength != -1 {
+                    if updatedText.count > parent.maxLength {return false}
+                }
                 guard let  inputChanged = self.inputChanged else { return true}
                 inputChanged(updatedText)
             }
-
             return true
         }
         

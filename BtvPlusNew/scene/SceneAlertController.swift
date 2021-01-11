@@ -11,11 +11,14 @@ import SwiftUI
 import Combine
 
 enum SceneAlert:Equatable {
-    case recivedApns, apiError(ApiResultError), connectWifi , notFoundDevice
+    case recivedApns, apiError(ApiResultError),
+         connectWifi , notFoundDevice, requestLocation, limitedDevice(PairingInfo?),
+         pairingError(NpsCommonHeader?)
     static func ==(lhs: SceneAlert, rhs: SceneAlert) -> Bool {
         switch (lhs, rhs) {
         case ( .connectWifi, .connectWifi):return true
         case ( .notFoundDevice, .notFoundDevice):return true
+        case ( .requestLocation, .requestLocation):return true
         default: return false
         }
     }
@@ -41,6 +44,8 @@ struct SceneAlertController: PageComponent{
     @State var image:UIImage? = nil
     @State var text:String = ""
     @State var subText:String? = nil
+    @State var referenceText:String? = nil
+    @State var tipText:String? = nil
     @State var buttons:[AlertBtnData] = []
     @State var currentAlert:SceneAlert? = nil
     @State var delayReset:AnyCancellable? = nil
@@ -54,6 +59,8 @@ struct SceneAlertController: PageComponent{
             image: self.$image,
             text: self.$text,
             subText: self.$subText,
+            tipText: self.$tipText,
+            referenceText: self.$referenceText,
             buttons: self.$buttons
         ){ idx in
             switch self.currentAlert {
@@ -61,6 +68,9 @@ struct SceneAlertController: PageComponent{
             case .connectWifi: self.selectedConnectWifi(idx)
             case .notFoundDevice : self.selectedNotFoundDevice(idx)
             case .recivedApns: self.selectedRecivedApns(idx)
+            case .requestLocation: self.selectedRequestLocation(idx)
+            case .limitedDevice(_) : self.selectedLimitedDevice(idx)
+            case .pairingError(_): self.selectedPairingError(idx)
             default: do { return }
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -75,6 +85,9 @@ struct SceneAlertController: PageComponent{
             case .apiError(let data): self.setupApi(data:data)
             case .connectWifi: self.setupConnectWifi()
             case .notFoundDevice: self.setupNotFoundDevice()
+            case .requestLocation: self.setupRequestLocation()
+            case .limitedDevice(let data) : self.setupLimitedDevice(data: data)
+            case .pairingError(let data): self.setupPairingError(data: data)
             case .recivedApns:
                 let enable = self.setupRecivedApns()
                 if !enable { return }
@@ -92,6 +105,8 @@ struct SceneAlertController: PageComponent{
         self.image = nil
         self.text = ""
         self.subText = nil
+        self.tipText = nil
+        self.referenceText = nil
         self.buttons = []
         self.currentAlert = nil
     }
@@ -179,6 +194,62 @@ struct SceneAlertController: PageComponent{
             self.pageSceneObserver.alertResult = .cancel(.notFoundDevice)
         }
     }
+    
+    func setupRequestLocation() {
+        self.title = String.alert.connect
+        self.text = String.alert.location
+        self.subText = String.alert.locationSub
+        self.buttons = [
+            AlertBtnData(title: String.alert.locationBtn, index: 0),
+            AlertBtnData(title: String.app.cancel, index: 1)
+        ]
+    }
+    func selectedRequestLocation(_ idx:Int) {
+        if idx == 0 {
+            self.pageSceneObserver.alertResult = .retry(.requestLocation)
+        }else {
+            self.pageSceneObserver.alertResult = .cancel(.requestLocation)
+        }
+    }
+    
+    func setupLimitedDevice(data:PairingInfo?) {
+        self.title = String.alert.connect
+        if let count = data?.count {
+            self.text = String.alert.limitedDevice.replace(count.description)
+        }
+        self.subText = String.alert.limitedDeviceSub.replace(data?.max_count?.description ?? Pairing.LIMITED_DEVICE_NUM.description)
+        if let max = data?.max_count {
+            if Int(max) ?? 0 < Pairing.LIMITED_DEVICE_NUM {
+                self.tipText = String.alert.limitedDeviceTip.replace(Pairing.LIMITED_DEVICE_NUM.description)
+                self.referenceText = String.alert.limitedDeviceReference
+            }
+        }
+        self.buttons = [
+            AlertBtnData(title: String.app.corfirm, index: 0)
+        ]
+    }
+    func selectedLimitedDevice(_ idx:Int) {}
+    
+    
+    func setupPairingError(data:NpsCommonHeader?) {
+        self.title = String.alert.connect
+        switch data?.result {
+        case NpsNetwork.resultCode.authcodeInvalid.code :
+            self.text = String.alert.authcodeInvalid
+        case NpsNetwork.resultCode.authcodeWrong.code :
+            self.text = String.alert.authcodeWrong
+        case NpsNetwork.resultCode.authcodeTimeout.code :
+            self.text = String.alert.authcodeTimeout
+        case NpsNetwork.resultCode.pairingLimited.code :
+            self.text = String.alert.limitedConnect
+        default :
+            self.text = String.alert.stbConnectFail
+        }
+        self.buttons = [
+            AlertBtnData(title: String.app.corfirm, index: 0)
+        ]
+    }
+    func selectedPairingError(_ idx:Int) {}
 }
 
 

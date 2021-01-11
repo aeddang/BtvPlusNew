@@ -204,7 +204,7 @@ extension Network {
         #if DEBUG
         guard let headers = request.allHTTPHeaderFields else { return }
         let str = headers.reduce("headers :"){
-            $0 + " " + $1.key + " : " + $1.value
+            $0 + "\n" + $1.key + " : " + $1.value
         }
         DataLog.d(str, tag: self.tag)
         #endif

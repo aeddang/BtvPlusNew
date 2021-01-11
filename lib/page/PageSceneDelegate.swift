@@ -97,8 +97,6 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     private var changeSubscription:AnyCancellable?
     private var popupSubscriptions:[String:AnyCancellable] = [String:AnyCancellable]()
     
-    
-    
     deinit {
         changeSubscription?.cancel()
         changeSubscription = nil

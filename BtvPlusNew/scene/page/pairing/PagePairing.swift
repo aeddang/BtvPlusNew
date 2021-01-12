@@ -11,6 +11,7 @@ struct PagePairing: PageView {
     @EnvironmentObject var sceneObserver:SceneObserver
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var networkObserver:NetworkObserver
+    @EnvironmentObject var dataProvider:DataProvider
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -94,7 +95,8 @@ struct PagePairing: PageView {
                             title: String.pageText.pairingBtnUserCertification,
                             text: String.pageText.pairingBtnUserCertificationSub
                         ){
-                            self.requestPairing(type: .user)
+                            self.dataProvider.requestData(q: .init(id: self.tag, type: .postUnPairing))
+                            //self.requestPairing(type: .user)
                         }
                         .padding(.vertical, Dimen.margin.lightExtra)
                     }
@@ -172,6 +174,7 @@ struct PagePairing_Previews: PreviewProvider {
                 .environmentObject(SceneObserver())
                 .environmentObject(PageSceneObserver())
                 .environmentObject(NetworkObserver())
+                .environmentObject(DataProvider())
                 .environmentObject(Pairing())
                 .frame(width: 375, height: 640, alignment: .center)
         }

@@ -12,11 +12,15 @@ enum ApiStatus{
     case initate, ready
 }
 
+enum ApiEvents{
+    case pairingHostChanged
+}
+
 class ApiManager :PageProtocol, ObservableObject{
-    static private(set) var stbId:String = "{00000000-0000-0000-0000-000000000000}"
     @Published var status:ApiStatus = .initate
     @Published var result:ApiResultResponds? = nil {didSet{ if result != nil { result = nil} }}
     @Published var error:ApiResultError? = nil {didSet{ if error != nil { error = nil} }}
+    @Published var event:ApiEvents? = nil {didSet{ if event != nil { event = nil} }}
     
     private var anyCancellable = Set<AnyCancellable>()
     private var apiQ :[ ApiQ ] = []
@@ -24,14 +28,9 @@ class ApiManager :PageProtocol, ObservableObject{
     private lazy var euxp = Euxp(network: EuxpNetwork())
     private lazy var metv = Metv(network: MetvNetwork())
     private lazy var nps = Nps(network: NpsNetwork())
-    private var stbId:String
+
     init(pairing:Pairing) {
-        self.stbId = pairing.stbId
         self.initateApi()
-        pairing.$event.sink(receiveValue: { evt in
-            Self.stbId = pairing.stbId
-        
-        }).store(in: &anyCancellable)
     }
     
     func clear(){
@@ -73,13 +72,17 @@ class ApiManager :PageProtocol, ObservableObject{
         self.apiQ.removeAll()
     }
     
+    
+    
+    
     private var transition = [String : ApiQ]()
     func load(q:ApiQ){
         switch q.type {
-        case .postAuthPairing, .postDevicePairingInfo, .postDevicePairing :
+        case .getGnb,
+             .postAuthPairing, .getDevicePairingInfo, .postDevicePairing, .postUnPairing :
             if NpsNetwork.sessionId == "" {
                 transition[q.id] = q
-                self.load(.postHello, action: q.action, resultId: q.id, isOptional: q.isOptional)
+                self.load(.registHello, action: q.action, resultId: q.id, isOptional: q.isOptional)
                 return
             }
         default : do{}
@@ -87,8 +90,7 @@ class ApiManager :PageProtocol, ObservableObject{
         self.load(q.type, action: q.action, resultId: q.id, isOptional: q.isOptional)
     }
     
-    
-    
+
     @discardableResult
     func load(_ type:ApiType, action:ApiAction? = nil,
               resultId:String = "", isOptional:Bool = false, isLock:Bool = false)->String
@@ -120,10 +122,10 @@ class ApiManager :PageProtocol, ObservableObject{
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         //NPS
-        case .postHello : self.nps.postHello(
+        case .registHello : self.nps.postHello(
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
-        case .postDevicePairingInfo (let authcode, let hostDeviceid) : self.nps.postDevicePairingInfo(
+        case .getDevicePairingInfo (let authcode, let hostDeviceid) : self.nps.getDevicePairingInfo(
             authcode:authcode, hostDeviceid:hostDeviceid,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
@@ -135,7 +137,13 @@ class ApiManager :PageProtocol, ObservableObject{
             user: user, authcode: authcode,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
-        case .postHostDeviceInfo : self.nps.postHostDeviceInfo(
+        case .getHostDeviceInfo : self.nps.getHostDeviceInfo(
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .postGuestDeviceInfo(let user) : self.nps.postGuestDeviceInfo(user: user,
+            completion: {res in self.complated(id: apiID, type: type, res: res)}, 
+            error:error)
+        case .postUnPairing, .rePairing : self.nps.postUnPairing(
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         } 
@@ -144,13 +152,21 @@ class ApiManager :PageProtocol, ObservableObject{
     
     private func complated<T:Decodable>(id:String, type:ApiType, res:T){
         let result:ApiResultResponds = .init(id: id, type:type, data: res)
+        let prevHost = NpsNetwork.hostDeviceId
+        
         switch type {
-        case .postHello :
+        case .registHello :
             if let path = NpsNetwork.hello(res: result) {
-                nps = Nps(network: NpsNetwork(enviroment: path))
+                self.nps = Nps(network: NpsNetwork(enviroment: path))
             }
+        case .postAuthPairing, .postDevicePairing :
+            NpsNetwork.pairing(res: result)
+        case .postUnPairing :
+            NpsNetwork.unpairing(res: result)
         default: do{}
         }
+        
+        if prevHost != NpsNetwork.hostDeviceId{ self.event = .pairingHostChanged }
         if let trans = transition[result.id] {
             transition.removeValue(forKey: result.id)
             self.load(q:trans)

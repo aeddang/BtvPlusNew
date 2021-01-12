@@ -65,6 +65,8 @@ extension String {
         public static var authcodeTimeout = "alertAuthcodeTimeout".loaalized()
         public static var limitedConnect = "alertLimitedConnect".loaalized()
         public static var stbConnectFail = "alertStbConnectFail".loaalized()
+        
+        public static var connectCompleted = "alertConnectCompleted".loaalized()
     }
     
     struct button {

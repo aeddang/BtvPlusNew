@@ -52,9 +52,10 @@ class ImageLoader: ObservableObject, PageProtocol{
                 case .success(let value):
                     //DataLog.d("cached " + key , tag:self.tag)
                     self.image = value.image
-                case .failure(_):
+                case .failure(_): do{
                     //DataLog.d(error.localizedDescription, tag:self.tag)
-                    DataLog.e("cached error" + key , tag:self.tag)
+                    // DataLog.e("cached error" + key , tag:self.tag)
+                    }
                 }
             }
         } else {
@@ -65,12 +66,12 @@ class ImageLoader: ObservableObject, PageProtocol{
                     self.cache.storeToDisk(value.originalData, forKey: url.absoluteString)
                     self.image = value.image
                     //DataLog.d("loaded" + key , tag:self.tag)
-                case .failure(let error):
+                case .failure(_): do{
                     //DataLog.e(error.localizedDescription, tag:self.tag)
-                    DataLog.e("loaded error " + key , tag:self.tag)
+                    //DataLog.e("loaded error " + key , tag:self.tag)
+                    }
                 }
             }
         }
     }
-
 }

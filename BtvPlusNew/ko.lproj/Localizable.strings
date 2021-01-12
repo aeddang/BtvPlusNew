@@ -65,6 +65,8 @@
 "alertLimitedConnect" = "연결 가능한 개수를 초과하였습니다.";
 "alertStbConnectFail" = "셋톱박스와 연결에 실패하였습니다.";
 
+"alertConnectCompleted" = "B tv 연결이 완료되었습니다.\nUI 4.0 버전에서는 B tv에서\n[확인]버튼을 누르셔야 연결이 완료됩니다.";
+
 /*
  PageTitle
 */

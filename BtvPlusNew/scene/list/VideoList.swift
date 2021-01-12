@@ -92,9 +92,9 @@ struct VideoList: PageComponent{
 struct VideoItem: PageView {
     var data:VideoData
     var body: some View {
-        VStack(spacing:0){
+        VStack(alignment: .leading, spacing:0){
             ZStack{
-                ImageView(url: self.data.image, contentMode: .fit, noImg: Asset.noImg16_9)
+                ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg16_9)
                     .modifier(MatchParent())
                 if self.data.subTitle != nil {
                     Text(self.data.subTitle!)
@@ -107,9 +107,11 @@ struct VideoItem: PageView {
             .clipped()
             if self.data.title != nil {
                 Text(self.data.title!)
-                    .modifier(MediumTextStyle(size: Font.size.medium))
+                    .modifier(MediumTextStyle(size: Font.size.thinExtra))
                     .padding(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/, Dimen.margin.thin)
-                    .frame(width: ListItem.thumb.size.width)
+                    
+                    .lineLimit(1)
+                    .multilineTextAlignment(.leading)
             }
         }
         .background(Color.app.blueLight)

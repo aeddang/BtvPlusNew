@@ -20,6 +20,7 @@ extension EuxpNetwork{
     static let VERSION = "0"
     static let PAGE_COUNT = 30
     
+    
     enum SortType: String {
         case none = "10" // 기본, 사용자 정의
         case last = "20" // 최신순
@@ -200,7 +201,6 @@ class Euxp: Rest{
         fetch(route: EuxpGridEvent(query: params), completion: completion, error:error)
     }
     
-    
     func getCWGrid(
         menuId:String?, cwCallId:String?,
         completion: @escaping (CWGrid) -> Void, error: ((_ e:Error) -> Void)? = nil){
@@ -211,7 +211,7 @@ class Euxp: Rest{
         params["IF"] = "IF-EUXP-009"
         
         params["menu_id"] = menuId ?? ""
-        params["stb_id"] = ApiManager.stbId
+        params["stb_id"] = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         params["sort_typ_cd"] = ""
         params["rslu_typ_cd"] = "20"
         params["inspect_yn"] = "Y"
@@ -219,9 +219,6 @@ class Euxp: Rest{
         params["type"] = "all"
         fetch(route: EuxpCWGrid(query: params), completion: completion, error:error)
     }
-    
-    
-
 }
 
 

@@ -20,7 +20,6 @@ class Vms: Rest{
         params["response_format"] = "json"
         params["x-os-info"] = ApiPrefix.iphone+"/"+SystemEnvironment.systemVersion
         params["ver"] = "1.0"
-        
         fetch(route: VmsVersionCheck(body: params), completion: completion, error:error)
     }
 }
@@ -40,6 +39,3 @@ struct Version : Decodable {
     private(set) var eUpdateFlag: String? = nil
     private(set) var server_conf:Array<[String : String]>? = nil
 }
-
-
-

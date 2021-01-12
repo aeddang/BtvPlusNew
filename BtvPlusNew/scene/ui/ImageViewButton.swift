@@ -16,7 +16,7 @@ struct ImageViewButton: View{
     var textSize:CGFloat = Font.size.tinyExtra
     var defaultTextColor:Color = Color.app.whiteDeep
     var activeTextColor:Color = Color.app.white
-    
+    var noImg:String? = nil
     let action: () -> Void
     
     var body: some View {
@@ -25,7 +25,7 @@ struct ImageViewButton: View{
         }) {
             VStack(spacing:Dimen.margin.tiny){
                 if !self.isSelected {
-                    DynamicImageView(url: self.activeImage)
+                    DynamicImageView(url: self.activeImage, noImg: noImg)
                         .frame(width: size.width, height: size.height)
                 }else{
                     DynamicImageView(url: self.defaultImage)

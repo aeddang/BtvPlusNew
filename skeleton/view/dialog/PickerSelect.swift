@@ -60,7 +60,7 @@ struct PickerSelect<Presenting>: View where Presenting: View {
                Spacer().modifier(MatchParent())
                    .background(Color.transparent.black70)
             }
-            Picker(selection: self.$selected.onChange(selected),label: Text(self.title ?? "")) {
+            Picker(selection: self.$selected.onChange(self.onSelected),label: Text(self.title ?? "")) {
                 ForEach(self.buttons) { btn in
                     Text(btn.title).modifier(MediumTextStyle(
                         size: Font.size.light)
@@ -72,7 +72,7 @@ struct PickerSelect<Presenting>: View where Presenting: View {
         .opacity(self.isShowing ? 1 : 0)
     }
     
-    func selected(_ tag: Int) {
+    func onSelected(_ tag: Int) {
         self.action(tag)
         withAnimation{
             self.isShowing = false

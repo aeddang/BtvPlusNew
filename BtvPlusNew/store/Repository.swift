@@ -56,18 +56,31 @@ class Repository:ObservableObject, PageProtocol{
             guard let requestPairing = req else { return }
             switch requestPairing{
             case .wifi :
-                //self.pagePresenter?.isLoading = true
                 self.mdnsPairingManager.requestPairing( requestPairing,
                    found: { data in
-                        //self.pagePresenter?.isLoading = false
                         self.pairing.foundDevice(data)
                    },notFound: {
-                        //self.pagePresenter?.isLoading = false
                         self.pairing.notFoundDevice()
                    })
             default: do{}
             }
-            
+        }).store(in: &anyCancellable)
+        
+        self.pairing.$event.sink(receiveValue: { evt in
+            guard let evt = evt else { return }
+            switch evt{
+            case .connected :
+                self.sceneObserver?.event = .toast("connected")
+                self.dataProvider.requestData(q: .init(type: .getHostDeviceInfo, isOptional: true))
+                if let user = self.pairing.user {
+                    self.dataProvider.requestData(q: .init(type: .postGuestDeviceInfo(user), isOptional: true))
+                }
+            case .disConnected :
+                self.sceneObserver?.event = .toast("disConnected")
+            case .pairingCompleted :
+                self.sceneObserver?.event = .toast(String.alert.connectCompleted)
+            default: do{}
+            }
         }).store(in: &anyCancellable)
     }
     
@@ -84,22 +97,16 @@ class Repository:ObservableObject, PageProtocol{
             }else{
                 self.apiManager.load(q: apiQ)
             }
-            
         }).store(in: &anyCancellable)
-        
         
         self.apiManager.$result.sink(receiveValue: { res in
             guard let res = res else { return }
-            if let coreDatakey = res.type.coreDataKey(){
-                self.respondApi(res, coreDatakey:coreDatakey)
-            }
+            self.respondApi(res)
             DispatchQueue.main.async {
                 self.dataProvider.result = res
                 self.sceneObserver?.isApiLoading = false
                 self.pagePresenter?.isLoading = false
             }
-            
-    
         }).store(in: &anyCancellable)
         
         self.apiManager.$error.sink(receiveValue: { err in
@@ -114,6 +121,16 @@ class Repository:ObservableObject, PageProtocol{
             }
         }).store(in: &anyCancellable)
         
+        self.apiManager.$event.sink(receiveValue: {evt in
+            switch evt {
+            case .pairingHostChanged :
+                if NpsNetwork.isPairing { self.pairing.connected() }
+                else { self.pairing.disconnected() }
+                
+            default: do{}
+            }
+        }).store(in: &anyCancellable)
+        
         self.apiManager.$status.sink(receiveValue: { status in
             if status == .ready { self.onReadyApiManager() }
         }).store(in: &anyCancellable)
@@ -125,7 +142,6 @@ class Repository:ObservableObject, PageProtocol{
             self.setting.initate = true
             SystemEnvironment.firstLaunch = true
         }
-        
         if self.setting.retryPushToken != "" {
             self.registerPushToken(self.setting.retryPushToken)
         }
@@ -156,13 +172,22 @@ class Repository:ObservableObject, PageProtocol{
         }
     }
     
-    private func respondApi(_ res:ApiResultResponds, coreDatakey:String){
+    private func respondApi(_ res:ApiResultResponds){
         switch res.type {
         case .getGnb :
-            if let data = res.data as? GnbBlock {
-                self.apiCoreDataManager.setData(key: coreDatakey, data: res.data as? GnbBlock)
-                self.onReadyRepository(gnbData: data)
-            }
+            guard let data = res.data as? GnbBlock  else { return }
+            self.onReadyRepository(gnbData: data)
+            
+        case .getHostDeviceInfo :
+            guard let data = res.data as? HostDeviceInfo else { return }
+            if data.header?.result != NpsNetwork.resultCode.success.code { return }
+            guard let hostData = data.body?.host_deviceinfo  else { return }
+            self.pairing.syncHostDevice(HostDevice().setData(deviceData: hostData))
+            
+        case .postGuestDeviceInfo :
+            guard let data = res.data as? NpsResult  else { return }
+            if data.header?.result != NpsNetwork.resultCode.success.code { return }
+            self.pairing.syncPairingUserData()
         default: do{}
         }
     }
@@ -186,7 +211,6 @@ class Repository:ObservableObject, PageProtocol{
         if self.status == .initate {self.status = .ready}
     }
     
-    
     func requestBandsData(){
         self.dataProvider.bands.resetData()
         self.dataProvider.requestData(q: .init(type: .getGnb))
@@ -198,6 +222,7 @@ class Repository:ObservableObject, PageProtocol{
             self.registerPushToken(self.setting.retryPushToken)
         }
     }
+    
     func registerPushToken(_ token:String) {
         self.setting.retryPushToken = token
     }

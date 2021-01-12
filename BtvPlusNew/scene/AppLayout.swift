@@ -24,6 +24,10 @@ struct AppLayout: PageComponent{
     @State var loadingInfo:[String]? = nil
     @State var isLoading = false
     @State var isInit = false
+    
+    @State var toastMsg:String = ""
+    @State var isToastShowing:Bool = false
+    
     var body: some View {
         ZStack{
             SceneTab()
@@ -48,6 +52,8 @@ struct AppLayout: PageComponent{
                 ActivityIndicator(isAnimating: self.$isLoading, style: .large)
             }
         }
+        .toast(isShowing: self.$isToastShowing , text: self.toastMsg)
+        
         .onReceive(self.pagePresenter.$isLoading){ loading in
             DispatchQueue.main.async {
                 withAnimation{
@@ -59,6 +65,14 @@ struct AppLayout: PageComponent{
             self.loadingInfo = loadingInfo
             withAnimation{
                 self.isLoading = loadingInfo == nil ? false : true
+            }
+        }
+        .onReceive(self.pageSceneObserver.$event){ evt in
+            guard let evt = evt else { return }
+            switch evt  {
+            case .toast(let msg):
+                self.toastMsg = msg
+                self.isToastShowing = true
             }
         }
         .onReceive(self.pagePresenter.$currentTopPage){ page in

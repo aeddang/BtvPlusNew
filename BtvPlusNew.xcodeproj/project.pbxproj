@@ -12,6 +12,7 @@
 		314C7ECB25ABC32200C489FC /* Hello.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314C7ECA25ABC32200C489FC /* Hello.swift */; };
 		314C7EE125AC13C600C489FC /* HostDeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */; };
 		3158232925A704F800E4E9C8 /* LocationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3158232825A704F800E4E9C8 /* LocationObserver.swift */; };
+		315A8FC125AD114F00498B03 /* ApiUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 315A8FBF25AD114F00498B03 /* ApiUtil.m */; };
 		315B55D225A7E2DC00B5B351 /* Nps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315B55D125A7E2DC00B5B351 /* Nps.swift */; };
 		315B55D725A8006B00B5B351 /* NpsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315B55D625A8006B00B5B351 /* NpsModel.swift */; };
 		315B55DC25A8026700B5B351 /* DevicePairingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315B55DB25A8026700B5B351 /* DevicePairingInfo.swift */; };
@@ -204,6 +205,8 @@
 		314C7ECA25ABC32200C489FC /* Hello.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hello.swift; sourceTree = "<group>"; };
 		314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostDeviceInfo.swift; sourceTree = "<group>"; };
 		3158232825A704F800E4E9C8 /* LocationObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationObserver.swift; sourceTree = "<group>"; };
+		315A8FBF25AD114F00498B03 /* ApiUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiUtil.m; sourceTree = "<group>"; };
+		315A8FC025AD114F00498B03 /* ApiUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiUtil.h; sourceTree = "<group>"; };
 		315B55C625A7C85900B5B351 /* BtvPlusNew.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BtvPlusNew.entitlements; sourceTree = "<group>"; };
 		315B55D125A7E2DC00B5B351 /* Nps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nps.swift; sourceTree = "<group>"; };
 		315B55D625A8006B00B5B351 /* NpsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NpsModel.swift; sourceTree = "<group>"; };
@@ -244,7 +247,7 @@
 		D56C603725933E52009AE769 /* libti2-mdns-service-proxy-client.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libti2-mdns-service-proxy-client.a"; sourceTree = "<group>"; };
 		D56C603825933E52009AE769 /* mdnsServiceProxyClientIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mdnsServiceProxyClientIOS.h; sourceTree = "<group>"; };
 		D56C603B25933EBD009AE769 /* MdnsPairingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MdnsPairingManager.swift; sourceTree = "<group>"; };
-		D56C604125934050009AE769 /* Mdns-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Mdns-Bridging-Header.h"; sourceTree = "<group>"; };
+		D56C604125934050009AE769 /* Store-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Store-Bridging-Header.h"; sourceTree = "<group>"; };
 		D56C60532593462B009AE769 /* Pairing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pairing.swift; sourceTree = "<group>"; };
 		D56C6923257D9EE500CF9AB8 /* BtvPlusNew.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BtvPlusNew.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D56C692A257D9EE600CF9AB8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -428,6 +431,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		315A8FBE25AD10BA00498B03 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				315A8FC025AD114F00498B03 /* ApiUtil.h */,
+				315A8FBF25AD114F00498B03 /* ApiUtil.m */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
 		315B55D025A7E24700B5B351 /* nps */ = {
 			isa = PBXGroup;
 			children = (
@@ -557,7 +569,6 @@
 			isa = PBXGroup;
 			children = (
 				D56C603B25933EBD009AE769 /* MdnsPairingManager.swift */,
-				D56C604125934050009AE769 /* Mdns-Bridging-Header.h */,
 			);
 			path = pairing;
 			sourceTree = "<group>";
@@ -987,6 +998,7 @@
 				D56C6B1C257DACD800CF9AB8 /* storage */,
 				D56C6B21257DACD800CF9AB8 /* api */,
 				D56C6B1F257DACD800CF9AB8 /* DataProvider.swift */,
+				D56C604125934050009AE769 /* Store-Bridging-Header.h */,
 				D56C6B1E257DACD800CF9AB8 /* Repository.swift */,
 			);
 			path = store;
@@ -1025,6 +1037,7 @@
 		D56C6B21257DACD800CF9AB8 /* api */ = {
 			isa = PBXGroup;
 			children = (
+				315A8FBE25AD10BA00498B03 /* util */,
 				D56C6B25257DACD800CF9AB8 /* rest  */,
 				D56C6B22257DACD800CF9AB8 /* ApiManager.swift */,
 				D56C6B23257DACD800CF9AB8 /* Api.swift */,
@@ -1376,6 +1389,7 @@
 				D50AB91125807AAA00649C4A /* EuxpModel.swift in Sources */,
 				D56C69B2257DA09E00CF9AB8 /* WhereverYouCanGo.swift in Sources */,
 				D56C6B10257DAADE00CF9AB8 /* SceneAlertController.swift in Sources */,
+				315A8FC125AD114F00498B03 /* ApiUtil.m in Sources */,
 				D57298DD259D69EB00ED2CE6 /* PickerSelect.swift in Sources */,
 				D56C6A5D257DA0C700CF9AB8 /* CircularSpinner.swift in Sources */,
 				D56C6A59257DA0C700CF9AB8 /* TextButton.swift in Sources */,
@@ -1752,7 +1766,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "BtvPlusNew/store/pairing/Mdns-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "BtvPlusNew/store/Store-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1814,7 +1828,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "BtvPlusNew/store/pairing/Mdns-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "BtvPlusNew/store/Store-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

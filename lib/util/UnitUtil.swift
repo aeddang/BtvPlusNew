@@ -140,7 +140,7 @@ extension String{
     }
     
     func toAES(key:String , iv:String, pass:String = "") -> String {
-        let key = SymmetricKey(data: SHA256.hash(data: pass.data(using: .utf8)!))
+        let key = SymmetricKey(data: key.data(using: .utf8)!)
         //let ivData = Data(iv.utf8)
         let inputData = Data(self.utf8)
         let iv = AES.GCM.Nonce()
@@ -188,6 +188,11 @@ extension String{
         //let predicate = NSPredicate(format:"SELF MATCHES %@", passwordRegEx)
         //return predicate.evaluate(with: self)
         return self.count >= 6
+    }
+    
+    func onlyNumric()-> String {
+        let ruleNum = "[0-9]"
+        return self.getArrayAfterRegex(regex: ruleNum ).reduce("", {$0 + $1})
     }
     
     func isNickNameType() -> Bool {

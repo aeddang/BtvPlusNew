@@ -34,7 +34,7 @@ struct Toast<Presenting>: View where Presenting: View {
 
     @Binding var isShowing: Bool
     let presenting: () -> Presenting
-    let text: Text
+    var text: Text
     var duration:Double = 2
     var body: some View {
         ZStack(alignment: .center) {

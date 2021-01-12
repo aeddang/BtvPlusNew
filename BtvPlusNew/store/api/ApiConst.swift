@@ -50,8 +50,7 @@ struct ApiGateway{
         let timestamp = Date().toTimestamp(dateFormat: "yyyyMMddHHmmss.SSS", local: "en_US_POSIX")
         authorizationRequest.addValue( timestamp, forHTTPHeaderField: "TimeStamp")
         authorizationRequest.addValue( timestamp.toSHA256(), forHTTPHeaderField: "Auth_Val")
-        authorizationRequest.addValue(
-            ApiManager.stbId, forHTTPHeaderField: "Client_ID")
+        authorizationRequest.addValue( NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId , forHTTPHeaderField: "Client_ID")
         return authorizationRequest
     }
     
@@ -81,8 +80,10 @@ struct ApiPrefix {
     static let service = "btvplus"
 }
 
-
-let ApiPageSize = 20
+struct ApiConst {
+    static let pageSize = 20
+    static let defaultStbId = "{00000000-0000-0000-0000-000000000000}"
+}
 
 enum ApiAction:String{
     case password

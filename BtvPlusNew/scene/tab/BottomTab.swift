@@ -46,7 +46,6 @@ struct BottomTab: PageComponent{
                 }
             }
             .padding(.bottom, self.sceneObserver.safeAreaBottom)
-            
         }
         .modifier(MatchParent())
         .background(Color.brand.bg)
@@ -69,9 +68,7 @@ struct BottomTab: PageComponent{
                     }
                 default : do{}
             }
-            
         }
-        
         .onAppear(){
         
         }
@@ -84,12 +81,10 @@ struct BottomTab: PageComponent{
             return self.selectedPage?.pageID == pageID
         }
     }
-    
 }
 
 #if DEBUG
 struct ComponentBottomTab_Previews: PreviewProvider {
-    
     static var previews: some View {
         Form{
             BottomTab().environmentObject(PagePresenter()).frame(width:370,height:200)

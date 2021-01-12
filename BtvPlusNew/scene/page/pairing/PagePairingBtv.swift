@@ -222,29 +222,44 @@ struct PagePairingBtv: PageView {
         self.pageDataProviderModel.initate()
     }
     
+    private func retryPairingAuth(){
+        self.isPairingProsessError = false
+        self.pageDataProviderModel.initate()
+    }
+    
     @State var isPairingProsessError = false
     private func pairingProsess(evt:PageDataProviderEvent){
         if  self.isPairingProsessError { return }
         switch evt {
+        
         case .willRequest(let progress):
             switch progress {
             case 0 : self.pageDataProviderModel.requestProgress(
                 q:.init(id: self.tag, type: .postAuthPairing(self.pairing.user, self.input), isOptional: true))
             default : do{}
             }
+            
         case .onResult(let progress, let res, _):
             self.isPairingProsessError = true
             var resHeader:NpsCommonHeader? = nil
             switch progress {
+            case -1 :
+                if let resData = res.data as? NpsResult {
+                    if resData.header?.result == NpsNetwork.resultCode.success.code {
+                        self.retryPairingAuth()
+                        return
+                    }
+                }
             case 0 :
                 guard let resData = res.data as? DevicePairing else { return }
-                resHeader = resData.header
-            case 1 :
-                guard let resData = res.data as? HostDeviceInfo else { return }
                 resHeader = resData.header
             default : do{}
             }
             
+            if resHeader?.result == NpsNetwork.resultCode.pairingRetry.code && progress != -1  {
+                self.pageDataProviderModel.request = .init(id: self.tag, type: .rePairing, isOptional: true)
+                return
+            }
             if resHeader?.result != NpsNetwork.resultCode.success.code {
                 self.pageSceneObserver.alert = .pairingError(resHeader)
                 return

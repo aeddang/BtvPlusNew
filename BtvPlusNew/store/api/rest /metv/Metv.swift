@@ -29,17 +29,19 @@ class Metv: Rest{
     func getBookMark(
         page:Int?, pageCnt:Int?,
         completion: @escaping (BookMark) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:String]()
         params["response_format"] = MetvNetwork.RESPONSE_FORMET
         params["ver"] = MetvNetwork.VERSION
         params["IF"] = "IF-ME-011"
         
-        params["stb_id"] = ApiManager.stbId //pairingManager?.getStbId()
+        params["stb_id"] = stbId
         params["group"] = "VOD"
         params["ch_type"] = ""
         params["page_no"] = page?.description ?? "1"
         params["entry_no"] = pageCnt?.description ?? MetvNetwork.PAGE_COUNT.description
-        params["hash_id"] = ApiManager.stbId.toSHA256().lowercased()
+        params["hash_id"] = stbId.toSHA256()
         params["svc_code"] = MetvNetwork.SVC_CODE
         
         fetch(route: MetvBookMark(query: params), completion: completion, error:error)

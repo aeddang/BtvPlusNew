@@ -18,3 +18,6 @@ struct NpsCommonHeader : Decodable {
 }
 
 
+struct NpsResult : Decodable {
+    private(set) var header:NpsCommonHeader? = nil//공통 정보
+}

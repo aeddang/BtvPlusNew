@@ -60,11 +60,12 @@ struct ScenePickerController: PageComponent{
     }
     
     func setupPicker(data:(String,[String]), idx:Int) {
-        self.selected = idx
+        
         let range = 0 ..< data.1.count
         self.buttons = zip(range, data.1).map {index, text in
             SelectBtnData(title: text, index: index)
         }
+        self.selected = idx
     }
     func selectedPicker(_ idx:Int, data:(String,[String])) {
         self.sceneObserver.selectResult = .complete(.select(data), idx)

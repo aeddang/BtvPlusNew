@@ -54,21 +54,24 @@ enum ApiType{
     case getBookMark(Int? = nil , Int? = nil)
     
     //NPS
-    case postHello,
-         postDevicePairingInfo(String?, String?),
+    case registHello,
+         getDevicePairingInfo(String?, String?),
          postDevicePairing(User?, MdnsDevice?),
          postAuthPairing(User?, String?),
-         postHostDeviceInfo
+         postUnPairing,rePairing,  // rePairing 재시도용
+         getHostDeviceInfo,
+         postGuestDeviceInfo(User?)
+    
         
     func coreDataKey() -> String? {
         switch self {
-        case .getGnb : return "getGnb"
+        //case .getGnb : return "getGnb"
         default : return nil
         }
     }
     func transitionKey() -> String {
         switch self {
-        case .postHello : return "postHello"
+        case .registHello : return "postHello"
         default : return ""
         }
     }

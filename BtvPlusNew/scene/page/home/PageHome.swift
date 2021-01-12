@@ -53,7 +53,7 @@ struct PageHome: PageView {
         .onReceive(self.dataProvider.bands.$event){ evt in
             guard let evt = evt else { return }
             switch evt {
-            case .updated: self.setupBlocks()
+            case .updated: self.reload()
             default: do{}
             }
         }
@@ -77,7 +77,6 @@ struct PageHome: PageView {
             }
         }
         .onReceive(self.infinityScrollModel.$pullPosition){ pos in
-            PageLog.d("infinityScrollModel " + pos.description, tag: self.tag)
             if pos < 30 && pos > 120{ return }
             if self.reloadDegree >= ReflashSpinner.DEGREE_MAX
                 && Double(pos) < self.reloadDegree
@@ -86,7 +85,6 @@ struct PageHome: PageView {
             }
             withAnimation{
                 self.reloadDegree = Double(pos)
-                PageLog.d("self.reloadDegree " + self.reloadDegree.description, tag: self.tag)
             }
         }
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in

@@ -56,16 +56,17 @@ struct PagePairingSetupUser: PageView {
                         useTracking: self.useTracking
                         ){
                         VStack(alignment:.leading , spacing:0) {
-                            Text(String.pageText.pairingSetupUserText1)
-                                .modifier(MediumTextStyle( size: Font.size.bold ))
-                                .padding(.top, Dimen.margin.light)
-                            
-                            Text(String.pageText.pairingSetupUserText2)
-                                .modifier(
-                                    MediumTextStyle( size: Font.size.light, color: Color.app.whiteDeep))
-                                .padding(.top, Dimen.margin.light)
-                                .fixedSize(horizontal: false, vertical:true)
-                            
+                            if self.editType != .nickName {
+                                Text(String.pageText.pairingSetupUserText1)
+                                    .modifier(MediumTextStyle( size: Font.size.bold ))
+                                    .padding(.top, Dimen.margin.light)
+                                
+                                Text(String.pageText.pairingSetupUserText2)
+                                    .modifier(
+                                        MediumTextStyle( size: Font.size.light, color: Color.app.whiteDeep))
+                                    .padding(.top, Dimen.margin.light)
+                                    .fixedSize(horizontal: false, vertical:true)
+                            }
                             InputCell(
                                 title: String.app.nickName,
                                 input: self.$nickName,

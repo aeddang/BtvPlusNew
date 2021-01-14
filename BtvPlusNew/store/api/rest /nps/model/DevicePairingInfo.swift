@@ -21,7 +21,6 @@ struct DevicePairingInfoBody : Decodable {
     //private(set) var custom_param:[String:Any]? = nil //임의의 배열
 }
     
-
 struct PairingInfo : Decodable {
     private(set) var count:String? = nil
     private(set) var max_count:String? = nil

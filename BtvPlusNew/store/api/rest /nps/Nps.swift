@@ -18,7 +18,7 @@ struct NpsNetwork : Network{
         authorizationRequest.addValue("receiver", forHTTPHeaderField: Self.RECEIVER)
         return authorizationRequest
     }
-     */
+    */
 }
 extension NpsNetwork{
     static let RESPONSE_FORMET = "json"
@@ -251,7 +251,7 @@ class Nps: Rest{
         fetch(route: NpsHostDeviceInfo(body: body), completion: completion, error:error)
     }
     
-    func postGuestDeviceInfo(
+    func postGuestInfo(
         user:User?, customParam:[String: Any] = [String: Any](),
         completion: @escaping (NpsResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
@@ -275,10 +275,69 @@ class Nps: Rest{
         fetch(route: NpsGuestDeviceInfo(body: body), completion: completion, error:error)
     }
     
+    func postGuestNickname(
+        user:User?, customParam:[String: Any] = [String: Any](),
+        completion: @escaping (NpsResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        
+        
+        let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-542")
+        var params = [String: Any]()
+        params["service_type"] = NpsNetwork.SERVICE_TYPE
+        params["guest_deviceid"] = NpsNetwork.getGuestDeviceId()
+        params["sessionid"] = NpsNetwork.sessionId
+        params["pairingid"] = NpsNetwork.pairingId
+        params["user_name"] = NpsNetwork.getNpsUsername(userName: user?.nickName)
+        params["custom_param"] = customParam
+        
+        var body = [String: Any]()
+        body["header"] = headers
+        body["body"] = params
+        fetch(route: NpsGuestDeviceInfo(body: body), completion: completion, error:error)
+    }
+    
+    func getGuestAgreement(
+        customParam:[String: Any] = [String: Any](),
+        completion: @escaping (GuestAgreementInfo) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-536")
+        var params = [String: Any]()
+        params["service_type"] = NpsNetwork.SERVICE_TYPE
+        params["pairing_deviceid"] = NpsNetwork.getGuestDeviceId()
+        params["pairing_device_type"] = "G"
+        params["pairingid"] = NpsNetwork.pairingId
+        params["custom_param"] = customParam
+    
+        var body = [String: Any]()
+        body["header"] = headers
+        body["body"] = params
+        fetch(route: NpsGuestAgreementInfo(body: body), completion: completion, error:error)
+    }
+    func postGuestAgreement(
+        user:User?, customParam:[String: Any] = [String: Any](),
+        completion: @escaping (NpsResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        var agreement = [String: String]()
+        if let user = user {
+            agreement["market"] = user.isAgree1 ? "1" : "0"
+            agreement["personal"] = user.isAgree2 ? "1" : "0"
+            agreement["push"] = user.isAgree3 ? "1" : "0"
+        }
+        let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-535")
+        var params = [String: Any]()
+        params["service_type"] = NpsNetwork.SERVICE_TYPE
+        params["pairing_deviceid"] = NpsNetwork.getGuestDeviceId()
+        params["pairing_device_type"] = "G"
+        params["pairingid"] = NpsNetwork.pairingId
+        params["agreement"] = agreement
+        params["custom_param"] = customParam
+        
+        var body = [String: Any]()
+        body["header"] = headers
+        body["body"] = params
+        fetch(route: NpsGuestAgreement(body: body), completion: completion, error:error)
+    }
+    
     func postUnPairing(
         customParam:[String: Any] = [String: Any](),
         completion: @escaping (NpsResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
-    
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-534")
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
@@ -331,11 +390,24 @@ struct NpsGuestDeviceInfo:NetworkRoute{
    var body: [String : Any]? = nil
 }
 
+struct NpsGuestAgreement:NetworkRoute{
+   var method: HTTPMethod = .post
+   var path: String = "/nps/v5/reqUpdateAgreement"
+   var body: [String : Any]? = nil
+}
+
+struct NpsGuestAgreementInfo:NetworkRoute{
+   var method: HTTPMethod = .post
+   var path: String = "/nps/v5/reqAgreement"
+   var body: [String : Any]? = nil
+}
+
 struct NpsUnPairing:NetworkRoute{
    var method: HTTPMethod = .post
    var path: String = "/nps/v5/reqUnPairing"
    var body: [String : Any]? = nil
 }
+
 
 
 

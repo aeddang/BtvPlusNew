@@ -9,16 +9,29 @@ import Foundation
 
 
 
-enum PairingRequest{
-    case wifi , btv, user, cancel
+enum PairingRequest:Equatable{
+    case wifi , btv, user, cancel,
+         recovery, device(MdnsDevice), auth(String) , unPairing
+    static func ==(lhs: PairingRequest, rhs: PairingRequest) -> Bool {
+        switch (lhs, rhs) {
+        case ( .wifi, .wifi):return true
+        case ( .btv, .btv):return true
+        case ( .user, .user):return true
+        case ( .recovery, .recovery):return true
+        default: return false
+        }
+    }
 }
 
 enum PairingStatus{
-    case disConnect , connect
+    case disConnect , connect , pairing, unstablePairing
 }
 
 enum PairingEvent{
-    case connected, disConnected, error, findMdnsDevice([MdnsDevice]) , notFoundDevice, pairingCompleted
+    case connected, disConnected, connectError(NpsCommonHeader?), disConnectError(NpsCommonHeader?),
+         findMdnsDevice([MdnsDevice]) , notFoundDevice,
+         syncError(NpsCommonHeader?),
+         pairingCompleted
 }
 
 enum Gender {
@@ -38,10 +51,20 @@ class User {
     private(set) var birth:String = ""
     private(set) var isAgree1:Bool = true
     private(set) var isAgree2:Bool = true
-    var isAgree3:Bool = true
+    private(set) var isAgree3:Bool = true
+    private(set) var postAgreement:Bool = false
     
     init(){}
-    init(nickName:String,characterIdx:Int,gender:Gender,birth:String,isAgree1:Bool,isAgree2:Bool,isAgree3:Bool){
+    init(nickName:String?,characterIdx:Int?,gender:String?,birth:String?){
+        self.nickName = nickName ?? ""
+        self.characterIdx = characterIdx ?? 0
+        self.gender = gender == "M" ? .mail : .femail
+        self.birth = birth ?? ""
+    }
+    
+    init(nickName:String,characterIdx:Int,gender:Gender,birth:String,
+         isAgree1:Bool = false,isAgree2:Bool = false,isAgree3:Bool = false){
+        
         self.nickName = nickName
         self.characterIdx = characterIdx
         self.gender = gender
@@ -49,15 +72,20 @@ class User {
         self.isAgree1 = isAgree1
         self.isAgree2 = isAgree2
         self.isAgree3 = isAgree3
+        self.postAgreement = true
     }
     
-    func setData() -> User{
+    @discardableResult
+    func setData(guestAgreement:GuestAgreement) -> User{
+        self.isAgree1 = guestAgreement.market == "1" ? true : false
+        self.isAgree2 = guestAgreement.personal == "1" ? true : false
+        self.isAgree3 = guestAgreement.push == "1" ? true : false
+        self.postAgreement = false
         return self
     }
 }
 
 class HostDevice {
-    
     func setData(deviceData:HostDeviceData) -> HostDevice{
         return self
     }
@@ -70,8 +98,9 @@ class Pairing:ObservableObject, PageProtocol {
     @Published private(set) var event:PairingEvent? = nil {didSet{ if event != nil { event = nil} }}
     @Published private(set) var status:PairingStatus = .disConnect
     
-    @Published var user:User? = nil
+    @Published var user:User? = nil 
     private(set) var isPairingUser:Bool = false
+    private(set) var isPairingAgreement:Bool = false
    
     @Published private(set) var hostDevice:HostDevice? = nil
     private(set) var stbId:String? = nil
@@ -79,18 +108,34 @@ class Pairing:ObservableObject, PageProtocol {
     func connected(){
         self.stbId = NpsNetwork.hostDeviceId 
         self.status = self.stbId != "" ? .connect : .disConnect
-        self.event = self.status == .connect ? .connected : .error
+        self.event = self.status == .connect ? .connected : .connectError(nil)
     }
     
     func disconnected() {
         self.stbId = ""
+        self.isPairingAgreement = false
+        self.isPairingUser = false
         self.hostDevice = nil
         self.status = .disConnect
         self.event = .disConnected
     }
     
+    func disConnectError(header:NpsCommonHeader? = nil) {
+        self.status = .disConnect
+        self.event = .disConnectError(header)
+    }
+    
+    func connectError(header:NpsCommonHeader? = nil) {
+        self.status = .disConnect
+        self.event = .connectError(header)
+    }
+    
     func requestPairing(_ request:PairingRequest){
+        if request == .recovery {
+            self.status = .connect
+        }
         self.request = request
+        
     }
     
     func foundDevice(_ mdnsData:[MdnsDevice]){
@@ -100,19 +145,38 @@ class Pairing:ObservableObject, PageProtocol {
         self.event = .notFoundDevice
     }
     
+    func syncError(header:NpsCommonHeader? = nil) {
+        if self.status == .unstablePairing {return}
+        self.status = .unstablePairing
+        self.event = .syncError(header)
+    }
+    
     func syncPairingUserData(){
         self.isPairingUser = true
-        if self.hostDevice != nil {
-            self.event = .pairingCompleted
-        }
+        self.checkComple()
+    }
+
+    func syncPairingAgreement(_ guestAgreement:GuestAgreement){
+        self.user?.setData(guestAgreement: guestAgreement)
+        self.syncPairingAgreement()
+    }
+    func syncPairingAgreement(){
+        self.isPairingAgreement = true
+        self.checkComple()
     }
     
     func syncHostDevice(_ hostDevice:HostDevice){
         self.hostDevice = hostDevice
-        if self.isPairingUser {
+        self.checkComple()
+    }
+    
+    private func checkComple(){
+        if self.isPairingUser && self.isPairingAgreement && self.hostDevice != nil{
+            self.status = .pairing
             self.event = .pairingCompleted
         }
     }
+    
     
     static func getSTBImage(stbModel: String?) -> String {
         switch stbModel {

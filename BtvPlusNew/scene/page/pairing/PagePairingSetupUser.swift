@@ -143,6 +143,7 @@ struct PagePairingSetupUser: PageView {
                                 self.isAgree3 = !isAll
                             }
                         )
+                        
                         CheckBox(
                             isChecked: self.$isAgree1,
                             text:String.pageText.pairingSetupUserAgreement1,
@@ -150,6 +151,7 @@ struct PagePairingSetupUser: PageView {
                                 
                             }
                         )
+                        
                         CheckBox(
                             isChecked: self.$isAgree2,
                             text:String.pageText.pairingSetupUserAgreement2,
@@ -248,7 +250,6 @@ struct PagePairingSetupUser: PageView {
             .onDisappear{
             
             }
-            
         }//geo
     }//body
     
@@ -278,19 +279,30 @@ struct PagePairingSetupUser: PageView {
     func inputCompleted() {
         if !self.isInputCompleted().wrappedValue { return }
         self.pairing.user = User(
-            nickName: self.nickName, characterIdx: self.characterIdx, gender: self.gender, birth: self.birth, isAgree1: self.isAgree1, isAgree2: self.isAgree2, isAgree3: self.isAgree3
+            nickName: self.nickName, characterIdx: self.characterIdx, gender: self.gender, birth: self.birth,
+            isAgree1: self.isAgree1, isAgree2: self.isAgree2, isAgree3: self.isAgree3
         )
         self.pagePresenter.goBack()
-        if self.pairingType == .btv {
+        switch self.pairingType {
+        case .btv :
             self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.pairingBtv)
             )
-        }else {
+        case .wifi :
             self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.pairingDevice)
                     .addParam(key: .type, value: self.pairingType)
             )
+        case .user :
+            self.pagePresenter.openPopup(
+                PageProvider.getPageObject(.pairingUser)
+            )
+        case .recovery :
+            self.pairing.requestPairing(.recovery)
+        default : do{}
         }
+        
+        
     }
     
     private func onGenderSelected(_ gen:Gender){

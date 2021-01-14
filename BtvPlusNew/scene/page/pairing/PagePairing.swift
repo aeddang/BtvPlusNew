@@ -95,8 +95,7 @@ struct PagePairing: PageView {
                             title: String.pageText.pairingBtnUserCertification,
                             text: String.pageText.pairingBtnUserCertificationSub
                         ){
-                            self.dataProvider.requestData(q: .init(id: self.tag, type: .postUnPairing))
-                            //self.requestPairing(type: .user)
+                            self.requestPairing(type: .user)
                         }
                         .padding(.vertical, Dimen.margin.lightExtra)
                     }
@@ -115,10 +114,9 @@ struct PagePairing: PageView {
                 .modifier(PageFull())
             }
             .onReceive(self.infinityScrollModel.$event){evt in
-                guard let evt = evt else {return}
-                if evt == .up || evt == .down {
-                    self.pageDragingModel.uiEvent = .dragCancel(geometry)
-                }
+                guard let _ = evt else {return}
+                self.pageDragingModel.uiEvent = .draged(geometry)
+                
             }
             .onReceive(self.pageSceneObserver.$alertResult){ result in
                 guard let result = result else { return }

@@ -4,57 +4,216 @@
 //
 //  Created by KimJeongCheol on 2020/12/23.
 //
-
 import Foundation
+import SwiftUI
+import Combine
 
-class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtocol{
-    let client:MDNSServiceProxyClient
-    override init() {
-        client = MDNSServiceProxyClient()
+class PairingManager : PageProtocol{
+    private let mdnsPairingManager = MdnsPairingManager()
+    private let pairing:Pairing
+    private let dataProvider:DataProvider
+    private let apiManager:ApiManager
+    private var anyCancellable = Set<AnyCancellable>()
+    
+    init(pairing:Pairing, dataProvider:DataProvider, apiManager:ApiManager) {
+        self.pairing = pairing
+        self.dataProvider = dataProvider
+        self.apiManager = apiManager
     }
     
-    func mdnsServiceFound(_ serviceJsonString: UnsafeMutablePointer<Int8>) {
-        let data = String(cString: serviceJsonString)
-        DataLog.d("data : " + data, tag: self.tag)
-    }
-    
-    func requestPairing(_ request:PairingRequest){
-        switch request {
-        case .wifi:
-            client.delegate = self
-            if let ip = self.getIPAddress() {
-                client.startSearching(ip)
+    var requestDevice:MdnsDevice? = nil
+    var requestAuthcode:String? = nil
+    func setupPairing(savedUser:User? = nil){
+        
+        self.pairing.$request.sink(receiveValue: { req in
+            guard let requestPairing = req else { return }
+            self.requestDevice = nil
+            self.requestAuthcode = nil
+        
+            switch requestPairing{
+            case .wifi :
+                self.mdnsPairingManager.requestPairing( requestPairing,
+                   found: { data in
+                        self.pairing.foundDevice(data)
+                   },notFound: {
+                        self.pairing.notFoundDevice()
+                   })
+            
+            case .device(let device) :
+                self.requestDevice = device
+                self.dataProvider.requestData(q: .init(type: .postDevicePairing(self.pairing.user, device), isOptional: true))
+                
+            case .auth(let code) :
+                self.requestAuthcode = code
+                self.dataProvider.requestData(q: .init(type: .postAuthPairing(self.pairing.user, code), isOptional: true))
+                
+            case .recovery :
+                if let user = self.pairing.user {
+                    if !self.pairing.isPairingUser { self.dataProvider.requestData(q: .init(type: .postGuestInfo(user), isOptional: true))}
+                    if !self.pairing.isPairingAgreement {
+                        if user.postAgreement { self.dataProvider.requestData(q: .init(type: .postGuestAgreement(user), isOptional: true)) }
+                        else { self.dataProvider.requestData(q: .init(type: .getGuestAgreement, isOptional: true)) }
+                    }
+                    if self.pairing.hostDevice == nil { self.dataProvider.requestData(q: .init(type: .getHostDeviceInfo, isOptional: true)) }
+                } else {
+                    
+                }
+            case .unPairing :
+                self.dataProvider.requestData(q: .init(type: .postUnPairing, isOptional: true))
+             
+            default: do{}
             }
-        default:do{}
-        }
-    }
-    
-    
-    func getIPAddress() -> UnsafeMutablePointer<Int8>? {
-        var address: String?
-        var ifaddr: UnsafeMutablePointer<ifaddrs>? = nil
-        if getifaddrs(&ifaddr) == 0 {
-            var ptr = ifaddr
-            while ptr != nil {
-                defer { ptr = ptr?.pointee.ifa_next }
-                guard let interface = ptr?.pointee else { return nil }
-                let addrFamily = interface.ifa_addr.pointee.sa_family
-                if addrFamily == UInt8(AF_INET) || addrFamily == UInt8(AF_INET6) {
-                    // wifi = ["en0"]
-                    // wired = ["en2", "en3", "en4"]
-                    // cellular = ["pdp_ip0","pdp_ip1","pdp_ip2","pdp_ip3"]
-                    let name: String = String(cString: (interface.ifa_name))
-                    if  name == "en0" || name == "en2" || name == "en3" || name == "en4" || name == "pdp_ip0" || name == "pdp_ip1" || name == "pdp_ip2" || name == "pdp_ip3" {
-                        var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
-                        getnameinfo(interface.ifa_addr, socklen_t((interface.ifa_addr.pointee.sa_len)), &hostname, socklen_t(hostname.count), nil, socklen_t(0), NI_NUMERICHOST)
-                        address = String(cString: hostname)
+        }).store(in: &anyCancellable)
+        
+        self.apiManager.$event.sink(receiveValue: {evt in
+            switch evt {
+            case .pairingHostChanged :
+                if NpsNetwork.isPairing { self.pairing.connected() }
+                else { self.pairing.disconnected() }
+                
+            default: do{}
+            }
+        }).store(in: &anyCancellable)
+        
+        self.pairing.$event.sink(receiveValue: { evt in
+            guard let evt = evt else { return }
+            switch evt{
+            case .connected :
+                self.dataProvider.requestData(q: .init(type: .getHostDeviceInfo, isOptional: true))
+                if let user = self.pairing.user {
+                    self.dataProvider.requestData(q: .init(type: .postGuestInfo(user), isOptional: true))
+                    if user.postAgreement { self.dataProvider.requestData(q: .init(type: .postGuestAgreement(user), isOptional: true)) }
+                    else { self.dataProvider.requestData(q: .init(type: .getGuestAgreement, isOptional: true)) }
+                }else{
+                    if savedUser == nil {
+                        self.pairing.syncError()
+                    }
+                    else{
+                        self.pairing.user = savedUser
+                        self.pairing.syncPairingUserData()
+                        self.dataProvider.requestData(q: .init(type: .getGuestAgreement, isOptional: true))
                     }
                 }
+            case .disConnected : do{}
+            case .pairingCompleted : do{}
+            default: do{}
             }
-            freeifaddrs(ifaddr)
-        }
-        guard let add = address else {return nil}
-        return UnsafeMutablePointer(mutating: (add as NSString).utf8String)
+        }).store(in: &anyCancellable)
+        
+        
+        
+        self.apiManager.$result.sink(receiveValue: { res in
+            guard let res = res else { return }
+            
+            switch res.type {
+            case .postUnPairing :
+                if !self.checkConnectHeader(res) { return }
+                
+            case .postAuthPairing, .postDevicePairing :
+                if !self.checkConnectHeader(res) { return }
+    
+            case .rePairing :
+                if !self.checkConnectHeader(res) { return }
+                guard let user = self.pairing.user else {
+                    self.pairing.connectError()
+                    return
+                }
+                if let code = self.requestAuthcode {
+                    self.dataProvider.requestData(q: .init(type: .postAuthPairing(user, code), isOptional: true))
+                }
+                if let device = self.requestDevice {
+                    self.dataProvider.requestData(q: .init(type: .postDevicePairing(user , device), isOptional: true))
+                }
+                
+            case .getHostDeviceInfo :
+                guard let data = res.data as? HostDeviceInfo else { return }
+                if !self.checkSyncHeader(data.header) { return }
+                guard let hostData = data.body?.host_deviceinfo  else {
+                    self.pairing.syncError()
+                    return
+                }
+                self.pairing.syncHostDevice(HostDevice().setData(deviceData: hostData))
+           
+            case .postGuestInfo :
+                guard let data = res.data as? NpsResult  else { return }
+                if !self.checkSyncHeader(data.header) { return }
+                self.pairing.syncPairingUserData()
+                
+            case .postGuestAgreement :
+                guard let data = res.data as? NpsResult  else { return }
+                if !self.checkSyncHeader(data.header) { return }
+                self.pairing.syncPairingAgreement()
+            
+            case .getGuestAgreement :
+                guard let data = res.data as? GuestAgreementInfo  else { return }
+                if !self.checkSyncHeader(data.header) { return }
+                guard let agreement = data.body?.agreement  else {
+                    self.pairing.syncError()
+                    return
+                }
+                self.pairing.syncPairingAgreement(agreement)
+                
+            default: do{}
+            }
+        }).store(in: &anyCancellable)
+        
+        self.apiManager.$error.sink(receiveValue: { err in
+            guard let err = err else { return }
+            switch err.type {
+            case .postUnPairing, .postAuthPairing, .postDevicePairing, .rePairing : self.pairing.connectError()
+            case .getHostDeviceInfo, .postGuestInfo, .postGuestAgreement, .getGuestAgreement: self.pairing.syncError()
+            default: do{}
+            }
+        }).store(in: &anyCancellable)
     }
+    
+    private func checkDisConnectHeader(_ res:ApiResultResponds ) -> Bool{
+        guard let data = res.data as? NpsResult  else {
+            self.pairing.disConnectError()
+            return false
+        }
+        guard let resultCode = data.header?.result else {
+            self.pairing.disConnectError()
+            return false
+        }
+        if resultCode == NpsNetwork.resultCode.pairingRetry.code {
+            self.dataProvider.requestData(q: .init(type: .rePairing , isOptional: true))
+            return false
+        }
+        if resultCode != NpsNetwork.resultCode.success.code {
+            self.pairing.disConnectError(header: data.header)
+            return false
+        }
+        return true
+    }
+    
+    private func checkConnectHeader(_ res:ApiResultResponds ) -> Bool{
+        guard let data = res.data as? DevicePairing  else {
+            self.pairing.connectError()
+            return false
+        }
+        guard let resultCode = data.header?.result else {
+            self.pairing.connectError()
+            return false
+        }
+        if resultCode == NpsNetwork.resultCode.pairingRetry.code {
+            self.dataProvider.requestData(q: .init(type: .rePairing , isOptional: true))
+            return false
+        }
+        if resultCode != NpsNetwork.resultCode.success.code {
+            self.pairing.connectError(header: data.header)
+            return false
+        }
+        return true
+    }
+    
+    private func checkSyncHeader(_ header:NpsCommonHeader? ) -> Bool{
+        if header?.result != NpsNetwork.resultCode.success.code {
+            self.pairing.syncError(header: header)
+            return false
+        }
+        return true
+    }
+    
     
 }

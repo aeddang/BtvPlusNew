@@ -224,6 +224,8 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
         self.pullOffset = minPullAmount
     }
     
+    private let pullInitDelay = 0.2
+    @State var isPullInit: Bool = false
     var body: some View {
         ZStack(alignment: .topLeading){
             self.content.modifier(MatchParent())
@@ -238,8 +240,9 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
             case .pull(let geo, let value, let offset) :
                 if #available(iOS 14.0, *) {
                     if value < self.minPullAmount { return }
+                    
                     if self.pullOffset == self.minPullAmount {
-                        withAnimation{
+                        withAnimation(.easeOut(duration: self.pullInitDelay )){
                             self.bodyOffset = self.minPullAmount * 2
                         }
                     } else {

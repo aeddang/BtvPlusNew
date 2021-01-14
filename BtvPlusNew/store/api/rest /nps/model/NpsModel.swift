@@ -17,7 +17,6 @@ struct NpsCommonHeader : Decodable {
     private(set) var receiver:String? = nil //응답받을 디바이스 타입 (Mobile)
 }
 
-
 struct NpsResult : Decodable {
     private(set) var header:NpsCommonHeader? = nil//공통 정보
 }

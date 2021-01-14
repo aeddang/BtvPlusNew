@@ -11,8 +11,11 @@
 		310D7E2C25A42D05000BE173 /* StbList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310D7E2B25A42D05000BE173 /* StbList.swift */; };
 		314C7ECB25ABC32200C489FC /* Hello.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314C7ECA25ABC32200C489FC /* Hello.swift */; };
 		314C7EE125AC13C600C489FC /* HostDeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */; };
+		315730EE25AFC1B600D9A693 /* PairingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315730ED25AFC1B600D9A693 /* PairingManager.swift */; };
+		315730F325B01FFF00D9A693 /* PagePairingUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315730F225B01FFF00D9A693 /* PagePairingUser.swift */; };
 		3158232925A704F800E4E9C8 /* LocationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3158232825A704F800E4E9C8 /* LocationObserver.swift */; };
 		315A8FC125AD114F00498B03 /* ApiUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 315A8FBF25AD114F00498B03 /* ApiUtil.m */; };
+		315A8FD425ADADD600498B03 /* GuestAgreementInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315A8FD325ADADD600498B03 /* GuestAgreementInfo.swift */; };
 		315B55D225A7E2DC00B5B351 /* Nps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315B55D125A7E2DC00B5B351 /* Nps.swift */; };
 		315B55D725A8006B00B5B351 /* NpsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315B55D625A8006B00B5B351 /* NpsModel.swift */; };
 		315B55DC25A8026700B5B351 /* DevicePairingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315B55DB25A8026700B5B351 /* DevicePairingInfo.swift */; };
@@ -204,9 +207,12 @@
 		310D7E2B25A42D05000BE173 /* StbList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StbList.swift; sourceTree = "<group>"; };
 		314C7ECA25ABC32200C489FC /* Hello.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hello.swift; sourceTree = "<group>"; };
 		314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostDeviceInfo.swift; sourceTree = "<group>"; };
+		315730ED25AFC1B600D9A693 /* PairingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PairingManager.swift; sourceTree = "<group>"; };
+		315730F225B01FFF00D9A693 /* PagePairingUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePairingUser.swift; sourceTree = "<group>"; };
 		3158232825A704F800E4E9C8 /* LocationObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationObserver.swift; sourceTree = "<group>"; };
 		315A8FBF25AD114F00498B03 /* ApiUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiUtil.m; sourceTree = "<group>"; };
 		315A8FC025AD114F00498B03 /* ApiUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiUtil.h; sourceTree = "<group>"; };
+		315A8FD325ADADD600498B03 /* GuestAgreementInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestAgreementInfo.swift; sourceTree = "<group>"; };
 		315B55C625A7C85900B5B351 /* BtvPlusNew.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BtvPlusNew.entitlements; sourceTree = "<group>"; };
 		315B55D125A7E2DC00B5B351 /* Nps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nps.swift; sourceTree = "<group>"; };
 		315B55D625A8006B00B5B351 /* NpsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NpsModel.swift; sourceTree = "<group>"; };
@@ -478,6 +484,7 @@
 			isa = PBXGroup;
 			children = (
 				315B55D625A8006B00B5B351 /* NpsModel.swift */,
+				315A8FD325ADADD600498B03 /* GuestAgreementInfo.swift */,
 				315B55DB25A8026700B5B351 /* DevicePairingInfo.swift */,
 				315B55E625A84B0900B5B351 /* DevicePairing.swift */,
 				314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */,
@@ -534,6 +541,7 @@
 				D568892D259C592000F2F67A /* PagePairingSetupUser.swift */,
 				310D7E2325A42B72000BE173 /* PagePairingDevice.swift */,
 				D573785725A2D70B00EC571F /* PagePairingBtv.swift */,
+				315730F225B01FFF00D9A693 /* PagePairingUser.swift */,
 			);
 			path = pairing;
 			sourceTree = "<group>";
@@ -568,6 +576,7 @@
 		D56C603A25933EAB009AE769 /* pairing */ = {
 			isa = PBXGroup;
 			children = (
+				315730ED25AFC1B600D9A693 /* PairingManager.swift */,
 				D56C603B25933EBD009AE769 /* MdnsPairingManager.swift */,
 			);
 			path = pairing;
@@ -1395,6 +1404,7 @@
 				D56C6A59257DA0C700CF9AB8 /* TextButton.swift in Sources */,
 				D56CC31225907F3700CA1D54 /* ThemaBlock.swift in Sources */,
 				D56C5FE32592F693009AE769 /* Metv.swift in Sources */,
+				315730F325B01FFF00D9A693 /* PagePairingUser.swift in Sources */,
 				D56C6A37257DA0C700CF9AB8 /* CPCircularNavigation.swift in Sources */,
 				D51AA9F82599BAFB0035CD51 /* PageTab.swift in Sources */,
 				D56C69B4257DA09E00CF9AB8 /* KeyboardObserver.swift in Sources */,
@@ -1505,6 +1515,7 @@
 				D56C6A50257DA0C700CF9AB8 /* Select.swift in Sources */,
 				D56C69AA257DA09E00CF9AB8 /* Network.swift in Sources */,
 				D56C6A4D257DA0C700CF9AB8 /* ProgressSlider.swift in Sources */,
+				315A8FD425ADADD600498B03 /* GuestAgreementInfo.swift in Sources */,
 				D56C6A34257DA0C700CF9AB8 /* Navigation.swift in Sources */,
 				D56C69B0257DA09E00CF9AB8 /* SocialMediaSharingManager.swift in Sources */,
 				D5DC477E25821DFA007EDD86 /* CWGrid.swift in Sources */,
@@ -1531,6 +1542,7 @@
 				D56C6A33257DA0C700CF9AB8 /* WebView.swift in Sources */,
 				D56C6B6C257DBAC800CF9AB8 /* BottomTab.swift in Sources */,
 				D56CC2FA2590313A00CA1D54 /* PosterBlock.swift in Sources */,
+				315730EE25AFC1B600D9A693 /* PairingManager.swift in Sources */,
 				310D7E2425A42B72000BE173 /* PagePairingDevice.swift in Sources */,
 				D56C6A5E257DA0C700CF9AB8 /* MultiStrokeSpinner.swift in Sources */,
 				D56C6A56257DA0C700CF9AB8 /* CircleButton.swift in Sources */,

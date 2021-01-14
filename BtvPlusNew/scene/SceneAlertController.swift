@@ -13,7 +13,7 @@ import Combine
 enum SceneAlert:Equatable {
     case recivedApns, apiError(ApiResultError),
          connectWifi , notFoundDevice, requestLocation, limitedDevice(PairingInfo?),
-         pairingError(NpsCommonHeader?)
+         pairingError(NpsCommonHeader?), pairingRecovery
     static func ==(lhs: SceneAlert, rhs: SceneAlert) -> Bool {
         switch (lhs, rhs) {
         case ( .connectWifi, .connectWifi):return true
@@ -36,6 +36,7 @@ struct SceneAlertController: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var networkObserver:NetworkObserver
     @EnvironmentObject var repository:Repository
+    @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var appObserver:AppObserver
     
@@ -71,6 +72,7 @@ struct SceneAlertController: PageComponent{
             case .requestLocation: self.selectedRequestLocation(idx)
             case .limitedDevice(_) : self.selectedLimitedDevice(idx)
             case .pairingError(_): self.selectedPairingError(idx)
+            case .pairingRecovery: self.selectedPairingRecovery(idx)
             default: do { return }
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -88,6 +90,7 @@ struct SceneAlertController: PageComponent{
             case .requestLocation: self.setupRequestLocation()
             case .limitedDevice(let data) : self.setupLimitedDevice(data: data)
             case .pairingError(let data): self.setupPairingError(data: data)
+            case .pairingRecovery: self.setupPairingRecovery()
             case .recivedApns:
                 let enable = self.setupRecivedApns()
                 if !enable { return }
@@ -250,6 +253,29 @@ struct SceneAlertController: PageComponent{
         ]
     }
     func selectedPairingError(_ idx:Int) {}
+    
+    func setupPairingRecovery() {
+        self.title = String.alert.connect
+        self.text = String.alert.pairingRecovery
+        
+        self.buttons = [
+            AlertBtnData(title: String.button.connect, index: 0),
+            AlertBtnData(title: String.button.disConnect, index: 1)
+        ]
+    }
+    func selectedPairingRecovery(_ idx:Int) {
+        if idx == 0 {
+            if self.pairing.user != nil { self.pairing.requestPairing(.recovery) }
+            else {
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.pairingSetupUser)
+                        .addParam(key: PageParam.type, value: PairingRequest.recovery)
+                )
+            }
+        }else{
+            self.pairing.requestPairing(.unPairing)
+        }
+    }
 }
 
 

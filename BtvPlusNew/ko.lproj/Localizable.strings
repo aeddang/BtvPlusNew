@@ -31,6 +31,7 @@
 "btnView" = "보기";
 "btnDelete" = "지우기";
 "btnConnect" = "연결하기";
+"btnDisConnect" = "연결끊기";
 /*
   Alert
 */
@@ -45,7 +46,6 @@
 "alertConnectWifiSub" = "기기의 [설정 > Wi-Fi] 메뉴에서\nWi-Fi활성화 후 다시 시도해 주세요.";
 "alertConnectNotFound" = "연결가능한 B tv가 없습니다.";
 "alertConnectNotFoundSub" = "다시 조회를 시도하시거나\n다른연결방법을 이용해 주세요.";
-"alertConnectError" = "B tv 연결에 실패하였습니다.\n계속 연결 불가한 경우\n고객센터(국번 없이 106)로\n문의해 주세요.";
 
 "alertLocation" = "위치 접근 권한을 허용해 주세요";
 "alertLocationSub" = "애플의 정책에 따라 공유기 이름 정보를 확인하기 위해서 위치 접근 권한을 허용하셔야 이용이 가능합니다.";
@@ -65,8 +65,9 @@
 "alertLimitedConnect" = "연결 가능한 개수를 초과하였습니다.";
 "alertStbConnectFail" = "셋톱박스와 연결에 실패하였습니다.";
 
-"alertConnectCompleted" = "B tv 연결이 완료되었습니다.\nUI 4.0 버전에서는 B tv에서\n[확인]버튼을 누르셔야 연결이 완료됩니다.";
-
+"alertPairingError" = "B tv 연결에 실패하였습니다.\n계속 연결 불가한 경우\n고객센터(국번 없이 106)로\n문의해 주세요.";
+"alertPairingCompleted" = "B tv 연결이 완료되었습니다.\nUI 4.0 버전에서는 B tv에서\n[확인]버튼을 누르셔야 연결이 완료됩니다.";
+"alertPairingRecovery" = "완료되지않은  B tv 연결이 있습니다.\n연결을 완료 하시겠습니까?";
 /*
  PageTitle
 */

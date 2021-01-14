@@ -17,13 +17,13 @@ enum RepositoryStatus{
 
 class Repository:ObservableObject, PageProtocol{
     @Published var status:ApiStatus = .initate
-    let sceneObserver:PageSceneObserver?
+    let pageSceneObserver:PageSceneObserver?
     let pagePresenter:PagePresenter?
     let dataProvider:DataProvider
     let pairing:Pairing
     private let setting = SettingStorage()
     private let apiCoreDataManager = ApiCoreDataManager()
-    private let mdnsPairingManager = MdnsPairingManager()
+    private let pairingManager:PairingManager
     private let apiManager:ApiManager
     private var anyCancellable = Set<AnyCancellable>()
     
@@ -35,13 +35,17 @@ class Repository:ObservableObject, PageProtocol{
     ) {
         self.dataProvider = dataProvider ?? DataProvider()
         self.pairing = pairing ?? Pairing()
-        self.apiManager = ApiManager(pairing:self.pairing)
-        self.sceneObserver = sceneObserver
+        self.apiManager = ApiManager()
+        self.pageSceneObserver = sceneObserver
         self.pagePresenter = pagePresenter
+        self.pairingManager =  PairingManager(
+            pairing: self.pairing,
+            dataProvider: self.dataProvider,
+            apiManager: self.apiManager)
         
         self.pagePresenter?.$currentPage.sink(receiveValue: { evt in
             self.apiManager.clear()
-            self.sceneObserver?.isApiLoading = false
+            self.pageSceneObserver?.isApiLoading = false
             self.pagePresenter?.isLoading = false
             self.retryRegisterPushToken()
         }).store(in: &anyCancellable)
@@ -52,33 +56,22 @@ class Repository:ObservableObject, PageProtocol{
     }
     
     private func setupPairing(){
-        self.pairing.$request.sink(receiveValue: { req in
-            guard let requestPairing = req else { return }
-            switch requestPairing{
-            case .wifi :
-                self.mdnsPairingManager.requestPairing( requestPairing,
-                   found: { data in
-                        self.pairing.foundDevice(data)
-                   },notFound: {
-                        self.pairing.notFoundDevice()
-                   })
-            default: do{}
-            }
-        }).store(in: &anyCancellable)
-        
+        self.pairingManager.setupPairing(savedUser:self.setting.getSavedUser())
         self.pairing.$event.sink(receiveValue: { evt in
             guard let evt = evt else { return }
             switch evt{
             case .connected :
-                self.sceneObserver?.event = .toast("connected")
-                self.dataProvider.requestData(q: .init(type: .getHostDeviceInfo, isOptional: true))
-                if let user = self.pairing.user {
-                    self.dataProvider.requestData(q: .init(type: .postGuestDeviceInfo(user), isOptional: true))
-                }
+                self.pageSceneObserver?.event = .toast("connected")
             case .disConnected :
-                self.sceneObserver?.event = .toast("disConnected")
+                self.pageSceneObserver?.event = .toast("disConnected")
+                self.setting.saveUser(nil)
+                
             case .pairingCompleted :
-                self.sceneObserver?.event = .toast(String.alert.connectCompleted)
+                self.setting.saveUser(self.pairing.user)
+                self.pageSceneObserver?.event = .toast(String.alert.pairingCompleted)
+            
+            case .syncError :
+                self.pageSceneObserver?.alert = .pairingRecovery
             default: do{}
             }
         }).store(in: &anyCancellable)
@@ -90,7 +83,7 @@ class Repository:ObservableObject, PageProtocol{
             if apiQ.isLock {
                 self.pagePresenter?.isLoading = true
             }else{
-                self.sceneObserver?.isApiLoading = true
+                self.pageSceneObserver?.isApiLoading = true
             }
             if let coreDatakey = apiQ.type.coreDataKey(){
                 self.requestApi(apiQ, coreDatakey:coreDatakey)
@@ -104,7 +97,7 @@ class Repository:ObservableObject, PageProtocol{
             self.respondApi(res)
             DispatchQueue.main.async {
                 self.dataProvider.result = res
-                self.sceneObserver?.isApiLoading = false
+                self.pageSceneObserver?.isApiLoading = false
                 self.pagePresenter?.isLoading = false
             }
         }).store(in: &anyCancellable)
@@ -114,20 +107,10 @@ class Repository:ObservableObject, PageProtocol{
             DispatchQueue.main.async {
                 self.dataProvider.error = err
                 if !err.isOptional {
-                    self.sceneObserver?.alert = .apiError(err)
+                    self.pageSceneObserver?.alert = .apiError(err)
                 }
-                self.sceneObserver?.isApiLoading = false
+                self.pageSceneObserver?.isApiLoading = false
                 self.pagePresenter?.isLoading = false
-            }
-        }).store(in: &anyCancellable)
-        
-        self.apiManager.$event.sink(receiveValue: {evt in
-            switch evt {
-            case .pairingHostChanged :
-                if NpsNetwork.isPairing { self.pairing.connected() }
-                else { self.pairing.disconnected() }
-                
-            default: do{}
             }
         }).store(in: &anyCancellable)
         
@@ -163,7 +146,7 @@ class Repository:ObservableObject, PageProtocol{
             DispatchQueue.main.async {
                 if let coreData = coreData {
                     self.dataProvider.result = ApiResultResponds(id: apiQ.id, type: apiQ.type, data: coreData)
-                    self.sceneObserver?.isApiLoading = false
+                    self.pageSceneObserver?.isApiLoading = false
                     self.pagePresenter?.isLoading = false
                 }else{
                     self.apiManager.load(q: apiQ)
@@ -177,17 +160,7 @@ class Repository:ObservableObject, PageProtocol{
         case .getGnb :
             guard let data = res.data as? GnbBlock  else { return }
             self.onReadyRepository(gnbData: data)
-            
-        case .getHostDeviceInfo :
-            guard let data = res.data as? HostDeviceInfo else { return }
-            if data.header?.result != NpsNetwork.resultCode.success.code { return }
-            guard let hostData = data.body?.host_deviceinfo  else { return }
-            self.pairing.syncHostDevice(HostDevice().setData(deviceData: hostData))
-            
-        case .postGuestDeviceInfo :
-            guard let data = res.data as? NpsResult  else { return }
-            if data.header?.result != NpsNetwork.resultCode.success.code { return }
-            self.pairing.syncPairingUserData()
+        
         default: do{}
         }
     }

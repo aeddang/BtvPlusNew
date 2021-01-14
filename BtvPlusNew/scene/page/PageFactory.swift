@@ -15,9 +15,11 @@ extension PageID{
     static let pairingSetupUser:PageID = "pairingSetupUser"
     static let pairingDevice:PageID = "pairingDevice"
     static let pairingBtv:PageID = "pairingBtv"
+    static let pairingUser:PageID = "pairingUser"
 }
 
 struct PageProvider {
+    
     static func getPageObject(_ pageID:PageID)-> PageObject {
         let pobj = PageObject(pageID: pageID)
         pobj.pageIDX = getPageIdx(pageID)
@@ -28,26 +30,28 @@ struct PageProvider {
         pobj.zIndex = isTop(pageID) ? 1 : 0
         return pobj
     }
+    
     static func isHome(_ pageID:PageID)-> Bool{
         switch pageID {
         case .home, .intro : return  true
            default : return  false
         }
     }
+    
     static func getType(_ pageID:PageID)-> PageAnimationType{
         switch pageID {
         case .home,
-             .pairingSetupUser, .pairingBtv, .pairingDevice : return  .vertical
+             .pairingSetupUser, .pairingBtv, .pairingDevice, .pairingUser : return  .vertical
         
         default : return  .horizental
         }
     }
+    
     static func isTop(_ pageID:PageID)-> Bool{
         switch pageID{
            default : return  false
         }
     }
-    
     
     static func getPageIdx(_ pageID:PageID)-> Int {
         switch pageID {
@@ -56,6 +60,7 @@ struct PageProvider {
             default : return  9999
         }
     }
+    
     static func getDimed(_ pageID:PageID)-> Bool {
         switch pageID {
             default : return  false
@@ -82,7 +87,6 @@ extension PageEventType {
    static let pageChange = "pageChange"
 }
 
-
 struct PageFactory{
     static func getPage(_ pageObject:PageObject) -> PageViewProtocol{
         switch pageObject.pageID {
@@ -91,6 +95,7 @@ struct PageFactory{
         case .pairingSetupUser : return PagePairingSetupUser()
         case .pairingDevice : return PagePairingDevice()
         case .pairingBtv : return PagePairingBtv()
+        case .pairingUser : return PagePairingUser()
         default : return PageTest()
         }
     }

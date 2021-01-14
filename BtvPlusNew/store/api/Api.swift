@@ -60,7 +60,9 @@ enum ApiType{
          postAuthPairing(User?, String?),
          postUnPairing,rePairing,  // rePairing 재시도용
          getHostDeviceInfo,
-         postGuestDeviceInfo(User?)
+         postGuestInfo(User?),
+         postGuestNickname(User?),
+         postGuestAgreement(User?), getGuestAgreement
     
         
     func coreDataKey() -> String? {

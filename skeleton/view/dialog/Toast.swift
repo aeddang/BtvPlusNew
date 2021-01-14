@@ -20,8 +20,9 @@ extension View {
         let text = Text(text)
         _ = text.modifier(
             MediumTextStyle(
-                size: Font.size.light, color: Color.app.white
+                size: Font.size.thinExtra, color: Color.app.white
             ))
+        _ = text.multilineTextAlignment(.center)
         
         return Toast(isShowing: isShowing,
               presenting: { self },

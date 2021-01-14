@@ -29,7 +29,7 @@ class ApiManager :PageProtocol, ObservableObject{
     private lazy var metv = Metv(network: MetvNetwork())
     private lazy var nps = Nps(network: NpsNetwork())
 
-    init(pairing:Pairing) {
+    init() {
         self.initateApi()
     }
     
@@ -140,8 +140,17 @@ class ApiManager :PageProtocol, ObservableObject{
         case .getHostDeviceInfo : self.nps.getHostDeviceInfo(
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
-        case .postGuestDeviceInfo(let user) : self.nps.postGuestDeviceInfo(user: user,
+        case .postGuestInfo(let user) : self.nps.postGuestInfo(user: user,
             completion: {res in self.complated(id: apiID, type: type, res: res)}, 
+            error:error)
+        case .postGuestNickname(let user) : self.nps.postGuestNickname(user: user,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getGuestAgreement : self.nps.getGuestAgreement(
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .postGuestAgreement(let user) : self.nps.postGuestAgreement(user: user,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         case .postUnPairing, .rePairing : self.nps.postUnPairing(
             completion: {res in self.complated(id: apiID, type: type, res: res)},

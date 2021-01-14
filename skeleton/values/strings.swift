@@ -44,7 +44,7 @@ extension String {
         public static var connect = "alertConnect".loaalized()
         public static var connectWifi = "alertConnectWifi".loaalized()
         public static var connectWifiSub = "alertConnectWifiSub".loaalized()
-        public static var connectError = "alertConnectError".loaalized()
+        
         public static var connectNotFound = "alertConnectNotFound".loaalized()
         public static var connectNotFoundSub = "alertConnectNotFoundSub".loaalized()
         
@@ -66,7 +66,9 @@ extension String {
         public static var limitedConnect = "alertLimitedConnect".loaalized()
         public static var stbConnectFail = "alertStbConnectFail".loaalized()
         
-        public static var connectCompleted = "alertConnectCompleted".loaalized()
+        public static var pairingError = "alertPairingError".loaalized()
+        public static var pairingCompleted = "alertPairingCompleted".loaalized()
+        public static var pairingRecovery = "alertPairingRecovery".loaalized()
     }
     
     struct button {
@@ -77,6 +79,7 @@ extension String {
         public static var delete = "btnDelete".loaalized()
         public static let view = "btnView".loaalized()
         public static let connect = "btnConnect".loaalized()
+        public static let disConnect = "btnDisConnect".loaalized()
     }
     
     struct pageTitle {

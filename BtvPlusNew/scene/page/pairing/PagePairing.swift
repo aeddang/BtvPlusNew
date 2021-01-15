@@ -95,7 +95,7 @@ struct PagePairing: PageView {
                             title: String.pageText.pairingBtnUserCertification,
                             text: String.pageText.pairingBtnUserCertificationSub
                         ){
-                            self.requestPairing(type: .user)
+                            self.requestPairing(type: .user(nil))
                         }
                         .padding(.vertical, Dimen.margin.lightExtra)
                     }

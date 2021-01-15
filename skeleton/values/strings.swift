@@ -69,6 +69,16 @@ extension String {
         public static var pairingError = "alertPairingError".loaalized()
         public static var pairingCompleted = "alertPairingCompleted".loaalized()
         public static var pairingRecovery = "alertPairingRecovery".loaalized()
+        
+        public static var serviceUnavailable = "alertServiceUnavailable".loaalized()
+        public static var serviceUnavailableText = "alertServiceUnavailableText".loaalized()
+        
+        public static var identifySuccess = "alertIdentifySuccess".loaalized()
+        public static var identifyFail = "alertIdentifyFail".loaalized()
+        public static var identifySuccessAdult = "alertIdentifySuccessAdult".loaalized()
+        public static var identifyFailAdult = "alertIdentifyFailAdult".loaalized()
+        public static var identifySuccessMe = "alertIdentifySuccessMe".loaalized()
+        public static var identifyFailMe = "alertIdentifyFailMe".loaalized()
     }
     
     struct button {

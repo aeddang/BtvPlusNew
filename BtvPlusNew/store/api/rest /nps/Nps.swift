@@ -88,7 +88,7 @@ extension NpsNetwork{
     }
     
     static func getGuestDeviceId() -> String{
-        return "I" + SystemEnvironment.deviceId
+        return ApiPrefix.device + SystemEnvironment.deviceId
     }
     
     static func getNpsUsername(userName:String?) -> String{
@@ -180,20 +180,20 @@ class Nps: Rest{
     }
     
     func postDevicePairing(
-        user:User?, device:MdnsDevice?, customParam:[String: Any] = [String: Any](),
+        user:User?, device:StbData?, customParam:[String: Any] = [String: Any](),
         completion: @escaping (DevicePairing) -> Void, error: ((_ e:Error) -> Void)? = nil){
     
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-531")
         var deviceinfo = [String: String]()
         if let device = device {
-            deviceinfo["restricted_age"] = device.restricted_age
+            deviceinfo["restricted_age"] = device.restrictedAge
             deviceinfo["adult_safety_mode"] = device.isAdultSafetyMode == true ? "1" : "0"
-            deviceinfo["stb_src_agent_version"] = device.rcu_agent_ver
+            deviceinfo["stb_src_agent_version"] = device.agentVer
             deviceinfo["stb_mac_address"] = ApiUtil.getEncyptedData(
-                forNps: device.stb_mac_address, npsKey: NpsNetwork.AES_KEY, npsIv: NpsNetwork.AES_IV)
+                forNps: device.macAddress, npsKey: NpsNetwork.AES_KEY, npsIv: NpsNetwork.AES_IV)
                 
-            deviceinfo["stb_patch_version"] = device.stb_patch_ver
-            deviceinfo["stb_ui_version"] = device.ui_app_ver
+            deviceinfo["stb_patch_version"] = device.patchVer
+            deviceinfo["stb_ui_version"] = device.uiAppVer
         }
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE

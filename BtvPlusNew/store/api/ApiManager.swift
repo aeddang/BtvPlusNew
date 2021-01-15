@@ -28,6 +28,7 @@ class ApiManager :PageProtocol, ObservableObject{
     private lazy var euxp = Euxp(network: EuxpNetwork())
     private lazy var metv = Metv(network: MetvNetwork())
     private lazy var nps = Nps(network: NpsNetwork())
+    private lazy var kms = Kms(network: KmsNetwork())
 
     init() {
         self.initateApi()
@@ -155,7 +156,13 @@ class ApiManager :PageProtocol, ObservableObject{
         case .postUnPairing, .rePairing : self.nps.postUnPairing(
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
-        } 
+        //KMS
+        case .getStbInfo(let cid): self.kms.getStbList(ci: cid,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        }
+        
+        
         return apiID
     }
     

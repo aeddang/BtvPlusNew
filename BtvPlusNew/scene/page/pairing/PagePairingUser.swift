@@ -53,9 +53,37 @@ struct PagePairingUser: PageView {
                 default : do{}
                 }
             }
+            .onReceive(self.webViewModel.$event){ evt in
+                guard let evt = evt else {return}
+                switch evt {
+                case .callFuncion(let method, let json, _) :
+                    if method == WebviewMethod.bpn_closeWebView.rawValue {
+                        if let jsonData = json?.parseJson() {
+                            if let cid = jsonData["ci"] as? String {
+                                self.pageSceneObserver.alert = .alert(
+                                    String.alert.identifySuccess, String.alert.identifySuccessMe, nil)
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(.pairingDevice)
+                                        .addParam(key: .type, value: PairingRequest.user)
+                                        .addParam(key: .id, value: cid)
+                                    
+                                )
+                            }else{
+                                self.pageSceneObserver.alert = .alert(
+                                    String.alert.identifyFail, String.alert.identifyFailMe, nil)
+                            }
+                        }else{
+                            self.pageSceneObserver.alert = .alert(
+                                String.alert.identifyFail, String.alert.identifyFailMe, nil)
+                        }
+                        self.pagePresenter.closePopup(self.pageObject?.id)
+                    }
+                default : do{}
+                }
+            }
             .onAppear{
                 let linkUrl = ApiPath.getRestApiPath(.WEB) + "/view/v3.0/identityverification"
-                self.webViewModel.event = .link(linkUrl)
+                self.webViewModel.request = .link(linkUrl)
             }
             .onDisappear{
             }

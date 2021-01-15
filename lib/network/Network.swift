@@ -131,6 +131,7 @@ extension Network {
         return URLSession.shared
             .dataTaskPublisher(for: request)
             .tryCompactMap { result in
+            
                 self.debug(data: result.data)
                 do{
                     if T.Type.self == Blank.Type.self {
@@ -162,7 +163,6 @@ extension Network {
         return URLSession.shared
             .dataTaskPublisher(for: request)
             .tryCompactMap { result in
-            
                 self.debug(data: result.data)
                 do{
                     if T.Type.self == Blank.Type.self {

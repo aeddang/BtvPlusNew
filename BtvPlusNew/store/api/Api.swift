@@ -56,13 +56,14 @@ enum ApiType{
     //NPS
     case registHello,
          getDevicePairingInfo(String?, String?),
-         postDevicePairing(User?, MdnsDevice?),
+         postDevicePairing(User?, StbData?),
          postAuthPairing(User?, String?),
          postUnPairing,rePairing,  // rePairing 재시도용
          getHostDeviceInfo,
          postGuestInfo(User?),
          postGuestNickname(User?),
-         postGuestAgreement(User?), getGuestAgreement
+         postGuestAgreement(User?), getGuestAgreement,
+         getStbInfo(String?)
     
         
     func coreDataKey() -> String? {

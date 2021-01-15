@@ -17,7 +17,6 @@ struct SocialMediaShareable {
     var text:String?
 }
 
-
 struct SocialMediaSharingManage{
     
     static func share(_ object: SocialMediaShareable, for serviceType: String) {
@@ -31,7 +30,6 @@ struct SocialMediaSharingManage{
             composeVC.add(object.image)
             composeVC.add(object.url)
             composeVC.setInitialText(object.text)
-           
             presentingVC.present(composeVC, animated: true, completion: nil)
         }
     }

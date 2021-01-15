@@ -174,6 +174,10 @@ struct PagePairingDevice: PageView {
         }//geo
     }//body
     
+    func getMyStbDevice(cid:String) {
+        
+    }
+    
     @State var isLocationRequest:Bool = false
     func findSSID() {
         let status = self.locationObserver.status
@@ -205,9 +209,8 @@ struct PagePairingDevice: PageView {
             String.alert.findDeviceSub
         ]
         switch  self.pairingType {
-        case .wifi:
-            self.pairing.requestPairing(.wifi)
-        case .user: do{}
+        case .wifi, .user:
+            self.pairing.requestPairing(self.pairingType)
         default: do{}
         }
     }
@@ -217,6 +220,10 @@ struct PagePairingDevice: PageView {
         
         switch evt {
         case .findMdnsDevice(let findData) : do {
+            self.datas = findData.map{StbData().setData(data: $0)}
+            self.textAvailableDevice = String.pageText.pairingDeviceText3 + self.datas.count.description + String.pageText.pairingDeviceText4
+        }
+        case .findStbInfoDevice(let findData) : do {
             self.datas = findData.map{StbData().setData(data: $0)}
             self.textAvailableDevice = String.pageText.pairingDeviceText3 + self.datas.count.description + String.pageText.pairingDeviceText4
         }
@@ -230,8 +237,7 @@ struct PagePairingDevice: PageView {
     }
     
     private func selectePairingDevice(stb:StbData){
-        guard let device = stb.device else { return }
-        self.pairing.requestPairing(.device(device))
+        self.pairing.requestPairing(.device(stb))
     }
     
 }

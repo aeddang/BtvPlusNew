@@ -54,22 +54,23 @@ struct ApiGateway{
         return authorizationRequest
     }
     
-    /*
-    authorizationRequest.addValue(
-        SystemEnvironment.model+"/"+SystemEnvironment.systemVersion, forHTTPHeaderField: "x-device-info")
-    
-    authorizationRequest.addValue(
-        ApiPrefix.iphone+"/"+SystemEnvironment.systemVersion, forHTTPHeaderField: "x-os-info")
-    
-    authorizationRequest.addValue(
-        ApiPrefix.service+"/"+SystemEnvironment.systemVersion, forHTTPHeaderField: "x-service-info")
-    
-    authorizationRequest.addValue(
-        SystemEnvironment.deviceId, forHTTPHeaderField: "x-did-info")
-    
-    authorizationRequest.addValue(
-        "", forHTTPHeaderField: "x-auth-info")
-    */
+    static func setDefaultheader( request:URLRequest) -> URLRequest{
+        var authorizationRequest = request
+        authorizationRequest.addValue("application/json", forHTTPHeaderField: "Accept")
+        authorizationRequest.addValue(
+            SystemEnvironment.model+"/"+SystemEnvironment.model, forHTTPHeaderField: "x-device-info")
+        authorizationRequest.addValue(
+            ApiPrefix.iphone+"/"+SystemEnvironment.systemVersion, forHTTPHeaderField: "x-os-info")
+        authorizationRequest.addValue(
+            ApiPrefix.service+"/"+SystemEnvironment.bundleVersion , forHTTPHeaderField: "x-service-info")
+        authorizationRequest.addValue(
+            ApiPrefix.device + SystemEnvironment.deviceId , forHTTPHeaderField: "x-did-info")
+        /*
+        authorizationRequest.addValue(
+            "", forHTTPHeaderField: "x-auth-info")
+        */
+        return authorizationRequest
+    }
 }
 
 
@@ -78,6 +79,7 @@ struct ApiPrefix {
     static let iphone = "iphone"
     static let ipad = "ipad"
     static let service = "btvplus"
+    static let device = "I"
 }
 
 struct ApiConst {

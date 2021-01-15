@@ -12,6 +12,22 @@ import WebKit
 import Combine
 
 
+enum WebviewMethod:String {
+    case bpn_showSynopsis,
+         bpn_backWebView, bpn_closeWebView, bpn_showModalWebView,
+         bpn_setShowModalWebViewResult,bpn_setIdentityVerfResult, bpn_setPurchaseResult,
+         bpn_setKidsMode,
+         bpn_showTopBar,bpn_changeTopBar,bpn_hideTopBar,bpn_setTopBarTitle,
+         bpn_requestGnbBlockData,bpn_requestMoveWebByCallUrl,
+         bpn_setPassAge, bpn_requestPassAge,bpn_showMyBtv,
+         bpn_requestHlsTokenInfo,bpn_setMute,bpn_requestMuteState,
+         bpn_setMoveListener,bpn_setBackListener,
+         bpn_requestFocus,bpn_showComingSoon,bpn_showMyPairing,bpn_familyInvite
+    
+    
+}
+
+
 struct CPWebView: PageComponent {
     
     @ObservedObject var viewModel:WebViewModel = WebViewModel()
@@ -38,34 +54,22 @@ struct CPWebView: PageComponent {
     }
 }
 
-struct CustomWebView : UIViewRepresentable, WebViewProtocol {
+struct CustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
+    @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @ObservedObject var viewModel:WebViewModel
     var path: String = ""
     var request: URLRequest? {
         get{
-            PageLog.log("origin request " + viewModel.path )
+            ComponentLog.log("origin request " + viewModel.path , tag:self.tag )
             let encodedString = viewModel.path.addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
             guard let path = encodedString else { return nil }
-            PageLog.log("encoded request " + viewModel.path )
+            ComponentLog.log("encoded request " + viewModel.path , tag:self.tag )
             guard let url:URL = URL(string: path) else { return nil }
             return URLRequest(url: url)
         }
     }
     
-    class Coordinator: NSObject, WKNavigationDelegate, PageProtocol {
-        var parent: CustomWebView
 
-        init(_ parent: CustomWebView) {
-            self.parent = parent
-        }
-        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            
-            webView.evaluateJavaScript("document.documentElement.scrollHeight", completionHandler: { (height, error) in
-                webView.bounds.size.height = height as! CGFloat
-                ComponentLog.d("document.documentElement.scrollHeight " + webView.bounds.size.height.description, tag: self.tag)
-            })
-        }
-    }
 
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -74,6 +78,7 @@ struct CustomWebView : UIViewRepresentable, WebViewProtocol {
     func makeUIView(context: Context) -> WKWebView  {
         let uiView = creatWebView()
         uiView.navigationDelegate = context.coordinator
+        uiView.uiDelegate = context.coordinator
         return uiView
     }
     func updateUIView(_ uiView: WKWebView, context: Context) {
@@ -83,7 +88,7 @@ struct CustomWebView : UIViewRepresentable, WebViewProtocol {
             self.viewModel.error = .busy
             return
         }
-        if let e = self.viewModel.event { update(uiView , evt:e) }
+        if let e = self.viewModel.request { update(uiView , evt:e) }
     }
     
     private func checkLoading(_ uiView: WKWebView){
@@ -114,29 +119,41 @@ struct CustomWebView : UIViewRepresentable, WebViewProtocol {
         checkLoading(uiView)
     }
     
-    private func update(_ uiView: WKWebView, evt:WebViewEvent){
+    fileprivate func callJS(_ uiView: WKWebView, jsStr: String) {
+        uiView.evaluateJavaScript(jsStr, completionHandler: { (result, error) in
+            let resultString = result.debugDescription
+            let errorString = error.debugDescription
+            let msg = "result: " + resultString + " error: " + errorString
+            ComponentLog.d(msg, tag: "callJS")
+        })
+    }
+    
+    private func update(_ uiView: WKWebView, evt:WebViewRequest){
         switch evt {
-            case .home:
-                goHome(uiView)
+        case .home:
+            goHome(uiView)
+            return
+        case .writeHtml(let html):
+            uiView.loadHTMLString(html, baseURL: nil)
+            return
+        case .evaluateJavaScript(let jsStr):
+            self.callJS(uiView, jsStr: jsStr)
+            return
+        case .back:
+            if uiView.canGoBack {uiView.goBack()}
+            else {
+                self.viewModel.error = .update(.back)
                 return
-            case .writeHtml(let html):
-                uiView.loadHTMLString(html, baseURL: nil)
+            }
+        case .foward:
+            if uiView.canGoForward {uiView.goForward() }
+            else {
+                self.viewModel.error = .update(.foward)
                 return
-            case .back:
-                if uiView.canGoBack {uiView.goBack()}
-                else {
-                    self.viewModel.error = .update(.back)
-                    return
-                }
-            case .foward:
-                if uiView.canGoForward {uiView.goForward() }
-                else {
-                    self.viewModel.error = .update(.foward)
-                    return
-                }
-            case .link(let path) :
-                viewModel.path = path
-                load(uiView)
+            }
+        case .link(let path) :
+            viewModel.path = path
+            load(uiView)
         }
         self.viewModel.status = .ready
         checkLoading(uiView)
@@ -144,6 +161,199 @@ struct CustomWebView : UIViewRepresentable, WebViewProtocol {
     
     static func dismantleUIView(_ uiView: WKWebView, coordinator: ()) {
         dismantleUIView( uiView )
+    }
+    
+    
+    class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, PageProtocol {
+        var parent: CustomWebView
+        init(_ parent: CustomWebView) {
+            self.parent = parent
+        }
+        func webView(_ webView: WKWebView,
+                     decidePolicyFor navigationAction: WKNavigationAction,
+                     preferences: WKWebpagePreferences,
+                     decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
+            
+            preferences.preferredContentMode = .mobile
+            let url = navigationAction.request.url?.absoluteString
+            if navigationAction.navigationType == .backForward {
+                //checkReload(curUrl: url!)
+                // 편성표를 back으로 오는 경우에는 reload한다.
+            }
+            if (url?.hasPrefix("btvplus://"))! {
+                if let urlStr = url {
+                    if let components = URLComponents(string: urlStr) {
+                        if let path = components.host {
+                            let param = components.queryItems
+                            ComponentLog.d("path " + path, tag: self.tag)
+                            ComponentLog.d("param " + (param?.debugDescription ?? ""), tag: self.tag)
+                            self.parent.viewModel.event = .callPage(path, param)
+                        }
+                    }
+                }
+                decisionHandler(.cancel, preferences)
+                return
+            }
+            if (url?.hasPrefix("btvplusapp://"))! {
+    
+                var funcName:String? = nil
+                var query:String? = nil
+                var jsonParam:String?  = nil
+                var cbName:String?  = nil
+                if let path = url?.replace("btvplusapp://", with: "") {
+                    let paths = path.components(separatedBy: "?")
+                    if paths.count > 0  { funcName = paths[0] }
+                    if paths.count > 1  { query = paths[1] }
+                    if (query?.count ?? 0) > 0 {
+                        for pair in query!.components(separatedBy: "&") {
+                            let key = pair.components(separatedBy: "=")[0]
+                            let value = pair
+                                .components(separatedBy:"=")[1]
+                                .replacingOccurrences(of: "+", with: " ")
+                                .removingPercentEncoding ?? ""
+                            switch key {
+                            case "jsonParam": jsonParam = value
+                            case "cbName": cbName = value
+                            default:do{}
+                            }
+                        }
+                    }
+                    if let fn = funcName {
+                        ComponentLog.d("funcName " + fn, tag: self.tag)
+                        ComponentLog.d("query " + (query ?? ""), tag: self.tag)
+                        ComponentLog.d("jsonParam " + (jsonParam ?? ""), tag: self.tag)
+                        ComponentLog.d("cbName " + (cbName ?? ""), tag: self.tag)
+                        self.parent.viewModel.event = .callFuncion(fn, jsonParam, cbName )
+                    }
+                }
+                decisionHandler(.cancel, preferences)
+                return
+            }
+            decisionHandler(.allow, preferences)
+        }
+        
+        func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {}
+        func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {}
+        func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {}
+        
+        
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            webView.evaluateJavaScript("document.documentElement.scrollHeight", completionHandler: { (height, error) in
+                webView.bounds.size.height = height as! CGFloat
+                ComponentLog.d("document.documentElement.scrollHeight " + webView.bounds.size.height.description, tag: self.tag)
+            })
+            //선택 제거
+            let disabledSelect = "document.documentElement.style.webkitUserSelect='none';"
+            //복사 붙여넣기 같은 팝업 제거
+            let disabledOptionBubble = "document.documentElement.style.webkitTouchCallout='none';"
+            //하이라이트 제거
+            let disabledHightlight = "document.documentElement.style.webkitTapHighlightColor='rgba(0,0,0,0)';"
+            // 자동 완성 제거
+            let disableAutocompleteScript: String = """
+                var textFields = document.getElementsByTagName('textarea');
+                if (textFields) {
+                    var i;
+                    for( i = 0; i < textFields.length; i++) {
+                        var txtField = textFields[i];
+                        if(txtField) {
+                            txtField.setAttribute('autocomplete','off');
+                            txtField.setAttribute('autocorrect','off');
+                            txtField.setAttribute('autocapitalize','off');
+                            txtField.setAttribute('spellcheck','false');
+                        }
+                    }
+                }
+            """
+            [disabledSelect, disabledOptionBubble, disabledHightlight, disableAutocompleteScript].forEach { option in
+                self.parent.callJS(webView, jsStr: option)
+            }
+            
+            WKWebsiteDataStore.default().httpCookieStore.getAllCookies { (cookies) in
+                for cookie in cookies {
+                    //Tool.debugLog("cookie.name:\(cookie.name), cookie.value:\(cookie.value)")
+                    if cookie.name.contains("BtvplusWebVer") {
+                        //MenuNaviBuilder.setWebPageVersion(cookie.value)
+                    }
+                }
+            }
+        }
+        
+        
+        func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+            ComponentLog.d("error: " + error.localizedDescription , tag: self.tag )
+    
+            guard let failingUrlStr = (error as NSError).userInfo["NSErrorFailingURLStringKey"] as? String  else { return }
+            guard let failingUrl = URL(string: failingUrlStr) else { return }
+            guard let scheme = failingUrl.scheme?.lowercased() else { return }
+            ComponentLog.d("scheme: " + scheme , tag: self.tag )
+            
+            if scheme == "tel" || scheme == "mailto"
+                || scheme == "itmss" || scheme == "itms-appss" || scheme == "btvmobile" {
+                
+                ComponentLog.d("openURL: " + failingUrlStr , tag:self.tag)
+                AppUtil.openURL(failingUrlStr)
+                return
+            }
+            
+            if scheme == "outlink" {
+                let replacedUrl = failingUrlStr
+                    .replace("outlink://", with: "")
+                    .replace("https//", with: "https://")
+                    .replace("http//", with: "http://")
+                
+                ComponentLog.d("openURL: " + replacedUrl , tag:self.tag)
+                AppUtil.openURL(replacedUrl)
+                return
+            }
+            
+            if scheme == "http" || scheme == "https" {
+                let errorCode = (error as NSError).code
+                if errorCode == -1001 || errorCode == -1003 || errorCode == -1009 {
+                    self.parent.pageSceneObserver.alert = .serviceUnavailable(failingUrlStr)
+                    return
+                }
+            }
+        }
+        
+        func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String,
+                     initiatedByFrame frame: WKFrameInfo,
+                     completionHandler: @escaping () -> Void) {
+            
+            self.parent.pageSceneObserver.alert = .alert(nil,  message, completionHandler)
+           
+        }
+
+        func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String,
+                     initiatedByFrame frame: WKFrameInfo,
+                     completionHandler: @escaping (Bool) -> Void) {
+            
+            self.parent.pageSceneObserver.alert = .confirm(nil,  message, completionHandler)
+        }
+
+        func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String,
+                     defaultText: String?, initiatedByFrame frame: WKFrameInfo,
+                     completionHandler: @escaping (String?) -> Void) {
+            self.parent.pageSceneObserver.alert = .serviceSelect( prompt, defaultText, completionHandler)
+        }
+
+        func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse,
+                     decisionHandler: @escaping (WKNavigationResponsePolicy) -> Swift.Void) {
+            
+            guard
+                let response = navigationResponse.response as? HTTPURLResponse,
+                let url = navigationResponse.response.url
+                else {
+                    decisionHandler(.cancel)
+                    return
+                }
+            if let headerFields = response.allHeaderFields as? [String: String] {
+                let cookies = HTTPCookie.cookies(withResponseHeaderFields: headerFields, for: url)
+                cookies.forEach { (cookie) in
+                    HTTPCookieStorage.shared.setCookie(cookie)
+                }
+            }
+            decisionHandler(.allow)
+        }
     }
 }
 

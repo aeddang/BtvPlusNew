@@ -68,6 +68,19 @@
 "alertPairingError" = "B tv 연결에 실패하였습니다.\n계속 연결 불가한 경우\n고객센터(국번 없이 106)로\n문의해 주세요.";
 "alertPairingCompleted" = "B tv 연결이 완료되었습니다.\nUI 4.0 버전에서는 B tv에서\n[확인]버튼을 누르셔야 연결이 완료됩니다.";
 "alertPairingRecovery" = "완료되지않은  B tv 연결이 있습니다.\n연결을 완료 하시겠습니까?";
+
+"alertServiceUnavailable" = "서비스 연결 불가 안내";
+"alertServiceUnavailableText" = "현재 서비스 연결이\n원활하지 않습니다.\n잠시 후 다시 시도해 주세요.";
+
+"alertServiceUnavailable" = "서비스 연결 불가 안내";
+
+"alertIdentifySuccess" = "인증 성공";
+"alertIdentifyFail" = "인증 실패";
+"alertIdentifySuccessAdult" = "성인인증이 성공하였습니다.";
+"alertIdentifyFailAdult" = "성인인증이 실패하였습니다.";
+"alertIdentifySuccessMe" = "본인 인증이 완료되었습니다.";
+"alertIdentifyFailMe" = "본인 인증에 실패하였습니다.";
+
 /*
  PageTitle
 */

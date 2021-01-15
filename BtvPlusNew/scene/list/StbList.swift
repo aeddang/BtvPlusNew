@@ -12,15 +12,61 @@ class StbData:InfinityData{
     private(set) var image: String = Asset.noImg1_1
     private(set) var title: String? = nil
     private(set) var subTitle: String? = nil
-    private(set) var device:MdnsDevice? = nil
+     
+    private(set) var macAddress:String? = nil
+    private(set) var uiAppVer:String? = nil
+    private(set) var adult:String? = nil
+    private(set) var patchVer:String? = nil
+    private(set) var agentVer:String? = nil
+    private(set) var eros:String? = nil
+    private(set) var stbid:String? = nil
+    private(set) var stbName:String? = nil
+    private(set) var restrictedAge:String? = nil
+    private(set) var port:String? = nil
+    private(set) var address:String? = nil
+    private(set) var isAdultSafetyMode:Bool? = nil
     
     func setData(data:MdnsDevice) -> StbData {
-        device = data
+        macAddress = data.stb_mac_address
+        uiAppVer = data.ui_app_ver
+        adult = data.adult
+        patchVer = data.stb_patch_ver
+        agentVer = data.rcu_agent_ver
+        eros = data.eros
+        stbid = data.stbid
+        stbName = data.stb_mac_view
+        restrictedAge = data.restricted_age
+        port = data.port
+        address = data.address
+        isAdultSafetyMode = data.isAdultSafetyMode
+        
         title = data.stb_mac_view
         if let mac = data.stb_mac_address {
             subTitle = String.app.macAdress + " : " + mac
         }
         image = Pairing.getSTBImage(stbModel: data.stb_mac_view)
+        return self
+    }
+    
+    func setData(data:StbInfoDataItem) -> StbData {
+        macAddress = data.mac_address
+        uiAppVer = ""
+        adult = ""
+        patchVer = ""
+        agentVer = ""
+        eros = ""
+        stbid = data.stb_id
+        stbName = data.model_name
+        restrictedAge = ""
+        port = ""
+        address = ""
+        isAdultSafetyMode = false
+        
+        title = data.model_name
+        if let mac = data.mac_address {
+            subTitle = String.app.macAdress + " : " + mac
+        }
+        image = Pairing.getSTBImage(stbModel: data.model_name)
         return self
     }
     

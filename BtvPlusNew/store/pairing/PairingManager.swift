@@ -14,14 +14,13 @@ class PairingManager : PageProtocol{
     private let dataProvider:DataProvider
     private let apiManager:ApiManager
     private var anyCancellable = Set<AnyCancellable>()
-    
     init(pairing:Pairing, dataProvider:DataProvider, apiManager:ApiManager) {
         self.pairing = pairing
         self.dataProvider = dataProvider
         self.apiManager = apiManager
     }
     
-    var requestDevice:MdnsDevice? = nil
+    var requestDevice:StbData? = nil
     var requestAuthcode:String? = nil
     func setupPairing(savedUser:User? = nil){
         
@@ -34,10 +33,13 @@ class PairingManager : PageProtocol{
             case .wifi :
                 self.mdnsPairingManager.requestPairing( requestPairing,
                    found: { data in
-                        self.pairing.foundDevice(data)
+                        self.pairing.foundDevice(mdnsData:data)
                    },notFound: {
                         self.pairing.notFoundDevice()
                    })
+            
+            case .user(let cid) :
+                self.dataProvider.requestData(q: .init(type: .getStbInfo(cid), isOptional: true))
             
             case .device(let device) :
                 self.requestDevice = device
@@ -100,8 +102,6 @@ class PairingManager : PageProtocol{
             }
         }).store(in: &anyCancellable)
         
-        
-        
         self.apiManager.$result.sink(receiveValue: { res in
             guard let res = res else { return }
             
@@ -152,6 +152,21 @@ class PairingManager : PageProtocol{
                     return
                 }
                 self.pairing.syncPairingAgreement(agreement)
+                
+            case .getStbInfo :
+                guard let data = res.data as? StbInfo else {
+                    self.pairing.notFoundDevice()
+                    return
+                }
+                guard let datas = data.data?.stb_infos else {
+                    self.pairing.notFoundDevice()
+                    return
+                }
+                if datas.isEmpty {
+                    self.pairing.notFoundDevice()
+                    return
+                }
+                self.pairing.foundDevice(stbInfoDatas: datas)
                 
             default: do{}
             }

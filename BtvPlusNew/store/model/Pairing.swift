@@ -10,8 +10,8 @@ import Foundation
 
 
 enum PairingRequest:Equatable{
-    case wifi , btv, user, cancel,
-         recovery, device(MdnsDevice), auth(String) , unPairing
+    case wifi , btv, user(String?), cancel,
+         recovery, device(StbData), auth(String) , unPairing
     static func ==(lhs: PairingRequest, rhs: PairingRequest) -> Bool {
         switch (lhs, rhs) {
         case ( .wifi, .wifi):return true
@@ -29,7 +29,7 @@ enum PairingStatus{
 
 enum PairingEvent{
     case connected, disConnected, connectError(NpsCommonHeader?), disConnectError(NpsCommonHeader?),
-         findMdnsDevice([MdnsDevice]) , notFoundDevice,
+         findMdnsDevice([MdnsDevice]), findStbInfoDevice([StbInfoDataItem]),  notFoundDevice,
          syncError(NpsCommonHeader?),
          pairingCompleted
 }
@@ -138,8 +138,11 @@ class Pairing:ObservableObject, PageProtocol {
         
     }
     
-    func foundDevice(_ mdnsData:[MdnsDevice]){
+    func foundDevice(mdnsData:[MdnsDevice]){
         self.event = .findMdnsDevice(mdnsData)
+    }
+    func foundDevice(stbInfoDatas:[StbInfoDataItem]){
+        self.event = .findStbInfoDevice(stbInfoDatas)
     }
     func notFoundDevice(){
         self.event = .notFoundDevice

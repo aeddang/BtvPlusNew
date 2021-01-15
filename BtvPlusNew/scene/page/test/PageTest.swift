@@ -28,19 +28,16 @@ struct PageTest: PageView {
             VStack(alignment: .center)
             {
                 Spacer()
-            
             }//VStack
             .padding([.bottom], Dimen.margin.footer)
             .background(Color.app.white)
         }//GeometryReader
         .onAppear{
-            self.webViewModel.event = .home
+            self.webViewModel.request = .home
             //self.playerModel.event = PlayerUIEvent.load(testPath, false, 0.0)
             //self.playerModel.event = PlayerUIEvent.resume
             // SocialMediaSharingManage.share(SocialMediaShareable(text:"sjdhdsaijhancfk"))
-            
             PageLog.d(self.pageObject.debugDescription, tag: self.tag)
-            
             /*
             guard let qurry = WhereverYouCanGo.qurryIwillGo(
                 pageID: .test,

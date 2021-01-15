@@ -10,20 +10,21 @@ import Foundation
 import SwiftUI
 import WebKit
 
-enum WebViewEvent {
-    case home, foward, back, link(String), writeHtml(String)
+enum WebViewRequest {
+    case home, foward, back, link(String), writeHtml(String), evaluateJavaScript(String)
 }
 enum WebViewError{
-    case update(WebViewEvent), busy
+    case update(WebViewRequest), busy
+}
+
+enum WebViewEvent {
+    case callPage(String, [URLQueryItem]?), callFuncion(String,String?,String?)
 }
 
 open class WebViewModel: ComponentObservable {
     @Published var path:String = ""
-    @Published var event:WebViewEvent? = nil{
-        willSet{
-            self.status = .update
-        }
-    }
+    @Published var request:WebViewRequest? = nil{ willSet{ self.status = .update } }
+    @Published var event:WebViewEvent? = nil{didSet{ if event != nil { event = nil} }}
     @Published var error:WebViewError? = nil
     var base = ""
     convenience init(base:String, path: String? = nil) {
@@ -34,7 +35,6 @@ open class WebViewModel: ComponentObservable {
     }
 }
 
-
 protocol WebViewProtocol {
     var path: String { get set }
     var request: URLRequest? { get }
@@ -42,6 +42,7 @@ protocol WebViewProtocol {
     var scriptMessageHandlerName : String { get set }
     var uiDelegate:WKUIDelegate? { get set }
 }
+
 extension WebViewProtocol {
     var request: URLRequest? {
         get{

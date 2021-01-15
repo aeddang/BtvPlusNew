@@ -67,6 +67,25 @@ extension String{
         return self.replacingOccurrences(of: "%s" , with: newString)
     }
     
+    func parseJson() -> [String: Any]? {
+        guard let data = self.data(using: .utf8) else {
+            DataLog.e("parse : jsonString data error", tag: "parseJson")
+            return nil
+        }
+        do{
+            let value = try JSONSerialization.jsonObject(with: data , options: [])
+            guard let dictionary = value as? [String: Any] else {
+                DataLog.e("parse : dictionary error", tag: "parseJson")
+                return nil
+            }
+            return dictionary
+        } catch {
+            DataLog.e("parse : JSONSerialization " + error.localizedDescription, tag: "parseJson")
+           return nil
+        }
+    }
+    
+    
     func getArrayAfterRegex(regex: String) -> [String] {
         do {
             let regex = try NSRegularExpression(pattern: regex)

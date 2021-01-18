@@ -9,19 +9,9 @@
 import Foundation
 import SwiftUI
 struct CircleButton: View, SelecterbleProtocol {
-    @Binding var isSelected: Bool
-    let index:Int
+    var isSelected: Bool = false
+    var index:Int = 0
     let action: (_ idx:Int) -> Void
-    init(
-        isSelected:Binding<Bool>? = nil,
-        index: Int = 0,
-        action:@escaping (_ idx:Int) -> Void
-    )
-    {
-        self.index = index
-        self._isSelected = isSelected ?? Binding.constant(false)
-        self.action = action
-    }
     
     var body: some View {
         Button(action: {

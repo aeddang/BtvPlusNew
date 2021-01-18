@@ -9,7 +9,7 @@ import Foundation
 struct KmsNetwork : Network{
     var enviroment: NetworkEnvironment = ApiPath.getRestApiPath(.KMS)
     func onRequestIntercepter(request: URLRequest) -> URLRequest {
-        return ApiGateway.setGatewayheader(request: request)
+        return ApiGateway.setDefaultheader(request: request)
     }
 }
 extension KmsNetwork{
@@ -28,7 +28,7 @@ class Kms: Rest{
         completion: @escaping (StbInfo) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
         params["ci"] = ci ?? ""
-       fetch(route: KmsStbList(query: params), completion: completion, error:error)
+        fetch(route: KmsStbList(query: params), completion: completion, error:error)
     }
 }
 

@@ -23,7 +23,7 @@ struct PagePairingUser: PageView {
             ) {
                 VStack(spacing:0){
                     PageTab(
-                        title: .constant(String.pageTitle.connectCertificationBtv),
+                        title: String.pageTitle.connectCertificationBtv,
                         isClose: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
@@ -57,16 +57,14 @@ struct PagePairingUser: PageView {
                 guard let evt = evt else {return}
                 switch evt {
                 case .callFuncion(let method, let json, _) :
-                    if method == WebviewMethod.bpn_closeWebView.rawValue {
+                    if method == WebviewMethod.bpn_setIdentityVerfResult.rawValue {
                         if let jsonData = json?.parseJson() {
                             if let cid = jsonData["ci"] as? String {
                                 self.pageSceneObserver.alert = .alert(
                                     String.alert.identifySuccess, String.alert.identifySuccessMe, nil)
                                 self.pagePresenter.openPopup(
                                     PageProvider.getPageObject(.pairingDevice)
-                                        .addParam(key: .type, value: PairingRequest.user)
-                                        .addParam(key: .id, value: cid)
-                                    
+                                        .addParam(key: .type, value: PairingRequest.user(cid))
                                 )
                             }else{
                                 self.pageSceneObserver.alert = .alert(

@@ -11,29 +11,11 @@ import SwiftUI
 
 struct ImageView : View, PageProtocol {
     @ObservedObject var imageLoader: ImageLoader = ImageLoader()
-    @Binding var url:String?
-    @State var img:UIImage?
+    var url:String?
+    var contentMode:ContentMode  = .fit
     var noImg:String = Asset.noImg16_9
-    let contentMode:ContentMode
-    init(
-        url:String? = nil,
-        contentMode:ContentMode = .fit,
-        noImg:String? = nil
-    ){
-        self._url = .constant(url)
-        self.contentMode = contentMode
-        self.noImg = noImg ?? self.noImg
-    }
-    init(
-        url:Binding<String?>,
-        contentMode:ContentMode = .fit,
-        noImg:String? = nil
-    ){
-        self._url = url
-        self.contentMode = contentMode
-        self.noImg = noImg ?? self.noImg
-    }
     
+    @State var img:UIImage?
     var body: some View {
         Image(uiImage:
                 self.img ??
@@ -58,27 +40,10 @@ struct ImageView : View, PageProtocol {
 
 struct DynamicImageView : View, PageProtocol {
     @ObservedObject var imageLoader: ImageLoader = ImageLoader()
-    @Binding var url:String?
-    let contentMode:ContentMode
+    var url:String?
+    var contentMode:ContentMode = .fit
     var noImg:String = Asset.noImg16_9
-    init(
-        url:String? = nil,
-        contentMode:ContentMode = .fit,
-        noImg:String? = nil
-    ){
-        self._url = .constant(url)
-        self.contentMode = contentMode
-        self.noImg = noImg ?? self.noImg
-    }
-    init(
-        url:Binding<String?>,
-        contentMode:ContentMode = .fit,
-        noImg:String? = nil
-    ){
-        self._url = url
-        self.contentMode = contentMode
-        self.noImg = noImg ?? self.noImg
-    }
+    
     var body: some View {
         Image(uiImage: self.imageLoader.image(url: self.url) ?? UIImage(named: self.noImg)! )
             .renderingMode(.original)

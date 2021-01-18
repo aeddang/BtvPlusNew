@@ -46,7 +46,7 @@ struct PagePairingSetupUser: PageView {
             ) {
                 VStack(spacing:0){
                     PageTab(
-                        title: self.$title,
+                        title: self.title,
                         isClose: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
@@ -90,7 +90,7 @@ struct PagePairingSetupUser: PageView {
                                     .frame(width:Dimen.tab.titleWidth, alignment: .leading)
                                     .multilineTextAlignment(.leading)
                                 SortButton(
-                                    text: self.$birth,
+                                    text: self.birth,
                                     isFocus: self.editType == .birth){
                                     self.doBirthSelect()
                                 }
@@ -188,6 +188,7 @@ struct PagePairingSetupUser: PageView {
                 .onReceive(self.infinityScrollModel.$event){evt in
                     guard let evt = evt else {return}
                     switch evt {
+                    case .top : self.pageDragingModel.uiEvent = .draged(geometry)
                     case .down, .up : self.pageDragingModel.uiEvent = .dragCancel(geometry)
                     case .pullCancel : self.pageDragingModel.uiEvent = .pulled(geometry)
                     default : do{}
@@ -227,7 +228,8 @@ struct PagePairingSetupUser: PageView {
                 //UIScrollView.appearance().bounces = false
                 guard let obj = self.pageObject  else { return }
                 self.birth = self.birthList[20]
-                self.pairingType = (obj.getParamValue(key: .type) as? PairingRequest) ?? self.pairingType
+                let type = obj.getParamValue(key: .type)
+                self.pairingType = type as? PairingRequest ?? self.pairingType
                 
                 switch self.pairingType {
                 case .btv : self.title = String.pageTitle.connectCertificationBtv
@@ -263,21 +265,16 @@ struct PagePairingSetupUser: PageView {
         }
     }
 
-    func isInputCompleted() -> Binding<Bool> {
+    func isInputCompleted() -> Bool {
         var complete = false
         if self.nickName.isNickNameType() && self.isAgree1 && self.isAgree2 {
             complete = true
         }
-        return  Binding<Bool>(
-            get: {
-                complete
-            },
-            set: { _ in }
-        )
+        return complete
     }
     
     func inputCompleted() {
-        if !self.isInputCompleted().wrappedValue { return }
+        if !self.isInputCompleted() { return }
         self.pairing.user = User(
             nickName: self.nickName, characterIdx: self.characterIdx, gender: self.gender, birth: self.birth,
             isAgree1: self.isAgree1, isAgree2: self.isAgree2, isAgree3: self.isAgree3

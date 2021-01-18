@@ -23,7 +23,7 @@ struct CheckBox: View, SelecterbleProtocol {
                 defaultImage: Asset.shape.checkBoxOff,
             activeImage: self.isStrong
                 ? Asset.shape.checkBoxOn : Asset.shape.checkBoxOn2,
-                isSelected: self.$isChecked,
+                isSelected: self.isChecked,
                 size: CGSize(width: Dimen.icon.thinExtra, height: Dimen.icon.thinExtra)
                 ){_ in
                     self.isChecked.toggle()

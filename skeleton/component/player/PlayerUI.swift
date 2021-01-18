@@ -61,7 +61,7 @@ struct PlayerUI: PageComponent {
                 
             }
         }
-        .toast(isShowing: self.$isError, text: Text(self.errorMessage))
+        .toast(isShowing: self.$isError, text: self.errorMessage)
 
         .onReceive(self.viewModel.$time) { tm in
             self.time = tm.description

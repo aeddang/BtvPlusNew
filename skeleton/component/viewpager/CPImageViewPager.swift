@@ -26,7 +26,7 @@ struct CPImageViewPager: PageComponent {
                 HStack(spacing: Dimen.margin.thin) {
                     ForEach(0..<self.pages.count) { index in
                         CircleButton(
-                            isSelected: Binding<Bool>(get: { self.index == index }, set: { _ in }),
+                            isSelected: self.index == index ,
                             index:index )
                         { idx in
                             self.index = idx

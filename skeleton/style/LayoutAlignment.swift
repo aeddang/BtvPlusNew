@@ -92,4 +92,17 @@ struct MatchVertical: ViewModifier {
     }
 }
 
+struct LineHorizontal: ViewModifier {
+    var height:CGFloat = 1
+    var margin:CGFloat = 0
+    func body(content: Content) -> some View {
+        return content
+            .frame(minWidth: 0, maxWidth: .infinity - (margin * 2.0) , minHeight: height, maxHeight: height)
+            .offset(x:margin)
+            .background(Color.app.blueDeep)
+            
+            
+    }
+}
+
 

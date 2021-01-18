@@ -13,10 +13,8 @@ extension Asset {
     public static let noImg4_3 = "imgDefaultMonthlyCardB"
     public static let noImg1_1 = "img07CardDefault"
     public static let noImgCircle1_1 = "img05CardDefault"
-    
     public static let noImg9_16 = "imgDefaultPosterSmall"
     public static let noImg3_4 = "imgDefaultPosterSmall02"
-
     public static let noImgBanner = "img09CardBannerDefault"
     public static let test = "test"
 }
@@ -55,11 +53,39 @@ extension Asset{
         public static let more = "icArrowRight"
         public static let moreSmall = "icArrowRightWhite"
         public static let close = "icTopClose"
+        public static let setting = "icTopSetting"
        
         public static let alertSmall = "icAlertS"
         public static let pairingWifi = "icPairing03"
         public static let pairingBtv = "icPairing02"
         public static let pairingUser = "icPairing01"
+        
+        public static let watchBTv = "icSynopTvNor"
+        public static let likeOff = "icSynopRatingDownFoc"
+        public static let likeOn = "icSynopRatingFoc"
+        public static let like = "icSynopRatingNor"
+        
+        public static let goodOn = "icPopupGoodFoc"
+        public static let goodOff = "icPopupGoodNor"
+        public static let badOn = "icPopupBadFoc"
+        public static let badOff = "icPopupBadNor"
+        
+        
+        public static let heartOn = "icSynopStarFoc"
+        public static let heartOff = "icSynopStarNor"
+        public static let ageAll = "icSynopAgeAll"
+        public static let age19 = "icSynopAge19"
+        public static let age15 = "icSynopAge15"
+        public static let age12 = "icSynopAge12"
+        public static let age7 = "icSynopAge7"
+        public static let trophy = "icSynopTrophy"
+        public static let ratingPrimary = "icSynopRatingS"
+        
+        public static let watcha = "icSynopWatcha"
+        public static let share = "icSynopShareNor"
+        
+        public static let alarm = "icMyAlarm"
+        public static let notice = "icMyNotice"
         
     }
     
@@ -72,8 +98,16 @@ extension Asset{
         public static let spinner = "icSpinner"
     }
     
+    struct image {
+        public static let noImgActor =  "imgSynopNoimageActor"
+        public static let noImgVoice =  "imgSynopNoimageVoice"
+        public static let noImgWriter =  "imgSynopNoimageWriter"
+        public static let noImgDirector =  "imgSynopNoimageDirector"
+    }
+    
     struct source {
-        public static let pairingTutorial =  "pairingTutorialS"
+        public static let pairingTutorial = "pairingTutorialS"
+        public static let myConnectIos = "imgMyConnectIos"
     }
     
     

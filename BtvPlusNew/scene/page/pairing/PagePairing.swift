@@ -23,7 +23,7 @@ struct PagePairing: PageView {
             ) {
                 VStack(spacing:0){
                     PageTab(
-                        title: .constant(String.pageTitle.connectBtv),
+                        title: String.pageTitle.connectBtv,
                         isBack : true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
@@ -154,7 +154,7 @@ struct PagePairing: PageView {
         case .user:
             self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.pairingSetupUser)
-                    .addParam(key: PageParam.type, value: PairingRequest.user)
+                    .addParam(key: PageParam.type, value: PairingRequest.user(nil))
             )
         default: do{}
         }

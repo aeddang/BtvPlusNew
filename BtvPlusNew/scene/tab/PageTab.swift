@@ -10,10 +10,11 @@ import SwiftUI
 
 struct PageTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @Binding var title:String?
+    var title:String? = nil
     var isBack:Bool = false
     var isClose:Bool = false
-        
+    var isSetting:Bool = false
+    
     var body: some View {
         ZStack(alignment: .leading){
             if self.title != nil {
@@ -50,6 +51,19 @@ struct PageTab: PageComponent{
                                    height: Dimen.icon.regular)
                     }
                 }
+                if self.isSetting {
+                    Button(action: {
+                        //self.pagePresenter.goBack()
+                        
+                    }) {
+                        Image(Asset.icon.setting)
+                            .renderingMode(.original)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: Dimen.icon.regular,
+                                   height: Dimen.icon.regular)
+                    }
+                }
             }
             .padding(.horizontal, Dimen.margin.tiny)
             
@@ -63,7 +77,8 @@ struct PageTab_Previews: PreviewProvider {
     
     static var previews: some View {
         Form{
-            PageTab(title:.constant("title")).environmentObject(PagePresenter()).frame(width:320,height:100)
+            PageTab(title: "title")
+                .environmentObject(PagePresenter()).frame(width:320,height:100)
                 .background(Color.app.blue)
         }
     }

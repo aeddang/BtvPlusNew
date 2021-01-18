@@ -9,11 +9,16 @@
 import Foundation
 import SwiftUI
 struct StrokeRectButton: View, SelecterbleProtocol{
-    @Binding var isSelected: Bool
     let text:String
-    let index: Int
-    let textModifier:TextModifier
-    let action: (_ idx:Int) -> Void
+    var isSelected: Bool = true
+    var index: Int = 0
+    var textModifier:TextModifier = TextModifier(
+        family: Font.family.bold,
+        size: Font.size.light,
+        color: Color.app.grey,
+        activeColor: Color.brand.primary
+    )
+    
     var strokeColor = Color.app.grey
     var strokeActiveColor = Color.brand.primary
     var cornerRadius = Dimen.radius.light
@@ -21,40 +26,7 @@ struct StrokeRectButton: View, SelecterbleProtocol{
     var padding:CGFloat = Dimen.margin.thin
     var icon:String? = nil
     var iconTail:String? = nil
-    init(
-        text:String,
-        index: Int = 0,
-        isSelected:Binding<Bool>? = nil,
-        textModifier:TextModifier? = nil,
-        strokeColor:Color? = nil,
-        strokeActiveColor:Color? = nil,
-        cornerRadius:CGFloat? = nil,
-        size:CGFloat? = nil,
-        padding:CGFloat? = nil,
-        icon:String? = nil,
-        iconTail:String? = nil,
-        action:@escaping (_ idx:Int) -> Void
-        
-    ){
-        self.text = text
-        self.index = index
-        self.textModifier = textModifier ??
-            TextModifier(
-                family: Font.family.bold,
-                size: Font.size.light,
-                color: Color.app.grey,
-                activeColor: Color.brand.primary
-            )
-        self._isSelected = isSelected ?? Binding.constant(true)
-        self.action = action
-        if let cornerRadius = cornerRadius { self.cornerRadius = cornerRadius }
-        if let size = size { self.size = size }
-        if let padding = padding { self.padding = padding }
-        if let strokeColor = strokeColor { self.strokeColor = strokeColor }
-        if let strokeActiveColor = strokeActiveColor { self.strokeActiveColor = strokeActiveColor }
-        if let icon = icon { self.icon = icon }
-        if let iconTail = iconTail { self.iconTail = iconTail }
-    }
+    let action: (_ idx:Int) -> Void
     
     var body: some View {
         Button(action: {

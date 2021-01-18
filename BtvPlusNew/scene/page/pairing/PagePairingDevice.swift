@@ -37,7 +37,7 @@ struct PagePairingDevice: PageView {
             ) {
                 VStack(spacing:0){
                     PageTab(
-                        title: self.$title,
+                        title: self.title,
                         isClose: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
@@ -85,6 +85,7 @@ struct PagePairingDevice: PageView {
                 .onReceive(self.infinityScrollModel.$event){evt in
                     guard let evt = evt else {return}
                     switch evt {
+                    case .top : self.pageDragingModel.uiEvent = .draged(geometry)
                     case .down, .up :
                         self.pageDragingModel.uiEvent = .dragCancel(geometry)
                     case .pullCancel :

@@ -91,6 +91,7 @@ enum PosterType {
 struct PosterList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var pairing:Pairing
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     @Binding var datas:[PosterData]
     var body: some View {
@@ -104,7 +105,8 @@ struct PosterList: PageComponent{
                 PosterItem( data:data )
                 .onTapGesture {
                     self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.pairing)
+                        PageProvider.getPageObject(.synopsis)
+                            .addParam(key: .data, value: data)
                     )
                 }
             }

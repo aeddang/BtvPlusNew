@@ -25,8 +25,8 @@ struct ScenePickerController: PageComponent{
         }
         .picker(
             isShowing: self.$isShow,
-            title: .constant(""),
-            buttons: self.$buttons,
+            title: "",
+            buttons: self.buttons,
             selected: self.$selected)
         { idx in
             switch self.currentSelect {
@@ -68,7 +68,7 @@ struct ScenePickerController: PageComponent{
         self.selected = idx
     }
     func selectedPicker(_ idx:Int, data:(String,[String])) {
-        self.sceneObserver.selectResult = .complete(.select(data), idx)
+        self.sceneObserver.selectResult = .complete(.picker(data, idx), idx)
         self.sceneObserver.selectResult = nil
     }
     

@@ -92,7 +92,7 @@ struct PagePairingBtv: PageView {
                 VStack(spacing:0){
                     if !self.isInput || self.sceneOrientation == .portrait {
                         PageTab(
-                            title: .constant(String.pageTitle.connectCertificationBtv),
+                            title: String.pageTitle.connectCertificationBtv,
                             isClose: true
                         )
                         .padding(.top, self.sceneObserver.safeAreaTop)
@@ -207,17 +207,12 @@ struct PagePairingBtv: PageView {
         
     }
     
-    func isInputCompleted() -> Binding<Bool> {
-        return  Binding<Bool>(
-            get: {
-                self.input.isCertificationNumberType()
-            },
-            set: { _ in }
-        )
+    func isInputCompleted() -> Bool {
+        return self.input.isCertificationNumberType()
     }
     
     func inputCompleted() {
-        if !self.isInputCompleted().wrappedValue { return }
+        if !self.isInputCompleted() { return }
         self.pairing.requestPairing(.auth(self.input))
     }
 }

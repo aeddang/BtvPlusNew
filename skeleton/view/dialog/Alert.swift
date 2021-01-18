@@ -18,41 +18,21 @@ extension View {
                subText: String? = nil,
                tipText: String? = nil,
                referenceText: String? = nil,
-               buttons:[String]? = nil,
+               imgButtons:[AlertBtnData]? = nil,
+               buttons:[AlertBtnData]? = nil,
                action: @escaping (_ idx:Int) -> Void ) -> some View {
         
-        let btns = buttons ?? [
-            String.app.cancel,
-            String.app.corfirm
-        ]
+        var alertBtns:[AlertBtnData] = buttons ?? []
+        if buttons == nil {
+            let btns = [
+                String.app.cancel,
+                String.app.corfirm
+            ]
+            let range = 0 ..< btns.count
+            alertBtns = zip(range,btns).map {index, text in AlertBtnData(title: text, index: index)}
+        }
         
-        let range = 0 ..< btns.count
         return Alert(
-            isShowing: isShowing,
-            presenting: { self },
-            title:Binding.constant(title),
-            image:Binding.constant(image),
-            text: Binding.constant(text),
-            subText: Binding.constant(subText),
-            tipText: Binding.constant(tipText),
-            referenceText: Binding.constant(referenceText),
-            buttons:.constant(
-                zip(range,btns).map {index, text in
-                    AlertBtnData(title: text, index: index)
-            }),
-            action:action)
-    }
-    func alert(isShowing: Binding<Bool>,
-               title: Binding<String?>,
-               image: Binding<UIImage?>,
-               text: Binding<String>,
-               subText: Binding<String?>,
-               tipText: Binding<String?>,
-               referenceText: Binding<String?>,
-               buttons:Binding<[AlertBtnData]>,
-               action: @escaping (_ idx:Int) -> Void ) -> some View {
-        
-       return Alert(
             isShowing: isShowing,
             presenting: { self },
             title:title,
@@ -60,14 +40,17 @@ extension View {
             text:text,
             subText:subText,
             tipText:tipText,
-            referenceText:referenceText,
-            buttons:buttons,
+            referenceText: referenceText,
+            imgButtons : imgButtons,
+            buttons: alertBtns,
             action:action)
     }
+    
 }
 struct AlertBtnData:Identifiable, Equatable{
     let id = UUID.init()
     let title:String
+    var img:String = ""
     let index:Int
 }
 
@@ -75,13 +58,14 @@ struct AlertBtnData:Identifiable, Equatable{
 struct Alert<Presenting>: View where Presenting: View {
     @Binding var isShowing: Bool
     let presenting: () -> Presenting
-    @Binding var title: String?
-    @Binding var image: UIImage?
-    @Binding var text: String
-    @Binding var subText: String?
-    @Binding var tipText: String?
-    @Binding var referenceText: String?
-    @Binding var buttons: [AlertBtnData]
+    var title: String?
+    var image: UIImage?
+    var text: String
+    var subText: String?
+    var tipText: String?
+    var referenceText: String?
+    var imgButtons: [AlertBtnData]?
+    var buttons: [AlertBtnData]
     let action: (_ idx:Int) -> Void
     
     var body: some View {
@@ -136,12 +120,32 @@ struct Alert<Presenting>: View where Presenting: View {
                     .padding(.top, Dimen.margin.regular)
                     .padding(.bottom, Dimen.margin.medium)
                     .padding(.horizontal, Dimen.margin.regular)
+                    if self.imgButtons != nil {
+                        HStack(spacing:0){
+                            ForEach(self.imgButtons!) { btn in
+                                ImageButton(
+                                    defaultImage: btn.img,
+                                    text: btn.title,
+                                    isSelected: true ,
+                                    index: btn.index,
+                                    size: CGSize(width: Dimen.icon.heavy, height: Dimen.icon.heavy)
+                                    
+                                ){idx in
+                                    self.action(idx)
+                                    withAnimation{
+                                        self.isShowing = false
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.bottom, Dimen.margin.medium)
+                    }
                     HStack(spacing:0){
                         ForEach(self.buttons) { btn in
                             FillButton(
                                 text: btn.title,
                                 index: btn.index,
-                                isSelected:.constant( true ),
+                                isSelected: true ,
                                 textModifier: TextModifier(
                                     family: Font.family.bold,
                                     size: Font.size.lightExtra,
@@ -157,7 +161,6 @@ struct Alert<Presenting>: View where Presenting: View {
                                 withAnimation{
                                     self.isShowing = false
                                 }
-                                
                             }
                         }
                     }
@@ -186,9 +189,7 @@ struct Alert_Previews: PreviewProvider {
             title:"TEST",
             text: "text",
             subText: "subtext",
-            buttons: [
-                "test","test1"
-            ]
+            buttons: nil
         ){ _ in
         
         }

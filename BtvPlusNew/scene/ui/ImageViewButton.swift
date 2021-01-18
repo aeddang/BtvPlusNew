@@ -16,7 +16,7 @@ struct ImageViewButton: View{
     var textSize:CGFloat = Font.size.tinyExtra
     var defaultTextColor:Color = Color.app.whiteDeep
     var activeTextColor:Color = Color.app.white
-    var noImg:String? = nil
+    var noImg:String = Asset.noImg1_1
     let action: () -> Void
     
     var body: some View {

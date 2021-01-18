@@ -28,6 +28,14 @@ extension Double {
     func millisecToSec() -> Double {
         return self/1000.0
     }
+    
+    func toPercent(n:Int = 0) -> String {
+        return self.toTruncateDecimal(n:n) + "%"
+    }
+    
+    func toTruncateDecimal (n:Int = 0) -> String {
+        return String(format: "%." + n.description + "f", self)
+    }
 }
 
 extension Date{

@@ -15,7 +15,9 @@ struct TopTab: PageComponent{
     var body: some View {
         HStack(alignment: .bottom ,spacing:Dimen.margin.tiny){
             Button(action: {
-                
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.my)
+                )
             }) {
                 Image(Asset.gnbTop.my)
                     .renderingMode(.original)

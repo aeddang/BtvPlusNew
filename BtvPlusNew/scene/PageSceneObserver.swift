@@ -32,4 +32,27 @@ class PageSceneObserver:ObservableObject{
     }
 }
 
+enum SceneSelect:Equatable {
+    case select((String,[String]),Int), selectBtn((String,[SelectBtnData]),Int), picker((String,[String]),Int)
+    
+    func check(key:String)-> Bool{
+        switch (self) {
+        case let .selectBtn(v, _): return v.0 == key
+        case let .select(v, _): return v.0 == key
+        case let .picker(v, _): return v.0 == key
+        }
+    }
+    
+    static func ==(lhs: SceneSelect, rhs: SceneSelect) -> Bool {
+        switch (lhs, rhs) {
+        case (let .selectBtn(lh,_), let .selectBtn(rh,_)): return lh.0 == rh.0
+        case (let .select(lh,_), let .select(rh,_)): return lh.0 == rh.0
+        case (let .picker(lh,_), let .picker(rh,_)): return lh.0 == rh.0
+        default : return false
+        }
+    }
+}
+enum SceneSelectResult {
+    case complete(SceneSelect,Int)
+}
 

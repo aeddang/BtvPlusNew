@@ -9,25 +9,8 @@ import Foundation
 import SwiftUI
 extension View {
     func picker(isShowing: Binding<Bool>,
-               title: String,
-               buttons:[String],
-               selected:Int = 0,
-               action: @escaping (_ idx:Int) -> Void) -> some View {
-        let range = 0 ..< buttons.count
-        return PickerSelect(
-            isShowing: isShowing,
-            presenting: { self },
-            title:Binding.constant(title),
-            selected: Binding.constant(selected),
-            buttons:.constant(
-                zip(range,buttons).map {index, text in
-                    SelectBtnData(title: text, index: index)
-            }),
-            action:action)
-    }
-    func picker(isShowing: Binding<Bool>,
-               title: Binding<String?>,
-               buttons:Binding<[SelectBtnData]>,
+               title: String?,
+               buttons:[SelectBtnData],
                selected: Binding<Int>,
                action: @escaping (_ idx:Int) -> Void) -> some View {
         
@@ -43,11 +26,10 @@ extension View {
 struct PickerSelect<Presenting>: View where Presenting: View {
     @Binding var isShowing: Bool
     let presenting: () -> Presenting
-    @Binding var title: String?
+    var title: String?
     @Binding var selected:Int
-    @Binding var buttons: [SelectBtnData]
+    var buttons: [SelectBtnData]
     let action: (_ idx:Int) -> Void
-    
     var body: some View {
         ZStack(alignment: .bottom) {
             Button(action: {
@@ -91,8 +73,9 @@ struct PickerSelect_Previews: PreviewProvider {
             isShowing: .constant(true),
             title:"TEST",
             buttons: [
-                "test","test1"
-            ]
+                SelectBtnData(title:"test" , index:0) ,
+                SelectBtnData(title:"test1" , index:1)
+            ], selected: .constant(0)
         ){ idx in
         
         }

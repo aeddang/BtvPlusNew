@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct ImageButton: View, SelecterbleProtocol{
-    @Binding var isSelected: Bool
+    var isSelected: Bool
     let index: Int
     let defaultImage:String
     let activeImage:String
@@ -24,7 +24,7 @@ struct ImageButton: View, SelecterbleProtocol{
         defaultImage:String,
         activeImage:String? = nil,
         text:String? = nil,
-        isSelected:Binding<Bool>? = nil,
+        isSelected:Bool? = nil,
         index: Int = 0,
         size:CGSize = CGSize(width: Dimen.icon.light, height: Dimen.icon.light),
         textSize:CGFloat = Font.size.thin,
@@ -37,7 +37,7 @@ struct ImageButton: View, SelecterbleProtocol{
         self.activeImage = activeImage ?? defaultImage
         self.text = text
         self.index = index
-        self._isSelected = isSelected ?? Binding.constant(false)
+        self.isSelected = isSelected ?? false
         self.size = size
         self.textSize = textSize
         self.defaultTextColor = defaultTextColor

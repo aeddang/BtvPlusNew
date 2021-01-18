@@ -9,7 +9,7 @@
 import Foundation
 import SwiftUI
 struct SortButton: View{
-    @Binding var text:String
+    var text:String
     var isFocus:Bool = false
     var textModifier:TextModifier = TextModifier(
         family: Font.family.bold,
@@ -56,7 +56,7 @@ struct SortButtonButton_Previews: PreviewProvider {
     static var previews: some View {
         Form{
             SortButton(
-                text: .constant("test")
+                text: "test"
                 //isFocus: .constant(true)
             )
             {

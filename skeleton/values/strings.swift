@@ -16,6 +16,7 @@ extension String {
     struct app {
         public static let appName = "appName".loaalized()
         public static let corfirm = "corfirm".loaalized()
+        public static let close = "close".loaalized()
         public static let cancel = "cancel".loaalized()
         public static let retry = "retry".loaalized()
         
@@ -32,6 +33,9 @@ extension String {
         public static let certificationNumber = "certificationNumber".loaalized()
         public static let certificationNumberHolder = "certificationNumberHolder".loaalized()
         public static let macAdress = "macAdress".loaalized()
+        
+        public static let rent = "rent".loaalized()
+        public static let owner = "owner".loaalized()
     }
     
     struct alert {
@@ -39,11 +43,12 @@ extension String {
         public static var api = "alertApi".loaalized()
         public static var apiErrorServer = "alertApiErrorServer".loaalized()
         public static var apiErrorClient = "alertApiErrorClient".loaalized()
-        
-        
+
         public static var connect = "alertConnect".loaalized()
         public static var connectWifi = "alertConnectWifi".loaalized()
         public static var connectWifiSub = "alertConnectWifiSub".loaalized()
+    
+        public static var needConnect = "alertNeedConnect".loaalized()
         
         public static var connectNotFound = "alertConnectNotFound".loaalized()
         public static var connectNotFoundSub = "alertConnectNotFoundSub".loaalized()
@@ -69,16 +74,16 @@ extension String {
         public static var pairingError = "alertPairingError".loaalized()
         public static var pairingCompleted = "alertPairingCompleted".loaalized()
         public static var pairingRecovery = "alertPairingRecovery".loaalized()
-        
         public static var serviceUnavailable = "alertServiceUnavailable".loaalized()
         public static var serviceUnavailableText = "alertServiceUnavailableText".loaalized()
-        
         public static var identifySuccess = "alertIdentifySuccess".loaalized()
         public static var identifyFail = "alertIdentifyFail".loaalized()
         public static var identifySuccessAdult = "alertIdentifySuccessAdult".loaalized()
         public static var identifyFailAdult = "alertIdentifyFailAdult".loaalized()
         public static var identifySuccessMe = "alertIdentifySuccessMe".loaalized()
         public static var identifyFailMe = "alertIdentifyFailMe".loaalized()
+        public static var like = "alertLike ".loaalized()
+        
     }
     
     struct button {
@@ -90,6 +95,12 @@ extension String {
         public static let view = "btnView".loaalized()
         public static let connect = "btnConnect".loaalized()
         public static let disConnect = "btnDisConnect".loaalized()
+        public static let heart = "btnHeart".loaalized()
+        public static let like = "btnLike".loaalized()
+        public static let likeOn = "btnLikeOn".loaalized()
+        public static let likeOff = "btnLikeOff".loaalized()
+        public static let watchBtv = "btnWatchBtv".loaalized()
+        public static let connectBtv = "btnConnectBtv".loaalized()
     }
     
     struct pageTitle {
@@ -97,6 +108,7 @@ extension String {
         public static let connectWifi = "titleConnectWifi".loaalized()
         public static let connectCertificationBtv = "titleConnectCertificationBtv".loaalized()
         public static let connectCertificationUser = "titleConnectCertificationUser".loaalized()
+        public static let my = "titleMy".loaalized()
     }
     
     struct pageText {

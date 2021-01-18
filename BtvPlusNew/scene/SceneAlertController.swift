@@ -14,8 +14,9 @@ enum SceneAlert:Equatable {
     case confirm(String?, String?,(Bool) -> Void), alert(String?, String?, (() -> Void)?),
          recivedApns, apiError(ApiResultError),
          connectWifi , notFoundDevice, requestLocation,
-         limitedDevice(PairingInfo?), pairingError(NpsCommonHeader?), pairingRecovery,
-         serviceUnavailable(String?), serviceSelect(String?, String? , (String?) -> Void)
+         limitedDevice(PairingInfo?), pairingError(NpsCommonHeader?), pairingRecovery, needPairing,
+         serviceUnavailable(String?), serviceSelect(String?, String? , (String?) -> Void),
+         like(String, Bool?)
     
     static func ==(lhs: SceneAlert, rhs: SceneAlert) -> Bool {
         switch (lhs, rhs) {
@@ -50,6 +51,7 @@ struct SceneAlertController: PageComponent{
     @State var subText:String? = nil
     @State var referenceText:String? = nil
     @State var tipText:String? = nil
+    @State var imgButtons:[AlertBtnData]? = nil
     @State var buttons:[AlertBtnData] = []
     @State var currentAlert:SceneAlert? = nil
     @State var delayReset:AnyCancellable? = nil
@@ -59,13 +61,14 @@ struct SceneAlertController: PageComponent{
         }
         .alert(
             isShowing: self.$isShow,
-            title: self.$title,
-            image: self.$image,
-            text: self.$text,
-            subText: self.$subText,
-            tipText: self.$tipText,
-            referenceText: self.$referenceText,
-            buttons: self.$buttons
+            title: self.title,
+            image: self.image,
+            text: self.text,
+            subText: self.subText,
+            tipText: self.tipText,
+            referenceText: self.referenceText,
+            imgButtons: self.imgButtons,
+            buttons: self.buttons
         ){ idx in
             switch self.currentAlert {
             case .alert(_, _, let completionHandler) :
@@ -79,6 +82,7 @@ struct SceneAlertController: PageComponent{
             case .limitedDevice(_) : self.selectedLimitedDevice(idx)
             case .pairingError(_): self.selectedPairingError(idx)
             case .pairingRecovery: self.selectedPairingRecovery(idx)
+            case .needPairing: self.selectedNeedPairing(idx)
             case .serviceUnavailable(let path): self.selectedServiceUnavailable(idx, path: path)
             case .serviceSelect(_ , let value, let completionHandler) : self.selectedServiceSelect(idx, value:value, completionHandler:completionHandler)
            
@@ -102,6 +106,7 @@ struct SceneAlertController: PageComponent{
             case .limitedDevice(let data) : self.setupLimitedDevice(data: data)
             case .pairingError(let data): self.setupPairingError(data: data)
             case .pairingRecovery: self.setupPairingRecovery()
+            case .needPairing: self.setupNeedPairing()
             case .serviceUnavailable(let path): self.setupServiceUnavailable(path: path)
             case .serviceSelect(let text, _ , _) : self.setupServiceSelect(text: text)
 
@@ -125,6 +130,7 @@ struct SceneAlertController: PageComponent{
         self.tipText = nil
         self.referenceText = nil
         self.buttons = []
+        self.imgButtons = nil
         self.currentAlert = nil
     }
 
@@ -291,49 +297,77 @@ struct SceneAlertController: PageComponent{
         }
     }
     
-    func setupServiceUnavailable(path:String?) {
+    func setupNeedPairing() {
         self.title = String.alert.connect
-        self.text = String.alert.pairingRecovery
+        self.text = String.alert.needConnect
         
         self.buttons = [
-            AlertBtnData(title: String.app.retry, index: 0),
-            AlertBtnData(title: String.app.cancel, index: 1)
+            AlertBtnData(title: String.app.cancel, index: 0),
+            AlertBtnData(title: String.button.connectBtv, index: 1)
         ]
     }
-    func selectedServiceUnavailable(_ idx:Int, path:String?) {
-        if idx == 0 {
-            
-        }else{
-            
+    func selectedNeedPairing(_ idx:Int) {
+        if idx == 1 {
+            self.pagePresenter.openPopup(
+                PageProvider.getPageObject(.pairing)
+            )
         }
     }
+    
+    func setupServiceUnavailable(path:String?) {
+        self.title = String.alert.serviceUnavailable
+        self.text = String.alert.serviceUnavailableText
+        
+        self.buttons = [
+            AlertBtnData(title: String.app.corfirm, index: 1)
+        ]
+    }
+    func selectedServiceUnavailable(_ idx:Int, path:String?) {}
     
     
     func setupServiceSelect(text:String?) {
         self.text = text ?? ""
         self.buttons = [
-            AlertBtnData(title: String.app.corfirm, index: 0),
-            AlertBtnData(title: String.app.cancel, index: 1)
+            AlertBtnData(title: String.app.cancel, index: 0),
+            AlertBtnData(title: String.app.corfirm, index: 1)
         ]
     }
     func selectedServiceSelect(_ idx:Int, value:String?, completionHandler: @escaping (String?) -> Void) {
-        if idx == 0 {
+        if idx == 1 {
             completionHandler(value)
         }else{
             completionHandler(nil)
         }
     }
     
+    func setupLike(id:String, isLike:Bool?) {
+        self.title = String.alert.like
+        self.imgButtons = [
+            AlertBtnData(title: String.button.likeOn,
+                         img: isLike == true ? Asset.icon.goodOn : Asset.icon.goodOff,
+                         index: 1),
+            AlertBtnData(title: String.button.likeOff,
+                         img: isLike == false ? Asset.icon.badOn : Asset.icon.badOff,
+                         index: 2)
+        ]
+        self.buttons = [
+            AlertBtnData(title: String.app.cancel, index: 0)
+        ]
+    }
+    func selectedLike(_ idx:Int, isLike:Bool?) {
+        
+    }
+    
     func setupConfirm(title:String?, text:String?) {
         self.title = title
         self.text = text ?? ""
         self.buttons = [
-            AlertBtnData(title: String.app.corfirm, index: 0),
-            AlertBtnData(title: String.app.cancel, index: 1)
+            AlertBtnData(title: String.app.cancel, index: 0),
+            AlertBtnData(title: String.app.corfirm, index: 1)
         ]
     }
     func selectedConfirm(_ idx:Int,  completionHandler: @escaping (Bool) -> Void) {
-        completionHandler(idx == 0)
+        completionHandler(idx == 1)
     }
     
     func setupAlert(title:String?, text:String?) {
@@ -346,6 +380,8 @@ struct SceneAlertController: PageComponent{
     func selectedAlert(_ idx:Int, completionHandler: @escaping () -> Void) {
         completionHandler()
     }
+    
+    
     
 }
 

@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 
 struct TextButton: View, SelecterbleProtocol{
-    @Binding var isSelected: Bool
+    var isSelected: Bool
     let index: Int
     let defaultText:String
     let activeText:String
@@ -22,7 +22,7 @@ struct TextButton: View, SelecterbleProtocol{
     init(
         defaultText:String,
         activeText:String? = nil,
-        isSelected:Binding<Bool>? = nil,
+        isSelected:Bool? = nil,
         textModifier:TextModifier? = nil,
         index: Int = 0,
         isUnderLine:Bool = false,
@@ -33,7 +33,7 @@ struct TextButton: View, SelecterbleProtocol{
         self.activeText = activeText ?? defaultText
         self.index = index
         self.textModifier = textModifier ?? RegularTextStyle().textModifier
-        self._isSelected = isSelected ?? Binding.constant(false)
+        self.isSelected = isSelected ?? false
         self.isUnderLine = isUnderLine
         self.action = action
     }

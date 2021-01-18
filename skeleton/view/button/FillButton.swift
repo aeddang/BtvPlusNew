@@ -9,49 +9,22 @@
 import Foundation
 import SwiftUI
 struct FillButton: View, SelecterbleProtocol{
-    @Binding var isSelected: Bool
     let text:String
-    let index: Int 
-    let image:String?
-    let imageOn:String?
-    let textModifier:TextModifier
-    let size:CGFloat
-    let imageSize:CGFloat
-    let bgColor:Color
+    var index: Int = 0
+    var isSelected: Bool = true
+    var image:String? = nil
+    var imageOn:String? = nil
+    var textModifier:TextModifier = TextModifier(
+        family: Font.family.bold,
+        size: Font.size.regular,
+        color: Color.app.white,
+        activeColor: Color.app.white
+    )
+    var size:CGFloat = Dimen.button.medium
+    var imageSize:CGFloat = Dimen.icon.light
+    var bgColor:Color = Color.brand.primary
     let action: (_ idx:Int) -> Void
    
-    init(
-        text:String,
-        index: Int = 0,
-        image:String? = nil,
-        imageOn:String? = nil,
-        isSelected:Binding<Bool>? = nil,
-        textModifier:TextModifier? = nil,
-        size:CGFloat = Dimen.button.medium,
-        imageSize:CGFloat =  Dimen.icon.light,
-        bgColor:Color = Color.brand.primary,
-        action:@escaping (_ idx:Int) -> Void
-    )
-    {
-        self.text = text
-        self.index = index
-        self.image = image
-        self.imageOn = imageOn ?? image
-        self.size = size
-        self.imageSize = imageSize
-        self.bgColor = bgColor
-        self._isSelected = isSelected ?? Binding.constant(false)
-        self.textModifier = textModifier ??
-            TextModifier(
-                family: Font.family.bold,
-                size: Font.size.regular,
-                color: Color.app.white,
-                activeColor: Color.app.white
-            )
-        self.action = action
-        
-    }
-    
     
     var body: some View {
         Button(action: {
@@ -87,8 +60,8 @@ struct FillButton_Previews: PreviewProvider {
         Form{
             FillButton(
                 text: "test",
-                image: Asset.test,
-                isSelected: .constant(true)
+                isSelected: true,
+                image: Asset.test
             ){_ in
                 
             }

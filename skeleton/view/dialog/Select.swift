@@ -12,100 +12,80 @@ import SwiftUI
 
 extension View {
     func select(isShowing: Binding<Bool>,
-               title: String,
-               buttons:[String],
-               action: @escaping (_ idx:Int) -> Void) -> some View {
-        let range = 0 ..< buttons.count
-        return Select(
-            isShowing: isShowing,
-            presenting: { self },
-            title:Binding.constant(title),
-            buttons:.constant(
-                zip(range,buttons).map {index, text in
-                    SelectBtnData(title: text, index: index)
-            }),
-            action:action)
-    }
-    func select(isShowing: Binding<Bool>,
-               title: Binding<String?>,
-               buttons:Binding<[SelectBtnData]>,
+               index: Binding<Int>,
+               buttons:[SelectBtnData],
                action: @escaping (_ idx:Int) -> Void) -> some View {
         
-       return Select(
+        return Select(
             isShowing: isShowing,
+            index: index,
             presenting: { self },
-            title:title,
-            buttons:buttons,
+            buttons: buttons,
             action:action)
     }
+    
 }
 struct SelectBtnData:Identifiable, Equatable{
     let id = UUID.init()
     let title:String
     let index:Int
+    var tipA:String? = nil
+    var tipB:String? = nil
 }
 
 struct Select<Presenting>: View where Presenting: View {
+    @EnvironmentObject var sceneObserver:SceneObserver
     @Binding var isShowing: Bool
+    @Binding var index: Int
     let presenting: () -> Presenting
-    @Binding var title: String?
-    @Binding var buttons: [SelectBtnData]
+    var buttons: [SelectBtnData]
     let action: (_ idx:Int) -> Void
     
+    @State var safeAreaBottom:CGFloat = 0
+    
     var body: some View {
-        ZStack(alignment: .center) {
+        ZStack(alignment: .bottom) {
             VStack{
                 Spacer()
-                VStack (alignment: .leading, spacing:Dimen.margin.medium){
-                    HStack{
-                        if self.title != nil{
-                            Text(self.title!)
-                                .modifier(BoldTextStyle(size: Font.size.medium))
-                        }
-                        Spacer()
-                        ImageButton(defaultImage: Asset.icon.close){_ in
-                            withAnimation{
-                                self.isShowing = false
+                VStack (alignment: .leading, spacing:0){
+                    VStack(alignment: .leading, spacing:0){
+                        ForEach(self.buttons) { btn in
+                            SelectButton(
+                                text: btn.title ,
+                                tipA: btn.tipA, tipB: btn.tipB,
+                                index: btn.index,
+                                isSelected: btn.index == self.index){idx in
+                                
+                                self.index = idx
+                                self.action(idx)
                             }
                         }
                     }
-                    .padding(.horizontal, Dimen.margin.heavy)
-                    Divider()
-                    VStack(alignment: .leading, spacing:Dimen.margin.medium){
-                        ForEach(self.buttons) { btn in
-                            TextButton(
-                                defaultText: btn.title,
-                                index: btn.index
-                            ){idx in
-                                self.action(idx)
-                                withAnimation{
-                                    self.isShowing = false
-                                }
-                                
-                            }
+                    FillButton(
+                        text: String.app.close,
+                        isSelected: true 
+                    ){idx in
+                        withAnimation{
+                            self.isShowing = false
                         }
-                        FillButton(
-                            text: String.app.cancel,
-                            isSelected:.constant( false )
-                        ){idx in
-                            withAnimation{
-                                self.isShowing = false
-                            }
-                            
-                        }
-                    }.padding(.horizontal, Dimen.margin.heavy)
+                        
+                    }
                 }
-                .padding(.vertical, Dimen.margin.heavy)
-                .background(Color.app.white)
-                .cornerRadius(Dimen.radius.light)
+                .padding(.top, Dimen.margin.mediumExtra)
+                .background(Color.app.blue)
                 .transition(.slide)
                 Spacer()
             }
-            .padding(.all, Dimen.margin.heavy)
             .background(Color.transparent.black70)
             .opacity(self.isShowing ? 1 : 0)
         }
-        
+        .padding(.bottom, self.safeAreaBottom)
+        .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
+            //if self.editType == .nickName {return}
+            withAnimation{
+                self.safeAreaBottom = pos
+            }
+        }
     }
 }
 #if DEBUG
@@ -117,14 +97,15 @@ struct Select_Previews: PreviewProvider {
         }
         .select(
             isShowing: .constant(true),
-            title:"TEST",
+            index: .constant(0),
             buttons: [
-                "test","test1"
+                SelectBtnData(title:"test" , index:0, tipA:"T") ,
+                SelectBtnData(title:"test1" , index:1)
             ]
         ){ idx in
         
         }
-
+        .environmentObject(SceneObserver())
     }
 }
 #endif

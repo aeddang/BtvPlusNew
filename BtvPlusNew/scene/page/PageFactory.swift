@@ -10,8 +10,10 @@ import Foundation
 extension PageID{
     static let intro:PageID = "intro"
     static let home:PageID = "home"
+    static let synopsis:PageID = "synopsis"
     static let oeean:PageID = "oeean"
     static let pairing:PageID = "pairing"
+    static let my:PageID = "my"
     static let pairingSetupUser:PageID = "pairingSetupUser"
     static let pairingDevice:PageID = "pairingDevice"
     static let pairingBtv:PageID = "pairingBtv"
@@ -91,6 +93,8 @@ struct PageFactory{
     static func getPage(_ pageObject:PageObject) -> PageViewProtocol{
         switch pageObject.pageID {
         case .home : return PageHome()
+        case .my : return PageMy()
+        case .synopsis : return PageSynopsis()
         case .pairing : return PagePairing()
         case .pairingSetupUser : return PagePairingSetupUser()
         case .pairingDevice : return PagePairingDevice()

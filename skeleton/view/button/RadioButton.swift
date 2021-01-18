@@ -17,7 +17,7 @@ struct RadioButton: View, SelecterbleProtocol {
             ImageButton(
                 defaultImage: Asset.shape.radioBtnOff,
                 activeImage: Asset.shape.radioBtnOn,
-                isSelected: self.$isChecked
+                isSelected: self.isChecked
                 ){_ in
                     self.isChecked.toggle()
                     if self.action != nil {

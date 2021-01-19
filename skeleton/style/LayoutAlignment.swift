@@ -93,13 +93,25 @@ struct MatchVertical: ViewModifier {
 }
 
 struct LineHorizontal: ViewModifier {
-    var height:CGFloat = 1
+    var height:CGFloat = Dimen.line.light
     var margin:CGFloat = 0
     func body(content: Content) -> some View {
         return content
             .frame(minWidth: 0, maxWidth: .infinity - (margin * 2.0) , minHeight: height, maxHeight: height)
             .offset(x:margin)
-            .background(Color.app.blueDeep)
+            .background(Color.app.white).opacity(0.1)
+            
+            
+    }
+}
+struct LineVertical: ViewModifier {
+    var width:CGFloat = Dimen.line.light
+    var margin:CGFloat = 0
+    func body(content: Content) -> some View {
+        return content
+            .frame(minWidth: width, maxWidth: width , minHeight:0, maxHeight: .infinity - (margin * 2.0))
+            .offset(y:margin)
+            .background(Color.app.white).opacity(0.1)
             
             
     }

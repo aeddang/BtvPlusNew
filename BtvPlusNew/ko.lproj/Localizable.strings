@@ -25,6 +25,7 @@
 
 "rent" = "대여";
 "owner" = "소장";
+"defaultStb" = "B tv 셋톱박스";
 
 /*
   Button
@@ -44,6 +45,8 @@
 
 "btnWatchBtv" = "B tv로 보기";
 "btnConnectBtv" = "B tv 연결하기";
+"btnAlarm" = "알림";
+"btnNotice" = "모비 소식";
 
 /*
   Alert
@@ -105,6 +108,9 @@
 "titleConnectCertificationBtv" = "B tv 인증번호로 연결하기";
 "titleConnectCertificationUser" = "가입자 확인 후 연결하기";
 "titleMy" = "MY";
+"titlePairingManagement" = "B tv 연결 관리";
+"titleMyPurchase" = "이전 B tv 구매/소장 목록";
+
 /*
  PagePairing
 */
@@ -125,6 +131,7 @@
 "pairingBtnBtvCertificationSub" = "• B tv에서 확인한 인증번호를 입력합니다.";
 "pairingBtnUserCertification" = "가입자 인증으로 연결하기";
 "pairingBtnUserCertificationSub" = "• B tv 가입자의 휴대폰 인증이 필요합니다.";
+
 
 /*
  PagePairingSetupUser
@@ -149,6 +156,22 @@
 "pairingBtvText3" = "B tv에서 채널 777번으로 진입";
 "pairingBtvText4" = "B tv에서 [홈 > MY > 설정 > 모바일 B tv 연결] 선택";
 "pairingBtvText5" = "셋톱박스의 채널버튼을 3초간 누르기";
+
+
+/*
+ PageMy
+*/
+"myText1" = "모바일 B tv 서비스를 이용하려면\nB tv 연결이 필요합니다.";
+"myText2" = "B tv의 최근 시청 내역, 구매 내역 등\n다양한 이용내역을 편리하게 확인하실 수 있어요.";
+
+"myPairing" = "B tv 연결중";
+"myPairingInfo" = "나의 연결 정보";
+"myConnectedBtv" = "연결된 B tv";
+"myPairingDate" = "연결일";
+"myEditNick" = "B tv 닉네임 변경";
+"myinviteFammly" = "우리 가족 B tv 연결 초대하기";
+"myinviteFammlyText1" = "가족들이 더욱 쉽고 빠르게";
+"myinviteFammlyText2" = "B tv를 연결할 수 있도록 SMS를 전송해보세요!";
 
 
 

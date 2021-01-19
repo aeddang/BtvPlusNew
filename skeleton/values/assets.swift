@@ -86,6 +86,7 @@ extension Asset{
         
         public static let alarm = "icMyAlarm"
         public static let notice = "icMyNotice"
+        public static let profileEdit = "icMyProfileEdit"
         
     }
     

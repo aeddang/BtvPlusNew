@@ -11,6 +11,10 @@
 		310D7E2C25A42D05000BE173 /* StbList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310D7E2B25A42D05000BE173 /* StbList.swift */; };
 		314C7ECB25ABC32200C489FC /* Hello.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314C7ECA25ABC32200C489FC /* Hello.swift */; };
 		314C7EE125AC13C600C489FC /* HostDeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */; };
+		314D588225B64EB6007BCA34 /* PairingBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D588125B64EB6007BCA34 /* PairingBlock.swift */; };
+		314D588725B64ECD007BCA34 /* DisconnectBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D588625B64ECD007BCA34 /* DisconnectBlock.swift */; };
+		314D588C25B66868007BCA34 /* ValueInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D588B25B66868007BCA34 /* ValueInfo.swift */; };
+		314D589425B685B2007BCA34 /* PagePairingManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D589325B685B2007BCA34 /* PagePairingManagement.swift */; };
 		314D738A25B4F8B100907118 /* PageSynopsis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D738925B4F8B100907118 /* PageSynopsis.swift */; };
 		314D739725B5053F00907118 /* TopSynopsisViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D739625B5053F00907118 /* TopSynopsisViewer.swift */; };
 		314D73A225B509B200907118 /* RatingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D73A125B509B200907118 /* RatingInfo.swift */; };
@@ -220,6 +224,10 @@
 		310D7E2B25A42D05000BE173 /* StbList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StbList.swift; sourceTree = "<group>"; };
 		314C7ECA25ABC32200C489FC /* Hello.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hello.swift; sourceTree = "<group>"; };
 		314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostDeviceInfo.swift; sourceTree = "<group>"; };
+		314D588125B64EB6007BCA34 /* PairingBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingBlock.swift; sourceTree = "<group>"; };
+		314D588625B64ECD007BCA34 /* DisconnectBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisconnectBlock.swift; sourceTree = "<group>"; };
+		314D588B25B66868007BCA34 /* ValueInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueInfo.swift; sourceTree = "<group>"; };
+		314D589325B685B2007BCA34 /* PagePairingManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePairingManagement.swift; sourceTree = "<group>"; };
 		314D738925B4F8B100907118 /* PageSynopsis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsis.swift; sourceTree = "<group>"; };
 		314D739625B5053F00907118 /* TopSynopsisViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopSynopsisViewer.swift; sourceTree = "<group>"; };
 		314D73A125B509B200907118 /* RatingInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingInfo.swift; sourceTree = "<group>"; };
@@ -567,6 +575,7 @@
 			children = (
 				31E3975725B5A0AC00CE6E21 /* view */,
 				31E3974F25B5A0A300CE6E21 /* PageMy.swift */,
+				314D589325B685B2007BCA34 /* PagePairingManagement.swift */,
 			);
 			path = my;
 			sourceTree = "<group>";
@@ -574,6 +583,9 @@
 		31E3975725B5A0AC00CE6E21 /* view */ = {
 			isa = PBXGroup;
 			children = (
+				314D588125B64EB6007BCA34 /* PairingBlock.swift */,
+				314D588625B64ECD007BCA34 /* DisconnectBlock.swift */,
+				314D588B25B66868007BCA34 /* ValueInfo.swift */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -1493,17 +1505,20 @@
 				D56C5FE32592F693009AE769 /* Metv.swift in Sources */,
 				315730F325B01FFF00D9A693 /* PagePairingUser.swift in Sources */,
 				D56C6A37257DA0C700CF9AB8 /* CPCircularNavigation.swift in Sources */,
+				314D588725B64ECD007BCA34 /* DisconnectBlock.swift in Sources */,
 				D51AA9F82599BAFB0035CD51 /* PageTab.swift in Sources */,
 				D56C69B4257DA09E00CF9AB8 /* KeyboardObserver.swift in Sources */,
 				D56C69A1257DA09E00CF9AB8 /* PageProtocol.swift in Sources */,
 				D56C6A4E257DA0C700CF9AB8 /* ImageView.swift in Sources */,
 				D56C6B37257DACD800CF9AB8 /* ApiManager.swift in Sources */,
 				D56C6A54257DA0C700CF9AB8 /* RectButton.swift in Sources */,
+				314D588225B64EB6007BCA34 /* PairingBlock.swift in Sources */,
 				D56CC30225906F2500CA1D54 /* VideoBlock.swift in Sources */,
 				D56C6B5C257DB44000CF9AB8 /* PageStyle.swift in Sources */,
 				D56C6B54257DB24C00CF9AB8 /* PageFactory.swift in Sources */,
 				D573784A25A2983800EC571F /* CharacterSelectBox.swift in Sources */,
 				D56C6A4B257DA0C700CF9AB8 /* SwipperView.swift in Sources */,
+				314D589425B685B2007BCA34 /* PagePairingManagement.swift in Sources */,
 				D57178582582D87500BF2612 /* PageHome.swift in Sources */,
 				D56C6A43257DA0C700CF9AB8 /* LayoutAlignment.swift in Sources */,
 				D56C69B1257DA09E00CF9AB8 /* IndexMap.swift in Sources */,
@@ -1629,6 +1644,7 @@
 				D56C6A2D257DA0C700CF9AB8 /* ImagePicker.swift in Sources */,
 				D573784325A2852900EC571F /* CharacterList.swift in Sources */,
 				3192318025A40A7D00020388 /* ReflashSpinner.swift in Sources */,
+				314D588C25B66868007BCA34 /* ValueInfo.swift in Sources */,
 				315B55D725A8006B00B5B351 /* NpsModel.swift in Sources */,
 				D56C6A62257DA0C700CF9AB8 /* SearchBar.swift in Sources */,
 				D57298E5259D6EC100ED2CE6 /* ScenePickerController.swift in Sources */,

@@ -37,7 +37,7 @@ struct SelectButton: View, SelecterbleProtocol{
                         Text(self.tipA!)
                             .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.white))
                             .padding(.horizontal, Dimen.margin.thin)
-                            .frame(height:19)
+                            .frame(height:Dimen.button.thin)
                             .background(Color.brand.primary)
                             .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.medium))
                     }
@@ -45,7 +45,7 @@ struct SelectButton: View, SelecterbleProtocol{
                         Text(self.tipB!)
                             .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.brand.primary))
                             .padding(.horizontal, Dimen.margin.thin)
-                            .frame(height:19)
+                            .frame(height:Dimen.button.thin)
                             .overlay(
                                 RoundedRectangle(cornerRadius: Dimen.radius.medium)
                                     .stroke(Color.brand.primary, lineWidth: 1)

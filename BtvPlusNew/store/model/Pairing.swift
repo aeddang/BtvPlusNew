@@ -28,7 +28,7 @@ enum PairingStatus{
 }
 
 enum PairingEvent{
-    case connected, disConnected, connectError(NpsCommonHeader?), disConnectError(NpsCommonHeader?),
+    case connected(StbData?), disConnected, connectError(NpsCommonHeader?), disConnectError(NpsCommonHeader?),
          findMdnsDevice([MdnsDevice]), findStbInfoDevice([StbInfoDataItem]),  notFoundDevice,
          syncError(NpsCommonHeader?),
          pairingCompleted
@@ -47,6 +47,7 @@ enum Gender {
 class User {
     private(set) var nickName:String = ""
     var characterIdx:Int = 0
+    var pairingDate:String? = nil
     private(set) var gender:Gender = .mail
     private(set) var birth:String = ""
     private(set) var isAgree1:Bool = true
@@ -86,7 +87,11 @@ class User {
 }
 
 class HostDevice {
+    private(set) var macAdress:String? = nil
+    var modelName:String? = nil
+   
     func setData(deviceData:HostDeviceData) -> HostDevice{
+        self.macAdress = deviceData.stb_mac_address
         return self
     }
 }
@@ -105,10 +110,10 @@ class Pairing:ObservableObject, PageProtocol {
     @Published private(set) var hostDevice:HostDevice? = nil
     private(set) var stbId:String? = nil
     
-    func connected(){
+    func connected(stbData:StbData?){
         self.stbId = NpsNetwork.hostDeviceId 
         self.status = self.stbId != "" ? .connect : .disConnect
-        self.event = self.status == .connect ? .connected : .connectError(nil)
+        self.event = self.status == .connect ? .connected(stbData) : .connectError(nil)
     }
     
     func disconnected() {

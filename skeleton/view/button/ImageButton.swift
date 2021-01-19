@@ -72,7 +72,7 @@ struct ImageButton_Previews: PreviewProvider {
     
     static var previews: some View {
         Form{
-            ImageButton(defaultImage:Asset.test ){_ in
+            ImageButton(defaultImage:Asset.noImg1_1 ){_ in
                 
             }
             .frame( alignment: .center)

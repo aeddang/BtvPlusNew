@@ -22,6 +22,8 @@ class SettingStorage {
         static let birth = "birth" + VS
         static let character = "character" + VS
         static let gender = "gender" + VS
+        static let pairingDate = "pairingDate" + VS
+        static let pairingModelName = "pairingModelName" + VS
     }
     let defaults = UserDefaults.standard
     
@@ -37,8 +39,11 @@ class SettingStorage {
         let birth = self.birth
         let character = self.character
         let gender = self.gender
+        
         if nicName != nil && birth != nil && character != nil && gender != nil {
-            return User(nickName: nicName, characterIdx: character, gender: gender, birth: birth)
+            let savedUser = User(nickName: nicName, characterIdx: character, gender: gender, birth: birth)
+            savedUser.pairingDate = self.pairingDate
+            return savedUser
         }
         return nil
     }
@@ -48,6 +53,19 @@ class SettingStorage {
         self.birth = user?.birth
         self.character = user?.characterIdx
         self.gender = user?.gender.apiValue()
+        if user == nil {
+            self.pairingDate = nil
+        }else if self.pairingDate == nil {
+            self.pairingDate = Date().localDate().description
+        }
+    }
+    
+    func saveDevice(_ stbData:StbData? = nil){
+        guard let stbData = stbData else { return }
+        self.pairingModelName = stbData.stbName
+    }
+    func clearDevice(){
+        self.pairingModelName = nil
     }
     
     
@@ -111,6 +129,24 @@ class SettingStorage {
         }
         get{
             return defaults.integer(forKey: Keys.character )
+        }
+    }
+    
+    var pairingDate:String? {
+        set(newVal){
+            defaults.set(newVal, forKey: Keys.pairingDate )
+        }
+        get{
+            return defaults.string(forKey: Keys.pairingDate)
+        }
+    }
+    
+    var pairingModelName:String? {
+        set(newVal){
+            defaults.set(newVal, forKey: Keys.pairingModelName )
+        }
+        get{
+            return defaults.string(forKey: Keys.pairingModelName)
         }
     }
     

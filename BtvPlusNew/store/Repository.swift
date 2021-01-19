@@ -57,17 +57,32 @@ class Repository:ObservableObject, PageProtocol{
     
     private func setupPairing(){
         self.pairingManager.setupPairing(savedUser:self.setting.getSavedUser())
+        
+        self.pairing.$request.sink(receiveValue: { req in
+            guard let requestPairing = req else { return }
+            switch requestPairing{
+            case .user , .device, .auth:
+                self.setting.clearDevice()
+            default : do{}
+            }
+        }).store(in: &anyCancellable)
+        
         self.pairing.$event.sink(receiveValue: { evt in
             guard let evt = evt else { return }
             switch evt{
-            case .connected :
+            case .connected(let stbData) :
                 self.pageSceneObserver?.event = .toast("connected")
+                self.setting.saveDevice(stbData)
+                
             case .disConnected :
                 self.pageSceneObserver?.event = .toast("disConnected")
                 self.setting.saveUser(nil)
+                self.setting.clearDevice()
                 
             case .pairingCompleted :
                 self.setting.saveUser(self.pairing.user)
+                self.pairing.user?.pairingDate = self.setting.pairingDate
+                self.pairing.hostDevice?.modelName = self.setting.pairingModelName
                 self.pageSceneObserver?.event = .toast(String.alert.pairingCompleted)
             
             case .syncError :

@@ -10,49 +10,38 @@ import Foundation
 import SwiftUI
 
 struct TextButton: View, SelecterbleProtocol{
-    var isSelected: Bool
-    let index: Int
-    let defaultText:String
-    let activeText:String
-    let textModifier:TextModifier
-    let isUnderLine:Bool
+    var defaultText:String
+    var isSelected: Bool = false
+    var index: Int = 0
+    var activeText:String? = nil
+    var textModifier:TextModifier = RegularTextStyle().textModifier
+    var isUnderLine:Bool = false
+    var image:String? = nil
+    var imageSize:CGFloat = Dimen.icon.tinyExtra
     let action: (_ idx:Int) -> Void
-    
-    
-    init(
-        defaultText:String,
-        activeText:String? = nil,
-        isSelected:Bool? = nil,
-        textModifier:TextModifier? = nil,
-        index: Int = 0,
-        isUnderLine:Bool = false,
-        action:@escaping (_ idx:Int) -> Void
-    )
-    {
-        self.defaultText = defaultText
-        self.activeText = activeText ?? defaultText
-        self.index = index
-        self.textModifier = textModifier ?? RegularTextStyle().textModifier
-        self.isSelected = isSelected ?? false
-        self.isUnderLine = isUnderLine
-        self.action = action
-    }
     
     var body: some View {
         Button(action: {
             self.action(self.index)
         }) {
-            
-            if self.isUnderLine {
-                Text(self.isSelected ? self.activeText : self.defaultText)
-                .font(.custom(textModifier.family, size: textModifier.size))
-                .underline()
-                .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
-            } else {
-                
-                Text(self.isSelected ? self.activeText : self.defaultText)
-                .font(.custom(textModifier.family, size: textModifier.size))
-                .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+            HStack(spacing: Dimen.margin.tinyExtra){
+                if self.isUnderLine {
+                    Text(self.isSelected ? ( self.activeText ?? self.defaultText ) : self.defaultText)
+                    .font(.custom(textModifier.family, size: textModifier.size))
+                    .underline()
+                    .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+                } else {
+                    
+                    Text(self.isSelected ? ( self.activeText ?? self.defaultText ) : self.defaultText)
+                    .font(.custom(textModifier.family, size: textModifier.size))
+                    .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+                }
+                if self.image != nil {
+                    Image(self.image!)
+                    .renderingMode(.original).resizable()
+                    .scaledToFit()
+                    .frame(width: self.imageSize, height: self.imageSize)
+                }
             }
         }.buttonStyle(BorderlessButtonStyle())
     }
@@ -65,7 +54,9 @@ struct TextButton_Previews: PreviewProvider {
         Form{
             TextButton(
                 defaultText:"test",
-                isUnderLine: true){_ in
+                isUnderLine: true,
+                image: Asset.icon.more
+                ){_ in
                 
             }
             .frame( alignment: .center)

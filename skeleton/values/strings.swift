@@ -36,6 +36,7 @@ extension String {
         
         public static let rent = "rent".loaalized()
         public static let owner = "owner".loaalized()
+        public static let defaultStb = "defaultStb".loaalized()
     }
     
     struct alert {
@@ -101,6 +102,8 @@ extension String {
         public static let likeOff = "btnLikeOff".loaalized()
         public static let watchBtv = "btnWatchBtv".loaalized()
         public static let connectBtv = "btnConnectBtv".loaalized()
+        public static let alarm = "btnAlarm".loaalized()
+        public static let notice = "btnNotice".loaalized()
     }
     
     struct pageTitle {
@@ -109,6 +112,8 @@ extension String {
         public static let connectCertificationBtv = "titleConnectCertificationBtv".loaalized()
         public static let connectCertificationUser = "titleConnectCertificationUser".loaalized()
         public static let my = "titleMy".loaalized()
+        public static let pairingManagement =  "titlePairingManagement".loaalized()
+        public static let myPurchase =  "titleMyPurchase".loaalized()
     }
     
     struct pageText {
@@ -146,7 +151,18 @@ extension String {
         public static let pairingBtvText4 = "pairingBtvText4".loaalized()
         public static let pairingBtvText5 = "pairingBtvText5".loaalized()
         
+        public static let myText1 = "myText1".loaalized()
+        public static let myText2 = "myText2".loaalized()
+       
+        public static let myPairing =  "myPairing".loaalized()
         
+        public static let myPairingInfo = "myPairingInfo".loaalized()
+        public static let myConnectedBtv = "myConnectedBtv".loaalized()
+        public static let myPairingDate = "myPairingDate".loaalized()
+        public static let myEditNick = "myEditNick".loaalized()
+        public static let myinviteFammly = "myinviteFammly".loaalized()
+        public static let myinviteFammlyText1 = "myinviteFammlyText1".loaalized()
+        public static let myinviteFammlyText2 = "myinviteFammlyText2".loaalized()
         
     }
     

@@ -9,10 +9,12 @@ import SwiftUI
 struct PageMy: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
-    
+    @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
-    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
+    
+    @State var isPairing:Bool = false
+    
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -26,7 +28,11 @@ struct PageMy: PageView {
                         isSetting: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    Spacer().modifier(MatchParent())
+                    if self.isPairing {
+                        PairingBlock()
+                    }else {
+                        DisconnectBlock()
+                    }
                 }
                 .highPriorityGesture(
                     DragGesture(minimumDistance: 20, coordinateSpace: .local)
@@ -39,9 +45,8 @@ struct PageMy: PageView {
                 )
                 .modifier(PageFull())
             }
-            .onReceive(self.infinityScrollModel.$event){evt in
-                guard let _ = evt else {return}
-                self.pageDragingModel.uiEvent = .draged(geometry)
+            .onReceive(self.pairing.$status){status in
+                self.isPairing = ( status == .pairing )
             }
             .onAppear{
                

@@ -26,6 +26,7 @@ class PairingManager : PageProtocol{
         
         self.pairing.$request.sink(receiveValue: { req in
             guard let requestPairing = req else { return }
+            
             self.requestDevice = nil
             self.requestAuthcode = nil
         
@@ -70,7 +71,7 @@ class PairingManager : PageProtocol{
         self.apiManager.$event.sink(receiveValue: {evt in
             switch evt {
             case .pairingHostChanged :
-                if NpsNetwork.isPairing { self.pairing.connected() }
+                if NpsNetwork.isPairing { self.pairing.connected(stbData:self.requestDevice) }
                 else { self.pairing.disconnected() }
                 
             default: do{}

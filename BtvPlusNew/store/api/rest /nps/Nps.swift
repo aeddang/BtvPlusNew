@@ -32,6 +32,9 @@ extension NpsNetwork{
     static let TEST_APP_NAME = "b tv plus"
     static let TEST_APP_VERSION = "4.0.0"
     
+    static let USER_ID = ""
+    static let DEVICE_TYPE = "G"
+    
     static let AES_KEY = "R3WoPEtbkEIhPQqrKl37fQEsfZAYpPMk"
     static let AES_IV = "8C7BFE4A1116E5E5"
     static let AES_PW  = "sFJ4y3uJ8Pcz2BCp82Ds6VPByNX2vG8u"
@@ -39,6 +42,7 @@ extension NpsNetwork{
     static private(set) var isTest = false
     static private(set) var sessionId = ""
     static private(set) var pairingId = ""
+    static private(set) var pairingStatus = ""
     static private(set) var hostDeviceId:String? = nil
     
     static func hello(res:ApiResultResponds) -> String? {
@@ -70,7 +74,20 @@ extension NpsNetwork{
         if resData.header?.result != NpsNetwork.resultCode.success.code { return }
         Self.pairingId = ""
         Self.hostDeviceId = nil
+        Self.pairingStatus = ""
     }
+    static func checkPairing(res:ApiResultResponds) {
+        guard let resData = res.data as? DevicePairingStatus  else { return }
+        if resData.header?.result != NpsNetwork.resultCode.success.code { return }
+        guard let pairingStatus = resData.body?.pairing_status else { return }
+        Self.pairingStatus = pairingStatus
+        if pairingStatus == "0" {
+            Self.pairingId = ""
+            Self.hostDeviceId = nil
+            Self.pairingStatus = ""
+        }
+    }
+    
     
     static var isPairing:Bool{
         get{
@@ -179,6 +196,25 @@ class Nps: Rest{
         fetch(route: NpsDevicePairingInfo(body: body), completion: completion, error:error)
     }
     
+    func getDevicePairingStatus(
+        customParam:[String: Any] = [String: Any](),
+        completion: @escaping (DevicePairingStatus) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-533")
+        var params = [String: Any]()
+        params["service_type"] = NpsNetwork.SERVICE_TYPE
+        params["pairing_deviceid"] = NpsNetwork.getGuestDeviceId()
+        params["pairing_device_type"] =  NpsNetwork.DEVICE_TYPE
+        params["pairingid"] = NpsNetwork.pairingId
+        params["userId"] = NpsNetwork.USER_ID
+        params["custom_param"] = customParam
+        
+        var body = [String: Any]()
+        body["header"] = headers
+        body["body"] = params
+        
+        fetch(route: NpsPairingStatus(body: body), completion: completion, error:error)
+    }
+    
     func postDevicePairing(
         user:User?, device:StbData?, customParam:[String: Any] = [String: Any](),
         completion: @escaping (DevicePairing) -> Void, error: ((_ e:Error) -> Void)? = nil){
@@ -200,7 +236,7 @@ class Nps: Rest{
         params["guest_deviceid"] = NpsNetwork.getGuestDeviceId()
         params["user_name"] = NpsNetwork.getNpsUsername(userName: user?.nickName)
         params["muser_num"] = ""
-        params["userid"] = ""
+        params["userid"] =  NpsNetwork.USER_ID
         params["host_deviceinfo"] = deviceinfo
         params["host_deviceid"] = device?.stbid
         params["custom_param"] = customParam
@@ -223,7 +259,7 @@ class Nps: Rest{
         params["sessionid"] = NpsNetwork.sessionId
         params["authcode"] = authcode
         params["muser_num"] = ""
-        params["userid"] = ""
+        params["userid"] =  NpsNetwork.USER_ID
         params["custom_param"] = customParam
         
         var body = [String: Any]()
@@ -302,7 +338,7 @@ class Nps: Rest{
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
         params["pairing_deviceid"] = NpsNetwork.getGuestDeviceId()
-        params["pairing_device_type"] = "G"
+        params["pairing_device_type"] = NpsNetwork.DEVICE_TYPE
         params["pairingid"] = NpsNetwork.pairingId
         params["custom_param"] = customParam
     
@@ -324,7 +360,7 @@ class Nps: Rest{
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
         params["pairing_deviceid"] = NpsNetwork.getGuestDeviceId()
-        params["pairing_device_type"] = "G"
+        params["pairing_device_type"] = NpsNetwork.DEVICE_TYPE
         params["pairingid"] = NpsNetwork.pairingId
         params["agreement"] = agreement
         params["custom_param"] = customParam
@@ -342,7 +378,7 @@ class Nps: Rest{
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
         params["pairing_deviceid"] = NpsNetwork.getGuestDeviceId()
-        params["pairing_device_type"] = "G"
+        params["pairing_device_type"] = NpsNetwork.DEVICE_TYPE
         params["pairingid"] = NpsNetwork.pairingId
         params["custom_param"] = customParam
 
@@ -357,6 +393,12 @@ class Nps: Rest{
 struct NpsHello:NetworkRoute{
    var method: HTTPMethod = .post
    var path: String = "/nps/v5/reqHello"
+   var body: [String : Any]? = nil
+}
+
+struct NpsPairingStatus:NetworkRoute{
+   var method: HTTPMethod = .post
+   var path: String = "/nps/v5/reqPairingStatus"
    var body: [String : Any]? = nil
 }
 

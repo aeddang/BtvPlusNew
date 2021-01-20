@@ -11,12 +11,13 @@ import SwiftUI
 import Combine
 
 enum SceneAlert:Equatable {
-    case confirm(String?, String?,(Bool) -> Void), alert(String?, String?, (() -> Void)?),
+    case confirm(String?, String?,(Bool) -> Void), alert(String?, String?, (() -> Void)? = nil),
          recivedApns, apiError(ApiResultError),
          connectWifi , notFoundDevice, requestLocation,
-         limitedDevice(PairingInfo?), pairingError(NpsCommonHeader?), pairingRecovery, needPairing,
+         limitedDevice(PairingInfo?), pairingError(NpsCommonHeader?), pairingRecovery, needPairing, pairingCheckFail,
          serviceUnavailable(String?), serviceSelect(String?, String? , (String?) -> Void),
-         like(String, Bool?)
+         like(String, Bool?),
+         cancel
     
     static func ==(lhs: SceneAlert, rhs: SceneAlert) -> Bool {
         switch (lhs, rhs) {
@@ -38,6 +39,7 @@ struct DeclarationData:Identifiable {
 
 struct SceneAlertController: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var networkObserver:NetworkObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pairing:Pairing
@@ -85,7 +87,7 @@ struct SceneAlertController: PageComponent{
             case .needPairing: self.selectedNeedPairing(idx)
             case .serviceUnavailable(let path): self.selectedServiceUnavailable(idx, path: path)
             case .serviceSelect(_ , let value, let completionHandler) : self.selectedServiceSelect(idx, value:value, completionHandler:completionHandler)
-           
+            case .pairingCheckFail : self.selectedPairingCheckFail(idx)
             default: do { return }
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -97,6 +99,12 @@ struct SceneAlertController: PageComponent{
             self.reset()
             self.currentAlert = alert
             switch alert{
+            case .cancel :
+                self.isShow = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.reset()
+                }
+                return
             case .alert(let title,let text, _) : self.setupAlert(title:title, text:text)
             case .confirm(let title,let text, _) : self.setupConfirm(title:title, text:text)
             case .apiError(let data): self.setupApi(data:data)
@@ -109,7 +117,7 @@ struct SceneAlertController: PageComponent{
             case .needPairing: self.setupNeedPairing()
             case .serviceUnavailable(let path): self.setupServiceUnavailable(path: path)
             case .serviceSelect(let text, _ , _) : self.setupServiceSelect(text: text)
-
+            case .pairingCheckFail : self.setupPairingCheckFail()
             case .recivedApns:
                 let enable = self.setupRecivedApns()
                 if !enable { return }
@@ -173,16 +181,27 @@ struct SceneAlertController: PageComponent{
         }else{
             if self.networkObserver.status == .none {
                 self.text = String.alert.apiErrorClient
+                self.buttons = [
+                    AlertBtnData(title: String.app.cancel, index: 0),
+                    AlertBtnData(title: String.app.retry, index: 1),
+                ]
                 
             }else{
                 self.text = String.alert.apiErrorServer
+                self.buttons = [
+                    AlertBtnData(title: String.app.corfirm, index: 2),
+                ]
             }
         }
-        self.buttons = [
-            AlertBtnData(title: String.app.corfirm, index: 0),
-        ]
     }
-    func selectedApi(_ idx:Int, data:ApiResultError) {}
+    
+    func selectedApi(_ idx:Int, data:ApiResultError) {
+        if idx == 1 {
+            self.dataProvider.requestData(q:.init(type:data.type))
+        }else {
+            self.pageSceneObserver.alertResult = .cancel(.connectWifi)
+        }
+    }
     
     func setupConnectWifi() {
         self.title = String.alert.connect
@@ -273,6 +292,22 @@ struct SceneAlertController: PageComponent{
         ]
     }
     func selectedPairingError(_ idx:Int) {}
+    
+    func setupPairingCheckFail() {
+        self.title = String.alert.connect
+        self.text = String.alert.needConnectStatus
+        self.buttons = [
+            AlertBtnData(title: String.app.close, index: 0),
+            AlertBtnData(title: String.app.corfirm, index: 1)
+        ]
+    }
+    func selectedPairingCheckFail(_ idx:Int) {
+        if idx == 0 {
+            self.pagePresenter.goBack()
+        }else{
+            self.pairing.requestPairing(.check)
+        }
+    }
     
     func setupPairingRecovery() {
         self.title = String.alert.connect

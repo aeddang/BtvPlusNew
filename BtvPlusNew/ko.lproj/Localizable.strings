@@ -19,9 +19,14 @@
 "mail" = "남";
 "femail" = "여";
 "year" = "년";
+"min" = "분";
 "certificationNumber" = "인증번호";
 "certificationNumberHolder" = "000000";
 "macAdress" = "MAC 주소";
+
+"another" = "외";
+"count" = "개";
+"award" = "수상";
 
 "rent" = "대여";
 "owner" = "소장";
@@ -63,6 +68,7 @@
 "alertConnectNotFound" = "연결가능한 B tv가 없습니다.";
 "alertConnectNotFoundSub" = "다시 조회를 시도하시거나\n다른연결방법을 이용해 주세요.";
 "alertNeedConnect" = "B tv와 연결이 필요합니다.\n연결하시겠습니까?";
+"alertNeedConnectStatus" = "B tv와 연결 상태 확인이 필요합니다.\n다시 시도 하시겠습니까?";
 
 "alertLocation" = "위치 접근 권한을 허용해 주세요";
 "alertLocationSub" = "애플의 정책에 따라 공유기 이름 정보를 확인하기 위해서 위치 접근 권한을 허용하셔야 이용이 가능합니다.";
@@ -85,9 +91,12 @@
 "alertPairingError" = "B tv 연결에 실패하였습니다.\n계속 연결 불가한 경우\n고객센터(국번 없이 106)로\n문의해 주세요.";
 "alertPairingCompleted" = "B tv 연결이 완료되었습니다.\nUI 4.0 버전에서는 B tv에서\n[확인]버튼을 누르셔야 연결이 완료됩니다.";
 "alertPairingRecovery" = "완료되지않은  B tv 연결이 있습니다.\n연결을 완료 하시겠습니까?";
+"alertPairingDisconnected" = "B tv 연결이 끊어젔습니다.";
 
 "alertServiceUnavailable" = "서비스 연결 불가 안내";
 "alertServiceUnavailableText" = "현재 서비스 연결이\n원활하지 않습니다.\n잠시 후 다시 시도해 주세요.";
+"alertServiceUnavailableText1" = "현재 서비스 연결이 원활하지 않습니다.";
+"alertServiceUnavailableText2" = "잠시 후 다시 시도해 주세요.";
 
 "alertServiceUnavailable" = "서비스 연결 불가 안내";
 

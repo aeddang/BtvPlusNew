@@ -131,7 +131,11 @@ struct PagePairingManagement: PageView {
             }
             .onReceive(self.pairing.$hostDevice){ device in
                 guard let device = device else {return}
-                self.macAdress = device.macAdress ?? "i don't know"
+                if let adress = device.macAdress {
+                    self.macAdress = ApiUtil.getDecyptedData(
+                        forNps: adress,
+                        npsKey: NpsNetwork.AES_KEY, npsIv: NpsNetwork.AES_IV)
+                }
                 self.modelName = device.modelName ?? String.app.defaultStb
                 self.modelImage = Pairing.getSTBImage(stbModel: self.modelName)
             }

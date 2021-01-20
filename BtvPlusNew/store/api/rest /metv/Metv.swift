@@ -16,6 +16,7 @@ extension MetvNetwork{
     static let RESPONSE_FORMET = "json"
     static let SVC_CODE = "BTV"
     static let VERSION = "5.0"
+    static let GROUP_VOD = "VOD"
     static let PAGE_COUNT = 30
 
 }
@@ -37,14 +38,65 @@ class Metv: Rest{
         params["IF"] = "IF-ME-011"
         
         params["stb_id"] = stbId
-        params["group"] = "VOD"
+        params["group"] = MetvNetwork.GROUP_VOD
         params["ch_type"] = ""
         params["page_no"] = page?.description ?? "1"
         params["entry_no"] = pageCnt?.description ?? MetvNetwork.PAGE_COUNT.description
-        params["hash_id"] = stbId.toSHA256()
+        params["hash_id"] = ApiUtil.getHashId(stbId)
         params["svc_code"] = MetvNetwork.SVC_CODE
         
         fetch(route: MetvBookMark(query: params), completion: completion, error:error)
+    }
+    /**
+    * 즐겨찾기 등록 (VOD) (IF-ME-012)
+    * @param srisId VOD 컨텐트의 식별자
+    * @param epsdId 에피소드ID
+    * @param epsdRsluId VOD 컨텐트의 해상도ID
+    * @param isKidsZone 키즈존 여부
+    */
+    func postBookMark(
+        data:SynopsisData,
+        completion: @escaping (UpdateBookMark) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:String]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["ver"] = MetvNetwork.VERSION
+        params["IF"] = "IF-ME-012"
+        
+        params["stb_id"] = stbId
+        params["group"] = MetvNetwork.GROUP_VOD
+        params["hash_id"] = ApiUtil.getHashId(stbId)
+        params["sris_id"] = data.srisId ?? ""
+        params["epsd_id"] = data.epsdId ?? ""
+        params["epsd_rslu_id"] = data.epsdRsluId ?? ""
+        params["yn_kzone"] = data.kidZone ?? "N"
+        params["svc_code"] = MetvNetwork.SVC_CODE
+        
+        fetch(route: MetvPostBookMark(body: params), completion: completion, error:error)
+    }
+    /**
+    * 즐겨찾기 삭제 (VOD) (IF-ME-013)
+    * @param isAllType 0 : 단건 또는 복수건 삭제(deleteList는 반드시 설정하여야 함), 1 : 그룹별 전체삭제
+    * @param deleteList 즐겨찾기 삭제할 unique key 집합 - group=VOD 일 때, sris_id를 의미
+    */
+    func deleteBookMark(
+        data:SynopsisData,
+        completion: @escaping (UpdateBookMark) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:Any]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["ver"] = MetvNetwork.VERSION
+        params["IF"] = "IF-ME-013"
+        
+        params["stb_id"] = stbId
+        params["group"] = MetvNetwork.GROUP_VOD
+        params["hash_id"] = ApiUtil.getHashId(stbId)
+        
+        params["isAll_type"] = "0"
+        params["deleteList"] = [data.epsdId]
+        fetch(route: MetvDelBookMark(body: params), completion: completion, error:error)
     }
 }
 
@@ -53,3 +105,17 @@ struct MetvBookMark:NetworkRoute{
    var path: String = "/metv/v5/bookmark/bookmark/mobilebtv"
    var query: [String : String]? = nil
 }
+
+struct MetvPostBookMark:NetworkRoute{
+   var method: HTTPMethod = .post
+   var path: String = "/metv/v5/bookmark/bookmark/add/mobilebtv"
+   var body: [String : String]? = nil
+}
+struct MetvDelBookMark:NetworkRoute{
+   var method: HTTPMethod = .delete
+   var path: String = "/metv/v5/bookmark/bookmark/del/mobilebtv"
+   var body: [String : Any]? = nil
+}
+
+
+

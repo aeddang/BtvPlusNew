@@ -48,10 +48,9 @@ class PageDataProviderModel:ObservableObject{
             self.event = .onResult(-1, result, -1)
         }
         guard let apis = self.requests else { return }
-        guard let _ = apis.firstIndex(where: { $0.id == result.id }) else { return }
-        
+        guard let count = apis.firstIndex(where: { $0.id == result.id }) else { return }
         self.completedCount += 1
-        self.event = .onResult(progress, result, completedCount)
+        self.event = .onResult(progress, result, count)
         self.next()
     }
     
@@ -60,10 +59,9 @@ class PageDataProviderModel:ObservableObject{
             self.event = .onError(-1, err, -1)
         }
         guard let apis = self.requests else { return }
-        guard let _ = apis.firstIndex(where: { $0.id == err.id }) else { return }
-        
+        guard let count = apis.firstIndex(where: { $0.id == err.id }) else { return }
         self.completedCount += 1
-        self.event = .onError(progress, err, completedCount)
+        self.event = .onError(progress, err, count)
         self.next()
     }
 }

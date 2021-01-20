@@ -66,6 +66,23 @@
 }
 
 /**
+ * HASH ID 반환
+ */
++ (NSString *) getHashId:(NSString *)strSTBId
+{
+    NSString *_pInput = nil;
+    if (strSTBId == nil || !([strSTBId length] > 0)) {
+        _pInput = @"{00000000-0000-0000-0000-000000000000}";
+    } else {
+        _pInput = strSTBId;
+    }
+    NSData *data = [self SHAx:_pInput];
+    NSString *hash = [self hexEncode:data];
+    
+    return hash;
+}
+
+/**
  * nValue 값
  */
 + (NSString *) getNValue

@@ -12,6 +12,7 @@ struct PagePairing: PageView {
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var networkObserver:NetworkObserver
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -117,6 +118,14 @@ struct PagePairing: PageView {
                 guard let _ = evt else {return}
                 self.pageDragingModel.uiEvent = .draged(geometry)
                 
+            }
+            .onReceive(self.pairing.$event){ evt in
+                guard let evt = evt else {return}
+                switch evt {
+                case .connected :
+                    self.pagePresenter.closePopup(self.pageObject?.id)
+                default : do{}
+                }
             }
             .onReceive(self.pageSceneObserver.$alertResult){ result in
                 guard let result = result else { return }

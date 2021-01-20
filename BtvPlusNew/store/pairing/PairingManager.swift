@@ -63,7 +63,8 @@ class PairingManager : PageProtocol{
                 }
             case .unPairing :
                 self.dataProvider.requestData(q: .init(type: .postUnPairing, isOptional: true))
-             
+            case .check :
+                self.dataProvider.requestData(q: .init(type: .getDevicePairingStatus, isOptional: true))
             default: do{}
             }
         }).store(in: &anyCancellable)
@@ -168,6 +169,11 @@ class PairingManager : PageProtocol{
                     return
                 }
                 self.pairing.foundDevice(stbInfoDatas: datas)
+            
+            case .getDevicePairingStatus :
+                if NpsNetwork.pairingStatus != "" {
+                    self.pairing.checkCompleted(isSuccess: true)
+                }
                 
             default: do{}
             }
@@ -178,6 +184,7 @@ class PairingManager : PageProtocol{
             switch err.type {
             case .postUnPairing, .postAuthPairing, .postDevicePairing, .rePairing : self.pairing.connectError()
             case .getHostDeviceInfo, .postGuestInfo, .postGuestAgreement, .getGuestAgreement: self.pairing.syncError()
+            case .getDevicePairingStatus : self.pairing.checkCompleted(isSuccess: false)
             default: do{}
             }
         }).store(in: &anyCancellable)

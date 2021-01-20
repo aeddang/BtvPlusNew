@@ -48,13 +48,19 @@ enum ApiType{
     //EUXP
     case getGnb,
          getCWGrid(String?, String?),
-         getGridEvent(String?, EuxpNetwork.SortType? = Optional.none, Int? = nil, Int? = nil) //EUXP
+         getGridEvent(String?, EuxpNetwork.SortType? = Optional.none, Int? = nil, Int? = nil),
+         getGatewaySynopsis(SynopsisData),
+         getSynopsis(SynopsisData), getInsideInfo(SynopsisData)
+    
     
     //METV
-    case getBookMark(Int? = nil , Int? = nil)
+    case getBookMark(Int? = nil , Int? = nil),
+         postBookMark(SynopsisData),
+         deleteBookMark(SynopsisData)
     
     //NPS
     case registHello,
+         getDevicePairingStatus,
          getDevicePairingInfo(String?, String?),
          postDevicePairing(User?, StbData?),
          postAuthPairing(User?, String?),

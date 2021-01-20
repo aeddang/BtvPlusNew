@@ -16,8 +16,8 @@ struct LikeButton: PageView {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
-    var id:String
-    @Binding var isLike:Bool?
+    var data:SynopsisData
+    @State var isLike:Bool?
     var action: ((_ ac:Bool) -> Void)? = nil
     
     
@@ -93,7 +93,7 @@ struct LikeButton: PageView {
     }
     
     func deleted(_ res:ApiResultResponds, type:ApiValue){
-        self.isLike = true
+        self.isLike = false
         action?(false)
     }
     
@@ -107,9 +107,8 @@ struct LikeButton_Previews: PreviewProvider {
     
     static var previews: some View {
         Form{
-            LikeButton(
-                id:"",
-                isLike:.constant(true)
+            LikeButton (
+                data:SynopsisData()
             ){ ac in
                 
             }

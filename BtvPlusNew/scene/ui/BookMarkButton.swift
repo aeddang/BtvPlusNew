@@ -10,14 +10,12 @@
 import Foundation
 import SwiftUI
 
-
-
-struct HeartButton: PageView {
+struct BookMarkButton: PageView {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
-    var id:String
-    @Binding var isHeart:Bool?
+    var data:SynopsisData
+    @State var isHeart:Bool? = nil
     var action: ((_ ac:Bool) -> Void)? = nil
     
     
@@ -27,7 +25,8 @@ struct HeartButton: PageView {
                 self.pageSceneObserver.alert = .needPairing
             }
             else{
-                
+                if self.isHeart == true { self.add() }
+                else if self.isHeart == false { self.delete() }
             }
         }) {
             VStack(spacing:0){
@@ -49,65 +48,59 @@ struct HeartButton: PageView {
         
         .onReceive(self.dataProvider.$result){ res in
             guard let res = res else { return }
-            //ComponentLog.d("onReceive " + res.id , tag: self.tag)
-            //ComponentLog.d("onReceive self.apiId " + self.apiId , tag: self.tag)
-            /*
-            if !res.id.hasPrefix(self.apiId) { return }
+            guard let epsdId = self.data.epsdId else { return }
+            if !res.id.hasPrefix(epsdId) { return }
             switch res.type {
-            case .heartDelete(let type, _): self.deleted(res, type:type)
-            case .heartAdd(let type, _): self.added(res, type:type)
+            case .postBookMark : self.added(res)
             default: do{}
             }
-            */
         }
         .onReceive(self.dataProvider.$error){ err in
             guard let err = err else { return }
-            /*
-            if !err.id.hasPrefix(self.apiId) { return }
+            guard let epsdId = self.data.epsdId else { return }
+            if !err.id.hasPrefix(epsdId) { return }
             switch err.type {
-                case .heartDelete(let type, _): self.error(err, type:type)
-                case .heartAdd(let type, _): self.error(err, type:type)
+                case .postBookMark : self.error(err, type:err.type)
                 default: do{}
             }
-             */
         }
         
     }//body
     
     @State var isBusy:Bool = true
     func add(){
+        guard let epsdId = self.data.epsdId else { return }
         self.isBusy = true
-        
+        self.dataProvider.requestData(q: .init(id: epsdId, type: .postBookMark(self.data)))
     }
     
     func delete(){
         self.isBusy = true
-        
+        //self.dataProvider.requestData(q: .init(id: epsdId, type: .deleteBookMark(self.data)))
     }
     
-    func added(_ res:ApiResultResponds, type:ApiValue){
+    func added(_ res:ApiResultResponds){
         self.isHeart = true
         action?(true)
     }
     
-    func deleted(_ res:ApiResultResponds, type:ApiValue){
-        self.isHeart = true
+    func deleted(_ res:ApiResultResponds){
+        self.isHeart = false
         action?(false)
     }
     
-    func error(_ err:ApiResultError, type:ApiValue){
+    func error(_ err:ApiResultError, type:ApiType){
        self.isBusy = false
     }
 }
 
 #if DEBUG
-struct HeartButton_Previews: PreviewProvider {
+struct BookMarkButton_Previews: PreviewProvider {
     
     static var previews: some View {
         Form{
-            HeartButton(
-                id:"",
-                isHeart:.constant(true)
+            BookMarkButton(
+                data:SynopsisData()
             ){ ac in
                 
             }

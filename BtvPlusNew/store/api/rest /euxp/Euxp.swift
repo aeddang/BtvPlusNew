@@ -28,6 +28,11 @@ extension EuxpNetwork{
         case price = "40" // 가격
     }
     
+    enum SearchType: String {
+        case sris = "1" // 시리즈
+        case prd = "2" // 단품
+    }
+    
     enum GnbTypeCode: String {
         case GNB_HOME = "BP_01"  // 홈
         case GNB_MONTHLY = "BP_02"  // 월정액
@@ -65,17 +70,16 @@ class Euxp: Rest{
      * @param searchType 1 : epsd_id 기준 조회, 2 : epsd_rslu_id 기준 조회(con_id)
      */
     func getSynopsis(
-        srisId:String, searchType:String, epsdId:String, epsdRsluId:String,
+        data:SynopsisData,
         completion: @escaping (Synopsis) -> Void, error: ((_ e:Error) -> Void)? = nil){
-        
         var params = [String:String]()
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
         params["IF"] = "IF-EUXP-010"
-        params["sris_id"] = srisId
-        params["epsd_id"] = epsdId
-        params["epsd_rslu_id"] = epsdRsluId
-        params["search_type"] = searchType
+        params["sris_id"] = data.srisId ?? ""
+        params["epsd_id"] = data.epsdId ?? ""
+        params["epsd_rslu_id"] = data.epsdRsluId ?? ""
+        params["search_type"] = data.searchType ?? ""
         params["app_typ_cd"] = "BTVPLUS"
         fetch(route: EuxpSynopsis(query: params), completion: completion, error:error)
         
@@ -89,17 +93,17 @@ class Euxp: Rest{
      * @param searchType 검색조건 1 : sris_id 조회, 2 : prd_prc_id 조회 (상품가격아이디)
      */
     func getGatewaySynopsis(
-        srisId:String, searchType:String, epsdId:String, prdPrcId:String,
+        data:SynopsisData,
         completion: @escaping (GatewaySynopsis) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         var params = [String:String]()
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
         params["IF"] = "IF-EUXP-014"
-        params["sris_id"] = srisId
-        params["epsd_id"] = epsdId
-        params["prd_prc_id"] = prdPrcId
-        params["search_type"] = searchType
+        params["sris_id"] = data.srisId ?? ""
+        params["epsd_id"] = data.epsdId ?? ""
+        params["prd_prc_id"] = data.prdPrcId ?? ""
+        params["search_type"] = data.searchType ?? ""
         fetch(route: EuxpGatewaySynopsis(query: params), completion: completion, error:error)
         
     }
@@ -133,14 +137,13 @@ class Euxp: Rest{
       * @param epsdId 에피소드아이디
      */
     func getInsideInfo(
-        epsdId:String,
+        data:SynopsisData,
         completion: @escaping (InsideInfo) -> Void, error: ((_ e:Error) -> Void)? = nil){
-        
         var params = [String:String]()
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
         params["IF"] = "IF-EUXP-019"
-        params["epsd_id"] = epsdId
+        params["epsd_id"] = data.epsdId
         fetch(route: EuxpInsideInfo(query: params), completion: completion, error:error)
     }
     

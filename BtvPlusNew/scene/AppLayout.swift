@@ -104,6 +104,7 @@ struct AppLayout: PageComponent{
         .onReceive(self.repository.$status){ status in
             switch status {
             case .ready: self.onPageInit()
+            case .error(let err): self.onPageError(err)
             default: do{}
             }
         }
@@ -127,6 +128,11 @@ struct AppLayout: PageComponent{
                     .addParam(key: .id, value: initMenuId)
             )
         }
+    }
+    func onPageError(_ err:ApiResultError){
+        self.pagePresenter.changePage(
+            PageProvider.getPageObject(.serviceError)
+        )
     }
     
     

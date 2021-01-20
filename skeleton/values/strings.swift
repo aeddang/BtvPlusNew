@@ -29,6 +29,7 @@ extension String {
         public static let mail = "mail".loaalized()
         public static let femail = "femail".loaalized()
         public static let year = "year".loaalized()
+        public static let min = "min".loaalized()
         
         public static let certificationNumber = "certificationNumber".loaalized()
         public static let certificationNumberHolder = "certificationNumberHolder".loaalized()
@@ -37,6 +38,9 @@ extension String {
         public static let rent = "rent".loaalized()
         public static let owner = "owner".loaalized()
         public static let defaultStb = "defaultStb".loaalized()
+        public static let another = "another".loaalized()
+        public static let count = "count".loaalized()
+        public static let award = "award".loaalized()
     }
     
     struct alert {
@@ -50,7 +54,7 @@ extension String {
         public static var connectWifiSub = "alertConnectWifiSub".loaalized()
     
         public static var needConnect = "alertNeedConnect".loaalized()
-        
+        public static var needConnectStatus = "alertNeedConnectStatus".loaalized()
         public static var connectNotFound = "alertConnectNotFound".loaalized()
         public static var connectNotFoundSub = "alertConnectNotFoundSub".loaalized()
         
@@ -75,8 +79,11 @@ extension String {
         public static var pairingError = "alertPairingError".loaalized()
         public static var pairingCompleted = "alertPairingCompleted".loaalized()
         public static var pairingRecovery = "alertPairingRecovery".loaalized()
+        public static var pairingDisconnected = "alertPairingDisconnected".loaalized()
         public static var serviceUnavailable = "alertServiceUnavailable".loaalized()
         public static var serviceUnavailableText = "alertServiceUnavailableText".loaalized()
+        public static var serviceUnavailableText1 = "alertServiceUnavailableText1".loaalized()
+        public static var serviceUnavailableText2 = "alertServiceUnavailableText2".loaalized()
         public static var identifySuccess = "alertIdentifySuccess".loaalized()
         public static var identifyFail = "alertIdentifyFail".loaalized()
         public static var identifySuccessAdult = "alertIdentifySuccessAdult".loaalized()

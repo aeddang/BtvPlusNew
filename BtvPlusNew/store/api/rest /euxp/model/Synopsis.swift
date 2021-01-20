@@ -140,8 +140,8 @@ struct EpsdRsluInfo: Codable {
     private(set) var rslu_typ_cd:String? = nil   // 해상도 유형 코드
     private(set) var lag_capt_typ_cd:String? = nil   // 언어자막유형코드
     private(set) var possn_yn:String? = nil   // 소장여부
-    private(set) var openg_tmtag_tmsc:String? = nil   // 오프닝 타임태그 시간초
-    private(set) var endg_tmtag_tmsc:String? = nil   // 엔딩 타임태그 시간초
+    private(set) var openg_tmtag_tmsc:DynamicValue? = nil   // 오프닝 타임태그 시간초
+    private(set) var endg_tmtag_tmsc:DynamicValue? = nil   // 엔딩 타임태그 시간초
     private(set) var capt_yn:String? = nil   // 자막사용여부
     private(set) var capt_svc_file_path:String? = nil   // 자막 파일 경로
     private(set) var mtx_capt_yn:String? = nil   // 다중자막여부
@@ -159,7 +159,7 @@ struct PeoplesItem : Codable{
     private(set) var prs_role_nm:String? = nil   // 역할명
     private(set) var prs_plrl_nm:String? = nil   // 배역명
     private(set) var brth_ymd:String? = nil   // 생년월일
-    private(set) var sort_seq:String? = nil   // 정렬순서
+    private(set) var sort_seq:Int? = nil   // 정렬순서
     private(set) var prs_role_cd:String? = nil   // 인물역할코드
 }
 
@@ -182,9 +182,9 @@ struct SiteReviewSitesDistInfoItem : Codable{
 }
 
 struct SiteReviewSitesItem : Codable{
-    private(set) var bas_pnt:String? = nil   // 기준평점
+    private(set) var bas_pnt:Double? = nil   // 기준평점
     private(set) var site_cd:String? = nil   // 평점사이트 코드
-    private(set) var review_cnt:String? = nil   // 평가자 수
+    private(set) var review_cnt:Double? = nil   // 평가자 수
     private(set) var reviewsArray:Array<SiteReviewSitesReviewsItem>? = nil   // 리뷰 정보
     private(set) var dist_infoArray:Array<SiteReviewSitesDistInfoItem>? = nil   // 평점 분포 정보
     private(set) var avg_pnt:Double? = nil  // 평균 평점
@@ -223,10 +223,10 @@ struct ProductItem : Codable{
     private(set) var prd_typ_cd:String? = nil   // 상품유형코드
     private(set) var asis_prd_typ_cd:String? = nil   // AS-IS 상품 유형 코드
     private(set) var prd_prc_id:String? = nil   // 상품가격 ID
-    private(set) var prd_prc:String? = nil   // 상품가격(원가격)
-    private(set) var prd_prc_vat:String? = nil   // 상품가격(원가격) 부가세 포함
-    private(set) var sale_prc:String? = nil   // 판매가격
-    private(set) var sale_prc_vat:String? = nil   // 판매가격 부가세 포함
+    private(set) var prd_prc:Double? = nil   // 상품가격(원가격)
+    private(set) var prd_prc_vat:Double? = nil   // 상품가격(원가격) 부가세 포함
+    private(set) var sale_prc:Double? = nil   // 판매가격
+    private(set) var sale_prc_vat:Double? = nil   // 판매가격 부가세 포함
     private(set) var ppm_orgnz_fr_dt:String? = nil   // 프리미어편성예정일
     private(set) var ppm_orgnz_to_dt:String? = nil   // 프리미어편성종료일
     private(set) var svc_to_dt:String? = nil   // 서비스 종료일
@@ -241,7 +241,7 @@ struct ProductItem : Codable{
     private(set) var use_yn:String? = nil   // 사용여부
     private(set) var brcast_avl_perd_yn:String? = nil   // 방송 유효 기간 여부
     private(set) var purc_wat_dd_fg_cd:String? = nil   // 구매시청일구분코드(10:일,20:주,30:년,40:월)
-    private(set) var purc_wat_dd_cnt:String? = nil   // 구매실청일수
+    private(set) var purc_wat_dd_cnt:Int? = nil   // 구매실청일수
     private(set) var poc_det_typ_cd_list:Array<String>? = nil // POC 상세 유형 코드 리스트 코드값 추가 ( 101 - Btv, 102-MBtv )
     private(set) var sale_tgt_fg_yn:String? = nil //판매대상구분여부
 }
@@ -254,7 +254,7 @@ struct CornersItem : Codable{
     private(set) var img_path:String? = nil   // 시작 서비스 이미지 파일
     private(set) var wat_fr_byte_val:String? = nil   // 시청 시작 바이트 값
     private(set) var tmtag_fr_tmsc:String? = nil   // 타임 태그 시작 시각
-    private(set) var sort_seq:String? = nil   // 정렬순서
+    private(set) var sort_seq:Int? = nil   // 정렬순서
     private(set) var cnr_grp_id:String? = nil   // 코너 그룹 ID
     private(set) var cnr_btm_nm:String? = nil     // 코너 하위 명
     private(set) var cnr_typ_cd:String? = nil     // 코너 유형 코드(1.코너, 3.OCR코드)
@@ -270,10 +270,10 @@ struct SeriesInfoItem : Codable{
     private(set) var svc_fr_dt:String? = nil    // 서비스 시작일
     private(set) var svc_to_dt:String? = nil    // 서비스 종료일
     private(set) var dist_sts_cd:String? = nil    // 배포상태코드
-    private(set) var sort_seq:Double? = nil        // 178
+    private(set) var sort_seq:Int? = nil        // 178
     private(set) var play_tms_val:String? = nil    // "94"
     private(set) var sub_title:String? = nil       // "아이즈원"
     private(set) var brcast_exps_dy:String? = nil  // "19.05.04 (토)"
-    private(set) var sale_prc_vat:String? = nil  // 판매가격 부가세 포함
+    private(set) var sale_prc_vat:Double? = nil  // 판매가격 부가세 포함
 
 }

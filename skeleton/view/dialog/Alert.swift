@@ -128,7 +128,7 @@ struct Alert<Presenting>: View where Presenting: View {
                                     text: btn.title,
                                     isSelected: true ,
                                     index: btn.index,
-                                    size: CGSize(width: Dimen.icon.heavy, height: Dimen.icon.heavy)
+                                    size: CGSize(width: Dimen.icon.heavyExtra, height: Dimen.icon.heavyExtra)
                                     
                                 ){idx in
                                     self.action(idx)

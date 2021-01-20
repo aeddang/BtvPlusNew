@@ -11,7 +11,7 @@ import Foundation
 
 enum PairingRequest:Equatable{
     case wifi , btv, user(String?), cancel,
-         recovery, device(StbData), auth(String) , unPairing
+         recovery, device(StbData), auth(String) , unPairing, check
     static func ==(lhs: PairingRequest, rhs: PairingRequest) -> Bool {
         switch (lhs, rhs) {
         case ( .wifi, .wifi):return true
@@ -31,7 +31,7 @@ enum PairingEvent{
     case connected(StbData?), disConnected, connectError(NpsCommonHeader?), disConnectError(NpsCommonHeader?),
          findMdnsDevice([MdnsDevice]), findStbInfoDevice([StbInfoDataItem]),  notFoundDevice,
          syncError(NpsCommonHeader?),
-         pairingCompleted
+         pairingCompleted, pairingCheckCompleted(Bool)
 }
 
 enum Gender {
@@ -133,6 +133,10 @@ class Pairing:ObservableObject, PageProtocol {
     func connectError(header:NpsCommonHeader? = nil) {
         self.status = .disConnect
         self.event = .connectError(header)
+    }
+    
+    func checkCompleted(isSuccess:Bool) {
+        self.event = .pairingCheckCompleted(isSuccess)
     }
     
     func requestPairing(_ request:PairingRequest){

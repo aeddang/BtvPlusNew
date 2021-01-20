@@ -13,6 +13,7 @@ class PosterData:InfinityData{
     private(set) var title: String? = nil
     private(set) var subTitle: String? = nil
     private(set) var type:PosterType = .small
+    private(set) var synopsisData:SynopsisData? = nil
     
     func setData(data:ContentItem, cardType:Block.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
         setCardType(cardType)
@@ -21,6 +22,11 @@ class PosterData:InfinityData{
             image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
         }
         index = idx
+        
+        synopsisData = .init(
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: data.prd_prc_id, kidZone:data.kids_yn)
+        
         return self
     }
     
@@ -31,6 +37,10 @@ class PosterData:InfinityData{
             image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
         }
         index = idx
+        
+        synopsisData = .init(
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "", kidZone:data.yn_kzone)
         return self
     }
     
@@ -90,7 +100,6 @@ enum PosterType {
 
 struct PosterList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     @Binding var datas:[PosterData]
@@ -106,7 +115,7 @@ struct PosterList: PageComponent{
                 .onTapGesture {
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.synopsis)
-                            .addParam(key: .data, value: data)
+                            .addParam(key: .data, value: data.synopsisData)
                     )
                 }
             }

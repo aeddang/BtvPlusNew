@@ -30,7 +30,8 @@ struct Dimen{
     }
 
     struct icon {
-        public static let heavy:CGFloat = 58 //*
+        public static let heavy:CGFloat = 69 //*
+        public static let heavyExtra:CGFloat = 58 //*
         public static let medium:CGFloat = 40 //*
         public static let regular:CGFloat = 36 //*
         public static let regularExtra:CGFloat = 38  //*

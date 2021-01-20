@@ -110,6 +110,7 @@ struct PagePairingDevice: PageView {
                 if self.pairingType != .wifi { return } 
                 switch status {
                 case .wifi :
+                    self.pageSceneObserver.alert = .cancel
                     self.findSSID()
                 default :
                     self.textAvailableWifi = String.alert.connectWifi

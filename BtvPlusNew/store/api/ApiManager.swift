@@ -63,6 +63,11 @@ class ApiManager :PageProtocol, ObservableObject{
             }
         )
     }
+    func retryApi()
+    {
+        self.status = .initate
+        initateApi()
+    }
     private func initApi()
     {
         self.status = .ready
@@ -73,9 +78,7 @@ class ApiManager :PageProtocol, ObservableObject{
         self.apiQ.removeAll()
     }
     
-    
-    
-    
+
     private var transition = [String : ApiQ]()
     func load(q:ApiQ){
         switch q.type {
@@ -117,13 +120,36 @@ class ApiManager :PageProtocol, ObservableObject{
             menuId: menuId, sortType: sort, page: page, pageCnt: count, version: nil,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .getGatewaySynopsis(let data) : self.euxp.getGatewaySynopsis(
+            data:data,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getSynopsis(let data) : self.euxp.getSynopsis(
+            data:data,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getInsideInfo(let data) : self.euxp.getInsideInfo(
+            data:data,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         //METV
         case .getBookMark(let page, let count) : self.metv.getBookMark(
             page: page, pageCnt: count,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .postBookMark(let data) : self.metv.postBookMark(
+            data: data,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .deleteBookMark(let data) : self.metv.postBookMark(
+            data: data,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         //NPS
         case .registHello : self.nps.postHello(
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getDevicePairingStatus : self.nps.getDevicePairingStatus(
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         case .getDevicePairingInfo (let authcode, let hostDeviceid) : self.nps.getDevicePairingInfo(
@@ -179,6 +205,8 @@ class ApiManager :PageProtocol, ObservableObject{
             NpsNetwork.pairing(res: result)
         case .postUnPairing :
             NpsNetwork.unpairing(res: result)
+        case .getDevicePairingStatus :
+            NpsNetwork.checkPairing(res: result) 
         default: do{}
         }
         

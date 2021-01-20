@@ -9,6 +9,7 @@ import UIKit
 import Foundation
 extension PageID{
     static let intro:PageID = "intro"
+    static let serviceError:PageID = "serviceError"
     static let home:PageID = "home"
     static let synopsis:PageID = "synopsis"
     static let oeean:PageID = "oeean"
@@ -94,6 +95,7 @@ struct PageFactory{
     static func getPage(_ pageObject:PageObject) -> PageViewProtocol{
         switch pageObject.pageID {
         case .home : return PageHome()
+        case .serviceError : return PageServiceError()
         case .my : return PageMy()
         case .synopsis : return PageSynopsis()
         case .pairing : return PagePairing()
@@ -127,6 +129,13 @@ struct PageSceneModel: PageModel {
     }
     func getCloseExceptions() -> [PageID]? {
         return []
+    }
+    
+    func isHistoryPage(_ pageObject:PageObject ) -> Bool {
+        switch pageObject.pageID {
+        case .serviceError: return false
+        default : return true
+        }
     }
     
     static func needBottomTab(_ pageObject:PageObject) -> Bool{

@@ -6,6 +6,17 @@
 //
 import Foundation
 import SwiftUI
+
+struct SynopsisData {
+    var srisId:String?
+    var searchType:String?
+    var epsdId:String?
+    var epsdRsluId:String?
+    var prdPrcId:String?
+    var kidZone:String?
+}
+
+
 struct PageSynopsis: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
@@ -17,6 +28,11 @@ struct PageSynopsis: PageView {
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var pageDataProviderModel:PageDataProviderModel = PageDataProviderModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
+    
+    @State var isPairing:Bool? = nil
+    @State var topSynopsisViewerData:TopSynopsisViewerData? = nil
+    @State var synopsisData:SynopsisData? = nil
+   
     var body: some View {
         GeometryReader { geometry in
             PageDataProviderContent(
@@ -31,7 +47,18 @@ struct PageSynopsis: PageView {
                             .modifier(Ratio16_9(geometry:geometry))
                         InfinityScrollView( viewModel: self.infinityScrollModel ){
                             VStack(alignment:.leading , spacing:0) {
-                                TopSynopsisViewer()
+                                if self.topSynopsisViewerData != nil {
+                                    TopSynopsisViewer(data:self.topSynopsisViewerData!)
+                                }
+                                if self.isPairing == false {
+                                    FillButton(
+                                        text: String.button.connectBtv
+                                    ){_ in
+                                        self.pagePresenter.openPopup(
+                                            PageProvider.getPageObject(.pairing)
+                                        )
+                                    }
+                                }
                             }
                         }
                         .modifier(MatchParent())
@@ -53,15 +80,129 @@ struct PageSynopsis: PageView {
                     
                 }
             }//PageDataProviderContent
-            
+            .onReceive(self.pairing.$event){evt in
+                guard let _ = evt else {return}
+                switch evt {
+                case .pairingCompleted : self.initPage()
+                case .disConnected : self.initPage()
+                case .pairingCheckCompleted(let isSuccess) :
+                    if isSuccess { self.initPage() }
+                    else { self.pageSceneObserver.alert = .pairingCheckFail }
+                default : do{}
+                }
+            }
+            .onReceive(self.pageDataProviderModel.$event){evt in
+                guard let evt = evt else { return }
+                switch evt {
+                case .willRequest(let progress): self.requestProgress(progress)
+                case .onResult(let progress, let res, let count):
+                    self.respondProgress(progress: progress, res: res, count: count)
+                case .onError(let progress,  let err, let count):
+                    self.errorProgress(progress: progress, err: err, count: count)
+                }
+            }
+            .onReceive(self.pageObservable.$status){status in
+                switch status {
+                case .appear:
+                    DispatchQueue.main.async {
+                        switch self.pairing.status {
+                        case .pairing : self.pairing.requestPairing(.check)
+                        case .unstablePairing : self.pageSceneObserver.alert = .pairingRecovery
+                        default : self.initPage()
+                        }
+                    }
+                default : do{}
+                }
+            }
             .onAppear{
-               
+                guard let obj = self.pageObject  else { return }
+                self.synopsisData = obj.getParamValue(key: .data) as? SynopsisData
+                
             }
             
         }//geo
     }//body
     
     
+    @State var isInitPage = false
+    @State var progressError = false
+    func initPage(){
+        if self.pageObservable.status == .initate { return }
+        self.isPairing = self.pairing.status == .pairing
+        if self.isInitPage {
+            self.resetPage()
+            return
+        }
+        PageLog.d("initPage", tag: self.tag)
+        self.isInitPage = true
+        self.pageDataProviderModel.initate()
+    }
+    
+    func resetPage(){
+        PageLog.d("resetPage", tag: self.tag)
+        self.progressError = false
+        self.topSynopsisViewerData = nil
+        self.pageDataProviderModel.initate()
+    }
+
+    private func requestProgress(_ progress:Int){
+        PageLog.d("requestProgress " + progress.description, tag: self.tag)
+        if self.progressError {return}
+        guard let data = self.synopsisData else {return}
+        switch progress {
+        case 0 : self.pageDataProviderModel.requestProgress(
+            qs: [
+                .init(type: .getGatewaySynopsis(data)),
+                .init(type: .getSynopsis(data))
+            ])
+        //case 1 : self.pageDataProviderModel.requestProgress(q: .init(type: .getGnb))
+        //case 2 : self.pageDataProviderModel.requestProgress(q: .init(type: .getGnb))
+        //case 3 : self.pageDataProviderModel.requestProgress(q: .init(type: .getGnb))
+        default : do{}
+        }
+    }
+    
+    private func respondProgress(progress:Int, res:ApiResultResponds, count:Int){
+        PageLog.d("respondProgress " + progress.description + " " + count.description, tag: self.tag)
+        switch progress {
+        case 0 :
+            switch count {
+            case 0 :
+                guard let data = res.data as? GatewaySynopsis else {
+                    self.progressError = true
+                    return
+                }
+                self.setupGatewaySynopsis(data)
+            case 1 :
+                guard let data = res.data as? Synopsis else {
+                    PageLog.d("error Synopsis", tag: self.tag)
+                    self.progressError = true
+                    return
+                }
+                self.setupSynopsis(data)
+            default : do{}
+            }
+        default : do{}
+        }
+    }
+    
+    private func errorProgress(progress:Int, err:ApiResultError, count:Int){
+        switch progress {
+        case 0 : self.progressError = true
+        default : do{}
+        }
+    }
+    
+    private func setupSynopsis (_ data:Synopsis){
+        PageLog.d("setupSynopsis", tag: self.tag)
+        if let content = data.contents {
+            self.topSynopsisViewerData = TopSynopsisViewerData().setData(data: content)
+        }
+    }
+    
+    private func setupGatewaySynopsis (_ data:GatewaySynopsis){
+        PageLog.d("setupGatewaySynopsis", tag: self.tag)
+    }
 
 }
 

@@ -15,13 +15,11 @@ struct ApiPath {
         if let vmsPath = SystemEnvironment.serverConfig[server.configKey] {
             if vmsPath != "" { return vmsPath }
         }
-        if server == .VMS {
-            return "http://mobilebtv.com:9080"
-        }
+        /*
         if server == .NPS_V5 {
             return "http://nps.hanafostv.com:9090"
         }
-    
+        */
         if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
             let dictRoot = NSDictionary(contentsOfFile: path)
             if let dict = dictRoot {

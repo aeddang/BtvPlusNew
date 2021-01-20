@@ -14,7 +14,7 @@ class VideoData:InfinityData{
     private(set) var subTitle: String? = nil
     private(set) var count: String = "0"
     private(set) var type:VideoType = .nomal
-    
+    private(set) var synopsisData:SynopsisData? = nil
     
     func setData(data:ContentItem, cardType:Block.CardType = .video, idx:Int = -1) -> VideoData {
         setCardType(cardType)
@@ -23,6 +23,11 @@ class VideoData:InfinityData{
             image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.thumb.size)
         }
         index = idx
+        
+        synopsisData = .init(
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: data.prd_prc_id ,kidZone:data.kids_yn)
+        
         return self
     }
     
@@ -33,6 +38,10 @@ class VideoData:InfinityData{
             image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.thumb.size)
         }
         index = idx
+        
+        synopsisData = .init(
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:data.yn_kzone)
         return self
     }
     
@@ -68,7 +77,6 @@ enum VideoType {
 
 struct VideoList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     @Binding var datas:[VideoData]
     var body: some View {
@@ -82,7 +90,10 @@ struct VideoList: PageComponent{
             ForEach(self.datas) { data in
                 VideoItem( data:data )
                 .onTapGesture {
-                   
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.synopsis)
+                            .addParam(key: .data, value: data.synopsisData)
+                    )
                 }
             }
         }

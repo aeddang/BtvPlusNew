@@ -11,12 +11,19 @@ import UIKit
 import SwiftUI
 import Combine
 
-enum RepositoryStatus{
-    case initate, ready
+enum RepositoryStatus:Equatable{
+    case initate, ready, error(ApiResultError)
+    static func ==(lhs: RepositoryStatus, rhs: RepositoryStatus) -> Bool {
+        switch (lhs, rhs) {
+        case ( .initate, .initate):return true
+        case ( .ready, .ready):return true
+        default: return false
+        }
+    }
 }
 
 class Repository:ObservableObject, PageProtocol{
-    @Published var status:ApiStatus = .initate
+    @Published var status:RepositoryStatus = .initate
     let pageSceneObserver:PageSceneObserver?
     let pagePresenter:PagePresenter?
     let dataProvider:DataProvider
@@ -71,11 +78,11 @@ class Repository:ObservableObject, PageProtocol{
             guard let evt = evt else { return }
             switch evt{
             case .connected(let stbData) :
-                self.pageSceneObserver?.event = .toast("connected")
+                //self.pageSceneObserver?.event = .toast("connected")
                 self.setting.saveDevice(stbData)
                 
             case .disConnected :
-                self.pageSceneObserver?.event = .toast("disConnected")
+                self.pageSceneObserver?.event = .toast(String.alert.pairingDisconnected)
                 self.setting.saveUser(nil)
                 self.setting.clearDevice()
                 
@@ -119,6 +126,7 @@ class Repository:ObservableObject, PageProtocol{
         
         self.apiManager.$error.sink(receiveValue: { err in
             guard let err = err else { return }
+            if self.status != .ready { self.status = .error(err) }
             DispatchQueue.main.async {
                 self.dataProvider.error = err
                 if !err.isOptional {
@@ -191,12 +199,20 @@ class Repository:ObservableObject, PageProtocol{
                 self.apiCoreDataManager.clearData(server: server)
             }
         }
+        //self.pageSceneObserver?.event = .toast("onReadyApiManager")
         self.dataProvider.requestData(q: .init(type: .getGnb))
     }
     
     private func onReadyRepository(gnbData:GnbBlock){
         self.dataProvider.bands.setDate(gnbData)
-        if self.status == .initate {self.status = .ready}
+        //self.pageSceneObserver?.event = .toast("onReadyRepository")
+        if self.status != .ready {self.status = .ready}
+    }
+    
+    func retryRepository()
+    {
+        self.status = .initate
+        self.apiManager.retryApi()
     }
     
     func requestBandsData(){

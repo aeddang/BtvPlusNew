@@ -19,6 +19,19 @@ extension MetvNetwork{
     static let GROUP_VOD = "VOD"
     static let PAGE_COUNT = 30
 
+    enum SynopsisType{
+        case none, title, seriesChange , seasonFirst
+        var code:String {
+            get {
+                switch self {
+                case .none: return "0"
+                case .title: return "1"
+                case .seriesChange: return "2"
+                case .seasonFirst: return "3"
+                }
+            }
+        }
+    }
 }
 
 class Metv: Rest{
@@ -98,6 +111,37 @@ class Metv: Rest{
         params["deleteList"] = [data.epsdId]
         fetch(route: MetvDelBookMark(body: params), completion: completion, error:error)
     }
+    
+    /**
+    * 바로보기 (IF-ME-061)
+    * @param srisId 최근본회차 시청정보, 즐겨찾기 확인  + 컨텐츠의 sris_id + 필수
+    * @param synopsisType 시놉시스 확인 식별자 값 설명 - 1 : 단편시놉 진입시  - 2 : 시즌시놉 회차이동시 - 3. : 시즌시놉 최초진입 또는 시즌변경시
+    * @param ppvProducts 단편 또는 시즌 회차별 바로보기 여부 확인시의 요청 상품리스트
+    * @param ppsProducts 시즌시놉의 바로보기 여부 확인 요청 상품리스트
+    */
+    func getDirectView(
+        data:SynopsisModel,
+        completion: @escaping (DirectView) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:Any]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["ver"] = MetvNetwork.VERSION
+        params["IF"] = "IF-ME-061"
+        
+        params["stb_id"] = stbId
+        params["hash_id"] = ApiUtil.getHashId(stbId)
+        
+        params["sris_id"] = data.srisId ?? ""
+        params["synopsis_type"] = data.synopsisType.code
+        //params["muser_num"] = ""
+        //params["version"] = ""
+        params["ppv_products"] = data.ppvProducts
+        if !data.ppsProducts.isEmpty {
+            params["pps_products "] = data.ppsProducts
+        }
+        fetch(route: MetvDirectview(body: params), completion: completion, error:error)
+    }
 }
 
 struct MetvBookMark:NetworkRoute{
@@ -111,11 +155,20 @@ struct MetvPostBookMark:NetworkRoute{
    var path: String = "/metv/v5/bookmark/bookmark/add/mobilebtv"
    var body: [String : String]? = nil
 }
+
 struct MetvDelBookMark:NetworkRoute{
    var method: HTTPMethod = .delete
    var path: String = "/metv/v5/bookmark/bookmark/del/mobilebtv"
    var body: [String : Any]? = nil
 }
+
+struct MetvDirectview:NetworkRoute{
+   var method: HTTPMethod = .post
+   var path: String = "/metv/v5/datamart/directview/mobilebtv"
+   var body: [String : Any]? = nil
+}
+
+
 
 
 

@@ -90,7 +90,7 @@ extension String {
         public static var identifyFailAdult = "alertIdentifyFailAdult".loaalized()
         public static var identifySuccessMe = "alertIdentifySuccessMe".loaalized()
         public static var identifyFailMe = "alertIdentifyFailMe".loaalized()
-        public static var like = "alertLike ".loaalized()
+        public static var like = "alertLike".loaalized()
         
     }
     

@@ -41,6 +41,23 @@ extension EuxpNetwork{
         case GNB_SCHEDULED = "BP_05"  // 공개 예정
         case GNB_OCEAN = "BP_08"  // 오션 월정액
     }
+    
+    enum SrisTypCd: String {
+        case none = "00" // error
+        case season = "01"
+        case title = "02"
+        case contentsPack = "04"
+        /*
+        var name: String {
+            switch self {
+            case .season: return "시즌"
+            case .title: return "타이틀"
+            case .contentsPack: return "패키지"
+            default: return "없음\(self)"
+            }
+        }
+        */
+    }
 }
 
 

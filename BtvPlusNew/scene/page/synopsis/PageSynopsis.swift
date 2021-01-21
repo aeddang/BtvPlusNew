@@ -7,16 +7,6 @@
 import Foundation
 import SwiftUI
 
-struct SynopsisData {
-    var srisId:String?
-    var searchType:String?
-    var epsdId:String?
-    var epsdRsluId:String?
-    var prdPrcId:String?
-    var kidZone:String?
-}
-
-
 struct PageSynopsis: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
@@ -30,9 +20,8 @@ struct PageSynopsis: PageView {
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     
     @State var isPairing:Bool? = nil
-    @State var topSynopsisViewerData:TopSynopsisViewerData? = nil
     @State var synopsisData:SynopsisData? = nil
-   
+
     var body: some View {
         GeometryReader { geometry in
             PageDataProviderContent(
@@ -47,9 +36,14 @@ struct PageSynopsis: PageView {
                             .modifier(Ratio16_9(geometry:geometry))
                         InfinityScrollView( viewModel: self.infinityScrollModel ){
                             VStack(alignment:.leading , spacing:0) {
-                                if self.topSynopsisViewerData != nil {
-                                    TopSynopsisViewer(data:self.topSynopsisViewerData!)
+                                if self.episodeViewerData != nil {
+                                    EpisodeViewer(data:self.episodeViewerData!)
                                 }
+                                SrisViewer(
+                                    synopsisData :self.synopsisData,
+                                    srisId: self.srisId,
+                                    isHeart: self.$isBookmark
+                                )
                                 if self.isPairing == false {
                                     FillButton(
                                         text: String.button.connectBtv
@@ -117,7 +111,6 @@ struct PageSynopsis: PageView {
             .onAppear{
                 guard let obj = self.pageObject  else { return }
                 self.synopsisData = obj.getParamValue(key: .data) as? SynopsisData
-                
             }
             
         }//geo
@@ -126,6 +119,11 @@ struct PageSynopsis: PageView {
     
     @State var isInitPage = false
     @State var progressError = false
+    @State var synopsisModel:SynopsisModel? = nil
+    @State var episodeViewerData:EpisodeViewerData? = nil
+    @State var srisId:String? = nil
+    @State var srisCount:String? = nil
+    @State var isBookmark:Bool? = nil
     func initPage(){
         if self.pageObservable.status == .initate { return }
         self.isPairing = self.pairing.status == .pairing
@@ -141,7 +139,7 @@ struct PageSynopsis: PageView {
     func resetPage(){
         PageLog.d("resetPage", tag: self.tag)
         self.progressError = false
-        self.topSynopsisViewerData = nil
+        self.episodeViewerData = nil
         self.pageDataProviderModel.initate()
     }
 
@@ -155,7 +153,10 @@ struct PageSynopsis: PageView {
                 .init(type: .getGatewaySynopsis(data)),
                 .init(type: .getSynopsis(data))
             ])
-        //case 1 : self.pageDataProviderModel.requestProgress(q: .init(type: .getGnb))
+        case 1 :
+            if let model = self.synopsisModel {
+                self.pageDataProviderModel.requestProgress(q: .init(type: .getDirectView(model)))
+            }
         //case 2 : self.pageDataProviderModel.requestProgress(q: .init(type: .getGnb))
         //case 3 : self.pageDataProviderModel.requestProgress(q: .init(type: .getGnb))
         default : do{}
@@ -182,6 +183,13 @@ struct PageSynopsis: PageView {
                 self.setupSynopsis(data)
             default : do{}
             }
+            
+        case 1 :
+            guard let data = res.data as? DirectView else {
+                self.progressError = true
+                return
+            }
+            self.setupDirectView(data)
         default : do{}
         }
     }
@@ -189,6 +197,7 @@ struct PageSynopsis: PageView {
     private func errorProgress(progress:Int, err:ApiResultError, count:Int){
         switch progress {
         case 0 : self.progressError = true
+        case 1 : self.progressError = true
         default : do{}
         }
     }
@@ -196,12 +205,28 @@ struct PageSynopsis: PageView {
     private func setupSynopsis (_ data:Synopsis){
         PageLog.d("setupSynopsis", tag: self.tag)
         if let content = data.contents {
-            self.topSynopsisViewerData = TopSynopsisViewerData().setData(data: content)
+            self.episodeViewerData = EpisodeViewerData().setData(data: content)
+            if self.synopsisData?.srisId != self.srisId {
+                self.srisId = self.synopsisData?.srisId
+                if self.synopsisModel == nil {
+                    self.synopsisModel = SynopsisModel(type: .seasonFirst).setData(data: data)
+                }else {
+                    self.synopsisModel = SynopsisModel(type: .seriesChange).setData(data: data)
+                }
+            } else if self.episodeViewerData?.count != self.srisCount {
+                self.synopsisModel = SynopsisModel(type: .title).setData(data: data)
+            }
         }
     }
     
     private func setupGatewaySynopsis (_ data:GatewaySynopsis){
         PageLog.d("setupGatewaySynopsis", tag: self.tag)
+    }
+    
+    private func setupDirectView (_ data:DirectView){
+        PageLog.d("setupDirectView", tag: self.tag)
+        self.isBookmark = data.is_bookmark == "Y"
+        
     }
 
 }

@@ -15,9 +15,8 @@ struct BookMarkButton: PageView {
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
     var data:SynopsisData
-    @State var isHeart:Bool? = nil
+    @Binding var isHeart:Bool?
     var action: ((_ ac:Bool) -> Void)? = nil
-    
     
     var body: some View {
         Button(action: {
@@ -100,7 +99,8 @@ struct BookMarkButton_Previews: PreviewProvider {
     static var previews: some View {
         Form{
             BookMarkButton(
-                data:SynopsisData()
+                data:SynopsisData(),
+                isHeart: .constant(true)
             ){ ac in
                 
             }

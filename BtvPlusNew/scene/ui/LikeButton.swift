@@ -16,11 +16,9 @@ struct LikeButton: PageView {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
-    var data:SynopsisData
+    var srisId:String
     @State var isLike:Bool?
     var action: ((_ ac:Bool) -> Void)? = nil
-    
-    
     var body: some View {
         Button(action: {
             let status = self.pairing.status
@@ -28,7 +26,7 @@ struct LikeButton: PageView {
                 self.pageSceneObserver.alert = .needPairing
             }
             else{
-                
+                self.pageSceneObserver.alert = .like(self.srisId, self.isLike)
             }
         }) {
             VStack(spacing:0){
@@ -51,54 +49,51 @@ struct LikeButton: PageView {
         
         .onReceive(self.dataProvider.$result){ res in
             guard let res = res else { return }
-            //ComponentLog.d("onReceive " + res.id , tag: self.tag)
-            //ComponentLog.d("onReceive self.apiId " + self.apiId , tag: self.tag)
-            /*
-            if !res.id.hasPrefix(self.apiId) { return }
+            if !res.id.hasPrefix(self.srisId) { return }
             switch res.type {
-            case .heartDelete(let type, _): self.deleted(res, type:type)
-            case .heartAdd(let type, _): self.added(res, type:type)
+            case .registLike: self.regist(res)
+            case .getLike: self.setup(res)
             default: do{}
             }
-            */
+            
         }
         .onReceive(self.dataProvider.$error){ err in
             guard let err = err else { return }
-            /*
-            if !err.id.hasPrefix(self.apiId) { return }
-            switch err.type {
-                case .heartDelete(let type, _): self.error(err, type:type)
-                case .heartAdd(let type, _): self.error(err, type:type)
-                default: do{}
-            }
-             */
+            self.error(err)
+        }
+        .onAppear{
+            self.dataProvider.requestData(
+                q: .init(
+                    id: self.srisId,
+                    type: .getLike(self.srisId, self.pairing.hostDevice),
+                isOptional: true)
+            )
         }
         
     }//body
     
-    @State var isBusy:Bool = true
-    func add(){
-        self.isBusy = true
-        
+   
+    func setup(_ res:ApiResultResponds){
+        guard let data = res.data as? Like else { return }
+        if data.like == "1" { self.isLike = true }
+        else if data.dislike == "1" { self.isLike = false }
+        else { self.isLike = nil }
     }
     
-    func delete(){
-        self.isBusy = true
-        
+    func regist(_ res:ApiResultResponds){
+        guard let data = res.data as? RegistLike else { return }
+        if data.like_action == "1" {
+            self.isLike = true
+            action?(true)
+        }
+        else if data.like_action == "2" {
+            self.isLike = false
+            action?(false)
+        }
     }
     
-    func added(_ res:ApiResultResponds, type:ApiValue){
-        self.isLike = true
-        action?(true)
-    }
-    
-    func deleted(_ res:ApiResultResponds, type:ApiValue){
-        self.isLike = false
-        action?(false)
-    }
-    
-    func error(_ err:ApiResultError, type:ApiValue){
-       self.isBusy = false
+    func error(_ err:ApiResultError){
+       
     }
 }
 
@@ -108,7 +103,7 @@ struct LikeButton_Previews: PreviewProvider {
     static var previews: some View {
         Form{
             LikeButton (
-                data:SynopsisData()
+                srisId: ""
             ){ ac in
                 
             }

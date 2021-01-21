@@ -88,10 +88,12 @@ class User {
 
 class HostDevice {
     private(set) var macAdress:String? = nil
+    private(set) var agentVersion:String? = nil
     var modelName:String? = nil
    
     func setData(deviceData:HostDeviceData) -> HostDevice{
         self.macAdress = deviceData.stb_mac_address
+        self.agentVersion = deviceData.stb_src_agent_version
         return self
     }
 }

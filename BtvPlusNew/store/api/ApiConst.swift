@@ -10,16 +10,20 @@ import Foundation
 
 import UIKit
 
+let isTestMode = true
+
 struct ApiPath {
     static func getRestApiPath(_ server:ApiServer) -> String {
+        if isTestMode {
+            if server == .VMS {
+                return "http://mobilebtv.com:9080"
+            }
+        }
         if let vmsPath = SystemEnvironment.serverConfig[server.configKey] {
+            //DataLog.d(server.configKey + " : " +  vmsPath, tag: "ApiPath")
             if vmsPath != "" { return vmsPath }
         }
-        /*
-        if server == .NPS_V5 {
-            return "http://nps.hanafostv.com:9090"
-        }
-        */
+        DataLog.d(server.configKey + " : use local data", tag: "ApiPath")
         if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
             let dictRoot = NSDictionary(contentsOfFile: path)
             if let dict = dictRoot {
@@ -38,19 +42,28 @@ struct ApiGateway{
         var authorizationRequest = request
         authorizationRequest.addValue(
             "application/json;charset=utf-8", forHTTPHeaderField: "Accept")
-        #if DEBUG
-        authorizationRequest.addValue(
-            Self.DEBUG_API_KEY, forHTTPHeaderField: "Api_Key")
-        #else
-        authorizationRequest.addValue(
-            Self.API_KEY, forHTTPHeaderField: "Api_Key")
-        #endif
+        if isTestMode {
+            authorizationRequest.addValue(
+                Self.API_KEY, forHTTPHeaderField: "Api_Key")
+        }else{
+            #if DEBUG
+            authorizationRequest.addValue(
+                Self.DEBUG_API_KEY, forHTTPHeaderField: "Api_Key")
+            #else
+            authorizationRequest.addValue(
+                Self.API_KEY, forHTTPHeaderField: "Api_Key")
+            #endif
+        }
         let timestamp = Date().toTimestamp(dateFormat: "yyyyMMddHHmmss.SSS", local: "en_US_POSIX")
         authorizationRequest.addValue( timestamp, forHTTPHeaderField: "TimeStamp")
         authorizationRequest.addValue( timestamp.toSHA256(), forHTTPHeaderField: "Auth_Val")
         authorizationRequest.addValue( NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId , forHTTPHeaderField: "Client_ID")
+        authorizationRequest.addValue( AppUtil.getIPAddress() , forHTTPHeaderField: "Client_IP")
+        
         return authorizationRequest
     }
+    
+    
     
     static func setDefaultheader( request:URLRequest) -> URLRequest{
         var authorizationRequest = request

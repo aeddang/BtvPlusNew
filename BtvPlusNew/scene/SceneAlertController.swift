@@ -49,7 +49,7 @@ struct SceneAlertController: PageComponent{
     @State var isShow = false
     @State var title:String? = nil
     @State var image:UIImage? = nil
-    @State var text:String = ""
+    @State var text:String? = nil
     @State var subText:String? = nil
     @State var referenceText:String? = nil
     @State var tipText:String? = nil
@@ -88,6 +88,7 @@ struct SceneAlertController: PageComponent{
             case .serviceUnavailable(let path): self.selectedServiceUnavailable(idx, path: path)
             case .serviceSelect(_ , let value, let completionHandler) : self.selectedServiceSelect(idx, value:value, completionHandler:completionHandler)
             case .pairingCheckFail : self.selectedPairingCheckFail(idx)
+            case .like(let id, let isLike) : self.selectedLike(idx, id: id, isLike:isLike)
             default: do { return }
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -118,6 +119,7 @@ struct SceneAlertController: PageComponent{
             case .serviceUnavailable(let path): self.setupServiceUnavailable(path: path)
             case .serviceSelect(let text, _ , _) : self.setupServiceSelect(text: text)
             case .pairingCheckFail : self.setupPairingCheckFail()
+            case .like(_, let isLike) : self.setupLike( isLike: isLike)
             case .recivedApns:
                 let enable = self.setupRecivedApns()
                 if !enable { return }
@@ -133,7 +135,7 @@ struct SceneAlertController: PageComponent{
         if self.isShow { return }
         self.title = nil
         self.image = nil
-        self.text = ""
+        self.text = nil
         self.subText = nil
         self.tipText = nil
         self.referenceText = nil
@@ -375,7 +377,7 @@ struct SceneAlertController: PageComponent{
         }
     }
     
-    func setupLike(id:String, isLike:Bool?) {
+    func setupLike( isLike:Bool? ) {
         self.title = String.alert.like
         self.imgButtons = [
             AlertBtnData(title: String.button.likeOn,
@@ -389,8 +391,14 @@ struct SceneAlertController: PageComponent{
             AlertBtnData(title: String.app.cancel, index: 0)
         ]
     }
-    func selectedLike(_ idx:Int, isLike:Bool?) {
-        
+    func selectedLike(_ idx:Int, id:String, isLike:Bool?) {
+        if idx == 1 {
+            if isLike == true {return}
+            self.dataProvider.requestData(q: .init(id:id, type: .registLike(true, id, self.pairing.hostDevice)))
+        }else if idx == 2 {
+            if isLike == false {return}
+            self.dataProvider.requestData(q: .init(id:id, type: .registLike(false, id, self.pairing.hostDevice)))
+        }
     }
     
     func setupConfirm(title:String?, text:String?) {

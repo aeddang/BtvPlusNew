@@ -9,8 +9,8 @@ import Foundation
 
 struct Synopsis : Codable {
     private(set) var contents: SynopsisContentsItem? = nil
-    private(set) var purchares: Array<EventBanner>? = nil
-    private(set) var series: Array<EventBanner>? = nil
+    private(set) var purchares: Array<PurchasItem>? = nil
+    private(set) var series: Array<SeriesItem>? = nil
 }
 
 struct SynopsisContentsItem : Codable {
@@ -275,5 +275,48 @@ struct SeriesInfoItem : Codable{
     private(set) var sub_title:String? = nil       // "아이즈원"
     private(set) var brcast_exps_dy:String? = nil  // "19.05.04 (토)"
     private(set) var sale_prc_vat:Double? = nil  // 판매가격 부가세 포함
+
+}
+
+struct PurchasItem : Codable{
+    private(set) var prd_prc_id:String? = nil  // 상품ID
+    private(set) var prd_typ_cd:String? = nil  // 상품 유형 코드
+    private(set) var asis_prd_typ_cd:String? = nil  // AS-IS 상품유형코드
+    private(set) var sale_prc:Double? = nil  // 판매가격
+    private(set) var use_yn:String? = nil  // 사용여부
+    private(set) var epsd_id:String? = nil  // 에피소드ID
+    private(set) var ppm_orgnz_fr_dt:String? = nil  // 프리미어편성예정일
+    private(set) var purc_wat_to_dt:String? = nil  // 상품 시청 종료일
+    private(set) var nscrn_yn:String? = nil  // Nscreen 여부
+    private(set) var prd_prc_to_dt:String? = nil  // 상품 가격 종료일
+    private(set) var expire_prd_prc_dt:String? = nil  // 콘텐츠 종료일
+    private(set) var sale_prc_vat:Double? = nil  // 판매가격 부가세 포함
+    private(set) var prd_prc:Double? = nil  // 상품가격(원가격)
+    private(set) var epsd_rslu_id:String? = nil  // 해상도 아이디
+    private(set) var rslu_typ_cd:String? = nil  // 화질
+    private(set) var possn_yn:String? = nil  // 소장여부
+    private(set) var prd_prc_fr_dt:String? = nil  // 상품 가격 시작일
+    private(set) var ppm_orgnz_to_dt:String? = nil  // 프리미어편성종료일
+    private(set) var purc_pref_rank:String? = nil  // 구매우선순위
+    private(set) var next_prd_prc_fr_dt:String? = nil  // 가격변경일
+    private(set) var lag_capt_typ_cd:String? = nil  // 언어자막유형코드
+    private(set) var prd_prc_vat:Double? = nil  // 상품가격(원가격) 부가세 포함
+    private(set) var sris_id:String? = nil  // 시리즈ID
+    private(set) var lag_capt_typ_exps_yn:String? = nil  // 언어 자막 유형 노출 여부
+    private(set) var brcast_avl_perd_yn:String? = nil  // 방송 유효 기간 여부
+    private(set) var purc_wat_dd_fg_cd:String? = nil  // 구매시청일구분코드(10:일,20:주,30:년,40:월)
+    private(set) var purc_wat_dd_cnt:Int? = nil  //구매실청일수
+    private(set) var ppm_synop_icon_img_path:String? = nil    // PPM아이콘이미지경로(시놉)
+    private(set) var ppm_prd_nm:String? = nil // PPM상품명
+    private(set) var ppm_prd_typ_cd:String? = nil // PPM상품유형코드
+    private(set) var poc_det_typ_cd_list:[String]? = nil // POC 상세 유형 코드 리스트 코드값 추가 ( 101 - Btv, 102-MBtv )
+    private(set) var sale_tgt_fg_yn:String? = nil //판매대상구분여부
+}
+
+struct SeriesItem : Codable{
+    private(set) var sris_id:String? = nil  // 시리즈ID
+    private(set) var sson_choic_nm:String? = nil  // 시즌선택명
+    private(set) var epsd_id:String? = nil  // 에피소드ID(첫번째 에피소드 ID)
+    private(set) var sort_seq:Int? = nil  // 정렬순번(시즌 번호)
 
 }

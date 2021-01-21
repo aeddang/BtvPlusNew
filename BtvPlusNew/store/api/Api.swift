@@ -56,7 +56,8 @@ enum ApiType{
     //METV
     case getBookMark(Int? = nil , Int? = nil),
          postBookMark(SynopsisData),
-         deleteBookMark(SynopsisData)
+         deleteBookMark(SynopsisData),
+         getDirectView(SynopsisModel)
     
     //NPS
     case registHello,
@@ -68,9 +69,12 @@ enum ApiType{
          getHostDeviceInfo,
          postGuestInfo(User?),
          postGuestNickname(User?),
-         postGuestAgreement(User?), getGuestAgreement,
-         getStbInfo(String?)
-    
+         postGuestAgreement(User?), getGuestAgreement
+    //KMS
+    case getStbInfo(String?)
+    //SMD
+    case getLike(String?, HostDevice?),
+         registLike(Bool, String?, HostDevice?)
         
     func coreDataKey() -> String? {
         switch self {

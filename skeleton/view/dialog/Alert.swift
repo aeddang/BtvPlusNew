@@ -14,7 +14,7 @@ extension View {
     func alert(isShowing: Binding<Bool>,
                title: String? = nil,
                image: UIImage? = nil,
-               text: String,
+               text: String? = nil,
                subText: String? = nil,
                tipText: String? = nil,
                referenceText: String? = nil,
@@ -60,7 +60,7 @@ struct Alert<Presenting>: View where Presenting: View {
     let presenting: () -> Presenting
     var title: String?
     var image: UIImage?
-    var text: String
+    var text: String?
     var subText: String?
     var tipText: String?
     var referenceText: String?
@@ -77,7 +77,7 @@ struct Alert<Presenting>: View where Presenting: View {
                             Text(self.title!)
                                 .modifier(BoldTextStyle(size: Font.size.regular))
                                 .fixedSize(horizontal: false, vertical: true)
-                                .padding(.bottom, Dimen.margin.medium)
+                                
                         }
                         if self.image != nil{
                             Image(uiImage: self.image!)
@@ -85,13 +85,16 @@ struct Alert<Presenting>: View where Presenting: View {
                                 .resizable()
                                 .scaledToFit()
                                 .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
-                                .padding(.bottom, Dimen.margin.light)
+                                .padding(.top, Dimen.margin.medium)
                                 
                         }
-                        Text(self.text)
-                            .multilineTextAlignment(.center)
-                            .modifier(MediumTextStyle(size: Font.size.lightExtra))
-                            .fixedSize(horizontal: false, vertical: true)
+                        if self.text != nil{
+                            Text(self.text!)
+                                .multilineTextAlignment(.center)
+                                .modifier(MediumTextStyle(size: Font.size.lightExtra))
+                                .fixedSize(horizontal: false, vertical: true)
+                                .padding(.top, Dimen.margin.medium)
+                        }
                         if self.subText != nil{
                             Text(self.subText!)
                                 .multilineTextAlignment(.center)
@@ -121,7 +124,7 @@ struct Alert<Presenting>: View where Presenting: View {
                     .padding(.bottom, Dimen.margin.medium)
                     .padding(.horizontal, Dimen.margin.regular)
                     if self.imgButtons != nil {
-                        HStack(spacing:0){
+                        HStack(spacing:Dimen.margin.regular){
                             ForEach(self.imgButtons!) { btn in
                                 ImageButton(
                                     defaultImage: btn.img,
@@ -166,7 +169,6 @@ struct Alert<Presenting>: View where Presenting: View {
                     }
                 }
                 .background(Color.app.blue)
-                
             }
             .padding(.all, Dimen.margin.heavy)
             

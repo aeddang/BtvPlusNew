@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct UpdateBookMark : Codable {
+struct UpdateBookMark : Decodable {
     private(set) var result: String?    // 요청 결과.
 }
 /*

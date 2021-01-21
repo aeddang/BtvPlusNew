@@ -25,19 +25,23 @@ class ApiManager :PageProtocol, ObservableObject{
     private var anyCancellable = Set<AnyCancellable>()
     private var apiQ :[ ApiQ ] = []
     private let vms:Vms = Vms(network: VmsNetwork())
-    private lazy var euxp = Euxp(network: EuxpNetwork())
-    private lazy var metv = Metv(network: MetvNetwork())
-    private lazy var nps = Nps(network: NpsNetwork())
-    private lazy var kms = Kms(network: KmsNetwork())
+    private lazy var euxp:Euxp = Euxp(network: EuxpNetwork())
+    private lazy var metv:Metv = Metv(network: MetvNetwork())
+    private lazy var nps:Nps = Nps(network: NpsNetwork())
+    private lazy var kms:Kms = Kms(network: KmsNetwork())
+    private lazy var smd:Smd = Smd(network: SmdNetwork())
 
     init() {
         self.initateApi()
     }
     
     func clear(){
+        if self.status == .initate {return}
         self.euxp.clear()
         self.metv.clear()
         self.nps.clear()
+        self.kms.clear()
+        self.smd.clear()
         self.apiQ.removeAll()
     }
     
@@ -70,6 +74,7 @@ class ApiManager :PageProtocol, ObservableObject{
     }
     private func initApi()
     {
+
         self.status = .ready
         self.executeQ()
     }
@@ -145,6 +150,10 @@ class ApiManager :PageProtocol, ObservableObject{
             data: data,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .getDirectView(let data): self.metv.getDirectView(
+            data: data,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         //NPS
         case .registHello : self.nps.postHello(
             completion: {res in self.complated(id: apiID, type: type, res: res)},
@@ -186,9 +195,16 @@ class ApiManager :PageProtocol, ObservableObject{
         case .getStbInfo(let cid): self.kms.getStbList(ci: cid,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        //SMD
+        case .getLike(let seriesId, let device) : self.smd.getLike(
+            seriesId: seriesId, hostDevice: device,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .registLike(let isLike, let seriesId, let device) : self.smd.postLike(
+            isLike: isLike, seriesId: seriesId, hostDevice: device,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         }
-        
-        
         return apiID
     }
     

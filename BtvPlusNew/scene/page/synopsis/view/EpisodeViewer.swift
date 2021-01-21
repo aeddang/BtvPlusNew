@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 
-class TopSynopsisViewerData {
+class EpisodeViewerData {
     private(set) var image: String = Asset.noImg16_9
     private(set) var title: String = ""
     private(set) var count: String? = nil
@@ -22,8 +22,8 @@ class TopSynopsisViewerData {
     private(set) var provider: String? = nil
     private(set) var award: String? = nil
     private(set) var awardDetail: String? = nil
-    private(set) var isHeart:Bool? = nil
-    func setData(data:SynopsisContentsItem) -> TopSynopsisViewerData {
+    
+    func setData(data:SynopsisContentsItem) -> EpisodeViewerData {
         self.title = data.title ?? ""
         self.count = data.brcast_tseq_nm
         self.date = data.brcast_exps_dy
@@ -59,8 +59,10 @@ class TopSynopsisViewerData {
                         self.award = leading + " " + String.app.another
                             + " " + (count-1).description + String.app.count +  String.app.award
                     }
-                    let detail = prizeHistory.reduce("", {
-                        $0 + ($1.awrdc_nm ?? "") + "\n" + ($1.prize_dts_cts ?? "")
+                    let detail:String = prizeHistory.reduce("", {
+                        let leading = $1.awrdc_nm ?? ""
+                        let tailing = $1.prize_dts_cts ?? ""
+                        return $0 + leading + "\n" + tailing
                     })
                     self.awardDetail = detail
                 }
@@ -68,18 +70,16 @@ class TopSynopsisViewerData {
             }
         
         }
-
         return self
     }
 }
 
 
-struct TopSynopsisViewer: PageComponent{
+struct EpisodeViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
-    var data:TopSynopsisViewerData
-    var synopsisData:SynopsisData? = nil
-   
+    var data:EpisodeViewerData
+    
     var body: some View {
         VStack(alignment:.leading , spacing:0) {
             Text(self.data.title)
@@ -136,32 +136,6 @@ struct TopSynopsisViewer: PageComponent{
                     .padding(.top, Dimen.margin.lightExtra)
                 }
             }
-            
-            HStack(spacing:Dimen.margin.regular){
-                if self.synopsisData != nil{
-                    BookMarkButton(
-                        data:self.synopsisData!
-                    ){ ac in
-                       
-                    }
-                }
-                if self.synopsisData != nil{
-                    LikeButton(
-                        data:self.synopsisData!
-                    ){ ac in
-                       
-                    }
-                }
-                BtvButton(
-                    id:""
-                )
-                ShareButton(
-                    id:""
-                )
-            }
-            .padding(.vertical, Dimen.margin.regular)
-            Spacer().modifier(LineHorizontal())
-            
         }
         .modifier(ContentHorizontalEdges())
         .onAppear{
@@ -173,16 +147,17 @@ struct TopSynopsisViewer: PageComponent{
 
 
 #if DEBUG
-struct TopSynopsisViewer_Previews: PreviewProvider {
+struct EpisodeViewer_Previews: PreviewProvider {
     
     static var previews: some View {
         VStack{
-            TopSynopsisViewer(
-                data:TopSynopsisViewerData()
+            EpisodeViewer(
+                data:EpisodeViewerData()
             )
+            .environmentObject(DataProvider())
             .environmentObject(PagePresenter())
             .environmentObject(PageSceneObserver())
-           
+            .environmentObject(Pairing())
         }.background(Color.blue)
     }
 }

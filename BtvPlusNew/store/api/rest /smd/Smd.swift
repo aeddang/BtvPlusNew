@@ -42,7 +42,7 @@ class Smd: Rest{
      * @param likeAction 좋아요정보등록, like_action = 0, 미평가상태, 1 좋아요, 2 별로에요
      */
     func postLike(
-        isLike:Bool, seriesId:String?, hostDevice:HostDevice?,
+        isLike:Bool?, seriesId:String?, hostDevice:HostDevice?,
         completion: @escaping (RegistLike) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         var params = [String:String]()
@@ -51,7 +51,11 @@ class Smd: Rest{
         params["m"] = "registerLikeHate"
         params["stb_id"] = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         params["version_sw"] = hostDevice?.agentVersion ?? ""
-        params["like_action"] = isLike ? "1" : "2"
+        if let like = isLike {
+            params["like_action"] = like  ? "1" : "2"
+        }else{
+            params["like_action"] = "0"
+        }
         params["series_id"] = seriesId ?? ""
         fetch(route: SmdLike(query: params), completion: completion, error:error)
     }

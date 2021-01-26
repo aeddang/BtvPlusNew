@@ -253,7 +253,7 @@ struct CornersItem : Codable{
     private(set) var epsd_rslu_id:String? = nil   // 에피소드 해상도 ID
     private(set) var img_path:String? = nil   // 시작 서비스 이미지 파일
     private(set) var wat_fr_byte_val:String? = nil   // 시청 시작 바이트 값
-    private(set) var tmtag_fr_tmsc:String? = nil   // 타임 태그 시작 시각
+    private(set) var tmtag_fr_tmsc:Double? = nil   // 타임 태그 시작 시각
     private(set) var sort_seq:Int? = nil   // 정렬순서
     private(set) var cnr_grp_id:String? = nil   // 코너 그룹 ID
     private(set) var cnr_btm_nm:String? = nil     // 코너 하위 명

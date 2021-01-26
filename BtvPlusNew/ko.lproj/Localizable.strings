@@ -18,14 +18,21 @@
 "gender" = "성별";
 "mail" = "남";
 "femail" = "여";
-"year" = "년";
+
 "min" = "분";
+"hour" = "시";
+"day" = "일";
+"week" = "주";
+"month" = "월";
+"year" = "년";
+
 "certificationNumber" = "인증번호";
 "certificationNumberHolder" = "000000";
 "macAdress" = "MAC 주소";
 
 "another" = "외";
 "count" = "개";
+"broCount" = "회";
 "award" = "수상";
 
 "rent" = "대여";
@@ -52,6 +59,21 @@
 "btnConnectBtv" = "B tv 연결하기";
 "btnAlarm" = "알림";
 "btnNotice" = "모비 소식";
+"btnPurchas" = "구매하기";
+"btnPurchasAnother" = "다른 옵션 구매하기";
+
+/*
+ Sort
+*/
+"sortLangTitle" = "언어옵션";
+"sortDubbing" = "더빙";
+"sortSubtitle" = "자막";
+"sortEnsubtitle" = "영어자막";
+"sortEndubbing" = "영어더빙";
+"sortCndubbing" = "중국어더빙";
+"sortFolansubtitle" = "다국어자막";
+"sortEtc" = "기타";
+"sortNone" = "없음";
 
 /*
   Alert
@@ -108,6 +130,11 @@
 "alertIdentifyFailMe" = "본인 인증에 실패하였습니다.";
 
 "alertLike" = "콘텐츠가 마음에 드셨나요?";
+
+"alertBC" = "결방 회차";
+"alertBCtext" = "본 회차는 방송사의 사정으로 결방되었습니다.\n고객님의 양해를 부탁드립니다.";
+"alertBS" = "서비스 중지";
+
 
 /*
  PageTitle
@@ -182,5 +209,15 @@
 "myinviteFammlyText1" = "가족들이 더욱 쉽고 빠르게";
 "myinviteFammlyText2" = "B tv를 연결할 수 있도록 SMS를 전송해보세요!";
 
-
-
+/*
+ PageSynopsis
+*/
+"synopsisOnlyBtvFree" = "B tv에서 무료 시청 가능";
+"synopsisOnlyBtv" = "B tv에서 구매/시청 가능";
+"synopsisOnlyPurchasBtv" = "B tv에서 구매 시 시청 가능";
+"synopsisTerminationBtv" = "B tv 해지 후 시청 불가 콘텐츠";
+"synopsisFreeWatch" = "무료 시청 가능";
+"synopsisFreeWatchBtv" = "B tv 연결 후 시청 가능";
+"synopsisFreeWatchMonthly" = "월정액 가입 시 무료로 이용하실 수 있어요!";
+"synopsisWatchPeriod" = "이용 기간 동안 시청 가능";
+"synopsisWatchPossn" = "B tv 해지 전 무제한 시청 가능";

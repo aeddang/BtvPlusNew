@@ -23,6 +23,11 @@ class EpisodeViewerData {
     private(set) var award: String? = nil
     private(set) var awardDetail: String? = nil
     
+    var episodeTitle:String {
+        guard let count = self.count else { return self.title }
+        return self.title + " " + count + String.app.broCount
+    }
+    
     func setData(data:SynopsisContentsItem) -> EpisodeViewerData {
         self.title = data.title ?? ""
         self.count = data.brcast_tseq_nm
@@ -82,7 +87,7 @@ struct EpisodeViewer: PageComponent{
     
     var body: some View {
         VStack(alignment:.leading , spacing:0) {
-            Text(self.data.title)
+            Text(self.data.episodeTitle)
                 .modifier(BoldTextStyle( size: Font.size.boldExtra ))
                 .lineLimit(2)
                 .padding(.top, Dimen.margin.regularExtra)

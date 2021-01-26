@@ -83,6 +83,7 @@ extension Asset{
         
         public static let watcha = "icSynopWatcha"
         public static let share = "icSynopShareNor"
+        public static let tip = "icSynopTip"
         
         public static let alarm = "icMyAlarm"
         public static let notice = "icMyNotice"

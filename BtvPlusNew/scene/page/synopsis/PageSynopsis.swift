@@ -20,6 +20,7 @@ struct PageSynopsis: PageView {
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     
     @State var isPairing:Bool? = nil
+    @State var hasAuthority:Bool? = nil
     @State var synopsisData:SynopsisData? = nil
 
     var body: some View {
@@ -39,12 +40,15 @@ struct PageSynopsis: PageView {
                                 if self.episodeViewerData != nil {
                                     EpisodeViewer(data:self.episodeViewerData!)
                                 }
-                                SrisViewer(
+                                FunctionViewer(
                                     synopsisData :self.synopsisData,
                                     srisId: self.srisId,
                                     isHeart: self.$isBookmark
                                 )
-                                if self.isPairing == false {
+                                if self.hasAuthority != nil && self.purchasViewerData != nil {
+                                    PurchasViewer( data:self.purchasViewerData! )
+                                }
+                                if self.hasAuthority == false && self.isPairing == false {
                                     FillButton(
                                         text: String.button.connectBtv
                                     ){_ in
@@ -53,6 +57,8 @@ struct PageSynopsis: PageView {
                                         )
                                     }
                                 }
+                                
+                                
                             }
                         }
                         .modifier(MatchParent())
@@ -121,9 +127,11 @@ struct PageSynopsis: PageView {
     @State var progressError = false
     @State var synopsisModel:SynopsisModel? = nil
     @State var episodeViewerData:EpisodeViewerData? = nil
+    @State var purchasViewerData:PurchasViewerData? = nil
     @State var srisId:String? = nil
     @State var srisCount:String? = nil
     @State var isBookmark:Bool? = nil
+    
     func initPage(){
         if self.pageObservable.status == .initate { return }
         self.isPairing = self.pairing.status == .pairing
@@ -138,8 +146,10 @@ struct PageSynopsis: PageView {
     
     func resetPage(){
         PageLog.d("resetPage", tag: self.tag)
+        self.hasAuthority = nil
         self.progressError = false
         self.episodeViewerData = nil
+        self.purchasViewerData = nil
         self.pageDataProviderModel.initate()
     }
 
@@ -154,8 +164,10 @@ struct PageSynopsis: PageView {
                 .init(type: .getSynopsis(data))
             ])
         case 1 :
-            if let model = self.synopsisModel {
-                self.pageDataProviderModel.requestProgress(q: .init(type: .getDirectView(model)))
+            if self.isPairing == true {
+                if let model = self.synopsisModel {
+                    self.pageDataProviderModel.requestProgress(q: .init(type: .getDirectView(model)))
+                }
             }
         //case 2 : self.pageDataProviderModel.requestProgress(q: .init(type: .getGnb))
         //case 3 : self.pageDataProviderModel.requestProgress(q: .init(type: .getGnb))
@@ -216,7 +228,21 @@ struct PageSynopsis: PageView {
             } else if self.episodeViewerData?.count != self.srisCount {
                 self.synopsisModel = SynopsisModel(type: .title).setData(data: data)
             }
+            self.synopsisData?.epsdRsluId = self.synopsisModel?.epsdRsluId
+            if self.isPairing == false {
+                self.synopsisModel?.setData(directViewdata: nil)
+                self.purchasViewerData = PurchasViewerData().setData(
+                        synopsisModel: self.synopsisModel,
+                        isPairing: self.isPairing)
+                self.hasAuthority = false
+            }
+            
+        } else {
+            self.progressError = true
+            PageLog.d("setupSynopsis error", tag: self.tag)
         }
+        
+        
     }
     
     private func setupGatewaySynopsis (_ data:GatewaySynopsis){
@@ -225,8 +251,15 @@ struct PageSynopsis: PageView {
     
     private func setupDirectView (_ data:DirectView){
         PageLog.d("setupDirectView", tag: self.tag)
-        self.isBookmark = data.is_bookmark == "Y"
+        self.synopsisModel?.setData(directViewdata: data)
+        self.isBookmark = self.synopsisModel?.isBookmark
+        self.purchasViewerData = PurchasViewerData().setData(
+                synopsisModel: self.synopsisModel,
+                isPairing: self.isPairing)
         
+        if let curSynopsisItem = self.synopsisModel?.curSynopsisItem {
+            self.hasAuthority = curSynopsisItem.hasAuthority
+        }
     }
 
 }

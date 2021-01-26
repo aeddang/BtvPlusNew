@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct SrisViewer: PageComponent{
+struct FunctionViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     var synopsisData:SynopsisData? = nil
@@ -53,11 +53,11 @@ struct SrisViewer: PageComponent{
 
 
 #if DEBUG
-struct SrisViewer_Previews: PreviewProvider {
+struct FunctionViewer_Previews: PreviewProvider {
     
     static var previews: some View {
         VStack{
-            SrisViewer(
+            FunctionViewer(
                 synopsisData:SynopsisData(),
                 isHeart: .constant(false)
             )

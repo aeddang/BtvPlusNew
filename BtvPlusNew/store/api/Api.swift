@@ -74,7 +74,7 @@ enum ApiType{
     case getStbInfo(String?)
     //SMD
     case getLike(String?, HostDevice?),
-         registLike(Bool, String?, HostDevice?)
+         registLike(Bool?, String?, HostDevice?)
         
     func coreDataKey() -> String? {
         switch self {

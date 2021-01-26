@@ -25,6 +25,7 @@ protocol NetworkRoute:PageProtocol {
     var headers: [String: String]? { get set }
     var query: [String: String]? { get set }
     var body: [String: Any]? { get set }
+    var bodys: [Any]? { get set }
     var contentType:String? { get set }
     func onRequestIntercepter(request:URLRequest)
 }
@@ -33,6 +34,7 @@ extension NetworkRoute {
     var headers: [String : String]?  { get{nil} set{headers=nil} }
     var query: [String: String]?  { get{nil} set{query=nil} }
     var body: [String: Any]?  { get{nil} set{body=nil} }
+    var bodys: [Any]?  { get{nil} set{bodys=nil} }
     var contentType:String? { get{nil} set{contentType = nil} }
     
     func create(for enviroment:NetworkEnvironment) -> URLRequest {
@@ -43,6 +45,7 @@ extension NetworkRoute {
         request.allHTTPHeaderFields = headers
         request.httpMethod = method.rawValue.uppercased()
         request.httpBody = getBody()
+
         self.onRequestIntercepter(request: request)
         DataLog.d("request : " + request.debugDescription , tag:self.tag)
         return request
@@ -105,9 +108,24 @@ extension NetworkRoute {
     
     private func getBody() -> Data?{
         if method == .get {return nil}
-        guard let params = body else { return nil }
-        DataLog.d("params : " + params.description , tag:self.tag)
-        return try? JSONSerialization.data(withJSONObject:params)
+        if let params = bodys {
+            return try? JSONSerialization.data(withJSONObject:params)
+        }
+        
+        guard let param = body else { return nil }
+        if JSONSerialization.isValidJSONObject(param) {
+            do{
+                let data =  try JSONSerialization.data(withJSONObject: param , options: [])
+                let jsonString = String(decoding: data, as: UTF8.self)
+                DataLog.d("stringfy : " + jsonString, tag: self.tag)
+                return jsonString.data(using: .utf8)
+            } catch {
+                DataLog.e("stringfy : JSONSerialization " + error.localizedDescription, tag: self.tag)
+            }
+        }
+        
+        DataLog.d("params : " + param.description , tag:self.tag)
+        return try? JSONSerialization.data(withJSONObject:param)
     }
 }
 
@@ -122,13 +140,16 @@ protocol Network:PageProtocol {
 extension Network {
     var decoder:JSONDecoder { get{ .init() } }
     var encoding: String.Encoding { get{ .utf8 } }
+    
+    private var sharedSession:URLSession  { get{ AppDelegate.appURLSession ?? URLSession.shared } }
+    
     func onRequestIntercepter(request:URLRequest)->URLRequest{return request}
     func onDecodingError(data:Data, e:Error)->Error{return e}
     func fetch<T: Decodable>(route: NetworkRoute) -> AnyPublisher<T, Error> {
         var request:URLRequest = route.create(for: enviroment)
         request = self.onRequestIntercepter(request: request)
         self.debug(request: request)
-        return URLSession.shared
+        return self.sharedSession
             .dataTaskPublisher(for: request)
             .tryCompactMap { result in
             
@@ -160,7 +181,7 @@ extension Network {
         self.debug(request: request)
         self.debug(data: request.httpBody)
         request = self.onRequestIntercepter(request: request)
-        return URLSession.shared
+        return self.sharedSession
             .dataTaskPublisher(for: request)
             .tryCompactMap { result in
                 self.debug(data: result.data)
@@ -186,7 +207,7 @@ extension Network {
     func fetch(route: NetworkRoute) -> AnyPublisher<[String : Any], Error> {
         var request:URLRequest = route.create(for: enviroment)
         request = self.onRequestIntercepter(request: request)
-        return URLSession.shared
+        return self.sharedSession
             .dataTaskPublisher(for: request)
             .tryCompactMap { result in
                 self.debug(data: result.data)

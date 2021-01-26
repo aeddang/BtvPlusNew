@@ -72,7 +72,7 @@ class Metv: Rest{
         completion: @escaping (UpdateBookMark) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
-        var params = [String:String]()
+        var params = [String:Any]()
         params["response_format"] = MetvNetwork.RESPONSE_FORMET
         params["ver"] = MetvNetwork.VERSION
         params["IF"] = "IF-ME-012"
@@ -108,8 +108,13 @@ class Metv: Rest{
         params["hash_id"] = ApiUtil.getHashId(stbId)
         
         params["isAll_type"] = "0"
-        params["deleteList"] = [data.epsdId]
-        fetch(route: MetvDelBookMark(body: params), completion: completion, error:error)
+        if let deleteID = data.srisId {
+            params["deleteList"] = [deleteID]
+        }
+        
+        var headers = [String : String]()
+        headers["method"] = "delete"
+        fetch(route: MetvDelBookMark(headers: headers, body: params), completion: completion, error:error)
     }
     
     /**
@@ -124,6 +129,7 @@ class Metv: Rest{
         completion: @escaping (DirectView) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        
         var params = [String:Any]()
         params["response_format"] = MetvNetwork.RESPONSE_FORMET
         params["ver"] = MetvNetwork.VERSION
@@ -136,11 +142,11 @@ class Metv: Rest{
         params["synopsis_type"] = data.synopsisType.code
         //params["muser_num"] = ""
         //params["version"] = ""
-        params["ppv_products"] = data.ppvProducts
         if !data.ppsProducts.isEmpty {
-            params["pps_products "] = data.ppsProducts
+            params["pps_products"] = data.ppsProducts
         }
-        fetch(route: MetvDirectview(body: params), completion: completion, error:error)
+        params["ppv_products"] = data.ppvProducts
+        fetch(route: MetvDirectview( body: params), completion: completion, error:error)
     }
 }
 
@@ -153,12 +159,13 @@ struct MetvBookMark:NetworkRoute{
 struct MetvPostBookMark:NetworkRoute{
    var method: HTTPMethod = .post
    var path: String = "/metv/v5/bookmark/bookmark/add/mobilebtv"
-   var body: [String : String]? = nil
+   var body: [String : Any]? = nil
 }
 
 struct MetvDelBookMark:NetworkRoute{
-   var method: HTTPMethod = .delete
+   var method: HTTPMethod = .post
    var path: String = "/metv/v5/bookmark/bookmark/del/mobilebtv"
+   var headers:[String : String]? = nil
    var body: [String : Any]? = nil
 }
 

@@ -36,4 +36,6 @@
  */
 + (NSString *) getNValue;
 
++ (NSString *) getAuthVal:(NSString *)timestamp;
+
 @end

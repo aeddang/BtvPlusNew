@@ -18,7 +18,7 @@ struct LikeButton: PageView {
     @EnvironmentObject var pairing:Pairing
     var srisId:String
     @State var isLike:Bool?
-    var action: ((_ ac:Bool) -> Void)? = nil
+    var action: ((_ ac:Bool?) -> Void)? = nil
     var body: some View {
         Button(action: {
             let status = self.pairing.status
@@ -61,17 +61,28 @@ struct LikeButton: PageView {
             guard let err = err else { return }
             self.error(err)
         }
+        .onReceive(self.pairing.$status){stat in
+            switch stat {
+            case .pairing: self.load()
+            default: do{}
+            }
+        }
         .onAppear{
-            self.dataProvider.requestData(
-                q: .init(
-                    id: self.srisId,
-                    type: .getLike(self.srisId, self.pairing.hostDevice),
-                isOptional: true)
-            )
+            
         }
         
     }//body
-    
+        
+    func load(){
+        self.isLike = nil
+        self.dataProvider.requestData(
+            q: .init(
+                id: self.srisId,
+                type: .getLike(self.srisId, self.pairing.hostDevice),
+            isOptional: true)
+        )
+    }
+        
    
     func setup(_ res:ApiResultResponds){
         guard let data = res.data as? Like else { return }
@@ -81,7 +92,9 @@ struct LikeButton: PageView {
     }
     
     func regist(_ res:ApiResultResponds){
-        guard let data = res.data as? RegistLike else { return }
+        guard let data = res.data as? RegistLike else {
+            return
+        }
         if data.like_action == "1" {
             self.isLike = true
             action?(true)
@@ -89,6 +102,9 @@ struct LikeButton: PageView {
         else if data.like_action == "2" {
             self.isLike = false
             action?(false)
+        }else{
+            self.isLike = nil
+            action?(nil)
         }
     }
     

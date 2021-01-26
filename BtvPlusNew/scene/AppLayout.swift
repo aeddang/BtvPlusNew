@@ -129,7 +129,7 @@ struct AppLayout: PageComponent{
             )
         }
     }
-    func onPageError(_ err:ApiResultError){
+    func onPageError(_ err:ApiResultError?){
         self.pagePresenter.changePage(
             PageProvider.getPageObject(.serviceError)
         )

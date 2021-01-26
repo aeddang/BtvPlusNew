@@ -12,7 +12,7 @@ import SwiftUI
 import Combine
 
 enum RepositoryStatus:Equatable{
-    case initate, ready, error(ApiResultError)
+    case initate, ready, error(ApiResultError?)
     static func ==(lhs: RepositoryStatus, rhs: RepositoryStatus) -> Bool {
         switch (lhs, rhs) {
         case ( .initate, .initate):return true
@@ -85,12 +85,14 @@ class Repository:ObservableObject, PageProtocol{
                 self.pageSceneObserver?.event = .toast(String.alert.pairingDisconnected)
                 self.setting.saveUser(nil)
                 self.setting.clearDevice()
+                self.dataProvider.requestData(q: .init(type: .getGnb))
                 
             case .pairingCompleted :
                 self.setting.saveUser(self.pairing.user)
                 self.pairing.user?.pairingDate = self.setting.pairingDate
                 self.pairing.hostDevice?.modelName = self.setting.pairingModelName
                 self.pageSceneObserver?.event = .toast(String.alert.pairingCompleted)
+                self.dataProvider.requestData(q: .init(type: .getGnb))
             
             case .syncError :
                 self.pageSceneObserver?.alert = .pairingRecovery
@@ -182,6 +184,10 @@ class Repository:ObservableObject, PageProtocol{
         switch res.type {
         case .getGnb :
             guard let data = res.data as? GnbBlock  else { return }
+            if data.gnbs == nil ||   data.gnbs!.isEmpty {
+                self.status = .error(nil)
+                return
+            }
             self.onReadyRepository(gnbData: data)
         
         default: do{}

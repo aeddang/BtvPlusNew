@@ -95,6 +95,7 @@ PODS:
   - nanopb/encode (2.30906.0)
   - PromisesObjC (1.2.11)
   - ReachabilitySwift (5.0.0)
+  - TrueTime (5.0.3)
 
 DEPENDENCIES:
   - Firebase/Analytics
@@ -103,6 +104,7 @@ DEPENDENCIES:
   - Firebase/Messaging
   - Kingfisher
   - ReachabilitySwift
+  - TrueTime
 
 SPEC REPOS:
   trunk:
@@ -122,6 +124,7 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - ReachabilitySwift
+    - TrueTime
 
 SPEC CHECKSUMS:
   Firebase: 456eeacc158d8c58586b7871619a81bb9f27d4ae
@@ -140,7 +143,8 @@ SPEC CHECKSUMS:
   nanopb: 1bf24dd71191072e120b83dd02d08f3da0d65e53
   PromisesObjC: 8c196f5a328c2cba3e74624585467a557dcb482f
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
+  TrueTime: b49551ffafb28a9dee04e51b226f42a416010842
 
-PODFILE CHECKSUM: 60e549e847247703532a68a9f9aa73b310f49171
+PODFILE CHECKSUM: 5c6880343fceff0c8f7ff18bc5b72bae82cafced
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.10.1

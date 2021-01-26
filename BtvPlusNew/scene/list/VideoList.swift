@@ -125,6 +125,7 @@ struct VideoItem: PageView {
                     .multilineTextAlignment(.leading)
             }
         }
+        .frame(width: ListItem.thumb.size.width)
         .background(Color.app.blueLight)
         
     }

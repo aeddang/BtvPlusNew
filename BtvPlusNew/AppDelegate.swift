@@ -79,7 +79,8 @@ class AppObserver: ObservableObject, PageProtocol {
 class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
     static var orientationLock = UIInterfaceOrientationMask.all
     static let appObserver = AppObserver()
-
+    static private(set) var appURLSession:URLSession? = nil
+    
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window:UIWindow?) -> UIInterfaceOrientationMask {
         return AppDelegate.orientationLock
     }
@@ -98,7 +99,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
             application.registerUserNotificationSettings(settings)
         }
         application.registerForRemoteNotifications()
-    
+        Self.appURLSession = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: nil)
         //let launchedURL = launchOptions?[UIApplication.LaunchOptionsKey.url] as? URL
         return true//AppDelegate.appObserver.handleDynamicLink(launchedURL)
         
@@ -161,6 +162,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
         AppDelegate.appObserver.pushToken = deviceToken.base64EncodedString()
     }
 
+}
+
+extension AppDelegate : URLSessionDelegate {
+    public func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+           let urlCredential = URLCredential(trust: challenge.protectionSpace.serverTrust!)
+            completionHandler(.useCredential, urlCredential)
+    }
 }
 
 extension AppDelegate : UNUserNotificationCenterDelegate {

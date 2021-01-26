@@ -28,9 +28,14 @@ extension String {
         public static let gender = "gender".loaalized()
         public static let mail = "mail".loaalized()
         public static let femail = "femail".loaalized()
-        public static let year = "year".loaalized()
-        public static let min = "min".loaalized()
         
+        public static let min = "min".loaalized()
+        public static let hour = "hour".loaalized()
+        public static let day = "day".loaalized()
+        public static let week = "week".loaalized()
+        public static let month = "month".loaalized()
+        public static let year = "year".loaalized()
+      
         public static let certificationNumber = "certificationNumber".loaalized()
         public static let certificationNumberHolder = "certificationNumberHolder".loaalized()
         public static let macAdress = "macAdress".loaalized()
@@ -40,8 +45,22 @@ extension String {
         public static let defaultStb = "defaultStb".loaalized()
         public static let another = "another".loaalized()
         public static let count = "count".loaalized()
+        public static let broCount = "broCount".loaalized()
         public static let award = "award".loaalized()
     }
+    
+    struct sort {
+        public static let langTitle = "sortLangTitle".loaalized()
+        public static let dubbing = "sortDubbing".loaalized()
+        public static let subtitle = "sortSubtitle".loaalized()
+        public static let ensubtitle = "sortEnsubtitle".loaalized()
+        public static let endubbing = "sortEndubbing".loaalized()
+        public static let cndubbing = "sortCndubbing".loaalized()
+        public static let folansubtitle = "sortFolansubtitle".loaalized()
+        public static let etc = "sortEtc".loaalized()
+        public static let none = "sortNone".loaalized()
+    }
+    
     
     struct alert {
         public static var apns = "alertApns".loaalized()
@@ -92,6 +111,11 @@ extension String {
         public static var identifyFailMe = "alertIdentifyFailMe".loaalized()
         public static var like = "alertLike".loaalized()
         
+        public static var bc = "alertBC".loaalized()
+        public static var bcText = "alertBCtext".loaalized()
+        public static var bs = "alertBS".loaalized()
+        public static var bsText = "alertBStext".loaalized()
+        
     }
     
     struct button {
@@ -111,6 +135,8 @@ extension String {
         public static let connectBtv = "btnConnectBtv".loaalized()
         public static let alarm = "btnAlarm".loaalized()
         public static let notice = "btnNotice".loaalized()
+        public static let purchas = "btnPurchas".loaalized()
+        public static let purchasAnother = "btnPurchasAnother".loaalized()
     }
     
     struct pageTitle {
@@ -171,6 +197,15 @@ extension String {
         public static let myinviteFammlyText1 = "myinviteFammlyText1".loaalized()
         public static let myinviteFammlyText2 = "myinviteFammlyText2".loaalized()
         
+        public static let synopsisOnlyBtvFree = "synopsisOnlyBtvFree".loaalized()
+        public static let synopsisOnlyBtv = "synopsisOnlyBtv".loaalized()
+        public static let synopsisOnlyPurchasBtv = "synopsisOnlyPurchasBtv".loaalized()
+        public static let synopsisTerminationBtv = "synopsisTerminationBtv".loaalized()
+        public static let synopsisFreeWatch = "synopsisFreeWatch".loaalized()
+        public static let synopsisFreeWatchBtv = "synopsisFreeWatchBtv".loaalized()
+        public static let synopsisFreeWatchMonthly = "synopsisFreeWatchMonthly".loaalized()
+        public static let synopsisWatchPeriod = "synopsisWatchPeriod".loaalized()
+        public static let synopsisWatchPossn = "synopsisWatchPossn".loaalized()
     }
     
 }

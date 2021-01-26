@@ -12,6 +12,7 @@ target 'BtvPlusNew' do
   pod 'Firebase/Crashlytics'
   pod 'ReachabilitySwift'
   pod 'Kingfisher'
+  pod 'TrueTime'
   
   target 'BtvPlusNewTests' do
     inherit! :search_paths

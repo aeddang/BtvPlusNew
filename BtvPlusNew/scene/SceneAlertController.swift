@@ -393,11 +393,11 @@ struct SceneAlertController: PageComponent{
     }
     func selectedLike(_ idx:Int, id:String, isLike:Bool?) {
         if idx == 1 {
-            if isLike == true {return}
-            self.dataProvider.requestData(q: .init(id:id, type: .registLike(true, id, self.pairing.hostDevice)))
+            if isLike == true { self.dataProvider.requestData(q: .init(id:id, type: .registLike(nil, id, self.pairing.hostDevice))) }
+            else { self.dataProvider.requestData(q: .init(id:id, type: .registLike(true, id, self.pairing.hostDevice))) }
         }else if idx == 2 {
-            if isLike == false {return}
-            self.dataProvider.requestData(q: .init(id:id, type: .registLike(false, id, self.pairing.hostDevice)))
+            if isLike == false { self.dataProvider.requestData(q: .init(id:id, type: .registLike(nil, id, self.pairing.hostDevice))) }
+            else { self.dataProvider.requestData(q: .init(id:id, type: .registLike(false, id, self.pairing.hostDevice))) }
         }
     }
     

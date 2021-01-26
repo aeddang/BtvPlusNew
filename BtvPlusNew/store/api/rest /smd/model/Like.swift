@@ -17,6 +17,7 @@ struct Like : Codable {
 }
 
 struct RegistLike : Codable {
+    private(set) var result: String?
     private(set) var like_action: String?    //  0, 미평가상태, 1 좋아요, 2 별로에요
     private(set) var series_id: String?
 }

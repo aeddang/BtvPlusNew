@@ -10,11 +10,11 @@ import Foundation
 
 import UIKit
 
-let isTestMode = true
+
 
 struct ApiPath {
     static func getRestApiPath(_ server:ApiServer) -> String {
-        if isTestMode {
+        if SystemEnvironment.isTestMode {
             if server == .VMS {
                 return "http://mobilebtv.com:9080"
             }
@@ -41,8 +41,8 @@ struct ApiGateway{
     static func setGatewayheader( request:URLRequest) -> URLRequest{
         var authorizationRequest = request
         authorizationRequest.addValue(
-            "application/json;charset=utf-8", forHTTPHeaderField: "Accept")
-        if isTestMode {
+            "application/json", forHTTPHeaderField: "Accept")
+        if SystemEnvironment.isTestMode {
             authorizationRequest.addValue(
                 Self.API_KEY, forHTTPHeaderField: "Api_Key")
         }else{
@@ -56,8 +56,8 @@ struct ApiGateway{
         }
         let timestamp = Date().toTimestamp(dateFormat: "yyyyMMddHHmmss.SSS", local: "en_US_POSIX")
         authorizationRequest.addValue( timestamp, forHTTPHeaderField: "TimeStamp")
-        authorizationRequest.addValue( timestamp.toSHA256(), forHTTPHeaderField: "Auth_Val")
-        authorizationRequest.addValue( NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId , forHTTPHeaderField: "Client_ID")
+        authorizationRequest.addValue( ApiUtil.getAuthVal(timestamp), forHTTPHeaderField: "Auth_Val")
+        authorizationRequest.addValue( NpsNetwork.hostDeviceId ?? NpsNetwork.getGuestDeviceId() , forHTTPHeaderField: "Client_ID")
         authorizationRequest.addValue( AppUtil.getIPAddress() , forHTTPHeaderField: "Client_IP")
         
         return authorizationRequest

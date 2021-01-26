@@ -24,8 +24,8 @@ struct BookMarkButton: PageView {
                 self.pageSceneObserver.alert = .needPairing
             }
             else{
-                if self.isHeart == true { self.add() }
-                else if self.isHeart == false { self.delete() }
+                if self.isHeart == false { self.add() }
+                else if self.isHeart == true { self.delete() }
             }
         }) {
             VStack(spacing:0){
@@ -51,6 +51,7 @@ struct BookMarkButton: PageView {
             if !res.id.hasPrefix(epsdId) { return }
             switch res.type {
             case .postBookMark : self.added(res)
+            case .deleteBookMark : self.deleted(res)
             default: do{}
             }
         }
@@ -59,36 +60,42 @@ struct BookMarkButton: PageView {
             guard let epsdId = self.data.epsdId else { return }
             if !err.id.hasPrefix(epsdId) { return }
             switch err.type {
-                case .postBookMark : self.error(err, type:err.type)
+                case .postBookMark : self.error(err)
+                case .deleteBookMark : self.error(err)
                 default: do{}
             }
         }
         
     }//body
     
-    @State var isBusy:Bool = true
+    @State var isBusy:Bool = false
     func add(){
+        if self.isBusy {return}
         guard let epsdId = self.data.epsdId else { return }
         self.isBusy = true
         self.dataProvider.requestData(q: .init(id: epsdId, type: .postBookMark(self.data)))
     }
     
     func delete(){
+        if self.isBusy {return}
+        guard let epsdId = self.data.epsdId else { return }
         self.isBusy = true
-        //self.dataProvider.requestData(q: .init(id: epsdId, type: .deleteBookMark(self.data)))
+        self.dataProvider.requestData(q: .init(id: epsdId, type: .deleteBookMark(self.data)))
     }
     
     func added(_ res:ApiResultResponds){
         self.isHeart = true
         action?(true)
+        self.isBusy = false
     }
     
     func deleted(_ res:ApiResultResponds){
         self.isHeart = false
         action?(false)
+        self.isBusy = false
     }
     
-    func error(_ err:ApiResultError, type:ApiType){
+    func error(_ err:ApiResultError){
        self.isBusy = false
     }
 }

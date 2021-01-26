@@ -122,6 +122,16 @@
     return nil;
 }
 
++ (NSString *) getAuthVal:(NSString *)timestamp
+{
+    NSMutableString *auth = [[NSMutableString alloc] init];
+    [auth appendString:timestamp];
+    NSData* data = [auth dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableData *sha256Data = [NSMutableData dataWithLength:CC_SHA256_DIGEST_LENGTH];
+    CC_SHA256([data bytes], (CC_LONG)[data length], [sha256Data mutableBytes]);
+    return [sha256Data base64EncodedStringWithOptions:0];
+}
+
 
 + (NSData *)AES256DecryptWithKey:(const void *)key theData:(NSData *)data andIv:(const void *)iv
 {

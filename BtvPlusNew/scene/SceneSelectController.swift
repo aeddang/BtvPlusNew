@@ -29,7 +29,7 @@ struct SceneSelectController: PageComponent{
             buttons: self.buttons)
         { idx in
             switch self.currentSelect {
-            case .select(_ , let idx) , .selectBtn(_ , let idx): self.selectedSelect(idx ,data:self.currentSelect!)
+            case .select(_ , _) , .selectBtn(_ , _): self.selectedSelect(idx ,data:self.currentSelect!)
                 default: do { return }
             }
             withAnimation{

@@ -63,6 +63,14 @@ struct VideoBlock:BlockProtocol, PageComponent {
                 }
                 allDatas.append(contentsOf: addDatas)
                 
+            case .watched:
+                guard let resData = res?.data as? Watch else {return onBlank()}
+                guard let blocks = resData.watchList else {return onBlank()}
+                let addDatas = blocks.map{ d in
+                    VideoData().setData(data: d, cardType: data.cardType)
+                }
+                allDatas.append(contentsOf: addDatas)
+                
             default: do {}
             }
             self.datas = allDatas

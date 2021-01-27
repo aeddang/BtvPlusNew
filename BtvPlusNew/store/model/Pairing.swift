@@ -8,7 +8,6 @@
 import Foundation
 
 
-
 enum PairingRequest:Equatable{
     case wifi , btv, user(String?), cancel,
          recovery, device(StbData), auth(String) , unPairing, check
@@ -88,14 +87,23 @@ class User {
 
 class HostDevice {
     private(set) var macAdress:String? = nil
+    private(set) var convertMacAdress:String = ApiConst.defaultMacAdress
     private(set) var agentVersion:String? = nil
     var modelName:String? = nil
    
     func setData(deviceData:HostDeviceData) -> HostDevice{
         self.macAdress = deviceData.stb_mac_address
+        if let ma = self.macAdress {
+            self.convertMacAdress = ApiUtil.getDecyptedData(
+                forNps: ma,
+                npsKey: NpsNetwork.AES_KEY, npsIv: NpsNetwork.AES_IV)
+        }
         self.agentVersion = deviceData.stb_src_agent_version
         return self
     }
+    
+    
+    
 }
 
 class Pairing:ObservableObject, PageProtocol {

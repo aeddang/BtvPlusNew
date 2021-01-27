@@ -39,6 +39,10 @@ class SynopsisModel : PageProtocol {
     private(set) var distStsCd:DistStsCd = .synced
     private(set) var cacbroCd: CacbroCd = .none
     private(set) var isCancelProgram:Bool = false
+    private(set) var hasPreview:Bool = false
+    private(set) var previews:[PreviewItem] = []
+    private(set) var hasExamPreview:Bool = false
+    private(set) var kids_yn:String? = nil
     
     init(type:MetvNetwork.SynopsisType = .none ) {
         self.synopsisType = type
@@ -52,6 +56,12 @@ class SynopsisModel : PageProtocol {
         }
         self.srisId = data.contents?.sris_id
         if let contents = data.contents{
+            self.kids_yn = contents.kids_yn
+            self.hasExamPreview = contents.pre_exam_yn?.toBool() ?? false
+            if let preview = contents.preview {
+                self.previews = preview
+                self.hasPreview = !preview.isEmpty
+            }
             self.isCombineProduct = contents.combine_product_yn?.toBool() ?? false
             self.epsdId = contents.epsd_id
             self.isGstn = contents.gstn_yn?.toBool() ?? false
@@ -147,7 +157,6 @@ class SynopsisModel : PageProtocol {
     private(set) var watchOptionItems: [PurchasModel]? = nil
     private(set) var curSynopsisItem: PurchasModel?
     private(set) var metvSeasonWatchAll:Bool = false
-    private(set) var isPurchasableNextStep:Bool = false
     private(set) var isBookmark:Bool = false
     private(set) var isDistProgram:Bool = false
     
@@ -251,17 +260,14 @@ class SynopsisModel : PageProtocol {
             //월정액 구매했을 경우 단편 구매권한 y로 내려줌.
             //(200610기준 상용 프리미어 월정액 메뉴에 어벤져스 단편 자막|대여, 더빙|대여, 월정액 자막|대여, 더빙|대여 4개 권한 y내려줌)
             //월정액과 쌍을 맞춰서 권한 주는 것으로 보임.
-            //월정액과 같은 타입에 권한 부여 (월정액은 대여만 내려오는 듯함.)
-            //월정액, 자막|대여, 단편에 더빙|소장, 자막|소장만 있을경우..? 단편 다 권한x.
-            //더빙|소장, 자막|대여 있을 경우..? 자막 대여만 권한 있음.
-            //더빙|대여, 자막|소장 있을 경우, 단편 권한x.
-             //현재 시놉의 ppm 아이템이 캐싱된 ppm 목록에 있고.(pid가 같다면), 단편에 권한 안내려줄 경우.
+            //단편에 소장,대여 둘다 있을 경우 목록의 첫번째 아이템 사용.
+            //현재 시놉의 ppm 아이템이 캐싱된 ppm 목록에 있고.(pid가 같다면), 단편에 권한 안내려줄 경우.
             if isPurchasedPPM, !usableItems.contains(where: { $0.prdTypCd == .ppv && $0.isDirectview }) {
                 let temp = usableItems.filter({ $0.prdTypCd == .ppv && $0.isUse && $0.isSalesPeriod && !$0.isDirectview })
                 purchasedPPMItems.forEach { ppmItem in
                 if let target = temp.filter({ ppvItem in
                     ppmItem.lag_capt_typ_cd == ppvItem.lag_capt_typ_cd
-                        && ppmItem.isPossn == ppvItem.isPossn
+                        //&& ppmItem.isPossn == ppvItem.isPossn
                         //월정액 해상도보다 같거나 작은 컨텐츠 권한 부여.
                         //타이틀 hd 구매하면 sd 권한 o, uhd 구매 hd, sd 권한 o 인듯
                         //시리즈 비밀의숲은 HD /UHD 별도인듯.
@@ -398,21 +404,16 @@ class SynopsisModel : PageProtocol {
         let tempNextPurchaseItems = usableItems.filter({!$0.isDirectview && $0.isUse && $0.isSalesPeriod && !$0.isFree && isNScreen})
         tempNextPurchaseItems.forEach {
             guard let curSynopsisItem = curSynopsisItem else { return }
-            if isPurchasedPPM {
-                isPurchasableNextStep = false
-                return
-            }
+            if isPurchasedPPM { return }
             if !$0.isDirectview && $0.isUse && $0.isSalesPeriod {
                 //단편 등급이 같으면(자막|소장 구매, 우리말|소장 미구매 상태 등) 다른 에피소드(언어타입 다름)
                 if curSynopsisItem.purchaseProductRank == $0.purchaseProductRank {
                     if self.srisTypCd == .title && curSynopsisItem.epsd_id != $0.epsd_id {
                         purchasableItems.append($0)
-                        isPurchasableNextStep = true
                     }
                 //등급이 다르면 기본 체크 사용.
                 } else if curSynopsisItem.purchaseProductRank > $0.purchaseProductRank {
                     purchasableItems.append($0)
-                    isPurchasableNextStep = true
                 }
             }
         }
@@ -432,8 +433,8 @@ class SynopsisModel : PageProtocol {
         DataLog.d("isPurchased : " + self.isPurchased.description , tag: self.tag)
         DataLog.d("holdbackType : " + self.holdbackType.name , tag: self.tag)
         DataLog.d("purchasedPPMItem : " + (self.purchasedPPMItem?.ppm_prd_nm ?? "nil") , tag: self.tag)
-        
-        
+        DataLog.d("hasExamPreview : " + self.hasExamPreview.description , tag: self.tag)
+        DataLog.d("hasPreview : " + self.hasPreview.description , tag: self.tag)
         DataLog.d("curSynopsisItem : " + (curSynopsisItem?.debugString ?? "nil") , tag: self.tag)
         
         #endif

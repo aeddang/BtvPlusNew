@@ -10,8 +10,6 @@ import Foundation
 
 import UIKit
 
-
-
 struct ApiPath {
     static func getRestApiPath(_ server:ApiServer) -> String {
         if SystemEnvironment.isTestMode {
@@ -57,13 +55,11 @@ struct ApiGateway{
         let timestamp = Date().toTimestamp(dateFormat: "yyyyMMddHHmmss.SSS", local: "en_US_POSIX")
         authorizationRequest.addValue( timestamp, forHTTPHeaderField: "TimeStamp")
         authorizationRequest.addValue( ApiUtil.getAuthVal(timestamp), forHTTPHeaderField: "Auth_Val")
-        authorizationRequest.addValue( NpsNetwork.hostDeviceId ?? NpsNetwork.getGuestDeviceId() , forHTTPHeaderField: "Client_ID")
+        authorizationRequest.addValue( NpsNetwork.hostDeviceId ?? SystemEnvironment.getGuestDeviceId() , forHTTPHeaderField: "Client_ID")
         authorizationRequest.addValue( AppUtil.getIPAddress() , forHTTPHeaderField: "Client_IP")
         
         return authorizationRequest
     }
-    
-    
     
     static func setDefaultheader( request:URLRequest) -> URLRequest{
         var authorizationRequest = request
@@ -91,11 +87,17 @@ struct ApiPrefix {
     static let ipad = "ipad"
     static let service = "btvplus"
     static let device = "I"
+    
 }
 
 struct ApiConst {
     static let pageSize = 20
     static let defaultStbId = "{00000000-0000-0000-0000-000000000000}"
+    static let defaultMacAdress = "ff:ff:ff:ff:ff:ff"
+}
+
+struct ApiCode {
+    static let success = "0000"
 }
 
 enum ApiAction:String{

@@ -209,4 +209,72 @@
     return result;
 }
 
++ (NSString *)convertMacAddress:(NSString *)macAddr
+{
+    if (macAddr != nil) {
+        NSArray *arrTemp = [[macAddr lowercaseString] componentsSeparatedByString:@":"];
+        if ([arrTemp count] == 6) {
+            NSMutableString *convertMac = [[NSMutableString alloc] init];
+            for (NSString *item in arrTemp) {
+                if ([convertMac length] > 0 ) {
+                    [convertMac appendString:@":"];
+                }
+                if ([item length] == 0 ) {
+                    [convertMac appendString:@"0"];
+                } else if ([item length] > 1) {
+                    NSString *first = [item substringWithRange:NSMakeRange(0, 1)];
+                    if ([@"0" isEqualToString:first]) {
+                        [convertMac appendString:[item substringFromIndex:1]];
+                    } else {
+                        [convertMac appendString:item];
+                    }
+                } else {
+                    [convertMac appendString:item];
+                }
+            }
+            return convertMac;
+        }
+    }
+    return macAddr;
+}
+
+/**
+ * for SCS
+ */
++ (NSString *) getSCSVerfReqData:(NSString *)stbId plainText:(NSString *)plainText date:(NSDate *)date
+{
+    //NSString *plainText = @"01012345678";
+    
+    NSString *key = [self getSCSKey:stbId date:date];
+    NSData *rawkeyData = [key dataUsingEncoding:NSUTF8StringEncoding];
+    const char *rawkey = [rawkeyData bytes];
+    
+    NSString *ivStr = [key substringWithRange:NSMakeRange(0, 16)];
+    NSData *ivData = [ivStr dataUsingEncoding:NSUTF8StringEncoding];
+    const char *iv = [ivData bytes];
+    
+    NSData *data = [plainText dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *encrypted = [self AES256EncryptWithKey:rawkey theData:data andIv:iv];
+    if (encrypted) {
+        return [self hexEncode:encrypted];
+    }
+    
+    return nil;
+}
+
++ (NSString *) getSCSKey:(NSString *)stbId date:(NSDate *)date
+{
+    NSMutableString *pKey = [[NSMutableString alloc] init];
+    [pKey appendString:@"oEpnlw8nx3"];
+    [pKey appendString:[stbId substringWithRange:NSMakeRange(10, 12)]];
+    
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    [dateFormat setDateFormat:@"MMddHHmmss"];
+    [dateFormat setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
+    NSString *dateStr =  [dateFormat stringFromDate:date];
+    [pKey appendString:dateStr];
+    
+    return pKey;
+}
+
 @end

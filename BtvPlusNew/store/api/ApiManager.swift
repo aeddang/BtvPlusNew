@@ -30,6 +30,7 @@ class ApiManager :PageProtocol, ObservableObject{
     private lazy var nps:Nps = Nps(network: NpsNetwork())
     private lazy var kms:Kms = Kms(network: KmsNetwork())
     private lazy var smd:Smd = Smd(network: SmdNetwork())
+    private lazy var scs:Scs = Scs(network: ScsNetwork())
 
     init() {
         self.initateApi()
@@ -138,6 +139,10 @@ class ApiManager :PageProtocol, ObservableObject{
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         //METV
+        case .getWatch(let isPpm, let page, let count) : self.metv.getWatch(
+            isPpm:isPpm, page: page, pageCnt: count,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         case .getBookMark(let page, let count) : self.metv.getBookMark(
             page: page, pageCnt: count,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
@@ -202,6 +207,19 @@ class ApiManager :PageProtocol, ObservableObject{
             error:error)
         case .registLike(let isLike, let seriesId, let device) : self.smd.postLike(
             isLike: isLike, seriesId: seriesId, hostDevice: device,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        //SCS
+        case .getPreview(let epsdRsluId, let device) : self.scs.getPreview(
+            epsdRsluId: epsdRsluId, hostDevice: device,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getPreplay(let epsdRsluId, let isPreview) : self.scs.getPreplay(
+            epsdRsluId: epsdRsluId, isPreview: isPreview,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getPlay(let epsdRsluId, let device) : self.scs.getPlay(
+            epsdRsluId: epsdRsluId, hostDevice: device,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         }

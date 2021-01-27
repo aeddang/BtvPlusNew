@@ -55,7 +55,6 @@ struct Radio<Presenting>: View where Presenting: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             Button(action: {
-               
                 withAnimation{
                     self.isShowing = false
                 }

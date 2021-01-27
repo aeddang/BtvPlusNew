@@ -25,6 +25,7 @@ class EpisodeViewerData {
     
     var episodeTitle:String {
         guard let count = self.count else { return self.title }
+        if count.isEmpty { return self.title }
         return self.title + " " + count + String.app.broCount
     }
     

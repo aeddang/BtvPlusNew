@@ -61,10 +61,10 @@ struct PageHome: PageView {
             guard let evt = evt else {return}
             if self.pagePresenter.currentTopPage?.pageID == .home {
                 switch evt {
-                case .top : self.pageSceneObserver.useTop = true
+                case .top : self.pageSceneObserver.useTopFix = true
                 case .down :
                     if !self.isDataCompleted { return }
-                    self.pageSceneObserver.useTop = false
+                    self.pageSceneObserver.useTopFix = false
                 case .pullCancel :
                     if !self.infinityScrollModel.isLoading {
                         if self.reloadDegree >= ReflashSpinner.DEGREE_MAX { self.reload() }
@@ -93,6 +93,7 @@ struct PageHome: PageView {
         .onDisappear{
             self.anyCancellable.forEach{$0.cancel()}
             self.anyCancellable.removeAll()
+            self.pageSceneObserver.useTopFix = nil
         }
         
     }//body

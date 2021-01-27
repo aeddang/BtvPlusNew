@@ -41,6 +41,12 @@ extension BlockProtocol {
                 id: data.id,
                 type: .getBookMark(),
                 isOptional: true)
+        case .watched:
+            ComponentLog.d("Request watche" + data.name, tag: "BlockProtocol")
+            return .init(
+                id: data.id,
+                type: .getWatch(false),
+                isOptional: true)
         default:
             ComponentLog.d("onRequestFail " + data.name, tag: "BlockProtocol")
             data.setRequestFail() 

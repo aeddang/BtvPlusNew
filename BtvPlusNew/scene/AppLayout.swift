@@ -78,7 +78,10 @@ struct AppLayout: PageComponent{
         .onReceive(self.pagePresenter.$currentTopPage){ page in
             guard let cPage = page else { return }
             PageLog.d("currentTopPage " + cPage.pageID.debugDescription, tag:self.tag)
-            self.pageSceneObserver.useTop = PageSceneModel.needTopTab(cPage)
+            PageLog.d("current useTopFix " + (self.pageSceneObserver.useTopFix?.description ?? "nil"), tag:self.tag)
+            if self.pageSceneObserver.useTopFix != false {
+                self.pageSceneObserver.useTop = PageSceneModel.needTopTab(cPage)
+            }
             self.pageSceneObserver.useBottom = PageSceneModel.needBottomTab(cPage)
             if PageSceneModel.needKeyboard(cPage) {
                 self.keyboardObserver.start()

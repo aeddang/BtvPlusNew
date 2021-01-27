@@ -15,6 +15,7 @@ enum SceneEvent {
 
 class PageSceneObserver:ObservableObject{
     @Published var useTop = false
+    @Published var useTopFix:Bool? = nil
     @Published var useBottom = false
     @Published var isApiLoading = false
     

@@ -35,8 +35,8 @@ struct TopTab: PageComponent{
                     .renderingMode(.original)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: Dimen.icon.regularExtra,
-                           height: Dimen.icon.regularExtra)
+                    .frame(width: Dimen.icon.mediumExtra,
+                           height: Dimen.icon.mediumExtra)
             }
             Button(action: {
                 

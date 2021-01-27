@@ -54,7 +54,8 @@ enum ApiType{
     
     
     //METV
-    case getBookMark(Int? = nil , Int? = nil),
+    case getWatch(Bool = false, Int? = nil , Int? = nil),
+         getBookMark(Int? = nil , Int? = nil),
          postBookMark(SynopsisData),
          deleteBookMark(SynopsisData),
          getDirectView(SynopsisModel)
@@ -75,6 +76,11 @@ enum ApiType{
     //SMD
     case getLike(String?, HostDevice?),
          registLike(Bool?, String?, HostDevice?)
+    
+    //SCS
+    case getPreview(String?, HostDevice?),
+         getPreplay(String?, Bool?),
+         getPlay(String?, HostDevice?)
         
     func coreDataKey() -> String? {
         switch self {

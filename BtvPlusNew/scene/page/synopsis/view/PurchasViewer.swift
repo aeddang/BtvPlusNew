@@ -21,6 +21,8 @@ class PurchasViewerData {
     private(set) var isOption:Bool = false
     private(set) var optionTitle: String? = nil
     private(set) var options: [String] = []
+    private(set) var optionValues: [String] = []
+    var optionIdx = 0
     private(set) var purchasBtnTitle:String? = nil
 
     func setData(synopsisModel:SynopsisModel?, isPairing:Bool? ) -> PurchasViewerData? {
@@ -29,43 +31,104 @@ class PurchasViewerData {
         if !synopsisModel.isDistProgram {
             serviceInfo = String.alert.bs
             serviceInfoDesc = String.alert.bsText
-            
+                       
         } else if synopsisModel.isCancelProgram {
             serviceInfo = String.alert.bc
             serviceInfoDesc = String.alert.bcText
             
-        } else if synopsisModel.isPossonVODMode {
-            serviceInfo = String.pageText.synopsisTerminationBtv
-        
         } else if !synopsisModel.isNScreen {
-            serviceInfo = String.pageText.synopsisOnlyBtv
+            serviceInfo = purchas.hasAuthority
+                ? String.pageText.synopsisWatchOnlyBtv
+                : String.pageText.synopsisOnlyBtv
             
-        } else if synopsisModel.isOnlyPurchasedBtv {
+            
+        } else if synopsisModel.isOnlyPurchasedBtv && !purchas.hasAuthority {
             serviceInfo = String.pageText.synopsisOnlyPurchasBtv
-        
-        } else if isPairing == true{
+            
+        } else {
+            switch synopsisModel.holdbackType {
+            case .none :
+                self.setupBtvWatchInfo(synopsisModel: synopsisModel, isPairing: isPairing, purchas: purchas)
+                if isPairing == true {
+                    self.setupOption(purchasableItems: synopsisModel.purchasableItems, purchas: purchas)
+                }
+                if purchas.hasAuthority == true{
+                    self.setupOption(watchItems: synopsisModel.watchOptionItems, purchas: purchas)
+                }
+                
+            case .holdIn :
+                serviceInfo = (purchas.isDirectview && purchas.isFree)
+                    ? String.pageText.synopsisWatchOnlyBtv
+                    : String.pageText.synopsisOnlyBtv
+                
+            case .holdOut : serviceInfo = String.pageText.synopsisOnlyBtvFree
+            }
+        }
+        return self
+    }
+    
+    private func setupBtvWatchInfo(synopsisModel:SynopsisModel, isPairing:Bool? , purchas:PurchasModel){
+        if isPairing == true || synopsisModel.isPossonVODMode {
             if purchas.isFree {
                 infoTailing = String.pageText.synopsisFreeWatch
-            } else if purchas.isDirectview {
-                
-                
-            } else{
-                
-                
             }
-            
-        } else{
+            else if purchas.isDirectview {
+                if let ppmItem = synopsisModel.purchasedPPMItem {
+                    if let name = ppmItem.ppm_prd_nm {
+                        infoLeading = name + " "
+                        infoTailing = String.pageText.synopsisWatchPeriod
+                    }else{
+                        infoTailing = String.pageText.synopsisWatchPeriod
+                    }
+                }else{
+                    infoTailing = purchas.isPossn
+                        ? String.pageText.synopsisWatchPossn
+                        : String.pageText.synopsisWatchRent
+                }
+            }
+            else{
+                if synopsisModel.isPossonVODMode {
+                    infoTailing = String.pageText.synopsisTerminationBtv
+                }else{
+                    if synopsisModel.isContainPPM {
+                        infoIcon = Asset.icon.tip
+                        infoTailing = String.pageText.synopsisFreeWatchMonthly
+                    }
+                }
+            }
+        }
+        else{
             if purchas.isFree {
                 infoTailing = String.pageText.synopsisFreeWatchBtv
             } else {
                 if synopsisModel.isContainPPM {
-                    
+                    infoIcon = Asset.icon.tip
+                    infoTailing = String.pageText.synopsisFreeWatchMonthly
                 }
             }
         }
         self.isInfo = infoIcon != nil || infoLeading != nil || infoTailing != nil
-        
-        return self
+    }
+    
+    private func setupOption(watchItems: [PurchasModel]?, purchas:PurchasModel){
+        guard let watchItems =  watchItems else { return }
+        if watchItems.count < 2 { return }
+        guard let curIdx = watchItems.firstIndex(where: {$0.prd_prc_id == purchas.prd_prc_id}) else { return }
+        self.isOption = true
+        self.optionIdx = curIdx
+        self.optionTitle = String.sort.langTitle
+        self.options = watchItems.map({$0.purStateText})
+        self.optionValues = watchItems.map({$0.prd_prc_id})
+    }
+    private func setupOption(purchasableItems: [PurchasModel]?, purchas:PurchasModel){
+        guard let purchasableItems =  purchasableItems else { return }
+        guard let purchasableItem =  purchasableItems.first else { return }
+        let leading = purchas.hasAuthority ? String.button.purchasAnother : String.button.purchas
+        if purchasableItems.count < 2  {
+            self.purchasBtnTitle =  leading + "(" + purchasableItem.salePrice + ")"
+        }else{
+            self.purchasBtnTitle =  leading + "(" + purchasableItem.salePrice + "~)"
+        }
     }
     
     func setDummy() -> PurchasViewerData {
@@ -82,14 +145,13 @@ class PurchasViewerData {
     }
 }
 
-
 struct PurchasViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     var data:PurchasViewerData
     @State var option:String = ""
     var body: some View {
-        VStack(alignment:.leading , spacing:Dimen.margin.light) {
+        VStack(alignment:.leading , spacing:Dimen.margin.light) { 
             if self.data.serviceInfo != nil {
                 HStack{
                     Text(self.data.serviceInfo!)
@@ -104,7 +166,12 @@ struct PurchasViewer: PageComponent{
                     Text(self.data.serviceInfoDesc!)
                         .modifier(MediumTextStyle( size: Font.size.light, color:Color.app.white ))
                 }
+               
             }
+            if self.data.isInfo || self.data.isOption {
+                Spacer().modifier(LineHorizontal())
+            }
+            
             if self.data.isInfo {
                 HStack(){
                     if self.data.infoIcon != nil {
@@ -125,13 +192,12 @@ struct PurchasViewer: PageComponent{
                         Text(self.data.infoLeading!)
                             .modifier(BoldTextStyle( size: Font.size.light, color:Color.brand.primary ))
                             .lineLimit(1)
-                            .padding(.top, Dimen.margin.regularExtra)
+                            
                     }
                     else if self.data.infoTailing != nil {
                         Text(self.data.infoTailing!)
                             .modifier(BoldTextStyle( size: Font.size.light ))
                             .lineLimit(1)
-                            .padding(.top, Dimen.margin.regularExtra)
                     }
                 }
             }//info
@@ -143,8 +209,19 @@ struct PurchasViewer: PageComponent{
                     isFill: true,
                     bgColor: Color.app.blueDeep){
                     
+                    self.pageSceneObserver.select = .select((self.tag, self.data.options), self.data.optionIdx)
                 }
-                
+                .onReceive(self.pageSceneObserver.$selectResult){ result in
+                    guard let result = result else { return }
+                    switch result {
+                        case .complete(let type, let idx) : do {
+                            if type.check(key: self.tag){
+                                self.data.optionIdx = idx
+                                self.option = self.data.options[idx]
+                            }
+                        }
+                    }
+                }
             }//option
             
             if self.data.isInfo || self.data.isOption {
@@ -163,8 +240,11 @@ struct PurchasViewer: PageComponent{
             }
         }
         .modifier(ContentHorizontalEdges())
+        .padding(.top, Dimen.margin.regularExtra)
         .onAppear{
-            
+            if self.data.isOption {
+                self.option = self.data.options[self.data.optionIdx]
+            }
         }
     }//body
 }

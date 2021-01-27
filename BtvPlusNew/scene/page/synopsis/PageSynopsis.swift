@@ -40,11 +40,14 @@ struct PageSynopsis: PageView {
                                 if self.episodeViewerData != nil {
                                     EpisodeViewer(data:self.episodeViewerData!)
                                 }
-                                FunctionViewer(
-                                    synopsisData :self.synopsisData,
-                                    srisId: self.srisId,
-                                    isHeart: self.$isBookmark
-                                )
+                                HStack(spacing:0){
+                                    FunctionViewer(
+                                        synopsisData :self.synopsisData,
+                                        srisId: self.srisId,
+                                        isHeart: self.$isBookmark
+                                    )
+                                    Spacer()
+                                }
                                 if self.hasAuthority != nil && self.purchasViewerData != nil {
                                     PurchasViewer( data:self.purchasViewerData! )
                                 }
@@ -56,9 +59,8 @@ struct PageSynopsis: PageView {
                                             PageProvider.getPageObject(.pairing)
                                         )
                                     }
+                                    .padding(.horizontal, Dimen.margin.thin)
                                 }
-                                
-                                
                             }
                         }
                         .modifier(MatchParent())
@@ -125,6 +127,7 @@ struct PageSynopsis: PageView {
     
     @State var isInitPage = false
     @State var progressError = false
+    @State var progressCompleted = false
     @State var synopsisModel:SynopsisModel? = nil
     @State var episodeViewerData:EpisodeViewerData? = nil
     @State var purchasViewerData:PurchasViewerData? = nil
@@ -148,28 +151,47 @@ struct PageSynopsis: PageView {
         PageLog.d("resetPage", tag: self.tag)
         self.hasAuthority = nil
         self.progressError = false
+        self.progressCompleted = false
         self.episodeViewerData = nil
         self.purchasViewerData = nil
+        
         self.pageDataProviderModel.initate()
     }
 
     private func requestProgress(_ progress:Int){
         PageLog.d("requestProgress " + progress.description, tag: self.tag)
         if self.progressError {return}
-        guard let data = self.synopsisData else {return}
+        if self.progressCompleted{
+            PageLog.d("requestProgress Completed", tag: self.tag)
+            return
+        }
         switch progress {
-        case 0 : self.pageDataProviderModel.requestProgress(
-            qs: [
+        case 0 :
+            guard let data = self.synopsisData else {return}
+            self.pageDataProviderModel.requestProgress( qs: [
                 .init(type: .getGatewaySynopsis(data)),
                 .init(type: .getSynopsis(data))
             ])
         case 1 :
+            guard let model = self.synopsisModel else {return}
             if self.isPairing == true {
-                if let model = self.synopsisModel {
-                    self.pageDataProviderModel.requestProgress(q: .init(type: .getDirectView(model)))
-                }
+                self.pageDataProviderModel.requestProgress(q: .init(type: .getDirectView(model)))
+            } else if model.hasExamPreview{
+                self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.synopsisModel?.epsdRsluId,  true )))
+                self.progressCompleted = true
+            } else{
+                PageLog.d("no preview", tag: self.tag)
+                self.progressCompleted = true
             }
-        //case 2 : self.pageDataProviderModel.requestProgress(q: .init(type: .getGnb))
+        case 2 :
+            if self.hasAuthority == false{
+                self.pageDataProviderModel.requestProgress(q: .init(type: .getPreview(self.synopsisModel?.epsdRsluId,  self.pairing.hostDevice )))
+            }
+            else {
+                self.pageDataProviderModel.requestProgress(q: .init(type: .getPlay(self.synopsisModel?.epsdRsluId,  self.pairing.hostDevice )))
+                
+            }
+            self.progressCompleted = true
         //case 3 : self.pageDataProviderModel.requestProgress(q: .init(type: .getGnb))
         default : do{}
         }
@@ -186,6 +208,7 @@ struct PageSynopsis: PageView {
                     return
                 }
                 self.setupGatewaySynopsis(data)
+                
             case 1 :
                 guard let data = res.data as? Synopsis else {
                     PageLog.d("error Synopsis", tag: self.tag)
@@ -193,15 +216,47 @@ struct PageSynopsis: PageView {
                     return
                 }
                 self.setupSynopsis(data)
+                
             default : do{}
             }
             
         case 1 :
-            guard let data = res.data as? DirectView else {
-                self.progressError = true
-                return
+            guard let model = self.synopsisModel else {return}
+            if self.isPairing == true {
+                guard let data = res.data as? DirectView else {
+                    PageLog.d("error DirectView", tag: self.tag)
+                    self.progressError = true
+                    return
+                }
+                self.setupDirectView(data)
+                
+            } else if model.hasExamPreview {
+                guard let data = res.data as? Preview else {
+                    PageLog.d("error Preview", tag: self.tag)
+                    self.progressError = true
+                    return
+                }
+                self.setupPreview(data)
+                
             }
-            self.setupDirectView(data)
+        case 2 :
+            if self.hasAuthority == false{
+                guard let data = res.data as? Preview else {
+                    PageLog.d("error Preview", tag: self.tag)
+                    self.progressError = true
+                    return
+                }
+                self.setupPreview(data)
+                
+            }else{
+                guard let data = res.data as? Play else {
+                    PageLog.d("error Play", tag: self.tag)
+                    self.progressError = true
+                    return
+                }
+                self.setupPlay(data)
+                
+            }
         default : do{}
         }
     }
@@ -236,6 +291,7 @@ struct PageSynopsis: PageView {
                         isPairing: self.isPairing)
                 self.hasAuthority = false
             }
+            if let kidYn = self.synopsisModel?.kids_yn {self.synopsisData?.kidZone = kidYn }
             
         } else {
             self.progressError = true
@@ -246,10 +302,12 @@ struct PageSynopsis: PageView {
     }
     
     private func setupGatewaySynopsis (_ data:GatewaySynopsis){
+        
         PageLog.d("setupGatewaySynopsis", tag: self.tag)
     }
     
     private func setupDirectView (_ data:DirectView){
+
         PageLog.d("setupDirectView", tag: self.tag)
         self.synopsisModel?.setData(directViewdata: data)
         self.isBookmark = self.synopsisModel?.isBookmark
@@ -261,6 +319,32 @@ struct PageSynopsis: PageView {
             self.hasAuthority = curSynopsisItem.hasAuthority
         }
     }
+    private func setupPreview (_ data:Preview){
+        if data.result != ApiCode.success {
+            PageLog.d("fail PreviewInfo", tag: self.tag)
+            return
+        }
+        guard let dataInfo = data.ResSCSProduct013CtsInfo else {
+            PageLog.d("error PreviewInfo", tag: self.tag)
+            return
+        }
+        PageLog.d("setupPreview", tag: self.tag)
+        
+    }
+    
+    private func setupPlay (_ data:Play){
+        if data.result != ApiCode.success {
+            PageLog.d("fail Play", tag: self.tag)
+            return
+        }
+        guard let dataInfo = data.CTS_INFO else {
+            PageLog.d("error PlayInfo", tag: self.tag)
+            return
+        }
+        PageLog.d("setupPlay", tag: self.tag)
+        
+    }
+
 
 }
 

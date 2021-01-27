@@ -44,6 +44,19 @@ class PosterData:InfinityData{
         return self
     }
     
+    func setData(data:WatchItem, cardType:Block.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
+        setCardType(cardType)
+        title = data.title
+        if let poster = data.thumbnail {
+            image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
+        }
+        index = idx
+        synopsisData = .init(
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "", kidZone:nil)
+        return self
+    }
+    
     private func setCardType(_ cardType:Block.CardType){
         switch cardType {
         case .bigPoster: type = .big

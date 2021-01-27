@@ -90,6 +90,8 @@ extension Asset{
         public static let profileEdit = "icMyProfileEdit"
         public static let alert = "icChannelAlert"
         
+        public static let thumbPlay = "icThumPlay"
+        
     }
     
     struct shape {

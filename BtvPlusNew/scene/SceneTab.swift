@@ -86,6 +86,11 @@ struct SceneTab: PageComponent{
                     self.updateBottomPos()
                 }
             }
+            .onReceive (self.pageSceneObserver.$useTopFix) { use in
+                guard let use = use else {return}
+                self.pageSceneObserver.useTop = use
+            }
+            
             .onReceive (self.pageSceneObserver.$useTop) { use in
                 withAnimation{
                     self.useTop = use

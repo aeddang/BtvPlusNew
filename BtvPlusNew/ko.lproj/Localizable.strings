@@ -26,6 +26,8 @@
 "month" = "월";
 "year" = "년";
 
+"cash" = "원";
+
 "certificationNumber" = "인증번호";
 "certificationNumberHolder" = "000000";
 "macAdress" = "MAC 주소";
@@ -134,7 +136,7 @@
 "alertBC" = "결방 회차";
 "alertBCtext" = "본 회차는 방송사의 사정으로 결방되었습니다.\n고객님의 양해를 부탁드립니다.";
 "alertBS" = "서비스 중지";
-
+"alertBStext" = "서비스 중지로 인해 시청 불가한 상품입니다.";
 
 /*
  PageTitle
@@ -214,10 +216,12 @@
 */
 "synopsisOnlyBtvFree" = "B tv에서 무료 시청 가능";
 "synopsisOnlyBtv" = "B tv에서 구매/시청 가능";
+"synopsisWatchOnlyBtv" = "B tv에서만 시청 가능";
 "synopsisOnlyPurchasBtv" = "B tv에서 구매 시 시청 가능";
 "synopsisTerminationBtv" = "B tv 해지 후 시청 불가 콘텐츠";
 "synopsisFreeWatch" = "무료 시청 가능";
 "synopsisFreeWatchBtv" = "B tv 연결 후 시청 가능";
 "synopsisFreeWatchMonthly" = "월정액 가입 시 무료로 이용하실 수 있어요!";
 "synopsisWatchPeriod" = "이용 기간 동안 시청 가능";
+"synopsisWatchRent" = "대여 기간 내 시청 가능";
 "synopsisWatchPossn" = "B tv 해지 전 무제한 시청 가능";

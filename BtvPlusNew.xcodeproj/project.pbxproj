@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		310D7E2425A42B72000BE173 /* PagePairingDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310D7E2325A42B72000BE173 /* PagePairingDevice.swift */; };
 		310D7E2C25A42D05000BE173 /* StbList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310D7E2B25A42D05000BE173 /* StbList.swift */; };
+		310F6FAC25C0FE53005718B0 /* Watch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F6FAB25C0FE53005718B0 /* Watch.swift */; };
+		310F6FB225C1267D005718B0 /* Scs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F6FB125C1267D005718B0 /* Scs.swift */; };
+		310F6FBA25C13AE8005718B0 /* Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F6FB925C13AE8005718B0 /* Preview.swift */; };
+		310F6FBF25C167EC005718B0 /* ScsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F6FBE25C167EC005718B0 /* ScsModel.swift */; };
+		310F6FC725C16916005718B0 /* Play.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F6FC625C16916005718B0 /* Play.swift */; };
 		314C7ECB25ABC32200C489FC /* Hello.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314C7ECA25ABC32200C489FC /* Hello.swift */; };
 		314C7EE125AC13C600C489FC /* HostDeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */; };
 		314D588225B64EB6007BCA34 /* PairingBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D588125B64EB6007BCA34 /* PairingBlock.swift */; };
@@ -233,6 +238,11 @@
 		01E5590AFE81BD86D6657D56 /* Pods-BtvPlusNew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BtvPlusNew.release.xcconfig"; path = "Target Support Files/Pods-BtvPlusNew/Pods-BtvPlusNew.release.xcconfig"; sourceTree = "<group>"; };
 		310D7E2325A42B72000BE173 /* PagePairingDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePairingDevice.swift; sourceTree = "<group>"; };
 		310D7E2B25A42D05000BE173 /* StbList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StbList.swift; sourceTree = "<group>"; };
+		310F6FAB25C0FE53005718B0 /* Watch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Watch.swift; sourceTree = "<group>"; };
+		310F6FB125C1267D005718B0 /* Scs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scs.swift; sourceTree = "<group>"; };
+		310F6FB925C13AE8005718B0 /* Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preview.swift; sourceTree = "<group>"; };
+		310F6FBE25C167EC005718B0 /* ScsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScsModel.swift; sourceTree = "<group>"; };
+		310F6FC625C16916005718B0 /* Play.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Play.swift; sourceTree = "<group>"; };
 		314C7ECA25ABC32200C489FC /* Hello.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hello.swift; sourceTree = "<group>"; };
 		314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostDeviceInfo.swift; sourceTree = "<group>"; };
 		314D588125B64EB6007BCA34 /* PairingBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingBlock.swift; sourceTree = "<group>"; };
@@ -493,6 +503,25 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		310F6FB025C1266C005718B0 /* scs */ = {
+			isa = PBXGroup;
+			children = (
+				310F6FB825C13AB8005718B0 /* model */,
+				310F6FB125C1267D005718B0 /* Scs.swift */,
+			);
+			path = scs;
+			sourceTree = "<group>";
+		};
+		310F6FB825C13AB8005718B0 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				310F6FB925C13AE8005718B0 /* Preview.swift */,
+				310F6FBE25C167EC005718B0 /* ScsModel.swift */,
+				310F6FC625C16916005718B0 /* Play.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
 		314D738825B4F88A00907118 /* synopsis */ = {
 			isa = PBXGroup;
 			children = (
@@ -572,6 +601,7 @@
 				D56C5FE725930060009AE769 /* BookMark.swift */,
 				315544CE25B83F8C00086510 /* UpdateBookMark.swift */,
 				31626F0025B9151E00F4031D /* DirectView.swift */,
+				310F6FAB25C0FE53005718B0 /* Watch.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -1212,6 +1242,7 @@
 		D56C6B25257DACD800CF9AB8 /* rest  */ = {
 			isa = PBXGroup;
 			children = (
+				310F6FB025C1266C005718B0 /* scs */,
 				31626ED525B8E9FB00F4031D /* smd */,
 				3159B04E25B1700B008CA85B /* kms */,
 				315B55D025A7E24700B5B351 /* nps */,
@@ -1567,6 +1598,7 @@
 				D56C69B4257DA09E00CF9AB8 /* KeyboardObserver.swift in Sources */,
 				D56C69A1257DA09E00CF9AB8 /* PageProtocol.swift in Sources */,
 				D56C6A4E257DA0C700CF9AB8 /* ImageView.swift in Sources */,
+				310F6FBA25C13AE8005718B0 /* Preview.swift in Sources */,
 				D56C6B37257DACD800CF9AB8 /* ApiManager.swift in Sources */,
 				D56C6A54257DA0C700CF9AB8 /* RectButton.swift in Sources */,
 				314D588225B64EB6007BCA34 /* PairingBlock.swift in Sources */,
@@ -1585,6 +1617,7 @@
 				D56C6A5C257DA0C700CF9AB8 /* StrokeRectButton.swift in Sources */,
 				315B55E725A84B0900B5B351 /* DevicePairing.swift in Sources */,
 				D56C69A3257DA09E00CF9AB8 /* Log.swift in Sources */,
+				310F6FB225C1267D005718B0 /* Scs.swift in Sources */,
 				D56C6A4A257DA0C700CF9AB8 /* Swipper.swift in Sources */,
 				31626EF125B9092400F4031D /* PurchasModel.swift in Sources */,
 				D56C6A5B257DA0C700CF9AB8 /* CheckBox.swift in Sources */,
@@ -1606,6 +1639,7 @@
 				314F816025BE30AA00E76508 /* PurchasViewer.swift in Sources */,
 				D56C6A60257DA0C700CF9AB8 /* InputAccssory.swift in Sources */,
 				3159B05025B17B0B008CA85B /* Kms.swift in Sources */,
+				310F6FC725C16916005718B0 /* Play.swift in Sources */,
 				315544CF25B83F8C00086510 /* UpdateBookMark.swift in Sources */,
 				D568892E259C592000F2F67A /* PagePairingSetupUser.swift in Sources */,
 				310D7E2C25A42D05000BE173 /* StbList.swift in Sources */,
@@ -1670,6 +1704,7 @@
 				D56C6A26257DA0C600CF9AB8 /* dimens.swift in Sources */,
 				314D738A25B4F8B100907118 /* PageSynopsis.swift in Sources */,
 				D56C69AB257DA09E00CF9AB8 /* Resource.swift in Sources */,
+				310F6FAC25C0FE53005718B0 /* Watch.swift in Sources */,
 				D56C6B33257DACD800CF9AB8 /* SettingStorage.swift in Sources */,
 				314C7ECB25ABC32200C489FC /* Hello.swift in Sources */,
 				D5DC4776258219CF007EDD86 /* GridEvent.swift in Sources */,
@@ -1729,6 +1764,7 @@
 				314D73BA25B54FD900907118 /* BookMarkButton.swift in Sources */,
 				D56C6A48257DA0C700CF9AB8 /* RoundRectMask.swift in Sources */,
 				D56C699D257DA09E00CF9AB8 /* PageSceneDelegate.swift in Sources */,
+				310F6FBF25C167EC005718B0 /* ScsModel.swift in Sources */,
 				D50AB8ED257F311800649C4A /* SystemEnvironment.swift in Sources */,
 				314D73A225B509B200907118 /* RatingInfo.swift in Sources */,
 				314D73AC25B5276700907118 /* SelectButton.swift in Sources */,

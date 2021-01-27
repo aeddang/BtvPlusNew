@@ -14,6 +14,7 @@ class VideoData:InfinityData{
     private(set) var subTitle: String? = nil
     private(set) var count: String = "0"
     private(set) var type:VideoType = .nomal
+    private(set) var progress:Float? = nil
     private(set) var synopsisData:SynopsisData? = nil
     
     func setData(data:ContentItem, cardType:Block.CardType = .video, idx:Int = -1) -> VideoData {
@@ -44,6 +45,24 @@ class VideoData:InfinityData{
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:data.yn_kzone)
         return self
     }
+    
+    func setData(data:WatchItem, cardType:Block.CardType = .video, idx:Int = -1) -> VideoData {
+        setCardType(cardType)
+        if let rt = data.watch_rt?.toInt() {
+            self.progress = Float(rt) / 100.0
+        }
+        title = data.title
+        if let thumb = data.thumbnail {
+            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.thumb.size)
+        }
+        index = idx
+        synopsisData = .init(
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
+        return self
+    }
+    
+   
     
     
     private func setCardType(_ cardType:Block.CardType){
@@ -107,9 +126,23 @@ struct VideoItem: PageView {
             ZStack{
                 ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg16_9)
                     .modifier(MatchParent())
-                if self.data.subTitle != nil {
-                    Text(self.data.subTitle!)
-                        .modifier(MediumTextStyle(size: Font.size.thin, color: Color.app.grey))
+                if self.data.progress != nil {
+                    Image(Asset.icon.thumbPlay)
+                        .renderingMode(.original).resizable()
+                        .scaledToFit()
+                        .frame(width: Dimen.icon.regularExtra, height: Dimen.icon.regularExtra)
+                }
+                VStack(spacing:0){
+                    HStack(spacing:0){
+                        
+                    }
+                    Spacer()
+                    if self.data.progress != nil {
+                        Spacer().frame(
+                            width: ListItem.thumb.size.width * CGFloat(self.data.progress!),
+                            height: Dimen.line.regular)
+                            .background(Color.brand.primary)
+                    }
                 }
             }
             .frame(

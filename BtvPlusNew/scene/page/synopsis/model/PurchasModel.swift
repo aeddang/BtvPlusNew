@@ -24,7 +24,7 @@ class PurchasModel {
         sale_prc_vat = product.sale_prc_vat ?? 0
         sale_prc = product.sale_prc ?? 0
         isFree = sale_prc_vat == 0
-        ppm_prd_nm = ""
+        ppm_prd_nm = nil
         ppm_prd_typ_cd = ""
         isUse =  product.use_yn?.toBool() ?? false
         isPossn =  product.possn_yn?.toBool() ?? false
@@ -36,6 +36,7 @@ class PurchasModel {
         prdTypCd = PrdTypCd(rawValue: prd_typ_cd) ?? .none //isFree, psson_yn  사용중이라 뒤에 호출
         poc_det_typ_cd_list =  product.poc_det_typ_cd_list
         sale_tgt_fg_yn =  product.sale_tgt_fg_yn
+        self.setupProductRank()
          
     }
     init(purchas: PurchasItem){
@@ -54,7 +55,7 @@ class PurchasModel {
         prd_prc_vat = purchas.prd_prc_vat ?? 0
         sale_prc_vat = purchas.sale_prc_vat ?? 0
         isFree = sale_prc_vat == 0
-        ppm_prd_nm = purchas.ppm_prd_nm ?? ""
+        ppm_prd_nm = purchas.ppm_prd_nm 
         ppmPrdTypCd = PpmPrdTypCd(rawValue: ppm_prd_typ_cd) ?? .none
         isUse =  purchas.use_yn?.toBool() ?? false
         isPossn =  purchas.possn_yn?.toBool() ?? false
@@ -66,6 +67,7 @@ class PurchasModel {
         prdTypCd = PrdTypCd(rawValue: prd_typ_cd) ?? .none //isFree, psson_yn  사용중이라 뒤에 호출
         poc_det_typ_cd_list =  purchas.poc_det_typ_cd_list
         sale_tgt_fg_yn =  purchas.sale_tgt_fg_yn
+        self.setupProductRank()
     }
     
     func setupSynopsis(_ contents:SynopsisContentsItem, idx:Int){
@@ -111,30 +113,31 @@ class PurchasModel {
     //구매했을 때 노출 우선순위
     //월정액, 기간권(0) > 소장(3) > 무료(4) > 대여(시리즈, 5)
     // metv 월정액/기간권.
-    var purchaseProductRank: Int = 999
-    var prdTypCd: PrdTypCd = .none {
-        didSet {
-            switch prdTypCd {
-            case .vodppm, .vodppmterm, .cbvodppm, .relvodppm:
-            purchaseProductRank = 10
-            default:
-                if isPossn {
-                   purchaseProductRank = 30
-                   if prdTypCd == .ppv {
-                       purchaseProductRank += 5
-                   }
-               } else if isFree {
-                   purchaseProductRank = 40
-                   //대여
-               } else {
-                   purchaseProductRank = 50
-                   if prdTypCd == .ppv {
-                       purchaseProductRank += 5
-                   }
+    private(set) var prdTypCd: PrdTypCd = .none
+    private(set) var purchaseProductRank: Int = 999
+    private func setupProductRank(){
+        switch prdTypCd {
+        case .vodppm, .vodppmterm, .cbvodppm, .relvodppm:
+        purchaseProductRank = 10
+        default:
+            if isPossn {
+               purchaseProductRank = 30
+               if prdTypCd == .ppv {
+                   purchaseProductRank += 5
                }
-            }
+           } else if isFree {
+               purchaseProductRank = 40
+               //대여
+           } else {
+               purchaseProductRank = 50
+               if prdTypCd == .ppv {
+                   purchaseProductRank += 5
+               }
+           }
         }
     }
+    
+    
     
     var purRank: Int { self.isDirectview ? 50 : 0 }
     var purStateText: String {
@@ -165,8 +168,12 @@ class PurchasModel {
     var pssonRank: Int { isPossn ? 20 : 10 }
     var isRentPeriod: Bool { period != -1 || period_hour != -1 || period_min != -1 }
     var purcWatDDay: String { purc_wat_dd_cnt.description + purcWatDdFgCd.name }
-    var salePrice: Double { self.sale_prc_vat }
+    var salePrice: String {
+        let price  = self.sale_prc_vat
+        return price.currency + String.app.cash
+    }
     var hasAuthority: Bool { self.isFree || self.isDirectview }
+    
     
     private(set) var ppmPrdTypCd: PpmPrdTypCd = .none
     private(set) var rsluTypCd: RsluTypCd = .none
@@ -195,7 +202,7 @@ class PurchasModel {
     private(set) var prd_prc_vat: Double = 0
     private(set) var sale_prc_vat: Double = 0
     private(set) var sale_prc: Double = 0
-    private(set) var ppm_prd_nm: String = "0"
+    private(set) var ppm_prd_nm: String? = nil
     private(set) var ppm_prd_typ_cd: String = "0"
     private(set) var period: Int = -1
     private(set) var period_hour: Int = -1
@@ -216,7 +223,7 @@ class PurchasModel {
         msg.append("타입: \(prd_typ_cd) (\(prdType)) id:(\(prd_prc_id))")
         msg.append(", epsdId: \(epsd_id)")
         msg.append(", 화질: \(rsluTypCd)")
-        msg.append(", 월정액: \(ppm_prd_nm)")
+        msg.append(", 월정액: \(ppm_prd_nm ?? "")")
         msg.append(", 구매순위: \(purc_pref_rank)")
         msg.append(", 가격: \(sale_prc)")
         msg.append(", 가격(vat): \(sale_prc_vat)")
@@ -226,6 +233,8 @@ class PurchasModel {
         msg.append(", \(purSubstateText)")
         msg.append(", 판매기간: \(startDate)~\(endDate)")
         msg.append(", 판매중: \(isSalesPeriod.description)")
+        msg.append(", 옵션: \(purStateText)")
+        
         return msg
     }
 }

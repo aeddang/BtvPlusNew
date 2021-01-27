@@ -45,6 +45,14 @@ struct Select<Presenting>: View where Presenting: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
+            Button(action: {
+                withAnimation{
+                    self.isShowing = false
+                }
+            }) {
+               Spacer().modifier(MatchParent())
+                   .background(Color.transparent.black70)
+            }
             VStack{
                 Spacer()
                 VStack (alignment: .leading, spacing:0){
@@ -73,12 +81,10 @@ struct Select<Presenting>: View where Presenting: View {
                 }
                 .padding(.top, Dimen.margin.mediumExtra)
                 .background(Color.app.blue)
-                .transition(.slide)
-                Spacer()
             }
-            .background(Color.transparent.black70)
-            .opacity(self.isShowing ? 1 : 0)
         }
+        //.transition(.slide)
+        .opacity(self.isShowing ? 1 : 0)
         .padding(.bottom, self.safeAreaBottom)
         .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
             //if self.editType == .nickName {return}

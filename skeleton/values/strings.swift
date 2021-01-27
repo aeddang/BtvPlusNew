@@ -35,6 +35,7 @@ extension String {
         public static let week = "week".loaalized()
         public static let month = "month".loaalized()
         public static let year = "year".loaalized()
+        public static let cash = "cash".loaalized()
       
         public static let certificationNumber = "certificationNumber".loaalized()
         public static let certificationNumberHolder = "certificationNumberHolder".loaalized()
@@ -199,11 +200,13 @@ extension String {
         
         public static let synopsisOnlyBtvFree = "synopsisOnlyBtvFree".loaalized()
         public static let synopsisOnlyBtv = "synopsisOnlyBtv".loaalized()
+        public static let synopsisWatchOnlyBtv = "synopsisWatchOnlyBtv".loaalized()
         public static let synopsisOnlyPurchasBtv = "synopsisOnlyPurchasBtv".loaalized()
         public static let synopsisTerminationBtv = "synopsisTerminationBtv".loaalized()
         public static let synopsisFreeWatch = "synopsisFreeWatch".loaalized()
         public static let synopsisFreeWatchBtv = "synopsisFreeWatchBtv".loaalized()
         public static let synopsisFreeWatchMonthly = "synopsisFreeWatchMonthly".loaalized()
+        public static let synopsisWatchRent = "synopsisWatchRent".loaalized()
         public static let synopsisWatchPeriod = "synopsisWatchPeriod".loaalized()
         public static let synopsisWatchPossn = "synopsisWatchPossn".loaalized()
     }

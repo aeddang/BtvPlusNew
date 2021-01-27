@@ -39,9 +39,8 @@ struct FunctionViewer: PageComponent{
                     id:""
                 )
             }
-            .padding(.vertical, Dimen.margin.regular)
-            Spacer().modifier(LineHorizontal())
-            
+            .padding(.top, Dimen.margin.regular)
+    
         }
         .modifier(ContentHorizontalEdges())
         .onAppear{

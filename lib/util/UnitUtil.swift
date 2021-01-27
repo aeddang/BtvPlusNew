@@ -253,6 +253,7 @@ extension Formatter {
 extension Formatter {
     static let number = NumberFormatter()
 }
+
 extension Locale {
     static let englishUS: Locale = .init(identifier: "en_US")
     static let frenchFR: Locale = .init(identifier: "fr_FR")

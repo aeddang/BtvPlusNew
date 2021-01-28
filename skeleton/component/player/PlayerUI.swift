@@ -34,6 +34,10 @@ struct PlayerUI: PageComponent {
             }
             
             VStack{
+                HStack{
+                    Spacer()
+                    CPAirPlayButton().frame(width: Dimen.icon.medium, height: Dimen.icon.medium)
+                }
                 Spacer()
                 ProgressSlider(progress: self.$progress, onEditingChanged:{
                     pct in
@@ -101,6 +105,7 @@ struct PlayerUI: PageComponent {
                 case .pip(let msg): self.errorMessage = msg
                 case .playback(let msg): self.errorMessage = msg
                 case .unknown(let msg): self.errorMessage = msg
+                case .certification(let msg): self.errorMessage = msg
                 }
             }
            

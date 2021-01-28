@@ -55,8 +55,23 @@ open class PlayerModel: ComponentObservable {
 }
 
 enum PlayerUIEvent {//input
-    case togglePlay, resume, pause, load(String, Bool = true, Double = 0.0), stop, volume(Float),
-    seekTime(Double, Bool = true), seekProgress(Float, Bool = true), seekMove(Double, Bool = true)
+    case togglePlay, resume, pause, load(String, Bool = true, Double = 0.0, Dictionary<String,String>? = nil), stop, volume(Float),
+    seekTime(Double, Bool = true), seekProgress(Float, Bool = true), seekMove(Double, Bool = true), check
+    
+    var decription: String {
+        switch self {
+        case .togglePlay: return "togglePlay"
+        case .resume: return "resume"
+        case .pause: return "pause"
+        case .load: return "load"
+        case .stop: return "stop"
+        case .volume: return "volume"
+        case .seekTime: return "seekTime"
+        case .seekProgress: return "seekProgress"
+        case .seekMove: return "seekMove"
+        default: return ""
+        }
+    }
 }
 
 enum PlayerStreamEvent {//output
@@ -75,14 +90,15 @@ enum PlayerError{
     case connect(String), stream(PlayerStreamError), illegalState(PlayerUIEvent)
 }
 enum PlayerStreamError{
-    case playback(String), unknown(String), pip(String)
-    
+    case playback(String), unknown(String), pip(String), certification(String)
     func getDescription() -> String {
         switch self {
         case .pip(let s):
             return "PlayerStreamError pip " + s
         case .playback(let s):
             return "PlayerStreamError playback " + s
+        case .certification(let s):
+            return "PlayerStreamError certification " + s
         case .unknown(let s):
             return "PlayerStreamError unknown " + s
         }

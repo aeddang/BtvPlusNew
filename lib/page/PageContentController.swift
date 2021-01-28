@@ -36,6 +36,7 @@ struct PageContentController: View{
             return pageControllerObservable.popups.last
         }
     }
+    
     var prevView:PageViewProtocol?{
         get{
             if pageControllerObservable.popups.count <= 1 { return currnetPage }

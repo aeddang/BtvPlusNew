@@ -33,6 +33,7 @@ class Repository:ObservableObject, PageProtocol{
     private let pairingManager:PairingManager
     private let apiManager:ApiManager
     private var anyCancellable = Set<AnyCancellable>()
+    private let drmAgent = DrmAgent.initialize() as? DrmAgent
     
     init(
         dataProvider:DataProvider? = nil,
@@ -60,6 +61,10 @@ class Repository:ObservableObject, PageProtocol{
         self.setupDataProvider()
         self.setupSetting()
         self.setupPairing()
+    }
+    
+    deinit {
+        self.drmAgent?.terminate()
     }
     
     private func setupPairing(){
@@ -235,6 +240,10 @@ class Repository:ObservableObject, PageProtocol{
     
     func registerPushToken(_ token:String) {
         self.setting.retryPushToken = token
+    }
+    
+    func getDrmId() -> String? {
+        return drmAgent?.getDeviceInfo()
     }
     
 }

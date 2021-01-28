@@ -18,7 +18,7 @@ struct PageSynopsis: PageView {
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var pageDataProviderModel:PageDataProviderModel = PageDataProviderModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
-    
+    @ObservedObject var playerModel: BtvPlayerModel = BtvPlayerModel()
     @State var isPairing:Bool? = nil
     @State var hasAuthority:Bool? = nil
     @State var synopsisData:SynopsisData? = nil
@@ -33,8 +33,10 @@ struct PageSynopsis: PageView {
                     axis:.horizontal
                 ) {
                     VStack(spacing:0){
-                        Image(Asset.noImg16_9)
+                        BtvPlayer(viewModel:self.playerModel, pageObservable:self.pageObservable)
                             .modifier(Ratio16_9(geometry:geometry))
+                            .padding(.top, sceneObserver.safeAreaTop)
+                        
                         InfinityScrollView( viewModel: self.infinityScrollModel ){
                             VStack(alignment:.leading , spacing:0) {
                                 if self.episodeViewerData != nil {
@@ -121,6 +123,7 @@ struct PageSynopsis: PageView {
                 self.synopsisData = obj.getParamValue(key: .data) as? SynopsisData
             }
             
+            
         }//geo
     }//body
     
@@ -134,7 +137,7 @@ struct PageSynopsis: PageView {
     @State var srisId:String? = nil
     @State var srisCount:String? = nil
     @State var isBookmark:Bool? = nil
-    
+    @State var epsdRsluId:String = ""
     func initPage(){
         if self.pageObservable.status == .initate { return }
         self.isPairing = self.pairing.status == .pairing
@@ -173,11 +176,12 @@ struct PageSynopsis: PageView {
                 .init(type: .getSynopsis(data))
             ])
         case 1 :
+            
             guard let model = self.synopsisModel else {return}
             if self.isPairing == true {
                 self.pageDataProviderModel.requestProgress(q: .init(type: .getDirectView(model)))
             } else if model.hasExamPreview{
-                self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.synopsisModel?.epsdRsluId,  true )))
+                self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.epsdRsluId,  true )))
                 self.progressCompleted = true
             } else{
                 PageLog.d("no preview", tag: self.tag)
@@ -185,10 +189,10 @@ struct PageSynopsis: PageView {
             }
         case 2 :
             if self.hasAuthority == false{
-                self.pageDataProviderModel.requestProgress(q: .init(type: .getPreview(self.synopsisModel?.epsdRsluId,  self.pairing.hostDevice )))
+                self.pageDataProviderModel.requestProgress(q: .init(type: .getPreview(self.epsdRsluId,  self.pairing.hostDevice )))
             }
             else {
-                self.pageDataProviderModel.requestProgress(q: .init(type: .getPlay(self.synopsisModel?.epsdRsluId,  self.pairing.hostDevice )))
+                self.pageDataProviderModel.requestProgress(q: .init(type: .getPlay(self.epsdRsluId,  self.pairing.hostDevice )))
                 
             }
             self.progressCompleted = true
@@ -292,13 +296,12 @@ struct PageSynopsis: PageView {
                 self.hasAuthority = false
             }
             if let kidYn = self.synopsisModel?.kids_yn {self.synopsisData?.kidZone = kidYn }
+            self.epsdRsluId = self.synopsisModel?.epsdRsluId ?? ""
             
         } else {
             self.progressError = true
             PageLog.d("setupSynopsis error", tag: self.tag)
         }
-        
-        
     }
     
     private func setupGatewaySynopsis (_ data:GatewaySynopsis){
@@ -324,12 +327,12 @@ struct PageSynopsis: PageView {
             PageLog.d("fail PreviewInfo", tag: self.tag)
             return
         }
-        guard let dataInfo = data.ResSCSProduct013CtsInfo else {
+        guard let dataInfo = data.CTS_INFO else {
             PageLog.d("error PreviewInfo", tag: self.tag)
             return
         }
         PageLog.d("setupPreview", tag: self.tag)
-        
+        self.playerModel.setData(data: dataInfo, type: .preview(self.epsdRsluId))
     }
     
     private func setupPlay (_ data:Play){
@@ -341,7 +344,7 @@ struct PageSynopsis: PageView {
             PageLog.d("error PlayInfo", tag: self.tag)
             return
         }
-        PageLog.d("setupPlay", tag: self.tag)
+        self.playerModel.setData(data: dataInfo, type: .vod(self.epsdRsluId, self.episodeViewerData?.episodeTitle))
         
     }
 

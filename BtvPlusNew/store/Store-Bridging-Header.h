@@ -3,4 +3,5 @@
 //
 
 #import "mdnsServiceProxyClientIOS.h"
+#import "DrmAgent.h"
 #import "ApiUtil.h"

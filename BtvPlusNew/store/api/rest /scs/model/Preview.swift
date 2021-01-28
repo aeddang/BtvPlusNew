@@ -16,10 +16,9 @@ struct Preview : Decodable {
     private(set) var sris_id: String?     // 시리즈 ID
     private(set) var STB_ID: String?  // STB ID
     private(set) var CUR_TIME: String?    // H/E DB 서버 시간
-    private(set) var ResSCSProduct013CtsInfo:PlayInfo?   // 컨텐츠 정보
+    private(set) var CTS_INFO:PlayInfo?   // 컨텐츠 정보
     private(set) var verf_res_data: String?     // @end
 }
-
 
 
 

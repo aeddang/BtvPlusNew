@@ -7,15 +7,15 @@ let testPath2 = "http://techslides.com/demos/sample-videos/small.mp4"
 
 
 struct CPPlayer: PageComponent {
-
     @ObservedObject var viewModel:PlayerModel = PlayerModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     
     private let TAG = "ComponentPlayer"
     var body: some View {
         ZStack{
-            CustomPlayer( viewModel : self.viewModel)
+            CustomAVPlayer( viewModel : self.viewModel)
             PlayerUI(viewModel : self.viewModel, pageObservable:self.pageObservable)
+           
         }
         .background(Color.black)
     }

@@ -50,6 +50,10 @@
 		31626EF125B9092400F4031D /* PurchasModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31626EF025B9092400F4031D /* PurchasModel.swift */; };
 		31626EF925B9093300F4031D /* SynopsisModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31626EF825B9093300F4031D /* SynopsisModel.swift */; };
 		31626F0125B9151E00F4031D /* DirectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31626F0025B9151E00F4031D /* DirectView.swift */; };
+		316DF2D125C29EC500915B27 /* CustomAVPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316DF2D025C29EC500915B27 /* CustomAVPlayer.swift */; };
+		316DF2DF25C2AA3C00915B27 /* CPAirPlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316DF2DE25C2AA3C00915B27 /* CPAirPlayButton.swift */; };
+		3180855825C2287300AE4A73 /* BtvPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3180855725C2287300AE4A73 /* BtvPlayer.swift */; };
+		3180855E25C233A900AE4A73 /* libPoCDrmAgent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */; };
 		3192317225A3FDBE00020388 /* coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192317125A3FDBE00020388 /* coordinator.swift */; };
 		3192318025A40A7D00020388 /* ReflashSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192317F25A40A7D00020388 /* ReflashSpinner.swift */; };
 		31E3974225B5906E00CE6E21 /* RatingPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E3974125B5906E00CE6E21 /* RatingPoint.swift */; };
@@ -134,7 +138,6 @@
 		D56C6A37257DA0C700CF9AB8 /* CPCircularNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56C69DE257DA0C600CF9AB8 /* CPCircularNavigation.swift */; };
 		D56C6A38257DA0C700CF9AB8 /* ImageItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56C69E0257DA0C600CF9AB8 /* ImageItem.swift */; };
 		D56C6A3E257DA0C700CF9AB8 /* CPPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56C69EA257DA0C600CF9AB8 /* CPPlayer.swift */; };
-		D56C6A3F257DA0C700CF9AB8 /* CustomPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56C69EB257DA0C600CF9AB8 /* CustomPlayer.swift */; };
 		D56C6A40257DA0C700CF9AB8 /* PlayerUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56C69EC257DA0C600CF9AB8 /* PlayerUI.swift */; };
 		D56C6A41257DA0C700CF9AB8 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56C69ED257DA0C600CF9AB8 /* Player.swift */; };
 		D56C6A42257DA0C700CF9AB8 /* CustomToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56C69EF257DA0C600CF9AB8 /* CustomToggleStyle.swift */; };
@@ -281,6 +284,11 @@
 		31626EF025B9092400F4031D /* PurchasModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchasModel.swift; sourceTree = "<group>"; };
 		31626EF825B9093300F4031D /* SynopsisModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisModel.swift; sourceTree = "<group>"; };
 		31626F0025B9151E00F4031D /* DirectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectView.swift; sourceTree = "<group>"; };
+		316DF2D025C29EC500915B27 /* CustomAVPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAVPlayer.swift; sourceTree = "<group>"; };
+		316DF2DE25C2AA3C00915B27 /* CPAirPlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPAirPlayButton.swift; sourceTree = "<group>"; };
+		3180855725C2287300AE4A73 /* BtvPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtvPlayer.swift; sourceTree = "<group>"; };
+		3180855C25C233A900AE4A73 /* DrmAgent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrmAgent.h; sourceTree = "<group>"; };
+		3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPoCDrmAgent.a; sourceTree = "<group>"; };
 		3192317125A3FDBE00020388 /* coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = coordinator.swift; sourceTree = "<group>"; };
 		3192317F25A40A7D00020388 /* ReflashSpinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflashSpinner.swift; sourceTree = "<group>"; };
 		31E3974125B5906E00CE6E21 /* RatingPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingPoint.swift; sourceTree = "<group>"; };
@@ -380,7 +388,6 @@
 		D56C69DE257DA0C600CF9AB8 /* CPCircularNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPCircularNavigation.swift; sourceTree = "<group>"; };
 		D56C69E0257DA0C600CF9AB8 /* ImageItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageItem.swift; sourceTree = "<group>"; };
 		D56C69EA257DA0C600CF9AB8 /* CPPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPPlayer.swift; sourceTree = "<group>"; };
-		D56C69EB257DA0C600CF9AB8 /* CustomPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomPlayer.swift; sourceTree = "<group>"; };
 		D56C69EC257DA0C600CF9AB8 /* PlayerUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerUI.swift; sourceTree = "<group>"; };
 		D56C69ED257DA0C600CF9AB8 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		D56C69EF257DA0C600CF9AB8 /* CustomToggleStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomToggleStyle.swift; sourceTree = "<group>"; };
@@ -468,6 +475,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3180855E25C233A900AE4A73 /* libPoCDrmAgent.a in Frameworks */,
 				D56C5FF025933DA9009AE769 /* libti2-mdns-service-proxy-client.a in Frameworks */,
 				D4D8529D19DCDC8D8370F889 /* Pods_BtvPlusNew.framework in Frameworks */,
 			);
@@ -515,8 +523,8 @@
 		310F6FB825C13AB8005718B0 /* model */ = {
 			isa = PBXGroup;
 			children = (
-				310F6FB925C13AE8005718B0 /* Preview.swift */,
 				310F6FBE25C167EC005718B0 /* ScsModel.swift */,
+				310F6FB925C13AE8005718B0 /* Preview.swift */,
 				310F6FC625C16916005718B0 /* Play.swift */,
 			);
 			path = model;
@@ -741,8 +749,10 @@
 		D56C603625933E52009AE769 /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				D56C603725933E52009AE769 /* libti2-mdns-service-proxy-client.a */,
+				3180855C25C233A900AE4A73 /* DrmAgent.h */,
+				3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */,
 				D56C603825933E52009AE769 /* mdnsServiceProxyClientIOS.h */,
+				D56C603725933E52009AE769 /* libti2-mdns-service-proxy-client.a */,
 			);
 			path = libs;
 			sourceTree = "<group>";
@@ -974,8 +984,8 @@
 		D56C69D3257DA0C600CF9AB8 /* viewpager */ = {
 			isa = PBXGroup;
 			children = (
-				D56C69D4257DA0C600CF9AB8 /* CPPageViewPager.swift */,
 				D56C69D5257DA0C600CF9AB8 /* ViewPager.swift */,
+				D56C69D4257DA0C600CF9AB8 /* CPPageViewPager.swift */,
 				D56C69D6257DA0C600CF9AB8 /* CPImageViewPager.swift */,
 			);
 			path = viewpager;
@@ -1023,7 +1033,8 @@
 			isa = PBXGroup;
 			children = (
 				D56C69EA257DA0C600CF9AB8 /* CPPlayer.swift */,
-				D56C69EB257DA0C600CF9AB8 /* CustomPlayer.swift */,
+				316DF2D025C29EC500915B27 /* CustomAVPlayer.swift */,
+				316DF2DE25C2AA3C00915B27 /* CPAirPlayButton.swift */,
 			);
 			path = avplayer;
 			sourceTree = "<group>";
@@ -1314,6 +1325,7 @@
 		D5DABD942589F1D400DF5701 /* component */ = {
 			isa = PBXGroup;
 			children = (
+				3180855725C2287300AE4A73 /* BtvPlayer.swift */,
 			);
 			path = component;
 			sourceTree = "<group>";
@@ -1610,7 +1622,10 @@
 				314D589425B685B2007BCA34 /* PagePairingManagement.swift in Sources */,
 				D57178582582D87500BF2612 /* PageHome.swift in Sources */,
 				D56C6A43257DA0C700CF9AB8 /* LayoutAlignment.swift in Sources */,
+				316DF2D125C29EC500915B27 /* CustomAVPlayer.swift in Sources */,
+				3180855825C2287300AE4A73 /* BtvPlayer.swift in Sources */,
 				D56C69B1257DA09E00CF9AB8 /* IndexMap.swift in Sources */,
+				316DF2DF25C2AA3C00915B27 /* CPAirPlayButton.swift in Sources */,
 				314C7EE125AC13C600C489FC /* HostDeviceInfo.swift in Sources */,
 				D56C6A2B257DA0C700CF9AB8 /* CustomCaptureSession.swift in Sources */,
 				315B55DC25A8026700B5B351 /* DevicePairingInfo.swift in Sources */,
@@ -1646,7 +1661,6 @@
 				D56C6A32257DA0C700CF9AB8 /* CPWebView.swift in Sources */,
 				D56CC2EF25902E6600CA1D54 /* MultiBlock.swift in Sources */,
 				D5E27EDF2586F29200B2CD5D /* ImageViewButton.swift in Sources */,
-				D56C6A3F257DA0C700CF9AB8 /* CustomPlayer.swift in Sources */,
 				3192317225A3FDBE00020388 /* coordinator.swift in Sources */,
 				D56C6A41257DA0C700CF9AB8 /* Player.swift in Sources */,
 				D5688924259C29DE00F2F67A /* SpanText.swift in Sources */,

@@ -80,7 +80,7 @@ open class CustomAVPlayerViewController: AVPlayerViewController {
 
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.viewModel.event = .stop
+        self.playerScreenView.destory()
         UIApplication.shared.endReceivingRemoteControlEvents()
         NotificationCenter.default.post(name: Notification.Name("avPlayerDidDismiss"), object: nil, userInfo: nil)
         self.resignFirstResponder()
@@ -308,9 +308,15 @@ class PlayerScreenView: UIView, PageProtocol {
     
     deinit {
         ComponentLog.d("deinit" , tag: self.tag)
+        destory()
+    }
+    func destory(){
+        ComponentLog.d("destory" , tag: self.tag)
         destoryPlayer()
         delegate = nil
+        playerController = nil
     }
+    
     
     override func layoutSubviews() {
         super.layoutSubviews()

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		31061E6625C8CF5800543FC0 /* BtvWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31061E6525C8CF5800543FC0 /* BtvWebView.swift */; };
+		31061E7725C934B600543FC0 /* PlayerEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31061E7625C934B600543FC0 /* PlayerEffect.swift */; };
 		310D7E2425A42B72000BE173 /* PagePairingDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310D7E2325A42B72000BE173 /* PagePairingDevice.swift */; };
 		310D7E2C25A42D05000BE173 /* StbList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310D7E2B25A42D05000BE173 /* StbList.swift */; };
 		310F6FAC25C0FE53005718B0 /* Watch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F6FAB25C0FE53005718B0 /* Watch.swift */; };
@@ -14,6 +16,11 @@
 		310F6FBA25C13AE8005718B0 /* Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F6FB925C13AE8005718B0 /* Preview.swift */; };
 		310F6FBF25C167EC005718B0 /* ScsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F6FBE25C167EC005718B0 /* ScsModel.swift */; };
 		310F6FC725C16916005718B0 /* Play.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F6FC625C16916005718B0 /* Play.swift */; };
+		31373F6025C7E726004353DA /* CustomYTPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31373F5A25C7E726004353DA /* CustomYTPlayer.swift */; };
+		31373F6125C7E726004353DA /* CPYTPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31373F5B25C7E726004353DA /* CPYTPlayer.swift */; };
+		31373F6225C7E726004353DA /* YTPlayerView-iframe-player.html in Resources */ = {isa = PBXBuildFile; fileRef = 31373F5D25C7E726004353DA /* YTPlayerView-iframe-player.html */; };
+		31373F6325C7E726004353DA /* YTPlayerView-iframe-playerIPAD.html in Resources */ = {isa = PBXBuildFile; fileRef = 31373F5E25C7E726004353DA /* YTPlayerView-iframe-playerIPAD.html */; };
+		31373F6425C7E726004353DA /* YTPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31373F5F25C7E726004353DA /* YTPlayerView.swift */; };
 		314C7ECB25ABC32200C489FC /* Hello.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314C7ECA25ABC32200C489FC /* Hello.swift */; };
 		314C7EE125AC13C600C489FC /* HostDeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */; };
 		314D588225B64EB6007BCA34 /* PairingBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D588125B64EB6007BCA34 /* PairingBlock.swift */; };
@@ -239,6 +246,8 @@
 
 /* Begin PBXFileReference section */
 		01E5590AFE81BD86D6657D56 /* Pods-BtvPlusNew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BtvPlusNew.release.xcconfig"; path = "Target Support Files/Pods-BtvPlusNew/Pods-BtvPlusNew.release.xcconfig"; sourceTree = "<group>"; };
+		31061E6525C8CF5800543FC0 /* BtvWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtvWebView.swift; sourceTree = "<group>"; };
+		31061E7625C934B600543FC0 /* PlayerEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerEffect.swift; sourceTree = "<group>"; };
 		310D7E2325A42B72000BE173 /* PagePairingDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePairingDevice.swift; sourceTree = "<group>"; };
 		310D7E2B25A42D05000BE173 /* StbList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StbList.swift; sourceTree = "<group>"; };
 		310F6FAB25C0FE53005718B0 /* Watch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Watch.swift; sourceTree = "<group>"; };
@@ -246,6 +255,11 @@
 		310F6FB925C13AE8005718B0 /* Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preview.swift; sourceTree = "<group>"; };
 		310F6FBE25C167EC005718B0 /* ScsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScsModel.swift; sourceTree = "<group>"; };
 		310F6FC625C16916005718B0 /* Play.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Play.swift; sourceTree = "<group>"; };
+		31373F5A25C7E726004353DA /* CustomYTPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomYTPlayer.swift; sourceTree = "<group>"; };
+		31373F5B25C7E726004353DA /* CPYTPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPYTPlayer.swift; sourceTree = "<group>"; };
+		31373F5D25C7E726004353DA /* YTPlayerView-iframe-player.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "YTPlayerView-iframe-player.html"; sourceTree = "<group>"; };
+		31373F5E25C7E726004353DA /* YTPlayerView-iframe-playerIPAD.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "YTPlayerView-iframe-playerIPAD.html"; sourceTree = "<group>"; };
+		31373F5F25C7E726004353DA /* YTPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YTPlayerView.swift; sourceTree = "<group>"; };
 		314C7ECA25ABC32200C489FC /* Hello.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hello.swift; sourceTree = "<group>"; };
 		314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostDeviceInfo.swift; sourceTree = "<group>"; };
 		314D588125B64EB6007BCA34 /* PairingBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingBlock.swift; sourceTree = "<group>"; };
@@ -511,6 +525,23 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		31061E6A25C8D21A00543FC0 /* player */ = {
+			isa = PBXGroup;
+			children = (
+				31061E7E25C93E4500543FC0 /* view */,
+				3180855725C2287300AE4A73 /* BtvPlayer.swift */,
+			);
+			path = player;
+			sourceTree = "<group>";
+		};
+		31061E7E25C93E4500543FC0 /* view */ = {
+			isa = PBXGroup;
+			children = (
+				31061E7625C934B600543FC0 /* PlayerEffect.swift */,
+			);
+			path = view;
+			sourceTree = "<group>";
+		};
 		310F6FB025C1266C005718B0 /* scs */ = {
 			isa = PBXGroup;
 			children = (
@@ -528,6 +559,26 @@
 				310F6FC625C16916005718B0 /* Play.swift */,
 			);
 			path = model;
+			sourceTree = "<group>";
+		};
+		31373F5925C7E726004353DA /* ytplayer */ = {
+			isa = PBXGroup;
+			children = (
+				31373F5A25C7E726004353DA /* CustomYTPlayer.swift */,
+				31373F5B25C7E726004353DA /* CPYTPlayer.swift */,
+				31373F5F25C7E726004353DA /* YTPlayerView.swift */,
+				31373F5C25C7E726004353DA /* Assets */,
+			);
+			path = ytplayer;
+			sourceTree = "<group>";
+		};
+		31373F5C25C7E726004353DA /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				31373F5D25C7E726004353DA /* YTPlayerView-iframe-player.html */,
+				31373F5E25C7E726004353DA /* YTPlayerView-iframe-playerIPAD.html */,
+			);
+			path = Assets;
 			sourceTree = "<group>";
 		};
 		314D738825B4F88A00907118 /* synopsis */ = {
@@ -1022,6 +1073,7 @@
 		D56C69E1257DA0C600CF9AB8 /* player */ = {
 			isa = PBXGroup;
 			children = (
+				31373F5925C7E726004353DA /* ytplayer */,
 				D56C69E9257DA0C600CF9AB8 /* avplayer */,
 				D56C69EC257DA0C600CF9AB8 /* PlayerUI.swift */,
 				D56C69ED257DA0C600CF9AB8 /* Player.swift */,
@@ -1325,7 +1377,8 @@
 		D5DABD942589F1D400DF5701 /* component */ = {
 			isa = PBXGroup;
 			children = (
-				3180855725C2287300AE4A73 /* BtvPlayer.swift */,
+				31061E6A25C8D21A00543FC0 /* player */,
+				31061E6525C8CF5800543FC0 /* BtvWebView.swift */,
 			);
 			path = component;
 			sourceTree = "<group>";
@@ -1465,6 +1518,8 @@
 				D568891C259C24A200F2F67A /* Localizable.strings in Resources */,
 				D56C692E257D9EE600CF9AB8 /* Preview Assets.xcassets in Resources */,
 				D56C692B257D9EE600CF9AB8 /* Assets.xcassets in Resources */,
+				31373F6325C7E726004353DA /* YTPlayerView-iframe-playerIPAD.html in Resources */,
+				31373F6225C7E726004353DA /* YTPlayerView-iframe-player.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1652,15 +1707,18 @@
 				D56C6A2E257DA0C700CF9AB8 /* CustomImagePicker.swift in Sources */,
 				D56C6B13257DAADE00CF9AB8 /* AppLayout.swift in Sources */,
 				314F816025BE30AA00E76508 /* PurchasViewer.swift in Sources */,
+				31061E6625C8CF5800543FC0 /* BtvWebView.swift in Sources */,
 				D56C6A60257DA0C700CF9AB8 /* InputAccssory.swift in Sources */,
 				3159B05025B17B0B008CA85B /* Kms.swift in Sources */,
 				310F6FC725C16916005718B0 /* Play.swift in Sources */,
 				315544CF25B83F8C00086510 /* UpdateBookMark.swift in Sources */,
 				D568892E259C592000F2F67A /* PagePairingSetupUser.swift in Sources */,
+				31373F6025C7E726004353DA /* CustomYTPlayer.swift in Sources */,
 				310D7E2C25A42D05000BE173 /* StbList.swift in Sources */,
 				D56C6A32257DA0C700CF9AB8 /* CPWebView.swift in Sources */,
 				D56CC2EF25902E6600CA1D54 /* MultiBlock.swift in Sources */,
 				D5E27EDF2586F29200B2CD5D /* ImageViewButton.swift in Sources */,
+				31373F6125C7E726004353DA /* CPYTPlayer.swift in Sources */,
 				3192317225A3FDBE00020388 /* coordinator.swift in Sources */,
 				D56C6A41257DA0C700CF9AB8 /* Player.swift in Sources */,
 				D5688924259C29DE00F2F67A /* SpanText.swift in Sources */,
@@ -1681,6 +1739,7 @@
 				D571785E2582DBF000BF2612 /* PageDataProviderContent.swift in Sources */,
 				D573785825A2D70B00EC571F /* PagePairingBtv.swift in Sources */,
 				D56C6A28257DA0C700CF9AB8 /* assets.swift in Sources */,
+				31061E7725C934B600543FC0 /* PlayerEffect.swift in Sources */,
 				D56C69A5257DA09E00CF9AB8 /* UnitUtil.swift in Sources */,
 				D5DC475625820DC3007EDD86 /* GatewaySynopsis.swift in Sources */,
 				D56C69AF257DA09E00CF9AB8 /* DynamicLinkManager.swift in Sources */,
@@ -1783,6 +1842,7 @@
 				314D73A225B509B200907118 /* RatingInfo.swift in Sources */,
 				314D73AC25B5276700907118 /* SelectButton.swift in Sources */,
 				D56C6B72257DBAE700CF9AB8 /* PageTest.swift in Sources */,
+				31373F6425C7E726004353DA /* YTPlayerView.swift in Sources */,
 				D56C6A42257DA0C700CF9AB8 /* CustomToggleStyle.swift in Sources */,
 				D56C6A3E257DA0C700CF9AB8 /* CPPlayer.swift in Sources */,
 				D56C6A52257DA0C700CF9AB8 /* Toast.swift in Sources */,

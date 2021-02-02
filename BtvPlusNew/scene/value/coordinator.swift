@@ -51,4 +51,20 @@ extension Asset{
         "imgProfile35",
         "imgProfile36"
     ]
+    
+    static let brightnessList = [
+        Asset.player.brightnessLv0,
+        Asset.player.brightnessLv1,
+        Asset.player.brightnessLv2,
+        Asset.player.brightnessLv3,
+        Asset.player.brightnessLv4,
+        Asset.player.brightnessLv5
+    ]
+    
+    static let volumeList = [
+        Asset.player.volumeLv0,
+        Asset.player.volumeLv1,
+        Asset.player.volumeLv2,
+        Asset.player.volumeLv3
+    ]
 }

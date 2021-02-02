@@ -77,8 +77,6 @@ struct PageServiceError: PageView {
                 self.error = obj.getParamValue(key:.data) as? ApiResultError
             }
         }
-        
-        
     }//body
     
     

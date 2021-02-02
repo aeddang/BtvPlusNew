@@ -72,6 +72,8 @@ struct PageContentController: View{
             }
             .onReceive(self.orientationChanged){ _ in
                 sceneObserver.update(geometry: geometry)
+                
+                
             }
         }
     }

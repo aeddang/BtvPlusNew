@@ -26,9 +26,18 @@ open class PlayerModel: ComponentObservable {
             if event == nil { self.status = .ready }
         }
     }
+    @Published var remoteEvent:PlayerRemoteEvent? = nil{
+        willSet{
+            self.status = .update
+        }
+        didSet{
+            if remoteEvent == nil { self.status = .ready }
+        }
+    }
     
     @Published var streamEvent:PlayerStreamEvent? = nil
     @Published var playerStatus:PlayerStatus? = nil
+    @Published var playerUiStatus:PlayerUiStatus = .hidden
     @Published var streamStatus:PlayerStreamStatus? = nil
     @Published var error:PlayerError? = nil
     convenience init(path: String) {
@@ -54,9 +63,13 @@ open class PlayerModel: ComponentObservable {
     
 }
 
+
+
 enum PlayerUIEvent {//input
-    case togglePlay, resume, pause, load(String, Bool = true, Double = 0.0, Dictionary<String,String>? = nil), stop, volume(Float),
-    seekTime(Double, Bool = true), seekProgress(Float, Bool = true), seekMove(Double, Bool = true), check
+    case load(String, Bool = true, Double = 0.0, Dictionary<String,String>? = nil),
+         togglePlay, resume, pause, stop, volume(Float),
+         seekTime(Double, Bool = true), seekProgress(Float, Bool = true), seekMove(Double, Bool = true), seeking(Double),
+         check, neetLayoutUpdate
     
     var decription: String {
         switch self {
@@ -74,12 +87,20 @@ enum PlayerUIEvent {//input
     }
 }
 
+enum PlayerRemoteEvent {//input
+    case next, prev
+}
+
 enum PlayerStreamEvent {//output
     case resumed, paused, loaded(String), buffer, stoped, seeked, completed
 }
 
-enum PlayerStatus {
+enum PlayerStatus:String {
     case load, resume, pause, seek, complete, error, stop
+}
+
+enum PlayerUiStatus:String {
+    case view, hidden
 }
 
 enum PlayerStreamStatus {
@@ -153,13 +174,21 @@ extension PlayBack {
         }
         ComponentLog.d("onSeek", tag: self.tag)
         viewModel.playerStatus = .seek
-        onBuffering()
+        //onBuffering()
     }
+    func checkSeeked(){
+        switch self.viewModel.playerStatus {
+        case .seek: onSeeked()
+        default: break
+        }
+    }
+    
     func onSeeked(){
         ComponentLog.d("onSeeked", tag: self.tag)
         viewModel.streamEvent = .seeked
     }
     func onResumed(){
+        self.checkSeeked()
         ComponentLog.d("onResumed", tag: self.tag)
         viewModel.isPlay = true
         viewModel.streamEvent = .resumed
@@ -167,6 +196,7 @@ extension PlayBack {
         onBufferCompleted()
     }
     func onPaused(){
+        self.checkSeeked()
         viewModel.isPlay = false
         if viewModel.playerStatus == .complete
             || viewModel.playerStatus == .error {
@@ -195,6 +225,7 @@ extension PlayBack {
     }
     
     func onBufferCompleted(){
+        self.checkSeeked()
         ComponentLog.d("onBufferCompleted", tag: self.tag)
         viewModel.streamStatus = .playing
     }

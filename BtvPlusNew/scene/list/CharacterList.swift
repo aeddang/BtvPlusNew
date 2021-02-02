@@ -85,7 +85,7 @@ struct CharacterItem: PageView {
         .overlay(
            Circle()
             .stroke(
-                self.selected ? Color.app.white : Color.transparent.black0,
+                self.selected ? Color.app.white : Color.transparent.clear,
                 lineWidth: Dimen.stroke.regular)
         )
         

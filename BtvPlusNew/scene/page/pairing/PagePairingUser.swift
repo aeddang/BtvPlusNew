@@ -27,7 +27,7 @@ struct PagePairingUser: PageView {
                         isClose: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    CPWebView(
+                    BtvWebView(
                         viewModel: self.webViewModel
                     )
                 }

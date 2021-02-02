@@ -22,7 +22,13 @@ extension Double {
     func secToMinString(_ div:String = ":") -> String {
         let sec = self.toInt() % 60
         let min = floor( Double(self / 60) ).toInt()
-        return min.description + div + sec.description
+        return min.description.toFixLength(2) + div + sec.description.toFixLength(2)
+    }
+    func secToHourString(_ div:String = ":") -> String {
+        let sec = self.toInt() % 60
+        let min = floor( Double(self / 60) ).toInt() % 60
+        let hour = floor( Double(self / 3600) ).toInt()
+        return hour.description.toFixLength(2) + div + min.description.toFixLength(2) + div + sec.description.toFixLength(2)
     }
     
     func millisecToSec() -> Double {
@@ -154,6 +160,12 @@ extension String{
     
     func toInt() -> Int {
         return Int(self) ?? -1
+    }
+    
+    func toFixLength(_ l:Int, prefix:String = "000000") -> String {
+        if self.count >= l { return self }
+        let fix:String = prefix + self
+        return String(fix.suffix(l))
     }
     
     //let isoDate = "2016-04-14T10:44:00+0000"

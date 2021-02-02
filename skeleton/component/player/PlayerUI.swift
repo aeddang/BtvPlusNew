@@ -11,77 +11,119 @@ import SwiftUI
 import Combine
 
 struct PlayerUI: PageComponent {
+    @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var viewModel:PlayerModel
     @ObservedObject var pageObservable:PageObservable
     @State var time:String = ""
     @State var duration:String = ""
     @State var progress: Float = 0
+    @State var isPlaying = false
     @State var isLoading = false
-    @State var toggleString = "Pause"
+    @State var isSeeking = false
     @State var isError = false
     @State var errorMessage = ""
-
+    
+    @State var isFullScreen:Bool = false
+    @State var isShowing: Bool = false
     var body: some View {
         ZStack{
             ActivityIndicator( isAnimating: self.$isLoading,
                                style: .large,
                                color: Color.app.white )
-            
-            Button<Text>(action: {
-                self.viewModel.event = .togglePlay
-            }){
-                Text(self.toggleString)
+            if !self.isSeeking {
+                ImageButton(
+                    defaultImage: Asset.player.resume,
+                    activeImage: Asset.player.pause,
+                    isSelected: self.isPlaying,
+                    size: CGSize(width:Dimen.icon.heavyExtra,height:Dimen.icon.heavyExtra)
+                ){ _ in
+                    self.viewModel.event = .togglePlay
+                }
+                .opacity(( self.isShowing && !self.isLoading) ? 1 : 0)
             }
-            
             VStack{
-                HStack{
-                    Spacer()
-                    CPAirPlayButton().frame(width: Dimen.icon.medium, height: Dimen.icon.medium)
-                }
                 Spacer()
-                ProgressSlider(progress: self.$progress, onEditingChanged:{
-                    pct in
-                    ComponentLog.d("ProgressSlider " + pct.description, tag: self.tag)
-                    self.viewModel.event = .seekProgress(pct)
-                })
-                .accentColor(.red)
-                .frame(height: 5)
-                
-                
-                HStack{
+                HStack(spacing:Dimen.margin.thin){
                     Text(self.time)
-                        .font(Font.customFont.light)
-                        .foregroundColor(Color.app.white)
-                        .padding(Dimen.margin.regular)
-                        .frame(maxWidth: .infinity, alignment: .bottom)
-                    Spacer()
+                        .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.white))
+                        .frame(width:52)
+                        .fixedSize(horizontal: true, vertical: false)
+                    ProgressSlider(
+                        progress: self.progress,
+                        thumbSize: Dimen.icon.tiny,
+                        onChange: { pct in
+                            let willTime = self.viewModel.duration * Double(pct)
+                            self.viewModel.event = .seeking(willTime)
+                        },
+                        onChanged:{ pct in
+                            self.viewModel.event = .seekProgress(pct)
+                        })
+                        .frame(height: 20)
                     Text(self.duration)
-                        .font(Font.customFont.light)
-                        .foregroundColor(Color.app.white)
-                        .padding(Dimen.margin.regular)
-                        .frame(maxWidth: .infinity, alignment: .bottom)
-                    
+                        .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.greyLightExtra))
+                        .frame(width:52)
+                        .fixedSize(horizontal: true, vertical: false)
+                    ImageButton(
+                        defaultImage: Asset.player.fullScreen,
+                        activeImage: Asset.player.fullScreenOff,
+                        isSelected: self.isFullScreen,
+                        size: CGSize(width:Dimen.icon.regular,height:Dimen.icon.regular)
+                    ){ _ in
+                        self.isFullScreen
+                            ? self.pagePresenter.fullScreenExit()
+                            :self.pagePresenter.fullScreenEnter()
+                    }
                 }
-                
+                .padding(.horizontal, Dimen.margin.tinyExtra)
             }
+            .opacity(self.isShowing ? 1 : 0)
         }
         .toast(isShowing: self.$isError, text: self.errorMessage)
-
+        
         .onReceive(self.viewModel.$time) { tm in
-            self.time = tm.description
+            self.time = tm.secToHourString()
             if self.viewModel.duration <= 0.0 {return}
-            self.progress = Float(self.viewModel.time / self.viewModel.duration)
+            if !self.isSeeking {
+                self.progress = Float(self.viewModel.time / self.viewModel.duration)
+            }
         }
         .onReceive(self.viewModel.$duration) { tm in
-            self.duration = tm.description
+            self.duration = tm.secToHourString()
         }
         .onReceive(self.viewModel.$isPlay) { play in
-            ComponentLog.d("isPlay " + play.description, tag: self.tag)
-            self.toggleString = play ? "PLAY" : "PAUSE"
+            self.isPlaying = play
+            if self.isPlaying {
+                self.viewModel.playerUiStatus = .hidden
+            }else {
+                self.viewModel.playerUiStatus = .view
+            }
+        }
+        .onReceive(self.viewModel.$playerUiStatus) { st in
+            withAnimation{
+                switch st {
+                case .view :
+                    self.isShowing = true
+                default : self.isShowing = false
+                }
+            }
+        }
+        .onReceive(self.viewModel.$event) { evt in
+            guard let evt = evt else { return }
+            switch evt {
+            case .seeking(let willTime):
+                self.progress = Float(willTime / self.viewModel.duration)
+                if !self.isSeeking {
+                    withAnimation{ self.isSeeking = true }
+                }
+            default : do{}
+            }
         }
         .onReceive(self.viewModel.$streamEvent) { evt in
-            //guard let event = evt else { return }
-
+            guard let evt = evt else { return }
+            switch evt {
+            case .seeked: withAnimation{ self.isSeeking = false }
+            default : do{}
+            }
         }
         .onReceive(self.viewModel.$playerStatus) { st in
             //guard let status = st else { return }
@@ -97,6 +139,7 @@ struct PlayerUI: PageComponent {
             guard let error = err else { return }
             ComponentLog.d("error " + err.debugDescription, tag: self.tag)
             self.isError = true
+            self.viewModel.playerUiStatus = .view
             switch error{
             case .connect(_) : self.errorMessage = "connect error"
             case .illegalState(_) : self.errorMessage = "illegalState"
@@ -108,9 +151,11 @@ struct PlayerUI: PageComponent {
                 case .certification(let msg): self.errorMessage = msg
                 }
             }
-           
+        }
+        .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
+            self.isFullScreen = fullScreen
         }
     }
-    
+
 }
 

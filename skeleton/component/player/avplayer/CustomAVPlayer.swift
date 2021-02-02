@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 import Combine
 import AVKit
+import MediaPlayer
 
 struct CustomAVPlayer {
     @ObservedObject var viewModel:PlayerModel
@@ -92,6 +93,8 @@ open class CustomAVPlayerViewController: AVPlayerViewController {
         switch event!.subtype {
         case .remoteControlPause: self.viewModel.event = .pause
         case .remoteControlPlay: self.viewModel.event = .resume
+        case .remoteControlNextTrack: self.viewModel.remoteEvent = .next
+        case .remoteControlPreviousTrack: self.viewModel.remoteEvent = .prev
         default: do{}
         }
     }
@@ -101,7 +104,7 @@ open class CustomAVPlayerViewController: AVPlayerViewController {
 extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenViewDelegate {
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<CustomAVPlayer>) -> AVPlayerViewController {
-        let playerScreenView = PlayerScreenView(frame: .zero)
+        let playerScreenView = PlayerScreenView(frame: .infinite)
         let playerController = CustomAVPlayerViewController(viewModel: self.viewModel, playerScreenView: playerScreenView)
         playerController.delegate = context.coordinator
         playerScreenView.delegate = self
@@ -187,16 +190,16 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
             ComponentLog.d("stop" , tag: self.tag)
             player.stop()
         case .volume(let v):
-            player.currentVolume = v
+            MPVolumeView.setVolume(v)
             viewModel.volume = v
         case .seekTime(let t, let play): onSeek(time:t, play: play)
         case .seekMove(let t, let play): onSeek(time:viewModel.time + t, play: play)
         case .seekProgress(let pct, let play):
             let t = viewModel.duration * Double(pct)
             onSeek(time:t, play: play)
+        default : do{}
         }
         viewModel.event = nil
-        
     }
     
     private func run(_ player: PlayerScreenView){
@@ -251,7 +254,6 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
                     }
                     status = currentPlayer.status
                 }
-                
         }
     }
     
@@ -323,6 +325,7 @@ class PlayerScreenView: UIView, PageProtocol {
         playerLayer.frame = bounds
     }
     
+    
     private func createPlayer(_ url:URL, buffer:Double = 2.0, header:[String:String]? = nil) -> AVPlayer?{
         destoryPlayer()
         if let header = header {
@@ -369,6 +372,7 @@ class PlayerScreenView: UIView, PageProtocol {
         playerLayer.player = player
         playerLayer.videoGravity = .resizeAspectFill
         playerController?.player = player
+        playerController?.updatesNowPlayingInfoCenter = false
         //player?.addPeriodicTimeObserver(forInterval: <#T##CMTime#>, queue: <#T##DispatchQueue?#>, using: <#T##(CMTime) -> Void#>)
         //ComponentLog.d("startPlayer " + playerLayer.isReadyForDisplay.description , tag: self.tag)
         
@@ -464,5 +468,17 @@ class PlayerScreenView: UIView, PageProtocol {
             timescale: CMTimeScale(PlayerModel.TIME_SCALE))
         currentPlayer.seek(to: cmt)
         return true
+    }
+}
+
+
+extension MPVolumeView {
+    static func setVolume(_ volume: Float) -> Void {
+        let volumeView = MPVolumeView()
+        let slider = volumeView.subviews.first(where: { $0 is UISlider }) as? UISlider
+
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.01) {
+            slider?.value = volume
+        }
     }
 }

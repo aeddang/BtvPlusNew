@@ -121,12 +121,16 @@ struct PageFactory{
 struct PageSceneModel: PageModel {
     
     var currentPageObject: PageObject? = nil
-    func getPageOrientation(_ pageObject:PageObject ) -> UIInterfaceOrientationMask? {
+    func getPageOrientation(_ pageObject:PageObject? = nil ) -> UIInterfaceOrientationMask? {
+        guard let pageObject = pageObject ?? self.currentPageObject else {
+            return UIInterfaceOrientationMask.all
+        }
         switch pageObject.pageID {
         case .home : return UIInterfaceOrientationMask.all
         default : return UIInterfaceOrientationMask.all
         }
     }
+    
     func getCloseExceptions() -> [PageID]? {
         return []
     }

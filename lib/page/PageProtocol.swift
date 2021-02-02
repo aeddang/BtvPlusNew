@@ -75,7 +75,7 @@ enum SceneStatus:String {
     enterBackground
 }
 
-enum SceneOrientation {
+enum SceneOrientation :String{
     case portrait, landscape
 }
 
@@ -301,7 +301,7 @@ protocol PageModel {
     func isHistoryPage(_ pageObject:PageObject ) -> Bool
     func isChangedCategory(prevPage:PageObject?, nextPage:PageObject?) -> Bool
     func isChangePageAble(_ pageObject: PageObject) -> Bool
-    func getPageOrientation(_ pageObject:PageObject ) -> UIInterfaceOrientationMask?
+    func getPageOrientation(_ pageObject:PageObject? ) -> UIInterfaceOrientationMask?
     func getCloseExceptions() -> [PageID]?
 }
 extension PageModel{
@@ -310,7 +310,7 @@ extension PageModel{
     func isHistoryPage(_ pageObject:PageObject ) -> Bool { return true }
     func isChangedCategory(prevPage:PageObject?, nextPage:PageObject?) -> Bool { return false }
     func isChangePageAble(_ pageObject: PageObject) -> Bool { return true }
-    func getPageOrientation(_ pageObject:PageObject ) -> UIInterfaceOrientationMask? { return nil }
+    func getPageOrientation(_ pageObject:PageObject? = nil ) -> UIInterfaceOrientationMask? { return nil }
     func getCloseExceptions() -> [PageID]? { return nil }
 }
 

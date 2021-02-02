@@ -22,6 +22,7 @@ struct PageSynopsis: PageView {
     @State var isPairing:Bool? = nil
     @State var hasAuthority:Bool? = nil
     @State var synopsisData:SynopsisData? = nil
+    @State var isFullScreen:Bool = false
 
     var body: some View {
         GeometryReader { geometry in
@@ -34,9 +35,10 @@ struct PageSynopsis: PageView {
                 ) {
                     VStack(spacing:0){
                         BtvPlayer(viewModel:self.playerModel, pageObservable:self.pageObservable)
-                            .modifier(Ratio16_9(geometry:geometry))
+                            .modifier(Ratio16_9(
+                                        geometry:geometry, isFullScreen: self.isFullScreen))
                             .padding(.top, sceneObserver.safeAreaTop)
-                        
+                       
                         InfinityScrollView( viewModel: self.infinityScrollModel ){
                             VStack(alignment:.leading , spacing:0) {
                                 if self.episodeViewerData != nil {
@@ -66,22 +68,22 @@ struct PageSynopsis: PageView {
                             }
                         }
                         .modifier(MatchParent())
+                        .highPriorityGesture(
+                            DragGesture(minimumDistance: 20, coordinateSpace: .local)
+                                .onChanged({ value in
+                                    self.pageDragingModel.uiEvent = .drag(geometry, value)
+                                })
+                                .onEnded({ _ in
+                                    self.pageDragingModel.uiEvent = .draged(geometry)
+                                })
+                        )
                     }
-                    .highPriorityGesture(
-                        DragGesture(minimumDistance: 20, coordinateSpace: .local)
-                            .onChanged({ value in
-                                self.pageDragingModel.uiEvent = .drag(geometry, value)
-                            })
-                            .onEnded({ _ in
-                                self.pageDragingModel.uiEvent = .draged(geometry)
-                            })
-                    )
+                    
                     .modifier(PageFull())
                 }//PageDragingBody
-                .onReceive(self.infinityScrollModel.$event){evt in
-                    guard let _ = evt else {return}
-                    self.pageDragingModel.uiEvent = .draged(geometry)
-                    
+                .onReceive(self.infinityScrollModel.$scrollPosition){pos in
+                    //PageLog.d("scrollPosition " + pos.description, tag: self.tag)
+                    self.pageDragingModel.uiEvent = .dragCancel(geometry)
                 }
             }//PageDataProviderContent
             .onReceive(self.pairing.$event){evt in
@@ -117,6 +119,9 @@ struct PageSynopsis: PageView {
                     }
                 default : do{}
                 }
+            }
+            .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
+                self.isFullScreen = fullScreen
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }

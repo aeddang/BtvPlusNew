@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 struct PageFull: ViewModifier {
+    @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
     var bgColor:Color = Color.brand.bg
     @State var marginStart:CGFloat = 0
@@ -20,8 +21,14 @@ struct PageFull: ViewModifier {
             .background(bgColor)
             .onReceive(self.sceneObserver.$isUpdated){ update in
                 if !update {return}
-                self.marginStart = self.sceneObserver.safeAreaStart
-                self.marginEnd = self.sceneObserver.safeAreaEnd
+                if self.pagePresenter.isFullScreen {
+                    self.marginStart = 0
+                    self.marginEnd = 0
+                }else{
+                    self.marginStart = self.sceneObserver.safeAreaStart
+                    self.marginEnd = self.sceneObserver.safeAreaEnd
+                }
+                
             }
     }
 }

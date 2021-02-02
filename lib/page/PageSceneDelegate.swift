@@ -64,6 +64,19 @@ final class PagePresenter:ObservableObject{
         let result = PageSceneDelegate.instance?.historys.first
         return result !== nil
     }
+    func fullScreenEnter(isLock:Bool = false){
+        if self.isFullScreen {return}
+        PageSceneDelegate.instance?.onFullScreenEnter(isLock: isLock)
+        self.isFullScreen = true
+        PageLog.d("fullScreenEnter", tag: "PagePresenter")
+    }
+    func fullScreenExit(){
+        if !self.isFullScreen {return}
+        PageSceneDelegate.instance?.onFullScreenExit()
+        PageLog.d("fullScreenExit", tag: "PagePresenter")
+        self.isFullScreen = false
+    }
+    
     @Published fileprivate(set) var event:PageEvent? = nil
     @Published fileprivate(set) var currentPage:PageObject? = nil
     @Published fileprivate(set) var currentPopup:PageObject? = nil
@@ -72,6 +85,7 @@ final class PagePresenter:ObservableObject{
     @Published var bodyColor:Color = Color.white
     @Published var dragOpercity:Double = 0.0
     @Published fileprivate(set) var isBusy:Bool = false
+    @Published fileprivate(set) var isFullScreen:Bool = false
     @Published fileprivate(set) var hasPopup:Bool = false
 }
 
@@ -403,13 +417,28 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         guard let willChangeOrientation = willChangeOrientationMask else { return }
         AppDelegate.orientationLock = willChangeOrientation
         if  willChangeOrientation == .all { return }
-        let changeOrientation:UIInterfaceOrientation? = getChangeDeviceOrientation(mask: willChangeOrientation)
-        guard let change = changeOrientation else { return }
-        UIDevice.current.setValue(change.rawValue, forKey: "orientation")
-        UINavigationController.attemptRotationToDeviceOrientation()
+        self.requestDeviceOrientation(willChangeOrientation)
         
     }
     
+    func onFullScreenEnter(isLock:Bool = false){
+        if isLock { AppDelegate.orientationLock = .landscape }
+        self.requestDeviceOrientation(.landscape)
+    }
+    func onFullScreenExit(){
+        let willChangeOrientationMask = pageModel.getPageOrientation() ?? .all
+        AppDelegate.orientationLock = willChangeOrientationMask
+        self.requestDeviceOrientation(.portrait)
+    }
+    
+    private func requestDeviceOrientation(_ mask:UIInterfaceOrientationMask){
+        let changeOrientation:UIInterfaceOrientation? = getChangeDeviceOrientation(mask: mask)
+        guard let change = changeOrientation else { return }
+        UIDevice.current.setValue(change.rawValue, forKey: "orientation")
+        //PageLog.d("requestDeviceOrientation mask" , tag: "PageScene")
+        UINavigationController.attemptRotationToDeviceOrientation()
+    }
+
     final func getChangeDeviceOrientation(mask:UIInterfaceOrientationMask) -> UIInterfaceOrientation? {
         if UIDevice.current.orientation == .portrait {
             switch mask {
@@ -443,7 +472,13 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                 default:return nil
             }
         }
-        else { return  nil }
+        else {
+            switch mask {
+            case .landscape: return .landscapeLeft
+            case .portrait: return .portrait
+            default:return nil
+            }
+        }
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {

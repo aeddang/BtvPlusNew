@@ -154,6 +154,7 @@ extension PageDragingView{
             offset = 0
             isBottom = false
         }
+        ComponentLog.d("onDragEnd " + isBottom.description, tag: "PageDragingProtocol")
         self.onDragEndAction(isBottom:isBottom, offset: offset)
     }
 }
@@ -264,7 +265,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
                 self.onDraging(geometry: geo, value: value, modifyOffset: offset ?? 0)
             case .draged(let geo) : self.onDragEnd(geometry: geo)
             case .dragCancel(let geo) :
-                if self.viewModel.status == .drag { return }
+                if self.viewModel.status != .drag { return }
                 self.onDragEnd(geometry: geo)
                 
             case .scrollContentRange(let range) :

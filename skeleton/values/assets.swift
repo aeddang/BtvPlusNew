@@ -94,6 +94,33 @@ extension Asset{
         
     }
     
+    
+    struct player {
+        public static let more = "icPlayerHalfMore"
+        public static let lock = "icPlayerFullLock"
+        public static let resume = "icPlayerPlay"
+        public static let pause = "icPlayerPause"
+        
+        public static let fullScreen = "icPlayerHalfScalemax"
+        public static let fullScreenOff = "icPlayerFullScalemin"
+        public static let volumeOn = "icPlayerHalfVolume"
+        public static let volumeOff = "icPlayerHalfVolumeMute"
+        public static let seekForward = "icPlayerHalfTimeNext"
+        public static let seekBackward = "icPlayerHalfTimePrevious"
+        public static let volumeLv0 = "icPlayerHalfVolume0"
+        public static let volumeLv1 = "icPlayerHalfVolume1"
+        public static let volumeLv2 = "icPlayerHalfVolume6"
+        public static let volumeLv3 = "icPlayerHalfVolume11"
+        public static let brightnessLv0 = "icPlayerHalfBrightness0"
+        public static let brightnessLv1 = "icPlayerHalfBrightness1"
+        public static let brightnessLv2 = "icPlayerHalfBrightness4"
+        public static let brightnessLv3 = "icPlayerHalfBrightness8"
+        public static let brightnessLv4 = "icPlayerHalfBrightness12"
+        public static let brightnessLv5 = "icPlayerHalfBrightness15"
+        
+        public static let guide = "playerCoachmarkFull"
+    }
+    
     struct shape {
         public static let radioBtnOn = "icRadioSOn"
         public static let radioBtnOff = "icRadioSOff"

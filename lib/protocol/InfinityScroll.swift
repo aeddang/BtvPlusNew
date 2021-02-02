@@ -25,6 +25,7 @@ class InfinityScrollModel:ComponentObservable, PageProtocol, Identifiable{
     @Published private(set) var total = 0
     @Published fileprivate(set) var pullCount = 0
     @Published fileprivate(set) var pullPosition:CGFloat = 0
+    @Published fileprivate(set) var scrollPosition:CGFloat = 0
     static let PULL_MAX = 7
     private var increasePull:AnyCancellable? = nil
     private let pullMax:Int
@@ -138,6 +139,7 @@ extension InfinityScrollViewProtocol {
     func onMove(pos:CGFloat){
         //ComponentLog.d("onMove  " + pos.description , tag: "InfinityScrollViewProtocol")
         let diff = self.prevPosition - pos
+        if abs(diff) > 1 {self.viewModel.scrollPosition = pos}
         //ComponentLog.d(" diff  " + diff.description , tag: "InfinityScrollViewProtocol")
         //ComponentLog.d(" scrollStatus  " + self.viewModel.scrollStatus.rawValue , tag: "InfinityScrollViewProtocol")
         if pos >= 30 && self.viewModel.scrollStatus != .pullCancel {
@@ -199,6 +201,7 @@ extension InfinityScrollViewProtocol {
         self.viewModel.onPull(pos: pos)
         self.viewModel.scrollStatus = .pull
     }
+    
 }
 
 

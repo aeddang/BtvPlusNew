@@ -10,8 +10,13 @@ import SwiftUI
 import Combine
 
 struct PlayerEffect: PageView{
+    @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
-    @ObservedObject var pageObservable:PageObservable = PageObservable()
+    
+    @State var brightness:CGFloat? = nil
+    @State var volume:Float? = nil
+    @State var rate:Float? = nil
+    @State var message:String? = nil
     
     @State var imgBrightness:String = Asset.player.brightnessLv0
     @State var imgVolume:String = Asset.player.volumeOn
@@ -24,12 +29,17 @@ struct PlayerEffect: PageView{
     @State var showBrightness:Bool = false
     @State var showVolume:Bool = false
     @State var showSeeking:Bool = false
+    @State var isFullScreen:Bool = false
+    
+    @State var textWillMoveTime:String = ""
+    @State var showSeekForward:Bool = false
+    @State var showSeekBackward:Bool = false
     
     var body: some View {
-        ZStack{
+        ZStack(alignment: .bottom){
             ZStack{
                 if self.showSeeking {
-                    VStack(spacing:Dimen.margin.thinExtra){
+                    VStack(spacing:Dimen.margin.tiny){
                         Text(self.textSeeking)
                             .modifier(BoldTextStyle(
                                     size: Font.size.bold,
@@ -62,6 +72,20 @@ struct PlayerEffect: PageView{
                                 )
                         }
                     }
+                    if self.showSeekBackward {
+                        VStack(spacing:Dimen.margin.thinExtra){
+                            Image( Asset.player.seekBackward )
+                                .renderingMode(.original).resizable()
+                                .scaledToFit()
+                                .modifier(MatchHorizontal(
+                                            height: self.isFullScreen ? Dimen.icon.light : Dimen.icon.tiny))
+                            Text(self.textWillMoveTime)
+                                .modifier(BoldTextStyle(
+                                        size: self.isFullScreen ? Font.size.lightExtra :Font.size.tinyExtra,
+                                        color: Color.app.white)
+                                )
+                        }
+                    }
                     Spacer()
                         .modifier(MatchParent())
                         .background(Color.app.white)
@@ -81,16 +105,43 @@ struct PlayerEffect: PageView{
                                 )
                         }
                     }
+                    if self.showSeekForward {
+                        VStack(spacing:Dimen.margin.thinExtra){
+                            Image( Asset.player.seekForward )
+                                .renderingMode(.original).resizable()
+                                .scaledToFit()
+                                .modifier(MatchHorizontal(
+                                            height: self.isFullScreen ? Dimen.icon.light : Dimen.icon.tiny))
+                            Text(self.textWillMoveTime)
+                                .modifier(BoldTextStyle(
+                                        size: self.isFullScreen ? Font.size.lightExtra :Font.size.tinyExtra,
+                                        color: Color.app.white)
+                                )
+                        }
+                    }
                     Spacer()
                         .modifier(MatchParent())
                         .background(Color.app.white)
                         .opacity(self.showVolume ? 0.2 : 0)
                 }
-                
+            }
+            if self.message != nil {
+                Text(self.message!)
+                    .modifier(BoldTextStyle(
+                                size: self.isFullScreen ? Font.size.bold : Font.size.regular,
+                            color: Color.app.white)
+                    )
+                    .padding(.bottom,  self.isFullScreen ? PlayerUI.paddingFullScreen : PlayerUI.padding)
             }
         }
         .modifier(MatchParent())
         .onReceive(self.viewModel.$brightness){ brightness in
+            if self.brightness == nil {
+                self.brightness = brightness
+                return
+            }
+            if self.brightness == brightness { return }
+            self.brightness = brightness
             let value = min(brightness*100.0, 100)
             let lv = Int( ceil( value / 100 * 5 ) )
             self.imgBrightness = Asset.brightnessList[lv]
@@ -98,11 +149,32 @@ struct PlayerEffect: PageView{
             self.delayBrightnessHidden()
         }
         .onReceive(self.viewModel.$volume){ volume in
+            if self.volume == nil {
+                self.volume = volume
+                return
+            }
+            if self.volume == volume { return }
+            self.volume = volume
             let value = min(volume*100.0, 100.0)
             let lv = Int( ceil( value / 100 * 3 ) )
             self.imgVolume = Asset.volumeList[lv]
             self.textVolume = Double(value).toInt().description
             self.delayVolumeHidden()
+        }
+        .onReceive(self.viewModel.$message){ message in
+            guard let message = message else { return }
+            if self.message == message { return }
+            withAnimation{ self.message = message }
+            self.delayMessageHidden()
+        }
+        .onReceive(self.viewModel.$rate){ rate in
+            if self.rate == nil {
+                self.rate = rate
+                return
+            }
+            if self.rate == rate { return }
+            withAnimation{ self.message = "x " + rate.description }
+            self.delayMessageHidden()
         }
         .onReceive(self.viewModel.$streamEvent) { evt in
             guard let evt = evt else { return }
@@ -125,6 +197,21 @@ struct PlayerEffect: PageView{
         .onReceive(self.viewModel.$time) { tm in
             if !self.showSeeking { return }
             self.textTime = tm.secToHourString()
+        }
+        .onReceive(self.viewModel.$event) { evt in
+            guard let evt = evt else { return }
+            switch evt {
+            case .seekForward(let t, _):
+                self.textWillMoveTime = t.toInt().description + String.app.moveSec
+                self.delaySeekForwardHidden()
+            case .seekBackword(let t, _):
+                self.textWillMoveTime = t.toInt().description + String.app.moveSec
+                self.delaySeekBackwardHidden()
+            default : do{}
+            }
+        }
+        .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
+            self.isFullScreen = fullScreen
         }
             
     }//body
@@ -157,6 +244,48 @@ struct PlayerEffect: PageView{
             .sink() {_ in
                 self.effectBrightness?.cancel()
                 withAnimation{ self.showBrightness = false }
+            }
+    }
+    
+    @State var effectSeekForward:AnyCancellable?
+    func delaySeekForwardHidden(){
+        if !self.showSeekForward {
+            withAnimation{ self.showSeekForward = true }
+        }
+        self.effectSeekForward?.cancel()
+        self.effectSeekForward = Timer.publish(
+            every: 1.5, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                self.effectSeekForward?.cancel()
+                withAnimation{ self.showSeekForward = false }
+            }
+    }
+    
+    @State var effectSeekBackward:AnyCancellable?
+    func delaySeekBackwardHidden(){
+        if !self.showSeekBackward {
+            withAnimation{ self.showSeekBackward = true }
+        }
+        self.effectSeekBackward?.cancel()
+        self.effectSeekBackward = Timer.publish(
+            every: 1.5, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                self.effectSeekBackward?.cancel()
+                withAnimation{ self.showSeekBackward = false }
+            }
+    }
+    
+    @State var effectMessage:AnyCancellable?
+    func delayMessageHidden(){
+        self.effectMessage?.cancel()
+        self.effectMessage = Timer.publish(
+            every: 1.5, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                self.effectMessage?.cancel()
+                withAnimation{ self.message = nil }
             }
     }
     

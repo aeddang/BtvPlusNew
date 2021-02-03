@@ -78,6 +78,7 @@ class ApiManager :PageProtocol, ObservableObject{
 
         self.status = .ready
         self.executeQ()
+        
     }
     private func executeQ(){
         self.apiQ.forEach{ q in self.load(q: q)}
@@ -92,25 +93,25 @@ class ApiManager :PageProtocol, ObservableObject{
              .postAuthPairing, .getDevicePairingInfo, .postDevicePairing, .postUnPairing :
             if NpsNetwork.sessionId == "" {
                 transition[q.id] = q
-                self.load(.registHello, action: q.action, resultId: q.id, isOptional: q.isOptional)
+                self.load(.registHello, action: q.action, resultId: q.id, isOptional: q.isOptional, isProcess: q.isProcess)
                 return
             }
         default : do{}
         }
-        self.load(q.type, action: q.action, resultId: q.id, isOptional: q.isOptional)
+        self.load(q.type, action: q.action, resultId: q.id, isOptional: q.isOptional, isProcess: q.isProcess)
     }
     
 
     @discardableResult
     func load(_ type:ApiType, action:ApiAction? = nil,
-              resultId:String = "", isOptional:Bool = false, isLock:Bool = false)->String
+              resultId:String = "", isOptional:Bool = false, isLock:Bool = false, isProcess:Bool = false)->String
     {
         let apiID = resultId //+ UUID().uuidString
         if status != .ready{
             self.apiQ.append(ApiQ(id: resultId, type: type, action: action, isOptional: isOptional, isLock: isLock))
             return apiID
         }
-        let error = {err in self.onError(id: apiID, type: type, e: err, isOptional: isOptional)}
+        let error = {err in self.onError(id: apiID, type: type, e: err, isOptional: isOptional, isProcess: isProcess)}
         switch type {
         case .versionCheck : self.vms.versionCheck(
             completion: {res in self.complated(id: apiID, type: type, res: res)},
@@ -263,12 +264,12 @@ class ApiManager :PageProtocol, ObservableObject{
         }
     }
     
-    private func onError(id:String, type:ApiType, e:Error,isOptional:Bool = false){
+    private func onError(id:String, type:ApiType, e:Error,isOptional:Bool = false, isProcess:Bool = false){
         if let trans = transition[id] {
             transition.removeValue(forKey: id)
-            self.error = .init(id: id, type:trans.type, error: e, isOptional:isOptional)
+            self.error = .init(id: id, type:trans.type, error: e, isOptional:isOptional, isProcess:isProcess)
         }else{
-            self.error = .init(id: id, type:type, error: e, isOptional:isOptional)
+            self.error = .init(id: id, type:type, error: e, isOptional:isOptional, isProcess:isProcess)
         }
         
     }

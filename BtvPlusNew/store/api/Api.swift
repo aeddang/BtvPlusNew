@@ -21,6 +21,7 @@ struct ApiQ :Identifiable{
     var action:ApiAction? = nil
     var isOptional:Bool = false
     var isLock:Bool = false
+    var isProcess:Bool = false
     
     func copy(newId:String? = nil) -> ApiQ {
         let nid = newId ?? id
@@ -38,6 +39,7 @@ struct ApiResultError :Identifiable{
     let type:ApiType
     let error:Error
     var isOptional:Bool = false
+    var isProcess:Bool = false
 }
 
 

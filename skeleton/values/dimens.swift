@@ -57,6 +57,15 @@ struct Dimen{
         public static let regular:CGFloat = 40 //*
         public static let light:CGFloat = 30//*
         public static let thin:CGFloat = 20//*
+        
+        public static let heavyRect:CGSize = CGSize(width: 90, height: 42)//*
+        public static let mediumRect:CGSize = CGSize(width: 79, height: 30)//*
+        public static let mediumExtraRect:CGSize = CGSize(width: 62, height: 30)//*
+        public static let regularRect:CGSize = CGSize(width: 48, height: 25)//*
+        public static let lightRect:CGSize = CGSize(width: 38, height: 20)//*
+        
+        
+        
     }
 
     struct radius {

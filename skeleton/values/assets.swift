@@ -119,6 +119,9 @@ extension Asset{
         public static let brightnessLv5 = "icPlayerHalfBrightness15"
         
         public static let guide = "playerCoachmarkFull"
+        
+        public static let popupBgFull = "icPlayerFullPopup"
+        public static let popupBg = "icPlayerHalfPopup"
     }
     
     struct shape {

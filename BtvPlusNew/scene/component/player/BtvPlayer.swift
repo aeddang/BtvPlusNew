@@ -40,10 +40,17 @@ enum DragGestureType:String {
     case progress, volume, brightness
 }
 
+enum SelectFunctionType:String {
+    case quality, rate, ratio
+}
+
 class BtvPlayerModel:PlayerModel{
     @Published fileprivate(set) var brightness:CGFloat = UIScreen.main.brightness
     @Published fileprivate(set) var seeking:Double = 0
-    @Published private(set) var currentQuality:Quality? = nil
+    @Published var currentQuality:Quality? = nil
+    @Published private(set) var message:String? = nil
+    @Published var selectFunctionType:SelectFunctionType? = nil
+    
     private(set) var qualitys:[Quality] = []
     private(set) var header:[String:String]? = nil
     private func appendQuality(name:String, path:String){
@@ -75,11 +82,14 @@ struct BtvPlayer: PageComponent{
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
+    var title:String? = nil
     var body: some View {
         GeometryReader { geometry in
             ZStack{
                 CPPlayer( viewModel : self.viewModel)
                 PlayerEffect(viewModel: self.viewModel)
+                PlayerTop(viewModel: self.viewModel, title: self.title)
+                SelectFunction(viewModel: self.viewModel)
             }
             .modifier(MatchParent())
             .gesture(
@@ -128,7 +138,7 @@ struct BtvPlayer: PageComponent{
                 guard let evt = evt else { return }
                 switch evt {
                 case .seeking(let willTime):
-                    let diff = self.viewModel.time - willTime
+                    let diff =  willTime - self.viewModel.time
                     self.viewModel.seeking = diff
                 default : do{}
                 }

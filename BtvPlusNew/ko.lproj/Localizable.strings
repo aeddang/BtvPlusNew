@@ -40,6 +40,7 @@
 "rent" = "대여";
 "owner" = "소장";
 "defaultStb" = "B tv 셋톱박스";
+"moveSec" = "초 이동";
 
 /*
   Button
@@ -63,6 +64,10 @@
 "btnNotice" = "모비 소식";
 "btnPurchas" = "구매하기";
 "btnPurchasAnother" = "다른 옵션 구매하기";
+
+"btnRatioOrigin" = "원본비율";
+"btnRatioFill" = "꽉찬화면";
+"btnRatioFit" = "비율유지";
 
 /*
  Sort
@@ -225,3 +230,4 @@
 "synopsisWatchPeriod" = "이용 기간 동안 시청 가능";
 "synopsisWatchRent" = "대여 기간 내 시청 가능";
 "synopsisWatchPossn" = "B tv 해지 전 무제한 시청 가능";
+

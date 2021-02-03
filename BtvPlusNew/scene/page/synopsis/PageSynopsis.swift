@@ -34,7 +34,11 @@ struct PageSynopsis: PageView {
                     axis:.horizontal
                 ) {
                     VStack(spacing:0){
-                        BtvPlayer(viewModel:self.playerModel, pageObservable:self.pageObservable)
+                        BtvPlayer(
+                            viewModel:self.playerModel,
+                            pageObservable:self.pageObservable,
+                            title: self.episodeViewerData?.episodeTitle
+                            )
                             .modifier(Ratio16_9(
                                         geometry:geometry, isFullScreen: self.isFullScreen))
                             .padding(.top, sceneObserver.safeAreaTop)
@@ -120,6 +124,16 @@ struct PageSynopsis: PageView {
                 default : do{}
                 }
             }
+            .onReceive(self.pageSceneObserver.$alertResult){ result in
+                guard let result = result else { return }
+                switch result {
+                case .retry(let alert) :
+                    if alert == nil {
+                        self.resetPage()
+                    }
+                default : do{}
+                }
+            }
             .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
                 self.isFullScreen = fullScreen
             }
@@ -167,6 +181,7 @@ struct PageSynopsis: PageView {
     }
 
     private func requestProgress(_ progress:Int){
+        
         PageLog.d("requestProgress " + progress.description, tag: self.tag)
         if self.progressError {return}
         if self.progressCompleted{
@@ -207,7 +222,9 @@ struct PageSynopsis: PageView {
     }
     
     private func respondProgress(progress:Int, res:ApiResultResponds, count:Int){
+        
         PageLog.d("respondProgress " + progress.description + " " + count.description, tag: self.tag)
+        self.progressError = false
         switch progress {
         case 0 :
             switch count {

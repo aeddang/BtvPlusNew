@@ -7,15 +7,18 @@
 //
 
 import Foundation
-
+import AVKit
 open class PlayerModel: ComponentObservable {
     static let TIME_SCALE:Double = 600
     @Published var path:String = ""
+    @Published var isMute:Bool = false
     @Published var volume:Float = 1.0
-    @Published var initTime:Double? = nil
-    @Published var isPlay = false
-    @Published var duration:Double = 0.0
-    @Published var time:Double = 0.0
+    @Published var rate:Float = 1.0
+    @Published var screenGravity:AVLayerVideoGravity = .resizeAspectFill
+    @Published fileprivate(set) var initTime:Double? = nil
+    @Published fileprivate(set) var isPlay = false
+    @Published fileprivate(set) var duration:Double = 0.0
+    @Published fileprivate(set) var time:Double = 0.0
     @Published var isRunning = false
     @Published var updateType:PlayerUpdateType = .update
     @Published var event:PlayerUIEvent? = nil{
@@ -35,11 +38,13 @@ open class PlayerModel: ComponentObservable {
         }
     }
     
-    @Published var streamEvent:PlayerStreamEvent? = nil
-    @Published var playerStatus:PlayerStatus? = nil
+    @Published fileprivate(set) var streamEvent:PlayerStreamEvent? = nil
+    @Published fileprivate(set) var playerStatus:PlayerStatus? = nil
+    @Published fileprivate(set) var streamStatus:PlayerStreamStatus? = nil
     @Published var playerUiStatus:PlayerUiStatus = .hidden
-    @Published var streamStatus:PlayerStreamStatus? = nil
     @Published var error:PlayerError? = nil
+    
+    fileprivate var seekTime:Double? = nil
     convenience init(path: String) {
         self.init()
         self.path = path
@@ -67,9 +72,11 @@ open class PlayerModel: ComponentObservable {
 
 enum PlayerUIEvent {//input
     case load(String, Bool = true, Double = 0.0, Dictionary<String,String>? = nil),
-         togglePlay, resume, pause, stop, volume(Float),
-         seekTime(Double, Bool = true), seekProgress(Float, Bool = true), seekMove(Double, Bool = true), seeking(Double),
-         check, neetLayoutUpdate
+         togglePlay, resume, pause, stop, volume(Float), rate(Float), mute(Bool),
+         seekTime(Double, Bool = true), seekProgress(Float, Bool = true),
+         seekMove(Double, Bool = true),
+         seeking(Double), seekForward(Double, Bool = false), seekBackword(Double, Bool = false),
+         check, neetLayoutUpdate, screenGravity(AVLayerVideoGravity)
     
     var decription: String {
         switch self {
@@ -136,7 +143,7 @@ protocol PlayBack:PageProtocol {
     func onDurationChange(_ t:Double)
     func onLoad()
     func onLoaded()
-    func onSeek()
+    func onSeek(time:Double)
     func onSeeked()
     func onResumed()
     func onPaused()
@@ -151,6 +158,11 @@ protocol PlayBack:PageProtocol {
 extension PlayBack {
     func onTimeChange(_ t:Double){
         viewModel.time = t
+        if let checkTime = viewModel.seekTime {
+            if abs(checkTime-t) <= 1 {
+                self.checkSeeked()
+            }
+        }
     }
     func onDurationChange(_ t:Double){
         if t <= 0 { return }
@@ -167,12 +179,13 @@ extension PlayBack {
         ComponentLog.d("onLoaded", tag: self.tag)
         viewModel.streamEvent = .loaded(viewModel.path)
     }
-    func onSeek(){
+    func onSeek(time:Double){
         if viewModel.playerStatus == .error {
             ComponentLog.d("error reload", tag: self.tag)
             return
         }
         ComponentLog.d("onSeek", tag: self.tag)
+        viewModel.seekTime = time
         viewModel.playerStatus = .seek
         //onBuffering()
     }
@@ -185,6 +198,7 @@ extension PlayBack {
     
     func onSeeked(){
         ComponentLog.d("onSeeked", tag: self.tag)
+        viewModel.seekTime = nil
         viewModel.streamEvent = .seeked
     }
     func onResumed(){

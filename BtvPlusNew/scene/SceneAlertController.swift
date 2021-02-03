@@ -30,7 +30,7 @@ enum SceneAlert:Equatable {
 
 }
 enum SceneAlertResult {
-    case complete(SceneAlert), error(SceneAlert) , cancel(SceneAlert), retry(SceneAlert)
+    case complete(SceneAlert), error(SceneAlert) , cancel(SceneAlert), retry(SceneAlert?)
 }
 struct DeclarationData:Identifiable {
     let id = UUID.init().uuidString
@@ -199,8 +199,13 @@ struct SceneAlertController: PageComponent{
     
     func selectedApi(_ idx:Int, data:ApiResultError) {
         if idx == 1 {
-            self.dataProvider.requestData(q:.init(type:data.type))
-        }else {
+            if data.isProcess {
+                self.pageSceneObserver.alertResult = .retry(nil)
+            }else{
+                self.dataProvider.requestData(q:.init(type:data.type))
+            }
+            
+        }else if idx == 0  {
             self.pageSceneObserver.alertResult = .cancel(.connectWifi)
         }
     }

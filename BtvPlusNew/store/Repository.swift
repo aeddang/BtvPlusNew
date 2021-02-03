@@ -189,10 +189,12 @@ class Repository:ObservableObject, PageProtocol{
         switch res.type {
         case .getGnb :
             guard let data = res.data as? GnbBlock  else { return }
-            if data.gnbs == nil ||   data.gnbs!.isEmpty {
+            if data.gnbs == nil || data.gnbs!.isEmpty {
+                //self.pageSceneObserver?.event = .toast("respondApi data.gnbs error")
                 self.status = .error(nil)
                 return
             }
+            //self.pageSceneObserver?.event = .toast("respondApi getGnb")
             self.onReadyRepository(gnbData: data)
         
         default: do{}
@@ -222,6 +224,7 @@ class Repository:ObservableObject, PageProtocol{
     
     func retryRepository()
     {
+        //self.pageSceneObserver?.event = .toast("retryRepository")
         self.status = .initate
         self.apiManager.retryApi()
     }

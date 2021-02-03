@@ -36,14 +36,22 @@ class PageDataProviderModel:ObservableObject{
     }
     func requestProgress(q:ApiQ){
         if isProgress { return }
-        self.requests = [q]
+        var copy = q.copy()
+        copy.isProcess = true
+        self.requests = [copy]
     }
     func requestProgress(qs:Array<ApiQ>){
         if isProgress { return }
-        self.requests = qs
+        let copys:Array<ApiQ> = qs.map { q in
+            var copy = q.copy()
+            copy.isProcess = true
+            return copy
+        }
+        self.requests = copys
     }
     
     fileprivate func onResult(_ result:ApiResultResponds) {
+        
         if result.id == request?.id {
             self.event = .onResult(-1, result, -1)
         }

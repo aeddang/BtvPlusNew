@@ -66,6 +66,8 @@
 		31E3974225B5906E00CE6E21 /* RatingPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E3974125B5906E00CE6E21 /* RatingPoint.swift */; };
 		31E3974A25B595FC00CE6E21 /* ShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E3974925B595FC00CE6E21 /* ShareButton.swift */; };
 		31E3975025B5A0A300CE6E21 /* PageMy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E3974F25B5A0A300CE6E21 /* PageMy.swift */; };
+		31E8D7BC25CA5D470034BBC4 /* PlayerTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E8D7BB25CA5D470034BBC4 /* PlayerTop.swift */; };
+		31E8D7C125CA85190034BBC4 /* SelectFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E8D7C025CA85190034BBC4 /* SelectFunction.swift */; };
 		4624169650CBC1A8EF5A5678 /* Pods_BtvPlusNewTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 422A939031A7D25F7E469FCB /* Pods_BtvPlusNewTests.framework */; };
 		D4D8529D19DCDC8D8370F889 /* Pods_BtvPlusNew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 562032BFA89FA1AD38D16D26 /* Pods_BtvPlusNew.framework */; };
 		D506D717258C8FFB00F27C00 /* PosterList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D506D716258C8FFB00F27C00 /* PosterList.swift */; };
@@ -308,6 +310,8 @@
 		31E3974125B5906E00CE6E21 /* RatingPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingPoint.swift; sourceTree = "<group>"; };
 		31E3974925B595FC00CE6E21 /* ShareButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareButton.swift; sourceTree = "<group>"; };
 		31E3974F25B5A0A300CE6E21 /* PageMy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMy.swift; sourceTree = "<group>"; };
+		31E8D7BB25CA5D470034BBC4 /* PlayerTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTop.swift; sourceTree = "<group>"; };
+		31E8D7C025CA85190034BBC4 /* SelectFunction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectFunction.swift; sourceTree = "<group>"; };
 		348DCDB744BAB8587ED219D4 /* Pods-BtvPlusNewTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BtvPlusNewTests.release.xcconfig"; path = "Target Support Files/Pods-BtvPlusNewTests/Pods-BtvPlusNewTests.release.xcconfig"; sourceTree = "<group>"; };
 		422A939031A7D25F7E469FCB /* Pods_BtvPlusNewTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BtvPlusNewTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		562032BFA89FA1AD38D16D26 /* Pods_BtvPlusNew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BtvPlusNew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -537,7 +541,9 @@
 		31061E7E25C93E4500543FC0 /* view */ = {
 			isa = PBXGroup;
 			children = (
+				31E8D7C025CA85190034BBC4 /* SelectFunction.swift */,
 				31061E7625C934B600543FC0 /* PlayerEffect.swift */,
+				31E8D7BB25CA5D470034BBC4 /* PlayerTop.swift */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -1725,6 +1731,7 @@
 				D506D732258CA3E300F27C00 /* ThemaList.swift in Sources */,
 				D56C5FE825930060009AE769 /* BookMark.swift in Sources */,
 				D56C69A8257DA09E00CF9AB8 /* ImageLoader.swift in Sources */,
+				31E8D7C125CA85190034BBC4 /* SelectFunction.swift in Sources */,
 				D56C6A53257DA0C700CF9AB8 /* FillButton.swift in Sources */,
 				D56C699F257DA09E00CF9AB8 /* PageDragingProtocol.swift in Sources */,
 				D56C6A44257DA0C700CF9AB8 /* TextStyle.swift in Sources */,
@@ -1751,6 +1758,7 @@
 				D56C6A40257DA0C700CF9AB8 /* PlayerUI.swift in Sources */,
 				D56C6A5A257DA0C700CF9AB8 /* SortButton.swift in Sources */,
 				D56C6B0F257DAADE00CF9AB8 /* SceneRadioController.swift in Sources */,
+				31E8D7BC25CA5D470034BBC4 /* PlayerTop.swift in Sources */,
 				D5DC474E25820A02007EDD86 /* RelationContent.swift in Sources */,
 				D5E27EEA258751A200B2CD5D /* Block.swift in Sources */,
 				315B55D225A7E2DC00B5B351 /* Nps.swift in Sources */,

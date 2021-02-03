@@ -14,19 +14,19 @@ struct StrokeRectButton: View, SelecterbleProtocol{
     var index: Int = 0
     var textModifier:TextModifier = TextModifier(
         family: Font.family.bold,
-        size: Font.size.light,
-        color: Color.app.grey,
-        activeColor: Color.brand.primary
+        size: Font.size.tinyExtra,
+        color: Color.app.greyLight,
+        activeColor: Color.app.white
     )
     
-    var strokeColor = Color.app.grey
-    var strokeActiveColor = Color.brand.primary
-    var cornerRadius = Dimen.radius.light
-    var size:CGFloat = Dimen.button.light
-    var padding:CGFloat = Dimen.margin.thin
+    var strokeColor = Color.app.greyLight
+    var strokeActiveColor = Color.app.white
+    var cornerRadius:CGFloat = 0
+    var size:CGSize = CGSize(width: Dimen.button.heavy, height: Dimen.button.thin)
     var icon:String? = nil
     var iconTail:String? = nil
     let action: (_ idx:Int) -> Void
+    
     
     var body: some View {
         Button(action: {
@@ -52,14 +52,14 @@ struct StrokeRectButton: View, SelecterbleProtocol{
                         
                     }
                 }
-                .padding(.horizontal, self.padding)
             }
-            .frame(height:self.size)
-            .background(Color.app.white)
+            .frame(width:self.size.width, height:self.size.height)
+            .background(Color.transparent.black1)
             .clipShape(RoundedRectangle(cornerRadius: self.cornerRadius))
             .overlay(
                 RoundedRectangle(cornerRadius: self.cornerRadius)
-                    .stroke(self.isSelected ? self.strokeActiveColor : self.strokeColor,lineWidth: 1)
+                    .stroke(self.isSelected ? self.strokeActiveColor : self.strokeColor,
+                            lineWidth: self.isSelected ? 2 : 1)
             )
         }
     }
@@ -74,6 +74,7 @@ struct StrokeRectButton_Previews: PreviewProvider {
                 
             }
             .frame( alignment: .center)
+            .background(Color.brand.bg)
         }
     }
 }

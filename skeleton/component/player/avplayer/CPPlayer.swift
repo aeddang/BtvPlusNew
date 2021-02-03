@@ -14,18 +14,28 @@ struct CPPlayer: PageComponent {
     var body: some View {
         ZStack{
             CustomAVPlayer( viewModel : self.viewModel)
-            PlayerUI(viewModel : self.viewModel, pageObservable:self.pageObservable)
-        }
-        .onTapGesture {
-            if self.viewModel.playerUiStatus == .hidden {
-                self.viewModel.playerUiStatus = .view
-                if self.viewModel.playerStatus == PlayerStatus.resume {
-                    self.delayAutoUiHidden()
-                }
-            }else {
-                self.viewModel.playerUiStatus = .hidden
-                self.autoUiHidden?.cancel()
+            HStack(spacing:0){
+                Spacer().modifier(MatchParent())
+                    .background(Color.transparent.black1)
+                    .onTapGesture(count: 2, perform: {
+                        self.viewModel.event = .seekBackword(10, false)
+                    })
+                    .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
+                        self.uiViewChange()
+                    })
+                    
+                Spacer().modifier(MatchParent())
+                    .background(Color.transparent.black1)
+                    .onTapGesture(count: 2, perform: {
+                        self.viewModel.event = .seekForward(10, false)
+                    })
+                    .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
+                        self.uiViewChange()
+                    })
+                    
             }
+            PlayerUI(viewModel : self.viewModel, pageObservable:self.pageObservable)
+            
         }
         .onReceive(self.viewModel.$isPlay) { _ in
             self.autoUiHidden?.cancel()
@@ -47,6 +57,18 @@ struct CPPlayer: PageComponent {
         .background(Color.black)
     }
     
+    func uiViewChange(){
+        if self.viewModel.playerUiStatus == .hidden {
+            self.viewModel.playerUiStatus = .view
+            if self.viewModel.playerStatus == PlayerStatus.resume {
+                self.delayAutoUiHidden()
+            }
+        }else {
+            self.viewModel.playerUiStatus = .hidden
+            self.autoUiHidden?.cancel()
+        }
+    }
+
     @State var autoUiHidden:AnyCancellable?
     func delayAutoUiHidden(){
         self.autoUiHidden?.cancel()

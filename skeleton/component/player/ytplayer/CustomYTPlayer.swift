@@ -63,6 +63,7 @@ open class YTPlayerModel: ComponentObservable {
 
 
 struct CustomYTPlayer: UIViewRepresentable, PlayBack, YTPlayerViewDelegate {
+    
     @ObservedObject var viewModel:PlayerModel
     @ObservedObject var ytPlayerModel:YTPlayerModel = YTPlayerModel()
     var playID:String?
@@ -148,7 +149,7 @@ struct CustomYTPlayer: UIViewRepresentable, PlayBack, YTPlayerViewDelegate {
         
         func onSeek(time:Double, play:Bool){
             player.seek(seekToSeconds: Float(time), allowSeekAhead: true)
-            self.onSeek()
+            self.onSeek(time: time)
         }
         switch evt {
         case .load(let path, let isAutoPlay, let initTime, _):

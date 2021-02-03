@@ -93,7 +93,9 @@ open class CustomAVPlayerViewController: AVPlayerViewController {
         switch event!.subtype {
         case .remoteControlPause: self.viewModel.event = .pause
         case .remoteControlPlay: self.viewModel.event = .resume
-        case .remoteControlNextTrack: self.viewModel.remoteEvent = .next
+        case .remoteControlEndSeekingForward: self.viewModel.event = .resume
+        //case .remoteControlEndSeekingBackward: self.viewModel.event = .seekForward(10, false)
+        //case .remoteControlNextTrack: self.viewModel.event = .seekBackword(10, false)
         case .remoteControlPreviousTrack: self.viewModel.remoteEvent = .prev
         default: do{}
         }
@@ -105,6 +107,10 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<CustomAVPlayer>) -> AVPlayerViewController {
         let playerScreenView = PlayerScreenView(frame: .infinite)
+        playerScreenView.screenGravity(self.viewModel.screenGravity)
+        playerScreenView.mute(self.viewModel.isMute)
+        playerScreenView.playRate(self.viewModel.rate)
+        
         let playerController = CustomAVPlayerViewController(viewModel: self.viewModel, playerScreenView: playerScreenView)
         playerController.delegate = context.coordinator
         playerScreenView.delegate = self
@@ -154,6 +160,11 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
     
     private func update(_ player:PlayerScreenView, evt:PlayerUIEvent){
         func onResume(){
+            if viewModel.playerStatus == .complete {
+                onSeek(time: 0, play:true)
+                return
+            }
+            
             if !player.resume() {
                 viewModel.error = .illegalState(evt)
                 return
@@ -166,7 +177,7 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
         
         func onSeek(time:Double, play:Bool){
             if !player.seek(time) { viewModel.error = .illegalState(evt) }
-            self.onSeek()
+            self.onSeek(time: time)
             if self.viewModel.isRunning {return}
             if play { onResume() }
             run(player)
@@ -192,8 +203,27 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
         case .volume(let v):
             MPVolumeView.setVolume(v)
             viewModel.volume = v
+            if v == 0{
+                viewModel.isMute = true
+                player.mute(true)
+            }else if viewModel.isMute {
+                viewModel.isMute = false
+                player.mute(false)
+            }
+            
+        case .mute(let isMute):
+            viewModel.isMute = isMute
+            player.mute(isMute)
+        case .rate(let r):
+            player.playRate(r)
+            viewModel.rate = r
+        case .screenGravity(let gravity):
+            viewModel.screenGravity = gravity
+            player.screenGravity(gravity)
         case .seekTime(let t, let play): onSeek(time:t, play: play)
         case .seekMove(let t, let play): onSeek(time:viewModel.time + t, play: play)
+        case .seekForward(let t, let play): onSeek(time:viewModel.time + t, play: play)
+        case .seekBackword(let t, let play): onSeek(time:viewModel.time - t, play: play)
         case .seekProgress(let pct, let play):
             let t = viewModel.duration * Double(pct)
             onSeek(time:t, play: play)
@@ -247,6 +277,7 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
                     case .readyToPlay: do {
                         if let d = currentPlayer.currentItem?.asset.duration {
                             self.onDurationChange(Double(CMTimeGetSeconds(d)))
+                            player.playInit()
                         }
                         self.onReadyToPlay()
                     }
@@ -277,7 +308,11 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
         self.viewModel.event = .check
     }
     func onPlayerVolumeChanged(_ v:Float){
+        if self.viewModel.volume == v {return}
         self.viewModel.volume = v
+        if viewModel.isMute {
+            self.viewModel.event = .volume(v)
+        }
     }
 }
 
@@ -290,17 +325,18 @@ protocol PlayerScreenViewDelegate{
 
 class PlayerScreenView: UIView, PageProtocol {
     
-    var currentVolume:Float = 1.0
-    {
-        didSet{
-            player?.volume = currentVolume
-        }
-    }
+   
     var delegate:PlayerScreenViewDelegate?
     var player:AVPlayer? = nil
     private var recoveryTime:Double = -1
     let playerLayer = AVPlayerLayer()
     var playerController : AVPlayerViewController? = nil
+    private var videoGravitGravity:AVLayerVideoGravity = .resizeAspectFill
+    private var currentVolume:Float = 1.0
+    private var currentRate:Float = 1.0
+    
+    private var isAutoPlay:Bool = false
+    private var initTime:Double = 0
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -335,6 +371,8 @@ class PlayerScreenView: UIView, PageProtocol {
             player = AVPlayer(url: url)
             startPlayer()
         }
+        if self.isAutoPlay { resume() }
+        else { pause() }
         return player
     }
     
@@ -369,12 +407,16 @@ class PlayerScreenView: UIView, PageProtocol {
         player?.usesExternalPlaybackWhileExternalScreenIsActive = true
         player?.preventsDisplaySleepDuringVideoPlayback = true
         player?.volume = currentVolume
+        //player?.rate = currentRate
         playerLayer.player = player
-        playerLayer.videoGravity = .resizeAspectFill
+        playerLayer.videoGravity = videoGravitGravity
         playerController?.player = player
         playerController?.updatesNowPlayingInfoCenter = false
+        
         //player?.addPeriodicTimeObserver(forInterval: <#T##CMTime#>, queue: <#T##DispatchQueue?#>, using: <#T##(CMTime) -> Void#>)
-        //ComponentLog.d("startPlayer " + playerLayer.isReadyForDisplay.description , tag: self.tag)
+        ComponentLog.d("startPlayer currentVolume " + currentVolume.description , tag: self.tag)
+        ComponentLog.d("startPlayer currentRate " + currentRate.description , tag: self.tag)
+        ComponentLog.d("startPlayer videoGravity " + videoGravitGravity.rawValue , tag: self.tag)
         
         //player?.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.new, .initial], context: nil)
         //player?.addObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status), options:[.new, .initial], context: nil)
@@ -431,20 +473,35 @@ class PlayerScreenView: UIView, PageProtocol {
         delegate?.onPlayerVolumeChanged(volume)
     }
     
+    @discardableResult
+    func screenGravity(_ gravity:AVLayerVideoGravity) -> Bool {
+        self.videoGravitGravity = gravity
+        playerLayer.videoGravity = gravity
+        return true
+    }
     
     @discardableResult
     func load(_ path:String, isAutoPlay:Bool = false , initTime:Double = 0, buffer:Double = 2.0, header:[String:String]? = nil) -> AVPlayer? {
         guard let url = URL(string: path) else {
            return nil
         }
+        self.initTime = initTime
+        self.isAutoPlay = isAutoPlay
         let player = createPlayer(url, buffer:buffer, header:header)
-        if isAutoPlay { resume() }
-        if initTime > 0 { seek(initTime) }
         return player
     }
+    
+    func playInit(){
+        if self.initTime > 0 { seek(initTime) }
+        guard let currentPlayer = player else { return }
+        currentPlayer.rate = self.currentRate
+    }
+    
     func stop() {
         destoryPlayer()
     }
+    
+    
     
     @discardableResult
     func resume() -> Bool {
@@ -467,6 +524,22 @@ class PlayerScreenView: UIView, PageProtocol {
             value: CMTimeValue(t * PlayerModel.TIME_SCALE),
             timescale: CMTimeScale(PlayerModel.TIME_SCALE))
         currentPlayer.seek(to: cmt)
+        return true
+    }
+    
+    @discardableResult
+    func playRate(_ r:Float) -> Bool {
+        currentRate = r
+        guard let currentPlayer = player else { return false }
+        currentPlayer.rate = r
+        return true
+    }
+    
+    @discardableResult
+    func mute(_ isMute:Bool) -> Bool {
+        currentVolume = isMute ? 0.0 : 1.0
+        guard let currentPlayer = player else { return false }
+        currentPlayer.volume = currentVolume
         return true
     }
 }

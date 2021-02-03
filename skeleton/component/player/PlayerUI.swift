@@ -10,6 +10,12 @@ import Foundation
 import SwiftUI
 import Combine
 
+extension PlayerUI {
+    static let padding = Dimen.margin.thin
+    static let paddingFullScreen = Dimen.margin.regular
+}
+
+
 struct PlayerUI: PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var viewModel:PlayerModel
@@ -30,6 +36,7 @@ struct PlayerUI: PageComponent {
             ActivityIndicator( isAnimating: self.$isLoading,
                                style: .large,
                                color: Color.app.white )
+        
             if !self.isSeeking {
                 ImageButton(
                     defaultImage: Asset.player.resume,
@@ -46,11 +53,11 @@ struct PlayerUI: PageComponent {
                 HStack(spacing:Dimen.margin.thin){
                     Text(self.time)
                         .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.white))
-                        .frame(width:52)
+                        .frame(width:53)
                         .fixedSize(horizontal: true, vertical: false)
                     ProgressSlider(
                         progress: self.progress,
-                        thumbSize: Dimen.icon.tiny,
+                        thumbSize: self.isFullScreen ?Dimen.icon.thinExtra : Dimen.icon.tiny,
                         onChange: { pct in
                             let willTime = self.viewModel.duration * Double(pct)
                             self.viewModel.event = .seeking(willTime)
@@ -58,10 +65,10 @@ struct PlayerUI: PageComponent {
                         onChanged:{ pct in
                             self.viewModel.event = .seekProgress(pct)
                         })
-                        .frame(height: 20)
+                        .frame(height: self.isFullScreen ? 54 : 44)
                     Text(self.duration)
                         .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.greyLightExtra))
-                        .frame(width:52)
+                        .frame(width:53)
                         .fixedSize(horizontal: true, vertical: false)
                     ImageButton(
                         defaultImage: Asset.player.fullScreen,
@@ -74,7 +81,7 @@ struct PlayerUI: PageComponent {
                             :self.pagePresenter.fullScreenEnter()
                     }
                 }
-                .padding(.horizontal, Dimen.margin.tinyExtra)
+                .padding(.horizontal, self.isFullScreen ? Self.paddingFullScreen : Self.padding)
             }
             .opacity(self.isShowing ? 1 : 0)
         }

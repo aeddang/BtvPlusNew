@@ -51,6 +51,7 @@ struct ProgressSlider: PageView {
                         
                 }
             }
+            .modifier(MatchParent())
             .background(Color.transparent.black1)
             .highPriorityGesture(DragGesture(minimumDistance: 0)
                 .onChanged({ value in

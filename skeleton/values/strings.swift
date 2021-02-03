@@ -48,6 +48,7 @@ extension String {
         public static let count = "count".loaalized()
         public static let broCount = "broCount".loaalized()
         public static let award = "award".loaalized()
+        public static let moveSec = "moveSec".loaalized()
     }
     
     struct sort {
@@ -138,6 +139,10 @@ extension String {
         public static let notice = "btnNotice".loaalized()
         public static let purchas = "btnPurchas".loaalized()
         public static let purchasAnother = "btnPurchasAnother".loaalized()
+        
+        public static let ratioOrigin = "btnRatioOrigin".loaalized()
+        public static let ratioFill = "btnRatioFill".loaalized()
+        public static let ratioFit = "btnRatioFit".loaalized()
     }
     
     struct pageTitle {

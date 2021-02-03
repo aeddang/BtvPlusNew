@@ -51,7 +51,7 @@ extension Color {
     
     struct transparent {
         public static let clear = Color.black.opacity(0.0)
-        public static let black1 = Color.black.opacity(0.001)
+        public static let black1 = Color.black.opacity(0.0001)
         public static let black70 = Color.black.opacity(0.7)
         public static let black45 = Color.black.opacity(0.45)
         public static let black15 = Color.black.opacity(0.15)

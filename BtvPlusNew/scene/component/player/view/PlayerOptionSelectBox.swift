@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 import AVKit
 
-extension SelectFunction{
+extension PlayerOptionSelectBox{
     static let strokeButtonText = TextModifier(
         family: Font.family.bold,
         size: Font.size.thinExtra,
@@ -47,14 +47,14 @@ extension SelectFunction{
 }
 
 
-struct SelectFunction: PageView{
+struct PlayerOptionSelectBox: PageView{
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
     
     @State var isFullScreen:Bool = false
     @State var isShowing:Bool = false
     @State var btns:[BtnData] = []
-    
+    @State var buttonSize:CGSize = Dimen.button.mediumRect
     
     @State var selectedIdx:Int = -1
     var body: some View {
@@ -87,8 +87,7 @@ struct SelectFunction: PageView{
                             : Self.strokeButtonText,
                         size: self.isFullScreen
                             ? Dimen.button.heavyRect
-                            : self.viewModel.selectFunctionType == .ratio
-                                ? Dimen.button.mediumRect : Dimen.button.mediumExtraRect
+                            : self.buttonSize
                         ){ _ in
                         guard let type = self.viewModel.selectFunctionType else{ return }
                         
@@ -96,7 +95,6 @@ struct SelectFunction: PageView{
                         case .quality :
                             guard let value = btn.value as? Quality else { return }
                             self.viewModel.currentQuality = value
-                            
                         case .rate :
                             guard let value = btn.value as? Float else { return }
                             self.viewModel.event = .rate(value)
@@ -121,6 +119,7 @@ struct SelectFunction: PageView{
                 }
                 return
             }
+            self.viewModel.playerUiStatus = .hidden
             self.selectedIdx = -1
             switch type {
             case .quality :
@@ -130,7 +129,8 @@ struct SelectFunction: PageView{
                     }
                     return BtnData(title: q.name, index: idx, value: q)
                 }
-                
+                self.buttonSize = Dimen.button.mediumExtraRect
+                   
             case .rate :
                 self.btns = zip(0...Self.rates.count, Self.rates).map{ idx, r in
                     if self.viewModel.rate == r {
@@ -138,6 +138,8 @@ struct SelectFunction: PageView{
                     }
                     return BtnData(title: "x" + r.description , index: idx, value: r)
                 }
+                self.buttonSize = Dimen.button.mediumExtraRect
+                
             case .ratio :
                 self.btns = zip(0...Self.ratios.count, Self.ratios).map{ idx, r in
                     if self.viewModel.screenGravity == r.gravity{
@@ -145,6 +147,8 @@ struct SelectFunction: PageView{
                     }
                     return BtnData(title: r.name , index: idx, value: r.gravity )
                 }
+                self.buttonSize = Dimen.button.mediumRect
+                
             }
             withAnimation{
                 self.isShowing = true
@@ -164,11 +168,11 @@ struct SelectFunction: PageView{
 
 
 #if DEBUG
-struct SelectFunction_Previews: PreviewProvider {
+struct PlayerOptionSelectBox_Previews: PreviewProvider {
     
     static var previews: some View {
         VStack{
-            SelectFunction()
+            PlayerOptionSelectBox()
             .environmentObject(PagePresenter())
             .modifier(MatchParent())
         }

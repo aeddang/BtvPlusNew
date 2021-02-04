@@ -94,6 +94,7 @@ open class SceneObserver: ObservableObject{
     @Published private(set) var safeAreaEnd:CGFloat = 0
     @Published private(set) var safeAreaBottom:CGFloat = 0
     @Published private(set) var safeAreaTop:CGFloat = 0
+    @Published var willScreenSize:CGSize? = nil
     @Published private(set) var screenSize:CGSize = CGSize()
     @Published var isUpdated:Bool = false
         {didSet{ if isUpdated { isUpdated = false} }}
@@ -106,7 +107,15 @@ open class SceneObserver: ObservableObject{
         //ComponentLog.d("safeAreaBottom " + safeAreaBottom.description, tag: "SceneObserver")
         self.isUpdated = true
     }
-    
+    var willSceneOrientation: SceneOrientation? {
+        get{
+            guard let screen = willScreenSize else {return nil}
+            return screen.width > screen.height
+                        ? .landscape
+                        : .portrait
+            //return UIDevice.current.orientation.isLandscape ? .landscape : .portrait
+        }
+    }
     var sceneOrientation: SceneOrientation {
         get{
             return self.screenSize.width > self.screenSize.height

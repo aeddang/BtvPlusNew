@@ -5,38 +5,39 @@ import Combine
 let testPath = "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
 let testPath2 = "http://techslides.com/demos/sample-videos/small.mp4"
 
-
 struct CPPlayer: PageComponent {
+    @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var viewModel:PlayerModel = PlayerModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
-    
-    private let TAG = "ComponentPlayer"
+    @State var screenRatio = CGSize(width:1, height:1)
     var body: some View {
         ZStack{
             CustomAVPlayer( viewModel : self.viewModel)
-            HStack(spacing:0){
-                Spacer().modifier(MatchParent())
-                    .background(Color.transparent.black1)
-                    .onTapGesture(count: 2, perform: {
-                        self.viewModel.event = .seekBackword(10, false)
-                    })
-                    .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
-                        self.uiViewChange()
-                    })
-                    
-                Spacer().modifier(MatchParent())
-                    .background(Color.transparent.black1)
-                    .onTapGesture(count: 2, perform: {
-                        self.viewModel.event = .seekForward(10, false)
-                    })
-                    .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
-                        self.uiViewChange()
-                    })
-                    
+            if !self.viewModel.useAvPlayerController {
+                HStack(spacing:0){
+                    Spacer().modifier(MatchParent())
+                        .background(Color.transparent.clearUi)
+                        .onTapGesture(count: 2, perform: {
+                            self.viewModel.event = .seekBackword(10, false)
+                        })
+                        .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
+                            self.uiViewChange()
+                        })
+                        
+                    Spacer().modifier(MatchParent())
+                        .background(Color.transparent.clearUi)
+                        .onTapGesture(count: 2, perform: {
+                            self.viewModel.event = .seekForward(10, false)
+                        })
+                        .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
+                            self.uiViewChange()
+                        })
+                        
+                }
+                PlayerUI(viewModel : self.viewModel, pageObservable:self.pageObservable)
             }
-            PlayerUI(viewModel : self.viewModel, pageObservable:self.pageObservable)
-            
         }
+        .clipped()
         .onReceive(self.viewModel.$isPlay) { _ in
             self.autoUiHidden?.cancel()
         }
@@ -44,6 +45,7 @@ struct CPPlayer: PageComponent {
             guard let evt = evt else { return }
             switch evt {
             case .seeking(_): self.autoUiHidden?.cancel()
+            case .fixUiStatus: self.autoUiHidden?.cancel()
             default : do{}
             }
         }
@@ -55,11 +57,14 @@ struct CPPlayer: PageComponent {
             }
         }
         .background(Color.black)
+        
+        
     }
     
     func uiViewChange(){
         if self.viewModel.playerUiStatus == .hidden {
             self.viewModel.playerUiStatus = .view
+            //ComponentLog.d("self.viewModel.playerStatus " + self.viewModel.playerStatus.debugDescription , tag: self.tag)
             if self.viewModel.playerStatus == PlayerStatus.resume {
                 self.delayAutoUiHidden()
             }
@@ -89,7 +94,8 @@ struct ComponentPlayer_Previews: PreviewProvider {
     static var previews: some View {
         Form{
             CPPlayer(viewModel:PlayerModel()).contentBody
-            .frame(width: 320, height: 640, alignment: .center)
+                .environmentObject(PagePresenter())
+                .frame(width: 320, height: 640, alignment: .center)
         }
     }
 }

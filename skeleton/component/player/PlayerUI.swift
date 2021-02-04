@@ -33,21 +33,31 @@ struct PlayerUI: PageComponent {
     @State var isShowing: Bool = false
     var body: some View {
         ZStack{
+            HStack(spacing:0){
+                Spacer().modifier(MatchParent())
+                    .background(Color.transparent.clearUi)
+                    .onTapGesture(count: 2, perform: {
+                        self.viewModel.event = .seekBackword(10, false)
+                    })
+                    .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
+                        self.viewModel.playerUiStatus = .hidden
+                    })
+                    
+                Spacer().modifier(MatchParent())
+                    .background(Color.transparent.clearUi)
+                    .onTapGesture(count: 2, perform: {
+                        self.viewModel.event = .seekForward(10, false)
+                    })
+                    .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
+                        self.viewModel.playerUiStatus = .hidden
+                    })
+            }
+            .background(Color.transparent.black45)
+            .opacity(self.isShowing ? 1 : 0)
+                        
             ActivityIndicator( isAnimating: self.$isLoading,
                                style: .large,
                                color: Color.app.white )
-        
-            if !self.isSeeking {
-                ImageButton(
-                    defaultImage: Asset.player.resume,
-                    activeImage: Asset.player.pause,
-                    isSelected: self.isPlaying,
-                    size: CGSize(width:Dimen.icon.heavyExtra,height:Dimen.icon.heavyExtra)
-                ){ _ in
-                    self.viewModel.event = .togglePlay
-                }
-                .opacity(( self.isShowing && !self.isLoading) ? 1 : 0)
-            }
             VStack{
                 Spacer()
                 HStack(spacing:Dimen.margin.thin){
@@ -65,7 +75,7 @@ struct PlayerUI: PageComponent {
                         onChanged:{ pct in
                             self.viewModel.event = .seekProgress(pct)
                         })
-                        .frame(height: self.isFullScreen ? 54 : 44)
+                        .frame(height: self.isFullScreen ? 64 : 44)
                     Text(self.duration)
                         .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.greyLightExtra))
                         .frame(width:53)
@@ -78,12 +88,24 @@ struct PlayerUI: PageComponent {
                     ){ _ in
                         self.isFullScreen
                             ? self.pagePresenter.fullScreenExit()
-                            :self.pagePresenter.fullScreenEnter()
+                            : self.pagePresenter.fullScreenEnter()
                     }
                 }
                 .padding(.horizontal, self.isFullScreen ? Self.paddingFullScreen : Self.padding)
             }
             .opacity(self.isShowing ? 1 : 0)
+            
+            if !self.isSeeking {
+                ImageButton(
+                    defaultImage: Asset.player.resume,
+                    activeImage: Asset.player.pause,
+                    isSelected: self.isPlaying,
+                    size: CGSize(width:Dimen.icon.heavyExtra,height:Dimen.icon.heavyExtra)
+                ){ _ in
+                    self.viewModel.event = .togglePlay
+                }
+                .opacity(( self.isShowing && !self.isLoading) ? 1 : 0)
+            }
         }
         .toast(isShowing: self.$isError, text: self.errorMessage)
         
@@ -128,7 +150,9 @@ struct PlayerUI: PageComponent {
         .onReceive(self.viewModel.$streamEvent) { evt in
             guard let evt = evt else { return }
             switch evt {
-            case .seeked: withAnimation{ self.isSeeking = false }
+            case .seeked: withAnimation{
+                self.isSeeking = false
+            }
             default : do{}
             }
         }

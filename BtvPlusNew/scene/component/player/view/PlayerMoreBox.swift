@@ -1,0 +1,117 @@
+//
+//  PosterType01.swift
+//  BtvPlusNew
+//
+//  Created by KimJeongCheol on 2020/12/18.
+//
+
+import Foundation
+import SwiftUI
+
+extension PlayerMoreBox{
+    static let textSize = Font.size.thin
+    static let textSizeFull = Font.size.lightExtra
+}
+
+
+struct PlayerMoreBox: PageView{
+    @EnvironmentObject var pagePresenter:PagePresenter
+    @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
+    
+    @State var isFullScreen:Bool = false
+    @State var isShowing:Bool = false
+    var body: some View {
+        ZStack{
+            Image(self.isFullScreen ? Asset.player.popupBgFull : Asset.player.popupBg)
+                .renderingMode(.original)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+            
+            VStack(spacing:Dimen.margin.light){
+                Button(action: {
+                    self.viewModel.isLock = true
+                    withAnimation{ self.isShowing = false }
+                }) {
+                    Text( String.button.screenLock )
+                        .modifier(
+                            MediumTextStyle(size: self.isFullScreen ? Self.textSizeFull : Self.textSize))
+                }
+                
+                Button(action: {
+                    self.viewModel.selectFunctionType = .ratio
+                    
+                }) {
+                    Text( String.button.screenRatio )
+                        .modifier(
+                            MediumTextStyle(size: self.isFullScreen ? Self.textSizeFull : Self.textSize))
+                }
+                
+                Button(action: {
+                    
+                }) {
+                    Text( String.button.watchBtv )
+                        .modifier(
+                            MediumTextStyle(size: self.isFullScreen ? Self.textSizeFull : Self.textSize))
+                }
+                
+                if self.isFullScreen {
+                    Button(action: {
+                        self.viewModel.btvUiEvent = .guide
+                        withAnimation{ self.isShowing = false }
+                    }) {
+                        Text( String.button.guide )
+                            .modifier(
+                                MediumTextStyle(size: self.isFullScreen ? Self.textSizeFull : Self.textSize))
+                    }
+                }
+            }
+            
+        }
+        .frame(
+            width: self.isFullScreen ? 120 : 81,
+            height: self.isFullScreen ? 169 : 102
+        )
+        .opacity(self.isShowing ? 1 : 0)
+        .onReceive(self.viewModel.$btvUiEvent) { evt in
+            withAnimation{
+                switch evt {
+                case .more :
+                    self.isShowing = self.isShowing ? false : true
+                    if self.isShowing {
+                        self.viewModel.event = .fixUiStatus
+                    }
+                default : do{}
+                }
+            }
+        }
+        
+        .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
+            self.isFullScreen = fullScreen
+        }
+            
+    }//body
+    
+    
+    func hideBox(){
+        self.viewModel.playerUiStatus = .hidden
+        withAnimation{ self.isShowing = false }
+    }
+
+}
+
+
+#if DEBUG
+struct PlayerMoreBox_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        VStack{
+            PlayerMoreBox(
+               
+            )
+            .environmentObject(PagePresenter())
+            .modifier(MatchParent())
+        }
+        .background(Color.brand.bg)
+    }
+}
+#endif

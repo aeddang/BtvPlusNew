@@ -8,7 +8,8 @@
 import UIKit
 import SwiftUI
 import Combine
-import os.log
+
+
 final class PagePresenter:ObservableObject{
     func changePage(_ pageObject:PageObject ){
         if isBusy { return }
@@ -66,15 +67,16 @@ final class PagePresenter:ObservableObject{
     }
     func fullScreenEnter(isLock:Bool = false){
         if self.isFullScreen {return}
-        PageSceneDelegate.instance?.onFullScreenEnter(isLock: isLock)
         self.isFullScreen = true
+        PageSceneDelegate.instance?.onFullScreenEnter(isLock: isLock)
         PageLog.d("fullScreenEnter", tag: "PagePresenter")
     }
     func fullScreenExit(){
         if !self.isFullScreen {return}
+        self.isFullScreen = false
         PageSceneDelegate.instance?.onFullScreenExit()
         PageLog.d("fullScreenExit", tag: "PagePresenter")
-        self.isFullScreen = false
+        
     }
     
     @Published fileprivate(set) var event:PageEvent? = nil
@@ -82,7 +84,7 @@ final class PagePresenter:ObservableObject{
     @Published fileprivate(set) var currentPopup:PageObject? = nil
     @Published fileprivate(set) var currentTopPage:PageObject? = nil
     @Published var isLoading:Bool = false
-    @Published var bodyColor:Color = Color.white
+    @Published var bodyColor:Color = Color.black
     @Published var dragOpercity:Double = 0.0
     @Published fileprivate(set) var isBusy:Bool = false
     @Published fileprivate(set) var isFullScreen:Bool = false
@@ -97,8 +99,8 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     static let CHANGE_DURATION = Duration.ani.long
     
     static fileprivate var instance:PageSceneDelegate?
-    
-    public var window: UIWindow?
+    var window: UIWindow? = nil
+   
     fileprivate let changeDelay = 0.1
     fileprivate let changeAniDelay =  CHANGE_DURATION
     private(set) var contentController:PageContentController? = nil
@@ -126,26 +128,26 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
             let window = UIWindow(windowScene: windowScene)
             setupRootViewController(window)
             self.window = window
+            //window.backgroundColor = UIColor.black
             window.makeKeyAndVisible()
         }
         onInitPage()
     }
     func getPageModel() -> PageModel { return SceneModel()}
     
-    class CustomHostingController<ContentView> : UIHostingController<ContentView> where ContentView : View {
-        override dynamic open var preferredStatusBarStyle: UIStatusBarStyle {
-            .lightContent
-        }
-    }
+    
     private func setupRootViewController(_ window: UIWindow){
-        
         contentController = PageContentController()
         onInitController(controller: contentController!)
         let view = contentController?
             .environmentObject(pagePresenter)
             .environmentObject(sceneObserver)
-        window.rootViewController = CustomHostingController(rootView: adjustEnvironmentObjects(view))
+        
+        let rootViewController = PageHostingController(rootView: adjustEnvironmentObjects(view))
+        rootViewController.sceneObserver = sceneObserver
+        window.rootViewController = rootViewController
         window.overrideUserInterfaceStyle = .light
+       
     }
     
     private let preventDelay =  0.5
@@ -422,13 +424,22 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     }
     
     func onFullScreenEnter(isLock:Bool = false){
+        if let controller = self.window?.rootViewController as? PageHostingController<AnyView> {
+            controller.isFullScreen = true
+        }
         if isLock { AppDelegate.orientationLock = .landscape }
         self.requestDeviceOrientation(.landscape)
+        
+        
     }
     func onFullScreenExit(){
+        if let controller = self.window?.rootViewController as? PageHostingController<AnyView> {
+            controller.isFullScreen = false
+        }
         let willChangeOrientationMask = pageModel.getPageOrientation() ?? .all
         AppDelegate.orientationLock = willChangeOrientationMask
         self.requestDeviceOrientation(.portrait)
+    
     }
     
     private func requestDeviceOrientation(_ mask:UIInterfaceOrientationMask){

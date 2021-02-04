@@ -59,6 +59,9 @@
 		31626F0125B9151E00F4031D /* DirectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31626F0025B9151E00F4031D /* DirectView.swift */; };
 		316DF2D125C29EC500915B27 /* CustomAVPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316DF2D025C29EC500915B27 /* CustomAVPlayer.swift */; };
 		316DF2DF25C2AA3C00915B27 /* CPAirPlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316DF2DE25C2AA3C00915B27 /* CPAirPlayButton.swift */; };
+		317A8F4925CBA81700E41226 /* PlayerScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317A8F4825CBA81700E41226 /* PlayerScreenView.swift */; };
+		317A8F4E25CBBB2700E41226 /* PageHostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317A8F4D25CBBB2700E41226 /* PageHostingController.swift */; };
+		317A8F5C25CBE1AE00E41226 /* PlayerMoreBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317A8F5B25CBE1AE00E41226 /* PlayerMoreBox.swift */; };
 		3180855825C2287300AE4A73 /* BtvPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3180855725C2287300AE4A73 /* BtvPlayer.swift */; };
 		3180855E25C233A900AE4A73 /* libPoCDrmAgent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */; };
 		3192317225A3FDBE00020388 /* coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192317125A3FDBE00020388 /* coordinator.swift */; };
@@ -67,7 +70,7 @@
 		31E3974A25B595FC00CE6E21 /* ShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E3974925B595FC00CE6E21 /* ShareButton.swift */; };
 		31E3975025B5A0A300CE6E21 /* PageMy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E3974F25B5A0A300CE6E21 /* PageMy.swift */; };
 		31E8D7BC25CA5D470034BBC4 /* PlayerTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E8D7BB25CA5D470034BBC4 /* PlayerTop.swift */; };
-		31E8D7C125CA85190034BBC4 /* SelectFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E8D7C025CA85190034BBC4 /* SelectFunction.swift */; };
+		31E8D7C125CA85190034BBC4 /* PlayerOptionSelectBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E8D7C025CA85190034BBC4 /* PlayerOptionSelectBox.swift */; };
 		4624169650CBC1A8EF5A5678 /* Pods_BtvPlusNewTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 422A939031A7D25F7E469FCB /* Pods_BtvPlusNewTests.framework */; };
 		D4D8529D19DCDC8D8370F889 /* Pods_BtvPlusNew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 562032BFA89FA1AD38D16D26 /* Pods_BtvPlusNew.framework */; };
 		D506D717258C8FFB00F27C00 /* PosterList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D506D716258C8FFB00F27C00 /* PosterList.swift */; };
@@ -302,6 +305,9 @@
 		31626F0025B9151E00F4031D /* DirectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectView.swift; sourceTree = "<group>"; };
 		316DF2D025C29EC500915B27 /* CustomAVPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAVPlayer.swift; sourceTree = "<group>"; };
 		316DF2DE25C2AA3C00915B27 /* CPAirPlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPAirPlayButton.swift; sourceTree = "<group>"; };
+		317A8F4825CBA81700E41226 /* PlayerScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerScreenView.swift; sourceTree = "<group>"; };
+		317A8F4D25CBBB2700E41226 /* PageHostingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageHostingController.swift; sourceTree = "<group>"; };
+		317A8F5B25CBE1AE00E41226 /* PlayerMoreBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerMoreBox.swift; sourceTree = "<group>"; };
 		3180855725C2287300AE4A73 /* BtvPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtvPlayer.swift; sourceTree = "<group>"; };
 		3180855C25C233A900AE4A73 /* DrmAgent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrmAgent.h; sourceTree = "<group>"; };
 		3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPoCDrmAgent.a; sourceTree = "<group>"; };
@@ -311,7 +317,7 @@
 		31E3974925B595FC00CE6E21 /* ShareButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareButton.swift; sourceTree = "<group>"; };
 		31E3974F25B5A0A300CE6E21 /* PageMy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMy.swift; sourceTree = "<group>"; };
 		31E8D7BB25CA5D470034BBC4 /* PlayerTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTop.swift; sourceTree = "<group>"; };
-		31E8D7C025CA85190034BBC4 /* SelectFunction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectFunction.swift; sourceTree = "<group>"; };
+		31E8D7C025CA85190034BBC4 /* PlayerOptionSelectBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerOptionSelectBox.swift; sourceTree = "<group>"; };
 		348DCDB744BAB8587ED219D4 /* Pods-BtvPlusNewTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BtvPlusNewTests.release.xcconfig"; path = "Target Support Files/Pods-BtvPlusNewTests/Pods-BtvPlusNewTests.release.xcconfig"; sourceTree = "<group>"; };
 		422A939031A7D25F7E469FCB /* Pods_BtvPlusNewTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BtvPlusNewTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		562032BFA89FA1AD38D16D26 /* Pods_BtvPlusNew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BtvPlusNew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -541,7 +547,8 @@
 		31061E7E25C93E4500543FC0 /* view */ = {
 			isa = PBXGroup;
 			children = (
-				31E8D7C025CA85190034BBC4 /* SelectFunction.swift */,
+				31E8D7C025CA85190034BBC4 /* PlayerOptionSelectBox.swift */,
+				317A8F5B25CBE1AE00E41226 /* PlayerMoreBox.swift */,
 				31061E7625C934B600543FC0 /* PlayerEffect.swift */,
 				31E8D7BB25CA5D470034BBC4 /* PlayerTop.swift */,
 			);
@@ -605,6 +612,17 @@
 				314F815F25BE30AA00E76508 /* PurchasViewer.swift */,
 			);
 			path = view;
+			sourceTree = "<group>";
+		};
+		3156F09E25CAC29100C9BE06 /* dialog */ = {
+			isa = PBXGroup;
+			children = (
+				D56C6B09257DAADE00CF9AB8 /* SceneAlertController.swift */,
+				D56C6B08257DAADE00CF9AB8 /* SceneRadioController.swift */,
+				D56C6B06257DAADE00CF9AB8 /* SceneSelectController.swift */,
+				D57298E4259D6EC100ED2CE6 /* ScenePickerController.swift */,
+			);
+			path = dialog;
 			sourceTree = "<group>";
 		};
 		3159B04E25B1700B008CA85B /* kms */ = {
@@ -908,6 +926,7 @@
 		D56C697D257DA09E00CF9AB8 /* page */ = {
 			isa = PBXGroup;
 			children = (
+				317A8F4D25CBBB2700E41226 /* PageHostingController.swift */,
 				D56C697E257DA09E00CF9AB8 /* PageSceneDelegate.swift */,
 				D56C697F257DA09E00CF9AB8 /* PageContentController.swift */,
 				D56C6980257DA09E00CF9AB8 /* PageDragingProtocol.swift */,
@@ -1093,6 +1112,7 @@
 				D56C69EA257DA0C600CF9AB8 /* CPPlayer.swift */,
 				316DF2D025C29EC500915B27 /* CustomAVPlayer.swift */,
 				316DF2DE25C2AA3C00915B27 /* CPAirPlayButton.swift */,
+				317A8F4825CBA81700E41226 /* PlayerScreenView.swift */,
 			);
 			path = avplayer;
 			sourceTree = "<group>";
@@ -1223,6 +1243,7 @@
 		D56C6A70257DA4AD00CF9AB8 /* scene */ = {
 			isa = PBXGroup;
 			children = (
+				3156F09E25CAC29100C9BE06 /* dialog */,
 				3192317025A3FD6200020388 /* value */,
 				D506D715258C8FCD00F27C00 /* list */,
 				D5DABD942589F1D400DF5701 /* component */,
@@ -1231,11 +1252,6 @@
 				D56C6A72257DA4C700CF9AB8 /* page */,
 				D56C6B64257DBAC800CF9AB8 /* tab */,
 				D56C6B0C257DAADE00CF9AB8 /* AppLayout.swift */,
-				D56C6B07257DAADE00CF9AB8 /* SceneTab.swift */,
-				D56C6B09257DAADE00CF9AB8 /* SceneAlertController.swift */,
-				D56C6B08257DAADE00CF9AB8 /* SceneRadioController.swift */,
-				D56C6B06257DAADE00CF9AB8 /* SceneSelectController.swift */,
-				D57298E4259D6EC100ED2CE6 /* ScenePickerController.swift */,
 				D56C6B0A257DAADE00CF9AB8 /* PageSceneObserver.swift */,
 				D56C6B0B257DAADE00CF9AB8 /* SceneDelegate.swift */,
 			);
@@ -1335,6 +1351,7 @@
 		D56C6B64257DBAC800CF9AB8 /* tab */ = {
 			isa = PBXGroup;
 			children = (
+				D56C6B07257DAADE00CF9AB8 /* SceneTab.swift */,
 				D56C6B65257DBAC800CF9AB8 /* TopTab.swift */,
 				D56C6B68257DBAC800CF9AB8 /* BottomTab.swift */,
 				D51AA9F72599BAFB0035CD51 /* PageTab.swift */,
@@ -1731,7 +1748,7 @@
 				D506D732258CA3E300F27C00 /* ThemaList.swift in Sources */,
 				D56C5FE825930060009AE769 /* BookMark.swift in Sources */,
 				D56C69A8257DA09E00CF9AB8 /* ImageLoader.swift in Sources */,
-				31E8D7C125CA85190034BBC4 /* SelectFunction.swift in Sources */,
+				31E8D7C125CA85190034BBC4 /* PlayerOptionSelectBox.swift in Sources */,
 				D56C6A53257DA0C700CF9AB8 /* FillButton.swift in Sources */,
 				D56C699F257DA09E00CF9AB8 /* PageDragingProtocol.swift in Sources */,
 				D56C6A44257DA0C700CF9AB8 /* TextStyle.swift in Sources */,
@@ -1782,6 +1799,7 @@
 				D506D717258C8FFB00F27C00 /* PosterList.swift in Sources */,
 				D56C69AE257DA09E00CF9AB8 /* AnimateDrawView.swift in Sources */,
 				D56C6B0E257DAADE00CF9AB8 /* SceneTab.swift in Sources */,
+				317A8F5C25CBE1AE00E41226 /* PlayerMoreBox.swift in Sources */,
 				D56C6A26257DA0C600CF9AB8 /* dimens.swift in Sources */,
 				314D738A25B4F8B100907118 /* PageSynopsis.swift in Sources */,
 				D56C69AB257DA09E00CF9AB8 /* Resource.swift in Sources */,
@@ -1803,6 +1821,7 @@
 				315A8FD425ADADD600498B03 /* GuestAgreementInfo.swift in Sources */,
 				D56C6A34257DA0C700CF9AB8 /* Navigation.swift in Sources */,
 				314D73BF25B550F900907118 /* BtvButton.swift in Sources */,
+				317A8F4E25CBBB2700E41226 /* PageHostingController.swift in Sources */,
 				D56C69B0257DA09E00CF9AB8 /* SocialMediaSharingManager.swift in Sources */,
 				D5DC477E25821DFA007EDD86 /* CWGrid.swift in Sources */,
 				31626EEB25B8FB3000F4031D /* FunctionViewer.swift in Sources */,
@@ -1838,6 +1857,7 @@
 				D56CC2FA2590313A00CA1D54 /* PosterBlock.swift in Sources */,
 				31E3974225B5906E00CE6E21 /* RatingPoint.swift in Sources */,
 				31626F0125B9151E00F4031D /* DirectView.swift in Sources */,
+				317A8F4925CBA81700E41226 /* PlayerScreenView.swift in Sources */,
 				315730EE25AFC1B600D9A693 /* PairingManager.swift in Sources */,
 				310D7E2425A42B72000BE173 /* PagePairingDevice.swift in Sources */,
 				D56C6A5E257DA0C700CF9AB8 /* MultiStrokeSpinner.swift in Sources */,

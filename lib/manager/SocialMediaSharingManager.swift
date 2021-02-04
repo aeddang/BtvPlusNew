@@ -38,7 +38,6 @@ struct SocialMediaSharingManage{
         let rootVC = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController
         guard let vc = rootVC else { return }
         share(object, from: vc)
-           
     }
     
     static func share(_ object: SocialMediaShareable, from presentingVC: UIViewController) {

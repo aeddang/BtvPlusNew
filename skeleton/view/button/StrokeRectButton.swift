@@ -54,7 +54,7 @@ struct StrokeRectButton: View, SelecterbleProtocol{
                 }
             }
             .frame(width:self.size.width, height:self.size.height)
-            .background(Color.transparent.black1)
+            .background(Color.transparent.clearUi)
             .clipShape(RoundedRectangle(cornerRadius: self.cornerRadius))
             .overlay(
                 RoundedRectangle(cornerRadius: self.cornerRadius)

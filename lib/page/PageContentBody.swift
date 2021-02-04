@@ -15,7 +15,8 @@ struct PageBackgroundBody: View {
     var body: some View {
         ZStack{
             Rectangle().fill(pageChanger.bodyColor)
-        }.edgesIgnoringSafeArea(.all)
+        }
+        .edgesIgnoringSafeArea(.all)
     }
 }
 

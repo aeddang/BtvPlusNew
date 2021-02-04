@@ -24,6 +24,8 @@ struct PageContentController: View{
     @EnvironmentObject var keyboardObserver:KeyboardObserver
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
+    
+    @State var isFullScreen:Bool = false
     var currnetPage:PageViewProtocol?{
         get{
             return pageControllerObservable.pages.first
@@ -55,7 +57,6 @@ struct PageContentController: View{
                 ForEach(self.pageControllerObservable.popups, id: \.id) { popup in popup.contentBody }
                 self.pageControllerObservable.overlayView?.contentBody
             }
-            
             .onAppear(){
                 sceneObserver.update(geometry: geometry)
             }
@@ -63,6 +64,7 @@ struct PageContentController: View{
                 
             }
             .edgesIgnoringSafeArea(.all)
+            .statusBar(hidden: self.isFullScreen)
             .background(backgroundBody)
             .onReceive(self.keyboardObserver.$isOn){ on in
                 delaySafeAreaUpdate(geometry: geometry)
@@ -73,7 +75,9 @@ struct PageContentController: View{
             .onReceive(self.orientationChanged){ _ in
                 sceneObserver.update(geometry: geometry)
                 
-                
+            }
+            .onReceive(self.pagePresenter.$isFullScreen){ isFullScreen in
+                self.isFullScreen = isFullScreen
             }
         }
     }
@@ -178,6 +182,7 @@ struct PageContentController: View{
         pageControllerObservable.overlayView?.sceneDidEnterBackground(scene)
     }
 }
+
 
 
 #if DEBUG

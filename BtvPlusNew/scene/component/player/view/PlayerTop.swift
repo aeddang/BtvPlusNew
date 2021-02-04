@@ -37,7 +37,7 @@ struct PlayerTop: PageView{
     
     var body: some View {
         ZStack(alignment: .topLeading){
-            VStack(spacing:Dimen.margin.light){
+            VStack(alignment :.trailing, spacing:Dimen.margin.light){
                 HStack(spacing:self.isFullScreen ? Dimen.margin.regular : Dimen.margin.light){
                     Button(action: {
                         self.pagePresenter.goBack()
@@ -98,7 +98,7 @@ struct PlayerTop: PageView{
                         }
                     }
                     Button(action: {
-                        self.pagePresenter.goBack()
+                        self.viewModel.btvUiEvent = .more
                         
                     }) {
                         Image(Asset.player.more)
@@ -109,11 +109,10 @@ struct PlayerTop: PageView{
                                    height: Dimen.icon.regular)
                     }
                 }
+                PlayerMoreBox( viewModel: self.viewModel )
                 Spacer()
+                
             }
-            
-            
-            
         }
         .modifier(MatchParent())
         .padding(.all, self.isFullScreen ? PlayerUI.paddingFullScreen : PlayerUI.padding)

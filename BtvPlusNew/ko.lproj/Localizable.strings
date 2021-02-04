@@ -69,6 +69,10 @@
 "btnRatioFill" = "꽉찬화면";
 "btnRatioFit" = "비율유지";
 
+"btnScreenLock" = "화면잠금";
+"btnScreenRatio" = "화면비율";
+"btnGuide" = "도움말";
+
 /*
  Sort
 */

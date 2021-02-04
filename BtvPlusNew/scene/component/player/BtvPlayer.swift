@@ -40,16 +40,23 @@ enum DragGestureType:String {
     case progress, volume, brightness
 }
 
-enum SelectFunctionType:String {
+enum SelectOptionType:String {
     case quality, rate, ratio
 }
+enum BtvUiEvent {
+    case more, guide
+}
+
 
 class BtvPlayerModel:PlayerModel{
     @Published fileprivate(set) var brightness:CGFloat = UIScreen.main.brightness
     @Published fileprivate(set) var seeking:Double = 0
-    @Published var currentQuality:Quality? = nil
     @Published private(set) var message:String? = nil
-    @Published var selectFunctionType:SelectFunctionType? = nil
+    
+    @Published var currentQuality:Quality? = nil
+    @Published var selectFunctionType:SelectOptionType? = nil
+    @Published var btvUiEvent:BtvUiEvent? = nil {didSet{ if btvUiEvent != nil { btvUiEvent = nil} }}
+    @Published var isLock:Bool = false
     
     private(set) var qualitys:[Quality] = []
     private(set) var header:[String:String]? = nil
@@ -89,11 +96,11 @@ struct BtvPlayer: PageComponent{
                 CPPlayer( viewModel : self.viewModel)
                 PlayerEffect(viewModel: self.viewModel)
                 PlayerTop(viewModel: self.viewModel, title: self.title)
-                SelectFunction(viewModel: self.viewModel)
+                PlayerOptionSelectBox(viewModel: self.viewModel)
             }
             .modifier(MatchParent())
             .gesture(
-                DragGesture(minimumDistance: 30, coordinateSpace: .local)
+                DragGesture(minimumDistance: 0, coordinateSpace: .local)
                     .onChanged({ value in
                         if let type = dragGestureType {
                             switch type {
@@ -113,6 +120,7 @@ struct BtvPlayer: PageComponent{
                                 else {self.dragGestureType = .brightness}
                             }
                             self.viewModel.playerUiStatus = .hidden
+                    
                         }
                     })
                     .onEnded({ value in
@@ -120,18 +128,23 @@ struct BtvPlayer: PageComponent{
                             self.viewModel.event = .seekMove(self.viewModel.seeking, false)
                             self.viewModel.seeking = 0
                         }
-                        self.dragGestureType = nil
-                        
+                        self.resetDragGesture()
                     })
+            )
+            .gesture(
+                MagnificationGesture(minimumScaleDelta: 0).onChanged { val in
+                    self.onRatioChange(value: val)
+                }.onEnded { val in
+                    self.resetDragGesture()
+                    self.isChangeRatioCancel = false
+                }
             )
             
             .onReceive(self.sceneObserver.$isUpdated){ update in
                 if !update {return}
-                switch self.sceneObserver.sceneOrientation{
+                switch self.sceneObserver.sceneOrientation {
                 case .landscape : self.pagePresenter.fullScreenEnter()
-                case .portrait :
-                    self.pagePresenter.fullScreenExit()
-                    self.viewModel.event = .neetLayoutUpdate
+                case .portrait : self.pagePresenter.fullScreenExit()
                 }
             }
             .onReceive(self.viewModel.$event) { evt in
@@ -165,23 +178,68 @@ struct BtvPlayer: PageComponent{
     
     
     @State var dragGestureType:DragGestureType? = nil
+    @State var startSeeking:Double = -1
+    @State var startVolume:Float = -1
+    @State var startBrightness:CGFloat = -1
+    @State var startRatio:CGFloat = -1
+    @State var isChangeRatioCancel = false
+    
+    func resetDragGesture(){
+        self.startSeeking = -1
+        self.startVolume = -1
+        self.startBrightness = -1
+        self.startRatio = -1
+        self.dragGestureType = nil
+    }
+    
+    func onRatioChange(value:CGFloat){
+        if self.isChangeRatioCancel { return }
+        if self.startRatio == -1 {self.startRatio = self.viewModel.screenRatio }
+        let diff = value - 2
+        var targetRatio = self.startRatio + diff
+        //ComponentLog.d("onRatioChange " + targetRatio.description, tag: self.tag)
+        if self.viewModel.screenGravity == .resizeAspect {
+            if targetRatio > 1.0 {
+                self.viewModel.event = .screenRatio(1)
+                self.viewModel.event = .screenGravity(.resizeAspectFill)
+                self.isChangeRatioCancel = true
+                //ComponentLog.d("onRatioChange resizeAspectFil", tag: self.tag)
+                return
+            }
+        }else {
+            if targetRatio < 0.0 {
+                self.viewModel.event = .screenRatio(1)
+                self.viewModel.event = .screenGravity(.resizeAspect)
+                self.isChangeRatioCancel = true
+                //ComponentLog.d("onRatioChange resizeAspect", tag: self.tag)
+                return
+            }
+        }
+        targetRatio = min(3.0, targetRatio)
+        targetRatio = max(1.0, targetRatio)
+        
+        self.viewModel.event = .screenRatio(targetRatio)
+    }
+    
     func onProgressChange(value:DragGesture.Value){
-        let diff = Double(value.translation.width/100)
-        self.viewModel.seeking += Double(diff)
+        if self.startSeeking == -1 {self.startSeeking = self.viewModel.seeking }
+        let diff = Double(value.translation.width/1)
+        self.viewModel.seeking = self.startSeeking + Double(diff)
     }
     
     func onVolumeChange(value:DragGesture.Value){
-        let diff = Float(value.translation.height/5000)
-        var targetVolume = self.viewModel.volume - diff
+        if self.startVolume  == -1 {self.startVolume  = self.viewModel.volume }
+        let diff = Float(value.translation.height/200)
+        var targetVolume = self.startVolume - diff
         targetVolume = max(0, targetVolume)
         targetVolume = min(1, targetVolume)
         self.viewModel.event = .volume(targetVolume)
     }
     
     func onBrightnessChange(value:DragGesture.Value){
-        let current = UIScreen.main.brightness
-        let diff = CGFloat(value.translation.height/5000)
-        var targetBrightness  = current - diff
+        if self.startBrightness  == -1 {self.startBrightness  = UIScreen.main.brightness }
+        let diff = CGFloat(value.translation.height/200)
+        var targetBrightness  = self.startBrightness - diff
         targetBrightness = max(0, targetBrightness)
         targetBrightness = min(1, targetBrightness)
         UIScreen.main.brightness = targetBrightness
@@ -189,7 +247,7 @@ struct BtvPlayer: PageComponent{
     }
 }
 
-/*
+
 #if DEBUG
 struct BtvPlayer_Previews: PreviewProvider {
     
@@ -205,4 +263,4 @@ struct BtvPlayer_Previews: PreviewProvider {
     }
 }
 #endif
-*/
+

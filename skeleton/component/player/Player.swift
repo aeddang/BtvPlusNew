@@ -10,11 +10,14 @@ import Foundation
 import AVKit
 open class PlayerModel: ComponentObservable {
     static let TIME_SCALE:Double = 600
+    var useAvPlayerController = false
     @Published var path:String = ""
     @Published var isMute:Bool = false
     @Published var volume:Float = 1.0
+    @Published var screenRatio:CGFloat = 1.0
     @Published var rate:Float = 1.0
-    @Published var screenGravity:AVLayerVideoGravity = .resizeAspectFill
+    
+    @Published var screenGravity:AVLayerVideoGravity = .resizeAspect
     @Published fileprivate(set) var initTime:Double? = nil
     @Published fileprivate(set) var isPlay = false
     @Published fileprivate(set) var duration:Double = 0.0
@@ -76,7 +79,10 @@ enum PlayerUIEvent {//input
          seekTime(Double, Bool = true), seekProgress(Float, Bool = true),
          seekMove(Double, Bool = true),
          seeking(Double), seekForward(Double, Bool = false), seekBackword(Double, Bool = false),
-         check, neetLayoutUpdate, screenGravity(AVLayerVideoGravity)
+         check, neetLayoutUpdate, fixUiStatus,
+         screenGravity(AVLayerVideoGravity), screenRatio(CGFloat)
+         
+         
     
     var decription: String {
         switch self {
@@ -200,6 +206,8 @@ extension PlayBack {
         ComponentLog.d("onSeeked", tag: self.tag)
         viewModel.seekTime = nil
         viewModel.streamEvent = .seeked
+        viewModel.event = .check
+        viewModel.playerStatus = viewModel.isPlay ? .resume : .pause
     }
     func onResumed(){
         self.checkSeeked()

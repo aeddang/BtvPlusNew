@@ -77,7 +77,7 @@ struct FillButton: View, SelecterbleProtocol{
     init(
         text:String,
         isMore: Bool,
-        bgColor:Color = Color.transparent.black1,
+        bgColor:Color = Color.transparent.clearUi,
         action:@escaping (_ idx:Int) -> Void )
     {
         self.text = text

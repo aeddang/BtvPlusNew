@@ -143,6 +143,10 @@ extension String {
         public static let ratioOrigin = "btnRatioOrigin".loaalized()
         public static let ratioFill = "btnRatioFill".loaalized()
         public static let ratioFit = "btnRatioFit".loaalized()
+        
+        public static let screenLock = "btnScreenLock".loaalized()
+        public static let screenRatio = "btnScreenRatio".loaalized()
+        public static let guide = "btnGuide".loaalized()
     }
     
     struct pageTitle {

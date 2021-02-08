@@ -30,7 +30,7 @@ struct PlayerMoreBox: PageView{
             VStack(spacing:Dimen.margin.light){
                 Button(action: {
                     self.viewModel.isLock = true
-                    withAnimation{ self.isShowing = false }
+                    self.hideBox()
                 }) {
                     Text( String.button.screenLock )
                         .modifier(
@@ -39,7 +39,7 @@ struct PlayerMoreBox: PageView{
                 
                 Button(action: {
                     self.viewModel.selectFunctionType = .ratio
-                    
+                    self.hideBox()
                 }) {
                     Text( String.button.screenRatio )
                         .modifier(
@@ -47,6 +47,8 @@ struct PlayerMoreBox: PageView{
                 }
                 
                 Button(action: {
+                    
+                    self.hideBox()
                     
                 }) {
                     Text( String.button.watchBtv )
@@ -57,7 +59,8 @@ struct PlayerMoreBox: PageView{
                 if self.isFullScreen {
                     Button(action: {
                         self.viewModel.btvUiEvent = .guide
-                        withAnimation{ self.isShowing = false }
+                        self.hideBox()
+                        
                     }) {
                         Text( String.button.guide )
                             .modifier(

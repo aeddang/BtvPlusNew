@@ -47,8 +47,10 @@ extension String {
         public static let another = "another".loaalized()
         public static let count = "count".loaalized()
         public static let broCount = "broCount".loaalized()
+        public static let sesonCount = "sesonCount".loaalized()
+        public static let ageCount = "ageCount".loaalized()
         public static let award = "award".loaalized()
-        public static let moveSec = "moveSec".loaalized()
+       
     }
     
     struct sort {
@@ -118,6 +120,17 @@ extension String {
         public static var bs = "alertBS".loaalized()
         public static var bsText = "alertBStext".loaalized()
         
+        public static var dataAlramOn = "alertDataAlramOn".loaalized()
+        public static var dataAlramOff = "alertDataAlramOff".loaalized()
+        public static var autoRemoconOn = "alertAutoRemoconOn".loaalized()
+        public static var autoRemoconOff = "alertAutoRemoconOff".loaalized()
+        public static var remoconVibrationOn = "alertRemoconVibrationOn".loaalized()
+        public static var remoconVibrationOff = "alertRemoconVibrationOff".loaalized()
+        public static var autoPlayOn = "alertAutoPlayOn".loaalized()
+        public static var autoPlayOff = "alertAutoPlayOff".loaalized()
+        public static var nextPlayOn = "alertNextPlayOn".loaalized()
+        public static var nextPlayOff = "alertNextPlayOff".loaalized()
+        
     }
     
     struct button {
@@ -148,7 +161,21 @@ extension String {
         public static let screenRatio = "btnScreenRatio".loaalized()
         public static let guide = "btnGuide".loaalized()
     }
-    
+    struct player {
+        public static let moveSec = "playerMoveSec".loaalized()
+        public static let preplay = "playerPreplay".loaalized()
+        public static let preview = "playerPreview".loaalized()
+        public static let cookie = "playerCookie".loaalized()
+        public static let next = "playerNext".loaalized()
+        public static let directPlay = "playerDirectPlay".loaalized()
+        public static let season = "playerSeason".loaalized()
+        public static let continuePlay = "playerContinuePlay".loaalized()
+        public static let adTitlec = "playerAdTitle".loaalized()
+        public static let adMore = "playerAdMore".loaalized()
+        public static let adCancel = "playerAdCancel".loaalized()
+        
+        
+    }
     struct pageTitle {
         public static let connectBtv = "titleConnectBtv".loaalized()
         public static let connectWifi = "titleConnectWifi".loaalized()
@@ -157,6 +184,7 @@ extension String {
         public static let my = "titleMy".loaalized()
         public static let pairingManagement =  "titlePairingManagement".loaalized()
         public static let myPurchase =  "titleMyPurchase".loaalized()
+        public static let setup = "titleSetup".loaalized()
     }
     
     struct pageText {
@@ -196,7 +224,49 @@ extension String {
         
         public static let myText1 = "myText1".loaalized()
         public static let myText2 = "myText2".loaalized()
-       
+        
+        public static let setupApp = "setupApp".loaalized()
+        public static let setupAppDataAlram = "setupAppDataAlram".loaalized()
+        public static let setupAppDataAlramText = "setupAppDataAlramText".loaalized()
+        public static let setupAppAutoRemocon = "setupAppAutoRemocon".loaalized()
+        public static let setupAppAutoRemoconText = "setupAppAutoRemoconText".loaalized()
+        public static let setupAppRemoconVibration = "setupAppRemoconVibration".loaalized()
+        public static let setupAppRemoconVibrationText = "setupAppRemoconVibrationText".loaalized()
+
+        public static let setupPlay = "setupPlay".loaalized()
+        public static let setupPlayAuto = "setupPlayAuto".loaalized()
+        public static let setupPlayAutoText = "setupPlayAutoText".loaalized()
+        public static let setupPlayNext = "setupPlayNext".loaalized()
+        public static let setupPlayNextText = "setupPlayNextText".loaalized()
+
+        public static let setupAlram = "setupAlram".loaalized()
+        public static let setupAlramMarketing = "setupAlramMarketing".loaalized()
+        public static let setupAlramMarketingText = "setupAlramMarketingText".loaalized()
+        public static let setupAlramMarketingTip1 = "setupAlramMarketingTip1".loaalized()
+        public static let setupAlramMarketingTip2 = "setupAlramMarketingTip2".loaalized()
+        public static let setupAlramMarketingTip3 = "setupAlramMarketingTip3".loaalized()
+        public static let setupAlramMarketingTip4 = "setupAlramMarketingTip4".loaalized()
+        public static let setupAlramMarketingTip5 = "setupAlramMarketingTip5".loaalized()
+
+        public static let setupCertification = "setupCertification".loaalized()
+        public static let setupCertificationPurchase = "setupCertificationPurchase".loaalized()
+        public static let setupCertificationPurchaseText = "setupCertificationPurchaseText".loaalized()
+        public static let setupCertificationAge = "setupCertificationAge".loaalized()
+        public static let setupCertificationAgeText = "setupCertificationAgeText".loaalized()
+
+        public static let setupChildren = "setupChildren".loaalized()
+        public static let setupChildrenHabit = "setupChildrenHabit".loaalized()
+        public static let setupChildrenHabitText = "setupChildrenHabitText".loaalized()
+
+        public static let setupHappySenior = "setupHappySenior".loaalized()
+        public static let setupHappySeniorPicture = "setupHappySeniorPicture".loaalized()
+        public static let setupHappySeniorPictureText = "setupHappySeniorPictureText".loaalized()
+
+        public static let setupGuideNVersion = "setupGuideNVersion".loaalized()
+        public static let setupGuide = "setupGuide".loaalized()
+        public static let setupVersionLatest = "setupVersionLatest".loaalized()
+        public static let setupOpensource = "setupOpensource".loaalized()
+        
         public static let myPairing =  "myPairing".loaalized()
         
         public static let myPairingInfo = "myPairingInfo".loaalized()

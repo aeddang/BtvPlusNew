@@ -72,7 +72,9 @@ struct AppLayout: PageComponent{
             switch evt  {
             case .toast(let msg):
                 self.toastMsg = msg
-                self.isToastShowing = true
+                withAnimation{
+                    self.isToastShowing = true
+                }
             }
         }
         .onReceive(self.pagePresenter.$currentTopPage){ page in

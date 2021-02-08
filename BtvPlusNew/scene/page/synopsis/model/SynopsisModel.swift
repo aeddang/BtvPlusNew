@@ -25,6 +25,10 @@ class SynopsisModel : PageProtocol {
     private(set) var srisId:String? = nil
     private(set) var epsdId:String? = nil
     private(set) var epsdRsluId:String? = nil
+    
+    private(set) var nextSrisId:String? = nil
+    private(set) var nextEpsdId:String? = nil
+    
     private(set) var srisTypCd:SrisTypCd = .none
     private(set) var isGstn = false
     private(set) var isPossonVODMode = false
@@ -33,7 +37,7 @@ class SynopsisModel : PageProtocol {
     private(set) var rsluInfoList: Array< EpsdRsluInfo >? = nil
     private(set) var ppvProducts: Array< [String:String] > = []
     private(set) var ppsProducts: Array< [String:String] > = []
-    private(set) var purchasModels: Array< PurchasModel > = []
+    private(set) var purchaseModels: Array< PurchaseModel > = []
     private(set) var synopsisType:MetvNetwork.SynopsisType
     private(set) var isEmptyProducts = false
     private(set) var distStsCd:DistStsCd = .synced
@@ -41,8 +45,11 @@ class SynopsisModel : PageProtocol {
     private(set) var isCancelProgram:Bool = false
     private(set) var hasPreview:Bool = false
     private(set) var previews:[PreviewItem] = []
+    private(set) var siries:[SeriesItem]? = nil
+
     private(set) var hasExamPreview:Bool = false
     private(set) var kids_yn:String? = nil
+    private(set) var imgBg:String? = nil
     
     init(type:MetvNetwork.SynopsisType = .none ) {
         self.synopsisType = type
@@ -55,8 +62,13 @@ class SynopsisModel : PageProtocol {
             }
         }
         self.srisId = data.contents?.sris_id
+        self.siries = data.series
+        
         if let contents = data.contents{
             self.kids_yn = contents.kids_yn
+            if let bg = contents.epsd_poster_filename_h ?? contents.sris_poster_filename_h {
+                self.imgBg = ImagePath.thumbImagePath(filePath: bg, size: CGSize(width: 720, height: 0))
+            }
             self.hasExamPreview = contents.pre_exam_yn?.toBool() ?? false
             if let preview = contents.preview {
                 self.previews = preview
@@ -64,6 +76,9 @@ class SynopsisModel : PageProtocol {
             }
             self.isCombineProduct = contents.combine_product_yn?.toBool() ?? false
             self.epsdId = contents.epsd_id
+            self.nextSrisId = contents.next_sris_id
+            self.nextEpsdId = contents.next_epsd_id
+            
             self.isGstn = contents.gstn_yn?.toBool() ?? false
             self.isNScreen = contents.nscrn_yn?.toBool() ?? false
             self.rsluInfoList = contents.epsd_rslu_info
@@ -103,7 +118,7 @@ class SynopsisModel : PageProtocol {
                 set["possn_yn"] = product.possn_yn
                 return set
             }
-            self.purchasModels.append(contentsOf: products.map { PurchasModel(product: $0)} )
+            self.purchaseModels.append(contentsOf: products.map { PurchaseModel(product: $0)} )
         }
         
         if let purchares = data.purchares {
@@ -117,11 +132,11 @@ class SynopsisModel : PageProtocol {
                 set["possn_yn"] = purchas.possn_yn
                 return set
             }
-            self.purchasModels.append(contentsOf: purchares.map { PurchasModel(purchas: $0)} )
+            self.purchaseModels.append(contentsOf: purchares.map { PurchaseModel(purchas: $0)} )
         }
         
         if let contents = data.contents {
-            zip(0...self.purchasModels.count,self.purchasModels).forEach({ idx,model in
+            zip(0...self.purchaseModels.count,self.purchaseModels).forEach({ idx,model in
                 model.setupSynopsis(contents, idx: idx)
             })
         }
@@ -150,12 +165,12 @@ class SynopsisModel : PageProtocol {
         return self
     }
    
-    private(set) var salePPMItem: PurchasModel? = nil
-    private(set) var purchasedPPMItems: [PurchasModel] = []
-    private(set) var purchasedPPSItems: [PurchasModel] = []
-    private(set) var purchasableItems: [PurchasModel] = []
-    private(set) var watchOptionItems: [PurchasModel]? = nil
-    private(set) var curSynopsisItem: PurchasModel?
+    private(set) var salePPMItem: PurchaseModel? = nil
+    private(set) var purchasedPPMItems: [PurchaseModel] = []
+    private(set) var purchasedPPSItems: [PurchaseModel] = []
+    private(set) var purchasableItems: [PurchaseModel] = []
+    private(set) var watchOptionItems: [PurchaseModel]? = nil
+    private(set) var curSynopsisItem: PurchaseModel?
     private(set) var metvSeasonWatchAll:Bool = false
     private(set) var isBookmark:Bool = false
     private(set) var isDistProgram:Bool = false
@@ -164,7 +179,7 @@ class SynopsisModel : PageProtocol {
     func setData(directViewdata:DirectView?){
         self.isBookmark = directViewdata?.is_bookmark?.toBool() ?? false
         self.metvSeasonWatchAll = directViewdata?.yn_season_watch_all?.toBool() ?? false
-        self.purchasModels.forEach({ model in
+        self.purchaseModels.forEach({ model in
             if let metvItem = directViewdata?.ppv_products?.first(where: {model.epsd_id == $0.epsd_id && model.prd_prc_id == $0.prd_prc_id}) {
                 model.mePPVProduct = metvItem
             }
@@ -204,8 +219,8 @@ class SynopsisModel : PageProtocol {
             }
         })
         
-        let tempItems = self.purchasModels.filter({ $0.isRentPeriod || !($0.prdTypCd == .ppv && $0.rsluTypCd >= .uhd) })
-        let usableItems = tempItems.count > 0 ? tempItems : self.purchasModels
+        let tempItems = self.purchaseModels.filter({ $0.isRentPeriod || !($0.prdTypCd == .ppv && $0.rsluTypCd >= .uhd) })
+        let usableItems = tempItems.count > 0 ? tempItems : self.purchaseModels
         let purchasItems = usableItems.filter({ $0.isDirectview || $0.isUse && $0.isSalesPeriod }).sorted(by: { $0.prdPrcFrDt > $1.prdPrcFrDt })
         
         // 월정액(30)만 발라냄. 서버 오더링 사용. (첫번째 월정액 노출.)
@@ -350,7 +365,7 @@ class SynopsisModel : PageProtocol {
                 }
             } else {
                 //시리즈면 현재시놉의 에피소드 아이디만 사용.(시리즈면서 더빙/자막 있는게 있나..)
-                var minItem: PurchasModel?
+                var minItem: PurchaseModel?
                 //구매했으면 노출순위 제일 낮은거.(최우선, 소장) 미구매면 제일 높은거.(최하위, 대여)
                 if let temp = $1.min(by: {
                     var result = false
@@ -447,15 +462,15 @@ class SynopsisModel : PageProtocol {
     // 현재 시놉시스 판매 상품 월정액 가입 여부. (filterSynopsisItem 에서 purchasedPPMItems yn_direct ppm 추가함.)
     // 시리즈 월정액일 경우 회차 변경시 사용.
     var isPurchasedPPM: Bool {
-        purchasModels.filter({PrdTypCd.isPPM(typCd: $0.prdTypCd, all: true)})
+        purchaseModels.filter({PrdTypCd.isPPM(typCd: $0.prdTypCd, all: true)})
         .contains(where: { curPpm in
             purchasedPPMItems.contains(where: {
                 curPpm.prd_prc_id == $0.prd_prc_id
             })
         })
     }
-    var purchasedPPMItem: PurchasModel? {
-        purchasModels.filter({PrdTypCd.isPPM(typCd: $0.prdTypCd, all: true)})
+    var purchasedPPMItem: PurchaseModel? {
+        purchaseModels.filter({PrdTypCd.isPPM(typCd: $0.prdTypCd, all: true)})
        .first(where: { curPpm in
            purchasedPPMItems.contains(where: {
                curPpm.prd_prc_id == $0.prd_prc_id
@@ -464,17 +479,17 @@ class SynopsisModel : PageProtocol {
     }
     //월정액 상품 포함 여부
     var isContainPPM: Bool {
-        purchasModels.contains(where: { PrdTypCd.isPPM(typCd: $0.prdTypCd, all: true) })
+        purchaseModels.contains(where: { PrdTypCd.isPPM(typCd: $0.prdTypCd, all: true) })
     }
     var isContainPPS: Bool {
-        purchasModels.contains(where: { $0.prdTypCd == .pps })
+        purchaseModels.contains(where: { $0.prdTypCd == .pps })
     }
     
     //1사 지상파일때만 유효.
     var holdbackType: HoldbackType {
         if !isSingleTrstrs { return .none }
         //product / purchase 합친 목록에서 proudct만 찾음.
-        let productList = purchasModels.filter({ $0.originType == .product && $0.isUse && $0.isSalesPeriod })
+        let productList = purchaseModels.filter({ $0.originType == .product && $0.isUse && $0.isSalesPeriod })
             .sorted(by: { $0.prdPrcFrDt > $1.prdPrcFrDt })
         if productList.count > 0,
             let synopEpsdId = self.epsdId,
@@ -491,25 +506,25 @@ class SynopsisModel : PageProtocol {
     }
     
     private var isSingleTrstrs: Bool {
-        srisTypCd == .season && purchasModels.contains(where: {
+        srisTypCd == .season && purchaseModels.contains(where: {
             SynopsisModel.singleTrstrsPidList.contains($0.prd_prc_id)
         })
     }
     private var isTrstrs: Bool {
-        srisTypCd == .season && purchasModels.contains(where: {
+        srisTypCd == .season && purchaseModels.contains(where: {
             SynopsisModel.trstrsPidList.contains($0.prd_prc_id)
         })
     }
     private var isOnlyCommerce: Bool {
         srisTypCd == .season
-            && purchasModels.filter({ $0.sale_tgt_fg_yn == "Y" })
+            && purchaseModels.filter({ $0.sale_tgt_fg_yn == "Y" })
             .contains(where: { !($0.poc_det_typ_cd_list?.contains("102") ?? false) })
     }
     
     
     
     private var isPurchased: Bool {
-        purchasModels.contains(where: {$0.isDirectview})
+        purchaseModels.contains(where: {$0.isDirectview})
     }
     
     
@@ -517,7 +532,7 @@ class SynopsisModel : PageProtocol {
 
     // 현재 시놉의 시즌 전체 시청 가능 여부( 시리즈 아이디로 pps 캐싱된거있나 찾음)
     private var isSeasonWatchAll: Bool {
-        purchasModels.filter({$0.prdTypCd == .pps})
+        purchaseModels.filter({$0.prdTypCd == .pps})
         .contains(where: { curPps in
             purchasedPPSItems.contains(where: {
                 curPps.prd_prc_id == $0.prd_prc_id
@@ -525,9 +540,9 @@ class SynopsisModel : PageProtocol {
         })
     }
     
-    private func getDefaultItem() -> PurchasModel? {
-        if self.purchasModels.isEmpty { return nil }
-        let tempUsableItems = self.purchasModels.filter({ $0.isUse && $0.isSalesPeriod })
+    private func getDefaultItem() -> PurchaseModel? {
+        if self.purchaseModels.isEmpty { return nil }
+        let tempUsableItems = self.purchaseModels.filter({ $0.isUse && $0.isSalesPeriod })
         let tempFilteredItems = tempUsableItems.filter({ $0.rsluTypCd <= .fhd })
         //uhd 이상 필터링, 필터링 목록 0개면 포함된 목록 사용.
         let defItems = tempFilteredItems.count > 0 ? tempFilteredItems : tempUsableItems

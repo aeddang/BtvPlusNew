@@ -10,34 +10,59 @@ import Foundation
 import SwiftUI
 struct RectButton: View, SelecterbleProtocol{
     let text:String
+    var textTailing:String = ""
     var index: Int = 0
-    var isSelected: Bool = true
+    var isSelected: Bool = false
     var textModifier:TextModifier = TextModifier(
-        family:Font.family.regular,
-        size:Font.size.light,
-        color: Color.app.black,
-        activeColor: Color.app.white
+        family:Font.family.bold,
+        size:Font.size.thin,
+        color: Color.app.white,
+        activeColor: Color.brand.primary
     )
-    var bgColor = Color.app.whiteDeep
+    var bgColor = Color.transparent.black50
     var bgActiveColor = Color.brand.primary
-    var cornerRadius = Dimen.radius.light
-    var padding = Dimen.margin.thin
+    var fixSize:CGFloat? = nil
+    var progress:Float = 0
+    var cornerRadius:CGFloat = 0
+    var padding:CGFloat = Dimen.margin.thin
+    var icon:String? = nil
     let action: (_ idx:Int) -> Void
-    
     
     var body: some View {
         Button(action: {
             self.action(self.index)
         }) {
             ZStack{
-                Text(self.text)
-                    .font(.custom(textModifier.family, size: textModifier.size))
-                    .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
-                    .padding(.horizontal, self.padding)
+                if self.fixSize != nil {
+                    ZStack(alignment: .leading){
+                        Spacer().frame( width: self.fixSize! )
+                        Spacer()
+                            .modifier(MatchVertical(width:self.fixSize! * CGFloat(self.progress)))
+                            .background(self.bgActiveColor)
+                    }
+                }
+                HStack{
+                    Text(self.text)
+                        .font(.custom(textModifier.family, size: textModifier.size))
+                        .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+                    + Text(self.textTailing)
+                        .font(.custom(textModifier.family, size: textModifier.size))
+                        .foregroundColor( textModifier.activeColor )
+                    
+                    if self.icon != nil {
+                        Image(self.icon!)
+                            .renderingMode(.original).resizable()
+                            .scaledToFit()
+                            .frame(width: Dimen.icon.tinyExtra, height: Dimen.icon.tinyExtra)
+                    }
+                }
+                    
             }
-            .frame(height:Dimen.button.regular)
+            .padding(.horizontal, self.padding)
+            .frame(height:Dimen.button.regularExtra)
             .background(self.isSelected ? self.bgActiveColor : self.bgColor)
             .clipShape(RoundedRectangle(cornerRadius: self.cornerRadius))
+            
         }
     }
 }
@@ -47,7 +72,12 @@ struct RectButton_Previews: PreviewProvider {
     static var previews: some View {
         Form{
             RectButton(
-            text: "test"){_ in
+            text: "test",
+                textTailing: "1/6",
+                fixSize: 100,
+                progress: 0.5,
+                padding: 0
+                ){_ in
                 
             }
             .frame( alignment: .center)

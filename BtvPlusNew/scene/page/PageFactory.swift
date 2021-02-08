@@ -15,6 +15,7 @@ extension PageID{
     static let oeean:PageID = "oeean"
     static let pairing:PageID = "pairing"
     static let my:PageID = "my"
+    static let setup:PageID = "setup"
     static let pairingSetupUser:PageID = "pairingSetupUser"
     static let pairingDevice:PageID = "pairingDevice"
     static let pairingBtv:PageID = "pairingBtv"
@@ -97,6 +98,7 @@ struct PageFactory{
         case .home : return PageHome()
         case .serviceError : return PageServiceError()
         case .my : return PageMy()
+        case .setup : return PageSetup()
         case .synopsis : return PageSynopsis()
         case .pairing : return PagePairing()
         case .pairingSetupUser : return PagePairingSetupUser()

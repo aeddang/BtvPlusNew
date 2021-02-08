@@ -24,6 +24,9 @@ class SettingStorage {
         static let gender = "gender" + VS
         static let pairingDate = "pairingDate" + VS
         static let pairingModelName = "pairingModelName" + VS
+        
+        static let autoPlay = "autoPlay" + VS
+        static let nextPlay = "nextPlay" + VS
     }
     let defaults = UserDefaults.standard
     
@@ -149,5 +152,4 @@ class SettingStorage {
             return defaults.string(forKey: Keys.pairingModelName)
         }
     }
-    
 }

@@ -259,10 +259,10 @@ struct PlayerEffect: PageView{
                 guard let evt = evt else { return }
                 switch evt {
                 case .seekForward(let t, _):
-                    self.textWillMoveTime = t.toInt().description + String.app.moveSec
+                    self.textWillMoveTime = t.toInt().description + String.player.moveSec
                     self.delaySeekForwardHidden()
                 case .seekBackword(let t, _):
-                    self.textWillMoveTime = t.toInt().description + String.app.moveSec
+                    self.textWillMoveTime = t.toInt().description + String.player.moveSec
                     self.delaySeekBackwardHidden()
                 default : do{}
                 }

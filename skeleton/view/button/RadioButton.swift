@@ -9,7 +9,7 @@
 import Foundation
 import SwiftUI
 struct RadioButton: View, SelecterbleProtocol {
-    @Binding var isChecked: Bool
+    var isChecked: Bool
     var text:String? = nil
     var action: ((_ check:Bool) -> Void)? = nil
     var body: some View {
@@ -19,17 +19,17 @@ struct RadioButton: View, SelecterbleProtocol {
                 activeImage: Asset.shape.radioBtnOn,
                 isSelected: self.isChecked
                 ){_ in
-                    self.isChecked.toggle()
+                    //self.isChecked.toggle()
                     if self.action != nil {
-                        self.action!(self.isChecked)
+                        self.action!(!self.isChecked)
                     }
             }
             .buttonStyle(BorderlessButtonStyle())
             if self.text != nil {
                 Button(action: {
-                    self.isChecked.toggle()
+                   // self.isChecked.toggle()
                     if self.action != nil {
-                        self.action!(self.isChecked)
+                        self.action!(!self.isChecked)
                     }
                     
                 }) {
@@ -50,7 +50,7 @@ struct RadioButton_Previews: PreviewProvider {
     static var previews: some View {
         Form{
             RadioButton(
-                isChecked: .constant(true),
+                isChecked: true,
                 text:"asdafafsd"
             )
             .frame( alignment: .center)

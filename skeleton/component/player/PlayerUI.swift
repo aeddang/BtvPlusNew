@@ -13,6 +13,9 @@ import Combine
 extension PlayerUI {
     static let padding = Dimen.margin.thin
     static let paddingFullScreen = Dimen.margin.regular
+    
+    static let uiHeight:CGFloat = 44
+    static let uiHeightFullScreen:CGFloat  = 64
 }
 
 
@@ -33,10 +36,12 @@ struct PlayerUI: PageComponent {
     @State var isShowing: Bool = false
     var body: some View {
         ZStack{
+            
             HStack(spacing:0){
                 Spacer().modifier(MatchParent())
                     .background(Color.transparent.clearUi)
                     .onTapGesture(count: 2, perform: {
+                        if self.viewModel.isLock { return }
                         self.viewModel.event = .seekBackword(10, false)
                     })
                     .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
@@ -46,6 +51,7 @@ struct PlayerUI: PageComponent {
                 Spacer().modifier(MatchParent())
                     .background(Color.transparent.clearUi)
                     .onTapGesture(count: 2, perform: {
+                        if self.viewModel.isLock { return }
                         self.viewModel.event = .seekForward(10, false)
                     })
                     .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
@@ -53,7 +59,7 @@ struct PlayerUI: PageComponent {
                     })
             }
             .background(Color.transparent.black45)
-            .opacity(self.isShowing ? 1 : 0)
+            .opacity(self.isShowing  ? 1 : 0)
                         
             ActivityIndicator( isAnimating: self.$isLoading,
                                style: .large,
@@ -75,7 +81,7 @@ struct PlayerUI: PageComponent {
                         onChanged:{ pct in
                             self.viewModel.event = .seekProgress(pct)
                         })
-                        .frame(height: self.isFullScreen ? 64 : 44)
+                        .frame(height: self.isFullScreen ? Self.uiHeightFullScreen : Self.uiHeight)
                     Text(self.duration)
                         .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.greyLightExtra))
                         .frame(width:53)
@@ -93,18 +99,24 @@ struct PlayerUI: PageComponent {
                 }
                 .padding(.horizontal, self.isFullScreen ? Self.paddingFullScreen : Self.padding)
             }
-            .opacity(self.isShowing ? 1 : 0)
+            .opacity(self.isShowing && !self.viewModel.isLock ? 1 : 0)
             
             if !self.isSeeking {
-                ImageButton(
-                    defaultImage: Asset.player.resume,
-                    activeImage: Asset.player.pause,
-                    isSelected: self.isPlaying,
-                    size: CGSize(width:Dimen.icon.heavyExtra,height:Dimen.icon.heavyExtra)
-                ){ _ in
-                    self.viewModel.event = .togglePlay
+                VStack(spacing:Dimen.margin.regular){
+                    ImageButton(
+                        defaultImage: Asset.player.resume,
+                        activeImage: Asset.player.pause,
+                        isSelected: self.isPlaying,
+                        size: CGSize(width:Dimen.icon.heavyExtra,height:Dimen.icon.heavyExtra)
+                    ){ _ in
+                        self.viewModel.event = .togglePlay
+                    }
+                    if self.isFullScreen && ( self.viewModel.playInfo != nil ) {
+                        Text(self.viewModel.playInfo!)
+                            .modifier(BoldTextStyle(size: Font.size.lightExtra, color: Color.app.white))
+                    }
                 }
-                .opacity(( self.isShowing && !self.isLoading) ? 1 : 0)
+                .opacity( (self.isShowing && !self.isLoading  && !self.viewModel.isLock) ? 1 : 0 )
             }
         }
         .toast(isShowing: self.$isError, text: self.errorMessage)

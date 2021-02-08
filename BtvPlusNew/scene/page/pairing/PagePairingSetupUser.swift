@@ -100,13 +100,13 @@ struct PagePairingSetupUser: PageView {
                     
                                 HStack(spacing:Dimen.margin.thin){
                                     RadioButton(
-                                        isChecked: .constant(self.gender == .mail),
+                                        isChecked: self.gender == .mail,
                                         text: String.app.mail
                                     ){idx in
                                         self.onGenderSelected(.mail)
                                     }
                                     RadioButton(
-                                        isChecked: .constant(self.gender == .femail),
+                                        isChecked: self.gender == .femail,
                                         text: String.app.femail
                                     ){idx in
                                         self.onGenderSelected(.femail)

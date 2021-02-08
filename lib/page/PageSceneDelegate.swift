@@ -65,6 +65,12 @@ final class PagePresenter:ObservableObject{
         let result = PageSceneDelegate.instance?.historys.first
         return result !== nil
     }
+    
+    func orientationLock(isLock:Bool = false){
+        PageSceneDelegate.instance?.requestDeviceOrientationLock(isLock)
+        PageLog.d("orientationLock " + isLock.description , tag: "PagePresenter")
+    }
+    
     func fullScreenEnter(isLock:Bool = false){
         if self.isFullScreen {return}
         self.isFullScreen = true
@@ -436,10 +442,18 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         if let controller = self.window?.rootViewController as? PageHostingController<AnyView> {
             controller.isFullScreen = false
         }
-        let willChangeOrientationMask = pageModel.getPageOrientation() ?? .all
-        AppDelegate.orientationLock = willChangeOrientationMask
+        let willChangeOrientation = pageModel.getPageOrientation() ?? .all
+        AppDelegate.orientationLock = willChangeOrientation
         self.requestDeviceOrientation(.portrait)
     
+    }
+    
+    func requestDeviceOrientationLock(_ lock:Bool){
+        let interfaceOrientation = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation ?? UIInterfaceOrientation.unknown
+        
+        AppDelegate.orientationLock = lock
+            ? getDeviceOrientationMask(orientation: interfaceOrientation)
+            : pageModel.getPageOrientation() ?? .all
     }
     
     private func requestDeviceOrientation(_ mask:UIInterfaceOrientationMask){
@@ -491,7 +505,15 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
             }
         }
     }
-    
+    final func getDeviceOrientationMask(orientation:UIInterfaceOrientation) -> UIInterfaceOrientationMask {
+        switch orientation {
+        case .portrait: return .portrait
+        case .portraitUpsideDown:return .portraitUpsideDown
+        case .landscapeRight: return .landscapeRight
+        case .landscapeLeft: return .landscapeLeft
+        default: return .portrait
+        }
+    }
     func sceneDidDisconnect(_ scene: UIScene) {
         contentController?.sceneDidDisconnect(scene)
     }

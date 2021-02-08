@@ -55,6 +55,7 @@ struct Dimen{
         public static let heavy:CGFloat = 80
         public static let medium:CGFloat = 50 //*
         public static let regular:CGFloat = 40 //*
+        public static let regularExtra:CGFloat = 32 //*
         public static let light:CGFloat = 30//*
         public static let thin:CGFloat = 20//*
         

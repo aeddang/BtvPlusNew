@@ -68,7 +68,7 @@ struct Radio<Presenting>: View where Presenting: View {
                 VStack (alignment: .leading, spacing:Dimen.margin.medium){
                     ForEach(self.buttons) { btn in
                         RadioButton(
-                            isChecked: .constant(self.selected == btn.index),
+                            isChecked: self.selected == btn.index,
                             text: btn.title
                         ){idx in
                              self.selected = btn.index
@@ -85,7 +85,7 @@ struct Radio<Presenting>: View where Presenting: View {
                         LazyVStack(alignment: .leading, spacing: 0){
                             ForEach(self.buttons) { btn in
                                 RadioButton(
-                                    isChecked: .constant(self.selected == btn.index),
+                                    isChecked: self.selected == btn.index,
                                     text: btn.title
                                 ){idx in
                                      self.selected = btn.index
@@ -104,7 +104,7 @@ struct Radio<Presenting>: View where Presenting: View {
                     List {
                         ForEach(self.buttons) { btn in
                             RadioButton(
-                                isChecked: .constant(self.selected == btn.index),
+                                isChecked: self.selected == btn.index,
                                 text: btn.title
                             ){idx in
                                  self.selected = btn.index

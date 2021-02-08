@@ -53,7 +53,9 @@ struct PageTab: PageComponent{
                 }
                 if self.isSetting {
                     Button(action: {
-                        //self.pagePresenter.goBack()
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.setup)
+                        )
                         
                     }) {
                         Image(Asset.icon.setting)

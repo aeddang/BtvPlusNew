@@ -8,7 +8,7 @@
 import Foundation
 import TrueTime
 
-class PurchasModel {
+class PurchaseModel {
     var originType: PurchasDataType = .none
     init(product: ProductItem){
         originType = .product

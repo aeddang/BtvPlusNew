@@ -56,7 +56,7 @@ class BtvPlayerModel:PlayerModel{
     @Published var currentQuality:Quality? = nil
     @Published var selectFunctionType:SelectOptionType? = nil
     @Published var btvUiEvent:BtvUiEvent? = nil {didSet{ if btvUiEvent != nil { btvUiEvent = nil} }}
-    @Published var isLock:Bool = false
+    @Published var synopsisPlayerData:SynopsisPlayerData? = nil
     
     private(set) var qualitys:[Quality] = []
     private(set) var header:[String:String]? = nil
@@ -64,8 +64,8 @@ class BtvPlayerModel:PlayerModel{
         let quality = Quality(name: name, path: path)
         qualitys.append(quality)
     }
-    
-    func setData(data:PlayInfo, type:BtvPlayType) {
+    @discardableResult
+    func setData(data:PlayInfo, type:BtvPlayType) -> BtvPlayerModel {
         var header = [String:String]()
         header["x-ids-cinfo"] = type.type + "," + type.cid + "," + type.title
         self.header = header
@@ -78,13 +78,24 @@ class BtvPlayerModel:PlayerModel{
         if !qualitys.isEmpty {
             currentQuality = qualitys.first{$0.name == "HD"}
         }
+        return self
+    }
+    @discardableResult
+    func setData(synopsisPlayData:SynopsisPlayerData?) -> BtvPlayerModel {
+        guard let data = synopsisPlayData else {
+            return self
+        }
+        self.synopsisPlayerData = data
+        self.playInfo = data.type.name
+        return self
     }
 
 }
 
 struct BtvPlayer: PageComponent{
-    @EnvironmentObject var sceneObserver:SceneObserver
     @EnvironmentObject var repository:Repository
+    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var setup:Setup
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
@@ -95,13 +106,16 @@ struct BtvPlayer: PageComponent{
             ZStack{
                 CPPlayer( viewModel : self.viewModel)
                 PlayerEffect(viewModel: self.viewModel)
+                PlayerBottom(viewModel: self.viewModel)
                 PlayerTop(viewModel: self.viewModel, title: self.title)
                 PlayerOptionSelectBox(viewModel: self.viewModel)
+                PlayerGuide(viewModel: self.viewModel)
             }
             .modifier(MatchParent())
             .gesture(
                 DragGesture(minimumDistance: 0, coordinateSpace: .local)
                     .onChanged({ value in
+                        if self.viewModel.isLock { return }
                         if let type = dragGestureType {
                             switch type {
                             case .brightness: self.onBrightnessChange(value: value)
@@ -133,6 +147,7 @@ struct BtvPlayer: PageComponent{
             )
             .gesture(
                 MagnificationGesture(minimumScaleDelta: 0).onChanged { val in
+                    if self.viewModel.isLock { return }
                     self.onRatioChange(value: val)
                 }.onEnded { val in
                     self.resetDragGesture()
@@ -142,6 +157,8 @@ struct BtvPlayer: PageComponent{
             
             .onReceive(self.sceneObserver.$isUpdated){ update in
                 if !update {return}
+                if self.viewModel.isLock { return }
+                
                 switch self.sceneObserver.sceneOrientation {
                 case .landscape : self.pagePresenter.fullScreenEnter()
                 case .portrait : self.pagePresenter.fullScreenExit()
@@ -168,7 +185,7 @@ struct BtvPlayer: PageComponent{
                     "&token=" + (repository.getDrmId() ?? "")
                 ComponentLog.d("path : " + path, tag: self.tag)
                 
-                self.viewModel.event = .load(path, true, self.viewModel.time, self.viewModel.header)
+                self.viewModel.event = .load(path, self.setup.autoPlay , self.viewModel.time, self.viewModel.header)
             }
             .onDisappear(){
                 self.pagePresenter.fullScreenExit()
@@ -255,6 +272,7 @@ struct BtvPlayer_Previews: PreviewProvider {
         VStack{
             BtvPlayer()
                 .environmentObject(Repository())
+                .environmentObject(Setup())
                 .environmentObject(SceneObserver())
                 .environmentObject(PagePresenter())
                 .environmentObject(Pairing())

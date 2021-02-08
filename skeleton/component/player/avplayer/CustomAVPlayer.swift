@@ -94,7 +94,9 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
         
         func onSeek(time:Double, play:Bool){
             if !player.seek(time) { viewModel.error = .illegalState(evt) }
-            self.onSeek(time: time)
+            var st = min(time, self.viewModel.duration)
+            st = max(time, 0)
+            self.onSeek(time: st)
             if self.viewModel.isRunning {return}
             if play { onResume() }
             run(player)

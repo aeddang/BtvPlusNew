@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 
-class PurchasViewerData {
+class PurchaseViewerData {
     private(set) var isInfo:Bool = false
     private(set) var infoIcon: String? = nil
     private(set) var infoLeading: String? = nil
@@ -25,7 +25,7 @@ class PurchasViewerData {
     var optionIdx = 0
     private(set) var purchasBtnTitle:String? = nil
 
-    func setData(synopsisModel:SynopsisModel?, isPairing:Bool? ) -> PurchasViewerData? {
+    func setData(synopsisModel:SynopsisModel?, isPairing:Bool? ) -> PurchaseViewerData? {
         guard let synopsisModel = synopsisModel else { return nil }
         guard let purchas = synopsisModel.curSynopsisItem else { return nil }
         if !synopsisModel.isDistProgram {
@@ -67,7 +67,7 @@ class PurchasViewerData {
         return self
     }
     
-    private func setupBtvWatchInfo(synopsisModel:SynopsisModel, isPairing:Bool? , purchas:PurchasModel){
+    private func setupBtvWatchInfo(synopsisModel:SynopsisModel, isPairing:Bool? , purchas:PurchaseModel){
         if isPairing == true || synopsisModel.isPossonVODMode {
             if purchas.isFree {
                 infoTailing = String.pageText.synopsisFreeWatch
@@ -110,7 +110,7 @@ class PurchasViewerData {
         self.isInfo = infoIcon != nil || infoLeading != nil || infoTailing != nil
     }
     
-    private func setupOption(watchItems: [PurchasModel]?, purchas:PurchasModel){
+    private func setupOption(watchItems: [PurchaseModel]?, purchas:PurchaseModel){
         guard let watchItems =  watchItems else { return }
         if watchItems.count < 2 { return }
         guard let curIdx = watchItems.firstIndex(where: {$0.prd_prc_id == purchas.prd_prc_id}) else { return }
@@ -120,7 +120,7 @@ class PurchasViewerData {
         self.options = watchItems.map({$0.purStateText})
         self.optionValues = watchItems.map({$0.prd_prc_id})
     }
-    private func setupOption(purchasableItems: [PurchasModel]?, purchas:PurchasModel){
+    private func setupOption(purchasableItems: [PurchaseModel]?, purchas:PurchaseModel){
         guard let purchasableItems =  purchasableItems else { return }
         guard let purchasableItem =  purchasableItems.first else { return }
         let leading = purchas.hasAuthority ? String.button.purchasAnother : String.button.purchas
@@ -131,7 +131,7 @@ class PurchasViewerData {
         }
     }
     
-    func setDummy() -> PurchasViewerData {
+    func setDummy() -> PurchaseViewerData {
         isInfo = true
         infoIcon = Asset.icon.tip
         infoLeading = "ocean"
@@ -145,10 +145,10 @@ class PurchasViewerData {
     }
 }
 
-struct PurchasViewer: PageComponent{
+struct PurchaseViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
-    var data:PurchasViewerData
+    var data:PurchaseViewerData
     @State var option:String = ""
     var body: some View {
         VStack(alignment:.leading , spacing:Dimen.margin.light) { 
@@ -252,12 +252,12 @@ struct PurchasViewer: PageComponent{
 
 
 #if DEBUG
-struct PurchasViewer_Previews: PreviewProvider {
+struct PurchaseViewer_Previews: PreviewProvider {
     
     static var previews: some View {
         VStack{
-            PurchasViewer(
-                data:PurchasViewerData().setDummy()
+            PurchaseViewer(
+                data:PurchaseViewerData().setDummy()
             )
             .environmentObject(DataProvider())
             .environmentObject(PagePresenter())

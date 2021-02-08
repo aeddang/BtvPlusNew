@@ -63,6 +63,7 @@ struct PageTitle: ViewModifier {
     }
 }
 
+
 struct BlockTitle: ViewModifier {
     func body(content: Content) -> some View {
         return content
@@ -76,15 +77,10 @@ struct BlockTitle: ViewModifier {
 struct ContentTitle: ViewModifier {
     func body(content: Content) -> some View {
         return content
-            .modifier(BoldTextStyle())
+            .modifier(MediumTextStyle( size: Font.size.regular))
     }
 }
 
-struct PartTitle: ViewModifier {
-    func body(content: Content) -> some View {
-        return content
-            .modifier(BlackTextStyle(size: Font.size.regular))
-    }
-}
+
 
 

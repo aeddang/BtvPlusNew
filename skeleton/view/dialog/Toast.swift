@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 extension View {
     func toast(isShowing: Binding<Bool>, text: String) -> some View {
@@ -28,31 +29,39 @@ struct Toast<Presenting>: View where Presenting: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             self.presenting()
-            VStack {
+            VStack{
                 Text(self.text)
                     .modifier(MediumTextStyle(size: Font.size.light, color: Color.app.white))
-                    .padding(.top, Dimen.margin.thin)
-                    .padding(.horizontal, Dimen.margin.thin)
-                    .padding(.bottom, Dimen.margin.thin + self.safeAreaBottom)
-                    .frame(minWidth: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/,  maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
+                    .padding(.all, Dimen.margin.thin)
+                    .frame(minWidth: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/,  maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .center)
             }
-            .background(Color.black.opacity(0.7))
-            .transition(.slide)
+            .background(Color.app.greyDeep.opacity(0.7))
+            .padding(.bottom, self.safeAreaBottom)
+            .offset(y:self.isShowing ? 0 : 100)
             .opacity(self.isShowing ? 1 : 0)
         }
         .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
-            //if self.editType == .nickName {return}
             withAnimation{
                 self.safeAreaBottom = pos
             }
         }
         .onReceive( [self.isShowing].publisher ) { show in
             if !show  { return }
-            DispatchQueue.main.asyncAfter(deadline: .now() + self.duration) {
-              withAnimation {
-                 self.isShowing = false
-              }
-            }
+            self.delayAutoHidden()
         }
+    }
+    
+    @State var autoHidden:AnyCancellable?
+    func delayAutoHidden(){
+        self.autoHidden?.cancel()
+        self.autoHidden = Timer.publish(
+            every: self.duration, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                self.autoHidden?.cancel()
+                withAnimation {
+                   self.isShowing = false
+                }
+            }
     }
 }

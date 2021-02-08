@@ -32,6 +32,7 @@ class Repository:ObservableObject, PageProtocol{
     private let apiCoreDataManager = ApiCoreDataManager()
     private let pairingManager:PairingManager
     private let apiManager:ApiManager
+    private let userSetup:Setup
     private var anyCancellable = Set<AnyCancellable>()
     private let drmAgent = DrmAgent.initialize() as? DrmAgent
     
@@ -39,13 +40,15 @@ class Repository:ObservableObject, PageProtocol{
         dataProvider:DataProvider? = nil,
         pairing:Pairing? = nil,
         pagePresenter:PagePresenter? = nil,
-        sceneObserver:PageSceneObserver? = nil
+        sceneObserver:PageSceneObserver? = nil,
+        setup:Setup? = nil
     ) {
         self.dataProvider = dataProvider ?? DataProvider()
         self.pairing = pairing ?? Pairing()
         self.apiManager = ApiManager()
         self.pageSceneObserver = sceneObserver
         self.pagePresenter = pagePresenter
+        self.userSetup = setup ?? Setup()
         self.pairingManager =  PairingManager(
             pairing: self.pairing,
             dataProvider: self.dataProvider,
@@ -154,6 +157,7 @@ class Repository:ObservableObject, PageProtocol{
         if !self.setting.initate {
             self.setting.initate = true
             SystemEnvironment.firstLaunch = true
+            self.userSetup.initateSetup()
         }
         if self.setting.retryPushToken != "" {
             self.registerPushToken(self.setting.retryPushToken)

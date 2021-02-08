@@ -25,7 +25,6 @@
 "week" = "주";
 "month" = "월";
 "year" = "년";
-
 "cash" = "원";
 
 "certificationNumber" = "인증번호";
@@ -35,12 +34,14 @@
 "another" = "외";
 "count" = "개";
 "broCount" = "회";
+"sesonCount" = "화";
 "award" = "수상";
+"ageCount" = "세";
 
 "rent" = "대여";
 "owner" = "소장";
 "defaultStb" = "B tv 셋톱박스";
-"moveSec" = "초 이동";
+
 
 /*
   Button
@@ -147,6 +148,17 @@
 "alertBS" = "서비스 중지";
 "alertBStext" = "서비스 중지로 인해 시청 불가한 상품입니다.";
 
+"alertDataAlramOn" = "데이타 연결 알림이 설정되었습니다.";
+"alertDataAlramOff" = "데이타 연결 알림이 해재되었습니다.";
+"alertAutoRemoconOn" = "리모컨 자동 전환이 설정되었습니다.";
+"alertAutoRemoconOff" = "리모컨 자동 전환이 해재되었습니다.";
+"alertRemoconVibrationOn" = "리모컨 진동 효과가 설정되었습니다.";
+"alertRemoconVibrationOff" = "리모컨 진동 효과가 해재되었습니다.";
+"alertAutoPlayOn" = "플레이어 자동 재생이 설정되었습니다.";
+"alertAutoPlayOff" = "플레이어 자동 재생이 해재되었습니다.";
+"alertNextPlayOn" = "다음 영상 연속 재생이 설정되었습니다.";
+"alertNextPlayOff" = "다음 영상 연속 재생이 해재되었습니다.";
+
 /*
  PageTitle
 */
@@ -157,6 +169,7 @@
 "titleMy" = "MY";
 "titlePairingManagement" = "B tv 연결 관리";
 "titleMyPurchase" = "이전 B tv 구매/소장 목록";
+"titleSetup" = "설정";
 
 /*
  PagePairing
@@ -221,6 +234,51 @@
 "myinviteFammlyText2" = "B tv를 연결할 수 있도록 SMS를 전송해보세요!";
 
 /*
+ PageSetup
+*/
+"setupApp" = "사용 설정";
+"setupAppDataAlram" = "데이터 연결 알림";
+"setupAppDataAlramText" = "설정 후 모바일 데이터 연결 시 알림을 제공합니다.";
+"setupAppAutoRemocon" = "리모컨 자동 전환 설정";
+"setupAppAutoRemoconText" = "B tv로 시청 선택 시 리모컨이 자동으로 실행됩니다.";
+"setupAppRemoconVibration" = "리모컨 진동 효과 사용";
+"setupAppRemoconVibrationText" = "리모컨 버튼 선택 시 진동 효과를 사용합니다.";
+
+"setupPlay" = "재생 설정";
+"setupPlayAuto" = "플레이어 자동 재생";
+"setupPlayAutoText" = "재생 가능한 영상이 있을 경우 자동으로 재생합니다.";
+"setupPlayNext" = "다음 영상 연속 재생";
+"setupPlayNextText" = "영상 시청 완료 후 다음 영상을 자동으로 재생합니다.";
+
+"setupAlram" = "알림 설정";
+"setupAlramMarketing" = "알림 수신 설정";
+"setupAlramMarketingText" = "인기, 무료 콘텐츠 소식, 공개예정, 시청 예약 알림과 SK 브로드밴드 상품의 안내/혜택 알림을 수신합니다.";
+"setupAlramMarketingTip1" = "신작 영화 및 TV 다시보기, 무료 VOD등 엄선한 콘텐츠 소식을 알려드립니다.";
+"setupAlramMarketingTip2" = "화제작, 인기작 등 더 재미있는 콘텐츠 이야기를 뉴스레터로 구성하여 보내드립니다.";
+"setupAlramMarketingTip3" = "B포인트/쿠폰의 유효기간 만료 도래 시 바로 알려드립니다.";
+"setupAlramMarketingTip4" = "보고 싶었던 공개예정 콘텐츠가 B tv에 편성되는 즉시 알려드립니다.";
+"setupAlramMarketingTip5" = "놓치면 아까운 이벤트에 대한 소식을 알려드립니다.";
+
+"setupCertification" = "인증 설정";
+"setupCertificationPurchase" = "구매 인증";
+"setupCertificationPurchaseText" = "콘텐츠 구매 시 인증번호 확인을 진행합니다.";
+"setupCertificationAge" = "시청 연령 제한 설정";
+"setupCertificationAgeText" = "시청 연령 이상의 콘텐츠는 인증 후 이용하도록 설정합니다.";
+
+"setupChildren" = "자녀 안심 설정";
+"setupChildrenHabit" = "시청 습관 관리";
+"setupChildrenHabitText" = "B tv의 유해 콘텐츠 시청 및 시청 시간을 제어할 수 있습니다.";
+
+"setupHappySenior" = "B tv 해피시니어 설정";
+"setupHappySeniorPicture" = "가족사진 등록";
+"setupHappySeniorPictureText" = "B tv Lite 효 상품을 이용중인 셋톱박스 해피시니어 홈 화면에 가족사진을 등록할 수 있습니다.";
+
+"setupGuideNVersion" = "도움말 및 버전 정보";
+"setupGuide" = "도움말";
+"setupVersionLatest" = "최신 버전 이용 중";
+"setupOpensource" = "오픈소스 라이선스";
+
+/*
  PageSynopsis
 */
 "synopsisOnlyBtvFree" = "B tv에서 무료 시청 가능";
@@ -235,3 +293,19 @@
 "synopsisWatchRent" = "대여 기간 내 시청 가능";
 "synopsisWatchPossn" = "B tv 해지 전 무제한 시청 가능";
 
+/*
+ Player
+*/
+"playerPreplay" = "3분 미리보기";
+"playerPreview" = "예고편";
+"playerCookie" = "쿠키 영상";
+"playerNext" = "다음 화";
+"playerDirectPlay" = "도입부 건너뛰기";
+"playerSeason" = "시즌";
+"playerContinuePlay" = "계속 시청";
+
+"playerAdTitle" = "광고 중입니다.";
+"playerAdMore" = "광고 정보 더보기";
+"playerAdCancel" = "광고 건너뛰기";
+
+"playerMoveSec" = "초 이동";

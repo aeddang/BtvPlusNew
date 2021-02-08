@@ -19,7 +19,7 @@ struct PageTest: PageView {
     @ObservedObject var playerModel = PlayerModel(path: "3qOhAhik0hA")
     @ObservedObject var naviModel = NavigationModel()
     @ObservedObject var webViewModel = WebViewModel(base: "https://www.todaypp.com")
-    @State var naviImg:String? = Asset.bland.logoLauncher
+    @State var naviImg:String? = Asset.brand.logoLauncher
     @State var index: Int = 0
     @State private var showingAlert = false
     @State private var showingMsg = ""

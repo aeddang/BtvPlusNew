@@ -19,9 +19,10 @@ extension Asset {
     public static let test = "test"
 }
 extension Asset{
-    struct bland {
+    struct brand {
         public static let logoLauncher =  "icLauncherSIos"
         public static let logoSplash =  "imgSplashLogo"
+        public static let logoWhite =  "icHalfLogoBtv"
     }
     
     struct gnbTop {
@@ -91,12 +92,13 @@ extension Asset{
         public static let alert = "icChannelAlert"
         
         public static let thumbPlay = "icThumPlay"
+        public static let play = "icPlayerPlayS"
         
     }
     
     
     struct player {
-        public static let more = "icPlayerHalfMore"
+        public static let more = "icPlayerFullMore"
         public static let lock = "icPlayerFullLock"
         public static let resume = "icPlayerPlay"
         public static let pause = "icPlayerPause"

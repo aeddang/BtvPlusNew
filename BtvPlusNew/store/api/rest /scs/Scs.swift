@@ -114,6 +114,8 @@ class Scs: Rest{
         params["verf_req_data"] = ApiUtil.getSCSVerfReqData(stbId, plainText: plainText, date: date)
         params["req_date"] = ScsNetwork.getReqData(date:date)
         params["method"] = "get"
+        
+        DataLog.d("epsdRsluId : " + (epsdRsluId ?? ""), tag: "상품정보 조회")
         fetch(route: ScsPlay(query: params), completion: completion, error:error)
     }
 }

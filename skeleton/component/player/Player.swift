@@ -60,14 +60,16 @@ open class PlayerModel: ComponentObservable {
     
     open func reset(){
         limitedDuration = nil
+        
         playInfo = nil
         reload()
     }
     
     open func reload(){
         isPlay = false
-        duration = 0.0
-        time = 0.0
+        duration = 0
+        originDuration = 0
+        time = 0
         streamEvent = nil
         playerStatus = nil
         streamStatus = nil

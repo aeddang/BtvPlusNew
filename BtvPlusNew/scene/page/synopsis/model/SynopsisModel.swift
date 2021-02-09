@@ -101,8 +101,9 @@ class SynopsisModel : PageProtocol {
             self.epsdRsluId = first.epsd_rslu_id
         }
         if let first = data.contents?.epsd_rslu_info?.first {
-            epsdRsluId = first.epsd_rslu_id
+            self.epsdRsluId = first.epsd_rslu_id
         }
+        DataLog.d("SynopsisModel epsdRsluId  : " + (self.epsdRsluId ?? ""), tag: "상품정보 조회")
         
         var productsPpv: Array< Dictionary<String, String> > = []
         var purchasPpv: Array< Dictionary<String, String> > = []

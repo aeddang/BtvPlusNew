@@ -135,6 +135,10 @@ struct PlayerBottom: PageView{
                 if t >= self.viewModel.openingTime {
                     withAnimation { self.showDirectview = false }
                 }
+            } else {
+                if t < self.viewModel.openingTime {
+                    withAnimation { self.showDirectview = true }
+                }
             }
             if !self.isTimeCheck { return }
             guard let d = self.durationTime else {return}

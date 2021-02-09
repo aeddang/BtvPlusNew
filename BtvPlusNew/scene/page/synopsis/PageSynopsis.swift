@@ -407,6 +407,7 @@ struct PageSynopsis: PageView {
             self.textInfo = self.purchasViewerData?.serviceInfo
             self.imgBg = self.synopsisModel?.imgBg
             self.epsdRsluId = self.synopsisModel?.epsdRsluId ?? ""
+            DataLog.d("PageSynopsis epsdRsluId  : " + (self.epsdRsluId ?? ""), tag: "상품정보 조회")
             
         } else {
             self.progressError = true

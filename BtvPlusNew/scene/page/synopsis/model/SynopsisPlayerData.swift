@@ -34,7 +34,7 @@ class SynopsisPlayerData {
         case .preview:
             self.previews = synopsis.previews
         case .preplay:do{}
-        case .vod:
+        case .vod, .vodChange, .vodNext:
             if let srisId = synopsis.nextSrisId {
                 if !srisId.isEmpty { self.nextSeason = srisId }
             }

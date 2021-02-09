@@ -7,7 +7,12 @@
 import Foundation
 import SwiftUI
 
+
+
 struct PageSynopsis: PageView {
+    class ComponentViewModel:ComponentObservable{
+        @Published var selectedOption:PurchaseModel? = nil
+    }
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
@@ -17,6 +22,7 @@ struct PageSynopsis: PageView {
     @EnvironmentObject var setup:Setup
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
+    @ObservedObject var componentViewModel:ComponentViewModel = ComponentViewModel()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var pageDataProviderModel:PageDataProviderModel = PageDataProviderModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -27,7 +33,7 @@ struct PageSynopsis: PageView {
     @State var isFullScreen:Bool = false
     
     enum SingleRequestType:String {
-        case preview
+        case preview, changeOption
     }
     
     var body: some View {
@@ -41,14 +47,16 @@ struct PageSynopsis: PageView {
                 ) {
                     VStack(spacing:0){
                         ZStack {
-                            if self.playerData != nil {
-                                BtvPlayer(
-                                    viewModel:self.playerModel,
-                                    pageObservable:self.pageObservable,
-                                    title: self.title)
-                                
-                            } else {
+                            BtvPlayer(
+                                viewModel:self.playerModel,
+                                pageObservable:self.pageObservable,
+                                title: self.title,
+                                thumbImage: self.imgBg
+                            )
+                            
+                            if self.playerData == nil {
                                 PlayViewer(
+                                    pageObservable:self.pageObservable,
                                     title: self.title,
                                     textInfo: self.textInfo,
                                     imgBg: self.imgBg)
@@ -56,7 +64,7 @@ struct PageSynopsis: PageView {
                             }
                         }
                         .modifier(Ratio16_9( geometry:geometry, isFullScreen: self.isFullScreen))
-                        .padding(.top, sceneObserver.safeAreaTop)
+                        .padding(.top, self.sceneObserver.safeAreaTop)
                         
                         InfinityScrollView( viewModel: self.infinityScrollModel ){
                             VStack(alignment:.leading , spacing:0) {
@@ -72,7 +80,9 @@ struct PageSynopsis: PageView {
                                     Spacer()
                                 }
                                 if self.hasAuthority != nil && self.purchasViewerData != nil {
-                                    PurchaseViewer( data:self.purchasViewerData! )
+                                    PurchaseViewer(
+                                        componentViewModel: self.componentViewModel,
+                                        data:self.purchasViewerData! )
                                 }
                                 if self.hasAuthority == false && self.isPairing == false {
                                     FillButton(
@@ -126,6 +136,10 @@ struct PageSynopsis: PageView {
                     self.errorProgress(progress: progress, err: err, count: count)
                 }
             }
+            .onReceive(self.componentViewModel.$selectedOption ){option in
+                guard let option = option else { return }
+                self.changeOption(option)
+            }
             .onReceive(self.pageObservable.$status){status in
                 switch status {
                 case .appear:
@@ -152,7 +166,6 @@ struct PageSynopsis: PageView {
             .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
                 self.isFullScreen = fullScreen
             }
-            
             .onReceive(self.playerModel.$streamEvent){evt in
                 guard let _ = evt else {return}
                 switch evt {
@@ -268,7 +281,7 @@ struct PageSynopsis: PageView {
                 }
             }
             else {
-                self.synopsisPlayType = .vod
+                self.synopsisPlayType = .vod()
                 self.pageDataProviderModel.requestProgress(q: .init(type: .getPlay(self.epsdRsluId,  self.pairing.hostDevice )))
                 
             }
@@ -346,6 +359,13 @@ struct PageSynopsis: PageView {
                 }
                 self.setupPreview(data)
             }
+            if  res.id.hasPrefix( SingleRequestType.changeOption.rawValue ) {
+                guard let data = res.data as? Play else {
+                    PageLog.d("error changeOption", tag: self.tag)
+                    return
+                }
+                self.setupPlay(data)
+            }
 
         }
     }
@@ -381,7 +401,7 @@ struct PageSynopsis: PageView {
                         isPairing: self.isPairing)
                 self.hasAuthority = false
             }
-            if let kidYn = self.synopsisModel?.kids_yn {self.synopsisData?.kidZone = kidYn }
+            if let kidYn = self.synopsisModel?.kidsYn {self.synopsisData?.kidZone = kidYn }
 
             self.title = self.episodeViewerData?.episodeTitle
             self.textInfo = self.purchasViewerData?.serviceInfo
@@ -406,10 +426,21 @@ struct PageSynopsis: PageView {
                 synopsisModel: self.synopsisModel,
                 isPairing: self.isPairing)
         
+        if let lastWatch = data.last_watch_info {
+            if let t = lastWatch.watch_rt?.toInt() {
+                switch self.synopsisPlayType {
+                case .vod: self.synopsisPlayType = .vod(Double(t))
+                case .vodChange: self.synopsisPlayType = .vodChange(Double(t))
+                case .vodNext: self.synopsisPlayType = .vodNext(Double(t))
+                default: do{}
+                }
+            }
+        }
         if let curSynopsisItem = self.synopsisModel?.curSynopsisItem {
             self.hasAuthority = curSynopsisItem.hasAuthority
         }
     }
+    
     private func setupPreview (_ data:Preview){
         if data.result != ApiCode.success {
             PageLog.d("fail PreviewInfo", tag: self.tag)
@@ -420,12 +451,15 @@ struct PageSynopsis: PageView {
             return
         }
         PageLog.d("setupPreview", tag: self.tag)
-        
         if let synopsis = self.synopsisModel {
+            let prerollData = SynopsisPrerollData()
+                .setData(data: synopsis, playType: self.synopsisPlayType, epsdRsluId: self.epsdRsluId)
             self.playerData = SynopsisPlayerData().setData(type: self.synopsisPlayType, synopsis: synopsis)
             self.playerModel
-                .setData(data: dataInfo, type: .preview(self.epsdRsluId))
+                .setData(synopsisPrerollData: prerollData)
                 .setData(synopsisPlayData: self.playerData)
+                .setData(data: dataInfo, type: .preview(self.epsdRsluId))
+                
         }
     }
     
@@ -439,12 +473,15 @@ struct PageSynopsis: PageView {
             return
         }
         if let synopsis = self.synopsisModel {
+            let prerollData = SynopsisPrerollData()
+                .setData(data: synopsis, playType: self.synopsisPlayType, epsdRsluId: self.epsdRsluId)
             self.playerData = SynopsisPlayerData().setData(type: self.synopsisPlayType, synopsis: synopsis)
             self.playerModel
-                .setData(data: dataInfo, type: .vod(self.epsdRsluId,self.title))
+                .setData(synopsisPrerollData: prerollData)
                 .setData(synopsisPlayData: self.playerData)
+                .setData(data: dataInfo, type: .vod(self.epsdRsluId,self.title))
+                
         }
-        
     }
     
     
@@ -479,12 +516,14 @@ struct PageSynopsis: PageView {
         self.synopsisPlayType = .preview(next)
         if self.isPairing == true {
             let item = previews[next]
+            self.epsdRsluId = item.epsd_rslu_id ?? ""
             self.pageDataProviderModel.request = .init(
                 id: SingleRequestType.preview.rawValue,
                 type: .getPreview(item.epsd_rslu_id,  self.pairing.hostDevice))
            
         }else{
             let item = previews[next]
+            self.epsdRsluId = item.epsd_rslu_id ?? ""
             self.pageDataProviderModel.request = .init(
                 id: SingleRequestType.preview.rawValue,
                 type: .getPreplay(item.epsd_rslu_id,  false))
@@ -497,6 +536,9 @@ struct PageSynopsis: PageView {
         guard let playData = self.playerData else { return false}
         if !self.setup.nextPlay { return false}
         if !playData.hasNext { return false}
+        
+        self.epsdRsluId = ""
+        self.synopsisPlayType = .vodNext()
         let nextSynopsisData = SynopsisData(
             srisId: playData.nextSeason ?? prevData.srisId,
             searchType: prevData.searchType,
@@ -508,6 +550,14 @@ struct PageSynopsis: PageView {
         self.synopsisData = nextSynopsisData
         self.resetPage()
         return true
+    }
+    
+    func changeOption(_ option:PurchaseModel){
+        self.epsdRsluId = option.epsd_rslu_id
+        self.synopsisPlayType = .vodChange()
+        self.pageDataProviderModel.request = .init(
+            id: SingleRequestType.changeOption.rawValue,
+            type: .getPlay(self.epsdRsluId,  self.pairing.hostDevice ))
     }
     
     

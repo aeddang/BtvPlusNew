@@ -9,7 +9,7 @@ import Foundation
 
 
 enum SynopsisPlayType {
-    case unknown, preview(Int) , preplay , vod, season
+    case unknown, preview(Int) , preplay , vod(Double = 0), vodNext(Double = 0), vodChange(Double = 0)
     var name: String? {
         switch self {
         case .preview: return String.player.preview
@@ -19,7 +19,7 @@ enum SynopsisPlayType {
     }
 }
 
-class SynopsisPlayerData:ObservableObject {
+class SynopsisPlayerData {
     private(set) var type:SynopsisPlayType = .unknown
     private(set) var previews:[PreviewItem]? = nil
     private(set) var siries:[SeriesItem]? = nil
@@ -27,7 +27,7 @@ class SynopsisPlayerData:ObservableObject {
     private(set) var hasNext:Bool = false
     private(set) var nextSeason:String? = nil
     private(set) var nextEpisode:String? = nil
-    
+    private(set) var openingTime:Double? = nil
     func setData(type:SynopsisPlayType, synopsis:SynopsisModel) -> SynopsisPlayerData {
         self.type = type
         switch type {
@@ -43,9 +43,18 @@ class SynopsisPlayerData:ObservableObject {
             }
             self.siries = synopsis.siries
             self.hasNext = self.nextEpisode != nil || self.nextSeason != nil
+            if let list = synopsis.rsluInfoList {
+                if !list.isEmpty {
+                    let rslu = list.first
+                    self.openingTime = rslu?.openg_tmtag_tmsc?.number
+                }
+            }
+            
+            
         default:do{}
         }
-        return self
+    
+return self
     }
     
     var previewCount:String {

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 
-class PurchaseViewerData {
+class PurchaseViewerData:ObservableObject{
     private(set) var isInfo:Bool = false
     private(set) var infoIcon: String? = nil
     private(set) var infoLeading: String? = nil
@@ -22,9 +22,11 @@ class PurchaseViewerData {
     private(set) var optionTitle: String? = nil
     private(set) var options: [String] = []
     private(set) var optionValues: [String] = []
-    var optionIdx = 0
     private(set) var purchasBtnTitle:String? = nil
-
+    
+    private(set) var watchOptions:[PurchaseModel]? = nil
+    fileprivate(set) var optionIdx = 0
+    
     func setData(synopsisModel:SynopsisModel?, isPairing:Bool? ) -> PurchaseViewerData? {
         guard let synopsisModel = synopsisModel else { return nil }
         guard let purchas = synopsisModel.curSynopsisItem else { return nil }
@@ -111,6 +113,7 @@ class PurchaseViewerData {
     }
     
     private func setupOption(watchItems: [PurchaseModel]?, purchas:PurchaseModel){
+        self.watchOptions = watchItems
         guard let watchItems =  watchItems else { return }
         if watchItems.count < 2 { return }
         guard let curIdx = watchItems.firstIndex(where: {$0.prd_prc_id == purchas.prd_prc_id}) else { return }
@@ -148,6 +151,7 @@ class PurchaseViewerData {
 struct PurchaseViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @ObservedObject var componentViewModel:PageSynopsis.ComponentViewModel = PageSynopsis.ComponentViewModel()
     var data:PurchaseViewerData
     @State var option:String = ""
     var body: some View {
@@ -218,6 +222,9 @@ struct PurchaseViewer: PageComponent{
                             if type.check(key: self.tag){
                                 self.data.optionIdx = idx
                                 self.option = self.data.options[idx]
+                                if let watchOptions = self.data.watchOptions {
+                                    self.componentViewModel.selectedOption = watchOptions[idx]
+                                }
                             }
                         }
                     }

@@ -14,13 +14,15 @@ struct ApiPath {
     static func getRestApiPath(_ server:ApiServer) -> String {
         if SystemEnvironment.isTestMode {
             if server == .VMS {
-                return "http://mobilebtv.com:9080"
+                return SystemEnvironment.VMS
             }
         }
+        
         if let vmsPath = SystemEnvironment.serverConfig[server.configKey] {
             //DataLog.d(server.configKey + " : " +  vmsPath, tag: "ApiPath")
             if vmsPath != "" { return vmsPath }
         }
+        
         DataLog.d(server.configKey + " : use local data", tag: "ApiPath")
         if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
             let dictRoot = NSDictionary(contentsOfFile: path)

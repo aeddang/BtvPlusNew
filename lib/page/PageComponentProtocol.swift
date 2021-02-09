@@ -26,7 +26,6 @@ open class ComponentObservable: ObservableObject  {
 
 protocol PageComponent : PageView{}
 extension PageComponent {
-    
     var pageID:PageID{
         get{ pageObservable.pageObject?.pageID ?? UUID.init().uuidString}
     }

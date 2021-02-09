@@ -60,6 +60,10 @@
 		31626EF125B9092400F4031D /* PurchaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31626EF025B9092400F4031D /* PurchaseModel.swift */; };
 		31626EF925B9093300F4031D /* SynopsisModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31626EF825B9093300F4031D /* SynopsisModel.swift */; };
 		31626F0125B9151E00F4031D /* DirectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31626F0025B9151E00F4031D /* DirectView.swift */; };
+		31631C4F25D22DC100E501F7 /* SKBNewAdSdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31631C4E25D22DC100E501F7 /* SKBNewAdSdk.framework */; };
+		31631C5425D22E7900E501F7 /* Preroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31631C5325D22E7900E501F7 /* Preroll.swift */; };
+		31631C6525D2516E00E501F7 /* SynopsisPrerollData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31631C6425D2516E00E501F7 /* SynopsisPrerollData.swift */; };
+		31631C6D25D2895000E501F7 /* PlayerWaiting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31631C6C25D2895000E501F7 /* PlayerWaiting.swift */; };
 		3167640F25CCBE79003A7721 /* PlayerGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3167640E25CCBE79003A7721 /* PlayerGuide.swift */; };
 		3167641A25CCC1C5003A7721 /* PlayViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3167641925CCC1C5003A7721 /* PlayViewer.swift */; };
 		3167641F25CCC80E003A7721 /* SynopsisPlayerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3167641E25CCC80E003A7721 /* SynopsisPlayerData.swift */; };
@@ -313,6 +317,10 @@
 		31626EF025B9092400F4031D /* PurchaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseModel.swift; sourceTree = "<group>"; };
 		31626EF825B9093300F4031D /* SynopsisModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisModel.swift; sourceTree = "<group>"; };
 		31626F0025B9151E00F4031D /* DirectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectView.swift; sourceTree = "<group>"; };
+		31631C4E25D22DC100E501F7 /* SKBNewAdSdk.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SKBNewAdSdk.framework; path = libs/SKBNewAdSdk.framework; sourceTree = "<group>"; };
+		31631C5325D22E7900E501F7 /* Preroll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preroll.swift; sourceTree = "<group>"; };
+		31631C6425D2516E00E501F7 /* SynopsisPrerollData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisPrerollData.swift; sourceTree = "<group>"; };
+		31631C6C25D2895000E501F7 /* PlayerWaiting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerWaiting.swift; sourceTree = "<group>"; };
 		3167640E25CCBE79003A7721 /* PlayerGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerGuide.swift; sourceTree = "<group>"; };
 		3167641925CCC1C5003A7721 /* PlayViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayViewer.swift; sourceTree = "<group>"; };
 		3167641E25CCC80E003A7721 /* SynopsisPlayerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisPlayerData.swift; sourceTree = "<group>"; };
@@ -513,6 +521,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31631C4F25D22DC100E501F7 /* SKBNewAdSdk.framework in Frameworks */,
 				3180855E25C233A900AE4A73 /* libPoCDrmAgent.a in Frameworks */,
 				D56C5FF025933DA9009AE769 /* libti2-mdns-service-proxy-client.a in Frameworks */,
 				D4D8529D19DCDC8D8370F889 /* Pods_BtvPlusNew.framework in Frameworks */,
@@ -541,6 +550,7 @@
 		309EBDAD795DF6595FE7C4A3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				31631C4E25D22DC100E501F7 /* SKBNewAdSdk.framework */,
 				D56C5FEF25933DA9009AE769 /* libti2-mdns-service-proxy-client.a */,
 				562032BFA89FA1AD38D16D26 /* Pods_BtvPlusNew.framework */,
 				5AB7647BF720A2E85DC62906 /* Pods_BtvPlusNew_BtvPlusNewUITests.framework */,
@@ -567,6 +577,8 @@
 				31061E7625C934B600543FC0 /* PlayerEffect.swift */,
 				31E8D7BB25CA5D470034BBC4 /* PlayerTop.swift */,
 				3167642925CD11E8003A7721 /* PlayerBottom.swift */,
+				31631C5325D22E7900E501F7 /* Preroll.swift */,
+				31631C6C25D2895000E501F7 /* PlayerWaiting.swift */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -761,6 +773,7 @@
 				31626EF825B9093300F4031D /* SynopsisModel.swift */,
 				314F816425BE3CFA00E76508 /* SynopsisConst.swift */,
 				3167641E25CCC80E003A7721 /* SynopsisPlayerData.swift */,
+				31631C6425D2516E00E501F7 /* SynopsisPrerollData.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -1740,6 +1753,7 @@
 				D56CC30225906F2500CA1D54 /* VideoBlock.swift in Sources */,
 				D56C6B5C257DB44000CF9AB8 /* PageStyle.swift in Sources */,
 				D56C6B54257DB24C00CF9AB8 /* PageFactory.swift in Sources */,
+				31631C6D25D2895000E501F7 /* PlayerWaiting.swift in Sources */,
 				D573784A25A2983800EC571F /* CharacterSelectBox.swift in Sources */,
 				D56C6A4B257DA0C700CF9AB8 /* SwipperView.swift in Sources */,
 				314D589425B685B2007BCA34 /* PagePairingManagement.swift in Sources */,
@@ -1785,6 +1799,7 @@
 				31373F6025C7E726004353DA /* CustomYTPlayer.swift in Sources */,
 				310D7E2C25A42D05000BE173 /* StbList.swift in Sources */,
 				314D6B0225D0E9A50003C749 /* PageSetup.swift in Sources */,
+				31631C5425D22E7900E501F7 /* Preroll.swift in Sources */,
 				D56C6A32257DA0C700CF9AB8 /* CPWebView.swift in Sources */,
 				D56CC2EF25902E6600CA1D54 /* MultiBlock.swift in Sources */,
 				D5E27EDF2586F29200B2CD5D /* ImageViewButton.swift in Sources */,
@@ -1865,6 +1880,7 @@
 				D56C69A0257DA09E00CF9AB8 /* PageContentBody.swift in Sources */,
 				D51AA9F02599A2870035CD51 /* ConnectButton.swift in Sources */,
 				D56C6A49257DA0C700CF9AB8 /* SwipperPage.swift in Sources */,
+				31631C6525D2516E00E501F7 /* SynopsisPrerollData.swift in Sources */,
 				D56C6A50257DA0C700CF9AB8 /* Select.swift in Sources */,
 				D56C69AA257DA09E00CF9AB8 /* Network.swift in Sources */,
 				D56C6A4D257DA0C700CF9AB8 /* ProgressSlider.swift in Sources */,
@@ -2140,6 +2156,15 @@
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/libs",
+				);
+				"FRAMEWORK_SEARCH_PATHS[arch=*]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/libs",
+					"$(PROJECT_DIR)/lib",
+				);
 				INFOPLIST_FILE = BtvPlusNew/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2202,6 +2227,10 @@
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/libs",
+				);
 				INFOPLIST_FILE = BtvPlusNew/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (

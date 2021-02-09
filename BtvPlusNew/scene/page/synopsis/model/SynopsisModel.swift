@@ -46,9 +46,8 @@ class SynopsisModel : PageProtocol {
     private(set) var hasPreview:Bool = false
     private(set) var previews:[PreviewItem] = []
     private(set) var siries:[SeriesItem]? = nil
-
     private(set) var hasExamPreview:Bool = false
-    private(set) var kids_yn:String? = nil
+    private(set) var kidsYn:String? = nil
     private(set) var imgBg:String? = nil
     
     init(type:MetvNetwork.SynopsisType = .none ) {
@@ -65,7 +64,7 @@ class SynopsisModel : PageProtocol {
         self.siries = data.series
         
         if let contents = data.contents{
-            self.kids_yn = contents.kids_yn
+            self.kidsYn = contents.kids_yn
             if let bg = contents.epsd_poster_filename_h ?? contents.sris_poster_filename_h {
                 self.imgBg = ImagePath.thumbImagePath(filePath: bg, size: CGSize(width: 720, height: 0))
             }
@@ -453,6 +452,10 @@ class SynopsisModel : PageProtocol {
         DataLog.d("curSynopsisItem : " + (curSynopsisItem?.debugString ?? "nil") , tag: self.tag)
         
         #endif
+    }
+    
+    var isFree: Bool {
+        curSynopsisItem?.isFree ?? false
     }
     
     var isOnlyPurchasedBtv: Bool {

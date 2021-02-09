@@ -72,7 +72,7 @@ struct PlayerUI: PageComponent {
                         .frame(width:53)
                         .fixedSize(horizontal: true, vertical: false)
                     ProgressSlider(
-                        progress: self.progress,
+                        progress: min(self.progress, 1.0),
                         thumbSize: self.isFullScreen ?Dimen.icon.thinExtra : Dimen.icon.tiny,
                         onChange: { pct in
                             let willTime = self.viewModel.duration * Double(pct)

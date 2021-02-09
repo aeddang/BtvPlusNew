@@ -18,6 +18,13 @@ struct SystemEnvironment {
     static var serverConfig: [String:String] = [String:String]()
     static let isTestMode = true
     
+    static let VMS = "http://mobilebtv.com:9080"
+    static var isStage:Bool {
+        get{
+            return ApiPath.getRestApiPath(.VMS) == Self.VMS
+        }
+    }
+    
     static func getGuestDeviceId() -> String{
         return ApiPrefix.device + SystemEnvironment.deviceId
     }

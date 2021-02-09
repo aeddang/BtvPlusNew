@@ -224,6 +224,7 @@ class PlayerScreenView: UIView, PageProtocol {
         if self.initTime > 0 { seek(initTime) }
         guard let currentPlayer = player else { return }
         currentPlayer.rate = self.currentRate
+        if !self.isAutoPlay { pause() }
     }
     
     func stop() {

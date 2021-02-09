@@ -132,11 +132,9 @@ struct VideoItem: PageView {
                         .scaledToFit()
                         .frame(width: Dimen.icon.regularExtra, height: Dimen.icon.regularExtra)
                 }
-                VStack(spacing:0){
-                    HStack(spacing:0){
-                        
-                    }
-                    Spacer()
+                VStack(alignment: .leading, spacing:0){
+                    HStack(spacing:0){}
+                    Spacer().modifier(MatchParent())
                     if self.data.progress != nil {
                         Spacer().frame(
                             width: ListItem.thumb.size.width * CGFloat(self.data.progress!),

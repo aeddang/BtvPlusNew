@@ -30,8 +30,6 @@ struct PlayerBottom: PageView{
     @State var nextBtnTitle:String = ""
     @State var nextBtnSize:CGFloat = 0
     @State var isTimeCheck = false
-    
-    @State var directviewTime:Double = 10
     @State var durationTime:Double? = nil
     
     var body: some View {
@@ -45,6 +43,7 @@ struct PlayerBottom: PageView{
                             text: String.player.directPlay
                             ){_ in
                             
+                            self.viewModel.event = .seekTime(self.viewModel.openingTime, true)
                         }
                     }
                     if self.showPreplay {
@@ -96,27 +95,35 @@ struct PlayerBottom: PageView{
         .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
             self.isFullScreen = fullScreen
         }
-        .onReceive(self.viewModel.$synopsisPlayerData){data in
+        .onReceive(self.viewModel.$currentQuality){_ in
             self.durationTime = nil
             self.nextProgress = 0.0
             self.isTimeCheck = false
+            
+            guard let data = self.viewModel.synopsisPlayerData else {
+                withAnimation {
+                    self.showDirectview = false
+                    self.showPreplay = false
+                    self.showPreview = false
+                    self.showNext = false
+                }
+                return
+            }
             withAnimation {
                 self.showDirectview = false
                 self.showPreplay = false
                 self.showPreview = false
                 self.showNext = false
-                if let data = data {
-                    switch data.type {
-                    case .preview :
-                        self.showPreview = true
-                    case .preplay :
-                        self.showPreplay = true
-                    case .vod :
-                        self.showDirectview = true
-                        self.isTimeCheck = self.viewModel.synopsisPlayerData?.hasNext ?? false
-                        
-                    default : do{}
-                    }
+                switch data.type {
+                case .preview :
+                    self.showPreview = true
+                case .preplay :
+                    self.showPreplay = true
+                case .vod :
+                    self.showDirectview = true
+                    self.isTimeCheck = self.viewModel.synopsisPlayerData?.hasNext ?? false
+                    
+                default : do{}
                 }
             }
         }
@@ -125,7 +132,7 @@ struct PlayerBottom: PageView{
         }
         .onReceive(self.viewModel.$time){ t in
             if self.showDirectview {
-                if t >= self.directviewTime {
+                if t >= self.viewModel.openingTime {
                     withAnimation { self.showDirectview = false }
                 }
             }

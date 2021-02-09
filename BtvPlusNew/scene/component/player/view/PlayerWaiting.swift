@@ -8,13 +8,12 @@
 import Foundation
 import SwiftUI
 
-struct PlayViewer: PageComponent{
+struct PlayerWaiting: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var pageObservable:PageObservable = PageObservable()
-    var title:String? = nil
-    var textInfo:String? = nil
-    var imgBg:String? = nil
+    @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
     
+    var imgBg:String? = nil
     @State var isFullScreen:Bool = false
     @State var isPageOn:Bool = false
     var body: some View {
@@ -27,7 +26,6 @@ struct PlayViewer: PageComponent{
                 .modifier(MatchParent())
                 .background(Color.transparent.black70)
                 
-            
             VStack(spacing:0){
                 HStack(spacing:self.isFullScreen ? Dimen.margin.regular : Dimen.margin.light){
                     Button(action: {
@@ -40,37 +38,27 @@ struct PlayViewer: PageComponent{
                             .frame(width: Dimen.icon.regular,
                                    height: Dimen.icon.regular)
                     }
-                    if self.isFullScreen && self.title != nil {
-                        Text(self.title!)
-                            .modifier(MediumTextStyle(
-                                size: Font.size.mediumExtra,
-                                color: Color.app.white)
-                            )
-                    }
                     Spacer()
                 }
                 Spacer()
             }
             .padding(.all, self.isFullScreen ? PlayerUI.paddingFullScreen : PlayerUI.padding)
             
-            VStack(spacing:self.isFullScreen ? Dimen.margin.regular : Dimen.margin.tiny) {
-                Image(Asset.brand.logoWhite)
-                    .renderingMode(.original)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 87,
-                           height: 52)
-                if self.textInfo != nil {
-                    Text(self.textInfo!)
-                        .modifier(BoldTextStyle(
-                            size: self.isFullScreen ? Font.size.lightExtra :Font.size.thin ))
+            VStack(spacing:Dimen.margin.regular){
+                ImageButton(
+                    defaultImage: Asset.player.resume,
+                    size: CGSize(width:Dimen.icon.heavyExtra,height:Dimen.icon.heavyExtra)
+                ){ _ in
+                    self.viewModel.event = .resume
                 }
-            }
-            .opacity(self.isPageOn ? 1.0 : 0)
+                if self.viewModel.playInfo != nil  {
+                    Text(self.viewModel.playInfo!)
+                        .modifier(BoldTextStyle(size: Font.size.lightExtra, color: Color.app.white))
+                }
+            }.opacity(self.isPageOn ? 1.0 : 0)
         }
         .modifier(MatchParent())
         .clipped()
-        
         .onReceive(self.pagePresenter.$isFullScreen){ fullScreen in
             withAnimation{ self.isFullScreen = fullScreen }
         }
@@ -88,12 +76,12 @@ struct PlayViewer: PageComponent{
 
 
 #if DEBUG
-struct PlayViewer_Previews: PreviewProvider {
+struct PlayerWaiting_Previews: PreviewProvider {
     
     static var previews: some View {
         VStack{
-            PlayViewer(
-                textInfo: "sjknkjdfndnfkds"
+            PlayerWaiting(
+               
             )
             .environmentObject(PagePresenter())
         }.background(Color.blue)

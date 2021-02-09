@@ -23,6 +23,9 @@ open class PlayerModel: ComponentObservable {
     @Published fileprivate(set) var initTime:Double? = nil
     @Published fileprivate(set) var isPlay = false
     @Published fileprivate(set) var duration:Double = 0.0
+    fileprivate(set) var originDuration:Double = 0
+    open var limitedDuration:Double? = nil
+    
     @Published fileprivate(set) var time:Double = 0.0
     @Published var isRunning = false
     @Published var updateType:PlayerUpdateType = .update
@@ -55,7 +58,13 @@ open class PlayerModel: ComponentObservable {
         self.path = path
     }
     
-    func reset(){
+    open func reset(){
+        limitedDuration = nil
+        playInfo = nil
+        reload()
+    }
+    
+    open func reload(){
         isPlay = false
         duration = 0.0
         time = 0.0
@@ -65,7 +74,7 @@ open class PlayerModel: ComponentObservable {
         error = nil
     }
     
-    func isCompleted() -> Bool{
+    open func isCompleted() -> Bool{
         if duration == 0.0 {return false}
         return duration == time
     }
@@ -174,11 +183,17 @@ extension PlayBack {
     }
     func onDurationChange(_ t:Double){
         if t <= 0 { return }
-        viewModel.duration = t
+        if let limit = viewModel.limitedDuration {
+            viewModel.duration = min(t, limit)
+        }else{
+            viewModel.duration = t
+        }
+        viewModel.originDuration = t
         viewModel.updateType = .update
     }
     func onLoad(){
         ComponentLog.d("onLoad", tag: self.tag)
+        self.checkSeeked()
         viewModel.playerStatus = .load
         viewModel.updateType = .initate
         

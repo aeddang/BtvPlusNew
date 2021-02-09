@@ -142,17 +142,6 @@ struct PosterItem: PageView {
         ZStack{
             ImageView(url: self.data.image, contentMode: .fit, noImg: Asset.noImg9_16)
                 .modifier(MatchParent())
-            VStack(spacing:0){
-                if self.data.title != nil {
-                    Text(self.data.title!)
-                        .modifier(BlackTextStyle(size: Font.size.regular))
-                }
-                if self.data.subTitle != nil {
-                    Text(self.data.subTitle!)
-                        .modifier(MediumTextStyle(size: Font.size.thin, color: Color.app.grey))
-                }
-            }
-            .padding(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/, self.data.type.padding)
         }
         .frame(
             width: self.data.type.size.width,

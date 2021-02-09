@@ -95,7 +95,11 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
         func onSeek(time:Double, play:Bool){
             if !player.seek(time) { viewModel.error = .illegalState(evt) }
             var st = min(time, self.viewModel.duration)
-            st = max(time, 0)
+            st = max(st, 0)
+            //ComponentLog.d("onSeek time " + time.description, tag: self.tag)
+            //ComponentLog.d("onSeek st " + st.description, tag: self.tag)
+            //ComponentLog.d("onSeek " + self.viewModel.duration.description, tag: self.tag)
+            
             self.onSeek(time: st)
             if self.viewModel.isRunning {return}
             if play { onResume() }
@@ -104,7 +108,7 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
         //ComponentLog.d("update evt" , tag: self.tag)
         switch evt {
         case .load(let path, let isAutoPlay, let initTime, let header):
-            viewModel.reset()
+            viewModel.reload()
             if path == "" {viewModel.error = .connect(path)}
             viewModel.path = path
             self.onLoad()
@@ -118,7 +122,6 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
         case .resume: onResume()
         case .pause: onPause()
         case .stop:
-            ComponentLog.d("stop" , tag: self.tag)
             player.stop()
         case .volume(let v):
             MPVolumeView.setVolume(v)
@@ -175,6 +178,16 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
                     return
                 }
                 let t = CMTimeGetSeconds(currentPlayer.currentTime())
+                if t >= viewModel.duration && viewModel.duration > 0 {
+                    if viewModel.playerStatus != .seek && viewModel.playerStatus != .pause {
+                        self.cancel(job, reason: "duration completed")
+                        player.pause()
+                        self.onTimeChange(viewModel.duration)
+                        self.onPaused()
+                        self.onCompleted()
+                        return
+                    }
+                }
                 self.onTimeChange(Double(t))
                 player.layer.setNeedsDisplay()
                 if currentPlayer.timeControlStatus != timeControlStatus {
@@ -206,7 +219,7 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
                     case .readyToPlay: do {
                         if let d = currentPlayer.currentItem?.asset.duration {
                             let willDuration = Double(CMTimeGetSeconds(d))
-                            if willDuration != viewModel.duration {
+                            if willDuration != viewModel.originDuration {
                                 self.onDurationChange(willDuration)
                                 player.playInit()
                             }

@@ -43,6 +43,11 @@ struct PlayerEffect: PageView{
         GeometryReader { geometry in
             ZStack(alignment: .bottom){
                 ZStack{
+                    Spacer()
+                        .modifier(MatchParent())
+                        .background(Color.app.black)
+                        .opacity(self.showSeeking ? 0.5 : 0)
+                    
                     if self.showSeeking {
                         VStack(spacing:Dimen.margin.tiny){
                             Text(self.textSeeking)
@@ -57,10 +62,7 @@ struct PlayerEffect: PageView{
                                 )
                         }
                     }
-                    Spacer()
-                        .modifier(MatchParent())
-                        .background(Color.app.black)
-                        .opacity(self.showSeeking ? 0.5 : 0)
+                    
                     if self.message != nil {
                         Text(self.message!)
                             .modifier(BoldTextStyle(

@@ -56,21 +56,75 @@ class BtvPlayerModel:PlayerModel{
     @Published var currentQuality:Quality? = nil
     @Published var selectFunctionType:SelectOptionType? = nil
     @Published var btvUiEvent:BtvUiEvent? = nil {didSet{ if btvUiEvent != nil { btvUiEvent = nil} }}
-    @Published var synopsisPlayerData:SynopsisPlayerData? = nil
     
+    private(set) var synopsisPlayerData:SynopsisPlayerData? = nil
+    private(set) var synopsisPrerollData:SynopsisPrerollData? = nil
+    private(set) var openingTime:Double = 0
+    fileprivate(set) var continuousTime:Double = 0
+    fileprivate(set) var checkPreroll = true
     private(set) var qualitys:[Quality] = []
     private(set) var header:[String:String]? = nil
+    private(set) var initPlay:Bool? = nil
+    
     private func appendQuality(name:String, path:String){
         let quality = Quality(name: name, path: path)
         qualitys.append(quality)
     }
+    
+    override func reset() {
+        self.currentQuality = nil
+        self.limitedDuration = nil
+        self.continuousTime = 0
+        self.openingTime = 0
+        self.seeking = 0
+        self.qualitys = []
+        self.header = nil
+        self.initPlay = nil
+        super.reset()
+    }
+    
+    @discardableResult
+    func setData(synopsisPrerollData:SynopsisPrerollData?) -> BtvPlayerModel {
+        self.synopsisPrerollData = synopsisPrerollData
+        self.checkPreroll = true
+        return self
+    }
+    
+    @discardableResult
+    func setData(synopsisPlayData:SynopsisPlayerData?) -> BtvPlayerModel {
+        self.synopsisPlayerData = synopsisPlayData
+        return self
+    }
+    
     @discardableResult
     func setData(data:PlayInfo, type:BtvPlayType) -> BtvPlayerModel {
+        self.reset()
         var header = [String:String]()
         header["x-ids-cinfo"] = type.type + "," + type.cid + "," + type.title
         self.header = header
-        self.qualitys = []
-        self.currentQuality = nil
+        if let playData = self.synopsisPlayerData {
+            self.playInfo = playData.type.name
+            switch playData.type {
+            case .preplay:
+                if let prevTime = data.PREVIEW_TIME {
+                    self.limitedDuration = Double(prevTime.toInt())
+                }
+            case .preview(let count):
+                if count > 0{ self.initPlay = true }
+                
+            case .vodNext(let t), .vodChange(let t):
+                self.openingTime = playData.openingTime ?? 0
+                self.continuousTime = t
+                self.initPlay = true
+            
+            case .vod(let t):
+                self.openingTime = playData.openingTime ?? 0
+                self.continuousTime = t
+                
+            default: do{}
+            }
+        }
+        
         if let auto = data.CNT_URL_NS_AUTO { self.appendQuality(name: "AUTO", path: auto) }
         if let fhd = data.CNT_URL_NS_FHD { self.appendQuality(name: "FHD", path: fhd) }
         if let hd = data.CNT_URL_NS_HD  { self.appendQuality(name: "HD", path: hd) }
@@ -80,15 +134,7 @@ class BtvPlayerModel:PlayerModel{
         }
         return self
     }
-    @discardableResult
-    func setData(synopsisPlayData:SynopsisPlayerData?) -> BtvPlayerModel {
-        guard let data = synopsisPlayData else {
-            return self
-        }
-        self.synopsisPlayerData = data
-        self.playInfo = data.type.name
-        return self
-    }
+    
 
 }
 
@@ -99,62 +145,74 @@ struct BtvPlayer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
+    @ObservedObject var prerollModel: PrerollModel = PrerollModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     var title:String? = nil
+    var thumbImage:String? = nil
+    
     var body: some View {
         GeometryReader { geometry in
             ZStack{
-                CPPlayer( viewModel : self.viewModel)
-                PlayerEffect(viewModel: self.viewModel)
-                PlayerBottom(viewModel: self.viewModel)
-                PlayerTop(viewModel: self.viewModel, title: self.title)
-                PlayerOptionSelectBox(viewModel: self.viewModel)
-                PlayerGuide(viewModel: self.viewModel)
+                ZStack{
+                    CPPlayer( viewModel : self.viewModel)
+                    PlayerEffect(viewModel: self.viewModel)
+                    PlayerTop(viewModel: self.viewModel, title: self.title)
+                    PlayerBottom(viewModel: self.viewModel)
+                    PlayerOptionSelectBox(viewModel: self.viewModel)
+                    PlayerGuide(viewModel: self.viewModel)
+                }
+                .gesture(
+                    DragGesture(minimumDistance: 0, coordinateSpace: .local)
+                        .onChanged({ value in
+                            if self.viewModel.isLock { return }
+                            if let type = dragGestureType {
+                                switch type {
+                                case .brightness: self.onBrightnessChange(value: value)
+                                case .volume: self.onVolumeChange(value: value)
+                                case .progress: self.onProgressChange(value: value)
+                                }
+                            }else {
+                                let diffX = value.translation.width
+                                let diffY = value.translation.height
+                                if abs(diffX) > abs(diffY) {
+                                    self.dragGestureType = .progress
+                                }else{
+                                    let half = geometry.size.width/2
+                                    let posX = value.startLocation.x
+                                    if posX > half {self.dragGestureType = .volume}
+                                    else {self.dragGestureType = .brightness}
+                                }
+                                self.viewModel.playerUiStatus = .hidden
+                        
+                            }
+                        })
+                        .onEnded({ value in
+                            if self.dragGestureType == .progress {
+                                self.viewModel.event = .seekMove(self.viewModel.seeking, false)
+                                self.viewModel.seeking = 0
+                            }
+                            self.resetDragGesture()
+                        })
+                )
+                .gesture(
+                    MagnificationGesture(minimumScaleDelta: 0).onChanged { val in
+                        if self.viewModel.isLock { return }
+                        self.onRatioChange(value: val)
+                    }.onEnded { val in
+                        self.resetDragGesture()
+                        self.isChangeRatioCancel = false
+                    }
+                )
+                
+                if self.isPreroll {
+                    Preroll(viewModel: self.prerollModel)
+                }else if self.isWaiting {
+                    PlayerWaiting(
+                        pageObservable:self.pageObservable,
+                        viewModel: self.viewModel, imgBg: self.thumbImage)
+                }
             }
             .modifier(MatchParent())
-            .gesture(
-                DragGesture(minimumDistance: 0, coordinateSpace: .local)
-                    .onChanged({ value in
-                        if self.viewModel.isLock { return }
-                        if let type = dragGestureType {
-                            switch type {
-                            case .brightness: self.onBrightnessChange(value: value)
-                            case .volume: self.onVolumeChange(value: value)
-                            case .progress: self.onProgressChange(value: value)
-                            }
-                        }else {
-                            let diffX = value.translation.width
-                            let diffY = value.translation.height
-                            if abs(diffX) > abs(diffY) {
-                                self.dragGestureType = .progress
-                            }else{
-                                let half = geometry.size.width/2
-                                let posX = value.startLocation.x
-                                if posX > half {self.dragGestureType = .volume}
-                                else {self.dragGestureType = .brightness}
-                            }
-                            self.viewModel.playerUiStatus = .hidden
-                    
-                        }
-                    })
-                    .onEnded({ value in
-                        if self.dragGestureType == .progress {
-                            self.viewModel.event = .seekMove(self.viewModel.seeking, false)
-                            self.viewModel.seeking = 0
-                        }
-                        self.resetDragGesture()
-                    })
-            )
-            .gesture(
-                MagnificationGesture(minimumScaleDelta: 0).onChanged { val in
-                    if self.viewModel.isLock { return }
-                    self.onRatioChange(value: val)
-                }.onEnded { val in
-                    self.resetDragGesture()
-                    self.isChangeRatioCancel = false
-                }
-            )
-            
             .onReceive(self.sceneObserver.$isUpdated){ update in
                 if !update {return}
                 if self.viewModel.isLock { return }
@@ -162,6 +220,16 @@ struct BtvPlayer: PageComponent{
                 switch self.sceneObserver.sceneOrientation {
                 case .landscape : self.pagePresenter.fullScreenEnter()
                 case .portrait : self.pagePresenter.fullScreenExit()
+                }
+            }
+            .onReceive(self.viewModel.$playerStatus) { status in
+                guard let status = status else { return }
+                switch status {
+                case .resume:
+                    if self.isWaiting {
+                        withAnimation{ self.isWaiting = false }
+                    }
+                default : do{}
                 }
             }
             .onReceive(self.viewModel.$event) { evt in
@@ -174,18 +242,26 @@ struct BtvPlayer: PageComponent{
                 }
             }
             .onReceive(self.viewModel.$currentQuality){ quality in
-                guard let quality = quality else {
-                    self.viewModel.event = .stop
-                    return
+                if self.viewModel.checkPreroll {
+                    self.viewModel.checkPreroll = false
+                    if let data = self.viewModel.synopsisPrerollData {
+                        self.isPreroll = true
+                        self.prerollModel.request = .load(data)
+                        return
+                    }
                 }
-                let find = quality.path.contains("?")
-                let leading = find ? "&" : "?"
-                let path = quality.path + leading +
-                    "device_id" + SystemEnvironment.getGuestDeviceId() +
-                    "&token=" + (repository.getDrmId() ?? "")
-                ComponentLog.d("path : " + path, tag: self.tag)
+                self.initPlayer()
                 
-                self.viewModel.event = .load(path, self.setup.autoPlay , self.viewModel.time, self.viewModel.header)
+            }
+            .onReceive(self.prerollModel.$event){ evt in
+                guard let evt = evt else {return}
+                switch evt {
+                case .finish : self.initPlayer()
+                default : do{}
+                }
+            }
+            .onAppear(){
+                if !Preroll.isInit { Preroll.initate() }
             }
             .onDisappear(){
                 self.pagePresenter.fullScreenExit()
@@ -193,7 +269,29 @@ struct BtvPlayer: PageComponent{
         }//geo
     }//body
     
+    func initPlayer(){
+        ComponentLog.d("initPlayer", tag: self.tag)
+        self.isPreroll = false
+        guard let quality = self.viewModel.currentQuality else {
+            self.viewModel.event = .stop
+            return
+        }
+        let find = quality.path.contains("?")
+        let leading = find ? "&" : "?"
+        let path = quality.path + leading +
+            "device_id" + SystemEnvironment.getGuestDeviceId() +
+            "&token=" + (repository.getDrmId() ?? "")
+        ComponentLog.d("path : " + path, tag: self.tag)
+        
+        let autoPlay = self.viewModel.initPlay ?? self.setup.autoPlay
+        withAnimation{ self.isWaiting = !autoPlay }
+        let t = self.viewModel.continuousTime > 0 ? self.viewModel.continuousTime : self.viewModel.time
+        self.viewModel.continuousTime = 0
+        self.viewModel.event = .load(path, autoPlay , t, self.viewModel.header)
+    }
     
+    @State var isWaiting:Bool = true
+    @State var isPreroll:Bool = false
     @State var dragGestureType:DragGestureType? = nil
     @State var startSeeking:Double = -1
     @State var startVolume:Float = -1

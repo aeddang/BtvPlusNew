@@ -288,6 +288,10 @@ extension String {
         public static let synopsisWatchRent = "synopsisWatchRent".loaalized()
         public static let synopsisWatchPeriod = "synopsisWatchPeriod".loaalized()
         public static let synopsisWatchPossn = "synopsisWatchPossn".loaalized()
+        public static let synopsisSummry = "synopsisSummry".loaalized()
+        public static let synopsisSiris = "synopsisSiris".loaalized()
+        public static let synopsisSimilarMovie = "synopsisSimilarMovie".loaalized()
+        public static let synopsisRelationContent = "synopsisRelationContent".loaalized()
     }
     
 }

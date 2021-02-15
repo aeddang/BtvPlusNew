@@ -16,12 +16,15 @@ struct SynopsisData {
     var kidZone:String? = nil
 }
 
+
+
 class SynopsisModel : PageProtocol {
     //지상파 월정액 복합 1476793, MBC ALL 복합 410705773, MBC + SBS 1210230 판매종료, MBC PLUS 월정액 410705797
     static let trstrsPidList = ["1476793", "410705773", "410705797", "1210230"] + singleTrstrsPidList
     //KBS 5430389, SBS, 4921402, MBC 5430512,
     static let singleTrstrsPidList = ["5430389", "4921402", "5430512"]
     
+    private(set) var srisTitle:String? = nil
     private(set) var srisId:String? = nil
     private(set) var epsdId:String? = nil
     private(set) var epsdRsluId:String? = nil
@@ -35,12 +38,14 @@ class SynopsisModel : PageProtocol {
     private(set) var isNScreen = false
     private(set) var isCombineProduct = false
     private(set) var rsluInfoList: Array< EpsdRsluInfo >? = nil
+    private(set) var seriesInfoList: Array< SeriesInfoItem >? = nil
     private(set) var ppvProducts: Array< [String:String] > = []
     private(set) var ppsProducts: Array< [String:String] > = []
     private(set) var purchaseModels: Array< PurchaseModel > = []
     private(set) var synopsisType:MetvNetwork.SynopsisType
     private(set) var isEmptyProducts = false
     private(set) var distStsCd:DistStsCd = .synced
+    private(set) var isDistProgram:Bool = false
     private(set) var cacbroCd: CacbroCd = .none
     private(set) var isCancelProgram:Bool = false
     private(set) var hasPreview:Bool = false
@@ -49,6 +54,7 @@ class SynopsisModel : PageProtocol {
     private(set) var hasExamPreview:Bool = false
     private(set) var kidsYn:String? = nil
     private(set) var imgBg:String? = nil
+    private(set) var cwCallId:String? = nil
     
     init(type:MetvNetwork.SynopsisType = .none ) {
         self.synopsisType = type
@@ -64,6 +70,7 @@ class SynopsisModel : PageProtocol {
         self.siries = data.series
         
         if let contents = data.contents{
+            self.srisTitle = contents.title
             self.kidsYn = contents.kids_yn
             if let bg = contents.epsd_poster_filename_h ?? contents.sris_poster_filename_h {
                 self.imgBg = ImagePath.thumbImagePath(filePath: bg, size: CGSize(width: 720, height: 0))
@@ -90,7 +97,9 @@ class SynopsisModel : PageProtocol {
                 self.cacbroCd = CacbroCd(rawValue: contents.cacbro_cd ?? "" ) ?? .none
                 self.isCancelProgram = !(contents.combine_product_yn?.toBool() == true && self.cacbroCd == .SS)
             }
+            self.seriesInfoList = contents.series_info
             self.isDistProgram = self.distStsCd != .stop
+            self.cwCallId = contents.cw_call_id_val
         }
         
         //epsdRsluId
@@ -173,7 +182,7 @@ class SynopsisModel : PageProtocol {
     private(set) var curSynopsisItem: PurchaseModel?
     private(set) var metvSeasonWatchAll:Bool = false
     private(set) var isBookmark:Bool = false
-    private(set) var isDistProgram:Bool = false
+    
     
     var purchasedPid:String? = nil
     func setData(directViewdata:DirectView?){

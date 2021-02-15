@@ -13,6 +13,10 @@ import Combine
 
 
 class InfinityScrollModel:ComponentObservable, PageProtocol, Identifiable{
+    static let PULL_MAX = 7
+    static let PULL_RANGE:CGFloat = 30
+    
+    
     @Published var uiEvent:InfinityScrollUIEvent? = nil {
         didSet{if self.uiEvent != nil { self.uiEvent = nil}}
     }
@@ -26,11 +30,13 @@ class InfinityScrollModel:ComponentObservable, PageProtocol, Identifiable{
     @Published fileprivate(set) var pullCount = 0
     @Published fileprivate(set) var pullPosition:CGFloat = 0
     @Published fileprivate(set) var scrollPosition:CGFloat = 0
-    static let PULL_MAX = 7
+    
     private var increasePull:AnyCancellable? = nil
     private let pullMax:Int
-    init(pullMax:Int? = nil) {
+    let pullRange:CGFloat
+    init(axis:Axis.Set = .vertical,  pullMax:Int? = nil) {
         self.pullMax = pullMax ?? Self.PULL_MAX
+        self.pullRange = Self.PULL_RANGE
     }
     
     deinit {
@@ -142,7 +148,7 @@ extension InfinityScrollViewProtocol {
         if abs(diff) > 1 {self.viewModel.scrollPosition = pos}
         //ComponentLog.d(" diff  " + diff.description , tag: "InfinityScrollViewProtocol")
         //ComponentLog.d(" scrollStatus  " + self.viewModel.scrollStatus.rawValue , tag: "InfinityScrollViewProtocol")
-        if pos >= 30 && self.viewModel.scrollStatus != .pullCancel {
+        if pos >= self.viewModel.pullRange && self.viewModel.scrollStatus != .pullCancel {
             if diff > 5 && self.viewModel.scrollStatus == .pull {
                 self.viewModel.onPullCancel()
                 self.viewModel.scrollStatus = .pullCancel

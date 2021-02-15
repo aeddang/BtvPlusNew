@@ -57,12 +57,30 @@ class PosterData:InfinityData{
         return self
     }
     
+    func setData(data:CWBlockItem, cardType:Block.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
+        setCardType(cardType)
+        title = data.title
+        if let poster = data.poster_filename_v {
+            image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
+        }
+        index = idx
+        synopsisData = .init(
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "", kidZone:nil)
+        return self
+    }
+    
     private func setCardType(_ cardType:Block.CardType){
         switch cardType {
         case .bigPoster: type = .big
         case .smallPoster: type = .small
         default: type = .small
         }
+    }
+    
+    fileprivate func setCardType(width:CGFloat, height:CGFloat, padding:CGFloat) -> PosterData {
+        self.type = .cell(CGSize(width: width, height: height), padding)
+        return self
     }
     
     func setDummy(_ idx:Int = -1) -> PosterData {
@@ -89,13 +107,14 @@ class PosterData:InfinityData{
 }
 
 enum PosterType {
-    case small, big, banner
+    case small, big, banner, cell(CGSize, CGFloat)
     var size:CGSize {
         get{
             switch self {
             case .small: return ListItem.poster.type01
             case .big: return ListItem.poster.type02
             case .banner: return ListItem.poster.type03
+            case .cell(let size, _ ): return size
             }
         }
     }
@@ -106,6 +125,7 @@ enum PosterType {
             case .small: return Dimen.margin.thinExtra
             case .big: return Dimen.margin.light
             case .banner: return Dimen.margin.light
+            case .cell( _ , let padding): return padding
             }
         }
     }
@@ -115,7 +135,7 @@ struct PosterList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
-    @Binding var datas:[PosterData]
+    var datas:[PosterData]
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
@@ -131,6 +151,51 @@ struct PosterList: PageComponent{
                             .addParam(key: .data, value: data.synopsisData)
                     )
                 }
+            }
+        }
+    }//body
+}
+
+
+struct PosterDataSet:Identifiable {
+    private(set) var id = UUID().uuidString
+    var count:Int = 3
+    var datas:[PosterData] = []
+    var isFull = false
+}
+
+struct PosterSet: PageComponent{
+    @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var sceneObserver:SceneObserver
+    var data:PosterDataSet
+    var padding:CGFloat = Dimen.margin.thin
+    @State var cellDatas:[PosterData] = []
+    var body: some View {
+        HStack(spacing: self.padding){
+            ForEach(self.cellDatas) { data in
+                PosterItem( data:data )
+                .onTapGesture {
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.synopsis)
+                            .addParam(key: .data, value: data.synopsisData)
+                    )
+                }
+            }
+            if !self.data.isFull {
+                Spacer()
+            }
+        }
+        .padding(.horizontal, self.padding)
+        .onAppear {
+            if self.data.datas.isEmpty { return }
+            let datas = self.data.datas
+            let ratio = datas.first!.type.size.height / datas.first!.type.size.width
+            let count = CGFloat(self.data.count)
+            let w = self.sceneObserver.screenSize.width - (self.padding*2)
+            let cellW = ( w - (self.padding*(count-1)) ) / count
+            let cellH = cellW * ratio
+            self.cellDatas = datas.map{
+                $0.setCardType(width: cellW, height: cellH, padding: self.padding)
             }
         }
     }//body
@@ -158,12 +223,12 @@ struct PosterList_Previews: PreviewProvider {
     
     static var previews: some View {
         VStack{
-            PosterList( datas: .constant([
+            PosterList( datas: [
                 PosterData().setDummyBanner(0),
                 PosterData().setDummy(),
                 PosterData().setDummy(),
                 PosterData().setDummy()
-            ]))
+            ])
             .environmentObject(PagePresenter()).modifier(MatchParent())
         }
     }

@@ -20,8 +20,8 @@ struct CharacterSelectBox: PageComponent{
                 .modifier(MediumTextStyle(size: Font.size.light))
             CharacterList(
                 selectIdx: self.$selectIdx,
-                datas:self.$datas,
-                cellSpace: self.$cellSpace
+                datas:self.datas,
+                cellSpace: self.cellSpace
             )
         }
         .padding(.horizontal, Dimen.margin.regular)

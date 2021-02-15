@@ -11,8 +11,7 @@ import SwiftUI
 import Combine
 
 struct SwipperView : View , PageProtocol, Swipper {
-    @ObservedObject var viewModel:NavigationModel = NavigationModel()
-    @Binding var pages: [PageViewProtocol]
+    var pages: [PageViewProtocol]
     @Binding var index: Int
     @State var offset: CGFloat = 0
     @State var isUserSwiping: Bool = false
@@ -40,23 +39,16 @@ struct SwipperView : View , PageProtocol, Swipper {
             .frame(width: geometry.size.width, alignment: .leading)
             .highPriorityGesture(
                 DragGesture(minimumDistance: 20, coordinateSpace: .local)
-                    .onChanged({ value in
-                        self.isUserSwiping = true
-                        self.offset = self.getDragOffset(value: value, geometry: geometry)
-                        self.autoReset()
-                    })
-                    .onEnded({ value in
-                        self.index = self.getWillIndex(value: value, maxIdx: self.pages.count)
-                        withAnimation{
-                            self.viewModel.index = self.index
-                        }
-                        self.viewModel.selected = self.pages[self.index].pageID
-                    })
-                
+                .onChanged({ value in
+                    self.isUserSwiping = true
+                    self.offset = self.getDragOffset(value: value, geometry: geometry)
+                    self.autoReset()
+                })
+                .onEnded({ value in
+                    self.reset(idx: self.getWillIndex(value: value, maxIdx: self.pages.count) )
+                })
             )
-            .onReceive(self.viewModel.$index){ idx in
-                self.reset(idx: idx)
-            }
+            
             .onDisappear(){
                 DispatchQueue.main.async {
                     self.autoResetSubscription?.cancel()

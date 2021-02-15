@@ -63,7 +63,7 @@ struct PagePairingDevice: PageView {
                             }
                         }
                         .padding(.horizontal, Dimen.margin.regular)
-                        StbList(datas: self.$datas){ stb in
+                        StbList(datas: self.datas){ stb in
                             self.selectePairingDevice(stb: stb)
                         }
                         .padding(.top, Dimen.margin.heavy)
@@ -74,7 +74,7 @@ struct PagePairingDevice: PageView {
                 }
                 .modifier(PageFull())
                 .highPriorityGesture(
-                    DragGesture(minimumDistance: 20, coordinateSpace: .local)
+                    DragGesture(minimumDistance: 5, coordinateSpace: .local)
                         .onChanged({ value in
                             self.pageDragingModel.uiEvent = .drag(geometry, value)
                         })

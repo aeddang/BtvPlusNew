@@ -48,8 +48,8 @@ struct CharacterData:Identifiable{
 
 struct CharacterList: PageComponent{
     @Binding var selectIdx:Int
-    @Binding var datas:[CharacterRows]
-    @Binding var cellSpace:CGFloat
+    var datas:[CharacterRows]
+    var cellSpace:CGFloat
     var body: some View {
         VStack (alignment: .leading, spacing: Dimen.margin.medium){
             ForEach(self.datas) { data in
@@ -99,8 +99,8 @@ struct CharacterList_Previews: PreviewProvider {
         VStack{
             CharacterList(
                 selectIdx: .constant(0) ,
-                datas: .constant(CharacterRowData().getRow(lineNum: 4)),
-                cellSpace: .constant(20))
+                datas: CharacterRowData().getRow(lineNum: 4),
+                cellSpace: 20)
                 .frame(width:320,height:600)
         }
         .background(Color.brand.bg)

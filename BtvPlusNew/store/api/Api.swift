@@ -52,8 +52,8 @@ enum ApiType{
          getCWGrid(String?, String?),
          getGridEvent(String?, EuxpNetwork.SortType? = Optional.none, Int? = nil, Int? = nil),
          getGatewaySynopsis(SynopsisData),
-         getSynopsis(SynopsisData), getInsideInfo(SynopsisData)
-    
+         getSynopsis(SynopsisData), getInsideInfo(SynopsisData),
+         getRelationContents(SynopsisRelationData)
     
     //METV
     case getWatch(Bool = false, Int? = nil , Int? = nil),

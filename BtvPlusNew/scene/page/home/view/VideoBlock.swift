@@ -19,7 +19,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
             if !self.datas.isEmpty {
                 Text(data.name).modifier(BlockTitle())
             }
-            VideoList(viewModel:self.viewModel, datas: self.$datas)
+            VideoList(viewModel:self.viewModel, datas: self.datas)
                 .modifier(MatchHorizontal(height: self.listHeight))
         }
         .onAppear{
@@ -86,7 +86,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
         }
     }
     func updateListSize(){
-        if !self.datas.isEmpty { self.listHeight = ListItem.thumb.height }
+        if !self.datas.isEmpty { self.listHeight = ListItem.video.height }
         else { onBlank() }
     }
 }

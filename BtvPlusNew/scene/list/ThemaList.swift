@@ -25,7 +25,7 @@ class ThemaData:InfinityData{
         
         title = data.title
         if let thumb = data.poster_filename_h {
-            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.thumb.size)
+            image = ImagePath.thumbImagePath(filePath: thumb, size: type.size)
         }
         index = idx
         return self
@@ -84,14 +84,14 @@ struct ThemaList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
-    @Binding var datas:[ThemaData]
+    var datas:[ThemaData]
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
             axes: .horizontal,
-            marginVertical: .constant(0),
-            marginHorizontal: .constant(0) ,
-            spacing: .constant(datas.isEmpty ? 0 : datas[0].type.spacing)
+            marginVertical: 0,
+            marginHorizontal: 0 ,
+            spacing: datas.isEmpty ? 0 : datas[0].type.spacing
             ){
             ForEach(self.datas) { data in
                 ThemaItem( data:data )
@@ -137,12 +137,12 @@ struct ThemaList_Previews: PreviewProvider {
     
     static var previews: some View {
         VStack{
-            ThemaList( datas: .constant([
+            ThemaList( datas: [
                 ThemaData().setDummy(0),
                 ThemaData().setDummyCircle(),
                 ThemaData().setDummy(),
                 ThemaData().setDummy()
-            ]))
+            ])
             .environmentObject(PagePresenter()).frame(width:320,height:600)
         }
     }

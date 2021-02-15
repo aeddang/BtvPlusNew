@@ -19,7 +19,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
             if !self.datas.isEmpty {
                 Text(data.name).modifier(BlockTitle())
             }
-            PosterList(viewModel:self.viewModel, datas: self.$datas)
+            PosterList(viewModel:self.viewModel, datas: self.datas)
                 .modifier(MatchHorizontal(height: self.listHeight))
            
         }

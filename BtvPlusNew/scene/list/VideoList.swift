@@ -21,7 +21,7 @@ class VideoData:InfinityData{
         setCardType(cardType)
         title = data.title
         if let thumb = data.poster_filename_h {
-            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.thumb.size)
+            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
         }
         index = idx
         
@@ -36,7 +36,7 @@ class VideoData:InfinityData{
         setCardType(cardType)
         title = data.title
         if let thumb = data.poster {
-            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.thumb.size)
+            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
         }
         index = idx
         
@@ -53,7 +53,7 @@ class VideoData:InfinityData{
         }
         title = data.title
         if let thumb = data.thumbnail {
-            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.thumb.size)
+            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
         }
         index = idx
         synopsisData = .init(
@@ -97,7 +97,7 @@ enum VideoType {
 struct VideoList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
-    @Binding var datas:[VideoData]
+    var datas:[VideoData]
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
@@ -137,15 +137,15 @@ struct VideoItem: PageView {
                     Spacer().modifier(MatchParent())
                     if self.data.progress != nil {
                         Spacer().frame(
-                            width: ListItem.thumb.size.width * CGFloat(self.data.progress!),
+                            width: ListItem.video.size.width * CGFloat(self.data.progress!),
                             height: Dimen.line.regular)
                             .background(Color.brand.primary)
                     }
                 }
             }
             .frame(
-                width: ListItem.thumb.size.width,
-                height: ListItem.thumb.size.height)
+                width: ListItem.video.size.width,
+                height: ListItem.video.size.height)
             .clipped()
             if self.data.title != nil {
                 Text(self.data.title!)
@@ -156,7 +156,7 @@ struct VideoItem: PageView {
                     .multilineTextAlignment(.leading)
             }
         }
-        .frame(width: ListItem.thumb.size.width)
+        .frame(width: ListItem.video.size.width)
         .background(Color.app.blueLight)
         
     }
@@ -168,12 +168,12 @@ struct VideoList_Previews: PreviewProvider {
     
     static var previews: some View {
         VStack{
-            VideoList( datas: .constant([
+            VideoList( datas: [
                 VideoData().setDummy(0),
                 VideoData().setDummyWatching(),
                 VideoData().setDummy(),
                 VideoData().setDummy()
-            ]))
+            ])
             .environmentObject(PagePresenter()).frame(width:320,height:600)
         }
     }

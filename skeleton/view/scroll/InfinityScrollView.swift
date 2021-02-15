@@ -18,9 +18,9 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     let showIndicators: Bool
     let content: Content
     
-    @Binding var marginVertical: CGFloat
-    @Binding var marginHorizontal: CGFloat
-    @Binding var spacing: CGFloat
+    var marginVertical: CGFloat
+    var marginHorizontal: CGFloat
+    var spacing: CGFloat
     var useTracking:Bool
     var parentProxy:GeometryProxy? = nil
     let isRecycle: Bool
@@ -41,37 +41,14 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         self.axes = axes
         self.showIndicators = showIndicators
         self.content = content()
-        self._marginVertical = .constant(marginVertical)
-        self._marginHorizontal = .constant(marginHorizontal)
-        self._spacing = .constant(spacing)
+        self.marginVertical = marginVertical
+        self.marginHorizontal = marginHorizontal
+        self.spacing = spacing
         self.parentProxy = parentProxy
         self.isRecycle = isRecycle
         self.useTracking = useTracking
     }
     
-    init(
-        viewModel: InfinityScrollModel,
-        axes: Axis.Set = .vertical,
-        showIndicators: Bool = false,
-        marginVertical: Binding<CGFloat> = .constant(Dimen.margin.regular),
-        marginHorizontal: Binding<CGFloat> = .constant(Dimen.margin.regular),
-        spacing: Binding<CGFloat> = .constant(Dimen.margin.lightExtra),
-        parentProxy:GeometryProxy? = nil,
-        isRecycle:Bool = true,
-        useTracking:Bool = true,
-        @ViewBuilder content: () -> Content) {
-        
-        self.viewModel = viewModel
-        self.axes = axes
-        self.showIndicators = showIndicators
-        self.content = content()
-        self._marginVertical = marginVertical
-        self._marginHorizontal = marginHorizontal
-        self.parentProxy = parentProxy
-        self._spacing = spacing
-        self.isRecycle = isRecycle
-        self.useTracking = useTracking
-    }
     
     init(
         viewModel: InfinityScrollModel,
@@ -84,9 +61,9 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         self.showIndicators = false
         self.content = content()
         self.parentProxy = parentProxy
-        self._marginVertical = .constant(0)
-        self._marginHorizontal = .constant(0)
-        self._spacing = .constant(0)
+        self.marginVertical = 0
+        self.marginHorizontal = 0
+        self.spacing = 0
         self.isRecycle = false
         self.useTracking = useTracking
     }

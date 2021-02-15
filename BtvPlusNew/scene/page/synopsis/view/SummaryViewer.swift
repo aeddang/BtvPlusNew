@@ -1,0 +1,110 @@
+//
+//  PosterType01.swift
+//  BtvPlusNew
+//
+//  Created by KimJeongCheol on 2020/12/18.
+//
+
+import Foundation
+import SwiftUI
+
+
+class SummaryViewerData {
+    private(set) var summry: String? = nil
+    private(set) var peoples:[PeopleData]? = nil
+   
+    func setData(data:SynopsisContentsItem) -> SummaryViewerData {
+        self.summry = data.epsd_snss_cts
+        self.peoples = data.peoples?.map {
+            PeopleData().setData(data: $0)
+        }
+        return self
+    }
+}
+
+struct SummaryViewer: PageComponent{
+    @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @ObservedObject var peopleScrollModel: InfinityScrollModel = InfinityScrollModel()
+    var data:SummaryViewerData
+    
+    @State var isExpand = false
+    @State var needExpand = false
+    var body: some View {
+        VStack(alignment:.leading , spacing:0) {
+            Text(String.pageText.synopsisSummry)
+                .modifier(BoldTextStyle( size: Font.size.regular ))
+                .padding(.vertical, Dimen.margin.regularExtra )
+                .modifier(ContentHorizontalEdges())
+            if self.data.peoples != nil {
+                PeopleList(
+                    viewModel:self.peopleScrollModel,
+                    datas: self.data.peoples!)
+                    .padding(.bottom, Dimen.margin.medium )
+            }
+            if self.data.summry != nil {
+                VStack(alignment:.leading , spacing:Dimen.margin.thin) {
+                    Text(self.data.summry!)
+                        .modifier(MediumTextStyle( size: Font.size.light ))
+                        .fixedSize(horizontal: false, vertical: true)
+                        .lineLimit(self.isExpand ? 999 : 3)
+                        
+                    if !self.isExpand && self.needExpand {
+                        HStack{
+                            Spacer()
+                            Image(Asset.icon.down)
+                                .renderingMode(.original).resizable()
+                                .scaledToFit()
+                                .frame(width: Dimen.icon.thin, height: Dimen.icon.thin)
+                            Spacer()
+                        }
+                    }
+                    
+                }
+                .modifier(ContentHorizontalEdges())
+                .onTapGesture {
+                    if self.needExpand {
+                        self.isExpand.toggle()
+                    }
+                }
+            }
+        }
+        
+        .onAppear{
+            self.checkExpand()
+        }
+    }//body
+    
+    
+    func checkExpand() {
+        guard let summry = self.data.summry else { return }
+        let h = summry.textHeightFrom(
+            width: self.sceneObserver.screenSize.width - (Dimen.margin.thin * 2),
+            fontSize: Font.size.light )
+        if h > ((Font.size.light + Dimen.margin.micro) * 3) {
+            self.needExpand = true
+        }
+    }
+}
+
+
+
+#if DEBUG
+struct SummaryViewer_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        VStack{
+            SummaryViewer(
+                data:SummaryViewerData()
+            )
+         
+            .environmentObject(PagePresenter())
+            .environmentObject(SceneObserver())
+            .environmentObject(PageSceneObserver())
+            
+        }.background(Color.blue)
+    }
+}
+#endif
+

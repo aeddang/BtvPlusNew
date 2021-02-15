@@ -292,6 +292,11 @@
 "synopsisWatchPeriod" = "이용 기간 동안 시청 가능";
 "synopsisWatchRent" = "대여 기간 내 시청 가능";
 "synopsisWatchPossn" = "B tv 해지 전 무제한 시청 가능";
+"synopsisSummry" = "제작/출연진 및 줄거리";
+"synopsisSiris" = "회차";
+"synopsisSimilarMovie" = "비슷한 영화";
+"synopsisRelationContent" = "함께 많이 본 작품";
+
 
 /*
  Player

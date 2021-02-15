@@ -5,61 +5,33 @@
 //  Created by JeongCheol Kim on 2020/07/29.
 //  Copyright © 2020 JeongCheol Kim. All rights reserved.
 //
-
 import Foundation
 import SwiftUI
 
 struct CPPageViewPager: PageComponent {
-    @ObservedObject var pageObservable: PageObservable
-    @ObservedObject var viewModel:ViewPagerModel
-    var pages: [PageObject]
-    @Binding var texts: [String]?
-    @Binding var index: Int
-    
+    @ObservedObject var pageObservable: PageObservable = PageObservable()
+    @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
+    var pages: [PageViewProtocol]
+    var texts: [String]?
     var useGesture = true
-    var isHighPriority = true
+    var pageOn:((_ idx:Int) -> Void)? = nil
+    
+    @State var index: Int = 0
     @State private var isPageReady:Bool = false
-    
     init(
-        pageObservable:PageObservable,
-        viewModel:ViewPagerModel? = nil,
-        pages:[PageObject],
-        texts:Binding<[String]?>? = nil,
-        index:Binding<Int>,
-        useGesture:Bool? = nil,
-        isHighPriority:Bool? = nil
-    )
-    {
-        self.pageObservable = pageObservable
-        self.viewModel = viewModel ?? ViewPagerModel()
-        self.pages = pages
-        self._texts = texts ?? .constant(nil)
-        self._index = index
-        self.useGesture = useGesture ?? true
-        self.isHighPriority = isHighPriority ?? true
-        self.viewModel.index = self.index
+        pageObservable: PageObservable,
+        viewModel:ViewPagerModel = ViewPagerModel(),
+        pages: [PageObject],
+        texts: [String]?,
+        useGesture:Bool = true,
+        pageOn: @escaping (_ idx:Int) -> Void
+    ) {
+        self.pages = pages.map{ PageFactory.getPage($0) }
+        self.texts = texts
+        self.useGesture = useGesture
+        self.pageOn = pageOn
     }
     
-    init(
-        pageObservable:PageObservable,
-        viewModel:ViewPagerModel? = nil,
-        pages:[PageObject],
-        texts:[String]? = nil,
-        index:Binding<Int>,
-        useGesture:Bool? = nil,
-        isHighPriority:Bool? = nil
-    )
-    {
-        self.pageObservable = pageObservable
-        self.viewModel = viewModel ?? ViewPagerModel()
-        self.pages = pages
-        self._texts = .constant(texts)
-        self._index = index
-        self.useGesture = useGesture ?? true
-        self.isHighPriority = isHighPriority ?? true
-        self.viewModel.index = self.index
-    }
-
     var body: some View {
         VStack(spacing:0){
             if self.isPageReady {
@@ -67,30 +39,20 @@ struct CPPageViewPager: PageComponent {
                     CPTabDivisionNavigation(
                         viewModel: self.viewModel,
                         buttons:
-                           NavigationBuilder(index:self.$index, marginH:Dimen.margin.regular)
-                               .getConstantNavigationButtons(texts:self.texts!),
+                           NavigationBuilder(index:self.index, marginH:Dimen.margin.regular)
+                               .getNavigationButtons(texts:self.texts!),
                         index: self.$index
                     )
-                    .background(Color.app.white)
                     .frame(height:Dimen.tab.regular)
                     
                 }
-                if self.isHighPriority {
-                    SwipperPageHighPriority(
-                        pageObservable: self.pageObservable,
-                        viewModel: self.viewModel,
-                        pages: self.pages,
-                        index: self.$index,
-                        useGesture: self.useGesture)
-                }else{
-                    SwipperPage(
-                        pageObservable: self.pageObservable,
-                        viewModel: self.viewModel,
-                        pages: self.pages,
-                        index: self.$index,
-                        useGesture: self.useGesture)
+                SwipperView(
+                    pages: self.pages,
+                    index: self.$index) {
+
+                    guard let pageOn = self.pageOn else {return}
+                    pageOn(self.index)
                 }
-                
             }else{
                 Spacer()
             }
@@ -98,12 +60,11 @@ struct CPPageViewPager: PageComponent {
         }
         .onReceive( self.pageObservable.$status ){ stat in
             switch stat {
-            case . transactionComplete : do {
-                    withAnimation(Animation.easeIn(duration: PageSceneDelegate.CHANGE_DURATION)){
-                        self.isPageReady = true
-                    }
+            case . transactionComplete :
+                withAnimation(Animation.easeIn(duration: PageSceneDelegate.CHANGE_DURATION)){
+                    self.isPageReady = true
                 }
-                default : do {}
+            default : do {}
             }
         }
         .onReceive( [self.index].publisher ){ idx in
@@ -118,7 +79,7 @@ struct CPPageViewPager: PageComponent {
         .onReceive(self.viewModel.$event){ evt in
             guard let event = evt else { return }
             switch event {
-                case .move(let idx) : self.index = idx
+            case .move(let idx) : withAnimation{self.index = idx}
             }
         }
     }

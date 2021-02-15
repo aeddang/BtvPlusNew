@@ -60,7 +60,6 @@ extension EuxpNetwork{
     }
 }
 
-
 class Euxp: Rest{
     /**
      * 빅배너/이벤트 정보 (IF-EUXP-007)
@@ -69,7 +68,7 @@ class Euxp: Rest{
     func getEventBanners(
         menuId:String, bnrTypCd:String = "10", segId:String? = nil,
         completion: @escaping (EventBanners) -> Void, error: ((_ e:Error) -> Void)? = nil){
-        
+
         var params = [String:String]()
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
@@ -79,6 +78,7 @@ class Euxp: Rest{
         params["bnr_typ_cd"] = bnrTypCd
         fetch(route: EuxpEventBanners(query: params), completion: completion, error:error)
     }
+    
     /**
      * 시놉시스 (IF-EUXP-010)
      * @param srisId 시리즈아이디
@@ -112,7 +112,6 @@ class Euxp: Rest{
     func getGatewaySynopsis(
         data:SynopsisData,
         completion: @escaping (GatewaySynopsis) -> Void, error: ((_ e:Error) -> Void)? = nil){
-        
         var params = [String:String]()
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
@@ -122,7 +121,6 @@ class Euxp: Rest{
         params["prd_prc_id"] = data.prdPrcId ?? ""
         params["search_type"] = data.searchType ?? ""
         fetch(route: EuxpGatewaySynopsis(query: params), completion: completion, error:error)
-        
     }
     
     /**
@@ -133,17 +131,16 @@ class Euxp: Rest{
      * @param epsdRsluId 해상도아이디(CID)
      */
     func getRelationContents(
-        menuId:String, cwCallId:String, epsdId:String, epsdRsluId:String,
+        data:SynopsisRelationData,
         completion: @escaping (RelationContents) -> Void, error: ((_ e:Error) -> Void)? = nil){
-        
         var params = [String:String]()
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
         params["IF"] = "IF-EUXP-012"
-        params["menu_id"] = menuId
-        params["cw_call_id"] = cwCallId
-        params["epsd_id"] = epsdId
-        params["epsd_rslu_id"] = epsdRsluId
+        params["menu_id"] = data.menuId
+        params["cw_call_id"] = data.cwCallId
+        params["epsd_id"] = data.epsdId
+        params["epsd_rslu_id"] = data.epsdRsluId
         params["type"] = "all"
         params["app_typ_cd"] = "BTVPLUS"
         fetch(route: EuxpRelationContents(query: params), completion: completion, error:error)

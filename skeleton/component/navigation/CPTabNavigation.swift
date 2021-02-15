@@ -13,7 +13,7 @@ import Combine
 
 struct CPTabNavigation : PageComponent {
     @ObservedObject var viewModel:NavigationModel = NavigationModel()
-    @Binding var buttons:[NavigationButton]
+    var buttons:[NavigationButton]
     @Binding var index: Int
     @State private var isUserScrolling: Bool = false
     @State private var offset: CGFloat = 0
@@ -166,7 +166,7 @@ struct CPTabNavigation_Previews: PreviewProvider {
     static var previews: some View {
         Form{
             CPTabNavigation(
-                buttons: .constant([
+                buttons: [
                     NavigationButton(
                         id: "test1sdsd",
                         body: AnyView(
@@ -200,7 +200,7 @@ struct CPTabNavigation_Previews: PreviewProvider {
                         idx:3
                     )
 
-                ]),
+                ],
                 index: .constant(0)
             )
             .frame( alignment: .center)

@@ -247,7 +247,6 @@ struct PurchaseViewer: PageComponent{
             }
         }
         .modifier(ContentHorizontalEdges())
-        .padding(.top, Dimen.margin.regularExtra)
         .onAppear{
             if self.data.isOption {
                 self.option = self.data.options[self.data.optionIdx]

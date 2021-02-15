@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 struct ContentItem : Codable {
     private(set) var sris_id:String? = nil // 시리즈 ID
     private(set) var sort_seq:Int? = nil // 정렬순서

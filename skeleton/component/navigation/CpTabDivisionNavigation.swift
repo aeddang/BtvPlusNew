@@ -13,7 +13,7 @@ import Combine
 
 struct CPTabDivisionNavigation : PageComponent {
     @ObservedObject var viewModel:NavigationModel = NavigationModel()
-    @Binding var buttons:[NavigationButton]
+    var buttons:[NavigationButton]
     @Binding var index: Int
     @State private var pos:CGFloat = 0
     var useSpacer = true
@@ -21,26 +21,30 @@ struct CPTabDivisionNavigation : PageComponent {
     
     var body: some View {
         GeometryReader { geometry in
-            VStack(spacing:0){
-                HStack(spacing:0){
-                    ForEach(self.buttons) { btn in
-                        self.createButton(btn, geometry: geometry)
+            ZStack(alignment: .bottom){
+                VStack(spacing:0){
+                    HStack(spacing:0){
+                        ForEach(self.buttons) { btn in
+                            self.createButton(btn, geometry: geometry)
+                        }
+                    }
+                    if self.useSpacer {
+                        Spacer()
+                            .frame(
+                                width: self.getButtonSize(geometry: geometry),
+                                height:Dimen.line.medium
+                            )
+                            .background(Color.brand.primary)
+                            .offset(
+                                x: self.getButtonPosition(idx:self.index, geometry: geometry)
+                            )
                     }
                 }
-                if self.useSpacer {
-                    Spacer()
-                        .frame(
-                            width: self.getButtonSize(geometry: geometry),
-                            height:Dimen.line.regular
-                        )
-                        .background(Color.brand.primary)
-                        .offset(
-                            x: self.getButtonPosition(idx:self.index, geometry: geometry)
-                        )
-                        
-                }
-                Divider().background(Color.app.whiteDeep)
-            }.modifier(MatchParent())
+                Spacer()
+                    .modifier(MatchHorizontal(height: Dimen.line.regular))
+                    .background(Color.app.whiteDeep).opacity(0.1)
+            }
+            .modifier(MatchParent())
         }//geo
     }//body
     
@@ -83,7 +87,7 @@ struct CPTabDivisionNavigation_Previews: PreviewProvider {
         Form{
             CPTabDivisionNavigation(
                 viewModel:NavigationModel(),
-                buttons: .constant([
+                buttons: [
                     NavigationButton(
                         id: "test1sdsd",
                         body: AnyView(
@@ -116,7 +120,8 @@ struct CPTabDivisionNavigation_Previews: PreviewProvider {
                         idx:3
                     )
 
-                ]), index: .constant(0)
+                ],
+                index: .constant(0)
             )
             .frame( alignment: .center)
         }

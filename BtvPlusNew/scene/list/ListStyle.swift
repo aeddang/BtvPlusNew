@@ -16,7 +16,7 @@ struct ListItem{
         static let type03:CGSize = CGSize(width: 224, height: 154)
     }
     
-    struct thumb {
+    struct video {
        static let size:CGSize = CGSize(width: 164, height: 92)
        static let height:CGFloat = 127
     }
@@ -35,6 +35,15 @@ struct ListItem{
     struct character {
         static let size:CGSize = CGSize(width: 62, height: 62)
     }
+    
+    struct people {
+        static let size:CGSize = CGSize(width: 78, height: 78)
+    }
+    
+    struct seris {
+        static let size:CGSize = CGSize(width: 164, height: 92)
+    }
+    
     
     struct stb {
         static let size:CGSize = CGSize(width: 52, height: 52)

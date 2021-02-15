@@ -241,10 +241,9 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
             case .pull(let geo, let value, let offset) :
                 if #available(iOS 14.0, *) {
                     if value < self.minPullAmount { return }
-                    
                     if self.pullOffset == self.minPullAmount {
                         withAnimation(.easeOut(duration: self.pullInitDelay )){
-                            self.bodyOffset = self.minPullAmount * 2
+                            self.bodyOffset = self.axis == .vertical ? self.minPullAmount * 2 : self.minPullAmount
                         }
                     } else {
                         let diff =  value - self.pullOffset

@@ -12,11 +12,11 @@ import Combine
 
 struct CPCircularNavigation : PageComponent {
     @ObservedObject var viewModel:NavigationModel
-    @Binding var backgroundImage:String?
-    @Binding var rotateImage:String?
-    @Binding var buttons:[NavigationButton]
-    @Binding var totalRotateIdx:Int
-    @Binding var useDrag:Bool
+    var buttons:[NavigationButton]
+    var totalRotateIdx:Int = 12
+    var useDrag:Bool = true
+    var backgroundImage:String? = nil
+    var rotateImage:String? = nil
     @State private var prevRotate = 0.0
     @State private var rotate = 0.0
     @State private var rotateRange = 0.0
@@ -25,23 +25,6 @@ struct CPCircularNavigation : PageComponent {
     private let radiusAmount:Double = 0.45
     private let sensitivity = 0.7
     
-    
-    init(
-        viewModel:NavigationModel,
-        buttons:Binding<[NavigationButton]>,
-        backgroundImage:Binding<String?>? = nil,
-        rotateImage: Binding<String?>? = nil,
-        totalRotateIdx:Binding<Int>? = nil,
-        useDrag:Binding<Bool>? = nil
-    )
-    {
-        self.viewModel = viewModel
-        self._buttons = buttons
-        self._backgroundImage = backgroundImage ?? Binding.constant(nil)
-        self._rotateImage = rotateImage ?? Binding.constant(nil)
-        self._totalRotateIdx = totalRotateIdx ?? Binding.constant(12)
-        self._useDrag = useDrag ?? Binding.constant(true)
-    }
     
     var body: some View {
         GeometryReader { geometry in
@@ -150,7 +133,7 @@ struct CPCircularNavigation_Previews: PreviewProvider {
         Form{
             CPCircularNavigation(
                 viewModel:NavigationModel(),
-                buttons: .constant([
+                buttons: [
                     NavigationButton(
                         id: "test1",
                         body: AnyView(
@@ -178,9 +161,9 @@ struct CPCircularNavigation_Previews: PreviewProvider {
                         idx:3
                     )
 
-                ]),
-                backgroundImage: .constant(Asset.test),
-                rotateImage: .constant(Asset.test))
+                ],
+                backgroundImage: Asset.test,
+                rotateImage: Asset.test)
                 .frame(width: 250, height: 250, alignment: .center)
         }
     }

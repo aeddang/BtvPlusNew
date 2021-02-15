@@ -50,11 +50,15 @@ extension Asset{
     struct icon {
         public static let new =  "tagMyNewS"
         public static let sort = "icArrowDownG"
+        public static let down = "icArrowDownG"
         public static let back = "icTopBack"
         public static let more = "icArrowRight"
         public static let moreSmall = "icArrowRightWhite"
         public static let close = "icTopClose"
         public static let setting = "icTopSetting"
+        
+        public static let sortList =  "icSynopSorting"
+        public static let dropDown =  "icSynopDropdownArrow"
        
         public static let alertSmall = "icAlertS"
         public static let pairingWifi = "icPairing03"

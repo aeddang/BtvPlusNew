@@ -78,7 +78,7 @@ class StbData:InfinityData{
 }
 
 struct StbList: PageComponent{
-    @Binding var datas:[StbData]
+    var datas:[StbData]
     let action: (_ data:StbData) -> Void
     var body: some View {
         VStack (alignment: .leading, spacing: 0){
@@ -133,13 +133,13 @@ struct StbList_Previews: PreviewProvider {
     static var previews: some View {
         VStack{
             StbList(
-                datas: .constant([
+                datas: [
                     StbData().setDummy(),
                     StbData().setDummy(),
                     StbData().setDummy(),
                     StbData().setDummy(),
                     StbData().setDummy()
-                ])
+                ]
             ){_ in
                 
             }

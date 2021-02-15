@@ -91,7 +91,6 @@ struct EpisodeViewer: PageComponent{
             Text(self.data.episodeTitle)
                 .modifier(BoldTextStyle( size: Font.size.boldExtra ))
                 .lineLimit(2)
-                .padding(.top, Dimen.margin.regularExtra)
             HStack(alignment: .center, spacing:Dimen.margin.tiny){
                 if self.data.ratingPct != nil {
                     RatingInfo(

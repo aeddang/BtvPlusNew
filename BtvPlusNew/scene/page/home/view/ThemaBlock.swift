@@ -19,7 +19,7 @@ struct ThemaBlock:BlockProtocol, PageComponent {
             if !self.datas.isEmpty {
                 Text(data.name).modifier(BlockTitle())
             }
-            ThemaList(viewModel:self.viewModel, datas: self.$datas)
+            ThemaList(viewModel:self.viewModel, datas: self.datas)
                 .modifier(MatchHorizontal(height: self.listHeight))
             
         }

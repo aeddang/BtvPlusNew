@@ -38,7 +38,7 @@ struct PageHome: PageView {
                     .padding(.top, Dimen.app.pageTop)
                     Spacer()
                 }
-                MultiBlock(viewModel: self.infinityScrollModel, datas: self.$blocks, useTracking:self.useTracking)
+                MultiBlock(viewModel: self.infinityScrollModel, datas: self.blocks, useTracking:self.useTracking)
             }
         }
         .modifier(PageFull())

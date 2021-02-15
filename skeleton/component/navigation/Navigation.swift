@@ -22,39 +22,16 @@ struct NavigationButton: Identifiable {
 }
 
 struct NavigationBuilder{
-    @Binding var index: Int
+    var index: Int
     var textModifier:TextModifier = TextModifier(
-        family:Font.family.black,
+        family:Font.family.medium,
         size: Font.size.regular,
-        color: Color.brand.thirdly,
+        color: Color.app.grey,
         activeColor: Color.brand.primary
     )
     var marginH:CGFloat = 0
     var marginV:CGFloat = Dimen.margin.thin
-    /*
-    func getBindingNavigationButtons(texts:[String]) -> Binding<[NavigationButton]> {
-        return Binding<[NavigationButton]>(
-            get: {
-                self.getNavigationButtons(texts:texts)
-            },
-            set: { _ in }
-        )
-    }
-    */
-    func getConstantNavigationButtons(texts:[String]) -> Binding<[NavigationButton]> {
-        return .constant(self.getNavigationButtons(texts:texts))
-        
-    }
-    
-    func getConstantNavigationButtons(images:[String], size:CGSize) -> Binding<[NavigationButton]> {
-        return .constant(self.getNavigationButtons(images:images, size: size))
-        
-    }
-    
-    func getConstantNavigationButtons(images:[(String,String)], size:CGSize) -> Binding<[NavigationButton]> {
-        return .constant(self.getNavigationButtons(images:images, size: size))
-        
-    }
+   
     
     func getNavigationButtons(texts:[String]) -> [NavigationButton] {
         let range = 0 ..< texts.count

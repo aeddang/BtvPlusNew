@@ -11,15 +11,16 @@ import SwiftUI
 struct MultiBlock:PageComponent {
     @EnvironmentObject var sceneObserver:SceneObserver
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
-    @Binding var datas:[Block]
+    var datas:[Block]
     var useTracking:Bool = false
+    @State var safeAreaBottom:CGFloat = 0
     var body :some View {
         InfinityScrollView(
             viewModel: self.viewModel,
             axes: .vertical,
-            marginVertical : .constant(Dimen.app.bottom + sceneObserver.safeAreaTop),
-            marginHorizontal : .constant(0),
-            spacing: .constant(Dimen.margin.medium),
+            marginVertical : Dimen.app.bottom + sceneObserver.safeAreaTop,
+            marginHorizontal : 0,
+            spacing: Dimen.margin.medium,
             isRecycle : false,
             useTracking:self.useTracking){
             
@@ -35,7 +36,10 @@ struct MultiBlock:PageComponent {
                     ThemaBlock(data: data)
                 }
             }
-            Spacer().frame(height:Dimen.margin.heavy)
+            //Spacer().frame( height:self.safeAreaBottom )
+        }
+        .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
+            self.safeAreaBottom = pos
         }
     }
     

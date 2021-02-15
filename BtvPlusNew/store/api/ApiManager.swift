@@ -135,6 +135,10 @@ class ApiManager :PageProtocol, ObservableObject{
             data:data,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .getRelationContents(let data) : self.euxp.getRelationContents(
+            data:data,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         case .getInsideInfo(let data) : self.euxp.getInsideInfo(
             data:data,
             completion: {res in self.complated(id: apiID, type: type, res: res)},

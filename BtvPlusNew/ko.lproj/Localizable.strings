@@ -32,6 +32,7 @@
 "macAdress" = "MAC 주소";
 
 "another" = "외";
+"total" = "총";
 "count" = "개";
 "broCount" = "회";
 "sesonCount" = "화";
@@ -86,6 +87,9 @@
 "sortFolansubtitle" = "다국어자막";
 "sortEtc" = "기타";
 "sortNone" = "없음";
+
+"sortCount" = "1회 부터";
+"sortLatest" = "최신순";
 
 /*
   Alert
@@ -293,15 +297,17 @@
 "synopsisWatchRent" = "대여 기간 내 시청 가능";
 "synopsisWatchPossn" = "B tv 해지 전 무제한 시청 가능";
 "synopsisSummry" = "제작/출연진 및 줄거리";
+
 "synopsisSiris" = "회차";
-"synopsisSimilarMovie" = "비슷한 영화";
-"synopsisRelationContent" = "함께 많이 본 작품";
+
 
 
 /*
  Player
 */
 "playerPreplay" = "3분 미리보기";
+"playerPreplaying" = "3분 미리보기 중";
+"playerContinueView" = "계속 보기";
 "playerPreview" = "예고편";
 "playerCookie" = "쿠키 영상";
 "playerNext" = "다음 화";
@@ -312,5 +318,4 @@
 "playerAdTitle" = "광고 중입니다.";
 "playerAdMore" = "광고 정보 더보기";
 "playerAdCancel" = "광고 건너뛰기";
-
 "playerMoveSec" = "초 이동";

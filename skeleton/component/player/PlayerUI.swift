@@ -18,7 +18,6 @@ extension PlayerUI {
     static let uiHeightFullScreen:CGFloat  = 64
 }
 
-
 struct PlayerUI: PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var viewModel:PlayerModel
@@ -36,7 +35,6 @@ struct PlayerUI: PageComponent {
     @State var isShowing: Bool = false
     var body: some View {
         ZStack{
-            
             HStack(spacing:0){
                 Spacer().modifier(MatchParent())
                     .background(Color.transparent.clearUi)
@@ -64,16 +62,18 @@ struct PlayerUI: PageComponent {
             ActivityIndicator( isAnimating: self.$isLoading,
                                style: .large,
                                color: Color.app.white )
+            
             VStack{
                 Spacer()
-                HStack(spacing:Dimen.margin.thin){
+                HStack(alignment:.center, spacing:Dimen.margin.thin){
                     Text(self.time)
                         .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.white))
                         .frame(width:53)
                         .fixedSize(horizontal: true, vertical: false)
+                    
                     ProgressSlider(
                         progress: min(self.progress, 1.0),
-                        thumbSize: self.isFullScreen ?Dimen.icon.thinExtra : Dimen.icon.tiny,
+                        thumbSize: self.isFullScreen ? Dimen.icon.thinExtra : Dimen.icon.tiny,
                         onChange: { pct in
                             let willTime = self.viewModel.duration * Double(pct)
                             self.viewModel.event = .seeking(willTime)
@@ -82,10 +82,13 @@ struct PlayerUI: PageComponent {
                             self.viewModel.event = .seekProgress(pct)
                         })
                         .frame(height: self.isFullScreen ? Self.uiHeightFullScreen : Self.uiHeight)
+                        .fixedSize(horizontal: false, vertical: true)
+                    
                     Text(self.duration)
                         .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.greyLightExtra))
                         .frame(width:53)
                         .fixedSize(horizontal: true, vertical: false)
+                    
                     ImageButton(
                         defaultImage: Asset.player.fullScreen,
                         activeImage: Asset.player.fullScreenOff,
@@ -97,7 +100,7 @@ struct PlayerUI: PageComponent {
                             : self.pagePresenter.fullScreenEnter()
                     }
                 }
-                .padding(.horizontal, self.isFullScreen ? Self.paddingFullScreen : Self.padding)
+                .padding(.all, self.isFullScreen ? Self.paddingFullScreen : Self.padding)
             }
             .opacity(self.isShowing && !self.viewModel.isLock ? 1 : 0)
             
@@ -111,7 +114,7 @@ struct PlayerUI: PageComponent {
                     ){ _ in
                         self.viewModel.event = .togglePlay
                     }
-                    if self.isFullScreen && ( self.viewModel.playInfo != nil ) {
+                    if self.isFullScreen && ( self.viewModel.playInfo != nil ) && !self.isPlaying {
                         Text(self.viewModel.playInfo!)
                             .modifier(BoldTextStyle(size: Font.size.lightExtra, color: Color.app.white))
                     }

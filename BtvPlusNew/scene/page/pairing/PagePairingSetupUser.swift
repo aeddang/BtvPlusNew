@@ -177,7 +177,7 @@ struct PagePairingSetupUser: PageView {
                 }
                 .modifier(PageFull())
                 .highPriorityGesture(
-                    DragGesture(minimumDistance: 5, coordinateSpace: .local)
+                    DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
                         .onChanged({ value in
                             self.pageDragingModel.uiEvent = .drag(geometry, value)
                         })
@@ -193,7 +193,7 @@ struct PagePairingSetupUser: PageView {
                     guard let evt = evt else {return}
                     switch evt {
                     // case .top : self.pageDragingModel.uiEvent = .draged(geometry)
-                   // case .down, .up : self.pageDragingModel.uiEvent = .dragCancel(geometry)
+                    // case .down, .up : self.pageDragingModel.uiEvent = .dragCancel(geometry)
                     case .pullCancel : self.pageDragingModel.uiEvent = .pulled(geometry)
                     default : do{}
                     }

@@ -56,7 +56,6 @@ extension PageDragingView{
     var isScrolling:Bool {get{false} set{isBodyDraging = false}}
     var scrollStartTime:Double {get{0} set{scrollStartTime = 0.0}}
     
-    
     func onScrolling(geometry:GeometryProxy,  value:DragGesture.Value) {
         if !self.isScrolling {self.onScrollInit()}
         let movePos = value.translation.height
@@ -160,7 +159,9 @@ extension PageDragingView{
 }
 
 
+
 class PageDragingModel: ObservableObject, PageProtocol, Identifiable{
+    static var MIN_DRAG_RANGE:CGFloat = 10
     @Published var uiEvent:PageDragingUIEvent? = nil
     @Published var event:PageDragingEvent? = nil
     @Published var status:PageDragingStatus = .none
@@ -191,11 +192,13 @@ enum PageDragingStatus {
     case none,drag,pull
 }
 
+
+
 struct PageDragingBody<Content>: PageDragingView  where Content: View{
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel:PageDragingModel = PageDragingModel()
-    
+
     let content: Content
     var axis:Axis.Set
     
@@ -316,6 +319,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     }
     
     func onDragingAction(offset: CGFloat, dragOpacity: Double) {
+        let diff = abs(self.bodyOffset - offset)
         self.bodyOffset = offset
         self.viewModel.event = .drag(offset, dragOpacity)
         self.pagePresenter.dragOpercity = dragOpacity

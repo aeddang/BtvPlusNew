@@ -50,13 +50,14 @@ struct SummaryViewer: PageComponent{
                         .fixedSize(horizontal: false, vertical: true)
                         .lineLimit(self.isExpand ? 999 : 3)
                         
-                    if !self.isExpand && self.needExpand {
+                    if self.needExpand {
                         HStack{
                             Spacer()
                             Image(Asset.icon.down)
                                 .renderingMode(.original).resizable()
                                 .scaledToFit()
                                 .frame(width: Dimen.icon.thin, height: Dimen.icon.thin)
+                                .rotationEffect(.degrees(self.isExpand ? 180 : 0))
                             Spacer()
                         }
                     }
@@ -65,12 +66,12 @@ struct SummaryViewer: PageComponent{
                 .modifier(ContentHorizontalEdges())
                 .onTapGesture {
                     if self.needExpand {
-                        self.isExpand.toggle()
+                        withAnimation{ self.isExpand.toggle() }
                     }
                 }
             }
         }
-        
+        .fixedSize(horizontal: false, vertical: true)
         .onAppear{
             self.checkExpand()
         }

@@ -40,7 +40,6 @@ struct PageSynopsis: PageView {
     enum SingleRequestType:String {
         case preview, changeOption, relationContents
     }
-    
     var body: some View {
         GeometryReader { geometry in
             PageDataProviderContent(
@@ -56,15 +55,33 @@ struct PageSynopsis: PageView {
                                 viewModel:self.playerModel,
                                 pageObservable:self.pageObservable,
                                 title: self.title,
-                                thumbImage: self.imgBg
+                                thumbImage: self.imgBg,
+                                contentID:self.epsdId,
+                                listData: self.playListData
                             )
-                            
-                            if self.playerData == nil {
+                            .onReceive(self.playerModel.$btvPlayerEvent){evt in
+                                guard let evt = evt else { return }
+                                guard let cdata = self.synopsisData else { return }
+                                
+                                switch evt {
+                                case .nextView : self.nextVod()
+                                case .continueView: break
+                                case .changeView(let epsdId) :
+                                    self.synopsisData = SynopsisData(
+                                        srisId: cdata.srisId, searchType: cdata.searchType,
+                                        epsdId: epsdId, epsdRsluId: "", prdPrcId: cdata.prdPrcId, kidZone:cdata.kidZone
+                                    )
+                                    self.resetPage()
+                                }
+                            }
+                            if !self.isPlayAble {
                                 PlayViewer(
                                     pageObservable:self.pageObservable,
                                     title: self.title,
                                     textInfo: self.textInfo,
-                                    imgBg: self.imgBg)
+                                    imgBg: self.imgBg,
+                                    isActive: self.isPlayViewActive
+                                )
                                 
                             }
                         }
@@ -76,15 +93,17 @@ struct PageSynopsis: PageView {
                                 if self.episodeViewerData != nil {
                                     EpisodeViewer(data:self.episodeViewerData!)
                                         .padding(.top, Dimen.margin.regularExtra)
+                                    
+                                    HStack(spacing:0){
+                                        FunctionViewer(
+                                            synopsisData :self.synopsisData,
+                                            srisId: self.srisId,
+                                            isHeart: self.$isBookmark
+                                        )
+                                        Spacer()
+                                    }
                                 }
-                                HStack(spacing:0){
-                                    FunctionViewer(
-                                        synopsisData :self.synopsisData,
-                                        srisId: self.srisId,
-                                        isHeart: self.$isBookmark
-                                    )
-                                    Spacer()
-                                }
+                                
                                 if self.hasAuthority != nil && self.purchasViewerData != nil {
                                     PurchaseViewer(
                                         componentViewModel: self.componentViewModel,
@@ -104,6 +123,7 @@ struct PageSynopsis: PageView {
                                     SummaryViewer(
                                         peopleScrollModel:self.peopleScrollModel,
                                         data: self.summaryViewerData!)
+                                        
                                         .onReceive(self.peopleScrollModel.$scrollPosition){pos in
                                             self.pageDragingModel.uiEvent = .dragCancel(geometry)
                                         }
@@ -140,6 +160,17 @@ struct PageSynopsis: PageView {
                                     }
                                     
                                 }
+                                if !self.seris.isEmpty {
+                                    SerisTab(
+                                        data:self.relationContentsModel,
+                                        seris: self.$seris
+                                    ){ season in
+                                        guard let data = season.synopsisData else {return}
+                                        self.synopsisData = data
+                                        self.resetPage()
+                                    }
+                                    .padding(.horizontal, Dimen.margin.thin)
+                                }
                                 ForEach(self.seris) { data in
                                     SerisItem( data:data, isSelected: self.synopsisData?.epsdId == data.contentID )
                                         .padding(.horizontal, Dimen.margin.thin)
@@ -152,6 +183,7 @@ struct PageSynopsis: PageView {
                                         self.resetPage()
                                     }
                                 }
+                                
                                 VStack(spacing:Dimen.margin.thin){
                                     ForEach(self.relationDatas) { data in
                                         PosterSet( data:data )
@@ -162,7 +194,7 @@ struct PageSynopsis: PageView {
                         }
                         .modifier(MatchParent())
                         .highPriorityGesture(
-                            DragGesture(minimumDistance: 5, coordinateSpace: .local)
+                            DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
                                 .onChanged({ value in
                                     self.pageDragingModel.uiEvent = .drag(geometry, value)
                                 })
@@ -180,6 +212,7 @@ struct PageSynopsis: PageView {
             }//PageDataProviderContent
             .onReceive(self.pairing.$event){evt in
                 guard let _ = evt else {return}
+                self.isPageDataReady = true
                 switch evt {
                 case .pairingCompleted : self.initPage()
                 case .disConnected : self.initPage()
@@ -211,7 +244,9 @@ struct PageSynopsis: PageView {
                         switch self.pairing.status {
                         case .pairing : self.pairing.requestPairing(.check)
                         case .unstablePairing : self.pageSceneObserver.alert = .pairingRecovery
-                        default : self.initPage()
+                        default :
+                            self.isPageDataReady = true
+                            self.initPage()
                         }
                     }
                 default : do{}
@@ -240,6 +275,12 @@ struct PageSynopsis: PageView {
             .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
                 self.safeAreaBottom = pos
             }
+            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                if ani {
+                    self.isPageUiReady = true
+                    self.initPage()
+                }
+            }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
                 self.synopsisData = obj.getParamValue(key: .data) as? SynopsisData
@@ -253,6 +294,7 @@ struct PageSynopsis: PageView {
     /*
      Data process
      */
+    
     @State var isInitPage = false
     @State var progressError = false
     @State var progressCompleted = false
@@ -266,18 +308,27 @@ struct PageSynopsis: PageView {
     @State var imgBg:String? = nil
     @State var textInfo:String? = nil
     
+    @State var playListData:PlayListData = PlayListData()
+    
     @State var synopsisPlayType:SynopsisPlayType = .unknown
     @State var srisId:String? = nil
     @State var srisCount:String? = nil
     @State var isBookmark:Bool? = nil
+    @State var epsdId:String? = nil
     @State var epsdRsluId:String = ""
-    
+
     @State var relationTab:[String] = []
     @State var selectedRelationTabIdx:Int = 0
     @State var seris:[SerisData] = []
     @State var relationDatas:[PosterDataSet] = []
+
+    @State var isPlayAble:Bool = false
+    @State var isPageUiReady = false
+    @State var isPageDataReady = false
+    @State var isPlayViewActive = false
     
     func initPage(){
+        if !self.isPageDataReady || !self.isPageUiReady { return }
         if self.pageObservable.status == .initate { return }
         self.isPairing = self.pairing.status == .pairing
         if self.isInitPage {
@@ -297,7 +348,6 @@ struct PageSynopsis: PageView {
         self.episodeViewerData = nil
         self.purchasViewerData = nil
         self.summaryViewerData = nil
-       
         self.playerData = nil
         self.title = nil
         self.imgBg = nil
@@ -305,15 +355,17 @@ struct PageSynopsis: PageView {
         self.relationTab = []
         self.seris = []
         self.relationDatas = []
-        
         self.pageDataProviderModel.initate()
+        withAnimation{ self.isPlayViewActive = false }
     }
 
     private func requestProgress(_ progress:Int){
         PageLog.d("requestProgress " + progress.description, tag: self.tag)
-        if self.progressError {return}
+        if self.progressError {
+            self.errorProgress()
+            return
+        }
         if self.progressCompleted{
-            PageLog.d("requestProgress Completed", tag: self.tag)
             self.completedProgress()
             return
         }
@@ -327,6 +379,11 @@ struct PageSynopsis: PageView {
         
         case 1 :
             guard let model = self.synopsisModel else {return}
+            if self.purchasViewerData?.isPlayAble == false {
+                withAnimation{ self.isPlayViewActive = true }
+                self.progressCompleted = true
+                return
+            }
             if self.isPairing == true {
                 self.pageDataProviderModel.requestProgress(q: .init(type: .getDirectView(model)))
             }else{
@@ -435,6 +492,7 @@ struct PageSynopsis: PageView {
             if  res.id.hasPrefix( SingleRequestType.preview.rawValue ) {
                 guard let data = res.data as? Preview else {
                     PageLog.d("error next Preview", tag: self.tag)
+                    self.errorProgress()
                     return
                 }
                 self.setupPreview(data)
@@ -442,6 +500,7 @@ struct PageSynopsis: PageView {
             if  res.id.hasPrefix( SingleRequestType.changeOption.rawValue ) {
                 guard let data = res.data as? Play else {
                     PageLog.d("error changeOption", tag: self.tag)
+                    self.errorProgress()
                     return
                 }
                 self.setupPlay(data)
@@ -457,7 +516,28 @@ struct PageSynopsis: PageView {
         }
     }
     
+    private func errorProgress(progress:Int, err:ApiResultError, count:Int){
+        switch progress {
+        case 0 : self.progressError = true
+        case 1 : self.progressError = true
+        default :
+            if  err.id.hasPrefix( SingleRequestType.relationContents.rawValue ) {
+                PageLog.d("error relationContents", tag: self.tag)
+                self.setupRelationContent(nil)
+            }
+            if  err.id.hasPrefix( SingleRequestType.preview.rawValue ) {
+                PageLog.d("error preview", tag: self.tag)
+                self.errorProgress()
+            }
+            if  err.id.hasPrefix( SingleRequestType.changeOption.rawValue ) {
+                PageLog.d("error changeOption", tag: self.tag)
+                self.errorProgress()
+            }
+        }
+    }
+    
     private func completedProgress(){
+        PageLog.d("completedProgress", tag: self.tag)
         guard let synopsisModel = self.synopsisModel else { return }
         if self.relationContentsModel.isReady {
             PageLog.d("already synopsisRelationData", tag: self.tag)
@@ -466,6 +546,12 @@ struct PageSynopsis: PageView {
         }
         
         self.relationContentsModel.setData(synopsis: synopsisModel)
+        self.playListData = PlayListData(
+            listTitle: String.pageText.synopsisSiris,
+            title: self.relationContentsModel.serisTitle,
+            datas: self.relationContentsModel.playList
+            )
+         
         PageLog.d("request synopsisRelationData", tag: self.tag)
         if let synopsisRelationData = self.relationContentsModel.synopsisRelationData {
             self.pageDataProviderModel.request = .init(
@@ -476,19 +562,15 @@ struct PageSynopsis: PageView {
             self.setupRelationContentCompleted ()
         }
     }
-    
-    private func errorProgress(progress:Int, err:ApiResultError, count:Int){
-        switch progress {
-        case 0 : self.progressError = true
-        case 1 : self.progressError = true
-        default :
-            if  err.id.hasPrefix( SingleRequestType.relationContents.rawValue ) {
-                PageLog.d("error relationContents", tag: self.tag)
-                self.setupRelationContent(nil)
-            }
+    private func errorProgress(){
+        PageLog.d("errorProgress", tag: self.tag)
+        withAnimation{
+            self.isPlayAble = false
+            self.isPlayViewActive = true
         }
     }
     
+
     private func setupSynopsis (_ data:Synopsis) {
         PageLog.d("setupSynopsis", tag: self.tag)
         if let content = data.contents {
@@ -516,8 +598,9 @@ struct PageSynopsis: PageView {
 
             self.title = self.episodeViewerData?.episodeTitle
             self.textInfo = self.purchasViewerData?.serviceInfo
-            self.imgBg = self.synopsisModel?.imgBg
             self.epsdRsluId = self.synopsisModel?.epsdRsluId ?? ""
+            self.epsdId = self.synopsisModel?.epsdId
+            self.imgBg = self.synopsisModel?.imgBg
             self.relationContentsModel.reset(synopsisType: self.synopsisModel?.synopsisType)
             DataLog.d("PageSynopsis epsdRsluId  : " + self.epsdRsluId, tag: "상품정보 조회")
             
@@ -552,6 +635,7 @@ struct PageSynopsis: PageView {
         if let curSynopsisItem = self.synopsisModel?.curSynopsisItem {
             self.hasAuthority = curSynopsisItem.hasAuthority
         }
+        withAnimation{self.isPlayAble = true}
     }
     
     private func setupPreview (_ data:Preview){
@@ -572,7 +656,7 @@ struct PageSynopsis: PageView {
                 .setData(synopsisPrerollData: prerollData)
                 .setData(synopsisPlayData: self.playerData)
                 .setData(data: dataInfo, type: .preview(self.epsdRsluId))
-                
+            withAnimation{self.isPlayAble = true}
         }
     }
     
@@ -615,16 +699,14 @@ struct PageSynopsis: PageView {
         self.seris = []
         self.relationDatas = []
         var relationContentsIdx = self.selectedRelationTabIdx
-        if self.relationContentsModel.seris.isEmpty {
-            
-        } else {
+        if !self.relationContentsModel.seris.isEmpty {
             if self.selectedRelationTabIdx == 0 {
-                self.seris = self.relationContentsModel.seris
+                self.seris = self.relationContentsModel.getSerisDatas()
                 return
             }else{
                 relationContentsIdx = self.selectedRelationTabIdx-1
             }
-        }
+        } 
         if self.relationContentsModel.relationContents.isEmpty { return }
         if relationContentsIdx >= self.relationContentsModel.relationContents.count  { return }
         self.relationDatas =  self.relationContentsModel.getRelationContentSets(idx: relationContentsIdx)
@@ -674,6 +756,7 @@ struct PageSynopsis: PageView {
         return true
     }
     
+    @discardableResult
     func nextVod()->Bool{
         guard let prevData = self.synopsisData else { return false}
         guard let playData = self.playerData else { return false}

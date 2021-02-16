@@ -83,7 +83,7 @@ struct PlayerMoreBox: PageView{
                     if self.isShowing {
                         self.viewModel.event = .fixUiStatus
                     }
-                default : do{}
+                default : break
                 }
             }
         }

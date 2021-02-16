@@ -16,6 +16,8 @@ class VideoData:InfinityData{
     private(set) var type:VideoType = .nomal
     private(set) var progress:Float? = nil
     private(set) var synopsisData:SynopsisData? = nil
+    private(set) var epsdId:String? = nil
+    private(set) var isInside:Bool = false
     
     func setData(data:ContentItem, cardType:Block.CardType = .video, idx:Int = -1) -> VideoData {
         setCardType(cardType)
@@ -62,6 +64,20 @@ class VideoData:InfinityData{
         return self
     }
     
+    func setData(data:SeriesInfoItem, title:String? = nil, idx:Int = -1) -> VideoData {
+        if let thumb = data.poster_filename_h {
+            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
+        }
+        self.title = title
+        if let count = data.brcast_tseq_nm {
+            self.title = count + String.app.broCount + " " + (self.title ?? "")
+        }
+        index = idx
+        epsdId = data.epsd_id
+        isInside = true
+        return self
+    }
+    
    
     
     
@@ -97,36 +113,72 @@ enum VideoType {
 struct VideoList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
+    
     var datas:[VideoData]
+    var contentID:String? = nil
+    var margin:CGFloat = Dimen.margin.thin
+    var action: ((_ data:VideoData) -> Void)? = nil
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
             axes: .horizontal,
             marginVertical: 0,
-            marginHorizontal: Dimen.margin.thin,
+            marginHorizontal: self.margin,
             spacing: Dimen.margin.tiny
         ){
             ForEach(self.datas) { data in
-                VideoItem( data:data )
-                .onTapGesture {
-                    self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.synopsis)
-                            .addParam(key: .data, value: data.synopsisData)
-                    )
+                if data.index == -1 {
+                    VideoItem( data:data , isSelected: self.contentID == nil
+                                ? false
+                                : self.contentID == data.epsdId)
+                    .onTapGesture {
+                        if let action = self.action {
+                            action(data)
+                        }else{
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.synopsis)
+                                    .addParam(key: .data, value: data.synopsisData)
+                            )
+                        }
+                        
+                    }
+                }else{
+                    VideoItem( data:data , isSelected: self.contentID == nil
+                                ? false
+                                : self.contentID == data.epsdId)
+                        .id(data.index)
+                    .onTapGesture {
+                        if let action = self.action {
+                            action(data)
+                        }else{
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.synopsis)
+                                    .addParam(key: .data, value: data.synopsisData)
+                            )
+                        }
+                        
+                    }
                 }
+                
             }
         }
+        
     }//body
 }
 
 struct VideoItem: PageView {
     var data:VideoData
+    var isSelected:Bool = false
     var body: some View {
         VStack(alignment: .leading, spacing:0){
             ZStack{
                 ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg16_9)
                     .modifier(MatchParent())
-                if self.data.progress != nil {
+                if self.data.isInside {
+                    Spacer().modifier(MatchParent()).background(
+                        self.isSelected ? Color.transparent.black45 : Color.transparent.black70)
+                }
+                if self.data.progress != nil || self.isSelected {
                     Image(Asset.icon.thumbPlay)
                         .renderingMode(.original).resizable()
                         .scaledToFit()
@@ -135,6 +187,15 @@ struct VideoItem: PageView {
                 VStack(alignment: .leading, spacing:0){
                     HStack(spacing:0){}
                     Spacer().modifier(MatchParent())
+                    if self.data.title != nil && self.data.isInside {
+                        VStack(alignment: .center, spacing:0){
+                            Spacer().modifier(MatchHorizontal(height: 0))
+                            Text(self.data.title!)
+                                .modifier(MediumTextStyle(size: Font.size.thinExtra))
+                                .padding(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/, Dimen.margin.thinExtra)
+                                .lineLimit(1)
+                        }
+                    }
                     if self.data.progress != nil {
                         Spacer().frame(
                             width: ListItem.video.size.width * CGFloat(self.data.progress!),
@@ -142,12 +203,13 @@ struct VideoItem: PageView {
                             .background(Color.brand.primary)
                     }
                 }
+                
             }
             .frame(
                 width: ListItem.video.size.width,
                 height: ListItem.video.size.height)
             .clipped()
-            if self.data.title != nil {
+            if self.data.title != nil && !self.data.isInside {
                 Text(self.data.title!)
                     .modifier(MediumTextStyle(size: Font.size.thinExtra))
                     .padding(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/, Dimen.margin.thin)

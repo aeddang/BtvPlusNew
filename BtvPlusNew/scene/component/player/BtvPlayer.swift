@@ -37,16 +37,19 @@ struct Quality {
 }
 
 enum DragGestureType:String {
-    case progress, volume, brightness
+    case progress, volume, brightness, playList
 }
 
 enum SelectOptionType:String {
     case quality, rate, ratio
 }
 enum BtvUiEvent {
-    case more, guide
+    case more, guide, initate
 }
 
+enum BtvPlayerEvent {
+    case nextView, continueView, changeView(String)
+}
 
 class BtvPlayerModel:PlayerModel{
     @Published fileprivate(set) var brightness:CGFloat = UIScreen.main.brightness
@@ -56,6 +59,7 @@ class BtvPlayerModel:PlayerModel{
     @Published var currentQuality:Quality? = nil
     @Published var selectFunctionType:SelectOptionType? = nil
     @Published var btvUiEvent:BtvUiEvent? = nil {didSet{ if btvUiEvent != nil { btvUiEvent = nil} }}
+    @Published var btvPlayerEvent:BtvPlayerEvent? = nil {didSet{ if btvPlayerEvent != nil { btvPlayerEvent = nil} }}
     
     private(set) var synopsisPlayerData:SynopsisPlayerData? = nil
     private(set) var synopsisPrerollData:SynopsisPrerollData? = nil
@@ -116,11 +120,12 @@ class BtvPlayerModel:PlayerModel{
                 self.openingTime = playData.openingTime ?? 0
                 self.continuousTime = t
                 self.initPlay = true
+                ComponentLog.d("vodNext" , tag: "BtvPlayer")
             
             case .vod(let t):
                 self.openingTime = playData.openingTime ?? 0
                 self.continuousTime = t
-                
+                ComponentLog.d("vod" , tag: "BtvPlayer")
             default: do{}
             }
         }
@@ -134,9 +139,14 @@ class BtvPlayerModel:PlayerModel{
         }
         return self
     }
-    
-
 }
+struct PlayListData{
+    var listTitle:String? = nil
+    var title:String? = nil
+    var datas:[VideoData] = []
+}
+
+
 
 struct BtvPlayer: PageComponent{
     @EnvironmentObject var repository:Repository
@@ -147,29 +157,60 @@ struct BtvPlayer: PageComponent{
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
     @ObservedObject var prerollModel: PrerollModel = PrerollModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
+    @ObservedObject var listViewModel: InfinityScrollModel = InfinityScrollModel()
     var title:String? = nil
     var thumbImage:String? = nil
-    
+    var contentID:String? = nil
+    var listData:PlayListData = PlayListData()
+   
     var body: some View {
         GeometryReader { geometry in
             ZStack{
-                ZStack{
+                ZStack(alignment:.bottom){
                     CPPlayer( viewModel : self.viewModel)
                     PlayerEffect(viewModel: self.viewModel)
                     PlayerTop(viewModel: self.viewModel, title: self.title)
                     PlayerBottom(viewModel: self.viewModel)
+                    PlayerListTab( viewModel: self.viewModel, listTitle:self.listData.listTitle, title: self.listData.title,
+                                  listOffset:self.playListOffset + ListItem.video.size.height)
+                        .opacity( self.playListTapOpacity )
+                        .onTapGesture {
+                            self.isPlayListShowing = false
+                            self.updatePlayListOffset()
+                        }
+                    VideoList(viewModel:self.listViewModel,
+                              datas: self.listData.datas,
+                              contentID: self.contentID,
+                              margin:PlayerUI.paddingFullScreen){ data in
+                        
+                        guard let epsdId = data.epsdId else { return }
+                        self.viewModel.btvPlayerEvent = .changeView(epsdId)
+                        }
+                        .modifier(MatchHorizontal(height: ListItem.video.size.height))
+                        .opacity( self.isFullScreen && (self.isUiShowing || self.isPlayListShowing) ? 1.0 : 0)
+                        .padding(.bottom, self.playListOffset)
+                    
                     PlayerOptionSelectBox(viewModel: self.viewModel)
                     PlayerGuide(viewModel: self.viewModel)
                 }
+                .opacity(self.isWaiting == false ? 1.0 : 0)
                 .gesture(
-                    DragGesture(minimumDistance: 0, coordinateSpace: .local)
+                    DragGesture(minimumDistance: 5, coordinateSpace: .local)
                         .onChanged({ value in
                             if self.viewModel.isLock { return }
+                            if self.isFullScreen && (self.isUiShowing || self.isPlayListShowing) {
+                                let range = geometry.size.height/2
+                                if value.startLocation.y > range {
+                                    self.dragGestureType = .playList
+                                }
+                            }
+                            
                             if let type = dragGestureType {
                                 switch type {
                                 case .brightness: self.onBrightnessChange(value: value)
                                 case .volume: self.onVolumeChange(value: value)
                                 case .progress: self.onProgressChange(value: value)
+                                case .playList: self.onPlaylistChange(value: value)
                                 }
                             }else {
                                 let diffX = value.translation.width
@@ -177,19 +218,26 @@ struct BtvPlayer: PageComponent{
                                 if abs(diffX) > abs(diffY) {
                                     self.dragGestureType = .progress
                                 }else{
-                                    let half = geometry.size.width/2
-                                    let posX = value.startLocation.x
-                                    if posX > half {self.dragGestureType = .volume}
-                                    else {self.dragGestureType = .brightness}
+                                    if self.isPlayListShowing {
+                                        self.dragGestureType = .playList
+                                    }else{
+                                        let half = geometry.size.width/2
+                                        let posX = value.startLocation.x
+                                        if posX > half {self.dragGestureType = .volume}
+                                        else {self.dragGestureType = .brightness}
+                                    }
                                 }
                                 self.viewModel.playerUiStatus = .hidden
-                        
                             }
                         })
                         .onEnded({ value in
-                            if self.dragGestureType == .progress {
+                            switch self.dragGestureType {
+                            case .progress:
                                 self.viewModel.event = .seekMove(self.viewModel.seeking, false)
                                 self.viewModel.seeking = 0
+                            case .playList:
+                                self.onPlaylistChangeCompleted()
+                            default:break
                             }
                             self.resetDragGesture()
                         })
@@ -206,32 +254,24 @@ struct BtvPlayer: PageComponent{
                 
                 if self.isPreroll {
                     Preroll(viewModel: self.prerollModel)
-                }else if self.isWaiting {
-                    PlayerWaiting(
-                        pageObservable:self.pageObservable,
-                        viewModel: self.viewModel, imgBg: self.thumbImage)
                 }
+                PlayerWaiting(
+                    pageObservable:self.pageObservable,
+                    viewModel: self.viewModel, imgBg: self.thumbImage)
+                    .opacity(self.isWaiting == true ? 1.0 : 0)
+                
             }
             .modifier(MatchParent())
+            .background(Color.app.black)
             .onReceive(self.sceneObserver.$isUpdated){ update in
                 if !update {return}
                 if self.viewModel.isLock { return }
-                
                 switch self.sceneObserver.sceneOrientation {
                 case .landscape : self.pagePresenter.fullScreenEnter()
                 case .portrait : self.pagePresenter.fullScreenExit()
                 }
             }
-            .onReceive(self.viewModel.$playerStatus) { status in
-                guard let status = status else { return }
-                switch status {
-                case .resume:
-                    if self.isWaiting {
-                        withAnimation{ self.isWaiting = false }
-                    }
-                default : do{}
-                }
-            }
+            
             .onReceive(self.viewModel.$event) { evt in
                 guard let evt = evt else { return }
                 switch evt {
@@ -242,21 +282,51 @@ struct BtvPlayer: PageComponent{
                 }
             }
             .onReceive(self.viewModel.$currentQuality){ quality in
-                if self.viewModel.checkPreroll {
-                    self.viewModel.checkPreroll = false
-                    if let data = self.viewModel.synopsisPrerollData {
-                        self.isPreroll = true
-                        self.prerollModel.request = .load(data)
-                        return
+                if quality == nil { return }
+                let autoPlay = self.viewModel.initPlay ?? self.setup.autoPlay
+                self.isPreroll = false
+                ComponentLog.d("autoPlay " + autoPlay.description, tag: self.tag)
+                if autoPlay {
+                    self.initPlayer()
+                } else  {
+                    self.viewModel.event = .stop
+                    withAnimation{ self.isWaiting = true }
+                }
+                
+            }
+            .onReceive(self.viewModel.$btvUiEvent) { evt in
+                guard let evt = evt else { return }
+                    switch evt {
+                    case .initate :
+                        self.initPlayer()
+                    default : break
+                }
+            }
+            .onReceive(self.viewModel.$playerUiStatus) { st in
+                withAnimation{
+                    switch st {
+                    case .view :
+                        self.isUiShowing = true
+                    default : self.isUiShowing = false
                     }
                 }
-                self.initPlayer()
-                
+                if !self.isPlayListShowing {
+                    self.updatePlayListOffset()
+                }
+        
+            }
+            .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
+                self.isFullScreen = fullScreen
+                if let find = self.listData.datas.firstIndex(where: {self.contentID == $0.epsdId}) {
+                    if find != -1 { self.listViewModel.uiEvent = .scrollTo(find)}
+                    
+                }
+                self.updatePlayListOffset()
             }
             .onReceive(self.prerollModel.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
-                case .finish : self.initPlayer()
+                case .finish : self.initPlay()
                 default : do{}
                 }
             }
@@ -270,7 +340,22 @@ struct BtvPlayer: PageComponent{
     }//body
     
     func initPlayer(){
-        ComponentLog.d("initPlayer", tag: self.tag)
+        withAnimation{ self.isWaiting = false }
+        ComponentLog.d("initPlayer " + self.isWaiting!.description, tag: self.tag)
+        if self.viewModel.checkPreroll {
+            self.viewModel.checkPreroll = false
+            if let data = self.viewModel.synopsisPrerollData {
+                self.isPreroll = true
+                ComponentLog.d("initPreroll", tag: self.tag)
+                self.prerollModel.request = .load(data)
+                return
+            }
+        }
+        self.initPlay()
+    }
+    
+    func initPlay(){
+        ComponentLog.d("initPlay", tag: self.tag)
         self.isPreroll = false
         guard let quality = self.viewModel.currentQuality else {
             self.viewModel.event = .stop
@@ -281,16 +366,13 @@ struct BtvPlayer: PageComponent{
         let path = quality.path + leading +
             "device_id" + SystemEnvironment.getGuestDeviceId() +
             "&token=" + (repository.getDrmId() ?? "")
-        ComponentLog.d("path : " + path, tag: self.tag)
-        
-        let autoPlay = self.viewModel.initPlay ?? self.setup.autoPlay
-        withAnimation{ self.isWaiting = !autoPlay }
+       // ComponentLog.d("path : " + path, tag: self.tag)
         let t = self.viewModel.continuousTime > 0 ? self.viewModel.continuousTime : self.viewModel.time
         self.viewModel.continuousTime = 0
-        self.viewModel.event = .load(path, autoPlay , t, self.viewModel.header)
+        self.viewModel.event = .load(path, true , t, self.viewModel.header)
     }
     
-    @State var isWaiting:Bool = true
+    @State var isWaiting:Bool? = nil
     @State var isPreroll:Bool = false
     @State var dragGestureType:DragGestureType? = nil
     @State var startSeeking:Double = -1
@@ -298,14 +380,62 @@ struct BtvPlayer: PageComponent{
     @State var startBrightness:CGFloat = -1
     @State var startRatio:CGFloat = -1
     @State var isChangeRatioCancel = false
+    @State var isFullScreen:Bool = false
+    @State var isUiShowing:Bool = false
+    @State var isPlayListShowing:Bool = false
+    @State var startPlayListOffset:CGFloat = -1
+    @State var playListOffset:CGFloat = -ListItem.video.size.height
+    @State var playListTapOpacity:Double = 0
     
     func resetDragGesture(){
         self.startSeeking = -1
         self.startVolume = -1
         self.startBrightness = -1
         self.startRatio = -1
+        self.startPlayListOffset = -1
         self.dragGestureType = nil
     }
+    
+    func updatePlayListOffset(){
+        if self.listData.datas.isEmpty { return }
+        var willPos = self.playListOffset
+        if !self.isFullScreen {
+            willPos = -ListItem.video.size.height
+        }else{
+            willPos = self.isPlayListShowing
+                ? PlayerUI.paddingFullScreen
+                : -ListItem.video.size.height + PlayerUI.paddingFullScreen
+        }
+        withAnimation{
+            self.playListOffset = willPos
+            self.updateListTapOpacity()
+        }
+    }
+    
+    func updateListTapOpacity(){
+        if !self.isPlayListShowing {
+            self.playListTapOpacity = 0
+            return
+        }
+        let top = ListItem.video.size.height
+        let pos = top + self.playListOffset
+        self.playListTapOpacity = Double( pos / top )
+    }
+    func onPlaylistChange(value:DragGesture.Value){
+        if !self.isPlayListShowing { self.isPlayListShowing = true }
+        if self.startPlayListOffset == -1 {self.startPlayListOffset = self.playListOffset }
+        self.playListOffset  = self.startPlayListOffset - value.translation.height
+        self.updateListTapOpacity()
+    }
+    func onPlaylistChangeCompleted(){
+        if self.playListOffset >= -ListItem.video.size.height/2 {
+            self.isPlayListShowing = true
+        }else{
+            self.isPlayListShowing = false
+        }
+        self.updatePlayListOffset()
+    }
+    
     
     func onRatioChange(value:CGFloat){
         if self.isChangeRatioCancel { return }

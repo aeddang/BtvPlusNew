@@ -20,7 +20,7 @@ struct PlayerBottom: PageView{
     
     @State var isFullScreen:Bool = false
     @State var isUiShowing:Bool = false
-    
+    @State var isPlaying:Bool = false
     @State var showDirectview = false
     @State var showPreplay = false
     @State var showPreview = false
@@ -47,12 +47,27 @@ struct PlayerBottom: PageView{
                         }
                     }
                     if self.showPreplay {
-                        RectButton(
-                            text: String.player.preplay
-                            ){_ in
-                            
+                        if self.isFullScreen {
+                            if self.isPlaying {
+                                Text(String.player.preplaying)
+                                    .modifier(BoldTextStyle(size: Font.size.thin, color: Color.app.white))
+                            }
+                            RectButton(
+                                text: String.player.continueView,
+                                icon: Asset.icon.play
+                                ){_ in
+                                
+                                self.viewModel.btvPlayerEvent = .continueView
+                            }
+                        }else{
+                            RectButton(
+                                text: String.player.preplay
+                                ){_ in
+                                
+                            }
                         }
                     }
+                    
                     if self.showPreview {
                         RectButton(
                             text: String.player.cookie,
@@ -61,6 +76,7 @@ struct PlayerBottom: PageView{
                             
                         }
                     }
+                    
                     if self.showNext{
                         RectButton(
                             text: self.nextBtnTitle,
@@ -70,6 +86,7 @@ struct PlayerBottom: PageView{
                             icon: Asset.icon.play
                             ){_ in
                             
+                            self.viewModel.btvPlayerEvent = .nextView
                         }
                     }
                 }
@@ -95,11 +112,11 @@ struct PlayerBottom: PageView{
         .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
             self.isFullScreen = fullScreen
         }
+        
         .onReceive(self.viewModel.$currentQuality){_ in
             self.durationTime = nil
             self.nextProgress = 0.0
             self.isTimeCheck = false
-            
             guard let data = self.viewModel.synopsisPlayerData else {
                 withAnimation {
                     self.showDirectview = false
@@ -129,6 +146,9 @@ struct PlayerBottom: PageView{
         }
         .onReceive(self.viewModel.$duration){ t in
             self.durationTime = t
+        }
+        .onReceive(self.viewModel.$isPlay) { play in
+            self.isPlaying = play
         }
         .onReceive(self.viewModel.$time){ t in
             if self.showDirectview {

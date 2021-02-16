@@ -18,13 +18,14 @@ struct TextButton: View, SelecterbleProtocol{
     var isUnderLine:Bool = false
     var image:String? = nil
     var imageSize:CGFloat = Dimen.icon.tinyExtra
+    var spacing:CGFloat = Dimen.margin.tiny
     let action: (_ idx:Int) -> Void
     
     var body: some View {
         Button(action: {
             self.action(self.index)
         }) {
-            HStack(spacing: Dimen.margin.tinyExtra){
+            HStack(alignment:.center, spacing: spacing){
                 if self.isUnderLine {
                     Text(self.isSelected ? ( self.activeText ?? self.defaultText ) : self.defaultText)
                     .font(.custom(textModifier.family, size: textModifier.size))
@@ -41,6 +42,7 @@ struct TextButton: View, SelecterbleProtocol{
                     .renderingMode(.original).resizable()
                     .scaledToFit()
                     .frame(width: self.imageSize, height: self.imageSize)
+                    .padding(.bottom, 1)
                 }
             }
         }.buttonStyle(BorderlessButtonStyle())

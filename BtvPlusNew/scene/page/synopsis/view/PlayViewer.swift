@@ -14,45 +14,44 @@ struct PlayViewer: PageComponent{
     var title:String? = nil
     var textInfo:String? = nil
     var imgBg:String? = nil
-    
+    var isActive:Bool = false
     @State var isFullScreen:Bool = false
     @State var isPageOn:Bool = false
     var body: some View {
         ZStack{
-            if self.imgBg != nil {
+            if self.imgBg != nil && self.isActive {
                 ImageView(url: self.imgBg!, contentMode: .fill, noImg: Asset.noImg16_9)
                     .modifier(MatchParent())
             }
             Spacer()
                 .modifier(MatchParent())
                 .background(Color.transparent.black70)
-                
-            
-            VStack(spacing:0){
-                HStack(spacing:self.isFullScreen ? Dimen.margin.regular : Dimen.margin.light){
-                    Button(action: {
-                        self.pagePresenter.goBack()
-                    }) {
-                        Image(Asset.icon.back)
-                            .renderingMode(.original)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: Dimen.icon.regular,
-                                   height: Dimen.icon.regular)
-                    }
-                    if self.isFullScreen && self.title != nil {
-                        Text(self.title!)
-                            .modifier(MediumTextStyle(
-                                size: Font.size.mediumExtra,
-                                color: Color.app.white)
-                            )
+            if self.isActive {
+                VStack(spacing:0){
+                    HStack(spacing:self.isFullScreen ? Dimen.margin.regular : Dimen.margin.light){
+                        Button(action: {
+                            self.pagePresenter.goBack()
+                        }) {
+                            Image(Asset.icon.back)
+                                .renderingMode(.original)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: Dimen.icon.regular,
+                                       height: Dimen.icon.regular)
+                        }
+                        if self.isFullScreen && self.title != nil {
+                            Text(self.title!)
+                                .modifier(MediumTextStyle(
+                                    size: Font.size.mediumExtra,
+                                    color: Color.app.white)
+                                )
+                        }
+                        Spacer()
                     }
                     Spacer()
                 }
-                Spacer()
+                .padding(.all, self.isFullScreen ? PlayerUI.paddingFullScreen : PlayerUI.padding)
             }
-            .padding(.all, self.isFullScreen ? PlayerUI.paddingFullScreen : PlayerUI.padding)
-            
             VStack(spacing:self.isFullScreen ? Dimen.margin.regular : Dimen.margin.tiny) {
                 Image(Asset.brand.logoWhite)
                     .renderingMode(.original)
@@ -66,7 +65,7 @@ struct PlayViewer: PageComponent{
                             size: self.isFullScreen ? Font.size.lightExtra :Font.size.thin ))
                 }
             }
-            .opacity(self.isPageOn ? 1.0 : 0)
+            .opacity(self.isActive ? 1.0 : 0.5)
         }
         .modifier(MatchParent())
         .clipped()

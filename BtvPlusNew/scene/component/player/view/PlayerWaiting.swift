@@ -12,10 +12,9 @@ struct PlayerWaiting: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
-    
     var imgBg:String? = nil
     @State var isFullScreen:Bool = false
-    @State var isPageOn:Bool = false
+
     var body: some View {
         ZStack{
             if self.imgBg != nil {
@@ -49,23 +48,19 @@ struct PlayerWaiting: PageComponent{
                     defaultImage: Asset.player.resume,
                     size: CGSize(width:Dimen.icon.heavyExtra,height:Dimen.icon.heavyExtra)
                 ){ _ in
-                    self.viewModel.event = .resume
+                    self.viewModel.btvUiEvent = .initate
                 }
                 if self.viewModel.playInfo != nil  {
                     Text(self.viewModel.playInfo!)
                         .modifier(BoldTextStyle(size: Font.size.lightExtra, color: Color.app.white))
                 }
-            }.opacity(self.isPageOn ? 1.0 : 0)
+            }
         }
         .modifier(MatchParent())
+        .background(Color.app.black)
         .clipped()
         .onReceive(self.pagePresenter.$isFullScreen){ fullScreen in
             withAnimation{ self.isFullScreen = fullScreen }
-        }
-        .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-            if ani {
-                withAnimation{ self.isPageOn = true }
-            }
         }
         .onAppear{
             

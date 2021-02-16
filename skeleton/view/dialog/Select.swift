@@ -80,12 +80,14 @@ struct Select<Presenting>: View where Presenting: View {
                     }
                 }
                 .padding(.top, Dimen.margin.mediumExtra)
+                .padding(.bottom, self.safeAreaBottom)
                 .background(Color.app.blue)
+                .offset(y:self.isShowing ? 0 : 200)
             }
         }
         //.transition(.slide)
         .opacity(self.isShowing ? 1 : 0)
-        .padding(.bottom, self.safeAreaBottom)
+        
         .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
             //if self.editType == .nickName {return}
             withAnimation{

@@ -25,6 +25,7 @@ class PurchaseViewerData:ObservableObject{
     private(set) var purchasBtnTitle:String? = nil
     
     private(set) var watchOptions:[PurchaseModel]? = nil
+    private(set) var isPlayAble:Bool = false
     fileprivate(set) var optionIdx = 0
     
     func setData(synopsisModel:SynopsisModel?, isPairing:Bool? ) -> PurchaseViewerData? {
@@ -33,19 +34,22 @@ class PurchaseViewerData:ObservableObject{
         if !synopsisModel.isDistProgram {
             serviceInfo = String.alert.bs
             serviceInfoDesc = String.alert.bsText
+            isPlayAble = false
                        
         } else if synopsisModel.isCancelProgram {
             serviceInfo = String.alert.bc
             serviceInfoDesc = String.alert.bcText
+            isPlayAble = false
             
         } else if !synopsisModel.isNScreen {
             serviceInfo = purchas.hasAuthority
                 ? String.pageText.synopsisWatchOnlyBtv
                 : String.pageText.synopsisOnlyBtv
-            
+            isPlayAble = true
             
         } else if synopsisModel.isOnlyPurchasedBtv && !purchas.hasAuthority {
             serviceInfo = String.pageText.synopsisOnlyPurchasBtv
+            isPlayAble = true
             
         } else {
             switch synopsisModel.holdbackType {
@@ -65,6 +69,7 @@ class PurchaseViewerData:ObservableObject{
                 
             case .holdOut : serviceInfo = String.pageText.synopsisOnlyBtvFree
             }
+            isPlayAble = true
         }
         return self
     }

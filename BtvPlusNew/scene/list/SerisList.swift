@@ -13,6 +13,7 @@ class SerisData:InfinityData{
     private(set) var title: String? = nil
     private(set) var subTitle: String? = nil
     private(set) var epsdId:String? = nil
+    private(set) var brcastTseqNm:Int = -1
     func setData(data:SeriesInfoItem, title:String? = nil, idx:Int = -1) -> SerisData {
        
         if let thumb = data.poster_filename_h {
@@ -21,6 +22,7 @@ class SerisData:InfinityData{
         self.title = title
         if let count = data.brcast_tseq_nm {
             self.title = (self.title ?? "") + " " + count + String.app.broCount
+            self.brcastTseqNm = count.toInt()
         }
         subTitle = data.brcast_exps_dy
         index = idx

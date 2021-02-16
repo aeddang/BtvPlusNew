@@ -7,6 +7,12 @@
 
 import Foundation
 
+struct SeasonData {
+    var title:String? = nil
+    var srisId:String? = nil
+    var synopsisData:SynopsisData? = nil
+}
+
 struct SynopsisRelationData {
     var menuId:String? = nil
     var cwCallId:String? = nil
@@ -14,14 +20,33 @@ struct SynopsisRelationData {
     var epsdRsluId:String? = nil
 }
 
+enum SerisSortType {
+    case count, latest
+    
+    var name: String {
+        switch self {
+        case .count: return String.sort.count
+        case .latest: return String.sort.latest
+        }
+    }
+    
+}
+
 
 class RelationContentsModel:ObservableObject {
     private(set) var isReady = false
     private(set) var serisTitle:String? = nil
     private(set) var relationTabs:[String] = []
+    
+    private(set) var seasons:[SeasonData] = []
     private(set) var seris:[SerisData] = []
+    private(set) var playList:[VideoData] = []
+    private(set) var serisSortType:SerisSortType = .latest
     private(set) var relationContents:[[PosterData]] = []
     private(set) var synopsisRelationData:SynopsisRelationData? = nil
+    
+    var currentSeasonIdx:Int = -1
+    
     func reset(synopsisType:MetvNetwork.SynopsisType?){
         if synopsisType != .title {
             self.relationContents = []
@@ -30,14 +55,28 @@ class RelationContentsModel:ObservableObject {
             self.serisTitle = nil
             self.isReady = false
         }
-        
     }
+    
     func setData(synopsis:SynopsisModel) {
         self.isReady = true
         self.serisTitle = synopsis.srisTitle
         if let list = synopsis.seriesInfoList {
             self.seris = list.map{SerisData().setData(data: $0, title: self.serisTitle)}
+            self.playList = zip(list, 0...list.count).map{ data, idx in
+                VideoData().setData(data: data, title: self.serisTitle, idx: idx)}
         }
+        if let list = synopsis.siries {
+            self.seasons = list.map{
+                let data = SynopsisData(
+                    srisId: $0.sris_id,
+                    searchType: EuxpNetwork.SearchType.sris.rawValue,
+                    epsdId: $0.epsd_id, epsdRsluId: nil, prdPrcId: nil, kidZone: nil)
+                return SeasonData(title: $0.sson_choic_nm, srisId:$0.sris_id, synopsisData: data)
+            }
+            self.currentSeasonIdx = self.seasons.firstIndex(where:{ $0.srisId == synopsis.srisId }) ?? -1
+        }
+        
+        
         
         if let temp = synopsis.cwCallId {
             var cwCallIdVal:String? = nil
@@ -77,6 +116,18 @@ class RelationContentsModel:ObservableObject {
             $0.block!.map{ PosterData().setData(data: $0) }
         }
         self.createTab(tabs: tabs)
+    }
+    
+    func getSerisDatas(sort:SerisSortType? = nil) -> [SerisData] {
+        let sort = sort ?? self.serisSortType
+        self.serisSortType = sort
+        if self.seris.isEmpty { return self.seris }
+        return self.seris.sorted(by: {
+            switch sort {
+            case .count : return $0.brcastTseqNm < $1.brcastTseqNm
+            case .latest : return $0.brcastTseqNm > $1.brcastTseqNm
+            }
+        })
     }
     
     func getRelationContentSets(idx:Int) -> [PosterDataSet] {

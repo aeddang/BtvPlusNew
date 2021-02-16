@@ -36,7 +36,7 @@ extension String {
         public static let month = "month".loaalized()
         public static let year = "year".loaalized()
         public static let cash = "cash".loaalized()
-      
+        public static let total = "total".loaalized()
         public static let certificationNumber = "certificationNumber".loaalized()
         public static let certificationNumberHolder = "certificationNumberHolder".loaalized()
         public static let macAdress = "macAdress".loaalized()
@@ -63,6 +63,8 @@ extension String {
         public static let folansubtitle = "sortFolansubtitle".loaalized()
         public static let etc = "sortEtc".loaalized()
         public static let none = "sortNone".loaalized()
+        public static let count = "sortCount".loaalized()
+        public static let latest = "sortLatest".loaalized()
     }
     
     
@@ -164,6 +166,8 @@ extension String {
     struct player {
         public static let moveSec = "playerMoveSec".loaalized()
         public static let preplay = "playerPreplay".loaalized()
+        public static let preplaying = "playerPreplaying".loaalized()
+        public static let continueView = "playerContinueView".loaalized()
         public static let preview = "playerPreview".loaalized()
         public static let cookie = "playerCookie".loaalized()
         public static let next = "playerNext".loaalized()
@@ -173,6 +177,7 @@ extension String {
         public static let adTitlec = "playerAdTitle".loaalized()
         public static let adMore = "playerAdMore".loaalized()
         public static let adCancel = "playerAdCancel".loaalized()
+        
         
         
     }
@@ -290,8 +295,7 @@ extension String {
         public static let synopsisWatchPossn = "synopsisWatchPossn".loaalized()
         public static let synopsisSummry = "synopsisSummry".loaalized()
         public static let synopsisSiris = "synopsisSiris".loaalized()
-        public static let synopsisSimilarMovie = "synopsisSimilarMovie".loaalized()
-        public static let synopsisRelationContent = "synopsisRelationContent".loaalized()
+        
     }
     
 }

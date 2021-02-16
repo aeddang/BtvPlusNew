@@ -106,7 +106,7 @@ struct PagePairingManagement: PageView {
                 }
                 
                 .highPriorityGesture(
-                    DragGesture(minimumDistance: 20, coordinateSpace: .local)
+                    DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
                         .onChanged({ value in
                             self.pageDragingModel.uiEvent = .drag(geometry, value)
                         })

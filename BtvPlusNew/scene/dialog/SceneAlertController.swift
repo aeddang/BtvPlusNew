@@ -15,6 +15,7 @@ enum SceneAlert:Equatable {
          recivedApns, apiError(ApiResultError),
          connectWifi , notFoundDevice, requestLocation,
          limitedDevice(PairingInfo?), pairingError(NpsCommonHeader?), pairingRecovery, needPairing, pairingCheckFail,
+         needPurchase( PurchaseWebviewModel ),
          serviceUnavailable(String?), serviceSelect(String?, String? , (String?) -> Void),
          like(String, Bool?),
          cancel
@@ -85,6 +86,7 @@ struct SceneAlertController: PageComponent{
             case .pairingError(_): self.selectedPairingError(idx)
             case .pairingRecovery: self.selectedPairingRecovery(idx)
             case .needPairing: self.selectedNeedPairing(idx)
+            case .needPurchase(let data): self.selectedNeedPurchase(idx, model: data)
             case .serviceUnavailable(let path): self.selectedServiceUnavailable(idx, path: path)
             case .serviceSelect(_ , let value, let completionHandler) : self.selectedServiceSelect(idx, value:value, completionHandler:completionHandler)
             case .pairingCheckFail : self.selectedPairingCheckFail(idx)
@@ -116,6 +118,7 @@ struct SceneAlertController: PageComponent{
             case .pairingError(let data): self.setupPairingError(data: data)
             case .pairingRecovery: self.setupPairingRecovery()
             case .needPairing: self.setupNeedPairing()
+            case .needPurchase: self.setupNeedPurchase()
             case .serviceUnavailable(let path): self.setupServiceUnavailable(path: path)
             case .serviceSelect(let text, _ , _) : self.setupServiceSelect(text: text)
             case .pairingCheckFail : self.setupPairingCheckFail()
@@ -352,6 +355,24 @@ struct SceneAlertController: PageComponent{
         if idx == 1 {
             self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.pairing)
+            )
+        }
+    }
+    
+    func setupNeedPurchase() {
+        self.title = String.alert.purchase
+        self.text = String.alert.purchaseContinue
+        
+        self.buttons = [
+            AlertBtnData(title: String.app.cancel, index: 0),
+            AlertBtnData(title: String.button.purchas, index: 1)
+        ]
+    }
+    func selectedNeedPurchase(_ idx:Int,  model:PurchaseWebviewModel) {
+        if idx == 1 {
+            self.pagePresenter.openPopup(
+                PageProvider.getPageObject(.purchase)
+                    .addParam(key: .data, value: model)
             )
         }
     }

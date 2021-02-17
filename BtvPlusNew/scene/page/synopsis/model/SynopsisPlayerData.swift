@@ -9,7 +9,9 @@ import Foundation
 
 
 enum SynopsisPlayType {
-    case unknown, preview(Int) , preplay , vod(Double = 0), vodNext(Double = 0), vodChange(Double = 0)
+    case unknown, preview(Int, Bool? = nil) , preplay(Bool? = nil),
+         vod(Double = 0, Bool? = nil), vodNext(Double = 0, Bool? = nil), vodChange(Double = 0, Bool? = nil)
+    
     var name: String? {
         switch self {
         case .preview: return String.player.preview
@@ -60,7 +62,7 @@ return self
     var previewCount:String {
         get{
             switch type {
-            case .preview(let count):
+            case .preview(let count, _ ):
                 let num = self.previews?.count ?? 0
                 if num > 1 {
                     return count.description + "/" + num.description

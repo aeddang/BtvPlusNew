@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct SynopsisData {
     var srisId:String? = nil
@@ -54,7 +55,9 @@ class SynopsisModel : PageProtocol {
     private(set) var hasExamPreview:Bool = false
     private(set) var kidsYn:String? = nil
     private(set) var imgBg:String? = nil
+    private(set) var imgContentMode:ContentMode = .fit
     private(set) var cwCallId:String? = nil
+    
     
     init(type:MetvNetwork.SynopsisType = .none ) {
         self.synopsisType = type
@@ -64,7 +67,12 @@ class SynopsisModel : PageProtocol {
         if synopsisType == .seasonFirst {
             if data.contents?.sris_typ_cd == EuxpNetwork.SrisTypCd.title.rawValue {
                 self.synopsisType = .title
+                DataLog.d("PageSynopsis synopsisType  : title", tag: self.tag)
+            } else {
+                DataLog.d("PageSynopsis synopsisType  : seasonFirst", tag: self.tag)
             }
+        } else {
+            DataLog.d("PageSynopsis synopsisType  : " + synopsisType.code, tag: self.tag)
         }
         self.srisId = data.contents?.sris_id
         self.siries = data.series
@@ -72,15 +80,14 @@ class SynopsisModel : PageProtocol {
         if let contents = data.contents{
             self.srisTitle = contents.title
             self.kidsYn = contents.kids_yn
-            if let bg = contents.epsd_poster_filename_h ?? contents.sris_poster_filename_h {
-                self.imgBg = ImagePath.thumbImagePath(filePath: bg, size: CGSize(width: 720, height: 0))
-            }
+            self.setupThumbImage(contents: contents)
             self.hasExamPreview = contents.pre_exam_yn?.toBool() ?? false
             if let preview = contents.preview {
                 self.previews = preview
                 self.hasPreview = !preview.isEmpty
             }
             self.isCombineProduct = contents.combine_product_yn?.toBool() ?? false
+            
             self.epsdId = contents.epsd_id
             self.nextSrisId = contents.next_sris_id
             self.nextEpsdId = contents.next_epsd_id
@@ -172,6 +179,37 @@ class SynopsisModel : PageProtocol {
         case .none: do{}
         }
         return self
+    }
+    private func getSafePath(_ path:String?)->String?{
+        guard let path = path else { return nil }
+        if path.isEmpty { return nil }
+        return path
+    }
+    private func setupThumbImage(contents:SynopsisContentsItem){
+        let stillCut = self.getSafePath(contents.stillCut?.first?.img_path)
+        var effect:IIPConvertType = .none
+        self.imgContentMode = .fill
+        if synopsisType  == .title {
+            let hCut = self.getSafePath(contents.epsd_poster_filename_h)
+            if let bg = hCut ?? stillCut
+                ?? self.getSafePath(contents.epsd_poster_filename_v){
+                if stillCut == nil && hCut == nil {
+                    effect = .blur
+                    self.imgContentMode = .fit
+                }
+                self.imgBg = ImagePath.thumbImagePath(filePath: bg, size: CGSize(width: 720, height: 0), convType: effect)
+            }
+            
+        }else{
+            if let bg = stillCut ?? self.getSafePath(contents.epsd_poster_filename_v) {
+                
+                if stillCut == nil {
+                    effect = .blur
+                    self.imgContentMode = .fit
+                }
+                self.imgBg = ImagePath.thumbImagePath(filePath: bg, size: CGSize(width: 720, height: 0), convType: effect)
+            }
+        }
     }
    
     private(set) var salePPMItem: PurchaseModel? = nil

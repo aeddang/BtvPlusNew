@@ -61,6 +61,7 @@ struct PlayerEffect: PageView{
                                         color: Color.app.greyLight)
                                 )
                         }
+                        
                     }
                     
                     if self.message != nil {
@@ -87,6 +88,14 @@ struct PlayerEffect: PageView{
                                             color: Color.app.white)
                                     )
                             }
+                            .modifier(MatchParent())
+                            .background(
+                                LinearGradient(
+                                    gradient:Gradient(colors: [Color.transparent.white45, Color.transparent.clear]), startPoint: .leading, endPoint: .trailing))
+                            .onTapGesture(count: 2, perform: {
+                                if self.viewModel.isLock { return }
+                                self.viewModel.event = .seekBackword(self.viewModel.getSeekBackwordAmount(), false)
+                            })
                         }
                         if self.showBrightness {
                             VStack(spacing:Dimen.margin.thinExtra){
@@ -128,6 +137,13 @@ struct PlayerEffect: PageView{
                                             color: Color.app.white)
                                     )
                             }
+                            .modifier(MatchParent())
+                            .background(
+                                LinearGradient(gradient:Gradient(colors: [Color.transparent.white45, Color.transparent.clear]), startPoint: .trailing, endPoint: .leading))
+                            .onTapGesture(count: 2, perform: {
+                                if self.viewModel.isLock { return }
+                                self.viewModel.event = .seekForward(self.viewModel.getSeekForwardAmount(), false)
+                            })
                         }
                         if self.showVolume {
                             VStack(spacing:Dimen.margin.thinExtra){

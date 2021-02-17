@@ -56,6 +56,11 @@ extension Color {
         public static let black50 = Color.black.opacity(0.5)
         public static let black45 = Color.black.opacity(0.45)
         public static let black15 = Color.black.opacity(0.15)
+        
+        public static let white70 = Color.white.opacity(0.7)
+        public static let white50 = Color.white.opacity(0.5)
+        public static let white45 = Color.white.opacity(0.45)
+        public static let white15 = Color.white.opacity(0.15)
     }
 }
 

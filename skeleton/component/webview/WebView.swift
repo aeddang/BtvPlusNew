@@ -26,6 +26,7 @@ open class WebViewModel: ComponentObservable {
     @Published var request:WebViewRequest? = nil{ willSet{ self.status = .update } }
     @Published var event:WebViewEvent? = nil{didSet{ if event != nil { event = nil} }}
     @Published var error:WebViewError? = nil
+    @Published var screenHeight:CGFloat = 0
     var base = ""
     convenience init(base:String, path: String? = nil) {
         self.init()
@@ -87,7 +88,7 @@ extension WebViewProtocol {
 
 struct WebView : UIViewRepresentable, WebViewProtocol {
     @Binding var path: String
-    var viewModel: WebViewModel? = nil    
+    var viewModel: WebViewModel? = nil
     var scriptMessageHandler :WKScriptMessageHandler? = nil
     var scriptMessageHandlerName : String = ""
     var uiDelegate:WKUIDelegate? = nil

@@ -12,6 +12,7 @@ import SwiftUI
 struct Dimen{
     struct margin {
         public static let heavy:CGFloat = 46 //*
+        public static let heavyExtra:CGFloat = 40 //*
         public static let medium:CGFloat = 30 //*
         public static let mediumExtra:CGFloat = 24 //*
         public static let regular:CGFloat = 20 //*

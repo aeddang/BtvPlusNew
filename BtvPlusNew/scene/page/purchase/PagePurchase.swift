@@ -7,7 +7,7 @@
 import Foundation
 import SwiftUI
 
-struct PagePairingUser: PageView {
+struct PagePurchase: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
@@ -25,18 +25,13 @@ struct PagePairingUser: PageView {
                 axis:.vertical
             ) {
                 VStack(spacing:0){
-                    PageTab(
-                        title: String.pageTitle.connectCertificationBtv,
-                        isClose: true
-                    )
-                    .padding(.top, self.sceneObserver.safeAreaTop)
                     InfinityScrollView( viewModel: self.infinityScrollModel ){
                         BtvWebView( viewModel: self.webViewModel )
                             .modifier(MatchHorizontal(height: self.webViewHeight))
                             .onReceive(self.webViewModel.$screenHeight){height in
                                 self.webViewHeight = max(
                                     height,
-                                    geometry.size.height - Dimen.app.pageTop  )
+                                    geometry.size.height )
                             }
                     }
                     .modifier(MatchParent())
@@ -101,8 +96,11 @@ struct PagePairingUser: PageView {
                 default : do{}
                 }
             }
+            
             .onAppear{
-                let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.identity
+                guard let obj = self.pageObject  else { return }
+                let data = obj.getParamValue(key: .data) as? PurchaseWebviewModel
+                let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.purchase + (data?.gurry ?? "")
                 self.webViewModel.request = .link(linkUrl)
             }
             .onDisappear{
@@ -115,10 +113,10 @@ struct PagePairingUser: PageView {
 }
 
 #if DEBUG
-struct PagePairingUser_Previews: PreviewProvider {
+struct PagePurchase_Previews: PreviewProvider {
     static var previews: some View {
         Form{
-            PagePairingUser().contentBody
+            PagePurchase().contentBody
                 .environmentObject(PagePresenter())
                 .environmentObject(SceneObserver())
                 .environmentObject(PageSceneObserver())

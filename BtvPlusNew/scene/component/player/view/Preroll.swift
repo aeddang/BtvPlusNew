@@ -16,7 +16,7 @@ enum PrerollRequest {
 enum PrerollEvent {
     case event(OneAdEvent), finish
 }
-class PrerollModel: ComponentObservable, Identifiable{
+class PrerollModel: ComponentObservable{
     @Published var request:PrerollRequest? = nil{ willSet{ self.status = .update } }
     @Published fileprivate(set) var event:PrerollEvent? = nil
 }
@@ -41,7 +41,7 @@ extension Preroll{
 
 struct Preroll: UIViewRepresentable, PageProtocol {
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
-    @ObservedObject var viewModel: PrerollModel = PrerollModel()
+    @ObservedObject var viewModel: PrerollModel
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
@@ -61,7 +61,6 @@ struct Preroll: UIViewRepresentable, PageProtocol {
         case .load(let data):
             var params = [String:String]()
             params["placementId"] = "btvplus/vod-preroll"
-            
             var extParams = [String:String]()
             extParams["contentId"] = data.contentId
             extParams["isFree"] = data.isFree ? "true" : "false"
@@ -79,6 +78,7 @@ struct Preroll: UIViewRepresentable, PageProtocol {
             uiView.playAd()
         default:do{}
         }
+        self.viewModel.status = .ready
     }
     
     class Coordinator: NSObject, OneAdEventDelegate {
@@ -117,7 +117,7 @@ struct Preroll_Previews: PreviewProvider {
     static var previews: some View {
         VStack{
             Preroll(
-               
+               viewModel: PrerollModel()
             )
             .environmentObject(PagePresenter())
             .modifier(MatchParent())

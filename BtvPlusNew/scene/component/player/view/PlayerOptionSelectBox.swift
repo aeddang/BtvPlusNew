@@ -94,6 +94,7 @@ struct PlayerOptionSelectBox: PageView{
                         switch type {
                         case .quality :
                             guard let value = btn.value as? Quality else { return }
+                            self.viewModel.initPlay = true
                             self.viewModel.currentQuality = value
                         case .rate :
                             guard let value = btn.value as? Float else { return }

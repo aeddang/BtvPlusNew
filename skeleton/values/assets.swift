@@ -94,7 +94,7 @@ extension Asset{
         public static let notice = "icMyNotice"
         public static let profileEdit = "icMyProfileEdit"
         public static let alert = "icChannelAlert"
-        
+        public static let info = "icSynopInfo"
         public static let thumbPlay = "icThumPlay"
         public static let play = "icPlayerPlayS"
         
@@ -137,6 +137,7 @@ extension Asset{
         public static let checkBoxOn2 = "icCheckboxOn02"
         public static let checkBoxOff = "icCheckboxOff"
         public static let spinner = "icSpinner"
+        public static let tooltip = "icSynopTooltip"
     }
     
     struct image {

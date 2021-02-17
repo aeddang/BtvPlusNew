@@ -21,6 +21,8 @@ extension PageID{
     static let pairingBtv:PageID = "pairingBtv"
     static let pairingUser:PageID = "pairingUser"
     static let pairingManagement:PageID = "pairingManagement"
+    
+    static let purchase:PageID = "purchase"
 }
 
 struct PageProvider {
@@ -46,7 +48,11 @@ struct PageProvider {
     static func getType(_ pageID:PageID)-> PageAnimationType{
         switch pageID {
         case .home,
-             .pairingSetupUser, .pairingBtv, .pairingDevice, .pairingUser, .pairingManagement : return  .vertical
+             .pairingSetupUser, .pairingBtv,
+             .pairingDevice, .pairingUser, .pairingManagement,
+             .purchase :
+            
+            return  .vertical
         
         default : return  .horizental
         }
@@ -106,6 +112,7 @@ struct PageFactory{
         case .pairingBtv : return PagePairingBtv()
         case .pairingUser : return PagePairingUser()
         case .pairingManagement : return PagePairingManagement()
+        case .purchase : return PagePurchase()
         default : return PageTest()
         }
     }

@@ -49,7 +49,6 @@ extension Date{
         let nowUTC = Date()
         let timeZoneOffset = Double(TimeZone.current.secondsFromGMT(for: nowUTC))
         guard let localDate = Calendar.current.date(byAdding: .second, value: Int(timeZoneOffset), to: nowUTC) else {return Date()}
-
         return localDate
     }
     func currentTimeMillis() -> Double {
@@ -66,6 +65,10 @@ extension Date{
     
     func isBetween(_ date1: Date, and date2: Date) -> Bool {
         return (min(date1, date2) ... max(date1, date2)).contains(self)
+    }
+    
+    func getDDay() -> Int {
+        Int(ceil(self.timeIntervalSince(AppUtil.networkTimeDate()) / 24)) - 1
     }
 }
 

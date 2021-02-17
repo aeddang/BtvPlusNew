@@ -19,7 +19,7 @@ struct CPPlayer: PageComponent {
                         .background(Color.transparent.clearUi)
                         .onTapGesture(count: 2, perform: {
                             if self.viewModel.isLock { return }
-                            self.viewModel.event = .seekBackword(10, false)
+                            self.viewModel.event = .seekBackword(self.viewModel.getSeekBackwordAmount(), false)
                         })
                         .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
                             self.uiViewChange()
@@ -29,7 +29,7 @@ struct CPPlayer: PageComponent {
                         .background(Color.transparent.clearUi)
                         .onTapGesture(count: 2, perform: {
                             if self.viewModel.isLock { return }
-                            self.viewModel.event = .seekForward(10, false)
+                            self.viewModel.event = .seekForward(self.viewModel.getSeekForwardAmount(), false)
                         })
                         .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
                             self.uiViewChange()

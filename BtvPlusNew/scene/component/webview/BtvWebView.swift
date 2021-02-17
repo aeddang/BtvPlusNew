@@ -24,6 +24,10 @@ enum WebviewMethod:String {
          bpn_setMoveListener,bpn_setBackListener,
          bpn_requestFocus,bpn_showComingSoon,bpn_showMyPairing,bpn_familyInvite
 }
+extension BtvWebView {
+    static let identity = "/view/v3.0/identityverification"
+    static let purchase = "/view/v3.0/purchase/list"
+}
 
 
 struct BtvWebView: PageComponent {
@@ -42,6 +46,7 @@ struct BtvWebView: PageComponent {
                                style: .large,
                                color: Color.app.white )
         }
+        
         .onReceive(self.viewModel.$status){ stat in
             if stat == .complete {self.isLoading = false}
             else if stat == .ready {self.isLoading = true}
@@ -235,7 +240,8 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             webView.evaluateJavaScript("document.documentElement.scrollHeight", completionHandler: { (height, error) in
-                webView.bounds.size.height = height as! CGFloat
+                self.parent.viewModel.screenHeight = height as! CGFloat
+                webView.bounds.size.height = self.parent.viewModel.screenHeight
                 ComponentLog.d("document.documentElement.scrollHeight " + webView.bounds.size.height.description, tag: self.tag)
             })
             //선택 제거

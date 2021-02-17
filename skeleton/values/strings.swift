@@ -122,6 +122,9 @@ extension String {
         public static var bs = "alertBS".loaalized()
         public static var bsText = "alertBStext".loaalized()
         
+        public static var purchase = "alertPurchase".loaalized()
+        public static var purchaseContinue = "alertPurchaseContinue".loaalized()
+        
         public static var dataAlramOn = "alertDataAlramOn".loaalized()
         public static var dataAlramOff = "alertDataAlramOff".loaalized()
         public static var autoRemoconOn = "alertAutoRemoconOn".loaalized()
@@ -190,6 +193,9 @@ extension String {
         public static let pairingManagement =  "titlePairingManagement".loaalized()
         public static let myPurchase =  "titleMyPurchase".loaalized()
         public static let setup = "titleSetup".loaalized()
+        public static let purchase = "titlePurchase".loaalized()
+        public static let certificationUser = "titleCertificationUser".loaalized()
+        
     }
     
     struct pageText {
@@ -295,7 +301,8 @@ extension String {
         public static let synopsisWatchPossn = "synopsisWatchPossn".loaalized()
         public static let synopsisSummry = "synopsisSummry".loaalized()
         public static let synopsisSiris = "synopsisSiris".loaalized()
-        
+        public static let synopsisSirisView = "synopsisSirisView".loaalized()
+        public static let synopsisDDay = "synopsisDDay".loaalized()
     }
     
 }

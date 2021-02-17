@@ -13,18 +13,12 @@ struct PlayerWaiting: PageComponent{
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
     var imgBg:String? = nil
+    var contentMode:ContentMode = .fit
     @State var isFullScreen:Bool = false
 
     var body: some View {
         ZStack{
-            if self.imgBg != nil {
-                ImageView(url: self.imgBg!, contentMode: .fill, noImg: Asset.noImg16_9)
-                    .modifier(MatchParent())
-            }
-            Spacer()
-                .modifier(MatchParent())
-                .background(Color.transparent.black70)
-                
+            ThumbImageViewer(imgBg: self.imgBg, contentMode: self.contentMode)
             VStack(spacing:0){
                 HStack(spacing:self.isFullScreen ? Dimen.margin.regular : Dimen.margin.light){
                     Button(action: {

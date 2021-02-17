@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import SystemConfiguration.CaptiveNetwork
 import NetworkExtension
+import TrueTime
 
 struct AppUtil{
     static var version: String {
@@ -63,7 +64,10 @@ struct AppUtil{
         return ranges
     }
     
-    
+    static func networkTimeDate() -> Date {
+        let client = TrueTimeClient.sharedInstance
+        return client.referenceTime?.now() ?? Date()
+    }
     
     static func goLocationSettings() {
         if let appSettings = URL(string: UIApplication.openSettingsURLString) {

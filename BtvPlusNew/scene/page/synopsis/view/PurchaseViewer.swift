@@ -9,11 +9,12 @@ import Foundation
 import SwiftUI
 
 
-class PurchaseViewerData:ObservableObject{
+class PurchaseViewerData:ObservableObject, PageProtocol{
     private(set) var isInfo:Bool = false
     private(set) var infoIcon: String? = nil
     private(set) var infoLeading: String? = nil
     private(set) var infoTailing: String? = nil
+    private(set) var infoTip: String? = nil
     
     private(set) var serviceInfo: String? = nil
     private(set) var serviceInfoDesc: String? = nil
@@ -82,8 +83,8 @@ class PurchaseViewerData:ObservableObject{
             else if purchas.isDirectview {
                 if let ppmItem = synopsisModel.purchasedPPMItem {
                     if let name = ppmItem.ppm_prd_nm {
-                        infoLeading = name + " "
-                        infoTailing = String.pageText.synopsisWatchPeriod
+                        infoLeading = name
+                        infoTailing = " " + String.pageText.synopsisWatchPeriod
                     }else{
                         infoTailing = String.pageText.synopsisWatchPeriod
                     }
@@ -113,6 +114,25 @@ class PurchaseViewerData:ObservableObject{
                     infoTailing = String.pageText.synopsisFreeWatchMonthly
                 }
             }
+        }
+        if synopsisModel.isContainPPM {
+            var enablePPMTooltip = false
+            var toDday:Int  = 0
+            if let purchasedPPMItem = synopsisModel.purchasedPPMItem {
+                toDday = purchasedPPMItem.prdPrcToDt.getDDay()
+                DataLog.d("purchasedPPMItem 구매. 시작일:" + (purchasedPPMItem.prdPrcFrDt.debugDescription)
+                            + ", 종료일:" + (purchasedPPMItem.prdPrcToDt.debugDescription) , tag:self.tag)
+                
+            } else if let salePPMitem = synopsisModel.salePPMItem {
+                toDday = salePPMitem.prdPrcToDt.getDDay()
+                DataLog.d("salePPMitem 구매. 시작일:" + (salePPMitem.prdPrcFrDt.debugDescription)
+                            + ", 종료일:" + (salePPMitem.prdPrcToDt.debugDescription) , tag:self.tag)
+            }
+            if 1...7 ~= toDday { enablePPMTooltip = true }
+            DataLog.d("enablePPMTooltip:" + enablePPMTooltip.description + ", 종료일Dday:" + toDday.description, tag:self.tag)
+            self.infoTip =  enablePPMTooltip ? String.pageText.synopsisDDay + toDday.description : nil
+        } else {
+            self.infoTip = nil
         }
         self.isInfo = infoIcon != nil || infoLeading != nil || infoTailing != nil
     }
@@ -159,6 +179,7 @@ struct PurchaseViewer: PageComponent{
     @ObservedObject var componentViewModel:PageSynopsis.ComponentViewModel = PageSynopsis.ComponentViewModel()
     var data:PurchaseViewerData
     @State var option:String = ""
+    @State var showInfo:Bool = false
     var body: some View {
         VStack(alignment:.leading , spacing:Dimen.margin.light) { 
             if self.data.serviceInfo != nil {
@@ -180,9 +201,8 @@ struct PurchaseViewer: PageComponent{
             if self.data.isInfo || self.data.isOption {
                 Spacer().modifier(LineHorizontal())
             }
-            
             if self.data.isInfo {
-                HStack(){
+                HStack(spacing:Dimen.margin.thinExtra){
                     if self.data.infoIcon != nil {
                         Image( self.data.infoIcon! )
                             .renderingMode(.original).resizable()
@@ -208,7 +228,28 @@ struct PurchaseViewer: PageComponent{
                             .modifier(BoldTextStyle( size: Font.size.light ))
                             .lineLimit(1)
                     }
+                    if self.data.infoTip != nil {
+                        VStack(spacing:0){
+                            Tooltip(
+                                title: self.data.infoLeading,
+                                text: self.data.infoTip
+                            )
+                            .opacity( self.showInfo ? 1.0 : 0)
+                            .padding(.top, -(Tooltip.size.height+Dimen.margin.thinExtra))
+                            //.padding(.leading, -(Tooltip.size.width - Dimen.icon.tiny)/2)
+                            Button(action: {
+                                withAnimation { self.showInfo.toggle() }
+                            }){
+                                Image( Asset.icon.info )
+                                    .renderingMode(.original).resizable()
+                                    .scaledToFit()
+                                    .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
+                            }
+                        }
+                        .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
+                    }
                 }
+                
             }//info
             if self.data.isOption {
                 SortButton(

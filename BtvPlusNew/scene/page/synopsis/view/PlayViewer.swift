@@ -14,18 +14,14 @@ struct PlayViewer: PageComponent{
     var title:String? = nil
     var textInfo:String? = nil
     var imgBg:String? = nil
+    var contentMode:ContentMode = .fit
     var isActive:Bool = false
+   
     @State var isFullScreen:Bool = false
     @State var isPageOn:Bool = false
     var body: some View {
         ZStack{
-            if self.imgBg != nil && self.isActive {
-                ImageView(url: self.imgBg!, contentMode: .fill, noImg: Asset.noImg16_9)
-                    .modifier(MatchParent())
-            }
-            Spacer()
-                .modifier(MatchParent())
-                .background(Color.transparent.black70)
+            ThumbImageViewer(imgBg: self.imgBg, contentMode: self.contentMode)
             if self.isActive {
                 VStack(spacing:0){
                     HStack(spacing:self.isFullScreen ? Dimen.margin.regular : Dimen.margin.light){

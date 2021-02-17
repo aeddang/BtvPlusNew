@@ -12,7 +12,7 @@ import SwiftUI
 struct ImageView : View, PageProtocol {
     @ObservedObject var imageLoader: ImageLoader = ImageLoader()
     var url:String?
-    var contentMode:ContentMode  = .fit
+    var contentMode:ContentMode  = .fill
     var noImg:String = Asset.noImg16_9
     
     @State var img:UIImage?

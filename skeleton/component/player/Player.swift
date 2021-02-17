@@ -8,6 +8,7 @@
 
 import Foundation
 import AVKit
+import Combine
 open class PlayerModel: ComponentObservable {
     static let TIME_SCALE:Double = 600
     var useAvPlayerController = false
@@ -46,6 +47,7 @@ open class PlayerModel: ComponentObservable {
         }
     }
     
+        
     @Published fileprivate(set) var streamEvent:PlayerStreamEvent? = nil
     @Published fileprivate(set) var playerStatus:PlayerStatus? = nil
     @Published fileprivate(set) var streamStatus:PlayerStreamStatus? = nil
@@ -60,7 +62,6 @@ open class PlayerModel: ComponentObservable {
     
     open func reset(){
         limitedDuration = nil
-        
         playInfo = nil
         reload()
     }
@@ -81,7 +82,30 @@ open class PlayerModel: ComponentObservable {
         return duration == time
     }
     
+    func getSeekForwardAmount(t:Double = 10)->Double {
+        self.delayAutoResetSeekMove()
+        self.seekMove = self.seekMove < 0 ? self.seekMove - t : -t
+        return -self.seekMove
+    }
     
+    func getSeekBackwordAmount(t:Double = 10)->Double {
+        self.delayAutoResetSeekMove()
+        self.seekMove = self.seekMove > 0 ? self.seekMove + t : t
+        return self.seekMove
+    }
+    
+    private var seekMove:Double = 0
+    private var autoResetSeekMove:AnyCancellable?
+    private func delayAutoResetSeekMove(){
+        self.autoResetSeekMove?.cancel()
+        self.autoResetSeekMove = Timer.publish(
+            every: 1.0, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                self.autoResetSeekMove?.cancel()
+                self.seekMove = 0
+            }
+    }
 }
 
 
@@ -92,6 +116,7 @@ enum PlayerUIEvent {//input
          seekTime(Double, Bool = true), seekProgress(Float, Bool = true),
          seekMove(Double, Bool = true),
          seeking(Double), seekForward(Double, Bool = false), seekBackword(Double, Bool = false),
+         addSeekForward(Double, Bool = false), addSeekBackword(Double, Bool = false),
          check, neetLayoutUpdate, fixUiStatus,
          screenGravity(AVLayerVideoGravity), screenRatio(CGFloat)
          

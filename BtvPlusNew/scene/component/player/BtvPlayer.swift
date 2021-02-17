@@ -44,7 +44,7 @@ enum SelectOptionType:String {
     case quality, rate, ratio
 }
 enum BtvUiEvent {
-    case more, guide, initate
+    case more, guide, initate, closeList
 }
 
 enum BtvPlayerEvent {
@@ -68,7 +68,8 @@ class BtvPlayerModel:PlayerModel{
     fileprivate(set) var checkPreroll = true
     private(set) var qualitys:[Quality] = []
     private(set) var header:[String:String]? = nil
-    private(set) var initPlay:Bool? = nil
+    var initPlay:Bool? = nil
+    var isFirstPlay:Bool = true
     
     private func appendQuality(name:String, path:String){
         let quality = Quality(name: name, path: path)
@@ -102,6 +103,7 @@ class BtvPlayerModel:PlayerModel{
     
     @discardableResult
     func setData(data:PlayInfo, type:BtvPlayType) -> BtvPlayerModel {
+        let isPrevPlay = self.isPlay
         self.reset()
         var header = [String:String]()
         header["x-ids-cinfo"] = type.type + "," + type.cid + "," + type.title
@@ -109,25 +111,32 @@ class BtvPlayerModel:PlayerModel{
         if let playData = self.synopsisPlayerData {
             self.playInfo = playData.type.name
             switch playData.type {
-            case .preplay:
+            case .preplay(let autoPlay):
                 if let prevTime = data.PREVIEW_TIME {
                     self.limitedDuration = Double(prevTime.toInt())
                 }
-            case .preview(let count):
-                if count > 0{ self.initPlay = true }
-                
-            case .vodNext(let t), .vodChange(let t):
+                self.initPlay = autoPlay
+            case .preview(_, let autoPlay):
+                self.initPlay = autoPlay
+            case .vodNext(let t, let autoPlay), .vodChange(let t, let autoPlay):
                 self.openingTime = playData.openingTime ?? 0
                 self.continuousTime = t
-                self.initPlay = true
-                ComponentLog.d("vodNext" , tag: "BtvPlayer")
-            
-            case .vod(let t):
+                self.initPlay = autoPlay
+            case .vod(let t, let autoPlay):
                 self.openingTime = playData.openingTime ?? 0
                 self.continuousTime = t
-                ComponentLog.d("vod" , tag: "BtvPlayer")
+                self.initPlay = autoPlay
             default: do{}
             }
+        }
+        if self.isFirstPlay {
+            self.isFirstPlay = false
+            ComponentLog.d("first setup initPlay " + self.initPlay.debugDescription , tag: "BtvPlayer")
+        }else if self.initPlay == nil{
+            self.initPlay = isPrevPlay
+            ComponentLog.d("auto setup initPlay " + self.initPlay.debugDescription , tag: "BtvPlayer")
+        } else {
+            ComponentLog.d("setup initPlay " + self.initPlay.debugDescription , tag: "BtvPlayer")
         }
         
         if let auto = data.CNT_URL_NS_AUTO { self.appendQuality(name: "AUTO", path: auto) }
@@ -154,12 +163,13 @@ struct BtvPlayer: PageComponent{
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
+    @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
     @ObservedObject var prerollModel: PrerollModel = PrerollModel()
-    @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var listViewModel: InfinityScrollModel = InfinityScrollModel()
     var title:String? = nil
     var thumbImage:String? = nil
+    var thumbContentMode:ContentMode = .fit
     var contentID:String? = nil
     var listData:PlayListData = PlayListData()
    
@@ -174,14 +184,11 @@ struct BtvPlayer: PageComponent{
                     PlayerListTab( viewModel: self.viewModel, listTitle:self.listData.listTitle, title: self.listData.title,
                                   listOffset:self.playListOffset + ListItem.video.size.height)
                         .opacity( self.playListTapOpacity )
-                        .onTapGesture {
-                            self.isPlayListShowing = false
-                            self.updatePlayListOffset()
-                        }
+                        
                     VideoList(viewModel:self.listViewModel,
                               datas: self.listData.datas,
                               contentID: self.contentID,
-                              margin:PlayerUI.paddingFullScreen){ data in
+                              margin:PlayerUI.paddingFullScreen + PlayerListTab.padding ){ data in
                         
                         guard let epsdId = data.epsdId else { return }
                         self.viewModel.btvPlayerEvent = .changeView(epsdId)
@@ -198,7 +205,10 @@ struct BtvPlayer: PageComponent{
                     DragGesture(minimumDistance: 5, coordinateSpace: .local)
                         .onChanged({ value in
                             if self.viewModel.isLock { return }
-                            if self.isFullScreen && (self.isUiShowing || self.isPlayListShowing) {
+                            if self.isFullScreen
+                                && (self.isUiShowing || self.isPlayListShowing)
+                                && !self.listData.datas.isEmpty {
+                                
                                 let range = geometry.size.height/2
                                 if value.startLocation.y > range {
                                     self.dragGestureType = .playList
@@ -257,7 +267,7 @@ struct BtvPlayer: PageComponent{
                 }
                 PlayerWaiting(
                     pageObservable:self.pageObservable,
-                    viewModel: self.viewModel, imgBg: self.thumbImage)
+                    viewModel: self.viewModel, imgBg: self.thumbImage, contentMode: self.thumbContentMode)
                     .opacity(self.isWaiting == true ? 1.0 : 0)
                 
             }
@@ -282,14 +292,20 @@ struct BtvPlayer: PageComponent{
                 }
             }
             .onReceive(self.viewModel.$currentQuality){ quality in
+                self.viewModel.event = .stop
+                if self.isPreroll {
+                    self.isPreroll = false
+                    if self.viewModel.initPlay == nil {
+                        ComponentLog.d("auto setup initPlay preroll" , tag: self.tag)
+                        self.viewModel.initPlay = true
+                    }
+                }
                 if quality == nil { return }
                 let autoPlay = self.viewModel.initPlay ?? self.setup.autoPlay
-                self.isPreroll = false
                 ComponentLog.d("autoPlay " + autoPlay.description, tag: self.tag)
                 if autoPlay {
                     self.initPlayer()
                 } else  {
-                    self.viewModel.event = .stop
                     withAnimation{ self.isWaiting = true }
                 }
                 
@@ -299,6 +315,9 @@ struct BtvPlayer: PageComponent{
                     switch evt {
                     case .initate :
                         self.initPlayer()
+                    case .closeList :
+                        self.isPlayListShowing = false
+                        self.updatePlayListOffset()
                     default : break
                 }
             }
@@ -326,7 +345,8 @@ struct BtvPlayer: PageComponent{
             .onReceive(self.prerollModel.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
-                case .finish : self.initPlay()
+                case .finish :
+                    self.initPlay()
                 default : do{}
                 }
             }
@@ -341,11 +361,10 @@ struct BtvPlayer: PageComponent{
     
     func initPlayer(){
         withAnimation{ self.isWaiting = false }
-        ComponentLog.d("initPlayer " + self.isWaiting!.description, tag: self.tag)
         if self.viewModel.checkPreroll {
             self.viewModel.checkPreroll = false
             if let data = self.viewModel.synopsisPrerollData {
-                self.isPreroll = true
+                if !self.isPreroll { self.isPreroll = true }
                 ComponentLog.d("initPreroll", tag: self.tag)
                 self.prerollModel.request = .load(data)
                 return
@@ -356,7 +375,7 @@ struct BtvPlayer: PageComponent{
     
     func initPlay(){
         ComponentLog.d("initPlay", tag: self.tag)
-        self.isPreroll = false
+        if self.isPreroll { self.isPreroll = false }
         guard let quality = self.viewModel.currentQuality else {
             self.viewModel.event = .stop
             return

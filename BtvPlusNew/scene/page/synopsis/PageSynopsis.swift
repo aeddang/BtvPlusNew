@@ -28,7 +28,10 @@ struct PageSynopsis: PageView {
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var playerModel: BtvPlayerModel = BtvPlayerModel()
     @ObservedObject var peopleScrollModel: InfinityScrollModel = InfinityScrollModel(axis: .horizontal)
+    @ObservedObject var prerollModel = PrerollModel()
+    @ObservedObject var playerListViewModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var relationContentsModel:RelationContentsModel = RelationContentsModel()
+    
     
     @State var isPairing:Bool? = nil
     @State var hasAuthority:Bool? = nil
@@ -52,26 +55,22 @@ struct PageSynopsis: PageView {
                     VStack(spacing:0){
                         ZStack {
                             BtvPlayer(
-                                viewModel:self.playerModel,
                                 pageObservable:self.pageObservable,
+                                viewModel:self.playerModel,
+                                prerollModel:self.prerollModel,
+                                listViewModel: self.playerListViewModel,
                                 title: self.title,
                                 thumbImage: self.imgBg,
+                                thumbContentMode: self.imgContentMode,
                                 contentID:self.epsdId,
                                 listData: self.playListData
                             )
                             .onReceive(self.playerModel.$btvPlayerEvent){evt in
                                 guard let evt = evt else { return }
-                                guard let cdata = self.synopsisData else { return }
-                                
                                 switch evt {
                                 case .nextView : self.nextVod()
-                                case .continueView: break
-                                case .changeView(let epsdId) :
-                                    self.synopsisData = SynopsisData(
-                                        srisId: cdata.srisId, searchType: cdata.searchType,
-                                        epsdId: epsdId, epsdRsluId: "", prdPrcId: cdata.prdPrcId, kidZone:cdata.kidZone
-                                    )
-                                    self.resetPage()
+                                case .continueView: self.continueVod()
+                                case .changeView(let epsdId) : self.changeVod(epsdId:epsdId)
                                 }
                             }
                             if !self.isPlayAble {
@@ -79,10 +78,10 @@ struct PageSynopsis: PageView {
                                     pageObservable:self.pageObservable,
                                     title: self.title,
                                     textInfo: self.textInfo,
-                                    imgBg: self.imgBg,
+                                    imgBg: self.isPlayViewActive ? self.imgBg : nil,
+                                    contentMode: self.imgContentMode,
                                     isActive: self.isPlayViewActive
                                 )
-                                
                             }
                         }
                         .modifier(Ratio16_9( geometry:geometry, isFullScreen: self.isFullScreen))
@@ -175,12 +174,7 @@ struct PageSynopsis: PageView {
                                     SerisItem( data:data, isSelected: self.synopsisData?.epsdId == data.contentID )
                                         .padding(.horizontal, Dimen.margin.thin)
                                     .onTapGesture {
-                                        guard let cdata = self.synopsisData else { return }
-                                        self.synopsisData = SynopsisData(
-                                            srisId: cdata.srisId, searchType: cdata.searchType,
-                                            epsdId: data.epsdId, epsdRsluId: "", prdPrcId: cdata.prdPrcId, kidZone:cdata.kidZone
-                                        )
-                                        self.resetPage()
+                                        self.changeVod(epsdId:data.epsdId)
                                     }
                                 }
                                 
@@ -303,9 +297,11 @@ struct PageSynopsis: PageView {
     @State var purchasViewerData:PurchaseViewerData? = nil
     @State var playerData:SynopsisPlayerData? = nil
     @State var summaryViewerData:SummaryViewerData? = nil
+    @State var purchaseWebviewModel:PurchaseWebviewModel? = nil
     
     @State var title:String? = nil
     @State var imgBg:String? = nil
+    @State var imgContentMode:ContentMode = .fit
     @State var textInfo:String? = nil
     
     @State var playListData:PlayListData = PlayListData()
@@ -348,6 +344,7 @@ struct PageSynopsis: PageView {
         self.episodeViewerData = nil
         self.purchasViewerData = nil
         self.summaryViewerData = nil
+        self.purchaseWebviewModel = nil
         self.playerData = nil
         self.title = nil
         self.imgBg = nil
@@ -388,7 +385,7 @@ struct PageSynopsis: PageView {
                 self.pageDataProviderModel.requestProgress(q: .init(type: .getDirectView(model)))
             }else{
                 if model.hasExamPreview{
-                    self.synopsisPlayType = .preplay
+                    self.synopsisPlayType = .preplay()
                     self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.epsdRsluId,  true )))
                 }
                 else if model.hasPreview{
@@ -406,7 +403,7 @@ struct PageSynopsis: PageView {
             guard let model = self.synopsisModel else {return}
             if self.hasAuthority == false{
                 if model.hasExamPreview{
-                    self.synopsisPlayType = .preplay
+                    self.synopsisPlayType = .preplay()
                     self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.epsdRsluId,  true )))
                 }
                 else if model.hasPreview{
@@ -547,7 +544,7 @@ struct PageSynopsis: PageView {
         
         self.relationContentsModel.setData(synopsis: synopsisModel)
         self.playListData = PlayListData(
-            listTitle: String.pageText.synopsisSiris,
+            listTitle: String.pageText.synopsisSirisView,
             title: self.relationContentsModel.serisTitle,
             datas: self.relationContentsModel.playList
             )
@@ -572,7 +569,9 @@ struct PageSynopsis: PageView {
     
 
     private func setupSynopsis (_ data:Synopsis) {
-        PageLog.d("setupSynopsis", tag: self.tag)
+        PageLog.d("setupSynopsis prev " + (self.srisId ?? "nil"), tag: self.tag)
+        PageLog.d("setupSynopsis new " + (self.synopsisData?.srisId ?? "nil"), tag: self.tag)
+        self.purchaseWebviewModel = PurchaseWebviewModel().setParam(synopsisData: data)
         if let content = data.contents {
             self.episodeViewerData = EpisodeViewerData().setData(data: content)
             self.summaryViewerData = SummaryViewerData().setData(data: content)
@@ -594,6 +593,7 @@ struct PageSynopsis: PageView {
                         isPairing: self.isPairing)
                 self.hasAuthority = false
             }
+            
             if let kidYn = self.synopsisModel?.kidsYn {self.synopsisData?.kidZone = kidYn }
 
             self.title = self.episodeViewerData?.episodeTitle
@@ -601,8 +601,9 @@ struct PageSynopsis: PageView {
             self.epsdRsluId = self.synopsisModel?.epsdRsluId ?? ""
             self.epsdId = self.synopsisModel?.epsdId
             self.imgBg = self.synopsisModel?.imgBg
+            self.imgContentMode = self.synopsisModel?.imgContentMode ?? .fit
             self.relationContentsModel.reset(synopsisType: self.synopsisModel?.synopsisType)
-            DataLog.d("PageSynopsis epsdRsluId  : " + self.epsdRsluId, tag: "상품정보 조회")
+            DataLog.d("PageSynopsis epsdRsluId  : " + self.epsdRsluId, tag: self.tag)
             
         } else {
             self.progressError = true
@@ -616,6 +617,7 @@ struct PageSynopsis: PageView {
     
     private func setupDirectView (_ data:DirectView){
         PageLog.d("setupDirectView", tag: self.tag)
+        self.purchaseWebviewModel?.setParam(me061Info: data, monthlyPid: nil)
         self.synopsisModel?.setData(directViewdata: data)
         self.isBookmark = self.synopsisModel?.isBookmark
         self.purchasViewerData = PurchaseViewerData().setData(
@@ -625,9 +627,9 @@ struct PageSynopsis: PageView {
         if let lastWatch = data.last_watch_info {
             if let t = lastWatch.watch_rt?.toInt() {
                 switch self.synopsisPlayType {
-                case .vod: self.synopsisPlayType = .vod(Double(t))
-                case .vodChange: self.synopsisPlayType = .vodChange(Double(t))
-                case .vodNext: self.synopsisPlayType = .vodNext(Double(t))
+                case .vod(_, let autoPlay): self.synopsisPlayType = .vod(Double(t), autoPlay)
+                case .vodChange(_, let autoPlay): self.synopsisPlayType = .vodChange(Double(t), autoPlay)
+                case .vodNext(_, let autoPlay): self.synopsisPlayType = .vodNext(Double(t), autoPlay)
                 default: do{}
                 }
             }
@@ -720,7 +722,7 @@ struct PageSynopsis: PageView {
         switch playerData?.type {
         case .preplay:
             self.preplayCompleted()
-        case .preview(let count):
+        case .preview(let count, _):
             if !self.nextPreview(count: count) {
                 self.previewCompleted()
             }
@@ -798,6 +800,27 @@ struct PageSynopsis: PageView {
     
     func vodCompleted(){
         PageLog.d("vodCompleted", tag: self.tag)
+    }
+    
+    func continueVod(){
+        if self.pairing.status != .pairing {
+            self.pageSceneObserver.alert = .needPairing
+            return
+        }
+        if self.hasAuthority == false {
+            guard  let model = self.purchaseWebviewModel else { return }
+            self.pageSceneObserver.alert = .needPurchase(model)
+        }
+    }
+    
+    func changeVod(epsdId:String?){
+        guard let epsdId = epsdId else { return }
+        guard let cdata = self.synopsisData else { return }
+        self.synopsisData = SynopsisData(
+            srisId: cdata.srisId, searchType: cdata.searchType,
+            epsdId: epsdId, epsdRsluId: "", prdPrcId: cdata.prdPrcId, kidZone:cdata.kidZone
+        )
+        self.resetPage()
     }
 
 }

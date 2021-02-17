@@ -152,6 +152,10 @@
 "alertBS" = "서비스 중지";
 "alertBStext" = "서비스 중지로 인해 시청 불가한 상품입니다.";
 
+"alertPurchase" = "구매";
+"alertPurchaseContinue" = "전체 영상은 구매 후 시청 가능합니다.\n구매 후 계속 시청하시겠습니까?";
+
+
 "alertDataAlramOn" = "데이타 연결 알림이 설정되었습니다.";
 "alertDataAlramOff" = "데이타 연결 알림이 해재되었습니다.";
 "alertAutoRemoconOn" = "리모컨 자동 전환이 설정되었습니다.";
@@ -174,6 +178,8 @@
 "titlePairingManagement" = "B tv 연결 관리";
 "titleMyPurchase" = "이전 B tv 구매/소장 목록";
 "titleSetup" = "설정";
+"titlePurchase" = "상품구매";
+"titleCertificationUser" = "성인인증";
 
 /*
  PagePairing
@@ -299,8 +305,8 @@
 "synopsisSummry" = "제작/출연진 및 줄거리";
 
 "synopsisSiris" = "회차";
-
-
+"synopsisSirisView" = "회차 보기";
+"synopsisDDay" = "편성 종료 D-";
 
 /*
  Player

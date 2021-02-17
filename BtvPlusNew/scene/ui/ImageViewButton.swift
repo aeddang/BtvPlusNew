@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-struct ImageViewButton: View{
+struct ImageViewButton: PageView{
     @Binding var isSelected: Bool
     var defaultImage:String? = Asset.noImg1_1
     var activeImage:String? = Asset.noImg1_1

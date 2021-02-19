@@ -10,13 +10,14 @@ import Foundation
 
 enum PairingRequest:Equatable{
     case wifi , btv, user(String?), cancel,
-         recovery, device(StbData), auth(String) , unPairing, check
+         recovery, device(StbData), auth(String) , unPairing, check, userInfo
     static func ==(lhs: PairingRequest, rhs: PairingRequest) -> Bool {
         switch (lhs, rhs) {
         case ( .wifi, .wifi):return true
         case ( .btv, .btv):return true
         case ( .user, .user):return true
         case ( .recovery, .recovery):return true
+        case ( .userInfo, .userInfo):return true
         default: return false
         }
     }
@@ -89,6 +90,8 @@ class HostDevice {
     private(set) var macAdress:String? = nil
     private(set) var convertMacAdress:String = ApiConst.defaultMacAdress
     private(set) var agentVersion:String? = nil
+    private(set) var restrictedAge:Int = -1
+    private(set) var adultAafetyMode = false
     var modelName:String? = nil
    
     func setData(deviceData:HostDeviceData) -> HostDevice{
@@ -98,12 +101,36 @@ class HostDevice {
                 forNps: ma,
                 npsKey: NpsNetwork.AES_KEY, npsIv: NpsNetwork.AES_IV)
         }
+        self.restrictedAge = deviceData.restricted_age?.toInt() ?? -1
         self.agentVersion = deviceData.stb_src_agent_version
+        self.adultAafetyMode = deviceData.adult_safety_mode?.toBool() ?? false
         return self
     }
     
-    
-    
+    func isSupportSimplePairing()->Bool{
+        guard let agent = agentVersion else { return true }
+        if agent.isEmpty {return true}
+        if agent == "null" || agent == "0" {return false}
+        let agents = agent.split(separator: ".")
+        if agents.count != 3 {return false}
+        let major:Int = String(agents[0]).toInt()
+        let minor = String(agents[1]).toInt()
+        let revision = String(agents[2]).toInt()
+        // legacy  1.2.20 이상
+        if (major == 1 && ((minor == 2 && revision >= 20) || minor > 2)) {
+            return true
+        }
+        // Smart  2.1.16 이상
+        else if (major == 2 && ((minor == 1 && revision >= 16) || minor > 1)) {
+            return true
+        }
+        // UHD 3.1.18 이상
+        else if (major == 3 && ((minor == 1 && revision >= 18) || minor > 1)) {
+            return true
+        } else {
+            return false
+        }
+    }
 }
 
 class Pairing:ObservableObject, PageProtocol {
@@ -119,11 +146,15 @@ class Pairing:ObservableObject, PageProtocol {
    
     @Published private(set) var hostDevice:HostDevice? = nil
     private(set) var stbId:String? = nil
+    private(set) var phoneNumer:String = "01000000000"
     
+    @Published var userInfo:PairingUserInfo? = nil
+   
     func connected(stbData:StbData?){
         self.stbId = NpsNetwork.hostDeviceId 
         self.status = self.stbId != "" ? .connect : .disConnect
         self.event = self.status == .connect ? .connected(stbData) : .connectError(nil)
+        
     }
     
     func disconnected() {
@@ -192,13 +223,16 @@ class Pairing:ObservableObject, PageProtocol {
         self.checkComple()
     }
     
+    func updateUserinfo(_ data:PairingUserInfo){
+        self.userInfo = data
+    }
+    
     private func checkComple(){
         if self.isPairingUser && self.isPairingAgreement && self.hostDevice != nil{
             self.status = .pairing
             self.event = .pairingCompleted
         }
     }
-    
     
     static func getSTBImage(stbModel: String?) -> String {
         switch stbModel {

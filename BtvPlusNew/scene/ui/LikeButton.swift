@@ -23,7 +23,7 @@ struct LikeButton: PageView {
         Button(action: {
             let status = self.pairing.status
             if status != .pairing {
-                self.pageSceneObserver.alert = .needPairing
+                self.pageSceneObserver.alert = .needPairing()
             }
             else{
                 self.pageSceneObserver.alert = .like(self.srisId, self.isLike)

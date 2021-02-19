@@ -18,8 +18,9 @@ struct ThumbImageViewer: PageView{
                     ImageView(url: self.imgBg!, contentMode: .fill, noImg: Asset.noImg16_9)
                         .modifier(MatchParent())
                         .blur(radius: 4)
-                        .opacity(0.5)
+                        
                 }
+                Spacer().modifier(MatchParent()).background(Color.transparent.black45)
                 if self.imgBg != nil {
                     ImageView(url: self.imgBg!, contentMode: .fit, noImg: Asset.noImg9_16)
                         .modifier(MatchParent())
@@ -29,8 +30,9 @@ struct ThumbImageViewer: PageView{
                 if self.imgBg != nil {
                     ImageView(url: self.imgBg!, contentMode: .fill, noImg: Asset.noImg16_9)
                         .modifier(MatchParent())
-                        .opacity(0.5)
+                        
                 }
+                Spacer().modifier(MatchParent()).background(Color.transparent.black45)
             }
         }
         .modifier(MatchParent())

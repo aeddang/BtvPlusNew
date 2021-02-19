@@ -31,6 +31,7 @@ class ApiManager :PageProtocol, ObservableObject{
     private lazy var kms:Kms = Kms(network: KmsNetwork())
     private lazy var smd:Smd = Smd(network: SmdNetwork())
     private lazy var scs:Scs = Scs(network: ScsNetwork())
+    private lazy var pss:Pss = Pss(network: PssNetwork())
 
     init() {
         self.initateApi()
@@ -43,6 +44,7 @@ class ApiManager :PageProtocol, ObservableObject{
         self.nps.clear()
         self.kms.clear()
         self.smd.clear()
+        self.pss.clear()
         self.apiQ.removeAll()
     }
     
@@ -225,6 +227,15 @@ class ApiManager :PageProtocol, ObservableObject{
             error:error)
         case .getPlay(let epsdRsluId, let device) : self.scs.getPlay(
             epsdRsluId: epsdRsluId, hostDevice: device,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        //PSS
+        case .getPairingUserInfo(let macAddress, let uiName) : self.pss.getPairingUserInfo(
+            macAddress: macAddress, uiName: uiName,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getPairingUserInfoByPackageID(let charId) : self.pss.getPairingUserInfoByPackageID(
+            charId: charId,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         }

@@ -10,9 +10,13 @@ import SwiftUI
 
 
 struct PageSynopsis: PageView {
-    class ComponentViewModel:ComponentObservable{
-        @Published var selectedOption:PurchaseModel? = nil
+    enum ComponentEvent {
+        case changeVod(String?), changeSynopsis(SynopsisData?), changeOption(PurchaseModel?), purchase
     }
+    class ComponentViewModel:ComponentObservable{
+        @Published var uiEvent:ComponentEvent? = nil {didSet{ if uiEvent != nil { uiEvent = nil} }}
+    }
+    
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
@@ -31,14 +35,11 @@ struct PageSynopsis: PageView {
     @ObservedObject var prerollModel = PrerollModel()
     @ObservedObject var playerListViewModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var relationContentsModel:RelationContentsModel = RelationContentsModel()
-    
-    
-    @State var isPairing:Bool? = nil
-    @State var hasAuthority:Bool? = nil
+
+   
     @State var synopsisData:SynopsisData? = nil
+    @State var isPairing:Bool? = nil
     @State var isFullScreen:Bool = false
-    @State var relationTabIdx:Int = 0
-    @State var safeAreaBottom:CGFloat = 0
     
     enum SingleRequestType:String {
         case preview, changeOption, relationContents
@@ -53,137 +54,76 @@ struct PageSynopsis: PageView {
                     axis:.horizontal
                 ) {
                     VStack(spacing:0){
-                        ZStack {
-                            BtvPlayer(
-                                pageObservable:self.pageObservable,
-                                viewModel:self.playerModel,
-                                prerollModel:self.prerollModel,
-                                listViewModel: self.playerListViewModel,
-                                title: self.title,
-                                thumbImage: self.imgBg,
-                                thumbContentMode: self.imgContentMode,
-                                contentID:self.epsdId,
-                                listData: self.playListData
-                            )
-                            .onReceive(self.playerModel.$btvPlayerEvent){evt in
-                                guard let evt = evt else { return }
-                                switch evt {
-                                case .nextView : self.nextVod()
-                                case .continueView: self.continueVod()
-                                case .changeView(let epsdId) : self.changeVod(epsdId:epsdId)
-                                }
-                            }
-                            if !self.isPlayAble {
-                                PlayViewer(
-                                    pageObservable:self.pageObservable,
-                                    title: self.title,
-                                    textInfo: self.textInfo,
-                                    imgBg: self.isPlayViewActive ? self.imgBg : nil,
-                                    contentMode: self.imgContentMode,
-                                    isActive: self.isPlayViewActive
-                                )
-                            }
-                        }
+                        SynopsisTop(
+                            pageObservable: self.pageObservable,
+                            playerModel: self.playerModel,
+                            playerListViewModel: self.playerListViewModel,
+                            prerollModel: self.prerollModel,
+                            title: self.title,
+                            imgBg: self.imgBg,
+                            imgContentMode: self.imgContentMode,
+                            textInfo: self.textInfo,
+                            epsdId: self.epsdId,
+                            playListData: self.playListData,
+                            isPlayAble: self.isPlayAble,
+                            isPlayViewActive: self.isPlayViewActive)
+                            
                         .modifier(Ratio16_9( geometry:geometry, isFullScreen: self.isFullScreen))
                         .padding(.top, self.sceneObserver.safeAreaTop)
-                        
+                        .onReceive(self.playerModel.$btvPlayerEvent){evt in
+                            guard let evt = evt else { return }
+                            switch evt {
+                            case .nextView : self.nextVod(auto: false)
+                            case .continueView: self.continueVod()
+                            case .changeView(let epsdId) : self.changeVod(epsdId:epsdId)
+                            }
+                        }
+                       
                         InfinityScrollView( viewModel: self.infinityScrollModel ){
-                            VStack(alignment:.leading , spacing:Dimen.margin.regular) {
-                                if self.episodeViewerData != nil {
-                                    EpisodeViewer(data:self.episodeViewerData!)
-                                        .padding(.top, Dimen.margin.regularExtra)
-                                    
-                                    HStack(spacing:0){
-                                        FunctionViewer(
-                                            synopsisData :self.synopsisData,
-                                            srisId: self.srisId,
-                                            isHeart: self.$isBookmark
-                                        )
-                                        Spacer()
-                                    }
+                            SynopsisBody(
+                                componentViewModel: self.componentViewModel,
+                                relationContentsModel: self.relationContentsModel,
+                                peopleScrollModel: self.peopleScrollModel,
+                                pageDragingModel: self.pageDragingModel,
+                                isBookmark: self.$isBookmark,
+                                seris: self.$seris,
+                                relationTabIdx: self.$relationTabIdx,
+                                synopsisData: self.synopsisData,
+                                isPairing: self.isPairing,
+                                episodeViewerData: self.episodeViewerData,
+                                purchasViewerData: self.purchasViewerData,
+                                summaryViewerData: self.summaryViewerData,
+                                srisId: self.srisId, epsdId: self.epsdId,
+                                hasAuthority: self.hasAuthority,
+                                relationTab: self.relationTab,
+                                relationDatas: self.relationDatas,
+                                hasRelationVod: self.hasRelationVod)
+                            
+                            .onReceive( [self.relationTabIdx].publisher ){ idx in
+                                if idx == self.selectedRelationTabIdx { return }
+                                self.selectedRelationContent(idx:idx)
+                            }
+                            .onReceive(self.componentViewModel.$uiEvent){evt in
+                                guard let evt = evt else { return }
+                                switch evt {
+                                case .changeVod(let epsdId) : self.changeVod(epsdId:epsdId)
+                                case .changeSynopsis(let data): self.changeVod(synopsisData: data)
+                                case .changeOption(let option) : self.changeOption(option)
+                                case .purchase : self.purchase()
                                 }
-                                
-                                if self.hasAuthority != nil && self.purchasViewerData != nil {
-                                    PurchaseViewer(
-                                        componentViewModel: self.componentViewModel,
-                                        data:self.purchasViewerData! )
+                            }
+                            .onReceive(self.peopleScrollModel.$scrollPosition){pos in
+                                self.pageDragingModel.uiEvent = .dragCancel(geometry)
+                            }
+                            .onReceive(self.peopleScrollModel.$event){evt in
+                                guard let evt = evt else {return}
+                                switch evt {
+                                case .pullCancel : self.pageDragingModel.uiEvent = .pulled(geometry)
+                                default : do{}
                                 }
-                                if self.hasAuthority == false && self.isPairing == false {
-                                    FillButton(
-                                        text: String.button.connectBtv
-                                    ){_ in
-                                        self.pagePresenter.openPopup(
-                                            PageProvider.getPageObject(.pairing)
-                                        )
-                                    }
-                                    .padding(.horizontal, Dimen.margin.thin)
-                                }
-                                if self.summaryViewerData != nil {
-                                    SummaryViewer(
-                                        peopleScrollModel:self.peopleScrollModel,
-                                        data: self.summaryViewerData!)
-                                        
-                                        .onReceive(self.peopleScrollModel.$scrollPosition){pos in
-                                            self.pageDragingModel.uiEvent = .dragCancel(geometry)
-                                        }
-                                        .onReceive(self.peopleScrollModel.$event){evt in
-                                            guard let evt = evt else {return}
-                                            switch evt {
-                                            case .pullCancel : self.pageDragingModel.uiEvent = .pulled(geometry)
-                                            default : do{}
-                                            }
-                                        }
-                                        .onReceive(self.peopleScrollModel.$pullPosition){ pos in
-                                            self.pageDragingModel.uiEvent = .pull(geometry, pos)
-                                        }
-                                }
-                                if !self.relationTab.isEmpty {
-                                    if self.relationTab.count == 1 {
-                                        Text(self.relationTab.first!)
-                                            .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
-                                            .padding(.horizontal, Dimen.margin.thin)
-                                    }else{
-                                        CPTabDivisionNavigation(
-                                            buttons: NavigationBuilder(
-                                                index:self.relationTabIdx,
-                                                marginH:Dimen.margin.regular)
-                                                .getNavigationButtons(texts:self.relationTab),
-                                            index: self.$relationTabIdx
-                                        )
-                                        .frame(height:Dimen.tab.regular)
-                                        .padding(.horizontal, Dimen.margin.thin)
-                                        .onReceive( [self.relationTabIdx].publisher ){ idx in
-                                            if idx == self.selectedRelationTabIdx { return }
-                                            self.selectedRelationContent(idx:idx)
-                                        }
-                                    }
-                                    
-                                }
-                                if !self.seris.isEmpty {
-                                    SerisTab(
-                                        data:self.relationContentsModel,
-                                        seris: self.$seris
-                                    ){ season in
-                                        guard let data = season.synopsisData else {return}
-                                        self.synopsisData = data
-                                        self.resetPage()
-                                    }
-                                    .padding(.horizontal, Dimen.margin.thin)
-                                }
-                                ForEach(self.seris) { data in
-                                    SerisItem( data:data, isSelected: self.synopsisData?.epsdId == data.contentID )
-                                        .padding(.horizontal, Dimen.margin.thin)
-                                    .onTapGesture {
-                                        self.changeVod(epsdId:data.epsdId)
-                                    }
-                                }
-                                
-                                VStack(spacing:Dimen.margin.thin){
-                                    ForEach(self.relationDatas) { data in
-                                        PosterSet( data:data )
-                                    }
-                                }
-                                Spacer().frame(height: self.safeAreaBottom)
+                            }
+                            .onReceive(self.peopleScrollModel.$pullPosition){ pos in
+                                self.pageDragingModel.uiEvent = .pull(geometry, pos)
                             }
                         }
                         .modifier(MatchParent())
@@ -197,7 +137,6 @@ struct PageSynopsis: PageView {
                                 })
                         )
                     }
-                    
                     .modifier(PageFull())
                 }//PageDragingBody
                 .onReceive(self.infinityScrollModel.$scrollPosition){pos in
@@ -226,11 +165,6 @@ struct PageSynopsis: PageView {
                     self.errorProgress(progress: progress, err: err, count: count)
                 }
             }
-            
-            .onReceive(self.componentViewModel.$selectedOption ){option in
-                guard let option = option else { return }
-                self.changeOption(option)
-            }
             .onReceive(self.pageObservable.$status){status in
                 switch status {
                 case .appear:
@@ -256,6 +190,19 @@ struct PageSynopsis: PageView {
                 default : do{}
                 }
             }
+            .onReceive(self.pagePresenter.$currentTopPage){ page in
+                if page != self.pageObject {
+                    self.isFinalPlaying = self.playerModel.isPrerollPlay ? true : self.playerModel.isPlay
+                    self.playerModel.event = .pause
+                    ComponentLog.d("isFinalPlaying pause" , tag: "BtvPlayer")
+                } else {
+                    if self.isFinalPlaying == true {
+                        self.playerModel.event = .resume
+                        self.isFinalPlaying = false
+                        ComponentLog.d("isFinalPlaying resume" , tag: "BtvPlayer")
+                    }
+                }
+            }
             .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
                 self.isFullScreen = fullScreen
             }
@@ -265,9 +212,6 @@ struct PageSynopsis: PageView {
                 case .completed : self.playCompleted()
                 default : do{}
                 }
-            }
-            .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
-                self.safeAreaBottom = pos
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
@@ -312,16 +256,21 @@ struct PageSynopsis: PageView {
     @State var isBookmark:Bool? = nil
     @State var epsdId:String? = nil
     @State var epsdRsluId:String = ""
+    @State var hasAuthority:Bool? = nil
 
     @State var relationTab:[String] = []
     @State var selectedRelationTabIdx:Int = 0
     @State var seris:[SerisData] = []
     @State var relationDatas:[PosterDataSet] = []
+    @State var hasRelationVod:Bool? = nil
+    @State var relationTabIdx:Int = 0
 
+    @State var isFinalPlaying:Bool = false
     @State var isPlayAble:Bool = false
+    @State var isPlayViewActive = false
     @State var isPageUiReady = false
     @State var isPageDataReady = false
-    @State var isPlayViewActive = false
+    
     
     func initPage(){
         if !self.isPageDataReady || !self.isPageUiReady { return }
@@ -352,6 +301,7 @@ struct PageSynopsis: PageView {
         self.relationTab = []
         self.seris = []
         self.relationDatas = []
+        self.hasRelationVod = nil
         self.pageDataProviderModel.initate()
         withAnimation{ self.isPlayViewActive = false }
     }
@@ -377,7 +327,7 @@ struct PageSynopsis: PageView {
         case 1 :
             guard let model = self.synopsisModel else {return}
             if self.purchasViewerData?.isPlayAble == false {
-                withAnimation{ self.isPlayViewActive = true }
+                self.errorProgress()
                 self.progressCompleted = true
                 return
             }
@@ -506,6 +456,7 @@ struct PageSynopsis: PageView {
             if  res.id.hasPrefix( SingleRequestType.relationContents.rawValue ) {
                 guard let data = res.data as? RelationContents else {
                     PageLog.d("error relationContents", tag: self.tag)
+                    self.setupRelationContent(nil)
                     return
                 }
                 self.setupRelationContent(data)
@@ -597,7 +548,6 @@ struct PageSynopsis: PageView {
             if let kidYn = self.synopsisModel?.kidsYn {self.synopsisData?.kidZone = kidYn }
 
             self.title = self.episodeViewerData?.episodeTitle
-            self.textInfo = self.purchasViewerData?.serviceInfo
             self.epsdRsluId = self.synopsisModel?.epsdRsluId ?? ""
             self.epsdId = self.synopsisModel?.epsdId
             self.imgBg = self.synopsisModel?.imgBg
@@ -617,7 +567,7 @@ struct PageSynopsis: PageView {
     
     private func setupDirectView (_ data:DirectView){
         PageLog.d("setupDirectView", tag: self.tag)
-        self.purchaseWebviewModel?.setParam(me061Info: data, monthlyPid: nil)
+        self.purchaseWebviewModel?.setParam(directView: data, monthlyPid: nil)
         self.synopsisModel?.setData(directViewdata: data)
         self.isBookmark = self.synopsisModel?.isBookmark
         self.purchasViewerData = PurchaseViewerData().setData(
@@ -634,6 +584,7 @@ struct PageSynopsis: PageView {
                 }
             }
         }
+        self.textInfo = self.purchasViewerData?.serviceInfo
         if let curSynopsisItem = self.synopsisModel?.curSynopsisItem {
             self.hasAuthority = curSynopsisItem.hasAuthority
         }
@@ -643,10 +594,12 @@ struct PageSynopsis: PageView {
     private func setupPreview (_ data:Preview){
         if data.result != ApiCode.success {
             PageLog.d("fail PreviewInfo", tag: self.tag)
+            self.errorProgress()
             return
         }
         guard let dataInfo = data.CTS_INFO else {
             PageLog.d("error PreviewInfo", tag: self.tag)
+            self.errorProgress()
             return
         }
         PageLog.d("setupPreview", tag: self.tag)
@@ -665,10 +618,12 @@ struct PageSynopsis: PageView {
     private func setupPlay (_ data:Play){
         if data.result != ApiCode.success {
             PageLog.d("fail Play", tag: self.tag)
+            self.errorProgress()
             return
         }
         guard let dataInfo = data.CTS_INFO else {
             PageLog.d("error PlayInfo", tag: self.tag)
+            self.errorProgress()
             return
         }
         if let synopsis = self.synopsisModel {
@@ -679,7 +634,6 @@ struct PageSynopsis: PageView {
                 .setData(synopsisPrerollData: prerollData)
                 .setData(synopsisPlayData: self.playerData)
                 .setData(data: dataInfo, type: .vod(self.epsdRsluId,self.title))
-                
         }
     }
     
@@ -689,9 +643,13 @@ struct PageSynopsis: PageView {
     }
     
     private func setupRelationContentCompleted (){
-        
         self.relationTab = self.relationContentsModel.relationTabs
-        self.selectedRelationContent(idx:0)
+        if self.relationTab.isEmpty {
+            self.hasRelationVod = false
+        }else{
+            self.hasRelationVod = true
+            self.selectedRelationContent(idx:0)
+        }
     }
     
     private func selectedRelationContent (idx:Int){
@@ -717,7 +675,6 @@ struct PageSynopsis: PageView {
     /*
      Player process
      */
-    
     func playCompleted(){
         switch playerData?.type {
         case .preplay:
@@ -759,10 +716,10 @@ struct PageSynopsis: PageView {
     }
     
     @discardableResult
-    func nextVod()->Bool{
+    func nextVod(auto:Bool = true)->Bool{
         guard let prevData = self.synopsisData else { return false}
         guard let playData = self.playerData else { return false}
-        if !self.setup.nextPlay { return false}
+        if !self.setup.nextPlay && auto { return false}
         if !playData.hasNext { return false}
         
         self.epsdRsluId = ""
@@ -780,19 +737,10 @@ struct PageSynopsis: PageView {
         return true
     }
     
-    func changeOption(_ option:PurchaseModel){
-        self.epsdRsluId = option.epsd_rslu_id
-        self.synopsisPlayType = .vodChange()
-        self.pageDataProviderModel.request = .init(
-            id: SingleRequestType.changeOption.rawValue,
-            type: .getPlay(self.epsdRsluId,  self.pairing.hostDevice ))
-    }
-    
-    
     func preplayCompleted(){
         PageLog.d("prevplayCompleted", tag: self.tag)
+        self.continueVod()
     }
-    
     
     func previewCompleted(){
         PageLog.d("previewCompleted", tag: self.tag)
@@ -804,13 +752,28 @@ struct PageSynopsis: PageView {
     
     func continueVod(){
         if self.pairing.status != .pairing {
-            self.pageSceneObserver.alert = .needPairing
+            self.pageSceneObserver.alert = .needPairing(String.alert.needConnectForView)
             return
         }
         if self.hasAuthority == false {
             guard  let model = self.purchaseWebviewModel else { return }
             self.pageSceneObserver.alert = .needPurchase(model)
         }
+    }
+    
+    func changeOption(_ option:PurchaseModel?){
+        guard let option = option else { return }
+        self.epsdRsluId = option.epsd_rslu_id
+        self.synopsisPlayType = .vodChange()
+        self.pageDataProviderModel.request = .init(
+            id: SingleRequestType.changeOption.rawValue,
+            type: .getPlay(self.epsdRsluId,  self.pairing.hostDevice ))
+    }
+    
+    func changeVod(synopsisData:SynopsisData?){
+        guard let synopsisData = synopsisData else { return }
+        self.synopsisData = synopsisData
+        self.resetPage()
     }
     
     func changeVod(epsdId:String?){
@@ -822,7 +785,14 @@ struct PageSynopsis: PageView {
         )
         self.resetPage()
     }
-
+    
+    func purchase(){
+        guard  let model = self.purchaseWebviewModel else { return }
+        self.pagePresenter.openPopup(
+            PageProvider.getPageObject(.purchase)
+                .addParam(key: .data, value: model)
+        )
+    }
 }
 
 #if DEBUG

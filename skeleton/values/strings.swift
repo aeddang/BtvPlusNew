@@ -79,9 +79,11 @@ extension String {
         public static var connectWifiSub = "alertConnectWifiSub".loaalized()
     
         public static var needConnect = "alertNeedConnect".loaalized()
+        public static var needConnectForView = "alertNeedConnectForView".loaalized()
         public static var needConnectStatus = "alertNeedConnectStatus".loaalized()
         public static var connectNotFound = "alertConnectNotFound".loaalized()
         public static var connectNotFoundSub = "alertConnectNotFoundSub".loaalized()
+     
         
         public static var location = "alertLocation".loaalized()
         public static var locationSub = "alertLocationSub".loaalized()
@@ -303,6 +305,8 @@ extension String {
         public static let synopsisSiris = "synopsisSiris".loaalized()
         public static let synopsisSirisView = "synopsisSirisView".loaalized()
         public static let synopsisDDay = "synopsisDDay".loaalized()
+        public static let synopsisRelationVod = "synopsisRelationVod".loaalized()
+        public static let synopsisNoRelationVod = "synopsisNoRelationVod".loaalized()
     }
     
 }

@@ -77,6 +77,8 @@
 		3167641A25CCC1C5003A7721 /* PlayViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3167641925CCC1C5003A7721 /* PlayViewer.swift */; };
 		3167641F25CCC80E003A7721 /* SynopsisPlayerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3167641E25CCC80E003A7721 /* SynopsisPlayerData.swift */; };
 		3167642A25CD11E8003A7721 /* PlayerBottom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3167642925CD11E8003A7721 /* PlayerBottom.swift */; };
+		316955AB25DF9D1500848507 /* Pss.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316955AA25DF9D1500848507 /* Pss.swift */; };
+		316955B425DFA41500848507 /* PairingUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316955B325DFA41500848507 /* PairingUserInfo.swift */; };
 		316DF2D125C29EC500915B27 /* CustomAVPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316DF2D025C29EC500915B27 /* CustomAVPlayer.swift */; };
 		316DF2DF25C2AA3C00915B27 /* CPAirPlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316DF2DE25C2AA3C00915B27 /* CPAirPlayButton.swift */; };
 		317A8F4925CBA81700E41226 /* PlayerScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317A8F4825CBA81700E41226 /* PlayerScreenView.swift */; };
@@ -87,6 +89,8 @@
 		3180855E25C233A900AE4A73 /* libPoCDrmAgent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */; };
 		3192317225A3FDBE00020388 /* coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192317125A3FDBE00020388 /* coordinator.swift */; };
 		3192318025A40A7D00020388 /* ReflashSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192317F25A40A7D00020388 /* ReflashSpinner.swift */; };
+		3193414F25DDD847002F2000 /* SynopsisTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3193414E25DDD847002F2000 /* SynopsisTop.swift */; };
+		3193415425DDDAE8002F2000 /* SynopsisBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3193415325DDDAE8002F2000 /* SynopsisBody.swift */; };
 		31E3974225B5906E00CE6E21 /* RatingPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E3974125B5906E00CE6E21 /* RatingPoint.swift */; };
 		31E3974A25B595FC00CE6E21 /* ShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E3974925B595FC00CE6E21 /* ShareButton.swift */; };
 		31E3975025B5A0A300CE6E21 /* PageMy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E3974F25B5A0A300CE6E21 /* PageMy.swift */; };
@@ -343,6 +347,8 @@
 		3167641925CCC1C5003A7721 /* PlayViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayViewer.swift; sourceTree = "<group>"; };
 		3167641E25CCC80E003A7721 /* SynopsisPlayerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisPlayerData.swift; sourceTree = "<group>"; };
 		3167642925CD11E8003A7721 /* PlayerBottom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerBottom.swift; sourceTree = "<group>"; };
+		316955AA25DF9D1500848507 /* Pss.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pss.swift; sourceTree = "<group>"; };
+		316955B325DFA41500848507 /* PairingUserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingUserInfo.swift; sourceTree = "<group>"; };
 		316DF2D025C29EC500915B27 /* CustomAVPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAVPlayer.swift; sourceTree = "<group>"; };
 		316DF2DE25C2AA3C00915B27 /* CPAirPlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPAirPlayButton.swift; sourceTree = "<group>"; };
 		317A8F4825CBA81700E41226 /* PlayerScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerScreenView.swift; sourceTree = "<group>"; };
@@ -354,6 +360,8 @@
 		3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPoCDrmAgent.a; sourceTree = "<group>"; };
 		3192317125A3FDBE00020388 /* coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = coordinator.swift; sourceTree = "<group>"; };
 		3192317F25A40A7D00020388 /* ReflashSpinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflashSpinner.swift; sourceTree = "<group>"; };
+		3193414E25DDD847002F2000 /* SynopsisTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisTop.swift; sourceTree = "<group>"; };
+		3193415325DDDAE8002F2000 /* SynopsisBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisBody.swift; sourceTree = "<group>"; };
 		31E3974125B5906E00CE6E21 /* RatingPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingPoint.swift; sourceTree = "<group>"; };
 		31E3974925B595FC00CE6E21 /* ShareButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareButton.swift; sourceTree = "<group>"; };
 		31E3974F25B5A0A300CE6E21 /* PageMy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMy.swift; sourceTree = "<group>"; };
@@ -681,6 +689,8 @@
 				31626EEF25B908E600F4031D /* model */,
 				314D739125B501CC00907118 /* view */,
 				314D738925B4F8B100907118 /* PageSynopsis.swift */,
+				3193414E25DDD847002F2000 /* SynopsisTop.swift */,
+				3193415325DDDAE8002F2000 /* SynopsisBody.swift */,
 			);
 			path = synopsis;
 			sourceTree = "<group>";
@@ -823,6 +833,23 @@
 				31061E6525C8CF5800543FC0 /* BtvWebView.swift */,
 			);
 			path = webview;
+			sourceTree = "<group>";
+		};
+		316955A925DF9D0100848507 /* pss */ = {
+			isa = PBXGroup;
+			children = (
+				316955B225DFA0AC00848507 /* model */,
+				316955AA25DF9D1500848507 /* Pss.swift */,
+			);
+			path = pss;
+			sourceTree = "<group>";
+		};
+		316955B225DFA0AC00848507 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				316955B325DFA41500848507 /* PairingUserInfo.swift */,
+			);
+			path = model;
 			sourceTree = "<group>";
 		};
 		3192317025A3FD6200020388 /* value */ = {
@@ -1428,6 +1455,7 @@
 		D56C6B25257DACD800CF9AB8 /* rest  */ = {
 			isa = PBXGroup;
 			children = (
+				316955A925DF9D0100848507 /* pss */,
 				310F6FB025C1266C005718B0 /* scs */,
 				31626ED525B8E9FB00F4031D /* smd */,
 				3159B04E25B1700B008CA85B /* kms */,
@@ -1873,6 +1901,7 @@
 				D56C6B12257DAADE00CF9AB8 /* SceneDelegate.swift in Sources */,
 				D51AA9E72599A24A0035CD51 /* PagePairing.swift in Sources */,
 				D571785E2582DBF000BF2612 /* PageDataProviderContent.swift in Sources */,
+				3193415425DDDAE8002F2000 /* SynopsisBody.swift in Sources */,
 				D573785825A2D70B00EC571F /* PagePairingBtv.swift in Sources */,
 				D56C6A28257DA0C700CF9AB8 /* assets.swift in Sources */,
 				31061E7725C934B600543FC0 /* PlayerEffect.swift in Sources */,
@@ -1916,6 +1945,7 @@
 				317A8F5C25CBE1AE00E41226 /* PlayerMoreBox.swift in Sources */,
 				D56C6A26257DA0C600CF9AB8 /* dimens.swift in Sources */,
 				314D738A25B4F8B100907118 /* PageSynopsis.swift in Sources */,
+				316955AB25DF9D1500848507 /* Pss.swift in Sources */,
 				D56C69AB257DA09E00CF9AB8 /* Resource.swift in Sources */,
 				310F6FAC25C0FE53005718B0 /* Watch.swift in Sources */,
 				D56C6B33257DACD800CF9AB8 /* SettingStorage.swift in Sources */,
@@ -1946,6 +1976,7 @@
 				3159B05925B17BED008CA85B /* KmsModel.swift in Sources */,
 				D56C6A38257DA0C700CF9AB8 /* ImageItem.swift in Sources */,
 				D57298D8259D4BEF00ED2CE6 /* InputCell.swift in Sources */,
+				3193414F25DDD847002F2000 /* SynopsisTop.swift in Sources */,
 				D5469F4925834BAA009CED2D /* DynamicValue.swift in Sources */,
 				D56C69A2257DA09E00CF9AB8 /* PageComponentProtocol.swift in Sources */,
 				D56C6B38257DACD800CF9AB8 /* Api.swift in Sources */,
@@ -1956,6 +1987,7 @@
 				D56C60542593462B009AE769 /* Pairing.swift in Sources */,
 				31E3975025B5A0A300CE6E21 /* PageMy.swift in Sources */,
 				D56C6B73257DBAE700CF9AB8 /* PageSample.swift in Sources */,
+				316955B425DFA41500848507 /* PairingUserInfo.swift in Sources */,
 				D56C6A2D257DA0C700CF9AB8 /* ImagePicker.swift in Sources */,
 				D573784325A2852900EC571F /* CharacterList.swift in Sources */,
 				3192318025A40A7D00020388 /* ReflashSpinner.swift in Sources */,

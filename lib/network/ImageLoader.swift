@@ -12,37 +12,43 @@ import SwiftUI
 import Combine
 import Kingfisher
 
+enum ImageLoaderEvent {
+   case complete(UIImage), error
+}
+
+
 class ImageLoader: ObservableObject, PageProtocol{
     private let downloader: ImageDownloader = KingfisherManager.shared.downloader
     private let cache: ImageCache = KingfisherManager.shared.cache
     private var task: DownloadTask? = nil
-    @Published var image: UIImage? = nil
-    
+    @Published var event: ImageLoaderEvent? = nil {didSet{ if event != nil { event = nil} }}
+   
+    var image: UIImage? = nil
     deinit {
-        task?.cancel()
+        guard let task = task else {return}
+        task.cancel()
     }
     
     func image(url: String?) -> UIImage? {
-        guard let url = url else {
-            return nil
-        }
-        if url == "" { return UIImage.from(color: Color.clear ) }
+        guard let url = url else { return nil }
+        if url == "" { return nil }
+        /*
         guard let _ = url.firstIndex(of: ":") else{
             DataLog.d("asset " + url , tag:self.tag)
             return nil
         }
+        */
         guard let targetUrl = URL(string:url) else {
-             DataLog.e("targetUrl error " + url , tag:self.tag)
+            DataLog.e("targetUrl error " + url , tag:self.tag)
             return nil
         }
-        guard let image = image else {
-            //DataLog.d("targetUrl " + url , tag:self.tag)
+        guard let image = self.image else {
             load(url: targetUrl)
             return nil
         }
         return image
     }
-
+    
     private func load(url: URL) {
         let key = url.absoluteString
         if cache.isCached(forKey: key) {
@@ -50,12 +56,16 @@ class ImageLoader: ObservableObject, PageProtocol{
                 guard let self = self else { return }
                 switch result {
                 case .success(let value):
-                    //DataLog.d("cached " + key , tag:self.tag)
-                    self.image = value.image
-                case .failure(_): do{
-                    //DataLog.d(error.localizedDescription, tag:self.tag)
-                    // DataLog.e("cached error" + key , tag:self.tag)
+                    guard let img = value.image else {
+                        DataLog.d("cache error crear" + key , tag:self.tag)
+                        self.cache.removeImage(forKey: key)
+                        return
                     }
+                    self.image = img
+                    self.event = .complete(img)
+                case .failure(_):
+                    DataLog.d("cache error crear" + key , tag:self.tag)
+                    self.cache.removeImage(forKey: key)
                 }
             }
         } else {
@@ -65,11 +75,11 @@ class ImageLoader: ObservableObject, PageProtocol{
                 case .success(let value):
                     self.cache.storeToDisk(value.originalData, forKey: url.absoluteString)
                     self.image = value.image
-                    //DataLog.d("loaded" + key , tag:self.tag)
-                case .failure(_): do{
-                    //DataLog.e(error.localizedDescription, tag:self.tag)
+                    //DataLog.d("loaded success " + key , tag:self.tag)
+                    self.event = .complete(value.image)
+                case .failure(_):
                     DataLog.e("loaded error " + key , tag:self.tag)
-                    }
+                    self.event = .error
                 }
             }
         }

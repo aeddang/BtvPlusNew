@@ -215,7 +215,7 @@ struct PageSetup: PageView {
                 if !self.isInitate { return }
                 if self.setup.autoRemocon == self.isAutoRemocon { return }
                 if self.isPairing == false && value == true {
-                    self.pageSceneObserver.alert = .needPairing
+                    self.pageSceneObserver.alert = .needPairing()
                     self.isAutoRemocon = false
                     return
                 }
@@ -229,7 +229,7 @@ struct PageSetup: PageView {
                 if !self.isInitate { return }
                 if self.setup.remoconVibration == self.isRemoconVibration { return }
                 if self.isPairing == false && value == true {
-                    self.pageSceneObserver.alert = .needPairing
+                    self.pageSceneObserver.alert = .needPairing()
                     self.isRemoconVibration = false
                     return
                 }

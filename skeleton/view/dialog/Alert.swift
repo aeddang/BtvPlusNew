@@ -170,6 +170,10 @@ struct Alert<Presenting>: View where Presenting: View {
                 }
                 .background(Color.app.blue)
             }
+            .frame(
+                minWidth: 0, idealWidth: 247, maxWidth: 320,
+                minHeight: 0,  maxHeight: .infinity
+            )
             .padding(.all, Dimen.margin.heavy)
             
         }

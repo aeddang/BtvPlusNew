@@ -38,6 +38,14 @@ struct AppUtil{
     static func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
+    
+    static func isPad() -> Bool {
+        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad {
+            return true
+        }
+        return false
+    }
+    
     static func openURL(_ path:String) {
         guard let url = URL(string: path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? path) else {
             return
@@ -142,6 +150,31 @@ struct AppUtil{
             freeifaddrs(ifaddr)
         }
         return address ?? ""
+    }
+    
+    static func getSafeString(_ s:String?,  defaultValue:String = "") -> String {
+        guard let s = s else { return defaultValue }
+        return s.isEmpty ? defaultValue : s
+    }
+    static func getSafeInt(bool:Bool?,  defaultValue:Int = 1) -> Int {
+        guard let v = bool else { return defaultValue }
+        return v ? 1 : 0
+    }
+    
+    static func getJsonString(dic:[String:Any])->String?{
+        if JSONSerialization.isValidJSONObject(dic) {
+            do{
+                let data =  try JSONSerialization.data(withJSONObject: dic , options: [])
+                let jsonString = String(decoding: data, as: UTF8.self)
+                DataLog.d("stringfy : " + jsonString, tag: "getJsonString")
+                return jsonString
+            } catch {
+                DataLog.e("stringfy : JSONSerialization " + error.localizedDescription, tag: "getJsonString")
+                return nil
+            }
+        }
+        DataLog.e("stringfy : JSONSerialization isValidJSONObject error", tag: "getJsonString")
+        return nil
     }
 
 }

@@ -66,6 +66,7 @@ class BtvPlayerModel:PlayerModel{
     private(set) var openingTime:Double = 0
     fileprivate(set) var continuousTime:Double = 0
     fileprivate(set) var checkPreroll = true
+    fileprivate(set) var isPrerollPlay = false
     private(set) var qualitys:[Quality] = []
     private(set) var header:[String:String]? = nil
     var initPlay:Bool? = nil
@@ -288,6 +289,27 @@ struct BtvPlayer: PageComponent{
                 case .seeking(let willTime):
                     let diff =  willTime - self.viewModel.time
                     self.viewModel.seeking = diff
+                    
+                case .resume :
+                    if self.isPrerollPause {
+                        ComponentLog.d("isPrerollPause retry" , tag: self.tag)
+                        self.isPrerollPause = false
+                        self.initPlayer()
+                    }
+                    if self.isWaiting != false {
+                        self.continuousPlay()
+                    }
+                    
+                case .pause :
+                    if self.isPreroll {
+                        ComponentLog.d("isPrerollPause" , tag: self.tag)
+                        self.isPrerollPause = true
+                        self.isPreroll = false
+                        self.viewModel.isPrerollPlay = false
+                        withAnimation{ self.isWaiting = true }
+                    }else{
+                        self.recoveryTime = self.viewModel.time
+                    }
                 default : do{}
                 }
             }
@@ -295,6 +317,7 @@ struct BtvPlayer: PageComponent{
                 self.viewModel.event = .stop
                 if self.isPreroll {
                     self.isPreroll = false
+                    self.viewModel.isPrerollPlay = false
                     if self.viewModel.initPlay == nil {
                         ComponentLog.d("auto setup initPlay preroll" , tag: self.tag)
                         self.viewModel.initPlay = true
@@ -310,6 +333,7 @@ struct BtvPlayer: PageComponent{
                 }
                 
             }
+            
             .onReceive(self.viewModel.$btvUiEvent) { evt in
                 guard let evt = evt else { return }
                     switch evt {
@@ -338,7 +362,6 @@ struct BtvPlayer: PageComponent{
                 self.isFullScreen = fullScreen
                 if let find = self.listData.datas.firstIndex(where: {self.contentID == $0.epsdId}) {
                     if find != -1 { self.listViewModel.uiEvent = .scrollTo(find)}
-                    
                 }
                 self.updatePlayListOffset()
             }
@@ -360,11 +383,15 @@ struct BtvPlayer: PageComponent{
     }//body
     
     func initPlayer(){
+        ComponentLog.d("initPlayer", tag: self.tag)
         withAnimation{ self.isWaiting = false }
         if self.viewModel.checkPreroll {
             self.viewModel.checkPreroll = false
             if let data = self.viewModel.synopsisPrerollData {
-                if !self.isPreroll { self.isPreroll = true }
+                if !self.isPreroll {
+                    self.isPreroll = true
+                    self.viewModel.isPrerollPlay = true
+                }
                 ComponentLog.d("initPreroll", tag: self.tag)
                 self.prerollModel.request = .load(data)
                 return
@@ -373,9 +400,18 @@ struct BtvPlayer: PageComponent{
         self.initPlay()
     }
     
+    func continuousPlay(){
+        withAnimation{ self.isWaiting = false }
+        self.viewModel.continuousTime = self.recoveryTime
+        self.initPlay()
+    }
+    
     func initPlay(){
         ComponentLog.d("initPlay", tag: self.tag)
-        if self.isPreroll { self.isPreroll = false }
+        if self.isPreroll {
+            self.isPreroll = false
+            self.viewModel.isPrerollPlay = false
+        }
         guard let quality = self.viewModel.currentQuality else {
             self.viewModel.event = .stop
             return
@@ -392,6 +428,8 @@ struct BtvPlayer: PageComponent{
     }
     
     @State var isWaiting:Bool? = nil
+    @State var isPrerollPause:Bool = false
+    @State var recoveryTime:Double = 0
     @State var isPreroll:Bool = false
     @State var dragGestureType:DragGestureType? = nil
     @State var startSeeking:Double = -1

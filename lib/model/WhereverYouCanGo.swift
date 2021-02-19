@@ -28,19 +28,8 @@ class IwillGo:PageProtocol{
         dic[IwillGo.pageIDX] = value.pageIDX
         dic[IwillGo.params] = value.params
         dic[IwillGo.isPopup] = value.isPopup
-        if JSONSerialization.isValidJSONObject(dic) {
-            do{
-                let data =  try JSONSerialization.data(withJSONObject: dic , options: [])
-                let jsonString = String(decoding: data, as: UTF8.self)
-                ComponentLog.d("stringfy : " + jsonString, tag: self.tag)
-                return jsonString
-            } catch {
-                ComponentLog.e("stringfy : JSONSerialization " + error.localizedDescription, tag: self.tag)
-                return nil
-            }
-        }
-        ComponentLog.e("stringfy : JSONSerialization invalid error", tag: self.tag)
-        return nil
+        let jsonString = AppUtil.getJsonString(dic: dic)
+        return jsonString
     }
     
     func qurry()-> String?{

@@ -56,6 +56,9 @@ class SceneDelegate: PageSceneDelegate {
         //guard let page = page else { return false }
         //guard let repo = self.repository else { return false }
         //Analytic.viewPage(id: page.pageID, value: page.isPopup.description)
+        if page?.pageID == PageID.synopsis {
+            requestDeviceOrientation(.portrait)
+        }
         return true
     }
     

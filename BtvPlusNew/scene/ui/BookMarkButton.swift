@@ -21,7 +21,7 @@ struct BookMarkButton: PageView {
     var body: some View {
         Button(action: {
             if self.pairing.status != .pairing {
-                self.pageSceneObserver.alert = .needPairing
+                self.pageSceneObserver.alert = .needPairing()
             }
             else{
                 if self.isHeart == false { self.add() }

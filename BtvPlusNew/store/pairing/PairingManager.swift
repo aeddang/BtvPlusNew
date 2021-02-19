@@ -65,6 +65,8 @@ class PairingManager : PageProtocol{
                 self.dataProvider.requestData(q: .init(type: .postUnPairing, isOptional: true))
             case .check :
                 self.dataProvider.requestData(q: .init(type: .getDevicePairingStatus, isOptional: true))
+            case .userInfo :
+                self.dataProvider.requestData(q: .init(type: .getPairingUserInfo(self.pairing.hostDevice?.macAdress), isOptional: true))
             default: do{}
             }
         }).store(in: &anyCancellable)
@@ -99,7 +101,9 @@ class PairingManager : PageProtocol{
                     }
                 }
             case .disConnected : do{}
-            case .pairingCompleted : do{}
+            case .pairingCompleted :
+                self.pairing.requestPairing(.userInfo)
+        
             default: do{}
             }
         }).store(in: &anyCancellable)
@@ -174,6 +178,10 @@ class PairingManager : PageProtocol{
                 if NpsNetwork.pairingStatus != "" {
                     self.pairing.checkCompleted(isSuccess: true)
                 }
+                
+            case .getPairingUserInfo :
+                guard let data = res.data as? PairingUserInfo  else { return }
+                self.pairing.updateUserinfo(data)
                 
             default: do{}
             }

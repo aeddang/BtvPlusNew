@@ -16,6 +16,9 @@ struct ApiPath {
             if server == .VMS {
                 return SystemEnvironment.VMS
             }
+            if server == .WEB {
+                return SystemEnvironment.WEB
+            }
         }
         
         if let vmsPath = SystemEnvironment.serverConfig[server.configKey] {

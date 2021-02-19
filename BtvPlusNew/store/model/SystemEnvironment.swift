@@ -17,8 +17,9 @@ struct SystemEnvironment {
     static var firstLaunch :Bool = false
     static var serverConfig: [String:String] = [String:String]()
     static let isTestMode = true
-    
+    static var isEvaluation = false
     static let VMS = "http://mobilebtv.com:9080"
+    static let WEB = "http://mobilebtv.com:8080"
     static var isStage:Bool {
         get{
             return ApiPath.getRestApiPath(.VMS) == Self.VMS

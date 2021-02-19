@@ -46,7 +46,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
             serviceInfo = purchas.hasAuthority
                 ? String.pageText.synopsisWatchOnlyBtv
                 : String.pageText.synopsisOnlyBtv
-            isPlayAble = true
+            isPlayAble = false
             
         } else if synopsisModel.isOnlyPurchasedBtv && !purchas.hasAuthority {
             serviceInfo = String.pageText.synopsisOnlyPurchasBtv
@@ -269,7 +269,7 @@ struct PurchaseViewer: PageComponent{
                                 self.data.optionIdx = idx
                                 self.option = self.data.options[idx]
                                 if let watchOptions = self.data.watchOptions {
-                                    self.componentViewModel.selectedOption = watchOptions[idx]
+                                    self.componentViewModel.uiEvent = .changeOption(watchOptions[idx])
                                 }
                             }
                         }
@@ -285,10 +285,7 @@ struct PurchaseViewer: PageComponent{
                 FillButton(
                     text: self.data.purchasBtnTitle!
                 ){_ in
-                    /*
-                    self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.pairing)
-                    )*/
+                    self.componentViewModel.uiEvent = .purchase
                 }
             }
         }

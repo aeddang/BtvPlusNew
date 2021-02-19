@@ -13,6 +13,7 @@ import Combine
 
 
 enum WebviewMethod:String {
+    case getSTBInfo
     case bpn_showSynopsis,
          bpn_backWebView, bpn_closeWebView, bpn_showModalWebView,
          bpn_setShowModalWebViewResult,bpn_setIdentityVerfResult, bpn_setPurchaseResult,
@@ -27,6 +28,8 @@ enum WebviewMethod:String {
 extension BtvWebView {
     static let identity = "/view/v3.0/identityverification"
     static let purchase = "/view/v3.0/purchase/list"
+    
+    static let callJsPrefix = "javascript:"
 }
 
 
@@ -71,15 +74,29 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             return URLRequest(url: url)
         }
     }
-
+    
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
     
     func makeUIView(context: Context) -> WKWebView  {
-        let uiView = creatWebView()
+        let config = WKWebViewConfiguration()
+        let deviceType = AppUtil.isPad() ? "BtvTablet" : "BtvPhone"
+        config.applicationNameForUserAgent = "BtvPlusApp/1.54/\(deviceType)"
+        config.mediaTypesRequiringUserActionForPlayback = []
+        config.requiresUserActionForMediaPlayback = false
+        config.mediaPlaybackRequiresUserAction = false
+        config.allowsInlineMediaPlayback = true
+        config.processPool = WKProcessPool()
+        #if DEBUG
+            config.preferences.setValue(true, forKey: "developerExtrasEnabled")
+        #endif
+        let uiView = creatWebView(config: config)
         uiView.navigationDelegate = context.coordinator
         uiView.uiDelegate = context.coordinator
+        uiView.allowsLinkPreview = false
+        uiView.scrollView.bounces = false
+        uiView.isOpaque = false
         return uiView
     }
     func updateUIView(_ uiView: WKWebView, context: Context) {
@@ -250,6 +267,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             let disabledOptionBubble = "document.documentElement.style.webkitTouchCallout='none';"
             //하이라이트 제거
             let disabledHightlight = "document.documentElement.style.webkitTapHighlightColor='rgba(0,0,0,0)';"
+            //let disabledScroll = "document.body.style.overflow = 'hidden';"
             // 자동 완성 제거
             let disableAutocompleteScript: String = """
                 var textFields = document.getElementsByTagName('textarea');
@@ -266,7 +284,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                     }
                 }
             """
-            [disabledSelect, disabledOptionBubble, disabledHightlight, disableAutocompleteScript].forEach { option in
+            [disabledSelect, disabledOptionBubble, disabledHightlight, disableAutocompleteScript ].forEach { option in
                 self.parent.callJS(webView, jsStr: option)
             }
             

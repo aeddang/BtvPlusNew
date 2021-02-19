@@ -7,6 +7,8 @@
 //
 import UIKit
 import Foundation
+import SwiftUI
+
 extension PageID{
     static let intro:PageID = "intro"
     static let serviceError:PageID = "serviceError"
@@ -98,6 +100,26 @@ extension PageEventType {
    static let pageChange = "pageChange"
 }
 
+enum PageStyle{
+    case dark, white
+    var textColor:Color {
+        get{
+            switch self {
+            case .dark: return Color.app.white
+            case .white: return Color.app.black
+            }
+        }
+    }
+    var bgColor:Color {
+        get{
+            switch self {
+            case .dark: return Color.brand.bg
+            case .white: return Color.app.white
+            }
+        }
+    }
+}
+
 struct PageFactory{
     static func getPage(_ pageObject:PageObject) -> PageViewProtocol{
         switch pageObject.pageID {
@@ -128,7 +150,6 @@ struct PageFactory{
 }
 
 struct PageSceneModel: PageModel {
-    
     var currentPageObject: PageObject? = nil
     func getPageOrientation(_ pageObject:PageObject? = nil ) -> UIInterfaceOrientationMask? {
         guard let pageObject = pageObject ?? self.currentPageObject else {

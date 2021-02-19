@@ -47,22 +47,27 @@ protocol WebViewProtocol {
 extension WebViewProtocol {
     var request: URLRequest? {
         get{
-            guard let url:URL = URL(string: path) else { return nil }
+            guard let url:URL = path.toUrl() else { return nil }
             return URLRequest(url: url)
         }
     }
     var scriptMessageHandler :WKScriptMessageHandler? { get{ nil } set{} }
     var scriptMessageHandlerName : String { get{""} set{} }
     var uiDelegate:WKUIDelegate? { get{nil} set{} }
-    func creatWebView() -> WKWebView  {
+    
+    func creatWebView(config:WKWebViewConfiguration? = nil) -> WKWebView  {
         let webView:WKWebView
-        if let scriptMessage = scriptMessageHandler {
-            let webConfiguration = WKWebViewConfiguration()
+        if let configuration = config {
+            webView = WKWebView(frame: .zero, configuration: configuration)
+        }
+        else if let scriptMessage = scriptMessageHandler {
+            let configuration = WKWebViewConfiguration()
             let contentController = WKUserContentController()
             contentController.add(scriptMessage, name: scriptMessageHandlerName)
-            webConfiguration.userContentController = contentController
-            webView = WKWebView(frame: .zero, configuration: webConfiguration)
-        } else{
+            configuration.userContentController = contentController
+            webView = WKWebView(frame: .zero, configuration: configuration)
+        }
+        else{
             webView = WKWebView()
         }
         webView.uiDelegate = uiDelegate

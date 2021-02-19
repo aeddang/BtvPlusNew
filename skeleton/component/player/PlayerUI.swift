@@ -96,7 +96,7 @@ struct PlayerUI: PageComponent {
                         size: CGSize(width:Dimen.icon.regular,height:Dimen.icon.regular)
                     ){ _ in
                         self.isFullScreen
-                            ? self.pagePresenter.fullScreenExit()
+                            ? self.pagePresenter.fullScreenExit(changeOrientation: .portrait)
                             : self.pagePresenter.fullScreenEnter()
                     }
                 }

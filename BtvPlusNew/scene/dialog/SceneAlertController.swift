@@ -14,7 +14,7 @@ enum SceneAlert:Equatable {
     case confirm(String?, String?,(Bool) -> Void), alert(String?, String?, (() -> Void)? = nil),
          recivedApns, apiError(ApiResultError),
          connectWifi , notFoundDevice, requestLocation,
-         limitedDevice(PairingInfo?), pairingError(NpsCommonHeader?), pairingRecovery, needPairing, pairingCheckFail,
+         limitedDevice(PairingInfo?), pairingError(NpsCommonHeader?), pairingRecovery, needPairing(String? = nil), pairingCheckFail,
          needPurchase( PurchaseWebviewModel ),
          serviceUnavailable(String?), serviceSelect(String?, String? , (String?) -> Void),
          like(String, Bool?),
@@ -117,7 +117,7 @@ struct SceneAlertController: PageComponent{
             case .limitedDevice(let data) : self.setupLimitedDevice(data: data)
             case .pairingError(let data): self.setupPairingError(data: data)
             case .pairingRecovery: self.setupPairingRecovery()
-            case .needPairing: self.setupNeedPairing()
+            case .needPairing(let msg): self.setupNeedPairing(msg:msg)
             case .needPurchase: self.setupNeedPurchase()
             case .serviceUnavailable(let path): self.setupServiceUnavailable(path: path)
             case .serviceSelect(let text, _ , _) : self.setupServiceSelect(text: text)
@@ -342,9 +342,9 @@ struct SceneAlertController: PageComponent{
         }
     }
     
-    func setupNeedPairing() {
+    func setupNeedPairing(msg:String? = nil) {
         self.title = String.alert.connect
-        self.text = String.alert.needConnect
+        self.text = msg ?? String.alert.needConnect
         
         self.buttons = [
             AlertBtnData(title: String.app.cancel, index: 0),

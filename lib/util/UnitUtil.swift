@@ -183,6 +183,11 @@ extension String{
         return date
     }
     
+    func toUrl() -> URL? {
+        let temp = self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        return URL(string: temp)
+    }
+    
     func toSHA256() -> String {
         let inputData = Data(self.utf8)
         let hashed = CryptoKit.SHA256.hash(data: inputData)
@@ -253,6 +258,11 @@ extension String{
         let str = String(format: fm , num)
         //DataLog.d("str " + str , tag:"toDigits")
         return str
+    }
+    
+    func replace(start:Int, len:Int, with:String) -> String {
+        let range = self.index(self.startIndex, offsetBy: start)...self.index(self.startIndex, offsetBy: start + len)
+        return self.replacingCharacters(in: range, with: with)
     }
 }
 

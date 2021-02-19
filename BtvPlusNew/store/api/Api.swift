@@ -83,6 +83,10 @@ enum ApiType{
     case getPreview(String?, HostDevice?),
          getPreplay(String?, Bool?),
          getPlay(String?, HostDevice?)
+    
+    //PSS
+    case getPairingUserInfo(String?, String? = nil),
+         getPairingUserInfoByPackageID(String?)
         
     func coreDataKey() -> String? {
         switch self {

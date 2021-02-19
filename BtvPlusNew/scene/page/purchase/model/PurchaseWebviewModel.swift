@@ -57,14 +57,14 @@ class PurchaseWebviewModel {
     var gurry:String {
         get{
             var q =
-                "?epsd_id=" + epsdIds.reduce("", {$0 + "," + $1})
+                "?epsd_id=" + (epsdIds.isEmpty ? "" :  epsdIds.dropFirst().reduce(epsdIds.first!, {$0 + "," + $1}))
                 + "&sris_id=" + srisId
                 + "&synopsis_type=" + synopsisType.code
                 + "&ptype=" + ptype.code
                 + "&conTitle=" + conTitle
             if let value = seriesNo { q = q + "&seriesNo=" + value }
             if let value = pid { q = q + "&pid=" + value }
-            if let value = exceptPids { q = q + "&except_pid=" + value.reduce("", {$0 + "," + $1}) }
+            if let value = exceptPids { q = q + "&except_pid=" + (value.isEmpty ? "" : value.dropFirst().reduce(value.first!, {$0 + "," + $1})) }
             if let value = pidOnly { q = q + "&pidOnly=" + value }
             return q
         }
@@ -102,12 +102,12 @@ class PurchaseWebviewModel {
         self.synopsisData = synopsisData
         return self
     }
-    func setParam(me061Info:DirectView? , monthlyPid: String?) {
+    func setParam(directView:DirectView? , monthlyPid: String?) {
        
         func checkPurchase(pid: String?) -> Bool {
             guard let pid = pid else { return false}
-            if me061Info?.ppv_products?.first(where: {$0.prd_prc_id == pid && $0.yn_directview == "Y"}) != nil { return true }
-            if me061Info?.pps_products?.first(where: {$0.prd_prc_id == pid && $0.yn_directview == "Y"}) != nil { return true }
+            if directView?.ppv_products?.first(where: {$0.prd_prc_id == pid && $0.yn_directview == "Y"}) != nil { return true }
+            if directView?.pps_products?.first(where: {$0.prd_prc_id == pid && $0.yn_directview == "Y"}) != nil { return true }
             return false
         }
         guard let epsdId = synopsisData?.contents?.epsd_id else { return }

@@ -11,7 +11,9 @@ struct PagePurchase: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var repository:Repository
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var networkObserver:NetworkObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -25,15 +27,25 @@ struct PagePurchase: PageView {
                 axis:.vertical
             ) {
                 VStack(spacing:0){
+                    PageTab(
+                        title: String.pageTitle.purchase,
+                        isClose: true,
+                        style: .white
+                    )
+                    .padding(.top, self.sceneObserver.safeAreaTop)
+                    
                     InfinityScrollView( viewModel: self.infinityScrollModel ){
-                        BtvWebView( viewModel: self.webViewModel )
-                            .modifier(MatchHorizontal(height: self.webViewHeight))
-                            .onReceive(self.webViewModel.$screenHeight){height in
-                                self.webViewHeight = max(
-                                    height,
-                                    geometry.size.height )
-                            }
+                        VStack{
+                            BtvWebView( viewModel: self.webViewModel )
+                                .modifier(MatchHorizontal(height: self.webViewHeight))
+                                .onReceive(self.webViewModel.$screenHeight){height in
+                                    let min = geometry.size.height - self.sceneObserver.safeAreaTop - Dimen.app.top
+                                    self.webViewHeight = max( height, min)
+                                }
+                        }
+                        
                     }
+                    .padding(.bottom, self.sceneObserver.safeAreaBottom)
                     .modifier(MatchParent())
                     .onReceive(self.infinityScrollModel.$scrollPosition){pos in
                         self.pageDragingModel.uiEvent = .dragCancel(geometry)
@@ -49,7 +61,7 @@ struct PagePurchase: PageView {
                         self.pageDragingModel.uiEvent = .pull(geometry, pos)
                     }
                 }
-                .modifier(PageFull())
+                .modifier(PageFull(bgColor:Color.app.white))
                 .highPriorityGesture(
                     DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
                         .onChanged({ value in
@@ -73,30 +85,25 @@ struct PagePurchase: PageView {
             .onReceive(self.webViewModel.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
-                case .callFuncion(let method, let json, _) :
-                    if method == WebviewMethod.bpn_setIdentityVerfResult.rawValue {
-                        if let jsonData = json?.parseJson() {
-                            if let cid = jsonData["ci"] as? String {
-                                self.pageSceneObserver.alert = .alert(
-                                    String.alert.identifySuccess, String.alert.identifySuccessMe, nil)
-                                self.pagePresenter.openPopup(
-                                    PageProvider.getPageObject(.pairingDevice)
-                                        .addParam(key: .type, value: PairingRequest.user(cid))
-                                )
-                            }else{
-                                self.pageSceneObserver.alert = .alert(
-                                    String.alert.identifyFail, String.alert.identifyFailMe, nil)
-                            }
-                        }else{
-                            self.pageSceneObserver.alert = .alert(
-                                String.alert.identifyFail, String.alert.identifyFailMe, nil)
-                        }
-                        self.pagePresenter.closePopup(self.pageObject?.id)
+                case .callFuncion(let method, let json, let cbName) :
+                    switch method {
+                    case WebviewMethod.getSTBInfo.rawValue :
+                        guard let cb = cbName else { return }
+                        if cb.isEmpty { return }
+                        let dic = self.repository.getSTBInfo(isWifi: self.networkObserver.status == .wifi)
+                        let jsonString = AppUtil.getJsonString(dic: dic) ?? ""
+                        ComponentLog.d("jsonString : " + jsonString, tag: self.tag)
+                        let js = BtvWebView.callJsPrefix + cb + "(\'" + jsonString + "\')"
+                        ComponentLog.d(js, tag: self.tag)
+                        self.webViewModel.request = .evaluateJavaScript(js)
+                        
+                    case WebviewMethod.bpn_setPurchaseResult.rawValue : break
+                    default : break
                     }
+                    
                 default : do{}
                 }
             }
-            
             .onAppear{
                 guard let obj = self.pageObject  else { return }
                 let data = obj.getParamValue(key: .data) as? PurchaseWebviewModel
@@ -117,6 +124,7 @@ struct PagePurchase_Previews: PreviewProvider {
     static var previews: some View {
         Form{
             PagePurchase().contentBody
+                .environmentObject(Repository())
                 .environmentObject(PagePresenter())
                 .environmentObject(SceneObserver())
                 .environmentObject(PageSceneObserver())

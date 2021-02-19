@@ -20,7 +20,7 @@ struct BtvButton: PageView {
     var body: some View {
         Button(action: {
             if self.pairing.status != .pairing {
-                self.pageSceneObserver.alert = .needPairing
+                self.pageSceneObserver.alert = .needPairing()
             }
             else{
                 

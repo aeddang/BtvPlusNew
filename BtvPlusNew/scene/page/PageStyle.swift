@@ -13,6 +13,7 @@ struct PageFull: ViewModifier {
     var bgColor:Color = Color.brand.bg
     @State var marginStart:CGFloat = 0
     @State var marginEnd:CGFloat = 0
+
     func body(content: Content) -> some View {
         return content
             //.padding(.top, PageSceneObserver.safeAreaTop)

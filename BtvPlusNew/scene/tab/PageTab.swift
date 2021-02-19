@@ -8,20 +8,25 @@
 import Foundation
 import SwiftUI
 
+
+
 struct PageTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     var title:String? = nil
     var isBack:Bool = false
     var isClose:Bool = false
     var isSetting:Bool = false
+    var style:PageStyle = .dark
     
     var body: some View {
         ZStack(alignment: .leading){
             if self.title != nil {
                 Text(self.title!)
-                    .modifier(BoldTextStyle(size: Font.size.mediumExtra, color: Color.app.white))
+                    .modifier(BoldTextStyle(size: Font.size.mediumExtra,
+                                            color: self.style.textColor))
                     .modifier(ContentHorizontalEdges())
                     .frame(maxWidth: .infinity)
+                    .padding(.top, 1)
             }
             HStack{
                 if self.isBack {
@@ -33,6 +38,7 @@ struct PageTab: PageComponent{
                             .renderingMode(.original)
                             .resizable()
                             .scaledToFit()
+                            .colorMultiply(self.style.textColor)
                             .frame(width: Dimen.icon.regular,
                                    height: Dimen.icon.regular)
                     }
@@ -47,6 +53,7 @@ struct PageTab: PageComponent{
                             .renderingMode(.original)
                             .resizable()
                             .scaledToFit()
+                            .colorMultiply(self.style.textColor)
                             .frame(width: Dimen.icon.regular,
                                    height: Dimen.icon.regular)
                     }
@@ -62,6 +69,7 @@ struct PageTab: PageComponent{
                             .renderingMode(.original)
                             .resizable()
                             .scaledToFit()
+                            .colorMultiply(self.style.textColor)
                             .frame(width: Dimen.icon.regular,
                                    height: Dimen.icon.regular)
                     }

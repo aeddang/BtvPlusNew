@@ -71,7 +71,7 @@ struct SummaryViewer: PageComponent{
                 }
             }
         }
-        .fixedSize(horizontal: false, vertical: true)
+        //.fixedSize(horizontal: false, vertical: true)
         .onAppear{
             self.checkExpand()
         }

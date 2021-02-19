@@ -24,9 +24,16 @@ class SettingStorage {
         static let gender = "gender" + VS
         static let pairingDate = "pairingDate" + VS
         static let pairingModelName = "pairingModelName" + VS
-        
+        static let restrictedAge = "restrictedAge" + VS
         static let autoPlay = "autoPlay" + VS
         static let nextPlay = "nextPlay" + VS
+        
+        static let isPurchaseAuth = "isPurchaseAuth" + VS
+        static let isAdultAuth = "isAdultAuth" + VS
+        static let isFirstAdultAuth = "isFirstAdultAuth" + VS
+        
+        static let isShowRemoconSelectPopup = "isShowRemoconSelectPopup" + VS
+        static let isShowAutoRemocon = "isShowAutoRemocon" + VS
     }
     let defaults = UserDefaults.standard
     
@@ -152,4 +159,60 @@ class SettingStorage {
             return defaults.string(forKey: Keys.pairingModelName)
         }
     }
+    
+    var restrictedAge:Int? {
+        set(newVal){
+            defaults.set(newVal, forKey: Keys.restrictedAge )
+        }
+        get{
+            return defaults.integer(forKey: Keys.restrictedAge )
+        }
+    }
+    
+    var isPurchaseAuth:Bool{
+        set(newVal){
+            defaults.set(newVal, forKey: Keys.isPurchaseAuth)
+        }
+        get{
+            return defaults.bool(forKey: Keys.isPurchaseAuth)
+        }
+    }
+    
+    var isAdultAuth:Bool{
+        set(newVal){
+            defaults.set(newVal, forKey: Keys.isAdultAuth)
+        }
+        get{
+            return defaults.bool(forKey: Keys.isAdultAuth)
+        }
+    }
+    
+    var isFirstAdultAuth:Bool{
+        set(newVal){
+            defaults.set(newVal, forKey: Keys.isFirstAdultAuth)
+        }
+        get{
+            return defaults.bool(forKey: Keys.isFirstAdultAuth)
+        }
+    }
+    
+    var isShowRemoconSelectPopup:Bool{
+        set(newVal){
+            defaults.set(newVal, forKey: Keys.isShowRemoconSelectPopup)
+        }
+        get{
+            return defaults.bool(forKey: Keys.isShowRemoconSelectPopup)
+        }
+    }
+    
+    var isShowAutoRemocon:Bool{
+        set(newVal){
+            defaults.set(newVal, forKey: Keys.isShowAutoRemocon)
+        }
+        get{
+            return defaults.bool(forKey: Keys.isShowAutoRemocon)
+        }
+    }
+    
+    
 }

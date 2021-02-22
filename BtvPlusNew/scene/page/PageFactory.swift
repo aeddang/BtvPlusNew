@@ -25,6 +25,7 @@ extension PageID{
     static let pairingManagement:PageID = "pairingManagement"
     
     static let purchase:PageID = "purchase"
+    static let thema:PageID = "thema"
 }
 
 struct PageProvider {
@@ -135,6 +136,7 @@ struct PageFactory{
         case .pairingUser : return PagePairingUser()
         case .pairingManagement : return PagePairingManagement()
         case .purchase : return PagePurchase()
+        case .thema : return PageThema()
         default : return PageTest()
         }
     }

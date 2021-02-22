@@ -9,8 +9,12 @@
 import Foundation
 import SwiftUI
 
+enum SceneUpdateType {
+    case purchase(String, String?, String?), identify(Bool), identifyAdult(Bool, Int)
+}
+
 enum SceneEvent {
-    case toast(String)
+    case toast(String), update(SceneUpdateType)
 }
 
 class PageSceneObserver:ObservableObject{

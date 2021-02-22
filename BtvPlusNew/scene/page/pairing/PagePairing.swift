@@ -103,6 +103,7 @@ struct PagePairing: PageView {
                     .modifier(ContentHorizontalEdges())
                     .modifier(MatchParent())
                 }
+                .modifier(PageFull())
                 .highPriorityGesture(
                     DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
                         .onChanged({ value in
@@ -112,7 +113,6 @@ struct PagePairing: PageView {
                             self.pageDragingModel.uiEvent = .draged(geometry)
                         })
                 )
-                .modifier(PageFull())
             }
             .onReceive(self.infinityScrollModel.$scrollPosition){pos in
                 //PageLog.d("scrollPosition " + pos.description, tag: self.tag)

@@ -10,9 +10,11 @@ import SwiftUI
 import Combine
 struct PageHome: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var sceneObserver:SceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel:PageDataProviderModel = PageDataProviderModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -38,7 +40,12 @@ struct PageHome: PageView {
                     .padding(.top, Dimen.app.pageTop)
                     Spacer()
                 }
-                MultiBlock(viewModel: self.infinityScrollModel, datas: self.blocks, useTracking:self.useTracking)
+                MultiBlock(
+                    viewModel: self.infinityScrollModel,
+                    datas: self.blocks,
+                    useTracking:self.useTracking,
+                    marginVertical: Dimen.app.bottom + self.sceneObserver.safeAreaTop
+                    )
             }
         }
         .modifier(PageFull())
@@ -185,6 +192,7 @@ struct PageHome_Previews: PreviewProvider {
         Form{
             PageHome().contentBody
                 .environmentObject(PagePresenter())
+                .environmentObject(SceneObserver())
                 .environmentObject(Repository())
                 .environmentObject(DataProvider())
                 .environmentObject(PageSceneObserver())

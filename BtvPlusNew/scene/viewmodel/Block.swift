@@ -12,8 +12,6 @@ enum BlockStatus:String{
     case initate, active, passive
 }
 
-
-
 class Block:Identifiable, ObservableObject, Equatable{
     private(set) var id = UUID().uuidString
     private(set) var name:String = ""
@@ -21,31 +19,41 @@ class Block:Identifiable, ObservableObject, Equatable{
     private(set) var cwCallId:String? = nil
     private(set) var cardType:CardType = .none
     private(set) var dataType:DataType = .none
+    private(set) var blocks:[BlockItem]? = nil
+    private(set) var originData:BlockItem? = nil
     @Published private(set) var status:BlockStatus = .initate
     
     public static func == (l:Block, r:Block)-> Bool {
         return l.id == r.id
     }
     
+    func reset(){
+        status = .initate
+    }
+        
     func setDate(_ data:BlockItem) -> Block{
         name = data.menu_nm ?? ""
         menuId = data.menu_id
         cwCallId = data.cw_call_id_val
         cardType = findType(data)
         dataType = findDataType(data)
+        blocks = data.blocks
+        switch cardType {
+        case .banner: self.originData = data
+        default: break
+        }
         return self
     }
-    
-    
+        
     var posters:[PosterData]? = nil {
         didSet{
             if posters != nil {
                 status = posters!.isEmpty ? .passive : .active
                 //ComponentLog.d(name + " " + posters!.count.description + " " + status.rawValue, tag: "BlockProtocol")
             }
-            
         }
     }
+    
     var videos:[VideoData]? = nil {
         didSet{
             if videos != nil {
@@ -54,6 +62,7 @@ class Block:Identifiable, ObservableObject, Equatable{
             }
         }
     }
+    
     var themas:[ThemaData]? = nil {
         didSet{
             if themas != nil {
@@ -69,6 +78,10 @@ class Block:Identifiable, ObservableObject, Equatable{
     
     func setBlank(){
         status = .passive
+    }
+    
+    func setDatabindingCompleted(){
+        status = .active
     }
     
     func setError(_ err:ApiResultError?){
@@ -126,7 +139,7 @@ class Block:Identifiable, ObservableObject, Equatable{
                     response = self.metvRepository.getVODWatched(pageNo: 1, entryNo: 99, isPPM: false)
                     DispatchQueue.global().sync(execute: responseCountTask)
                     if response != nil {
-//                            DispatchQueue.global().sync(execute: responseCountTask)
+                        DispatchQueue.global().sync(execute: responseCountTask)
                     } else {
                         print(d: "self.metvRepository.getVODWatched response fail")
                     }
@@ -136,7 +149,7 @@ class Block:Identifiable, ObservableObject, Equatable{
             */
             return .watched
         } else if data.blk_typ_cd == "20" {
-            return .none
+            return .theme
         } else {
             //getGnbGrid(menuId: menuId, pageNo: 1, pageCnt: 30, version: "0")
             return .grid
@@ -167,6 +180,7 @@ class Block:Identifiable, ObservableObject, Equatable{
         bookMark,
         grid,
         watched,
-        cwGrid
+        cwGrid,
+        theme
     }
 }

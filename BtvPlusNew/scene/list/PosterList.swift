@@ -136,12 +136,13 @@ struct PosterList: PageComponent{
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[PosterData]
+    var margin:CGFloat = Dimen.margin.thin
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
             axes: .horizontal,
             marginVertical: 0,
-            marginHorizontal: Dimen.margin.thin,
+            marginHorizontal: self.margin,
             spacing: Dimen.margin.tiny){
             ForEach(self.datas) { data in
                 PosterItem( data:data )

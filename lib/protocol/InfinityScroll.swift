@@ -34,6 +34,8 @@ class InfinityScrollModel:ComponentObservable, PageProtocol, Identifiable{
     private var increasePull:AnyCancellable? = nil
     private let pullMax:Int
     let pullRange:CGFloat
+    
+    let idstr:String = UUID().uuidString
     init(axis:Axis.Set = .vertical,  pullMax:Int? = nil) {
         self.pullMax = pullMax ?? Self.PULL_MAX
         self.pullRange = Self.PULL_RANGE
@@ -83,7 +85,7 @@ class InfinityScrollModel:ComponentObservable, PageProtocol, Identifiable{
             .autoconnect()
             .sink() {_ in
                 self.pullCount += 1
-                DataLog.d("onPull" + self.pullCount.description , tag:self.tag)
+                //DataLog.d("onPull" + self.pullCount.description , tag:self.tag)
                 if self.pullCount >= self.pullMax {
                     self.onPullCompleted()
                 }
@@ -183,25 +185,25 @@ extension InfinityScrollViewProtocol {
     func onBottom(){
         if self.viewModel.event == .bottom { return }
         self.viewModel.event = .bottom
-        ComponentLog.d("onBottom", tag: "InfinityScrollViewProtocol")
+        ComponentLog.d("onBottom", tag: "InfinityScrollViewProtocol" + self.viewModel.idstr)
     }
     
     func onTop(){
         if self.viewModel.event == .top { return }
         self.viewModel.event = .top
-        ComponentLog.d("onTop", tag: "InfinityScrollViewProtocol")
+        ComponentLog.d("onTop", tag: "InfinityScrollViewProtocol" + self.viewModel.idstr)
     }
     
     func onUp(){
         if self.viewModel.event == .up { return }
         self.viewModel.event = .up
-        ComponentLog.d("onUp", tag: "InfinityScrollViewProtocol")
+        ComponentLog.d("onUp", tag: "InfinityScrollViewProtocol" + self.viewModel.idstr)
     }
     
     func onDown(){
         if self.viewModel.event == .down { return }
         self.viewModel.event = .down
-        ComponentLog.d("onDown", tag: "InfinityScrollViewProtocol")
+        ComponentLog.d("onDown", tag: "InfinityScrollViewProtocol" + self.viewModel.idstr)
     }
     
     func onPull(pos:CGFloat){

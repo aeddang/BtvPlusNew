@@ -479,7 +479,7 @@ class SynopsisModel : PageProtocol {
                 }
             }
         }
-        #if DEBUG
+        
         //log
         watchOptions.forEach({
             DataLog.d("watchOption : " + $0.debugString, tag: self.tag)
@@ -498,8 +498,6 @@ class SynopsisModel : PageProtocol {
         DataLog.d("hasExamPreview : " + self.hasExamPreview.description , tag: self.tag)
         DataLog.d("hasPreview : " + self.hasPreview.description , tag: self.tag)
         DataLog.d("curSynopsisItem : " + (curSynopsisItem?.debugString ?? "nil") , tag: self.tag)
-        
-        #endif
     }
     
     var isFree: Bool {

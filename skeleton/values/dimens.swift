@@ -53,7 +53,6 @@ struct Dimen{
     }
     
     struct button {
-       
         public static let heavy:CGFloat = 80
         public static let medium:CGFloat = 50 //*
         public static let regular:CGFloat = 40 //*
@@ -66,9 +65,6 @@ struct Dimen{
         public static let mediumExtraRect:CGSize = CGSize(width: 62, height: 30)//*
         public static let regularRect:CGSize = CGSize(width: 48, height: 25)//*
         public static let lightRect:CGSize = CGSize(width: 38, height: 20)//*
-        
-        
-        
     }
 
     struct radius {

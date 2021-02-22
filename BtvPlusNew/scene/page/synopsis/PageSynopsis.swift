@@ -35,8 +35,6 @@ struct PageSynopsis: PageView {
     @ObservedObject var prerollModel = PrerollModel()
     @ObservedObject var playerListViewModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var relationContentsModel:RelationContentsModel = RelationContentsModel()
-
-   
     @State var synopsisData:SynopsisData? = nil
     @State var isPairing:Bool? = nil
     @State var isFullScreen:Bool = false
@@ -138,6 +136,7 @@ struct PageSynopsis: PageView {
                         )
                     }
                     .modifier(PageFull())
+                    
                 }//PageDragingBody
                 .onReceive(self.infinityScrollModel.$scrollPosition){pos in
                    self.pageDragingModel.uiEvent = .dragCancel(geometry)
@@ -187,7 +186,20 @@ struct PageSynopsis: PageView {
                     if alert == nil {
                         self.resetPage()
                     }
-                default : do{}
+                default : break
+                }
+            }
+            .onReceive(self.pageSceneObserver.$event){ evt in
+                guard let evt = evt else { return }
+                switch evt {
+                case .update(let type):
+                    switch type {
+                    case .purchase(let pid, _, _) :
+                        self.purchasedPid = pid
+                        self.resetPage()
+                    default : break
+                    }
+                default : break
                 }
             }
             .onReceive(self.pagePresenter.$currentTopPage){ page in
@@ -256,6 +268,7 @@ struct PageSynopsis: PageView {
     @State var isBookmark:Bool? = nil
     @State var epsdId:String? = nil
     @State var epsdRsluId:String = ""
+    @State var purchasedPid:String? = nil
     @State var hasAuthority:Bool? = nil
 
     @State var relationTab:[String] = []
@@ -536,7 +549,7 @@ struct PageSynopsis: PageView {
             } else if self.episodeViewerData?.count != self.srisCount {
                 self.synopsisModel = SynopsisModel(type: .title).setData(data: data)
             }
-            self.synopsisData?.epsdRsluId = self.synopsisModel?.epsdRsluId
+           
             if self.isPairing == false {
                 self.synopsisModel?.setData(directViewdata: nil)
                 self.purchasViewerData = PurchaseViewerData().setData(
@@ -547,6 +560,8 @@ struct PageSynopsis: PageView {
             
             if let kidYn = self.synopsisModel?.kidsYn {self.synopsisData?.kidZone = kidYn }
 
+            //self.synopsisData?.epsdRsluId = self.synopsisModel?.epsdRsluId
+            self.synopsisModel?.purchasedPid = self.purchasedPid
             self.title = self.episodeViewerData?.episodeTitle
             self.epsdRsluId = self.synopsisModel?.epsdRsluId ?? ""
             self.epsdId = self.synopsisModel?.epsdId

@@ -28,10 +28,14 @@ class Repository:ObservableObject, PageProtocol{
     let pagePresenter:PagePresenter?
     let dataProvider:DataProvider
     let pairing:Pairing
+    let webManager:WebManager
+    let networkObserver:NetworkObserver
+    
     private let setting = SettingStorage()
     private let apiCoreDataManager = ApiCoreDataManager()
     private let pairingManager:PairingManager
     private let apiManager:ApiManager
+    
     private let userSetup:Setup
     private var anyCancellable = Set<AnyCancellable>()
     private let drmAgent = DrmAgent.initialize() as? DrmAgent
@@ -39,12 +43,14 @@ class Repository:ObservableObject, PageProtocol{
     init(
         dataProvider:DataProvider? = nil,
         pairing:Pairing? = nil,
+        networkObserver:NetworkObserver? = nil,
         pagePresenter:PagePresenter? = nil,
         sceneObserver:PageSceneObserver? = nil,
         setup:Setup? = nil
     ) {
         self.dataProvider = dataProvider ?? DataProvider()
         self.pairing = pairing ?? Pairing()
+        self.networkObserver = networkObserver ?? NetworkObserver()
         self.apiManager = ApiManager()
         self.pageSceneObserver = sceneObserver
         self.pagePresenter = pagePresenter
@@ -53,6 +59,11 @@ class Repository:ObservableObject, PageProtocol{
             pairing: self.pairing,
             dataProvider: self.dataProvider,
             apiManager: self.apiManager)
+        
+        self.webManager = WebManager(
+            pairing: self.pairing,
+            setting: self.setting,
+            networkObserver: self.networkObserver)
         
         self.pagePresenter?.$currentPage.sink(receiveValue: { evt in
             self.apiManager.clear()
@@ -252,53 +263,6 @@ class Repository:ObservableObject, PageProtocol{
     
     func getDrmId() -> String? {
         return drmAgent?.getDeviceInfo()
-    }
-    
-    func getSTBInfo(isWifi:Bool)->[String: Any] {
-        var info = [String: Any]()
-        let maskingPhoneNumber:String = (pairing.phoneNumer.count == 10)
-            ? pairing.phoneNumer.replace(start: 3, len: 2, with:  "****")
-            : pairing.phoneNumer.replace(start: 3, len: 3, with:  "****")
-        info["phoneNumer"] = maskingPhoneNumber
-        info["networkState"] = isWifi ? 1 : 0
-        info["pairingState"] = pairing.status == .pairing ? 0 : 1
-        info["pairingType"] = 0
-        info["stbId"] = pairing.stbId
-        info["hashId"] = ApiUtil.getHashId(pairing.stbId)
-        info["stbName"] = nil
-        info["macAddress"] = pairing.hostDevice?.convertMacAdress ?? "null"
-        //var adultMenuLimit = false
-        var RCUAgentVersion:String? = nil
-        if let hostDevice = pairing.hostDevice {
-            //adultMenuLimit = hostDevice.adultAafetyMode
-            RCUAgentVersion = hostDevice.agentVersion
-           
-        }
-        info["isAdultAuth"] = setting.isAdultAuth       // 성인인증 ON/OFF
-        info["isPurchaseAuth"] = setting.isPurchaseAuth    // 구매인증 ON/OFF
-        info["isMemberAuth"] = setting.isFirstAdultAuth   // 최초 본인 인증 여부
-        info["restrictedAge"] = setting.isAdultAuth ? (setting.restrictedAge ?? 0) : 0
-        info["RCUAgentVersion"] = AppUtil.getSafeString(RCUAgentVersion, defaultValue: "0.0.0")
-        info["userAgent"] = ScsNetwork.getUserAgentParameter()
-        info["isShowRemoconSelectPopup"] = setting.isShowRemoconSelectPopup
-        info["isShowAutoRemocon"] = setting.isShowAutoRemocon
-        
-        info["marketingInfo"] = setting.pushAble ? 1 : 0
-        info["pushInfo"] = setting.pushAble ? 1 : 0
-        
-        let userInfo = pairing.userInfo?.user
-        info["regionCode"] = AppUtil.getSafeString(userInfo?.region_code, defaultValue: "MBC=1^KBS=41^SBS=61^HD=0")
-        info["svc"] = AppUtil.getSafeString(userInfo?.svc, defaultValue: "0")
-        info["ukey_prod_id"] = AppUtil.getSafeString(userInfo?.ukey_prod_id, defaultValue: "null")
-        info["combine_product_use"] = AppUtil.getSafeString(userInfo?.combine_product_use, defaultValue: "N")
-        info["combine_product_list"] = AppUtil.getSafeString(userInfo?.combine_product_list, defaultValue: "null")
-        info["isSupportSimplePairing"] = AppUtil.getSafeInt(bool: pairing.hostDevice?.isSupportSimplePairing())
-        
-        info["evaluation"] = AppUtil.getSafeInt(bool: SystemEnvironment.isEvaluation)
-        info["clientId"] = SystemEnvironment.deviceId
-        info["expiredSTB"] = AppUtil.getSafeInt(bool: false)
-      
-        return info
     }
     
 }

@@ -158,15 +158,32 @@ extension PageDragingView{
     }
 }
 
-
-
 class PageDragingModel: ObservableObject, PageProtocol, Identifiable{
     static var MIN_DRAG_RANGE:CGFloat = 20
-    @Published var uiEvent:PageDragingUIEvent? = nil
-    @Published var event:PageDragingEvent? = nil
+    @Published var uiEvent:PageDragingUIEvent? = nil {didSet{ if uiEvent != nil { uiEvent = nil} }}
+    @Published var event:PageDragingEvent? = nil {didSet{ if event != nil { event = nil} }}
     @Published var status:PageDragingStatus = .none
-    
+    @Published private(set) var nestedScrollEvent:PageNestedScrollEvent? = nil {didSet{ if nestedScrollEvent != nil { nestedScrollEvent = nil} }}
+    private(set) var nestedScrollPos:CGFloat = 0
+    private(set) var nestedPullPos:CGFloat = 0
+    func updateNestedScroll(evt:PageNestedScrollEvent) {
+        switch evt {
+        case .pulled :
+            self.nestedScrollEvent = .pulled
+        case .pull(let pos) :
+            if nestedPullPos != pos {
+                nestedPullPos = pos
+                self.nestedScrollEvent = .pull(pos)
+            }
+        case .scroll(let pos) :
+            if nestedScrollPos != pos {
+                self.nestedScrollPos = pos
+                self.nestedScrollEvent = .scroll(pos)
+            }
+        }
+    }
 }
+
 enum PageDragingUIEvent {
     case scroll(GeometryProxy, DragGesture.Value),
          scrolled(GeometryProxy),
@@ -190,6 +207,10 @@ enum PageDragingEvent {
 }
 enum PageDragingStatus:String {
     case none,drag,pull
+}
+
+enum PageNestedScrollEvent {
+    case scroll(CGFloat), pull(CGFloat),pulled
 }
 
 
@@ -238,6 +259,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
         .offset(
             x:self.axis == .horizontal ? self.bodyOffset : 0,
             y:self.axis == .vertical ? self.bodyOffset : 0)
+        
         .onReceive(self.viewModel.$uiEvent){evt in
             switch evt {
             case .scroll(let geo, let value) : self.onScrolling(geometry: geo, value: value)
@@ -335,10 +357,8 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     func onDragingAction(offset: CGFloat, dragOpacity: Double) {
         if self.isDragingCompleted {return}
         let diff = abs(self.bodyOffset - offset)
-        //DataLog.d("diff " + diff.description, tag: "DIFF")
+        DataLog.d("diff " + diff.description, tag: "DIFF")
         if abs(diff) > 100 { return }
-        //if abs(diff) < PageDragingModel.MIN_DRAG_RANGE { self.bodyOffset = offset }
-        //else { withAnimation{ self.bodyOffset = offset } }
         self.bodyOffset = offset
         self.viewModel.event = .drag(offset, dragOpacity)
         self.pagePresenter.dragOpercity = dragOpacity

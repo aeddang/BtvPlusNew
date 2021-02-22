@@ -1,5 +1,5 @@
 //
-//  PosterBox.swift
+//  VideoBlock.swift
 //  BtvPlusNew
 //
 //  Created by KimJeongCheol on 2020/12/21.
@@ -8,47 +8,55 @@
 import Foundation
 import SwiftUI
 
-struct PosterBlock:PageComponent, BlockProtocol {
+struct VideoBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var pageDragingModel:PageDragingModel = PageDragingModel()
     var data: Block
-    @State var datas:[PosterData] = []
+    @State var datas:[VideoData] = []
     @State var listHeight:CGFloat = 0
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             if !self.datas.isEmpty {
                 Text(data.name).modifier(BlockTitle())
             }
-            PosterList(viewModel:self.viewModel, datas: self.datas)
+            VideoList(viewModel:self.viewModel, datas: self.datas)
                 .modifier(MatchHorizontal(height: self.listHeight))
-           
+                .onReceive(self.viewModel.$scrollPosition){pos in
+                    self.pageDragingModel.updateNestedScroll(evt: .scroll(pos))
+                }
+                .onReceive(self.viewModel.$event){evt in
+                    guard let evt = evt else {return}
+                    switch evt {
+                    case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pulled)
+                    default : do{}
+                    }
+                }
+                .onReceive(self.viewModel.$pullPosition){ pos in
+                    self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
+                }
         }
         .onAppear{
-            if let datas = data.posters {
+            if let datas = data.videos {
                 self.datas = datas
                 self.updateListSize()
-                ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
-                
             }
             if let apiQ = self.getRequestApi() {
                 dataProvider.requestData(q: apiQ)
             }
         }
-        .onDisappear{
-            
-        }
-        
         .onReceive(dataProvider.$result) { res in
             if res?.id != data.id { return }
-            var allDatas:[PosterData] = []
+            var allDatas:[VideoData] = []
             switch data.dataType {
             case .cwGrid:
                 guard let resData = res?.data as? CWGrid else {return onBlank()}
                 guard let grid = resData.grid else {return onBlank()}
+                if grid.isEmpty {return onBlank()}
                 grid.forEach{ g in
                     if let blocks = g.block {
                         let addDatas = blocks.map{ d in
-                            PosterData().setData(data: d, cardType: data.cardType)
+                            VideoData().setData(data: d, cardType: data.cardType)
                         }
                         allDatas.append(contentsOf: addDatas)
                     }
@@ -57,7 +65,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
                 guard let resData = res?.data as? GridEvent else {return onBlank()}
                 guard let blocks = resData.contents else {return onBlank()}
                 let addDatas = blocks.map{ d in
-                    PosterData().setData(data: d, cardType: data.cardType)
+                    VideoData().setData(data: d, cardType: data.cardType)
                 }
                 allDatas.append(contentsOf: addDatas)
                 
@@ -65,7 +73,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
                 guard let resData = res?.data as? BookMark else {return onBlank()}
                 guard let blocks = resData.bookmarkList else {return onBlank()}
                 let addDatas = blocks.map{ d in
-                    PosterData().setData(data: d, cardType: data.cardType)
+                    VideoData().setData(data: d, cardType: data.cardType)
                 }
                 allDatas.append(contentsOf: addDatas)
                 
@@ -73,7 +81,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
                 guard let resData = res?.data as? Watch else {return onBlank()}
                 guard let blocks = resData.watchList else {return onBlank()}
                 let addDatas = blocks.map{ d in
-                    PosterData().setData(data: d, cardType: data.cardType)
+                    VideoData().setData(data: d, cardType: data.cardType)
                 }
                 allDatas.append(contentsOf: addDatas)
                 
@@ -81,22 +89,21 @@ struct PosterBlock:PageComponent, BlockProtocol {
             }
             self.datas = allDatas
             self.updateListSize()
-            self.data.posters = allDatas
-            ComponentLog.d("Remote " + data.name, tag: "BlockProtocol")
+            self.data.videos = allDatas
+            ComponentLog.d(allDatas.count.description, tag: self.tag)
+            
         }
         .onReceive(dataProvider.$error) { err in
             if err?.id != data.id { return }
             onError(err)
-            
+            ComponentLog.d(err.debugDescription, tag: self.tag)
         }
     }
-    
     func updateListSize(){
         if !self.datas.isEmpty {
-            self.listHeight = self.datas.first!.type.size.height
+            self.listHeight = ListItem.video.height
+            onDataBinding()
         }
         else { onBlank() }
     }
-    
-    
 }

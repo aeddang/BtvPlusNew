@@ -11,7 +11,6 @@ import SwiftUI
 import WebKit
 import Combine
 
-
 enum WebviewMethod:String {
     case getSTBInfo
     case bpn_showSynopsis,
@@ -45,11 +44,11 @@ struct BtvWebView: PageComponent {
     var body: some View {
         ZStack{
             BtvCustomWebView( viewModel: self.viewModel )
+                .opacity(self.isLoading ? 0 : 1)
             ActivityIndicator( isAnimating: self.$isLoading,
                                style: .large,
                                color: Color.app.white )
         }
-        
         .onReceive(self.viewModel.$status){ stat in
             if stat == .complete {self.isLoading = false}
             else if stat == .ready {self.isLoading = true}
@@ -84,8 +83,8 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         let deviceType = AppUtil.isPad() ? "BtvTablet" : "BtvPhone"
         config.applicationNameForUserAgent = "BtvPlusApp/1.54/\(deviceType)"
         config.mediaTypesRequiringUserActionForPlayback = []
-        config.requiresUserActionForMediaPlayback = false
-        config.mediaPlaybackRequiresUserAction = false
+        //config.requiresUserActionForMediaPlayback = false
+        //config.mediaPlaybackRequiresUserAction = false
         config.allowsInlineMediaPlayback = true
         config.processPool = WKProcessPool()
         #if DEBUG
@@ -101,11 +100,16 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
     }
     func updateUIView(_ uiView: WKWebView, context: Context) {
         if self.viewModel.status != .update { return }
-        if uiView.isLoading {
-            self.viewModel.status = .error
-            self.viewModel.error = .busy
-            return
+        switch self.viewModel.request{
+        case .evaluateJavaScript : break
+        default :
+            if uiView.isLoading {
+                self.viewModel.status = .error
+                self.viewModel.error = .busy
+                return
+            }
         }
+        
         if let e = self.viewModel.request { update(uiView , evt:e) }
     }
     
@@ -114,10 +118,13 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         job = Timer.publish(every: 0.1, on:.current, in: .common)
             .autoconnect()
             .sink{_ in
-                if self.viewModel.status == .end {
+                switch self.viewModel.status {
+                case .end :
                     job?.cancel()
                     return
+                default : break
                 }
+                
                 if !uiView.isLoading {
                     job?.cancel()
                     self.viewModel.status = .complete
@@ -138,10 +145,11 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
     }
     
     fileprivate func callJS(_ uiView: WKWebView, jsStr: String) {
+        ComponentLog.d("callJS " + jsStr, tag: "callJS")
         uiView.evaluateJavaScript(jsStr, completionHandler: { (result, error) in
             let resultString = result.debugDescription
             let errorString = error.debugDescription
-            let msg = "result: " + resultString + " error: " + errorString
+            let msg = jsStr + " -> result: " + resultString + " error: " + errorString
             ComponentLog.d(msg, tag: "callJS")
         })
     }
@@ -155,6 +163,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             uiView.loadHTMLString(html, baseURL: nil)
             return
         case .evaluateJavaScript(let jsStr):
+            ComponentLog.d("update " + jsStr, tag: "callJS")
             self.callJS(uiView, jsStr: jsStr)
             return
         case .back:

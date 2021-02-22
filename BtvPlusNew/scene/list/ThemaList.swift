@@ -14,21 +14,35 @@ class ThemaData:InfinityData{
     private(set) var subTitle: String? = nil
     private(set) var count: String = "0"
     private(set) var type:ThemaType = .square
+    private(set) var blocks:[BlockItem]? = nil
     
     func setData(data:ContentItem, cardType:Block.CardType = .squareThema, idx:Int = -1) -> ThemaData {
-        
-        switch cardType {
-        case .circleTheme: type = .small
-        case .bigTheme: type = .big
-        default: type = .square
-        }
-        
+        setCardType(cardType)
         title = data.title
         if let thumb = data.poster_filename_h {
             image = ImagePath.thumbImagePath(filePath: thumb, size: type.size)
         }
         index = idx
         return self
+    }
+    
+    func setData(data:BlockItem, cardType:Block.CardType = .squareThema, idx:Int = -1) -> ThemaData {
+        setCardType(cardType)
+        title = data.menu_nm
+        if let thumb = data.bnr_off_img_path {
+            image = ImagePath.thumbImagePath(filePath: thumb, size: type.size)
+        }
+        index = idx
+        blocks = data.blocks
+        return self
+    }
+    
+    private func setCardType(_ cardType:Block.CardType){
+        switch cardType {
+        case .circleTheme: type = .small
+        case .bigTheme: type = .big
+        default: type = .square
+        }
     }
     
     func setDummy(_ idx:Int = -1) -> ThemaData {
@@ -48,7 +62,6 @@ class ThemaData:InfinityData{
 
 enum ThemaType {
     case square, small, big
-    
     var size:CGSize {
         get{
             switch self {
@@ -78,25 +91,33 @@ enum ThemaType {
     }
 }
 
-
-
 struct ThemaList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[ThemaData]
+    var margin:CGFloat = Dimen.margin.thin
+    var action: ((_ data:ThemaData) -> Void)? = nil
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
             axes: .horizontal,
             marginVertical: 0,
-            marginHorizontal: 0 ,
+            marginHorizontal: self.margin ,
             spacing: datas.isEmpty ? 0 : datas[0].type.spacing
             ){
             ForEach(self.datas) { data in
                 ThemaItem( data:data )
                 .onTapGesture {
-                   
+                    if let action = self.action {
+                        action(data)
+                    }else{
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.thema)
+                                .addParam(key: .title, value: data.title)
+                                .addParam(key: .data, value: data.blocks)
+                        )
+                    }
                 }
             }
         }
@@ -115,13 +136,6 @@ struct ThemaItem: PageView {
                 ImageView(url: self.data.image, contentMode: .fit, noImg: Asset.noImg1_1)
                     .modifier(MatchParent())
                     .clipShape(Rectangle())
-            }
-            
-            if self.data.title != nil {
-                Text(self.data.title!)
-                    .modifier(MediumTextStyle(size: Font.size.medium))
-                    .padding(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/, Dimen.margin.thin)
-                    .frame(width: self.data.type.size.width)
             }
         }
         .frame(

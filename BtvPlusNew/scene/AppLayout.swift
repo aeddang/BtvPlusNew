@@ -75,6 +75,7 @@ struct AppLayout: PageComponent{
                 withAnimation{
                     self.isToastShowing = true
                 }
+            default: break
             }
         }
         .onReceive(self.pagePresenter.$currentTopPage){ page in

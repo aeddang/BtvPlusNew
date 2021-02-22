@@ -128,7 +128,6 @@ struct PageContentBody: PageView  {
             
             DispatchQueue.main.async {
                 self.isReady = true
-                
                 self.pageObservable.status = .appear
                 self.pageObservable.pagePosition.x = 0
                 self.pageObservable.pagePosition.y = 0

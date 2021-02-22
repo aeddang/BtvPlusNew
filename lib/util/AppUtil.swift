@@ -176,6 +176,24 @@ struct AppUtil{
         DataLog.e("stringfy : JSONSerialization isValidJSONObject error", tag: "getJsonString")
         return nil
     }
+    
+    static func getJsonParam(jsonString: String) -> [String: Any]? {
+        guard let data = jsonString.data(using: .utf8) else {
+            DataLog.e("parse : jsonString data error", tag: "getJsonParam")
+            return nil
+        }
+        do{
+            let value = try JSONSerialization.jsonObject(with: data , options: [])
+            guard let dictionary = value as? [String: Any] else {
+                DataLog.e("parse : dictionary error", tag: "getJsonParam")
+                return nil
+            }
+            return dictionary
+        } catch {
+           DataLog.e("parse : JSONSerialization " + error.localizedDescription, tag: "getJsonParam")
+           return nil
+        }
+    }
 
 }
 

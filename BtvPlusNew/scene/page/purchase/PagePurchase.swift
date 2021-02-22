@@ -13,7 +13,6 @@ struct PagePurchase: PageView {
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pairing:Pairing
-    @EnvironmentObject var networkObserver:NetworkObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -35,14 +34,13 @@ struct PagePurchase: PageView {
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     
                     InfinityScrollView( viewModel: self.infinityScrollModel ){
-                        VStack{
-                            BtvWebView( viewModel: self.webViewModel )
+                        BtvWebView( viewModel: self.webViewModel )
+                                //.modifier(MatchParent())
                                 .modifier(MatchHorizontal(height: self.webViewHeight))
                                 .onReceive(self.webViewModel.$screenHeight){height in
                                     let min = geometry.size.height - self.sceneObserver.safeAreaTop - Dimen.app.top
-                                    self.webViewHeight = max( height, min)
+                                    self.webViewHeight = min //max( height, min)
                                 }
-                        }
                         
                     }
                     .padding(.bottom, self.sceneObserver.safeAreaBottom)
@@ -90,14 +88,25 @@ struct PagePurchase: PageView {
                     case WebviewMethod.getSTBInfo.rawValue :
                         guard let cb = cbName else { return }
                         if cb.isEmpty { return }
-                        let dic = self.repository.getSTBInfo(isWifi: self.networkObserver.status == .wifi)
+                        let dic = self.repository.webManager.getSTBInfo()
                         let jsonString = AppUtil.getJsonString(dic: dic) ?? ""
-                        ComponentLog.d("jsonString : " + jsonString, tag: self.tag)
                         let js = BtvWebView.callJsPrefix + cb + "(\'" + jsonString + "\')"
-                        ComponentLog.d(js, tag: self.tag)
                         self.webViewModel.request = .evaluateJavaScript(js)
                         
-                    case WebviewMethod.bpn_setPurchaseResult.rawValue : break
+                    case WebviewMethod.bpn_setPurchaseResult.rawValue :
+                        guard let json = json else { return }
+                        guard let param = AppUtil.getJsonParam(jsonString: json) else { return }
+                        if let result = param["result"] as? Bool,let pid = param["pid"] as? String {
+                            if !result { return }
+                            let listPrice = param["listPrice"] as? String
+                            let paymentPrice = param["paymentPrice"] as? String
+                            self.pageSceneObserver.event = .update(.purchase(pid, listPrice, paymentPrice))
+                        }
+                        break
+                    case WebviewMethod.bpn_closeWebView.rawValue :
+                        self.pagePresenter.goBack()
+                        break
+                        
                     default : break
                     }
                     

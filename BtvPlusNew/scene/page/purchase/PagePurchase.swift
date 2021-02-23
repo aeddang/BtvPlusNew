@@ -59,7 +59,7 @@ struct PagePurchase: PageView {
                         self.pageDragingModel.uiEvent = .pull(geometry, pos)
                     }
                 }
-                .modifier(PageFull(bgColor:Color.app.white))
+                .modifier(PageFull(style:.white))
                 .highPriorityGesture(
                     DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
                         .onChanged({ value in

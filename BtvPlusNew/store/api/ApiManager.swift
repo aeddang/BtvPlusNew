@@ -145,6 +145,10 @@ class ApiManager :PageProtocol, ObservableObject{
             data:data,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .getEventBanner(let menuId, let bnrType) : self.euxp.getEventBanner(
+            menuId: menuId, bnrTypCd: bnrType,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         //METV
         case .getWatch(let isPpm, let page, let count) : self.metv.getWatch(
             isPpm:isPpm, page: page, pageCnt: count,

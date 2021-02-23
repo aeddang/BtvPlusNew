@@ -27,7 +27,8 @@ struct ImageView : View, PageProtocol {
                 guard let  evt = evt else { return }
                 switch evt {
                 case .complete(let img) : self.img = img
-                case .error : self.img = UIImage(named: self.noImg)
+                case .error :
+                    self.img = UIImage(named: self.noImg)
                 }
             }
             .onDisappear(){

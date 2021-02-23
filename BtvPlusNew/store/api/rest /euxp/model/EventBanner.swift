@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct EventBanners : Codable {
+struct EventBanner : Codable {
     private(set) var total_count: Int? = nil
-    private(set) var banners: Array<EventBanner>? = nil
+    private(set) var banners: Array<EventBannerItem>? = nil
 }
 
-struct EventBanner : Codable {
+struct EventBannerItem : Codable {
     private(set) var menu_id: String? = nil  // 메뉴 ID
     private(set) var menu_nm: String? = nil   // 메뉴명
     private(set) var gnb_typ_cd: String? = nil // GNB 유형 코드(KIDS, PPM 등)
@@ -29,7 +29,7 @@ struct EventBanner : Codable {
     private(set) var vas_itm_id:String? = nil // VAS 아이템 ID
     private(set) var vas_id:String? = nil // VAS ID
     private(set) var bnr_det_typ_cd:String? = nil // 배너 상세 유형 코드
-    private(set) var bnr_exps_mthd_cd:String? = nil   // 배너노출방식코드
+    private(set) var bnr_exps_mthd_cd:String? = nil   // 배너노출방식코드 
     private(set) var call_typ_cd:String? = nil    // 호출유형코드
     private(set) var call_url:String? = nil   // 호출URL
     private(set) var cw_call_id_val:String? = nil // CW Call ID

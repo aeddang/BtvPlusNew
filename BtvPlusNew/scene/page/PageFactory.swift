@@ -26,6 +26,7 @@ extension PageID{
     
     static let purchase:PageID = "purchase"
     static let thema:PageID = "thema"
+    static let cate:PageID = "cate"
 }
 
 struct PageProvider {
@@ -39,6 +40,12 @@ struct PageProvider {
         pobj.animationType = getType(pageID)
         pobj.zIndex = isTop(pageID) ? 1 : 0
         return pobj
+    }
+    
+    static func getPageId(skimlink:String?)-> PageID? {
+        guard let skimlink = skimlink else { return nil }
+        if let _ = skimlink.range(of: "btvplusapp/MyPairgingManager", options: .caseInsensitive) { return .my }
+        return nil
     }
     
     static func isHome(_ pageID:PageID)-> Bool{
@@ -102,10 +109,11 @@ extension PageEventType {
 }
 
 enum PageStyle{
-    case dark, white
+    case dark, white, normal
     var textColor:Color {
         get{
             switch self {
+            case .normal: return Color.app.white
             case .dark: return Color.app.white
             case .white: return Color.app.black
             }
@@ -114,7 +122,8 @@ enum PageStyle{
     var bgColor:Color {
         get{
             switch self {
-            case .dark: return Color.brand.bg
+            case .normal: return Color.brand.bg
+            case .dark: return Color.app.blueDeep
             case .white: return Color.app.white
             }
         }
@@ -137,6 +146,7 @@ struct PageFactory{
         case .pairingManagement : return PagePairingManagement()
         case .purchase : return PagePurchase()
         case .thema : return PageThema()
+        case .cate : return PageCate()
         default : return PageTest()
         }
     }
@@ -158,7 +168,8 @@ struct PageSceneModel: PageModel {
             return UIInterfaceOrientationMask.all
         }
         switch pageObject.pageID {
-        case .home : return UIInterfaceOrientationMask.all
+       
+        case .home, .synopsis, .purchase : return UIInterfaceOrientationMask.portrait
         default : return UIInterfaceOrientationMask.all
         }
     }

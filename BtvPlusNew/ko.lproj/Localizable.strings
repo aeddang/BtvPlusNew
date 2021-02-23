@@ -51,6 +51,7 @@
 "btnComplete" = "완료";
 "btnShare" = "공유하기";
 "btnMore" = "더 보기";
+"btnAll" = "전체보기";
 "btnView" = "보기";
 "btnDelete" = "지우기";
 "btnConnect" = "연결하기";
@@ -75,6 +76,7 @@
 "btnScreenRatio" = "화면비율";
 "btnGuide" = "도움말";
 
+
 /*
  Sort
 */
@@ -91,6 +93,11 @@
 "sortCount" = "1회 부터";
 "sortLatest" = "최신순";
 
+"sortPopularity" = "인기순";
+"sortTitle" = "제목순";
+"sortPrice" = "가격순";
+
+
 /*
   Alert
 */
@@ -99,6 +106,7 @@
 "alertApi" = "알림";
 "alertApiErrorServer" = "접속이 지연되고 있습니다. 잠시 후 다시 이용해 주세요.";
 "alertApiErrorClient" = "네트워크 연결 상태를 확인하시고 다시 시도해 주세요.";
+"alertDataError" = "데이타가 없습니다.";
 
 "alertConnect" = "B tv 연결알림";
 "alertConnectWifi" = "Wi-Fi 네트워크에 연결해 주세요.";

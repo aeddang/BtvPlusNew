@@ -77,7 +77,8 @@ struct PageSynopsis: PageView {
                             }
                         }
                        
-                        InfinityScrollView( viewModel: self.infinityScrollModel ){
+                        InfinityScrollView(
+                            viewModel: self.infinityScrollModel){
                             SynopsisBody(
                                 componentViewModel: self.componentViewModel,
                                 relationContentsModel: self.relationContentsModel,

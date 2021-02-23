@@ -44,12 +44,55 @@ class Block:Identifiable, ObservableObject, Equatable{
         }
         return self
     }
+    
+    func getRequestApi(apiId:String? = nil, sortType:EuxpNetwork.SortType? = Optional.none, page:Int = 1, isOption:Bool = true) -> ApiQ? {
+        switch self.dataType {
+        case .cwGrid:
+            DataLog.d("Request cwGrid " + self.name, tag: "BlockProtocol")
+            return .init(
+                id: apiId ?? self.id,
+                type: .getCWGrid(
+                    self.menuId,
+                    self.cwCallId),
+                isOptional: isOption)
+        case .grid:
+            DataLog.d("Request grid " + self.name, tag: "BlockProtocol")
+            return .init(
+                id: apiId ?? self.id,
+                type: .getGridEvent(self.menuId, sortType, page),
+                isOptional: isOption)
+            
+        case .bookMark:
+            DataLog.d("Request bookMark " + self.name, tag: "BlockProtocol")
+            return .init(
+                id: apiId ?? self.id,
+                type: .getBookMark(),
+                isOptional: isOption)
+        case .watched:
+            DataLog.d("Request watche " + self.name, tag: "BlockProtocol")
+            return .init(
+                id: apiId ?? self.id,
+                type: .getWatch(false),
+                isOptional: isOption)
+        case .banner:
+            DataLog.d("Request banner " + self.name, tag: "BlockProtocol")
+            return .init(
+                id: apiId ?? self.id,
+                type: .getEventBanner(self.menuId, .list),
+                isOptional: isOption)
+       
+        default:
+            DataLog.d("onRequestFail " + self.name, tag: "BlockProtocol")
+            return nil
+        }
+        
+    }
         
     var posters:[PosterData]? = nil {
         didSet{
             if posters != nil {
                 status = posters!.isEmpty ? .passive : .active
-                //ComponentLog.d(name + " " + posters!.count.description + " " + status.rawValue, tag: "BlockProtocol")
+                //DataLog.d(name + " " + posters!.count.description + " " + status.rawValue, tag: "BlockProtocol")
             }
         }
     }
@@ -58,7 +101,7 @@ class Block:Identifiable, ObservableObject, Equatable{
         didSet{
             if videos != nil {
                 status = videos!.isEmpty ? .passive : .active
-                //ComponentLog.d(name + " " + videos!.count.description + " " + status.rawValue, tag: "BlockProtocol")
+                //DataLog.d(name + " " + videos!.count.description + " " + status.rawValue, tag: "BlockProtocol")
             }
         }
     }
@@ -67,7 +110,16 @@ class Block:Identifiable, ObservableObject, Equatable{
         didSet{
             if themas != nil {
                 status = themas!.isEmpty ? .passive : .active
-               //ComponentLog.d(name + " " + themas!.count.description + " " + status.rawValue, tag: "BlockProtocol")
+               //DataLog.d(name + " " + themas!.count.description + " " + status.rawValue, tag: "BlockProtocol")
+            }
+        }
+    }
+    
+    var banners:[BannerData]? = nil {
+        didSet{
+            if banners != nil {
+                status = banners!.isEmpty ? .passive : .active
+               //DataLog.d(name + " " + themas!.count.description + " " + status.rawValue, tag: "BlockProtocol")
             }
         }
     }
@@ -122,8 +174,9 @@ class Block:Identifiable, ObservableObject, Equatable{
     
     
     private func findDataType(_ data:BlockItem) -> DataType{
+        if self.cardType == .banner {return .banner}
+        
         if data.svc_prop_cd == "501", data.gnb_typ_cd == EuxpNetwork.GnbTypeCode.GNB_HOME.rawValue {
-            //getVODBookmark()
             return .bookMark
         } else if data.scn_mthd_cd == "501" || data.scn_mthd_cd == "507" {
             return .cwGrid
@@ -131,28 +184,11 @@ class Block:Identifiable, ObservableObject, Equatable{
                   (data.gnb_typ_cd ==  EuxpNetwork.GnbTypeCode.GNB_HOME.rawValue ||
                     data.gnb_typ_cd == EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue ||
                     data.gnb_typ_cd == EuxpNetwork.GnbTypeCode.GNB_MONTHLY.rawValue) {
-            /*
-            if PairingManager.sharedObject().isPairing() {
-                queue.async {
-                    DispatchQueue.global().sync(execute: requestCountTask)
-                    let response: ME021?
-                    response = self.metvRepository.getVODWatched(pageNo: 1, entryNo: 99, isPPM: false)
-                    DispatchQueue.global().sync(execute: responseCountTask)
-                    if response != nil {
-                        DispatchQueue.global().sync(execute: responseCountTask)
-                    } else {
-                        print(d: "self.metvRepository.getVODWatched response fail")
-                    }
-                }
-                
-            }
-            */
             return .watched
         } else if data.blk_typ_cd == "20" {
             return .theme
         } else {
-            //getGnbGrid(menuId: menuId, pageNo: 1, pageCnt: 30, version: "0")
-            return .grid
+           return .grid
         }
     }
     
@@ -181,6 +217,7 @@ class Block:Identifiable, ObservableObject, Equatable{
         grid,
         watched,
         cwGrid,
-        theme
+        theme,
+        banner
     }
 }

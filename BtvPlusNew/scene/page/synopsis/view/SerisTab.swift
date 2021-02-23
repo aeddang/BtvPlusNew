@@ -13,7 +13,6 @@ import SwiftUI
 struct SerisTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
-    @ObservedObject var pageObservable:PageObservable = PageObservable()
     
     var data:RelationContentsModel
     @Binding var seris:[SerisData]

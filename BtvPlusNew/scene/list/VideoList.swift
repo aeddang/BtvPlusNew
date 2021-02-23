@@ -78,14 +78,16 @@ class VideoData:InfinityData{
         return self
     }
     
-   
-    
-    
     private func setCardType(_ cardType:Block.CardType){
         switch cardType {
         case .watchedVideo: type = .watching
         default: type = .nomal
         }
+    }
+    
+    fileprivate func setCardType(width:CGFloat, height:CGFloat, padding:CGFloat) -> VideoData {
+        self.type = .cell(CGSize(width: width, height: height), padding)
+        return self
     }
     
     
@@ -105,10 +107,17 @@ class VideoData:InfinityData{
 }
 
 enum VideoType {
-    case nomal, watching
+    case nomal, watching, cell(CGSize, CGFloat)
+    var size:CGSize {
+        get{
+            switch self {
+            case .nomal: return ListItem.video.size
+            case .watching: return ListItem.video.size
+            case .cell(let size, _ ): return size
+            }
+        }
+    }
 }
-
-
 
 struct VideoList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
@@ -166,6 +175,52 @@ struct VideoList: PageComponent{
     }//body
 }
 
+struct VideoDataSet:Identifiable {
+    private(set) var id = UUID().uuidString
+    var count:Int = 2
+    var datas:[VideoData] = []
+    var isFull = false
+    var index:Int = -1
+}
+
+struct VideoSet: PageComponent{
+    @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var sceneObserver:SceneObserver
+    var data:VideoDataSet
+    var padding:CGFloat = Dimen.margin.thin
+    @State var cellDatas:[VideoData] = []
+    var body: some View {
+        HStack(spacing: self.padding){
+            ForEach(self.cellDatas) { data in
+                VideoItem( data:data )
+                .onTapGesture {
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.synopsis)
+                            .addParam(key: .data, value: data.synopsisData)
+                    )
+                }
+            }
+            if !self.data.isFull {
+                Spacer()
+            }
+        }
+        .padding(.horizontal, self.padding)
+        .onAppear {
+            if self.data.datas.isEmpty { return }
+            let datas = self.data.datas
+            let ratio = datas.first!.type.size.height / datas.first!.type.size.width
+            let count = CGFloat(self.data.count)
+            let w = self.sceneObserver.screenSize.width - (self.padding*2)
+            let cellW = ( w - (self.padding*(count-1)) ) / count
+            let cellH = cellW * ratio
+            self.cellDatas = datas.map{
+                $0.setCardType(width: cellW, height: cellH, padding: self.padding)
+            }
+        }
+    }//body
+}
+
+
 struct VideoItem: PageView {
     var data:VideoData
     var isSelected:Bool = false
@@ -206,8 +261,8 @@ struct VideoItem: PageView {
                 
             }
             .frame(
-                width: ListItem.video.size.width,
-                height: ListItem.video.size.height)
+                width: self.data.type.size.width,
+                height: self.data.type.size.height)
             .clipped()
             if self.data.title != nil && !self.data.isInside {
                 Text(self.data.title!)
@@ -218,7 +273,7 @@ struct VideoItem: PageView {
                     .multilineTextAlignment(.leading)
             }
         }
-        .frame(width: ListItem.video.size.width)
+        .frame(width: self.data.type.size.width)
         .background(Color.app.blueLight)
         
     }

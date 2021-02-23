@@ -65,6 +65,9 @@ extension String {
         public static let none = "sortNone".loaalized()
         public static let count = "sortCount".loaalized()
         public static let latest = "sortLatest".loaalized()
+        public static let popularity = "sortPopularity".loaalized()
+        public static let title = "sortTitle".loaalized()
+        public static let price = "sortPrice".loaalized()
     }
     
     
@@ -73,7 +76,7 @@ extension String {
         public static var api = "alertApi".loaalized()
         public static var apiErrorServer = "alertApiErrorServer".loaalized()
         public static var apiErrorClient = "alertApiErrorClient".loaalized()
-
+        public static var dataError = "alertDataError".loaalized()
         public static var connect = "alertConnect".loaalized()
         public static var connectWifi = "alertConnectWifi".loaalized()
         public static var connectWifiSub = "alertConnectWifiSub".loaalized()
@@ -145,6 +148,7 @@ extension String {
         public static var complete = "btnComplete".loaalized()
         public static var share = "btnShare".loaalized()
         public static var more = "btnMore".loaalized()
+        public static var all = "btnAll".loaalized()
         public static var delete = "btnDelete".loaalized()
         public static let view = "btnView".loaalized()
         public static let connect = "btnConnect".loaalized()

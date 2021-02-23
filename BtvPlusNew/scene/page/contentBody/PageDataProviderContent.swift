@@ -13,7 +13,7 @@ enum PageDataProviderEvent {
          onResult(Int,ApiResultResponds, Int),
          onError(Int,ApiResultError, Int)
 }
-class PageDataProviderModel:ObservableObject{
+open class PageDataProviderModel:ObservableObject{
     
     @Published private(set) var event:PageDataProviderEvent? = nil
     @Published var request:ApiQ? = nil

@@ -87,6 +87,9 @@
 		317EF18625DB46D6004A6A5E /* PlayerListTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317EF18525DB46D6004A6A5E /* PlayerListTab.swift */; };
 		3180855825C2287300AE4A73 /* BtvPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3180855725C2287300AE4A73 /* BtvPlayer.swift */; };
 		3180855E25C233A900AE4A73 /* libPoCDrmAgent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */; };
+		318FBFF725E4882700ABC241 /* PageCate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318FBFF625E4882700ABC241 /* PageCate.swift */; };
+		318FBFFE25E48F5B00ABC241 /* SortTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318FBFFD25E48F5B00ABC241 /* SortTab.swift */; };
+		318FC00625E4CA5800ABC241 /* CateBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318FC00525E4CA5800ABC241 /* CateBlock.swift */; };
 		3192317225A3FDBE00020388 /* coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192317125A3FDBE00020388 /* coordinator.swift */; };
 		3192318025A40A7D00020388 /* ReflashSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192317F25A40A7D00020388 /* ReflashSpinner.swift */; };
 		3193414F25DDD847002F2000 /* SynopsisTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3193414E25DDD847002F2000 /* SynopsisTop.swift */; };
@@ -362,6 +365,9 @@
 		3180855725C2287300AE4A73 /* BtvPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtvPlayer.swift; sourceTree = "<group>"; };
 		3180855C25C233A900AE4A73 /* DrmAgent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrmAgent.h; sourceTree = "<group>"; };
 		3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPoCDrmAgent.a; sourceTree = "<group>"; };
+		318FBFF625E4882700ABC241 /* PageCate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCate.swift; sourceTree = "<group>"; };
+		318FBFFD25E48F5B00ABC241 /* SortTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortTab.swift; sourceTree = "<group>"; };
+		318FC00525E4CA5800ABC241 /* CateBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CateBlock.swift; sourceTree = "<group>"; };
 		3192317125A3FDBE00020388 /* coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = coordinator.swift; sourceTree = "<group>"; };
 		3192317F25A40A7D00020388 /* ReflashSpinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflashSpinner.swift; sourceTree = "<group>"; };
 		3193414E25DDD847002F2000 /* SynopsisTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisTop.swift; sourceTree = "<group>"; };
@@ -860,6 +866,35 @@
 			path = model;
 			sourceTree = "<group>";
 		};
+		318FC01425E4D75400ABC241 /*  cateblock */ = {
+			isa = PBXGroup;
+			children = (
+				318FC01625E4D7D900ABC241 /* view */,
+				318FC00525E4CA5800ABC241 /* CateBlock.swift */,
+			);
+			path = " cateblock";
+			sourceTree = "<group>";
+		};
+		318FC01525E4D7C100ABC241 /* view */ = {
+			isa = PBXGroup;
+			children = (
+				D56CC3092590703200CA1D54 /* BlockProtocol.swift */,
+				D56CC2F92590313A00CA1D54 /* PosterBlock.swift */,
+				D56CC30125906F2500CA1D54 /* VideoBlock.swift */,
+				D56CC31125907F3700CA1D54 /* ThemaBlock.swift */,
+				31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */,
+			);
+			path = view;
+			sourceTree = "<group>";
+		};
+		318FC01625E4D7D900ABC241 /* view */ = {
+			isa = PBXGroup;
+			children = (
+				318FBFFD25E48F5B00ABC241 /* SortTab.swift */,
+			);
+			path = view;
+			sourceTree = "<group>";
+		};
 		3192317025A3FD6200020388 /* value */ = {
 			isa = PBXGroup;
 			children = (
@@ -880,6 +915,7 @@
 			isa = PBXGroup;
 			children = (
 				31D3F4DD25E36625008FDFEC /* PageThema.swift */,
+				318FBFF625E4882700ABC241 /* PageCate.swift */,
 			);
 			path = popups;
 			sourceTree = "<group>";
@@ -1518,12 +1554,8 @@
 		D56CC2ED25902E5400CA1D54 /* multiblock */ = {
 			isa = PBXGroup;
 			children = (
+				318FC01525E4D7C100ABC241 /* view */,
 				D56CC2EE25902E6600CA1D54 /* MultiBlock.swift */,
-				D56CC3092590703200CA1D54 /* BlockProtocol.swift */,
-				D56CC2F92590313A00CA1D54 /* PosterBlock.swift */,
-				D56CC30125906F2500CA1D54 /* VideoBlock.swift */,
-				D56CC31125907F3700CA1D54 /* ThemaBlock.swift */,
-				31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */,
 			);
 			path = multiblock;
 			sourceTree = "<group>";
@@ -1556,6 +1588,7 @@
 		D5DABD942589F1D400DF5701 /* component */ = {
 			isa = PBXGroup;
 			children = (
+				318FC01425E4D75400ABC241 /*  cateblock */,
 				D56CC2ED25902E5400CA1D54 /* multiblock */,
 				3167642525CD0A0C003A7721 /* webview */,
 				31061E6A25C8D21A00543FC0 /* player */,
@@ -1829,6 +1862,7 @@
 			files = (
 				D56C6A25257DA0C600CF9AB8 /* fonts.swift in Sources */,
 				317EF18625DB46D6004A6A5E /* PlayerListTab.swift in Sources */,
+				318FBFFE25E48F5B00ABC241 /* SortTab.swift in Sources */,
 				D56C6A51257DA0C700CF9AB8 /* Radio.swift in Sources */,
 				D50AB91125807AAA00649C4A /* EuxpModel.swift in Sources */,
 				D56C69B2257DA09E00CF9AB8 /* WhereverYouCanGo.swift in Sources */,
@@ -1836,6 +1870,7 @@
 				315A8FC125AD114F00498B03 /* ApiUtil.m in Sources */,
 				D57298DD259D69EB00ED2CE6 /* PickerSelect.swift in Sources */,
 				D56C6A5D257DA0C700CF9AB8 /* CircularSpinner.swift in Sources */,
+				318FBFF725E4882700ABC241 /* PageCate.swift in Sources */,
 				D56C6A59257DA0C700CF9AB8 /* TextButton.swift in Sources */,
 				D56CC31225907F3700CA1D54 /* ThemaBlock.swift in Sources */,
 				D56C5FE32592F693009AE769 /* Metv.swift in Sources */,
@@ -1941,6 +1976,7 @@
 				D56C69AF257DA09E00CF9AB8 /* DynamicLinkManager.swift in Sources */,
 				D56C69AD257DA09E00CF9AB8 /* InfinityScroll.swift in Sources */,
 				3158232925A704F800E4E9C8 /* LocationObserver.swift in Sources */,
+				318FC00625E4CA5800ABC241 /* CateBlock.swift in Sources */,
 				D56C6A61257DA0C700CF9AB8 /* FocusableTextView.swift in Sources */,
 				D56C69AC257DA09E00CF9AB8 /* SelecterbleView.swift in Sources */,
 				D56C69B5257DA09E00CF9AB8 /* NetworkObserver.swift in Sources */,

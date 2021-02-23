@@ -26,7 +26,7 @@ struct SummaryViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
-    @ObservedObject var peopleScrollModel: InfinityScrollModel = InfinityScrollModel()
+    var peopleScrollModel: InfinityScrollModel = InfinityScrollModel()
     var data:SummaryViewerData
     
     @State var isExpand = false

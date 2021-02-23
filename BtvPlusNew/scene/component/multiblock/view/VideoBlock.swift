@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 struct VideoBlock:BlockProtocol, PageComponent {
+    @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -18,7 +19,24 @@ struct VideoBlock:BlockProtocol, PageComponent {
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             if !self.datas.isEmpty {
-                Text(data.name).modifier(BlockTitle())
+                HStack( spacing:Dimen.margin.thin){
+                    VStack(alignment: .leading, spacing:0){
+                        Text(data.name).modifier(BlockTitle())
+                            .lineLimit(1)
+                        Spacer().modifier(MatchHorizontal(height: 0))
+                    }
+                    TextButton(
+                        defaultText: String.button.all,
+                        textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
+                    ){_ in
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.cate)
+                                .addParam(key: .data, value: data)
+                                .addParam(key: .type, value: CateBlock.ListType.video)
+                        )
+                    }
+                }
+                .modifier(ContentHorizontalEdges())
             }
             VideoList(viewModel:self.viewModel, datas: self.datas)
                 .modifier(MatchHorizontal(height: self.listHeight))

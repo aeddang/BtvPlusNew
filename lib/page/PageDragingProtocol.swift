@@ -357,7 +357,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     func onDragingAction(offset: CGFloat, dragOpacity: Double) {
         if self.isDragingCompleted {return}
         let diff = abs(self.bodyOffset - offset)
-        DataLog.d("diff " + diff.description, tag: "DIFF")
+        //DataLog.d("diff " + diff.description, tag: "DIFF")
         if abs(diff) > 100 { return }
         self.bodyOffset = offset
         self.viewModel.event = .drag(offset, dragOpacity)

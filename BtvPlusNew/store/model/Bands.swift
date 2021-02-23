@@ -45,6 +45,12 @@ class Bands:ObservableObject, PageProtocol {
                 where: { $0.menuId == menuId }) else { return nil }
         return band
     }
+    
+    func getData(gnbTypCd:String)-> Band? {
+        guard let band = self.datas.first(
+                where: { $0.gnbTypCd == gnbTypCd }) else { return nil }
+        return band
+    }
 }
 
 class Band {

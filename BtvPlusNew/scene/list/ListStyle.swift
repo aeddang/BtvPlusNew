@@ -28,7 +28,7 @@ struct ListItem{
     }
     
     struct banner {
-       static let size:CGSize = CGSize(width: -1, height: 80)
+       static let size:CGSize = CGSize(width: 0, height: 80)
     }
     
     struct character {

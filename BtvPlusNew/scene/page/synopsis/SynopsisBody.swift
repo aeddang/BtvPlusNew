@@ -11,10 +11,10 @@ import SwiftUI
 struct SynopsisBody: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
-    @ObservedObject var componentViewModel:PageSynopsis.ComponentViewModel
-    @ObservedObject var relationContentsModel:RelationContentsModel
-    @ObservedObject var peopleScrollModel: InfinityScrollModel
-    @ObservedObject var pageDragingModel:PageDragingModel
+    var componentViewModel:PageSynopsis.ComponentViewModel
+    var relationContentsModel:RelationContentsModel
+    var peopleScrollModel: InfinityScrollModel
+    var pageDragingModel:PageDragingModel
     
     @Binding var isBookmark:Bool?
     @Binding var seris:[SerisData]

@@ -16,14 +16,15 @@ struct PageTab: PageComponent{
     var isBack:Bool = false
     var isClose:Bool = false
     var isSetting:Bool = false
-    var style:PageStyle = .dark
+    var style:PageStyle = .normal
     
     var body: some View {
         ZStack(alignment: .leading){
             if self.title != nil {
                 Text(self.title!)
-                    .modifier(BoldTextStyle(size: Font.size.mediumExtra,
-                                            color: self.style.textColor))
+                    .modifier(BoldTextStyle(
+                                size: Font.size.mediumExtra,
+                                color: self.style.textColor))
                     .modifier(ContentHorizontalEdges())
                     .frame(maxWidth: .infinity)
                     .padding(.top, 1)
@@ -32,7 +33,6 @@ struct PageTab: PageComponent{
                 if self.isBack {
                     Button(action: {
                         self.pagePresenter.goBack()
-                        
                     }) {
                         Image(Asset.icon.back)
                             .renderingMode(.original)
@@ -47,7 +47,6 @@ struct PageTab: PageComponent{
                 if self.isClose {
                     Button(action: {
                         self.pagePresenter.goBack()
-                        
                     }) {
                         Image(Asset.icon.close)
                             .renderingMode(.original)
@@ -63,7 +62,6 @@ struct PageTab: PageComponent{
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject(.setup)
                         )
-                        
                     }) {
                         Image(Asset.icon.setting)
                             .renderingMode(.original)

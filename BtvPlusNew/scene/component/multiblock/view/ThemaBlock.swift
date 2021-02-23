@@ -1,5 +1,5 @@
 //
-//  PosterBox.swift
+//  VideoBlock.swift
 //  BtvPlusNew
 //
 //  Created by KimJeongCheol on 2020/12/21.
@@ -8,20 +8,21 @@
 import Foundation
 import SwiftUI
 
-struct PosterBlock:PageComponent, BlockProtocol {
+struct ThemaBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var data: Block
-    @State var datas:[PosterData] = []
+    @State var datas:[ThemaData] = []
     @State var listHeight:CGFloat = 0
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             if !self.datas.isEmpty {
                 Text(data.name).modifier(BlockTitle())
+                    .modifier(ContentHorizontalEdges())
             }
-            PosterList(viewModel:self.viewModel, datas: self.datas)
-                .modifier(MatchHorizontal(height: self.listHeight)) 
+            ThemaList(viewModel:self.viewModel, datas: self.datas)
+                .modifier(MatchHorizontal(height: self.listHeight))
                 .onReceive(self.viewModel.$scrollPosition){pos in
                     self.pageDragingModel.updateNestedScroll(evt: .scroll(pos))
                 }
@@ -35,26 +36,24 @@ struct PosterBlock:PageComponent, BlockProtocol {
                 .onReceive(self.viewModel.$pullPosition){ pos in
                     self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
                 }
-             
+            
         }
         .onAppear{
-            if let datas = data.posters {
-                self.datas = datas
+            self.datas = []
+            if data.dataType == .theme , let blocks = data.blocks {
+                self.datas = blocks.map{ d in
+                    ThemaData().setData(data: d, cardType: data.cardType)
+                }
                 self.updateListSize()
-                ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
-                
+                return
             }
             if let apiQ = self.getRequestApi() {
                 dataProvider.requestData(q: apiQ)
             }
         }
-        .onDisappear{
-            
-        }
-        
         .onReceive(dataProvider.$result) { res in
             if res?.id != data.id { return }
-            var allDatas:[PosterData] = []
+            var allDatas:[ThemaData] = []
             switch data.dataType {
             case .cwGrid:
                 guard let resData = res?.data as? CWGrid else {return onBlank()}
@@ -62,7 +61,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
                 grid.forEach{ g in
                     if let blocks = g.block {
                         let addDatas = blocks.map{ d in
-                            PosterData().setData(data: d, cardType: data.cardType)
+                            ThemaData().setData(data: d, cardType: data.cardType)
                         }
                         allDatas.append(contentsOf: addDatas)
                     }
@@ -71,40 +70,23 @@ struct PosterBlock:PageComponent, BlockProtocol {
                 guard let resData = res?.data as? GridEvent else {return onBlank()}
                 guard let blocks = resData.contents else {return onBlank()}
                 let addDatas = blocks.map{ d in
-                    PosterData().setData(data: d, cardType: data.cardType)
+                    ThemaData().setData(data: d, cardType: data.cardType)
                 }
                 allDatas.append(contentsOf: addDatas)
-                
-            case .bookMark:
-                guard let resData = res?.data as? BookMark else {return onBlank()}
-                guard let blocks = resData.bookmarkList else {return onBlank()}
-                let addDatas = blocks.map{ d in
-                    PosterData().setData(data: d, cardType: data.cardType)
-                }
-                allDatas.append(contentsOf: addDatas)
-                
-            case .watched:
-                guard let resData = res?.data as? Watch else {return onBlank()}
-                guard let blocks = resData.watchList else {return onBlank()}
-                let addDatas = blocks.map{ d in
-                    PosterData().setData(data: d, cardType: data.cardType)
-                }
-                allDatas.append(contentsOf: addDatas)
-                
             default: do {}
             }
             self.datas = allDatas
             self.updateListSize()
-            self.data.posters = allDatas
-            ComponentLog.d("Remote " + data.name, tag: "BlockProtocol")
+            self.data.themas = allDatas
+            ComponentLog.d(allDatas.count.description, tag: self.tag)
+            
         }
         .onReceive(dataProvider.$error) { err in
             if err?.id != data.id { return }
             onError(err)
-            
+            ComponentLog.d(err.debugDescription, tag: self.tag)
         }
     }
-    
     func updateListSize(){
         if !self.datas.isEmpty {
             self.listHeight = self.datas.first!.type.size.height
@@ -112,6 +94,5 @@ struct PosterBlock:PageComponent, BlockProtocol {
         }
         else { onBlank() }
     }
-    
     
 }

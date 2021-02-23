@@ -22,7 +22,6 @@ class PosterData:InfinityData{
             image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
         }
         index = idx
-        
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
             epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: data.prd_prc_id, kidZone:data.kids_yn)
@@ -118,17 +117,6 @@ enum PosterType {
             }
         }
     }
-        
-    var padding:CGFloat {
-        get{
-            switch self {
-            case .small: return Dimen.margin.thinExtra
-            case .big: return Dimen.margin.light
-            case .banner: return Dimen.margin.light
-            case .cell( _ , let padding): return padding
-            }
-        }
-    }
 }
 
 struct PosterList: PageComponent{
@@ -163,6 +151,7 @@ struct PosterDataSet:Identifiable {
     var count:Int = 3
     var datas:[PosterData] = []
     var isFull = false
+    var index:Int = -1
 }
 
 struct PosterSet: PageComponent{
@@ -175,6 +164,7 @@ struct PosterSet: PageComponent{
         HStack(spacing: self.padding){
             ForEach(self.cellDatas) { data in
                 PosterItem( data:data )
+
                 .onTapGesture {
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.synopsis)

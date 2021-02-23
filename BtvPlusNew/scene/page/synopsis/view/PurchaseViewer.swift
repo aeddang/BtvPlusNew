@@ -176,7 +176,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
 struct PurchaseViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
-    @ObservedObject var componentViewModel:PageSynopsis.ComponentViewModel = PageSynopsis.ComponentViewModel()
+    var componentViewModel:PageSynopsis.ComponentViewModel = PageSynopsis.ComponentViewModel()
     var data:PurchaseViewerData
     @State var option:String = ""
     @State var showInfo:Bool = false

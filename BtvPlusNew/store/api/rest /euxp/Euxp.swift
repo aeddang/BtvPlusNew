@@ -22,10 +22,19 @@ extension EuxpNetwork{
     
     
     enum SortType: String {
-        case none = "10" // 기본, 사용자 정의
-        case last = "20" // 최신순
+        case popularity = "10" // 기본, 사용자 정의
+        case latest = "20" // 최신순
         case title = "30" // 타이틀
         case price = "40" // 가격
+        
+        var name: String {
+            switch self {
+            case .popularity: return String.sort.popularity
+            case .latest: return String.sort.latest
+            case .title: return String.sort.title
+            case .price: return String.sort.price
+            }
+        }
     }
     
     enum SearchType: String {
@@ -58,6 +67,11 @@ extension EuxpNetwork{
         }
         */
     }
+    
+    enum BannerType: String {
+        case page = "10" // error
+        case list = "20"
+    }
 }
 
 class Euxp: Rest{
@@ -65,17 +79,17 @@ class Euxp: Rest{
      * 빅배너/이벤트 정보 (IF-EUXP-007)
      * @param menuId 블록의 메뉴아이디(배너부모메뉴ID) -> 이벤트배너
      */
-    func getEventBanners(
-        menuId:String, bnrTypCd:String = "10", segId:String? = nil,
-        completion: @escaping (EventBanners) -> Void, error: ((_ e:Error) -> Void)? = nil){
+    func getEventBanner(
+        menuId:String?, bnrTypCd:EuxpNetwork.BannerType = .page , segId:String? = nil,
+        completion: @escaping (EventBanner) -> Void, error: ((_ e:Error) -> Void)? = nil){
 
         var params = [String:String]()
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
         params["IF"] = "IF-EUXP-007"
-        params["menu_id"] = menuId
+        params["menu_id"] = menuId ?? ""
         params["seg_id"] = segId
-        params["bnr_typ_cd"] = bnrTypCd
+        params["bnr_typ_cd"] = bnrTypCd.rawValue
         fetch(route: EuxpEventBanners(query: params), completion: completion, error:error)
     }
     
@@ -195,7 +209,6 @@ class Euxp: Rest{
         fetch(route: EuxpGridPreview(query: params), completion: completion, error:error)
     }
     
-
     /**
     * 이벤트 그리드 정보 (IF-EUXP-024)
     * @param menuId 메뉴 ID
@@ -213,11 +226,18 @@ class Euxp: Rest{
         params["menu_id"] = menuId ?? ""
         params["page_no"] = page?.description ?? "1"
         params["page_cnt"] = pageCnt?.description ?? EuxpNetwork.PAGE_COUNT.description
-        params["sort_typ_cd"] = sortType?.rawValue ?? EuxpNetwork.SortType.none.rawValue
+        params["sort_typ_cd"] = sortType?.rawValue ?? EuxpNetwork.SortType.popularity.rawValue
         params["version"] = version ?? EuxpNetwork.VERSION
         fetch(route: EuxpGridEvent(query: params), completion: completion, error:error)
     }
     
+    /**
+    * 이벤트 그리드 정보 (IF-EUXP-009)
+    * @param menuId 메뉴 ID
+    * @param pageNo 페이지 시작점 (reviews 태그의 list)
+    * @param pageCnt 페이지 갯수 (reviews 태그의 list)
+    * @param version 버전정보
+    */
     func getCWGrid(
         menuId:String?, cwCallId:String?,
         completion: @escaping (CWGrid) -> Void, error: ((_ e:Error) -> Void)? = nil){

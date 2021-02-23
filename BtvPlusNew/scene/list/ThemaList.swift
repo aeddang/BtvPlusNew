@@ -14,6 +14,7 @@ class ThemaData:InfinityData{
     private(set) var subTitle: String? = nil
     private(set) var count: String = "0"
     private(set) var type:ThemaType = .square
+    private(set) var menuId: String? = nil
     private(set) var blocks:[BlockItem]? = nil
     
     func setData(data:ContentItem, cardType:Block.CardType = .squareThema, idx:Int = -1) -> ThemaData {
@@ -34,6 +35,7 @@ class ThemaData:InfinityData{
         }
         index = idx
         blocks = data.blocks
+        menuId = data.menu_id
         return self
     }
     
@@ -112,11 +114,23 @@ struct ThemaList: PageComponent{
                     if let action = self.action {
                         action(data)
                     }else{
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.thema)
-                                .addParam(key: .title, value: data.title)
-                                .addParam(key: .data, value: data.blocks)
-                        )
+                        if data.blocks != nil && data.blocks?.isEmpty == false {
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.thema)
+                                    .addParam(key: .title, value: data.title)
+                                    .addParam(key: .data, value: data.blocks)
+                            )
+                        }else{
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.cate)
+                                    .addParam(key: .title, value: data.title)
+                                    .addParam(key: .id, value: data.menuId)
+                                    .addParam(key: .type, value: CateBlock.ListType.poster)
+                            )
+                        }
+                        
+                        
+                        
                     }
                 }
             }

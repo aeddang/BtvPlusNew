@@ -1,5 +1,5 @@
 //
-//  VideoBlock.swift
+//  PosterBox.swift
 //  BtvPlusNew
 //
 //  Created by KimJeongCheol on 2020/12/21.
@@ -8,20 +8,38 @@
 import Foundation
 import SwiftUI
 
-struct ThemaBlock:BlockProtocol, PageComponent {
+struct PosterBlock:PageComponent, BlockProtocol {
+    @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var data: Block
-    @State var datas:[ThemaData] = []
+    @State var datas:[PosterData] = []
     @State var listHeight:CGFloat = 0
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             if !self.datas.isEmpty {
-                Text(data.name).modifier(BlockTitle())
+                HStack( spacing:Dimen.margin.thin){
+                    VStack(alignment: .leading, spacing:0){
+                        Text(data.name).modifier(BlockTitle())
+                            .lineLimit(1)
+                        Spacer().modifier(MatchHorizontal(height: 0))
+                    }
+                    TextButton(
+                        defaultText: String.button.all,
+                        textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
+                    ){_ in
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.cate)
+                                .addParam(key: .data, value: data)
+                                .addParam(key: .type, value: CateBlock.ListType.poster)
+                        )
+                    }
+                }
+                .modifier(ContentHorizontalEdges())
             }
-            ThemaList(viewModel:self.viewModel, datas: self.datas)
-                .modifier(MatchHorizontal(height: self.listHeight))
+            PosterList(viewModel:self.viewModel, datas: self.datas)
+                .modifier(MatchHorizontal(height: self.listHeight)) 
                 .onReceive(self.viewModel.$scrollPosition){pos in
                     self.pageDragingModel.updateNestedScroll(evt: .scroll(pos))
                 }
@@ -35,24 +53,26 @@ struct ThemaBlock:BlockProtocol, PageComponent {
                 .onReceive(self.viewModel.$pullPosition){ pos in
                     self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
                 }
-            
+             
         }
         .onAppear{
-            self.datas = []
-            if data.dataType == .theme , let blocks = data.blocks {
-                self.datas = blocks.map{ d in
-                    ThemaData().setData(data: d, cardType: data.cardType)
-                }
+            if let datas = data.posters {
+                self.datas = datas
                 self.updateListSize()
-                return
+                ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
+                
             }
             if let apiQ = self.getRequestApi() {
                 dataProvider.requestData(q: apiQ)
             }
         }
+        .onDisappear{
+            
+        }
+        
         .onReceive(dataProvider.$result) { res in
             if res?.id != data.id { return }
-            var allDatas:[ThemaData] = []
+            var allDatas:[PosterData] = []
             switch data.dataType {
             case .cwGrid:
                 guard let resData = res?.data as? CWGrid else {return onBlank()}
@@ -60,7 +80,7 @@ struct ThemaBlock:BlockProtocol, PageComponent {
                 grid.forEach{ g in
                     if let blocks = g.block {
                         let addDatas = blocks.map{ d in
-                            ThemaData().setData(data: d, cardType: data.cardType)
+                            PosterData().setData(data: d, cardType: data.cardType)
                         }
                         allDatas.append(contentsOf: addDatas)
                     }
@@ -69,23 +89,40 @@ struct ThemaBlock:BlockProtocol, PageComponent {
                 guard let resData = res?.data as? GridEvent else {return onBlank()}
                 guard let blocks = resData.contents else {return onBlank()}
                 let addDatas = blocks.map{ d in
-                    ThemaData().setData(data: d, cardType: data.cardType)
+                    PosterData().setData(data: d, cardType: data.cardType)
                 }
                 allDatas.append(contentsOf: addDatas)
+                
+            case .bookMark:
+                guard let resData = res?.data as? BookMark else {return onBlank()}
+                guard let blocks = resData.bookmarkList else {return onBlank()}
+                let addDatas = blocks.map{ d in
+                    PosterData().setData(data: d, cardType: data.cardType)
+                }
+                allDatas.append(contentsOf: addDatas)
+                
+            case .watched:
+                guard let resData = res?.data as? Watch else {return onBlank()}
+                guard let blocks = resData.watchList else {return onBlank()}
+                let addDatas = blocks.map{ d in
+                    PosterData().setData(data: d, cardType: data.cardType)
+                }
+                allDatas.append(contentsOf: addDatas)
+                
             default: do {}
             }
             self.datas = allDatas
             self.updateListSize()
-            self.data.themas = allDatas
-            ComponentLog.d(allDatas.count.description, tag: self.tag)
-            
+            self.data.posters = allDatas
+            ComponentLog.d("Remote " + data.name, tag: "BlockProtocol")
         }
         .onReceive(dataProvider.$error) { err in
             if err?.id != data.id { return }
             onError(err)
-            ComponentLog.d(err.debugDescription, tag: self.tag)
+            
         }
     }
+    
     func updateListSize(){
         if !self.datas.isEmpty {
             self.listHeight = self.datas.first!.type.size.height
@@ -93,5 +130,6 @@ struct ThemaBlock:BlockProtocol, PageComponent {
         }
         else { onBlank() }
     }
+    
     
 }

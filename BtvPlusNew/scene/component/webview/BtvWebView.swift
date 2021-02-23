@@ -24,6 +24,7 @@ enum WebviewMethod:String {
          bpn_setMoveListener,bpn_setBackListener,
          bpn_requestFocus,bpn_showComingSoon,bpn_showMyPairing,bpn_familyInvite
 }
+
 extension BtvWebView {
     static let identity = "/view/v3.0/identityverification"
     static let purchase = "/view/v3.0/purchase/list"

@@ -10,7 +10,7 @@ import SwiftUI
 struct PageFull: ViewModifier {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
-    var bgColor:Color = Color.brand.bg
+    var style:PageStyle = .normal
     @State var marginStart:CGFloat = 0
     @State var marginEnd:CGFloat = 0
 
@@ -19,7 +19,7 @@ struct PageFull: ViewModifier {
             //.padding(.top, PageSceneObserver.safeAreaTop)
             .padding(.leading, self.marginStart)
             .padding(.trailing, self.marginEnd)
-            .background(bgColor)
+            .background(self.style.bgColor)
             .onReceive(self.sceneObserver.$isUpdated){ update in
                 if !update {return}
                 if self.pagePresenter.isFullScreen {
@@ -71,7 +71,6 @@ struct BlockTitle: ViewModifier {
             .modifier(BoldTextStyle(
                 size: Font.size.regular
             ))
-            .modifier(ContentHorizontalEdges())
     }
 }
 

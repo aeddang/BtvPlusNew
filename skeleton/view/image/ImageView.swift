@@ -29,6 +29,7 @@ struct ImageView : View, PageProtocol {
                 case .complete(let img) : self.img = img
                 case .error :
                     self.img = UIImage(named: self.noImg)
+                    DataLog.d("error " + (self.img?.description ?? "") , tag:self.tag)
                 }
             }
             .onDisappear(){

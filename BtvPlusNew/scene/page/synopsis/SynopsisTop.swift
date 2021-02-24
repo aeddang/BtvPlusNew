@@ -12,8 +12,8 @@ struct SynopsisTop: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var playerModel: BtvPlayerModel = BtvPlayerModel()
-    @ObservedObject var playerListViewModel: InfinityScrollModel = InfinityScrollModel()
-    @ObservedObject var prerollModel = PrerollModel()
+    var playerListViewModel: InfinityScrollModel = InfinityScrollModel()
+    var prerollModel = PrerollModel()
     var title:String? = nil
     var imgBg:String? = nil
     var imgContentMode:ContentMode = .fit

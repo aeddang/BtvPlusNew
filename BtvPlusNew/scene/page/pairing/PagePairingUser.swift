@@ -41,7 +41,7 @@ struct PagePairingUser: PageView {
                     }
                     .modifier(MatchParent())
                     .onReceive(self.infinityScrollModel.$scrollPosition){pos in
-                        self.pageDragingModel.uiEvent = .dragCancel(geometry)
+                        self.pageDragingModel.uiEvent = .dragCancel
                     }
                     .onReceive(self.infinityScrollModel.$event){evt in
                         guard let evt = evt else {return}

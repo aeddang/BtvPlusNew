@@ -11,7 +11,7 @@ import SwiftUI
 struct MultiBlock:PageComponent {
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
-    var datas:[Block]
+    var datas:[BlockData]
     var useTracking:Bool = false
     var marginVertical : CGFloat = 0
    
@@ -19,11 +19,15 @@ struct MultiBlock:PageComponent {
         InfinityScrollView(
             viewModel: self.viewModel,
             axes: .vertical,
-            marginVertical : self.marginVertical,
+            marginVertical : 0,
             marginHorizontal : 0,
             spacing: Dimen.margin.medium,
             isRecycle : false,
             useTracking:self.useTracking){
+            
+            TopBanner(
+             datas: [BannerData(),BannerData(),BannerData(),BannerData()])
+                .modifier(MatchHorizontal(height: TopBanner.height))
             
             ForEach(self.datas) { data in
                 switch data.cardType {

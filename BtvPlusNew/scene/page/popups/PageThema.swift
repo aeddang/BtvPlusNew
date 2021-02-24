@@ -21,8 +21,8 @@ struct PageThema: PageView {
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     
     @State var originDatas:Array<BlockItem> = []
-    @State var originBlocks:Array<Block> = []
-    @State var blocks:Array<Block> = []
+    @State var originBlocks:Array<BlockData> = []
+    @State var blocks:Array<BlockData> = []
     @State var anyCancellable = Set<AnyCancellable>()
     
     @State var reloadDegree:Double = 0
@@ -69,7 +69,7 @@ struct PageThema: PageView {
                                     case .pull(let pos) :
                                         self.pageDragingModel.uiEvent = .pull(geometry, pos)
                                     case .scroll(_) :
-                                        self.pageDragingModel.uiEvent = .dragCancel(geometry)
+                                        self.pageDragingModel.uiEvent = .dragCancel
                                     }
                                 }
                                 
@@ -114,7 +114,7 @@ struct PageThema: PageView {
                 }
             }
             .onReceive(self.infinityScrollModel.$scrollPosition){pos in
-                self.pageDragingModel.uiEvent = .dragCancel(geometry)
+                self.pageDragingModel.uiEvent = .dragCancel
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
@@ -136,6 +136,7 @@ struct PageThema: PageView {
     
     private func reload(){
         self.isDataCompleted = false
+        self.useTracking = false
         self.originBlocks = []
         self.blocks = []
         self.setupBlocks()
@@ -143,7 +144,7 @@ struct PageThema: PageView {
     
     private func setupBlocks(){
         let blocks = self.originDatas.map{ d in
-            Block().setDate(d)
+            BlockData().setDate(d)
         }
         .filter{ block in
             switch block.dataType {
@@ -170,8 +171,9 @@ struct PageThema: PageView {
     private func requestBlockCompleted(){
         PageLog.d("addBlock completed", tag: "BlockProtocol")
         self.isDataCompleted = true
+        self.useTracking = true
     }
-    private func onBlock(stat:BlockStatus, block:Block){
+    private func onBlock(stat:BlockStatus, block:BlockData){
         switch stat {
         case .passive: self.removeBlock(block)
         case .active: break
@@ -203,7 +205,7 @@ struct PageThema: PageView {
         }
     }
     
-    private func removeBlock(_ block:Block){
+    private func removeBlock(_ block:BlockData){
         DispatchQueue.main.async {
             guard let find = self.blocks.firstIndex(of: block) else { return }
             self.blocks.remove(at: find)

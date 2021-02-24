@@ -12,7 +12,7 @@ enum BlockStatus:String{
     case initate, active, passive
 }
 
-class Block:Identifiable, ObservableObject, Equatable{
+class BlockData:Identifiable, ObservableObject, Equatable{
     private(set) var id = UUID().uuidString
     private(set) var name:String = ""
     private(set) var menuId:String? = nil
@@ -23,7 +23,7 @@ class Block:Identifiable, ObservableObject, Equatable{
     private(set) var originData:BlockItem? = nil
     @Published private(set) var status:BlockStatus = .initate
     
-    public static func == (l:Block, r:Block)-> Bool {
+    public static func == (l:BlockData, r:BlockData)-> Bool {
         return l.id == r.id
     }
     
@@ -31,7 +31,7 @@ class Block:Identifiable, ObservableObject, Equatable{
         status = .initate
     }
         
-    func setDate(_ data:BlockItem) -> Block{
+    func setDate(_ data:BlockItem) -> BlockData{
         name = data.menu_nm ?? ""
         menuId = data.menu_id
         cwCallId = data.cw_call_id_val

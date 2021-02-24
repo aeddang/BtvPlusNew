@@ -74,12 +74,15 @@ enum RoleType {
     }
 }
 
+extension PeopleList{
+    static let height = ListItem.people.size.height + Dimen.margin.micro + Font.size.lightExtra + Font.size.thinExtra
+}
 
 
 struct PeopleList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
-    @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[PeopleData]
     var body: some View {
         InfinityScrollView(
@@ -87,7 +90,9 @@ struct PeopleList: PageComponent{
             axes: .horizontal,
             marginVertical:0,
             marginHorizontal: Dimen.margin.thin ,
-            spacing: Dimen.margin.thin
+            spacing: Dimen.margin.thin,
+            isRecycle: false,
+            useTracking: true
             ){
             ForEach(self.datas) { data in
                 PeopleItem( data:data )

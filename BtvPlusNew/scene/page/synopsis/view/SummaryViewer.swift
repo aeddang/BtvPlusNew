@@ -41,6 +41,7 @@ struct SummaryViewer: PageComponent{
                 PeopleList(
                     viewModel:self.peopleScrollModel,
                     datas: self.data.peoples!)
+                    .frame(height:PeopleList.height)
                     .padding(.bottom, Dimen.margin.medium )
             }
             if self.data.summry != nil {

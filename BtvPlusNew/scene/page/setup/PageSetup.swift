@@ -194,7 +194,7 @@ struct PageSetup: PageView {
                 .modifier(PageFull())
             }
             .onReceive(self.infinityScrollModel.$scrollPosition){pos in
-                self.pageDragingModel.uiEvent = .dragCancel(geometry)
+                self.pageDragingModel.uiEvent = .dragCancel
             }
             .onReceive(self.pairing.$status){ status in
                 self.resetSetup(status: status)

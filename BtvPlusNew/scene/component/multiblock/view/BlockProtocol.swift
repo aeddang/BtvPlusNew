@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 protocol BlockProtocol {
-    var data:Block { get set }
+    var data:BlockData { get set }
     func getRequestApi() -> ApiQ?
     func onBlank()
     func onError(_ err:ApiResultError?)

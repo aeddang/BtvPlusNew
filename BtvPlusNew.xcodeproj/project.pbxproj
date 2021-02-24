@@ -87,6 +87,8 @@
 		317EF18625DB46D6004A6A5E /* PlayerListTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317EF18525DB46D6004A6A5E /* PlayerListTab.swift */; };
 		3180855825C2287300AE4A73 /* BtvPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3180855725C2287300AE4A73 /* BtvPlayer.swift */; };
 		3180855E25C233A900AE4A73 /* libPoCDrmAgent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */; };
+		318C874D25E64AA400ADDFE0 /* TopBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C874C25E64AA400ADDFE0 /* TopBanner.swift */; };
+		318C875825E64C3200ADDFE0 /* BannerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C875725E64C3200ADDFE0 /* BannerData.swift */; };
 		318FBFF725E4882700ABC241 /* PageCate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318FBFF625E4882700ABC241 /* PageCate.swift */; };
 		318FBFFE25E48F5B00ABC241 /* SortTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318FBFFD25E48F5B00ABC241 /* SortTab.swift */; };
 		318FC00625E4CA5800ABC241 /* CateBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318FC00525E4CA5800ABC241 /* CateBlock.swift */; };
@@ -259,7 +261,7 @@
 		D5DC477E25821DFA007EDD86 /* CWGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DC477D25821DFA007EDD86 /* CWGrid.swift */; };
 		D5E27EDF2586F29200B2CD5D /* ImageViewButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E27EDE2586F29200B2CD5D /* ImageViewButton.swift */; };
 		D5E27EE42587115900B2CD5D /* ImageConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E27EE32587115900B2CD5D /* ImageConst.swift */; };
-		D5E27EEA258751A200B2CD5D /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E27EE9258751A200B2CD5D /* Block.swift */; };
+		D5E27EEA258751A200B2CD5D /* BlockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E27EE9258751A200B2CD5D /* BlockData.swift */; };
 		EAD4DC85600F7786226DBDD0 /* Pods_BtvPlusNew_BtvPlusNewUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AB7647BF720A2E85DC62906 /* Pods_BtvPlusNew_BtvPlusNewUITests.framework */; };
 /* End PBXBuildFile section */
 
@@ -365,6 +367,8 @@
 		3180855725C2287300AE4A73 /* BtvPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtvPlayer.swift; sourceTree = "<group>"; };
 		3180855C25C233A900AE4A73 /* DrmAgent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrmAgent.h; sourceTree = "<group>"; };
 		3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPoCDrmAgent.a; sourceTree = "<group>"; };
+		318C874C25E64AA400ADDFE0 /* TopBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBanner.swift; sourceTree = "<group>"; };
+		318C875725E64C3200ADDFE0 /* BannerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerData.swift; sourceTree = "<group>"; };
 		318FBFF625E4882700ABC241 /* PageCate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCate.swift; sourceTree = "<group>"; };
 		318FBFFD25E48F5B00ABC241 /* SortTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortTab.swift; sourceTree = "<group>"; };
 		318FC00525E4CA5800ABC241 /* CateBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CateBlock.swift; sourceTree = "<group>"; };
@@ -552,7 +556,7 @@
 		D5DC477D25821DFA007EDD86 /* CWGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CWGrid.swift; sourceTree = "<group>"; };
 		D5E27EDE2586F29200B2CD5D /* ImageViewButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewButton.swift; sourceTree = "<group>"; };
 		D5E27EE32587115900B2CD5D /* ImageConst.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageConst.swift; sourceTree = "<group>"; };
-		D5E27EE9258751A200B2CD5D /* Block.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Block.swift; sourceTree = "<group>"; };
+		D5E27EE9258751A200B2CD5D /* BlockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockData.swift; sourceTree = "<group>"; };
 		FB8D979C17BAF3D2F1F3BE8D /* Pods-BtvPlusNewTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BtvPlusNewTests.debug.xcconfig"; path = "Target Support Files/Pods-BtvPlusNewTests/Pods-BtvPlusNewTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -866,6 +870,14 @@
 			path = model;
 			sourceTree = "<group>";
 		};
+		318C874B25E64A9200ADDFE0 /* topbanner */ = {
+			isa = PBXGroup;
+			children = (
+				318C874C25E64AA400ADDFE0 /* TopBanner.swift */,
+			);
+			path = topbanner;
+			sourceTree = "<group>";
+		};
 		318FC01425E4D75400ABC241 /*  cateblock */ = {
 			isa = PBXGroup;
 			children = (
@@ -1112,12 +1124,12 @@
 		D56C697D257DA09E00CF9AB8 /* page */ = {
 			isa = PBXGroup;
 			children = (
+				D56C6982257DA09E00CF9AB8 /* PageProtocol.swift */,
 				317A8F4D25CBBB2700E41226 /* PageHostingController.swift */,
 				D56C697E257DA09E00CF9AB8 /* PageSceneDelegate.swift */,
 				D56C697F257DA09E00CF9AB8 /* PageContentController.swift */,
-				D56C6980257DA09E00CF9AB8 /* PageDragingProtocol.swift */,
 				D56C6981257DA09E00CF9AB8 /* PageContentBody.swift */,
-				D56C6982257DA09E00CF9AB8 /* PageProtocol.swift */,
+				D56C6980257DA09E00CF9AB8 /* PageDragingProtocol.swift */,
 				D56C6983257DA09E00CF9AB8 /* PageComponentProtocol.swift */,
 			);
 			path = page;
@@ -1588,6 +1600,7 @@
 		D5DABD942589F1D400DF5701 /* component */ = {
 			isa = PBXGroup;
 			children = (
+				318C874B25E64A9200ADDFE0 /* topbanner */,
 				318FC01425E4D75400ABC241 /*  cateblock */,
 				D56CC2ED25902E5400CA1D54 /* multiblock */,
 				3167642525CD0A0C003A7721 /* webview */,
@@ -1599,7 +1612,8 @@
 		D5E27EF1258755FE00B2CD5D /* viewmodel */ = {
 			isa = PBXGroup;
 			children = (
-				D5E27EE9258751A200B2CD5D /* Block.swift */,
+				D5E27EE9258751A200B2CD5D /* BlockData.swift */,
+				318C875725E64C3200ADDFE0 /* BannerData.swift */,
 			);
 			path = viewmodel;
 			sourceTree = "<group>";
@@ -1949,6 +1963,7 @@
 				31373F6125C7E726004353DA /* CPYTPlayer.swift in Sources */,
 				3192317225A3FDBE00020388 /* coordinator.swift in Sources */,
 				D56C6A41257DA0C700CF9AB8 /* Player.swift in Sources */,
+				318C875825E64C3200ADDFE0 /* BannerData.swift in Sources */,
 				D5688924259C29DE00F2F67A /* SpanText.swift in Sources */,
 				D506D732258CA3E300F27C00 /* ThemaList.swift in Sources */,
 				D56C5FE825930060009AE769 /* BookMark.swift in Sources */,
@@ -1958,6 +1973,7 @@
 				D56C6A53257DA0C700CF9AB8 /* FillButton.swift in Sources */,
 				D56C699F257DA09E00CF9AB8 /* PageDragingProtocol.swift in Sources */,
 				D56C6A44257DA0C700CF9AB8 /* TextStyle.swift in Sources */,
+				318C874D25E64AA400ADDFE0 /* TopBanner.swift in Sources */,
 				D56C6A23257DA0C600CF9AB8 /* util.swift in Sources */,
 				D56C6A2A257DA0C700CF9AB8 /* CPImagePicker.swift in Sources */,
 				D506D722258C924500F27C00 /* ListStyle.swift in Sources */,
@@ -1986,7 +2002,7 @@
 				D56C6B0F257DAADE00CF9AB8 /* SceneRadioController.swift in Sources */,
 				31E8D7BC25CA5D470034BBC4 /* PlayerTop.swift in Sources */,
 				D5DC474E25820A02007EDD86 /* RelationContent.swift in Sources */,
-				D5E27EEA258751A200B2CD5D /* Block.swift in Sources */,
+				D5E27EEA258751A200B2CD5D /* BlockData.swift in Sources */,
 				315B55D225A7E2DC00B5B351 /* Nps.swift in Sources */,
 				D56C6AFF257DAAC000CF9AB8 /* AppDelegate.swift in Sources */,
 				3159B05E25B17C14008CA85B /* StbInfo.swift in Sources */,

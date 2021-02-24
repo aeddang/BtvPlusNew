@@ -27,6 +27,7 @@ struct SwipperView : View , PageProtocol, Swipper {
                             width: geometry.size.width,
                             height: geometry.size.height
                         )
+                        .clipped()
                         .onTapGesture(){
                             guard let action = self.action else {return}
                             action()
@@ -50,10 +51,9 @@ struct SwipperView : View , PageProtocol, Swipper {
             )
             
             .onDisappear(){
-                DispatchQueue.main.async {
-                    self.autoResetSubscription?.cancel()
-                    self.autoResetSubscription = nil
-                }
+                self.autoResetSubscription?.cancel()
+                self.autoResetSubscription = nil
+                
             }
          }//GeometryReader
     }//body

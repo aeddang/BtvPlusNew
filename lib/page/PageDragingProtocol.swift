@@ -37,6 +37,7 @@ protocol PageDragingProtocol {
     
     func onDraging(geometry:GeometryProxy, value:DragGesture.Value, modifyOffset:CGFloat)
     func onDragEnd(geometry:GeometryProxy)
+    func onDragCancel()
     
     func onDragInit()
     func onDragingAction(offset:CGFloat, dragOpacity:Double)
@@ -153,13 +154,22 @@ extension PageDragingView{
             offset = 0
             isBottom = false
         }
-        ComponentLog.d("onDragEnd " + isBottom.description, tag: "PageDragingProtocol")
+        //ComponentLog.d("onDragEnd " + isBottom.description, tag: "PageDragingProtocol")
         self.onDragEndAction(isBottom:isBottom, offset: offset)
     }
+    
+    func onDragCancel() {
+        if self.pageObject?.isPopup == false { return }
+        self.onDragEndAction(isBottom: false, offset: 0)
+    }
+    
+    
 }
 
 class PageDragingModel: ObservableObject, PageProtocol, Identifiable{
     static var MIN_DRAG_RANGE:CGFloat = 20
+    
+    
     @Published var uiEvent:PageDragingUIEvent? = nil {didSet{ if uiEvent != nil { uiEvent = nil} }}
     @Published var event:PageDragingEvent? = nil {didSet{ if event != nil { event = nil} }}
     @Published var status:PageDragingStatus = .none
@@ -191,7 +201,7 @@ enum PageDragingUIEvent {
          pulled(GeometryProxy),
          drag(GeometryProxy, DragGesture.Value, CGFloat? = nil), 
          draged(GeometryProxy),
-         dragCancel(GeometryProxy),
+         dragCancel,
          scrollBodyOffset(CGFloat),
          scrollContentRange(CGFloat),
          scrollTop,
@@ -216,6 +226,8 @@ enum PageNestedScrollEvent {
 
 
 struct PageDragingBody<Content>: PageDragingView  where Content: View{
+    
+    
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel:PageDragingModel = PageDragingModel()
@@ -237,7 +249,8 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     @State var isScrolling = false
     @State var isBottom = false
     @State var isDragingCompleted = false
-    
+    private let minDiff:CGFloat = 0.75
+    private let maxDiff:CGFloat = 100
     init(
         viewModel: PageDragingModel,
         axis:Axis.Set = .vertical,
@@ -255,6 +268,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     var body: some View {
         ZStack(alignment: .topLeading){
             self.content.modifier(MatchParent())
+            
         }//z
         .offset(
             x:self.axis == .horizontal ? self.bodyOffset : 0,
@@ -285,10 +299,9 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
                     self.pullOffset = self.minPullAmount
                     self.onPulled(geometry: geo)
                     self.viewModel.status = .none
-                    //ComponentLog.d("pulled " +  self.viewModel.status.rawValue + " " + self.bodyOffset.description, tag: "dragCancel")
                     if self.bodyOffset != 0 {
-                        self.onDragInit()
-                        self.onDragEnd(geometry: geo)
+                        //ComponentLog.d("pulled " +  self.viewModel.status.rawValue + " " + self.bodyOffset.description, tag: "dragCancel")
+                        self.autoReset()
                         return
                     }
                 }
@@ -296,14 +309,14 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
             case .drag(let geo, let value, let offset) :
                 self.onDraging(geometry: geo, value: value, modifyOffset: offset ?? 0)
             case .draged(let geo) : self.onDragEnd(geometry: geo)
-            case .dragCancel(let geo) :
+            case .dragCancel :
                 if self.viewModel.status == .none && self.bodyOffset != 0 {
-                    self.onDragInit()
-                    self.onDragEnd(geometry: geo)
+                    self.autoReset()
                     return
                 }
                 if self.viewModel.status != .drag { return }
-                self.onDragEnd(geometry: geo)
+                //ComponentLog.d("dragCancel " +  self.viewModel.status.rawValue + " " + self.bodyOffset.description, tag: "dragCancel")
+                self.autoReset()
                 
             case .scrollContentRange(let range) :
                 self.contentRange = range 
@@ -352,13 +365,17 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
         self.isDraging = true
         self.viewModel.event = .dragInit
         self.viewModel.status = .drag
+        
     }
     
     func onDragingAction(offset: CGFloat, dragOpacity: Double) {
         if self.isDragingCompleted {return}
+        self.autoResetSubscription?.cancel()
+        self.autoResetSubscription = nil
         let diff = abs(self.bodyOffset - offset)
         //DataLog.d("diff " + diff.description, tag: "DIFF")
-        if abs(diff) > 100 { return }
+        if abs(diff) > maxDiff { return }
+        if abs(diff) < minDiff { return }
         self.bodyOffset = offset
         self.viewModel.event = .drag(offset, dragOpacity)
         self.pagePresenter.dragOpercity = dragOpacity
@@ -382,6 +399,28 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
             self.pagePresenter.goBack()
         }
     }
+    
+    @State var autoResetSubscription:AnyCancellable?
+    func autoReset(){
+        self.autoResetSubscription?.cancel()
+        self.autoResetSubscription = Timer.publish(
+            every: 0.05, on: .current, in: .tracking)
+            .autoconnect()
+            .sink() {_ in
+                self.reset()
+            }
+    }
+    
+    func reset() {
+       self.autoResetSubscription?.cancel()
+       self.autoResetSubscription = nil
+       DispatchQueue.main.async {
+            self.onDragInit()
+            self.onDragCancel()
+       }
+    }
+    
+    
     
             
 }

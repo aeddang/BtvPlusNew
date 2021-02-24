@@ -13,7 +13,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
-    var data: Block
+    var data: BlockData
     @State var datas:[VideoData] = []
     @State var listHeight:CGFloat = 0
     var body :some View {

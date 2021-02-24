@@ -24,7 +24,7 @@ struct PageCate: PageView {
     @State var title:String? = nil
     @State var listType:CateBlock.ListType = .poster
     @State var menuId:String? = nil
-    @State var blockData:Block? = nil
+    @State var blockData:BlockData? = nil
     
     var body: some View {
         GeometryReader { geometry in
@@ -53,7 +53,7 @@ struct PageCate: PageView {
                         case .pull(let pos) :
                             self.pageDragingModel.uiEvent = .pull(geometry, pos)
                         case .scroll(_) :
-                            self.pageDragingModel.uiEvent = .dragCancel(geometry)
+                            self.pageDragingModel.uiEvent = .dragCancel
                         }
                     }
                 }
@@ -79,7 +79,7 @@ struct PageCate: PageView {
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
-                if let data = obj.getParamValue(key: .data) as? Block {
+                if let data = obj.getParamValue(key: .data) as? BlockData {
                     self.title = data.name
                     self.blockData = data
                 } else {

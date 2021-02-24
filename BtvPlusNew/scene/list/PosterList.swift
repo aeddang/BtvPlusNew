@@ -15,7 +15,7 @@ class PosterData:InfinityData{
     private(set) var type:PosterType = .small
     private(set) var synopsisData:SynopsisData? = nil
     
-    func setData(data:ContentItem, cardType:Block.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
+    func setData(data:ContentItem, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
         setCardType(cardType)
         title = data.title
         if let poster = data.poster_filename_v {
@@ -29,7 +29,7 @@ class PosterData:InfinityData{
         return self
     }
     
-    func setData(data:BookMarkItem, cardType:Block.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
+    func setData(data:BookMarkItem, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
         setCardType(cardType)
         title = data.title
         if let poster = data.poster {
@@ -43,7 +43,7 @@ class PosterData:InfinityData{
         return self
     }
     
-    func setData(data:WatchItem, cardType:Block.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
+    func setData(data:WatchItem, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
         setCardType(cardType)
         title = data.title
         if let poster = data.thumbnail {
@@ -56,7 +56,7 @@ class PosterData:InfinityData{
         return self
     }
     
-    func setData(data:CWBlockItem, cardType:Block.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
+    func setData(data:CWBlockItem, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
         setCardType(cardType)
         title = data.title
         if let poster = data.poster_filename_v {
@@ -69,7 +69,7 @@ class PosterData:InfinityData{
         return self
     }
     
-    private func setCardType(_ cardType:Block.CardType){
+    private func setCardType(_ cardType:BlockData.CardType){
         switch cardType {
         case .bigPoster: type = .big
         case .smallPoster: type = .small
@@ -131,7 +131,10 @@ struct PosterList: PageComponent{
             axes: .horizontal,
             marginVertical: 0,
             marginHorizontal: self.margin,
-            spacing: Dimen.margin.tiny){
+            spacing: Dimen.margin.tiny,
+            isRecycle: true,
+            useTracking: true
+            ){
             ForEach(self.datas) { data in
                 PosterItem( data:data )
                 .onTapGesture {
@@ -177,6 +180,7 @@ struct PosterSet: PageComponent{
             }
         }
         .padding(.horizontal, self.padding)
+        .frame(width: self.sceneObserver.screenSize.width)
         .onAppear {
             if self.data.datas.isEmpty { return }
             let datas = self.data.datas

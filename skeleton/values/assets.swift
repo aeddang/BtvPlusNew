@@ -138,6 +138,9 @@ extension Asset{
         public static let checkBoxOff = "icCheckboxOff"
         public static let spinner = "icSpinner"
         public static let tooltip = "icSynopTooltip"
+        
+        public static let bgGradientBottom = "bgGradientBottom"
+        public static let bgGradientTop = "bgGradientTop"
     }
     
     struct image {

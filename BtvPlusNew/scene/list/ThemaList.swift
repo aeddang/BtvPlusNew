@@ -17,7 +17,7 @@ class ThemaData:InfinityData{
     private(set) var menuId: String? = nil
     private(set) var blocks:[BlockItem]? = nil
     
-    func setData(data:ContentItem, cardType:Block.CardType = .squareThema, idx:Int = -1) -> ThemaData {
+    func setData(data:ContentItem, cardType:BlockData.CardType = .squareThema, idx:Int = -1) -> ThemaData {
         setCardType(cardType)
         title = data.title
         if let thumb = data.poster_filename_h {
@@ -27,7 +27,7 @@ class ThemaData:InfinityData{
         return self
     }
     
-    func setData(data:BlockItem, cardType:Block.CardType = .squareThema, idx:Int = -1) -> ThemaData {
+    func setData(data:BlockItem, cardType:BlockData.CardType = .squareThema, idx:Int = -1) -> ThemaData {
         setCardType(cardType)
         title = data.menu_nm
         if let thumb = data.bnr_off_img_path {
@@ -39,7 +39,7 @@ class ThemaData:InfinityData{
         return self
     }
     
-    private func setCardType(_ cardType:Block.CardType){
+    private func setCardType(_ cardType:BlockData.CardType){
         switch cardType {
         case .circleTheme: type = .small
         case .bigTheme: type = .big
@@ -106,7 +106,9 @@ struct ThemaList: PageComponent{
             axes: .horizontal,
             marginVertical: 0,
             marginHorizontal: self.margin ,
-            spacing: datas.isEmpty ? 0 : datas[0].type.spacing
+            spacing: datas.isEmpty ? 0 : datas[0].type.spacing,
+            isRecycle: true,
+            useTracking: true
             ){
             ForEach(self.datas) { data in
                 ThemaItem( data:data )
@@ -145,11 +147,10 @@ struct ThemaItem: PageView {
             if self.data.type.isCircle {
                 ImageView(url: self.data.image, contentMode: .fit, noImg: Asset.noImg1_1)
                     .modifier(MatchParent())
-                    .clipShape(Circle())
+                
             }else{
                 ImageView(url: self.data.image, contentMode: .fit, noImg: Asset.noImg1_1)
                     .modifier(MatchParent())
-                    .clipShape(Rectangle())
             }
         }
         .frame(

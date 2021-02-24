@@ -61,9 +61,9 @@ struct ImageViewPager_Previews: PreviewProvider {
             CPImageViewPager(
                 pages:
                    [
-                     ImageItem(imageNamed: Asset.test),
-                     ImageItem(imageNamed: Asset.test),
-                     ImageItem(imageNamed: Asset.test)
+                     ImageItem(imagePath: Asset.test),
+                     ImageItem(imagePath: Asset.test),
+                     ImageItem(imagePath: Asset.test)
                    ]
                 
             )

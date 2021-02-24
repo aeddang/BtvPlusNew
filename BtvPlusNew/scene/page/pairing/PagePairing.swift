@@ -115,8 +115,7 @@ struct PagePairing: PageView {
                 )
             }
             .onReceive(self.infinityScrollModel.$scrollPosition){pos in
-                //PageLog.d("scrollPosition " + pos.description, tag: self.tag)
-                self.pageDragingModel.uiEvent = .dragCancel(geometry)
+                self.pageDragingModel.uiEvent = .dragCancel
             }
             .onReceive(self.pairing.$event){ evt in
                 guard let evt = evt else {return}

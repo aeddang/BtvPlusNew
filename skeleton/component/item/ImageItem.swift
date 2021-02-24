@@ -11,9 +11,8 @@ import SwiftUI
 
 struct ImageItem: PageComponent, Identifiable {
     let id = UUID().uuidString
-    let imageNamed: String
+    let imagePath: String
     var body: some View {
-        ImageView(url:imageNamed, contentMode: .fill)
-            .clipped()
+        ImageView(url:imagePath, contentMode: .fill)
     }
 }

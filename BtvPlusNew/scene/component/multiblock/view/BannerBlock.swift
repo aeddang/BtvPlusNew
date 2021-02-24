@@ -11,7 +11,7 @@ import SwiftUI
 struct BannerBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
-    var data: Block
+    var data: BlockData
     @State var bannerData:BannerData? = nil
     @State var listHeight:CGFloat = 0
     var body :some View {

@@ -18,8 +18,8 @@ struct PageHome: PageView {
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel:PageDataProviderModel = PageDataProviderModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
-    @State var originBlocks:Array<Block> = []
-    @State var blocks:Array<Block> = []
+    @State var originBlocks:Array<BlockData> = []
+    @State var blocks:Array<BlockData> = []
     @State var menuId:String = ""
     @State var anyCancellable = Set<AnyCancellable>()
     
@@ -107,6 +107,7 @@ struct PageHome: PageView {
     
     private func reload(){
         self.isDataCompleted = false
+        self.useTracking = false
         self.originBlocks = []
         self.blocks = []
         self.setupBlocks()
@@ -115,7 +116,7 @@ struct PageHome: PageView {
     private func setupBlocks(){
         guard let blocksData = self.dataProvider.bands.getData(menuId: self.menuId)?.blocks else {return}
         let blocks = blocksData.map{ data in
-            Block().setDate(data)
+            BlockData().setDate(data)
         }
         .filter{ block in
             switch block.dataType {
@@ -143,8 +144,9 @@ struct PageHome: PageView {
     private func requestBlockCompleted(){
         PageLog.d("addBlock completed", tag: "BlockProtocol")
         self.isDataCompleted = true
+        self.useTracking = true
     }
-    private func onBlock(stat:BlockStatus, block:Block){
+    private func onBlock(stat:BlockStatus, block:BlockData){
         switch stat {
         case .passive: self.removeBlock(block)
         case .active: break
@@ -176,7 +178,7 @@ struct PageHome: PageView {
         }
     }
     
-    private func removeBlock(_ block:Block){
+    private func removeBlock(_ block:BlockData){
         DispatchQueue.main.async {
             guard let find = self.blocks.firstIndex(of: block) else { return }
             self.blocks.remove(at: find)

@@ -19,7 +19,7 @@ class VideoData:InfinityData{
     private(set) var epsdId:String? = nil
     private(set) var isInside:Bool = false
     
-    func setData(data:ContentItem, cardType:Block.CardType = .video, idx:Int = -1) -> VideoData {
+    func setData(data:ContentItem, cardType:BlockData.CardType = .video, idx:Int = -1) -> VideoData {
         setCardType(cardType)
         title = data.title
         if let thumb = data.poster_filename_h {
@@ -34,7 +34,7 @@ class VideoData:InfinityData{
         return self
     }
     
-    func setData(data:BookMarkItem, cardType:Block.CardType = .video, idx:Int = -1) -> VideoData {
+    func setData(data:BookMarkItem, cardType:BlockData.CardType = .video, idx:Int = -1) -> VideoData {
         setCardType(cardType)
         title = data.title
         if let thumb = data.poster {
@@ -48,7 +48,7 @@ class VideoData:InfinityData{
         return self
     }
     
-    func setData(data:WatchItem, cardType:Block.CardType = .video, idx:Int = -1) -> VideoData {
+    func setData(data:WatchItem, cardType:BlockData.CardType = .video, idx:Int = -1) -> VideoData {
         setCardType(cardType)
         if let rt = data.watch_rt?.toInt() {
             self.progress = Float(rt) / 100.0
@@ -78,7 +78,7 @@ class VideoData:InfinityData{
         return self
     }
     
-    private func setCardType(_ cardType:Block.CardType){
+    private func setCardType(_ cardType:BlockData.CardType){
         switch cardType {
         case .watchedVideo: type = .watching
         default: type = .nomal
@@ -133,7 +133,9 @@ struct VideoList: PageComponent{
             axes: .horizontal,
             marginVertical: 0,
             marginHorizontal: self.margin,
-            spacing: Dimen.margin.tiny
+            spacing: Dimen.margin.tiny,
+            isRecycle: true,
+            useTracking: true
         ){
             ForEach(self.datas) { data in
                 if data.index == -1 {
@@ -205,6 +207,7 @@ struct VideoSet: PageComponent{
             }
         }
         .padding(.horizontal, self.padding)
+        .frame(width: self.sceneObserver.screenSize.width)
         .onAppear {
             if self.data.datas.isEmpty { return }
             let datas = self.data.datas

@@ -86,14 +86,16 @@ struct PageContentBody: PageView  {
         .onReceive(self.pageChanger.$dragOpercity){ opacity in
             if !self.isReady  {return}
             //PageLog.log("dragOpercity",tag:self.pageID)
-            self.opacity = opacity
+            
             if self.isTop {return}
+            self.opacity = opacity
             let amount = Self.pageMoveAmount * CGFloat(opacity)
             switch self.topPageType {
             case .horizental :  self.pageOffsetX = amount
             case .vertical :  self.pageOffsetY = amount
             default : do{}
             }
+            
         }
         
         .onReceive(self.pageObservable.$pagePosition){ pos in

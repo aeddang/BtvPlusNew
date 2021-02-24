@@ -69,6 +69,8 @@ class ImageLoader: ObservableObject, PageProtocol{
                 }
             }
         } else {
+            
+            DataLog.e("load " + key , tag:self.tag)
             self.task = downloader.downloadImage(with: url, options: nil, progressBlock: nil) {  [weak self] (result) in
                 guard let self = self else { return }
                 switch result {

@@ -11,16 +11,16 @@ import SwiftUI
 
 class CateBlockModel: PageDataProviderModel {
     private(set) var listType:CateBlock.ListType = .poster
-    private(set) var dataType:Block.DataType = .grid
+    private(set) var dataType:BlockData.DataType = .grid
     private(set) var key:String? = nil
     private(set) var menuId:String? = nil
-    private(set) var data:Block? = nil
+    private(set) var data:BlockData? = nil
     
     @Published private(set) var isUpdate = false {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
     
-    func update(data:Block, listType:CateBlock.ListType, key:String? = nil) {
+    func update(data:BlockData, listType:CateBlock.ListType, key:String? = nil) {
         self.data = data
         self.listType = listType
         self.key = key
@@ -73,10 +73,10 @@ struct CateBlock: PageComponent{
                     marginVertical : 0,
                     marginHorizontal : 0,
                     spacing: Dimen.margin.thin,
-                    isRecycle:true
+                    isRecycle: true
                 ){
                     if !self.isError {
-                    
+                        
                         SortTab(
                             count:self.totalCount,
                             isSortAble: self.isSortAble

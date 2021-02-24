@@ -38,6 +38,7 @@ struct PageSynopsis: PageView {
     @State var synopsisData:SynopsisData? = nil
     @State var isPairing:Bool? = nil
     @State var isFullScreen:Bool = false
+    @State var safeAreaBottom:CGFloat = 0
     
     enum SingleRequestType:String {
         case preview, changeOption, relationContents
@@ -78,14 +79,18 @@ struct PageSynopsis: PageView {
                         }
                        
                         InfinityScrollView(
-                            viewModel: self.infinityScrollModel){
+                            viewModel: self.infinityScrollModel,
+                            spacing:Dimen.margin.regular,
+                            isRecycle:false,
+                            useTracking:true
+                            ){
                             SynopsisBody(
                                 componentViewModel: self.componentViewModel,
                                 relationContentsModel: self.relationContentsModel,
                                 peopleScrollModel: self.peopleScrollModel,
                                 pageDragingModel: self.pageDragingModel,
                                 isBookmark: self.$isBookmark,
-                                seris: self.$seris,
+                               // seris: self.$seris,
                                 relationTabIdx: self.$relationTabIdx,
                                 synopsisData: self.synopsisData,
                                 isPairing: self.isPairing,
@@ -112,7 +117,7 @@ struct PageSynopsis: PageView {
                                 }
                             }
                             .onReceive(self.peopleScrollModel.$scrollPosition){pos in
-                                self.pageDragingModel.uiEvent = .dragCancel(geometry)
+                                self.pageDragingModel.uiEvent = .dragCancel
                             }
                             .onReceive(self.peopleScrollModel.$event){evt in
                                 guard let evt = evt else {return}
@@ -124,9 +129,34 @@ struct PageSynopsis: PageView {
                             .onReceive(self.peopleScrollModel.$pullPosition){ pos in
                                 self.pageDragingModel.uiEvent = .pull(geometry, pos)
                             }
+                            
+                            if !self.seris.isEmpty {
+                                SerisTab(
+                                    data:self.relationContentsModel,
+                                    seris: self.$seris
+                                ){ season in
+                                    self.componentViewModel.uiEvent = .changeSynopsis(season.synopsisData)
+                                }
+                                .padding(.horizontal, Dimen.margin.thin)
+                            }
+                            ForEach(self.seris) { data in
+                                SerisItem( data:data, isSelected: self.synopsisData?.epsdId == data.contentID )
+                                    .padding(.horizontal, Dimen.margin.thin)
+                                .onTapGesture {
+                                    self.componentViewModel.uiEvent = .changeVod(data.epsdId)
+                                }
+                            }
+                            
+                            VStack(spacing:Dimen.margin.thin){
+                                ForEach(self.relationDatas) { data in
+                                    PosterSet( data:data )
+                                }
+                            }
+                            Spacer().frame(height: self.safeAreaBottom)
                         }
                         .modifier(MatchParent())
                         .highPriorityGesture(
+                            
                             DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
                                 .onChanged({ value in
                                     self.pageDragingModel.uiEvent = .drag(geometry, value)
@@ -134,15 +164,19 @@ struct PageSynopsis: PageView {
                                 .onEnded({ _ in
                                     self.pageDragingModel.uiEvent = .draged(geometry)
                                 })
+                            
                         )
                     }
                     .modifier(PageFull())
                     
                 }//PageDragingBody
                 .onReceive(self.infinityScrollModel.$scrollPosition){pos in
-                   self.pageDragingModel.uiEvent = .dragCancel(geometry)
+                   self.pageDragingModel.uiEvent = .dragCancel
                 }
             }//PageDataProviderContent
+            .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
+                self.safeAreaBottom = pos
+            }
             .onReceive(self.pairing.$event){evt in
                 guard let _ = evt else {return}
                 self.isPageDataReady = true
@@ -235,10 +269,13 @@ struct PageSynopsis: PageView {
             .onAppear{
                 guard let obj = self.pageObject  else { return }
                 self.synopsisData = obj.getParamValue(key: .data) as? SynopsisData
+                self.initPage()
             }
             
             
         }//geo
+        
+        
     }//body
     
 
@@ -287,7 +324,8 @@ struct PageSynopsis: PageView {
     
     
     func initPage(){
-        if !self.isPageDataReady || !self.isPageUiReady { return }
+       
+        if !self.isPageDataReady || !self.isPageUiReady || self.synopsisData == nil { return }
         if self.pageObservable.status == .initate { return }
         self.isPairing = self.pairing.status == .pairing
         if self.isInitPage {
@@ -332,7 +370,11 @@ struct PageSynopsis: PageView {
         }
         switch progress {
         case 0 :
-            guard let data = self.synopsisData else {return}
+            guard let data = self.synopsisData else {
+                PageLog.d("requestProgress synopsisData nil", tag: self.tag)
+                self.errorProgress()
+                return
+            }
             self.pageDataProviderModel.requestProgress( qs: [
                 .init(type: .getGatewaySynopsis(data)),
                 .init(type: .getSynopsis(data))

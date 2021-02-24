@@ -17,7 +17,7 @@ struct SynopsisBody: PageComponent{
     var pageDragingModel:PageDragingModel
     
     @Binding var isBookmark:Bool?
-    @Binding var seris:[SerisData]
+   // @Binding var seris:[SerisData]
     @Binding var relationTabIdx:Int
 
     var synopsisData:SynopsisData? = nil
@@ -33,7 +33,7 @@ struct SynopsisBody: PageComponent{
     var relationDatas:[PosterDataSet] = []
     var hasRelationVod:Bool? = nil
     
-    @State var safeAreaBottom:CGFloat = 0
+    
 
     var body: some View {
         VStack(alignment:.leading , spacing:Dimen.margin.regular) {
@@ -107,34 +107,11 @@ struct SynopsisBody: PageComponent{
                     .padding(.horizontal, Dimen.margin.thin)
                 }
                 
-                if !self.seris.isEmpty {
-                    SerisTab(
-                        data:self.relationContentsModel,
-                        seris: self.$seris
-                    ){ season in
-                        self.componentViewModel.uiEvent = .changeSynopsis(season.synopsisData)
-                    }
-                    .padding(.horizontal, Dimen.margin.thin)
-                }
-                ForEach(self.seris) { data in
-                    SerisItem( data:data, isSelected: self.synopsisData?.epsdId == data.contentID )
-                        .padding(.horizontal, Dimen.margin.thin)
-                    .onTapGesture {
-                        self.componentViewModel.uiEvent = .changeVod(data.epsdId)
-                    }
-                }
                 
-                VStack(spacing:Dimen.margin.thin){
-                    ForEach(self.relationDatas) { data in
-                        PosterSet( data:data )
-                    }
-                }
             }
-            Spacer().frame(height: self.safeAreaBottom)
+            
         }
-        .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
-            self.safeAreaBottom = pos
-        }
+        
     }//body
 }
 

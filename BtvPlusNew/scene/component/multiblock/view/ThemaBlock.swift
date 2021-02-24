@@ -12,7 +12,7 @@ struct ThemaBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
-    var data: Block
+    var data: BlockData
     @State var datas:[ThemaData] = []
     @State var listHeight:CGFloat = 0
     var body :some View {

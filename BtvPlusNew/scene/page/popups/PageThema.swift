@@ -59,7 +59,7 @@ struct PageThema: PageView {
                                     pageDragingModel: self.pageDragingModel,
                                     datas: self.blocks,
                                     useTracking:self.useTracking,
-                                    marginVertical: Dimen.margin.lightExtra
+                                    marginVertical: 0
                                     )
                                 .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
                                     guard let evt = evt else {return}

@@ -21,7 +21,7 @@ class ThemaData:InfinityData{
         setCardType(cardType)
         title = data.title
         if let thumb = data.poster_filename_h {
-            image = ImagePath.thumbImagePath(filePath: thumb, size: type.size)
+            image = ImagePath.thumbImagePath(filePath: thumb, size: type.size, convType: type == .small ? .alpha : .none)
         }
         index = idx
         return self
@@ -31,7 +31,7 @@ class ThemaData:InfinityData{
         setCardType(cardType)
         title = data.menu_nm
         if let thumb = data.bnr_off_img_path {
-            image = ImagePath.thumbImagePath(filePath: thumb, size: type.size)
+            image = ImagePath.thumbImagePath(filePath: thumb, size: type.size, convType: type == .small ? .alpha : .none)
         }
         index = idx
         blocks = data.blocks

@@ -4,16 +4,43 @@ import SwiftUI
 
 class BannerData:InfinityData, PageProtocol{
     private(set) var image: String = Asset.noImg9_16
+    private(set) var logo: String? = nil
+    private(set) var focus: String? = nil
     private(set) var title: String? = nil
     private(set) var subTitle: String? = nil
     
     private(set) var link:String? = nil
     private(set) var move:PageID? = nil
     private(set) var moveData:[PageParam:Any]? = nil
+    
+    
      
-    func setData(data:EventBannerItem, idx:Int = -1) -> BannerData {
+    func setData(data:EventBannerItem, type: EuxpNetwork.BannerType = .list ,idx:Int = -1) -> BannerData {
         if let poster = data.bnr_off_img_path {
-            image = ImagePath.thumbImagePath(filePath: poster, size: ListItem.banner.size)
+            switch type {
+            case .list: image = ImagePath.thumbImagePath(filePath: poster, size: ListItem.banner.size)
+            case .page:
+                image = ImagePath.thumbImagePath(filePath: poster, size: CGSize(width: 0, height: TopBanner.imageHeight))
+                logo = ImagePath.thumbImagePath(filePath: data.logo_img_path, size: CGSize(width: 320, height: 0), convType: .alpha)
+                focus = ImagePath.thumbImagePath(filePath: data.width_focus_off_path, size: CGSize(width: 320, height: 0))
+                if let str = data.bnr_img_expl {
+                    subTitle = str.isEmpty ? nil : str
+                }
+                if let str = data.bnr_img_btm_expl , !str.isEmpty{
+                    if subTitle == nil || subTitle?.isEmpty == true {
+                        subTitle = str
+                    }else{
+                        subTitle! += ("\n" + str)
+                    }
+                }
+                if let str = data.bnr_img_btm_expl2 , !str.isEmpty {
+                    if subTitle == nil || subTitle?.isEmpty == true {
+                        subTitle = str
+                    }else{
+                        subTitle! += ("\n" + str)
+                    }
+                }
+            }
         }
         title = data.menu_nm
         index = idx

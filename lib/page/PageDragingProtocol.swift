@@ -167,7 +167,7 @@ extension PageDragingView{
 }
 
 class PageDragingModel: ObservableObject, PageProtocol, Identifiable{
-    static var MIN_DRAG_RANGE:CGFloat = 20
+    static var MIN_DRAG_RANGE:CGFloat = 10
     
     
     @Published var uiEvent:PageDragingUIEvent? = nil {didSet{ if uiEvent != nil { uiEvent = nil} }}
@@ -236,7 +236,9 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     var axis:Axis.Set
     
     var minPullAmount:CGFloat
-    @State var bodyOffset: CGFloat = 0.0
+    @State var bodyOffset:CGFloat = 0.0
+    @State var direction:CGFloat = 0
+    
     @State var isScrollInit = false
     @State var scrollOffset: CGFloat = 0.0
     @State var gestureOffset: CGFloat = 0.0
@@ -372,11 +374,20 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
         if self.isDragingCompleted {return}
         self.autoResetSubscription?.cancel()
         self.autoResetSubscription = nil
-        let diff = abs(self.bodyOffset - offset)
-        //DataLog.d("diff " + diff.description, tag: "DIFF")
+        var diff = self.bodyOffset - offset
+        if self.direction * diff < 0 {
+            self.direction = diff == 0 ? 0 : ( diff > 0 ? 1 : -1 )
+            DataLog.d("direction return " +   self.direction.description, tag: "DIFF")
+            return
+        }
+        self.direction = diff == 0 ? 0 : ( diff > 0 ? 1 : -1 )
+        diff = abs(diff)
+        DataLog.d("offset " + offset.description, tag: "DIFF")
+        DataLog.d("direction " +   self.direction.description, tag: "DIFF")
         if abs(diff) > maxDiff { return }
         if abs(diff) < minDiff { return }
         self.bodyOffset = offset
+        
         self.viewModel.event = .drag(offset, dragOpacity)
         self.pagePresenter.dragOpercity = dragOpacity
     }
@@ -386,6 +397,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
         if !self.isDraging { return }
         self.viewModel.status = .none
         self.isDraging = false
+        self.direction = 0
         withAnimation{
             if !isBottom {
                 self.bodyOffset = 0
@@ -404,7 +416,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     func autoReset(){
         self.autoResetSubscription?.cancel()
         self.autoResetSubscription = Timer.publish(
-            every: 0.05, on: .current, in: .tracking)
+            every: 0.01, on: .current, in: .tracking)
             .autoconnect()
             .sink() {_ in
                 self.reset()

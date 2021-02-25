@@ -73,6 +73,7 @@ struct EventBannerItem : Codable {
     private(set) var bnr_img_btm_expl_typ_cd:String? = nil    // 배너 이미지 하위 설명 유형 코드
     private(set) var bnr_img_expl:String? = nil   // 배너 이미지 설명
     private(set) var bnr_img_btm_expl:String? = nil   // 배너 이미지 하위 설명
+    private(set) var bnr_img_btm_expl2:String? = nil   // 배너 이미지 하위 설명
     private(set) var img_bagr_color_code:String? = nil    // 이미지 배경 컬러 코드
     private(set) var logo_img_path:String? = nil  // 로고 이미지 경로
     private(set) var width_focus_off_path:String? = nil   // 가로 포커스 OFF 경로: 태블릿 이미지

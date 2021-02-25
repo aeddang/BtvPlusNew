@@ -10,9 +10,13 @@ import Foundation
 import SwiftUI
 
 extension TopBanner{
-    static let barWidth:CGFloat = 120
-    static let imageHeight:CGFloat = 667
+    static let barWidth:CGFloat = 20
+    static let imageHeight:CGFloat = 720
     static let height:CGFloat = 477
+    
+    static let barHeight = Dimen.line.medium
+    static let marginBottom = Dimen.margin.medium
+    static let maginBottomLogo = (Self.imageHeight - Self.height) + (Self.marginBottom + Self.barHeight + Dimen.margin.medium)
 }
 
 
@@ -46,19 +50,22 @@ struct TopBanner: PageComponent {
                         Spacer()
                             .modifier(MatchVertical(width:self.leading))
                             .background(Color.transparent.white20)
+                            .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
                         Spacer()
-                            .modifier(MatchParent())
+                            .modifier(MatchVertical(width: Self.barWidth))
                             .background(Color.app.white)
+                            .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
                         Spacer()
                             .modifier(MatchVertical(width:self.tailing))
                             .background(Color.transparent.white20)
+                            .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
                     }
-                    .frame(width:Self.barWidth, height:Dimen.line.medium)
+                    .frame( height:Self.barHeight)
                     .modifier(
                         LayoutBotttom(
                             geometry: geometry,
-                            height:Dimen.line.medium,
-                            margin: Dimen.margin.medium )
+                            height:Self.barHeight,
+                            margin: Self.marginBottom )
                     )
                 }
             }
@@ -76,7 +83,7 @@ struct TopBanner: PageComponent {
             }
             .onAppear(){
                 self.pages = datas.map{data in
-                    TopBannerItem(imagePath: data.image)
+                    TopBannerItem(data: data)
                 }
                 self.setBar()
             }
@@ -85,7 +92,7 @@ struct TopBanner: PageComponent {
     
     func setBar(){
         let count = self.datas.count
-        let size = Self.barWidth / CGFloat(count)
+        let size = Self.barWidth
         withAnimation{
             self.leading = size * CGFloat(self.index)
             self.tailing = size * CGFloat(max(0,(count - self.index - 1)))
@@ -95,22 +102,48 @@ struct TopBanner: PageComponent {
 }
 
 struct TopBannerItem: PageComponent, Identifiable {
+    @EnvironmentObject var sceneObserver:SceneObserver
     let id = UUID().uuidString
-    let imagePath: String
+    let data: BannerData
+   
     var body: some View {
         ZStack{
-            ImageView(url:imagePath, contentMode: .fill, noImg: Asset.source.pairingTutorial)
+            ImageView(url:data.image, contentMode: .fill, noImg: Asset.noImgBanner)
             VStack{
                 Image(Asset.shape.bgGradientTop)
                 .renderingMode(.original)
                 .resizable()
-                .modifier(MatchHorizontal(height: 110))
+                    .modifier(MatchHorizontal(height: 110 + self.sceneObserver.safeAreaTop))
                 Spacer()
                 Image(Asset.shape.bgGradientBottom)
                 .renderingMode(.original)
                 .resizable()
                 .modifier(MatchHorizontal(height: 463))
             }
+           
+            VStack{
+                Spacer()
+                if data.logo != nil {
+                    ImageView(url:data.logo!, contentMode: .fit, noImg: Asset.noImg1_1)
+                        .frame(minWidth: 0, maxWidth: 280, minHeight: 0, maxHeight: 80, alignment:.bottom)
+                    
+                }
+                else if data.title != nil {
+                    Text(data.title!)
+                        .modifier(BlackTextStyle(size: Font.size.black) )
+                        .multilineTextAlignment(.center)
+                }
+                if data.subTitle != nil {
+                    Text(data.subTitle!)
+                        .modifier(MediumTextStyle(size: Font.size.lightExtra, color:Color.app.grey))
+                        .multilineTextAlignment(.center)
+                        .padding(.top, Dimen.margin.lightExtra)
+                }
+            }
+            .padding(.horizontal, Dimen.margin.heavy)
+            .padding(.bottom, TopBanner.maginBottomLogo)
+                    
+            
         }
         .clipped()
     }

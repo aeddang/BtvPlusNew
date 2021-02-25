@@ -18,13 +18,10 @@ struct PageHome: PageView {
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel:PageDataProviderModel = PageDataProviderModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
-    @State var originBlocks:Array<BlockData> = []
-    @State var blocks:Array<BlockData> = []
-    @State var menuId:String = ""
-    @State var anyCancellable = Set<AnyCancellable>()
+    
     
     @State var reloadDegree:Double = 0
-    @State var useTracking:Bool = false
+    
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -37,11 +34,12 @@ struct PageHome: PageView {
                     ReflashSpinner(
                         progress: self.$reloadDegree
                     )
-                    .padding(.top, Dimen.app.pageTop)
+                    .padding(.top, self.topData == nil ? Dimen.app.pageTop : self.sceneObserver.safeAreaTop)
                     Spacer()
                 }
                 MultiBlock(
                     viewModel: self.infinityScrollModel,
+                    topDatas: self.topData,
                     datas: self.blocks,
                     useTracking:self.useTracking,
                     marginVertical: Dimen.app.bottom + self.sceneObserver.safeAreaTop
@@ -69,9 +67,7 @@ struct PageHome: PageView {
             if self.pagePresenter.currentTopPage?.pageID == .home {
                 switch evt {
                 case .top : self.pageSceneObserver.useTopFix = true
-                case .down :
-                    if !self.isDataCompleted { return }
-                    self.pageSceneObserver.useTopFix = false
+                case .down : self.pageSceneObserver.useTopFix = false
                 case .pullCancel :
                     if !self.infinityScrollModel.isLoading {
                         if self.reloadDegree >= ReflashSpinner.DEGREE_MAX { self.reload() }
@@ -97,7 +93,17 @@ struct PageHome: PageView {
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
             self.useTracking = ani
         }
+        .onReceive(self.viewModel.$event){evt in
+            guard let evt = evt else { return }
+            switch evt {
+            case .onResult(_, let res, _):
+                self.setupTopBanner(res: res)
+            default : break
+            }
+        }
         .onDisappear{
+            self.delayRequestSubscription?.cancel()
+            self.delayRequestSubscription = nil
             self.anyCancellable.forEach{$0.cancel()}
             self.anyCancellable.removeAll()
             self.pageSceneObserver.useTopFix = nil
@@ -105,13 +111,24 @@ struct PageHome: PageView {
         
     }//body
     
+    @State var originBlocks:Array<BlockData> = []
+    @State var topData:Array<BannerData>? = nil
+    @State var blocks:Array<BlockData> = []
+    @State var menuId:String = ""
+    @State var anyCancellable = Set<AnyCancellable>()
+    @State var useTracking:Bool = false
+    
     private func reload(){
+        self.delayRequestSubscription?.cancel()
+        self.delayRequestSubscription = nil
         self.isDataCompleted = false
         self.useTracking = false
         self.originBlocks = []
         self.blocks = []
         self.setupBlocks()
+        
     }
+    
     
     private func setupBlocks(){
         guard let blocksData = self.dataProvider.bands.getData(menuId: self.menuId)?.blocks else {return}
@@ -133,10 +150,24 @@ struct PageHome: PageView {
             }).store(in: &anyCancellable)
         }
         self.addBlock()
-        
+        if self.dataProvider.bands.getData(menuId: self.menuId)?.bnrUse == true && self.topData == nil{
+            self.viewModel.request = .init(
+                id: self.menuId,
+                type: .getEventBanner(self.menuId, .page),  isOptional: true)
+        }
     }
     
-    private let setNum = 5
+    private func setupTopBanner(res:ApiResultResponds?){
+        guard let resData = res?.data as? EventBanner else {return}
+        guard let banners = resData.banners else { return self.topData = [] }
+        if banners.isEmpty { return self.topData = [] }
+        self.topData = banners.map{ d in
+            BannerData().setData(data: d, type: .page)
+        }
+        self.pageSceneObserver.useTopFix = true
+    }
+    
+    private var setNum = 5
     @State var requestNum = 0
     @State var completedNum = 0
     @State var isDataCompleted = false
@@ -144,9 +175,10 @@ struct PageHome: PageView {
     private func requestBlockCompleted(){
         PageLog.d("addBlock completed", tag: "BlockProtocol")
         self.isDataCompleted = true
-        self.useTracking = true
     }
     private func onBlock(stat:BlockStatus, block:BlockData){
+        self.useTracking = true
+        
         switch stat {
         case .passive: self.removeBlock(block)
         case .active: break
@@ -156,9 +188,24 @@ struct PageHome: PageView {
         PageLog.d("completedNum " + completedNum.description, tag: "BlockProtocol")
         if self.completedNum == self.requestNum {
             self.completedNum = 0
-            self.addBlock()
+            self.delayRequest()
         }
     }
+    
+    @State var delayRequestSubscription:AnyCancellable?
+    func delayRequest(){
+        self.delayRequestSubscription?.cancel()
+        self.delayRequestSubscription = Timer.publish(
+            every: 0.05, on: .current, in: .tracking)
+            .autoconnect()
+            .sink() {_ in
+                self.delayRequestSubscription?.cancel()
+                self.delayRequestSubscription = nil
+                self.addBlock()
+            }
+    }
+    
+   
     
     private func addBlock(){
         let max = min(setNum, self.originBlocks.count)

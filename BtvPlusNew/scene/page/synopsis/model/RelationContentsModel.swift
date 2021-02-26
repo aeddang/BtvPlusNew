@@ -154,7 +154,7 @@ class RelationContentsModel:ObservableObject {
                 PosterDataSet(
                     count: count,
                     datas: cells,
-                    isFull: false)
+                    isFull: cells.count == count)
             )
         }
         return rows

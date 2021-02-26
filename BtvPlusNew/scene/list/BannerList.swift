@@ -40,6 +40,8 @@ struct BannerItem: PageView {
                     pageObj.params = data.moveData
                     self.pagePresenter.openPopup(pageObj)
                 }
+            } else if let link = data.link {
+                AppUtil.openURL(link)
             }
             
         }

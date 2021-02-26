@@ -76,10 +76,11 @@ struct CPPageViewPager: PageComponent {
                 }
             }
         }
-        .onReceive(self.viewModel.$event){ evt in
+        .onReceive(self.viewModel.$request){ evt in
             guard let event = evt else { return }
             switch event {
             case .move(let idx) : withAnimation{self.index = idx}
+            case .jump(let idx) : self.index = idx
             }
         }
     }

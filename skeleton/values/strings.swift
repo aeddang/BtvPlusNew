@@ -186,10 +186,16 @@ extension String {
         public static let adTitlec = "playerAdTitle".loaalized()
         public static let adMore = "playerAdMore".loaalized()
         public static let adCancel = "playerAdCancel".loaalized()
-        
-        
-        
     }
+    
+    struct monthly {
+        public static let title = "monthlyTitle".loaalized()
+        public static let more = "monthlyMore".loaalized()
+        public static let textRecommand = "monthlyTextRecommand".loaalized()
+        public static let textEnjoy = "monthlyTextEnjoy".loaalized()
+    }
+    
+    
     struct pageTitle {
         public static let connectBtv = "titleConnectBtv".loaalized()
         public static let connectWifi = "titleConnectWifi".loaalized()

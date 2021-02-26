@@ -9,7 +9,7 @@
 import Foundation
 import SwiftUI
 
-open class NavigationModel: ComponentObservable {
+open class NavigationModel: ObservableObject {
     @Published var selected:String? = nil
     @Published var index = 0
 }

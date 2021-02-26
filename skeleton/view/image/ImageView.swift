@@ -45,7 +45,7 @@ struct DynamicImageView : View, PageProtocol {
     @ObservedObject var imageLoader: ImageLoader = ImageLoader()
     var url:String?
     var contentMode:ContentMode = .fit
-    var noImg:String = Asset.noImg16_9
+    var noImg:String = Asset.noImg1_1
     
     var body: some View {
         Image(uiImage: self.imageLoader.image(url: self.url) ?? UIImage(named: self.noImg)! )

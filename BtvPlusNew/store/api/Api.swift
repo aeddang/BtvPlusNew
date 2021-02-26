@@ -58,7 +58,8 @@ enum ApiType{
          getEventBanner(String?, EuxpNetwork.BannerType = .page)
     
     //METV
-    case getWatch(Bool = false, Int? = nil , Int? = nil),
+    case getMonthly(Bool = false, Int? = nil , Int? = nil),
+         getWatch(Bool = false, Int? = nil , Int? = nil),
          getBookMark(Int? = nil , Int? = nil),
          postBookMark(SynopsisData),
          deleteBookMark(SynopsisData),

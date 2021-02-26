@@ -40,9 +40,6 @@ struct PageSynopsis: PageView {
     @State var isFullScreen:Bool = false
     @State var safeAreaBottom:CGFloat = 0
     
-    enum SingleRequestType:String {
-        case preview, changeOption, relationContents
-    }
     var body: some View {
         GeometryReader { geometry in
             PageDataProviderContent(
@@ -282,6 +279,10 @@ struct PageSynopsis: PageView {
     /*
      Data process
      */
+    
+    enum SingleRequestType:String {
+        case preview, changeOption, relationContents
+    }
     
     @State var isInitPage = false
     @State var progressError = false

@@ -56,8 +56,9 @@ struct Dimen{
         public static let heavy:CGFloat = 80
         public static let medium:CGFloat = 50 //*
         public static let regular:CGFloat = 40 //*
-        public static let regularExtra:CGFloat = 32 //*
-        public static let light:CGFloat = 30//*
+        public static let regularExtra:CGFloat = 35 //*
+        public static let light:CGFloat = 32 //*
+        public static let lightExtra:CGFloat = 30//*
         public static let thin:CGFloat = 20//*
         
         public static let heavyRect:CGSize = CGSize(width: 90, height: 42)//*
@@ -84,7 +85,7 @@ struct Dimen{
     }
     
     struct stroke {
-        public static let heavy:CGFloat = 3
+        public static let heavy:CGFloat = 5 //*
         public static let regular:CGFloat = 2 //*
         public static let light:CGFloat = 1 //*
     }

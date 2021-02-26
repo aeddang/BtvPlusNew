@@ -37,7 +37,10 @@ struct VideoBlock:BlockProtocol, PageComponent {
                     }
                 }
                 .modifier(ContentHorizontalEdges())
+            } else{
+                ActivityIndicator(isAnimating: .constant(true), style: .medium).padding(.all, Dimen.margin.light)
             }
+            
             VideoList(viewModel:self.viewModel, datas: self.datas)
                 .modifier(MatchHorizontal(height: self.listHeight))
                 .onReceive(self.viewModel.$scrollPosition){pos in

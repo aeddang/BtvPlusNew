@@ -37,6 +37,8 @@ struct PosterBlock:PageComponent, BlockProtocol {
                     }
                 }
                 .modifier(ContentHorizontalEdges())
+            } else{
+                ActivityIndicator(isAnimating: .constant(true), style: .medium).padding(.all, Dimen.margin.light)
             }
             PosterList(viewModel:self.viewModel, datas: self.datas)
                 .modifier(MatchHorizontal(height: self.listHeight)) 

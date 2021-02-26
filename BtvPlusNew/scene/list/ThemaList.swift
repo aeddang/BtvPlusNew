@@ -21,7 +21,7 @@ class ThemaData:InfinityData{
         setCardType(cardType)
         title = data.title
         if let thumb = data.poster_filename_h {
-            image = ImagePath.thumbImagePath(filePath: thumb, size: type.size, convType: type == .small ? .alpha : .none)
+            image = ImagePath.thumbImagePath(filePath: thumb, size: type.size, convType: .alpha )
         }
         index = idx
         return self
@@ -31,7 +31,7 @@ class ThemaData:InfinityData{
         setCardType(cardType)
         title = data.menu_nm
         if let thumb = data.bnr_off_img_path {
-            image = ImagePath.thumbImagePath(filePath: thumb, size: type.size, convType: type == .small ? .alpha : .none)
+            image = ImagePath.thumbImagePath(filePath: thumb, size: type.size, convType:  .alpha )
         }
         index = idx
         blocks = data.blocks
@@ -144,14 +144,9 @@ struct ThemaItem: PageView {
     var data:ThemaData
     var body: some View {
         ZStack{
-            if self.data.type.isCircle {
-                ImageView(url: self.data.image, contentMode: .fit, noImg: Asset.noImg1_1)
-                    .modifier(MatchParent())
+            ImageView(url: self.data.image, contentMode: .fit, noImg: Asset.noImg1_1)
+                .modifier(MatchParent())
                 
-            }else{
-                ImageView(url: self.data.image, contentMode: .fit, noImg: Asset.noImg1_1)
-                    .modifier(MatchParent())
-            }
         }
         .frame(
             width: self.data.type.size.width,
@@ -163,7 +158,6 @@ struct ThemaItem: PageView {
 
 #if DEBUG
 struct ThemaList_Previews: PreviewProvider {
-    
     static var previews: some View {
         VStack{
             ThemaList( datas: [

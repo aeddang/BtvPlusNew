@@ -45,7 +45,7 @@ struct DisconnectBlock: PageComponent{
                     )
                 }
                 Spacer().modifier(LineVertical())
-                    .frame(height:Dimen.button.light)
+                    .frame(height:Dimen.button.lightExtra)
                 FillButton(
                     text: String.button.notice,
                     image: Asset.icon.notice,

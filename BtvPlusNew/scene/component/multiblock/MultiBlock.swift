@@ -10,12 +10,16 @@ import SwiftUI
 
 struct MultiBlock:PageComponent {
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var pageObservable:PageObservable = PageObservable()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var topDatas:[BannerData]? = nil
     var datas:[BlockData]
-   
+    
     var useTracking:Bool = false
     var marginVertical : CGFloat = 0
+    
+    var monthlyDatas:[MonthlyData]? = nil
+    var action: ((_ data:MonthlyData) -> Void)? = nil
    
     var body :some View {
         InfinityScrollView(
@@ -26,13 +30,24 @@ struct MultiBlock:PageComponent {
             spacing: Dimen.margin.medium,
             isRecycle : false,
             useTracking:self.useTracking){
+            
             if self.topDatas != nil {
                 TopBanner(
-                 datas: self.topDatas! )
+                    pageObservable:self.pageObservable,
+                    datas: self.topDatas! )
                     .modifier(MatchHorizontal(height: TopBanner.height))
             } else if marginVertical > 0 {
                 Spacer().frame( height:self.marginVertical)
             }
+            
+            if self.monthlyDatas != nil {
+               MonthlyBlock(
+                    pageDragingModel:self.pageDragingModel,
+                    monthlyDatas:self.monthlyDatas!,
+                    action:self.action
+               )
+            }
+            
             ForEach(self.datas) { data in
                 switch data.cardType {
                 case .smallPoster, .bigPoster, .bookmarkedPoster, .rankingPoster :

@@ -56,6 +56,7 @@ struct PageThema: PageView {
                                 }
                                 MultiBlock(
                                     viewModel: self.infinityScrollModel,
+                                    pageObservable: self.pageObservable,
                                     pageDragingModel: self.pageDragingModel,
                                     datas: self.blocks,
                                     useTracking:self.useTracking,
@@ -103,7 +104,7 @@ struct PageThema: PageView {
                 
             }
             .onReceive(self.infinityScrollModel.$pullPosition){ pos in
-                if pos < 30 && pos > 120{ return }
+                if pos < InfinityScrollModel.PULL_RANGE && pos > InfinityScrollModel.PULL_COMPLETED_RANGE{ return }
                 if self.reloadDegree >= ReflashSpinner.DEGREE_MAX
                     && Double(pos) < self.reloadDegree
                 {
@@ -128,6 +129,8 @@ struct PageThema: PageView {
                 self.originDatas = obj.getParamValue(key: .data) as? [BlockItem] ?? []
             }
             .onDisappear{
+                self.delayRequestSubscription?.cancel()
+                self.delayRequestSubscription = nil
                 self.anyCancellable.forEach{$0.cancel()}
                 self.anyCancellable.removeAll()
             }
@@ -135,6 +138,8 @@ struct PageThema: PageView {
     }//body
     
     private func reload(){
+        self.delayRequestSubscription?.cancel()
+        self.delayRequestSubscription = nil
         self.isDataCompleted = false
         self.useTracking = false
         self.originBlocks = []
@@ -183,8 +188,21 @@ struct PageThema: PageView {
         PageLog.d("completedNum " + completedNum.description, tag: "BlockProtocol")
         if self.completedNum == self.requestNum {
             self.completedNum = 0
-            self.addBlock()
+            self.delayRequest()
         }
+    }
+    
+    @State var delayRequestSubscription:AnyCancellable?
+    func delayRequest(){
+        self.delayRequestSubscription?.cancel()
+        self.delayRequestSubscription = Timer.publish(
+            every: 0.05, on: .current, in: .tracking)
+            .autoconnect()
+            .sink() {_ in
+                self.delayRequestSubscription?.cancel()
+                self.delayRequestSubscription = nil
+                self.addBlock()
+            }
     }
     
     private func addBlock(){

@@ -7,7 +7,7 @@
 import Foundation
 import SwiftUI
 extension ReflashSpinner{
-    static let DEGREE_MAX:Double = 80
+    static let DEGREE_MAX:Double = 90
 }
 struct ReflashSpinner: PageComponent {
     @Binding var progress:Double

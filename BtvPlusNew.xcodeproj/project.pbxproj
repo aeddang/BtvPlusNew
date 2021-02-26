@@ -89,6 +89,9 @@
 		3180855E25C233A900AE4A73 /* libPoCDrmAgent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */; };
 		318C874D25E64AA400ADDFE0 /* TopBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C874C25E64AA400ADDFE0 /* TopBanner.swift */; };
 		318C875825E64C3200ADDFE0 /* BannerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C875725E64C3200ADDFE0 /* BannerData.swift */; };
+		318E7EFE25E8814C00B2AAAF /* MonthlyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E7EFD25E8814C00B2AAAF /* MonthlyList.swift */; };
+		318E7F0425E8990900B2AAAF /* MonthlyBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E7F0325E8990900B2AAAF /* MonthlyBlock.swift */; };
+		318E7F0C25E8B01800B2AAAF /* MonthlyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E7F0B25E8B01800B2AAAF /* MonthlyInfo.swift */; };
 		318FBFF725E4882700ABC241 /* PageCate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318FBFF625E4882700ABC241 /* PageCate.swift */; };
 		318FBFFE25E48F5B00ABC241 /* SortTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318FBFFD25E48F5B00ABC241 /* SortTab.swift */; };
 		318FC00625E4CA5800ABC241 /* CateBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318FC00525E4CA5800ABC241 /* CateBlock.swift */; };
@@ -369,6 +372,9 @@
 		3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPoCDrmAgent.a; sourceTree = "<group>"; };
 		318C874C25E64AA400ADDFE0 /* TopBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBanner.swift; sourceTree = "<group>"; };
 		318C875725E64C3200ADDFE0 /* BannerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerData.swift; sourceTree = "<group>"; };
+		318E7EFD25E8814C00B2AAAF /* MonthlyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyList.swift; sourceTree = "<group>"; };
+		318E7F0325E8990900B2AAAF /* MonthlyBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyBlock.swift; sourceTree = "<group>"; };
+		318E7F0B25E8B01800B2AAAF /* MonthlyInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyInfo.swift; sourceTree = "<group>"; };
 		318FBFF625E4882700ABC241 /* PageCate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCate.swift; sourceTree = "<group>"; };
 		318FBFFD25E48F5B00ABC241 /* SortTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortTab.swift; sourceTree = "<group>"; };
 		318FC00525E4CA5800ABC241 /* CateBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CateBlock.swift; sourceTree = "<group>"; };
@@ -797,6 +803,7 @@
 				315544CE25B83F8C00086510 /* UpdateBookMark.swift */,
 				31626F0025B9151E00F4031D /* DirectView.swift */,
 				310F6FAB25C0FE53005718B0 /* Watch.swift */,
+				318E7F0B25E8B01800B2AAAF /* MonthlyInfo.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -878,13 +885,13 @@
 			path = topbanner;
 			sourceTree = "<group>";
 		};
-		318FC01425E4D75400ABC241 /*  cateblock */ = {
+		318FC01425E4D75400ABC241 /* cateblock */ = {
 			isa = PBXGroup;
 			children = (
 				318FC01625E4D7D900ABC241 /* view */,
 				318FC00525E4CA5800ABC241 /* CateBlock.swift */,
 			);
-			path = " cateblock";
+			path = cateblock;
 			sourceTree = "<group>";
 		};
 		318FC01525E4D7C100ABC241 /* view */ = {
@@ -895,6 +902,7 @@
 				D56CC30125906F2500CA1D54 /* VideoBlock.swift */,
 				D56CC31125907F3700CA1D54 /* ThemaBlock.swift */,
 				31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */,
+				318E7F0325E8990900B2AAAF /* MonthlyBlock.swift */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -964,6 +972,7 @@
 				3152B46725D9E3FF00147C86 /* PeopleList.swift */,
 				3152B47125DA310000147C86 /* SerisList.swift */,
 				31D3F4EB25E3A7D4008FDFEC /* BannerList.swift */,
+				318E7EFD25E8814C00B2AAAF /* MonthlyList.swift */,
 			);
 			path = list;
 			sourceTree = "<group>";
@@ -1601,7 +1610,7 @@
 			isa = PBXGroup;
 			children = (
 				318C874B25E64A9200ADDFE0 /* topbanner */,
-				318FC01425E4D75400ABC241 /*  cateblock */,
+				318FC01425E4D75400ABC241 /* cateblock */,
 				D56CC2ED25902E5400CA1D54 /* multiblock */,
 				3167642525CD0A0C003A7721 /* webview */,
 				31061E6A25C8D21A00543FC0 /* player */,
@@ -1954,6 +1963,7 @@
 				315544CF25B83F8C00086510 /* UpdateBookMark.swift in Sources */,
 				D568892E259C592000F2F67A /* PagePairingSetupUser.swift in Sources */,
 				31373F6025C7E726004353DA /* CustomYTPlayer.swift in Sources */,
+				318E7F0C25E8B01800B2AAAF /* MonthlyInfo.swift in Sources */,
 				310D7E2C25A42D05000BE173 /* StbList.swift in Sources */,
 				314D6B0225D0E9A50003C749 /* PageSetup.swift in Sources */,
 				31631C5425D22E7900E501F7 /* Preroll.swift in Sources */,
@@ -2049,6 +2059,7 @@
 				315A8FD425ADADD600498B03 /* GuestAgreementInfo.swift in Sources */,
 				D56C6A34257DA0C700CF9AB8 /* Navigation.swift in Sources */,
 				314D73BF25B550F900907118 /* BtvButton.swift in Sources */,
+				318E7F0425E8990900B2AAAF /* MonthlyBlock.swift in Sources */,
 				317A8F4E25CBBB2700E41226 /* PageHostingController.swift in Sources */,
 				D56C69B0257DA09E00CF9AB8 /* SocialMediaSharingManager.swift in Sources */,
 				D5DC477E25821DFA007EDD86 /* CWGrid.swift in Sources */,
@@ -2059,6 +2070,7 @@
 				3159B05925B17BED008CA85B /* KmsModel.swift in Sources */,
 				D56C6A38257DA0C700CF9AB8 /* ImageItem.swift in Sources */,
 				D57298D8259D4BEF00ED2CE6 /* InputCell.swift in Sources */,
+				318E7EFE25E8814C00B2AAAF /* MonthlyList.swift in Sources */,
 				3193414F25DDD847002F2000 /* SynopsisTop.swift in Sources */,
 				D5469F4925834BAA009CED2D /* DynamicValue.swift in Sources */,
 				D56C69A2257DA09E00CF9AB8 /* PageComponentProtocol.swift in Sources */,

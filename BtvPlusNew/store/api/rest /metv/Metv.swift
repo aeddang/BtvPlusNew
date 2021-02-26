@@ -35,7 +35,30 @@ extension MetvNetwork{
 }
 
 class Metv: Rest{
-    
+    /**
+    * 월정액 메뉴 리스트 (IF-ME-036)
+    * @param pageNo 요청할 페이지의 번호 (Default: 1)
+    * @param entryNo 요청한 페이지에 보여질 개수 (Default: 10)
+    * @param isLowlevelPPM 가입한 월정액의 하위상품ID 리스트 제공여부 값이 없는경우, N로 간주(기본값)
+    */
+    func getMonthly(
+        lowLevelPpm:Bool = false , page:Int?, pageCnt:Int?,
+        completion: @escaping (MonthlyInfo) -> Void, error: ((_ e:Error) -> Void)? = nil){
+
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:String]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["ver"] = MetvNetwork.VERSION
+        params["IF"] = "IF-ME-036" //"IF-ME-121"
+        
+        params["stb_id"] = stbId
+        params["page_no"] = page?.description ?? "1"
+        params["entry_no"] = pageCnt?.description ?? "999"
+        params["hash_id"] = ApiUtil.getHashId(stbId)
+        params["svc_code"] = MetvNetwork.SVC_CODE
+        params["yn_lowlevel_ppm"] = lowLevelPpm ? "Y" : "N"
+        fetch(route: MetvMonthly(query: params), completion: completion, error:error)
+    }
     /**
     * 모바일 최근시청 VOD 조회 (IF-ME-121)
     * @param pageNo 요청할 페이지의 번호 (Default: 1)
@@ -174,7 +197,11 @@ class Metv: Rest{
         fetch(route: MetvDirectview( body: params), completion: completion, error:error)
     }
 }
-
+struct MetvMonthly:NetworkRoute{
+    var method: HTTPMethod = .get
+    var path: String = "/metv/v5/setting/fixedchargelist/mobilebtv"
+    var query: [String : String]? = nil
+}
 
 struct MetvWatch:NetworkRoute{
    var method: HTTPMethod = .get

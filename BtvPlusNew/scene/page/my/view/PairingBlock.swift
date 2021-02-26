@@ -65,7 +65,7 @@ struct PairingBlock: PageComponent{
                     )
                 }
                 Spacer().modifier(LineVertical())
-                    .frame(height:Dimen.button.light)
+                    .frame(height:Dimen.button.lightExtra)
                 FillButton(
                     text: String.button.notice,
                     image: Asset.icon.notice,
@@ -82,15 +82,15 @@ struct PairingBlock: PageComponent{
                 ValueInfo(key: "A", value: "B")
                     .modifier(MatchParent())
                 Spacer().modifier(LineVertical())
-                    .frame(height:Dimen.button.light)
+                    .frame(height:Dimen.button.lightExtra)
                 ValueInfo(key: "A", value: "B")
                     .modifier(MatchParent())
                 Spacer().modifier(LineVertical())
-                    .frame(height:Dimen.button.light)
+                    .frame(height:Dimen.button.lightExtra)
                 ValueInfo(key: "A", value: "B")
                     .modifier(MatchParent())
                 Spacer().modifier(LineVertical())
-                    .frame(height:Dimen.button.light)
+                    .frame(height:Dimen.button.lightExtra)
                 ValueInfo(key: "A", value: "B")
                     .modifier(MatchParent())
             }

@@ -8,9 +8,14 @@
 
 import Foundation
 open class ViewPagerModel: NavigationModel {
-    @Published var event:ViewPagerEvent? = nil
+    @Published var request:ViewPagerUiEvent? = nil
+    @Published var status:ViewPagerStatus = .stop
 }
 
-enum ViewPagerEvent {
-    case move(Int)
+enum ViewPagerUiEvent {
+    case move(Int), jump(Int)
+}
+
+enum ViewPagerStatus:String {
+    case move, stop
 }

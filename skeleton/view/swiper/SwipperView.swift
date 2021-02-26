@@ -11,6 +11,7 @@ import SwiftUI
 import Combine
 
 struct SwipperView : View , PageProtocol, Swipper {
+    var viewModel:ViewPagerModel? = nil
     var pages: [PageViewProtocol]
     @Binding var index: Int
     @State var offset: CGFloat = 0
@@ -28,10 +29,6 @@ struct SwipperView : View , PageProtocol, Swipper {
                             height: geometry.size.height
                         )
                         .clipped()
-                        .onTapGesture(){
-                            guard let action = self.action else {return}
-                            action()
-                        }
                     }
                 }
             }
@@ -43,6 +40,7 @@ struct SwipperView : View , PageProtocol, Swipper {
                 .onChanged({ value in
                     self.isUserSwiping = true
                     self.offset = self.getDragOffset(value: value, geometry: geometry)
+                    if self.viewModel?.status == .stop { self.viewModel?.status = .move }
                     self.autoReset()
                 })
                 .onEnded({ value in
@@ -63,18 +61,19 @@ struct SwipperView : View , PageProtocol, Swipper {
         self.autoResetSubscription = self.creatResetTimer()
     }
     func reset(idx:Int) {
-       self.autoResetSubscription?.cancel()
-       self.autoResetSubscription = nil
-       if !self.isUserSwiping { return }
-       DispatchQueue.main.async {
+        self.autoResetSubscription?.cancel()
+        self.autoResetSubscription = nil
+        if self.viewModel?.status == .move { self.viewModel?.status = .stop }
+        if !self.isUserSwiping { return }
+        DispatchQueue.main.async {
            withAnimation {
                self.isUserSwiping = false
                if idx != self.index {
                    self.index = idx
                }
            }
-       }
-    }
+        }
+     }
 }
 
 

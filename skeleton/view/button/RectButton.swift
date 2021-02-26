@@ -59,7 +59,7 @@ struct RectButton: View, SelecterbleProtocol{
                     
             }
             .padding(.horizontal, self.padding)
-            .frame(height:Dimen.button.regularExtra)
+            .frame(height:Dimen.button.light)
             .background(self.isSelected ? self.bgActiveColor : self.bgColor)
             .clipShape(RoundedRectangle(cornerRadius: self.cornerRadius))
             

@@ -378,7 +378,7 @@ struct CateBlock: PageComponent{
         }
         if !cells.isEmpty {
             rows.append(
-                PosterDataSet( count: count, datas: cells,isFull: false, index: total)
+                PosterDataSet( count: count, datas: cells,isFull: cells.count == count, index: total)
             )
         }
         self.posters.append(contentsOf: rows)
@@ -404,7 +404,7 @@ struct CateBlock: PageComponent{
         }
         if !cells.isEmpty {
             rows.append(
-                VideoDataSet( count: count, datas: cells,isFull: false, index: total)
+                VideoDataSet( count: count, datas: cells,isFull: cells.count == count, index: total)
             )
         }
         self.videos.append(contentsOf: rows)

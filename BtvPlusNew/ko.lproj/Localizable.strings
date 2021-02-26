@@ -336,3 +336,12 @@
 "playerAdMore" = "광고 정보 더보기";
 "playerAdCancel" = "광고 건너뛰기";
 "playerMoveSec" = "초 이동";
+
+
+/*
+ Monthly
+*/
+"monthlyTitle" = "B tv 월정액";
+"monthlyMore" = "전체 상품 보기";
+"monthlyTextRecommand" = "고객님을 위한 콘텐츠가 가득! 지금, 월정액에 가입해 보세요.";
+"monthlyTextEnjoy" = "아래의 모든 콘텐츠를 마음껏 즐겨보세요!.";

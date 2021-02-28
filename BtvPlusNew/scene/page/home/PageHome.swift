@@ -26,7 +26,7 @@ struct PageHome: PageView {
     
     
     @State var reloadDegree:Double = 0
-    
+    @State var reloadDegreeMax:Double = ReflashSpinner.DEGREE_MAX
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -37,7 +37,8 @@ struct PageHome: PageView {
             }else{
                 VStack{
                     ReflashSpinner(
-                        progress: self.$reloadDegree
+                        progress: self.$reloadDegree,
+                        progressMax: self.reloadDegreeMax
                     )
                     .padding(.top, self.topDatas == nil ? Dimen.app.pageTop : (self.sceneObserver.safeAreaTop + Dimen.margin.regular))
                     Spacer()
@@ -72,7 +73,9 @@ struct PageHome: PageView {
                 case .down : self.pageSceneObserver.useTopFix = false
                 case .pullCancel :
                     if !self.infinityScrollModel.isLoading {
-                        if self.reloadDegree >= ReflashSpinner.DEGREE_MAX { self.reload() }
+                        if self.reloadDegree >= self.reloadDegreeMax {
+                            self.reload()
+                        }
                     }
                     withAnimation{
                         self.reloadDegree = 0
@@ -82,14 +85,10 @@ struct PageHome: PageView {
             }
         }
         .onReceive(self.infinityScrollModel.$pullPosition){ pos in
-            if pos < InfinityScrollModel.PULL_RANGE && pos > InfinityScrollModel.PULL_COMPLETED_RANGE{ return }
-            if self.reloadDegree >= ReflashSpinner.DEGREE_MAX
-                && Double(pos) < self.reloadDegree
-            {
-                return
-            }
+            if pos < InfinityScrollModel.PULL_RANGE { return }
+           
             withAnimation{
-                self.reloadDegree = Double(pos)
+                self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
             }
         }
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
@@ -177,6 +176,7 @@ struct PageHome: PageView {
         if self.pagePresenter.currentTopPage?.pageID == PageID.home {
             self.pageSceneObserver.useTopFix = true
         }
+        self.reloadDegreeMax = ReflashSpinner.DEGREE_MAX + Double(Dimen.margin.medium)
     }
     
     //Monthly
@@ -276,7 +276,7 @@ struct PageHome: PageView {
    //Block init
     
     
-    private var setNum = 7
+    private var setNum = 5
     @State var requestNum = 0
     @State var completedNum = 0
     @State var isDataCompleted = false
@@ -287,7 +287,6 @@ struct PageHome: PageView {
     }
     private func onBlock(stat:BlockStatus, block:BlockData){
         self.useTracking = true
-        
         switch stat {
         case .passive: self.removeBlock(block)
         case .active: break
@@ -305,7 +304,7 @@ struct PageHome: PageView {
     func delayRequest(){
         self.delayRequestSubscription?.cancel()
         self.delayRequestSubscription = Timer.publish(
-            every: 0.05, on: .current, in: .tracking)
+            every: 0.01, on: .current, in: .tracking)
             .autoconnect()
             .sink() {_ in
                 self.delayRequestSubscription?.cancel()

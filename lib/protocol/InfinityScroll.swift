@@ -13,7 +13,7 @@ import Combine
 
 
 class InfinityScrollModel:ComponentObservable, PageProtocol, Identifiable{
-    static let PULL_MAX = 7
+    
     static let PULL_RANGE:CGFloat = 30
     static let PULL_COMPLETED_RANGE:CGFloat = 120
     
@@ -28,22 +28,19 @@ class InfinityScrollModel:ComponentObservable, PageProtocol, Identifiable{
     @Published private(set) var isLoading = false
     @Published private(set) var page = 0
     @Published private(set) var total = 0
-    @Published fileprivate(set) var pullCount = 0
     @Published fileprivate(set) var pullPosition:CGFloat = 0
     @Published fileprivate(set) var scrollPosition:CGFloat = 0
     
-    private var increasePull:AnyCancellable? = nil
-    private let pullMax:Int
+
     let pullRange:CGFloat
     
     let idstr:String = UUID().uuidString
-    init(axis:Axis.Set = .vertical,  pullMax:Int? = nil) {
-        self.pullMax = pullMax ?? Self.PULL_MAX
+    init(axis:Axis.Set = .vertical) {
+        
         self.pullRange = Self.PULL_RANGE
     }
     
     deinit {
-        self.cancelPull()
     }
     
     var size = 20
@@ -79,35 +76,16 @@ class InfinityScrollModel:ComponentObservable, PageProtocol, Identifiable{
         self.pullPosition = pos
         if self.event == .pull { return }
         self.event = .pull
-        //DataLog.d("onPull" , tag:self.tag)
-        self.increasePull?.cancel()
-        self.increasePull = Timer.publish(
-            every: 0.05, on: .current, in: .common)
-            .autoconnect()
-            .sink() {_ in
-                self.pullCount += 1
-                //DataLog.d("onPull" + self.pullCount.description , tag:self.tag)
-                if self.pullCount >= self.pullMax {
-                    self.onPullCompleted()
-                }
-            }
     }
     func onPullCancel(){
         if self.event != .pull && self.event != .pullCompleted  { return }
         self.event = .pullCancel
         self.pullPosition = 0
-        self.cancelPull()
     }
     private func onPullCompleted(){
         self.event = .pullCompleted
-        //DataLog.d("onPullCompleted" + self.pullCount.description , tag:self.tag)
-        self.cancelPull()
     }
-    private func cancelPull(){
-        self.increasePull?.cancel()
-        self.increasePull = nil
-        self.pullCount = 0
-    }
+    
 }
 enum InfinityScrollUIEvent {
     case reload, scrollMove(Float), scrollTo(Int)

@@ -61,7 +61,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         self.marginHorizontal = 0
         self.spacing = 0
         self.isRecycle = false
-        self.useTracking = true
+        self.useTracking = false
 
     }
     var body: some View {
@@ -203,8 +203,10 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     private func onPreferenceChange(value:[CGFloat]){
         let contentOffset = value[0]
         if self.prevPosition == contentOffset {return}
-        self.onMove(pos: contentOffset)
-        self.prevPosition = contentOffset
+        DispatchQueue.main.async {
+            self.onMove(pos: contentOffset)
+            self.prevPosition = contentOffset
+        }
     }
     
     private func calculateContentOffset(insideProxy: GeometryProxy) -> CGFloat {

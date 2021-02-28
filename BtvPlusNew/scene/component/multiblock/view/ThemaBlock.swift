@@ -23,9 +23,6 @@ struct ThemaBlock:BlockProtocol, PageComponent {
             }
             ThemaList(viewModel:self.viewModel, datas: self.datas)
                 .modifier(MatchHorizontal(height: self.listHeight))
-                .onReceive(self.viewModel.$scrollPosition){pos in
-                    self.pageDragingModel.updateNestedScroll(evt: .scroll(pos))
-                }
                 .onReceive(self.viewModel.$event){evt in
                     guard let evt = evt else {return}
                     switch evt {

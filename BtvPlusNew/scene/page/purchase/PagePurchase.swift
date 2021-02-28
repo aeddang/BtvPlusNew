@@ -19,6 +19,7 @@ struct PagePurchase: PageView {
     @ObservedObject var webViewModel = WebViewModel()
     
     @State var webViewHeight:CGFloat = 0
+    @State var useTracking:Bool = false
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -33,7 +34,9 @@ struct PagePurchase: PageView {
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     
-                    InfinityScrollView( viewModel: self.infinityScrollModel ){
+                    InfinityScrollView(
+                        viewModel: self.infinityScrollModel,
+                        useTracking:self.useTracking){
                         BtvWebView( viewModel: self.webViewModel )
                                 //.modifier(MatchParent())
                                 .modifier(MatchHorizontal(height: self.webViewHeight))
@@ -45,9 +48,7 @@ struct PagePurchase: PageView {
                     }
                     .padding(.bottom, self.sceneObserver.safeAreaBottom)
                     .modifier(MatchParent())
-                    .onReceive(self.infinityScrollModel.$scrollPosition){pos in
-                        self.pageDragingModel.uiEvent = .dragCancel
-                    }
+                    
                     .onReceive(self.infinityScrollModel.$event){evt in
                         guard let evt = evt else {return}
                         switch evt {
@@ -68,6 +69,11 @@ struct PagePurchase: PageView {
                         .onEnded({ _ in
                             self.pageDragingModel.uiEvent = .draged(geometry)
                         })
+                )
+                .gesture(
+                    self.pageDragingModel.cancelGesture
+                        .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                        .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
                 )
             }//draging
             .onReceive(self.pairing.$event){ evt in
@@ -112,6 +118,9 @@ struct PagePurchase: PageView {
                     
                 default : do{}
                 }
+            }
+            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                self.useTracking = ani
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }

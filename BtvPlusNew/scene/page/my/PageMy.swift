@@ -43,6 +43,11 @@ struct PageMy: PageView {
                             self.pageDragingModel.uiEvent = .draged(geometry)
                         })
                 )
+                .gesture(
+                    self.pageDragingModel.cancelGesture
+                        .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                        .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                )
                 .modifier(PageFull())
             }
             .onReceive(self.pairing.$status){status in

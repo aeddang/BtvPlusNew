@@ -48,12 +48,10 @@ extension CateBlock{
 struct CateBlock: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
-    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel(pullMax:EuxpNetwork.PAGE_COUNT)
+    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     
     @ObservedObject var viewModel:CateBlockModel = CateBlockModel()
-    var pageDragingModel:PageDragingModel = PageDragingModel()
     var key:String? = nil
-    
     
     var body: some View {
         PageDataProviderContent(
@@ -153,9 +151,7 @@ struct CateBlock: PageComponent{
                 self.reloadDegree = Double(pos)
             }
         }
-        .onReceive(self.infinityScrollModel.$scrollPosition){pos in
-            self.pageDragingModel.updateNestedScroll(evt: .scroll(pos))
-        }
+        
         .onReceive(self.viewModel.$isUpdate){ update in
             if update {
                 self.reload()

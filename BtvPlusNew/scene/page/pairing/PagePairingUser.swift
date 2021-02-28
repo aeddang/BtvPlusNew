@@ -18,6 +18,7 @@ struct PagePairingUser: PageView {
     @ObservedObject var webViewModel = WebViewModel()
     
     @State var webViewHeight:CGFloat = 0
+    @State var useTracking:Bool = false
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -30,7 +31,9 @@ struct PagePairingUser: PageView {
                         isClose: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    InfinityScrollView( viewModel: self.infinityScrollModel ){
+                    InfinityScrollView(
+                        viewModel: self.infinityScrollModel ,
+                        useTracking:self.useTracking){
                         BtvWebView( viewModel: self.webViewModel )
                             .modifier(MatchHorizontal(height: self.webViewHeight))
                             .onReceive(self.webViewModel.$screenHeight){height in
@@ -63,6 +66,11 @@ struct PagePairingUser: PageView {
                         .onEnded({ _ in
                             self.pageDragingModel.uiEvent = .draged(geometry)
                         })
+                )
+                .gesture(
+                    self.pageDragingModel.cancelGesture
+                        .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                        .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
                 )
             }//draging
             .onReceive(self.pairing.$event){ evt in
@@ -100,6 +108,9 @@ struct PagePairingUser: PageView {
                     }
                 default : do{}
                 }
+            }
+            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                self.useTracking = ani
             }
             .onAppear{
                 let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.identity

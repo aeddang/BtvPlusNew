@@ -56,6 +56,7 @@ struct AlertBtnData:Identifiable, Equatable{
 
 
 struct Alert<Presenting>: View where Presenting: View {
+    let maxTextCount:Int = 200
     @Binding var isShowing: Bool
     let presenting: () -> Presenting
     var title: String?
@@ -72,57 +73,19 @@ struct Alert<Presenting>: View where Presenting: View {
         ZStack(alignment: .center) {
             VStack{
                 VStack (alignment: .center, spacing:0){
-                    VStack (alignment: .center, spacing:0){
-                        if self.title != nil{
-                            Text(self.title!)
-                                .modifier(BoldTextStyle(size: Font.size.regular))
-                                .fixedSize(horizontal: false, vertical: true)
-                                
+                    if (self.text?.count ?? 0) > self.maxTextCount {
+                        ScrollView{
+                            AlertBody(title: self.title, image: self.image, text: self.text, subText: self.subText, tipText: self.tipText, referenceText: self.referenceText)
                         }
-                        if self.image != nil{
-                            Image(uiImage: self.image!)
-                                .renderingMode(.original)
-                                .resizable()
-                                .scaledToFit()
-                                .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
-                                .padding(.top, Dimen.margin.medium)
-                                
-                        }
-                        if self.text != nil{
-                            Text(self.text!)
-                                .multilineTextAlignment(.center)
-                                .modifier(MediumTextStyle(size: Font.size.lightExtra))
-                                .fixedSize(horizontal: false, vertical: true)
-                                .padding(.top, Dimen.margin.medium)
-                        }
-                        if self.subText != nil{
-                            Text(self.subText!)
-                                .multilineTextAlignment(.center)
-                                .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyDeep))
-                                .lineLimit(nil)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .padding(.top, Dimen.margin.tiny)
-                        }
-                        if self.tipText != nil{
-                            Text(self.tipText!)
-                                .multilineTextAlignment(.center)
-                                .modifier(MediumTextStyle(size: Font.size.tiny, color: Color.brand.primary))
-                                .lineLimit(nil)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .padding(.top, Dimen.margin.regular)
-                        }
-                        if self.referenceText != nil{
-                            Text(self.referenceText!)
-                                .multilineTextAlignment(.center)
-                                .modifier(MediumTextStyle(size: Font.size.tiny, color: Color.app.greyLight))
-                                .lineLimit(nil)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .padding(.top, Dimen.margin.tiny)
-                        }
+                        .padding(.top, Dimen.margin.regular)
+                        .padding(.bottom, Dimen.margin.medium)
+                        .padding(.horizontal, Dimen.margin.regular)
+                    } else {
+                        AlertBody(title: self.title, image: self.image, text: self.text, subText: self.subText, tipText: self.tipText, referenceText: self.referenceText)
+                            .padding(.top, Dimen.margin.regular)
+                            .padding(.bottom, Dimen.margin.medium)
+                            .padding(.horizontal, Dimen.margin.regular)
                     }
-                    .padding(.top, Dimen.margin.regular)
-                    .padding(.bottom, Dimen.margin.medium)
-                    .padding(.horizontal, Dimen.margin.regular)
                     if self.imgButtons != nil {
                         HStack(spacing:Dimen.margin.regular){
                             ForEach(self.imgButtons!) { btn in
@@ -171,8 +134,8 @@ struct Alert<Presenting>: View where Presenting: View {
                 .background(Color.app.blue)
             }
             .frame(
-                minWidth: 0, idealWidth: 247, maxWidth: 320,
-                minHeight: 0,  maxHeight: .infinity
+                minWidth: 0, idealWidth: 247, maxWidth:  320,
+                minHeight: 0,  maxHeight: (self.text?.count ?? 0) > self.maxTextCount ? 320 : .infinity
             )
             .padding(.all, Dimen.margin.heavy)
             
@@ -183,6 +146,66 @@ struct Alert<Presenting>: View where Presenting: View {
         
     }
 }
+
+struct AlertBody: PageComponent{
+    var title: String?
+    var image: UIImage?
+    var text: String?
+    var subText: String?
+    var tipText: String?
+    var referenceText: String?
+    var body: some View {
+        VStack (alignment: .center, spacing:0){
+            if self.title != nil{
+                Text(self.title!)
+                    .modifier(BoldTextStyle(size: Font.size.regular))
+                    .fixedSize(horizontal: false, vertical: true)
+                    
+            }
+            if self.image != nil{
+                Image(uiImage: self.image!)
+                    .renderingMode(.original)
+                    .resizable()
+                    .scaledToFit()
+                    .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
+                    .padding(.top, Dimen.margin.medium)
+                    
+            }
+            if self.text != nil{
+                Text(self.text!)
+                    .multilineTextAlignment(.center)
+                    .modifier(MediumTextStyle(size: Font.size.lightExtra))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, Dimen.margin.medium)
+            }
+            if self.subText != nil{
+                Text(self.subText!)
+                    .multilineTextAlignment(.center)
+                    .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyDeep))
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, Dimen.margin.tiny)
+            }
+            if self.tipText != nil{
+                Text(self.tipText!)
+                    .multilineTextAlignment(.center)
+                    .modifier(MediumTextStyle(size: Font.size.tiny, color: Color.brand.primary))
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, Dimen.margin.regular)
+            }
+            if self.referenceText != nil{
+                Text(self.referenceText!)
+                    .multilineTextAlignment(.center)
+                    .modifier(MediumTextStyle(size: Font.size.tiny, color: Color.app.greyLight))
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, Dimen.margin.tiny)
+            }
+        }
+    }
+}
+
 #if DEBUG
 struct Alert_Previews: PreviewProvider {
     

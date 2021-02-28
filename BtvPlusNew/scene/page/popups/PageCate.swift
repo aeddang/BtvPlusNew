@@ -19,7 +19,7 @@ struct PageCate: PageView {
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
-    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel(pullMax:EuxpNetwork.PAGE_COUNT)
+    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var viewModel:CateBlockModel = CateBlockModel()
     @State var title:String? = nil
     @State var listType:CateBlock.ListType = .poster
@@ -41,21 +41,9 @@ struct PageCate: PageView {
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     CateBlock(
                         infinityScrollModel:self.infinityScrollModel,
-                        viewModel:self.viewModel,
-                        pageDragingModel:self.pageDragingModel
+                        viewModel:self.viewModel
                     )
                     .modifier(MatchParent())
-                    .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
-                        guard let evt = evt else {return}
-                        switch evt {
-                        case .pulled :
-                            self.pageDragingModel.uiEvent = .pulled(geometry)
-                        case .pull(let pos) :
-                            self.pageDragingModel.uiEvent = .pull(geometry, pos)
-                        case .scroll(_) :
-                            self.pageDragingModel.uiEvent = .dragCancel
-                        }
-                    }
                 }
                 .modifier(PageFull(style:.dark))
                 .highPriorityGesture(
@@ -66,6 +54,11 @@ struct PageCate: PageView {
                         .onEnded({ _ in
                             self.pageDragingModel.uiEvent = .draged(geometry)
                         })
+                )
+                .gesture(
+                    self.pageDragingModel.cancelGesture
+                        .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                        .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
                 )
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in

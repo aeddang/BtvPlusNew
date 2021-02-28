@@ -15,7 +15,6 @@ struct PagePairingBtv: PageView {
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
-    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     
     @State var input:String = ""
     @State var safeAreaBottom:CGFloat = 0
@@ -144,21 +143,11 @@ struct PagePairingBtv: PageView {
                             self.pageDragingModel.uiEvent = .draged(geometry)
                         })
                 )
-                .onReceive(self.infinityScrollModel.$scrollPosition){pos in
-                    //PageLog.d("scrollPosition " + pos.description, tag: self.tag)
-                    self.pageDragingModel.uiEvent = .dragCancel
-                }
-                .onReceive(self.infinityScrollModel.$event){evt in
-                    guard let evt = evt else {return}
-                    switch evt {
-                    case .pullCancel :
-                        self.pageDragingModel.uiEvent = .pulled(geometry)
-                    default : do{}
-                    }
-                }
-                .onReceive(self.infinityScrollModel.$pullPosition){ pos in
-                    self.pageDragingModel.uiEvent = .pull(geometry, pos)
-                }
+                .gesture(
+                    self.pageDragingModel.cancelGesture
+                        .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                        .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                )
             }//draging
         
             .onReceive(self.sceneObserver.$safeAreaBottom){ pos in

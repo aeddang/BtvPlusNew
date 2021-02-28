@@ -12,34 +12,18 @@ import Combine
 protocol PageDragingProtocol {
     var axis: Axis.Set {get set}
     var isDraging:Bool {get set}
-    var isScrolling:Bool {get set}
     var isBottom:Bool {get set}
     var bodyOffset:CGFloat {get set}
-    var scrollOffset: CGFloat {get set}
-    var gestureOffset: CGFloat {get set}
-    var contentRange: CGFloat {get set}
-    var scrollBodyOffset: CGFloat {get set}
-    var isBodyDraging:Bool {get set}
-    var scrollStartTime:TimeInterval {get set}
+    var dragInitOffset:CGFloat {get set}
     
-    func onScrollTop()
-    func onScrollBottom()
-    func onScrolling(geometry:GeometryProxy, value:DragGesture.Value)
-    func onScrollEnd(geometry:GeometryProxy)
-    
-    func onScrollTransaction()
-    func onScrollInit()
-    func onScrollingAction(offset:CGFloat)
-    func onScrollEndAction(verticalOffset:CGFloat, gestureOffset:CGFloat)
-    
-    func onPull(geometry:GeometryProxy, value:CGFloat, modifyOffset:CGFloat)
+    func onPull(geometry:GeometryProxy, value:CGFloat)
     func onPulled(geometry:GeometryProxy)
     
-    func onDraging(geometry:GeometryProxy, value:DragGesture.Value, modifyOffset:CGFloat)
+    func onDraging(geometry:GeometryProxy, value:DragGesture.Value)
     func onDragEnd(geometry:GeometryProxy)
     func onDragCancel()
     
-    func onDragInit()
+    func onDragInit(offset:CGFloat)
     func onDragingAction(offset:CGFloat, dragOpacity:Double)
     func onDragEndAction(isBottom:Bool, offset:CGFloat)
 }
@@ -49,63 +33,7 @@ protocol PageDragingView : PageView, PageDragingProtocol {}
 extension PageDragingView{
     var axis: Axis.Set {get{.vertical} set{axis = .vertical}}
     var isBottom:Bool {get{false} set{isBottom = false}}
-    var gestureOffset: CGFloat {get{0} set{gestureOffset = 0.0}}
-    var contentRange: CGFloat {get{0} set{contentRange = 0.0}}
-    var scrollOffset: CGFloat {get{0} set{scrollOffset = 0.0}}
-    var scrollBodyOffset: CGFloat {get{0} set{scrollBodyOffset = 0.0}}
-    var isBodyDraging:Bool {get{false} set{isBodyDraging = false}}
-    var isScrolling:Bool {get{false} set{isBodyDraging = false}}
-    var scrollStartTime:Double {get{0} set{scrollStartTime = 0.0}}
     
-    func onScrolling(geometry:GeometryProxy,  value:DragGesture.Value) {
-        if !self.isScrolling {self.onScrollInit()}
-        let movePos = value.translation.height
-        let willPos = movePos + self.scrollOffset
-        if willPos > 60 && self.axis == .vertical {
-            self.onScrollTransaction()
-        }
-        if self.isBodyDraging{
-            self.onDraging(geometry: geometry, value: value, modifyOffset: self.gestureOffset)
-        }else{
-            self.onScrollingAction( offset: movePos )
-        }
-    }
-    
-    func onScrollEnd(geometry:GeometryProxy) {
-        if self.isBodyDraging {
-           self.onDragEnd(geometry: geometry)
-        }
-        let range = -self.contentRange - self.scrollBodyOffset
-        let t = Date().timeIntervalSince1970 - self.scrollStartTime
-        
-        var spd = t > 0.2
-            ? 0
-            : abs(self.gestureOffset) / CGFloat(t) / 200
-        
-        spd = min(spd, 5.0)
-        //ComponentLog.d("onScrollEnd " + spd.description)
-        let inertia = self.gestureOffset * spd
-        var willPos = self.isBodyDraging ? 0 :  (self.scrollOffset + self.gestureOffset)
-        willPos += inertia
-        willPos = willPos < range ? range : willPos
-        willPos = willPos > 0 ? 0 : willPos
-        let verticalOffset:CGFloat = willPos
-        let gestureOffset:CGFloat = 0
-        self.onScrollEndAction(verticalOffset: verticalOffset, gestureOffset: gestureOffset)
-    }
-    func onScrollTop(){
-        self.onScrollEndAction(verticalOffset: 0, gestureOffset: 0)
-    }
-    func onScrollBottom(){
-        let range = -self.contentRange - self.scrollBodyOffset
-        if range > 0 {  return }
-        self.onScrollEndAction(verticalOffset: range, gestureOffset: 0)
-    }
-    func onScrollInit(){}
-    func onScrollTransaction(){}
-    func onScrollingAction(offset:CGFloat){}
-    func onScrollEndAction(verticalOffset:CGFloat, gestureOffset:CGFloat){}
-   
     private func moveOffset(_ value:CGFloat, geometry:GeometryProxy) {
         var offset = value
         if offset < 0 { offset = 0 }
@@ -117,10 +45,10 @@ extension PageDragingView{
         self.onDragingAction(offset: offset, dragOpacity:opc)
     }
     
-    func onPull(geometry:GeometryProxy, value:CGFloat, modifyOffset:CGFloat = 0) {
+    func onPull(geometry:GeometryProxy, value:CGFloat) {
         if self.pageObject?.isPopup == false { return }
-        if !self.isDraging { self.onDragInit() }
-        let offset = self.bodyOffset + value - modifyOffset
+        if !self.isDraging { self.onDragInit(offset: 0) }
+        let offset = self.bodyOffset + value
         self.moveOffset(offset, geometry:geometry)
     }
     
@@ -128,12 +56,14 @@ extension PageDragingView{
         self.onDragEnd(geometry:geometry)
     }
     
-    func onDraging(geometry:GeometryProxy, value:DragGesture.Value, modifyOffset:CGFloat = 0) {
+    func onDraging(geometry:GeometryProxy, value:DragGesture.Value) {
         if self.pageObject?.isPopup == false { return }
-        if !self.isDraging { self.onDragInit() }
+        
         let offset = (self.axis == .vertical)
-            ? self.bodyOffset + value.translation.height - modifyOffset
-            : self.bodyOffset + value.translation.width - modifyOffset
+            ? self.bodyOffset + value.translation.height
+            : self.bodyOffset + value.translation.width
+        
+        if !self.isDraging { self.onDragInit(offset:offset) }
         self.moveOffset(offset, geometry:geometry)
         
     }
@@ -167,7 +97,7 @@ extension PageDragingView{
 }
 
 class PageDragingModel: ObservableObject, PageProtocol, Identifiable{
-    static var MIN_DRAG_RANGE:CGFloat = 20
+    static var MIN_DRAG_RANGE:CGFloat = 30
 
     @Published var uiEvent:PageDragingUIEvent? = nil {didSet{ if uiEvent != nil { uiEvent = nil} }}
     @Published var event:PageDragingEvent? = nil {didSet{ if event != nil { event = nil} }}
@@ -191,28 +121,22 @@ class PageDragingModel: ObservableObject, PageProtocol, Identifiable{
             }
         }
     }
+    
+    let cancelGesture =  LongPressGesture(minimumDuration: 0.0, maximumDistance: 0.0)
+          .simultaneously(with: RotationGesture(minimumAngleDelta:.zero))
+          .simultaneously(with: MagnificationGesture(minimumScaleDelta: 0))
+      
 }
 
 enum PageDragingUIEvent {
-    case scroll(GeometryProxy, DragGesture.Value),
-         scrolled(GeometryProxy),
-         pull(GeometryProxy, CGFloat, CGFloat? = nil),
+    case pull(GeometryProxy, CGFloat),
          pulled(GeometryProxy),
-         drag(GeometryProxy, DragGesture.Value, CGFloat? = nil), 
+         drag(GeometryProxy, DragGesture.Value),
          draged(GeometryProxy),
-         dragCancel,
-         scrollBodyOffset(CGFloat),
-         scrollContentRange(CGFloat),
-         scrollTop,
-         scrollBottom
+         dragCancel
 }
 enum PageDragingEvent {
-    case scrollInit,
-         scroll(CGFloat),
-         scrolled(CGFloat),
-         dragInit,
-         drag(CGFloat, Double),
-         draged(Bool,CGFloat)
+    case dragInit, drag(CGFloat, Double), draged(Bool,CGFloat)
 }
 enum PageDragingStatus:String {
     case none,drag,pull
@@ -223,9 +147,7 @@ enum PageNestedScrollEvent {
 }
 
 
-
 struct PageDragingBody<Content>: PageDragingView  where Content: View{
-    
     
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -236,19 +158,15 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     
     var minPullAmount:CGFloat
     @State var bodyOffset:CGFloat = 0.0
-    @State var isScrollInit = false
-    @State var scrollOffset: CGFloat = 0.0
-    @State var gestureOffset: CGFloat = 0.0
-    @State var isBodyDraging:Bool = false
-    @State var scrollStartTime:Double = 0
-    @State var contentRange: CGFloat = 0
-    @State var scrollBodyOffset:CGFloat = 0
+    @State var dragInitOffset:CGFloat = 0.0
     @State var pullOffset:CGFloat = 0
+    @State var pullDiff:CGFloat = 0
+    
     @State var isDraging: Bool = false
-    @State var isScrolling = false
     @State var isBottom = false
     @State var isDragingCompleted = false
-    private let minDiff:CGFloat = 0.75
+    
+    private let minDiff:CGFloat = 0.4
     private let maxDiff:CGFloat = 100
     init(
         viewModel: PageDragingModel,
@@ -264,6 +182,9 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     
     private let pullInitDelay = 0.2
     @State var isPullInit: Bool = false
+    
+     
+    
     var body: some View {
         ZStack(alignment: .topLeading){
             self.content.modifier(MatchParent())
@@ -275,18 +196,19 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
         
         .onReceive(self.viewModel.$uiEvent){evt in
             switch evt {
-            case .scroll(let geo, let value) : self.onScrolling(geometry: geo, value: value)
-            case .scrolled(let geo) : self.onScrollEnd(geometry: geo)
-            case .pull(let geo, let value, let offset) :
+            case .pull(let geo, let value) :
                 if #available(iOS 14.0, *) {
+                    
                     if value < self.minPullAmount { return }
                     if self.pullOffset == self.minPullAmount {
                         withAnimation(.easeOut(duration: self.pullInitDelay )){
                             self.bodyOffset = self.axis == .vertical ? self.minPullAmount * 2 : self.minPullAmount
                         }
+                        self.pullDiff = 0
                     } else {
                         let diff =  value - self.pullOffset
-                        self.onPull(geometry: geo, value: diff, modifyOffset: offset ?? 0)
+                        self.onPull(geometry: geo, value: diff)
+                        self.pullDiff = diff
                     }
                     self.pullOffset = value
                     self.viewModel.status = .pull
@@ -296,33 +218,22 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
                 if #available(iOS 14.0, *) {
                     if self.viewModel.status == .drag { return }
                     self.pullOffset = self.minPullAmount
-                    self.onPulled(geometry: geo)
-                    self.viewModel.status = .none
-                    if self.bodyOffset != 0 {
-                        //ComponentLog.d("pulled " +  self.viewModel.status.rawValue + " " + self.bodyOffset.description, tag: "dragCancel")
-                        self.autoReset()
-                        return
+                    if self.pullDiff < 0 {
+                        self.onDragCancel()
+                    }else{
+                        self.onPulled(geometry: geo)
                     }
+                    
+                    self.viewModel.status = .none
+                    
                 }
                 
-            case .drag(let geo, let value, let offset) :
-                self.onDraging(geometry: geo, value: value, modifyOffset: offset ?? 0)
+            case .drag(let geo, let value) :
+                self.onDraging(geometry: geo, value: value)
             case .draged(let geo) : self.onDragEnd(geometry: geo)
             case .dragCancel :
-                if self.viewModel.status == .none && self.bodyOffset != 0 {
-                    self.autoReset()
-                    return
-                }
                 if self.viewModel.status != .drag { return }
-                //ComponentLog.d("dragCancel " +  self.viewModel.status.rawValue + " " + self.bodyOffset.description, tag: "dragCancel")
-                self.autoReset()
-                
-            case .scrollContentRange(let range) :
-                self.contentRange = range 
-            case .scrollBodyOffset(let offset) :
-                self.scrollBodyOffset = offset
-            case .scrollTop : self.onScrollTop()
-            case .scrollBottom : self.onScrollBottom()
+                self.onDragCancel()
             default : do {}
             }
         }
@@ -334,49 +245,22 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
         }
     }//body
     
-
-    func onScrollInit() {
-        self.isScrollInit = true
-        self.isScrolling = true
-        self.scrollStartTime = Date().timeIntervalSince1970
-        self.viewModel.event = .scrollInit
-    }
-    
-    func onScrollTransaction() {
-        self.isBodyDraging = true
-    }
-    
-    func onScrollingAction(offset: CGFloat) {
-        self.gestureOffset = offset
-        self.viewModel.event = .scroll(offset + self.scrollOffset)
-    }
-    
-    func onScrollEndAction(verticalOffset: CGFloat, gestureOffset: CGFloat) {
-        self.isScrolling = false
-        self.scrollOffset = verticalOffset
-        self.gestureOffset = gestureOffset
-        self.isBodyDraging = false
-        self.viewModel.event = .scrolled(verticalOffset + gestureOffset)
-    }
-    
-    func onDragInit() {
+    func onDragInit(offset:CGFloat = 0) {
         if self.isDragingCompleted {return}
         self.isDraging = true
+        self.dragInitOffset = offset
         self.viewModel.event = .dragInit
         self.viewModel.status = .drag
-        
     }
     
     func onDragingAction(offset: CGFloat, dragOpacity: Double) {
         if self.isDragingCompleted {return}
-        self.autoResetSubscription?.cancel()
-        self.autoResetSubscription = nil
         let diff = abs(self.bodyOffset - offset)
-        
         //DataLog.d("offset " + offset.description, tag: "DIFF")
         if abs(diff) > maxDiff { return }
         if abs(diff) < minDiff { return }
-        self.bodyOffset = offset
+        let bodyOffset = max( 0, offset - self.dragInitOffset)
+        self.bodyOffset = bodyOffset
         
         self.viewModel.event = .drag(offset, dragOpacity)
         self.pagePresenter.dragOpercity = dragOpacity
@@ -391,8 +275,6 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
         withAnimation{
             if !isBottom {
                 self.bodyOffset = 0
-                self.scrollOffset = 0
-                self.gestureOffset = 0
             }
         }
         self.viewModel.event = .draged(isBottom, offset)

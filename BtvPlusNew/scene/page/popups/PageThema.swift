@@ -69,8 +69,7 @@ struct PageThema: PageView {
                                         self.pageDragingModel.uiEvent = .pulled(geometry)
                                     case .pull(let pos) :
                                         self.pageDragingModel.uiEvent = .pull(geometry, pos)
-                                    case .scroll(_) :
-                                        self.pageDragingModel.uiEvent = .dragCancel
+                                    default: break
                                     }
                                 }
                                 
@@ -88,6 +87,11 @@ struct PageThema: PageView {
                             self.pageDragingModel.uiEvent = .draged(geometry)
                         })
                 )
+                .gesture(
+                    self.pageDragingModel.cancelGesture
+                        .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                        .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                )
             }
             .onReceive(self.infinityScrollModel.$event){evt in
                 guard let evt = evt else {return}
@@ -104,12 +108,7 @@ struct PageThema: PageView {
                 
             }
             .onReceive(self.infinityScrollModel.$pullPosition){ pos in
-                if pos < InfinityScrollModel.PULL_RANGE && pos > InfinityScrollModel.PULL_COMPLETED_RANGE{ return }
-                if self.reloadDegree >= ReflashSpinner.DEGREE_MAX
-                    && Double(pos) < self.reloadDegree
-                {
-                    return
-                }
+                if pos < InfinityScrollModel.PULL_RANGE { return }
                 withAnimation{
                     self.reloadDegree = Double(pos)
                 }
@@ -176,9 +175,9 @@ struct PageThema: PageView {
     private func requestBlockCompleted(){
         PageLog.d("addBlock completed", tag: "BlockProtocol")
         self.isDataCompleted = true
-        self.useTracking = true
     }
     private func onBlock(stat:BlockStatus, block:BlockData){
+        self.useTracking = true
         switch stat {
         case .passive: self.removeBlock(block)
         case .active: break
@@ -196,7 +195,7 @@ struct PageThema: PageView {
     func delayRequest(){
         self.delayRequestSubscription?.cancel()
         self.delayRequestSubscription = Timer.publish(
-            every: 0.05, on: .current, in: .tracking)
+            every: 0.01, on: .current, in: .tracking)
             .autoconnect()
             .sink() {_ in
                 self.delayRequestSubscription?.cancel()

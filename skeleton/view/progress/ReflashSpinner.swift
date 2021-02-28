@@ -7,10 +7,11 @@
 import Foundation
 import SwiftUI
 extension ReflashSpinner{
-    static let DEGREE_MAX:Double = 90
+    static let DEGREE_MAX:Double = 80
 }
 struct ReflashSpinner: PageComponent {
     @Binding var progress:Double
+    var progressMax:Double = Self.DEGREE_MAX
     var text:String? = nil
     var body: some View {
         VStack{
@@ -19,6 +20,7 @@ struct ReflashSpinner: PageComponent {
                 .scaledToFit()
                 .frame(width: Dimen.icon.regular, height: Dimen.icon.regular)
                 .rotationEffect(.degrees(self.progress * 2.0 ) )
+                .colorMultiply(self.progress >= self.progressMax ? Color.brand.primary : Color.app.white)
             if text != nil {
                 Text(text!)
                 .modifier(LightTextStyle(size: Font.size.lightExtra, color: Color.app.grey))

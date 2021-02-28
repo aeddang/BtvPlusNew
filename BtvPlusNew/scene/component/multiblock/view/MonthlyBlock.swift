@@ -51,9 +51,7 @@ struct MonthlyBlock: PageComponent {
                     self.selectedData(data: data)
                 }
                 //.modifier(MatchHorizontal(height: ListItem.monthly.size.height))
-                .onReceive(self.viewModel.$scrollPosition){pos in
-                self.pageDragingModel.updateNestedScroll(evt: .scroll(pos))
-                }
+                
                 .onReceive(self.viewModel.$event){evt in
                     guard let evt = evt else {return}
                     switch evt {

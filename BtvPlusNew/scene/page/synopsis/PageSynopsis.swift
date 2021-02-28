@@ -39,6 +39,8 @@ struct PageSynopsis: PageView {
     @State var isPairing:Bool? = nil
     @State var isFullScreen:Bool = false
     @State var safeAreaBottom:CGFloat = 0
+
+         
     
     var body: some View {
         GeometryReader { geometry in
@@ -79,7 +81,7 @@ struct PageSynopsis: PageView {
                             viewModel: self.infinityScrollModel,
                             spacing:Dimen.margin.regular,
                             isRecycle:false,
-                            useTracking:true
+                            useTracking:false
                             ){
                             SynopsisBody(
                                 componentViewModel: self.componentViewModel,
@@ -114,7 +116,7 @@ struct PageSynopsis: PageView {
                                 }
                             }
                             .onReceive(self.peopleScrollModel.$scrollPosition){pos in
-                                self.pageDragingModel.uiEvent = .dragCancel
+                               // self.pageDragingModel.uiEvent = .dragCancel
                             }
                             .onReceive(self.peopleScrollModel.$event){evt in
                                 guard let evt = evt else {return}
@@ -153,7 +155,6 @@ struct PageSynopsis: PageView {
                         }
                         .modifier(MatchParent())
                         .highPriorityGesture(
-                            
                             DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
                                 .onChanged({ value in
                                     self.pageDragingModel.uiEvent = .drag(geometry, value)
@@ -161,8 +162,15 @@ struct PageSynopsis: PageView {
                                 .onEnded({ _ in
                                     self.pageDragingModel.uiEvent = .draged(geometry)
                                 })
-                            
+                                
                         )
+                        .gesture(
+                            self.pageDragingModel.cancelGesture
+                                .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                                .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                        )
+                       
+                        
                     }
                     .modifier(PageFull())
                     

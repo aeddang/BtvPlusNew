@@ -47,7 +47,12 @@ struct Toast<Presenting>: View where Presenting: View {
         }
         .onReceive( [self.isShowing].publisher ) { show in
             if !show  { return }
-            self.delayAutoHidden()
+            DispatchQueue.global().asyncAfter(deadline: .now() + self.duration) {
+                withAnimation {
+                   self.isShowing = false
+                }
+            }
+            
         }
     }
     

@@ -22,7 +22,7 @@ struct SynopsisTop: PageComponent{
     var playListData:PlayListData = PlayListData()
     var isPlayAble:Bool = false
     var isPlayViewActive = false
-    
+  
     var body: some View {
         ZStack {
             BtvPlayer(

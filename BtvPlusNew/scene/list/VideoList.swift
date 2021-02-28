@@ -125,6 +125,7 @@ struct VideoList: PageComponent{
     
     var datas:[VideoData]
     var contentID:String? = nil
+    var useTracking:Bool = false
     var margin:CGFloat = Dimen.margin.thin
     var action: ((_ data:VideoData) -> Void)? = nil
     var body: some View {
@@ -135,7 +136,7 @@ struct VideoList: PageComponent{
             marginHorizontal: self.margin,
             spacing: Dimen.margin.tiny,
             isRecycle: true,
-            useTracking: true
+            useTracking: self.useTracking
         ){
             ForEach(self.datas) { data in
                 if data.index == -1 {

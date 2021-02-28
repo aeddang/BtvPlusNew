@@ -13,6 +13,7 @@ struct ThemaBlock:BlockProtocol, PageComponent {
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var data: BlockData
+    var useTracking:Bool = false
     @State var datas:[ThemaData] = []
     @State var listHeight:CGFloat = 0
     var body :some View {
@@ -21,7 +22,11 @@ struct ThemaBlock:BlockProtocol, PageComponent {
                 Text(data.name).modifier(BlockTitle())
                     .modifier(ContentHorizontalEdges())
             }
-            ThemaList(viewModel:self.viewModel, datas: self.datas)
+            ThemaList(
+                viewModel:self.viewModel,
+                datas: self.datas,
+                useTracking:self.useTracking)
+                
                 .modifier(MatchHorizontal(height: self.listHeight))
                 .onReceive(self.viewModel.$event){evt in
                     guard let evt = evt else {return}

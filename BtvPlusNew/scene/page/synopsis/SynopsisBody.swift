@@ -32,7 +32,7 @@ struct SynopsisBody: PageComponent{
     var relationTab:[String] = []
     var relationDatas:[PosterDataSet] = []
     var hasRelationVod:Bool? = nil
-    
+    var useTracking:Bool = false
     
 
     var body: some View {
@@ -69,7 +69,9 @@ struct SynopsisBody: PageComponent{
             if self.summaryViewerData != nil {
                 SummaryViewer(
                     peopleScrollModel:self.peopleScrollModel,
-                    data: self.summaryViewerData!)
+                    data: self.summaryViewerData!,
+                    useTracking: self.useTracking
+                )
             }
             if self.hasRelationVod != nil {
                 if self.hasRelationVod == false {

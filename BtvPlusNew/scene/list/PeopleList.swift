@@ -84,6 +84,7 @@ struct PeopleList: PageComponent{
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[PeopleData]
+    var useTracking:Bool = false
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
@@ -92,7 +93,7 @@ struct PeopleList: PageComponent{
             marginHorizontal: Dimen.margin.thin ,
             spacing: Dimen.margin.thin,
             isRecycle: false,
-            useTracking: true
+            useTracking: self.useTracking
             ){
             ForEach(self.datas) { data in
                 PeopleItem( data:data )

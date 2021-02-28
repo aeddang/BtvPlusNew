@@ -45,13 +45,15 @@ struct SerisList: PageComponent{
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[SerisData]
     var contentID:String? = nil
+    var useTracking:Bool = false
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
             axes: .vertical,
             marginVertical: 0,
             marginHorizontal: 0,
-            spacing: Dimen.margin.regular
+            spacing: Dimen.margin.regular,
+            useTracking: self.useTracking
         ){
             ForEach(self.datas) { data in
                 SerisItem( data:data, isSelected: self.contentID == data.contentID )

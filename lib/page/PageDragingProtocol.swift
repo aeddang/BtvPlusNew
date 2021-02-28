@@ -97,7 +97,7 @@ extension PageDragingView{
 }
 
 class PageDragingModel: ObservableObject, PageProtocol, Identifiable{
-    static var MIN_DRAG_RANGE:CGFloat = 30
+    static var MIN_DRAG_RANGE:CGFloat = 25
 
     @Published var uiEvent:PageDragingUIEvent? = nil {didSet{ if uiEvent != nil { uiEvent = nil} }}
     @Published var event:PageDragingEvent? = nil {didSet{ if event != nil { event = nil} }}
@@ -125,6 +125,7 @@ class PageDragingModel: ObservableObject, PageProtocol, Identifiable{
     let cancelGesture =  LongPressGesture(minimumDuration: 0.0, maximumDistance: 0.0)
           .simultaneously(with: RotationGesture(minimumAngleDelta:.zero))
           .simultaneously(with: MagnificationGesture(minimumScaleDelta: 0))
+    
       
 }
 
@@ -167,7 +168,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     @State var isDragingCompleted = false
     
     private let minDiff:CGFloat = 0.4
-    private let maxDiff:CGFloat = 100
+    private let maxDiff:CGFloat = 300
     init(
         viewModel: PageDragingModel,
         axis:Axis.Set = .vertical,
@@ -180,7 +181,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
         self.pullOffset = minPullAmount
     }
     
-    private let pullInitDelay = 0.2
+    private let pullInitDelay = 0.15
     @State var isPullInit: Bool = false
     
      
@@ -202,7 +203,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
                     if value < self.minPullAmount { return }
                     if self.pullOffset == self.minPullAmount {
                         withAnimation(.easeOut(duration: self.pullInitDelay )){
-                            self.bodyOffset = self.axis == .vertical ? self.minPullAmount * 2 : self.minPullAmount
+                            self.bodyOffset = self.axis == .vertical ? (self.minPullAmount * 1.5) : self.minPullAmount
                         }
                         self.pullDiff = 0
                     } else {
@@ -214,18 +215,19 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
                     self.viewModel.status = .pull
                     //ComponentLog.d("pull " +  self.viewModel.status.rawValue + " " + self.bodyOffset.description, tag: "dragCancel")
                 }
-            case .pulled(let geo) :
+            case .pulled(_) :
                 if #available(iOS 14.0, *) {
+                    //ComponentLog.d("pulled" + self.pullDiff.description, tag: "PageDragingBody" )
                     if self.viewModel.status == .drag { return }
                     self.pullOffset = self.minPullAmount
-                    if self.pullDiff < 0 {
+                    if self.pullDiff <= 0 {
+                        //ComponentLog.d("onDragCancel", tag: "PageDragingBody" )
                         self.onDragCancel()
                     }else{
-                        self.onPulled(geometry: geo)
+                       // ComponentLog.d("onDragEndAction", tag: "PageDragingBody" )
+                        self.onDragEndAction(isBottom: true, offset: self.bodyOffset)
                     }
-                    
                     self.viewModel.status = .none
-                    
                 }
                 
             case .drag(let geo, let value) :
@@ -246,7 +248,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     }//body
     
     func onDragInit(offset:CGFloat = 0) {
-        if self.isDragingCompleted {return}
+        self.isDragingCompleted = false
         self.isDraging = true
         self.dragInitOffset = offset
         self.viewModel.event = .dragInit
@@ -256,9 +258,12 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     func onDragingAction(offset: CGFloat, dragOpacity: Double) {
         if self.isDragingCompleted {return}
         let diff = abs(self.bodyOffset - offset)
-        //DataLog.d("offset " + offset.description, tag: "DIFF")
+        ComponentLog.d("diff " + diff.description , tag: "DIFF")
+        
         if abs(diff) > maxDiff { return }
         if abs(diff) < minDiff { return }
+        ComponentLog.d("modify diff " + diff.description , tag: "DIFF")
+        
         let bodyOffset = max( 0, offset - self.dragInitOffset)
         self.bodyOffset = bodyOffset
         
@@ -267,19 +272,17 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     }
 
     func onDragEndAction(isBottom: Bool, offset: CGFloat) {
-        if self.isDragingCompleted {return}
-        if !self.isDraging { return }
         self.viewModel.status = .none
         self.isDraging = false
-
         withAnimation{
             if !isBottom {
                 self.bodyOffset = 0
             }
         }
         self.viewModel.event = .draged(isBottom, offset)
+        if self.isDragingCompleted {return}
+        self.isDragingCompleted = true
         if isBottom {
-            self.isDragingCompleted = true
             self.pagePresenter.goBack()
         }
     }

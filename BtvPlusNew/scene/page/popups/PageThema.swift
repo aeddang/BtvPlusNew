@@ -81,16 +81,22 @@ struct PageThema: PageView {
                 .highPriorityGesture(
                     DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
                         .onChanged({ value in
+                            if self.useTracking { self.useTracking = false }
                             self.pageDragingModel.uiEvent = .drag(geometry, value)
                         })
                         .onEnded({ _ in
                             self.pageDragingModel.uiEvent = .draged(geometry)
+                            self.useTracking = true
                         })
                 )
                 .gesture(
                     self.pageDragingModel.cancelGesture
-                        .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
-                        .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                        .onChanged({_ in
+                            self.useTracking = true
+                            self.pageDragingModel.uiEvent = .dragCancel})
+                        .onEnded({_ in
+                            self.useTracking = true
+                            self.pageDragingModel.uiEvent = .dragCancel})
                 )
             }
             .onReceive(self.infinityScrollModel.$event){evt in
@@ -121,6 +127,9 @@ struct PageThema: PageView {
                 if ani {
                     self.reload()
                 }
+            }
+            .onReceive(self.pagePresenter.$currentTopPage){ page in
+                self.useTracking = page?.id == self.pageObject?.id
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }

@@ -98,6 +98,7 @@ struct ThemaList: PageComponent{
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[ThemaData]
+    var useTracking:Bool = false
     var margin:CGFloat = Dimen.margin.thin
     var action: ((_ data:ThemaData) -> Void)? = nil
     var body: some View {
@@ -108,7 +109,7 @@ struct ThemaList: PageComponent{
             marginHorizontal: self.margin ,
             spacing: datas.isEmpty ? 0 : datas[0].type.spacing,
             isRecycle: true,
-            useTracking: true
+            useTracking: self.useTracking
             ){
             ForEach(self.datas) { data in
                 ThemaItem( data:data )

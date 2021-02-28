@@ -44,6 +44,7 @@ struct MultiBlock:PageComponent {
                MonthlyBlock(
                     pageDragingModel:self.pageDragingModel,
                     monthlyDatas:self.monthlyDatas!,
+                    useTracking:self.useTracking,
                     action:self.action
                )
             }
@@ -53,15 +54,21 @@ struct MultiBlock:PageComponent {
                 case .smallPoster, .bigPoster, .bookmarkedPoster, .rankingPoster :
                     PosterBlock(
                         pageDragingModel:self.pageDragingModel,
-                        data: data)
+                        data: data,
+                        useTracking:self.useTracking
+                        )
                 case .video, .watchedVideo :
                     VideoBlock(
                         pageDragingModel:self.pageDragingModel,
-                        data: data)
+                        data: data,
+                        useTracking:self.useTracking
+                        )
                 case .circleTheme, .bigTheme, .squareThema :
                     ThemaBlock(
                         pageDragingModel:self.pageDragingModel,
-                        data: data)
+                        data: data,
+                        useTracking:self.useTracking
+                        )
                 case .banner :
                     BannerBlock(data: data)
                 default:

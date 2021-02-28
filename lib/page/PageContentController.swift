@@ -149,34 +149,34 @@ struct PageContentController: View{
     }
     
     func sceneDidBecomeActive(_ scene: UIScene){
-        pageObservable.status = SceneStatus.becomeActive
+        pageObservable.status = PageStatus.becomeActive
         pageControllerObservable.pages.forEach({$0.sceneDidBecomeActive(scene)})
         pageControllerObservable.popups.forEach({$0.sceneDidBecomeActive(scene)})
         pageControllerObservable.overlayView?.sceneDidBecomeActive(scene)
     }
     
     func sceneDidDisconnect(_ scene: UIScene){
-        pageObservable.status = SceneStatus.disconnect
+        pageObservable.status = PageStatus.disconnect
         pageControllerObservable.pages.forEach({$0.sceneDidDisconnect(scene)})
         pageControllerObservable.overlayView?.sceneDidDisconnect(scene)
     }
     
     func sceneWillResignActive(_ scene: UIScene){
-        pageObservable.status = SceneStatus.resignActive
+        pageObservable.status = PageStatus.resignActive
         pageControllerObservable.pages.forEach({$0.sceneWillResignActive(scene)})
         pageControllerObservable.popups.forEach({$0.sceneWillResignActive(scene)})
         pageControllerObservable.overlayView?.sceneWillResignActive(scene)
     }
     
     func sceneWillEnterForeground(_ scene: UIScene){
-        pageObservable.status = SceneStatus.enterForeground
+        pageObservable.status = PageStatus.enterForeground
         pageControllerObservable.pages.forEach({$0.sceneWillEnterForeground(scene)})
         pageControllerObservable.popups.forEach({$0.sceneWillEnterForeground(scene)})
         pageControllerObservable.overlayView?.sceneWillEnterForeground(scene)
     }
     
     func sceneDidEnterBackground(_ scene: UIScene){
-        pageObservable.status = SceneStatus.enterBackground
+        pageObservable.status = PageStatus.enterBackground
         pageControllerObservable.pages.forEach({$0.sceneDidEnterBackground(scene)})
         pageControllerObservable.popups.forEach({$0.sceneDidEnterBackground(scene)})
         pageControllerObservable.overlayView?.sceneDidEnterBackground(scene)

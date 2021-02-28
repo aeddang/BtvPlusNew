@@ -124,6 +124,7 @@ struct PosterList: PageComponent{
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[PosterData]
+    var useTracking:Bool = false
     var margin:CGFloat = Dimen.margin.thin
     var body: some View {
         InfinityScrollView(
@@ -133,7 +134,7 @@ struct PosterList: PageComponent{
             marginHorizontal: self.margin,
             spacing: Dimen.margin.tiny,
             isRecycle: true,
-            useTracking: true
+            useTracking: self.useTracking
             ){
             ForEach(self.datas) { data in
                 PosterItem( data:data )

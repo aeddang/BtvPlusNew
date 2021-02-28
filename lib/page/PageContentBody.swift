@@ -35,60 +35,73 @@ struct PageContentBody: PageView  {
     @State var pageOffsetX:CGFloat = 0.0
     @State var pageOffsetY:CGFloat = 0.0
     @State var isTop:Bool = true
+    @State var isBelow:Bool = false
     @State var topPageType:PageAnimationType = .none
 
     @State var isReady:Bool = false
     var body: some View {
         ZStack(){
-            Spacer().modifier(MatchParent()).background(Color.transparent.black70)
-                .opacity(self.opacity)
-                .onTapGesture {
-                    self.pageChanger.goBack()
-                }
+            
             ForEach(childViews, id: \.pageID) { page in
                 page.contentBody
                 .offset(x:  self.offsetX, y:self.offsetY)
+            }
+            if self.isBelow {
+                Spacer().modifier(MatchParent()).background(Color.transparent.black70)
+                    .opacity(self.opacity)
+                    .onTapGesture {
+                        self.pageChanger.goBack()
+                    }
             }
         }
         .frame(alignment: .topLeading)
         .offset(x:  self.pageOffsetX, y:  -self.pageOffsetY )
         .onReceive(self.pageChanger.$currentTopPage){ page in
+            guard let page = page else { return }
             if !self.isReady  {return}
             //PageLog.log("currentTopPage",tag:self.pageID)
-            self.isTop = true
-            self.topPageType = page?.animationType ?? .none
+            
+            self.topPageType = page.animationType
             guard let pageObject = self.pageObject else { return }
             if pageObject.zIndex != 0 { return }
+           
             if self.offsetX != 0 || self.offsetY != 0 { return }
             if pageObject == page {
+                self.isTop = true
+                self.isBelow = false
                 withAnimation{
                     self.pageOffsetX = 0.0
                     self.pageOffsetY = 0.0
                 }
-                return
-            }
-            self.isTop = false
-            withAnimation{
-                switch self.topPageType {
-                case .horizental :
-                    self.pageOffsetX = Self.pageMoveAmount
-                    self.pageOffsetY = 0
                 
-                case .vertical :
-                    self.pageOffsetY = Self.pageMoveAmount
-                    self.pageOffsetX = 0
-                
-                default : do{}
+            } else {
+                self.isTop = false
+                let below = self.pageChanger.getBelowPage(page: page)
+                self.isBelow = below == pageObject
+                self.opacity = 1
+                withAnimation{
+                    switch self.topPageType {
+                    case .horizental :
+                        self.pageOffsetX = Self.pageMoveAmount
+                        self.pageOffsetY = 0
+                    
+                    case .vertical :
+                        self.pageOffsetY = Self.pageMoveAmount
+                        self.pageOffsetX = 0
+                    
+                    default : do{}
+                    }
                 }
             }
             
         }
         .onReceive(self.pageChanger.$dragOpercity){ opacity in
             if !self.isReady  {return}
-            //PageLog.log("dragOpercity",tag:self.pageID)
-            
+            if !self.isBelow {return}
             if self.isTop {return}
             self.opacity = opacity
+            
+            //PageLog.log("pagePosition " + self.opacity.description + " " + self.pageID ,tag:self.pageID)
             let amount = Self.pageMoveAmount * CGFloat(opacity)
             switch self.topPageType {
             case .horizental :  self.pageOffsetX = amount

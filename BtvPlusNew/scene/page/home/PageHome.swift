@@ -24,9 +24,10 @@ struct PageHome: PageView {
     @ObservedObject var viewModel:PageDataProviderModel = PageDataProviderModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     
-    
     @State var reloadDegree:Double = 0
     @State var reloadDegreeMax:Double = ReflashSpinner.DEGREE_MAX
+    @State var useTracking:Bool = false
+    
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -94,6 +95,9 @@ struct PageHome: PageView {
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
             self.useTracking = ani
         }
+        .onReceive(self.pagePresenter.$currentTopPage){ page in
+            self.useTracking = page?.id == self.pageObject?.id
+        }
         .onReceive(self.viewModel.$event){evt in
             guard let evt = evt else { return }
             switch evt {
@@ -134,7 +138,7 @@ struct PageHome: PageView {
     @State var blocks:Array<BlockData> = []
     @State var menuId:String = ""
     @State var anyCancellable = Set<AnyCancellable>()
-    @State var useTracking:Bool = false
+    
     
     private func reload(selectedMonthlyId:String? = nil){
         self.delayRequestSubscription?.cancel()

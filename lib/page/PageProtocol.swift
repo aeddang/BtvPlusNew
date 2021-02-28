@@ -63,7 +63,7 @@ class PageObject : Equatable, Identifiable{
     }
 }
 
-enum SceneStatus:String {
+enum PageStatus:String {
     case initate,
     appear,
     disAppear,
@@ -80,7 +80,7 @@ enum SceneOrientation :String{
 }
 
 open class PageObservable: ObservableObject  {
-    @Published var status:SceneStatus = SceneStatus.initate
+    @Published var status:PageStatus = PageStatus.initate
     @Published var pageObject:PageObject?
     @Published var pagePosition:CGPoint = CGPoint()
     @Published var pageOpacity:Double = 1.0

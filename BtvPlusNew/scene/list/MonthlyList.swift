@@ -99,6 +99,7 @@ struct MonthlyList: PageComponent{
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[MonthlyData]
+    var useTracking:Bool = false
     var margin:CGFloat = Dimen.margin.thin
     var action: ((_ data:MonthlyData) -> Void)? = nil
     var body: some View {

@@ -25,7 +25,7 @@ struct PageCate: PageView {
     @State var listType:CateBlock.ListType = .poster
     @State var menuId:String? = nil
     @State var blockData:BlockData? = nil
-    
+    @State var useTracking:Bool = false
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -41,7 +41,8 @@ struct PageCate: PageView {
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     CateBlock(
                         infinityScrollModel:self.infinityScrollModel,
-                        viewModel:self.viewModel
+                        viewModel:self.viewModel,
+                        useTracking:self.useTracking
                     )
                     .modifier(MatchParent())
                 }
@@ -49,16 +50,22 @@ struct PageCate: PageView {
                 .highPriorityGesture(
                     DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
                         .onChanged({ value in
+                            if self.useTracking { self.useTracking = false }
                             self.pageDragingModel.uiEvent = .drag(geometry, value)
                         })
                         .onEnded({ _ in
                             self.pageDragingModel.uiEvent = .draged(geometry)
+                            self.useTracking = true
                         })
                 )
                 .gesture(
                     self.pageDragingModel.cancelGesture
-                        .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
-                        .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                        .onChanged({_ in
+                            self.useTracking = true
+                            self.pageDragingModel.uiEvent = .dragCancel})
+                        .onEnded({_ in
+                            self.useTracking = true
+                            self.pageDragingModel.uiEvent = .dragCancel})
                 )
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
@@ -69,6 +76,12 @@ struct PageCate: PageView {
                         self.viewModel.update(menuId:self.menuId, listType:self.listType, key:nil)
                     }
                 }
+            }
+            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                self.useTracking = ani
+            }
+            .onReceive(self.pagePresenter.$currentTopPage){ page in
+                self.useTracking = page?.id == self.pageObject?.id
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }

@@ -14,6 +14,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var data: BlockData
+    var useTracking:Bool = false
     @State var datas:[PosterData] = []
     @State var listHeight:CGFloat = 0
     var body :some View {
@@ -40,7 +41,11 @@ struct PosterBlock:PageComponent, BlockProtocol {
             } else{
                 ActivityIndicator(isAnimating: .constant(true), style: .medium).padding(.all, Dimen.margin.light)
             }
-            PosterList(viewModel:self.viewModel, datas: self.datas)
+            PosterList(
+                viewModel:self.viewModel,
+                datas: self.datas,
+                useTracking:self.useTracking
+                )
                 .modifier(MatchHorizontal(height: self.listHeight)) 
                 .onReceive(self.viewModel.$event){evt in
                     guard let evt = evt else {return}

@@ -28,6 +28,7 @@ struct SummaryViewer: PageComponent{
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     var peopleScrollModel: InfinityScrollModel = InfinityScrollModel()
     var data:SummaryViewerData
+    var useTracking:Bool = false
     
     @State var isExpand = false
     @State var needExpand = false
@@ -40,7 +41,8 @@ struct SummaryViewer: PageComponent{
             if self.data.peoples != nil {
                 PeopleList(
                     viewModel:self.peopleScrollModel,
-                    datas: self.data.peoples!)
+                    datas: self.data.peoples!,
+                    useTracking:self.useTracking)
                     .frame(height:PeopleList.height)
                     .padding(.bottom, Dimen.margin.medium )
             }

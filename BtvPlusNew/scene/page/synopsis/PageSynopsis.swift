@@ -39,9 +39,8 @@ struct PageSynopsis: PageView {
     @State var isPairing:Bool? = nil
     @State var isFullScreen:Bool = false
     @State var safeAreaBottom:CGFloat = 0
-
+    @State var useTracking:Bool = false
          
-    
     var body: some View {
         GeometryReader { geometry in
             PageDataProviderContent(
@@ -65,7 +64,6 @@ struct PageSynopsis: PageView {
                             playListData: self.playListData,
                             isPlayAble: self.isPlayAble,
                             isPlayViewActive: self.isPlayViewActive)
-                            
                         .modifier(Ratio16_9( geometry:geometry, isFullScreen: self.isFullScreen))
                         .padding(.top, self.sceneObserver.safeAreaTop)
                         .onReceive(self.playerModel.$btvPlayerEvent){evt in
@@ -76,12 +74,11 @@ struct PageSynopsis: PageView {
                             case .changeView(let epsdId) : self.changeVod(epsdId:epsdId)
                             }
                         }
-                       
                         InfinityScrollView(
                             viewModel: self.infinityScrollModel,
                             spacing:Dimen.margin.regular,
                             isRecycle:false,
-                            useTracking:false
+                            useTracking:self.useTracking
                             ){
                             SynopsisBody(
                                 componentViewModel: self.componentViewModel,
@@ -100,8 +97,8 @@ struct PageSynopsis: PageView {
                                 hasAuthority: self.hasAuthority,
                                 relationTab: self.relationTab,
                                 relationDatas: self.relationDatas,
-                                hasRelationVod: self.hasRelationVod)
-                            
+                                hasRelationVod: self.hasRelationVod,
+                                useTracking:self.useTracking)
                             .onReceive( [self.relationTabIdx].publisher ){ idx in
                                 if idx == self.selectedRelationTabIdx { return }
                                 self.selectedRelationContent(idx:idx)
@@ -157,17 +154,22 @@ struct PageSynopsis: PageView {
                         .highPriorityGesture(
                             DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
                                 .onChanged({ value in
+                                    if self.useTracking { self.useTracking = false }
                                     self.pageDragingModel.uiEvent = .drag(geometry, value)
                                 })
                                 .onEnded({ _ in
                                     self.pageDragingModel.uiEvent = .draged(geometry)
+                                    self.useTracking = true
                                 })
-                                
                         )
                         .gesture(
                             self.pageDragingModel.cancelGesture
-                                .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
-                                .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                                .onChanged({_ in
+                                    self.useTracking = true
+                                    self.pageDragingModel.uiEvent = .dragCancel})
+                                .onEnded({_ in
+                                    self.useTracking = true
+                                    self.pageDragingModel.uiEvent = .dragCancel})
                         )
                        
                         
@@ -266,10 +268,14 @@ struct PageSynopsis: PageView {
                 }
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                self.useTracking = ani
                 if ani {
                     self.isPageUiReady = true
                     self.initPage()
                 }
+            }
+            .onReceive(self.pagePresenter.$currentTopPage){ page in
+                self.useTracking = page?.id == self.pageObject?.id
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }

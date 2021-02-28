@@ -173,7 +173,7 @@ struct BtvPlayer: PageComponent{
     var thumbContentMode:ContentMode = .fit
     var contentID:String? = nil
     var listData:PlayListData = PlayListData()
-   
+     
     var body: some View {
         GeometryReader { geometry in
             ZStack{
@@ -189,6 +189,7 @@ struct BtvPlayer: PageComponent{
                     VideoList(viewModel:self.listViewModel,
                               datas: self.listData.datas,
                               contentID: self.contentID,
+                              useTracking : false,
                               margin:PlayerUI.paddingFullScreen + PlayerListTab.padding ){ data in
                         
                         guard let epsdId = data.epsdId else { return }

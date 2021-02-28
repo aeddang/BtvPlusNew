@@ -15,6 +15,7 @@ struct MonthlyBlock: PageComponent {
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var monthlyDatas:[MonthlyData]? = nil
+    var useTracking:Bool = false
     var action: ((_ data:MonthlyData) -> Void)? = nil
     
    

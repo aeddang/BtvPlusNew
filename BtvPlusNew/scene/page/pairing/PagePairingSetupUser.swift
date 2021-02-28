@@ -31,7 +31,6 @@ struct PagePairingSetupUser: PageView {
     @State var isAgree2:Bool = true
     @State var isAgree3:Bool = true
     @State var safeAreaBottom:CGFloat = 0
-    
     @State var useTracking:Bool = false
      
     let birthList = AppUtil.getYearRange(len: 100, offset:0).map{
@@ -53,6 +52,7 @@ struct PagePairingSetupUser: PageView {
                     
                     InfinityScrollView(
                         viewModel: self.infinityScrollModel,
+                        isRecycle:false,
                         useTracking: self.useTracking
                         ){
                         VStack(alignment:.leading , spacing:0) {
@@ -179,16 +179,22 @@ struct PagePairingSetupUser: PageView {
                 .highPriorityGesture(
                     DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
                         .onChanged({ value in
+                            if self.useTracking { self.useTracking = false }
                             self.pageDragingModel.uiEvent = .drag(geometry, value)
                         })
                         .onEnded({ _ in
                             self.pageDragingModel.uiEvent = .draged(geometry)
+                            self.useTracking = true
                         })
                 )
                 .gesture(
                     self.pageDragingModel.cancelGesture
-                        .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
-                        .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                        .onChanged({_ in
+                            self.useTracking = true
+                            self.pageDragingModel.uiEvent = .dragCancel})
+                        .onEnded({_ in
+                            self.useTracking = true
+                            self.pageDragingModel.uiEvent = .dragCancel})
                 )
                 
                 .onReceive(self.infinityScrollModel.$event){evt in

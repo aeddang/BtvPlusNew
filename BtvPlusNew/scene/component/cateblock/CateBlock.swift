@@ -52,7 +52,7 @@ struct CateBlock: PageComponent{
     
     @ObservedObject var viewModel:CateBlockModel = CateBlockModel()
     var key:String? = nil
-    
+    var useTracking:Bool = false
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -71,7 +71,8 @@ struct CateBlock: PageComponent{
                     marginVertical : 0,
                     marginHorizontal : 0,
                     spacing: Dimen.margin.thin,
-                    isRecycle: true
+                    isRecycle: true,
+                    useTracking:self.useTracking
                 ){
                     if !self.isError {
                         

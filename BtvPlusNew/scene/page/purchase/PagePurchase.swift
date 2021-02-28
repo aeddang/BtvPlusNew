@@ -36,7 +36,9 @@ struct PagePurchase: PageView {
                     
                     InfinityScrollView(
                         viewModel: self.infinityScrollModel,
-                        useTracking:self.useTracking){
+                        isRecycle:false,
+                        useTracking:self.useTracking
+                    ){
                         BtvWebView( viewModel: self.webViewModel )
                                 //.modifier(MatchParent())
                                 .modifier(MatchHorizontal(height: self.webViewHeight))
@@ -51,6 +53,7 @@ struct PagePurchase: PageView {
                     
                     .onReceive(self.infinityScrollModel.$event){evt in
                         guard let evt = evt else {return}
+                       
                         switch evt {
                         case .pullCancel : self.pageDragingModel.uiEvent = .pulled(geometry)
                         default : do{}
@@ -72,8 +75,10 @@ struct PagePurchase: PageView {
                 )
                 .gesture(
                     self.pageDragingModel.cancelGesture
-                        .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
-                        .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                        .onChanged({_ in
+                            self.pageDragingModel.uiEvent = .dragCancel})
+                        .onEnded({_ in
+                            self.pageDragingModel.uiEvent = .dragCancel})
                 )
             }//draging
             .onReceive(self.pairing.$event){ evt in

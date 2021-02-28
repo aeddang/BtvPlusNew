@@ -52,7 +52,6 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     init(
         viewModel: InfinityScrollModel,
         @ViewBuilder content: () -> Content) {
-        
         self.viewModel = viewModel
         self.axes = .vertical
         self.showIndicators = false

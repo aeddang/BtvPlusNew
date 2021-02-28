@@ -52,6 +52,19 @@ final class PagePresenter:ObservableObject{
         self.event = event
         self.event = nil
     }
+    
+    func getBelowPage(page:PageObject)->PageObject?{
+        if page.isPopup {
+            let find = PageSceneDelegate.instance?.popups.firstIndex(of: page)
+            if let find = find , find > 0{
+                return PageSceneDelegate.instance?.popups[find - 1]
+            }
+            return currentPage
+        } else {
+            return nil
+        }
+    }
+    
     func hasPopup(find:PageID)->Bool{
         let result = PageSceneDelegate.instance?.popups.first{ $0.pageID == find}
         return result !== nil
@@ -60,6 +73,7 @@ final class PagePresenter:ObservableObject{
         let result = PageSceneDelegate.instance?.popups.first{ $0.pageID != exception}
         return result !== nil
     }
+    
     
     func hasHistory()->Bool{
         let result = PageSceneDelegate.instance?.historys.first

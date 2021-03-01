@@ -23,6 +23,7 @@ struct PageHome: PageView {
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel:PageDataProviderModel = PageDataProviderModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
+    @ObservedObject var monthlyViewModel: InfinityScrollModel = InfinityScrollModel()
     
     @State var reloadDegree:Double = 0
     @State var reloadDegreeMax:Double = ReflashSpinner.DEGREE_MAX
@@ -51,6 +52,7 @@ struct PageHome: PageView {
                     datas: self.blocks,
                     useTracking:self.useTracking,
                     marginVertical: Dimen.app.bottom + self.sceneObserver.safeAreaTop,
+                    monthlyViewModel : self.monthlyViewModel,
                     monthlyDatas: self.monthlyDatas
                     ){ data in
                     self.reload(selectedMonthlyId: data.prdPrcId)
@@ -204,7 +206,6 @@ struct PageHome: PageView {
                 if monthlyDatas.count < maxCount { monthlyDatas.append(monthly) }
             }
             self.originMonthlyDatas = originMonthlyDatas
-            
             self.monthlyDatas = monthlyDatas
         }
         self.requestMonthly()

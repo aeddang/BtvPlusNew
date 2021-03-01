@@ -122,7 +122,7 @@ enum PosterType {
 struct PosterList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
-    @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[PosterData]
     var useTracking:Bool = false
     var margin:CGFloat = Dimen.margin.thin
@@ -158,14 +158,27 @@ struct PosterDataSet:Identifiable {
     var index:Int = -1
 }
 
+extension PosterSet{
+    static let padding:CGFloat = Dimen.margin.thin
+    static func listSize(data:PosterDataSet, screenWidth:CGFloat) -> CGSize{
+        let datas = data.datas
+        let ratio = datas.first!.type.size.height / datas.first!.type.size.width
+        let count = CGFloat(data.count)
+        let w = screenWidth - ( padding * 2)
+        let cellW = ( w - (padding*(count-1)) ) / count
+        let cellH = cellW * ratio
+        
+        return CGSize(width: cellW, height: cellH )
+    }
+}
+
 struct PosterSet: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
     var data:PosterDataSet
-    var padding:CGFloat = Dimen.margin.thin
     @State var cellDatas:[PosterData] = []
     var body: some View {
-        HStack(spacing: self.padding){
+        HStack(spacing: Self.padding){
             ForEach(self.cellDatas) { data in
                 PosterItem( data:data )
 
@@ -180,18 +193,13 @@ struct PosterSet: PageComponent{
                 Spacer()
             }
         }
-        .padding(.horizontal, self.padding)
+        .padding(.horizontal, Self.padding)
         .frame(width: self.sceneObserver.screenSize.width)
         .onAppear {
             if self.data.datas.isEmpty { return }
-            let datas = self.data.datas
-            let ratio = datas.first!.type.size.height / datas.first!.type.size.width
-            let count = CGFloat(self.data.count)
-            let w = self.sceneObserver.screenSize.width - (self.padding*2)
-            let cellW = ( w - (self.padding*(count-1)) ) / count
-            let cellH = cellW * ratio
-            self.cellDatas = datas.map{
-                $0.setCardType(width: cellW, height: cellH, padding: self.padding)
+            let size = Self.listSize(data: self.data, screenWidth: sceneObserver.screenSize.width)
+            self.cellDatas = self.data.datas.map{
+                $0.setCardType(width: size.width, height: size.height, padding: Self.padding)
             }
         }
     }//body

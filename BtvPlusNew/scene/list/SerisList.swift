@@ -42,7 +42,7 @@ class SerisData:InfinityData{
 
 struct SerisList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[SerisData]
     var contentID:String? = nil
     var useTracking:Bool = false
@@ -79,6 +79,7 @@ struct SerisItem: PageView {
                         .scaledToFit()
                         .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
                 }
+                
             }
             .frame(
                 width: ListItem.seris.size.width,

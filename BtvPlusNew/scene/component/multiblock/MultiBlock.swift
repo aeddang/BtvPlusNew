@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct MultiBlock:PageComponent {
-    @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageObservable:PageObservable = PageObservable()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var topDatas:[BannerData]? = nil
@@ -18,6 +18,7 @@ struct MultiBlock:PageComponent {
     var useTracking:Bool = false
     var marginVertical : CGFloat = 0
     
+    var monthlyViewModel: InfinityScrollModel? = nil
     var monthlyDatas:[MonthlyData]? = nil
     var action: ((_ data:MonthlyData) -> Void)? = nil
    
@@ -42,6 +43,7 @@ struct MultiBlock:PageComponent {
             
             if self.monthlyDatas != nil {
                MonthlyBlock(
+                    viewModel:self.monthlyViewModel ?? InfinityScrollModel(),
                     pageDragingModel:self.pageDragingModel,
                     monthlyDatas:self.monthlyDatas!,
                     useTracking:self.useTracking,

@@ -66,6 +66,7 @@ struct SynopsisBody: PageComponent{
                 }
                 .padding(.horizontal, Dimen.margin.thin)
             }
+            
             if self.summaryViewerData != nil {
                 SummaryViewer(
                     peopleScrollModel:self.peopleScrollModel,
@@ -73,6 +74,7 @@ struct SynopsisBody: PageComponent{
                     useTracking: self.useTracking
                 )
             }
+            
             if self.hasRelationVod != nil {
                 if self.hasRelationVod == false {
                     Text(String.pageText.synopsisRelationVod)

@@ -45,6 +45,12 @@ extension CateBlock{
         case video, poster
     }
 }
+
+
+
+
+
+
 struct CateBlock: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
@@ -53,29 +59,71 @@ struct CateBlock: PageComponent{
     @ObservedObject var viewModel:CateBlockModel = CateBlockModel()
     var key:String? = nil
     var useTracking:Bool = false
+    
+    
+    @State var posterCellHeight:CGFloat = 0
+    @State var videoCellHeight:CGFloat = 0
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
             viewModel : self.viewModel
         ){
-            ZStack(alignment: .topLeading){
-                VStack{
-                    ReflashSpinner(
-                        progress: self.$reloadDegree
-                    )
-                    Spacer()
-                }
-                InfinityScrollView(
-                    viewModel: self.infinityScrollModel,
-                    axes: .vertical,
-                    marginVertical : 0,
-                    marginHorizontal : 0,
-                    spacing: Dimen.margin.thin,
-                    isRecycle: true,
-                    useTracking:self.useTracking
-                ){
-                    if !self.isError {
-                        
+            if !self.isError {
+                if #available(iOS 14.0, *) {
+                    ZStack(alignment: .topLeading){
+                        VStack{
+                            ReflashSpinner(
+                                progress: self.$reloadDegree
+                            )
+                            Spacer()
+                        }
+                        InfinityScrollView(
+                            viewModel: self.infinityScrollModel,
+                            axes: .vertical,
+                            marginVertical : 0,
+                            marginHorizontal : 0,
+                            spacing: Dimen.margin.thin,
+                            isRecycle: true,
+                            useTracking:self.useTracking
+                        ){
+                            SortTab(
+                                count:self.totalCount,
+                                isSortAble: self.isSortAble
+                                ){ sort in
+                                    self.sortType = sort
+                                    self.reload()
+                                }
+                            .modifier(ContentEdges())
+                            
+                            ForEach(self.posters) { data in
+                                PosterSet( data:data )
+                                    .frame(height:self.posterCellHeight)
+                                    .onAppear(){
+                                        if data.index == self.posters.last?.index {
+                                            if self.isPaging { self.load() }
+                                        }
+                                    }
+                            }
+                            ForEach(self.videos) { data in
+                                VideoSet( data:data )
+                                    .frame(height:self.videoCellHeight)
+                                    .onAppear(){
+                                        if data.index == self.videos.last?.index {
+                                            if self.isPaging { self.load() }
+                                        }
+                                    }
+                            }
+                            if self.posters.isEmpty && self.videos.isEmpty {
+                                Spacer().modifier(MatchParent())
+                            }
+                            
+                        }
+                    }
+                    .padding(.bottom, self.sceneObserver.safeAreaBottom)
+                    .background(Color.brand.bg)
+                    
+                }else{
+                    List {
                         SortTab(
                             count:self.totalCount,
                             isSortAble: self.isSortAble
@@ -83,18 +131,25 @@ struct CateBlock: PageComponent{
                                 self.sortType = sort
                                 self.reload()
                             }
-                        .modifier(ContentEdges())
+                        .modifier(ListRowInset(
+                                    firstIndex: 0, index: 0,
+                                    marginHorizontal:Dimen.margin.thin,
+                                    spacing: Dimen.margin.thin, marginTop: 0))
                         
                         ForEach(self.posters) { data in
                             PosterSet( data:data )
-                            .onAppear(){
-                                if data.index == self.posters.last?.index {
-                                    if self.isPaging { self.load() }
+                                .frame(height:self.posterCellHeight)
+                                .modifier(ListRowInset( spacing: Dimen.margin.thin))
+                                .onAppear(){
+                                    if data.index == self.posters.last?.index {
+                                        if self.isPaging { self.load() }
+                                    }
                                 }
-                            }
                         }
                         ForEach(self.videos) { data in
                             VideoSet( data:data )
+                                .frame(height:self.videoCellHeight)
+                                .modifier(ListRowInset( spacing: Dimen.margin.thin))
                                 .onAppear(){
                                     if data.index == self.videos.last?.index {
                                         if self.isPaging { self.load() }
@@ -103,29 +158,38 @@ struct CateBlock: PageComponent{
                         }
                         if self.posters.isEmpty && self.videos.isEmpty {
                             Spacer().modifier(MatchParent())
+                                .listRowBackground(Color.brand.bg)
                         }
-                    }else{
-                        ZStack{
-                            VStack(alignment: .center, spacing: 0){
-                                Spacer().modifier(MatchHorizontal(height:0))
-                                Image(Asset.icon.alert)
-                                    .renderingMode(.original)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
-                                    .padding(.top, Dimen.margin.medium)
-                                Text(String.alert.dataError)
-                                    .modifier(BoldTextStyle(size: Font.size.regular, color: Color.app.greyLight))
-                                    .multilineTextAlignment(.center)
-                                    .padding(.top, Dimen.margin.regularExtra)
-                            }
-                        }
-                        .modifier(MatchParent())
+                    }
+                    .modifier(MatchParent())
+                    .background(Color.brand.bg)
+                    .onAppear(){
+                        UITableView.appearance().backgroundColor = Color.brand.bg.uiColor()
+                        UITableView.appearance().separatorStyle = .none
+                        UITableView.appearance().separatorInset = .init(top: 0, left: 0, bottom: 0, right: 0)
+                    }
+                    
+                }
+            } else {
+                ZStack{
+                    VStack(alignment: .center, spacing: 0){
+                        Spacer().modifier(MatchHorizontal(height:0))
+                        Image(Asset.icon.alert)
+                            .renderingMode(.original)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
+                            .padding(.top, Dimen.margin.medium)
+                        Text(String.alert.dataError)
+                            .modifier(BoldTextStyle(size: Font.size.regular, color: Color.app.greyLight))
+                            .multilineTextAlignment(.center)
+                            .padding(.top, Dimen.margin.regularExtra)
                     }
                 }
+                .modifier(MatchParent())
             }
-            .padding(.bottom, self.sceneObserver.safeAreaBottom)
-            .background(Color.brand.bg)
+            
+            
         }
         .onReceive(self.infinityScrollModel.$event){evt in
             guard let evt = evt else {return}
@@ -297,6 +361,7 @@ struct CateBlock: PageComponent{
         let loadedDatas:[PosterData] = datas.map { d in
             return PosterData().setData(data: d)
         }
+        
         setPosterSets(loadedDatas: loadedDatas)
     }
     
@@ -380,6 +445,10 @@ struct CateBlock: PageComponent{
         }
         self.posters.append(contentsOf: rows)
         if self.posters.isEmpty { self.onError() }
+        if let data = self.posters.first {
+            let size = PosterSet.listSize(data: data, screenWidth: self.sceneObserver.screenSize.width)
+            self.posterCellHeight = size.height
+        }
         self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)
     }
     
@@ -406,6 +475,11 @@ struct CateBlock: PageComponent{
         }
         self.videos.append(contentsOf: rows)
         if self.videos.isEmpty { self.onError() }
+        
+        if let data = self.videos.first {
+            let size = VideoSet.listSize(data: data, screenWidth: self.sceneObserver.screenSize.width, isFull: true)
+            self.videoCellHeight = size.height
+        }
         self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)
     }
 }

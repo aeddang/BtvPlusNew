@@ -77,9 +77,10 @@ struct PageSynopsis: PageView {
                         InfinityScrollView(
                             viewModel: self.infinityScrollModel,
                             spacing:Dimen.margin.regular,
-                            isRecycle:false,
-                            useTracking:self.useTracking
+                            isRecycle:true,
+                            useTracking:false
                             ){
+                            
                             SynopsisBody(
                                 componentViewModel: self.componentViewModel,
                                 relationContentsModel: self.relationContentsModel,
@@ -103,6 +104,7 @@ struct PageSynopsis: PageView {
                                 if idx == self.selectedRelationTabIdx { return }
                                 self.selectedRelationContent(idx:idx)
                             }
+                            
                             .onReceive(self.componentViewModel.$uiEvent){evt in
                                 guard let evt = evt else { return }
                                 switch evt {
@@ -112,9 +114,7 @@ struct PageSynopsis: PageView {
                                 case .purchase : self.purchase()
                                 }
                             }
-                            .onReceive(self.peopleScrollModel.$scrollPosition){pos in
-                               // self.pageDragingModel.uiEvent = .dragCancel
-                            }
+                            
                             .onReceive(self.peopleScrollModel.$event){evt in
                                 guard let evt = evt else {return}
                                 switch evt {
@@ -135,6 +135,7 @@ struct PageSynopsis: PageView {
                                 }
                                 .padding(.horizontal, Dimen.margin.thin)
                             }
+                            
                             ForEach(self.seris) { data in
                                 SerisItem( data:data, isSelected: self.synopsisData?.epsdId == data.contentID )
                                     .padding(.horizontal, Dimen.margin.thin)
@@ -148,6 +149,7 @@ struct PageSynopsis: PageView {
                                     PosterSet( data:data )
                                 }
                             }
+                            
                             Spacer().frame(height: self.safeAreaBottom)
                         }
                         .modifier(MatchParent())

@@ -19,6 +19,7 @@ struct ListItem{
     struct video {
        static let size:CGSize = CGSize(width: 164, height: 92)
        static let height:CGFloat = 127
+       static let bottomHeight:CGFloat = 35
     }
     
     struct thema {
@@ -76,5 +77,27 @@ struct ListItem{
         }
     }
    
+}
+
+
+struct ListRowInset: ViewModifier {
+    var firstIndex = 1
+    var index:Int = -1
+    var marginHorizontal:CGFloat = 0
+    var spacing:CGFloat = Dimen.margin.thin
+    var marginTop:CGFloat = Dimen.margin.medium
+    var bgColor:Color = Color.brand.bg
+    func body(content: Content) -> some View {
+        return content
+            .listRowBackground(bgColor)
+            .listRowInsets(
+                .init(
+                    top: (index == firstIndex) ? marginTop : 0,
+                    leading:  marginHorizontal,
+                    bottom: spacing,
+                    trailing: marginHorizontal)
+                    
+        )
+    }
 }
 

@@ -362,7 +362,7 @@ struct BtvPlayer: PageComponent{
             .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
                 self.isFullScreen = fullScreen
                 if let find = self.listData.datas.firstIndex(where: {self.contentID == $0.epsdId}) {
-                    if find != -1 { self.listViewModel.uiEvent = .scrollTo(find)}
+                    if find >= 1 { self.listViewModel.uiEvent = .scrollTo(find - 1)}
                 }
                 self.updatePlayListOffset()
             }

@@ -117,11 +117,17 @@ enum VideoType {
             }
         }
     }
+    
+    var bottomHeight:CGFloat{
+        get{
+            return ListItem.video.bottomHeight
+        }
+    }
 }
 
 struct VideoList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var viewModel: InfinityScrollModel = InfinityScrollModel()
     
     var datas:[VideoData]
     var contentID:String? = nil
@@ -186,14 +192,32 @@ struct VideoDataSet:Identifiable {
     var index:Int = -1
 }
 
+extension VideoSet{
+    static let padding:CGFloat = Dimen.margin.thin
+    
+    static func listSize(data:VideoDataSet, screenWidth:CGFloat, isFull:Bool = false) -> CGSize{
+        let datas = data.datas
+        let ratio = datas.first!.type.size.height / datas.first!.type.size.width
+        let count = CGFloat(data.count)
+        let w = screenWidth - ( padding * 2)
+        let cellW = ( w - (padding*(count-1)) ) / count
+        var cellH = cellW * ratio
+        
+        if datas.first?.isInside == false && isFull {
+            cellH = cellH + datas.first!.type.bottomHeight
+        }
+        return CGSize(width: cellW, height: cellH )
+    }
+}
+
 struct VideoSet: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
     var data:VideoDataSet
-    var padding:CGFloat = Dimen.margin.thin
+    
     @State var cellDatas:[VideoData] = []
     var body: some View {
-        HStack(spacing: self.padding){
+        HStack(spacing: Self.padding){
             ForEach(self.cellDatas) { data in
                 VideoItem( data:data )
                 .onTapGesture {
@@ -207,18 +231,13 @@ struct VideoSet: PageComponent{
                 Spacer()
             }
         }
-        .padding(.horizontal, self.padding)
+        .padding(.horizontal, Self.padding)
         .frame(width: self.sceneObserver.screenSize.width)
         .onAppear {
             if self.data.datas.isEmpty { return }
-            let datas = self.data.datas
-            let ratio = datas.first!.type.size.height / datas.first!.type.size.width
-            let count = CGFloat(self.data.count)
-            let w = self.sceneObserver.screenSize.width - (self.padding*2)
-            let cellW = ( w - (self.padding*(count-1)) ) / count
-            let cellH = cellW * ratio
-            self.cellDatas = datas.map{
-                $0.setCardType(width: cellW, height: cellH, padding: self.padding)
+            let size = Self.listSize(data: self.data, screenWidth: sceneObserver.screenSize.width)
+            self.cellDatas = self.data.datas.map{
+                $0.setCardType(width: size.width, height: size.height, padding: Self.padding)
             }
         }
     }//body
@@ -275,6 +294,7 @@ struct VideoItem: PageView {
                     
                     .lineLimit(1)
                     .multilineTextAlignment(.leading)
+                    .frame(height:self.data.type.bottomHeight)
             }
         }
         .frame(width: self.data.type.size.width)

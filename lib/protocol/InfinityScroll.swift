@@ -30,7 +30,8 @@ class InfinityScrollModel:ComponentObservable, PageProtocol, Identifiable{
     @Published private(set) var total = 0
     @Published fileprivate(set) var pullPosition:CGFloat = 0
     @Published fileprivate(set) var scrollPosition:CGFloat = 0
-    
+    var initIndex:Int? = nil
+    var initPos:Float? = nil
 
     let pullRange:CGFloat
     
@@ -91,7 +92,7 @@ enum InfinityScrollUIEvent {
     case reload, scrollMove(Float), scrollTo(Int)
 }
 enum InfinityScrollEvent {
-    case up, down, bottom, top, pull, pullCompleted, pullCancel
+    case up, down, bottom, top, pull, pullCompleted, pullCancel, ready
 }
 enum InfinityScrollStatus: String{
     case scroll, pull, pullCancel
@@ -115,6 +116,7 @@ open class InfinityData:Identifiable, Equatable{
 protocol InfinityScrollViewProtocol :PageProtocol{
     var viewModel:InfinityScrollModel {get set}
     var prevPosition:CGFloat {get set}
+    func onReady()
     func onMove(pos:CGFloat)
     func onBottom()
     func onTop()
@@ -123,6 +125,15 @@ protocol InfinityScrollViewProtocol :PageProtocol{
     func onPull(pos:CGFloat)
 }
 extension InfinityScrollViewProtocol {
+    func onReady(){
+        if let idx = self.viewModel.initIndex {
+            self.viewModel.uiEvent = .scrollTo(idx)
+        }
+        if let pos = self.viewModel.initPos {
+            self.viewModel.uiEvent = .scrollMove(pos)
+        }
+        self.viewModel.event = .ready
+    }
     func onMove(pos:CGFloat){
         //ComponentLog.d("onMove  " + pos.description , tag: "InfinityScrollViewProtocol")
         let diff = self.prevPosition - pos

@@ -97,7 +97,7 @@ extension PageDragingView{
 }
 
 class PageDragingModel: ObservableObject, PageProtocol, Identifiable{
-    static var MIN_DRAG_RANGE:CGFloat = 25
+    static var MIN_DRAG_RANGE:CGFloat = 30
 
     @Published var uiEvent:PageDragingUIEvent? = nil {didSet{ if uiEvent != nil { uiEvent = nil} }}
     @Published var event:PageDragingEvent? = nil {didSet{ if event != nil { event = nil} }}
@@ -258,12 +258,10 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     func onDragingAction(offset: CGFloat, dragOpacity: Double) {
         if self.isDragingCompleted {return}
         let diff = abs(self.bodyOffset - offset)
-        ComponentLog.d("diff " + diff.description , tag: "DIFF")
-        
+        //ComponentLog.d("diff " + diff.description , tag: "DIFF")
         if abs(diff) > maxDiff { return }
         if abs(diff) < minDiff { return }
-        ComponentLog.d("modify diff " + diff.description , tag: "DIFF")
-        
+        //ComponentLog.d("modify diff " + diff.description , tag: "DIFF")
         let bodyOffset = max( 0, offset - self.dragInitOffset)
         self.bodyOffset = bodyOffset
         

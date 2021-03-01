@@ -18,7 +18,6 @@ struct MonthlyBlock: PageComponent {
     var useTracking:Bool = false
     var action: ((_ data:MonthlyData) -> Void)? = nil
     
-   
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             HStack( spacing:Dimen.margin.thin){
@@ -44,14 +43,16 @@ struct MonthlyBlock: PageComponent {
             .modifier(ContentHorizontalEdges())
             if self.monthlyDatas != nil {
                 MonthlyList(
-                    datas: self.monthlyDatas!
+                    viewModel:self.viewModel,
+                    datas: self.monthlyDatas!,
+                    useTracking:self.useTracking
                 ){ data in
                     if let action = self.action {
                         action(data)
                     }
                     self.selectedData(data: data)
                 }
-                //.modifier(MatchHorizontal(height: ListItem.monthly.size.height))
+                .modifier(MatchHorizontal(height: ListItem.monthly.size.height))
                 
                 .onReceive(self.viewModel.$event){evt in
                     guard let evt = evt else {return}
@@ -97,6 +98,10 @@ struct MonthlyBlock: PageComponent {
                 self.selectedData(data: data)
             }
             self.initSubscription()
+            if let data = self.currentData {
+                let idx  = data.index - 1
+                if idx > 0 { self.viewModel.uiEvent = .scrollTo(idx) }
+            }
         }
         .onDisappear(){
             self.anyCancellable.forEach{$0.cancel()}
@@ -123,6 +128,7 @@ struct MonthlyBlock: PageComponent {
     private func selectedData(data:MonthlyData){
         self.currentData = data
         self.hasAuth = data.hasAuth
+       
         
     }
 }

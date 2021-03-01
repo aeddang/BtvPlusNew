@@ -11,6 +11,7 @@ import SwiftUI
 import Combine
 
 struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where Content: View {
+    @EnvironmentObject var sceneObserver:SceneObserver
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     @State var prevPosition: CGFloat = 0
     @State var isTracking = false
@@ -18,6 +19,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     let showIndicators: Bool
     let content: Content
     
+    var contentSize: CGFloat = -1
     var marginVertical: CGFloat
     var marginHorizontal: CGFloat
     var spacing: CGFloat
@@ -31,6 +33,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         viewModel: InfinityScrollModel,
         axes: Axis.Set = .vertical,
         showIndicators: Bool = false,
+        contentSize : CGFloat = -1,
         marginVertical: CGFloat = 0,
         marginHorizontal: CGFloat = 0,
         spacing: CGFloat = 0,
@@ -42,6 +45,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         self.axes = axes
         self.showIndicators = showIndicators
         self.content = content()
+        self.contentSize = contentSize
         self.marginVertical = marginVertical
         self.marginHorizontal = marginHorizontal
         self.spacing = spacing
@@ -111,7 +115,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                     })
                     .onChange(of: self.scrollIdx, perform: { idx in
                         guard let idx = idx else {return}
-                        reader.scrollTo(idx, anchor: .center)
+                        reader.scrollTo(idx, anchor: nil)
                     })
                 }
                 
@@ -132,6 +136,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
             }
             .onAppear(){
                 self.isTracking = true
+                self.onReady()
             }
         }else{
             GeometryReader { outsideProxy in
@@ -156,10 +161,10 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                 .coordinateSpace(name: self.tag)
                 .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
                     self.onPreferenceChange(value: value)
-                    
                 }
                 .onAppear(){
                     self.isTracking = true
+                    self.onReady()
                 }
                 .onDisappear{
                     self.isTracking = false
@@ -186,13 +191,13 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                 .coordinateSpace(name: self.tag)
                 .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
                     self.onPreferenceChange(value: value)
-                    
                 }
                 .onAppear(){
                      self.isTracking = true
                 }
                 .onDisappear{
                     self.isTracking = false
+                    self.onReady()
                 }
             }
         }//if
@@ -235,17 +240,16 @@ struct ScrollOffsetPreferenceKey: PreferenceKey {
 }
 /*
  List {
-     VStack(spacing:0){
-         if self.isTracking {
-             GeometryReader { insideProxy in
-                 Color.clear
-                     .preference(key: ScrollOffsetPreferenceKey.self,
-                         value: [self.calculateContentOffset(
-                             insideProxy: insideProxy, outsideProxy: outsideProxy)])
-             }
+     if self.isTracking {
+         GeometryReader { insideProxy in
+             Color.clear
+                 .preference(key: ScrollOffsetPreferenceKey.self,
+                     value: [self.calculateContentOffset(
+                         insideProxy: insideProxy, outsideProxy: outsideProxy)])
          }
-         self.content
      }
+     self.content
+     
  }
  .padding(.vertical, self.marginVertical)
  .padding(.horizontal, self.marginHorizontal)
@@ -257,6 +261,38 @@ struct ScrollOffsetPreferenceKey: PreferenceKey {
      self.isTracking = true
      UITableView.appearance().separatorStyle = .none
      UITableView.appearance().separatorInset = .init(top: 0, left: 0, bottom: 0, right: 0)
+ }
+ .onDisappear{
+     self.isTracking = false
+ }
+ 
+ 
+ 
+ ScrollView(.vertical, showsIndicators: false) {
+     ZStack(alignment: .topLeading) {
+         if self.isTracking && self.useTracking{
+             GeometryReader { insideProxy in
+                 Color.clear
+                     .preference(key: ScrollOffsetPreferenceKey.self,
+                         value: [self.calculateContentOffset(
+                             insideProxy: insideProxy, outsideProxy: outsideProxy)])
+             }
+         }
+         VStack (alignment:.leading, spacing:self.spacing){
+             self.content
+         }
+         .padding(.vertical, self.marginVertical)
+         .padding(.horizontal, self.marginHorizontal)
+     }
+ }
+ .coordinateSpace(name: self.tag)
+ .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+     self.onPreferenceChange(value: value)
+     
+ }
+ .onAppear(){
+     self.isTracking = true
+     self.onReady()
  }
  .onDisappear{
      self.isTracking = false

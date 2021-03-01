@@ -96,7 +96,7 @@ enum ThemaType {
 struct ThemaList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
-    @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[ThemaData]
     var useTracking:Bool = false
     var margin:CGFloat = Dimen.margin.thin

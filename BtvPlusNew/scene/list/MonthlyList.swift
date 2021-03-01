@@ -95,9 +95,7 @@ class MonthlyData:InfinityData,ObservableObject{
 
 
 struct MonthlyList: PageComponent{
-    @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
-    @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[MonthlyData]
     var useTracking:Bool = false
     var margin:CGFloat = Dimen.margin.thin
@@ -109,14 +107,24 @@ struct MonthlyList: PageComponent{
             marginVertical: 0,
             marginHorizontal: self.margin ,
             spacing: Dimen.margin.tiny,
-            isRecycle: false,
-            useTracking: true
+            isRecycle: true,
+            useTracking: self.useTracking
             ){
             ForEach(self.datas) { data in
-                MonthlyItem( data:data )
-                .onTapGesture {
-                    if let action = self.action {
-                        action(data)
+                if data.index == -1 {
+                    MonthlyItem( data:data )
+                    .onTapGesture {
+                        if let action = self.action {
+                            action(data)
+                        }
+                    }
+                }else{
+                    MonthlyItem( data:data )
+                        .id(data.index)
+                    .onTapGesture {
+                        if let action = self.action {
+                            action(data)
+                        }
                     }
                 }
             }
@@ -165,7 +173,10 @@ struct MonttlyList_Previews: PreviewProvider {
     
     static var previews: some View {
         VStack{
-            MonthlyList( datas: [
+            
+            MonthlyList(
+                viewModel:InfinityScrollModel(),
+                datas: [
                 MonthlyData().setDummy(0),
                 MonthlyData().setDummy(),
                 MonthlyData().setDummy()

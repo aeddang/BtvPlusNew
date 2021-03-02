@@ -105,6 +105,7 @@ struct SerisItem: PageView {
                 }
             }
         }
+        .frame(height: ListItem.seris.size.height)
     }
     
 }

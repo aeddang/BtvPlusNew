@@ -10,6 +10,17 @@
 import Foundation
 import SwiftUI
 
+enum LikeStatus :String {
+    case like, unlike, unkowned
+    
+    var boolType: Bool? {
+        switch self {
+        case .like : return true
+        case .unlike : return false
+        default: return nil
+        }
+    }
+}
 
 
 struct LikeButton: PageView {
@@ -17,7 +28,8 @@ struct LikeButton: PageView {
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
     var srisId:String
-    @State var isLike:Bool?
+    @Binding var isLike:LikeStatus?
+   
     var action: ((_ ac:Bool?) -> Void)? = nil
     var body: some View {
         Button(action: {
@@ -26,12 +38,12 @@ struct LikeButton: PageView {
                 self.pageSceneObserver.alert = .needPairing()
             }
             else{
-                self.pageSceneObserver.alert = .like(self.srisId, self.isLike)
+                self.pageSceneObserver.alert = .like(self.srisId, self.isLike?.boolType)
             }
         }) {
             VStack(spacing:0){
-                Image(self.isLike == nil ? Asset.icon.like
-                    : self.isLike == true ? Asset.icon.likeOn : Asset.icon.likeOff )
+                Image(self.isLike == nil || self.isLike == .unkowned ? Asset.icon.like
+                        : self.isLike == .like ? Asset.icon.likeOn : Asset.icon.likeOff )
                     .renderingMode(.original).resizable()
                     .scaledToFit()
                     .frame(
@@ -46,7 +58,6 @@ struct LikeButton: PageView {
                 
             }
         }//btn
-        
         .onReceive(self.dataProvider.$result){ res in
             guard let res = res else { return }
             if !res.id.hasPrefix(self.srisId) { return }
@@ -62,17 +73,27 @@ struct LikeButton: PageView {
             self.error(err)
         }
         .onReceive(self.pairing.$status){stat in
+            if !self.isInit { return }
             switch stat {
-            case .pairing: self.load()
-            default: do{}
+            case .pairing:
+                ComponentLog.d("self.pairing.$status " + self.isLike.debugDescription, tag:self.tag)
+                if self.isLike == nil { self.load() }
+            default:
+                ComponentLog.d("self.unpairing.$status " + self.isLike.debugDescription, tag:self.tag)
+                self.isLike = nil
             }
         }
         .onAppear{
-            
+            if self.pairing.status == .pairing {
+                ComponentLog.d("onAppear " + self.isLike.debugDescription, tag:self.tag)
+                if self.isLike == nil { self.load() }
+            }
+            self.isInit = true
         }
         
     }//body
         
+    @State var isInit:Bool = false
     func load(){
         self.isLike = nil
         self.dataProvider.requestData(
@@ -86,9 +107,9 @@ struct LikeButton: PageView {
    
     func setup(_ res:ApiResultResponds){
         guard let data = res.data as? Like else { return }
-        if data.like == "1" { self.isLike = true }
-        else if data.dislike == "1" { self.isLike = false }
-        else { self.isLike = nil }
+        if data.like == "1" { self.isLike = .like }
+        else if data.dislike == "1" { self.isLike = .unlike }
+        else { self.isLike = .unlike }
     }
     
     func regist(_ res:ApiResultResponds){
@@ -96,14 +117,14 @@ struct LikeButton: PageView {
             return
         }
         if data.like_action == "1" {
-            self.isLike = true
+            self.isLike = .like
             action?(true)
         }
         else if data.like_action == "2" {
-            self.isLike = false
+            self.isLike = .unlike
             action?(false)
         }else{
-            self.isLike = nil
+            self.isLike = .unkowned
             action?(nil)
         }
     }
@@ -119,7 +140,8 @@ struct LikeButton_Previews: PreviewProvider {
     static var previews: some View {
         Form{
             LikeButton (
-                srisId: ""
+                srisId: "",
+                isLike: .constant(.like)
             ){ ac in
                 
             }

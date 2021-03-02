@@ -16,47 +16,53 @@ struct PosterBlock:PageComponent, BlockProtocol {
     var data: BlockData
     var useTracking:Bool = false
     @State var datas:[PosterData] = []
-    @State var listHeight:CGFloat = 0
+    @State var listHeight:CGFloat = ListItem.poster.type01.height
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
-            if !self.datas.isEmpty {
-                HStack( spacing:Dimen.margin.thin){
-                    VStack(alignment: .leading, spacing:0){
-                        Text(data.name).modifier(BlockTitle())
-                            .lineLimit(1)
-                        Spacer().modifier(MatchHorizontal(height: 0))
-                    }
-                    TextButton(
-                        defaultText: String.button.all,
-                        textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
-                    ){_ in
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.cate)
-                                .addParam(key: .data, value: data)
-                                .addParam(key: .type, value: CateBlock.ListType.poster)
-                        )
-                    }
+            HStack( spacing:Dimen.margin.thin){
+                VStack(alignment: .leading, spacing:0){
+                    Text(data.name).modifier(BlockTitle())
+                        .lineLimit(1)
+                    Spacer().modifier(MatchHorizontal(height: 0))
                 }
-                .modifier(ContentHorizontalEdges())
-            } else{
-                ActivityIndicator(isAnimating: .constant(true), style: .medium).padding(.all, Dimen.margin.light)
+                TextButton(
+                    defaultText: String.button.all,
+                    textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
+                ){_ in
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.cate)
+                            .addParam(key: .data, value: data)
+                            .addParam(key: .type, value: CateBlock.ListType.poster)
+                    )
+                }
             }
-            PosterList(
-                viewModel:self.viewModel,
-                datas: self.datas,
-                useTracking:self.useTracking
-                )
-                .modifier(MatchHorizontal(height: self.listHeight)) 
-                .onReceive(self.viewModel.$event){evt in
-                    guard let evt = evt else {return}
-                    switch evt {
-                    case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pulled)
-                    default : do{}
+            .modifier(ContentHorizontalEdges())
+            if !self.datas.isEmpty {
+                PosterList(
+                    viewModel:self.viewModel,
+                    datas: self.datas,
+                    useTracking:self.useTracking
+                    )
+                    .modifier(MatchHorizontal(height: self.listHeight))
+                    .onReceive(self.viewModel.$event){evt in
+                        guard let evt = evt else {return}
+                        switch evt {
+                        case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pulled)
+                        default : do{}
+                        }
                     }
-                }
-                .onReceive(self.viewModel.$pullPosition){ pos in
-                    self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
-                }
+                    .onReceive(self.viewModel.$pullPosition){ pos in
+                        self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
+                    }
+                
+            } else{
+                PosterList(
+                    viewModel:self.viewModel,
+                    datas: [PosterData(),PosterData(),PosterData(),PosterData(),PosterData()]
+                    )
+                    .modifier(MatchHorizontal(height: self.listHeight))
+            }
+            
              
         }
         .onAppear{

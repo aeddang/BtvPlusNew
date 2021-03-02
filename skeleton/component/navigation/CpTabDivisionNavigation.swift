@@ -56,6 +56,7 @@ struct CPTabDivisionNavigation : PageComponent {
             width: self.getButtonSize(geometry: geometry),
             height: btn.frame.height
         )
+        .buttonStyle(BorderlessButtonStyle())
         .padding(0)
     }
     

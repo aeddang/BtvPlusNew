@@ -13,31 +13,37 @@ struct FunctionViewer: PageComponent{
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     var synopsisData:SynopsisData? = nil
     var srisId:String?
-    @Binding var isHeart:Bool?
+    @Binding var isBookmark:Bool?
+    @Binding var isLike:LikeStatus?
     var body: some View {
         VStack(alignment:.leading , spacing:0) {
             HStack(spacing:Dimen.margin.regular){
                 if self.synopsisData != nil{
                     BookMarkButton(
                         data:self.synopsisData!,
-                        isHeart: self.$isHeart
+                        isBookmark: self.$isBookmark
                     ){ ac in
                        
                     }
+                    .buttonStyle(BorderlessButtonStyle())
                 }
                 if self.srisId != nil{
                     LikeButton(
-                        srisId: self.srisId!
+                        srisId: self.srisId!,
+                        isLike: self.$isLike
                     ){ ac in
                        
                     }
+                    .buttonStyle(BorderlessButtonStyle())
                 }
                 BtvButton(
                     id:""
                 )
+                .buttonStyle(BorderlessButtonStyle())
                 ShareButton(
                     id:""
                 )
+                .buttonStyle(BorderlessButtonStyle())
             }
         }
         .modifier(ContentHorizontalEdges())
@@ -56,7 +62,8 @@ struct FunctionViewer_Previews: PreviewProvider {
         VStack{
             FunctionViewer(
                 synopsisData:SynopsisData(),
-                isHeart: .constant(false)
+                isBookmark: .constant(false),
+                isLike: .constant(.unlike)
             )
             .environmentObject(DataProvider())
             .environmentObject(PagePresenter())

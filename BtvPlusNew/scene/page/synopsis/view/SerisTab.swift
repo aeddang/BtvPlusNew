@@ -13,11 +13,9 @@ import SwiftUI
 struct SerisTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
-    
     var data:RelationContentsModel
     @Binding var seris:[SerisData]
     let action: (_ idx:SeasonData) -> Void
-    
     
     @State var textSeason:String? = nil
     @State var textSeasonCount:String = ""
@@ -50,6 +48,7 @@ struct SerisTab: PageComponent{
                         self.data.currentSeasonIdx)
                     
                 }
+                .buttonStyle(BorderlessButtonStyle())
             }
             Text(self.textSeasonCount)
                 .modifier(BoldTextStyle(
@@ -73,6 +72,7 @@ struct SerisTab: PageComponent{
                     .select((self.tag + SelectType.sort.rawValue , self.sortOption.map{$0.name}), idx ?? -1)
                 
             }
+            .buttonStyle(BorderlessButtonStyle())
         }
         .onReceive(self.pageSceneObserver.$selectResult){ result in
             guard let result = result else { return }

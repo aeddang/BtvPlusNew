@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 class PosterData:InfinityData{
-    private(set) var image: String = Asset.noImg9_16
+    private(set) var image: String? = nil
     private(set) var title: String? = nil
     private(set) var subTitle: String? = nil
     private(set) var type:PosterType = .small
@@ -160,11 +160,11 @@ struct PosterDataSet:Identifiable {
 
 extension PosterSet{
     static let padding:CGFloat = Dimen.margin.thin
-    static func listSize(data:PosterDataSet, screenWidth:CGFloat) -> CGSize{
+    static func listSize(data:PosterDataSet, screenWidth:CGFloat, negativeMargin:CGFloat = 0 ) -> CGSize{
         let datas = data.datas
         let ratio = datas.first!.type.size.height / datas.first!.type.size.width
         let count = CGFloat(data.count)
-        let w = screenWidth - ( padding * 2)
+        let w = screenWidth - ( padding * 2) - (  negativeMargin * 2 )
         let cellW = ( w - (padding*(count-1)) ) / count
         let cellH = cellW * ratio
         
@@ -176,6 +176,7 @@ struct PosterSet: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
     var data:PosterDataSet
+    var negativeMargin:CGFloat = 0 //IOS 14 SidebarListStyle
     @State var cellDatas:[PosterData] = []
     var body: some View {
         HStack(spacing: Self.padding){
@@ -197,7 +198,7 @@ struct PosterSet: PageComponent{
         .frame(width: self.sceneObserver.screenSize.width)
         .onAppear {
             if self.data.datas.isEmpty { return }
-            let size = Self.listSize(data: self.data, screenWidth: sceneObserver.screenSize.width)
+            let size = Self.listSize(data: self.data, screenWidth: sceneObserver.screenSize.width, negativeMargin: self.negativeMargin)
             self.cellDatas = self.data.datas.map{
                 $0.setCardType(width: size.width, height: size.height, padding: Self.padding)
             }
@@ -209,8 +210,16 @@ struct PosterItem: PageView {
     var data:PosterData
     var body: some View {
         ZStack{
-            ImageView(url: self.data.image, contentMode: .fit, noImg: Asset.noImg9_16)
-                .modifier(MatchParent())
+            if self.data.image == nil {
+                Image(Asset.noImg9_16)
+                    .renderingMode(.original)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .modifier(MatchParent())
+            } else {
+                ImageView(url: self.data.image!, contentMode: .fill, noImg: Asset.noImg9_16)
+                    .modifier(MatchParent())
+            }
         }
         .frame(
             width: self.data.type.size.width,

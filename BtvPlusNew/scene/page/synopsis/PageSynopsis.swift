@@ -38,7 +38,6 @@ struct PageSynopsis: PageView {
     @State var synopsisData:SynopsisData? = nil
     @State var isPairing:Bool? = nil
     @State var isFullScreen:Bool = false
-    @State var safeAreaBottom:CGFloat = 0
     @State var useTracking:Bool = false
          
     var body: some View {
@@ -74,107 +73,71 @@ struct PageSynopsis: PageView {
                             case .changeView(let epsdId) : self.changeVod(epsdId:epsdId)
                             }
                         }
-                        InfinityScrollView(
-                            viewModel: self.infinityScrollModel,
-                            spacing:Dimen.margin.regular,
-                            isRecycle:true,
-                            useTracking:false
-                            ){
-                            
-                            SynopsisBody(
-                                componentViewModel: self.componentViewModel,
-                                relationContentsModel: self.relationContentsModel,
-                                peopleScrollModel: self.peopleScrollModel,
-                                pageDragingModel: self.pageDragingModel,
-                                isBookmark: self.$isBookmark,
-                               // seris: self.$seris,
-                                relationTabIdx: self.$relationTabIdx,
-                                synopsisData: self.synopsisData,
-                                isPairing: self.isPairing,
-                                episodeViewerData: self.episodeViewerData,
-                                purchasViewerData: self.purchasViewerData,
-                                summaryViewerData: self.summaryViewerData,
-                                srisId: self.srisId, epsdId: self.epsdId,
-                                hasAuthority: self.hasAuthority,
-                                relationTab: self.relationTab,
-                                relationDatas: self.relationDatas,
-                                hasRelationVod: self.hasRelationVod,
-                                useTracking:self.useTracking)
-                            .onReceive( [self.relationTabIdx].publisher ){ idx in
-                                if idx == self.selectedRelationTabIdx { return }
-                                self.selectedRelationContent(idx:idx)
-                            }
-                            
-                            .onReceive(self.componentViewModel.$uiEvent){evt in
-                                guard let evt = evt else { return }
-                                switch evt {
-                                case .changeVod(let epsdId) : self.changeVod(epsdId:epsdId)
-                                case .changeSynopsis(let data): self.changeVod(synopsisData: data)
-                                case .changeOption(let option) : self.changeOption(option)
-                                case .purchase : self.purchase()
-                                }
-                            }
-                            
-                            .onReceive(self.peopleScrollModel.$event){evt in
-                                guard let evt = evt else {return}
-                                switch evt {
-                                case .pullCancel : self.pageDragingModel.uiEvent = .pulled(geometry)
-                                default : do{}
-                                }
-                            }
-                            .onReceive(self.peopleScrollModel.$pullPosition){ pos in
-                                self.pageDragingModel.uiEvent = .pull(geometry, pos)
-                            }
-                            
-                            if !self.seris.isEmpty {
-                                SerisTab(
-                                    data:self.relationContentsModel,
-                                    seris: self.$seris
-                                ){ season in
-                                    self.componentViewModel.uiEvent = .changeSynopsis(season.synopsisData)
-                                }
-                                .padding(.horizontal, Dimen.margin.thin)
-                            }
-                            
-                            ForEach(self.seris) { data in
-                                SerisItem( data:data, isSelected: self.synopsisData?.epsdId == data.contentID )
-                                    .padding(.horizontal, Dimen.margin.thin)
-                                .onTapGesture {
-                                    self.componentViewModel.uiEvent = .changeVod(data.epsdId)
-                                }
-                            }
-                            
-                            VStack(spacing:Dimen.margin.thin){
-                                ForEach(self.relationDatas) { data in
-                                    PosterSet( data:data )
-                                }
-                            }
-                            
-                            Spacer().frame(height: self.safeAreaBottom)
-                        }
-                        .modifier(MatchParent())
-                        .highPriorityGesture(
-                            DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
-                                .onChanged({ value in
-                                    if self.useTracking { self.useTracking = false }
-                                    self.pageDragingModel.uiEvent = .drag(geometry, value)
-                                })
-                                .onEnded({ _ in
-                                    self.pageDragingModel.uiEvent = .draged(geometry)
-                                    self.useTracking = true
-                                })
-                        )
-                        .gesture(
-                            self.pageDragingModel.cancelGesture
-                                .onChanged({_ in
-                                    self.useTracking = true
-                                    self.pageDragingModel.uiEvent = .dragCancel})
-                                .onEnded({_ in
-                                    self.useTracking = true
-                                    self.pageDragingModel.uiEvent = .dragCancel})
-                        )
-                       
                         
+                        SynopsisBody(
+                            componentViewModel: self.componentViewModel,
+                            infinityScrollModel: self.infinityScrollModel,
+                            relationContentsModel: self.relationContentsModel,
+                            peopleScrollModel: self.peopleScrollModel,
+                            pageDragingModel: self.pageDragingModel,
+                            isBookmark: self.$isBookmark,
+                            isLike: self.$isLike,
+                            relationTabIdx: self.$relationTabIdx,
+                            seris: self.$seris,
+                            synopsisData: self.synopsisData,
+                            isPairing: self.isPairing,
+                            episodeViewerData: self.episodeViewerData,
+                            purchasViewerData: self.purchasViewerData,
+                            summaryViewerData: self.summaryViewerData,
+                            srisId: self.srisId, epsdId: self.epsdId,
+                            hasAuthority: self.hasAuthority,
+                            relationTab: self.relationTab,
+                            relationDatas: self.relationDatas,
+                            hasRelationVod: self.hasRelationVod,
+                            useTracking:self.useTracking)
+                            .highPriorityGesture(
+                                DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
+                                    .onChanged({ value in
+                                        if self.useTracking { self.useTracking = false }
+                                        self.pageDragingModel.uiEvent = .drag(geometry, value)
+                                    })
+                                    .onEnded({ _ in
+                                        self.pageDragingModel.uiEvent = .draged(geometry)
+                                        self.useTracking = true
+                                    })
+                            )
+                            .gesture(
+                                self.pageDragingModel.cancelGesture
+                                    .onChanged({_ in
+                                                self.useTracking = true
+                                                self.pageDragingModel.uiEvent = .dragCancel})
+                                    .onEnded({_ in
+                                                self.useTracking = true
+                                                self.pageDragingModel.uiEvent = .dragCancel})
+                            )
+                    }
+                    .onReceive( [self.relationTabIdx].publisher ){ idx in
+                        if idx == self.selectedRelationTabIdx { return }
+                        self.selectedRelationContent(idx:idx)
+                    }
+                    .onReceive(self.componentViewModel.$uiEvent){evt in
+                        guard let evt = evt else { return }
+                        switch evt {
+                        case .changeVod(let epsdId) : self.changeVod(epsdId:epsdId)
+                        case .changeSynopsis(let data): self.changeVod(synopsisData: data)
+                        case .changeOption(let option) : self.changeOption(option)
+                        case .purchase : self.purchase()
+                        }
+                    }
+                    .onReceive(self.peopleScrollModel.$event){evt in
+                        guard let evt = evt else {return}
+                        switch evt {
+                        case .pullCancel : self.pageDragingModel.uiEvent = .pulled(geometry)
+                        default : do{}
+                        }
+                    }
+                    .onReceive(self.peopleScrollModel.$pullPosition){ pos in
+                        self.pageDragingModel.uiEvent = .pull(geometry, pos)
                     }
                     .modifier(PageFull())
                     
@@ -183,9 +146,7 @@ struct PageSynopsis: PageView {
                    self.pageDragingModel.uiEvent = .dragCancel
                 }
             }//PageDataProviderContent
-            .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
-                self.safeAreaBottom = pos
-            }
+            
             .onReceive(self.pairing.$event){evt in
                 guard let _ = evt else {return}
                 self.isPageDataReady = true
@@ -321,6 +282,7 @@ struct PageSynopsis: PageView {
     @State var srisId:String? = nil
     @State var srisCount:String? = nil
     @State var isBookmark:Bool? = nil
+    @State var isLike:LikeStatus? = nil
     @State var epsdId:String? = nil
     @State var epsdRsluId:String = ""
     @State var purchasedPid:String? = nil
@@ -623,7 +585,6 @@ struct PageSynopsis: PageView {
             //self.synopsisData?.epsdRsluId = self.synopsisModel?.epsdRsluId
             self.synopsisModel?.purchasedPid = self.purchasedPid
             self.title = self.episodeViewerData?.episodeTitle
-            self.epsdRsluId = self.synopsisModel?.epsdRsluId ?? ""
             self.epsdId = self.synopsisModel?.epsdId
             self.imgBg = self.synopsisModel?.imgBg
             self.imgContentMode = self.synopsisModel?.imgContentMode ?? .fit
@@ -660,6 +621,7 @@ struct PageSynopsis: PageView {
             }
         }
         self.textInfo = self.purchasViewerData?.serviceInfo
+        self.epsdRsluId = self.synopsisModel?.curSynopsisItem?.epsd_rslu_id ?? self.synopsisModel?.epsdRsluId ?? ""
         if let curSynopsisItem = self.synopsisModel?.curSynopsisItem {
             self.hasAuthority = curSynopsisItem.hasAuthority
         }
@@ -887,3 +849,8 @@ struct PageSynopsis_Previews: PreviewProvider {
     }
 }
 #endif
+
+
+
+
+

@@ -87,17 +87,21 @@ struct ListRowInset: ViewModifier {
     var spacing:CGFloat = Dimen.margin.thin
     var marginTop:CGFloat = Dimen.margin.medium
     var bgColor:Color = Color.brand.bg
+    
     func body(content: Content) -> some View {
         return content
-            .listRowBackground(bgColor)
-            .listRowInsets(
-                .init(
+            .padding(
+                EdgeInsets(
                     top: (index == firstIndex) ? marginTop : 0,
                     leading:  marginHorizontal,
                     bottom: spacing,
                     trailing: marginHorizontal)
-                    
-        )
+            )
+            .listRowInsets(
+                EdgeInsets()
+            )
+            .background(bgColor)
+            .listRowBackground(bgColor)
     }
 }
 

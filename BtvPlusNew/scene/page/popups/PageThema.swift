@@ -20,14 +20,7 @@ struct PageThema: PageView {
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     
-    @State var originDatas:Array<BlockItem> = []
-    @State var originBlocks:Array<BlockData> = []
-    @State var blocks:Array<BlockData> = []
-    @State var anyCancellable = Set<AnyCancellable>()
     
-    @State var reloadDegree:Double = 0
-    @State var useTracking:Bool = false
-    @State var title:String? = nil
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -59,6 +52,7 @@ struct PageThema: PageView {
                                     pageObservable: self.pageObservable,
                                     pageDragingModel: self.pageDragingModel,
                                     datas: self.blocks,
+                                    useBodyTracking:self.useTracking,
                                     useTracking:self.useTracking,
                                     marginVertical: 0
                                     )
@@ -116,7 +110,7 @@ struct PageThema: PageView {
             .onReceive(self.infinityScrollModel.$pullPosition){ pos in
                 if pos < InfinityScrollModel.PULL_RANGE { return }
                 withAnimation{
-                    self.reloadDegree = Double(pos)
+                    self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
                 }
             }
             .onReceive(self.infinityScrollModel.$scrollPosition){pos in
@@ -124,9 +118,7 @@ struct PageThema: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
-                if ani {
-                    self.reload()
-                }
+                if ani { self.reload() }
             }
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 self.useTracking = page?.id == self.pageObject?.id
@@ -137,19 +129,28 @@ struct PageThema: PageView {
                 self.originDatas = obj.getParamValue(key: .data) as? [BlockItem] ?? []
             }
             .onDisappear{
-                self.delayRequestSubscription?.cancel()
-                self.delayRequestSubscription = nil
+               
                 self.anyCancellable.forEach{$0.cancel()}
                 self.anyCancellable.removeAll()
             }
         }//geo
     }//body
     
+    @State var originDatas:Array<BlockItem> = []
+    @State var originBlocks:Array<BlockData> = []
+    @State var blocks:[BlockData] = []
+    @State var anyCancellable = Set<AnyCancellable>()
+    
+    @State var reloadDegree:Double = 0
+    @State var useTracking:Bool = false
+    @State var title:String? = nil
+    
     private func reload(){
-        self.delayRequestSubscription?.cancel()
-        self.delayRequestSubscription = nil
+       
         self.isDataCompleted = false
         self.useTracking = false
+        self.completedNum = 0
+        self.requestNum = 0
         self.originBlocks = []
         self.blocks = []
         self.setupBlocks()
@@ -196,22 +197,10 @@ struct PageThema: PageView {
         PageLog.d("completedNum " + completedNum.description, tag: "BlockProtocol")
         if self.completedNum == self.requestNum {
             self.completedNum = 0
-            self.delayRequest()
+            self.addBlock()
         }
     }
     
-    @State var delayRequestSubscription:AnyCancellable?
-    func delayRequest(){
-        self.delayRequestSubscription?.cancel()
-        self.delayRequestSubscription = Timer.publish(
-            every: 0.01, on: .current, in: .tracking)
-            .autoconnect()
-            .sink() {_ in
-                self.delayRequestSubscription?.cancel()
-                self.delayRequestSubscription = nil
-                self.addBlock()
-            }
-    }
     
     private func addBlock(){
         let max = min(setNum, self.originBlocks.count)
@@ -224,17 +213,13 @@ struct PageThema: PageView {
         PageLog.d("addBlock" + set.debugDescription, tag: "BlockProtocol")
         if set.isEmpty { return }
         self.requestNum = set.count
-        DispatchQueue.main.async {
-            withAnimation {
-                self.blocks.append(contentsOf: set)
-            }
-        }
+        self.blocks.append(contentsOf: set)
     }
     
     private func removeBlock(_ block:BlockData){
-        DispatchQueue.main.async {
-            guard let find = self.blocks.firstIndex(of: block) else { return }
+        if let find = self.blocks.firstIndex(of: block) {
             self.blocks.remove(at: find)
+            return
         }
     }
     

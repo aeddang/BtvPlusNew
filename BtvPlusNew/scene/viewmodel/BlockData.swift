@@ -88,55 +88,28 @@ class BlockData:Identifiable, ObservableObject, Equatable{
         
     }
         
-    var posters:[PosterData]? = nil {
-        didSet{
-            if posters != nil {
-                status = posters!.isEmpty ? .passive : .active
-                //DataLog.d(name + " " + posters!.count.description + " " + status.rawValue, tag: "BlockProtocol")
-            }
-        }
-    }
-    
-    var videos:[VideoData]? = nil {
-        didSet{
-            if videos != nil {
-                status = videos!.isEmpty ? .passive : .active
-                //DataLog.d(name + " " + videos!.count.description + " " + status.rawValue, tag: "BlockProtocol")
-            }
-        }
-    }
-    
-    var themas:[ThemaData]? = nil {
-        didSet{
-            if themas != nil {
-                status = themas!.isEmpty ? .passive : .active
-               //DataLog.d(name + " " + themas!.count.description + " " + status.rawValue, tag: "BlockProtocol")
-            }
-        }
-    }
-    
-    var banners:[BannerData]? = nil {
-        didSet{
-            if banners != nil {
-                status = banners!.isEmpty ? .passive : .active
-               //DataLog.d(name + " " + themas!.count.description + " " + status.rawValue, tag: "BlockProtocol")
-            }
-        }
-    }
+    var posters:[PosterData]? = nil
+    var videos:[VideoData]? = nil
+    var themas:[ThemaData]? = nil
+    var banners:[BannerData]? = nil
     
     func setRequestFail(){
+        if status != .initate { return }
         status = .passive
     }
     
     func setBlank(){
+        if status != .initate { return }
         status = .passive
     }
     
     func setDatabindingCompleted(){
+        if status != .initate { return }
         status = .active
     }
     
     func setError(_ err:ApiResultError?){
+        if status != .initate { return }
         status = .passive
     }
     

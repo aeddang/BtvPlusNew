@@ -76,7 +76,9 @@ enum RoleType {
 }
 
 extension PeopleList{
-    static let height = ListItem.people.size.height + Dimen.margin.micro + Font.size.lightExtra + Font.size.thinExtra
+    static let height = ListItem.people.size.height
+        + (Dimen.margin.micro + Dimen.margin.thin)
+        + Font.size.lightExtra + Font.size.thinExtra
 }
 
 
@@ -114,13 +116,14 @@ struct PeopleItem: PageView {
                 Image(uiImage:self.data.uiImage!)
                     .renderingMode(.original)
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: ListItem.people.size.width, height:ListItem.people.size.height)
                     .clipShape(Circle())
                     .padding(.bottom, Dimen.margin.thin)
             } else {
                 ImageView(
                     imageLoader : self.imageLoader,
-                    url: self.data.image, contentMode: .fit, noImg: self.data.role.getDefaultImg())
+                    url: self.data.image, contentMode: .fill, noImg: self.data.role.getDefaultImg())
                     .frame(width: ListItem.people.size.width, height:ListItem.people.size.height)
                     .clipShape(Circle())
                     .padding(.bottom, Dimen.margin.thin)
@@ -141,6 +144,7 @@ struct PeopleItem: PageView {
                     .frame(width: ListItem.people.size.width)
                     .lineLimit(1)
                     .padding(.bottom, Dimen.margin.micro)
+                    
             }
             if self.data.description != nil {
                 Text(self.data.description!)

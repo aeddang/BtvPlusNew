@@ -7,7 +7,7 @@
 import Foundation
 import SwiftUI
 extension ReflashSpinner{
-    static let DEGREE_MAX:Double = 50
+    static let DEGREE_MAX:Double = Double(InfinityScrollModel.PULL_COMPLETED_RANGE)
 }
 struct ReflashSpinner: PageComponent {
     @Binding var progress:Double
@@ -27,7 +27,7 @@ struct ReflashSpinner: PageComponent {
             }
         }
         .modifier(MatchHorizontal(height: 90, margin: 0))
-        .opacity(self.progress / Self.DEGREE_MAX)
+        .opacity(self.progress / self.progressMax)
     }//body
 }
 

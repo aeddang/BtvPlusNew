@@ -164,6 +164,7 @@ struct CateBlock: PageComponent{
                     .modifier(MatchParent())
                     .background(Color.brand.bg)
                     .onAppear(){
+                        UITableView.appearance().allowsSelection = false
                         UITableView.appearance().backgroundColor = Color.brand.bg.uiColor()
                         UITableView.appearance().separatorStyle = .none
                         UITableView.appearance().separatorInset = .init(top: 0, left: 0, bottom: 0, right: 0)
@@ -206,14 +207,9 @@ struct CateBlock: PageComponent{
             
         }
         .onReceive(self.infinityScrollModel.$pullPosition){ pos in
-            if pos < 30 && pos > 120{ return }
-            if self.reloadDegree >= ReflashSpinner.DEGREE_MAX
-                && Double(pos) < self.reloadDegree
-            {
-                return
-            }
+            if pos < InfinityScrollModel.PULL_RANGE { return }
             withAnimation{
-                self.reloadDegree = Double(pos)
+                self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
             }
         }
         

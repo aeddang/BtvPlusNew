@@ -49,11 +49,14 @@ struct PageHome: PageView {
                     viewModel: self.infinityScrollModel,
                     pageObservable: self.pageObservable,
                     topDatas: self.topDatas,
+                    dataSet: self.topBlocks,
                     datas: self.blocks,
-                    useTracking:self.useTracking,
+                    useBodyTracking:self.useTracking,
+                    useTracking:false,
                     marginVertical: Dimen.app.bottom + self.sceneObserver.safeAreaTop,
                     monthlyViewModel : self.monthlyViewModel,
-                    monthlyDatas: self.monthlyDatas
+                    monthlyDatas: self.monthlyDatas,
+                    isRecycle:true
                     ){ data in
                     self.reload(selectedMonthlyId: data.prdPrcId)
                 }
@@ -89,7 +92,6 @@ struct PageHome: PageView {
         }
         .onReceive(self.infinityScrollModel.$pullPosition){ pos in
             if pos < InfinityScrollModel.PULL_RANGE { return }
-           
             withAnimation{
                 self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
             }
@@ -137,7 +139,8 @@ struct PageHome: PageView {
     @State var originMonthlyDatas:[String:MonthlyData]? = nil
     @State var monthlyDatas:Array<MonthlyData>? = nil
     @State var selectedMonthlyId:String? = Self.finalSelectedMonthlyId
-    @State var blocks:Array<BlockData> = []
+    @State var blocks:[BlockData] = []
+    @State var topBlocks:MultiBlockSetData? = nil
     @State var menuId:String = ""
     @State var anyCancellable = Set<AnyCancellable>()
     
@@ -146,12 +149,15 @@ struct PageHome: PageView {
         self.delayRequestSubscription?.cancel()
         self.delayRequestSubscription = nil
         self.isDataCompleted = false
+        self.isTopBlockCompleted = false
         self.useTracking = false
         self.selectedMonthlyId = selectedMonthlyId ?? self.selectedMonthlyId
         self.originBlocks = []
         self.blocks = []
+        self.topBlocks = nil
         self.monthlyDatas?.forEach{$0.reset()}
-        
+        self.completedNum = 0
+        self.requestNum = 0
         guard let band = self.dataProvider.bands.getData(menuId: self.menuId) else { return }
         switch band.gnbTypCd {
         case "BP_02" : self.setupOriginMonthly()
@@ -275,20 +281,21 @@ struct PageHome: PageView {
             }).store(in: &anyCancellable)
         }
         self.addBlock()
+        self.addBlock()
     }
-   
-    
-   //Block init
+    //Block init
     
     
     private var setNum = 5
     @State var requestNum = 0
     @State var completedNum = 0
+    @State var isTopBlockCompleted = false
     @State var isDataCompleted = false
     
     private func requestBlockCompleted(){
         PageLog.d("addBlock completed", tag: "BlockProtocol")
         self.isDataCompleted = true
+        
     }
     private func onBlock(stat:BlockStatus, block:BlockData){
         self.useTracking = true
@@ -298,10 +305,11 @@ struct PageHome: PageView {
         default: return
         }
         self.completedNum += 1
-        PageLog.d("completedNum " + completedNum.description, tag: "BlockProtocol")
+        PageLog.d("completedNum " + completedNum.description + " " + self.requestNum.description, tag: "BlockProtocol")
         if self.completedNum == self.requestNum {
             self.completedNum = 0
-            self.delayRequest()
+            self.requestNum = 0
+            self.addBlock()
         }
     }
     
@@ -318,30 +326,36 @@ struct PageHome: PageView {
             }
     }
     
-   
-    
     private func addBlock(){
-        let max = min(setNum, self.originBlocks.count)
+        let num = self.topBlocks == nil ? 2 : setNum
+        let max = min(num, self.originBlocks.count)
         if max == 0 {
             self.requestBlockCompleted()
             return
         }
         let set = self.originBlocks[..<max]
         self.originBlocks.removeSubrange(..<max)
-        PageLog.d("addBlock" + set.debugDescription, tag: "BlockProtocol")
+        self.requestNum += set.count
         if set.isEmpty { return }
-        self.requestNum = set.count
-        DispatchQueue.main.async {
-            withAnimation {
-                self.blocks.append(contentsOf: set)
-            }
+        if  self.topBlocks != nil {
+            PageLog.d("addBlock " + set.debugDescription, tag: "BlockProtocol")
+            self.blocks.append(contentsOf: set)
+           
+        }else{
+            PageLog.d("addBlock currentBlocks " + set.debugDescription, tag: "BlockProtocol")
+            let multiBlock = MultiBlockSetData()
+            multiBlock.datas.append(contentsOf: set)
+            self.topBlocks = multiBlock
         }
     }
     
     private func removeBlock(_ block:BlockData){
-        DispatchQueue.main.async {
-            guard let find = self.blocks.firstIndex(of: block) else { return }
+        if let find = self.blocks.firstIndex(of: block) {
             self.blocks.remove(at: find)
+            return
+        }
+        if let find = self.topBlocks?.datas.firstIndex(of: block){
+            self.topBlocks?.datas.remove(at: find)
         }
     }
     

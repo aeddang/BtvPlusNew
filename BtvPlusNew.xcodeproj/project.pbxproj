@@ -1483,8 +1483,8 @@
 		D56C6A72257DA4C700CF9AB8 /* page */ = {
 			isa = PBXGroup;
 			children = (
-				31D3F4DB25E365F3008FDFEC /* popups */,
 				D5717865258300C000BF2612 /* contentBody */,
+				31D3F4DB25E365F3008FDFEC /* popups */,
 				312BB08325DCF90F00AC03BC /* purchase */,
 				314D6B1125D1070E0003C749 /* setup */,
 				31E3974E25B59CC600CE6E21 /* my */,

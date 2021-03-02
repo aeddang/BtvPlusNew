@@ -245,6 +245,7 @@ struct PurchaseViewer: PageComponent{
                                     .scaledToFit()
                                     .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
                             }
+                            .buttonStyle(BorderlessButtonStyle())
                         }
                         .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
                     }
@@ -261,6 +262,7 @@ struct PurchaseViewer: PageComponent{
                     
                     self.pageSceneObserver.select = .select((self.tag, self.data.options), self.data.optionIdx)
                 }
+                .buttonStyle(BorderlessButtonStyle())
                 .onReceive(self.pageSceneObserver.$selectResult){ result in
                     guard let result = result else { return }
                     switch result {
@@ -287,6 +289,7 @@ struct PurchaseViewer: PageComponent{
                 ){_ in
                     self.componentViewModel.uiEvent = .purchase
                 }
+                .buttonStyle(BorderlessButtonStyle())
             }
         }
         .modifier(ContentHorizontalEdges())

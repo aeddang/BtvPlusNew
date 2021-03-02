@@ -15,7 +15,7 @@ struct BookMarkButton: PageView {
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
     var data:SynopsisData
-    @Binding var isHeart:Bool?
+    @Binding var isBookmark:Bool?
     var action: ((_ ac:Bool) -> Void)? = nil
     
     var body: some View {
@@ -24,12 +24,12 @@ struct BookMarkButton: PageView {
                 self.pageSceneObserver.alert = .needPairing()
             }
             else{
-                if self.isHeart == false { self.add() }
-                else if self.isHeart == true { self.delete() }
+                if self.isBookmark == false { self.add() }
+                else if self.isBookmark == true { self.delete() }
             }
         }) {
             VStack(spacing:0){
-                Image( self.isHeart == true ? Asset.icon.heartOn : Asset.icon.heartOff )
+                Image( self.isBookmark == true ? Asset.icon.heartOn : Asset.icon.heartOff )
                     .renderingMode(.original).resizable()
                     .scaledToFit()
                     .frame(
@@ -84,13 +84,13 @@ struct BookMarkButton: PageView {
     }
     
     func added(_ res:ApiResultResponds){
-        self.isHeart = true
+        self.isBookmark = true
         action?(true)
         self.isBusy = false
     }
     
     func deleted(_ res:ApiResultResponds){
-        self.isHeart = false
+        self.isBookmark = false
         action?(false)
         self.isBusy = false
     }
@@ -102,12 +102,11 @@ struct BookMarkButton: PageView {
 
 #if DEBUG
 struct BookMarkButton_Previews: PreviewProvider {
-    
     static var previews: some View {
         Form{
             BookMarkButton(
                 data:SynopsisData(),
-                isHeart: .constant(true)
+                isBookmark: .constant(true)
             ){ ac in
                 
             }

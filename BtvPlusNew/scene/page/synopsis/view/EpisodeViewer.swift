@@ -140,6 +140,7 @@ struct EpisodeViewer: PageComponent{
                     }
                     .padding(.top, Dimen.margin.lightExtra)
                 }
+                .buttonStyle(BorderlessButtonStyle())
             }
         }
         .modifier(ContentHorizontalEdges())

@@ -13,6 +13,7 @@ extension PageID{
     static let intro:PageID = "intro"
     static let serviceError:PageID = "serviceError"
     static let home:PageID = "home"
+    static let category:PageID = "category"
     static let synopsis:PageID = "synopsis"
     static let oeean:PageID = "oeean"
     static let pairing:PageID = "pairing"
@@ -25,8 +26,8 @@ extension PageID{
     static let pairingManagement:PageID = "pairingManagement"
     
     static let purchase:PageID = "purchase"
-    static let thema:PageID = "thema"
-    static let cate:PageID = "cate"
+    static let multiBlock:PageID = "multiBlock"
+    static let categoryList:PageID = "categoryList"
 }
 
 struct PageProvider {
@@ -78,6 +79,7 @@ struct PageProvider {
         switch pageID {
             case .intro : return 1
             case .home : return  100
+            case .category : return  101
             default : return  9999
         }
     }
@@ -134,6 +136,7 @@ struct PageFactory{
     static func getPage(_ pageObject:PageObject) -> PageViewProtocol{
         switch pageObject.pageID {
         case .home : return PageHome()
+        case .category : return PageCategory()
         case .serviceError : return PageServiceError()
         case .my : return PageMy()
         case .setup : return PageSetup()
@@ -145,8 +148,8 @@ struct PageFactory{
         case .pairingUser : return PagePairingUser()
         case .pairingManagement : return PagePairingManagement()
         case .purchase : return PagePurchase()
-        case .thema : return PageThema()
-        case .cate : return PageCate()
+        case .multiBlock : return PageMultiBlock()
+        case .categoryList : return PageCategoryList()
         default : return PageTest()
         }
     }
@@ -169,7 +172,7 @@ struct PageSceneModel: PageModel {
         }
         switch pageObject.pageID {
        
-        case .home, .synopsis, .purchase : return UIInterfaceOrientationMask.portrait
+        case .home, .synopsis, .purchase, .category: return UIInterfaceOrientationMask.portrait
         default : return UIInterfaceOrientationMask.all
         }
     }
@@ -187,7 +190,7 @@ struct PageSceneModel: PageModel {
     
     static func needBottomTab(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
-        case .home: return true
+        case .home, .category: return true
         default : return false
         }
     }
@@ -195,7 +198,7 @@ struct PageSceneModel: PageModel {
     static func needTopTab(_ pageObject:PageObject) -> Bool{
         
         switch pageObject.pageID {
-        case .home: return true
+        case .home, .category: return true
         default : return false
         }
     }

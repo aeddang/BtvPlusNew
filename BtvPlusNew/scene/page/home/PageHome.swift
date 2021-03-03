@@ -21,7 +21,7 @@ struct PageHome: PageView {
     @EnvironmentObject var pairing:Pairing
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
-    @ObservedObject var viewModel:PageDataProviderModel = PageDataProviderModel()
+    @ObservedObject var viewModel:MultiBlockModel = MultiBlockModel(headerSize: 5, requestSize: 5)
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var monthlyViewModel: InfinityScrollModel = InfinityScrollModel()
     
@@ -34,30 +34,31 @@ struct PageHome: PageView {
             pageObservable:self.pageObservable,
             viewModel : self.viewModel
         ){
-            if self.blocks.isEmpty {
-                Spacer()
-            }else{
+            ZStack{
                 VStack{
                     ReflashSpinner(
                         progress: self.$reloadDegree,
                         progressMax: self.reloadDegreeMax
                     )
-                    .padding(.top, self.topDatas == nil ? Dimen.app.pageTop : (self.sceneObserver.safeAreaTop + Dimen.margin.regular))
+                    .padding(.top,
+                             (self.topDatas == nil ? Dimen.app.pageTop :  Dimen.margin.regular)
+                                + self.sceneObserver.safeAreaTop )
                     Spacer()
                 }
-                MultiBlock(
-                    viewModel: self.infinityScrollModel,
+                MultiBlockBody (
+                    viewModel: self.viewModel,
+                    infinityScrollModel: self.infinityScrollModel,
                     pageObservable: self.pageObservable,
-                    topDatas: self.topDatas,
-                    dataSet: self.topBlocks,
-                    datas: self.blocks,
                     useBodyTracking:self.useTracking,
                     useTracking:false,
-                    marginVertical: Dimen.app.bottom + self.sceneObserver.safeAreaTop,
+                    marginTop:Dimen.app.top + self.sceneObserver.safeAreaTop,
+                    marginBottom: Dimen.app.bottom + self.sceneObserver.safeAreaBottom,
+                    topDatas: self.topDatas,
                     monthlyViewModel : self.monthlyViewModel,
                     monthlyDatas: self.monthlyDatas,
                     isRecycle:true
                     ){ data in
+                    
                     self.reload(selectedMonthlyId: data.prdPrcId)
                 }
             }
@@ -125,39 +126,23 @@ struct PageHome: PageView {
             }
         }
         .onDisappear{
-            self.delayRequestSubscription?.cancel()
-            self.delayRequestSubscription = nil
-            self.anyCancellable.forEach{$0.cancel()}
-            self.anyCancellable.removeAll()
             self.pageSceneObserver.useTopFix = nil
         }
         
     }//body
     
-    @State var originBlocks:Array<BlockData> = []
     @State var topDatas:Array<BannerData>? = nil
     @State var originMonthlyDatas:[String:MonthlyData]? = nil
     @State var monthlyDatas:Array<MonthlyData>? = nil
     @State var selectedMonthlyId:String? = Self.finalSelectedMonthlyId
-    @State var blocks:[BlockData] = []
-    @State var topBlocks:MultiBlockSetData? = nil
+    
     @State var menuId:String = ""
-    @State var anyCancellable = Set<AnyCancellable>()
     
     
     private func reload(selectedMonthlyId:String? = nil){
-        self.delayRequestSubscription?.cancel()
-        self.delayRequestSubscription = nil
-        self.isDataCompleted = false
-        self.isTopBlockCompleted = false
-        self.useTracking = false
+       
         self.selectedMonthlyId = selectedMonthlyId ?? self.selectedMonthlyId
-        self.originBlocks = []
-        self.blocks = []
-        self.topBlocks = nil
         self.monthlyDatas?.forEach{$0.reset()}
-        self.completedNum = 0
-        self.requestNum = 0
         guard let band = self.dataProvider.bands.getData(menuId: self.menuId) else { return }
         switch band.gnbTypCd {
         case "BP_02" : self.setupOriginMonthly()
@@ -262,102 +247,9 @@ struct PageHome: PageView {
     }
     
     private func requestBlocks(blocksData:[BlockItem]){
-       
-        let blocks = blocksData.map{ data in
-            BlockData().setDate(data)
-        }
-        .filter{ block in
-            switch block.dataType {
-            case .cwGrid : return block.menuId != nil && block.cwCallId != nil
-            case .grid : return block.menuId != nil
-            default : return true
-            }
-        }
-        
-        self.originBlocks = blocks
-        blocks.forEach{ block in
-            block.$status.sink(receiveValue: { stat in
-                self.onBlock(stat:stat, block:block)
-            }).store(in: &anyCancellable)
-        }
-        self.addBlock()
-        self.addBlock()
+        self.viewModel.update(datas: blocksData)
     }
     //Block init
-    
-    
-    private var setNum = 5
-    @State var requestNum = 0
-    @State var completedNum = 0
-    @State var isTopBlockCompleted = false
-    @State var isDataCompleted = false
-    
-    private func requestBlockCompleted(){
-        PageLog.d("addBlock completed", tag: "BlockProtocol")
-        self.isDataCompleted = true
-        
-    }
-    private func onBlock(stat:BlockStatus, block:BlockData){
-        self.useTracking = true
-        switch stat {
-        case .passive: self.removeBlock(block)
-        case .active: break
-        default: return
-        }
-        self.completedNum += 1
-        PageLog.d("completedNum " + completedNum.description + " " + self.requestNum.description, tag: "BlockProtocol")
-        if self.completedNum == self.requestNum {
-            self.completedNum = 0
-            self.requestNum = 0
-            self.addBlock()
-        }
-    }
-    
-    @State var delayRequestSubscription:AnyCancellable?
-    func delayRequest(){
-        self.delayRequestSubscription?.cancel()
-        self.delayRequestSubscription = Timer.publish(
-            every: 0.01, on: .current, in: .tracking)
-            .autoconnect()
-            .sink() {_ in
-                self.delayRequestSubscription?.cancel()
-                self.delayRequestSubscription = nil
-                self.addBlock()
-            }
-    }
-    
-    private func addBlock(){
-        let num = self.topBlocks == nil ? 2 : setNum
-        let max = min(num, self.originBlocks.count)
-        if max == 0 {
-            self.requestBlockCompleted()
-            return
-        }
-        let set = self.originBlocks[..<max]
-        self.originBlocks.removeSubrange(..<max)
-        self.requestNum += set.count
-        if set.isEmpty { return }
-        if  self.topBlocks != nil {
-            PageLog.d("addBlock " + set.debugDescription, tag: "BlockProtocol")
-            self.blocks.append(contentsOf: set)
-           
-        }else{
-            PageLog.d("addBlock currentBlocks " + set.debugDescription, tag: "BlockProtocol")
-            let multiBlock = MultiBlockSetData()
-            multiBlock.datas.append(contentsOf: set)
-            self.topBlocks = multiBlock
-        }
-    }
-    
-    private func removeBlock(_ block:BlockData){
-        if let find = self.blocks.firstIndex(of: block) {
-            self.blocks.remove(at: find)
-            return
-        }
-        if let find = self.topBlocks?.datas.firstIndex(of: block){
-            self.topBlocks?.datas.remove(at: find)
-        }
-    }
     
 }
 

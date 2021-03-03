@@ -30,7 +30,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
                     textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
                 ){_ in
                     self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.cate)
+                        PageProvider.getPageObject(.categoryList)
                             .addParam(key: .data, value: data)
                             .addParam(key: .type, value: CateBlock.ListType.poster)
                     )
@@ -124,6 +124,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
             self.datas = allDatas
             self.updateListSize()
             self.data.posters = allDatas
+            
             ComponentLog.d("Remote " + data.name, tag: "BlockProtocol")
         }
         .onReceive(dataProvider.$error) { err in

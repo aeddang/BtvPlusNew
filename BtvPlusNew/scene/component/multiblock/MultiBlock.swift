@@ -8,23 +8,21 @@
 import Foundation
 import SwiftUI
 
-class MultiBlockSetData:Identifiable {
-    private(set) var id = UUID().uuidString
-    var datas:[BlockData] = []
+extension MultiBlock{
+    static let spacing = Dimen.margin.medium
 }
-
-
 struct MultiBlock:PageComponent {
+    @EnvironmentObject var sceneObserver:SceneObserver
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageObservable:PageObservable = PageObservable()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var topDatas:[BannerData]? = nil
-    var dataSet:MultiBlockSetData? = nil
-    var datas:[BlockData]? = nil
+    var datas:[BlockData] = []
+    var headerSize:Int = 0
     var useBodyTracking:Bool = false
     var useTracking:Bool = false
-    var marginVertical : CGFloat = 0
-    
+    var marginTop : CGFloat = 0
+    var marginBottom : CGFloat = 0
     var monthlyViewModel: InfinityScrollModel? = nil
     var monthlyDatas:[MonthlyData]? = nil
     var isRecycle = true
@@ -35,9 +33,9 @@ struct MultiBlock:PageComponent {
         InfinityScrollView(
             viewModel: self.viewModel,
             axes: .vertical,
-            marginVertical : 0,
-            marginHorizontal : 0,
-            spacing: Dimen.margin.medium,
+            marginTop : self.topDatas == nil ? self.marginTop : 0,
+            marginBottom : self.marginBottom  + self.sceneObserver.safeAreaBottom,
+            spacing: Self.spacing,
             isRecycle : self.isRecycle,
             useTracking:self.useBodyTracking){
             
@@ -46,9 +44,6 @@ struct MultiBlock:PageComponent {
                     pageObservable:self.pageObservable,
                     datas: self.topDatas! )
                     .modifier(MatchHorizontal(height: TopBanner.height))
-            } else if marginVertical > 0 {
-                Spacer().frame( height:0)
-                    .padding(.top, marginVertical - Dimen.margin.medium)
             }
             
             if self.monthlyDatas != nil {
@@ -60,80 +55,58 @@ struct MultiBlock:PageComponent {
                     action:self.action
                )
             }
-            if self.dataSet != nil {
-                MultiBlockSet(
-                    pageDragingModel: self.pageDragingModel,
-                    data: self.dataSet!,
-                    useTracking: self.useTracking
-                )
-            }
-            if self.datas != nil {
-                ForEach(self.datas!) { data in
-                    switch data.cardType {
-                    case .smallPoster, .bigPoster, .bookmarkedPoster, .rankingPoster :
-                        PosterBlock(
-                            pageDragingModel:self.pageDragingModel,
-                            data: data,
-                            useTracking:self.useTracking
-                            )
-                    case .video, .watchedVideo :
-                        VideoBlock(
-                            pageDragingModel:self.pageDragingModel,
-                            data: data,
-                            useTracking:self.useTracking
-                            )
-                    case .circleTheme, .bigTheme, .squareThema :
-                        ThemaBlock(
-                            pageDragingModel:self.pageDragingModel,
-                            data: data,
-                            useTracking:self.useTracking
-                            )
-                    case .banner :
-                        BannerBlock(data: data)
-                    default:
-                        ThemaBlock(data: data)
+            
+            
+            if !self.datas.isEmpty  {
+                if self.headerSize > 1 {
+                    VStack(spacing:Dimen.margin.medium){
+                        ForEach(self.datas[..<min(self.headerSize, self.datas.count)]) { data in
+                            MultiBlockCell(pageDragingModel: self.pageDragingModel, data: data , useTracking: self.useTracking)
+                        }
+                    }
+                    if self.datas.count > self.headerSize {
+                        ForEach(self.datas[self.headerSize..<self.datas.count]) { data in
+                            MultiBlockCell(pageDragingModel: self.pageDragingModel, data: data , useTracking: self.useTracking)
+                        }
+                    }
+                } else {
+                    ForEach(self.datas) { data in
+                        MultiBlockCell(pageDragingModel: self.pageDragingModel, data: data , useTracking: self.useTracking)
                     }
                 }
             }
-            
+        
         }
-        .padding(.bottom, self.marginVertical)
     }
     
-    struct MultiBlockSet:PageComponent {
+    struct MultiBlockCell:PageComponent {
         var pageDragingModel:PageDragingModel = PageDragingModel()
-        var data:MultiBlockSetData
+        var data:BlockData
         var useTracking:Bool = false
-        
         var body :some View {
-            VStack(spacing: Dimen.margin.medium){
-                ForEach(self.data.datas) { data in
-                    switch data.cardType {
-                    case .smallPoster, .bigPoster, .bookmarkedPoster, .rankingPoster :
-                        PosterBlock(
-                            pageDragingModel:self.pageDragingModel,
-                            data: data,
-                            useTracking:self.useTracking
-                            )
-                    case .video, .watchedVideo :
-                        VideoBlock(
-                            pageDragingModel:self.pageDragingModel,
-                            data: data,
-                            useTracking:self.useTracking
-                            )
-                    case .circleTheme, .bigTheme, .squareThema :
-                        ThemaBlock(
-                            pageDragingModel:self.pageDragingModel,
-                            data: data,
-                            useTracking:self.useTracking
-                            )
-                    case .banner :
-                        BannerBlock(data: data)
-                    default:
-                        ThemaBlock(data: data)
-                    }
-                }
-                
+            switch data.cardType {
+            case .smallPoster, .bigPoster, .bookmarkedPoster, .rankingPoster :
+                PosterBlock(
+                    pageDragingModel:self.pageDragingModel,
+                    data: data,
+                    useTracking:self.useTracking
+                    )
+            case .video, .watchedVideo :
+                VideoBlock(
+                    pageDragingModel:self.pageDragingModel,
+                    data: data,
+                    useTracking:self.useTracking
+                    )
+            case .circleTheme, .bigTheme, .squareThema :
+                ThemaBlock(
+                    pageDragingModel:self.pageDragingModel,
+                    data: data,
+                    useTracking:self.useTracking
+                    )
+            case .banner :
+                BannerBlock(data: data)
+            default:
+                ThemaBlock(data: data)
             }
         }//body
     }

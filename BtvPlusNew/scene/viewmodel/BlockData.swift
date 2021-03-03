@@ -15,6 +15,7 @@ enum BlockStatus:String{
 class BlockData:Identifiable, ObservableObject, Equatable{
     private(set) var id = UUID().uuidString
     private(set) var name:String = ""
+    
     private(set) var menuId:String? = nil
     private(set) var cwCallId:String? = nil
     private(set) var cardType:CardType = .none
@@ -38,6 +39,7 @@ class BlockData:Identifiable, ObservableObject, Equatable{
         cardType = findType(data)
         dataType = findDataType(data)
         blocks = data.blocks
+        
         switch cardType {
         case .banner: self.originData = data
         default: break

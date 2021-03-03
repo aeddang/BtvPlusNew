@@ -77,6 +77,7 @@ struct PageTab: PageComponent{
             
         }
         .modifier(MatchHorizontal(height: Dimen.app.pageTop))
+        .background(self.style.bgColor)
     }
 }
 

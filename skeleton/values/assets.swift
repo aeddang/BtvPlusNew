@@ -98,6 +98,8 @@ extension Asset{
         public static let thumbPlay = "icThumPlay"
         public static let play = "icPlayerPlayS"
         
+        public static let cateEvent = "icCategoryBtnEvent"
+        public static let cateTip = "icCategoryBtnTip"
     }
     
     

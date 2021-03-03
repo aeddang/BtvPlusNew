@@ -12,13 +12,14 @@ import Combine
 
 struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where Content: View {
     @EnvironmentObject var sceneObserver:SceneObserver
-    var viewModel: InfinityScrollModel = InfinityScrollModel()
+    @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     let axes: Axis.Set 
     let showIndicators: Bool
     let content: Content
     
     var contentSize: CGFloat = -1
-    var marginVertical: CGFloat
+    var marginTop: CGFloat
+    var marginBottom: CGFloat
     var marginHorizontal: CGFloat
     var spacing: CGFloat
     var useTracking:Bool
@@ -29,13 +30,15 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     
     @State var prevPosition: CGFloat = 0
     @State var isTracking = false
-    
+    @State var anchor:UnitPoint? = nil
     init(
         viewModel: InfinityScrollModel,
         axes: Axis.Set = .vertical,
         showIndicators: Bool = false,
         contentSize : CGFloat = -1,
         marginVertical: CGFloat = 0,
+        marginTop: CGFloat = 0,
+        marginBottom: CGFloat = 0,
         marginHorizontal: CGFloat = 0,
         spacing: CGFloat = 0,
         isRecycle:Bool = true,
@@ -47,7 +50,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         self.showIndicators = showIndicators
         self.content = content()
         self.contentSize = contentSize
-        self.marginVertical = marginVertical
+        self.marginTop = marginTop + marginVertical
+        self.marginBottom = marginBottom + marginVertical
         self.marginHorizontal = marginHorizontal
         self.spacing = spacing
         self.isRecycle = isRecycle
@@ -61,7 +65,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         self.axes = .vertical
         self.showIndicators = false
         self.content = content()
-        self.marginVertical = 0
+        self.marginTop = 0
+        self.marginBottom = 0
         self.marginHorizontal = 0
         self.spacing = 0
         self.isRecycle = false
@@ -85,13 +90,15 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                     LazyVStack(alignment: .leading, spacing: self.spacing){
                                         self.content
                                     }
-                                    .padding(.vertical, self.marginVertical)
+                                    .padding(.top, self.marginTop)
+                                    .padding(.bottom, self.marginBottom)
                                     .padding(.horizontal, self.marginHorizontal)
                                 } else {
                                     VStack(alignment: .leading, spacing: self.spacing){
                                         self.content
                                     }
-                                    .padding(.vertical, self.marginVertical)
+                                    .padding(.top, self.marginTop)
+                                    .padding(.bottom, self.marginBottom)
                                     .padding(.horizontal, self.marginHorizontal)
                                 }
                             }else{
@@ -99,13 +106,15 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                     LazyHStack (alignment: .top, spacing: self.spacing){
                                         self.content
                                     }
-                                    .padding(.vertical, self.marginVertical)
+                                    .padding(.top, self.marginTop)
+                                    .padding(.bottom, self.marginBottom)
                                     .padding(.horizontal, self.marginHorizontal)
                                 } else {
                                     HStack (alignment: .top, spacing: self.spacing){
                                         self.content
                                     }
-                                    .padding(.vertical, self.marginVertical)
+                                    .padding(.top, self.marginTop)
+                                    .padding(.bottom, self.marginBottom)
                                     .padding(.horizontal, self.marginHorizontal)
                                 }
                             }
@@ -117,7 +126,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                         })
                         .onChange(of: self.scrollIdx, perform: { idx in
                             guard let idx = idx else {return}
-                            reader.scrollTo(idx, anchor: nil)
+                            reader.scrollTo(idx, anchor: anchor)
                         })
                     }
                 }
@@ -131,8 +140,12 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
             .onReceive(self.viewModel.$uiEvent){ evt in
                 guard let evt = evt else{ return }
                 switch evt {
-                case .scrollTo(let idx): self.scrollIdx = idx
-                case .scrollMove(let pos): self.scrollPos = pos
+                case .scrollTo(let idx, let anchor):
+                    self.anchor = anchor
+                    self.scrollIdx = idx
+                case .scrollMove(let pos, let anchor):
+                    self.anchor = anchor
+                    self.scrollPos = pos
                 default: break
                 }
             }
@@ -165,7 +178,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                 VStack (alignment:.leading, spacing:self.spacing){
                                     self.content
                                 }
-                                .padding(.vertical, self.marginVertical)
+                                .padding(.top, self.marginTop)
+                                .padding(.bottom, self.marginBottom)
                                 .padding(.horizontal, self.marginHorizontal)
                             }
                         }
@@ -202,7 +216,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                 HStack(spacing:self.spacing){
                                     self.content
                                 }
-                                .padding(.vertical, self.marginVertical)
+                                .padding(.top, self.marginTop)
+                                .padding(.bottom, self.marginBottom)
                                 .padding(.horizontal, self.marginHorizontal)
                             }
                         }

@@ -40,16 +40,11 @@ class CateBlockModel: PageDataProviderModel {
 extension CateBlock{
     static let videoRowsize:Int = 2
     static let posterRowsize:Int = 3
-    
+    static let headerSize:Int = 5
     enum ListType:String {
         case video, poster
     }
 }
-
-
-
-
-
 
 struct CateBlock: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
@@ -59,8 +54,9 @@ struct CateBlock: PageComponent{
     @ObservedObject var viewModel:CateBlockModel = CateBlockModel()
     var key:String? = nil
     var useTracking:Bool = false
-    
-    
+    var marginTop : CGFloat = 0
+    var marginBottom : CGFloat = 0
+    var spacing: CGFloat = Dimen.margin.thin
     @State var posterCellHeight:CGFloat = 0
     @State var videoCellHeight:CGFloat = 0
     var body: some View {
@@ -75,14 +71,16 @@ struct CateBlock: PageComponent{
                             ReflashSpinner(
                                 progress: self.$reloadDegree
                             )
+                            .padding(.top, self.marginTop)
                             Spacer()
                         }
                         InfinityScrollView(
                             viewModel: self.infinityScrollModel,
                             axes: .vertical,
-                            marginVertical : 0,
+                            marginTop : self.marginTop,
+                            marginBottom : self.marginBottom + self.sceneObserver.safeAreaBottom,
                             marginHorizontal : 0,
-                            spacing: Dimen.margin.thin,
+                            spacing:self.spacing,
                             isRecycle: true,
                             useTracking:self.useTracking
                         ){
@@ -94,32 +92,63 @@ struct CateBlock: PageComponent{
                                     self.reload()
                                 }
                             .modifier(ContentEdges())
+
+                            if !self.posters.isEmpty  {
+                                VStack(spacing:self.spacing){
+                                    ForEach(self.posters[..<min(Self.headerSize,self.posters.count)]) { data in
+                                        PosterSet( data:data )
+                                            .frame(height:self.posterCellHeight)
+                                            .onAppear(){
+                                                if data.index == self.posters.last?.index {
+                                                    if self.isPaging { self.load() }
+                                                }
+                                            }
+                                    }
+                                }
+                                if self.posters.count > Self.headerSize {
+                                    ForEach(self.posters[Self.headerSize..<self.posters.count]) { data in
+                                        PosterSet( data:data )
+                                            .frame(height:self.posterCellHeight)
+                                            .onAppear(){
+                                                if data.index == self.posters.last?.index {
+                                                    if self.isPaging { self.load() }
+                                                }
+                                            }
+                                    }
+                                }
+                            }
                             
-                            ForEach(self.posters) { data in
-                                PosterSet( data:data )
-                                    .frame(height:self.posterCellHeight)
-                                    .onAppear(){
-                                        if data.index == self.posters.last?.index {
-                                            if self.isPaging { self.load() }
-                                        }
+                            if !self.videos.isEmpty  {
+                                VStack(spacing:self.spacing){
+                                    ForEach(self.videos[..<min(Self.headerSize,self.videos.count)]) { data in
+                                        VideoSet( data:data )
+                                            .frame(height:self.videoCellHeight)
+                                            .onAppear(){
+                                                if data.index == self.videos.last?.index {
+                                                    if self.isPaging { self.load() }
+                                                }
+                                            }
                                     }
-                            }
-                            ForEach(self.videos) { data in
-                                VideoSet( data:data )
-                                    .frame(height:self.videoCellHeight)
-                                    .onAppear(){
-                                        if data.index == self.videos.last?.index {
-                                            if self.isPaging { self.load() }
-                                        }
+                                }
+                                if self.videos.count > Self.headerSize {
+                                    ForEach(self.videos[Self.headerSize..<self.videos.count]) { data in
+                                        VideoSet( data:data )
+                                            .frame(height:self.videoCellHeight)
+                                            .onAppear(){
+                                                if data.index == self.videos.last?.index {
+                                                    if self.isPaging { self.load() }
+                                                }
+                                            }
                                     }
+                                }
                             }
+                            
                             if self.posters.isEmpty && self.videos.isEmpty {
                                 Spacer().modifier(MatchParent())
                             }
                             
                         }
                     }
-                    .padding(.bottom, self.sceneObserver.safeAreaBottom)
                     .background(Color.brand.bg)
                     
                 }else{
@@ -134,12 +163,12 @@ struct CateBlock: PageComponent{
                         .modifier(ListRowInset(
                                     firstIndex: 0, index: 0,
                                     marginHorizontal:Dimen.margin.thin,
-                                    spacing: Dimen.margin.thin, marginTop: 0))
+                                    spacing: self.spacing, marginTop: self.marginTop))
                         
                         ForEach(self.posters) { data in
                             PosterSet( data:data )
                                 .frame(height:self.posterCellHeight)
-                                .modifier(ListRowInset( spacing: Dimen.margin.thin))
+                                .modifier(ListRowInset( spacing: self.spacing))
                                 .onAppear(){
                                     if data.index == self.posters.last?.index {
                                         if self.isPaging { self.load() }
@@ -149,7 +178,7 @@ struct CateBlock: PageComponent{
                         ForEach(self.videos) { data in
                             VideoSet( data:data )
                                 .frame(height:self.videoCellHeight)
-                                .modifier(ListRowInset( spacing: Dimen.margin.thin))
+                                .modifier(ListRowInset( spacing: self.spacing))
                                 .onAppear(){
                                     if data.index == self.videos.last?.index {
                                         if self.isPaging { self.load() }
@@ -161,6 +190,7 @@ struct CateBlock: PageComponent{
                                 .listRowBackground(Color.brand.bg)
                         }
                     }
+                    .padding(.bottom, self.sceneObserver.safeAreaBottom + self.marginBottom)
                     .modifier(MatchParent())
                     .background(Color.brand.bg)
                     .onAppear(){

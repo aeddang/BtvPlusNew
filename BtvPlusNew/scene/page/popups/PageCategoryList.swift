@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 
-struct PageCate: PageView {
+struct PageCategoryList: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
     @EnvironmentObject var repository:Repository
@@ -44,7 +44,7 @@ struct PageCate: PageView {
                         viewModel:self.viewModel,
                         useTracking:self.useTracking
                     )
-                    .modifier(MatchParent())
+                    
                 }
                 .modifier(PageFull(style:.dark))
                 .highPriorityGesture(
@@ -109,7 +109,7 @@ struct PageCate: PageView {
 struct PageCate_Previews: PreviewProvider {
     static var previews: some View {
         Form{
-            PageCate().contentBody
+            PageCategoryList().contentBody
                 .environmentObject(PagePresenter())
                 .environmentObject(SceneObserver())
                 .environmentObject(Repository())

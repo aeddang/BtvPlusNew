@@ -172,7 +172,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     init(
         viewModel: PageDragingModel,
         axis:Axis.Set = .vertical,
-        minPullAmount:CGFloat = 60,
+        minPullAmount:CGFloat = 80,
         @ViewBuilder content: () -> Content) {
         self.viewModel = viewModel
         self.axis = axis
@@ -203,7 +203,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
                     if value < self.minPullAmount { return }
                     if self.pullOffset == self.minPullAmount {
                         withAnimation(.easeOut(duration: self.pullInitDelay )){
-                            self.bodyOffset = self.axis == .vertical ? (self.minPullAmount * 1.5) : self.minPullAmount
+                            self.bodyOffset = self.minPullAmount
                         }
                         self.pullDiff = 0
                     } else {
@@ -217,10 +217,12 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
                 }
             case .pulled(_) :
                 if #available(iOS 14.0, *) {
-                    //ComponentLog.d("pulled" + self.pullDiff.description, tag: "PageDragingBody" )
+                   
                     if self.viewModel.status == .drag { return }
                     self.pullOffset = self.minPullAmount
-                    if self.pullDiff <= 0 {
+                    let diff = self.bodyOffset - self.minPullAmount
+                    ComponentLog.d("self.pullDiff " + diff.description, tag: "PageDragingBody" )
+                    if diff <= 10 {
                         //ComponentLog.d("onDragCancel", tag: "PageDragingBody" )
                         self.onDragCancel()
                     }else{

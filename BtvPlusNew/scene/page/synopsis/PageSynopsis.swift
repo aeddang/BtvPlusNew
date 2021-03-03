@@ -74,27 +74,31 @@ struct PageSynopsis: PageView {
                             }
                         }
                         
-                        SynopsisBody(
-                            componentViewModel: self.componentViewModel,
-                            infinityScrollModel: self.infinityScrollModel,
-                            relationContentsModel: self.relationContentsModel,
-                            peopleScrollModel: self.peopleScrollModel,
-                            pageDragingModel: self.pageDragingModel,
-                            isBookmark: self.$isBookmark,
-                            isLike: self.$isLike,
-                            relationTabIdx: self.$relationTabIdx,
-                            seris: self.$seris,
-                            synopsisData: self.synopsisData,
-                            isPairing: self.isPairing,
-                            episodeViewerData: self.episodeViewerData,
-                            purchasViewerData: self.purchasViewerData,
-                            summaryViewerData: self.summaryViewerData,
-                            srisId: self.srisId, epsdId: self.epsdId,
-                            hasAuthority: self.hasAuthority,
-                            relationTab: self.relationTab,
-                            relationDatas: self.relationDatas,
-                            hasRelationVod: self.hasRelationVod,
-                            useTracking:self.useTracking)
+                        if !self.isFullScreen{
+                            
+                            SynopsisBody(
+                                componentViewModel: self.componentViewModel,
+                                infinityScrollModel: self.infinityScrollModel,
+                                relationContentsModel: self.relationContentsModel,
+                                peopleScrollModel: self.peopleScrollModel,
+                                pageDragingModel: self.pageDragingModel,
+                                isBookmark: self.$isBookmark,
+                                isLike: self.$isLike,
+                                relationTabIdx: self.$relationTabIdx,
+                                seris: self.$seris,
+                                topIdx : self.topIdx,
+                                synopsisData: self.synopsisData,
+                                isPairing: self.isPairing,
+                                episodeViewerData: self.episodeViewerData,
+                                purchasViewerData: self.purchasViewerData,
+                                summaryViewerData: self.summaryViewerData,
+                                srisId: self.srisId, epsdId: self.epsdId,
+                                hasAuthority: self.hasAuthority,
+                                relationTab: self.relationTab,
+                                relationDatas: self.relationDatas,
+                                hasRelationVod: self.hasRelationVod,
+                                useTracking:self.useTracking)
+                               
                             .highPriorityGesture(
                                 DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
                                     .onChanged({ value in
@@ -115,6 +119,7 @@ struct PageSynopsis: PageView {
                                                 self.useTracking = true
                                                 self.pageDragingModel.uiEvent = .dragCancel})
                             )
+                        }
                     }
                     .onReceive( [self.relationTabIdx].publisher ){ idx in
                         if idx == self.selectedRelationTabIdx { return }
@@ -300,10 +305,9 @@ struct PageSynopsis: PageView {
     @State var isPlayViewActive = false
     @State var isPageUiReady = false
     @State var isPageDataReady = false
-    
+    @State var topIdx:Int = 0
     
     func initPage(){
-       
         if !self.isPageDataReady || !self.isPageUiReady || self.synopsisData == nil { return }
         if self.pageObservable.status == .initate { return }
         self.isPairing = self.pairing.status == .pairing
@@ -318,6 +322,7 @@ struct PageSynopsis: PageView {
     
     func resetPage(){
         PageLog.d("resetPage", tag: self.tag)
+        
         self.hasAuthority = nil
         self.progressError = false
         self.progressCompleted = false
@@ -334,7 +339,10 @@ struct PageSynopsis: PageView {
         self.relationDatas = []
         self.hasRelationVod = nil
         self.pageDataProviderModel.initate()
-        withAnimation{ self.isPlayViewActive = false }
+        self.topIdx = UUID.init().hashValue
+        withAnimation{
+            self.isPlayViewActive = false
+        }
     }
 
     private func requestProgress(_ progress:Int){
@@ -595,6 +603,7 @@ struct PageSynopsis: PageView {
             self.progressError = true
             PageLog.d("setupSynopsis error", tag: self.tag)
         }
+        
     }
     
     private func setupGatewaySynopsis (_ data:GatewaySynopsis){
@@ -626,6 +635,7 @@ struct PageSynopsis: PageView {
             self.hasAuthority = curSynopsisItem.hasAuthority
         }
         withAnimation{self.isPlayAble = true}
+        self.infinityScrollModel.uiEvent = .scrollTo(self.topIdx)
     }
     
     private func setupPreview (_ data:Preview){

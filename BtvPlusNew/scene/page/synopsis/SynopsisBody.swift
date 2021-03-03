@@ -8,6 +8,8 @@
 import Foundation
 import SwiftUI
 
+
+
 struct SynopsisBody: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
@@ -16,12 +18,13 @@ struct SynopsisBody: PageComponent{
     var relationContentsModel:RelationContentsModel
     var peopleScrollModel: InfinityScrollModel
     var pageDragingModel:PageDragingModel
-    
+
     @Binding var isBookmark:Bool?
     @Binding var isLike:LikeStatus?
     @Binding var relationTabIdx:Int
     @Binding var seris:[SerisData]
 
+    var topIdx:Int = UUID.init().hashValue
     var synopsisData:SynopsisData? = nil
     var isPairing:Bool? = nil
     var episodeViewerData:EpisodeViewerData? = nil
@@ -36,16 +39,19 @@ struct SynopsisBody: PageComponent{
     var hasRelationVod:Bool? = nil
     var useTracking:Bool = false
     var negativeMargin:CGFloat = 0 //IOS 14 SidebarListStyle
-    var isScrollMode = false
+
     var body: some View {
-        if isScrollMode  { //#available(iOS 14.0, *)
+        if #available(iOS 14.0, *)  { //#available(iOS 14.0, *)
             InfinityScrollView(
                 viewModel: self.infinityScrollModel,
+                marginTop : 0,
+                marginBottom : self.sceneObserver.safeAreaBottom,
                 spacing:Dimen.margin.regular,
                 isRecycle:true,
                 useTracking:false
                 ){
-                
+                Spacer().modifier(MatchHorizontal(height: 1)).background(Color.transparent.clearUi)
+                    .id(self.topIdx)
                 BodyTop(
                     componentViewModel: self.componentViewModel,
                     relationContentsModel: self.relationContentsModel,
@@ -64,28 +70,49 @@ struct SynopsisBody: PageComponent{
                     relationTab: self.relationTab,
                     hasRelationVod: self.hasRelationVod,
                     useTracking:self.useTracking)
-               
-                if !self.seris.isEmpty {
-                    SerisTab(
-                        data:self.relationContentsModel,
-                        seris: self.$seris
-                    ){ season in
-                        self.componentViewModel.uiEvent = .changeSynopsis(season.synopsisData)
-                    }
-                    .padding(.horizontal, Dimen.margin.thin)
-                }
-                ForEach(self.seris) { data in
-                    SerisItem( data:data, isSelected: self.synopsisData?.epsdId == data.contentID )
-                        .padding(.horizontal, Dimen.margin.thin)
-                        .onTapGesture {
-                            self.componentViewModel.uiEvent = .changeVod(data.epsdId)
+                    
+                
+                if !self.seris.isEmpty  {
+                    
+                    VStack(spacing:Dimen.margin.regular){
+                        SerisTab(
+                            data:self.relationContentsModel,
+                            seris: self.$seris
+                        ){ season in
+                            self.componentViewModel.uiEvent = .changeSynopsis(season.synopsisData)
                         }
+                        .padding(.horizontal, Dimen.margin.thin)
+                        
+                        ForEach(self.seris[..<min(5,self.seris.count)]) { data in
+                            SerisItem( data:data, isSelected: self.synopsisData?.epsdId == data.contentID )
+                                .padding(.horizontal, Dimen.margin.thin)
+                                .onTapGesture {
+                                    self.componentViewModel.uiEvent = .changeVod(data.epsdId)
+                                }
+                        }
+                    }
+                    
+                    
+                    if self.seris.count > 5 {
+                        
+                        ForEach(self.seris[5..<self.seris.count]) { data in
+                            SerisItem( data:data, isSelected: self.synopsisData?.epsdId == data.contentID )
+                                .padding(.horizontal, Dimen.margin.thin)
+                                .onTapGesture {
+                                    self.componentViewModel.uiEvent = .changeVod(data.epsdId)
+                                }
+                        }
+                    }
                 }
-                ForEach(self.relationDatas) { data in
-                    PosterSet( data:data )
+                VStack(spacing:Dimen.margin.regular){
+                    ForEach(self.relationDatas) { data in
+                        PosterSet( data:data ){data in
+                            self.componentViewModel.uiEvent = .changeSynopsis(data.synopsisData)
+                        }
+                    }
                 }
             }
-            .padding(.bottom,  self.sceneObserver.safeAreaBottom)
+            
             
         } else {
             List {
@@ -107,8 +134,8 @@ struct SynopsisBody: PageComponent{
                     relationTab: self.relationTab,
                     hasRelationVod: self.hasRelationVod,
                     useTracking:self.useTracking)
-                    .modifier(ListRowInset(spacing: Dimen.margin.thin))
-                
+                    .modifier(ListRowInset(index:1, spacing: Dimen.margin.thin, marginTop: Dimen.margin.regular))
+                    
                 if !self.seris.isEmpty {
                     SerisTab(
                         data:self.relationContentsModel,
@@ -129,9 +156,11 @@ struct SynopsisBody: PageComponent{
                         .modifier(ListRowInset( spacing: Dimen.margin.regular))
                 }
                 ForEach(self.relationDatas) { data in
-                    PosterSet( data:data, negativeMargin:self.negativeMargin )
-                        .modifier(ListRowInset( spacing: Dimen.margin.thin))
-                        .frame(height: PosterSet.listSize(data: data, screenWidth: self.sceneObserver.screenSize.width, negativeMargin:self.negativeMargin).height)
+                    PosterSet( data:data, negativeMargin:self.negativeMargin ){data in
+                        self.componentViewModel.uiEvent = .changeSynopsis(data.synopsisData)
+                    }
+                    .modifier(ListRowInset( spacing: Dimen.margin.thin))
+                    .frame(height: PosterSet.listSize(data: data, screenWidth: self.sceneObserver.screenSize.width, negativeMargin:self.negativeMargin).height)
                 }
                
             }//list
@@ -172,10 +201,11 @@ struct SynopsisBody: PageComponent{
        
         var body: some View {
             VStack(alignment:.leading , spacing:Dimen.margin.regular) {
+                
                 if self.episodeViewerData != nil {
-                    EpisodeViewer(data:self.episodeViewerData!)
-                        .padding(.top, Dimen.margin.regularExtra)
                     
+                    EpisodeViewer(data:self.episodeViewerData!)
+                        
                     HStack(spacing:0){
                         FunctionViewer(
                             synopsisData :self.synopsisData,

@@ -89,7 +89,7 @@ class InfinityScrollModel:ComponentObservable, PageProtocol, Identifiable{
     
 }
 enum InfinityScrollUIEvent {
-    case reload, scrollMove(Float), scrollTo(Int)
+    case reload, scrollMove(Float, UnitPoint? = nil), scrollTo(Int, UnitPoint? = nil)
 }
 enum InfinityScrollEvent {
     case up, down, bottom, top, pull, pullCompleted, pullCancel, ready

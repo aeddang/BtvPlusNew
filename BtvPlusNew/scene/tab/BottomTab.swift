@@ -62,7 +62,9 @@ struct BottomTab: PageComponent{
             switch evt {
                 case .updated :
                     self.pages = self.dataProvider.bands.datas.map{ band in
-                        PageSelecterble(
+                        let page:PageID = band.gnbTypCd == "BP_03" ? .category : .home
+                        return PageSelecterble(
+                            id: page,
                             on: band.activeIcon, off: band.defaultIcon,
                             text: band.name, menuId: band.menuId)
                     }

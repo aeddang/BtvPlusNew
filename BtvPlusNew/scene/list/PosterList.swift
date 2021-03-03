@@ -177,17 +177,23 @@ struct PosterSet: PageComponent{
     @EnvironmentObject var sceneObserver:SceneObserver
     var data:PosterDataSet
     var negativeMargin:CGFloat = 0 //IOS 14 SidebarListStyle
+    var action: ((_ data:PosterData) -> Void)? = nil
+    
     @State var cellDatas:[PosterData] = []
     var body: some View {
         HStack(spacing: Self.padding){
             ForEach(self.cellDatas) { data in
                 PosterItem( data:data )
-
                 .onTapGesture {
-                    self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.synopsis)
-                            .addParam(key: .data, value: data.synopsisData)
-                    )
+                    if let action = self.action {
+                        action(data)
+                    }else{
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.synopsis)
+                                .addParam(key: .data, value: data.synopsisData)
+                        )
+                    }
+                    
                 }
             }
             if !self.data.isFull {

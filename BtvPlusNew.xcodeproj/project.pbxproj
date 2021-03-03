@@ -73,6 +73,8 @@
 		31631C5425D22E7900E501F7 /* Preroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31631C5325D22E7900E501F7 /* Preroll.swift */; };
 		31631C6525D2516E00E501F7 /* SynopsisPrerollData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31631C6425D2516E00E501F7 /* SynopsisPrerollData.swift */; };
 		31631C6D25D2895000E501F7 /* PlayerWaiting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31631C6C25D2895000E501F7 /* PlayerWaiting.swift */; };
+		31632FFB25EF386F00581FA7 /* MultiBlockBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31632FFA25EF386F00581FA7 /* MultiBlockBody.swift */; };
+		3163300325EF70B000581FA7 /* TextTabList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3163300225EF70B000581FA7 /* TextTabList.swift */; };
 		3167640F25CCBE79003A7721 /* PlayerGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3167640E25CCBE79003A7721 /* PlayerGuide.swift */; };
 		3167641A25CCC1C5003A7721 /* PlayViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3167641925CCC1C5003A7721 /* PlayViewer.swift */; };
 		3167641F25CCC80E003A7721 /* SynopsisPlayerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3167641E25CCC80E003A7721 /* SynopsisPlayerData.swift */; };
@@ -87,12 +89,14 @@
 		317EF18625DB46D6004A6A5E /* PlayerListTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317EF18525DB46D6004A6A5E /* PlayerListTab.swift */; };
 		3180855825C2287300AE4A73 /* BtvPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3180855725C2287300AE4A73 /* BtvPlayer.swift */; };
 		3180855E25C233A900AE4A73 /* libPoCDrmAgent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */; };
+		3185FE1925EF017A005074AA /* CateList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3185FE1825EF017A005074AA /* CateList.swift */; };
+		3185FE1E25EF11B2005074AA /* PageCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3185FE1D25EF11B2005074AA /* PageCategory.swift */; };
 		318C874D25E64AA400ADDFE0 /* TopBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C874C25E64AA400ADDFE0 /* TopBanner.swift */; };
 		318C875825E64C3200ADDFE0 /* BannerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C875725E64C3200ADDFE0 /* BannerData.swift */; };
 		318E7EFE25E8814C00B2AAAF /* MonthlyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E7EFD25E8814C00B2AAAF /* MonthlyList.swift */; };
 		318E7F0425E8990900B2AAAF /* MonthlyBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E7F0325E8990900B2AAAF /* MonthlyBlock.swift */; };
 		318E7F0C25E8B01800B2AAAF /* MonthlyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E7F0B25E8B01800B2AAAF /* MonthlyInfo.swift */; };
-		318FBFF725E4882700ABC241 /* PageCate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318FBFF625E4882700ABC241 /* PageCate.swift */; };
+		318FBFF725E4882700ABC241 /* PageCategoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318FBFF625E4882700ABC241 /* PageCategoryList.swift */; };
 		318FBFFE25E48F5B00ABC241 /* SortTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318FBFFD25E48F5B00ABC241 /* SortTab.swift */; };
 		318FC00625E4CA5800ABC241 /* CateBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318FC00525E4CA5800ABC241 /* CateBlock.swift */; };
 		3192317225A3FDBE00020388 /* coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192317125A3FDBE00020388 /* coordinator.swift */; };
@@ -100,7 +104,7 @@
 		3193414F25DDD847002F2000 /* SynopsisTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3193414E25DDD847002F2000 /* SynopsisTop.swift */; };
 		3193415425DDDAE8002F2000 /* SynopsisBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3193415325DDDAE8002F2000 /* SynopsisBody.swift */; };
 		31D3F4CB25E3368A008FDFEC /* WepManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4CA25E3368A008FDFEC /* WepManager.swift */; };
-		31D3F4DE25E36625008FDFEC /* PageThema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4DD25E36625008FDFEC /* PageThema.swift */; };
+		31D3F4DE25E36625008FDFEC /* PageMultiBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */; };
 		31D3F4E625E3A57A008FDFEC /* BannerBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */; };
 		31D3F4EC25E3A7D4008FDFEC /* BannerList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4EB25E3A7D4008FDFEC /* BannerList.swift */; };
 		31E3974225B5906E00CE6E21 /* RatingPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E3974125B5906E00CE6E21 /* RatingPoint.swift */; };
@@ -355,6 +359,8 @@
 		31631C5325D22E7900E501F7 /* Preroll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preroll.swift; sourceTree = "<group>"; };
 		31631C6425D2516E00E501F7 /* SynopsisPrerollData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisPrerollData.swift; sourceTree = "<group>"; };
 		31631C6C25D2895000E501F7 /* PlayerWaiting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerWaiting.swift; sourceTree = "<group>"; };
+		31632FFA25EF386F00581FA7 /* MultiBlockBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiBlockBody.swift; sourceTree = "<group>"; };
+		3163300225EF70B000581FA7 /* TextTabList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextTabList.swift; sourceTree = "<group>"; };
 		3167640E25CCBE79003A7721 /* PlayerGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerGuide.swift; sourceTree = "<group>"; };
 		3167641925CCC1C5003A7721 /* PlayViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayViewer.swift; sourceTree = "<group>"; };
 		3167641E25CCC80E003A7721 /* SynopsisPlayerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisPlayerData.swift; sourceTree = "<group>"; };
@@ -370,12 +376,14 @@
 		3180855725C2287300AE4A73 /* BtvPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtvPlayer.swift; sourceTree = "<group>"; };
 		3180855C25C233A900AE4A73 /* DrmAgent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrmAgent.h; sourceTree = "<group>"; };
 		3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPoCDrmAgent.a; sourceTree = "<group>"; };
+		3185FE1825EF017A005074AA /* CateList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CateList.swift; sourceTree = "<group>"; };
+		3185FE1D25EF11B2005074AA /* PageCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCategory.swift; sourceTree = "<group>"; };
 		318C874C25E64AA400ADDFE0 /* TopBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBanner.swift; sourceTree = "<group>"; };
 		318C875725E64C3200ADDFE0 /* BannerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerData.swift; sourceTree = "<group>"; };
 		318E7EFD25E8814C00B2AAAF /* MonthlyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyList.swift; sourceTree = "<group>"; };
 		318E7F0325E8990900B2AAAF /* MonthlyBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyBlock.swift; sourceTree = "<group>"; };
 		318E7F0B25E8B01800B2AAAF /* MonthlyInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyInfo.swift; sourceTree = "<group>"; };
-		318FBFF625E4882700ABC241 /* PageCate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCate.swift; sourceTree = "<group>"; };
+		318FBFF625E4882700ABC241 /* PageCategoryList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCategoryList.swift; sourceTree = "<group>"; };
 		318FBFFD25E48F5B00ABC241 /* SortTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortTab.swift; sourceTree = "<group>"; };
 		318FC00525E4CA5800ABC241 /* CateBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CateBlock.swift; sourceTree = "<group>"; };
 		3192317125A3FDBE00020388 /* coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = coordinator.swift; sourceTree = "<group>"; };
@@ -383,7 +391,7 @@
 		3193414E25DDD847002F2000 /* SynopsisTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisTop.swift; sourceTree = "<group>"; };
 		3193415325DDDAE8002F2000 /* SynopsisBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisBody.swift; sourceTree = "<group>"; };
 		31D3F4CA25E3368A008FDFEC /* WepManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WepManager.swift; sourceTree = "<group>"; };
-		31D3F4DD25E36625008FDFEC /* PageThema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageThema.swift; sourceTree = "<group>"; };
+		31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMultiBlock.swift; sourceTree = "<group>"; };
 		31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerBlock.swift; sourceTree = "<group>"; };
 		31D3F4EB25E3A7D4008FDFEC /* BannerList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerList.swift; sourceTree = "<group>"; };
 		31E3974125B5906E00CE6E21 /* RatingPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingPoint.swift; sourceTree = "<group>"; };
@@ -934,8 +942,8 @@
 		31D3F4DB25E365F3008FDFEC /* popups */ = {
 			isa = PBXGroup;
 			children = (
-				31D3F4DD25E36625008FDFEC /* PageThema.swift */,
-				318FBFF625E4882700ABC241 /* PageCate.swift */,
+				31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */,
+				318FBFF625E4882700ABC241 /* PageCategoryList.swift */,
 			);
 			path = popups;
 			sourceTree = "<group>";
@@ -973,6 +981,8 @@
 				3152B47125DA310000147C86 /* SerisList.swift */,
 				31D3F4EB25E3A7D4008FDFEC /* BannerList.swift */,
 				318E7EFD25E8814C00B2AAAF /* MonthlyList.swift */,
+				3185FE1825EF017A005074AA /* CateList.swift */,
+				3163300225EF70B000581FA7 /* TextTabList.swift */,
 			);
 			path = list;
 			sourceTree = "<group>";
@@ -1577,6 +1587,7 @@
 			children = (
 				318FC01525E4D7C100ABC241 /* view */,
 				D56CC2EE25902E6600CA1D54 /* MultiBlock.swift */,
+				31632FFA25EF386F00581FA7 /* MultiBlockBody.swift */,
 			);
 			path = multiblock;
 			sourceTree = "<group>";
@@ -1585,6 +1596,7 @@
 			isa = PBXGroup;
 			children = (
 				D57178572582D87500BF2612 /* PageHome.swift */,
+				3185FE1D25EF11B2005074AA /* PageCategory.swift */,
 				315544C125B79FAA00086510 /* PageServiceError.swift */,
 			);
 			path = home;
@@ -1893,7 +1905,7 @@
 				315A8FC125AD114F00498B03 /* ApiUtil.m in Sources */,
 				D57298DD259D69EB00ED2CE6 /* PickerSelect.swift in Sources */,
 				D56C6A5D257DA0C700CF9AB8 /* CircularSpinner.swift in Sources */,
-				318FBFF725E4882700ABC241 /* PageCate.swift in Sources */,
+				318FBFF725E4882700ABC241 /* PageCategoryList.swift in Sources */,
 				D56C6A59257DA0C700CF9AB8 /* TextButton.swift in Sources */,
 				D56CC31225907F3700CA1D54 /* ThemaBlock.swift in Sources */,
 				D56C5FE32592F693009AE769 /* Metv.swift in Sources */,
@@ -1951,7 +1963,7 @@
 				D56C6A5F257DA0C700CF9AB8 /* ActivityIndicator.swift in Sources */,
 				D5688929259C4C0800F2F67A /* MoreInfoButton.swift in Sources */,
 				D56C699E257DA09E00CF9AB8 /* PageContentController.swift in Sources */,
-				31D3F4DE25E36625008FDFEC /* PageThema.swift in Sources */,
+				31D3F4DE25E36625008FDFEC /* PageMultiBlock.swift in Sources */,
 				D50AB9042580772A00649C4A /* EventBanner.swift in Sources */,
 				D56C6A2E257DA0C700CF9AB8 /* CustomImagePicker.swift in Sources */,
 				D56C6B13257DAADE00CF9AB8 /* AppLayout.swift in Sources */,
@@ -1971,6 +1983,7 @@
 				D56CC2EF25902E6600CA1D54 /* MultiBlock.swift in Sources */,
 				D5E27EDF2586F29200B2CD5D /* ImageViewButton.swift in Sources */,
 				31373F6125C7E726004353DA /* CPYTPlayer.swift in Sources */,
+				3185FE1E25EF11B2005074AA /* PageCategory.swift in Sources */,
 				3192317225A3FDBE00020388 /* coordinator.swift in Sources */,
 				D56C6A41257DA0C700CF9AB8 /* Player.swift in Sources */,
 				318C875825E64C3200ADDFE0 /* BannerData.swift in Sources */,
@@ -1981,6 +1994,7 @@
 				31E8D7C125CA85190034BBC4 /* PlayerOptionSelectBox.swift in Sources */,
 				3167641A25CCC1C5003A7721 /* PlayViewer.swift in Sources */,
 				D56C6A53257DA0C700CF9AB8 /* FillButton.swift in Sources */,
+				3163300325EF70B000581FA7 /* TextTabList.swift in Sources */,
 				D56C699F257DA09E00CF9AB8 /* PageDragingProtocol.swift in Sources */,
 				D56C6A44257DA0C700CF9AB8 /* TextStyle.swift in Sources */,
 				318C874D25E64AA400ADDFE0 /* TopBanner.swift in Sources */,
@@ -2013,6 +2027,7 @@
 				31E8D7BC25CA5D470034BBC4 /* PlayerTop.swift in Sources */,
 				D5DC474E25820A02007EDD86 /* RelationContent.swift in Sources */,
 				D5E27EEA258751A200B2CD5D /* BlockData.swift in Sources */,
+				31632FFB25EF386F00581FA7 /* MultiBlockBody.swift in Sources */,
 				315B55D225A7E2DC00B5B351 /* Nps.swift in Sources */,
 				D56C6AFF257DAAC000CF9AB8 /* AppDelegate.swift in Sources */,
 				3159B05E25B17C14008CA85B /* StbInfo.swift in Sources */,
@@ -2117,6 +2132,7 @@
 				D50AB8ED257F311800649C4A /* SystemEnvironment.swift in Sources */,
 				314D73A225B509B200907118 /* RatingInfo.swift in Sources */,
 				314D73AC25B5276700907118 /* SelectButton.swift in Sources */,
+				3185FE1925EF017A005074AA /* CateList.swift in Sources */,
 				D56C6B72257DBAE700CF9AB8 /* PageTest.swift in Sources */,
 				31373F6425C7E726004353DA /* YTPlayerView.swift in Sources */,
 				D56C6A42257DA0C700CF9AB8 /* CustomToggleStyle.swift in Sources */,

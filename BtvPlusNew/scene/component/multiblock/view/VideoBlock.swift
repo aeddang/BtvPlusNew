@@ -31,7 +31,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                     textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
                 ){_ in
                     self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.cate)
+                        PageProvider.getPageObject(.categoryList)
                             .addParam(key: .data, value: data)
                             .addParam(key: .type, value: CateBlock.ListType.video)
                     )

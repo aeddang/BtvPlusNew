@@ -29,6 +29,7 @@ class ImageLoader: ObservableObject, PageProtocol{
         task.cancel()
     }
     
+    @discardableResult
     func image(url: String?) -> UIImage? {
         guard let url = url else { return nil }
         if url == "" { return nil }

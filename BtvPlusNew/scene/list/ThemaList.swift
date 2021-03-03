@@ -119,21 +119,18 @@ struct ThemaList: PageComponent{
                     }else{
                         if data.blocks != nil && data.blocks?.isEmpty == false {
                             self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(.thema)
+                                PageProvider.getPageObject(.multiBlock)
                                     .addParam(key: .title, value: data.title)
                                     .addParam(key: .data, value: data.blocks)
                             )
                         }else{
                             self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(.cate)
+                                PageProvider.getPageObject(.categoryList)
                                     .addParam(key: .title, value: data.title)
                                     .addParam(key: .id, value: data.menuId)
                                     .addParam(key: .type, value: CateBlock.ListType.poster)
                             )
                         }
-                        
-                        
-                        
                     }
                 }
             }

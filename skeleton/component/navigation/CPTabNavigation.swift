@@ -21,7 +21,7 @@ struct CPTabNavigation : PageComponent {
     @State private var updatedIndex: Int = -1
     @State private var needGesture = false
     var spacing:CGFloat = 0
-    var useSpacer = true
+    var useSpacer = false
     var body: some View {
         GeometryReader { geometry in
             ScrollView(.horizontal, showsIndicators: false) {
@@ -171,7 +171,6 @@ struct CPTabNavigation_Previews: PreviewProvider {
                         id: "test1sdsd",
                         body: AnyView(
                             Text("testqsq").background(Color.yellow)
-                            
                         ),
                         idx:0
                     ),
@@ -204,6 +203,7 @@ struct CPTabNavigation_Previews: PreviewProvider {
                 index: .constant(0)
             )
             .frame( alignment: .center)
+            .background(Color.brand.bg)
         }
     }
 }

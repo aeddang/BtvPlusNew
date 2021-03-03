@@ -17,8 +17,8 @@ struct ImageView : View, PageProtocol {
     @State var img:UIImage? = nil
     var body: some View {
         Image(uiImage:
-                self.img ??
-                (self.imageLoader.image(url: self.url) ??
+                self.img
+                ?? (self.imageLoader.image(url: self.url) ??
                     UIImage(named: self.noImg)!)
             )
             .renderingMode(.original)

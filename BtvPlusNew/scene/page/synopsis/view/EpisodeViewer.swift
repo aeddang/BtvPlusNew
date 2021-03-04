@@ -35,13 +35,7 @@ class EpisodeViewerData {
         self.date = data.brcast_exps_dy
         self.provider = data.brcast_chnl_nm
         if let age = data.wat_lvl_cd {
-            switch age {
-            case "7": self.restrictAgeIcon = Asset.icon.age7
-            case "12": self.restrictAgeIcon = Asset.icon.age12
-            case "15": self.restrictAgeIcon = Asset.icon.age15
-            case "19": self.restrictAgeIcon = Asset.icon.age19
-            default: self.restrictAgeIcon = Asset.icon.ageAll
-            }
+            self.restrictAgeIcon = Asset.age.getIcon(age: age)
         }
         if let min = data.play_tms_val {
             self.duration = min + String.app.min

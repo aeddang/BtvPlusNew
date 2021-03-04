@@ -33,6 +33,7 @@ extension Font{
         public static let black:CGFloat = 32 //*
         public static let bold:CGFloat = 26 //*
         public static let boldExtra:CGFloat = 24 //*
+        public static let large:CGFloat = 22 //*
         public static let medium:CGFloat = 20 //*
         public static let mediumExtra:CGFloat = 18 //*
         public static let regular:CGFloat = 16//*

@@ -21,7 +21,7 @@ struct PageHome: PageView {
     @EnvironmentObject var pairing:Pairing
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
-    @ObservedObject var viewModel:MultiBlockModel = MultiBlockModel(headerSize: 5, requestSize: 5)
+    @ObservedObject var viewModel:MultiBlockModel = MultiBlockModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var monthlyViewModel: InfinityScrollModel = InfinityScrollModel()
     

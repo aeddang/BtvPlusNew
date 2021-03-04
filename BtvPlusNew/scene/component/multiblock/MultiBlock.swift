@@ -84,20 +84,20 @@ struct MultiBlock:PageComponent {
         var data:BlockData
         var useTracking:Bool = false
         var body :some View {
-            switch data.cardType {
-            case .smallPoster, .bigPoster, .bookmarkedPoster, .rankingPoster :
+            switch data.uiType {
+            case .poster :
                 PosterBlock(
                     pageDragingModel:self.pageDragingModel,
                     data: data,
                     useTracking:self.useTracking
                     )
-            case .video, .watchedVideo :
+            case .video :
                 VideoBlock(
                     pageDragingModel:self.pageDragingModel,
                     data: data,
                     useTracking:self.useTracking
                     )
-            case .circleTheme, .bigTheme, .squareThema :
+            case .theme :
                 ThemaBlock(
                     pageDragingModel:self.pageDragingModel,
                     data: data,
@@ -105,8 +105,7 @@ struct MultiBlock:PageComponent {
                     )
             case .banner :
                 BannerBlock(data: data)
-            default:
-                ThemaBlock(data: data)
+            
             }
         }//body
     }

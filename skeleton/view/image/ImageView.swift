@@ -18,8 +18,8 @@ struct ImageView : View, PageProtocol {
     var body: some View {
         Image(uiImage:
                 self.img
-                ?? (self.imageLoader.image(url: self.url) ??
-                    UIImage(named: self.noImg)!)
+                ?? self.imageLoader.image(url: self.url)
+                ?? UIImage(named: self.noImg)!
             )
             .renderingMode(.original)
             .resizable()

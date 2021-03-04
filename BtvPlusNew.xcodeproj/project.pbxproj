@@ -91,6 +91,9 @@
 		3180855E25C233A900AE4A73 /* libPoCDrmAgent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */; };
 		3185FE1925EF017A005074AA /* CateList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3185FE1825EF017A005074AA /* CateList.swift */; };
 		3185FE1E25EF11B2005074AA /* PageCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3185FE1D25EF11B2005074AA /* PageCategory.swift */; };
+		318B537125F049DA0052E4E0 /* PlayList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318B537025F049DA0052E4E0 /* PlayList.swift */; };
+		318B537625F050CC0052E4E0 /* AlramButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318B537525F050CC0052E4E0 /* AlramButton.swift */; };
+		318B537C25F05BAB0052E4E0 /* PagePreviewList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318B537B25F05BAB0052E4E0 /* PagePreviewList.swift */; };
 		318C874D25E64AA400ADDFE0 /* TopBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C874C25E64AA400ADDFE0 /* TopBanner.swift */; };
 		318C875825E64C3200ADDFE0 /* BannerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C875725E64C3200ADDFE0 /* BannerData.swift */; };
 		318E7EFE25E8814C00B2AAAF /* MonthlyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E7EFD25E8814C00B2AAAF /* MonthlyList.swift */; };
@@ -378,6 +381,9 @@
 		3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPoCDrmAgent.a; sourceTree = "<group>"; };
 		3185FE1825EF017A005074AA /* CateList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CateList.swift; sourceTree = "<group>"; };
 		3185FE1D25EF11B2005074AA /* PageCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCategory.swift; sourceTree = "<group>"; };
+		318B537025F049DA0052E4E0 /* PlayList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayList.swift; sourceTree = "<group>"; };
+		318B537525F050CC0052E4E0 /* AlramButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlramButton.swift; sourceTree = "<group>"; };
+		318B537B25F05BAB0052E4E0 /* PagePreviewList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePreviewList.swift; sourceTree = "<group>"; };
 		318C874C25E64AA400ADDFE0 /* TopBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBanner.swift; sourceTree = "<group>"; };
 		318C875725E64C3200ADDFE0 /* BannerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerData.swift; sourceTree = "<group>"; };
 		318E7EFD25E8814C00B2AAAF /* MonthlyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyList.swift; sourceTree = "<group>"; };
@@ -944,6 +950,7 @@
 			children = (
 				31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */,
 				318FBFF625E4882700ABC241 /* PageCategoryList.swift */,
+				318B537B25F05BAB0052E4E0 /* PagePreviewList.swift */,
 			);
 			path = popups;
 			sourceTree = "<group>";
@@ -983,6 +990,7 @@
 				318E7EFD25E8814C00B2AAAF /* MonthlyList.swift */,
 				3185FE1825EF017A005074AA /* CateList.swift */,
 				3163300225EF70B000581FA7 /* TextTabList.swift */,
+				318B537025F049DA0052E4E0 /* PlayList.swift */,
 			);
 			path = list;
 			sourceTree = "<group>";
@@ -1521,6 +1529,7 @@
 				314D73BE25B550F900907118 /* BtvButton.swift */,
 				31E3974925B595FC00CE6E21 /* ShareButton.swift */,
 				312BB07325DCDCBB00AC03BC /* Tooltip.swift */,
+				318B537525F050CC0052E4E0 /* AlramButton.swift */,
 			);
 			path = ui;
 			sourceTree = "<group>";
@@ -2046,6 +2055,7 @@
 				D56C6A57257DA0C700CF9AB8 /* RadioButton.swift in Sources */,
 				D56C6A2C257DA0C700CF9AB8 /* CustomPHPicker.swift in Sources */,
 				D56C6A47257DA0C700CF9AB8 /* RoundedCorner.swift in Sources */,
+				318B537125F049DA0052E4E0 /* PlayList.swift in Sources */,
 				D56C6B11257DAADE00CF9AB8 /* PageSceneObserver.swift in Sources */,
 				D506D717258C8FFB00F27C00 /* PosterList.swift in Sources */,
 				D56C69AE257DA09E00CF9AB8 /* AnimateDrawView.swift in Sources */,
@@ -2070,6 +2080,7 @@
 				31631C6525D2516E00E501F7 /* SynopsisPrerollData.swift in Sources */,
 				D56C6A50257DA0C700CF9AB8 /* Select.swift in Sources */,
 				D56C69AA257DA09E00CF9AB8 /* Network.swift in Sources */,
+				318B537625F050CC0052E4E0 /* AlramButton.swift in Sources */,
 				D56C6A4D257DA0C700CF9AB8 /* ProgressSlider.swift in Sources */,
 				315A8FD425ADADD600498B03 /* GuestAgreementInfo.swift in Sources */,
 				D56C6A34257DA0C700CF9AB8 /* Navigation.swift in Sources */,
@@ -2084,6 +2095,7 @@
 				31626EE025B8EF1900F4031D /* Like.swift in Sources */,
 				3159B05925B17BED008CA85B /* KmsModel.swift in Sources */,
 				D56C6A38257DA0C700CF9AB8 /* ImageItem.swift in Sources */,
+				318B537C25F05BAB0052E4E0 /* PagePreviewList.swift in Sources */,
 				D57298D8259D4BEF00ED2CE6 /* InputCell.swift in Sources */,
 				318E7EFE25E8814C00B2AAAF /* MonthlyList.swift in Sources */,
 				3193414F25DDD847002F2000 /* SynopsisTop.swift in Sources */,

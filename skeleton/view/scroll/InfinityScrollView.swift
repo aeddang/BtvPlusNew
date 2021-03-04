@@ -78,21 +78,23 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
             ScrollView(self.axes, showsIndicators: self.showIndicators) {
                 if self.isTracking {
                     ScrollViewReader{ reader in
-                       ZStack(alignment: self.axes == .vertical ? .top : .leading) {
-                            if self.useTracking {
-                                GeometryReader { insideProxy in
-                                    Color.clear
-                                        .preference(key: ScrollOffsetPreferenceKey.self, value: [self.calculateContentOffset(insideProxy: insideProxy)])
+                        if self.axes == .vertical {
+                            ZStack(alignment: .top) {
+                                if self.useTracking {
+                                    GeometryReader { insideProxy in
+                                        Color.clear
+                                            .preference(key: ScrollOffsetPreferenceKey.self, value: [self.calculateContentOffset(insideProxy: insideProxy)])
+                                    }
                                 }
-                            }
-                            if self.axes == .vertical {
                                 if self.isRecycle {
                                     LazyVStack(alignment: .leading, spacing: self.spacing){
+                                        
                                         self.content
                                     }
                                     .padding(.top, self.marginTop)
                                     .padding(.bottom, self.marginBottom)
                                     .padding(.horizontal, self.marginHorizontal)
+                                
                                 } else {
                                     VStack(alignment: .leading, spacing: self.spacing){
                                         self.content
@@ -101,7 +103,25 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                     .padding(.bottom, self.marginBottom)
                                     .padding(.horizontal, self.marginHorizontal)
                                 }
-                            }else{
+                            }
+                            .frame(alignment: .top)
+                            .onChange(of: self.scrollPos, perform: { pos in
+                                guard let pos = pos else {return}
+                                reader.scrollTo(pos)
+                            })
+                            .onChange(of: self.scrollIdx, perform: { idx in
+                                guard let idx = idx else {return}
+                                reader.scrollTo(idx, anchor: anchor)
+                            })
+                        
+                        } else {
+                            ZStack(alignment: .leading) {
+                                if self.useTracking {
+                                    GeometryReader { insideProxy in
+                                        Color.clear
+                                            .preference(key: ScrollOffsetPreferenceKey.self, value: [self.calculateContentOffset(insideProxy: insideProxy)])
+                                    }
+                                }
                                 if self.isRecycle {
                                     LazyHStack (alignment: .top, spacing: self.spacing){
                                         self.content
@@ -118,19 +138,21 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                     .padding(.horizontal, self.marginHorizontal)
                                 }
                             }
-                            
+                            .frame(alignment: .leading)
+                            .onChange(of: self.scrollPos, perform: { pos in
+                                guard let pos = pos else {return}
+                                reader.scrollTo(pos)
+                            })
+                            .onChange(of: self.scrollIdx, perform: { idx in
+                                guard let idx = idx else {return}
+                                reader.scrollTo(idx, anchor: anchor)
+                            })
                         }
-                        .onChange(of: self.scrollPos, perform: { pos in
-                            guard let pos = pos else {return}
-                            reader.scrollTo(pos)
-                        })
-                        .onChange(of: self.scrollIdx, perform: { idx in
-                            guard let idx = idx else {return}
-                            reader.scrollTo(idx, anchor: anchor)
-                        })
+                        
                     }
                 }
             }
+            .modifier(MatchParent())
             .coordinateSpace(name: self.tag)
             .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
                 DispatchQueue.main.async {
@@ -184,6 +206,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                             }
                         }
                     }
+                    .modifier(MatchParent())
                     .coordinateSpace(name: self.tag)
                     .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
                         self.onPreferenceChange(value: value)
@@ -222,6 +245,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                             }
                         }
                     }
+                    .modifier(MatchParent())
                     .coordinateSpace(name: self.tag)
                     .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
                         self.onPreferenceChange(value: value)

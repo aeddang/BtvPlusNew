@@ -18,7 +18,7 @@ class MultiBlockModel: PageDataProviderModel {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
     
-    init(headerSize:Int = 0, requestSize:Int = 5) {
+    init(headerSize:Int = 5, requestSize:Int = 5) {
         self.headerSize = headerSize
         self.requestSize = requestSize
     }
@@ -42,7 +42,7 @@ class MultiBlockModel: PageDataProviderModel {
 
 
 struct MultiBlockBody: PageComponent {
-   
+    @EnvironmentObject var dataProvider:DataProvider
     var viewModel:MultiBlockModel = MultiBlockModel()
     var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     var pageObservable:PageObservable = PageObservable()
@@ -83,6 +83,105 @@ struct MultiBlockBody: PageComponent {
                 self.reload()
             }
         }
+        .onReceive(dataProvider.$result) { res in
+            guard let data = self.loadingBlocks.first(where: { $0.id == res?.id}) else {return}
+           
+            switch data.dataType {
+            case .cwGrid:
+                guard let resData = res?.data as? CWGrid else {return data.setBlank()}
+                guard let grid = resData.grid else {return data.setBlank()}
+                grid.forEach{ g in
+                    if let blocks = g.block {
+                        switch data.uiType {
+                        case .poster :
+                            data.posters = blocks.map{ d in
+                                PosterData().setData(data: d, cardType: data.cardType)
+                            }
+                        case .video :
+                            data.videos = blocks.map{ d in
+                                VideoData().setData(data: d, cardType: data.cardType)
+                            }
+                        case .theme :
+                            data.themas = blocks.map{ d in
+                                ThemaData().setData(data: d, cardType: data.cardType)
+                            }
+                        default: break
+                        }
+                    }
+                }
+            case .grid:
+                guard let resData = res?.data as? GridEvent else {return data.setBlank()}
+                guard let blocks = resData.contents else {return data.setBlank()}
+                switch data.uiType {
+                case .poster :
+                    data.posters = blocks.map{ d in
+                        PosterData().setData(data: d, cardType: data.cardType)
+                    }
+                case .video :
+                    data.videos = blocks.map{ d in
+                        VideoData().setData(data: d, cardType: data.cardType)
+                    }
+                case .theme :
+                    data.themas = blocks.map{ d in
+                        ThemaData().setData(data: d, cardType: data.cardType)
+                    }
+                default: break
+                }
+                
+                
+            case .bookMark:
+                guard let resData = res?.data as? BookMark else {return data.setBlank()}
+                guard let blocks = resData.bookmarkList else {return data.setBlank()}
+                switch data.uiType {
+                case .poster :
+                    data.posters = blocks.map{ d in
+                        PosterData().setData(data: d, cardType: data.cardType)
+                    }
+                case .video :
+                    data.videos = blocks.map{ d in
+                        VideoData().setData(data: d, cardType: data.cardType)
+                    }
+                default: break
+                }
+               
+                
+            case .watched:
+                guard let resData = res?.data as? Watch else {return data.setBlank()}
+                guard let blocks = resData.watchList else {return data.setBlank()}
+                switch data.uiType {
+                case .poster :
+                    data.posters = blocks.map{ d in
+                        PosterData().setData(data: d, cardType: data.cardType)
+                    }
+                case .video :
+                    data.videos = blocks.map{ d in
+                        VideoData().setData(data: d, cardType: data.cardType)
+                    }
+                default: break
+                }
+            
+            case .banner:
+                guard let resData = res?.data as? EventBanner else {return data.setBlank()}
+                guard let banners = resData.banners else {return data.setBlank()}
+                if banners.isEmpty {return data.setBlank()}
+                switch data.uiType {
+                case .banner :
+                    data.banners = banners.map{ d in
+                        BannerData().setData(data: d)
+                    }
+                default: break
+                }
+               
+            default: do {}
+            }
+            data.setDatabindingCompleted()
+            ComponentLog.d("Remote " + data.name, tag: "BlockProtocol")
+        }
+        .onReceive(dataProvider.$error) { err in
+            guard let data = self.loadingBlocks.first(where: { $0.id == err?.id}) else {return}
+            data.setError(err)
+            
+        }
         .onDisappear{
             self.anyCancellable.forEach{$0.cancel()}
             self.anyCancellable.removeAll()
@@ -91,6 +190,7 @@ struct MultiBlockBody: PageComponent {
     }//body
     
     @State var originBlocks:Array<BlockData> = []
+    @State var loadingBlocks:[BlockData] = []
     @State var blocks:[BlockData] = []
     @State var anyCancellable = Set<AnyCancellable>()
     
@@ -118,6 +218,8 @@ struct MultiBlockBody: PageComponent {
     
     private func requestBlockCompleted(){
         PageLog.d("addBlock completed", tag: "BlockProtocol")
+        //self.blocks.append(contentsOf: self.loadingBlocks)
+        //self.loadingBlocks = []
     }
     private func onBlock(stat:BlockStatus, block:BlockData){
         switch stat {
@@ -129,6 +231,8 @@ struct MultiBlockBody: PageComponent {
         PageLog.d("completedNum " + completedNum.description, tag: "BlockProtocol")
         if self.completedNum == self.requestNum {
             self.completedNum = 0
+            //self.blocks.append(contentsOf: self.loadingBlocks)
+            //self.loadingBlocks = []
             self.addBlock()
         }
     }
@@ -150,6 +254,14 @@ struct MultiBlockBody: PageComponent {
         PageLog.d("addBlock" + set.debugDescription, tag: "BlockProtocol")
         if set.isEmpty { return }
         self.requestNum = set.count
+        /*
+        self.loadingBlocks.append(contentsOf: set)
+        self.loadingBlocks.forEach{ s in
+            if let apiQ = s.getRequestApi() {
+                dataProvider.requestData(q: apiQ)
+            }
+        }
+        */
         self.blocks.append(contentsOf: set)
     }
     

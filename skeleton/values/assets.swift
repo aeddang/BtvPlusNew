@@ -100,6 +100,9 @@ extension Asset{
         
         public static let cateEvent = "icCategoryBtnEvent"
         public static let cateTip = "icCategoryBtnTip"
+        
+        public static let alarmOn = "icSynopAlarmFoc"
+        public static let alarmOff = "icSynopAlarmNor"
     }
     
     
@@ -155,6 +158,18 @@ extension Asset{
     struct source {
         public static let pairingTutorial = "pairingTutorialS"
         public static let myConnectIos = "imgMyConnectIos"
+    }
+    
+    struct age {
+        static func getIcon(age:String?) -> String {
+            switch age {
+            case "7": return Asset.icon.age7
+            case "12": return Asset.icon.age12
+            case "15": return Asset.icon.age15
+            case "19": return Asset.icon.age19
+            default: return Asset.icon.ageAll
+            }
+        }
     }
     
     

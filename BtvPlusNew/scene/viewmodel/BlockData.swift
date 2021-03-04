@@ -20,6 +20,7 @@ class BlockData:Identifiable, ObservableObject, Equatable{
     private(set) var cwCallId:String? = nil
     private(set) var cardType:CardType = .none
     private(set) var dataType:DataType = .none
+    private(set) var uiType:UiType = .poster
     private(set) var blocks:[BlockItem]? = nil
     private(set) var originData:BlockItem? = nil
     @Published private(set) var status:BlockStatus = .initate
@@ -39,11 +40,11 @@ class BlockData:Identifiable, ObservableObject, Equatable{
         cardType = findType(data)
         dataType = findDataType(data)
         blocks = data.blocks
-        
         switch cardType {
         case .banner: self.originData = data
         default: break
         }
+        uiType = findUiType()
         return self
     }
     
@@ -167,6 +168,21 @@ class BlockData:Identifiable, ObservableObject, Equatable{
         }
     }
     
+    private func findUiType() -> UiType{
+        switch self.cardType {
+        case .smallPoster, .bigPoster, .bookmarkedPoster, .rankingPoster :
+            return .poster
+        case .video, .watchedVideo :
+            return .video
+        case .circleTheme, .bigTheme, .squareThema :
+            return .theme
+        case .banner :
+            return .banner
+        default:
+            return .poster
+        }
+    }
+    
     enum CardType: String, Codable {
         case none,
         homeBigBanner,
@@ -192,6 +208,13 @@ class BlockData:Identifiable, ObservableObject, Equatable{
         grid,
         watched,
         cwGrid,
+        theme,
+        banner
+    }
+    
+    enum UiType: String, Codable {
+        case poster,
+        video,
         theme,
         banner
     }

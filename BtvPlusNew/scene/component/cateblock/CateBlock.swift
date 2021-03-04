@@ -40,7 +40,7 @@ class CateBlockModel: PageDataProviderModel {
 extension CateBlock{
     static let videoRowsize:Int = 2
     static let posterRowsize:Int = 3
-    static let headerSize:Int = 5
+    static let headerSize:Int = 0
     enum ListType:String {
         case video, poster
     }
@@ -94,8 +94,8 @@ struct CateBlock: PageComponent{
                             .modifier(ContentEdges())
 
                             if !self.posters.isEmpty  {
-                                VStack(spacing:self.spacing){
-                                    ForEach(self.posters[..<min(Self.headerSize,self.posters.count)]) { data in
+                                if Self.headerSize == 0 {
+                                    ForEach(self.posters) { data in
                                         PosterSet( data:data )
                                             .frame(height:self.posterCellHeight)
                                             .onAppear(){
@@ -104,23 +104,36 @@ struct CateBlock: PageComponent{
                                                 }
                                             }
                                     }
-                                }
-                                if self.posters.count > Self.headerSize {
-                                    ForEach(self.posters[Self.headerSize..<self.posters.count]) { data in
-                                        PosterSet( data:data )
-                                            .frame(height:self.posterCellHeight)
-                                            .onAppear(){
-                                                if data.index == self.posters.last?.index {
-                                                    if self.isPaging { self.load() }
+                                } else {
+                                    VStack(spacing:self.spacing){
+                                        ForEach(self.posters[..<min(Self.headerSize,self.posters.count)]) { data in
+                                            PosterSet( data:data )
+                                                .frame(height:self.posterCellHeight)
+                                                .onAppear(){
+                                                    if data.index == self.posters.last?.index {
+                                                        if self.isPaging { self.load() }
+                                                    }
                                                 }
-                                            }
+                                        }
+                                    }
+                                    if self.posters.count > Self.headerSize {
+                                        ForEach(self.posters[Self.headerSize..<self.posters.count]) { data in
+                                            PosterSet( data:data )
+                                                .frame(height:self.posterCellHeight)
+                                                .onAppear(){
+                                                    if data.index == self.posters.last?.index {
+                                                        if self.isPaging { self.load() }
+                                                    }
+                                                }
+                                        }
                                     }
                                 }
+                                
                             }
                             
                             if !self.videos.isEmpty  {
-                                VStack(spacing:self.spacing){
-                                    ForEach(self.videos[..<min(Self.headerSize,self.videos.count)]) { data in
+                                if Self.headerSize == 0 {
+                                    ForEach(self.videos) { data in
                                         VideoSet( data:data )
                                             .frame(height:self.videoCellHeight)
                                             .onAppear(){
@@ -129,18 +142,31 @@ struct CateBlock: PageComponent{
                                                 }
                                             }
                                     }
-                                }
-                                if self.videos.count > Self.headerSize {
-                                    ForEach(self.videos[Self.headerSize..<self.videos.count]) { data in
-                                        VideoSet( data:data )
-                                            .frame(height:self.videoCellHeight)
-                                            .onAppear(){
-                                                if data.index == self.videos.last?.index {
-                                                    if self.isPaging { self.load() }
+                                } else {
+                                    VStack(spacing:self.spacing){
+                                        ForEach(self.videos[..<min(Self.headerSize,self.videos.count)]) { data in
+                                            VideoSet( data:data )
+                                                .frame(height:self.videoCellHeight)
+                                                .onAppear(){
+                                                    if data.index == self.videos.last?.index {
+                                                        if self.isPaging { self.load() }
+                                                    }
                                                 }
-                                            }
+                                        }
+                                    }
+                                    if self.videos.count > Self.headerSize {
+                                        ForEach(self.videos[Self.headerSize..<self.videos.count]) { data in
+                                            VideoSet( data:data )
+                                                .frame(height:self.videoCellHeight)
+                                                .onAppear(){
+                                                    if data.index == self.videos.last?.index {
+                                                        if self.isPaging { self.load() }
+                                                    }
+                                                }
+                                        }
                                     }
                                 }
+                                
                             }
                             
                             if self.posters.isEmpty && self.videos.isEmpty {

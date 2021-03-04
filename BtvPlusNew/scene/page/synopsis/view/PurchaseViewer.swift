@@ -258,7 +258,7 @@ struct PurchaseViewer: PageComponent{
                     text: self.option,
                     isFocus: false,
                     isFill: true,
-                    bgColor: Color.app.blueDeep){
+                    bgColor: Color.brand.bg){
                     
                     self.pageSceneObserver.select = .select((self.tag, self.data.options), self.data.optionIdx)
                 }

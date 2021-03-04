@@ -51,14 +51,14 @@ struct PageProvider {
     
     static func isHome(_ pageID:PageID)-> Bool{
         switch pageID {
-        case .home, .intro : return  true
+        case .home, .intro , .category : return  true
            default : return  false
         }
     }
     
     static func getType(_ pageID:PageID)-> PageAnimationType{
         switch pageID {
-        case .home,
+        case .home, .category,
              .pairingSetupUser, .pairingBtv,
              .pairingDevice, .pairingUser, .pairingManagement,
              .purchase :

@@ -71,7 +71,7 @@ struct PageMultiBlock: PageView {
                         
                     }
                     ZStack(alignment: .topLeading){
-                        if self.tabDatas != nil {
+                        if self.tabDatas != nil && self.isTop != nil {
                             TextTabList(
                                 datas: self.tabDatas!,
                                 selectedIdx:self.selectedTabIdx,
@@ -79,7 +79,7 @@ struct PageMultiBlock: PageView {
                                 self.setupOriginData(idx: data.index)
                             }
                             .modifier(MatchHorizontal(height: TextTabList.height))
-                            .padding(.top, (self.isTop ? Dimen.app.pageTop  : 0) + self.sceneObserver.safeAreaTop )
+                            .padding(.top, (self.isTop == true ? Dimen.app.pageTop  : 0) + self.sceneObserver.safeAreaTop )
                         }
                         PageTab(
                             title: self.title,
@@ -88,13 +88,12 @@ struct PageMultiBlock: PageView {
                         )
                         .padding(.top, self.sceneObserver.safeAreaTop)
                     }
-                    .modifier(MatchHorizontal(height: (self.isTop ? self.marginTop  : 0) + Dimen.app.pageTop  + self.sceneObserver.safeAreaTop))
+                    .modifier(MatchHorizontal(height: (self.isTop == true ? self.marginTop  : 0) + Dimen.app.pageTop  + self.sceneObserver.safeAreaTop))
                     .background(Color.app.blueDeep)
                 }
                 .onReceive(self.infinityScrollModel.$event){evt in
                     guard let evt = evt else {return}
-                    if self.tabDatas == nil {return}
-                    
+                    if self.isTop == nil {return}
                     switch evt {
                     case .top : withAnimation{self.isTop = true}
                     case .down : withAnimation{self.isTop = false}
@@ -165,8 +164,10 @@ struct PageMultiBlock: PageView {
                         }
                         .filter({$0.useAble})
                         
-                        self.marginTop =  TextTabList.height
-                        self.isTop = true
+                        if (self.tabDatas?.count ?? 0) > 1 {
+                            self.marginTop =  TextTabList.height
+                            self.isTop = true
+                        }
                     }
                     
                 }else{
@@ -180,7 +181,7 @@ struct PageMultiBlock: PageView {
     
     
     @State var marginTop:CGFloat = 0
-    @State var isTop:Bool = false
+    @State var isTop:Bool? = nil
     @State var cateData:TextTabData? = nil
     @State var tabDatas:[TextTabData]? = nil
     @State var selectedTabIdx:Int = -1

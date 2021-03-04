@@ -10,27 +10,16 @@
 import Foundation
 import SwiftUI
 
-enum LikeStatus :String {
-    case like, unlike, unkowned
-    
-    var boolType: Bool? {
-        switch self {
-        case .like : return true
-        case .unlike : return false
-        default: return nil
-        }
-    }
-}
 
 
-struct LikeButton: PageView {
+struct AlramButton: PageView {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
     var srisId:String
-    @Binding var isLike:LikeStatus?
-    var useText:Bool = true
-    var action: ((_ ac:LikeStatus?) -> Void)? = nil
+    @Binding var isAlram:Bool?
+    var action: ((_ ac:Bool) -> Void)? = nil
+    
     var body: some View {
         Button(action: {
             let status = self.pairing.status
@@ -38,24 +27,18 @@ struct LikeButton: PageView {
                 self.pageSceneObserver.alert = .needPairing()
             }
             else{
-                self.pageSceneObserver.alert = .like(self.srisId, self.isLike?.boolType)
+                
             }
         }) {
             VStack(spacing:0){
-                Image(self.isLike == nil || self.isLike == .unkowned ? Asset.icon.like
-                        : self.isLike == .like ? Asset.icon.likeOn : Asset.icon.likeOff )
+                Image( self.isAlram == true ? Asset.icon.alarmOn
+                        : Asset.icon.alarmOff )
                     .renderingMode(.original).resizable()
                     .scaledToFit()
                     .frame(
                         width: Dimen.icon.regular,
                         height: Dimen.icon.regular)
-                if self.useText {
-                    Text(String.button.like)
-                    .modifier(MediumTextStyle(
-                        size: Font.size.tiny,
-                        color: Color.app.greyLight
-                    ))
-                }
+                
             }
         }//btn
         .onReceive(self.dataProvider.$result){ res in
@@ -76,17 +59,14 @@ struct LikeButton: PageView {
             if !self.isInit { return }
             switch stat {
             case .pairing:
-                ComponentLog.d("self.pairing.$status " + self.isLike.debugDescription, tag:self.tag)
-                if self.isLike == nil { self.load() }
+                if self.isAlram == nil { self.load() }
             default:
-                ComponentLog.d("self.unpairing.$status " + self.isLike.debugDescription, tag:self.tag)
-                self.isLike = nil
+                self.isAlram = false
             }
         }
         .onAppear{
             if self.pairing.status == .pairing {
-                ComponentLog.d("onAppear " + self.isLike.debugDescription, tag:self.tag)
-                if self.isLike == nil { self.load() }
+                if self.isAlram == nil { self.load() }
             }
             self.isInit = true
         }
@@ -95,38 +75,31 @@ struct LikeButton: PageView {
         
     @State var isInit:Bool = false
     func load(){
-        self.isLike = nil
+        /*
         self.dataProvider.requestData(
             q: .init(
                 id: self.srisId,
                 type: .getLike(self.srisId, self.pairing.hostDevice),
             isOptional: true)
         )
+        */
     }
         
    
     func setup(_ res:ApiResultResponds){
+        /*
         guard let data = res.data as? Like else { return }
         if data.like == "1" { self.isLike = .like }
         else if data.dislike == "1" { self.isLike = .unlike }
         else { self.isLike = .unkowned }
+        */
     }
     
     func regist(_ res:ApiResultResponds){
         guard let data = res.data as? RegistLike else {
             return
         }
-        if data.like_action == "1" {
-            self.isLike = .like
-            action?(self.isLike)
-        }
-        else if data.like_action == "2" {
-            self.isLike = .unlike
-            action?(self.isLike)
-        }else{
-            self.isLike = .unkowned
-            action?(self.isLike)
-        }
+        
     }
     
     func error(_ err:ApiResultError){
@@ -135,12 +108,13 @@ struct LikeButton: PageView {
 }
 
 #if DEBUG
-struct LikeButton_Previews: PreviewProvider {
+struct AlramButton_Previews: PreviewProvider {
+    
     static var previews: some View {
         Form{
-            LikeButton (
+            AlramButton (
                 srisId: "",
-                isLike: .constant(.like)
+                isAlram: .constant(true)
             ){ ac in
                 
             }

@@ -39,7 +39,7 @@ struct SynopsisBody: PageComponent{
     var hasRelationVod:Bool? = nil
     var useTracking:Bool = false
     var negativeMargin:CGFloat = 0 //IOS 14 SidebarListStyle
-
+    var headerSize:Int = 5
     var body: some View {
         if #available(iOS 14.0, *)  { //#available(iOS 14.0, *)
             InfinityScrollView(
@@ -83,7 +83,7 @@ struct SynopsisBody: PageComponent{
                         }
                         .padding(.horizontal, Dimen.margin.thin)
                         
-                        ForEach(self.seris[..<min(5,self.seris.count)]) { data in
+                        ForEach(self.seris[..<min(self.headerSize,self.seris.count)]) { data in
                             SerisItem( data:data, isSelected: self.synopsisData?.epsdId == data.contentID )
                                 .padding(.horizontal, Dimen.margin.thin)
                                 .onTapGesture {
@@ -92,10 +92,8 @@ struct SynopsisBody: PageComponent{
                         }
                     }
                     
-                    
-                    if self.seris.count > 5 {
-                        
-                        ForEach(self.seris[5..<self.seris.count]) { data in
+                    if self.seris.count > self.headerSize {
+                        ForEach(self.seris[self.headerSize..<self.seris.count]) { data in
                             SerisItem( data:data, isSelected: self.synopsisData?.epsdId == data.contentID )
                                 .padding(.horizontal, Dimen.margin.thin)
                                 .onTapGesture {
@@ -104,13 +102,26 @@ struct SynopsisBody: PageComponent{
                         }
                     }
                 }
-                VStack(spacing:Dimen.margin.regular){
-                    ForEach(self.relationDatas) { data in
-                        PosterSet( data:data ){data in
-                            self.componentViewModel.uiEvent = .changeSynopsis(data.synopsisData)
+                /*
+                LazyVStack(alignment: .leading, spacing: Dimen.margin.regular){
+                    ForEach(self.seris) { data in
+                        SerisItem( data:data, isSelected: self.synopsisData?.epsdId == data.contentID )
+                            .padding(.horizontal, Dimen.margin.thin)
+                            .onTapGesture {
+                                self.componentViewModel.uiEvent = .changeVod(data.epsdId)
+                            }
+                    }
+                }
+                LazyVStack(alignment: .leading, spacing: Dimen.margin.regular){
+                    VStack(spacing:Dimen.margin.regular){
+                        ForEach(self.relationDatas) { data in
+                            PosterSet( data:data ){data in
+                                self.componentViewModel.uiEvent = .changeSynopsis(data.synopsisData)
+                            }
                         }
                     }
                 }
+                */
             }
             
             

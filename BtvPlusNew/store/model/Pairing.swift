@@ -44,6 +44,8 @@ enum Gender {
     }
 }
 
+
+
 class User {
     private(set) var nickName:String = ""
     var characterIdx:Int = 0

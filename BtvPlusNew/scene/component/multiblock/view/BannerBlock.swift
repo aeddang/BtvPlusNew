@@ -15,13 +15,21 @@ struct BannerBlock:BlockProtocol, PageComponent {
     @State var bannerData:BannerData? = nil
     @State var listHeight:CGFloat = 0
     var body :some View {
-        VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
+        ZStack() {
             if self.bannerData != nil {
                 BannerItem(data: self.bannerData!)
-                    .modifier(MatchHorizontal(height: self.listHeight))
+                    .modifier(MatchParent())
+            } else {
+                Image(Asset.noImg16_9)
+                    .renderingMode(.original)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .modifier(MatchParent())
             }
         }
         .padding(.horizontal, Dimen.margin.thin)
+        .frame( height: self.listHeight)
+        
         .onAppear{
             if let datas = data.banners {
                 self.bannerData = datas.first

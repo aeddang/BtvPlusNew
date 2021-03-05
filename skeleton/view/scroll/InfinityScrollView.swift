@@ -88,13 +88,11 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                 }
                                 if self.isRecycle {
                                     LazyVStack(alignment: .leading, spacing: self.spacing){
-                                        
                                         self.content
                                     }
                                     .padding(.top, self.marginTop)
                                     .padding(.bottom, self.marginBottom)
                                     .padding(.horizontal, self.marginHorizontal)
-                                
                                 } else {
                                     VStack(alignment: .leading, spacing: self.spacing){
                                         self.content
@@ -267,9 +265,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         }
     }//body
     
-    
-    
     private func onPreferenceChange(value:[CGFloat]){
+        if !self.useTracking {return}
         let contentOffset = value[0]
         if self.prevPosition == contentOffset {return}
         

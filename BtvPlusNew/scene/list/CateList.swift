@@ -89,7 +89,6 @@ struct CateDataSet:Identifiable {
     var index:Int = -1
 }
 
-
 struct CateSet: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     var data:CateDataSet
@@ -98,19 +97,33 @@ struct CateSet: PageComponent{
             ForEach(self.data.datas) { data in
                 CateItem( data:data )
                 .onTapGesture {
-                    if data.blocks != nil && data.blocks?.isEmpty == false {
+                    switch data.subType {
+                    case .prevList :
                         self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.multiBlock)
-                                .addParam(key: .data, value: data)
-                        )
-                    }else{
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.categoryList)
+                            PageProvider.getPageObject(.previewList)
                                 .addParam(key: .title, value: data.title)
                                 .addParam(key: .id, value: data.menuId)
-                                .addParam(key: .type, value: CateBlock.ListType.poster)
+                                .addParam(key: .data, value: data)
                         )
+        
+                    default :
+                        if data.blocks != nil && data.blocks?.isEmpty == false {
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.multiBlock)
+                                    .addParam(key: .data, value: data)
+                            )
+                        }else{
+                            
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.categoryList)
+                                    .addParam(key: .title, value: data.title)
+                                    .addParam(key: .id, value: data.menuId)
+                                    .addParam(key: .type, value: CateBlock.ListType.poster)
+                            )
+                        }
                     }
+                    
+                    
                 }
             }
             if !self.data.isFull {

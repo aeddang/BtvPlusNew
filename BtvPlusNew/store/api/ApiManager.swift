@@ -129,6 +129,10 @@ class ApiManager :PageProtocol, ObservableObject{
             menuId: menuId, sortType: sort, page: page, pageCnt: count, version: nil,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .getGridPreview(let menuId, let page, let count) : self.euxp.getGridPreview(
+            menuId: menuId, page: page, pageCnt: count, version: nil,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         case .getGatewaySynopsis(let data) : self.euxp.getGatewaySynopsis(
             data:data,
             completion: {res in self.complated(id: apiID, type: type, res: res)},

@@ -81,6 +81,7 @@ struct CPPageViewPager: PageComponent {
             switch event {
             case .move(let idx) : withAnimation{self.index = idx}
             case .jump(let idx) : self.index = idx
+            default : break
             }
         }
     }

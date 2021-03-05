@@ -19,13 +19,14 @@ extension Font{
         public static let black = Font.custom(Font.family.black, size: Font.size.black)
     }
     
+    
     struct family {
-        public static let thin =  "AppleSDGothicNeo-Thin"
-        public static let light =  "AppleSDGothicNeo-Light"
-        public static let regular = "AppleSDGothicNeo-Regular"
-        public static let medium =  "AppleSDGothicNeo-Medium"
-        public static let bold =  "AppleSDGothicNeo-SemiBold"
-        public static let black =  "AppleSDGothicNeo-Bold"
+        public static let thin =  "SKBtvLight"
+        public static let light =  "SKBtvLight"
+        public static let regular = "SKBtvMedium"
+        public static let medium =  "SKBtvMedium"
+        public static let bold =  "SKBtvBold"
+        public static let black =  "SKBtvBold"
     }    
     
     struct size {

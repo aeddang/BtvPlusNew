@@ -30,6 +30,7 @@ struct LikeButton: PageView {
     var srisId:String
     @Binding var isLike:LikeStatus?
     var useText:Bool = true
+    var isThin:Bool = false
     var action: ((_ ac:LikeStatus?) -> Void)? = nil
     var body: some View {
         Button(action: {
@@ -42,7 +43,8 @@ struct LikeButton: PageView {
             }
         }) {
             VStack(spacing:0){
-                Image(self.isLike == nil || self.isLike == .unkowned ? Asset.icon.like
+                Image(self.isLike == nil || self.isLike == .unkowned
+                        ? self.isThin ? Asset.icon.likeThin : Asset.icon.like
                         : self.isLike == .like ? Asset.icon.likeOn : Asset.icon.likeOff )
                     .renderingMode(.original).resizable()
                     .scaledToFit()
@@ -110,6 +112,7 @@ struct LikeButton: PageView {
         if data.like == "1" { self.isLike = .like }
         else if data.dislike == "1" { self.isLike = .unlike }
         else { self.isLike = .unkowned }
+        action?(self.isLike)
     }
     
     func regist(_ res:ApiResultResponds){

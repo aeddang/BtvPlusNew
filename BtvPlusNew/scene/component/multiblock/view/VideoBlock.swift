@@ -62,6 +62,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                     .modifier(MatchHorizontal(height: self.listHeight))
             }
         }
+        .frame( height: self.listHeight + Font.size.regular + Dimen.margin.thinExtra)
         .onAppear{
             if let datas = data.videos {
                 self.datas = datas

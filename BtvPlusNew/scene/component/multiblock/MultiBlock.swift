@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 extension MultiBlock{
-    static let spacing = Dimen.margin.medium
+    static let spacing:CGFloat = Dimen.margin.medium
 }
 struct MultiBlock:PageComponent {
     @EnvironmentObject var sceneObserver:SceneObserver
@@ -30,52 +30,87 @@ struct MultiBlock:PageComponent {
    
     
     var body :some View {
-        InfinityScrollView(
-            viewModel: self.viewModel,
-            axes: .vertical,
-            marginTop : self.topDatas == nil ? self.marginTop : 0,
-            marginBottom : self.marginBottom  + self.sceneObserver.safeAreaBottom,
-            spacing: Self.spacing,
-            isRecycle : self.isRecycle,
-            useTracking:self.useBodyTracking){
-            
-            if self.topDatas != nil {
-                TopBanner(
-                    pageObservable:self.pageObservable,
-                    datas: self.topDatas! )
-                    .modifier(MatchHorizontal(height: TopBanner.height))
-            }
-            
-            if self.monthlyDatas != nil {
-               MonthlyBlock(
-                    viewModel:self.monthlyViewModel ?? InfinityScrollModel(),
-                    pageDragingModel:self.pageDragingModel,
-                    monthlyDatas:self.monthlyDatas!,
-                    useTracking:self.useTracking,
-                    action:self.action
-               )
-            }
-            
-            
-            if !self.datas.isEmpty  {
-                if self.headerSize > 1 {
-                    VStack(spacing:Dimen.margin.medium){
-                        ForEach(self.datas[..<min(self.headerSize, self.datas.count)]) { data in
+        if #available(iOS 14.0, *)  { //#
+            InfinityScrollView(
+                viewModel: self.viewModel,
+                axes: .vertical,
+                marginTop : self.topDatas == nil ? self.marginTop : 0,
+                marginBottom : self.marginBottom  + self.sceneObserver.safeAreaBottom,
+                spacing: Self.spacing,
+                isRecycle : self.isRecycle,
+                useTracking:self.useBodyTracking){
+                
+                if self.topDatas != nil {
+                    TopBanner(
+                        pageObservable:self.pageObservable,
+                        datas: self.topDatas! )
+                        .modifier(MatchHorizontal(height: TopBanner.height))
+                }
+                
+                if self.monthlyDatas != nil {
+                   MonthlyBlock(
+                        viewModel:self.monthlyViewModel ?? InfinityScrollModel(),
+                        pageDragingModel:self.pageDragingModel,
+                        monthlyDatas:self.monthlyDatas!,
+                        useTracking:self.useTracking,
+                        action:self.action
+                   )
+                }
+                
+                
+                if !self.datas.isEmpty  {
+                    if self.headerSize > 1 {
+                        VStack(spacing:Dimen.margin.medium){
+                            ForEach(self.datas[..<min(self.headerSize, self.datas.count)]) { data in
+                                MultiBlockCell(pageDragingModel: self.pageDragingModel, data: data , useTracking: self.useTracking)
+                            }
+                        }
+                        if self.datas.count > self.headerSize {
+                            ForEach(self.datas[self.headerSize..<self.datas.count]) { data in
+                                MultiBlockCell(pageDragingModel: self.pageDragingModel, data: data , useTracking: self.useTracking)
+                            }
+                        }
+                    } else {
+                        ForEach(self.datas) { data in
                             MultiBlockCell(pageDragingModel: self.pageDragingModel, data: data , useTracking: self.useTracking)
                         }
-                    }
-                    if self.datas.count > self.headerSize {
-                        ForEach(self.datas[self.headerSize..<self.datas.count]) { data in
-                            MultiBlockCell(pageDragingModel: self.pageDragingModel, data: data , useTracking: self.useTracking)
-                        }
-                    }
-                } else {
-                    ForEach(self.datas) { data in
-                        MultiBlockCell(pageDragingModel: self.pageDragingModel, data: data , useTracking: self.useTracking)
                     }
                 }
+            
             }
-        
+        } else {
+            List {
+                VStack(spacing: Self.spacing){
+                    if self.topDatas != nil {
+                        TopBanner(
+                            pageObservable:self.pageObservable,
+                            datas: self.topDatas! )
+                            .modifier(MatchHorizontal(height: TopBanner.height))
+                            
+                    }
+                    
+                    if self.monthlyDatas != nil {
+                       MonthlyBlock(
+                            viewModel:self.monthlyViewModel ?? InfinityScrollModel(),
+                            pageDragingModel:self.pageDragingModel,
+                            monthlyDatas:self.monthlyDatas!,
+                            useTracking:self.useTracking,
+                            action:self.action
+                       )
+                    }
+                }
+                ForEach(self.datas) { data in
+                    MultiBlockCell(pageDragingModel: self.pageDragingModel, data: data , useTracking: false)
+                       .modifier(ListRowInset(spacing: Self.spacing))
+                }
+            }
+            .padding(.bottom,  self.sceneObserver.safeAreaBottom)
+            .listStyle(PlainListStyle())
+            .onAppear(){
+                UITableView.appearance().allowsSelection = false
+                UITableView.appearance().backgroundColor = Color.brand.bg.uiColor()
+                UITableView.appearance().separatorStyle = .none
+            }
         }
     }
     

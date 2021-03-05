@@ -40,6 +40,7 @@ struct ThemaBlock:BlockProtocol, PageComponent {
                 }
             
         }
+        .frame( height: self.listHeight + Font.size.regular + Dimen.margin.thinExtra)
         .onAppear{
             self.datas = []
             if data.dataType == .theme , let blocks = data.blocks {

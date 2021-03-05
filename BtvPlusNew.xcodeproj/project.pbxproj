@@ -94,6 +94,14 @@
 		318B537125F049DA0052E4E0 /* PlayList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318B537025F049DA0052E4E0 /* PlayList.swift */; };
 		318B537625F050CC0052E4E0 /* AlramButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318B537525F050CC0052E4E0 /* AlramButton.swift */; };
 		318B537C25F05BAB0052E4E0 /* PagePreviewList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318B537B25F05BAB0052E4E0 /* PagePreviewList.swift */; };
+		318B53A125F1DA8E0052E4E0 /* TopBannerBg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318B53A025F1DA8E0052E4E0 /* TopBannerBg.swift */; };
+		318B53AB25F20A350052E4E0 /* PlayBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318B53AA25F20A350052E4E0 /* PlayBlock.swift */; };
+		318B53B925F236960052E4E0 /* SKBtvLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 318B53B325F235610052E4E0 /* SKBtvLight.ttf */; };
+		318B53BD25F2369B0052E4E0 /* SKBtvBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 318B53B225F235600052E4E0 /* SKBtvBold.ttf */; };
+		318B53C125F2369E0052E4E0 /* SKBtvMedium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 318B53B425F235610052E4E0 /* SKBtvMedium.ttf */; };
+		318B53C525F236A00052E4E0 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 318B53B125F235600052E4E0 /* Roboto-Bold.ttf */; };
+		318B53C925F236A20052E4E0 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 318B53B025F235600052E4E0 /* Roboto-Medium.ttf */; };
+		318B53CD25F236A50052E4E0 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 318B53B525F235610052E4E0 /* Roboto-Light.ttf */; };
 		318C874D25E64AA400ADDFE0 /* TopBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C874C25E64AA400ADDFE0 /* TopBanner.swift */; };
 		318C875825E64C3200ADDFE0 /* BannerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C875725E64C3200ADDFE0 /* BannerData.swift */; };
 		318E7EFE25E8814C00B2AAAF /* MonthlyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E7EFD25E8814C00B2AAAF /* MonthlyList.swift */; };
@@ -384,6 +392,14 @@
 		318B537025F049DA0052E4E0 /* PlayList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayList.swift; sourceTree = "<group>"; };
 		318B537525F050CC0052E4E0 /* AlramButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlramButton.swift; sourceTree = "<group>"; };
 		318B537B25F05BAB0052E4E0 /* PagePreviewList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePreviewList.swift; sourceTree = "<group>"; };
+		318B53A025F1DA8E0052E4E0 /* TopBannerBg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBannerBg.swift; sourceTree = "<group>"; };
+		318B53AA25F20A350052E4E0 /* PlayBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayBlock.swift; sourceTree = "<group>"; };
+		318B53B025F235600052E4E0 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
+		318B53B125F235600052E4E0 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
+		318B53B225F235600052E4E0 /* SKBtvBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SKBtvBold.ttf; sourceTree = "<group>"; };
+		318B53B325F235610052E4E0 /* SKBtvLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SKBtvLight.ttf; sourceTree = "<group>"; };
+		318B53B425F235610052E4E0 /* SKBtvMedium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SKBtvMedium.ttf; sourceTree = "<group>"; };
+		318B53B525F235610052E4E0 /* Roboto-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Light.ttf"; sourceTree = "<group>"; };
 		318C874C25E64AA400ADDFE0 /* TopBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBanner.swift; sourceTree = "<group>"; };
 		318C875725E64C3200ADDFE0 /* BannerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerData.swift; sourceTree = "<group>"; };
 		318E7EFD25E8814C00B2AAAF /* MonthlyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyList.swift; sourceTree = "<group>"; };
@@ -891,40 +907,38 @@
 			path = model;
 			sourceTree = "<group>";
 		};
+		318B53AF25F2354C0052E4E0 /* font */ = {
+			isa = PBXGroup;
+			children = (
+				318B53B125F235600052E4E0 /* Roboto-Bold.ttf */,
+				318B53B525F235610052E4E0 /* Roboto-Light.ttf */,
+				318B53B025F235600052E4E0 /* Roboto-Medium.ttf */,
+				318B53B225F235600052E4E0 /* SKBtvBold.ttf */,
+				318B53B325F235610052E4E0 /* SKBtvLight.ttf */,
+				318B53B425F235610052E4E0 /* SKBtvMedium.ttf */,
+			);
+			path = font;
+			sourceTree = "<group>";
+		};
 		318C874B25E64A9200ADDFE0 /* topbanner */ = {
 			isa = PBXGroup;
 			children = (
+				318B53A025F1DA8E0052E4E0 /* TopBannerBg.swift */,
 				318C874C25E64AA400ADDFE0 /* TopBanner.swift */,
 			);
 			path = topbanner;
 			sourceTree = "<group>";
 		};
-		318FC01425E4D75400ABC241 /* cateblock */ = {
-			isa = PBXGroup;
-			children = (
-				318FC01625E4D7D900ABC241 /* view */,
-				318FC00525E4CA5800ABC241 /* CateBlock.swift */,
-			);
-			path = cateblock;
-			sourceTree = "<group>";
-		};
 		318FC01525E4D7C100ABC241 /* view */ = {
 			isa = PBXGroup;
 			children = (
+				318FBFFD25E48F5B00ABC241 /* SortTab.swift */,
 				D56CC3092590703200CA1D54 /* BlockProtocol.swift */,
 				D56CC2F92590313A00CA1D54 /* PosterBlock.swift */,
 				D56CC30125906F2500CA1D54 /* VideoBlock.swift */,
 				D56CC31125907F3700CA1D54 /* ThemaBlock.swift */,
 				31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */,
 				318E7F0325E8990900B2AAAF /* MonthlyBlock.swift */,
-			);
-			path = view;
-			sourceTree = "<group>";
-		};
-		318FC01625E4D7D900ABC241 /* view */ = {
-			isa = PBXGroup;
-			children = (
-				318FBFFD25E48F5B00ABC241 /* SortTab.swift */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -1071,6 +1085,7 @@
 			children = (
 				D56C603625933E52009AE769 /* libs */,
 				D56C697C257DA09E00CF9AB8 /* lib */,
+				318B53AF25F2354C0052E4E0 /* font */,
 				D56C69B9257DA0C600CF9AB8 /* skeleton */,
 				D56C6925257D9EE500CF9AB8 /* BtvPlusNew */,
 				D56C693C257D9EE600CF9AB8 /* BtvPlusNewTests */,
@@ -1597,6 +1612,8 @@
 				318FC01525E4D7C100ABC241 /* view */,
 				D56CC2EE25902E6600CA1D54 /* MultiBlock.swift */,
 				31632FFA25EF386F00581FA7 /* MultiBlockBody.swift */,
+				318FC00525E4CA5800ABC241 /* CateBlock.swift */,
+				318B53AA25F20A350052E4E0 /* PlayBlock.swift */,
 			);
 			path = multiblock;
 			sourceTree = "<group>";
@@ -1631,7 +1648,6 @@
 			isa = PBXGroup;
 			children = (
 				318C874B25E64A9200ADDFE0 /* topbanner */,
-				318FC01425E4D75400ABC241 /* cateblock */,
 				D56CC2ED25902E5400CA1D54 /* multiblock */,
 				3167642525CD0A0C003A7721 /* webview */,
 				31061E6A25C8D21A00543FC0 /* player */,
@@ -1771,10 +1787,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				318B53B925F236960052E4E0 /* SKBtvLight.ttf in Resources */,
 				D571786A258304D000BF2612 /* LaunchScreen.storyboard in Resources */,
+				318B53CD25F236A50052E4E0 /* Roboto-Light.ttf in Resources */,
+				318B53C525F236A00052E4E0 /* Roboto-Bold.ttf in Resources */,
 				D568891C259C24A200F2F67A /* Localizable.strings in Resources */,
+				318B53C125F2369E0052E4E0 /* SKBtvMedium.ttf in Resources */,
 				D56C692E257D9EE600CF9AB8 /* Preview Assets.xcassets in Resources */,
+				318B53BD25F2369B0052E4E0 /* SKBtvBold.ttf in Resources */,
 				D56C692B257D9EE600CF9AB8 /* Assets.xcassets in Resources */,
+				318B53C925F236A20052E4E0 /* Roboto-Medium.ttf in Resources */,
 				31373F6325C7E726004353DA /* YTPlayerView-iframe-playerIPAD.html in Resources */,
 				31373F6225C7E726004353DA /* YTPlayerView-iframe-player.html in Resources */,
 			);
@@ -1967,6 +1989,7 @@
 				D5DC475B25820FC3007EDD86 /* InsideInfo.swift in Sources */,
 				D5DC476E25821825007EDD86 /* GridPreview.swift in Sources */,
 				D56C6933257D9EE600CF9AB8 /* ApiCoreData.xcdatamodeld in Sources */,
+				318B53AB25F20A350052E4E0 /* PlayBlock.swift in Sources */,
 				D56C6B39257DACD800CF9AB8 /* ApiConst.swift in Sources */,
 				31D3F4CB25E3368A008FDFEC /* WepManager.swift in Sources */,
 				D56C6A5F257DA0C700CF9AB8 /* ActivityIndicator.swift in Sources */,
@@ -2089,6 +2112,7 @@
 				317A8F4E25CBBB2700E41226 /* PageHostingController.swift in Sources */,
 				D56C69B0257DA09E00CF9AB8 /* SocialMediaSharingManager.swift in Sources */,
 				D5DC477E25821DFA007EDD86 /* CWGrid.swift in Sources */,
+				318B53A125F1DA8E0052E4E0 /* TopBannerBg.swift in Sources */,
 				31626EEB25B8FB3000F4031D /* FunctionViewer.swift in Sources */,
 				D56C6B69257DBAC800CF9AB8 /* TopTab.swift in Sources */,
 				D56CC30A2590703200CA1D54 /* BlockProtocol.swift in Sources */,

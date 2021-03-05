@@ -70,6 +70,10 @@ extension Date{
     func getDDay() -> Int {
         Int(ceil(self.timeIntervalSince(AppUtil.networkTimeDate()) / 24)) - 1
     }
+    
+    func getWeekday()-> Int {
+        return Calendar.current.component(.weekday, from: self)
+    }
 }
 
 extension Digest {
@@ -86,6 +90,16 @@ extension String{
     }
     func replace(_ newString:String) -> String {
         return self.replacingOccurrences(of: "%s" , with: newString)
+    }
+    
+    func replace(start:Int, len:Int, with:String) -> String {
+        let range = self.index(self.startIndex, offsetBy: start)...self.index(self.startIndex, offsetBy: start + len)
+        return self.replacingCharacters(in: range, with: with)
+    }
+    
+    func subString(start:Int, len:Int) -> String {
+        let range = self.index(self.startIndex, offsetBy: start)...self.index(self.startIndex, offsetBy: start + (len-1))
+        return String(self[range])
     }
     
     func parseJson() -> [String: Any]? {
@@ -183,6 +197,8 @@ extension String{
         return date
     }
     
+    
+    
     func toUrl() -> URL? {
         let temp = self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         return URL(string: temp)
@@ -260,10 +276,7 @@ extension String{
         return str
     }
     
-    func replace(start:Int, len:Int, with:String) -> String {
-        let range = self.index(self.startIndex, offsetBy: start)...self.index(self.startIndex, offsetBy: start + len)
-        return self.replacingCharacters(in: range, with: with)
-    }
+    
 }
 
 extension Formatter {

@@ -40,14 +40,6 @@ struct PageMultiBlock: PageView {
                         )
                         .background(Color.brand.bg)
                     } else {
-                        VStack{
-                            ReflashSpinner(
-                                progress: self.$reloadDegree
-                            )
-                            .padding(.top, self.marginTop + self.sceneObserver.safeAreaTop + Dimen.app.top)
-                            Spacer()
-                        }
-                        
                         MultiBlockBody(
                             viewModel: self.multiBlockViewModel,
                             infinityScrollModel: self.infinityScrollModel,
@@ -57,7 +49,6 @@ struct PageMultiBlock: PageView {
                             useTracking:self.useTracking,
                             marginTop: self.marginTop  + Dimen.margin.thin + self.sceneObserver.safeAreaTop + Dimen.app.top
                         )
-                    
                         .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
                             guard let evt = evt else {return}
                             switch evt {
@@ -123,26 +114,7 @@ struct PageMultiBlock: PageView {
                             self.pageDragingModel.uiEvent = .dragCancel})
                 )
             }
-            .onReceive(self.infinityScrollModel.$event){evt in
-                guard let evt = evt else {return}
-                switch evt {
-                case .pullCancel :
-                    if !self.infinityScrollModel.isLoading {
-                        if self.reloadDegree >= ReflashSpinner.DEGREE_MAX { self.reload() }
-                    }
-                    withAnimation{
-                        self.reloadDegree = 0
-                    }
-                default : do{}
-                }
-                
-            }
-            .onReceive(self.infinityScrollModel.$pullPosition){ pos in
-                if pos < InfinityScrollModel.PULL_RANGE { return }
-                withAnimation{
-                    self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
-                }
-            }
+            
             .onReceive(self.infinityScrollModel.$scrollPosition){pos in
                 
                 self.pageDragingModel.uiEvent = .dragCancel
@@ -186,7 +158,6 @@ struct PageMultiBlock: PageView {
     @State var tabDatas:[TextTabData]? = nil
     @State var selectedTabIdx:Int = -1
     @State var originDatas:Array<BlockItem> = []
-    @State var reloadDegree:Double = 0
     @State var useTracking:Bool = false
     @State var title:String? = nil
     

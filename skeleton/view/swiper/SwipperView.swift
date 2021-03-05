@@ -11,9 +11,11 @@ import SwiftUI
 import Combine
 
 struct SwipperView : View , PageProtocol, Swipper {
-    var viewModel:ViewPagerModel? = nil
+    @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
     var pages: [PageViewProtocol]
     @Binding var index: Int
+    
+    var useGesture:Bool = true
     @State var offset: CGFloat = 0
     @State var isUserSwiping: Bool = false
     var action:(() -> Void)? = nil
@@ -38,16 +40,47 @@ struct SwipperView : View , PageProtocol, Swipper {
             .highPriorityGesture(
                 DragGesture(minimumDistance: 20, coordinateSpace: .local)
                 .onChanged({ value in
+                    if !self.useGesture { return }
                     self.isUserSwiping = true
                     self.offset = self.getDragOffset(value: value, geometry: geometry)
-                    if self.viewModel?.status == .stop { self.viewModel?.status = .move }
+                    if self.viewModel.status == .stop { self.viewModel.status = .move }
+                    self.viewModel.request = .drag(self.offset)
                     self.autoReset()
                 })
                 .onEnded({ value in
-                    self.reset(idx: self.getWillIndex(value: value, maxIdx: self.pages.count) )
+                    if !self.useGesture { return }
+                    let willIdx = self.getWillIndex(value: value, maxIdx: self.pages.count)
+                    self.reset(idx: willIdx)
+                    
                 })
             )
+            .onReceive(self.viewModel.$request){ evt in
+                if self.useGesture { return }
+                guard let evt = evt else {return}
+                switch evt{
+                case .drag(let pos):
+                    self.offset = pos
+                case .draged:
+                    self.isUserSwiping = false
+                    
+                default : break
+                }
+            }
+            .onReceive( self.viewModel.$index ){ idx in
+                if self.index == idx {return}
+                withAnimation{
+                    self.index = idx
+                    self.isUserSwiping = false
+                }
+            }
             
+            .onReceive(self.viewModel.$status){ stat in
+                if self.useGesture { return }
+                switch stat{
+                case .move : self.isUserSwiping = true
+                default: break 
+                }
+            }
             .onDisappear(){
                 self.autoResetSubscription?.cancel()
                 self.autoResetSubscription = nil
@@ -63,13 +96,16 @@ struct SwipperView : View , PageProtocol, Swipper {
     func reset(idx:Int) {
         self.autoResetSubscription?.cancel()
         self.autoResetSubscription = nil
-        if self.viewModel?.status == .move { self.viewModel?.status = .stop }
+        if self.viewModel.status == .move { self.viewModel.status = .stop }
         if !self.isUserSwiping { return }
+        
         DispatchQueue.main.async {
            withAnimation {
                self.isUserSwiping = false
                if idx != self.index {
                    self.index = idx
+               } else {
+                   self.viewModel.request = .draged
                }
            }
         }

@@ -27,6 +27,14 @@
 "year" = "년";
 "cash" = "원";
 
+"mon" = "월요일";
+"tue" = "화요일";
+"wed" = "수요일";
+"thu" = "목요일";
+"fri" = "금요일";
+"sat" = "토요일";
+"sun" = "일요일";
+
 "certificationNumber" = "인증번호";
 "certificationNumberHolder" = "000000";
 "macAdress" = "MAC 주소";
@@ -43,6 +51,8 @@
 "owner" = "소장";
 "defaultStb" = "B tv 셋톱박스";
 
+"ppmUpdate" = "월정액 업데이트";
+"open" = "공개";
 
 /*
   Button
@@ -345,3 +355,6 @@
 "monthlyMore" = "전체 상품 보기";
 "monthlyTextRecommand" = "고객님을 위한 콘텐츠가 가득! 지금, 월정액에 가입해 보세요.";
 "monthlyTextEnjoy" = "아래의 모든 콘텐츠를 마음껏 즐겨보세요!.";
+
+
+

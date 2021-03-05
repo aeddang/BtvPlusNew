@@ -31,8 +31,12 @@ class BlockData:Identifiable, ObservableObject, Equatable{
     
     func reset(){
         status = .initate
+        posters = nil
+        videos = nil
+        themas = nil
+        banners = nil
     }
-        
+            
     func setDate(_ data:BlockItem) -> BlockData{
         name = data.menu_nm ?? ""
         menuId = data.menu_id

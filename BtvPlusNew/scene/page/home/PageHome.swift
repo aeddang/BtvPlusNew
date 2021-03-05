@@ -25,8 +25,7 @@ struct PageHome: PageView {
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var monthlyViewModel: InfinityScrollModel = InfinityScrollModel()
     
-    @State var reloadDegree:Double = 0
-    @State var reloadDegreeMax:Double = ReflashSpinner.DEGREE_MAX
+   
     @State var useTracking:Bool = false
     
     var body: some View {
@@ -34,33 +33,21 @@ struct PageHome: PageView {
             pageObservable:self.pageObservable,
             viewModel : self.viewModel
         ){
-            ZStack{
-                VStack{
-                    ReflashSpinner(
-                        progress: self.$reloadDegree,
-                        progressMax: self.reloadDegreeMax
-                    )
-                    .padding(.top,
-                             (self.topDatas == nil ? Dimen.app.pageTop :  Dimen.margin.regular)
-                                + self.sceneObserver.safeAreaTop )
-                    Spacer()
-                }
-                MultiBlockBody (
-                    viewModel: self.viewModel,
-                    infinityScrollModel: self.infinityScrollModel,
-                    pageObservable: self.pageObservable,
-                    useBodyTracking:self.useTracking,
-                    useTracking:false,
-                    marginTop:Dimen.app.top + self.sceneObserver.safeAreaTop,
-                    marginBottom: Dimen.app.bottom + self.sceneObserver.safeAreaBottom,
-                    topDatas: self.topDatas,
-                    monthlyViewModel : self.monthlyViewModel,
-                    monthlyDatas: self.monthlyDatas,
-                    isRecycle:true
-                    ){ data in
-                    
-                    self.reload(selectedMonthlyId: data.prdPrcId)
-                }
+            MultiBlockBody (
+                viewModel: self.viewModel,
+                infinityScrollModel: self.infinityScrollModel,
+                pageObservable: self.pageObservable,
+                useBodyTracking:self.useTracking,
+                useTracking:false,
+                marginTop:Dimen.app.top + self.sceneObserver.safeAreaTop,
+                marginBottom: Dimen.app.bottom + self.sceneObserver.safeAreaBottom,
+                topDatas: self.topDatas,
+                monthlyViewModel : self.monthlyViewModel,
+                monthlyDatas: self.monthlyDatas,
+                isRecycle:true
+                ){ data in
+                
+                self.reload(selectedMonthlyId: data.prdPrcId)
             }
         }
         .modifier(PageFull())
@@ -78,23 +65,8 @@ struct PageHome: PageView {
                 switch evt {
                 case .top : self.pageSceneObserver.useTopFix = true
                 case .down : self.pageSceneObserver.useTopFix = false
-                case .pullCancel :
-                    if !self.infinityScrollModel.isLoading {
-                        if self.reloadDegree >= self.reloadDegreeMax {
-                            self.reload()
-                        }
-                    }
-                    withAnimation{
-                        self.reloadDegree = 0
-                    }
-                default : do{}
+                default : break
                 }
-            }
-        }
-        .onReceive(self.infinityScrollModel.$pullPosition){ pos in
-            if pos < InfinityScrollModel.PULL_RANGE { return }
-            withAnimation{
-                self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
             }
         }
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
@@ -173,7 +145,6 @@ struct PageHome: PageView {
         if self.pagePresenter.currentTopPage?.pageID == PageID.home {
             self.pageSceneObserver.useTopFix = true
         }
-        self.reloadDegreeMax = ReflashSpinner.DEGREE_MAX + Double(Dimen.margin.medium)
     }
     
     //Monthly
@@ -237,8 +208,6 @@ struct PageHome: PageView {
         guard let blocksData = selectData.blocks else {return}
         self.requestBlocks(blocksData: blocksData)
     }
-    
-    
     
     //Block
     private func setupBlocks(){

@@ -33,7 +33,8 @@ extension Swipper{
         var willIdx = self.index
         if predictedAmount < -self.sensitivity, self.index < maxIdx - 1 {
             willIdx += 1
-        }else if predictedAmount > self.sensitivity, self.index > 0 {
+        }
+        else if predictedAmount > self.sensitivity, self.index > 0 {
             willIdx -= 1
         }
         return willIdx

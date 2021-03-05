@@ -20,11 +20,9 @@ struct PagePreviewList: PageView {
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
-    @ObservedObject var viewModel:CateBlockModel = CateBlockModel()
+    @ObservedObject var viewModel:PlayBlockModel = PlayBlockModel()
     @State var title:String? = nil
-    @State var listType:CateBlock.ListType = .poster
     @State var menuId:String? = nil
-    @State var blockData:BlockData? = nil
     @State var useTracking:Bool = false
     var body: some View {
         GeometryReader { geometry in
@@ -39,7 +37,7 @@ struct PagePreviewList: PageView {
                         style: .dark
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    CateBlock(
+                    PlayBlock(
                         infinityScrollModel:self.infinityScrollModel,
                         viewModel:self.viewModel,
                         useTracking:self.useTracking
@@ -70,11 +68,7 @@ struct PagePreviewList: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    if let data = self.blockData {
-                        self.viewModel.update(data: data, listType:self.listType, key:nil)
-                    }else{
-                        self.viewModel.update(menuId:self.menuId, listType:self.listType, key:nil)
-                    }
+                    self.viewModel.update(menuId:self.menuId, key:nil)
                 }
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
@@ -85,15 +79,23 @@ struct PagePreviewList: PageView {
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
+                
+                if let data = obj.getParamValue(key: .data) as? CateData {
+                    self.title = data.title
+                    if let cateData = data.blocks?.filter({ $0.menu_id != nil }).first {
+                        self.menuId = cateData.menu_id
+                        return
+                    }
+                }
                 if let data = obj.getParamValue(key: .data) as? BlockData {
                     self.title = data.name
-                    self.blockData = data
+                    self.menuId = data.menuId
                 } else {
                     self.menuId = obj.getParamValue(key: .id) as? String
                     
                 }
                 self.title = obj.getParamValue(key: .title) as? String ?? self.title
-                self.listType = obj.getParamValue(key: .type) as? CateBlock.ListType ?? .poster
+
             }
             .onDisappear{
                

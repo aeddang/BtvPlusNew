@@ -12,6 +12,7 @@ class PlayData:InfinityData{
     private(set) var image: String? = nil
     private(set) var title: String? = nil
     private(set) var date: String? = nil
+    private(set) var srisId: String? = nil
     private(set) var description: String? = nil
     fileprivate(set) var isLike:LikeStatus? = nil
     fileprivate(set) var isAlram:Bool = false
@@ -19,6 +20,38 @@ class PlayData:InfinityData{
     private(set) var restrictAgeIcon:String? = nil
     private(set) var provider: String? = nil
     
+    
+    func setData(data:PreviewContentsItem,idx:Int = -1) -> PlayData {
+        title = data.title
+        srisId = data.sris_id
+        description = data.epsd_snss_cts
+        if let poster = data.poster_filename_h {
+            image = ImagePath.thumbImagePath(filePath: poster, size: ListItem.play.size)
+        }
+        index = idx
+        let ppm: Bool = ("30" == data.prd_typ_cd || "34" == data.prd_typ_cd )
+        if let release = data.release_dt?.subString(start: 0, len: 8) {
+            if let date = release.toDate(dateFormat: "yyyyMMdd") {
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "M" + String.app.month + "d" + String.app.day
+                //OR dateFormatter.dateFormat = "EEEE, MMMM dd, yyyy"
+                let currentDateString: String = dateFormatter.string(from: date)
+                let weekday = date.getWeekday()
+                self.date = currentDateString
+                    + " " + String.week.getDayString(day: weekday)
+                    + " " + ( ppm ? String.app.ppmUpdate : String.app.open)
+            }
+        }
+        
+        if let age = data.wat_lvl_cd {
+            self.restrictAgeIcon = Asset.age.getIcon(age: age)
+        }
+        isPlayAble = true
+       
+        return self
+    }
+    
+   
     func setDummy(_ idx:Int = -1) -> PlayData {
         title = "조커"
         date = "4월 10일 월정액 업데이트"
@@ -57,6 +90,7 @@ struct PlayItem: PageView {
     var data:PlayData
     var isSelected:Bool = false
     
+    @State var isInit:Bool = false
     @State var isLike:LikeStatus? = nil
     @State var isAlram:Bool? = nil
     var body: some View {
@@ -73,7 +107,7 @@ struct PlayItem: PageView {
                         .modifier(MatchParent())
                 }
                 
-                if self.data.isPlayAble {
+                if self.data.isPlayAble && self.isSelected {
                     Image(Asset.icon.thumbPlay)
                         .renderingMode(.original).resizable()
                         .scaledToFit()
@@ -91,20 +125,23 @@ struct PlayItem: PageView {
                                     color: Color.app.white)
                             )
                             .lineLimit(1)
+                        
                         Spacer().modifier(MatchHorizontal(height: 0))
                     }
                     .modifier(MatchHorizontal(height: Font.size.large))
                 } else{
                     Spacer().modifier(MatchHorizontal(height: 1))
                 }
-                LikeButton(srisId: "", isLike: self.$isLike, useText:false){ value in
-                    self.data.isLike = value
-                }
-                AlramButton(srisId: "", isAlram: self.$isAlram){ value in
-                    self.data.isAlram = value
+                if self.data.srisId != nil && self.isInit {
+                    LikeButton(srisId: self.data.srisId!, isLike: self.$isLike, useText:false, isThin:true){ value in
+                        self.data.isLike = value
+                    }
+                    AlramButton(srisId: self.data.srisId!, isAlram: self.$isAlram){ value in
+                        self.data.isAlram = value
+                    }
                 }
             }
-            .padding(.top, Dimen.margin.light)
+            .padding(.top, Dimen.margin.lightExtra)
             
             HStack(spacing:Dimen.margin.thin){
                 if self.data.date != nil {
@@ -128,8 +165,8 @@ struct PlayItem: PageView {
                     Image( self.data.restrictAgeIcon! )
                         .renderingMode(.original).resizable()
                         .scaledToFit()
-                        .frame(width: Dimen.icon.thin, height: Dimen.icon.thin)
-                    }
+                        .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
+                }
                 
             }
             .padding(.top, Dimen.margin.light)
@@ -143,8 +180,14 @@ struct PlayItem: PageView {
             }
             
         }
-        
-        
+        .onAppear{
+            self.isLike = self.data.isLike
+            self.isAlram = self.data.isAlram
+            self.isInit = true
+        }
+        .onDisappear{
+            self.isInit = false
+        }
         
     }
     

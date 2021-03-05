@@ -69,6 +69,7 @@ extension Asset{
         public static let likeOff = "icSynopRatingDownFoc"
         public static let likeOn = "icSynopRatingFoc"
         public static let like = "icSynopRatingNor"
+        public static let likeThin = "icReleaseRatingNor"
         
         public static let goodOn = "icPopupGoodFoc"
         public static let goodOff = "icPopupGoodNor"

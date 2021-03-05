@@ -23,7 +23,7 @@ struct SynopsisBody: PageComponent{
     @Binding var isLike:LikeStatus?
     @Binding var relationTabIdx:Int
     @Binding var seris:[SerisData]
-
+  
     var topIdx:Int = UUID.init().hashValue
     var synopsisData:SynopsisData? = nil
     var isPairing:Bool? = nil
@@ -39,7 +39,8 @@ struct SynopsisBody: PageComponent{
     var hasRelationVod:Bool? = nil
     var useTracking:Bool = false
     var negativeMargin:CGFloat = 0 //IOS 14 SidebarListStyle
-    var headerSize:Int = 5
+    var headerSize:Int = 0
+   
     var body: some View {
         if #available(iOS 14.0, *)  { //#available(iOS 14.0, *)
             InfinityScrollView(
@@ -52,28 +53,89 @@ struct SynopsisBody: PageComponent{
                 ){
                 Spacer().modifier(MatchHorizontal(height: 1)).background(Color.transparent.clearUi)
                     .id(self.topIdx)
-                BodyTop(
-                    componentViewModel: self.componentViewModel,
-                    relationContentsModel: self.relationContentsModel,
-                    peopleScrollModel: self.peopleScrollModel,
-                    pageDragingModel: self.pageDragingModel,
-                    isBookmark: self.$isBookmark,
-                    isLike:self.$isLike,
-                    relationTabIdx: self.$relationTabIdx,
-                    synopsisData: self.synopsisData,
-                    isPairing: self.isPairing,
-                    episodeViewerData: self.episodeViewerData,
-                    purchasViewerData: self.purchasViewerData,
-                    summaryViewerData: self.summaryViewerData,
-                    srisId: self.srisId, epsdId: self.epsdId,
-                    hasAuthority: self.hasAuthority,
-                    relationTab: self.relationTab,
-                    hasRelationVod: self.hasRelationVod,
-                    useTracking:self.useTracking)
+                
+                //VStack(alignment:.leading , spacing:Dimen.margin.regular) {
+                    
+                    if self.episodeViewerData != nil {
+                        
+                        EpisodeViewer(data:self.episodeViewerData!)
+                            
+                        HStack(spacing:0){
+                            FunctionViewer(
+                                synopsisData :self.synopsisData,
+                                srisId: self.srisId,
+                                isBookmark: self.$isBookmark,
+                                isLike: self.$isLike
+                            )
+                            Spacer()
+                        }
+                    }
+                    
+                    if self.hasAuthority != nil && self.purchasViewerData != nil {
+                        PurchaseViewer(
+                            componentViewModel: self.componentViewModel,
+                            data:self.purchasViewerData! )
+                    }
+                    if self.hasAuthority == false && self.isPairing == false {
+                        FillButton(
+                            text: String.button.connectBtv
+                        ){_ in
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.pairing)
+                            )
+                        }
+                        .buttonStyle(BorderlessButtonStyle())
+                        .padding(.horizontal, Dimen.margin.thin)
+                    }
+                    
+                    if self.summaryViewerData != nil {
+                        SummaryViewer(
+                            peopleScrollModel:self.peopleScrollModel,
+                            data: self.summaryViewerData!,
+                            useTracking: self.useTracking
+                        )
+                    }
+                    
+                    if self.hasRelationVod != nil {
+                        if self.hasRelationVod == false {
+                            Text(String.pageText.synopsisRelationVod)
+                                .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
+                                .padding(.horizontal, Dimen.margin.thin)
+                            VStack(alignment: .center, spacing: 0){
+                                Spacer().modifier(MatchHorizontal(height:0))
+                                Image(Asset.icon.alert)
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
+                                    .padding(.top, Dimen.margin.medium)
+                                Text(String.pageText.synopsisNoRelationVod)
+                                    .modifier(BoldTextStyle(size: Font.size.regular, color: Color.app.greyLight))
+                                    .multilineTextAlignment(.center)
+                                    .padding(.top, Dimen.margin.regularExtra)
+                            }
+                        }
+                        else if self.relationTab.count == 1 {
+                            Text(self.relationTab.first!)
+                                .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
+                                .padding(.horizontal, Dimen.margin.thin)
+                        }
+                        else{
+                            CPTabDivisionNavigation(
+                                buttons: NavigationBuilder(
+                                    index:self.relationTabIdx,
+                                    marginH:Dimen.margin.regular)
+                                    .getNavigationButtons(texts:self.relationTab),
+                                index: self.$relationTabIdx
+                            )
+                            .frame(height:Dimen.tab.regular)
+                            .padding(.horizontal, Dimen.margin.thin)
+                        }
+                    }
+               // }
                     
                 
                 if !self.seris.isEmpty  {
-                    
                     VStack(spacing:Dimen.margin.regular){
                         SerisTab(
                             data:self.relationContentsModel,
@@ -102,26 +164,14 @@ struct SynopsisBody: PageComponent{
                         }
                     }
                 }
-                /*
-                LazyVStack(alignment: .leading, spacing: Dimen.margin.regular){
-                    ForEach(self.seris) { data in
-                        SerisItem( data:data, isSelected: self.synopsisData?.epsdId == data.contentID )
-                            .padding(.horizontal, Dimen.margin.thin)
-                            .onTapGesture {
-                                self.componentViewModel.uiEvent = .changeVod(data.epsdId)
-                            }
-                    }
-                }
-                LazyVStack(alignment: .leading, spacing: Dimen.margin.regular){
-                    VStack(spacing:Dimen.margin.regular){
-                        ForEach(self.relationDatas) { data in
-                            PosterSet( data:data ){data in
-                                self.componentViewModel.uiEvent = .changeSynopsis(data.synopsisData)
-                            }
+                VStack(spacing:Dimen.margin.thin){
+                    ForEach(self.relationDatas) { data in
+                        PosterSet( data:data, negativeMargin:self.negativeMargin ){data in
+                            self.componentViewModel.uiEvent = .changeSynopsis(data.synopsisData)
                         }
+                        .frame(height: PosterSet.listSize(data: data, screenWidth: self.sceneObserver.screenSize.width, negativeMargin:self.negativeMargin).height)
                     }
                 }
-                */
             }
             
             

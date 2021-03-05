@@ -13,7 +13,7 @@ class MultiBlockModel: PageDataProviderModel {
   
     private(set) var datas:[BlockData]? = nil
     private(set) var headerSize:Int = 0
-    private(set) var requestSize:Int = 5
+    private(set) var requestSize:Int = 0
     @Published private(set) var isUpdate = false {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
@@ -23,6 +23,10 @@ class MultiBlockModel: PageDataProviderModel {
         self.requestSize = requestSize
     }
     
+    func reload() {
+        self.datas?.forEach({$0.reset()})
+        self.isUpdate = true
+    }
     
     func update(datas:[BlockItem]) {
         self.datas = datas.map{ block in
@@ -43,8 +47,10 @@ class MultiBlockModel: PageDataProviderModel {
 
 struct MultiBlockBody: PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var sceneObserver:SceneObserver
     var viewModel:MultiBlockModel = MultiBlockModel()
-    var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
+    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
+    var viewPagerModel:ViewPagerModel = ViewPagerModel()
     var pageObservable:PageObservable = PageObservable()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var useBodyTracking:Bool = false
@@ -56,27 +62,97 @@ struct MultiBlockBody: PageComponent {
     var monthlyDatas:[MonthlyData]? = nil
     var isRecycle = true
     var action: ((_ data:MonthlyData) -> Void)? = nil
+    
+    @State var reloadDegree:Double = 0
+    @State var reloadDegreeMax:Double = ReflashSpinner.DEGREE_MAX
+    @State var headerOffset:CGFloat = 0
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
             viewModel : self.viewModel
         ){
-            MultiBlock(
-                viewModel: self.infinityScrollModel,
-                pageObservable: self.pageObservable,
-                pageDragingModel: self.pageDragingModel,
-                topDatas: self.topDatas,
-                datas: self.blocks,
-                headerSize: self.viewModel.headerSize,
-                useBodyTracking:self.useBodyTracking,
-                useTracking:self.useTracking,
-                marginTop:self.marginTop,
-                marginBottom: self.marginBottom,
-                monthlyViewModel : self.monthlyViewModel,
-                monthlyDatas: self.monthlyDatas,
-                isRecycle:self.isRecycle,
-                action:self.action
+            ZStack(alignment: .topLeading){
+                if self.topDatas != nil {
+                    TopBannerBg(
+                        viewModel:self.viewPagerModel,
+                        datas: self.topDatas! )
+                        .padding(.top, max(self.headerOffset, -TopBanner.imageHeight))
+                }
+                
+                ReflashSpinner(
+                    progress: self.$reloadDegree,
+                    progressMax: self.reloadDegreeMax
                 )
+                .padding(.top,
+                         self.marginTop
+                         + (self.topDatas != nil ? TopBanner.height - self.marginTop : 0)
+                         + (self.monthlyDatas != nil ? MonthlyBlock.height + MultiBlock.spacing : 0) )
+                
+                MultiBlock(
+                    viewModel: self.infinityScrollModel,
+                    pageObservable: self.pageObservable,
+                    pageDragingModel: self.pageDragingModel,
+                    topDatas: nil,
+                    datas: self.blocks,
+                    headerSize: self.viewModel.headerSize,
+                    useBodyTracking:self.useBodyTracking,
+                    useTracking:self.useTracking,
+                    marginTop:self.marginTop
+                        + (self.topDatas != nil ? (TopBanner.height - self.marginTop) : 0)
+                        + (self.monthlyDatas != nil ? MonthlyBlock.height + MultiBlock.spacing : 0),
+                    marginBottom: self.marginBottom,
+                    monthlyViewModel : nil,
+                    monthlyDatas: nil,
+                    isRecycle:self.isRecycle,
+                    action:self.action
+                    )
+                
+                if self.topDatas != nil {
+                    TopBanner(
+                        viewModel:self.viewPagerModel,
+                        datas: self.topDatas! )
+                        .modifier(MatchHorizontal(height: TopBanner.height))
+                        .padding(.top, max(self.headerOffset, -TopBanner.imageHeight))
+                }
+                if self.monthlyDatas != nil {
+                   MonthlyBlock(
+                        viewModel:self.monthlyViewModel ?? InfinityScrollModel(),
+                        pageDragingModel:self.pageDragingModel,
+                        monthlyDatas:self.monthlyDatas!,
+                        useTracking:self.useTracking,
+                        action:self.action
+                   )
+                   .padding(.top, max(
+                                self.marginTop + self.headerOffset
+                                + (self.topDatas != nil ? (TopBanner.height - self.marginTop) : 0)
+                                , -MonthlyBlock.height ))
+                }
+            }
+        }
+        .onReceive(self.infinityScrollModel.$event){evt in
+            guard let evt = evt else {return}
+            switch evt {
+            case .pullCancel :
+                if !self.infinityScrollModel.isLoading {
+                    if self.reloadDegree >= self.reloadDegreeMax {
+                        self.viewModel.reload()
+                    }
+                }
+                withAnimation{
+                    self.reloadDegree = 0
+                }
+            default : do{}
+            }
+            
+        }
+        .onReceive(self.infinityScrollModel.$scrollPosition){pos in
+            self.headerOffset = min(pos,0)
+        }
+        .onReceive(self.infinityScrollModel.$pullPosition){ pos in
+            if pos < InfinityScrollModel.PULL_RANGE { return }
+            withAnimation{
+                self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
+            }
         }
         .onReceive(self.viewModel.$isUpdate){ update in
             if update {

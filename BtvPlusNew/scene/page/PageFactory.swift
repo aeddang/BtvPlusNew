@@ -28,6 +28,7 @@ extension PageID{
     static let purchase:PageID = "purchase"
     static let multiBlock:PageID = "multiBlock"
     static let categoryList:PageID = "categoryList"
+    static let previewList:PageID = "previewList"
 }
 
 struct PageProvider {
@@ -62,7 +63,6 @@ struct PageProvider {
              .pairingSetupUser, .pairingBtv,
              .pairingDevice, .pairingUser, .pairingManagement,
              .purchase :
-            
             return  .vertical
         
         default : return  .horizental
@@ -150,6 +150,7 @@ struct PageFactory{
         case .purchase : return PagePurchase()
         case .multiBlock : return PageMultiBlock()
         case .categoryList : return PageCategoryList()
+        case .previewList : return PagePreviewList()
         default : return PageTest()
         }
     }

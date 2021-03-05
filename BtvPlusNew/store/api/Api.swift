@@ -51,6 +51,7 @@ enum ApiType{
     case getGnb,
          getCWGrid(String?, String?),
          getGridEvent(String?, EuxpNetwork.SortType? = Optional.none, Int? = nil, Int? = nil),
+         getGridPreview(String?, Int? = nil, Int? = nil),
          getGatewaySynopsis(SynopsisData),
          getSynopsis(SynopsisData),
          getInsideInfo(SynopsisData),

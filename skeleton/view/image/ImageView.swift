@@ -13,13 +13,12 @@ struct ImageView : View, PageProtocol {
     @ObservedObject var imageLoader: ImageLoader = ImageLoader()
     var url:String?
     var contentMode:ContentMode  = .fill
-    var noImg:String = Asset.noImg16_9
+    var noImg:String? = nil
     @State var img:UIImage? = nil
     var body: some View {
         Image(uiImage:
-                self.img
-                ?? self.imageLoader.image(url: self.url)
-                ?? UIImage(named: self.noImg)!
+                (self.img ?? self.imageLoader.image(url: self.url))
+                ?? ( noImg != nil ? UIImage(named: self.noImg!)! : UIImage.from(color: Color.transparent.clear.uiColor() ) )
             )
             .renderingMode(.original)
             .resizable()
@@ -29,7 +28,7 @@ struct ImageView : View, PageProtocol {
                 switch evt {
                 case .complete(let img) : self.img = img
                 case .error :
-                    self.img = UIImage(named: self.noImg)
+                    self.img = noImg != nil ? UIImage(named: self.noImg!)! : UIImage.from(color: Color.transparent.clear.uiColor() )
                     DataLog.d("error " + (self.img?.description ?? "") , tag:self.tag)
                 }
             }

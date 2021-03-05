@@ -50,8 +50,27 @@ extension String {
         public static let sesonCount = "sesonCount".loaalized()
         public static let ageCount = "ageCount".loaalized()
         public static let award = "award".loaalized()
-       
+        
+        public static let ppmUpdate = "ppmUpdate".loaalized()
+        public static let open = "open".loaalized()
+    
     }
+    
+    struct week {
+        static func getDayString(day:Int) -> String{
+            switch day {
+            case 2 : return "mon".loaalized()
+            case 3 : return "tue".loaalized()
+            case 4 : return "wed".loaalized()
+            case 5 : return "thu".loaalized()
+            case 6 : return "fri".loaalized()
+            case 7 : return "sat".loaalized()
+            case 1 : return "sun".loaalized()
+            default : return ""
+            }
+        }
+    }
+    
     
     struct sort {
         public static let langTitle = "sortLangTitle".loaalized()

@@ -8,6 +8,11 @@
 import Foundation
 import SwiftUI
 import Combine
+extension MonthlyBlock{
+    static let height:CGFloat = ListItem.monthly.size.height + Font.size.regular
+        + Dimen.button.regularExtra + (Dimen.margin.thinExtra * 3) + Dimen.margin.lightExtra
+}
+
 
 struct MonthlyBlock: PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
@@ -93,6 +98,7 @@ struct MonthlyBlock: PageComponent {
                 )
             }
         }
+        
         .onAppear(){
             if let data = self.monthlyDatas?.first(where: { $0.isSelected }) {
                 self.selectedData(data: data)

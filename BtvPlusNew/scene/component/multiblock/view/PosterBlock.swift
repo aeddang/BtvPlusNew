@@ -63,8 +63,8 @@ struct PosterBlock:PageComponent, BlockProtocol {
                     .modifier(MatchHorizontal(height: self.listHeight))
             }
             
-             
         }
+        .frame( height: self.listHeight + Font.size.regular + Dimen.margin.thinExtra)
         .onAppear{
             if let datas = data.posters {
                 self.datas = datas

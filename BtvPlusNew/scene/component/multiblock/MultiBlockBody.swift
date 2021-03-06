@@ -294,7 +294,6 @@ struct MultiBlockBody: PageComponent {
             
         }
         .onReceive(dataProvider.$error) { err in
-            ComponentLog.d("dataProvider  error", tag: "BlockProtocol")
             guard let data = self.loadingBlocks.first(where: { $0.id == err?.id}) else {return}
             data.setError(err)
             ComponentLog.d("dataProvider error" + data.name, tag: "BlockProtocol")

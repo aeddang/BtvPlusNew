@@ -109,8 +109,8 @@ struct PagePairing: PageView {
                         .onChanged({ value in
                             self.pageDragingModel.uiEvent = .drag(geometry, value)
                         })
-                        .onEnded({ _ in
-                            self.pageDragingModel.uiEvent = .draged(geometry)
+                        .onEnded({ value in
+                            self.pageDragingModel.uiEvent = .draged(geometry, value)
                         })
                 )
                 .gesture(

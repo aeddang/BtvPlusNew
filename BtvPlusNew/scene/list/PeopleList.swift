@@ -27,7 +27,7 @@ class PeopleData:InfinityData{
             description = data.prs_plrl_nm
         }
         if let thumb = data.img_path {
-            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.people.size)
+            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.people.size) ?? image
         }
         index = idx
         return self

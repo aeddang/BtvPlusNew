@@ -105,8 +105,8 @@ struct PageSynopsis: PageView {
                                         if self.useTracking { self.useTracking = false }
                                         self.pageDragingModel.uiEvent = .drag(geometry, value)
                                     })
-                                    .onEnded({ _ in
-                                        self.pageDragingModel.uiEvent = .draged(geometry)
+                                    .onEnded({ value in
+                                        self.pageDragingModel.uiEvent = .draged(geometry, value)
                                         self.useTracking = true
                                     })
                             )

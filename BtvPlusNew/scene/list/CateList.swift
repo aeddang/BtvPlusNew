@@ -40,7 +40,7 @@ class CateData:InfinityData{
         blocks = data.blocks
         subType = CateSubType.getType(id:data.gnb_sub_typ_cd) 
         if let path = data.menu_off_img_path {
-            image = ImagePath.thumbImagePath(filePath: path, size:CGSize(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra) , convType: .alpha)
+            image = ImagePath.thumbImagePath(filePath: path, size:CGSize(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra) , convType: .alpha) ?? image
         }
         return self
     }

@@ -150,29 +150,31 @@ struct TopBannerItem: PageComponent, Identifiable {
     let data: BannerData
    
     var body: some View {
-        ZStack() {
+        ZStack(alignment: .top) {
             VStack{
                 Spacer()
                 if data.logo != nil {
                     ImageView(url:data.logo!, contentMode: .fit)
                         .frame(minWidth: 0, maxWidth: 280, minHeight: 0, maxHeight: 80, alignment:.bottom)
-                    
+                        .padding(.horizontal, Dimen.margin.heavy)
                 }
                 else if data.title != nil {
                     Text(data.title!)
                         .modifier(BlackTextStyle(size: Font.size.black) )
                         .multilineTextAlignment(.center)
+                        .padding(.horizontal, Dimen.margin.heavy)
                 }
                 if data.subTitle != nil {
                     Text(data.subTitle!)
                         .modifier(MediumTextStyle(size: Font.size.lightExtra, color:Color.app.grey))
                         .multilineTextAlignment(.center)
                         .padding(.top, Dimen.margin.lightExtra)
+                        .padding(.horizontal, Dimen.margin.thin)
                 }
             }
             .offset(y:TopBanner.height/2 - TopBanner.maginBottomLogo)
             .modifier(MatchHorizontal(height: TopBanner.height))
-            .padding(.horizontal, Dimen.margin.heavy)
+            
             //.padding(.bottom, TopBanner.maginBottomLogo)
             
             Spacer()

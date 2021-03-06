@@ -22,7 +22,8 @@ struct ImagePath {
         size: CGSize = CGSize(width: 0,height: 0),
         convType: IIPConvertType = .none,
         locType: IIPLocType = .none,
-        server:ApiServer = .IIP) -> String{
+        server:ApiServer = .IIP) -> String?{
+        if filePath == nil || filePath == "" {return nil}
         
         let path = ApiPath.getRestApiPath(server) + "/"
         return getIIPUrl(path: path, filePath: filePath ?? "", size: size, convType: convType, locType: locType)
@@ -33,8 +34,9 @@ struct ImagePath {
         size: CGSize = CGSize(width: 0,height: 0),
         convType: IIPConvertType = .none,
         locType: IIPLocType = .none,
-        server:ApiServer = .IIP) -> String {
+        server:ApiServer = .IIP) -> String? {
         
+        if filePath == nil || filePath == "" {return nil}
         let path = ApiPath.getRestApiPath(server)
         let apiPath = "/thumbnails/iip/"
         return getIIPUrl(path: path + apiPath, filePath: filePath ?? "", size: size, convType: convType, locType: locType)

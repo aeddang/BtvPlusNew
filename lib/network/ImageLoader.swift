@@ -52,7 +52,9 @@ class ImageLoader: ObservableObject, PageProtocol{
     
     private func load(url: URL) {
         let key = url.absoluteString
+        
         if cache.isCached(forKey: key) {
+            
             cache.retrieveImage(forKey: key) {  [weak self] (result) in
                 guard let self = self else { return }
                 switch result {
@@ -71,7 +73,7 @@ class ImageLoader: ObservableObject, PageProtocol{
             }
         } else {
             
-            DataLog.e("load " + key , tag:self.tag)
+            DataLog.d("load " + key , tag:self.tag)
             self.task = downloader.downloadImage(with: url, options: nil, progressBlock: nil) {  [weak self] (result) in
                 guard let self = self else { return }
                 switch result {

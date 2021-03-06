@@ -17,7 +17,7 @@ class SerisData:InfinityData{
     func setData(data:SeriesInfoItem, title:String? = nil, idx:Int = -1) -> SerisData {
        
         if let thumb = data.poster_filename_h {
-            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
+            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size) ?? image
         }
         self.title = title
         if let count = data.brcast_tseq_nm {

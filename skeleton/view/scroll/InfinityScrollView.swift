@@ -247,6 +247,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                 }else{
                     ScrollView(.horizontal, showsIndicators: false) {
                         ZStack(alignment: .leading) {
+                            /*
                             if self.useTracking{
                                 GeometryReader { insideProxy in
                                     Color.clear
@@ -255,6 +256,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                                 insideProxy: insideProxy, outsideProxy: outsideProxy)])
                                 }
                             }
+                            */
                             HStack(spacing:self.spacing){
                                 self.content
                             }

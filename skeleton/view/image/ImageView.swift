@@ -15,6 +15,7 @@ struct ImageView : View, PageProtocol {
     var contentMode:ContentMode  = .fill
     var noImg:String? = nil
     @State var img:UIImage? = nil
+   
     var body: some View {
         Image(uiImage:
                 (self.img ?? self.imageLoader.image(url: self.url))
@@ -26,16 +27,19 @@ struct ImageView : View, PageProtocol {
             .onReceive(self.imageLoader.$event) { evt in
                 guard let  evt = evt else { return }
                 switch evt {
-                case .complete(let img) : self.img = img
+                case .complete(let img) :
+                    self.img = img
+                   
                 case .error :
                     self.img = noImg != nil ? UIImage(named: self.noImg!)! : UIImage.from(color: Color.transparent.clear.uiColor() )
                     DataLog.d("error " + (self.img?.description ?? "") , tag:self.tag)
+                   
                 }
             }
             .onDisappear(){
-                //DataLog.d("onDisappear " + (self.url ?? "") , tag:self.tag)
-                //self.img = UIImage(named: self.noImg)
+               
             }
+            
     }
 }
 

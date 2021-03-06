@@ -29,7 +29,7 @@ class MonthlyData:InfinityData,ObservableObject{
     func setData(data:BlockItem, idx:Int = -1) -> MonthlyData {
         title = data.menu_nm
         if let thumb = data.bnr_off_img_path {
-            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.monthly.size)
+            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.monthly.size) ?? image
         }
         if let thumb = data.bnr_selected_img_path {
             selectedImage = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.monthly.size)

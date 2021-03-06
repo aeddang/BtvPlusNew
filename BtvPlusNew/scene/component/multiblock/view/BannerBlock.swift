@@ -13,7 +13,7 @@ struct BannerBlock:BlockProtocol, PageComponent {
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var data: BlockData
     @State var bannerData:BannerData? = nil
-    @State var listHeight:CGFloat = 0
+    @State var listHeight:CGFloat = ListItem.banner.size.height
     var body :some View {
         ZStack() {
             if self.bannerData != nil {
@@ -25,6 +25,7 @@ struct BannerBlock:BlockProtocol, PageComponent {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .modifier(MatchParent())
+                    .clipped()
             }
         }
         .padding(.horizontal, Dimen.margin.thin)

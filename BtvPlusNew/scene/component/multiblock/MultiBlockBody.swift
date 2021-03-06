@@ -57,11 +57,21 @@ struct MultiBlockBody: PageComponent {
     var useTracking:Bool = false
     var marginTop : CGFloat = 0
     var marginBottom : CGFloat = 0
+    
     var topDatas:[BannerData]? = nil
-    var monthlyViewModel: InfinityScrollModel? = nil
+    
+    var monthlyViewModel: InfinityScrollModel = InfinityScrollModel()
     var monthlyDatas:[MonthlyData]? = nil
     var isRecycle = true
+    var isLegacy:Bool {
+        get{
+            if #available(iOS 14.0, *) { return false }
+            else { return true }
+        }
+    }
     var action: ((_ data:MonthlyData) -> Void)? = nil
+    
+    
     
     @State var reloadDegree:Double = 0
     @State var reloadDegreeMax:Double = ReflashSpinner.DEGREE_MAX
@@ -71,61 +81,91 @@ struct MultiBlockBody: PageComponent {
             pageObservable:self.pageObservable,
             viewModel : self.viewModel
         ){
+           
             ZStack(alignment: .topLeading){
-                if self.topDatas != nil {
-                    TopBannerBg(
-                        viewModel:self.viewPagerModel,
-                        datas: self.topDatas! )
-                        .padding(.top, max(self.headerOffset, -TopBanner.imageHeight))
-                }
-                
-                ReflashSpinner(
-                    progress: self.$reloadDegree,
-                    progressMax: self.reloadDegreeMax
-                )
-                .padding(.top,
-                         self.marginTop
-                         + (self.topDatas != nil ? TopBanner.height - self.marginTop : 0)
-                         + (self.monthlyDatas != nil ? MonthlyBlock.height + MultiBlock.spacing : 0) )
-                
-                MultiBlock(
-                    viewModel: self.infinityScrollModel,
-                    pageObservable: self.pageObservable,
-                    pageDragingModel: self.pageDragingModel,
-                    topDatas: nil,
-                    datas: self.blocks,
-                    headerSize: self.viewModel.headerSize,
-                    useBodyTracking:self.useBodyTracking,
-                    useTracking:self.useTracking,
-                    marginTop:self.marginTop
-                        + (self.topDatas != nil ? (TopBanner.height - self.marginTop) : 0)
-                        + (self.monthlyDatas != nil ? MonthlyBlock.height + MultiBlock.spacing : 0),
-                    marginBottom: self.marginBottom,
-                    monthlyViewModel : nil,
-                    monthlyDatas: nil,
-                    isRecycle:self.isRecycle,
-                    action:self.action
+                if !self.isLegacy  { //#
+                    if self.topDatas != nil {
+                        TopBannerBg(
+                            viewModel:self.viewPagerModel,
+                            datas: self.topDatas! )
+                            .padding(.top, max(self.headerOffset, -TopBanner.imageHeight))
+                    }
+                    
+                    ReflashSpinner(
+                        progress: self.$reloadDegree,
+                        progressMax: self.reloadDegreeMax
                     )
-                
-                if self.topDatas != nil {
-                    TopBanner(
-                        viewModel:self.viewPagerModel,
-                        datas: self.topDatas! )
-                        .modifier(MatchHorizontal(height: TopBanner.height))
-                        .padding(.top, max(self.headerOffset, -TopBanner.imageHeight))
-                }
-                if self.monthlyDatas != nil {
-                   MonthlyBlock(
-                        viewModel:self.monthlyViewModel ?? InfinityScrollModel(),
-                        pageDragingModel:self.pageDragingModel,
-                        monthlyDatas:self.monthlyDatas!,
+                    .padding(.top,
+                             self.marginTop
+                             + (self.topDatas != nil ? TopBanner.height - self.marginTop : 0)
+                             + (self.monthlyDatas != nil ? MonthlyBlock.height + MultiBlock.spacing : 0) )
+                    
+                    MultiBlock(
+                        viewModel: self.infinityScrollModel,
+                        pageObservable: self.pageObservable,
+                        pageDragingModel: self.pageDragingModel,
+                        topDatas: nil,
+                        datas: self.blocks,
+                        headerSize: self.viewModel.headerSize,
+                        useBodyTracking:self.useBodyTracking,
                         useTracking:self.useTracking,
+                        marginTop:self.marginTop
+                            + (self.topDatas != nil ? (TopBanner.height - self.marginTop) : 0)
+                            + (self.monthlyDatas != nil ? MonthlyBlock.height + MultiBlock.spacing : 0),
+                        marginBottom: self.marginBottom,
+                        monthlyViewModel : nil,
+                        monthlyDatas: nil,
+                        isRecycle:self.isRecycle,
+                        isLegacy:self.isLegacy,
                         action:self.action
-                   )
-                   .padding(.top, max(
-                                self.marginTop + self.headerOffset
-                                + (self.topDatas != nil ? (TopBanner.height - self.marginTop) : 0)
-                                , -MonthlyBlock.height ))
+                        )
+                    
+                    if self.topDatas != nil {
+                        TopBanner(
+                            viewModel:self.viewPagerModel,
+                            datas: self.topDatas! )
+                            .modifier(MatchHorizontal(height: TopBanner.height))
+                            .padding(.top, max(self.headerOffset, -TopBanner.imageHeight))
+                    }
+                    if self.monthlyDatas != nil {
+                       MonthlyBlock(
+                            viewModel:self.monthlyViewModel,
+                            pageDragingModel:self.pageDragingModel,
+                            monthlyDatas:self.monthlyDatas!,
+                            useTracking:self.useTracking,
+                            action:self.action
+                       )
+                       .padding(.top, max(
+                                    self.marginTop + self.headerOffset
+                                    + (self.topDatas != nil ? (TopBanner.height - self.marginTop) : 0)
+                                    , -MonthlyBlock.height ))
+                    }
+                } else {
+                    ReflashSpinner(
+                        progress: self.$reloadDegree,
+                        progressMax: self.reloadDegreeMax
+                    )
+                    .padding(.top, self.topDatas == nil ? self.marginTop : self.sceneObserver.safeAreaTop )
+                    
+                    
+                    MultiBlock(
+                        viewModel: self.infinityScrollModel,
+                        pageObservable: self.pageObservable,
+                        pageDragingModel: self.pageDragingModel,
+                        topDatas: self.topDatas,
+                        datas: self.blocks,
+                        headerSize: self.viewModel.headerSize,
+                        useBodyTracking:self.useBodyTracking,
+                        useTracking:self.useTracking,
+                        marginTop: self.topDatas == nil ? self.marginTop : 0,
+                        marginBottom: self.marginBottom,
+                        monthlyViewModel : self.monthlyViewModel,
+                        monthlyDatas: self.monthlyDatas,
+                        isRecycle:self.isRecycle,
+                        isLegacy:self.isLegacy,
+                        action:self.action
+                        )
+                
                 }
             }
         }
@@ -160,8 +200,9 @@ struct MultiBlockBody: PageComponent {
             }
         }
         .onReceive(dataProvider.$result) { res in
+            ComponentLog.d("dataProvider", tag: "BlockProtocol")
             guard let data = self.loadingBlocks.first(where: { $0.id == res?.id}) else {return}
-           
+            ComponentLog.d("dataProvider " + data.name, tag: "BlockProtocol")
             switch data.dataType {
             case .cwGrid:
                 guard let resData = res?.data as? CWGrid else {return data.setBlank()}
@@ -220,7 +261,6 @@ struct MultiBlockBody: PageComponent {
                 default: break
                 }
                
-                
             case .watched:
                 guard let resData = res?.data as? Watch else {return data.setBlank()}
                 guard let blocks = resData.watchList else {return data.setBlank()}
@@ -251,11 +291,13 @@ struct MultiBlockBody: PageComponent {
             default: do {}
             }
             data.setDatabindingCompleted()
-            ComponentLog.d("Remote " + data.name, tag: "BlockProtocol")
+            
         }
         .onReceive(dataProvider.$error) { err in
+            ComponentLog.d("dataProvider  error", tag: "BlockProtocol")
             guard let data = self.loadingBlocks.first(where: { $0.id == err?.id}) else {return}
             data.setError(err)
+            ComponentLog.d("dataProvider error" + data.name, tag: "BlockProtocol")
             
         }
         .onDisappear{
@@ -294,8 +336,11 @@ struct MultiBlockBody: PageComponent {
     
     private func requestBlockCompleted(){
         PageLog.d("addBlock completed", tag: "BlockProtocol")
-        //self.blocks.append(contentsOf: self.loadingBlocks)
-        //self.loadingBlocks = []
+        if !self.loadingBlocks.isEmpty {
+            self.blocks.append(contentsOf: self.loadingBlocks)
+            PageLog.d("self.blocks " + self.blocks.count.description, tag: "BlockProtocol")
+            self.loadingBlocks = []
+        }
     }
     private func onBlock(stat:BlockStatus, block:BlockData){
         switch stat {
@@ -307,16 +352,21 @@ struct MultiBlockBody: PageComponent {
         PageLog.d("completedNum " + completedNum.description, tag: "BlockProtocol")
         if self.completedNum == self.requestNum {
             self.completedNum = 0
-            //self.blocks.append(contentsOf: self.loadingBlocks)
-            //self.loadingBlocks = []
-            self.addBlock()
+            if  !self.isLegacy {
+                self.addBlock()
+            } else{
+                self.blocks.append(contentsOf: self.loadingBlocks)
+                PageLog.d("self.blocks " + self.blocks.count.description, tag: "BlockProtocol")
+                self.loadingBlocks = []
+                self.addBlock()
+            }
         }
     }
     
     
     private func addBlock(){
         var max = 0
-        if  #available(iOS 14.0, *) {
+        if  !self.isLegacy {
             max = self.originBlocks.count
         } else {
             max = min(self.viewModel.requestSize, self.originBlocks.count)
@@ -330,21 +380,36 @@ struct MultiBlockBody: PageComponent {
         PageLog.d("addBlock" + set.debugDescription, tag: "BlockProtocol")
         if set.isEmpty { return }
         self.requestNum = set.count
-        /*
-        self.loadingBlocks.append(contentsOf: set)
-        self.loadingBlocks.forEach{ s in
-            if let apiQ = s.getRequestApi() {
-                dataProvider.requestData(q: apiQ)
+        if  !self.isLegacy {
+            self.blocks.append(contentsOf: set)
+        }else{
+            self.loadingBlocks.append(contentsOf: set)
+            self.loadingBlocks.forEach{ s in
+                if let apiQ = s.getRequestApi() {
+                    dataProvider.requestData(q: apiQ)
+                } else{
+                    if s.dataType == .theme , let _ = s.blocks {
+                        s.setDatabindingCompleted()
+                        return
+                    } else{
+                        s.setError(nil)
+                    }
+                }
             }
         }
-        */
-        self.blocks.append(contentsOf: set)
     }
     
     private func removeBlock(_ block:BlockData){
-        if let find = self.blocks.firstIndex(of: block) {
-            self.blocks.remove(at: find)
-            return
+        if !self.isLegacy {
+            if let find = self.blocks.firstIndex(of: block) {
+                self.blocks.remove(at: find)
+                return
+            }
+        } else{
+            if let find = self.loadingBlocks.firstIndex(of: block) {
+                self.loadingBlocks.remove(at: find)
+                return
+            }
         }
     }
     

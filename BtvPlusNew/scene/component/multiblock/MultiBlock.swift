@@ -13,6 +13,8 @@ extension MultiBlock{
 }
 struct MultiBlock:PageComponent {
     @EnvironmentObject var sceneObserver:SceneObserver
+    @ObservedObject var viewPagerModel:ViewPagerModel = ViewPagerModel()
+    
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageObservable:PageObservable = PageObservable()
     var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -26,25 +28,34 @@ struct MultiBlock:PageComponent {
     var monthlyViewModel: InfinityScrollModel? = nil
     var monthlyDatas:[MonthlyData]? = nil
     var isRecycle = true
+    var isLegacy:Bool = false
     var action: ((_ data:MonthlyData) -> Void)? = nil
    
     
     var body :some View {
-        if #available(iOS 14.0, *)  { //#
+        if !self.isLegacy  { //#
             InfinityScrollView(
                 viewModel: self.viewModel,
                 axes: .vertical,
                 marginTop : self.topDatas == nil ? self.marginTop : 0,
-                marginBottom : self.marginBottom  + self.sceneObserver.safeAreaBottom,
+                marginBottom : self.marginBottom + self.sceneObserver.safeAreaBottom,
                 spacing: Self.spacing,
                 isRecycle : self.isRecycle,
                 useTracking:self.useBodyTracking){
                 
                 if self.topDatas != nil {
-                    TopBanner(
-                        pageObservable:self.pageObservable,
-                        datas: self.topDatas! )
-                        .modifier(MatchHorizontal(height: TopBanner.height))
+                    ZStack{
+                        TopBannerBg(
+                            viewModel:self.viewPagerModel,
+                            datas: self.topDatas! )
+                            .modifier(MatchHorizontal(height: TopBanner.imageHeight))
+                            .offset(y:(TopBanner.imageHeight - TopBanner.height)/2)
+                        TopBanner(
+                            viewModel:self.viewPagerModel,
+                            datas: self.topDatas! )
+                            
+                    }
+                    .modifier(MatchHorizontal(height: TopBanner.height))
                 }
                 
                 if self.monthlyDatas != nil {
@@ -56,8 +67,6 @@ struct MultiBlock:PageComponent {
                         action:self.action
                    )
                 }
-                
-                
                 if !self.datas.isEmpty  {
                     if self.headerSize > 1 {
                         VStack(spacing:Dimen.margin.medium){
@@ -76,42 +85,63 @@ struct MultiBlock:PageComponent {
                         }
                     }
                 }
-            
             }
+            
         } else {
-            List {
+            InfinityScrollView(
+                viewModel: self.viewModel,
+                axes: .vertical,
+                marginTop : 0,
+                marginBottom : self.marginBottom + self.sceneObserver.safeAreaBottom,
+                spacing: 0,
+                isRecycle : self.isRecycle,
+                useTracking:self.useBodyTracking){
+                    
                 VStack(spacing: Self.spacing){
                     if self.topDatas != nil {
-                        TopBanner(
-                            pageObservable:self.pageObservable,
-                            datas: self.topDatas! )
-                            .modifier(MatchHorizontal(height: TopBanner.height))
-                            
-                    }
-                    
-                    if self.monthlyDatas != nil {
-                       MonthlyBlock(
-                            viewModel:self.monthlyViewModel ?? InfinityScrollModel(),
-                            pageDragingModel:self.pageDragingModel,
-                            monthlyDatas:self.monthlyDatas!,
-                            useTracking:self.useTracking,
-                            action:self.action
-                       )
+                        ZStack{
+                            TopBannerBg(
+                                viewModel:self.viewPagerModel,
+                                datas: self.topDatas! )
+                                .offset(y:(TopBanner.imageHeight - TopBanner.height)/2)
+                            TopBanner(
+                                viewModel:self.viewPagerModel,
+                                datas: self.topDatas! )
+                                
+                        }
+                        .modifier(MatchHorizontal(height: TopBanner.height))
+                        .clipped()
+                       
+                    } else if self.monthlyDatas != nil {
+                        MonthlyBlock(
+                             viewModel:self.monthlyViewModel ?? InfinityScrollModel(),
+                             pageDragingModel:self.pageDragingModel,
+                             monthlyDatas:self.monthlyDatas!,
+                             useTracking:self.useTracking,
+                             action:self.action
+                        )
+                        .padding(.top, self.marginTop)
+                        .padding(.bottom, Self.spacing)
+                        
+                    } else {
+                        Spacer().modifier(MatchHorizontal(height: self.marginTop))
                     }
                 }
-                ForEach(self.datas) { data in
-                    MultiBlockCell(pageDragingModel: self.pageDragingModel, data: data , useTracking: false)
-                       .modifier(ListRowInset(spacing: Self.spacing))
+                .modifier(ListRowInset(spacing: 0))
+                
+                if !self.datas.isEmpty {
+                    ForEach(self.datas) { data in
+                        MultiBlockCell(pageDragingModel: self.pageDragingModel, data: data , useTracking: false)
+                           .modifier(ListRowInset(spacing: Self.spacing))
+                    }
+                } else {
+                    Spacer().modifier(MatchParent())
+                        .modifier(ListRowInset(spacing: 0))
                 }
             }
-            .padding(.bottom,  self.sceneObserver.safeAreaBottom)
-            .listStyle(PlainListStyle())
-            .onAppear(){
-                UITableView.appearance().allowsSelection = false
-                UITableView.appearance().backgroundColor = Color.brand.bg.uiColor()
-                UITableView.appearance().separatorStyle = .none
-            }
+            
         }
+            
     }
     
     struct MultiBlockCell:PageComponent {

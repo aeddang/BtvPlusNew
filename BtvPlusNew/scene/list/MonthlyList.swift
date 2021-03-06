@@ -129,6 +129,7 @@ struct MonthlyList: PageComponent{
                 }
             }
         }
+        
     }//body
 }
 

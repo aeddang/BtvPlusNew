@@ -70,7 +70,7 @@ struct CateList: PageComponent{
             marginVertical: 0,
             marginHorizontal: 0,
             spacing: CateList.magin,
-            isRecycle: true,
+            isRecycle: false,
             useTracking: false
             ){
             ForEach(self.datas) { data in

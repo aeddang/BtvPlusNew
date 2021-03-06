@@ -65,120 +65,24 @@ struct CateBlock: PageComponent{
             viewModel : self.viewModel
         ){
             if !self.isError {
-                if #available(iOS 14.0, *) {
-                    ZStack(alignment: .topLeading){
-                        VStack{
-                            ReflashSpinner(
-                                progress: self.$reloadDegree
-                            )
-                            .padding(.top, self.marginTop)
-                            Spacer()
-                        }
-                        InfinityScrollView(
-                            viewModel: self.infinityScrollModel,
-                            axes: .vertical,
-                            marginTop : self.marginTop,
-                            marginBottom : self.marginBottom + self.sceneObserver.safeAreaBottom,
-                            marginHorizontal : 0,
-                            spacing:self.spacing,
-                            isRecycle: true,
-                            useTracking:self.useTracking
-                        ){
-                            SortTab(
-                                count:self.totalCount,
-                                isSortAble: self.isSortAble
-                                ){ sort in
-                                    self.sortType = sort
-                                    self.reload()
-                                }
-                            .modifier(ContentEdges())
-
-                            if !self.posters.isEmpty  {
-                                if Self.headerSize == 0 {
-                                    ForEach(self.posters) { data in
-                                        PosterSet( data:data )
-                                            .frame(height:self.posterCellHeight)
-                                            .onAppear(){
-                                                if data.index == self.posters.last?.index {
-                                                    if self.isPaging { self.load() }
-                                                }
-                                            }
-                                    }
-                                } else {
-                                    VStack(spacing:self.spacing){
-                                        ForEach(self.posters[..<min(Self.headerSize,self.posters.count)]) { data in
-                                            PosterSet( data:data )
-                                                .frame(height:self.posterCellHeight)
-                                                .onAppear(){
-                                                    if data.index == self.posters.last?.index {
-                                                        if self.isPaging { self.load() }
-                                                    }
-                                                }
-                                        }
-                                    }
-                                    if self.posters.count > Self.headerSize {
-                                        ForEach(self.posters[Self.headerSize..<self.posters.count]) { data in
-                                            PosterSet( data:data )
-                                                .frame(height:self.posterCellHeight)
-                                                .onAppear(){
-                                                    if data.index == self.posters.last?.index {
-                                                        if self.isPaging { self.load() }
-                                                    }
-                                                }
-                                        }
-                                    }
-                                }
-                                
-                            }
-                            
-                            if !self.videos.isEmpty  {
-                                if Self.headerSize == 0 {
-                                    ForEach(self.videos) { data in
-                                        VideoSet( data:data )
-                                            .frame(height:self.videoCellHeight)
-                                            .onAppear(){
-                                                if data.index == self.videos.last?.index {
-                                                    if self.isPaging { self.load() }
-                                                }
-                                            }
-                                    }
-                                } else {
-                                    VStack(spacing:self.spacing){
-                                        ForEach(self.videos[..<min(Self.headerSize,self.videos.count)]) { data in
-                                            VideoSet( data:data )
-                                                .frame(height:self.videoCellHeight)
-                                                .onAppear(){
-                                                    if data.index == self.videos.last?.index {
-                                                        if self.isPaging { self.load() }
-                                                    }
-                                                }
-                                        }
-                                    }
-                                    if self.videos.count > Self.headerSize {
-                                        ForEach(self.videos[Self.headerSize..<self.videos.count]) { data in
-                                            VideoSet( data:data )
-                                                .frame(height:self.videoCellHeight)
-                                                .onAppear(){
-                                                    if data.index == self.videos.last?.index {
-                                                        if self.isPaging { self.load() }
-                                                    }
-                                                }
-                                        }
-                                    }
-                                }
-                                
-                            }
-                            
-                            if self.posters.isEmpty && self.videos.isEmpty {
-                                Spacer().modifier(MatchParent())
-                            }
-                            
-                        }
+                ZStack(alignment: .topLeading){
+                    VStack{
+                        ReflashSpinner(
+                            progress: self.$reloadDegree
+                        )
+                        .padding(.top, self.marginTop)
+                        Spacer()
                     }
-                    .background(Color.brand.bg)
-                    
-                }else{
-                    List {
+                    InfinityScrollView(
+                        viewModel: self.infinityScrollModel,
+                        axes: .vertical,
+                        marginTop : self.marginTop,
+                        marginBottom : self.marginBottom,
+                        marginHorizontal : 0,
+                        spacing:0,
+                        isRecycle: true,
+                        useTracking:self.useTracking
+                    ){
                         SortTab(
                             count:self.totalCount,
                             isSortAble: self.isSortAble
@@ -187,9 +91,8 @@ struct CateBlock: PageComponent{
                                 self.reload()
                             }
                         .modifier(ListRowInset(
-                                    firstIndex: 0, index: 0,
                                     marginHorizontal:Dimen.margin.thin,
-                                    spacing: self.spacing, marginTop: self.marginTop))
+                                    spacing: self.spacing))
                         
                         ForEach(self.posters) { data in
                             PosterSet( data:data )
@@ -216,17 +119,10 @@ struct CateBlock: PageComponent{
                                 .listRowBackground(Color.brand.bg)
                         }
                     }
-                    .padding(.bottom, self.sceneObserver.safeAreaBottom + self.marginBottom)
                     .modifier(MatchParent())
-                    .background(Color.brand.bg)
-                    .onAppear(){
-                        UITableView.appearance().allowsSelection = false
-                        UITableView.appearance().backgroundColor = Color.brand.bg.uiColor()
-                        UITableView.appearance().separatorStyle = .none
-                        UITableView.appearance().separatorInset = .init(top: 0, left: 0, bottom: 0, right: 0)
-                    }
-                    
+                
                 }
+               
             } else {
                 ZStack{
                     VStack(alignment: .center, spacing: 0){

@@ -78,6 +78,7 @@ struct PageContentBody: PageView  {
                 self.isTop = false
                 let below = self.pageChanger.getBelowPage(page: page)
                 self.isBelow = below == pageObject
+                
                 self.opacity = 1
                 withAnimation{
                     switch self.topPageType {
@@ -86,12 +87,13 @@ struct PageContentBody: PageView  {
                         self.pageOffsetY = 0
                     
                     case .vertical :
-                        self.pageOffsetY = Self.pageMoveAmount
+                        self.pageOffsetY = -Self.pageMoveAmount
                         self.pageOffsetX = 0
                     
                     default : do{}
                     }
                 }
+                
             }
             
         }
@@ -105,7 +107,7 @@ struct PageContentBody: PageView  {
             let amount = Self.pageMoveAmount * CGFloat(opacity)
             switch self.topPageType {
             case .horizental :  self.pageOffsetX = amount
-            case .vertical :  self.pageOffsetY = amount
+            case .vertical :  self.pageOffsetY = -amount
             default : do{}
             }
             

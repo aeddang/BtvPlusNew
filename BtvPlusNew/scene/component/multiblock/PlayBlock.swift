@@ -44,48 +44,26 @@ struct PlayBlock: PageComponent{
             viewModel : self.viewModel
         ){
             if !self.isError {
-                if #available(iOS 15.0, *) {
-                    ZStack(alignment: .topLeading){
-                        VStack{
-                            ReflashSpinner(
-                                progress: self.$reloadDegree
-                            )
-                            .padding(.top, self.marginTop)
-                            Spacer()
-                        }
-                        InfinityScrollView(
-                            viewModel: self.infinityScrollModel,
-                            axes: .vertical,
-                            marginTop: self.marginTop,
-                            marginBottom: self.sceneObserver.safeAreaBottom + self.marginBottom,
-                            marginHorizontal: Dimen.margin.thin,
-                            spacing: self.spacing,
-                            isRecycle: true,
-                            useTracking: self.useTracking
-                        ){
-                            ForEach(self.datas) { data in
-                                PlayItem(data: data)
-                                    .onAppear{
-                                        if data.index == self.datas.last?.index {
-                                            self.load()
-                                        }
-                                        self.onAppear(idx:data.index)
-                                    }
-                                    .onDisappear{
-                                        self.onDisappear(idx: data.index)
-                                    }
-                            }
-                        }
+                ZStack(alignment: .topLeading){
+                    VStack{
+                        ReflashSpinner(
+                            progress: self.$reloadDegree
+                        )
+                        .padding(.top, self.marginTop)
+                        Spacer()
                     }
-                    .background(Color.brand.bg)
-                    
-                }else{
-                    List {
+                    InfinityScrollView(
+                        viewModel: self.infinityScrollModel,
+                        axes: .vertical,
+                        marginTop: self.marginTop,
+                        marginBottom : self.marginBottom,
+                        spacing: 0,
+                        isRecycle: true,
+                        useTracking: self.useTracking){
                         ForEach(self.datas) { data in
                             PlayItem(data: data)
                                 .modifier(
                                     ListRowInset(
-                                        firstIndex: 0, index: data.index,
                                         marginHorizontal:Dimen.margin.thin,
                                         spacing: self.spacing,
                                         marginTop: self.marginTop
@@ -102,17 +80,10 @@ struct PlayBlock: PageComponent{
                                 }
                         }
                     }
-                    .padding(.bottom, self.sceneObserver.safeAreaBottom + self.marginBottom)
                     .modifier(MatchParent())
                     .background(Color.brand.bg)
-                    .onAppear(){
-                        UITableView.appearance().allowsSelection = false
-                        UITableView.appearance().backgroundColor = Color.brand.bg.uiColor()
-                        UITableView.appearance().separatorStyle = .none
-                        UITableView.appearance().separatorInset = .init(top: 0, left: 0, bottom: 0, right: 0)
-                    }
-                    
                 }
+                .background(Color.brand.bg)
             } else {
                 ZStack{
                     VStack(alignment: .center, spacing: 0){
@@ -222,6 +193,7 @@ struct PlayBlock: PageComponent{
             return PlayData().setData(data: d, idx: idx)
         }
         self.datas.append(contentsOf: loadedDatas)
+        self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)
     }
     
     func onAppear(idx:Int){

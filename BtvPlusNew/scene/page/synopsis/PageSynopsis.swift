@@ -590,7 +590,7 @@ struct PageSynopsis: PageView {
             
             if let kidYn = self.synopsisModel?.kidsYn {self.synopsisData?.kidZone = kidYn }
 
-            //self.synopsisData?.epsdRsluId = self.synopsisModel?.epsdRsluId
+            self.epsdRsluId = self.synopsisModel?.epsdRsluId ?? self.epsdRsluId
             self.synopsisModel?.purchasedPid = self.purchasedPid
             self.title = self.episodeViewerData?.episodeTitle
             self.epsdId = self.synopsisModel?.epsdId

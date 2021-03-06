@@ -221,8 +221,9 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
                     if self.viewModel.status == .drag { return }
                     self.pullOffset = self.minPullAmount
                     let diff = self.bodyOffset - self.minPullAmount
+                    let diffMax:CGFloat = self.axis == .horizontal ? 10 : 20
                     ComponentLog.d("self.pullDiff " + diff.description, tag: "PageDragingBody" )
-                    if diff <= 10 {
+                    if diff <= diffMax {
                         //ComponentLog.d("onDragCancel", tag: "PageDragingBody" )
                         self.onDragCancel()
                     }else{

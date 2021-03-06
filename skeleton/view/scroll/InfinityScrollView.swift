@@ -12,7 +12,7 @@ import Combine
 
 struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where Content: View {
     @EnvironmentObject var sceneObserver:SceneObserver
-    @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var viewModel: InfinityScrollModel
     let axes: Axis.Set 
     let showIndicators: Bool
     let content: Content
@@ -76,79 +76,78 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     var body: some View {
         if #available(iOS 14.0, *) {
             ScrollView(self.axes, showsIndicators: self.showIndicators) {
-                if self.isTracking {
-                    ScrollViewReader{ reader in
-                        if self.axes == .vertical {
-                            ZStack(alignment: .top) {
-                                if self.useTracking {
-                                    GeometryReader { insideProxy in
-                                        Color.clear
-                                            .preference(key: ScrollOffsetPreferenceKey.self, value: [self.calculateContentOffset(insideProxy: insideProxy)])
-                                    }
-                                }
-                                if self.isRecycle {
-                                    LazyVStack(alignment: .leading, spacing: self.spacing){
-                                        self.content
-                                    }
-                                    .padding(.top, self.marginTop)
-                                    .padding(.bottom, self.marginBottom)
-                                    .padding(.horizontal, self.marginHorizontal)
-                                } else {
-                                    VStack(alignment: .leading, spacing: self.spacing){
-                                        self.content
-                                    }
-                                    .padding(.top, self.marginTop)
-                                    .padding(.bottom, self.marginBottom)
-                                    .padding(.horizontal, self.marginHorizontal)
+                ScrollViewReader{ reader in
+                    if self.axes == .vertical {
+                        ZStack(alignment: .top) {
+                            if self.useTracking {
+                                GeometryReader { insideProxy in
+                                    Color.clear
+                                        .preference(key: ScrollOffsetPreferenceKey.self, value: [self.calculateContentOffset(insideProxy: insideProxy)])
                                 }
                             }
-                            .frame(alignment: .top)
-                            .onChange(of: self.scrollPos, perform: { pos in
-                                guard let pos = pos else {return}
-                                reader.scrollTo(pos)
-                            })
-                            .onChange(of: self.scrollIdx, perform: { idx in
-                                guard let idx = idx else {return}
-                                reader.scrollTo(idx, anchor: anchor)
-                            })
-                        
-                        } else {
-                            ZStack(alignment: .leading) {
-                                if self.useTracking {
-                                    GeometryReader { insideProxy in
-                                        Color.clear
-                                            .preference(key: ScrollOffsetPreferenceKey.self, value: [self.calculateContentOffset(insideProxy: insideProxy)])
-                                    }
+                            if self.isRecycle {
+                                LazyVStack(alignment: .leading, spacing: self.spacing){
+                                    self.content
                                 }
-                                if self.isRecycle {
-                                    LazyHStack (alignment: .top, spacing: self.spacing){
-                                        self.content
-                                    }
-                                    .padding(.top, self.marginTop)
-                                    .padding(.bottom, self.marginBottom)
-                                    .padding(.horizontal, self.marginHorizontal)
-                                } else {
-                                    HStack (alignment: .top, spacing: self.spacing){
-                                        self.content
-                                    }
-                                    .padding(.top, self.marginTop)
-                                    .padding(.bottom, self.marginBottom)
-                                    .padding(.horizontal, self.marginHorizontal)
+                                .padding(.top, self.marginTop)
+                                .padding(.bottom, self.marginBottom)
+                                .padding(.horizontal, self.marginHorizontal)
+                            } else {
+                                VStack(alignment: .leading, spacing: self.spacing){
+                                    self.content
                                 }
+                                .padding(.top, self.marginTop)
+                                .padding(.bottom, self.marginBottom)
+                                .padding(.horizontal, self.marginHorizontal)
                             }
-                            .frame(alignment: .leading)
-                            .onChange(of: self.scrollPos, perform: { pos in
-                                guard let pos = pos else {return}
-                                reader.scrollTo(pos)
-                            })
-                            .onChange(of: self.scrollIdx, perform: { idx in
-                                guard let idx = idx else {return}
-                                reader.scrollTo(idx, anchor: anchor)
-                            })
                         }
-                        
+                        .frame(alignment: .top)
+                        .onChange(of: self.scrollPos, perform: { pos in
+                            guard let pos = pos else {return}
+                            reader.scrollTo(pos)
+                        })
+                        .onChange(of: self.scrollIdx, perform: { idx in
+                            guard let idx = idx else {return}
+                            reader.scrollTo(idx, anchor: anchor)
+                        })
+                    
+                    } else {
+                        ZStack(alignment: .leading) {
+                            if self.useTracking {
+                                GeometryReader { insideProxy in
+                                    Color.clear
+                                        .preference(key: ScrollOffsetPreferenceKey.self, value: [self.calculateContentOffset(insideProxy: insideProxy)])
+                                }
+                            }
+                            if self.isRecycle {
+                                LazyHStack (alignment: .top, spacing: self.spacing){
+                                    self.content
+                                }
+                                .padding(.top, self.marginTop)
+                                .padding(.bottom, self.marginBottom)
+                                .padding(.horizontal, self.marginHorizontal)
+                            } else {
+                                HStack (alignment: .top, spacing: self.spacing){
+                                    self.content
+                                }
+                                .padding(.top, self.marginTop)
+                                .padding(.bottom, self.marginBottom)
+                                .padding(.horizontal, self.marginHorizontal)
+                            }
+                        }
+                        .frame(alignment: .leading)
+                        .onChange(of: self.scrollPos, perform: { pos in
+                            guard let pos = pos else {return}
+                            reader.scrollTo(pos)
+                        })
+                        .onChange(of: self.scrollIdx, perform: { idx in
+                            guard let idx = idx else {return}
+                            reader.scrollTo(idx, anchor: anchor)
+                        })
                     }
+                    
                 }
+                
             }
             .modifier(MatchParent())
             .coordinateSpace(name: self.tag)
@@ -184,8 +183,30 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         }else{
             GeometryReader { outsideProxy in
                 if self.axes == .vertical {
-                    ScrollView(.vertical, showsIndicators: false) {
-                        if self.isTracking {
+                    if self.isRecycle {
+                        List {
+                            self.content
+                                .padding(.top, self.marginTop)
+                            Spacer().modifier(MatchHorizontal(height: self.marginBottom))
+                                .modifier(ListRowInset(spacing: 0))
+                        }
+                        .padding(.horizontal, self.marginHorizontal)
+                        .coordinateSpace(name: self.tag)
+                        .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                            self.onPreferenceChange(value: value)
+                        }
+                        .listStyle(PlainListStyle())
+                        .onAppear(){
+                            self.isTracking = true
+                            UITableView.appearance().allowsSelection = false
+                            UITableView.appearance().backgroundColor = Color.brand.bg.uiColor()
+                            UITableView.appearance().separatorStyle = .none
+                        }
+                        .onDisappear{
+                            self.isTracking = false
+                        }
+                    } else{
+                        ScrollView(.vertical, showsIndicators: false) {
                             ZStack(alignment: .topLeading) {
                                 if self.useTracking{
                                     GeometryReader { insideProxy in
@@ -203,44 +224,43 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                 .padding(.horizontal, self.marginHorizontal)
                             }
                         }
-                    }
-                    .modifier(MatchParent())
-                    .coordinateSpace(name: self.tag)
-                    .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                        self.onPreferenceChange(value: value)
-                    }
-                    .onAppear(){
-                        DispatchQueue.main.async {
-                            self.isTracking = true
-                            self.onReady()
+                        .modifier(MatchParent())
+                        .coordinateSpace(name: self.tag)
+                        .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                            self.onPreferenceChange(value: value)
+                        }
+                        .onAppear(){
+                            DispatchQueue.main.async {
+                                self.isTracking = true
+                                self.onReady()
+                            }
+                        }
+                        .onDisappear{
+                            DispatchQueue.main.async {
+                                self.isTracking = false
+                            }
+                            
                         }
                     }
-                    .onDisappear{
-                        DispatchQueue.main.async {
-                            self.isTracking = false
-                        }
-                        
-                    }
+                    
                     
                 }else{
                     ScrollView(.horizontal, showsIndicators: false) {
-                        if self.isTracking {
-                            ZStack(alignment: .leading) {
-                                if self.useTracking{
-                                    GeometryReader { insideProxy in
-                                        Color.clear
-                                            .preference(key: ScrollOffsetPreferenceKey.self,
-                                                value: [self.calculateContentOffset(
-                                                    insideProxy: insideProxy, outsideProxy: outsideProxy)])
-                                    }
+                        ZStack(alignment: .leading) {
+                            if self.useTracking{
+                                GeometryReader { insideProxy in
+                                    Color.clear
+                                        .preference(key: ScrollOffsetPreferenceKey.self,
+                                            value: [self.calculateContentOffset(
+                                                insideProxy: insideProxy, outsideProxy: outsideProxy)])
                                 }
-                                HStack(spacing:self.spacing){
-                                    self.content
-                                }
-                                .padding(.top, self.marginTop)
-                                .padding(.bottom, self.marginBottom)
-                                .padding(.horizontal, self.marginHorizontal)
                             }
+                            HStack(spacing:self.spacing){
+                                self.content
+                            }
+                            .padding(.top, self.marginTop)
+                            .padding(.bottom, self.marginBottom)
+                            .padding(.horizontal, self.marginHorizontal)
                         }
                     }
                     .modifier(MatchParent())

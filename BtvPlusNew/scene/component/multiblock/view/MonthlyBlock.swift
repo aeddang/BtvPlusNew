@@ -19,7 +19,7 @@ struct MonthlyBlock: PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
-    var monthlyDatas:[MonthlyData]? = nil
+    var monthlyDatas:[MonthlyData] = []
     var useTracking:Bool = false
     var action: ((_ data:MonthlyData) -> Void)? = nil
     
@@ -46,32 +46,29 @@ struct MonthlyBlock: PageComponent {
                 }
             }
             .modifier(ContentHorizontalEdges())
-            if self.monthlyDatas != nil {
-                MonthlyList(
-                    viewModel:self.viewModel,
-                    datas: self.monthlyDatas!,
-                    useTracking:self.useTracking
-                ){ data in
-                    if let action = self.action {
-                        action(data)
-                    }
-                    self.selectedData(data: data)
+            MonthlyList(
+                viewModel:self.viewModel,
+                datas: self.monthlyDatas,
+                useTracking:self.useTracking
+            ){ data in
+                if let action = self.action {
+                    action(data)
                 }
-                .modifier(MatchHorizontal(height: ListItem.monthly.size.height))
-                
-                .onReceive(self.viewModel.$event){evt in
-                    guard let evt = evt else {return}
-                    switch evt {
-                    case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pulled)
-                    default : do{}
-                    }
-                }
-                .onReceive(self.viewModel.$pullPosition){ pos in
-                    self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
+                self.selectedData(data: data)
+            }
+            .modifier(MatchHorizontal(height: ListItem.monthly.size.height))
+            .onReceive(self.viewModel.$event){evt in
+                guard let evt = evt else {return}
+                switch evt {
+                case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pulled)
+                default : do{}
                 }
             }
+            .onReceive(self.viewModel.$pullPosition){ pos in
+                self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
+            }
             ZStack{
-                HStack(spacing:Dimen.margin.tinyExtra){
+                HStack(spacing:Dimen.margin.micro){
                     Text(self.hasAuth ? String.monthly.textEnjoy : String.monthly.textRecommand)
                         .modifier(MediumTextStyle(size: Font.size.thin, color: self.hasAuth ? Color.app.white : Color.app.greyLight))
                     if !self.hasAuth{
@@ -81,8 +78,9 @@ struct MonthlyBlock: PageComponent {
                         .frame(width: Dimen.icon.thinExtra, height: Dimen.icon.thinExtra)
                     }
                 }
+                .padding(.horizontal, Dimen.margin.micro)
             }
-            .padding(.horizontal, Dimen.margin.thin)
+            
             .modifier( MatchHorizontal(height: Dimen.button.regularExtra) )
             .background(self.hasAuth ? Color.brand.primary : Color.app.blueLight)
             .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.regular))
@@ -100,13 +98,16 @@ struct MonthlyBlock: PageComponent {
         }
         
         .onAppear(){
-            if let data = self.monthlyDatas?.first(where: { $0.isSelected }) {
+            if self.monthlyDatas.isEmpty {return}
+            if let data = self.monthlyDatas.first(where: { $0.isSelected }) {
                 self.selectedData(data: data)
             }
             self.initSubscription()
             if let data = self.currentData {
-                let idx  = data.index - 1
-                if idx > 0 { self.viewModel.uiEvent = .scrollTo(idx) }
+                let idx  = data.index
+                if idx > 0 {
+                    self.viewModel.uiEvent = .scrollTo(idx)
+                }
             }
         }
         .onDisappear(){
@@ -116,12 +117,14 @@ struct MonthlyBlock: PageComponent {
     }
     
     @State var anyCancellable = Set<AnyCancellable>()
-    
     @State var currentData:MonthlyData? = nil
     @State var hasAuth:Bool = false
     
     private func initSubscription(){
-        self.monthlyDatas?.forEach{ data in
+        self.anyCancellable.forEach{$0.cancel()}
+        self.anyCancellable.removeAll()
+        
+        self.monthlyDatas.forEach{ data in
             data.$isUpdated.sink(receiveValue: { update in
                 if !update {return}
                 if data.prdPrcId == self.currentData?.prdPrcId {

@@ -15,7 +15,7 @@ import Combine
 class InfinityScrollModel:ComponentObservable, PageProtocol, Identifiable{
     
     static let PULL_RANGE:CGFloat = 30
-    static let PULL_COMPLETED_RANGE:CGFloat = 80
+    static let PULL_COMPLETED_RANGE:CGFloat = 60
     
     
     @Published var uiEvent:InfinityScrollUIEvent? = nil {

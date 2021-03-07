@@ -23,6 +23,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     var marginHorizontal: CGFloat
     var spacing: CGFloat
     var useTracking:Bool
+    var bgColor:Color //List only
     let isRecycle: Bool
     
     @State var scrollPos:Float? = nil
@@ -43,6 +44,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         spacing: CGFloat = 0,
         isRecycle:Bool = true,
         useTracking:Bool = true,
+        bgColor:Color = Color.brand.bg,
         @ViewBuilder content: () -> Content) {
         
         self.viewModel = viewModel
@@ -56,10 +58,12 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         self.spacing = spacing
         self.isRecycle = isRecycle
         self.useTracking = useTracking
+        self.bgColor = bgColor
     }
     
     init(
         viewModel: InfinityScrollModel,
+        bgColor:Color = Color.brand.bg,
         @ViewBuilder content: () -> Content) {
         self.viewModel = viewModel
         self.axes = .vertical
@@ -71,6 +75,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         self.spacing = 0
         self.isRecycle = false
         self.useTracking = false
+        self.bgColor = Color.brand.bg
 
     }
     var body: some View {
@@ -196,11 +201,14 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                             self.onPreferenceChange(value: value)
                         }
                         .listStyle(PlainListStyle())
+                        .background(self.bgColor)
                         .onAppear(){
                             self.isTracking = true
                             UITableView.appearance().allowsSelection = false
-                            UITableView.appearance().backgroundColor = Color.brand.bg.uiColor()
+                            UITableViewCell.appearance().selectionStyle = .none
+                            UITableView.appearance().backgroundColor = self.bgColor.uiColor()
                             UITableView.appearance().separatorStyle = .none
+                            UITableView.appearance().separatorColor = .clear
                         }
                         .onDisappear{
                             self.isTracking = false

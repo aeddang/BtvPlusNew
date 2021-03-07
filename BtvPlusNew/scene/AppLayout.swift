@@ -115,6 +115,7 @@ struct AppLayout: PageComponent{
             }
         }
         .onAppear(){
+            self.isLoading = true
             //UITableView.appearance().separatorStyle = .none
             /*
             for family in UIFont.familyNames.sorted() {
@@ -127,6 +128,7 @@ struct AppLayout: PageComponent{
     }
     func onPageInit(){
         self.isInit = true
+        self.isLoading = false
         if !self.appObserverMove(self.appObserver.page) {
             let initMenuId = self.dataProvider.bands.datas.first?.menuId
             self.pagePresenter.changePage(

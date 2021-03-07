@@ -87,12 +87,15 @@ struct PlayList: PageComponent{
 
 struct PlayItem: PageView {
     @EnvironmentObject var sceneObserver:SceneObserver
+    var pageObservable:PageObservable? = nil
+    var playerModel: BtvPlayerModel? = nil
     var data:PlayData
     var isSelected:Bool = false
-    
+    var isPlay:Bool = false
     @State var isInit:Bool = false
     @State var isLike:LikeStatus? = nil
     @State var isAlram:Bool? = nil
+
     var body: some View {
         VStack(alignment: .leading, spacing:0){
             ZStack{
@@ -107,11 +110,19 @@ struct PlayItem: PageView {
                         .modifier(MatchParent())
                 }
                 
-                if self.data.isPlayAble && self.isSelected {
+                if self.isSelected {
                     Image(Asset.icon.thumbPlay)
                         .renderingMode(.original).resizable()
                         .scaledToFit()
                         .frame(width: Dimen.icon.regularExtra, height: Dimen.icon.regularExtra)
+                        
+                }
+                if self.isPlay && self.isSelected && self.playerModel != nil {
+                    BtvPlayer(
+                        pageObservable:self.pageObservable,
+                        viewModel:self.playerModel!
+                    )
+                    .modifier(MatchParent())
                 }
             }
             .modifier(Ratio16_9(width: self.sceneObserver.screenSize.width, horizontalEdges: Dimen.margin.thin))
@@ -180,6 +191,7 @@ struct PlayItem: PageView {
             }
             
         }
+        .opacity(self.isSelected ? 1.0 : 0.5)
         .onAppear{
             self.isLike = self.data.isLike
             self.isAlram = self.data.isAlram

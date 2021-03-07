@@ -12,8 +12,8 @@ enum BlockStatus:String{
     case initate, active, passive
 }
 
-class BlockData:Identifiable, ObservableObject, Equatable{
-    private(set) var id = UUID().uuidString
+class BlockData:InfinityData, ObservableObject{
+    
     private(set) var name:String = ""
     
     private(set) var menuId:String? = nil

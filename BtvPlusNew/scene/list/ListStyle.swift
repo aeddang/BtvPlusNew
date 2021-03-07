@@ -108,6 +108,7 @@ struct ListRowInset: ViewModifier {
             .listRowInsets(
                 EdgeInsets()
             )
+
             .listRowBackground(bgColor)
         
     }

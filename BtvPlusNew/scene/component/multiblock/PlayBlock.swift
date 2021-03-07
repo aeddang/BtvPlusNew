@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-
+import Combine
 
 class PlayBlockModel: PageDataProviderModel {
     private(set) var dataType:BlockData.DataType = .grid
@@ -30,8 +30,10 @@ struct PlayBlock: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
-    
     @ObservedObject var viewModel:PlayBlockModel = PlayBlockModel()
+    @ObservedObject var pageObservable:PageObservable = PageObservable()
+    @ObservedObject var playerModel: BtvPlayerModel = BtvPlayerModel()
+    
     var key:String? = nil
     var useTracking:Bool = false
     var marginTop : CGFloat = 0
@@ -61,7 +63,13 @@ struct PlayBlock: PageComponent{
                         isRecycle: true,
                         useTracking: self.useTracking){
                         ForEach(self.datas) { data in
-                            PlayItem(data: data)
+                            PlayItem(
+                                pageObservable:self.pageObservable,
+                                playerModel:self.playerModel,
+                                data: data,
+                                isSelected: data.index == self.focusIndex,
+                                isPlay: data.index == self.playIndex
+                                )
                                 .modifier(
                                     ListRowInset(
                                         marginHorizontal:Dimen.margin.thin,
@@ -77,6 +85,14 @@ struct PlayBlock: PageComponent{
                                 }
                                 .onDisappear{
                                     self.onDisappear(idx: data.index)
+                                }
+                                .onTapGesture {
+                                    if self.focusIndex != data.index {
+                                        withAnimation{ self.focusIndex = data.index }
+                                        self.playIndex = -1
+                                    } else {
+                                        self.playIndex = data.index
+                                    }
                                 }
                         }
                     }
@@ -141,18 +157,24 @@ struct PlayBlock: PageComponent{
             default : break
             }
         }
+        .onDisappear(){
+            self.delayUpdateCancel()
+        }
         
     }//body
     
     @State var isError:Bool = false
     @State var datas:[PlayData] = []
     @State var reloadDegree:Double = 0
-    @State var apearList:[Int] = []
-    
+    @State var appearList:[Int] = []
+    @State var appearValue:Float = 0
+    @State var focusIndex:Int = 0
+    @State var playIndex:Int = -1
      
     func reload(){
+        self.delayUpdateCancel()
         self.datas = []
-        self.apearList = []
+        self.appearList = []
         self.infinityScrollModel.reload()
         self.load()
     }
@@ -182,7 +204,7 @@ struct PlayBlock: PageComponent{
     }
     
     
-    func setDatas(datas:[PreviewContentsItem]?) {
+    private func setDatas(datas:[PreviewContentsItem]?) {
         guard let datas = datas else {
             if self.datas.isEmpty { self.onError() }
             return
@@ -194,19 +216,68 @@ struct PlayBlock: PageComponent{
         }
         self.datas.append(contentsOf: loadedDatas)
         self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)
+        
     }
     
-    func onAppear(idx:Int){
-        if self.apearList.first(where: {$0 == idx}) == nil {
-            self.apearList.append(idx)
+    private func onAppear(idx:Int){
+        if self.appearList.first(where: {$0 == idx}) == nil {
+            self.appearList.append(idx)
         }
-        PageLog.d("self.apearList " + self.apearList.debugDescription, tag: self.tag)
+        self.delayUpdate()
     }
-    func onDisappear(idx:Int){
-        if let find = self.apearList.firstIndex(where: {$0 == idx}) {
-            self.apearList.remove(at: find)
+    private func onDisappear(idx:Int){
+        if let find = self.appearList.firstIndex(where: {$0 == idx}) {
+            self.appearList.remove(at: find)
         }
-        PageLog.d("self.apearList " + self.apearList.debugDescription, tag: self.tag)
+        self.delayUpdate()
+    }
+    
+    @State var delayUpdateSubscription:AnyCancellable?
+    func delayUpdate(){
+        self.delayUpdateSubscription?.cancel()
+        self.delayUpdateSubscription = Timer.publish(
+            every: 0.1, on: .current, in: .tracking)
+            .autoconnect()
+            .sink() {_ in
+                self.delayUpdateCancel()
+                self.onUpdate()
+            }
+    }
+    
+    func delayUpdateCancel(){
+        //ComponentLog.d("autoChangeCancel", tag:self.tag)
+        self.delayUpdateSubscription?.cancel()
+        self.delayUpdateSubscription = nil
+    }
+    
+    private func onUpdate(){
+        if self.appearList.isEmpty {
+            return
+        }
+        self.appearList.sort()
+        let value = Float(self.appearList.reduce(0, {$0 + $1}) / self.appearList.count)
+        //PageLog.d("self.apearList " + self.appearList.debugDescription, tag: self.tag)
+        //PageLog.d("self.appearValue " + value.debugDescription, tag: self.tag)
+        let diff = self.appearValue - value
+        self.appearValue = value
+        let willIdx = Int(round(Double(self.appearList.count/2)))
+        var willFocus = self.appearList[willIdx]
+        if diff > 0 {
+            //PageLog.d("self.appearValue Up " + willFocus.description, tag: self.tag)
+            if self.appearList.first == 0 && willFocus == self.focusIndex {
+                willFocus = self.appearList.first ?? 0
+            }
+        } else {
+            //PageLog.d("self.appearValue Down " + willFocus.description, tag: self.tag)
+            if self.appearList.last == (self.datas.count-1) && willFocus == self.focusIndex{
+                willFocus = self.appearList.last ?? self.datas.count-1
+            }
+        }
+        if self.focusIndex != willFocus  {
+            self.playIndex = -1
+            withAnimation{ self.focusIndex = willFocus }
+        }
+        
     }
 
 }

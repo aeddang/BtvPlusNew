@@ -24,7 +24,7 @@ struct TopBannerBg: PageComponent {
             viewModel : self.viewModel,
             pages: self.pages,
             index: self.$index,
-            useGesture : false
+            isForground : false
             )
             .modifier(MatchHorizontal(height: TopBanner.imageHeight))
             .onAppear(){

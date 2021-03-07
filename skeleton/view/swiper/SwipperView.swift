@@ -17,7 +17,7 @@ struct SwipperView : View , PageProtocol, Swipper {
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
     var pages: [PageViewProtocol]
     @Binding var index: Int
-    var useGesture:Bool = true
+    var isForground:Bool = true
     var action:(() -> Void)? = nil
     
     var body: some View {
@@ -85,7 +85,7 @@ struct SwipperView : View , PageProtocol, Swipper {
                 .highPriorityGesture(
                     DragGesture(minimumDistance: 30, coordinateSpace: .local)
                     .onChanged({ value in
-                        if !self.useGesture { return }
+                        if !self.isForground { return }
                         self.isUserSwiping = true
                         if self.viewModel.status == .stop {
                             self.viewModel.status = .move
@@ -96,7 +96,7 @@ struct SwipperView : View , PageProtocol, Swipper {
                         self.autoReset()
                     })
                     .onEnded({ value in
-                        if !self.useGesture { return }
+                        if !self.isForground { return }
                         let willIdx = self.getWillIndex(value: value, minIdx: -1, maxIdx: self.pages.count + 1)
                         self.reset(idx: willIdx)
                         
@@ -104,7 +104,7 @@ struct SwipperView : View , PageProtocol, Swipper {
                 )
                 .onReceive(self.viewModel.$request){ evt in
                     guard let evt = evt else {return}
-                    if self.useGesture {
+                    if self.isForground {
                         switch evt{
                         case .move(let idx) : withAnimation(Self.ani){ self.index = idx }
                         case .jump(let idx) : self.index = idx
@@ -139,12 +139,12 @@ struct SwipperView : View , PageProtocol, Swipper {
                     }
                     withAnimation(Self.ani){
                         self.index = idx
-                        if !self.useGesture { self.isUserSwiping = false }
+                        if !self.isForground { self.isUserSwiping = false }
                     }
                    
                 }
                 .onReceive(self.viewModel.$status){ stat in
-                    if self.useGesture { return }
+                    if self.isForground { return }
                     switch stat{
                     case .move : self.isUserSwiping = true
                     default: break

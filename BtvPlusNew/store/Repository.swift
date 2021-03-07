@@ -159,7 +159,10 @@ class Repository:ObservableObject, PageProtocol{
             }
         }).store(in: &anyCancellable)
         
+        self.pagePresenter?.isLoading = true
         self.apiManager.$status.sink(receiveValue: { status in
+            
+            self.pagePresenter?.isLoading = false
             if status == .ready { self.onReadyApiManager() }
         }).store(in: &anyCancellable)
         
@@ -228,7 +231,7 @@ class Repository:ObservableObject, PageProtocol{
                 self.apiCoreDataManager.clearData(server: server)
             }
         }
-        //self.pageSceneObserver?.event = .toast("onReadyApiManager")
+        self.pageSceneObserver?.event = .toast("onReadyApiManager")
         self.dataProvider.requestData(q: .init(type: .getGnb))
     }
     

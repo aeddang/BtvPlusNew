@@ -38,8 +38,8 @@ class CateBlockModel: PageDataProviderModel {
 }
 
 extension CateBlock{
-    static let videoRowsize:Int = 2
-    static let posterRowsize:Int = 3
+    static let videoCellsize:CGFloat = ListItem.video.size.width
+    static let posterCellsize:CGFloat = ListItem.poster.type01.width
     static let headerSize:Int = 0
     enum ListType:String {
         case video, poster
@@ -165,7 +165,9 @@ struct CateBlock: PageComponent{
                 self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
             }
         }
-        
+        .onReceive(self.sceneObserver.$screenSize){ _ in
+            self.resetSize()
+        }
         .onReceive(self.viewModel.$isUpdate){ update in
             if update {
                 self.reload()
@@ -192,6 +194,9 @@ struct CateBlock: PageComponent{
     @State var reloadDegree:Double = 0
     @State var isPaging:Bool = true
     @State var isSortAble:Bool = false
+    
+    @State var loadedPosterDatas:[PosterData]? = nil
+    @State var loadedVideoDatas:[VideoData]? = nil
     
     func reload(){
         self.posters = []
@@ -235,6 +240,19 @@ struct CateBlock: PageComponent{
             loadedGrid(res)
         }else{
             loadedBlock(res)
+        }
+    }
+    
+    private func resetSize(){
+        if let loadedVideo = self.loadedVideoDatas {
+            self.loadedVideoDatas = nil
+            self.videos = []
+            self.setVideoSets(loadedDatas: loadedVideo)
+        }
+        if let loadedPoster = self.loadedPosterDatas{
+            self.posters = []
+            self.loadedPosterDatas = nil
+            self.setPosterSets(loadedDatas: loadedPoster)
         }
     }
     
@@ -372,7 +390,13 @@ struct CateBlock: PageComponent{
     
     
     func setPosterSets(loadedDatas:[PosterData]) {
-        let count = Self.posterRowsize
+        if self.loadedPosterDatas != nil {
+            self.loadedPosterDatas?.append(contentsOf: loadedDatas)
+        } else{
+            self.loadedPosterDatas = loadedDatas
+        }
+        
+        let count:Int = Int(floor(self.sceneObserver.screenSize.width / Self.posterCellsize))
         var rows:[PosterDataSet] = []
         var cells:[PosterData] = []
         var total = self.posters.count
@@ -402,7 +426,12 @@ struct CateBlock: PageComponent{
     }
     
     func setVideoSets(loadedDatas:[VideoData]) {
-        let count = Self.videoRowsize
+        if self.loadedVideoDatas != nil {
+            self.loadedVideoDatas?.append(contentsOf: loadedDatas)
+        } else{
+            self.loadedVideoDatas = loadedDatas
+        }
+        let count:Int = Int(floor(self.sceneObserver.screenSize.width / Self.videoCellsize))
         var rows:[VideoDataSet] = []
         var cells:[VideoData] = []
         var total = self.videos.count

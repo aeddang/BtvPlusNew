@@ -43,6 +43,15 @@ class MultiBlockModel: PageDataProviderModel {
     }
     
 }
+extension MultiBlockBody {
+    private static var isLegacy:Bool {
+        get{
+            if #available(iOS 14.0, *) { return false }
+            else { return true }
+        }
+    }
+    private static var isPreLoad:Bool = true
+}
 
 
 struct MultiBlockBody: PageComponent {
@@ -64,12 +73,7 @@ struct MultiBlockBody: PageComponent {
     var monthlyViewModel: InfinityScrollModel = InfinityScrollModel()
     var monthlyDatas:[MonthlyData]? = nil
     var isRecycle = true
-    var isLegacy:Bool {
-        get{
-            if #available(iOS 14.0, *) { return false }
-            else { return true }
-        }
-    }
+    
     var action: ((_ data:MonthlyData) -> Void)? = nil
     
     
@@ -84,7 +88,7 @@ struct MultiBlockBody: PageComponent {
         ){
            
             ZStack(alignment: .topLeading){
-                if !self.isLegacy  { //#
+                if !Self.isLegacy  { //#
                     if self.topDatas != nil && self.topDatas?.isEmpty == false {
                         TopBannerBg(
                             viewModel:self.viewPagerModel,
@@ -117,7 +121,7 @@ struct MultiBlockBody: PageComponent {
                         monthlyViewModel : nil,
                         monthlyDatas: nil,
                         isRecycle:self.isRecycle,
-                        isLegacy:self.isLegacy,
+                        isLegacy:Self.isLegacy,
                         action:self.action
                         )
                     
@@ -164,7 +168,7 @@ struct MultiBlockBody: PageComponent {
                         monthlyViewModel : self.monthlyViewModel,
                         monthlyDatas: self.monthlyDatas,
                         isRecycle:self.isRecycle,
-                        isLegacy:self.isLegacy,
+                        isLegacy:Self.isLegacy,
                         action:self.action
                         )
                 
@@ -174,6 +178,7 @@ struct MultiBlockBody: PageComponent {
         .onReceive(self.infinityScrollModel.$event){evt in
             guard let evt = evt else {return}
             switch evt {
+            case .bottom : self.addBlock()
             case .pullCancel :
                 if !self.infinityScrollModel.isLoading {
                     if self.reloadDegree >= self.reloadDegreeMax {
@@ -303,7 +308,6 @@ struct MultiBlockBody: PageComponent {
             self.anyCancellable.forEach{$0.cancel()}
             self.anyCancellable.removeAll()
         }
-        
     }//body
     
     @State var originBlocks:Array<BlockData> = []
@@ -336,7 +340,7 @@ struct MultiBlockBody: PageComponent {
     private func requestBlockCompleted(){
         PageLog.d("addBlock completed", tag: "BlockProtocol")
         if !self.loadingBlocks.isEmpty {
-            self.blocks.append(contentsOf: self.loadingBlocks)
+            self.addLoadedBlocks(self.loadingBlocks) 
             PageLog.d("self.blocks " + self.blocks.count.description, tag: "BlockProtocol")
             self.loadingBlocks = []
         }
@@ -351,21 +355,30 @@ struct MultiBlockBody: PageComponent {
         PageLog.d("completedNum " + completedNum.description, tag: "BlockProtocol")
         if self.completedNum == self.requestNum {
             self.completedNum = 0
-            if  !self.isLegacy {
+            if  !Self.isPreLoad {
                 self.addBlock()
             } else{
-                self.blocks.append(contentsOf: self.loadingBlocks)
+                self.addLoadedBlocks(self.loadingBlocks)
                 PageLog.d("self.blocks " + self.blocks.count.description, tag: "BlockProtocol")
                 self.loadingBlocks = []
-                self.addBlock()
+
             }
         }
     }
+    private func addLoadedBlocks (_ loadedBlocks:[BlockData]){
+        var idx = self.blocks.count
+        loadedBlocks.forEach{
+            $0.index = idx
+            idx += 1
+        }
+        self.blocks.append(contentsOf: loadedBlocks)
+    }
+    
     
     
     private func addBlock(){
         var max = 0
-        if  !self.isLegacy {
+        if  !Self.isPreLoad {
             max = self.originBlocks.count
         } else {
             max = min(self.viewModel.requestSize, self.originBlocks.count)
@@ -379,7 +392,7 @@ struct MultiBlockBody: PageComponent {
         PageLog.d("addBlock" + set.debugDescription, tag: "BlockProtocol")
         if set.isEmpty { return }
         self.requestNum = set.count
-        if  !self.isLegacy {
+        if  !Self.isPreLoad {
             self.blocks.append(contentsOf: set)
         }else{
             self.loadingBlocks.append(contentsOf: set)
@@ -399,7 +412,7 @@ struct MultiBlockBody: PageComponent {
     }
     
     private func removeBlock(_ block:BlockData){
-        if !self.isLegacy {
+        if !Self.isPreLoad {
             if let find = self.blocks.firstIndex(of: block) {
                 self.blocks.remove(at: find)
                 return

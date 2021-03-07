@@ -73,16 +73,32 @@ struct MultiBlock:PageComponent {
                         VStack(spacing:Dimen.margin.medium){
                             ForEach(self.datas[..<min(self.headerSize, self.datas.count)]) { data in
                                 MultiBlockCell(pageDragingModel: self.pageDragingModel, data: data , useTracking: self.useTracking)
+                                    .onAppear(){
+                                        if data.index == self.datas.last?.index {
+                                            self.viewModel.event = .bottom
+                                        }
+                                    }
                             }
                         }
                         if self.datas.count > self.headerSize {
                             ForEach(self.datas[self.headerSize..<self.datas.count]) { data in
                                 MultiBlockCell(pageDragingModel: self.pageDragingModel, data: data , useTracking: self.useTracking)
+                                    .onAppear(){
+                                        if data.index == self.datas.last?.index {
+                                            self.viewModel.event = .bottom
+                                        }
+                                    }
                             }
+                            
                         }
                     } else {
                         ForEach(self.datas) { data in
                             MultiBlockCell(pageDragingModel: self.pageDragingModel, data: data , useTracking: self.useTracking)
+                                .onAppear(){
+                                    if data.index == self.datas.last?.index {
+                                        self.viewModel.event = .bottom
+                                    }
+                                }
                         }
                     }
                 }
@@ -135,6 +151,11 @@ struct MultiBlock:PageComponent {
                     ForEach(self.datas) { data in
                         MultiBlockCell(pageDragingModel: self.pageDragingModel, data: data , useTracking: false)
                            .modifier(ListRowInset(spacing: Self.spacing))
+                            .onAppear(){
+                                if data.index == self.datas.last?.index {
+                                    self.viewModel.event = .bottom
+                                }
+                            }
                     }
                 } else {
                     Spacer().modifier(MatchParent())

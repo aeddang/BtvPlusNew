@@ -40,7 +40,9 @@ struct PagePreviewList: PageView {
                     PlayBlock(
                         infinityScrollModel:self.infinityScrollModel,
                         viewModel:self.viewModel,
-                        useTracking:self.useTracking
+                        useTracking:self.useTracking,
+                        marginTop: Dimen.margin.thin,
+                        marginBottom: Dimen.margin.thin
                     )
                     
                 }

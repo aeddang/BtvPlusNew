@@ -48,6 +48,7 @@ class MultiBlockModel: PageDataProviderModel {
 struct MultiBlockBody: PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var pairing:Pairing
     var viewModel:MultiBlockModel = MultiBlockModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     var viewPagerModel:ViewPagerModel = ViewPagerModel()
@@ -84,7 +85,7 @@ struct MultiBlockBody: PageComponent {
            
             ZStack(alignment: .topLeading){
                 if !self.isLegacy  { //#
-                    if self.topDatas != nil {
+                    if self.topDatas != nil && self.topDatas?.isEmpty == false {
                         TopBannerBg(
                             viewModel:self.viewPagerModel,
                             datas: self.topDatas! )
@@ -110,7 +111,7 @@ struct MultiBlockBody: PageComponent {
                         useBodyTracking:self.useBodyTracking,
                         useTracking:self.useTracking,
                         marginTop:self.marginTop
-                            + (self.topDatas != nil ? (TopBanner.height - self.marginTop) : 0)
+                            + ((self.topDatas != nil && self.topDatas?.isEmpty == false) ? (TopBanner.height - self.marginTop) : 0)
                             + (self.monthlyDatas != nil ? MonthlyBlock.height + MultiBlock.spacing : 0),
                         marginBottom: self.marginBottom,
                         monthlyViewModel : nil,
@@ -120,8 +121,9 @@ struct MultiBlockBody: PageComponent {
                         action:self.action
                         )
                     
-                    if self.topDatas != nil {
+                    if self.topDatas != nil && self.topDatas?.isEmpty == false {
                         TopBanner(
+                            pageObservable: self.pageObservable,
                             viewModel:self.viewPagerModel,
                             datas: self.topDatas! )
                             .modifier(MatchHorizontal(height: TopBanner.height))
@@ -200,9 +202,8 @@ struct MultiBlockBody: PageComponent {
             }
         }
         .onReceive(dataProvider.$result) { res in
-            ComponentLog.d("dataProvider", tag: "BlockProtocol")
+        
             guard let data = self.loadingBlocks.first(where: { $0.id == res?.id}) else {return}
-            ComponentLog.d("dataProvider " + data.name, tag: "BlockProtocol")
             switch data.dataType {
             case .cwGrid:
                 guard let resData = res?.data as? CWGrid else {return data.setBlank()}
@@ -296,8 +297,7 @@ struct MultiBlockBody: PageComponent {
         .onReceive(dataProvider.$error) { err in
             guard let data = self.loadingBlocks.first(where: { $0.id == err?.id}) else {return}
             data.setError(err)
-            ComponentLog.d("dataProvider error" + data.name, tag: "BlockProtocol")
-            
+    
         }
         .onDisappear{
             self.anyCancellable.forEach{$0.cancel()}
@@ -384,14 +384,14 @@ struct MultiBlockBody: PageComponent {
         }else{
             self.loadingBlocks.append(contentsOf: set)
             self.loadingBlocks.forEach{ s in
-                if let apiQ = s.getRequestApi() {
+                if let apiQ = s.getRequestApi(pairing:self.pairing.status) {
                     dataProvider.requestData(q: apiQ)
                 } else{
                     if s.dataType == .theme , let _ = s.blocks {
                         s.setDatabindingCompleted()
                         return
                     } else{
-                        s.setError(nil)
+                        s.setRequestFail()
                     }
                 }
             }

@@ -49,6 +49,7 @@ extension CateBlock{
 struct CateBlock: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var pairing:Pairing
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     
     @ObservedObject var viewModel:CateBlockModel = CateBlockModel()
@@ -204,7 +205,7 @@ struct CateBlock: PageComponent{
         if  !self.infinityScrollModel.isLoadable { return }
         withAnimation{ self.isError = false }
         self.infinityScrollModel.onLoad()
-        if let api = self.viewModel.data?.getRequestApi(apiId:self.tag) {
+        if let api = self.viewModel.data?.getRequestApi(apiId:self.tag, pairing:self.pairing.status) {
             if self.viewModel.data!.dataType != .grid {
                 self.isPaging = false
                 withAnimation{ self.isSortAble = false }

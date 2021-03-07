@@ -21,6 +21,7 @@ class ImageLoader: ObservableObject, PageProtocol{
     private let downloader: ImageDownloader = KingfisherManager.shared.downloader
     private let cache: ImageCache = KingfisherManager.shared.cache
     private var task: DownloadTask? = nil
+   
     @Published var event: ImageLoaderEvent? = nil {didSet{ if event != nil { event = nil} }}
    
     var image: UIImage? = nil
@@ -33,17 +34,12 @@ class ImageLoader: ObservableObject, PageProtocol{
     func image(url: String?) -> UIImage? {
         guard let url = url else { return nil }
         if url == "" { return nil }
-        /*
-        guard let _ = url.firstIndex(of: ":") else{
-            DataLog.d("asset " + url , tag:self.tag)
-            return nil
-        }
-        */
         guard let targetUrl = URL(string:url) else {
             DataLog.e("targetUrl error " + url , tag:self.tag)
             return nil
         }
         guard let image = self.image else {
+            
             load(url: targetUrl)
             return nil
         }
@@ -54,7 +50,6 @@ class ImageLoader: ObservableObject, PageProtocol{
         let key = url.absoluteString
         
         if cache.isCached(forKey: key) {
-            
             cache.retrieveImage(forKey: key) {  [weak self] (result) in
                 guard let self = self else { return }
                 switch result {
@@ -66,21 +61,22 @@ class ImageLoader: ObservableObject, PageProtocol{
                     }
                     self.image = img
                     self.event = .complete(img)
+                    
                 case .failure(_):
                     DataLog.d("cache error crear" + key , tag:self.tag)
                     self.cache.removeImage(forKey: key)
+                   
                 }
             }
         } else {
             
-            DataLog.d("load " + key , tag:self.tag)
+            
             self.task = downloader.downloadImage(with: url, options: nil, progressBlock: nil) {  [weak self] (result) in
                 guard let self = self else { return }
                 switch result {
                 case .success(let value):
                     self.cache.storeToDisk(value.originalData, forKey: url.absoluteString)
                     self.image = value.image
-                    //DataLog.d("loaded success " + key , tag:self.tag)
                     self.event = .complete(value.image)
                 case .failure(_):
                     DataLog.e("loaded error " + key , tag:self.tag)

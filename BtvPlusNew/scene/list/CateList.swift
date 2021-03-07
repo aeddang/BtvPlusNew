@@ -69,12 +69,17 @@ struct CateList: PageComponent{
             axes: .vertical,
             marginVertical: 0,
             marginHorizontal: 0,
-            spacing: CateList.magin,
-            isRecycle: false,
+            spacing: 0,
+            isRecycle: true,
             useTracking: false
             ){
-            ForEach(self.datas) { data in
-                CateSet( data:data )
+            if self.datas.isEmpty {
+                Spacer()
+            } else {
+                ForEach(self.datas) { data in
+                    CateSet( data:data )
+                        .modifier(ListRowInset(spacing:CateList.magin))
+                }
             }
         }
     }//body

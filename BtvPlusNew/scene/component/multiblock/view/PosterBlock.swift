@@ -11,6 +11,7 @@ import SwiftUI
 struct PosterBlock:PageComponent, BlockProtocol {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var pairing:Pairing
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var data: BlockData
@@ -61,6 +62,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
                     datas: [PosterData(),PosterData(),PosterData(),PosterData(),PosterData()]
                     )
                     .modifier(MatchHorizontal(height: self.listHeight))
+                .opacity(0.5)
             }
             
         }
@@ -72,8 +74,10 @@ struct PosterBlock:PageComponent, BlockProtocol {
                 ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
                 
             }
-            if let apiQ = self.getRequestApi() {
+            if let apiQ = self.getRequestApi(pairing:self.pairing.status) {
                 dataProvider.requestData(q: apiQ)
+            } else {
+                self.data.setRequestFail()
             }
         }
         .onDisappear{

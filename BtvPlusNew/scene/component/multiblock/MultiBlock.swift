@@ -37,13 +37,13 @@ struct MultiBlock:PageComponent {
             InfinityScrollView(
                 viewModel: self.viewModel,
                 axes: .vertical,
-                marginTop : self.topDatas == nil ? self.marginTop : 0,
+                marginTop : (self.topDatas != nil && self.topDatas?.isEmpty == false) ? 0 : self.marginTop,
                 marginBottom : self.marginBottom + self.sceneObserver.safeAreaBottom,
                 spacing: Self.spacing,
                 isRecycle : self.isRecycle,
                 useTracking:self.useBodyTracking){
                 
-                if self.topDatas != nil {
+                if self.topDatas != nil  && self.topDatas?.isEmpty == false{
                     ZStack{
                         TopBannerBg(
                             viewModel:self.viewPagerModel,
@@ -51,6 +51,7 @@ struct MultiBlock:PageComponent {
                             .modifier(MatchHorizontal(height: TopBanner.imageHeight))
                             .offset(y:(TopBanner.imageHeight - TopBanner.height)/2)
                         TopBanner(
+                            pageObservable: self.pageObservable,
                             viewModel:self.viewPagerModel,
                             datas: self.topDatas! )
                             
@@ -98,13 +99,14 @@ struct MultiBlock:PageComponent {
                 useTracking:self.useBodyTracking){
                     
                 VStack(spacing: Self.spacing){
-                    if self.topDatas != nil {
+                    if self.topDatas != nil  && self.topDatas?.isEmpty == false {
                         ZStack{
                             TopBannerBg(
                                 viewModel:self.viewPagerModel,
                                 datas: self.topDatas! )
                                 .offset(y:(TopBanner.imageHeight - TopBanner.height)/2)
                             TopBanner(
+                                pageObservable: self.pageObservable,
                                 viewModel:self.viewPagerModel,
                                 datas: self.topDatas! )
                                 

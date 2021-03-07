@@ -10,6 +10,7 @@ import SwiftUI
 
 struct ThemaBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var pairing:Pairing
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var data: BlockData
@@ -50,8 +51,10 @@ struct ThemaBlock:BlockProtocol, PageComponent {
                 self.updateListSize()
                 return
             }
-            if let apiQ = self.getRequestApi() {
+            if let apiQ = self.getRequestApi(pairing:pairing.status) {
                 dataProvider.requestData(q: apiQ)
+            } else {
+                self.data.setRequestFail()
             }
         }
         .onReceive(dataProvider.$result) { res in

@@ -25,9 +25,14 @@ struct PageCategory: PageView {
             viewModel : self.viewModel
         ){
             VStack(alignment: .center, spacing: 0){
-                CateList( datas: self.datas)
-                    .padding(.top, Dimen.app.top + self.sceneObserver.safeAreaTop)
-                    .modifier(MatchVertical(width: self.listWidth))
+                if self.datas.isEmpty {
+                    Spacer().modifier(MatchParent())
+                } else {
+                    CateList( datas: self.datas)
+                        .padding(.top, Dimen.app.top + self.sceneObserver.safeAreaTop)
+                        .modifier(MatchVertical(width: self.listWidth))
+                }
+                
                 HStack(spacing:Dimen.margin.thinExtra){
                     if self.eventData != nil {
                         FillButton(

@@ -17,24 +17,24 @@ protocol Swipper {
     var sensitivity:CGFloat {get set}
     func creatResetTimer() -> AnyCancellable
     func reset(idx:Int)
-    func getDragOffset(value:DragGesture.Value, geometry:GeometryProxy)->CGFloat
-    func getWillIndex(value:DragGesture.Value, maxIdx:Int)->Int
+    func getDragOffset(value:DragGesture.Value, geometry:GeometryProxy, offset:CGFloat)->CGFloat
+    func getWillIndex(value:DragGesture.Value, minIdx:Int, maxIdx:Int)->Int
 }
 
 extension Swipper{
     var sensitivity:CGFloat { get{100} set{sensitivity = 100.0}}
     
-    func getDragOffset(value:DragGesture.Value, geometry:GeometryProxy)->CGFloat {
-        return value.translation.width + -geometry.size.width * CGFloat(self.index)
+    func getDragOffset(value:DragGesture.Value, geometry:GeometryProxy, offset:CGFloat = 0)->CGFloat {
+        return value.translation.width + -geometry.size.width * CGFloat(self.index) - offset
     }
     
-    func getWillIndex(value:DragGesture.Value, maxIdx:Int)->Int {
+    func getWillIndex(value:DragGesture.Value, minIdx:Int, maxIdx:Int)->Int {
         let predictedAmount = value.predictedEndTranslation.width
         var willIdx = self.index
         if predictedAmount < -self.sensitivity, self.index < maxIdx - 1 {
             willIdx += 1
         }
-        else if predictedAmount > self.sensitivity, self.index > 0 {
+        else if predictedAmount > self.sensitivity, self.index > minIdx {
             willIdx -= 1
         }
         return willIdx
@@ -43,7 +43,7 @@ extension Swipper{
     func creatResetTimer() -> AnyCancellable {
         self.autoResetSubscription?.cancel()
         return Timer.publish(
-            every: 0.5, on: .current, in: .common)
+            every: 0.2, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
                 self.reset(idx:self.index)

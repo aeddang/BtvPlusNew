@@ -9,98 +9,171 @@
 import Foundation
 import SwiftUI
 import Combine
-
+extension SwipperView {
+    static let duration:Double = 0.35
+    static let ani:Animation = Animation.easeOut(duration: duration)
+}
 struct SwipperView : View , PageProtocol, Swipper {
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
     var pages: [PageViewProtocol]
     @Binding var index: Int
-    
     var useGesture:Bool = true
-    @State var offset: CGFloat = 0
-    @State var isUserSwiping: Bool = false
     var action:(() -> Void)? = nil
     
     var body: some View {
         GeometryReader { geometry in
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(alignment: .center, spacing: 0) {
-                    ForEach(self.pages, id:\.id) { page in
-                        page.contentBody
-                        .frame(
-                            width: geometry.size.width,
-                            height: geometry.size.height
-                        )
-                        .clipped()
+            if self.pages.count <= 1 {
+                self.pages.first?.contentBody
+                    .frame(
+                        width: geometry.size.width,
+                        height: geometry.size.height
+                    )
+                    .clipped()
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    if #available(iOS 15.0, *) {
+                        LazyHStack(alignment: .center, spacing: 0) {
+                            self.pages.last?.contentBody
+                                .frame(
+                                    width: geometry.size.width,
+                                    height: geometry.size.height
+                                )
+                                .clipped()
+                            ForEach(self.pages, id:\.id) { page in
+                                page.contentBody
+                                .frame(
+                                    width: geometry.size.width,
+                                    height: geometry.size.height
+                                )
+                                .clipped()
+                            }
+                            self.pages.first?.contentBody
+                                .frame(
+                                    width: geometry.size.width,
+                                    height: geometry.size.height
+                                )
+                                .clipped()
+                        }
+                    } else {
+                        HStack(alignment: .center, spacing: 0) {
+                            self.pages.last?.contentBody
+                                .frame(
+                                    width: geometry.size.width,
+                                    height: geometry.size.height
+                                )
+                                .clipped()
+                            ForEach(self.pages, id:\.id) { page in
+                                page.contentBody
+                                .frame(
+                                    width: geometry.size.width,
+                                    height: geometry.size.height
+                                )
+                                .clipped()
+                            }
+                            self.pages.first?.contentBody
+                                .frame(
+                                    width: geometry.size.width,
+                                    height: geometry.size.height
+                                )
+                                .clipped()
+                        }
                     }
                 }
-            }
-            .content
-            .offset(x: self.isUserSwiping ? self.offset : CGFloat(self.index) * -geometry.size.width)
-            .frame(width: geometry.size.width, alignment: .leading)
-            .highPriorityGesture(
-                DragGesture(minimumDistance: 20, coordinateSpace: .local)
-                .onChanged({ value in
-                    if !self.useGesture { return }
-                    self.isUserSwiping = true
-                    self.offset = self.getDragOffset(value: value, geometry: geometry)
-                    if self.viewModel.status == .stop { self.viewModel.status = .move }
-                    self.viewModel.request = .drag(self.offset)
-                    self.autoReset()
-                })
-                .onEnded({ value in
-                    if !self.useGesture { return }
-                    let willIdx = self.getWillIndex(value: value, maxIdx: self.pages.count)
-                    self.reset(idx: willIdx)
+                .content
+                .offset(x: self.isUserSwiping ? self.offset : CGFloat(self.index + 1) * -geometry.size.width)
+                .frame(width: geometry.size.width, alignment: .leading)
+                .highPriorityGesture(
+                    DragGesture(minimumDistance: 30, coordinateSpace: .local)
+                    .onChanged({ value in
+                        if !self.useGesture { return }
+                        self.isUserSwiping = true
+                        if self.viewModel.status == .stop {
+                            self.viewModel.status = .move
+                            self.dragOffset = value.translation.width
+                        }
+                        self.offset = self.getDragOffset(value: value, geometry: geometry, offset: self.dragOffset) - geometry.size.width
+                        self.viewModel.request = .drag(self.offset)
+                        self.autoReset()
+                    })
+                    .onEnded({ value in
+                        if !self.useGesture { return }
+                        let willIdx = self.getWillIndex(value: value, minIdx: -1, maxIdx: self.pages.count + 1)
+                        self.reset(idx: willIdx)
+                        
+                    })
+                )
+                .onReceive(self.viewModel.$request){ evt in
+                    guard let evt = evt else {return}
+                    if self.useGesture {
+                        switch evt{
+                        case .move(let idx) : withAnimation(Self.ani){ self.index = idx }
+                        case .jump(let idx) : self.index = idx
+                        case .next:
+                            let willIdx = self.index >= self.pages.count ? 0 : self.index + 1
+                            self.offset = CGFloat(self.index + 1) * -geometry.size.width
+                            self.viewModel.status = .move
+                            self.viewModel.request = .drag(self.offset)
+                            self.isUserSwiping = true
+                            self.reset(idx: willIdx)
+                        default : break
+                        }
+                    } else {
+                        switch evt{
+                        case .drag(let pos):
+                            self.offset = pos
+                        case .draged:
+                            self.isUserSwiping = false
+                        default : break
+                        }
+                    }
                     
-                })
-            )
-            .onReceive(self.viewModel.$request){ evt in
-                if self.useGesture { return }
-                guard let evt = evt else {return}
-                switch evt{
-                case .drag(let pos):
-                    self.offset = pos
-                case .draged:
-                    self.isUserSwiping = false
                     
-                default : break
                 }
-            }
-            .onReceive( self.viewModel.$index ){ idx in
-                if self.index == idx {return}
-                withAnimation{
-                    self.index = idx
-                    self.isUserSwiping = false
+                .onReceive( self.viewModel.$index ){ idx in
+                    if self.index == idx {return}
+                    let diff = abs(idx - self.index)
+                    if diff > 1 {
+                        self.index = idx
+                        self.isUserSwiping = false
+                        return
+                    }
+                    withAnimation(Self.ani){
+                        self.index = idx
+                        if !self.useGesture { self.isUserSwiping = false }
+                    }
+                   
+                }
+                .onReceive(self.viewModel.$status){ stat in
+                    if self.useGesture { return }
+                    switch stat{
+                    case .move : self.isUserSwiping = true
+                    default: break
+                    }
+                }
+               
+                .onDisappear(){
+                    self.autoResetSubscription?.cancel()
+                    self.autoResetSubscription = nil
                 }
             }
             
-            .onReceive(self.viewModel.$status){ stat in
-                if self.useGesture { return }
-                switch stat{
-                case .move : self.isUserSwiping = true
-                default: break 
-                }
-            }
-            .onDisappear(){
-                self.autoResetSubscription?.cancel()
-                self.autoResetSubscription = nil
-                
-            }
          }//GeometryReader
     }//body
-    
-    @State var autoResetSubscription:AnyCancellable?
-    func autoReset() {
-        self.autoResetSubscription = self.creatResetTimer()
-    }
+    @State var dragOffset:CGFloat = 0
+    @State var offset: CGFloat = 0
+    @State var isUserSwiping: Bool = false
+   
     func reset(idx:Int) {
         self.autoResetSubscription?.cancel()
         self.autoResetSubscription = nil
-        if self.viewModel.status == .move { self.viewModel.status = .stop }
-        if !self.isUserSwiping { return }
+        if !self.isUserSwiping {
+            self.viewModel.status = .stop
+            return
+        }
         
+        if self.viewModel.status == .stop { self.viewModel.status = .move }
         DispatchQueue.main.async {
-           withAnimation {
+           withAnimation(Self.ani){
                self.isUserSwiping = false
                if idx != self.index {
                    self.index = idx
@@ -109,7 +182,26 @@ struct SwipperView : View , PageProtocol, Swipper {
                }
            }
         }
+        
+        DispatchQueue.global().asyncAfter(deadline: .now() + Self.duration) {
+            DispatchQueue.main.async {
+                let min = 0
+                let max = self.pages.count-1
+                if self.index < min {
+                    self.index = max
+                } else  if self.index > max {
+                    self.index = min
+                }
+                self.viewModel.status = .stop
+            }
+        }
+        
      }
+    
+    @State var autoResetSubscription:AnyCancellable?
+    func autoReset() {
+        //self.autoResetSubscription = self.creatResetTimer()
+    }
 }
 
 

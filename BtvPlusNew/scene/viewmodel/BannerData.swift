@@ -3,7 +3,7 @@ import SwiftUI
 
 
 class BannerData:InfinityData, PageProtocol{
-    private(set) var image: String = Asset.noImg9_16
+    private(set) var image: String = Asset.noImgBanner
     private(set) var logo: String? = nil
     private(set) var focus: String? = nil
     private(set) var title: String? = nil

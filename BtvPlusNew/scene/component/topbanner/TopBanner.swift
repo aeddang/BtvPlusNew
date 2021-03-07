@@ -35,7 +35,8 @@ struct TopBanner: PageComponent {
             SwipperView(
                 viewModel : self.viewModel,
                 pages: self.pages,
-                index: self.$index)
+                index: self.$index
+                )
                 .modifier(MatchHorizontal(height: TopBanner.height))
             if self.pages.count > 1 {
                 HStack(spacing: Dimen.margin.tiny) {
@@ -57,7 +58,6 @@ struct TopBanner: PageComponent {
             }
         }
         .modifier(MatchHorizontal(height: Self.height))
-        
         .onReceive(self.pagePresenter.$currentTopPage){ page in
             self.isTop = self.pageObservable.pageObject?.pageID == page?.pageID
             self.isTop ? self.autoChange() : self.autoChangeCancel()
@@ -73,14 +73,7 @@ struct TopBanner: PageComponent {
             case .move : self.autoChangeCancel()
             }
         }
-        .onReceive(self.viewModel.$request){ evt in
-            guard let event = evt else { return }
-            switch event {
-            case .move(let idx) : withAnimation{ self.index = idx }
-            case .jump(let idx) : self.index = idx
-            default : break
-            }
-        }
+    
         .onReceive(self.pageObservable.$status){status in
             switch status {
             //case .enterBackground : self.autoChangeCancel()
@@ -116,21 +109,13 @@ struct TopBanner: PageComponent {
     @State var autoChangeSubscription:AnyCancellable?
     func autoChange(){
         if !self.isTop { return }
-        //ComponentLog.d("autoChange", tag:self.tag)
         self.autoChangeSubscription?.cancel()
         self.autoChangeSubscription = Timer.publish(
             every: 5, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
-                var idx  = self.index + 1
-                if idx >= self.datas.count {
-                    idx = 0
-                    self.viewModel.request = .jump(idx)
-                } else {
-                    self.viewModel.request = .move(idx)
-                }
-               // ComponentLog.d("autoChange com " + idx.description, tag:self.tag)
-                
+                self.viewModel.request = .next
+                ComponentLog.d("autoChange com ", tag:self.tag)
             }
     }
     
@@ -151,60 +136,34 @@ struct TopBannerItem: PageComponent, Identifiable {
    
     var body: some View {
         ZStack(alignment: .top) {
-            VStack{
-                Spacer()
-                if data.logo != nil {
-                    ImageView(url:data.logo!, contentMode: .fit)
-                        .frame(minWidth: 0, maxWidth: 280, minHeight: 0, maxHeight: 80, alignment:.bottom)
-                        .padding(.horizontal, Dimen.margin.heavy)
-                }
-                else if data.title != nil {
-                    Text(data.title!)
-                        .modifier(BlackTextStyle(size: Font.size.black) )
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, Dimen.margin.heavy)
-                }
-                if data.subTitle != nil {
-                    Text(data.subTitle!)
-                        .modifier(MediumTextStyle(size: Font.size.lightExtra, color:Color.app.grey))
-                        .multilineTextAlignment(.center)
-                        .padding(.top, Dimen.margin.lightExtra)
-                        .padding(.horizontal, Dimen.margin.thin)
+           Spacer()
+            .modifier(MatchHorizontal(height: TopBanner.height - Dimen.app.top - self.sceneObserver.safeAreaTop))
+            .background(Color.transparent.clearUi)
+            .padding(.top, Dimen.app.pageTop + self.sceneObserver.safeAreaTop)
+            .onTapGesture {
+                if let move = data.move {
+                    switch move {
+                    case .home :
+                        if let gnbTypCd = data.moveData?[PageParam.id] as? String {
+                            if let band = dataProvider.bands.getData(gnbTypCd: gnbTypCd) {
+                                self.pagePresenter.changePage(
+                                    PageProvider
+                                        .getPageObject(move)
+                                        .addParam(key: .id, value: band.menuId)
+                                        .addParam(key: UUID().uuidString , value: "")
+                                )
+                            }
+                        }
+                        
+                    default :
+                        let pageObj = PageProvider.getPageObject(move)
+                        pageObj.params = data.moveData
+                        self.pagePresenter.openPopup(pageObj)
+                    }
+                }else if let link = data.link {
+                    AppUtil.openURL(link)
                 }
             }
-            .offset(y:TopBanner.height/2 - TopBanner.maginBottomLogo)
-            .modifier(MatchHorizontal(height: TopBanner.height))
-            
-            //.padding(.bottom, TopBanner.maginBottomLogo)
-            
-            Spacer()
-                .modifier(MatchHorizontal(height: TopBanner.height - Dimen.app.top - self.sceneObserver.safeAreaTop))
-                .background(Color.transparent.clearUi)
-                .padding(.top, Dimen.app.pageTop + self.sceneObserver.safeAreaTop)
-                .onTapGesture {
-                    if let move = data.move {
-                        switch move {
-                        case .home :
-                            if let gnbTypCd = data.moveData?[PageParam.id] as? String {
-                                if let band = dataProvider.bands.getData(gnbTypCd: gnbTypCd) {
-                                    self.pagePresenter.changePage(
-                                        PageProvider
-                                            .getPageObject(move)
-                                            .addParam(key: .id, value: band.menuId)
-                                            .addParam(key: UUID().uuidString , value: "")
-                                    )
-                                }
-                            }
-                            
-                        default :
-                            let pageObj = PageProvider.getPageObject(move)
-                            pageObj.params = data.moveData
-                            self.pagePresenter.openPopup(pageObj)
-                        }
-                    }else if let link = data.link {
-                        AppUtil.openURL(link)
-                    }
-                }
         }
         .modifier(MatchHorizontal(height: TopBanner.height))
         .clipped()

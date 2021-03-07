@@ -43,7 +43,7 @@ struct TopBannerBgItem: PageComponent, Identifiable {
    
     var body: some View {
         ZStack{
-            ImageView(url:data.image, contentMode: .fill, noImg: Asset.noImgBanner)
+            ImageView(url:data.image, contentMode: .fill, noImg: Asset.noImg9_16)
                 .frame(height:TopBanner.imageHeight)
             VStack{
                 Image(Asset.shape.bgGradientTop)
@@ -56,6 +56,29 @@ struct TopBannerBgItem: PageComponent, Identifiable {
                 .resizable()
                     .modifier(MatchHorizontal(height:TopBanner.height))
             }
+            VStack{
+                Spacer()
+                if data.logo != nil {
+                    ImageView(url:data.logo!, contentMode: .fit)
+                        .frame(minWidth: 0, maxWidth: 280, minHeight: 0, maxHeight: 80, alignment:.bottom)
+                        .padding(.horizontal, Dimen.margin.heavy)
+                }
+                else if data.title != nil {
+                    Text(data.title!)
+                        .modifier(BlackTextStyle(size: Font.size.black) )
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, Dimen.margin.heavy)
+                }
+                if data.subTitle != nil {
+                    Text(data.subTitle!)
+                        .modifier(MediumTextStyle(size: Font.size.lightExtra, color:Color.app.grey))
+                        .multilineTextAlignment(.center)
+                        .padding(.top, Dimen.margin.lightExtra)
+                        .padding(.horizontal, Dimen.margin.thin)
+                }
+            }
+            .offset(y:TopBanner.height/2 - TopBanner.maginBottomLogo - (TopBanner.imageHeight-TopBanner.height)/2)
+            .modifier(MatchHorizontal(height: TopBanner.height))
            
         }
         .modifier(MatchHorizontal(height: TopBanner.imageHeight))

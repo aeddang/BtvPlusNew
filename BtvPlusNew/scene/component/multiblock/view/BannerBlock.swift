@@ -10,6 +10,7 @@ import SwiftUI
 
 struct BannerBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var pairing:Pairing
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var data: BlockData
     @State var bannerData:BannerData? = nil
@@ -20,12 +21,14 @@ struct BannerBlock:BlockProtocol, PageComponent {
                 BannerItem(data: self.bannerData!)
                     .modifier(MatchParent())
             } else {
-                Image(Asset.noImg16_9)
+                Image(Asset.noImgBanner)
                     .renderingMode(.original)
                     .resizable()
-                    .aspectRatio(contentMode: .fill)
+                    .aspectRatio(contentMode: .fit)
                     .modifier(MatchParent())
                     .clipped()
+                    .background(Color.app.black)
+                    .opacity(0.5)
             }
         }
         .padding(.horizontal, Dimen.margin.thin)
@@ -36,8 +39,10 @@ struct BannerBlock:BlockProtocol, PageComponent {
                 self.bannerData = datas.first
                 self.updateListSize()
             }
-            if let apiQ = self.getRequestApi() {
+            if let apiQ = self.getRequestApi(pairing:self.pairing.status) {
                 dataProvider.requestData(q: apiQ)
+            } else {
+                self.data.setRequestFail()
             }
         }
         .onReceive(dataProvider.$result) { res in

@@ -14,31 +14,39 @@ struct ImageView : View, PageProtocol {
     var url:String?
     var contentMode:ContentMode  = .fill
     var noImg:String? = nil
-    @State var img:UIImage? = nil
    
+    @State var img:UIImage? = nil
+    @State var opacity:Double = 0.4
     var body: some View {
-        Image(uiImage:
-                (self.img ?? self.imageLoader.image(url: self.url))
+        Image(uiImage: self.img ?? self.imageLoader.image(url: self.url)
                 ?? ( noImg != nil ? UIImage(named: self.noImg!)! : UIImage.from(color: Color.transparent.clear.uiColor() ) )
             )
             .renderingMode(.original)
             .resizable()
             .aspectRatio(contentMode: self.contentMode)
+            .opacity( self.opacity )
             .onReceive(self.imageLoader.$event) { evt in
                 guard let  evt = evt else { return }
                 switch evt {
                 case .complete(let img) :
                     self.img = img
-                   
+                    withAnimation{self.opacity = 1.0}
+                    
                 case .error :
                     self.img = noImg != nil ? UIImage(named: self.noImg!)! : UIImage.from(color: Color.transparent.clear.uiColor() )
                     DataLog.d("error " + (self.img?.description ?? "") , tag:self.tag)
                    
                 }
             }
-            .onDisappear(){
-               
+        .onAppear(){
+            self.img = self.imageLoader.image(url: self.url)
+            if self.img != nil {
+                withAnimation{self.opacity = 1.0}
             }
+        }
+        .onDisappear(){
+        
+        }
             
     }
 }

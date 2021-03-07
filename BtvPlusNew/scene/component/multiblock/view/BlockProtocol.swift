@@ -10,15 +10,15 @@ import SwiftUI
 
 protocol BlockProtocol {
     var data:BlockData { get set }
-    func getRequestApi() -> ApiQ?
+    func getRequestApi(pairing:PairingStatus) -> ApiQ?
     func onBlank()
     func onError(_ err:ApiResultError?)
     
 }
 extension BlockProtocol {
-    func getRequestApi() -> ApiQ? {
+    func getRequestApi(pairing:PairingStatus) -> ApiQ? {
         if data.status != .initate  { return nil }
-        return data.getRequestApi()
+        return data.getRequestApi(pairing: pairing)
     }
     func onDataBinding(){
         ComponentLog.d("onDataBinding " + data.name, tag: "BlockProtocol")

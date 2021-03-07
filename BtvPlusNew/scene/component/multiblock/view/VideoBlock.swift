@@ -11,6 +11,7 @@ import SwiftUI
 struct VideoBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var pairing:Pairing
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var data: BlockData
@@ -60,6 +61,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                     viewModel:self.viewModel,
                     datas: [VideoData(),VideoData(),VideoData(),VideoData()] )
                     .modifier(MatchHorizontal(height: self.listHeight))
+                    .opacity(0.5)
             }
         }
         .frame( height: self.listHeight + Font.size.regular + Dimen.margin.thinExtra)
@@ -68,8 +70,10 @@ struct VideoBlock:BlockProtocol, PageComponent {
                 self.datas = datas
                 self.updateListSize()
             }
-            if let apiQ = self.getRequestApi() {
+            if let apiQ = self.getRequestApi(pairing: self.pairing.status) {
                 dataProvider.requestData(q: apiQ)
+            } else {
+                self.data.setRequestFail()
             }
         }
         .onReceive(dataProvider.$result) { res in

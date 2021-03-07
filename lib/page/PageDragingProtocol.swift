@@ -58,13 +58,11 @@ extension PageDragingView{
     
     func onDraging(geometry:GeometryProxy, value:DragGesture.Value) {
         if self.pageObject?.isPopup == false { return }
-        
         let offset = (self.axis == .vertical)
-            ? self.bodyOffset + value.translation.height
-            : self.bodyOffset + value.translation.width
-        
+            ? value.translation.height
+            : value.translation.width
         if !self.isDraging { self.onDragInit(offset:offset) }
-        self.moveOffset(offset, geometry:geometry)
+        self.moveOffset(offset + self.bodyOffset, geometry:geometry)
         
     }
     
@@ -169,8 +167,8 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     @State var isBottom = false
     @State var isDragingCompleted = false
     
-    private let minDiff:CGFloat = 0
-    private let maxDiff:CGFloat = 300
+    private let minDiff:CGFloat = 0.6
+    private let maxDiff:CGFloat = 600
     init(
         viewModel: PageDragingModel,
         axis:Axis.Set = .vertical,
@@ -252,6 +250,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     }//body
     
     func onDragInit(offset:CGFloat = 0) {
+        if offset < 0 {return}
         self.isDragingCompleted = false
         self.isDraging = true
         self.dragInitOffset = offset
@@ -261,13 +260,15 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     
     func onDragingAction(offset: CGFloat, dragOpacity: Double) {
         if self.isDragingCompleted {return}
+        if !self.isDraging {return}
         let diff = abs(self.bodyOffset - offset)
         //ComponentLog.d("diff " + diff.description , tag: "DIFF")
         if abs(diff) > maxDiff { return }
         if abs(diff) < minDiff { return }
         let bodyOffset = max( 0, offset - self.dragInitOffset)
+        // ComponentLog.d("self.dragInitOffset " + self.dragInitOffset.description , tag: "DIFF")
+        //ComponentLog.d("bodyOffset " + offset.description , tag: "DIFF")
         self.bodyOffset = bodyOffset
-        
         self.viewModel.event = .drag(offset, dragOpacity)
         self.pagePresenter.dragOpercity = dragOpacity
     }

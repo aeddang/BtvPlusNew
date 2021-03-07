@@ -52,7 +52,7 @@ class BlockData:Identifiable, ObservableObject, Equatable{
         return self
     }
     
-    func getRequestApi(apiId:String? = nil, sortType:EuxpNetwork.SortType? = Optional.none, page:Int = 1, isOption:Bool = true) -> ApiQ? {
+    func getRequestApi(apiId:String? = nil, pairing:PairingStatus, sortType:EuxpNetwork.SortType? = Optional.none, page:Int = 1, isOption:Bool = true) -> ApiQ? {
         switch self.dataType {
         case .cwGrid:
             DataLog.d("Request cwGrid " + self.name, tag: "BlockProtocol")
@@ -70,12 +70,20 @@ class BlockData:Identifiable, ObservableObject, Equatable{
                 isOptional: isOption)
             
         case .bookMark:
+            if pairing != .pairing {
+                DataLog.d("Request bookMark not pairing " + self.name, tag: "BlockProtocol")
+                return nil
+            }
             DataLog.d("Request bookMark " + self.name, tag: "BlockProtocol")
             return .init(
                 id: apiId ?? self.id,
                 type: .getBookMark(),
                 isOptional: isOption)
         case .watched:
+            if pairing != .pairing {
+                DataLog.d("Request watche not pairing " + self.name, tag: "BlockProtocol")
+                return nil
+            }
             DataLog.d("Request watche " + self.name, tag: "BlockProtocol")
             return .init(
                 id: apiId ?? self.id,

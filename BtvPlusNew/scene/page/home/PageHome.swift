@@ -20,8 +20,10 @@ struct PageHome: PageView {
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
     
-    @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel:MultiBlockModel = MultiBlockModel()
+    
+    @ObservedObject var viewPagerModel:ViewPagerModel = ViewPagerModel()
+    @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var monthlyViewModel: InfinityScrollModel = InfinityScrollModel()
     
@@ -36,6 +38,7 @@ struct PageHome: PageView {
             MultiBlockBody (
                 viewModel: self.viewModel,
                 infinityScrollModel: self.infinityScrollModel,
+                viewPagerModel:self.viewPagerModel,
                 pageObservable: self.pageObservable,
                 useBodyTracking:self.useTracking,
                 useTracking:false,
@@ -137,8 +140,8 @@ struct PageHome: PageView {
     
     private func respondTopBanner(res:ApiResultResponds?){
         guard let resData = res?.data as? EventBanner else {return}
-        guard let banners = resData.banners else { return self.topDatas = [] }
-        if banners.isEmpty { return self.topDatas = [] }
+        guard let banners = resData.banners else { return }
+        if banners.isEmpty { return }
         self.topDatas = banners.map{ d in
             BannerData().setData(data: d, type: .page)
         }
@@ -168,13 +171,16 @@ struct PageHome: PageView {
                 if monthlyDatas.count < maxCount { monthlyDatas.append(monthly) }
             }
             self.originMonthlyDatas = originMonthlyDatas
-            self.monthlyDatas = monthlyDatas
+            if !monthlyDatas.isEmpty {
+                self.monthlyDatas = monthlyDatas
+            }
         }
         self.requestMonthly()
         self.setupMonthly()
     }
 
     private func requestMonthly(){
+        if self.monthlyDatas == nil {return}
         if self.pairing.status == .pairing {
             self.viewModel.request = .init(
                 id: self.menuId,

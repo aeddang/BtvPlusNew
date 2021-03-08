@@ -29,6 +29,7 @@ extension PageID{
     static let multiBlock:PageID = "multiBlock"
     static let categoryList:PageID = "categoryList"
     static let previewList:PageID = "previewList"
+    static let fullPlayer:PageID = "fullPlayer"
 }
 
 struct PageProvider {
@@ -64,7 +65,8 @@ struct PageProvider {
              .pairingDevice, .pairingUser, .pairingManagement,
              .purchase :
             return  .vertical
-        
+        case .fullPlayer :
+            return .none
         default : return  .horizental
         }
     }
@@ -102,6 +104,8 @@ extension PageParam {
    static let data = "data"
    static let type = "type"
    static let title = "title"
+   static let autoPlay = "autoPlay"
+   static let initTime = "initTime"
    static let viewPagerModel = "viewPagerModel"
    static let infinityScrollModel = "infinityScrollModel"
 }
@@ -151,6 +155,7 @@ struct PageFactory{
         case .multiBlock : return PageMultiBlock()
         case .categoryList : return PageCategoryList()
         case .previewList : return PagePreviewList()
+        case .fullPlayer : return PageFullPlayer()
         default : return PageTest()
         }
     }
@@ -167,24 +172,38 @@ struct PageFactory{
 
 struct PageSceneModel: PageModel {
     var currentPageObject: PageObject? = nil
-    func getPageOrientation(_ pageObject:PageObject? = nil ) -> UIInterfaceOrientationMask? {
-        guard let pageObject = pageObject ?? self.currentPageObject else {
+    var topPageObject: PageObject? = nil
+    
+    func getPageOrientation(_ pageObject:PageObject?) -> UIInterfaceOrientationMask? {
+        guard let pageObject = pageObject ?? self.topPageObject else {
             return UIInterfaceOrientationMask.all
         }
         switch pageObject.pageID {
-       
-        case .home, .synopsis, .purchase, .category: return UIInterfaceOrientationMask.portrait
-        default : return UIInterfaceOrientationMask.all
+        case .home, .synopsis, .purchase, .category, .previewList:
+            return UIInterfaceOrientationMask.portrait
+        case .fullPlayer: return UIInterfaceOrientationMask.landscape
+        default :
+            return UIInterfaceOrientationMask.all
         }
     }
-    
+    func getPageOrientationLock(_ pageObject:PageObject?) -> UIInterfaceOrientationMask? {
+        guard let pageObject = pageObject ?? self.topPageObject else {
+            return UIInterfaceOrientationMask.all
+        }
+        switch pageObject.pageID {
+        case .synopsis, .fullPlayer:
+            return UIInterfaceOrientationMask.all
+        default :
+            return getPageOrientation(pageObject)
+        }
+    }
     func getCloseExceptions() -> [PageID]? {
         return []
     }
     
     func isHistoryPage(_ pageObject:PageObject ) -> Bool {
         switch pageObject.pageID {
-        case .serviceError: return false
+        case .serviceError, .fullPlayer: return false
         default : return true
         }
     }

@@ -10,20 +10,13 @@ import Foundation
 import SwiftUI
 import Combine
 
-extension PlayerUI {
-    static let padding = Dimen.margin.thin
-    static let paddingFullScreen = Dimen.margin.regular
-    
-    static let uiHeight:CGFloat = 44
-    static let uiHeightFullScreen:CGFloat  = 64
-}
 
-struct PlayerUI: PageComponent {
+
+struct SimplePlayerUI: PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var viewModel:PlayerModel
     @ObservedObject var pageObservable:PageObservable
-    @State var time:String = ""
-    @State var duration:String = ""
+    
     @State var progress: Float = 0
     @State var isPlaying = false
     @State var isLoading = false
@@ -63,46 +56,48 @@ struct PlayerUI: PageComponent {
                                style: .large,
                                color: Color.app.white )
             
-            VStack{
+            VStack(spacing:0){
                 Spacer()
                 HStack(alignment:.center, spacing:Dimen.margin.thin){
-                    Text(self.time)
-                        .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.white))
-                        .frame(width:53)
-                        .fixedSize(horizontal: true, vertical: false)
-                    
-                    ProgressSlider(
-                        progress: min(self.progress, 1.0),
-                        thumbSize: self.isFullScreen ? Dimen.icon.thinExtra : Dimen.icon.tiny,
-                        onChange: { pct in
-                            let willTime = self.viewModel.duration * Double(pct)
-                            self.viewModel.event = .seeking(willTime)
-                        },
-                        onChanged:{ pct in
-                            self.viewModel.event = .seekProgress(pct)
-                        })
-                        .frame(height: self.isFullScreen ? Self.uiHeightFullScreen : Self.uiHeight)
-                        .fixedSize(horizontal: false, vertical: true)
-                    
-                    Text(self.duration)
-                        .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.greyLightExtra))
-                        .frame(width:53)
-                        .fixedSize(horizontal: true, vertical: false)
-                    
+                    Spacer()
                     ImageButton(
                         defaultImage: Asset.player.fullScreen,
                         activeImage: Asset.player.fullScreenOff,
                         isSelected: self.isFullScreen,
                         size: CGSize(width:Dimen.icon.regular,height:Dimen.icon.regular)
                     ){ _ in
-                        self.isFullScreen
-                            ? self.pagePresenter.fullScreenExit(changeOrientation: .portrait)
-                            : self.pagePresenter.fullScreenEnter()
+                        if self.viewModel.useFullScreenAction {
+                            self.isFullScreen
+                                ? self.pagePresenter.fullScreenExit(changeOrientation: .portrait)
+                                : self.pagePresenter.fullScreenEnter()
+                        } else{
+                            self.viewModel.event = .fullScreen(!self.isFullScreen)
+                        }
                     }
                 }
-                .padding(.all, self.isFullScreen ? Self.paddingFullScreen : Self.padding)
+                .padding(.all, self.isFullScreen ? PlayerUI.paddingFullScreen : PlayerUI.padding)
+                .opacity(self.isShowing  ? 1 : 0)
+                ProgressSlider(
+                    progress: min(self.progress, 1.0),
+                    thumbSize: self.isFullScreen
+                        ? Dimen.icon.thinExtra
+                        : 0,
+                        
+                    onChange: { pct in
+                        let willTime = self.viewModel.duration * Double(pct)
+                        self.viewModel.event = .seeking(willTime)
+                    },
+                    onChanged:{ pct in
+                        self.viewModel.event = .seekProgress(pct)
+                    })
+                    .frame(height: self.isFullScreen
+                            ? PlayerUI.uiHeightFullScreen
+                            : Dimen.stroke.regular )
+                .padding(.all, self.isFullScreen
+                         ? PlayerUI.paddingFullScreen
+                         : 0)
             }
-            .opacity(self.isShowing && !self.viewModel.isLock ? 1 : 0)
+            
             
             if !self.isSeeking {
                 VStack(spacing:Dimen.margin.regular){
@@ -123,16 +118,11 @@ struct PlayerUI: PageComponent {
             }
         }
         .toast(isShowing: self.$isError, text: self.errorMessage)
-        
         .onReceive(self.viewModel.$time) { tm in
-            self.time = tm.secToHourString()
             if self.viewModel.duration <= 0.0 {return}
             if !self.isSeeking {
                 self.progress = Float(self.viewModel.time / self.viewModel.duration)
             }
-        }
-        .onReceive(self.viewModel.$duration) { tm in
-            self.duration = tm.secToHourString()
         }
         .onReceive(self.viewModel.$isPlay) { play in
             self.isPlaying = play
@@ -200,6 +190,9 @@ struct PlayerUI: PageComponent {
         }
         .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
             self.isFullScreen = fullScreen
+        }
+        .onAppear{
+            self.isFullScreen = self.pagePresenter.isFullScreen
         }
     }
     

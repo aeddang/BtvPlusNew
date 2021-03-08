@@ -9,13 +9,15 @@
 import Foundation
 import SwiftUI
 struct Ratio16_9: ViewModifier {
+    @EnvironmentObject var sceneObserver:SceneObserver
     var geometry:GeometryProxy? = nil
     var width:CGFloat = 0
     var horizontalEdges:CGFloat = 0
     var isFullScreen:Bool = false
     func body(content: Content) -> some View {
-        let w =  (geometry?.size.width ?? width) - (horizontalEdges * 2.0)
-        let h = isFullScreen ? ( geometry?.size.height ?? 0 ) : ( w * 9.0 / 16.0 )
+        let w =  isFullScreen ?  geometry?.size.width ?? sceneObserver.screenSize.width
+            : (geometry?.size.width ?? width) - (horizontalEdges * 2.0)
+        let h = isFullScreen ? ( geometry?.size.height ?? sceneObserver.screenSize.height ) : ( w * 9.0 / 16.0 )
         return content
             .frame(
                 width:w,

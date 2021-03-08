@@ -51,6 +51,10 @@ enum BtvPlayerEvent {
     case nextView, continueView, changeView(String)
 }
 
+enum BtvPlayerType {
+    case full, simple
+}
+
 class BtvPlayerModel:PlayerModel{
     @Published fileprivate(set) var brightness:CGFloat = UIScreen.main.brightness
     @Published fileprivate(set) var seeking:Double = 0
@@ -64,13 +68,18 @@ class BtvPlayerModel:PlayerModel{
     private(set) var synopsisPlayerData:SynopsisPlayerData? = nil
     private(set) var synopsisPrerollData:SynopsisPrerollData? = nil
     private(set) var openingTime:Double = 0
-    fileprivate(set) var continuousTime:Double = 0
-    fileprivate(set) var checkPreroll = true
-    fileprivate(set) var isPrerollPlay = false
+    var continuousTime:Double = 0
+    var checkPreroll = true
+    var isPrerollPlay = false
+    private(set) var playData:PlayInfo? = nil
+    private(set) var btvPlayType:BtvPlayType? = nil
     private(set) var qualitys:[Quality] = []
     private(set) var header:[String:String]? = nil
     var initPlay:Bool? = nil
     var isFirstPlay:Bool = true
+    
+    var currentEpsdRsluId:String? = nil
+    var currentIdx:Int? = nil
     
     private func appendQuality(name:String, path:String){
         let quality = Quality(name: name, path: path)
@@ -86,7 +95,16 @@ class BtvPlayerModel:PlayerModel{
         self.qualitys = []
         self.header = nil
         self.initPlay = nil
+        self.playData = nil
+        self.btvPlayType = nil
         super.reset()
+    }
+    
+    func resetCurrentPlayer() {
+        self.currentEpsdRsluId = nil
+        self.currentIdx = nil
+        self.playData = nil
+        self.btvPlayType = nil
     }
     
     @discardableResult
@@ -103,9 +121,11 @@ class BtvPlayerModel:PlayerModel{
     }
     
     @discardableResult
-    func setData(data:PlayInfo, type:BtvPlayType) -> BtvPlayerModel {
+    func setData(data:PlayInfo, type:BtvPlayType, autoPlay:Bool? = nil) -> BtvPlayerModel {
         let isPrevPlay = self.isPlay
         self.reset()
+        self.playData = data
+        self.btvPlayType = type
         var header = [String:String]()
         header["x-ids-cinfo"] = type.type + "," + type.cid + "," + type.title
         self.header = header
@@ -130,6 +150,11 @@ class BtvPlayerModel:PlayerModel{
             default: do{}
             }
         }
+        if let autoPlay = autoPlay {
+            ComponentLog.d("force setup initPlay " + autoPlay.description , tag: "BtvPlayer")
+            self.initPlay = autoPlay
+        }
+        
         if self.isFirstPlay {
             self.isFirstPlay = false
             ComponentLog.d("first setup initPlay " + self.initPlay.debugDescription , tag: "BtvPlayer")
@@ -173,7 +198,7 @@ struct BtvPlayer: PageComponent{
     var thumbContentMode:ContentMode = .fit
     var contentID:String? = nil
     var listData:PlayListData = PlayListData()
-     
+    var type:BtvPlayerType = .full
     var body: some View {
         GeometryReader { geometry in
             ZStack{

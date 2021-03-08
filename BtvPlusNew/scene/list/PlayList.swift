@@ -13,6 +13,8 @@ class PlayData:InfinityData{
     private(set) var title: String? = nil
     private(set) var date: String? = nil
     private(set) var srisId: String? = nil
+    private(set) var epsdId: String? = nil
+    private(set) var epsdRsluId: String? = nil
     private(set) var description: String? = nil
     fileprivate(set) var isLike:LikeStatus? = nil
     fileprivate(set) var isAlram:Bool = false
@@ -20,11 +22,12 @@ class PlayData:InfinityData{
     private(set) var restrictAgeIcon:String? = nil
     private(set) var provider: String? = nil
     
-    
     func setData(data:PreviewContentsItem,idx:Int = -1) -> PlayData {
         title = data.title
         srisId = data.sris_id
         description = data.epsd_snss_cts
+        epsdId = data.epsd_id
+        epsdRsluId = data.epsd_rslu_id
         if let poster = data.poster_filename_h {
             image = ImagePath.thumbImagePath(filePath: poster, size: ListItem.play.size)
         }
@@ -46,8 +49,7 @@ class PlayData:InfinityData{
         if let age = data.wat_lvl_cd {
             self.restrictAgeIcon = Asset.age.getIcon(age: age)
         }
-        isPlayAble = true
-       
+        isPlayAble = self.epsdRsluId != nil && self.epsdRsluId != ""
         return self
     }
     
@@ -86,15 +88,16 @@ struct PlayList: PageComponent{
 }
 
 struct PlayItem: PageView {
+    @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var pairing:Pairing
     var pageObservable:PageObservable? = nil
     var playerModel: BtvPlayerModel? = nil
     var data:PlayData
     var isSelected:Bool = false
-    var isPlay:Bool = false
-    @State var isInit:Bool = false
-    @State var isLike:LikeStatus? = nil
-    @State var isAlram:Bool? = nil
+    @State var isPlay:Bool = false
+    
 
     var body: some View {
         VStack(alignment: .leading, spacing:0){
@@ -109,24 +112,59 @@ struct PlayItem: PageView {
                     ImageView(url: self.data.image!, contentMode: .fill, noImg: Asset.noImg16_9)
                         .modifier(MatchParent())
                 }
-                
-                if self.isSelected {
-                    Image(Asset.icon.thumbPlay)
-                        .renderingMode(.original).resizable()
-                        .scaledToFit()
-                        .frame(width: Dimen.icon.regularExtra, height: Dimen.icon.regularExtra)
-                        
-                }
-                if self.isPlay && self.isSelected && self.playerModel != nil {
-                    BtvPlayer(
-                        pageObservable:self.pageObservable,
-                        viewModel:self.playerModel!
-                    )
-                    .modifier(MatchParent())
+                if self.data.isPlayAble {
+                    if self.isSelected {
+                        Button(action: {
+                            self.isPlay = true
+                        }) {
+                            Image(Asset.icon.thumbPlay)
+                                .renderingMode(.original).resizable()
+                                .scaledToFit()
+                                .frame(width: Dimen.icon.medium, height: Dimen.icon.medium)
+                        }
+                    }
+                    if self.isPlay && self.isSelected && self.playerModel != nil {
+                        if !self.isError {
+                            SimplePlayer(
+                                pageObservable:self.pageObservable,
+                                viewModel:self.playerModel!
+                            )
+                            .modifier(MatchParent())
+                            .onAppear{
+                                if self.pagePresenter.isFullScreen { return }
+                                self.loadPreview()
+                                self.pagePresenter.orientationLock(lockOrientation: .all)
+                            }
+                            
+                            .onDisappear{
+                                self.isPlay = false
+                                if self.pagePresenter.isFullScreen { return }
+                                if self.sceneObserver.sceneOrientation == .landscape { return }
+                                guard let prevEpsdRsluId = self.playerModel?.currentEpsdRsluId else { return }
+                                if prevEpsdRsluId != self.data.epsdRsluId { return }
+                                //self.playerModel?.resetCurrentPlayer()
+                                ComponentLog.d("onDisappear " + (self.data.title ?? "") + " " + self.isError.description, tag:"SimplePlayer")
+                                
+                                
+                            }
+                        } else {
+                            Button(action: {
+                                self.isError = false
+                            }) {
+                                Spacer().background(Color.transparent.black15).modifier(MatchParent())
+                            }
+                        }
+                    }
                 }
             }
-            .modifier(Ratio16_9(width: self.sceneObserver.screenSize.width, horizontalEdges: Dimen.margin.thin))
+            .modifier(
+                Ratio16_9(
+                    width: self.sceneObserver.screenSize.width,
+                    horizontalEdges: Dimen.margin.thin
+                )
+            )
             .clipped()
+            
             HStack(spacing:Dimen.margin.thin){
                 if self.data.title != nil {
                     VStack(alignment: .leading, spacing:0){
@@ -189,9 +227,22 @@ struct PlayItem: PageView {
                     .multilineTextAlignment(.leading)
                     .padding(.top, Dimen.margin.thin)
             }
-            
         }
         .opacity(self.isSelected ? 1.0 : 0.5)
+        .onReceive(self.dataProvider.$result){ res in
+            guard let res = res else { return }
+            if !self.isSelected {return}
+            guard let epsdRsluId = data.epsdRsluId else { return }
+            if !res.id.hasPrefix(epsdRsluId) { return }
+            self.setupPreview(res: res)
+        }
+        .onReceive(self.dataProvider.$error){ err in
+            guard let err = err else { return }
+            if !self.isSelected {return}
+            guard let epsdRsluId = data.epsdRsluId else { return }
+            if !err.id.hasPrefix(epsdRsluId) { return }
+            self.isError = true
+        }
         .onAppear{
             self.isLike = self.data.isLike
             self.isAlram = self.data.isAlram
@@ -200,9 +251,49 @@ struct PlayItem: PageView {
         .onDisappear{
             self.isInit = false
         }
-        
     }
     
+    @State var isInit:Bool = false
+    @State var isLike:LikeStatus? = nil
+    @State var isAlram:Bool? = nil
+    @State var isError:Bool = false
+    
+    private func loadPreview(){
+        guard let epsdRsluId = data.epsdRsluId else { return }
+        self.playerModel?.currentIdx = self.data.index
+        self.playerModel?.currentEpsdRsluId = self.data.epsdRsluId
+        PageLog.d("currentIdx " + data.index.description, tag: "SimplePlayer")
+        self.isError = false
+        if pairing.status == .pairing {
+            dataProvider.requestData(q: .init(id:epsdRsluId, type: .getPreview(epsdRsluId, self.pairing.hostDevice)))
+        }
+        else {
+            dataProvider.requestData(q: .init(id:epsdRsluId, type: .getPreplay(epsdRsluId, false)))
+        }
+    }
+    
+    private func setupPreview(res:ApiResultResponds){
+        guard let epsdRsluId = data.epsdRsluId else { return }
+        guard let data = res.data as? Preview else {
+            PageLog.d("error Preview", tag: self.tag)
+            self.isError = true
+            return
+        }
+        if data.result != ApiCode.success {
+            PageLog.d("fail PreviewInfo", tag: self.tag)
+            self.isError = true
+            return
+        }
+        guard let dataInfo = data.CTS_INFO else {
+            PageLog.d("error PreviewInfo", tag: self.tag)
+            self.isError = true
+            return
+        }
+        PageLog.d("setupPreview", tag: self.tag)
+        self.playerModel?.setData(data: dataInfo, type: .preview(epsdRsluId), autoPlay: true)
+        
+        
+    }
 }
 
 #if DEBUG

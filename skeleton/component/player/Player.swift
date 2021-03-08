@@ -11,11 +11,12 @@ import AVKit
 import Combine
 open class PlayerModel: ComponentObservable {
     static let TIME_SCALE:Double = 600
-    var useAvPlayerController = false
+    var useAvPlayerController:Bool = false
+    var useFullScreenAction:Bool = true
     @Published var path:String = ""
     @Published var isMute:Bool = false
     @Published var isLock:Bool = false
-    @Published var volume:Float = 1.0
+    @Published var volume:Float = -1
     @Published var screenRatio:CGFloat = 1.0
     @Published var rate:Float = 1.0
     @Published var playInfo:String? = nil
@@ -58,6 +59,10 @@ open class PlayerModel: ComponentObservable {
     convenience init(path: String) {
         self.init()
         self.path = path
+    }
+    convenience init(useFullScreenAction: Bool) {
+        self.init()
+        self.useFullScreenAction = useFullScreenAction
     }
     
     open func reset(){
@@ -118,7 +123,9 @@ enum PlayerUIEvent {//input
          seeking(Double), seekForward(Double, Bool = false), seekBackword(Double, Bool = false),
          addSeekForward(Double, Bool = false), addSeekBackword(Double, Bool = false),
          check, neetLayoutUpdate, fixUiStatus,
-         screenGravity(AVLayerVideoGravity), screenRatio(CGFloat)
+         screenGravity(AVLayerVideoGravity), screenRatio(CGFloat),
+         fullScreen(Bool)
+            
          
          
     

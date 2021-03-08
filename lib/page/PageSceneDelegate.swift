@@ -80,6 +80,10 @@ final class PagePresenter:ObservableObject{
         return result !== nil
     }
     
+    func orientationLock(lockOrientation:UIInterfaceOrientationMask){
+        AppDelegate.orientationLock = lockOrientation
+    }
+    
     func orientationLock(isLock:Bool = false){
         PageSceneDelegate.instance?.requestDeviceOrientationLock(isLock)
         PageLog.d("orientationLock " + isLock.description , tag: "PagePresenter")
@@ -116,6 +120,7 @@ final class PagePresenter:ObservableObject{
 
 struct SceneModel: PageModel {
     var currentPageObject: PageObject? = nil
+    var topPageObject: PageObject? = nil
 }
 
 class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
@@ -435,11 +440,10 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
             pagePresenter.currentPopup = nil
         }
         pagePresenter.currentTopPage = willChangePage
-        
-        
+        pageModel.topPageObject = willChangePage
         let willChangeOrientationMask = pageModel.getPageOrientation(willChangePage)
+        AppDelegate.orientationLock = pageModel.getPageOrientationLock(willChangePage) ?? .all
         guard let willChangeOrientation = willChangeOrientationMask else { return }
-        AppDelegate.orientationLock = willChangeOrientation
         if  willChangeOrientation == .all { return }
         self.requestDeviceOrientation(willChangeOrientation)
         
@@ -458,8 +462,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         if let controller = self.window?.rootViewController as? PageHostingController<AnyView> {
             controller.isFullScreen = false
         }
-        let willChangeOrientation = pageModel.getPageOrientation() ?? .all
-        AppDelegate.orientationLock = willChangeOrientation
+        AppDelegate.orientationLock = pageModel.getPageOrientationLock(nil) ?? .all
         if let mask = changeOrientation { self.requestDeviceOrientation(mask) }
     
     }
@@ -467,9 +470,12 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     func requestDeviceOrientationLock(_ lock:Bool){
         let interfaceOrientation = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation ?? UIInterfaceOrientation.unknown
         
-        AppDelegate.orientationLock = lock
+        let orientationLock = lock
             ? getDeviceOrientationMask(orientation: interfaceOrientation)
-            : pageModel.getPageOrientation() ?? .all
+            : pageModel.getPageOrientationLock(nil) ?? .all
+       
+        DataLog.d("orientationLock " + orientationLock.rawValue.description, tag:"PageSceneModel")
+        AppDelegate.orientationLock = orientationLock
     }
     
     final func  requestDeviceOrientation(_ mask:UIInterfaceOrientationMask){

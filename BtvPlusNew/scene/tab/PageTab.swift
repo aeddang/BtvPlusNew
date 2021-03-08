@@ -25,9 +25,11 @@ struct PageTab: PageComponent{
                     .modifier(BoldTextStyle(
                                 size: Font.size.mediumExtra,
                                 color: self.style.textColor))
+                    .lineLimit(1)
                     .modifier(ContentHorizontalEdges())
                     .frame(maxWidth: .infinity)
                     .padding(.top, 1)
+                    .padding(.horizontal, Dimen.icon.regular)
             }
             HStack{
                 if self.isBack {

@@ -253,6 +253,10 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
         self.viewModel.event = .check
     }
     func onPlayerVolumeChanged(_ v:Float){
+        if self.viewModel.volume == -1 {
+            self.viewModel.volume = v
+            return
+        }
         if self.viewModel.volume == v {return}
         self.viewModel.volume = v
         if viewModel.isMute {

@@ -10,6 +10,7 @@ struct CPPlayer: PageComponent {
     @ObservedObject var viewModel:PlayerModel = PlayerModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @State var screenRatio = CGSize(width:1, height:1)
+    var isSimple:Bool = false
     var body: some View {
         ZStack(alignment: .center){
             CustomAVPlayer( viewModel : self.viewModel)
@@ -36,7 +37,11 @@ struct CPPlayer: PageComponent {
                         })
                         
                 }
-                PlayerUI(viewModel : self.viewModel, pageObservable:self.pageObservable)
+                if self.isSimple {
+                    SimplePlayerUI(viewModel : self.viewModel, pageObservable:self.pageObservable)
+                }else{
+                    PlayerUI(viewModel : self.viewModel, pageObservable:self.pageObservable)
+                }
             }
         }
         .clipped()

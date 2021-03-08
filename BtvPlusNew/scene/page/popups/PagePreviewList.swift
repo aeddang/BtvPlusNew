@@ -18,12 +18,14 @@ struct PagePreviewList: PageView {
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
+    @ObservedObject var playerModel: BtvPlayerModel = BtvPlayerModel(useFullScreenAction:false)
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var viewModel:PlayBlockModel = PlayBlockModel()
     @State var title:String? = nil
     @State var menuId:String? = nil
     @State var useTracking:Bool = false
+  
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -40,6 +42,8 @@ struct PagePreviewList: PageView {
                     PlayBlock(
                         infinityScrollModel:self.infinityScrollModel,
                         viewModel:self.viewModel,
+                        pageObservable:self.pageObservable,
+                        playerModel:self.playerModel,
                         useTracking:self.useTracking,
                         marginTop: Dimen.margin.thin,
                         marginBottom: Dimen.margin.thin
@@ -79,6 +83,7 @@ struct PagePreviewList: PageView {
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 self.useTracking = page?.id == self.pageObject?.id
             }
+           
             .onAppear{
                 guard let obj = self.pageObject  else { return }
                 

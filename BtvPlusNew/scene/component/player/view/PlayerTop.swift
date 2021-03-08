@@ -28,7 +28,7 @@ struct PlayerTop: PageView{
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
     var title:String? = nil
-    
+    var isSimple:Bool = false
     @State var isFullScreen:Bool = false
     @State var isShowing:Bool = false
     @State var isMute:Bool = false
@@ -40,16 +40,18 @@ struct PlayerTop: PageView{
         ZStack(alignment: .topLeading){
             VStack(alignment :.trailing, spacing:Dimen.margin.light){
                 HStack(spacing:self.isFullScreen ? Dimen.margin.regular : Dimen.margin.light){
-                    Button(action: {
-                        self.pagePresenter.goBack()
-                        
-                    }) {
-                        Image(Asset.icon.back)
-                            .renderingMode(.original)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: Dimen.icon.regular,
-                                   height: Dimen.icon.regular)
+                    if !self.isSimple{
+                        Button(action: {
+                            self.pagePresenter.goBack()
+                            
+                        }) {
+                            Image(Asset.icon.back)
+                                .renderingMode(.original)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: Dimen.icon.regular,
+                                       height: Dimen.icon.regular)
+                        }
                     }
                     if self.isFullScreen && self.title != nil {
                         VStack(alignment: .leading){
@@ -83,40 +85,44 @@ struct PlayerTop: PageView{
                                 self.viewModel.event = .mute(true)
                             }
                         }
-                        if self.textQuality != nil {
-                            StrokeRectButton(
-                                text: self.textQuality!,
-                                isSelected: false,
-                                textModifier: self.isFullScreen ? Self.strokeButtonTextFull :  Self.strokeButtonText,
-                                size: self.isFullScreen ? Dimen.button.regularRect : Dimen.button.lightRect
-                                ){ _ in
-                                
-                                self.viewModel.selectFunctionType = .quality
+                        if !self.isSimple{
+                            if self.textQuality != nil {
+                                StrokeRectButton(
+                                    text: self.textQuality!,
+                                    isSelected: false,
+                                    textModifier: self.isFullScreen ? Self.strokeButtonTextFull :  Self.strokeButtonText,
+                                    size: self.isFullScreen ? Dimen.button.regularRect : Dimen.button.lightRect
+                                    ){ _ in
+                                    
+                                    self.viewModel.selectFunctionType = .quality
+                                }
                             }
-                        }
-                        if self.textRate != nil {
-                            StrokeRectButton(
-                                text: self.textRate!,
-                                isSelected: false,
-                                textModifier: self.isFullScreen ? Self.strokeButtonTextFull :  Self.strokeButtonText,
-                                size: self.isFullScreen ? Dimen.button.regularRect : Dimen.button.lightRect
-                                ){ _ in
-                                
-                                self.viewModel.selectFunctionType = .rate
-                                
+                            if self.textRate != nil {
+                                StrokeRectButton(
+                                    text: self.textRate!,
+                                    isSelected: false,
+                                    textModifier: self.isFullScreen ? Self.strokeButtonTextFull :  Self.strokeButtonText,
+                                    size: self.isFullScreen ? Dimen.button.regularRect : Dimen.button.lightRect
+                                    ){ _ in
+                                    
+                                    self.viewModel.selectFunctionType = .rate
+                                    
+                                }
                             }
                         }
                     }
-                    ImageButton(
-                        defaultImage: Asset.player.more,
-                        activeImage: Asset.player.lock,
-                        isSelected: self.isLock,
-                        size: CGSize(width:Dimen.icon.light,height:Dimen.icon.light)
-                    ){ _ in
-                        if self.isLock {
-                            self.viewModel.isLock = false
-                        } else {
-                            self.viewModel.btvUiEvent = .more
+                    if !self.isSimple{
+                        ImageButton(
+                            defaultImage: Asset.player.more,
+                            activeImage: Asset.player.lock,
+                            isSelected: self.isLock,
+                            size: CGSize(width:Dimen.icon.light,height:Dimen.icon.light)
+                        ){ _ in
+                            if self.isLock {
+                                self.viewModel.isLock = false
+                            } else {
+                                self.viewModel.btvUiEvent = .more
+                            }
                         }
                     }
                 }

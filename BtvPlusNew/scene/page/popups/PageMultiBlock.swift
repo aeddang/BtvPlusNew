@@ -36,7 +36,8 @@ struct PageMultiBlock: PageView {
                             infinityScrollModel:self.cateInfinityScrollModel,
                             viewModel:self.cateBlockViewModel,
                             useTracking:self.useTracking,
-                            marginTop: self.marginTop + self.sceneObserver.safeAreaTop + Dimen.app.top
+                            marginTop: self.marginTop + self.sceneObserver.safeAreaTop + Dimen.app.top,
+                            marginBottom: Dimen.app.bottom + self.sceneObserver.safeAreaBottom
                         )
                         .background(Color.brand.bg)
                     } else {
@@ -47,7 +48,8 @@ struct PageMultiBlock: PageView {
                             pageDragingModel: self.pageDragingModel,
                             useBodyTracking: self.useTracking,
                             useTracking:self.useTracking,
-                            marginTop: self.marginTop  + Dimen.margin.thin + self.sceneObserver.safeAreaTop + Dimen.app.top
+                            marginTop: self.marginTop  + Dimen.margin.thin + self.sceneObserver.safeAreaTop + Dimen.app.top,
+                            marginBottom: Dimen.app.bottom + self.sceneObserver.safeAreaBottom
                         )
                         .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
                             guard let evt = evt else {return}
@@ -96,21 +98,19 @@ struct PageMultiBlock: PageView {
                 .highPriorityGesture(
                     DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
                         .onChanged({ value in
-                            if self.useTracking { self.useTracking = false }
                             self.pageDragingModel.uiEvent = .drag(geometry, value)
                         })
                         .onEnded({ value in
                             self.pageDragingModel.uiEvent = .draged(geometry, value)
-                            self.useTracking = true
                         })
                 )
                 .gesture(
                     self.pageDragingModel.cancelGesture
                         .onChanged({_ in
-                            self.useTracking = true
+                            //self.useTracking = true
                             self.pageDragingModel.uiEvent = .dragCancel})
                         .onEnded({_ in
-                            self.useTracking = true
+                            //self.useTracking = true
                             self.pageDragingModel.uiEvent = .dragCancel})
                 )
             }
@@ -130,7 +130,7 @@ struct PageMultiBlock: PageView {
                 guard let obj = self.pageObject  else { return }
                 if let data = obj.getParamValue(key: .data) as? CateData {
                     self.title = data.title
-                    if let blocks = data.blocks?.filter({ $0.menu_nm != nil }) {
+                    if let blocks = data.blocks?.filter({ $0.menu_id != nil }) {
                         self.tabDatas = zip(0...blocks.count, blocks).map { idx, d in
                             TextTabData().setData(data: d, idx: idx)
                         }

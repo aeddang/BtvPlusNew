@@ -8,9 +8,10 @@
 import Foundation
 import SwiftUI
 
-class PlayData:InfinityData{
+class PlayData:InfinityData,ObservableObject{
     private(set) var image: String? = nil
     private(set) var title: String? = nil
+    private(set) var openDate: String? = nil
     private(set) var date: String? = nil
     private(set) var srisId: String? = nil
     private(set) var epsdId: String? = nil
@@ -21,6 +22,11 @@ class PlayData:InfinityData{
     private(set) var isPlayAble:Bool = false
     private(set) var restrictAgeIcon:String? = nil
     private(set) var provider: String? = nil
+    private(set) var notificationData: NotificationData? = nil
+    private(set) var notiType: String? = nil
+    var playTime:Double = 0
+    @Published private(set) var isUpdated: Bool = false
+        {didSet{ if isUpdated { isUpdated = false} }}
     
     func setData(data:PreviewContentsItem,idx:Int = -1) -> PlayData {
         title = data.title
@@ -40,19 +46,46 @@ class PlayData:InfinityData{
                 //OR dateFormatter.dateFormat = "EEEE, MMMM dd, yyyy"
                 let currentDateString: String = dateFormatter.string(from: date)
                 let weekday = date.getWeekday()
+                self.openDate = currentDateString
                 self.date = currentDateString
                     + " " + String.week.getDayString(day: weekday)
                     + " " + ( ppm ? String.app.ppmUpdate : String.app.open)
             }
         }
-        
-        if let age = data.wat_lvl_cd {
-            self.restrictAgeIcon = Asset.age.getIcon(age: age)
-        }
         isPlayAble = self.epsdRsluId != nil && self.epsdRsluId != ""
+        
+        if ("30" == data.prd_typ_cd || "34" == data.prd_typ_cd) && 0 < (data.prd_id?.count ?? 0) {
+            notiType = NfNetwork.NotiType.product.rawValue
+        } else if "02" == data.synon_typ_cd {
+            notiType = NfNetwork.NotiType.season.rawValue
+        } else {
+            notiType = NfNetwork.NotiType.movie.rawValue
+        }
+        self.notificationData = NotificationData(
+            srisId: self.srisId,
+            epsdId: self.epsdId,
+            type: self.notiType,
+            epsdRsluId: self.epsdRsluId,
+            prdId:data.prd_id,
+            contentsNm: self.title)
+        
         return self
     }
     
+    @discardableResult
+    func setData(data:NotificationVodItem?) -> PlayData {
+        if let noti = data {
+            self.isAlram = true
+            self.notiType = noti.noti_type
+        } else{
+            self.isAlram = false
+        }
+        if let nm = data?.contents_nm {
+            self.notificationData?.contentsNm = nm
+        }
+        self.isUpdated = true
+        return self
+    }
    
     func setDummy(_ idx:Int = -1) -> PlayData {
         title = "조커"
@@ -92,6 +125,7 @@ struct PlayItem: PageView {
     @EnvironmentObject var sceneObserver:SceneObserver
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var setup:Setup
     var pageObservable:PageObservable? = nil
     var playerModel: BtvPlayerModel? = nil
     var data:PlayData
@@ -135,17 +169,8 @@ struct PlayItem: PageView {
                                 self.loadPreview()
                                 self.pagePresenter.orientationLock(lockOrientation: .all)
                             }
-                            
                             .onDisappear{
-                                self.isPlay = false
-                                if self.pagePresenter.isFullScreen { return }
-                                if self.sceneObserver.sceneOrientation == .landscape { return }
-                                guard let prevEpsdRsluId = self.playerModel?.currentEpsdRsluId else { return }
-                                if prevEpsdRsluId != self.data.epsdRsluId { return }
-                                //self.playerModel?.resetCurrentPlayer()
-                                ComponentLog.d("onDisappear " + (self.data.title ?? "") + " " + self.isError.description, tag:"SimplePlayer")
-                                
-                                
+                                self.isPlay = self.setup.autoPlay
                             }
                         } else {
                             Button(action: {
@@ -185,8 +210,10 @@ struct PlayItem: PageView {
                     LikeButton(srisId: self.data.srisId!, isLike: self.$isLike, useText:false, isThin:true){ value in
                         self.data.isLike = value
                     }
-                    AlramButton(srisId: self.data.srisId!, isAlram: self.$isAlram){ value in
-                        self.data.isAlram = value
+                    if self.data.notificationData != nil {
+                        AlramButton(data: self.data.notificationData!, isAlram: self.$isAlram){ value in
+                            self.data.isAlram = value
+                        }
                     }
                 }
             }
@@ -228,7 +255,7 @@ struct PlayItem: PageView {
                     .padding(.top, Dimen.margin.thin)
             }
         }
-        .opacity(self.isSelected ? 1.0 : 0.5)
+        .opacity(self.isSelected ? 1.0 : 0.4)
         .onReceive(self.dataProvider.$result){ res in
             guard let res = res else { return }
             if !self.isSelected {return}
@@ -243,9 +270,15 @@ struct PlayItem: PageView {
             if !err.id.hasPrefix(epsdRsluId) { return }
             self.isError = true
         }
+        .onReceive(self.data.$isUpdated){ updated in
+            if updated {
+                self.isAlram = self.data.isAlram
+            }
+        }
         .onAppear{
             self.isLike = self.data.isLike
             self.isAlram = self.data.isAlram
+            self.isPlay = self.setup.autoPlay
             self.isInit = true
         }
         .onDisappear{
@@ -257,12 +290,11 @@ struct PlayItem: PageView {
     @State var isLike:LikeStatus? = nil
     @State var isAlram:Bool? = nil
     @State var isError:Bool = false
-    
+     
     private func loadPreview(){
         guard let epsdRsluId = data.epsdRsluId else { return }
         self.playerModel?.currentIdx = self.data.index
         self.playerModel?.currentEpsdRsluId = self.data.epsdRsluId
-        PageLog.d("currentIdx " + data.index.description, tag: "SimplePlayer")
         self.isError = false
         if pairing.status == .pairing {
             dataProvider.requestData(q: .init(id:epsdRsluId, type: .getPreview(epsdRsluId, self.pairing.hostDevice)))
@@ -289,8 +321,7 @@ struct PlayItem: PageView {
             self.isError = true
             return
         }
-        PageLog.d("setupPreview", tag: self.tag)
-        self.playerModel?.setData(data: dataInfo, type: .preview(epsdRsluId), autoPlay: true)
+        self.playerModel?.setData(data: dataInfo, type: .preview(epsdRsluId), autoPlay: true, continuousTime: self.data.playTime)
         
         
     }

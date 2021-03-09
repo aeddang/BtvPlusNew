@@ -160,7 +160,7 @@ struct TopBannerItem: PageComponent, Identifiable {
                         pageObj.params = data.moveData
                         self.pagePresenter.openPopup(pageObj)
                     }
-                }else if let link = data.link {
+                }else if let link = data.outLink {
                     AppUtil.openURL(link)
                 }
             }

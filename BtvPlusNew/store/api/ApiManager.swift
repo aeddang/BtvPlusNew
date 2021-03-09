@@ -32,6 +32,7 @@ class ApiManager :PageProtocol, ObservableObject{
     private lazy var smd:Smd = Smd(network: SmdNetwork())
     private lazy var scs:Scs = Scs(network: ScsNetwork())
     private lazy var pss:Pss = Pss(network: PssNetwork())
+    private lazy var nf:Nf = Nf(network: NfNetwork())
 
     init() {
         self.initateApi()
@@ -45,6 +46,7 @@ class ApiManager :PageProtocol, ObservableObject{
         self.kms.clear()
         self.smd.clear()
         self.pss.clear()
+        self.nf.clear()
         self.apiQ.removeAll()
     }
     
@@ -248,6 +250,19 @@ class ApiManager :PageProtocol, ObservableObject{
             error:error)
         case .getPairingUserInfoByPackageID(let charId) : self.pss.getPairingUserInfoByPackageID(
             charId: charId,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        //NF
+        case .getNotificationVod(let srisId, let epsdId, let notiType , _ ) : self.nf.getNotificationVod(
+            srisId:srisId, epsdId:epsdId, type:notiType,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .postNotificationVod(let data) : self.nf.postNotificationVod(
+            data:data,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .deleteNotificationVod(let srisId) : self.nf.deleteNotificationVod(
+            srisId:srisId,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         }

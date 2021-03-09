@@ -160,6 +160,11 @@ extension String {
         public static var nextPlayOn = "alertNextPlayOn".loaalized()
         public static var nextPlayOff = "alertNextPlayOff".loaalized()
         
+        public static var updateAlram = "alertUpdateAlram".loaalized()
+        public static var updateAlramSetup = "alertUpdateAlramSetup".loaalized()
+        public static var updateAlramRecommand = "alertUpdateAlramRecommand".loaalized()
+        public static var updateRegistAlram = "alertUpdateRegistAlram".loaalized()
+        public static var updateUnregistAlram = "alertUpdateUnregistAlram".loaalized()
     }
     
     struct button {
@@ -190,6 +195,8 @@ extension String {
         public static let screenLock = "btnScreenLock".loaalized()
         public static let screenRatio = "btnScreenRatio".loaalized()
         public static let guide = "btnGuide".loaalized()
+        public static let recieveAlram = "btnRecieveAlram".loaalized()
+        
     }
     struct player {
         public static let moveSec = "playerMoveSec".loaalized()

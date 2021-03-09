@@ -63,7 +63,6 @@ struct SimplePlayer: PageComponent{
                     
                 case .resume :
                     if self.isPrerollPause {
-                        ComponentLog.d("isPrerollPause retry" , tag: self.tag)
                         self.isPrerollPause = false
                         self.initPlayer()
                     }
@@ -73,7 +72,6 @@ struct SimplePlayer: PageComponent{
                     
                 case .pause :
                     if self.isPreroll {
-                        ComponentLog.d("isPrerollPause" , tag: self.tag)
                         self.isPrerollPause = true
                         self.isPreroll = false
                         self.viewModel.isPrerollPlay = false
@@ -154,10 +152,12 @@ struct SimplePlayer: PageComponent{
                 return
             }
         }
+       
         self.initPlay()
     }
     
     func continuousPlay(){
+        
         withAnimation{ self.isWaiting = false }
         self.viewModel.continuousTime = self.recoveryTime
         self.initPlay()
@@ -180,7 +180,6 @@ struct SimplePlayer: PageComponent{
             "&token=" + (repository.getDrmId() ?? "")
        // ComponentLog.d("path : " + path, tag: self.tag)
         let t = self.viewModel.continuousTime > 0 ? self.viewModel.continuousTime : self.viewModel.time
-        self.viewModel.continuousTime = 0
         self.viewModel.event = .load(path, true , t, self.viewModel.header)
     }
 }

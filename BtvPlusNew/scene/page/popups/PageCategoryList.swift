@@ -50,21 +50,17 @@ struct PageCategoryList: PageView {
                 .highPriorityGesture(
                     DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
                         .onChanged({ value in
-                            if self.useTracking { self.useTracking = false }
                             self.pageDragingModel.uiEvent = .drag(geometry, value)
                         })
                         .onEnded({ value in
                             self.pageDragingModel.uiEvent = .draged(geometry, value)
-                            self.useTracking = true
                         })
                 )
                 .gesture(
                     self.pageDragingModel.cancelGesture
                         .onChanged({_ in
-                            self.useTracking = true
                             self.pageDragingModel.uiEvent = .dragCancel})
                         .onEnded({_ in
-                            self.useTracking = true
                             self.pageDragingModel.uiEvent = .dragCancel})
                 )
             }

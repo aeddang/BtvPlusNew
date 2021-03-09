@@ -34,26 +34,48 @@ struct PageCategory: PageView {
                 }
                 
                 HStack(spacing:Dimen.margin.thinExtra){
-                    if self.eventData != nil {
+                    if let data = self.eventData  {
                         FillButton(
                             text: self.eventData?.title ?? "",
                             image: Asset.icon.cateEvent,
                             bgColor: Color.app.blueLightExtra
                         ){_ in
-                            self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(.pairing)
-                            )
+                            if data.blocks != nil && data.blocks?.isEmpty == false {
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(.multiBlock)
+                                        .addParam(key: .data, value: data)
+                                )
+                            }else{
+                                
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(.categoryList)
+                                        .addParam(key: .title, value: data.title)
+                                        .addParam(key: .id, value: data.menuId)
+                                        .addParam(key: .type, value: CateBlock.ListType.poster)
+                                )
+                            }
                         }
                     }
-                    if self.tipData != nil {
+                    if let data = self.tipData {
                         FillButton(
                             text: self.tipData?.title ?? "",
                             image: Asset.icon.cateTip,
                             bgColor: Color.app.blueLightExtra
                         ){_ in
-                            self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(.pairing)
-                            )
+                            if data.blocks != nil && data.blocks?.isEmpty == false {
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(.multiBlock)
+                                        .addParam(key: .data, value: data)
+                                )
+                            }else{
+                                
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(.categoryList)
+                                        .addParam(key: .title, value: data.title)
+                                        .addParam(key: .id, value: data.menuId)
+                                        .addParam(key: .type, value: CateBlock.ListType.poster)
+                                )
+                            }
                         }
                     }
                 }

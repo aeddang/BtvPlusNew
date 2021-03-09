@@ -216,12 +216,15 @@ class PlayerScreenView: UIView, PageProtocol {
         }
         self.initTime = initTime
         self.isAutoPlay = isAutoPlay
+    
         let player = createPlayer(url, buffer:buffer, header:header)
         return player
     }
     
     func playInit(){
-        if self.initTime > 0 { seek(initTime) }
+        if self.initTime > 0 {
+            seek(initTime)
+        }
         guard let currentPlayer = player else { return }
         currentPlayer.rate = self.currentRate
         if !self.isAutoPlay { pause() }

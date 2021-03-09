@@ -30,6 +30,7 @@ extension PageID{
     static let categoryList:PageID = "categoryList"
     static let previewList:PageID = "previewList"
     static let fullPlayer:PageID = "fullPlayer"
+    static let webview:PageID = "webview"
 }
 
 struct PageProvider {
@@ -63,7 +64,7 @@ struct PageProvider {
         case .home, .category,
              .pairingSetupUser, .pairingBtv,
              .pairingDevice, .pairingUser, .pairingManagement,
-             .purchase :
+             .purchase , .webview:
             return  .vertical
         case .fullPlayer :
             return .none
@@ -111,7 +112,8 @@ extension PageParam {
 }
 
 extension PageEventType {
-   static let pageChange = "pageChange"
+    static let pageChange = "pageChange"
+    static let timeChange = "timeChange"
 }
 
 enum PageStyle{
@@ -156,6 +158,7 @@ struct PageFactory{
         case .categoryList : return PageCategoryList()
         case .previewList : return PagePreviewList()
         case .fullPlayer : return PageFullPlayer()
+        case .webview : return PageWebview()
         default : return PageTest()
         }
     }
@@ -210,7 +213,7 @@ struct PageSceneModel: PageModel {
     
     static func needBottomTab(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
-        case .home, .category: return true
+        case .home, .category, .multiBlock: return true
         default : return false
         }
     }

@@ -31,6 +31,7 @@ struct PreviewContentsItem : Codable {
     private(set) var prd_id:String? = nil     // 상품ID (빅배너/이벤트 내 월정액 상품 추가)
     private(set) var ppm_grid_icon_img_path:String? = nil      // PPM아이콘이미지경로(그리드)
     private(set) var prd_typ_cd:String? = nil     // 상품유형코드
+    
     private(set) var epsd_snss_cts:String? = nil  // 에피소드 줄거리
     private(set) var sris_dist_aprv_yn:String? = nil  // 본편 배포 승인 여부 (Y=배포승인 + 시작일 경과)
     private(set) var synon_typ_cd:String? = nil  // 진입할 시놉시스 유형(타이틀/단편/시즌/컬렉션/VOD+관련상품)

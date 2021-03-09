@@ -28,6 +28,7 @@ extension PageContentBody{
 struct PageContentBody: PageView  {
     var childViews:[PageViewProtocol] = []
     @EnvironmentObject var pageChanger:PagePresenter
+    @EnvironmentObject var sceneObserver:SceneObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @State var offsetX:CGFloat = 0
     @State var offsetY:CGFloat = 0
@@ -42,10 +43,13 @@ struct PageContentBody: PageView  {
     var body: some View {
         ZStack(){
             
-            ForEach(childViews, id: \.pageID) { page in
-                page.contentBody
-                .offset(x:  self.offsetX, y:self.offsetY)
-            }
+                ForEach(childViews, id: \.pageID) { page in
+                    page.contentBody
+                        .offset(
+                            x: (self.isTop || self.isBelow ) ? self.offsetX : -sceneObserver.screenSize.width,
+                            y:self.offsetY)
+                }
+            
             if self.isBelow {
                 Spacer().modifier(MatchParent()).background(Color.transparent.black70)
                     .opacity(self.opacity)

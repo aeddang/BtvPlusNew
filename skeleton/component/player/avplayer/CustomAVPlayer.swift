@@ -49,7 +49,6 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
              ComponentLog.d("initate" , tag: self.tag)
              recovery(player, evt: evt, recoveryTime: 0)
         default:
-             ComponentLog.d("updateUIView" , tag: self.tag)
              update(player, evt: evt)
         }
     }

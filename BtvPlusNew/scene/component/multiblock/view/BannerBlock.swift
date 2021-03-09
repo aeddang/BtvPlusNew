@@ -14,7 +14,7 @@ struct BannerBlock:BlockProtocol, PageComponent {
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var data: BlockData
     @State var bannerData:BannerData? = nil
-    @State var listHeight:CGFloat = ListItem.banner.size.height
+    @State var listHeight:CGFloat = ListItem.banner.type01.height
     var body :some View {
         ZStack() {
             if self.bannerData != nil {
@@ -74,7 +74,7 @@ struct BannerBlock:BlockProtocol, PageComponent {
     
     func updateListSize(){
         if self.bannerData != nil {
-            self.listHeight = ListItem.banner.size.height
+            self.listHeight = ListItem.banner.type01.height
             onDataBinding()
         }
         else { onBlank() }

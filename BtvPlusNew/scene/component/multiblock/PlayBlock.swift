@@ -28,7 +28,10 @@ class PlayBlockModel: PageDataProviderModel {
 
 struct PlayBlock: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var pairing:Pairing
+    
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var viewModel:PlayBlockModel = PlayBlockModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -77,7 +80,6 @@ struct PlayBlock: PageComponent{
                                         marginTop: self.marginTop
                                     )
                                 )
-                                
                                 .onAppear{
                                     if data.index == self.datas.last?.index {
                                         self.load()
@@ -91,11 +93,12 @@ struct PlayBlock: PageComponent{
                                     if self.focusIndex != data.index {
                                         self.onFocusChange(willFocus: data.index)
                                     }
+                                    self.pageSceneObserver.event = .toast((data.openDate ?? "") + " " + String.alert.updateAlramRecommand)
                                 }
                         }
                     }
                     .modifier(MatchParent())
-                    .background(Color.brand.bg)
+
                 }
                 .background(Color.brand.bg)
             } else {
@@ -180,9 +183,38 @@ struct PlayBlock: PageComponent{
             guard let evt = evt else { return }
             switch evt {
             case .onResult(_, let res, _):
-                self.loaded(res)
-            case .onError(_,  _, _):
-                self.onError()
+                switch res.type {
+                case .getNotificationVod(_, _, _ , let returnDatas) : self.loadedNoti(res, returnDatas:returnDatas)
+                case .getGridPreview : self.loaded(res)
+                default : break
+                }
+            case .onError(_,  let err, _):
+                switch err.type {
+                case .getGridPreview : self.onError()
+                case .getNotificationVod(_, _, _ , let returnDatas) : self.errorNoti(returnDatas:returnDatas)
+                default : break
+                }
+                
+            default : break
+            }
+        }
+        .onReceive(self.pairing.$event){evt in
+            guard let _ = evt else {return}
+            switch evt {
+            case .pairingCompleted : self.reload()
+            case .disConnected : self.reload()
+            case .pairingCheckCompleted(let isSuccess) :
+                if isSuccess { self.reload() }
+                else { self.pageSceneObserver.alert = .pairingCheckFail }
+            default : do{}
+            }
+        }
+        .onReceive(self.pagePresenter.$event){ evt in
+            guard let evt = evt else {return}
+            switch evt.type {
+            case .timeChange :
+                guard let t = evt.data as? Double else { return }
+                self.onPlaytimeChanged(t:t)
             default : break
             }
         }
@@ -201,8 +233,7 @@ struct PlayBlock: PageComponent{
         if self.playerModel.playData == nil { return }
         self.isFullScreen = true
         self.finalIndex = self.playerModel.currentIdx
-        ComponentLog.d("openFullScreen " + (self.playerModel.currentIdx?.description ?? "nil"), tag:"SimplePlayer")
-        ComponentLog.d("openFullScreen " + (self.finalIndex?.description ?? "nil"), tag:"SimplePlayer")
+        self.focusIndex = -1
         self.playerModel.event = .pause
         self.pagePresenter.openPopup(
             PageProvider.getPageObject(.fullPlayer)
@@ -213,27 +244,28 @@ struct PlayBlock: PageComponent{
         )
     }
     private func closeFullScreen(){
-        ComponentLog.d("closeFullScreen ", tag:"SimplePlayer")
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            
-            self.playerModel.event = .resume
             self.isFullScreen = false
             if let posIdx = self.finalIndex {
-                infinityScrollModel.uiEvent = .scrollTo(posIdx)
-                ComponentLog.d("closeFullScreen success", tag:"SimplePlayer")
-                self.delayUpdate()
+                self.infinityScrollModel.uiEvent = .scrollTo(posIdx)
+                self.pagePresenter.orientationLock(lockOrientation: .all)
             }
-           
         }
+    }
+    
+    private func onPlaytimeChanged(t:Double){
+        guard let data = self.selectedData else { return }
+        data.playTime = t
     }
     
     
     @State var isError:Bool = false
     @State var datas:[PlayData] = []
+    @State var selectedData:PlayData? = nil
     @State var reloadDegree:Double = 0
     @State var appearList:[Int] = []
     @State var appearValue:Float = 0
-    @State var focusIndex:Int = 0
+    @State var focusIndex:Int = -1
      
     func reload(){
         self.delayUpdateCancel()
@@ -267,6 +299,14 @@ struct PlayBlock: PageComponent{
        
     }
     
+    private func emptyNoti(returnDatas:Any? = nil){
+        guard let requestDatas = returnDatas as? [PlayData] else { return }
+        requestDatas.forEach{ $0.setData(data: nil) }
+    }
+    private func errorNoti(returnDatas:Any? = nil){
+        guard let requestDatas = returnDatas as? [PlayData] else { return }
+        requestDatas.forEach{ $0.setData(data: nil) }
+    }
     
     private func setDatas(datas:[PreviewContentsItem]?) {
         guard let datas = datas else {
@@ -279,8 +319,33 @@ struct PlayBlock: PageComponent{
             return PlayData().setData(data: d, idx: idx)
         }
         self.datas.append(contentsOf: loadedDatas)
-        self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)
         
+        if self.pairing.status != .pairing { return }
+        self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)
+        self.viewModel.request = .init(
+            id: self.tag,
+            type: .getNotificationVod(
+                loadedDatas.filter{$0.srisId != nil}.map{$0.srisId!},
+                loadedDatas.filter{$0.epsdId != nil}.map{$0.epsdId!},
+                .movie,
+                returnDatas: loadedDatas
+                ),
+            isOptional:true
+        )
+    }
+    
+    private func loadedNoti(_ res:ApiResultResponds, returnDatas:Any? = nil){
+        guard let data = res.data as? NotificationVod else { return errorNoti(returnDatas:returnDatas)}
+        guard let notiDatas = data.NotiVodList else { return emptyNoti(returnDatas:returnDatas)}
+        guard let requestDatas = returnDatas as? [PlayData] else { return }
+        requestDatas.forEach{ d in
+            if let find = notiDatas.first(where: { noti in
+                d.srisId == noti.sris_id && d.epsdId == noti.epsd_id}){
+                d.setData(data: find)
+            } else {
+                d.setData(data: nil)
+            }
+        }
     }
     
     private func onAppear(idx:Int){
@@ -302,7 +367,7 @@ struct PlayBlock: PageComponent{
     func delayUpdate(){
         self.delayUpdateSubscription?.cancel()
         self.delayUpdateSubscription = Timer.publish(
-            every: 0.1, on: .current, in: .tracking)
+            every: 0.4, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
                 self.delayUpdateCancel()
@@ -311,7 +376,6 @@ struct PlayBlock: PageComponent{
     }
     
     func delayUpdateCancel(){
-        //ComponentLog.d("autoChangeCancel", tag:self.tag)
         self.delayUpdateSubscription?.cancel()
         self.delayUpdateSubscription = nil
     }
@@ -336,6 +400,7 @@ struct PlayBlock: PageComponent{
                 willFocus = self.appearList.last ?? self.datas.count-1
             }
         }
+        if self.selectedData == nil { willFocus = 0 }
         if self.focusIndex != willFocus  {
             self.onFocusChange(willFocus: willFocus)
         }
@@ -343,13 +408,16 @@ struct PlayBlock: PageComponent{
     }
     
     private func onFocusChange(willFocus:Int){
+        PageLog.d("onFocusChange " + willFocus .description, tag: self.tag)
         if self.pagePresenter.isFullScreen { return }
         if self.isFullScreen { return }
+        self.onPlaytimeChanged(t:self.playerModel.time)
         self.finalIndex = nil
         self.playerModel.reset()
         self.playerModel.resetCurrentPlayer()
         self.pagePresenter.orientationLock(isLock: false)
-        ComponentLog.d("onDisappear playblock ", tag:"SimplePlayer")
+        self.selectedData = self.datas[willFocus]
+        PageLog.d("onFocusChange completed " + willFocus .description, tag: self.tag)
         withAnimation{ self.focusIndex = willFocus }
     }
 

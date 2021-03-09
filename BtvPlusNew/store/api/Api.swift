@@ -91,7 +91,12 @@ enum ApiType{
     //PSS
     case getPairingUserInfo(String?, String? = nil),
          getPairingUserInfoByPackageID(String?)
-        
+    
+    //NF
+    case getNotificationVod([String]?, [String]?, NfNetwork.NotiType?, returnDatas:Any? = nil),
+         postNotificationVod(NotificationData?),
+         deleteNotificationVod(String?)
+    
     func coreDataKey() -> String? {
         switch self {
         //case .getGnb : return "getGnb"

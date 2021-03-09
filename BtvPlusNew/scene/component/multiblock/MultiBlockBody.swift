@@ -18,7 +18,7 @@ class MultiBlockModel: PageDataProviderModel {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
     
-    init(headerSize:Int = 5, requestSize:Int = 5) {
+    init(headerSize:Int = 5, requestSize:Int = 10) {
         self.headerSize = headerSize
         self.requestSize = requestSize
     }
@@ -381,7 +381,9 @@ struct MultiBlockBody: PageComponent {
         if  !Self.isPreLoad {
             max = self.originBlocks.count
         } else {
-            max = min(self.viewModel.requestSize, self.originBlocks.count)
+            max = (self.blocks.isEmpty == true)
+                ? min(self.viewModel.headerSize + 2, self.originBlocks.count)
+                : min(self.viewModel.requestSize, self.originBlocks.count)
         }
         if max == 0 {
             self.requestBlockCompleted()

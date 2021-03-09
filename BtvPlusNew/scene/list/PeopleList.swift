@@ -78,7 +78,7 @@ enum RoleType {
 extension PeopleList{
     static let height = ListItem.people.size.height
         + (Dimen.margin.micro + Dimen.margin.thin)
-        + Font.size.lightExtra + Font.size.thinExtra
+        + Font.size.lightExtra + Font.size.thinExtra + Dimen.margin.micro
 }
 
 

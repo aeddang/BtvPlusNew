@@ -23,10 +23,11 @@ class TextTabData:InfinityData{
             listType = .poster
         case .video, .watchedVideo :
             listType = .video
+        case .banner :
+            listType = .banner
         default:
             listType = nil
         }
-        
         index = idx
         blocks = data.blocks
         return self

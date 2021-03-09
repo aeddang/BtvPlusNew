@@ -40,12 +40,11 @@ struct PagePurchase: PageView {
                         useTracking:self.useTracking
                     ){
                         BtvWebView( viewModel: self.webViewModel )
-                                //.modifier(MatchParent())
-                                .modifier(MatchHorizontal(height: self.webViewHeight))
-                                .onReceive(self.webViewModel.$screenHeight){height in
-                                    let min = geometry.size.height - self.sceneObserver.safeAreaTop - Dimen.app.top
-                                    self.webViewHeight = min //max( height, min)
-                                }
+                            .modifier(MatchHorizontal(height: self.webViewHeight))
+                            .onReceive(self.webViewModel.$screenHeight){height in
+                                let min = geometry.size.height - self.sceneObserver.safeAreaTop - Dimen.app.top
+                                self.webViewHeight = min //max( height, min)
+                            }
                         
                     }
                     .padding(.bottom, self.sceneObserver.safeAreaBottom)

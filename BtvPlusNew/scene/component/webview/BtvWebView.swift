@@ -264,12 +264,14 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {}
         func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {}
         
-        
+       
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             webView.evaluateJavaScript("document.documentElement.scrollHeight", completionHandler: { (height, error) in
-                self.parent.viewModel.screenHeight = height as! CGFloat
-                webView.bounds.size.height = self.parent.viewModel.screenHeight
-                ComponentLog.d("document.documentElement.scrollHeight " + webView.bounds.size.height.description, tag: self.tag)
+                DispatchQueue.main.async {
+                    self.parent.viewModel.screenHeight = height as! CGFloat
+                    webView.bounds.size.height = self.parent.viewModel.screenHeight
+                    ComponentLog.d("document.documentElement.scrollHeight " + webView.bounds.size.height.description, tag: self.tag)
+                }
             })
             //선택 제거
             let disabledSelect = "document.documentElement.style.webkitUserSelect='none';"
@@ -278,6 +280,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             //하이라이트 제거
             let disabledHightlight = "document.documentElement.style.webkitTapHighlightColor='rgba(0,0,0,0)';"
             //let disabledScroll = "document.body.style.overflow = 'hidden';"
+            let disabledScroll = "document.querySelectorAll('*[style]').forEach(el => el.style.overflow = 'scroll');"
             // 자동 완성 제거
             let disableAutocompleteScript: String = """
                 var textFields = document.getElementsByTagName('textarea');
@@ -294,7 +297,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                     }
                 }
             """
-            [disabledSelect, disabledOptionBubble, disabledHightlight, disableAutocompleteScript ].forEach { option in
+            [disabledSelect, disabledOptionBubble, disabledHightlight, disableAutocompleteScript, disabledScroll ].forEach { option in
                 self.parent.callJS(webView, jsStr: option)
             }
             

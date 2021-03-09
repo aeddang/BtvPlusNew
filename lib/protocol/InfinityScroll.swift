@@ -12,7 +12,7 @@ import Combine
 
 
 
-class InfinityScrollModel:ComponentObservable, PageProtocol, Identifiable{
+class InfinityScrollModel:ComponentObservable, Identifiable{
     
     static let PULL_RANGE:CGFloat = 30
     static let PULL_COMPLETED_RANGE:CGFloat = 60
@@ -32,14 +32,7 @@ class InfinityScrollModel:ComponentObservable, PageProtocol, Identifiable{
     @Published fileprivate(set) var scrollPosition:CGFloat = 0
     var initIndex:Int? = nil
     var initPos:Float? = nil
-
-    let pullRange:CGFloat
-    
     let idstr:String = UUID().uuidString
-    init(axis:Axis.Set = .vertical) {
-        
-        self.pullRange = Self.PULL_RANGE
-    }
     
     deinit {
     }
@@ -83,7 +76,7 @@ class InfinityScrollModel:ComponentObservable, PageProtocol, Identifiable{
         self.event = .pullCancel
         self.pullPosition = 0
     }
-    private func onPullCompleted(){
+    func onPullCompleted(){
         self.event = .pullCompleted
     }
     
@@ -141,13 +134,13 @@ extension InfinityScrollViewProtocol {
         if abs(diff) > 10 { return }
         //ComponentLog.d(" diff  " + diff.description , tag: "InfinityScrollViewProtocol")
         //ComponentLog.d(" scrollStatus  " + self.viewModel.scrollStatus.rawValue , tag: "InfinityScrollViewProtocol")
-        if pos >= self.viewModel.pullRange && self.viewModel.scrollStatus != .pullCancel {
+        if pos >= InfinityScrollModel.PULL_RANGE && self.viewModel.scrollStatus != .pullCancel {
+            
             if diff > 5 && self.viewModel.scrollStatus == .pull {
                 self.viewModel.onPullCancel()
                 self.viewModel.scrollStatus = .pullCancel
                 //ComponentLog.d("onPullCancel " + diff.description , tag: "InfinityScrollViewProtocol")
-            }
-            else {
+            }else {
                 self.onPull(pos:pos)
             }
             return

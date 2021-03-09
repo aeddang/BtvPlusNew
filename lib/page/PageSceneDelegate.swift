@@ -364,7 +364,9 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                 pop.removeAnimationStart()
                 if let pageObject =  pop.pageObject {
                     delay = pageObject.animationType != .none ? self.changeAniDelay : delay
+                   
                     let opacity = pageObject.animationType == .none ? 1.0 : 0.0
+                    /*
                     switch  pageObject.animationType {
                     case .vertical:
                         pop.pageObservable.pagePosition.y = UIScreen.main.bounds.height
@@ -372,6 +374,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                         pop.pageObservable.pagePosition.x = UIScreen.main.bounds.width
                     default: do{}
                     }
+        `           */
                     pop.pageObservable.pageOpacity = opacity
                 }
                 pop.pageObservable.pagePosition.y = UIScreen.main.bounds.height

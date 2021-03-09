@@ -31,8 +31,7 @@ struct PageFullPlayer: PageView {
             switch evt {
             case .fullScreen(let isFullScreen) :
                 if isFullScreen { return }
-                self.playerModel.event = .pause
-                self.pagePresenter.closePopup(self.pageObject?.id)
+                self.onClose()
             default : break
             }
         }
@@ -40,7 +39,8 @@ struct PageFullPlayer: PageView {
             if !update {return}
             if !isInit {return}
             switch self.sceneObserver.sceneOrientation {
-            case .portrait : self.pagePresenter.closePopup(self.pageObject?.id)
+            case .portrait :
+                self.onClose()
             default : break
             }
         }
@@ -50,8 +50,8 @@ struct PageFullPlayer: PageView {
                     if let data = obj.getParamValue(key: .data) as? PlayInfo {
                         let type = obj.getParamValue(key: .type) as? BtvPlayType ?? .preview("")
                         let autoPlay = obj.getParamValue(key: .autoPlay) as? Bool
-                        let initTime = obj.getParamValue(key: .initTime) as? Double ?? 0
-                        self.playerModel.setData(data: data, type: type, autoPlay: autoPlay)
+                        let initTime = obj.getParamValue(key: .initTime) as? Double
+                        self.playerModel.setData(data: data, type: type, autoPlay: autoPlay, continuousTime: initTime)
                         
                     }
                 }
@@ -67,6 +67,12 @@ struct PageFullPlayer: PageView {
        
     }//body
    
+    private func onClose(){
+        self.playerModel.event = .pause
+        PageLog.d("play time " +  self.playerModel.time.description, tag:self.tag)
+        self.pagePresenter.onPageEvent(self.pageObject, event: .init(type: .timeChange, data: self.playerModel.time))
+        self.pagePresenter.closePopup(self.pageObject?.id)
+    }
     
 }
 

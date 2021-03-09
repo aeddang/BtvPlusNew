@@ -19,7 +19,7 @@ enum ComponentStatus:String {
     end
 }
 
-open class ComponentObservable: ObservableObject  {
+open class ComponentObservable: ObservableObject , PageProtocol{
     @Published var status:ComponentStatus = ComponentStatus.initate
     let id = UUID().description
 }

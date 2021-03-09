@@ -31,7 +31,7 @@ struct PageSynopsis: PageView {
     @ObservedObject var pageDataProviderModel:PageDataProviderModel = PageDataProviderModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var playerModel: BtvPlayerModel = BtvPlayerModel()
-    @ObservedObject var peopleScrollModel: InfinityScrollModel = InfinityScrollModel(axis: .horizontal)
+    @ObservedObject var peopleScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var prerollModel = PrerollModel()
     @ObservedObject var playerListViewModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var relationContentsModel:RelationContentsModel = RelationContentsModel()
@@ -102,21 +102,21 @@ struct PageSynopsis: PageView {
                             .highPriorityGesture(
                                 DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
                                     .onChanged({ value in
-                                        if self.useTracking { self.useTracking = false }
+                                        //if self.useTracking { self.useTracking = false }
                                         self.pageDragingModel.uiEvent = .drag(geometry, value)
                                     })
                                     .onEnded({ value in
                                         self.pageDragingModel.uiEvent = .draged(geometry, value)
-                                        self.useTracking = true
+                                        //self.useTracking = true
                                     })
                             )
                             .gesture(
                                 self.pageDragingModel.cancelGesture
                                     .onChanged({_ in
-                                                self.useTracking = true
+                                                //self.useTracking = true
                                                 self.pageDragingModel.uiEvent = .dragCancel})
                                     .onEnded({_ in
-                                                self.useTracking = true
+                                                //self.useTracking = true
                                                 self.pageDragingModel.uiEvent = .dragCancel})
                             )
                         }
@@ -137,6 +137,7 @@ struct PageSynopsis: PageView {
                     .onReceive(self.peopleScrollModel.$event){evt in
                         guard let evt = evt else {return}
                         switch evt {
+                        case .pullCompleted : self.pageDragingModel.uiEvent = .pulled(geometry)
                         case .pullCancel : self.pageDragingModel.uiEvent = .pulled(geometry)
                         default : do{}
                         }

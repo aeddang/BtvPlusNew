@@ -16,7 +16,7 @@ struct AlramButton: PageView {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
-    var srisId:String
+    var data:NotificationData
     @Binding var isAlram:Bool?
     var action: ((_ ac:Bool) -> Void)? = nil
     
@@ -27,7 +27,7 @@ struct AlramButton: PageView {
                 self.pageSceneObserver.alert = .needPairing()
             }
             else{
-                
+                self.requestToggle()
             }
         }) {
             VStack(spacing:0){
@@ -43,10 +43,9 @@ struct AlramButton: PageView {
         }//btn
         .onReceive(self.dataProvider.$result){ res in
             guard let res = res else { return }
-            if !res.id.hasPrefix(self.srisId) { return }
             switch res.type {
-            case .registLike: self.regist(res)
-            case .getLike: self.setup(res)
+            case .postNotificationVod(let data): self.regist(data, res:res)
+            case .deleteNotificationVod(let srisId): self.delete(srisId, res:res)
             default: do{}
             }
             
@@ -55,51 +54,48 @@ struct AlramButton: PageView {
             guard let err = err else { return }
             self.error(err)
         }
-        .onReceive(self.pairing.$status){stat in
-            if !self.isInit { return }
-            switch stat {
-            case .pairing:
-                if self.isAlram == nil { self.load() }
-            default:
-                self.isAlram = false
-            }
-        }
         .onAppear{
-            if self.pairing.status == .pairing {
-                if self.isAlram == nil { self.load() }
-            }
-            self.isInit = true
+           
         }
         
     }//body
-        
-    @State var isInit:Bool = false
-    func load(){
-        /*
-        self.dataProvider.requestData(
-            q: .init(
-                id: self.srisId,
-                type: .getLike(self.srisId, self.pairing.hostDevice),
-            isOptional: true)
-        )
-        */
-    }
-        
-   
-    func setup(_ res:ApiResultResponds){
-        /*
-        guard let data = res.data as? Like else { return }
-        if data.like == "1" { self.isLike = .like }
-        else if data.dislike == "1" { self.isLike = .unlike }
-        else { self.isLike = .unkowned }
-        */
+    
+    func requestToggle(){
+        if self.isAlram == true {
+            dataProvider.requestData(q: .init( type: .deleteNotificationVod(self.data.srisId)))
+        } else {
+            dataProvider.requestData(q: .init( type: .postNotificationVod(self.data)))
+        }
     }
     
-    func regist(_ res:ApiResultResponds){
-        guard let data = res.data as? RegistLike else {
-            return
-        }
         
+    func regist(_ data:NotificationData?, res:ApiResultResponds){
+        if self.data.srisId == data?.srisId && self.data.epsdId == data?.epsdId {
+            if !checkResult(res:res) { return }
+            self.isAlram = true
+            action?(true)
+            self.pageSceneObserver.event = .toast(String.alert.updateRegistAlram)
+        }
+    }
+    func delete(_ srisId:String?, res:ApiResultResponds){
+        if self.data.srisId == srisId {
+            if !checkResult(res:res) { return }
+            self.isAlram = false
+            action?(false)
+            self.pageSceneObserver.event = .toast(String.alert.updateUnregistAlram)
+        }
+    }
+    
+    private func checkResult(res:ApiResultResponds)->Bool{
+        guard let result = res.data as? RegistNotificationVod else {
+            self.pageSceneObserver.event = .toast(String.alert.apiErrorServer)
+            return false
+        }
+        if result.result != ApiCode.success {
+            self.pageSceneObserver.event = .toast(result.reason ?? String.alert.apiErrorServer)
+            return false
+        }
+        return true
     }
     
     func error(_ err:ApiResultError){
@@ -113,7 +109,7 @@ struct AlramButton_Previews: PreviewProvider {
     static var previews: some View {
         Form{
             AlramButton (
-                srisId: "",
+                data: NotificationData(),
                 isAlram: .constant(true)
             ){ ac in
                 

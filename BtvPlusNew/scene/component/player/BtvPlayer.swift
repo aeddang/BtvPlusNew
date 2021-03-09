@@ -121,7 +121,7 @@ class BtvPlayerModel:PlayerModel{
     }
     
     @discardableResult
-    func setData(data:PlayInfo, type:BtvPlayType, autoPlay:Bool? = nil) -> BtvPlayerModel {
+    func setData(data:PlayInfo, type:BtvPlayType, autoPlay:Bool? = nil, continuousTime:Double? = nil) -> BtvPlayerModel {
         let isPrevPlay = self.isPlay
         self.reset()
         self.playData = data
@@ -151,18 +151,22 @@ class BtvPlayerModel:PlayerModel{
             }
         }
         if let autoPlay = autoPlay {
-            ComponentLog.d("force setup initPlay " + autoPlay.description , tag: "BtvPlayer")
+            ComponentLog.d("force setup initPlay " + autoPlay.description , tag: self.tag)
             self.initPlay = autoPlay
+        }
+        if let continuousTime = continuousTime {
+            ComponentLog.d("force setup continuousTime " + continuousTime.description , tag: self.tag)
+            self.continuousTime = continuousTime
         }
         
         if self.isFirstPlay {
             self.isFirstPlay = false
-            ComponentLog.d("first setup initPlay " + self.initPlay.debugDescription , tag: "BtvPlayer")
+            ComponentLog.d("first setup initPlay " + self.initPlay.debugDescription , tag: self.tag)
         }else if self.initPlay == nil{
             self.initPlay = isPrevPlay
-            ComponentLog.d("auto setup initPlay " + self.initPlay.debugDescription , tag: "BtvPlayer")
+            ComponentLog.d("auto setup initPlay " + self.initPlay.debugDescription , tag: self.tag)
         } else {
-            ComponentLog.d("setup initPlay " + self.initPlay.debugDescription , tag: "BtvPlayer")
+            ComponentLog.d("setup initPlay " + self.initPlay.debugDescription , tag: self.tag)
         }
         
         if let auto = data.CNT_URL_NS_AUTO { self.appendQuality(name: "AUTO", path: auto) }

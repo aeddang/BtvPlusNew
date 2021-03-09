@@ -7,7 +7,7 @@
 import Foundation
 import SwiftUI
 
-struct PagePairingUser: PageView {
+struct PageWebview: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
@@ -19,6 +19,8 @@ struct PagePairingUser: PageView {
     
     @State var webViewHeight:CGFloat = 0
     @State var useTracking:Bool = false
+    @State var title:String? = nil
+
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -26,37 +28,42 @@ struct PagePairingUser: PageView {
                 axis:.vertical
             ) {
                 VStack(spacing:0){
-                    PageTab(
-                        title: String.pageTitle.connectCertificationBtv,
-                        isClose: true
-                    )
-                    .padding(.top, self.sceneObserver.safeAreaTop)
+                    if self.title != nil {
+                        PageTab(
+                            title: self.title,
+                            isClose: true
+                        )
+                        .padding(.top, self.sceneObserver.safeAreaTop)
+                    }
                     InfinityScrollView(
                         viewModel: self.infinityScrollModel,
                         isRecycle:false,
-                        useTracking:self.useTracking
-                    ){
-                        BtvWebView( viewModel: self.webViewModel )
-                            .modifier(MatchHorizontal(height: self.webViewHeight))
-                            .onReceive(self.webViewModel.$screenHeight){height in
-                                let min = geometry.size.height - self.sceneObserver.safeAreaTop - Dimen.app.top
-                                self.webViewHeight = min //max( height, min)
-                            }
-                        
+                        useTracking:self.useTracking ){
+                        ZStack{
+                            BtvWebView( viewModel: self.webViewModel )
+                                .modifier(MatchHorizontal(height: self.webViewHeight))
+                                .onReceive(self.webViewModel.$screenHeight){height in
+                                    let min = geometry.size.height - self.sceneObserver.safeAreaTop - Dimen.app.top
+                                    self.webViewHeight = min //max( height, min)
+                                    ComponentLog.d("webViewHeight " + webViewHeight.description)
+                                }
+                        }
                     }
                     .padding(.bottom, self.sceneObserver.safeAreaBottom)
                     .modifier(MatchParent())
                     .onReceive(self.infinityScrollModel.$scrollPosition){pos in
-                        self.pageDragingModel.uiEvent = .dragCancel
+                        ComponentLog.d("scrollPosition " + pos.description)
                     }
                     .onReceive(self.infinityScrollModel.$event){evt in
                         guard let evt = evt else {return}
                         switch evt {
-                        case .pullCancel : self.pageDragingModel.uiEvent = .pulled(geometry)
+                        case .pullCancel :
+                            self.pageDragingModel.uiEvent = .pulled(geometry)
                         default : do{}
                         }
                     }
                     .onReceive(self.infinityScrollModel.$pullPosition){ pos in
+                        ComponentLog.d("pullPosition " + pos.description)
                         self.pageDragingModel.uiEvent = .pull(geometry, pos)
                     }
                 }
@@ -86,38 +93,16 @@ struct PagePairingUser: PageView {
                 default : do{}
                 }
             }
-            .onReceive(self.webViewModel.$event){ evt in
-                guard let evt = evt else {return}
-                switch evt {
-                case .callFuncion(let method, let json, _) :
-                    if method == WebviewMethod.bpn_setIdentityVerfResult.rawValue {
-                        if let jsonData = json?.parseJson() {
-                            if let cid = jsonData["ci"] as? String {
-                                self.pageSceneObserver.alert = .alert(
-                                    String.alert.identifySuccess, String.alert.identifySuccessMe, nil)
-                                self.pagePresenter.openPopup(
-                                    PageProvider.getPageObject(.pairingDevice)
-                                        .addParam(key: .type, value: PairingRequest.user(cid))
-                                )
-                            }else{
-                                self.pageSceneObserver.alert = .alert(
-                                    String.alert.identifyFail, String.alert.identifyFailMe, nil)
-                            }
-                        }else{
-                            self.pageSceneObserver.alert = .alert(
-                                String.alert.identifyFail, String.alert.identifyFailMe, nil)
-                        }
-                        self.pagePresenter.closePopup(self.pageObject?.id)
-                    }
-                default : do{}
-                }
-            }
+            
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
             }
             .onAppear{
-                let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.identity
-                self.webViewModel.request = .link(linkUrl)
+                guard let obj = self.pageObject  else { return }
+                self.title = obj.getParamValue(key: .title) as? String
+                if let link = obj.getParamValue(key: .data) as? String{
+                   self.webViewModel.request = .link(link)
+                }
             }
             .onDisappear{
             }
@@ -129,10 +114,10 @@ struct PagePairingUser: PageView {
 }
 
 #if DEBUG
-struct PagePairingUser_Previews: PreviewProvider {
+struct PageWebview_Previews: PreviewProvider {
     static var previews: some View {
         Form{
-            PagePairingUser().contentBody
+            PageWebview().contentBody
                 .environmentObject(PagePresenter())
                 .environmentObject(SceneObserver())
                 .environmentObject(PageSceneObserver())

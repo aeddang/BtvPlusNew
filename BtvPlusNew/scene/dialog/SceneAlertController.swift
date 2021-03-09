@@ -17,7 +17,7 @@ enum SceneAlert:Equatable {
          limitedDevice(PairingInfo?), pairingError(NpsCommonHeader?), pairingRecovery, needPairing(String? = nil), pairingCheckFail,
          needPurchase( PurchaseWebviewModel ),
          serviceUnavailable(String?), serviceSelect(String?, String? , (String?) -> Void),
-         like(String, Bool?),
+         like(String, Bool?), updateAlram(String, Bool),
          cancel
     
     static func ==(lhs: SceneAlert, rhs: SceneAlert) -> Bool {
@@ -91,6 +91,7 @@ struct SceneAlertController: PageComponent{
             case .serviceSelect(_ , let value, let completionHandler) : self.selectedServiceSelect(idx, value:value, completionHandler:completionHandler)
             case .pairingCheckFail : self.selectedPairingCheckFail(idx)
             case .like(let id, let isLike) : self.selectedLike(idx, id: id, isLike:isLike)
+            case .updateAlram(let id, let isAlram) : self.selectedUpdateAlram(idx, id: id, isAlram:isAlram)
             default: do { return }
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -123,6 +124,7 @@ struct SceneAlertController: PageComponent{
             case .serviceSelect(let text, _ , _) : self.setupServiceSelect(text: text)
             case .pairingCheckFail : self.setupPairingCheckFail()
             case .like(_, let isLike) : self.setupLike( isLike: isLike)
+            case .updateAlram(let id, let isAlram) : self.setupUpdateAlram( isAlram: isAlram)
             case .recivedApns:
                 let enable = self.setupRecivedApns()
                 if !enable { return }
@@ -426,6 +428,21 @@ struct SceneAlertController: PageComponent{
             else { self.dataProvider.requestData(q: .init(id:id, type: .registLike(false, id, self.pairing.hostDevice))) }
         }
     }
+    
+    func setupUpdateAlram( isAlram:Bool) {
+        self.title = String.alert.updateAlram
+        self.text = String.alert.updateAlramSetup
+        self.buttons = [
+            AlertBtnData(title: String.app.cancel, index: 0),
+            AlertBtnData(title: String.button.recieveAlram, index: 1)
+        ]
+    }
+    func selectedUpdateAlram(_ idx:Int, id:String, isAlram:Bool) {
+        if idx == 1 {
+            
+        }
+    }
+    
     
     func setupConfirm(title:String?, text:String?) {
         self.title = title

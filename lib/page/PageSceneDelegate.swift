@@ -366,18 +366,18 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                     delay = pageObject.animationType != .none ? self.changeAniDelay : delay
                    
                     let opacity = pageObject.animationType == .none ? 1.0 : 0.0
-                    /*
+                    
                     switch  pageObject.animationType {
                     case .vertical:
                         pop.pageObservable.pagePosition.y = UIScreen.main.bounds.height
                     case .horizental:
                         pop.pageObservable.pagePosition.x = UIScreen.main.bounds.width
-                    default: do{}
+                    default: break
                     }
-        `           */
+        
                     pop.pageObservable.pageOpacity = opacity
                 }
-                pop.pageObservable.pagePosition.y = UIScreen.main.bounds.height
+                //pop.pageObservable.pagePosition.y = UIScreen.main.bounds.height
                 pop.pageObservable.pageOpacity = 0.0
             }
         }

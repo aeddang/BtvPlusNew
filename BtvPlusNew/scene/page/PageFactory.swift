@@ -182,11 +182,11 @@ struct PageSceneModel: PageModel {
             return UIInterfaceOrientationMask.all
         }
         switch pageObject.pageID {
-        case .home, .synopsis, .purchase, .category, .previewList:
+        case .categoryList, .multiBlock:
             return UIInterfaceOrientationMask.portrait
         case .fullPlayer: return UIInterfaceOrientationMask.landscape
         default :
-            return UIInterfaceOrientationMask.all
+            return UIInterfaceOrientationMask.portrait
         }
     }
     func getPageOrientationLock(_ pageObject:PageObject?) -> UIInterfaceOrientationMask? {

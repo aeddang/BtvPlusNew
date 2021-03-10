@@ -192,6 +192,8 @@
 "alertUpdateRegistAlram" = "알림 설정이 완료 되었습니다.";
 "alertUpdateUnregistAlram" = "알림 설정이 해제 되었습니다.";
 
+"alertDragdown" = "당겨서 페이지 닫기";
+
 /*
  PageTitle
 */

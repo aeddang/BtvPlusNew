@@ -82,27 +82,34 @@ class PurchaseWebviewModel {
         pidOnly = nil
         synopsisData = nil
     }
-    private func addEpsdId(epsdId: String?) {
-        guard let epsdId = epsdId else { return }
+    
+    @discardableResult
+    func addEpsdId(epsdId: String?) -> PurchaseWebviewModel{
+        guard let epsdId = epsdId else { return self}
         let find = epsdIds.first(where: {$0 == epsdId})
         if find == nil { epsdIds.append(epsdId) }
+        return self
     }
     
-    private func addExcepPid(pid: String?) {
-        guard let pid = pid else { return }
+    @discardableResult
+    func addExcepPid(pid: String?) -> PurchaseWebviewModel{
+        guard let pid = pid else { return self}
         if exceptPids == nil { exceptPids = [] }
         let find = exceptPids!.first(where: {$0 == pid})
         if find == nil { exceptPids!.append(pid) }
+        return self
     }
     /*
      * 일반 시놉인 경우 구매
      */
     var synopsisData:Synopsis? = nil
+    @discardableResult
     func setParam(synopsisData: Synopsis) -> PurchaseWebviewModel{
         self.synopsisData = synopsisData
         return self
     }
-    func setParam(directView:DirectView? , monthlyPid: String?) {
+    @discardableResult
+    func setParam(directView:DirectView? , monthlyPid: String?) -> PurchaseWebviewModel{
        
         func checkPurchase(pid: String?) -> Bool {
             guard let pid = pid else { return false}
@@ -110,7 +117,7 @@ class PurchaseWebviewModel {
             if directView?.pps_products?.first(where: {$0.prd_prc_id == pid && $0.yn_directview == "Y"}) != nil { return true }
             return false
         }
-        guard let epsdId = synopsisData?.contents?.epsd_id else { return }
+        guard let epsdId = synopsisData?.contents?.epsd_id else { return self }
         var isPPS = false
         if let srisTypCd = synopsisData?.contents?.sris_typ_cd {
             if srisTypCd == "01" { isPPS = true }
@@ -153,20 +160,29 @@ class PurchaseWebviewModel {
             ptype = .ppv
         }
         conTitle = synopsisData?.contents?.title ?? ""
+        return self
     }
     
    
     /*
     * 월정액 경우 구매
     */
-    func setParam(data: BlockItem, seriesId: String, epsId: String) {
-        addEpsdId(epsdId: epsId)
-        srisId = seriesId
+    @discardableResult
+    func setParam(data: BlockItem, seriesId: String? = nil , epsId: String? = nil) -> PurchaseWebviewModel{
+        if let epsId = epsId { addEpsdId(epsdId: epsId) }
+        if let seriesId = seriesId { self.srisId = seriesId }
         ptype = PurchasePType.getType(data.prd_typ_cd)
         synopsisType = .title
         conTitle = data.menu_nm ?? ""
         pid = data.prd_prc_id
         pidOnly = "true"
+        return self
+    }
+    @discardableResult
+    func setParam(seriesId: String? = nil , epsId: String? = nil) -> PurchaseWebviewModel{
+        if let epsId = epsId { addEpsdId(epsdId: epsId) }
+        if let seriesId = seriesId { self.srisId = seriesId }
+        return self
     }
     
     /*

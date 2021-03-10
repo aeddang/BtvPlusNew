@@ -35,36 +35,41 @@ struct PageWebview: PageView {
                         )
                         .padding(.top, self.sceneObserver.safeAreaTop)
                     }
-                    InfinityScrollView(
-                        viewModel: self.infinityScrollModel,
-                        isRecycle:false,
-                        useTracking:self.useTracking ){
-                        ZStack{
-                            BtvWebView( viewModel: self.webViewModel )
-                                .modifier(MatchHorizontal(height: self.webViewHeight))
-                                .onReceive(self.webViewModel.$screenHeight){height in
-                                    let min = geometry.size.height - self.sceneObserver.safeAreaTop - Dimen.app.top
-                                    self.webViewHeight = min //max( height, min)
-                                    ComponentLog.d("webViewHeight " + webViewHeight.description)
-                                }
+                    ZStack(alignment: .topLeading){
+                        DragDownArrow(
+                            infinityScrollModel: self.infinityScrollModel)
+                           
+                        InfinityScrollView(
+                            viewModel: self.infinityScrollModel,
+                            scrollType : .web(isDragEnd: true),
+                            isRecycle:false,
+                            useTracking:self.useTracking ){
+                            ZStack{
+                                BtvWebView( viewModel: self.webViewModel )
+                                    .modifier(MatchHorizontal(height: self.webViewHeight))
+                                    .onReceive(self.webViewModel.$screenHeight){height in
+                                        let min = geometry.size.height - self.sceneObserver.safeAreaTop - Dimen.app.top
+                                        self.webViewHeight = min //max( height, min)
+                                        ComponentLog.d("webViewHeight " + webViewHeight.description)
+                                    }
+                            }
                         }
-                    }
-                    .padding(.bottom, self.sceneObserver.safeAreaBottom)
-                    .modifier(MatchParent())
-                    .onReceive(self.infinityScrollModel.$scrollPosition){pos in
-                        ComponentLog.d("scrollPosition " + pos.description)
-                    }
-                    .onReceive(self.infinityScrollModel.$event){evt in
-                        guard let evt = evt else {return}
-                        switch evt {
-                        case .pullCancel :
-                            self.pageDragingModel.uiEvent = .pulled(geometry)
-                        default : do{}
+                        .padding(.bottom, self.sceneObserver.safeAreaBottom)
+                        .modifier(MatchParent())
+        
+                        .onReceive(self.infinityScrollModel.$event){evt in
+                            guard let evt = evt else {return}
+                            switch evt {
+                            case .pullCompleted :
+                                self.pageDragingModel.uiEvent = .pullCompleted(geometry)
+                            case .pullCancel :
+                                self.pageDragingModel.uiEvent = .pullCancel(geometry)
+                            default : do{}
+                            }
                         }
-                    }
-                    .onReceive(self.infinityScrollModel.$pullPosition){ pos in
-                        ComponentLog.d("pullPosition " + pos.description)
-                        self.pageDragingModel.uiEvent = .pull(geometry, pos)
+                        .onReceive(self.infinityScrollModel.$pullPosition){ pos in
+                            self.pageDragingModel.uiEvent = .pull(geometry, pos)
+                        }
                     }
                 }
                 .modifier(PageFull())
@@ -83,6 +88,7 @@ struct PageWebview: PageView {
                         .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
                 )
             }//draging
+            
             .onReceive(self.pairing.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {

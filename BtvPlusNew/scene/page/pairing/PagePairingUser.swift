@@ -31,28 +31,37 @@ struct PagePairingUser: PageView {
                         isClose: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    InfinityScrollView(
-                        viewModel: self.infinityScrollModel,
-                        isRecycle:false,
-                        useTracking:self.useTracking
-                    ){
-                        BtvWebView( viewModel: self.webViewModel )
-                            .modifier(MatchHorizontal(height: self.webViewHeight))
-                            .onReceive(self.webViewModel.$screenHeight){height in
-                                let min = geometry.size.height - self.sceneObserver.safeAreaTop - Dimen.app.top
-                                self.webViewHeight = min //max( height, min)
-                            }
-                        
+                    
+                    ZStack(alignment: .topLeading){
+                        DragDownArrow(
+                            infinityScrollModel: self.infinityScrollModel)
+                        InfinityScrollView(
+                            viewModel: self.infinityScrollModel,
+                            scrollType : .web(isDragEnd: true),
+                            isRecycle:false,
+                            useTracking:self.useTracking
+                        ){
+                            BtvWebView( viewModel: self.webViewModel )
+                                .modifier(MatchHorizontal(height: self.webViewHeight))
+                                .onReceive(self.webViewModel.$screenHeight){height in
+                                    self.webViewHeight = geometry.size.height
+                                        - Dimen.app.top
+                                        - self.sceneObserver.safeAreaTop
+                                        - self.sceneObserver.safeAreaBottom
+                                }
+                            
+                        }
                     }
                     .padding(.bottom, self.sceneObserver.safeAreaBottom)
                     .modifier(MatchParent())
-                    .onReceive(self.infinityScrollModel.$scrollPosition){pos in
-                        self.pageDragingModel.uiEvent = .dragCancel
-                    }
+                    
                     .onReceive(self.infinityScrollModel.$event){evt in
                         guard let evt = evt else {return}
                         switch evt {
-                        case .pullCancel : self.pageDragingModel.uiEvent = .pulled(geometry)
+                        case .pullCompleted :
+                            self.pageDragingModel.uiEvent = .pullCompleted(geometry)
+                        case .pullCancel :
+                            self.pageDragingModel.uiEvent = .pullCancel(geometry)
                         default : do{}
                         }
                     }
@@ -63,12 +72,8 @@ struct PagePairingUser: PageView {
                 .modifier(PageFull())
                 .highPriorityGesture(
                     DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
-                        .onChanged({ value in
-                            self.pageDragingModel.uiEvent = .drag(geometry, value)
-                        })
-                        .onEnded({ value in
-                            self.pageDragingModel.uiEvent = .draged(geometry,value)
-                        })
+                        .onChanged({ value in self.pageDragingModel.uiEvent = .drag(geometry, value) })
+                        .onEnded({ value in self.pageDragingModel.uiEvent = .draged(geometry,value) })
                 )
                 .gesture(
                     self.pageDragingModel.cancelGesture

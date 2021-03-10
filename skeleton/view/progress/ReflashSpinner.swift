@@ -6,12 +6,10 @@
 //
 import Foundation
 import SwiftUI
-extension ReflashSpinner{
-    static let DEGREE_MAX:Double = Double(InfinityScrollModel.PULL_COMPLETED_RANGE)
-}
+
 struct ReflashSpinner: PageComponent {
     @Binding var progress:Double
-    var progressMax:Double = Self.DEGREE_MAX
+    var progressMax:Double = Double(InfinityScrollModel.PULL_COMPLETED_RANGE)
     var text:String? = nil
     var body: some View {
         VStack{

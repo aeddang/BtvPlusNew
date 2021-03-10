@@ -165,6 +165,7 @@ extension String {
         public static var updateAlramRecommand = "alertUpdateAlramRecommand".loaalized()
         public static var updateRegistAlram = "alertUpdateRegistAlram".loaalized()
         public static var updateUnregistAlram = "alertUpdateUnregistAlram".loaalized()
+        public static var dragdown = "alertDragdown".loaalized()
     }
     
     struct button {

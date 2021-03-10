@@ -75,50 +75,53 @@ struct PageSynopsis: PageView {
                         }
                         
                         if !self.isFullScreen{
-                            
-                            SynopsisBody(
-                                componentViewModel: self.componentViewModel,
-                                infinityScrollModel: self.infinityScrollModel,
-                                relationContentsModel: self.relationContentsModel,
-                                peopleScrollModel: self.peopleScrollModel,
-                                pageDragingModel: self.pageDragingModel,
-                                isBookmark: self.$isBookmark,
-                                isLike: self.$isLike,
-                                relationTabIdx: self.$relationTabIdx,
-                                seris: self.$seris,
-                                topIdx : self.topIdx,
-                                synopsisData: self.synopsisData,
-                                isPairing: self.isPairing,
-                                episodeViewerData: self.episodeViewerData,
-                                purchasViewerData: self.purchasViewerData,
-                                summaryViewerData: self.summaryViewerData,
-                                srisId: self.srisId, epsdId: self.epsdId,
-                                hasAuthority: self.hasAuthority,
-                                relationTab: self.relationTab,
-                                relationDatas: self.relationDatas,
-                                hasRelationVod: self.hasRelationVod,
-                                useTracking:self.useTracking)
-                               
-                            .highPriorityGesture(
-                                DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
-                                    .onChanged({ value in
-                                        //if self.useTracking { self.useTracking = false }
-                                        self.pageDragingModel.uiEvent = .drag(geometry, value)
-                                    })
-                                    .onEnded({ value in
-                                        self.pageDragingModel.uiEvent = .draged(geometry, value)
-                                        //self.useTracking = true
-                                    })
-                            )
-                            .gesture(
-                                self.pageDragingModel.cancelGesture
-                                    .onChanged({_ in
-                                                //self.useTracking = true
-                                                self.pageDragingModel.uiEvent = .dragCancel})
-                                    .onEnded({_ in
-                                                //self.useTracking = true
-                                                self.pageDragingModel.uiEvent = .dragCancel})
-                            )
+                            if self.isUIView{
+                                SynopsisBody(
+                                    componentViewModel: self.componentViewModel,
+                                    infinityScrollModel: self.infinityScrollModel,
+                                    relationContentsModel: self.relationContentsModel,
+                                    peopleScrollModel: self.peopleScrollModel,
+                                    pageDragingModel: self.pageDragingModel,
+                                    isBookmark: self.$isBookmark,
+                                    isLike: self.$isLike,
+                                    relationTabIdx: self.$relationTabIdx,
+                                    seris: self.$seris,
+                                    topIdx : self.topIdx,
+                                    synopsisData: self.synopsisData,
+                                    isPairing: self.isPairing,
+                                    episodeViewerData: self.episodeViewerData,
+                                    purchasViewerData: self.purchasViewerData,
+                                    summaryViewerData: self.summaryViewerData,
+                                    srisId: self.srisId, epsdId: self.epsdId,
+                                    hasAuthority: self.hasAuthority,
+                                    relationTab: self.relationTab,
+                                    relationDatas: self.relationDatas,
+                                    hasRelationVod: self.hasRelationVod,
+                                    useTracking:self.useTracking)
+                                   
+                                .highPriorityGesture(
+                                    DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
+                                        .onChanged({ value in
+                                            //if self.useTracking { self.useTracking = false }
+                                            self.pageDragingModel.uiEvent = .drag(geometry, value)
+                                        })
+                                        .onEnded({ value in
+                                            self.pageDragingModel.uiEvent = .draged(geometry, value)
+                                            //self.useTracking = true
+                                        })
+                                )
+                                .gesture(
+                                    self.pageDragingModel.cancelGesture
+                                        .onChanged({_ in
+                                                    //self.useTracking = true
+                                                    self.pageDragingModel.uiEvent = .dragCancel})
+                                        .onEnded({_ in
+                                                    //self.useTracking = true
+                                                    self.pageDragingModel.uiEvent = .dragCancel})
+                                )
+                            } else {
+                                Spacer().modifier(MatchParent())
+                            }
                         }
                     }
                     .onReceive( [self.relationTabIdx].publisher ){ idx in
@@ -137,8 +140,10 @@ struct PageSynopsis: PageView {
                     .onReceive(self.peopleScrollModel.$event){evt in
                         guard let evt = evt else {return}
                         switch evt {
-                        case .pullCompleted : self.pageDragingModel.uiEvent = .pulled(geometry)
-                        case .pullCancel : self.pageDragingModel.uiEvent = .pulled(geometry)
+                        case .pullCompleted :
+                            self.pageDragingModel.uiEvent = .pullCompleted(geometry)
+                        case .pullCancel :
+                            self.pageDragingModel.uiEvent = .pullCancel(geometry)
                         default : do{}
                         }
                     }
@@ -307,6 +312,8 @@ struct PageSynopsis: PageView {
     @State var isPageUiReady = false
     @State var isPageDataReady = false
     @State var topIdx:Int = 0
+    
+    @State var isUIView:Bool = false
     
     func initPage(){
         if !self.isPageDataReady || !self.isPageUiReady || self.synopsisData == nil { return }
@@ -534,6 +541,7 @@ struct PageSynopsis: PageView {
         if self.relationContentsModel.isReady {
             PageLog.d("already synopsisRelationData", tag: self.tag)
             self.setupRelationContentCompleted ()
+            self.onAllProgressCompleted()
             return
         }
         
@@ -553,6 +561,7 @@ struct PageSynopsis: PageView {
         } else {
             self.setupRelationContentCompleted ()
         }
+        self.onAllProgressCompleted()
     }
     private func errorProgress(){
         PageLog.d("errorProgress", tag: self.tag)
@@ -560,6 +569,12 @@ struct PageSynopsis: PageView {
             self.isPlayAble = false
             self.isPlayViewActive = true
         }
+        self.onAllProgressCompleted()
+    }
+    
+    private func onAllProgressCompleted(){
+        PageLog.d("onAllProgressCompleted(", tag: self.tag)
+        withAnimation{ self.isUIView = true }
     }
     
 

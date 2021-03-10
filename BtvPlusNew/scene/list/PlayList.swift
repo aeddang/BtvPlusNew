@@ -156,6 +156,7 @@ struct PlayItem: PageView {
                                 .scaledToFit()
                                 .frame(width: Dimen.icon.medium, height: Dimen.icon.medium)
                         }
+                        .buttonStyle(BorderlessButtonStyle())
                     }
                     if self.isPlay && self.isSelected && self.playerModel != nil {
                         if !self.isError {
@@ -178,6 +179,7 @@ struct PlayItem: PageView {
                             }) {
                                 Spacer().background(Color.transparent.black15).modifier(MatchParent())
                             }
+                            .buttonStyle(BorderlessButtonStyle())
                         }
                     }
                 }
@@ -210,10 +212,12 @@ struct PlayItem: PageView {
                     LikeButton(srisId: self.data.srisId!, isLike: self.$isLike, useText:false, isThin:true){ value in
                         self.data.isLike = value
                     }
+                    .buttonStyle(BorderlessButtonStyle())
                     if self.data.notificationData != nil {
                         AlramButton(data: self.data.notificationData!, isAlram: self.$isAlram){ value in
                             self.data.isAlram = value
                         }
+                        .buttonStyle(BorderlessButtonStyle())
                     }
                 }
             }

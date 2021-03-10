@@ -35,7 +35,7 @@ open class PlayerModel: ComponentObservable {
         willSet{
             self.status = .update
         }
-        didSet{
+        didSet{ 
             if event == nil { self.status = .ready }
         }
     }

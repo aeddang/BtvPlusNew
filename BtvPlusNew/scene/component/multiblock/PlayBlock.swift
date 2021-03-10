@@ -50,51 +50,52 @@ struct PlayBlock: PageComponent{
         ){
             if !self.isError {
                 ZStack(alignment: .topLeading){
-                    VStack{
-                        ReflashSpinner(
-                            progress: self.$reloadDegree
-                        )
+                    ReflashSpinner(
+                        progress: self.$reloadDegree)
                         .padding(.top, self.marginTop)
-                        Spacer()
-                    }
                     InfinityScrollView(
                         viewModel: self.infinityScrollModel,
                         axes: .vertical,
+                        scrollType : .reload(isDragEnd:false),
                         marginTop:self.marginTop,
                         marginBottom :self.marginBottom,
                         spacing: 0,
                         isRecycle: true,
                         useTracking: self.useTracking){
-                        ForEach(self.datas) { data in
-                            PlayItem(
-                                pageObservable:self.pageObservable,
-                                playerModel:self.playerModel,
-                                data: data,
-                                isSelected: data.index == self.focusIndex
-                                )
-                                .id(data.index)
-                                .modifier(
-                                    ListRowInset(
-                                        marginHorizontal: Dimen.margin.thin,
-                                        spacing: self.spacing,
-                                        marginTop: self.marginTop
+                        if self.datas.isEmpty {
+                            Spacer().modifier(ListRowInset())
+                        } else {
+                            ForEach(self.datas) { data in
+                                PlayItem(
+                                    pageObservable:self.pageObservable,
+                                    playerModel:self.playerModel,
+                                    data: data,
+                                    isSelected: data.index == self.focusIndex
                                     )
-                                )
-                                .onAppear{
-                                    if data.index == self.datas.last?.index {
-                                        self.load()
+                                    .id(data.index)
+                                    .modifier(
+                                        ListRowInset(
+                                            marginHorizontal: Dimen.margin.thin,
+                                            spacing: self.spacing,
+                                            marginTop: self.marginTop
+                                        )
+                                    )
+                                    .onAppear{
+                                        if data.index == self.datas.last?.index {
+                                            self.load()
+                                        }
+                                        self.onAppear(idx:data.index)
                                     }
-                                    self.onAppear(idx:data.index)
-                                }
-                                .onDisappear{
-                                    self.onDisappear(idx: data.index)
-                                }
-                                .onTapGesture {
-                                    if self.focusIndex != data.index {
-                                        self.onFocusChange(willFocus: data.index)
+                                    .onDisappear{
+                                        self.onDisappear(idx: data.index)
                                     }
-                                    self.pageSceneObserver.event = .toast((data.openDate ?? "") + " " + String.alert.updateAlramRecommand)
-                                }
+                                    .onTapGesture {
+                                        if self.focusIndex != data.index {
+                                            self.onFocusChange(willFocus: data.index)
+                                        }
+                                        self.pageSceneObserver.event = .toast((data.openDate ?? "") + " " + String.alert.updateAlramRecommand)
+                                    }
+                            }
                         }
                     }
                     .modifier(MatchParent())
@@ -157,13 +158,11 @@ struct PlayBlock: PageComponent{
         .onReceive(self.infinityScrollModel.$event){evt in
             guard let evt = evt else {return}
             switch evt {
+            case .pullCompleted :
+                if !self.infinityScrollModel.isLoading { self.reload() }
+                withAnimation{ self.reloadDegree = 0 }
             case .pullCancel :
-                if !self.infinityScrollModel.isLoading {
-                    if self.reloadDegree >= ReflashSpinner.DEGREE_MAX { self.reload() }
-                }
-                withAnimation{
-                    self.reloadDegree = 0
-                }
+                withAnimation{ self.reloadDegree = 0 }
             default : do{}
             }
             

@@ -49,8 +49,11 @@ struct PageHome: PageView {
                 monthlyDatas: self.monthlyDatas,
                 isRecycle:true
                 ){ data in
-                
-                self.reload(selectedMonthlyId: data.prdPrcId)
+                    if let data = data {
+                        self.reload(selectedMonthlyId: data.prdPrcId)
+                    } else {// all view
+                        
+                    }
             }
         }
         .modifier(PageFull())

@@ -74,12 +74,10 @@ struct MultiBlockBody: PageComponent {
     var monthlyDatas:[MonthlyData]? = nil
     var isRecycle = true
     
-    var action: ((_ data:MonthlyData) -> Void)? = nil
-    
-    
+    var action: ((_ data:MonthlyData?) -> Void)? = nil
     
     @State var reloadDegree:Double = 0
-    @State var reloadDegreeMax:Double = ReflashSpinner.DEGREE_MAX
+    @State var reloadDegreeMax:Double = Double(InfinityScrollModel.PULL_COMPLETED_RANGE)
     @State var headerOffset:CGFloat = 0
     var body: some View {
         PageDataProviderContent(
@@ -179,15 +177,11 @@ struct MultiBlockBody: PageComponent {
             guard let evt = evt else {return}
             switch evt {
             case .bottom : self.addBlock()
+            case .pullCompleted :
+                if !self.infinityScrollModel.isLoading { self.viewModel.reload() }
+                withAnimation{ self.reloadDegree = 0}
             case .pullCancel :
-                if !self.infinityScrollModel.isLoading {
-                    if self.reloadDegree >= self.reloadDegreeMax {
-                        self.viewModel.reload()
-                    }
-                }
-                withAnimation{
-                    self.reloadDegree = 0
-                }
+                withAnimation{ self.reloadDegree = 0}
             default : do{}
             }
             

@@ -41,33 +41,36 @@ struct PagePairingDevice: PageView {
                         isClose: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    InfinityScrollView(
-                        viewModel: self.infinityScrollModel,
-                        useTracking:self.useTracking){
-                        
-                        VStack(alignment:.leading , spacing:0) {
-                            Text(String.pageText.pairingDeviceText1)
-                                .modifier(MediumTextStyle( size: Font.size.bold ))
-                                .padding(.top, Dimen.margin.light)
-                                .fixedSize(horizontal: false, vertical:true)
-                            if self.textAvailableWifi != nil {
-                                Text(self.textAvailableWifi!)
-                                    .modifier(MediumTextStyle( size: Font.size.light, color: Color.brand.thirdly ))
-                                    .padding(.top, Dimen.margin.medium)
+                    ZStack(alignment: .topLeading){
+                        DragDownArrow(
+                            infinityScrollModel: self.infinityScrollModel)
+                        InfinityScrollView(
+                            viewModel: self.infinityScrollModel,
+                            useTracking:self.useTracking){
+                            
+                            VStack(alignment:.leading , spacing:0) {
+                                Text(String.pageText.pairingDeviceText1)
+                                    .modifier(MediumTextStyle( size: Font.size.bold ))
+                                    .padding(.top, Dimen.margin.light)
+                                    .fixedSize(horizontal: false, vertical:true)
+                                if self.textAvailableWifi != nil {
+                                    Text(self.textAvailableWifi!)
+                                        .modifier(MediumTextStyle( size: Font.size.light, color: Color.brand.thirdly ))
+                                        .padding(.top, Dimen.margin.medium)
+                                }
+                                HStack{
+                                    Spacer()
+                                    Text(self.textAvailableDevice)
+                                        .modifier(MediumTextStyle( size: Font.size.thin ))
+                                        .padding(.top, Dimen.margin.heavy)
+                                }
                             }
-                            HStack{
-                                Spacer()
-                                Text(self.textAvailableDevice)
-                                    .modifier(MediumTextStyle( size: Font.size.thin ))
-                                    .padding(.top, Dimen.margin.heavy)
+                            .padding(.horizontal, Dimen.margin.regular)
+                            StbList(datas: self.datas){ stb in
+                                self.selectePairingDevice(stb: stb)
                             }
+                            .padding(.top, Dimen.margin.heavy)
                         }
-                        .padding(.horizontal, Dimen.margin.regular)
-                        StbList(datas: self.datas){ stb in
-                            self.selectePairingDevice(stb: stb)
-                        }
-                        .padding(.top, Dimen.margin.heavy)
-                        
                     }
                     .background(Color.brand.bg)
                     .modifier(MatchParent())
@@ -90,8 +93,10 @@ struct PagePairingDevice: PageView {
                 .onReceive(self.infinityScrollModel.$event){evt in
                     guard let evt = evt else {return}
                     switch evt {
+                    case .pullCompleted :
+                        self.pageDragingModel.uiEvent = .pullCompleted(geometry)
                     case .pullCancel :
-                        self.pageDragingModel.uiEvent = .pulled(geometry)
+                        self.pageDragingModel.uiEvent = .pullCancel(geometry)
                     default : do{}
                     }
                 }

@@ -60,6 +60,7 @@ struct CateBlock: PageComponent{
     var marginBottom : CGFloat = 0
     var spacing: CGFloat = Dimen.margin.thin
     
+    @State var reloadDegree:Double = 0
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -67,16 +68,13 @@ struct CateBlock: PageComponent{
         ){
             if !self.isError {
                 ZStack(alignment: .topLeading){
-                    VStack{
-                        ReflashSpinner(
-                            progress: self.$reloadDegree
-                        )
+                    ReflashSpinner(
+                        progress: self.$reloadDegree)
                         .padding(.top, self.marginTop)
-                        Spacer()
-                    }
                     InfinityScrollView(
                         viewModel: self.infinityScrollModel,
                         axes: .vertical,
+                        scrollType : .reload(isDragEnd:false),
                         marginTop : self.marginTop,
                         marginBottom : self.marginBottom,
                         marginHorizontal : 0,
@@ -160,22 +158,18 @@ struct CateBlock: PageComponent{
         .onReceive(self.infinityScrollModel.$event){evt in
             guard let evt = evt else {return}
             switch evt {
+            case .pullCompleted :
+                if !self.infinityScrollModel.isLoading { self.reload() }
+                withAnimation{ self.reloadDegree = 0 }
             case .pullCancel :
-                if !self.infinityScrollModel.isLoading {
-                    if self.reloadDegree >= ReflashSpinner.DEGREE_MAX { self.reload() }
-                }
-                withAnimation{
-                    self.reloadDegree = 0
-                }
+                withAnimation{ self.reloadDegree = 0 }
             default : do{}
             }
             
         }
         .onReceive(self.infinityScrollModel.$pullPosition){ pos in
             if pos < InfinityScrollModel.PULL_RANGE { return }
-            withAnimation{
-                self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
-            }
+            self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
         }
         .onReceive(self.sceneObserver.$screenSize){ _ in
             self.resetSize()
@@ -204,7 +198,7 @@ struct CateBlock: PageComponent{
     @State var posters:[PosterDataSet] = []
     @State var videos:[VideoDataSet] = []
     @State var banners:[BannerDataSet] = []
-    @State var reloadDegree:Double = 0
+    
     @State var isPaging:Bool = true
     @State var isSortAble:Bool = false
     @State var useTop:Bool = false
@@ -273,6 +267,11 @@ struct CateBlock: PageComponent{
             self.posters = []
             self.loadedPosterDatas = nil
             self.setPosterSets(loadedDatas: loadedPoster)
+        }
+        if let loadedBanner = self.loadedBannerDatas{
+            self.banners = []
+            self.loadedBannerDatas = nil
+            self.setBannerSets(loadedDatas: loadedBanner)
         }
     }
     
@@ -502,7 +501,7 @@ struct CateBlock: PageComponent{
             self.loadedBannerDatas = loadedDatas
         }
         
-        let count:Int = Int(floor(self.sceneObserver.screenSize.width / Self.bannerCellsize))
+        let count:Int = Int(round(self.sceneObserver.screenSize.width / Self.bannerCellsize))
         var rows:[BannerDataSet] = []
         var cells:[BannerData] = []
         var total = self.banners.count

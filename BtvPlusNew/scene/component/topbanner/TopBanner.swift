@@ -59,7 +59,7 @@ struct TopBanner: PageComponent {
         }
         .modifier(MatchHorizontal(height: Self.height))
         .onReceive(self.pagePresenter.$currentTopPage){ page in
-            self.isTop = self.pageObservable.pageObject?.pageID == page?.pageID
+            self.isTop = self.pageObservable.pageObject?.id == page?.id
             self.isTop ? self.autoChange() : self.autoChangeCancel()
         }
         .onReceive( [self.index].publisher ){ idx in
@@ -76,8 +76,8 @@ struct TopBanner: PageComponent {
     
         .onReceive(self.pageObservable.$status){status in
             switch status {
-            //case .enterBackground : self.autoChangeCancel()
-            //case .enterForeground : self.autoChange()
+            case .enterBackground : self.autoChangeCancel()
+            case .enterForeground : self.autoChange()
             case .becomeActive : self.autoChange()
             case .resignActive : self.autoChangeCancel()
             case .disconnect : self.autoChangeCancel()
@@ -108,19 +108,21 @@ struct TopBanner: PageComponent {
     @State var isTop = false
     @State var autoChangeSubscription:AnyCancellable?
     func autoChange(){
+        self.autoChangeCancel()
         if !self.isTop { return }
-        self.autoChangeSubscription?.cancel()
+        
+        //ComponentLog.d("autoChange init " + self.pageID, tag:self.tag)
         self.autoChangeSubscription = Timer.publish(
             every: 5, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
                 self.viewModel.request = .next
-                ComponentLog.d("autoChange com ", tag:self.tag)
+                ComponentLog.d("autoChange com " + self.pageID, tag:self.tag)
             }
     }
     
     func autoChangeCancel(){
-        //ComponentLog.d("autoChangeCancel", tag:self.tag)
+        //ComponentLog.d("autoChangeCancel" + self.pageID, tag:self.tag)
         self.autoChangeSubscription?.cancel()
         self.autoChangeSubscription = nil
     }

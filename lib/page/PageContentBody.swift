@@ -42,14 +42,12 @@ struct PageContentBody: PageView  {
     @State var isReady:Bool = false
     var body: some View {
         ZStack(){
-            
-                ForEach(childViews, id: \.pageID) { page in
-                    page.contentBody
-                        .offset(
-                            x: (self.isTop || self.isBelow ) ? self.offsetX : -sceneObserver.screenSize.width,
-                            y:self.offsetY)
-                }
-            
+            ForEach(childViews, id: \.pageID) { page in
+                page.contentBody
+                    .offset(
+                        x: self.offsetX ,
+                        y: self.offsetY)
+            }
             if self.isBelow {
                 Spacer().modifier(MatchParent()).background(Color.transparent.black70)
                     .opacity(self.opacity)
@@ -58,7 +56,9 @@ struct PageContentBody: PageView  {
                     }
             }
         }
-        .frame(alignment: .topLeading)
+        .frame(minHeight:0,
+               maxHeight: (self.isTop || self.isBelow) ? .infinity : 1,
+               alignment: .topLeading)
         .offset(x:  self.pageOffsetX, y:  -self.pageOffsetY )
         .onReceive(self.pageChanger.$currentTopPage){ page in
             guard let page = page else { return }

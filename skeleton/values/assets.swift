@@ -104,6 +104,7 @@ extension Asset{
         
         public static let alarmOn = "icSynopAlarmFoc"
         public static let alarmOff = "icSynopAlarmNor"
+        public static let dragDown = "icDragDown"
     }
     
     

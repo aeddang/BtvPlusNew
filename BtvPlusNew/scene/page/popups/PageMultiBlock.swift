@@ -54,8 +54,10 @@ struct PageMultiBlock: PageView {
                         .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
                             guard let evt = evt else {return}
                             switch evt {
-                            case .pulled :
-                                self.pageDragingModel.uiEvent = .pulled(geometry)
+                            case .pullCompleted :
+                                self.pageDragingModel.uiEvent = .pullCompleted(geometry)
+                            case .pullCancel :
+                                self.pageDragingModel.uiEvent = .pullCancel(geometry)
                             case .pull(let pos) :
                                 self.pageDragingModel.uiEvent = .pull(geometry, pos)
                             default: break
@@ -107,10 +109,8 @@ struct PageMultiBlock: PageView {
                 .gesture(
                     self.pageDragingModel.cancelGesture
                         .onChanged({_ in
-                            //self.useTracking = true
                             self.pageDragingModel.uiEvent = .dragCancel})
                         .onEnded({_ in
-                            //self.useTracking = true
                             self.pageDragingModel.uiEvent = .dragCancel})
                 )
             }

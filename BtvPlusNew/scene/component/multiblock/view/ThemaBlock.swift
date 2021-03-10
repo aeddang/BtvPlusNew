@@ -32,7 +32,8 @@ struct ThemaBlock:BlockProtocol, PageComponent {
                 .onReceive(self.viewModel.$event){evt in
                     guard let evt = evt else {return}
                     switch evt {
-                    case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pulled)
+                    case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
+                    case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
                     default : do{}
                     }
                 }

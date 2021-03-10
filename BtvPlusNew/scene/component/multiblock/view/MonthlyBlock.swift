@@ -21,7 +21,7 @@ struct MonthlyBlock: PageComponent {
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var monthlyDatas:[MonthlyData] = []
     var useTracking:Bool = false
-    var action: ((_ data:MonthlyData) -> Void)? = nil
+    var action: ((_ data:MonthlyData?) -> Void)? = nil
     
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
@@ -35,14 +35,9 @@ struct MonthlyBlock: PageComponent {
                     defaultText: String.monthly.more,
                     textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
                 ){_ in
-                    /*
-                    self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.cate)
-                            .addParam(key: .data, value: data)
-                            .addParam(key: .type, value: CateBlock.ListType.video)
-                        
-                    )
-                     */
+                    if let action = self.action {
+                        action(nil)
+                    }
                 }
             }
             .modifier(ContentHorizontalEdges())
@@ -60,7 +55,8 @@ struct MonthlyBlock: PageComponent {
             .onReceive(self.viewModel.$event){evt in
                 guard let evt = evt else {return}
                 switch evt {
-                case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pulled)
+                case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
+                case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
                 default : do{}
                 }
             }
@@ -88,11 +84,11 @@ struct MonthlyBlock: PageComponent {
             .padding(.top, Dimen.margin.lightExtra)
             .onTapGesture {
                 if self.hasAuth {return}
-                
-                let model = PurchaseWebviewModel()
+                guard let data = currentData?.blocks?.first(
+                        where: { BlockData().setDate($0).dataType == .grid }) else {return}
                 self.pagePresenter.openPopup(
                     PageProvider.getPageObject(.purchase)
-                        .addParam(key: .data, value: model)
+                        .addParam(key: .data, value: data)
                 )
             }
         }

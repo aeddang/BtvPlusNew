@@ -107,8 +107,10 @@ class PageDragingModel: ObservableObject, PageProtocol, Identifiable{
     private(set) var nestedPullPos:CGFloat = 0
     func updateNestedScroll(evt:PageNestedScrollEvent) {
         switch evt {
-        case .pulled :
-            self.nestedScrollEvent = .pulled
+        case .pullCompleted :
+            self.nestedScrollEvent = .pullCompleted
+        case .pullCancel :
+            self.nestedScrollEvent = .pullCancel
         case .pull(let pos) :
             if nestedPullPos != pos {
                 nestedPullPos = pos
@@ -131,7 +133,8 @@ class PageDragingModel: ObservableObject, PageProtocol, Identifiable{
 
 enum PageDragingUIEvent {
     case pull(GeometryProxy, CGFloat),
-         pulled(GeometryProxy),
+         pullCompleted(GeometryProxy? = nil),
+         pullCancel(GeometryProxy? = nil),
          drag(GeometryProxy, DragGesture.Value),
          draged(GeometryProxy, DragGesture.Value),
          dragCancel
@@ -144,7 +147,7 @@ enum PageDragingStatus:String {
 }
 
 enum PageNestedScrollEvent {
-    case scroll(CGFloat), pull(CGFloat),pulled
+    case scroll(CGFloat), pull(CGFloat),pullCompleted ,pullCancel
 }
 
 
@@ -156,12 +159,10 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
 
     let content: Content
     var axis:Axis.Set
-    
-    var minPullAmount:CGFloat
+    var initPullRange:CGFloat
     @State var bodyOffset:CGFloat = 0.0
     @State var dragInitOffset:CGFloat = 0.0
     @State var pullOffset:CGFloat = 0
-    @State var pullDiff:CGFloat = 0
     
     @State var isDraging: Bool = false
     @State var isBottom = false
@@ -172,20 +173,16 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     init(
         viewModel: PageDragingModel,
         axis:Axis.Set = .vertical,
-        minPullAmount:CGFloat = 80,
+        minPullAmount:CGFloat? = nil,
         @ViewBuilder content: () -> Content) {
         self.viewModel = viewModel
         self.axis = axis
         self.content = content()
-        self.minPullAmount = minPullAmount
-        self.pullOffset = minPullAmount
+        self.initPullRange = minPullAmount ?? ( axis == .vertical ? 0 : 0 )
+        self.pullOffset = self.initPullRange
     }
     
-    private let pullInitDelay = 0.15
-    @State var isPullInit: Bool = false
-    
-     
-    
+
     var body: some View {
         ZStack(alignment: .topLeading){
             self.content.modifier(MatchParent())
@@ -199,36 +196,32 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
             switch evt {
             case .pull(let geo, let value) :
                 if #available(iOS 14.0, *) {
-                    
-                    if value < self.minPullAmount { return }
-                    if self.pullOffset == self.minPullAmount {
-                        withAnimation(.easeOut(duration: self.pullInitDelay )){
-                            self.bodyOffset = self.minPullAmount
-                        }
-                        self.bodyOffset = self.minPullAmount
-                        self.pullDiff = 0
+                    if value < self.initPullRange { return }
+                    if self.pullOffset == self.initPullRange {
+                        self.viewModel.status = .pull
                     } else {
-                        let diff =  value - self.pullOffset
-                        self.onPull(geometry: geo, value: diff)
-                        self.pullDiff = diff
+                        let diff = value - self.pullOffset
+                        let dr:CGFloat = diff > 0 ? 1 : -1
+                        var d = dr * max(abs(diff),minDiff)
+                        if dr == 1 {d = d*2.0}
+                        //ComponentLog.d("pull diff " + d.description , tag: "InfinityScrollViewProtocol")
+                        if self.viewModel.status != .drag && self.viewModel.status != .pull  {return}
+                        self.onPull(geometry: geo, value: d)
+
                     }
                     self.pullOffset = value
-                    self.viewModel.status = .pull
-                    //ComponentLog.d("pull " +  self.viewModel.status.rawValue + " " + self.bodyOffset.description, tag: "dragCancel")
                 }
-            case .pulled(_) :
+            case .pullCompleted:
                 if #available(iOS 14.0, *) {
-                    if self.viewModel.status == .drag { return }
-                    self.pullOffset = self.minPullAmount
-                    let diff = self.bodyOffset - self.minPullAmount
-                    let diffMax:CGFloat = self.axis == .horizontal ? 7 : 20
-                    if diff <= diffMax {
-                        //ComponentLog.d("onDragCancel", tag: "PageDragingBody" )
-                        self.onDragCancel()
-                    }else{
-                       // ComponentLog.d("onDragEndAction", tag: "PageDragingBody" )
-                        self.onDragEndAction(isBottom: true, offset: self.bodyOffset)
-                    }
+                    //ComponentLog.d("pullCompleted " + self.viewModel.status.rawValue , tag: "InfinityScrollViewProtocol")
+                    self.onDragEndAction(isBottom: true, offset: self.bodyOffset)
+                    self.viewModel.status = .none
+                }
+            case .pullCancel :
+                if #available(iOS 14.0, *) {
+                    //ComponentLog.d("pullCancel " + self.viewModel.status.rawValue , tag: "InfinityScrollViewProtocol")
+                    self.pullOffset = self.initPullRange
+                    self.onDragCancel()
                     self.viewModel.status = .none
                 }
                 
@@ -242,7 +235,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
             }
         }
         .onAppear(){
-            self.pullOffset = self.minPullAmount
+            self.pullOffset = self.initPullRange
         }
         .onDisappear(){
             
@@ -262,12 +255,12 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
         if self.isDragingCompleted {return}
         if !self.isDraging {return}
         let diff = abs(self.bodyOffset - offset)
-        //ComponentLog.d("diff " + diff.description , tag: "DIFF")
+        
+        // ComponentLog.d("Draging diff " + diff.description , tag: "InfinityScrollViewProtocol")
         if abs(diff) > maxDiff { return }
         if abs(diff) < minDiff { return }
         let bodyOffset = max( 0, offset - self.dragInitOffset)
         // ComponentLog.d("self.dragInitOffset " + self.dragInitOffset.description , tag: "DIFF")
-        //ComponentLog.d("bodyOffset " + offset.description , tag: "DIFF")
         self.bodyOffset = bodyOffset
         self.viewModel.event = .drag(offset, dragOpacity)
         self.pagePresenter.dragOpercity = dragOpacity

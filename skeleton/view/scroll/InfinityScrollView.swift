@@ -23,18 +23,20 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     var marginHorizontal: CGFloat
     var spacing: CGFloat
     var useTracking:Bool
+    var scrollType:InfinityScrollType = .reload(isDragEnd: false)
     var bgColor:Color //List only
     let isRecycle: Bool
     
     @State var scrollPos:Float? = nil
     @State var scrollIdx:Int? = nil
-    
-    @State var prevPosition: CGFloat = 0
     @State var isTracking = false
     @State var anchor:UnitPoint? = nil
+    @State var isScroll:Bool = true
+     
     init(
         viewModel: InfinityScrollModel,
         axes: Axis.Set = .vertical,
+        scrollType:InfinityScrollType? = nil,
         showIndicators: Bool = false,
         contentSize : CGFloat = -1,
         marginVertical: CGFloat = 0,
@@ -59,12 +61,16 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         self.isRecycle = isRecycle
         self.useTracking = useTracking
         self.bgColor = bgColor
+        self.scrollType = scrollType ?? ( self.axes == .vertical ? .vertical(isDragEnd: false) : .horizontal(isDragEnd: false) )
+        viewModel.setup(type: self.scrollType)
     }
     
     init(
         viewModel: InfinityScrollModel,
+        scrollType:InfinityScrollType? = nil,
         bgColor:Color = Color.brand.bg,
         @ViewBuilder content: () -> Content) {
+        
         self.viewModel = viewModel
         self.axes = .vertical
         self.showIndicators = false
@@ -76,11 +82,13 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         self.isRecycle = false
         self.useTracking = false
         self.bgColor = Color.brand.bg
+        self.scrollType = scrollType ?? ( self.axes == .vertical ? .vertical(isDragEnd: false) : .horizontal(isDragEnd: false) )
+        viewModel.setup(type: self.scrollType)
 
     }
     var body: some View {
         if #available(iOS 14.0, *) {
-            ScrollView(self.axes, showsIndicators: self.showIndicators) {
+            ScrollView(self.isScroll ? self.axes : [], showsIndicators: self.showIndicators) {
                 ScrollViewReader{ reader in
                     if self.axes == .vertical {
                         ZStack(alignment: .top) {
@@ -161,6 +169,32 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                     self.onPreferenceChange(value: value)
                 }
             }
+            
+            .onReceive(self.viewModel.$scrollStatus){ stat in
+                if self.scrollType != .web() {return}
+                switch stat  {
+                case .pull :
+                    self.isScroll = false
+                    ComponentLog.d("scroll unable", tag: "InfinityScrollViewProtocol")
+                default: break
+                }
+            }
+            .onReceive(self.viewModel.$event){ evt in
+                if self.scrollType != .web() {return}
+                guard let evt = evt else{ return }
+                switch evt  {
+                case .pullCompleted, .pullCancel :
+                    self.isScroll = true
+                    self.onMove(pos: 1)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        ComponentLog.d("scroll onMove", tag: "InfinityScrollViewProtocol")
+                        self.onMove(pos: 0)
+                    }
+                    
+                default: break
+                }
+            }
+            
             .onReceive(self.viewModel.$uiEvent){ evt in
                 guard let evt = evt else{ return }
                 switch evt {
@@ -183,7 +217,6 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                 DispatchQueue.main.async {
                     self.isTracking = false
                 }
-                
             }
         }else{
             GeometryReader { outsideProxy in
@@ -247,7 +280,6 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                             DispatchQueue.main.async {
                                 self.isTracking = false
                             }
-                            
                         }
                     }
                     
@@ -298,11 +330,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     private func onPreferenceChange(value:[CGFloat]){
         if !self.useTracking {return}
         let contentOffset = value[0]
-        if self.prevPosition == contentOffset {return}
-        
         DispatchQueue.main.async {
             self.onMove(pos: contentOffset)
-            self.prevPosition = contentOffset
         }
     }
     

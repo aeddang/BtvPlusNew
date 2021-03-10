@@ -11,7 +11,6 @@ import SwiftUI
 class MonthlyData:InfinityData,ObservableObject{
     private(set) var image: String = Asset.noImg16_9
     private(set) var selectedImage: String? = nil
-    private(set) var imageJoin: String? = nil
     private(set) var selectedJoinImage: String? = nil
     private(set) var joinImage: String? = nil
     private(set) var title: String? = nil
@@ -23,10 +22,12 @@ class MonthlyData:InfinityData,ObservableObject{
     private(set) var isSubJoin: Bool = false
     private(set) var isSelected: Bool = false
     private(set) var blocks:[BlockItem]? = nil
+  
     @Published private(set) var isUpdated: Bool = false
         {didSet{ if isUpdated { isUpdated = false} }}
     
     func setData(data:BlockItem, idx:Int = -1) -> MonthlyData {
+        
         title = data.menu_nm
         if let thumb = data.bnr_off_img_path {
             image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.monthly.size) ?? image
@@ -35,7 +36,7 @@ class MonthlyData:InfinityData,ObservableObject{
             selectedImage = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.monthly.size)
         }
         if let thumb = data.ppm_join_off_img_path {
-            imageJoin = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.monthly.size)
+            joinImage = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.monthly.size)
         }
         if let thumb = data.ppm_join_on_img_path {
             selectedJoinImage = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.monthly.size)

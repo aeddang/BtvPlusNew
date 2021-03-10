@@ -13,6 +13,7 @@ struct PagePurchase: PageView {
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var dataProvider:DataProvider
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -20,6 +21,7 @@ struct PagePurchase: PageView {
     
     @State var webViewHeight:CGFloat = 0
     @State var useTracking:Bool = false
+    @State var purchaseWebviewModel:PurchaseWebviewModel? = nil
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -33,19 +35,25 @@ struct PagePurchase: PageView {
                         style: .white
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    
-                    InfinityScrollView(
-                        viewModel: self.infinityScrollModel,
-                        isRecycle:false,
-                        useTracking:self.useTracking
-                    ){
-                        BtvWebView( viewModel: self.webViewModel )
-                            .modifier(MatchHorizontal(height: self.webViewHeight))
-                            .onReceive(self.webViewModel.$screenHeight){height in
-                                let min = geometry.size.height - self.sceneObserver.safeAreaTop - Dimen.app.top
-                                self.webViewHeight = min //max( height, min)
-                            }
-                        
+                    ZStack(alignment: .topLeading){
+                        DragDownArrow(
+                            infinityScrollModel: self.infinityScrollModel)
+                        InfinityScrollView(
+                            viewModel: self.infinityScrollModel,
+                            scrollType : .web(isDragEnd: true),
+                            isRecycle:false,
+                            useTracking:self.useTracking
+                        ){
+                            BtvWebView( viewModel: self.webViewModel )
+                                .modifier(MatchHorizontal(height: self.webViewHeight))
+                                .onReceive(self.webViewModel.$screenHeight){height in
+                                    self.webViewHeight = geometry.size.height
+                                        - Dimen.app.top
+                                        - self.sceneObserver.safeAreaTop
+                                        - self.sceneObserver.safeAreaBottom
+                                }
+                            
+                        }
                     }
                     .padding(.bottom, self.sceneObserver.safeAreaBottom)
                     .modifier(MatchParent())
@@ -54,7 +62,10 @@ struct PagePurchase: PageView {
                         guard let evt = evt else {return}
                        
                         switch evt {
-                        case .pullCancel : self.pageDragingModel.uiEvent = .pulled(geometry)
+                        case .pullCompleted :
+                            self.pageDragingModel.uiEvent = .pullCompleted(geometry)
+                        case .pullCancel :
+                            self.pageDragingModel.uiEvent = .pullCancel(geometry)
                         default : do{}
                         }
                     }
@@ -126,11 +137,35 @@ struct PagePurchase: PageView {
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
             }
+            .onReceive(dataProvider.$result) { res in
+                guard let res = res else { return }
+                if res.id != self.tag { return }
+                guard let resData = res.data as? GridEvent else {return}
+                guard let first = resData.contents?.first else {return}
+                guard let model = self.purchaseWebviewModel else {return}
+                model.addEpsdId(epsdId: first.epsd_id)
+                model.srisId = first.sris_id ?? ""
+                let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.purchase + (model.gurry)
+                self.webViewModel.request = .link(linkUrl)
+            }
+            .onReceive(dataProvider.$error) { err in
+                if err?.id != self.tag { return }
+                
+            }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
-                let data = obj.getParamValue(key: .data) as? PurchaseWebviewModel
-                let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.purchase + (data?.gurry ?? "")
-                self.webViewModel.request = .link(linkUrl)
+                if let data = obj.getParamValue(key: .data) as? PurchaseWebviewModel {
+                    self.purchaseWebviewModel = data
+                    let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.purchase + (data.gurry)
+                    self.webViewModel.request = .link(linkUrl)
+                }
+                if let data = obj.getParamValue(key: .data) as? BlockItem {
+                    self.purchaseWebviewModel = PurchaseWebviewModel().setParam(data:data)
+                    self.dataProvider.requestData(
+                        q:.init(
+                            id: self.tag,
+                            type: .getGridEvent(data.menu_id , .popularity , 1, 1)))
+                }
             }
             .onDisappear{
             }

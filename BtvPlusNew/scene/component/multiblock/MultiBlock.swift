@@ -29,7 +29,7 @@ struct MultiBlock:PageComponent {
     var monthlyDatas:[MonthlyData]? = nil
     var isRecycle = true
     var isLegacy:Bool = false
-    var action: ((_ data:MonthlyData) -> Void)? = nil
+    var action: ((_ data:MonthlyData?) -> Void)? = nil
    
     
     var body :some View {
@@ -37,6 +37,7 @@ struct MultiBlock:PageComponent {
             InfinityScrollView(
                 viewModel: self.viewModel,
                 axes: .vertical,
+                scrollType : .reload(isDragEnd: false),
                 marginTop : (self.topDatas != nil && self.topDatas?.isEmpty == false) ? 0 : self.marginTop,
                 marginBottom : self.marginBottom + self.sceneObserver.safeAreaBottom,
                 spacing: Self.spacing,
@@ -108,6 +109,7 @@ struct MultiBlock:PageComponent {
             InfinityScrollView(
                 viewModel: self.viewModel,
                 axes: .vertical,
+                scrollType : .reload(isDragEnd: false),
                 marginTop : 0,
                 marginBottom : self.marginBottom + self.sceneObserver.safeAreaBottom,
                 spacing: 0,

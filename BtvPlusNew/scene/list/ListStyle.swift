@@ -22,6 +22,11 @@ struct ListItem{
        static let bottomHeight:CGFloat = 35
     }
     
+    struct ticket {
+       static let type01:CGSize = CGSize(width: 164, height: 92)
+       static let type02:CGSize = CGSize(width: 224, height: 154)
+    }
+    
     struct thema {
        static let type01:CGSize = CGSize(width: 75, height: 75)
        static let type02:CGSize = CGSize(width: 100, height: 115)
@@ -31,6 +36,7 @@ struct ListItem{
     struct banner {
        static let type01:CGSize = CGSize(width: 0, height: 80)
        static let type02:CGSize = CGSize(width: 320, height: 120)
+       static let type03:CGSize = CGSize(width: 224, height: 154)
     }
     
     struct character {
@@ -94,7 +100,7 @@ struct ListRowInset: ViewModifier {
     var index:Int = -1
     var marginHorizontal:CGFloat = 0
     var spacing:CGFloat = Dimen.margin.thin
-    var marginTop:CGFloat = Dimen.margin.medium
+    var marginTop:CGFloat = 0
     var bgColor:Color = Color.brand.bg
     
     func body(content: Content) -> some View {

@@ -123,6 +123,7 @@ struct PosterList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
     var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var banners:[BannerData]? = nil
     var datas:[PosterData]
     var useTracking:Bool = false
     var margin:CGFloat = Dimen.margin.thin
@@ -133,9 +134,14 @@ struct PosterList: PageComponent{
             marginVertical: 0,
             marginHorizontal: self.margin,
             spacing: Dimen.margin.tiny,
-            isRecycle: true,
+            isRecycle: self.banners?.isEmpty == false ? false : true,
             useTracking: self.useTracking
             ){
+            if let banners = self.banners {
+                ForEach(banners) { data in
+                    BannerItem(data: data)
+                }
+            }
             ForEach(self.datas) { data in
                 PosterItem( data:data )
                 .onTapGesture {

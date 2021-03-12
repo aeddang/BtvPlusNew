@@ -12,6 +12,7 @@ import Combine
 extension SwipperView {
     static let duration:Double = 0.35
     static let ani:Animation = Animation.easeOut(duration: duration)
+    static let aniBg:Animation = Animation.easeOut(duration: duration)
 }
 struct SwipperView : View , PageProtocol, Swipper {
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
@@ -137,7 +138,7 @@ struct SwipperView : View , PageProtocol, Swipper {
                         self.isUserSwiping = false
                         return
                     }
-                    withAnimation(Self.ani){
+                    withAnimation(self.isForground ? Self.ani : Self.aniBg){
                         self.index = idx
                         if !self.isForground { self.isUserSwiping = false }
                     }
@@ -173,7 +174,7 @@ struct SwipperView : View , PageProtocol, Swipper {
         
         if self.viewModel.status == .stop { self.viewModel.status = .move }
         DispatchQueue.main.async {
-           withAnimation(Self.ani){
+            withAnimation(self.isForground ? Self.ani : Self.aniBg){
                self.isUserSwiping = false
                if idx != self.index {
                    self.index = idx

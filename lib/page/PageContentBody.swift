@@ -48,6 +48,7 @@ struct PageContentBody: PageView  {
                         x: self.offsetX ,
                         y: self.offsetY)
             }
+            
             if self.isBelow {
                 Spacer().modifier(MatchParent()).background(Color.transparent.black70)
                     .opacity(self.opacity)
@@ -55,9 +56,10 @@ struct PageContentBody: PageView  {
                         self.pageChanger.goBack()
                     }
             }
+            
         }
         .frame(minHeight:0,
-               maxHeight: (self.isTop || self.isBelow) ? .infinity : 1,
+               maxHeight: (self.isTop || self.isBelow) ? .infinity : 0,
                alignment: .topLeading)
         .offset(x:  self.pageOffsetX, y:  -self.pageOffsetY )
         .onReceive(self.pageChanger.$currentTopPage){ page in

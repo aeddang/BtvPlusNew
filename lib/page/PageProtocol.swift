@@ -99,13 +99,28 @@ open class SceneObserver: ObservableObject{
     @Published var isUpdated:Bool = false
         {didSet{ if isUpdated { isUpdated = false} }}
     func update(geometry:GeometryProxy) {
-        self.safeAreaBottom = geometry.safeAreaInsets.bottom
-        self.safeAreaTop = geometry.safeAreaInsets.top
-        self.safeAreaStart = geometry.safeAreaInsets.leading
-        self.safeAreaEnd = geometry.safeAreaInsets.trailing
-        self.screenSize = geometry.size
-        //ComponentLog.d("safeAreaBottom " + safeAreaBottom.description, tag: "SceneObserver")
-        self.isUpdated = true
+        var willUpdate = false
+        if geometry.safeAreaInsets.bottom != self.safeAreaBottom{
+            self.safeAreaBottom = geometry.safeAreaInsets.bottom
+            willUpdate = true
+        }
+        if geometry.safeAreaInsets.top != self.safeAreaTop{
+            self.safeAreaTop = geometry.safeAreaInsets.top
+            willUpdate = true
+        }
+        if geometry.safeAreaInsets.leading != self.safeAreaStart{
+            self.safeAreaStart = geometry.safeAreaInsets.leading
+            willUpdate = true
+        }
+        if geometry.safeAreaInsets.trailing != self.safeAreaEnd {
+            self.safeAreaEnd = geometry.safeAreaInsets.trailing
+            willUpdate = true
+        }
+        if geometry.size != self.screenSize {
+            self.screenSize = geometry.size
+            willUpdate = true
+        }
+        if willUpdate { self.isUpdated = true }
     }
     var willSceneOrientation: SceneOrientation? {
         get{

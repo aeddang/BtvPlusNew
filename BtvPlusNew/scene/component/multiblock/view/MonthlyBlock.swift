@@ -16,12 +16,15 @@ extension MonthlyBlock{
 
 struct MonthlyBlock: PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var pairing:Pairing
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var monthlyDatas:[MonthlyData] = []
+    var allData:BlockItem? = nil
     var useTracking:Bool = false
-    var action: ((_ data:MonthlyData?) -> Void)? = nil
+    var action: ((_ data:MonthlyData) -> Void)? = nil
     
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
@@ -31,13 +34,20 @@ struct MonthlyBlock: PageComponent {
                         .lineLimit(1)
                     Spacer().modifier(MatchHorizontal(height: 0))
                 }
-                TextButton(
-                    defaultText: String.monthly.more,
-                    textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
-                ){_ in
-                    if let action = self.action {
-                        action(nil)
+                if let allData = self.allData {
+                    TextButton(
+                        defaultText: String.monthly.more,
+                        textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
+                    ){_ in
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.multiBlock)
+                                .addParam(key: .title, value: allData.menu_nm)
+                                .addParam(key: .data, value: allData.blocks)
+                                .addParam(key: .type, value: BlockData.ThemaType.ticket)
+                        )
                     }
+                } else{
+                    Spacer()
                 }
             }
             .modifier(ContentHorizontalEdges())
@@ -84,11 +94,16 @@ struct MonthlyBlock: PageComponent {
             .padding(.top, Dimen.margin.lightExtra)
             .onTapGesture {
                 if self.hasAuth {return}
-                guard let data = currentData?.blocks?.first(
-                        where: { BlockData().setDate($0).dataType == .grid }) else {return}
+                
+                let status = self.pairing.status
+                if status != .pairing {
+                    self.pageSceneObserver.alert = .needPairing()
+                    return 
+                }
+                
                 self.pagePresenter.openPopup(
                     PageProvider.getPageObject(.purchase)
-                        .addParam(key: .data, value: data)
+                        .addParam(key: .data, value: currentData)
                 )
             }
         }
@@ -99,12 +114,14 @@ struct MonthlyBlock: PageComponent {
                 self.selectedData(data: data)
             }
             self.initSubscription()
+            
             if let data = self.currentData {
                 let idx  = data.index
                 if idx > 0 {
-                    self.viewModel.uiEvent = .scrollTo(idx)
+                    self.viewModel.uiEvent = .scrollTo(max(0,idx-1))
                 }
             }
+            
         }
         .onDisappear(){
             self.anyCancellable.forEach{$0.cancel()}

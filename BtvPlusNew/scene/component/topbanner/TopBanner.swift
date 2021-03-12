@@ -13,7 +13,6 @@ extension TopBanner{
     static let barWidth:CGFloat = 20
     static let imageHeight:CGFloat = 720
     static let height:CGFloat = 477
-    
     static let barHeight = Dimen.line.medium
     static let marginBottom = Dimen.margin.medium
     static let maginBottomLogo = (Self.imageHeight - Self.height) + (Self.marginBottom + Self.barHeight + Dimen.margin.medium)
@@ -22,6 +21,7 @@ struct TopBanner: PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
+    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     var datas: [BannerData]
      
     @State var pages: [PageViewProtocol] = []
@@ -31,50 +31,36 @@ struct TopBanner: PageComponent {
     
     var action:((_ idx:Int) -> Void)? = nil
     var body: some View {
-        ZStack(alignment: .bottom) {
-            SwipperView(
-                viewModel : self.viewModel,
-                pages: self.pages,
-                index: self.$index
-                )
-                .modifier(MatchHorizontal(height: TopBanner.height))
-            if self.pages.count > 1 {
-                HStack(spacing: Dimen.margin.tiny) {
-                    Spacer()
-                        .modifier(MatchVertical(width:self.leading))
-                        .background(Color.transparent.white20)
-                        .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
-                    Spacer()
-                        .modifier(MatchVertical(width: Self.barWidth))
-                        .background(Color.app.white)
-                        .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
-                    Spacer()
-                        .modifier(MatchVertical(width:self.tailing))
-                        .background(Color.transparent.white20)
-                        .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
-                }
-                .frame( height:Self.barHeight)
-                .padding(.bottom, Dimen.margin.heavy)
-            }
-        }
-        .modifier(MatchHorizontal(height: Self.height))
+        SwipperView(
+            viewModel : self.viewModel,
+            pages: self.pages,
+            index: self.$index
+            )
+        .modifier(MatchParent())
         .onReceive(self.pagePresenter.$currentTopPage){ page in
             self.isTop = self.pageObservable.pageObject?.id == page?.id
             self.isTop ? self.autoChange() : self.autoChangeCancel()
         }
-        .onReceive( [self.index].publisher ){ idx in
-            if self.viewModel.index == idx { return }
-            self.viewModel.index = idx
-            self.setBar()
-        }
+       
         .onReceive(self.viewModel.$status){ status in
             switch status {
             case .stop : self.autoChange()
             case .move : self.autoChangeCancel()
             }
         }
+        .onReceive(self.infinityScrollModel.$event){evt in
+            guard let evt = evt else {return}
+            if self.isTop {
+                switch evt {
+                case .top : self.autoChange()
+                case .down : self.autoChangeCancel()
+                default : break
+                }
+            }
+        }
     
         .onReceive(self.pageObservable.$status){status in
+            
             switch status {
             case .enterBackground : self.autoChangeCancel()
             case .enterForeground : self.autoChange()
@@ -84,34 +70,32 @@ struct TopBanner: PageComponent {
             default : return
             }
         }
+        .onReceive( [self.index].publisher ){ idx in
+            if self.viewModel.index == idx { return }
+            self.viewModel.index = idx
+        }
         .onAppear(){
+            self.isInit = true
             self.pages = datas.map{data in
                 TopBannerItem(data: data)
             }
-            self.setBar()
+            self.autoChange()
         }
         .onDisappear(){
+            self.isInit = false
             self.autoChangeCancel()
         }
 
     }
     
-    private func setBar(){
-        let count = self.datas.count
-        let size = Self.barWidth
-        withAnimation{
-            self.leading = size * CGFloat(self.index)
-            self.tailing = size * CGFloat(max(0,(count - self.index - 1)))
-        }
-    }
-    
+    @State var isInit = false
     @State var isTop = false
     @State var autoChangeSubscription:AnyCancellable?
     func autoChange(){
         self.autoChangeCancel()
         if !self.isTop { return }
-        
-        //ComponentLog.d("autoChange init " + self.pageID, tag:self.tag)
+        if !self.isInit { return }
+        ComponentLog.d("autoChange init " + self.pageID, tag:self.tag)
         self.autoChangeSubscription = Timer.publish(
             every: 5, on: .current, in: .common)
             .autoconnect()
@@ -122,7 +106,7 @@ struct TopBanner: PageComponent {
     }
     
     func autoChangeCancel(){
-        //ComponentLog.d("autoChangeCancel" + self.pageID, tag:self.tag)
+        ComponentLog.d("autoChangeCancel" + self.pageID, tag:self.tag)
         self.autoChangeSubscription?.cancel()
         self.autoChangeSubscription = nil
     }
@@ -139,9 +123,8 @@ struct TopBannerItem: PageComponent, Identifiable {
     var body: some View {
         ZStack(alignment: .top) {
            Spacer()
-            .modifier(MatchHorizontal(height: TopBanner.height - Dimen.app.top - self.sceneObserver.safeAreaTop))
+            .modifier(MatchParent())
             .background(Color.transparent.clearUi)
-            .padding(.top, Dimen.app.pageTop + self.sceneObserver.safeAreaTop)
             .onTapGesture {
                 if let move = data.move {
                     switch move {

@@ -169,9 +169,7 @@ struct PlayBlock: PageComponent{
         }
         .onReceive(self.infinityScrollModel.$pullPosition){ pos in
             if pos < InfinityScrollModel.PULL_RANGE { return }
-            withAnimation{
-                self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
-            }
+            self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
         }
         .onReceive(self.viewModel.$isUpdate){ update in
             if update {

@@ -128,7 +128,7 @@ enum VideoType {
 struct VideoList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     var viewModel: InfinityScrollModel = InfinityScrollModel()
-    
+    var banners:[BannerData]? = nil
     var datas:[VideoData]
     var contentID:String? = nil
     var useTracking:Bool = false
@@ -141,9 +141,14 @@ struct VideoList: PageComponent{
             marginVertical: 0,
             marginHorizontal: self.margin,
             spacing: Dimen.margin.tiny,
-            isRecycle: true,
+            isRecycle: self.banners?.isEmpty == false ? false : true,
             useTracking: self.useTracking
         ){
+            if let banners = self.banners {
+                ForEach(banners) { data in
+                    BannerItem(data: data)
+                }
+            }
             ForEach(self.datas) { data in
                 if data.index == -1 {
                     VideoItem( data:data , isSelected: self.contentID == nil

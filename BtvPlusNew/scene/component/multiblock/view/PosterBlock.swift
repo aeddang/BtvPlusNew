@@ -41,6 +41,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
             if !self.datas.isEmpty {
                 PosterList(
                     viewModel:self.viewModel,
+                    banners: self.data.leadingBanners,
                     datas: self.datas,
                     useTracking:self.useTracking
                     )
@@ -67,7 +68,9 @@ struct PosterBlock:PageComponent, BlockProtocol {
             }
             
         }
-        .frame( height: self.listHeight + Font.size.regular + Dimen.margin.thinExtra)
+        .frame( height:
+                    (self.data.listHeight ?? self.listHeight)
+                    + Font.size.regular + Dimen.margin.thinExtra)
         .onAppear{
             if let datas = data.posters {
                 self.datas = datas

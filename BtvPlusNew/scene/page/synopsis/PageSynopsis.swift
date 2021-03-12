@@ -262,12 +262,10 @@ struct PageSynopsis: PageView {
         
         
     }//body
-    
 
     /*
      Data process
      */
-    
     enum SingleRequestType:String {
         case preview, changeOption, relationContents
     }
@@ -286,9 +284,7 @@ struct PageSynopsis: PageView {
     @State var imgBg:String? = nil
     @State var imgContentMode:ContentMode = .fit
     @State var textInfo:String? = nil
-    
     @State var playListData:PlayListData = PlayListData()
-    
     @State var synopsisPlayType:SynopsisPlayType = .unknown
     @State var srisId:String? = nil
     @State var srisCount:String? = nil
@@ -298,21 +294,18 @@ struct PageSynopsis: PageView {
     @State var epsdRsluId:String = ""
     @State var purchasedPid:String? = nil
     @State var hasAuthority:Bool? = nil
-
     @State var relationTab:[String] = []
     @State var selectedRelationTabIdx:Int = 0
     @State var seris:[SerisData] = []
     @State var relationDatas:[PosterDataSet] = []
     @State var hasRelationVod:Bool? = nil
     @State var relationTabIdx:Int = 0
-
     @State var isFinalPlaying:Bool = false
     @State var isPlayAble:Bool = false
     @State var isPlayViewActive = false
     @State var isPageUiReady = false
     @State var isPageDataReady = false
     @State var topIdx:Int = 0
-    
     @State var isUIView:Bool = false
     
     func initPage(){

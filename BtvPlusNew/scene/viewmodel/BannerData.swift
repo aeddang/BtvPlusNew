@@ -66,7 +66,8 @@ class BannerData:InfinityData, PageProtocol{
         return self
     }
     
-    func setBannerType(width:CGFloat, height:CGFloat, padding:CGFloat) -> BannerData {
+    @discardableResult
+    func setBannerSize(width:CGFloat, height:CGFloat, padding:CGFloat) -> BannerData {
         self.type = .cell(CGSize(width: width, height: height), padding)
         return self
     }

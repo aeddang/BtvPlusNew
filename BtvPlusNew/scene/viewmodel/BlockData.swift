@@ -25,19 +25,28 @@ class BlockData:InfinityData, ObservableObject{
     private(set) var originData:BlockItem? = nil
     @Published private(set) var status:BlockStatus = .initate
     
+    var leadingBanners:[BannerData]? = nil
+    var posters:[PosterData]? = nil
+    var videos:[VideoData]? = nil
+    var themas:[ThemaData]? = nil
+    var tickets:[TicketData]? = nil
+    var banners:[BannerData]? = nil
+    var listHeight:CGFloat? = nil
+    
     public static func == (l:BlockData, r:BlockData)-> Bool {
         return l.id == r.id
     }
     
     func reset(){
         status = .initate
+        leadingBanners = nil
         posters = nil
         videos = nil
         themas = nil
         banners = nil
     }
             
-    func setDate(_ data:BlockItem) -> BlockData{
+    func setDate(_ data:BlockItem, themaType:ThemaType = .category) -> BlockData{
         name = data.menu_nm ?? ""
         menuId = data.menu_id
         cwCallId = data.cw_call_id_val
@@ -48,7 +57,7 @@ class BlockData:InfinityData, ObservableObject{
         case .banner: self.originData = data
         default: break
         }
-        uiType = findUiType()
+        uiType = findUiType(themaType:themaType)
         return self
     }
     
@@ -100,14 +109,8 @@ class BlockData:InfinityData, ObservableObject{
             DataLog.d("onRequestFail " + self.name, tag: "BlockProtocol")
             return nil
         }
-        
     }
         
-    var posters:[PosterData]? = nil
-    var videos:[VideoData]? = nil
-    var themas:[ThemaData]? = nil
-    var banners:[BannerData]? = nil
-    
     func setRequestFail(){
         if status != .initate { return }
         status = .passive
@@ -176,17 +179,18 @@ class BlockData:InfinityData, ObservableObject{
         } else if data.blk_typ_cd == "20" {
             return .theme
         } else {
-           return .grid
+            return .grid
         }
     }
     
-    private func findUiType() -> UiType{
+    private func findUiType(themaType:ThemaType) -> UiType{
         switch self.cardType {
         case .smallPoster, .bigPoster, .bookmarkedPoster, .rankingPoster :
             return .poster
         case .video, .watchedVideo :
             return .video
         case .circleTheme, .bigTheme, .squareThema :
+            if themaType == .ticket {return .ticket}
             return .theme
         case .banner :
             return .banner
@@ -228,6 +232,12 @@ class BlockData:InfinityData, ObservableObject{
         case poster,
         video,
         theme,
+        ticket,
         banner
+    }
+    
+    enum ThemaType: String, Codable {
+        case category,
+        ticket
     }
 }

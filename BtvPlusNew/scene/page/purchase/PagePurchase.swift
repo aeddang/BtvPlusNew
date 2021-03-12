@@ -166,6 +166,25 @@ struct PagePurchase: PageView {
                             id: self.tag,
                             type: .getGridEvent(data.menu_id , .popularity , 1, 1)))
                 }
+                
+                if let data = obj.getParamValue(key: .data) as? TicketData {
+                    self.purchaseWebviewModel = PurchaseWebviewModel().setParam(data:data)
+                    let menuId = data.blocks?.first?.menu_id ?? data.menuId
+                    self.dataProvider.requestData(
+                        q:.init(
+                            id: self.tag,
+                            type: .getGridEvent(menuId , .popularity , 1, 1)))
+                }
+                
+                if let data = obj.getParamValue(key: .data) as? MonthlyData {
+                    self.purchaseWebviewModel = PurchaseWebviewModel().setParam(data:data)
+                    guard let block = data.blocks?.first( where: { BlockData().setDate($0).dataType == .grid }) else {return}
+                    let menuId = block.menu_id ?? data.menuId
+                    self.dataProvider.requestData(
+                        q:.init(
+                            id: self.tag,
+                            type: .getGridEvent(menuId , .popularity , 1, 1)))
+                }
             }
             .onDisappear{
             }

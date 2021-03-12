@@ -91,7 +91,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
             ScrollView(self.isScroll ? self.axes : [], showsIndicators: self.showIndicators) {
                 ScrollViewReader{ reader in
                     if self.axes == .vertical {
-                        ZStack(alignment: .top) {
+                        ZStack(alignment: .topLeading) {
                             if self.useTracking {
                                 GeometryReader { insideProxy in
                                     Color.clear
@@ -114,7 +114,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                 .padding(.horizontal, self.marginHorizontal)
                             }
                         }
-                        .frame(alignment: .top)
+                        .frame(alignment: .topLeading)
                         .onChange(of: self.scrollPos, perform: { pos in
                             guard let pos = pos else {return}
                             reader.scrollTo(pos)
@@ -125,7 +125,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                         })
                     
                     } else {
-                        ZStack(alignment: .leading) {
+                        ZStack(alignment: .topLeading) {
                             if self.useTracking {
                                 GeometryReader { insideProxy in
                                     Color.clear
@@ -148,7 +148,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                 .padding(.horizontal, self.marginHorizontal)
                             }
                         }
-                        .frame(alignment: .leading)
+                        .frame(alignment: .topLeading)
                         .onChange(of: self.scrollPos, perform: { pos in
                             guard let pos = pos else {return}
                             reader.scrollTo(pos)

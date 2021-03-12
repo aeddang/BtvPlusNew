@@ -33,7 +33,7 @@ class Repository:ObservableObject, PageProtocol{
     
     private let setting = SettingStorage()
     private let apiCoreDataManager = ApiCoreDataManager()
-    private let pairingManager:PairingManager
+    private let pairingManager:AccountManager
     private let apiManager:ApiManager
     
     private let userSetup:Setup
@@ -55,7 +55,7 @@ class Repository:ObservableObject, PageProtocol{
         self.pageSceneObserver = sceneObserver
         self.pagePresenter = pagePresenter
         self.userSetup = setup ?? Setup()
-        self.pairingManager =  PairingManager(
+        self.pairingManager =  AccountManager(
             pairing: self.pairing,
             dataProvider: self.dataProvider,
             apiManager: self.apiManager)

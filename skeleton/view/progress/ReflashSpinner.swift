@@ -18,7 +18,7 @@ struct ReflashSpinner: PageComponent {
                 .scaledToFit()
                 .frame(width: Dimen.icon.regular, height: Dimen.icon.regular)
                 .rotationEffect(.degrees(self.progress * 2.0 ) )
-                .colorMultiply(self.progress >= self.progressMax ? Color.brand.primary : Color.app.white)
+                .colorMultiply(self.progress > self.progressMax ? Color.brand.primary : Color.app.white)
             if text != nil {
                 Text(text!)
                 .modifier(LightTextStyle(size: Font.size.lightExtra, color: Color.app.grey))

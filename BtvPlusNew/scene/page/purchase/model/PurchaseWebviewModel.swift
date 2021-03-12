@@ -179,6 +179,28 @@ class PurchaseWebviewModel {
         return self
     }
     @discardableResult
+    func setParam(data: TicketData, seriesId: String? = nil , epsId: String? = nil) -> PurchaseWebviewModel{
+        if let epsId = epsId { addEpsdId(epsdId: epsId) }
+        if let seriesId = seriesId { self.srisId = seriesId }
+        ptype = PurchasePType.getType(data.prodTypeCd)
+        synopsisType = .title
+        conTitle = data.title ?? ""
+        pid = data.prodId
+        pidOnly = "true"
+        return self
+    }
+    @discardableResult
+    func setParam(data: MonthlyData, seriesId: String? = nil , epsId: String? = nil) -> PurchaseWebviewModel{
+        if let epsId = epsId { addEpsdId(epsdId: epsId) }
+        if let seriesId = seriesId { self.srisId = seriesId }
+        ptype = PurchasePType.getType(data.prodTypeCd)
+        synopsisType = .title
+        conTitle = data.title ?? ""
+        pid = data.prdPrcId
+        pidOnly = "true"
+        return self
+    }
+    @discardableResult
     func setParam(seriesId: String? = nil , epsId: String? = nil) -> PurchaseWebviewModel{
         if let epsId = epsId { addEpsdId(epsdId: epsId) }
         if let seriesId = seriesId { self.srisId = seriesId }

@@ -12,14 +12,14 @@ struct DragDownArrow: PageComponent {
     var text:String? = String.alert.dragdown
     
     @State var progress:Double = 0
-    let progressMax:Double = Double(InfinityScrollModel.DRAG_COMPLETED_RANGE)
+    let progressMax:Double = Double(InfinityScrollModel.DRAG_COMPLETED_RANGE) 
     var body: some View {
         VStack{
             Image(Asset.icon.dropDown)
                 .resizable()
                 .scaledToFit()
                 .frame(width: Dimen.icon.regular, height: Dimen.icon.regular)
-                .colorMultiply(self.progress >= self.progressMax ? Color.brand.primary : Color.app.white)
+                .colorMultiply(self.progress > self.progressMax ? Color.brand.primary : Color.app.white)
             if text != nil {
                 Text(text!)
                 .modifier(LightTextStyle(

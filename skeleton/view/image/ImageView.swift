@@ -40,7 +40,9 @@ struct ImageView : View, PageProtocol {
             }
         .onAppear(){
             self.img = self.imageLoader.image(url: self.url)
-            if self.img != nil { self.opacity = 1.0 }
+            if self.img != nil {
+                withAnimation{ self.opacity = 1.0}
+            }
         }
         .onDisappear(){
         

@@ -48,7 +48,7 @@ struct BannerSet: PageComponent{
             if self.data.datas.isEmpty { return }
             let size = Self.listSize(data: self.data, screenWidth: sceneObserver.screenSize.width)
             self.cellDatas = self.data.datas.map{
-                $0.setBannerType(width: size.width, height: size.height, padding: Self.padding)
+                $0.setBannerSize(width: size.width, height: size.height, padding: Self.padding)
             }
         }
     }//body

@@ -18,6 +18,7 @@ class MonthlyData:InfinityData,ObservableObject{
     private(set) var count: String = "0"
     private(set) var menuId: String? = nil
     private(set) var prdPrcId: String = ""
+    private(set) var prodTypeCd: String? = nil
     private(set) var isJoin: Bool = false
     private(set) var isSubJoin: Bool = false
     private(set) var isSelected: Bool = false
@@ -42,10 +43,11 @@ class MonthlyData:InfinityData,ObservableObject{
             selectedJoinImage = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.monthly.size)
         }
         index = idx
-        self.prdPrcId = data.prd_prc_id ?? ""
-        self.menuId = data.menu_id
-        self.blocks = data.blocks
-        self.isUpdated = true
+        prdPrcId = data.prd_prc_id ?? ""
+        prodTypeCd = data.prd_typ_cd
+        menuId = data.menu_id
+        blocks = data.blocks
+        isUpdated = true
         return self
     }
     
@@ -58,6 +60,12 @@ class MonthlyData:InfinityData,ObservableObject{
         }
         self.isUpdated = true
         return self
+    }
+    
+    func resetJoin(){
+        self.isSubJoin = false
+        self.isJoin = false
+        self.isUpdated = true
     }
     
     func setDummy(_ idx:Int = -1) -> MonthlyData {

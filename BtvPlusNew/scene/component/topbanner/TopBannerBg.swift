@@ -17,21 +17,57 @@ struct TopBannerBg: PageComponent {
      
     @State var pages: [PageViewProtocol] = []
     @State var index: Int = 0
+    @State var leading:CGFloat = 0
+    @State var tailing:CGFloat = 0
     
     var action:((_ idx:Int) -> Void)? = nil
     var body: some View {
-        SwipperView(
-            viewModel : self.viewModel,
-            pages: self.pages,
-            index: self.$index,
-            isForground : false
-            )
-            .modifier(MatchHorizontal(height: TopBanner.imageHeight))
-            .onAppear(){
-                self.pages = datas.map{data in
-                    TopBannerBgItem(data: data)
+        ZStack(alignment: .bottom) {
+            SwipperView(
+                viewModel : self.viewModel,
+                pages: self.pages,
+                index: self.$index,
+                isForground : false
+                )
+                .modifier(MatchHorizontal(height: TopBanner.imageHeight))
+           
+            if self.pages.count > 1 {
+                HStack(spacing: Dimen.margin.tiny) {
+                    Spacer()
+                        .modifier(MatchVertical(width:self.leading))
+                        .background(Color.transparent.white20)
+                        .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
+                    Spacer()
+                        .modifier(MatchVertical(width: TopBanner.barWidth))
+                        .background(Color.app.white)
+                        .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
+                    Spacer()
+                        .modifier(MatchVertical(width:self.tailing))
+                        .background(Color.transparent.white20)
+                        .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
                 }
+                .frame( height:TopBanner.barHeight)
+                .padding(.bottom, Dimen.margin.heavy + TopBanner.imageHeight - TopBanner.height)
             }
+        }
+        .onAppear(){
+            self.pages = datas.map{data in
+                TopBannerBgItem(data: data)
+            }
+           //self.setBar()
+        }
+        .onReceive( self.viewModel.$index ){ idx in
+            self.setBar()
+        }
+    }
+    
+    private func setBar(){
+        let count = self.datas.count
+        let size = TopBanner.barWidth
+        withAnimation{
+            self.leading = size * CGFloat(self.index)
+            self.tailing = size * CGFloat(max(0,(count - self.index - 1)))
+        }
     }
 }
 

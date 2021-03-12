@@ -90,7 +90,7 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
             updateScrollDiff = 1.0
             updatePullDiff = 0.3
             cancelPullDiff = 5
-            completePullDiff = 15
+            completePullDiff = 20
             cancelPullRange = pullRange
             isDragEnd = end ?? false
         case .vertical (let end):
@@ -202,33 +202,34 @@ extension InfinityScrollViewProtocol {
     }
     func onMove(pos:CGFloat){
         if self.viewModel.isScrollEnd {
-            //ComponentLog.d("isScrollEnd", tag: "InfinityScrollViewProtocol")
             return
         }
         let diff = self.viewModel.prevPosition - pos
+        //ComponentLog.d("diff " + diff.description, tag: "InfinityScrollViewProtocol")
         if abs(diff) > 600 { return }
         if abs(diff) > self.viewModel.minDiff{
             self.viewModel.scrollPosition = pos
             self.viewModel.prevPosition = pos
         }
+        if diff > 30 { return }
         
         if pos >= self.viewModel.pullRange && self.viewModel.scrollStatus != .pullCancel {
             self.viewModel.scrollStatus = .pull
             self.viewModel.minDiff = self.viewModel.updatePullDiff
             
-            ComponentLog.d("diff " + diff.description, tag: "InfinityScrollViewProtocol")
+            
             if diff < -self.viewModel.completePullDiff {
                 ComponentLog.d("onPullCompleted pull range", tag: "InfinityScrollViewProtocol")
                 self.onPullCompleted()
                 return
             }
             if diff > self.viewModel.cancelPullDiff {
-                if (pos+diff) >= (self.viewModel.pullCompletedRange + self.viewModel.pullRange){
+                if (pos + diff + 1) >= (self.viewModel.pullCompletedRange + self.viewModel.pullRange){
                     ComponentLog.d("onPullCompleted pull", tag: "InfinityScrollViewProtocol")
                     self.viewModel.isScrollEnd = self.viewModel.isDragEnd
                     self.onPullCompleted()
                 } else {
-                    ComponentLog.d("onPullCancel pull" , tag: "InfinityScrollViewProtocol")
+                    ComponentLog.d("onPullCancel pull " + self.viewModel.isScrollEnd.description , tag: "InfinityScrollViewProtocol")
                     self.onPullCancel()
                 }
                 self.viewModel.prevPosition = pos

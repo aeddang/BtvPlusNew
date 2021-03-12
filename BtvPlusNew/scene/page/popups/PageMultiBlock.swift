@@ -146,12 +146,13 @@ struct PageMultiBlock: PageView {
                     self.title = obj.getParamValue(key: .title) as? String
                     self.originDatas = obj.getParamValue(key: .data) as? [BlockItem] ?? []
                 }
+                self.themaType = obj.getParamValue(key: .type) as? BlockData.ThemaType ?? .category
             }
             
         }//geo
     }//body
     
-    
+    @State var themaType:BlockData.ThemaType = .category
     @State var marginTop:CGFloat = 0
     @State var isTop:Bool? = nil
     @State var cateData:TextTabData? = nil
@@ -183,7 +184,7 @@ struct PageMultiBlock: PageView {
                 if let data = self.cateData {
                     self.cateBlockViewModel.update(menuId:data.menuId, listType:data.listType ?? .poster, key:nil)
                 } else {
-                    self.multiBlockViewModel.update(datas: self.originDatas)
+                    self.multiBlockViewModel.update(datas: self.originDatas, themaType: self.themaType)
                 }
             }
         }

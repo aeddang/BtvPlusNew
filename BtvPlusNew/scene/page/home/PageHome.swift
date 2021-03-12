@@ -47,13 +47,11 @@ struct PageHome: PageView {
                 topDatas: self.topDatas,
                 monthlyViewModel : self.monthlyViewModel,
                 monthlyDatas: self.monthlyDatas,
+                monthlyAllData: self.monthlyAllData,
                 isRecycle:true
                 ){ data in
-                    if let data = data {
-                        self.reload(selectedMonthlyId: data.prdPrcId)
-                    } else {// all view
-                        
-                    }
+                    self.reload(selectedMonthlyId: data.prdPrcId)
+                    
             }
         }
         .modifier(PageFull())
@@ -81,6 +79,14 @@ struct PageHome: PageView {
         .onReceive(self.pagePresenter.$currentTopPage){ page in
             self.useTracking = page?.id == self.pageObject?.id
         }
+        .onReceive(self.pairing.authority.$purchaseLowLevelTicketList){ list in
+            guard let list = list else { return }
+            self.updatedMonthly(purchases: list, lowLevelPpm: true)
+        }
+        .onReceive(self.pairing.authority.$purchaseTicketList){ list in
+            guard let list = list else { return }
+            self.updatedMonthly(purchases: list, lowLevelPpm: false)
+        }
         .onReceive(self.viewModel.$event){evt in
             guard let evt = evt else { return }
             switch evt {
@@ -88,8 +94,6 @@ struct PageHome: PageView {
                 switch res.type {
                 case .getEventBanner :
                     self.respondTopBanner(res: res)
-                case .getMonthly(let lowLevelPpm, _, _) :
-                    self.respondMonthly(res: res, lowLevelPpm: lowLevelPpm)
                 default: break
                 }
                
@@ -111,6 +115,7 @@ struct PageHome: PageView {
     
     @State var topDatas:Array<BannerData>? = nil
     @State var originMonthlyDatas:[String:MonthlyData]? = nil
+    @State var monthlyAllData:BlockItem? = nil
     @State var monthlyDatas:Array<MonthlyData>? = nil
     @State var selectedMonthlyId:String? = Self.finalSelectedMonthlyId
     
@@ -159,19 +164,24 @@ struct PageHome: PageView {
         if self.originMonthlyDatas == nil {
             var originMonthlyDatas = [String:MonthlyData]()
             let maxCount = 8
+            var idx = 0
             var monthlyDatas = Array<MonthlyData>()
             guard let blocksData = self.dataProvider.bands.getData(menuId: self.menuId)?.blocks else {return}
-            zip( blocksData,0...blocksData.count)
-            .filter{ block, _ in
-                if block.prd_prc_id == nil {return false}
+            blocksData
+            .filter{ block in
+                if block.prd_prc_id == nil {
+                    self.monthlyAllData = block
+                    return false
+                }
                 guard let blocks = block.blocks else {return false}
                 return !blocks.isEmpty
             }
-            .forEach{ data, idx in
+            .forEach{ data in
                 let monthly = MonthlyData().setData(data: data, idx: idx)
                 if monthly.prdPrcId == self.selectedMonthlyId { monthly.setSelected(true) }
                 originMonthlyDatas[monthly.prdPrcId] = monthly
                 if monthlyDatas.count < maxCount { monthlyDatas.append(monthly) }
+                idx += 1
             }
             self.originMonthlyDatas = originMonthlyDatas
             if !monthlyDatas.isEmpty {
@@ -183,22 +193,12 @@ struct PageHome: PageView {
     }
 
     private func requestMonthly(){
-        if self.monthlyDatas == nil {return}
-        if self.pairing.status == .pairing {
-            self.viewModel.request = .init(
-                id: self.menuId,
-                type: .getMonthly(false),  isOptional: true)
-            
-            self.viewModel.request = .init(
-                id: self.menuId,
-                type: .getMonthly(true),  isOptional: true)
-        }
+        self.originMonthlyDatas?.forEach{$1.resetJoin()}
+        self.pairing.authority.requestAuth(.updateTicket)
     }
     
-    
-    private func respondMonthly(res:ApiResultResponds?, lowLevelPpm:Bool){
-        guard let resData = res?.data as? MonthlyInfo else { return }
-        guard let purchases = resData.purchaseList else { return }
+    private func updatedMonthly( purchases:[MonthlyInfoItem], lowLevelPpm:Bool){
+        if self.originMonthlyDatas == nil { return }
         purchases.forEach{ purchas in
             guard let id = purchas.prod_id else {return}
             guard let monthlyData = self.originMonthlyDatas?[id] else {return}

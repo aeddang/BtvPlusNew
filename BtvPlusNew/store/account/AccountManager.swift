@@ -8,7 +8,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-class PairingManager : PageProtocol{
+class AccountManager : PageProtocol{
     private let mdnsPairingManager = MdnsPairingManager()
     private let pairing:Pairing
     private let dataProvider:DataProvider
@@ -68,6 +68,16 @@ class PairingManager : PageProtocol{
             case .userInfo :
                 self.dataProvider.requestData(q: .init(type: .getPairingUserInfo(self.pairing.hostDevice?.macAdress), isOptional: true))
             default: do{}
+            }
+        }).store(in: &anyCancellable)
+        
+        self.pairing.authority.$request.sink(receiveValue: { req in
+            guard let requestPairing = req else { return }
+            switch requestPairing{
+            case .updateTicket :
+                if self.pairing.status != .pairing {return}
+                self.dataProvider.requestData(q: .init(type: .getMonthly(false),  isOptional: true))
+                self.dataProvider.requestData(q: .init(type: .getMonthly(true),  isOptional: true))
             }
         }).store(in: &anyCancellable)
         
@@ -183,6 +193,11 @@ class PairingManager : PageProtocol{
                 guard let data = res.data as? PairingUserInfo  else { return }
                 self.pairing.updateUserinfo(data)
                 
+            case .getMonthly(let lowLevelPpm , _ , _) :
+                guard let resData = res.data as? MonthlyInfo else { return }
+                guard let purchases = resData.purchaseList else { return }
+                self.pairing.authority.updatePurchaseTicket(purchases, lowLevelPpm: lowLevelPpm)
+        
             default: do{}
             }
         }).store(in: &anyCancellable)

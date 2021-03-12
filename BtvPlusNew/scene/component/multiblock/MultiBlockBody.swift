@@ -14,11 +14,12 @@ class MultiBlockModel: PageDataProviderModel {
     private(set) var datas:[BlockData]? = nil
     private(set) var headerSize:Int = 0
     private(set) var requestSize:Int = 0
+     
     @Published private(set) var isUpdate = false {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
     
-    init(headerSize:Int = 5, requestSize:Int = 10) {
+    init(headerSize:Int = 4, requestSize:Int = 10) {
         self.headerSize = headerSize
         self.requestSize = requestSize
     }
@@ -28,9 +29,9 @@ class MultiBlockModel: PageDataProviderModel {
         self.isUpdate = true
     }
     
-    func update(datas:[BlockItem]) {
+    func update(datas:[BlockItem], themaType:BlockData.ThemaType = .category) {
         self.datas = datas.map{ block in
-            BlockData().setDate(block)
+            BlockData().setDate(block, themaType:themaType)
         }
         .filter{ block in
             switch block.dataType {
@@ -41,8 +42,9 @@ class MultiBlockModel: PageDataProviderModel {
         }
         self.isUpdate = true
     }
-    
 }
+
+
 extension MultiBlockBody {
     private static var isLegacy:Bool {
         get{
@@ -72,9 +74,10 @@ struct MultiBlockBody: PageComponent {
     
     var monthlyViewModel: InfinityScrollModel = InfinityScrollModel()
     var monthlyDatas:[MonthlyData]? = nil
+    var monthlyAllData:BlockItem? = nil
     var isRecycle = true
     
-    var action: ((_ data:MonthlyData?) -> Void)? = nil
+    var action: ((_ data:MonthlyData) -> Void)? = nil
     
     @State var reloadDegree:Double = 0
     @State var reloadDegreeMax:Double = Double(InfinityScrollModel.PULL_COMPLETED_RANGE)
@@ -98,52 +101,28 @@ struct MultiBlockBody: PageComponent {
                         progress: self.$reloadDegree,
                         progressMax: self.reloadDegreeMax
                     )
-                    .padding(.top,
-                             self.marginTop
-                             + (self.topDatas != nil ? TopBanner.height - self.marginTop : 0)
-                             + (self.monthlyDatas != nil ? MonthlyBlock.height + MultiBlock.spacing : 0) )
-                    
+                    .padding(.top, self.topDatas != nil ? TopBanner.height  : self.marginTop )
+                             
                     MultiBlock(
                         viewModel: self.infinityScrollModel,
+                        viewPagerModel:self.viewPagerModel,
                         pageObservable: self.pageObservable,
                         pageDragingModel: self.pageDragingModel,
-                        topDatas: nil,
+                        topDatas: self.topDatas,
                         datas: self.blocks,
                         headerSize: self.viewModel.headerSize,
                         useBodyTracking:self.useBodyTracking,
                         useTracking:self.useTracking,
-                        marginTop:self.marginTop
-                            + ((self.topDatas != nil && self.topDatas?.isEmpty == false) ? (TopBanner.height - self.marginTop) : 0)
-                            + (self.monthlyDatas != nil ? MonthlyBlock.height + MultiBlock.spacing : 0),
+                        marginTop:self.marginTop,
                         marginBottom: self.marginBottom,
-                        monthlyViewModel : nil,
-                        monthlyDatas: nil,
+                        monthlyViewModel : self.monthlyViewModel,
+                        monthlyDatas: self.monthlyDatas,
+                        monthlyAllData: self.monthlyAllData,
                         isRecycle:self.isRecycle,
                         isLegacy:Self.isLegacy,
                         action:self.action
                         )
                     
-                    if self.topDatas != nil && self.topDatas?.isEmpty == false {
-                        TopBanner(
-                            pageObservable: self.pageObservable,
-                            viewModel:self.viewPagerModel,
-                            datas: self.topDatas! )
-                            .modifier(MatchHorizontal(height: TopBanner.height))
-                            .padding(.top, max(self.headerOffset, -TopBanner.imageHeight))
-                    }
-                    if self.monthlyDatas != nil {
-                       MonthlyBlock(
-                            viewModel:self.monthlyViewModel,
-                            pageDragingModel:self.pageDragingModel,
-                            monthlyDatas:self.monthlyDatas!,
-                            useTracking:self.useTracking,
-                            action:self.action
-                       )
-                       .padding(.top, max(
-                                    self.marginTop + self.headerOffset
-                                    + (self.topDatas != nil ? (TopBanner.height - self.marginTop) : 0)
-                                    , -MonthlyBlock.height ))
-                    }
                 } else {
                     ReflashSpinner(
                         progress: self.$reloadDegree,
@@ -154,6 +133,7 @@ struct MultiBlockBody: PageComponent {
                     
                     MultiBlock(
                         viewModel: self.infinityScrollModel,
+                        viewPagerModel:self.viewPagerModel,
                         pageObservable: self.pageObservable,
                         pageDragingModel: self.pageDragingModel,
                         topDatas: self.topDatas,
@@ -165,6 +145,7 @@ struct MultiBlockBody: PageComponent {
                         marginBottom: self.marginBottom,
                         monthlyViewModel : self.monthlyViewModel,
                         monthlyDatas: self.monthlyDatas,
+                        monthlyAllData: self.monthlyAllData,
                         isRecycle:self.isRecycle,
                         isLegacy:Self.isLegacy,
                         action:self.action
@@ -191,9 +172,7 @@ struct MultiBlockBody: PageComponent {
         }
         .onReceive(self.infinityScrollModel.$pullPosition){ pos in
             if pos < InfinityScrollModel.PULL_RANGE { return }
-            withAnimation{
-                self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
-            }
+            self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
         }
         .onReceive(self.viewModel.$isUpdate){ update in
             if update {
@@ -203,6 +182,7 @@ struct MultiBlockBody: PageComponent {
         .onReceive(dataProvider.$result) { res in
         
             guard let data = self.loadingBlocks.first(where: { $0.id == res?.id}) else {return}
+            var banners:[BannerData]? = nil
             switch data.dataType {
             case .cwGrid:
                 guard let resData = res?.data as? CWGrid else {return data.setBlank()}
@@ -229,20 +209,28 @@ struct MultiBlockBody: PageComponent {
             case .grid:
                 guard let resData = res?.data as? GridEvent else {return data.setBlank()}
                 guard let blocks = resData.contents else {return data.setBlank()}
+                
                 switch data.uiType {
                 case .poster :
                     data.posters = blocks.map{ d in
                         PosterData().setData(data: d, cardType: data.cardType)
                     }
+                    
                 case .video :
                     data.videos = blocks.map{ d in
                         VideoData().setData(data: d, cardType: data.cardType)
                     }
+                    
                 case .theme :
                     data.themas = blocks.map{ d in
                         ThemaData().setData(data: d, cardType: data.cardType)
                     }
+                    
                 default: break
+                }
+                
+                banners = resData.banners?.map{d in
+                    BannerData().setData(data: d, type: .list)
                 }
                 
                 
@@ -290,6 +278,28 @@ struct MultiBlockBody: PageComponent {
                
             default: do {}
             }
+            
+            var listHeight:CGFloat = 0
+            var padding = Dimen.margin.thin
+            if let size = data.posters?.first?.type {
+                listHeight = size.size.height
+            }
+            if let size = data.videos?.first?.type {
+                listHeight = size.size.height + size.bottomHeight
+            }
+            if let size = data.themas?.first?.type {
+                listHeight = size.size.height
+                padding = size.spacing
+            }
+            if listHeight != 0 {
+                if let banner = banners {
+                    let ratio = ListItem.banner.type03
+                    let w = listHeight * ratio.width/ratio.height
+                    banner.forEach{ $0.setBannerSize(width: w , height: listHeight, padding: padding) }
+                    data.leadingBanners = banner
+                }
+                data.listHeight = listHeight
+            }
             data.setDatabindingCompleted()
             
         }
@@ -303,13 +313,14 @@ struct MultiBlockBody: PageComponent {
             self.anyCancellable.removeAll()
         }
     }//body
-    
+
     @State var originBlocks:Array<BlockData> = []
     @State var loadingBlocks:[BlockData] = []
     @State var blocks:[BlockData] = []
     @State var anyCancellable = Set<AnyCancellable>()
     
     func reload(){
+        
         self.anyCancellable.forEach{$0.cancel()}
         self.anyCancellable.removeAll()
         self.blocks = []

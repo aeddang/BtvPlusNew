@@ -32,6 +32,9 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     @State var isTracking = false
     @State var anchor:UnitPoint? = nil
     @State var isScroll:Bool = true
+    
+    @State var progress:Double = 1
+    @State var progressMax:Double = 1
      
     init(
         viewModel: InfinityScrollModel,
@@ -163,11 +166,12 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                 
             }
             .modifier(MatchParent())
+            .opacity(self.progress / self.progressMax)
             .coordinateSpace(name: self.tag)
             .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                DispatchQueue.main.async {
+                //DispatchQueue.main.async {
                     self.onPreferenceChange(value: value)
-                }
+                //}
             }
             
             .onReceive(self.viewModel.$scrollStatus){ stat in
@@ -175,26 +179,32 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                 switch stat  {
                 case .pull :
                     self.isScroll = false
-                    ComponentLog.d("scroll unable", tag: "InfinityScrollViewProtocol")
                 default: break
                 }
             }
             .onReceive(self.viewModel.$event){ evt in
-                if self.scrollType != .web() {return}
                 guard let evt = evt else{ return }
+                switch evt  {
+                case .pullCancel : withAnimation{ self.progress = self.progressMax }
+                case .pullCompleted : withAnimation{ self.progress = self.scrollType == .reload() ? self.progressMax : 0 }
+                default: break
+                }
+                
+                if self.scrollType != .web() {return}
                 switch evt  {
                 case .pullCompleted, .pullCancel :
                     self.isScroll = true
                     self.onMove(pos: 1)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        ComponentLog.d("scroll onMove", tag: "InfinityScrollViewProtocol")
                         self.onMove(pos: 0)
                     }
-                    
                 default: break
                 }
             }
-            
+            .onReceive(self.viewModel.$pullPosition){ pos in
+                if pos < self.viewModel.pullRange { return }
+                self.progress = self.progressMax - Double(pos - self.viewModel.pullRange)
+            }
             .onReceive(self.viewModel.$uiEvent){ evt in
                 guard let evt = evt else{ return }
                 switch evt {
@@ -208,15 +218,14 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                 }
             }
             .onAppear(){
-                DispatchQueue.main.async {
-                    self.isTracking = true
-                    self.onReady()
-                }
+                let max = Double(viewModel.pullRange + viewModel.pullCompletedRange )
+                self.progress = max
+                self.progressMax = max
+                self.isTracking = true
+                self.onReady()
             }
             .onDisappear{
-                DispatchQueue.main.async {
-                    self.isTracking = false
-                }
+                self.isTracking = false
             }
         }else{
             GeometryReader { outsideProxy in
@@ -271,15 +280,12 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                             self.onPreferenceChange(value: value)
                         }
                         .onAppear(){
-                            DispatchQueue.main.async {
-                                self.isTracking = true
-                                self.onReady()
-                            }
+                            self.isTracking = true
+                            self.onReady()
+                            
                         }
                         .onDisappear{
-                            DispatchQueue.main.async {
-                                self.isTracking = false
-                            }
+                            self.isTracking = false
                         }
                     }
                     
@@ -311,15 +317,11 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                         self.onPreferenceChange(value: value)
                     }
                     .onAppear(){
-                        DispatchQueue.main.async {
-                            self.isTracking = true
-                            self.onReady()
-                        }
+                        self.isTracking = true
+                        self.onReady()
                     }
                     .onDisappear{
-                        DispatchQueue.main.async {
-                            self.isTracking = false
-                        }
+                        self.isTracking = false
                         
                     }
                 }
@@ -330,9 +332,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     private func onPreferenceChange(value:[CGFloat]){
         if !self.useTracking {return}
         let contentOffset = value[0]
-        DispatchQueue.main.async {
-            self.onMove(pos: contentOffset)
-        }
+        self.onMove(pos: contentOffset)
     }
     
     private func calculateContentOffset(insideProxy: GeometryProxy) -> CGFloat {
@@ -361,63 +361,3 @@ struct ScrollOffsetPreferenceKey: PreferenceKey {
     }
 }
 
-/*
- List {
-     if self.isTracking {
-         GeometryReader { insideProxy in
-             Color.clear
-                 .preference(key: ScrollOffsetPreferenceKey.self,
-                     value: [self.calculateContentOffset(
-                         insideProxy: insideProxy, outsideProxy: outsideProxy)])
-         }
-     }
-     self.content
-     
- }
- .padding(.vertical, self.marginVertical)
- .padding(.horizontal, self.marginHorizontal)
- .coordinateSpace(name: self.tag)
- .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-     self.onPreferenceChange(value: value)
- }
- .onAppear(){
-     self.isTracking = true
-     UITableView.appearance().separatorStyle = .none
-     UITableView.appearance().separatorInset = .init(top: 0, left: 0, bottom: 0, right: 0)
- }
- .onDisappear{
-     self.isTracking = false
- }
- 
- 
- 
- ScrollView(.vertical, showsIndicators: false) {
-     ZStack(alignment: .topLeading) {
-         if self.isTracking && self.useTracking{
-             GeometryReader { insideProxy in
-                 Color.clear
-                     .preference(key: ScrollOffsetPreferenceKey.self,
-                         value: [self.calculateContentOffset(
-                             insideProxy: insideProxy, outsideProxy: outsideProxy)])
-             }
-         }
-         VStack (alignment:.leading, spacing:self.spacing){
-             self.content
-         }
-         .padding(.vertical, self.marginVertical)
-         .padding(.horizontal, self.marginHorizontal)
-     }
- }
- .coordinateSpace(name: self.tag)
- .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-     self.onPreferenceChange(value: value)
-     
- }
- .onAppear(){
-     self.isTracking = true
-     self.onReady()
- }
- .onDisappear{
-     self.isTracking = false
- }
- */

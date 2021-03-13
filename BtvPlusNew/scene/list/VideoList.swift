@@ -205,7 +205,7 @@ extension VideoSet{
         let count = CGFloat(data.count)
         let w = screenWidth - ( padding * 2)
         let cellW = ( w - (padding*(count-1)) ) / count
-        var cellH = cellW * ratio
+        var cellH = round(cellW * ratio)
         
         if datas.first?.isInside == false && isFull {
             cellH = cellH + datas.first!.type.bottomHeight
@@ -231,7 +231,7 @@ struct VideoSet: PageComponent{
                     )
                 }
             }
-            if !self.data.isFull {
+            if !self.data.isFull && self.data.count > 1{
                 Spacer()
             }
         }

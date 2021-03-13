@@ -39,125 +39,133 @@ struct PageSynopsis: PageView {
     @State var isPairing:Bool? = nil
     @State var isFullScreen:Bool = false
     @State var useTracking:Bool = false
-         
+    @State var isUiview:Bool = true
     var body: some View {
         GeometryReader { geometry in
             PageDataProviderContent(
                 viewModel: self.pageDataProviderModel
             ){
-                PageDragingBody(
-                    viewModel:self.pageDragingModel,
-                    axis:.horizontal
-                ) {
-                    VStack(spacing:0){
-                        SynopsisTop(
-                            pageObservable: self.pageObservable,
-                            playerModel: self.playerModel,
-                            playerListViewModel: self.playerListViewModel,
-                            prerollModel: self.prerollModel,
-                            title: self.title,
-                            imgBg: self.imgBg,
-                            imgContentMode: self.imgContentMode,
-                            textInfo: self.textInfo,
-                            epsdId: self.epsdId,
-                            playListData: self.playListData,
-                            isPlayAble: self.isPlayAble,
-                            isPlayViewActive: self.isPlayViewActive)
-                        .modifier(Ratio16_9( geometry:geometry, isFullScreen: self.isFullScreen))
-                        .padding(.top, self.sceneObserver.safeAreaTop)
-                        .onReceive(self.playerModel.$btvPlayerEvent){evt in
+                if isUiview {
+                    PageDragingBody(
+                        viewModel:self.pageDragingModel,
+                        axis:.horizontal
+                    ) {
+                        VStack(spacing:0){
+                            SynopsisTop(
+                                pageObservable: self.pageObservable,
+                                playerModel: self.playerModel,
+                                playerListViewModel: self.playerListViewModel,
+                                prerollModel: self.prerollModel,
+                                title: self.title,
+                                imgBg: self.imgBg,
+                                imgContentMode: self.imgContentMode,
+                                textInfo: self.textInfo,
+                                epsdId: self.epsdId,
+                                playListData: self.playListData,
+                                isPlayAble: self.isPlayAble,
+                                isPlayViewActive: self.isPlayViewActive)
+                            .modifier(Ratio16_9( geometry:geometry, isFullScreen: self.isFullScreen))
+                            .padding(.top, self.sceneObserver.safeAreaTop)
+                            .onReceive(self.playerModel.$btvPlayerEvent){evt in
+                                guard let evt = evt else { return }
+                                switch evt {
+                                case .nextView : self.nextVod(auto: false)
+                                case .continueView: self.continueVod()
+                                case .changeView(let epsdId) : self.changeVod(epsdId:epsdId)
+                                }
+                            }
+                            
+                            if !self.isFullScreen{
+                                if self.isUIView{
+                                    SynopsisBody(
+                                        componentViewModel: self.componentViewModel,
+                                        infinityScrollModel: self.infinityScrollModel,
+                                        relationContentsModel: self.relationContentsModel,
+                                        peopleScrollModel: self.peopleScrollModel,
+                                        pageDragingModel: self.pageDragingModel,
+                                        isBookmark: self.$isBookmark,
+                                        isLike: self.$isLike,
+                                        relationTabIdx: self.$relationTabIdx,
+                                        seris: self.$seris,
+                                        topIdx : self.topIdx,
+                                        synopsisData: self.synopsisData,
+                                        isPairing: self.isPairing,
+                                        episodeViewerData: self.episodeViewerData,
+                                        purchasViewerData: self.purchasViewerData,
+                                        summaryViewerData: self.summaryViewerData,
+                                        srisId: self.srisId, epsdId: self.epsdId,
+                                        hasAuthority: self.hasAuthority,
+                                        relationTab: self.relationTab,
+                                        relationDatas: self.relationDatas,
+                                        hasRelationVod: self.hasRelationVod,
+                                        useTracking:self.useTracking)
+                                       
+                                    .highPriorityGesture(
+                                        DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
+                                            .onChanged({ value in
+                                                //if self.useTracking { self.useTracking = false }
+                                                self.pageDragingModel.uiEvent = .drag(geometry, value)
+                                            })
+                                            .onEnded({ value in
+                                                self.pageDragingModel.uiEvent = .draged(geometry, value)
+                                                //self.useTracking = true
+                                            })
+                                    )
+                                    .gesture(
+                                        self.pageDragingModel.cancelGesture
+                                            .onChanged({_ in
+                                                        //self.useTracking = true
+                                                        self.pageDragingModel.uiEvent = .dragCancel})
+                                            .onEnded({_ in
+                                                        //self.useTracking = true
+                                                        self.pageDragingModel.uiEvent = .dragCancel})
+                                    )
+                                } else {
+                                    Spacer().modifier(MatchParent())
+                                }
+                            }
+                        }
+                        .onReceive( [self.relationTabIdx].publisher ){ idx in
+                            if idx == self.selectedRelationTabIdx { return }
+                            self.selectedRelationContent(idx:idx)
+                        }
+                        .onReceive(self.componentViewModel.$uiEvent){evt in
                             guard let evt = evt else { return }
                             switch evt {
-                            case .nextView : self.nextVod(auto: false)
-                            case .continueView: self.continueVod()
-                            case .changeView(let epsdId) : self.changeVod(epsdId:epsdId)
+                            case .changeVod(let epsdId) : self.changeVod(epsdId:epsdId)
+                            case .changeSynopsis(let data): self.changeVod(synopsisData: data)
+                            case .changeOption(let option) : self.changeOption(option)
+                            case .purchase : self.purchase()
                             }
                         }
+                        .onReceive(self.peopleScrollModel.$event){evt in
+                            guard let evt = evt else {return}
+                            switch evt {
+                            case .pullCompleted :
+                                self.pageDragingModel.uiEvent = .pullCompleted(geometry)
+                            case .pullCancel :
+                                self.pageDragingModel.uiEvent = .pullCancel(geometry)
+                            default : do{}
+                            }
+                        }
+                        .onReceive(self.peopleScrollModel.$pullPosition){ pos in
+                            self.pageDragingModel.uiEvent = .pull(geometry, pos)
+                        }
+                        .modifier(PageFull())
                         
-                        if !self.isFullScreen{
-                            if self.isUIView{
-                                SynopsisBody(
-                                    componentViewModel: self.componentViewModel,
-                                    infinityScrollModel: self.infinityScrollModel,
-                                    relationContentsModel: self.relationContentsModel,
-                                    peopleScrollModel: self.peopleScrollModel,
-                                    pageDragingModel: self.pageDragingModel,
-                                    isBookmark: self.$isBookmark,
-                                    isLike: self.$isLike,
-                                    relationTabIdx: self.$relationTabIdx,
-                                    seris: self.$seris,
-                                    topIdx : self.topIdx,
-                                    synopsisData: self.synopsisData,
-                                    isPairing: self.isPairing,
-                                    episodeViewerData: self.episodeViewerData,
-                                    purchasViewerData: self.purchasViewerData,
-                                    summaryViewerData: self.summaryViewerData,
-                                    srisId: self.srisId, epsdId: self.epsdId,
-                                    hasAuthority: self.hasAuthority,
-                                    relationTab: self.relationTab,
-                                    relationDatas: self.relationDatas,
-                                    hasRelationVod: self.hasRelationVod,
-                                    useTracking:self.useTracking)
-                                   
-                                .highPriorityGesture(
-                                    DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
-                                        .onChanged({ value in
-                                            //if self.useTracking { self.useTracking = false }
-                                            self.pageDragingModel.uiEvent = .drag(geometry, value)
-                                        })
-                                        .onEnded({ value in
-                                            self.pageDragingModel.uiEvent = .draged(geometry, value)
-                                            //self.useTracking = true
-                                        })
-                                )
-                                .gesture(
-                                    self.pageDragingModel.cancelGesture
-                                        .onChanged({_ in
-                                                    //self.useTracking = true
-                                                    self.pageDragingModel.uiEvent = .dragCancel})
-                                        .onEnded({_ in
-                                                    //self.useTracking = true
-                                                    self.pageDragingModel.uiEvent = .dragCancel})
-                                )
-                            } else {
-                                Spacer().modifier(MatchParent())
-                            }
-                        }
+                    }//PageDragingBody
+                    .onReceive(self.infinityScrollModel.$scrollPosition){pos in
+                       self.pageDragingModel.uiEvent = .dragCancel
                     }
-                    .onReceive( [self.relationTabIdx].publisher ){ idx in
-                        if idx == self.selectedRelationTabIdx { return }
-                        self.selectedRelationContent(idx:idx)
-                    }
-                    .onReceive(self.componentViewModel.$uiEvent){evt in
-                        guard let evt = evt else { return }
-                        switch evt {
-                        case .changeVod(let epsdId) : self.changeVod(epsdId:epsdId)
-                        case .changeSynopsis(let data): self.changeVod(synopsisData: data)
-                        case .changeOption(let option) : self.changeOption(option)
-                        case .purchase : self.purchase()
-                        }
-                    }
-                    .onReceive(self.peopleScrollModel.$event){evt in
-                        guard let evt = evt else {return}
-                        switch evt {
-                        case .pullCompleted :
-                            self.pageDragingModel.uiEvent = .pullCompleted(geometry)
-                        case .pullCancel :
-                            self.pageDragingModel.uiEvent = .pullCancel(geometry)
-                        default : do{}
-                        }
-                    }
-                    .onReceive(self.peopleScrollModel.$pullPosition){ pos in
-                        self.pageDragingModel.uiEvent = .pull(geometry, pos)
-                    }
-                    .modifier(PageFull())
-                    
-                }//PageDragingBody
-                .onReceive(self.infinityScrollModel.$scrollPosition){pos in
-                   self.pageDragingModel.uiEvent = .dragCancel
                 }
             }//PageDataProviderContent
-            
+            .onReceive(self.pageObservable.$status){ stat in
+                switch stat {
+                case .bottom : self.isUiview = false
+                case .top, .below : self.isUiview = true
+                default : break
+                }
+            }
             .onReceive(self.pairing.$event){evt in
                 guard let _ = evt else {return}
                 self.isPageDataReady = true

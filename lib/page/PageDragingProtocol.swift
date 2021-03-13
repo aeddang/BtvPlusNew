@@ -184,9 +184,28 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     
 
     var body: some View {
+        GeometryReader { geometry in
         ZStack(alignment: .topLeading){
             self.content.modifier(MatchParent())
-            
+            Spacer()
+                .modifier(MatchVertical(width: 20, margin: 0))
+                .background(Color.transparent.clearUi)
+                .highPriorityGesture(
+                    DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
+                        .onChanged({ value in
+                            self.viewModel.uiEvent = .drag(geometry, value)
+                        })
+                        .onEnded({ value in
+                            self.viewModel.uiEvent = .draged(geometry, value)
+                        })
+                )
+                .gesture(
+                    self.viewModel.cancelGesture
+                        .onChanged({_ in
+                            self.viewModel.uiEvent = .dragCancel})
+                        .onEnded({_ in
+                            self.viewModel.uiEvent = .dragCancel})
+                )
         }//z
         .offset(
             x:self.axis == .horizontal ? self.bodyOffset : 0,
@@ -241,6 +260,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
         .onDisappear(){
             
         }
+        }//geo
     }//body
     
     func onDragInit(offset:CGFloat = 0) {

@@ -23,8 +23,6 @@ struct PageBackgroundBody: View {
 extension PageContentBody{
     static let pageMoveAmount:CGFloat = -70.0
 }
-
-
 struct PageContentBody: PageView  {
     var childViews:[PageViewProtocol] = []
     @EnvironmentObject var pageChanger:PagePresenter
@@ -38,17 +36,21 @@ struct PageContentBody: PageView  {
     @State var isTop:Bool = true
     @State var isBelow:Bool = false
     @State var topPageType:PageAnimationType = .none
-
     @State var isReady:Bool = false
     var body: some View {
         ZStack(){
-            ForEach(childViews, id: \.pageID) { page in
+            childViews.first!.contentBody
+                .offset(
+                    x: self.offsetX ,
+                    y: self.offsetY)
+            /*
+            ForEach(childViews, id: \.id) { page in
                 page.contentBody
                     .offset(
                         x: self.offsetX ,
                         y: self.offsetY)
             }
-            
+            */
             if self.isBelow {
                 Spacer().modifier(MatchParent()).background(Color.transparent.black70)
                     .opacity(self.opacity)
@@ -58,15 +60,12 @@ struct PageContentBody: PageView  {
             }
             
         }
-        .frame(minHeight:0,
-               maxHeight: (self.isTop || self.isBelow) ? .infinity : 0,
-               alignment: .topLeading)
+        
         .offset(x:  self.pageOffsetX, y:  -self.pageOffsetY )
         .onReceive(self.pageChanger.$currentTopPage){ page in
             guard let page = page else { return }
             if !self.isReady  {return}
             //PageLog.log("currentTopPage",tag:self.pageID)
-            
             self.topPageType = page.animationType
             guard let pageObject = self.pageObject else { return }
             if pageObject.zIndex != 0 { return }
@@ -75,6 +74,7 @@ struct PageContentBody: PageView  {
             if pageObject == page {
                 self.isTop = true
                 self.isBelow = false
+                self.pageObservable.status = .top
                 withAnimation{
                     self.pageOffsetX = 0.0
                     self.pageOffsetY = 0.0

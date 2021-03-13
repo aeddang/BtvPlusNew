@@ -20,7 +20,6 @@ struct SwipperView : View , PageProtocol, Swipper {
     @Binding var index: Int
     var isForground:Bool = true
     var action:(() -> Void)? = nil
-    
     var body: some View {
         GeometryReader { geometry in
             if self.pages.count <= 1 {
@@ -84,7 +83,7 @@ struct SwipperView : View , PageProtocol, Swipper {
                 .offset(x: self.isUserSwiping ? self.offset : CGFloat(self.index + 1) * -geometry.size.width)
                 .frame(width: geometry.size.width, alignment: .leading)
                 .highPriorityGesture(
-                    DragGesture(minimumDistance: 30, coordinateSpace: .local)
+                    DragGesture(minimumDistance: 10, coordinateSpace: .local)
                     .onChanged({ value in
                         if !self.isForground { return }
                         self.isUserSwiping = true
@@ -103,10 +102,25 @@ struct SwipperView : View , PageProtocol, Swipper {
                         
                     })
                 )
+                .gesture(
+                    LongPressGesture(minimumDuration: 0.0, maximumDistance: 0.0)
+                          .simultaneously(with: RotationGesture(minimumAngleDelta:.zero))
+                          .simultaneously(with: MagnificationGesture(minimumScaleDelta: 0))
+                        .onChanged({_ in
+                            if !self.isForground { return }
+                            self.reset(idx: self.index)
+                        })
+                        .onEnded({_ in
+                            if !self.isForground { return }
+                            self.reset(idx: self.index)
+                        })
+                )
                 .onReceive(self.viewModel.$request){ evt in
                     guard let evt = evt else {return}
+        
                     if self.isForground {
                         switch evt{
+                        case .reset : if self.isUserSwiping { self.reset(idx:self.index) }
                         case .move(let idx) : withAnimation(Self.ani){ self.index = idx }
                         case .jump(let idx) : self.index = idx
                         case .next:

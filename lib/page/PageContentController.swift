@@ -14,6 +14,43 @@ final class PageControllerObservable: ObservableObject  {
     @Published var pages:[PageViewProtocol] = []
     @Published var popups:[PageViewProtocol] = []
     @Published var overlayView: PageViewProtocol? = nil
+    
+    func updatePageIndex(){
+        PageLog.d("updatePageIndex" , tag:"PageController")
+        let checkPopups = popups.filter({$0.zIndex == 0}).reversed()
+        if checkPopups.isEmpty {
+            pages.first?.pageObservable.status = .top
+            PageLog.d("updatePage top " + (pages.first?.pageID ?? "") , tag:"PageController")
+            return
+        }
+        
+        let top = checkPopups.count
+        if top == 1 {
+            checkPopups.first?.pageObservable.status = .top
+            pages.first?.pageObservable.status = .below
+            PageLog.d("updatePage top " + (checkPopups.first?.pageID ?? "") , tag:"PageController")
+            PageLog.d("updatePage below " + (pages.first?.pageID ?? "") , tag:"PageController")
+            return
+        }
+        let below = top - 1
+        var idx = top
+        checkPopups.forEach{ pop in
+            if idx == top {
+                pop.pageObservable.status = .top
+                PageLog.d("updatePage top " + pop.pageID , tag:"PageController")
+            } else if idx == below {
+                pop.pageObservable.status = .below
+                PageLog.d("updatePage below " + pop.pageID , tag:"PageController")
+            } else {
+                pop.pageObservable.status = .bottom
+                PageLog.d("updatePage bottom " + pop.pageID , tag:"PageController")
+            }
+            idx -= 1
+        }
+        pages.first?.pageObservable.status = .bottom
+        PageLog.d("updatePage bottom " + (pages.first?.pageID ?? "") , tag:"PageController")
+        
+    }
 }
 
 struct PageContentController: View{
@@ -106,6 +143,7 @@ struct PageContentController: View{
 
     func removePage(){
         pageControllerObservable.pages.removeFirst()
+        pageControllerObservable.updatePageIndex()
     }
     
     func onPageEvent(_ pageObject: PageObject?, event:PageEvent){
@@ -120,6 +158,7 @@ struct PageContentController: View{
         pageControllerObservable.pages.forEach({ $0.pageAdded( page.pageObject )})
         pageControllerObservable.popups.forEach({ $0.pageAdded( page.pageObject )})
         pageControllerObservable.overlayView?.pageAdded(page.pageObject)
+        pageControllerObservable.updatePageIndex()
     }
     
     func getPopup(_ key:String) -> PageViewProtocol? {
@@ -133,6 +172,7 @@ struct PageContentController: View{
         pageControllerObservable.pages.forEach({ $0.pageRemoved( pop.pageObject )})
         pageControllerObservable.popups.forEach({ $0.pageRemoved( pop.pageObject )})
         pageControllerObservable.overlayView?.pageRemoved( pop.pageObject )
+        pageControllerObservable.updatePageIndex()
     }
     
     func removeAllPopup(_ pageKey:String = "", exceptions:[PageID]? = nil){
@@ -146,6 +186,7 @@ struct PageContentController: View{
         })
         pageControllerObservable.pages.forEach({ $0.pageRemoved( nil )})
         pageControllerObservable.overlayView?.pageRemoved(nil)
+        pageControllerObservable.updatePageIndex()
     }
     
     func sceneDidBecomeActive(_ scene: UIScene){

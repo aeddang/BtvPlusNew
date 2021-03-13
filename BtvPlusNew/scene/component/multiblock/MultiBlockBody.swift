@@ -60,10 +60,12 @@ struct MultiBlockBody: PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var sceneObserver:SceneObserver
     @EnvironmentObject var pairing:Pairing
+    @ObservedObject var pageObservable:PageObservable
+    
     var viewModel:MultiBlockModel = MultiBlockModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     var viewPagerModel:ViewPagerModel = ViewPagerModel()
-    var pageObservable:PageObservable = PageObservable()
+    
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var useBodyTracking:Bool = false
     var useTracking:Bool = false
@@ -82,76 +84,85 @@ struct MultiBlockBody: PageComponent {
     @State var reloadDegree:Double = 0
     @State var reloadDegreeMax:Double = Double(InfinityScrollModel.PULL_COMPLETED_RANGE)
     @State var headerOffset:CGFloat = 0
+    @State var isUiview:Bool = true
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
             viewModel : self.viewModel
         ){
-           
-            ZStack(alignment: .topLeading){
-                if !Self.isLegacy  { //#
-                    if self.topDatas != nil && self.topDatas?.isEmpty == false {
-                        TopBannerBg(
-                            viewModel:self.viewPagerModel,
-                            datas: self.topDatas! )
-                            .padding(.top, max(self.headerOffset, -TopBanner.imageHeight))
+            if self.isUiview {
+                ZStack(alignment: .topLeading){
+                    if !Self.isLegacy  { //#
+                        if self.topDatas != nil && self.topDatas?.isEmpty == false {
+                            TopBannerBg(
+                                viewModel:self.viewPagerModel,
+                                datas: self.topDatas! )
+                                .padding(.top, max(self.headerOffset, -TopBanner.imageHeight))
+                        }
+                        
+                        ReflashSpinner(
+                            progress: self.$reloadDegree,
+                            progressMax: self.reloadDegreeMax
+                        )
+                        .padding(.top, self.topDatas != nil ? TopBanner.height  : self.marginTop )
+                                 
+                        MultiBlock(
+                            viewModel: self.infinityScrollModel,
+                            viewPagerModel:self.viewPagerModel,
+                            pageObservable: self.pageObservable,
+                            pageDragingModel: self.pageDragingModel,
+                            topDatas: self.topDatas,
+                            datas: self.blocks,
+                            headerSize: self.viewModel.headerSize,
+                            useBodyTracking:self.useBodyTracking,
+                            useTracking:self.useTracking,
+                            marginTop:self.marginTop,
+                            marginBottom: self.marginBottom,
+                            monthlyViewModel : self.monthlyViewModel,
+                            monthlyDatas: self.monthlyDatas,
+                            monthlyAllData: self.monthlyAllData,
+                            isRecycle:self.isRecycle,
+                            isLegacy:Self.isLegacy,
+                            action:self.action
+                            )
+                        
+                    } else {
+                        ReflashSpinner(
+                            progress: self.$reloadDegree,
+                            progressMax: self.reloadDegreeMax
+                        )
+                        .padding(.top, self.topDatas == nil ? self.marginTop : self.sceneObserver.safeAreaTop )
+                        
+                        
+                        MultiBlock(
+                            viewModel: self.infinityScrollModel,
+                            viewPagerModel:self.viewPagerModel,
+                            pageObservable: self.pageObservable,
+                            pageDragingModel: self.pageDragingModel,
+                            topDatas: self.topDatas,
+                            datas: self.blocks,
+                            headerSize: self.viewModel.headerSize,
+                            useBodyTracking:self.useBodyTracking,
+                            useTracking:self.useTracking,
+                            marginTop: self.topDatas == nil ? self.marginTop : 0,
+                            marginBottom: self.marginBottom,
+                            monthlyViewModel : self.monthlyViewModel,
+                            monthlyDatas: self.monthlyDatas,
+                            monthlyAllData: self.monthlyAllData,
+                            isRecycle:self.isRecycle,
+                            isLegacy:Self.isLegacy,
+                            action:self.action
+                            )
+                    
                     }
-                    
-                    ReflashSpinner(
-                        progress: self.$reloadDegree,
-                        progressMax: self.reloadDegreeMax
-                    )
-                    .padding(.top, self.topDatas != nil ? TopBanner.height  : self.marginTop )
-                             
-                    MultiBlock(
-                        viewModel: self.infinityScrollModel,
-                        viewPagerModel:self.viewPagerModel,
-                        pageObservable: self.pageObservable,
-                        pageDragingModel: self.pageDragingModel,
-                        topDatas: self.topDatas,
-                        datas: self.blocks,
-                        headerSize: self.viewModel.headerSize,
-                        useBodyTracking:self.useBodyTracking,
-                        useTracking:self.useTracking,
-                        marginTop:self.marginTop,
-                        marginBottom: self.marginBottom,
-                        monthlyViewModel : self.monthlyViewModel,
-                        monthlyDatas: self.monthlyDatas,
-                        monthlyAllData: self.monthlyAllData,
-                        isRecycle:self.isRecycle,
-                        isLegacy:Self.isLegacy,
-                        action:self.action
-                        )
-                    
-                } else {
-                    ReflashSpinner(
-                        progress: self.$reloadDegree,
-                        progressMax: self.reloadDegreeMax
-                    )
-                    .padding(.top, self.topDatas == nil ? self.marginTop : self.sceneObserver.safeAreaTop )
-                    
-                    
-                    MultiBlock(
-                        viewModel: self.infinityScrollModel,
-                        viewPagerModel:self.viewPagerModel,
-                        pageObservable: self.pageObservable,
-                        pageDragingModel: self.pageDragingModel,
-                        topDatas: self.topDatas,
-                        datas: self.blocks,
-                        headerSize: self.viewModel.headerSize,
-                        useBodyTracking:self.useBodyTracking,
-                        useTracking:self.useTracking,
-                        marginTop: self.topDatas == nil ? self.marginTop : 0,
-                        marginBottom: self.marginBottom,
-                        monthlyViewModel : self.monthlyViewModel,
-                        monthlyDatas: self.monthlyDatas,
-                        monthlyAllData: self.monthlyAllData,
-                        isRecycle:self.isRecycle,
-                        isLegacy:Self.isLegacy,
-                        action:self.action
-                        )
-                
                 }
+            }
+        }
+        .onReceive(self.pageObservable.$status){ stat in
+            switch stat {
+            case .bottom : self.isUiview = false
+            case .top, .below : self.isUiview = true
+            default : break
             }
         }
         .onReceive(self.infinityScrollModel.$event){evt in

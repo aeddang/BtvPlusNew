@@ -22,7 +22,7 @@ extension BannerSet{
         let count = CGFloat(data.count)
         let w = screenWidth - ( padding * 2)
         let cellW = ( w - (padding*(count-1)) ) / count
-        let cellH = cellW * ratio
+        let cellH = round(cellW * ratio)
         return CGSize(width: cellW, height: cellH )
     }
 }
@@ -38,7 +38,7 @@ struct BannerSet: PageComponent{
             ForEach(self.cellDatas) { data in
                 BannerItem( data:data )
             }
-            if !self.data.isFull {
+            if !self.data.isFull && self.data.count > 1 {
                 Spacer()
             }
         }

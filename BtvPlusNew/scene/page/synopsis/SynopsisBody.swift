@@ -56,52 +56,95 @@ struct SynopsisBody: PageComponent{
             isRecycle:true,
             useTracking:false
             ){
-            Spacer().modifier(MatchHorizontal(height: 1)).background(Color.transparent.clearUi)
-                .id(self.topIdx)
-                .modifier(ListRowInset(spacing: Dimen.margin.regular))
-            
-            if self.episodeViewerData != nil {
-                EpisodeViewer(data:self.episodeViewerData!)
+            if #available(iOS 14.0, *) {
+                Spacer().modifier(MatchHorizontal(height: 1)).background(Color.transparent.clearUi)
+                    .id(self.topIdx)
                     .modifier(ListRowInset(spacing: Dimen.margin.regular))
-                HStack(spacing:0){
-                    FunctionViewer(
-                        synopsisData :self.synopsisData,
-                        srisId: self.srisId,
-                        isBookmark: self.$isBookmark,
-                        isLike: self.$isLike
-                    )
-                    Spacer()
-                }
-                .modifier(ListRowInset(spacing: Dimen.margin.regular))
-            }
-            
-            if self.hasAuthority != nil && self.purchasViewerData != nil {
-                PurchaseViewer(
-                    componentViewModel: self.componentViewModel,
-                    data:self.purchasViewerData! )
+                
+                if self.episodeViewerData != nil {
+                    EpisodeViewer(data:self.episodeViewerData!)
+                        .modifier(ListRowInset(spacing: Dimen.margin.regular))
+                    HStack(spacing:0){
+                        FunctionViewer(
+                            synopsisData :self.synopsisData,
+                            srisId: self.srisId,
+                            isBookmark: self.$isBookmark,
+                            isLike: self.$isLike
+                        )
+                        Spacer()
+                    }
                     .modifier(ListRowInset(spacing: Dimen.margin.regular))
-            }
-            if self.hasAuthority == false && self.isPairing == false {
-                FillButton(
-                    text: String.button.connectBtv
-                ){_ in
-                    self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.pairing)
-                    )
                 }
-                .buttonStyle(BorderlessButtonStyle())
-                .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
-            }
-            
-            if self.summaryViewerData != nil {
-                SummaryViewer(
-                    peopleScrollModel:self.peopleScrollModel,
-                    data: self.summaryViewerData!,
-                    useTracking: self.usePullTracking
-                )
+                
+                if self.hasAuthority != nil && self.purchasViewerData != nil {
+                    PurchaseViewer(
+                        componentViewModel: self.componentViewModel,
+                        data:self.purchasViewerData! )
+                        .modifier(ListRowInset(spacing: Dimen.margin.regular))
+                }
+                if self.hasAuthority == false && self.isPairing == false {
+                    FillButton(
+                        text: String.button.connectBtv
+                    ){_ in
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.pairing)
+                        )
+                    }
+                    .buttonStyle(BorderlessButtonStyle())
+                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
+                }
+                
+                if self.summaryViewerData != nil {
+                    SummaryViewer(
+                        peopleScrollModel:self.peopleScrollModel,
+                        data: self.summaryViewerData!,
+                        useTracking: self.usePullTracking
+                    )
+                    .modifier(ListRowInset(spacing: Dimen.margin.regular))
+                }
+            } else {
+                VStack(alignment:.leading , spacing:Dimen.margin.regular){
+                    if self.episodeViewerData != nil {
+                        EpisodeViewer(data:self.episodeViewerData!)
+                        HStack(spacing:0){
+                            FunctionViewer(
+                                synopsisData :self.synopsisData,
+                                srisId: self.srisId,
+                                isBookmark: self.$isBookmark,
+                                isLike: self.$isLike
+                            )
+                            Spacer()
+                        }
+                    }
+                    
+                    if self.hasAuthority != nil && self.purchasViewerData != nil {
+                        PurchaseViewer(
+                            componentViewModel: self.componentViewModel,
+                            data:self.purchasViewerData! )
+                    }
+                    if self.hasAuthority == false && self.isPairing == false {
+                        FillButton(
+                            text: String.button.connectBtv
+                        ){_ in
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.pairing)
+                            )
+                        }
+                        .buttonStyle(BorderlessButtonStyle())
+                        .modifier(ContentHorizontalEdges())
+                    }
+                    
+                    if self.summaryViewerData != nil {
+                        SummaryViewer(
+                            peopleScrollModel:self.peopleScrollModel,
+                            data: self.summaryViewerData!,
+                            useTracking: self.usePullTracking
+                        )
+                    }
+                }
+                .padding(.top, Dimen.margin.regular)
                 .modifier(ListRowInset(spacing: Dimen.margin.regular))
             }
-            
             if self.hasRelationVod != nil {
                 if self.hasRelationVod == false {
                     Text(String.pageText.synopsisRelationVod)
@@ -138,6 +181,9 @@ struct SynopsisBody: PageComponent{
                     .frame(height:Dimen.tab.regular)
                     .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
                 }
+            } else {
+                Spacer().modifier(MatchParent())
+                    .modifier(ListRowInset(spacing: 0))
             }
          
             if !self.seris.isEmpty {
@@ -172,6 +218,8 @@ struct SynopsisBody: PageComponent{
             }
         }
     }//body
+   
+    
     
 }
 

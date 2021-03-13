@@ -36,10 +36,10 @@ struct PageHome: PageView {
             viewModel : self.viewModel
         ){
             MultiBlockBody (
+                pageObservable: self.pageObservable,
                 viewModel: self.viewModel,
                 infinityScrollModel: self.infinityScrollModel,
                 viewPagerModel:self.viewPagerModel,
-                pageObservable: self.pageObservable,
                 useBodyTracking:self.useTracking,
                 useTracking:false,
                 marginTop:Dimen.app.top + self.sceneObserver.safeAreaTop,

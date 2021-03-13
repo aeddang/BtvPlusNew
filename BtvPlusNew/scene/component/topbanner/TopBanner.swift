@@ -56,6 +56,7 @@ struct TopBanner: PageComponent {
                 case .down : self.autoChangeCancel()
                 default : break
                 }
+                self.viewModel.request = .reset
             }
         }
     
@@ -95,7 +96,7 @@ struct TopBanner: PageComponent {
         self.autoChangeCancel()
         if !self.isTop { return }
         if !self.isInit { return }
-        ComponentLog.d("autoChange init " + self.pageID, tag:self.tag)
+        //ComponentLog.d("autoChange init " + self.pageID, tag:self.tag)
         self.autoChangeSubscription = Timer.publish(
             every: 5, on: .current, in: .common)
             .autoconnect()
@@ -106,7 +107,7 @@ struct TopBanner: PageComponent {
     }
     
     func autoChangeCancel(){
-        ComponentLog.d("autoChangeCancel" + self.pageID, tag:self.tag)
+        //ComponentLog.d("autoChangeCancel" + self.pageID, tag:self.tag)
         self.autoChangeSubscription?.cancel()
         self.autoChangeSubscription = nil
     }

@@ -33,6 +33,7 @@ struct PageMultiBlock: PageView {
                 ZStack(alignment: .topLeading){
                     if self.cateData != nil {
                         CateBlock(
+                            pageObservable: self.pageObservable,
                             infinityScrollModel:self.cateInfinityScrollModel,
                             viewModel:self.cateBlockViewModel,
                             useTracking:self.useTracking,
@@ -42,9 +43,9 @@ struct PageMultiBlock: PageView {
                         .background(Color.brand.bg)
                     } else {
                         MultiBlockBody(
+                            pageObservable: self.pageObservable,
                             viewModel: self.multiBlockViewModel,
                             infinityScrollModel: self.infinityScrollModel,
-                            pageObservable: self.pageObservable,
                             pageDragingModel: self.pageDragingModel,
                             useBodyTracking: self.useTracking,
                             useTracking:self.useTracking,

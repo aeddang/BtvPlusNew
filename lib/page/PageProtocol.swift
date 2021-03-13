@@ -72,7 +72,10 @@ enum PageStatus:String {
     disconnect ,
     resignActive  ,
     enterForeground ,
-    enterBackground
+    enterBackground ,
+    top,
+    below,
+    bottom
 }
 
 enum SceneOrientation :String{
@@ -120,6 +123,7 @@ open class SceneObserver: ObservableObject{
             self.screenSize = geometry.size
             willUpdate = true
         }
+        ComponentLog.d("resize " + self.screenSize.debugDescription, tag:"SceneObserver")
         if willUpdate { self.isUpdated = true }
     }
     var willSceneOrientation: SceneOrientation? {

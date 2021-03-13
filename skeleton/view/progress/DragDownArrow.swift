@@ -30,15 +30,19 @@ struct DragDownArrow: PageComponent {
         .modifier(MatchHorizontal(height: 90, margin: 0))
         .opacity(self.progress / self.progressMax)
         .onReceive(self.infinityScrollModel.$event){evt in
-            guard let evt = evt else {return}
-            switch evt {
-            case .pullCancel : withAnimation{ self.progress = 0 }
-            default : do{}
+            if #available(iOS 14.0, *) {
+                guard let evt = evt else {return}
+                switch evt {
+                case .pullCancel : withAnimation{ self.progress = 0 }
+                default : do{}
+                }
             }
         }
         .onReceive(self.infinityScrollModel.$pullPosition){ pos in
-            if pos < InfinityScrollModel.DRAG_RANGE { return }
-            self.progress = Double(pos - InfinityScrollModel.DRAG_RANGE)
+            if #available(iOS 14.0, *) {
+                if pos < InfinityScrollModel.DRAG_RANGE { return }
+                self.progress = Double(pos - InfinityScrollModel.DRAG_RANGE)
+            }
         }
     }//body
 }

@@ -40,6 +40,7 @@ struct PageCategoryList: PageView {
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     CateBlock(
+                        pageObservable: self.pageObservable,
                         infinityScrollModel:self.infinityScrollModel,
                         viewModel:self.viewModel,
                         useTracking:self.useTracking

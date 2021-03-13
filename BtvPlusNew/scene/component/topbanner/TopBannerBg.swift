@@ -57,16 +57,17 @@ struct TopBannerBg: PageComponent {
            //self.setBar()
         }
         .onReceive( self.viewModel.$index ){ idx in
-            self.setBar()
+            self.setBar(idx:idx)
         }
     }
     
-    private func setBar(){
+    private func setBar(idx:Int){
         let count = self.datas.count
         let size = TopBanner.barWidth
+        
         withAnimation{
-            self.leading = size * CGFloat(self.index)
-            self.tailing = size * CGFloat(max(0,(count - self.index - 1)))
+            self.leading = size * CGFloat(idx)
+            self.tailing = size * CGFloat(max(0,(count - idx - 1)))
         }
     }
 }

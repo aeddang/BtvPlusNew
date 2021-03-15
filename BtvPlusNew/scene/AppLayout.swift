@@ -16,6 +16,7 @@ struct AppLayout: PageComponent{
     @EnvironmentObject var appObserver:AppObserver
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var keyboardObserver:KeyboardObserver
+    @EnvironmentObject var setup:Setup
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     
     @State var positionTop:CGFloat = 0
@@ -27,7 +28,7 @@ struct AppLayout: PageComponent{
     
     @State var toastMsg:String = ""
     @State var isToastShowing:Bool = false
-    
+    @State var floatBannerDatas:[BannerData]? = nil
     var body: some View {
         ZStack{
             SceneTab()
@@ -35,6 +36,14 @@ struct AppLayout: PageComponent{
             SceneSelectController()
             ScenePickerController()
             SceneAlertController()
+            if let datas = self.floatBannerDatas {
+                FloatingBanner(datas:datas){ today in
+                    if today {self.floatingBannerToDayUnvisible()}
+                    withAnimation{
+                        floatBannerDatas = nil
+                    }
+                }
+            }
             if self.isLoading {
                 Spacer().modifier(MatchParent()).background(Color.transparent.black70)
                 if self.loadingInfo != nil {
@@ -70,11 +79,13 @@ struct AppLayout: PageComponent{
         .onReceive(self.pageSceneObserver.$event){ evt in
             guard let evt = evt else { return }
             switch evt  {
+            case .initate: self.onPageInit()
             case .toast(let msg):
                 self.toastMsg = msg
                 withAnimation{
                     self.isToastShowing = true
                 }
+            case .floatingBanner(let datas): self.onFloatingBannerView(datas: datas)
             default: break
             }
         }
@@ -109,7 +120,7 @@ struct AppLayout: PageComponent{
         
         .onReceive(self.repository.$status){ status in
             switch status {
-            case .ready: self.onPageInit()
+            case .ready: self.onStoreInit()
             case .error(let err): self.onPageError(err)
             default: do{}
             }
@@ -117,14 +128,23 @@ struct AppLayout: PageComponent{
         .onAppear(){
             self.isLoading = true
             //UITableView.appearance().separatorStyle = .none
-            /*
+            
             for family in UIFont.familyNames.sorted() {
                 let names = UIFont.fontNames(forFamilyName: family)
                 PageLog.d("Family: \(family) Font names: \(names)")
             }
-            */
+            
     
         }
+    }
+    func onStoreInit(){
+        if SystemEnvironment.firstLaunch {
+            self.pagePresenter.changePage(
+                PageProvider.getPageObject(.auth)
+            )
+            return
+        }
+        self.onPageInit()
     }
     func onPageInit(){
         self.isInit = true
@@ -137,10 +157,38 @@ struct AppLayout: PageComponent{
             )
         }
     }
+    
     func onPageError(_ err:ApiResultError?){
         self.pagePresenter.changePage(
             PageProvider.getPageObject(.serviceError)
         )
+    }
+    
+    func onFloatingBannerView(datas:[BannerData]?) {
+        guard let datas = datas else {
+            withAnimation{ floatBannerDatas = nil }
+            return
+        }
+        if datas.isEmpty {return}
+        if self.getFloatingDateKey() == self.setup.floatingUnvisibleDate {return}
+        
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.2) {
+            DispatchQueue.main.async {
+                withAnimation{ floatBannerDatas = datas }
+            }
+        }
+        
+    }
+    
+    func floatingBannerToDayUnvisible() {
+        self.setup.floatingUnvisibleDate = self.getFloatingDateKey()
+    }
+    
+    private func getFloatingDateKey() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
+        let todayString: String = dateFormatter.string(from: Date())
+        return todayString
     }
     
     

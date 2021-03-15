@@ -11,35 +11,39 @@ import SwiftUI
 struct TicketBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
-    @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var pageObservable:PageObservable
+    var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var data: BlockData
     var useTracking:Bool = false
     @State var datas:[TicketData]? = nil
     @State var listHeight:CGFloat = ListItem.ticket.type01.height
+    @State var isUiview:Bool = true
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
-            if self.datas?.isEmpty == false {
-                Text(data.name).modifier(BlockTitle())
-                    .modifier(ContentHorizontalEdges())
-            }
-            if let datas = self.datas {
-                TicketList(
-                    viewModel:self.viewModel,
-                    datas: datas,
-                    useTracking:self.useTracking)
-                    .modifier(MatchHorizontal(height: self.listHeight + 1))
-                    .onReceive(self.viewModel.$event){evt in
-                        guard let evt = evt else {return}
-                        switch evt {
-                        case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
-                        case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
-                        default : do{}
+            if self.isUiview {
+                if self.datas?.isEmpty == false {
+                    Text(data.name).modifier(BlockTitle())
+                        .modifier(ContentHorizontalEdges())
+                }
+                if let datas = self.datas {
+                    TicketList(
+                        viewModel:self.viewModel,
+                        datas: datas,
+                        useTracking:self.useTracking)
+                        .modifier(MatchHorizontal(height: self.listHeight + 1))
+                        .onReceive(self.viewModel.$event){evt in
+                            guard let evt = evt else {return}
+                            switch evt {
+                            case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
+                            case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
+                            default : do{}
+                            }
                         }
-                    }
-                    .onReceive(self.viewModel.$pullPosition){ pos in
-                        self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
-                    }
+                        .onReceive(self.viewModel.$pullPosition){ pos in
+                            self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
+                        }
+                }
             }
         }
         .frame( height:
@@ -58,6 +62,12 @@ struct TicketBlock:BlockProtocol, PageComponent {
                 dataProvider.requestData(q: apiQ)
             } else {
                 self.data.setRequestFail()
+            }
+        }
+        .onReceive(self.pageObservable.$layer ){ layer  in
+            switch layer {
+            case .bottom : self.isUiview = false
+            case .top, .below : self.isUiview = true
             }
         }
         .onReceive(dataProvider.$result) { res in

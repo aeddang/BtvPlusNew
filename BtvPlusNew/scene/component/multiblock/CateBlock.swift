@@ -61,107 +61,105 @@ struct CateBlock: PageComponent{
     var spacing: CGFloat = Dimen.margin.thin
     
     @State var reloadDegree:Double = 0
-    @State var isUiview:Bool = true
+    
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
-            viewModel : self.viewModel
-        ){
-            if isUiview {
-                if !self.isError {
-                    ZStack(alignment: .topLeading){
-                        ReflashSpinner(
-                            progress: self.$reloadDegree)
-                            .padding(.top, self.marginTop)
-                        InfinityScrollView(
-                            viewModel: self.infinityScrollModel,
-                            axes: .vertical,
-                            scrollType : .reload(isDragEnd:false),
-                            marginTop : self.marginTop,
-                            marginBottom : self.marginBottom,
-                            marginHorizontal : 0,
-                            spacing:0,
-                            isRecycle: true,
-                            useTracking:self.useTracking
-                        ){
-                            if self.useTop {
-                                SortTab(
-                                    count:self.totalCount,
-                                    isSortAble: self.isSortAble
-                                    ){ sort in
-                                        self.sortType = sort
-                                        self.reload()
-                                    }
-                                .modifier(ListRowInset(
-                                            marginHorizontal:Dimen.margin.thin,
-                                            spacing: self.spacing))
-                            }
-                            
-                            ForEach(self.posters) { data in
-                                PosterSet( data:data )
-                                    .frame(height:self.posterCellHeight)
-                                    .modifier(ListRowInset( spacing: self.spacing))
-                                    .onAppear(){
-                                        if data.index == self.posters.last?.index {
-                                            if self.isPaging { self.load() }
-                                        }
-                                    }
-                            }
-                            ForEach(self.videos) { data in
-                                VideoSet( data:data )
-                                    .frame(height:self.videoCellHeight)
-                                    .modifier(ListRowInset( spacing: self.spacing))
-                                    .onAppear(){
-                                        if data.index == self.videos.last?.index {
-                                            if self.isPaging { self.load() }
-                                        }
-                                    }
-                            }
-                            ForEach(self.banners) { data in
-                                BannerSet( data:data )
-                                    .frame(height:self.bannerCellHeight)
-                                    .modifier(ListRowInset( spacing: self.spacing))
-                                    .onAppear(){
-                                        if data.index == self.banners.last?.index {
-                                            if self.isPaging { self.load() }
-                                        }
-                                    }
-                            }
-                            if self.posters.isEmpty && self.videos.isEmpty  && self.banners.isEmpty{
-                                Spacer().modifier(MatchParent())
-                                    .listRowBackground(Color.brand.bg)
-                            }
+            viewModel : self.viewModel){
+           
+            if !self.isError {
+                ZStack(alignment: .topLeading){
+                    ReflashSpinner(
+                        progress: self.$reloadDegree)
+                        .padding(.top, self.marginTop)
+                    InfinityScrollView(
+                        viewModel: self.infinityScrollModel,
+                        axes: .vertical,
+                        scrollType : .reload(isDragEnd:false),
+                        marginTop : self.marginTop,
+                        marginBottom : self.marginBottom,
+                        marginHorizontal : 0,
+                        spacing:0,
+                        isRecycle: true,
+                        useTracking:self.useTracking
+                    ){
+                        if self.useTop {
+                            SortTab(
+                                count:self.totalCount,
+                                isSortAble: self.isSortAble
+                                ){ sort in
+                                    self.sortType = sort
+                                    self.reload()
+                                }
+                            .modifier(ListRowInset(
+                                        marginHorizontal:Dimen.margin.thin,
+                                        spacing: self.spacing))
                         }
-                        .modifier(MatchParent())
-                    
-                    }
-                   
-                } else {
-                    ZStack{
-                        VStack(alignment: .center, spacing: 0){
-                            Spacer().modifier(MatchHorizontal(height:0))
-                            Image(Asset.icon.alert)
-                                .renderingMode(.original)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
-                                .padding(.top, Dimen.margin.medium)
-                            Text(String.alert.dataError)
-                                .modifier(BoldTextStyle(size: Font.size.regular, color: Color.app.greyLight))
-                                .multilineTextAlignment(.center)
-                                .padding(.top, Dimen.margin.regularExtra)
+                        
+                        ForEach(self.posters) { data in
+                            PosterSet(
+                                pageObservable:self.pageObservable,
+                                data:data )
+                                .frame(height:self.posterCellHeight)
+                                .modifier(ListRowInset( spacing: self.spacing))
+                                .onAppear(){
+                                    if data.index == self.posters.last?.index {
+                                        if self.isPaging { self.load() }
+                                    }
+                                }
+                        }
+                        ForEach(self.videos) { data in
+                            VideoSet(
+                                pageObservable:self.pageObservable,
+                                data:data )
+                                .frame(height:self.videoCellHeight)
+                                .modifier(ListRowInset( spacing: self.spacing))
+                                .onAppear(){
+                                    if data.index == self.videos.last?.index {
+                                        if self.isPaging { self.load() }
+                                    }
+                                }
+                        }
+                        ForEach(self.banners) { data in
+                            BannerSet(
+                                pageObservable:self.pageObservable,
+                                data:data )
+                                .frame(height:self.bannerCellHeight)
+                                .modifier(ListRowInset( spacing: self.spacing))
+                                .onAppear(){
+                                    if data.index == self.banners.last?.index {
+                                        if self.isPaging { self.load() }
+                                    }
+                                }
+                        }
+                        if self.posters.isEmpty && self.videos.isEmpty  && self.banners.isEmpty{
+                            Spacer().modifier(MatchParent())
+                                .listRowBackground(Color.brand.bg)
                         }
                     }
                     .modifier(MatchParent())
+                
                 }
+               
+            } else {
+                ZStack{
+                    VStack(alignment: .center, spacing: 0){
+                        Spacer().modifier(MatchHorizontal(height:0))
+                        Image(Asset.icon.alert)
+                            .renderingMode(.original)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
+                            .padding(.top, Dimen.margin.medium)
+                        Text(String.alert.dataError)
+                            .modifier(BoldTextStyle(size: Font.size.regular, color: Color.app.greyLight))
+                            .multilineTextAlignment(.center)
+                            .padding(.top, Dimen.margin.regularExtra)
+                    }
+                }
+                .modifier(MatchParent())
             }
-        }
-        .onReceive(self.pageObservable.$status){ stat in
-            switch stat {
-            case .bottom : self.isUiview = false
-            case .top, .below : self.isUiview = true
-            default : break
-            }
+            
         }
         .onReceive(self.infinityScrollModel.$event){evt in
             guard let evt = evt else {return}
@@ -232,7 +230,7 @@ struct CateBlock: PageComponent{
         if  !self.infinityScrollModel.isLoadable { return }
         withAnimation{ self.isError = false }
         self.infinityScrollModel.onLoad()
-        if let api = self.viewModel.data?.getRequestApi(apiId:self.tag, pairing:self.pairing.status) {
+        if let api = self.viewModel.data?.getRequestApi(apiId:self.tag, pairing:self.pairing.status, isOption: false) {
             if self.viewModel.data!.dataType != .grid {
                 self.isPaging = false
                 withAnimation{ self.isSortAble = false }
@@ -248,8 +246,7 @@ struct CateBlock: PageComponent{
             type: .getGridEvent(
                 self.viewModel.menuId,
                 self.sortType,
-                self.infinityScrollModel.page + 1),
-            isOptional:true
+                self.infinityScrollModel.page + 1)
         )
     }
     

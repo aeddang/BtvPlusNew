@@ -45,6 +45,7 @@ struct SynopsisTop: PageComponent{
                     contentMode: self.imgContentMode,
                     isActive: self.isPlayViewActive
                 )
+                
             }
         }
     }//body

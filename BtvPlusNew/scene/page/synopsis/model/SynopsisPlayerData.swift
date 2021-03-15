@@ -82,8 +82,8 @@ return self
                 if self.siries != nil && self.siries?.isEmpty != true {
                     let siris = self.siries![0]
                     let leading = siris.sson_choic_nm ?? String.player.season
-                    let tailing = siris.sort_seq?.description ?? ""
-                    return leading + tailing + " 1" + String.app.sesonCount
+                    let trailing = siris.sort_seq?.description ?? ""
+                    return leading + trailing + " 1" + String.app.sesonCount
                 }else{
                     return String.player.season + " 1" + String.app.sesonCount
                 }

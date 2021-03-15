@@ -61,8 +61,8 @@ class EpisodeViewerData {
                     }
                     let detail:String = prizeHistory.reduce("", {
                         let leading = $1.awrdc_nm ?? ""
-                        let tailing = $1.prize_dts_cts ?? ""
-                        return $0 + leading + "\n" + tailing
+                        let trailing = $1.prize_dts_cts ?? ""
+                        return $0 + leading + "\n" + trailing
                     })
                     self.awardDetail = detail
                 }

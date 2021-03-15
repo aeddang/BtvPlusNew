@@ -71,7 +71,7 @@ struct PlayerBottom: PageView{
                     if self.showPreview {
                         RectButton(
                             text: String.player.cookie,
-                            textTailing: self.viewModel.synopsisPlayerData?.previewCount ?? ""
+                            textTrailing: self.viewModel.synopsisPlayerData?.previewCount ?? ""
                             ){_ in
                             
                         }

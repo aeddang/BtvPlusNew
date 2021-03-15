@@ -15,6 +15,16 @@ class Setup:ObservableObject, PageProtocol {
         
         static let autoPlay = "autoPlay" + VS
         static let nextPlay = "nextPlay" + VS
+        
+        static let pushAble = "pushAble" + VS
+        static let isPurchaseAuth = "isPurchaseAuth" + VS
+        static let isAdultAuth = "isAdultAuth" + VS
+        static let isFirstAdultAuth = "isFirstAdultAuth" + VS
+        
+        static let isShowRemoconSelectPopup = "isShowRemoconSelectPopup" + VS
+        static let isShowAutoRemocon = "isShowAutoRemocon" + VS
+        
+        static let floatingUnvisibleDate = "floatingUnvisibleDate" + VS
     }
     
     let storage = UserDefaults.init()
@@ -70,6 +80,69 @@ class Setup:ObservableObject, PageProtocol {
         }
         get{
             return storage.bool(forKey: Keys.nextPlay) 
+        }
+    }
+    
+    var floatingUnvisibleDate:String{
+        set(newVal){
+            storage.set(newVal, forKey: Keys.floatingUnvisibleDate)
+        }
+        get{
+            return storage.string(forKey: Keys.floatingUnvisibleDate) ?? ""
+        }
+    }
+    
+    var pushAble:Bool{
+        set(newVal){
+            storage.set(newVal, forKey: Keys.pushAble)
+        }
+        get{
+            return storage.bool(forKey: Keys.pushAble)
+        }
+    }
+    
+    var isPurchaseAuth:Bool{
+        set(newVal){
+            storage.set(newVal, forKey: Keys.isPurchaseAuth)
+        }
+        get{
+            return storage.bool(forKey: Keys.isPurchaseAuth)
+        }
+    }
+    
+    var isAdultAuth:Bool{
+        set(newVal){
+            storage.set(newVal, forKey: Keys.isAdultAuth)
+        }
+        get{
+            return storage.bool(forKey: Keys.isAdultAuth)
+        }
+    }
+    
+    var isFirstAdultAuth:Bool{
+        set(newVal){
+            storage.set(newVal, forKey: Keys.isFirstAdultAuth)
+        }
+        get{
+            return storage.bool(forKey: Keys.isFirstAdultAuth)
+        }
+    }
+    
+    var isShowRemoconSelectPopup:Bool{
+        set(newVal){
+            storage.set(newVal, forKey: Keys.isShowRemoconSelectPopup)
+        }
+        get{
+            return storage.bool(forKey: Keys.isShowRemoconSelectPopup)
+        }
+    }
+    
+    var isShowAutoRemocon:Bool{
+        set(newVal){
+            storage.set(newVal, forKey: Keys.isShowAutoRemocon)
+        }
+        get{
+            return storage.bool(forKey: Keys.isShowAutoRemocon)
         }
     }
     

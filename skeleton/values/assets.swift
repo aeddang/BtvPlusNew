@@ -51,6 +51,10 @@ extension Asset{
         public static let new =  "tagMyNewS"
         public static let sort = "icArrowDownG"
         public static let down = "icArrowDownG"
+        
+        public static let directLeft = "icArrowIcPopupArrowLeftG"
+        public static let directRight = "icArrowIcPopupArrowRightG"
+        
         public static let back = "icTopBack"
         public static let more = "icArrowRight"
         public static let moreSmall = "icArrowRightWhite"
@@ -105,6 +109,9 @@ extension Asset{
         public static let alarmOn = "icSynopAlarmFoc"
         public static let alarmOff = "icSynopAlarmNor"
         public static let dragDown = "icDragDown"
+        
+        public static let mic = "icPopupMic"
+        public static let location = "icPopupLocation"
     }
     
     

@@ -32,7 +32,7 @@ struct PairingBlock: PageComponent{
                         .padding(.horizontal, Dimen.margin.thin)
                         .frame(height:Dimen.button.thin)
                         .background(Color.brand.primary)
-                        .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.medium))
+                        .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.regularExtra))
                 }
                 TextButton(
                     defaultText: self.nick,

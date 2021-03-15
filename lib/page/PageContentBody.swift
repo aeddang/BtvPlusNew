@@ -43,14 +43,6 @@ struct PageContentBody: PageView  {
                 .offset(
                     x: self.offsetX ,
                     y: self.offsetY)
-            /*
-            ForEach(childViews, id: \.id) { page in
-                page.contentBody
-                    .offset(
-                        x: self.offsetX ,
-                        y: self.offsetY)
-            }
-            */
             if self.isBelow {
                 Spacer().modifier(MatchParent()).background(Color.transparent.black70)
                     .opacity(self.opacity)
@@ -74,7 +66,6 @@ struct PageContentBody: PageView  {
             if pageObject == page {
                 self.isTop = true
                 self.isBelow = false
-                self.pageObservable.status = .top
                 withAnimation{
                     self.pageOffsetX = 0.0
                     self.pageOffsetY = 0.0
@@ -107,6 +98,7 @@ struct PageContentBody: PageView  {
             if !self.isReady  {return}
             if !self.isBelow {return}
             if self.isTop {return}
+            
             self.opacity = opacity
             
             //PageLog.log("pagePosition " + self.opacity.description + " " + self.pageID ,tag:self.pageID)
@@ -116,7 +108,6 @@ struct PageContentBody: PageView  {
             case .vertical :  self.pageOffsetY = -amount
             default : do{}
             }
-            
         }
         
         .onReceive(self.pageObservable.$pagePosition){ pos in

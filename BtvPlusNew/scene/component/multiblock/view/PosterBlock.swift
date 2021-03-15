@@ -12,61 +12,64 @@ struct PosterBlock:PageComponent, BlockProtocol {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
-    @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var pageObservable:PageObservable
+    var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var data: BlockData
     var useTracking:Bool = false
     @State var datas:[PosterData] = []
     @State var listHeight:CGFloat = ListItem.poster.type01.height
+    @State var isUiview:Bool = true
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
-            HStack( spacing:Dimen.margin.thin){
-                VStack(alignment: .leading, spacing:0){
-                    Text(data.name).modifier(BlockTitle())
-                        .lineLimit(1)
-                    Spacer().modifier(MatchHorizontal(height: 0))
+            if self.isUiview {
+                HStack( spacing:Dimen.margin.thin){
+                    VStack(alignment: .leading, spacing:0){
+                        Text(data.name).modifier(BlockTitle())
+                            .lineLimit(1)
+                        Spacer().modifier(MatchHorizontal(height: 0))
+                    }
+                    TextButton(
+                        defaultText: String.button.all,
+                        textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
+                    ){_ in
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.categoryList)
+                                .addParam(key: .data, value: data)
+                                .addParam(key: .type, value: CateBlock.ListType.poster)
+                        )
+                    }
                 }
-                TextButton(
-                    defaultText: String.button.all,
-                    textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
-                ){_ in
-                    self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.categoryList)
-                            .addParam(key: .data, value: data)
-                            .addParam(key: .type, value: CateBlock.ListType.poster)
-                    )
-                }
-            }
-            .modifier(ContentHorizontalEdges())
-            if !self.datas.isEmpty {
-                PosterList(
-                    viewModel:self.viewModel,
-                    banners: self.data.leadingBanners,
-                    datas: self.datas,
-                    useTracking:self.useTracking
-                    )
-                    .modifier(MatchHorizontal(height: self.listHeight))
-                    .onReceive(self.viewModel.$event){evt in
-                        guard let evt = evt else {return}
-                        switch evt {
-                        case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
-                        case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
-                        default : do{}
+                .modifier(ContentHorizontalEdges())
+                if !self.datas.isEmpty {
+                    PosterList(
+                        viewModel:self.viewModel,
+                        banners: self.data.leadingBanners,
+                        datas: self.datas,
+                        useTracking:self.useTracking
+                        )
+                        .modifier(MatchHorizontal(height: self.listHeight))
+                        .onReceive(self.viewModel.$event){evt in
+                            guard let evt = evt else {return}
+                            switch evt {
+                            case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
+                            case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
+                            default : do{}
+                            }
                         }
-                    }
-                    .onReceive(self.viewModel.$pullPosition){ pos in
-                        self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
-                    }
-                
-            } else{
-                PosterList(
-                    viewModel:self.viewModel,
-                    datas: [PosterData(),PosterData(),PosterData(),PosterData(),PosterData()]
-                    )
-                    .modifier(MatchHorizontal(height: self.listHeight))
-                .opacity(0.5)
+                        .onReceive(self.viewModel.$pullPosition){ pos in
+                            self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
+                        }
+                    
+                } else{
+                    PosterList(
+                        viewModel:self.viewModel,
+                        datas: [PosterData(),PosterData(),PosterData(),PosterData(),PosterData()]
+                        )
+                        .modifier(MatchHorizontal(height: self.listHeight))
+                    .opacity(0.5)
+                }
             }
-            
         }
         .frame( height:
                     (self.data.listHeight ?? self.listHeight)
@@ -87,7 +90,12 @@ struct PosterBlock:PageComponent, BlockProtocol {
         .onDisappear{
             
         }
-        
+        .onReceive(self.pageObservable.$layer ){ layer  in
+            switch layer {
+            case .bottom : self.isUiview = false
+            case .top, .below : self.isUiview = true
+            }
+        }
         .onReceive(dataProvider.$result) { res in
             if res?.id != data.id { return }
             var allDatas:[PosterData] = []

@@ -84,6 +84,31 @@ class Metv: Rest{
         fetch(route: MetvWatch(query: params), completion: completion, error:error)
     }
     /**
+    * 모바일 최근시청 VOD 삭제 (IF-ME-122)
+    * @param isAll 전체 삭제 여부
+    * @param deleteList 시청한 VOD 컨텐트의 sris_id(시즌 ID)
+    */
+    func deleteWatch(
+        deleteList:[String]? = nil, isAll:Bool = false ,
+        completion: @escaping (UpdateMetv) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:Any]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["ver"] = MetvNetwork.VERSION
+        params["IF"] = "IF-ME-022" //"IF-ME-122"
+        params["stb_id"] = stbId
+        // params["mobile_id"] = SystemEnvironment.getGuestDeviceId()
+        params["isAll"] = isAll ? "Y" : "N"
+        params["hash_id"] = ApiUtil.getHashId(stbId)
+        params["svc_code"] = MetvNetwork.SVC_CODE
+        params["deleteList"] = deleteList ?? []
+        
+        var headers = [String : String]()
+        headers["method"] = "delete"
+        fetch(route: MetvDelWatch(headers:headers, body: params), completion: completion, error:error)
+    }
+    
+    /**
     * 즐겨찾기 조회(VOD) (IF-ME-011)
     * @param pageNo 요청할 페이지의 번호 (Default: 1)
     * @param entryNo 요청한 페이지에 보여질 개수 (Default: 5)
@@ -117,7 +142,7 @@ class Metv: Rest{
     */
     func postBookMark(
         data:SynopsisData,
-        completion: @escaping (UpdateBookMark) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        completion: @escaping (UpdateMetv) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:Any]()
@@ -143,7 +168,7 @@ class Metv: Rest{
     */
     func deleteBookMark(
         data:SynopsisData,
-        completion: @escaping (UpdateBookMark) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        completion: @escaping (UpdateMetv) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:Any]()
@@ -208,6 +233,13 @@ struct MetvWatch:NetworkRoute{
    //var path: String = "/metv/v5/watch/mbtv-season"
    var path: String = "/metv/v5/watch/season/mobilebtv"
    var query: [String : String]? = nil
+}
+struct MetvDelWatch:NetworkRoute{
+   var method: HTTPMethod = .post
+   //var path: String = "/metv/v5/watch/mbtv-season/del"
+   var path: String = "/metv/v5/watch/season/del/mobilebtv"
+   var headers:[String : String]? = nil
+   var body: [String : Any]? = nil
 }
 
 struct MetvBookMark:NetworkRoute{

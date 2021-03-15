@@ -126,6 +126,72 @@ struct LightTextStyle: ViewModifier {
     }
 }
 
+
+struct NumberBoldTextStyle: ViewModifier {
+    var textModifier = TextModifier(family:Font.family.robotoBold,size:Font.size.bold)
+    init(textModifier:TextModifier) {self.textModifier = textModifier}
+    init(size:CGFloat? = nil, color: Color? = nil) {
+        if let size = size {
+            self.textModifier.size = size
+        }
+        if let color = color {
+            self.textModifier.color = color
+            self.textModifier.activeColor = color
+        }
+        
+    }
+    func body(content: Content) -> some View {
+        return content
+            .font(.custom(textModifier.family, size: textModifier.size))
+            .foregroundColor(textModifier.color)
+            .lineSpacing(2)
+    }
+}
+
+struct NumberMediumTextStyle: ViewModifier {
+    var textModifier = TextModifier(family:Font.family.robotoMedium,size:Font.size.medium)
+    init(textModifier:TextModifier) {self.textModifier = textModifier}
+    init(size:CGFloat? = nil, color: Color? = nil) {
+        if let size = size {
+            self.textModifier.size = size
+        }
+        if let color = color {
+            self.textModifier.color = color
+            self.textModifier.activeColor = color
+        }
+        
+    }
+    func body(content: Content) -> some View {
+        return content
+            .font(.custom(textModifier.family, size: textModifier.size))
+            .foregroundColor(textModifier.color)
+            .lineSpacing(2)
+    }
+}
+
+struct NumberLightTextStyle: ViewModifier {
+    var textModifier = TextModifier(family:Font.family.robotoLight,size:Font.size.light)
+    init(textModifier:TextModifier) {self.textModifier = textModifier}
+    init(size:CGFloat? = nil, color: Color? = nil) {
+        if let size = size {
+            self.textModifier.size = size
+        }
+        if let color = color {
+            self.textModifier.color = color
+            self.textModifier.activeColor = color
+        }
+        
+    }
+    func body(content: Content) -> some View {
+        return content
+            .font(.custom(textModifier.family, size: textModifier.size))
+            .foregroundColor(textModifier.color)
+            .lineSpacing(2)
+    }
+}
+
+
+
 struct CustomTextStyle: ViewModifier {
     var textModifier:TextModifier
     init(textModifier:TextModifier) {self.textModifier = textModifier}
@@ -136,3 +202,5 @@ struct CustomTextStyle: ViewModifier {
             .lineSpacing(2)
     }
 }
+
+

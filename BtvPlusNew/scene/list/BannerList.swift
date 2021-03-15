@@ -30,16 +30,20 @@ extension BannerSet{
 struct BannerSet: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
+    var pageObservable:PageObservable = PageObservable()
     var data:BannerDataSet
     
     @State var cellDatas:[BannerData] = []
+    @State var isUiview:Bool = true
     var body: some View {
         HStack(spacing: Self.padding){
-            ForEach(self.cellDatas) { data in
-                BannerItem( data:data )
-            }
-            if !self.data.isFull && self.data.count > 1 {
-                Spacer()
+            if self.isUiview {
+                ForEach(self.cellDatas) { data in
+                    BannerItem( data:data )
+                }
+                if !self.data.isFull && self.data.count > 1 {
+                    Spacer()
+                }
             }
         }
         .padding(.horizontal, Self.padding)
@@ -49,6 +53,12 @@ struct BannerSet: PageComponent{
             let size = Self.listSize(data: self.data, screenWidth: sceneObserver.screenSize.width)
             self.cellDatas = self.data.datas.map{
                 $0.setBannerSize(width: size.width, height: size.height, padding: Self.padding)
+            }
+        }
+        .onReceive(self.pageObservable.$layer ){ layer  in
+            switch layer {
+            case .bottom : self.isUiview = false
+            case .top, .below : self.isUiview = true
             }
         }
     }//body

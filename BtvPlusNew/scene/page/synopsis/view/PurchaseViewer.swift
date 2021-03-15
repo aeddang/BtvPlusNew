@@ -13,7 +13,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
     private(set) var isInfo:Bool = false
     private(set) var infoIcon: String? = nil
     private(set) var infoLeading: String? = nil
-    private(set) var infoTailing: String? = nil
+    private(set) var infoTrailing: String? = nil
     private(set) var infoTip: String? = nil
     
     private(set) var serviceInfo: String? = nil
@@ -78,40 +78,40 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
     private func setupBtvWatchInfo(synopsisModel:SynopsisModel, isPairing:Bool? , purchas:PurchaseModel){
         if isPairing == true || synopsisModel.isPossonVODMode {
             if purchas.isFree {
-                infoTailing = String.pageText.synopsisFreeWatch
+                infoTrailing = String.pageText.synopsisFreeWatch
             }
             else if purchas.isDirectview {
                 if let ppmItem = synopsisModel.purchasedPPMItem {
                     if let name = ppmItem.ppm_prd_nm {
                         infoLeading = name
-                        infoTailing = " " + String.pageText.synopsisWatchPeriod
+                        infoTrailing = " " + String.pageText.synopsisWatchPeriod
                     }else{
-                        infoTailing = String.pageText.synopsisWatchPeriod
+                        infoTrailing = String.pageText.synopsisWatchPeriod
                     }
                 }else{
-                    infoTailing = purchas.isPossn
+                    infoTrailing = purchas.isPossn
                         ? String.pageText.synopsisWatchPossn
                         : String.pageText.synopsisWatchRent
                 }
             }
             else{
                 if synopsisModel.isPossonVODMode {
-                    infoTailing = String.pageText.synopsisTerminationBtv
+                    infoTrailing = String.pageText.synopsisTerminationBtv
                 }else{
                     if synopsisModel.isContainPPM {
                         infoIcon = Asset.icon.tip
-                        infoTailing = String.pageText.synopsisFreeWatchMonthly
+                        infoTrailing = String.pageText.synopsisFreeWatchMonthly
                     }
                 }
             }
         }
         else{
             if purchas.isFree {
-                infoTailing = String.pageText.synopsisFreeWatchBtv
+                infoTrailing = String.pageText.synopsisFreeWatchBtv
             } else {
                 if synopsisModel.isContainPPM {
                     infoIcon = Asset.icon.tip
-                    infoTailing = String.pageText.synopsisFreeWatchMonthly
+                    infoTrailing = String.pageText.synopsisFreeWatchMonthly
                 }
             }
         }
@@ -134,7 +134,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
         } else {
             self.infoTip = nil
         }
-        self.isInfo = infoIcon != nil || infoLeading != nil || infoTailing != nil
+        self.isInfo = infoIcon != nil || infoLeading != nil || infoTrailing != nil
     }
     
     private func setupOption(watchItems: [PurchaseModel]?, purchas:PurchaseModel){
@@ -163,7 +163,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
         isInfo = true
         infoIcon = Asset.icon.tip
         infoLeading = "ocean"
-        infoTailing = "시청가능"
+        infoTrailing = "시청가능"
         serviceInfo = "결방"
         serviceInfoDesc = "결방"
         isOption = true
@@ -209,11 +209,11 @@ struct PurchaseViewer: PageComponent{
                             .scaledToFit()
                             .frame(width: Dimen.icon.medium)
                     }
-                    if self.data.infoLeading != nil && self.data.infoTailing != nil{
+                    if self.data.infoLeading != nil && self.data.infoTrailing != nil{
                         Text(self.data.infoLeading!)
                             .font(.custom(Font.family.bold, size: Font.size.light))
                             .foregroundColor(Color.brand.primary)
-                        + Text(self.data.infoTailing!)
+                        + Text(self.data.infoTrailing!)
                             .font(.custom(Font.family.bold, size: Font.size.light))
                             .foregroundColor(Color.app.white)
                     }
@@ -223,8 +223,8 @@ struct PurchaseViewer: PageComponent{
                             .lineLimit(1)
                             
                     }
-                    else if self.data.infoTailing != nil {
-                        Text(self.data.infoTailing!)
+                    else if self.data.infoTrailing != nil {
+                        Text(self.data.infoTrailing!)
                             .modifier(BoldTextStyle( size: Font.size.light ))
                             .lineLimit(1)
                     }

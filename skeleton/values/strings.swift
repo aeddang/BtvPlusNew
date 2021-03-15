@@ -53,7 +53,12 @@ extension String {
         
         public static let ppmUpdate = "ppmUpdate".loaalized()
         public static let open = "open".loaalized()
-    
+        
+        public static let mic = "mic".loaalized()
+        public static let location = "location".loaalized()
+        public static let select = "select".loaalized()
+        public static let todayUnvisible = "todayUnvisible".loaalized()
+        public static let watch = "watch".loaalized()
     }
     
     struct week {
@@ -197,6 +202,7 @@ extension String {
         public static let screenRatio = "btnScreenRatio".loaalized()
         public static let guide = "btnGuide".loaalized()
         public static let recieveAlram = "btnRecieveAlram".loaalized()
+        public static let broadband = "btnBroadband".loaalized()
         
     }
     struct player {
@@ -222,7 +228,11 @@ extension String {
         public static let textEnjoy = "monthlyTextEnjoy".loaalized()
     }
     
-    
+    struct footer {
+        public static let text = "footerText".loaalized()
+        public static let button = "footerButton".loaalized()
+    }
+  
     struct pageTitle {
         public static let connectBtv = "titleConnectBtv".loaalized()
         public static let connectWifi = "titleConnectWifi".loaalized()
@@ -234,6 +244,8 @@ extension String {
         public static let setup = "titleSetup".loaalized()
         public static let purchase = "titlePurchase".loaalized()
         public static let certificationUser = "titleCertificationUser".loaalized()
+        public static let privacy = "titlePrivacy".loaalized()
+        public static let serviceTerms = "titleServiceTerms".loaalized()
         
     }
     
@@ -344,6 +356,13 @@ extension String {
         public static let synopsisDDay = "synopsisDDay".loaalized()
         public static let synopsisRelationVod = "synopsisRelationVod".loaalized()
         public static let synopsisNoRelationVod = "synopsisNoRelationVod".loaalized()
+        
+        
+        public static let authTitle = "authTitle".loaalized()
+        public static let authText = "authText".loaalized()
+        public static let authTextMic = "authTextMic".loaalized()
+        public static let authTextLocation = "authTextLocation".loaalized()
+        public static let authBtn = "authBtn".loaalized()
     }
     
 }

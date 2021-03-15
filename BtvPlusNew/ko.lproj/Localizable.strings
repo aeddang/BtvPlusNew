@@ -54,6 +54,11 @@
 "ppmUpdate" = "월정액 업데이트";
 "open" = "공개";
 
+"mic" = "마이크";
+"location" = "위치";
+"select" = "선택";
+"todayUnvisible" = "오늘 하루 보지 않기";
+"watch" = "시청";
 /*
   Button
 */
@@ -86,6 +91,9 @@
 "btnScreenRatio" = "화면비율";
 "btnGuide" = "도움말";
 "btnRecieveAlram" = "알림 받기";
+"btnBroadband" = "© SK Broadband";
+
+
 
 /*
  Sort
@@ -207,6 +215,8 @@
 "titleSetup" = "설정";
 "titlePurchase" = "상품구매";
 "titleCertificationUser" = "성인인증";
+"titlePrivacy" = "개인정보 처리방침";
+"titleServiceTerms" = "이용약관 및 청소년 보호정책";
 
 /*
  PagePairing
@@ -338,6 +348,15 @@
 "synopsisDDay" = "편성 종료 D-";
 
 /*
+ PageAuth
+*/
+"authTitle" = "모바일 B tv 서비스 이용을 위해\n아래 접근 권한이 필요합니다.";
+"authText" = "선택 항목은 허용하지 않아도 이용이 가능하나,\n일부 서비스 이용이 제한될 수 있습니다.\n권한 설정은 서비스 이용 중 권한이 필요한 정보에\n접근하거나 기기 내 설정 > 모바일 B tv에서 변경 가능합니다.";
+"authTextMic" = "음성으로 검색어 입력";
+"authTextLocation" = "B tv 이어폰 모드 사용";
+"authBtn" = "모바일 B tv 시작하기";
+
+/*
  Player
 */
 "playerPreplay" = "3분 미리보기";
@@ -364,5 +383,8 @@
 "monthlyTextRecommand" = "고객님을 위한 콘텐츠가 가득! 지금, 월정액에 가입해 보세요.";
 "monthlyTextEnjoy" = "아래의 모든 콘텐츠를 마음껏 즐겨보세요!.";
 
-
-
+/*
+ Footer
+ */
+"footerText" = "・ 상호 : SK브로드밴드 주식회사\n・ 대표이사 : 최진환\n・ 주소 : 서울특별시 중구 퇴계로 24 SK남산그린빌딩\n・ 통신판매업 신고번호 : 서울 중구 제2008-1608호\n・ 사업자등록번호 : 214-86-18758\n・ 고객센터 : 국번없이 106, 080-8282-106(무료)\n・ 고객지원 이메일 : mobilebtv@skbroadband.com\n・ 호스팅 서비스 제공 : SK브로드밴드 주식회사";
+"footerButton" = "・ 사업자 정보 확인";

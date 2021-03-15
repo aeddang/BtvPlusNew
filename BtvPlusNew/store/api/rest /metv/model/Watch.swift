@@ -20,7 +20,6 @@ struct Watch : Decodable {
     private(set) var watchList: Array<WatchItem>? // 시청 집합의 이름
 }
 
-
 struct WatchItem : Decodable {
     private(set) var ver: String?    // 인터페이스 버전
     private(set) var sris_id: String?    // VOD 컨텐츠의 시즌ID

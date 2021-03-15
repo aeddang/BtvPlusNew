@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 struct RectButton: View, SelecterbleProtocol{
     let text:String
-    var textTailing:String = ""
+    var textTrailing:String = ""
     var index: Int = 0
     var isSelected: Bool = false
     var textModifier:TextModifier = TextModifier(
@@ -45,7 +45,7 @@ struct RectButton: View, SelecterbleProtocol{
                     Text(self.text)
                         .font(.custom(textModifier.family, size: textModifier.size))
                         .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
-                    + Text(self.textTailing)
+                    + Text(self.textTrailing)
                         .font(.custom(textModifier.family, size: textModifier.size))
                         .foregroundColor( textModifier.activeColor )
                     
@@ -73,7 +73,7 @@ struct RectButton_Previews: PreviewProvider {
         Form{
             RectButton(
             text: "test",
-                textTailing: "1/6",
+                textTrailing: "1/6",
                 fixSize: 100,
                 progress: 0.5,
                 padding: 0

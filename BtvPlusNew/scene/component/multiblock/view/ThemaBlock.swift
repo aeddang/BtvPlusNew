@@ -11,37 +11,40 @@ import SwiftUI
 struct ThemaBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
-    @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var pageObservable:PageObservable
+    var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var data: BlockData
     var useTracking:Bool = false
     @State var datas:[ThemaData] = []
     @State var listHeight:CGFloat = ListItem.thema.type01.height
+    @State var isUiview:Bool = true
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
-            if !self.datas.isEmpty {
-                Text(data.name).modifier(BlockTitle())
-                    .modifier(ContentHorizontalEdges())
-            }
-            ThemaList(
-                viewModel:self.viewModel,
-                banners: self.data.leadingBanners,
-                datas: self.datas,
-                useTracking:self.useTracking)
-                
-                .modifier(MatchHorizontal(height: self.listHeight))
-                .onReceive(self.viewModel.$event){evt in
-                    guard let evt = evt else {return}
-                    switch evt {
-                    case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
-                    case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
-                    default : do{}
+            if self.isUiview {
+                if !self.datas.isEmpty {
+                    Text(data.name).modifier(BlockTitle())
+                        .modifier(ContentHorizontalEdges())
+                }
+                ThemaList(
+                    viewModel:self.viewModel,
+                    banners: self.data.leadingBanners,
+                    datas: self.datas,
+                    useTracking:self.useTracking)
+                    
+                    .modifier(MatchHorizontal(height: self.listHeight))
+                    .onReceive(self.viewModel.$event){evt in
+                        guard let evt = evt else {return}
+                        switch evt {
+                        case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
+                        case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
+                        default : do{}
+                        }
                     }
-                }
-                .onReceive(self.viewModel.$pullPosition){ pos in
-                    self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
-                }
-            
+                    .onReceive(self.viewModel.$pullPosition){ pos in
+                        self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
+                    }
+            }
         }
         .frame( height:
                     (self.data.listHeight ?? self.listHeight)
@@ -59,6 +62,12 @@ struct ThemaBlock:BlockProtocol, PageComponent {
                 dataProvider.requestData(q: apiQ)
             } else {
                 self.data.setRequestFail()
+            }
+        }
+        .onReceive(self.pageObservable.$layer ){ layer  in
+            switch layer {
+            case .bottom : self.isUiview = false
+            case .top, .below : self.isUiview = true
             }
         }
         .onReceive(dataProvider.$result) { res in

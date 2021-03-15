@@ -181,29 +181,33 @@ extension PosterSet{
 struct PosterSet: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
+    var pageObservable:PageObservable = PageObservable()
     var data:PosterDataSet
     var negativeMargin:CGFloat = 0 //IOS 14 SidebarListStyle
     var action: ((_ data:PosterData) -> Void)? = nil
     
     @State var cellDatas:[PosterData] = []
+    @State var isUiview:Bool = true
     var body: some View {
         HStack(spacing: Self.padding){
-            ForEach(self.cellDatas) { data in
-                PosterItem( data:data )
-                .onTapGesture {
-                    if let action = self.action {
-                        action(data)
-                    }else{
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.synopsis)
-                                .addParam(key: .data, value: data.synopsisData)
-                        )
+            if self.isUiview {
+                ForEach(self.cellDatas) { data in
+                    PosterItem( data:data )
+                    .onTapGesture {
+                        if let action = self.action {
+                            action(data)
+                        }else{
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.synopsis)
+                                    .addParam(key: .data, value: data.synopsisData)
+                            )
+                        }
+                        
                     }
-                    
                 }
-            }
-            if !self.data.isFull && self.data.count > 1 {
-                Spacer()
+                if !self.data.isFull && self.data.count > 1 {
+                    Spacer()
+                }
             }
         }
         .padding(.horizontal, Self.padding)
@@ -213,6 +217,12 @@ struct PosterSet: PageComponent{
             let size = Self.listSize(data: self.data, screenWidth: sceneObserver.screenSize.width, negativeMargin: self.negativeMargin)
             self.cellDatas = self.data.datas.map{
                 $0.setCardType(width: size.width, height: size.height, padding: Self.padding)
+            }
+        }
+        .onReceive(self.pageObservable.$layer ){ layer  in
+            switch layer {
+            case .bottom : self.isUiview = false
+            case .top, .below : self.isUiview = true
             }
         }
     }//body

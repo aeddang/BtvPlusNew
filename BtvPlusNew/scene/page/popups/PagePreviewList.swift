@@ -69,12 +69,10 @@ struct PagePreviewList: PageView {
                 )
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                self.useTracking = ani
                 if ani {
                     self.viewModel.update(menuId:self.menuId, key:nil)
                 }
-            }
-            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
             }
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 self.useTracking = page?.id == self.pageObject?.id

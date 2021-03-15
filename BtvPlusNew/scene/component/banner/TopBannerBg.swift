@@ -18,7 +18,7 @@ struct TopBannerBg: PageComponent {
     @State var pages: [PageViewProtocol] = []
     @State var index: Int = 0
     @State var leading:CGFloat = 0
-    @State var tailing:CGFloat = 0
+    @State var trailing:CGFloat = 0
     
     var action:((_ idx:Int) -> Void)? = nil
     var body: some View {
@@ -42,7 +42,7 @@ struct TopBannerBg: PageComponent {
                         .background(Color.app.white)
                         .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
                     Spacer()
-                        .modifier(MatchVertical(width:self.tailing))
+                        .modifier(MatchVertical(width:self.trailing))
                         .background(Color.transparent.white20)
                         .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
                 }
@@ -67,7 +67,7 @@ struct TopBannerBg: PageComponent {
         
         withAnimation{
             self.leading = size * CGFloat(idx)
-            self.tailing = size * CGFloat(max(0,(count - idx - 1)))
+            self.trailing = size * CGFloat(max(0,(count - idx - 1)))
         }
     }
 }

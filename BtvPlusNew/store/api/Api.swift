@@ -61,6 +61,7 @@ enum ApiType{
     //METV
     case getMonthly(Bool = false, Int? = nil , Int? = nil),
          getWatch(Bool = false, Int? = nil , Int? = nil),
+         deleteWatch([String]? = nil, Bool = false),
          getBookMark(Int? = nil , Int? = nil),
          postBookMark(SynopsisData),
          deleteBookMark(SynopsisData),

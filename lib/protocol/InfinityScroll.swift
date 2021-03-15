@@ -193,10 +193,14 @@ protocol InfinityScrollViewProtocol :PageProtocol{
 extension InfinityScrollViewProtocol {
     func onReady(){
         if let idx = self.viewModel.initIndex {
-            self.viewModel.uiEvent = .scrollTo(idx)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.viewModel.uiEvent = .scrollTo(idx)
+            }
         }
         if let pos = self.viewModel.initPos {
-            self.viewModel.uiEvent = .scrollMove(pos)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.viewModel.uiEvent = .scrollMove(pos)
+            }
         }
         self.viewModel.event = .ready
     }

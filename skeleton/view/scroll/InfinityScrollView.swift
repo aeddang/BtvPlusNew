@@ -169,9 +169,9 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
             .opacity(self.progress / self.progressMax)
             .coordinateSpace(name: self.tag)
             .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                //DispatchQueue.main.async {
+                DispatchQueue.main.async {
                     self.onPreferenceChange(value: value)
-                //}
+                }
             }
             
             .onReceive(self.viewModel.$scrollStatus){ stat in
@@ -223,6 +223,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                 self.progressMax = max
                 self.isTracking = true
                 self.onReady()
+                
             }
             .onDisappear{
                 self.isTracking = false
@@ -332,6 +333,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     private func onPreferenceChange(value:[CGFloat]){
         if !self.useTracking {return}
         let contentOffset = value[0]
+        //ComponentLog.d("onPreferenceChange " + self.viewModel.idstr, tag: "InfinityScrollViewProtocol" + self.viewModel.idstr)
         self.onMove(pos: contentOffset)
     }
     

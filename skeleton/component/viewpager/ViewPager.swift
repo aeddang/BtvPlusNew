@@ -13,7 +13,7 @@ open class ViewPagerModel: NavigationModel {
 }
 
 enum ViewPagerUiEvent {
-    case move(Int), jump(Int), next, drag(CGFloat), draged , reset
+    case move(Int), jump(Int), next, prev, drag(CGFloat), draged , reset
 }
 
 enum ViewPagerStatus:String {

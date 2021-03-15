@@ -26,9 +26,7 @@ struct TopBanner: PageComponent {
      
     @State var pages: [PageViewProtocol] = []
     @State var index: Int = 0
-    @State var leading:CGFloat = 0
-    @State var tailing:CGFloat = 0
-    
+   
     var action:((_ idx:Int) -> Void)? = nil
     var body: some View {
         SwipperView(

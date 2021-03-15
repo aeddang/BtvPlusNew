@@ -16,39 +16,33 @@ final class PageControllerObservable: ObservableObject  {
     @Published var overlayView: PageViewProtocol? = nil
     
     func updatePageIndex(){
+        
         PageLog.d("updatePageIndex" , tag:"PageController")
         let checkPopups = popups.filter({$0.zIndex == 0}).reversed()
         if checkPopups.isEmpty {
-            pages.first?.pageObservable.status = .top
-            PageLog.d("updatePage top " + (pages.first?.pageID ?? "") , tag:"PageController")
+            pages.first?.pageTop()
             return
         }
         
         let top = checkPopups.count
         if top == 1 {
-            checkPopups.first?.pageObservable.status = .top
-            pages.first?.pageObservable.status = .below
-            PageLog.d("updatePage top " + (checkPopups.first?.pageID ?? "") , tag:"PageController")
-            PageLog.d("updatePage below " + (pages.first?.pageID ?? "") , tag:"PageController")
+            checkPopups.first?.pageTop()
+            pages.first?.pageBelow()
             return
         }
         let below = top - 1
         var idx = top
         checkPopups.forEach{ pop in
             if idx == top {
-                pop.pageObservable.status = .top
-                PageLog.d("updatePage top " + pop.pageID , tag:"PageController")
+                pop.pageTop()
             } else if idx == below {
-                pop.pageObservable.status = .below
-                PageLog.d("updatePage below " + pop.pageID , tag:"PageController")
+                pop.pageBelow()
             } else {
-                pop.pageObservable.status = .bottom
-                PageLog.d("updatePage bottom " + pop.pageID , tag:"PageController")
+                pop.pageBottom()
             }
             idx -= 1
         }
-        pages.first?.pageObservable.status = .bottom
-        PageLog.d("updatePage bottom " + (pages.first?.pageID ?? "") , tag:"PageController")
+        pages.first?.pageBottom()
         
     }
 }

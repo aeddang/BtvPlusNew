@@ -39,7 +39,7 @@ struct SelectButton: View, SelecterbleProtocol{
                             .padding(.horizontal, Dimen.margin.thin)
                             .frame(height:Dimen.button.thin)
                             .background(Color.brand.primary)
-                            .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.medium))
+                            .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.regularExtra))
                     }
                     if self.tipB != nil {
                         Text(self.tipB!)
@@ -47,7 +47,7 @@ struct SelectButton: View, SelecterbleProtocol{
                             .padding(.horizontal, Dimen.margin.thin)
                             .frame(height:Dimen.button.thin)
                             .overlay(
-                                RoundedRectangle(cornerRadius: Dimen.radius.medium)
+                                RoundedRectangle(cornerRadius: Dimen.radius.regularExtra)
                                     .stroke(Color.brand.primary, lineWidth: 1)
                             )
                     }

@@ -102,7 +102,76 @@ struct SynopsisBody: PageComponent{
                     )
                     .modifier(ListRowInset(spacing: Dimen.margin.regular))
                 }
+                
+                if self.hasRelationVod != nil {
+                    if self.hasRelationVod == false {
+                        Text(String.pageText.synopsisRelationVod)
+                            .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
+                            .frame(height:Dimen.tab.regular)
+                            .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
+                        VStack(alignment: .center, spacing: 0){
+                            Spacer().modifier(MatchHorizontal(height:0))
+                            Image(Asset.icon.alert)
+                                .renderingMode(.original)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
+                                .padding(.top, Dimen.margin.medium)
+                            Text(String.pageText.synopsisNoRelationVod)
+                                .modifier(BoldTextStyle(size: Font.size.regular, color: Color.app.greyLight))
+                                .multilineTextAlignment(.center)
+                                .padding(.top, Dimen.margin.regularExtra)
+                        }
+                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
+                    } else if self.relationTab.count == 1 {
+                        Text(self.relationTab.first!)
+                            .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
+                            .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
+                    }
+                    else{
+                        CPTabDivisionNavigation(
+                            buttons: NavigationBuilder(
+                                index:self.relationTabIdx,
+                                marginH:Dimen.margin.regular)
+                                .getNavigationButtons(texts:self.relationTab),
+                            index: self.$relationTabIdx
+                        )
+                        .frame(height:Dimen.tab.regular)
+                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
+                    }
+                }
+                
+                if !self.seris.isEmpty {
+                    SerisTab(
+                        data:self.relationContentsModel,
+                        seris: self.$seris
+                    ){ season in
+                        self.componentViewModel.uiEvent = .changeSynopsis(season.synopsisData)
+                    }
+                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.thin))
+                    ForEach(self.seris) { data in
+                        SerisItem( data:data, isSelected: self.synopsisData?.epsdId == data.contentID )
+                            .onTapGesture {
+                                self.componentViewModel.uiEvent = .changeVod(data.epsdId)
+                            }
+                            .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))
+                    }
+                
+                } else if !self.relationDatas.isEmpty {
+                    ForEach(self.relationDatas) { data in
+                        PosterSet( data:data ){data in
+                            self.componentViewModel.uiEvent = .changeSynopsis(data.synopsisData)
+                        }
+                        .frame(height: PosterSet.listSize(data: data, screenWidth: self.sceneObserver.screenSize.width).height)
+                        .modifier(ListRowInset( spacing: Dimen.margin.thin))
+                    }
+                } else {
+                    Spacer().modifier(MatchParent())
+                        .modifier(ListRowInset(spacing: 0))
+                }
+                
             } else {
+                //IOS 13
                 VStack(alignment:.leading , spacing:Dimen.margin.regular){
                     if self.episodeViewerData != nil {
                         EpisodeViewer(data:self.episodeViewerData!)
@@ -142,85 +211,80 @@ struct SynopsisBody: PageComponent{
                         )
                     }
                 }
-                .padding(.top, Dimen.margin.regular)
-                .modifier(ListRowInset(spacing: Dimen.margin.regular))
-            }
-            if self.hasRelationVod != nil {
-                if self.hasRelationVod == false {
-                    Text(String.pageText.synopsisRelationVod)
-                        .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
-                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
-                    VStack(alignment: .center, spacing: 0){
-                        Spacer().modifier(MatchHorizontal(height:0))
-                        Image(Asset.icon.alert)
-                            .renderingMode(.original)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
-                            .padding(.top, Dimen.margin.medium)
-                        Text(String.pageText.synopsisNoRelationVod)
-                            .modifier(BoldTextStyle(size: Font.size.regular, color: Color.app.greyLight))
-                            .multilineTextAlignment(.center)
-                            .padding(.top, Dimen.margin.regularExtra)
-                    }
-                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
-                }
-                else if self.relationTab.count == 1 {
-                    Text(self.relationTab.first!)
-                        .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
-                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
-                }
-                else{
-                    CPTabDivisionNavigation(
-                        buttons: NavigationBuilder(
-                            index:self.relationTabIdx,
-                            marginH:Dimen.margin.regular)
-                            .getNavigationButtons(texts:self.relationTab),
-                        index: self.$relationTabIdx
-                    )
-                    .frame(height:Dimen.tab.regular)
-                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
-                }
-            } else {
-                Spacer().modifier(MatchParent())
-                    .modifier(ListRowInset(spacing: 0))
-            }
-         
-            if !self.seris.isEmpty {
-                SerisTab(
-                    data:self.relationContentsModel,
-                    seris: self.$seris
-                ){ season in
-                    self.componentViewModel.uiEvent = .changeSynopsis(season.synopsisData)
-                }
-                .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.thin))
-               
-                ForEach(self.seris) { data in
-                    SerisItem( data:data, isSelected: self.synopsisData?.epsdId == data.contentID )
-                        .padding(.horizontal, Dimen.margin.thin)
-                        .onTapGesture {
-                            self.componentViewModel.uiEvent = .changeVod(data.epsdId)
+                .modifier(ListRowInset(index:1, spacing: Dimen.margin.regular, marginTop:Dimen.margin.regular))
+                
+                if self.hasRelationVod != nil {
+                    if self.hasRelationVod == false {
+                        Text(String.pageText.synopsisRelationVod)
+                            .frame(height:Dimen.tab.regular)
+                            .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
+                        VStack(alignment: .center, spacing: 0){
+                            Spacer().modifier(MatchHorizontal(height:0))
+                            Image(Asset.icon.alert)
+                                .renderingMode(.original)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
+                                .padding(.top, Dimen.margin.medium)
+                            Text(String.pageText.synopsisNoRelationVod)
+                                .modifier(BoldTextStyle(size: Font.size.regular, color: Color.app.greyLight))
+                                .multilineTextAlignment(.center)
+                                .padding(.top, Dimen.margin.regularExtra)
                         }
-                        .modifier(ListRowInset( spacing: Dimen.margin.thin))
-                }
-            } else if !self.relationDatas.isEmpty {
-                ForEach(self.relationDatas) { data in
-                    PosterSet( data:data ){data in
-                        self.componentViewModel.uiEvent = .changeSynopsis(data.synopsisData)
+                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
+                    } else if self.relationTab.count == 1 {
+                        Text(self.relationTab.first!)
+                            .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
+                            .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
                     }
-                    .frame(height: PosterSet.listSize(data: data, screenWidth: self.sceneObserver.screenSize.width).height)
-                    .modifier(ListRowInset( spacing: Dimen.margin.thin))
-                    
+                    else{
+                        CPTabDivisionNavigation(
+                            buttons: NavigationBuilder(
+                                index:self.relationTabIdx,
+                                marginH:Dimen.margin.regular)
+                                .getNavigationButtons(texts:self.relationTab),
+                            index: self.$relationTabIdx
+                        )
+                        .frame(height:Dimen.tab.regular)
+                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
+                    }
+                } else {
+                    Spacer().frame(height:Dimen.tab.regular)
                 }
-            } else {
-                Spacer().modifier(MatchParent())
-                    .modifier(ListRowInset(spacing: 0))
+                
+                if !self.seris.isEmpty {
+                    SerisTab(
+                        data:self.relationContentsModel,
+                        seris: self.$seris
+                    ){ season in
+                        self.componentViewModel.uiEvent = .changeSynopsis(season.synopsisData)
+                    }
+                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.thin))
+                    ForEach(self.seris) { data in
+                        SerisItem( data:data, isSelected: self.synopsisData?.epsdId == data.contentID )
+                            .onTapGesture {
+                                self.componentViewModel.uiEvent = .changeVod(data.epsdId)
+                            }
+                            .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))
+                    }
+                
+                } else if !self.relationDatas.isEmpty {
+                    ForEach(self.relationDatas) { data in
+                        PosterSet( data:data ){data in
+                            self.componentViewModel.uiEvent = .changeSynopsis(data.synopsisData)
+                        }
+                        .frame(height: PosterSet.listSize(data: data, screenWidth: self.sceneObserver.screenSize.width).height)
+                        .modifier(ListRowInset( spacing: Dimen.margin.thin))
+                    }
+                }  else  {
+                    Spacer().modifier(MatchParent())
+                        .modifier(ListRowInset(spacing: 0))
+                }
             }
         }
+        
     }//body
    
-    
-    
 }
 
 

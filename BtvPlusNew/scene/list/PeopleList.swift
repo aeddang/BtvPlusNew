@@ -94,9 +94,10 @@ struct PeopleList: PageComponent{
             marginVertical:0,
             marginHorizontal: Dimen.margin.thin ,
             spacing: Dimen.margin.thin,
-            isRecycle: false,
+            isRecycle: true,
             useTracking: self.useTracking
             ){
+            
             ForEach(self.datas) { data in
                 PeopleItem( data:data )
                 .onTapGesture {

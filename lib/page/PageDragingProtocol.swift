@@ -168,7 +168,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     @State var isBottom = false
     @State var isDragingCompleted = false
     
-    private let minDiff:CGFloat = 0.6
+    private let minDiff:CGFloat = 0.0
     private let maxDiff:CGFloat = 600
     init(
         viewModel: PageDragingModel,
@@ -206,11 +206,11 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
                         .onEnded({_ in
                             self.viewModel.uiEvent = .dragCancel})
                 )
-        }//z
+            
+        }
         .offset(
             x:self.axis == .horizontal ? self.bodyOffset : 0,
             y:self.axis == .vertical ? self.bodyOffset : 0)
-        
         .onReceive(self.viewModel.$uiEvent){evt in
             switch evt {
             case .pull(let geo, let value) :
@@ -277,7 +277,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
         if !self.isDraging {return}
         let diff = abs(self.bodyOffset - offset)
         
-        //ComponentLog.d("Draging diff " + diff.description , tag: "InfinityScrollViewProtocol")
+       // ComponentLog.d("Draging diff " + diff.description , tag: "InfinityScrollViewProtocol")
         if abs(diff) > maxDiff { return }
         if abs(diff) < minDiff { return }
         let bodyOffset = max( 0, offset - self.dragInitOffset)

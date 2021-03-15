@@ -7,8 +7,9 @@
 
 import Foundation
 
-struct UpdateBookMark : Decodable {
+struct UpdateMetv : Decodable {
     private(set) var result: String?    // 요청 결과.
+    private(set) var reason: String?
 }
 /*
 @property (nonatomic, strong) NSString *IF;       // 인터페이스 식별자

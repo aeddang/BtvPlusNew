@@ -24,7 +24,7 @@ struct StrokeRectButton: View, SelecterbleProtocol{
     var cornerRadius:CGFloat = 0
     var size:CGSize = CGSize(width: Dimen.button.heavy, height: Dimen.button.thin)
     var icon:String? = nil
-    var iconTail:String? = nil
+    var iconTrail:String? = nil
     let action: (_ idx:Int) -> Void
     
     
@@ -44,8 +44,8 @@ struct StrokeRectButton: View, SelecterbleProtocol{
                     Text(self.text)
                     .font(.custom(textModifier.family, size: textModifier.size))
                     .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
-                    if self.iconTail != nil {
-                        Image(self.iconTail!)
+                    if self.iconTrail != nil {
+                        Image(self.iconTrail!)
                             .renderingMode(.original).resizable()
                             .scaledToFit()
                             .frame(width: Dimen.icon.thin, height: Dimen.icon.thin)

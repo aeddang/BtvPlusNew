@@ -19,7 +19,7 @@ class MultiBlockModel: PageDataProviderModel {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
     
-    init(headerSize:Int = 4, requestSize:Int = 10) {
+    init(headerSize:Int = 0, requestSize:Int = 10) {
         self.headerSize = headerSize
         self.requestSize = requestSize
     }
@@ -73,10 +73,10 @@ struct MultiBlockBody: PageComponent {
     var marginBottom : CGFloat = 0
     
     var topDatas:[BannerData]? = nil
-    
     var monthlyViewModel: InfinityScrollModel = InfinityScrollModel()
     var monthlyDatas:[MonthlyData]? = nil
     var monthlyAllData:BlockItem? = nil
+    var useFooter:Bool = false
     var isRecycle = true
     
     var action: ((_ data:MonthlyData) -> Void)? = nil
@@ -84,15 +84,15 @@ struct MultiBlockBody: PageComponent {
     @State var reloadDegree:Double = 0
     @State var reloadDegreeMax:Double = Double(InfinityScrollModel.PULL_COMPLETED_RANGE)
     @State var headerOffset:CGFloat = 0
-    @State var isUiview:Bool = true
+    
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
             viewModel : self.viewModel
         ){
-            if self.isUiview {
+            
                 ZStack(alignment: .topLeading){
-                    if !Self.isLegacy  { //#
+                    if !Self.isLegacy  {
                         if self.topDatas != nil && self.topDatas?.isEmpty == false {
                             TopBannerBg(
                                 viewModel:self.viewPagerModel,
@@ -121,6 +121,7 @@ struct MultiBlockBody: PageComponent {
                             monthlyViewModel : self.monthlyViewModel,
                             monthlyDatas: self.monthlyDatas,
                             monthlyAllData: self.monthlyAllData,
+                            useFooter:self.useFooter,
                             isRecycle:self.isRecycle,
                             isLegacy:Self.isLegacy,
                             action:self.action
@@ -149,6 +150,7 @@ struct MultiBlockBody: PageComponent {
                             monthlyViewModel : self.monthlyViewModel,
                             monthlyDatas: self.monthlyDatas,
                             monthlyAllData: self.monthlyAllData,
+                            useFooter:self.useFooter,
                             isRecycle:self.isRecycle,
                             isLegacy:Self.isLegacy,
                             action:self.action
@@ -156,15 +158,9 @@ struct MultiBlockBody: PageComponent {
                     
                     }
                 }
-            }
+            
         }
-        .onReceive(self.pageObservable.$status){ stat in
-            switch stat {
-            case .bottom : self.isUiview = false
-            case .top, .below : self.isUiview = true
-            default : break
-            }
-        }
+       
         .onReceive(self.infinityScrollModel.$event){evt in
             guard let evt = evt else {return}
             switch evt {

@@ -38,7 +38,8 @@ struct SummaryViewer: PageComponent{
                 .modifier(BoldTextStyle( size: Font.size.regular ))
                 .padding(.vertical, Dimen.margin.regularExtra )
                 .modifier(ContentHorizontalEdges())
-            if self.data.peoples != nil {
+            
+            if self.data.peoples != nil && self.data.peoples?.isEmpty == false {
                 PeopleList(
                     viewModel:self.peopleScrollModel,
                     datas: self.data.peoples!,

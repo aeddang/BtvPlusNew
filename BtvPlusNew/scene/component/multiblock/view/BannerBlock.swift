@@ -11,24 +11,28 @@ import SwiftUI
 struct BannerBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
-    @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var pageObservable:PageObservable
+    var viewModel: InfinityScrollModel = InfinityScrollModel()
     var data: BlockData
     @State var bannerData:BannerData? = nil
     @State var listHeight:CGFloat = ListItem.banner.type01.height
+    @State var isUiview:Bool = true
     var body :some View {
         ZStack() {
-            if self.bannerData != nil {
-                BannerItem(data: self.bannerData!)
-                    .modifier(MatchParent())
-            } else {
-                Image(Asset.noImgBanner)
-                    .renderingMode(.original)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .modifier(MatchParent())
-                    .clipped()
-                    .background(Color.app.black)
-                    .opacity(0.5)
+            if self.isUiview {
+                if self.bannerData != nil {
+                    BannerItem(data: self.bannerData!)
+                        .modifier(MatchParent())
+                } else {
+                    Image(Asset.noImgBanner)
+                        .renderingMode(.original)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .modifier(MatchParent())
+                        .clipped()
+                        .background(Color.app.black)
+                        .opacity(0.5)
+                }
             }
         }
         .padding(.horizontal, Dimen.margin.thin)
@@ -43,6 +47,12 @@ struct BannerBlock:BlockProtocol, PageComponent {
                 dataProvider.requestData(q: apiQ)
             } else {
                 self.data.setRequestFail()
+            }
+        }
+        .onReceive(self.pageObservable.$layer ){ layer  in
+            switch layer {
+            case .bottom : self.isUiview = false
+            case .top, .below : self.isUiview = true
             }
         }
         .onReceive(dataProvider.$result) { res in

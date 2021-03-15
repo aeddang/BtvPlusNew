@@ -11,11 +11,13 @@ import Combine
 
 class WebManager :PageProtocol{
     private let pairing:Pairing
-    private let setting:SettingStorage
+    private let storage:LocalStorage
+    private let setup:Setup
     private let networkObserver:NetworkObserver
-    init(pairing:Pairing,setting:SettingStorage, networkObserver:NetworkObserver) {
+    init(pairing:Pairing,storage:LocalStorage, setup:Setup, networkObserver:NetworkObserver) {
         self.pairing = pairing
-        self.setting = setting
+        self.storage = storage
+        self.setup = setup
         self.networkObserver = networkObserver
     }
     
@@ -40,17 +42,17 @@ class WebManager :PageProtocol{
             RCUAgentVersion = hostDevice.agentVersion
            
         }
-        info["isAdultAuth"] = setting.isAdultAuth       // 성인인증 ON/OFF
+        info["isAdultAuth"] = setup.isAdultAuth       // 성인인증 ON/OFF
         info["isPurchaseAuth"] = true//setting.isPurchaseAuth    // 구매인증 ON/OFF
         info["isMemberAuth"] = true//setting.isFirstAdultAuth   // 최초 본인 인증 여부
-        info["restrictedAge"] = setting.isAdultAuth ? (setting.restrictedAge ?? 0) : 0
+        info["restrictedAge"] = setup.isAdultAuth ? (storage.restrictedAge ?? 0) : 0
         info["RCUAgentVersion"] = AppUtil.getSafeString(RCUAgentVersion, defaultValue: "0.0.0")
         info["userAgent"] = ScsNetwork.getUserAgentParameter()
-        info["isShowRemoconSelectPopup"] = setting.isShowRemoconSelectPopup
-        info["isShowAutoRemocon"] = setting.isShowAutoRemocon
+        info["isShowRemoconSelectPopup"] = setup.isShowRemoconSelectPopup
+        info["isShowAutoRemocon"] = setup.isShowAutoRemocon
         
-        info["marketingInfo"] = setting.pushAble ? 1 : 0
-        info["pushInfo"] = setting.pushAble ? 1 : 0
+        info["marketingInfo"] = setup.pushAble ? 1 : 0
+        info["pushInfo"] = setup.pushAble ? 1 : 0
         
         let userInfo = pairing.userInfo?.user
         info["regionCode"] = AppUtil.getSafeString(userInfo?.region_code, defaultValue: "MBC=1^KBS=41^SBS=61^HD=0")

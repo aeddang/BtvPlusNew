@@ -164,6 +164,10 @@ class ApiManager :PageProtocol, ObservableObject{
             isPpm:isPpm, page: page, pageCnt: count,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .deleteWatch(let list, let isAll) : self.metv.deleteWatch(
+            deleteList: list, isAll: isAll,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         case .getBookMark(let page, let count) : self.metv.getBookMark(
             page: page, pageCnt: count,
             completion: {res in self.complated(id: apiID, type: type, res: res)},

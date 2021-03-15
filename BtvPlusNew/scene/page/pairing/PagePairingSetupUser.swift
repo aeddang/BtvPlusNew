@@ -238,7 +238,6 @@ struct PagePairingSetupUser: PageView {
                 AppUtil.hideKeyboard()
             }
             .onAppear{
-                //UIScrollView.appearance().bounces = false
                 guard let obj = self.pageObject  else { return }
                 self.birth = self.birthList[20]
                 let type = obj.getParamValue(key: .type)

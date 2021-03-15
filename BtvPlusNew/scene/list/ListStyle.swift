@@ -68,6 +68,10 @@ struct ListItem{
        static let size:CGSize = CGSize(width: 320, height: 180)
     }
     
+    struct watched {
+       static let size:CGSize = CGSize(width: 112, height: 64)
+    }
+    
     
     struct tablet {
         struct poster {

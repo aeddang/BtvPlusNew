@@ -281,8 +281,7 @@ struct PlayBlock: PageComponent{
             id: self.tag,
             type: .getGridPreview(
                 self.viewModel.menuId,
-                self.infinityScrollModel.page + 1),
-            isOptional:true
+                self.infinityScrollModel.page + 1)
         )
     }
     

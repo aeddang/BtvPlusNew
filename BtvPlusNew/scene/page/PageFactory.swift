@@ -11,6 +11,7 @@ import SwiftUI
 
 extension PageID{
     static let intro:PageID = "intro"
+    static let auth:PageID = "auth"
     static let serviceError:PageID = "serviceError"
     static let home:PageID = "home"
     static let category:PageID = "category"
@@ -29,6 +30,7 @@ extension PageID{
     static let multiBlock:PageID = "multiBlock"
     static let categoryList:PageID = "categoryList"
     static let previewList:PageID = "previewList"
+    static let watchedList:PageID = "watchedList"
     static let fullPlayer:PageID = "fullPlayer"
     static let webview:PageID = "webview"
 }
@@ -54,7 +56,7 @@ struct PageProvider {
     
     static func isHome(_ pageID:PageID)-> Bool{
         switch pageID {
-        case .home, .intro , .category : return  true
+        case .home, .intro , .category, .auth : return  true
            default : return  false
         }
     }
@@ -141,6 +143,7 @@ enum PageStyle{
 struct PageFactory{
     static func getPage(_ pageObject:PageObject) -> PageViewProtocol{
         switch pageObject.pageID {
+        case .auth : return PageAuth()
         case .home : return PageHome()
         case .category : return PageCategory()
         case .serviceError : return PageServiceError()
@@ -156,6 +159,7 @@ struct PageFactory{
         case .purchase : return PagePurchase()
         case .multiBlock : return PageMultiBlock()
         case .categoryList : return PageCategoryList()
+        case .watchedList : return PageWatchedList()
         case .previewList : return PagePreviewList()
         case .fullPlayer : return PageFullPlayer()
         case .webview : return PageWebview()
@@ -206,7 +210,7 @@ struct PageSceneModel: PageModel {
     
     func isHistoryPage(_ pageObject:PageObject ) -> Bool {
         switch pageObject.pageID {
-        case .serviceError, .fullPlayer: return false
+        case .serviceError, .fullPlayer, .auth: return false
         default : return true
         }
     }

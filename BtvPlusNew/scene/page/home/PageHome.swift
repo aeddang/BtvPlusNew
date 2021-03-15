@@ -43,17 +43,19 @@ struct PageHome: PageView {
                 useBodyTracking:self.useTracking,
                 useTracking:false,
                 marginTop:Dimen.app.top + self.sceneObserver.safeAreaTop,
-                marginBottom: Dimen.app.bottom + self.sceneObserver.safeAreaBottom,
+                marginBottom: self.sceneObserver.safeAreaBottom,
                 topDatas: self.topDatas,
                 monthlyViewModel : self.monthlyViewModel,
                 monthlyDatas: self.monthlyDatas,
                 monthlyAllData: self.monthlyAllData,
+                useFooter: self.useFooter,
                 isRecycle:true
                 ){ data in
                     self.reload(selectedMonthlyId: data.prdPrcId)
                     
             }
         }
+        .padding(.bottom, Dimen.app.bottom )
         .modifier(PageFull())
         
         .onReceive(self.dataProvider.bands.$event){ evt in
@@ -118,9 +120,8 @@ struct PageHome: PageView {
     @State var monthlyAllData:BlockItem? = nil
     @State var monthlyDatas:Array<MonthlyData>? = nil
     @State var selectedMonthlyId:String? = Self.finalSelectedMonthlyId
-    
     @State var menuId:String = ""
-    
+    @State var useFooter:Bool = false
     
     private func reload(selectedMonthlyId:String? = nil){
        
@@ -128,9 +129,15 @@ struct PageHome: PageView {
         self.monthlyDatas?.forEach{$0.reset()}
         guard let band = self.dataProvider.bands.getData(menuId: self.menuId) else { return }
         switch band.gnbTypCd {
-        case "BP_02" : self.setupOriginMonthly()
+        case EuxpNetwork.GnbTypeCode.GNB_HOME.rawValue :
+            self.useFooter = true
+            self.setupBlocks()
+        case EuxpNetwork.GnbTypeCode.GNB_MONTHLY.rawValue :
+            self.setupOriginMonthly()
         default: self.setupBlocks()
         }
+        
+        
         self.requestTopBanner()
     }
     
@@ -150,8 +157,14 @@ struct PageHome: PageView {
         guard let resData = res?.data as? EventBanner else {return}
         guard let banners = resData.banners else { return }
         if banners.isEmpty { return }
-        self.topDatas = banners.map{ d in
+        self.topDatas = banners.filter{$0.bbnr_exps_mthd_cd == "01"}.map{ d in
             BannerData().setData(data: d, type: .page)
+        }
+        let floating = banners.filter{$0.bbnr_exps_mthd_cd == "03"}.map{ d in
+            BannerData().setData(data: d, type: .page)
+        }
+        if !floating.isEmpty {
+            self.pageSceneObserver.event = .floatingBanner(floating)
         }
         if self.pagePresenter.currentTopPage?.pageID == PageID.home {
             self.pageSceneObserver.useTopFix = true

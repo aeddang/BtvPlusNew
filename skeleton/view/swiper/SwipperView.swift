@@ -123,9 +123,16 @@ struct SwipperView : View , PageProtocol, Swipper {
                         case .reset : if self.isUserSwiping { self.reset(idx:self.index) }
                         case .move(let idx) : withAnimation(Self.ani){ self.index = idx }
                         case .jump(let idx) : self.index = idx
+                        case .prev:
+                            let willIdx = self.index == 0 ? self.pages.count : self.index - 1
+                            self.offset = CGFloat(willIdx) * -geometry.size.width
+                            self.viewModel.status = .move
+                            self.viewModel.request = .drag(self.offset)
+                            self.isUserSwiping = true
+                            self.reset(idx: willIdx)
                         case .next:
                             let willIdx = self.index >= self.pages.count ? 0 : self.index + 1
-                            self.offset = CGFloat(self.index + 1) * -geometry.size.width
+                            self.offset = CGFloat(willIdx) * -geometry.size.width
                             self.viewModel.status = .move
                             self.viewModel.request = .drag(self.offset)
                             self.isUserSwiping = true

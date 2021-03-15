@@ -31,7 +31,7 @@ class Repository:ObservableObject, PageProtocol{
     let webManager:WebManager
     let networkObserver:NetworkObserver
     
-    private let setting = SettingStorage()
+    private let storage = LocalStorage()
     private let apiCoreDataManager = ApiCoreDataManager()
     private let pairingManager:AccountManager
     private let apiManager:ApiManager
@@ -62,7 +62,8 @@ class Repository:ObservableObject, PageProtocol{
         
         self.webManager = WebManager(
             pairing: self.pairing,
-            setting: self.setting,
+            storage: self.storage,
+            setup: self.userSetup,
             networkObserver: self.networkObserver)
         
         self.pagePresenter?.$currentPage.sink(receiveValue: { evt in
@@ -82,13 +83,13 @@ class Repository:ObservableObject, PageProtocol{
     }
     
     private func setupPairing(){
-        self.pairingManager.setupPairing(savedUser:self.setting.getSavedUser())
+        self.pairingManager.setupPairing(savedUser:self.storage.getSavedUser())
         
         self.pairing.$request.sink(receiveValue: { req in
             guard let requestPairing = req else { return }
             switch requestPairing{
             case .user , .device, .auth:
-                self.setting.clearDevice()
+                self.storage.clearDevice()
             default : do{}
             }
         }).store(in: &anyCancellable)
@@ -98,18 +99,18 @@ class Repository:ObservableObject, PageProtocol{
             switch evt{
             case .connected(let stbData) :
                 //self.pageSceneObserver?.event = .toast("connected")
-                self.setting.saveDevice(stbData)
+                self.storage.saveDevice(stbData)
                 
             case .disConnected :
                 self.pageSceneObserver?.event = .toast(String.alert.pairingDisconnected)
-                self.setting.saveUser(nil)
-                self.setting.clearDevice()
+                self.storage.saveUser(nil)
+                self.storage.clearDevice()
                 self.dataProvider.requestData(q: .init(type: .getGnb))
                 
             case .pairingCompleted :
-                self.setting.saveUser(self.pairing.user)
-                self.pairing.user?.pairingDate = self.setting.pairingDate
-                self.pairing.hostDevice?.modelName = self.setting.pairingModelName
+                self.storage.saveUser(self.pairing.user)
+                self.pairing.user?.pairingDate = self.storage.pairingDate
+                self.pairing.hostDevice?.modelName = self.storage.pairingModelName
                 self.pageSceneObserver?.event = .toast(String.alert.pairingCompleted)
                 self.dataProvider.requestData(q: .init(type: .getGnb))
          
@@ -169,13 +170,13 @@ class Repository:ObservableObject, PageProtocol{
     }
     
     private func setupSetting(){
-        if !self.setting.initate {
-            self.setting.initate = true
+        if !self.storage.initate {
+            self.storage.initate = true
             SystemEnvironment.firstLaunch = true
             self.userSetup.initateSetup()
         }
-        if self.setting.retryPushToken != "" {
-            self.registerPushToken(self.setting.retryPushToken)
+        if self.storage.retryPushToken != "" {
+            self.registerPushToken(self.storage.retryPushToken)
         }
     }
     
@@ -225,9 +226,9 @@ class Repository:ObservableObject, PageProtocol{
             config.value.hasPrefix("http")
         }.forEach{ config in
             guard let server = ApiServer.getType(config.key) else { return }
-            if let savedPath = self.setting.getServerConfig(configKey: config.key){
+            if let savedPath = self.storage.getServerConfig(configKey: config.key){
                 if savedPath == config.value { return }
-                self.setting.setServerConfig(configKey: config.key, path: config.value)
+                self.storage.setServerConfig(configKey: config.key, path: config.value)
                 self.apiCoreDataManager.clearData(server: server)
             }
         }
@@ -255,13 +256,13 @@ class Repository:ObservableObject, PageProtocol{
    
     // PushToken
     func retryRegisterPushToken(){
-        if self.setting.retryPushToken != "" {
-            self.registerPushToken(self.setting.retryPushToken)
+        if self.storage.retryPushToken != "" {
+            self.registerPushToken(self.storage.retryPushToken)
         }
     }
     
     func registerPushToken(_ token:String) {
-        self.setting.retryPushToken = token
+        self.storage.retryPushToken = token
     }
     
     func getDrmId() -> String? {

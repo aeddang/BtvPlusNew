@@ -14,7 +14,7 @@ enum SceneUpdateType {
 }
 
 enum SceneEvent {
-    case toast(String), update(SceneUpdateType)
+    case initate, toast(String), update(SceneUpdateType), floatingBanner([BannerData]? = nil)
 }
 
 class PageSceneObserver:ObservableObject{

@@ -12,58 +12,61 @@ struct VideoBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
-    @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var pageObservable:PageObservable
+    var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var data: BlockData
     var useTracking:Bool = false
     @State var datas:[VideoData] = []
     @State var listHeight:CGFloat = ListItem.video.height
+    @State var isUiview:Bool = true
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
-            
-            HStack( spacing:Dimen.margin.thin){
-                VStack(alignment: .leading, spacing:0){
-                    Text(data.name).modifier(BlockTitle())
-                        .lineLimit(1)
-                    Spacer().modifier(MatchHorizontal(height: 0))
+            if self.isUiview {
+                HStack( spacing:Dimen.margin.thin){
+                    VStack(alignment: .leading, spacing:0){
+                        Text(data.name).modifier(BlockTitle())
+                            .lineLimit(1)
+                        Spacer().modifier(MatchHorizontal(height: 0))
+                    }
+                    TextButton(
+                        defaultText: String.button.all,
+                        textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
+                    ){_ in
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(data.dataType == .watched ? .watchedList : .categoryList)
+                                .addParam(key: .data, value: data)
+                                .addParam(key: .type, value: CateBlock.ListType.video)
+                        )
+                    }
                 }
-                TextButton(
-                    defaultText: String.button.all,
-                    textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
-                ){_ in
-                    self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.categoryList)
-                            .addParam(key: .data, value: data)
-                            .addParam(key: .type, value: CateBlock.ListType.video)
-                    )
-                }
-            }
-            .modifier(ContentHorizontalEdges())
-            if !self.datas.isEmpty {
-                VideoList(
-                    viewModel:self.viewModel,
-                    banners: self.data.leadingBanners,
-                    datas: self.datas,
-                    useTracking:self.useTracking
-                    )
-                    .modifier(MatchHorizontal(height: self.listHeight))
-                    .onReceive(self.viewModel.$event){evt in
-                        guard let evt = evt else {return}
-                        switch evt {
-                        case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
-                        case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
-                        default : do{}
+                .modifier(ContentHorizontalEdges())
+                if !self.datas.isEmpty {
+                    VideoList(
+                        viewModel:self.viewModel,
+                        banners: self.data.leadingBanners,
+                        datas: self.datas,
+                        useTracking:self.useTracking
+                        )
+                        .modifier(MatchHorizontal(height: self.listHeight))
+                        .onReceive(self.viewModel.$event){evt in
+                            guard let evt = evt else {return}
+                            switch evt {
+                            case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
+                            case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
+                            default : do{}
+                            }
                         }
-                    }
-                    .onReceive(self.viewModel.$pullPosition){ pos in
-                        self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
-                    }
-            } else{
-                VideoList(
-                    viewModel:self.viewModel,
-                    datas: [VideoData(),VideoData(),VideoData(),VideoData()] )
-                    .modifier(MatchHorizontal(height: self.listHeight))
-                    .opacity(0.5)
+                        .onReceive(self.viewModel.$pullPosition){ pos in
+                            self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
+                        }
+                } else{
+                    VideoList(
+                        viewModel:self.viewModel,
+                        datas: [VideoData(),VideoData(),VideoData(),VideoData()] )
+                        .modifier(MatchHorizontal(height: self.listHeight))
+                        .opacity(0.5)
+                }
             }
         }
         .frame( height:
@@ -78,6 +81,12 @@ struct VideoBlock:BlockProtocol, PageComponent {
                 dataProvider.requestData(q: apiQ)
             } else {
                 self.data.setRequestFail()
+            }
+        }
+        .onReceive(self.pageObservable.$layer ){ layer  in
+            switch layer {
+            case .bottom : self.isUiview = false
+            case .top, .below : self.isUiview = true
             }
         }
         .onReceive(dataProvider.$result) { res in

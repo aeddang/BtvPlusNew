@@ -49,6 +49,18 @@ struct BookMarkButton: PageView {
             guard let res = res else { return }
             guard let epsdId = self.data.epsdId else { return }
             if !res.id.hasPrefix(epsdId) { return }
+            
+            guard let result = res.data as? UpdateMetv else {
+                self.pageSceneObserver.event = .toast(String.alert.apiErrorServer)
+                self.isBusy = false
+                return
+            }
+            if result.result != ApiCode.success {
+                self.pageSceneObserver.event = .toast(result.reason ?? String.alert.apiErrorServer)
+                self.isBusy = false
+                return
+            }
+            
             switch res.type {
             case .postBookMark : self.added(res)
             case .deleteBookMark : self.deleted(res)

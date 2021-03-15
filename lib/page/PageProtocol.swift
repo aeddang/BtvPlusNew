@@ -72,8 +72,11 @@ enum PageStatus:String {
     disconnect ,
     resignActive  ,
     enterForeground ,
-    enterBackground ,
-    top,
+    enterBackground
+}
+
+enum PageLayer:String {
+    case top,
     below,
     bottom
 }
@@ -83,7 +86,8 @@ enum SceneOrientation :String{
 }
 
 open class PageObservable: ObservableObject  {
-    @Published var status:PageStatus = PageStatus.initate
+    @Published var status:PageStatus = .initate
+    @Published var layer:PageLayer = .top
     @Published var pageObject:PageObject?
     @Published var pagePosition:CGPoint = CGPoint()
     @Published var pageOpacity:Double = 1.0
@@ -123,8 +127,11 @@ open class SceneObserver: ObservableObject{
             self.screenSize = geometry.size
             willUpdate = true
         }
-        ComponentLog.d("resize " + self.screenSize.debugDescription, tag:"SceneObserver")
-        if willUpdate { self.isUpdated = true }
+        
+        if willUpdate {
+            self.isUpdated = true
+            ComponentLog.d("resize " + self.screenSize.debugDescription, tag:"SceneObserver")
+        }
     }
     var willSceneOrientation: SceneOrientation? {
         get{
@@ -173,6 +180,9 @@ protocol PageContentProtocol:PageProtocol {
     func onSceneWillResignActive()
     func onSceneWillEnterForeground()
     func onSceneDidEnterBackground()
+    func onPageTop()
+    func onPageBelow()
+    func onPageBottom()
     
     func initAnimationComplete()
     func removeAnimationStart()
@@ -181,6 +191,9 @@ protocol PageContentProtocol:PageProtocol {
     func sceneWillResignActive(_ scene: UIScene)
     func sceneWillEnterForeground(_ scene: UIScene)
     func sceneDidEnterBackground(_ scene: UIScene)
+    func pageTop()
+    func pageBelow()
+    func pageBottom()
     
     
   
@@ -205,6 +218,9 @@ extension PageContentProtocol {
     func onSceneDidEnterBackground(){}
     func onAppear(){}
     func onDisAppear(){}
+    func onPageTop(){}
+    func onPageBelow(){}
+    func onPageBottom(){}
     
     //super func
     @discardableResult
@@ -289,6 +305,24 @@ extension PageContentProtocol {
         pageObservable.status = .enterBackground
         pageObservable.isBackground = true
         onSceneDidEnterBackground()
+    }
+    func pageTop(){
+        if pageObservable.layer == .top {return}
+        childViews.forEach{ $0.pageTop() }
+        pageObservable.layer = .top
+        onPageTop()
+    }
+    func pageBelow(){
+        if pageObservable.layer == .below {return}
+        childViews.forEach{ $0.pageBelow() }
+        pageObservable.layer = .below
+        onPageBelow()
+    }
+    func pageBottom(){
+        if pageObservable.layer == .bottom {return}
+        childViews.forEach{ $0.pageBottom() }
+        pageObservable.layer = .bottom
+        onPageBottom()
     }
 }
 

@@ -27,6 +27,10 @@ extension Font{
         public static let medium =  "SKBtvMedium"
         public static let bold =  "SKBtvBold"
         public static let black =  "SKBtvBold"
+        
+        public static let robotoBold = "Roboto-Bold"
+        public static let robotoMedium = "Roboto-Medium"
+        public static let robotoLight = "Roboto-Light"
     }    
     
     struct size {

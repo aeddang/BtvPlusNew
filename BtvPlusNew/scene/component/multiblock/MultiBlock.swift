@@ -28,6 +28,7 @@ struct MultiBlock:PageComponent {
     var monthlyViewModel: InfinityScrollModel? = nil
     var monthlyDatas:[MonthlyData]? = nil
     var monthlyAllData:BlockItem? = nil
+    var useFooter:Bool = false
     var isRecycle = true
     var isLegacy:Bool = false
     var action: ((_ data:MonthlyData) -> Void)? = nil
@@ -40,7 +41,7 @@ struct MultiBlock:PageComponent {
                 axes: .vertical,
                 scrollType : .reload(isDragEnd: false),
                 marginTop : self.marginTop,
-                marginBottom : self.marginBottom + self.sceneObserver.safeAreaBottom,
+                marginBottom : self.marginBottom ,
                 spacing: 0,
                 isRecycle : self.isRecycle,
                 useTracking:self.useBodyTracking){
@@ -74,7 +75,11 @@ struct MultiBlock:PageComponent {
                     if self.headerSize > 1 {
                         VStack(spacing:Self.spacing){
                             ForEach(self.datas[..<min(self.headerSize, self.datas.count)]) { data in
-                                MultiBlockCell(pageDragingModel: self.pageDragingModel, data: data , useTracking: self.useTracking)
+                                MultiBlockCell(
+                                    pageObservable:self.pageObservable,
+                                    pageDragingModel: self.pageDragingModel,
+                                    data: data ,
+                                    useTracking: self.useTracking)
                                     .onAppear(){
                                         if data.index == self.datas.last?.index {
                                             self.viewModel.event = .bottom
@@ -82,10 +87,16 @@ struct MultiBlock:PageComponent {
                                     }
                             }
                         }
+                        
                         .modifier(ListRowInset(spacing: Self.spacing))
+                        
                         if self.datas.count > self.headerSize {
                             ForEach(self.datas[self.headerSize..<self.datas.count]) { data in
-                                MultiBlockCell(pageDragingModel: self.pageDragingModel, data: data , useTracking: self.useTracking)
+                                MultiBlockCell(
+                                    pageObservable:self.pageObservable,
+                                    pageDragingModel: self.pageDragingModel,
+                                    data: data ,
+                                    useTracking: self.useTracking)
                                     .modifier(ListRowInset(spacing: Self.spacing))
                                     .onAppear(){
                                         if data.index == self.datas.last?.index {
@@ -97,7 +108,11 @@ struct MultiBlock:PageComponent {
                         }
                     } else {
                         ForEach(self.datas) { data in
-                            MultiBlockCell(pageDragingModel: self.pageDragingModel, data: data , useTracking: self.useTracking)
+                            MultiBlockCell(
+                                pageObservable:self.pageObservable,
+                                pageDragingModel: self.pageDragingModel,
+                                data: data ,
+                                useTracking: self.useTracking)
                                 .modifier(ListRowInset(spacing: Self.spacing))
                                 .onAppear(){
                                     if data.index == self.datas.last?.index {
@@ -106,7 +121,13 @@ struct MultiBlock:PageComponent {
                                 }
                         }
                     }
+                    if self.useFooter {
+                        Footer()
+                            .modifier(ListRowInset(spacing: 0))
+                    }
                 }
+                
+               
             }
             
         } else {
@@ -156,18 +177,27 @@ struct MultiBlock:PageComponent {
                 
                 if !self.datas.isEmpty {
                     ForEach(self.datas) { data in
-                        MultiBlockCell(pageDragingModel: self.pageDragingModel, data: data , useTracking: false)
-                           .modifier(ListRowInset(spacing: Self.spacing))
+                        MultiBlockCell(
+                            pageObservable:self.pageObservable,
+                            pageDragingModel: self.pageDragingModel,
+                            data: data ,
+                            useTracking: self.useTracking)
+                            .modifier(ListRowInset(spacing: Self.spacing))
                             .onAppear(){
                                 if data.index == self.datas.last?.index  {
                                     self.viewModel.event = .bottom
                                 }
                             }
                     }
+                    if self.useFooter {
+                        Footer()
+                            .modifier(ListRowInset(spacing: 0))
+                    }
                 } else {
                     Spacer().modifier(MatchParent())
                         .modifier(ListRowInset(spacing: 0))
                 }
+               
             }
             
         }
@@ -175,6 +205,7 @@ struct MultiBlock:PageComponent {
     }
     
     struct MultiBlockCell:PageComponent {
+        var pageObservable:PageObservable
         var pageDragingModel:PageDragingModel = PageDragingModel()
         var data:BlockData
         var useTracking:Bool = false
@@ -182,30 +213,36 @@ struct MultiBlock:PageComponent {
             switch data.uiType {
             case .poster :
                 PosterBlock(
+                    pageObservable:self.pageObservable,
                     pageDragingModel:self.pageDragingModel,
                     data: data,
                     useTracking:self.useTracking
                     )
             case .video :
                 VideoBlock(
+                    pageObservable:self.pageObservable,
                     pageDragingModel:self.pageDragingModel,
                     data: data,
                     useTracking:self.useTracking
                     )
             case .theme :
                 ThemaBlock(
+                    pageObservable:self.pageObservable,
                     pageDragingModel:self.pageDragingModel,
                     data: data,
                     useTracking:self.useTracking
                     )
             case .ticket :
                 TicketBlock(
+                    pageObservable:self.pageObservable,
                     pageDragingModel:self.pageDragingModel,
                     data: data,
                     useTracking:self.useTracking
                     )
             case .banner :
-                BannerBlock(data: data)
+                BannerBlock(
+                    pageObservable:self.pageObservable,
+                    data: data)
             
             }
         }//body

@@ -12,7 +12,7 @@ import SwiftUI
 struct TopTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
-    @State var bgHeight:CGFloat = Dimen.app.pageTop
+    
     var body: some View {
         HStack(alignment: .bottom ,spacing:Dimen.margin.tiny){
             Button(action: {
@@ -72,15 +72,7 @@ struct TopTab: PageComponent{
             
         }
         .modifier(ContentHorizontalEdges())
-        .background(
-            Image(Asset.shape.bgGradientTop)
-                    .resizable()
-                .modifier(MatchHorizontal(height: Dimen.app.pageTop + self.bgHeight ))
-                .padding(.top, -self.bgHeight)
-            )
-        .onReceive(self.sceneObserver.$safeAreaTop) { hei in
-            self.bgHeight = hei * 2
-        }
+        
     }
 }
 

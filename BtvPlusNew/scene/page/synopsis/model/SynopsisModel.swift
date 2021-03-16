@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct SynopsisData {
+struct SynopsisData{
     var srisId:String? = nil
     var searchType:String? = nil
     var epsdId:String? = nil
@@ -16,7 +16,6 @@ struct SynopsisData {
     var prdPrcId:String? = nil
     var kidZone:String? = nil
 }
-
 
 
 class SynopsisModel : PageProtocol {

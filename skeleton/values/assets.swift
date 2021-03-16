@@ -167,6 +167,11 @@ extension Asset{
     struct source {
         public static let pairingTutorial = "pairingTutorialS"
         public static let myConnectIos = "imgMyConnectIos"
+        public static let bannerTopPairing = "imgBannerTopPairing"
+        public static let intro01 = "imgIosIntro01"
+        public static let intro02 = "imgIosIntro02"
+        public static let intro03 = "imgIosIntro03"
+        public static let empty = "imgMyEmpty01"
     }
     
     struct age {

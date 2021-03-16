@@ -16,3 +16,14 @@ struct ImageItem: PageComponent, Identifiable {
         ImageView(url:imagePath, contentMode: .fill)
     }
 }
+
+struct ResourceItem: PageComponent, Identifiable {
+    let id = UUID().uuidString
+    let asset: String
+    var body: some View {
+        Image(asset)
+            .renderingMode(.original)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+    }
+}

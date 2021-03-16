@@ -14,7 +14,7 @@ enum SceneUpdateType {
 }
 
 enum SceneEvent {
-    case initate, toast(String), update(SceneUpdateType), floatingBanner([BannerData]? = nil)
+    case initate, toast(String), update(SceneUpdateType), floatingBanner([BannerData]? = nil), headerBanner(BannerData? = nil)
 }
 
 class PageSceneObserver:ObservableObject{
@@ -22,6 +22,8 @@ class PageSceneObserver:ObservableObject{
     @Published var useTopFix:Bool? = nil
     @Published var useBottom = false
     @Published var isApiLoading = false
+    @Published var safeHeaderHeight:CGFloat = 0
+    @Published var headerHeight:CGFloat = 0
     
     @Published var loadingInfo:[String]? = nil
     @Published var alert:SceneAlert? = nil

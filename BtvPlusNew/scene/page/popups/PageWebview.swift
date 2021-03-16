@@ -44,15 +44,13 @@ struct PageWebview: PageView {
                             scrollType : .web(isDragEnd: true),
                             isRecycle:false,
                             useTracking:self.useTracking ){
-                            ZStack{
-                                BtvWebView( viewModel: self.webViewModel )
-                                    .modifier(MatchHorizontal(height: self.webViewHeight))
-                                    .onReceive(self.webViewModel.$screenHeight){height in
-                                        let min = geometry.size.height - self.sceneObserver.safeAreaTop - Dimen.app.top
-                                        self.webViewHeight = min //max( height, min)
-                                        ComponentLog.d("webViewHeight " + webViewHeight.description)
-                                    }
-                            }
+                            BtvWebView( viewModel: self.webViewModel )
+                                .modifier(MatchHorizontal(height: self.webViewHeight))
+                                .onReceive(self.webViewModel.$screenHeight){height in
+                                    let min = geometry.size.height - self.sceneObserver.safeAreaTop - Dimen.app.top
+                                    self.webViewHeight = min //max( height, min)
+                                    ComponentLog.d("webViewHeight " + webViewHeight.description)
+                                }
                         }
                         .padding(.bottom, self.sceneObserver.safeAreaBottom)
                         .modifier(MatchParent())
@@ -99,7 +97,20 @@ struct PageWebview: PageView {
                 default : do{}
                 }
             }
-            
+            .onReceive(self.webViewModel.$event){ evt in
+                guard let evt = evt else {return}
+                switch evt {
+                case .callFuncion(let method, _, _) :
+                    switch method {
+                    case WebviewMethod.bpn_closeWebView.rawValue :
+                        self.pagePresenter.goBack()
+                        break
+                    default : break
+                    }
+                    
+                default : do{}
+                }
+            }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
             }

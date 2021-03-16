@@ -171,6 +171,7 @@ extension String {
         public static var updateRegistAlram = "alertUpdateRegistAlram".loaalized()
         public static var updateUnregistAlram = "alertUpdateUnregistAlram".loaalized()
         public static var dragdown = "alertDragdown".loaalized()
+        public static var deleteWatch = "alertDeleteWatch".loaalized()
     }
     
     struct button {
@@ -203,6 +204,10 @@ extension String {
         public static let guide = "btnGuide".loaalized()
         public static let recieveAlram = "btnRecieveAlram".loaalized()
         public static let broadband = "btnBroadband".loaalized()
+        
+        public static let skip = "btnSkip".loaalized()
+        public static let appInit = "btnAppInit".loaalized()
+        public static let home = "btnHome".loaalized()
         
     }
     struct player {
@@ -284,8 +289,7 @@ extension String {
         public static let pairingBtvText4 = "pairingBtvText4".loaalized()
         public static let pairingBtvText5 = "pairingBtvText5".loaalized()
         
-        public static let myText1 = "myText1".loaalized()
-        public static let myText2 = "myText2".loaalized()
+      
         
         public static let setupApp = "setupApp".loaalized()
         public static let setupAppDataAlram = "setupAppDataAlram".loaalized()
@@ -329,6 +333,8 @@ extension String {
         public static let setupVersionLatest = "setupVersionLatest".loaalized()
         public static let setupOpensource = "setupOpensource".loaalized()
         
+        public static let myText1 = "myText1".loaalized()
+        public static let myText2 = "myText2".loaalized()
         public static let myPairing =  "myPairing".loaalized()
         
         public static let myPairingInfo = "myPairingInfo".loaalized()
@@ -338,6 +344,11 @@ extension String {
         public static let myinviteFammly = "myinviteFammly".loaalized()
         public static let myinviteFammlyText1 = "myinviteFammlyText1".loaalized()
         public static let myinviteFammlyText2 = "myinviteFammlyText2".loaalized()
+        
+        public static let myWatchedInfo = "myWatchedInfo".loaalized()
+        public static let myWatchedEmpty = "myWatchedEmpty".loaalized()
+        public static let myCollectedEmpty = "myCollectedEmpty".loaalized()
+        public static let myBookMarkedEmpty =  "myBookMarkedEmpty".loaalized()
         
         public static let synopsisOnlyBtvFree = "synopsisOnlyBtvFree".loaalized()
         public static let synopsisOnlyBtv = "synopsisOnlyBtv".loaalized()
@@ -362,7 +373,7 @@ extension String {
         public static let authText = "authText".loaalized()
         public static let authTextMic = "authTextMic".loaalized()
         public static let authTextLocation = "authTextLocation".loaalized()
-        public static let authBtn = "authBtn".loaalized()
+      
     }
     
 }

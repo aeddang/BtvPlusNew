@@ -124,7 +124,7 @@ struct SceneAlertController: PageComponent{
             case .serviceSelect(let text, _ , _) : self.setupServiceSelect(text: text)
             case .pairingCheckFail : self.setupPairingCheckFail()
             case .like(_, let isLike) : self.setupLike( isLike: isLike)
-            case .updateAlram(let id, let isAlram) : self.setupUpdateAlram( isAlram: isAlram)
+            case .updateAlram(_, let isAlram) : self.setupUpdateAlram( isAlram: isAlram)
             case .recivedApns:
                 let enable = self.setupRecivedApns()
                 if !enable { return }

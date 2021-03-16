@@ -82,6 +82,12 @@
 		3167197325FF27AA005AC3D2 /* WatchList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3167197225FF27AA005AC3D2 /* WatchList.swift */; };
 		3167197B25FF4159005AC3D2 /* PageWatchedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3167197A25FF4159005AC3D2 /* PageWatchedList.swift */; };
 		3167198425FF42A8005AC3D2 /* WatchedBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3167198325FF42A8005AC3D2 /* WatchedBlock.swift */; };
+		3167199B260039C8005AC3D2 /* HeaderBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3167199A260039C8005AC3D2 /* HeaderBanner.swift */; };
+		316719A02600642D005AC3D2 /* PageIntro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3167199F2600642D005AC3D2 /* PageIntro.swift */; };
+		316719A726008681005AC3D2 /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316719A626008680005AC3D2 /* Alerts.swift */; };
+		31671A052600930D005AC3D2 /* PagePerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31671A042600930D005AC3D2 /* PagePerson.swift */; };
+		31671A132600B379005AC3D2 /* SynopsisJson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31671A122600B379005AC3D2 /* SynopsisJson.swift */; };
+		31671A202600BB05005AC3D2 /* Pageㅖㄷㄱ내ㅜ.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31671A1F2600BB05005AC3D2 /* Pageㅖㄷㄱ내ㅜ.swift */; };
 		3167640F25CCBE79003A7721 /* PlayerGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3167640E25CCBE79003A7721 /* PlayerGuide.swift */; };
 		3167641A25CCC1C5003A7721 /* PlayViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3167641925CCC1C5003A7721 /* PlayViewer.swift */; };
 		3167641F25CCC80E003A7721 /* SynopsisPlayerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3167641E25CCC80E003A7721 /* SynopsisPlayerData.swift */; };
@@ -397,6 +403,12 @@
 		3167197225FF27AA005AC3D2 /* WatchList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchList.swift; sourceTree = "<group>"; };
 		3167197A25FF4159005AC3D2 /* PageWatchedList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageWatchedList.swift; sourceTree = "<group>"; };
 		3167198325FF42A8005AC3D2 /* WatchedBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchedBlock.swift; sourceTree = "<group>"; };
+		3167199A260039C8005AC3D2 /* HeaderBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderBanner.swift; sourceTree = "<group>"; };
+		3167199F2600642D005AC3D2 /* PageIntro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageIntro.swift; sourceTree = "<group>"; };
+		316719A626008680005AC3D2 /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
+		31671A042600930D005AC3D2 /* PagePerson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePerson.swift; sourceTree = "<group>"; };
+		31671A122600B379005AC3D2 /* SynopsisJson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisJson.swift; sourceTree = "<group>"; };
+		31671A1F2600BB05005AC3D2 /* Pageㅖㄷㄱ내ㅜ.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Pageㅖㄷㄱ내ㅜ.swift"; sourceTree = "<group>"; };
 		3167640E25CCBE79003A7721 /* PlayerGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerGuide.swift; sourceTree = "<group>"; };
 		3167641925CCC1C5003A7721 /* PlayViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayViewer.swift; sourceTree = "<group>"; };
 		3167641E25CCC80E003A7721 /* SynopsisPlayerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisPlayerData.swift; sourceTree = "<group>"; };
@@ -931,6 +943,7 @@
 			isa = PBXGroup;
 			children = (
 				3167196125FEED00005AC3D2 /* PageAuth.swift */,
+				3167199F2600642D005AC3D2 /* PageIntro.swift */,
 			);
 			path = intro;
 			sourceTree = "<group>";
@@ -941,13 +954,23 @@
 				318B53A025F1DA8E0052E4E0 /* TopBannerBg.swift */,
 				318C874C25E64AA400ADDFE0 /* TopBanner.swift */,
 				3167196725FEF6BE005AC3D2 /* FloatingBanner.swift */,
+				3167199A260039C8005AC3D2 /* HeaderBanner.swift */,
 			);
 			path = banner;
+			sourceTree = "<group>";
+		};
+		31671A112600B359005AC3D2 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				31671A122600B379005AC3D2 /* SynopsisJson.swift */,
+			);
+			path = model;
 			sourceTree = "<group>";
 		};
 		3167642525CD0A0C003A7721 /* webview */ = {
 			isa = PBXGroup;
 			children = (
+				31671A112600B359005AC3D2 /* model */,
 				31061E6525C8CF5800543FC0 /* BtvWebView.swift */,
 			);
 			path = webview;
@@ -1040,6 +1063,8 @@
 				3167197A25FF4159005AC3D2 /* PageWatchedList.swift */,
 				31EA9FC125F5D23B0059E19B /* PageFullPlayer.swift */,
 				3174067B25F763BD00201850 /* PageWebview.swift */,
+				31671A042600930D005AC3D2 /* PagePerson.swift */,
+				31671A1F2600BB05005AC3D2 /* Pageㅖㄷㄱ내ㅜ.swift */,
 			);
 			path = popups;
 			sourceTree = "<group>";
@@ -1635,6 +1660,7 @@
 				31E3974925B595FC00CE6E21 /* ShareButton.swift */,
 				312BB07325DCDCBB00AC03BC /* Tooltip.swift */,
 				318B537525F050CC0052E4E0 /* AlramButton.swift */,
+				316719A626008680005AC3D2 /* Alerts.swift */,
 			);
 			path = ui;
 			sourceTree = "<group>";
@@ -2058,6 +2084,7 @@
 				D573784A25A2983800EC571F /* CharacterSelectBox.swift in Sources */,
 				D56C6A4B257DA0C700CF9AB8 /* SwipperView.swift in Sources */,
 				314D589425B685B2007BCA34 /* PagePairingManagement.swift in Sources */,
+				31671A202600BB05005AC3D2 /* Pageㅖㄷㄱ내ㅜ.swift in Sources */,
 				3167196825FEF6BE005AC3D2 /* FloatingBanner.swift in Sources */,
 				D57178582582D87500BF2612 /* PageHome.swift in Sources */,
 				312BB09125DD102200AC03BC /* PurchaseWebviewModel.swift in Sources */,
@@ -2121,6 +2148,7 @@
 				318C875825E64C3200ADDFE0 /* BannerData.swift in Sources */,
 				D5688924259C29DE00F2F67A /* SpanText.swift in Sources */,
 				D506D732258CA3E300F27C00 /* ThemaList.swift in Sources */,
+				316719A02600642D005AC3D2 /* PageIntro.swift in Sources */,
 				D56C5FE825930060009AE769 /* BookMark.swift in Sources */,
 				D56C69A8257DA09E00CF9AB8 /* ImageLoader.swift in Sources */,
 				31E8D7C125CA85190034BBC4 /* PlayerOptionSelectBox.swift in Sources */,
@@ -2128,6 +2156,7 @@
 				D56C6A53257DA0C700CF9AB8 /* FillButton.swift in Sources */,
 				3163300325EF70B000581FA7 /* TextTabList.swift in Sources */,
 				D56C699F257DA09E00CF9AB8 /* PageDragingProtocol.swift in Sources */,
+				3167199B260039C8005AC3D2 /* HeaderBanner.swift in Sources */,
 				D56C6A44257DA0C700CF9AB8 /* TextStyle.swift in Sources */,
 				318C874D25E64AA400ADDFE0 /* TopBanner.swift in Sources */,
 				D56C6A23257DA0C600CF9AB8 /* util.swift in Sources */,
@@ -2166,6 +2195,7 @@
 				315B55D225A7E2DC00B5B351 /* Nps.swift in Sources */,
 				D56C6AFF257DAAC000CF9AB8 /* AppDelegate.swift in Sources */,
 				3159B05E25B17C14008CA85B /* StbInfo.swift in Sources */,
+				31671A052600930D005AC3D2 /* PagePerson.swift in Sources */,
 				315544C225B79FAA00086510 /* PageServiceError.swift in Sources */,
 				D5469F5725835231009CED2D /* Bands.swift in Sources */,
 				D56C6A24257DA0C600CF9AB8 /* strings.swift in Sources */,
@@ -2209,6 +2239,7 @@
 				31631C6525D2516E00E501F7 /* SynopsisPrerollData.swift in Sources */,
 				D56C6A50257DA0C700CF9AB8 /* Select.swift in Sources */,
 				D56C69AA257DA09E00CF9AB8 /* Network.swift in Sources */,
+				31671A132600B379005AC3D2 /* SynopsisJson.swift in Sources */,
 				318B537625F050CC0052E4E0 /* AlramButton.swift in Sources */,
 				D56C6A4D257DA0C700CF9AB8 /* ProgressSlider.swift in Sources */,
 				315A8FD425ADADD600498B03 /* GuestAgreementInfo.swift in Sources */,
@@ -2281,6 +2312,7 @@
 				31EA9FC225F5D23B0059E19B /* PageFullPlayer.swift in Sources */,
 				3185FE1925EF017A005074AA /* CateList.swift in Sources */,
 				D56C6B72257DBAE700CF9AB8 /* PageTest.swift in Sources */,
+				316719A726008681005AC3D2 /* Alerts.swift in Sources */,
 				31373F6425C7E726004353DA /* YTPlayerView.swift in Sources */,
 				D56C6A42257DA0C700CF9AB8 /* CustomToggleStyle.swift in Sources */,
 				D56C6A3E257DA0C700CF9AB8 /* CPPlayer.swift in Sources */,

@@ -81,6 +81,7 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
     private(set) var cancelPullDiff:CGFloat = 5
     private(set) var completePullDiff:CGFloat = 15
     private(set) var cancelPullRange:CGFloat = 40
+    private(set) var topRange:CGFloat = 80
     
     func setup(type: InfinityScrollType){
         switch type {
@@ -209,7 +210,7 @@ extension InfinityScrollViewProtocol {
             return
         }
         let diff = self.viewModel.prevPosition - pos
-        //ComponentLog.d("diff " + diff.description, tag: "InfinityScrollViewProtocol")
+        //ComponentLog.d("pos " + pos.description, tag: "InfinityScrollViewProtocol")
         if abs(diff) > 600 { return }
         if abs(diff) > self.viewModel.minDiff{
             self.viewModel.scrollPosition = pos
@@ -249,25 +250,21 @@ extension InfinityScrollViewProtocol {
         }
         
         
-        if pos >= -5 && pos < self.viewModel.cancelPullRange {
+        if pos >= -self.viewModel.topRange && pos < self.viewModel.cancelPullRange {
             if self.viewModel.scrollStatus == .pull {
                 ComponentLog.d("onPullCancel scroll", tag: "InfinityScrollViewProtocol")
                 self.onPullCancel()
                 self.viewModel.prevPosition = pos
             }
-            self.viewModel.scrollStatus = .scroll
             self.viewModel.minDiff = self.viewModel.updateScrollDiff
             onTop()
-            return
-        }
-        
-        if diff < 0 {
-            if pos >= 0 { return }
-            self.onUp()
-        }
-        else if diff > 0 {
-            if pos >= 0 { return }
-            self.onDown()
+        } else {
+            if diff < 0 {
+                self.onUp()
+            }
+            else if diff > 0 {
+                self.onDown()
+            }
         }
         self.viewModel.scrollStatus = .scroll
     }

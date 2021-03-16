@@ -69,6 +69,7 @@ struct MultiBlockBody: PageComponent {
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var useBodyTracking:Bool = false
     var useTracking:Bool = false
+    var marginHeader : CGFloat = 0
     var marginTop : CGFloat = 0
     var marginBottom : CGFloat = 0
     
@@ -97,14 +98,14 @@ struct MultiBlockBody: PageComponent {
                             TopBannerBg(
                                 viewModel:self.viewPagerModel,
                                 datas: self.topDatas! )
-                                .padding(.top, max(self.headerOffset, -TopBanner.imageHeight))
+                                .padding(.top, max(self.headerOffset, -TopBanner.imageHeight) + self.marginHeader)
                         }
                         
                         ReflashSpinner(
                             progress: self.$reloadDegree,
                             progressMax: self.reloadDegreeMax
                         )
-                        .padding(.top, self.topDatas != nil ? TopBanner.height  : self.marginTop )
+                        .padding(.top, self.topDatas != nil ? (TopBanner.height + self.marginHeader)  : self.marginTop)
                                  
                         MultiBlock(
                             viewModel: self.infinityScrollModel,
@@ -116,6 +117,7 @@ struct MultiBlockBody: PageComponent {
                             headerSize: self.viewModel.headerSize,
                             useBodyTracking:self.useBodyTracking,
                             useTracking:self.useTracking,
+                            marginHeader:self.marginHeader,
                             marginTop:self.marginTop,
                             marginBottom: self.marginBottom,
                             monthlyViewModel : self.monthlyViewModel,
@@ -132,7 +134,7 @@ struct MultiBlockBody: PageComponent {
                             progress: self.$reloadDegree,
                             progressMax: self.reloadDegreeMax
                         )
-                        .padding(.top, self.topDatas == nil ? self.marginTop : self.sceneObserver.safeAreaTop )
+                        .padding(.top, self.topDatas != nil ? (TopBanner.height + self.marginHeader)  : self.marginTop)
                         
                         
                         MultiBlock(
@@ -145,7 +147,8 @@ struct MultiBlockBody: PageComponent {
                             headerSize: self.viewModel.headerSize,
                             useBodyTracking:self.useBodyTracking,
                             useTracking:self.useTracking,
-                            marginTop: self.topDatas == nil ? self.marginTop : 0,
+                            marginHeader:self.marginHeader,
+                            marginTop: self.topDatas == nil ? self.marginTop : self.marginHeader,
                             marginBottom: self.marginBottom,
                             monthlyViewModel : self.monthlyViewModel,
                             monthlyDatas: self.monthlyDatas,
@@ -158,7 +161,6 @@ struct MultiBlockBody: PageComponent {
                     
                     }
                 }
-            
         }
        
         .onReceive(self.infinityScrollModel.$event){evt in

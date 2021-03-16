@@ -123,7 +123,7 @@ struct PagePairing: PageView {
             .onReceive(self.pairing.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
-                case .connected :
+                case .pairingCompleted :
                     self.pagePresenter.closePopup(self.pageObject?.id)
                 default : do{}
                 }

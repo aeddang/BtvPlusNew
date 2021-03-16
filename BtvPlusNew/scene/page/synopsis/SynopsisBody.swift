@@ -109,20 +109,8 @@ struct SynopsisBody: PageComponent{
                             .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
                             .frame(height:Dimen.tab.regular)
                             .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
-                        VStack(alignment: .center, spacing: 0){
-                            Spacer().modifier(MatchHorizontal(height:0))
-                            Image(Asset.icon.alert)
-                                .renderingMode(.original)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
-                                .padding(.top, Dimen.margin.medium)
-                            Text(String.pageText.synopsisNoRelationVod)
-                                .modifier(BoldTextStyle(size: Font.size.regular, color: Color.app.greyLight))
-                                .multilineTextAlignment(.center)
-                                .padding(.top, Dimen.margin.regularExtra)
-                        }
-                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
+                        EmptyAlert(text:String.pageText.synopsisNoRelationVod)
+                            .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
                     } else if self.relationTab.count == 1 {
                         Text(self.relationTab.first!)
                             .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
@@ -218,20 +206,9 @@ struct SynopsisBody: PageComponent{
                         Text(String.pageText.synopsisRelationVod)
                             .frame(height:Dimen.tab.regular)
                             .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
-                        VStack(alignment: .center, spacing: 0){
-                            Spacer().modifier(MatchHorizontal(height:0))
-                            Image(Asset.icon.alert)
-                                .renderingMode(.original)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
-                                .padding(.top, Dimen.margin.medium)
-                            Text(String.pageText.synopsisNoRelationVod)
-                                .modifier(BoldTextStyle(size: Font.size.regular, color: Color.app.greyLight))
-                                .multilineTextAlignment(.center)
-                                .padding(.top, Dimen.margin.regularExtra)
-                        }
-                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
+                        EmptyAlert(text:String.pageText.synopsisNoRelationVod)
+                            .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
+                        
                     } else if self.relationTab.count == 1 {
                         Text(self.relationTab.first!)
                             .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))

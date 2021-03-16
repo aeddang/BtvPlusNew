@@ -192,7 +192,7 @@ struct SwipperView : View , PageProtocol, Swipper {
             self.viewModel.status = .stop
             return
         }
-        
+        //if self.viewModel.index != idx && self.isForground { self.viewModel.index = idx }
         if self.viewModel.status == .stop { self.viewModel.status = .move }
         DispatchQueue.main.async {
             withAnimation(self.isForground ? Self.ani : Self.aniBg){

@@ -29,7 +29,8 @@ struct PageHome: PageView {
     
    
     @State var useTracking:Bool = false
-    
+    @State var headerHeight:CGFloat = 0
+    @State var marginHeader:CGFloat = 0
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -42,7 +43,8 @@ struct PageHome: PageView {
                 viewPagerModel:self.viewPagerModel,
                 useBodyTracking:self.useTracking,
                 useTracking:false,
-                marginTop:Dimen.app.top + self.sceneObserver.safeAreaTop,
+                marginHeader : self.marginHeader,
+                marginTop:self.headerHeight,
                 marginBottom: self.sceneObserver.safeAreaBottom,
                 topDatas: self.topDatas,
                 monthlyViewModel : self.monthlyViewModel,
@@ -73,6 +75,14 @@ struct PageHome: PageView {
                 case .down : self.pageSceneObserver.useTopFix = false
                 default : break
                 }
+            }
+        }
+        .onReceive(self.pageSceneObserver.$headerHeight){ hei in
+            self.headerHeight = hei
+        }
+        .onReceive(self.pageSceneObserver.$safeHeaderHeight){ hei in
+            withAnimation{
+                self.marginHeader = self.topDatas == nil ? 0 : self.pageSceneObserver.safeHeaderHeight
             }
         }
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in

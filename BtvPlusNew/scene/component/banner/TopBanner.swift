@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 import Combine
 extension TopBanner{
-    static let barWidth:CGFloat = 20
+    static let barWidth:CGFloat = Dimen.bar.medium
     static let imageHeight:CGFloat = 720
     static let height:CGFloat = 477
     static let barHeight = Dimen.line.medium

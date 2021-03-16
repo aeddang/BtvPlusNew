@@ -20,7 +20,17 @@ class WebManager :PageProtocol{
         self.setup = setup
         self.networkObserver = networkObserver
     }
-    
+    func getNetworkState()->[String: Any] {
+        var networkState:String = ""
+        switch (self.networkObserver.status) {
+        case .wifi: networkState = "WIFI"
+        case .cellular: networkState = "MOBILE"
+        default: networkState = "UNCONNECTED"
+        }
+        var info = [String: Any]()
+        info["networkState"] = networkState
+        return info
+    }
 
     func getSTBInfo()->[String: Any] {
         var info = [String: Any]()

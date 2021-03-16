@@ -247,7 +247,16 @@ struct PageSynopsis: PageView {
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
+                
+                
                 self.synopsisData = obj.getParamValue(key: .data) as? SynopsisData
+                if self.synopsisData == nil {
+                    if let json = obj.getParamValue(key: .data) as? SynopsisJson {
+                    self.synopsisData = SynopsisData(
+                        srisId: json.srisId, searchType:EuxpNetwork.SearchType.sris.rawValue, epsdId: json.epsdId,
+                        epsdRsluId: json.episodeResolutionId, prdPrcId: json.pid, kidZone: nil)
+                    }
+                }
                 self.initPage()
             }
             

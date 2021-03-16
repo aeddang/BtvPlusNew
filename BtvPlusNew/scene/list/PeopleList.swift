@@ -16,9 +16,12 @@ class PeopleData:InfinityData{
     private(set) var name: String? = nil
     private(set) var role:RoleType = .unknown
     private(set) var description: String? = nil
-    
-    func setData(data:PeoplesItem, idx:Int = -1) -> PeopleData {
+    private(set) var prsId: String? = nil
+    private(set) var epsdId: String? = nil
+    func setData(data:PeoplesItem, epsdId: String?, idx:Int = -1) -> PeopleData {
         name = data.prs_nm
+        prsId = data.prs_id
+        self.epsdId = epsdId
         role = RoleType.getType(data.prs_role_cd)
         switch role {
         case .director, .author, .step:
@@ -101,7 +104,11 @@ struct PeopleList: PageComponent{
             ForEach(self.datas) { data in
                 PeopleItem( data:data )
                 .onTapGesture {
-                   
+                    if data.epsdId == nil {return}
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.person)
+                            .addParam(key: .data, value: data)
+                    )
                 }
             }
         }

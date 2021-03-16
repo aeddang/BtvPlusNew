@@ -33,6 +33,7 @@ extension PageID{
     static let watchedList:PageID = "watchedList"
     static let fullPlayer:PageID = "fullPlayer"
     static let webview:PageID = "webview"
+    static let person:PageID = "person"
 }
 
 struct PageProvider {
@@ -144,6 +145,7 @@ struct PageFactory{
     static func getPage(_ pageObject:PageObject) -> PageViewProtocol{
         switch pageObject.pageID {
         case .auth : return PageAuth()
+        case .intro : return PageIntro()
         case .home : return PageHome()
         case .category : return PageCategory()
         case .serviceError : return PageServiceError()
@@ -163,6 +165,7 @@ struct PageFactory{
         case .previewList : return PagePreviewList()
         case .fullPlayer : return PageFullPlayer()
         case .webview : return PageWebview()
+        case .person : return PagePerson()
         default : return PageTest()
         }
     }

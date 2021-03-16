@@ -16,6 +16,7 @@ enum BannerType {
 
 class BannerData:InfinityData, PageProtocol{
     private(set) var image: String = Asset.noImgBanner
+    private(set) var resourceImage: String? = nil
     private(set) var logo: String? = nil
     private(set) var focus: String? = nil
     private(set) var title: String? = nil
@@ -27,6 +28,11 @@ class BannerData:InfinityData, PageProtocol{
     private(set) var moveData:[PageParam:Any]? = nil
     
     private(set) var type:BannerType = .list
+    func setPairing()->BannerData {
+        self.move = .pairing
+        self.resourceImage = Asset.source.bannerTopPairing
+        return self
+    }
     
     func setData(data:EventBannerItem, type: EuxpNetwork.BannerType = .list ,idx:Int = -1) -> BannerData {
         if let poster = data.bnr_off_img_path {

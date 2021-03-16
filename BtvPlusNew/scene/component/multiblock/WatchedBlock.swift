@@ -38,8 +38,6 @@ struct WatchedBlock: PageComponent{
      
     var key:String? = nil
     var useTracking:Bool = false
-    var marginTop : CGFloat = 0
-    var marginBottom : CGFloat = 0
     var spacing: CGFloat = Dimen.margin.medium
    
     var body: some View {
@@ -51,8 +49,6 @@ struct WatchedBlock: PageComponent{
                 WatchedList(
                     datas: self.datas,
                     useTracking:self.useTracking,
-                    marginTop:self.marginTop,
-                    marginBottom:self.marginBottom,
                     delete: { data in
                         self.delete(data:data)
                     },
@@ -157,11 +153,14 @@ struct WatchedBlock: PageComponent{
         guard  let sridId = data.srisId else {
             return
         }
-        self.currentDeleteId = sridId
-        self.viewModel.request = .init(
-            id: sridId ,
-            type: .deleteWatch([sridId], false)
-        )
+        self.pageSceneObserver.alert = .confirm(nil,  String.alert.deleteWatch){ isOk in
+            if !isOk {return}
+            self.currentDeleteId = sridId
+            self.viewModel.request = .init(
+                id: sridId ,
+                type: .deleteWatch([sridId], false)
+            )
+        }
     }
     
     func deleted(_ res:ApiResultResponds){

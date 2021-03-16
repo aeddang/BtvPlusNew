@@ -32,10 +32,6 @@ struct AppLayout: PageComponent{
     var body: some View {
         ZStack{
             SceneTab()
-            SceneRadioController()
-            SceneSelectController()
-            ScenePickerController()
-            SceneAlertController()
             if let datas = self.floatBannerDatas {
                 FloatingBanner(datas:datas){ today in
                     if today {self.floatingBannerToDayUnvisible()}
@@ -44,6 +40,11 @@ struct AppLayout: PageComponent{
                     }
                 }
             }
+            SceneRadioController()
+            SceneSelectController()
+            ScenePickerController()
+            SceneAlertController()
+            
             if self.isLoading {
                 Spacer().modifier(MatchParent()).background(Color.transparent.black70)
                 if self.loadingInfo != nil {
@@ -128,13 +129,10 @@ struct AppLayout: PageComponent{
         .onAppear(){
             self.isLoading = true
             //UITableView.appearance().separatorStyle = .none
-            
             for family in UIFont.familyNames.sorted() {
                 let names = UIFont.fontNames(forFamilyName: family)
                 PageLog.d("Family: \(family) Font names: \(names)")
             }
-            
-    
         }
     }
     func onStoreInit(){
@@ -166,6 +164,7 @@ struct AppLayout: PageComponent{
     
     func onFloatingBannerView(datas:[BannerData]?) {
         guard let datas = datas else {
+            if floatBannerDatas == nil {return}
             withAnimation{ floatBannerDatas = nil }
             return
         }

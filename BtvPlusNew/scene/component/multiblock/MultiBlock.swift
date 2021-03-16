@@ -23,6 +23,7 @@ struct MultiBlock:PageComponent {
     var headerSize:Int = 0
     var useBodyTracking:Bool = false
     var useTracking:Bool = false
+    var marginHeader : CGFloat = 0
     var marginTop : CGFloat = 0
     var marginBottom : CGFloat = 0
     var monthlyViewModel: InfinityScrollModel? = nil
@@ -54,7 +55,9 @@ struct MultiBlock:PageComponent {
                         datas: self.topDatas! )
                         .modifier(MatchHorizontal(height: TopBanner.imageHeight
                                                 - self.marginTop
-                                                - TopBanner.maginBottomLogo ))
+                                                - TopBanner.maginBottomLogo
+                                                + self.marginHeader
+                        ))
                     .modifier(ListRowInset(spacing: Self.spacing * 2))
                 }
                 
@@ -157,6 +160,7 @@ struct MultiBlock:PageComponent {
                         }
                         .modifier(MatchHorizontal(height: TopBanner.height))
                         .clipped()
+                        .padding(.top, self.marginHeader)
                        
                     } else if self.monthlyDatas != nil {
                         MonthlyBlock(

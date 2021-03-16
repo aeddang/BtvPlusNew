@@ -78,6 +78,11 @@ struct Dimen{
         public static let thin:CGFloat = 2//*
     }
     
+    struct bar {
+        public static let medium:CGFloat = 20//*
+        public static let regular:CGFloat = 7 //*
+    }
+    
     struct line {
         public static let heavy:CGFloat = 10
         public static let medium:CGFloat = 3 //*

@@ -66,6 +66,9 @@ struct WatchedList: PageComponent{
             isRecycle: true,
             useTracking: self.useTracking
         ){
+            
+            InfoAlert(text: String.pageText.myWatchedInfo)
+                .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.thin))
             ForEach(self.datas) { data in
                 WatchedItem( data:data , delete:self.delete)
                     .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.thin))

@@ -16,7 +16,7 @@ class SummaryViewerData {
     func setData(data:SynopsisContentsItem) -> SummaryViewerData {
         self.summry = data.epsd_snss_cts
         self.peoples = data.peoples?.map {
-            PeopleData().setData(data: $0)
+            PeopleData().setData(data: $0, epsdId: data.epsd_id)
         }
         return self
     }

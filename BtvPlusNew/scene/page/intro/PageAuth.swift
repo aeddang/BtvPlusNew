@@ -74,13 +74,14 @@ struct PageAuth: PageView {
                 .modifier(ContentHorizontalEdges())
             Spacer()
             FillButton(
-                text: String.pageText.authBtn,
+                text: String.button.appInit,
                 isSelected: true
             ){_ in
-                
-                self.pageSceneObserver.event = .initate
+                self.pagePresenter.changePage(
+                    PageProvider.getPageObject(.intro)
+                )
+                //self.pageSceneObserver.event = .initate
             }
-            .padding(.bottom, self.sceneObserver.safeAreaBottom)
         }
         .padding(.vertical, Dimen.margin.regular)
         .modifier(PageFull())

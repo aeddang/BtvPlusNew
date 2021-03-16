@@ -10,15 +10,8 @@ import Foundation
 import SwiftUI
 import Combine
 
-extension FloatingBanner{
-    static let barWidth:CGFloat = 7
-    static let barHeight:CGFloat = Dimen.line.regular
-}
-
-
 struct FloatingBanner: PageComponent {
-   
-    var viewModel:ViewPagerModel = ViewPagerModel()
+    @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
     var datas: [BannerData]
     @State var pages: [PageViewProtocol] = []
     @State var index: Int = 0
@@ -57,13 +50,13 @@ struct FloatingBanner: PageComponent {
                                     .modifier(MatchVertical(width:self.leading))
                                     .background(Color.transparent.white20)
                                 Spacer()
-                                    .modifier(MatchVertical(width: TopBanner.barWidth))
+                                    .modifier(MatchVertical(width: Dimen.bar.regular))
                                     .background(Color.app.white)
                                 Spacer()
                                     .modifier(MatchVertical(width:self.trailing))
                                     .background(Color.transparent.white20)
                             }
-                            .frame( height: Self.barHeight)
+                            .frame( height: Dimen.line.regular)
                             .padding(.horizontal, Dimen.margin.tiny)
                             Text((self.pages.count).description.toFixLength(2))
                                 .modifier(NumberMediumTextStyle(size: Font.size.lightExtra, color: Color.app.greyLight))
@@ -99,6 +92,7 @@ struct FloatingBanner: PageComponent {
                 .background(Color.app.white)
             }
             .frame(width: 300, height: 430)
+            .background(Color.brand.bg)
             .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.medium))
         }
         .modifier(MatchParent())
@@ -116,7 +110,7 @@ struct FloatingBanner: PageComponent {
     private func setBar(idx:Int){
         let count = self.datas.count
         let minSize:CGFloat = 150.0 / CGFloat(count)
-        let size = min(TopBanner.barWidth, minSize)
+        let size = min(Dimen.bar.regular, minSize)
         withAnimation{
             self.leading = size * CGFloat(idx)
             self.trailing = size * CGFloat(max(0,(count - idx - 1)))

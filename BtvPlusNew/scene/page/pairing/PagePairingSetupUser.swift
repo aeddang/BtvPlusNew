@@ -291,7 +291,8 @@ struct PagePairingSetupUser: PageView {
             nickName: self.nickName, characterIdx: self.characterIdx, gender: self.gender, birth: self.birth,
             isAgree1: self.isAgree1, isAgree2: self.isAgree2, isAgree3: self.isAgree3
         )
-        self.pagePresenter.goBack()
+        //self.pagePresenter.goBack()
+        self.pagePresenter.closePopup(self.pageObject?.id)
         switch self.pairingType {
         case .btv :
             self.pagePresenter.openPopup(

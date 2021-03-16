@@ -14,6 +14,7 @@ struct SceneTab: PageComponent{
     @EnvironmentObject var appObserver:AppObserver
     @EnvironmentObject var sceneObserver:SceneObserver
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var pairing:Pairing
     @State var positionTop:CGFloat = -Dimen.app.top
     @State var positionBottom:CGFloat = -Dimen.app.bottom
     @State var positionLoading:CGFloat = -Dimen.app.bottom
@@ -25,17 +26,37 @@ struct SceneTab: PageComponent{
     
     @State var useBottom:Bool = false
     @State var useTop:Bool = false
+    @State var headerHeight:CGFloat = 0
+    @State var headerBgHeight:CGFloat = 0
+    @State var headerBgTop:CGFloat = 0
+    
+    @State var headerBannerData:BannerData? = nil
     var body: some View {
         GeometryReader { geometry in
             ZStack{
-                TopTab()
-                    .modifier(
-                        LayoutTop(
-                            geometry: geometry,
-                            height:Dimen.app.top + self.safeAreaTop,
-                            margin: self.positionTop)
-                    )
-                    .opacity(self.useTop ? 1 : 0)
+                ZStack{
+                    Image(Asset.shape.bgGradientTop)
+                        .resizable()
+                        .modifier(MatchHorizontal(height: self.headerBgHeight))
+                        .padding(.top, self.headerBgTop )
+                    
+                    VStack(spacing:0){
+                        if let bannerData = self.headerBannerData {
+                            HeaderBanner(data:bannerData) {
+                                self.headerBannerData = nil
+                                self.updateTopPos()
+                            }
+                        }
+                        TopTab()
+                    }
+                }
+                .modifier(
+                    LayoutTop(
+                        geometry: geometry,
+                        height: self.headerHeight,
+                        margin: self.positionTop)
+                )
+                .opacity(self.useTop ? 1 : 0)
                 
                 BottomTab()
                     .modifier(
@@ -86,6 +107,30 @@ struct SceneTab: PageComponent{
                     self.updateBottomPos()
                 }
             }
+            .onReceive (self.pairing.$status){ stat in
+                switch stat {
+                case .pairing :
+                    if self.headerBannerData != nil {
+                        self.headerBannerData = nil
+                        self.updateTopPos()
+                    }
+                case .disConnect :
+                    if self.headerBannerData == nil {
+                        self.headerBannerData = BannerData().setPairing()
+                        self.updateTopPos()
+                    }
+                default : break
+                }
+            }
+            .onReceive(self.pageSceneObserver.$event){ evt in
+                guard let evt = evt else { return }
+                switch evt  {
+                case .headerBanner(let data):
+                    self.headerBannerData = data
+                    self.updateTopPos()
+                default: break
+                }
+            }
             .onReceive (self.pageSceneObserver.$useTopFix) { use in
                 guard let use = use else {return}
                 self.pageSceneObserver.useTop = use
@@ -106,12 +151,28 @@ struct SceneTab: PageComponent{
         }//geometry
     }
     func updateTopPos(){
+        var headerHeight = self.headerBannerData == nil ? 0 : HeaderBanner.height
+        headerHeight = headerHeight + self.safeAreaTop + Dimen.app.top
+        
+        let top = self.pageSceneObserver.useTop
+            ? 0
+            : -headerHeight
+        
+        self.pageSceneObserver.headerHeight = headerHeight
+        self.pageSceneObserver.safeHeaderHeight = self.headerBannerData == nil
+            ? 0
+            : self.safeAreaTop + HeaderBanner.height
+        
         withAnimation{
-            withAnimation{
-                self.positionTop = self.pageSceneObserver.useTop
-                    ? 0
-                    : -(Dimen.app.top+self.safeAreaTop)
-            }
+            self.positionTop = top
+            self.headerHeight = headerHeight
+            self.headerBgHeight = self.headerBannerData == nil
+                ? self.safeAreaTop + Dimen.app.top
+                : Dimen.app.top
+            self.headerBgTop = self.headerBannerData == nil
+                ? -self.safeAreaTop
+                : Dimen.app.top
+            
         }
     }
     func updateBottomPos(){

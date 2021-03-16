@@ -12,7 +12,7 @@ import WebKit
 import Combine
 
 enum WebviewMethod:String {
-    case getSTBInfo
+    case getSTBInfo, getNetworkState
     case bpn_showSynopsis,
          bpn_backWebView, bpn_closeWebView, bpn_showModalWebView,
          bpn_setShowModalWebViewResult,bpn_setIdentityVerfResult, bpn_setPurchaseResult,
@@ -28,7 +28,7 @@ enum WebviewMethod:String {
 extension BtvWebView {
     static let identity = "/view/v3.0/identityverification"
     static let purchase = "/view/v3.0/purchase/list"
-    
+    static let person = "/view/v3.0/synopsis/person"
     static let callJsPrefix = "javascript:"
 }
 
@@ -61,6 +61,8 @@ struct BtvWebView: PageComponent {
 }
 
 struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
+    @EnvironmentObject var repository:Repository
+    @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @ObservedObject var viewModel:WebViewModel
     var path: String = ""
@@ -164,7 +166,6 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             uiView.loadHTMLString(html, baseURL: nil)
             return
         case .evaluateJavaScript(let jsStr):
-            ComponentLog.d("update " + jsStr, tag: "callJS")
             self.callJS(uiView, jsStr: jsStr)
             return
         case .back:
@@ -193,6 +194,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
     
     
     class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, PageProtocol {
+        
         var parent: BtvCustomWebView
         init(_ parent: BtvCustomWebView) {
             self.parent = parent
@@ -251,7 +253,35 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                         ComponentLog.d("query " + (query ?? ""), tag: self.tag)
                         ComponentLog.d("jsonParam " + (jsonParam ?? ""), tag: self.tag)
                         ComponentLog.d("cbName " + (cbName ?? ""), tag: self.tag)
-                        self.parent.viewModel.event = .callFuncion(fn, jsonParam, cbName )
+                        var dic:[String: Any]? = nil
+                        switch fn {
+                        case WebviewMethod.getNetworkState.rawValue :
+                            dic = self.parent.repository.webManager.getNetworkState()
+                        case WebviewMethod.getSTBInfo.rawValue :
+                            dic = self.parent.repository.webManager.getSTBInfo()
+                        
+                        case WebviewMethod.bpn_showSynopsis.rawValue :
+                            if let jsonString = jsonParam {
+                                let jsonData = jsonString.data(using: .utf8)!
+                                do {
+                                    let data = try JSONDecoder().decode(SynopsisJson.self, from: jsonData)
+                                    self.parent.pagePresenter.openPopup(
+                                        PageProvider.getPageObject(.synopsis)
+                                            .addParam(key: .data, value: data)
+                                    )
+                                } catch {
+                                    ComponentLog.e("json parse error", tag:"WebviewMethod.bpn_showSynopsis")
+                                }
+                            }
+                         
+                        default :
+                            self.parent.viewModel.event = .callFuncion(fn, jsonParam, cbName )
+                        }
+                        if let dic = dic, let cb = cbName, !cb.isEmpty {
+                            let jsonString = AppUtil.getJsonString(dic: dic) ?? ""
+                            let js = BtvWebView.callJsPrefix + cb + "(\'" + jsonString + "\')"
+                            self.parent.viewModel.request = .evaluateJavaScript(js)
+                        }
                     }
                 }
                 decisionHandler(.cancel, preferences)

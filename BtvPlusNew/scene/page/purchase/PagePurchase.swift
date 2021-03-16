@@ -106,6 +106,7 @@ struct PagePurchase: PageView {
                 switch evt {
                 case .callFuncion(let method, let json, let cbName) :
                     switch method {
+                    /*
                     case WebviewMethod.getSTBInfo.rawValue :
                         guard let cb = cbName else { return }
                         if cb.isEmpty { return }
@@ -113,7 +114,7 @@ struct PagePurchase: PageView {
                         let jsonString = AppUtil.getJsonString(dic: dic) ?? ""
                         let js = BtvWebView.callJsPrefix + cb + "(\'" + jsonString + "\')"
                         self.webViewModel.request = .evaluateJavaScript(js)
-                        
+                    */
                     case WebviewMethod.bpn_setPurchaseResult.rawValue :
                         guard let json = json else { return }
                         guard let param = AppUtil.getJsonParam(jsonString: json) else { return }

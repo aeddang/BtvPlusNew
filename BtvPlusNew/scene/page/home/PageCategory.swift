@@ -18,7 +18,7 @@ struct PageCategory: PageView {
     @ObservedObject var viewModel:PageDataProviderModel = PageDataProviderModel()
     
     let listWidth:CGFloat = (ListItem.cate.size.width * CGFloat(CateList.cellCount)) + CateList.magin
-    
+    @State var headerHeight:CGFloat = 0
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -29,7 +29,7 @@ struct PageCategory: PageView {
                     Spacer().modifier(MatchParent())
                 } else {
                     CateList( datas: self.datas)
-                        .padding(.top, Dimen.app.top + self.sceneObserver.safeAreaTop)
+                        .padding(.top, self.headerHeight)
                         .modifier(MatchVertical(width: self.listWidth))
                 }
                 
@@ -85,6 +85,9 @@ struct PageCategory: PageView {
             .padding(.bottom, Dimen.app.bottom + self.sceneObserver.safeAreaBottom)
         }
         .modifier(PageFull())
+        .onReceive(self.pageSceneObserver.$headerHeight){ hei in
+            self.headerHeight = hei
+        }
         .onReceive(self.viewModel.$event ){ evt in
             guard let evt = evt else {return}
             switch evt {

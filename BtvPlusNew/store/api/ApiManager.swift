@@ -42,7 +42,7 @@ class ApiManager :PageProtocol, ObservableObject{
         if self.status == .initate {return}
         self.euxp.clear()
         self.metv.clear()
-        self.nps.clear()
+        //self.nps.clear()
         self.kms.clear()
         self.smd.clear()
         self.pss.clear()

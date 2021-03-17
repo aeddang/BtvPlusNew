@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 struct ImageViewButton: PageView{
-    @Binding var isSelected: Bool
+    var isSelected: Bool
     var defaultImage:String? = Asset.noImg1_1
     var activeImage:String? = Asset.noImg1_1
     var size:CGSize = CGSize(width: Dimen.icon.light, height: Dimen.icon.light)
@@ -25,10 +25,10 @@ struct ImageViewButton: PageView{
         }) {
             VStack(spacing:Dimen.margin.tiny){
                 if !self.isSelected {
-                    DynamicImageView(url: self.activeImage, noImg: noImg)
+                    ImageView(url: self.activeImage, noImg: noImg)
                         .frame(width: size.width, height: size.height)
                 }else{
-                    DynamicImageView(url: self.defaultImage)
+                    ImageView(url: self.defaultImage)
                         .frame(width: size.width, height: size.height)
                 }
                 
@@ -50,7 +50,7 @@ struct ImageViewButton_Previews: PreviewProvider {
     
     static var previews: some View {
         Form{
-            ImageViewButton(isSelected: .constant(true)){
+            ImageViewButton(isSelected: true){
                 
             }
             .frame( alignment: .center)

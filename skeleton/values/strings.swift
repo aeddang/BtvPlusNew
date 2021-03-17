@@ -59,6 +59,8 @@ extension String {
         public static let select = "select".loaalized()
         public static let todayUnvisible = "todayUnvisible".loaalized()
         public static let watch = "watch".loaalized()
+        public static let watchAble = "watchAble".loaalized()
+        public static let cast = "cast".loaalized()
     }
     
     struct week {
@@ -180,6 +182,7 @@ extension String {
         public static var share = "btnShare".loaalized()
         public static var more = "btnMore".loaalized()
         public static var all = "btnAll".loaalized()
+        public static var detail = "btnDetail".loaalized()
         public static var delete = "btnDelete".loaalized()
         public static let view = "btnView".loaalized()
         public static let connect = "btnConnect".loaalized()
@@ -367,7 +370,7 @@ extension String {
         public static let synopsisDDay = "synopsisDDay".loaalized()
         public static let synopsisRelationVod = "synopsisRelationVod".loaalized()
         public static let synopsisNoRelationVod = "synopsisNoRelationVod".loaalized()
-        
+        public static let synopsisPackageContent = "synopsisPackageContent".loaalized()
         
         public static let authTitle = "authTitle".loaalized()
         public static let authText = "authText".loaalized()

@@ -221,6 +221,29 @@ class Metv: Rest{
         params["ppv_products"] = data.ppvProducts
         fetch(route: MetvDirectview( body: params), completion: completion, error:error)
     }
+    
+    /**
+    * 게이트웨이시놉 바로보기 (IF-ME-062)
+    * @param reqPidList 바로보기 확인용 상품ID 리스트 집합
+    * @param isPPM 월정액 전용 게이트웨이 시놉 바로보기 확인여부 체크(Y/N)
+    */
+    func getPackageDirectView(
+        data:SynopsisPackageModel, isPpm:Bool = false ,
+        completion: @escaping (DirectPackageView) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        
+        var params = [String:Any]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["ver"] = MetvNetwork.VERSION
+        params["IF"] = "IF-ME-062"
+        
+        params["stb_id"] = stbId
+        params["hash_id"] = ApiUtil.getHashId(stbId)
+        params["req_pidList"] = [ data.prdPrcId ?? "" ]
+        params["yn_ppm"] = isPpm ? "Y": "N"
+        fetch(route: MetvPackageDirectview( body: params), completion: completion, error:error)
+    }
 }
 struct MetvMonthly:NetworkRoute{
     var method: HTTPMethod = .get
@@ -264,6 +287,12 @@ struct MetvDelBookMark:NetworkRoute{
 struct MetvDirectview:NetworkRoute{
    var method: HTTPMethod = .post
    var path: String = "/metv/v5/datamart/directview/mobilebtv"
+   var body: [String : Any]? = nil
+}
+
+struct MetvPackageDirectview:NetworkRoute{
+   var method: HTTPMethod = .post
+   var path: String = "/metv/v5/datamart/directviewgateway/mobilebtv"
    var body: [String : Any]? = nil
 }
 

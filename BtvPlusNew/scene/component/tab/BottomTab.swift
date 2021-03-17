@@ -29,7 +29,7 @@ struct BottomTab: PageComponent{
             HStack( alignment: .center, spacing:0 ){
                 ForEach(self.pages, id: \.key) {band in
                     ImageViewButton(
-                        isSelected:Binding<Bool>(get: { self.checkCategory(pageID: band.id, menuId: band.menuId) }, set: { _ in }),
+                        isSelected:self.checkCategory(pageID: band.id, menuId: band.menuId),
                         defaultImage: band.off,
                         activeImage:band.on,
                         text: band.text

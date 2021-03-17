@@ -15,6 +15,7 @@ class VideoData:InfinityData{
     private(set) var count: String = "0"
     private(set) var type:VideoType = .nomal
     private(set) var progress:Float? = nil
+    private(set) var synopsisType:SynopsisType = .title
     private(set) var synopsisData:SynopsisData? = nil
     private(set) var epsdId:String? = nil
     private(set) var isInside:Bool = false
@@ -26,10 +27,26 @@ class VideoData:InfinityData{
             image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
         }
         index = idx
-        
+        synopsisType = SynopsisType(value: data.synon_typ_cd)
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
             epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: data.prd_prc_id ,kidZone:data.kids_yn)
+        
+        return self
+    }
+    
+    func setData(data:PackageContentsItem, prdPrcId:String, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> VideoData {
+        setCardType(cardType)
+        title = data.title
+        synopsisType = SynopsisType(value: data.synon_typ_cd)
+        if let poster = data.poster_filename_v {
+            image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
+        }
+        index = idx
+        epsdId = data.epsd_id
+        synopsisData = .init(
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: prdPrcId , kidZone:nil)
         
         return self
     }
@@ -69,6 +86,7 @@ class VideoData:InfinityData{
             image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
         }
         self.title = title
+        
         if let count = data.brcast_tseq_nm {
             self.title = count + String.app.broCount + " " + (self.title ?? "")
         }
@@ -159,7 +177,7 @@ struct VideoList: PageComponent{
                             action(data)
                         }else{
                             self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(.synopsis)
+                                PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
                                     .addParam(key: .data, value: data.synopsisData)
                             )
                         }
@@ -175,7 +193,7 @@ struct VideoList: PageComponent{
                             action(data)
                         }else{
                             self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(.synopsis)
+                                PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
                                     .addParam(key: .data, value: data.synopsisData)
                             )
                         }
@@ -229,7 +247,7 @@ struct VideoSet: PageComponent{
                     VideoItem( data:data )
                     .onTapGesture {
                         self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.synopsis)
+                            PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
                                 .addParam(key: .data, value: data.synopsisData)
                         )
                     }

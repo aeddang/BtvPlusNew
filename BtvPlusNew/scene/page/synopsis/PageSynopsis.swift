@@ -224,6 +224,7 @@ struct PageSynopsis: PageView {
                         ComponentLog.d("isFinalPlaying resume" , tag: "BtvPlayer")
                     }
                 }
+                self.useTracking = page?.id == self.pageObject?.id
             }
             .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
                 self.isFullScreen = fullScreen
@@ -241,9 +242,6 @@ struct PageSynopsis: PageView {
                     self.isPageUiReady = true
                     self.initPage()
                 }
-            }
-            .onReceive(self.pagePresenter.$currentTopPage){ page in
-                self.useTracking = page?.id == self.pageObject?.id
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
@@ -366,10 +364,7 @@ struct PageSynopsis: PageView {
                 self.errorProgress()
                 return
             }
-            self.pageDataProviderModel.requestProgress( qs: [
-                .init(type: .getGatewaySynopsis(data)),
-                .init(type: .getSynopsis(data))
-            ])
+            self.pageDataProviderModel.requestProgress( q: .init(type: .getSynopsis(data)))
         
         case 1 :
             guard let model = self.synopsisModel else {return}
@@ -391,7 +386,7 @@ struct PageSynopsis: PageView {
                     self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(item.epsd_rslu_id,  false )))
                 } else {
                     PageLog.d("no preview", tag: self.tag)
-                    
+                    self.errorProgress()
                 }
                 self.progressCompleted = true
             }
@@ -409,6 +404,7 @@ struct PageSynopsis: PageView {
                     self.pageDataProviderModel.requestProgress(q: .init(type: .getPreview(item.epsd_rslu_id,  self.pairing.hostDevice )))
                 } else {
                     PageLog.d("no preview", tag: self.tag)
+                    self.errorProgress()
                 }
             }
             else {
@@ -427,24 +423,12 @@ struct PageSynopsis: PageView {
         self.progressError = false
         switch progress {
         case 0 :
-            switch count {
-            case 0 :
-                guard let data = res.data as? GatewaySynopsis else {
-                    self.progressError = true
-                    return
-                }
-                self.setupGatewaySynopsis(data)
-                
-            case 1 :
-                guard let data = res.data as? Synopsis else {
-                    PageLog.d("error Synopsis", tag: self.tag)
-                    self.progressError = true
-                    return
-                }
-                self.setupSynopsis(data)
-                
-            default : do{}
+            guard let data = res.data as? Synopsis else {
+                PageLog.d("error Synopsis", tag: self.tag)
+                self.progressError = true
+                return
             }
+            self.setupSynopsis(data)
             
         case 1 :
             if self.isPairing == true {

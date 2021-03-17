@@ -59,6 +59,9 @@
 "select" = "선택";
 "todayUnvisible" = "오늘 하루 보지 않기";
 "watch" = "시청";
+"watchAble" = "시청가능";
+"cast" = "출연";
+
 /*
   Button
 */
@@ -67,6 +70,7 @@
 "btnShare" = "공유하기";
 "btnMore" = "더 보기";
 "btnAll" = "전체보기";
+"btnDetail" = "상세보기";
 "btnView" = "보기";
 "btnDelete" = "지우기";
 "btnConnect" = "연결하기";
@@ -355,6 +359,7 @@
 "synopsisSiris" = "회차";
 "synopsisSirisView" = "회차 보기";
 "synopsisDDay" = "편성 종료 D-";
+"synopsisPackageContent" = "구성 콘텐츠";
 
 /*
  PageAuth

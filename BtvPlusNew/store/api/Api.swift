@@ -65,7 +65,8 @@ enum ApiType{
          getBookMark(Int? = nil , Int? = nil),
          postBookMark(SynopsisData),
          deleteBookMark(SynopsisData),
-         getDirectView(SynopsisModel)
+         getDirectView(SynopsisModel),
+         getPackageDirectView(SynopsisPackageModel, Bool = false)
     
     //NPS
     case registHello,

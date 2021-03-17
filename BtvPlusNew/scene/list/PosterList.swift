@@ -12,6 +12,9 @@ class PosterData:InfinityData{
     private(set) var image: String? = nil
     private(set) var title: String? = nil
     private(set) var subTitle: String? = nil
+    private(set) var epsdId:String? = nil
+    private(set) var synopsisType:SynopsisType = .title
+    
     private(set) var type:PosterType = .small
     private(set) var synopsisData:SynopsisData? = nil
     
@@ -22,6 +25,8 @@ class PosterData:InfinityData{
             image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
         }
         index = idx
+        epsdId = data.epsd_id
+        synopsisType = SynopsisType(value: data.synon_typ_cd)
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
             epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: data.prd_prc_id, kidZone:data.kids_yn)
@@ -29,9 +34,26 @@ class PosterData:InfinityData{
         return self
     }
     
+    func setData(data:PackageContentsItem, prdPrcId:String, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
+        setCardType(cardType)
+        title = data.title
+        synopsisType = SynopsisType(value: data.synon_typ_cd)
+        if let poster = data.poster_filename_v {
+            image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
+        }
+        index = idx
+        epsdId = data.epsd_id
+        synopsisData = .init(
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: prdPrcId , kidZone:nil)
+        
+        return self
+    }
+    
     func setData(data:BookMarkItem, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
         setCardType(cardType)
         title = data.title
+        epsdId = data.epsd_id
         if let poster = data.poster {
             image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
         }
@@ -46,6 +68,7 @@ class PosterData:InfinityData{
     func setData(data:WatchItem, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
         setCardType(cardType)
         title = data.title
+        epsdId = data.epsd_id
         if let poster = data.thumbnail {
             image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
         }
@@ -59,6 +82,8 @@ class PosterData:InfinityData{
     func setData(data:CWBlockItem, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
         setCardType(cardType)
         title = data.title
+        epsdId = data.epsd_id
+        synopsisType = SynopsisType(value: data.synon_typ_cd)
         if let poster = data.poster_filename_v {
             image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
         }
@@ -125,8 +150,10 @@ struct PosterList: PageComponent{
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var banners:[BannerData]? = nil
     var datas:[PosterData]
+    var contentID:String? = nil
     var useTracking:Bool = false
     var margin:CGFloat = Dimen.margin.thin
+    var action: ((_ data:PosterData) -> Void)? = nil
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
@@ -143,12 +170,19 @@ struct PosterList: PageComponent{
                 }
             }
             ForEach(self.datas) { data in
-                PosterItem( data:data )
+                PosterItem( data:data ,
+                            isSelected: self.contentID == nil
+                                ? false
+                                : self.contentID == data.epsdId)
                 .onTapGesture {
-                    self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.synopsis)
-                            .addParam(key: .data, value: data.synopsisData)
-                    )
+                    if let action = self.action {
+                        action(data)
+                    }else{
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
+                                .addParam(key: .data, value: data.synopsisData)
+                        )
+                    }
                 }
             }
         }
@@ -166,11 +200,11 @@ struct PosterDataSet:Identifiable {
 
 extension PosterSet{
     static let padding:CGFloat = Dimen.margin.thin
-    static func listSize(data:PosterDataSet, screenWidth:CGFloat, negativeMargin:CGFloat = 0 ) -> CGSize{
+    static func listSize(data:PosterDataSet, screenWidth:CGFloat ) -> CGSize{
         let datas = data.datas
         let ratio = datas.first!.type.size.height / datas.first!.type.size.width
         let count = CGFloat(data.count)
-        let w = screenWidth - ( padding * 2) - (  negativeMargin * 2 )
+        let w = screenWidth - ( padding * 2) 
         let cellW = ( w - (padding*(count-1)) ) / count
         let cellH = round(cellW * ratio)
         
@@ -183,7 +217,6 @@ struct PosterSet: PageComponent{
     @EnvironmentObject var sceneObserver:SceneObserver
     var pageObservable:PageObservable = PageObservable()
     var data:PosterDataSet
-    var negativeMargin:CGFloat = 0 //IOS 14 SidebarListStyle
     var action: ((_ data:PosterData) -> Void)? = nil
     
     @State var cellDatas:[PosterData] = []
@@ -198,7 +231,7 @@ struct PosterSet: PageComponent{
                             action(data)
                         }else{
                             self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(.synopsis)
+                                PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
                                     .addParam(key: .data, value: data.synopsisData)
                             )
                         }
@@ -214,7 +247,7 @@ struct PosterSet: PageComponent{
         .frame(width: self.sceneObserver.screenSize.width)
         .onAppear {
             if self.data.datas.isEmpty { return }
-            let size = Self.listSize(data: self.data, screenWidth: sceneObserver.screenSize.width, negativeMargin: self.negativeMargin)
+            let size = Self.listSize(data: self.data, screenWidth: sceneObserver.screenSize.width)
             self.cellDatas = self.data.datas.map{
                 $0.setCardType(width: size.width, height: size.height, padding: Self.padding)
             }
@@ -230,6 +263,7 @@ struct PosterSet: PageComponent{
 
 struct PosterItem: PageView {
     var data:PosterData
+    var isSelected:Bool = false
     var body: some View {
         ZStack{
             if self.data.image == nil {
@@ -248,6 +282,12 @@ struct PosterItem: PageView {
             height: self.data.type.size.height)
         .background(Color.app.blueLight)
         .clipped()
+        .overlay(
+           Rectangle()
+            .stroke(
+                self.isSelected ? Color.brand.primary : Color.transparent.clear,
+                lineWidth: Dimen.stroke.medium)
+        )
         
     }
     

@@ -184,6 +184,10 @@ class ApiManager :PageProtocol, ObservableObject{
             data: data,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .getPackageDirectView(let data, let isPpm): self.metv.getPackageDirectView(
+            data: data, isPpm:isPpm,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         //NPS
         case .registHello : self.nps.postHello(
             completion: {res in self.complated(id: apiID, type: type, res: res)},

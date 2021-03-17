@@ -7,17 +7,6 @@
 
 import Foundation
 import SwiftUI
-
-struct SynopsisData{
-    var srisId:String? = nil
-    var searchType:String? = nil
-    var epsdId:String? = nil
-    var epsdRsluId:String? = nil
-    var prdPrcId:String? = nil
-    var kidZone:String? = nil
-}
-
-
 class SynopsisModel : PageProtocol {
     //지상파 월정액 복합 1476793, MBC ALL 복합 410705773, MBC + SBS 1210230 판매종료, MBC PLUS 월정액 410705797
     static let trstrsPidList = ["1476793", "410705773", "410705797", "1210230"] + singleTrstrsPidList

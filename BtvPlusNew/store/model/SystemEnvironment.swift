@@ -16,7 +16,7 @@ struct SystemEnvironment {
     static let deviceId:String = UIDevice.current.identifierForVendor?.uuidString ?? UUID.init().uuidString
     static var firstLaunch :Bool = false
     static var serverConfig: [String:String] = [String:String]()
-    static let isTestMode = false
+    static var isReleaseMode = true
     static var isEvaluation = false
     static let VMS = "http://mobilebtv.com:9080"
     static let WEB = "http://mobilebtv.com:8080"

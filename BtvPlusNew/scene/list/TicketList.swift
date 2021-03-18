@@ -96,6 +96,7 @@ struct TicketList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var pairing:Pairing
    
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[TicketData]
@@ -118,6 +119,11 @@ struct TicketList: PageComponent{
                 TicketItem( data:data )
                 .onTapGesture {
                     if !data.hasAuth {
+                        let status = self.pairing.status
+                        if status != .pairing {
+                            self.pageSceneObserver.alert = .needPairing()
+                            return
+                        }
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject(.purchase)
                                 .addParam(key: .data, value: data)

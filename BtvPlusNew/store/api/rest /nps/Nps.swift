@@ -44,6 +44,10 @@ extension NpsNetwork{
     static private(set) var pairingStatus = ""
     static private(set) var hostDeviceId:String? = nil
     
+    static func goodbye() {
+        Self.sessionId = ""
+    }
+    
     static func hello(res:ApiResultResponds) -> String? {
         guard let resData = res.data as? Hello else { return nil }
         if resData.header?.result != NpsNetwork.resultCode.success.code { return nil}
@@ -60,9 +64,15 @@ extension NpsNetwork{
         return path
     }
     
+    static func resetPairing() {
+        Self.pairingId = ""
+        Self.hostDeviceId = nil
+        Self.pairingStatus = ""
+    }
     static func pairing(res:ApiResultResponds) {
         guard let resData = res.data as? DevicePairing  else { return }
-        if resData.header?.result != NpsNetwork.resultCode.success.code { return }
+        guard let resultCode = resData.header?.result else { return }
+        if resultCode != NpsNetwork.resultCode.success.code { return }
         guard let pairingid = resData.body?.pairingid else { return }
         Self.pairingId = pairingid
         Self.hostDeviceId = resData.body?.host_deviceid
@@ -126,7 +136,7 @@ extension NpsNetwork{
     
     enum resultCode:String{
         case success, pairingRetry, pairingLimited,
-             authcodeInvalid, authcodeWrong, authcodeTimeout
+             authcodeInvalid, authcodeWrong, authcodeTimeout, existPairing
         
         var code:String {
             get {
@@ -137,6 +147,7 @@ extension NpsNetwork{
                 case .authcodeInvalid: return "1005"
                 case .authcodeWrong: return "1011"
                 case .authcodeTimeout: return "1012"
+                case .existPairing: return  "1019"
                 //default: return ""
                 }
             }
@@ -214,6 +225,7 @@ class Nps: Rest{
         user:User?, device:StbData?, customParam:[String: Any] = [String: Any](),
         completion: @escaping (DevicePairing) -> Void, error: ((_ e:Error) -> Void)? = nil){
     
+        NpsNetwork.resetPairing()
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-531")
         var deviceinfo = [String: String]()
         if let device = device {
@@ -246,6 +258,7 @@ class Nps: Rest{
         user:User?, authcode:String?, customParam:[String: Any] = [String: Any](),
         completion: @escaping (DevicePairing) -> Void, error: ((_ e:Error) -> Void)? = nil){
     
+        NpsNetwork.resetPairing()
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-512")
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE

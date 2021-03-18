@@ -178,9 +178,10 @@ struct PosterList: PageComponent{
                     if let action = self.action {
                         action(data)
                     }else{
+                        guard let synopsisData = data.synopsisData else { return }
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
-                                .addParam(key: .data, value: data.synopsisData)
+                                .addParam(key: .data, value: synopsisData)
                         )
                     }
                 }
@@ -220,19 +221,20 @@ struct PosterSet: PageComponent{
     var action: ((_ data:PosterData) -> Void)? = nil
     
     @State var cellDatas:[PosterData] = []
-    @State var isUiview:Bool = true
+    @State var isUiActive:Bool = true
     var body: some View {
         HStack(spacing: Self.padding){
-            if self.isUiview {
+            if self.isUiActive {
                 ForEach(self.cellDatas) { data in
                     PosterItem( data:data )
                     .onTapGesture {
                         if let action = self.action {
                             action(data)
                         }else{
+                            guard let synopsisData = data.synopsisData else { return }
                             self.pagePresenter.openPopup(
                                 PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
-                                    .addParam(key: .data, value: data.synopsisData)
+                                    .addParam(key: .data, value: synopsisData)
                             )
                         }
                         
@@ -254,8 +256,8 @@ struct PosterSet: PageComponent{
         }
         .onReceive(self.pageObservable.$layer ){ layer  in
             switch layer {
-            case .bottom : self.isUiview = false
-            case .top, .below : self.isUiview = true
+            case .bottom : self.isUiActive = false
+            case .top, .below : self.isUiActive = true
             }
         }
     }//body
@@ -277,17 +279,19 @@ struct PosterItem: PageView {
                     .modifier(MatchParent())
             }
         }
-        .frame(
-            width: self.data.type.size.width,
-            height: self.data.type.size.height)
-        .background(Color.app.blueLight)
-        .clipped()
         .overlay(
            Rectangle()
             .stroke(
                 self.isSelected ? Color.brand.primary : Color.transparent.clear,
                 lineWidth: Dimen.stroke.medium)
         )
+        .frame(
+            width: self.data.type.size.width,
+            height: self.data.type.size.height)
+        .background(Color.app.blueLight)
+        .clipped()
+        
+        
         
     }
     

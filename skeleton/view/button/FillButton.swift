@@ -10,6 +10,8 @@ import Foundation
 import SwiftUI
 struct FillButton: View, SelecterbleProtocol{
     let text:String
+    var trailText:String? = nil
+    var strikeText:String? = nil
     var index: Int = 0
     var isSelected: Bool = true
     var image:String? = nil
@@ -29,6 +31,8 @@ struct FillButton: View, SelecterbleProtocol{
     
     init(
         text:String,
+        trailText:String? = nil,
+        strikeText:String? = nil,
         index: Int = 0,
         isSelected: Bool = true,
         image:String? = nil,
@@ -40,6 +44,8 @@ struct FillButton: View, SelecterbleProtocol{
         action:@escaping (_ idx:Int) -> Void )
     {
         self.text = text
+        self.trailText = trailText
+        self.strikeText = strikeText
         self.index = index
         self.isSelected = isSelected
         self.image = image
@@ -95,8 +101,8 @@ struct FillButton: View, SelecterbleProtocol{
                     if self.isMore{
                         Spacer().frame(width: Dimen.margin.thin)
                     }
-                    if self.image != nil {
-                        Image(self.isSelected ? ( self.imageOn ?? self.image! )  : self.image!)
+                    if let image = self.image  {
+                        Image(self.isSelected ? ( self.imageOn ?? image )  : image)
                         .renderingMode(.original).resizable()
                         .scaledToFit()
                         .frame(width: self.imageSize, height: self.imageSize)
@@ -104,7 +110,20 @@ struct FillButton: View, SelecterbleProtocol{
                     Text(self.text)
                         .font(.custom(textModifier.family, size: textModifier.size))
                         .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
-                    
+                    if self.trailText != nil || self.strikeText != nil {
+                        Spacer()
+                        if let strikeText = self.strikeText {
+                            Text(strikeText)
+                                .font(.custom(textModifier.family, size: Font.size.thinExtra))
+                                .strikethrough()
+                                .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+                        }
+                        if let trailText = self.trailText {
+                            Text(trailText )
+                                .font(.custom(textModifier.family, size: textModifier.size))
+                                .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+                        }
+                    }
                     if self.isNew {
                         Image(Asset.icon.new)
                         .renderingMode(.original).resizable()
@@ -119,6 +138,7 @@ struct FillButton: View, SelecterbleProtocol{
                         .frame(width: Dimen.icon.regular, height: Dimen.icon.regular)
                     }
                 }
+                .padding(.horizontal, Dimen.margin.regular)
                 
                 if !self.isSelected {
                     Spacer().modifier(MatchParent()).background(Color.transparent.black45)

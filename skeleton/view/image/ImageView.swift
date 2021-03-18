@@ -18,7 +18,8 @@ struct ImageView : View, PageProtocol {
     @State var img:UIImage? = nil
     @State var opacity:Double = 0.4
     var body: some View {
-        Image(uiImage: self.img ?? self.imageLoader.image(url: self.url)
+        Image(uiImage: self.img ??
+                self.imageLoader.image(url: self.url)
                 ?? ( noImg != nil ? UIImage(named: self.noImg!)! : UIImage.from(color: Color.transparent.clear.uiColor() ) )
             )
             .renderingMode(.original)
@@ -28,6 +29,9 @@ struct ImageView : View, PageProtocol {
             .onReceive(self.imageLoader.$event) { evt in
                 guard let  evt = evt else { return }
                 switch evt {
+                case .reset :
+                    self.img = nil
+                    break
                 case .complete(let img) :
                     self.img = img
                     withAnimation{self.opacity = 1.0}

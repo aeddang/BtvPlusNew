@@ -28,7 +28,7 @@ extension Preroll{
         let accessKey = "8LrhdsQYra5WG/o15zaCpsKz9uyy/WuqT2qTqo2oix340pJIxMFFwx+7smR8iEsL"
         OneAdSdk.initialize(withMediaId: mediaId, accessKey: accessKey)
        
-        if SystemEnvironment.isTestMode {
+        if SystemEnvironment.isReleaseMode {
             OneAdSdk.setEnvironment( .PROD )
             OneAdSdk.setDebug(true)
         }else{

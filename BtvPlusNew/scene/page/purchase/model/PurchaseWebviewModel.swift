@@ -9,19 +9,20 @@ import Foundation
 import Foundation
 import SwiftUI
 enum PurchaseSynopsisType {
-    case season, title
+    case season, title, package
     var code:String {
         get {
             switch self {
             case .season: return "02"
             case .title: return "01"
+            case .package: return "03"
             }
         }
     }
 }
 
 enum PurchasePType {
-    case ppv, pps, ppm, ppp
+    case ppv, pps, ppm, ppp, pkg
     var code:String {
         get {
             switch self {
@@ -29,6 +30,7 @@ enum PurchasePType {
             case .pps: return "20"
             case .ppm: return "30"
             case .ppp: return "40"
+            case .pkg: return "41"
             }
         }
     }
@@ -210,32 +212,18 @@ class PurchaseWebviewModel {
     /*
     * 패키지 시놉인 경우 구매
     */
-    /*
-    func setParam(data: ResEUXP014) {
-        //epsd_id = ["noEpsdId"]
-        let arrEpsdId = NSMutableArray()
-        
-        func addEpsdId(epsdId: String) {
-            for item in arrEpsdId where epsdId == (item as? String) {
-                return
-            }
-            arrEpsdId.add(epsdId)
+    @discardableResult
+    func setParam(data: GatewaySynopsis) -> PurchaseWebviewModel{
+        guard let package =  data.package else {return self}
+        package.contents?.forEach{
+            self.addEpsdId(epsdId: $0.epsd_id)
         }
-        
-        for item in data.package.contents {
-            if let contentItem = item as? ResEUXPPackageContentsItem {
-                addEpsdId(epsdId: contentItem.epsd_id)
-            }
-        }
-        epsd_id = arrEpsdId as? [String]
-        sris_id = data.package.sris_id
-        ptype = "41"    // 하드코딩? data.package.prd_typ_cd
-        synopsis_type = "03"    // 하드코딩?
-        conTitle = data.package.title
-        pid = data.package.prd_prc_id
+        srisId = package.sris_id ?? ""
+        ptype = .pkg
+        synopsisType = .package
+        conTitle = package.title ?? ""
+        pid = package.prd_prc_id
+        return self
     }
-    */
-    
-    
     
 }

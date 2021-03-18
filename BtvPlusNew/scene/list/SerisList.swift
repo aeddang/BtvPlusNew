@@ -81,16 +81,16 @@ struct SerisItem: PageView {
                 }
                 
             }
-            .frame(
-                width: ListItem.seris.size.width,
-                height: ListItem.seris.size.height)
             .overlay(
                Rectangle()
                 .stroke(
                     self.isSelected ? Color.app.white : Color.transparent.clear,
                     lineWidth: Dimen.stroke.regular)
             )
-            
+            .frame(
+                width: ListItem.seris.size.width,
+                height: ListItem.seris.size.height)
+            .clipped()
             VStack(alignment: .leading, spacing:Dimen.margin.thinExtra){
                 Spacer().modifier(MatchHorizontal(height: 0))
                 if self.data.title != nil {

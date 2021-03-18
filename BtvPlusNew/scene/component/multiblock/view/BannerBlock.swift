@@ -16,10 +16,10 @@ struct BannerBlock:BlockProtocol, PageComponent {
     var data: BlockData
     @State var bannerData:BannerData? = nil
     @State var listHeight:CGFloat = ListItem.banner.type01.height
-    @State var isUiview:Bool = true
+    @State var isUiActive:Bool = true
     var body :some View {
         ZStack() {
-            if self.isUiview {
+            if self.isUiActive {
                 if self.bannerData != nil {
                     BannerItem(data: self.bannerData!)
                         .modifier(MatchParent())
@@ -51,8 +51,8 @@ struct BannerBlock:BlockProtocol, PageComponent {
         }
         .onReceive(self.pageObservable.$layer ){ layer  in
             switch layer {
-            case .bottom : self.isUiview = false
-            case .top, .below : self.isUiview = true
+            case .bottom : self.isUiActive = false
+            case .top, .below : self.isUiActive = true
             }
         }
         .onReceive(dataProvider.$result) { res in

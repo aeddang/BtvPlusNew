@@ -101,6 +101,7 @@ struct FloatingBanner: PageComponent {
             self.pages = datas.map{data in
                 FloatingBannerItem(data: data)
             }
+            self.setBar(idx:self.index)
         }
         .onReceive( self.viewModel.$index ){ idx in
             self.setBar(idx:idx)

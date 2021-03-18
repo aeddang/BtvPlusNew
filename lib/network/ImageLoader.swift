@@ -13,7 +13,7 @@ import Combine
 import Kingfisher
 
 enum ImageLoaderEvent {
-   case complete(UIImage), error
+   case complete(UIImage), error, reset
 }
 
 
@@ -38,8 +38,8 @@ class ImageLoader: ObservableObject, PageProtocol{
             DataLog.e("targetUrl error " + url , tag:self.tag)
             return nil
         }
+        
         guard let image = self.image else {
-            
             load(url: targetUrl)
             return nil
         }

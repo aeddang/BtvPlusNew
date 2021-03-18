@@ -69,10 +69,7 @@ struct TopBanner: PageComponent {
             default : return
             }
         }
-        .onReceive( [self.index].publisher ){ idx in
-            if self.viewModel.index == idx { return }
-            self.viewModel.index = idx
-        }
+        
         .onAppear(){
             self.isInit = true
             self.pages = datas.map{data in

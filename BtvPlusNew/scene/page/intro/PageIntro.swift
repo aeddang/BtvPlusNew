@@ -83,9 +83,7 @@ struct PageIntro: PageView {
         }
         .padding(.vertical, Dimen.margin.regular)
         .modifier(PageFull())
-        .onReceive( [self.index].publisher ){ idx in
-            if self.viewModel.index == idx { return }
-            self.viewModel.index = idx
+        .onReceive( self.viewModel.$index ){ idx in
             self.setBar(idx:idx)
         }
         .onAppear{

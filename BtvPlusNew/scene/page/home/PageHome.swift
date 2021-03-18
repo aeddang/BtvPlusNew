@@ -84,6 +84,7 @@ struct PageHome: PageView {
             withAnimation{
                 self.marginHeader = self.topDatas == nil ? 0 : self.pageSceneObserver.safeHeaderHeight
             }
+            
         }
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
             self.useTracking = ani
@@ -167,7 +168,7 @@ struct PageHome: PageView {
         guard let resData = res?.data as? EventBanner else {return}
         guard let banners = resData.banners else { return }
         if banners.isEmpty { return }
-        self.topDatas = banners.filter{$0.bbnr_exps_mthd_cd == "01"}.map{ d in
+        let topDatas = banners.filter{$0.bbnr_exps_mthd_cd == "01"}.map{ d in
             BannerData().setData(data: d, type: .page)
         }
         let floating = banners.filter{$0.bbnr_exps_mthd_cd == "03"}.map{ d in
@@ -178,6 +179,12 @@ struct PageHome: PageView {
         }
         if self.pagePresenter.currentTopPage?.pageID == PageID.home {
             self.pageSceneObserver.useTopFix = true
+        }
+        if topDatas.isEmpty == false {
+            self.topDatas = topDatas
+            withAnimation{
+                self.marginHeader = self.topDatas == nil ? 0 : self.pageSceneObserver.safeHeaderHeight
+            }
         }
     }
     

@@ -14,7 +14,7 @@ struct TextModifier {
     var size:CGFloat = Font.size.regular
     var color: Color = Color.app.whiteDeep
     var activeColor: Color = Color.app.white
-    var sizeScale: CGFloat = 1.5
+    var sizeScale: CGFloat = 1.2
     
     func getTextWidth(_ text:String) -> CGFloat{
         return text.textSizeFrom(fontSize: size * sizeScale).width

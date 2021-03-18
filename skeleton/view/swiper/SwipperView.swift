@@ -192,9 +192,10 @@ struct SwipperView : View , PageProtocol, Swipper {
             self.viewModel.status = .stop
             return
         }
-        //if self.viewModel.index != idx && self.isForground { self.viewModel.index = idx }
+        
         if self.viewModel.status == .stop { self.viewModel.status = .move }
         DispatchQueue.main.async {
+            if self.viewModel.index != idx { self.viewModel.index = idx }
             withAnimation(self.isForground ? Self.ani : Self.aniBg){
                self.isUserSwiping = false
                if idx != self.index {
@@ -214,7 +215,9 @@ struct SwipperView : View , PageProtocol, Swipper {
                 } else  if self.index > max {
                     self.index = min
                 }
+                
                 self.viewModel.status = .stop
+                if self.viewModel.index != self.index { self.viewModel.index = self.index }
             }
         }
         

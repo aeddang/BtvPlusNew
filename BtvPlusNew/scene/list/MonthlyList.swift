@@ -143,20 +143,24 @@ struct MonthlyList: PageComponent{
 }
 
 struct MonthlyItem: PageView {
+    @ObservedObject var imageLoader: ImageLoader = ImageLoader()
     @ObservedObject var data:MonthlyData
     
     @State var image:String? = nil
     @State var isSelected:Bool = false
     var body: some View {
         ZStack{
-            DynamicImageView(url: self.image, contentMode: .fit, noImg: Asset.noImg1_1)
-                .modifier(MatchParent())
+            ImageView(
+                imageLoader:self.imageLoader,
+                url: self.image,
+                contentMode: .fit, noImg: Asset.noImg1_1)
                 .overlay(
                    Rectangle()
                     .stroke(
                         self.isSelected ? Color.brand.primary : Color.transparent.clear,
                         lineWidth: Dimen.stroke.heavy)
                 )
+                .modifier(MatchParent())
         }
         .frame(
             width: ListItem.monthly.size.width,
@@ -167,7 +171,8 @@ struct MonthlyItem: PageView {
             if !update {return}
             self.image = data.getImage() ?? data.image
             self.isSelected = data.isSelected
-            
+            self.imageLoader.event = .reset
+            self.imageLoader.image(url: self.image)
         }
         .onAppear{
             self.image = data.getImage() ?? data.image

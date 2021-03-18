@@ -73,9 +73,10 @@ struct WatchedList: PageComponent{
                 WatchedItem( data:data , delete:self.delete)
                     .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.thin))
                     .onTapGesture {
+                        guard let synopsisData = data.synopsisData else { return }
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject(.synopsis)
-                                .addParam(key: .data, value: data.synopsisData)
+                                .addParam(key: .data, value: synopsisData)
                         )
                     }
                     .onAppear{

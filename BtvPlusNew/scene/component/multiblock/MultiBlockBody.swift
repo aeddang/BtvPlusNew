@@ -91,14 +91,17 @@ struct MultiBlockBody: PageComponent {
             pageObservable:self.pageObservable,
             viewModel : self.viewModel
         ){
-            
+                
+            if !self.isError {
                 ZStack(alignment: .topLeading){
                     if !Self.isLegacy  {
                         if self.topDatas != nil && self.topDatas?.isEmpty == false {
+                            
                             TopBannerBg(
                                 viewModel:self.viewPagerModel,
                                 datas: self.topDatas! )
-                                .padding(.top, max(self.headerOffset, -TopBanner.imageHeight) + self.marginHeader)
+                                .padding(.top, max(self.headerOffset, -TopBanner.imageHeight))
+                                .offset(y: self.marginHeader)
                         }
                         
                         ReflashSpinner(
@@ -161,8 +164,11 @@ struct MultiBlockBody: PageComponent {
                     
                     }
                 }
+            } else {
+                EmptyAlert()
+                .modifier(MatchParent())
+            }
         }
-       
         .onReceive(self.infinityScrollModel.$event){evt in
             guard let evt = evt else {return}
             switch evt {
@@ -327,9 +333,9 @@ struct MultiBlockBody: PageComponent {
     @State var loadingBlocks:[BlockData] = []
     @State var blocks:[BlockData] = []
     @State var anyCancellable = Set<AnyCancellable>()
-    
+    @State var isError:Bool = false
     func reload(){
-        
+        self.isError = false
         self.anyCancellable.forEach{$0.cancel()}
         self.anyCancellable.removeAll()
         self.blocks = []
@@ -357,6 +363,9 @@ struct MultiBlockBody: PageComponent {
             self.addLoadedBlocks(self.loadingBlocks) 
             PageLog.d("self.blocks " + self.blocks.count.description, tag: "BlockProtocol")
             self.loadingBlocks = []
+        }
+        if self.blocks.isEmpty {
+            self.isError = true
         }
     }
     private func onBlock(stat:BlockStatus, block:BlockData){

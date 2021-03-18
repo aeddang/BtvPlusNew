@@ -12,12 +12,11 @@ class AccountManager : PageProtocol{
     private let mdnsPairingManager = MdnsPairingManager()
     private let pairing:Pairing
     private let dataProvider:DataProvider
-    private let apiManager:ApiManager
     private var anyCancellable = Set<AnyCancellable>()
-    init(pairing:Pairing, dataProvider:DataProvider, apiManager:ApiManager) {
+    private var dataCancellable = Set<AnyCancellable>()
+    init(pairing:Pairing, dataProvider:DataProvider) {
         self.pairing = pairing
         self.dataProvider = dataProvider
-        self.apiManager = apiManager
     }
     
     var requestDevice:StbData? = nil
@@ -81,16 +80,6 @@ class AccountManager : PageProtocol{
             }
         }).store(in: &anyCancellable)
         
-        self.apiManager.$event.sink(receiveValue: {evt in
-            switch evt {
-            case .pairingHostChanged :
-                if NpsNetwork.isPairing { self.pairing.connected(stbData:self.requestDevice) }
-                else { self.pairing.disconnected() }
-                
-            default: do{}
-            }
-        }).store(in: &anyCancellable)
-        
         self.pairing.$event.sink(receiveValue: { evt in
             guard let evt = evt else { return }
             switch evt{
@@ -118,7 +107,23 @@ class AccountManager : PageProtocol{
             }
         }).store(in: &anyCancellable)
         
-        self.apiManager.$result.sink(receiveValue: { res in
+       
+    }
+    func setupApiManager(_ apiManager:ApiManager){
+        self.dataCancellable.forEach{$0.cancel()}
+        self.dataCancellable.removeAll()
+        
+        apiManager.$event.sink(receiveValue: {evt in
+            switch evt {
+            case .pairingHostChanged :
+                if NpsNetwork.isPairing { self.pairing.connected(stbData:self.requestDevice) }
+                else { self.pairing.disconnected() }
+                
+            default: do{}
+            }
+        }).store(in: &dataCancellable)
+        
+        apiManager.$result.sink(receiveValue: { res in
             guard let res = res else { return }
             
             switch res.type {
@@ -185,9 +190,8 @@ class AccountManager : PageProtocol{
                 self.pairing.foundDevice(stbInfoDatas: datas)
             
             case .getDevicePairingStatus :
-                if NpsNetwork.pairingStatus != "" {
-                    self.pairing.checkCompleted(isSuccess: true)
-                }
+                self.pairing.checkCompleted(isSuccess: NpsNetwork.pairingStatus != "")
+        
                 
             case .getPairingUserInfo :
                 guard let data = res.data as? PairingUserInfo  else { return }
@@ -200,9 +204,9 @@ class AccountManager : PageProtocol{
         
             default: do{}
             }
-        }).store(in: &anyCancellable)
+        }).store(in: &dataCancellable)
         
-        self.apiManager.$error.sink(receiveValue: { err in
+        apiManager.$error.sink(receiveValue: { err in
             guard let err = err else { return }
             switch err.type {
             case .postUnPairing, .postAuthPairing, .postDevicePairing, .rePairing : self.pairing.connectError()
@@ -210,9 +214,8 @@ class AccountManager : PageProtocol{
             case .getDevicePairingStatus : self.pairing.checkCompleted(isSuccess: false)
             default: do{}
             }
-        }).store(in: &anyCancellable)
+        }).store(in: &dataCancellable)
     }
-    
     private func checkDisConnectHeader(_ res:ApiResultResponds ) -> Bool{
         guard let data = res.data as? NpsResult  else {
             self.pairing.disConnectError()
@@ -226,6 +229,7 @@ class AccountManager : PageProtocol{
             self.dataProvider.requestData(q: .init(type: .rePairing , isOptional: true))
             return false
         }
+        
         if resultCode != NpsNetwork.resultCode.success.code {
             self.pairing.disConnectError(header: data.header)
             return false
@@ -244,6 +248,10 @@ class AccountManager : PageProtocol{
         }
         if resultCode == NpsNetwork.resultCode.pairingRetry.code {
             self.dataProvider.requestData(q: .init(type: .rePairing , isOptional: true))
+            return false
+        }
+        if resultCode == NpsNetwork.resultCode.existPairing.code {
+            self.pairing.syncError(header: nil)
             return false
         }
         if resultCode != NpsNetwork.resultCode.success.code {

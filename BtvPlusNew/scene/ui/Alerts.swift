@@ -24,7 +24,7 @@ struct InfoAlert: PageView {
 }
 
 struct EmptyAlert: PageView {
-    let text:String
+    var text:String = String.alert.dataError
     var body: some View {
         VStack(alignment: .center, spacing: 0){
             Spacer().modifier(MatchHorizontal(height:0))

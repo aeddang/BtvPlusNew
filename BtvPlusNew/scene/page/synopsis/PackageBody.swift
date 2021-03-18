@@ -15,6 +15,7 @@ struct PackageBody: PageComponent{
     var synopsisPackageModel:SynopsisPackageModel
     var isPairing:Bool? = nil
     var contentID:String? = nil
+    var currentPoster:PosterData? = nil
     var episodeViewerData:EpisodeViewerData? = nil
     var summaryViewerData:SimpleSummaryViewerData? = nil
     var useTracking:Bool = false
@@ -29,8 +30,8 @@ struct PackageBody: PageComponent{
             useTracking:false
             ){
             
-            TopViewer(data: self.synopsisPackageModel)
-                .modifier(ListRowInset(spacing: Dimen.margin.heavyExtra))
+            TopViewer( data: self.synopsisPackageModel)
+                .modifier(ListRowInset(spacing: Dimen.margin.regular))
             
             if !self.synopsisPackageModel.posters.isEmpty {
                 VStack(alignment: .leading, spacing: Dimen.margin.thinExtra){
@@ -61,7 +62,10 @@ struct PackageBody: PageComponent{
             }
                 
             if self.summaryViewerData != nil {
-                SimpleSummaryViewer(data: self.summaryViewerData!)
+                SimpleSummaryViewer(
+                    data: self.summaryViewerData!,
+                    currentPoster:self.currentPoster
+                    )
                     .modifier(ListRowInset(spacing: Dimen.margin.regular))
             } else {
                 Spacer().modifier(MatchParent())

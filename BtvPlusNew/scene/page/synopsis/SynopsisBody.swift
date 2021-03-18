@@ -8,8 +8,6 @@
 import Foundation
 import SwiftUI
 
-
-
 struct SynopsisBody: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
@@ -204,6 +202,7 @@ struct SynopsisBody: PageComponent{
                 if self.hasRelationVod != nil {
                     if self.hasRelationVod == false {
                         Text(String.pageText.synopsisRelationVod)
+                            .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
                             .frame(height:Dimen.tab.regular)
                             .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
                         EmptyAlert(text:String.pageText.synopsisNoRelationVod)
@@ -213,8 +212,7 @@ struct SynopsisBody: PageComponent{
                         Text(self.relationTab.first!)
                             .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
                             .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
-                    }
-                    else{
+                    } else{
                         CPTabDivisionNavigation(
                             buttons: NavigationBuilder(
                                 index:self.relationTabIdx,
@@ -227,6 +225,7 @@ struct SynopsisBody: PageComponent{
                     }
                 } else {
                     Spacer().frame(height:Dimen.tab.regular)
+                        .modifier(ListRowInset(spacing: 0))
                 }
                 
                 if !self.seris.isEmpty {
@@ -253,7 +252,8 @@ struct SynopsisBody: PageComponent{
                         .frame(height: PosterSet.listSize(data: data, screenWidth: self.sceneObserver.screenSize.width).height)
                         .modifier(ListRowInset( spacing: Dimen.margin.thin))
                     }
-                }  else  {
+                }
+                if self.relationDatas.isEmpty && self.seris.isEmpty {
                     Spacer().modifier(MatchParent())
                         .modifier(ListRowInset(spacing: 0))
                 }

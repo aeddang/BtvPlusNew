@@ -9,9 +9,9 @@ import Foundation
 import SwiftUI
 
 
-class SimpleSummaryViewerData {
+class SimpleSummaryViewerData:ObservableObject{
     private(set) var summry: String? = nil
-    private(set) var casts:[CastSummary]? = nil
+    @Published private(set) var casts:[CastSummary]? = nil
     func setData(data:SynopsisContentsItem) -> SimpleSummaryViewerData {
         self.summry = data.epsd_snss_cts
         if let peoples = data.peoples {
@@ -35,6 +35,7 @@ class SimpleSummaryViewerData {
             self.casts = peopleSet.map{ set in
                 CastSummary(title: set.key, people: set.value)
             }
+            self.casts?.sort{$0.title.localizedStandardCompare($1.title) == .orderedAscending}
         }
         return self
     }
@@ -65,26 +66,25 @@ class SimpleSummaryViewerData {
             var lineWidth:CGFloat = 0
             var people:PeopleSet? = PeopleSet()
             cast.people.forEach{ person in
-                let cellW = textModifier.getTextWidth(person.name ?? "")
+                let cellW = textModifier.getTextWidth((person.name ?? "") + " | ")
                 lineWidth += cellW
                 if lineWidth < limit || people?.datas.count == 0 {
                     people?.datas.append(person)
-                    DataLog.d("add person " + person.name! + " " + people!.datas.count.description, tag:"SimpleSummaryViewerData")
                 } else {
                     if let peo = people {
-                        DataLog.d("add peo " + peo.datas.count.description, tag:"SimpleSummaryViewerData")
                         peopleSets.append(peo)
                     }
                     people = PeopleSet(datas: [person])
-                    DataLog.d("add person " + person.name! + " " + people!.datas.count.description, tag:"SimpleSummaryViewerData")
                     lineWidth = cellW
                 }
             }
             if let peo = people {
-                DataLog.d("add peo end " + peo.datas.count.description,  tag:"SimpleSummaryViewerData")
                 peopleSets.append(peo)
             }
-            DataLog.d("add cast " + peopleSets.count.description,  tag:"SimpleSummaryViewerData")
+            peopleSets.forEach{ set in
+                zip(0...set.datas.count, set.datas).forEach{$0.1.index = $0.0}
+            }
+            
             sets.append(CastSummarySet(title: cast.title, peopleSets: peopleSets))
         }
         return sets
@@ -95,6 +95,8 @@ struct SimpleSummaryViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
     var data:SimpleSummaryViewerData
+    var currentPoster:PosterData? = nil
+    
     let textStyle = MediumTextStyle( size: Font.size.thin, color: Color.app.greyDeep)
     @State var castSet:[SimpleSummaryViewerData.CastSummarySet]? = nil
     var body: some View {
@@ -110,15 +112,24 @@ struct SimpleSummaryViewer: PageComponent{
                         Text(cast.title + ":")
                             .modifier(textStyle)
                             .fixedSize(horizontal: false, vertical: true)
-                        VStack(alignment: .leading, spacing: Dimen.margin.micro){
+                        VStack(alignment: .leading, spacing: Dimen.margin.tinyExtra){
                             ForEach( cast.peopleSets ) { set in
                                 HStack(alignment: .top, spacing: Dimen.margin.tiny){
                                     ForEach( set.datas ) { person in
+                                        if person.index != 0 {
+                                            Text("|")
+                                                .modifier(textStyle)
+                                        }
                                         TextButton(
                                             defaultText: person.name ?? "",
                                             textModifier: textStyle.textModifier,
                                             isUnderLine: true){ _ in
                                             
+                                            if person.epsdId == nil {return}
+                                            self.pagePresenter.openPopup(
+                                                PageProvider.getPageObject(.person)
+                                                    .addParam(key: .data, value: person)
+                                            )
                                         }
                                     }
                                 }
@@ -132,14 +143,23 @@ struct SimpleSummaryViewer: PageComponent{
                 defaultText: String.button.detail,
                 textModifier: BoldTextStyle(size: Font.size.thinExtra, color: Color.app.white).textModifier,
                 isUnderLine: false, image: Asset.icon.directRight){ _ in
+                guard let poster = self.currentPoster else {return}
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject( poster.synopsisType == .package ? .synopsisPackage : .synopsis)
+                        .addParam(key: .data, value: poster.synopsisData)
+                )
             }
             .padding(.top, Dimen.margin.regular)
         }
         .modifier(ContentHorizontalEdges())
-        .onAppear{
+        .onReceive(self.data.$casts){ cast in
+            if cast == nil {return}
             self.castSet = self.data.getCastSummarySet(
                 screenWidth: sceneObserver.screenSize.width - (Dimen.margin.thin * 2),
                 textModifier: textStyle.textModifier)
+        }
+        .onAppear{
+            
         }
     }//body
 }

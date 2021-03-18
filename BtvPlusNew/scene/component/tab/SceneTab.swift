@@ -45,7 +45,7 @@ struct SceneTab: PageComponent{
                             HeaderBanner(data:bannerData) {
                                 self.headerBannerData = nil
                                 self.updateTopPos()
-                            }
+                            } 
                         }
                         TopTab()
                     }

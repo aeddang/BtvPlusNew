@@ -18,10 +18,10 @@ struct TicketBlock:BlockProtocol, PageComponent {
     var useTracking:Bool = false
     @State var datas:[TicketData]? = nil
     @State var listHeight:CGFloat = ListItem.ticket.type01.height
-    @State var isUiview:Bool = true
+    @State var isUiActive:Bool = true
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
-            if self.isUiview {
+            if self.isUiActive {
                 if self.datas?.isEmpty == false {
                     Text(data.name).modifier(BlockTitle())
                         .modifier(ContentHorizontalEdges())
@@ -66,8 +66,8 @@ struct TicketBlock:BlockProtocol, PageComponent {
         }
         .onReceive(self.pageObservable.$layer ){ layer  in
             switch layer {
-            case .bottom : self.isUiview = false
-            case .top, .below : self.isUiview = true
+            case .bottom : self.isUiActive = false
+            case .top, .below : self.isUiActive = true
             }
         }
         .onReceive(dataProvider.$result) { res in

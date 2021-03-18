@@ -12,7 +12,7 @@ import UIKit
 
 struct ApiPath {
     static func getRestApiPath(_ server:ApiServer) -> String {
-        if SystemEnvironment.isTestMode {
+        if SystemEnvironment.isReleaseMode {
             if server == .VMS {
                 return SystemEnvironment.VMS
             }
@@ -45,7 +45,7 @@ struct ApiGateway{
         var authorizationRequest = request
         authorizationRequest.addValue(
             "application/json", forHTTPHeaderField: "Accept")
-        if SystemEnvironment.isTestMode {
+        if SystemEnvironment.isReleaseMode {
             authorizationRequest.addValue(
                 Self.API_KEY, forHTTPHeaderField: "Api_Key")
         }else{

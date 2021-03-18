@@ -7,6 +7,7 @@
 import Foundation
 import SwiftUI
 struct PageSetup: PageView {
+    @EnvironmentObject var repository:Repository
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:SceneObserver
@@ -170,6 +171,22 @@ struct PageSetup: PageView {
                                         title: SystemEnvironment.bundleVersion + "(" + SystemEnvironment.buildNumber + ")",
                                         more:{
                                             
+                                        }
+                                    )
+                                    Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
+                                    SetupItem (
+                                        isOn: .constant(true),
+                                        title: "실서버",
+                                        more:{
+                                            self.repository.reset(isReleaseMode: true, isEvaluation: false)
+                                        }
+                                    )
+                                    Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
+                                    SetupItem (
+                                        isOn: .constant(true),
+                                        title: "스테이지",
+                                        more:{
+                                            self.repository.reset(isReleaseMode: false, isEvaluation: false)
                                         }
                                     )
                                 }

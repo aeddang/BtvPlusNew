@@ -176,9 +176,10 @@ struct VideoList: PageComponent{
                         if let action = self.action {
                             action(data)
                         }else{
+                            guard let synopsisData = data.synopsisData else { return }
                             self.pagePresenter.openPopup(
                                 PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
-                                    .addParam(key: .data, value: data.synopsisData)
+                                    .addParam(key: .data, value: synopsisData)
                             )
                         }
                         
@@ -192,9 +193,10 @@ struct VideoList: PageComponent{
                         if let action = self.action {
                             action(data)
                         }else{
+                            guard let synopsisData = data.synopsisData else { return }
                             self.pagePresenter.openPopup(
                                 PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
-                                    .addParam(key: .data, value: data.synopsisData)
+                                    .addParam(key: .data, value: synopsisData)
                             )
                         }
                         
@@ -239,16 +241,17 @@ struct VideoSet: PageComponent{
     var data:VideoDataSet
     
     @State var cellDatas:[VideoData] = []
-    @State var isUiview:Bool = true
+    @State var isUiActive:Bool = true
     var body: some View {
         HStack(spacing: Self.padding){
-            if self.isUiview {
+            if self.isUiActive {
                 ForEach(self.cellDatas) { data in
                     VideoItem( data:data )
                     .onTapGesture {
+                        guard let synopsisData = data.synopsisData else { return }
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
-                                .addParam(key: .data, value: data.synopsisData)
+                                .addParam(key: .data, value: synopsisData)
                         )
                     }
                 }
@@ -268,8 +271,8 @@ struct VideoSet: PageComponent{
         }
         .onReceive(self.pageObservable.$layer ){ layer  in
             switch layer {
-            case .bottom : self.isUiview = false
-            case .top, .below : self.isUiview = true
+            case .bottom : self.isUiActive = false
+            case .top, .below : self.isUiActive = true
             }
         }
     }//body

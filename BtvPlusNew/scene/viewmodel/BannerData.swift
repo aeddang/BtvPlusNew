@@ -116,7 +116,8 @@ class BannerData:InfinityData, PageProtocol{
                 
             }
         case "503":
-            self.move = PageID.synopsis
+            let type = SynopsisType(value: data.synon_typ_cd)
+            self.move = (type == .package) ? PageID.synopsisPackage : PageID.synopsis
             // 503 시놉 바로가기
             // 1. "call_typ_cd": "503"이면
             // 2. synon_typ_cd로 시놉시스 유형을 판단한 후

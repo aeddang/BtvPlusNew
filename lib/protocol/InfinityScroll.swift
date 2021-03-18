@@ -76,7 +76,7 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
     private(set) var isDragEnd:Bool = false
     private(set) var pullRange:CGFloat = 40
     private(set) var pullCompletedRange:CGFloat = 50
-    private(set) var updateScrollDiff:CGFloat = 1.0
+    private(set) var updateScrollDiff:CGFloat = 0.3
     private(set) var updatePullDiff:CGFloat = 0.3
     private(set) var cancelPullDiff:CGFloat = 5
     private(set) var completePullDiff:CGFloat = 15
@@ -88,7 +88,7 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
         case .horizontal (let end):
             pullRange = 40
             pullCompletedRange = 50
-            updateScrollDiff = 1.0
+            //updateScrollDiff = 1.0
             updatePullDiff = 0.3
             cancelPullDiff = 5
             completePullDiff = 20
@@ -97,7 +97,7 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
         case .vertical (let end):
             pullRange = InfinityScrollModel.DRAG_RANGE
             pullCompletedRange = InfinityScrollModel.DRAG_COMPLETED_RANGE
-            updateScrollDiff = 0.3
+            //updateScrollDiff = 0.3
             updatePullDiff = 0.3
             cancelPullDiff = 10
             completePullDiff = 30
@@ -106,7 +106,7 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
         case .reload (let end):
             pullRange = InfinityScrollModel.PULL_RANGE
             pullCompletedRange = InfinityScrollModel.PULL_COMPLETED_RANGE
-            updateScrollDiff = 0.3
+            //updateScrollDiff = 0.3
             updatePullDiff = 0.3
             cancelPullDiff = 10
             completePullDiff = 1000
@@ -115,7 +115,7 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
         case .web (let end):
             pullRange = 0
             pullCompletedRange = InfinityScrollModel.DRAG_RANGE + InfinityScrollModel.DRAG_COMPLETED_RANGE
-            updateScrollDiff = 0.3
+            //updateScrollDiff = 0.3
             updatePullDiff = 0.3
             cancelPullDiff = 10
             completePullDiff = 1000

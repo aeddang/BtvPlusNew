@@ -34,10 +34,10 @@ struct BannerSet: PageComponent{
     var data:BannerDataSet
     
     @State var cellDatas:[BannerData] = []
-    @State var isUiview:Bool = true
+    @State var isUiActive:Bool = true
     var body: some View {
         HStack(spacing: Self.padding){
-            if self.isUiview {
+            if self.isUiActive {
                 ForEach(self.cellDatas) { data in
                     BannerItem( data:data )
                 }
@@ -57,8 +57,8 @@ struct BannerSet: PageComponent{
         }
         .onReceive(self.pageObservable.$layer ){ layer  in
             switch layer {
-            case .bottom : self.isUiview = false
-            case .top, .below : self.isUiview = true
+            case .bottom : self.isUiActive = false
+            case .top, .below : self.isUiActive = true
             }
         }
     }//body

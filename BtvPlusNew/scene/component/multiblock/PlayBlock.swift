@@ -103,21 +103,7 @@ struct PlayBlock: PageComponent{
                 }
                 .background(Color.brand.bg)
             } else {
-                ZStack{
-                    VStack(alignment: .center, spacing: 0){
-                        Spacer().modifier(MatchHorizontal(height:0))
-                        Image(Asset.icon.alert)
-                            .renderingMode(.original)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
-                            .padding(.top, Dimen.margin.medium)
-                        Text(String.alert.dataError)
-                            .modifier(BoldTextStyle(size: Font.size.regular, color: Color.app.greyLight))
-                            .multilineTextAlignment(.center)
-                            .padding(.top, Dimen.margin.regularExtra)
-                    }
-                }
+                EmptyAlert()
                 .modifier(MatchParent())
             }
             

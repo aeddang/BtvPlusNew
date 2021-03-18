@@ -44,6 +44,7 @@ struct PageSynopsisPackage: PageView {
                                 synopsisPackageModel: self.synopsisPackageModel!,
                                 isPairing: self.isPairing,
                                 contentID: self.synopsisModel?.epsdId,
+                                currentPoster:self.currentPoster,
                                 episodeViewerData: self.episodeViewerData,
                                 summaryViewerData: self.summaryViewerData,
                                 useTracking: self.useTracking){ posterData in
@@ -69,7 +70,7 @@ struct PageSynopsisPackage: PageView {
                             Spacer().modifier(MatchParent())
                         }
                     }
-                    .modifier(PageFull())
+                    .modifier(PageFull(style:.dark))
                 }//PageDragingBody
                 .onReceive(self.synopsisListViewModel.$event){evt in
                     guard let evt = evt else {return}
@@ -138,7 +139,7 @@ struct PageSynopsisPackage: PageView {
                 switch evt {
                 case .update(let type):
                     switch type {
-                    case .purchase(let pid, _, _) :
+                    case .purchase(_, _, _) :
                         self.resetPage()
                     default : break
                     }
@@ -185,10 +186,11 @@ struct PageSynopsisPackage: PageView {
     
     @State var synopsisPackageModel:SynopsisPackageModel? = nil
     @State var synopsisModel:SynopsisModel? = nil
+    @State var currentPoster:PosterData? = nil
+    
     @State var episodeViewerData:EpisodeViewerData? = nil
     @State var summaryViewerData:SimpleSummaryViewerData? = nil
-    @State var purchaseWebviewModel:PurchaseWebviewModel? = nil
-    
+
     @State var isPageUiReady = false
     @State var isPageDataReady = false
     @State var isUIView:Bool = false
@@ -214,7 +216,7 @@ struct PageSynopsisPackage: PageView {
         self.synopsisPackageModel = nil
         self.episodeViewerData = nil
         self.summaryViewerData = nil
-        self.purchaseWebviewModel = nil
+        self.currentPoster = nil
         self.pageDataProviderModel.initate()
         
     }
@@ -327,6 +329,7 @@ struct PageSynopsisPackage: PageView {
     
     private func setupDirectPackageView (_ data:DirectPackageView){
         PageLog.d("setupDirectPackageView", tag: self.tag)
+        self.synopsisPackageModel?.setData(data: data)
        
     }
     
@@ -334,6 +337,7 @@ struct PageSynopsisPackage: PageView {
         guard let synopsisData = data.synopsisData else {
             return
         }
+        self.currentPoster = data
         self.pageDataProviderModel.request = .init(type: .getSynopsis(synopsisData))
     }
     

@@ -52,6 +52,7 @@ class ApiManager :PageProtocol, ObservableObject{
     
     private func initateApi()
     {
+        NpsNetwork.goodbye()
         self.vms.versionCheck(
             completion:{res in
                 self.complated(id: "", type: .versionCheck, res: res)
@@ -295,7 +296,9 @@ class ApiManager :PageProtocol, ObservableObject{
         default: do{}
         }
         
-        if prevHost != NpsNetwork.hostDeviceId{ self.event = .pairingHostChanged }
+        if prevHost != NpsNetwork.hostDeviceId{
+            self.event = .pairingHostChanged
+        }
         if let trans = transition[result.id] {
             transition.removeValue(forKey: result.id)
             self.load(q:trans)

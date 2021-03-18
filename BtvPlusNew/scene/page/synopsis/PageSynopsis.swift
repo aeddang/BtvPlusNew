@@ -38,7 +38,7 @@ struct PageSynopsis: PageView {
     @State var isPairing:Bool? = nil
     @State var isFullScreen:Bool = false
     @State var useTracking:Bool = false
-    
+    @State var isUiActive:Bool = true
     var body: some View {
         GeometryReader { geometry in
             PageDataProviderContent(
@@ -74,9 +74,8 @@ struct PageSynopsis: PageView {
                             }
                         }
                         
-                        if !self.isFullScreen{
-                            if self.isUIView{
-                                
+                        if !self.isFullScreen && self.isUiActive{
+                            if self.isUIView {
                                 SynopsisBody(
                                     componentViewModel: self.componentViewModel,
                                     infinityScrollModel: self.infinityScrollModel,
@@ -152,6 +151,12 @@ struct PageSynopsis: PageView {
                 
                 
             }//PageDataProviderContent
+            .onReceive(self.pageObservable.$layer ){ layer  in
+                switch layer {
+                case .bottom : self.isUiActive = false
+                case .top, .below : self.isUiActive = true
+                }
+            }
             .onReceive(self.pairing.$event){evt in
                 guard let _ = evt else {return}
                 self.isPageDataReady = true
@@ -245,8 +250,6 @@ struct PageSynopsis: PageView {
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
-                
-                
                 self.synopsisData = obj.getParamValue(key: .data) as? SynopsisData
                 if self.synopsisData == nil {
                     if let json = obj.getParamValue(key: .data) as? SynopsisJson {
@@ -310,6 +313,7 @@ struct PageSynopsis: PageView {
     @State var isUIView:Bool = false
     
     func initPage(){
+        
         if !self.isPageDataReady || !self.isPageUiReady || self.synopsisData == nil { return }
         if self.pageObservable.status == .initate { return }
         self.isPairing = self.pairing.status == .pairing
@@ -710,7 +714,7 @@ struct PageSynopsis: PageView {
         if !self.relationContentsModel.seris.isEmpty {
             if self.selectedRelationTabIdx == 0 {
                 let sorted = self.relationContentsModel.getSerisDatas()
-                DispatchQueue.main.async {
+                DispatchQueue.main.async {//IOS13
                     self.seris = sorted
                 }
                 return
@@ -720,7 +724,10 @@ struct PageSynopsis: PageView {
         } 
         if self.relationContentsModel.relationContents.isEmpty { return }
         if relationContentsIdx >= self.relationContentsModel.relationContents.count  { return }
-        self.relationDatas =  self.relationContentsModel.getRelationContentSets(idx: relationContentsIdx)
+        let relationDatas = self.relationContentsModel.getRelationContentSets(idx: relationContentsIdx)
+        DispatchQueue.main.async {//IOS13
+            self.relationDatas = relationDatas
+        }
     }
     
     /*

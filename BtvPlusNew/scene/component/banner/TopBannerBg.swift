@@ -22,7 +22,7 @@ struct TopBannerBg: PageComponent {
     
     var action:((_ idx:Int) -> Void)? = nil
     var body: some View {
-        ZStack(alignment: .bottom) {
+        ZStack(alignment: .bottom){
             SwipperView(
                 viewModel : self.viewModel,
                 pages: self.pages,
@@ -30,7 +30,7 @@ struct TopBannerBg: PageComponent {
                 isForground : false
                 )
                 .modifier(MatchHorizontal(height: TopBanner.imageHeight))
-           
+                
             if self.pages.count > 1 {
                 HStack(spacing: Dimen.margin.tiny) {
                     Spacer()
@@ -54,7 +54,7 @@ struct TopBannerBg: PageComponent {
             self.pages = datas.map{data in
                 TopBannerBgItem(data: data)
             }
-           //self.setBar()
+            self.setBar(idx:self.index)
         }
         .onReceive( self.viewModel.$index ){ idx in
             self.setBar(idx:idx)
@@ -63,8 +63,9 @@ struct TopBannerBg: PageComponent {
     
     private func setBar(idx:Int){
         let count = self.datas.count
-        let size = TopBanner.barWidth
-        
+        let minSize:CGFloat = 240.0
+        let size = min(TopBanner.barWidth, minSize/CGFloat(count))
+    
         withAnimation{
             self.leading = size * CGFloat(idx)
             self.trailing = size * CGFloat(max(0,(count - idx - 1)))
@@ -79,7 +80,7 @@ struct TopBannerBgItem: PageComponent, Identifiable {
     let data: BannerData
    
     var body: some View {
-        ZStack{
+        ZStack(){
             ImageView(url:data.image, contentMode: .fill, noImg: Asset.noImg9_16)
                 .frame(height:TopBanner.imageHeight)
             VStack{

@@ -8,7 +8,9 @@
 import Foundation
 import SwiftUI
 
-
+extension TopViewer {
+    static let height:CGFloat = 580
+}
 
 
 struct TopViewer: PageComponent{
@@ -17,6 +19,7 @@ struct TopViewer: PageComponent{
     @EnvironmentObject var sceneObserver:SceneObserver
 
     var data:SynopsisPackageModel
+   
     @State var isPairing:Bool? = nil
     var body: some View {
         ZStack(alignment:.bottom) {
@@ -33,7 +36,7 @@ struct TopViewer: PageComponent{
                     }
                     .buttonStyle(BorderlessButtonStyle())
                     
-                } else if self.data.hasAuthority == false {
+                } else if self.data.hasAuthority == true {
                     HStack{
                         Text(String.app.watchAble)
                             .modifier(BoldTextStyle( size: Font.size.light, color:Color.app.white ))
@@ -42,22 +45,30 @@ struct TopViewer: PageComponent{
                     .modifier( MatchHorizontal(height:Dimen.button.medium))
                     .overlay(Rectangle().stroke( Color.app.greyExtra , lineWidth: 1 ))
                     
-                } else {
+                } else if self.data.purchaseWebviewModel != nil {
                     FillButton(
-                        text: String.button.purchas + " " + (self.data.salePrice ?? "")
+                        text: String.button.purchas ,
+                        trailText: self.data.salePrice ?? self.data.price,
+                        strikeText: self.data.salePrice == nil ? nil : self.data.price
                     ){_ in
-                        
+                        guard let model = self.data.purchaseWebviewModel else {return}
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.purchase)
+                                .addParam(key: .data, value: model)
+                        )
                     }
                     .buttonStyle(BorderlessButtonStyle())
                     
                 }
+                /*
                 Text(String.app.watchAble)
                     .modifier(BoldTextStyle( size: Font.size.light, color:Color.app.white ))
                     .padding(.top, Dimen.margin.tinyExtra)
+                */
             }
             .modifier(ContentHorizontalEdges())
         }
-        .frame(height:580)
+        .frame(height:Self.height)
         .onReceive(self.pairing.$status){stat in
             self.isPairing = stat == .pairing
         }

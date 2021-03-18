@@ -33,11 +33,12 @@ class Repository:ObservableObject, PageProtocol{
     
     private let storage = LocalStorage()
     private let apiCoreDataManager = ApiCoreDataManager()
-    private let pairingManager:AccountManager
-    private let apiManager:ApiManager
+    private let accountManager:AccountManager
+    private var apiManager:ApiManager
     
     private let userSetup:Setup
     private var anyCancellable = Set<AnyCancellable>()
+    private var dataCancellable = Set<AnyCancellable>()
     private let drmAgent = DrmAgent.initialize() as? DrmAgent
     
     init(
@@ -55,10 +56,9 @@ class Repository:ObservableObject, PageProtocol{
         self.pageSceneObserver = sceneObserver
         self.pagePresenter = pagePresenter
         self.userSetup = setup ?? Setup()
-        self.pairingManager =  AccountManager(
+        self.accountManager =  AccountManager(
             pairing: self.pairing,
-            dataProvider: self.dataProvider,
-            apiManager: self.apiManager)
+            dataProvider: self.dataProvider)
         
         self.webManager = WebManager(
             pairing: self.pairing,
@@ -74,16 +74,34 @@ class Repository:ObservableObject, PageProtocol{
         }).store(in: &anyCancellable)
         
         self.setupDataProvider()
+        self.setupApiManager()
         self.setupSetting()
         self.setupPairing()
+        
     }
     
     deinit {
         self.drmAgent?.terminate()
+        self.anyCancellable.forEach{$0.cancel()}
+        self.anyCancellable.removeAll()
+        self.dataCancellable.forEach{$0.cancel()}
+        self.dataCancellable.removeAll()
     }
     
+    func reset(isReleaseMode:Bool = true, isEvaluation:Bool = false){
+        SystemEnvironment.isReleaseMode = isReleaseMode
+        SystemEnvironment.isEvaluation = isEvaluation
+        self.dataCancellable.forEach{$0.cancel()}
+        self.dataCancellable.removeAll()
+        self.apiManager.clear()
+        self.apiManager = ApiManager()
+        self.setupApiManager()
+    }
+    
+    
     private func setupPairing(){
-        self.pairingManager.setupPairing(savedUser:self.storage.getSavedUser())
+        self.accountManager.setupPairing(savedUser:self.storage.getSavedUser())
+        
         
         self.pairing.$request.sink(receiveValue: { req in
             guard let requestPairing = req else { return }
@@ -136,6 +154,10 @@ class Repository:ObservableObject, PageProtocol{
                 self.apiManager.load(q: apiQ)
             }
         }).store(in: &anyCancellable)
+    }
+    
+    private func setupApiManager(){
+        self.accountManager.setupApiManager(self.apiManager)
         
         self.apiManager.$result.sink(receiveValue: { res in
             guard let res = res else { return }
@@ -145,7 +167,7 @@ class Repository:ObservableObject, PageProtocol{
                 self.pageSceneObserver?.isApiLoading = false
                 self.pagePresenter?.isLoading = false
             }
-        }).store(in: &anyCancellable)
+        }).store(in: &dataCancellable)
         
         self.apiManager.$error.sink(receiveValue: { err in
             guard let err = err else { return }
@@ -158,14 +180,14 @@ class Repository:ObservableObject, PageProtocol{
                 self.pageSceneObserver?.isApiLoading = false
                 self.pagePresenter?.isLoading = false
             }
-        }).store(in: &anyCancellable)
+        }).store(in: &dataCancellable)
         
         self.pagePresenter?.isLoading = true
         self.apiManager.$status.sink(receiveValue: { status in
             
             self.pagePresenter?.isLoading = false
             if status == .ready { self.onReadyApiManager() }
-        }).store(in: &anyCancellable)
+        }).store(in: &dataCancellable)
         
     }
     

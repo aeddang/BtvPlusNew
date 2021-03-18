@@ -19,10 +19,10 @@ struct PosterBlock:PageComponent, BlockProtocol {
     var useTracking:Bool = false
     @State var datas:[PosterData] = []
     @State var listHeight:CGFloat = ListItem.poster.type01.height
-    @State var isUiview:Bool = true
+    @State var isUiActive:Bool = true
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
-            if self.isUiview {
+            if self.isUiActive {
                 HStack( spacing:Dimen.margin.thin){
                     VStack(alignment: .leading, spacing:0){
                         Text(data.name).modifier(BlockTitle())
@@ -92,8 +92,8 @@ struct PosterBlock:PageComponent, BlockProtocol {
         }
         .onReceive(self.pageObservable.$layer ){ layer  in
             switch layer {
-            case .bottom : self.isUiview = false
-            case .top, .below : self.isUiview = true
+            case .bottom : self.isUiActive = false
+            case .top, .below : self.isUiActive = true
             }
         }
         .onReceive(dataProvider.$result) { res in

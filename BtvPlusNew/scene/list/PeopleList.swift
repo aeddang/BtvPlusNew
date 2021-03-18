@@ -140,6 +140,7 @@ struct PeopleItem: PageView {
                         switch evt {
                         case .complete(let img) : self.data.uiImage = img
                         case .error : self.data.uiImage = UIImage(named: self.data.role.getDefaultImg())
+                        default: break
                         }
                     }
             }

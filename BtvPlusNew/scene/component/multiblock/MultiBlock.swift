@@ -210,7 +210,7 @@ struct MultiBlock:PageComponent {
     
     struct MultiBlockCell:PageComponent {
         var pageObservable:PageObservable
-        var pageDragingModel:PageDragingModel = PageDragingModel()
+        var pageDragingModel:PageDragingModel
         var data:BlockData
         var useTracking:Bool = false
         var body :some View {

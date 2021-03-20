@@ -24,7 +24,7 @@ struct MultiStrokeSpinner: View , AnimateDrawViewProtocol {
     
     func startAnimation(_ duration:Double = 0, delay:Double = 0 ) {
         isRunning = true
-        createJob(duration: duration, fps:fps)
+        createJob(duration: duration, fps: 0.2)
     }
     func stopAnimation() {
         isRunning = false

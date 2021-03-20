@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import struct Kingfisher.KFImage
 
 class MonthlyData:InfinityData,ObservableObject{
     private(set) var image: String = Asset.noImg16_9
@@ -143,36 +144,41 @@ struct MonthlyList: PageComponent{
 }
 
 struct MonthlyItem: PageView {
-    @ObservedObject var imageLoader: ImageLoader = ImageLoader()
+    //@ObservedObject var imageLoader: ImageLoader = ImageLoader()
     @ObservedObject var data:MonthlyData
-    
     @State var image:String? = nil
     @State var isSelected:Bool = false
     var body: some View {
         ZStack{
-            ImageView(
-                imageLoader:self.imageLoader,
-                url: self.image,
-                contentMode: .fit, noImg: Asset.noImg1_1)
-                .overlay(
-                   Rectangle()
-                    .stroke(
-                        self.isSelected ? Color.brand.primary : Color.transparent.clear,
-                        lineWidth: Dimen.stroke.heavy)
-                )
+            KFImage(URL(string: self.image ?? ""))
+                .resizable()
+                .placeholder {
+                    Image(Asset.noImg4_3)
+                        .resizable()
+                }
+                .cancelOnDisappear(true)
+                .loadImmediately()
+                .aspectRatio(contentMode: .fill)
                 .modifier(MatchParent())
         }
+        .overlay(
+           Rectangle()
+            .stroke(
+                self.isSelected ? Color.brand.primary : Color.transparent.clear,
+                lineWidth: Dimen.stroke.heavy)
+        )
         .frame(
             width: ListItem.monthly.size.width,
             height: ListItem.monthly.size.height)
         .clipped()
-        
         .onReceive(self.data.$isUpdated){ update in
             if !update {return}
-            self.image = data.getImage() ?? data.image
+            let willImage = data.getImage() ?? data.image
             self.isSelected = data.isSelected
-            self.imageLoader.event = .reset
-            self.imageLoader.image(url: self.image)
+            if willImage != self.image {
+                self.image = willImage
+            }
+           
         }
         .onAppear{
             self.image = data.getImage() ?? data.image

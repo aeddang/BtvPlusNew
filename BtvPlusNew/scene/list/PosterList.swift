@@ -170,8 +170,7 @@ struct PosterList: PageComponent{
                 }
             }
             ForEach(self.datas) { data in
-                PosterItem( data:data ,
-                            isSelected: self.contentID == nil
+                PosterItem( data:data , isSelected: self.contentID == nil
                                 ? false
                                 : self.contentID == data.epsdId)
                 .onTapGesture {
@@ -290,7 +289,9 @@ struct PosterItem: PageView {
             height: self.data.type.size.height)
         .background(Color.app.blueLight)
         .clipped()
-        
+        .onAppear(){
+           
+        }
         
         
     }

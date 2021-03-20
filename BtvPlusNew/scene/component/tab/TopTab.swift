@@ -40,7 +40,9 @@ struct TopTab: PageComponent{
                            height: Dimen.icon.mediumExtra)
             }
             Button(action: {
-                
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.search)
+                )
             }) {
                 Image(Asset.gnbTop.search)
                     .renderingMode(.original)

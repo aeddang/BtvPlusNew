@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import struct Kingfisher.KFImage
 
 class TicketData:InfinityData{
     private(set) var image: String = Asset.noImg16_9
@@ -200,7 +201,15 @@ struct TicketItem: PageView {
     var data:TicketData
     var body: some View {
         ZStack{
-            DynamicImageView(url: self.image, contentMode: .fill, noImg: Asset.noImg1_1)
+            KFImage(URL(string: self.image ?? ""))
+                .resizable()
+                .placeholder {
+                    Image(Asset.noImg1_1)
+                        .resizable()
+                }
+                .cancelOnDisappear(true)
+                .loadImmediately()
+                .aspectRatio(contentMode: .fill)
                 .modifier(MatchParent())
         }
         .frame(
@@ -213,12 +222,19 @@ struct TicketItem: PageView {
         .onReceive(self.pairing.authority.$purchaseLowLevelTicketList){ list in
             guard let list = list else { return }
             self.data.isSubJoin = (list.first(where: {$0.prod_id == self.data.prodId}) != nil)
-            self.image = self.data.getImage()
+            let willImage = self.data.getImage()
+            if willImage != self.image {
+                self.image = willImage
+            }
         }
         .onReceive(self.pairing.authority.$purchaseTicketList){ list in
             guard let list = list else { return }
             self.data.isJoin = (list.first(where: {$0.prod_id == self.data.prodId}) != nil)
-            self.image = self.data.getImage()
+            let willImage = self.data.getImage()
+            if willImage != self.image {
+                self.image = willImage
+            }
+           
         }
     }
 }

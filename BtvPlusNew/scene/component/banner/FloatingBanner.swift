@@ -42,7 +42,7 @@ struct FloatingBanner: PageComponent {
                                 self.viewModel.request = .prev
                             }
                             Spacer()
-                            Text((self.index+1).description.toFixLength(2))
+                            Text(min(self.pages.count, max(1,self.index+1)).description.toFixLength(2))
                                 .modifier(NumberMediumTextStyle(size: Font.size.lightExtra, color: Color.app.white))
                                 .fixedSize(horizontal: true, vertical: true)
                             HStack(spacing: 0) {
@@ -58,7 +58,7 @@ struct FloatingBanner: PageComponent {
                             }
                             .frame( height: Dimen.line.regular)
                             .padding(.horizontal, Dimen.margin.tiny)
-                            Text((self.pages.count).description.toFixLength(2))
+                            Text(self.pages.count.description.toFixLength(2))
                                 .modifier(NumberMediumTextStyle(size: Font.size.lightExtra, color: Color.app.greyLight))
                             Spacer()
                             ImageButton(

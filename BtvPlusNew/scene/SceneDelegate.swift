@@ -26,6 +26,7 @@ class SceneDelegate: PageSceneDelegate {
         let dataProvider = DataProvider()
         let pairing = Pairing()
         let networkObserver = NetworkObserver()
+        
         let setup = Setup()
         self.pagePresenter.bodyColor = Color.brand.bg
         let res = Repository(
@@ -51,6 +52,7 @@ class SceneDelegate: PageSceneDelegate {
             .environmentObject(keyboardObserver)
             .environmentObject(locationObserver)
             .environmentObject(setup)
+            
         return AnyView(environmentView)
     }
     

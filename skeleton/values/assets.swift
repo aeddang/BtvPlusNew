@@ -111,7 +111,10 @@ extension Asset{
         public static let dragDown = "icDragDown"
         
         public static let mic = "icPopupMic"
+        public static let searchMic = "icMicS"
+        public static let micError = "icMicError"
         public static let location = "icPopupLocation"
+        public static let searchDelete = "icSearchDelete"
     }
     
     
@@ -184,6 +187,11 @@ extension Asset{
             default: return Asset.icon.ageAll
             }
         }
+    }
+    
+    struct ani {
+        public static let mic:[String] = (1...27).map{ "imgSearchMic" + $0.description.toFixLength(2) }
+        public static let record:[String] = (1...10).map{ "icRecoqIng" + $0.description.toFixLength(2) }
     }
     
     

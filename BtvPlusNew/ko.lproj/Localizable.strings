@@ -62,6 +62,8 @@
 "watchAble" = "시청가능";
 "cast" = "출연";
 
+
+
 /*
   Button
 */
@@ -130,6 +132,7 @@
 "alertApi" = "알림";
 "alertApiErrorServer" = "접속이 지연되고 있습니다. 잠시 후 다시 이용해 주세요.";
 "alertApiErrorClient" = "네트워크 연결 상태를 확인하시고 다시 시도해 주세요.";
+"alertNetworkError" = "네트워크 연결이 원활하지 않습니다.";
 "alertDataError" = "데이타가 없습니다.";
 
 "alertConnect" = "B tv 연결알림";
@@ -205,11 +208,9 @@
 "alertUpdateAlramRecommand" = "본편이 공개됩니다.\n알림을 설정하고 업데이트를 놓치지 마세요.";
 "alertUpdateRegistAlram" = "알림 설정이 완료 되었습니다.";
 "alertUpdateUnregistAlram" = "알림 설정이 해제 되었습니다.";
-
 "alertDeleteWatch" = "선택하신 항목을 삭제 하시겠습니까?";
-
-
 "alertDragdown" = "당겨서 페이지 닫기";
+"alertNeedMicPermission" = "음성검색을 이용하시려면 기기 내 [설정 > 개인정보보호 > 마이크] 메뉴에서 모바일 B tv의 권한을 허용해 주세요.";
 
 /*
  PageTitle
@@ -401,3 +402,9 @@
  */
 "footerText" = "・ 상호 : SK브로드밴드 주식회사\n・ 대표이사 : 최진환\n・ 주소 : 서울특별시 중구 퇴계로 24 SK남산그린빌딩\n・ 통신판매업 신고번호 : 서울 중구 제2008-1608호\n・ 사업자등록번호 : 214-86-18758\n・ 고객센터 : 국번없이 106, 080-8282-106(무료)\n・ 고객지원 이메일 : mobilebtv@skbroadband.com\n・ 호스팅 서비스 제공 : SK브로드밴드 주식회사";
 "footerButton" = "・ 사업자 정보 확인";
+
+/*
+ Voice
+ */
+"voiceSearchTitle" = "음성 검색";
+"voiceSearchText" = "검색어를 말해보세요.";

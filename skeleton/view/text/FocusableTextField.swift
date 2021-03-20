@@ -13,10 +13,10 @@ struct FocusableTextField: UIViewRepresentable {
     var returnVal: UIReturnKeyType = .default
     var placeholder: String = ""
     var maxLength: Int = -1
-    var kern: Int = 10
+    var kern: Int = 1
     var textModifier:TextModifier = RegularTextStyle().textModifier
     
-    @Binding var isfocusAble:Bool
+    var isfocusAble:Bool
     var inputChanged: ((_ text:String) -> Void)? = nil
     var inputCopmpleted: ((_ text:String) -> Void)? = nil
     

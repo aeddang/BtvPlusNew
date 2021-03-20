@@ -5,4 +5,5 @@
 #import "mdnsServiceProxyClientIOS.h"
 #import "DrmAgent.h"
 #import "ApiUtil.h"
+#import "TycheSpeechRecognizer.h"
 #import "SKBNewAdSdk/OneAdSdk.h"

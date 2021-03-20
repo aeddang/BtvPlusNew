@@ -102,6 +102,7 @@ extension String {
         public static var api = "alertApi".loaalized()
         public static var apiErrorServer = "alertApiErrorServer".loaalized()
         public static var apiErrorClient = "alertApiErrorClient".loaalized()
+        public static var networkError = "alertNetworkError".loaalized()
         public static var dataError = "alertDataError".loaalized()
         public static var connect = "alertConnect".loaalized()
         public static var connectWifi = "alertConnectWifi".loaalized()
@@ -174,6 +175,7 @@ extension String {
         public static var updateUnregistAlram = "alertUpdateUnregistAlram".loaalized()
         public static var dragdown = "alertDragdown".loaalized()
         public static var deleteWatch = "alertDeleteWatch".loaalized()
+        public static var needMicPermission = "alertNeedMicPermission".loaalized()
     }
     
     struct button {
@@ -240,6 +242,12 @@ extension String {
         public static let text = "footerText".loaalized()
         public static let button = "footerButton".loaalized()
     }
+    
+    struct voice {
+        public static let searchTitle = "voiceSearchTitle".loaalized()
+        public static let searchText = "voiceSearchText".loaalized()
+    }
+
   
     struct pageTitle {
         public static let connectBtv = "titleConnectBtv".loaalized()

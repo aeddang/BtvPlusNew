@@ -10,12 +10,13 @@ import Foundation
 import SwiftUI
 struct FocusableTextView: UIViewRepresentable {
     var keyboardType: UIKeyboardType = .default
-    var returnVal: UIReturnKeyType = .default
+    var returnVal: UIReturnKeyType = .done
     var placeholder: String = ""
     @Binding var text:String
-    @Binding var isfocusAble:Bool
+    var isfocusAble:Bool
     var textModifier:TextModifier = RegularTextStyle().textModifier
     var usefocusAble:Bool = true
+    var limitedLine: Int = 1
     var limitedSize: Int = -1
     var inputChange: ((_ text:String, _ size:CGSize) -> Void)? = nil
     var inputChanged: ((_ text:String, _ size:CGSize) -> Void)? = nil
@@ -29,7 +30,13 @@ struct FocusableTextView: UIViewRepresentable {
         textView.returnKeyType = self.returnVal
         textView.delegate = context.coordinator
         textView.autocorrectionType = .yes
+        textView.textAlignment = .left
+        textView.textColor = UIColor.white
         textView.sizeToFit()
+        textView.backgroundColor = UIColor.clear
+        if limitedLine != -1 {
+            textView.textContainer.maximumNumberOfLines = self.limitedLine
+        }
         textView.text = self.text
         return textView
     }

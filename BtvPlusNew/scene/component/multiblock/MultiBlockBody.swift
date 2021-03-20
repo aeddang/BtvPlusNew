@@ -202,6 +202,7 @@ struct MultiBlockBody: PageComponent {
             case .cwGrid:
                 guard let resData = res?.data as? CWGrid else {return data.setBlank()}
                 guard let grid = resData.grid else {return data.setBlank()}
+               
                 grid.forEach{ g in
                     if let blocks = g.block {
                         switch data.uiType {
@@ -384,7 +385,9 @@ struct MultiBlockBody: PageComponent {
                 self.addLoadedBlocks(self.loadingBlocks)
                 PageLog.d("self.blocks " + self.blocks.count.description, tag: "BlockProtocol")
                 self.loadingBlocks = []
-
+                if self.blocks.isEmpty {
+                    self.addBlock()
+                }
             }
         }
     }

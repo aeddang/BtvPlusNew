@@ -140,6 +140,13 @@
 		3192318025A40A7D00020388 /* ReflashSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192317F25A40A7D00020388 /* ReflashSpinner.swift */; };
 		3193414F25DDD847002F2000 /* SynopsisTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3193414E25DDD847002F2000 /* SynopsisTop.swift */; };
 		3193415425DDDAE8002F2000 /* SynopsisBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3193415325DDDAE8002F2000 /* SynopsisBody.swift */; };
+		319BAFA02604394F0007273F /* libTycheSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 319BAF9F260439120007273F /* libTycheSDK.a */; };
+		319BAFA326043A2F0007273F /* VoiceRecognition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319BAFA226043A2F0007273F /* VoiceRecognition.swift */; };
+		319BAFAE26043DCA0007273F /* Voice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319BAFAD26043DCA0007273F /* Voice.swift */; };
+		319BAFC1260450390007273F /* PageSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319BAFC0260450390007273F /* PageSearch.swift */; };
+		319BAFCC26046B240007273F /* ImageAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319BAFCB26046B240007273F /* ImageAnimation.swift */; };
+		319BAFD7260478540007273F /* VoiceRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319BAFD6260478540007273F /* VoiceRecorder.swift */; };
+		319BAFDD2604A2FE0007273F /* SearchTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319BAFDC2604A2FE0007273F /* SearchTab.swift */; };
 		31D3F4CB25E3368A008FDFEC /* WepManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4CA25E3368A008FDFEC /* WepManager.swift */; };
 		31D3F4DE25E36625008FDFEC /* PageMultiBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */; };
 		31D3F4E625E3A57A008FDFEC /* BannerBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */; };
@@ -468,6 +475,14 @@
 		3192317F25A40A7D00020388 /* ReflashSpinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflashSpinner.swift; sourceTree = "<group>"; };
 		3193414E25DDD847002F2000 /* SynopsisTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisTop.swift; sourceTree = "<group>"; };
 		3193415325DDDAE8002F2000 /* SynopsisBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisBody.swift; sourceTree = "<group>"; };
+		319BAF9E260439110007273F /* TycheSpeechRecognizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TycheSpeechRecognizer.h; sourceTree = "<group>"; };
+		319BAF9F260439120007273F /* libTycheSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTycheSDK.a; sourceTree = "<group>"; };
+		319BAFA226043A2F0007273F /* VoiceRecognition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecognition.swift; sourceTree = "<group>"; };
+		319BAFAD26043DCA0007273F /* Voice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Voice.swift; sourceTree = "<group>"; };
+		319BAFC0260450390007273F /* PageSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSearch.swift; sourceTree = "<group>"; };
+		319BAFCB26046B240007273F /* ImageAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAnimation.swift; sourceTree = "<group>"; };
+		319BAFD6260478540007273F /* VoiceRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecorder.swift; sourceTree = "<group>"; };
+		319BAFDC2604A2FE0007273F /* SearchTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTab.swift; sourceTree = "<group>"; };
 		31D3F4CA25E3368A008FDFEC /* WepManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WepManager.swift; sourceTree = "<group>"; };
 		31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMultiBlock.swift; sourceTree = "<group>"; };
 		31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerBlock.swift; sourceTree = "<group>"; };
@@ -662,6 +677,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				31631C4F25D22DC100E501F7 /* SKBNewAdSdk.framework in Frameworks */,
+				319BAFA02604394F0007273F /* libTycheSDK.a in Frameworks */,
 				3180855E25C233A900AE4A73 /* libPoCDrmAgent.a in Frameworks */,
 				D56C5FF025933DA9009AE769 /* libti2-mdns-service-proxy-client.a in Frameworks */,
 				D4D8529D19DCDC8D8370F889 /* Pods_BtvPlusNew.framework in Frameworks */,
@@ -1065,6 +1081,40 @@
 			path = value;
 			sourceTree = "<group>";
 		};
+		319BAFA1260439AD0007273F /* voice */ = {
+			isa = PBXGroup;
+			children = (
+				319BAFAD26043DCA0007273F /* Voice.swift */,
+				319BAFA226043A2F0007273F /* VoiceRecognition.swift */,
+			);
+			path = voice;
+			sourceTree = "<group>";
+		};
+		319BAFBD26044FE30007273F /* search */ = {
+			isa = PBXGroup;
+			children = (
+				319BAFBF26044FFC0007273F /* model */,
+				319BAFBE26044FEB0007273F /* view */,
+				319BAFC0260450390007273F /* PageSearch.swift */,
+			);
+			path = search;
+			sourceTree = "<group>";
+		};
+		319BAFBE26044FEB0007273F /* view */ = {
+			isa = PBXGroup;
+			children = (
+				319BAFDC2604A2FE0007273F /* SearchTab.swift */,
+			);
+			path = view;
+			sourceTree = "<group>";
+		};
+		319BAFBF26044FFC0007273F /* model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
 		31D3F4C925E3364D008FDFEC /* web */ = {
 			isa = PBXGroup;
 			children = (
@@ -1195,6 +1245,8 @@
 		D56C603625933E52009AE769 /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				319BAF9E260439110007273F /* TycheSpeechRecognizer.h */,
+				319BAF9F260439120007273F /* libTycheSDK.a */,
 				3180855C25C233A900AE4A73 /* DrmAgent.h */,
 				3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */,
 				D56C603825933E52009AE769 /* mdnsServiceProxyClientIOS.h */,
@@ -1556,6 +1608,7 @@
 			isa = PBXGroup;
 			children = (
 				D56C6A01257DA0C600CF9AB8 /* ImageView.swift */,
+				319BAFCB26046B240007273F /* ImageAnimation.swift */,
 			);
 			path = image;
 			sourceTree = "<group>";
@@ -1633,6 +1686,7 @@
 			isa = PBXGroup;
 			children = (
 				D50AB8EB257F30EC00649C4A /* model */,
+				319BAFA1260439AD0007273F /* voice */,
 				31D3F4C925E3364D008FDFEC /* web */,
 				D56C603A25933EAB009AE769 /* account */,
 				D5DABD6F258972D100DF5701 /* coreData */,
@@ -1651,6 +1705,7 @@
 				D5717865258300C000BF2612 /* contentBody */,
 				31D3F4DB25E365F3008FDFEC /* popups */,
 				312BB08325DCF90F00AC03BC /* purchase */,
+				319BAFBD26044FE30007273F /* search */,
 				314D6B1125D1070E0003C749 /* setup */,
 				31E3974E25B59CC600CE6E21 /* my */,
 				D51AA9E52599A2200035CD51 /* pairing */,
@@ -1679,6 +1734,7 @@
 				312BB07325DCDCBB00AC03BC /* Tooltip.swift */,
 				318B537525F050CC0052E4E0 /* AlramButton.swift */,
 				316719A626008680005AC3D2 /* Alerts.swift */,
+				319BAFD6260478540007273F /* VoiceRecorder.swift */,
 			);
 			path = ui;
 			sourceTree = "<group>";
@@ -2111,6 +2167,7 @@
 				31895B072601CEB8002DE02E /* SynopsisPackageModel.swift in Sources */,
 				D56C6A43257DA0C700CF9AB8 /* LayoutAlignment.swift in Sources */,
 				316DF2D125C29EC500915B27 /* CustomAVPlayer.swift in Sources */,
+				319BAFDD2604A2FE0007273F /* SearchTab.swift in Sources */,
 				3180855825C2287300AE4A73 /* BtvPlayer.swift in Sources */,
 				D56C69B1257DA09E00CF9AB8 /* IndexMap.swift in Sources */,
 				314D6B1D25D122610003C749 /* Setup.swift in Sources */,
@@ -2168,6 +2225,7 @@
 				3185FE1E25EF11B2005074AA /* PageCategory.swift in Sources */,
 				3192317225A3FDBE00020388 /* coordinator.swift in Sources */,
 				D56C6A41257DA0C700CF9AB8 /* Player.swift in Sources */,
+				319BAFAE26043DCA0007273F /* Voice.swift in Sources */,
 				318C875825E64C3200ADDFE0 /* BannerData.swift in Sources */,
 				D5688924259C29DE00F2F67A /* SpanText.swift in Sources */,
 				D506D732258CA3E300F27C00 /* ThemaList.swift in Sources */,
@@ -2209,6 +2267,7 @@
 				3152B47225DA310000147C86 /* SerisList.swift in Sources */,
 				D56C6A40257DA0C700CF9AB8 /* PlayerUI.swift in Sources */,
 				D56C6A5A257DA0C700CF9AB8 /* SortButton.swift in Sources */,
+				319BAFA326043A2F0007273F /* VoiceRecognition.swift in Sources */,
 				D56C6B0F257DAADE00CF9AB8 /* SceneRadioController.swift in Sources */,
 				31E8D7BC25CA5D470034BBC4 /* PlayerTop.swift in Sources */,
 				D5DC474E25820A02007EDD86 /* RelationContent.swift in Sources */,
@@ -2240,6 +2299,7 @@
 				3175F2AA25F8939B008E3721 /* DragDownArrow.swift in Sources */,
 				D506D717258C8FFB00F27C00 /* PosterList.swift in Sources */,
 				D56C69AE257DA09E00CF9AB8 /* AnimateDrawView.swift in Sources */,
+				319BAFCC26046B240007273F /* ImageAnimation.swift in Sources */,
 				D56C6B0E257DAADE00CF9AB8 /* SceneTab.swift in Sources */,
 				317A8F5C25CBE1AE00E41226 /* PlayerMoreBox.swift in Sources */,
 				3177732425FAF916006382AE /* User.swift in Sources */,
@@ -2289,6 +2349,7 @@
 				D56C69A2257DA09E00CF9AB8 /* PageComponentProtocol.swift in Sources */,
 				D56C6B38257DACD800CF9AB8 /* Api.swift in Sources */,
 				D56C6A63257DA0C700CF9AB8 /* FocusableTextField.swift in Sources */,
+				319BAFD7260478540007273F /* VoiceRecorder.swift in Sources */,
 				D56C69A4257DA09E00CF9AB8 /* ViewUtil;.swift in Sources */,
 				31D3F4EC25E3A7D4008FDFEC /* BannerList.swift in Sources */,
 				D56C6B0D257DAADE00CF9AB8 /* SceneSelectController.swift in Sources */,
@@ -2322,6 +2383,7 @@
 				315730EE25AFC1B600D9A693 /* AccountManager.swift in Sources */,
 				310D7E2425A42B72000BE173 /* PagePairingDevice.swift in Sources */,
 				D56C6A5E257DA0C700CF9AB8 /* MultiStrokeSpinner.swift in Sources */,
+				319BAFC1260450390007273F /* PageSearch.swift in Sources */,
 				31895B242601F609002DE02E /* SimpleSummaryViewer.swift in Sources */,
 				3167198425FF42A8005AC3D2 /* WatchedBlock.swift in Sources */,
 				D56C6A56257DA0C700CF9AB8 /* CircleButton.swift in Sources */,

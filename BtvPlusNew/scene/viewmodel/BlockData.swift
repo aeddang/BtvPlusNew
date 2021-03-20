@@ -123,6 +123,21 @@ class BlockData:InfinityData, ObservableObject{
     
     func setDatabindingCompleted(){
         if status != .initate { return }
+        if uiType == .poster && posters?.isEmpty != false  {
+            setBlank()
+            return
+        }
+        
+        if uiType == .video && videos?.isEmpty != false {
+            setBlank()
+            return
+        }
+        
+        if uiType == .banner && banners?.isEmpty != false {
+            setBlank()
+            return
+        }
+        
         status = .active
     }
     

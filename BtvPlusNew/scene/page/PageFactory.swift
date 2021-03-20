@@ -35,6 +35,7 @@ extension PageID{
     static let fullPlayer:PageID = "fullPlayer"
     static let webview:PageID = "webview"
     static let person:PageID = "person"
+    static let search:PageID = "search"
 }
 
 struct PageProvider {
@@ -168,6 +169,7 @@ struct PageFactory{
         case .fullPlayer : return PageFullPlayer()
         case .webview : return PageWebview()
         case .person : return PagePerson()
+        case .search : return PageSearch()
         default : return PageTest()
         }
     }
@@ -237,7 +239,7 @@ struct PageSceneModel: PageModel {
     
     static func needKeyboard(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
-        case .pairingSetupUser, .pairingBtv: return true
+        case .pairingSetupUser, .pairingBtv, .search: return true
         default : return false
         }
     }

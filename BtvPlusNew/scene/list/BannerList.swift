@@ -7,6 +7,8 @@
 
 import Foundation
 import SwiftUI
+import struct Kingfisher.KFImage
+
 struct BannerDataSet:Identifiable {
     private(set) var id = UUID().uuidString
     var count:Int = 1
@@ -76,8 +78,19 @@ struct BannerItem: PageView {
             case .cell(let size, _) :
                 ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg16_9)
                     .frame(width: size.width, height: size.height)
+            case .list :
+                KFImage(URL(string: self.data.image))
+                    .resizable()
+                    .placeholder {
+                        Image(Asset.noImg16_9)
+                            .resizable()
+                    }
+                    .cancelOnDisappear(true)
+                    .loadImmediately()
+                    .aspectRatio(contentMode: .fill)
+                    .modifier(MatchHorizontal(height: ListItem.banner.type01.height))
             default :
-                ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg16_9)
+                ImageView(url: self.data.image, key: self.data.title ?? "",contentMode: .fill, noImg: Asset.noImg16_9)
                     .modifier(MatchHorizontal(height: ListItem.banner.type01.height))
             }
         }

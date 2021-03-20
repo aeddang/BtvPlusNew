@@ -60,6 +60,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                         .onReceive(self.viewModel.$pullPosition){ pos in
                             self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
                         }
+                        
                 } else{
                     VideoList(
                         viewModel:self.viewModel,

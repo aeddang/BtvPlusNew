@@ -7,10 +7,12 @@
 
 import Foundation
 import SwiftUI
+import struct Kingfisher.KFImage
+
 struct ImageViewButton: PageView{
     var isSelected: Bool
-    var defaultImage:String? = Asset.noImg1_1
-    var activeImage:String? = Asset.noImg1_1
+    let defaultImage:String
+    let activeImage:String
     var size:CGSize = CGSize(width: Dimen.icon.light, height: Dimen.icon.light)
     var text:String? = nil
     var textSize:CGFloat = Font.size.tinyExtra
@@ -24,11 +26,21 @@ struct ImageViewButton: PageView{
             self.action()
         }) {
             VStack(spacing:Dimen.margin.tiny){
-                if !self.isSelected {
-                    ImageView(url: self.activeImage, noImg: noImg)
+                if self.isSelected {
+                    KFImage(URL(string: self.activeImage)).resizable()
+                        .placeholder {
+                            Image(Asset.noImg1_1)
+                                .resizable()
+                        }
+                        .loadImmediately()
                         .frame(width: size.width, height: size.height)
                 }else{
-                    ImageView(url: self.defaultImage)
+                    KFImage(URL(string: self.defaultImage)).resizable()
+                        .placeholder {
+                            Image(Asset.noImg1_1)
+                                .resizable()
+                        }
+                        .loadImmediately()
                         .frame(width: size.width, height: size.height)
                 }
                 
@@ -45,16 +57,4 @@ struct ImageViewButton: PageView{
     }
 }
 
-#if DEBUG
-struct ImageViewButton_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        Form{
-            ImageViewButton(isSelected: true){
-                
-            }
-            .frame( alignment: .center)
-        }
-    }
-}
-#endif
+

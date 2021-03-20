@@ -30,6 +30,7 @@ class Repository:ObservableObject, PageProtocol{
     let pairing:Pairing
     let webManager:WebManager
     let networkObserver:NetworkObserver
+    let voiceRecognition:VoiceRecognition
     
     private let storage = LocalStorage()
     private let apiCoreDataManager = ApiCoreDataManager()
@@ -40,6 +41,7 @@ class Repository:ObservableObject, PageProtocol{
     private var anyCancellable = Set<AnyCancellable>()
     private var dataCancellable = Set<AnyCancellable>()
     private let drmAgent = DrmAgent.initialize() as? DrmAgent
+    
     
     init(
         dataProvider:DataProvider? = nil,
@@ -56,6 +58,8 @@ class Repository:ObservableObject, PageProtocol{
         self.pageSceneObserver = sceneObserver
         self.pagePresenter = pagePresenter
         self.userSetup = setup ?? Setup()
+        self.voiceRecognition = VoiceRecognition(pageSceneObserver: sceneObserver)
+        
         self.accountManager =  AccountManager(
             pairing: self.pairing,
             dataProvider: self.dataProvider)
@@ -101,8 +105,6 @@ class Repository:ObservableObject, PageProtocol{
     
     private func setupPairing(){
         self.accountManager.setupPairing(savedUser:self.storage.getSavedUser())
-        
-        
         self.pairing.$request.sink(receiveValue: { req in
             guard let requestPairing = req else { return }
             switch requestPairing{
@@ -129,7 +131,7 @@ class Repository:ObservableObject, PageProtocol{
                 self.storage.saveUser(self.pairing.user)
                 self.pairing.user?.pairingDate = self.storage.pairingDate
                 self.pairing.hostDevice?.modelName = self.storage.pairingModelName
-                self.pageSceneObserver?.event = .toast(String.alert.pairingCompleted)
+                //self.pageSceneObserver?.event = .toast(String.alert.pairingCompleted)
                 self.dataProvider.requestData(q: .init(type: .getGnb))
          
             
@@ -232,11 +234,11 @@ class Repository:ObservableObject, PageProtocol{
         case .getGnb :
             guard let data = res.data as? GnbBlock  else { return }
             if data.gnbs == nil || data.gnbs!.isEmpty {
-                //self.pageSceneObserver?.event = .toast("respondApi data.gnbs error")
+                self.pageSceneObserver?.event = .toast("respondApi data.gnbs error")
                 self.status = .error(nil)
                 return
             }
-            //self.pageSceneObserver?.event = .toast("respondApi getGnb")
+            self.pageSceneObserver?.event = .toast("respondApi getGnb")
             self.onReadyRepository(gnbData: data)
         
         default: do{}
@@ -260,7 +262,7 @@ class Repository:ObservableObject, PageProtocol{
     
     private func onReadyRepository(gnbData:GnbBlock){
         self.dataProvider.bands.setDate(gnbData)
-        //self.pageSceneObserver?.event = .toast("onReadyRepository")
+        self.pageSceneObserver?.event = .toast("onReadyRepository")
         if self.status != .ready {self.status = .ready}
     }
     

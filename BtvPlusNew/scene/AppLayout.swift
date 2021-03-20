@@ -121,6 +121,7 @@ struct AppLayout: PageComponent{
         
         .onReceive(self.repository.$status){ status in
             switch status {
+            
             case .ready: self.onStoreInit()
             case .error(let err): self.onPageError(err)
             default: do{}
@@ -136,6 +137,7 @@ struct AppLayout: PageComponent{
         }
     }
     func onStoreInit(){
+        self.pageSceneObserver.event = .toast("onStoreInit")
         if SystemEnvironment.firstLaunch {
             self.pagePresenter.changePage(
                 PageProvider.getPageObject(.auth)
@@ -147,8 +149,11 @@ struct AppLayout: PageComponent{
     func onPageInit(){
         self.isInit = true
         self.isLoading = false
+        self.pageSceneObserver.event = .toast("onPageInit")
         if !self.appObserverMove(self.appObserver.page) {
             let initMenuId = self.dataProvider.bands.datas.first?.menuId
+            self.pageSceneObserver.event = .toast("on go home")
+            
             self.pagePresenter.changePage(
                 PageProvider.getPageObject(.home)
                     .addParam(key: .id, value: initMenuId)

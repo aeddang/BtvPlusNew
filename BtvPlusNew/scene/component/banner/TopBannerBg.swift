@@ -30,7 +30,6 @@ struct TopBannerBg: PageComponent {
                 isForground : false
                 )
                 .modifier(MatchHorizontal(height: TopBanner.imageHeight))
-                
             if self.pages.count > 1 {
                 HStack(spacing: Dimen.margin.tiny) {
                     Spacer()

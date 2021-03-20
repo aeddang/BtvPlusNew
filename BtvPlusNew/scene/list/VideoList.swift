@@ -182,13 +182,12 @@ struct VideoList: PageComponent{
                                     .addParam(key: .data, value: synopsisData)
                             )
                         }
-                        
                     }
-                }else{
+                } else {
                     VideoItem( data:data , isSelected: self.contentID == nil
                                 ? false
                                 : self.contentID == data.epsdId)
-                        .id(data.index)
+                    .id(data.index)
                     .onTapGesture {
                         if let action = self.action {
                             action(data)
@@ -199,12 +198,11 @@ struct VideoList: PageComponent{
                                     .addParam(key: .data, value: synopsisData)
                             )
                         }
-                        
                     }
                 }
-                
             }
         }
+        
         
     }//body
 }
@@ -286,13 +284,13 @@ struct VideoItem: PageView {
         VStack(alignment: .leading, spacing:0){
             ZStack{
                 if self.data.image == nil {
-                    Image(Asset.noImg9_16)
+                    Image(Asset.noImg16_9)
                         .renderingMode(.original)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .modifier(MatchParent())
                 } else {
-                    ImageView(url: self.data.image!, contentMode: .fill, noImg: Asset.noImg9_16)
+                    ImageView(url: self.data.image!,contentMode: .fill, noImg: Asset.noImg16_9)
                         .modifier(MatchParent())
                 }
                 if self.data.isInside {
@@ -342,7 +340,8 @@ struct VideoItem: PageView {
         }
         .frame(width: self.data.type.size.width)
         .background(Color.app.blueLight)
-        
+        .onAppear(){
+        }
     }
     
 }

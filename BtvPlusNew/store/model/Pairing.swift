@@ -53,6 +53,14 @@ class Pairing:ObservableObject, PageProtocol {
     
     @Published var userInfo:PairingUserInfo? = nil
     let authority:Authority = Authority()
+    
+    func requestPairing(_ request:PairingRequest){
+        if request == .recovery {
+            self.status = .connect
+        }
+        self.request = request
+        
+    }
    
     func connected(stbData:StbData?){
         self.stbId = NpsNetwork.hostDeviceId 
@@ -71,6 +79,7 @@ class Pairing:ObservableObject, PageProtocol {
         self.authority.reset()
     }
     
+    
     func disConnectError(header:NpsCommonHeader? = nil) {
         self.status = .disConnect
         self.event = .disConnectError(header)
@@ -83,14 +92,6 @@ class Pairing:ObservableObject, PageProtocol {
     
     func checkCompleted(isSuccess:Bool) {
         self.event = .pairingCheckCompleted(isSuccess)
-    }
-    
-    func requestPairing(_ request:PairingRequest){
-        if request == .recovery {
-            self.status = .connect
-        }
-        self.request = request
-        
     }
     
     func foundDevice(mdnsData:[MdnsDevice]){

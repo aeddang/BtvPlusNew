@@ -10,10 +10,8 @@ import Foundation
 
 class DataProvider : ObservableObject {
     let bands:Bands = Bands()
-    
     @Published private(set) var request:ApiQ? = nil
-        {didSet{ if result != nil { result = nil} }}
-   
+        {didSet{ if request != nil { request = nil} }}
     @Published var result:ApiResultResponds? = nil
         {didSet{ if result != nil { result = nil} }}
     @Published var error:ApiResultError? = nil

@@ -11,8 +11,8 @@ struct PagePairingSetupUser: PageView {
         case nickName, birth, none
     }
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var keyboardObserver:KeyboardObserver
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -224,7 +224,7 @@ struct PagePairingSetupUser: PageView {
             .onReceive(self.keyboardObserver.$isOn){ on in
                 self.updatekeyboardStatus(on:on)
             }
-            .onReceive(self.pageSceneObserver.$selectResult){ result in
+            .onReceive(self.appSceneObserver.$selectResult){ result in
                 guard let result = result else { return }
                 switch result {
                     case .complete(let type, let idx) : do {
@@ -336,7 +336,7 @@ struct PagePairingSetupUser: PageView {
             self.editType = .birth
         }
         let pic = self.birthList.firstIndex(of: self.birth) ?? 0
-        self.pageSceneObserver.select = .picker((self.tag, self.birthList), pic)
+        self.appSceneObserver.select = .picker((self.tag, self.birthList), pic)
     }
     
     private func onBirthSelected(idx:Int){
@@ -354,8 +354,8 @@ struct PagePairingSetupUser_Previews: PreviewProvider {
         Form{
             PagePairingSetupUser().contentBody
                 .environmentObject(PagePresenter())
-                .environmentObject(SceneObserver())
                 .environmentObject(PageSceneObserver())
+                .environmentObject(AppSceneObserver())
                 .environmentObject(KeyboardObserver())
                 .environmentObject(Pairing())
                 .frame(width: 565, height: 640, alignment: .center)

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 struct PackageBody: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     var infinityScrollModel: InfinityScrollModel
     var synopsisListViewModel: InfinityScrollModel
     var synopsisPackageModel:SynopsisPackageModel
@@ -47,6 +47,9 @@ struct PackageBody: PageComponent{
                         self.action?(data)
                     }
                 }
+                .frame( height:
+                            (ListItem.poster.type01.height)
+                            + Font.size.regular + Dimen.margin.thinExtra)
                 .modifier(ListRowInset(spacing: Dimen.margin.regular))
             } else {
                 Spacer().modifier(MatchParent())

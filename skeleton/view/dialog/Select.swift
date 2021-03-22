@@ -34,7 +34,7 @@ struct SelectBtnData:Identifiable, Equatable{
 }
 
 struct Select<Presenting>: View where Presenting: View {
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @Binding var isShowing: Bool
     @Binding var index: Int
     let presenting: () -> Presenting
@@ -113,7 +113,7 @@ struct Select_Previews: PreviewProvider {
         ){ idx in
         
         }
-        .environmentObject(SceneObserver())
+        .environmentObject(PageSceneObserver())
     }
 }
 #endif

@@ -12,8 +12,8 @@ import SwiftUI
 struct PageSynopsisPackage: PageView {
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -95,7 +95,7 @@ struct PageSynopsisPackage: PageView {
                 case .disConnected : self.initPage()
                 case .pairingCheckCompleted(let isSuccess) :
                     if isSuccess { self.initPage() }
-                    else { self.pageSceneObserver.alert = .pairingCheckFail }
+                    else { self.appSceneObserver.alert = .pairingCheckFail }
                 default : do{}
                 }
             }
@@ -115,7 +115,7 @@ struct PageSynopsisPackage: PageView {
                     DispatchQueue.main.async {
                         switch self.pairing.status {
                         case .pairing : self.pairing.requestPairing(.check)
-                        case .unstablePairing : self.pageSceneObserver.alert = .pairingRecovery
+                        case .unstablePairing : self.appSceneObserver.alert = .pairingRecovery
                         default :
                             self.isPageDataReady = true
                             self.initPage()
@@ -124,7 +124,7 @@ struct PageSynopsisPackage: PageView {
                 default : do{}
                 }
             }
-            .onReceive(self.pageSceneObserver.$alertResult){ result in
+            .onReceive(self.appSceneObserver.$alertResult){ result in
                 guard let result = result else { return }
                 switch result {
                 case .retry(let alert) :
@@ -134,7 +134,7 @@ struct PageSynopsisPackage: PageView {
                 default : break
                 }
             }
-            .onReceive(self.pageSceneObserver.$event){ evt in
+            .onReceive(self.appSceneObserver.$event){ evt in
                 guard let evt = evt else { return }
                 switch evt {
                 case .update(let type):

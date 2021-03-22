@@ -14,13 +14,13 @@ import SwiftUI
 
 struct BtvButton: PageView {
     @EnvironmentObject var pairing:Pairing
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     var id:String
     
     var body: some View {
         Button(action: {
             if self.pairing.status != .pairing {
-                self.pageSceneObserver.alert = .needPairing()
+                self.appSceneObserver.alert = .needPairing()
             }
             else{
                 
@@ -55,7 +55,7 @@ struct BtvButton_Previews: PreviewProvider {
                 id:""
             )
             .environmentObject(Pairing())
-            .environmentObject(PageSceneObserver())
+            .environmentObject(AppSceneObserver())
             .environmentObject(Pairing())
         }
     }

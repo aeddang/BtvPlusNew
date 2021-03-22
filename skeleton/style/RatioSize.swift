@@ -9,7 +9,7 @@
 import Foundation
 import SwiftUI
 struct Ratio16_9: ViewModifier {
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     var geometry:GeometryProxy? = nil
     var width:CGFloat = 0
     var horizontalEdges:CGFloat = 0

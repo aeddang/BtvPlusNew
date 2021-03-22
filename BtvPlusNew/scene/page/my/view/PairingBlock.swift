@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 struct PairingBlock: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
     @State var safeAreaBottom:CGFloat = 0
     
@@ -127,7 +127,7 @@ struct PairingBlock_Previews: PreviewProvider {
         Form{
             PairingBlock()
                 .environmentObject(PagePresenter())
-                .environmentObject(SceneObserver())
+                .environmentObject(PageSceneObserver())
                 .environmentObject(Pairing())
                 .frame(width:320,height:600)
                 .background(Color.brand.bg)

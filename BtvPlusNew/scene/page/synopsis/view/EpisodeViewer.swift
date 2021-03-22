@@ -77,7 +77,7 @@ class EpisodeViewerData {
 
 struct EpisodeViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     var data:EpisodeViewerData
     
     var body: some View {
@@ -121,7 +121,7 @@ struct EpisodeViewer: PageComponent{
             
             if self.data.award != nil {
                 Button(action: {
-                    self.pageSceneObserver.alert = .alert(nil, self.data.awardDetail)
+                    self.appSceneObserver.alert = .alert(nil, self.data.awardDetail)
                 }) {
                     HStack(spacing:Dimen.margin.tinyExtra){
                         Image( Asset.icon.trophy )
@@ -156,7 +156,7 @@ struct EpisodeViewer_Previews: PreviewProvider {
             )
             .environmentObject(DataProvider())
             .environmentObject(PagePresenter())
-            .environmentObject(PageSceneObserver())
+            .environmentObject(AppSceneObserver())
             .environmentObject(Pairing())
         }.background(Color.blue)
     }

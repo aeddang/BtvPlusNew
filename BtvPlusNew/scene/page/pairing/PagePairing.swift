@@ -8,8 +8,8 @@ import Foundation
 import SwiftUI
 struct PagePairing: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var networkObserver:NetworkObserver
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
@@ -128,7 +128,7 @@ struct PagePairing: PageView {
                 default : do{}
                 }
             }
-            .onReceive(self.pageSceneObserver.$alertResult){ result in
+            .onReceive(self.appSceneObserver.$alertResult){ result in
                 guard let result = result else { return }
                 switch result {
                 case .retry(let alert) :
@@ -149,7 +149,7 @@ struct PagePairing: PageView {
         switch type {
         case .wifi:
             if self.networkObserver.status != .wifi {
-                self.pageSceneObserver.alert = .connectWifi
+                self.appSceneObserver.alert = .connectWifi
                 return
             }
             self.pagePresenter.openPopup(
@@ -179,8 +179,8 @@ struct PagePairing_Previews: PreviewProvider {
         Form{
             PagePairing().contentBody
                 .environmentObject(PagePresenter())
-                .environmentObject(SceneObserver())
                 .environmentObject(PageSceneObserver())
+                .environmentObject(AppSceneObserver())
                 .environmentObject(NetworkObserver())
                 .environmentObject(DataProvider())
                 .environmentObject(Pairing())

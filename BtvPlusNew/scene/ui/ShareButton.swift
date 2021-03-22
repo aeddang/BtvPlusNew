@@ -47,7 +47,7 @@ struct ShareButton_Previews: PreviewProvider {
             ShareButton(
                 id:""
             )
-            .environmentObject(PageSceneObserver())
+            .environmentObject(AppSceneObserver())
         }
     }
 }

@@ -135,7 +135,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     fileprivate var historys:[PageObject] = []
     fileprivate var popups:[PageObject] = []
     let pagePresenter = PagePresenter()
-    let sceneObserver = SceneObserver()
+    let sceneObserver = PageSceneObserver()
     private(set) lazy var pageModel:PageModel = getPageModel()
     
     private var changeSubscription:AnyCancellable?

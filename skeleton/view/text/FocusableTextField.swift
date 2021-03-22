@@ -16,7 +16,7 @@ struct FocusableTextField: UIViewRepresentable {
     var kern: Int = 1
     var textModifier:TextModifier = RegularTextStyle().textModifier
     
-    var isfocusAble:Bool
+    var isfocus:Bool
     var inputChanged: ((_ text:String) -> Void)? = nil
     var inputCopmpleted: ((_ text:String) -> Void)? = nil
     
@@ -37,11 +37,14 @@ struct FocusableTextField: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: UITextField, context: Context) {
-        if self.isfocusAble {
-            uiView.becomeFirstResponder()
-            
+        if self.isfocus {
+            if !uiView.isFocused {
+                uiView.becomeFirstResponder()
+            }
         } else {
-            uiView.resignFirstResponder()
+            if uiView.isFocused {
+                uiView.resignFirstResponder()
+            }
         }
     }
 

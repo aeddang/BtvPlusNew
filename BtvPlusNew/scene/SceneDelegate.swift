@@ -22,7 +22,7 @@ class SceneDelegate: PageSceneDelegate {
     override func adjustEnvironmentObjects<T>(_ view: T) -> AnyView where T : View
     {
         
-        let sceneObserver = PageSceneObserver()
+        let sceneObserver = AppSceneObserver()
         let dataProvider = DataProvider()
         let pairing = Pairing()
         let networkObserver = NetworkObserver()

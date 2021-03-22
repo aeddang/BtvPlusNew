@@ -16,7 +16,7 @@ extension MonthlyBlock{
 
 struct MonthlyBlock: PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
@@ -97,7 +97,7 @@ struct MonthlyBlock: PageComponent {
                 
                 let status = self.pairing.status
                 if status != .pairing {
-                    self.pageSceneObserver.alert = .needPairing()
+                    self.appSceneObserver.alert = .needPairing()
                     return 
                 }
                 

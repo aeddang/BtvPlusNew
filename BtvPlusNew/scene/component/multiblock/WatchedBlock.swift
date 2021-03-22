@@ -28,8 +28,8 @@ class WatchedBlockModel: PageDataProviderModel {
 
 struct WatchedBlock: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
     
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -103,7 +103,7 @@ struct WatchedBlock: PageComponent{
             case .disConnected : self.reload()
             case .pairingCheckCompleted(let isSuccess) :
                 if isSuccess { self.reload() }
-                else { self.pageSceneObserver.alert = .pairingCheckFail }
+                else { self.appSceneObserver.alert = .pairingCheckFail }
             default : do{}
             }
         }
@@ -139,7 +139,7 @@ struct WatchedBlock: PageComponent{
         guard  let sridId = data.srisId else {
             return
         }
-        self.pageSceneObserver.alert = .confirm(nil,  String.alert.deleteWatch){ isOk in
+        self.appSceneObserver.alert = .confirm(nil,  String.alert.deleteWatch){ isOk in
             if !isOk {return}
             self.currentDeleteId = sridId
             self.viewModel.request = .init(
@@ -151,11 +151,11 @@ struct WatchedBlock: PageComponent{
     
     func deleted(_ res:ApiResultResponds){
         guard let result = res.data as? UpdateMetv else {
-            self.pageSceneObserver.event = .toast(String.alert.apiErrorServer)
+            self.appSceneObserver.event = .toast(String.alert.apiErrorServer)
             return
         }
         if result.result != ApiCode.success {
-            self.pageSceneObserver.event = .toast(result.reason ?? String.alert.apiErrorServer)
+            self.appSceneObserver.event = .toast(result.reason ?? String.alert.apiErrorServer)
             return
         }
         if let find = self.datas.firstIndex(where: {$0.srisId == self.currentDeleteId}) {

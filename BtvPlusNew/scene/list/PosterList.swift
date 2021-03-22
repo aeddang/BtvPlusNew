@@ -94,6 +94,20 @@ class PosterData:InfinityData{
         return self
     }
     
+    func setData(data:SearchPopularityVodItem, idx:Int = -1) -> PosterData {
+        title = data.title
+        epsdId = data.epsd_id
+        if let poster = data.poster {
+            image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
+        }
+        index = idx
+        synopsisType = SynopsisType(value: data.synon_typ_cd)
+        synopsisData = .init(
+            srisId: nil, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "", kidZone:nil)
+        return self
+    }
+    
     private func setCardType(_ cardType:BlockData.CardType){
         switch cardType {
         case .bigPoster: type = .big
@@ -214,7 +228,7 @@ extension PosterSet{
 
 struct PosterSet: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     var pageObservable:PageObservable = PageObservable()
     var data:PosterDataSet
     var action: ((_ data:PosterData) -> Void)? = nil

@@ -9,8 +9,8 @@ import SwiftUI
 
 struct PagePairingBtv: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var keyboardObserver:KeyboardObserver
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -67,7 +67,7 @@ struct PagePairingBtv: PageView {
                             maxLength: 6,
                             kern: 10,
                             textModifier: BoldTextStyle( size: Font.size.black ).textModifier,
-                            isfocusAble: self.isFocus,
+                            isfocus: self.isFocus,
                             inputChanged: { text in
                                 self.input = text
                             },
@@ -174,7 +174,7 @@ struct PagePairingBtv: PageView {
                 case .connected :
                     self.pagePresenter.closePopup(self.pageObject?.id)
                 case .connectError(let header) :
-                    self.pageSceneObserver.alert = .pairingError(header)
+                    self.appSceneObserver.alert = .pairingError(header)
                 default : do{}
                 }
             }
@@ -214,8 +214,8 @@ struct PagePairingBtv_Previews: PreviewProvider {
         Form{
             PagePairingBtv().contentBody
                 .environmentObject(PagePresenter())
-                .environmentObject(SceneObserver())
                 .environmentObject(PageSceneObserver())
+                .environmentObject(AppSceneObserver())
                 .environmentObject(KeyboardObserver())
                 .environmentObject(Pairing())
                 .frame(width: 375, height: 640, alignment: .center)

@@ -12,7 +12,7 @@ extension MultiBlock{
     static let spacing:CGFloat = Dimen.margin.medium
 }
 struct MultiBlock:PageComponent {
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var viewPagerModel:ViewPagerModel = ViewPagerModel()

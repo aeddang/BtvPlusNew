@@ -175,7 +175,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
 
 struct PurchaseViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     var componentViewModel:PageSynopsis.ComponentViewModel = PageSynopsis.ComponentViewModel()
     var data:PurchaseViewerData
     @State var option:String = ""
@@ -260,10 +260,10 @@ struct PurchaseViewer: PageComponent{
                     isFill: true,
                     bgColor: Color.brand.bg){
                     
-                    self.pageSceneObserver.select = .select((self.tag, self.data.options), self.data.optionIdx)
+                    self.appSceneObserver.select = .select((self.tag, self.data.options), self.data.optionIdx)
                 }
                 .buttonStyle(BorderlessButtonStyle())
-                .onReceive(self.pageSceneObserver.$selectResult){ result in
+                .onReceive(self.appSceneObserver.$selectResult){ result in
                     guard let result = result else { return }
                     switch result {
                         case .complete(let type, let idx) : do {
@@ -313,7 +313,7 @@ struct PurchaseViewer_Previews: PreviewProvider {
             )
             .environmentObject(DataProvider())
             .environmentObject(PagePresenter())
-            .environmentObject(PageSceneObserver())
+            .environmentObject(AppSceneObserver())
             .environmentObject(Pairing())
         }.background(Color.brand.bg)
     }

@@ -112,7 +112,7 @@ struct TopBanner: PageComponent {
 struct TopBannerItem: PageComponent, Identifiable {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     let id = UUID().uuidString
     let data: BannerData
    

@@ -54,7 +54,7 @@ struct PageContentController: View{
     @ObservedObject internal var pageObservable: PageObservable = PageObservable()
     @EnvironmentObject var keyboardObserver:KeyboardObserver
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     
     @State var isFullScreen:Bool = false
     var currnetPage:PageViewProtocol?{
@@ -97,7 +97,7 @@ struct PageContentController: View{
             .edgesIgnoringSafeArea(.all)
             .statusBar(hidden: self.isFullScreen)
             .background(backgroundBody)
-            .onReceive(self.keyboardObserver.$isOn){ on in
+            .onReceive(self.keyboardObserver.$isOn){ _ in
                 delaySafeAreaUpdate(geometry: geometry)
             }
             .onReceive(self.pagePresenter.$currentTopPage){ page in
@@ -105,7 +105,6 @@ struct PageContentController: View{
             }
             .onReceive(self.orientationChanged){ _ in
                 sceneObserver.update(geometry: geometry)
-                
             }
             .onReceive(self.pagePresenter.$isFullScreen){ isFullScreen in
                 self.isFullScreen = isFullScreen

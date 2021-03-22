@@ -189,7 +189,7 @@ struct PlayListData{
 
 struct BtvPlayer: PageComponent{
     @EnvironmentObject var repository:Repository
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
@@ -588,7 +588,7 @@ struct BtvPlayer_Previews: PreviewProvider {
             BtvPlayer()
                 .environmentObject(Repository())
                 .environmentObject(Setup())
-                .environmentObject(SceneObserver())
+                .environmentObject(PageSceneObserver())
                 .environmentObject(PagePresenter())
                 .environmentObject(Pairing())
                 .modifier(MatchParent())

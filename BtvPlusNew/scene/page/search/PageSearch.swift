@@ -6,228 +6,223 @@
 //
 import Foundation
 import SwiftUI
+import Combine
 
 struct PageSearch: PageView {
     @EnvironmentObject var repository:Repository
+    @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var keyboardObserver:KeyboardObserver
     
+    @ObservedObject var viewModel:PageSearchModel = PageSearchModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var pageDataProviderModel:PageDataProviderModel = PageDataProviderModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     
-    @State var useTracking:Bool = false
     @State var isKeyboardOn:Bool = false
     @State var isVoiceSearch:Bool = false
-    @State var isInputSearch:Bool = true
-    @State var keyword:String = ""
+    @State var isInputSearch:Bool = false
+    @State var useTracking:Bool = false
+    @State var marginBottom:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
-            PageDataProviderContent(
-                viewModel: self.pageDataProviderModel
-            ){
-                PageDragingBody(
-                    viewModel:self.pageDragingModel,
-                    axis:.horizontal
-                ) {
-                    ZStack(){
-                        VStack{
-                            SearchTab(
-                                isFocus:self.isInputSearch,
-                                isVoiceSearch: self.$isVoiceSearch,
-                                keyword: self.$keyword,
-                                inputChanged: {text in
-                                    PageLog.d("inputChanged "  + text)
-                                },
-                                inputCopmpleted : { text in
-                                    PageLog.d("nputCopmpleted "  + text)
-                                    AppUtil.hideKeyboard()
+            PageDragingBody(
+                viewModel:self.pageDragingModel,
+                axis:.horizontal
+            ) {
+                ZStack(){
+                    VStack(spacing:0){
+                        SearchTab(
+                            isFocus:self.isInputSearch,
+                            isVoiceSearch: self.$isVoiceSearch,
+                            keyword: self.$keyword,
+                            inputChanged: {text in
+                                if text == "" {
+                                    self.viewModel.updateSearchKeyword()
+                                } else {
+                                    self.changeSearch(word: text)
                                 }
-                            )
-                            .modifier(ContentHorizontalEdges())
-                            .padding(.top, self.sceneObserver.safeAreaTop)
-                            Spacer()
-                            
+                            },
+                            inputCopmpleted : { text in
+                                self.search(keyword: text)
+                            },
+                            goBack: {
+                                if !self.emptyDatas.isEmpty {
+                                    self.emptyDatas = []
+                                    return
+                                }
+                                self.pagePresenter.goBack()
+                            }
+                        )
+                        .modifier(ContentHorizontalEdges())
+                        .padding(.top, Dimen.margin.thin)
+                        .padding(.bottom, Dimen.margin.micro)
+                        ZStack(){
+                            if !self.emptyDatas.isEmpty {
+                                EmptySearchList(keyword: self.keyword, datas: self.emptyDatas)
+                                    .modifier(MatchParent())
+                            } else {
+                                SearchList(
+                                    viewModel:self.infinityScrollModel,
+                                    datas:self.datas,
+                                    delete: { data in
+                                        if data.isSection {
+                                            self.viewModel.removeAllSearchKeyword()
+                                        } else {
+                                            self.viewModel.removeSearchKeyword(keyword: data.keyword)
+                                        }
+                                    },
+                                    action: { data in
+                                        self.search(keyword: data.keyword)
+                                    }
+                                )
+                                .modifier(ContentHorizontalEdges())
+                            }
                         }
-                        if self.isVoiceSearch {
+                        
+                    }
+                    .padding(.top, self.sceneObserver.safeAreaTop)
+                    .padding(.bottom, self.marginBottom)
+                    if self.isVoiceSearch {
+                        ZStack(){
                             VoiceRecorder(){ keyword in
-                                self.isVoiceSearch = false
-                                self.keyword = keyword
+                                self.search(keyword: keyword)
                             }
                             .modifier(MatchHorizontal(height:VoiceRecorder.height ))
+                            VStack(alignment: .trailing){
+                                Button(action: {
+                                    withAnimation{ self.isVoiceSearch = false }
+                                }) {
+                                    Image(Asset.icon.close)
+                                        .renderingMode(.original)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: Dimen.icon.regular,
+                                               height: Dimen.icon.regular)
+                                }
+                                .padding(.all, Dimen.margin.thin)
+                                Spacer().modifier(MatchParent())
+                            }
+                            .padding(.top, self.sceneObserver.safeAreaTop)
                         }
+                        .modifier(MatchParent())
+                        .background(Color.transparent.black70)
+                        
                     }
-                    .modifier(PageFull())
-                    .highPriorityGesture(
-                        DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
-                            .onChanged({ value in
-                               self.pageDragingModel.uiEvent = .drag(geometry, value)
-                            })
-                            .onEnded({ value in
-                                self.pageDragingModel.uiEvent = .draged(geometry, value)
-                            })
-                    )
-                    .gesture(
-                        self.pageDragingModel.cancelGesture
-                            .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
-                            .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
-                    )
-                }//PageDragingBody
-                
-            }//PageDataProviderContent
-           
+                }
+                .modifier(PageFull())
+                .highPriorityGesture(
+                    DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
+                        .onChanged({ value in
+                           self.pageDragingModel.uiEvent = .drag(geometry, value)
+                        })
+                        .onEnded({ value in
+                            self.pageDragingModel.uiEvent = .draged(geometry, value)
+                        })
+                )
+                .gesture(
+                    self.pageDragingModel.cancelGesture
+                        .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                        .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                )
+            }//PageDragingBody
             .onReceive(self.keyboardObserver.$isOn){ on in
+                PageLog.d("keyboardObserver " + on.description, tag: self.tag)
+                PageLog.d("self.isKeyboardOn " + self.isKeyboardOn.description, tag: self.tag)
                 if self.isKeyboardOn == on { return }
                 self.isKeyboardOn = on
                 if self.isInputSearch != on {
-                    withAnimation{ self.isInputSearch = on }
+                    PageLog.d("keyboardObserver isInputSearch " + isInputSearch.description, tag: self.tag)
+                    self.isInputSearch = on
+                }
+                if on {
+                    self.emptyDatas = []
+                }
+                if self.pageObservable.layer == .top {
+                    self.appSceneObserver.useBottom = !on
                 }
             }
-            .onReceive(self.pageDataProviderModel.$event){evt in
-                guard let evt = evt else { return }
-                switch evt {
-                case .willRequest(let progress): self.requestProgress(progress)
-                case .onResult(let progress, let res, let count):
-                    self.respondProgress(progress: progress, res: res, count: count)
-                case .onError(let progress,  let err, let count):
-                    self.errorProgress(progress: progress, err: err, count: count)
+            .onReceive(self.viewModel.$searchDatas){ datas in
+                self.datas = datas
+            }
+            .onReceive(dataProvider.$result) { res in
+                guard let res = res else { return }
+                if res.id != self.tag { return }
+                switch res.type {
+                case .getSearchKeywords : self.viewModel.updatePopularityKeywords(res.data as? SearchKeyword)
+                case .getCompleteKeywords : self.viewModel.updateCompleteKeywords(res.data as? CompleteKeyword)
+                case .getSeachVod :
+                    self.viewModel.updateSearchCategory(res.data as? SearchCategory)
+                case .getSeachPopularityVod :
+                    self.viewModel.updatePopularityVod(res.data as? SearchPopularityVod)
+                    self.emptyDatas = self.viewModel.getPosterSets(screenSize: geometry.size.width)
+                default : break
                 }
             }
-            
+            .onReceive(dataProvider.$error) { err in
+                if err?.id != self.tag { return }
+            }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
                 if ani {
-                    self.initPage()
+                    self.isInputSearch = true
                 }
             }
             .onReceive(self.pagePresenter.$currentTopPage){ page in
-                self.useTracking = page?.id == self.pageObject?.id
+                if page?.id == self.pageObject?.id {
+                    if self.useTracking {return}
+                    self.useTracking = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.marginBottom = self.sceneObserver.safeAreaBottom + Dimen.app.bottom
+                    }
+                } else {
+                    if !self.useTracking {return}
+                    self.useTracking = false
+                    self.marginBottom = 0
+                }
             }
             .onAppear{
-                
+                self.viewModel.onAppear(apiCoreDataManager:self.repository.apiCoreDataManager)
+                self.dataProvider.requestData(q: .init(id: self.tag, type: .getSearchKeywords, isOptional: true))
             }
-            
             
         }//geo
-        
-        
     }//body
-
-    /*
-     Data process
-     */
-   
-    @State var progressError = false
-    @State var progressCompleted = false
-
-      
-    func initPage(){
-        self.pageDataProviderModel.initate()
+    
+    
+    @State var keyword:String = ""
+    @State var datas:[SearchData] = []
+    @State var emptyDatas:[PosterDataSet] = []
+    
+    func voiceSearch(){
+        withAnimation{ self.isVoiceSearch = true }
     }
     
-
-    private func requestProgress(_ progress:Int){
-        PageLog.d("requestProgress " + progress.description, tag: self.tag)
-        if self.progressError {
-            self.errorProgress()
-            return
-        }
-        if self.progressCompleted{
-            self.completedProgress()
-            return
-        }
-        /*
-        switch progress {
-        case 0 :
-            guard let data = self.synopsisData else {
-                PageLog.d("requestProgress synopsisData nil", tag: self.tag)
-                self.errorProgress()
-                return
-            }
-            self.pageDataProviderModel.requestProgress( q:.init(type: .getGatewaySynopsis(data)))
-        
-        case 1 :
-            guard let model = self.synopsisPackageModel else {return}
-            if self.isPairing == true {
-                self.pageDataProviderModel.requestProgress(q: .init(type: .getPackageDirectView(model, false)))
-                self.progressCompleted = true
-            } else {
-                self.completedProgress()
-            }
-            
-            
-        default : do{}
-        }
-        */
+    func search(keyword:String){
+        AppUtil.hideKeyboard()
+        withAnimation{ self.isVoiceSearch = false }
+        if keyword.isEmpty { return }
+        self.viewModel.addSearchKeyword(keyword: keyword)
+        self.keyword = keyword
+        self.dataProvider.requestData(q: .init(id: self.tag, type: .getSeachVod(keyword), isOptional: false))
+        self.dataProvider.requestData(q: .init(id: self.tag, type: .getSeachPopularityVod, isOptional: false))
     }
     
-    private func respondProgress(progress:Int, res:ApiResultResponds, count:Int){
-        PageLog.d("respondProgress " + progress.description + " " + count.description, tag: self.tag)
-        self.progressError = false
-        /*
-        switch progress {
-        case 0 :
-            guard let data = res.data as? GatewaySynopsis else {
-                self.progressError = true
-                return
-            }
-            self.setupGatewaySynopsis(data)
-            
-        case 1 :
-            guard let data = res.data as? DirectPackageView else {
-                PageLog.d("DirectPackageView", tag: self.tag)
-                self.progressError = true
-                return
-            }
-            self.setupDirectPackageView(data)
-        
-    
-        default :
-            switch res.type {
-            case .getSynopsis :
-                guard let data = res.data as? Synopsis else {
-                    PageLog.d("getSynopsis error", tag: self.tag)
-                    return
-                }
-                self.setupSynopsis(data)
-            default: break
-            }
-            
-        }
-         */
-    }
-    
-    private func errorProgress(progress:Int, err:ApiResultError, count:Int){
-        switch progress {
-        case 0 : self.progressError = true
-        case 1 : self.progressError = true
-        default : break
+    @State var changeSearchSubscription:AnyCancellable?
+    func changeSearch(word:String) {
+        self.changeSearchSubscription?.cancel()
+        self.changeSearchSubscription = Timer.publish(
+            every: 0.1, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                self.changeSearchSubscription?.cancel()
+                self.dataProvider.requestData(q: .init(id: self.tag, type: .getCompleteKeywords(word), isOptional: true))
         }
     }
     
-    private func completedProgress(){
-        PageLog.d("completedProgress", tag: self.tag)
-        
-        self.onAllProgressCompleted()
-        
-    }
-    private func errorProgress(){
-        PageLog.d("errorProgress", tag: self.tag)
-        
-        self.onAllProgressCompleted()
-    }
-    
-    private func onAllProgressCompleted(){
-        PageLog.d("onAllProgressCompleted(", tag: self.tag)
-        
-    }
 }
-
-
-
-
 
 

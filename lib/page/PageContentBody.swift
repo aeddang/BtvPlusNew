@@ -26,7 +26,7 @@ extension PageContentBody{
 struct PageContentBody: PageView  {
     var childViews:[PageViewProtocol] = []
     @EnvironmentObject var pageChanger:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @State var offsetX:CGFloat = 0
     @State var offsetY:CGFloat = 0

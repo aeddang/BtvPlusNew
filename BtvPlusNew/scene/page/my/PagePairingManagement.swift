@@ -8,7 +8,7 @@ import Foundation
 import SwiftUI
 struct PagePairingManagement: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -161,8 +161,8 @@ struct PagePairingManagement_Previews: PreviewProvider {
         Form{
             PagePairingManagement().contentBody
                 .environmentObject(PagePresenter())
-                .environmentObject(SceneObserver())
                 .environmentObject(PageSceneObserver())
+                .environmentObject(AppSceneObserver())
                 .environmentObject(NetworkObserver())
                 .environmentObject(DataProvider())
                 .environmentObject(Pairing())

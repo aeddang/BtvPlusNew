@@ -13,7 +13,7 @@ struct FocusableTextView: UIViewRepresentable {
     var returnVal: UIReturnKeyType = .done
     var placeholder: String = ""
     @Binding var text:String
-    var isfocusAble:Bool
+    var isfocus:Bool
     var textModifier:TextModifier = RegularTextStyle().textModifier
     var usefocusAble:Bool = true
     var limitedLine: Int = 1
@@ -44,57 +44,50 @@ struct FocusableTextView: UIViewRepresentable {
     func updateUIView(_ uiView: UITextView, context: Context) {
         if uiView.text != self.text { uiView.text = self.text }
         if !self.usefocusAble {return}
-        if self.isfocusAble {
-            uiView.becomeFirstResponder()
+        if self.isfocus {
+            if !uiView.isFocused {
+                uiView.becomeFirstResponder()
+            }
             
         } else {
-            uiView.resignFirstResponder()
+            if uiView.isFocused {
+                uiView.resignFirstResponder()
+            }
         }
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(text:self.$text,
-                    limitedSize: self.limitedSize,
-                    inputChange:inputChange,
-                    inputChanged: inputChanged,
-                    inputCopmpleted:inputCopmpleted)
+        Coordinator(self)
     }
 
     class Coordinator: NSObject, UITextViewDelegate {
-        @Binding var text:String
-        var limitedSize: Int = -1
-        var inputChange: ((_ text:String, _ size:CGSize) -> Void)? = nil
-        var inputChanged: ((_ text:String, _ size:CGSize) -> Void)? = nil
-        var inputCopmpleted: ((_ text:String) -> Void)? = nil
-        init(text:Binding<String>,
-             limitedSize:Int,
-             inputChange: ((_ text:String, _ size:CGSize) -> Void)?,
-             inputChanged: ((_ text:String, _ size:CGSize) -> Void)?,
-             inputCopmpleted:((_ text:String) -> Void)?) {
-           
-            self._text = text
-            self.limitedSize = limitedSize
-            self.inputChange = inputChange
-            self.inputChanged = inputChanged
-            self.inputCopmpleted = inputCopmpleted
+        var parent: FocusableTextView
+        init(_ parent: FocusableTextView) {
+            self.parent = parent
         }
+       
         
         func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+            if self.parent.limitedLine == 1 && text == "\n" {
+                guard let  inputCopmpleted = self.parent.inputCopmpleted else { return true }
+                inputCopmpleted(textView.text)
+                return false
+            }
             if let currentText = textView.text,
                 let textRange = Range(range, in: currentText) {
                 let updatedText = currentText.replacingCharacters(in: textRange, with: text)
-                if self.limitedSize != -1 {
-                    if updatedText.count > self.limitedSize { return false }
+                if self.parent.limitedSize != -1 {
+                    if updatedText.count > self.parent.limitedSize { return false }
                 }
-                guard let  inputChange = self.inputChange else { return true}
+                guard let  inputChange = self.parent.inputChange else { return true}
                 inputChange(updatedText, textView.contentSize)
             }
             return true
         }
         
         func textViewDidChange(_ textView: UITextView) {
-            text = textView.text
-            guard let  inputChanged = self.inputChanged else { return }
+            self.parent.text = textView.text
+            guard let  inputChanged = self.parent.inputChanged else { return }
             inputChanged(textView.text , textView.contentSize)
         }
        
@@ -102,11 +95,11 @@ struct FocusableTextView: UIViewRepresentable {
         func updatefocus(textView: UITextView) {
             textView.becomeFirstResponder()
         }
+       
 
         func textViewShouldReturn(_ textView: UITextView) -> Bool {
-            guard let  inputCopmpleted = self.inputCopmpleted else { return true }
+            guard let  inputCopmpleted = self.parent.inputCopmpleted else { return true }
             inputCopmpleted(textView.text)
-            textView.text = ""
             return false
         
         }

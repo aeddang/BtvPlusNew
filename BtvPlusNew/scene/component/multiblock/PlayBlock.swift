@@ -28,8 +28,8 @@ class PlayBlockModel: PageDataProviderModel {
 
 struct PlayBlock: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
     
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -93,7 +93,7 @@ struct PlayBlock: PageComponent{
                                         if self.focusIndex != data.index {
                                             self.onFocusChange(willFocus: data.index)
                                         }
-                                        self.pageSceneObserver.event = .toast((data.openDate ?? "") + " " + String.alert.updateAlramRecommand)
+                                        self.appSceneObserver.event = .toast((data.openDate ?? "") + " " + String.alert.updateAlramRecommand)
                                     }
                             }
                         }
@@ -188,7 +188,7 @@ struct PlayBlock: PageComponent{
             case .disConnected : self.reload()
             case .pairingCheckCompleted(let isSuccess) :
                 if isSuccess { self.reload() }
-                else { self.pageSceneObserver.alert = .pairingCheckFail }
+                else { self.appSceneObserver.alert = .pairingCheckFail }
             default : do{}
             }
         }

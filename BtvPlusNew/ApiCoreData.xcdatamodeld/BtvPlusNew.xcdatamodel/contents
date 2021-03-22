@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17511" systemVersion="19H114" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="20D91" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Item" representedClassName=".Item" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="jsonString" optional="YES" attributeType="String"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
+    <entity name="Keyword" representedClassName=".Keyword" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="String" defaultValueString="&quot;&quot;"/>
+    </entity>
     <elements>
         <element name="Item" positionX="-11823.1171875" positionY="-7418.76953125" width="128" height="88"/>
+        <element name="Keyword" positionX="-11826" positionY="-7389" width="128" height="44"/>
     </elements>
 </model>

@@ -12,11 +12,10 @@ import Combine
 
 struct PagePreviewList: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
-    
+     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var playerModel: BtvPlayerModel = BtvPlayerModel(useFullScreenAction:false)
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -114,10 +113,10 @@ struct PagePreviewList_Previews: PreviewProvider {
         Form{
             PagePreviewList().contentBody
                 .environmentObject(PagePresenter())
-                .environmentObject(SceneObserver())
+                .environmentObject(PageSceneObserver())
                 .environmentObject(Repository())
                 .environmentObject(DataProvider())
-                .environmentObject(PageSceneObserver())
+                .environmentObject(AppSceneObserver())
                 .frame(width: 375, height: 640, alignment: .center)
         }
     }

@@ -20,7 +20,7 @@ struct PageSelecterble : SelecterbleProtocol{
 struct BottomTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @State var pages:[PageSelecterble] = []
     @State var selectedPage:PageObject? = nil
     @State var selectedMenuId:String? = nil

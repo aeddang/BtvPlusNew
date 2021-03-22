@@ -11,7 +11,7 @@ import SwiftUI
 
 struct TopTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     
     var body: some View {
         HStack(alignment: .bottom ,spacing:Dimen.margin.tiny){

@@ -39,8 +39,8 @@ struct AuthItem:View {
 struct PageAuth: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var repository:Repository
-    @EnvironmentObject var sceneObserver:SceneObserver
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     var body: some View {
         VStack(alignment: .leading, spacing: 0){
             Text(String.pageText.authTitle)
@@ -80,7 +80,6 @@ struct PageAuth: PageView {
                 self.pagePresenter.changePage(
                     PageProvider.getPageObject(.intro)
                 )
-                //self.pageSceneObserver.event = .initate
             }
         }
         .padding(.vertical, Dimen.margin.regular)
@@ -103,8 +102,8 @@ struct PageAuth_Previews: PreviewProvider {
         Form{
             PageAuth().contentBody
                 .environmentObject(PagePresenter())
-                .environmentObject(SceneObserver())
                 .environmentObject(PageSceneObserver())
+                .environmentObject(AppSceneObserver())
                 .environmentObject(Repository())
                 .frame(width: 375, height: 440, alignment: .center)
         }

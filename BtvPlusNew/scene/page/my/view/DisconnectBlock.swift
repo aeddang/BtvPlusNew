@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 struct DisconnectBlock: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @State var safeAreaBottom:CGFloat = 0
     var body: some View {
         VStack (alignment: .leading, spacing: Dimen.margin.lightExtra){
@@ -87,7 +87,7 @@ struct DisconnectBlock_Previews: PreviewProvider {
         Form{
             DisconnectBlock()
                 .environmentObject(PagePresenter())
-                .environmentObject(SceneObserver())
+                .environmentObject(PageSceneObserver())
                 .frame(width:320,height:600)
                 .background(Color.brand.bg)
         }

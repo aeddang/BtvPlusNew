@@ -14,10 +14,10 @@ extension PageHome{
 
 struct PageHome: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     
     @ObservedObject var viewModel:MultiBlockModel = MultiBlockModel()
@@ -30,6 +30,7 @@ struct PageHome: PageView {
     @State var useTracking:Bool = false
     @State var headerHeight:CGFloat = 0
     @State var marginHeader:CGFloat = 0
+    @State var marginBottom:CGFloat = 0
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -44,7 +45,7 @@ struct PageHome: PageView {
                 useTracking:false,
                 marginHeader : self.marginHeader,
                 marginTop:self.headerHeight,
-                marginBottom: self.sceneObserver.safeAreaBottom,
+                marginBottom: 0,
                 topDatas: self.topDatas,
                 monthlyViewModel : self.monthlyViewModel,
                 monthlyDatas: self.monthlyDatas,
@@ -56,7 +57,7 @@ struct PageHome: PageView {
                     
             }
         }
-        .padding(.bottom, Dimen.app.bottom )
+        .padding(.bottom, self.marginBottom)
         .modifier(PageFull())
         
         .onReceive(self.dataProvider.bands.$event){ evt in
@@ -70,26 +71,36 @@ struct PageHome: PageView {
             guard let evt = evt else {return}
             if self.pagePresenter.currentTopPage?.pageID == .home {
                 switch evt {
-                case .top : self.pageSceneObserver.useTopFix = true
-                case .down : self.pageSceneObserver.useTopFix = false
+                case .top : self.appSceneObserver.useTopFix = true
+                case .down : self.appSceneObserver.useTopFix = false
                 default : break
                 }
             }
         }
-        .onReceive(self.pageSceneObserver.$headerHeight){ hei in
+        .onReceive(self.appSceneObserver.$headerHeight){ hei in
             self.headerHeight = hei
         }
-        .onReceive(self.pageSceneObserver.$safeHeaderHeight){ hei in
+        .onReceive(self.appSceneObserver.$safeHeaderHeight){ hei in
             withAnimation{
-                self.marginHeader = self.topDatas == nil ? 0 : self.pageSceneObserver.safeHeaderHeight
+                self.marginHeader = self.topDatas == nil ? 0 : self.appSceneObserver.safeHeaderHeight
             }
-            
         }
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
             self.useTracking = ani
         }
         .onReceive(self.pagePresenter.$currentTopPage){ page in
-            self.useTracking = page?.id == self.pageObject?.id
+            if page?.id == self.pageObject?.id {
+                if self.useTracking {return}
+                self.useTracking = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.margin.regular
+                }
+            } else {
+                if !self.useTracking {return}
+                self.useTracking = false
+                self.marginBottom = 0
+                
+            }
         }
         .onReceive(self.pairing.authority.$purchaseLowLevelTicketList){ list in
             guard let list = list else { return }
@@ -120,7 +131,7 @@ struct PageHome: PageView {
             }
         }
         .onDisappear{
-            self.pageSceneObserver.useTopFix = nil
+            self.appSceneObserver.useTopFix = nil
         }
         
     }//body
@@ -134,7 +145,6 @@ struct PageHome: PageView {
     @State var useFooter:Bool = false
     
     private func reload(selectedMonthlyId:String? = nil){
-       
         self.selectedMonthlyId = selectedMonthlyId ?? self.selectedMonthlyId
         self.monthlyDatas?.forEach{$0.reset()}
         guard let band = self.dataProvider.bands.getData(menuId: self.menuId) else { return }
@@ -146,8 +156,6 @@ struct PageHome: PageView {
             self.setupOriginMonthly()
         default: self.setupBlocks()
         }
-        
-        
         self.requestTopBanner()
     }
     
@@ -158,7 +166,7 @@ struct PageHome: PageView {
                 type: .getEventBanner(self.menuId, .page),  isOptional: true)
         } else {
             if self.pagePresenter.currentTopPage?.pageID == PageID.home {
-                self.pageSceneObserver.useTopFix = true
+                self.appSceneObserver.useTopFix = true
             }
         }
     }
@@ -174,15 +182,15 @@ struct PageHome: PageView {
             BannerData().setData(data: d, type: .page)
         }
         if !floating.isEmpty {
-            self.pageSceneObserver.event = .floatingBanner(floating)
+            self.appSceneObserver.event = .floatingBanner(floating)
         }
         if self.pagePresenter.currentTopPage?.pageID == PageID.home {
-            self.pageSceneObserver.useTopFix = true
+            self.appSceneObserver.useTopFix = true
         }
         if topDatas.isEmpty == false {
             self.topDatas = topDatas
             withAnimation{
-                self.marginHeader = self.topDatas == nil ? 0 : self.pageSceneObserver.safeHeaderHeight
+                self.marginHeader = self.topDatas == nil ? 0 : self.appSceneObserver.safeHeaderHeight
             }
         }
     }
@@ -267,10 +275,10 @@ struct PageHome_Previews: PreviewProvider {
         Form{
             PageHome().contentBody
                 .environmentObject(PagePresenter())
-                .environmentObject(SceneObserver())
+                .environmentObject(PageSceneObserver())
                 .environmentObject(Repository())
                 .environmentObject(DataProvider())
-                .environmentObject(PageSceneObserver())
+                .environmentObject(AppSceneObserver())
                 .frame(width: 375, height: 640, alignment: .center)
         }
     }

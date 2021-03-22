@@ -22,7 +22,7 @@ struct SystemEnvironment {
     static let WEB = "http://mobilebtv.com:8080"
     static var isStage:Bool {
         get{
-            return ApiPath.getRestApiPath(.VMS) == Self.VMS
+            return ApiPath.getRestApiPath(.VMS) != Self.VMS
         }
     }
     

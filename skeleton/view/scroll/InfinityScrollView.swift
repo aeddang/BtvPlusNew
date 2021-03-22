@@ -11,7 +11,7 @@ import SwiftUI
 import Combine
 
 struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where Content: View {
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     var viewModel: InfinityScrollModel
     let axes: Axis.Set 
     let showIndicators: Bool

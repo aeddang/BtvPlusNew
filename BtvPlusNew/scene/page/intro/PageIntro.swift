@@ -10,8 +10,8 @@ import SwiftUI
 
 struct PageIntro: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
     let pages: [PageViewProtocol] = [
         ResourceItem(asset: Asset.source.intro01),
@@ -67,14 +67,14 @@ struct PageIntro: PageView {
                         isSelected: true,
                         bgColor:Color.app.blueLightExtra
                     ){_ in
-                        self.pageSceneObserver.event = .initate
+                        self.appSceneObserver.event = .initate
                     }
                     
                     FillButton(
                         text: String.button.appInit,
                         isSelected: true
                     ){_ in
-                        self.pageSceneObserver.event = .initate
+                        self.appSceneObserver.event = .initate
                         
                     }
                    
@@ -111,8 +111,8 @@ struct PageIntro_Previews: PreviewProvider {
         Form{
             PageIntro().contentBody
                 .environmentObject(PagePresenter())
-                .environmentObject(SceneObserver())
                 .environmentObject(PageSceneObserver())
+                .environmentObject(AppSceneObserver())
                 .environmentObject(Repository())
                 .frame(width: 325, height: 640, alignment: .center)
         }

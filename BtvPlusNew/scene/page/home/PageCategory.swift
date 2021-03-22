@@ -10,10 +10,10 @@ import SwiftUI
 
 struct PageCategory: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel:PageDataProviderModel = PageDataProviderModel()
     
@@ -85,7 +85,7 @@ struct PageCategory: PageView {
             .padding(.bottom, Dimen.app.bottom + self.sceneObserver.safeAreaBottom)
         }
         .modifier(PageFull())
-        .onReceive(self.pageSceneObserver.$headerHeight){ hei in
+        .onReceive(self.appSceneObserver.$headerHeight){ hei in
             self.headerHeight = hei
         }
         .onReceive(self.viewModel.$event ){ evt in
@@ -99,10 +99,10 @@ struct PageCategory: PageView {
             guard let obj = self.pageObject  else { return }
             let menuId = (obj.getParamValue(key: .id) as? String) ?? ""
             self.setupDatas(menuId:menuId)
-            self.pageSceneObserver.useTopFix = true
+            self.appSceneObserver.useTopFix = true
         }
         .onDisappear{
-            self.pageSceneObserver.useTopFix = nil
+            self.appSceneObserver.useTopFix = nil
         }
     }//body
     
@@ -151,10 +151,10 @@ struct PageCategory_Previews: PreviewProvider {
         Form{
             PageCategory().contentBody
                 .environmentObject(PagePresenter())
-                .environmentObject(SceneObserver())
+                .environmentObject(PageSceneObserver())
                 .environmentObject(DataProvider())
                 .environmentObject(Repository())
-                .environmentObject(PageSceneObserver())
+                .environmentObject(AppSceneObserver())
                 .frame(width: 320, height: 640, alignment: .center)
         }
     }

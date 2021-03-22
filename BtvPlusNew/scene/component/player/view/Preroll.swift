@@ -27,20 +27,15 @@ extension Preroll{
         let mediaId = "cfb87121-4f7b-4d88-99ff-2b446c00e1c4"
         let accessKey = "8LrhdsQYra5WG/o15zaCpsKz9uyy/WuqT2qTqo2oix340pJIxMFFwx+7smR8iEsL"
         OneAdSdk.initialize(withMediaId: mediaId, accessKey: accessKey)
+        let isStage = SystemEnvironment.isStage
+        OneAdSdk.setEnvironment( isStage ? .STAGE : .PROD)
+        OneAdSdk.setDebug(SystemEnvironment.isReleaseMode ? true : isStage)
        
-        if SystemEnvironment.isReleaseMode {
-            OneAdSdk.setEnvironment( .PROD )
-            OneAdSdk.setDebug(true)
-        }else{
-            OneAdSdk.setEnvironment( SystemEnvironment.isStage ? .STAGE : .PROD)
-            OneAdSdk.setDebug(false)
-        }
         Self.isInit = true
     }
 }
 
 struct Preroll: UIViewRepresentable, PageProtocol {
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
     @ObservedObject var viewModel: PrerollModel
     func makeCoordinator() -> Coordinator {
         Coordinator(self)

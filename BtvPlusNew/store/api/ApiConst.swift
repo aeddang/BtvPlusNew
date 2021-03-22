@@ -61,7 +61,7 @@ struct ApiGateway{
         authorizationRequest.addValue( timestamp, forHTTPHeaderField: "TimeStamp")
         authorizationRequest.addValue( ApiUtil.getAuthVal(timestamp), forHTTPHeaderField: "Auth_Val")
         authorizationRequest.addValue( NpsNetwork.hostDeviceId ?? SystemEnvironment.getGuestDeviceId() , forHTTPHeaderField: "Client_ID")
-        authorizationRequest.addValue( AppUtil.getIPAddress() , forHTTPHeaderField: "Client_IP")
+        authorizationRequest.addValue( AppUtil.getIPAddress() ?? "" , forHTTPHeaderField: "Client_IP")
         
         return authorizationRequest
     }

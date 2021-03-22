@@ -31,7 +31,7 @@ extension BannerSet{
 
 struct BannerSet: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     var pageObservable:PageObservable = PageObservable()
     var data:BannerDataSet
     

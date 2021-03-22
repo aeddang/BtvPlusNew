@@ -213,6 +213,7 @@ extension String {
         public static let skip = "btnSkip".loaalized()
         public static let appInit = "btnAppInit".loaalized()
         public static let home = "btnHome".loaalized()
+        public static let deleteAll = "btnDeleteAll".loaalized()
         
     }
     struct player {
@@ -384,6 +385,9 @@ extension String {
         public static let authText = "authText".loaalized()
         public static let authTextMic = "authTextMic".loaalized()
         public static let authTextLocation = "authTextLocation".loaalized()
+        
+        public static let searchLatest = "searchLatest".loaalized()
+        public static let searchPopularity = "searchPopularity".loaalized()
       
     }
     

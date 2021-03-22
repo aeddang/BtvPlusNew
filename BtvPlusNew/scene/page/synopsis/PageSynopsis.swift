@@ -19,8 +19,8 @@ struct PageSynopsis: PageView {
     
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var setup:Setup
@@ -33,7 +33,7 @@ struct PageSynopsis: PageView {
     @ObservedObject var peopleScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var prerollModel = PrerollModel()
     @ObservedObject var playerListViewModel: InfinityScrollModel = InfinityScrollModel()
-    @ObservedObject var relationContentsModel:RelationContentsModel = RelationContentsModel()
+    
     @State var synopsisData:SynopsisData? = nil
     @State var isPairing:Bool? = nil
     @State var isFullScreen:Bool = false
@@ -165,7 +165,7 @@ struct PageSynopsis: PageView {
                 case .disConnected : self.initPage()
                 case .pairingCheckCompleted(let isSuccess) :
                     if isSuccess { self.initPage() }
-                    else { self.pageSceneObserver.alert = .pairingCheckFail }
+                    else { self.appSceneObserver.alert = .pairingCheckFail }
                 default : do{}
                 }
             }
@@ -185,7 +185,7 @@ struct PageSynopsis: PageView {
                     DispatchQueue.main.async {
                         switch self.pairing.status {
                         case .pairing : self.pairing.requestPairing(.check)
-                        case .unstablePairing : self.pageSceneObserver.alert = .pairingRecovery
+                        case .unstablePairing : self.appSceneObserver.alert = .pairingRecovery
                         default :
                             self.isPageDataReady = true
                             self.initPage()
@@ -194,7 +194,7 @@ struct PageSynopsis: PageView {
                 default : do{}
                 }
             }
-            .onReceive(self.pageSceneObserver.$alertResult){ result in
+            .onReceive(self.appSceneObserver.$alertResult){ result in
                 guard let result = result else { return }
                 switch result {
                 case .retry(let alert) :
@@ -204,7 +204,7 @@ struct PageSynopsis: PageView {
                 default : break
                 }
             }
-            .onReceive(self.pageSceneObserver.$event){ evt in
+            .onReceive(self.appSceneObserver.$event){ evt in
                 guard let evt = evt else { return }
                 switch evt {
                 case .update(let type):
@@ -260,8 +260,6 @@ struct PageSynopsis: PageView {
                 }
                 self.initPage()
             }
-            
-            
         }//geo
         
         
@@ -283,7 +281,7 @@ struct PageSynopsis: PageView {
     @State var playerData:SynopsisPlayerData? = nil
     @State var summaryViewerData:SummaryViewerData? = nil
     @State var purchaseWebviewModel:PurchaseWebviewModel? = nil
-    
+    @State var relationContentsModel:RelationContentsModel = RelationContentsModel()
     @State var title:String? = nil
     @State var imgBg:String? = nil
     @State var imgContentMode:ContentMode = .fit
@@ -567,8 +565,11 @@ struct PageSynopsis: PageView {
     
 
     private func setupSynopsis (_ data:Synopsis) {
-        PageLog.d("setupSynopsis prev " + (self.srisId ?? "nil"), tag: self.tag)
-        PageLog.d("setupSynopsis new " + (self.synopsisData?.srisId ?? "nil"), tag: self.tag)
+        
+        if self.synopsisData?.srisId?.isEmpty != false { self.synopsisData?.srisId = data.contents?.sris_id }
+        if self.synopsisData?.epsdId?.isEmpty != false { self.synopsisData?.epsdId = data.contents?.epsd_id }
+        PageLog.d("srisId " + (self.synopsisData?.srisId ?? "nil"), tag: self.tag)
+        PageLog.d("epsdId " + (self.synopsisData?.epsdId ?? "nil"), tag: self.tag)
         self.purchaseWebviewModel = PurchaseWebviewModel().setParam(synopsisData: data)
         if let content = data.contents {
             self.episodeViewerData = EpisodeViewerData().setData(data: content)
@@ -810,12 +811,12 @@ struct PageSynopsis: PageView {
     
     func continueVod(){
         if self.pairing.status != .pairing {
-            self.pageSceneObserver.alert = .needPairing(String.alert.needConnectForView)
+            self.appSceneObserver.alert = .needPairing(String.alert.needConnectForView)
             return
         }
         if self.hasAuthority == false {
             guard  let model = self.purchaseWebviewModel else { return }
-            self.pageSceneObserver.alert = .needPurchase(model)
+            self.appSceneObserver.alert = .needPurchase(model)
         }
     }
     
@@ -860,8 +861,8 @@ struct PageSynopsis_Previews: PreviewProvider {
             PageSynopsis().contentBody
                 .environmentObject(Repository())
                 .environmentObject(PagePresenter())
-                .environmentObject(SceneObserver())
                 .environmentObject(PageSceneObserver())
+                .environmentObject(AppSceneObserver())
                 .environmentObject(DataProvider())
                 .environmentObject(Pairing())
                 .environmentObject(Setup())

@@ -95,7 +95,6 @@ enum ThemaType {
 
 struct ThemaList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var banners:[BannerData]? = nil
     var datas:[ThemaData]

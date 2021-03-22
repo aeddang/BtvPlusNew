@@ -24,8 +24,7 @@ class SummaryViewerData {
 
 struct SummaryViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     var peopleScrollModel: InfinityScrollModel = InfinityScrollModel()
     var data:SummaryViewerData
     var useTracking:Bool = false
@@ -105,8 +104,8 @@ struct SummaryViewer_Previews: PreviewProvider {
             )
          
             .environmentObject(PagePresenter())
-            .environmentObject(SceneObserver())
             .environmentObject(PageSceneObserver())
+            .environmentObject(AppSceneObserver())
             
         }.background(Color.blue)
     }

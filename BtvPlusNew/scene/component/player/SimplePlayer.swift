@@ -12,7 +12,7 @@ import SwiftUI
 
 struct SimplePlayer: PageComponent{
     @EnvironmentObject var repository:Repository
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing

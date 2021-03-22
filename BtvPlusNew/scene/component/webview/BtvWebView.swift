@@ -12,7 +12,8 @@ import WebKit
 import Combine
 
 enum WebviewMethod:String {
-    case getSTBInfo, getNetworkState
+    case getSTBInfo, getNetworkState, getLogInfo
+    case requestVoiceSearch
     case bpn_showSynopsis,
          bpn_backWebView, bpn_closeWebView, bpn_showModalWebView,
          bpn_setShowModalWebViewResult,bpn_setIdentityVerfResult, bpn_setPurchaseResult,
@@ -24,11 +25,16 @@ enum WebviewMethod:String {
          bpn_setMoveListener,bpn_setBackListener,
          bpn_requestFocus,bpn_showComingSoon,bpn_showMyPairing,bpn_familyInvite
 }
+enum WebviewRespond:String {
+    case responseVoiceSearch
+}
 
 extension BtvWebView {
     static let identity = "/view/v3.0/identityverification"
     static let purchase = "/view/v3.0/purchase/list"
     static let person = "/view/v3.0/synopsis/person"
+    static let search = "/view/v3.0/search/main"
+    static let searchMore = "/view/v3.0/search/more_info"
     static let callJsPrefix = "javascript:"
 }
 
@@ -38,13 +44,14 @@ struct BtvWebView: PageComponent {
     @ObservedObject var viewModel:WebViewModel = WebViewModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @State private var isLoading:Bool = false
+    var useNativeScroll:Bool = true
     var scriptMessageHandler :WKScriptMessageHandler? = nil
     var scriptMessageHandlerName : String = ""
     var uiDelegate:WKUIDelegate? = nil
     
     var body: some View {
         ZStack{
-            BtvCustomWebView( viewModel: self.viewModel )
+            BtvCustomWebView( viewModel: self.viewModel , useNativeScroll:self.useNativeScroll)
                 .opacity(self.isLoading ? 0 : 1)
             ActivityIndicator( isAnimating: self.$isLoading,
                                style: .large,
@@ -63,8 +70,9 @@ struct BtvWebView: PageComponent {
 struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var viewModel:WebViewModel
+    var useNativeScroll:Bool = true
     var path: String = ""
     var request: URLRequest? {
         get{
@@ -168,6 +176,16 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         case .evaluateJavaScript(let jsStr):
             self.callJS(uiView, jsStr: jsStr)
             return
+        case .evaluateJavaScriptMethod(let fn, let dic):
+            var jsStr = ""
+            if let dic = dic {
+                let jsonString = AppUtil.getJsonString(dic: dic) ?? ""
+                jsStr = fn + "(\'" + jsonString + "\')"
+            } else {
+                jsStr = fn + "()"
+            }
+            self.callJS(uiView, jsStr: jsStr)
+            return
         case .back:
             if uiView.canGoBack {uiView.goBack()}
             else {
@@ -210,6 +228,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                 //checkReload(curUrl: url!)
                 // 편성표를 back으로 오는 경우에는 reload한다.
             }
+            ComponentLog.d(url ?? "", tag:"WebView")
             if (url?.hasPrefix("btvplus://"))! {
                 if let urlStr = url {
                     if let components = URLComponents(string: urlStr) {
@@ -259,6 +278,8 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                             dic = self.parent.repository.webManager.getNetworkState()
                         case WebviewMethod.getSTBInfo.rawValue :
                             dic = self.parent.repository.webManager.getSTBInfo()
+                        case WebviewMethod.getLogInfo.rawValue :
+                            dic = self.parent.repository.webManager.getLogInfo()
                         
                         case WebviewMethod.bpn_showSynopsis.rawValue :
                             if let jsonString = jsonParam {
@@ -278,9 +299,8 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                             self.parent.viewModel.event = .callFuncion(fn, jsonParam, cbName )
                         }
                         if let dic = dic, let cb = cbName, !cb.isEmpty {
-                            let jsonString = AppUtil.getJsonString(dic: dic) ?? ""
-                            let js = BtvWebView.callJsPrefix + cb + "(\'" + jsonString + "\')"
-                            self.parent.viewModel.request = .evaluateJavaScript(js)
+                            let js = BtvWebView.callJsPrefix + cb
+                            self.parent.viewModel.request = .evaluateJavaScriptMethod(js, dic)
                         }
                     }
                 }
@@ -299,7 +319,9 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             webView.evaluateJavaScript("document.documentElement.scrollHeight", completionHandler: { (height, error) in
                 DispatchQueue.main.async {
                     self.parent.viewModel.screenHeight = height as! CGFloat
-                    webView.bounds.size.height = self.parent.viewModel.screenHeight
+                    if self.parent.useNativeScroll {
+                        webView.bounds.size.height = self.parent.viewModel.screenHeight
+                    }
                     ComponentLog.d("document.documentElement.scrollHeight " + webView.bounds.size.height.description, tag: self.tag)
                 }
             })
@@ -372,7 +394,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             if scheme == "http" || scheme == "https" {
                 let errorCode = (error as NSError).code
                 if errorCode == -1001 || errorCode == -1003 || errorCode == -1009 {
-                    self.parent.pageSceneObserver.alert = .serviceUnavailable(failingUrlStr)
+                    self.parent.appSceneObserver.alert = .serviceUnavailable(failingUrlStr)
                     return
                 }
             }
@@ -382,7 +404,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                      initiatedByFrame frame: WKFrameInfo,
                      completionHandler: @escaping () -> Void) {
             
-            self.parent.pageSceneObserver.alert = .alert(nil,  message, completionHandler)
+            self.parent.appSceneObserver.alert = .alert(nil,  message, completionHandler)
            
         }
 
@@ -390,13 +412,13 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                      initiatedByFrame frame: WKFrameInfo,
                      completionHandler: @escaping (Bool) -> Void) {
             
-            self.parent.pageSceneObserver.alert = .confirm(nil,  message, completionHandler)
+            self.parent.appSceneObserver.alert = .confirm(nil,  message, completionHandler)
         }
 
         func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String,
                      defaultText: String?, initiatedByFrame frame: WKFrameInfo,
                      completionHandler: @escaping (String?) -> Void) {
-            self.parent.pageSceneObserver.alert = .serviceSelect( prompt, defaultText, completionHandler)
+            self.parent.appSceneObserver.alert = .serviceSelect( prompt, defaultText, completionHandler)
         }
 
         func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse,

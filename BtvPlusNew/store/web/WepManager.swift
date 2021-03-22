@@ -14,6 +14,7 @@ class WebManager :PageProtocol{
     private let storage:LocalStorage
     private let setup:Setup
     private let networkObserver:NetworkObserver
+    private var sessionId:String? = nil
     init(pairing:Pairing,storage:LocalStorage, setup:Setup, networkObserver:NetworkObserver) {
         self.pairing = pairing
         self.storage = storage
@@ -79,4 +80,47 @@ class WebManager :PageProtocol{
     }
 
     
+    func getLogInfo()->[String: Any] {
+        var info = [String: Any]()
+        info["log_type"] = SystemEnvironment.isStage ? "dev" : "live"
+        info["stb_onead_id"] = nil
+        info["pcid"] = self.getPcid()
+        info["session_id"] = self.getSessionId()
+        info["stbId"] = pairing.stbId
+        info["stb_mac"] = pairing.hostDevice?.convertMacAdress ?? ""
+        info["app_release_version"] = SystemEnvironment.bundleVersion
+        info["app_build_version"] = SystemEnvironment.buildNumber
+        info["os_name"] = "iOS"
+        info["os_version"] = SystemEnvironment.systemVersion
+        info["device_model"] = AppUtil.model
+        
+        info["manufacturer"] = "Apple"
+        info["gaid"] = nil
+        info["idfa"] = AppUtil.idfa
+        info["client_ip"] = AppUtil.getIPAddress() ?? "0.0.0.0"
+        
+        info["pi_url"] = ApiPath.getRestApiPath(.NAVILOG)
+        info["npi_url"] = ApiPath.getRestApiPath(.NAVILOG_NPI)
+        return info
+    }
+    
+    private func getPcid()->String {
+        if let id = storage.pcId {return id}
+        let dateId = Date().toTimestamp(dateFormat: "yyyyMMddHHmmssSSS", local: "en_US_POSIX")
+        var t = time_t(0)
+        srand48( time(&t))
+        let randNum = drand48() * 1000000
+        let id = dateId + randNum.description.toDigits(6)
+        storage.pcId = id
+        return id
+    
+    }
+    private func getSessionId()->String {
+        if let id = sessionId {return id}
+        var t = time_t(0)
+        srand48( time(&t));
+        let randNum = drand48() * 100000
+        sessionId = getPcid() + randNum.description.toDigits(5)
+        return sessionId!
+    }
 }

@@ -9,17 +9,20 @@ import Foundation
 import SwiftUI
 struct SearchTab: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
+    
     var isFocus:Bool = false
     @Binding var isVoiceSearch:Bool
     @Binding var keyword:String
     
     var inputChanged: ((_ text:String) -> Void)? = nil
     var inputCopmpleted: ((_ text:String) -> Void)? = nil
+    var goBack: (() -> Void)? = nil
     
     var body: some View {
         HStack(spacing:Dimen.margin.thinExtra){
             Button(action: {
-                self.pagePresenter.goBack()
+                AppUtil.hideKeyboard()
+                self.goBack?()
             }) {
                 Image(Asset.icon.back)
                     .renderingMode(.original)
@@ -31,7 +34,7 @@ struct SearchTab: PageView {
             HStack(spacing:Dimen.margin.tiny){
                 FocusableTextView(
                     text: self.$keyword,
-                    isfocusAble: self.isFocus,
+                    isfocus: self.isFocus,
                     textModifier:BoldTextStyle(size: Font.size.lightExtra).textModifier,
                     inputChanged: {text, _ in
                         self.inputChanged?(text)
@@ -42,6 +45,9 @@ struct SearchTab: PageView {
                 )
                 .modifier(MatchParent())
                 .clipped()
+                .padding(.top, 1)
+                
+                
                 Button(action: {
                     self.keyword = ""
                 }) {
@@ -53,7 +59,7 @@ struct SearchTab: PageView {
                                height: Dimen.icon.tiny)
                 }
                 Button(action: {
-                    self.isVoiceSearch = true
+                    withAnimation{ self.isVoiceSearch = true }
                     AppUtil.hideKeyboard()
                 }) {
                     Image(Asset.icon.searchMic)

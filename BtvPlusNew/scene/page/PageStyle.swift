@@ -9,14 +9,13 @@ import Foundation
 import SwiftUI
 struct PageFull: ViewModifier {
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     var style:PageStyle = .normal
     @State var marginStart:CGFloat = 0
     @State var marginEnd:CGFloat = 0
 
     func body(content: Content) -> some View {
         return content
-            //.padding(.top, PageSceneObserver.safeAreaTop)
             .padding(.leading, self.marginStart)
             .padding(.trailing, self.marginEnd)
             .background(self.style.bgColor)

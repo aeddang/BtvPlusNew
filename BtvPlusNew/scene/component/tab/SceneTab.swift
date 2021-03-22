@@ -12,8 +12,8 @@ import SwiftUI
 struct SceneTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appObserver:AppObserver
-    @EnvironmentObject var sceneObserver:SceneObserver
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @State var positionTop:CGFloat = -Dimen.app.top
     @State var positionBottom:CGFloat = -Dimen.app.bottom
@@ -69,7 +69,7 @@ struct SceneTab: PageComponent{
                 
                 if self.isDimed {
                     Button(action: {
-                        self.pageSceneObserver.cancelAll()
+                        self.appSceneObserver.cancelAll()
                     }) {
                         Spacer().modifier(MatchParent())
                             .background(Color.transparent.black45)
@@ -88,7 +88,7 @@ struct SceneTab: PageComponent{
                 
             }
             .modifier(MatchParent())
-            .onReceive (self.pageSceneObserver.$isApiLoading) { loading in
+            .onReceive (self.appSceneObserver.$isApiLoading) { loading in
                 DispatchQueue.main.async {
                     withAnimation{
                         self.isLoading = loading
@@ -122,7 +122,7 @@ struct SceneTab: PageComponent{
                 default : break
                 }
             }
-            .onReceive(self.pageSceneObserver.$event){ evt in
+            .onReceive(self.appSceneObserver.$event){ evt in
                 guard let evt = evt else { return }
                 switch evt  {
                 case .headerBanner(let data):
@@ -131,18 +131,18 @@ struct SceneTab: PageComponent{
                 default: break
                 }
             }
-            .onReceive (self.pageSceneObserver.$useTopFix) { use in
+            .onReceive (self.appSceneObserver.$useTopFix) { use in
                 guard let use = use else {return}
-                self.pageSceneObserver.useTop = use
+                self.appSceneObserver.useTop = use
             }
             
-            .onReceive (self.pageSceneObserver.$useTop) { use in
+            .onReceive (self.appSceneObserver.$useTop) { use in
                 withAnimation{
                     self.useTop = use
                 }
                 self.updateTopPos()
             }
-            .onReceive (self.pageSceneObserver.$useBottom) { use in
+            .onReceive (self.appSceneObserver.$useBottom) { use in
                 withAnimation{
                     self.useBottom = use
                 }
@@ -154,12 +154,12 @@ struct SceneTab: PageComponent{
         var headerHeight = self.headerBannerData == nil ? 0 : HeaderBanner.height
         headerHeight = headerHeight + self.safeAreaTop + Dimen.app.top
         
-        let top = self.pageSceneObserver.useTop
+        let top = self.appSceneObserver.useTop
             ? 0
             : -headerHeight
         
-        self.pageSceneObserver.headerHeight = headerHeight
-        self.pageSceneObserver.safeHeaderHeight = self.headerBannerData == nil
+        self.appSceneObserver.headerHeight = headerHeight
+        self.appSceneObserver.safeHeaderHeight = self.headerBannerData == nil
             ? 0
             : self.safeAreaTop + HeaderBanner.height
         
@@ -177,11 +177,11 @@ struct SceneTab: PageComponent{
     }
     func updateBottomPos(){
         withAnimation{
-            self.positionBottom = self.pageSceneObserver.useBottom
+            self.positionBottom = self.appSceneObserver.useBottom
                 ? 0
                 : -(Dimen.app.bottom+self.safeAreaBottom)
             
-            self.positionLoading = self.pageSceneObserver.useBottom
+            self.positionLoading = self.appSceneObserver.useBottom
                 ? (Dimen.app.bottom + Dimen.margin.heavy + self.safeAreaBottom)
                 : self.safeAreaBottom
         }
@@ -198,8 +198,8 @@ struct SceneTab_Previews: PreviewProvider {
         Form{
             SceneTab()
             .environmentObject(AppObserver())
-            .environmentObject(SceneObserver())
             .environmentObject(PageSceneObserver())
+            .environmentObject(AppSceneObserver())
             .environmentObject(PagePresenter())
                 .frame(width:340,height:300)
         }

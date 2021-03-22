@@ -7,12 +7,11 @@
 
 import Foundation
 import SwiftUI
-
+import struct Kingfisher.KFImage
 
 
 class PeopleData:InfinityData{
     private(set) var image: String = Asset.noImg1_1
-    fileprivate(set) var uiImage: UIImage? = nil
     private(set) var name: String? = nil
     private(set) var role:RoleType = .unknown
     private(set) var description: String? = nil
@@ -117,33 +116,22 @@ struct PeopleList: PageComponent{
 
 struct PeopleItem: PageView {
     var data:PeopleData
-    @ObservedObject var imageLoader: ImageLoader = ImageLoader()
+    
     var body: some View {
         VStack( spacing: 0 ){
-            if self.data.uiImage != nil {
-                Image(uiImage:self.data.uiImage!)
-                    .renderingMode(.original)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: ListItem.people.size.width, height:ListItem.people.size.height)
-                    .clipShape(Circle())
-                    .padding(.bottom, Dimen.margin.thin)
-            } else {
-                ImageView(
-                    imageLoader : self.imageLoader,
-                    url: self.data.image, contentMode: .fill, noImg: self.data.role.getDefaultImg())
-                    .frame(width: ListItem.people.size.width, height:ListItem.people.size.height)
-                    .clipShape(Circle())
-                    .padding(.bottom, Dimen.margin.thin)
-                    .onReceive(self.imageLoader.$event) { evt in
-                        guard let  evt = evt else { return }
-                        switch evt {
-                        case .complete(let img) : self.data.uiImage = img
-                        case .error : self.data.uiImage = UIImage(named: self.data.role.getDefaultImg())
-                        default: break
-                        }
-                    }
-            }
+            KFImage(URL(string: self.data.image))
+                .resizable()
+                .placeholder {
+                    Image(self.data.role.getDefaultImg())
+                        .resizable()
+                }
+                .cancelOnDisappear(true)
+                .loadImmediately()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: ListItem.people.size.width, height:ListItem.people.size.height)
+                .clipShape(Circle())
+                .padding(.bottom, Dimen.margin.thin)
+            
             
             if self.data.name != nil {
                 Text(self.data.name!)

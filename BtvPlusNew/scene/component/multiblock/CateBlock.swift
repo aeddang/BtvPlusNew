@@ -49,7 +49,7 @@ extension CateBlock{
 
 struct CateBlock: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()

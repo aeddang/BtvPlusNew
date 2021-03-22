@@ -122,7 +122,7 @@ struct PlayList: PageComponent{
 
 struct PlayItem: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var setup:Setup
@@ -343,10 +343,10 @@ struct PlayList_Previews: PreviewProvider {
                 PlayData().setDummy()
             ])
             .environmentObject(PagePresenter())
-            .environmentObject(SceneObserver())
+            .environmentObject(PageSceneObserver())
             .environmentObject(DataProvider())
             .environmentObject(Pairing())
-            .environmentObject(PageSceneObserver())
+            .environmentObject(AppSceneObserver())
             .frame(width:320,height:600)
             
         }

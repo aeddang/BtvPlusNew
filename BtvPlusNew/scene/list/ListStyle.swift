@@ -72,6 +72,10 @@ struct ListItem{
        static let size:CGSize = CGSize(width: 112, height: 64)
     }
     
+    struct search {
+        static let height:CGFloat = 45
+    }
+    
     
     struct tablet {
         struct poster {

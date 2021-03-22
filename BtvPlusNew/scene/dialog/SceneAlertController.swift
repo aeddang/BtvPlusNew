@@ -44,7 +44,7 @@ struct SceneAlertController: PageComponent{
     @EnvironmentObject var networkObserver:NetworkObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pairing:Pairing
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var appObserver:AppObserver
     
     @State var isShow = false
@@ -99,7 +99,7 @@ struct SceneAlertController: PageComponent{
             }
         
         }
-        .onReceive(self.pageSceneObserver.$alert){ alert in
+        .onReceive(self.appSceneObserver.$alert){ alert in
             self.reset()
             self.currentAlert = alert
             switch alert{
@@ -205,13 +205,13 @@ struct SceneAlertController: PageComponent{
     func selectedApi(_ idx:Int, data:ApiResultError) {
         if idx == 1 {
             if data.isProcess {
-                self.pageSceneObserver.alertResult = .retry(nil)
+                self.appSceneObserver.alertResult = .retry(nil)
             }else{
                 self.dataProvider.requestData(q:.init(type:data.type))
             }
             
         }else if idx == 0  {
-            self.pageSceneObserver.alertResult = .cancel(.connectWifi)
+            self.appSceneObserver.alertResult = .cancel(.connectWifi)
         }
     }
     
@@ -226,9 +226,9 @@ struct SceneAlertController: PageComponent{
     }
     func selectedConnectWifi(_ idx:Int){
         if idx == 0 {
-            self.pageSceneObserver.alertResult = .retry(.connectWifi)
+            self.appSceneObserver.alertResult = .retry(.connectWifi)
         }else {
-            self.pageSceneObserver.alertResult = .cancel(.connectWifi)
+            self.appSceneObserver.alertResult = .cancel(.connectWifi)
         }
     }
     
@@ -243,9 +243,9 @@ struct SceneAlertController: PageComponent{
     }
     func selectedNotFoundDevice(_ idx:Int) {
         if idx == 0 {
-            self.pageSceneObserver.alertResult = .retry(.notFoundDevice)
+            self.appSceneObserver.alertResult = .retry(.notFoundDevice)
         }else {
-            self.pageSceneObserver.alertResult = .cancel(.notFoundDevice)
+            self.appSceneObserver.alertResult = .cancel(.notFoundDevice)
         }
     }
     
@@ -260,9 +260,9 @@ struct SceneAlertController: PageComponent{
     }
     func selectedRequestLocation(_ idx:Int) {
         if idx == 0 {
-            self.pageSceneObserver.alertResult = .retry(.requestLocation)
+            self.appSceneObserver.alertResult = .retry(.requestLocation)
         }else {
-            self.pageSceneObserver.alertResult = .cancel(.requestLocation)
+            self.appSceneObserver.alertResult = .cancel(.requestLocation)
         }
     }
     

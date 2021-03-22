@@ -25,7 +25,7 @@ enum LikeStatus :String {
 
 struct LikeButton: PageView {
     @EnvironmentObject var dataProvider:DataProvider
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     var srisId:String
     @Binding var isLike:LikeStatus?
@@ -36,10 +36,10 @@ struct LikeButton: PageView {
         Button(action: {
             let status = self.pairing.status
             if status != .pairing {
-                self.pageSceneObserver.alert = .needPairing()
+                self.appSceneObserver.alert = .needPairing()
             }
             else{
-                self.pageSceneObserver.alert = .like(self.srisId, self.isLike?.boolType)
+                self.appSceneObserver.alert = .like(self.srisId, self.isLike?.boolType)
             }
         }) {
             VStack(spacing:0){
@@ -148,7 +148,7 @@ struct LikeButton_Previews: PreviewProvider {
                 
             }
             .environmentObject(DataProvider())
-            .environmentObject(PageSceneObserver())
+            .environmentObject(AppSceneObserver())
             .environmentObject(Pairing())
         }
     }

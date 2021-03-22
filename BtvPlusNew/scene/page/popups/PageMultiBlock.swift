@@ -10,10 +10,9 @@ import SwiftUI
 import Combine
 struct PageMultiBlock: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var multiBlockViewModel:MultiBlockModel = MultiBlockModel()
@@ -23,6 +22,7 @@ struct PageMultiBlock: PageView {
     @ObservedObject var cateInfinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var tabInfinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     
+    @State var marginBottom:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -38,7 +38,7 @@ struct PageMultiBlock: PageView {
                             viewModel:self.cateBlockViewModel,
                             useTracking:self.useTracking,
                             marginTop: self.marginTop + self.sceneObserver.safeAreaTop + Dimen.app.top,
-                            marginBottom: self.sceneObserver.safeAreaBottom
+                            marginBottom: 0
                         )
                         .background(Color.brand.bg)
                     } else {
@@ -50,7 +50,7 @@ struct PageMultiBlock: PageView {
                             useBodyTracking: self.useTracking,
                             useTracking:self.useTracking,
                             marginTop: self.marginTop  + Dimen.margin.thin + self.sceneObserver.safeAreaTop + Dimen.app.top,
-                            marginBottom: self.sceneObserver.safeAreaBottom
+                            marginBottom: 0
                         )
                         .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
                             guard let evt = evt else {return}
@@ -88,7 +88,7 @@ struct PageMultiBlock: PageView {
                     .modifier(MatchHorizontal(height: (self.isTop == true ? self.marginTop  : 0) + Dimen.app.pageTop  + self.sceneObserver.safeAreaTop))
                     .background(Color.app.blueDeep)
                 }
-                .padding(.bottom, Dimen.app.bottom )
+                .padding(.bottom, self.marginBottom)
                 .onReceive(self.infinityScrollModel.$event){evt in
                     guard let evt = evt else {return}
                     if self.isTop == nil {return}
@@ -129,7 +129,17 @@ struct PageMultiBlock: PageView {
                 if ani { self.setupOriginData(idx:0) }
             }
             .onReceive(self.pagePresenter.$currentTopPage){ page in
-                self.useTracking = page?.id == self.pageObject?.id
+                if page?.id == self.pageObject?.id {
+                    if self.useTracking {return}
+                    self.useTracking = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.marginBottom = self.sceneObserver.safeAreaBottom + Dimen.app.bottom
+                    }
+                } else {
+                    if !self.useTracking {return}
+                    self.useTracking = false
+                    self.marginBottom = 0
+                }
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
@@ -204,10 +214,10 @@ struct PageThema_Previews: PreviewProvider {
         Form{
             PageMultiBlock().contentBody
                 .environmentObject(PagePresenter())
-                .environmentObject(SceneObserver())
+                .environmentObject(PageSceneObserver())
                 .environmentObject(Repository())
                 .environmentObject(DataProvider())
-                .environmentObject(PageSceneObserver())
+                .environmentObject(AppSceneObserver())
                 .frame(width: 375, height: 640, alignment: .center)
         }
     }

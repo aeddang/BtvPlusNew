@@ -110,7 +110,12 @@ class Euxp: Rest{
         params["sris_id"] = data.srisId ?? ""
         params["epsd_id"] = data.epsdId ?? ""
         params["epsd_rslu_id"] = data.epsdRsluId ?? ""
-        params["search_type"] = data.searchType ?? ""
+        if data.epsdId?.isEmpty != false && data.epsdRsluId?.isEmpty == false {
+            params["search_type"] = EuxpNetwork.SearchType.prd.rawValue
+        } else {
+            params["search_type"] = data.searchType ?? ""
+        }
+       
         params["app_typ_cd"] = "BTVPLUS"
         fetch(route: EuxpSynopsis(query: params), completion: completion, error:error)
         

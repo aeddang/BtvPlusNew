@@ -99,6 +99,12 @@ enum ApiType{
          postNotificationVod(NotificationData?),
          deleteNotificationVod(String?)
     
+    //WEB
+    case getSearchKeywords,
+         getCompleteKeywords(String?),
+         getSeachVod(String?),
+         getSeachPopularityVod
+    
     func coreDataKey() -> String? {
         switch self {
         //case .getGnb : return "getGnb"

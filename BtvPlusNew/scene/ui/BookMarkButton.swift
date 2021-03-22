@@ -12,7 +12,7 @@ import SwiftUI
 
 struct BookMarkButton: PageView {
     @EnvironmentObject var dataProvider:DataProvider
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     var data:SynopsisData
     @Binding var isBookmark:Bool?
@@ -21,7 +21,7 @@ struct BookMarkButton: PageView {
     var body: some View {
         Button(action: {
             if self.pairing.status != .pairing {
-                self.pageSceneObserver.alert = .needPairing()
+                self.appSceneObserver.alert = .needPairing()
             }
             else{
                 if self.isBookmark == false { self.add() }
@@ -51,12 +51,12 @@ struct BookMarkButton: PageView {
             if !res.id.hasPrefix(epsdId) { return }
             
             guard let result = res.data as? UpdateMetv else {
-                self.pageSceneObserver.event = .toast(String.alert.apiErrorServer)
+                self.appSceneObserver.event = .toast(String.alert.apiErrorServer)
                 self.isBusy = false
                 return
             }
             if result.result != ApiCode.success {
-                self.pageSceneObserver.event = .toast(result.reason ?? String.alert.apiErrorServer)
+                self.appSceneObserver.event = .toast(result.reason ?? String.alert.apiErrorServer)
                 self.isBusy = false
                 return
             }
@@ -123,7 +123,7 @@ struct BookMarkButton_Previews: PreviewProvider {
                 
             }
             .environmentObject(DataProvider())
-            .environmentObject(PageSceneObserver())
+            .environmentObject(AppSceneObserver())
             .environmentObject(Pairing())
         }
     }

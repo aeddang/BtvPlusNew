@@ -12,7 +12,7 @@ import SwiftUI
 
 struct SerisTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     var data:RelationContentsModel
     @Binding var seris:[SerisData]
     let action: (_ idx:SeasonData) -> Void
@@ -42,7 +42,7 @@ struct SerisTab: PageComponent{
                     image: Asset.icon.dropDown,
                     imageSize: Dimen.icon.tinyExtra){_ in
                     
-                    self.pageSceneObserver.select =
+                    self.appSceneObserver.select =
                         .select((self.tag + SelectType.season.rawValue ,
                                  self.data.seasons.map{$0.title ?? ""}),
                         self.data.currentSeasonIdx)
@@ -68,13 +68,13 @@ struct SerisTab: PageComponent{
                 spacing: Dimen.margin.micro
                 ){_ in
                 let idx = sortOption.firstIndex(where: {$0 == self.sortType})
-                self.pageSceneObserver.select =
+                self.appSceneObserver.select =
                     .select((self.tag + SelectType.sort.rawValue , self.sortOption.map{$0.name}), idx ?? -1)
                 
             }
             .buttonStyle(BorderlessButtonStyle())
         }
-        .onReceive(self.pageSceneObserver.$selectResult){ result in
+        .onReceive(self.appSceneObserver.$selectResult){ result in
             guard let result = result else { return }
             switch result {
                 case .complete(let type, let idx) : do {

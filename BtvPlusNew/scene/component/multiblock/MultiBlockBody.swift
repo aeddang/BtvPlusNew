@@ -58,7 +58,7 @@ extension MultiBlockBody {
 
 struct MultiBlockBody: PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable
     
@@ -96,7 +96,6 @@ struct MultiBlockBody: PageComponent {
                 ZStack(alignment: .topLeading){
                     if !Self.isLegacy  {
                         if self.topDatas != nil && self.topDatas?.isEmpty == false {
-                            
                             TopBannerBg(
                                 viewModel:self.viewPagerModel,
                                 datas: self.topDatas! )

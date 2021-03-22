@@ -9,8 +9,8 @@ import SwiftUI
 
 struct PagePurchase: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
@@ -44,7 +44,7 @@ struct PagePurchase: PageView {
                             isRecycle:false,
                             useTracking:self.useTracking
                         ){
-                            BtvWebView( viewModel: self.webViewModel )
+                            BtvWebView( viewModel: self.webViewModel, useNativeScroll:false )
                                 .modifier(MatchHorizontal(height: self.webViewHeight))
                                 .onReceive(self.webViewModel.$screenHeight){height in
                                     self.webViewHeight = geometry.size.height
@@ -97,24 +97,15 @@ struct PagePurchase: PageView {
                 case .connected :
                     self.pagePresenter.closePopup(self.pageObject?.id)
                 case .connectError(let header) :
-                    self.pageSceneObserver.alert = .pairingError(header)
+                    self.appSceneObserver.alert = .pairingError(header)
                 default : do{}
                 }
             }
             .onReceive(self.webViewModel.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
-                case .callFuncion(let method, let json, let cbName) :
+                case .callFuncion(let method, let json, _) :
                     switch method {
-                    /*
-                    case WebviewMethod.getSTBInfo.rawValue :
-                        guard let cb = cbName else { return }
-                        if cb.isEmpty { return }
-                        let dic = self.repository.webManager.getSTBInfo()
-                        let jsonString = AppUtil.getJsonString(dic: dic) ?? ""
-                        let js = BtvWebView.callJsPrefix + cb + "(\'" + jsonString + "\')"
-                        self.webViewModel.request = .evaluateJavaScript(js)
-                    */
                     case WebviewMethod.bpn_setPurchaseResult.rawValue :
                         guard let json = json else { return }
                         guard let param = AppUtil.getJsonParam(jsonString: json) else { return }
@@ -122,7 +113,7 @@ struct PagePurchase: PageView {
                             if !result { return }
                             let listPrice = param["listPrice"] as? String
                             let paymentPrice = param["paymentPrice"] as? String
-                            self.pageSceneObserver.event = .update(.purchase(pid, listPrice, paymentPrice))
+                            self.appSceneObserver.event = .update(.purchase(pid, listPrice, paymentPrice))
                         }
                         break
                     case WebviewMethod.bpn_closeWebView.rawValue :
@@ -203,8 +194,8 @@ struct PagePurchase_Previews: PreviewProvider {
             PagePurchase().contentBody
                 .environmentObject(Repository())
                 .environmentObject(PagePresenter())
-                .environmentObject(SceneObserver())
                 .environmentObject(PageSceneObserver())
+                .environmentObject(AppSceneObserver())
                 .environmentObject(KeyboardObserver())
                 .environmentObject(Pairing())
                 .frame(width: 375, height: 640, alignment: .center)

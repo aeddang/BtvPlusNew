@@ -11,7 +11,7 @@ import SwiftUI
 import WebKit
 
 enum WebViewRequest {
-    case home, foward, back, link(String), writeHtml(String), evaluateJavaScript(String)
+    case home, foward, back, link(String), writeHtml(String), evaluateJavaScript(String), evaluateJavaScriptMethod(String, [String:Any]?)
 }
 enum WebViewError{
     case update(WebViewRequest), busy

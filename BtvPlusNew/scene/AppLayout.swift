@@ -14,7 +14,7 @@ struct AppLayout: PageComponent{
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appObserver:AppObserver
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var keyboardObserver:KeyboardObserver
     @EnvironmentObject var setup:Setup
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -71,13 +71,13 @@ struct AppLayout: PageComponent{
                 }
             }
         }
-        .onReceive(self.pageSceneObserver.$loadingInfo){ loadingInfo in
+        .onReceive(self.appSceneObserver.$loadingInfo){ loadingInfo in
             self.loadingInfo = loadingInfo
             withAnimation{
                 self.isLoading = loadingInfo == nil ? false : true
             }
         }
-        .onReceive(self.pageSceneObserver.$event){ evt in
+        .onReceive(self.appSceneObserver.$event){ evt in
             guard let evt = evt else { return }
             switch evt  {
             case .initate: self.onPageInit()
@@ -93,11 +93,11 @@ struct AppLayout: PageComponent{
         .onReceive(self.pagePresenter.$currentTopPage){ page in
             guard let cPage = page else { return }
             PageLog.d("currentTopPage " + cPage.pageID.debugDescription, tag:self.tag)
-            PageLog.d("current useTopFix " + (self.pageSceneObserver.useTopFix?.description ?? "nil"), tag:self.tag)
-            if self.pageSceneObserver.useTopFix != false {
-                self.pageSceneObserver.useTop = PageSceneModel.needTopTab(cPage)
+            PageLog.d("current useTopFix " + (self.appSceneObserver.useTopFix?.description ?? "nil"), tag:self.tag)
+            if self.appSceneObserver.useTopFix != false {
+                self.appSceneObserver.useTop = PageSceneModel.needTopTab(cPage)
             }
-            self.pageSceneObserver.useBottom = PageSceneModel.needBottomTab(cPage)
+            self.appSceneObserver.useBottom = PageSceneModel.needBottomTab(cPage)
             if PageSceneModel.needKeyboard(cPage) {
                 self.keyboardObserver.start()
             }else{
@@ -108,7 +108,7 @@ struct AppLayout: PageComponent{
         .onReceive (self.appObserver.$page) { iwg in
             if !self.isInit { return }
             if self.appObserver.apns != nil {
-                self.pageSceneObserver.alert = .recivedApns
+                self.appSceneObserver.alert = .recivedApns
                 return
             }
             PageLog.d("onReceive : \(self.pageObservable.status)" , tag : self.tag)
@@ -137,7 +137,7 @@ struct AppLayout: PageComponent{
         }
     }
     func onStoreInit(){
-        self.pageSceneObserver.event = .toast("onStoreInit")
+        self.appSceneObserver.event = .toast("onStoreInit")
         if SystemEnvironment.firstLaunch {
             self.pagePresenter.changePage(
                 PageProvider.getPageObject(.auth)
@@ -149,10 +149,10 @@ struct AppLayout: PageComponent{
     func onPageInit(){
         self.isInit = true
         self.isLoading = false
-        self.pageSceneObserver.event = .toast("onPageInit")
+        self.appSceneObserver.event = .toast("onPageInit")
         if !self.appObserverMove(self.appObserver.page) {
             let initMenuId = self.dataProvider.bands.datas.first?.menuId
-            self.pageSceneObserver.event = .toast("on go home")
+            self.appSceneObserver.event = .toast("on go home")
             
             self.pagePresenter.changePage(
                 PageProvider.getPageObject(.home)

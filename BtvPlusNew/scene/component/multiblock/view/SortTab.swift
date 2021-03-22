@@ -14,7 +14,7 @@ extension SortTab{
 }
 
 struct SortTab: PageComponent{
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     
     var count:Int = 0
     var isSortAble:Bool = false
@@ -47,13 +47,13 @@ struct SortTab: PageComponent{
                     spacing: Dimen.margin.micro
                     ){_ in
                     let idx = sortOption.firstIndex(where: {$0 == self.sortType})
-                    self.pageSceneObserver.select =
+                    self.appSceneObserver.select =
                         .select((self.tag , self.sortOption.map{$0.name}), idx ?? -1)
                     
                 }
             }
         }
-        .onReceive(self.pageSceneObserver.$selectResult){ result in
+        .onReceive(self.appSceneObserver.$selectResult){ result in
             guard let result = result else { return }
             switch result {
                 case .complete(let type, let idx) : do {

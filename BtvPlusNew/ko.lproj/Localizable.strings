@@ -102,6 +102,7 @@
 "btnSkip" = "건너뛰기";
 "btnAppInit" = "모바일 B tv 시작하기";
 "btnHome" = "홈으로 가기";
+"btnDeleteAll" = "전체삭제";
 
 /*
  Sort
@@ -369,6 +370,13 @@
 "authText" = "선택 항목은 허용하지 않아도 이용이 가능하나,\n일부 서비스 이용이 제한될 수 있습니다.\n권한 설정은 서비스 이용 중 권한이 필요한 정보에\n접근하거나 기기 내 설정 > 모바일 B tv에서 변경 가능합니다.";
 "authTextMic" = "음성으로 검색어 입력";
 "authTextLocation" = "B tv 이어폰 모드 사용";
+
+/*
+ PageSearch
+*/
+"searchLatest" = "최근 검색어";
+"searchPopularity" = "인기 검색어";
+
 
 /*
  Player

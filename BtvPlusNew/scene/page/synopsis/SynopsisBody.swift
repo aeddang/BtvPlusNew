@@ -10,7 +10,7 @@ import SwiftUI
 
 struct SynopsisBody: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     var componentViewModel:PageSynopsis.ComponentViewModel
     var infinityScrollModel: InfinityScrollModel
     var relationContentsModel:RelationContentsModel
@@ -152,8 +152,9 @@ struct SynopsisBody: PageComponent{
                         .modifier(ListRowInset( spacing: Dimen.margin.thin))
                     }
                 } else {
-                    Spacer().modifier(MatchParent())
-                        .modifier(ListRowInset(spacing: 0))
+                    Spacer()
+                        .modifier(MatchHorizontal(height:self.hasRelationVod == false ? 0 : sceneObserver.screenSize.height))
+                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
                 }
                 
             } else {
@@ -254,8 +255,9 @@ struct SynopsisBody: PageComponent{
                     }
                 }
                 if self.relationDatas.isEmpty && self.seris.isEmpty {
-                    Spacer().modifier(MatchParent())
-                        .modifier(ListRowInset(spacing: 0))
+                    Spacer()
+                        .modifier(MatchHorizontal(height:self.hasRelationVod == false ? 0 : sceneObserver.screenSize.height))
+                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
                 }
             }
         }

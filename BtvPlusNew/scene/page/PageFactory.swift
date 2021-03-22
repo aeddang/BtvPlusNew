@@ -224,13 +224,12 @@ struct PageSceneModel: PageModel {
     
     static func needBottomTab(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
-        case .home, .category, .multiBlock: return true
+        case .home, .category, .multiBlock, .search: return true
         default : return false
         }
     }
     
     static func needTopTab(_ pageObject:PageObject) -> Bool{
-        
         switch pageObject.pageID {
         case .home, .category: return true
         default : return false

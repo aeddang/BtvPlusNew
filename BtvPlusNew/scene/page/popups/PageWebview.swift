@@ -9,8 +9,8 @@ import SwiftUI
 
 struct PageWebview: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -93,7 +93,7 @@ struct PageWebview: PageView {
                 case .connected :
                     self.pagePresenter.closePopup(self.pageObject?.id)
                 case .connectError(let header) :
-                    self.pageSceneObserver.alert = .pairingError(header)
+                    self.appSceneObserver.alert = .pairingError(header)
                 default : do{}
                 }
             }
@@ -136,8 +136,8 @@ struct PageWebview_Previews: PreviewProvider {
         Form{
             PageWebview().contentBody
                 .environmentObject(PagePresenter())
-                .environmentObject(SceneObserver())
                 .environmentObject(PageSceneObserver())
+                .environmentObject(AppSceneObserver())
                 .environmentObject(KeyboardObserver())
                 .environmentObject(Pairing())
                 .frame(width: 375, height: 640, alignment: .center)

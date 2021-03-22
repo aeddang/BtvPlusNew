@@ -9,6 +9,8 @@
 import Foundation
 import SwiftUI
 import Combine
+import struct Kingfisher.KFImage
+
 extension HeaderBanner{
     static let height:CGFloat = 65
 }
@@ -28,7 +30,15 @@ struct HeaderBanner: PageComponent {
                     .aspectRatio(contentMode: .fit)
                     .modifier(MatchParent())
             } else {
-                ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg16_9)
+                KFImage(URL(string: self.data.image))
+                    .resizable()
+                    .placeholder {
+                        Image(Asset.noImg16_9)
+                            .resizable()
+                    }
+                    .cancelOnDisappear(true)
+                    .loadImmediately()
+                    .aspectRatio(contentMode: .fill)
                     .modifier(MatchParent())
             }
             if let close = self.close {

@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-
+import struct Kingfisher.KFImage
 extension TopViewer {
     static let height:CGFloat = 580
 }
@@ -16,15 +16,24 @@ extension TopViewer {
 struct TopViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
 
     var data:SynopsisPackageModel
    
     @State var isPairing:Bool? = nil
     var body: some View {
         ZStack(alignment:.bottom) {
-            ImageView(url:self.data.image, contentMode: .fill, noImg: Asset.noImg9_16)
+            KFImage(URL(string: self.data.image))
+                .resizable()
+                .placeholder {
+                    Image(Asset.noImg9_16)
+                        .resizable()
+                }
+                .cancelOnDisappear(true)
+                .loadImmediately()
+                .aspectRatio(contentMode: .fill)
                 .modifier(MatchParent())
+                
             VStack(alignment: .leading, spacing:0){
                 if self.isPairing == false {
                     FillButton(
@@ -91,7 +100,7 @@ struct TopViewer_Previews: PreviewProvider {
             )
          
             .environmentObject(PagePresenter())
-            .environmentObject(SceneObserver())
+            .environmentObject(PageSceneObserver())
             .environmentObject(Pairing())
             
         }.background(Color.blue)

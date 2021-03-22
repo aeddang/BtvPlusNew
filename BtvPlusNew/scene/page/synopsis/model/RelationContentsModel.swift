@@ -33,7 +33,7 @@ enum SerisSortType {
 }
 
 
-class RelationContentsModel:ObservableObject {
+class RelationContentsModel {
     private(set) var isReady = false
     private(set) var serisTitle:String? = nil
     private(set) var relationTabs:[String] = []

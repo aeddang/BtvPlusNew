@@ -40,7 +40,7 @@ struct CPWebView: PageComponent {
 }
 
 struct CustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var viewModel:WebViewModel
     var path: String = ""
     var request: URLRequest? {
@@ -124,6 +124,16 @@ struct CustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         case .evaluateJavaScript(let jsStr):
             self.callJS(uiView, jsStr: jsStr)
             return
+        case .evaluateJavaScriptMethod(let fn, let dic):
+            var jsStr = ""
+            if let dic = dic {
+                let jsonString = AppUtil.getJsonString(dic: dic) ?? ""
+                jsStr = fn + "(\'" + jsonString + "\')"
+            } else {
+                jsStr = fn + "()"
+            }
+            self.callJS(uiView, jsStr: jsStr)
+            return
         case .back:
             if uiView.canGoBack {uiView.goBack()}
             else {
@@ -179,7 +189,7 @@ struct CustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                      initiatedByFrame frame: WKFrameInfo,
                      completionHandler: @escaping () -> Void) {
             
-            self.parent.pageSceneObserver.alert = .alert(nil,  message, completionHandler)
+            self.parent.appSceneObserver.alert = .alert(nil,  message, completionHandler)
            
         }
 
@@ -187,13 +197,13 @@ struct CustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                      initiatedByFrame frame: WKFrameInfo,
                      completionHandler: @escaping (Bool) -> Void) {
             
-            self.parent.pageSceneObserver.alert = .confirm(nil,  message, completionHandler)
+            self.parent.appSceneObserver.alert = .confirm(nil,  message, completionHandler)
         }
 
         func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String,
                      defaultText: String?, initiatedByFrame frame: WKFrameInfo,
                      completionHandler: @escaping (String?) -> Void) {
-            self.parent.pageSceneObserver.alert = .serviceSelect( prompt, defaultText, completionHandler)
+            self.parent.appSceneObserver.alert = .serviceSelect( prompt, defaultText, completionHandler)
         }
 
         func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse,

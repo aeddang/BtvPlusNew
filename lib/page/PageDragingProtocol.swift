@@ -154,7 +154,9 @@ enum PageNestedScrollEvent {
 struct PageDragingBody<Content>: PageDragingView  where Content: View{
     
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var keyboardObserver:KeyboardObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
+   
     @ObservedObject var viewModel:PageDragingModel = PageDragingModel()
 
     let content: Content
@@ -246,6 +248,9 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
                 }
                 
             case .drag(let geo, let value) :
+                if self.keyboardObserver.isOn {
+                    AppUtil.hideKeyboard()
+                }
                 self.onDraging(geometry: geo, value: value)
             case .draged(let geo, let value) : self.onDragEnd(geometry: geo, value:value)
             case .dragCancel :

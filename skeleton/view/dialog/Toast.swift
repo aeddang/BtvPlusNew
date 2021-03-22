@@ -20,7 +20,7 @@ extension View {
 }
 
 struct Toast<Presenting>: View where Presenting: View {
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @Binding var isShowing: Bool
     let presenting: () -> Presenting
     var text: String

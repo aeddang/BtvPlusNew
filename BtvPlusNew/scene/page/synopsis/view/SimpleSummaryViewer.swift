@@ -93,7 +93,7 @@ class SimpleSummaryViewerData:ObservableObject{
 
 struct SimpleSummaryViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     var data:SimpleSummaryViewerData
     var currentPoster:PosterData? = nil
     

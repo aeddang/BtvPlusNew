@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 class PageHostingController<ContentView> : UIHostingController<ContentView> where ContentView : View {
-    var sceneObserver:SceneObserver? = nil
+    var sceneObserver:PageSceneObserver? = nil
     var isFullScreen = false
     override dynamic open var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent

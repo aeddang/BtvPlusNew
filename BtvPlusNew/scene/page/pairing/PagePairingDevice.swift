@@ -10,9 +10,9 @@ import CoreLocation
 
 struct PagePairingDevice: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var networkObserver:NetworkObserver
     @EnvironmentObject var locationObserver:LocationObserver
     @EnvironmentObject var pairing:Pairing
@@ -117,13 +117,13 @@ struct PagePairingDevice: PageView {
                 if self.pairingType != .wifi { return } 
                 switch status {
                 case .wifi :
-                    self.pageSceneObserver.alert = .cancel
+                    self.appSceneObserver.alert = .cancel
                     self.findSSID()
                 default :
                     self.textAvailableWifi = String.alert.connectWifi
                 }
             }
-            .onReceive(self.pageSceneObserver.$alertResult){ result in
+            .onReceive(self.appSceneObserver.$alertResult){ result in
                 guard let result = result else {return}
                 switch result {
                 case .retry(let alert) :
@@ -155,7 +155,7 @@ struct PagePairingDevice: PageView {
                 case .connected :
                     self.pagePresenter.closePopup(self.pageObject?.id)
                 case .connectError(let header) :
-                    self.pageSceneObserver.alert = .pairingError(header)
+                    self.appSceneObserver.alert = .pairingError(header)
                 default : do{}
                 }
             }
@@ -194,7 +194,7 @@ struct PagePairingDevice: PageView {
             self.updateSSID()
         } else if status == .denied {
             self.isLocationRequest = true
-            self.pageSceneObserver.alert = .requestLocation
+            self.appSceneObserver.alert = .requestLocation
         } else {
             self.locationObserver.requestWhenInUseAuthorization()
         }
@@ -213,7 +213,7 @@ struct PagePairingDevice: PageView {
     }
     
     private func findDevice(){
-        self.pageSceneObserver.loadingInfo = [
+        self.appSceneObserver.loadingInfo = [
             String.alert.findDevice,
             String.alert.findDeviceSub
         ]
@@ -225,7 +225,7 @@ struct PagePairingDevice: PageView {
     }
     
     private func findDeviceCompleted(evt:PairingEvent){
-        self.pageSceneObserver.loadingInfo = nil
+        self.appSceneObserver.loadingInfo = nil
         
         switch evt {
         case .findMdnsDevice(let findData) : do {
@@ -239,7 +239,7 @@ struct PagePairingDevice: PageView {
         case .notFoundDevice : do {
             self.datas = []
             self.textAvailableDevice = ""
-            self.pageSceneObserver.alert = .notFoundDevice
+            self.appSceneObserver.alert = .notFoundDevice
         }
         default : do {}
         }
@@ -259,9 +259,9 @@ struct PagePairingDevice_Previews: PreviewProvider {
         Form{
             PagePairingDevice().contentBody
                 .environmentObject(PagePresenter())
-                .environmentObject(SceneObserver())
-                .environmentObject(DataProvider())
                 .environmentObject(PageSceneObserver())
+                .environmentObject(DataProvider())
+                .environmentObject(AppSceneObserver())
                 .environmentObject(NetworkObserver())
                 .environmentObject(LocationObserver())
                 .environmentObject(Pairing())

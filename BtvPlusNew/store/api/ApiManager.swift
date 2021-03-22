@@ -33,7 +33,7 @@ class ApiManager :PageProtocol, ObservableObject{
     private lazy var scs:Scs = Scs(network: ScsNetwork())
     private lazy var pss:Pss = Pss(network: PssNetwork())
     private lazy var nf:Nf = Nf(network: NfNetwork())
-
+    private lazy var web:Web = Web(network: WebNetwork())
     init() {
         self.initateApi()
     }
@@ -47,6 +47,7 @@ class ApiManager :PageProtocol, ObservableObject{
         self.smd.clear()
         self.pss.clear()
         self.nf.clear()
+        self.web.clear()
         self.apiQ.removeAll()
     }
     
@@ -272,6 +273,19 @@ class ApiManager :PageProtocol, ObservableObject{
             error:error)
         case .deleteNotificationVod(let srisId) : self.nf.deleteNotificationVod(
             srisId:srisId,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        //WEB
+        case .getSearchKeywords :   self.web.getSearchKeywords(
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getCompleteKeywords(let word) : self.web.getCompleteKeywords(word: word,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getSeachVod(let word) : self.web.getSearchVod(word: word,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getSeachPopularityVod : self.web.getSeachPopularityVod(
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         }

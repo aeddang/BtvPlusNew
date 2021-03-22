@@ -11,6 +11,7 @@ import UIKit
 import SystemConfiguration.CaptiveNetwork
 import NetworkExtension
 import TrueTime
+import AdSupport
 
 struct AppUtil{
     static var version: String {
@@ -33,6 +34,14 @@ struct AppUtil{
         var sysinfo = utsname()
         uname(&sysinfo) // ignore return value
         return String(bytes: Data(bytes: &sysinfo.machine, count: Int(_SYS_NAMELEN)), encoding: .ascii)!.trimmingCharacters(in: .controlCharacters)
+    }
+    
+    static var idfa: String {
+        if ASIdentifierManager.shared().isAdvertisingTrackingEnabled {
+            let identifier = ASIdentifierManager.shared().advertisingIdentifier
+            return identifier.uuidString
+        }
+        return ""
     }
     
     static func hideKeyboard() {
@@ -129,7 +138,7 @@ struct AppUtil{
         return nil
     }
     
-    static func getIPAddress() -> String {
+    static func getIPAddress() -> String? {
         var address: String?
         var ifaddr: UnsafeMutablePointer<ifaddrs>? = nil
         if getifaddrs(&ifaddr) == 0 {
@@ -149,7 +158,7 @@ struct AppUtil{
             }
             freeifaddrs(ifaddr)
         }
-        return address ?? ""
+        return address 
     }
     
     static func getSafeString(_ s:String?,  defaultValue:String = "") -> String {

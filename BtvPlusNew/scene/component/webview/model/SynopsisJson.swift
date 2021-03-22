@@ -14,7 +14,8 @@ struct SynopsisJson :Codable{
     var entryMenu:String? = nil
     var pid:String? = nil
     var cwCallIdVal:String? = nil
-    var gGubun:Int? = nil
+    var gGubun:DynamicValue? = nil
     var sessionId:String? = nil
     init(json: [String:Any]) throws {}
 }
+

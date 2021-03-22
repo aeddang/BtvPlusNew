@@ -74,7 +74,7 @@ struct TopBannerBg: PageComponent {
 
 struct TopBannerBgItem: PageComponent, Identifiable {
 
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     let id = UUID().uuidString
     let data: BannerData
    

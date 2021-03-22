@@ -33,7 +33,7 @@ enum SceneRadioResult {
 struct SceneRadioController: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var repository:Repository
-    @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var sceneObserver:AppSceneObserver
     
     @State var isShow = false
     @State var buttons:[RadioBtnData] = []

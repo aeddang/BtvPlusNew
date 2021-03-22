@@ -24,16 +24,16 @@ enum RepositoryStatus:Equatable{
 
 class Repository:ObservableObject, PageProtocol{
     @Published var status:RepositoryStatus = .initate
-    let pageSceneObserver:PageSceneObserver?
+    let appSceneObserver:AppSceneObserver?
     let pagePresenter:PagePresenter?
     let dataProvider:DataProvider
     let pairing:Pairing
     let webManager:WebManager
     let networkObserver:NetworkObserver
     let voiceRecognition:VoiceRecognition
+    let apiCoreDataManager = ApiCoreDataManager()
     
     private let storage = LocalStorage()
-    private let apiCoreDataManager = ApiCoreDataManager()
     private let accountManager:AccountManager
     private var apiManager:ApiManager
     
@@ -48,17 +48,17 @@ class Repository:ObservableObject, PageProtocol{
         pairing:Pairing? = nil,
         networkObserver:NetworkObserver? = nil,
         pagePresenter:PagePresenter? = nil,
-        sceneObserver:PageSceneObserver? = nil,
+        sceneObserver:AppSceneObserver? = nil,
         setup:Setup? = nil
     ) {
         self.dataProvider = dataProvider ?? DataProvider()
         self.pairing = pairing ?? Pairing()
         self.networkObserver = networkObserver ?? NetworkObserver()
         self.apiManager = ApiManager()
-        self.pageSceneObserver = sceneObserver
+        self.appSceneObserver = sceneObserver
         self.pagePresenter = pagePresenter
         self.userSetup = setup ?? Setup()
-        self.voiceRecognition = VoiceRecognition(pageSceneObserver: sceneObserver)
+        self.voiceRecognition = VoiceRecognition(appSceneObserver: sceneObserver)
         
         self.accountManager =  AccountManager(
             pairing: self.pairing,
@@ -72,7 +72,7 @@ class Repository:ObservableObject, PageProtocol{
         
         self.pagePresenter?.$currentPage.sink(receiveValue: { evt in
             self.apiManager.clear()
-            self.pageSceneObserver?.isApiLoading = false
+            self.appSceneObserver?.isApiLoading = false
             self.pagePresenter?.isLoading = false
             self.retryRegisterPushToken()
         }).store(in: &anyCancellable)
@@ -118,11 +118,11 @@ class Repository:ObservableObject, PageProtocol{
             guard let evt = evt else { return }
             switch evt{
             case .connected(let stbData) :
-                //self.pageSceneObserver?.event = .toast("connected")
+                //self.appSceneObserver?.event = .toast("connected")
                 self.storage.saveDevice(stbData)
                 
             case .disConnected :
-                self.pageSceneObserver?.event = .toast(String.alert.pairingDisconnected)
+                self.appSceneObserver?.event = .toast(String.alert.pairingDisconnected)
                 self.storage.saveUser(nil)
                 self.storage.clearDevice()
                 self.dataProvider.requestData(q: .init(type: .getGnb))
@@ -131,12 +131,12 @@ class Repository:ObservableObject, PageProtocol{
                 self.storage.saveUser(self.pairing.user)
                 self.pairing.user?.pairingDate = self.storage.pairingDate
                 self.pairing.hostDevice?.modelName = self.storage.pairingModelName
-                //self.pageSceneObserver?.event = .toast(String.alert.pairingCompleted)
+                //self.appSceneObserver?.event = .toast(String.alert.pairingCompleted)
                 self.dataProvider.requestData(q: .init(type: .getGnb))
          
             
             case .syncError :
-                self.pageSceneObserver?.alert = .pairingRecovery
+                self.appSceneObserver?.alert = .pairingRecovery
             default: do{}
             }
         }).store(in: &anyCancellable)
@@ -148,7 +148,7 @@ class Repository:ObservableObject, PageProtocol{
             if apiQ.isLock {
                 self.pagePresenter?.isLoading = true
             }else{
-                self.pageSceneObserver?.isApiLoading = true
+                self.appSceneObserver?.isApiLoading = true
             }
             if let coreDatakey = apiQ.type.coreDataKey(){
                 self.requestApi(apiQ, coreDatakey:coreDatakey)
@@ -166,7 +166,7 @@ class Repository:ObservableObject, PageProtocol{
             self.respondApi(res)
             DispatchQueue.main.async {
                 self.dataProvider.result = res
-                self.pageSceneObserver?.isApiLoading = false
+                self.appSceneObserver?.isApiLoading = false
                 self.pagePresenter?.isLoading = false
             }
         }).store(in: &dataCancellable)
@@ -177,9 +177,9 @@ class Repository:ObservableObject, PageProtocol{
             DispatchQueue.main.async {
                 self.dataProvider.error = err
                 if !err.isOptional {
-                    self.pageSceneObserver?.alert = .apiError(err)
+                    self.appSceneObserver?.alert = .apiError(err)
                 }
-                self.pageSceneObserver?.isApiLoading = false
+                self.appSceneObserver?.isApiLoading = false
                 self.pagePresenter?.isLoading = false
             }
         }).store(in: &dataCancellable)
@@ -220,7 +220,7 @@ class Repository:ObservableObject, PageProtocol{
             DispatchQueue.main.async {
                 if let coreData = coreData {
                     self.dataProvider.result = ApiResultResponds(id: apiQ.id, type: apiQ.type, data: coreData)
-                    self.pageSceneObserver?.isApiLoading = false
+                    self.appSceneObserver?.isApiLoading = false
                     self.pagePresenter?.isLoading = false
                 }else{
                     self.apiManager.load(q: apiQ)
@@ -234,11 +234,11 @@ class Repository:ObservableObject, PageProtocol{
         case .getGnb :
             guard let data = res.data as? GnbBlock  else { return }
             if data.gnbs == nil || data.gnbs!.isEmpty {
-                self.pageSceneObserver?.event = .toast("respondApi data.gnbs error")
+                //self.appSceneObserver?.event = .toast("respondApi data.gnbs error")
                 self.status = .error(nil)
                 return
             }
-            self.pageSceneObserver?.event = .toast("respondApi getGnb")
+            //self.appSceneObserver?.event = .toast("respondApi getGnb")
             self.onReadyRepository(gnbData: data)
         
         default: do{}
@@ -256,19 +256,19 @@ class Repository:ObservableObject, PageProtocol{
                 self.apiCoreDataManager.clearData(server: server)
             }
         }
-        self.pageSceneObserver?.event = .toast("onReadyApiManager")
+        //self.appSceneObserver?.event = .toast("onReadyApiManager")
         self.dataProvider.requestData(q: .init(type: .getGnb))
     }
     
     private func onReadyRepository(gnbData:GnbBlock){
         self.dataProvider.bands.setDate(gnbData)
-        self.pageSceneObserver?.event = .toast("onReadyRepository")
+        //self.appSceneObserver?.event = .toast("onReadyRepository")
         if self.status != .ready {self.status = .ready}
     }
     
     func retryRepository()
     {
-        //self.pageSceneObserver?.event = .toast("retryRepository")
+        //self.appSceneObserver?.event = .toast("retryRepository")
         self.status = .initate
         self.apiManager.retryApi()
     }

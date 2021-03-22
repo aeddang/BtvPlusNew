@@ -14,7 +14,7 @@ import SwiftUI
 
 struct AlramButton: PageView {
     @EnvironmentObject var dataProvider:DataProvider
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     var data:NotificationData
     @Binding var isAlram:Bool?
@@ -24,7 +24,7 @@ struct AlramButton: PageView {
         Button(action: {
             let status = self.pairing.status
             if status != .pairing {
-                self.pageSceneObserver.alert = .needPairing()
+                self.appSceneObserver.alert = .needPairing()
             }
             else{
                 self.requestToggle()
@@ -74,7 +74,7 @@ struct AlramButton: PageView {
             if !checkResult(res:res) { return }
             self.isAlram = true
             action?(true)
-            self.pageSceneObserver.event = .toast(String.alert.updateRegistAlram)
+            self.appSceneObserver.event = .toast(String.alert.updateRegistAlram)
         }
     }
     func delete(_ srisId:String?, res:ApiResultResponds){
@@ -82,17 +82,17 @@ struct AlramButton: PageView {
             if !checkResult(res:res) { return }
             self.isAlram = false
             action?(false)
-            self.pageSceneObserver.event = .toast(String.alert.updateUnregistAlram)
+            self.appSceneObserver.event = .toast(String.alert.updateUnregistAlram)
         }
     }
     
     private func checkResult(res:ApiResultResponds)->Bool{
         guard let result = res.data as? RegistNotificationVod else {
-            self.pageSceneObserver.event = .toast(String.alert.apiErrorServer)
+            self.appSceneObserver.event = .toast(String.alert.apiErrorServer)
             return false
         }
         if result.result != ApiCode.success {
-            self.pageSceneObserver.event = .toast(result.reason ?? String.alert.apiErrorServer)
+            self.appSceneObserver.event = .toast(result.reason ?? String.alert.apiErrorServer)
             return false
         }
         return true
@@ -115,7 +115,7 @@ struct AlramButton_Previews: PreviewProvider {
                 
             }
             .environmentObject(DataProvider())
-            .environmentObject(PageSceneObserver())
+            .environmentObject(AppSceneObserver())
             .environmentObject(Pairing())
         }
     }

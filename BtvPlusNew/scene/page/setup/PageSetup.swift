@@ -10,8 +10,8 @@ struct PageSetup: PageView {
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -223,7 +223,7 @@ struct PageSetup: PageView {
                 if self.setup.dataAlram == self.isDataAlram { return }
                 self.setup.dataAlram = self.isDataAlram
                 DispatchQueue.main.async {
-                    self.pageSceneObserver.event = .toast(
+                    self.appSceneObserver.event = .toast(
                         self.isDataAlram ? String.alert.dataAlramOn : String.alert.dataAlramOff
                     )
                     
@@ -234,12 +234,12 @@ struct PageSetup: PageView {
                 if !self.isInitate { return }
                 if self.setup.autoRemocon == self.isAutoRemocon { return }
                 if self.isPairing == false && value == true {
-                    self.pageSceneObserver.alert = .needPairing()
+                    self.appSceneObserver.alert = .needPairing()
                     self.isAutoRemocon = false
                     return
                 }
                 self.setup.autoRemocon = self.isAutoRemocon
-                self.pageSceneObserver.event = .toast(
+                self.appSceneObserver.event = .toast(
                     self.isAutoRemocon ? String.alert.autoRemoconOn : String.alert.autoRemoconOff
                 )
                 
@@ -248,12 +248,12 @@ struct PageSetup: PageView {
                 if !self.isInitate { return }
                 if self.setup.remoconVibration == self.isRemoconVibration { return }
                 if self.isPairing == false && value == true {
-                    self.pageSceneObserver.alert = .needPairing()
+                    self.appSceneObserver.alert = .needPairing()
                     self.isRemoconVibration = false
                     return
                 }
                 self.setup.remoconVibration = self.isRemoconVibration
-                self.pageSceneObserver.event = .toast(
+                self.appSceneObserver.event = .toast(
                     self.isRemoconVibration ? String.alert.remoconVibrationOn : String.alert.remoconVibrationOff
                 )
                 
@@ -262,7 +262,7 @@ struct PageSetup: PageView {
                 if !self.isInitate { return }
                 if self.setup.autoPlay == self.isAutoPlay { return }
                 self.setup.autoPlay = self.isAutoPlay
-                self.pageSceneObserver.event = .toast(
+                self.appSceneObserver.event = .toast(
                     self.isAutoPlay ? String.alert.autoPlayOn : String.alert.autoPlayOff
                 )
                 
@@ -271,7 +271,7 @@ struct PageSetup: PageView {
                 if !self.isInitate { return }
                 if self.setup.nextPlay == self.isNextPlay { return }
                 self.setup.nextPlay = self.isNextPlay
-                self.pageSceneObserver.event = .toast(
+                self.appSceneObserver.event = .toast(
                     self.isNextPlay ? String.alert.nextPlayOn : String.alert.nextPlayOff
                 )
             }
@@ -314,8 +314,8 @@ struct PageSetup_Previews: PreviewProvider {
         Form{
             PageSetup().contentBody
                 .environmentObject(PagePresenter())
-                .environmentObject(SceneObserver())
                 .environmentObject(PageSceneObserver())
+                .environmentObject(AppSceneObserver())
                 .environmentObject(Repository())
                 .environmentObject(DataProvider())
                 .environmentObject(Pairing())

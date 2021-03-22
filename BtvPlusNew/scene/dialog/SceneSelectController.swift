@@ -12,7 +12,7 @@ import SwiftUI
 struct SceneSelectController: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var repository:Repository
-    @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var sceneObserver:AppSceneObserver
     
     @State var isShow = false
     @State var selected:Int = 0

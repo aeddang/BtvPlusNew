@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 struct CharacterSelectBox: PageComponent{
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     var data:CharacterRowData
     @Binding var selectIdx:Int
     
@@ -43,7 +43,7 @@ struct CharacterSelectBox_Previews: PreviewProvider {
     static var previews: some View {
         VStack{
             CharacterSelectBox( data:CharacterRowData(), selectIdx: .constant(0) )
-                .environmentObject(SceneObserver())
+                .environmentObject(PageSceneObserver())
                 .frame(width:320,height:600)
         }
         .background(Color.brand.bg)

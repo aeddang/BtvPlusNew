@@ -92,7 +92,8 @@ struct VoiceRecorder: PageView {
                 self.isError = true
                 
             case .find(let word):
-                action(word)
+                let findKeyword = word.replace("0", with: "").replace(" ", with: "")
+                action(findKeyword)
             default : break
             }
         }

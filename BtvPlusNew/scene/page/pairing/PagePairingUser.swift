@@ -9,8 +9,8 @@ import SwiftUI
 
 struct PagePairingUser: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -87,7 +87,7 @@ struct PagePairingUser: PageView {
                 case .connected :
                     self.pagePresenter.closePopup(self.pageObject?.id)
                 case .connectError(let header) :
-                    self.pageSceneObserver.alert = .pairingError(header)
+                    self.appSceneObserver.alert = .pairingError(header)
                 default : do{}
                 }
             }
@@ -98,18 +98,18 @@ struct PagePairingUser: PageView {
                     if method == WebviewMethod.bpn_setIdentityVerfResult.rawValue {
                         if let jsonData = json?.parseJson() {
                             if let cid = jsonData["ci"] as? String {
-                                self.pageSceneObserver.alert = .alert(
+                                self.appSceneObserver.alert = .alert(
                                     String.alert.identifySuccess, String.alert.identifySuccessMe, nil)
                                 self.pagePresenter.openPopup(
                                     PageProvider.getPageObject(.pairingDevice)
                                         .addParam(key: .type, value: PairingRequest.user(cid))
                                 )
                             }else{
-                                self.pageSceneObserver.alert = .alert(
+                                self.appSceneObserver.alert = .alert(
                                     String.alert.identifyFail, String.alert.identifyFailMe, nil)
                             }
                         }else{
-                            self.pageSceneObserver.alert = .alert(
+                            self.appSceneObserver.alert = .alert(
                                 String.alert.identifyFail, String.alert.identifyFailMe, nil)
                         }
                         self.pagePresenter.closePopup(self.pageObject?.id)
@@ -139,8 +139,8 @@ struct PagePairingUser_Previews: PreviewProvider {
         Form{
             PagePairingUser().contentBody
                 .environmentObject(PagePresenter())
-                .environmentObject(SceneObserver())
                 .environmentObject(PageSceneObserver())
+                .environmentObject(AppSceneObserver())
                 .environmentObject(KeyboardObserver())
                 .environmentObject(Pairing())
                 .frame(width: 375, height: 640, alignment: .center)

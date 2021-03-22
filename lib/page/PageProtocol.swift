@@ -95,11 +95,12 @@ open class PageObservable: ObservableObject  {
     @Published var isAnimationComplete:Bool = false
 }
 
-open class SceneObserver: ObservableObject{
+open class PageSceneObserver: ObservableObject{
     
     @Published private(set) var safeAreaStart:CGFloat = 0
     @Published private(set) var safeAreaEnd:CGFloat = 0
     @Published private(set) var safeAreaBottom:CGFloat = 0
+    @Published private(set) var safeAreaIgnoreKeyboardBottom:CGFloat = 0
     @Published private(set) var safeAreaTop:CGFloat = 0
     @Published var willScreenSize:CGSize? = nil
     @Published private(set) var screenSize:CGSize = CGSize()
@@ -108,25 +109,29 @@ open class SceneObserver: ObservableObject{
     func update(geometry:GeometryProxy) {
         var willUpdate = false
         if geometry.safeAreaInsets.bottom != self.safeAreaBottom{
-            self.safeAreaBottom = geometry.safeAreaInsets.bottom
+            self.safeAreaBottom = round( geometry.safeAreaInsets.bottom )
+            if self.safeAreaBottom < 100 {
+                self.safeAreaIgnoreKeyboardBottom = self.safeAreaBottom
+            }
             willUpdate = true
         }
         if geometry.safeAreaInsets.top != self.safeAreaTop{
-            self.safeAreaTop = geometry.safeAreaInsets.top
+            self.safeAreaTop = round( geometry.safeAreaInsets.top )
             willUpdate = true
         }
         if geometry.safeAreaInsets.leading != self.safeAreaStart{
-            self.safeAreaStart = geometry.safeAreaInsets.leading
+            self.safeAreaStart = round(geometry.safeAreaInsets.leading)
             willUpdate = true
         }
         if geometry.safeAreaInsets.trailing != self.safeAreaEnd {
-            self.safeAreaEnd = geometry.safeAreaInsets.trailing
+            self.safeAreaEnd = round(geometry.safeAreaInsets.trailing)
             willUpdate = true
         }
         if geometry.size != self.screenSize {
             self.screenSize = geometry.size
             willUpdate = true
         }
+        ComponentLog.d("geometry.size " + geometry.size.debugDescription, tag:"SceneObserver")
         
         if willUpdate {
             self.isUpdated = true

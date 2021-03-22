@@ -10,14 +10,14 @@ import AVFoundation
 
 
 class VoiceRecognition:  NSObject, ObservableObject, RecognitionListener , PageProtocol{
-    private var pageSceneObserver:PageSceneObserver? = nil
+    private var appSceneObserver:AppSceneObserver? = nil
     var recognizer: SpeechRecognizer? = nil
     
     @Published private(set) var event:VoiceEvent? = nil {didSet{ if event != nil { event = nil} }}
     @Published private(set) var status:VoiceStatus = .initate
 
-    init(pageSceneObserver:PageSceneObserver? = nil) {
-        self.pageSceneObserver = pageSceneObserver
+    init(appSceneObserver:AppSceneObserver? = nil) {
+        self.appSceneObserver = appSceneObserver
     }
     
     @objc func audioSessionInterrupted(notification: NSNotification) {
@@ -41,7 +41,7 @@ class VoiceRecognition:  NSObject, ObservableObject, RecognitionListener , PageP
         AVAudioSession.sharedInstance().requestRecordPermission { [unowned self] granted in
             if !granted {
                 DispatchQueue.main.async {
-                    self.pageSceneObserver?.alert = .alert(nil, String.alert.needMicPermission)
+                    self.appSceneObserver?.alert = .alert(nil, String.alert.needMicPermission)
                 }
                 return
             }

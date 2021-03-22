@@ -114,7 +114,8 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
     }
     
     func getIPAddress() -> UnsafeMutablePointer<Int8>? {
-        var address: String?
+        var address: String? = AppUtil.getIPAddress()
+        /*
         var ifaddr: UnsafeMutablePointer<ifaddrs>? = nil
         if getifaddrs(&ifaddr) == 0 {
             var ptr = ifaddr
@@ -136,6 +137,7 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
             }
             freeifaddrs(ifaddr)
         }
+        */
         guard let add = address else {return nil}
         return UnsafeMutablePointer(mutating: (add as NSString).utf8String)
     }

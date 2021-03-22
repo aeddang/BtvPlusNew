@@ -9,6 +9,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import struct Kingfisher.KFImage
 
 struct FloatingBanner: PageComponent {
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
@@ -122,13 +123,21 @@ struct FloatingBanner: PageComponent {
 struct FloatingBannerItem: PageComponent, Identifiable {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     let id = UUID().uuidString
     let data: BannerData
    
     var body: some View {
-        ImageView(url:data.image, contentMode: .fill, noImg: Asset.noImg9_16)
-        .modifier(MatchParent())
+        KFImage(URL(string: self.data.image))
+            .resizable()
+            .placeholder {
+                Image(Asset.noImg9_16)
+                    .resizable()
+            }
+            .cancelOnDisappear(true)
+            .loadImmediately()
+            .aspectRatio(contentMode: .fill)
+            .modifier(MatchParent())
         .clipped()
         .onTapGesture {
             if let move = data.move {
@@ -153,7 +162,7 @@ struct FloatingBannerItem: PageComponent, Identifiable {
             }else if let link = data.outLink {
                 AppUtil.openURL(link)
             }
-            self.pageSceneObserver.event = .floatingBanner(nil)
+            self.appSceneObserver.event = .floatingBanner(nil)
         }
     }
 }

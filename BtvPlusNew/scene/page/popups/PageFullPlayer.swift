@@ -12,9 +12,8 @@ import Combine
 
 struct PageFullPlayer: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:SceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var repository:Repository
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var playerModel: BtvPlayerModel = BtvPlayerModel(useFullScreenAction:false)

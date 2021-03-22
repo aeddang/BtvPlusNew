@@ -10,7 +10,6 @@ import SwiftUI
 
 struct FunctionViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var pageSceneObserver:PageSceneObserver
     var synopsisData:SynopsisData? = nil
     var srisId:String?
     @Binding var isBookmark:Bool?
@@ -67,7 +66,7 @@ struct FunctionViewer_Previews: PreviewProvider {
             )
             .environmentObject(DataProvider())
             .environmentObject(PagePresenter())
-            .environmentObject(PageSceneObserver())
+            .environmentObject(AppSceneObserver())
             .environmentObject(Pairing())
         }.background(Color.blue)
     }

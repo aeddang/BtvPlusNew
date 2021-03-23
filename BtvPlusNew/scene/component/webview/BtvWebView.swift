@@ -35,6 +35,7 @@ extension BtvWebView {
     static let person = "/view/v3.0/synopsis/person"
     static let search = "/view/v3.0/search/main"
     static let searchMore = "/view/v3.0/search/more_info"
+    static let schedule = "/view/v3.0/epg"
     static let callJsPrefix = "javascript:"
 }
 
@@ -165,6 +166,49 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         })
     }
     
+    fileprivate func callJS(_ uiView: WKWebView, fn: String, dic:[String: Any]? = nil) {
+        var jsStr = ""
+        if let dic = dic {
+            let jsonString = AppUtil.getJsonString(dic: dic) ?? ""
+            jsStr = fn + "(\'" + jsonString + "\')"
+        } else {
+            jsStr = fn + "()"
+        }
+        self.callJS(uiView, jsStr: jsStr)
+    }
+    
+    fileprivate func callPage(_ path:String, param:[URLQueryItem]? = nil) {
+        
+        switch path {
+        case "synopsis":
+            let id = param?.first(where: {$0.name == "id"})?.value
+            let contentId = param?.first(where: {$0.name == "contentId"})?.value
+            let cid = param?.first(where: {$0.name == "cid"})?.value
+            let type = param?.first(where: {$0.name == "type"})?.value
+            let synopsisType = SynopsisType(value:type)
+            let epsdId = synopsisType == .title ? ((id ?? contentId) ?? cid) : cid
+            let srisId = synopsisType == .package ? ((id ?? contentId) ?? cid) : nil
+            self.pagePresenter.openPopup(
+                PageProvider.getPageObject(synopsisType == .package ? .synopsisPackage : .synopsis)
+                    .addParam(key: .data, value: SynopsisQurry(srisId: srisId, epsdId: epsdId))
+            )
+        case "menu": break
+            //menu(param: param)
+        case "event": break
+            //event(param: param)
+        case "point": break
+            //point(param: p aram)
+        case "coupon": break
+            //coupon(param: param)
+        case "bpoint": break
+            //bpoint(param: param)
+        case "family_invite":  break
+            //family_invite(param: param)
+        default: break
+        }
+        
+    }
+    
     private func update(_ uiView: WKWebView, evt:WebViewRequest){
         switch evt {
         case .home:
@@ -177,14 +221,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             self.callJS(uiView, jsStr: jsStr)
             return
         case .evaluateJavaScriptMethod(let fn, let dic):
-            var jsStr = ""
-            if let dic = dic {
-                let jsonString = AppUtil.getJsonString(dic: dic) ?? ""
-                jsStr = fn + "(\'" + jsonString + "\')"
-            } else {
-                jsStr = fn + "()"
-            }
-            self.callJS(uiView, jsStr: jsStr)
+            self.callJS(uiView, fn: fn, dic: dic)
             return
         case .back:
             if uiView.canGoBack {uiView.goBack()}
@@ -236,6 +273,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                             let param = components.queryItems
                             ComponentLog.d("path " + path, tag: self.tag)
                             ComponentLog.d("param " + (param?.debugDescription ?? ""), tag: self.tag)
+                            self.parent.callPage(path, param: param)
                             self.parent.viewModel.event = .callPage(path, param)
                         }
                     }
@@ -286,8 +324,9 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                                 let jsonData = jsonString.data(using: .utf8)!
                                 do {
                                     let data = try JSONDecoder().decode(SynopsisJson.self, from: jsonData)
+                                    let type = SynopsisType(value: data.synopType)
                                     self.parent.pagePresenter.openPopup(
-                                        PageProvider.getPageObject(.synopsis)
+                                        PageProvider.getPageObject(type == .package ? .synopsisPackage : .synopsis)
                                             .addParam(key: .data, value: data)
                                     )
                                 } catch {
@@ -300,7 +339,8 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                         }
                         if let dic = dic, let cb = cbName, !cb.isEmpty {
                             let js = BtvWebView.callJsPrefix + cb
-                            self.parent.viewModel.request = .evaluateJavaScriptMethod(js, dic)
+                            self.parent.callJS(webView, fn: js, dic: dic)
+                           
                         }
                     }
                 }
@@ -355,7 +395,6 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             
             WKWebsiteDataStore.default().httpCookieStore.getAllCookies { (cookies) in
                 for cookie in cookies {
-                    //Tool.debugLog("cookie.name:\(cookie.name), cookie.value:\(cookie.value)")
                     if cookie.name.contains("BtvplusWebVer") {
                         //MenuNaviBuilder.setWebPageVersion(cookie.value)
                     }
@@ -366,7 +405,6 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         
         func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
             ComponentLog.d("error: " + error.localizedDescription , tag: self.tag )
-    
             guard let failingUrlStr = (error as NSError).userInfo["NSErrorFailingURLStringKey"] as? String  else { return }
             guard let failingUrl = URL(string: failingUrlStr) else { return }
             guard let scheme = failingUrl.scheme?.lowercased() else { return }

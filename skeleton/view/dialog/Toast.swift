@@ -47,9 +47,9 @@ struct Toast<Presenting>: View where Presenting: View {
         }
         .onReceive( [self.isShowing].publisher ) { show in
             if !show  { return }
-            DispatchQueue.global().asyncAfter(deadline: .now() + self.duration) {
-                withAnimation {
-                   self.isShowing = false
+            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + self.duration) {
+                DispatchQueue.main.async {
+                    withAnimation {self.isShowing = false}
                 }
             }
             

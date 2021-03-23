@@ -9,7 +9,7 @@
 import Foundation
 import SwiftUI
 import Combine
-
+import struct Kingfisher.KFImage
 struct TopBannerBg: PageComponent {
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     var viewModel:ViewPagerModel = ViewPagerModel()
@@ -80,8 +80,17 @@ struct TopBannerBgItem: PageComponent, Identifiable {
    
     var body: some View {
         ZStack(){
-            ImageView(url:data.image, contentMode: .fill, noImg: Asset.noImg9_16)
+            KFImage(URL(string: self.data.image))
+                .resizable()
+                .placeholder {
+                    Image(Asset.noImg9_16)
+                        .resizable()
+                }
+                .cancelOnDisappear(true)
+                .loadImmediately()
+                .aspectRatio(contentMode: .fill)
                 .frame(height:TopBanner.imageHeight)
+            
             VStack{
                 Image(Asset.shape.bgGradientTop)
                 .renderingMode(.original)
@@ -95,8 +104,12 @@ struct TopBannerBgItem: PageComponent, Identifiable {
             }
             VStack{
                 Spacer()
-                if data.logo != nil {
-                    ImageView(url:data.logo!, contentMode: .fit)
+                if let logo = data.logo {
+                    KFImage(URL(string: logo))
+                        .resizable()
+                        .cancelOnDisappear(true)
+                        .loadImmediately()
+                        .aspectRatio(contentMode: .fit)
                         .frame(minWidth: 0, maxWidth: 280, minHeight: 0, maxHeight: 80, alignment:.bottom)
                         .padding(.horizontal, Dimen.margin.heavy)
                 }

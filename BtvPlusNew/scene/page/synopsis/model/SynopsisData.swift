@@ -11,6 +11,7 @@ enum SynopsisType {
     public init(value: String?) {
         switch value {
         case "03": self = .package
+        case "41": self = .package
         default: self = .title
         }
     }

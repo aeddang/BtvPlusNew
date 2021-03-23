@@ -13,8 +13,8 @@ class PosterData:InfinityData{
     private(set) var title: String? = nil
     private(set) var subTitle: String? = nil
     private(set) var epsdId:String? = nil
+    private(set) var prsId:String? = nil
     private(set) var synopsisType:SynopsisType = .title
-    
     private(set) var type:PosterType = .small
     private(set) var synopsisData:SynopsisData? = nil
     
@@ -108,6 +108,30 @@ class PosterData:InfinityData{
         return self
     }
     
+    func setData(data:CategoryVodItem, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
+        setCardType(cardType)
+        title = data.title
+        synopsisType = SynopsisType(value: data.synon_typ_cd)
+        if let poster = data.poster {
+            image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
+        }
+        index = idx
+        epsdId = data.epsd_id
+        synopsisData = .init(
+            srisId: nil, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "", kidZone:nil)
+        
+        return self
+    }
+    
+    func setData(data:CategoryPeopleItem, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
+        setCardType(cardType)
+        title = data.title
+        index = idx
+        prsId = data.prs_id
+        return self
+    }
+    
     private func setCardType(_ cardType:BlockData.CardType){
         switch cardType {
         case .bigPoster: type = .big
@@ -191,11 +215,17 @@ struct PosterList: PageComponent{
                     if let action = self.action {
                         action(data)
                     }else{
-                        guard let synopsisData = data.synopsisData else { return }
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
-                                .addParam(key: .data, value: synopsisData)
-                        )
+                        if let synopsisData = data.synopsisData {
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
+                                    .addParam(key: .data, value: synopsisData)
+                            )
+                        } else {
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.person)
+                                    .addParam(key: .data, value: data)
+                            )
+                        }
                     }
                 }
             }
@@ -244,11 +274,17 @@ struct PosterSet: PageComponent{
                         if let action = self.action {
                             action(data)
                         }else{
-                            guard let synopsisData = data.synopsisData else { return }
-                            self.pagePresenter.openPopup(
-                                PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
-                                    .addParam(key: .data, value: synopsisData)
-                            )
+                            if let synopsisData = data.synopsisData {
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
+                                        .addParam(key: .data, value: synopsisData)
+                                )
+                            } else {
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(.person)
+                                        .addParam(key: .data, value: data)
+                                )
+                            }
                         }
                         
                     }

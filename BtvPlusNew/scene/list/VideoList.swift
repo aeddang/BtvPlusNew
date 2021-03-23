@@ -35,7 +35,7 @@ class VideoData:InfinityData{
         return self
     }
     
-    func setData(data:PackageContentsItem, prdPrcId:String, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> VideoData {
+    func setData(data:PackageContentsItem, prdPrcId:String, cardType:BlockData.CardType = .video ,idx:Int = -1) -> VideoData {
         setCardType(cardType)
         title = data.title
         synopsisType = SynopsisType(value: data.synon_typ_cd)
@@ -96,6 +96,44 @@ class VideoData:InfinityData{
         return self
     }
     
+    func setData(data:CategorySrisItem, idx:Int = -1) -> VideoData {
+        if let thumb = data.poster_tseq {
+            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
+        }
+        self.title = data.title
+        self.subTitle = data.title_sub
+        index = idx
+        epsdId = data.epsd_id
+        synopsisType = SynopsisType(value: data.synon_typ_cd)
+        synopsisData = .init(
+            srisId: nil, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
+        return self
+    }
+    
+    func setData(data:CategoryCornerItem, idx:Int = -1) -> VideoData {
+        if let thumb = data.thumb {
+            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
+        }
+        self.title = data.title
+        index = idx
+        epsdId = data.epsd_id
+        synopsisData = .init(
+            srisId: nil, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
+        return self
+    }
+    
+    var bottomHeight:CGFloat {
+        get{
+            if self.title != nil && self.subTitle != nil {
+                return ListItem.video.type02
+            } else {
+                return ListItem.video.type01
+            }
+        }
+    }
+    
     private func setCardType(_ cardType:BlockData.CardType){
         switch cardType {
         case .watchedVideo: type = .watching
@@ -133,12 +171,6 @@ enum VideoType {
             case .watching: return ListItem.video.size
             case .cell(let size, _ ): return size
             }
-        }
-    }
-    
-    var bottomHeight:CGFloat{
-        get{
-            return ListItem.video.bottomHeight
         }
     }
 }
@@ -219,14 +251,14 @@ extension VideoSet{
     static let padding:CGFloat = Dimen.margin.thin
     static func listSize(data:VideoDataSet, screenWidth:CGFloat, isFull:Bool = false) -> CGSize{
         let datas = data.datas
-        let ratio = datas.first!.type.size.height / datas.first!.type.size.width
+        let ratio = ListItem.video.size.height / ListItem.video.size.width
         let count = CGFloat(data.count)
         let w = screenWidth - ( padding * 2)
         let cellW = ( w - (padding*(count-1)) ) / count
         var cellH = round(cellW * ratio)
         
-        if datas.first?.isInside == false && isFull {
-            cellH = cellH + datas.first!.type.bottomHeight
+        if datas.first?.isInside == false && isFull{
+            cellH = cellH + datas.first!.bottomHeight
         }
         return CGSize(width: cellW, height: cellH )
     }
@@ -329,13 +361,20 @@ struct VideoItem: PageView {
                 height: self.data.type.size.height)
             .clipped()
             if self.data.title != nil && !self.data.isInside {
-                Text(self.data.title!)
-                    .modifier(MediumTextStyle(size: Font.size.thinExtra))
-                    .padding(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/, Dimen.margin.thin)
-                    
-                    .lineLimit(1)
-                    .multilineTextAlignment(.leading)
-                    .frame(height:self.data.type.bottomHeight)
+                VStack(alignment: .leading, spacing:Dimen.margin.tiny){
+                    if let title = self.data.title {
+                        Text(title)
+                            .modifier(MediumTextStyle(size: Font.size.thinExtra))
+                            .lineLimit(1)
+                    }
+                    if let subTitle = self.data.subTitle {
+                        Text(subTitle)
+                            .modifier(MediumTextStyle(size: Font.size.tiny, color:Color.app.grey))
+                            .lineLimit(1)
+                    }
+                }
+                .padding(.horizontal, Dimen.margin.thin)
+                .frame(height:self.data.bottomHeight)
             }
         }
         .frame(width: self.data.type.size.width)

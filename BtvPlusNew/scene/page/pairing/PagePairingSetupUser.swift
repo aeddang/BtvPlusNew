@@ -180,22 +180,7 @@ struct PagePairingSetupUser: PageView {
                     .padding(.bottom, self.safeAreaBottom)
                 }
                 .modifier(PageFull())
-                .highPriorityGesture(
-                    DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
-                        .onChanged({ value in
-                            self.pageDragingModel.uiEvent = .drag(geometry, value)
-                        })
-                        .onEnded({ value in
-                            self.pageDragingModel.uiEvent = .draged(geometry, value)
-                        })
-                )
-                .gesture(
-                    self.pageDragingModel.cancelGesture
-                        .onChanged({_ in
-                            self.pageDragingModel.uiEvent = .dragCancel})
-                        .onEnded({_ in
-                            self.pageDragingModel.uiEvent = .dragCancel})
-                )
+                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                 
                 .onReceive(self.infinityScrollModel.$event){evt in
                     guard let evt = evt else {return}
@@ -222,6 +207,7 @@ struct PagePairingSetupUser: PageView {
                 }
             }
             .onReceive(self.keyboardObserver.$isOn){ on in
+                if self.pageObservable.layer != .top { return }
                 self.updatekeyboardStatus(on:on)
             }
             .onReceive(self.appSceneObserver.$selectResult){ result in

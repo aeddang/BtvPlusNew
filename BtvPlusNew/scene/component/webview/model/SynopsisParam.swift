@@ -19,3 +19,7 @@ struct SynopsisJson :Codable{
     init(json: [String:Any]) throws {}
 }
 
+struct SynopsisQurry :Codable{
+    var srisId:String? = nil
+    var epsdId:String? = nil
+}

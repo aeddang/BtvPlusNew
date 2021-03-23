@@ -34,21 +34,8 @@ struct PageMy: PageView {
                         DisconnectBlock()
                     }
                 }
-                .highPriorityGesture(
-                    DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
-                        .onChanged({ value in
-                            self.pageDragingModel.uiEvent = .drag(geometry, value)
-                        })
-                        .onEnded({ value in
-                            self.pageDragingModel.uiEvent = .draged(geometry, value)
-                        })
-                )
-                .gesture(
-                    self.pageDragingModel.cancelGesture
-                        .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
-                        .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
-                )
                 .modifier(PageFull())
+                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
             .onReceive(self.pairing.$status){status in
                 self.isPairing = ( status == .pairing )

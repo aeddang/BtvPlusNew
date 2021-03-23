@@ -207,7 +207,7 @@ struct SwipperView : View , PageProtocol, Swipper {
            }
         }
         
-        DispatchQueue.global().asyncAfter(deadline: .now() + Self.duration) {
+        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + Self.duration) {
             DispatchQueue.main.async {
                 let min = 0
                 let max = self.pages.count-1

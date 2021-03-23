@@ -60,7 +60,6 @@ struct PagePurchase: PageView {
                     
                     .onReceive(self.infinityScrollModel.$event){evt in
                         guard let evt = evt else {return}
-                       
                         switch evt {
                         case .pullCompleted :
                             self.pageDragingModel.uiEvent = .pullCompleted(geometry)
@@ -74,22 +73,7 @@ struct PagePurchase: PageView {
                     }
                 }
                 .modifier(PageFull(style:.white))
-                .highPriorityGesture(
-                    DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
-                        .onChanged({ value in
-                            self.pageDragingModel.uiEvent = .drag(geometry, value)
-                        })
-                        .onEnded({ value in
-                            self.pageDragingModel.uiEvent = .draged(geometry, value)
-                        })
-                )
-                .gesture(
-                    self.pageDragingModel.cancelGesture
-                        .onChanged({_ in
-                            self.pageDragingModel.uiEvent = .dragCancel})
-                        .onEnded({_ in
-                            self.pageDragingModel.uiEvent = .dragCancel})
-                )
+                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }//draging
             .onReceive(self.pairing.$event){ evt in
                 guard let evt = evt else {return}

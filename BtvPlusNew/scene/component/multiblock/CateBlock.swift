@@ -213,9 +213,18 @@ struct CateBlock: PageComponent{
     
     
     func load(){
-        if  !self.infinityScrollModel.isLoadable { return }
+        if !self.infinityScrollModel.isLoadable { return }
         withAnimation{ self.isError = false }
         self.infinityScrollModel.onLoad()
+        if let posters = self.viewModel.data?.allPosters {
+            self.setPosterSets(loadedDatas: posters)
+            return
+        }
+        if let videos = self.viewModel.data?.allVideos{
+            self.setVideoSets(loadedDatas: videos)
+            return
+        }
+        
         if let api = self.viewModel.data?.getRequestApi(apiId:self.tag, pairing:self.pairing.status, isOption: false) {
             if self.viewModel.data!.dataType != .grid {
                 self.isPaging = false
@@ -478,7 +487,7 @@ struct CateBlock: PageComponent{
         if self.videos.isEmpty { self.onError() }
         
         if let data = self.videos.first {
-            let size = VideoSet.listSize(data: data, screenWidth: self.sceneObserver.screenSize.width, isFull: true)
+            let size = VideoSet.listSize(data: data, screenWidth: self.sceneObserver.screenSize.width, isFull:true)
             self.videoCellHeight = size.height
         }
         self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)

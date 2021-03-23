@@ -60,8 +60,7 @@ struct MultiBlockBody: PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
-    @ObservedObject var pageObservable:PageObservable
-    
+    var pageObservable:PageObservable
     var viewModel:MultiBlockModel = MultiBlockModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     var viewPagerModel:ViewPagerModel = ViewPagerModel()
@@ -201,7 +200,7 @@ struct MultiBlockBody: PageComponent {
             case .cwGrid:
                 guard let resData = res?.data as? CWGrid else {return data.setBlank()}
                 guard let grid = resData.grid else {return data.setBlank()}
-               
+                if grid.isEmpty {return data.setBlank()}
                 grid.forEach{ g in
                     if let blocks = g.block {
                         switch data.uiType {
@@ -224,7 +223,7 @@ struct MultiBlockBody: PageComponent {
             case .grid:
                 guard let resData = res?.data as? GridEvent else {return data.setBlank()}
                 guard let blocks = resData.contents else {return data.setBlank()}
-                
+                if blocks.isEmpty {return data.setBlank()}
                 switch data.uiType {
                 case .poster :
                     data.posters = blocks.map{ d in
@@ -252,6 +251,7 @@ struct MultiBlockBody: PageComponent {
             case .bookMark:
                 guard let resData = res?.data as? BookMark else {return data.setBlank()}
                 guard let blocks = resData.bookmarkList else {return data.setBlank()}
+                if blocks.isEmpty {return data.setBlank()}
                 switch data.uiType {
                 case .poster :
                     data.posters = blocks.map{ d in
@@ -267,6 +267,7 @@ struct MultiBlockBody: PageComponent {
             case .watched:
                 guard let resData = res?.data as? Watch else {return data.setBlank()}
                 guard let blocks = resData.watchList else {return data.setBlank()}
+                if blocks.isEmpty {return data.setBlank()}
                 switch data.uiType {
                 case .poster :
                     data.posters = blocks.map{ d in
@@ -299,8 +300,8 @@ struct MultiBlockBody: PageComponent {
             if let size = data.posters?.first?.type {
                 listHeight = size.size.height
             }
-            if let size = data.videos?.first?.type {
-                listHeight = size.size.height + size.bottomHeight
+            if let video = data.videos?.first{
+                listHeight = video.type.size.height + video.bottomHeight
             }
             if let size = data.themas?.first?.type {
                 listHeight = size.size.height
@@ -406,9 +407,7 @@ struct MultiBlockBody: PageComponent {
         if  !Self.isPreLoad {
             max = self.originBlocks.count
         } else {
-            max = (self.blocks.isEmpty == true)
-                ? min(self.viewModel.headerSize + 2, self.originBlocks.count)
-                : min(self.viewModel.requestSize, self.originBlocks.count)
+            max = min(self.viewModel.requestSize, self.originBlocks.count)
         }
         if max == 0 {
             self.requestBlockCompleted()
@@ -416,7 +415,6 @@ struct MultiBlockBody: PageComponent {
         }
         let set = self.originBlocks[..<max]
         self.originBlocks.removeSubrange(..<max)
-        PageLog.d("addBlock" + set.debugDescription, tag: "BlockProtocol")
         if set.isEmpty { return }
         self.requestNum = set.count
         if  !Self.isPreLoad {

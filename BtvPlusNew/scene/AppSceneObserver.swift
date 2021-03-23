@@ -14,13 +14,17 @@ enum SceneUpdateType {
 }
 
 enum SceneEvent {
-    case initate, toast(String), update(SceneUpdateType), floatingBanner([BannerData]? = nil), headerBanner(BannerData? = nil)
+    case initate, toast(String), update(SceneUpdateType),
+         floatingBanner([BannerData]? = nil), headerBanner(BannerData? = nil),
+         debug(String)
 }
 
 class AppSceneObserver:ObservableObject{
     @Published var useTop = false
+    @Published var useTopImmediately = false
     @Published var useTopFix:Bool? = nil
     @Published var useBottom = false
+    @Published var useBottomImmediately = false
     @Published var isApiLoading = false
     @Published var safeHeaderHeight:CGFloat = 0
     @Published var headerHeight:CGFloat = 0

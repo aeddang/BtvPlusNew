@@ -18,26 +18,33 @@ struct VideoBlock:BlockProtocol, PageComponent {
     var data: BlockData
     var useTracking:Bool = false
     @State var datas:[VideoData] = []
-    @State var listHeight:CGFloat = ListItem.video.height
+    @State var listHeight:CGFloat = ListItem.video.size.height + ListItem.video.type01
     @State var isUiActive:Bool = true
+    @State var hasMore:Bool = true
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             if self.isUiActive {
                 HStack( spacing:Dimen.margin.thin){
                     VStack(alignment: .leading, spacing:0){
-                        Text(data.name).modifier(BlockTitle())
-                            .lineLimit(1)
+                        HStack( spacing:Dimen.margin.thin){
+                            Text(data.name).modifier(BlockTitle())
+                                .lineLimit(1)
+                            Text(data.subName).modifier(BlockTitle(color:Color.app.grey))
+                                .lineLimit(1)
+                        }
                         Spacer().modifier(MatchHorizontal(height: 0))
                     }
-                    TextButton(
-                        defaultText: String.button.all,
-                        textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
-                    ){_ in
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(data.dataType == .watched ? .watchedList : .categoryList)
-                                .addParam(key: .data, value: data)
-                                .addParam(key: .type, value: CateBlock.ListType.video)
-                        )
+                    if self.hasMore {
+                        TextButton(
+                            defaultText: String.button.all,
+                            textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
+                        ){_ in
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(data.dataType == .watched ? .watchedList : .categoryList)
+                                    .addParam(key: .data, value: data)
+                                    .addParam(key: .type, value: CateBlock.ListType.video)
+                            )
+                        }
                     }
                 }
                 .modifier(ContentHorizontalEdges())
@@ -61,7 +68,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                             self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
                         }
                         
-                } else{
+                } else if self.hasMore{
                     VideoList(
                         viewModel:self.viewModel,
                         datas: [VideoData(),VideoData(),VideoData(),VideoData()] )
@@ -75,6 +82,9 @@ struct VideoBlock:BlockProtocol, PageComponent {
                     + Font.size.regular + Dimen.margin.thinExtra)
         .onAppear{
             if let datas = data.videos {
+                if data.allVideos?.isEmpty == true {
+                    self.hasMore = false
+                }
                 self.datas = datas
                 self.updateListSize()
             }
@@ -146,7 +156,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
     }
     func updateListSize(){
         if !self.datas.isEmpty {
-            self.listHeight = ListItem.video.height
+            self.listHeight = ListItem.video.size.height + self.datas.first!.bottomHeight
             onDataBinding()
         }
         else { onBlank() }

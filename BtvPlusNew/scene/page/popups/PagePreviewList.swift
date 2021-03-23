@@ -50,22 +50,7 @@ struct PagePreviewList: PageView {
                     
                 }
                 .modifier(PageFull(style:.dark))
-                .highPriorityGesture(
-                    DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
-                        .onChanged({ value in
-                            self.pageDragingModel.uiEvent = .drag(geometry, value)
-                        })
-                        .onEnded({ value in
-                            self.pageDragingModel.uiEvent = .draged(geometry, value)
-                        })
-                )
-                .gesture(
-                    self.pageDragingModel.cancelGesture
-                        .onChanged({_ in
-                            self.pageDragingModel.uiEvent = .dragCancel})
-                        .onEnded({_ in
-                            self.pageDragingModel.uiEvent = .dragCancel})
-                )
+                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani

@@ -36,6 +36,7 @@ extension PageID{
     static let webview:PageID = "webview"
     static let person:PageID = "person"
     static let search:PageID = "search"
+    static let schedule:PageID = "schedule"
 }
 
 struct PageProvider {
@@ -69,7 +70,7 @@ struct PageProvider {
         case .home, .category,
              .pairingSetupUser, .pairingBtv,
              .pairingDevice, .pairingUser, .pairingManagement,
-             .purchase , .webview:
+             .purchase , .webview, .schedule:
             return  .vertical
         case .fullPlayer :
             return .none
@@ -106,14 +107,15 @@ struct PageProvider {
 }
 
 extension PageParam {
-   static let id = "id"
-   static let data = "data"
-   static let type = "type"
-   static let title = "title"
-   static let autoPlay = "autoPlay"
-   static let initTime = "initTime"
-   static let viewPagerModel = "viewPagerModel"
-   static let infinityScrollModel = "infinityScrollModel"
+    static let id = "id"
+    static let data = "data"
+    static let datas = "datas"
+    static let type = "type"
+    static let title = "title"
+    static let autoPlay = "autoPlay"
+    static let initTime = "initTime"
+    static let viewPagerModel = "viewPagerModel"
+    static let infinityScrollModel = "infinityScrollModel"
 }
 
 extension PageEventType {
@@ -170,6 +172,7 @@ struct PageFactory{
         case .webview : return PageWebview()
         case .person : return PagePerson()
         case .search : return PageSearch()
+        case .schedule : return PageSchedule()
         default : return PageTest()
         }
     }

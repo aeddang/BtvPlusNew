@@ -62,6 +62,11 @@
 "watchAble" = "시청가능";
 "cast" = "출연";
 
+"vod" = "VOD";
+"sris" = "회차";
+"corner" = "코너";
+"people" = "인물";
+
 
 
 /*
@@ -228,6 +233,7 @@
 "titleCertificationUser" = "성인인증";
 "titlePrivacy" = "개인정보 처리방침";
 "titleServiceTerms" = "이용약관 및 청소년 보호정책";
+"titleSchedule" = "편성표";
 
 /*
  PagePairing
@@ -376,8 +382,10 @@
 */
 "searchLatest" = "최근 검색어";
 "searchPopularity" = "인기 검색어";
-
-
+"searchResult" = "에 대한\n검색결과가 %s건 있습니다.";
+"searchEmpty" = "에 대한\n검색결과가 없습니다.";
+"searchEmptyGuide" = "검색어의 철자, 띄어쓰기를 다시 한번 확인해 주세요.";
+"searchEmptyTitle" = "최근 많이 찾는 작품";
 /*
  Player
 */

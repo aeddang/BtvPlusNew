@@ -86,6 +86,14 @@ struct AppLayout: PageComponent{
                 withAnimation{
                     self.isToastShowing = true
                 }
+            case .debug(let msg):
+                #if DEBUG
+                    self.toastMsg = msg
+                    withAnimation{
+                        self.isToastShowing = true
+                    }
+                #endif
+                break
             case .floatingBanner(let datas): self.onFloatingBannerView(datas: datas)
             default: break
             }
@@ -121,7 +129,6 @@ struct AppLayout: PageComponent{
         
         .onReceive(self.repository.$status){ status in
             switch status {
-            
             case .ready: self.onStoreInit()
             case .error(let err): self.onPageError(err)
             default: do{}
@@ -137,7 +144,7 @@ struct AppLayout: PageComponent{
         }
     }
     func onStoreInit(){
-        self.appSceneObserver.event = .toast("onStoreInit")
+        self.appSceneObserver.event = .debug("onStoreInit")
         if SystemEnvironment.firstLaunch {
             self.pagePresenter.changePage(
                 PageProvider.getPageObject(.auth)
@@ -149,11 +156,9 @@ struct AppLayout: PageComponent{
     func onPageInit(){
         self.isInit = true
         self.isLoading = false
-        self.appSceneObserver.event = .toast("onPageInit")
+        self.appSceneObserver.event = .debug("onPageInit")
         if !self.appObserverMove(self.appObserver.page) {
             let initMenuId = self.dataProvider.bands.datas.first?.menuId
-            self.appSceneObserver.event = .toast("on go home")
-            
             self.pagePresenter.changePage(
                 PageProvider.getPageObject(.home)
                     .addParam(key: .id, value: initMenuId)
@@ -176,7 +181,7 @@ struct AppLayout: PageComponent{
         if datas.isEmpty {return}
         if self.getFloatingDateKey() == self.setup.floatingUnvisibleDate {return}
         
-        DispatchQueue.global().asyncAfter(deadline: .now() + 0.2) {
+        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.2) {
             DispatchQueue.main.async {
                 withAnimation{ floatBannerDatas = datas }
             }

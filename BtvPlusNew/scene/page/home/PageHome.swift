@@ -93,7 +93,7 @@ struct PageHome: PageView {
                 if self.useTracking {return}
                 self.useTracking = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.margin.regular
+                    self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.app.bottom
                 }
             } else {
                 if !self.useTracking {return}

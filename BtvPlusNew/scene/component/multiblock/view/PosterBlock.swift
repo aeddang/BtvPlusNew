@@ -20,24 +20,31 @@ struct PosterBlock:PageComponent, BlockProtocol {
     @State var datas:[PosterData] = []
     @State var listHeight:CGFloat = ListItem.poster.type01.height
     @State var isUiActive:Bool = true
+    @State var hasMore:Bool = true
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             if self.isUiActive {
                 HStack( spacing:Dimen.margin.thin){
-                    VStack(alignment: .leading, spacing:0){
-                        Text(data.name).modifier(BlockTitle())
-                            .lineLimit(1)
+                    VStack(alignment: .leading, spacing:Dimen.margin.tiny){
+                        HStack( spacing:Dimen.margin.thin){
+                            Text(data.name).modifier(BlockTitle())
+                                .lineLimit(1)
+                            Text(data.subName).modifier(BlockTitle(color:Color.app.grey))
+                                .lineLimit(1)
+                        }
                         Spacer().modifier(MatchHorizontal(height: 0))
                     }
-                    TextButton(
-                        defaultText: String.button.all,
-                        textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
-                    ){_ in
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.categoryList)
-                                .addParam(key: .data, value: data)
-                                .addParam(key: .type, value: CateBlock.ListType.poster)
-                        )
+                    if self.hasMore {
+                        TextButton(
+                            defaultText: String.button.all,
+                            textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
+                        ){_ in
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.categoryList)
+                                    .addParam(key: .data, value: data)
+                                    .addParam(key: .type, value: CateBlock.ListType.poster)
+                            )
+                        }
                     }
                 }
                 .modifier(ContentHorizontalEdges())
@@ -61,7 +68,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
                             self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
                         }
                     
-                } else{
+                } else if self.hasMore {
                     PosterList(
                         viewModel:self.viewModel,
                         datas: [PosterData(),PosterData(),PosterData(),PosterData(),PosterData()]
@@ -75,7 +82,11 @@ struct PosterBlock:PageComponent, BlockProtocol {
                     (self.data.listHeight ?? self.listHeight)
                     + Font.size.regular + Dimen.margin.thinExtra)
         .onAppear{
+            
             if let datas = data.posters {
+                if data.allPosters?.isEmpty == true {
+                    self.hasMore = false
+                }
                 self.datas = datas
                 self.updateListSize()
                 ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")

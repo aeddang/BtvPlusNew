@@ -106,22 +106,7 @@ struct PageMultiBlock: PageView {
                 }
                 
                 .modifier(PageFull())
-                .highPriorityGesture(
-                    DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
-                        .onChanged({ value in
-                            self.pageDragingModel.uiEvent = .drag(geometry, value)
-                        })
-                        .onEnded({ value in
-                            self.pageDragingModel.uiEvent = .draged(geometry, value)
-                        })
-                )
-                .gesture(
-                    self.pageDragingModel.cancelGesture
-                        .onChanged({_ in
-                            self.pageDragingModel.uiEvent = .dragCancel})
-                        .onEnded({_ in
-                            self.pageDragingModel.uiEvent = .dragCancel})
-                )
+                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
 
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
@@ -195,7 +180,7 @@ struct PageMultiBlock: PageView {
     }
     
     private func reload(delay:Double = 0){
-        DispatchQueue.global().asyncAfter(deadline: .now() + delay) {
+        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + delay) {
             DispatchQueue.main.async {
                 if let data = self.cateData {
                     self.cateBlockViewModel.update(menuId:data.menuId, listType:data.listType ?? .poster, key:nil)

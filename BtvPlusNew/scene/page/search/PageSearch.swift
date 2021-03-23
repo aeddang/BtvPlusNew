@@ -20,7 +20,8 @@ struct PageSearch: PageView {
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var pageDataProviderModel:PageDataProviderModel = PageDataProviderModel()
-    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
+    @ObservedObject var searchScrollModel: InfinityScrollModel = InfinityScrollModel()
+    @ObservedObject var resultScrollModel: InfinityScrollModel = InfinityScrollModel()
     
     @State var isKeyboardOn:Bool = false
     @State var isVoiceSearch:Bool = false
@@ -41,7 +42,7 @@ struct PageSearch: PageView {
                             keyword: self.$keyword,
                             inputChanged: {text in
                                 if text == "" {
-                                    self.viewModel.updateSearchKeyword()
+                                    self.resetSearchData()
                                 } else {
                                     self.changeSearch(word: text)
                                 }
@@ -54,19 +55,48 @@ struct PageSearch: PageView {
                                     self.emptyDatas = []
                                     return
                                 }
+                                if !self.searchDatas.isEmpty {
+                                    self.searchDatas = []
+                                    return
+                                }
                                 self.pagePresenter.goBack()
                             }
                         )
                         .modifier(ContentHorizontalEdges())
                         .padding(.top, Dimen.margin.thin)
-                        .padding(.bottom, Dimen.margin.micro)
+                        
                         ZStack(){
-                            if !self.emptyDatas.isEmpty {
-                                EmptySearchList(keyword: self.keyword, datas: self.emptyDatas)
+                            if !self.searchDatas.isEmpty {
+                                SearchResult(
+                                    viewModel: self.resultScrollModel,
+                                    pageObservable: self.pageObservable,
+                                    pageDragingModel: self.pageDragingModel,
+                                    total:self.total,
+                                    keyword: self.keyword,
+                                    datas: self.searchDatas,
+                                    useTracking: self.useTracking
+                                    )
                                     .modifier(MatchParent())
+                                    .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
+                                        guard let evt = evt else {return}
+                                        switch evt {
+                                        case .pullCompleted :
+                                            self.pageDragingModel.uiEvent = .pullCompleted(geometry)
+                                        case .pullCancel :
+                                            self.pageDragingModel.uiEvent = .pullCancel(geometry)
+                                        case .pull(let pos) :
+                                            self.pageDragingModel.uiEvent = .pull(geometry, pos)
+                                        default: break
+                                        }
+                                    }
+                                    
+                            } else if !self.emptyDatas.isEmpty {
+                                EmptySearchResult(keyword: self.keyword, datas: self.emptyDatas)
+                                    .modifier(MatchParent())
+                                    
                             } else {
                                 SearchList(
-                                    viewModel:self.infinityScrollModel,
+                                    viewModel:self.searchScrollModel,
                                     datas:self.datas,
                                     delete: { data in
                                         if data.isSection {
@@ -79,7 +109,15 @@ struct PageSearch: PageView {
                                         self.search(keyword: data.keyword)
                                     }
                                 )
-                                .modifier(ContentHorizontalEdges())
+                                .modifier(MatchParent())
+                                .onReceive(self.searchScrollModel.$event){ evt in
+                                    guard let evt = evt else { return }
+                                    switch evt {
+                                    case .down : AppUtil.hideKeyboard()
+                                    default : break
+                                    }
+                                    
+                                }
                             }
                         }
                         
@@ -113,37 +151,23 @@ struct PageSearch: PageView {
                         
                     }
                 }
-                .modifier(PageFull())
-                .highPriorityGesture(
-                    DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
-                        .onChanged({ value in
-                           self.pageDragingModel.uiEvent = .drag(geometry, value)
-                        })
-                        .onEnded({ value in
-                            self.pageDragingModel.uiEvent = .draged(geometry, value)
-                        })
-                )
-                .gesture(
-                    self.pageDragingModel.cancelGesture
-                        .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
-                        .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
-                )
+                .modifier(PageFull(style:.dark))
+                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }//PageDragingBody
             .onReceive(self.keyboardObserver.$isOn){ on in
-                PageLog.d("keyboardObserver " + on.description, tag: self.tag)
-                PageLog.d("self.isKeyboardOn " + self.isKeyboardOn.description, tag: self.tag)
+                if self.pageObservable.layer != .top { return }
                 if self.isKeyboardOn == on { return }
                 self.isKeyboardOn = on
-                if self.isInputSearch != on {
-                    PageLog.d("keyboardObserver isInputSearch " + isInputSearch.description, tag: self.tag)
-                    self.isInputSearch = on
-                }
+                if self.isInputSearch != on { self.isInputSearch = on}
                 if on {
                     self.emptyDatas = []
                 }
-                if self.pageObservable.layer == .top {
-                    self.appSceneObserver.useBottom = !on
+                if on {
+                    self.appSceneObserver.useBottomImmediately = false
+                } else {
+                    self.appSceneObserver.useBottom = true
                 }
+                
             }
             .onReceive(self.viewModel.$searchDatas){ datas in
                 self.datas = datas
@@ -154,8 +178,7 @@ struct PageSearch: PageView {
                 switch res.type {
                 case .getSearchKeywords : self.viewModel.updatePopularityKeywords(res.data as? SearchKeyword)
                 case .getCompleteKeywords : self.viewModel.updateCompleteKeywords(res.data as? CompleteKeyword)
-                case .getSeachVod :
-                    self.viewModel.updateSearchCategory(res.data as? SearchCategory)
+                case .getSeachVod : self.searchRespond(res: res, geometry: geometry)
                 case .getSeachPopularityVod :
                     self.viewModel.updatePopularityVod(res.data as? SearchPopularityVod)
                     self.emptyDatas = self.viewModel.getPosterSets(screenSize: geometry.size.width)
@@ -175,8 +198,10 @@ struct PageSearch: PageView {
                 if page?.id == self.pageObject?.id {
                     if self.useTracking {return}
                     self.useTracking = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.marginBottom = self.sceneObserver.safeAreaBottom + Dimen.app.bottom
+                    DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.5) {
+                        DispatchQueue.main.async {
+                            self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.app.bottom
+                        }
                     }
                 } else {
                     if !self.useTracking {return}
@@ -196,6 +221,17 @@ struct PageSearch: PageView {
     @State var keyword:String = ""
     @State var datas:[SearchData] = []
     @State var emptyDatas:[PosterDataSet] = []
+    @State var searchDatas:[BlockData] = []
+    @State var total:Int = 0
+    func resetSearchData() {
+        if !self.emptyDatas.isEmpty {
+            self.emptyDatas = []
+        }
+        if !self.searchDatas.isEmpty {
+            self.searchDatas = []
+        }
+        self.viewModel.updateSearchKeyword()
+    }
     
     func voiceSearch(){
         withAnimation{ self.isVoiceSearch = true }
@@ -208,7 +244,18 @@ struct PageSearch: PageView {
         self.viewModel.addSearchKeyword(keyword: keyword)
         self.keyword = keyword
         self.dataProvider.requestData(q: .init(id: self.tag, type: .getSeachVod(keyword), isOptional: false))
-        self.dataProvider.requestData(q: .init(id: self.tag, type: .getSeachPopularityVod, isOptional: false))
+    }
+    
+    func searchRespond(res:ApiResultResponds, geometry:GeometryProxy){
+        self.searchDatas = self.viewModel.updateSearchCategory(res.data as? SearchCategory)
+        if self.searchDatas.isEmpty {
+            self.emptyDatas = self.viewModel.getPosterSets(screenSize: geometry.size.width)
+            if self.emptyDatas.isEmpty {
+                self.dataProvider.requestData(q: .init(id: self.tag, type: .getSeachPopularityVod, isOptional: false))
+            }
+        } else {
+            self.total = self.searchDatas.reduce(0, {$0 + ($1.allPosters?.count ?? 0) + ($1.allVideos?.count ?? 0)})
+        }
     }
     
     @State var changeSearchSubscription:AnyCancellable?

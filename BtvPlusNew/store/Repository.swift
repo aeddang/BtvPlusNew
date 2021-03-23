@@ -205,7 +205,7 @@ class Repository:ObservableObject, PageProtocol{
     }
     
     private func requestApi(_ apiQ:ApiQ, coreDatakey:String){
-        DispatchQueue.global().async(){
+        DispatchQueue.global(qos: .background).async(){
             var coreData:Codable? = nil
             switch apiQ.type {
                 case .getGnb :
@@ -234,11 +234,11 @@ class Repository:ObservableObject, PageProtocol{
         case .getGnb :
             guard let data = res.data as? GnbBlock  else { return }
             if data.gnbs == nil || data.gnbs!.isEmpty {
-                //self.appSceneObserver?.event = .toast("respondApi data.gnbs error")
+                self.appSceneObserver?.event = .debug("respondApi data.gnbs error")
                 self.status = .error(nil)
                 return
             }
-            //self.appSceneObserver?.event = .toast("respondApi getGnb")
+            self.appSceneObserver?.event = .debug("respondApi getGnb")
             self.onReadyRepository(gnbData: data)
         
         default: do{}
@@ -256,19 +256,19 @@ class Repository:ObservableObject, PageProtocol{
                 self.apiCoreDataManager.clearData(server: server)
             }
         }
-        //self.appSceneObserver?.event = .toast("onReadyApiManager")
+        self.appSceneObserver?.event = .debug("onReadyApiManager")
         self.dataProvider.requestData(q: .init(type: .getGnb))
     }
     
     private func onReadyRepository(gnbData:GnbBlock){
         self.dataProvider.bands.setDate(gnbData)
-        //self.appSceneObserver?.event = .toast("onReadyRepository")
+        self.appSceneObserver?.event = .debug("onReadyRepository " + (SystemEnvironment.isStage ? "STAGE" : "RELEASE"))
         if self.status != .ready {self.status = .ready}
     }
     
     func retryRepository()
     {
-        //self.appSceneObserver?.event = .toast("retryRepository")
+        self.appSceneObserver?.event = .debug("retryRepository")
         self.status = .initate
         self.apiManager.retryApi()
     }

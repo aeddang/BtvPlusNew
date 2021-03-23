@@ -52,7 +52,9 @@ struct TopTab: PageComponent{
                            height: Dimen.icon.regular)
             }
             Button(action: {
-                
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.schedule)
+                )
             }) {
                 Image(Asset.gnbTop.schedule)
                     .renderingMode(.original)

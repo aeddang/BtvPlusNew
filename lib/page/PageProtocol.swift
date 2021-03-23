@@ -131,8 +131,6 @@ open class PageSceneObserver: ObservableObject{
             self.screenSize = geometry.size
             willUpdate = true
         }
-        ComponentLog.d("geometry.size " + geometry.size.debugDescription, tag:"SceneObserver")
-        
         if willUpdate {
             self.isUpdated = true
             ComponentLog.d("resize " + self.screenSize.debugDescription, tag:"SceneObserver")

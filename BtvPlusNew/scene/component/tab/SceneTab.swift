@@ -148,6 +148,14 @@ struct SceneTab: PageComponent{
                 }
                 self.updateBottomPos()
             }
+            .onReceive (self.appSceneObserver.$useTopImmediately) { use in
+                self.useTop = use
+                self.updateTopPos()
+            }
+            .onReceive (self.appSceneObserver.$useBottomImmediately) { use in
+                self.useBottom = use
+                self.updateBottomPos()
+            }
         }//geometry
     }
     func updateTopPos(){

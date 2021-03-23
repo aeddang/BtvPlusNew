@@ -6,9 +6,6 @@
 //
 import Foundation
 import SwiftUI
-
-
-
 struct PageSynopsis: PageView {
     enum ComponentEvent {
         case changeVod(String?), changeSynopsis(SynopsisData?), changeOption(PurchaseModel?), purchase
@@ -44,7 +41,6 @@ struct PageSynopsis: PageView {
             PageDataProviderContent(
                 viewModel: self.pageDataProviderModel
             ){
-                
                 PageDragingBody(
                     viewModel:self.pageDragingModel,
                     axis:.horizontal
@@ -74,8 +70,8 @@ struct PageSynopsis: PageView {
                             }
                         }
                         
-                        if !self.isFullScreen && self.isUiActive{
-                            if self.isUIView {
+                        if !self.isFullScreen {
+                            if self.isUIView && self.isUiActive && !self.progressError {
                                 SynopsisBody(
                                     componentViewModel: self.componentViewModel,
                                     infinityScrollModel: self.infinityScrollModel,
@@ -99,23 +95,33 @@ struct PageSynopsis: PageView {
                                     hasRelationVod: self.hasRelationVod,
                                     useTracking:self.useTracking)
                                    
-                                .highPriorityGesture(
-                                    DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
-                                        .onChanged({ value in
-                                           self.pageDragingModel.uiEvent = .drag(geometry, value)
-                                        })
-                                        .onEnded({ value in
-                                            self.pageDragingModel.uiEvent = .draged(geometry, value)
-                                        })
-                                )
-                                .gesture(
-                                    self.pageDragingModel.cancelGesture
-                                        .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
-                                        .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
-                                )
+                                    .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                                    .onReceive(self.peopleScrollModel.$event){evt in
+                                        guard let evt = evt else {return}
+                                        switch evt {
+                                        case .pullCompleted :
+                                            self.pageDragingModel.uiEvent = .pullCompleted(geometry)
+                                        case .pullCancel :
+                                            self.pageDragingModel.uiEvent = .pullCancel(geometry)
+                                        default : do{}
+                                        }
+                                    }
+                                    .onReceive(self.peopleScrollModel.$pullPosition){ pos in
+                                        self.pageDragingModel.uiEvent = .pull(geometry, pos)
+                                    }
                                 
                             } else {
-                                Spacer().modifier(MatchParent())
+                                ZStack{
+                                    if self.progressError {
+                                        EmptyAlert(text: self.synopsisData == nil ? String.alert.dataError : String.alert.apiErrorServer)
+                                            
+                                    } else {
+                                        Spacer().modifier(MatchParent())
+                                    }
+                                }
+                                .modifier(MatchParent())
+                                .background(Color.brand.bg)
+                                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                             }
                         }
                     }
@@ -132,24 +138,8 @@ struct PageSynopsis: PageView {
                         case .purchase : self.purchase()
                         }
                     }
-                    .onReceive(self.peopleScrollModel.$event){evt in
-                        guard let evt = evt else {return}
-                        switch evt {
-                        case .pullCompleted :
-                            self.pageDragingModel.uiEvent = .pullCompleted(geometry)
-                        case .pullCancel :
-                            self.pageDragingModel.uiEvent = .pullCancel(geometry)
-                        default : do{}
-                        }
-                    }
-                    .onReceive(self.peopleScrollModel.$pullPosition){ pos in
-                        self.pageDragingModel.uiEvent = .pull(geometry, pos)
-                    }
                     .modifier(PageFull())
-                    
                 }//PageDragingBody
-                
-                
             }//PageDataProviderContent
             .onReceive(self.pageObservable.$layer ){ layer  in
                 switch layer {
@@ -253,9 +243,14 @@ struct PageSynopsis: PageView {
                 self.synopsisData = obj.getParamValue(key: .data) as? SynopsisData
                 if self.synopsisData == nil {
                     if let json = obj.getParamValue(key: .data) as? SynopsisJson {
-                    self.synopsisData = SynopsisData(
-                        srisId: json.srisId, searchType:EuxpNetwork.SearchType.sris.rawValue, epsdId: json.epsdId,
-                        epsdRsluId: json.episodeResolutionId, prdPrcId: json.pid, kidZone: nil)
+                        self.synopsisData = SynopsisData(
+                            srisId: json.srisId, searchType:EuxpNetwork.SearchType.sris.rawValue, epsdId: json.epsdId,
+                            epsdRsluId: json.episodeResolutionId, prdPrcId: json.pid, kidZone: nil)
+                    }
+                    if let qurry = obj.getParamValue(key: .data) as? SynopsisQurry {
+                        self.synopsisData = SynopsisData(
+                            srisId:  qurry.srisId, searchType:EuxpNetwork.SearchType.sris.rawValue, epsdId:  qurry.epsdId,
+                            epsdRsluId: nil, prdPrcId: nil, kidZone: nil)
                     }
                 }
                 self.initPage()
@@ -311,8 +306,11 @@ struct PageSynopsis: PageView {
     @State var isUIView:Bool = false
     
     func initPage(){
-        
-        if !self.isPageDataReady || !self.isPageUiReady || self.synopsisData == nil { return }
+        if self.synopsisData == nil {
+            self.progressError = true
+            return
+        }
+        if !self.isPageDataReady || !self.isPageUiReady { return }
         if self.pageObservable.status == .initate { return }
         self.isPairing = self.pairing.status == .pairing
         if self.isInitPage {

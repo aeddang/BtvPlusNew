@@ -7,11 +7,13 @@
 import Foundation
 import SwiftUI
 
-struct PagePairingUser: PageView {
+struct PageSchedule: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var repository:Repository
     @EnvironmentObject var pairing:Pairing
+
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -19,6 +21,7 @@ struct PagePairingUser: PageView {
     
     @State var webViewHeight:CGFloat = 0
     @State var useTracking:Bool = false
+    @State var purchaseWebviewModel:PurchaseWebviewModel? = nil
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -27,11 +30,10 @@ struct PagePairingUser: PageView {
             ) {
                 VStack(spacing:0){
                     PageTab(
-                        title: String.pageTitle.connectCertificationBtv,
+                        title: String.pageTitle.schedule,
                         isClose: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    
                     ZStack(alignment: .topLeading){
                         DragDownArrow(
                             infinityScrollModel: self.infinityScrollModel)
@@ -41,7 +43,7 @@ struct PagePairingUser: PageView {
                             isRecycle:false,
                             useTracking:self.useTracking
                         ){
-                            BtvWebView( viewModel: self.webViewModel )
+                            BtvWebView( viewModel: self.webViewModel, useNativeScroll:false )
                                 .modifier(MatchHorizontal(height: self.webViewHeight))
                                 .onReceive(self.webViewModel.$screenHeight){height in
                                     self.webViewHeight = geometry.size.height
@@ -72,47 +74,29 @@ struct PagePairingUser: PageView {
                 .modifier(PageFull())
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }//draging
-            .onReceive(self.pairing.$event){ evt in
-                guard let evt = evt else {return}
-                switch evt {
-                case .connected :
-                    self.pagePresenter.closePopup(self.pageObject?.id)
-                case .connectError(let header) :
-                    self.appSceneObserver.alert = .pairingError(header)
-                default : do{}
-                }
-            }
+            
             .onReceive(self.webViewModel.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
                 case .callFuncion(let method, let json, _) :
-                    if method == WebviewMethod.bpn_setIdentityVerfResult.rawValue {
-                        if let jsonData = json?.parseJson() {
-                            if let cid = jsonData["ci"] as? String {
-                                self.appSceneObserver.alert = .alert(
-                                    String.alert.identifySuccess, String.alert.identifySuccessMe, nil)
-                                self.pagePresenter.openPopup(
-                                    PageProvider.getPageObject(.pairingDevice)
-                                        .addParam(key: .type, value: PairingRequest.user(cid))
-                                )
-                            }else{
-                                self.appSceneObserver.alert = .alert(
-                                    String.alert.identifyFail, String.alert.identifyFailMe, nil)
-                            }
-                        }else{
-                            self.appSceneObserver.alert = .alert(
-                                String.alert.identifyFail, String.alert.identifyFailMe, nil)
-                        }
-                        self.pagePresenter.closePopup(self.pageObject?.id)
+                    switch method {
+                   
+                    case WebviewMethod.bpn_closeWebView.rawValue :
+                        self.pagePresenter.goBack()
+                        break
+                        
+                    default : break
                     }
+                    
                 default : do{}
                 }
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
             }
+            
             .onAppear{
-                let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.identity
+                let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.schedule
                 self.webViewModel.request = .link(linkUrl)
             }
             .onDisappear{
@@ -125,10 +109,11 @@ struct PagePairingUser: PageView {
 }
 
 #if DEBUG
-struct PagePairingUser_Previews: PreviewProvider {
+struct PageSchedule_Previews: PreviewProvider {
     static var previews: some View {
         Form{
-            PagePairingUser().contentBody
+            PageSchedule().contentBody
+                .environmentObject(Repository())
                 .environmentObject(PagePresenter())
                 .environmentObject(PageSceneObserver())
                 .environmentObject(AppSceneObserver())

@@ -173,22 +173,24 @@ struct PageSetup: PageView {
                                             
                                         }
                                     )
-                                    Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
-                                    SetupItem (
-                                        isOn: .constant(true),
-                                        title: "실서버",
-                                        more:{
-                                            self.repository.reset(isReleaseMode: true, isEvaluation: false)
-                                        }
-                                    )
-                                    Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
-                                    SetupItem (
-                                        isOn: .constant(true),
-                                        title: "스테이지",
-                                        more:{
-                                            self.repository.reset(isReleaseMode: false, isEvaluation: false)
-                                        }
-                                    )
+                                    #if DEBUG
+                                        Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
+                                        SetupItem (
+                                            isOn: .constant(true),
+                                            title: "실서버",
+                                            more:{
+                                                self.repository.reset(isReleaseMode: true, isEvaluation: false)
+                                            }
+                                        )
+                                        Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
+                                        SetupItem (
+                                            isOn: .constant(true),
+                                            title: "스테이지",
+                                            more:{
+                                                self.repository.reset(isReleaseMode: false, isEvaluation: false)
+                                            }
+                                        )
+                                    #endif
                                 }
                                 .background(Color.app.blueLight)
                             }
@@ -199,20 +201,7 @@ struct PageSetup: PageView {
                     .modifier(ContentHorizontalEdges())
                     .modifier(MatchParent())
                 }
-                .highPriorityGesture(
-                    DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
-                        .onChanged({ value in
-                            self.pageDragingModel.uiEvent = .drag(geometry, value)
-                        })
-                        .onEnded({ value in
-                            self.pageDragingModel.uiEvent = .draged(geometry, value)
-                        })
-                )
-                .gesture(
-                    self.pageDragingModel.cancelGesture
-                        .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
-                        .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
-                )
+                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                 .modifier(PageFull())
             }
             .onReceive(self.pairing.$status){ status in

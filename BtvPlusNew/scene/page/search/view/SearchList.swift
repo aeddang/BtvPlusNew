@@ -37,7 +37,7 @@ struct SearchList: PageComponent{
             marginHorizontal: 0,
             spacing: 0,
             isRecycle:true,
-            useTracking: false
+            useTracking: true
         ){
             if !self.datas.isEmpty {
                 ForEach(self.datas) { data in
@@ -52,6 +52,9 @@ struct SearchList: PageComponent{
                 Spacer().modifier(MatchParent())
             }
         }
+        .modifier(ContentHorizontalEdges())
+        .background(Color.brand.bg)
+        .padding(.top, Dimen.margin.thin)
     }//body
 }
 
@@ -77,14 +80,20 @@ struct SearchItem: PageView {
                     Button(action: {
                         self.delete?(self.data)
                     }) {
-                        Image(Asset.icon.close)
-                            .renderingMode(.original)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: Dimen.icon.light,
-                                   height: Dimen.icon.light)
-                            
-                            .colorMultiply(Color.app.grey)
+                        HStack(spacing:Dimen.margin.tiny){
+                            if self.data.isSection {
+                                Text( String.button.deleteAll)
+                                    .modifier(LightTextStyle(size: Font.size.tiny, color:Color.app.grey) )
+                            }
+                            Image(Asset.icon.close)
+                                .renderingMode(.original)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: Dimen.icon.light,
+                                       height: Dimen.icon.light)
+                                
+                                .colorMultiply(Color.app.grey)
+                        }
                     }
                 }
             }

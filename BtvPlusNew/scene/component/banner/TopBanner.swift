@@ -10,9 +10,9 @@ import Foundation
 import SwiftUI
 import Combine
 extension TopBanner{
+    static let height:CGFloat = 477
     static let barWidth:CGFloat = Dimen.bar.medium
     static let imageHeight:CGFloat = 720
-    static let height:CGFloat = 477
     static let barHeight = Dimen.line.medium
     static let marginBottom = Dimen.margin.medium
     static let maginBottomLogo = (Self.imageHeight - Self.height) + (Self.marginBottom + Self.barHeight + Dimen.margin.medium)
@@ -141,8 +141,17 @@ struct TopBannerItem: PageComponent, Identifiable {
                         pageObj.params = data.moveData
                         self.pagePresenter.openPopup(pageObj)
                     }
-                }else if let link = data.outLink {
+                }
+                else if let link = data.outLink {
                     AppUtil.openURL(link)
+                }
+                else if let link = data.inLink {
+                    self.pagePresenter.openPopup(
+                        PageProvider
+                            .getPageObject(.webview)
+                            .addParam(key: .data, value: link)
+                            .addParam(key: .title , value: data.title)
+                    )
                 }
             }
         }

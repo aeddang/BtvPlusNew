@@ -15,6 +15,7 @@ enum BlockStatus:String{
 class BlockData:InfinityData, ObservableObject{
     
     private(set) var name:String = ""
+    private(set) var subName:String = ""
     
     private(set) var menuId:String? = nil
     private(set) var cwCallId:String? = nil
@@ -33,6 +34,9 @@ class BlockData:InfinityData, ObservableObject{
     var banners:[BannerData]? = nil
     var listHeight:CGFloat? = nil
     
+    var allPosters:[PosterData]? = nil
+    var allVideos:[VideoData]? = nil
+    
     public static func == (l:BlockData, r:BlockData)-> Bool {
         return l.id == r.id
     }
@@ -44,6 +48,84 @@ class BlockData:InfinityData, ObservableObject{
         videos = nil
         themas = nil
         banners = nil
+    }
+    
+    func setDate(title:String, datas:[CategoryVodItem], max:Int = 10) -> BlockData{
+        name = title
+        uiType = .poster
+        self.allPosters = []
+        self.posters = []
+        var idx:Int = 0
+        
+        datas.forEach{
+            let video = PosterData().setData(data: $0)
+            self.allPosters?.append(video)
+            if idx < max { self.posters?.append(video) }
+            idx += 1
+        }
+        self.listHeight = self.posters?.first?.type.size.height ?? 0
+        self.subName = idx.description
+        return self
+    }
+    func setDate(title:String, datas:[CategoryPeopleItem], max:Int = 10) -> BlockData{
+        name = title
+        uiType = .poster
+        self.allPosters = []
+        self.posters = []
+        var idx:Int = 0
+        datas.forEach{
+            let video = PosterData().setData(data: $0)
+            self.allPosters?.append(video)
+            if idx < max { self.posters?.append(video) }
+            idx += 1
+        }
+        self.listHeight = self.posters?.first?.type.size.height ?? 0
+        self.subName = idx.description
+        return self
+    }
+    func setDate(title:String, datas:[CategorySrisItem], max:Int = 10) -> BlockData{
+        name = title
+        uiType = .video
+        self.allVideos = []
+        self.videos = []
+        var idx:Int = 0
+        datas.forEach{
+            let video = VideoData().setData(data: $0)
+            self.allVideos?.append(video)
+            if idx < max {
+                self.videos?.append(video)
+            }
+            idx += 1
+        }
+        self.subName = idx.description
+        if let video = self.videos?.first{
+            listHeight = video.type.size.height + video.bottomHeight
+        } else {
+            listHeight = 0
+        }
+        return self
+    }
+    func setDate(title:String, datas:[CategoryCornerItem], max:Int = 10) -> BlockData{
+        name = title
+        uiType = .video
+        self.allVideos = []
+        self.videos = []
+        var idx:Int = 0
+        datas.forEach{
+            let video = VideoData().setData(data: $0)
+            self.allVideos?.append(video)
+            if idx < max {
+                self.videos?.append(video)
+            }
+            idx += 1
+        }
+        self.subName = idx.description
+        if let video = self.videos?.first{
+            listHeight = video.type.size.height + video.bottomHeight
+        } else {
+            listHeight = 0
+        }
+        return self
     }
             
     func setDate(_ data:BlockItem, themaType:ThemaType = .category) -> BlockData{
@@ -123,21 +205,6 @@ class BlockData:InfinityData, ObservableObject{
     
     func setDatabindingCompleted(){
         if status != .initate { return }
-        if uiType == .poster && posters?.isEmpty != false  {
-            setBlank()
-            return
-        }
-        
-        if uiType == .video && videos?.isEmpty != false {
-            setBlank()
-            return
-        }
-        
-        if uiType == .banner && banners?.isEmpty != false {
-            setBlank()
-            return
-        }
-        
         status = .active
     }
     

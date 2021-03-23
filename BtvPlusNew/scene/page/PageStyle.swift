@@ -33,6 +33,29 @@ struct PageFull: ViewModifier {
     }
 }
 
+struct PageDraging: ViewModifier {
+    var geometry:GeometryProxy
+    var pageDragingModel:PageDragingModel
+   
+    func body(content: Content) -> some View {
+        return content
+            .highPriorityGesture(
+                DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
+                    .onChanged({ value in
+                       self.pageDragingModel.uiEvent = .drag(geometry, value)
+                    })
+                    .onEnded({ value in
+                        self.pageDragingModel.uiEvent = .draged(geometry, value)
+                    })
+            )
+            .gesture(
+                self.pageDragingModel.cancelGesture
+                    .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                    .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
+            )
+    }
+}
+
 struct ContentEdges: ViewModifier {
     var margin:CGFloat = Dimen.margin.thin
     func body(content: Content) -> some View {
@@ -65,10 +88,12 @@ struct PageTitle: ViewModifier {
 
 
 struct BlockTitle: ViewModifier {
+    var color:Color = Color.app.white
     func body(content: Content) -> some View {
         return content
             .modifier(BoldTextStyle(
-                size: Font.size.regular
+                size: Font.size.regular,
+                color:color
             ))
     }
 }

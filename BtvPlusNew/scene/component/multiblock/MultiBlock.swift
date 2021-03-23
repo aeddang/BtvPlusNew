@@ -126,7 +126,7 @@ struct MultiBlock:PageComponent {
                     }
                     if self.useFooter {
                         Footer()
-                            .modifier(ListRowInset(spacing: 0))
+                            .modifier(ListRowInset(spacing: Dimen.margin.regular))
                     }
                 }
                 
@@ -195,7 +195,7 @@ struct MultiBlock:PageComponent {
                     }
                     if self.useFooter {
                         Footer()
-                            .modifier(ListRowInset(spacing: 0))
+                            .modifier(ListRowInset(spacing: Dimen.margin.regular))
                     }
                 } else {
                     Spacer().modifier(MatchParent())

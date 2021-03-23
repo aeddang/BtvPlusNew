@@ -49,20 +49,7 @@ struct PagePerson: PageView {
 
                 }
                 .modifier(PageFull())
-                .highPriorityGesture(
-                    DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
-                        .onChanged({ value in
-                            self.pageDragingModel.uiEvent = .drag(geometry, value)
-                        })
-                        .onEnded({ value in
-                            self.pageDragingModel.uiEvent = .draged(geometry,value)
-                        })
-                )
-                .gesture(
-                    self.pageDragingModel.cancelGesture
-                        .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
-                        .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
-                )
+                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }//draging
             .onReceive(self.webViewModel.$event){ evt in
                 guard let evt = evt else {return}
@@ -82,6 +69,12 @@ struct PagePerson: PageView {
                 guard let obj = self.pageObject  else { return }
                 if let people = obj.getParamValue(key: .data) as? PeopleData{
                     self.title = people.name ?? ""
+                    let epsdId = people.epsdId ?? ""
+                    let prsId = people.prsId ?? ""
+                    let path = ApiPath.getRestApiPath(.WEB) + BtvWebView.person + "?epsd_id=" + epsdId + "&prs_id=" + prsId
+                    self.webViewModel.request = .link(path)
+                } else if let people = obj.getParamValue(key: .data) as? PosterData{
+                    self.title = people.title ?? ""
                     let epsdId = people.epsdId ?? ""
                     let prsId = people.prsId ?? ""
                     let path = ApiPath.getRestApiPath(.WEB) + BtvWebView.person + "?epsd_id=" + epsdId + "&prs_id=" + prsId

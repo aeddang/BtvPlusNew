@@ -12,7 +12,6 @@ import Foundation
 class PageSearchModel :ObservableObject, PageProtocol {
     
     @Published private(set) var searchDatas:[SearchData] = []
-    
     private var apiCoreDataManager:ApiCoreDataManager? = nil
     private var localKeywords:[String] = []
     private var popularityKeywords:[String] = []
@@ -20,7 +19,7 @@ class PageSearchModel :ObservableObject, PageProtocol {
     
     func onAppear(apiCoreDataManager:ApiCoreDataManager) {
         self.apiCoreDataManager = apiCoreDataManager
-        DispatchQueue.global().async(){
+        DispatchQueue.global(qos: .background).async(){
             let localDatas = apiCoreDataManager.getAllKeywords()
             DispatchQueue.main.async {
                 self.localKeywords.append(contentsOf: localDatas)
@@ -33,7 +32,7 @@ class PageSearchModel :ObservableObject, PageProtocol {
         let find = self.localKeywords.first(where: {$0 == keyword})
         if find == nil {
             self.localKeywords.append(keyword)
-            DispatchQueue.global().async(){
+            DispatchQueue.global(qos: .background).async(){
                 self.apiCoreDataManager?.addKeyword(keyword)
             }
         }
@@ -44,14 +43,14 @@ class PageSearchModel :ObservableObject, PageProtocol {
         }
         self.localKeywords.remove(at: find)
         self.updateSearchKeyword()
-        DispatchQueue.global().async(){
+        DispatchQueue.global(qos: .background).async(){
             self.apiCoreDataManager?.removeKeyword(keyword)
         }
     }
     func removeAllSearchKeyword (){
         self.localKeywords.removeAll()
         self.updateSearchKeyword()
-        DispatchQueue.global().async(){
+        DispatchQueue.global(qos: .background).async(){
             self.localKeywords.forEach{
                 self.apiCoreDataManager?.removeKeyword($0)
             }
@@ -90,10 +89,26 @@ class PageSearchModel :ObservableObject, PageProtocol {
         self.popularityDatas = datas.map{PosterData().setData(data: $0)}
     }
     
-    func updateSearchCategory (_ data:SearchCategory? = nil){
-        guard let result = data?.data else {return}
-        guard let datas = result.results_vod else {return}
-        
+    func updateSearchCategory (_ data:SearchCategory? = nil) ->[BlockData]{
+        guard let result = data?.data else {return []}
+        var blocks:[BlockData] = []
+        if let datas = result.results_vod {
+            let block = BlockData().setDate(title: String.app.vod, datas: datas)
+            blocks.append(block)
+        }
+        if let datas = result.results_vod_tseq {
+            let block = BlockData().setDate(title: String.app.sris, datas: datas)
+            blocks.append(block)
+        }
+        if let datas = result.results_corner {
+            let block = BlockData().setDate(title: String.app.corner, datas: datas)
+            blocks.append(block)
+        }
+        if let datas = result.results_people {
+            let block = BlockData().setDate(title: String.app.people, datas: datas)
+            blocks.append(block)
+        }
+        return blocks
     }
     
     

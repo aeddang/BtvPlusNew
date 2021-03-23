@@ -50,6 +50,7 @@ struct SearchTab: PageView {
                 
                 Button(action: {
                     self.keyword = ""
+                    self.inputChanged?("")
                 }) {
                     Image(Asset.icon.searchDelete)
                         .renderingMode(.original)

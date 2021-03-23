@@ -76,7 +76,7 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
     private(set) var isDragEnd:Bool = false
     private(set) var pullRange:CGFloat = 40
     private(set) var pullCompletedRange:CGFloat = 50
-    private(set) var updateScrollDiff:CGFloat = 0.3
+    private(set) var updateScrollDiff:CGFloat = 1.0
     private(set) var updatePullDiff:CGFloat = 0.3
     private(set) var cancelPullDiff:CGFloat = 5
     private(set) var completePullDiff:CGFloat = 15
@@ -91,7 +91,7 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
             //updateScrollDiff = 1.0
             updatePullDiff = 0.3
             cancelPullDiff = 5
-            completePullDiff = 20
+            completePullDiff = 40
             cancelPullRange = pullRange
             isDragEnd = end ?? false
         case .vertical (let end):
@@ -100,7 +100,7 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
             //updateScrollDiff = 0.3
             updatePullDiff = 0.3
             cancelPullDiff = 10
-            completePullDiff = 30
+            completePullDiff = 50
             cancelPullRange = pullRange
             isDragEnd = end ?? false
         case .reload (let end):
@@ -214,7 +214,7 @@ extension InfinityScrollViewProtocol {
         if abs(diff) > 600 { return }
         if abs(diff) > self.viewModel.minDiff{
             self.viewModel.scrollPosition = pos
-            self.viewModel.prevPosition = pos
+            self.viewModel.prevPosition = ceil(pos)
         }
         if diff > 30 { return }
         
@@ -237,14 +237,14 @@ extension InfinityScrollViewProtocol {
                     ComponentLog.d("onPullCancel pull " + self.viewModel.isScrollEnd.description , tag: "InfinityScrollViewProtocol")
                     self.onPullCancel()
                 }
-                self.viewModel.prevPosition = pos
+                self.viewModel.prevPosition = ceil(pos)
                 return
             }
             if abs(diff) > self.viewModel.minDiff { self.onPull(pos: pos) }
             if pos == 0 && diff > 0 {
                 ComponentLog.d("onPullCancel pos", tag: "InfinityScrollViewProtocol")
                 self.onPullCancel()
-                self.viewModel.prevPosition = pos
+                self.viewModel.prevPosition = ceil(pos)
             }
             return
         }
@@ -254,7 +254,7 @@ extension InfinityScrollViewProtocol {
             if self.viewModel.scrollStatus == .pull {
                 ComponentLog.d("onPullCancel scroll", tag: "InfinityScrollViewProtocol")
                 self.onPullCancel()
-                self.viewModel.prevPosition = pos
+                self.viewModel.prevPosition = ceil(pos)
             }
             self.viewModel.minDiff = self.viewModel.updateScrollDiff
             onTop()

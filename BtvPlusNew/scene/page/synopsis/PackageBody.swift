@@ -34,8 +34,7 @@ struct PackageBody: PageComponent{
                 .modifier(ListRowInset(spacing: Dimen.margin.regular))
             
             if !self.synopsisPackageModel.posters.isEmpty {
-                VStack(alignment: .leading, spacing: Dimen.margin.thinExtra){
-                    Spacer().modifier(MatchHorizontal(height: 0))
+                VStack(alignment: .leading, spacing: 0){
                     Text(String.pageText.synopsisPackageContent + " " + self.synopsisPackageModel.posters.count.description)
                         .modifier(BlockTitle())
                         .modifier(ContentHorizontalEdges())
@@ -46,10 +45,11 @@ struct PackageBody: PageComponent{
                     ) { data in
                         self.action?(data)
                     }
+                    .padding(.top, Dimen.margin.thinExtra)
                 }
                 .frame( height:
                             (ListItem.poster.type01.height)
-                            + Font.size.regular + Dimen.margin.thinExtra)
+                            + Font.size.regular + Dimen.margin.thinExtra + Dimen.margin.micro)
                 .modifier(ListRowInset(spacing: Dimen.margin.regular))
             } else {
                 Spacer().modifier(MatchParent())

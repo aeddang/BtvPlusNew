@@ -38,7 +38,7 @@ struct EmptyAlert: PageView {
                 .multilineTextAlignment(.center)
                 .padding(.top, Dimen.margin.regularExtra)
         }
-        .padding(.vertical, Dimen.margin.medium)
+        .padding(.all, Dimen.margin.medium)
     }//body
 }
 

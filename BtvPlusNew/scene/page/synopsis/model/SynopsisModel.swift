@@ -185,9 +185,8 @@ class SynopsisModel : PageProtocol {
                     effect = .blur
                     self.imgContentMode = .fit
                 }
-                self.imgBg = ImagePath.thumbImagePath(filePath: bg, size: CGSize(width: 720, height: 0), convType: effect)
+                self.imgBg = ImagePath.thumbImagePath(filePath: bg, size: CGSize(width: 320, height: 0), convType: effect)
             }
-            
         }else{
             if let bg = stillCut ?? self.getSafePath(contents.epsd_poster_filename_v) {
                 
@@ -195,7 +194,7 @@ class SynopsisModel : PageProtocol {
                     effect = .blur
                     self.imgContentMode = .fit
                 }
-                self.imgBg = ImagePath.thumbImagePath(filePath: bg, size: CGSize(width: 720, height: 0), convType: effect)
+                self.imgBg = ImagePath.thumbImagePath(filePath: bg, size: CGSize(width: 320, height: 0), convType: effect)
             }
         }
     }

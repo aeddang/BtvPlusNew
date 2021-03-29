@@ -116,7 +116,7 @@ enum ApiValue:String{
 enum ApiServer:String{
     case WEB, NPS, NPS_V5, PSS, RVS, WEPG, VMS, STACM, SRCXPG,
     UPMC, ME, EVENT, EMS, LGS, METV, IMAGE, NAVILOG, NAVILOG_NPI, EUXP, SMD,
-    IIP, METV2, SCS2, EPS, NF, RVS2, VLS, KMS, NSUTIL, PUCR, PUSH
+    IIP, METV2, SCS2, EPS, EPS2, NF, RVS2, VLS, KMS, NSUTIL, PUCR, PUSH
     
     var configKey:String {
         get {
@@ -138,6 +138,7 @@ enum ApiServer:String{
             case .LGS: return "lgs"
             case .SCS2: return "scs2"
             case .EPS: return "eps"
+            case .EPS2: return "eps2"
             case .METV: return "metv"
             case .RVS: return "rvs"
             case .PUSH: return "push"

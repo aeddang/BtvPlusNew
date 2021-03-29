@@ -23,7 +23,7 @@ struct TopBannerBg: PageComponent {
     var action:((_ idx:Int) -> Void)? = nil
     var body: some View {
         ZStack(alignment: .bottom){
-            SwipperView(
+            LoopSwipperView(
                 viewModel : self.viewModel,
                 pages: self.pages,
                 index: self.$index,

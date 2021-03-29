@@ -22,7 +22,15 @@ struct PageBackgroundBody: View {
 
 extension PageContentBody{
     static let pageMoveAmount:CGFloat = -70.0
+    private static var useBelowPageMove:Bool {
+        get{
+            if #available(iOS 14.0, *) { return true }
+            else { return false }
+        }
+    }
 }
+
+
 struct PageContentBody: PageView  {
     var childViews:[PageViewProtocol] = []
     @EnvironmentObject var pageChanger:PagePresenter
@@ -37,6 +45,7 @@ struct PageContentBody: PageView  {
     @State var isBelow:Bool = false
     @State var topPageType:PageAnimationType = .none
     @State var isReady:Bool = false
+    let useBelowPageMove = Self.useBelowPageMove
     var body: some View {
         ZStack(){
             childViews.first!.contentBody
@@ -73,10 +82,11 @@ struct PageContentBody: PageView  {
                 
             } else {
                 self.isTop = false
+                
                 let below = self.pageChanger.getBelowPage(page: page)
                 self.isBelow = below == pageObject
-                
                 self.opacity = 1
+                if !self.useBelowPageMove {return}
                 withAnimation{
                     switch self.topPageType {
                     case .horizental :
@@ -95,12 +105,13 @@ struct PageContentBody: PageView  {
             
         }
         .onReceive(self.pageChanger.$dragOpercity){ opacity in
+            
             if !self.isReady  {return}
             if !self.isBelow {return}
             if self.isTop {return}
             
             self.opacity = opacity
-            
+            if !self.useBelowPageMove {return}
             //PageLog.log("pagePosition " + self.opacity.description + " " + self.pageID ,tag:self.pageID)
             let amount = Self.pageMoveAmount * CGFloat(opacity)
             switch self.topPageType {

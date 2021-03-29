@@ -32,7 +32,7 @@ struct PagePairingSetupUser: PageView {
     @State var isAgree3:Bool = true
     @State var safeAreaBottom:CGFloat = 0
     @State var useTracking:Bool = false
-    @State var reloadDegree:Double = 0
+
     let birthList = AppUtil.getYearRange(len: 100, offset:0).map{
         $0.description + String.app.year
     }
@@ -185,6 +185,8 @@ struct PagePairingSetupUser: PageView {
                 .onReceive(self.infinityScrollModel.$event){evt in
                     guard let evt = evt else {return}
                     switch evt {
+                    case .down, .up :
+                        if self.keyboardObserver.isOn { AppUtil.hideKeyboard() }
                     case .pullCompleted:
                         self.pageDragingModel.uiEvent = .pullCompleted(geometry)
                     case .pullCancel :
@@ -220,9 +222,7 @@ struct PagePairingSetupUser: PageView {
                     }
                 }
             }
-            .onTapGesture {
-                AppUtil.hideKeyboard()
-            }
+            
             .onAppear{
                 guard let obj = self.pageObject  else { return }
                 self.birth = self.birthList[20]

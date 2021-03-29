@@ -28,7 +28,7 @@ struct FloatingBanner: PageComponent {
                 }
             VStack(spacing: 0){
                 ZStack(alignment: .bottom) {
-                    SwipperView(
+                    LoopSwipperView(
                         viewModel : self.viewModel,
                         pages: self.pages,
                         index: self.$index

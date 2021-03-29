@@ -29,7 +29,7 @@ struct TopBanner: PageComponent {
    
     var action:((_ idx:Int) -> Void)? = nil
     var body: some View {
-        SwipperView(
+        LoopSwipperView(
             viewModel : self.viewModel,
             pages: self.pages,
             index: self.$index

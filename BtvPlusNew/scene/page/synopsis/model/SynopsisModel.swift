@@ -175,26 +175,22 @@ class SynopsisModel : PageProtocol {
     }
     private func setupThumbImage(contents:SynopsisContentsItem){
         let stillCut = self.getSafePath(contents.stillCut?.first?.img_path)
-        var effect:IIPConvertType = .none
         self.imgContentMode = .fill
         if synopsisType  == .title {
             let hCut = self.getSafePath(contents.epsd_poster_filename_h)
             if let bg = hCut ?? stillCut
                 ?? self.getSafePath(contents.epsd_poster_filename_v){
                 if stillCut == nil && hCut == nil {
-                    effect = .blur
                     self.imgContentMode = .fit
                 }
-                self.imgBg = ImagePath.thumbImagePath(filePath: bg, size: CGSize(width: 320, height: 0), convType: effect)
+                self.imgBg = bg
             }
         }else{
-            if let bg = stillCut ?? self.getSafePath(contents.epsd_poster_filename_v) {
-                
+            if let bg = stillCut ?? self.getSafePath(contents.sris_poster_filename_v) {
                 if stillCut == nil {
-                    effect = .blur
                     self.imgContentMode = .fit
                 }
-                self.imgBg = ImagePath.thumbImagePath(filePath: bg, size: CGSize(width: 320, height: 0), convType: effect)
+                self.imgBg = bg
             }
         }
     }

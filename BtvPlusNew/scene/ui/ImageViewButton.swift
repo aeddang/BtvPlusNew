@@ -27,7 +27,8 @@ struct ImageViewButton: PageView{
         }) {
             VStack(spacing:Dimen.margin.tiny){
                 if self.isSelected {
-                    KFImage(URL(string: self.activeImage)).resizable()
+                    KFImage(URL(string: self.activeImage))
+                        .resizable()
                         .placeholder {
                             Image(Asset.noImg1_1)
                                 .resizable()
@@ -35,7 +36,8 @@ struct ImageViewButton: PageView{
                         .loadImmediately()
                         .frame(width: size.width, height: size.height)
                 }else{
-                    KFImage(URL(string: self.defaultImage)).resizable()
+                    KFImage(URL(string: self.defaultImage))
+                        .resizable()
                         .placeholder {
                             Image(Asset.noImg1_1)
                                 .resizable()

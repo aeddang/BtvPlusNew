@@ -331,7 +331,6 @@ struct PlayBlock: PageComponent{
     }
     
     private func onAppear(idx:Int){
-        
         if self.appearList.first(where: {$0 == idx}) == nil {
             self.appearList.append(idx)
         }

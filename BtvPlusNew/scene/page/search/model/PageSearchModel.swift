@@ -92,20 +92,25 @@ class PageSearchModel :ObservableObject, PageProtocol {
     func updateSearchCategory (_ data:SearchCategory? = nil) ->[BlockData]{
         guard let result = data?.data else {return []}
         var blocks:[BlockData] = []
+        
         if let datas = result.results_vod {
-            let block = BlockData().setDate(title: String.app.vod, datas: datas)
+            let allPosters:[PosterData] = datas.map{ PosterData().setData(data: $0)}
+            let block = BlockData().setDate(title: String.app.vod, datas: allPosters)
             blocks.append(block)
         }
         if let datas = result.results_vod_tseq {
-            let block = BlockData().setDate(title: String.app.sris, datas: datas)
+            let allPosters:[VideoData] = datas.map{ VideoData().setData(data: $0)}
+            let block = BlockData().setDate(title: String.app.sris, datas: allPosters)
             blocks.append(block)
         }
         if let datas = result.results_corner {
-            let block = BlockData().setDate(title: String.app.corner, datas: datas)
+            let allPosters:[VideoData] = datas.map{ VideoData().setData(data: $0)}
+            let block = BlockData().setDate(title: String.app.corner, datas: allPosters)
             blocks.append(block)
         }
         if let datas = result.results_people {
-            let block = BlockData().setDate(title: String.app.people, datas: datas)
+            let allPosters:[PosterData] = datas.map{ PosterData().setData(data: $0)}
+            let block = BlockData().setDate(title: String.app.people, datas: allPosters)
             blocks.append(block)
         }
         return blocks

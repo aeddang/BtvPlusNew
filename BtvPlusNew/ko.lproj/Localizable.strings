@@ -67,7 +67,10 @@
 "corner" = "코너";
 "people" = "인물";
 
-
+"ticket" = "이용권";
+"coupon" = "쿠폰";
+"bpoint" = "포인트";
+"bcash" = "B캐쉬";
 
 /*
   Button
@@ -234,6 +237,8 @@
 "titlePrivacy" = "개인정보 처리방침";
 "titleServiceTerms" = "이용약관 및 청소년 보호정책";
 "titleSchedule" = "편성표";
+"titleModifyProfile" = "프로필 변경";
+"titleWatched" = "최근 시청 목록";
 
 /*
  PagePairing
@@ -301,6 +306,13 @@
 "myWatchedEmpty" = "최근 시청 내역이 없습니다.";
 "myCollectedEmpty" = "구매하신 소장 VOD가 없습니다.";
 "myBookMarkedEmpty" = "찜한 콘텐츠가 없습니다.";
+/*
+ PageModifyProfile
+*/
+"modifyProfileText1" = "닉네임과 캐릭터를\n바꿀 수 있어요.";
+"modifyProfileText2" = "변경할 닉네임을 입력해 주세요.";
+"modifyProfileText3" = "변경할 캐릭터 이미지를 선택해 주세요.";
+
 /*
  PageSetup
 */

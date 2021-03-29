@@ -67,6 +67,10 @@ extension String {
         public static let sris = "sris".loaalized()
         public static let corner = "corner".loaalized()
         public static let people = "people".loaalized()
+        public static let ticket = "ticket".loaalized()
+        public static let coupon = "coupon".loaalized()
+        public static let bpoint = "bpoint".loaalized()
+        public static let bcash = "bcash".loaalized()
     }
     
     struct week {
@@ -270,6 +274,8 @@ extension String {
         public static let privacy = "titlePrivacy".loaalized()
         public static let serviceTerms = "titleServiceTerms".loaalized()
         public static let schedule = "titleSchedule".loaalized()
+        public static let modifyProfile = "titleModifyProfile".loaalized()
+        public static let watched = "titleWatched".loaalized()
         
     }
     
@@ -399,6 +405,10 @@ extension String {
         public static let searchEmpty = "searchEmpty".loaalized()
         public static let searchEmptyGuide = "searchEmptyGuide".loaalized()
         public static let searchEmptyTitle = "searchEmptyTitle".loaalized()
+        
+        public static let modifyProfileText1 = "modifyProfileText1".loaalized()
+        public static let modifyProfileText2 = "modifyProfileText2".loaalized()
+        public static let modifyProfileText3 = "modifyProfileText3".loaalized()
     }
     
 }

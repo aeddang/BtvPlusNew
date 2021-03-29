@@ -24,6 +24,7 @@ struct TicketBlock:BlockProtocol, PageComponent {
             if self.isUiActive {
                 if self.datas?.isEmpty == false {
                     Text(data.name).modifier(BlockTitle())
+                        .frame(height:Dimen.tab.thin)
                         .modifier(ContentHorizontalEdges())
                 }
                 if let datas = self.datas {
@@ -48,7 +49,7 @@ struct TicketBlock:BlockProtocol, PageComponent {
         }
         .frame( height:
                     (self.data.listHeight ?? self.listHeight)
-                    + Font.size.regular + Dimen.margin.thinExtra)
+                    + Dimen.tab.thin + Dimen.margin.thinExtra)
         .onAppear{
             self.datas = nil
             if data.dataType == .theme , let blocks = data.blocks {

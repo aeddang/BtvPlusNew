@@ -24,6 +24,7 @@ struct ThemaBlock:BlockProtocol, PageComponent {
             if self.isUiActive {
                 if !self.datas.isEmpty {
                     Text(data.name).modifier(BlockTitle())
+                        .frame(height:Dimen.tab.thin)
                         .modifier(ContentHorizontalEdges())
                 }
                 ThemaList(
@@ -31,7 +32,6 @@ struct ThemaBlock:BlockProtocol, PageComponent {
                     banners: self.data.leadingBanners,
                     datas: self.datas,
                     useTracking:self.useTracking)
-                    
                     .modifier(MatchHorizontal(height: self.listHeight))
                     .onReceive(self.viewModel.$event){evt in
                         guard let evt = evt else {return}
@@ -48,7 +48,7 @@ struct ThemaBlock:BlockProtocol, PageComponent {
         }
         .frame( height:
                     (self.data.listHeight ?? self.listHeight)
-                    + Font.size.regular + Dimen.margin.thinExtra)
+                    + Dimen.tab.thin + Dimen.margin.thinExtra)
         .onAppear{
             self.datas = []
             if data.dataType == .theme , let blocks = data.blocks {

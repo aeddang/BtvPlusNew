@@ -28,7 +28,7 @@ extension Swipper{
         return value.translation.width + -geometry.size.width * CGFloat(self.index) - offset
     }
     
-    func getWillIndex(value:DragGesture.Value, minIdx:Int, maxIdx:Int)->Int {
+    func getWillIndex(value:DragGesture.Value, minIdx:Int = 0, maxIdx:Int)->Int {
         let predictedAmount = value.predictedEndTranslation.width
         var willIdx = self.index
         if predictedAmount < -self.sensitivity, self.index < maxIdx - 1 {

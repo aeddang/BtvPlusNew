@@ -138,8 +138,7 @@ struct FillButton: View, SelecterbleProtocol{
                         .frame(width: Dimen.icon.regular, height: Dimen.icon.regular)
                     }
                 }
-                .padding(.horizontal, Dimen.margin.regular)
-                
+                .padding(.horizontal, self.isMore ? 0 : Dimen.margin.regular)
                 if !self.isSelected {
                     Spacer().modifier(MatchParent()).background(Color.transparent.black45)
                 }

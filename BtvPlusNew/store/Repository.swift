@@ -164,29 +164,28 @@ class Repository:ObservableObject, PageProtocol{
         self.apiManager.$result.sink(receiveValue: { res in
             guard let res = res else { return }
             self.respondApi(res)
-            DispatchQueue.main.async {
+            //DispatchQueue.main.async {
                 self.dataProvider.result = res
                 self.appSceneObserver?.isApiLoading = false
                 self.pagePresenter?.isLoading = false
-            }
+            //}
         }).store(in: &dataCancellable)
         
         self.apiManager.$error.sink(receiveValue: { err in
             guard let err = err else { return }
             if self.status != .ready { self.status = .error(err) }
-            DispatchQueue.main.async {
+            //DispatchQueue.main.async {
                 self.dataProvider.error = err
                 if !err.isOptional {
                     self.appSceneObserver?.alert = .apiError(err)
                 }
                 self.appSceneObserver?.isApiLoading = false
                 self.pagePresenter?.isLoading = false
-            }
+            //}
         }).store(in: &dataCancellable)
         
         self.pagePresenter?.isLoading = true
         self.apiManager.$status.sink(receiveValue: { status in
-            
             self.pagePresenter?.isLoading = false
             if status == .ready { self.onReadyApiManager() }
         }).store(in: &dataCancellable)
@@ -273,10 +272,6 @@ class Repository:ObservableObject, PageProtocol{
         self.apiManager.retryApi()
     }
     
-    func requestBandsData(){
-        self.dataProvider.bands.resetData()
-        self.dataProvider.requestData(q: .init(type: .getGnb))
-    }
    
     // PushToken
     func retryRegisterPushToken(){
@@ -287,6 +282,11 @@ class Repository:ObservableObject, PageProtocol{
     
     func registerPushToken(_ token:String) {
         self.storage.retryPushToken = token
+    }
+    
+    func updateUser(_ data:ModifyUserData) {
+        self.storage.updateUser(data)
+        self.pairing.updateUser(data)
     }
     
     func getDrmId() -> String? {

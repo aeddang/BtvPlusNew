@@ -49,7 +49,6 @@ struct CPPageViewPager: PageComponent {
                 SwipperView(
                     pages: self.pages,
                     index: self.$index) {
-
                     guard let pageOn = self.pageOn else {return}
                     pageOn(self.index)
                 }

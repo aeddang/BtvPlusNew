@@ -24,15 +24,15 @@ struct VideoBlock:BlockProtocol, PageComponent {
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             if self.isUiActive {
-                HStack( spacing:Dimen.margin.thin){
+                HStack(alignment: .bottom, spacing:Dimen.margin.thin){
                     VStack(alignment: .leading, spacing:0){
+                        Spacer().modifier(MatchHorizontal(height: 0))
                         HStack( spacing:Dimen.margin.thin){
                             Text(data.name).modifier(BlockTitle())
                                 .lineLimit(1)
                             Text(data.subName).modifier(BlockTitle(color:Color.app.grey))
                                 .lineLimit(1)
                         }
-                        Spacer().modifier(MatchHorizontal(height: 0))
                     }
                     if self.hasMore {
                         TextButton(
@@ -47,6 +47,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                         }
                     }
                 }
+                .modifier(MatchHorizontal(height: Dimen.tab.thin))
                 .modifier(ContentHorizontalEdges())
                 if !self.datas.isEmpty {
                     VideoList(
@@ -79,7 +80,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
         }
         .frame( height:
                     (self.data.listHeight ?? self.listHeight)
-                    + Font.size.regular + Dimen.margin.thinExtra)
+                    + Dimen.tab.thin + Dimen.margin.thinExtra)
         .onAppear{
             if let datas = data.videos {
                 if data.allVideos?.isEmpty == true {

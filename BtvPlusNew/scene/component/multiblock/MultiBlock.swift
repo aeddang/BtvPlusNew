@@ -83,6 +83,7 @@ struct MultiBlock:PageComponent {
                                     pageDragingModel: self.pageDragingModel,
                                     data: data ,
                                     useTracking: self.useTracking)
+                                    
                                     .onAppear(){
                                         if data.index == self.datas.last?.index {
                                             self.viewModel.event = .bottom
@@ -143,7 +144,7 @@ struct MultiBlock:PageComponent {
                 spacing: 0,
                 isRecycle : self.isRecycle,
                 useTracking:self.useBodyTracking){
-                    
+                
                 VStack(spacing: Self.spacing){
                     if self.topDatas != nil  && self.topDatas?.isEmpty == false {
                         ZStack{
@@ -178,7 +179,12 @@ struct MultiBlock:PageComponent {
                     }
                 }
                 .modifier(ListRowInset(spacing: 0))
-                
+                .onAppear(){
+                    //self.viewModel.onAppear(idx: 0)
+                }
+                .onDisappear(){
+                    //self.viewModel.onDisappear(idx: 0)
+                }
                 if !self.datas.isEmpty {
                     ForEach(self.datas) { data in
                         MultiBlockCell(
@@ -191,6 +197,10 @@ struct MultiBlock:PageComponent {
                                 if data.index == self.datas.last?.index  {
                                     self.viewModel.event = .bottom
                                 }
+                                //self.viewModel.onAppear(idx: data.index + 2)
+                            }
+                            .onDisappear(){
+                                //self.viewModel.onDisappear(idx: data.index + 2)
                             }
                     }
                     if self.useFooter {

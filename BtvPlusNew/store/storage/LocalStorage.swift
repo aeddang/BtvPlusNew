@@ -60,6 +60,11 @@ class LocalStorage {
         }
     }
     
+    func updateUser(_ data:ModifyUserData){
+        if let value = data.nickName { self.nickName = value }
+        if let value = data.characterIdx { self.character = value }
+    }
+    
     func saveDevice(_ stbData:StbData? = nil){
         guard let stbData = stbData else { return }
         self.pairingModelName = stbData.stbName

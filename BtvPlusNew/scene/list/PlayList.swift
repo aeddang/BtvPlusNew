@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-
+import struct Kingfisher.KFImage
 class PlayData:InfinityData,ObservableObject{
     private(set) var image: String? = nil
     private(set) var title: String? = nil
@@ -143,7 +143,15 @@ struct PlayItem: PageView {
                         .aspectRatio(contentMode: .fill)
                         .modifier(MatchParent())
                 } else {
-                    ImageView(url: self.data.image!, contentMode: .fill, noImg: Asset.noImg16_9)
+                    KFImage(URL(string: self.data.image!))
+                        .resizable()
+                        .placeholder {
+                            Image(Asset.noImg16_9)
+                                .resizable()
+                        }
+                        .cancelOnDisappear(true)
+                        .loadImmediately()
+                        .aspectRatio(contentMode: .fill)
                         .modifier(MatchParent())
                 }
                 if self.data.isPlayAble {

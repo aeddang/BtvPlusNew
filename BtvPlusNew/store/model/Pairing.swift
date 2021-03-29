@@ -133,6 +133,11 @@ class Pairing:ObservableObject, PageProtocol {
         self.userInfo = data
     }
     
+    func updateUser(_ data:ModifyUserData){
+        let user = self.user?.clone().update(data)
+        self.user = user
+    }
+    
     private func checkComple(){
         if self.isPairingUser && self.isPairingAgreement && self.hostDevice != nil{
             self.status = .pairing

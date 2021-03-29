@@ -17,6 +17,11 @@ enum Gender {
     }
 }
 
+struct ModifyUserData {
+    var nickName:String? = nil
+    var characterIdx:Int? = nil
+}
+
 class User {
     private(set) var nickName:String = ""
     var characterIdx:Int = 0
@@ -47,6 +52,17 @@ class User {
         self.isAgree2 = isAgree2
         self.isAgree3 = isAgree3
         self.postAgreement = true
+    }
+    
+    func clone() -> User{
+        return User(nickName: self.nickName, characterIdx: self.characterIdx, gender: self.gender, birth: self.birth,
+                    isAgree1: self.isAgree1, isAgree2: self.isAgree2, isAgree3: self.isAgree3)
+    }
+    
+    func update(_ data:ModifyUserData) -> User{
+        if let value = data.nickName { self.nickName = value }
+        if let value = data.characterIdx { self.characterIdx = value }
+        return self
     }
     
     @discardableResult

@@ -33,6 +33,7 @@ class ApiManager :PageProtocol, ObservableObject{
     private lazy var scs:Scs = Scs(network: ScsNetwork())
     private lazy var pss:Pss = Pss(network: PssNetwork())
     private lazy var nf:Nf = Nf(network: NfNetwork())
+    private lazy var eps:Eps = Eps(network: EpsNetwork())
     private lazy var web:Web = Web(network: WebNetwork())
     init() {
         self.initateApi()
@@ -42,11 +43,12 @@ class ApiManager :PageProtocol, ObservableObject{
         if self.status == .initate {return}
         self.euxp.clear()
         self.metv.clear()
-        //self.nps.clear()
         self.kms.clear()
         self.smd.clear()
+        self.scs.clear()
         self.pss.clear()
         self.nf.clear()
+        self.eps.clear()
         self.web.clear()
         self.apiQ.removeAll()
     }
@@ -81,10 +83,8 @@ class ApiManager :PageProtocol, ObservableObject{
     }
     private func initApi()
     {
-
         self.status = .ready
         self.executeQ()
-        
     }
     private func executeQ(){
         self.apiQ.forEach{ q in self.load(q: q)}
@@ -158,6 +158,14 @@ class ApiManager :PageProtocol, ObservableObject{
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         //METV
+        case .getPurchaseMonthly(let page, let count) : self.metv.getPurchaseMonthly(
+            page: page, pageCnt: count,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getPeriodPurchaseMonthly(let page, let count) : self.metv.getPeriodPurchaseMonthly(
+            page: page, pageCnt: count,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         case .getMonthly(let lowLevelPpm, let page, let count) : self.metv.getMonthly(
             lowLevelPpm:lowLevelPpm, page: page, pageCnt: count,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
@@ -227,6 +235,9 @@ class ApiManager :PageProtocol, ObservableObject{
         case .postUnPairing, .rePairing : self.nps.postUnPairing(
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .updateUser(let data) : self.nps.updateUser(data: data,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         //KMS
         case .getStbInfo(let cid): self.kms.getStbList(ci: cid,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
@@ -275,11 +286,21 @@ class ApiManager :PageProtocol, ObservableObject{
             srisId:srisId,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        //EPS
+        case .getTotalPointInfo(let device) : self.eps.getTotalPointInfo(
+            hostDevice: device,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getTotalPoint(let device, let isSimple) : self.eps.getTotalPoint(
+            hostDevice: device, isSimple: isSimple,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         //WEB
         case .getSearchKeywords :   self.web.getSearchKeywords(
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
-        case .getCompleteKeywords(let word) : self.web.getCompleteKeywords(word: word,
+        case .getCompleteKeywords(let word) : self.web.getCompleteKeywords(
+            word: word,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         case .getSeachVod(let word) : self.web.getSearchVod(word: word,

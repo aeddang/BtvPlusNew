@@ -237,12 +237,11 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                 .padding(.top, self.marginTop)
                             Spacer().modifier(MatchHorizontal(height: self.marginBottom))
                                 .modifier(ListRowInset(spacing: 0))
+                            
+                            
                         }
                         .padding(.horizontal, self.marginHorizontal)
                         .coordinateSpace(name: self.tag)
-                        .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                            self.onPreferenceChange(value: value)
-                        }
                         .listStyle(PlainListStyle())
                         .background(self.bgColor)
                         .onAppear(){

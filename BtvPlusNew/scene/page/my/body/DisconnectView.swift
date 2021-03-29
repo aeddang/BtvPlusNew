@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-struct DisconnectBlock: PageComponent{
+struct DisconnectView: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @State var safeAreaBottom:CGFloat = 0
@@ -85,7 +85,7 @@ struct DisconnectBlock_Previews: PreviewProvider {
     
     static var previews: some View {
         Form{
-            DisconnectBlock()
+            DisconnectView()
                 .environmentObject(PagePresenter())
                 .environmentObject(PageSceneObserver())
                 .frame(width:320,height:600)

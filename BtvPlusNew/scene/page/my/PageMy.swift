@@ -12,9 +12,10 @@ struct PageMy: PageView {
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
+    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
+    @ObservedObject var watchedScrollModel: InfinityScrollModel = InfinityScrollModel()
     
     @State var isPairing:Bool = false
-    
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -28,22 +29,45 @@ struct PageMy: PageView {
                         isSetting: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    if self.isPairing {
-                        PairingBlock()
-                    }else {
-                        DisconnectBlock()
+                    InfinityScrollView(
+                        viewModel: self.infinityScrollModel,
+                        isRecycle:false,
+                        useTracking: false
+                        ){
+                        if self.isPairing {
+                            PairingView(
+                                pageObservable:self.pageObservable,
+                                pageDragingModel: self.pageDragingModel,
+                                watchedScrollModel:self.watchedScrollModel
+                            )
+                            .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
+                                guard let evt = evt else {return}
+                                switch evt {
+                                case .pullCompleted :
+                                    self.pageDragingModel.uiEvent = .pullCompleted(geometry)
+                                case .pullCancel :
+                                    self.pageDragingModel.uiEvent = .pullCancel(geometry)
+                                case .pull(let pos) :
+                                    self.pageDragingModel.uiEvent = .pull(geometry, pos)
+                                default: break
+                                }
+                            }
+                            
+                        }else {
+                            DisconnectView()
+                        }
                     }
                 }
                 .modifier(PageFull())
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
-            }
+            }//PageDragingBody
             .onReceive(self.pairing.$status){status in
                 self.isPairing = ( status == .pairing )
             }
+            
             .onAppear{
                
             }
-            
         }//geo
     }//body
     

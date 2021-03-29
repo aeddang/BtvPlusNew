@@ -13,7 +13,7 @@ struct CPImageViewPager: PageComponent {
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
     var pages: [PageViewProtocol]
     var cornerRadius:CGFloat = 0
-    
+    var useButton:Bool = false
     @State var index: Int = 0
     var action:((_ idx:Int) -> Void)? = nil
     var body: some View {
@@ -21,12 +21,11 @@ struct CPImageViewPager: PageComponent {
             SwipperView(
                 pages: self.pages,
                 index: self.$index) {
-                
                 guard let action = self.action else {return}
                 action(self.index)
             }
             .clipShape(RoundedRectangle(cornerRadius: self.cornerRadius))
-            if self.pages.count > 1 {
+            if self.useButton && self.pages.count > 1 {
                 HStack(spacing: Dimen.margin.tiny) {
                     ForEach(0..<self.pages.count) { index in
                         CircleButton(

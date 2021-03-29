@@ -49,7 +49,13 @@ extension MultiBlockBody {
     private static var isLegacy:Bool {
         get{
             if #available(iOS 14.0, *) { return false }
-            else { return true }
+            else { return false }
+        }
+    }
+    private static var isRecycle:Bool {
+        get{
+            if #available(iOS 14.0, *) { return true }
+            else { return false }
         }
     }
     private static var isPreLoad:Bool = true
@@ -77,7 +83,7 @@ struct MultiBlockBody: PageComponent {
     var monthlyDatas:[MonthlyData]? = nil
     var monthlyAllData:BlockItem? = nil
     var useFooter:Bool = false
-    var isRecycle = true
+    var isRecycle = Self.isRecycle
     
     var action: ((_ data:MonthlyData) -> Void)? = nil
     
@@ -188,19 +194,18 @@ struct MultiBlockBody: PageComponent {
             self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
         }
         .onReceive(self.viewModel.$isUpdate){ update in
-            if update {
-                self.reload()
-            }
+            if update { self.reload() }
         }
         .onReceive(dataProvider.$result) { res in
-        
             guard let data = self.loadingBlocks.first(where: { $0.id == res?.id}) else {return}
             var banners:[BannerData]? = nil
+            var total:Int? = nil
             switch data.dataType {
             case .cwGrid:
                 guard let resData = res?.data as? CWGrid else {return data.setBlank()}
                 guard let grid = resData.grid else {return data.setBlank()}
                 if grid.isEmpty {return data.setBlank()}
+                total = resData.total_count
                 grid.forEach{ g in
                     if let blocks = g.block {
                         switch data.uiType {
@@ -224,12 +229,13 @@ struct MultiBlockBody: PageComponent {
                 guard let resData = res?.data as? GridEvent else {return data.setBlank()}
                 guard let blocks = resData.contents else {return data.setBlank()}
                 if blocks.isEmpty {return data.setBlank()}
+                total = resData.total_content_count
                 switch data.uiType {
                 case .poster :
                     data.posters = blocks.map{ d in
                         PosterData().setData(data: d, cardType: data.cardType)
                     }
-                    
+
                 case .video :
                     data.videos = blocks.map{ d in
                         VideoData().setData(data: d, cardType: data.cardType)
@@ -247,11 +253,11 @@ struct MultiBlockBody: PageComponent {
                     BannerData().setData(data: d, type: .list)
                 }
                 
-                
             case .bookMark:
                 guard let resData = res?.data as? BookMark else {return data.setBlank()}
                 guard let blocks = resData.bookmarkList else {return data.setBlank()}
                 if blocks.isEmpty {return data.setBlank()}
+                total = resData.bookmark_tot?.toInt()
                 switch data.uiType {
                 case .poster :
                     data.posters = blocks.map{ d in
@@ -268,6 +274,7 @@ struct MultiBlockBody: PageComponent {
                 guard let resData = res?.data as? Watch else {return data.setBlank()}
                 guard let blocks = resData.watchList else {return data.setBlank()}
                 if blocks.isEmpty {return data.setBlank()}
+                total = resData.watch_tot?.toInt()
                 switch data.uiType {
                 case .poster :
                     data.posters = blocks.map{ d in
@@ -291,7 +298,6 @@ struct MultiBlockBody: PageComponent {
                     }
                 default: break
                 }
-               
             default: do {}
             }
             
@@ -316,7 +322,7 @@ struct MultiBlockBody: PageComponent {
                 }
                 data.listHeight = listHeight
             }
-            data.setDatabindingCompleted()
+            data.setDatabindingCompleted(total: total)
             
         }
         .onReceive(dataProvider.$error) { err in
@@ -357,7 +363,6 @@ struct MultiBlockBody: PageComponent {
    
     @State var requestNum = 0
     @State var completedNum = 0
-    
     private func requestBlockCompleted(){
         PageLog.d("addBlock completed", tag: "BlockProtocol")
         if !self.loadingBlocks.isEmpty {
@@ -399,8 +404,6 @@ struct MultiBlockBody: PageComponent {
         }
         self.blocks.append(contentsOf: loadedBlocks)
     }
-    
-    
     
     private func addBlock(){
         var max = 0

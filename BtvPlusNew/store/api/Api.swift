@@ -59,7 +59,9 @@ enum ApiType{
          getEventBanner(String?, EuxpNetwork.BannerType = .page)
     
     //METV
-    case getMonthly(Bool = false, Int? = nil , Int? = nil),
+    case getPurchaseMonthly(Int? = nil , Int? = nil),
+         getPeriodPurchaseMonthly(Int? = nil , Int? = nil),
+         getMonthly(Bool = false, Int? = nil , Int? = nil),
          getWatch(Bool = false, Int? = nil , Int? = nil),
          deleteWatch([String]? = nil, Bool = false),
          getBookMark(Int? = nil , Int? = nil),
@@ -78,7 +80,9 @@ enum ApiType{
          getHostDeviceInfo,
          postGuestInfo(User?),
          postGuestNickname(User?),
-         postGuestAgreement(User?), getGuestAgreement
+         postGuestAgreement(User?), getGuestAgreement,
+         updateUser(ModifyUserData?)
+         
     //KMS
     case getStbInfo(String?)
     //SMD
@@ -98,6 +102,9 @@ enum ApiType{
     case getNotificationVod([String]?, [String]?, NfNetwork.NotiType?, returnDatas:Any? = nil),
          postNotificationVod(NotificationData?),
          deleteNotificationVod(String?)
+    //EPS
+    case getTotalPointInfo(HostDevice?),
+         getTotalPoint(HostDevice?, Bool = true)
     
     //WEB
     case getSearchKeywords,

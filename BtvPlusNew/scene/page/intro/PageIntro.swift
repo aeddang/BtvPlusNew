@@ -21,13 +21,12 @@ struct PageIntro: PageView {
     @State var index: Int = 0
     @State var leading:CGFloat = 0
     @State var trailing:CGFloat = 0
-    
+   
     var body: some View {
         VStack(alignment: .center, spacing: 0){
-            SwipperView(
+            CPImageViewPager(
                 viewModel : self.viewModel,
-                pages: self.pages,
-                index: self.$index
+                pages: self.pages
                 )
             if self.pages.count > 1 {
                 HStack(spacing: 0) {
@@ -75,9 +74,7 @@ struct PageIntro: PageView {
                         isSelected: true
                     ){_ in
                         self.appSceneObserver.event = .initate
-                        
                     }
-                   
                 }
             }
         }
@@ -87,7 +84,7 @@ struct PageIntro: PageView {
             self.setBar(idx:idx)
         }
         .onAppear{
-            self.setBar(idx:self.index)
+           // self.setBar(idx:self.index)
         }
         
     }//body
@@ -95,10 +92,11 @@ struct PageIntro: PageView {
     private func setBar(idx:Int){
         let count = self.pages.count
         let size = Dimen.bar.regular
-        let idx = self.index + 1
+        self.index = idx
+        let cidx = idx + 1
         withAnimation{
-            self.leading = size * CGFloat(idx)
-            self.trailing = size * CGFloat(count - idx)
+            self.leading = size * CGFloat(cidx)
+            self.trailing = size * CGFloat(count - cidx)
         }
     }
     

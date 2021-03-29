@@ -50,8 +50,7 @@ struct PageHome: PageView {
                 monthlyViewModel : self.monthlyViewModel,
                 monthlyDatas: self.monthlyDatas,
                 monthlyAllData: self.monthlyAllData,
-                useFooter: self.useFooter,
-                isRecycle:true
+                useFooter: self.useFooter
                 ){ data in
                     self.reload(selectedMonthlyId: data.prdPrcId)
                     

@@ -36,6 +36,48 @@ extension MetvNetwork{
 
 class Metv: Rest{
     /**
+    * 월정액 구매내역 조회 (IF-ME-033)
+    * @param pageNo 요청할 페이지의 번호 (Default: 1)
+    * @param entryNo 요청한 페이지에 보여질 개수 (Default: 10)
+    * @param isPeriod 기간권 구매내역 정보 요청 여부 Y : 월정액 기간권 구매내역 조회 요청 N : 기존 월정액 구매내역 정보 제공
+    */
+    func getPurchaseMonthly(
+        page:Int?, pageCnt:Int?,
+        completion: @escaping (MonthlyPurchaseInfo) -> Void, error: ((_ e:Error) -> Void)? = nil){
+
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:String]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["ver"] = MetvNetwork.VERSION
+        params["IF"] = "IF-ME-033"
+        
+        params["stb_id"] = stbId
+        params["page_no"] = page?.description ?? "1"
+        params["entry_no"] = pageCnt?.description ?? "999"
+        params["hash_id"] = ApiUtil.getHashId(stbId)
+        params["svc_code"] = MetvNetwork.SVC_CODE
+        params["req_perd"] = "N"
+        fetch(route: MetvPurchaseMonthly(query: params), completion: completion, error:error)
+    }
+    func getPeriodPurchaseMonthly(
+        page:Int?, pageCnt:Int?,
+        completion: @escaping (PeriodMonthlyPurchaseInfo) -> Void, error: ((_ e:Error) -> Void)? = nil){
+
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:String]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["ver"] = MetvNetwork.VERSION
+        params["IF"] = "IF-ME-033"
+        
+        params["stb_id"] = stbId
+        params["page_no"] = page?.description ?? "1"
+        params["entry_no"] = pageCnt?.description ?? "999"
+        params["hash_id"] = ApiUtil.getHashId(stbId)
+        params["svc_code"] = MetvNetwork.SVC_CODE
+        params["req_perd"] = "Y"
+        fetch(route: MetvPurchaseMonthly(query: params), completion: completion, error:error)
+    }
+    /**
     * 월정액 메뉴 리스트 (IF-ME-036)
     * @param pageNo 요청할 페이지의 번호 (Default: 1)
     * @param entryNo 요청한 페이지에 보여질 개수 (Default: 10)
@@ -49,7 +91,7 @@ class Metv: Rest{
         var params = [String:String]()
         params["response_format"] = MetvNetwork.RESPONSE_FORMET
         params["ver"] = MetvNetwork.VERSION
-        params["IF"] = "IF-ME-036" //"IF-ME-121"
+        params["IF"] = "IF-ME-036"
         
         params["stb_id"] = stbId
         params["page_no"] = page?.description ?? "1"
@@ -244,6 +286,13 @@ class Metv: Rest{
         params["yn_ppm"] = isPpm ? "Y": "N"
         fetch(route: MetvPackageDirectview( body: params), completion: completion, error:error)
     }
+}
+
+
+struct MetvPurchaseMonthly:NetworkRoute{
+    var method: HTTPMethod = .get
+    var path: String = "/metv/v5/purchase/fixedcharge/mobilebtv"
+    var query: [String : String]? = nil
 }
 struct MetvMonthly:NetworkRoute{
     var method: HTTPMethod = .get

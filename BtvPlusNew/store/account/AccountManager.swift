@@ -77,6 +77,17 @@ class AccountManager : PageProtocol{
                 if self.pairing.status != .pairing {return}
                 self.dataProvider.requestData(q: .init(type: .getMonthly(false),  isOptional: true))
                 self.dataProvider.requestData(q: .init(type: .getMonthly(true),  isOptional: true))
+            case .updateTotalPoint :
+                if self.pairing.status != .pairing {return}
+                self.dataProvider.requestData(q: .init(type: .getTotalPointInfo(self.pairing.hostDevice), isOptional: true))
+            case .updateMonthlyPurchase(let isPeriod) :
+                if self.pairing.status != .pairing {return}
+                if isPeriod {
+                    self.dataProvider.requestData(q: .init(type: .getPurchaseMonthly(), isOptional: true))
+                } else {
+                    self.dataProvider.requestData(q: .init(type: .getPeriodPurchaseMonthly(), isOptional: true))
+                }
+            default : break
             }
         }).store(in: &anyCancellable)
         
@@ -200,9 +211,18 @@ class AccountManager : PageProtocol{
             case .getMonthly(let lowLevelPpm , _ , _) :
                 guard let resData = res.data as? MonthlyInfo else { return }
                 guard let purchases = resData.purchaseList else { return }
-                self.pairing.authority.updatePurchaseTicket(purchases, lowLevelPpm: lowLevelPpm)
-        
+                self.pairing.authority.updatedPurchaseTicket(purchases, lowLevelPpm: lowLevelPpm)
+            case .getTotalPointInfo :
+                guard let resData = res.data as? TotalPointInfo else { return }
+                self.pairing.authority.updatedTotalPointInfo(resData)
+            case .getPurchaseMonthly :
+                guard let resData = res.data as? MonthlyPurchaseInfo else { return }
+                self.pairing.authority.updatedMonthlyPurchaseInfo(resData)
+            case .getPeriodPurchaseMonthly :
+                guard let resData = res.data as? PeriodMonthlyPurchaseInfo else { return }
+                self.pairing.authority.updatedMonthlyPurchaseInfo(resData)
             default: do{}
+            
             }
         }).store(in: &dataCancellable)
         
@@ -212,6 +232,7 @@ class AccountManager : PageProtocol{
             case .postUnPairing, .postAuthPairing, .postDevicePairing, .rePairing : self.pairing.connectError()
             case .getHostDeviceInfo, .postGuestInfo, .postGuestAgreement, .getGuestAgreement: self.pairing.syncError()
             case .getDevicePairingStatus : self.pairing.checkCompleted(isSuccess: false)
+            case .getTotalPointInfo, .getPurchaseMonthly, .getPeriodPurchaseMonthly : self.pairing.authority.errorMyInfo(err)
             default: do{}
             }
         }).store(in: &dataCancellable)

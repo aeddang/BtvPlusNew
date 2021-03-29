@@ -4,19 +4,15 @@
 //
 //  Created by KimJeongCheol on 2020/12/14.
 //
-
 import Foundation
 import SwiftUI
-
 enum BlockStatus:String{
     case initate, active, passive
 }
 
 class BlockData:InfinityData, ObservableObject{
-    
     private(set) var name:String = ""
     private(set) var subName:String = ""
-    
     private(set) var menuId:String? = nil
     private(set) var cwCallId:String? = nil
     private(set) var cardType:CardType = .none
@@ -24,6 +20,7 @@ class BlockData:InfinityData, ObservableObject{
     private(set) var uiType:UiType = .poster
     private(set) var blocks:[BlockItem]? = nil
     private(set) var originData:BlockItem? = nil
+    private(set) var isCountView:Bool = false
     @Published private(set) var status:BlockStatus = .initate
     
     var leadingBanners:[BannerData]? = nil
@@ -33,7 +30,6 @@ class BlockData:InfinityData, ObservableObject{
     var tickets:[TicketData]? = nil
     var banners:[BannerData]? = nil
     var listHeight:CGFloat? = nil
-    
     var allPosters:[PosterData]? = nil
     var allVideos:[VideoData]? = nil
     
@@ -50,54 +46,34 @@ class BlockData:InfinityData, ObservableObject{
         banners = nil
     }
     
-    func setDate(title:String, datas:[CategoryVodItem], max:Int = 10) -> BlockData{
-        name = title
-        uiType = .poster
-        self.allPosters = []
-        self.posters = []
-        var idx:Int = 0
-        
-        datas.forEach{
-            let video = PosterData().setData(data: $0)
-            self.allPosters?.append(video)
-            if idx < max { self.posters?.append(video) }
-            idx += 1
-        }
-        self.listHeight = self.posters?.first?.type.size.height ?? 0
-        self.subName = idx.description
+    
+    func setData(title:String, cardType:CardType, dataType:DataType, uiType:UiType, menuId:String? = nil, isCountView:Bool = false) -> BlockData{
+        self.name = title
+        self.cardType = cardType
+        self.dataType = dataType
+        self.uiType = uiType
+        self.menuId = menuId
         return self
     }
-    func setDate(title:String, datas:[CategoryPeopleItem], max:Int = 10) -> BlockData{
+    
+    func setDate(title:String, datas:[PosterData], max:Int = 10) -> BlockData{
         name = title
         uiType = .poster
-        self.allPosters = []
-        self.posters = []
-        var idx:Int = 0
-        datas.forEach{
-            let video = PosterData().setData(data: $0)
-            self.allPosters?.append(video)
-            if idx < max { self.posters?.append(video) }
-            idx += 1
-        }
+        self.allPosters = datas
+        let len = min(datas.count, max)
+        self.posters = datas.isEmpty ? datas : datas[0..<len].map{$0}
         self.listHeight = self.posters?.first?.type.size.height ?? 0
-        self.subName = idx.description
+        self.subName = datas.count.description
         return self
     }
-    func setDate(title:String, datas:[CategorySrisItem], max:Int = 10) -> BlockData{
+    
+    func setDate(title:String, datas:[VideoData], max:Int = 10) -> BlockData{
         name = title
         uiType = .video
-        self.allVideos = []
-        self.videos = []
-        var idx:Int = 0
-        datas.forEach{
-            let video = VideoData().setData(data: $0)
-            self.allVideos?.append(video)
-            if idx < max {
-                self.videos?.append(video)
-            }
-            idx += 1
-        }
-        self.subName = idx.description
+        self.allVideos = datas
+        let len = min(datas.count, max)
+        self.videos = datas.isEmpty ? datas : datas[0..<len].map{$0}
+        self.subName = datas.count.description
         if let video = self.videos?.first{
             listHeight = video.type.size.height + video.bottomHeight
         } else {
@@ -105,6 +81,7 @@ class BlockData:InfinityData, ObservableObject{
         }
         return self
     }
+    
     func setDate(title:String, datas:[CategoryCornerItem], max:Int = 10) -> BlockData{
         name = title
         uiType = .video
@@ -203,8 +180,11 @@ class BlockData:InfinityData, ObservableObject{
         status = .passive
     }
     
-    func setDatabindingCompleted(){
+    func setDatabindingCompleted(total:Int? = nil){
         if status != .initate { return }
+        if isCountView, let count = total {
+            self.subName = count.description
+        }
         status = .active
     }
     

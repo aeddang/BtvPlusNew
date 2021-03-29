@@ -395,6 +395,28 @@ class Nps: Rest{
         body["body"] = params
         fetch(route: NpsUnPairing(body: body), completion: completion, error:error)
     }
+    
+    /*!
+    * @brief 페어링 사용자 닉네임 변경
+    * @param userName 사용자 닉네임, 소셜 아이디 등 Host Device 상에 표기될 이름
+    * @param completion 페어링 사용자 닉네임 변경 API response
+    */
+    func updateUser(data:ModifyUserData?,
+        customParam:[String: Any] = [String: Any](),
+        completion: @escaping (NpsResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-542")
+        var params = [String: Any]()
+        params["service_type"] = NpsNetwork.SERVICE_TYPE
+        params["pairing_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["pairing_device_type"] = NpsNetwork.DEVICE_TYPE
+        params["pairingid"] = NpsNetwork.pairingId
+        if let value = data?.nickName { params["user_name"] = value }
+        params["custom_param"] = customParam
+        var body = [String: Any]()
+        body["header"] = headers
+        body["body"] = params
+        fetch(route: NpsUpdateUser(body: body), completion: completion, error:error)
+    }
 }
 
 
@@ -458,6 +480,11 @@ struct NpsUnPairing:NetworkRoute{
    var body: [String : Any]? = nil
 }
 
+struct NpsUpdateUser:NetworkRoute{
+   var method: HTTPMethod = .post
+   var path: String = "/nps/v5/reqUpdateUsername"
+   var body: [String : Any]? = nil
+}
 
 
 

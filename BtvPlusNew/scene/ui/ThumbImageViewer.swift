@@ -14,21 +14,24 @@ struct ThumbImageViewer: PageView{
     var body: some View {
         ZStack{
             if self.contentMode == .fit {
-                if self.imgBg != nil  {
-                    ImageView(url: self.imgBg!, contentMode: .fill, noImg: Asset.noImg16_9)
+                if let bg = self.imgBg  {
+                    ImageView(url:ImagePath.thumbImagePath(filePath: bg, size: CGSize(width: 240, height: 0), convType: .blur) ?? "",
+                              contentMode: .fill, noImg: Asset.noImg16_9)
                         .modifier(MatchParent())
                         .blur(radius: 4)
                         
                 }
                 Spacer().modifier(MatchParent()).background(Color.transparent.black45)
-                if self.imgBg != nil {
-                    ImageView(url: self.imgBg!, contentMode: .fit, noImg: Asset.noImg9_16)
+                if let bg = self.imgBg {
+                    ImageView(url:ImagePath.thumbImagePath(filePath: bg, size: CGSize(width: 90, height: 0), convType: .none) ?? "",
+                                        contentMode: .fit, noImg: Asset.noImg9_16)
                         .modifier(MatchParent())
                         .padding(.all, Dimen.margin.heavyExtra)
                 }
             }else{
-                if self.imgBg != nil {
-                    ImageView(url: self.imgBg!, contentMode: .fill, noImg: Asset.noImg16_9)
+                if let bg = self.imgBg {
+                    ImageView(url:ImagePath.thumbImagePath(filePath: bg, size: CGSize(width: 240, height: 0), convType: .none) ?? "",
+                              contentMode: .fill, noImg: Asset.noImg16_9)
                         .modifier(MatchParent())
                         
                 }

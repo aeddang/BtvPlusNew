@@ -20,6 +20,7 @@ extension PageID{
     static let oeean:PageID = "oeean"
     static let pairing:PageID = "pairing"
     static let my:PageID = "my"
+    static let modifyProile:PageID = "modifyProile"
     static let setup:PageID = "setup"
     static let pairingSetupUser:PageID = "pairingSetupUser"
     static let pairingDevice:PageID = "pairingDevice"
@@ -70,7 +71,7 @@ struct PageProvider {
         case .home, .category,
              .pairingSetupUser, .pairingBtv,
              .pairingDevice, .pairingUser, .pairingManagement,
-             .purchase , .webview, .schedule:
+             .purchase , .webview, .schedule, .modifyProile:
             return  .vertical
         case .fullPlayer :
             return .none
@@ -154,6 +155,7 @@ struct PageFactory{
         case .category : return PageCategory()
         case .serviceError : return PageServiceError()
         case .my : return PageMy()
+        case .modifyProile : return PageModifyProfile()
         case .setup : return PageSetup()
         case .synopsis : return PageSynopsis()
         case .synopsisPackage : return PageSynopsisPackage()
@@ -241,7 +243,7 @@ struct PageSceneModel: PageModel {
     
     static func needKeyboard(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
-        case .pairingSetupUser, .pairingBtv, .search: return true
+        case .pairingSetupUser, .pairingBtv, .search, .modifyProile: return true
         default : return false
         }
     }

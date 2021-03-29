@@ -7,12 +7,17 @@
 
 import Foundation
 import SwiftUI
-struct PairingBlock: PageComponent{
+struct PairingView: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
-    @State var safeAreaBottom:CGFloat = 0
+    @EnvironmentObject var dataProvider:DataProvider
     
+    var pageObservable:PageObservable = PageObservable()
+    var pageDragingModel:PageDragingModel = PageDragingModel()
+    var watchedScrollModel: InfinityScrollModel = InfinityScrollModel()
+    
+    @State var safeAreaBottom:CGFloat = 0
     @State var character:String = Asset.characterList[0]
     @State var nick:String = ""
     
@@ -41,7 +46,9 @@ struct PairingBlock: PageComponent{
                     image: Asset.icon.profileEdit,
                     imageSize: Dimen.icon.thinExtra
                 ) { _ in
-                     
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.modifyProile)
+                        )
                     }
                 TextButton(
                     defaultText: String.pageTitle.pairingManagement,
@@ -54,6 +61,7 @@ struct PairingBlock: PageComponent{
                         )
                     }
             }
+            .padding(.horizontal, Dimen.margin.thin)
             HStack(spacing: 0){
                 FillButton(
                     text: String.button.alarm,
@@ -77,30 +85,22 @@ struct PairingBlock: PageComponent{
                 }
             }
             .background(Color.app.blueLight)
+            .padding(.horizontal, Dimen.margin.thin)
             
-            HStack(spacing: 0){
-                ValueInfo(key: "A", value: "B")
-                    .modifier(MatchParent())
-                Spacer().modifier(LineVertical())
-                    .frame(height:Dimen.button.lightExtra)
-                ValueInfo(key: "A", value: "B")
-                    .modifier(MatchParent())
-                Spacer().modifier(LineVertical())
-                    .frame(height:Dimen.button.lightExtra)
-                ValueInfo(key: "A", value: "B")
-                    .modifier(MatchParent())
-                Spacer().modifier(LineVertical())
-                    .frame(height:Dimen.button.lightExtra)
-                ValueInfo(key: "A", value: "B")
-                    .modifier(MatchParent())
+            MyPointInfo()
+                .padding(.horizontal, Dimen.margin.thin)
+            if let data = self.watchedData {
+                VideoBlock(
+                    pageObservable:self.pageObservable,
+                    viewModel:self.watchedScrollModel,
+                    pageDragingModel:self.pageDragingModel,
+                    data: data,
+                    useTracking:true)
             }
-            .frame(height:Dimen.tab.heavy)
-            .background(Color.app.blueLight)
-            
             Spacer()
         }
         .padding(.top, Dimen.margin.light)
-        .padding(.horizontal, Dimen.margin.thin)
+        
         .padding(.bottom, Dimen.margin.thin + self.safeAreaBottom)
         .background(Color.brand.bg)
     
@@ -109,14 +109,41 @@ struct PairingBlock: PageComponent{
             self.character = Asset.characterList[user.characterIdx]
             self.nick = user.nickName
         }
+        .onReceive(self.dataProvider.$result){ res in
+            guard let res = res else {return}
+            switch res.type {
+            case .getWatch : self.onWatchedData(res: res)
+            default : break
+            }
+        }
         .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
             withAnimation{
                 self.safeAreaBottom = pos
             }
         }
-        
+        .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+            if ani {
+                self.dataProvider.requestData(q: .init(type: .getWatch(false), isOptional: true))
+            }
+        }
         
     }//body
+    
+    @State var watchedData:BlockData? = nil
+    func onWatchedData(res:ApiResultResponds){
+        guard let resData = res.data as? Watch else { return }
+        guard let blocks = resData.watchList else { return }
+        if blocks.isEmpty { return }
+        let videos = blocks.map{ d in VideoData().setData(data: d) }
+        let blockData = BlockData()
+            .setData(title: String.pageTitle.watched, cardType:.watchedVideo, dataType:.watched, uiType:.video, isCountView: true)
+        blockData.videos = videos
+        blockData.setDatabindingCompleted(total: resData.watch_tot?.toInt() ?? 0)
+        self.watchedData = blockData
+    }
+    
+    
+    
 }
 
 
@@ -125,7 +152,8 @@ struct PairingBlock_Previews: PreviewProvider {
     
     static var previews: some View {
         Form{
-            PairingBlock()
+            PairingView(
+            )
                 .environmentObject(PagePresenter())
                 .environmentObject(PageSceneObserver())
                 .environmentObject(Pairing())

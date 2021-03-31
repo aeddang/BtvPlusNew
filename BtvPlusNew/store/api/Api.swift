@@ -63,7 +63,7 @@ enum ApiType{
          getPeriodPurchaseMonthly(Int? = nil , Int? = nil),
          getMonthly(Bool = false, Int? = nil , Int? = nil),
          getWatch(Bool = false, Int? = nil , Int? = nil),
-         deleteWatch([String]? = nil, Bool = false),
+         deleteWatch([String]? = nil, isAll:Bool = false),
          getBookMark(Int? = nil , Int? = nil),
          postBookMark(SynopsisData),
          deleteBookMark(SynopsisData),

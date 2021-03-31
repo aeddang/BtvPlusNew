@@ -43,6 +43,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                                 PageProvider.getPageObject(data.dataType == .watched ? .watchedList : .categoryList)
                                     .addParam(key: .data, value: data)
                                     .addParam(key: .type, value: CateBlock.ListType.video)
+                                    .addParam(key: .subType, value:data.cardType)
                             )
                         }
                     }
@@ -75,6 +76,10 @@ struct VideoBlock:BlockProtocol, PageComponent {
                         datas: [VideoData(),VideoData(),VideoData(),VideoData()] )
                         .modifier(MatchHorizontal(height: self.listHeight))
                         .opacity(0.5)
+                } else {
+                    EmptyAlert( text: self.data.dataType != .watched
+                                ? String.pageText.myWatchedEmpty
+                                : String.alert.dataError)
                 }
             }
         }
@@ -102,6 +107,8 @@ struct VideoBlock:BlockProtocol, PageComponent {
             }
         }
         .onReceive(dataProvider.$result) { res in
+            self.checkModifyWatchedItem(res)
+    
             if res?.id != data.id { return }
             var allDatas:[VideoData] = []
             switch data.dataType {
@@ -140,7 +147,6 @@ struct VideoBlock:BlockProtocol, PageComponent {
                     VideoData().setData(data: d, cardType: data.cardType)
                 }
                 allDatas.append(contentsOf: addDatas)
-                
             default: do {}
             }
             self.datas = allDatas
@@ -161,5 +167,27 @@ struct VideoBlock:BlockProtocol, PageComponent {
             onDataBinding()
         }
         else { onBlank() }
+    }
+    
+    func checkModifyWatchedItem(_ res:ApiResultResponds?) {
+        guard let res = res else { return }
+        
+        switch res.type {
+        case .deleteWatch(let list, let isAll):
+            if self.data.dataType != .watched {return}
+            if isAll {
+                self.hasMore = false
+                self.datas.removeAll()
+                
+            } else {
+                list?.forEach{ del in
+                    if let f = self.datas.firstIndex(where: {$0.srisId == del }) {
+                        self.datas.remove(at: f)
+                    }
+                }
+            }
+        default: break
+        }
+        
     }
 }

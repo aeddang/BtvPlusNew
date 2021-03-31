@@ -71,8 +71,14 @@ struct PageSearchWebview: PageView {
                     
                     if self.isVoiceSearch {
                         ZStack(){
-                            VoiceRecorder(){ keyword in
-                                self.requestSearch(keyword: keyword)
+                            VoiceRecorder(cancle: {
+                                
+                            }
+                            ){ keyword in
+                                guard keyword != nil else {
+                                    withAnimation{ self.isVoiceSearch = false }
+                                    return
+                                }
                             }
                             .modifier(MatchHorizontal(height:VoiceRecorder.height ))
                             VStack(alignment: .trailing){

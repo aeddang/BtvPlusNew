@@ -197,7 +197,21 @@ extension String{
         return date
     }
     
-    
+    func toHMS(div:String = ":") -> String {
+        if self.count <= 2 {
+            return self
+        } else if self.count <= 4 {
+            return self.subString(start:0, len: min(2, self.count-2)) + div + self.subString(start:self.count-2, len: 2)
+        } else{
+            let h = self.subString(start:0, len: min(2, self.count-4))
+            if h == "0" || h == "00"{
+                return self.subString(start:self.count-4, len: 2 ) + div + self.subString(start:self.count-2, len: 2)
+            }else{
+                return h + div + self.subString(start:self.count-4, len: 2 )
+                        + div + self.subString(start:self.count-2, len: 2)
+            }
+        }
+    }
     
     func toUrl() -> URL? {
         let temp = self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""

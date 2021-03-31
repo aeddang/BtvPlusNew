@@ -12,6 +12,7 @@ import SwiftUI
 class CateBlockModel: PageDataProviderModel {
     private(set) var listType:CateBlock.ListType = .poster
     private(set) var dataType:BlockData.DataType = .grid
+    private(set) var cardType:BlockData.CardType? = nil
     private(set) var key:String? = nil
     private(set) var menuId:String? = nil
     private(set) var data:BlockData? = nil
@@ -20,17 +21,19 @@ class CateBlockModel: PageDataProviderModel {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
     
-    func update(data:BlockData, listType:CateBlock.ListType, key:String? = nil) {
+    func update(data:BlockData, listType:CateBlock.ListType, cardType:BlockData.CardType? = nil, key:String? = nil) {
         self.data = data
         self.listType = listType
+        self.cardType = cardType
         self.key = key
         self.isUpdate = true
         self.menuId = data.menuId
     }
     
-    func update(menuId:String?, listType:CateBlock.ListType, key:String? = nil) {
+    func update(menuId:String?, listType:CateBlock.ListType, cardType:BlockData.CardType? = nil, key:String? = nil) {
         self.listType = listType
         self.menuId = menuId
+        self.cardType = cardType
         self.key = key
         self.isUpdate = true
         self.data = nil
@@ -280,6 +283,7 @@ struct CateBlock: PageComponent{
         if self.infinityScrollModel.page == 0 {
             self.totalCount = data.total_content_count ?? 0
         }
+        
         switch self.viewModel.listType{
         case .poster : setPosterSets(datas: data.contents)
         case .video : setVideoSets(datas: data.contents)
@@ -356,7 +360,7 @@ struct CateBlock: PageComponent{
             return
         }
         let loadedDatas:[VideoData] = datas.map{ d in
-            return VideoData().setData(data: d)
+            return VideoData().setData(data: d, cardType: self.viewModel.cardType ?? .video)
         }
         setVideoSets(loadedDatas: loadedDatas)
     }
@@ -380,7 +384,7 @@ struct CateBlock: PageComponent{
             return
         }
         let loadedDatas:[VideoData] = datas.map{ d in
-            return VideoData().setData(data: d)
+            return VideoData().setData(data: d, cardType: self.viewModel.cardType ?? .watchedVideo)
         }
         setVideoSets(loadedDatas: loadedDatas)
     }
@@ -402,7 +406,7 @@ struct CateBlock: PageComponent{
             return
         }
         let loadedDatas:[VideoData] = datas.map{ d in
-            return VideoData().setData(data: d)
+            return VideoData().setData(data: d, cardType: self.viewModel.cardType ?? .video)
         }
         setVideoSets(loadedDatas: loadedDatas)
     }
@@ -425,6 +429,11 @@ struct CateBlock: PageComponent{
             self.loadedPosterDatas?.append(contentsOf: loadedDatas)
         } else{
             self.loadedPosterDatas = loadedDatas
+        }
+        if self.viewModel.cardType == .rankingPoster, let posters =  self.loadedPosterDatas {
+            zip( posters, 0...posters.count).forEach{ data , idx in
+                data.setRank(idx)
+            }
         }
         
         let count:Int = Int(floor(self.sceneObserver.screenSize.width / Self.posterCellsize))
@@ -463,6 +472,7 @@ struct CateBlock: PageComponent{
         } else{
             self.loadedVideoDatas = loadedDatas
         }
+        
         let count:Int = Int(floor(self.sceneObserver.screenSize.width / Self.videoCellsize))
         var rows:[VideoDataSet] = []
         var cells:[VideoData] = []

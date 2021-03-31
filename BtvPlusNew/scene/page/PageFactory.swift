@@ -17,6 +17,7 @@ extension PageID{
     static let category:PageID = "category"
     static let synopsis:PageID = "synopsis"
     static let synopsisPackage:PageID = "synopsisPackage"
+    static let synopsisPlayer:PageID = "synopsisPlayer"
     static let oeean:PageID = "oeean"
     static let pairing:PageID = "pairing"
     static let my:PageID = "my"
@@ -34,6 +35,7 @@ extension PageID{
     static let previewList:PageID = "previewList"
     static let watchedList:PageID = "watchedList"
     static let fullPlayer:PageID = "fullPlayer"
+    
     static let webview:PageID = "webview"
     static let person:PageID = "person"
     static let search:PageID = "search"
@@ -112,6 +114,7 @@ extension PageParam {
     static let data = "data"
     static let datas = "datas"
     static let type = "type"
+    static let subType = "subType"
     static let title = "title"
     static let autoPlay = "autoPlay"
     static let initTime = "initTime"
@@ -159,6 +162,7 @@ struct PageFactory{
         case .setup : return PageSetup()
         case .synopsis : return PageSynopsis()
         case .synopsisPackage : return PageSynopsisPackage()
+        case .synopsisPlayer : return PageSynopsisPlayer()
         case .pairing : return PagePairing()
         case .pairingSetupUser : return PagePairingSetupUser()
         case .pairingDevice : return PagePairingDevice()

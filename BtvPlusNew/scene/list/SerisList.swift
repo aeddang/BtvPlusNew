@@ -14,6 +14,9 @@ class SerisData:InfinityData{
     private(set) var subTitle: String? = nil
     private(set) var epsdId:String? = nil
     private(set) var brcastTseqNm:Int = -1
+    private(set) var price: String? = nil
+    private(set) var isFree: Bool? = nil
+    
     func setData(data:SeriesInfoItem, title:String? = nil, idx:Int = -1) -> SerisData {
        
         if let thumb = data.poster_filename_h {
@@ -23,6 +26,10 @@ class SerisData:InfinityData{
         if let count = data.brcast_tseq_nm {
             self.title = (self.title ?? "") + " " + count + String.app.broCount
             self.brcastTseqNm = count.toInt()
+        }
+        if let prc = data.sale_prc_vat {
+            if prc == 0 { isFree = true }
+            price = prc.formatted(style: .decimal) + String.app.cash
         }
         subTitle = data.brcast_exps_dy
         index = idx
@@ -70,16 +77,24 @@ struct SerisItem: PageView {
     var isSelected:Bool = false
     var body: some View {
         HStack(spacing:Dimen.margin.thin){
-            ZStack{
+            ZStack(alignment:.bottomTrailing){
                 ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg16_9)
                     .modifier(MatchParent())
                 if self.isSelected  {
-                    Image(Asset.icon.thumbPlay)
-                        .renderingMode(.original).resizable()
-                        .scaledToFit()
-                        .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
+                    ZStack(){
+                        Image(Asset.icon.thumbPlay)
+                            .renderingMode(.original).resizable()
+                            .scaledToFit()
+                            .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
+                    }
+                    .modifier(MatchParent())
                 }
-                
+                if data.isFree == true {
+                    Text(String.app.free)
+                        .modifier(BoldTextStyle(size: Font.size.thinExtra))
+                        .lineLimit(1)
+                        .padding(.all, Dimen.margin.tiny)
+                }
             }
             .overlay(
                Rectangle()

@@ -49,6 +49,7 @@
 
 "rent" = "대여";
 "owner" = "소장";
+"free" = "무료";
 "defaultStb" = "B tv 셋톱박스";
 
 "ppmUpdate" = "월정액 업데이트";

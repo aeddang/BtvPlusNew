@@ -13,6 +13,7 @@ enum BlockStatus:String{
 class BlockData:InfinityData, ObservableObject{
     private(set) var name:String = ""
     private(set) var subName:String = ""
+    private(set) var limLvl:Bool = false
     private(set) var menuId:String? = nil
     private(set) var cwCallId:String? = nil
     private(set) var cardType:CardType = .none
@@ -85,6 +86,7 @@ class BlockData:InfinityData, ObservableObject{
     func setDate(title:String, datas:[CategoryCornerItem], max:Int = 10) -> BlockData{
         name = title
         uiType = .video
+       
         self.allVideos = []
         self.videos = []
         var idx:Int = 0
@@ -109,6 +111,7 @@ class BlockData:InfinityData, ObservableObject{
         name = data.menu_nm ?? ""
         menuId = data.menu_id
         cwCallId = data.cw_call_id_val
+        limLvl = data.lim_lvl_yn?.toBool() ?? false
         cardType = findType(data)
         dataType = findDataType(data)
         blocks = data.blocks
@@ -185,6 +188,11 @@ class BlockData:InfinityData, ObservableObject{
         if isCountView, let count = total {
             self.subName = count.description
         }
+        if self.cardType == .rankingPoster , let posters = self.posters{
+            zip(posters, 0...posters.count).forEach{ data , idx in
+                data.setRank(idx)
+            }
+        }
         status = .active
     }
     
@@ -193,16 +201,15 @@ class BlockData:InfinityData, ObservableObject{
         status = .passive
     }
     
-    
     private func findType(_ data:BlockItem) -> CardType {
         if data.scn_mthd_cd == "504" { return .watchedVideo }
         else if data.svc_prop_cd == "501" { return .bookmarkedPoster }
         else if data.scn_mthd_cd == "501" || data.scn_mthd_cd == "507" { // block>scn_mthd_cd(상영 방식 코드)가 "501" or
             switch (data.blk_typ_cd, data.pst_exps_typ_cd, data.btm_bnr_blk_exps_cd) {
-            case (_, "10", _): return .video
+            case (_, "10", _): return data.svc_prop_cd == "522" ?.clip : .video
             case (_, "20", _): return .smallPoster //
             case (_, "40", _): return .bigPoster
-            case (_, "30", _): return .video
+            case (_, "30", _): return data.svc_prop_cd == "522" ?.clip : .video
             case (_, "50", _): return .rankingPoster
             default: return .none }
         } else {
@@ -210,7 +217,7 @@ class BlockData:InfinityData, ObservableObject{
             case ("30", "10", _): return .video
             case ("30", "20", _): return .smallPoster
             case ("30", "40", _): return .bigPoster
-            case ("30", "30", _): return .video
+            case ("30", "30", _): return data.svc_prop_cd == "522" ?.clip : .video
             case ("30", "50", _): return .rankingPoster
             case ("20", _, "05"): return .squareThema
             case ("20", _, "04"): return .circleTheme
@@ -222,6 +229,7 @@ class BlockData:InfinityData, ObservableObject{
                 else if data.svc_prop_cd == "501" { return .bookmarkedPoster }
                 else { return .none }
             }
+            
         }
     }
     
@@ -249,7 +257,7 @@ class BlockData:InfinityData, ObservableObject{
         switch self.cardType {
         case .smallPoster, .bigPoster, .bookmarkedPoster, .rankingPoster :
             return .poster
-        case .video, .watchedVideo :
+        case .video, .watchedVideo, .clip:
             return .video
         case .circleTheme, .bigTheme, .squareThema :
             if themaType == .ticket {return .ticket}
@@ -273,6 +281,7 @@ class BlockData:InfinityData, ObservableObject{
         bookmarkedPoster,
         
         watchedVideo,
+        clip,
         video,
         
         circleTheme,

@@ -34,7 +34,7 @@ struct MonthlyBlock: PageComponent {
                         .lineLimit(1)
                     Spacer().modifier(MatchHorizontal(height: 0))
                 }
-                if let allData = self.allData {
+                if let allData = self.allData, !SystemEnvironment.isEvaluation {
                     TextButton(
                         defaultText: String.monthly.more,
                         textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier

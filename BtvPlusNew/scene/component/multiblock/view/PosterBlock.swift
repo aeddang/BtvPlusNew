@@ -43,6 +43,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
                                 PageProvider.getPageObject(.categoryList)
                                     .addParam(key: .data, value: data)
                                     .addParam(key: .type, value: CateBlock.ListType.poster)
+                                    .addParam(key: .subType, value:data.cardType)
                             )
                         }
                     }
@@ -76,6 +77,8 @@ struct PosterBlock:PageComponent, BlockProtocol {
                         )
                         .modifier(MatchHorizontal(height: self.listHeight))
                     .opacity(0.5)
+                } else {
+                    EmptyAlert()
                 }
             }
         }

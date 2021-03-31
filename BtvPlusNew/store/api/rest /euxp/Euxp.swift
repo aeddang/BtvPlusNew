@@ -15,7 +15,7 @@ struct EuxpNetwork : Network{
 
 extension EuxpNetwork{
     static let RESPONSE_FORMET = "json"
-    static let MENU_STB_SVC_ID = "BTVMOBV521"
+    static let MENU_STB_SVC_ID = "BTVMOBV430"
     static let APP_TYPE_CD = "BTVPLUS"
     static let VERSION = "0"
     static let PAGE_COUNT = 30

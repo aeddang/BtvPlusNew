@@ -43,8 +43,8 @@ class BannerData:InfinityData, PageProtocol{
                 
             case .page:
                 image = ImagePath.thumbImagePath(filePath: poster, size: CGSize(width: 240, height: 0))  ?? image
-                logo = ImagePath.thumbImagePath(filePath: data.logo_img_path, size: CGSize(width: 240, height: 0), convType: .alpha)
-                focus = ImagePath.thumbImagePath(filePath: data.width_focus_off_path, size: CGSize(width: 240, height: 0))
+                logo = ImagePath.thumbImagePath(filePath: data.logo_img_path, size: CGSize(width: 200, height: 0), convType: .alpha)
+                focus = ImagePath.thumbImagePath(filePath: data.width_focus_off_path, size: CGSize(width: 200, height: 0))
                 if let str = data.bnr_img_expl {
                     subTitle = str.isEmpty ? nil : str
                 }

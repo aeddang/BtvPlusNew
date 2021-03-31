@@ -38,7 +38,6 @@ struct PageSearch: PageView {
                     VStack(spacing:0){
                         SearchTab(
                             isFocus:self.isInputSearch,
-                            isVoiceSearch: self.$isVoiceSearch,
                             keyword: self.$keyword,
                             inputChanged: {text in
                                 if text == "" {
@@ -50,9 +49,13 @@ struct PageSearch: PageView {
                             inputCopmpleted : { text in
                                 self.search(keyword: text)
                             },
+                            inputVoice: {
+                                self.voiceSearch()
+                            },
                             goBack: {
                                 if !self.emptyDatas.isEmpty {
                                     self.emptyDatas = []
+                                    self.keyword = ""
                                     return
                                 }
                                 if !self.searchDatas.isEmpty {
@@ -126,13 +129,22 @@ struct PageSearch: PageView {
                     .padding(.bottom, self.marginBottom)
                     if self.isVoiceSearch {
                         ZStack(){
-                            VoiceRecorder(){ keyword in
-                                self.search(keyword: keyword)
-                            }
+                            VoiceRecorder(
+                                cancle: {
+                                    self.voiceSearchEnd()
+                                },
+                                action: { keyword in
+                                    guard let keyword = keyword else {
+                                        self.voiceSearchEnd()
+                                        return
+                                    }
+                                    self.search(keyword: keyword)
+                                }
+                            )
                             .modifier(MatchHorizontal(height:VoiceRecorder.height ))
                             VStack(alignment: .trailing){
                                 Button(action: {
-                                    withAnimation{ self.isVoiceSearch = false }
+                                    self.voiceSearchEnd()
                                 }) {
                                     Image(Asset.icon.close)
                                         .renderingMode(.original)
@@ -162,12 +174,13 @@ struct PageSearch: PageView {
                 if on {
                     self.emptyDatas = []
                 }
-                if on {
-                    self.appSceneObserver.useBottomImmediately = false
-                } else {
-                    self.appSceneObserver.useBottom = true
+                if !self.isVoiceSearch {
+                    if on {
+                        self.appSceneObserver.useBottomImmediately = false
+                    } else {
+                        self.appSceneObserver.useBottom = true
+                    }
                 }
-                
             }
             .onReceive(self.viewModel.$searchDatas){ datas in
                 self.datas = datas
@@ -235,11 +248,17 @@ struct PageSearch: PageView {
     
     func voiceSearch(){
         withAnimation{ self.isVoiceSearch = true }
+        AppUtil.hideKeyboard()
+        self.appSceneObserver.useBottom = false
+    }
+    func voiceSearchEnd(){
+        withAnimation{ self.isVoiceSearch = false }
+        self.appSceneObserver.useBottom = true
     }
     
     func search(keyword:String){
         AppUtil.hideKeyboard()
-        withAnimation{ self.isVoiceSearch = false }
+        self.voiceSearchEnd()
         if keyword.isEmpty { return }
         self.viewModel.addSearchKeyword(keyword: keyword)
         self.keyword = keyword

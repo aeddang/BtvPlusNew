@@ -7,15 +7,18 @@
 
 import Foundation
 import SwiftUI
+import AVFoundation
+
 struct SearchTab: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     
     var isFocus:Bool = false
-    @Binding var isVoiceSearch:Bool
+    
     @Binding var keyword:String
     
     var inputChanged: ((_ text:String) -> Void)? = nil
     var inputCopmpleted: ((_ text:String) -> Void)? = nil
+    var inputVoice: (() -> Void)? = nil
     var goBack: (() -> Void)? = nil
     
     var body: some View {
@@ -60,8 +63,8 @@ struct SearchTab: PageView {
                                height: Dimen.icon.tiny)
                 }
                 Button(action: {
-                    withAnimation{ self.isVoiceSearch = true }
-                    AppUtil.hideKeyboard()
+                    self.inputVoice?()
+                    
                 }) {
                     Image(Asset.icon.searchMic)
                         .renderingMode(.original)

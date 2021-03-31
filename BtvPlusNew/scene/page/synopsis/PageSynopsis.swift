@@ -18,7 +18,6 @@ struct PageSynopsis: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
-    @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var setup:Setup
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -609,11 +608,7 @@ struct PageSynopsis: PageView {
         }
         
     }
-    
-    private func setupGatewaySynopsis (_ data:GatewaySynopsis){
-        PageLog.d("setupGatewaySynopsis", tag: self.tag)
-    }
-    
+        
     private func setupDirectView (_ data:DirectView){
         PageLog.d("setupDirectView", tag: self.tag)
         self.purchaseWebviewModel?.setParam(directView: data, monthlyPid: nil)

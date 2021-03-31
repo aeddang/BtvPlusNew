@@ -62,7 +62,7 @@ extension String {
         public static let watchAble = "watchAble".loaalized()
         public static let cast = "cast".loaalized()
         
-        
+        public static let free = "free".loaalized()
         public static let vod = "vod".loaalized()
         public static let sris = "sris".loaalized()
         public static let corner = "corner".loaalized()

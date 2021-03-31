@@ -17,7 +17,9 @@ struct VoiceRecorder: PageView {
     
     var title:String = String.voice.searchTitle
     var text:String = String.voice.searchText
-    var action: ((_ keyword:String) -> Void)
+    var cancle: (() -> Void)
+    var action: ((_ keyword:String?) -> Void)
+   
     @State var isRecording:Bool = false
     @State var isError:Bool = false
     @State var statusText:String? = nil
@@ -51,6 +53,7 @@ struct VoiceRecorder: PageView {
                     }
                     
                 }
+                .padding(.horizontal, Dimen.margin.regular)
             }
         }
         .onReceive(self.networkObserver.$status){ stat in
@@ -90,6 +93,8 @@ struct VoiceRecorder: PageView {
                 }
                 self.isRecording = false
                 self.isError = true
+            case .permissionError :
+                cancle()
                 
             case .find(let word):
                 let findKeyword = word.replace("0", with: "").replace(" ", with: "")
@@ -97,8 +102,7 @@ struct VoiceRecorder: PageView {
             default : break
             }
         }
-        .onAppear(){
-        }
+        
         .onDisappear(){
             self.isRecording = false
             self.repository.voiceRecognition.stop()
@@ -113,6 +117,9 @@ struct EVoiceRecorder_Previews: PreviewProvider {
     static var previews: some View {
         ZStack{
             VoiceRecorder(
+                cancle:{
+                    
+                }
             ){ keyword in
                 
             }

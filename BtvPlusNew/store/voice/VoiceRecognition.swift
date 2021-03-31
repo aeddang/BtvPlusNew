@@ -20,42 +20,37 @@ class VoiceRecognition:  NSObject, ObservableObject, RecognitionListener , PageP
         self.appSceneObserver = appSceneObserver
     }
     
-    @objc func audioSessionInterrupted(notification: NSNotification) {
-        guard let userInfo = notification.userInfo,
-            let interruptionTypeRawValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
-            let interruptionType = AVAudioSession.InterruptionType(rawValue: interruptionTypeRawValue) else {
-                return
-        }
-        ComponentLog.e("interruptionType: \(interruptionType)", tag: self.tag)
-        switch interruptionType {
-        case .began:
-            self.event = .error
-        case .ended:
-            break
-        @unknown default:
-            break
-        }
-    }
+    
     
     func start(){
-        AVAudioSession.sharedInstance().requestRecordPermission { [unowned self] granted in
+        AVAudioSession.sharedInstance().requestRecordPermission { granted in
+            ComponentLog.d("requestRecordPermission " + granted.description, tag: self.tag)
             if !granted {
+                ComponentLog.d("onStart fail", tag: self.tag)
                 DispatchQueue.main.async {
-                    self.appSceneObserver?.alert = .alert(nil, String.alert.needMicPermission)
+                    self.appSceneObserver?.alert = .alert(nil, String.alert.needMicPermission){
+                        self.event = .permissionError
+                    }
                 }
                 return
+            } else {
+                DispatchQueue.main.async { self.onStart() }
             }
         }
+        
+    }
+    private func onStart(){
+        ComponentLog.d("onStart", tag: self.tag)
         self.initAVAudioSession()
         self.initRecognizer()
         self.status = .ready
     }
-    
     func stop(){
         self.recognizer?.stopListening()
-        self.destroyRecognizer()
         self.destroyAVAudioSession()
+        self.destroyRecognizer()
         self.status = .initate
+        ComponentLog.d("onStop", tag: self.tag)
     }
     
     @discardableResult
@@ -112,10 +107,12 @@ class VoiceRecognition:  NSObject, ObservableObject, RecognitionListener , PageP
         }
     }
     func onCancel() {
+        if self.status == .initate {return}
         self.status = .ready
     }
     
     private func initAVAudioSession() {
+       
         NotificationCenter.default.addObserver(self, selector: #selector(audioSessionInterrupted), name: AVAudioSession.interruptionNotification, object: nil)
         let audioSession = AVAudioSession.sharedInstance()
         do {
@@ -126,6 +123,23 @@ class VoiceRecognition:  NSObject, ObservableObject, RecognitionListener , PageP
         } catch let error as NSError {
             ComponentLog.e("audioSession init error: \(error.localizedDescription)", tag: self.tag)
             self.onError()
+        }
+    }
+    
+    @objc func audioSessionInterrupted(notification: NSNotification) {
+        guard let userInfo = notification.userInfo,
+            let interruptionTypeRawValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+            let interruptionType = AVAudioSession.InterruptionType(rawValue: interruptionTypeRawValue) else {
+                return
+        }
+        ComponentLog.e("interruptionType: \(interruptionType)", tag: self.tag)
+        switch interruptionType {
+        case .began:
+            self.event = .error
+        case .ended:
+            break
+        @unknown default:
+            break
         }
     }
     

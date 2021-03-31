@@ -22,6 +22,7 @@ struct PageCategoryList: PageView {
     @ObservedObject var viewModel:CateBlockModel = CateBlockModel()
     @State var title:String? = nil
     @State var listType:CateBlock.ListType = .poster
+    @State var cardType:BlockData.CardType? = nil
     @State var menuId:String? = nil
     @State var blockData:BlockData? = nil
     @State var useTracking:Bool = false
@@ -53,9 +54,9 @@ struct PageCategoryList: PageView {
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
                     if let data = self.blockData {
-                        self.viewModel.update(data: data, listType:self.listType, key:nil)
+                        self.viewModel.update(data: data, listType:self.listType, cardType: self.cardType, key:nil)
                     }else{
-                        self.viewModel.update(menuId:self.menuId, listType:self.listType, key:nil)
+                        self.viewModel.update(menuId:self.menuId, listType:self.listType, cardType: self.cardType, key:nil)
                     }
                 }
             }
@@ -76,6 +77,7 @@ struct PageCategoryList: PageView {
                 }
                 self.title = obj.getParamValue(key: .title) as? String ?? self.title 
                 self.listType = obj.getParamValue(key: .type) as? CateBlock.ListType ?? .poster
+                self.cardType = obj.getParamValue(key: .subType) as? BlockData.CardType
             }
             .onDisappear{
                

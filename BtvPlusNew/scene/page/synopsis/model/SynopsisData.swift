@@ -15,6 +15,7 @@ enum SynopsisType {
         default: self = .title
         }
     }
+    
 }
 
 

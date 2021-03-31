@@ -38,27 +38,27 @@ struct ImageAnimation : View, AnimateDrawViewProtocol, PageProtocol {
     }
     
     func startAnimation() {
-        ComponentLog.d("startAnimation" , tag: self.tag)
+        //ComponentLog.d("startAnimation" , tag: self.tag)
         isDrawing = true
         createJob(duration: 0, fps: 0.05)
     }
     func stopAnimation() {
-        ComponentLog.d("stopAnimation" , tag: self.tag)
+        //ComponentLog.d("stopAnimation" , tag: self.tag)
         isDrawing = false
         currentFrm = 0
     }
     
     func onStart() {
-        ComponentLog.d("onStart" , tag: self.tag)
+        //ComponentLog.d("onStart" , tag: self.tag)
     }
     func onCancel(frm: Int) {
-        ComponentLog.d("onCancel" , tag: self.tag)
+        //ComponentLog.d("onCancel" , tag: self.tag)
     }
     
     func onCompute(frm: Int, t:Double) {}
     func onDraw(frm: Int) {
         self.currentFrm = frm % self.images.count
-        ComponentLog.d("onDraw " + self.currentFrm.description, tag: self.tag)
+        //ComponentLog.d("onDraw " + self.currentFrm.description, tag: self.tag)
     }
 }
 

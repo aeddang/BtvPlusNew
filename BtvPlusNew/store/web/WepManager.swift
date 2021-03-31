@@ -72,7 +72,7 @@ class WebManager :PageProtocol{
         info["combine_product_use"] = AppUtil.getSafeString(userInfo?.combine_product_use, defaultValue: "N")
         info["combine_product_list"] = AppUtil.getSafeString(userInfo?.combine_product_list, defaultValue: "null")
         info["isSupportSimplePairing"] = pairing.hostDevice?.isSupportSimplePairing() ?? false
-        info["evaluation"] = SystemEnvironment.isEvaluation
+        info["evaluation"] = SystemEnvironment.isEvaluation //? 1 : 0
         info["clientId"] = SystemEnvironment.deviceId
         info["expiredSTB"] = false
       

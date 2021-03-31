@@ -92,7 +92,7 @@ class Repository:ObservableObject, PageProtocol{
         self.dataCancellable.removeAll()
     }
     
-    func reset(isReleaseMode:Bool = true, isEvaluation:Bool = false){
+    func reset(isReleaseMode:Bool = true, isEvaluation:Bool = SystemEnvironment.isEvaluation){
         SystemEnvironment.isReleaseMode = isReleaseMode
         SystemEnvironment.isEvaluation = isEvaluation
         self.dataCancellable.forEach{$0.cancel()}
@@ -118,7 +118,6 @@ class Repository:ObservableObject, PageProtocol{
             guard let evt = evt else { return }
             switch evt{
             case .connected(let stbData) :
-                //self.appSceneObserver?.event = .toast("connected")
                 self.storage.saveDevice(stbData)
                 
             case .disConnected :
@@ -131,7 +130,6 @@ class Repository:ObservableObject, PageProtocol{
                 self.storage.saveUser(self.pairing.user)
                 self.pairing.user?.pairingDate = self.storage.pairingDate
                 self.pairing.hostDevice?.modelName = self.storage.pairingModelName
-                //self.appSceneObserver?.event = .toast(String.alert.pairingCompleted)
                 self.dataProvider.requestData(q: .init(type: .getGnb))
          
             
@@ -164,24 +162,22 @@ class Repository:ObservableObject, PageProtocol{
         self.apiManager.$result.sink(receiveValue: { res in
             guard let res = res else { return }
             self.respondApi(res)
-            //DispatchQueue.main.async {
-                self.dataProvider.result = res
-                self.appSceneObserver?.isApiLoading = false
-                self.pagePresenter?.isLoading = false
-            //}
+            self.dataProvider.result = res
+            self.appSceneObserver?.isApiLoading = false
+            self.pagePresenter?.isLoading = false
+        
         }).store(in: &dataCancellable)
         
         self.apiManager.$error.sink(receiveValue: { err in
             guard let err = err else { return }
             if self.status != .ready { self.status = .error(err) }
-            //DispatchQueue.main.async {
-                self.dataProvider.error = err
-                if !err.isOptional {
-                    self.appSceneObserver?.alert = .apiError(err)
-                }
-                self.appSceneObserver?.isApiLoading = false
-                self.pagePresenter?.isLoading = false
-            //}
+            self.dataProvider.error = err
+            if !err.isOptional {
+                self.appSceneObserver?.alert = .apiError(err)
+            }
+            self.appSceneObserver?.isApiLoading = false
+            self.pagePresenter?.isLoading = false
+            
         }).store(in: &dataCancellable)
         
         self.pagePresenter?.isLoading = true
@@ -211,6 +207,7 @@ class Repository:ObservableObject, PageProtocol{
                     if let savedData:GnbBlock = self.apiCoreDataManager.getData(key: coreDatakey){
                         coreData = savedData
                         DispatchQueue.main.async {
+                            DataLog.d("respond coreData getGnb", tag:self.tag)
                             self.onReadyRepository(gnbData: savedData)
                         }
                     }
@@ -227,8 +224,22 @@ class Repository:ObservableObject, PageProtocol{
             }
         }
     }
-    
+    private func respondApi(_ res:ApiResultResponds, coreDatakey:String){
+        DispatchQueue.global(qos: .background).async(){
+            switch res.type {
+                case .getGnb :
+                    guard let data = res.data as? GnbBlock  else { return }
+                    DataLog.d("save coreData getGnb", tag:self.tag)
+                    self.apiCoreDataManager.setData(key: coreDatakey, data: data)
+                default: do{}
+            }
+        }
+    }
     private func respondApi(_ res:ApiResultResponds){
+        if let coreDatakey = res.type.coreDataKey(){
+            self.respondApi(res, coreDatakey: coreDatakey)
+        }
+        
         switch res.type {
         case .getGnb :
             guard let data = res.data as? GnbBlock  else { return }
@@ -251,8 +262,12 @@ class Repository:ObservableObject, PageProtocol{
             guard let server = ApiServer.getType(config.key) else { return }
             if let savedPath = self.storage.getServerConfig(configKey: config.key){
                 if savedPath == config.value { return }
+                DataLog.d("reset Server " + server.rawValue , tag:self.tag)
                 self.storage.setServerConfig(configKey: config.key, path: config.value)
                 self.apiCoreDataManager.clearData(server: server)
+            } else {
+                DataLog.d("init Server " + server.rawValue , tag:self.tag)
+                self.storage.setServerConfig(configKey: config.key, path: config.value)
             }
         }
         self.appSceneObserver?.event = .debug("onReadyApiManager")
@@ -272,7 +287,6 @@ class Repository:ObservableObject, PageProtocol{
         self.apiManager.retryApi()
     }
     
-   
     // PushToken
     func retryRegisterPushToken(){
         if self.storage.retryPushToken != "" {

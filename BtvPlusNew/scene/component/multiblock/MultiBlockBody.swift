@@ -19,7 +19,7 @@ class MultiBlockModel: PageDataProviderModel {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
     
-    init(headerSize:Int = 0, requestSize:Int = 10) {
+    init(headerSize:Int = 0, requestSize:Int = 30) {
         self.headerSize = headerSize
         self.requestSize = requestSize
     }
@@ -336,7 +336,7 @@ struct MultiBlockBody: PageComponent {
         }
     }//body
 
-    @State var originBlocks:Array<BlockData> = []
+    @State var originBlocks:[BlockData] = []
     @State var loadingBlocks:[BlockData] = []
     @State var blocks:[BlockData] = []
     @State var anyCancellable = Set<AnyCancellable>()
@@ -348,6 +348,9 @@ struct MultiBlockBody: PageComponent {
         self.blocks = []
         self.infinityScrollModel.reload()
         self.originBlocks = viewModel.datas ?? []
+        if SystemEnvironment.isEvaluation {
+            self.originBlocks = self.originBlocks.filter{!$0.limLvl}
+        }
         self.setupBlocks()
     }
 

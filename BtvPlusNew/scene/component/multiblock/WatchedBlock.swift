@@ -59,7 +59,7 @@ struct WatchedBlock: PageComponent{
                 .modifier(MatchParent())
                 .background(Color.brand.bg)
             } else {
-                EmptyAlert()
+                EmptyAlert(text:String.pageText.myWatchedEmpty)
                 .modifier(MatchParent())
             }
             
@@ -144,7 +144,7 @@ struct WatchedBlock: PageComponent{
             self.currentDeleteId = sridId
             self.viewModel.request = .init(
                 id: sridId ,
-                type: .deleteWatch([sridId], false)
+                type: .deleteWatch([sridId], isAll: false)
             )
         }
     }

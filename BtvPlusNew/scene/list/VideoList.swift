@@ -18,15 +18,30 @@ class VideoData:InfinityData{
     private(set) var synopsisType:SynopsisType = .title
     private(set) var synopsisData:SynopsisData? = nil
     private(set) var epsdId:String? = nil
+    private(set) var srisId:String? = nil
     private(set) var isInside:Bool = false
-    
+    private(set) var isClip:Bool = false
+    private(set) var tagData: TagData? = nil
+    private(set) var playTime:String? = nil
     func setData(data:ContentItem, cardType:BlockData.CardType = .video, idx:Int = -1) -> VideoData {
         setCardType(cardType)
+        if let typeCd = data.svc_typ_cd {
+            isClip = typeCd == "38"
+        } else {
+            isClip = cardType == .clip
+        }
         title = data.title
         if let thumb = data.poster_filename_h {
             image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
         }
+        if self.isClip {
+            playTime = data.play_tms_hms?.toHMS()
+        } else {
+            tagData = TagData().setData(data: data)
+        }
         index = idx
+        epsdId = data.epsd_id
+        srisId = data.sris_id
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
@@ -37,13 +52,17 @@ class VideoData:InfinityData{
     
     func setData(data:PackageContentsItem, prdPrcId:String, cardType:BlockData.CardType = .video ,idx:Int = -1) -> VideoData {
         setCardType(cardType)
+        isClip = cardType == .clip
         title = data.title
+        tagData = TagData().setData(data: data)
+        
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         if let poster = data.poster_filename_v {
             image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
         }
         index = idx
         epsdId = data.epsd_id
+        srisId = data.sris_id
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
             epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: prdPrcId , kidZone:nil)
@@ -53,12 +72,15 @@ class VideoData:InfinityData{
     
     func setData(data:BookMarkItem, cardType:BlockData.CardType = .video, idx:Int = -1) -> VideoData {
         setCardType(cardType)
+        tagData = TagData().setData(data: data)
         title = data.title
+        tagData = TagData().setData(data: data)
         if let thumb = data.poster {
             image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
         }
         index = idx
-        
+        epsdId = data.epsd_id
+        srisId = data.sris_id
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:data.yn_kzone)
@@ -67,6 +89,9 @@ class VideoData:InfinityData{
     
     func setData(data:WatchItem, cardType:BlockData.CardType = .video, idx:Int = -1) -> VideoData {
         setCardType(cardType)
+        isClip = cardType == .clip
+        tagData = TagData().setData(data: data)
+        
         if let rt = data.watch_rt?.toInt() {
             self.progress = Float(rt) / 100.0
         }
@@ -75,6 +100,8 @@ class VideoData:InfinityData{
             image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
         }
         index = idx
+        epsdId = data.epsd_id
+        srisId = data.sris_id
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
@@ -86,7 +113,7 @@ class VideoData:InfinityData{
             image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
         }
         self.title = title
-        
+        tagData = TagData().setData(data: data)
         if let count = data.brcast_tseq_nm {
             self.title = count + String.app.broCount + " " + (self.title ?? "")
         }
@@ -100,8 +127,9 @@ class VideoData:InfinityData{
         if let thumb = data.poster_tseq {
             image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
         }
-        self.title = data.title
-        self.subTitle = data.title_sub
+        tagData = TagData().setData(data: data)
+        title = data.title
+        subTitle = data.title_sub
         index = idx
         epsdId = data.epsd_id
         synopsisType = SynopsisType(value: data.synon_typ_cd)
@@ -118,6 +146,7 @@ class VideoData:InfinityData{
         self.title = data.title
         index = idx
         epsdId = data.epsd_id
+        tagData = TagData().setData(data: data)
         synopsisData = .init(
             srisId: nil, searchType: EuxpNetwork.SearchType.sris.rawValue,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
@@ -126,7 +155,7 @@ class VideoData:InfinityData{
     
     var bottomHeight:CGFloat {
         get{
-            if self.title != nil && self.subTitle != nil {
+            if (self.title != nil && self.subTitle != nil) || self.isClip {
                 return ListItem.video.type02
             } else {
                 return ListItem.video.type01
@@ -145,7 +174,6 @@ class VideoData:InfinityData{
         self.type = .cell(CGSize(width: width, height: height), padding)
         return self
     }
-    
     
     func setDummy(_ idx:Int = -1) -> VideoData {
         title = "[Q&A] 이민?레나채널 삭제 안하는 이유?외국인남친?"
@@ -210,7 +238,10 @@ struct VideoList: PageComponent{
                         }else{
                             guard let synopsisData = data.synopsisData else { return }
                             self.pagePresenter.openPopup(
-                                PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
+                                PageProvider.getPageObject(
+                                    data.synopsisType == .package
+                                        ? .synopsisPackage
+                                        : data.isClip ? .synopsisPlayer : .synopsis)
                                     .addParam(key: .data, value: synopsisData)
                             )
                         }
@@ -226,7 +257,10 @@ struct VideoList: PageComponent{
                         }else{
                             guard let synopsisData = data.synopsisData else { return }
                             self.pagePresenter.openPopup(
-                                PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
+                                PageProvider.getPageObject(
+                                    data.synopsisType == .package
+                                        ? .synopsisPackage
+                                        : data.isClip ? .synopsisPlayer : .synopsis)
                                     .addParam(key: .data, value: synopsisData)
                             )
                         }
@@ -280,7 +314,10 @@ struct VideoSet: PageComponent{
                     .onTapGesture {
                         guard let synopsisData = data.synopsisData else { return }
                         self.pagePresenter.openPopup(
-                            PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
+                            PageProvider.getPageObject(
+                                data.synopsisType == .package
+                                    ? .synopsisPackage
+                                    : data.isClip ? .synopsisPlayer : .synopsis)
                                 .addParam(key: .data, value: synopsisData)
                         )
                     }
@@ -336,8 +373,25 @@ struct VideoItem: PageView {
                         .frame(width: Dimen.icon.regularExtra, height: Dimen.icon.regularExtra)
                 }
                 VStack(alignment: .leading, spacing:0){
-                    HStack(spacing:0){}
-                    Spacer().modifier(MatchParent())
+                    if let tag = self.data.tagData {
+                        Tag(data: tag)
+                            .modifier(MatchParent())
+                    }else if let time = self.data.playTime {
+                        ZStack(alignment:.bottomTrailing){
+                            Spacer().modifier(MatchParent())
+                            Text(time)
+                                .modifier(BoldTextStyle(size: Font.size.tiny))
+                                .lineLimit(1)
+                                .padding(.all, Dimen.margin.micro)
+                                .background(Color.transparent.black70)
+                                .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
+                                .padding(.all, Dimen.margin.tinyExtra)
+                        }
+                        .modifier(MatchParent())
+                    } else {
+                        Spacer().modifier(MatchParent())
+                    }
+                   
                     if self.data.title != nil && self.data.isInside {
                         VStack(alignment: .center, spacing:0){
                             Spacer().modifier(MatchHorizontal(height: 0))
@@ -365,7 +419,7 @@ struct VideoItem: PageView {
                     if let title = self.data.title {
                         Text(title)
                             .modifier(MediumTextStyle(size: Font.size.thinExtra))
-                            .lineLimit(1)
+                            .lineLimit(self.data.isClip ? 2 : 1)
                     }
                     if let subTitle = self.data.subTitle {
                         Text(subTitle)

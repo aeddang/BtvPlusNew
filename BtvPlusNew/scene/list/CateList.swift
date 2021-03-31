@@ -28,6 +28,7 @@ enum CateSubType {
 class CateData:InfinityData{
     private(set) var image: String = Asset.noImg1_1
     private(set) var title: String? = nil
+    private(set) var limLvl:Bool = false
     private(set) var subType: CateSubType = .list
     private(set) var subTitle: String? = nil
     private(set) var menuId: String? = nil
@@ -38,6 +39,7 @@ class CateData:InfinityData{
         index = idx
         menuId = data.menu_id
         blocks = data.blocks
+        limLvl = data.lim_lvl_yn?.toBool() ?? false
         subType = CateSubType.getType(id:data.gnb_sub_typ_cd) 
         if let path = data.menu_off_img_path {
             image = ImagePath.thumbImagePath(filePath: path, size:CGSize(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra) , convType: .alpha) ?? image
@@ -67,7 +69,7 @@ struct CateList: PageComponent{
         InfinityScrollView(
             viewModel: self.viewModel,
             axes: .vertical,
-            marginVertical: 0,
+            marginTop: margin,
             marginHorizontal: 0,
             spacing: 0,
             isRecycle: true,

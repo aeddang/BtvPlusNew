@@ -29,10 +29,9 @@ struct PageCategory: PageView {
                     Spacer().modifier(MatchParent())
                 } else {
                     CateList( datas: self.datas)
-                        .padding(.top, self.headerHeight)
+                        .padding(.top, self.headerHeight - CateList.magin)
                         .modifier(MatchVertical(width: self.listWidth))
                 }
-                
                 HStack(spacing:Dimen.margin.thinExtra){
                     if let data = self.eventData  {
                         FillButton(
@@ -86,7 +85,7 @@ struct PageCategory: PageView {
         }
         .modifier(PageFull())
         .onReceive(self.appSceneObserver.$headerHeight){ hei in
-            self.headerHeight = hei
+            withAnimation{ self.headerHeight = hei }
         }
         .onReceive(self.viewModel.$event ){ evt in
             guard let evt = evt else {return}
@@ -111,8 +110,11 @@ struct PageCategory: PageView {
     @State var tipData:CateData? = nil
     private func setupDatas(menuId:String){
         guard let blocksData = self.dataProvider.bands.getData(menuId: menuId)?.blocks else { return }
-        let cateDatas = blocksData.map{ block in
+        var cateDatas = blocksData.map{ block in
             CateData().setData(data: block)
+        }
+        if SystemEnvironment.isEvaluation {
+            cateDatas = cateDatas.filter{!$0.limLvl}
         }
         let count = CateList.cellCount
         var rows:[CateDataSet] = []

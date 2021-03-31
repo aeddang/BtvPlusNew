@@ -115,6 +115,12 @@ extension Asset{
         public static let micError = "icMicError"
         public static let location = "icPopupLocation"
         public static let searchDelete = "icSearchDelete"
+        
+        public static let itemRock = "ic19Lock"
+        public static let itemAge19 = "tagPoster19"
+        public static let itemDiscount = "tagPosterDiscount"
+        public static let itemEven = "tagPosterEvent"
+        public static let itemRangking = "tagPosterRangking"
     }
     
     
@@ -185,6 +191,12 @@ extension Asset{
             case "15": return Asset.icon.age15
             case "19": return Asset.icon.age19
             default: return Asset.icon.ageAll
+            }
+        }
+        static func getListIcon(age:String?) -> String?{
+            switch age {
+            case "19": return Asset.icon.itemAge19
+            default: return nil
             }
         }
     }

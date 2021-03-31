@@ -106,7 +106,8 @@ struct SynopsisContentsItem : Codable {
     private(set) var epsd_evt_comt_exps_mthd_cd:String? = nil  // 이벤트 코멘트 노출 방식
     private(set) var sris_evt_comt_img_path:String? = nil  // 이벤트 코멘트 이미지 경로
     private(set) var series_info:Array<SeriesInfoItem>? = nil  // 시리즈 정보
-    private(set) var poss_bg_img:Array<ImagePathItem>? = nil  // 소장용 배경이미지
+    //private(set) var poss_bg_img:String? = nil  // 소장용 배경이미지
+    //private(set) var poss_bg_img:Array<ImagePathItem>? = nil  // 소장용 배경이미지
     private(set) var dark_img_yn:String? = nil  // 배경이미지 명암여부(어두운지 안어두운지)
     private(set) var combine_product_yn:String? = nil  // 결합상품 사용여부(방송중단코드가 공급중단(SS)인 경우
     private(set) var session_id:String? = nil  // 세션아이디 (추천결과 수집용)

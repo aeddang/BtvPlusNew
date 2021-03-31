@@ -49,6 +49,7 @@ struct CPImageViewPager: PageComponent {
             switch event {
             case .move(let idx) : withAnimation{ self.index = idx }
             case .jump(let idx) : self.index = idx
+            case .next : self.index = min(self.index+1, self.pages.count-1)
             default : break
             }
         }

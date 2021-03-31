@@ -16,11 +16,28 @@ enum ApiEvents{
     case pairingHostChanged
 }
 
+enum UpdateFlag:String{
+    case none ,force ,recommend ,emergency ,advance
+    static func getFlag(_ value:String?)->UpdateFlag{
+        switch value {
+            case "0", "none": return .none
+            case "1", "force": return .force
+            case "2", "recommend": return .recommend
+            case "3", "emergency": return .emergency
+            case "4", "advance": return .advance
+            default : return .none
+        }
+        
+    }
+}
+
+
 class ApiManager :PageProtocol, ObservableObject{
     @Published var status:ApiStatus = .initate
     @Published var result:ApiResultResponds? = nil {didSet{ if result != nil { result = nil} }}
     @Published var error:ApiResultError? = nil {didSet{ if error != nil { error = nil} }}
     @Published var event:ApiEvents? = nil {didSet{ if event != nil { event = nil} }}
+    
     
     private var anyCancellable = Set<AnyCancellable>()
     private var apiQ :[ ApiQ ] = []
@@ -35,6 +52,8 @@ class ApiManager :PageProtocol, ObservableObject{
     private lazy var nf:Nf = Nf(network: NfNetwork())
     private lazy var eps:Eps = Eps(network: EpsNetwork())
     private lazy var web:Web = Web(network: WebNetwork())
+    
+    private(set) var updateFlag: UpdateFlag = .none
     init() {
         self.initateApi()
     }
@@ -58,19 +77,31 @@ class ApiManager :PageProtocol, ObservableObject{
         NpsNetwork.goodbye()
         self.vms.versionCheck(
             completion:{res in
+                DataLog.d("eUpdateFlag " + (res.eUpdateFlag ?? "nil"), tag:self.tag)
+                DataLog.d("releaseNote " + (res.releaseNote ?? "nil"), tag:self.tag)
+                DataLog.d("tstore " + (res.tstore ?? "nil"), tag:self.tag)
+                DataLog.d("update_url " + (res.update_url ?? "nil"), tag:self.tag)
+                DataLog.d("server_conf " + (res.server_conf?.debugDescription ?? "nil"), tag:self.tag)
+                
+                self.updateFlag = UpdateFlag.getFlag(res.eUpdateFlag)
+                DataLog.d("self.updateFlag " +  self.updateFlag.rawValue, tag:self.tag)
+                SystemEnvironment.isEvaluation = (self.updateFlag == .advance)
+                DataLog.d("SystemEnvironment.isEvaluation " +  SystemEnvironment.isEvaluation.description, tag:self.tag)
+                
                 self.complated(id: "", type: .versionCheck, res: res)
                 if let configs = res.server_conf {
                     configs.forEach{ con in
                         let key = con.keys.first ?? ""
                         if let value = con[key] {
                             SystemEnvironment.serverConfig[key] = value
-                            DataLog.d("key " + key + " value " + value)
+                            DataLog.d("key " + key + " value " + value, tag:self.tag)
                         }
                     }
                 }
                 self.initApi()
             },
             error:{ err in
+                DataLog.e("versionCheck " + err.localizedDescription, tag:self.tag)
                 self.onError(id: "", type: .versionCheck, e: err, isOptional: true)
                 self.initApi()
             }

@@ -7,9 +7,9 @@
 
 import Foundation
 enum VoiceEvent{
-    case ready, error, searchStart, searchEnd, find(String)
+    case ready, error, permissionError, searchStart, searchEnd, find(String)
 }
 
-enum VoiceStatus{
+enum VoiceStatus:String{
     case initate, ready, searching
 }

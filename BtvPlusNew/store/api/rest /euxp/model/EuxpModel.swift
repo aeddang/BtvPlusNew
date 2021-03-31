@@ -48,8 +48,9 @@ struct ContentItem : Codable {
     private(set) var fstry_spch_exps_yn:String? = nil // 동화 말하기 노출 여부
     private(set) var rsv_orgnz_yn:String? = nil //예약판매Y/N ( Y:예약판매상품, Y 가 아닐경우 : 예약판매상품 아님) 시즌일경우 회차중 예약판매 컨텐츠가 포함되어 있을 경우 Y
     private(set) var tseq_orgnz_yn:String? = nil //회차 편성 여부
-
-    private(set) var i_img_cd:String? = nil // 벳지 이미지
+    private(set) var play_tms_hms: String? = nil   //클립 재생 시간 (시분초) 
+    private(set) var i_img_cd:String? = nil // 벳지 이미지var
+    private(set) var svc_typ_cd: String? = nil // 서비스 유형 코드
     // private(set) var quiz_yn:String? = nil // JSON 데이타로는 넘어오는데 스펙에는 없슴.
     init(json: [String:Any]) throws {}
 }

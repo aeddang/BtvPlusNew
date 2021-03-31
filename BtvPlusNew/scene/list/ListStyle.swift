@@ -19,7 +19,7 @@ struct ListItem{
     struct video {
        static let size:CGSize = CGSize(width: 164, height: 92)
        static let type01:CGFloat = 35
-       static let type02:CGFloat = 60
+       static let type02:CGFloat = 52
     }
     
     struct ticket {

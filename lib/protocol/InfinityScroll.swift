@@ -197,10 +197,10 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
             self.minDiff = self.updateScrollDiff
             onTop()
         } else {
-            if diff < -10 {
+            if diff < -1 {
                 self.onUp()
             }
-            if diff > 10 {
+            if diff > 1 {
                 self.onDown()
             }
         }

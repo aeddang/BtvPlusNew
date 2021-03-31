@@ -16,9 +16,11 @@ class ThemaData:InfinityData{
     private(set) var type:ThemaType = .square
     private(set) var menuId: String? = nil
     private(set) var blocks:[BlockItem]? = nil
+    private(set) var cateType:CateBlock.ListType = .poster
     
     func setData(data:ContentItem, cardType:BlockData.CardType = .squareThema, idx:Int = -1) -> ThemaData {
         setCardType(cardType)
+        
         title = data.title
         if let thumb = data.poster_filename_h {
             image = ImagePath.thumbImagePath(filePath: thumb, size: type.size, convType: .alpha ) ?? image
@@ -29,6 +31,7 @@ class ThemaData:InfinityData{
     
     func setData(data:BlockItem, cardType:BlockData.CardType = .squareThema, idx:Int = -1) -> ThemaData {
         setCardType(cardType)
+        setCateType(data.pst_exps_typ_cd)
         title = data.menu_nm
         if let thumb = data.bnr_off_img_path {
             image = ImagePath.thumbImagePath(filePath: thumb, size: type.size, convType:  .alpha ) ?? image
@@ -44,6 +47,12 @@ class ThemaData:InfinityData{
         case .circleTheme: type = .small
         case .bigTheme: type = .big
         default: type = .square
+        }
+    }
+    private func setCateType(_ poster:String?){
+        switch poster {
+        case "10", "30": cateType = .video
+        default: cateType = .poster
         }
     }
     
@@ -133,7 +142,7 @@ struct ThemaList: PageComponent{
                                 PageProvider.getPageObject(.categoryList)
                                     .addParam(key: .title, value: data.title)
                                     .addParam(key: .id, value: data.menuId)
-                                    .addParam(key: .type, value: CateBlock.ListType.poster)
+                                    .addParam(key: .type, value: data.cateType)
                             )
                         }
                     }

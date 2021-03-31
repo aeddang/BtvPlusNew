@@ -14,6 +14,8 @@ class PosterData:InfinityData{
     private(set) var subTitle: String? = nil
     private(set) var epsdId:String? = nil
     private(set) var prsId:String? = nil
+    private(set) var tagData: TagData? = nil
+   
     private(set) var synopsisType:SynopsisType = .title
     private(set) var type:PosterType = .small
     private(set) var synopsisData:SynopsisData? = nil
@@ -21,9 +23,8 @@ class PosterData:InfinityData{
     func setData(data:ContentItem, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
         setCardType(cardType)
         title = data.title
-        if let poster = data.poster_filename_v {
-            image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
-        }
+        image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: type.size)
+        tagData = TagData().setData(data: data)
         index = idx
         epsdId = data.epsd_id
         synopsisType = SynopsisType(value: data.synon_typ_cd)
@@ -33,10 +34,18 @@ class PosterData:InfinityData{
         
         return self
     }
+    func setRank(_ idx:Int){
+        if self.tagData == nil {
+            self.tagData = TagData().setRank(idx)
+        } else{
+            self.tagData?.setRank(idx)
+        }
+    }
     
     func setData(data:PackageContentsItem, prdPrcId:String, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
         setCardType(cardType)
         title = data.title
+        tagData = TagData().setData(data: data)
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         if let poster = data.poster_filename_v {
             image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
@@ -54,6 +63,7 @@ class PosterData:InfinityData{
         setCardType(cardType)
         title = data.title
         epsdId = data.epsd_id
+        tagData = TagData().setData(data: data)
         if let poster = data.poster {
             image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
         }
@@ -69,6 +79,7 @@ class PosterData:InfinityData{
         setCardType(cardType)
         title = data.title
         epsdId = data.epsd_id
+        tagData = TagData().setData(data: data)
         if let poster = data.thumbnail {
             image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
         }
@@ -83,6 +94,7 @@ class PosterData:InfinityData{
         setCardType(cardType)
         title = data.title
         epsdId = data.epsd_id
+        tagData = TagData().setData(data: data)
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         if let poster = data.poster_filename_v {
             image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
@@ -97,6 +109,7 @@ class PosterData:InfinityData{
     func setData(data:SearchPopularityVodItem, idx:Int = -1) -> PosterData {
         title = data.title
         epsdId = data.epsd_id
+        tagData = TagData().setData(data: data)
         if let poster = data.poster {
             image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
         }
@@ -111,6 +124,7 @@ class PosterData:InfinityData{
     func setData(data:CategoryVodItem, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
         setCardType(cardType)
         title = data.title
+        tagData = TagData().setData(data: data)
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         if let poster = data.poster {
             image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
@@ -325,6 +339,10 @@ struct PosterItem: PageView {
                     .modifier(MatchParent())
             } else {
                 ImageView(url: self.data.image!, contentMode: .fill, noImg: Asset.noImg9_16)
+                    .modifier(MatchParent())
+            }
+            if let tag = self.data.tagData {
+                Tag(data: tag)
                     .modifier(MatchParent())
             }
         }

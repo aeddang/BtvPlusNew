@@ -30,12 +30,18 @@ struct VmsVersionCheck:NetworkRoute{
    var body: [String : Any]? = nil
 }
 
-struct Version : Decodable {
+struct Version : Codable {
     private(set) var result: String? = nil
     private(set) var reason: String? = nil
     private(set) var releaseNote: String? = nil
     private(set) var tstore: String? = nil
-    private(set) var updateUrl: String? = nil
+    private(set) var update_url: String? = nil
     private(set) var eUpdateFlag: String? = nil
     private(set) var server_conf:Array<[String : String]>? = nil
+
+    enum CodingKeys:String, CodingKey {
+        case result, reason, tstore, update_url, server_conf
+        case releaseNote = "r-note"
+        case eUpdateFlag = "x-update-flag"
+    }
 }

@@ -152,8 +152,11 @@ struct SynopsisBody: PageComponent{
                         .modifier(ListRowInset( spacing: Dimen.margin.thin))
                     }
                 } else {
-                    Spacer()
-                        .modifier(MatchHorizontal(height:self.hasRelationVod == false ? 0 : sceneObserver.screenSize.height))
+                    Text(String.pageText.synopsisRelationVod)
+                        .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
+                        .frame(height:Dimen.tab.regular)
+                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
+                    EmptyAlert(text:String.pageText.synopsisNoRelationVod)
                         .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
                 }
                 

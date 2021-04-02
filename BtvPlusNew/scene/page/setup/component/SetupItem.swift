@@ -27,7 +27,8 @@ struct SetupItem: PageView {
     var body: some View {
         VStack(alignment: .leading, spacing: Dimen.margin.thinExtra) {
             HStack(spacing:0){
-                VStack(alignment: .leading, spacing: Dimen.margin.tinyExtra) {
+                VStack(alignment: .leading, spacing: 0) {
+                    Spacer().modifier(MatchHorizontal(height: 0))
                     if self.title != nil {
                         Text(self.title!)
                         .modifier(MediumTextStyle(
@@ -41,19 +42,24 @@ struct SetupItem: PageView {
                             size: Font.size.thinExtra,
                             color: Color.app.greyLight
                         ))
+                        .padding(.top, Dimen.margin.thin)
+                        .fixedSize(horizontal: false, vertical: true)
                     }
                 }
-                Spacer()
+                
+                
                 if self.statusText != nil {
                     Text(self.statusText!)
                     .modifier(MediumTextStyle(
                         size: Font.size.thinExtra,
                         color: Color.app.greyLight
                     ))
+                    .fixedSize(horizontal: true, vertical: false)
                 } else if self.more == nil {
                     Toggle("", isOn: self.$isOn)
                        .toggleStyle( ColoredToggleStyle() )
                        .frame(width: 52)
+                        .padding(.trailing, Dimen.margin.tinyExtra)
                 } else{
                     Button(action: {
                         self.more?()
@@ -71,25 +77,30 @@ struct SetupItem: PageView {
                         HStack(alignment: .top, spacing: 0){
                             Text("・ ")
                             .modifier(MediumTextStyle(
-                                size: Font.size.thinExtra,
-                                color: Color.app.greyLight
+                                size: Font.size.tinyExtra,
+                                color: Color.app.grey
                             ))
                             Text(tip)
                             .modifier(MediumTextStyle(
-                                size: Font.size.thinExtra,
-                                color: Color.app.greyLight
+                                size: Font.size.tinyExtra,
+                                color: Color.app.grey
                             ))
+                            .fixedSize(horizontal: false, vertical: true)
                         }
                     }
                 }
+                .padding(.trailing, Dimen.margin.thin)
             }
             if self.radios != nil {
                 Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
+                    .padding(.trailing, Dimen.margin.thin)
                 HStack(spacing:Dimen.margin.regular){
                     ForEach(self.radios!, id: \.self) { radio in
                         RadioButton(
                             isChecked: self.selectedRadio == radio,
-                            text: radio
+                            size: CGSize(width: Dimen.icon.lightExtra, height: Dimen.icon.lightExtra),
+                            text: radio,
+                            textSize: Font.size.thinExtra
                         ){ isSelected in
                            if let selected = self.selected {
                               selected( radio )
@@ -97,10 +108,11 @@ struct SetupItem: PageView {
                         }
                     }
                 }
+                .padding(.trailing, Dimen.margin.thin)
                 
             }
         }
-        .padding(.horizontal, Dimen.margin.lightExtra)
+        .padding(.leading, Dimen.margin.thin)
         .padding(.vertical, Dimen.margin.regular)
         
         

@@ -12,6 +12,7 @@ class SerisData:InfinityData{
     private(set) var image: String = Asset.noImg16_9
     private(set) var title: String? = nil
     private(set) var subTitle: String? = nil
+    private(set) var isAdult:Bool = false
     private(set) var epsdId:String? = nil
     private(set) var brcastTseqNm:Int = -1
     private(set) var price: String? = nil

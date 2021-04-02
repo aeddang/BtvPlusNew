@@ -10,8 +10,10 @@ import SwiftUI
 import Combine
 struct PageMultiBlock: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var repository:Repository
+    @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -40,7 +42,7 @@ struct PageMultiBlock: PageView {
                             marginTop: self.marginTop + self.sceneObserver.safeAreaTop + Dimen.app.top,
                             marginBottom: 0
                         )
-                        .background(Color.brand.bg)
+                        
                     } else {
                         MultiBlockBody(
                             pageObservable: self.pageObservable,
@@ -52,6 +54,7 @@ struct PageMultiBlock: PageView {
                             marginTop: self.marginTop  + Dimen.margin.thin + self.sceneObserver.safeAreaTop + Dimen.app.top,
                             marginBottom: 0
                         )
+                        
                         .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
                             guard let evt = evt else {return}
                             switch evt {
@@ -113,12 +116,20 @@ struct PageMultiBlock: PageView {
                 self.useTracking = ani
                 if ani { self.setupOriginData(idx:0) }
             }
+            .onReceive(self.pairing.$event){ evt in
+                guard let evt = evt else {return}
+                guard let idx = self.finalSelectedIndex else {return}
+                switch evt {
+                case .pairingCompleted : self.setupOriginData(idx: idx )
+                default : break
+                }
+            }
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 if page?.id == self.pageObject?.id {
                     if self.useTracking {return}
                     self.useTracking = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.marginBottom = self.sceneObserver.safeAreaBottom + Dimen.app.bottom
+                        withAnimation{ self.marginBottom = self.sceneObserver.safeAreaBottom + Dimen.app.bottom }
                     }
                 } else {
                     if !self.useTracking {return}
@@ -162,9 +173,15 @@ struct PageMultiBlock: PageView {
     @State var originDatas:Array<BlockItem> = []
     @State var useTracking:Bool = false
     @State var title:String? = nil
-    
+    @State var finalSelectedIndex:Int? = nil
     private func setupOriginData(idx:Int){
-        
+        let isAdult = self.tabDatas?[idx].isAdult ?? false
+        if self.pairing.status != .pairing && isAdult {
+            finalSelectedIndex = idx
+            self.appSceneObserver.alert = .needPairing()
+            return
+        }
+        finalSelectedIndex = nil
         guard let datas = self.tabDatas else { return reload() }
         selectedTabIdx = idx
         originDatas = datas[idx].blocks ?? []
@@ -183,9 +200,12 @@ struct PageMultiBlock: PageView {
         DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + delay) {
             DispatchQueue.main.async {
                 if let data = self.cateData {
-                    self.cateBlockViewModel.update(menuId:data.menuId, listType:data.listType ?? .poster, key:nil)
+                    self.cateBlockViewModel.update(menuId:data.menuId,
+                                                   listType:data.listType ?? .poster,
+                                                   isAdult:data.isAdult , key:nil)
                 } else {
-                    self.multiBlockViewModel.update(datas: self.originDatas, themaType: self.themaType)
+                    let isAdult = self.tabDatas?[selectedTabIdx].isAdult ?? false
+                    self.multiBlockViewModel.update(datas: self.originDatas, themaType: self.themaType, isAdult:isAdult)
                 }
             }
         }

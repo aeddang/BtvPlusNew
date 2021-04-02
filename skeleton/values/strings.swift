@@ -71,6 +71,7 @@ extension String {
         public static let coupon = "coupon".loaalized()
         public static let bpoint = "bpoint".loaalized()
         public static let bcash = "bcash".loaalized()
+        public static let lockAdult = "lockAdult".loaalized()
     }
     
     struct week {
@@ -186,6 +187,18 @@ extension String {
         public static var dragdown = "alertDragdown".loaalized()
         public static var deleteWatch = "alertDeleteWatch".loaalized()
         public static var needMicPermission = "alertNeedMicPermission".loaalized()
+        
+        public static var adultCertification = "alertAdultCertification".loaalized()
+        public static var adultCertificationFail = "alertAdultCertificationFail".loaalized()
+        public static var adultCertificationNotAllowed = "alertAdultCertificationNotAllowed".loaalized()
+        public static var needAdultCertification = "alertNeedAdultCertification".loaalized()
+        
+        public static var watchLv = "alertWatchLv".loaalized()
+        public static var watchLvCompleted = "alertWatchLvCompleted".loaalized()
+        public static var watchLvInput = "alertWatchLvInput".loaalized()
+        public static var watchLvInfo = "alertWatchLvInfo".loaalized()
+        public static var watchLvInfoError = "alertWatchLvError".loaalized()
+        public static var watchLvCompletedInfo = "alertWatchLvCompletedInfo".loaalized()
     }
     
     struct button {
@@ -224,6 +237,8 @@ extension String {
         public static let appInit = "btnAppInit".loaalized()
         public static let home = "btnHome".loaalized()
         public static let deleteAll = "btnDeleteAll".loaalized()
+        public static let certification = "btnCertification".loaalized()
+        public static let adultCertification = "btnAdultCertification".loaalized()
         
     }
     struct player {
@@ -409,6 +424,10 @@ extension String {
         public static let modifyProfileText1 = "modifyProfileText1".loaalized()
         public static let modifyProfileText2 = "modifyProfileText2".loaalized()
         public static let modifyProfileText3 = "modifyProfileText3".loaalized()
+        
+        public static let adultCertificationText1 = "adultCertificationText1".loaalized()
+        public static let adultCertificationText2 = "adultCertificationText2".loaalized()
+        public static let adultCertificationText3 = "adultCertificationText3".loaalized()
     }
     
 }

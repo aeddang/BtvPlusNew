@@ -132,8 +132,8 @@ struct PairingView: PageComponent{
     @State var watchedData:BlockData? = nil
     func onWatchedData(res:ApiResultResponds){
         guard let resData = res.data as? Watch else { return }
-        guard let blocks = resData.watchList else { return }
-        if blocks.isEmpty { return }
+        let blocks:[WatchItem] = resData.watchList ?? [] 
+        //if blocks.isEmpty { return }
         let videos = blocks.map{ d in VideoData().setData(data: d) }
         let blockData = BlockData()
             .setData(title: String.pageTitle.watched, cardType:.watchedVideo, dataType:.watched, uiType:.video, isCountView: true)

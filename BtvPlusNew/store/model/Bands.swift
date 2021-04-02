@@ -56,7 +56,7 @@ class Bands:ObservableObject, PageProtocol {
 class Band {
     private(set) var name:String = ""
     private(set) var menuId:String = ""
-    private(set) var limLvl:Bool = false
+    private(set) var isAdult:Bool = false
     private(set) var gnbTypCd:String = ""
     private(set) var pagePath:String = ""
     private(set) var btmMenuTreeExps:Bool = false
@@ -69,7 +69,7 @@ class Band {
     func setDate(_ data:GnbItem) -> Band{
         name = data.menu_nm ?? ""
         menuId = data.menu_id ?? ""
-        limLvl = data.lim_lvl_yn?.toBool() ?? false
+        isAdult = data.lim_lvl_yn?.toBool() ?? false
         gnbTypCd = data.gnb_typ_cd ?? ""
         pagePath = data.page_path ?? ""
         

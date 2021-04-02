@@ -66,6 +66,7 @@ struct VoiceRecorder: PageView {
             }
         }
         .onReceive(self.repository.voiceRecognition.$status){ stat in
+            //ComponentLog.d("stat " + stat.rawValue, tag: self.tag)
             switch stat {
             case .initate :
                 self.isRecording = false

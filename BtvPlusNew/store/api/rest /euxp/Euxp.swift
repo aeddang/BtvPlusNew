@@ -19,8 +19,9 @@ extension EuxpNetwork{
     static let APP_TYPE_CD = "BTVPLUS"
     static let VERSION = "0"
     static let PAGE_COUNT = 30
+    static let adultCodes:[String?] = ["01", "03"]
     
-    
+
     enum SortType: String {
         case popularity = "10" // 기본, 사용자 정의
         case latest = "20" // 최신순

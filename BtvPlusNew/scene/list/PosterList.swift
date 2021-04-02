@@ -10,12 +10,14 @@ import SwiftUI
 
 class PosterData:InfinityData{
     private(set) var image: String? = nil
+    private(set) var originImage: String? = nil
     private(set) var title: String? = nil
     private(set) var subTitle: String? = nil
     private(set) var epsdId:String? = nil
     private(set) var prsId:String? = nil
     private(set) var tagData: TagData? = nil
-   
+    private(set) var isAdult:Bool = false
+    private(set) var watchLv:Int = 0
     private(set) var synopsisType:SynopsisType = .title
     private(set) var type:PosterType = .small
     private(set) var synopsisData:SynopsisData? = nil
@@ -23,8 +25,11 @@ class PosterData:InfinityData{
     func setData(data:ContentItem, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
         setCardType(cardType)
         title = data.title
-        image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: type.size)
-        tagData = TagData().setData(data: data)
+        watchLv = data.wat_lvl_cd?.toInt() ?? 0
+        isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
+        originImage = data.poster_filename_v
+        image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: type.size, isAdult: self.isAdult)
+        tagData = TagData().setData(data: data, isAdult: self.isAdult)
         index = idx
         epsdId = data.epsd_id
         synopsisType = SynopsisType(value: data.synon_typ_cd)
@@ -34,22 +39,18 @@ class PosterData:InfinityData{
         
         return self
     }
-    func setRank(_ idx:Int){
-        if self.tagData == nil {
-            self.tagData = TagData().setRank(idx)
-        } else{
-            self.tagData?.setRank(idx)
-        }
-    }
+    
     
     func setData(data:PackageContentsItem, prdPrcId:String, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
         setCardType(cardType)
         title = data.title
-        tagData = TagData().setData(data: data)
         synopsisType = SynopsisType(value: data.synon_typ_cd)
-        if let poster = data.poster_filename_v {
-            image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
-        }
+        isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
+        watchLv = data.wat_lvl_cd?.toInt() ?? 0
+        tagData = TagData().setData(data: data, isAdult: self.isAdult)
+        originImage = data.poster_filename_v
+        image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: type.size, isAdult: self.isAdult)
+        
         index = idx
         epsdId = data.epsd_id
         synopsisData = .init(
@@ -63,10 +64,12 @@ class PosterData:InfinityData{
         setCardType(cardType)
         title = data.title
         epsdId = data.epsd_id
-        tagData = TagData().setData(data: data)
-        if let poster = data.poster {
-            image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
-        }
+        isAdult = data.adult?.toBool() ?? false
+        watchLv = data.level?.toInt() ?? 0
+        tagData = TagData().setData(data: data, isAdult: self.isAdult)
+        originImage = data.poster
+        image = ImagePath.thumbImagePath(filePath: data.poster, size: type.size, isAdult: self.isAdult)
+        
         index = idx
         
         synopsisData = .init(
@@ -79,10 +82,12 @@ class PosterData:InfinityData{
         setCardType(cardType)
         title = data.title
         epsdId = data.epsd_id
-        tagData = TagData().setData(data: data)
-        if let poster = data.thumbnail {
-            image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
-        }
+        isAdult = data.adult?.toBool() ?? false
+        watchLv = data.level?.toInt() ?? 0
+        tagData = TagData().setData(data: data, isAdult: self.isAdult)
+        originImage = data.thumbnail
+        image = ImagePath.thumbImagePath(filePath: data.thumbnail, size: type.size, isAdult: self.isAdult)
+        
         index = idx
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
@@ -94,11 +99,13 @@ class PosterData:InfinityData{
         setCardType(cardType)
         title = data.title
         epsdId = data.epsd_id
-        tagData = TagData().setData(data: data)
+        isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
+        watchLv = data.wat_lvl_cd?.toInt() ?? 0
+        tagData = TagData().setData(data: data, isAdult: self.isAdult)
         synopsisType = SynopsisType(value: data.synon_typ_cd)
-        if let poster = data.poster_filename_v {
-            image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
-        }
+        originImage = data.poster_filename_v
+        image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: type.size, isAdult: self.isAdult)
+        
         index = idx
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
@@ -109,10 +116,12 @@ class PosterData:InfinityData{
     func setData(data:SearchPopularityVodItem, idx:Int = -1) -> PosterData {
         title = data.title
         epsdId = data.epsd_id
-        tagData = TagData().setData(data: data)
-        if let poster = data.poster {
-            image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
-        }
+        //isAdult = data.adult?.toBool() ?? false
+        watchLv = data.level?.toInt() ?? 0
+        tagData = TagData().setData(data: data, isAdult: self.isAdult)
+        originImage = data.poster
+        image = ImagePath.thumbImagePath(filePath: data.poster , size: type.size, isAdult: self.isAdult)
+        
         index = idx
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         synopsisData = .init(
@@ -124,11 +133,12 @@ class PosterData:InfinityData{
     func setData(data:CategoryVodItem, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
         setCardType(cardType)
         title = data.title
-        tagData = TagData().setData(data: data)
+        watchLv = data.level?.toInt() ?? 0
+        tagData = TagData().setData(data: data, isAdult: self.isAdult)
         synopsisType = SynopsisType(value: data.synon_typ_cd)
-        if let poster = data.poster {
-            image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
-        }
+        originImage = data.poster
+        image = ImagePath.thumbImagePath(filePath: data.poster, size: type.size, isAdult: self.isAdult)
+        
         index = idx
         epsdId = data.epsd_id
         synopsisData = .init(
@@ -146,12 +156,24 @@ class PosterData:InfinityData{
         return self
     }
     
+    func setRank(_ idx:Int){
+        if self.tagData == nil {
+            self.tagData = TagData().setRank(idx)
+        } else{
+            self.tagData?.setRank(idx)
+        }
+    }
+    
     private func setCardType(_ cardType:BlockData.CardType){
         switch cardType {
         case .bigPoster: type = .big
         case .smallPoster: type = .small
         default: type = .small
         }
+    }
+    
+    fileprivate func updatedImage(){
+        image = ImagePath.thumbImagePath(filePath: self.originImage, size: type.size, isAdult: self.isAdult)
     }
     
     fileprivate func setCardType(width:CGFloat, height:CGFloat, padding:CGFloat) -> PosterData {
@@ -233,11 +255,13 @@ struct PosterList: PageComponent{
                             self.pagePresenter.openPopup(
                                 PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
                                     .addParam(key: .data, value: synopsisData)
+                                    .addParam(key: .watchLv, value: data.watchLv)
                             )
                         } else {
                             self.pagePresenter.openPopup(
                                 PageProvider.getPageObject(.person)
                                     .addParam(key: .data, value: data)
+                                    .addParam(key: .watchLv, value: data.watchLv)
                             )
                         }
                     }
@@ -292,11 +316,13 @@ struct PosterSet: PageComponent{
                                 self.pagePresenter.openPopup(
                                     PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
                                         .addParam(key: .data, value: synopsisData)
+                                        .addParam(key: .watchLv, value: data.watchLv)
                                 )
                             } else {
                                 self.pagePresenter.openPopup(
                                     PageProvider.getPageObject(.person)
                                         .addParam(key: .data, value: data)
+                                        .addParam(key: .watchLv, value: data.watchLv)
                                 )
                             }
                         }
@@ -327,6 +353,7 @@ struct PosterSet: PageComponent{
 }
 
 struct PosterItem: PageView {
+    @EnvironmentObject var repository:Repository
     var data:PosterData
     var isSelected:Bool = false
     var body: some View {
@@ -338,6 +365,7 @@ struct PosterItem: PageView {
                     .aspectRatio(contentMode: .fill)
                     .modifier(MatchParent())
             } else {
+                
                 ImageView(url: self.data.image!, contentMode: .fill, noImg: Asset.noImg9_16)
                     .modifier(MatchParent())
             }
@@ -355,6 +383,13 @@ struct PosterItem: PageView {
         .frame(
             width: self.data.type.size.width,
             height: self.data.type.size.height)
+        .onReceive(self.repository.$event){ evt in
+            guard let evt = evt else {return}
+            switch evt {
+            case .updatedWatchLv : self.data.updatedImage()
+            default : break
+            }
+        }
         .background(Color.app.blueLight)
         .clipped()
         .onAppear(){

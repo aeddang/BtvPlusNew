@@ -22,8 +22,14 @@ enum RepositoryStatus:Equatable{
     }
 }
 
+enum RepositoryEvent{
+    case updatedWatchLv, updatedAdultAuth
+}
+
 class Repository:ObservableObject, PageProtocol{
     @Published var status:RepositoryStatus = .initate
+    @Published var event:RepositoryEvent? = nil {didSet{ if event != nil { event = nil} }}
+    
     let appSceneObserver:AppSceneObserver?
     let pagePresenter:PagePresenter?
     let dataProvider:DataProvider
@@ -32,12 +38,13 @@ class Repository:ObservableObject, PageProtocol{
     let networkObserver:NetworkObserver
     let voiceRecognition:VoiceRecognition
     let apiCoreDataManager = ApiCoreDataManager()
+    let userSetup:Setup
     
     private let storage = LocalStorage()
     private let accountManager:AccountManager
     private var apiManager:ApiManager
     
-    private let userSetup:Setup
+    
     private var anyCancellable = Set<AnyCancellable>()
     private var dataCancellable = Set<AnyCancellable>()
     private let drmAgent = DrmAgent.initialize() as? DrmAgent
@@ -194,6 +201,9 @@ class Repository:ObservableObject, PageProtocol{
             SystemEnvironment.firstLaunch = true
             self.userSetup.initateSetup()
         }
+        SystemEnvironment.isAdultAuth = self.userSetup.isAdultAuth
+        SystemEnvironment.watchLv = self.userSetup.watchLv
+        
         if self.storage.retryPushToken != "" {
             self.registerPushToken(self.storage.retryPushToken)
         }
@@ -302,9 +312,24 @@ class Repository:ObservableObject, PageProtocol{
         self.storage.updateUser(data)
         self.pairing.updateUser(data)
     }
+    func updateAdultAuth(able:Bool){
+        self.userSetup.isAdultAuth = able
+        SystemEnvironment.isAdultAuth = able
+        if SystemEnvironment.watchLv == 0 {
+            SystemEnvironment.isImageLock = false
+            self.event = .updatedWatchLv
+        }
+    }
+    func updateWatchLv(_ lv:Setup.WatchLv?){
+        SystemEnvironment.watchLv = lv?.rawValue ?? 0
+        self.userSetup.watchLv = SystemEnvironment.watchLv
+        self.appSceneObserver?.alert = .alert(String.alert.watchLvCompleted, String.alert.watchLvCompletedInfo)
+        self.event = .updatedWatchLv
+    }
     
     func getDrmId() -> String? {
         return drmAgent?.getDeviceInfo()
     }
     
+   
 }

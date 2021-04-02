@@ -16,27 +16,32 @@ class CateBlockModel: PageDataProviderModel {
     private(set) var key:String? = nil
     private(set) var menuId:String? = nil
     private(set) var data:BlockData? = nil
+    private(set) var isAdult:Bool = false
     
     @Published private(set) var isUpdate = false {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
     
-    func update(data:BlockData, listType:CateBlock.ListType, cardType:BlockData.CardType? = nil, key:String? = nil) {
+    func update(data:BlockData, listType:CateBlock.ListType,
+                cardType:BlockData.CardType? = nil, isAdult:Bool = false, key:String? = nil) {
         self.data = data
         self.listType = listType
         self.cardType = cardType
         self.key = key
         self.isUpdate = true
         self.menuId = data.menuId
+        self.isAdult = isAdult
     }
     
-    func update(menuId:String?, listType:CateBlock.ListType, cardType:BlockData.CardType? = nil, key:String? = nil) {
+    func update(menuId:String?, listType:CateBlock.ListType,
+                cardType:BlockData.CardType? = nil, isAdult:Bool = false, key:String? = nil) {
         self.listType = listType
         self.menuId = menuId
         self.cardType = cardType
         self.key = key
         self.isUpdate = true
         self.data = nil
+        self.isAdult = isAdult
     }
 }
 
@@ -64,13 +69,16 @@ struct CateBlock: PageComponent{
     var spacing: CGFloat = Dimen.margin.thin
     
     @State var reloadDegree:Double = 0
-    
+    @State var needAdult:Bool = false
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
             viewModel : self.viewModel){
            
-            if !self.isError {
+            if self.needAdult{
+                AdultAlert()
+                .modifier(MatchParent())
+            } else if !self.isError {
                 ZStack(alignment: .topLeading){
                     ReflashSpinner(
                         progress: self.$reloadDegree)
@@ -207,6 +215,13 @@ struct CateBlock: PageComponent{
     @State var bannerCellHeight:CGFloat = 0
     
     func reload(){
+        if self.viewModel.isAdult && !SystemEnvironment.isAdultAuth {
+            self.needAdult = true
+            return
+        }
+        if needAdult {
+            withAnimation {self.needAdult = false}
+        }
         self.posters = []
         self.videos = []
         self.banners = []

@@ -23,22 +23,75 @@ struct InfoAlert: PageView {
     }//body
 }
 
-struct EmptyAlert: PageView {
+struct EmptyMyData: PageView {
+    var icon:String = Asset.image.myEmpty
     var text:String = String.alert.dataError
     var body: some View {
         VStack(alignment: .center, spacing: 0){
-            Spacer().modifier(MatchHorizontal(height:0))
-            Image(Asset.icon.alert)
+            Image(icon)
+                .renderingMode(.original)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 157, height: 157)
+            Text(text)
+                .modifier(MediumTextStyle(size: Font.size.regular, color: Color.app.greyLight))
+                .multilineTextAlignment(.center)
+                .padding(.top, Dimen.margin.mediumExtra)
+        }
+        .padding(.all, Dimen.margin.medium)
+    }//body
+}
+
+struct EmptyAlert: PageView {
+    var icon:String = Asset.icon.alert
+    var text:String = String.alert.dataError
+    var body: some View {
+        VStack(alignment: .center, spacing: 0){
+            Image(icon)
                 .renderingMode(.original)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
             Text(text)
-                .modifier(BoldTextStyle(size: Font.size.regular, color: Color.app.greyLight))
+                .modifier(MediumTextStyle(size: Font.size.regular, color: Color.app.greyLight))
                 .multilineTextAlignment(.center)
-                .padding(.top, Dimen.margin.regularExtra)
+                .padding(.top, Dimen.margin.mediumExtra)
         }
         .padding(.all, Dimen.margin.medium)
+    }//body
+}
+
+struct AdultAlert: PageView {
+    @EnvironmentObject var pagePresenter:PagePresenter
+    var text:String = String.alert.needAdultCertification
+    var useCertificationBtn:Bool = true
+    var body: some View {
+        VStack(alignment: .center, spacing: 0){
+            //Spacer().modifier(MatchHorizontal(height:0))
+            Image(Asset.icon.lockAlert)
+                .renderingMode(.original)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
+            Text(text)
+                .modifier(MediumTextStyle(size: Font.size.regular, color: Color.app.greyLight))
+                .multilineTextAlignment(.center)
+                .padding(.top, Dimen.margin.mediumExtra)
+            if useCertificationBtn {
+                FillButton(
+                    text: String.button.adultCertification,
+                    isSelected: true,
+                    size: Dimen.button.regular
+                ){_ in
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.adultCertification)
+                    )
+                }
+                .padding(.top, Dimen.margin.regular)
+                .frame(width: 247)
+            }
+        }
+        .padding(.all, Dimen.margin.medium)        
     }//body
 }
 

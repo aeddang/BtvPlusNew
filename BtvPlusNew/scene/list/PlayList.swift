@@ -11,6 +11,7 @@ import struct Kingfisher.KFImage
 class PlayData:InfinityData,ObservableObject{
     private(set) var image: String? = nil
     private(set) var title: String? = nil
+    private(set) var watchLv:Int = 0
     private(set) var openDate: String? = nil
     private(set) var date: String? = nil
     private(set) var srisId: String? = nil

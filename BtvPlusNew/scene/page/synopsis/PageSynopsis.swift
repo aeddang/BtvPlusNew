@@ -368,7 +368,7 @@ struct PageSynopsis: PageView {
         case 1 :
             guard let model = self.synopsisModel else {return}
             if self.purchasViewerData?.isPlayAble == false {
-                self.errorProgress()
+                self.completedProgress()
                 self.progressCompleted = true
                 return
             }
@@ -516,6 +516,13 @@ struct PageSynopsis: PageView {
     
     private func completedProgress(){
         PageLog.d("completedProgress", tag: self.tag)
+        if self.purchasViewerData?.isPlayAble == false {
+            withAnimation{
+                self.isPlayAble = false
+                self.isPlayViewActive = true
+            }
+        }
+        
         guard let synopsisModel = self.synopsisModel else { return }
         if self.relationContentsModel.isReady {
             PageLog.d("already synopsisRelationData", tag: self.tag)
@@ -552,7 +559,7 @@ struct PageSynopsis: PageView {
     }
     
     private func onAllProgressCompleted(){
-        PageLog.d("onAllProgressCompleted(", tag: self.tag)
+        PageLog.d("onAllProgressCompleted", tag: self.tag)
         if #available(iOS 14.0, *) {
             withAnimation{ self.isUIView = true }
         } else {

@@ -20,18 +20,21 @@ struct ImagePath {
     static func imagePath(
         filePath: String?,
         size: CGSize = CGSize(width: 0,height: 0),
+        isAdult:Bool = false,
         convType: IIPConvertType = .none,
         locType: IIPLocType = .none,
         server:ApiServer = .IIP) -> String?{
         if filePath == nil || filePath == "" {return nil}
-        
+        let cType = !isAdult ? convType
+            : !SystemEnvironment.isImageLock ? convType : .blur
         let path = ApiPath.getRestApiPath(server) + "/"
-        return getIIPUrl(path: path, filePath: filePath ?? "", size: size, convType: convType, locType: locType)
+        return getIIPUrl(path: path, filePath: filePath ?? "", size: size, convType: cType, locType: locType)
     }
     
     static func thumbImagePath(
         filePath: String?,
         size: CGSize = CGSize(width: 0,height: 0),
+        isAdult:Bool = false,
         convType: IIPConvertType = .none,
         locType: IIPLocType = .none,
         server:ApiServer = .IIP) -> String? {
@@ -39,7 +42,9 @@ struct ImagePath {
         if filePath == nil || filePath == "" {return nil}
         let path = ApiPath.getRestApiPath(server)
         let apiPath = "/thumbnails/iip/"
-        return getIIPUrl(path: path + apiPath, filePath: filePath ?? "", size: size, convType: convType, locType: locType)
+        let cType = !isAdult ? convType
+            : !SystemEnvironment.isImageLock ? convType : .blur
+        return getIIPUrl(path: path + apiPath, filePath: filePath ?? "", size: size, convType: cType, locType: locType)
     }
 
     static func getIIPUrl(path:String, filePath: String, size: CGSize, convType: IIPConvertType = .none, locType: IIPLocType = .none) -> String {

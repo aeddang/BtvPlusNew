@@ -70,16 +70,11 @@ struct VideoBlock:BlockProtocol, PageComponent {
                             self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
                         }
                         
-                } else if self.hasMore{
-                    VideoList(
-                        viewModel:self.viewModel,
-                        datas: [VideoData(),VideoData(),VideoData(),VideoData()] )
-                        .modifier(MatchHorizontal(height: self.listHeight))
-                        .opacity(0.5)
                 } else {
                     EmptyAlert( text: self.data.dataType != .watched
                                 ? String.pageText.myWatchedEmpty
                                 : String.alert.dataError)
+                        .modifier(MatchParent())
                 }
             }
         }

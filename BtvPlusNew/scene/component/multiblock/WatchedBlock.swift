@@ -59,7 +59,8 @@ struct WatchedBlock: PageComponent{
                 .modifier(MatchParent())
                 .background(Color.brand.bg)
             } else {
-                EmptyAlert(text:String.pageText.myWatchedEmpty)
+                EmptyMyData(
+                    text:String.pageText.myWatchedEmpty)
                 .modifier(MatchParent())
             }
             

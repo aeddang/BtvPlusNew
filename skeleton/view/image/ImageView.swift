@@ -45,7 +45,7 @@ struct ImageView : View, PageProtocol {
             }
         }
         .onAppear(){
-            self.imageLoader.load(url: self.url, key: self.key)
+            //self.imageLoader.cash(url: self.url, key: self.key)
             self.creatAutoReload()
         }
         .onDisappear(){
@@ -62,13 +62,13 @@ struct ImageView : View, PageProtocol {
         var count = 0
         self.autoReloadSubscription?.cancel()
         self.autoReloadSubscription = Timer.publish(
-            every: 0.5, on: .current, in: .common)
+            every: count == 0 ? 0.05 : 0.5, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
-                DataLog.d("autoReload " + count.description , tag:self.tag)
                 count += 1
                 self.imageLoader.reload(url: self.url, key: self.key)
                 if count == 5 {
+                    DataLog.d("autoReload fail " + self.url , tag:self.tag)
                     self.clearAutoReload()
                 }
             }

@@ -18,6 +18,17 @@ struct SystemEnvironment {
     static var serverConfig: [String:String] = [String:String]()
     static var isReleaseMode = true
     static var isEvaluation = false
+    static var isAdultAuth = false { didSet { setImageLock()} }
+    static var isImageLock = false
+    static var watchLv = 0 { didSet { setImageLock()} }
+    
+    static func setImageLock(){
+        if watchLv == 0 && isAdultAuth {
+            isImageLock = false
+        } else {
+            isImageLock = true
+        }
+    }
     
     static let VMS = "http://mobilebtv.com:9080"
     static let WEB = "http://mobilebtv.com:8080"

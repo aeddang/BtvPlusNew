@@ -13,6 +13,7 @@ class TextTabData:InfinityData{
     private(set) var menuId: String? = nil
     private(set) var blocks:[BlockItem]? = nil
     private(set) var listType:CateBlock.ListType? = nil
+    private(set) var isAdult:Bool = false
     func setData(data:BlockItem ,idx:Int) -> TextTabData {
         title = data.menu_nm ?? ""
         menuId = data.menu_id
@@ -30,6 +31,7 @@ class TextTabData:InfinityData{
         }
         index = idx
         blocks = data.blocks
+        isAdult = data.lim_lvl_yn?.toBool() ?? false
         return self
     }
     

@@ -57,12 +57,42 @@ class SceneDelegate: PageSceneDelegate {
     }
     
     override func willChangeAblePage(_ page:PageObject?)->Bool{
+        if page?.getParamValue(key: .needAdult) as? Bool == true {
+            if self.repository?.pairing.status != .pairing {
+                self.repository?.appSceneObserver?.alert = .needPairing()
+                return false
+            }
+            if !SystemEnvironment.isAdultAuth {
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.adultCertification)
+                        .addParam(key: .data, value: page)
+                )
+                return false
+            }
+        }
+        
+        if let watchLv = page?.getParamValue(key: .watchLv) as? Int {
+            if watchLv >= 19 {
+                if !SystemEnvironment.isAdultAuth {
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.adultCertification)
+                            .addParam(key: .data, value: page)
+                    )
+                    return false
+                }
+            }
+            
+        }
+        
+        
         //guard let page = page else { return false }
         //guard let repo = self.repository else { return false }
         //Analytic.viewPage(id: page.pageID, value: page.isPopup.description)
+        /*
         if page?.pageID == PageID.synopsis {
             requestDeviceOrientation(.portrait)
         }
+        */
         return true
     }
     

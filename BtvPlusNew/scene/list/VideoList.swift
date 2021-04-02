@@ -10,7 +10,10 @@ import SwiftUI
 
 class VideoData:InfinityData{
     private(set) var image: String? = nil
+    private(set) var originImage: String? = nil
     private(set) var title: String? = nil
+    private(set) var watchLv:Int = 0
+    private(set) var isAdult:Bool = false
     private(set) var subTitle: String? = nil
     private(set) var count: String = "0"
     private(set) var type:VideoType = .nomal
@@ -31,14 +34,17 @@ class VideoData:InfinityData{
             isClip = cardType == .clip
         }
         title = data.title
-        if let thumb = data.poster_filename_h {
-            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
-        }
+        watchLv = data.wat_lvl_cd?.toInt() ?? 0
+        isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
+        originImage = data.poster_filename_h
+        image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: ListItem.video.size, isAdult: self.isAdult)
+        
         if self.isClip {
             playTime = data.play_tms_hms?.toHMS()
         } else {
-            tagData = TagData().setData(data: data)
+            tagData = TagData().setData(data: data, isAdult: self.isAdult)
         }
+        
         index = idx
         epsdId = data.epsd_id
         srisId = data.sris_id
@@ -54,12 +60,14 @@ class VideoData:InfinityData{
         setCardType(cardType)
         isClip = cardType == .clip
         title = data.title
-        tagData = TagData().setData(data: data)
+        watchLv = data.wat_lvl_cd?.toInt() ?? 0
+        isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
+        tagData = TagData().setData(data: data, isAdult: self.isAdult)
         
         synopsisType = SynopsisType(value: data.synon_typ_cd)
-        if let poster = data.poster_filename_v {
-            image = ImagePath.thumbImagePath(filePath: poster, size: type.size)
-        }
+        originImage = data.poster_filename_v
+        image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: ListItem.video.size, isAdult: self.isAdult)
+        
         index = idx
         epsdId = data.epsd_id
         srisId = data.sris_id
@@ -72,12 +80,15 @@ class VideoData:InfinityData{
     
     func setData(data:BookMarkItem, cardType:BlockData.CardType = .video, idx:Int = -1) -> VideoData {
         setCardType(cardType)
-        tagData = TagData().setData(data: data)
+        tagData = TagData().setData(data: data, isAdult: self.isAdult)
         title = data.title
-        tagData = TagData().setData(data: data)
-        if let thumb = data.poster {
-            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
-        }
+        watchLv = data.level?.toInt() ?? 0
+        isAdult = data.adult?.toBool() ?? false
+        tagData = TagData().setData(data: data, isAdult: self.isAdult)
+       
+        originImage = data.poster
+        image = ImagePath.thumbImagePath(filePath: data.poster, size: ListItem.video.size, isAdult: self.isAdult)
+      
         index = idx
         epsdId = data.epsd_id
         srisId = data.sris_id
@@ -90,15 +101,17 @@ class VideoData:InfinityData{
     func setData(data:WatchItem, cardType:BlockData.CardType = .video, idx:Int = -1) -> VideoData {
         setCardType(cardType)
         isClip = cardType == .clip
-        tagData = TagData().setData(data: data)
-        
+        watchLv = data.level?.toInt() ?? 0
+        isAdult = data.adult?.toBool() ?? false
+        tagData = TagData().setData(data: data, isAdult: self.isAdult)
         if let rt = data.watch_rt?.toInt() {
             self.progress = Float(rt) / 100.0
         }
         title = data.title
-        if let thumb = data.thumbnail {
-            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
-        }
+        originImage = data.thumbnail
+        image = ImagePath.thumbImagePath(filePath: data.thumbnail , size: ListItem.video.size, isAdult: self.isAdult)
+      
+        
         index = idx
         epsdId = data.epsd_id
         srisId = data.sris_id
@@ -109,14 +122,15 @@ class VideoData:InfinityData{
     }
     
     func setData(data:SeriesInfoItem, title:String? = nil, idx:Int = -1) -> VideoData {
-        if let thumb = data.poster_filename_h {
-            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
-        }
         self.title = title
-        tagData = TagData().setData(data: data)
+        tagData = TagData().setData(data: data, isAdult: self.isAdult)
         if let count = data.brcast_tseq_nm {
             self.title = count + String.app.broCount + " " + (self.title ?? "")
         }
+        
+        originImage = data.poster_filename_h
+        image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: ListItem.video.size, isAdult: self.isAdult)
+      
         index = idx
         epsdId = data.epsd_id
         isInside = true
@@ -124,14 +138,17 @@ class VideoData:InfinityData{
     }
     
     func setData(data:CategorySrisItem, idx:Int = -1) -> VideoData {
-        if let thumb = data.poster_tseq {
-            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
-        }
-        tagData = TagData().setData(data: data)
+    
         title = data.title
         subTitle = data.title_sub
         index = idx
         epsdId = data.epsd_id
+        watchLv = data.level?.toInt() ?? 0
+        tagData = TagData().setData(data: data, isAdult: self.isAdult)
+        
+        originImage = data.poster_tseq
+        image = ImagePath.thumbImagePath(filePath: data.poster_tseq, size: ListItem.video.size, isAdult: self.isAdult)
+    
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         synopsisData = .init(
             srisId: nil, searchType: EuxpNetwork.SearchType.sris.rawValue,
@@ -140,13 +157,14 @@ class VideoData:InfinityData{
     }
     
     func setData(data:CategoryCornerItem, idx:Int = -1) -> VideoData {
-        if let thumb = data.thumb {
-            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
-        }
         self.title = data.title
         index = idx
         epsdId = data.epsd_id
-        tagData = TagData().setData(data: data)
+        watchLv = data.level?.toInt() ?? 0
+        originImage = data.thumb
+        image = ImagePath.thumbImagePath(filePath: data.thumb, size: ListItem.video.size, isAdult: self.isAdult)
+      
+        tagData = TagData().setData(data: data, isAdult: self.isAdult)
         synopsisData = .init(
             srisId: nil, searchType: EuxpNetwork.SearchType.sris.rawValue,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
@@ -168,6 +186,10 @@ class VideoData:InfinityData{
         case .watchedVideo: type = .watching
         default: type = .nomal
         }
+    }
+    
+    fileprivate func updatedImage(){
+        image = ImagePath.thumbImagePath(filePath: self.originImage, size: type.size, isAdult: self.isAdult)
     }
     
     fileprivate func setCardType(width:CGFloat, height:CGFloat, padding:CGFloat) -> VideoData {
@@ -243,6 +265,7 @@ struct VideoList: PageComponent{
                                         ? .synopsisPackage
                                         : data.isClip ? .synopsisPlayer : .synopsis)
                                     .addParam(key: .data, value: synopsisData)
+                                    .addParam(key: .watchLv, value: data.watchLv)
                             )
                         }
                     }
@@ -262,6 +285,7 @@ struct VideoList: PageComponent{
                                         ? .synopsisPackage
                                         : data.isClip ? .synopsisPlayer : .synopsis)
                                     .addParam(key: .data, value: synopsisData)
+                                    .addParam(key: .watchLv, value: data.watchLv)
                             )
                         }
                     }
@@ -319,6 +343,7 @@ struct VideoSet: PageComponent{
                                     ? .synopsisPackage
                                     : data.isClip ? .synopsisPlayer : .synopsis)
                                 .addParam(key: .data, value: synopsisData)
+                                .addParam(key: .watchLv, value: data.watchLv)
                         )
                     }
                 }
@@ -347,6 +372,7 @@ struct VideoSet: PageComponent{
 
 
 struct VideoItem: PageView {
+    @EnvironmentObject var repository:Repository
     var data:VideoData
     var isSelected:Bool = false
     var body: some View {
@@ -366,7 +392,7 @@ struct VideoItem: PageView {
                     Spacer().modifier(MatchParent()).background(
                         self.isSelected ? Color.transparent.black45 : Color.transparent.black70)
                 }
-                if self.data.progress != nil || self.isSelected {
+                if (self.data.progress != nil || self.isSelected) && self.data.tagData?.isLock != true {
                     Image(Asset.icon.thumbPlay)
                         .renderingMode(.original).resizable()
                         .scaledToFit()
@@ -433,6 +459,13 @@ struct VideoItem: PageView {
         }
         .frame(width: self.data.type.size.width)
         .background(Color.app.blueLight)
+        .onReceive(self.repository.$event){ evt in
+            guard let evt = evt else {return}
+            switch evt {
+            case .updatedWatchLv : self.data.updatedImage()
+            default : break
+            }
+        }
         .onAppear(){
         }
     }

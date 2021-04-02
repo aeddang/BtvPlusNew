@@ -9,9 +9,12 @@ import Foundation
 import SwiftUI
 
 class ThemaData:InfinityData{
-    private(set) var image: String = Asset.noImg16_9
+    private(set) var originImage: String? = nil
+    private(set) var image: String? = nil
     private(set) var title: String? = nil
     private(set) var subTitle: String? = nil
+    private(set) var isAdult:Bool = false
+    private(set) var isLock:Bool = false
     private(set) var count: String = "0"
     private(set) var type:ThemaType = .square
     private(set) var menuId: String? = nil
@@ -20,11 +23,12 @@ class ThemaData:InfinityData{
     
     func setData(data:ContentItem, cardType:BlockData.CardType = .squareThema, idx:Int = -1) -> ThemaData {
         setCardType(cardType)
-        
+        isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
+        isLock = !SystemEnvironment.isImageLock ? false : isAdult
         title = data.title
-        if let thumb = data.poster_filename_h {
-            image = ImagePath.thumbImagePath(filePath: thumb, size: type.size, convType: .alpha ) ?? image
-        }
+        originImage = data.poster_filename_h
+        image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: type.size, isAdult:isAdult)
+
         index = idx
         return self
     }
@@ -32,10 +36,12 @@ class ThemaData:InfinityData{
     func setData(data:BlockItem, cardType:BlockData.CardType = .squareThema, idx:Int = -1) -> ThemaData {
         setCardType(cardType)
         setCateType(data.pst_exps_typ_cd)
+        isAdult = data.lim_lvl_yn?.toBool() ?? false
+        isLock = !SystemEnvironment.isImageLock ? false : isAdult
         title = data.menu_nm
-        if let thumb = data.bnr_off_img_path {
-            image = ImagePath.thumbImagePath(filePath: thumb, size: type.size, convType:  .alpha ) ?? image
-        }
+        originImage = data.bnr_off_img_path
+        image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: type.size, isAdult:isAdult)
+       
         index = idx
         blocks = data.blocks
         menuId = data.menu_id
@@ -68,6 +74,9 @@ class ThemaData:InfinityData{
         index = idx
         type = .small
         return self
+    }
+    fileprivate func updatedImage(){
+        image = ImagePath.thumbImagePath(filePath: self.originImage, size: type.size, isAdult: self.isAdult)
     }
 }
 
@@ -153,18 +162,45 @@ struct ThemaList: PageComponent{
 }
 
 struct ThemaItem: PageView {
+    @EnvironmentObject var repository:Repository
     var data:ThemaData
     var body: some View {
         ZStack{
-            ImageView(url: self.data.image, contentMode: .fit, noImg: Asset.noImg1_1)
-                .modifier(MatchParent())
-                
+            if self.data.image == nil {
+                Image(Asset.noImg1_1)
+                    .renderingMode(.original)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .modifier(MatchParent())
+            } else {
+                ImageView(url: self.data.image!, contentMode: .fit, noImg: Asset.noImg1_1)
+                    .modifier(MatchParent())
+            }
+            
+            if self.data.isLock {
+                VStack(alignment: .center, spacing: Dimen.margin.thin){
+                    Image(Asset.icon.itemRock)
+                        .renderingMode(.original)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width:Dimen.icon.light, height: Dimen.icon.light)
+                    Text(String.app.lockAdult)
+                        .modifier(MediumTextStyle(size: Font.size.tiny))
+                        
+                }
+            }
         }
         .frame(
             width: self.data.type.size.width,
             height: self.data.type.size.height)
         .clipped()
-        
+        .onReceive(self.repository.$event){ evt in
+            guard let evt = evt else {return}
+            switch evt {
+            case .updatedWatchLv : self.data.updatedImage()
+            default : break
+            }
+        }
     }
 }
 

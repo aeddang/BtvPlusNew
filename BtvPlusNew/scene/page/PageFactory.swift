@@ -40,6 +40,7 @@ extension PageID{
     static let person:PageID = "person"
     static let search:PageID = "search"
     static let schedule:PageID = "schedule"
+    static let adultCertification:PageID = "adultCertification"
 }
 
 struct PageProvider {
@@ -73,7 +74,7 @@ struct PageProvider {
         case .home, .category,
              .pairingSetupUser, .pairingBtv,
              .pairingDevice, .pairingUser, .pairingManagement,
-             .purchase , .webview, .schedule, .modifyProile:
+             .purchase , .webview, .schedule, .modifyProile, .adultCertification:
             return  .vertical
         case .fullPlayer :
             return .none
@@ -120,6 +121,8 @@ extension PageParam {
     static let initTime = "initTime"
     static let viewPagerModel = "viewPagerModel"
     static let infinityScrollModel = "infinityScrollModel"
+    static let needAdult = "needAdult"
+    static let watchLv = "watchLv"
 }
 
 extension PageEventType {
@@ -179,6 +182,7 @@ struct PageFactory{
         case .person : return PagePerson()
         case .search : return PageSearch()
         case .schedule : return PageSchedule()
+        case .adultCertification : return PageAdultCertification()
         default : return PageTest()
         }
     }

@@ -54,9 +54,11 @@ struct PageCategoryList: PageView {
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
                     if let data = self.blockData {
-                        self.viewModel.update(data: data, listType:self.listType, cardType: self.cardType, key:nil)
+                        self.viewModel.update(data: data, listType:self.listType,
+                                              cardType: self.cardType, isAdult:data.isAdult, key:nil)
                     }else{
-                        self.viewModel.update(menuId:self.menuId, listType:self.listType, cardType: self.cardType, key:nil)
+                        self.viewModel.update(menuId:self.menuId, listType:self.listType,
+                                              cardType: self.cardType, isAdult:false, key:nil)
                     }
                 }
             }

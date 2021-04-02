@@ -19,12 +19,38 @@ class Setup:ObservableObject, PageProtocol {
         static let pushAble = "pushAble" + VS
         static let isPurchaseAuth = "isPurchaseAuth" + VS
         static let isAdultAuth = "isAdultAuth" + VS
-        static let isFirstAdultAuth = "isFirstAdultAuth" + VS
+        static let watchLv = "watchLv" + VS
+        static let isFirstMemberAuth = "isFirstMemberAuth" + VS
         
         static let isShowRemoconSelectPopup = "isShowRemoconSelectPopup" + VS
         static let isShowAutoRemocon = "isShowAutoRemocon" + VS
         
         static let floatingUnvisibleDate = "floatingUnvisibleDate" + VS
+    }
+    
+    enum WatchLv:Int, CaseIterable {
+        case lv1 = 7
+        case lv2 = 12
+        case lv3 = 15
+        case lv4 = 19
+        func getName()->String{
+            switch self {
+            case .lv4:
+                let s = self.rawValue.description + String.app.ageCount
+                return s + "/" + s + "+"
+            default: return self.rawValue.description + String.app.ageCount
+            }
+        }
+        
+        static func getLv(_ value:Int)->WatchLv?{
+            switch value {
+            case 7: return .lv1
+            case 12: return .lv2
+            case 15: return .lv3
+            case 19: return .lv4
+            default: return nil
+            }
+        }
     }
     
     let storage = UserDefaults.init()
@@ -35,6 +61,8 @@ class Setup:ObservableObject, PageProtocol {
         self.dataAlram = true
         self.autoRemocon = true
         self.remoconVibration = true
+        self.isPurchaseAuth = true
+        self.isFirstMemberAuth = false
     }
     
     var dataAlram:Bool {
@@ -119,12 +147,21 @@ class Setup:ObservableObject, PageProtocol {
         }
     }
     
-    var isFirstAdultAuth:Bool{
+    var watchLv:Int{
         set(newVal){
-            storage.set(newVal, forKey: Keys.isFirstAdultAuth)
+            storage.set(newVal, forKey: Keys.watchLv)
         }
         get{
-            return storage.bool(forKey: Keys.isFirstAdultAuth)
+            return storage.integer(forKey: Keys.watchLv)
+        }
+    }
+    
+    var isFirstMemberAuth:Bool{
+        set(newVal){
+            storage.set(newVal, forKey: Keys.isFirstMemberAuth)
+        }
+        get{
+            return storage.bool(forKey: Keys.isFirstMemberAuth)
         }
     }
     

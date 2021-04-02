@@ -97,6 +97,7 @@ extension Asset{
         
         public static let alarm = "icMyAlarm"
         public static let notice = "icMyNotice"
+        public static let lockAlert = "icLockAlert"
         public static let profileEdit = "icMyProfileEdit"
         public static let alert = "icChannelAlert"
         public static let info = "icSynopInfo"
@@ -121,6 +122,9 @@ extension Asset{
         public static let itemDiscount = "tagPosterDiscount"
         public static let itemEven = "tagPosterEvent"
         public static let itemRangking = "tagPosterRangking"
+        public static let onAir = "tagSynopOnair"
+        public static let onAirOff = "tagSynopOffair"
+        
     }
     
     
@@ -171,6 +175,7 @@ extension Asset{
         public static let noImgVoice =  "imgSynopNoimageVoice"
         public static let noImgWriter =  "imgSynopNoimageWriter"
         public static let noImgDirector =  "imgSynopNoimageDirector"
+        public static let myEmpty = "imgMyEmpty01"
     }
     
     struct source {

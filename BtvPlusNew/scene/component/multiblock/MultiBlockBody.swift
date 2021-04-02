@@ -14,6 +14,7 @@ class MultiBlockModel: PageDataProviderModel {
     private(set) var datas:[BlockData]? = nil
     private(set) var headerSize:Int = 0
     private(set) var requestSize:Int = 0
+    private(set) var isAdult:Bool = false
      
     @Published private(set) var isUpdate = false {
         didSet{ if self.isUpdate { self.isUpdate = false} }
@@ -29,7 +30,7 @@ class MultiBlockModel: PageDataProviderModel {
         self.isUpdate = true
     }
     
-    func update(datas:[BlockItem], themaType:BlockData.ThemaType = .category) {
+    func update(datas:[BlockItem], themaType:BlockData.ThemaType = .category, isAdult:Bool = false) {
         self.datas = datas.map{ block in
             BlockData().setDate(block, themaType:themaType)
         }
@@ -40,6 +41,7 @@ class MultiBlockModel: PageDataProviderModel {
             default : return true
             }
         }
+        self.isAdult = isAdult
         self.isUpdate = true
     }
 }
@@ -90,14 +92,16 @@ struct MultiBlockBody: PageComponent {
     @State var reloadDegree:Double = 0
     @State var reloadDegreeMax:Double = Double(InfinityScrollModel.PULL_COMPLETED_RANGE)
     @State var headerOffset:CGFloat = 0
-    
+    @State var needAdult:Bool = false
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
             viewModel : self.viewModel
         ){
-                
-            if !self.isError {
+            if self.needAdult{
+                AdultAlert()
+                    .modifier(MatchParent())
+            } else if !self.isError {
                 ZStack(alignment: .topLeading){
                     if !Self.isLegacy  {
                         if self.topDatas != nil && self.topDatas?.isEmpty == false {
@@ -170,9 +174,10 @@ struct MultiBlockBody: PageComponent {
                 }
             } else {
                 EmptyAlert()
-                .modifier(MatchParent())
+                    .modifier(MatchParent())
             }
         }
+        .modifier(MatchParent())
         .onReceive(self.infinityScrollModel.$event){evt in
             guard let evt = evt else {return}
             switch evt {
@@ -187,7 +192,7 @@ struct MultiBlockBody: PageComponent {
             
         }
         .onReceive(self.infinityScrollModel.$scrollPosition){pos in
-            self.headerOffset = min(pos,0)
+            self.headerOffset = min(ceil(pos),0)
         }
         .onReceive(self.infinityScrollModel.$pullPosition){ pos in
             if pos < InfinityScrollModel.PULL_RANGE { return }
@@ -342,6 +347,13 @@ struct MultiBlockBody: PageComponent {
     @State var anyCancellable = Set<AnyCancellable>()
     @State var isError:Bool = false
     func reload(){
+        if self.viewModel.isAdult && !SystemEnvironment.isAdultAuth {
+            withAnimation {self.needAdult = true}
+            return
+        }
+        if needAdult {
+            withAnimation {self.needAdult = false}
+        }
         self.isError = false
         self.anyCancellable.forEach{$0.cancel()}
         self.anyCancellable.removeAll()
@@ -349,7 +361,7 @@ struct MultiBlockBody: PageComponent {
         self.infinityScrollModel.reload()
         self.originBlocks = viewModel.datas ?? []
         if SystemEnvironment.isEvaluation {
-            self.originBlocks = self.originBlocks.filter{!$0.limLvl}
+            self.originBlocks = self.originBlocks.filter{!$0.isAdult}
         }
         self.setupBlocks()
     }

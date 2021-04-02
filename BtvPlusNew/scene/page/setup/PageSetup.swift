@@ -18,6 +18,8 @@ struct PageSetup: PageView {
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     
+    
+    
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -105,12 +107,13 @@ struct PageSetup: PageView {
                                     )
                                     Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
                                     SetupItem (
-                                        isOn: .constant(true),
+                                        isOn: self.$isSetWatchLv,
                                         title: String.pageText.setupCertificationAge,
                                         subTitle: String.pageText.setupCertificationAgeText,
-                                        radios: nil,
+                                        radios: self.isSetWatchLv ? self.watchLvs : nil,
+                                        selectedRadio: self.isSetWatchLv ? self.selectedWatchLv : nil,
                                         selected: { select in
-                                            
+                                            self.setupWatchLv(select: select)
                                         }
                                     )
                                 }
@@ -264,6 +267,25 @@ struct PageSetup: PageView {
                     self.isNextPlay ? String.alert.nextPlayOn : String.alert.nextPlayOff
                 )
             }
+            .onReceive( [self.isSetWatchLv].publisher ) { value in
+                if !self.isInitate { return }
+                if (SystemEnvironment.watchLv > 0) == self.isSetWatchLv { return }
+                if self.isPairing == false && value == true {
+                    self.appSceneObserver.alert = .needPairing()
+                    self.isSetWatchLv = false
+                    return
+                }
+                if !SystemEnvironment.isAdultAuth && value == true {
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.adultCertification)
+                    )
+                    self.isSetWatchLv = false
+                    return
+                }
+                
+                self.repository.updateWatchLv(self.isSetWatchLv ? .lv4 : nil)
+                self.selectedWatchLv = Setup.WatchLv.getLv(SystemEnvironment.watchLv)?.getName()
+            }
             .onAppear{
                
             }
@@ -277,6 +299,11 @@ struct PageSetup: PageView {
     @State var isRemoconVibration:Bool = false
     @State var isAutoPlay:Bool = false
     @State var isNextPlay:Bool = false
+    @State var isSetWatchLv:Bool = false
+    
+    @State var watchLvs:[String]? = nil
+    @State var selectedWatchLv:String? = nil
+    
     
     @State var isInitate:Bool = false
     
@@ -292,8 +319,17 @@ struct PageSetup: PageView {
         self.isAutoPlay = self.setup.autoPlay
         self.isNextPlay = self.setup.nextPlay
         self.isInitate = true
+        self.isSetWatchLv = self.isPairing ? (SystemEnvironment.watchLv > 0) : false
+        
+        self.watchLvs = Setup.WatchLv.allCases.map{$0.getName()}
+        self.selectedWatchLv = Setup.WatchLv.getLv(SystemEnvironment.watchLv)?.getName()
     }
     
+    private func setupWatchLv(select:String){
+        guard let find = self.watchLvs?.firstIndex(where: {$0 == select}) else {return}
+        self.selectedWatchLv = select
+        self.repository.updateWatchLv(Setup.WatchLv.allCases[find])
+    }
     
 }
 

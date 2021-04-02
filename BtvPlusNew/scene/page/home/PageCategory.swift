@@ -114,7 +114,7 @@ struct PageCategory: PageView {
             CateData().setData(data: block)
         }
         if SystemEnvironment.isEvaluation {
-            cateDatas = cateDatas.filter{!$0.limLvl}
+            cateDatas = cateDatas.filter{!$0.isAdult}
         }
         let count = CateList.cellCount
         var rows:[CateDataSet] = []

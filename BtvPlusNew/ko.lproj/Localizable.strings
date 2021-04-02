@@ -72,6 +72,7 @@
 "coupon" = "쿠폰";
 "bpoint" = "포인트";
 "bcash" = "B캐쉬";
+"lockAdult" = "청소년 보호";
 
 /*
   Button
@@ -112,6 +113,9 @@
 "btnAppInit" = "모바일 B tv 시작하기";
 "btnHome" = "홈으로 가기";
 "btnDeleteAll" = "전체삭제";
+"btnCertification" = "인증하기";
+"btnAdultCertification" = "성인 인증하기";
+
 
 /*
  Sort
@@ -222,6 +226,18 @@
 "alertDragdown" = "당겨서 페이지 닫기";
 "alertNeedMicPermission" = "음성검색을 이용하시려면 기기 내 [설정 > 개인정보보호 > 마이크] 메뉴에서 모바일 B tv의 권한을 허용해 주세요.";
 
+"alertAdultCertification" = "성인 인증";
+"alertAdultCertificationFail" = "성인 인증 불가";
+"alertAdultCertificationNotAllowed" ="19세 미만의 사용자는\n성인 인증을 할 수 없습니다.";
+"alertNeedAdultCertification" = "청소년 유해 매체물은\n성인 인증 후 이용이 가능합니다.";
+
+"alertWatchLv" = "시청 연령 제한 설정";
+"alertWatchLvCompleted" = "시청 연령 제한 설정 완료";
+"alertWatchLvInput" = "성인인증번호를 입력해주세요.";
+"alertWatchLvInfo" = "※ 인증번호 초기화는 B tv에서 하실 수 잇습니다.";
+"alertWatchLvError" = "인증번호가 일치하지 않습니다.";
+"alertWatchLvCompletedInfo" = "시청 연령 제한 설정이 완료되었습니다.";
+
 /*
  PageTitle
 */
@@ -240,6 +256,8 @@
 "titleSchedule" = "편성표";
 "titleModifyProfile" = "프로필 변경";
 "titleWatched" = "최근 시청 목록";
+
+
 
 /*
  PagePairing
@@ -399,6 +417,16 @@
 "searchEmpty" = "에 대한\n검색결과가 없습니다.";
 "searchEmptyGuide" = "검색어의 철자, 띄어쓰기를 다시 한번 확인해 주세요.";
 "searchEmptyTitle" = "최근 많이 찾는 작품";
+
+
+/*
+ PageAdultCertification
+*/
+"adultCertificationText1" = "성인 인증 후\n이용하실 수 있습니다.";
+"adultCertificationText2" = "성인 여부 확인을 위해 휴대폰 본인확인을 해주세요.\n이후에는 B tv에서 사용 중인 성인 인증번호로 인증 후\n이용하실 수 있습니다.";
+"adultCertificationText3" = "이 정보 내용은 청소년 보호법 및 정보통신망 이용 촉진법, 정보 보호 등에 관한 법률에 따라 19세 미만의 청소년이 열람할 수 없습니다. 여성 가족부의 정책에 따라 성인 인증은 1년간 유효하며, 이후 다시 인증이 필요합니다.";
+
+
 /*
  Player
 */
@@ -416,6 +444,8 @@
 "playerAdMore" = "광고 정보 더보기";
 "playerAdCancel" = "광고 건너뛰기";
 "playerMoveSec" = "초 이동";
+
+
 
 
 /*

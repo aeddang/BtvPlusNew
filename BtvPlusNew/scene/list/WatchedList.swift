@@ -9,8 +9,12 @@ import Foundation
 import SwiftUI
 
 class WatchedData:InfinityData{
+    private(set) var originImage: String? = nil
     private(set) var image: String? = nil
     private(set) var title: String? = nil
+    private(set) var watchLv:Int = 0
+    private(set) var isAdult:Bool = false
+    private(set) var isLock:Bool = false
     private(set) var subTitle: String? = nil
     private(set) var count: String = "0"
     private(set) var progress:Float? = nil
@@ -23,10 +27,14 @@ class WatchedData:InfinityData{
             self.progress = Float(rt) / 100.0
             self.subTitle = rt.description + "% " + String.app.watch
         }
+        watchLv = data.level?.toInt() ?? 0
+        isAdult = data.adult?.toBool() ?? false
+        isLock = !SystemEnvironment.isImageLock ? false : isAdult
         title = data.title
-        if let thumb = data.thumbnail {
-            image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size)
-        }
+        
+        originImage = data.thumbnail
+        image = ImagePath.thumbImagePath(filePath: data.thumbnail, size: ListItem.watched.size, isAdult:isAdult)
+        
         index = idx
         srisId = data.sris_id
         synopsisData = .init(
@@ -42,6 +50,9 @@ class WatchedData:InfinityData{
         return self
     }
     
+    fileprivate func updatedImage(){
+        image = ImagePath.thumbImagePath(filePath: self.originImage, size: ListItem.watched.size, isAdult: self.isAdult)
+    }
 }
 
 
@@ -91,6 +102,7 @@ struct WatchedList: PageComponent{
 }
 
 struct WatchedItem: PageView {
+    @EnvironmentObject var repository:Repository
     var data:WatchedData
     var delete: ((_ data:WatchedData) -> Void)? = nil
     var body: some View {
@@ -106,7 +118,13 @@ struct WatchedItem: PageView {
                     ImageView(url: self.data.image!, contentMode: .fill, noImg: Asset.noImg9_16)
                         .modifier(MatchParent())
                 }
-                if self.data.progress != nil  {
+                if self.data.isLock {
+                    Image(Asset.icon.itemRock)
+                        .renderingMode(.original)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width:Dimen.icon.light, height: Dimen.icon.light)
+                }else if self.data.progress != nil  {
                     Image(Asset.icon.thumbPlay)
                         .renderingMode(.original).resizable()
                         .scaledToFit()
@@ -163,6 +181,13 @@ struct WatchedItem: PageView {
         .padding(.trailing, Dimen.margin.thin)
         .modifier(MatchHorizontal(height: ListItem.watched.size.height))
         .background(Color.app.blueLight)
+        .onReceive(self.repository.$event){ evt in
+            guard let evt = evt else {return}
+            switch evt {
+            case .updatedWatchLv : self.data.updatedImage()
+            default : break
+            }
+        }
         
     }
     

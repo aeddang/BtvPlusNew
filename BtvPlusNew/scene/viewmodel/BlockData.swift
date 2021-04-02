@@ -13,7 +13,7 @@ enum BlockStatus:String{
 class BlockData:InfinityData, ObservableObject{
     private(set) var name:String = ""
     private(set) var subName:String = ""
-    private(set) var limLvl:Bool = false
+    private(set) var isAdult:Bool = false
     private(set) var menuId:String? = nil
     private(set) var cwCallId:String? = nil
     private(set) var cardType:CardType = .none
@@ -111,7 +111,7 @@ class BlockData:InfinityData, ObservableObject{
         name = data.menu_nm ?? ""
         menuId = data.menu_id
         cwCallId = data.cw_call_id_val
-        limLvl = data.lim_lvl_yn?.toBool() ?? false
+        isAdult = data.lim_lvl_yn?.toBool() ?? false
         cardType = findType(data)
         dataType = findDataType(data)
         blocks = data.blocks

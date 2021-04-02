@@ -168,7 +168,6 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
             }
             if diff > self.cancelPullDiff {
                 if (pos + diff + 1) >= (self.pullCompletedRange + self.pullRange){
-                    ComponentLog.d("onPullCompleted pull", tag: "InfinityScrollViewProtocol")
                     self.isScrollEnd = self.isDragEnd
                     self.onPullCompleted()
                 } else {

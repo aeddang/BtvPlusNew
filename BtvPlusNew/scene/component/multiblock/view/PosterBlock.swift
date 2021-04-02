@@ -70,15 +70,11 @@ struct PosterBlock:PageComponent, BlockProtocol {
                             self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
                         }
                     
-                } else if self.hasMore {
-                    PosterList(
-                        viewModel:self.viewModel,
-                        datas: [PosterData(),PosterData(),PosterData(),PosterData(),PosterData()]
-                        )
-                        .modifier(MatchHorizontal(height: self.listHeight))
-                    .opacity(0.5)
                 } else {
-                    EmptyAlert()
+                    EmptyAlert( text: self.data.dataType != .watched
+                                ? String.pageText.myWatchedEmpty
+                                : String.alert.dataError)
+                        .modifier(MatchParent())
                 }
             }
         }

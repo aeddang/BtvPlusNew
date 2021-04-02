@@ -22,7 +22,7 @@ class EpisodeViewerData {
     private(set) var provider: String? = nil
     private(set) var award: String? = nil
     private(set) var awardDetail: String? = nil
-    
+    private(set) var onAir: String? = nil
     var episodeTitle:String {
         guard let count = self.count else { return self.title }
         if count.isEmpty { return self.title }
@@ -31,9 +31,13 @@ class EpisodeViewerData {
     
     func setData(data:SynopsisContentsItem) -> EpisodeViewerData {
         self.title = data.title ?? ""
-        self.count = data.brcast_tseq_nm
+        
         self.date = data.brcast_exps_dy
         self.provider = data.brcast_chnl_nm
+        if data.sris_typ_cd == SrisTypCd.season.rawValue {
+            self.count = data.brcast_tseq_nm
+            self.onAir = (data.sris_cmpt_yn?.toBool() ?? false) ? Asset.icon.onAirOff : Asset.icon.onAir 
+        }
         if let age = data.wat_lvl_cd {
             self.restrictAgeIcon = Asset.age.getIcon(age: age)
         }
@@ -86,36 +90,42 @@ struct EpisodeViewer: PageComponent{
                 .modifier(BoldTextStyle( size: Font.size.boldExtra ))
                 .lineLimit(2)
             HStack(alignment: .center, spacing:Dimen.margin.tiny){
-                if self.data.ratingPct != nil {
+                if let ratingPct = self.data.ratingPct {
                     RatingInfo(
-                        rating: self.data.ratingPct!
+                        rating: ratingPct
                     )
                     .fixedSize(horizontal: true, vertical: false)
                 }
-                if self.data.ratingPoint != nil {
+                if let ratingPoint = self.data.ratingPoint {
                     RatingPoint(
-                        rating: self.data.ratingPoint!, ratingMax: self.data.ratingMax!
+                        rating: ratingPoint, ratingMax: self.data.ratingMax!
                     )
                 }
                 
-                if self.data.date != nil {
-                    Text(self.data.date!)
+                if let date = self.data.date {
+                    Text( date )
                         .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.white))
                     }
-                if self.data.restrictAgeIcon != nil {
-                    Image( self.data.restrictAgeIcon! )
+                if let restrictAgeIcon = self.data.restrictAgeIcon {
+                    Image( restrictAgeIcon )
                         .renderingMode(.original).resizable()
                         .scaledToFit()
                         .frame(width: Dimen.icon.thin, height: Dimen.icon.thin)
                     }
-                if self.data.duration != nil {
-                    Text(self.data.duration!)
+                if let duration = self.data.duration {
+                    Text(duration)
                         .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.white))
                     }
-                if self.data.provider != nil {
-                    Text(self.data.provider!)
+                if let provider = self.data.provider {
+                    Text( provider )
                         .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.white))
                     }
+                if let onair = self.data.onAir {
+                    Image( onair )
+                        .renderingMode(.original).resizable()
+                        .scaledToFit()
+                        .frame(height: Dimen.icon.thin)
+                }
             }
             .padding(.top, Dimen.margin.lightExtra)
             

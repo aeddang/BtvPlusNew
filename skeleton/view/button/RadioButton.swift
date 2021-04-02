@@ -10,14 +10,18 @@ import Foundation
 import SwiftUI
 struct RadioButton: View, SelecterbleProtocol {
     var isChecked: Bool
+    var size:CGSize = CGSize(width: Dimen.icon.light, height: Dimen.icon.light)
     var text:String? = nil
+    var textSize:CGFloat = Font.size.lightExtra
+    
     var action: ((_ check:Bool) -> Void)? = nil
     var body: some View {
         HStack(alignment: .center, spacing: Dimen.margin.thinExtra){
             ImageButton(
                 defaultImage: Asset.shape.radioBtnOff,
                 activeImage: Asset.shape.radioBtnOn,
-                isSelected: self.isChecked
+                isSelected: self.isChecked,
+                size: self.size
                 ){_ in
                     //self.isChecked.toggle()
                     if self.action != nil {
@@ -35,7 +39,7 @@ struct RadioButton: View, SelecterbleProtocol {
                 }) {
                     Text(self.text!)
                         .modifier(BoldTextStyle(
-                            size: Font.size.lightExtra
+                            size: self.textSize
                         ))
                     
                 }

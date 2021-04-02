@@ -28,7 +28,7 @@ enum CateSubType {
 class CateData:InfinityData{
     private(set) var image: String = Asset.noImg1_1
     private(set) var title: String? = nil
-    private(set) var limLvl:Bool = false
+    private(set) var isAdult:Bool = false
     private(set) var subType: CateSubType = .list
     private(set) var subTitle: String? = nil
     private(set) var menuId: String? = nil
@@ -39,7 +39,7 @@ class CateData:InfinityData{
         index = idx
         menuId = data.menu_id
         blocks = data.blocks
-        limLvl = data.lim_lvl_yn?.toBool() ?? false
+        isAdult = data.lim_lvl_yn?.toBool() ?? false
         subType = CateSubType.getType(id:data.gnb_sub_typ_cd) 
         if let path = data.menu_off_img_path {
             image = ImagePath.thumbImagePath(filePath: path, size:CGSize(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra) , convType: .alpha) ?? image
@@ -111,6 +111,7 @@ struct CateSet: PageComponent{
                                 .addParam(key: .title, value: data.title)
                                 .addParam(key: .id, value: data.menuId)
                                 .addParam(key: .data, value: data)
+                                .addParam(key: .needAdult, value: data.isAdult)
                         )
         
                     default :
@@ -118,6 +119,7 @@ struct CateSet: PageComponent{
                             self.pagePresenter.openPopup(
                                 PageProvider.getPageObject(.multiBlock)
                                     .addParam(key: .data, value: data)
+                                    .addParam(key: .needAdult, value: data.isAdult)
                             )
                         }else{
                             
@@ -126,6 +128,7 @@ struct CateSet: PageComponent{
                                     .addParam(key: .title, value: data.title)
                                     .addParam(key: .id, value: data.menuId)
                                     .addParam(key: .type, value: CateBlock.ListType.poster)
+                                    .addParam(key: .needAdult, value: data.isAdult)
                             )
                         }
                     }

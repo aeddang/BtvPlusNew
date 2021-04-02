@@ -14,6 +14,7 @@ class TicketData:InfinityData{
     private(set) var joinImage: String? = nil
     private(set) var title: String? = nil
     private(set) var subTitle: String? = nil
+    private(set) var isAdult:Bool = false
     private(set) var count: String = "0"
     private(set) var type:TicketType = .small
     private(set) var menuId: String? = nil
@@ -31,6 +32,7 @@ class TicketData:InfinityData{
     }
     func setData(data:ContentItem, cardType:BlockData.CardType = .squareThema, idx:Int = -1) -> TicketData {
         title = data.title
+        isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
         if let thumb = data.poster_filename_h {
             image = ImagePath.thumbImagePath(filePath: thumb, size: type.size, convType: .alpha ) ?? image
         }
@@ -41,6 +43,7 @@ class TicketData:InfinityData{
     func setData(data:BlockItem, cardType:BlockData.CardType = .squareThema, idx:Int = -1) -> TicketData {
         type = data.blk_typ_cd == "30" ? .big : .small
         title = data.menu_nm
+        isAdult = data.lim_lvl_yn?.toBool() ?? false
         if let thumb = data.bnr_off_img_path {
             image = ImagePath.thumbImagePath(filePath: thumb, size: type.size, convType:  .alpha ) ?? image
         }

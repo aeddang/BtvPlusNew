@@ -40,10 +40,10 @@ class VoiceRecognition:  NSObject, ObservableObject, RecognitionListener , PageP
         
     }
     private func onStart(){
-        ComponentLog.d("onStart", tag: self.tag)
         self.initAVAudioSession()
         self.initRecognizer()
         self.status = .ready
+        ComponentLog.d("onStart " + self.status.rawValue, tag: self.tag)
     }
     func stop(){
         self.recognizer?.stopListening()
@@ -55,7 +55,8 @@ class VoiceRecognition:  NSObject, ObservableObject, RecognitionListener , PageP
     
     @discardableResult
     func search() -> Bool{
-        if self.status != .ready {return false}
+        //ComponentLog.d("search " + self.status.rawValue, tag: self.tag)
+        //if self.status != .ready {return false}
         self.recognizer?.startListening()
         return true
     }
@@ -64,8 +65,6 @@ class VoiceRecognition:  NSObject, ObservableObject, RecognitionListener , PageP
         self.stop()
         self.event = .error
     }
-    
-    
     
     // MARK: - listener
     func onReady() {

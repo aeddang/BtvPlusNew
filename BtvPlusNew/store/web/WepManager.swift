@@ -54,7 +54,7 @@ class WebManager :PageProtocol{
            
         }
         info["isAdultAuth"] = setup.isAdultAuth       // 성인인증 ON/OFF
-        info["isPurchaseAuth"] = true//setting.isPurchaseAuth    // 구매인증 ON/OFF
+        info["isPurchaseAuth"] = setup.isPurchaseAuth    // 구매인증 ON/OFF
         info["isMemberAuth"] = true//setting.isFirstAdultAuth   // 최초 본인 인증 여부
         info["restrictedAge"] = setup.isAdultAuth ? (storage.restrictedAge ?? 0) : 0
         info["RCUAgentVersion"] = AppUtil.getSafeString(RCUAgentVersion, defaultValue: "0.0.0")

@@ -91,6 +91,10 @@ extension String{
     func replace(_ newString:String) -> String {
         return self.replacingOccurrences(of: "%s" , with: newString)
     }
+    func replace(first:String, second:String) -> String {
+        let new = self.replacingOccurrences(of: "%s1" , with: first)
+        return new.replacingOccurrences(of: "%s2" , with: second)
+    }
     
     func replace(start:Int, len:Int, with:String) -> String {
         let range = self.index(self.startIndex, offsetBy: start)...self.index(self.startIndex, offsetBy: start + len)
@@ -282,7 +286,7 @@ extension String{
     }
     
     func toDigits(_ n:Int) -> String {
-        let num = Int(self) ?? 0
+        let num = Int(floor(Double(self) ?? 0)) 
         //DataLog.d("num " + num.description , tag:"toDigits")
         let fm = "%0" + n.description + "d"
         let str = String(format: fm , num)

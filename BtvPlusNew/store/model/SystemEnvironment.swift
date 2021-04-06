@@ -11,19 +11,27 @@ import UIKit
 struct SystemEnvironment {
     static let model:String = AppUtil.model
     static let systemVersion:String = UIDevice.current.systemVersion
-    static let bundleVersion:String = "4.3.0" //AppUtil.version
+    static let bundleVersion:String = "4.3.1" //AppUtil.version
     static let buildNumber:String = "1024" //AppUtil.build
     static let deviceId:String = UIDevice.current.identifierForVendor?.uuidString ?? UUID.init().uuidString
     static var firstLaunch :Bool = false
     static var serverConfig: [String:String] = [String:String]()
     static var isReleaseMode = true
     static var isEvaluation = false
+    
+    
+    static var isPurchaseAuth = false
     static var isAdultAuth = false { didSet { setImageLock()} }
+    static var isWatchAuth = false { didSet { setImageLock()} }
+    static var watchLv = 0 { didSet {
+        isWatchAuth = false
+        setImageLock()}
+    }
+   
     static var isImageLock = false
-    static var watchLv = 0 { didSet { setImageLock()} }
     
     static func setImageLock(){
-        if watchLv == 0 && isAdultAuth {
+        if (watchLv == 0 && isAdultAuth) || isWatchAuth  {
             isImageLock = false
         } else {
             isImageLock = true

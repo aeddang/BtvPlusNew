@@ -39,7 +39,7 @@ class AccountManager : PageProtocol{
                    })
             
             case .user(let cid) :
-                self.dataProvider.requestData(q: .init(type: .getStbInfo(cid), isOptional: true))
+                self.dataProvider.requestData(q: .init(type: .getStbInfo(cid), isOptional: false))
             
             case .device(let device) :
                 self.requestDevice = device
@@ -48,6 +48,9 @@ class AccountManager : PageProtocol{
             case .auth(let code) :
                 self.requestAuthcode = code
                 self.dataProvider.requestData(q: .init(type: .postAuthPairing(self.pairing.user, code), isOptional: true))
+                
+            case .hostInfo(let auth, let device, let prevResult) :
+                self.dataProvider.requestData(q: .init(type: .getDevicePairingInfo(auth, device, prevResult:prevResult),  isOptional: true))
                 
             case .recovery :
                 if let user = self.pairing.user {
@@ -166,6 +169,15 @@ class AccountManager : PageProtocol{
                 }
                 self.pairing.syncHostDevice(HostDevice().setData(deviceData: hostData))
            
+            case .getDevicePairingInfo(_, _, let prevResult) :
+                guard let data = res.data as? DevicePairingInfo else {
+                    return self.pairing.connectError(header: prevResult)
+                }
+                guard let info = data.body?.pairing_info else {
+                    return self.pairing.connectError(header: prevResult)
+                }
+                self.pairing.connectErrorReason(info)
+                
             case .postGuestInfo :
                 guard let data = res.data as? NpsResult  else { return }
                 if !self.checkSyncHeader(data.header) { return }
@@ -230,6 +242,7 @@ class AccountManager : PageProtocol{
             guard let err = err else { return }
             switch err.type {
             case .postUnPairing, .postAuthPairing, .postDevicePairing, .rePairing : self.pairing.connectError()
+            case .getDevicePairingInfo(_, _, let prevResult) : self.pairing.connectError(header: prevResult)
             case .getHostDeviceInfo, .postGuestInfo, .postGuestAgreement, .getGuestAgreement: self.pairing.syncError()
             case .getDevicePairingStatus : self.pairing.checkCompleted(isSuccess: false)
             case .getTotalPointInfo, .getPurchaseMonthly, .getPeriodPurchaseMonthly : self.pairing.authority.errorMyInfo(err)

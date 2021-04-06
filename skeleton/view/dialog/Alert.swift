@@ -119,6 +119,7 @@ struct Alert<Presenting>: View where Presenting: View {
                                     activeColor: Color.app.white
                                 ),
                                 size: Dimen.button.regular,
+                                margin: Dimen.margin.thin,
                                 bgColor: self.buttons.count == 1
                                     ? Color.brand.primary
                                     :(btn.index % 2 == 1) ? Color.brand.primary  : Color.brand.secondary

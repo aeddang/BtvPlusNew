@@ -47,7 +47,6 @@ struct SetupItem: PageView {
                     }
                 }
                 
-                
                 if self.statusText != nil {
                     Text(self.statusText!)
                     .modifier(MediumTextStyle(
@@ -114,7 +113,9 @@ struct SetupItem: PageView {
         }
         .padding(.leading, Dimen.margin.thin)
         .padding(.vertical, Dimen.margin.regular)
-        
+        .onTapGesture {
+            self.more?()
+        }
         
     }//body
 }

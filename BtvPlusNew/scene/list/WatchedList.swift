@@ -61,18 +61,14 @@ struct WatchedList: PageComponent{
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[WatchedData]
     var useTracking:Bool = false
-    var marginTop:CGFloat = Dimen.margin.tinyExtra
-    var marginBottom:CGFloat = Dimen.margin.tinyExtra
-    var margin:CGFloat = Dimen.margin.tinyExtra
     var delete: ((_ data:WatchedData) -> Void)? = nil
     var onBottom: ((_ data:WatchedData) -> Void)? = nil
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
             axes: .vertical,
-            marginTop: self.marginTop,
-            marginBottom: self.marginBottom,
-            marginHorizontal: self.margin,
+            marginTop: Dimen.margin.tinyExtra,
+            marginBottom: Dimen.margin.tinyExtra,
             spacing:0,
             isRecycle: true,
             useTracking: self.useTracking

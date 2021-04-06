@@ -62,7 +62,7 @@ struct ImageView : View, PageProtocol {
         var count = 0
         self.autoReloadSubscription?.cancel()
         self.autoReloadSubscription = Timer.publish(
-            every: count == 0 ? 0.05 : 0.5, on: .current, in: .common)
+            every: count == 0 ? 0.1 : 0.5, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
                 count += 1

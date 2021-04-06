@@ -37,6 +37,7 @@ extension NpsNetwork{
     static let AES_KEY = "R3WoPEtbkEIhPQqrKl37fQEsfZAYpPMk"
     static let AES_IV = "8C7BFE4A1116E5E5"
     static let AES_PW  = "sFJ4y3uJ8Pcz2BCp82Ds6VPByNX2vG8u"
+
     static private(set) var isHelloInit = true
     static private(set) var isTest = false
     static private(set) var sessionId = ""
@@ -169,7 +170,7 @@ class Nps: Rest{
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
         params["guest_deviceid"] = SystemEnvironment.getGuestDeviceId()
-        params["include_tier"] = "0"
+        params["include_tier"] = "1"
         params["initial_flag"] = NpsNetwork.isHelloInit ? "1" : "0"
         params["custom_param"] = customParam
         var body = [String: Any]()
@@ -417,6 +418,28 @@ class Nps: Rest{
         body["body"] = params
         fetch(route: NpsUpdateUser(body: body), completion: completion, error:error)
     }
+    
+    func sendMessage(data:NpsMessage?,
+        customParam:[String: Any] = [String: Any](),
+        completion: @escaping (NpsResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-521")
+        var params = [String: Any]()
+        params["service_type"] = NpsNetwork.SERVICE_TYPE
+        params["pairingid"] = NpsNetwork.pairingId
+        params["send_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["sessionid"] = NpsNetwork.sessionId
+        
+        let msg = data?.messageString ?? ""
+        let n = ApiUtil.getNValue()
+        params["message"] = msg
+        params["nvalue"] = n
+        params["sc"] = ApiUtil.getEncrypedSCValue(msg, nValue: n, npsPw: NpsNetwork.AES_PW)
+       // params["custom_param"] = customParam
+        var body = [String: Any]()
+        body["header"] = headers
+        body["body"] = params
+        fetch(route: NpsSendMessage(body: body), completion: completion, error:error)
+    }
 }
 
 
@@ -486,6 +509,12 @@ struct NpsUpdateUser:NetworkRoute{
    var body: [String : Any]? = nil
 }
 
+
+struct NpsSendMessage:NetworkRoute{
+   var method: HTTPMethod = .post
+   var path: String = "/nps/v5/reqSendMessage"
+   var body: [String : Any]? = nil
+}
 
 
 

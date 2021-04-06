@@ -65,7 +65,7 @@ struct PagePairingBtv: PageView {
                             keyboardType: .numberPad, returnVal: .done,
                             placeholder: String.app.certificationNumberHolder,
                             maxLength: 6,
-                            kern: 10,
+                            kern: 8,
                             textModifier: BoldTextStyle( size: Font.size.black ).textModifier,
                             isfocus: self.isFocus,
                             inputChanged: { text in
@@ -161,7 +161,13 @@ struct PagePairingBtv: PageView {
                 case .connected :
                     self.pagePresenter.closePopup(self.pageObject?.id)
                 case .connectError(let header) :
-                    self.appSceneObserver.alert = .pairingError(header)
+                    if header?.result == NpsNetwork.resultCode.pairingLimited.code {
+                        self.pairing.requestPairing(.hostInfo(auth: self.input, device: nil, prevResult: header))
+                    } else {
+                        self.appSceneObserver.alert = .pairingError(header)
+                    }
+                case .connectErrorReason(let info) :
+                    self.appSceneObserver.alert = .limitedDevice(info)
                 default : do{}
                 }
             }

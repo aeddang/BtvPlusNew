@@ -35,6 +35,30 @@ extension MetvNetwork{
 }
 
 class Metv: Rest{
+    
+    /**
+    * 일반 구매내역 조회 (IF-ME-031)
+    * @param pageNo 요청할 페이지의 번호 (Default: 1)
+    * @param entryNo 요청한 페이지에 보여질 개수 (Default: 10)
+    */
+    func getPurchase(
+        page:Int?, pageCnt:Int?,
+        completion: @escaping (Purchase) -> Void, error: ((_ e:Error) -> Void)? = nil){
+
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:String]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["ver"] = MetvNetwork.VERSION
+        params["IF"] = "IF-ME-031"
+        params["stb_id"] = stbId
+        params["page_no"] = page?.description ?? "1"
+        params["entry_no"] = pageCnt?.description ?? "999"
+        params["hash_id"] = ApiUtil.getHashId(stbId)
+        params["svc_code"] = MetvNetwork.SVC_CODE
+        fetch(route: MetvPurchase(query: params), completion: completion, error:error)
+    }
+    
+    
     /**
     * 월정액 구매내역 조회 (IF-ME-033)
     * @param pageNo 요청할 페이지의 번호 (Default: 1)
@@ -345,7 +369,11 @@ struct MetvPackageDirectview:NetworkRoute{
    var body: [String : Any]? = nil
 }
 
-
+struct MetvPurchase:NetworkRoute{
+   var method: HTTPMethod = .get
+   var path: String = "/metv/v5/purchase/general/mobilebtv"
+   var query: [String : String]? = nil
+}
 
 
 

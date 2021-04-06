@@ -30,3 +30,10 @@ struct PlayInfo : Decodable {
     private(set) var SAMPLING: String?
 
 }
+
+struct ConfirmPassword : Decodable {
+    private(set) var IF: String?     // Content ID
+    private(set) var verresult: String?    // 콘텐츠 경로(RTSP)
+    private(set) var result: String?     // "콘텐츠 경로(HLS) 프로토콜을 HLS로 요청하지 않았을경우, 콘텐츠의 HLS 재생 URL 없을경우, 요청 시스템이 BTVPLUS인 경우 값이 내려가지 않는다."
+   
+}

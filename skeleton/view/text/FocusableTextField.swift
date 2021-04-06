@@ -15,8 +15,8 @@ struct FocusableTextField: UIViewRepresentable {
     var maxLength: Int = -1
     var kern: Int = 1
     var textModifier:TextModifier = RegularTextStyle().textModifier
-    
     var isfocus:Bool
+    var isSecureTextEntry:Bool = false
     var inputChanged: ((_ text:String) -> Void)? = nil
     var inputCopmpleted: ((_ text:String) -> Void)? = nil
     
@@ -30,6 +30,7 @@ struct FocusableTextField: UIViewRepresentable {
         textField.adjustsFontSizeToFitWidth = true
         textField.textAlignment = .center
         textField.textColor = UIColor.white
+        textField.isSecureTextEntry = self.isSecureTextEntry
         textField.defaultTextAttributes.updateValue(self.kern, forKey: .kern)
         textField.attributedPlaceholder = NSAttributedString(string: self.placeholder , attributes: [ NSAttributedString.Key.kern: self.kern])
         textField.font = UIFont(name: self.textModifier.family, size: self.textModifier.size)

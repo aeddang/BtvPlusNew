@@ -25,8 +25,11 @@ struct FillButton: View, SelecterbleProtocol{
     var size:CGFloat = Dimen.button.medium
     var imageSize:CGFloat = Dimen.icon.light
     var bgColor:Color = Color.brand.primary
+    var margin:CGFloat = Dimen.margin.regular
     var isNew: Bool = false
     var isMore: Bool = false
+    var icon:String? = nil
+    var iconSize:CGFloat = Dimen.icon.thin
     let action: (_ idx:Int) -> Void
     
     init(
@@ -40,6 +43,7 @@ struct FillButton: View, SelecterbleProtocol{
         textModifier:TextModifier? = nil,
         size:CGFloat? = nil,
         imageSize:CGFloat? = nil,
+        margin:CGFloat? = nil,
         bgColor:Color? = nil,
         action:@escaping (_ idx:Int) -> Void )
     {
@@ -55,6 +59,7 @@ struct FillButton: View, SelecterbleProtocol{
         self.size = size ?? self.size
         self.imageSize = imageSize ?? self.imageSize
         self.bgColor = bgColor ?? self.bgColor
+        self.margin = margin ?? self.margin
     }
     // type new
     init(
@@ -83,6 +88,8 @@ struct FillButton: View, SelecterbleProtocol{
     init(
         text:String,
         isMore: Bool,
+        icon:String? = nil,
+        iconSize:CGFloat? = nil,
         bgColor:Color = Color.transparent.clearUi,
         action:@escaping (_ idx:Int) -> Void )
     {
@@ -90,6 +97,10 @@ struct FillButton: View, SelecterbleProtocol{
         self.isMore = isMore
         self.bgColor = bgColor
         self.action = action
+        self.icon = icon
+        self.iconSize = iconSize ?? self.iconSize
+        self.margin = Dimen.margin.light
+        self.size = Dimen.button.heavyExtra
     }
    
     var body: some View {
@@ -110,6 +121,9 @@ struct FillButton: View, SelecterbleProtocol{
                     Text(self.text)
                         .font(.custom(textModifier.family, size: textModifier.size))
                         .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+                        .lineLimit(1)
+                        .fixedSize(horizontal: true, vertical: false)
+                    
                     if self.trailText != nil || self.strikeText != nil {
                         Spacer()
                         if let strikeText = self.strikeText {
@@ -130,15 +144,23 @@ struct FillButton: View, SelecterbleProtocol{
                         .scaledToFit()
                         .frame(width: Dimen.icon.tinyExtra, height: Dimen.icon.tinyExtra)
                     }
+                    if let icon = self.icon {
+                        Spacer()
+                        Image(icon)
+                        .renderingMode(.original).resizable()
+                        .scaledToFit()
+                            .frame(height: self.iconSize)
+                    }
                     if self.isMore{
                         Spacer()
                         Image(Asset.icon.more)
                         .renderingMode(.original).resizable()
                         .scaledToFit()
                         .frame(width: Dimen.icon.regular, height: Dimen.icon.regular)
+                        .padding(.trailing, Dimen.margin.tinyExtra)
                     }
                 }
-                .padding(.horizontal, self.isMore ? 0 : Dimen.margin.regular)
+                .padding(.horizontal, self.isMore ? 0 : self.margin)
                 if !self.isSelected {
                     Spacer().modifier(MatchParent()).background(Color.transparent.black45)
                 }

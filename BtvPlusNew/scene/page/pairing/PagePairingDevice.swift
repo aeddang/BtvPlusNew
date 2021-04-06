@@ -46,7 +46,9 @@ struct PagePairingDevice: PageView {
                             infinityScrollModel: self.infinityScrollModel)
                         InfinityScrollView(
                             viewModel: self.infinityScrollModel,
-                            useTracking:self.useTracking){
+                            marginBottom:self.sceneObserver.safeAreaBottom,
+                            useTracking:self.useTracking
+                        ){
                             
                             VStack(alignment:.leading , spacing:0) {
                                 Text(String.pageText.pairingDeviceText1)
@@ -95,11 +97,7 @@ struct PagePairingDevice: PageView {
                     self.useTracking = ani
                 }
             }
-            .onReceive(self.pairing.$event){ evt in
-                if !self.isReady { return }
-                guard let evt = evt else { return }
-                self.findDeviceCompleted(evt: evt)
-            }
+           
             .onReceive(self.networkObserver.$status){ status in
                 if !self.isReady { return }
                 if self.pairingType != .wifi { return } 
@@ -109,18 +107,6 @@ struct PagePairingDevice: PageView {
                     self.findSSID()
                 default :
                     self.textAvailableWifi = String.alert.connectWifi
-                }
-            }
-            .onReceive(self.appSceneObserver.$alertResult){ result in
-                guard let result = result else {return}
-                switch result {
-                case .retry(let alert) :
-                    if alert == .notFoundDevice {self.findDevice()}
-                    if alert == .requestLocation { AppUtil.goLocationSettings() }
-                case .cancel(let alert) :
-                    if alert == .notFoundDevice {self.pagePresenter.goBack()}
-                    if alert == .requestLocation { self.findDevice() }
-                default : do{}
                 }
             }
             .onReceive(self.pageObservable.$status){ status in
@@ -140,10 +126,19 @@ struct PagePairingDevice: PageView {
             .onReceive(self.pairing.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
+                case .notFoundDevice, .findMdnsDevice, .findStbInfoDevice :
+                    if !self.isReady { return }
+                    self.findDeviceCompleted(evt: evt)
                 case .connected :
                     self.pagePresenter.closePopup(self.pageObject?.id)
                 case .connectError(let header) :
-                    self.appSceneObserver.alert = .pairingError(header)
+                    if header?.result == NpsNetwork.resultCode.pairingLimited.code {
+                        self.pairing.requestPairing(.hostInfo(auth: nil, device:self.selectedDevice?.stbid, prevResult: header))
+                    } else {
+                        self.appSceneObserver.alert = .pairingError(header)
+                    }
+                case .connectErrorReason(let info) :
+                    self.appSceneObserver.alert = .limitedDevice(info)
                 default : do{}
                 }
             }
@@ -176,13 +171,17 @@ struct PagePairingDevice: PageView {
     }
     
     @State var isLocationRequest:Bool = false
+    @State var selectedDevice:StbData? = nil
     func findSSID() {
         let status = self.locationObserver.status
         if status == .authorizedWhenInUse || status == .authorizedAlways {
             self.updateSSID()
         } else if status == .denied {
             self.isLocationRequest = true
-            self.appSceneObserver.alert = .requestLocation
+            self.appSceneObserver.alert = .requestLocation{ retry in
+                if retry { AppUtil.goLocationSettings() }
+                else { self.findDevice() }
+            }
         } else {
             self.locationObserver.requestWhenInUseAuthorization()
         }
@@ -221,19 +220,34 @@ struct PagePairingDevice: PageView {
             self.textAvailableDevice = String.pageText.pairingDeviceText3 + self.datas.count.description + String.pageText.pairingDeviceText4
         }
         case .findStbInfoDevice(let findData) : do {
-            self.datas = findData.map{StbData().setData(data: $0)}
+            self.datas = findData.filter{$0.status_code != 2}.map{StbData().setData(data: $0)}
             self.textAvailableDevice = String.pageText.pairingDeviceText3 + self.datas.count.description + String.pageText.pairingDeviceText4
         }
         case .notFoundDevice : do {
             self.datas = []
             self.textAvailableDevice = ""
-            self.appSceneObserver.alert = .notFoundDevice
+            switch self.pairingType {
+            case .user:
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.pairingEmptyDevice)
+                        .addParam(key: .title, value: self.title)
+                        .addParam(key: .text, value: String.alert.userCertificationNeedPairing)
+                )
+                self.pagePresenter.closePopup(self.pageObject?.id)
+                break
+            default:
+                self.appSceneObserver.alert = .notFoundDevice{ retry in
+                    if retry { self.findDevice() }
+                    else { self.pagePresenter.closePopup(self.pageObject?.id) }
+                }
+            }
         }
         default : do {}
         }
     }
     
     private func selectePairingDevice(stb:StbData){
+        self.selectedDevice = stb
         self.pairing.requestPairing(.device(stb))
     }
     

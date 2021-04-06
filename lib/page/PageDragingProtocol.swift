@@ -226,7 +226,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
                             var d = dr * max(abs(diff),minDiff)
                             let m:CGFloat = self.axis == .horizontal ? 2.0 : 1.0
                             if dr == 1 {d = d * m}
-                            ComponentLog.d("pull value " + value.description , tag: "InfinityScrollViewProtocol")
+                            //ComponentLog.d("pull value " + value.description , tag: "InfinityScrollViewProtocol")
                             if self.viewModel.status != .drag && self.viewModel.status != .pull  {return}
                             self.onPull(geometry: geo, value: d)
 
@@ -235,13 +235,13 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
                     }
                 case .pullCompleted:
                     if #available(iOS 14.0, *) {
-                        ComponentLog.d("pullCompleted " + self.viewModel.status.rawValue , tag: "InfinityScrollViewProtocol")
+                        //ComponentLog.d("pullCompleted " + self.viewModel.status.rawValue , tag: "InfinityScrollViewProtocol")
                         self.onDragEndAction(isBottom: true, offset: self.bodyOffset)
                         self.viewModel.status = .none
                     }
                 case .pullCancel :
                     if #available(iOS 14.0, *) {
-                        ComponentLog.d("pullCancel " + self.viewModel.status.rawValue , tag: "InfinityScrollViewProtocol")
+                        //ComponentLog.d("pullCancel " + self.viewModel.status.rawValue , tag: "InfinityScrollViewProtocol")
                         self.pullOffset = self.initPullRange
                         self.onDragCancel()
                         self.viewModel.status = .none

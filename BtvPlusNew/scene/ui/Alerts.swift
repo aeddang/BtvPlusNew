@@ -24,7 +24,7 @@ struct InfoAlert: PageView {
 }
 
 struct EmptyMyData: PageView {
-    var icon:String = Asset.image.myEmpty
+    var icon:String = Asset.source.myEmpty
     var text:String = String.alert.dataError
     var body: some View {
         VStack(alignment: .center, spacing: 0){

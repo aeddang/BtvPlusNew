@@ -27,7 +27,7 @@ class ThemaData:InfinityData{
         isLock = !SystemEnvironment.isImageLock ? false : isAdult
         title = data.title
         originImage = data.poster_filename_h
-        image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: type.size, isAdult:isAdult)
+        image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: type.size, isAdult:isAdult, convType:.alpha)
 
         index = idx
         return self
@@ -40,7 +40,7 @@ class ThemaData:InfinityData{
         isLock = !SystemEnvironment.isImageLock ? false : isAdult
         title = data.menu_nm
         originImage = data.bnr_off_img_path
-        image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: type.size, isAdult:isAdult)
+        image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: type.size, isAdult:isAdult, convType:.alpha)
        
         index = idx
         blocks = data.blocks

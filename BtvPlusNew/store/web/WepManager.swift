@@ -49,12 +49,12 @@ class WebManager :PageProtocol{
         //var adultMenuLimit = false
         var RCUAgentVersion:String? = nil
         if let hostDevice = pairing.hostDevice {
-            //adultMenuLimit = hostDevice.adultAafetyMode
+           // adultMenuLimit = hostDevice.adultAafetyMode
             RCUAgentVersion = hostDevice.agentVersion
            
         }
         info["isAdultAuth"] = setup.isAdultAuth       // 성인인증 ON/OFF
-        info["isPurchaseAuth"] = setup.isPurchaseAuth    // 구매인증 ON/OFF
+        info["isPurchaseAuth"] = setup.isPurchaseAuth   // 구매인증 ON/OFF
         info["isMemberAuth"] = true//setting.isFirstAdultAuth   // 최초 본인 인증 여부
         info["restrictedAge"] = setup.isAdultAuth ? (storage.restrictedAge ?? 0) : 0
         info["RCUAgentVersion"] = AppUtil.getSafeString(RCUAgentVersion, defaultValue: "0.0.0")
@@ -72,7 +72,7 @@ class WebManager :PageProtocol{
         info["combine_product_use"] = AppUtil.getSafeString(userInfo?.combine_product_use, defaultValue: "N")
         info["combine_product_list"] = AppUtil.getSafeString(userInfo?.combine_product_list, defaultValue: "null")
         info["isSupportSimplePairing"] = pairing.hostDevice?.isSupportSimplePairing() ?? false
-        info["evaluation"] = SystemEnvironment.isEvaluation //? 1 : 0
+        info["evaluation"] = SystemEnvironment.isEvaluation 
         info["clientId"] = SystemEnvironment.deviceId
         info["expiredSTB"] = false
       

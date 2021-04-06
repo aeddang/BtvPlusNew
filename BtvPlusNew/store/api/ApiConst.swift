@@ -77,10 +77,7 @@ struct ApiGateway{
             ApiPrefix.service+"/"+SystemEnvironment.bundleVersion , forHTTPHeaderField: "x-service-info")
         authorizationRequest.addValue(
             ApiPrefix.device + SystemEnvironment.deviceId , forHTTPHeaderField: "x-did-info")
-        /*
-        authorizationRequest.addValue(
-            "", forHTTPHeaderField: "x-auth-info")
-        */
+        
         return authorizationRequest
     }
 }

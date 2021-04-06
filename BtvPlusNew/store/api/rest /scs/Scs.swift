@@ -32,6 +32,11 @@ extension ScsNetwork{
     static func getReqData(date:Date) -> String{
         return date.toTimestamp(dateFormat: "yyyy-MM-dd_HH:mm:ss", local: "en_US_POSIX")
     }
+    
+    enum ConfirmType: String {
+        case adult = "adult"
+        case purchase = "purchase"
+    }
 }
 
 class Scs: Rest{
@@ -118,6 +123,28 @@ class Scs: Rest{
         DataLog.d("epsdRsluId : " + (epsdRsluId ?? ""), tag: "상품정보 조회")
         fetch(route: ScsPlay(query: params), completion: completion, error:error)
     }
+    
+    /**
+     * 비밀번호 확인 요청 (IF-SCS-004)
+     */
+    func confirmPassword(
+        pw:String?, hostDevice:HostDevice?, type:ScsNetwork.ConfirmType?,
+        completion: @escaping (ConfirmPassword) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        let macAdress = hostDevice?.convertMacAdress ?? ApiConst.defaultMacAdress
+        
+        var params = [String:String]()
+        params["if"] = "IF-SCS-GWSVC-UI5-002"
+        params["ver"] = ScsNetwork.VERSION
+        params["stb_id"] = stbId
+        params["mac_address"] = macAdress
+        params["passwd"] = pw;
+        params["passwd_type"] = type?.rawValue ?? ScsNetwork.ConfirmType.adult.rawValue;
+        params["method"] = "get"
+        
+        fetch(route: ScsConfirmPassword(query: params), completion: completion, error:error)
+    }
 }
 
 struct ScsPreview:NetworkRoute{
@@ -136,6 +163,13 @@ struct ScsPlay:NetworkRoute{
    var path: String = "/scs/v512/product/btvplus/mobilebtv"
    var query: [String : String]? = nil
 }
+
+struct ScsConfirmPassword:NetworkRoute{
+   var method: HTTPMethod = .get
+   var path: String = "/scs/v5/password/confirm/mobilebtv"
+   var query: [String : String]? = nil
+}
+
 
 
 

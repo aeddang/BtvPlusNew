@@ -43,6 +43,7 @@ class PageObject : Equatable, Identifiable{
         self.id = pageKey
     }
     
+    @discardableResult
     func addParam(key:PageParam, value:Any?)->PageObject{
         guard let value = value else { return self }
         if params == nil {

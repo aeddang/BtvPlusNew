@@ -17,9 +17,6 @@ struct PageSetup: PageView {
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
-    
-    
-    
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -101,7 +98,7 @@ struct PageSetup: PageView {
                                 Text(String.pageText.setupCertification).modifier(ContentTitle())
                                 VStack(alignment:.leading , spacing:0) {
                                     SetupItem (
-                                        isOn: .constant(true),
+                                        isOn: self.$isPurchaseAuth,
                                         title: String.pageText.setupCertificationPurchase,
                                         subTitle: String.pageText.setupCertificationPurchaseText
                                     )
@@ -128,7 +125,7 @@ struct PageSetup: PageView {
                                         title: String.pageText.setupChildrenHabit,
                                         subTitle: String.pageText.setupChildrenHabitText,
                                         more:{
-                                            
+                                            self.setupWatchHabit()
                                         }
                                     )
                                 }
@@ -182,6 +179,7 @@ struct PageSetup: PageView {
                                             isOn: .constant(true),
                                             title: "실서버",
                                             more:{
+                                                self.isInitate = false
                                                 self.repository.reset(isReleaseMode: true, isEvaluation: false)
                                             }
                                         )
@@ -190,6 +188,7 @@ struct PageSetup: PageView {
                                             isOn: .constant(true),
                                             title: "스테이지",
                                             more:{
+                                                self.isInitate = false
                                                 self.repository.reset(isReleaseMode: false, isEvaluation: false)
                                             }
                                         )
@@ -267,10 +266,27 @@ struct PageSetup: PageView {
                     self.isNextPlay ? String.alert.nextPlayOn : String.alert.nextPlayOff
                 )
             }
+            .onReceive( [self.isPurchaseAuth].publisher ) { value in
+                if !self.isInitate { return }
+                if self.willPurchaseAuth != nil { return }
+                if self.isPairing && self.setup.isPurchaseAuth == self.isPurchaseAuth { return }
+                if !self.isPairing && !self.isPurchaseAuth { return }
+                
+                if self.isPairing == false && value == true {
+                    self.appSceneObserver.alert = .needPairing()
+                    self.isPurchaseAuth = false
+                    return
+                }
+                self.setupPurchaseAuth(value)
+                self.isPurchaseAuth = !value
+                
+            }
             .onReceive( [self.isSetWatchLv].publisher ) { value in
                 if !self.isInitate { return }
-                if (SystemEnvironment.watchLv > 0) == self.isSetWatchLv { return }
-                if self.isPairing == false && value == true {
+                if self.willSelectedWatchLv != nil { return }
+                if self.isPairing && (SystemEnvironment.watchLv > 0) == self.isSetWatchLv { return }
+                if !self.isPairing && !self.isSetWatchLv { return }
+                if self.isPairing == false {
                     self.appSceneObserver.alert = .needPairing()
                     self.isSetWatchLv = false
                     return
@@ -282,9 +298,33 @@ struct PageSetup: PageView {
                     self.isSetWatchLv = false
                     return
                 }
+                self.setupWatchLv(select: value ? Setup.WatchLv.lv4.getName() : nil)
+                self.isSetWatchLv = !value
+            }
+            
+            .onReceive(self.pagePresenter.$event){ evt in
+                guard let evt = evt else {return}
                 
-                self.repository.updateWatchLv(self.isSetWatchLv ? .lv4 : nil)
-                self.selectedWatchLv = Setup.WatchLv.getLv(SystemEnvironment.watchLv)?.getName()
+                switch evt.type {
+                case .completed :
+                    guard let type = evt.data as? ScsNetwork.ConfirmType  else { return }
+                    switch type {
+                    case .adult:
+                        guard let willSelectedWatchLv = self.willSelectedWatchLv  else { return }
+                        self.onSetupWatchLv(select: willSelectedWatchLv)
+                    case .purchase:
+                        guard let willPurchaseAuth = self.willPurchaseAuth  else { return }
+                        self.onPurchaseAuth(willPurchaseAuth)
+                    }
+                case .cancel :
+                    guard let type = evt.data as? ScsNetwork.ConfirmType  else { return }
+                    switch type {
+                    case .adult: self.willSelectedWatchLv = nil
+                    case .purchase: self.willPurchaseAuth = nil
+                    }
+                    
+                default : break
+                }
             }
             .onAppear{
                
@@ -300,12 +340,15 @@ struct PageSetup: PageView {
     @State var isAutoPlay:Bool = false
     @State var isNextPlay:Bool = false
     @State var isSetWatchLv:Bool = false
+    @State var isPurchaseAuth:Bool = false
+    @State var willPurchaseAuth:Bool? = nil
     
     @State var watchLvs:[String]? = nil
     @State var selectedWatchLv:String? = nil
-    
+    @State var willSelectedWatchLv:String? = nil
     
     @State var isInitate:Bool = false
+    
     
     func resetSetup(status:PairingStatus){
         switch status {
@@ -318,17 +361,62 @@ struct PageSetup: PageView {
         self.isRemoconVibration = self.isPairing ? self.setup.remoconVibration : false
         self.isAutoPlay = self.setup.autoPlay
         self.isNextPlay = self.setup.nextPlay
-        self.isInitate = true
+        self.isPurchaseAuth = self.isPairing ? self.setup.isPurchaseAuth : false
         self.isSetWatchLv = self.isPairing ? (SystemEnvironment.watchLv > 0) : false
-        
         self.watchLvs = Setup.WatchLv.allCases.map{$0.getName()}
         self.selectedWatchLv = Setup.WatchLv.getLv(SystemEnvironment.watchLv)?.getName()
+        
+        self.isInitate = true
     }
     
-    private func setupWatchLv(select:String){
+    private func setupWatchLv(select:String?){
+        self.willSelectedWatchLv = select ?? ""
+        self.pagePresenter.openPopup(
+            PageProvider.getPageObject(.confirmPassword)
+                .addParam(key: .type, value: ScsNetwork.ConfirmType.adult)
+        )
+    }
+   
+    private func onSetupWatchLv(select:String){
+        if select.isEmpty {
+            self.isSetWatchLv = false
+            self.repository.updateWatchLv(nil)
+            self.selectedWatchLv = nil
+            self.willSelectedWatchLv = nil
+                PageLog.d("onSetupWatchLv " + self.isSetWatchLv.description, tag:self.tag)
+            return
+        }
         guard let find = self.watchLvs?.firstIndex(where: {$0 == select}) else {return}
-        self.selectedWatchLv = select
+        self.isSetWatchLv = true
         self.repository.updateWatchLv(Setup.WatchLv.allCases[find])
+        self.selectedWatchLv = select
+        self.willSelectedWatchLv = nil
+        PageLog.d("onSetupWatchLv " + self.isSetWatchLv.description, tag:self.tag)
+    }
+    
+    private func setupPurchaseAuth(_ select:Bool){
+        self.willPurchaseAuth = select
+        self.pagePresenter.openPopup(
+            PageProvider.getPageObject(.confirmPassword)
+                .addParam(key: .type, value: ScsNetwork.ConfirmType.purchase)
+        )
+    }
+   
+    private func onPurchaseAuth(_ select:Bool){
+        self.setup.isPurchaseAuth = select
+        self.isPurchaseAuth = select
+        self.willPurchaseAuth = nil
+        self.appSceneObserver.alert = .alert(String.alert.purchaseAuthCompleted, String.alert.purchaseAuthCompleteInfo)
+    }
+    
+    private func setupWatchHabit(){
+        let move = PageProvider.getPageObject(.watchHabit)
+        move.isPopup = true
+        self.pagePresenter.openPopup(
+            PageProvider.getPageObject(.confirmPassword)
+                .addParam(key: .data, value:move)
+                .addParam(key: .type, value: ScsNetwork.ConfirmType.adult)
+        )
     }
     
 }

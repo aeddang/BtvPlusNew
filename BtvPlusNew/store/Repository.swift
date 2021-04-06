@@ -13,6 +13,14 @@ import Combine
 
 enum RepositoryStatus:Equatable{
     case initate, ready, error(ApiResultError?)
+    
+    var description: String {
+        switch self {
+        case .initate: return "initate"
+        case .ready: return "ready"
+        case .error: return "error"
+        }
+    }
     static func ==(lhs: RepositoryStatus, rhs: RepositoryStatus) -> Bool {
         switch (lhs, rhs) {
         case ( .initate, .initate):return true
@@ -23,7 +31,7 @@ enum RepositoryStatus:Equatable{
 }
 
 enum RepositoryEvent{
-    case updatedWatchLv, updatedAdultAuth
+    case updatedWatchLv, updatedAdultAuth, reset
 }
 
 class Repository:ObservableObject, PageProtocol{
@@ -88,7 +96,6 @@ class Repository:ObservableObject, PageProtocol{
         self.setupApiManager()
         self.setupSetting()
         self.setupPairing()
-        
     }
     
     deinit {
@@ -107,6 +114,7 @@ class Repository:ObservableObject, PageProtocol{
         self.apiManager.clear()
         self.apiManager = ApiManager()
         self.setupApiManager()
+        DataLog.d("reset", tag:self.tag)
     }
     
     
@@ -138,8 +146,7 @@ class Repository:ObservableObject, PageProtocol{
                 self.pairing.user?.pairingDate = self.storage.pairingDate
                 self.pairing.hostDevice?.modelName = self.storage.pairingModelName
                 self.dataProvider.requestData(q: .init(type: .getGnb))
-         
-            
+                
             case .syncError :
                 self.appSceneObserver?.alert = .pairingRecovery
             default: do{}
@@ -187,12 +194,22 @@ class Repository:ObservableObject, PageProtocol{
             
         }).store(in: &dataCancellable)
         
+        self.apiManager.$event.sink(receiveValue: { evt in
+            guard let evt = evt else { return }
+            switch  evt {
+            case .pairingUpdated(let data) :
+                self.appSceneObserver?.alert = .pairingUpdated(data)
+                
+            default : break
+            }
+            
+        }).store(in: &dataCancellable)
+        
         self.pagePresenter?.isLoading = true
         self.apiManager.$status.sink(receiveValue: { status in
             self.pagePresenter?.isLoading = false
             if status == .ready { self.onReadyApiManager() }
         }).store(in: &dataCancellable)
-        
     }
     
     private func setupSetting(){
@@ -287,7 +304,11 @@ class Repository:ObservableObject, PageProtocol{
     private func onReadyRepository(gnbData:GnbBlock){
         self.dataProvider.bands.setDate(gnbData)
         self.appSceneObserver?.event = .debug("onReadyRepository " + (SystemEnvironment.isStage ? "STAGE" : "RELEASE"))
+        DataLog.d("onReadyRepository " + self.status.description , tag:self.tag)
         if self.status != .ready {self.status = .ready}
+        else {
+            self.event = .reset
+        }
     }
     
     func retryRepository()

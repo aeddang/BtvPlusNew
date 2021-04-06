@@ -124,7 +124,11 @@ extension Asset{
         public static let itemRangking = "tagPosterRangking"
         public static let onAir = "tagSynopOnair"
         public static let onAirOff = "tagSynopOffair"
+        public static let btvlite = "tagMyBtvlite"
+        public static let imminent = "tagMyEndSoon"
         
+        public static let delete = "icMyDelete"
+        public static let edit = "icMyEdit"
     }
     
     
@@ -175,7 +179,7 @@ extension Asset{
         public static let noImgVoice =  "imgSynopNoimageVoice"
         public static let noImgWriter =  "imgSynopNoimageWriter"
         public static let noImgDirector =  "imgSynopNoimageDirector"
-        public static let myEmpty = "imgMyEmpty01"
+        
     }
     
     struct source {
@@ -186,6 +190,8 @@ extension Asset{
         public static let intro02 = "imgIosIntro02"
         public static let intro03 = "imgIosIntro03"
         public static let empty = "imgMyEmpty01"
+        public static let myEmpty = "imgMyEmpty01"
+        public static let deviceEmpty = "imgPairingNostbB"
     }
     
     struct age {

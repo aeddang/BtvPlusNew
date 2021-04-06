@@ -74,6 +74,12 @@
 "bcash" = "B캐쉬";
 "lockAdult" = "청소년 보호";
 
+"purchasePrice" = "구매 금액";
+"purchaseDate" = "구매 일자";
+"purchasePeriod" = "이용 기간";
+"vat" = "부가세 포함";
+"expirePeriod" = "만료";
+
 /*
   Button
 */
@@ -115,7 +121,8 @@
 "btnDeleteAll" = "전체삭제";
 "btnCertification" = "인증하기";
 "btnAdultCertification" = "성인 인증하기";
-
+"btnPurchaseEdit" = "구매 목록 편집";
+"btnSelectAll" = "전체 선택";
 
 /*
  Sort
@@ -152,21 +159,33 @@
 "alertConnect" = "B tv 연결알림";
 "alertConnectWifi" = "Wi-Fi 네트워크에 연결해 주세요.";
 "alertConnectWifiSub" = "기기의 [설정 > Wi-Fi] 메뉴에서\nWi-Fi활성화 후 다시 시도해 주세요.";
-"alertConnectNotFound" = "연결가능한 B tv가 없습니다.";
+"alertConnectNotFound" = "연결가능한\nB tv가 없습니다.";
 "alertConnectNotFoundSub" = "다시 조회를 시도하시거나\n다른연결방법을 이용해 주세요.";
 "alertNeedConnect" = "B tv와 연결이 필요합니다.\n연결하시겠습니까?";
 "alertNeedConnectForView" = "전체 영상은 B tv와 연결 후 시청 가능합니다.\n연결하시겠습니까?";
 "alertNeedConnectStatus" = "B tv와 연결 상태 확인이 필요합니다.\n다시 시도 하시겠습니까?";
+"alertCheckConnectStatus" = "B tv와 연결 상태 확인 중 입니다.";
+
+"alertUserCertification" = "휴대폰 본인 인증 안내";
+"alertUserCertificationPairing" = "B tv 연결을 위해 휴대폰 인증을 진행합니다. B tv를 이용 중인 가입자 본인의 휴대폰으로 본인확인을 해주세요.";
+"alertUserCertificationNeedPairing" ="B tv 가입자 명의의 휴대폰으로\n본인확인이 필요합니다.\n확인 후 다시 시도해주세요.";
 
 "alertLocation" = "위치 접근 권한을 허용해 주세요";
 "alertLocationSub" = "애플의 정책에 따라 공유기 이름 정보를 확인하기 위해서 위치 접근 권한을 허용하셔야 이용이 가능합니다.";
-"alertLocationBtn" = "위치 접근 허용 하러 가기";
+"alertLocationBtn" = "권한 허용 하러 가기";
 
 "alertFindDevice" = "B tv 연결을 위해";
 "alertFindDeviceSub" = "잠시만 기다려주세요.";
 
+"alertUnpairing" = "B tv 연결 해제";
+"alertForceUnpairing" = "B tv 요금제 변경으로\n이용 중인 B tv와 스마트 기기의\n연결이 해제되었습니다.";
+"alertForceUnpairingInfo" = "(최대 %s대 기기 연결 가능)";
+
+"alertUpgradePairing" = "B tv 연결 업그레이드";
+"alertUpgradePairingSub" = "%s1 요금제로 변경하셨네요!\n이용 중인 B tv에 스마트 기기를\n\%s2대 더 연결하여 이용해 보세요.";
+
 "alertLimitedDevice" = "이미 %s대의 디바이스가\n연결되어 있습니다.";
-"alertLimitedDeviceSub" = "1대의 B tv에는 최대 %s대의 스마트 기기 연결이 가능합니다. B tv에서 현재 연결 중인 기기를 조정 후 다시 연결해 주세요.";
+"alertLimitedDeviceSub" = "1대의 B tv에는 최대 %s대의\n스마트 기기 연결이 가능합니다.\nB tv에서 현재 연결 중인 기기를\n조정 후 다시 연결해 주세요.";
 "alertLimitedDeviceTip" = "상위 요금제로 변경 시 %s대까지 연결 가능합니다.";
 "alertLimitedDeviceReference" = "*요금제 변경 문의 : 국번없이 106";
 
@@ -175,6 +194,8 @@
 "alertAuthcodeTimeout" = "연결 확인 시간이 초과되었습니다.";
 "alertLimitedConnect" = "연결 가능한 개수를 초과하였습니다.";
 "alertStbConnectFail" = "셋톱박스와 연결에 실패하였습니다.";
+
+
 
 "alertPairingError" = "B tv 연결에 실패하였습니다.\n계속 연결 불가한 경우\n고객센터(국번 없이 106)로\n문의해 주세요.";
 "alertPairingCompleted" = "B tv 연결이 완료되었습니다.\nUI 4.0 버전에서는 B tv에서\n[확인]버튼을 누르셔야 연결이 완료됩니다.";
@@ -232,11 +253,25 @@
 "alertNeedAdultCertification" = "청소년 유해 매체물은\n성인 인증 후 이용이 가능합니다.";
 
 "alertWatchLv" = "시청 연령 제한 설정";
-"alertWatchLvCompleted" = "시청 연령 제한 설정 완료";
 "alertWatchLvInput" = "성인인증번호를 입력해주세요.";
-"alertWatchLvInfo" = "※ 인증번호 초기화는 B tv에서 하실 수 잇습니다.";
-"alertWatchLvError" = "인증번호가 일치하지 않습니다.";
+"alertWatchLvCompleted" = "시청 연령 제한 설정 완료";
 "alertWatchLvCompletedInfo" = "시청 연령 제한 설정이 완료되었습니다.";
+
+"alertPurchaseAuth" = "구매 인증";
+"alertPurchaseAuthInput" = "구매인증번호를 입력해주세요.";
+"alertPurchaseAuthCompleted" = "구매인증 설정 완료";
+"alertPurchaseAuthCompleteInfo" = "구매인증 설정이 완료되었습니다.";
+
+"alertIncorrecPassword" = "인증 번호가 일치하지 않습니다.";
+"alertIncorrectNumberOfCharacter" = "%s자 로 입력해주세요.";
+
+
+"alertPasswordInitateInfo" = "※ 인증번호 초기화는 B tv에서 하실 수 잇습니다.";
+
+
+
+
+
 
 /*
  PageTitle
@@ -256,8 +291,9 @@
 "titleSchedule" = "편성표";
 "titleModifyProfile" = "프로필 변경";
 "titleWatched" = "최근 시청 목록";
-
-
+"titleWatchHabit" = "시청 습관 관리";
+"titleBookmarkList" = "찜 목록";
+"titlePurchaseList" = "구매 목록";
 
 /*
  PagePairing
@@ -321,6 +357,7 @@
 "myinviteFammlyText1" = "가족들이 더욱 쉽고 빠르게";
 "myinviteFammlyText2" = "B tv를 연결할 수 있도록 SMS를 전송해보세요!";
 
+"myRegistPictureFammly" = "B tv에 가족사진 등록하기";
 "myWatchedInfo" = "최근 1개월 간 시청한 VOD 목록입니다.";
 "myWatchedEmpty" = "최근 시청 내역이 없습니다.";
 "myCollectedEmpty" = "구매하신 소장 VOD가 없습니다.";

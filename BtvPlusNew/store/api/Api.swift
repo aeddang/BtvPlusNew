@@ -59,7 +59,8 @@ enum ApiType{
          getEventBanner(String?, EuxpNetwork.BannerType = .page)
     
     //METV
-    case getPurchaseMonthly(Int? = nil , Int? = nil),
+    case getPurchase(Int? = nil , Int? = nil),
+         getPurchaseMonthly(Int? = nil , Int? = nil),
          getPeriodPurchaseMonthly(Int? = nil , Int? = nil),
          getMonthly(Bool = false, Int? = nil , Int? = nil),
          getWatch(Bool = false, Int? = nil , Int? = nil),
@@ -73,7 +74,7 @@ enum ApiType{
     //NPS
     case registHello,
          getDevicePairingStatus,
-         getDevicePairingInfo(String?, String?),
+         getDevicePairingInfo(String?, String?, prevResult:NpsCommonHeader? = nil),
          postDevicePairing(User?, StbData?),
          postAuthPairing(User?, String?),
          postUnPairing,rePairing,  // rePairing 재시도용
@@ -81,7 +82,8 @@ enum ApiType{
          postGuestInfo(User?),
          postGuestNickname(User?),
          postGuestAgreement(User?), getGuestAgreement,
-         updateUser(ModifyUserData?)
+         updateUser(ModifyUserData?),
+         sendMessage(NpsMessage?)
          
     //KMS
     case getStbInfo(String?)
@@ -92,8 +94,8 @@ enum ApiType{
     //SCS
     case getPreview(String?, HostDevice?),
          getPreplay(String?, Bool?),
-         getPlay(String?, HostDevice?)
-    
+         getPlay(String?, HostDevice?),
+         confirmPassword(String?, HostDevice?, ScsNetwork.ConfirmType)
     //PSS
     case getPairingUserInfo(String?, String? = nil),
          getPairingUserInfoByPackageID(String?)

@@ -135,9 +135,7 @@ struct PagePairingSetupUser: PageView {
                     .background(Color.brand.bg)
                     VStack{
                         CheckBox(
-                            isChecked: .constant(
-                                self.isAgree1 &&  self.isAgree2 && self.isAgree3
-                            ),
+                            isChecked: self.isAgree1 &&  self.isAgree2 && self.isAgree3,
                             text:String.pageText.pairingSetupUserAgreementAll,
                             isStrong:true,
                             action:{ ck in
@@ -149,23 +147,35 @@ struct PagePairingSetupUser: PageView {
                         )
                         
                         CheckBox(
-                            isChecked: self.$isAgree1,
+                            isChecked: self.isAgree1,
                             text:String.pageText.pairingSetupUserAgreement1,
                             more:{
                                 
+                            },
+                            action:{ ck in
+                                self.isAgree1 = ck
                             }
                         )
                         
                         CheckBox(
-                            isChecked: self.$isAgree2,
+                            isChecked: self.isAgree2,
                             text:String.pageText.pairingSetupUserAgreement2,
                             more:{
                                 
+                            },
+                            action:{ ck in
+                                self.isAgree2 = ck
                             }
                         )
                         CheckBox(
-                            isChecked: self.$isAgree3,
-                            text:String.pageText.pairingSetupUserAgreement3
+                            isChecked: self.isAgree3,
+                            text:String.pageText.pairingSetupUserAgreement3,
+                            more:{
+                                
+                            },
+                            action:{ ck in
+                                self.isAgree3 = ck
+                            }
                         )
                     }
                     .padding(.all, Dimen.margin.regular)
@@ -290,9 +300,12 @@ struct PagePairingSetupUser: PageView {
                     .addParam(key: .type, value: self.pairingType)
             )
         case .user :
-            self.pagePresenter.openPopup(
-                PageProvider.getPageObject(.pairingUser)
-            )
+            self.appSceneObserver.alert = .alert(String.alert.userCertification, String.alert.userCertificationPairing){
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.pairingUser)
+                )
+            }
+            
         case .recovery :
             self.pairing.requestPairing(.recovery)
         default : do{}

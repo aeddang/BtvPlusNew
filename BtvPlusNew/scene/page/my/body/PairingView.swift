@@ -22,7 +22,7 @@ struct PairingView: PageComponent{
     @State var nick:String = ""
     
     var body: some View {
-        VStack (alignment: .center, spacing: Dimen.margin.lightExtra){
+        VStack (alignment: .center, spacing:0){
             VStack (alignment: .center, spacing: Dimen.margin.lightExtra){
                 ZStack (alignment: .bottom){
                     Image(self.character)
@@ -84,11 +84,12 @@ struct PairingView: PageComponent{
                     )
                 }
             }
-            .background(Color.app.blueLight)
-            .padding(.horizontal, Dimen.margin.thin)
-            
+                .background(Color.app.blueLight)
+                .padding(.horizontal, Dimen.margin.thin)
+                .padding(.top, Dimen.margin.regular)
             MyPointInfo()
                 .padding(.horizontal, Dimen.margin.thin)
+                .padding(.top, Dimen.margin.regularExtra)
             if let data = self.watchedData {
                 VideoBlock(
                     pageObservable:self.pageObservable,
@@ -96,8 +97,41 @@ struct PairingView: PageComponent{
                     pageDragingModel:self.pageDragingModel,
                     data: data,
                     useTracking:true)
+                    .padding(.top, Dimen.margin.medium)
             }
-            Spacer()
+            VStack (alignment: .center, spacing: 0){
+                Spacer().modifier(LineHorizontal())
+                FillButton(
+                    text: String.pageTitle.bookmarkList,
+                    isMore: true
+                ){_ in
+                    /*
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.pairing)
+                    )*/
+                }
+    
+                Spacer().modifier(LineHorizontal())
+                FillButton(
+                    text: String.pageTitle.purchaseList,
+                    isMore: true
+                ){_ in
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.purchaseList)
+                    )
+                }
+                
+                FillButton(
+                    text: String.pageText.myRegistPictureFammly,
+                    isMore: false,
+                    icon: Asset.icon.btvlite,
+                    bgColor : Color.app.blueLight
+                ){_ in
+                    
+                }
+            }
+            .padding(.horizontal, Dimen.margin.thin)
+            .padding(.top, Dimen.margin.medium)
         }
         .padding(.top, Dimen.margin.light)
         

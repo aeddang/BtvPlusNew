@@ -72,6 +72,11 @@ extension String {
         public static let bpoint = "bpoint".loaalized()
         public static let bcash = "bcash".loaalized()
         public static let lockAdult = "lockAdult".loaalized()
+        public static let purchasePrice = "purchasePrice".loaalized()
+        public static let purchaseDate = "purchaseDate".loaalized()
+        public static let purchasePeriod = "purchasePeriod".loaalized()
+        public static let vat = "vat".loaalized()
+        public static let expirePeriod = "expirePeriod".loaalized()
     }
     
     struct week {
@@ -122,6 +127,7 @@ extension String {
         public static var needConnect = "alertNeedConnect".loaalized()
         public static var needConnectForView = "alertNeedConnectForView".loaalized()
         public static var needConnectStatus = "alertNeedConnectStatus".loaalized()
+        public static var checkConnectStatus = "alertCheckConnectStatus".loaalized()
         public static var connectNotFound = "alertConnectNotFound".loaalized()
         public static var connectNotFoundSub = "alertConnectNotFoundSub".loaalized()
      
@@ -133,11 +139,21 @@ extension String {
         public static var findDevice = "alertFindDevice".loaalized()
         public static var findDeviceSub = "alertFindDeviceSub".loaalized()
         
+        public static var unpairing = "alertUnpairing".loaalized()
+        public static var forceUnpairing = "alertForceUnpairing".loaalized()
+        public static var forceUnpairingInfo = "alertForceUnpairingInfo".loaalized()
+
+        public static var upgradePairing = "alertUpgradePairing".loaalized()
+        public static var upgradePairingSub = "alertUpgradePairingSub".loaalized()
+        
         public static var limitedDevice = "alertLimitedDevice".loaalized()
         public static var limitedDeviceSub = "alertLimitedDeviceSub".loaalized()
         public static var limitedDeviceTip = "alertLimitedDeviceTip".loaalized()
         public static var limitedDeviceReference = "alertLimitedDeviceReference".loaalized()
         
+        public static var userCertification = "alertUserCertification".loaalized()
+        public static var userCertificationPairing = "alertUserCertificationPairing".loaalized()
+        public static var userCertificationNeedPairing = "alertUserCertificationNeedPairing".loaalized()
         public static var authcodeInvalid = "alertAuthcodeInvalid".loaalized()
         public static var authcodeWrong = "alertAuthcodeWrong".loaalized()
         public static var authcodeTimeout = "alertAuthcodeTimeout".loaalized()
@@ -193,12 +209,25 @@ extension String {
         public static var adultCertificationNotAllowed = "alertAdultCertificationNotAllowed".loaalized()
         public static var needAdultCertification = "alertNeedAdultCertification".loaalized()
         
+        
+        
+        public static var incorrectNumberOfCharacter = "alertIncorrectNumberOfCharacter".loaalized()
+        public static var incorrecPassword = "alertIncorrecPassword".loaalized()
+        public static var passwordInitateInfo = "alertPasswordInitateInfo".loaalized()
+        
         public static var watchLv = "alertWatchLv".loaalized()
-        public static var watchLvCompleted = "alertWatchLvCompleted".loaalized()
         public static var watchLvInput = "alertWatchLvInput".loaalized()
-        public static var watchLvInfo = "alertWatchLvInfo".loaalized()
-        public static var watchLvInfoError = "alertWatchLvError".loaalized()
+       
+        public static var watchLvCompleted = "alertWatchLvCompleted".loaalized()
         public static var watchLvCompletedInfo = "alertWatchLvCompletedInfo".loaalized()
+        
+        public static var purchaseAuth = "alertPurchaseAuth".loaalized()
+        public static var purchaseAuthInput = "alertPurchaseAuthInput".loaalized()
+        public static var purchaseAuthInfo = "alertPurchaseAuthInfo".loaalized()
+
+        public static var purchaseAuthCompleted = "alertPurchaseAuthCompleted".loaalized()
+        public static var purchaseAuthCompleteInfo = "alertPurchaseAuthCompleteInfo".loaalized()
+        
     }
     
     struct button {
@@ -239,6 +268,8 @@ extension String {
         public static let deleteAll = "btnDeleteAll".loaalized()
         public static let certification = "btnCertification".loaalized()
         public static let adultCertification = "btnAdultCertification".loaalized()
+        public static let purchaseEdit = "btnPurchaseEdit".loaalized()
+        public static let selectAll = "btnSelectAll".loaalized()
         
     }
     struct player {
@@ -291,6 +322,9 @@ extension String {
         public static let schedule = "titleSchedule".loaalized()
         public static let modifyProfile = "titleModifyProfile".loaalized()
         public static let watched = "titleWatched".loaalized()
+        public static let watchHabit = "titleWatchHabit".loaalized()
+        public static let bookmarkList = "titleBookmarkList".loaalized()
+        public static let purchaseList = "titlePurchaseList".loaalized()
         
     }
     
@@ -384,7 +418,7 @@ extension String {
         public static let myinviteFammly = "myinviteFammly".loaalized()
         public static let myinviteFammlyText1 = "myinviteFammlyText1".loaalized()
         public static let myinviteFammlyText2 = "myinviteFammlyText2".loaalized()
-        
+        public static let myRegistPictureFammly = "myRegistPictureFammly".loaalized()
         public static let myWatchedInfo = "myWatchedInfo".loaalized()
         public static let myWatchedEmpty = "myWatchedEmpty".loaalized()
         public static let myCollectedEmpty = "myCollectedEmpty".loaalized()

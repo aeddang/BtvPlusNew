@@ -28,6 +28,7 @@ class Kms: Rest{
         completion: @escaping (StbInfo) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
         params["ci"] = ci ?? ""
+        params["mode"] = "test"
         fetch(route: KmsStbList(query: params), completion: completion, error:error)
     }
 }

@@ -13,8 +13,11 @@ import Combine
 enum SceneAlert:Equatable {
     case confirm(String?, String?,(Bool) -> Void), alert(String?, String?, (() -> Void)? = nil),
          recivedApns, apiError(ApiResultError),
-         connectWifi , notFoundDevice, requestLocation,
-         limitedDevice(PairingInfo?), pairingError(NpsCommonHeader?), pairingRecovery, needPairing(String? = nil), pairingCheckFail,
+         connectWifi((Bool) -> Void) , notFoundDevice((Bool) -> Void), requestLocation((Bool) -> Void),
+         
+         limitedDevice(PairingInfo?), pairingError(NpsCommonHeader?), pairingUpdated(PairingUpdateData),
+         pairingRecovery, needPairing(String? = nil), pairingCheckFail,
+        
          needPurchase( PurchaseWebviewModel ),
          serviceUnavailable(String?), serviceSelect(String?, String? , (String?) -> Void),
          like(String, Bool?), updateAlram(String, Bool),
@@ -31,7 +34,7 @@ enum SceneAlert:Equatable {
 
 }
 enum SceneAlertResult {
-    case complete(SceneAlert), error(SceneAlert) , cancel(SceneAlert), retry(SceneAlert?)
+    case complete(SceneAlert), error(SceneAlert) , cancel(SceneAlert?), retry(SceneAlert?)
 }
 struct DeclarationData:Identifiable {
     let id = UUID.init().uuidString
@@ -78,11 +81,12 @@ struct SceneAlertController: PageComponent{
                 if let handler = completionHandler { self.selectedAlert(idx, completionHandler:handler) }
             case .confirm(_, _, let completionHandler) : self.selectedConfirm(idx, completionHandler:completionHandler)
             case .apiError(let data): self.selectedApi(idx, data:data)
-            case .connectWifi: self.selectedConnectWifi(idx)
-            case .notFoundDevice : self.selectedNotFoundDevice(idx)
+            case .connectWifi(let completionHandler): self.selectedConnectWifi(idx, completionHandler:completionHandler)
+            case .notFoundDevice(let completionHandler) : self.selectedNotFoundDevice(idx, completionHandler:completionHandler)
             case .recivedApns: self.selectedRecivedApns(idx)
-            case .requestLocation: self.selectedRequestLocation(idx)
+            case .requestLocation(let completionHandler): self.selectedRequestLocation(idx, completionHandler:completionHandler)
             case .limitedDevice(_) : self.selectedLimitedDevice(idx)
+            case .pairingUpdated(_) : self.selectedPairingUpdated(idx)
             case .pairingError(_): self.selectedPairingError(idx)
             case .pairingRecovery: self.selectedPairingRecovery(idx)
             case .needPairing: self.selectedNeedPairing(idx)
@@ -115,6 +119,11 @@ struct SceneAlertController: PageComponent{
             case .connectWifi: self.setupConnectWifi()
             case .notFoundDevice: self.setupNotFoundDevice()
             case .requestLocation: self.setupRequestLocation()
+            case .pairingUpdated(let data) :
+                guard let flag = data.updateFlag else { return }
+                if flag == .none { return }
+                self.setupPairingUpdated(data:data)
+                
             case .limitedDevice(let data) : self.setupLimitedDevice(data: data)
             case .pairingError(let data): self.setupPairingError(data: data)
             case .pairingRecovery: self.setupPairingRecovery()
@@ -211,7 +220,7 @@ struct SceneAlertController: PageComponent{
             }
             
         }else if idx == 0  {
-            self.appSceneObserver.alertResult = .cancel(.connectWifi)
+            self.appSceneObserver.alertResult = .cancel(nil)
         }
     }
     
@@ -224,12 +233,8 @@ struct SceneAlertController: PageComponent{
             AlertBtnData(title: String.app.corfirm, index: 1)
         ]
     }
-    func selectedConnectWifi(_ idx:Int){
-        if idx == 0 {
-            self.appSceneObserver.alertResult = .retry(.connectWifi)
-        }else {
-            self.appSceneObserver.alertResult = .cancel(.connectWifi)
-        }
+    func selectedConnectWifi(_ idx:Int, completionHandler: @escaping (Bool) -> Void){
+        completionHandler(idx == 0)
     }
     
     func setupNotFoundDevice() {
@@ -241,12 +246,8 @@ struct SceneAlertController: PageComponent{
             AlertBtnData(title: String.app.corfirm, index: 1)
         ]
     }
-    func selectedNotFoundDevice(_ idx:Int) {
-        if idx == 0 {
-            self.appSceneObserver.alertResult = .retry(.notFoundDevice)
-        }else {
-            self.appSceneObserver.alertResult = .cancel(.notFoundDevice)
-        }
+    func selectedNotFoundDevice(_ idx:Int, completionHandler: @escaping (Bool) -> Void) {
+        completionHandler(idx == 0)
     }
     
     func setupRequestLocation() {
@@ -258,12 +259,8 @@ struct SceneAlertController: PageComponent{
             AlertBtnData(title: String.app.cancel, index: 1)
         ]
     }
-    func selectedRequestLocation(_ idx:Int) {
-        if idx == 0 {
-            self.appSceneObserver.alertResult = .retry(.requestLocation)
-        }else {
-            self.appSceneObserver.alertResult = .cancel(.requestLocation)
-        }
+    func selectedRequestLocation(_ idx:Int, completionHandler: @escaping (Bool) -> Void) {
+        completionHandler(idx == 0)
     }
     
     func setupLimitedDevice(data:PairingInfo?) {
@@ -304,6 +301,25 @@ struct SceneAlertController: PageComponent{
         ]
     }
     func selectedPairingError(_ idx:Int) {}
+    
+    func setupPairingUpdated(data:PairingUpdateData) {
+        switch data.updateFlag {
+        case .forceUnpairing:
+            self.title = String.alert.unpairing
+            self.text = String.alert.forceUnpairing
+            self.subText = String.alert.forceUnpairingInfo.replace((data.maxCount ?? Pairing.LIMITED_DEVICE_NUM).description)
+        case .upgrade:
+            self.title = String.alert.upgradePairing
+            self.text = String.alert.upgradePairingSub.replace(
+                first:data.productName ?? "" ,
+                second: (data.maxCount ?? Pairing.LIMITED_DEVICE_NUM).description)
+        default: return
+        }
+        self.buttons = [
+            AlertBtnData(title: String.app.corfirm, index: 0)
+        ]
+    }
+    func selectedPairingUpdated(_ idx:Int) {}
     
     func setupPairingCheckFail() {
         self.title = String.alert.connect

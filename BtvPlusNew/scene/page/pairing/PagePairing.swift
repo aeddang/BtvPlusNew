@@ -96,6 +96,7 @@ struct PagePairing: PageView {
                             title: String.pageText.pairingBtnUserCertification,
                             text: String.pageText.pairingBtnUserCertificationSub
                         ){
+                            
                             self.requestPairing(type: .user(nil))
                         }
                         .padding(.vertical, Dimen.margin.lightExtra)
@@ -115,16 +116,6 @@ struct PagePairing: PageView {
                 default : do{}
                 }
             }
-            .onReceive(self.appSceneObserver.$alertResult){ result in
-                guard let result = result else { return }
-                switch result {
-                case .retry(let alert) :
-                    if alert == .connectWifi {
-                        self.requestPairing(type: .wifi)
-                    }
-                default : do{}
-                }
-            }
             .onAppear{
                
             }
@@ -136,7 +127,9 @@ struct PagePairing: PageView {
         switch type {
         case .wifi:
             if self.networkObserver.status != .wifi {
-                self.appSceneObserver.alert = .connectWifi
+                self.appSceneObserver.alert = .connectWifi{ retry in
+                    if retry { self.requestPairing(type: .wifi) }
+                }
                 return
             }
             self.pagePresenter.openPopup(
@@ -149,10 +142,11 @@ struct PagePairing: PageView {
                     .addParam(key: PageParam.type, value: PairingRequest.btv)
             )
         case .user:
-            self.pagePresenter.openPopup(
+           self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.pairingSetupUser)
                     .addParam(key: PageParam.type, value: PairingRequest.user(nil))
             )
+            
         default: do{}
         }
         

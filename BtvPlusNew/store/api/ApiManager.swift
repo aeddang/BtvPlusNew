@@ -13,7 +13,7 @@ enum ApiStatus{
 }
 
 enum ApiEvents{
-    case pairingHostChanged
+    case pairingHostChanged, pairingUpdated(PairingUpdateData)
 }
 
 enum UpdateFlag:String{
@@ -27,8 +27,27 @@ enum UpdateFlag:String{
             case "4", "advance": return .advance
             default : return .none
         }
-        
     }
+}
+
+enum PairingUpdateFlag:String{
+    case none ,forceUnpairing ,upgrade
+    static func getFlag(_ value:String?)->PairingUpdateFlag{
+        switch value {
+            case "0": return .none
+            case "1": return .forceUnpairing
+            case "2": return .upgrade
+            default : return .none
+        }
+    }
+}
+
+struct PairingUpdateData {
+    var updateFlag:PairingUpdateFlag? = nil
+    var productName:String? = nil
+    var maxCount:Int? = nil
+    var count:Int? = nil
+    
 }
 
 
@@ -189,6 +208,10 @@ class ApiManager :PageProtocol, ObservableObject{
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         //METV
+        case .getPurchase(let page, let count) : self.metv.getPurchase(
+            page: page, pageCnt: count,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         case .getPurchaseMonthly(let page, let count) : self.metv.getPurchaseMonthly(
             page: page, pageCnt: count,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
@@ -236,7 +259,7 @@ class ApiManager :PageProtocol, ObservableObject{
         case .getDevicePairingStatus : self.nps.getDevicePairingStatus(
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
-        case .getDevicePairingInfo (let authcode, let hostDeviceid) : self.nps.getDevicePairingInfo(
+        case .getDevicePairingInfo (let authcode, let hostDeviceid, _) : self.nps.getDevicePairingInfo(
             authcode:authcode, hostDeviceid:hostDeviceid,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
@@ -269,6 +292,9 @@ class ApiManager :PageProtocol, ObservableObject{
         case .updateUser(let data) : self.nps.updateUser(data: data,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .sendMessage(let data) : self.nps.sendMessage(data: data,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         //KMS
         case .getStbInfo(let cid): self.kms.getStbList(ci: cid,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
@@ -293,6 +319,10 @@ class ApiManager :PageProtocol, ObservableObject{
             error:error)
         case .getPlay(let epsdRsluId, let device) : self.scs.getPlay(
             epsdRsluId: epsdRsluId, hostDevice: device,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .confirmPassword(let pw, let device, let pwType) : self.scs.confirmPassword(
+            pw: pw, hostDevice: device, type: pwType,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         //PSS
@@ -352,7 +382,12 @@ class ApiManager :PageProtocol, ObservableObject{
         case .registHello :
             if let path = NpsNetwork.hello(res: result) {
                 self.nps = Nps(network: NpsNetwork(enviroment: path))
+                if  NpsNetwork.hostDeviceId == nil {
+                    self.load(q: .init(type: .postUnPairing, isOptional:true))
+                }
             }
+            self.updatePairing(res: result )
+            
         case .postAuthPairing, .postDevicePairing :
             NpsNetwork.pairing(res: result)
         case .postUnPairing :
@@ -371,6 +406,17 @@ class ApiManager :PageProtocol, ObservableObject{
         }else{
             self.result = .init(id: id, type:type, data: res)
         }
+    }
+    
+    private func updatePairing(res:ApiResultResponds){
+        guard let resData = res.data as? Hello else { return }
+        guard let tierInfo = resData.body?.tier_info else { return }
+        let pairingUpdateFlag = PairingUpdateFlag.getFlag( tierInfo.lastest_update_level )
+        let productNm = tierInfo.product_name
+        let maxCount = resData.body?.pairing_info?.max_count?.toInt()
+        let count = resData.body?.pairing_info?.count?.toInt()
+        let data = PairingUpdateData(updateFlag: pairingUpdateFlag, productName: productNm, maxCount: maxCount, count: count)
+        self.event = .pairingUpdated(data)
     }
     
     private func complated(id:String, type:ApiType, res:Blank){

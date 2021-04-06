@@ -54,6 +54,7 @@ class BlockData:InfinityData, ObservableObject{
         self.dataType = dataType
         self.uiType = uiType
         self.menuId = menuId
+        self.isCountView = isCountView
         return self
     }
     

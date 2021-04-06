@@ -106,6 +106,7 @@ struct AppLayout: PageComponent{
                 self.appSceneObserver.useTop = PageSceneModel.needTopTab(cPage)
             }
             self.appSceneObserver.useBottom = PageSceneModel.needBottomTab(cPage)
+            
             if PageSceneModel.needKeyboard(cPage) {
                 self.keyboardObserver.start()
             }else{
@@ -131,11 +132,19 @@ struct AppLayout: PageComponent{
             switch status {
             case .ready: self.onStoreInit()
             case .error(let err): self.onPageError(err)
-            default: do{}
+            default: break
+            }
+        }
+        .onReceive(self.repository.$event){ evt in
+            guard let evt = evt else { return }
+            switch evt {
+            case .reset : self.onPageReset()
+            default: break
             }
         }
         .onAppear(){
             self.isLoading = true
+           
             //UITableView.appearance().separatorStyle = .none
             /*
             for family in UIFont.familyNames.sorted() {
@@ -166,6 +175,16 @@ struct AppLayout: PageComponent{
                     .addParam(key: .id, value: initMenuId)
             )
         }
+    }
+    
+    func onPageReset(){
+        self.appSceneObserver.event = .debug("onPageReset")
+        let initMenuId = self.dataProvider.bands.datas.first?.menuId
+        self.pagePresenter.changePage(
+            PageProvider.getPageObject(.home)
+                .addParam(key: .id, value: initMenuId)
+                .addParam(key: SystemEnvironment.isStage ? .subType : .type, value: "reload")
+        )
     }
     
     func onPageError(_ err:ApiResultError?){

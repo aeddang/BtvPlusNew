@@ -36,7 +36,7 @@ open class WebViewModel: ComponentObservable {
     }
 }
 
-protocol WebViewProtocol {
+protocol WebViewProtocol{
     var path: String { get set }
     var request: URLRequest? { get }
     var scriptMessageHandler :WKScriptMessageHandler? { get set }
@@ -44,7 +44,15 @@ protocol WebViewProtocol {
     var uiDelegate:WKUIDelegate? { get set }
 }
 
-extension WebViewProtocol {
+class Console: NSObject, WKScriptMessageHandler {
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        if message.name == "logHandler" {
+            print("LOG: \(message.body)")
+        }
+    }
+}
+
+extension WebViewProtocol{
     var request: URLRequest? {
         get{
             guard let url:URL = path.toUrl() else { return nil }
@@ -70,12 +78,17 @@ extension WebViewProtocol {
         else{
             webView = WKWebView()
         }
+        
         webView.uiDelegate = uiDelegate
         webView.frame.size.height = 1
         webView.frame.size = webView.sizeThatFits(.zero)
+        let source = "function captureLog(msg) { window.webkit.messageHandlers.logHandler.postMessage(msg); } window.console.log = captureLog;"
+        let script = WKUserScript(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
+        webView.configuration.userContentController.addUserScript(script)
+        webView.configuration.userContentController.add(Console() , name: "logHandler")
         return webView
     }
-      
+
     func load(_ uiView: WKWebView) {
         guard let rq = request else { return }
         ComponentLog.d("load " + rq.description)

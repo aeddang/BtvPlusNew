@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-
+import struct Kingfisher.KFImage
 enum CateSubType {
     case prevList, list, event, tip, webview
      
@@ -149,8 +149,14 @@ struct CateItem: PageView {
     var body: some View {
         ZStack{
             VStack(spacing:Dimen.margin.tinyExtra){
-                ImageView(url: self.data.image, contentMode: .fit, noImg: Asset.noImg9_16)
+                KFImage(URL(string: self.data.image))
+                    .resizable()
+                    .placeholder { Image(Asset.noImg1_1).resizable() }
+                    .cancelOnDisappear(true)
+                    .loadImmediately()
+                    .aspectRatio(contentMode: .fill)
                     .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
+                
                 Text(self.data.title!)
                     .modifier(BoldTextStyle(size: Font.size.lightExtra))
             }

@@ -16,6 +16,8 @@ struct FocusableTextView: UIViewRepresentable {
     var isfocus:Bool
     var textModifier:TextModifier = RegularTextStyle().textModifier
     var usefocusAble:Bool = true
+    var isSecureTextEntry:Bool = false
+    var textAlignment:NSTextAlignment = .left
     var limitedLine: Int = 1
     var limitedSize: Int = -1
     var inputChange: ((_ text:String, _ size:CGSize) -> Void)? = nil
@@ -30,9 +32,11 @@ struct FocusableTextView: UIViewRepresentable {
         textView.returnKeyType = self.returnVal
         textView.delegate = context.coordinator
         textView.autocorrectionType = .yes
-        textView.textAlignment = .left
+        textView.textAlignment = self.textAlignment
         textView.textColor = UIColor.white
         textView.sizeToFit()
+        textView.textContentType = .oneTimeCode
+        textView.isSecureTextEntry = self.isSecureTextEntry
         textView.backgroundColor = UIColor.clear
         if limitedLine != -1 {
             textView.textContainer.maximumNumberOfLines = self.limitedLine

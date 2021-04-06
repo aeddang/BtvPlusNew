@@ -28,7 +28,7 @@ extension PageID{
     static let pairingBtv:PageID = "pairingBtv"
     static let pairingUser:PageID = "pairingUser"
     static let pairingManagement:PageID = "pairingManagement"
-    
+    static let pairingEmptyDevice:PageID = "pairingEmptyDevice"
     static let purchase:PageID = "purchase"
     static let multiBlock:PageID = "multiBlock"
     static let categoryList:PageID = "categoryList"
@@ -41,6 +41,9 @@ extension PageID{
     static let search:PageID = "search"
     static let schedule:PageID = "schedule"
     static let adultCertification:PageID = "adultCertification"
+    static let confirmPassword:PageID = "confirmPassword"
+    static let watchHabit:PageID = "watchHabit"
+    static let purchaseList:PageID = "purchaseList"
 }
 
 struct PageProvider {
@@ -73,8 +76,9 @@ struct PageProvider {
         switch pageID {
         case .home, .category,
              .pairingSetupUser, .pairingBtv,
-             .pairingDevice, .pairingUser, .pairingManagement,
-             .purchase , .webview, .schedule, .modifyProile, .adultCertification:
+             .pairingDevice, .pairingUser, .pairingManagement, .pairingEmptyDevice,
+             .purchase , .webview, .schedule, .modifyProile,
+             .adultCertification, .confirmPassword, .watchHabit:
             return  .vertical
         case .fullPlayer :
             return .none
@@ -117,6 +121,7 @@ extension PageParam {
     static let type = "type"
     static let subType = "subType"
     static let title = "title"
+    static let text = "text"
     static let autoPlay = "autoPlay"
     static let initTime = "initTime"
     static let viewPagerModel = "viewPagerModel"
@@ -128,6 +133,8 @@ extension PageParam {
 extension PageEventType {
     static let pageChange = "pageChange"
     static let timeChange = "timeChange"
+    static let completed = "completed"
+    static let cancel = "cancel"
 }
 
 enum PageStyle{
@@ -172,6 +179,7 @@ struct PageFactory{
         case .pairingBtv : return PagePairingBtv()
         case .pairingUser : return PagePairingUser()
         case .pairingManagement : return PagePairingManagement()
+        case .pairingEmptyDevice : return PagePairingEmptyDevice()
         case .purchase : return PagePurchase()
         case .multiBlock : return PageMultiBlock()
         case .categoryList : return PageCategoryList()
@@ -183,6 +191,9 @@ struct PageFactory{
         case .search : return PageSearch()
         case .schedule : return PageSchedule()
         case .adultCertification : return PageAdultCertification()
+        case .confirmPassword : return PageConfirmPassword()
+        case .watchHabit : return PageWatchHabit()
+        case .purchaseList : return PagePurchaseList()
         default : return PageTest()
         }
     }
@@ -206,7 +217,7 @@ struct PageSceneModel: PageModel {
             return UIInterfaceOrientationMask.all
         }
         switch pageObject.pageID {
-        case .categoryList, .multiBlock:
+        case .categoryList, .multiBlock :
             return UIInterfaceOrientationMask.portrait
         case .fullPlayer: return UIInterfaceOrientationMask.landscape
         default :
@@ -251,7 +262,7 @@ struct PageSceneModel: PageModel {
     
     static func needKeyboard(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
-        case .pairingSetupUser, .pairingBtv, .search, .modifyProile: return true
+        case .pairingSetupUser, .pairingBtv, .search, .modifyProile, .confirmPassword: return true
         default : return false
         }
     }

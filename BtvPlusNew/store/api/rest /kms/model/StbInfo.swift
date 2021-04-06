@@ -25,7 +25,7 @@ struct StbInfoDataItem: Decodable {
     private(set) var stb_id:String? = nil
     private(set) var mac_address:String? = nil
     private(set) var svc_num:String? = nil
-    private(set) var status_code:String? = nil // 상태값(2일 경우 해지)
+    private(set) var status_code:Int? = nil // 상태값(2일 경우 해지)
     private(set) var model_name:String? = nil
     private(set) var svcTermDt:String? = nil // ESS에서 획득한 해지일
 }

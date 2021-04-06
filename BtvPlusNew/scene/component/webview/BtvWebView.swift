@@ -12,8 +12,8 @@ import WebKit
 import Combine
 
 enum WebviewMethod:String {
-    case getSTBInfo, getNetworkState, getLogInfo
-    case requestVoiceSearch
+    case getSTBInfo, getNetworkState, getLogInfo, stopLoading
+    case requestVoiceSearch, requestSTBViewInfo
     case bpn_showSynopsis,
          bpn_backWebView, bpn_closeWebView, bpn_showModalWebView,
          bpn_setShowModalWebViewResult,bpn_setIdentityVerfResult, bpn_setPurchaseResult,
@@ -36,6 +36,7 @@ extension BtvWebView {
     static let search = "/view/v3.0/search/main"
     static let searchMore = "/view/v3.0/search/more_info"
     static let schedule = "/view/v3.0/epg"
+    static let watchHabit = "/view/v3.0/child/parentalctrls"
     static let callJsPrefix = "javascript:"
 }
 
@@ -127,6 +128,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
     
     private func checkLoading(_ uiView: WKWebView){
         var job:AnyCancellable? = nil
+        
         job = Timer.publish(every: 0.1, on:.current, in: .common)
             .autoconnect()
             .sink{_ in
@@ -156,13 +158,26 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         checkLoading(uiView)
     }
     
+    @State var isReady = true
+    @State var evalQ:[String] = []
     fileprivate func callJS(_ uiView: WKWebView, jsStr: String) {
-        ComponentLog.d("callJS " + jsStr, tag: "callJS")
+        if !isReady {
+            ComponentLog.d("callJS add Q", tag: self.tag)
+            evalQ.append(jsStr)
+            return
+        }
+        self.isReady = false
+        ComponentLog.d("callJS " + jsStr, tag: self.tag)
         uiView.evaluateJavaScript(jsStr, completionHandler: { (result, error) in
             let resultString = result.debugDescription
             let errorString = error.debugDescription
             let msg = jsStr + " -> result: " + resultString + " error: " + errorString
-            ComponentLog.d(msg, tag: "callJS")
+            ComponentLog.d(msg, tag: self.tag)
+            self.isReady = true
+            if !self.evalQ.isEmpty {
+                let first = self.evalQ.removeFirst()
+                DispatchQueue.main.async { callJS(uiView, fn: first)}
+            }
         })
     }
     
@@ -318,7 +333,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                             dic = self.parent.repository.webManager.getSTBInfo()
                         case WebviewMethod.getLogInfo.rawValue :
                             dic = self.parent.repository.webManager.getLogInfo()
-                        
+                            
                         case WebviewMethod.bpn_showSynopsis.rawValue :
                             if let jsonString = jsonParam {
                                 let jsonData = jsonString.data(using: .utf8)!
@@ -333,14 +348,16 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                                     ComponentLog.e("json parse error", tag:"WebviewMethod.bpn_showSynopsis")
                                 }
                             }
-                         
+                        case WebviewMethod.stopLoading.rawValue :
+                            self.forceRetry(webView: webView)
                         default :
                             self.parent.viewModel.event = .callFuncion(fn, jsonParam, cbName )
                         }
                         if let dic = dic, let cb = cbName, !cb.isEmpty {
                             let js = BtvWebView.callJsPrefix + cb
-                            self.parent.callJS(webView, fn: js, dic: dic)
-                           
+                            DispatchQueue.main.async {
+                                self.parent.callJS(webView, fn: js, dic: dic)
+                            }
                         }
                     }
                 }
@@ -350,9 +367,19 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             decisionHandler(.allow, preferences)
         }
         
+        func forceRetry(webView: WKWebView) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                if webView.isLoading { webView.reload() }
+            }
+        }
+        
         func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {}
-        func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {}
-        func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {}
+        func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+            ComponentLog.d("didCommit" , tag: self.tag )
+        }
+        func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+            ComponentLog.e("didFail: " + error.localizedDescription , tag: self.tag )
+        }
         
        
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -404,7 +431,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         
         
         func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-            ComponentLog.d("error: " + error.localizedDescription , tag: self.tag )
+            ComponentLog.e("error: " + error.localizedDescription , tag: self.tag )
             guard let failingUrlStr = (error as NSError).userInfo["NSErrorFailingURLStringKey"] as? String  else { return }
             guard let failingUrl = URL(string: failingUrlStr) else { return }
             guard let scheme = failingUrl.scheme?.lowercased() else { return }

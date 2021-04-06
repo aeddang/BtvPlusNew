@@ -58,31 +58,35 @@ class SceneDelegate: PageSceneDelegate {
     
     override func willChangeAblePage(_ page:PageObject?)->Bool{
         if page?.getParamValue(key: .needAdult) as? Bool == true {
-            if self.repository?.pairing.status != .pairing {
-                self.repository?.appSceneObserver?.alert = .needPairing()
-                return false
-            }
-            if !SystemEnvironment.isAdultAuth {
-                self.pagePresenter.openPopup(
-                    PageProvider.getPageObject(.adultCertification)
-                        .addParam(key: .data, value: page)
-                )
-                return false
-            }
+            page?.addParam(key: .watchLv, value: Setup.WatchLv.lv4.rawValue )
         }
         
-        if let watchLv = page?.getParamValue(key: .watchLv) as? Int {
-            if watchLv >= 19 {
-                if !SystemEnvironment.isAdultAuth {
+        if !SystemEnvironment.isAdultAuth ||
+            ( !SystemEnvironment.isWatchAuth && SystemEnvironment.watchLv != 0 ),
+            let watchLv = page?.getParamValue(key: .watchLv) as? Int {
+
+                if watchLv >= 19 {
+                    if self.repository?.pairing.status != .pairing {
+                        self.repository?.appSceneObserver?.alert = .needPairing()
+                        return false
+                    }
+                    if !SystemEnvironment.isAdultAuth {
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.adultCertification)
+                                .addParam(key: .data, value: page)
+                        )
+                        return false
+                    }
+                }
+                if SystemEnvironment.watchLv != 0 && SystemEnvironment.watchLv <= watchLv {
                     self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.adultCertification)
+                        PageProvider.getPageObject(.confirmPassword)
                             .addParam(key: .data, value: page)
+                            .addParam(key: .type, value: ScsNetwork.ConfirmType.adult)
                     )
                     return false
                 }
             }
-            
-        }
         
         
         //guard let page = page else { return false }

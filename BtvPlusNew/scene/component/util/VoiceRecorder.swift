@@ -11,7 +11,7 @@ extension VoiceRecorder {
     static let height:CGFloat = 258
 }
 
-struct VoiceRecorder: PageView {
+struct VoiceRecorder: PageComponent {
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var networkObserver:NetworkObserver
     

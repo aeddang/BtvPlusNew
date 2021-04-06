@@ -90,11 +90,12 @@ struct PagePairingUser: PageView {
                         if let jsonData = json?.parseJson() {
                             if let cid = jsonData["ci"] as? String {
                                 self.appSceneObserver.alert = .alert(
-                                    String.alert.identifySuccess, String.alert.identifySuccessMe, nil)
-                                self.pagePresenter.openPopup(
-                                    PageProvider.getPageObject(.pairingDevice)
-                                        .addParam(key: .type, value: PairingRequest.user(cid))
-                                )
+                                    String.alert.identifySuccess, String.alert.identifySuccessMe){
+                                        self.pagePresenter.openPopup(
+                                            PageProvider.getPageObject(.pairingDevice)
+                                                .addParam(key: .type, value: PairingRequest.user(cid))
+                                        )
+                                    }
                             }else{
                                 self.appSceneObserver.alert = .alert(
                                     String.alert.identifyFail, String.alert.identifyFailMe, nil)

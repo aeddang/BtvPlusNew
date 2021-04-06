@@ -9,7 +9,7 @@ import Foundation
 
 
 enum PairingRequest:Equatable{
-    case wifi , btv, user(String?), cancel,
+    case wifi , btv, user(String?), cancel, hostInfo(auth:String?, device:String?, prevResult:NpsCommonHeader?),
          recovery, device(StbData), auth(String) , unPairing, check, userInfo
     static func ==(lhs: PairingRequest, rhs: PairingRequest) -> Bool {
         switch (lhs, rhs) {
@@ -18,6 +18,7 @@ enum PairingRequest:Equatable{
         case ( .user, .user):return true
         case ( .recovery, .recovery):return true
         case ( .userInfo, .userInfo):return true
+        case (.hostInfo, .hostInfo):return true
         default: return false
         }
     }
@@ -28,7 +29,8 @@ enum PairingStatus{
 }
 
 enum PairingEvent{
-    case connected(StbData?), disConnected, connectError(NpsCommonHeader?), disConnectError(NpsCommonHeader?),
+    case connected(StbData?), disConnected,
+         connectError(NpsCommonHeader?), disConnectError(NpsCommonHeader?), connectErrorReason(PairingInfo?),
          findMdnsDevice([MdnsDevice]), findStbInfoDevice([StbInfoDataItem]),  notFoundDevice,
          syncError(NpsCommonHeader?),
          pairingCompleted, pairingCheckCompleted(Bool)
@@ -88,6 +90,9 @@ class Pairing:ObservableObject, PageProtocol {
     func connectError(header:NpsCommonHeader? = nil) {
         self.status = .disConnect
         self.event = .connectError(header)
+    }
+    func connectErrorReason(_ reason:PairingInfo? = nil) {
+        self.event = .connectErrorReason(reason)
     }
     
     func checkCompleted(isSuccess:Bool) {

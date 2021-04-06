@@ -36,9 +36,8 @@ struct WatchedBlock: PageComponent{
     @ObservedObject var viewModel:WatchedBlockModel = WatchedBlockModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
      
-    var key:String? = nil
     var useTracking:Bool = false
-    var spacing: CGFloat = Dimen.margin.medium
+   
    
     var body: some View {
         PageDataProviderContent(

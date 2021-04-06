@@ -51,6 +51,9 @@ struct ListItem{
         static let size:CGSize = CGSize(width: 164, height: 92)
     }
     
+    struct purchase {
+        static let size:CGSize = CGSize(width: 78, height: 111)
+    }
     
     struct stb {
         static let size:CGSize = CGSize(width: 52, height: 52)

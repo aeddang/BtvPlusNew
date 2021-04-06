@@ -48,14 +48,17 @@ struct Dimen{
     
     struct tab {
         public static let titleWidth:CGFloat = 60
-        public static let heavy:CGFloat = 72
+        public static let heavy:CGFloat = 72//*
+        public static let medium:CGFloat = 56 //*
         public static let regular:CGFloat = 46 //*
         public static let light:CGFloat = 36//*
+        public static let lightExtra:CGFloat = 24//*
         public static let thin:CGFloat = 18 //*
     }
     
     struct button {
-        public static let heavy:CGFloat = 80
+        public static let heavy:CGFloat = 80 //*
+        public static let heavyExtra:CGFloat = 64 //*
         public static let medium:CGFloat = 50 //*
         public static let regular:CGFloat = 40 //*
         public static let regularExtra:CGFloat = 35 //*

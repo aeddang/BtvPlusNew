@@ -25,7 +25,7 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
     private var client:MDNSServiceProxyClient? = nil
     let serviceName = "com.skb.btvplus"
     let querytime:Int32 = 60
-    let searchLimitedTime:Int = 10
+    let searchLimitedTime:Int = 5
         
     private var found:(([MdnsDevice]) -> Void)? = nil
     private var notFound: (() -> Void)? = nil
@@ -55,23 +55,7 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
         } catch {
             ComponentLog.e("foundDevice : JSONDecoder " + error.localizedDescription, tag: self.tag)
         }
-        /*
-        do{
-            let value = try JSONSerialization.jsonObject(with: data , options: [])
-            guard let dictionary = value as? [String: Any] else {
-                ComponentLog.e("foundDevice : dictionary error", tag: self.tag)
-                notFound?()
-                return
-            }
-             ComponentLog.d("foundDevice :" + dictionary.debugDescription, tag: self.tag)
-   
-        } catch {
-            ComponentLog.e("foundDevice : JSONSerialization " + error.localizedDescription, tag: self.tag)
-            notFound?()
-            return
-        }
-        */
-        
+       
     }
     
     private func mdnsServiceNotFound() {
@@ -80,8 +64,10 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
     }
     
    
+    private var retryCount:Int = 0
     private var searchLimited:DispatchWorkItem?? = nil
-    private func mdnsServiceFindStart() {
+    private func mdnsServiceFindStart(isRetry:Bool = false) {
+        if !isRetry {self.retryCount = 0}
         let client = MDNSServiceProxyClient()
         client.delegate = self
         if let ip = self.getIPAddress() {
@@ -94,7 +80,13 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
         self.client = client
         self.searchLimited = DispatchWorkItem { // Set the work item with the block you want to execute
             DispatchQueue.main.async {
-               self.mdnsServiceNotFound()
+                if self.retryCount == 2 {
+                    self.mdnsServiceNotFound()
+                } else {
+                    self.retryCount += 1
+                    self.removeClient()
+                    self.mdnsServiceFindStart(isRetry: true)
+                }
             }
         }
         DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(self.searchLimitedTime), execute: self.searchLimited!!)

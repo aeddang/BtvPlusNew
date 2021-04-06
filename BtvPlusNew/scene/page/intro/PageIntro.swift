@@ -57,7 +57,7 @@ struct PageIntro: PageView {
                     text: String.button.skip,
                     isSelected: true
                 ){_ in
-                    self.viewModel.request = .next
+                    self.appSceneObserver.event = .initate
                 }
             } else {
                 HStack(spacing: 0) {

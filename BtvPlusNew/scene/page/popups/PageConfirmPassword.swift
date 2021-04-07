@@ -162,6 +162,9 @@ struct PageConfirmPassword: PageView {
             if let text = obj.getParamValue(key: .text) as? String {
                 self.text = text
             }
+            if let tip = obj.getParamValue(key: .subText) as? String {
+                self.tip  = tip 
+            }
             self.placeHolder = (1...self.inputSize).reduce("", { p, _ in p + "*"})
         }
         .onReceive(self.keyboardObserver.$isOn){ on in

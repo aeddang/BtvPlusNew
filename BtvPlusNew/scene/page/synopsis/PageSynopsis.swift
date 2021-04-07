@@ -29,6 +29,7 @@ struct PageSynopsis: PageView {
     @ObservedObject var peopleScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var prerollModel = PrerollModel()
     @ObservedObject var playerListViewModel: InfinityScrollModel = InfinityScrollModel()
+    @ObservedObject var tabNavigationModel:NavigationModel = NavigationModel()
     
     @State var synopsisData:SynopsisData? = nil
     @State var isPairing:Bool? = nil
@@ -45,6 +46,7 @@ struct PageSynopsis: PageView {
                     axis:.horizontal
                 ) {
                     VStack(spacing:0){
+                        
                         SynopsisTop(
                             pageObservable: self.pageObservable,
                             playerModel: self.playerModel,
@@ -68,7 +70,7 @@ struct PageSynopsis: PageView {
                             case .changeView(let epsdId) : self.changeVod(epsdId:epsdId)
                             }
                         }
-                        
+                       
                         if !self.isFullScreen {
                             if self.isUIView && self.isUiActive && !self.progressError {
                                 SynopsisBody(
@@ -77,9 +79,9 @@ struct PageSynopsis: PageView {
                                     relationContentsModel: self.relationContentsModel,
                                     peopleScrollModel: self.peopleScrollModel,
                                     pageDragingModel: self.pageDragingModel,
+                                    tabNavigationModel: self.tabNavigationModel,
                                     isBookmark: self.$isBookmark,
                                     isLike: self.$isLike,
-                                    relationTabIdx: self.$relationTabIdx,
                                     seris: self.$seris,
                                     topIdx : self.topIdx,
                                     synopsisData: self.synopsisData,
@@ -124,7 +126,7 @@ struct PageSynopsis: PageView {
                             }
                         }
                     }
-                    .onReceive( [self.relationTabIdx].publisher ){ idx in
+                    .onReceive(self.tabNavigationModel.$index ){ idx in
                         if idx == self.selectedRelationTabIdx { return }
                         self.selectedRelationContent(idx:idx)
                     }
@@ -547,7 +549,7 @@ struct PageSynopsis: PageView {
         } else {
             self.setupRelationContentCompleted ()
         }
-        self.onAllProgressCompleted()
+        
     }
     private func errorProgress(){
         PageLog.d("errorProgress", tag: self.tag)
@@ -703,6 +705,7 @@ struct PageSynopsis: PageView {
             self.hasRelationVod = true
             self.selectedRelationContent(idx:0)
         }
+        self.onAllProgressCompleted()
     }
     
     private func selectedRelationContent (idx:Int){
@@ -715,9 +718,7 @@ struct PageSynopsis: PageView {
         if !self.relationContentsModel.seris.isEmpty {
             if self.selectedRelationTabIdx == 0 {
                 let sorted = self.relationContentsModel.getSerisDatas()
-                DispatchQueue.main.async {//IOS13
-                    self.seris = sorted
-                }
+                self.seris = sorted
                 return
             }else{
                 relationContentsIdx = self.selectedRelationTabIdx-1
@@ -726,9 +727,8 @@ struct PageSynopsis: PageView {
         if self.relationContentsModel.relationContents.isEmpty { return }
         if relationContentsIdx >= self.relationContentsModel.relationContents.count  { return }
         let relationDatas = self.relationContentsModel.getRelationContentSets(idx: relationContentsIdx)
-        DispatchQueue.main.async {//IOS13
-            self.relationDatas = relationDatas
-        }
+        self.relationDatas = relationDatas
+
     }
     
     /*

@@ -104,16 +104,8 @@ struct WatchedItem: PageView {
     var body: some View {
         HStack( spacing:Dimen.margin.light){
             ZStack{
-                if self.data.image == nil {
-                    Image(Asset.noImg16_9)
-                        .renderingMode(.original)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .modifier(MatchParent())
-                } else {
-                    ImageView(url: self.data.image!, contentMode: .fill, noImg: Asset.noImg9_16)
-                        .modifier(MatchParent())
-                }
+                ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg9_16)
+                    .modifier(MatchParent())
                 if self.data.isLock {
                     Image(Asset.icon.itemRock)
                         .renderingMode(.original)

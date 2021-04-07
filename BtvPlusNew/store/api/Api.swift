@@ -60,6 +60,8 @@ enum ApiType{
     
     //METV
     case getPurchase(Int? = nil , Int? = nil),
+         deletePurchase([String]),
+         getCollectiblePurchase(Int? = nil , Int? = nil),
          getPurchaseMonthly(Int? = nil , Int? = nil),
          getPeriodPurchaseMonthly(Int? = nil , Int? = nil),
          getMonthly(Bool = false, Int? = nil , Int? = nil),

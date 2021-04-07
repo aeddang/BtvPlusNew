@@ -245,7 +245,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                         .listStyle(PlainListStyle())
                         .background(self.bgColor)
                         .onAppear(){
-                            self.isTracking = true
+                            //self.isTracking = true
                             UITableView.appearance().allowsSelection = false
                             UITableViewCell.appearance().selectionStyle = .none
                             UITableView.appearance().backgroundColor = self.bgColor.uiColor()
@@ -253,7 +253,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                             UITableView.appearance().separatorColor = .clear
                         }
                         .onDisappear{
-                            self.isTracking = false
+                            //self.isTracking = false
                         }
                     } else{
                         ScrollView(.vertical, showsIndicators: false) {

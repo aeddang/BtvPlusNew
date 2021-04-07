@@ -11,23 +11,34 @@ import Combine
 
 class PurchaseBlockModel: PageDataProviderModel {
     private(set) var key:String? = nil
-    private(set) var menuId:String? = nil
     @Published private(set) var isUpdate = false {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
     
     @Published var isEditmode = false
     @Published var isSelectAll = false
+    private var isInit = true
+    func initUpdate(key:String? = nil) {
+        if !self.isInit {return}
+        self.update(key: key)
+    }
     
-    func update(menuId:String?, key:String? = nil) {
-        self.menuId = menuId
+    func update(key:String? = nil) {
         self.key = key
         self.isUpdate = true
+        self.isInit = false
+    }
+}
+
+extension PurchaseBlock{
+    enum ListType:String {
+        case normal, collection
     }
 }
 
 
-struct PurchaseBlock: PageComponent{
+struct PurchaseBlock: PageComponent, Identifiable{
+    let id:String = UUID().uuidString
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var sceneObserver:PageSceneObserver
@@ -38,6 +49,7 @@ struct PurchaseBlock: PageComponent{
     @ObservedObject var pageObservable:PageObservable = PageObservable()
      
     var useTracking:Bool = false
+    var type:ListType = .normal
     @State var isEdit:Bool = false
     @State var isSelectAll:Bool = false
     var body: some View {
@@ -47,6 +59,32 @@ struct PurchaseBlock: PageComponent{
         ){
             VStack(spacing:0){
                 if !self.isError {
+                    if self.type == .normal {
+                        HStack(spacing: 0){
+                            Spacer()
+                            Button(action: {
+                                self.viewModel.isEditmode.toggle()
+                            }) {
+                                if !self.isEdit {
+                                    HStack(alignment:.center, spacing: Dimen.margin.tinyExtra){
+                                        Image(Asset.icon.edit)
+                                            .renderingMode(.original).resizable()
+                                            .scaledToFit()
+                                            .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
+                                        Text(String.button.purchaseEdit)
+                                            .modifier(BoldTextStyle(size: Font.size.light))
+                                    }
+                                } else {
+                                    Text(String.app.cancel)
+                                        .modifier(BoldTextStyle(size: Font.size.light))
+                                }
+                            }
+                            .buttonStyle(BorderlessButtonStyle())
+                        }
+                        .padding(.horizontal, Dimen.margin.thin)
+                        .frame(height:Dimen.tab.lightExtra)
+                        .padding(.vertical, Dimen.margin.thin)
+                    }
                     PurchaseList(
                         purchaseBlockModel:self.viewModel,
                         viewModel:self.infinityScrollModel,
@@ -75,14 +113,14 @@ struct PurchaseBlock: PageComponent{
                         )
                         Spacer()
                         Button(action: {
-                            
+                            self.delete()
                         }) {
                             HStack(alignment:.center, spacing: Dimen.margin.tinyExtra){
                                 Image(Asset.icon.delete)
                                     .renderingMode(.original).resizable()
                                     .scaledToFit()
                                     .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
-                                Text(String.button.delete)
+                                Text(String.button.remove)
                                     .modifier(BoldTextStyle(size: Font.size.light))
                             }
                         }
@@ -94,6 +132,7 @@ struct PurchaseBlock: PageComponent{
                     .padding(.bottom, self.sceneObserver.safeAreaBottom)
                 }
             }
+            .background(Color.brand.bg)
         }
         .onReceive(self.viewModel.$isEditmode) { isEdit in
             withAnimation{ self.isEdit = isEdit }
@@ -111,20 +150,16 @@ struct PurchaseBlock: PageComponent{
             switch evt {
             case .onResult(_, let res, _):
                 switch res.type {
-                case .getPurchase : self.loaded(res)
-                case .deleteWatch :
-                    if res.id == self.currentDeleteId {
-                        self.deleted(res)
-                    }
+                case .getPurchase, .getCollectiblePurchase : self.loaded(res)
+                case .deletePurchase : self.deleted(res)
                 default : break
                 }
             case .onError(_,  let err, _):
                 switch err.type {
-                case .getWatch : self.onError()
-                case .deleteWatch :
-                    if err.id == self.currentDeleteId {
-                        PageLog.d("delete error", tag:self.tag)
-                    }
+                case .getPurchase, .getCollectiblePurchase : self.onError()
+                case .deletePurchase :
+                    PageLog.d("delete error", tag:self.tag)
+                    
                 default : break
                 }
                 
@@ -134,12 +169,35 @@ struct PurchaseBlock: PageComponent{
         .onReceive(self.pairing.$event){evt in
             guard let _ = evt else {return}
             switch evt {
-            case .pairingCompleted : self.reload()
-            case .disConnected : self.reload()
+            case .pairingCompleted : self.initLoad()
+            case .disConnected : self.initLoad()
             case .pairingCheckCompleted(let isSuccess) :
-                if isSuccess { self.reload() }
+                if isSuccess { self.initLoad() }
                 else { self.appSceneObserver.alert = .pairingCheckFail }
             default : do{}
+            }
+        }
+        .onReceive(self.pagePresenter.$event){ evt in
+            guard let evt = evt else {return}
+            
+            switch evt.type {
+            case .completed :
+                guard let type = evt.data as? ScsNetwork.ConfirmType  else { return }
+                switch type {
+                case .purchase:
+                    guard let list = self.deleteList   else { return }
+                    self.onPurchaseDelete(list:list)
+                    self.deleteList = nil
+                default: break
+                }
+            case .cancel :
+                guard let type = evt.data as? ScsNetwork.ConfirmType  else { return }
+                switch type {
+                case .purchase: self.deleteList = nil
+                default: break
+                }
+                
+            default : break
             }
         }
         .onAppear(){
@@ -150,10 +208,20 @@ struct PurchaseBlock: PageComponent{
     @State var isError:Bool = false
     @State var datas:[PurchaseData] = []
     @State var currentDeleteId:String? = nil
-     
+    @State var deleteList:[String]? = nil
+    func initLoad(){
+        if !self.datas.isEmpty {return}
+        self.reload()
+    }
     func reload(){
+        if self.pairing.status != .pairing {
+            withAnimation{ self.isError = true }
+            return
+        }
         self.datas = []
         self.infinityScrollModel.reload()
+        self.viewModel.isEditmode = false
+        self.viewModel.isSelectAll = false
         self.load()
     }
     
@@ -161,10 +229,19 @@ struct PurchaseBlock: PageComponent{
         if  !self.infinityScrollModel.isLoadable { return }
         withAnimation{ self.isError = false }
         self.infinityScrollModel.onLoad()
-        self.viewModel.request = .init(
-            id: self.tag,
-            type: .getPurchase( self.infinityScrollModel.page + 1 )
-        )
+        switch type {
+        case .normal:
+            self.viewModel.request = .init(
+                id: self.tag,
+                type: .getPurchase( self.infinityScrollModel.page + 1 )
+            )
+        case .collection:
+            self.viewModel.request = .init(
+                id: self.tag,
+                type: .getCollectiblePurchase( self.infinityScrollModel.page + 1 )
+            )
+        }
+        
     }
     
     private func onError(){
@@ -175,35 +252,38 @@ struct PurchaseBlock: PageComponent{
         guard let data = res.data as? Purchase else { return }
         setDatas(datas: data.purchaseList)
     }
-    
-    func delete(data:PurchaseData){
-        /*
-        guard  let sridId = data.srisId else {
+
+    func delete(){
+        let dels = self.datas
+            .filter{$0.isSelected}
+            .filter{$0.purchaseId != nil}
+            .map{$0.purchaseId!}
+        
+        if dels.count > 100 {
+            self.appSceneObserver.alert = .alert(String.alert.purchaseHiddenLimit, String.alert.purchaseHiddenLimitText)
             return
         }
-        self.appSceneObserver.alert = .confirm(nil,  String.alert.deleteWatch){ isOk in
-            if !isOk {return}
-            self.currentDeleteId = sridId
-            self.viewModel.request = .init(
-                id: sridId ,
-                type: .deleteWatch([sridId], isAll: false)
-            )
-        }
-        */
+        self.deleteList = dels
+        self.pagePresenter.openPopup(
+            PageProvider.getPageObject(.confirmPassword)
+                .addParam(key: .type, value: ScsNetwork.ConfirmType.purchase)
+                .addParam(key: .title, value: String.alert.purchaseHidden)
+                .addParam(key: .text, value: String.alert.purchaseHiddenText)
+                .addParam(key: .subText, value: String.alert.purchaseHiddenInfo)
+        )
+    }
+    
+    func onPurchaseDelete(list:[String]){
+        self.viewModel.request = .init( type: .deletePurchase(list) )
     }
     
     func deleted(_ res:ApiResultResponds){
-        guard let result = res.data as? UpdateMetv else {
+        guard let result = res.data as? PurchaseDeleted else {
             self.appSceneObserver.event = .toast(String.alert.apiErrorServer)
             return
         }
-        if result.result != ApiCode.success {
-            self.appSceneObserver.event = .toast(result.reason ?? String.alert.apiErrorServer)
-            return
-        }
-        if let find = self.datas.firstIndex(where: {$0.epsdId == self.currentDeleteId}) {
-            self.datas.remove(at: find)
-        }
+        ComponentLog.d("deleted count " + (result.result_infos?.count.description ?? "0"), tag: self.tag)
+        self.reload()
     }
     
     private func setDatas(datas:[PurchaseListItem]?) {

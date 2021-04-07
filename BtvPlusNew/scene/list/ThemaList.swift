@@ -166,16 +166,8 @@ struct ThemaItem: PageView {
     var data:ThemaData
     var body: some View {
         ZStack{
-            if self.data.image == nil {
-                Image(Asset.noImg1_1)
-                    .renderingMode(.original)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .modifier(MatchParent())
-            } else {
-                ImageView(url: self.data.image!, contentMode: .fit, noImg: Asset.noImg1_1)
-                    .modifier(MatchParent())
-            }
+            ImageView(url: self.data.image, contentMode: .fit, noImg: Asset.noImg1_1)
+                .modifier(MatchParent())
             
             if self.data.isLock {
                 VStack(alignment: .center, spacing: Dimen.margin.thin){

@@ -117,7 +117,7 @@ struct PairingView: PageComponent{
                     isMore: true
                 ){_ in
                     self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.purchaseList)
+                        PageProvider.getPageObject(.myPurchase)
                     )
                 }
                 

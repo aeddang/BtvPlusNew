@@ -25,14 +25,13 @@ struct TopBanner: PageComponent {
     var datas: [BannerData]
      
     @State var pages: [PageViewProtocol] = []
-    @State var index: Int = 0
+    
    
     var action:((_ idx:Int) -> Void)? = nil
     var body: some View {
         LoopSwipperView(
             viewModel : self.viewModel,
-            pages: self.pages,
-            index: self.$index
+            pages: self.pages
             )
         .modifier(MatchParent())
         .onReceive(self.pagePresenter.$currentTopPage){ page in
@@ -124,12 +123,13 @@ struct TopBannerItem: PageComponent, Identifiable {
             .onTapGesture {
                 if let move = data.move {
                     switch move {
-                    case .home :
+                    case .home, .category:
                         if let gnbTypCd = data.moveData?[PageParam.id] as? String {
                             if let band = dataProvider.bands.getData(gnbTypCd: gnbTypCd) {
                                 self.pagePresenter.changePage(
                                     PageProvider
                                         .getPageObject(move)
+                                        .addParam(params: data.moveData)
                                         .addParam(key: .id, value: band.menuId)
                                         .addParam(key: UUID().uuidString , value: "")
                                 )

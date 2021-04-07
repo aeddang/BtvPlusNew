@@ -103,14 +103,17 @@ class BannerData:InfinityData, PageProtocol{
         case "501":
             let arrParam = callUrl.components(separatedBy: "/")
             if arrParam.count > 0 {
-                self.move = PageID.home
+                
                 let gnbTypeCd: String = arrParam[0]
                 var param = [PageParam:Any]()
                 param[.id] = gnbTypeCd
+                self.move = gnbTypeCd == EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue ? PageID.category : PageID.home
                 if arrParam.count > 2 {
                     let subMenu: String = arrParam[2]
                     let url = arrParam[1] + "/" + subMenu.replace( "|", with: "/")
                     DataLog.d("page link " + url, tag:self.tag)
+                    param[.link] = url
+                    param[.subId] = subMenu
                 }
                 self.moveData = param
                 
@@ -118,12 +121,6 @@ class BannerData:InfinityData, PageProtocol{
         case "503":
             let type = SynopsisType(value: data.synon_typ_cd)
             self.move = (type == .package) ? PageID.synopsisPackage : PageID.synopsis
-            // 503 시놉 바로가기
-            // 1. "call_typ_cd": "503"이면
-            // 2. synon_typ_cd로 시놉시스 유형을 판단한 후
-            // 3. EUXP-010 조회
-            // A. 단, 조회 시에 sris_id  -> shcut_sris_id, epsd_id  -> shcut_epsd_id 사용
-            // synon_typ_cd : 타이틀01/시즌02/콘텐츠팩03/관련상품팩04/전시용콘텐츠팩05 <- 모바일 기준으로는 01, 02, 03만 사용
             let synopsisData = SynopsisData(
                 srisId: data.shcut_sris_id,
                 searchType: data.synon_typ_cd,

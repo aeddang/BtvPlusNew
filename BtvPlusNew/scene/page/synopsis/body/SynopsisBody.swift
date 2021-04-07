@@ -16,10 +16,9 @@ struct SynopsisBody: PageComponent{
     var relationContentsModel:RelationContentsModel
     var peopleScrollModel: InfinityScrollModel
     var pageDragingModel:PageDragingModel
-
+    var tabNavigationModel:NavigationModel
     @Binding var isBookmark:Bool?
     @Binding var isLike:LikeStatus?
-    @Binding var relationTabIdx:Int
     @Binding var seris:[SerisData]
   
     var topIdx:Int = UUID.init().hashValue
@@ -31,7 +30,7 @@ struct SynopsisBody: PageComponent{
     var srisId:String? = nil
     var epsdId:String? = nil
     var hasAuthority:Bool? = nil
-    
+
     var relationTab:[String] = []
     var relationDatas:[PosterDataSet] = []
     var hasRelationVod:Bool? = nil
@@ -116,11 +115,11 @@ struct SynopsisBody: PageComponent{
                     }
                     else{
                         CPTabDivisionNavigation(
+                            viewModel:self.tabNavigationModel,
                             buttons: NavigationBuilder(
-                                index:self.relationTabIdx,
+                                index:self.tabNavigationModel.index,
                                 marginH:Dimen.margin.regular)
-                                .getNavigationButtons(texts:self.relationTab),
-                            index: self.$relationTabIdx
+                                .getNavigationButtons(texts:self.relationTab)
                         )
                         .frame(height:Dimen.tab.regular)
                         .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
@@ -218,11 +217,11 @@ struct SynopsisBody: PageComponent{
                             .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
                     } else{
                         CPTabDivisionNavigation(
+                            viewModel:self.tabNavigationModel,
                             buttons: NavigationBuilder(
-                                index:self.relationTabIdx,
+                                index:self.tabNavigationModel.index,
                                 marginH:Dimen.margin.regular)
-                                .getNavigationButtons(texts:self.relationTab),
-                            index: self.$relationTabIdx
+                                .getNavigationButtons(texts:self.relationTab)
                         )
                         .frame(height:Dimen.tab.regular)
                         .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))

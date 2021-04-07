@@ -12,50 +12,42 @@ struct CPPageViewPager: PageComponent {
     @ObservedObject var pageObservable: PageObservable = PageObservable()
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
     var pages: [PageViewProtocol]
-    var texts: [String]?
+    var titles: [String]?
     var useGesture = true
     var pageOn:((_ idx:Int) -> Void)? = nil
     
-    @State var index: Int = 0
-    @State private var isPageReady:Bool = false
-    init(
-        pageObservable: PageObservable,
-        viewModel:ViewPagerModel = ViewPagerModel(),
-        pages: [PageObject],
-        texts: [String]?,
-        useGesture:Bool = true,
-        pageOn: @escaping (_ idx:Int) -> Void
-    ) {
-        self.pages = pages.map{ PageFactory.getPage($0) }
-        self.texts = texts
-        self.useGesture = useGesture
-        self.pageOn = pageOn
-    }
-    
+    @State var isPageReady:Bool = false
+    @State var isPageApear:Bool = false
     var body: some View {
         VStack(spacing:0){
             if self.isPageReady {
-                if self.texts != nil {
+                if self.titles != nil {
                     CPTabDivisionNavigation(
                         viewModel: self.viewModel,
                         buttons:
-                           NavigationBuilder(index:self.index, marginH:Dimen.margin.regular)
-                               .getNavigationButtons(texts:self.texts!),
-                        index: self.$index
+                            NavigationBuilder(index:self.viewModel.index, marginH:Dimen.margin.regular)
+                               .getNavigationButtons(texts:self.titles!)
                     )
                     .frame(height:Dimen.tab.regular)
-                    
                 }
                 SwipperView(
-                    pages: self.pages,
-                    index: self.$index) {
-                    guard let pageOn = self.pageOn else {return}
-                    pageOn(self.index)
-                }
+                    viewModel: self.viewModel,
+                    pages: self.pages)
+                    .modifier(MatchParent())
+                    .onAppear(){
+                        guard let pageOn = self.pageOn else {return}
+                        pageOn(self.viewModel.index)
+                        self.isPageApear = true
+                    }
             }else{
                 Spacer()
             }
             
+        }
+        .onReceive(self.viewModel.$index){ idx in
+            if !self.isPageApear { return }
+            guard let pageOn = self.pageOn else {return}
+            pageOn(idx)
         }
         .onReceive( self.pageObservable.$status ){ stat in
             switch stat {
@@ -63,26 +55,11 @@ struct CPPageViewPager: PageComponent {
                 withAnimation(Animation.easeIn(duration: PageSceneDelegate.CHANGE_DURATION)){
                     self.isPageReady = true
                 }
+                
             default : do {}
             }
         }
-        .onReceive( [self.index].publisher ){ idx in
-            if self.viewModel.index == idx { return }
-            withAnimation{
-                self.viewModel.index = idx
-                if self.viewModel.index != self.index {
-                    self.index = idx
-                }
-            }
-        }
-        .onReceive(self.viewModel.$request){ evt in
-            guard let event = evt else { return }
-            switch event {
-            case .move(let idx) : withAnimation{self.index = idx}
-            case .jump(let idx) : self.index = idx
-            default : break
-            }
-        }
+        
     }
 }
 

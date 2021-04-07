@@ -21,6 +21,7 @@ extension PageID{
     static let oeean:PageID = "oeean"
     static let pairing:PageID = "pairing"
     static let my:PageID = "my"
+    static let myPurchase:PageID = "myPurchase"
     static let modifyProile:PageID = "modifyProile"
     static let setup:PageID = "setup"
     static let pairingSetupUser:PageID = "pairingSetupUser"
@@ -78,7 +79,7 @@ struct PageProvider {
              .pairingSetupUser, .pairingBtv,
              .pairingDevice, .pairingUser, .pairingManagement, .pairingEmptyDevice,
              .purchase , .webview, .schedule, .modifyProile,
-             .adultCertification, .confirmPassword, .watchHabit:
+             .adultCertification, .confirmPassword, .watchHabit, .myPurchase:
             return  .vertical
         case .fullPlayer :
             return .none
@@ -116,12 +117,15 @@ struct PageProvider {
 
 extension PageParam {
     static let id = "id"
+    static let subId = "subId"
+    static let link = "link"
     static let data = "data"
     static let datas = "datas"
     static let type = "type"
     static let subType = "subType"
     static let title = "title"
     static let text = "text"
+    static let subText = "subText"
     static let autoPlay = "autoPlay"
     static let initTime = "initTime"
     static let viewPagerModel = "viewPagerModel"
@@ -168,6 +172,7 @@ struct PageFactory{
         case .category : return PageCategory()
         case .serviceError : return PageServiceError()
         case .my : return PageMy()
+        case .myPurchase : return PageMyPurchase()
         case .modifyProile : return PageModifyProfile()
         case .setup : return PageSetup()
         case .synopsis : return PageSynopsis()

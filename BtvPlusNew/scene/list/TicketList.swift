@@ -204,6 +204,9 @@ struct TicketItem: PageView {
     var data:TicketData
     var body: some View {
         ZStack{
+            ImageView(url: self.image, contentMode: .fill, noImg: Asset.noImg1_1)
+                .modifier(MatchParent())
+            /*
             KFImage(URL(string: self.image ?? ""))
                 .resizable()
                 .placeholder {
@@ -214,6 +217,7 @@ struct TicketItem: PageView {
                 .loadImmediately()
                 .aspectRatio(contentMode: .fill)
                 .modifier(MatchParent())
+            */
         }
         .frame(
             width: self.data.type.size.width,

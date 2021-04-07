@@ -17,7 +17,7 @@ extension LoopSwipperView {
 struct LoopSwipperView : View , PageProtocol, Swipper {
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
     var pages: [PageViewProtocol]
-    @Binding var index: Int
+    @State var index: Int = 0
     var isForground:Bool = true
     var action:(() -> Void)? = nil
     var body: some View {
@@ -83,7 +83,7 @@ struct LoopSwipperView : View , PageProtocol, Swipper {
                 .offset(x: self.isUserSwiping ? self.offset : CGFloat(self.index + 1) * -geometry.size.width)
                 .frame(width: geometry.size.width, alignment: .leading)
                 .clipped()
-                .highPriorityGesture(
+                .gesture(
                     DragGesture(minimumDistance: 10, coordinateSpace: .local)
                     .onChanged({ value in
                         if !self.isForground { return }
@@ -122,8 +122,12 @@ struct LoopSwipperView : View , PageProtocol, Swipper {
                     if self.isForground {
                         switch evt{
                         case .reset : if self.isUserSwiping { self.reset(idx:self.index) }
-                        case .move(let idx) : withAnimation(Self.ani){ self.index = idx }
-                        case .jump(let idx) : self.index = idx
+                        case .move(let idx) :
+                            withAnimation(Self.ani){ self.index = idx }
+                            self.viewModel.index = idx
+                        case .jump(let idx) :
+                            self.index = idx
+                            self.viewModel.index = idx
                         case .prev:
                             let willIdx = self.index == 0 ? self.pages.count : self.index - 1
                             self.offset = CGFloat(willIdx) * -geometry.size.width
@@ -173,7 +177,9 @@ struct LoopSwipperView : View , PageProtocol, Swipper {
                     default: break
                     }
                 }
-               
+                .onAppear(){
+                    self.index = self.viewModel.index
+                }
                 .onDisappear(){
                     self.autoResetSubscription?.cancel()
                     self.autoResetSubscription = nil

@@ -31,10 +31,22 @@ struct TopViewer: PageComponent{
                 }
                 .cancelOnDisappear(true)
                 .loadImmediately()
-                .aspectRatio(contentMode: .fill)
+                .aspectRatio(contentMode: .fit)
                 .modifier(MatchParent())
                 
             VStack(alignment: .leading, spacing:0){
+                Button(action: {
+                    self.pagePresenter.goBack()
+                }) {
+                    Image(Asset.icon.back)
+                        .renderingMode(.original)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: Dimen.icon.regular,
+                               height: Dimen.icon.regular)
+                }
+                .padding(.top, self.sceneObserver.safeAreaTop)
+                Spacer()
                 if self.isPairing == false {
                     FillButton(
                         text: String.button.connectBtv
@@ -75,6 +87,7 @@ struct TopViewer: PageComponent{
                     .padding(.top, Dimen.margin.tinyExtra)
                 */
             }
+            .modifier(MatchParent())
             .modifier(ContentHorizontalEdges())
         }
         .frame(height:Self.height)

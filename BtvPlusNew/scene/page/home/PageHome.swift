@@ -126,6 +126,7 @@ struct PageHome: PageView {
             guard let obj = self.pageObject  else { return }
             DispatchQueue.main.async {
                 self.menuId = (obj.getParamValue(key: .id) as? String) ?? self.menuId
+                self.openId = obj.getParamValue(key: .subId) as? String
                 self.reload()
             }
         }
@@ -141,6 +142,7 @@ struct PageHome: PageView {
     @State var monthlyDatas:Array<MonthlyData>? = nil
     @State var selectedMonthlyId:String? = Self.finalSelectedMonthlyId
     @State var menuId:String = ""
+    @State var openId:String? = nil
     @State var useFooter:Bool = false
     
     private func reload(selectedMonthlyId:String? = nil){
@@ -261,7 +263,8 @@ struct PageHome: PageView {
     }
     
     private func requestBlocks(blocksData:[BlockItem]){
-        self.viewModel.update(datas: blocksData)
+        self.viewModel.update(datas: blocksData, openId: self.openId)
+        self.openId = nil
     }
     //Block init
     

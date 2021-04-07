@@ -39,20 +39,7 @@ struct PageCategory: PageView {
                             image: Asset.icon.cateEvent,
                             bgColor: Color.app.blueLightExtra
                         ){_ in
-                            if data.blocks != nil && data.blocks?.isEmpty == false {
-                                self.pagePresenter.openPopup(
-                                    PageProvider.getPageObject(.multiBlock)
-                                        .addParam(key: .data, value: data)
-                                )
-                            }else{
-                                
-                                self.pagePresenter.openPopup(
-                                    PageProvider.getPageObject(.categoryList)
-                                        .addParam(key: .title, value: data.title)
-                                        .addParam(key: .id, value: data.menuId)
-                                        .addParam(key: .type, value: CateBlock.ListType.poster)
-                                )
-                            }
+                            self.openPopup(data: data)
                         }
                     }
                     if let data = self.tipData {
@@ -61,20 +48,7 @@ struct PageCategory: PageView {
                             image: Asset.icon.cateTip,
                             bgColor: Color.app.blueLightExtra
                         ){_ in
-                            if data.blocks != nil && data.blocks?.isEmpty == false {
-                                self.pagePresenter.openPopup(
-                                    PageProvider.getPageObject(.multiBlock)
-                                        .addParam(key: .data, value: data)
-                                )
-                            }else{
-                                
-                                self.pagePresenter.openPopup(
-                                    PageProvider.getPageObject(.categoryList)
-                                        .addParam(key: .title, value: data.title)
-                                        .addParam(key: .id, value: data.menuId)
-                                        .addParam(key: .type, value: CateBlock.ListType.poster)
-                                )
-                            }
+                            self.openPopup(data: data)
                         }
                     }
                 }
@@ -97,7 +71,8 @@ struct PageCategory: PageView {
         .onAppear{
             guard let obj = self.pageObject  else { return }
             let menuId = (obj.getParamValue(key: .id) as? String) ?? ""
-            self.setupDatas(menuId:menuId)
+            let openId = (obj.getParamValue(key: .subId) as? String)
+            self.setupDatas(menuId:menuId, openId: openId)
             self.appSceneObserver.useTopFix = true
         }
         .onDisappear{
@@ -108,7 +83,7 @@ struct PageCategory: PageView {
     @State var datas:[CateDataSet] = []
     @State var eventData:CateData? = nil
     @State var tipData:CateData? = nil
-    private func setupDatas(menuId:String){
+    private func setupDatas(menuId:String, openId:String? = nil){
         guard let blocksData = self.dataProvider.bands.getData(menuId: menuId)?.blocks else { return }
         var cateDatas = blocksData.map{ block in
             CateData().setData(data: block)
@@ -120,7 +95,12 @@ struct PageCategory: PageView {
         var rows:[CateDataSet] = []
         var cells:[CateData] = []
         var total = cateDatas.count
+        var openData:CateData? = nil
+        let findIds = openId?.split(separator: "|")
         cateDatas.forEach{ d in
+            if let menuId = d.menuId, let fids = findIds{
+                if fids.first(where: {$0 == menuId}) != nil { openData = d }
+            }
             switch d.subType{
             case .tip : tipData = d
             case .event : eventData = d
@@ -142,6 +122,43 @@ struct PageCategory: PageView {
             )
         }
         self.datas.append(contentsOf: rows)
+        guard let open = openData else { return }
+        self.openPopup(data: open, openId: openId)
+        
+    }
+    
+    private func openPopup(data:CateData, openId:String? = nil){
+        switch data.subType {
+        case .prevList :
+            self.pagePresenter.openPopup(
+                PageProvider.getPageObject(.previewList)
+                    .addParam(key: .title, value: data.title)
+                    .addParam(key: .id, value: data.menuId)
+                    .addParam(key: .data, value: data)
+                    .addParam(key: .needAdult, value: data.isAdult)
+                    .addParam(key: .subId, value: openId)
+            )
+
+        default :
+            if data.blocks != nil && data.blocks?.isEmpty == false {
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.multiBlock)
+                        .addParam(key: .data, value: data)
+                        .addParam(key: .needAdult, value: data.isAdult)
+                        .addParam(key: .subId, value: openId)
+                )
+            }else{
+                
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.categoryList)
+                        .addParam(key: .title, value: data.title)
+                        .addParam(key: .id, value: data.menuId)
+                        .addParam(key: .type, value: data.cateType)
+                        .addParam(key: .needAdult, value: data.isAdult)
+                        .addParam(key: .subId, value: openId)
+                )
+            }
+        }
     }
     
 }

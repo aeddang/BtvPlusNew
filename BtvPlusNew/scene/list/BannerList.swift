@@ -99,12 +99,13 @@ struct BannerItem: PageView {
         .onTapGesture {
             if let move = data.move {
                 switch move {
-                case .home :
+                case .home, .category:
                     if let gnbTypCd = data.moveData?[PageParam.id] as? String {
                         if let band = dataProvider.bands.getData(gnbTypCd: gnbTypCd) {
                             self.pagePresenter.changePage(
                                 PageProvider
                                     .getPageObject(move)
+                                    .addParam(params: data.moveData)
                                     .addParam(key: .id, value: band.menuId)
                                     .addParam(key: UUID().uuidString , value: "")
                             )
@@ -116,9 +117,11 @@ struct BannerItem: PageView {
                     pageObj.params = data.moveData
                     self.pagePresenter.openPopup(pageObj)
                 }
-            } else if let link = data.outLink {
+            }
+            else if let link = data.outLink {
                 AppUtil.openURL(link)
-            } else if let link = data.inLink {
+            }
+            else if let link = data.inLink {
                 self.pagePresenter.openPopup(
                     PageProvider
                         .getPageObject(.webview)

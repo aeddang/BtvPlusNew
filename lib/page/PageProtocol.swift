@@ -52,6 +52,20 @@ class PageObject : Equatable, Identifiable{
         params![key] = value
         return self
     }
+    @discardableResult
+    func addParam(params:[PageParam:Any]?)->PageObject{
+        guard let params = params else {
+            return self
+        }
+        if self.params == nil {
+            self.params = params
+            return self
+        }
+        params.forEach{
+            self.params![$0.key] = $0.value
+        }
+        return self
+    }
     
     func getParamValue(key:PageParam)->Any?{
         if params == nil { return nil }

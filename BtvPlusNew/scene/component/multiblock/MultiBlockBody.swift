@@ -15,7 +15,7 @@ class MultiBlockModel: PageDataProviderModel {
     private(set) var headerSize:Int = 0
     private(set) var requestSize:Int = 0
     private(set) var isAdult:Bool = false
-     
+    private(set) var openId:String? = nil
     @Published private(set) var isUpdate = false {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
@@ -30,7 +30,7 @@ class MultiBlockModel: PageDataProviderModel {
         self.isUpdate = true
     }
     
-    func update(datas:[BlockItem], themaType:BlockData.ThemaType = .category, isAdult:Bool = false) {
+    func update(datas:[BlockItem], openId:String?, themaType:BlockData.ThemaType = .category, isAdult:Bool = false) {
         self.datas = datas.map{ block in
             BlockData().setDate(block, themaType:themaType)
         }
@@ -41,6 +41,7 @@ class MultiBlockModel: PageDataProviderModel {
             default : return true
             }
         }
+        self.openId = openId
         self.isAdult = isAdult
         self.isUpdate = true
     }

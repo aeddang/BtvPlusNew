@@ -19,11 +19,12 @@ class PurchaseData:InfinityData,ObservableObject{
     private(set) var isImminent:Bool? = nil
     private(set) var srisId:String? = nil
     private(set) var epsdId:String? = nil
+    private(set) var purchaseId:String? = nil
     private(set) var isAdult:Bool = false
     private(set) var isLock:Bool = false
     private(set) var watchLv:Int = 0
     private(set) var synopsisData:SynopsisData? = nil
-    
+    private(set) var synopsisType:SynopsisType = .title
     @Published fileprivate(set) var isEdit:Bool = false
     @Published fileprivate(set) var isSelected:Bool = false
     
@@ -53,9 +54,10 @@ class PurchaseData:InfinityData,ObservableObject{
         isImminent = data.period == "0"
         
         index = idx
+        purchaseId = data.purchase_idx
         srisId = data.sris_id
         epsdId = data.epsd_id
-        
+        synopsisType = SynopsisType(value: data.prod_type_cd)
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
@@ -98,35 +100,19 @@ struct PurchaseList: PageComponent{
             spacing: 0,
             useTracking: self.useTracking
         ){
-            HStack(spacing: 0){
-                Spacer()
-                Button(action: {
-                    self.purchaseBlockModel.isEditmode.toggle()
-                }) {
-                    if !self.isEdit {
-                        HStack(alignment:.center, spacing: Dimen.margin.tinyExtra){
-                            Image(Asset.icon.edit)
-                                .renderingMode(.original).resizable()
-                                .scaledToFit()
-                                .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
-                            Text(String.button.purchaseEdit)
-                                .modifier(BoldTextStyle(size: Font.size.light))
-                        }
-                    } else {
-                        Text(String.app.cancel)
-                            .modifier(BoldTextStyle(size: Font.size.light))
-                    }
-                }
-                .buttonStyle(BorderlessButtonStyle())
-            }
-            .frame(height:Dimen.tab.lightExtra)
-            .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: 0))
+            
             
             ForEach(self.datas) { data in
                 PurchaseItem( data:data )
                 .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.tinyExtra))
                 .onTapGesture {
-                    
+                    if let synopsisData = data.synopsisData {
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
+                                .addParam(key: .data, value: synopsisData)
+                                .addParam(key: .watchLv, value: data.watchLv)
+                        )
+                    } 
                 }
             }
         }
@@ -162,16 +148,8 @@ struct PurchaseItem: PageView {
                     .padding(.trailing, Dimen.margin.thin)
                 }
                 ZStack{
-                    if self.data.image == nil {
-                        Image(Asset.noImg9_16)
-                            .renderingMode(.original)
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .modifier(MatchParent())
-                    } else {
-                        ImageView(url: self.data.image!, contentMode: .fill, noImg: Asset.noImg9_16)
-                            .modifier(MatchParent())
-                    }
+                    ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg9_16)
+                        .modifier(MatchParent())
                     if self.data.isLock {
                         VStack(alignment: .center, spacing: Dimen.margin.thin){
                             Image(Asset.icon.itemRock)

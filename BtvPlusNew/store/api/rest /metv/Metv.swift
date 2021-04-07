@@ -12,6 +12,7 @@ struct MetvNetwork : Network{
         return ApiGateway.setGatewayheader(request: request)
     }
 }
+
 extension MetvNetwork{
     static let RESPONSE_FORMET = "json"
     static let SVC_CODE = "BTV"
@@ -35,7 +36,6 @@ extension MetvNetwork{
 }
 
 class Metv: Rest{
-    
     /**
     * 일반 구매내역 조회 (IF-ME-031)
     * @param pageNo 요청할 페이지의 번호 (Default: 1)
@@ -58,6 +58,51 @@ class Metv: Rest{
         fetch(route: MetvPurchase(query: params), completion: completion, error:error)
     }
     
+    /**
+    * 365/소장용 구매내역 조회 (IF-ME-032)
+    * @param pageNo 요청할 페이지의 번호 (Default: 1)
+    * @param entryNo 요청한 페이지에 보여질 개수 (Default: 10)
+    */
+    func getCollectiblePurchase(
+        page:Int?, pageCnt:Int?,
+        completion: @escaping (Purchase) -> Void, error: ((_ e:Error) -> Void)? = nil){
+
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:String]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["ver"] = MetvNetwork.VERSION
+        params["IF"] = "IF-ME-032"
+        params["stb_id"] = stbId
+        params["page_no"] = page?.description ?? "1"
+        params["entry_no"] = pageCnt?.description ?? "999"
+        params["hash_id"] = ApiUtil.getHashId(stbId)
+        params["svc_code"] = MetvNetwork.SVC_CODE
+        fetch(route: MetvCollectiblePurchase(query: params), completion: completion, error:error)
+    }
+    
+    /**
+    * 구매내역 미노출 상태 등록 (IF-ME-037)
+    * @param purchaseList 노출/미노출 대상 구매 인덱스 리스트 + 단건, 복수건 노출 미노출 요청시 List 형식으로 필수
+    */
+    func deletePurchase(
+        deleteList:[String]? = nil,
+        completion: @escaping (PurchaseDeleted) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:Any]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["ver"] = MetvNetwork.VERSION
+        params["IF"] = "IF-ME-037" 
+        params["stb_id"] = stbId
+    
+        params["disp_sts_cd"] = "1"
+        params["hash_id"] = ApiUtil.getHashId(stbId)
+        params["svc_code"] = MetvNetwork.SVC_CODE
+        params["purchaseList"] = deleteList ?? []
+        
+        var headers = [String : String]()
+        headers["method"] = "delete"
+        fetch(route: MetvDeletePurchase(headers:headers, body: params), completion: completion, error:error)
+    }
     
     /**
     * 월정액 구매내역 조회 (IF-ME-033)
@@ -312,12 +357,33 @@ class Metv: Rest{
     }
 }
 
+struct MetvPurchase:NetworkRoute{
+    var method: HTTPMethod = .get
+    var path: String = "/metv/v5/purchase/general/mobilebtv"
+    var query: [String : String]? = nil
+}
+
+struct MetvDeletePurchase:NetworkRoute{
+    var method: HTTPMethod = .post
+    var path: String = "/metv/v5/purchase/dispctrl"
+    var headers:[String : String]? = nil
+    var body: [String : Any]? = nil
+}
+
+struct MetvCollectiblePurchase:NetworkRoute{
+    var method: HTTPMethod = .get
+    var path: String = "/metv/v5/purchase/unlimited/mobilebtv"
+    var query: [String : String]? = nil
+}
+
+
 
 struct MetvPurchaseMonthly:NetworkRoute{
     var method: HTTPMethod = .get
     var path: String = "/metv/v5/purchase/fixedcharge/mobilebtv"
     var query: [String : String]? = nil
 }
+
 struct MetvMonthly:NetworkRoute{
     var method: HTTPMethod = .get
     var path: String = "/metv/v5/setting/fixedchargelist/mobilebtv"
@@ -369,11 +435,7 @@ struct MetvPackageDirectview:NetworkRoute{
    var body: [String : Any]? = nil
 }
 
-struct MetvPurchase:NetworkRoute{
-   var method: HTTPMethod = .get
-   var path: String = "/metv/v5/purchase/general/mobilebtv"
-   var query: [String : String]? = nil
-}
+
 
 
 

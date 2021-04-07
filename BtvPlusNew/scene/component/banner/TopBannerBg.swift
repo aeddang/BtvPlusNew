@@ -26,7 +26,6 @@ struct TopBannerBg: PageComponent {
             LoopSwipperView(
                 viewModel : self.viewModel,
                 pages: self.pages,
-                index: self.$index,
                 isForground : false
                 )
                 .modifier(MatchHorizontal(height: TopBanner.imageHeight))
@@ -53,7 +52,7 @@ struct TopBannerBg: PageComponent {
             self.pages = datas.map{data in
                 TopBannerBgItem(data: data)
             }
-            self.setBar(idx:self.index)
+            self.setBar(idx:self.viewModel.index)
         }
         .onReceive( self.viewModel.$index ){ idx in
             self.setBar(idx:idx)

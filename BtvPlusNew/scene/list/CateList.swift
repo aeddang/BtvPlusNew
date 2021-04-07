@@ -33,20 +33,27 @@ class CateData:InfinityData{
     private(set) var subTitle: String? = nil
     private(set) var menuId: String? = nil
     private(set) var blocks:[BlockItem]? = nil
-    
+    private(set) var cateType:CateBlock.ListType = .poster
     func setData(data:BlockItem ,idx:Int = -1) -> CateData {
         title = data.menu_nm
         index = idx
         menuId = data.menu_id
         blocks = data.blocks
         isAdult = data.lim_lvl_yn?.toBool() ?? false
-        subType = CateSubType.getType(id:data.gnb_sub_typ_cd) 
+        subType = CateSubType.getType(id:data.gnb_sub_typ_cd)
+        setCateType(data.pst_exps_typ_cd)
         if let path = data.menu_off_img_path {
             image = ImagePath.thumbImagePath(filePath: path, size:CGSize(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra) , convType: .alpha) ?? image
         }
         return self
     }
 
+    private func setCateType(_ poster:String?){
+        switch poster {
+        case "10", "30": cateType = .video
+        default: cateType = .poster
+        }
+    }
     func setDummy(_ idx:Int = -1) -> CateData {
         title = "title"
         return self
@@ -127,7 +134,7 @@ struct CateSet: PageComponent{
                                 PageProvider.getPageObject(.categoryList)
                                     .addParam(key: .title, value: data.title)
                                     .addParam(key: .id, value: data.menuId)
-                                    .addParam(key: .type, value: CateBlock.ListType.poster)
+                                    .addParam(key: .type, value:data.cateType)
                                     .addParam(key: .needAdult, value: data.isAdult)
                             )
                         }

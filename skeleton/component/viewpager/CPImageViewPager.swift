@@ -19,8 +19,9 @@ struct CPImageViewPager: PageComponent {
     var body: some View {
         ZStack(alignment: .bottomLeading) {
             SwipperView(
-                pages: self.pages,
-                index: self.$index) {
+                viewModel:self.viewModel,
+                pages: self.pages) {
+               
                 guard let action = self.action else {return}
                 action(self.index)
             }
@@ -40,19 +41,20 @@ struct CPImageViewPager: PageComponent {
                 .padding(.vertical, Dimen.margin.thin)
             }
         }
-        .onReceive( [self.index].publisher ){ idx in
-            if self.viewModel.index == idx { return }
-            self.viewModel.index = idx
+        .onReceive( self.viewModel.$index ){ idx in
+            self.index = idx
         }
+        /*
         .onReceive(self.viewModel.$request){ evt in
             guard let event = evt else { return }
             switch event {
             case .move(let idx) : withAnimation{ self.index = idx }
-            case .jump(let idx) : self.index = idx
-            case .next : self.index = min(self.index+1, self.pages.count-1)
+            case .jump(let idx) : self.viewModel.index  = idx
+            case .next : self.viewModel.index = min(self.index+1, self.pages.count-1)
             default : break
             }
         }
+        */
     }
 }
 

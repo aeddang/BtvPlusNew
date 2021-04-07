@@ -212,6 +212,14 @@ class ApiManager :PageProtocol, ObservableObject{
             page: page, pageCnt: count,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .deletePurchase(let list) : self.metv.deletePurchase(
+            deleteList: list, 
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getCollectiblePurchase(let page, let count) : self.metv.getCollectiblePurchase(
+            page: page, pageCnt: count,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         case .getPurchaseMonthly(let page, let count) : self.metv.getPurchaseMonthly(
             page: page, pageCnt: count,
             completion: {res in self.complated(id: apiID, type: type, res: res)},

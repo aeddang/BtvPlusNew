@@ -227,6 +227,11 @@ extension String {
 
         public static var purchaseAuthCompleted = "alertPurchaseAuthCompleted".loaalized()
         public static var purchaseAuthCompleteInfo = "alertPurchaseAuthCompleteInfo".loaalized()
+        public static var purchaseHidden = "alertPurchaseHidden".loaalized()
+        public static var purchaseHiddenText = "alertPurchaseHiddenText".loaalized()
+        public static var purchaseHiddenInfo = "alertPurchaseHiddenInfo".loaalized()
+        public static var purchaseHiddenLimit = "alertPurchaseHiddenLimit".loaalized()
+        public static var purchaseHiddenLimitText = "alertPurchaseHiddenLimitText".loaalized()
         
     }
     
@@ -238,6 +243,7 @@ extension String {
         public static var all = "btnAll".loaalized()
         public static var detail = "btnDetail".loaalized()
         public static var delete = "btnDelete".loaalized()
+        public static var remove = "btnRemove".loaalized()
         public static let view = "btnView".loaalized()
         public static let connect = "btnConnect".loaalized()
         public static let disConnect = "btnDisConnect".loaalized()

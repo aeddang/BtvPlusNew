@@ -30,8 +30,7 @@ struct FloatingBanner: PageComponent {
                 ZStack(alignment: .bottom) {
                     LoopSwipperView(
                         viewModel : self.viewModel,
-                        pages: self.pages,
-                        index: self.$index
+                        pages: self.pages
                         )
                     
                     if self.pages.count > 1 {
@@ -102,7 +101,7 @@ struct FloatingBanner: PageComponent {
             self.pages = datas.map{data in
                 FloatingBannerItem(data: data)
             }
-            self.setBar(idx:self.index)
+            self.setBar(idx:self.viewModel.index)
         }
         .onReceive( self.viewModel.$index ){ idx in
             self.setBar(idx:idx)
@@ -142,12 +141,13 @@ struct FloatingBannerItem: PageComponent, Identifiable {
         .onTapGesture {
             if let move = data.move {
                 switch move {
-                case .home :
+                case .home, .category:
                     if let gnbTypCd = data.moveData?[PageParam.id] as? String {
                         if let band = dataProvider.bands.getData(gnbTypCd: gnbTypCd) {
                             self.pagePresenter.changePage(
                                 PageProvider
                                     .getPageObject(move)
+                                    .addParam(params: data.moveData)
                                     .addParam(key: .id, value: band.menuId)
                                     .addParam(key: UUID().uuidString , value: "")
                             )
@@ -161,6 +161,13 @@ struct FloatingBannerItem: PageComponent, Identifiable {
                 }
             }else if let link = data.outLink {
                 AppUtil.openURL(link)
+            }else if let link = data.inLink {
+                self.pagePresenter.openPopup(
+                    PageProvider
+                        .getPageObject(.webview)
+                        .addParam(key: .data, value: link)
+                        .addParam(key: .title , value: data.title)
+                )
             }
             self.appSceneObserver.event = .floatingBanner(nil)
         }

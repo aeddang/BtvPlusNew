@@ -358,17 +358,8 @@ struct PosterItem: PageView {
     var isSelected:Bool = false
     var body: some View {
         ZStack{
-            if self.data.image == nil {
-                Image(Asset.noImg9_16)
-                    .renderingMode(.original)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .modifier(MatchParent())
-            } else {
-                
-                ImageView(url: self.data.image!, contentMode: .fill, noImg: Asset.noImg9_16)
-                    .modifier(MatchParent())
-            }
+            ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg9_16)
+                .modifier(MatchParent())
             if let tag = self.data.tagData {
                 Tag(data: tag)
                     .modifier(MatchParent())

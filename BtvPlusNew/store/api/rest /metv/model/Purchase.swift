@@ -63,3 +63,19 @@ struct PurchaseListItem : Decodable {
     private(set) var method_pay_nm: String? // 결재방식 코드명 (null 또는 빈값: 청구서, 10: 핸드폰, 85: 신용카드, , 80: TV포인트
 }
 
+
+struct PurchaseDeleted : Decodable {
+    private(set) var ver: String?   // 인터페이스 버전
+    private(set) var svc_name: String?   // 서비스이름
+    private(set) var stb_id: String? // STB ID
+    private(set) var request_total_counts: String?   // 요청한 구매인덱스의 개수
+    private(set) var result_infos:[PurchaseDeletedItem]?  // 요청한 구매내역의 미노출처리결과 집합의 이름
+
+}
+
+struct PurchaseDeletedItem : Decodable {
+    private(set) var result_codes: String?    // 처리결과 코드(에러코드 시트 참고) [결과에 따른 인덱스별 코드] + 4000, 4001, 4002, 4003 * result_purchaseList의 인덱스별로 처리결과 코드와 설명을 제공한다.
+    private(set) var result_reasons: String?    // 처리결과 설명 [result_code별 result_reason값] + result_code = 4000인 경우 정상처리완료 + result_code = 4001인 경우 노출기간 만료(처리불가) + result_code = 4002인 경우 변경할 대상의 상태가 같음(처리불가) + result_code = 4003인 경우 상품 타입 오류 또는 요청한 인덱스값이 미존재(처리불가)
+    private(set) var result_countss: String?    // 처리결과 개수 * result_purchaseList의 구매인덱스의 개수와 동일
+    private(set) var result_purchaseList:[String]?   // 처리된 구매인덱스 * 하나라도 리스트로 제공
+}

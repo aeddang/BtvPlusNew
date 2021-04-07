@@ -14,11 +14,11 @@ import Combine
 struct CPTabDivisionNavigation : PageComponent {
     @ObservedObject var viewModel:NavigationModel = NavigationModel()
     var buttons:[NavigationButton]
-    @Binding var index: Int
-    @State private var pos:CGFloat = 0
     var useSpacer = true
-
     
+    @State var index: Int = 0
+    @State var pos:CGFloat = 0
+   
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .bottom){
@@ -45,6 +45,13 @@ struct CPTabDivisionNavigation : PageComponent {
                     .background(Color.app.whiteDeep).opacity(0.1)
             }
             .modifier(MatchParent())
+            .onReceive( self.viewModel.$index ){ idx in
+                if self.index == idx {return}
+                withAnimation{ self.index = idx }
+            }
+            .onAppear(){
+                self.index = self.viewModel.index
+            }
         }//geo
     }//body
     
@@ -71,10 +78,11 @@ struct CPTabDivisionNavigation : PageComponent {
     
     func performAction(_ btnID:String, index:Int){
         self.viewModel.selected = btnID
-        self.viewModel.index = index
+        
         withAnimation{
             self.index = index
         }
+        self.viewModel.index = index
         ComponentLog.d("performAction : " + index.description, tag:tag)
     }
     
@@ -121,8 +129,7 @@ struct CPTabDivisionNavigation_Previews: PreviewProvider {
                         idx:3
                     )
 
-                ],
-                index: .constant(0)
+                ]
             )
             .frame( alignment: .center)
         }

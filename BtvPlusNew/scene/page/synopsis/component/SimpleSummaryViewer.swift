@@ -147,6 +147,7 @@ struct SimpleSummaryViewer: PageComponent{
                 self.pagePresenter.openPopup(
                     PageProvider.getPageObject( poster.synopsisType == .package ? .synopsisPackage : .synopsis)
                         .addParam(key: .data, value: poster.synopsisData)
+                        .addParam(key: .watchLv, value: poster.watchLv)
                 )
             }
             .padding(.top, Dimen.margin.regular)

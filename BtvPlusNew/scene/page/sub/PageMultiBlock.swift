@@ -114,7 +114,7 @@ struct PageMultiBlock: PageView {
 
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
-                if ani { self.setupOriginData(idx:0) }
+                if ani { self.setupOriginData() }
             }
             .onReceive(self.pairing.$event){ evt in
                 guard let evt = evt else {return}
@@ -139,6 +139,8 @@ struct PageMultiBlock: PageView {
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
+                self.openId = obj.getParamValue(key: .subId) as? String
+                
                 if let data = obj.getParamValue(key: .data) as? CateData {
                     self.title = data.title
                     if let blocks = data.blocks?.filter({ $0.menu_id != nil }) {
@@ -158,6 +160,7 @@ struct PageMultiBlock: PageView {
                     self.title = obj.getParamValue(key: .title) as? String
                     self.originDatas = obj.getParamValue(key: .data) as? [BlockItem] ?? []
                 }
+                
                 self.themaType = obj.getParamValue(key: .type) as? BlockData.ThemaType ?? .category
             }
             
@@ -174,8 +177,21 @@ struct PageMultiBlock: PageView {
     @State var useTracking:Bool = false
     @State var title:String? = nil
     @State var finalSelectedIndex:Int? = nil
-    private func setupOriginData(idx:Int){
-        let isAdult = self.tabDatas?[idx].isAdult ?? false
+    @State var openId:String? = nil
+    
+    private func setupOriginData(idx:Int? = nil){
+        var moveIdx:Int = idx ?? 0
+        if idx == nil , let findIds = self.openId?.split(separator: "|") {
+            let tab = self.tabDatas?.first(
+                where: { t in
+                    guard let menuId = t.menuId else {return false}
+                    return findIds.first(where: {$0 == menuId}) != nil
+                }
+            )
+            moveIdx = tab?.index ?? 0
+        }
+        
+        let isAdult = self.tabDatas?[moveIdx].isAdult ?? false
         if self.pairing.status != .pairing && isAdult {
             finalSelectedIndex = idx
             self.appSceneObserver.alert = .needPairing()
@@ -183,17 +199,18 @@ struct PageMultiBlock: PageView {
         }
         finalSelectedIndex = nil
         guard let datas = self.tabDatas else { return reload() }
-        selectedTabIdx = idx
-        originDatas = datas[idx].blocks ?? []
+        selectedTabIdx = moveIdx
+        originDatas = datas[moveIdx].blocks ?? []
         var delay:Double = 0
         if originDatas.isEmpty {
             if self.cateData == nil {delay = 0.1}
-            self.cateData = self.tabDatas?[idx]
+            self.cateData = self.tabDatas?[moveIdx]
         } else {
             if self.cateData != nil {delay = 0.1}
             self.cateData =  nil
         }
         reload(delay:delay)
+        self.openId = nil
     }
     
     private func reload(delay:Double = 0){
@@ -205,8 +222,11 @@ struct PageMultiBlock: PageView {
                                                    isAdult:data.isAdult , key:nil)
                 } else {
                     let isAdult = self.tabDatas?[selectedTabIdx].isAdult ?? false
-                    self.multiBlockViewModel.update(datas: self.originDatas, themaType: self.themaType, isAdult:isAdult)
+                    self.multiBlockViewModel.update(
+                        datas: self.originDatas, openId: self.openId,
+                        themaType: self.themaType, isAdult:isAdult)
                 }
+                self.tabInfinityScrollModel.uiEvent = .scrollTo(self.selectedTabIdx)
             }
         }
     }

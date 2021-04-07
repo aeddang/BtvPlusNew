@@ -22,7 +22,7 @@ struct PagePurchaseList: PageView {
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var viewModel:PurchaseBlockModel = PurchaseBlockModel()
     
-    @State var menuId:String? = nil
+   
     @State var useTracking:Bool = false
   
     var body: some View {
@@ -52,7 +52,7 @@ struct PagePurchaseList: PageView {
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
                 if ani {
-                    self.viewModel.update(menuId:self.menuId, key:nil)
+                    self.viewModel.update(key:nil)
                 }
             }
             .onReceive(self.pagePresenter.$currentTopPage){ page in

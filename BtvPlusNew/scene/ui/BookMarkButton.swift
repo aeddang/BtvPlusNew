@@ -15,6 +15,7 @@ struct BookMarkButton: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     var data:SynopsisData
+    var isSimple:Bool = false
     @Binding var isBookmark:Bool?
     var action: ((_ ac:Bool) -> Void)? = nil
     
@@ -28,20 +29,29 @@ struct BookMarkButton: PageView {
                 else if self.isBookmark == true { self.delete() }
             }
         }) {
-            VStack(spacing:0){
-                Image( self.isBookmark == true ? Asset.icon.heartOn : Asset.icon.heartOff )
+            if !self.isSimple{
+                VStack(spacing:0){
+                    Image( self.isBookmark == true ? Asset.icon.heartOn : Asset.icon.heartOff )
+                        .renderingMode(.original).resizable()
+                        .scaledToFit()
+                        .frame(
+                            width: Dimen.icon.regular,
+                            height: Dimen.icon.regular)
+                    
+                    Text(String.button.heart)
+                    .modifier(MediumTextStyle(
+                        size: Font.size.tiny,
+                        color: Color.app.greyLight
+                    ))
+                    
+                }
+            } else {
+                Image( self.isBookmark == true ? Asset.icon.heartSmallOn : Asset.icon.heartSmallOff )
                     .renderingMode(.original).resizable()
                     .scaledToFit()
                     .frame(
-                        width: Dimen.icon.regular,
-                        height: Dimen.icon.regular)
-                
-                Text(String.button.heart)
-                .modifier(MediumTextStyle(
-                    size: Font.size.tiny,
-                    color: Color.app.greyLight
-                ))
-                
+                        width: Dimen.icon.medium,
+                        height: Dimen.icon.medium)
             }
         }//btn
         

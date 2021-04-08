@@ -79,7 +79,7 @@ struct PageProvider {
              .pairingSetupUser, .pairingBtv,
              .pairingDevice, .pairingUser, .pairingManagement, .pairingEmptyDevice,
              .purchase , .webview, .schedule, .modifyProile,
-             .adultCertification, .confirmPassword, .watchHabit, .myPurchase:
+             .adultCertification, .confirmPassword, .watchHabit:
             return  .vertical
         case .fullPlayer :
             return .none

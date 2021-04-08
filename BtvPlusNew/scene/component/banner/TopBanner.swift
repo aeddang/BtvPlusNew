@@ -43,6 +43,7 @@ struct TopBanner: PageComponent {
             switch status {
             case .stop : self.autoChange()
             case .move : self.autoChangeCancel()
+            default : break
             }
         }
         .onReceive(self.infinityScrollModel.$event){evt in

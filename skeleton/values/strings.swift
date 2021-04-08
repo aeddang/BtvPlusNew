@@ -427,9 +427,10 @@ extension String {
         public static let myRegistPictureFammly = "myRegistPictureFammly".loaalized()
         public static let myWatchedInfo = "myWatchedInfo".loaalized()
         public static let myWatchedEmpty = "myWatchedEmpty".loaalized()
+        public static let myPurchaseEmpty = "myPurchaseEmpty".loaalized()
         public static let myCollectedEmpty = "myCollectedEmpty".loaalized()
         public static let myBookMarkedEmpty =  "myBookMarkedEmpty".loaalized()
-        
+        public static let myBookMarkedInfo = "myBookMarkedInfo".loaalized()
         public static let synopsisOnlyBtvFree = "synopsisOnlyBtvFree".loaalized()
         public static let synopsisOnlyBtv = "synopsisOnlyBtv".loaalized()
         public static let synopsisWatchOnlyBtv = "synopsisWatchOnlyBtv".loaalized()

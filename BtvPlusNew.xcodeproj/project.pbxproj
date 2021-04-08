@@ -1842,10 +1842,10 @@
 			children = (
 				3156F09E25CAC29100C9BE06 /* dialog */,
 				3192317025A3FD6200020388 /* value */,
+				D56C6A73257DA4D200CF9AB8 /* ui */,
 				D506D715258C8FCD00F27C00 /* list */,
 				D5DABD942589F1D400DF5701 /* component */,
 				D5E27EF1258755FE00B2CD5D /* viewmodel */,
-				D56C6A73257DA4D200CF9AB8 /* ui */,
 				D56C6A72257DA4C700CF9AB8 /* page */,
 				D56C6B0C257DAADE00CF9AB8 /* AppLayout.swift */,
 				D56C6B0A257DAADE00CF9AB8 /* AppSceneObserver.swift */,
@@ -2823,7 +2823,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -2847,7 +2847,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.007;
+				MARKETING_VERSION = 1.009;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BtvPlusNew/store/Store-Bridging-Header.h";
@@ -2897,7 +2897,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -2916,7 +2916,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.007;
+				MARKETING_VERSION = 1.009;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BtvPlusNew/store/Store-Bridging-Header.h";

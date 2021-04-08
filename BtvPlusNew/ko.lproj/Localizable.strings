@@ -361,8 +361,10 @@
 "myRegistPictureFammly" = "B tv에 가족사진 등록하기";
 "myWatchedInfo" = "최근 1개월 간 시청한 VOD 목록입니다.";
 "myWatchedEmpty" = "최근 시청 내역이 없습니다.";
+"myPurchaseEmpty" = "구매 내역이 없습니다.";
 "myCollectedEmpty" = "구매하신 소장 VOD가 없습니다.";
 "myBookMarkedEmpty" = "찜한 콘텐츠가 없습니다.";
+"myBookMarkedInfo" = "찜 목록은 60개까지 저장됩니다.";
 /*
  PageModifyProfile
 */

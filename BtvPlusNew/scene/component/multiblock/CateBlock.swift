@@ -43,6 +43,16 @@ class CateBlockModel: PageDataProviderModel {
         self.data = nil
         self.isAdult = isAdult
     }
+    
+    var info:String? {
+        get{
+            switch self.data?.dataType {
+            case .watched : return String.pageText.myWatchedInfo
+            case .bookMark : return String.pageText.myBookMarkedInfo
+            default : return nil
+            }
+        }
+    }
 }
 
 extension CateBlock{
@@ -64,7 +74,7 @@ struct CateBlock: PageComponent{
     @ObservedObject var viewModel:CateBlockModel = CateBlockModel()
     var key:String? = nil
     var useTracking:Bool = false
-    var marginTop : CGFloat = 0
+    var marginTop : CGFloat = Dimen.margin.regular
     var marginBottom : CGFloat = 0
     var spacing: CGFloat = Dimen.margin.thin
     
@@ -97,7 +107,8 @@ struct CateBlock: PageComponent{
                         if self.useTop {
                             SortTab(
                                 count:self.totalCount,
-                                isSortAble: self.isSortAble
+                                isSortAble: self.isSortAble,
+                                info: self.viewModel.info
                                 ){ sort in
                                     self.sortType = sort
                                     self.reload()
@@ -153,8 +164,13 @@ struct CateBlock: PageComponent{
                 }
                
             } else {
-                EmptyAlert()
-                .modifier(MatchParent())
+                if self.viewModel.data?.dataType == .bookMark {
+                    EmptyMyData( text:String.pageText.myBookMarkedEmpty ).modifier(MatchParent())
+                } else  if self.viewModel.data?.dataType == .watched {
+                    EmptyMyData( text:String.pageText.myWatchedEmpty ).modifier(MatchParent())
+                } else {
+                    EmptyAlert().modifier(MatchParent())
+                }
             }
             
         }
@@ -364,7 +380,7 @@ struct CateBlock: PageComponent{
             return
         }
         let loadedDatas:[PosterData] = datas.map { d in
-            return PosterData().setData(data: d)
+            return PosterData().setData(data: d, cardType: .bookmarkedPoster)
         }
         setPosterSets(loadedDatas: loadedDatas)
     }

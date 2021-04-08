@@ -36,10 +36,19 @@ class ImageLoader: ObservableObject, PageProtocol{
     @discardableResult
     func load(url: String?, key:String = "") -> Bool {
         if isLoading { return false}
-        guard let url = url else { return false}
-        if url == "" { return false}
+        guard let url = url else {
+            DataLog.e("targetUrl nil" , tag:self.tag)
+            self.event = .error
+            return false
+        }
+        if url == "" {
+            DataLog.e("targetUrl empty" , tag:self.tag)
+            self.event = .error
+            return false
+        }
         guard let targetUrl = URL(string:url) else {
             DataLog.e("targetUrl error " + url , tag:self.tag)
+            self.event = .error
             return false
         }
         /*

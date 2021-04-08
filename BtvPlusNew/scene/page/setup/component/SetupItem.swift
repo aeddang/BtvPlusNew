@@ -54,6 +54,9 @@ struct SetupItem: PageView {
                         color: Color.app.greyLight
                     ))
                     .fixedSize(horizontal: true, vertical: false)
+                    .frame(height: Dimen.icon.regular)
+                    .padding(.trailing, Dimen.margin.thin)
+                    
                 } else if self.more == nil {
                     Toggle("", isOn: self.$isOn)
                        .toggleStyle( ColoredToggleStyle() )
@@ -113,6 +116,7 @@ struct SetupItem: PageView {
         }
         .padding(.leading, Dimen.margin.thin)
         .padding(.vertical, Dimen.margin.regular)
+        .background(Color.app.blueLight)
         .onTapGesture {
             self.more?()
         }

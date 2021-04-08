@@ -15,7 +15,7 @@ extension Footer{
     
     static let privacy = "https://m.skbroadband.com/Page.do?menu_id=F02000000"
     static let businessRegistration = "https://www.ftc.go.kr/bizCommPop.do?wrkr_no=2148618758"
-    static let serviceTerms = ApiPath.getRestApiPath(.WEB) + "/view/v3.0/terms"
+    
 }
 struct Footer: PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
@@ -40,7 +40,7 @@ struct Footer: PageComponent {
                     self.pagePresenter.openPopup(
                         PageProvider
                             .getPageObject(.webview)
-                            .addParam(key: .data, value: Self.serviceTerms)
+                            .addParam(key: .data, value: BtvWebView.serviceTerms)
                             .addParam(key: .title , value: String.pageTitle.privacy)
                     )
                     

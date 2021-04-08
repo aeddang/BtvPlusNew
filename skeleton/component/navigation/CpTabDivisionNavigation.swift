@@ -15,7 +15,7 @@ struct CPTabDivisionNavigation : PageComponent {
     @ObservedObject var viewModel:NavigationModel = NavigationModel()
     var buttons:[NavigationButton]
     var useSpacer = true
-    
+    var primaryColor:Color = Color.brand.primary
     @State var index: Int = 0
     @State var pos:CGFloat = 0
    
@@ -24,8 +24,8 @@ struct CPTabDivisionNavigation : PageComponent {
             ZStack(alignment: .bottom){
                 VStack(spacing:0){
                     HStack(spacing:0){
-                        ForEach(self.buttons) { btn in
-                            self.createButton(btn, geometry: geometry)
+                        ForEach(self.buttons, id:\.id) { btn in
+                            self.createButton(btn)
                         }
                     }
                     if self.useSpacer {
@@ -34,7 +34,7 @@ struct CPTabDivisionNavigation : PageComponent {
                                 width: self.getButtonSize(geometry: geometry),
                                 height:Dimen.line.medium
                             )
-                            .background(Color.brand.primary)
+                            .background(self.primaryColor)
                             .offset(
                                 x: self.getButtonPosition(idx:self.index, geometry: geometry)
                             )
@@ -55,23 +55,23 @@ struct CPTabDivisionNavigation : PageComponent {
         }//geo
     }//body
     
-    func createButton(_ btn:NavigationButton, geometry:GeometryProxy) -> some View {
+    func createButton(_ btn:NavigationButton) -> some View {
+        ComponentLog.d("createButton", tag:self.tag)
         return Button<AnyView?>(
             action: { self.performAction(btn.id, index: btn.idx)}
         ){ btn.body }
-        .frame(
-            width: self.getButtonSize(geometry: geometry),
-            height: btn.frame.height
-        )
+        .modifier(MatchHorizontal(height: btn.frame.height))
         .buttonStyle(BorderlessButtonStyle())
-        .padding(0)
+        
     }
     
     func getButtonSize(geometry:GeometryProxy) -> CGFloat {
+        ComponentLog.d("getButtonSize", tag:self.tag)
         return geometry.size.width / CGFloat(self.buttons.count)
     }
     
     func getButtonPosition(idx:Int, geometry:GeometryProxy) -> CGFloat {
+        ComponentLog.d("getButtonPosition", tag:self.tag)
         let size = getButtonSize(geometry: geometry)
         return size * CGFloat(idx) + size/2.0 - ( geometry.size.width / 2.0 )
     }

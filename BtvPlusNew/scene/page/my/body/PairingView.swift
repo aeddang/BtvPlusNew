@@ -80,7 +80,10 @@ struct PairingView: PageComponent{
                     isNew: true
                 ){_ in
                     self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.pairing)
+                        PageProvider
+                            .getPageObject(.webview)
+                            .addParam(key: .data, value: BtvWebView.notice)
+                            .addParam(key: .title , value: String.button.notice)
                     )
                 }
             }
@@ -105,10 +108,14 @@ struct PairingView: PageComponent{
                     text: String.pageTitle.bookmarkList,
                     isMore: true
                 ){_ in
-                    /*
+                    
+                    let blockData = BlockData()
+                        .setData(title: String.pageTitle.bookmarkList, cardType:.bookmarkedPoster, dataType:.bookMark, uiType:.poster)
+                    
                     self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.pairing)
-                    )*/
+                        PageProvider.getPageObject(.categoryList)
+                            .addParam(key: .data, value: blockData)
+                    )
                 }
     
                 Spacer().modifier(LineHorizontal())
@@ -128,6 +135,7 @@ struct PairingView: PageComponent{
                     bgColor : Color.app.blueLight
                 ){_ in
                     
+                    AppUtil.openURL(ApiPath.getRestApiPath(.WEB) + BtvWebView.happySenior)
                 }
             }
             .padding(.horizontal, Dimen.margin.thin)

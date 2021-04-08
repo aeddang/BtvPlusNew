@@ -192,8 +192,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
                 Spacer()
                     .modifier(MatchVertical(width: 15, margin: 0))
                     .background(Color.transparent.clearUi)
-                    //.highPriorityGesture(
-                    .gesture(
+                    .highPriorityGesture(
                         DragGesture(minimumDistance: 5, coordinateSpace: .local)
                             .onChanged({ value in
                                 self.viewModel.uiEvent = .drag(geometry, value)

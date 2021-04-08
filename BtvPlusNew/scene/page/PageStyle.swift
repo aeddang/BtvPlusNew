@@ -39,6 +39,30 @@ struct PageDraging: ViewModifier {
    
     func body(content: Content) -> some View {
         return content
+            .highPriorityGesture(
+                DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
+                    .onChanged({ value in
+                       self.pageDragingModel.uiEvent = .drag(geometry, value)
+                    })
+                    .onEnded({ value in
+                        self.pageDragingModel.uiEvent = .draged(geometry, value)
+                    })
+            )
+            
+            .gesture(
+                self.pageDragingModel.cancelGesture
+                    .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                    .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
+            )
+    }
+}
+
+struct PageDragingSecondPriority: ViewModifier {
+    var geometry:GeometryProxy
+    var pageDragingModel:PageDragingModel
+   
+    func body(content: Content) -> some View {
+        return content
             .gesture(
                 DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
                     .onChanged({ value in

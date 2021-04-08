@@ -177,7 +177,10 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
                 self.prevPosition = ceil(pos)
                 return
             }
-            if abs(diff) > self.minDiff { self.onPull(pos: pos) }
+            if abs(diff) > self.minDiff {
+                //ComponentLog.d("onPull pos " + pos.description, tag: "InfinityScrollViewProtocol")
+                self.onPull(pos: pos)
+            }
             if pos == 0 && diff > 0 {
                 ComponentLog.d("onPullCancel pos", tag: "InfinityScrollViewProtocol")
                 self.onPullCancel()

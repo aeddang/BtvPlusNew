@@ -292,7 +292,7 @@ struct PageSynopsis: PageView {
     @State var epsdRsluId:String = ""
     @State var purchasedPid:String? = nil
     @State var hasAuthority:Bool? = nil
-    @State var relationTab:[String] = []
+    @State var relationTab:[NavigationButton] = []
     @State var selectedRelationTabIdx:Int = 0
     @State var seris:[SerisData] = []
     @State var relationDatas:[PosterDataSet] = []
@@ -698,7 +698,11 @@ struct PageSynopsis: PageView {
     }
     
     private func setupRelationContentCompleted (){
-        self.relationTab = self.relationContentsModel.relationTabs
+        self.relationTab = NavigationBuilder(
+            index:self.tabNavigationModel.index,
+            marginH:Dimen.margin.regular)
+            .getNavigationButtons(texts:self.relationContentsModel.relationTabs)
+            
         if self.relationTab.isEmpty {
             self.hasRelationVod = false
         }else{

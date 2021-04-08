@@ -187,6 +187,7 @@ struct Tag: PageView {
                         .fixedSize()
                 }
                 Spacer()
+                
                 if let icon = data.ppmIcon {
                     KFImage(URL(string: icon))
                         .resizable()

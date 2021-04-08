@@ -18,58 +18,59 @@ struct ImageView : View, PageProtocol {
     var noImg:String? = nil
     @State var image:UIImage? = nil
     @State var opacity:Double = 0.4
-    @State var isOn:Bool = true
+    
     var body: some View {
-        if self.url != nil && self.isOn {
-            Image(uiImage: self.image ?? self.getNoImage())
+       
+        Image(uiImage: self.image ?? self.getNoImage())
             .renderingMode(.original)
             .resizable()
             .aspectRatio(contentMode: self.contentMode)
             .opacity( self.opacity )
             .onReceive(self.imageLoader.$event) { evt in
-                guard let  evt = evt else { return }
-                switch evt {
-                case .reset :
-                    self.resetImage()
-                    break
-                case .complete(let img) :
-                    self.image = img
-                    withAnimation{self.opacity = 1.0}
-                    self.clearAutoReload()
-                case .error :
-                    if !key.isEmpty {
-                        DataLog.d("error " + key , tag:"ImageView")
-                    }
-                    self.clearAutoReload()
-                    break
-                }
+                self.onImageEvent(evt: evt)
             }
             .onAppear(){
                 self.creatAutoReload()
             }
             .onDisappear(){
                 self.clearAutoReload()
+                
             }
-        } else {
-            Image(uiImage: self.getNoImage())
-                .renderingMode(.original)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .modifier(MatchParent())
-                .opacity( self.opacity )
-        }
+        
     }
     
     func getNoImage() -> UIImage {
         return (self.noImg != nil) ? UIImage(named: self.noImg!)! : UIImage.from(color: Color.transparent.clear.uiColor())
     }
     
+    @State var anyCancellable = Set<AnyCancellable>()
     func resetImage(){
         self.clearAutoReload()
-        self.isOn = false
         DispatchQueue.main.asyncAfter(deadline: .now()+0.1 ) {
-            self.isOn = true
-            DataLog.d("image reset" , tag:self.tag)
+            let loader = ImageLoader()
+            loader.$event.sink(receiveValue: { evt in
+                self.onImageEvent(evt: evt)
+            }).store(in: &anyCancellable)
+            loader.reload(url: self.url, key: self.key)
+        }
+    }
+    
+    private func onImageEvent(evt:ImageLoaderEvent?){
+        guard let  evt = evt else { return }
+        switch evt {
+        case .reset :
+            self.resetImage()
+            break
+        case .complete(let img) :
+            self.image = img
+            withAnimation{self.opacity = 1.0}
+            self.clearAutoReload()
+        case .error :
+            if !key.isEmpty {
+                DataLog.e("error " + key , tag:"ImageView")
+            }
+            self.clearAutoReload()
+            break
         }
     }
     
@@ -83,7 +84,7 @@ struct ImageView : View, PageProtocol {
             .sink() {_ in
                 count += 1
                 self.imageLoader.reload(url: self.url, key: self.key)
-                if count == 3 {
+                if count == 5 {
                     DataLog.d("autoReload fail " + (self.url ?? " nil") , tag:self.tag)
                     self.resetImage()
                 }
@@ -92,6 +93,8 @@ struct ImageView : View, PageProtocol {
     func clearAutoReload() {
         self.autoReloadSubscription?.cancel()
         self.autoReloadSubscription = nil
+        self.anyCancellable.forEach{$0.cancel()}
+        self.anyCancellable.removeAll()
     }
 }
 

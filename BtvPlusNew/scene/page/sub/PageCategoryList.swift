@@ -46,6 +46,7 @@ struct PageCategoryList: PageView {
                         useTracking:self.useTracking,
                         marginBottom:Dimen.margin.regular
                     )
+                    .background(Color.brand.bg)
                     
                 }
                 .modifier(PageFull(style:.dark))

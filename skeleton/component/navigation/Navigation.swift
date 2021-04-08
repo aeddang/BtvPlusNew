@@ -19,6 +19,7 @@ struct NavigationButton: Identifiable {
     var body:AnyView? = nil
     var idx = -1
     var frame:CGSize = CGSize(width:100, height: 100)
+    var data:String = ""
 }
 
 struct NavigationBuilder{
@@ -33,10 +34,10 @@ struct NavigationBuilder{
     var marginV:CGFloat = Dimen.margin.thin
    
     
-    func getNavigationButtons(texts:[String]) -> [NavigationButton] {
+    func getNavigationButtons(texts:[String], color:Color? = nil) -> [NavigationButton] {
         let range = 0 ..< texts.count
         return zip(range, texts).map {index, text in
-            self.createButton(txt:text, idx:index)
+            self.createButton(txt:text, idx:index, color:color)
         }
     }
     func getNavigationButtons(images:[String], size:CGSize) -> [NavigationButton] {
@@ -52,21 +53,22 @@ struct NavigationBuilder{
         }
     }
     
-    private func createButton(txt:String, idx:Int) -> NavigationButton {
+    private func createButton(txt:String, idx:Int, color:Color? = nil) -> NavigationButton {
         let size = txt.textSizeFrom( fontSize: textModifier.size )
         return NavigationButton(
             id: UUID.init().uuidString,
             body: AnyView(
                 Text(txt)
                     .font(.custom(Font.family.black, size: textModifier.size))
-                    .foregroundColor(self.index != idx ? textModifier.color : textModifier.activeColor)
+                    .foregroundColor(self.index != idx ? textModifier.color : (color ?? textModifier.activeColor))
                     .modifier(MatchParent())
             ),
             idx:idx,
             frame: CGSize (
                 width: size.width * textModifier.sizeScale + (marginH*2.0),
                 height: size.height * textModifier.sizeScale + (marginV*2.0)
-            )
+            ),
+            data:txt
             
         )
     }
@@ -83,7 +85,8 @@ struct NavigationBuilder{
             frame: CGSize (
                 width: size.width + (marginH*2.0),
                 height: size.height + (marginV*2.0)
-            )
+            ),
+            data:img
         )
     }
     private func createButton(img:(String,String), idx:Int, size:CGSize) -> NavigationButton {
@@ -99,7 +102,8 @@ struct NavigationBuilder{
             frame: CGSize (
                 width: size.width + (marginH*2.0),
                 height: size.height + (marginV*2.0)
-            )
+            ),
+            data:img.0
         )
     }
     

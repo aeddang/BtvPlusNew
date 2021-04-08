@@ -112,7 +112,6 @@ struct MultiBlock:PageComponent {
                         }
                     } else {
                         ForEach(self.datas) { data in
-                            //Section(header: Spacer().modifier(MatchHorizontal(height: 1))) {
                             MultiBlockCell(
                                 pageObservable:self.pageObservable,
                                 pageDragingModel: self.pageDragingModel,
@@ -124,7 +123,6 @@ struct MultiBlock:PageComponent {
                                         self.viewModel.event = .bottom
                                     }
                                 }
-                            //}
                         }
                     }
                     if self.useFooter {

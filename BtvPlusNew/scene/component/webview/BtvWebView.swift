@@ -37,8 +37,17 @@ extension BtvWebView {
     static let searchMore = "/view/v3.0/search/more_info"
     static let schedule = "/view/v3.0/epg"
     static let watchHabit = "/view/v3.0/child/parentalctrls"
+    static let opensrcLicense = "/view/v3.0/opensrclicense"
+    static let faq = "/view/v3.0/customer/helpfaq"
+    static let notice = "/view/v3.0/customer/notice"
+    static let serviceTerms = "/view/v3.0/terms"
+    
+    static let happySenior = "/view/v3.0/setting/happysenior"
+    
     static let callJsPrefix = "javascript:"
+    
 }
+
 
 
 struct BtvWebView: PageComponent {

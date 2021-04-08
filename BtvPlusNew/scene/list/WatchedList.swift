@@ -67,7 +67,7 @@ struct WatchedList: PageComponent{
         InfinityScrollView(
             viewModel: self.viewModel,
             axes: .vertical,
-            marginTop: Dimen.margin.tinyExtra,
+            marginTop: Dimen.margin.regular,
             marginBottom: Dimen.margin.tinyExtra,
             spacing:0,
             isRecycle: true,

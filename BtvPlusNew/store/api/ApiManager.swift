@@ -105,6 +105,7 @@ class ApiManager :PageProtocol, ObservableObject{
                 self.updateFlag = UpdateFlag.getFlag(res.eUpdateFlag)
                 DataLog.d("self.updateFlag " +  self.updateFlag.rawValue, tag:self.tag)
                 SystemEnvironment.isEvaluation = (self.updateFlag == .advance)
+                SystemEnvironment.needUpdate = !(self.updateFlag == .none || self.updateFlag == .advance)
                 DataLog.d("SystemEnvironment.isEvaluation " +  SystemEnvironment.isEvaluation.description, tag:self.tag)
                 
                 self.complated(id: "", type: .versionCheck, res: res)

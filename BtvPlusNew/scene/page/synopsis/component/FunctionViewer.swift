@@ -21,9 +21,7 @@ struct FunctionViewer: PageComponent{
                     BookMarkButton(
                         data:self.synopsisData!,
                         isBookmark: self.$isBookmark
-                    ){ ac in
-                       
-                    }
+                    )
                     .buttonStyle(BorderlessButtonStyle())
                 }
                 if self.srisId != nil{

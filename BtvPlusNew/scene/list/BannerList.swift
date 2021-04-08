@@ -79,6 +79,9 @@ struct BannerItem: PageView {
                 ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg16_9)
                     .frame(width: size.width, height: size.height)
             case .list :
+                ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg16_9)
+                    .modifier(MatchHorizontal(height: ListItem.banner.type01.height))
+                /*
                 KFImage(URL(string: self.data.image))
                     .resizable()
                     .placeholder {
@@ -89,8 +92,9 @@ struct BannerItem: PageView {
                     .loadImmediately()
                     .aspectRatio(contentMode: .fill)
                     .modifier(MatchHorizontal(height: ListItem.banner.type01.height))
+                */
             default :
-                ImageView(url: self.data.image, key: self.data.title ?? "",contentMode: .fill, noImg: Asset.noImg16_9)
+                ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg16_9)
                     .modifier(MatchHorizontal(height: ListItem.banner.type01.height))
             }
         }

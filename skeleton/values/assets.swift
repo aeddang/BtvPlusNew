@@ -83,6 +83,9 @@ extension Asset{
         
         public static let heartOn = "icSynopStarFoc"
         public static let heartOff = "icSynopStarNor"
+        public static let heartSmallOn = "icMyStarFoc"
+        public static let heartSmallOff = "icChannelNorStar"
+        
         public static let ageAll = "icSynopAgeAll"
         public static let age19 = "icSynopAge19"
         public static let age15 = "icSynopAge15"
@@ -129,6 +132,7 @@ extension Asset{
         
         public static let delete = "icMyDelete"
         public static let edit = "icMyEdit"
+        
     }
     
     

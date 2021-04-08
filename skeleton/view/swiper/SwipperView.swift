@@ -9,14 +9,21 @@
 import Foundation
 import SwiftUI
 import Combine
+extension SwipperView{
+    static var MIN_DRAG_RANGE:CGFloat = 20
+    static var PULL_RANGE:CGFloat = 80
+    static var PULL_COMPLETE_RANGE:CGFloat = 160
+}
 
 struct SwipperView : View , PageProtocol, Swipper {
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
     var pages: [PageViewProtocol]
-
+    var coordinateSpace:CoordinateSpace = .local
     @State var offset: CGFloat = 0
     @State var isUserSwiping: Bool = false
     @State var index: Int = 0
+    @State var progress:Double = 1
+    @State var progressMax:Double = 1
     var action:(() -> Void)? = nil
     
     var body: some View {
@@ -39,14 +46,38 @@ struct SwipperView : View , PageProtocol, Swipper {
             .content
             .offset(x: self.isUserSwiping ? self.offset : CGFloat(self.index) * -geometry.size.width)
             .frame(width: geometry.size.width, alignment: .leading)
-            .gesture(
-                DragGesture(minimumDistance: 20, coordinateSpace: .local)
+            .opacity(max(0.2,self.progress/self.progressMax))
+            .highPriorityGesture(
+                DragGesture(minimumDistance: Self.MIN_DRAG_RANGE, coordinateSpace: self.coordinateSpace)
                 .onChanged({ value in
                     self.isUserSwiping = true
-                    self.offset = self.getDragOffset(value: value, geometry: geometry)
+                    let willOffset = self.getDragOffset(value: value, geometry: geometry)
+                   
+                    if willOffset > Self.PULL_RANGE || self.viewModel.status == .pull {
+                        
+                        self.viewModel.event = .pull(willOffset/4.0)
+                        self.viewModel.status = .pull
+                        self.progress = self.progressMax - Double(willOffset-Self.PULL_RANGE)
+                    } else {
+                        self.viewModel.status = .move
+                        self.offset = willOffset
+                    }
                     self.autoReset()
                 })
                 .onEnded({ value in
+                    switch self.viewModel.status {
+                    case .pull :
+                        ComponentLog.d("self.offset " + value.predictedEndTranslation.width.description, tag: self.tag)
+                        if value.predictedEndTranslation.width > Self.PULL_COMPLETE_RANGE{
+                            self.viewModel.event = .pullCompleted
+                            withAnimation{self.progress = 0}
+                        } else {
+                            self.viewModel.event = .pullCancel
+                            withAnimation{self.progress = self.progressMax}
+                        }
+                    default : break
+                    }
+                    self.viewModel.status = .stop
                     self.reset(idx: self.getWillIndex(value: value, maxIdx: self.pages.count) )
                 })
             )
@@ -89,6 +120,8 @@ struct SwipperView : View , PageProtocol, Swipper {
             }
             .onAppear(){
                 self.index = self.viewModel.index
+                self.progressMax = Double(Self.PULL_COMPLETE_RANGE - Self.PULL_RANGE)
+                self.progress = self.progressMax
             }
          }//GeometryReader
     }//body
@@ -110,7 +143,7 @@ struct SwipperView : View , PageProtocol, Swipper {
     
     @State var autoResetSubscription:AnyCancellable?
     func autoReset() {
-        //self.autoResetSubscription = self.creatResetTimer()
+       // self.autoResetSubscription = self.creatResetTimer()
     }
 }
 

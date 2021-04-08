@@ -140,7 +140,7 @@ struct PageSetup: PageView {
                                         title: String.pageText.setupHappySeniorPicture,
                                         subTitle: String.pageText.setupHappySeniorPictureText,
                                         more:{
-                                            
+                                            AppUtil.openURL(ApiPath.getRestApiPath(.WEB) + BtvWebView.happySenior)
                                         }
                                     )
                                 }
@@ -154,25 +154,37 @@ struct PageSetup: PageView {
                                         isOn: .constant(true),
                                         title: String.pageText.setupGuide,
                                         more:{
-                                            
-                                        }
-                                    )
-                                    Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
-                                    SetupItem (
-                                        isOn: .constant(true),
-                                        title: String.pageText.setupGuideNVersion,
-                                        more:{
-                                            
+                                            self.pagePresenter.openPopup(
+                                                PageProvider
+                                                    .getPageObject(.webview)
+                                                    .addParam(key: .data, value: BtvWebView.faq)
+                                                    .addParam(key: .title , value: String.pageText.setupGuide)
+                                            )
                                         }
                                     )
                                     Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
                                     SetupItem (
                                         isOn: .constant(true),
                                         title: SystemEnvironment.bundleVersion + "(" + SystemEnvironment.buildNumber + ")",
+                                        statusText: SystemEnvironment.needUpdate ? nil : String.pageText.setupVersionLatest,
                                         more:{
                                             
                                         }
                                     )
+                                    Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
+                                    SetupItem (
+                                        isOn: .constant(true),
+                                        title: String.pageText.setupOpensource,
+                                        more:{
+                                            self.pagePresenter.openPopup(
+                                                PageProvider
+                                                    .getPageObject(.webview)
+                                                    .addParam(key: .data, value: BtvWebView.opensrcLicense)
+                                                    .addParam(key: .title , value: String.pageText.setupOpensource)
+                                            )
+                                        }
+                                    )
+                                   
                                     #if DEBUG
                                         Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
                                         SetupItem (

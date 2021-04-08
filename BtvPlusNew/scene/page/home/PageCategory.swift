@@ -72,8 +72,9 @@ struct PageCategory: PageView {
             guard let obj = self.pageObject  else { return }
             let menuId = (obj.getParamValue(key: .id) as? String) ?? ""
             let openId = (obj.getParamValue(key: .subId) as? String)
-            self.setupDatas(menuId:menuId, openId: openId)
             self.appSceneObserver.useTopFix = true
+            self.setupDatas(menuId:menuId, openId: openId)
+            
         }
         .onDisappear{
             self.appSceneObserver.useTopFix = nil

@@ -32,12 +32,12 @@ struct PageMyPurchase: PageView {
         GeometryReader { geometry in
             PageDragingBody(
                 viewModel:self.pageDragingModel,
-                axis:.vertical
+                axis:.horizontal
             ) {
                 VStack(spacing:0){
                     PageTab(
                         title: String.pageTitle.purchaseList,
-                        isClose: true,
+                        isBack: true,
                         style: .dark
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
@@ -55,33 +55,24 @@ struct PageMyPurchase: PageView {
                         }
                 }
                 .modifier(PageFull(style:.dark))
-                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                .modifier(PageDragingSecondPriority(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
-            .onReceive(self.purchaseScrollModel.$event){evt in
+            .onReceive(self.purchaseScrollModel.$scrollPosition){ pos in
+                self.viewPagerModel.request = .reset
+            }
+            .onReceive(self.collectionScrollModel.$scrollPosition){ pos in
+                self.viewPagerModel.request = .reset
+            }
+            .onReceive(self.viewPagerModel.$event){evt in
                 guard let evt = evt else {return}
                 switch evt {
                 case .pullCompleted:
                     self.pageDragingModel.uiEvent = .pullCompleted(geometry)
                 case .pullCancel :
                     self.pageDragingModel.uiEvent = .pullCancel(geometry)
-                default : do{}
+                case .pull(let pos) :
+                    self.pageDragingModel.uiEvent = .pull(geometry, pos)
                 }
-            }
-            .onReceive(self.purchaseScrollModel.$pullPosition){ pos in
-                self.pageDragingModel.uiEvent = .pull(geometry, pos)
-            }
-            .onReceive(self.collectionScrollModel.$event){evt in
-                guard let evt = evt else {return}
-                switch evt {
-                case .pullCompleted:
-                    self.pageDragingModel.uiEvent = .pullCompleted(geometry)
-                case .pullCancel :
-                    self.pageDragingModel.uiEvent = .pullCancel(geometry)
-                default : do{}
-                }
-            }
-            .onReceive(self.collectionScrollModel.$pullPosition){ pos in
-                self.pageDragingModel.uiEvent = .pull(geometry, pos)
             }
             
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in

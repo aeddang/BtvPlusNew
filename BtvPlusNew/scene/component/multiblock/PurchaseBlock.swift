@@ -98,7 +98,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
                     .background(Color.brand.bg)
                 } else {
                     EmptyMyData(
-                        text:String.pageText.myWatchedEmpty)
+                        text: String.pageText.myPurchaseEmpty)
                     .modifier(MatchParent())
                 }
                 if self.isEdit {

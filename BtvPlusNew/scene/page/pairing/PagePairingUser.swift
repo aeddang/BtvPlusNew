@@ -28,7 +28,8 @@ struct PagePairingUser: PageView {
                 VStack(spacing:0){
                     PageTab(
                         title: String.pageTitle.connectCertificationBtv,
-                        isClose: true
+                        isClose: true,
+                        style: .white
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     
@@ -69,7 +70,7 @@ struct PagePairingUser: PageView {
                         self.pageDragingModel.uiEvent = .pull(geometry, pos)
                     }
                 }
-                .modifier(PageFull())
+                .modifier(PageFull(style: .white))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }//draging
             .onReceive(self.pairing.$event){ evt in

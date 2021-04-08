@@ -31,7 +31,7 @@ struct SynopsisBody: PageComponent{
     var epsdId:String? = nil
     var hasAuthority:Bool? = nil
 
-    var relationTab:[String] = []
+    var relationTab:[NavigationButton] = []
     var relationDatas:[PosterDataSet] = []
     var hasRelationVod:Bool? = nil
     var useTracking:Bool = false
@@ -109,17 +109,14 @@ struct SynopsisBody: PageComponent{
                         EmptyAlert(text:String.pageText.synopsisNoRelationVod)
                             .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
                     } else if self.relationTab.count == 1 {
-                        Text(self.relationTab.first!)
+                        Text(self.relationTab.first!.data)
                             .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
                             .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
                     }
                     else{
                         CPTabDivisionNavigation(
                             viewModel:self.tabNavigationModel,
-                            buttons: NavigationBuilder(
-                                index:self.tabNavigationModel.index,
-                                marginH:Dimen.margin.regular)
-                                .getNavigationButtons(texts:self.relationTab)
+                            buttons: self.relationTab
                         )
                         .frame(height:Dimen.tab.regular)
                         .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
@@ -212,16 +209,13 @@ struct SynopsisBody: PageComponent{
                             .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
                         
                     } else if self.relationTab.count == 1 {
-                        Text(self.relationTab.first!)
+                        Text(self.relationTab.first!.data)
                             .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
                             .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
                     } else{
                         CPTabDivisionNavigation(
                             viewModel:self.tabNavigationModel,
-                            buttons: NavigationBuilder(
-                                index:self.tabNavigationModel.index,
-                                marginH:Dimen.margin.regular)
-                                .getNavigationButtons(texts:self.relationTab)
+                            buttons: self.relationTab
                         )
                         .frame(height:Dimen.tab.regular)
                         .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))

@@ -105,7 +105,8 @@ struct PageWebview: PageView {
                 guard let obj = self.pageObject  else { return }
                 self.title = obj.getParamValue(key: .title) as? String
                 if let link = obj.getParamValue(key: .data) as? String{
-                   self.webViewModel.request = .link(link)
+                    if link.hasPrefix("http") { self.webViewModel.request = .link(link) }
+                    else {self.webViewModel.request = .link(ApiPath.getRestApiPath(.WEB) + link)}
                 }
             }
             .onDisappear{

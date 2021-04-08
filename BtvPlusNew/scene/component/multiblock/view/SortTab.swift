@@ -18,6 +18,7 @@ struct SortTab: PageComponent{
     
     var count:Int = 0
     var isSortAble:Bool = false
+    var info:String? = nil
     let action: (_ type:EuxpNetwork.SortType) -> Void
     
     @State var sortType:EuxpNetwork.SortType = Self.finalSortType
@@ -35,6 +36,9 @@ struct SortTab: PageComponent{
                 )
                 .opacity(0.5)
             Spacer()
+            if let info = self.info {
+                InfoAlert(text: info)
+            }
             if self.isSortAble {
                 TextButton(
                     defaultText: self.sortType.name,

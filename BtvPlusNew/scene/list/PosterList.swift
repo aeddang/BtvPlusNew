@@ -18,6 +18,7 @@ class PosterData:InfinityData{
     private(set) var tagData: TagData? = nil
     private(set) var isAdult:Bool = false
     private(set) var watchLv:Int = 0
+    fileprivate(set) var isBookmark:Bool? = nil
     private(set) var synopsisType:SynopsisType = .title
     private(set) var type:PosterType = .small
     private(set) var synopsisData:SynopsisData? = nil
@@ -165,6 +166,8 @@ class PosterData:InfinityData{
     }
     
     private func setCardType(_ cardType:BlockData.CardType){
+        self.isBookmark = (cardType == .bookmarkedPoster) ? true : nil
+        
         switch cardType {
         case .bigPoster: type = .big
         case .smallPoster: type = .small
@@ -356,13 +359,24 @@ struct PosterItem: PageView {
     @EnvironmentObject var repository:Repository
     var data:PosterData
     var isSelected:Bool = false
+    @State var isBookmark:Bool? = nil
     var body: some View {
-        ZStack{
+        ZStack(alignment: .topLeading){
             ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg9_16)
                 .modifier(MatchParent())
             if let tag = self.data.tagData {
                 Tag(data: tag)
                     .modifier(MatchParent())
+            }
+            if self.isBookmark != nil , let synop = self.data.synopsisData  {
+                BookMarkButton(
+                    data:synop,
+                    isSimple:true,
+                    isBookmark: self.$isBookmark
+                ){ ac in
+                    self.data.isBookmark = ac
+                }
+                .buttonStyle(BorderlessButtonStyle())
             }
         }
         .overlay(
@@ -384,7 +398,7 @@ struct PosterItem: PageView {
         .background(Color.app.blueLight)
         .clipped()
         .onAppear(){
-           
+            self.isBookmark = self.data.isBookmark
         }
         
         

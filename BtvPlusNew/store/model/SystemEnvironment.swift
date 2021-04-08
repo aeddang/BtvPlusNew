@@ -18,7 +18,7 @@ struct SystemEnvironment {
     static var serverConfig: [String:String] = [String:String]()
     static var isReleaseMode = true
     static var isEvaluation = false
-    
+    static var needUpdate = false
     
     static var isPurchaseAuth = false
     static var isAdultAuth = false { didSet { setImageLock()} }

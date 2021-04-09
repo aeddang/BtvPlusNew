@@ -49,7 +49,7 @@ struct PageMultiBlock: PageView {
                             viewModel: self.multiBlockViewModel,
                             infinityScrollModel: self.infinityScrollModel,
                             pageDragingModel: self.pageDragingModel,
-                            useBodyTracking: self.useTracking,
+                            useBodyTracking: self.themaType == .ticket ? false : self.useTracking,
                             useTracking:self.useTracking,
                             marginTop: self.marginTop  + Dimen.margin.thin + self.sceneObserver.safeAreaTop + Dimen.app.top,
                             marginBottom: 0
@@ -135,6 +135,20 @@ struct PageMultiBlock: PageView {
                     if !self.useTracking {return}
                     self.useTracking = false
                     self.marginBottom = 0
+                }
+            }
+            .onReceive(self.appSceneObserver.$event){ evt in
+                guard let evt = evt else { return }
+                switch evt {
+                case .update(let type):
+                    switch type {
+                    case .purchase :
+                        if self.themaType == .ticket {
+                            self.pairing.authority.requestAuth(.updateTicket)
+                        }
+                    default : break
+                    }
+                default : break
                 }
             }
             .onAppear{

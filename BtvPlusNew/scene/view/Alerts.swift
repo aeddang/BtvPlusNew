@@ -11,7 +11,7 @@ import SwiftUI
 struct InfoAlert: PageView {
     let text:String
     var body: some View {
-        HStack(alignment: .center, spacing: Dimen.margin.tinyExtra){
+        HStack(alignment: .top, spacing: Dimen.margin.tinyExtra){
             Image(Asset.icon.alert)
                 .renderingMode(.original)
                 .resizable()

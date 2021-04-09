@@ -78,7 +78,9 @@ struct ListItem{
     struct search {
         static let height:CGFloat = 45
     }
-    
+    struct purchaseTicket {
+        static let size:CGSize =  CGSize(width: 355, height: 214)
+    }
     
     struct tablet {
         struct poster {
@@ -132,3 +134,28 @@ struct ListRowInset: ViewModifier {
     }
 }
 
+struct HolizentalListRowInset: ViewModifier {
+    var firstIndex = 1
+    var index:Int = -1
+    var marginVertical:CGFloat = 0
+    var spacing:CGFloat = Dimen.margin.thin
+    var marginTop:CGFloat = 0
+    var bgColor:Color = Color.brand.bg
+    
+    func body(content: Content) -> some View {
+        return content
+            .padding(
+                EdgeInsets(
+                    top: marginVertical,
+                    leading:  (index == firstIndex) ? marginTop : 0,
+                    bottom: marginVertical,
+                    trailing: spacing)
+            )
+            .listRowInsets(
+                EdgeInsets()
+            )
+
+            .listRowBackground(bgColor)
+        
+    }
+}

@@ -95,11 +95,12 @@ struct MatchVertical: ViewModifier {
 struct LineHorizontal: ViewModifier {
     var height:CGFloat = Dimen.line.light
     var margin:CGFloat = 0
+    var color:Color = Color.app.white
     func body(content: Content) -> some View {
         return content
             .frame(minWidth: 0, maxWidth: .infinity - (margin * 2.0) , minHeight: height, maxHeight: height)
             .offset(x:margin)
-            .background(Color.app.white).opacity(0.1)
+            .background(self.color).opacity(0.1)
             
             
     }

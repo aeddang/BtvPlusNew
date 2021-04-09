@@ -98,6 +98,7 @@ struct PagePurchase: PageView {
                             let listPrice = param["listPrice"] as? String
                             let paymentPrice = param["paymentPrice"] as? String
                             self.appSceneObserver.event = .update(.purchase(pid, listPrice, paymentPrice))
+                            self.pairing.authority.reset()
                         }
                         break
                     case WebviewMethod.bpn_closeWebView.rawValue :

@@ -133,6 +133,8 @@ extension Asset{
         public static let delete = "icMyDelete"
         public static let edit = "icMyEdit"
         
+        public static let ticketMonthly = "tagMySubscribe"
+        public static let ticketPeriod = "tagMySubscribe02"
     }
     
     

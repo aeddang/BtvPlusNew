@@ -62,10 +62,9 @@ struct PageCategoryList: PageView {
                                               cardType: self.cardType, isAdult:false, key:nil)
                     }
                 }
-            }
-            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
             }
+           
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 self.useTracking = page?.id == self.pageObject?.id
             }

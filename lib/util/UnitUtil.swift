@@ -101,6 +101,11 @@ extension String{
         return self.replacingCharacters(in: range, with: with)
     }
     
+    func subString(_ start:Int) -> String {
+        let range = self.index(self.startIndex, offsetBy: start)...self.endIndex
+        return String(self[range])
+    }
+    
     func subString(start:Int, len:Int) -> String {
         let range = self.index(self.startIndex, offsetBy: start)...self.index(self.startIndex, offsetBy: start + (len-1))
         return String(self[range])

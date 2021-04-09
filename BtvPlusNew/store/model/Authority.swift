@@ -8,8 +8,8 @@
 import Foundation
 
 
-enum AuthRequest:Equatable{
-    case updateMyinfo, updateTicket, updateTotalPoint, updateMonthlyPurchase(isPeriod:Bool)
+enum AuthRequest{
+    case updateMyinfo(isReset:Bool), updateTicket, updateTotalPoint, updateMonthlyPurchase(isPeriod:Bool)
 }
 
 enum AuthEvent{
@@ -32,11 +32,15 @@ class Authority:ObservableObject, PageProtocol {
     func reset() {
         purchaseTicketList = nil
         purchaseLowLevelTicketList = nil
+        totalPointInfo = nil
+        monthlyPurchaseInfo = nil
+        periodMonthlyPurchaseInfo = nil
     }
     
     func requestAuth(_ request:AuthRequest){
         switch request{
-        case .updateMyinfo :
+        case .updateMyinfo(let isReset):
+            if isReset {self.reset()}
             self.isMyInfoUpdate = false
             var needUpdate = false
             if self.totalPointInfo == nil {
@@ -89,6 +93,8 @@ class Authority:ObservableObject, PageProtocol {
         self.isMyInfoUpdate = false
         self.event = .updatedMyinfo
     }
+    
+    
     
     private func checkMyInfoUpdate(){
         if !self.isMyInfoUpdate { return }

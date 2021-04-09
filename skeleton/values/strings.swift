@@ -77,6 +77,12 @@ extension String {
         public static let purchasePeriod = "purchasePeriod".loaalized()
         public static let vat = "vat".loaalized()
         public static let expirePeriod = "expirePeriod".loaalized()
+        public static let ticketPrice = "ticketPrice".loaalized()
+        public static let paymentMethod = "paymentMethod".loaalized()
+        public static let joinDate = "joinDate".loaalized()
+        public static let contractInfo = "contractInfo".loaalized()
+        public static let contractPeriod = "contractPeriod".loaalized()
+        public static let contractDiscount = "contractDiscount".loaalized()
     }
     
     struct week {
@@ -276,6 +282,8 @@ extension String {
         public static let adultCertification = "btnAdultCertification".loaalized()
         public static let purchaseEdit = "btnPurchaseEdit".loaalized()
         public static let selectAll = "btnSelectAll".loaalized()
+        public static let allTicket = "btnAllTicket".loaalized()
+        
         
     }
     struct player {
@@ -331,6 +339,7 @@ extension String {
         public static let watchHabit = "titleWatchHabit".loaalized()
         public static let bookmarkList = "titleBookmarkList".loaalized()
         public static let purchaseList = "titlePurchaseList".loaalized()
+        public static let purchaseTicketList = "titlePurchaseTicketList".loaalized()
         
     }
     
@@ -416,7 +425,6 @@ extension String {
         public static let myText1 = "myText1".loaalized()
         public static let myText2 = "myText2".loaalized()
         public static let myPairing =  "myPairing".loaalized()
-        
         public static let myPairingInfo = "myPairingInfo".loaalized()
         public static let myConnectedBtv = "myConnectedBtv".loaalized()
         public static let myPairingDate = "myPairingDate".loaalized()
@@ -431,6 +439,8 @@ extension String {
         public static let myCollectedEmpty = "myCollectedEmpty".loaalized()
         public static let myBookMarkedEmpty =  "myBookMarkedEmpty".loaalized()
         public static let myBookMarkedInfo = "myBookMarkedInfo".loaalized()
+        public static let myTicketInfo = "myTicketInfo".loaalized()
+        
         public static let synopsisOnlyBtvFree = "synopsisOnlyBtvFree".loaalized()
         public static let synopsisOnlyBtv = "synopsisOnlyBtv".loaalized()
         public static let synopsisWatchOnlyBtv = "synopsisWatchOnlyBtv".loaalized()

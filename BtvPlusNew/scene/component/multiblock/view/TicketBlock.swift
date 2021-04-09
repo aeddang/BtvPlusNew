@@ -30,6 +30,7 @@ struct TicketBlock:BlockProtocol, PageComponent {
                 if let datas = self.datas {
                     TicketList(
                         viewModel:self.viewModel,
+                        data:self.data,
                         datas: datas,
                         useTracking:self.useTracking)
                         .modifier(MatchHorizontal(height: self.listHeight + 1))
@@ -52,11 +53,13 @@ struct TicketBlock:BlockProtocol, PageComponent {
                     + Dimen.tab.thin + Dimen.margin.thinExtra)
         .onAppear{
             self.datas = nil
+            
             if data.dataType == .theme , let blocks = data.blocks {
                 self.datas = blocks.map{ d in
-                    TicketData().setData(data: d, cardType: data.cardType)
+                    TicketData().setData(data: d, cardType: data.cardType, posters: self.data.posters)
                 }
                 self.updateListSize()
+                ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
                 return
             }
             if let apiQ = self.getRequestApi(pairing:pairing.status) {

@@ -135,6 +135,13 @@ class PlayerScreenView: UIView, PageProtocol {
         player?.usesExternalPlaybackWhileExternalScreenIsActive = true
         player?.preventsDisplaySleepDuringVideoPlayback = true
         player?.volume = currentVolume
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
+        }
+        catch {
+            ComponentLog.e("Setting category to AVAudioSessionCategoryPlayback failed." , tag: self.tag)
+        }
+        
         
         if let avPlayerViewController = playerController as? AVPlayerViewController {
             avPlayerViewController.player = player

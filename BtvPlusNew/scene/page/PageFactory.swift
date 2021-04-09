@@ -45,6 +45,7 @@ extension PageID{
     static let confirmPassword:PageID = "confirmPassword"
     static let watchHabit:PageID = "watchHabit"
     static let purchaseList:PageID = "purchaseList"
+    static let purchaseTicketList:PageID = "purchaseTicketList"
 }
 
 struct PageProvider {
@@ -79,7 +80,7 @@ struct PageProvider {
              .pairingSetupUser, .pairingBtv,
              .pairingDevice, .pairingUser, .pairingManagement, .pairingEmptyDevice,
              .purchase , .webview, .schedule, .modifyProile,
-             .adultCertification, .confirmPassword, .watchHabit:
+             .adultCertification, .confirmPassword, .watchHabit, .purchaseTicketList:
             return  .vertical
         case .fullPlayer :
             return .none
@@ -199,6 +200,7 @@ struct PageFactory{
         case .confirmPassword : return PageConfirmPassword()
         case .watchHabit : return PageWatchHabit()
         case .purchaseList : return PagePurchaseList()
+        case .purchaseTicketList : return PagePurchaseTicketList()
         default : return PageTest()
         }
     }

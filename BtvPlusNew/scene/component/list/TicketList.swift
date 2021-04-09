@@ -30,8 +30,9 @@ class TicketData:InfinityData{
             return isJoin || isSubJoin
         }
     }
-    func setData(data:ContentItem, cardType:BlockData.CardType = .squareThema, idx:Int = -1) -> TicketData {
+    func setData(data:ContentItem, cardType:BlockData.CardType = .squareThema, posters:[PosterData]? = nil, idx:Int = -1) -> TicketData {
         title = data.title
+        subDatas = posters
         isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
         if let thumb = data.poster_filename_h {
             image = ImagePath.thumbImagePath(filePath: thumb, size: type.size, convType: .alpha ) ?? image
@@ -40,9 +41,10 @@ class TicketData:InfinityData{
         return self
     }
     
-    func setData(data:BlockItem, cardType:BlockData.CardType = .squareThema, idx:Int = -1) -> TicketData {
+    func setData(data:BlockItem, cardType:BlockData.CardType = .squareThema, posters:[PosterData]? = nil, idx:Int = -1) -> TicketData {
         type = data.blk_typ_cd == "30" ? .big : .small
         title = data.menu_nm
+        subDatas = posters
         isAdult = data.lim_lvl_yn?.toBool() ?? false
         if let thumb = data.bnr_off_img_path {
             image = ImagePath.thumbImagePath(filePath: thumb, size: type.size, convType:  .alpha ) ?? image
@@ -67,7 +69,6 @@ class TicketData:InfinityData{
             return  image
         }
     }
-    
     
     func setDummy(_ idx:Int = -1) -> TicketData {
         title = "THEMA"
@@ -103,74 +104,79 @@ struct TicketList: PageComponent{
     @EnvironmentObject var pairing:Pairing
    
     var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var data: BlockData? = nil
     var datas:[TicketData]
     var useTracking:Bool = false
     var margin:CGFloat = Dimen.margin.thin
-    
+    var spacing:CGFloat = Dimen.margin.tiny
     @State var subDatas:[PosterData]? = nil
-    
+    var headerSize:Int = 2
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
             axes: .horizontal,
             marginVertical: 0,
-            marginHorizontal: self.margin ,
-            spacing: Dimen.margin.tiny,
+            marginHorizontal: margin ,
+            spacing: 0,
             isRecycle: false,
             useTracking: self.useTracking
             ){
             ForEach(self.datas) { data in
                 TicketItem( data:data )
-                .onTapGesture {
-                    if !data.hasAuth {
-                        let status = self.pairing.status
-                        if status != .pairing {
-                            self.appSceneObserver.alert = .needPairing()
+                    .modifier(HolizentalListRowInset(spacing: self.spacing))
+                    .onTapGesture {
+                        if !data.hasAuth {
+                            let status = self.pairing.status
+                            if status != .pairing {
+                                self.appSceneObserver.alert = .needPairing()
+                                return
+                            }
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.purchase)
+                                    .addParam(key: .data, value: data)
+                            )
                             return
                         }
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.purchase)
-                                .addParam(key: .data, value: data)
-                        )
-                        return
-                    }
-                    
-                    if data.blocks != nil && data.blocks?.isEmpty == false {
-                        if data.blocks!.count > 1 {
-                            self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(.multiBlock)
-                                    .addParam(key: .title, value: data.title)
-                                    .addParam(key: .data, value: data.blocks)
-                            )
-                        } else {
-                            let block = BlockData().setDate(data.blocks!.first!)
+                        
+                        if data.blocks != nil && data.blocks?.isEmpty == false {
+                            if data.blocks!.count > 1 {
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(.multiBlock)
+                                        .addParam(key: .title, value: data.title)
+                                        .addParam(key: .data, value: data.blocks)
+                                )
+                            } else {
+                                let block = BlockData().setDate(data.blocks!.first!)
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(.categoryList)
+                                        .addParam(key: .title, value: block.name)
+                                        .addParam(key: .id, value: block.menuId)
+                                        .addParam(key: .type, value: block.uiType )
+                                )
+                            }
+                        }else{
                             self.pagePresenter.openPopup(
                                 PageProvider.getPageObject(.categoryList)
-                                    .addParam(key: .title, value: block.name)
-                                    .addParam(key: .id, value: block.menuId)
-                                    .addParam(key: .type, value: block.uiType )
+                                    .addParam(key: .title, value: data.title)
+                                    .addParam(key: .id, value: data.menuId)
+                                    .addParam(key: .type, value: CateBlock.ListType.poster)
                             )
                         }
-                    }else{
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.categoryList)
-                                .addParam(key: .title, value: data.title)
-                                .addParam(key: .id, value: data.menuId)
-                                .addParam(key: .type, value: CateBlock.ListType.poster)
-                        )
-                    }
                 }
             }
             if let subDatas = self.subDatas {
                 ForEach(subDatas) { data in
                     PosterItem( data:data )
-                    .onTapGesture {
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.synopsis)
-                                .addParam(key: .data, value: data.synopsisData)
-                        )
-                    }
+                        .frame(width:ListItem.poster.type01.width)
+                        .modifier(HolizentalListRowInset(spacing: self.spacing))
+                        .onTapGesture {
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.synopsis)
+                                    .addParam(key: .data, value: data.synopsisData)
+                            )
+                        }
                 }
+                
             }
         }
         .onReceive(dataProvider.$result) { res in
@@ -180,6 +186,7 @@ struct TicketList: PageComponent{
             if res?.id != id {return}
             first.subDatas = data.contents?.map{PosterData().setData(data: $0)}
             self.subDatas = first.subDatas
+            self.data?.posters = first.subDatas
         }
         .onAppear{
             if let first = self.datas.first {
@@ -204,9 +211,6 @@ struct TicketItem: PageView {
     var data:TicketData
     var body: some View {
         ZStack{
-            ImageView(url: self.image, contentMode: .fill, noImg: Asset.noImg1_1)
-                .modifier(MatchParent())
-            /*
             KFImage(URL(string: self.image ?? ""))
                 .resizable()
                 .placeholder {
@@ -217,7 +221,7 @@ struct TicketItem: PageView {
                 .loadImmediately()
                 .aspectRatio(contentMode: .fill)
                 .modifier(MatchParent())
-            */
+            
         }
         .frame(
             width: self.data.type.size.width,
@@ -242,6 +246,22 @@ struct TicketItem: PageView {
                 self.image = willImage
             }
            
+        }
+        .onReceive(self.pairing.authority.$monthlyPurchaseInfo){ info in
+            guard let list = info?.purchaseList else { return }
+            self.data.isSubJoin = (list.first(where: {$0.prod_id == self.data.prodId}) != nil)
+            let willImage = self.data.getImage()
+            if willImage != self.image {
+                self.image = willImage
+            }
+        }
+        .onReceive(self.pairing.authority.$periodMonthlyPurchaseInfo){ info in
+            guard let list = info?.purchaseList else { return }
+            self.data.isSubJoin = (list.first(where: {$0.prod_id == self.data.prodId}) != nil)
+            let willImage = self.data.getImage()
+            if willImage != self.image {
+                self.image = willImage
+            }
         }
     }
 }

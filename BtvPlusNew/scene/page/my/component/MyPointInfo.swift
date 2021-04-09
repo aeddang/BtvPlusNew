@@ -16,6 +16,11 @@ struct MyPointInfo: View {
         HStack(spacing: 0){
             ValueInfo(key: String.app.ticket, value: self.ticket)
                 .modifier(MatchParent())
+                .onTapGesture {
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.purchaseTicketList)
+                    )
+                }
             Spacer().modifier(LineVertical())
                 .frame(height:Dimen.button.lightExtra)
             ValueInfo(key: String.app.coupon, value: self.coupon)
@@ -39,8 +44,13 @@ struct MyPointInfo: View {
             //default : break
             }
         }
+        .onReceive(self.pairing.authority.$totalPointInfo){ info in
+            if info == nil && !ticket.isEmpty {
+                self.pairing.authority.requestAuth(.updateMyinfo(isReset:true))
+            }
+        }
         .onAppear(){
-            self.pairing.authority.requestAuth(.updateMyinfo)
+            self.pairing.authority.requestAuth(.updateMyinfo(isReset:true))
         }
     }//body
     

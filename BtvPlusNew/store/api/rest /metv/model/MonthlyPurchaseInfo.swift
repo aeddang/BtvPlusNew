@@ -31,7 +31,7 @@ struct PeriodMonthlyPurchaseInfo : Decodable {
     private(set) var purchase_no: String?     // 현재 페이지의 즐겨찾기 개수
     private(set) var purchase_cancel_svc: String?     // 월정액 해지 서비스를 사용할 것인지 판단 여부 - Y: 해지 서비스 이용, N: 해지 서비스 이용 안함
     private(set) var yn_perd: String?     // N : 기존 월정액 구매내역 정보 제공(약정정보 및 커머스 구매내역 포함) Y : 기간권 구매내역 정보 제공
-    private(set) var purchaseList: [PurchaseFixedChargePredItem]?  // 즐겨찾기 집합의 이름
+    private(set) var purchaseList: [PurchaseFixedChargePeriodItem]?  // 즐겨찾기 집합의 이름
 }
 
 
@@ -75,7 +75,7 @@ struct PurchaseFixedChargeItem : Decodable {
 }
 
 
-struct PurchaseFixedChargePredItem : Decodable {
+struct PurchaseFixedChargePeriodItem : Decodable {
     private(set) var prod_type: String?  // "상품의 구성 종류 - 기간 제한 상품 : 월정액기간권 상품"
     private(set) var prod_code: String?  // "상품의 구분 코드 - 32 : 기간 제한 상품(VOD PPM 기간권)"
     private(set) var prod_id: String?    // 상품 식별자

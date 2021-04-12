@@ -365,6 +365,30 @@ class ApiManager :PageProtocol, ObservableObject{
             hostDevice: device, isSimple: isSimple,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .getCoupons(let device, let page, let count) : self.eps.getCoupons(
+            hostDevice: device, page: page, pageCnt: count,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .postCoupon(let device, let couponNum) : self.eps.postCoupon(
+            hostDevice: device, couponNum:couponNum,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getBPoints(let device, let page, let count) : self.eps.getBPoints(
+            hostDevice: device, page: page, pageCnt: count,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .postBPoint(let device, let pointId) : self.eps.postBPoint(
+            hostDevice: device, pointId:pointId,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getBCashes(let device, let page, let count) : self.eps.getBCashes(
+            hostDevice: device, page: page, pageCnt: count,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .postBCash(let device, let cashId) : self.eps.postBCash(
+            hostDevice: device, cashId:cashId,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         //WEB
         case .getSearchKeywords :   self.web.getSearchKeywords(
             completion: {res in self.complated(id: apiID, type: type, res: res)},

@@ -274,6 +274,42 @@ struct PosterList: PageComponent{
     }//body
 }
 
+struct PosterViewList: PageComponent{
+    @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var pairing:Pairing
+    var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var datas:[PosterData]
+    var contentID:String? = nil
+    var useTracking:Bool = false
+    var hasAuthority:Bool = false
+    var margin:CGFloat = Dimen.margin.thin
+    var action: ((_ data:PosterData) -> Void)? = nil
+    var body: some View {
+        InfinityScrollView(
+            viewModel: self.viewModel,
+            axes: .horizontal,
+            marginVertical: 0,
+            marginHorizontal: self.margin,
+            spacing: Dimen.margin.tiny,
+            isRecycle:  true,
+            useTracking: self.useTracking
+            ){
+            ForEach(self.datas) { data in
+                PosterViewItem( data:data , isSelected: self.contentID == nil
+                                ? false
+                                : self.contentID == data.epsdId,
+                                hasAuthority: self.hasAuthority
+                                )
+                .onTapGesture {
+                    if let action = self.action {
+                        action(data)
+                    }
+                }
+            }
+        }
+    }//body
+}
+
 
 struct PosterDataSet:Identifiable {
     private(set) var id = UUID().uuidString
@@ -403,8 +439,36 @@ struct PosterItem: PageView {
         
         
     }
+}
+
+struct PosterViewItem: PageView {
+    @EnvironmentObject var pagePresenter:PagePresenter
+    var data:PosterData
+    var isSelected:Bool = false
+    var hasAuthority:Bool = false
+    @State var isBookmark:Bool? = nil
+    var body: some View {
+        VStack( spacing:Dimen.margin.thin){
+            PosterItem(data: self.data, isSelected:self.isSelected)
+            if self.isSelected {
+                FillButton(
+                    text: self.hasAuthority ? String.button.directview : String.button.preview,
+                    strokeWidth: 1){ _ in
+                    
+                    if let synopsisData = data.synopsisData {
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
+                                .addParam(key: .data, value: synopsisData)
+                                .addParam(key: .watchLv, value: data.watchLv)
+                        )
+                    }
+                }
+            }
+        }
+    }
     
 }
+
 
 #if DEBUG
 struct PosterList_Previews: PreviewProvider {

@@ -13,7 +13,7 @@ struct TotalPointInfo : Decodable {
     private(set) var svc_name: String?   // 서비스 제공 어플리케이션 이름 "EPS"
     private(set) var coupon:CouponInfo?    // "쿠폰 정보 ※ API 응답 코드가 '0000'(OK)인 경우에만 응답"
     private(set) var bcash:BCashInfo?  // B캐쉬 정보 ※ API 응답 코드가 '0000'(OK)인 경우에만 응답
-    private(set) var NewBpoint:BPointInfo?    // 보유한 신규 B포인트정보 객체 ※ API 응답 코드가 '0000'(OK)인 경우에만 응답
+    private(set) var newBpoint:BPointInfo?    // 보유한 신규 B포인트정보 객체 ※ API 응답 코드가 '0000'(OK)인 경우에만 응답
     private(set) var tmembership:TMembership?    // T멤버십 정보 ※ API 응답 코드가 '0000'(OK)인 경우에만 응답 등록된 T멤버십카드가 없을 경우 null 또는 빈값 응답
     private(set) var ocbMasterSequence:Int?  // 대표 OK캐쉬백 카드 순번 ※ API 응답 코드가 '0000'(OK)인 경우에만 응답
     private(set) var ocbList:OcbInfo?// B포인트 정보 ※ API 응답 코드가 '0000'(OK)인 경우에만 응답
@@ -94,7 +94,4 @@ struct BPointItem : Decodable {
     private(set) var saleAmountDouble:Double?   // 구매금액
 }
 
-struct BalanceItem : Decodable {
-    private(set) var supplyBalance: Double?    // B캐쉬 공급가
-    private(set) var totalBalance: Double?    // B캐쉬 총액
-}
+

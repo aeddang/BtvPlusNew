@@ -22,6 +22,7 @@ extension PageID{
     static let pairing:PageID = "pairing"
     static let my:PageID = "my"
     static let myPurchase:PageID = "myPurchase"
+    static let myBenefits:PageID = "myBenefits"
     static let modifyProile:PageID = "modifyProile"
     static let setup:PageID = "setup"
     static let pairingSetupUser:PageID = "pairingSetupUser"
@@ -42,10 +43,11 @@ extension PageID{
     static let search:PageID = "search"
     static let schedule:PageID = "schedule"
     static let adultCertification:PageID = "adultCertification"
-    static let confirmPassword:PageID = "confirmPassword"
+    static let confirmNumber:PageID = "confirmNumber"
     static let watchHabit:PageID = "watchHabit"
     static let purchaseList:PageID = "purchaseList"
     static let purchaseTicketList:PageID = "purchaseTicketList"
+    static let couponList:PageID = "couponList"
 }
 
 struct PageProvider {
@@ -80,7 +82,7 @@ struct PageProvider {
              .pairingSetupUser, .pairingBtv,
              .pairingDevice, .pairingUser, .pairingManagement, .pairingEmptyDevice,
              .purchase , .webview, .schedule, .modifyProile,
-             .adultCertification, .confirmPassword, .watchHabit, .purchaseTicketList:
+             .adultCertification, .confirmNumber, .watchHabit, .purchaseTicketList, .myBenefits:
             return  .vertical
         case .fullPlayer :
             return .none
@@ -174,6 +176,7 @@ struct PageFactory{
         case .serviceError : return PageServiceError()
         case .my : return PageMy()
         case .myPurchase : return PageMyPurchase()
+        case .myBenefits : return PageMyBenefits()
         case .modifyProile : return PageModifyProfile()
         case .setup : return PageSetup()
         case .synopsis : return PageSynopsis()
@@ -197,10 +200,11 @@ struct PageFactory{
         case .search : return PageSearch()
         case .schedule : return PageSchedule()
         case .adultCertification : return PageAdultCertification()
-        case .confirmPassword : return PageConfirmPassword()
+        case .confirmNumber : return PageConfirmNumber()
         case .watchHabit : return PageWatchHabit()
         case .purchaseList : return PagePurchaseList()
         case .purchaseTicketList : return PagePurchaseTicketList()
+        case .couponList : return PageCouponList()
         default : return PageTest()
         }
     }
@@ -269,7 +273,7 @@ struct PageSceneModel: PageModel {
     
     static func needKeyboard(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
-        case .pairingSetupUser, .pairingBtv, .search, .modifyProile, .confirmPassword: return true
+        case .pairingSetupUser, .pairingBtv, .search, .modifyProile, .confirmNumber: return true
         default : return false
         }
     }

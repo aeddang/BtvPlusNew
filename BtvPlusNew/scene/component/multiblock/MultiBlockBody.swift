@@ -106,11 +106,13 @@ struct MultiBlockBody: PageComponent {
                 ZStack(alignment: .topLeading){
                     if !Self.isLegacy  {
                         if self.topDatas != nil && self.topDatas?.isEmpty == false {
+                            
                             TopBannerBg(
                                 viewModel:self.viewPagerModel,
                                 datas: self.topDatas! )
                                 .padding(.top, max(self.headerOffset, -TopBanner.imageHeight))
                                 .offset(y: self.marginHeader)
+                            
                         }
                         
                         ReflashSpinner(
@@ -193,7 +195,10 @@ struct MultiBlockBody: PageComponent {
             
         }
         .onReceive(self.infinityScrollModel.$scrollPosition){pos in
-            self.headerOffset = min(ceil(pos),0)
+            let willOffset = min(ceil(pos),0)
+            if  willOffset != self.headerOffset {
+                self.headerOffset = willOffset
+            }
         }
         .onReceive(self.infinityScrollModel.$pullPosition){ pos in
             if pos < InfinityScrollModel.PULL_RANGE { return }

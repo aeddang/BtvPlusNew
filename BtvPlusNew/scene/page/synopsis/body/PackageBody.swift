@@ -12,12 +12,13 @@ struct PackageBody: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
     var infinityScrollModel: InfinityScrollModel
     var synopsisListViewModel: InfinityScrollModel
+    var peopleScrollModel: InfinityScrollModel
+    
     var synopsisPackageModel:SynopsisPackageModel
     var isPairing:Bool? = nil
     var contentID:String? = nil
-    var currentPoster:PosterData? = nil
     var episodeViewerData:EpisodeViewerData? = nil
-    var summaryViewerData:SimpleSummaryViewerData? = nil
+    var summaryViewerData:SummaryViewerData? = nil
     var useTracking:Bool = false
     var action: ((_ data:PosterData) -> Void)? = nil
     var body: some View {
@@ -38,10 +39,11 @@ struct PackageBody: PageComponent{
                     Text(String.pageText.synopsisPackageContent + " " + self.synopsisPackageModel.posters.count.description)
                         .modifier(BlockTitle())
                         .modifier(ContentHorizontalEdges())
-                    PosterList(
+                    PosterViewList(
                         viewModel: self.synopsisListViewModel,
                         datas: self.synopsisPackageModel.posters,
-                        contentID: self.contentID, useTracking: self.useTracking
+                        contentID: self.contentID,
+                        useTracking: self.useTracking
                     ) { data in
                         self.action?(data)
                     }
@@ -49,7 +51,10 @@ struct PackageBody: PageComponent{
                 }
                 .frame( height:
                             (ListItem.poster.type01.height)
-                            + Font.size.regular + Dimen.margin.thinExtra + Dimen.margin.micro)
+                            + Dimen.tab.thin + Dimen.margin.thinExtra
+                            + Dimen.margin.thin + Dimen.button.lightExtra
+                            + Dimen.margin.thin
+                )
                 .modifier(ListRowInset(spacing: Dimen.margin.regular))
             } else {
                 Spacer().modifier(MatchParent())
@@ -65,11 +70,13 @@ struct PackageBody: PageComponent{
             }
                 
             if self.summaryViewerData != nil {
-                SimpleSummaryViewer(
+                SummaryViewer(
+                    peopleScrollModel:self.peopleScrollModel,
                     data: self.summaryViewerData!,
-                    currentPoster:self.currentPoster
-                    )
-                    .modifier(ListRowInset(spacing: Dimen.margin.regular))
+                    useTracking: self.useTracking,
+                    isSimple : true
+                )
+                .modifier(ListRowInset(spacing: Dimen.margin.regular))
             } else {
                 Spacer().modifier(MatchParent())
                     .modifier(ListRowInset(spacing: 0))

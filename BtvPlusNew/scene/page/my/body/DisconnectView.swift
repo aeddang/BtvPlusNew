@@ -52,7 +52,10 @@ struct DisconnectView: PageComponent{
                     isNew: true
                 ){_ in
                     self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.pairing)
+                        PageProvider
+                            .getPageObject(.webview)
+                            .addParam(key: .data, value: BtvWebView.notice)
+                            .addParam(key: .title , value: String.button.notice)
                     )
                 }
             }

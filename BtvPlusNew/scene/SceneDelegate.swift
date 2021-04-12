@@ -80,7 +80,7 @@ class SceneDelegate: PageSceneDelegate {
                 }
                 if SystemEnvironment.watchLv != 0 && SystemEnvironment.watchLv <= watchLv {
                     self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.confirmPassword)
+                        PageProvider.getPageObject(.confirmNumber)
                             .addParam(key: .data, value: page)
                             .addParam(key: .type, value: ScsNetwork.ConfirmType.adult)
                     )

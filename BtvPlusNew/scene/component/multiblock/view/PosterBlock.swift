@@ -69,7 +69,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
                         .onReceive(self.viewModel.$pullPosition){ pos in
                             self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
                         }
-                    
+                
                 } else {
                     EmptyAlert( text: self.data.dataType != .watched
                                 ? String.pageText.myWatchedEmpty

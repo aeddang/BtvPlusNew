@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import Combine
 extension PageHome{
+    static let bodyOffset:CGFloat = 100
     static fileprivate(set) var finalSelectedMonthlyId:String? = nil
 }
 
@@ -45,7 +46,7 @@ struct PageHome: PageView {
                 useTracking:false,
                 marginHeader : self.marginHeader,
                 marginTop:self.headerHeight,
-                marginBottom: 0,
+                marginBottom: self.marginBottom,
                 topDatas: self.topDatas,
                 monthlyViewModel : self.monthlyViewModel,
                 monthlyDatas: self.monthlyDatas,
@@ -56,7 +57,7 @@ struct PageHome: PageView {
                     
             }
         }
-        .padding(.bottom, self.marginBottom)
+        .padding(.bottom, -Self.bodyOffset)
         .modifier(PageFull())
         
         .onReceive(self.dataProvider.bands.$event){ evt in
@@ -91,13 +92,14 @@ struct PageHome: PageView {
             if page?.id == self.pageObject?.id {
                 if self.useTracking {return}
                 self.useTracking = true
+                /*
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.app.bottom
-                }
+                }*/
             } else {
                 if !self.useTracking {return}
                 self.useTracking = false
-                self.marginBottom = 0
+                //self.marginBottom = 0
                 
             }
         }
@@ -121,6 +123,9 @@ struct PageHome: PageView {
                
             default : break
             }
+        }
+        .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
+            self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.app.bottom + Self.bodyOffset
         }
         .onAppear{
             guard let obj = self.pageObject  else { return }

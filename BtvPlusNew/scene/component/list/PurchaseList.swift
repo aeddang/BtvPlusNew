@@ -114,6 +114,11 @@ struct PurchaseList: PageComponent{
                         )
                     } 
                 }
+                .onAppear{
+                    if data.index == self.datas.last?.index {
+                        self.onBottom?(data)
+                    }
+                }
             }
         }
         .onReceive(self.purchaseBlockModel.$isEditmode) { isEdit in

@@ -118,13 +118,21 @@
 		317A8F4925CBA81700E41226 /* PlayerScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317A8F4825CBA81700E41226 /* PlayerScreenView.swift */; };
 		317A8F4E25CBBB2700E41226 /* PageHostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317A8F4D25CBBB2700E41226 /* PageHostingController.swift */; };
 		317A8F5C25CBE1AE00E41226 /* PlayerMoreBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317A8F5B25CBE1AE00E41226 /* PlayerMoreBox.swift */; };
+		317C97442623EEF7008F267D /* CouponList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317C97432623EEF7008F267D /* CouponList.swift */; };
+		317C974A26240945008F267D /* CouponBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317C974926240945008F267D /* CouponBlock.swift */; };
+		317C974F26241B76008F267D /* Coupons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317C974E26241B76008F267D /* Coupons.swift */; };
+		317C9754262426CD008F267D /* PageCouponList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317C9753262426CD008F267D /* PageCouponList.swift */; };
+		317C975C262433F9008F267D /* EpsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317C975B262433F9008F267D /* EpsModel.swift */; };
+		317C976126243D31008F267D /* BPoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317C976026243D31008F267D /* BPoints.swift */; };
+		317C976926243DC3008F267D /* BCashes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317C976826243DC3008F267D /* BCashes.swift */; };
+		317C9774262443D4008F267D /* PageMyBenefits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317C9773262443D4008F267D /* PageMyBenefits.swift */; };
 		317EF18625DB46D6004A6A5E /* PlayerListTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317EF18525DB46D6004A6A5E /* PlayerListTab.swift */; };
 		317F0AAA2609537400EB9F6B /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317F0AA92609537400EB9F6B /* SearchResult.swift */; };
 		317F0AB32609DD9E00EB9F6B /* PageSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317F0AB22609DD9E00EB9F6B /* PageSchedule.swift */; };
 		3180855825C2287300AE4A73 /* BtvPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3180855725C2287300AE4A73 /* BtvPlayer.swift */; };
 		3180855E25C233A900AE4A73 /* libPoCDrmAgent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */; };
 		3182A0A6261877E800F7F07D /* InputBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3182A0A5261877E800F7F07D /* InputBox.swift */; };
-		3182A0B626188B8100F7F07D /* PageConfirmPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3182A0B526188B8100F7F07D /* PageConfirmPassword.swift */; };
+		3182A0B626188B8100F7F07D /* PageConfirmNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3182A0B526188B8100F7F07D /* PageConfirmNumber.swift */; };
 		3183B37D26168F03004F5C0D /* PageAdultCertification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3183B37C26168F03004F5C0D /* PageAdultCertification.swift */; };
 		3185FE1925EF017A005074AA /* CateList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3185FE1825EF017A005074AA /* CateList.swift */; };
 		3185FE1E25EF11B2005074AA /* PageCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3185FE1D25EF11B2005074AA /* PageCategory.swift */; };
@@ -486,6 +494,14 @@
 		317A8F4825CBA81700E41226 /* PlayerScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerScreenView.swift; sourceTree = "<group>"; };
 		317A8F4D25CBBB2700E41226 /* PageHostingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageHostingController.swift; sourceTree = "<group>"; };
 		317A8F5B25CBE1AE00E41226 /* PlayerMoreBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerMoreBox.swift; sourceTree = "<group>"; };
+		317C97432623EEF7008F267D /* CouponList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CouponList.swift; sourceTree = "<group>"; };
+		317C974926240945008F267D /* CouponBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CouponBlock.swift; sourceTree = "<group>"; };
+		317C974E26241B76008F267D /* Coupons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coupons.swift; sourceTree = "<group>"; };
+		317C9753262426CD008F267D /* PageCouponList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCouponList.swift; sourceTree = "<group>"; };
+		317C975B262433F9008F267D /* EpsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpsModel.swift; sourceTree = "<group>"; };
+		317C976026243D31008F267D /* BPoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPoints.swift; sourceTree = "<group>"; };
+		317C976826243DC3008F267D /* BCashes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BCashes.swift; sourceTree = "<group>"; };
+		317C9773262443D4008F267D /* PageMyBenefits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyBenefits.swift; sourceTree = "<group>"; };
 		317EF18525DB46D6004A6A5E /* PlayerListTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerListTab.swift; sourceTree = "<group>"; };
 		317F0AA92609537400EB9F6B /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
 		317F0AB22609DD9E00EB9F6B /* PageSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSchedule.swift; sourceTree = "<group>"; };
@@ -493,7 +509,7 @@
 		3180855C25C233A900AE4A73 /* DrmAgent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrmAgent.h; sourceTree = "<group>"; };
 		3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPoCDrmAgent.a; sourceTree = "<group>"; };
 		3182A0A5261877E800F7F07D /* InputBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputBox.swift; sourceTree = "<group>"; };
-		3182A0B526188B8100F7F07D /* PageConfirmPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageConfirmPassword.swift; sourceTree = "<group>"; };
+		3182A0B526188B8100F7F07D /* PageConfirmNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageConfirmNumber.swift; sourceTree = "<group>"; };
 		3183B37C26168F03004F5C0D /* PageAdultCertification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageAdultCertification.swift; sourceTree = "<group>"; };
 		3185FE1825EF017A005074AA /* CateList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CateList.swift; sourceTree = "<group>"; };
 		3185FE1D25EF11B2005074AA /* PageCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCategory.swift; sourceTree = "<group>"; };
@@ -1071,6 +1087,10 @@
 			isa = PBXGroup;
 			children = (
 				3166CBE92611A52200282891 /* TotalPoint.swift */,
+				317C974E26241B76008F267D /* Coupons.swift */,
+				317C976026243D31008F267D /* BPoints.swift */,
+				317C976826243DC3008F267D /* BCashes.swift */,
+				317C975B262433F9008F267D /* EpsModel.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -1188,6 +1208,7 @@
 				3167197A25FF4159005AC3D2 /* PageWatchedList.swift */,
 				31671A042600930D005AC3D2 /* PagePerson.swift */,
 				31740C42261C566E0052A9C2 /* PagePurchaseList.swift */,
+				317C9753262426CD008F267D /* PageCouponList.swift */,
 			);
 			path = sub;
 			sourceTree = "<group>";
@@ -1309,7 +1330,7 @@
 				31EA9FC125F5D23B0059E19B /* PageFullPlayer.swift */,
 				3174067B25F763BD00201850 /* PageWebview.swift */,
 				3183B37C26168F03004F5C0D /* PageAdultCertification.swift */,
-				3182A0B526188B8100F7F07D /* PageConfirmPassword.swift */,
+				3182A0B526188B8100F7F07D /* PageConfirmNumber.swift */,
 				319745C6262010F30072945D /* PagePurchaseTicketList.swift */,
 			);
 			path = popups;
@@ -1325,6 +1346,7 @@
 				314D589325B685B2007BCA34 /* PagePairingManagement.swift */,
 				3166CBB62611639F00282891 /* PageModifyProfile.swift */,
 				31A73BCC261D99B1009A143C /* PageMyPurchase.swift */,
+				317C9773262443D4008F267D /* PageMyBenefits.swift */,
 			);
 			path = my;
 			sourceTree = "<group>";
@@ -1368,6 +1390,7 @@
 				3185FE1825EF017A005074AA /* CateList.swift */,
 				3163300225EF70B000581FA7 /* TextTabList.swift */,
 				318B537025F049DA0052E4E0 /* PlayList.swift */,
+				317C97432623EEF7008F267D /* CouponList.swift */,
 			);
 			path = list;
 			sourceTree = "<group>";
@@ -1995,6 +2018,7 @@
 				318B53AA25F20A350052E4E0 /* PlayBlock.swift */,
 				3167198325FF42A8005AC3D2 /* WatchedBlock.swift */,
 				31740C38261C3AE70052A9C2 /* PurchaseBlock.swift */,
+				317C974926240945008F267D /* CouponBlock.swift */,
 			);
 			path = multiblock;
 			sourceTree = "<group>";
@@ -2410,11 +2434,13 @@
 				3174067C25F763BD00201850 /* PageWebview.swift in Sources */,
 				310F6FC725C16916005718B0 /* Play.swift in Sources */,
 				315544CF25B83F8C00086510 /* MetvModel.swift in Sources */,
+				317C9754262426CD008F267D /* PageCouponList.swift in Sources */,
 				318BA3982608C2660093BC7D /* CompleteKeyword.swift in Sources */,
 				D568892E259C592000F2F67A /* PagePairingSetupUser.swift in Sources */,
 				31740C30261C32780052A9C2 /* PurchaseList.swift in Sources */,
 				31373F6025C7E726004353DA /* CustomYTPlayer.swift in Sources */,
 				318E7F0C25E8B01800B2AAAF /* MonthlyInfo.swift in Sources */,
+				317C976126243D31008F267D /* BPoints.swift in Sources */,
 				310D7E2C25A42D05000BE173 /* StbList.swift in Sources */,
 				314D6B0225D0E9A50003C749 /* PageSetup.swift in Sources */,
 				31895B1C2601F0F3002DE02E /* TopViewer.swift in Sources */,
@@ -2428,6 +2454,7 @@
 				D56C6A41257DA0C700CF9AB8 /* Player.swift in Sources */,
 				318BA3872608B8C50093BC7D /* EmptySearchResult.swift in Sources */,
 				31A3E8782605F3F800BF044B /* SearchList.swift in Sources */,
+				317C974F26241B76008F267D /* Coupons.swift in Sources */,
 				319BAFAE26043DCA0007273F /* Voice.swift in Sources */,
 				318C875825E64C3200ADDFE0 /* BannerData.swift in Sources */,
 				D5688924259C29DE00F2F67A /* SpanText.swift in Sources */,
@@ -2511,6 +2538,7 @@
 				3175F2AA25F8939B008E3721 /* DragDownArrow.swift in Sources */,
 				D506D717258C8FFB00F27C00 /* PosterList.swift in Sources */,
 				D56C69AE257DA09E00CF9AB8 /* AnimateDrawView.swift in Sources */,
+				317C976926243DC3008F267D /* BCashes.swift in Sources */,
 				319BAFCC26046B240007273F /* ImageAnimation.swift in Sources */,
 				D56C6B0E257DAADE00CF9AB8 /* SceneTab.swift in Sources */,
 				317A8F5C25CBE1AE00E41226 /* PlayerMoreBox.swift in Sources */,
@@ -2537,7 +2565,7 @@
 				D51AA9F02599A2870035CD51 /* ConnectButton.swift in Sources */,
 				31631C6525D2516E00E501F7 /* SynopsisPrerollData.swift in Sources */,
 				D56C6A50257DA0C700CF9AB8 /* Select.swift in Sources */,
-				3182A0B626188B8100F7F07D /* PageConfirmPassword.swift in Sources */,
+				3182A0B626188B8100F7F07D /* PageConfirmNumber.swift in Sources */,
 				D56C69AA257DA09E00CF9AB8 /* Network.swift in Sources */,
 				31671A132600B379005AC3D2 /* SynopsisParam.swift in Sources */,
 				318B537625F050CC0052E4E0 /* AlramButton.swift in Sources */,
@@ -2557,7 +2585,9 @@
 				D56CC30A2590703200CA1D54 /* BlockProtocol.swift in Sources */,
 				31626EE025B8EF1900F4031D /* Like.swift in Sources */,
 				3159B05925B17BED008CA85B /* KmsModel.swift in Sources */,
+				317C974A26240945008F267D /* CouponBlock.swift in Sources */,
 				D56C6A38257DA0C700CF9AB8 /* ImageItem.swift in Sources */,
+				317C975C262433F9008F267D /* EpsModel.swift in Sources */,
 				318B537C25F05BAB0052E4E0 /* PagePreviewList.swift in Sources */,
 				31513CC025F59C6700D8373A /* SimplePlayer.swift in Sources */,
 				D57298D8259D4BEF00ED2CE6 /* InputCell.swift in Sources */,
@@ -2611,6 +2641,7 @@
 				314D6B0725D0E9DE0003C749 /* SetupItem.swift in Sources */,
 				314D73BA25B54FD900907118 /* BookMarkButton.swift in Sources */,
 				319745BB261FEE7D0072945D /* PurchaseTicketList.swift in Sources */,
+				317C9774262443D4008F267D /* PageMyBenefits.swift in Sources */,
 				D56C6A48257DA0C700CF9AB8 /* RoundRectMask.swift in Sources */,
 				D56C699D257DA09E00CF9AB8 /* PageSceneDelegate.swift in Sources */,
 				310F6FBF25C167EC005718B0 /* ScsModel.swift in Sources */,
@@ -2630,6 +2661,7 @@
 				D56C6B35257DACD800CF9AB8 /* DataProvider.swift in Sources */,
 				D56C6A4F257DA0C700CF9AB8 /* Alert.swift in Sources */,
 				314D73A725B5108900907118 /* LikeButton.swift in Sources */,
+				317C97442623EEF7008F267D /* CouponList.swift in Sources */,
 				D506D72D258C9ECE00F27C00 /* VideoList.swift in Sources */,
 				D56C6A35257DA0C700CF9AB8 /* CpTabDivisionNavigation.swift in Sources */,
 				D56C6B34257DACD800CF9AB8 /* Repository.swift in Sources */,
@@ -2839,7 +2871,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 12;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -2863,7 +2895,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.009;
+				MARKETING_VERSION = 1.010;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BtvPlusNew/store/Store-Bridging-Header.h";
@@ -2913,7 +2945,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 12;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -2932,7 +2964,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.009;
+				MARKETING_VERSION = 1.010;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BtvPlusNew/store/Store-Bridging-Header.h";

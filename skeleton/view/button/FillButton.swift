@@ -25,6 +25,7 @@ struct FillButton: View, SelecterbleProtocol{
     var size:CGFloat = Dimen.button.medium
     var imageSize:CGFloat = Dimen.icon.light
     var bgColor:Color = Color.brand.primary
+    var strokeWidth:CGFloat = 0
     var margin:CGFloat = Dimen.margin.regular
     var isNew: Bool = false
     var isMore: Bool = false
@@ -45,6 +46,7 @@ struct FillButton: View, SelecterbleProtocol{
         imageSize:CGFloat? = nil,
         margin:CGFloat? = nil,
         bgColor:Color? = nil,
+        strokeWidth:CGFloat? = nil,
         action:@escaping (_ idx:Int) -> Void )
     {
         self.text = text
@@ -57,8 +59,10 @@ struct FillButton: View, SelecterbleProtocol{
         self.action = action
         self.textModifier = textModifier ?? self.textModifier
         self.size = size ?? self.size
+       
         self.imageSize = imageSize ?? self.imageSize
         self.bgColor = bgColor ?? self.bgColor
+        self.strokeWidth = strokeWidth ?? self.strokeWidth
         self.margin = margin ?? self.margin
     }
     // type new
@@ -66,21 +70,19 @@ struct FillButton: View, SelecterbleProtocol{
         text:String,
         image:String?,
         isNew: Bool,
-        textModifier:TextModifier = TextModifier(
-            family: Font.family.bold,
-            size: Font.size.lightExtra,
-            color: Color.app.white,
-            activeColor: Color.app.white
-        ),
-        imageSize:CGFloat = Dimen.icon.thinExtra,
-        bgColor:Color = Color.app.blueLight,
         action:@escaping (_ idx:Int) -> Void )
     {
         self.text = text
         self.image = image
         self.isNew = isNew
-        self.imageSize = imageSize
-        self.bgColor = bgColor
+        self.textModifier = TextModifier(
+            family: Font.family.bold,
+            size: Font.size.lightExtra,
+            color: Color.app.white,
+            activeColor: Color.app.white
+        )
+        self.imageSize = Dimen.icon.thinExtra
+        self.bgColor = Color.app.blueLight
         self.action = action
     }
     
@@ -103,6 +105,25 @@ struct FillButton: View, SelecterbleProtocol{
         self.size = Dimen.button.heavyExtra
     }
    
+    // type stroke
+    init(
+        text:String,
+        strokeWidth:CGFloat = 1,
+        action:@escaping (_ idx:Int) -> Void )
+    {
+        self.text = text
+        self.textModifier = TextModifier(
+            family: Font.family.bold,
+            size: Font.size.lightExtra,
+            color: Color.app.greyLight,
+            activeColor: Color.app.white
+        )
+        self.strokeWidth = strokeWidth
+        self.bgColor = Color.transparent.clearUi
+        self.action = action
+        self.size = Dimen.button.regularExtra
+    }
+    
     var body: some View {
         Button(action: {
             self.action(self.index)
@@ -167,6 +188,9 @@ struct FillButton: View, SelecterbleProtocol{
             }
             .modifier( MatchHorizontal(height: self.size) )
             .background(self.bgColor )
+            .overlay(
+                Rectangle().stroke( Color.app.greyExtra ,lineWidth: self.strokeWidth )
+            )
         }
         
         

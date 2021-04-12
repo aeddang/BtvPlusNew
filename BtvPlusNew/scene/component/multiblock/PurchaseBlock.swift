@@ -265,7 +265,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
         }
         self.deleteList = dels
         self.pagePresenter.openPopup(
-            PageProvider.getPageObject(.confirmPassword)
+            PageProvider.getPageObject(.confirmNumber)
                 .addParam(key: .type, value: ScsNetwork.ConfirmType.purchase)
                 .addParam(key: .title, value: String.alert.purchaseHidden)
                 .addParam(key: .text, value: String.alert.purchaseHiddenText)

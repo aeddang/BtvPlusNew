@@ -68,7 +68,8 @@ extension PageDragingView{
     
     func onDragEnd(geometry:GeometryProxy, value:DragGesture.Value? = nil) {
         if self.pageObject?.isPopup == false { return }
-        let diffMin =  self.isBottom ? geometry.size.height*0.66 : geometry.size.height*0.2
+        let range = self.axis == .vertical ? geometry.size.height: geometry.size.width
+        let diffMin =  self.isBottom ? range*0.66 : range*0.2
         var offset:CGFloat = self.bodyOffset
         if let value = value {
             let predictedOffset = self.axis == .vertical
@@ -81,7 +82,7 @@ extension PageDragingView{
         
         var isBottom = false
         if offset > diffMin {
-            offset =  (self.axis == .vertical) ? geometry.size.height : geometry.size.width
+            offset =  range
             isBottom = true
         }else{
             offset = 0

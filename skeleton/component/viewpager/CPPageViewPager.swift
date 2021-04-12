@@ -15,6 +15,7 @@ struct CPPageViewPager: PageComponent {
     var titles: [String]?
     var primaryColor:Color = Color.app.white
     var useGesture = true
+    var usePull:Axis? = nil
     var pageOn:((_ idx:Int) -> Void)? = nil
     
     @State var isPageReady:Bool = false
@@ -32,7 +33,8 @@ struct CPPageViewPager: PageComponent {
                 SwipperView(
                     viewModel: self.viewModel,
                     pages: self.pages,
-                    coordinateSpace: .global
+                    coordinateSpace: .global,
+                    usePull : self.usePull
                     )
                     .modifier(MatchParent())
                     .onAppear(){

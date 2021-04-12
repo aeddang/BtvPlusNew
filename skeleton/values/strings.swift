@@ -49,6 +49,7 @@ extension String {
         public static let broCount = "broCount".loaalized()
         public static let sesonCount = "sesonCount".loaalized()
         public static let ageCount = "ageCount".loaalized()
+        public static let point = "point".loaalized()
         public static let award = "award".loaalized()
         
         public static let ppmUpdate = "ppmUpdate".loaalized()
@@ -83,6 +84,10 @@ extension String {
         public static let contractInfo = "contractInfo".loaalized()
         public static let contractPeriod = "contractPeriod".loaalized()
         public static let contractDiscount = "contractDiscount".loaalized()
+        
+        public static let expirePeriodDate = "expirePeriodDate".loaalized()
+        public static let remain = "remain".loaalized()
+        public static let vip = "vip".loaalized()
     }
     
     struct week {
@@ -283,8 +288,8 @@ extension String {
         public static let purchaseEdit = "btnPurchaseEdit".loaalized()
         public static let selectAll = "btnSelectAll".loaalized()
         public static let allTicket = "btnAllTicket".loaalized()
-        
-        
+        public static let preview = "btnPreview".loaalized()
+        public static let directview =  "btnDirectview".loaalized()
     }
     struct player {
         public static let moveSec = "playerMoveSec".loaalized()
@@ -340,6 +345,7 @@ extension String {
         public static let bookmarkList = "titleBookmarkList".loaalized()
         public static let purchaseList = "titlePurchaseList".loaalized()
         public static let purchaseTicketList = "titlePurchaseTicketList".loaalized()
+        public static let myBenefits = "titleMyBenefits".loaalized()
         
     }
     
@@ -440,6 +446,42 @@ extension String {
         public static let myBookMarkedEmpty =  "myBookMarkedEmpty".loaalized()
         public static let myBookMarkedInfo = "myBookMarkedInfo".loaalized()
         public static let myTicketInfo = "myTicketInfo".loaalized()
+        
+        public static let myBenefitsCoupon = "myBenefitsCoupon".loaalized()
+        public static let myBenefitsCouponText = "myBenefitsCouponText".loaalized()
+        public static let myBenefitsCouponRegist = "myBenefitsCouponRegist".loaalized()
+        public static let myBenefitsCouponEmpty = "myBenefitsCouponEmpty".loaalized()
+        public static let myBenefitsCouponInput = "myBenefitsCouponInput".loaalized()
+        
+        public static let myBenefitsPoint = "myBenefitsPoint".loaalized()
+        public static let myBenefitsPointText = "myBenefitsPointText".loaalized()
+        public static let myBenefitsPointRegist = "myBenefitsPointRegist".loaalized()
+        public static let myBenefitsPointEmpty = "myBenefitsPointEmpty".loaalized()
+        public static let myBenefitsPointInput = "myBenefitsPointInput".loaalized()
+        
+        public static let myBenefitsCash = "myBenefitsCash".loaalized()
+        public static let myBenefitsCashText = "myBenefitsCashText".loaalized()
+        public static let myBenefitsCashRegist = "myBenefitsCashRegist".loaalized()
+        public static let myBenefitsCashEmpty = "myBenefitsCashEmpty".loaalized()
+        public static let myBenefitsCashInput = "myBenefitsCashInput".loaalized()
+        
+
+        public static let myBenefitsNumberTip = "myBenefitsNumberTip".loaalized()
+
+        public static let myBenefitsDiscount = "myBenefitsDiscount".loaalized()
+        public static let myBenefitsDiscountT = "myBenefitsDiscountT".loaalized()
+        public static let myBenefitsDiscountOk = "myBenefitsDiscountOk".loaalized()
+        public static let myBenefitsDiscountTv = "myBenefitsDiscountTv".loaalized()
+        public static let myBenefitsDiscountTvText1 = "myBenefitsDiscountTvText1".loaalized()
+        public static let myBenefitsDiscountTvText2 = "myBenefitsDiscountTvText2".loaalized()
+
+        public static let myBenefitsDiscountTInfo = "myBenefitsDiscountTInfo".loaalized()
+        public static let myBenefitsDiscountOkInfo = "myBenefitsDiscountOkInfo".loaalized()
+        public static let myBenefitsDiscountTvInfo = "myBenefitsDiscountTvInfo".loaalized()
+
+        public static let myBenefitsCardEmpty = "myBenefitsCardEmpty".loaalized()
+        public static let myBenefitsDiscountTvEmpty = "myBenefitsDiscountTvEmpty".loaalized()
+        public static let myBenefitsDiscountTvEmptyTip = "myBenefitsDiscountTvEmptyTip".loaalized()
         
         public static let synopsisOnlyBtvFree = "synopsisOnlyBtvFree".loaalized()
         public static let synopsisOnlyBtv = "synopsisOnlyBtv".loaalized()

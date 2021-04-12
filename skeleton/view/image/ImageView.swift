@@ -13,11 +13,10 @@ import struct Kingfisher.KFImage
 struct ImageView : View, PageProtocol {
     @ObservedObject var imageLoader: ImageLoader = ImageLoader()
     let url:String?
-    var key:String = ""
     var contentMode:ContentMode  = .fill
     var noImg:String? = nil
     @State var image:UIImage? = nil
-    @State var opacity:Double = 0.4
+    @State var opacity:Double = 0.3
     
     var body: some View {
        
@@ -30,6 +29,7 @@ struct ImageView : View, PageProtocol {
                 self.onImageEvent(evt: evt)
             }
             .onAppear(){
+                self.imageLoader.cash(url: self.url)
                 self.creatAutoReload()
             }
             .onDisappear(){
@@ -51,7 +51,7 @@ struct ImageView : View, PageProtocol {
             loader.$event.sink(receiveValue: { evt in
                 self.onImageEvent(evt: evt)
             }).store(in: &anyCancellable)
-            loader.reload(url: self.url, key: self.key)
+            loader.reload(url: self.url)
         }
     }
     
@@ -66,9 +66,6 @@ struct ImageView : View, PageProtocol {
             withAnimation{self.opacity = 1.0}
             self.clearAutoReload()
         case .error :
-            if !key.isEmpty {
-                DataLog.e("error " + key , tag:"ImageView")
-            }
             self.clearAutoReload()
             break
         }
@@ -79,11 +76,11 @@ struct ImageView : View, PageProtocol {
         var count = 0
         self.autoReloadSubscription?.cancel()
         self.autoReloadSubscription = Timer.publish(
-            every: count == 0 ? 0.1 : 0.5, on: .current, in: .common)
+            every: count == 0 ? 0.3 : 0.5, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
                 count += 1
-                self.imageLoader.reload(url: self.url, key: self.key)
+                self.imageLoader.reload(url: self.url)
                 if count == 5 {
                     DataLog.d("autoReload fail " + (self.url ?? " nil") , tag:self.tag)
                     self.resetImage()

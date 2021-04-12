@@ -48,7 +48,7 @@ struct ImagePath {
     }
 
     static func getIIPUrl(path:String, filePath: String, size: CGSize, convType: IIPConvertType = .none, locType: IIPLocType = .none) -> String {
-        let scale = UIScreen.main.scale
+        let scale:CGFloat = UIScreen.main.scale
         let width = size.width * scale
         let height = size.height * scale
         var str = ""

@@ -28,16 +28,17 @@ struct SummaryViewer: PageComponent{
     var peopleScrollModel: InfinityScrollModel = InfinityScrollModel()
     var data:SummaryViewerData
     var useTracking:Bool = false
-    
+    var isSimple:Bool = false
     @State var isExpand = false
     @State var needExpand = false
     var body: some View {
         VStack(alignment:.leading , spacing:0) {
-            Text(String.pageText.synopsisSummry)
-                .modifier(BoldTextStyle( size: Font.size.regular ))
-                .padding(.vertical, Dimen.margin.regularExtra )
-                .modifier(ContentHorizontalEdges())
-            
+            if !self.isSimple {
+                Text(String.pageText.synopsisSummry)
+                    .modifier(BoldTextStyle( size: Font.size.regular ))
+                    .padding(.vertical, Dimen.margin.regularExtra )
+                    .modifier(ContentHorizontalEdges())
+            }
             if self.data.peoples != nil && self.data.peoples?.isEmpty == false {
                 PeopleList(
                     viewModel:self.peopleScrollModel,
@@ -47,29 +48,37 @@ struct SummaryViewer: PageComponent{
                     .padding(.bottom, Dimen.margin.medium )
             }
             if self.data.summry != nil {
-                VStack(alignment:.leading , spacing:Dimen.margin.thin) {
+                if self.isSimple {
                     Text(self.data.summry!)
                         .modifier(MediumTextStyle( size: Font.size.light ))
                         .fixedSize(horizontal: false, vertical: true)
-                        .lineLimit(self.isExpand ? 999 : 3)
-                        
-                    if self.needExpand {
-                        HStack{
-                            Spacer()
-                            Image(Asset.icon.down)
-                                .renderingMode(.original).resizable()
-                                .scaledToFit()
-                                .frame(width: Dimen.icon.thin, height: Dimen.icon.thin)
-                                .rotationEffect(.degrees(self.isExpand ? 180 : 0))
-                            Spacer()
+                        .modifier(ContentHorizontalEdges())
+                     
+                } else {
+                    VStack(alignment:.leading , spacing:Dimen.margin.thin) {
+                        Text(self.data.summry!)
+                            .modifier(MediumTextStyle( size: Font.size.light ))
+                            .fixedSize(horizontal: false, vertical: true)
+                            .lineLimit(self.isExpand ? 999 : 3)
+                            
+                        if self.needExpand {
+                            HStack{
+                                Spacer()
+                                Image(Asset.icon.down)
+                                    .renderingMode(.original).resizable()
+                                    .scaledToFit()
+                                    .frame(width: Dimen.icon.thin, height: Dimen.icon.thin)
+                                    .rotationEffect(.degrees(self.isExpand ? 180 : 0))
+                                Spacer()
+                            }
                         }
+                        
                     }
-                    
-                }
-                .modifier(ContentHorizontalEdges())
-                .onTapGesture {
-                    if self.needExpand {
-                        withAnimation{ self.isExpand.toggle() }
+                    .modifier(ContentHorizontalEdges())
+                    .onTapGesture {
+                        if self.needExpand {
+                            withAnimation{ self.isExpand.toggle() }
+                        }
                     }
                 }
             }
@@ -82,6 +91,7 @@ struct SummaryViewer: PageComponent{
     
     
     func checkExpand() {
+        if self.isSimple {return}
         guard let summry = self.data.summry else { return }
         let h = summry.textHeightFrom(
             width: self.sceneObserver.screenSize.width - (Dimen.margin.thin * 2),

@@ -22,7 +22,7 @@ struct PageSynopsisPackage: PageView {
     @ObservedObject var pageDataProviderModel:PageDataProviderModel = PageDataProviderModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var synopsisListViewModel: InfinityScrollModel = InfinityScrollModel()
-   
+    @ObservedObject var peopleScrollModel: InfinityScrollModel = InfinityScrollModel()
     @State var synopsisData:SynopsisData? = nil
     @State var isPairing:Bool? = nil
     @State var useTracking:Bool = false
@@ -41,10 +41,10 @@ struct PageSynopsisPackage: PageView {
                             PackageBody(
                                 infinityScrollModel: self.infinityScrollModel,
                                 synopsisListViewModel: self.synopsisListViewModel,
+                                peopleScrollModel: self.peopleScrollModel,
                                 synopsisPackageModel: self.synopsisPackageModel!,
                                 isPairing: self.isPairing,
                                 contentID: self.synopsisModel?.epsdId,
-                                currentPoster:self.currentPoster,
                                 episodeViewerData: self.episodeViewerData,
                                 summaryViewerData: self.summaryViewerData,
                                 useTracking: self.useTracking){ posterData in
@@ -79,6 +79,19 @@ struct PageSynopsisPackage: PageView {
                     }
                 }
                 .onReceive(self.synopsisListViewModel.$pullPosition){ pos in
+                    self.pageDragingModel.uiEvent = .pull(geometry, pos)
+                }
+                .onReceive(self.peopleScrollModel.$event){evt in
+                    guard let evt = evt else {return}
+                    switch evt {
+                    case .pullCompleted :
+                        self.pageDragingModel.uiEvent = .pullCompleted(geometry)
+                    case .pullCancel :
+                        self.pageDragingModel.uiEvent = .pullCancel(geometry)
+                    default : do{}
+                    }
+                }
+                .onReceive(self.peopleScrollModel.$pullPosition){ pos in
                     self.pageDragingModel.uiEvent = .pull(geometry, pos)
                 }
                 
@@ -190,7 +203,7 @@ struct PageSynopsisPackage: PageView {
     @State var currentPoster:PosterData? = nil
     
     @State var episodeViewerData:EpisodeViewerData? = nil
-    @State var summaryViewerData:SimpleSummaryViewerData? = nil
+    @State var summaryViewerData:SummaryViewerData? = nil
 
     @State var isPageUiReady = false
     @State var isPageDataReady = false
@@ -350,7 +363,7 @@ struct PageSynopsisPackage: PageView {
     private func setupSynopsis (_ data:Synopsis) {
         if let content = data.contents {
             self.episodeViewerData = EpisodeViewerData().setData(data: content)
-            self.summaryViewerData = SimpleSummaryViewerData().setData(data: content)
+            self.summaryViewerData = SummaryViewerData().setData(data: content)
             self.synopsisModel = SynopsisModel(type: .title).setData(data: data)
         } else {
             PageLog.d("setupSynopsis error", tag: self.tag)

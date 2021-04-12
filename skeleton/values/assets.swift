@@ -129,12 +129,16 @@ extension Asset{
         public static let onAirOff = "tagSynopOffair"
         public static let btvlite = "tagMyBtvlite"
         public static let imminent = "tagMyEndSoon"
+        public static let expiration = "tagMyEnd"
+        public static let used = "tagMyUsed"
         
+        public static let add = "icMyAddCouponPoint"
         public static let delete = "icMyDelete"
         public static let edit = "icMyEdit"
         
         public static let ticketMonthly = "tagMySubscribe"
         public static let ticketPeriod = "tagMySubscribe02"
+        
     }
     
     
@@ -178,6 +182,7 @@ extension Asset{
         
         public static let bgGradientBottom = "bgGradientBottom"
         public static let bgGradientTop = "bgGradientTop"
+        public static let bgCoupon = "imgMyListCoupon01"
     }
     
     struct image {

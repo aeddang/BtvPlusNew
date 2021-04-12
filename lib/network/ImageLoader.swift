@@ -28,13 +28,13 @@ class ImageLoader: ObservableObject, PageProtocol{
         task.cancel()
     }
     
-    func reload(url: String?, key:String = ""){
+    func reload(url: String?){
         isLoading = false
-        load(url: url, key: key)
+        load(url: url)
     }
     
     @discardableResult
-    func load(url: String?, key:String = "") -> Bool {
+    func load(url: String?) -> Bool {
         if isLoading { return false}
         guard let url = url else {
             DataLog.e("targetUrl nil" , tag:self.tag)
@@ -57,12 +57,12 @@ class ImageLoader: ObservableObject, PageProtocol{
             DataLog.d("targetUrl " + targetUrl.absoluteString , tag:"ImageView")
         }
         */
-        load(url: targetUrl, key: key)
+        load(url: targetUrl)
         return true
     }
     
     @discardableResult
-    func cash(url: String?, key:String = "") -> Bool {
+    func cash(url: String?) -> Bool {
         if isLoading { return false}
         guard let url = url else { return false}
         if cache.isCached(forKey: url ) {
@@ -139,7 +139,7 @@ class AsyncImageLoader: ObservableObject, PageProtocol{
     }
     
     @discardableResult
-    func load(url: String?, key:String = "") -> Bool {
+    func load(url: String?) -> Bool {
         if isLoading { return false}
         guard let url = url else { return false}
         if url == "" { return false}
@@ -147,72 +147,53 @@ class AsyncImageLoader: ObservableObject, PageProtocol{
             DataLog.e("targetUrl error " + url , tag:self.tag)
             return false
         }
-        if !key.isEmpty {
-            DataLog.d("load " + key , tag:"ImageView")
-            DataLog.d("targetUrl " + targetUrl.absoluteString , tag:"ImageView")
-            
-        }
-        load(url: targetUrl, key: key)
+        load(url: targetUrl)
         return true
     }
     
-    private func load(url: URL, key:String = "") {
+    private func load(url: URL) {
         self.isLoading = true
         let path = url.absoluteString
         let cache = KingfisherManager.shared.cache
-        if cache.isCached(forKey: key) {
+        if cache.isCached(forKey: path) {
             cache.retrieveImage(forKey: path) {  [weak self] (result) in
                 guard let self = self else { return }
                 switch result {
                 case .success(let value):
                     guard let img = value.image else {
-                        if !key.isEmpty {
-                            DataLog.d("cache error crear" + key , tag:"ImageView")
-                        }
                         cache.removeImage(forKey: path)
                         self.isLoading = false
                         return
                     }
                     
                     self.event = .complete(img)
-                    if !key.isEmpty {
-                        DataLog.d("cache complete" + key , tag:"ImageView")
-                    }
                     self.isLoading = false
                     
                 case .failure(_):
-                    if !key.isEmpty {
-                        DataLog.d("cache error crear" + key , tag:"ImageView")
-                    }
                     cache.removeImage(forKey: path)
                     self.isLoading = false
                 }
             }
         } else {
             self.cancellable = URLSession.shared.dataTaskPublisher(for: url)
-                        .map { UIImage(data: $0.data) }
-                        .replaceError(with: nil)
-                        .receive(on: DispatchQueue.main)
-                        .sink { [weak self] (image) in
-                            guard let self = self else { return }
-                            if let image = image {
-                                if let data = image.pngData() {
-                                    cache.storeToDisk(data, forKey: path)
-                                }
-                                self.event = .complete(image)
-                                self.isLoading = false
-                                
-                                if !key.isEmpty {
-                                    DataLog.d("loaded complete" + key , tag:"ImageView")
-                                }
-                            } else {
-                                if !key.isEmpty {
-                                    DataLog.e("loaded error " + key , tag:"ImageView")
-                                }
-                                self.event = .error
-                                self.isLoading = false
-                            }
-                      }
+                .map { UIImage(data: $0.data) }
+                .replaceError(with: nil)
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] (image) in
+                    guard let self = self else { return }
+                    if let image = image {
+                        if let data = image.pngData() {
+                            cache.storeToDisk(data, forKey: path)
+                        }
+                        self.event = .complete(image)
+                        self.isLoading = false
+                        
+                    } else {
+
+                        self.event = .error
+                        self.isLoading = false
+                    }
+              }
         }
     }
 }

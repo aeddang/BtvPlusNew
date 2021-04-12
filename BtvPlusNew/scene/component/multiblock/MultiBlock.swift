@@ -53,15 +53,11 @@ struct MultiBlock:PageComponent {
                         viewModel:self.viewPagerModel,
                         infinityScrollModel:self.viewModel,
                         datas: self.topDatas! )
-                        .modifier(MatchHorizontal(height: TopBanner.imageHeight
-                                                - self.marginTop
-                                                - TopBanner.maginBottomLogo
-                                                + self.marginHeader
-                        ))
-                    .modifier(ListRowInset(spacing: Self.spacing * 2))
+                        .modifier(MatchHorizontal(height:  TopBanner.uiRange
+                    ))
+                    .modifier(ListRowInset(spacing: TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange))
+                    
                 }
-                
-               
                 
                 if self.monthlyDatas != nil {
                    MonthlyBlock(
@@ -75,6 +71,7 @@ struct MultiBlock:PageComponent {
                    .modifier(ListRowInset(spacing: Self.spacing))
                 }
                 if !self.datas.isEmpty  {
+                    /*
                     if self.headerSize > 1 {
                         VStack(spacing:Self.spacing){
                             ForEach(self.datas[..<min(self.headerSize, self.datas.count)]) { data in
@@ -111,6 +108,7 @@ struct MultiBlock:PageComponent {
                             
                         }
                     } else {
+                    */
                         ForEach(self.datas) { data in
                             MultiBlockCell(
                                 pageObservable:self.pageObservable,
@@ -124,7 +122,7 @@ struct MultiBlock:PageComponent {
                                     }
                                 }
                         }
-                    }
+                    //}
                     if self.useFooter {
                         Footer()
                             .modifier(ListRowInset(spacing: Dimen.margin.regular))

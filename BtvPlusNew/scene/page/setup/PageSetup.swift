@@ -384,7 +384,7 @@ struct PageSetup: PageView {
     private func setupWatchLv(select:String?){
         self.willSelectedWatchLv = select ?? ""
         self.pagePresenter.openPopup(
-            PageProvider.getPageObject(.confirmPassword)
+            PageProvider.getPageObject(.confirmNumber)
                 .addParam(key: .type, value: ScsNetwork.ConfirmType.adult)
         )
     }
@@ -409,7 +409,7 @@ struct PageSetup: PageView {
     private func setupPurchaseAuth(_ select:Bool){
         self.willPurchaseAuth = select
         self.pagePresenter.openPopup(
-            PageProvider.getPageObject(.confirmPassword)
+            PageProvider.getPageObject(.confirmNumber)
                 .addParam(key: .type, value: ScsNetwork.ConfirmType.purchase)
         )
     }
@@ -425,7 +425,7 @@ struct PageSetup: PageView {
         let move = PageProvider.getPageObject(.watchHabit)
         move.isPopup = true
         self.pagePresenter.openPopup(
-            PageProvider.getPageObject(.confirmPassword)
+            PageProvider.getPageObject(.confirmNumber)
                 .addParam(key: .data, value:move)
                 .addParam(key: .type, value: ScsNetwork.ConfirmType.adult)
         )

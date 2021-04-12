@@ -52,7 +52,7 @@ struct PageMultiBlock: PageView {
                             useBodyTracking: self.themaType == .ticket ? false : self.useTracking,
                             useTracking:self.useTracking,
                             marginTop: self.marginTop  + Dimen.margin.thin + self.sceneObserver.safeAreaTop + Dimen.app.top,
-                            marginBottom: 0
+                            marginBottom: self.marginBottom
                         )
                         
                         .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
@@ -91,7 +91,7 @@ struct PageMultiBlock: PageView {
                     .modifier(MatchHorizontal(height: (self.isTop == true ? self.marginTop  : 0) + Dimen.app.pageTop  + self.sceneObserver.safeAreaTop))
                     .background(Color.app.blueDeep)
                 }
-                .padding(.bottom, self.marginBottom)
+                //.padding(.bottom, self.marginBottom)
                 .onReceive(self.infinityScrollModel.$event){evt in
                     guard let evt = evt else {return}
                     if self.isTop == nil {return}
@@ -128,14 +128,19 @@ struct PageMultiBlock: PageView {
                 if page?.id == self.pageObject?.id {
                     if self.useTracking {return}
                     self.useTracking = true
+                    /*
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         withAnimation{ self.marginBottom = self.sceneObserver.safeAreaBottom + Dimen.app.bottom }
                     }
+                    */
                 } else {
                     if !self.useTracking {return}
                     self.useTracking = false
-                    self.marginBottom = 0
+                    //self.marginBottom = 0
                 }
+            }
+            .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
+                self.marginBottom = self.sceneObserver.safeAreaBottom + Dimen.app.bottom
             }
             .onReceive(self.appSceneObserver.$event){ evt in
                 guard let evt = evt else { return }

@@ -7,7 +7,14 @@
 import Foundation
 import SwiftUI
 
-struct PageConfirmPassword: PageView {
+extension PageConfirmNumber{
+    enum InputType:String {
+        case password, coupon
+    }
+}
+
+
+struct PageConfirmNumber: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
@@ -18,9 +25,11 @@ struct PageConfirmPassword: PageView {
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
 
-    @State var movePage:PageObject? = nil
+    @State var type:InputType = .password
     
-    @State var type:ScsNetwork.ConfirmType = ScsNetwork.ConfirmType.adult
+    @State var movePage:PageObject? = nil
+    @State var pwType:ScsNetwork.ConfirmType = ScsNetwork.ConfirmType.adult
+    @State var couponType:CouponBlock.ListType = CouponBlock.ListType.coupon
     @State var title:String = ""
     @State var text:String = ""
     @State var placeHolder:String = ""
@@ -29,7 +38,7 @@ struct PageConfirmPassword: PageView {
     @State var msg:String? = nil // String.alert.watchLvInfoError
     @State var safeAreaBottom:CGFloat = 0
     @State var isFocus:Bool = false
-    
+    @State var isSecure:Bool = false
     var body: some View {
         ZStack{
             InputBox(
@@ -42,13 +51,16 @@ struct PageConfirmPassword: PageView {
                 placeHolder: self.placeHolder,
                 inputSize: self.inputSize,
                 keyboardType: .numberPad,
-                isSecure : true
+                isSecure : self.isSecure
             ){ input, _ in
                 guard let input = input else {
                     self.closePage()
                     return
                 }
-                self.confirmPassword(input)
+                switch self.type {
+                case .password : self.confirmPassword(input)
+                case .coupon : self.resigistCoupon(input)
+                }
             }
             .padding(.bottom, self.safeAreaBottom)
             .modifier(MatchParent())
@@ -95,24 +107,9 @@ struct PageConfirmPassword: PageView {
             if res.id != self.tag { return }
             switch res.type {
             case .confirmPassword :
-                guard let resData = res.data as? ConfirmPassword else {return}
-                if resData.result == ApiCode.success {
-                    switch self.type {
-                    case .adult: SystemEnvironment.isWatchAuth = true
-                    case .purchase: SystemEnvironment.isPurchaseAuth = true
-                    }
-                    if let page = self.movePage {
-                        if page.isPopup {
-                            self.pagePresenter.openPopup(page)
-                        } else {
-                            self.pagePresenter.changePage(page)
-                        }
-                    }
-                    self.pagePresenter.onPageEvent(self.pageObject, event: .init(type: .completed, data:self.type))
-                    self.closePage()
-                } else{
-                    self.msg = String.alert.incorrecPassword
-                }
+                self.confirmPasswordRespond(res)
+            case .postCoupon :
+                self.resigistCouponRespond(res)
             default: break
             }
         }
@@ -120,7 +117,7 @@ struct PageConfirmPassword: PageView {
             guard let err = err else { return }
             if err.id != self.tag { return }
             switch err.type {
-            case .confirmPassword :
+            case .confirmPassword, .postCoupon:
                 self.msg = String.alert.apiErrorClient
             default: break
             }
@@ -140,7 +137,7 @@ struct PageConfirmPassword: PageView {
                 self.movePage = data
             }
             if let type = obj.getParamValue(key: .type) as? ScsNetwork.ConfirmType {
-                self.type = type
+                self.pwType = type
                 switch type {
                 case .adult:
                     self.inputSize = 4
@@ -152,8 +149,26 @@ struct PageConfirmPassword: PageView {
                     self.text = String.alert.purchaseAuthInput
                 }
                 self.tip = String.alert.passwordInitateInfo
-            } else {
-                self.inputSize = 4
+                self.type = .password
+                self.isSecure = true
+                
+            } else if let type = obj.getParamValue(key: .type) as? CouponBlock.ListType  {
+                self.couponType = type
+                switch type {
+                case .coupon:
+                    self.title = String.pageText.myBenefitsCouponRegist
+                    self.text = String.pageText.myBenefitsCouponInput
+                case .point:
+                    self.title = String.pageText.myBenefitsPointRegist
+                    self.text = String.pageText.myBenefitsPointInput
+                case .cash:
+                    self.title = String.pageText.myBenefitsCashRegist
+                    self.text = String.pageText.myBenefitsCashInput
+                }
+                self.inputSize = 16
+                self.placeHolder = String.pageText.myBenefitsNumberTip
+                self.type = .coupon
+                self.isSecure = false
             }
             
             if let title = obj.getParamValue(key: .title) as? String {
@@ -165,7 +180,10 @@ struct PageConfirmPassword: PageView {
             if let tip = obj.getParamValue(key: .subText) as? String {
                 self.tip  = tip 
             }
-            self.placeHolder = (1...self.inputSize).reduce("", { p, _ in p + "*"})
+            if self.placeHolder.isEmpty {
+                self.placeHolder = (1...self.inputSize).reduce("", { p, _ in p + "*"})
+            }
+            
         }
         .onReceive(self.keyboardObserver.$isOn){ on in
             if on {return}
@@ -184,7 +202,7 @@ struct PageConfirmPassword: PageView {
     
     func closePage(){
         self.isFocus = false
-        self.pagePresenter.onPageEvent(self.pageObject, event: .init(type: .cancel, data:self.type))
+        self.pagePresenter.onPageEvent(self.pageObject, event: .init(type: .cancel, data:self.pwType))
     }
     
     func confirmPassword(_ pw:String){
@@ -192,7 +210,61 @@ struct PageConfirmPassword: PageView {
             self.appSceneObserver.event = .toast(String.alert.checkConnectStatus)
             return
         }
-        self.dataProvider.requestData(q: .init(id:self.tag, type: .confirmPassword(pw, self.pairing.hostDevice, .adult)))
+        self.dataProvider.requestData(q: .init(id:self.tag, type: .confirmPassword(pw, self.pairing.hostDevice, self.pwType)))
+    }
+    
+    func confirmPasswordRespond(_ res:ApiResultResponds){
+        guard let resData = res.data as? ConfirmPassword else {return}
+        if resData.result == ApiCode.success {
+            switch self.pwType {
+            case .adult: SystemEnvironment.isWatchAuth = true
+            case .purchase: SystemEnvironment.isPurchaseAuth = true
+            }
+            if let page = self.movePage {
+                if page.isPopup {
+                    self.pagePresenter.openPopup(page)
+                } else {
+                    self.pagePresenter.changePage(page)
+                }
+            }
+            self.pagePresenter.onPageEvent(self.pageObject, event: .init(type: .completed, data:self.pwType))
+            self.closePage()
+        } else{
+            self.msg = String.alert.incorrecPassword
+        }
+    }
+    
+    func resigistCoupon(_ number:String){
+        if !self.isReady {
+            self.appSceneObserver.event = .toast(String.alert.checkConnectStatus)
+            return
+        }
+        
+        switch couponType {
+        case .coupon:
+            self.dataProvider.requestData(q: .init(id:self.tag, type: .postCoupon(self.pairing.hostDevice, number)))
+        case .point:
+            self.dataProvider.requestData(q: .init(id:self.tag, type: .postBPoint(self.pairing.hostDevice, number)))
+        case .cash:
+            self.dataProvider.requestData(q: .init(id:self.tag, type: .postBCash(self.pairing.hostDevice, number)))
+        }
+    }
+    func resigistCouponRespond(_ res:ApiResultResponds){
+        guard let resData = res.data as? RegistEps else {return}
+        
+        if resData.result == ApiCode.success {
+            if let page = self.movePage {
+                if page.isPopup {
+                    self.pagePresenter.openPopup(page)
+                } else {
+                    self.pagePresenter.changePage(page)
+                }
+            }
+            self.pagePresenter.onPageEvent(self.pageObject, event: .init(type: .completed, data:self.couponType))
+            self.closePage()
+        } else{
+            self.msg = resData.reason
+        }
     }
     
 }
@@ -201,7 +273,7 @@ struct PageConfirmPassword: PageView {
 struct PageConfirmPassword_Previews: PreviewProvider {
     static var previews: some View {
         Form{
-            PageConfirmPassword().contentBody
+            PageConfirmNumber().contentBody
                 .environmentObject(PagePresenter())
                 .environmentObject(PageSceneObserver())
                 .environmentObject(AppSceneObserver())

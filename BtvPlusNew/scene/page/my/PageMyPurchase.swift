@@ -45,7 +45,8 @@ struct PageMyPurchase: PageView {
                         pageObservable: self.pageObservable,
                         viewModel: self.viewPagerModel,
                         pages: self.pages,
-                        titles: self.titles)
+                        titles: self.titles,
+                        usePull: .horizontal)
                         { idx in
                             switch idx {
                             case 0 : self.purchaseModel.initUpdate()

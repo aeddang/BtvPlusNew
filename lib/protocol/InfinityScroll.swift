@@ -152,7 +152,7 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
         }
         let diff = self.prevPosition - pos
     
-        if abs(diff) > 600 { return }
+        if abs(diff) > 10000 { return }
         if abs(diff) > self.minDiff{
             self.scrollPosition = pos
             self.prevPosition = ceil(pos)

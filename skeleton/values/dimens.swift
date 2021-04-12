@@ -44,6 +44,7 @@ struct Dimen{
         public static let thinExtra:CGFloat = 20  //*
         public static let tiny:CGFloat = 17//*
         public static let tinyExtra:CGFloat = 14//*
+        public static let micro:CGFloat = 12//*
     }
     
     struct tab {

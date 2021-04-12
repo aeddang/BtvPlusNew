@@ -201,7 +201,7 @@ struct PagePairingSetupUser: PageView {
                         self.pageDragingModel.uiEvent = .pullCompleted(geometry)
                     case .pullCancel :
                         self.pageDragingModel.uiEvent = .pullCancel(geometry)
-                    default : do{}
+                    default : break
                     }
                 }
                 .onReceive(self.infinityScrollModel.$pullPosition){ pos in

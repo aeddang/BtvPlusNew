@@ -25,14 +25,32 @@ struct MyPointInfo: View {
                 .frame(height:Dimen.button.lightExtra)
             ValueInfo(key: String.app.coupon, value: self.coupon)
                 .modifier(MatchParent())
+                .onTapGesture {
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.myBenefits)
+                            .addParam(key: .id, value: 0)
+                    )
+                }
             Spacer().modifier(LineVertical())
                 .frame(height:Dimen.button.lightExtra)
             ValueInfo(key: String.app.bpoint, value: self.point)
                 .modifier(MatchParent())
+                .onTapGesture {
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.myBenefits)
+                            .addParam(key: .id, value: 1)
+                    )
+                }
             Spacer().modifier(LineVertical())
                 .frame(height:Dimen.button.lightExtra)
             ValueInfo(key: String.app.bcash, value: self.cash)
                 .modifier(MatchParent())
+                .onTapGesture {
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.myBenefits)
+                            .addParam(key: .id, value: 2)
+                    )
+                }
         }
         .frame(height:Dimen.tab.heavy)
         .background(Color.app.blueLight)
@@ -86,7 +104,7 @@ struct MyPointInfo: View {
     private func updateTotalInfo(){
         if let data = self.pairing.authority.totalPointInfo {
             self.coupon = (data.coupon?.usableCount ?? 0).description + String.app.count
-            self.point = (data.NewBpoint?.usableNewBpoint?.formatted(style: .decimal) ?? "0").description + "P"
+            self.point = (data.newBpoint?.usableNewBpoint?.formatted(style: .decimal) ?? "0").description + "P"
             self.cash = (data.bcash?.usableBcash?.totalBalance?.formatted(style: .decimal) ?? "0").description + "P"
         }
     }

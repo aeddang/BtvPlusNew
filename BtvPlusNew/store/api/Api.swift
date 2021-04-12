@@ -108,8 +108,13 @@ enum ApiType{
          deleteNotificationVod(String?)
     //EPS
     case getTotalPointInfo(HostDevice?),
-         getTotalPoint(HostDevice?, Bool = true)
-    
+         getTotalPoint(HostDevice?, Bool = true),
+         getCoupons( HostDevice?, Int? = nil , Int? = nil),
+         postCoupon( HostDevice?, String?),
+         getBPoints( HostDevice?, Int? = nil , Int? = nil),
+         postBPoint( HostDevice?, String?),
+         getBCashes( HostDevice?, Int? = nil , Int? = nil),
+         postBCash( HostDevice?, String?)
     //WEB
     case getSearchKeywords,
          getCompleteKeywords(String?),

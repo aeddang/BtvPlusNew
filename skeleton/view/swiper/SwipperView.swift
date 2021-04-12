@@ -19,6 +19,7 @@ struct SwipperView : View , PageProtocol, Swipper {
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
     var pages: [PageViewProtocol]
     var coordinateSpace:CoordinateSpace = .local
+    var usePull: Axis? = nil
     @State var offset: CGFloat = 0
     @State var isUserSwiping: Bool = false
     @State var index: Int = 0
@@ -52,12 +53,28 @@ struct SwipperView : View , PageProtocol, Swipper {
                 .onChanged({ value in
                     self.isUserSwiping = true
                     let willOffset = self.getDragOffset(value: value, geometry: geometry)
-                   
-                    if willOffset > Self.PULL_RANGE || self.viewModel.status == .pull {
-                        
-                        self.viewModel.event = .pull(willOffset/4.0)
-                        self.viewModel.status = .pull
-                        self.progress = self.progressMax - Double(willOffset-Self.PULL_RANGE)
+                    if let pull = self.usePull {
+                        if pull == .horizontal {
+                            if willOffset > Self.PULL_RANGE || self.viewModel.status == .pull {
+                                self.viewModel.event = .pull(willOffset/4.0)
+                                self.viewModel.status = .pull
+                                self.progress = self.progressMax - Double(willOffset-Self.PULL_RANGE)
+                            } else {
+                                self.viewModel.status = .move
+                                self.offset = willOffset
+                            }
+                        } else {
+                            let pullOffset = value.translation.height
+                            if pullOffset > Self.PULL_RANGE || self.viewModel.status == .pull {
+                                self.viewModel.event = .pull(pullOffset/2.0)
+                                self.viewModel.status = .pull
+                                self.progress = self.progressMax - Double(pullOffset-Self.PULL_RANGE)
+                            } else {
+                                self.viewModel.status = .move
+                                self.offset = willOffset
+                            }
+                           
+                        }
                     } else {
                         self.viewModel.status = .move
                         self.offset = willOffset
@@ -67,8 +84,9 @@ struct SwipperView : View , PageProtocol, Swipper {
                 .onEnded({ value in
                     switch self.viewModel.status {
                     case .pull :
-                        ComponentLog.d("self.offset " + value.predictedEndTranslation.width.description, tag: self.tag)
-                        if value.predictedEndTranslation.width > Self.PULL_COMPLETE_RANGE{
+                        let willPullOffset = self.usePull == .horizontal ? value.predictedEndTranslation.width : value.predictedEndTranslation.height
+                        ComponentLog.d("self.offset " + willPullOffset.description, tag: self.tag)
+                        if willPullOffset > Self.PULL_COMPLETE_RANGE{
                             self.viewModel.event = .pullCompleted
                             withAnimation{self.progress = 0}
                         } else {

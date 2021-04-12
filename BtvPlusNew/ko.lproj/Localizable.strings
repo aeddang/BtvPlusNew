@@ -46,6 +46,7 @@
 "sesonCount" = "화";
 "award" = "수상";
 "ageCount" = "세";
+"point" = "P";
 
 "rent" = "대여";
 "owner" = "소장";
@@ -85,6 +86,10 @@
 "contractInfo" = "약정 정보";
 "contractPeriod" = "약정 기간";
 "contractDiscount" = "약정(%s%할인)";
+
+"expirePeriodDate" = "만료일";
+"remain" = "잔여";
+"vip" = "VIP";
 
 /*
   Button
@@ -131,6 +136,8 @@
 "btnPurchaseEdit" = "구매 목록 편집";
 "btnSelectAll" = "전체 선택";
 "btnAllTicket" = "다른 이용권 보기";
+"btnPreview" = "미리보기";
+"btnDirectview" = "바로보기";
 /*
  Sort
 */
@@ -302,6 +309,9 @@
 "titleBookmarkList" = "찜 목록";
 "titlePurchaseList" = "구매 목록";
 "titlePurchaseTicketList" = "이용권";
+"titleMyBenefits" = "나의 할인 해택";
+
+
 /*
  PagePairing
 */
@@ -372,6 +382,44 @@
 "myCollectedEmpty" = "구매하신 소장 VOD가 없습니다.";
 "myBookMarkedEmpty" = "찜한 콘텐츠가 없습니다.";
 "myBookMarkedInfo" = "찜 목록은 60개까지 저장됩니다.";
+
+/*
+ PageMyBenefits
+*/
+"myBenefitsCoupon" = "쿠폰";
+"myBenefitsCouponText" = "사용 가능한 쿠폰";
+"myBenefitsCouponRegist" = "쿠폰 등록";
+"myBenefitsCouponEmpty" = "보유한 쿠폰 내역이 없습니다.";
+"myBenefitsCouponInput" = "쿠폰 번호를 입력해주세요.";
+
+"myBenefitsPoint" = "B포인트";
+"myBenefitsPointText" = "사용 가능한 B포인트";
+"myBenefitsPointRegist" = "B포인트 등록";
+"myBenefitsPointEmpty" = "보유한 포인트 내역이 없습니다.";
+"myBenefitsPointInput" = "B포인트 번호를 입력해주세요.";
+
+"myBenefitsCash" = "B캐쉬";
+"myBenefitsCashText" = "사용 가능한 B캐쉬";
+"myBenefitsCashRegist" = "B캐쉬 등록";
+"myBenefitsCashEmpty" = "보유한 캐쉬 내역이 없습니다.";
+"myBenefitsCashInput" = "B캐쉬 번호를 입력해주세요.";
+
+"myBenefitsNumberTip" = "16자리 숫자를 입력하세요.";
+
+"myBenefitsDiscount" = "다른 할인 수단";
+"myBenefitsDiscountT" = "T맴버쉬";
+"myBenefitsDiscountOk" = "OK캐쉬백";
+"myBenefitsDiscountTv" = "TV포인트";
+"myBenefitsDiscountTvText1" = "TV 포인트";
+"myBenefitsDiscountTvText2" = "사용 가능 포인트";
+
+"myBenefitsDiscountTInfo" = "• 콘텐츠 구매 시 할인이 적용됩니다. (일부 상품 제외)\n• 카드 등록, 변경, 삭제는 B tv에서 하실 수 있습니다.";
+"myBenefitsDiscountOkInfo" = "• OK캐쉬백 카드는 최대 3개까지 등록 가능합니다.\n• OK캐쉬백 카드의 등록, 변경, 삭제는 B tv 에서 하실 수 있습니다.\n• 콘텐츠 결제 시 할인과 함께 구매 금액의 %s가 OK캐쉬백 포인트로 적립되며 할인 및 적립은 대표 카드로만 가능합니다.";
+"myBenefitsDiscountTvInfo" = "• TV포인트 등록 정보 변경 및 충전은 B tv에서 하실 수 있습니다.";
+
+"myBenefitsCardEmpty" = "등록된 카드가 없습니다.";
+"myBenefitsDiscountTvEmpty" = "TV포인트 등록 정보가 없습니다.";
+"myBenefitsDiscountTvEmptyTip" = "B tv에서 TV포인트에 가입해주세요.";
 
 
 

@@ -11,6 +11,7 @@ import SwiftUI
 import Combine
 extension TopBanner{
     static let height:CGFloat = 477
+    static let uiRange:CGFloat = 320
     static let barWidth:CGFloat = Dimen.bar.medium
     static let imageHeight:CGFloat = 720
     static let barHeight = Dimen.line.medium
@@ -156,8 +157,8 @@ struct TopBannerItem: PageComponent, Identifiable {
                 }
             }
         }
-        .modifier(MatchHorizontal(height: TopBanner.height))
-        .clipped()
+        .modifier(MatchParent())
+        
     }
 }
 

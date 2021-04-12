@@ -88,7 +88,7 @@ struct MatchVertical: ViewModifier {
     func body(content: Content) -> some View {
         return content
             .frame(minWidth: width, maxWidth: width , minHeight:0, maxHeight: .infinity - (margin * 2.0))
-            .offset(x:margin)
+            .offset(y:margin)
     }
 }
 
@@ -118,4 +118,12 @@ struct LineVertical: ViewModifier {
     }
 }
 
+struct LineVerticalDotted: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: 0, y: 0))
+        path.addLine(to: CGPoint(x: 0, y:rect.height))
+        return path
+    }
+}
 

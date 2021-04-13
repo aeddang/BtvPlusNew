@@ -108,7 +108,7 @@ struct FillButton: View, SelecterbleProtocol{
     // type stroke
     init(
         text:String,
-        strokeWidth:CGFloat = 1,
+        strokeWidth:CGFloat?,
         action:@escaping (_ idx:Int) -> Void )
     {
         self.text = text
@@ -118,7 +118,7 @@ struct FillButton: View, SelecterbleProtocol{
             color: Color.app.greyLight,
             activeColor: Color.app.white
         )
-        self.strokeWidth = strokeWidth
+        self.strokeWidth = strokeWidth ?? 1
         self.bgColor = Color.transparent.clearUi
         self.action = action
         self.size = Dimen.button.regularExtra

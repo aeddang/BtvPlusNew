@@ -321,7 +321,7 @@ class Nps: Rest{
     }
     
     func postGuestNickname(
-        user:User?, customParam:[String: Any] = [String: Any](),
+        name:String?, customParam:[String: Any] = [String: Any](),
         completion: @escaping (NpsResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         
@@ -331,13 +331,13 @@ class Nps: Rest{
         params["guest_deviceid"] = SystemEnvironment.getGuestDeviceId()
         params["sessionid"] = NpsNetwork.sessionId
         params["pairingid"] = NpsNetwork.pairingId
-        params["user_name"] = NpsNetwork.getNpsUsername(userName: user?.nickName)
+        params["user_name"] = NpsNetwork.getNpsUsername(userName: name)
         params["custom_param"] = customParam
         
         var body = [String: Any]()
         body["header"] = headers
         body["body"] = params
-        fetch(route: NpsGuestDeviceInfo(body: body), completion: completion, error:error)
+        fetch(route: NpsUpdateUser(body: body), completion: completion, error:error)
     }
     
     func getGuestAgreement(

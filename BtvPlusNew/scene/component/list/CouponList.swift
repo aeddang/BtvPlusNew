@@ -49,6 +49,7 @@ class CouponData:InfinityData{
         guard let balance = balance else {
             return
         }
+        if balance <= 0 { return }
         self.remain = String.app.remain + " " + balance.formatted(style: .decimal) + String.app.point
     }
     private func setupExpire(_ msg:String?){
@@ -102,6 +103,7 @@ struct CouponList: PageComponent{
         InfinityScrollView(
             viewModel: self.viewModel,
             axes: .vertical,
+            scrollType : .reload(isDragEnd:false),
             marginTop: Dimen.margin.medium,
             marginBottom: self.marginBottom,
             spacing: 0,
@@ -111,7 +113,12 @@ struct CouponList: PageComponent{
                 HStack(spacing: Dimen.margin.tiny){
                     VStack(alignment: .leading, spacing: 0){
                         if let title = self.title {
-                            Text(title).modifier(BoldTextStyle(size: Font.size.regular))
+                            HStack(spacing: Dimen.margin.micro){
+                                if let leading = self.type?.text {
+                                    Text(leading).modifier(MediumTextStyle(size: Font.size.regular))
+                                }
+                                Text(title).modifier(BoldTextStyle(size: Font.size.regular))
+                            }
                         }
                         Spacer().modifier(MatchHorizontal(height: 0))
                     }
@@ -149,7 +156,7 @@ struct CouponList: PageComponent{
             } else {
                 EmptyMyData(
                     text: self.type?.empty ?? String.alert.dataError)
-                .modifier(MatchParent())
+                    .modifier(PageBody())
             }
         }
        

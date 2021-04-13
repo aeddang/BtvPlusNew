@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 import Combine
 extension SwipperView{
-    static var MIN_DRAG_RANGE:CGFloat = 20
+    static var MIN_DRAG_RANGE:CGFloat = 30
     static var PULL_RANGE:CGFloat = 80
     static var PULL_COMPLETE_RANGE:CGFloat = 160
 }

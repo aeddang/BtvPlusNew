@@ -167,6 +167,12 @@
 		318E7EFE25E8814C00B2AAAF /* MonthlyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E7EFD25E8814C00B2AAAF /* MonthlyList.swift */; };
 		318E7F0425E8990900B2AAAF /* MonthlyBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E7F0325E8990900B2AAAF /* MonthlyBlock.swift */; };
 		318E7F0C25E8B01800B2AAAF /* MonthlyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E7F0B25E8B01800B2AAAF /* MonthlyInfo.swift */; };
+		318F7B412625444C00774B17 /* CardList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318F7B402625444C00774B17 /* CardList.swift */; };
+		318F7B472625708100774B17 /* DivisionTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318F7B462625708100774B17 /* DivisionTab.swift */; };
+		318F7B502625739A00774B17 /* CardBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318F7B4F2625739A00774B17 /* CardBlock.swift */; };
+		318F7B582625798400774B17 /* TMembership.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318F7B572625798400774B17 /* TMembership.swift */; };
+		318F7B632625818900774B17 /* OkCashPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318F7B622625818900774B17 /* OkCashPoint.swift */; };
+		318F7B692625820900774B17 /* TvPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318F7B682625820900774B17 /* TvPoint.swift */; };
 		318FBFF725E4882700ABC241 /* PageCategoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318FBFF625E4882700ABC241 /* PageCategoryList.swift */; };
 		318FBFFE25E48F5B00ABC241 /* SortTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318FBFFD25E48F5B00ABC241 /* SortTab.swift */; };
 		318FC00625E4CA5800ABC241 /* CateBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318FC00525E4CA5800ABC241 /* CateBlock.swift */; };
@@ -544,6 +550,12 @@
 		318E7EFD25E8814C00B2AAAF /* MonthlyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyList.swift; sourceTree = "<group>"; };
 		318E7F0325E8990900B2AAAF /* MonthlyBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyBlock.swift; sourceTree = "<group>"; };
 		318E7F0B25E8B01800B2AAAF /* MonthlyInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyInfo.swift; sourceTree = "<group>"; };
+		318F7B402625444C00774B17 /* CardList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardList.swift; sourceTree = "<group>"; };
+		318F7B462625708100774B17 /* DivisionTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DivisionTab.swift; sourceTree = "<group>"; };
+		318F7B4F2625739A00774B17 /* CardBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBlock.swift; sourceTree = "<group>"; };
+		318F7B572625798400774B17 /* TMembership.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMembership.swift; sourceTree = "<group>"; };
+		318F7B622625818900774B17 /* OkCashPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OkCashPoint.swift; sourceTree = "<group>"; };
+		318F7B682625820900774B17 /* TvPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TvPoint.swift; sourceTree = "<group>"; };
 		318FBFF625E4882700ABC241 /* PageCategoryList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCategoryList.swift; sourceTree = "<group>"; };
 		318FBFFD25E48F5B00ABC241 /* SortTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortTab.swift; sourceTree = "<group>"; };
 		318FC00525E4CA5800ABC241 /* CateBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CateBlock.swift; sourceTree = "<group>"; };
@@ -1091,6 +1103,9 @@
 				317C976026243D31008F267D /* BPoints.swift */,
 				317C976826243DC3008F267D /* BCashes.swift */,
 				317C975B262433F9008F267D /* EpsModel.swift */,
+				318F7B572625798400774B17 /* TMembership.swift */,
+				318F7B622625818900774B17 /* OkCashPoint.swift */,
+				318F7B682625820900774B17 /* TvPoint.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -1250,6 +1265,7 @@
 			isa = PBXGroup;
 			children = (
 				318FBFFD25E48F5B00ABC241 /* SortTab.swift */,
+				318F7B462625708100774B17 /* DivisionTab.swift */,
 				D56CC3092590703200CA1D54 /* BlockProtocol.swift */,
 				D56CC2F92590313A00CA1D54 /* PosterBlock.swift */,
 				D56CC30125906F2500CA1D54 /* VideoBlock.swift */,
@@ -1343,7 +1359,6 @@
 				3166CBAD26115D1300282891 /* component */,
 				31E3975725B5A0AC00CE6E21 /* body */,
 				31E3974F25B5A0A300CE6E21 /* PageMy.swift */,
-				314D589325B685B2007BCA34 /* PagePairingManagement.swift */,
 				3166CBB62611639F00282891 /* PageModifyProfile.swift */,
 				31A73BCC261D99B1009A143C /* PageMyPurchase.swift */,
 				317C9773262443D4008F267D /* PageMyBenefits.swift */,
@@ -1391,6 +1406,7 @@
 				3163300225EF70B000581FA7 /* TextTabList.swift */,
 				318B537025F049DA0052E4E0 /* PlayList.swift */,
 				317C97432623EEF7008F267D /* CouponList.swift */,
+				318F7B402625444C00774B17 /* CardList.swift */,
 			);
 			path = list;
 			sourceTree = "<group>";
@@ -1428,6 +1444,7 @@
 				D573785725A2D70B00EC571F /* PagePairingBtv.swift */,
 				315730F225B01FFF00D9A693 /* PagePairingUser.swift */,
 				31740C23261BFB310052A9C2 /* PagePairingEmptyDevice.swift */,
+				314D589325B685B2007BCA34 /* PagePairingManagement.swift */,
 			);
 			path = pairing;
 			sourceTree = "<group>";
@@ -2019,6 +2036,7 @@
 				3167198325FF42A8005AC3D2 /* WatchedBlock.swift */,
 				31740C38261C3AE70052A9C2 /* PurchaseBlock.swift */,
 				317C974926240945008F267D /* CouponBlock.swift */,
+				318F7B4F2625739A00774B17 /* CardBlock.swift */,
 			);
 			path = multiblock;
 			sourceTree = "<group>";
@@ -2433,6 +2451,7 @@
 				3159B05025B17B0B008CA85B /* Kms.swift in Sources */,
 				3174067C25F763BD00201850 /* PageWebview.swift in Sources */,
 				310F6FC725C16916005718B0 /* Play.swift in Sources */,
+				318F7B692625820900774B17 /* TvPoint.swift in Sources */,
 				315544CF25B83F8C00086510 /* MetvModel.swift in Sources */,
 				317C9754262426CD008F267D /* PageCouponList.swift in Sources */,
 				318BA3982608C2660093BC7D /* CompleteKeyword.swift in Sources */,
@@ -2463,6 +2482,7 @@
 				D56C5FE825930060009AE769 /* BookMark.swift in Sources */,
 				D56C69A8257DA09E00CF9AB8 /* ImageLoader.swift in Sources */,
 				31E8D7C125CA85190034BBC4 /* PlayerOptionSelectBox.swift in Sources */,
+				318F7B582625798400774B17 /* TMembership.swift in Sources */,
 				3167641A25CCC1C5003A7721 /* PlayViewer.swift in Sources */,
 				D56C6A53257DA0C700CF9AB8 /* FillButton.swift in Sources */,
 				3163300325EF70B000581FA7 /* TextTabList.swift in Sources */,
@@ -2475,6 +2495,7 @@
 				D56C6A2A257DA0C700CF9AB8 /* CPImagePicker.swift in Sources */,
 				D506D722258C924500F27C00 /* ListStyle.swift in Sources */,
 				317335FF26130003009B211B /* PageSynopsisPlayer.swift in Sources */,
+				318F7B472625708100774B17 /* DivisionTab.swift in Sources */,
 				31785808260AB2400058A039 /* SwipperView.swift in Sources */,
 				D56C6A4C257DA0C700CF9AB8 /* InfinityScrollView.swift in Sources */,
 				D5E27EE42587115900B2CD5D /* ImageConst.swift in Sources */,
@@ -2510,6 +2531,7 @@
 				31E8D7BC25CA5D470034BBC4 /* PlayerTop.swift in Sources */,
 				D5DC474E25820A02007EDD86 /* RelationContent.swift in Sources */,
 				D5E27EEA258751A200B2CD5D /* BlockData.swift in Sources */,
+				318F7B412625444C00774B17 /* CardList.swift in Sources */,
 				31632FFB25EF386F00581FA7 /* MultiBlockBody.swift in Sources */,
 				3167195925FEC876005AC3D2 /* Footer.swift in Sources */,
 				315B55D225A7E2DC00B5B351 /* Nps.swift in Sources */,
@@ -2540,6 +2562,7 @@
 				D56C69AE257DA09E00CF9AB8 /* AnimateDrawView.swift in Sources */,
 				317C976926243DC3008F267D /* BCashes.swift in Sources */,
 				319BAFCC26046B240007273F /* ImageAnimation.swift in Sources */,
+				318F7B632625818900774B17 /* OkCashPoint.swift in Sources */,
 				D56C6B0E257DAADE00CF9AB8 /* SceneTab.swift in Sources */,
 				317A8F5C25CBE1AE00E41226 /* PlayerMoreBox.swift in Sources */,
 				3177732425FAF916006382AE /* User.swift in Sources */,
@@ -2654,6 +2677,7 @@
 				D56C6B72257DBAE700CF9AB8 /* PageTest.swift in Sources */,
 				316719A726008681005AC3D2 /* Alerts.swift in Sources */,
 				318BA3992608C2660093BC7D /* SearchCategory.swift in Sources */,
+				318F7B502625739A00774B17 /* CardBlock.swift in Sources */,
 				31373F6425C7E726004353DA /* YTPlayerView.swift in Sources */,
 				D56C6A42257DA0C700CF9AB8 /* CustomToggleStyle.swift in Sources */,
 				D56C6A3E257DA0C700CF9AB8 /* CPPlayer.swift in Sources */,
@@ -2871,7 +2895,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -2895,7 +2919,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.010;
+				MARKETING_VERSION = 1.011;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BtvPlusNew/store/Store-Bridging-Header.h";
@@ -2945,7 +2969,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -2964,7 +2988,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.010;
+				MARKETING_VERSION = 1.011;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BtvPlusNew/store/Store-Bridging-Header.h";

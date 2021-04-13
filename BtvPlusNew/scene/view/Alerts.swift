@@ -26,6 +26,7 @@ struct InfoAlert: PageView {
 struct EmptyMyData: PageView {
     var icon:String = Asset.source.myEmpty
     var text:String = String.alert.dataError
+    var tip:String? = nil
     var body: some View {
         VStack(alignment: .center, spacing: 0){
             Image(icon)
@@ -37,8 +38,51 @@ struct EmptyMyData: PageView {
                 .modifier(MediumTextStyle(size: Font.size.regular, color: Color.app.greyLight))
                 .multilineTextAlignment(.center)
                 .padding(.top, Dimen.margin.mediumExtra)
+            if let tip = self.tip{
+                Text(tip)
+                    .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
+                    .multilineTextAlignment(.leading)
+                    .padding(.top, Dimen.margin.tiny)
+            }
         }
         .padding(.all, Dimen.margin.medium)
+        
+    }//body
+}
+
+struct EmptyCard: PageView {
+    var icon:String = Asset.source.myEmpty
+    var text:String = String.alert.dataError
+    var tip:String? = nil
+    var body: some View {
+        ZStack(alignment: .bottom){
+            Spacer()
+                .frame(
+                    width: ListItem.card.size.width,
+                    height: ListItem.card.size.height)
+                .background(Color.app.blueLight)
+                .clipShape( RoundedRectangle(cornerRadius: Dimen.radius.light))
+            VStack(alignment: .center, spacing: 0){
+                Image(icon)
+                    .renderingMode(.original)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 157, height: 157)
+                Text(text)
+                    .modifier(MediumTextStyle(size: Font.size.regular, color: Color.app.white))
+                    .multilineTextAlignment(.center)
+                    .padding(.top, Dimen.margin.mediumExtra)
+                if let tip = self.tip{
+                    Text(tip)
+                        .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
+                        .multilineTextAlignment(.center)
+                        .padding(.top, Dimen.margin.tiny)
+                }
+            }
+            .padding(.all, Dimen.margin.regular)
+        }
+        
+        
     }//body
 }
 
@@ -101,11 +145,12 @@ struct EmptyAlert_Previews: PreviewProvider {
     
     static var previews: some View {
         ZStack{
-            InfoAlert(
-                text: "편성 종료 D-7"
+            EmptyCard(
+                text: String.pageText.myBenefitsDiscountTvEmpty,
+                tip: String.pageText.myBenefitsDiscountTvEmptyTip
             )
         }
-        .frame(width: 320)
+        .frame(width: 350)
         .background(Color.brand.bg)
     }
 }

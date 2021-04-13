@@ -55,10 +55,6 @@ struct PageWatchedList: PageView {
                     self.viewModel.update(menuId:self.menuId, key:nil)
                 }
             }
-            .onReceive(self.pagePresenter.$currentTopPage){ page in
-                self.useTracking = page?.id == self.pageObject?.id
-            }
-           
             .onAppear{
                 guard let obj = self.pageObject  else { return }
                 

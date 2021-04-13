@@ -102,47 +102,48 @@ struct PairingView: PageComponent{
                     useTracking:true)
                     .padding(.top, Dimen.margin.medium)
             }
-            VStack (alignment: .center, spacing: 0){
-                Spacer().modifier(LineHorizontal())
-                FillButton(
-                    text: String.pageTitle.bookmarkList,
-                    isMore: true
-                ){_ in
+            if self.isCompleted {
+                VStack (alignment: .center, spacing: 0){
+                    Spacer().modifier(LineHorizontal())
+                    FillButton(
+                        text: String.pageTitle.bookmarkList,
+                        isMore: true
+                    ){_ in
+                        
+                        let blockData = BlockData()
+                            .setData(title: String.pageTitle.bookmarkList, cardType:.bookmarkedPoster, dataType:.bookMark, uiType:.poster)
+                        
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.categoryList)
+                                .addParam(key: .data, value: blockData)
+                        )
+                    }
+        
+                    Spacer().modifier(LineHorizontal())
+                    FillButton(
+                        text: String.pageTitle.purchaseList,
+                        isMore: true
+                    ){_ in
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.myPurchase)
+                        )
+                    }
                     
-                    let blockData = BlockData()
-                        .setData(title: String.pageTitle.bookmarkList, cardType:.bookmarkedPoster, dataType:.bookMark, uiType:.poster)
-                    
-                    self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.categoryList)
-                            .addParam(key: .data, value: blockData)
-                    )
+                    FillButton(
+                        text: String.pageText.myRegistPictureFammly,
+                        isMore: false,
+                        icon: Asset.icon.btvlite,
+                        bgColor : Color.app.blueLight
+                    ){_ in
+                        
+                        AppUtil.openURL(ApiPath.getRestApiPath(.WEB) + BtvWebView.happySenior)
+                    }
                 }
-    
-                Spacer().modifier(LineHorizontal())
-                FillButton(
-                    text: String.pageTitle.purchaseList,
-                    isMore: true
-                ){_ in
-                    self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.myPurchase)
-                    )
-                }
-                
-                FillButton(
-                    text: String.pageText.myRegistPictureFammly,
-                    isMore: false,
-                    icon: Asset.icon.btvlite,
-                    bgColor : Color.app.blueLight
-                ){_ in
-                    
-                    AppUtil.openURL(ApiPath.getRestApiPath(.WEB) + BtvWebView.happySenior)
-                }
+                .padding(.horizontal, Dimen.margin.thin)
+                .padding(.top, Dimen.margin.medium)
             }
-            .padding(.horizontal, Dimen.margin.thin)
-            .padding(.top, Dimen.margin.medium)
         }
         .padding(.top, Dimen.margin.light)
-        
         .padding(.bottom, Dimen.margin.thin + self.safeAreaBottom)
         .background(Color.brand.bg)
     
@@ -155,6 +156,13 @@ struct PairingView: PageComponent{
             guard let res = res else {return}
             switch res.type {
             case .getWatch : self.onWatchedData(res: res)
+            default : break
+            }
+        }
+        .onReceive(self.dataProvider.$error){ err in
+            guard let err = err else {return}
+            switch err.type {
+            case .getWatch : withAnimation{ self.isCompleted = true }
             default : break
             }
         }
@@ -171,6 +179,7 @@ struct PairingView: PageComponent{
         
     }//body
     
+    @State var isCompleted:Bool = false
     @State var watchedData:BlockData? = nil
     func onWatchedData(res:ApiResultResponds){
         guard let resData = res.data as? Watch else { return }
@@ -182,6 +191,7 @@ struct PairingView: PageComponent{
         blockData.videos = videos
         blockData.setDatabindingCompleted(total: resData.watch_tot?.toInt() ?? 0)
         self.watchedData = blockData
+        withAnimation{ self.isCompleted = true }
     }
     
     

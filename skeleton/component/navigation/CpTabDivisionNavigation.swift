@@ -24,7 +24,7 @@ struct CPTabDivisionNavigation : PageComponent {
             ZStack(alignment: .bottom){
                 VStack(spacing:0){
                     HStack(spacing:0){
-                        ForEach(self.buttons, id:\.id) { btn in
+                        ForEach(self.buttons) { btn in
                             self.createButton(btn)
                         }
                     }
@@ -56,22 +56,20 @@ struct CPTabDivisionNavigation : PageComponent {
     }//body
     
     func createButton(_ btn:NavigationButton) -> some View {
-        ComponentLog.d("createButton", tag:self.tag)
         return Button<AnyView?>(
             action: { self.performAction(btn.id, index: btn.idx)}
         ){ btn.body }
         .modifier(MatchHorizontal(height: btn.frame.height))
         .buttonStyle(BorderlessButtonStyle())
-        
     }
     
+    
+    
     func getButtonSize(geometry:GeometryProxy) -> CGFloat {
-        ComponentLog.d("getButtonSize", tag:self.tag)
         return geometry.size.width / CGFloat(self.buttons.count)
     }
     
     func getButtonPosition(idx:Int, geometry:GeometryProxy) -> CGFloat {
-        ComponentLog.d("getButtonPosition", tag:self.tag)
         let size = getButtonSize(geometry: geometry)
         return size * CGFloat(idx) + size/2.0 - ( geometry.size.width / 2.0 )
     }
@@ -83,9 +81,12 @@ struct CPTabDivisionNavigation : PageComponent {
             self.index = index
         }
         self.viewModel.index = index
-        ComponentLog.d("performAction : " + index.description, tag:tag)
     }
     
+    func getSpacerSize() -> CGFloat {
+        if self.buttons.isEmpty {return 0}
+        return self.buttons[self.index].frame.width
+    }
 }
 
 

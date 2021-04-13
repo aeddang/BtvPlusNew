@@ -57,15 +57,21 @@ struct MyPointInfo: View {
         .onReceive(self.pairing.authority.$event){ evt in
             guard let evt = evt else { return }
             switch evt {
-            case .updatedMyinfo : self.updatedMyInfo()
             case .updateMyinfoError(let err) : self.errorMyInfo(err)
-            //default : break
+            default : break
             }
         }
-        .onReceive(self.pairing.authority.$totalPointInfo){ info in
-            if info == nil && !ticket.isEmpty {
-                self.pairing.authority.requestAuth(.updateMyinfo(isReset:true))
-            }
+        .onReceive(self.pairing.authority.$useAbleBPoint){ point in
+            self.point = point.formatted(style: .decimal).description + String.app.point
+        }
+        .onReceive(self.pairing.authority.$useAbleBCash){ cash in
+            self.cash = cash.formatted(style: .decimal).description + String.app.point
+        }
+        .onReceive(self.pairing.authority.$useAbleCoupon){ coupon in
+            self.coupon = coupon.description + String.app.count
+        }
+        .onReceive(self.pairing.authority.$useAbleTicket){ ticket in
+            self.ticket = ticket.description + String.app.count
         }
         .onAppear(){
             self.pairing.authority.requestAuth(.updateMyinfo(isReset:true))
@@ -77,10 +83,6 @@ struct MyPointInfo: View {
     @State var point:String = ""
     @State var cash:String = ""
     
-    func updatedMyInfo(){
-        self.updateMonthlyPurchase()
-        self.updateTotalInfo()
-    }
     
     func errorMyInfo(_ err:ApiResultError?){
         if let apiError = err?.error as? ApiError {
@@ -89,26 +91,8 @@ struct MyPointInfo: View {
             self.appSceneObserver.alert = .alert(String.alert.connect, String.alert.needConnectStatus)
         }
     }
-    
-    private func updateMonthlyPurchase(){
-        var total:Int  = 0
-        if let data = self.pairing.authority.monthlyPurchaseInfo {
-            total += (data.purchaseList?.count ?? 0)
-        }
-        if let data = self.pairing.authority.periodMonthlyPurchaseInfo {
-            total += (data.purchaseList?.count ?? 0)
-        }
-        self.ticket = total.description + String.app.count
-    }
-    
-    private func updateTotalInfo(){
-        if let data = self.pairing.authority.totalPointInfo {
-            self.coupon = (data.coupon?.usableCount ?? 0).description + String.app.count
-            self.point = (data.newBpoint?.usableNewBpoint?.formatted(style: .decimal) ?? "0").description + "P"
-            self.cash = (data.bcash?.usableBcash?.totalBalance?.formatted(style: .decimal) ?? "0").description + "P"
-        }
-    }
-    
+
+
 }
 
 

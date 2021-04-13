@@ -9,7 +9,6 @@
 import SwiftUI
 import UIKit
 import CryptoKit
-
 extension Double {
     func toInt() -> Int {
         if self >= Double(Int.min) && self < Double(Int.max) {
@@ -264,6 +263,7 @@ extension String{
         let n = self.count
         if n < 1 { return false }
         if n > 8 { return false }
+        /*
         let ruleNum = "[0-9]"
         let resultNum = self.getArrayAfterRegex(regex: ruleNum )
         if resultNum.count == n { return false }
@@ -271,7 +271,8 @@ extension String{
         let rule = "[0-9가-힣a-zA-Z]"
         let result = self.getArrayAfterRegex(regex: rule )
         if result.count == n { return true}
-        return false
+        */
+        return true
     }
     func isPhoneNumberType() -> Bool {
         if self.count < 7 { return false }

@@ -698,10 +698,7 @@ struct PageSynopsis: PageView {
     }
     
     private func setupRelationContentCompleted (){
-        self.relationTab = NavigationBuilder(
-            index:self.tabNavigationModel.index,
-            marginH:Dimen.margin.regular)
-            .getNavigationButtons(texts:self.relationContentsModel.relationTabs)
+        self.updateRelationTabButtons(idx: self.tabNavigationModel.index)
             
         if self.relationTab.isEmpty {
             self.hasRelationVod = false
@@ -713,6 +710,7 @@ struct PageSynopsis: PageView {
     }
     
     private func selectedRelationContent (idx:Int){
+        self.updateRelationTabButtons(idx: idx)
         self.selectedRelationTabIdx = idx
         self.relationTabIdx = idx
         PageLog.d("selectedRelationContent", tag: self.tag)
@@ -733,6 +731,12 @@ struct PageSynopsis: PageView {
         let relationDatas = self.relationContentsModel.getRelationContentSets(idx: relationContentsIdx)
         self.relationDatas = relationDatas
 
+    }
+    private func updateRelationTabButtons(idx:Int){
+        self.relationTab = NavigationBuilder(
+            index:idx,
+            marginH:Dimen.margin.regular)
+            .getNavigationButtons(texts:self.relationContentsModel.relationTabs)
     }
     
     /*

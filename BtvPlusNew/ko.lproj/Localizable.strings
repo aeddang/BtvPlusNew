@@ -69,9 +69,9 @@
 "corner" = "코너";
 "people" = "인물";
 
-"ticket" = "이용권";
+"ticket" = "월정액";
 "coupon" = "쿠폰";
-"bpoint" = "포인트";
+"bpoint" = "B포인트";
 "bcash" = "B캐쉬";
 "lockAdult" = "청소년 보호";
 
@@ -112,6 +112,9 @@
 
 "btnWatchBtv" = "B tv로 보기";
 "btnConnectBtv" = "B tv 연결하기";
+"btnDisConnectBtv" = "B tv 연결 해제";
+"btnModifyNick" = "B tv 닉네임 변경";
+
 "btnAlarm" = "알림";
 "btnNotice" = "모비 소식";
 "btnPurchas" = "구매하기";
@@ -369,7 +372,6 @@
 "myPairingInfo" = "나의 연결 정보";
 "myConnectedBtv" = "연결된 B tv";
 "myPairingDate" = "연결일";
-"myEditNick" = "B tv 닉네임 변경";
 "myinviteFammly" = "우리 가족 B tv 연결 초대하기";
 "myinviteFammlyText1" = "가족들이 더욱 쉽고 빠르게";
 "myinviteFammlyText2" = "B tv를 연결할 수 있도록 SMS를 전송해보세요!";
@@ -383,6 +385,9 @@
 "myBookMarkedEmpty" = "찜한 콘텐츠가 없습니다.";
 "myBookMarkedInfo" = "찜 목록은 60개까지 저장됩니다.";
 
+"myModifyNickname" = "B tv 닉네임 설정";
+"myModifyNicknameText" = "설정하실 B tv의 닉네임을 입력해주세요.";
+"myModifyNicknameTip" = "※ 한글,영문,숫자를 포함하여 최대 8자까지 입력가능.";
 /*
  PageMyBenefits
 */
@@ -413,9 +418,14 @@
 "myBenefitsDiscountTvText1" = "TV 포인트";
 "myBenefitsDiscountTvText2" = "사용 가능 포인트";
 
-"myBenefitsDiscountTInfo" = "• 콘텐츠 구매 시 할인이 적용됩니다. (일부 상품 제외)\n• 카드 등록, 변경, 삭제는 B tv에서 하실 수 있습니다.";
-"myBenefitsDiscountOkInfo" = "• OK캐쉬백 카드는 최대 3개까지 등록 가능합니다.\n• OK캐쉬백 카드의 등록, 변경, 삭제는 B tv 에서 하실 수 있습니다.\n• 콘텐츠 결제 시 할인과 함께 구매 금액의 %s가 OK캐쉬백 포인트로 적립되며 할인 및 적립은 대표 카드로만 가능합니다.";
-"myBenefitsDiscountTvInfo" = "• TV포인트 등록 정보 변경 및 충전은 B tv에서 하실 수 있습니다.";
+"myBenefitsDiscountTInfo1" = "콘텐츠 구매 시 할인이 적용됩니다. (일부 상품 제외)";
+"myBenefitsDiscountTInfo2" = "카드 등록, 변경, 삭제는 B tv에서 하실 수 있습니다.";
+
+"myBenefitsDiscountOkInfo1" = "OK캐쉬백 카드는 최대 3개까지 등록 가능합니다.";
+"myBenefitsDiscountOkInfo2" = "OK캐쉬백 카드의 등록, 변경, 삭제는 B tv 에서 하실 수 있습니다.";
+"myBenefitsDiscountOkInfo3" = "콘텐츠 결제 시 할인과 함께 구매 금액의 %s가 OK캐쉬백 포인트로 적립되며 할인 및 적립은 대표 카드로만 가능합니다.";
+
+"myBenefitsDiscountTvInfo1" = "TV포인트 등록 정보 변경 및 충전은 B tv에서 하실 수 있습니다.";
 
 "myBenefitsCardEmpty" = "등록된 카드가 없습니다.";
 "myBenefitsDiscountTvEmpty" = "TV포인트 등록 정보가 없습니다.";

@@ -82,7 +82,7 @@ enum ApiType{
          postUnPairing,rePairing,  // rePairing 재시도용
          getHostDeviceInfo,
          postGuestInfo(User?),
-         postGuestNickname(User?),
+         postGuestNickname(String?),
          postGuestAgreement(User?), getGuestAgreement,
          updateUser(ModifyUserData?),
          sendMessage(NpsMessage?)
@@ -114,7 +114,10 @@ enum ApiType{
          getBPoints( HostDevice?, Int? = nil , Int? = nil),
          postBPoint( HostDevice?, String?),
          getBCashes( HostDevice?, Int? = nil , Int? = nil),
-         postBCash( HostDevice?, String?)
+         postBCash( HostDevice?, String?),
+         getTMembership( HostDevice? ),
+         getTvPoint( HostDevice? ),
+         getOkCashPoint( HostDevice?, OcbItem?, String?)
     //WEB
     case getSearchKeywords,
          getCompleteKeywords(String?),

@@ -138,6 +138,7 @@ extension Asset{
         
         public static let ticketMonthly = "tagMySubscribe"
         public static let ticketPeriod = "tagMySubscribe02"
+        public static let represent = "tagMyRepresent"
         
     }
     
@@ -169,6 +170,7 @@ extension Asset{
         
         public static let popupBgFull = "icPlayerFullPopup"
         public static let popupBg = "icPlayerHalfPopup"
+       
     }
     
     struct shape {
@@ -190,7 +192,9 @@ extension Asset{
         public static let noImgVoice =  "imgSynopNoimageVoice"
         public static let noImgWriter =  "imgSynopNoimageWriter"
         public static let noImgDirector =  "imgSynopNoimageDirector"
-        
+        public static let cardMembership = "imgMyCardMembership"
+        public static let cardOkcashbag = "imgMyCardOkcashbag"
+        public static let cardTvpoint = "imgMyCardTvpoint"
     }
     
     struct source {

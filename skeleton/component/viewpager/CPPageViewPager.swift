@@ -15,7 +15,8 @@ struct CPPageViewPager: PageComponent {
     var titles: [String]?
     var primaryColor:Color = Color.app.white
     var useGesture = true
-    var usePull:Axis? = nil
+    var usePull:Axis? = .horizontal
+    var isDivisionTab:Bool = true
     var pageOn:((_ idx:Int) -> Void)? = nil
     
     @State var isPageReady:Bool = false
@@ -24,12 +25,21 @@ struct CPPageViewPager: PageComponent {
     var body: some View {
         VStack(spacing:0){
             if self.isPageReady {
-                CPTabDivisionNavigation(
-                    viewModel: self.viewModel,
-                    buttons: self.tabs,
-                    primaryColor: self.primaryColor
-                )
-                .modifier(MatchHorizontal(height:Dimen.tab.regular))
+                if self.isDivisionTab {
+                    CPTabDivisionNavigation(
+                        viewModel: self.viewModel,
+                        buttons: self.tabs,
+                        primaryColor: self.primaryColor
+                    )
+                    .modifier(MatchHorizontal(height:Dimen.tab.regular))
+                } else {
+                    CPTabNavigation(
+                        viewModel: self.viewModel,
+                        buttons: self.tabs,
+                        primaryColor: self.primaryColor
+                    )
+                    .modifier(MatchHorizontal(height:Dimen.tab.regular))
+                }
                 SwipperView(
                     viewModel: self.viewModel,
                     pages: self.pages,
@@ -41,6 +51,7 @@ struct CPPageViewPager: PageComponent {
                         guard let pageOn = self.pageOn else {return}
                         pageOn(self.viewModel.index)
                         self.isPageApear = true
+                        self.updateButtons(idx:self.viewModel.index)
                     }
             }else{
                 Spacer()
@@ -49,6 +60,7 @@ struct CPPageViewPager: PageComponent {
         }
         .onReceive(self.viewModel.$index){ idx in
             if !self.isPageApear { return }
+            self.updateButtons(idx:idx)
             guard let pageOn = self.pageOn else {return}
             pageOn(idx)
         }
@@ -63,11 +75,15 @@ struct CPPageViewPager: PageComponent {
             }
         }
         .onAppear{
-            guard let titles = self.titles else{return}
-            self.tabs = NavigationBuilder(index:self.viewModel.index, marginH:Dimen.margin.regular)
-                .getNavigationButtons(texts:titles, color: self.primaryColor)
+            self.updateButtons(idx:self.viewModel.index)
         }
         
+    }
+    
+    private func updateButtons(idx:Int){
+        guard let titles = self.titles else{return}
+        self.tabs = NavigationBuilder(index:idx, marginH:Dimen.margin.regular)
+            .getNavigationButtons(texts:titles, color: self.primaryColor)
     }
 }
 

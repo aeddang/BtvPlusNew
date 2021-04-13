@@ -28,6 +28,7 @@ struct InputBox: PageComponent {
     var msg:String? = nil
     var placeHolder:String = ""
     var inputSize:Int = 4
+    var inputSizeMin:Int? = nil
     var keyboardType:UIKeyboardType = .default
     var isSecure:Bool = false
     var radios: [InputBox.Data]? = nil
@@ -183,7 +184,13 @@ struct InputBox: PageComponent {
     
     func isInputCompleted() -> Bool {
         let size = self.selectedInputSize ?? self.inputSize
-        return self.input.count == size
+        if let min = self.inputSizeMin {
+            return min < self.input.count && self.input.count <= size
+        } else{
+            return self.input.count == size
+        }
+        
+        
     }
 }
 

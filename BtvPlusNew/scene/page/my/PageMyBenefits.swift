@@ -24,24 +24,28 @@ struct PageMyBenefits: PageView {
     
     @ObservedObject var cashScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var cashModel:CouponBlockModel = CouponBlockModel()
+    
+    @ObservedObject var cardScrollModel: InfinityScrollModel = InfinityScrollModel()
+    @ObservedObject var cardModel:CardBlockModel = CardBlockModel()
    
     @State var useTracking:Bool = false
     @State var pages: [PageViewProtocol] = []
     let titles: [String] = [
         String.pageText.myBenefitsCoupon,
         String.pageText.myBenefitsPoint,
-        String.pageText.myBenefitsCash
+        String.pageText.myBenefitsCash,
+        String.pageText.myBenefitsDiscount
     ]
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
                 viewModel:self.pageDragingModel,
-                axis:.vertical
+                axis:.horizontal
             ) {
                 VStack(spacing:0){
                     PageTab(
                         title: String.pageTitle.myBenefits,
-                        isClose: true,
+                        isBack: true,
                         style: .dark
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
@@ -49,12 +53,15 @@ struct PageMyBenefits: PageView {
                         pageObservable: self.pageObservable,
                         viewModel: self.viewPagerModel,
                         pages: self.pages,
-                        titles: self.titles)
+                        titles: self.titles,
+                        isDivisionTab: false
+                        )
                         { idx in
                             switch idx {
                             case 0 : self.couponModel.initUpdate()
                             case 1 : self.pointModel.initUpdate()
                             case 2 : self.cashModel.initUpdate()
+                            case 3 : self.cardModel.initUpdate()
                             default : break
                             }
                         }
@@ -71,46 +78,9 @@ struct PageMyBenefits: PageView {
             .onReceive(self.cashScrollModel.$scrollPosition){ pos in
                 self.viewPagerModel.request = .reset
             }
-            .onReceive(self.couponScrollModel.$event){evt in
-                guard let evt = evt else {return}
-                switch evt {
-                case .pullCompleted:
-                    self.pageDragingModel.uiEvent = .pullCompleted(geometry)
-                case .pullCancel :
-                    self.pageDragingModel.uiEvent = .pullCancel(geometry)
-                default : break
-                }
+            .onReceive(self.cardScrollModel.$scrollPosition){ pos in
+                self.viewPagerModel.request = .reset
             }
-            .onReceive(self.couponScrollModel.$pullPosition){pos in
-                self.pageDragingModel.uiEvent = .pull(geometry, pos)
-            }
-            .onReceive(self.pointScrollModel.$event){evt in
-                guard let evt = evt else {return}
-                switch evt {
-                case .pullCompleted:
-                    self.pageDragingModel.uiEvent = .pullCompleted(geometry)
-                case .pullCancel :
-                    self.pageDragingModel.uiEvent = .pullCancel(geometry)
-                default : break
-                }
-            }
-            .onReceive(self.pointScrollModel.$pullPosition){pos in
-                self.pageDragingModel.uiEvent = .pull(geometry, pos)
-            }
-            .onReceive(self.cashScrollModel.$event){evt in
-                guard let evt = evt else {return}
-                switch evt {
-                case .pullCompleted:
-                    self.pageDragingModel.uiEvent = .pullCompleted(geometry)
-                case .pullCancel :
-                    self.pageDragingModel.uiEvent = .pullCancel(geometry)
-                default : break
-                }
-            }
-            .onReceive(self.cashScrollModel.$pullPosition){pos in
-                self.pageDragingModel.uiEvent = .pull(geometry, pos)
-            }
-            
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
             }
@@ -155,6 +125,13 @@ struct PageMyBenefits: PageView {
                         pageObservable:self.pageObservable,
                         useTracking:true,
                         type: .cash
+                    ),
+                    CardBlock(
+                        infinityScrollModel: self.cardScrollModel,
+                        viewModel: self.cardModel,
+                        pageObservable: self.pageObservable,
+                        useTracking: true,
+                        type: .okCash
                     )
                 ]
             }

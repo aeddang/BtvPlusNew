@@ -20,6 +20,9 @@ extension EpsNetwork{
     static let PAGE_COUNT = 30
     static let CLIENT_NAME = "BtvPlus"
     static let UI_NAME = "BTVUH2V500"
+    
+    static let AES_KEY_PREFIX = "SK"
+    static let AES_IV = "1161266980123456"
 
 }
 
@@ -199,6 +202,73 @@ class Eps: Rest{
         params["mac"] = macAdress
         fetch(route: EpsPostBCash( cashId: cashId ?? "", body: params), completion: completion, error:error)
     }
+    
+    /**
+     * 등록된 T멤버십 카드 정보 조회 (IF-EPS-501)
+     */
+    func getTMembership(
+        hostDevice:HostDevice?,
+        completion: @escaping (TMembership) -> Void, error: ((_ e:Error) -> Void)? = nil){
+
+        let macAdress = hostDevice?.convertMacAdress ?? ApiConst.defaultMacAdress
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:String]()
+        params["response_format"] = EpsNetwork.RESPONSE_FORMET
+        params["ver"] = EpsNetwork.VERSION
+        params["client_name"] = EpsNetwork.CLIENT_NAME
+        params["ui_name"] = EpsNetwork.UI_NAME
+        params["IF"] = "IF-EPS-501"
+        params["stb_id"] = stbId
+        params["mac"] = macAdress
+        fetch(route: EpsTMembership(query: params), completion: completion, error:error)
+    }
+    
+    /**
+     * TV포인트 계정 정보 및 URL 조회 (IF-EPS-601)
+     */
+    func getTvPoint(
+        hostDevice:HostDevice?,
+        completion: @escaping (TvPoint) -> Void, error: ((_ e:Error) -> Void)? = nil){
+
+        let macAdress = hostDevice?.convertMacAdress ?? ApiConst.defaultMacAdress
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:String]()
+        params["response_format"] = EpsNetwork.RESPONSE_FORMET
+        params["ver"] = EpsNetwork.VERSION
+        params["client_name"] = EpsNetwork.CLIENT_NAME
+        params["ui_name"] = EpsNetwork.UI_NAME
+        params["IF"] = "IF-EPS-601"
+        params["stb_id"] = stbId
+        params["mac"] = macAdress
+        fetch(route: EpsTVPoint(query: params), completion: completion, error:error)
+    }
+    
+    /**
+     * OK캐쉬백 카드의 잔여 포인트 조회 (IF-EPS-552)
+     * @param sequence 등록된 OK 캐쉬백카드 순번 (1 ~ 3) ※ STB에 등록된 카드번호로 조회시 필수
+     * @param password OK 캐쉬백의 카드번호 (필드 단위 암호화)
+     */
+    func getOkCashPoint(
+        hostDevice:HostDevice?, card:OcbItem?, password:String?,
+        completion: @escaping (OkCashPoint) -> Void, error: ((_ e:Error) -> Void)? = nil){
+
+        let reqDate = Date().toTimestamp(dateFormat: "yyyyMMddHHmmss")
+        let macAdress = hostDevice?.convertMacAdress ?? ApiConst.defaultMacAdress
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:String]()
+        params["response_format"] = EpsNetwork.RESPONSE_FORMET
+        params["ver"] = EpsNetwork.VERSION
+        params["client_name"] = EpsNetwork.CLIENT_NAME
+        params["ui_name"] = EpsNetwork.UI_NAME
+        params["IF"] = "IF-EPS-552"
+        params["stb_id"] = stbId
+        params["mac"] = macAdress
+        params["requestDateTime"] = reqDate
+        params["cardNo"] = card?.cardNo
+        params["sequence"] = (card?.sequence ?? 0).description
+        params["password"] = password?.toAES(key: EpsNetwork.AES_KEY_PREFIX + reqDate, iv: EpsNetwork.AES_IV)
+        fetch(route: EpsOKCashPoint(query: params), completion: completion, error:error)
+    }
 }
 
 struct EpsTotalPointInfo:NetworkRoute{
@@ -254,3 +324,21 @@ struct EpsPostBCash:NetworkRoute{
     var cashId:String = ""
     var body: [String : Any]? = nil
 }
+
+struct EpsTMembership:NetworkRoute{
+    var method: HTTPMethod = .get
+    var path: String = "/eps/v5/tmembership"
+    var query: [String : String]? = nil
+}
+
+struct EpsTVPoint:NetworkRoute{
+    var method: HTTPMethod = .get
+    var path: String = "/eps/v5/tvpoints/mobilebtv"
+    var query: [String : String]? = nil
+}
+struct EpsOKCashPoint:NetworkRoute{
+    var method: HTTPMethod = .get
+    var path: String = "/eps/v5/okcashbag/mobilebtv"
+    var query: [String : String]? = nil
+}
+

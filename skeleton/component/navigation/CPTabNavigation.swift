@@ -14,14 +14,15 @@ import Combine
 struct CPTabNavigation : PageComponent {
     @ObservedObject var viewModel:NavigationModel = NavigationModel()
     var buttons:[NavigationButton]
-    @Binding var index: Int
+    @State var index: Int = 0
     @State private var isUserScrolling: Bool = false
     @State private var offset: CGFloat = 0
     @State private var prevOffset: CGFloat = 0
     @State private var updatedIndex: Int = -1
     @State private var needGesture = false
     var spacing:CGFloat = 0
-    var useSpacer = false
+    var useSpacer = true
+    var primaryColor:Color = Color.brand.primary
     var body: some View {
         GeometryReader { geometry in
             ScrollView(.horizontal, showsIndicators: false) {
@@ -31,29 +32,29 @@ struct CPTabNavigation : PageComponent {
                             self.createButton(btn)
                         }
                     }
-                    Spacer().frame(height:Dimen.margin.thin)
                     if self.useSpacer {
                         Spacer()
                         .frame(
                             width: self.getSpacerSize(),
                             height:Dimen.line.regular
                         )
-                        .background(Color.brand.primary)
+                        .background(self.primaryColor)
                         .offset(
                             x:self.getSpacerPosition(geometry:geometry)
                         )
-                        .animation(
-                            Animation.easeInOut(duration: Duration.ani.long)
-                        )
+                        
                     }
-                    Divider().background(Color.app.whiteDeep)
+                    Spacer()
+                        .modifier(MatchHorizontal(height: Dimen.line.regular))
+                        .background(Color.app.whiteDeep).opacity(0.1)
                 }
-                .padding(.top, Dimen.margin.thin)
                 .frame(alignment: .leading)
+               
             }
             .content
             .offset(x:self.offset)
-            
+            .modifier(MatchParent())
+            .clipped()
             .highPriorityGesture(
                 DragGesture()
                     .onChanged({ value in
@@ -76,6 +77,13 @@ struct CPTabNavigation : PageComponent {
                         self.isUserScrolling = false
                     })
             )
+            .onReceive( self.viewModel.$index ){ idx in
+                if self.index == idx {return}
+                withAnimation{ self.index = idx }
+            }
+            .onAppear(){
+                self.index = self.viewModel.index
+            }
         }//GeometryReader
             
     }
@@ -199,8 +207,7 @@ struct CPTabNavigation_Previews: PreviewProvider {
                         idx:3
                     )
 
-                ],
-                index: .constant(0)
+                ]
             )
             .frame( alignment: .center)
             .background(Color.brand.bg)

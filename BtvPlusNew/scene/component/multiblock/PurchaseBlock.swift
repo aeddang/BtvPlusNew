@@ -52,13 +52,15 @@ struct PurchaseBlock: PageComponent, Identifiable{
     var type:ListType = .normal
     @State var isEdit:Bool = false
     @State var isSelectAll:Bool = false
+    @State var reloadDegree:Double = 0
+    
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
             viewModel : self.viewModel
         ){
             VStack(spacing:0){
-                if !self.isError {
+                if self.isError == false {
                     if self.type == .normal {
                         HStack(spacing: 0){
                             Spacer()
@@ -85,21 +87,44 @@ struct PurchaseBlock: PageComponent, Identifiable{
                         .frame(height:Dimen.tab.lightExtra)
                         .padding(.vertical, Dimen.margin.thin)
                     }
-                    PurchaseList(
-                        purchaseBlockModel:self.viewModel,
-                        viewModel:self.infinityScrollModel,
-                        datas: self.datas,
-                        useTracking:self.useTracking,
-                        onBottom: { _ in
-                            self.load()
-                        }
-                    )
+                    ZStack(alignment: .topLeading){
+                        ReflashSpinner(
+                            progress: self.$reloadDegree)
+                            .padding(.top, Dimen.margin.regular)
+                        PurchaseList(
+                            purchaseBlockModel:self.viewModel,
+                            viewModel:self.infinityScrollModel,
+                            datas: self.datas,
+                            useTracking:self.useTracking,
+                            onBottom: { _ in
+                                self.load()
+                            }
+                        )
+                        
+                    }
                     .modifier(MatchParent())
                     .background(Color.brand.bg)
+                    .onReceive(self.infinityScrollModel.$event){evt in
+                        guard let evt = evt else {return}
+                        switch evt {
+                        case .pullCompleted :
+                            if !self.infinityScrollModel.isLoading { self.reload() }
+                            withAnimation{ self.reloadDegree = 0 }
+                        case .pullCancel :
+                            withAnimation{ self.reloadDegree = 0 }
+                        default : do{}
+                        }
+                        
+                    }
+                    .onReceive(self.infinityScrollModel.$pullPosition){ pos in
+                        if pos < InfinityScrollModel.PULL_RANGE { return }
+                        self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
+                    }
+                    
+                } else if self.isError == true {
+                    EmptyAlert().modifier(MatchParent())
                 } else {
-                    EmptyMyData(
-                        text: String.pageText.myPurchaseEmpty)
-                    .modifier(MatchParent())
+                    Spacer().modifier(MatchParent())
                 }
                 if self.isEdit {
                     HStack(spacing: 0){
@@ -150,8 +175,9 @@ struct PurchaseBlock: PageComponent, Identifiable{
             switch evt {
             case .onResult(_, let res, _):
                 switch res.type {
-                case .getPurchase, .getCollectiblePurchase : self.loaded(res)
-                case .deletePurchase : self.deleted(res)
+                case .getPurchase : if self.type == .normal { self.loaded(res) }
+                case .getCollectiblePurchase : if self.type == .collection { self.loaded(res) }
+                case .deletePurchase : if self.type == .normal { self.deleted(res) }
                 default : break
                 }
             case .onError(_,  let err, _):
@@ -205,7 +231,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
         }
     }//body
     
-    @State var isError:Bool = false
+    @State var isError:Bool? = nil
     @State var datas:[PurchaseData] = []
     @State var currentDeleteId:String? = nil
     @State var deleteList:[String]? = nil
@@ -215,10 +241,13 @@ struct PurchaseBlock: PageComponent, Identifiable{
     }
     func reload(){
         if self.pairing.status != .pairing {
-            withAnimation{ self.isError = true }
+            withAnimation{ self.isError = true}
             return
         }
-        self.datas = []
+        withAnimation{
+            self.isError = nil
+            self.datas = []
+        }
         self.infinityScrollModel.reload()
         self.viewModel.isEditmode = false
         self.viewModel.isSelectAll = false
@@ -227,7 +256,6 @@ struct PurchaseBlock: PageComponent, Identifiable{
     
     func load(){
         if  !self.infinityScrollModel.isLoadable { return }
-        withAnimation{ self.isError = false }
         self.infinityScrollModel.onLoad()
         switch type {
         case .normal:
@@ -288,7 +316,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
     
     private func setDatas(datas:[PurchaseListItem]?) {
         guard let datas = datas else {
-            if self.datas.isEmpty { self.onError() }
+            withAnimation{ self.isError = false }
             return
         }
         let start = self.datas.count
@@ -298,6 +326,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
         }
         self.datas.append(contentsOf: loadedDatas)
         self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)
+        withAnimation{ self.isError = false }
     }
 }
 

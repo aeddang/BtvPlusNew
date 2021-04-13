@@ -67,6 +67,7 @@ struct WatchedList: PageComponent{
         InfinityScrollView(
             viewModel: self.viewModel,
             axes: .vertical,
+            scrollType : .reload(isDragEnd:false),
             marginTop: Dimen.margin.regular,
             marginBottom: Dimen.margin.tinyExtra,
             spacing:0,
@@ -76,21 +77,27 @@ struct WatchedList: PageComponent{
             
             InfoAlert(text: String.pageText.myWatchedInfo)
                 .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.thin))
-            ForEach(self.datas) { data in
-                WatchedItem( data:data , delete:self.delete)
-                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.thin))
-                    .onTapGesture {
-                        guard let synopsisData = data.synopsisData else { return }
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.synopsis)
-                                .addParam(key: .data, value: synopsisData)
-                        )
-                    }
-                    .onAppear{
-                        if data.index == self.datas.last?.index {
-                            self.onBottom?(data)
+            if !self.datas.isEmpty {
+                ForEach(self.datas) { data in
+                    WatchedItem( data:data , delete:self.delete)
+                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.tinyExtra))
+                        .onTapGesture {
+                            guard let synopsisData = data.synopsisData else { return }
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.synopsis)
+                                    .addParam(key: .data, value: synopsisData)
+                            )
                         }
-                    }
+                        .onAppear{
+                            if data.index == self.datas.last?.index {
+                                self.onBottom?(data)
+                            }
+                        }
+                }
+            } else {
+                EmptyMyData(
+                    text:String.pageText.myWatchedEmpty)
+                    .modifier(PageBody())
             }
         }
         

@@ -29,8 +29,9 @@ extension Color {
         public static let bg =  app.blue
     }
     struct app {
-        
         public static let black =  Color.black
+        public static let blackDeep =  Color.init(red: 65/255, green: 65/255, blue: 65/255)
+        public static let blackLight =  Color.init(red: 83/255, green: 83/255, blue: 83/255)
        
         public static let grey = Color.init(red: 136/255, green: 136/255, blue: 136/255)
         public static let greyExtra = Color.init(red: 153/255, green: 153/255, blue: 153/255)

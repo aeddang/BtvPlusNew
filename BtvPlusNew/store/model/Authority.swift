@@ -26,6 +26,11 @@ class Authority:ObservableObject, PageProtocol {
     @Published private(set) var totalPointInfo:TotalPointInfo? = nil
     @Published private(set) var monthlyPurchaseInfo:MonthlyPurchaseInfo? = nil
     @Published private(set) var periodMonthlyPurchaseInfo:PeriodMonthlyPurchaseInfo? = nil
+    
+    @Published var useAbleTicket:Int = 0
+    @Published var useAbleCoupon:Int = 0
+    @Published var useAbleBPoint:Double = 0
+    @Published var useAbleBCash:Double = 0
   
     private var isMyInfoUpdate:Bool = false
     
@@ -70,17 +75,23 @@ class Authority:ObservableObject, PageProtocol {
     }
     
     func updatedTotalPointInfo(_ totalPointInfo:TotalPointInfo){
+        
+        self.useAbleCoupon = totalPointInfo.coupon?.usableCount ?? 0
+        self.useAbleBPoint = totalPointInfo.newBpoint?.usableNewBpoint ?? 0
+        self.useAbleBCash = totalPointInfo.bcash?.usableBcash?.totalBalance ?? 0
         self.totalPointInfo = totalPointInfo
         self.checkMyInfoUpdate()
     }
     
     func updatedMonthlyPurchaseInfo(_ monthlyPurchaseInfo:MonthlyPurchaseInfo){
         self.monthlyPurchaseInfo = monthlyPurchaseInfo
+        self.updateTicketCount()
         self.checkMyInfoUpdate()
     }
     
     func updatedMonthlyPurchaseInfo(_ monthlyPurchaseInfo:PeriodMonthlyPurchaseInfo){
         self.periodMonthlyPurchaseInfo = monthlyPurchaseInfo
+        self.updateTicketCount()
         self.checkMyInfoUpdate()
     }
     func errorMyInfo(_ err:ApiResultError?){
@@ -94,6 +105,16 @@ class Authority:ObservableObject, PageProtocol {
         self.event = .updatedMyinfo
     }
     
+    private func updateTicketCount(){
+        var total:Int  = 0
+        if let data = self.monthlyPurchaseInfo {
+            total += (data.purchaseList?.count ?? 0)
+        }
+        if let data = self.periodMonthlyPurchaseInfo {
+            total += (data.purchaseList?.count ?? 0)
+        }
+        self.useAbleTicket = total
+    }
     
     
     private func checkMyInfoUpdate(){

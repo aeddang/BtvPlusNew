@@ -82,7 +82,7 @@ struct PageProvider {
              .pairingSetupUser, .pairingBtv,
              .pairingDevice, .pairingUser, .pairingManagement, .pairingEmptyDevice,
              .purchase , .webview, .schedule, .modifyProile,
-             .adultCertification, .confirmNumber, .watchHabit, .purchaseTicketList, .myBenefits:
+             .adultCertification, .confirmNumber, .watchHabit, .purchaseTicketList:
             return  .vertical
         case .fullPlayer :
             return .none

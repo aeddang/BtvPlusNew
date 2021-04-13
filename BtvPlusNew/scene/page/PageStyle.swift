@@ -33,6 +33,20 @@ struct PageFull: ViewModifier {
     }
 }
 
+struct PageBody: ViewModifier {
+    @EnvironmentObject var sceneObserver:PageSceneObserver
+    var style:PageStyle = .normal
+    func body(content: Content) -> some View {
+        return content
+            .frame(
+                width: self.sceneObserver.screenSize.width,
+                height: self.sceneObserver.screenSize.height - self.sceneObserver.safeAreaTop - Dimen.app.top - self.sceneObserver.safeAreaBottom)
+            .background(self.style.bgColor)
+            
+    }
+}
+
+
 struct PageDraging: ViewModifier {
     var geometry:GeometryProxy
     var pageDragingModel:PageDragingModel

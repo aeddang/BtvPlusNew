@@ -37,35 +37,56 @@ struct WatchedBlock: PageComponent{
     @ObservedObject var pageObservable:PageObservable = PageObservable()
      
     var useTracking:Bool = false
-   
+    @State var reloadDegree:Double = 0
    
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
             viewModel : self.viewModel
         ){
-            if !self.isError {
-                WatchedList(
-                    datas: self.datas,
-                    useTracking:self.useTracking,
-                    delete: { data in
-                        self.delete(data:data)
-                    },
-                    onBottom: { _ in
-                        self.load()
-                    }
-                )
+            if self.isError == false {
+                ZStack(alignment: .topLeading){
+                    ReflashSpinner(
+                        progress: self.$reloadDegree)
+                        .padding(.top, Dimen.margin.regular)
+                    WatchedList(
+                        viewModel: self.infinityScrollModel,
+                        datas: self.datas,
+                        useTracking:self.useTracking,
+                        delete: { data in
+                            self.delete(data:data)
+                        },
+                        onBottom: { _ in
+                            self.load()
+                        }
+                    )
+                    
+                }
                 .modifier(MatchParent())
                 .background(Color.brand.bg)
+                .onReceive(self.infinityScrollModel.$event){evt in
+                    guard let evt = evt else {return}
+                    switch evt {
+                    case .pullCompleted :
+                        if !self.infinityScrollModel.isLoading { self.reload() }
+                        withAnimation{ self.reloadDegree = 0 }
+                    case .pullCancel :
+                        withAnimation{ self.reloadDegree = 0 }
+                    default : do{}
+                    }
+                    
+                }
+                .onReceive(self.infinityScrollModel.$pullPosition){ pos in
+                    if pos < InfinityScrollModel.PULL_RANGE { return }
+                    self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
+                }
+            } else if self.isError == true {
+                EmptyAlert().modifier(MatchParent())
             } else {
-                EmptyMyData(
-                    text:String.pageText.myWatchedEmpty)
-                .modifier(MatchParent())
+                Spacer().modifier(MatchParent())
             }
             
-            
         }
-        
         .onReceive(self.viewModel.$isUpdate){ update in
             if update {
                 self.reload()
@@ -112,12 +133,19 @@ struct WatchedBlock: PageComponent{
         }
     }//body
     
-    @State var isError:Bool = false
+    @State var isError:Bool? = nil
     @State var datas:[WatchedData] = []
     @State var currentDeleteId:String? = nil
      
     func reload(){
-        self.datas = []
+        if self.pairing.status != .pairing {
+            withAnimation{ self.isError = true}
+            return
+        }
+        withAnimation{
+            self.isError = nil
+            self.datas = []
+        }
         self.infinityScrollModel.reload()
         self.load()
     }
@@ -125,7 +153,6 @@ struct WatchedBlock: PageComponent{
     
     func load(){
         if  !self.infinityScrollModel.isLoadable { return }
-        withAnimation{ self.isError = false }
         self.infinityScrollModel.onLoad()
         self.viewModel.request = .init(
             id: self.tag,
@@ -174,7 +201,7 @@ struct WatchedBlock: PageComponent{
     
     private func setDatas(datas:[WatchItem]?) {
         guard let datas = datas else {
-            if self.datas.isEmpty { self.onError() }
+            withAnimation{ self.isError = false }
             return
         }
         let start = self.datas.count
@@ -184,6 +211,7 @@ struct WatchedBlock: PageComponent{
         }
         self.datas.append(contentsOf: loadedDatas)
         self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)
+        withAnimation{ self.isError = false }
     }
 }
 

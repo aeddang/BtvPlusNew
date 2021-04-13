@@ -13,9 +13,9 @@ struct ValueInfo: View {
     var body: some View {
         VStack(spacing:Dimen.margin.tinyExtra){
             Text(self.key)
-                .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.brand.primary))
+                .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.white))
             Text(self.value)
-                .modifier(BoldTextStyle(size: Font.size.lightExtra, color: Color.app.white))
+                .modifier(BoldTextStyle(size: Font.size.lightExtra, color: Color.brand.primary))
         }
     }//body
 }

@@ -286,7 +286,7 @@ class ApiManager :PageProtocol, ObservableObject{
         case .postGuestInfo(let user) : self.nps.postGuestInfo(user: user,
             completion: {res in self.complated(id: apiID, type: type, res: res)}, 
             error:error)
-        case .postGuestNickname(let user) : self.nps.postGuestNickname(user: user,
+        case .postGuestNickname(let name) : self.nps.postGuestNickname(name: name, 
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         case .getGuestAgreement : self.nps.getGuestAgreement(
@@ -387,6 +387,18 @@ class ApiManager :PageProtocol, ObservableObject{
             error:error)
         case .postBCash(let device, let cashId) : self.eps.postBCash(
             hostDevice: device, cashId:cashId,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getTvPoint(let device) : self.eps.getTvPoint(
+            hostDevice: device,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error: error)
+        case .getTMembership(let device) : self.eps.getTMembership(
+            hostDevice: device,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getOkCashPoint(let device,let card, let pw) : self.eps.getOkCashPoint(
+            hostDevice: device, card: card, password:pw,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         //WEB

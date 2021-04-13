@@ -95,30 +95,36 @@ struct PurchaseList: PageComponent{
         InfinityScrollView(
             viewModel: self.viewModel,
             axes: .vertical,
+            scrollType : .reload(isDragEnd:false),
             marginTop: Dimen.margin.regularExtra,
             marginBottom: self.marginBottom,
             spacing: 0,
             useTracking: self.useTracking
         ){
             
-            
-            ForEach(self.datas) { data in
-                PurchaseItem( data:data )
-                .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.tinyExtra))
-                .onTapGesture {
-                    if let synopsisData = data.synopsisData {
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
-                                .addParam(key: .data, value: synopsisData)
-                                .addParam(key: .watchLv, value: data.watchLv)
-                        )
-                    } 
-                }
-                .onAppear{
-                    if data.index == self.datas.last?.index {
-                        self.onBottom?(data)
+            if !self.datas.isEmpty {
+                ForEach(self.datas) { data in
+                    PurchaseItem( data:data )
+                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.tinyExtra))
+                    .onTapGesture {
+                        if let synopsisData = data.synopsisData {
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
+                                    .addParam(key: .data, value: synopsisData)
+                                    .addParam(key: .watchLv, value: data.watchLv)
+                            )
+                        }
+                    }
+                    .onAppear{
+                        if data.index == self.datas.last?.index {
+                            self.onBottom?(data)
+                        }
                     }
                 }
+            } else {
+                EmptyMyData(text: String.pageText.myPurchaseEmpty)
+                    .modifier(PageBody())
+                
             }
         }
         .onReceive(self.purchaseBlockModel.$isEditmode) { isEdit in

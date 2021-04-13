@@ -53,31 +53,35 @@ struct PagePairingManagement: PageView {
                         Text(String.pageText.myConnectedBtv)
                             .modifier(MediumTextStyle(size: Font.size.regular, color: Color.app.white))
                             .padding(.top, Dimen.margin.medium)
-                        HStack(spacing:Dimen.margin.lightExtra){
-                            Image(self.modelImage)
-                            .renderingMode(.original)
-                            .resizable()
-                            .frame(
-                                width: ListItem.stb.size.width,
-                                height: ListItem.stb.size.height)
-                            
-                            VStack(alignment:.leading, spacing:Dimen.margin.thin){
-                                Text(self.modelName)
-                                    .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.white))
-    
-                                Text(String.app.macAdress + ":" + self.macAdress)
-                                    .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
-                                
+                        VStack(spacing:Dimen.margin.light){
+                            HStack(spacing:Dimen.margin.lightExtra){
+                                Image(self.modelImage)
+                                .renderingMode(.original)
+                                .resizable()
+                                .frame(
+                                    width: ListItem.stb.size.width,
+                                    height: ListItem.stb.size.height)
+                                VStack(alignment:.leading, spacing:Dimen.margin.thin){
+                                    Text(self.modelName)
+                                        .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.white))
+        
+                                    Text(String.app.macAdress + ":" + self.macAdress)
+                                        .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
+                                    
+                                }
+                                Spacer()
                             }
-                            Spacer()
-                            TextButton(
-                                defaultText: String.button.disConnect,
-                                textModifier: TextModifier( family: Font.family.bold,
-                                    size: Font.size.thinExtra, color:Color.app.white),
-                                image: Asset.icon.more) { _ in
+                            HStack(spacing:Dimen.margin.thin){
+                                FillButton(text: String.button.disConnectBtv, strokeWidth: 1){ _ in
                                     self.pairing.requestPairing(.unPairing)
                                 }
-                            
+                                FillButton(text: String.button.modifyNick, strokeWidth: 1){ _ in
+                                    self.pagePresenter.openPopup(
+                                        PageProvider.getPageObject(.confirmNumber)
+                                            .addParam(key: .type, value: PageConfirmNumber.InputType.nickname)
+                                    )
+                                }
+                            }
                         }
                         .padding(.vertical, Dimen.margin.regular)
                         .padding(.horizontal, Dimen.margin.lightExtra)

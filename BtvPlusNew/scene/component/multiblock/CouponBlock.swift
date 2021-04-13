@@ -72,25 +72,55 @@ struct CouponBlock: PageComponent, Identifiable{
      
     var useTracking:Bool = false
     var type:ListType = .coupon
-   
+    @State var reloadDegree:Double = 0
+    
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
             viewModel : self.viewModel
         ){
-            CouponList(
-                    couponBlockModel:self.viewModel,
-                    type:self.type,
-                    title:self.title,
-                    viewModel:self.infinityScrollModel,
-                    datas: self.datas,
-                    useTracking:self.useTracking,
-                    onBottom: { _ in
-                        self.load()
-                    }
-                )
+            
+            if self.isError == false {
+                ZStack(alignment: .topLeading){
+                    ReflashSpinner(
+                        progress: self.$reloadDegree)
+                        .padding(.top, Dimen.margin.regular)
+                    CouponList(
+                        couponBlockModel:self.viewModel,
+                        type:self.type,
+                        title:self.title,
+                        viewModel:self.infinityScrollModel,
+                        datas: self.datas,
+                        useTracking:self.useTracking,
+                        onBottom: { _ in
+                            self.load()
+                        }
+                    )
+                    
+                }
                 .modifier(MatchParent())
                 .background(Color.brand.bg)
+                .onReceive(self.infinityScrollModel.$event){evt in
+                    guard let evt = evt else {return}
+                    switch evt {
+                    case .pullCompleted :
+                        if !self.infinityScrollModel.isLoading { self.reload() }
+                        withAnimation{ self.reloadDegree = 0 }
+                    case .pullCancel :
+                        withAnimation{ self.reloadDegree = 0 }
+                    default : do{}
+                    }
+                    
+                }
+                .onReceive(self.infinityScrollModel.$pullPosition){ pos in
+                    if pos < InfinityScrollModel.PULL_RANGE { return }
+                    self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
+                }
+            } else if self.isError == true {
+                EmptyAlert().modifier(MatchParent())
+            } else {
+                Spacer().modifier(MatchParent())
+            }
         }
 
         .onReceive(self.viewModel.$isUpdate){ update in
@@ -144,7 +174,7 @@ struct CouponBlock: PageComponent, Identifiable{
         }
     }//body
     
-    @State var isError:Bool = false
+    @State var isError:Bool? = nil
     @State var datas:[CouponData] = []
     @State var title:String? = nil
     func initLoad(){
@@ -156,14 +186,16 @@ struct CouponBlock: PageComponent, Identifiable{
             withAnimation{ self.isError = true }
             return
         }
-        self.datas = []
+        withAnimation{
+            self.isError = nil
+            self.datas = []
+        }
         self.infinityScrollModel.reload()
         self.load()
     }
     
     func load(){
         if  !self.infinityScrollModel.isLoadable { return }
-        withAnimation{ self.isError = false }
         self.infinityScrollModel.onLoad()
         switch type {
         case .coupon:
@@ -192,14 +224,16 @@ struct CouponBlock: PageComponent, Identifiable{
     private func loadedCoupon(_ res:ApiResultResponds){
         guard let data = res.data as? Coupons else { return }
         if let count = data.usableCount {
-            self.title = self.type.text + " " + count.description + String.app.count
+            self.pairing.authority.useAbleCoupon = count
+            self.title = count.description + String.app.count
         }
         setDatas(datas: data.coupons?.coupon)
     }
     private func loadedPoint(_ res:ApiResultResponds){
         guard let data = res.data as? BPoints else { return }
         if let point = data.usableNewBpoint {
-            self.title = self.type.text + " " + point.formatted(style: .decimal) + String.app.point
+            self.pairing.authority.useAbleBPoint = point
+            self.title = point.formatted(style: .decimal) + String.app.point
         }
         setDatas(datas: data.newBpoints?.newBpoint)
         
@@ -207,14 +241,15 @@ struct CouponBlock: PageComponent, Identifiable{
     private func loadedCash(_ res:ApiResultResponds){
         guard let data = res.data as? BCashes else { return }
         if let cash = data.usableBcash?.totalBalance {
-            self.title = self.type.text + " " + cash.formatted(style: .decimal) + String.app.point
+            self.pairing.authority.useAbleBCash = cash
+            self.title = cash.formatted(style: .decimal) + String.app.point
         }
         setDatas(datas: data.bcashList?.bcash)
     }
     
     private func setDatas(datas:[Coupon]?) {
         guard let datas = datas else {
-            if self.datas.isEmpty { self.onError() }
+            withAnimation{ self.isError = false }
             return
         }
         let start = self.datas.count
@@ -224,11 +259,12 @@ struct CouponBlock: PageComponent, Identifiable{
         }
         self.datas.append(contentsOf: loadedDatas)
         self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)
+        withAnimation{ self.isError = false }
     }
     
     private func setDatas(datas:[BPoint]?) {
         guard let datas = datas else {
-            if self.datas.isEmpty { self.onError() }
+            withAnimation{ self.isError = false }
             return
         }
         let start = self.datas.count
@@ -238,11 +274,12 @@ struct CouponBlock: PageComponent, Identifiable{
         }
         self.datas.append(contentsOf: loadedDatas)
         self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)
+        withAnimation{ self.isError = false }
     }
     
     private func setDatas(datas:[BCash]?) {
         guard let datas = datas else {
-            if self.datas.isEmpty { self.onError() }
+            withAnimation{ self.isError = false }
             return
         }
         let start = self.datas.count
@@ -252,6 +289,7 @@ struct CouponBlock: PageComponent, Identifiable{
         }
         self.datas.append(contentsOf: loadedDatas)
         self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)
+        withAnimation{ self.isError = false }
     }
 }
 

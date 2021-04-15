@@ -73,23 +73,11 @@ struct MonthlyBlock: PageComponent {
             .onReceive(self.viewModel.$pullPosition){ pos in
                 self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
             }
-            ZStack{
-                HStack(spacing:Dimen.margin.micro){
-                    Text(self.hasAuth ? String.monthly.textEnjoy : String.monthly.textRecommand)
-                        .modifier(MediumTextStyle(size: Font.size.thin, color: self.hasAuth ? Color.app.white : Color.app.greyLight))
-                    if !self.hasAuth{
-                        Image(Asset.icon.more)
-                        .renderingMode(.original).resizable()
-                        .scaledToFit()
-                        .frame(width: Dimen.icon.thinExtra, height: Dimen.icon.thinExtra)
-                    }
-                }
-                .padding(.horizontal, Dimen.margin.micro)
-            }
-            
-            .modifier( MatchHorizontal(height: Dimen.button.regularExtra) )
-            .background(self.hasAuth ? Color.brand.primary : Color.app.blueLight)
-            .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.regular))
+            TipTab(
+                leading: self.hasAuth ? String.monthly.textEnjoy : String.monthly.textRecommand,
+                isMore: !self.hasAuth,
+                textColor: self.hasAuth ? Color.app.white : Color.app.greyLight,
+                bgColor: self.hasAuth ? Color.brand.primary : Color.app.blueLight)
             .modifier( ContentHorizontalEdges() )
             .padding(.top, Dimen.margin.lightExtra)
             .onTapGesture {

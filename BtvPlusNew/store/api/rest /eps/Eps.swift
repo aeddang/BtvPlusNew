@@ -264,9 +264,9 @@ class Eps: Rest{
         params["stb_id"] = stbId
         params["mac"] = macAdress
         params["requestDateTime"] = reqDate
-        params["cardNo"] = card?.cardNo
+       // params["cardNo"] = card?.cardNo
         params["sequence"] = (card?.sequence ?? 0).description
-        params["password"] = password?.toAES(key: EpsNetwork.AES_KEY_PREFIX + reqDate, iv: EpsNetwork.AES_IV)
+        params["password"] = password?.toAES256(key: EpsNetwork.AES_KEY_PREFIX + reqDate, iv: EpsNetwork.AES_IV)
         fetch(route: EpsOKCashPoint(query: params), completion: completion, error:error)
     }
 }

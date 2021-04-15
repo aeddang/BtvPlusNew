@@ -9,7 +9,7 @@ import SwiftUI
 
 extension PageConfirmNumber{
     enum InputType:String {
-        case password, coupon, nickname
+        case password, coupon, nickname, okcash
     }
 }
 
@@ -41,6 +41,7 @@ struct PageConfirmNumber: PageView {
     @State var safeAreaBottom:CGFloat = 0
     @State var isFocus:Bool = false
     @State var isSecure:Bool = false
+    @State var requestData:Any? = nil
     var body: some View {
         ZStack{
             InputBox(
@@ -64,6 +65,7 @@ struct PageConfirmNumber: PageView {
                 case .password : self.confirmPassword(input)
                 case .coupon : self.resigistCoupon(input)
                 case .nickname : self.modifyNickName(input)
+                case .okcash : self.confirmOkCash(input)
                 }
             }
             .padding(.bottom, self.safeAreaBottom)
@@ -116,6 +118,8 @@ struct PageConfirmNumber: PageView {
                 self.resigistCouponRespond(res)
             case .updateUser (let user):
                 self.modifyNickNameRespond(res, updateData:user)
+            case .getOkCashPoint :
+                self.confirmOkCashRespond(res)
             default: break
             }
         }
@@ -141,7 +145,10 @@ struct PageConfirmNumber: PageView {
             guard let obj = self.pageObject  else { return }
             if let data = obj.getParamValue(key: .data) as? PageObject {
                 self.movePage = data
+            }else if let data = obj.getParamValue(key: .data) {
+                self.requestData = data
             }
+          
             if let type = obj.getParamValue(key: .type) as? ScsNetwork.ConfirmType {
                 self.pwType = type
                 switch type {
@@ -186,6 +193,12 @@ struct PageConfirmNumber: PageView {
                     self.inputSizeMin = 0
                     self.inputSize = 8
                     self.isSecure = false
+                case .okcash:
+                    self.title = String.alert.okCashDiscount
+                    self.text = String.alert.okCashDiscountInput
+                    self.inputSize = 4
+                    self.isSecure = true
+                
                 default : break
                 }
             }
@@ -309,7 +322,25 @@ struct PageConfirmNumber: PageView {
         }
     }
    
+    func confirmOkCash(_ pw:String){
+        if !self.isReady {
+            self.appSceneObserver.event = .toast(String.alert.checkConnectStatus)
+            return
+        }
+        let item = self.requestData as? OcbItem
+        self.dataProvider.requestData(q: .init(id:self.tag, type: .getOkCashPoint(self.pairing.hostDevice, item, pw)))
+    }
     
+    func confirmOkCashRespond(_ res:ApiResultResponds){
+        guard let resData = res.data as? OkCashPoint else {return}
+        if resData.result == ApiCode.success {
+            self.pagePresenter.onPageEvent(self.pageObject, event: .init(type: .completed, data:self.type))
+            self.closePage()
+            
+        } else{
+            self.msg = String.alert.incorrecPassword
+        }
+    }
 }
 
 #if DEBUG

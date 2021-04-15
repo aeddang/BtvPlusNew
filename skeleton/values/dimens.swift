@@ -77,7 +77,7 @@ struct Dimen{
 
     struct radius {
         
-        public static let heavy:CGFloat = 25
+        public static let heavy:CGFloat = 20//*
         public static let medium:CGFloat = 14//*
         public static let regular:CGFloat = 12//*
         public static let regularExtra:CGFloat = 10//*

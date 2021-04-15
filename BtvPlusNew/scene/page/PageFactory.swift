@@ -31,6 +31,7 @@ extension PageID{
     static let pairingUser:PageID = "pairingUser"
     static let pairingManagement:PageID = "pairingManagement"
     static let pairingEmptyDevice:PageID = "pairingEmptyDevice"
+    static let pairingGuide:PageID = "pairingGuide"
     static let purchase:PageID = "purchase"
     static let multiBlock:PageID = "multiBlock"
     static let categoryList:PageID = "categoryList"
@@ -80,7 +81,7 @@ struct PageProvider {
         switch pageID {
         case .home, .category,
              .pairingSetupUser, .pairingBtv,
-             .pairingDevice, .pairingUser, .pairingManagement, .pairingEmptyDevice,
+             .pairingDevice, .pairingUser, .pairingManagement, .pairingEmptyDevice, .pairingGuide,
              .purchase , .webview, .schedule, .modifyProile,
              .adultCertification, .confirmNumber, .watchHabit, .purchaseTicketList:
             return  .vertical
@@ -189,6 +190,7 @@ struct PageFactory{
         case .pairingUser : return PagePairingUser()
         case .pairingManagement : return PagePairingManagement()
         case .pairingEmptyDevice : return PagePairingEmptyDevice()
+        case .pairingGuide : return PagePairingGuide()
         case .purchase : return PagePurchase()
         case .multiBlock : return PageMultiBlock()
         case .categoryList : return PageCategoryList()

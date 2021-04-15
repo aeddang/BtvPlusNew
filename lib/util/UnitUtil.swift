@@ -9,6 +9,8 @@
 import SwiftUI
 import UIKit
 import CryptoKit
+import CryptoSwift
+
 extension Double {
     func toInt() -> Int {
         if self >= Double(Int.min) && self < Double(Int.max) {
@@ -75,7 +77,7 @@ extension Date{
     }
 }
 
-extension Digest {
+extension CryptoKit.SHA256.Digest {
     var bytes: [UInt8] { Array(makeIterator()) }
     var data: Data { Data(bytes) }
     var hexStr: String {
@@ -241,6 +243,14 @@ extension String{
         return sealedBox?.combined?.base64EncodedString() ?? ""
     }
     
+    func toAES256(key: String, iv: String) -> String? {
+        do {
+            let aes = try AES(key: key, iv: iv)
+            let chiperText = try aes.encrypt(self.bytes).toBase64()
+            return chiperText
+        } catch { DataLog.e("aes256 error") }
+        return nil
+    }
     
     func isEmailType() -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"

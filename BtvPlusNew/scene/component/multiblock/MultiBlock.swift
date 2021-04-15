@@ -29,6 +29,7 @@ struct MultiBlock:PageComponent {
     var monthlyViewModel: InfinityScrollModel? = nil
     var monthlyDatas:[MonthlyData]? = nil
     var monthlyAllData:BlockItem? = nil
+    var tipBlock:TipBlockData? = nil
     var useFooter:Bool = false
     var isRecycle = true
     var isLegacy:Bool = false
@@ -59,70 +60,36 @@ struct MultiBlock:PageComponent {
                     
                 }
                 
-                if self.monthlyDatas != nil {
+                if let datas = self.monthlyDatas  {
                    MonthlyBlock(
                         viewModel:self.monthlyViewModel ?? InfinityScrollModel(),
                         pageDragingModel:self.pageDragingModel,
-                        monthlyDatas:self.monthlyDatas!,
+                        monthlyDatas:datas,
                         allData: self.monthlyAllData,
                         useTracking:self.useTracking,
                         action:self.action
                    )
                    .modifier(ListRowInset(spacing: Self.spacing))
                 }
+               
                 if !self.datas.isEmpty  {
-                    /*
-                    if self.headerSize > 1 {
-                        VStack(spacing:Self.spacing){
-                            ForEach(self.datas[..<min(self.headerSize, self.datas.count)]) { data in
-                                MultiBlockCell(
-                                    pageObservable:self.pageObservable,
-                                    pageDragingModel: self.pageDragingModel,
-                                    data: data ,
-                                    useTracking: self.useTracking)
-                                    
-                                    .onAppear(){
-                                        if data.index == self.datas.last?.index {
-                                            self.viewModel.event = .bottom
-                                        }
-                                    }
-                            }
-                        }
-                        
-                        .modifier(ListRowInset(spacing: Self.spacing))
-                        
-                        if self.datas.count > self.headerSize {
-                            ForEach(self.datas[self.headerSize..<self.datas.count]) { data in
-                                MultiBlockCell(
-                                    pageObservable:self.pageObservable,
-                                    pageDragingModel: self.pageDragingModel,
-                                    data: data ,
-                                    useTracking: self.useTracking)
-                                    .modifier(ListRowInset(spacing: Self.spacing))
-                                    .onAppear(){
-                                        if data.index == self.datas.last?.index {
-                                            self.viewModel.event = .bottom
-                                        }
-                                    }
-                            }
-                            
-                        }
-                    } else {
-                    */
-                        ForEach(self.datas) { data in
-                            MultiBlockCell(
-                                pageObservable:self.pageObservable,
-                                pageDragingModel: self.pageDragingModel,
-                                data: data ,
-                                useTracking: self.useTracking)
-                                .modifier(ListRowInset(spacing: Self.spacing))
-                                .onAppear(){
-                                    if data.index == self.datas.last?.index {
-                                        self.viewModel.event = .bottom
-                                    }
+                    if let data = self.tipBlock {
+                        TipBlock(data:data)
+                            .modifier(ListRowInset(spacing: Self.spacing))
+                    }
+                    ForEach(self.datas) { data in
+                        MultiBlockCell(
+                            pageObservable:self.pageObservable,
+                            pageDragingModel: self.pageDragingModel,
+                            data: data ,
+                            useTracking: self.useTracking)
+                            .modifier(ListRowInset(spacing: Self.spacing))
+                            .onAppear(){
+                                if data.index == self.datas.last?.index {
+                                    self.viewModel.event = .bottom
                                 }
-                        }
-                    //}
+                            }
+                    }
                     if self.useFooter {
                         Footer()
                             .modifier(ListRowInset(spacing: Dimen.margin.regular))
@@ -177,12 +144,8 @@ struct MultiBlock:PageComponent {
                     }
                 }
                 .modifier(ListRowInset(spacing: 0))
-                .onAppear(){
-                    //self.viewModel.onAppear(idx: 0)
-                }
-                .onDisappear(){
-                    //self.viewModel.onDisappear(idx: 0)
-                }
+                
+               
                 if !self.datas.isEmpty {
                     ForEach(self.datas) { data in
                         MultiBlockCell(

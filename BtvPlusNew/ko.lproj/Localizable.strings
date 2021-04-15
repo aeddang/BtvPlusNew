@@ -90,7 +90,8 @@
 "expirePeriodDate" = "만료일";
 "remain" = "잔여";
 "vip" = "VIP";
-
+"gold" = "GOLD";
+"silver" = "SILVER";
 /*
   Button
 */
@@ -141,6 +142,7 @@
 "btnAllTicket" = "다른 이용권 보기";
 "btnPreview" = "미리보기";
 "btnDirectview" = "바로보기";
+"btnLookup" = "조회하기";
 /*
  Sort
 */
@@ -282,6 +284,9 @@
 "alertIncorrectNumberOfCharacter" = "%s자 로 입력해주세요.";
 "alertPasswordInitateInfo" = "※ 인증번호 초기화는 B tv에서 하실 수 잇습니다.";
 
+"alertOkCashDiscount" = "OK캐쉬백 할인 적용";
+"alertOkCashDiscountInput" = "OK캐쉬백 비밀번호를 입력해주세요.";
+
 "alertPurchaseHidden" = "구매 내역 삭제";
 "alertPurchaseHiddenText" = "선택하신 구매내역을 목록에서\n삭제하시려면 구매 인증번호를\n입력해 주세요.";
 "alertPurchaseHiddenInfo" = "※ 구매내역 삭제 후 시청 기간 내에는 시청 가능하며, 삭제한 구매내역 확인은 국번 없이 106으로 문의 바랍니다";
@@ -299,6 +304,7 @@
 "titleConnectCertificationUser" = "가입자 확인 후 연결하기";
 "titleMy" = "MY";
 "titlePairingManagement" = "B tv 연결 관리";
+"titlePairingGuide" = "B tv 연결 안내";
 "titleMyPurchase" = "이전 B tv 구매/소장 목록";
 "titleSetup" = "설정";
 "titlePurchase" = "상품구매";
@@ -336,6 +342,20 @@
 "pairingBtnUserCertification" = "가입자 인증으로 연결하기";
 "pairingBtnUserCertificationSub" = "• B tv 가입자의 휴대폰 인증이 필요합니다.";
 
+"pairingGuideText1" = "모바일 B tv 서비스를 이용하기 위해서는\nB tv와 연결이 필요합니다.";
+"pairingGuideInfo1" = "세가지 연결 방법 중 하나를 선택한 후\n프로필을 등록하시면 연결이 진행됩니다.";
+
+"pairingGuideTitle2" = "집에서 B tv를 켜지 않고도 연결할 수 있는 방법!";
+"pairingGuideText2" = "Wi-Fi로 연결하기";
+"pairingGuideInfo2" = "모바일 B tv가 B tv와 연결된 공유기의\nWi-Fi에 연결되어 있으면 자동으로\nB tv와 연결됩니다.";
+
+"pairingGuideTitle3" = "집에서 B tv를 통해 간편하게 연결하는 방법!";
+"pairingGuideText3" = "B tv 인증번호로 연결하기";
+"pairingGuideInfo3" = "B tv에서 안내되는 인증번호 6자리를\n모바일 B tv에 입력하여 B tv와 연결하실 수 있습니다.";
+
+"pairingGuideTitle4" = "집 밖에서 B tv 없이도 연결할 수 있는 방법!";
+"pairingGuideText4" = "가입자 인증으로 연결하기";
+"pairingGuideInfo4" = "B tv에 가입한 명의자 본인의 스마트 기기로\n인증을 진행하시면 B tv와 연결할 수 있습니다.";
 
 /*
  PagePairingSetupUser
@@ -412,7 +432,7 @@
 "myBenefitsNumberTip" = "16자리 숫자를 입력하세요.";
 
 "myBenefitsDiscount" = "다른 할인 수단";
-"myBenefitsDiscountT" = "T맴버쉬";
+"myBenefitsDiscountT" = "T맴버쉽";
 "myBenefitsDiscountOk" = "OK캐쉬백";
 "myBenefitsDiscountTv" = "TV포인트";
 "myBenefitsDiscountTvText1" = "TV 포인트";
@@ -563,6 +583,11 @@
 "monthlyMore" = "전체 상품 보기";
 "monthlyTextRecommand" = "고객님을 위한 콘텐츠가 가득! 지금, 월정액에 가입해 보세요.";
 "monthlyTextEnjoy" = "아래의 모든 콘텐츠를 마음껏 즐겨보세요!.";
+
+"monthlyOceanPhaseLeading" = "매주 최신 영화가 쏟아지는";
+"monthlyOceanPhaseTrailing" = "에 가입해 보세요!";
+"monthlyOceanAuth" = "이용중!  아래의 콘텐츠를 즐겨보세요.";
+"monthlyOceanPeriodAuth" = "OCEAN 주말패스 이용중!  아래의 콘텐츠를 즐겨보세요.";
 
 /*
  Footer

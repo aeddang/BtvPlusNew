@@ -25,7 +25,6 @@ struct PageMyBenefits: PageView {
     @ObservedObject var cashScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var cashModel:CouponBlockModel = CouponBlockModel()
     
-    @ObservedObject var cardScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var cardModel:CardBlockModel = CardBlockModel()
    
     @State var useTracking:Bool = false
@@ -61,7 +60,7 @@ struct PageMyBenefits: PageView {
                             case 0 : self.couponModel.initUpdate()
                             case 1 : self.pointModel.initUpdate()
                             case 2 : self.cashModel.initUpdate()
-                            case 3 : self.cardModel.initUpdate()
+                            case 3 : self.cardModel.initUpdate(type: .member)
                             default : break
                             }
                         }
@@ -69,6 +68,7 @@ struct PageMyBenefits: PageView {
                 .modifier(PageFull(style:.dark))
                 .modifier(PageDragingSecondPriority(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
+            .clipped()
             .onReceive(self.couponScrollModel.$scrollPosition){ pos in
                 self.viewPagerModel.request = .reset
             }
@@ -78,9 +78,7 @@ struct PageMyBenefits: PageView {
             .onReceive(self.cashScrollModel.$scrollPosition){ pos in
                 self.viewPagerModel.request = .reset
             }
-            .onReceive(self.cardScrollModel.$scrollPosition){ pos in
-                self.viewPagerModel.request = .reset
-            }
+            
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
             }
@@ -126,12 +124,9 @@ struct PageMyBenefits: PageView {
                         useTracking:true,
                         type: .cash
                     ),
-                    CardBlock(
-                        infinityScrollModel: self.cardScrollModel,
-                        viewModel: self.cardModel,
-                        pageObservable: self.pageObservable,
-                        useTracking: true,
-                        type: .okCash
+                    DiscountView(
+                        cardModel: self.cardModel,
+                        pageObservable: self.pageObservable
                     )
                 ]
             }

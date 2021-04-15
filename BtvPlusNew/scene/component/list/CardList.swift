@@ -17,29 +17,57 @@ class CardData:InfinityData{
     private(set) var memberNo: String? = nil
     private(set) var cardPoint: String? = nil
     private(set) var cardNo: String? = nil
-    private(set) var isVip:Bool = false
+    private(set) var grade:String? = nil
     private(set) var isRepresent:Bool = false
-    
+    private(set) var requestPoint:Bool = false
    
+    private(set) var ocb:OcbItem? = nil
     func setData(data:TMembershipItem,  idx:Int = -1) -> CardData {
-        
+        defaultImage = Asset.image.cardMembership
+        if let no = data.cardNo, no.count == 8 {
+            memberNo = no.subString(start: 0, len: 4) + "  "
+                + no.subString(start: 4, len: 4) + "  ****  ****"
+        }
+        switch data.grade  {
+        case "V": grade = String.app.vip
+        case "G": grade = String.app.gold
+        case "S": grade = String.app.silver
+        default: break
+        }
         return self
     }
     
     func setData(data:TvPointItem,  idx:Int = -1) -> CardData {
-        
+        title = String.pageText.myBenefitsDiscountTvText1
+        defaultImage = Asset.image.cardTvpoint
+        if let balance = data.balance {
+            point = balance.formatted(style: .decimal) + String.app.point
+        }
         return self
     }
     
-    func setData(data:OcbItem,  idx:Int = -1) -> CardData {
-        
+    func setData(data:OcbItem, masterSequence:Int? = nil , idx:Int = -1) -> CardData {
+        if let master = masterSequence {
+            isRepresent = data.sequence == master
+        }
+   
+        requestPoint = true
+        ocb = data
+        defaultImage = Asset.image.cardOkcashbag
+        if let no = data.cardNo, no.count == 8 {
+            cardNo = no.subString(start: 0, len: 4) + "  "
+                + no.subString(start: 4, len: 4) + "  ****  ****"
+        }
         return self
     }
     
-    
+    func updatePoint(_ point:Double) {
+        self.requestPoint = false
+        self.point = point.formatted(style: .decimal) + String.app.point
+    }
     func setDummy(_ idx:Int = -1) -> CardData{
         memberNo = "2444  2444  ****  ****"
-        isVip = true
+       
         isRepresent = true
         return self
     }
@@ -89,7 +117,10 @@ struct CardList: PageComponent{
 }
 
 struct CardItem: PageView {
+    @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var dataProvider:DataProvider
     var data:CardData
+    @State var point:String? = nil
     var body: some View {
         ZStack{
             if let image = self.data.image {
@@ -124,8 +155,8 @@ struct CardItem: PageView {
                             .aspectRatio(contentMode: .fill)
                             .frame(width: 45, height: 20)
                     }
-                    if self.data.isVip {
-                        Text(String.app.vip)
+                    if let grade = self.data.grade {
+                        Text(grade)
                             .modifier(BoldTextStyle(size: Font.size.thin))
                     }
                 }
@@ -137,12 +168,24 @@ struct CardItem: PageView {
                             .modifier(MediumTextStyle(size: Font.size.large))
                             .padding(.top, Dimen.margin.heavy)
                     }
-                    if let point = self.data.point  {
+                    if let point = (self.data.point ?? self.point) {
                         Text(String.pageText.myBenefitsDiscountTvText2)
                             .modifier(MediumTextStyle(size: Font.size.regular, color:Color.app.blackLight))
                         Text(point)
                             .modifier(BoldTextStyle(size: Font.size.black, color:Color.app.blackDeep))
                             
+                    } else if self.data.requestPoint {
+                        RectButton(
+                            text: String.button.lookup,
+                            padding: Dimen.margin.regular
+                            ){_ in
+                            
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.confirmNumber)
+                                    .addParam(key: .type, value: PageConfirmNumber.InputType.okcash)
+                                    .addParam(key: .data, value: self.data.ocb)
+                            )
+                        }
                     }
                 }
                 Spacer()
@@ -156,6 +199,26 @@ struct CardItem: PageView {
         .frame(
             width: ListItem.card.size.width,
             height:  ListItem.card.size.height)
+        .onReceive(self.dataProvider.$result) { res in
+            guard let res = res else { return }
+            guard let ocb = self.data.ocb else { return }
+            switch res.type {
+            case .getOkCashPoint(_ , let card , _) :
+                guard let resData = res.data as? OkCashPoint else {return}
+                if resData.result == ApiCode.success {
+                    if card?.sequence == ocb.sequence {
+                        if let p = resData.ocb?.balance {
+                            self.data.updatePoint(p)
+                            self.point = self.data.point
+                        }
+                    }
+                }
+            default: break
+            }
+        }
+        .onAppear{
+            self.point = self.data.point
+        }
     }
 }
 

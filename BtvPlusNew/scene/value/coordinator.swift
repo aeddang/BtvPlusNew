@@ -14,6 +14,10 @@ extension Dimen{
 
 extension Asset{
     static let characterList = [
+        "imgProfile37",
+        "imgProfile38",
+        "imgProfile39",
+        "imgProfile40",
         "imgProfile01",
         "imgProfile02",
         "imgProfile03",

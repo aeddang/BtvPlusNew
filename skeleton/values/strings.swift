@@ -88,6 +88,8 @@ extension String {
         public static let expirePeriodDate = "expirePeriodDate".loaalized()
         public static let remain = "remain".loaalized()
         public static let vip = "vip".loaalized()
+        public static let gold = "gold".loaalized()
+        public static let silver = "silver".loaalized()
     }
     
     struct week {
@@ -235,6 +237,9 @@ extension String {
         public static var purchaseAuth = "alertPurchaseAuth".loaalized()
         public static var purchaseAuthInput = "alertPurchaseAuthInput".loaalized()
         public static var purchaseAuthInfo = "alertPurchaseAuthInfo".loaalized()
+        
+        public static var okCashDiscount = "alertOkCashDiscount".loaalized()
+        public static var okCashDiscountInput =  "alertOkCashDiscountInput".loaalized()
 
         public static var purchaseAuthCompleted = "alertPurchaseAuthCompleted".loaalized()
         public static var purchaseAuthCompleteInfo = "alertPurchaseAuthCompleteInfo".loaalized()
@@ -292,6 +297,7 @@ extension String {
         public static let allTicket = "btnAllTicket".loaalized()
         public static let preview = "btnPreview".loaalized()
         public static let directview =  "btnDirectview".loaalized()
+        public static let lookup =  "btnLookup".loaalized()
     }
     struct player {
         public static let moveSec = "playerMoveSec".loaalized()
@@ -314,6 +320,10 @@ extension String {
         public static let more = "monthlyMore".loaalized()
         public static let textRecommand = "monthlyTextRecommand".loaalized()
         public static let textEnjoy = "monthlyTextEnjoy".loaalized()
+        public static let oceanPhaseLeading = "monthlyOceanPhaseLeading".loaalized()
+        public static let oceanPhaseTrailing = "monthlyOceanPhaseTrailing".loaalized()
+        public static let oceanAuth = "monthlyOceanAuth".loaalized()
+        public static let oceanPeriodAuth = "monthlyOceanPeriodAuth".loaalized()
     }
     
     struct footer {
@@ -334,6 +344,7 @@ extension String {
         public static let connectCertificationUser = "titleConnectCertificationUser".loaalized()
         public static let my = "titleMy".loaalized()
         public static let pairingManagement =  "titlePairingManagement".loaalized()
+        public static let pairingGuide = "titlePairingGuide".loaalized()
         public static let myPurchase =  "titleMyPurchase".loaalized()
         public static let setup = "titleSetup".loaalized()
         public static let purchase = "titlePurchase".loaalized()
@@ -386,6 +397,20 @@ extension String {
         public static let pairingBtvText4 = "pairingBtvText4".loaalized()
         public static let pairingBtvText5 = "pairingBtvText5".loaalized()
         
+        public static let pairingGuideText1 = "pairingGuideText1".loaalized()
+        public static let pairingGuideInfo1 = "pairingGuideInfo1".loaalized()
+
+        public static let pairingGuideTitle2 = "pairingGuideTitle2".loaalized()
+        public static let pairingGuideText2 = "pairingGuideText2".loaalized()
+        public static let pairingGuideInfo2 = "pairingGuideInfo2".loaalized()
+
+        public static let pairingGuideTitle3 = "pairingGuideTitle3".loaalized()
+        public static let pairingGuideText3 = "pairingGuideText3".loaalized()
+        public static let pairingGuideInfo3 = "pairingGuideInfo3".loaalized()
+
+        public static let pairingGuideTitle4 = "pairingGuideTitle4".loaalized()
+        public static let pairingGuideText4 = "pairingGuideText4".loaalized()
+        public static let pairingGuideInfo4 = "pairingGuideInfo4".loaalized()
       
         
         public static let setupApp = "setupApp".loaalized()

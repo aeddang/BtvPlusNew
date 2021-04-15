@@ -25,20 +25,22 @@ struct CPPageViewPager: PageComponent {
     var body: some View {
         VStack(spacing:0){
             if self.isPageReady {
-                if self.isDivisionTab {
-                    CPTabDivisionNavigation(
-                        viewModel: self.viewModel,
-                        buttons: self.tabs,
-                        primaryColor: self.primaryColor
-                    )
-                    .modifier(MatchHorizontal(height:Dimen.tab.regular))
-                } else {
-                    CPTabNavigation(
-                        viewModel: self.viewModel,
-                        buttons: self.tabs,
-                        primaryColor: self.primaryColor
-                    )
-                    .modifier(MatchHorizontal(height:Dimen.tab.regular))
+                if !self.tabs.isEmpty {
+                    if self.isDivisionTab {
+                        CPTabDivisionNavigation(
+                            viewModel: self.viewModel,
+                            buttons: self.tabs,
+                            primaryColor: self.primaryColor
+                        )
+                        .modifier(MatchHorizontal(height:Dimen.tab.regular))
+                    } else {
+                        CPTabNavigation(
+                            viewModel: self.viewModel,
+                            buttons: self.tabs,
+                            primaryColor: self.primaryColor
+                        )
+                        .modifier(MatchHorizontal(height:Dimen.tab.regular))
+                    }
                 }
                 SwipperView(
                     viewModel: self.viewModel,

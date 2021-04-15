@@ -423,6 +423,7 @@ class Nps: Rest{
         customParam:[String: Any] = [String: Any](),
         completion: @escaping (NpsResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-521")
+        
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
         params["pairingid"] = NpsNetwork.pairingId

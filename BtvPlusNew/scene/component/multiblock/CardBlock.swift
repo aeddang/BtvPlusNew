@@ -11,17 +11,22 @@ import Combine
 
 class CardBlockModel: PageDataProviderModel {
     private(set) var key:String? = nil
+    private(set) var type:CardBlock.ListType = .member
     @Published private(set) var isUpdate = false {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
     
     private var isInit = true
-    func initUpdate(key:String? = nil) {
+    private var isReady = false
+    func initUpdate(type:CardBlock.ListType, key:String? = nil) {
         if !self.isInit {return}
-        self.update(key: key)
+        self.isReady = true
+        self.update(type:type, key: key)
     }
     
-    func update(key:String? = nil) {
+    func update(type:CardBlock.ListType, key:String? = nil) {
+        if !self.isReady {return}
+        self.type = type
         self.key = key
         self.isUpdate = true
         self.isInit = false
@@ -61,7 +66,7 @@ extension CardBlock{
             case .okCash: return [
                 String.pageText.myBenefitsDiscountOkInfo1,
                 String.pageText.myBenefitsDiscountOkInfo2,
-                String.pageText.myBenefitsDiscountOkInfo3]
+                String.pageText.myBenefitsDiscountOkInfo3.replace("1")]
             case .tvPoint: return [
                 String.pageText.myBenefitsDiscountTvInfo1]
             }
@@ -82,7 +87,7 @@ struct CardBlock: PageComponent, Identifiable{
     @ObservedObject var pageObservable:PageObservable = PageObservable()
      
     var useTracking:Bool = false
-    var type:CardBlock.ListType = .member
+    @State var type:CardBlock.ListType = .member
     
     var body: some View {
         PageDataProviderContent(
@@ -172,7 +177,7 @@ struct CardBlock: PageComponent, Identifiable{
             }
         }
         .onAppear(){
-           
+            self.type = self.viewModel.type
         }
     }//body
     
@@ -188,10 +193,11 @@ struct CardBlock: PageComponent, Identifiable{
             withAnimation{ self.isError = true }
             return
         }
-        withAnimation{
+        //withAnimation{
             self.isError = nil
             self.datas = []
-        }
+        //}
+        self.self.type = self.viewModel.type
         self.infinityScrollModel.reload()
         self.load()
     }
@@ -240,7 +246,7 @@ struct CardBlock: PageComponent, Identifiable{
         guard let data = res.data as? TotalPoint else { return }
         guard let ocbList = data.ocbList?.ocb else { return self.onEmpty() }
         let datas:[CardData] = ocbList.map{
-            CardData().setData(data: $0)
+            CardData().setData(data: $0, masterSequence: data.ocbMasterSequence)
         }
         self.datas.append(contentsOf: datas)
         self.infinityScrollModel.onComplete(itemCount: datas.count)

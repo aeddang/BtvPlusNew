@@ -26,8 +26,7 @@ struct PageHome: PageView {
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var monthlyViewModel: InfinityScrollModel = InfinityScrollModel()
-    
-   
+
     @State var useTracking:Bool = false
     @State var headerHeight:CGFloat = 0
     @State var marginHeader:CGFloat = 0
@@ -51,6 +50,7 @@ struct PageHome: PageView {
                 monthlyViewModel : self.monthlyViewModel,
                 monthlyDatas: self.monthlyDatas,
                 monthlyAllData: self.monthlyAllData,
+                tipBlock: self.tipBlockData,
                 useFooter: self.useFooter
                 ){ data in
                     self.reload(selectedMonthlyId: data.prdPrcId)
@@ -92,15 +92,10 @@ struct PageHome: PageView {
             if page?.id == self.pageObject?.id {
                 if self.useTracking {return}
                 self.useTracking = true
-                /*
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.app.bottom
-                }*/
             } else {
                 if !self.useTracking {return}
                 self.useTracking = false
-                //self.marginBottom = 0
-                
+               
             }
         }
         .onReceive(self.pairing.authority.$purchaseLowLevelTicketList){ list in
@@ -110,6 +105,14 @@ struct PageHome: PageView {
         .onReceive(self.pairing.authority.$purchaseTicketList){ list in
             guard let list = list else { return }
             self.updatedMonthly(purchases: list, lowLevelPpm: false)
+        }
+        .onReceive(self.pairing.authority.$monthlyPurchaseInfo){ info in
+            guard let info = info else { return }
+            self.updatedMonthlyPurchaseInfo(info)
+        }
+        .onReceive(self.pairing.authority.$periodMonthlyPurchaseInfo){ info in
+            guard let info = info else { return }
+            self.updatedPeriodMonthlyPurchaseInfo(info)
         }
         .onReceive(self.viewModel.$event){evt in
             guard let evt = evt else { return }
@@ -141,11 +144,13 @@ struct PageHome: PageView {
         
     }//body
     
+    @State var currentBand:Band? = nil
     @State var topDatas:Array<BannerData>? = nil
     @State var originMonthlyDatas:[String:MonthlyData]? = nil
     @State var monthlyAllData:BlockItem? = nil
     @State var monthlyDatas:Array<MonthlyData>? = nil
-    @State var selectedMonthlyId:String? = Self.finalSelectedMonthlyId
+    @State var tipBlockData:TipBlockData? = nil
+    @State var selectedMonthlyId:String? = nil
     @State var menuId:String = ""
     @State var openId:String? = nil
     @State var useFooter:Bool = false
@@ -154,9 +159,13 @@ struct PageHome: PageView {
         self.selectedMonthlyId = selectedMonthlyId ?? self.selectedMonthlyId
         self.monthlyDatas?.forEach{$0.reset()}
         guard let band = self.dataProvider.bands.getData(menuId: self.menuId) else { return }
+        self.currentBand = band
         switch band.gnbTypCd {
         case EuxpNetwork.GnbTypeCode.GNB_HOME.rawValue :
             self.useFooter = true
+            self.setupBlocks()
+        case EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue:
+            self.setupOcean()
             self.setupBlocks()
         case EuxpNetwork.GnbTypeCode.GNB_MONTHLY.rawValue :
             self.setupOriginMonthly()
@@ -201,10 +210,58 @@ struct PageHome: PageView {
         }
     }
     
+    //Ocean
+    private func setupOcean(){
+        guard let oceanBlock = self.dataProvider.bands.getMonthlyBlockData(name: self.currentBand?.name) else { return }
+        self.selectedMonthlyId = oceanBlock.prd_prc_id
+        if self.pairing.status == .pairing {
+            self.pairing.authority.requestAuth(.updateMonthlyPurchase(isPeriod: false))
+        } else {
+            self.setupPurchaseTip ()
+        }
+    }
+    
+    private func updatedMonthlyPurchaseInfo( _ info:MonthlyPurchaseInfo){
+        guard let band = self.currentBand  else { return }
+        if info.purchaseList?.first(where: {$0.title == band.name}) != nil {
+            self.tipBlockData = TipBlockData()
+                .setupTip(
+                    icon: Asset.icon.logoOcean,
+                    trailing: String.monthly.oceanAuth)
+            
+        } else {
+            self.pairing.authority.requestAuth(.updateMonthlyPurchase(isPeriod: false))
+        }
+    }
+    
+    private func updatedPeriodMonthlyPurchaseInfo( _ info:PeriodMonthlyPurchaseInfo){
+        guard let band = self.currentBand  else { return }
+        if info.purchaseList?.first(where: {$0.title == band.name}) != nil {
+            self.tipBlockData = TipBlockData()
+                .setupTip(leading: String.monthly.oceanPeriodAuth)
+            
+        } else {
+            self.setupPurchaseTip ()
+        }
+    }
+    
+    private func setupPurchaseTip (){
+        guard let band = self.currentBand  else { return }
+        guard let oceanBlock = self.dataProvider.bands.getMonthlyBlockData(name: band.name) else { return }
+        let phaseData = MonthlyData().setData(data: oceanBlock)
+        self.tipBlockData = TipBlockData()
+            .setupPurchase(
+                leading: String.monthly.oceanPhaseLeading,
+                icon: Asset.icon.logoOcean,
+                trailing: String.monthly.oceanPhaseTrailing,
+                data: phaseData)
+    }
+    
+    
     //Monthly
     private func setupOriginMonthly(){
-        
         if self.originMonthlyDatas == nil {
+            self.selectedMonthlyId = Self.finalSelectedMonthlyId
             var originMonthlyDatas = [String:MonthlyData]()
             let maxCount = 8
             var idx = 0
@@ -249,6 +306,8 @@ struct PageHome: PageView {
         }
     }
     
+    
+    
     private func setupMonthly(){
         guard let monthlyDatas = self.monthlyDatas else { return }
         if monthlyDatas.isEmpty { return }
@@ -268,7 +327,7 @@ struct PageHome: PageView {
     }
     
     private func requestBlocks(blocksData:[BlockItem]){
-        self.viewModel.update(datas: blocksData, openId: self.openId)
+        self.viewModel.update(datas: blocksData , openId: self.openId, selectedTicketId:self.selectedMonthlyId)
         self.openId = nil
     }
     //Block init

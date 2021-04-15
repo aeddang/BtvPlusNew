@@ -51,6 +51,13 @@ class Bands:ObservableObject, PageProtocol {
                 where: { $0.gnbTypCd == gnbTypCd }) else { return nil }
         return band
     }
+    
+    func getMonthlyBlockData(name:String?)-> BlockItem? {
+        guard let name = name else { return nil }
+        guard let band = getData(gnbTypCd: EuxpNetwork.GnbTypeCode.GNB_MONTHLY.rawValue) else {return nil}
+        let block = band.blocks.first(where: {$0.menu_nm == name })
+        return block 
+    }
 }
 
 class Band {

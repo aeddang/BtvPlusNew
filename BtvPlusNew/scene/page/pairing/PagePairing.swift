@@ -54,7 +54,9 @@ struct PagePairing: PageView {
                             MoreInfoButton(
                                 title: String.pageText.pairingBtnGuide
                             ){
-                                
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(.pairingGuide)
+                                )
                             }
                             .padding(.top, Dimen.margin.regularExtra)
                         }.modifier(ContentHorizontalEdges())

@@ -139,7 +139,7 @@ extension Asset{
         public static let ticketMonthly = "tagMySubscribe"
         public static let ticketPeriod = "tagMySubscribe02"
         public static let represent = "tagMyRepresent"
-        
+        public static let logoOcean = "logoOcean"
     }
     
     
@@ -204,6 +204,12 @@ extension Asset{
         public static let intro01 = "imgIosIntro01"
         public static let intro02 = "imgIosIntro02"
         public static let intro03 = "imgIosIntro03"
+        
+        public static let pairingTutorial01 = "imgPairingTutorial01"
+        public static let pairingTutorial02 = "imgPairingTutorial02"
+        public static let pairingTutorial03 = "imgPairingTutorial03"
+        public static let pairingTutorial04 = "imgPairingTutorial04"
+        
         public static let empty = "imgMyEmpty01"
         public static let myEmpty = "imgMyEmpty01"
         public static let deviceEmpty = "imgPairingNostbB"

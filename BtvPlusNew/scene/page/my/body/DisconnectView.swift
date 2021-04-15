@@ -25,8 +25,9 @@ struct DisconnectView: PageComponent{
                     .aspectRatio(contentMode: .fit)
                     .modifier(MatchParent())
                     .padding(.vertical, Dimen.margin.medium)
+                Spacer().modifier(MatchHorizontal(height: 0))
             }
-            .padding(.horizontal, Dimen.margin.regular)
+            .padding(.horizontal, Dimen.margin.light)
             FillButton(
                 text: String.button.connectBtv
             ){_ in

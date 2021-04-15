@@ -1,10 +1,3 @@
-//
-//  RectButton.swift
-//  shoppingTrip
-//
-//  Created by JeongCheol Kim on 2020/07/29.
-//  Copyright © 2020 JeongCheol Kim. All rights reserved.
-//
 
 import Foundation
 import SwiftUI

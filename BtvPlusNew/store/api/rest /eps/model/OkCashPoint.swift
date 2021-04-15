@@ -7,6 +7,8 @@
 
 import Foundation
 struct OkCashPoint : Decodable {
+    private(set) var result: String?    // 요청 결과.
+    private(set) var reason: String?
     private(set) var ui_name: String?    // UI구분자
     private(set) var response_format: String?    // 데이터 형식, "json"만 지원
     private(set) var svc_name: String?   // 서비스 제공 어플리케이션 이름 "EPS"
@@ -15,7 +17,7 @@ struct OkCashPoint : Decodable {
 
 struct OkCashPointItem : Decodable {
 
-    private(set) var sequence: String?    // OK캐쉬백 카드 순번
+    private(set) var sequence: Int?    // OK캐쉬백 카드 순번
     private(set) var cardNo: String?      // OK캐쉬백 카드 번호 (앞 8자리만 응답)
-    private(set) var balance: String?     // 잔액
+    private(set) var balance: Double?     // 잔액
 }

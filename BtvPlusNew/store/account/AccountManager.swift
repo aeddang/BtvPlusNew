@@ -86,9 +86,10 @@ class AccountManager : PageProtocol{
             case .updateMonthlyPurchase(let isPeriod) :
                 if self.pairing.status != .pairing {return}
                 if isPeriod {
-                    self.dataProvider.requestData(q: .init(type: .getPurchaseMonthly(), isOptional: true))
-                } else {
                     self.dataProvider.requestData(q: .init(type: .getPeriodPurchaseMonthly(), isOptional: true))
+                } else {
+                    self.dataProvider.requestData(q: .init(type: .getPurchaseMonthly(), isOptional: true))
+                    
                 }
             default : break
             }

@@ -13,6 +13,7 @@ target 'BtvPlusNew' do
   pod 'ReachabilitySwift'
   pod 'Kingfisher'
   pod 'TrueTime'
+  pod 'CryptoSwift', '~> 1.0'
   
   target 'BtvPlusNewTests' do
     inherit! :search_paths

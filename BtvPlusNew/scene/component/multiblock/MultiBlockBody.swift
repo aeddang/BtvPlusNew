@@ -10,12 +10,14 @@ import SwiftUI
 import Combine
 
 class MultiBlockModel: PageDataProviderModel {
-  
+   
     private(set) var datas:[BlockData]? = nil
     private(set) var headerSize:Int = 0
     private(set) var requestSize:Int = 0
     private(set) var isAdult:Bool = false
     private(set) var openId:String? = nil
+    private(set) var selectedTicketId:String? = nil
+    
     @Published private(set) var isUpdate = false {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
@@ -30,7 +32,7 @@ class MultiBlockModel: PageDataProviderModel {
         self.isUpdate = true
     }
     
-    func update(datas:[BlockItem], openId:String?, themaType:BlockData.ThemaType = .category, isAdult:Bool = false) {
+    func update(datas:[BlockItem], openId:String?, selectedTicketId:String? = nil, themaType:BlockData.ThemaType = .category, isAdult:Bool = false) {
         self.datas = datas.map{ block in
             BlockData().setDate(block, themaType:themaType)
         }
@@ -41,6 +43,7 @@ class MultiBlockModel: PageDataProviderModel {
             default : return true
             }
         }
+        self.selectedTicketId = selectedTicketId
         self.openId = openId
         self.isAdult = isAdult
         self.isUpdate = true
@@ -85,6 +88,7 @@ struct MultiBlockBody: PageComponent {
     var monthlyViewModel: InfinityScrollModel = InfinityScrollModel()
     var monthlyDatas:[MonthlyData]? = nil
     var monthlyAllData:BlockItem? = nil
+    var tipBlock:TipBlockData? = nil
     var useFooter:Bool = false
     var isRecycle = Self.isRecycle
     
@@ -106,7 +110,6 @@ struct MultiBlockBody: PageComponent {
                 ZStack(alignment: .topLeading){
                     if !Self.isLegacy  {
                         if self.topDatas != nil && self.topDatas?.isEmpty == false {
-                            
                             TopBannerBg(
                                 viewModel:self.viewPagerModel,
                                 datas: self.topDatas! )
@@ -137,19 +140,17 @@ struct MultiBlockBody: PageComponent {
                             monthlyViewModel : self.monthlyViewModel,
                             monthlyDatas: self.monthlyDatas,
                             monthlyAllData: self.monthlyAllData,
+                            tipBlock:self.tipBlock,
                             useFooter:self.useFooter,
                             isRecycle:self.isRecycle,
                             isLegacy:Self.isLegacy,
-                            action:self.action
-                            )
-                        
+                            action:self.action)
                     } else {
                         ReflashSpinner(
                             progress: self.$reloadDegree,
                             progressMax: self.reloadDegreeMax
                         )
                         .padding(.top, self.topDatas != nil ? (TopBanner.height + self.marginHeader)  : self.marginTop)
-                        
                         
                         MultiBlock(
                             viewModel: self.infinityScrollModel,
@@ -167,12 +168,11 @@ struct MultiBlockBody: PageComponent {
                             monthlyViewModel : self.monthlyViewModel,
                             monthlyDatas: self.monthlyDatas,
                             monthlyAllData: self.monthlyAllData,
+                            tipBlock:self.tipBlock,
                             useFooter:self.useFooter,
                             isRecycle:self.isRecycle,
                             isLegacy:Self.isLegacy,
-                            action:self.action
-                            )
-                    
+                            action:self.action)
                     }
                 }
             } else {
@@ -283,16 +283,20 @@ struct MultiBlockBody: PageComponent {
                
             case .watched:
                 guard let resData = res?.data as? Watch else {return data.setBlank()}
-                guard let blocks = resData.watchList else {return data.setBlank()}
-                if blocks.isEmpty {return data.setBlank()}
+                guard let originWatchBlocks = resData.watchList else {return data.setBlank()}
+                var watchBlocks:[WatchItem] = originWatchBlocks
+                if let ticketId = self.viewModel.selectedTicketId {
+                    watchBlocks = originWatchBlocks.filter{$0.prod_id == ticketId}
+                }
+                if watchBlocks.isEmpty {return data.setBlank()}
                 total = resData.watch_tot?.toInt()
                 switch data.uiType {
                 case .poster :
-                    data.posters = blocks.map{ d in
+                    data.posters = watchBlocks.map{ d in
                         PosterData().setData(data: d, cardType: data.cardType)
                     }
                 case .video :
-                    data.videos = blocks.map{ d in
+                    data.videos = watchBlocks.map{ d in
                         VideoData().setData(data: d, cardType: data.cardType)
                     }
                 default: break

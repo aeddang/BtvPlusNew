@@ -25,7 +25,6 @@
  */
 + (NSString *) getEncrypedSCValue:(NSString *)message nValue:(NSString *)nValue npsPw:(NSString *)pw;
 
-
 /**
  * HASH ID 반환
  */

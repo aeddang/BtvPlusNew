@@ -223,6 +223,7 @@ struct PageHome: PageView {
     
     private func updatedMonthlyPurchaseInfo( _ info:MonthlyPurchaseInfo){
         guard let band = self.currentBand  else { return }
+        if band.gnbTypCd != EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue {return}
         if info.purchaseList?.first(where: {$0.title == band.name}) != nil {
             self.tipBlockData = TipBlockData()
                 .setupTip(
@@ -230,12 +231,15 @@ struct PageHome: PageView {
                     trailing: String.monthly.oceanAuth)
             
         } else {
-            self.pairing.authority.requestAuth(.updateMonthlyPurchase(isPeriod: false))
+            if self.pageObservable.layer == .top {
+                self.pairing.authority.requestAuth(.updateMonthlyPurchase(isPeriod: false))
+            }
         }
     }
     
     private func updatedPeriodMonthlyPurchaseInfo( _ info:PeriodMonthlyPurchaseInfo){
         guard let band = self.currentBand  else { return }
+        if band.gnbTypCd != EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue {return}
         if info.purchaseList?.first(where: {$0.title == band.name}) != nil {
             self.tipBlockData = TipBlockData()
                 .setupTip(leading: String.monthly.oceanPeriodAuth)

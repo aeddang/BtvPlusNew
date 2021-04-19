@@ -140,6 +140,12 @@ extension Asset{
         public static let ticketPeriod = "tagMySubscribe02"
         public static let represent = "tagMyRepresent"
         public static let logoOcean = "logoOcean"
+        
+        public static let noticeAd = "icNoticeAdNor"
+        public static let noticeCoupon = "icNoticeCouponNor"
+        public static let noticePoint = "icNoticePointNor"
+        public static let noticeRelease = "icNoticeReleaseNor"
+        public static let noticeReserve = "icNoticeReserveNor"
     }
     
     

@@ -8,8 +8,17 @@
     <entity name="Keyword" representedClassName=".Keyword" syncable="YES" codeGenerationType="class">
         <attribute name="id" attributeType="String" defaultValueString="&quot;&quot;"/>
     </entity>
+    <entity name="NotificationEntity" representedClassName="NotificationEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="badge" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="body" optional="YES" attributeType="String"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="isRead" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="userInfo" optional="YES" attributeType="Binary"/>
+    </entity>
     <elements>
         <element name="Item" positionX="-11823.1171875" positionY="-7418.76953125" width="128" height="88"/>
         <element name="Keyword" positionX="-11826" positionY="-7389" width="128" height="44"/>
+        <element name="NotificationEntity" positionX="-11826" positionY="-7380" width="128" height="119"/>
     </elements>
 </model>

@@ -197,6 +197,8 @@
 		31A4A0082627F0A90065E6C6 /* TipTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A4A0072627F0A90065E6C6 /* TipTab.swift */; };
 		31A4A00E26281B840065E6C6 /* TipBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A4A00D26281B840065E6C6 /* TipBlock.swift */; };
 		31A73BCD261D99B1009A143C /* PageMyPurchase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A73BCC261D99B1009A143C /* PageMyPurchase.swift */; };
+		31C4BC8C262D154800BB2167 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31C4BC8B262D154800BB2167 /* GoogleService-Info.plist */; };
+		31C4BC97262D2D8600BB2167 /* NoticeCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BC96262D2D8600BB2167 /* NoticeCoreData.swift */; };
 		31D3F4CB25E3368A008FDFEC /* WepManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4CA25E3368A008FDFEC /* WepManager.swift */; };
 		31D3F4DE25E36625008FDFEC /* PageMultiBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */; };
 		31D3F4E625E3A57A008FDFEC /* BannerBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */; };
@@ -586,6 +588,8 @@
 		31A4A0072627F0A90065E6C6 /* TipTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipTab.swift; sourceTree = "<group>"; };
 		31A4A00D26281B840065E6C6 /* TipBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipBlock.swift; sourceTree = "<group>"; };
 		31A73BCC261D99B1009A143C /* PageMyPurchase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyPurchase.swift; sourceTree = "<group>"; };
+		31C4BC8B262D154800BB2167 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		31C4BC96262D2D8600BB2167 /* NoticeCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeCoreData.swift; sourceTree = "<group>"; };
 		31D3F4CA25E3368A008FDFEC /* WepManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WepManager.swift; sourceTree = "<group>"; };
 		31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMultiBlock.swift; sourceTree = "<group>"; };
 		31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerBlock.swift; sourceTree = "<group>"; };
@@ -1538,6 +1542,7 @@
 				D5717869258304D000BF2612 /* LaunchScreen.storyboard */,
 				D56C692A257D9EE600CF9AB8 /* Assets.xcassets */,
 				D56C6934257D9EE600CF9AB8 /* Info.plist */,
+				31C4BC8B262D154800BB2167 /* GoogleService-Info.plist */,
 				D56C6931257D9EE600CF9AB8 /* ApiCoreData.xcdatamodeld */,
 				D56C692C257D9EE600CF9AB8 /* Preview Content */,
 			);
@@ -2078,6 +2083,7 @@
 			isa = PBXGroup;
 			children = (
 				D5DABD782589746400DF5701 /* ApiCoreDataManager.swift */,
+				31C4BC96262D2D8600BB2167 /* NoticeCoreData.swift */,
 			);
 			path = coreData;
 			sourceTree = "<group>";
@@ -2241,6 +2247,7 @@
 				318B53C925F236A20052E4E0 /* Roboto-Medium.ttf in Resources */,
 				31373F6325C7E726004353DA /* YTPlayerView-iframe-playerIPAD.html in Resources */,
 				31373F6225C7E726004353DA /* YTPlayerView-iframe-player.html in Resources */,
+				31C4BC8C262D154800BB2167 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2683,6 +2690,7 @@
 				D56C6A56257DA0C700CF9AB8 /* CircleButton.swift in Sources */,
 				314D6B0725D0E9DE0003C749 /* SetupItem.swift in Sources */,
 				314D73BA25B54FD900907118 /* BookMarkButton.swift in Sources */,
+				31C4BC97262D2D8600BB2167 /* NoticeCoreData.swift in Sources */,
 				319745BB261FEE7D0072945D /* PurchaseTicketList.swift in Sources */,
 				317C9774262443D4008F267D /* PageMyBenefits.swift in Sources */,
 				D56C6A48257DA0C700CF9AB8 /* RoundRectMask.swift in Sources */,
@@ -2915,7 +2923,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -2989,7 +2997,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;

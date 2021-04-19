@@ -8,7 +8,7 @@
 
 import UIKit
 import CoreData
-//import Firebase
+import Firebase
 
 
 class AppObserver: ObservableObject, PageProtocol {
@@ -43,7 +43,7 @@ class AppObserver: ObservableObject, PageProtocol {
             self.page = WhereverYouCanGo.parseIwillGo(json: pageJson)
         }
     }
-    /*
+    
     @discardableResult
     func handleUniversalLink(_ deepLink: URL?)-> Bool{
         guard let url =  deepLink else { return false }
@@ -72,7 +72,7 @@ class AppObserver: ObservableObject, PageProtocol {
             return false
         }
     }
-    */
+    
 }
 
 @UIApplicationMain
@@ -86,8 +86,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        //FirebaseApp.configure()
-        //DynamicLinks.performDiagnostics(completion: nil)
+        FirebaseApp.configure()
+        DynamicLinks.performDiagnostics(completion: nil)
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().delegate = self
             let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
@@ -100,8 +100,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
         }
         application.registerForRemoteNotifications()
         Self.appURLSession = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: nil)
-        //let launchedURL = launchOptions?[UIApplication.LaunchOptionsKey.url] as? URL
-        return true//AppDelegate.appObserver.handleDynamicLink(launchedURL)
+        let launchedURL = launchOptions?[UIApplication.LaunchOptionsKey.url] as? URL
+        return AppDelegate.appObserver.handleDynamicLink(launchedURL)
         
         
     }
@@ -120,12 +120,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
     func application(_ application: UIApplication, continue userActivity: NSUserActivity,
                      restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         PageLog.d("Deeplink start", tag: self.tag)
-        return false//AppDelegate.appObserver.handleUniversalLink(userActivity.webpageURL)
+        return AppDelegate.appObserver.handleUniversalLink(userActivity.webpageURL)
     }
     
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
         PageLog.d("Deeplink start", tag: self.tag)
-        return false//AppDelegate.appObserver.handleDynamicLink(url)
+        return AppDelegate.appObserver.handleDynamicLink(url)
     }
     
     
@@ -158,8 +158,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
         PageLog.d("Unable to register for remote notifications: \(error.localizedDescription)", tag: self.tag)
     }
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        PageLog.d("APNs token retrieved: \(deviceToken)", tag: self.tag)
-        AppDelegate.appObserver.pushToken = deviceToken.base64EncodedString()
+        PageLog.d("APNs token retrieved: \(deviceToken.base64EncodedString())", tag: self.tag)
+       // AppDelegate.appObserver.pushToken = deviceToken.base64EncodedString()
+        Messaging.messaging().apnsToken = deviceToken
+        Messaging.messaging().token { token, error in
+          if let error = error {
+            PageLog.e("Error fetching FCM registration token: \(error)", tag: self.tag)
+          } else if let token = token {
+            PageLog.d("Firebase registration token: \(token)", tag: self.tag)
+            AppDelegate.appObserver.pushToken = token
+          }
+        }
     }
 
 }

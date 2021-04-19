@@ -1,68 +1,30 @@
 //
-//  CoreData.swift
+//  NoticeCoreData.swift
 //  BtvPlusNew
 //
-//  Created by KimJeongCheol on 2020/12/16.
+//  Created by JeongCheol Kim on 2021/04/19.
 //
 
 import Foundation
 import CoreData
 
-class ApiCoreDataManager:PageProtocol {
-    static let name = "ApiCoreData"
-    struct Models {
-        static let item = "Item"
-        static let keyword = "Keyword"
-    }
+class NoticeCoreData:PageProtocol {
+    static let name = "BtvPlus"
+    static let model = "NotificationEntity"
     struct Keys {
-        static let itemId = "id"
-        static let itemJson = "jsonString"
+        static let badge = "badge"
+        static let title = "title"
+        static let body = "body"
+        static let body = "body"
+        static let body = "body"
+        static let body = "body"
     }
     
-    func clearData(server:ApiServer) {
-        switch server {
-        case .VMS:do{}
-        default: do{}
-        }
-        
-    }
-    
-    func setData<T:Encodable>(key:String, data:T?){
-        guard let data = data else { return }
-        let jsonData = try! JSONEncoder().encode(data)
-        let jsonString = String(data: jsonData, encoding: .utf8)!
-        let container = self.persistentContainer
-        guard let entity = NSEntityDescription.entity(forEntityName: Models.item, in: container.viewContext) else { return }
-        let item = NSManagedObject(entity: entity, insertInto: container.viewContext)
-        item.setValue(key, forKey: Keys.itemId)
-        item.setValue(jsonString, forKey: Keys.itemJson)
-        self.saveContext()
-    }
-    
-    func getData<T:Decodable>(key:String)->T?{
-        let container = self.persistentContainer
-        do {
-            let items = try container.viewContext.fetch(Item.fetchRequest()) as! [Item]
-            guard let jsonString = items.first(where: {$0.id == key})?.jsonString else { return nil }
-            let jsonData = jsonString.data(using: .utf8)!
-            do {
-                let savedData = try JSONDecoder().decode(T.self, from: jsonData)
-                return savedData
-            } catch {
-                DataLog.e(error.localizedDescription, tag: self.tag)
-                return nil
-            }
-        } catch {
-           DataLog.e(error.localizedDescription, tag: self.tag)
-           return nil
-        }
-    }
-
     func addKeyword(_ word:String){
         let container = self.persistentContainer
-        guard let entity = NSEntityDescription.entity(forEntityName: Models.keyword, in: container.viewContext) else { return }
+        guard let entity = NSEntityDescription.entity(forEntityName: Self.name, in: container.viewContext) else { return }
         let item = NSManagedObject(entity: entity, insertInto: container.viewContext)
-        item.setValue(word, forKey: Keys.itemId)
+        item.setValue(word, forKey: )
         self.saveContext()
     }
 
@@ -94,7 +56,6 @@ class ApiCoreDataManager:PageProtocol {
     }
     
     
-    
     // MARK: - Core Data stack
     private lazy var persistentContainer: NSPersistentCloudKitContainer = {
         let container = NSPersistentCloudKitContainer(name: Self.name)
@@ -118,5 +79,36 @@ class ApiCoreDataManager:PageProtocol {
             }
         }
     }
-    
+
 }
+
+
+//{
+//   "aps":{
+//      "alert":{
+//         "title":"시놉 바로가기",
+//         "body":"push 메시지입니다."
+//      },
+//      "mutable-content":1
+//   },
+//    "system_data":{
+//      "messageId":"pixunptufh3uncbogyadn",
+//      "ackUrl":"",
+//      "blob":null,
+//      "hasMore":false,
+//      "type":"message"
+//   },
+//   "user_data":{
+//      "msgType":"content",
+//      "sysType":"Admin",
+//      "imgType":"icon",
+//      "landingPath":"SYNOP",
+//      "posterUrl":"PIMG",
+//      "title":"시놉 바로가기",
+//      "iconUrl":"IIMG",
+//      "receiveLimit":"",
+//      "destPos":"http:\\/\\/m.btvplus.co.kr?type=30&id=CE0001166079",
+//      "timestamp":"20201111180000",
+//      "notiType":"ALL"
+//   }
+//}

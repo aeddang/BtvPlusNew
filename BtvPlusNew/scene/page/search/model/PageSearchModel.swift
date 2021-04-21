@@ -12,15 +12,14 @@ import Foundation
 class PageSearchModel :ObservableObject, PageProtocol {
     
     @Published private(set) var searchDatas:[SearchData] = []
-    private var apiCoreDataManager:ApiCoreDataManager? = nil
+    private var keyword:KeywordCoreData = KeywordCoreData()
     private var localKeywords:[String] = []
     private var popularityKeywords:[String] = []
     private var popularityDatas:[PosterData] = []
     
-    func onAppear(apiCoreDataManager:ApiCoreDataManager) {
-        self.apiCoreDataManager = apiCoreDataManager
+    func onAppear() {
         DispatchQueue.global(qos: .background).async(){
-            let localDatas = apiCoreDataManager.getAllKeywords()
+            let localDatas = self.keyword.getAllKeywords()
             DispatchQueue.main.async {
                 self.localKeywords.append(contentsOf: localDatas)
                 self.updateSearchKeyword()
@@ -32,8 +31,9 @@ class PageSearchModel :ObservableObject, PageProtocol {
         let find = self.localKeywords.first(where: {$0 == keyword})
         if find == nil {
             self.localKeywords.append(keyword)
+            self.updateSearchKeyword()
             DispatchQueue.global(qos: .background).async(){
-                self.apiCoreDataManager?.addKeyword(keyword)
+                self.keyword.addKeyword(keyword)
             }
         }
     }
@@ -44,17 +44,19 @@ class PageSearchModel :ObservableObject, PageProtocol {
         self.localKeywords.remove(at: find)
         self.updateSearchKeyword()
         DispatchQueue.global(qos: .background).async(){
-            self.apiCoreDataManager?.removeKeyword(keyword)
+            self.keyword.removeKeyword(keyword)
         }
     }
     func removeAllSearchKeyword (){
-        self.localKeywords.removeAll()
-        self.updateSearchKeyword()
+        let removeKeywords = self.localKeywords
         DispatchQueue.global(qos: .background).async(){
-            self.localKeywords.forEach{
-                self.apiCoreDataManager?.removeKeyword($0)
+            removeKeywords.forEach{
+                self.keyword.removeKeyword($0)
             }
         }
+        self.localKeywords.removeAll()
+        self.updateSearchKeyword()
+       
     }
     
     func updatePopularityKeywords (_ data:SearchKeyword? = nil){
@@ -115,9 +117,6 @@ class PageSearchModel :ObservableObject, PageProtocol {
         }
         return blocks
     }
-    
-    
-    
     
     private func getLatestData() -> [SearchData] {
         var datas:[SearchData] = [

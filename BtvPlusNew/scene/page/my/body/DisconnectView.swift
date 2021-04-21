@@ -42,7 +42,7 @@ struct DisconnectView: PageComponent{
                     isNew: true
                 ){_ in
                     self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.pairing)
+                        PageProvider.getPageObject(.myAlram)
                     )
                 }
                 Spacer().modifier(LineVertical())

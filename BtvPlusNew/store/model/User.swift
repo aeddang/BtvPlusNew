@@ -54,6 +54,10 @@ class User {
         self.postAgreement = true
     }
     
+    init(isAgree:Bool){
+        self.isAgree3 = isAgree
+    }
+    
     func clone() -> User{
         return User(nickName: self.nickName, characterIdx: self.characterIdx, gender: self.gender, birth: self.birth,
                     isAgree1: self.isAgree1, isAgree2: self.isAgree2, isAgree3: self.isAgree3)
@@ -63,6 +67,10 @@ class User {
         if let value = data.nickName { self.nickName = value }
         if let value = data.characterIdx { self.characterIdx = value }
         return self
+    }
+    
+    func update(isAgree:Bool){
+        self.isAgree3 = isAgree
     }
     
     @discardableResult

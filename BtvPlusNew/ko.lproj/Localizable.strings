@@ -143,6 +143,7 @@
 "btnPreview" = "미리보기";
 "btnDirectview" = "바로보기";
 "btnLookup" = "조회하기";
+"btnAlramOn" = "알림 설정 켜기";
 /*
  Sort
 */
@@ -168,6 +169,20 @@
   Alert
 */
 "alertApns" = "알림";
+
+"alertApnsNotice" = "공지사항";
+"alertApnsEventWeb" = "이벤트 웹 화면";
+"alertApnsVodDetail" = "VOD 상세보기";
+"alertApnsWebInApp" = "WEB in App 이동";
+"alertApnsBrowser" = "단말 WEB 브라우저";
+"alertApnsHome" = "홈화면 이동";
+"alertApnsTrailer" = "영화본편 공개알림";
+"alertApnsMenu" = "메뉴이동";
+"alertApnsSynop" = "시놉이동";
+"alertApnsSeason" = "시즌 공개예정 알림";
+"alertApnsMonthly" = "월정액 공개예정 알림";
+"alertApnsReserve" = "시청예약 알림";
+
 
 "alertApi" = "알림";
 "alertApiErrorServer" = "접속이 지연되고 있습니다. 잠시 후 다시 이용해 주세요.";
@@ -257,6 +272,10 @@
 "alertNextPlayOn" = "다음 영상 연속 재생이 설정되었습니다.";
 "alertNextPlayOff" = "다음 영상 연속 재생이 해재되었습니다.";
 
+"alertPushOn" = "알림 수신 동의 처리가 완료되엇습니다.";
+"alertPushOff" = "알림 수신 거부 처리가 완료되엇습니다.";
+"alertPushError" = "알림 수신 변경이 실패하였습니다.";
+
 "alertUpdateAlram" = "작품 업데이트 알림";
 "alertUpdateAlramSetup" = "알림을 설정하시면\n본편 업데이트 시 알려 드립니다.\n설정을 변경하여 알림을 받으시겠습니까?";
 "alertUpdateAlramRecommand" = "본편이 공개됩니다.\n알림을 설정하고 업데이트를 놓치지 마세요.";
@@ -319,7 +338,7 @@
 "titlePurchaseList" = "구매 목록";
 "titlePurchaseTicketList" = "이용권";
 "titleMyBenefits" = "나의 할인 해택";
-
+"titleMyAlram" = "알림 목록";
 
 /*
  PagePairing
@@ -399,9 +418,12 @@
 "myRegistPictureFammly" = "B tv에 가족사진 등록하기";
 "myWatchedInfo" = "최근 1개월 간 시청한 VOD 목록입니다.";
 "myTicketInfo" = "할인내역 및 구매 상품의 상세정보 확인, 변경은 B tv내 구매내역에서 확인하실 수 있습니다.";
+"myAlramInfo" = "최근 15일간 수신한 알림 메시지입니다.";
 "myWatchedEmpty" = "최근 시청 내역이 없습니다.";
 "myPurchaseEmpty" = "구매 내역이 없습니다.";
 "myCollectedEmpty" = "구매하신 소장 VOD가 없습니다.";
+"myAlramEmpty" = "수신한 알림 메시지가 없습니다.";
+"myAlramEmptyTip" = "공개 예정인 작품의 업데이트 알림이나 놓칠 수 없는 실시간 방송의 알림을 설정해서 받아보세요.";
 "myBookMarkedEmpty" = "찜한 콘텐츠가 없습니다.";
 "myBookMarkedInfo" = "찜 목록은 60개까지 저장됩니다.";
 

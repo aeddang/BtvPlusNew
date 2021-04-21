@@ -16,6 +16,7 @@ struct PageMy: PageView {
     @ObservedObject var watchedScrollModel: InfinityScrollModel = InfinityScrollModel()
     
     @State var isPairing:Bool = false
+    @State var marginBottom:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -61,10 +62,13 @@ struct PageMy: PageView {
                 .modifier(PageFull())
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }//PageDragingBody
+            .padding(.bottom, self.marginBottom)
             .onReceive(self.pairing.$status){status in
                 self.isPairing = ( status == .pairing )
             }
-            
+            .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
+                self.marginBottom = self.sceneObserver.safeAreaBottom + Dimen.app.bottom
+            }
             .onAppear{
                
             }

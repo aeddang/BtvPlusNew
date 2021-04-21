@@ -79,7 +79,7 @@ struct PageSetup: PageView {
                                 Text(String.pageText.setupAlram).modifier(ContentTitle())
                                 VStack(alignment:.leading , spacing:0) {
                                     SetupItem (
-                                        isOn: .constant(true),
+                                        isOn: self.$isPush,
                                         title: String.pageText.setupAlramMarketing ,
                                         subTitle: String.pageText.setupAlramMarketingText,
                                         tips: [
@@ -229,9 +229,7 @@ struct PageSetup: PageView {
                     self.appSceneObserver.event = .toast(
                         self.isDataAlram ? String.alert.dataAlramOn : String.alert.dataAlramOff
                     )
-                    
                 }
-                
             }
             .onReceive( [self.isAutoRemocon].publisher ) { value in
                 if !self.isInitate { return }
@@ -268,6 +266,24 @@ struct PageSetup: PageView {
                 self.appSceneObserver.event = .toast(
                     self.isAutoPlay ? String.alert.autoPlayOn : String.alert.autoPlayOff
                 )
+                
+            }
+            .onReceive( [self.isPush].publisher ) { value in
+                if !self.isInitate { return }
+                if self.willPush != nil { return }
+                
+                PageLog.d("onPush value " + value.description, tag:self.tag)
+                PageLog.d("onPush isPairing " + self.isPairing.description, tag:self.tag)
+                if self.pairing.user?.isAgree3 == self.isPush { return }
+                if self.isPairing == false {
+                    if value {
+                        self.appSceneObserver.alert = .needPairing()
+                        self.isPush = false
+                    }
+                    return
+                }
+                
+                self.setupPush(value)
                 
             }
             .onReceive( [self.isNextPlay].publisher ) { value in
@@ -313,7 +329,22 @@ struct PageSetup: PageView {
                 self.setupWatchLv(select: value ? Setup.WatchLv.lv4.getName() : nil)
                 self.isSetWatchLv = !value
             }
+            .onReceive(self.dataProvider.$result){ res in
+                guard let res = res else { return }
+                switch res.type {
+                case .updateAgreement(let isAgree) : self.onUpdatedPush(res, isAgree: isAgree)
+                default: do{}
+                }
+            }
+            .onReceive(self.dataProvider.$error){ err in
+                guard let err = err else { return }
+                switch err.type {
+                case .updateAgreement : self.onUpdatePushError()
+                default: do{}
+                }
+            }
             
+           
             .onReceive(self.pagePresenter.$event){ evt in
                 guard let evt = evt else {return}
                 
@@ -347,6 +378,8 @@ struct PageSetup: PageView {
     
     @State var isPairing:Bool = false
     @State var isDataAlram:Bool = false
+    @State var isPush:Bool = false
+    @State var willPush:Bool? = nil
     @State var isAutoRemocon:Bool = false
     @State var isRemoconVibration:Bool = false
     @State var isAutoPlay:Bool = false
@@ -377,8 +410,10 @@ struct PageSetup: PageView {
         self.isSetWatchLv = self.isPairing ? (SystemEnvironment.watchLv > 0) : false
         self.watchLvs = Setup.WatchLv.allCases.map{$0.getName()}
         self.selectedWatchLv = Setup.WatchLv.getLv(SystemEnvironment.watchLv)?.getName()
-        
+        self.isPush = self.pairing.user?.isAgree3 ?? false
         self.isInitate = true
+        PageLog.d("self.isPairing " + self.isPairing.description, tag:self.tag)
+        PageLog.d("self.isPush " + self.isPush.description, tag:self.tag)
     }
     
     private func setupWatchLv(select:String?){
@@ -431,6 +466,30 @@ struct PageSetup: PageView {
         )
     }
     
+    private func setupPush(_ select:Bool){
+        self.willPush = select
+        self.dataProvider.requestData(q: .init(type: .updateAgreement(select)))
+    }
+    
+    private func onUpdatedPush(_ res:ApiResultResponds, isAgree:Bool){
+        guard let data = res.data as? NpsResult  else { return onUpdatePushError() }
+        guard let resultCode = data.header?.result else { return onUpdatePushError() }
+        if resultCode == NpsNetwork.resultCode.success.code {
+            self.repository.updatePush(isAgree)
+            self.isPush = isAgree
+            self.appSceneObserver.event = .toast(
+                isAgree ? String.alert.pushOn : String.alert.pushOff
+            )
+            self.willPush = nil
+        } else {
+            onUpdatePushError()
+        }
+    }
+    
+    private func onUpdatePushError(){
+        self.appSceneObserver.event = .toast( String.alert.pushError )
+        self.willPush = nil
+    }
 }
 
 #if DEBUG

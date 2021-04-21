@@ -57,7 +57,9 @@ struct PageMyPurchase: PageView {
                 }
                 .modifier(PageFull(style:.dark))
                 .modifier(PageDragingSecondPriority(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                .clipped()
             }
+            
             .onReceive(self.purchaseScrollModel.$scrollPosition){ pos in
                 self.viewPagerModel.request = .reset
             }
@@ -120,7 +122,7 @@ struct PageMyPurchase_Previews: PreviewProvider {
                 .environmentObject(AppSceneObserver())
                 .environmentObject(KeyboardObserver())
                 .environmentObject(Pairing())
-                .frame(width: 565, height: 640, alignment: .center)
+                .frame(width: 320, height: 640, alignment: .center)
         }
     }
 }

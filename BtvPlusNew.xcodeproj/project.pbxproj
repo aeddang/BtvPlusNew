@@ -182,6 +182,7 @@
 		3193415425DDDAE8002F2000 /* SynopsisBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3193415325DDDAE8002F2000 /* SynopsisBody.swift */; };
 		319745BB261FEE7D0072945D /* PurchaseTicketList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319745BA261FEE7D0072945D /* PurchaseTicketList.swift */; };
 		319745C7262010F30072945D /* PagePurchaseTicketList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319745C6262010F30072945D /* PagePurchaseTicketList.swift */; };
+		3198FED9262FAF77008DCB2C /* PageMyAlram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3198FED8262FAF77008DCB2C /* PageMyAlram.swift */; };
 		319BAFA02604394F0007273F /* libTycheSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 319BAF9F260439120007273F /* libTycheSDK.a */; };
 		319BAFA326043A2F0007273F /* VoiceRecognition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319BAFA226043A2F0007273F /* VoiceRecognition.swift */; };
 		319BAFAE26043DCA0007273F /* Voice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319BAFAD26043DCA0007273F /* Voice.swift */; };
@@ -198,7 +199,9 @@
 		31A4A00E26281B840065E6C6 /* TipBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A4A00D26281B840065E6C6 /* TipBlock.swift */; };
 		31A73BCD261D99B1009A143C /* PageMyPurchase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A73BCC261D99B1009A143C /* PageMyPurchase.swift */; };
 		31C4BC8C262D154800BB2167 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31C4BC8B262D154800BB2167 /* GoogleService-Info.plist */; };
-		31C4BC97262D2D8600BB2167 /* NoticeCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BC96262D2D8600BB2167 /* NoticeCoreData.swift */; };
+		31C4BC97262D2D8600BB2167 /* NotificationCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BC96262D2D8600BB2167 /* NotificationCoreData.swift */; };
+		31C4BCC0262D71BA00BB2167 /* KeywordCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BCBF262D71BA00BB2167 /* KeywordCoreData.swift */; };
+		31C4BCCE262D745B00BB2167 /* AlramList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BCCD262D745B00BB2167 /* AlramList.swift */; };
 		31D3F4CB25E3368A008FDFEC /* WepManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4CA25E3368A008FDFEC /* WepManager.swift */; };
 		31D3F4DE25E36625008FDFEC /* PageMultiBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */; };
 		31D3F4E625E3A57A008FDFEC /* BannerBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */; };
@@ -243,7 +246,7 @@
 		D56C60542593462B009AE769 /* Pairing.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56C60532593462B009AE769 /* Pairing.swift */; };
 		D56C692B257D9EE600CF9AB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D56C692A257D9EE600CF9AB8 /* Assets.xcassets */; };
 		D56C692E257D9EE600CF9AB8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D56C692D257D9EE600CF9AB8 /* Preview Assets.xcassets */; };
-		D56C6933257D9EE600CF9AB8 /* ApiCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D56C6931257D9EE600CF9AB8 /* ApiCoreData.xcdatamodeld */; };
+		D56C6933257D9EE600CF9AB8 /* BtvPlus.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D56C6931257D9EE600CF9AB8 /* BtvPlus.xcdatamodeld */; };
 		D56C693E257D9EE600CF9AB8 /* BtvPlusNewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56C693D257D9EE600CF9AB8 /* BtvPlusNewTests.swift */; };
 		D56C6949257D9EE600CF9AB8 /* BtvPlusNewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56C6948257D9EE600CF9AB8 /* BtvPlusNewUITests.swift */; };
 		D56C699D257DA09E00CF9AB8 /* PageSceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56C697E257DA09E00CF9AB8 /* PageSceneDelegate.swift */; };
@@ -572,6 +575,7 @@
 		3193415325DDDAE8002F2000 /* SynopsisBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisBody.swift; sourceTree = "<group>"; };
 		319745BA261FEE7D0072945D /* PurchaseTicketList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseTicketList.swift; sourceTree = "<group>"; };
 		319745C6262010F30072945D /* PagePurchaseTicketList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePurchaseTicketList.swift; sourceTree = "<group>"; };
+		3198FED8262FAF77008DCB2C /* PageMyAlram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyAlram.swift; sourceTree = "<group>"; };
 		319BAF9E260439110007273F /* TycheSpeechRecognizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TycheSpeechRecognizer.h; sourceTree = "<group>"; };
 		319BAF9F260439120007273F /* libTycheSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTycheSDK.a; sourceTree = "<group>"; };
 		319BAFA226043A2F0007273F /* VoiceRecognition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecognition.swift; sourceTree = "<group>"; };
@@ -589,7 +593,9 @@
 		31A4A00D26281B840065E6C6 /* TipBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipBlock.swift; sourceTree = "<group>"; };
 		31A73BCC261D99B1009A143C /* PageMyPurchase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyPurchase.swift; sourceTree = "<group>"; };
 		31C4BC8B262D154800BB2167 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
-		31C4BC96262D2D8600BB2167 /* NoticeCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeCoreData.swift; sourceTree = "<group>"; };
+		31C4BC96262D2D8600BB2167 /* NotificationCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCoreData.swift; sourceTree = "<group>"; };
+		31C4BCBF262D71BA00BB2167 /* KeywordCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordCoreData.swift; sourceTree = "<group>"; };
+		31C4BCCD262D745B00BB2167 /* AlramList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlramList.swift; sourceTree = "<group>"; };
 		31D3F4CA25E3368A008FDFEC /* WepManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WepManager.swift; sourceTree = "<group>"; };
 		31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMultiBlock.swift; sourceTree = "<group>"; };
 		31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerBlock.swift; sourceTree = "<group>"; };
@@ -1345,6 +1351,15 @@
 			path = model;
 			sourceTree = "<group>";
 		};
+		31C4BCB8262D69D200BB2167 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				31C4BC96262D2D8600BB2167 /* NotificationCoreData.swift */,
+				31C4BCBF262D71BA00BB2167 /* KeywordCoreData.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
 		31D3F4C925E3364D008FDFEC /* web */ = {
 			isa = PBXGroup;
 			children = (
@@ -1375,6 +1390,7 @@
 				3166CBB62611639F00282891 /* PageModifyProfile.swift */,
 				31A73BCC261D99B1009A143C /* PageMyPurchase.swift */,
 				317C9773262443D4008F267D /* PageMyBenefits.swift */,
+				3198FED8262FAF77008DCB2C /* PageMyAlram.swift */,
 			);
 			path = my;
 			sourceTree = "<group>";
@@ -1421,6 +1437,7 @@
 				318B537025F049DA0052E4E0 /* PlayList.swift */,
 				317C97432623EEF7008F267D /* CouponList.swift */,
 				318F7B402625444C00774B17 /* CardList.swift */,
+				31C4BCCD262D745B00BB2167 /* AlramList.swift */,
 			);
 			path = list;
 			sourceTree = "<group>";
@@ -1543,7 +1560,7 @@
 				D56C692A257D9EE600CF9AB8 /* Assets.xcassets */,
 				D56C6934257D9EE600CF9AB8 /* Info.plist */,
 				31C4BC8B262D154800BB2167 /* GoogleService-Info.plist */,
-				D56C6931257D9EE600CF9AB8 /* ApiCoreData.xcdatamodeld */,
+				D56C6931257D9EE600CF9AB8 /* BtvPlus.xcdatamodeld */,
 				D56C692C257D9EE600CF9AB8 /* Preview Content */,
 			);
 			path = BtvPlusNew;
@@ -2082,8 +2099,8 @@
 		D5DABD6F258972D100DF5701 /* coreData */ = {
 			isa = PBXGroup;
 			children = (
+				31C4BCB8262D69D200BB2167 /* model */,
 				D5DABD782589746400DF5701 /* ApiCoreDataManager.swift */,
-				31C4BC96262D2D8600BB2167 /* NoticeCoreData.swift */,
 			);
 			path = coreData;
 			sourceTree = "<group>";
@@ -2433,6 +2450,7 @@
 				314C7EE125AC13C600C489FC /* HostDeviceInfo.swift in Sources */,
 				D56C6A2B257DA0C700CF9AB8 /* CustomCaptureSession.swift in Sources */,
 				31A4A00E26281B840065E6C6 /* TipBlock.swift in Sources */,
+				3198FED9262FAF77008DCB2C /* PageMyAlram.swift in Sources */,
 				315B55DC25A8026700B5B351 /* DevicePairingInfo.swift in Sources */,
 				3167196225FEED00005AC3D2 /* PageAuth.swift in Sources */,
 				D56C6A5C257DA0C700CF9AB8 /* StrokeRectButton.swift in Sources */,
@@ -2454,7 +2472,7 @@
 				D56C69A7257DA09E00CF9AB8 /* UIKitUtil.swift in Sources */,
 				D5DC475B25820FC3007EDD86 /* InsideInfo.swift in Sources */,
 				D5DC476E25821825007EDD86 /* GridPreview.swift in Sources */,
-				D56C6933257D9EE600CF9AB8 /* ApiCoreData.xcdatamodeld in Sources */,
+				D56C6933257D9EE600CF9AB8 /* BtvPlus.xcdatamodeld in Sources */,
 				318B53AB25F20A350052E4E0 /* PlayBlock.swift in Sources */,
 				D56C6B39257DACD800CF9AB8 /* ApiConst.swift in Sources */,
 				31D3F4CB25E3368A008FDFEC /* WepManager.swift in Sources */,
@@ -2496,8 +2514,10 @@
 				D56C6A41257DA0C700CF9AB8 /* Player.swift in Sources */,
 				318BA3872608B8C50093BC7D /* EmptySearchResult.swift in Sources */,
 				31A3E8782605F3F800BF044B /* SearchList.swift in Sources */,
+				31C4BCC0262D71BA00BB2167 /* KeywordCoreData.swift in Sources */,
 				317C974F26241B76008F267D /* Coupons.swift in Sources */,
 				319BAFAE26043DCA0007273F /* Voice.swift in Sources */,
+				31C4BCCE262D745B00BB2167 /* AlramList.swift in Sources */,
 				318C875825E64C3200ADDFE0 /* BannerData.swift in Sources */,
 				31A49FD82626751B0065E6C6 /* DiscountView.swift in Sources */,
 				D5688924259C29DE00F2F67A /* SpanText.swift in Sources */,
@@ -2690,7 +2710,7 @@
 				D56C6A56257DA0C700CF9AB8 /* CircleButton.swift in Sources */,
 				314D6B0725D0E9DE0003C749 /* SetupItem.swift in Sources */,
 				314D73BA25B54FD900907118 /* BookMarkButton.swift in Sources */,
-				31C4BC97262D2D8600BB2167 /* NoticeCoreData.swift in Sources */,
+				31C4BC97262D2D8600BB2167 /* NotificationCoreData.swift in Sources */,
 				319745BB261FEE7D0072945D /* PurchaseTicketList.swift in Sources */,
 				317C9774262443D4008F267D /* PageMyBenefits.swift in Sources */,
 				D56C6A48257DA0C700CF9AB8 /* RoundRectMask.swift in Sources */,
@@ -2923,7 +2943,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -2947,7 +2967,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.013;
+				MARKETING_VERSION = 1.014;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BtvPlusNew/store/Store-Bridging-Header.h";
@@ -2997,7 +3017,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -3016,7 +3036,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.013;
+				MARKETING_VERSION = 1.014;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BtvPlusNew/store/Store-Bridging-Header.h";
@@ -3155,13 +3175,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		D56C6931257D9EE600CF9AB8 /* ApiCoreData.xcdatamodeld */ = {
+		D56C6931257D9EE600CF9AB8 /* BtvPlus.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
 				D56C6932257D9EE600CF9AB8 /* BtvPlusNew.xcdatamodel */,
 			);
 			currentVersion = D56C6932257D9EE600CF9AB8 /* BtvPlusNew.xcdatamodel */;
-			path = ApiCoreData.xcdatamodeld;
+			path = BtvPlus.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

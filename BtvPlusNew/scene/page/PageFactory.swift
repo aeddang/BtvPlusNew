@@ -23,6 +23,7 @@ extension PageID{
     static let my:PageID = "my"
     static let myPurchase:PageID = "myPurchase"
     static let myBenefits:PageID = "myBenefits"
+    static let myAlram:PageID = "myAlram"
     static let modifyProile:PageID = "modifyProile"
     static let setup:PageID = "setup"
     static let pairingSetupUser:PageID = "pairingSetupUser"
@@ -178,6 +179,7 @@ struct PageFactory{
         case .my : return PageMy()
         case .myPurchase : return PageMyPurchase()
         case .myBenefits : return PageMyBenefits()
+        case .myAlram : return PageMyAlram()
         case .modifyProile : return PageModifyProfile()
         case .setup : return PageSetup()
         case .synopsis : return PageSynopsis()
@@ -261,7 +263,7 @@ struct PageSceneModel: PageModel {
     
     static func needBottomTab(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
-        case .home, .category, .multiBlock, .search: return true
+        case .home, .category, .multiBlock, .search, .my: return true
         default : return false
         }
     }

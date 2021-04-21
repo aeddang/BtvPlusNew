@@ -8,30 +8,24 @@
 import Foundation
 import CoreData
 
-class NoticeCoreData:PageProtocol {
-    static let name = "BtvPlus"
-    static let model = "NotificationEntity"
+class KeywordCoreData:PageProtocol {
+    static let model = "KeywordEntity"
     struct Keys {
-        static let badge = "badge"
-        static let title = "title"
-        static let body = "body"
-        static let body = "body"
-        static let body = "body"
-        static let body = "body"
+        static let itemId = "id"
     }
     
     func addKeyword(_ word:String){
         let container = self.persistentContainer
-        guard let entity = NSEntityDescription.entity(forEntityName: Self.name, in: container.viewContext) else { return }
+        guard let entity = NSEntityDescription.entity(forEntityName: Self.model, in: container.viewContext) else { return }
         let item = NSManagedObject(entity: entity, insertInto: container.viewContext)
-        item.setValue(word, forKey: )
+        item.setValue(word, forKey: Keys.itemId)
         self.saveContext()
     }
 
     func removeKeyword(_ word:String){
         let container = self.persistentContainer
         do {
-            let fetchRequest:NSFetchRequest<Keyword> = Keyword.fetchRequest()
+            let fetchRequest:NSFetchRequest<KeywordEntity> = KeywordEntity.fetchRequest()
             fetchRequest.predicate = NSPredicate.init(format: "id = '\(word)'")
             let objects = try container.viewContext.fetch(fetchRequest)
             for obj in objects {
@@ -46,7 +40,7 @@ class NoticeCoreData:PageProtocol {
     func getAllKeywords()->[String]{
         let container = self.persistentContainer
         do {
-            let items = try container.viewContext.fetch(Keyword.fetchRequest()) as! [Keyword]
+            let items = try container.viewContext.fetch(KeywordEntity.fetchRequest()) as! [KeywordEntity]
             return items.filter{$0.id != nil}.map{($0.id!)}
             
         } catch {
@@ -56,9 +50,10 @@ class NoticeCoreData:PageProtocol {
     }
     
     
+    
     // MARK: - Core Data stack
     private lazy var persistentContainer: NSPersistentCloudKitContainer = {
-        let container = NSPersistentCloudKitContainer(name: Self.name)
+        let container = NSPersistentCloudKitContainer(name: ApiCoreDataManager.name)
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
@@ -83,32 +78,3 @@ class NoticeCoreData:PageProtocol {
 }
 
 
-//{
-//   "aps":{
-//      "alert":{
-//         "title":"시놉 바로가기",
-//         "body":"push 메시지입니다."
-//      },
-//      "mutable-content":1
-//   },
-//    "system_data":{
-//      "messageId":"pixunptufh3uncbogyadn",
-//      "ackUrl":"",
-//      "blob":null,
-//      "hasMore":false,
-//      "type":"message"
-//   },
-//   "user_data":{
-//      "msgType":"content",
-//      "sysType":"Admin",
-//      "imgType":"icon",
-//      "landingPath":"SYNOP",
-//      "posterUrl":"PIMG",
-//      "title":"시놉 바로가기",
-//      "iconUrl":"IIMG",
-//      "receiveLimit":"",
-//      "destPos":"http:\\/\\/m.btvplus.co.kr?type=30&id=CE0001166079",
-//      "timestamp":"20201111180000",
-//      "notiType":"ALL"
-//   }
-//}

@@ -128,6 +128,20 @@ extension String {
     
     struct alert {
         public static var apns = "alertApns".loaalized()
+        public static var apnsNotice = "alertApnsNotice".loaalized()
+        public static var apnsEventWeb =  "alertApnsEventWeb".loaalized()
+        public static var apnsVodDetail = "alertApnsVodDetail".loaalized()
+        public static var apnsWebInApp = "alertApnsWebInApp".loaalized()
+        public static var apnsBrowser = "alertApnsBrowser".loaalized()
+        public static var apnsHome = "alertApnsHome".loaalized()
+        public static var apnsTrailer = "alertApnsTrailer".loaalized()
+        public static var apnsMenu = "alertApnsMenu".loaalized()
+        public static var apnsSynop = "alertApnsSynop".loaalized()
+        public static var apnsSeason = "alertApnsSeason".loaalized()
+        public static var apnsMonthly = "alertApnsMonthly".loaalized()
+        public static var apnsReserve = "alertApnsReserve".loaalized()
+        
+        
         public static var api = "alertApi".loaalized()
         public static var apiErrorServer = "alertApiErrorServer".loaalized()
         public static var apiErrorClient = "alertApiErrorClient".loaalized()
@@ -144,6 +158,9 @@ extension String {
         public static var connectNotFound = "alertConnectNotFound".loaalized()
         public static var connectNotFoundSub = "alertConnectNotFoundSub".loaalized()
      
+        public static var pushOn =  "alertPushOn".loaalized()
+        public static var pushOff =  "alertPushOff".loaalized()
+        public static var pushError =  "alertPushError".loaalized()
         
         public static var location = "alertLocation".loaalized()
         public static var locationSub = "alertLocationSub".loaalized()
@@ -298,6 +315,7 @@ extension String {
         public static let preview = "btnPreview".loaalized()
         public static let directview =  "btnDirectview".loaalized()
         public static let lookup =  "btnLookup".loaalized()
+        public static let alramOn = "btnAlramOn".loaalized()
     }
     struct player {
         public static let moveSec = "playerMoveSec".loaalized()
@@ -359,7 +377,7 @@ extension String {
         public static let purchaseList = "titlePurchaseList".loaalized()
         public static let purchaseTicketList = "titlePurchaseTicketList".loaalized()
         public static let myBenefits = "titleMyBenefits".loaalized()
-        
+        public static let myAlram = "titleMyAlram".loaalized()
     }
     
     struct pageText {
@@ -473,6 +491,9 @@ extension String {
         public static let myBookMarkedEmpty =  "myBookMarkedEmpty".loaalized()
         public static let myBookMarkedInfo = "myBookMarkedInfo".loaalized()
         public static let myTicketInfo = "myTicketInfo".loaalized()
+        public static let myAlramInfo = "myAlramInfo".loaalized()
+        public static let myAlramEmpty = "myAlramEmpty".loaalized()
+        public static let myAlramEmptyTip = "myAlramEmptyTip".loaalized()
         
         public static let myModifyNickname = "myModifyNickname".loaalized()
         public static let myModifyNicknameText = "myModifyNicknameText".loaalized()

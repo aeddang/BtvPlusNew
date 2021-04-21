@@ -9,10 +9,10 @@ import Foundation
 import CoreData
 
 class ApiCoreDataManager:PageProtocol {
-    static let name = "ApiCoreData"
+    static let name = "BtvPlus"
+    
     struct Models {
         static let item = "Item"
-        static let keyword = "Keyword"
     }
     struct Keys {
         static let itemId = "id"
@@ -26,7 +26,7 @@ class ApiCoreDataManager:PageProtocol {
         }
         
     }
-    
+
     func setData<T:Encodable>(key:String, data:T?){
         guard let data = data else { return }
         let jsonData = try! JSONEncoder().encode(data)
@@ -58,42 +58,6 @@ class ApiCoreDataManager:PageProtocol {
         }
     }
 
-    func addKeyword(_ word:String){
-        let container = self.persistentContainer
-        guard let entity = NSEntityDescription.entity(forEntityName: Models.keyword, in: container.viewContext) else { return }
-        let item = NSManagedObject(entity: entity, insertInto: container.viewContext)
-        item.setValue(word, forKey: Keys.itemId)
-        self.saveContext()
-    }
-
-    func removeKeyword(_ word:String){
-        let container = self.persistentContainer
-        do {
-            let fetchRequest:NSFetchRequest<Keyword> = Keyword.fetchRequest()
-            fetchRequest.predicate = NSPredicate.init(format: "id = '\(word)'")
-            let objects = try container.viewContext.fetch(fetchRequest)
-            for obj in objects {
-                container.viewContext.delete(obj)
-            }
-            self.saveContext()
-        } catch {
-            DataLog.e(error.localizedDescription, tag: self.tag)
-        }
-    }
-    
-    func getAllKeywords()->[String]{
-        let container = self.persistentContainer
-        do {
-            let items = try container.viewContext.fetch(Keyword.fetchRequest()) as! [Keyword]
-            return items.filter{$0.id != nil}.map{($0.id!)}
-            
-        } catch {
-            DataLog.e(error.localizedDescription, tag: self.tag)
-            return []
-        }
-    }
-    
-    
     
     // MARK: - Core Data stack
     private lazy var persistentContainer: NSPersistentCloudKitContainer = {

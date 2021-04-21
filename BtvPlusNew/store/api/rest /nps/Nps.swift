@@ -88,7 +88,7 @@ extension NpsNetwork{
     }
     static func checkPairing(res:ApiResultResponds) {
         guard let resData = res.data as? DevicePairingStatus  else { return }
-        if resData.header?.result != NpsNetwork.resultCode.success.code { return }
+        //if resData.header?.result != NpsNetwork.resultCode.success.code { return }
         guard let pairingStatus = resData.body?.pairing_status else { return }
         Self.pairingStatus = pairingStatus
         if pairingStatus == "0" {

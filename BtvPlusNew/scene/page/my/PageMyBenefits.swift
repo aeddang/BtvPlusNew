@@ -67,8 +67,9 @@ struct PageMyBenefits: PageView {
                 }
                 .modifier(PageFull(style:.dark))
                 .modifier(PageDragingSecondPriority(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                .clipped()
             }
-            .clipped()
+           
             .onReceive(self.couponScrollModel.$scrollPosition){ pos in
                 self.viewPagerModel.request = .reset
             }

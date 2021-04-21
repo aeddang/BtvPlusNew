@@ -12,19 +12,22 @@ import SwiftUI
 import Combine
 
 enum RepositoryStatus:Equatable{
-    case initate, ready, error(ApiResultError?)
+    case initate, ready, reset, error(ApiResultError?)
     
     var description: String {
         switch self {
         case .initate: return "initate"
         case .ready: return "ready"
+        case .reset: return "reset"
         case .error: return "error"
+            
         }
     }
     static func ==(lhs: RepositoryStatus, rhs: RepositoryStatus) -> Bool {
         switch (lhs, rhs) {
         case ( .initate, .initate):return true
         case ( .ready, .ready):return true
+        case ( .reset, .reset):return true
         default: return false
         }
     }
@@ -109,6 +112,7 @@ class Repository:ObservableObject, PageProtocol{
     func reset(isReleaseMode:Bool = true, isEvaluation:Bool = SystemEnvironment.isEvaluation){
         SystemEnvironment.isReleaseMode = isReleaseMode
         SystemEnvironment.isEvaluation = isEvaluation
+        self.status = .reset
         self.dataCancellable.forEach{$0.cancel()}
         self.dataCancellable.removeAll()
         self.apiManager.clear()
@@ -140,12 +144,14 @@ class Repository:ObservableObject, PageProtocol{
                 self.storage.saveUser(nil)
                 self.storage.clearDevice()
                 self.dataProvider.requestData(q: .init(type: .getGnb))
+                NotificationCoreData().removeAllNotice()
                 
             case .pairingCompleted :
                 self.storage.saveUser(self.pairing.user)
                 self.pairing.user?.pairingDate = self.storage.pairingDate
                 self.pairing.hostDevice?.modelName = self.storage.pairingModelName
                 self.dataProvider.requestData(q: .init(type: .getGnb))
+                self.appSceneObserver?.event = .toast(String.alert.pairingCompleted)
                 
             case .syncError :
                 self.appSceneObserver?.alert = .pairingRecovery
@@ -305,16 +311,19 @@ class Repository:ObservableObject, PageProtocol{
         self.dataProvider.bands.setDate(gnbData)
         self.appSceneObserver?.event = .debug("onReadyRepository " + (SystemEnvironment.isStage ? "STAGE" : "RELEASE"))
         DataLog.d("onReadyRepository " + self.status.description , tag:self.tag)
-        if self.status != .ready {self.status = .ready}
-        else {
+        if self.status == .reset {
             self.event = .reset
+            self.status = .ready
+            
+        }else if self.status != .ready {
+            self.status = .ready
         }
     }
     
     func retryRepository()
     {
         self.appSceneObserver?.event = .debug("retryRepository")
-        self.status = .initate
+        self.status = .reset
         self.apiManager.retryApi()
     }
     
@@ -333,6 +342,11 @@ class Repository:ObservableObject, PageProtocol{
         self.storage.updateUser(data)
         self.pairing.updateUser(data)
     }
+    
+    func updatePush(_ isAgree:Bool) {
+        self.pairing.updateUserAgreement(isAgree)
+    }
+    
     func updateAdultAuth(able:Bool){
         self.userSetup.isAdultAuth = able
         SystemEnvironment.isAdultAuth = able

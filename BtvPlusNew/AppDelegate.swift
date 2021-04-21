@@ -18,26 +18,26 @@ class AppObserver: ObservableObject, PageProtocol {
         pushToken = nil
     }
     
-    private(set) var apns:[String: Any]? = nil
+    private(set) var apns:[AnyHashable: Any]? = nil
     func reset(){
         page = nil
         apns = nil
     }
-    
     let gcmMessageIDKey = "gcm.message_id"
     let pageKey = "page"
     let apnsKey = "aps"
-    
-    
-    
+
     func handleApns(_ userInfo: [AnyHashable: Any]){
         if let messageID = userInfo[gcmMessageIDKey] {
              PageLog.d("Message ID: \(messageID)", tag: self.tag)
         }
+        
         if let aps = userInfo[apnsKey] as? [String: Any] {
             PageLog.d("aps: \(aps)" , tag: self.tag)
-            self.apns = aps
+            self.apns = userInfo
+            NotificationCoreData().addNotice(userInfo)
         }
+        
         if let pageJson = userInfo[pageKey] as? [String: Any] {
             PageLog.d("pageJson : \(pageJson)" , tag: self.tag)
             self.page = WhereverYouCanGo.parseIwillGo(json: pageJson)

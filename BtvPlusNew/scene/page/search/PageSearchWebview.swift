@@ -137,7 +137,7 @@ struct PageSearchWebview: PageView {
                 
             }
             .onAppear{
-                self.viewModel.onAppear(apiCoreDataManager:self.repository.apiCoreDataManager)
+                self.viewModel.onAppear()
                 let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.search
                 self.webViewModel.request = .link(linkUrl)
                 self.dataProvider.requestData(q: .init(id: self.tag, type: .getSearchKeywords, isOptional: true))

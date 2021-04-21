@@ -76,6 +76,7 @@ class Pairing:ObservableObject, PageProtocol {
         self.isPairingAgreement = false
         self.isPairingUser = false
         self.hostDevice = nil
+        self.user = nil
         self.status = .disConnect
         self.event = .disConnected
         self.authority.reset()
@@ -141,6 +142,10 @@ class Pairing:ObservableObject, PageProtocol {
     func updateUser(_ data:ModifyUserData){
         let user = self.user?.clone().update(data)
         self.user = user
+    }
+    
+    func updateUserAgreement(_ isAgree:Bool){
+        self.user?.update(isAgree: isAgree)
     }
     
     private func checkComple(){

@@ -188,7 +188,7 @@ class AccountManager : PageProtocol{
                 guard let data = res.data as? NpsResult  else { return }
                 if !self.checkSyncHeader(data.header) { return }
                 self.pairing.syncPairingAgreement()
-            
+                
             case .getGuestAgreement :
                 guard let data = res.data as? GuestAgreementInfo  else { return }
                 if !self.checkSyncHeader(data.header) { return }
@@ -216,7 +216,6 @@ class AccountManager : PageProtocol{
             case .getDevicePairingStatus :
                 self.pairing.checkCompleted(isSuccess: NpsNetwork.pairingStatus != "")
         
-                
             case .getPairingUserInfo :
                 guard let data = res.data as? PairingUserInfo  else { return }
                 self.pairing.updateUserinfo(data)

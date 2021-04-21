@@ -15,14 +15,12 @@ struct PageSearch: PageView {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var keyboardObserver:KeyboardObserver
-    
     @ObservedObject var viewModel:PageSearchModel = PageSearchModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var pageDataProviderModel:PageDataProviderModel = PageDataProviderModel()
     @ObservedObject var searchScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var resultScrollModel: InfinityScrollModel = InfinityScrollModel()
-    
     @State var isKeyboardOn:Bool = false
     @State var isVoiceSearch:Bool = false
     @State var isInputSearch:Bool = false
@@ -223,7 +221,7 @@ struct PageSearch: PageView {
                 }
             }
             .onAppear{
-                self.viewModel.onAppear(apiCoreDataManager:self.repository.apiCoreDataManager)
+                self.viewModel.onAppear()
                 self.dataProvider.requestData(q: .init(id: self.tag, type: .getSearchKeywords, isOptional: true))
             }
             

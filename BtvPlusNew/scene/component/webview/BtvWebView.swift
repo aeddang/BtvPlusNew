@@ -40,6 +40,7 @@ extension BtvWebView {
     static let opensrcLicense = "/view/v3.0/opensrclicense"
     static let faq = "/view/v3.0/customer/helpfaq"
     static let notice = "/view/v3.0/customer/notice"
+    static let event = "/view/v3.0/event/all"
     static let serviceTerms = "/view/v3.0/terms"
     
     static let happySenior = "/view/v3.0/setting/happysenior"

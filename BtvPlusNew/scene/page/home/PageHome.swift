@@ -217,7 +217,7 @@ struct PageHome: PageView {
         if self.pairing.status == .pairing {
             self.pairing.authority.requestAuth(.updateMonthlyPurchase(isPeriod: false))
         } else {
-            self.setupPurchaseTip ()
+            self.setupPurchaseTip()
         }
     }
     

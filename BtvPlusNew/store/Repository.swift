@@ -277,11 +277,11 @@ class Repository:ObservableObject, PageProtocol{
         case .getGnb :
             guard let data = res.data as? GnbBlock  else { return }
             if data.gnbs == nil || data.gnbs!.isEmpty {
-                self.appSceneObserver?.event = .debug("respondApi data.gnbs error")
+               // self.appSceneObserver?.event = .debug("respondApi data.gnbs error")
                 self.status = .error(nil)
                 return
             }
-            self.appSceneObserver?.event = .debug("respondApi getGnb")
+            //self.appSceneObserver?.event = .debug("respondApi getGnb")
             self.onReadyRepository(gnbData: data)
         
         default: do{}
@@ -303,13 +303,13 @@ class Repository:ObservableObject, PageProtocol{
                 self.storage.setServerConfig(configKey: config.key, path: config.value)
             }
         }
-        self.appSceneObserver?.event = .debug("onReadyApiManager")
+        //self.appSceneObserver?.event = .debug("onReadyApiManager")
         self.dataProvider.requestData(q: .init(type: .getGnb))
     }
     
     private func onReadyRepository(gnbData:GnbBlock){
         self.dataProvider.bands.setDate(gnbData)
-        self.appSceneObserver?.event = .debug("onReadyRepository " + (SystemEnvironment.isStage ? "STAGE" : "RELEASE"))
+        //self.appSceneObserver?.event = .debug("onReadyRepository " + (SystemEnvironment.isStage ? "STAGE" : "RELEASE"))
         DataLog.d("onReadyRepository " + self.status.description , tag:self.tag)
         if self.status == .reset {
             self.event = .reset
@@ -322,7 +322,7 @@ class Repository:ObservableObject, PageProtocol{
     
     func retryRepository()
     {
-        self.appSceneObserver?.event = .debug("retryRepository")
+        //self.appSceneObserver?.event = .debug("retryRepository")
         self.status = .reset
         self.apiManager.retryApi()
     }

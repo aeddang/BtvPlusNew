@@ -50,6 +50,19 @@ extension EuxpNetwork{
         case GNB_FREE = "BP_04"  // 무료
         case GNB_SCHEDULED = "BP_05"  // 공개 예정
         case GNB_OCEAN = "BP_08"  // 오션 월정액
+        
+        static func getType(_ value:String?)->GnbTypeCode?{
+            guard let key = value?.subString(start: 0, len: 5) else {return nil}
+            switch key {
+                case "BP_01": return .GNB_HOME
+                case "BP_02": return .GNB_MONTHLY
+                case "BP_03": return .GNB_CATEGORY
+                case "BP_04": return .GNB_FREE
+                case "BP_05": return .GNB_SCHEDULED
+                case "BP_08": return .GNB_OCEAN
+                default : return nil
+            }
+        }
     }
     
     enum SrisTypCd: String {

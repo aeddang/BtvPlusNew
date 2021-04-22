@@ -28,7 +28,7 @@ struct MyPointInfo: View {
                 .onTapGesture {
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.myBenefits)
-                            .addParam(key: .id, value: 0)
+                            .addParam(key: .id, value: PageMyBenefits.MenyType.coupon.rawValue)
                     )
                 }
             Spacer().modifier(LineVertical())
@@ -38,7 +38,7 @@ struct MyPointInfo: View {
                 .onTapGesture {
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.myBenefits)
-                            .addParam(key: .id, value: 1)
+                            .addParam(key: .id, value: PageMyBenefits.MenyType.point.rawValue)
                     )
                 }
             Spacer().modifier(LineVertical())
@@ -48,7 +48,7 @@ struct MyPointInfo: View {
                 .onTapGesture {
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.myBenefits)
-                            .addParam(key: .id, value: 2)
+                            .addParam(key: .id, value: PageMyBenefits.MenyType.cash.rawValue)
                     )
                 }
         }

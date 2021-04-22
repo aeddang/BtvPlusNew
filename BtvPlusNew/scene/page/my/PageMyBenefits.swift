@@ -6,7 +6,18 @@
 //
 import Foundation
 import SwiftUI
+extension PageMyBenefits{
+    enum MenyType: Int {
+        case coupon = 0
+        case point = 1
+        case cash = 2
+        case discount = 3
+    }
+}
+
 struct PageMyBenefits: PageView {
+    
+    
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var repository:Repository

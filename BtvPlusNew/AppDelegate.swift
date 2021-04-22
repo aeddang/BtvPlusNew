@@ -14,6 +14,7 @@ import Firebase
 class AppObserver: ObservableObject, PageProtocol {
     @Published fileprivate(set) var page:IwillGo? = nil
     @Published fileprivate(set) var pushToken:String? = nil
+    @Published private(set) var alram:AlramData? = nil
     func resetToken(){
         pushToken = nil
     }
@@ -21,6 +22,9 @@ class AppObserver: ObservableObject, PageProtocol {
     private(set) var apns:[AnyHashable: Any]? = nil
     func reset(){
         page = nil
+    }
+    func resetApns(){
+        alram = nil
         apns = nil
     }
     let gcmMessageIDKey = "gcm.message_id"
@@ -35,7 +39,7 @@ class AppObserver: ObservableObject, PageProtocol {
         if let aps = userInfo[apnsKey] as? [String: Any] {
             PageLog.d("aps: \(aps)" , tag: self.tag)
             self.apns = userInfo
-            NotificationCoreData().addNotice(userInfo)
+            self.alram = NotificationCoreData().addNotice(userInfo)
         }
         
         if let pageJson = userInfo[pageKey] as? [String: Any] {

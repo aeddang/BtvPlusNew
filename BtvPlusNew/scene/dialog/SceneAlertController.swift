@@ -159,34 +159,92 @@ struct SceneAlertController: PageComponent{
     }
 
     func setupRecivedApns() -> Bool{
-        guard let apns = self.appObserver.apns else { return false }
-        guard let alert = apns["alert"] as? [String:String] else { return false }
-        self.title = String.alert.apns
-        self.text = alert["title"] as String? ?? ""
-        self.subText = alert["body"] as String? ?? ""
-        if (self.appObserver.page?.page) != nil {
-            self.buttons = [
-                AlertBtnData(title: String.app.cancel, index: 0), 
-                AlertBtnData(title: String.app.corfirm, index: 1)
-            ]
-        }else{
-            self.buttons = [
-                AlertBtnData(title: String.app.corfirm, index: 0)
-            ]
+        if let alram = self.appObserver.alram  {
+            self.title = alram.title
+            self.text = alram.text
+            if let move = alram.moveButton {
+                self.buttons = [
+                    AlertBtnData(title: String.app.cancel, index: 0),
+                    AlertBtnData(title: move, index: 1)
+                ]
+            } else {
+                self.buttons = [
+                    AlertBtnData(title: String.app.corfirm, index: 0)
+                ]
+            }
+            return true
+        } else {
+            guard let apns = self.appObserver.apns else { return false }
+            guard let alert = apns["alert"] as? [String:String] else { return false }
+            self.title = String.alert.apns
+            self.text = alert["title"] as String? ?? ""
+            self.subText = alert["body"] as String? ?? ""
+            if (self.appObserver.page?.page) != nil {
+                self.buttons = [
+                    AlertBtnData(title: String.app.cancel, index: 0),
+                    AlertBtnData(title: String.app.corfirm, index: 1)
+                ]
+            }else{
+                self.buttons = [
+                    AlertBtnData(title: String.app.corfirm, index: 0)
+                ]
+            }
+            return true
         }
-        return true
     }
     
     func selectedRecivedApns(_ idx:Int) {
         if idx == 1 {
-            guard let page = self.appObserver.page?.page else { return }
-            if page.isPopup {
-                self.pagePresenter.openPopup(page)
-            }else{
-                self.pagePresenter.changePage(page)
+            if let data = self.appObserver.alram {
+
+                if let move = data.move {
+                    switch move {
+                    case .home, .category:
+                        var findBand:Band? = nil
+                        if let gnbTypCd = data.moveData?[PageParam.id] as? String {
+                            findBand = dataProvider.bands.getData(gnbTypCd: gnbTypCd)
+                        }else if let menuId = data.moveData?[PageParam.data] as? String {
+                            findBand = dataProvider.bands.getData(menuId: menuId)
+                        }
+                        guard let band = findBand else { return }
+                        self.pagePresenter.changePage(
+                            PageProvider
+                                .getPageObject(move)
+                                .addParam(params: data.moveData)
+                                .addParam(key: .id, value: band.menuId)
+                                .addParam(key: UUID().uuidString , value: "")
+                        )
+                        
+                    default :
+                        let pageObj = PageProvider.getPageObject(move)
+                        pageObj.params = data.moveData
+                        self.pagePresenter.openPopup(pageObj)
+                    }
+                }
+                else if let link = data.outLink {
+                    AppUtil.openURL(link)
+                }
+                
+                if let link = data.inLink {
+                    self.pagePresenter.openPopup(
+                        PageProvider
+                            .getPageObject(.webview)
+                            .addParam(key: .data, value: link)
+                            .addParam(key: .title , value: data.title)
+                    )
+                }
+                NotificationCoreData().readNotice(title: data.title ?? "", body: data.text ?? "")
+                
+            } else{
+                guard let page = self.appObserver.page?.page else { return }
+                if page.isPopup {
+                    self.pagePresenter.openPopup(page)
+                }else{
+                    self.pagePresenter.changePage(page)
+                }
             }
         }
-        self.appObserver.reset()
+        self.appObserver.resetApns()
     }
     
     

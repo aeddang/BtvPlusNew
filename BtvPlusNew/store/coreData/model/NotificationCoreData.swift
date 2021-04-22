@@ -20,7 +20,8 @@ class NotificationCoreData:PageProtocol {
         static let isRead = "isRead"
     }
     
-    func addNotice(_ userInfo: [AnyHashable: Any]){
+    @discardableResult
+    func addNotice(_ userInfo: [AnyHashable: Any])->AlramData?{
         var badge:Int = 0
         var title:String = ""
         var body:String = ""
@@ -42,9 +43,9 @@ class NotificationCoreData:PageProtocol {
             }
         }
         
-        
+        let alram = AlramData().setData(title: title, text: body, userData: userInfo as? [String: Any])
         let container = self.persistentContainer
-        guard let entity = NSEntityDescription.entity(forEntityName: Self.model, in: container.viewContext) else { return }
+        guard let entity = NSEntityDescription.entity(forEntityName: Self.model, in: container.viewContext) else { return alram }
         let item = NSManagedObject(entity: entity, insertInto: container.viewContext)
         item.setValue(title, forKey: Self.Keys.title)
         item.setValue(badge, forKey: Self.Keys.badge)
@@ -53,6 +54,8 @@ class NotificationCoreData:PageProtocol {
         item.setValue(false, forKey: Self.Keys.isRead)
         item.setValue(userInfo, forKey: Self.Keys.userInfo)
         self.saveContext()
+        return alram
+        
     }
 
     func removeNotice(_ noti:NotificationEntity){
@@ -98,7 +101,7 @@ class NotificationCoreData:PageProtocol {
                     removeNotice($0)
                 }
             }
-            return notices
+            return notices.sorted(by: {($0.date?.timeIntervalSince1970 ?? 0) > ($1.date?.timeIntervalSince1970 ?? 0)})
             
         } catch {
             DataLog.e(error.localizedDescription, tag: self.tag)

@@ -203,6 +203,20 @@ struct AppUtil{
            return nil
         }
     }
+    
+    static func getQurry(url: String, key:String) -> String? {
+        if let components = URLComponents(string: url) {
+            if let queryItems = components.queryItems {
+                if let item = queryItems.first(where: {$0.name == key}) {
+                    return item.value 
+                } else {
+                    return nil
+                }
+            }
+        }
+        return nil
+    }
 
+    
 }
 

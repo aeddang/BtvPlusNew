@@ -116,12 +116,11 @@ struct AppLayout: PageComponent{
         }
         .onReceive (self.appObserver.$page) { iwg in
             if !self.isInit { return }
-            if self.appObserver.apns != nil {
-                self.appSceneObserver.alert = .recivedApns
-                return
-            }
-            PageLog.d("onReceive : \(self.pageObservable.status)" , tag : self.tag)
             self.appObserverMove(iwg)
+        }
+        .onReceive (self.appObserver.$alram) { alram in
+            if !self.isInit { return }
+            self.appSceneObserver.alert = .recivedApns
         }
         .onReceive (self.appObserver.$pushToken) { token in
             guard let token = token else { return }
@@ -155,7 +154,7 @@ struct AppLayout: PageComponent{
         }
     }
     func onStoreInit(){
-        self.appSceneObserver.event = .debug("onStoreInit")
+        //self.appSceneObserver.event = .debug("onStoreInit")
         if SystemEnvironment.firstLaunch {
             self.pagePresenter.changePage(
                 PageProvider.getPageObject(.auth)
@@ -167,13 +166,18 @@ struct AppLayout: PageComponent{
     func onPageInit(){
         self.isInit = true
         self.isLoading = false
-        self.appSceneObserver.event = .debug("onPageInit")
+        //self.appSceneObserver.event = .debug("onPageInit")
         if !self.appObserverMove(self.appObserver.page) {
             let initMenuId = self.dataProvider.bands.datas.first?.menuId
             self.pagePresenter.changePage(
                 PageProvider.getPageObject(.home)
                     .addParam(key: .id, value: initMenuId)
             )
+        }
+        if self.appObserver.apns != nil {
+            self.appSceneObserver.event = .debug("apns exist")
+            self.appSceneObserver.alert = .recivedApns
+            return
         }
     }
     

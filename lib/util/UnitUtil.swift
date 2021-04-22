@@ -164,6 +164,25 @@ extension String{
         return text.sizeThatFits(CGSize.init(width: width, height: .infinity)).height
     }
     
+    func textLineNumFrom(width: CGFloat,fontSize: CGFloat,  fontName: String = "System Font") -> Int {
+        #if os(macOS)
+        typealias UXFont = NSFont
+        let text: NSTextField = .init(string: self)
+        text.font = NSFont.init(name: fontName, size: fontSize)
+
+        #else
+        typealias UXFont = UIFont
+        let text: UILabel = .init()
+        text.text = self
+        text.numberOfLines = 0
+
+        #endif
+        text.font = UXFont.init(name: fontName, size: fontSize)
+        text.lineBreakMode = .byWordWrapping
+        text.sizeThatFits(CGSize.init(width: width, height: .infinity))
+        return text.numberOfLines
+    }
+    
     func textSizeFrom(fontSize: CGFloat,  fontName: String = "System Font") -> CGSize {
         let font = UIFont.init(name: fontName, size: fontSize)
         let fontAttributes = [NSAttributedString.Key.font: font]

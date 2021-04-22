@@ -9,6 +9,7 @@ import SwiftUI
 struct PageMyAlram: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     
@@ -29,7 +30,8 @@ struct PageMyAlram: PageView {
                     if let datas = self.datas {
                         AlramList(
                             viewModel: self.alramScrollModel,
-                            datas: datas
+                            datas: datas,
+                            marginBottom: self.sceneObserver.safeAreaBottom
                         )
                     } else {
                         Spacer().modifier(MatchParent())
@@ -38,11 +40,15 @@ struct PageMyAlram: PageView {
                 .modifier(PageFull())
                 .modifier(PageDragingSecondPriority(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
+            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                if ani {
+                    let historys = NotificationCoreData().getAllNotices()
+                    self.datas = historys.map{AlramData().setData(data: $0)}
+                    self.appSceneObserver.isApiLoading = false
+                }
+            }
             .onAppear{
-                let historys:[AlramData] = NotificationCoreData()
-                    .getAllNotices()
-                    .map{AlramData().setData(data: $0)}
-                self.datas = historys
+                self.appSceneObserver.isApiLoading = true
             }
             .onDisappear{
                

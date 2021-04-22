@@ -14,7 +14,7 @@
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="isRead" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="title" optional="YES" attributeType="String"/>
-        <attribute name="userInfo" optional="YES" attributeType="Transformable"/>
+        <attribute name="userInfo" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
     </entity>
     <elements>
         <element name="Item" positionX="-11823.1171875" positionY="-7418.76953125" width="128" height="88"/>

@@ -78,9 +78,8 @@ struct PageSchedule: PageView {
             .onReceive(self.webViewModel.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
-                case .callFuncion(let method, let json, _) :
+                case .callFuncion(let method, _, _) :
                     switch method {
-                   
                     case WebviewMethod.bpn_closeWebView.rawValue :
                         self.pagePresenter.goBack()
                         break
@@ -96,7 +95,13 @@ struct PageSchedule: PageView {
             }
             
             .onAppear{
-                let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.schedule
+                var link = BtvWebView.schedule
+                if let obj = self.pageObject {
+                    if let svcId = obj.getParamValue(key: .id) as? String {
+                        link = link + "?svcId=" + svcId
+                    }
+                }
+                let linkUrl = ApiPath.getRestApiPath(.WEB) + link
                 self.webViewModel.request = .link(linkUrl)
             }
             .onDisappear{

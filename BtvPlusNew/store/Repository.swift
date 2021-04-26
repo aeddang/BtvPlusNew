@@ -48,7 +48,9 @@ class Repository:ObservableObject, PageProtocol{
     let webManager:WebManager
     let networkObserver:NetworkObserver
     let voiceRecognition:VoiceRecognition
+    let shareManager:ShareManager
     let apiCoreDataManager = ApiCoreDataManager()
+    
     let userSetup:Setup
     
     private let storage = LocalStorage()
@@ -77,7 +79,7 @@ class Repository:ObservableObject, PageProtocol{
         self.pagePresenter = pagePresenter
         self.userSetup = setup ?? Setup()
         self.voiceRecognition = VoiceRecognition(appSceneObserver: sceneObserver)
-        
+        self.shareManager = ShareManager(pagePresenter: pagePresenter)
         self.accountManager =  AccountManager(
             pairing: self.pairing,
             dataProvider: self.dataProvider)

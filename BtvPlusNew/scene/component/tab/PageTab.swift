@@ -23,7 +23,7 @@ struct PageTab: PageComponent{
             if self.title != nil {
                 Text(self.title!)
                     .modifier(BoldTextStyle(
-                                size: Font.size.mediumExtra,
+                                size: SystemEnvironment.isTablet ?  Font.size.light : Font.size.mediumExtra,
                                 color: self.style.textColor))
                     .lineLimit(1)
                     .modifier(ContentHorizontalEdges())

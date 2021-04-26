@@ -93,11 +93,12 @@ struct BannerItem: PageView {
                     .modifier(MatchHorizontal(height: ListItem.banner.type01.height))
             */
             default :
-                ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg16_9)
+               
+                ImageView(url: self.data.image, contentMode: SystemEnvironment.isTablet ? .fit : .fill, noImg: Asset.noImg16_9)
                     .modifier(MatchHorizontal(height: ListItem.banner.type01.height))
             }
         }
-        .background(Color.app.blueLight)
+        .background(self.data.bgColor ?? Color.app.blueLight)
         .clipped()
         .onTapGesture {
             if let move = data.move {

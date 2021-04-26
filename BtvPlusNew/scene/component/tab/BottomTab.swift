@@ -32,7 +32,8 @@ struct BottomTab: PageComponent{
                         isSelected:self.checkCategory(pageID: band.id, menuId: band.menuId),
                         defaultImage: band.off,
                         activeImage:band.on,
-                        text: band.text
+                        text: band.text,
+                        axis: SystemEnvironment.isTablet ? .horizontal : .vertical
                     ){
                         self.pagePresenter.changePage(
                             PageProvider

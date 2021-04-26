@@ -68,7 +68,7 @@ class AccountManager : PageProtocol{
             case .check :
                 self.dataProvider.requestData(q: .init(type: .getDevicePairingStatus, isOptional: true))
             case .userInfo :
-                self.dataProvider.requestData(q: .init(type: .getPairingUserInfo(self.pairing.hostDevice?.macAdress), isOptional: true))
+                self.dataProvider.requestData(q: .init(type: .getPairingUserInfo(self.pairing.hostDevice?.convertMacAdress), isOptional: true))
             default: do{}
             }
         }).store(in: &anyCancellable)

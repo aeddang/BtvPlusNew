@@ -27,7 +27,7 @@ struct DisconnectView: PageComponent{
                     .padding(.vertical, Dimen.margin.medium)
                 Spacer().modifier(MatchHorizontal(height: 0))
             }
-            .padding(.horizontal, Dimen.margin.light)
+            .padding(.horizontal, SystemEnvironment.isTablet ? 0 : Dimen.margin.light)
             FillButton(
                 text: String.button.connectBtv
             ){_ in
@@ -70,8 +70,8 @@ struct DisconnectView: PageComponent{
                 )
             }
         }
-        .padding(.top, Dimen.margin.light)
-        .padding(.horizontal, Dimen.margin.thin)
+        .padding(.top, SystemEnvironment.isTablet ? Dimen.margin.heavyExtra : Dimen.margin.light)
+        .padding(.horizontal, SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.thin)
         .padding(.bottom, Dimen.margin.thin + self.safeAreaBottom)
         .background(Color.brand.bg)
         .onReceive(self.sceneObserver.$safeAreaBottom){ pos in

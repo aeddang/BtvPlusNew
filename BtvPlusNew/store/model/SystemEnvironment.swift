@@ -19,7 +19,7 @@ struct SystemEnvironment {
     static var isReleaseMode = true
     static var isEvaluation = false
     static var needUpdate = false
-    
+    static var isTablet = AppUtil.isPad()
     static var isPurchaseAuth = false
     static var isAdultAuth = false { didSet { setImageLock()} }
     static var isWatchAuth = false { didSet { setImageLock()} }

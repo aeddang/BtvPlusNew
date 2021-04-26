@@ -11,6 +11,8 @@ import SwiftUI
 
 
 extension Font{
+    private static let isPad =  AppUtil.isPad()
+    
     struct customFont {
         public static let light =  Font.custom(Font.family.light, size: Font.size.light)
         public static let regular = Font.custom(Font.family.regular, size: Font.size.regular)
@@ -34,20 +36,19 @@ extension Font{
     }    
     
     struct size {
-        public static let heavy:CGFloat = 40
-        public static let black:CGFloat = 32 //*
+        public static let black:CGFloat =  32 //*
         public static let bold:CGFloat = 26 //*
-        public static let boldExtra:CGFloat = 24 //*
-        public static let large:CGFloat = 22 //*
+        public static let boldExtra:CGFloat = isPad ? 32 : 24 //*
+        public static let large:CGFloat =  22 //*
         public static let medium:CGFloat = 20 //*
         public static let mediumExtra:CGFloat = 18 //*
-        public static let regular:CGFloat = 16//*
-        public static let light:CGFloat = 15 //*
-        public static let lightExtra:CGFloat = 14 //*
-        public static let thin:CGFloat = 13 //*
-        public static let thinExtra:CGFloat = 12 //*
-        public static let tiny:CGFloat = 11 //*
-        public static let tinyExtra:CGFloat = 10 //*
+        public static let regular:CGFloat = isPad ? 24 : 16//*
+        public static let light:CGFloat =  isPad ? 21 : 15 //*
+        public static let lightExtra:CGFloat = isPad ? 20 : 14 //*
+        public static let thin:CGFloat = isPad ? 18 : 13 //*
+        public static let thinExtra:CGFloat = isPad ? 17 : 12 //*
+        public static let tiny:CGFloat = isPad ? 16 : 11 //*
+        public static let tinyExtra:CGFloat = isPad ? 15 : 10 //*
     }
 
 }

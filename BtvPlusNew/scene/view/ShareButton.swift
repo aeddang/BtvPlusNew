@@ -13,10 +13,21 @@ import SwiftUI
 
 
 struct ShareButton: PageView {
-    var id:String
-    
+    @EnvironmentObject var repository:Repository
+    var srisId:String? = nil
+    var epsdId:String? = nil
     var body: some View {
         Button(action: {
+            let epsdId = self.epsdId ?? ""
+            let srisId = self.srisId ?? ""
+            let link = ApiPath.getRestApiPath(.WEB) + SocialMediaSharingManage.sharinglink + "/" + srisId + "/" + epsdId
+            self.repository.shareManager.share(
+                Shareable(
+                    link:link,
+                    text: String.share.synopsis,
+                    useDynamiclink:false
+                )
+            )
             
         }) {
             VStack(spacing:0){
@@ -45,9 +56,9 @@ struct ShareButton_Previews: PreviewProvider {
     static var previews: some View {
         Form{
             ShareButton(
-                id:""
+              
             )
-            .environmentObject(AppSceneObserver())
+            .environmentObject(Repository())
         }
     }
 }

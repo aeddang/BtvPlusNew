@@ -82,52 +82,83 @@ struct TopBannerBgItem: PageComponent, Identifiable {
             KFImage(URL(string: self.data.image))
                 .resizable()
                 .placeholder {
-                    Image(Asset.noImg9_16)
+                    Image(SystemEnvironment.isTablet ? Asset.noImg16_9 : Asset.noImg9_16)
                         .resizable()
                 }
                 .cancelOnDisappear(true)
                 .loadImmediately()
-                .aspectRatio(contentMode: .fill)
+                .aspectRatio(contentMode: SystemEnvironment.isTablet ? .fit : .fill)
                 .frame(height:TopBanner.imageHeight)
+            if !SystemEnvironment.isTablet {
+                VStack{
+                    Image(Asset.shape.bgGradientTop)
+                    .renderingMode(.original)
+                    .resizable()
+                        .modifier(MatchHorizontal(height: 110 + self.sceneObserver.safeAreaTop))
+                    Spacer()
+                    Image(Asset.shape.bgGradientBottom)
+                    .renderingMode(.original)
+                    .resizable()
+                        .modifier(MatchHorizontal(height:TopBanner.height))
+                }
+            }
+            if SystemEnvironment.isTablet {
+                VStack(alignment:.leading){
+                    Spacer().modifier(MatchParent())
+                    if let logo = data.logo {
+                        KFImage(URL(string: logo))
+                            .resizable()
+                            .cancelOnDisappear(true)
+                            .loadImmediately()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(minWidth: 0, maxWidth: 400, minHeight: 0, maxHeight: 120, alignment:.bottomLeading)
+                            
+                    }
+                    else if data.title != nil {
+                        Text(data.title!)
+                            .modifier(BlackTextStyle(size: Font.size.black) )
+                            .multilineTextAlignment(.leading)
+                    }
+                    if data.subTitle != nil {
+                        Text(data.subTitle!)
+                            .modifier(MediumTextStyle(size: Font.size.lightExtra, color:Color.app.grey))
+                            .multilineTextAlignment(.leading)
+                            .padding(.top, Dimen.margin.lightExtra)
+                
+                    }
+                }
+                .padding(.horizontal, Dimen.margin.thin)
+                .padding(.bottom, TopBanner.maginBottomLogo)
+            } else {
+                VStack(){
+                    Spacer()
+                    if let logo = data.logo {
+                        KFImage(URL(string: logo))
+                            .resizable()
+                            .cancelOnDisappear(true)
+                            .loadImmediately()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(minWidth: 0, maxWidth: 280, minHeight: 0, maxHeight: 80, alignment:.bottom)
+                            .padding(.horizontal, Dimen.margin.heavy)
+                    }
+                    else if data.title != nil {
+                        Text(data.title!)
+                            .modifier(BlackTextStyle(size: Font.size.black) )
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, Dimen.margin.heavy)
+                    }
+                    if data.subTitle != nil {
+                        Text(data.subTitle!)
+                            .modifier(MediumTextStyle(size: Font.size.lightExtra, color:Color.app.grey))
+                            .multilineTextAlignment(.center)
+                            .padding(.top, Dimen.margin.lightExtra)
+                            .padding(.horizontal, Dimen.margin.thin)
+                    }
+                }
+                .offset(y:TopBanner.height/2 - TopBanner.maginBottomLogo - (TopBanner.imageHeight-TopBanner.height)/2)
+                .modifier(MatchHorizontal(height: TopBanner.height))
+            }
             
-            VStack{
-                Image(Asset.shape.bgGradientTop)
-                .renderingMode(.original)
-                .resizable()
-                    .modifier(MatchHorizontal(height: 110 + self.sceneObserver.safeAreaTop))
-                Spacer()
-                Image(Asset.shape.bgGradientBottom)
-                .renderingMode(.original)
-                .resizable()
-                    .modifier(MatchHorizontal(height:TopBanner.height))
-            }
-            VStack{
-                Spacer()
-                if let logo = data.logo {
-                    KFImage(URL(string: logo))
-                        .resizable()
-                        .cancelOnDisappear(true)
-                        .loadImmediately()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(minWidth: 0, maxWidth: 280, minHeight: 0, maxHeight: 80, alignment:.bottom)
-                        .padding(.horizontal, Dimen.margin.heavy)
-                }
-                else if data.title != nil {
-                    Text(data.title!)
-                        .modifier(BlackTextStyle(size: Font.size.black) )
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, Dimen.margin.heavy)
-                }
-                if data.subTitle != nil {
-                    Text(data.subTitle!)
-                        .modifier(MediumTextStyle(size: Font.size.lightExtra, color:Color.app.grey))
-                        .multilineTextAlignment(.center)
-                        .padding(.top, Dimen.margin.lightExtra)
-                        .padding(.horizontal, Dimen.margin.thin)
-                }
-            }
-            .offset(y:TopBanner.height/2 - TopBanner.maginBottomLogo - (TopBanner.imageHeight-TopBanner.height)/2)
-            .modifier(MatchHorizontal(height: TopBanner.height))
            
         }
         .modifier(MatchHorizontal(height: TopBanner.imageHeight))

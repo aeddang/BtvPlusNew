@@ -65,6 +65,7 @@ struct SynopsisBody: PageComponent{
                         FunctionViewer(
                             synopsisData :self.synopsisData,
                             srisId: self.srisId,
+                            epsdId:self.epsdId,
                             isBookmark: self.$isBookmark,
                             isLike: self.$isLike
                         )

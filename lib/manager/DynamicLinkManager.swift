@@ -9,11 +9,11 @@
 import Foundation
 import Firebase
 struct DynamicLinkMamager{
-    private static let deepLink = "http://valla.kr"
-    private static let urlPreFix = "https://valla.page.link"
-    private static let bundleID = "com.genesisblock.Valla"
-    private static let scheme = "valla"
-    private static let packageName = "com.genesisblock.valla"
+    private static let deepLink = "http://btvplusnew.com"
+    private static let urlPreFix = "https://btvplusnew.page.link"
+    private static let bundleID = "com.skb.btvplus.BtvPlusNew"
+    private static let scheme = "btvPlus"
+    private static let packageName = "com.skb.btvplus"
     
     static func getDynamicLinkBuilder(_ link:String = deepLink) -> DynamicLinkComponents?{
         guard let link = URL(string: link) else { return nil }

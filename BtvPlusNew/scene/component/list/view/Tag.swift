@@ -194,10 +194,11 @@ struct Tag: PageView {
                         .cancelOnDisappear(true)
                         .loadImmediately()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width:53, height: Dimen.icon.lightExtra)
+                        .frame(height: Dimen.icon.lightExtra, alignment: .trailing)
+                        .padding(.bottom, Dimen.margin.microExtra)
                 }
             }
-            .padding(.all, Dimen.margin.tiny)
+            .padding(.all, Dimen.margin.tinyExtra)
             .background(
                 LinearGradient(gradient: Gradient(colors: [Color.transparent.clear, Color.transparent.black70]), startPoint: .top, endPoint: .bottom)
                 

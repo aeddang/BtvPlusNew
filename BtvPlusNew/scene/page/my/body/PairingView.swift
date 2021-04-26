@@ -61,7 +61,7 @@ struct PairingView: PageComponent{
                         )
                     }
             }
-            .padding(.horizontal, Dimen.margin.thin)
+            .padding(.horizontal, SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.thin)
             HStack(spacing: 0){
                 FillButton(
                     text: String.button.alarm,
@@ -87,9 +87,9 @@ struct PairingView: PageComponent{
                     )
                 }
             }
-                .background(Color.app.blueLight)
-                .padding(.horizontal, Dimen.margin.thin)
-                .padding(.top, Dimen.margin.regular)
+            .background(Color.app.blueLight)
+            .padding(.horizontal, SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.thin)
+            .padding(.top, Dimen.margin.regular)
             MyPointInfo()
                 .padding(.horizontal, Dimen.margin.thin)
                 .padding(.top, Dimen.margin.regularExtra)
@@ -99,6 +99,7 @@ struct PairingView: PageComponent{
                     viewModel:self.watchedScrollModel,
                     pageDragingModel:self.pageDragingModel,
                     data: data,
+                    margin:SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.thin ,
                     useTracking:true)
                     .padding(.top, Dimen.margin.medium)
             }
@@ -139,7 +140,7 @@ struct PairingView: PageComponent{
                         AppUtil.openURL(ApiPath.getRestApiPath(.WEB) + BtvWebView.happySenior)
                     }
                 }
-                .padding(.horizontal, Dimen.margin.thin)
+                .padding(.horizontal, SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.thin)
                 .padding(.top, Dimen.margin.medium)
             }
         }

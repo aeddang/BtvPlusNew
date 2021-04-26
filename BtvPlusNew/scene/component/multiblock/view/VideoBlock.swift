@@ -16,6 +16,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var data: BlockData
+    var margin:CGFloat = Dimen.margin.thin
     var useTracking:Bool = false
     @State var datas:[VideoData] = []
     @State var listHeight:CGFloat = ListItem.video.size.height + ListItem.video.type01
@@ -55,6 +56,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                         viewModel:self.viewModel,
                         banners: self.data.leadingBanners,
                         datas: self.datas,
+                        margin:self.margin,
                         useTracking:self.useTracking
                         )
                         .modifier(MatchHorizontal(height: self.listHeight))

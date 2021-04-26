@@ -133,7 +133,7 @@ struct PagePairingSetupUser: PageView {
                     }
                     .modifier(MatchParent())
                     .background(Color.brand.bg)
-                    VStack{
+                    VStack(spacing: Dimen.margin.thin){
                         CheckBox(
                             isChecked: self.isAgree1 &&  self.isAgree2 && self.isAgree3,
                             text:String.pageText.pairingSetupUserAgreementAll,

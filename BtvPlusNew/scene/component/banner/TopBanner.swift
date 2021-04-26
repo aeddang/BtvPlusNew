@@ -10,10 +10,10 @@ import Foundation
 import SwiftUI
 import Combine
 extension TopBanner{
-    static let height:CGFloat = 477
+    static let height:CGFloat = SystemEnvironment.isTablet ? 456 : 477
     static let uiRange:CGFloat = 320
     static let barWidth:CGFloat = Dimen.bar.medium
-    static let imageHeight:CGFloat = 720
+    static let imageHeight:CGFloat = SystemEnvironment.isTablet ? 500 : 720
     static let barHeight = Dimen.line.medium
     static let marginBottom = Dimen.margin.medium
     static let maginBottomLogo = (Self.imageHeight - Self.height) + (Self.marginBottom + Self.barHeight + Dimen.margin.medium)

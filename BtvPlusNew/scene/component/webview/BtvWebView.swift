@@ -195,9 +195,10 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         var jsStr = ""
         if let dic = dic {
             let jsonString = AppUtil.getJsonString(dic: dic) ?? ""
-            jsStr = fn + "(\'" + jsonString + "\')"
+            jsStr = fn + "(\'" + jsonString + "\');"
         } else {
-            jsStr = fn + "()"
+            
+            jsStr = fn.last == ";" ? fn : fn + "();"
         }
         self.callJS(uiView, jsStr: jsStr)
     }
@@ -336,6 +337,8 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                         ComponentLog.d("jsonParam " + (jsonParam ?? ""), tag: self.tag)
                         ComponentLog.d("cbName " + (cbName ?? ""), tag: self.tag)
                         var dic:[String: Any]? = nil
+                        var value:String? = nil
+                        
                         switch fn {
                         case WebviewMethod.getNetworkState.rawValue :
                             dic = self.parent.repository.webManager.getNetworkState()
@@ -343,6 +346,8 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                             dic = self.parent.repository.webManager.getSTBInfo()
                         case WebviewMethod.getLogInfo.rawValue :
                             dic = self.parent.repository.webManager.getLogInfo()
+                        case WebviewMethod.bpn_requestPassAge.rawValue :
+                            value = self.parent.repository.webManager.getPassAge()
                             
                         case WebviewMethod.bpn_showSynopsis.rawValue :
                             if let jsonString = jsonParam {
@@ -358,6 +363,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                                     ComponentLog.e("json parse error", tag:"WebviewMethod.bpn_showSynopsis")
                                 }
                             }
+                        
                         case WebviewMethod.stopLoading.rawValue :
                             self.forceRetry(webView: webView)
                         default :
@@ -367,6 +373,12 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                             let js = BtvWebView.callJsPrefix + cb
                             DispatchQueue.main.async {
                                 self.parent.callJS(webView, fn: js, dic: dic)
+                            }
+                        }
+                        if let value = value, let cb = cbName, !cb.isEmpty {
+                            let js = BtvWebView.callJsPrefix + cb + "(" + value + ");"
+                            DispatchQueue.main.async {
+                                self.parent.callJS(webView, jsStr: js)
                             }
                         }
                     }

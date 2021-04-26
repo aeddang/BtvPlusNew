@@ -354,6 +354,12 @@ extension String {
         public static let searchText = "voiceSearchText".loaalized()
     }
 
+    struct share {
+        public static let inviteMsg =  "shareInviteMsg".loaalized()
+        public static let synopsis = "shareSynopsis".loaalized()
+        public static let complete = "shareComplete".loaalized()
+        public static let fail = "shareFail".loaalized()
+    }
   
     struct pageTitle {
         public static let connectBtv = "titleConnectBtv".loaalized()
@@ -429,7 +435,6 @@ extension String {
         public static let pairingGuideTitle4 = "pairingGuideTitle4".loaalized()
         public static let pairingGuideText4 = "pairingGuideText4".loaalized()
         public static let pairingGuideInfo4 = "pairingGuideInfo4".loaalized()
-      
         
         public static let setupApp = "setupApp".loaalized()
         public static let setupAppDataAlram = "setupAppDataAlram".loaalized()
@@ -576,6 +581,8 @@ extension String {
         public static let adultCertificationText1 = "adultCertificationText1".loaalized()
         public static let adultCertificationText2 = "adultCertificationText2".loaalized()
         public static let adultCertificationText3 = "adultCertificationText3".loaalized()
+        
+       
     }
     
 }

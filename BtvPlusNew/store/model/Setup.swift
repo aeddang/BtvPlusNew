@@ -16,7 +16,6 @@ class Setup:ObservableObject, PageProtocol {
         static let autoPlay = "autoPlay" + VS
         static let nextPlay = "nextPlay" + VS
         
-        static let pushAble = "pushAble" + VS
         static let isPurchaseAuth = "isPurchaseAuth" + VS
         static let isAdultAuth = "isAdultAuth" + VS
         static let watchLv = "watchLv" + VS
@@ -120,14 +119,7 @@ class Setup:ObservableObject, PageProtocol {
         }
     }
     
-    var pushAble:Bool{
-        set(newVal){
-            storage.set(newVal, forKey: Keys.pushAble)
-        }
-        get{
-            return storage.bool(forKey: Keys.pushAble)
-        }
-    }
+   
     
     var isPurchaseAuth:Bool{
         set(newVal){

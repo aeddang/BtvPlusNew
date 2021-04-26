@@ -119,8 +119,9 @@ struct AppLayout: PageComponent{
             self.appObserverMove(iwg)
         }
         .onReceive (self.appObserver.$alram) { alram in
+            if alram == nil {return}
             if !self.isInit { return }
-            self.appSceneObserver.alert = .recivedApns
+            self.appSceneObserver.alert = .recivedApns(alram)
         }
         .onReceive (self.appObserver.$pushToken) { token in
             guard let token = token else { return }
@@ -174,9 +175,9 @@ struct AppLayout: PageComponent{
                     .addParam(key: .id, value: initMenuId)
             )
         }
-        if self.appObserver.apns != nil {
+        if let alram = self.appObserver.alram  {
             self.appSceneObserver.event = .debug("apns exist")
-            self.appSceneObserver.alert = .recivedApns
+            self.appSceneObserver.alert = .recivedApns(alram)
             return
         }
     }

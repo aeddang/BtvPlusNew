@@ -12,7 +12,7 @@ import Combine
 
 enum SceneAlert:Equatable {
     case confirm(String?, String?,(Bool) -> Void), alert(String?, String?, (() -> Void)? = nil),
-         recivedApns, apiError(ApiResultError),
+         recivedApns(AlramData?), apiError(ApiResultError),
          connectWifi((Bool) -> Void) , notFoundDevice((Bool) -> Void), requestLocation((Bool) -> Void),
          
          limitedDevice(PairingInfo?), pairingError(NpsCommonHeader?), pairingUpdated(PairingUpdateData),
@@ -83,7 +83,7 @@ struct SceneAlertController: PageComponent{
             case .apiError(let data): self.selectedApi(idx, data:data)
             case .connectWifi(let completionHandler): self.selectedConnectWifi(idx, completionHandler:completionHandler)
             case .notFoundDevice(let completionHandler) : self.selectedNotFoundDevice(idx, completionHandler:completionHandler)
-            case .recivedApns: self.selectedRecivedApns(idx)
+            case .recivedApns(let data): self.selectedRecivedApns(idx, alram:data)
             case .requestLocation(let completionHandler): self.selectedRequestLocation(idx, completionHandler:completionHandler)
             case .limitedDevice(_) : self.selectedLimitedDevice(idx)
             case .pairingUpdated(_) : self.selectedPairingUpdated(idx)
@@ -134,8 +134,8 @@ struct SceneAlertController: PageComponent{
             case .pairingCheckFail : self.setupPairingCheckFail()
             case .like(_, let isLike) : self.setupLike( isLike: isLike)
             case .updateAlram(_, let isAlram) : self.setupUpdateAlram( isAlram: isAlram)
-            case .recivedApns:
-                let enable = self.setupRecivedApns()
+            case .recivedApns(let data):
+                let enable = self.setupRecivedApns(alram:data)
                 if !enable { return }
             default: do { return }
             }
@@ -158,11 +158,11 @@ struct SceneAlertController: PageComponent{
         self.currentAlert = nil
     }
 
-    func setupRecivedApns() -> Bool{
-        if let alram = self.appObserver.alram  {
-            self.title = alram.title
-            self.text = alram.text
-            if let move = alram.moveButton {
+    func setupRecivedApns(alram:AlramData?) -> Bool{
+        if let data = alram {
+            self.title = data.title
+            self.text = data.text
+            if let move = data.moveButton {
                 self.buttons = [
                     AlertBtnData(title: String.app.cancel, index: 0),
                     AlertBtnData(title: move, index: 1)
@@ -193,9 +193,9 @@ struct SceneAlertController: PageComponent{
         }
     }
     
-    func selectedRecivedApns(_ idx:Int) {
+    func selectedRecivedApns(_ idx:Int, alram:AlramData?) {
         if idx == 1 {
-            if let data = self.appObserver.alram {
+            if let data = alram {
 
                 if let move = data.move {
                     switch move {

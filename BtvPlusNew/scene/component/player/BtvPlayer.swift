@@ -218,8 +218,8 @@ struct BtvPlayer: PageComponent{
                     VideoList(viewModel:self.listViewModel,
                               datas: self.listData.datas,
                               contentID: self.contentID,
-                              useTracking : false,
-                              margin:PlayerUI.paddingFullScreen + PlayerListTab.padding ){ data in
+                              margin:PlayerUI.paddingFullScreen + PlayerListTab.padding,
+                              useTracking : false ){ data in
                         
                         guard let epsdId = data.epsdId else { return }
                         self.viewModel.btvPlayerEvent = .changeView(epsdId)

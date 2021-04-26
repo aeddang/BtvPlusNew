@@ -272,8 +272,6 @@ struct PageSetup: PageView {
                 if !self.isInitate { return }
                 if self.willPush != nil { return }
                 
-                PageLog.d("onPush value " + value.description, tag:self.tag)
-                PageLog.d("onPush isPairing " + self.isPairing.description, tag:self.tag)
                 if self.pairing.user?.isAgree3 == self.isPush { return }
                 if self.isPairing == false {
                     if value {
@@ -412,8 +410,6 @@ struct PageSetup: PageView {
         self.selectedWatchLv = Setup.WatchLv.getLv(SystemEnvironment.watchLv)?.getName()
         self.isPush = self.pairing.user?.isAgree3 ?? false
         self.isInitate = true
-        PageLog.d("self.isPairing " + self.isPairing.description, tag:self.tag)
-        PageLog.d("self.isPush " + self.isPush.description, tag:self.tag)
     }
     
     private func setupWatchLv(select:String?){
@@ -430,7 +426,6 @@ struct PageSetup: PageView {
             self.repository.updateWatchLv(nil)
             self.selectedWatchLv = nil
             self.willSelectedWatchLv = nil
-                PageLog.d("onSetupWatchLv " + self.isSetWatchLv.description, tag:self.tag)
             return
         }
         guard let find = self.watchLvs?.firstIndex(where: {$0 == select}) else {return}
@@ -438,7 +433,6 @@ struct PageSetup: PageView {
         self.repository.updateWatchLv(Setup.WatchLv.allCases[find])
         self.selectedWatchLv = select
         self.willSelectedWatchLv = nil
-        PageLog.d("onSetupWatchLv " + self.isSetWatchLv.description, tag:self.tag)
     }
     
     private func setupPurchaseAuth(_ select:Bool){

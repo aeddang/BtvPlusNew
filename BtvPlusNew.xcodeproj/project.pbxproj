@@ -215,6 +215,8 @@
 		31E50C6C261AA05400D0762C /* PageWatchHabit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E50C6B261AA05400D0762C /* PageWatchHabit.swift */; };
 		31E50C71261ACA7400D0762C /* NpsMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E50C70261ACA7400D0762C /* NpsMessage.swift */; };
 		31E50C79261AEBFE00D0762C /* ResultMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E50C78261AEBFE00D0762C /* ResultMessage.swift */; };
+		31E76D0B2632634A00710624 /* ShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E76D0A2632634A00710624 /* ShareManager.swift */; };
+		31E76D132632636500710624 /* Shareable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E76D122632636500710624 /* Shareable.swift */; };
 		31E8D7BC25CA5D470034BBC4 /* PlayerTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E8D7BB25CA5D470034BBC4 /* PlayerTop.swift */; };
 		31E8D7C125CA85190034BBC4 /* PlayerOptionSelectBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E8D7C025CA85190034BBC4 /* PlayerOptionSelectBox.swift */; };
 		31EA9FBD25F5ACAC0059E19B /* SimplePlayerUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EA9FBC25F5ACAC0059E19B /* SimplePlayerUI.swift */; };
@@ -610,6 +612,8 @@
 		31E50C6B261AA05400D0762C /* PageWatchHabit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageWatchHabit.swift; sourceTree = "<group>"; };
 		31E50C70261ACA7400D0762C /* NpsMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NpsMessage.swift; sourceTree = "<group>"; };
 		31E50C78261AEBFE00D0762C /* ResultMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultMessage.swift; sourceTree = "<group>"; };
+		31E76D0A2632634A00710624 /* ShareManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareManager.swift; sourceTree = "<group>"; };
+		31E76D122632636500710624 /* Shareable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shareable.swift; sourceTree = "<group>"; };
 		31E8D7BB25CA5D470034BBC4 /* PlayerTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTop.swift; sourceTree = "<group>"; };
 		31E8D7C025CA85190034BBC4 /* PlayerOptionSelectBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerOptionSelectBox.swift; sourceTree = "<group>"; };
 		31EA9FBC25F5ACAC0059E19B /* SimplePlayerUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimplePlayerUI.swift; sourceTree = "<group>"; };
@@ -1407,6 +1411,15 @@
 			path = body;
 			sourceTree = "<group>";
 		};
+		31E76D092632633200710624 /* share */ = {
+			isa = PBXGroup;
+			children = (
+				31E76D0A2632634A00710624 /* ShareManager.swift */,
+				31E76D122632636500710624 /* Shareable.swift */,
+			);
+			path = share;
+			sourceTree = "<group>";
+		};
 		31EA9FBB25F5ABDD0059E19B /* view */ = {
 			isa = PBXGroup;
 			children = (
@@ -1951,6 +1964,7 @@
 				31D3F4C925E3364D008FDFEC /* web */,
 				D56C603A25933EAB009AE769 /* account */,
 				D5DABD6F258972D100DF5701 /* coreData */,
+				31E76D092632633200710624 /* share */,
 				D56C6B1C257DACD800CF9AB8 /* storage */,
 				D56C6B21257DACD800CF9AB8 /* api */,
 				D56C6B1F257DACD800CF9AB8 /* DataProvider.swift */,
@@ -2403,6 +2417,7 @@
 				D50AB91125807AAA00649C4A /* EuxpModel.swift in Sources */,
 				D56C69B2257DA09E00CF9AB8 /* WhereverYouCanGo.swift in Sources */,
 				D56C6B10257DAADE00CF9AB8 /* SceneAlertController.swift in Sources */,
+				31E76D132632636500710624 /* Shareable.swift in Sources */,
 				315A8FC125AD114F00498B03 /* ApiUtil.m in Sources */,
 				D57298DD259D69EB00ED2CE6 /* PickerSelect.swift in Sources */,
 				D56C6A5D257DA0C700CF9AB8 /* CircularSpinner.swift in Sources */,
@@ -2470,6 +2485,7 @@
 				D56C6A55257DA0C700CF9AB8 /* ImageButton.swift in Sources */,
 				D50AB90C2580779500649C4A /* Synopsis.swift in Sources */,
 				D56C603C25933EBD009AE769 /* MdnsPairingManager.swift in Sources */,
+				31E76D0B2632634A00710624 /* ShareManager.swift in Sources */,
 				D56C6A30257DA0C700CF9AB8 /* ViewPager.swift in Sources */,
 				3182A0A6261877E800F7F07D /* InputBox.swift in Sources */,
 				D56C69A7257DA09E00CF9AB8 /* UIKitUtil.swift in Sources */,

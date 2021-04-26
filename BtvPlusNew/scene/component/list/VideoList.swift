@@ -231,8 +231,8 @@ struct VideoList: PageComponent{
     var banners:[BannerData]? = nil
     var datas:[VideoData]
     var contentID:String? = nil
-    var useTracking:Bool = false
     var margin:CGFloat = Dimen.margin.thin
+    var useTracking:Bool = false
     var action: ((_ data:VideoData) -> Void)? = nil
     var body: some View {
         InfinityScrollView(

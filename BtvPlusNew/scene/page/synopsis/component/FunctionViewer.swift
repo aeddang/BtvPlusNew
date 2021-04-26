@@ -12,21 +12,22 @@ struct FunctionViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     var synopsisData:SynopsisData? = nil
     var srisId:String?
+    var epsdId:String?
     @Binding var isBookmark:Bool?
     @Binding var isLike:LikeStatus?
     var body: some View {
         VStack(alignment:.leading , spacing:0) {
             HStack(spacing:Dimen.margin.regular){
-                if self.synopsisData != nil{
+                if let synopsisData = self.synopsisData {
                     BookMarkButton(
-                        data:self.synopsisData!,
+                        data:synopsisData,
                         isBookmark: self.$isBookmark
                     )
                     .buttonStyle(BorderlessButtonStyle())
                 }
-                if self.srisId != nil{
+                if let srisId = self.srisId{
                     LikeButton(
-                        srisId: self.srisId!,
+                        srisId: srisId,
                         isLike: self.$isLike
                     ){ ac in
                        
@@ -37,10 +38,13 @@ struct FunctionViewer: PageComponent{
                     id:""
                 )
                 .buttonStyle(BorderlessButtonStyle())
-                ShareButton(
-                    id:""
-                )
-                .buttonStyle(BorderlessButtonStyle())
+                if let srisId = self.srisId{
+                    ShareButton(
+                        srisId:srisId,
+                        epsdId:self.epsdId
+                    )
+                    .buttonStyle(BorderlessButtonStyle())
+                }
             }
         }
         .modifier(ContentHorizontalEdges())

@@ -47,7 +47,7 @@ struct PageAuth: PageView {
                 .modifier(MediumTextStyle(size: Font.size.boldExtra, color: Color.app.white))
                 .padding(.top, self.sceneObserver.safeAreaTop)
                 .fixedSize(horizontal: false, vertical: true)
-                .padding(.horizontal, Dimen.margin.heavyExtra)
+                .padding(.horizontal, Dimen.margin.regular)
             Text(String.pageText.authText)
                 .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
                 .padding(.top, Dimen.margin.regular)

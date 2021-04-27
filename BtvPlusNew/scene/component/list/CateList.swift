@@ -27,6 +27,7 @@ enum CateSubType {
 
 class CateData:InfinityData{
     private(set) var image: String = Asset.noImg1_1
+    var icon: String = Asset.noImg1_1
     private(set) var title: String? = nil
     private(set) var isAdult:Bool = false
     private(set) var subType: CateSubType = .list
@@ -34,6 +35,9 @@ class CateData:InfinityData{
     private(set) var menuId: String? = nil
     private(set) var blocks:[BlockItem]? = nil
     private(set) var cateType:CateBlock.ListType = .poster
+    
+    var isRowFirst:Bool = false
+    
     func setData(data:BlockItem ,idx:Int = -1) -> CateData {
         title = data.menu_nm
         index = idx
@@ -63,15 +67,16 @@ class CateData:InfinityData{
 
 extension CateList{
     static let magin:CGFloat = Dimen.margin.regularExtra
-    static let cellCount = 2
- }
+    static let cellCount = 3
+    static let horizenlalCellCount = 4
+}
 
 
 struct CateList: PageComponent{
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[CateDataSet]
     var useTracking:Bool = false
-    var margin:CGFloat = Dimen.margin.thin
+    var margin:CGFloat = Dimen.margin.heavyExtra
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
@@ -97,7 +102,7 @@ struct CateList: PageComponent{
 
 struct CateDataSet:Identifiable {
     private(set) var id = UUID().uuidString
-    var count:Int = CateList.cellCount
+    var count:Int = 1
     var datas:[CateData] = []
     var isFull:Bool = false
     var index:Int = -1
@@ -107,8 +112,11 @@ struct CateSet: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     var data:CateDataSet
     var body: some View {
-        HStack(spacing: CateList.magin){
+        HStack(spacing: 0){
             ForEach(self.data.datas) { data in
+                if !data.isRowFirst {
+                    Spacer()
+                }
                 CateItem( data:data )
                 .onTapGesture {
                     switch data.subType {
@@ -142,9 +150,15 @@ struct CateSet: PageComponent{
                     
                     
                 }
+                
             }
             if !self.data.isFull {
-                Spacer().frame(width: ListItem.cate.size.width, height: ListItem.cate.size.height)
+                let add = self.data.count - self.data.datas.count - 1
+                ForEach(0...add, id: \.self) { data in
+                    Spacer()
+                    Spacer().frame(width: ListItem.cate.size.width, height: ListItem.cate.size.height)
+                }
+                
             }
         }
     }
@@ -154,8 +168,9 @@ struct CateSet: PageComponent{
 struct CateItem: PageView {
     var data:CateData
     var body: some View {
-        ZStack{
-            VStack(spacing:Dimen.margin.tinyExtra){
+        
+        VStack(spacing:Dimen.margin.tinyExtra){
+            ZStack{
                 KFImage(URL(string: self.data.image))
                     .resizable()
                     .placeholder { Image(Asset.noImg1_1).resizable() }
@@ -163,21 +178,15 @@ struct CateItem: PageView {
                     .loadImmediately()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
-                
-                Text(self.data.title!)
-                    .modifier(BoldTextStyle(size: Font.size.lightExtra))
             }
+            .frame(
+                width: ListItem.cate.size.width,
+                height: ListItem.cate.size.height)
+            .background(Color.app.blueLight)
+            .clipShape(Circle())
+            Text(self.data.title!)
+                .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.greyLight))
         }
-        .frame(
-            width: ListItem.cate.size.width,
-            height: ListItem.cate.size.height)
-        .background(Color.app.blueLightExtra.opacity(0.3))
-        .clipShape(RoundedRectangle(cornerRadius:Dimen.radius.regular))
-        .overlay(
-            RoundedRectangle(cornerRadius:Dimen.radius.regular)
-                .stroke(Color.app.blueLightExtra.opacity(0.5), lineWidth: 1)
-        )
-        
     }
     
 }
@@ -196,6 +205,7 @@ struct CateList_Previews: PreviewProvider {
             .environmentObject(PagePresenter()).modifier(MatchParent())
         }
         .frame(width: 320, height: 540)
+        .background(Color.brand.bg)
     }
 }
 #endif

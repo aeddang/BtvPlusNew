@@ -567,6 +567,15 @@ extension String {
         public static let authTextMic = "authTextMic".loaalized()
         public static let authTextLocation = "authTextLocation".loaalized()
         
+        public static let introTitle1 = "introTitle1".loaalized()
+        public static let introText1 = "introText1".loaalized()
+        public static let introTitle2 = "introTitle2".loaalized()
+        public static let introText2 = "introText2".loaalized()
+        public static let introTitle3 = "introTitle3".loaalized()
+        public static let introText3 = "introText3".loaalized()
+        public static let introTitle4 = "introTitle4".loaalized()
+        public static let introText4 = "introText4".loaalized()
+        
         public static let searchLatest = "searchLatest".loaalized()
         public static let searchPopularity = "searchPopularity".loaalized()
         public static let searchResult = "searchResult".loaalized()

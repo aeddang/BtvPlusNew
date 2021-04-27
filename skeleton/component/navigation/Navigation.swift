@@ -23,7 +23,7 @@ struct NavigationButton: Identifiable {
 }
 
 struct NavigationBuilder{
-    var index: Int
+    var index: Int = -1
     var textModifier:TextModifier = TextModifier(
         family:Font.family.medium,
         size: Font.size.regular,
@@ -32,7 +32,7 @@ struct NavigationBuilder{
     )
     var marginH:CGFloat = 0
     var marginV:CGFloat = Dimen.margin.thin
-   
+    var imgSize:CGSize = CGSize(width: Dimen.icon.thin, height: Dimen.icon.thin)
     
     func getNavigationButtons(texts:[String], color:Color? = nil) -> [NavigationButton] {
         let range = 0 ..< texts.count
@@ -40,13 +40,19 @@ struct NavigationBuilder{
             self.createButton(txt:text, idx:index, color:color)
         }
     }
-    func getNavigationButtons(images:[String], size:CGSize) -> [NavigationButton] {
+    func getNavigationButtons(datas:[(String,String)], size:CGSize? = nil,  color:Color? = nil) -> [NavigationButton] {
+        let range = 0 ..< datas.count
+        return zip(range, datas ).map {index, data in
+            self.createButton(txt:data.0, img:data.1,  idx:index, color:color, size:size)
+        }
+    }
+    func getNavigationButtons(images:[String], size:CGSize? = nil) -> [NavigationButton] {
         let range = 0 ..< images.count
         return zip(range, images).map {index, image in
             self.createButton(img:image, idx:index, size: size)
         }
     }
-    func getNavigationButtons(images:[(String,String)], size:CGSize) -> [NavigationButton] {
+    func getNavigationButtons(images:[(String,String)], size:CGSize? = nil) -> [NavigationButton] {
         let range = 0 ..< images.count
         return zip(range, images).map {index, image in
             self.createButton(img:image, idx:index, size: size)
@@ -72,7 +78,8 @@ struct NavigationBuilder{
             
         )
     }
-    private func createButton(img:String, idx:Int, size:CGSize) -> NavigationButton {
+    private func createButton(img:String, idx:Int, size:CGSize?) -> NavigationButton {
+        let size = size ?? self.imgSize
         return NavigationButton(
             id: UUID.init().uuidString,
             body: AnyView(
@@ -89,7 +96,32 @@ struct NavigationBuilder{
             data:img
         )
     }
-    private func createButton(img:(String,String), idx:Int, size:CGSize) -> NavigationButton {
+    private func createButton(txt:String, img:String, idx:Int, color:Color? = nil, size:CGSize? = nil) -> NavigationButton {
+        let size = size ?? self.imgSize
+        return NavigationButton(
+            id: UUID.init().uuidString,
+            body: AnyView(
+                VStack(spacing:Dimen.margin.micro){
+                    Image(img)
+                    .renderingMode(.original).resizable()
+                    .scaledToFit()
+                    .frame(width:size.width, height: size.height)
+                    Text(txt)
+                        .font(.custom(Font.family.black, size: textModifier.size))
+                        .foregroundColor(self.index != idx ? textModifier.color : (color ?? textModifier.activeColor))
+                       
+                }
+            ),
+            idx:idx,
+            frame: CGSize (
+                width: size.width + (marginH*2.0),
+                height: size.height + (marginV*2.0)
+            ),
+            data:img
+        )
+    }
+    private func createButton(img:(String,String), idx:Int, size:CGSize? = nil) -> NavigationButton {
+        let size = size ?? self.imgSize
         return NavigationButton(
             id: UUID.init().uuidString,
             body: AnyView(

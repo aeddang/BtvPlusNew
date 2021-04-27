@@ -34,37 +34,42 @@ class BannerData:InfinityData, PageProtocol{
         return self
     }
     
-    func setData(data:EventBannerItem, type: EuxpNetwork.BannerType = .list ,idx:Int = -1) -> BannerData {
+    func setData(data:EventBannerItem, type: EuxpNetwork.BannerType = .list, isFloat:Bool = false ,idx:Int = -1) -> BannerData {
         switch type {
         case .list:
             image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: ListItem.banner.type01)  ?? image
             self.type = .list
             
         case .page:
-            if SystemEnvironment.isTablet {
-                image = ImagePath.thumbImagePath(filePath: data.width_focus_off_path , size: CGSize(width: 480, height: 0))  ?? image
-            } else {
+            if isFloat {
                 image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: CGSize(width: 240, height: 0))  ?? image
+            } else{
+                if SystemEnvironment.isTablet {
+                    image = ImagePath.thumbImagePath(filePath: data.width_focus_off_path , size: CGSize(width: 480, height: 0))  ?? image
+                } else {
+                    image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: CGSize(width: 240, height: 0))  ?? image
+                }
+                logo = ImagePath.thumbImagePath(filePath: data.logo_img_path, size: CGSize(width: 200, height: 0), convType: .alpha)
+                
+                if let str = data.bnr_img_expl {
+                    subTitle = str.isEmpty ? nil : str
+                }
+                if let str = data.bnr_img_btm_expl , !str.isEmpty{
+                    if subTitle == nil || subTitle?.isEmpty == true {
+                        subTitle = str
+                    }else{
+                        subTitle! += ("\n" + str)
+                    }
+                }
+                if let str = data.bnr_img_btm_expl2 , !str.isEmpty {
+                    if subTitle == nil || subTitle?.isEmpty == true {
+                        subTitle = str
+                    }else{
+                        subTitle! += ("\n" + str)
+                    }
+                }
             }
-            logo = ImagePath.thumbImagePath(filePath: data.logo_img_path, size: CGSize(width: 200, height: 0), convType: .alpha)
             
-            if let str = data.bnr_img_expl {
-                subTitle = str.isEmpty ? nil : str
-            }
-            if let str = data.bnr_img_btm_expl , !str.isEmpty{
-                if subTitle == nil || subTitle?.isEmpty == true {
-                    subTitle = str
-                }else{
-                    subTitle! += ("\n" + str)
-                }
-            }
-            if let str = data.bnr_img_btm_expl2 , !str.isEmpty {
-                if subTitle == nil || subTitle?.isEmpty == true {
-                    subTitle = str
-                }else{
-                    subTitle! += ("\n" + str)
-                }
-            }
             self.type = .top
         }
         if let colorCode = data.img_bagr_color_code {

@@ -14,20 +14,26 @@ import Combine
 struct DivisionTab : PageComponent {
     @ObservedObject var viewModel:NavigationModel = NavigationModel()
     var buttons:[NavigationButton]
+    var strokeWidth:CGFloat = Dimen.line.light
+    var divisionMargin:CGFloat = 0
+    var height:CGFloat = Dimen.tab.regularExtra
+    var bgColor:Color = Color.transparent.clear
     var body: some View {
         HStack(spacing:0){
             ForEach(self.buttons) { btn in
                 self.createButton(btn)
-                if btn.idx != self.buttons.count {
+                if btn.idx != (self.buttons.count - 1) {
                     Spacer().modifier(MatchVertical(width: 1))
                         .background(Color.app.blueLightExtra)
+                        .padding(.vertical , self.divisionMargin)
                 }
             }
         }
-        .modifier(MatchHorizontal(height: Dimen.tab.regularExtra))
+        .modifier(MatchHorizontal(height: self.height))
+        .background(self.bgColor)
         .clipShape( RoundedRectangle(cornerRadius: Dimen.radius.light))
         .overlay(
-            RoundedRectangle(cornerRadius: Dimen.radius.light).stroke( Color.app.blueLightExtra ,lineWidth: 1)
+            RoundedRectangle(cornerRadius: Dimen.radius.light).stroke( Color.app.blueLightExtra ,lineWidth: self.strokeWidth)
         )
         
     }//body
@@ -36,7 +42,8 @@ struct DivisionTab : PageComponent {
         return Button<AnyView?>(
             action: { self.performAction(btn.id, index: btn.idx)}
         ){ btn.body }
-        .modifier(MatchHorizontal(height: btn.frame.height))
+        .modifier(MatchParent())
+        .background( btn.idx == self.viewModel.index ? Color.app.blueLightExtra : Color.transparent.clearUi)
         .buttonStyle(BorderlessButtonStyle())
         
     }

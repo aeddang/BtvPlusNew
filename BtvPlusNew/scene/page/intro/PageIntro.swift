@@ -7,12 +7,75 @@
 import Foundation
 import SwiftUI
 
+struct IntroItem: PageComponent, Identifiable {
+    @EnvironmentObject var sceneObserver:PageSceneObserver
+    let id = UUID().uuidString
+    let title:String
+    let text:String
+    let asset: String
+    
+    @State var sceneOrientation: SceneOrientation = .portrait
+    var body: some View {
+        ZStack{
+            if self.sceneOrientation == .portrait {
+                VStack(alignment: .leading, spacing: 0){
+                    Spacer().modifier(MatchHorizontal(height: 0))
+                    Text(self.title)
+                        .modifier(BoldTextStyle(size: Font.size.boldExtra, color: Color.app.white))
+                        .padding(.top, Dimen.margin.heavyExtra)
+                        .padding(.leading, Dimen.margin.regular)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(self.text)
+                        .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.greyDeep))
+                        .padding(.top, Dimen.margin.thin)
+                        .padding(.leading, Dimen.margin.regular)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Image(asset)
+                        .renderingMode(.original)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                }
+            } else {
+                HStack(alignment: .top, spacing: 0){
+                    VStack(alignment: .leading, spacing: 0){
+                        Text(self.title)
+                            .modifier(BoldTextStyle(size: Font.size.boldExtra, color: Color.app.white))
+                            .padding(.top, Dimen.margin.heavyExtra)
+                            .fixedSize(horizontal: false, vertical: true)
+                        Text(self.text)
+                            .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.greyDeep))
+                            .padding(.top, Dimen.margin.thin)
+                            .fixedSize(horizontal: false, vertical: true)
+                        
+                    }
+                    .padding(.leading, Dimen.margin.regular)
+                    Image(asset)
+                        .renderingMode(.original)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                }
+               
+            }
+        }
+        .onReceive(self.sceneObserver.$isUpdated){ _ in
+            self.sceneOrientation = self.sceneObserver.sceneOrientation
+        }
+    }
+}
+
+
 struct PageIntro: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
-    let pages: [PageViewProtocol] = [
+    let pages: [PageViewProtocol] = SystemEnvironment.isTablet ? [
+        IntroItem(title: String.pageText.introTitle1, text: String.pageText.introText1, asset:  Asset.source.introT01),
+        IntroItem(title: String.pageText.introTitle2, text: String.pageText.introText2, asset:  Asset.source.introT02),
+        IntroItem(title: String.pageText.introTitle3, text: String.pageText.introText3, asset:  Asset.source.introT03),
+        IntroItem(title: String.pageText.introTitle4, text: String.pageText.introText4, asset:  Asset.source.introT04)
+    ] :
+    [
         ResourceItem(asset: Asset.source.intro01),
         ResourceItem(asset: Asset.source.intro02),
         ResourceItem(asset: Asset.source.intro03)
@@ -20,9 +83,9 @@ struct PageIntro: PageView {
     @State var index: Int = 0
     @State var leading:CGFloat = 0
     @State var trailing:CGFloat = 0
-   
+    @State var sceneOrientation: SceneOrientation = .portrait
     var body: some View {
-        VStack(alignment: .center, spacing: 0){
+        VStack(alignment: self.sceneOrientation == .portrait ? .center : .leading, spacing: 0){
             CPImageViewPager(
                 viewModel : self.viewModel,
                 pages: self.pages
@@ -48,7 +111,7 @@ struct PageIntro: PageView {
                         .modifier(NumberMediumTextStyle(size: Font.size.lightExtra, color: Color.app.greyLight))
                     
                 }
-                .padding(.horizontal, Dimen.margin.lightExtra)
+                .padding(.horizontal, Dimen.margin.regular)
                 .frame( height:70)
             }
             if self.index < (self.pages.count - 1) {
@@ -82,6 +145,9 @@ struct PageIntro: PageView {
         .onReceive( self.viewModel.$index ){ idx in
             self.setBar(idx:idx)
         }
+        .onReceive(self.sceneObserver.$isUpdated){ _ in
+            self.sceneOrientation = self.sceneObserver.sceneOrientation
+        }
         .onAppear{
            // self.setBar(idx:self.index)
         }
@@ -90,7 +156,7 @@ struct PageIntro: PageView {
     
     private func setBar(idx:Int){
         let count = self.pages.count
-        let size = Dimen.bar.regular
+        let size = SystemEnvironment.isTablet ? Dimen.bar.medium : Dimen.bar.regular
         self.index = idx
         let cidx = idx + 1
         withAnimation{

@@ -88,10 +88,11 @@ struct FloatingBanner: PageComponent {
                     }
                 }
                 .padding(.horizontal, Dimen.margin.regularExtra)
-                .frame( height:50)
+                .frame( height:SystemEnvironment.isTablet ? 70 :  50)
                 .background(Color.app.white)
             }
-            .frame(width: 300, height: 430)
+            .frame(width: SystemEnvironment.isTablet ? 420 : 300,
+                   height: SystemEnvironment.isTablet ? 532 :430)
             .background(Color.brand.bg)
             .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.medium))
         }

@@ -87,19 +87,20 @@ struct TopBannerBgItem: PageComponent, Identifiable {
                 }
                 .cancelOnDisappear(true)
                 .loadImmediately()
-                .aspectRatio(contentMode: SystemEnvironment.isTablet ? .fit : .fill)
-                .frame(height:TopBanner.imageHeight)
+                .aspectRatio(contentMode:  .fill)
+                .modifier(MatchHorizontal(height:TopBanner.imageHeight))
+                //.frame(height:TopBanner.imageHeight)
             if !SystemEnvironment.isTablet {
                 VStack{
                     Image(Asset.shape.bgGradientTop)
                     .renderingMode(.original)
                     .resizable()
-                        .modifier(MatchHorizontal(height: 110 + self.sceneObserver.safeAreaTop))
+                    .modifier(MatchHorizontal(height: 110 + self.sceneObserver.safeAreaTop))
                     Spacer()
                     Image(Asset.shape.bgGradientBottom)
                     .renderingMode(.original)
                     .resizable()
-                        .modifier(MatchHorizontal(height:TopBanner.height))
+                    .modifier(MatchHorizontal(height:TopBanner.height))
                 }
             }
             if SystemEnvironment.isTablet {

@@ -22,13 +22,15 @@ struct HeaderBanner: PageComponent {
     var data: BannerData
     var close:(() -> Void)? = nil
     var body: some View {
-        ZStack(alignment: .trailing ){
+        HStack(spacing:0){
             if let img = self.data.resourceImage {
                 Image(img)
                     .renderingMode(.original)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .modifier(MatchParent())
+                    //.modifier(MatchParent())
+                    
+                    .background(Color.app.grey)
             } else {
                 KFImage(URL(string: self.data.image))
                     .resizable()
@@ -38,9 +40,11 @@ struct HeaderBanner: PageComponent {
                     }
                     .cancelOnDisappear(true)
                     .loadImmediately()
-                    .aspectRatio(contentMode: .fill)
-                    .modifier(MatchParent())
+                    .aspectRatio(contentMode: .fit)
+                    //.modifier(MatchParent())
+                    
             }
+            Spacer()
             if let close = self.close {
                 Button(action: {
                     close()

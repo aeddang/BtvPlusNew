@@ -66,7 +66,7 @@ struct ListItem{
     }
     
     struct cate {
-       static let size:CGSize = CGSize(width: 150, height: 92)
+        static let size:CGSize = isPad ? CGSize(width: 88, height: 88) :  CGSize(width: 62, height: 62)
     }
     
     struct play {

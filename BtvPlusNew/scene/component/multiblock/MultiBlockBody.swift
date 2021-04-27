@@ -55,13 +55,13 @@ extension MultiBlockBody {
     private static var isLegacy:Bool {
         get{
             if #available(iOS 14.0, *) { return false }
-            else { return false }
+            else { return true }
         }
     }
     private static var isRecycle:Bool {
         get{
             if #available(iOS 14.0, *) { return true }
-            else { return false }
+            else { return true }
         }
     }
     private static var isPreLoad:Bool = true

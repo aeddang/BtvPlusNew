@@ -16,7 +16,7 @@ struct Dimen{
         public static let heavyExtra:CGFloat = isPad ? 76 : 40 //*
         public static let medium:CGFloat = 30 //*
         public static let mediumExtra:CGFloat = 24 //*
-        public static let regular:CGFloat = 20 //*
+        public static let regular:CGFloat = isPad ? 40 : 20 //*
         public static let regularExtra:CGFloat = isPad ? 32 : 16 //*
         public static let light:CGFloat = isPad ? 28 : 14 //*
         public static let lightExtra:CGFloat = isPad ? 24 : 12 //*
@@ -51,7 +51,9 @@ struct Dimen{
     
     struct tab {
         public static let titleWidth:CGFloat = isPad ? 100 : 60
+       
         public static let heavy:CGFloat = 72//*
+        public static let heavyExtra:CGFloat = isPad ? 98 : 66//*
         public static let medium:CGFloat = 56 //*
         public static let regular:CGFloat = isPad ? 63 : 46 //*
         public static let regularExtra:CGFloat = isPad ? 52 : 38 //*
@@ -65,7 +67,7 @@ struct Dimen{
         public static let heavyExtra:CGFloat = 64 //*
         public static let medium:CGFloat = isPad ? 60 : 50 //*
         public static let regular:CGFloat = isPad ? 56 : 40 //*
-        public static let regularExtra:CGFloat = 35 //*
+        public static let regularExtra:CGFloat = isPad ? 42 : 35 //*
         public static let light:CGFloat = 32 //*
         public static let lightExtra:CGFloat = 30//*
         public static let thin:CGFloat = 20//*
@@ -88,7 +90,7 @@ struct Dimen{
     }
     
     struct bar {
-        public static let medium:CGFloat = 20//*
+        public static let medium:CGFloat = isPad ? 30 : 20//*
         public static let regular:CGFloat = 7 //*
     }
     

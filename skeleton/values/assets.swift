@@ -110,7 +110,7 @@ extension Asset{
         
         public static let cateEvent = "icCategoryBtnEvent"
         public static let cateTip = "icCategoryBtnTip"
-        
+        public static let cateBCash = "icCategoryBtnBcash"
         public static let alarmOn = "icSynopAlarmFoc"
         public static let alarmOff = "icSynopAlarmNor"
         public static let dragDown = "icDragDown"
@@ -211,6 +211,13 @@ extension Asset{
         public static let intro01 = "imgIosIntro01"
         public static let intro02 = "imgIosIntro02"
         public static let intro03 = "imgIosIntro03"
+        public static let intro04 = "imgIosIntro04"
+        
+        public static let introT01 = "imgIntro01T"
+        public static let introT02 = "imgIntro02T"
+        public static let introT03 = "imgIntro03T"
+        public static let introT04 = "imgIntro04T"
+       
         
         public static let pairingTutorial01 = "imgPairingTutorial01"
         public static let pairingTutorial02 = "imgPairingTutorial02"

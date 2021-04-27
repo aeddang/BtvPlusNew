@@ -16,9 +16,10 @@ struct PageCategory: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel:PageDataProviderModel = PageDataProviderModel()
-    
-    let listWidth:CGFloat = (ListItem.cate.size.width * CGFloat(CateList.cellCount)) + CateList.magin
+    @ObservedObject var navigationModel:NavigationModel = NavigationModel()
+    @State var listWidth:CGFloat = 0
     @State var headerHeight:CGFloat = 0
+    
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -29,37 +30,35 @@ struct PageCategory: PageView {
                     Spacer().modifier(MatchParent())
                 } else {
                     CateList( datas: self.datas)
-                        .padding(.top, self.headerHeight - CateList.magin)
+                        .padding(.top, self.headerHeight)
                         .modifier(MatchVertical(width: self.listWidth))
                 }
-                HStack(spacing:Dimen.margin.thinExtra){
-                    if let data = self.eventData  {
-                        FillButton(
-                            text: self.eventData?.title ?? "",
-                            image: Asset.icon.cateEvent,
-                            bgColor: Color.app.blueLightExtra
-                        ){_ in
-                            self.openPopup(data: data)
-                        }
-                    }
-                    if let data = self.tipData {
-                        FillButton(
-                            text: self.tipData?.title ?? "",
-                            image: Asset.icon.cateTip,
-                            bgColor: Color.app.blueLightExtra
-                        ){_ in
-                            self.openPopup(data: data)
-                        }
-                    }
-                }
-                .frame(width: self.listWidth)
-                .padding(.vertical, Dimen.margin.thin)
+                DivisionTab(
+                    viewModel: self.navigationModel,
+                    buttons: self.tabs,
+                    strokeWidth : 0,
+                    divisionMargin: Dimen.margin.thin,
+                    height: Dimen.tab.heavyExtra,
+                    bgColor : Color.app.blueLight
+                    )
+                    .frame(width: self.listWidth)
+                    .padding(.vertical, Dimen.margin.thin)
             }
             .padding(.bottom, Dimen.app.bottom + self.sceneObserver.safeAreaBottom)
         }
         .modifier(PageFull())
         .onReceive(self.appSceneObserver.$headerHeight){ hei in
             withAnimation{ self.headerHeight = hei }
+        }
+        .onReceive(self.sceneObserver.$screenSize){ _ in
+            if SystemEnvironment.isTablet {
+                self.resetSize()
+            }
+        }
+        .onReceive(self.navigationModel.$index) { idx in
+            guard let data = self.tabDatas?[idx] else {return}
+            self.openPopup(data: data)
+            
         }
         .onReceive(self.viewModel.$event ){ evt in
             guard let evt = evt else {return}
@@ -81,9 +80,14 @@ struct PageCategory: PageView {
         }
     }//body
     
+    @State var tabs:[NavigationButton] = []
+    @State var originDatas:[CateData]? = nil
     @State var datas:[CateDataSet] = []
-    @State var eventData:CateData? = nil
-    @State var tipData:CateData? = nil
+    
+    @State var tabDatas:[CateData]? = nil
+    
+    //@State var eventData:CateData? = nil
+    //@State var tipData:CateData? = nil
     private func setupDatas(menuId:String, openId:String? = nil){
         guard let blocksData = self.dataProvider.bands.getData(menuId: menuId)?.blocks else { return }
         var cateDatas = blocksData.map{ block in
@@ -92,19 +96,39 @@ struct PageCategory: PageView {
         if SystemEnvironment.isEvaluation {
             cateDatas = cateDatas.filter{!$0.isAdult}
         }
-        let count = CateList.cellCount
+        self.originDatas = cateDatas
+        let openData:CateData? = self.resetSize(openId: openId)
+        guard let open = openData else { return }
+        self.openPopup(data: open, openId: openId)
+        
+    }
+    
+    @discardableResult
+    private func resetSize(openId:String? = nil) -> CateData?{
+        let margin:CGFloat = SystemEnvironment.isTablet
+            ? Dimen.margin.heavy  : Dimen.margin.heavyExtra
+        self.listWidth = self.sceneObserver.screenSize.width - margin * 2.0
+        guard let cateDatas = self.originDatas else { return nil }
+        self.datas = []
+        var tabDatas:[CateData] = []
+        let count = self.sceneObserver.sceneOrientation == .portrait ? CateList.cellCount : CateList.horizenlalCellCount
         var rows:[CateDataSet] = []
         var cells:[CateData] = []
         var total = cateDatas.count
         var openData:CateData? = nil
         let findIds = openId?.split(separator: "|")
         cateDatas.forEach{ d in
+            d.isRowFirst = false
             if let menuId = d.menuId, let fids = findIds{
                 if fids.first(where: {$0 == menuId}) != nil { openData = d }
             }
             switch d.subType{
-            case .tip : tipData = d
-            case .event : eventData = d
+            case .tip :
+                d.icon = Asset.icon.cateTip
+                tabDatas.append(d)
+            case .event :
+                d.icon = Asset.icon.cateEvent
+                tabDatas.append(d)
             default :
                 if cells.count < count {
                     cells.append(d)
@@ -122,10 +146,22 @@ struct PageCategory: PageView {
                 CateDataSet( count: count, datas: cells,isFull: cells.count == count, index: total)
             )
         }
+        rows.forEach{$0.datas.first?.isRowFirst = true}
         self.datas.append(contentsOf: rows)
-        guard let open = openData else { return }
-        self.openPopup(data: open, openId: openId)
-        
+        if self.tabDatas == nil {
+            self.navigationModel.index = -1
+            let naviDatas:[(String,String)] = tabDatas.map { ($0.title ?? "", $0.icon ) }
+            self.tabs = NavigationBuilder(
+                textModifier: TextModifier(
+                    family:Font.family.medium,
+                    size: Font.size.lightExtra,
+                    color: Color.app.grey,
+                    activeColor: Color.app.white
+                    )
+                )
+            .getNavigationButtons(datas: naviDatas) 
+        }
+        return openData
     }
     
     private func openPopup(data:CateData, openId:String? = nil){

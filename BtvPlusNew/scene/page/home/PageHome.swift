@@ -191,10 +191,10 @@ struct PageHome: PageView {
         guard let banners = resData.banners else { return }
         if banners.isEmpty { return }
         let topDatas = banners.filter{$0.bbnr_exps_mthd_cd == "01"}.map{ d in
-            BannerData().setData(data: d, type: .page)
+            BannerData().setData(data: d, type: .page, isFloat: false)
         }
         let floating = banners.filter{$0.bbnr_exps_mthd_cd == "03"}.map{ d in
-            BannerData().setData(data: d, type: .page)
+            BannerData().setData(data: d, type: .page, isFloat: true)
         }
         if !floating.isEmpty {
             self.appSceneObserver.event = .floatingBanner(floating)

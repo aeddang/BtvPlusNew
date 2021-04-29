@@ -346,6 +346,8 @@ extension String {
     
     struct footer {
         public static let text = "footerText".loaalized()
+        public static let text1 = "footerText1".loaalized() // for pad
+        public static let text2 = "footerText2".loaalized() // for pad
         public static let button = "footerButton".loaalized()
     }
     
@@ -402,13 +404,26 @@ extension String {
         public static let pairingBtnUserCertification = "pairingBtnUserCertification".loaalized()
         public static let pairingBtnUserCertificationSub = "pairingBtnUserCertificationSub".loaalized()
         
+        public static let pairingText1Tablet = "pairingText1Tablet".loaalized()
+        public static let pairingTitle1Tablet = "pairingTitle1Tablet".loaalized()
+        public static let pairingTitle2Tablet = "pairingTitle2Tablet".loaalized()
+        public static let pairingBtnWifiSubTablet = "pairingBtnWifiSubTablet".loaalized()
+        public static let pairingBtnBtvCertificationSubTablet = "pairingBtnBtvCertificationSubTablet".loaalized()
+        public static let pairingBtnUserCertificationSubTablet = "pairingBtnUserCertificationSubTablet".loaalized()
+        
         public static let pairingSetupUserText1 = "pairingSetupUserText1".loaalized()
         public static let pairingSetupUserText2 = "pairingSetupUserText2".loaalized()
+        public static let pairingSetupUserText2Tablet = "pairingSetupUserText2Tablet".loaalized()
         public static let pairingSetupCharacterSelect = "pairingSetupCharacterSelect".loaalized()
         public static let pairingSetupUserAgreementAll = "pairingSetupUserAgreementAll".loaalized()
         public static let pairingSetupUserAgreement1 = "pairingSetupUserAgreement1".loaalized()
         public static let pairingSetupUserAgreement2 = "pairingSetupUserAgreement2".loaalized()
         public static let pairingSetupUserAgreement3 = "pairingSetupUserAgreement3".loaalized()
+        
+        public static let pairingGuideText1Horizontal = "pairingGuideText1Horizontal".loaalized()
+        public static let pairingGuideTitle2Horizontal = "pairingGuideTitle2Horizontal".loaalized()
+        public static let pairingGuideTitle3Horizontal = "pairingGuideTitle3Horizontal".loaalized()
+        public static let pairingGuideTitle4Horizontal = "pairingGuideTitle4Horizontal".loaalized()
         
         public static let pairingDeviceText1 = "pairingDeviceText1".loaalized()
         public static let pairingDeviceText2 = "pairingDeviceText2".loaalized()

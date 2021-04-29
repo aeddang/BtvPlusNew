@@ -61,6 +61,7 @@ struct BoldTextStyle: ViewModifier {
             .font(.custom(textModifier.family, size: textModifier.size))
             .foregroundColor(textModifier.color)
             .lineSpacing(2)
+            
     }
 }
 struct MediumTextStyle: ViewModifier {

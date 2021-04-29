@@ -273,7 +273,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
             switch  pageObject.animationType {
             case .vertical:
                 popupContent.pageObservable.pagePosition.y = UIScreen.main.bounds.height
-            case .horizental:
+            case .horizontal:
                 popupContent.pageObservable.pagePosition.x = UIScreen.main.bounds.width
             default: do{}
             }
@@ -312,7 +312,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
             switch  pageObject.animationType {
             case .vertical:
                 popupContent.pageObservable.pagePosition.y = UIScreen.main.bounds.height
-            case .horizental:
+            case .horizontal:
                 popupContent.pageObservable.pagePosition.x = UIScreen.main.bounds.width
             default: do{}
             }
@@ -370,7 +370,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                     switch  pageObject.animationType {
                     case .vertical:
                         pop.pageObservable.pagePosition.y = UIScreen.main.bounds.height
-                    case .horizental:
+                    case .horizontal:
                         pop.pageObservable.pagePosition.x = UIScreen.main.bounds.width
                     default: break
                     }

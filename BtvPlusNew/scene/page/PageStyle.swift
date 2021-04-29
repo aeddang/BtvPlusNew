@@ -96,17 +96,23 @@ struct PageDragingSecondPriority: ViewModifier {
 }
 
 struct ContentEdges: ViewModifier {
-    var margin:CGFloat = Dimen.margin.thin
     func body(content: Content) -> some View {
         return content
-            .padding(.all, margin)
+            .padding(.all, Dimen.margin.thin)
     }
 }
 struct ContentHorizontalEdges: ViewModifier {
-    var margin:CGFloat = Dimen.margin.thin
+    
     func body(content: Content) -> some View {
         return content
-            .padding(.horizontal, margin)
+            .padding(.horizontal, Dimen.margin.thin)
+    }
+}
+
+struct ContentHorizontalEdgesTablet: ViewModifier {
+    func body(content: Content) -> some View {
+        return content
+            .padding(.horizontal, SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.thin)
     }
 }
 
@@ -114,7 +120,7 @@ struct ContentVerticalEdges: ViewModifier {
     var margin:CGFloat = Dimen.margin.thin
     func body(content: Content) -> some View {
         return content
-            .padding(.vertical, margin)
+            .padding(.vertical, Dimen.margin.thin)
     }
 }
 

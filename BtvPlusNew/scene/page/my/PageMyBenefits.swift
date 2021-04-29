@@ -64,7 +64,7 @@ struct PageMyBenefits: PageView {
                         viewModel: self.viewPagerModel,
                         pages: self.pages,
                         titles: self.titles,
-                        isDivisionTab: false
+                        isDivisionTab: SystemEnvironment.isTablet ? true : false
                         )
                         { idx in
                             switch idx {

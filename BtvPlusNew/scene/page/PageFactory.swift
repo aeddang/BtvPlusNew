@@ -88,7 +88,7 @@ struct PageProvider {
             return  .vertical
         case .fullPlayer :
             return .none
-        default : return  .horizental
+        default : return  .horizontal
         }
     }
     
@@ -279,7 +279,7 @@ struct PageSceneModel: PageModel {
     
     static func needKeyboard(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
-        case .pairingSetupUser, .pairingBtv, .search, .modifyProile, .confirmNumber: return true
+        case .pairingSetupUser, .pairingBtv, .search, .modifyProile, .confirmNumber, .pairingManagement, .setup: return true
         default : return false
         }
     }

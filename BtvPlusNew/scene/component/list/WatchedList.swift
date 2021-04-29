@@ -57,12 +57,14 @@ class WatchedData:InfinityData{
 
 
 struct WatchedList: PageComponent{
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pagePresenter:PagePresenter
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[WatchedData]
     var useTracking:Bool = false
     var delete: ((_ data:WatchedData) -> Void)? = nil
     var onBottom: ((_ data:WatchedData) -> Void)? = nil
+    @State var horizontalMargin:CGFloat = Dimen.margin.thin
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
@@ -76,11 +78,11 @@ struct WatchedList: PageComponent{
         ){
             
             InfoAlert(text: String.pageText.myWatchedInfo)
-                .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.thin))
+                .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.thin))
             if !self.datas.isEmpty {
                 ForEach(self.datas) { data in
                     WatchedItem( data:data , delete:self.delete)
-                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.tinyExtra))
+                        .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.tinyExtra))
                         .onTapGesture {
                             guard let synopsisData = data.synopsisData else { return }
                             self.pagePresenter.openPopup(
@@ -100,7 +102,15 @@ struct WatchedList: PageComponent{
                     .modifier(PageBody())
             }
         }
-        
+        .onReceive(self.sceneObserver.$isUpdated){ update in
+            if !update {return}
+            self.horizontalMargin
+                = self.sceneObserver.sceneOrientation == .portrait ? Dimen.margin.thin : Dimen.margin.heavy
+        }
+        .onAppear{
+            self.horizontalMargin
+                = self.sceneObserver.sceneOrientation == .portrait ? Dimen.margin.thin : Dimen.margin.heavy
+        }
     }//body
 }
 

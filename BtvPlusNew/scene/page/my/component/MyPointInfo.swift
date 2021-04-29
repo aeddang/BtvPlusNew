@@ -52,7 +52,7 @@ struct MyPointInfo: View {
                     )
                 }
         }
-        .frame(height:Dimen.tab.heavy)
+        .frame(height:SystemEnvironment.isTablet ? Dimen.tab.heavyExtra : Dimen.tab.heavy)
         .background(Color.app.blueLight)
         .onReceive(self.pairing.authority.$event){ evt in
             guard let evt = evt else { return }

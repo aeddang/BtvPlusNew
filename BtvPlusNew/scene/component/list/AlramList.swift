@@ -9,11 +9,9 @@ import Foundation
 import SwiftUI
 import struct Kingfisher.KFImage
 
-extension AlramList{
-    static let horizentalMargin:CGFloat = Dimen.margin.thin
-}
 
 struct AlramList: PageComponent{
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
@@ -26,6 +24,7 @@ struct AlramList: PageComponent{
     var marginBottom:CGFloat = Dimen.margin.tinyExtra
     
     @State var isPush:Bool = false
+    @State var horizontalMargin:CGFloat = Dimen.margin.thin
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
@@ -37,11 +36,11 @@ struct AlramList: PageComponent{
             useTracking: self.useTracking
         ){
             InfoAlert(text: String.pageText.myAlramInfo)
-                .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.thin))
+                .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.thin))
             if !self.datas.isEmpty {
                 ForEach(self.datas) { data in
                     AlramItem( data:data )
-                        .modifier(ListRowInset(marginHorizontal:Self.horizentalMargin ,spacing: Dimen.margin.tinyExtra))
+                        .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.tinyExtra))
                 }
             } else {
                 VStack{
@@ -72,9 +71,15 @@ struct AlramList: PageComponent{
             default: do{}
             }
         }
-        
+        .onReceive(self.sceneObserver.$isUpdated){ update in
+            if !update {return}
+            self.horizontalMargin
+                = self.sceneObserver.sceneOrientation == .portrait ? Dimen.margin.thin : Dimen.margin.heavy
+        }
         .onAppear(){
             self.isPush = self.pairing.user?.isAgree3 ?? false
+            self.horizontalMargin
+                = self.sceneObserver.sceneOrientation == .portrait ? Dimen.margin.thin : Dimen.margin.heavy
         }
        
     }//body
@@ -106,6 +111,7 @@ extension AlramItem{
 
 
 struct AlramItem: PageView {
+    
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
@@ -221,6 +227,11 @@ struct AlramItem: PageView {
                 )
             }
         }
+        .onReceive(self.sceneObserver.$isUpdated){ update in
+            if !update {return}
+            self.checkExpand()
+            
+        }
         .onAppear{
             self.isRead = self.data.isRead
             self.isExpand = self.data.isExpand
@@ -240,9 +251,10 @@ struct AlramItem: PageView {
             self.needExpand = true
             return
         }
+        let horizontalMargin = self.sceneObserver.sceneOrientation == .portrait ? Dimen.margin.thin : Dimen.margin.heavy
         if let title = self.data.title{
             let lineHeight = title.textHeightFrom(
-                width: self.sceneObserver.screenSize.width - (AlramList.horizentalMargin * 2),
+                width: self.sceneObserver.screenSize.width - (horizontalMargin * 2),
                 fontSize: Self.titleSize )
             
             let lineNum:Int = Int(round(lineHeight / Self.titleSize))
@@ -253,7 +265,7 @@ struct AlramItem: PageView {
         }
         if let text = self.data.text {
             let lineHeight = text.textHeightFrom(
-                width: self.sceneObserver.screenSize.width - (AlramList.horizentalMargin * 2),
+                width: self.sceneObserver.screenSize.width - (horizontalMargin * 2),
                 fontSize: Self.textSize )
             let lineNum:Int = Int(round(lineHeight / Self.titleSize))
             if lineNum > Self.textLineNum {

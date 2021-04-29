@@ -32,7 +32,7 @@ struct InputBox: PageComponent {
     var keyboardType:UIKeyboardType = .default
     var isSecure:Bool = false
     var radios: [InputBox.Data]? = nil
-    var size:CGFloat = 265
+    var size:CGFloat = SystemEnvironment.isTablet ? 346 : 265
     var action: ((_ input:String?, _ idx:Int?) -> Void)
     @State var input:String = ""
     @State var selectedText:String? = nil

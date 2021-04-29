@@ -104,6 +104,10 @@ struct PagePurchaseTicketList: PageView {
             .onReceive(self.pairing.authority.$periodMonthlyPurchaseInfo){ _ in
                 self.updatedTickets()
             }
+            .onReceive(self.sceneObserver.$isUpdated){ update in
+                if !update {return}
+                self.updatedTickets()
+            }
             .onAppear(){
                 self.setupMonthlyDatas()
                 if self.pairing.authority.monthlyPurchaseInfo == nil {

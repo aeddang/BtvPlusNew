@@ -19,7 +19,7 @@ struct PagePairingManagement: PageView {
     @State var macAdress:String = ""
     @State var modelName:String = ""
     @State var modelImage:String = Asset.noImg1_1
-    
+    @State var sceneOrientation: SceneOrientation = .portrait
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -45,14 +45,14 @@ struct PagePairingManagement: PageView {
                                 Spacer()
                             }
                         }
-                        .padding(.vertical, Dimen.margin.regular)
+                        .padding(.vertical, SystemEnvironment.isTablet ? Dimen.margin.lightExtra : Dimen.margin.regular)
                         .padding(.horizontal, Dimen.margin.lightExtra)
                         .background(Color.app.blueLight)
                         .padding(.top, Dimen.margin.thinExtra)
                         
                         Text(String.pageText.myConnectedBtv)
                             .modifier(MediumTextStyle(size: Font.size.regular, color: Color.app.white))
-                            .padding(.top, Dimen.margin.medium)
+                            .padding(.top,SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.medium)
                         VStack(spacing:Dimen.margin.light){
                             HStack(spacing:Dimen.margin.lightExtra){
                                 Image(self.modelImage)
@@ -83,7 +83,7 @@ struct PagePairingManagement: PageView {
                                 }
                             }
                         }
-                        .padding(.vertical, Dimen.margin.regular)
+                        .padding(.vertical, SystemEnvironment.isTablet ? Dimen.margin.lightExtra : Dimen.margin.regular)
                         .padding(.horizontal, Dimen.margin.lightExtra)
                         .background(Color.app.blueLight)
                         .padding(.top, Dimen.margin.thinExtra)
@@ -96,17 +96,26 @@ struct PagePairingManagement: PageView {
                             )
                         }
                         .padding(.top, Dimen.margin.light)
-                        VStack(alignment:.center){
-                            Text(String.pageText.myinviteFammlyText1)
-                                .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyDeep))
-                            Text(String.pageText.myinviteFammlyText2)
-                                .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyDeep))
-                            Spacer().modifier(MatchParent())
+                        if self.sceneOrientation == .portrait {
+                            VStack(alignment:.center){
+                                Text(String.pageText.myinviteFammlyText1)
+                                    .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyDeep))
+                                Text(String.pageText.myinviteFammlyText2)
+                                    .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyDeep))
+                                Spacer().modifier(MatchParent())
+                            }
+                            .padding(.top, Dimen.margin.thin)
+                        } else {
+                            VStack(alignment: .center, spacing: 0){
+                                Text(String.pageText.myinviteFammlyText1 + " " + String.pageText.myinviteFammlyText2)
+                                    .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyDeep))
+                                    .padding(.top, Dimen.margin.thin)
+                                Spacer().modifier(MatchHorizontal(height: 0))
+                            }
                         }
-                        .padding(.top, Dimen.margin.thin)
-                        
                     }
-                    .modifier(ContentHorizontalEdges())
+                    .modifier(ContentHorizontalEdgesTablet())
+                    
                 }
                 .modifier(PageFull())
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
@@ -134,8 +143,12 @@ struct PagePairingManagement: PageView {
                 self.modelName = device.modelName ?? String.app.defaultStb
                 self.modelImage = Pairing.getSTBImage(stbModel: self.modelName)
             }
+            .onReceive(self.sceneObserver.$isUpdated){ update in
+                if !update {return}
+                self.sceneOrientation = self.sceneObserver.sceneOrientation
+            }
             .onAppear{
-               
+                self.sceneOrientation = self.sceneObserver.sceneOrientation
             }
             
         }//geo

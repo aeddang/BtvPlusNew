@@ -64,7 +64,8 @@ struct PagePairingSetupUser: PageView {
                                         .modifier(MediumTextStyle( size: Font.size.bold ))
                                         .padding(.top, Dimen.margin.light)
                                     
-                                    Text(String.pageText.pairingSetupUserText2)
+                                    Text(SystemEnvironment.isTablet
+                                            ? String.pageText.pairingSetupUserText2Tablet : String.pageText.pairingSetupUserText2)
                                         .modifier(
                                             MediumTextStyle( size: Font.size.light, color: Color.app.whiteDeep))
                                         .padding(.top, Dimen.margin.light)
@@ -122,7 +123,7 @@ struct PagePairingSetupUser: PageView {
                                 .padding(.top, Dimen.margin.thin)
                                 
                             }
-                            .padding(.horizontal, Dimen.margin.regular)
+                            .padding(.horizontal, SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.regular)
                     
                             CharacterSelectBox(
                                 data:CharacterRowData(),
@@ -150,7 +151,12 @@ struct PagePairingSetupUser: PageView {
                             isChecked: self.isAgree1,
                             text:String.pageText.pairingSetupUserAgreement1,
                             more:{
-                                
+                                self.pagePresenter.openPopup(
+                                    PageProvider
+                                        .getPageObject(.webview)
+                                        .addParam(key: .data, value: BtvWebView.serviceTerms)
+                                        .addParam(key: .title , value: String.pageTitle.serviceTerms)
+                                )
                             },
                             action:{ ck in
                                 self.isAgree1 = ck
@@ -170,15 +176,13 @@ struct PagePairingSetupUser: PageView {
                         CheckBox(
                             isChecked: self.isAgree3,
                             text:String.pageText.pairingSetupUserAgreement3,
-                            more:{
-                                
-                            },
                             action:{ ck in
                                 self.isAgree3 = ck
                             }
                         )
                     }
-                    .padding(.all, Dimen.margin.regular)
+                    .padding(.horizontal, SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.regular)
+                    .padding(.vertical, Dimen.margin.regular)
                     .background(Color.app.blueLight)
                     FillButton(
                         text: String.button.next,

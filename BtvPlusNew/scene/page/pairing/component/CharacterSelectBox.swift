@@ -7,11 +7,16 @@
 
 import Foundation
 import SwiftUI
+
+extension CharacterSelectBox {
+    static let horizontalMargin:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.regular
+}
+
+
 struct CharacterSelectBox: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
     var data:CharacterRowData
     @Binding var selectIdx:Int
-    
     @State var datas:[CharacterRows] = []
     @State var cellSpace:CGFloat = 0
     var body: some View {
@@ -24,9 +29,9 @@ struct CharacterSelectBox: PageComponent{
                 cellSpace: self.cellSpace
             )
         }
-        .padding(.horizontal, Dimen.margin.regular)
+        .padding(.horizontal, Self.horizontalMargin)
         .onReceive(self.sceneObserver.$screenSize){ size in
-            let screenWidth = size.width - (2*Dimen.margin.regular)
+            let screenWidth = size.width - (2*Self.horizontalMargin)
             let lineNum = floor(screenWidth /
                                     (ListItem.character.size.width + Dimen.margin.thin))
             self.cellSpace = floor((screenWidth - (ListItem.character.size.width * lineNum)) / (lineNum-1))

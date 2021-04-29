@@ -6,6 +6,261 @@
 //
 import Foundation
 import SwiftUI
+
+struct PagePairingBody: PageView {
+    @EnvironmentObject var pagePresenter:PagePresenter
+    let infinityScrollModel: InfinityScrollModel
+    var requestPairing:(_ type:PairingRequest) -> Void
+    var body: some View {
+        InfinityScrollView( viewModel: self.infinityScrollModel ){
+            VStack(alignment:.leading , spacing:0) {
+                Text(String.pageText.pairingText1)
+                    .modifier(MediumTextStyle( size: Font.size.bold ))
+                    .padding(.top, Dimen.margin.light)
+                
+                ZStack{
+                    Text(String.pageText.pairingText2_1)
+                        .font(.custom(Font.family.bold, size: Font.size.light))
+                        .foregroundColor(Color.brand.primary)
+                    + Text(String.pageText.pairingText2_2)
+                        .font(.custom(Font.family.bold, size: Font.size.light))
+                        .foregroundColor(Color.app.whiteDeep)
+                }
+                .padding(.top, Dimen.margin.lightExtra)
+                Text(String.pageText.pairingText2_3)
+                    .font(.custom(Font.family.bold, size: Font.size.light))
+                    .foregroundColor(Color.app.whiteDeep)
+                    .padding(.top, Dimen.margin.tiny)
+                Text(String.pageText.pairingText2_4)
+                    .font(.custom(Font.family.bold, size: Font.size.light))
+                    .foregroundColor(Color.app.whiteDeep)
+                    .padding(.top, Dimen.margin.tiny)
+                
+                MoreInfoButton(
+                    title: String.pageText.pairingBtnGuide
+                ){
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.pairingGuide)
+                    )
+                }
+                .padding(.top, Dimen.margin.regularExtra)
+            }.modifier(ContentHorizontalEdges())
+            
+            Text(String.pageText.pairingTitle1)
+                .modifier(MediumTextStyle(
+                    size:Font.size.light,
+                    color: Color.brand.primary
+                ))
+                .padding(.top, Dimen.margin.heavy)
+            
+            ConnectButton(
+                image: Asset.icon.pairingWifi,
+                title: String.pageText.pairingBtnWifi,
+                text: String.pageText.pairingBtnWifiSub
+            ){
+                self.requestPairing( .wifi )
+            }
+            .padding(.top, Dimen.margin.lightExtra)
+            
+            ConnectButton(
+                image: Asset.icon.pairingBtv,
+                title: String.pageText.pairingBtnBtvCertification,
+                text: String.pageText.pairingBtnBtvCertificationSub
+            ){
+                self.requestPairing( .btv)
+            }
+            .padding(.top, Dimen.margin.thin)
+            
+            Text(String.pageText.pairingTitle2)
+                .modifier(MediumTextStyle(
+                    size:Font.size.light,
+                    color: Color.brand.primary
+                ))
+                .padding(.top, Dimen.margin.lightExtra)
+            
+            ConnectButton(
+                image: Asset.icon.pairingUser,
+                title: String.pageText.pairingBtnUserCertification,
+                text: String.pageText.pairingBtnUserCertificationSub
+            ){
+                
+                self.requestPairing(.user(nil))
+            }
+            .padding(.vertical, Dimen.margin.lightExtra)
+        }
+        .modifier(ContentHorizontalEdges())
+        .modifier(MatchParent())
+    }//body
+}
+
+
+struct PagePairingBodyTablet: PageView {
+    @EnvironmentObject var pagePresenter:PagePresenter
+    let infinityScrollModel: InfinityScrollModel
+    var requestPairing:(_ type:PairingRequest) -> Void
+    var body: some View {
+        InfinityScrollView( viewModel: self.infinityScrollModel ){
+            VStack(alignment:.leading , spacing:0) {
+                Text(String.pageText.pairingText1)
+                    .modifier(MediumTextStyle( size: Font.size.bold ))
+                    .padding(.top, Dimen.margin.mediumExtra)
+                
+                ZStack{
+                    Text(String.pageText.pairingText2_1)
+                        .font(.custom(Font.family.bold, size: Font.size.tiny))
+                        .foregroundColor(Color.brand.primary)
+                    + Text(String.pageText.pairingText2_2)
+                        .font(.custom(Font.family.bold, size: Font.size.tiny))
+                        .foregroundColor(Color.app.whiteDeep)
+                }
+                .padding(.top, Dimen.margin.lightExtra)
+                Text(String.pageText.pairingText2_3)
+                    .font(.custom(Font.family.bold, size: Font.size.tiny))
+                    .foregroundColor(Color.app.whiteDeep)
+                    .padding(.top, Dimen.margin.tiny)
+                Text(String.pageText.pairingText2_4)
+                    .font(.custom(Font.family.bold, size: Font.size.tiny))
+                    .foregroundColor(Color.app.whiteDeep)
+                    .padding(.top, Dimen.margin.tiny)
+                
+                MoreInfoButton(
+                    title: String.pageText.pairingBtnGuide,
+                    textSize: Font.size.tiny
+                ){
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.pairingGuide)
+                    )
+                }
+                .padding(.top, Dimen.margin.regularExtra)
+            }
+            HStack(alignment: .top, spacing: 0){
+                ConnectTitle(title: String.pageText.pairingTitle1Tablet)
+                    .frame(width: 175, alignment: .topLeading)
+                ConnectButtonTablet(
+                    image: Asset.icon.pairingWifi,
+                    title: String.pageText.pairingBtnWifi,
+                    text: String.pageText.pairingBtnWifiSubTablet
+                ){
+                    self.requestPairing( .wifi )
+                }
+                .padding(.leading, Dimen.margin.thinExtra)
+                ConnectButtonTablet(
+                    image: Asset.icon.pairingBtv,
+                    title: String.pageText.pairingBtnBtvCertification,
+                    text: String.pageText.pairingBtnBtvCertificationSubTablet
+                ){
+                    self.requestPairing( .btv)
+                }
+                .padding(.leading, Dimen.margin.thinExtra)
+            }
+            .padding(.top, Dimen.margin.medium)
+            
+            HStack(alignment: .top, spacing: 0){
+                ConnectTitle(title: String.pageText.pairingTitle2Tablet)
+                    .frame(width: 170, alignment: .topLeading)
+                ConnectButtonTablet(
+                    image: Asset.icon.pairingUser,
+                    title: String.pageText.pairingBtnUserCertification,
+                    text: String.pageText.pairingBtnUserCertificationSubTablet
+                ){
+                    
+                    self.requestPairing(.user(nil))
+                }
+                .padding(.leading, Dimen.margin.thinExtra)
+            }
+            .padding(.top, Dimen.margin.medium)
+        }
+        
+        .modifier(MatchParent())
+    }//body
+}
+
+struct PagePairingBodyTabletHorizontal: PageView {
+    @EnvironmentObject var pagePresenter:PagePresenter
+    let infinityScrollModel: InfinityScrollModel
+    var requestPairing:(_ type:PairingRequest) -> Void
+    var body: some View {
+        InfinityScrollView( viewModel: self.infinityScrollModel ){
+            HStack(alignment:.top , spacing:0) {
+                VStack(alignment:.leading , spacing:0) {
+                    Text(String.pageText.pairingText1Tablet)
+                        .modifier(MediumTextStyle( size: Font.size.bold ))
+                    
+                    ZStack{
+                        Text(String.pageText.pairingText2_1)
+                            .font(.custom(Font.family.bold, size: Font.size.tiny))
+                            .foregroundColor(Color.brand.primary)
+                        + Text(String.pageText.pairingText2_2)
+                            .font(.custom(Font.family.bold, size: Font.size.tiny))
+                            .foregroundColor(Color.app.whiteDeep)
+                    }
+                    .padding(.top, Dimen.margin.lightExtra)
+                    Text(String.pageText.pairingText2_3)
+                        .font(.custom(Font.family.bold, size: Font.size.tiny))
+                        .foregroundColor(Color.app.whiteDeep)
+                        .padding(.top, Dimen.margin.tiny)
+                    Text(String.pageText.pairingText2_4)
+                        .font(.custom(Font.family.bold, size: Font.size.tiny))
+                        .foregroundColor(Color.app.whiteDeep)
+                        .padding(.top, Dimen.margin.tiny)
+                    
+                    MoreInfoButton(
+                        title: String.pageText.pairingBtnGuide,
+                        textSize: Font.size.tiny
+                    ){
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.pairingGuide)
+                        )
+                    }
+                    .padding(.top, Dimen.margin.regularExtra)
+                }
+                VStack(alignment: .leading, spacing: 0){
+                    ConnectTitle(title: String.pageText.pairingTitle1)
+                    
+                    HStack(alignment:.top , spacing:0) {
+                        ConnectButtonTablet(
+                            image: Asset.icon.pairingWifi,
+                            title: String.pageText.pairingBtnWifi,
+                            text: String.pageText.pairingBtnWifiSubTablet
+                        ){
+                            self.requestPairing( .wifi )
+                        }
+                        ConnectButtonTablet(
+                            image: Asset.icon.pairingBtv,
+                            title: String.pageText.pairingBtnBtvCertification,
+                            text: String.pageText.pairingBtnBtvCertificationSubTablet
+                        ){
+                            self.requestPairing( .btv)
+                        }
+                        .padding(.leading, Dimen.margin.thinExtra)
+                    }
+                    .padding(.top, Dimen.margin.thin)
+                    
+                    ConnectTitle(title: String.pageText.pairingTitle2)
+                    .padding(.top, Dimen.margin.regular)
+                    
+                    ConnectButtonTablet(
+                        image: Asset.icon.pairingUser,
+                        title: String.pageText.pairingBtnUserCertification,
+                        text: String.pageText.pairingBtnUserCertificationSubTablet
+                    ){
+                        
+                        self.requestPairing(.user(nil))
+                    }
+                    .padding(.top, Dimen.margin.thin)
+                }
+                .padding(.leading, Dimen.margin.medium)
+            }
+            .padding(.top, Dimen.margin.heavyExtra)
+            
+        }
+        .modifier(MatchParent())
+    }//body
+}
+
+
+
+
 struct PagePairing: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
@@ -16,6 +271,8 @@ struct PagePairing: PageView {
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
+    @State var sceneOrientation: SceneOrientation = .portrait
+    
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -28,83 +285,24 @@ struct PagePairing: PageView {
                         isBack : true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    InfinityScrollView( viewModel: self.infinityScrollModel ){
-                        VStack(alignment:.leading , spacing:0) {
-                            Text(String.pageText.pairingText1)
-                                .modifier(MediumTextStyle( size: Font.size.bold ))
-                                .padding(.top, Dimen.margin.light)
-                            
-                            ZStack{
-                                Text(String.pageText.pairingText2_1)
-                                    .font(.custom(Font.family.bold, size: Font.size.light))
-                                    .foregroundColor(Color.brand.primary)
-                                + Text(String.pageText.pairingText2_2)
-                                    .font(.custom(Font.family.bold, size: Font.size.light))
-                                    .foregroundColor(Color.app.whiteDeep)
+                    if SystemEnvironment.isTablet {
+                        if self.sceneOrientation == .portrait {
+                            PagePairingBodyTablet(
+                                infinityScrollModel: self.infinityScrollModel){ type in
+                                self.requestPairing(type: type)
                             }
-                            .padding(.top, Dimen.margin.lightExtra)
-                            Text(String.pageText.pairingText2_3)
-                                .font(.custom(Font.family.bold, size: Font.size.light))
-                                .foregroundColor(Color.app.whiteDeep)
-                            Text(String.pageText.pairingText2_4)
-                                .font(.custom(Font.family.bold, size: Font.size.light))
-                                .foregroundColor(Color.app.whiteDeep)
-                            
-                            
-                            MoreInfoButton(
-                                title: String.pageText.pairingBtnGuide
-                            ){
-                                self.pagePresenter.openPopup(
-                                    PageProvider.getPageObject(.pairingGuide)
-                                )
+                        } else {
+                            PagePairingBodyTabletHorizontal(
+                                infinityScrollModel: self.infinityScrollModel){ type in
+                                self.requestPairing(type: type)
                             }
-                            .padding(.top, Dimen.margin.regularExtra)
-                        }.modifier(ContentHorizontalEdges())
-                        
-                        Text(String.pageText.pairingTitle1)
-                            .modifier(MediumTextStyle(
-                                size:Font.size.light,
-                                color: Color.brand.primary
-                            ))
-                            .padding(.top, Dimen.margin.heavy)
-                        
-                        ConnectButton(
-                            image: Asset.icon.pairingWifi,
-                            title: String.pageText.pairingBtnWifi,
-                            text: String.pageText.pairingBtnWifiSub
-                        ){
-                            self.requestPairing(type: .wifi)
                         }
-                        .padding(.top, Dimen.margin.lightExtra)
-                        
-                        ConnectButton(
-                            image: Asset.icon.pairingBtv,
-                            title: String.pageText.pairingBtnBtvCertification,
-                            text: String.pageText.pairingBtnBtvCertificationSub
-                        ){
-                            self.requestPairing(type: .btv)
+                    } else {
+                        PagePairingBody(
+                            infinityScrollModel: self.infinityScrollModel){ type in
+                            self.requestPairing(type: type)
                         }
-                        .padding(.top, Dimen.margin.thin)
-                        
-                        Text(String.pageText.pairingTitle2)
-                            .modifier(MediumTextStyle(
-                                size:Font.size.light,
-                                color: Color.brand.primary
-                            ))
-                            .padding(.top, Dimen.margin.lightExtra)
-                        
-                        ConnectButton(
-                            image: Asset.icon.pairingUser,
-                            title: String.pageText.pairingBtnUserCertification,
-                            text: String.pageText.pairingBtnUserCertificationSub
-                        ){
-                            
-                            self.requestPairing(type: .user(nil))
-                        }
-                        .padding(.vertical, Dimen.margin.lightExtra)
                     }
-                    .modifier(ContentHorizontalEdges())
-                    .modifier(MatchParent())
                 }
                 .modifier(PageFull())
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
@@ -118,8 +316,12 @@ struct PagePairing: PageView {
                 default : do{}
                 }
             }
+            .onReceive(self.sceneObserver.$isUpdated){ update in
+                if !update {return}
+                self.sceneOrientation = self.sceneObserver.sceneOrientation
+            }
             .onAppear{
-               
+                self.sceneOrientation = self.sceneObserver.sceneOrientation
             }
             
         }//geo

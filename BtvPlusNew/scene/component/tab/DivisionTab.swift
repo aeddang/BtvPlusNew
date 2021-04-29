@@ -18,6 +18,7 @@ struct DivisionTab : PageComponent {
     var divisionMargin:CGFloat = 0
     var height:CGFloat = Dimen.tab.regularExtra
     var bgColor:Color = Color.transparent.clear
+    var useSelectedEffect:Bool = true
     var body: some View {
         HStack(spacing:0){
             ForEach(self.buttons) { btn in
@@ -43,13 +44,13 @@ struct DivisionTab : PageComponent {
             action: { self.performAction(btn.id, index: btn.idx)}
         ){ btn.body }
         .modifier(MatchParent())
-        .background( btn.idx == self.viewModel.index ? Color.app.blueLightExtra : Color.transparent.clearUi)
+        .background( btn.id == self.viewModel.selected ? Color.app.blueLightExtra : Color.transparent.clearUi)
         .buttonStyle(BorderlessButtonStyle())
         
     }
     
     func performAction(_ btnID:String, index:Int){
-        self.viewModel.selected = btnID
+        if self.useSelectedEffect { self.viewModel.selected = btnID }
         self.viewModel.index = index
     }
     

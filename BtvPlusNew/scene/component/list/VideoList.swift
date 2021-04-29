@@ -307,12 +307,13 @@ struct VideoDataSet:Identifiable {
 
 extension VideoSet{
     static let padding:CGFloat = Dimen.margin.thin
-    static func listSize(data:VideoDataSet, screenWidth:CGFloat, isFull:Bool = false) -> CGSize{
+    static func listSize(data:VideoDataSet, screenWidth:CGFloat, isFull:Bool = false,
+                         paddingHorizontal:CGFloat? = nil , spacing:CGFloat? = nil) -> CGSize{
         let datas = data.datas
         let ratio = ListItem.video.size.height / ListItem.video.size.width
         let count = CGFloat(data.count)
-        let w = screenWidth - ( padding * 2)
-        let cellW = ( w - (padding*(count-1)) ) / count
+        let w = screenWidth - ( (paddingHorizontal ?? padding) * 2)
+        let cellW = ( w - ( (spacing ?? padding) * (count-1)) ) / count
         var cellH = round(cellW * ratio)
         
         if datas.first?.isInside == false && isFull{
@@ -320,6 +321,7 @@ extension VideoSet{
         }
         return CGSize(width: cellW, height: cellH )
     }
+    
 }
 
 struct VideoSet: PageComponent{
@@ -327,11 +329,12 @@ struct VideoSet: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
     var pageObservable:PageObservable = PageObservable()
     var data:VideoDataSet
-    
+    var paddingHorizontal:CGFloat? = nil
+    var spacing:CGFloat? = nil
     @State var cellDatas:[VideoData] = []
     @State var isUiActive:Bool = true
     var body: some View {
-        HStack(spacing: Self.padding){
+        HStack(spacing: (self.spacing ?? Self.padding) ){
             if self.isUiActive {
                 ForEach(self.cellDatas) { data in
                     VideoItem( data:data )
@@ -356,7 +359,7 @@ struct VideoSet: PageComponent{
         .frame(width: self.sceneObserver.screenSize.width)
         .onAppear {
             if self.data.datas.isEmpty { return }
-            let size = Self.listSize(data: self.data, screenWidth: sceneObserver.screenSize.width)
+            let size = Self.listSize(data: self.data, screenWidth: sceneObserver.screenSize.width, isFull: false, paddingHorizontal: self.paddingHorizontal, spacing: self.spacing)
             self.cellDatas = self.data.datas.map{
                 $0.setCardType(width: size.width, height: size.height, padding: Self.padding)
             }

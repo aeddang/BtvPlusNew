@@ -54,11 +54,11 @@ struct ListItem{
     }
     
     struct purchase {
-        static let size:CGSize = CGSize(width: 78, height: 111)
+        static let size:CGSize = isPad ?  CGSize(width: 136, height: 194) : CGSize(width: 78, height: 111)
     }
     
     struct stb {
-        static let size:CGSize = CGSize(width: 52, height: 52)
+        static let size:CGSize = isPad ? CGSize(width: 72, height: 72) : CGSize(width: 52, height: 52)
     }
     
     struct monthly {
@@ -74,7 +74,7 @@ struct ListItem{
     }
     
     struct watched {
-       static let size:CGSize = CGSize(width: 112, height: 64)
+        static let size:CGSize = isPad ? CGSize(width: 176, height: 101) : CGSize(width: 112, height: 64)
     }
     
     struct search {
@@ -85,7 +85,7 @@ struct ListItem{
     }
     
     struct card {
-        static let size:CGSize =  CGSize(width: 267, height: 166)
+        static let size:CGSize =  isPad ? CGSize(width: 374, height: 232) : CGSize(width: 267, height: 166)
     }
     struct alram {
         static let height:CGFloat = 140

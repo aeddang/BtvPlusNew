@@ -60,6 +60,9 @@ struct IntroItem: PageComponent, Identifiable {
         .onReceive(self.sceneObserver.$isUpdated){ _ in
             self.sceneOrientation = self.sceneObserver.sceneOrientation
         }
+        .onAppear{
+            self.sceneOrientation = self.sceneObserver.sceneOrientation
+        }
     }
 }
 

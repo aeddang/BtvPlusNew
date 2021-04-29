@@ -89,6 +89,7 @@ class CouponData:InfinityData{
 
 
 struct CouponList: PageComponent{
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var couponBlockModel:CouponBlockModel = CouponBlockModel()
     var type:CouponBlock.ListType? = nil
@@ -98,6 +99,8 @@ struct CouponList: PageComponent{
     var useTracking:Bool = false
     var marginBottom:CGFloat = Dimen.margin.tinyExtra
     var onBottom: ((_ data:CouponData) -> Void)? = nil
+    
+    @State var horizontalMargin:CGFloat = Dimen.margin.thin
     
     var body: some View {
         InfinityScrollView(
@@ -141,12 +144,12 @@ struct CouponList: PageComponent{
                     }
                     .buttonStyle(BorderlessButtonStyle())
                 }
-                .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regularExtra))
+                .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.regularExtra))
             }
             if !self.datas.isEmpty {
                 ForEach(self.datas) { data in
                     CouponItem( data:data )
-                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.tinyExtra))
+                    .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.tinyExtra))
                     .onAppear{
                         if data.index == self.datas.last?.index {
                             self.onBottom?(data)
@@ -159,7 +162,17 @@ struct CouponList: PageComponent{
                     .modifier(PageBody())
             }
         }
-       
+        .onReceive(self.sceneObserver.$isUpdated){ update in
+            if !update {return}
+            self.horizontalMargin
+                = self.sceneObserver.sceneOrientation == .portrait ? Dimen.margin.thin : Dimen.margin.heavy
+        }
+        .onAppear{
+            self.horizontalMargin
+                = self.sceneObserver.sceneOrientation == .portrait ? Dimen.margin.thin : Dimen.margin.heavy
+        }
+        
+        
     }//body
 }
 

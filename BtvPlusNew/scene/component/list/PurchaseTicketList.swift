@@ -111,10 +111,11 @@ struct PurchaseTicketDataSet:Identifiable {
 
 extension PurchaseTicketSet{
     static let padding:CGFloat = Dimen.margin.thin
+    static let spacing:CGFloat = Dimen.margin.tinyExtra
     static func listSize(data:PurchaseTicketDataSet, screenWidth:CGFloat, isFull:Bool = false) -> CGSize{
         let count = CGFloat(data.count)
         let w = screenWidth - ( padding * 2)
-        let cellW = ( w - (padding*(count-1)) ) / count
+        let cellW = ( w - (spacing*(count-1)) ) / count
         let cellH = ListItem.purchaseTicket.size.height
         return CGSize(width: cellW, height: cellH )
     }
@@ -129,7 +130,7 @@ struct PurchaseTicketSet: PageComponent{
     @State var cellDatas:[PurchaseTicketData] = []
     @State var isUiActive:Bool = true
     var body: some View {
-        HStack(spacing: Self.padding){
+        HStack(spacing: Self.spacing){
             if self.isUiActive {
                 ForEach(self.cellDatas) { data in
                     PurchaseTicketItem( data:data )
@@ -210,35 +211,50 @@ struct PurchaseTicketItem: PageView {
    
     var data:PurchaseTicketData
     var body: some View {
-        VStack(alignment: .leading , spacing: Dimen.margin.regularExtra){
+        VStack(alignment: .leading , spacing:
+                SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.regularExtra){
             Image(self.data.isMonthly ? Asset.icon.ticketMonthly :Asset.icon.ticketPeriod)
                 .renderingMode(.original)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(height: Dimen.icon.light)
-                .padding(.horizontal, Dimen.margin.regularExtra)
+                .frame(height: SystemEnvironment.isTablet ? Dimen.icon.tiny : Dimen.icon.light)
+                .padding(.horizontal,
+                         SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.regularExtra)
             
             if let title = self.data.title {
                 Text(title)
-                    .modifier(BoldTextStyle(size: Font.size.medium, color: Color.app.black))
-                    .padding(.horizontal, Dimen.margin.regularExtra)
+                    .modifier(BoldTextStyle(
+                                size: SystemEnvironment.isTablet ? Font.size.lightExtra : Font.size.medium,
+                                color: Color.app.black))
+                    .padding(.horizontal,
+                             SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.regularExtra)
             }
             
             if let price = self.data.price {
                 HStack(alignment:.bottom , spacing: Dimen.margin.micro){
                     Text(String.app.purchasePrice)
-                        .modifier(MediumTextStyle(size: Font.size.regular, color: Color.app.black))
+                        .modifier(MediumTextStyle(
+                                    size: SystemEnvironment.isTablet ? Font.size.tiny : Font.size.regular,
+                                    color: Color.app.black))
                     Text(price)
-                        .modifier(MediumTextStyle(size: Font.size.regular, color: Color.app.black))
+                        .modifier(MediumTextStyle(
+                                    size: SystemEnvironment.isTablet ? Font.size.tiny : Font.size.regular,
+                                    color: Color.app.black))
                     Text("(" + String.app.vat + ")")
-                        .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.grey))
+                        .modifier(MediumTextStyle(
+                                    size: SystemEnvironment.isTablet ? Font.size.micro : Font.size.thinExtra,
+                                    color: Color.app.grey))
                 }
-                .padding(.horizontal, Dimen.margin.regularExtra)
+                .padding(.horizontal,
+                         SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.regularExtra)
             }
             Spacer().modifier(LineHorizontal(color:Color.app.black))
-                .padding(.horizontal, Dimen.margin.regularExtra)
-            HStack(alignment:.top , spacing: Dimen.margin.thin){
-                VStack(alignment: .leading , spacing: Dimen.margin.tiny){
+                .padding(.horizontal,
+                         SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.regularExtra)
+            HStack(alignment:.top ,
+                   spacing: SystemEnvironment.isTablet ? Dimen.margin.tinyExtra : Dimen.margin.thin){
+                VStack(alignment: .leading ,
+                       spacing: SystemEnvironment.isTablet ? Dimen.margin.tinyExtra : Dimen.margin.tiny){
                     if let value = self.data.originPrice {
                         PurchaseTicketValue(title: String.app.ticketPrice, value: value)
                     }
@@ -250,7 +266,8 @@ struct PurchaseTicketItem: PageView {
                     }
                 }
                 .frame(width: 130)
-                VStack(alignment: .leading , spacing: Dimen.margin.tiny){
+                VStack(alignment: .leading ,
+                       spacing: SystemEnvironment.isTablet ? Dimen.margin.tinyExtra : Dimen.margin.tiny){
                     if let value = self.data.period {
                         PurchaseTicketValue(title: String.app.purchasePeriod, value: value)
                     }
@@ -263,9 +280,9 @@ struct PurchaseTicketItem: PageView {
                 }
                
             }
-            .padding(.horizontal, Dimen.margin.thin)
+            .padding(.horizontal, SystemEnvironment.isTablet ? Dimen.margin.tinyExtra : Dimen.margin.thin)
         }
-        .padding(.vertical, Dimen.margin.regularExtra)
+        .padding(.vertical, SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.regularExtra)
         
         .background(Color.app.white)
     }
@@ -277,9 +294,15 @@ struct PurchaseTicketValue: View{
     var body: some View {
         HStack(alignment: .top, spacing: Dimen.margin.micro){
             Text("・ " + title + " ")
-                .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.grey))
+                .kerning(Font.kern.thin)
+                .modifier(MediumTextStyle(
+                            size: SystemEnvironment.isTablet ? Font.size.micro : Font.size.thinExtra,
+                            color: Color.app.grey))
             Text(value)
-                .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.black))
+                .kerning(Font.kern.thin)
+                .modifier(MediumTextStyle(
+                            size: SystemEnvironment.isTablet ? Font.size.micro : Font.size.thinExtra,
+                            color: Color.app.black))
                 .lineLimit(1)
         }
     }//body

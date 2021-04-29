@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 struct MoreInfoButton: View {
     let title:String
+    var textSize:CGFloat = Font.size.thin
     var image:String = Asset.icon.alertSmall
     let action: () -> Void
    
@@ -20,13 +21,13 @@ struct MoreInfoButton: View {
                 Image( self.image )
                     .renderingMode(.original).resizable()
                     .scaledToFit()
-                    .frame(width: Dimen.icon.thin, height: Dimen.icon.thin)
+                    .frame(width: Dimen.icon.thinExtra, height: Dimen.icon.thinExtra)
                 Text(self.title)
-                    .modifier(MediumTextStyle(size: Font.size.thin, color: Color.app.white))
+                    .modifier(MediumTextStyle(size: self.textSize, color: Color.app.white))
                 Image( Asset.icon.moreSmall )
                     .renderingMode(.original).resizable()
                     .scaledToFit()
-                    .frame(width: Dimen.icon.thin, height: Dimen.icon.thin)
+                    .frame(width: Dimen.icon.tinyExtra, height: Dimen.icon.tinyExtra)
             }
         }//btn
     }//body

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 extension MultiBlock{
-    static let spacing:CGFloat = Dimen.margin.medium
+    static let spacing:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.medium
 }
 struct MultiBlock:PageComponent {
     @EnvironmentObject var sceneObserver:PageSceneObserver

@@ -33,15 +33,21 @@ extension Font{
         public static let robotoBold = "Roboto-Bold"
         public static let robotoMedium = "Roboto-Medium"
         public static let robotoLight = "Roboto-Light"
-    }    
+    }
+    
+    struct kern {
+        public static let thin:CGFloat =  -0.7
+        public static let regular:CGFloat = 0
+        public static let large:CGFloat = 0.7
+    }
     
     struct size {
         public static let black:CGFloat =  32 //*
-        public static let bold:CGFloat = 26 //*
+        public static let bold:CGFloat = isPad ? 42 : 26 //*
         public static let boldExtra:CGFloat = isPad ? 32 : 24 //*
-        public static let large:CGFloat =  22 //*
-        public static let medium:CGFloat = 20 //*
-        public static let mediumExtra:CGFloat = 18 //*
+        public static let large:CGFloat =  isPad ? 30 : 22 //*
+        public static let medium:CGFloat = isPad ? 28 : 20 //*
+        public static let mediumExtra:CGFloat = isPad ? 26 : 18 //*
         public static let regular:CGFloat = isPad ? 24 : 16//*
         public static let light:CGFloat =  isPad ? 21 : 15 //*
         public static let lightExtra:CGFloat = isPad ? 20 : 14 //*
@@ -49,6 +55,7 @@ extension Font{
         public static let thinExtra:CGFloat = isPad ? 17 : 12 //*
         public static let tiny:CGFloat = isPad ? 16 : 11 //*
         public static let tinyExtra:CGFloat = isPad ? 15 : 10 //*
+        public static let micro:CGFloat = isPad ? 13 : 9 //*
     }
 
 }

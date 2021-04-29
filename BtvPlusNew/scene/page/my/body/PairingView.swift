@@ -61,7 +61,7 @@ struct PairingView: PageComponent{
                         )
                     }
             }
-            .padding(.horizontal, SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.thin)
+            .modifier(ContentHorizontalEdgesTablet())
             HStack(spacing: 0){
                 FillButton(
                     text: String.button.alarm,
@@ -88,20 +88,27 @@ struct PairingView: PageComponent{
                 }
             }
             .background(Color.app.blueLight)
-            .padding(.horizontal, SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.thin)
+            .modifier(ContentHorizontalEdgesTablet())
             .padding(.top, Dimen.margin.regular)
             MyPointInfo()
-                .padding(.horizontal, Dimen.margin.thin)
+                .modifier(ContentHorizontalEdgesTablet())
                 .padding(.top, Dimen.margin.regularExtra)
             if let data = self.watchedData {
-                VideoBlock(
-                    pageObservable:self.pageObservable,
-                    viewModel:self.watchedScrollModel,
-                    pageDragingModel:self.pageDragingModel,
-                    data: data,
-                    margin:SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.thin ,
-                    useTracking:true)
-                    .padding(.top, Dimen.margin.medium)
+                if SystemEnvironment.isTablet {
+                    VideoSetBlock(
+                        pageObservable: self.pageObservable,
+                        data: data)
+                        .padding(.top, Dimen.margin.medium)
+                } else {
+                    VideoBlock(
+                        pageObservable:self.pageObservable,
+                        viewModel:self.watchedScrollModel,
+                        pageDragingModel:self.pageDragingModel,
+                        data: data,
+                        margin:SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.thin ,
+                        useTracking:true)
+                        .padding(.top, Dimen.margin.medium)
+                }
             }
             if self.isCompleted {
                 VStack (alignment: .center, spacing: 0){
@@ -140,7 +147,7 @@ struct PairingView: PageComponent{
                         AppUtil.openURL(ApiPath.getRestApiPath(.WEB) + BtvWebView.happySenior)
                     }
                 }
-                .padding(.horizontal, SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.thin)
+                .modifier(ContentHorizontalEdgesTablet())
                 .padding(.top, Dimen.margin.medium)
             }
         }

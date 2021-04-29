@@ -15,7 +15,8 @@ extension TopBanner{
     static let barWidth:CGFloat = Dimen.bar.medium
     static let imageHeight:CGFloat = SystemEnvironment.isTablet ? 500 : 720
     static let barHeight = Dimen.line.medium
-    static let marginBottom = Dimen.margin.medium
+    static let marginBottom = SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.medium
+    static let marginBottomBar = SystemEnvironment.isTablet ? Dimen.margin.mediumExtra : Dimen.margin.heavy
     static let maginBottomLogo = (Self.imageHeight - Self.height) + (Self.marginBottom + Self.barHeight + Dimen.margin.medium)
 }
 struct TopBanner: PageComponent {

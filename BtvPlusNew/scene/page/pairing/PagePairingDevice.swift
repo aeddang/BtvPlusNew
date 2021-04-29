@@ -67,11 +67,12 @@ struct PagePairingDevice: PageView {
                                         .padding(.top, Dimen.margin.heavy)
                                 }
                             }
-                            .padding(.horizontal, Dimen.margin.regular)
+                            .padding(.horizontal, SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.regular)
                             StbList(datas: self.datas){ stb in
                                 self.selectePairingDevice(stb: stb)
                             }
                             .padding(.top, Dimen.margin.heavy)
+                            .padding(.horizontal, SystemEnvironment.isTablet ? Dimen.margin.heavy : 0)
                         }
                     }
                     .background(Color.brand.bg)

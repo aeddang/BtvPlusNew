@@ -12,7 +12,7 @@ typealias PageID = String
 typealias PageParam = String
 
 enum PageAnimationType {
-    case none, vertical, horizental, opacity
+    case none, vertical, horizontal, opacity
 }
 
 class PageObject : Equatable, Identifiable{
@@ -24,7 +24,7 @@ class PageObject : Equatable, Identifiable{
     var isDimed:Bool
     var isHome:Bool = false
     var isAnimation:Bool = false
-    var animationType:PageAnimationType = .horizental
+    var animationType:PageAnimationType = .horizontal
     let id:String
     init(
         pageID:PageID,

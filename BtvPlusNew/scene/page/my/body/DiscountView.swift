@@ -51,7 +51,7 @@ struct DiscountView: PageComponent{
             index:idx,
             textModifier: TextModifier(
                 family:Font.family.medium,
-                size: Font.size.lightExtra,
+                size: SystemEnvironment.isTablet ?  Font.size.tiny : Font.size.lightExtra,
                 color: Color.app.grey,
                 activeColor: Color.app.white
                 )

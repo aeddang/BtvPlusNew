@@ -135,8 +135,13 @@ struct Alert<Presenting>: View where Presenting: View {
                 .background(Color.app.blue)
             }
             .frame(
-                minWidth: 0, idealWidth: 247, maxWidth:  320,
-                minHeight: 0,  maxHeight: (self.text?.count ?? 0) > self.maxTextCount ? 320 : .infinity
+                minWidth: 0,
+                idealWidth: SystemEnvironment.isTablet ? 370 : 247,
+                maxWidth:  SystemEnvironment.isTablet ? 480 : 320,
+                minHeight: 0,
+                maxHeight: (self.text?.count ?? 0) > self.maxTextCount
+                    ? (SystemEnvironment.isTablet ? 480 : 320)
+                    : .infinity
             )
             .padding(.all, Dimen.margin.heavy)
             

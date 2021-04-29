@@ -184,6 +184,8 @@
 		319745BB261FEE7D0072945D /* PurchaseTicketList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319745BA261FEE7D0072945D /* PurchaseTicketList.swift */; };
 		319745C7262010F30072945D /* PagePurchaseTicketList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319745C6262010F30072945D /* PagePurchaseTicketList.swift */; };
 		3198FED9262FAF77008DCB2C /* PageMyAlram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3198FED8262FAF77008DCB2C /* PageMyAlram.swift */; };
+		319B07A4263A398C008C11A8 /* ConnectTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B07A3263A398C008C11A8 /* ConnectTitle.swift */; };
+		319B07A6263A8807008C11A8 /* VideoSetBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B07A5263A8807008C11A8 /* VideoSetBlock.swift */; };
 		319BAFA02604394F0007273F /* libTycheSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 319BAF9F260439120007273F /* libTycheSDK.a */; };
 		319BAFA326043A2F0007273F /* VoiceRecognition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319BAFA226043A2F0007273F /* VoiceRecognition.swift */; };
 		319BAFAE26043DCA0007273F /* Voice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319BAFAD26043DCA0007273F /* Voice.swift */; };
@@ -580,6 +582,8 @@
 		319745BA261FEE7D0072945D /* PurchaseTicketList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseTicketList.swift; sourceTree = "<group>"; };
 		319745C6262010F30072945D /* PagePurchaseTicketList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePurchaseTicketList.swift; sourceTree = "<group>"; };
 		3198FED8262FAF77008DCB2C /* PageMyAlram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyAlram.swift; sourceTree = "<group>"; };
+		319B07A3263A398C008C11A8 /* ConnectTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectTitle.swift; sourceTree = "<group>"; };
+		319B07A5263A8807008C11A8 /* VideoSetBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSetBlock.swift; sourceTree = "<group>"; };
 		319BAF9E260439110007273F /* TycheSpeechRecognizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TycheSpeechRecognizer.h; sourceTree = "<group>"; };
 		319BAF9F260439120007273F /* libTycheSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTycheSDK.a; sourceTree = "<group>"; };
 		319BAFA226043A2F0007273F /* VoiceRecognition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecognition.swift; sourceTree = "<group>"; };
@@ -1099,6 +1103,7 @@
 		3166CBAD26115D1300282891 /* component */ = {
 			isa = PBXGroup;
 			children = (
+				319B07A5263A8807008C11A8 /* VideoSetBlock.swift */,
 				314D588B25B66868007BCA34 /* ValueInfo.swift */,
 				3166CBF12611AD0000282891 /* MyPointInfo.swift */,
 			);
@@ -1318,6 +1323,13 @@
 			path = view;
 			sourceTree = "<group>";
 		};
+		319B07A2263A394E008C11A8 /* body */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = body;
+			sourceTree = "<group>";
+		};
 		319BAFA1260439AD0007273F /* voice */ = {
 			isa = PBXGroup;
 			children = (
@@ -1483,6 +1495,7 @@
 		D51AA9E52599A2200035CD51 /* pairing */ = {
 			isa = PBXGroup;
 			children = (
+				319B07A2263A394E008C11A8 /* body */,
 				D51AA9EE2599A26B0035CD51 /* component */,
 				D51AA9E62599A24A0035CD51 /* PagePairing.swift */,
 				D568892D259C592000F2F67A /* PagePairingSetupUser.swift */,
@@ -1500,6 +1513,7 @@
 			isa = PBXGroup;
 			children = (
 				D51AA9EF2599A2870035CD51 /* ConnectButton.swift */,
+				319B07A3263A398C008C11A8 /* ConnectTitle.swift */,
 				D573784925A2983800EC571F /* CharacterSelectBox.swift */,
 				31A49FFF2627D7700065E6C6 /* GuideView.swift */,
 			);
@@ -2541,6 +2555,7 @@
 				31A49FD82626751B0065E6C6 /* DiscountView.swift in Sources */,
 				D5688924259C29DE00F2F67A /* SpanText.swift in Sources */,
 				D506D732258CA3E300F27C00 /* ThemaList.swift in Sources */,
+				319B07A6263A8807008C11A8 /* VideoSetBlock.swift in Sources */,
 				316719A02600642D005AC3D2 /* PageIntro.swift in Sources */,
 				D56C5FE825930060009AE769 /* BookMark.swift in Sources */,
 				D56C69A8257DA09E00CF9AB8 /* ImageLoader.swift in Sources */,
@@ -2606,6 +2621,7 @@
 				315544C225B79FAA00086510 /* PageServiceError.swift in Sources */,
 				D5469F5725835231009CED2D /* Bands.swift in Sources */,
 				D56C6A24257DA0C600CF9AB8 /* strings.swift in Sources */,
+				319B07A4263A398C008C11A8 /* ConnectTitle.swift in Sources */,
 				D5DC47662582131E007EDD86 /* GnbBlock.swift in Sources */,
 				3167640F25CCBE79003A7721 /* PlayerGuide.swift in Sources */,
 				31DF152925F9AC4600F0A38D /* TicketBlock.swift in Sources */,
@@ -2963,7 +2979,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -2987,7 +3003,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.015;
+				MARKETING_VERSION = 1.016;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BtvPlusNew/store/Store-Bridging-Header.h";
@@ -3037,7 +3053,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -3056,7 +3072,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.015;
+				MARKETING_VERSION = 1.016;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BtvPlusNew/store/Store-Bridging-Header.h";

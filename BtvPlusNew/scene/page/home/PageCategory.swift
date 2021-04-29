@@ -39,7 +39,8 @@ struct PageCategory: PageView {
                     strokeWidth : 0,
                     divisionMargin: Dimen.margin.thin,
                     height: Dimen.tab.heavyExtra,
-                    bgColor : Color.app.blueLight
+                    bgColor : Color.app.blueLight,
+                    useSelectedEffect: false
                     )
                     .frame(width: self.listWidth)
                     .padding(.vertical, Dimen.margin.thin)
@@ -56,8 +57,9 @@ struct PageCategory: PageView {
             }
         }
         .onReceive(self.navigationModel.$index) { idx in
-            guard let data = self.tabDatas?[idx] else {return}
-            self.openPopup(data: data)
+            guard let datas = self.tabDatas else { return }
+            if idx < 0 || idx >= datas.count { return }
+            self.openPopup(data: datas[idx])
             
         }
         .onReceive(self.viewModel.$event ){ evt in
@@ -149,6 +151,7 @@ struct PageCategory: PageView {
         rows.forEach{$0.datas.first?.isRowFirst = true}
         self.datas.append(contentsOf: rows)
         if self.tabDatas == nil {
+            self.tabDatas = tabDatas
             self.navigationModel.index = -1
             let naviDatas:[(String,String)] = tabDatas.map { ($0.title ?? "", $0.icon ) }
             self.tabs = NavigationBuilder(

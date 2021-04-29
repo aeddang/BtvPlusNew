@@ -50,7 +50,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                     }
                 }
                 .modifier(MatchHorizontal(height: Dimen.tab.thin))
-                .modifier(ContentHorizontalEdges())
+                .padding( .horizontal , self.margin)
                 if !self.datas.isEmpty {
                     VideoList(
                         viewModel:self.viewModel,

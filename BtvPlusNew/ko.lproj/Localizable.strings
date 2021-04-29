@@ -349,17 +349,24 @@
 "pairingText2_3" = "보던 콘텐츠를 이어보고 구매도 하실 수 있어요.";
 "pairingText2_4" = "리모컨, 편성표 등 B tv를 더 편리하게 이용해 보세요.";
 
+"pairingBtnGuide" = "B tv 연결 방법 안내";
+
 "pairingTitle1" = "집 안에서 쉽게 B tv 연결하기";
 "pairingTitle2" = "집 밖에서 TV 없이  간편하게 연결하기";
 
-"pairingBtnGuide" = "B tv 연결 방법 안내";
-
 "pairingBtnWifi" = "Wi-Fi로 연결하기";
 "pairingBtnWifiSub" = "B tv와 동일한 네트워크 연결이 필요합니다.";
-"pairingBtnBtvCertification" = "• B tv 인증번호로 연결하기";
-"pairingBtnBtvCertificationSub" = "• B tv에서 확인한 인증번호를 입력합니다.";
+"pairingBtnBtvCertification" = "B tv 인증번호로 연결하기";
+"pairingBtnBtvCertificationSub" = "B tv에서 확인한 인증번호를 입력합니다.";
 "pairingBtnUserCertification" = "가입자 인증으로 연결하기";
-"pairingBtnUserCertificationSub" = "• B tv 가입자의 휴대폰 인증이 필요합니다.";
+"pairingBtnUserCertificationSub" = "B tv 가입자의 휴대폰 인증이 필요합니다.";
+
+"pairingText1Tablet" = "가족과 함께 B tv를\n모바일로 편리하게\n즐겨 보세요.";
+"pairingTitle1Tablet" = "집 안에서 쉽게\nB tv 연결하기";
+"pairingTitle2Tablet" = "집 밖에서 TV 없이\n간편하게 연결하기";
+"pairingBtnWifiSubTablet" = "B tv와 동일한\n네트워크 연결이 필요합니다.";
+"pairingBtnBtvCertificationSubTablet" = "B tv에서 확인한\n인증번호를 입력합니다.";
+"pairingBtnUserCertificationSubTablet" = "B tv 가입자의 휴대폰\n인증이 필요합니다.";
 
 "pairingGuideText1" = "모바일 B tv 서비스를 이용하기 위해서는\nB tv와 연결이 필요합니다.";
 "pairingGuideInfo1" = "세가지 연결 방법 중 하나를 선택한 후\n프로필을 등록하시면 연결이 진행됩니다.";
@@ -370,17 +377,22 @@
 
 "pairingGuideTitle3" = "집에서 B tv를 통해 간편하게 연결하는 방법!";
 "pairingGuideText3" = "B tv 인증번호로 연결하기";
-"pairingGuideInfo3" = "B tv에서 안내되는 인증번호 6자리를\n모바일 B tv에 입력하여 B tv와 연결하실 수 있습니다.";
+"pairingGuideInfo3" = "B tv에서 안내되는 인증번호 6자리를\n모바일 B tv에 입력하여 B tv와\n연결하실 수 있습니다.";
 
 "pairingGuideTitle4" = "집 밖에서 B tv 없이도 연결할 수 있는 방법!";
 "pairingGuideText4" = "가입자 인증으로 연결하기";
-"pairingGuideInfo4" = "B tv에 가입한 명의자 본인의 스마트 기기로\n인증을 진행하시면 B tv와 연결할 수 있습니다.";
+"pairingGuideInfo4" = "B tv에 가입한 명의자 본인의 스마트 기기로\n인증을 진행하시면 B tv와\n연결할 수 있습니다.";
 
+"pairingGuideText1Horizontal" = "모바일 B tv 서비스를\n이용하기 위해서는\nB tv와 연결이 필요합니다.";
+"pairingGuideTitle2Horizontal" = "집에서 B tv를 켜지 않고도\n연결할 수 있는 방법!";
+"pairingGuideTitle3Horizontal" = "집에서 B tv를 통해\n간편하게 연결하는 방법!";
+"pairingGuideTitle4Horizontal" = "집 밖에서 B tv 없이도\n연결할 수 있는 방법!";
 /*
  PagePairingSetupUser
 */
 "pairingSetupUserText1" = "프로필을 등록해 주세요.";
 "pairingSetupUserText2" = "등록하신 프로필로 취향에 맞는 영상 추천과\n서비스에 유용한 정보를 전달해 드립니다.";
+"pairingSetupUserText2Tablet" = "등록하신 프로필로 취향에 맞는 영상 추천과 서비스에 유용한 정보를 전달해 드립니다.";
 
 "pairingSetupCharacterSelect" = "캐릭터 선택";
 
@@ -628,6 +640,9 @@
  Footer
  */
 "footerText" = "・ 상호 : SK브로드밴드 주식회사\n・ 대표이사 : 최진환\n・ 주소 : 서울특별시 중구 퇴계로 24 SK남산그린빌딩\n・ 통신판매업 신고번호 : 서울 중구 제2008-1608호\n・ 사업자등록번호 : 214-86-18758\n・ 고객센터 : 국번없이 106, 080-8282-106(무료)\n・ 고객지원 이메일 : mobilebtv@skbroadband.com\n・ 호스팅 서비스 제공 : SK브로드밴드 주식회사";
+
+"footerText1" = "・ 상호 : SK브로드밴드 주식회사\n・ 대표이사 : 최진환\n・ 주소 : 서울특별시 중구 퇴계로 24 SK남산그린빌딩\n・ 통신판매업 신고번호 : 서울 중구 제2008-1608호\n・ 사업자등록번호 : 214-86-18758";
+"footerText2" = "・ 고객센터 : 국번없이 106, 080-8282-106(무료)\n・ 고객지원 이메일 : mobilebtv@skbroadband.com\n・ 호스팅 서비스 제공 : SK브로드밴드 주식회사";
 "footerButton" = "・ 사업자 정보 확인";
 
 /*

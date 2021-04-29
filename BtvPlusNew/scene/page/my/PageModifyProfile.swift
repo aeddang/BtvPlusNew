@@ -77,7 +77,7 @@ struct PageModifyProfile: PageView {
                                     .padding(.leading, Dimen.tab.titleWidth)
                                     .padding(.top, Dimen.margin.tiny)
                             }
-                            .padding(.horizontal, Dimen.margin.regular)
+                            .padding(.horizontal, SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.regular)
                             CharacterSelectBox(
                                 data:CharacterRowData(),
                                 selectIdx: self.$characterIdx )

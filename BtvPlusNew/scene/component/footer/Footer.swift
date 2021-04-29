@@ -11,10 +11,11 @@ import SwiftUI
 import Combine
 extension Footer{
     static let height:CGFloat = 50
-    static let expandHeight:CGFloat = 270
-    
+    static let expandHeight:CGFloat = SystemEnvironment.isTablet ? 300 : 270
     static let privacy = "https://m.skbroadband.com/Page.do?menu_id=F02000000"
     static let businessRegistration = "https://www.ftc.go.kr/bizCommPop.do?wrkr_no=2148618758"
+    
+    static let margin:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thinExtra
     
 }
 struct Footer: PageComponent {
@@ -22,11 +23,12 @@ struct Footer: PageComponent {
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @State var isExpand = false
     var body: some View {
-        VStack(alignment: .center, spacing: Dimen.margin.thin){
-            HStack(spacing: Dimen.margin.thinExtra){
+        VStack(alignment: .center,
+               spacing: SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin){
+            HStack(spacing: Self.margin){
                 TextButton(
                     defaultText:String.pageTitle.privacy,
-                    textModifier: MediumTextStyle(size: Font.size.tiny , color: Color.app.grey).textModifier
+                    textModifier: MediumTextStyle(size: Font.size.tinyExtra , color: Color.app.grey).textModifier
                 ){ _ in
                     AppUtil.openURL(Self.privacy)
                 }
@@ -41,7 +43,7 @@ struct Footer: PageComponent {
                         PageProvider
                             .getPageObject(.webview)
                             .addParam(key: .data, value: BtvWebView.serviceTerms)
-                            .addParam(key: .title , value: String.pageTitle.privacy)
+                            .addParam(key: .title , value: String.pageTitle.serviceTerms)
                     )
                     
                 }
@@ -64,22 +66,49 @@ struct Footer: PageComponent {
             }
             .buttonStyle(BorderlessButtonStyle())
             if self.isExpand {
-                VStack(alignment: .leading, spacing: 0){
-                    Spacer().modifier(MatchHorizontal(height: 0))
-                    Text(String.footer.text)
-                        .lineSpacing(Dimen.margin.thinExtra)
-                        .modifier(MediumTextStyle(size: Font.size.tiny , color: Color.app.grey))
-                    TextButton(
-                        defaultText:String.footer.button,
-                        textModifier: MediumTextStyle(size: Font.size.tiny , color: Color.app.grey).textModifier,
-                        isUnderLine: true
-                    ){ _ in
-                        AppUtil.openURL(Self.businessRegistration)
+                if SystemEnvironment.isTablet {
+                    HStack(alignment: .top, spacing: 0){
+                        VStack(alignment: .leading, spacing: 0){
+                            Spacer().modifier(MatchHorizontal(height: 0))
+                            Text(String.footer.text1)
+                                .lineSpacing(Self.margin)
+                                .modifier(MediumTextStyle(size: Font.size.micro , color: Color.app.grey))
+                        }
+                        VStack(alignment: .leading, spacing: 0){
+                            Spacer().modifier(MatchHorizontal(height: 0))
+                            Text(String.footer.text2)
+                                .lineSpacing(Self.margin)
+                                .modifier(MediumTextStyle(size: Font.size.micro , color: Color.app.grey))
+                            TextButton(
+                                defaultText:String.footer.button,
+                                textModifier: MediumTextStyle(size: Font.size.micro , color: Color.app.grey).textModifier,
+                                isUnderLine: true
+                            ){ _ in
+                                AppUtil.openURL(Self.businessRegistration)
+                            }
+                            .padding(.top, Self.margin)
+                        }
                     }
-                    .padding(.top, Dimen.margin.thinExtra)
+                    .padding(.all, Dimen.margin.regular)
+                    .background(Color.app.blueDeep)
+                } else {
+                    VStack(alignment: .leading, spacing: 0){
+                        Spacer().modifier(MatchHorizontal(height: 0))
+                        Text(String.footer.text)
+                            .lineSpacing(Self.margin)
+                            .modifier(MediumTextStyle(size: Font.size.tiny , color: Color.app.grey))
+                        TextButton(
+                            defaultText:String.footer.button,
+                            textModifier: MediumTextStyle(size: Font.size.tiny , color: Color.app.grey).textModifier,
+                            isUnderLine: true
+                        ){ _ in
+                            AppUtil.openURL(Self.businessRegistration)
+                        }
+                        .padding(.top, Self.margin)
+                    }
+                    .padding(.all, Dimen.margin.regular)
+                    .background(Color.app.blueDeep)
                 }
-                .padding(.all, Dimen.margin.regular)
-                .background(Color.app.blueDeep)
             }
         }
         .modifier(MatchHorizontal(height: self.isExpand ? Self.expandHeight : Self.height))

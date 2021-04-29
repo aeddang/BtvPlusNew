@@ -45,7 +45,7 @@ struct TopBannerBg: PageComponent {
                         .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
                 }
                 .frame( height:TopBanner.barHeight)
-                .padding(.bottom, Dimen.margin.heavy + TopBanner.imageHeight - TopBanner.height)
+                .padding(.bottom, TopBanner.marginBottomBar + TopBanner.imageHeight - TopBanner.height)
             }
         }
         .onAppear(){

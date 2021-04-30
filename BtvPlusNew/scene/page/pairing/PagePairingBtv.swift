@@ -27,7 +27,8 @@ struct PagePairingBtv: PageView {
         var body :some View {
             VStack(alignment:.leading , spacing:0) {
                 Text(String.pageText.pairingBtvText1)
-                    .modifier(MediumTextStyle( size: Font.size.bold ))
+                    .modifier(MediumTextStyle(
+                                size: SystemEnvironment.isTablet ? Font.size.boldExtra : Font.size.bold ))
                     .padding(.top, Dimen.margin.light)
                     .fixedSize(horizontal: false, vertical:true)
                 Text(String.pageText.pairingBtvText2)
@@ -35,10 +36,13 @@ struct PagePairingBtv: PageView {
                     .padding(.top, Dimen.margin.regular)
                 Text(String.pageText.pairingBtvText3)
                     .modifier(MediumTextStyle( size: Font.size.thin ))
+                    .padding(.top, Dimen.margin.light)
                 Text(String.pageText.pairingBtvText4)
                     .modifier(MediumTextStyle( size: Font.size.thin ))
+                    .padding(.top, Dimen.margin.micro)
                 Text(String.pageText.pairingBtvText5)
                     .modifier(MediumTextStyle( size: Font.size.thin ))
+                    .padding(.top, Dimen.margin.micro)
                 
             }
         }
@@ -46,17 +50,10 @@ struct PagePairingBtv: PageView {
     struct InputBlock:PageComponent {
         @Binding var input:String
         @Binding var isFocus:Bool
-        var isImageView:Bool = true
+        
         var body :some View {
             VStack(alignment:.center , spacing:Dimen.margin.regularExtra) {
-                if self.isImageView {
-                    Image(Asset.source.pairingTutorial)
-                        .renderingMode(.original)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .modifier(MatchParent())
-                        .padding(.all, Dimen.margin.thin)
-                }
+                
                 HStack(alignment:.center, spacing:Dimen.margin.light){
                     Text(String.app.certificationNumber)
                         .modifier(BoldTextStyle(size: Font.size.light))
@@ -98,26 +95,45 @@ struct PagePairingBtv: PageView {
                         .padding(.top, self.sceneObserver.safeAreaTop)
                     }
                     if self.sceneOrientation == .portrait {
-                        VStack(alignment:.leading , spacing:0) {
+                        VStack(alignment:.leading , spacing:Dimen.margin.regularExtra) {
                             if !self.isInput {
                                 TextBlock()
                                     .padding(.vertical, Dimen.margin.regularExtra)
                                     .padding(.horizontal, Dimen.margin.regular)
-                            }else{
-                                Spacer().frame(height:Dimen.margin.regularExtra)
                             }
-                            InputBlock(input: self.$input, isFocus: self.$isFocus)
-                                .frame(height:250)
-                            Spacer().modifier(MatchParent())
+                            VStack(alignment:.center , spacing:Dimen.margin.regularExtra) {
+                                Image(Asset.source.pairingTutorial)
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(height:SystemEnvironment.isTablet ? 336 : 200)
+                                
+                                InputBlock(input: self.$input, isFocus: self.$isFocus)
+                                Spacer().modifier(MatchParent())
+                            }
                         }
                         .modifier(MatchParent())
                         
                     } else {
-                        HStack(alignment:.top , spacing:0) {
-                            TextBlock()
+                        HStack(alignment:.center , spacing:0) {
+                            VStack(alignment:.center , spacing:0) {
+                                if !self.isInput {
+                                    TextBlock()
+                                        .padding(.horizontal, Dimen.margin.regular)
+                                        .modifier(MatchParent())
+                                } else {
+                                    Spacer().modifier(MatchHorizontal(height: 0))
+                                }
+                                InputBlock(input: self.$input, isFocus: self.$isFocus)
+                                    .padding(.vertical, Dimen.margin.medium)
+                            }
+                           
+                            Image(Asset.source.pairingTutorial)
+                                .renderingMode(.original)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
                                 .modifier(MatchParent())
-                            InputBlock(input: self.$input, isFocus: self.$isFocus, isImageView: !self.isInput)
-                                .modifier(MatchParent())
+                                
                         }
                         .padding(.vertical, Dimen.margin.light)
                         
@@ -132,12 +148,10 @@ struct PagePairingBtv: PageView {
                     .padding(.bottom, self.safeAreaBottom)
                 }
                 .modifier(PageFull())
-                .onTapGesture {
-                    self.isFocus = false
-                }
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                
             }//draging
-        
+            
             .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
                 if self.isInput {return}
                 withAnimation{
@@ -147,13 +161,22 @@ struct PagePairingBtv: PageView {
             .onReceive(self.sceneObserver.$isUpdated){ update in
                 if !update {return}
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
+                withAnimation{
+                    self.safeAreaBottom = self.sceneObserver.safeAreaBottom
+                }
             }
             .onReceive(self.keyboardObserver.$isOn){ on in
+                PageLog.d("keyboardObserver " + on.description, tag:self.tag)
                 self.updatekeyboardStatus(on:on)
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
-                if ani { self.isFocus = true }
+                if ani {
+                    DispatchQueue.main.async {
+                        self.isFocus = true
+                        self.updatekeyboardStatus(on:true)
+                    }
+                }
             }
             .onReceive(self.pairing.$event){ evt in
                 guard let evt = evt else {return}
@@ -173,6 +196,7 @@ struct PagePairingBtv: PageView {
             }
             .onAppear{
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
+                
             }
             .onDisappear{
             }
@@ -181,12 +205,13 @@ struct PagePairingBtv: PageView {
     }//body
     
     func updatekeyboardStatus(on:Bool) {
+        PageLog.d("updatekeyboardStatus " + on.description, tag:self.tag)
+        PageLog.d("updatekeyboardStatus isFocus " + isFocus.description, tag:self.tag)
+        PageLog.d("updatekeyboardStatus isInput " + isInput.description, tag:self.tag)
         if self.isFocus != on { self.isFocus = on }
         if self.isInput == on { return }
         withAnimation{
             self.isInput = on
-            self.safeAreaBottom = on
-                ? self.keyboardObserver.keyboardHeight : self.sceneObserver.safeAreaBottom
         }
         
     }

@@ -255,6 +255,9 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
                     self.onDraging(geometry: geo, value: value)
                 case .draged(let geo, let value) : self.onDragEnd(geometry: geo, value:value)
                 case .dragCancel :
+                    if self.keyboardObserver.isOn {
+                        AppUtil.hideKeyboard()
+                    }
                     if self.viewModel.status != .drag { return }
                     self.onDragCancel()
                 default : do {}

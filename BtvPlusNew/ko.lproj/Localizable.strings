@@ -144,6 +144,7 @@
 "btnDirectview" = "바로보기";
 "btnLookup" = "조회하기";
 "btnAlramOn" = "알림 설정 켜기";
+"btnAgree" = "동의";
 /*
  Sort
 */
@@ -330,6 +331,7 @@
 "titleCertificationUser" = "성인인증";
 "titlePrivacy" = "개인정보 처리방침";
 "titleServiceTerms" = "이용약관 및 청소년 보호정책";
+"titlePrivacyAndAgree" = "개인정보 수집 및 이용동의";
 "titleSchedule" = "편성표";
 "titleModifyProfile" = "프로필 변경";
 "titleWatched" = "최근 시청 목록";
@@ -442,6 +444,7 @@
 "myModifyNickname" = "B tv 닉네임 설정";
 "myModifyNicknameText" = "설정하실 B tv의 닉네임을 입력해주세요.";
 "myModifyNicknameTip" = "※ 한글,영문,숫자를 포함하여 최대 8자까지 입력가능.";
+
 /*
  PageMyBenefits
 */
@@ -484,8 +487,6 @@
 "myBenefitsCardEmpty" = "등록된 카드가 없습니다.";
 "myBenefitsDiscountTvEmpty" = "TV포인트 등록 정보가 없습니다.";
 "myBenefitsDiscountTvEmptyTip" = "B tv에서 TV포인트에 가입해주세요.";
-
-
 
 /*
  PageModifyProfile
@@ -538,6 +539,8 @@
 "setupGuide" = "도움말";
 "setupVersionLatest" = "최신 버전 이용 중";
 "setupOpensource" = "오픈소스 라이선스";
+
+
 
 /*
  PageSynopsis
@@ -603,6 +606,17 @@
 
 
 /*
+ PagePrivacyAndAgree
+*/
+"privacyAndAgreeTitle1" = "이용정보";
+"privacyAndAgreeTitle2" = "이용목적";
+"privacyAndAgreeTitle3" = "보유기간";
+
+"privacyAndAgreeText1" = "B tv 연결 정보 (IMEI, STB ID, 닉네임, 휴대전화번호), 모바일 B tv 서비스 이용정보 (이용서비스 종류, 이용량, 이용시간, 이용금액, 결제기록, 접속기록, 이용 콘텐츠 등)";
+"privacyAndAgreeText2" = "셋톱박스 연결 및 맞춤형 서비스 제공, 할인, 이벤트 등 다양한 혜택 정보와 업데이트, 콘텐츠 추천 등 서비스 이용에 필요한 정보 안내";
+"privacyAndAgreeText3" = "셋톱연결 해지 후 익일 24시까지";
+
+/*
  Player
 */
 "playerPreplay" = "3분 미리보기";
@@ -619,9 +633,6 @@
 "playerAdMore" = "광고 정보 더보기";
 "playerAdCancel" = "광고 건너뛰기";
 "playerMoveSec" = "초 이동";
-
-
-
 
 /*
  Monthly
@@ -654,7 +665,6 @@
 /*
  Share
  */
-
 "shareInviteMsg" = "모바일 B tv에 초대합니다.\n\n%s\n▶ 모바일 B tv 앱이 설치되어 있다면 위 링크를 누르시고 바로 이용해보세요.\n\n▶ 아직 앱이 설치되어 있지 않다면, 위 링크를 눌러 앱을 설치한 후 다시 이 링크를 눌러 이용하실 수 있습니다.\n\n※ B tv 연결은 링크가 유효한 30분 안에 완료해야 합니다.";
 
 "shareSynopsis" = "추천 영상을 모바일 Btv에서 확인해 보세요!";

@@ -24,8 +24,7 @@ struct PageConfirmNumber: PageView {
     @EnvironmentObject var keyboardObserver:KeyboardObserver
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
-    @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
-
+    
     @State var type:InputType = .password
     
     @State var movePage:PageObject? = nil

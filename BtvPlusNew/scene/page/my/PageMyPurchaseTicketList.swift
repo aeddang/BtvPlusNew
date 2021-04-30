@@ -11,7 +11,7 @@ import Combine
 
 
 
-struct PagePurchaseTicketList: PageView {
+struct PageMyPurchaseTicketList: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var sceneObserver:PageSceneObserver
@@ -192,7 +192,7 @@ struct PagePurchaseTicketList: PageView {
 struct PagePurchaseTicketList_Previews: PreviewProvider {
     static var previews: some View {
         Form{
-            PagePurchaseTicketList().contentBody
+            PageMyPurchaseTicketList().contentBody
                 .environmentObject(PagePresenter())
                 .environmentObject(PageSceneObserver())
                 .environmentObject(Repository())

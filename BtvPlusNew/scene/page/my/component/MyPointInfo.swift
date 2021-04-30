@@ -18,7 +18,7 @@ struct MyPointInfo: View {
                 .modifier(MatchParent())
                 .onTapGesture {
                     self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.purchaseTicketList)
+                        PageProvider.getPageObject(.myPurchaseTicketList)
                     )
                 }
             Spacer().modifier(LineVertical())

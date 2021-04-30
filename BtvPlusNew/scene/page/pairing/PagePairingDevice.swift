@@ -28,7 +28,7 @@ struct PagePairingDevice: PageView {
     
     @State var isReady:Bool = false
     @State var useTracking:Bool = false
-   
+    @State var sceneOrientation: SceneOrientation = .portrait
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -67,12 +67,12 @@ struct PagePairingDevice: PageView {
                                         .padding(.top, Dimen.margin.heavy)
                                 }
                             }
-                            .padding(.horizontal, SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.regular)
+                            .padding(.horizontal, self.sceneOrientation == .landscape ? Dimen.margin.heavy : Dimen.margin.regular)
                             StbList(datas: self.datas){ stb in
                                 self.selectePairingDevice(stb: stb)
                             }
                             .padding(.top, Dimen.margin.heavy)
-                            .padding(.horizontal, SystemEnvironment.isTablet ? Dimen.margin.heavy : 0)
+                            .padding(.horizontal, self.sceneOrientation == .landscape ? Dimen.margin.heavy : 0)
                         }
                     }
                     .background(Color.brand.bg)
@@ -143,7 +143,12 @@ struct PagePairingDevice: PageView {
                 default : do{}
                 }
             }
+            .onReceive(self.sceneObserver.$isUpdated){ _ in
+                self.sceneOrientation = self.sceneObserver.sceneOrientation
+            }
+            
             .onAppear{
+                self.sceneOrientation = self.sceneObserver.sceneOrientation
                 guard let obj = self.pageObject  else { return }
                 self.pairingType = (obj.getParamValue(key: .type) as? PairingRequest) ?? self.pairingType
 

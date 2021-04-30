@@ -106,12 +106,12 @@ struct AppLayout: PageComponent{
                 self.appSceneObserver.useTop = PageSceneModel.needTopTab(cPage)
             }
             self.appSceneObserver.useBottom = PageSceneModel.needBottomTab(cPage)
-            
+            AppUtil.hideKeyboard()
             if PageSceneModel.needKeyboard(cPage) {
                 self.keyboardObserver.start()
             }else{
                 self.keyboardObserver.cancel()
-                AppUtil.hideKeyboard()
+               
             }
         }
         .onReceive (self.appObserver.$page) { iwg in

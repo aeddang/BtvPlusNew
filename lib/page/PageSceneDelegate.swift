@@ -269,7 +269,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         var delay = self.changeDelay
         if let pageObject = popupContent.pageObject {
             delay = pageObject.animationType == .none ? self.changeDelay : self.changeAniDelay
-            let opacity = pageObject.animationType == .none ? 1.0 : 0.0
+            //let opacity = pageObject.animationType == .none ? 1.0 : 0.0
             switch  pageObject.animationType {
             case .vertical:
                 popupContent.pageObservable.pagePosition.y = UIScreen.main.bounds.height
@@ -277,7 +277,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                 popupContent.pageObservable.pagePosition.x = UIScreen.main.bounds.width
             default: do{}
             }
-            popupContent.pageObservable.pageOpacity = opacity
+            //popupContent.pageObservable.pageOpacity = opacity
         }
         contentController?.addPopup(popupContent)
         let key = popup.id
@@ -308,7 +308,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         var delay = self.changeDelay
         if let pageObject = popupContent.pageObject {
             delay = pageObject.animationType == .none ? self.changeDelay : self.changeAniDelay
-            let opacity = pageObject.animationType == .none ? 1.0 : 0.0
+            let opacity = pageObject.animationType == .opacity ? 0.0 : 1.0
             switch  pageObject.animationType {
             case .vertical:
                 popupContent.pageObservable.pagePosition.y = UIScreen.main.bounds.height

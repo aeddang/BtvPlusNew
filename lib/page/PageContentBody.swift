@@ -38,6 +38,7 @@ struct PageContentBody: PageView  {
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @State var offsetX:CGFloat = 0
     @State var offsetY:CGFloat = 0
+    @State var dragOpacity:Double = 0.0
     @State var opacity:Double = 1.0
     @State var pageOffsetX:CGFloat = 0.0
     @State var pageOffsetY:CGFloat = 0.0
@@ -54,14 +55,14 @@ struct PageContentBody: PageView  {
                     y: self.offsetY)
             if self.isBelow {
                 Spacer().modifier(MatchParent()).background(Color.transparent.black70)
-                    .opacity(self.opacity)
+                    .opacity(self.dragOpacity)
                     .onTapGesture {
                         self.pageChanger.goBack()
                     }
             }
             
         }
-        
+        .opacity(self.opacity)
         .offset(x:  self.pageOffsetX, y:  -self.pageOffsetY )
         .onReceive(self.pageChanger.$currentTopPage){ page in
             guard let page = page else { return }
@@ -70,8 +71,9 @@ struct PageContentBody: PageView  {
             self.topPageType = page.animationType
             guard let pageObject = self.pageObject else { return }
             if pageObject.zIndex != 0 { return }
-           
+            if pageObject.animationType == .opacity { return }
             if self.offsetX != 0 || self.offsetY != 0 { return }
+            
             if pageObject == page {
                 self.isTop = true
                 self.isBelow = false
@@ -85,7 +87,7 @@ struct PageContentBody: PageView  {
                 
                 let below = self.pageChanger.getBelowPage(page: page)
                 self.isBelow = below == pageObject
-                self.opacity = 1
+                self.dragOpacity = 1
                 if !self.useBelowPageMove {return}
                 withAnimation{
                     switch self.topPageType {
@@ -110,7 +112,7 @@ struct PageContentBody: PageView  {
             if !self.isBelow {return}
             if self.isTop {return}
             
-            self.opacity = opacity
+            self.dragOpacity = opacity
             if !self.useBelowPageMove {return}
             //PageLog.log("pagePosition " + self.opacity.description + " " + self.pageID ,tag:self.pageID)
             let amount = Self.pageMoveAmount * CGFloat(opacity)
@@ -149,7 +151,7 @@ struct PageContentBody: PageView  {
             PageLog.log("onAppear",tag:self.pageID)
             self.offsetX = self.pageObservable.pagePosition.x
             self.offsetY = self.pageObservable.pagePosition.y
-            self.opacity = 0
+            if self.pageObject?.animationType == .opacity { self.opacity = 0 }
             
             DispatchQueue.main.async {
                 self.isReady = true

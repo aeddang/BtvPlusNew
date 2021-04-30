@@ -316,6 +316,7 @@ extension String {
         public static let directview =  "btnDirectview".loaalized()
         public static let lookup =  "btnLookup".loaalized()
         public static let alramOn = "btnAlramOn".loaalized()
+        public static let agree = "btnAgree".loaalized()
     }
     struct player {
         public static let moveSec = "playerMoveSec".loaalized()
@@ -376,6 +377,7 @@ extension String {
         public static let purchase = "titlePurchase".loaalized()
         public static let certificationUser = "titleCertificationUser".loaalized()
         public static let privacy = "titlePrivacy".loaalized()
+        public static let privacyAndAgree = "titlePrivacyAndAgree".loaalized()
         public static let serviceTerms = "titleServiceTerms".loaalized()
         public static let schedule = "titleSchedule".loaalized()
         public static let modifyProfile = "titleModifyProfile".loaalized()
@@ -606,7 +608,13 @@ extension String {
         public static let adultCertificationText2 = "adultCertificationText2".loaalized()
         public static let adultCertificationText3 = "adultCertificationText3".loaalized()
         
-       
+        public static let privacyAndAgreeTitle1 = "privacyAndAgreeTitle1".loaalized()
+        public static let privacyAndAgreeTitle2 = "privacyAndAgreeTitle2".loaalized()
+        public static let privacyAndAgreeTitle3 = "privacyAndAgreeTitle3".loaalized()
+        public static let privacyAndAgreeText1 = "privacyAndAgreeText1".loaalized()
+        public static let privacyAndAgreeText2 = "privacyAndAgreeText2".loaalized()
+        public static let privacyAndAgreeText3 = "privacyAndAgreeText3".loaalized()
+
     }
     
 }

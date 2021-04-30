@@ -24,6 +24,7 @@ extension PageID{
     static let myPurchase:PageID = "myPurchase"
     static let myBenefits:PageID = "myBenefits"
     static let myAlram:PageID = "myAlram"
+    static let myPurchaseTicketList:PageID = "myPurchaseTicketList"
     static let modifyProile:PageID = "modifyProile"
     static let setup:PageID = "setup"
     static let pairingSetupUser:PageID = "pairingSetupUser"
@@ -48,8 +49,9 @@ extension PageID{
     static let confirmNumber:PageID = "confirmNumber"
     static let watchHabit:PageID = "watchHabit"
     static let purchaseList:PageID = "purchaseList"
-    static let purchaseTicketList:PageID = "purchaseTicketList"
+    
     static let couponList:PageID = "couponList"
+    static let privacyAndAgree:PageID = "PrivacyAndAgree"
 }
 
 struct PageProvider {
@@ -84,10 +86,12 @@ struct PageProvider {
              .pairingSetupUser, .pairingBtv,
              .pairingDevice, .pairingUser, .pairingManagement, .pairingEmptyDevice, .pairingGuide,
              .purchase , .webview, .schedule, .modifyProile,
-             .adultCertification, .confirmNumber, .watchHabit, .purchaseTicketList:
+             .adultCertification, .watchHabit, .myPurchaseTicketList :
             return  .vertical
         case .fullPlayer :
             return .none
+        case .confirmNumber, .privacyAndAgree:
+            return .opacity
         default : return  .horizontal
         }
     }
@@ -207,8 +211,9 @@ struct PageFactory{
         case .confirmNumber : return PageConfirmNumber()
         case .watchHabit : return PageWatchHabit()
         case .purchaseList : return PagePurchaseList()
-        case .purchaseTicketList : return PagePurchaseTicketList()
+        case .myPurchaseTicketList : return PageMyPurchaseTicketList()
         case .couponList : return PageCouponList()
+        case .privacyAndAgree : return PagePrivacyAndAgree()
         default : return PageTest()
         }
     }

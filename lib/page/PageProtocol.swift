@@ -162,7 +162,7 @@ open class PageSceneObserver: ObservableObject{
     }
     var sceneOrientation: SceneOrientation {
         get{
-            return self.screenSize.width > self.screenSize.height
+            return self.screenSize.width > (self.screenSize.height + self.safeAreaBottom)
                         ? .landscape
                         : .portrait
             //return UIDevice.current.orientation.isLandscape ? .landscape : .portrait
@@ -399,6 +399,7 @@ extension PageModel{
 
 typealias PageEventType = String
 struct PageEvent {
+    private(set) var id:String = ""
     private(set) var type:PageEventType = ""
     var data: Any? = nil
 }

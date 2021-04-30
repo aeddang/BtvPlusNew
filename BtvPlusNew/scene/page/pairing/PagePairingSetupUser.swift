@@ -167,12 +167,27 @@ struct PagePairingSetupUser: PageView {
                             isChecked: self.isAgree2,
                             text:String.pageText.pairingSetupUserAgreement2,
                             more:{
-                                
+                                self.pagePresenter.openPopup(
+                                    PageProvider
+                                        .getPageObject(.privacyAndAgree)
+                                )
                             },
                             action:{ ck in
                                 self.isAgree2 = ck
                             }
                         )
+                        .onReceive(self.pagePresenter.$event){ evt in
+                            if evt?.id != "PagePrivacyAndAgree" {return}
+                            guard let evt = evt else {return}
+                            switch evt.type {
+                            case .completed :
+                                self.isAgree2 = true
+                            case .cancel :
+                                self.isAgree2 = false
+                            default : break
+                            }
+                        }
+                        
                         CheckBox(
                             isChecked: self.isAgree3,
                             text:String.pageText.pairingSetupUserAgreement3,

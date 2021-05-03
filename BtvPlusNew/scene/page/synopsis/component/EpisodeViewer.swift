@@ -86,9 +86,7 @@ struct EpisodeViewer: PageComponent{
     
     var body: some View {
         VStack(alignment:.leading , spacing:0) {
-            Text(self.data.episodeTitle)
-                .modifier(BoldTextStyle( size: Font.size.boldExtra ))
-                .lineLimit(2)
+            
             HStack(alignment: .center, spacing:Dimen.margin.tiny){
                 if let ratingPct = self.data.ratingPct {
                     RatingInfo(
@@ -127,8 +125,6 @@ struct EpisodeViewer: PageComponent{
                         .frame(height: Dimen.icon.thin)
                 }
             }
-            .padding(.top, Dimen.margin.lightExtra)
-            
             if self.data.award != nil {
                 Button(action: {
                     self.appSceneObserver.alert = .alert(nil, self.data.awardDetail)

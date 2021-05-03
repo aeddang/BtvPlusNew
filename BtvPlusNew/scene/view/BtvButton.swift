@@ -39,7 +39,7 @@ struct BtvButton: PageView {
                     size: Font.size.tiny,
                     color: Color.app.greyLight
                 ))
-                
+                .fixedSize(horizontal: true, vertical: false)
             }
         }//btn
         

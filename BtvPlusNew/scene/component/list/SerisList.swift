@@ -17,7 +17,7 @@ class SerisData:InfinityData{
     private(set) var brcastTseqNm:Int = -1
     private(set) var price: String? = nil
     private(set) var isFree: Bool? = nil
-    
+    private(set) var type: SerisType = .big
     func setData(data:SeriesInfoItem, title:String? = nil, idx:Int = -1) -> SerisData {
        
         if let thumb = data.poster_filename_h {
@@ -39,6 +39,11 @@ class SerisData:InfinityData{
         return self
     }
     
+    func setListType(_ type: SerisType) -> SerisData {
+        self.type = type
+        return self
+    }
+    
     func setDummy(_ idx:Int = -1) -> SerisData {
         title = "12회 결방"
         subTitle = "19.08.25"
@@ -46,6 +51,17 @@ class SerisData:InfinityData{
     }
 }
 
+enum SerisType {
+    case small, big
+    var size:CGSize {
+        get{
+            switch self {
+            case .small: return ListItem.seris.type01
+            case .big: return ListItem.seris.type02
+            }
+        }
+    }
+}
 
 
 struct SerisList: PageComponent{
@@ -104,8 +120,8 @@ struct SerisItem: PageView {
                     lineWidth: Dimen.stroke.regular)
             )
             .frame(
-                width: ListItem.seris.size.width,
-                height: ListItem.seris.size.height)
+                width: self.data.type.size.width,
+                height: self.data.type.size.height)
             .clipped()
             VStack(alignment: .leading, spacing:Dimen.margin.thinExtra){
                 Spacer().modifier(MatchHorizontal(height: 0))
@@ -121,7 +137,7 @@ struct SerisItem: PageView {
                 }
             }
         }
-        .frame(height: ListItem.seris.size.height)
+        .frame(height: self.data.type.size.height)
     }
     
 }

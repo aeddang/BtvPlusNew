@@ -71,8 +71,12 @@ struct PlayerMoreBox: PageView{
             
         }
         .frame(
-            width: self.isFullScreen ? 120 : 81,
-            height: self.isFullScreen ? 169 : 102
+            width: self.isFullScreen
+                ? SystemEnvironment.isTablet ? 215 : 120
+                : SystemEnvironment.isTablet ? 174 :  81,
+            height: self.isFullScreen
+                ? SystemEnvironment.isTablet ? 302 : 169
+                : SystemEnvironment.isTablet ? 214 : 102
         )
         .opacity(self.isShowing ? 1 : 0)
         .onReceive(self.viewModel.$btvUiEvent) { evt in

@@ -43,7 +43,7 @@ struct BookMarkButton: PageView {
                         size: Font.size.tiny,
                         color: Color.app.greyLight
                     ))
-                    
+                    .fixedSize(horizontal: true, vertical: false)
                 }
             } else {
                 Image( self.isBookmark == true ? Asset.icon.heartSmallOn : Asset.icon.heartSmallOff )

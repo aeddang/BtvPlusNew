@@ -65,6 +65,7 @@ struct NavigationBuilder{
             id: UUID.init().uuidString,
             body: AnyView(
                 Text(txt)
+                    .kerning(Font.kern.thin)
                     .font(.custom(Font.family.black, size: textModifier.size))
                     .foregroundColor(self.index != idx ? textModifier.color : (color ?? textModifier.activeColor))
                     .modifier(MatchParent())

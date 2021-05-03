@@ -32,31 +32,36 @@ struct SerisTab: PageComponent{
     
     var body: some View {
         HStack(alignment:.center, spacing: Dimen.margin.thin){
-            if self.textSeason != nil {
-                TextButton(
-                    defaultText: self.textSeason!,
-                    textModifier: TextModifier(
-                        family: Font.family.medium,
-                        size: Font.size.regular,
-                        color: Color.app.white),
-                    image: Asset.icon.dropDown,
-                    imageSize: Dimen.icon.tinyExtra){_ in
-                    
-                    self.appSceneObserver.select =
-                        .select((self.tag + SelectType.season.rawValue ,
-                                 self.data.seasons.map{$0.title ?? ""}),
-                        self.data.currentSeasonIdx)
-                    
+            VStack(alignment: .leading, spacing: 0) {
+                Spacer().modifier(MatchHorizontal(height: 0))
+                HStack(alignment:.center, spacing: Dimen.margin.thin){
+                    if self.textSeason != nil {
+                        TextButton(
+                            defaultText: self.textSeason!,
+                            textModifier: TextModifier(
+                                family: Font.family.medium,
+                                size: Font.size.regular,
+                                color: Color.app.white),
+                            image: Asset.icon.dropDown,
+                            imageSize: Dimen.icon.tinyExtra){_ in
+                            
+                            self.appSceneObserver.select =
+                                .select((self.tag + SelectType.season.rawValue ,
+                                         self.data.seasons.map{$0.title ?? ""}),
+                                self.data.currentSeasonIdx)
+                            
+                        }
+                        .buttonStyle(BorderlessButtonStyle())
+                    }
+                    Text(self.textSeasonCount)
+                        .modifier(BoldTextStyle(
+                            size: Font.size.lightExtra,
+                            color: Color.app.white)
+                        )
+                        .opacity(0.5)
                 }
-                .buttonStyle(BorderlessButtonStyle())
             }
-            Text(self.textSeasonCount)
-                .modifier(BoldTextStyle(
-                    size: Font.size.lightExtra,
-                    color: Color.app.white)
-                )
-                .opacity(0.5)
-            Spacer()
+            
             TextButton(
                 defaultText: self.sortType.name,
                 textModifier: TextModifier(

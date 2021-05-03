@@ -46,11 +46,12 @@ struct ListItem{
     }
     
     struct people {
-        static let size:CGSize = CGSize(width: 78, height: 78)
+        static let size:CGSize = isPad ? CGSize(width: 99, height: 99) : CGSize(width: 78, height: 78)
     }
     
     struct seris {
-        static let size:CGSize = CGSize(width: 164, height: 92)
+        static let type01:CGSize = CGSize(width: 159, height: 89)
+        static let type02:CGSize = isPad ? CGSize(width: 247, height: 139) : CGSize(width: 164, height: 92)
     }
     
     struct purchase {

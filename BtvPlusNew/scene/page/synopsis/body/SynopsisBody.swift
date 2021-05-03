@@ -8,6 +8,10 @@
 import Foundation
 import SwiftUI
 
+extension SynopsisBody {
+    static let spacing:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.regular
+}
+
 struct SynopsisBody: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
@@ -35,6 +39,8 @@ struct SynopsisBody: PageComponent{
     var relationDatas:[PosterDataSet] = []
     var hasRelationVod:Bool? = nil
     var useTracking:Bool = false
+    var funtionLayout:Axis = .vertical
+    
     private var usePullTracking:Bool
     {
         get{
@@ -56,29 +62,49 @@ struct SynopsisBody: PageComponent{
             if #available(iOS 14.0, *) {
                 Spacer().modifier(MatchHorizontal(height: 1)).background(Color.transparent.clearUi)
                     .id(self.topIdx)
-                    .modifier(ListRowInset(spacing: Dimen.margin.regular))
+                    .modifier(ListRowInset(spacing: Self.spacing))
                 
-                if self.episodeViewerData != nil {
-                    EpisodeViewer(data:self.episodeViewerData!)
-                        .modifier(ListRowInset(spacing: Dimen.margin.regular))
-                    HStack(spacing:0){
-                        FunctionViewer(
-                            synopsisData :self.synopsisData,
-                            srisId: self.srisId,
-                            epsdId:self.epsdId,
-                            isBookmark: self.$isBookmark,
-                            isLike: self.$isLike
-                        )
-                        Spacer()
+                if let episodeViewerData = self.episodeViewerData {
+                    Text(episodeViewerData.episodeTitle)
+                        .modifier(BoldTextStyle( size: Font.size.boldExtra ))
+                        .lineLimit(2)
+                        .modifier(ContentHorizontalEdges())
+                        .modifier(ListRowInset(spacing: SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.lightExtra))
+                    if self.funtionLayout == .horizontal {
+                        HStack(alignment:.top , spacing:0){
+                            EpisodeViewer(data:episodeViewerData)
+                            Spacer()
+                            FunctionViewer(
+                                synopsisData :self.synopsisData,
+                                srisId: self.srisId,
+                                epsdId:self.epsdId,
+                                isBookmark: self.$isBookmark,
+                                isLike: self.$isLike
+                            )
+                        }
+                        .modifier(ListRowInset(spacing: Self.spacing))
+                    } else {
+                        EpisodeViewer(data:episodeViewerData)
+                            .modifier(ListRowInset(spacing: Self.spacing))
+                        HStack(spacing:0){
+                            FunctionViewer(
+                                synopsisData :self.synopsisData,
+                                srisId: self.srisId,
+                                epsdId:self.epsdId,
+                                isBookmark: self.$isBookmark,
+                                isLike: self.$isLike
+                            )
+                            Spacer()
+                        }
+                        .modifier(ListRowInset(spacing: Self.spacing))
                     }
-                    .modifier(ListRowInset(spacing: Dimen.margin.regular))
                 }
                 
                 if self.hasAuthority != nil && self.purchasViewerData != nil {
                     PurchaseViewer(
                         componentViewModel: self.componentViewModel,
                         data:self.purchasViewerData! )
-                        .modifier(ListRowInset(spacing: Dimen.margin.regular))
+                        .modifier(ListRowInset(spacing: Self.spacing))
                 }
                 if self.hasAuthority == false && self.isPairing == false {
                     FillButton(
@@ -89,7 +115,7 @@ struct SynopsisBody: PageComponent{
                         )
                     }
                     .buttonStyle(BorderlessButtonStyle())
-                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
+                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Self.spacing))
                 }
                 
                 if self.summaryViewerData != nil {
@@ -98,78 +124,56 @@ struct SynopsisBody: PageComponent{
                         data: self.summaryViewerData!,
                         useTracking: self.usePullTracking
                     )
-                    .modifier(ListRowInset(spacing: Dimen.margin.regular))
+                    .modifier(ListRowInset(spacing: Self.spacing))
                 }
-                
-                if self.hasRelationVod != nil {
-                    if self.hasRelationVod == false {
-                        Text(String.pageText.synopsisRelationVod)
-                            .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
-                            .frame(height:Dimen.tab.regular)
-                            .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
-                        EmptyAlert(text:String.pageText.synopsisNoRelationVod)
-                            .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
-                    } else if self.relationTab.count == 1 {
-                        Text(self.relationTab.first!.data)
-                            .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
-                            .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
-                    }
-                    else{
-                        CPTabDivisionNavigation(
-                            viewModel:self.tabNavigationModel,
-                            buttons: self.relationTab
+                if let hasRelationVod = self.hasRelationVod {
+                    RelationVodList(
+                        componentViewModel: self.componentViewModel,
+                        relationContentsModel: self.relationContentsModel,
+                        tabNavigationModel: self.tabNavigationModel,
+                        seris: self.$seris,
+                        synopsisData: self.synopsisData,
+                        relationTab: self.relationTab,
+                        relationDatas: self.relationDatas,
+                        hasRelationVod: hasRelationVod,
+                        screenSize: self.sceneObserver.screenSize.width
                         )
-                        .frame(height:Dimen.tab.regular)
-                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
-                    }
-                }
-                
-                if !self.seris.isEmpty {
-                    SerisTab(
-                        data:self.relationContentsModel,
-                        seris: self.$seris
-                    ){ season in
-                        self.componentViewModel.uiEvent = .changeSynopsis(season.synopsisData)
-                    }
-                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.thin))
-                    ForEach(self.seris) { data in
-                        SerisItem( data:data, isSelected: self.synopsisData?.epsdId == data.contentID )
-                            .onTapGesture {
-                                self.componentViewModel.uiEvent = .changeVod(data.epsdId)
-                            }
-                            .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))
-                    }
-                
-                } else if !self.relationDatas.isEmpty {
-                    ForEach(self.relationDatas) { data in
-                        PosterSet( data:data ){data in
-                            self.componentViewModel.uiEvent = .changeSynopsis(data.synopsisData)
-                        }
-                        .frame(height: PosterSet.listSize(data: data, screenWidth: self.sceneObserver.screenSize.width).height)
-                        .modifier(ListRowInset( spacing: Dimen.margin.thin))
-                    }
-                } else {
-                    Text(String.pageText.synopsisRelationVod)
-                        .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
-                        .frame(height:Dimen.tab.regular)
-                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
-                    EmptyAlert(text:String.pageText.synopsisNoRelationVod)
-                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
                 }
                 
             } else {
                 //IOS 13
-                VStack(alignment:.leading , spacing:Dimen.margin.regular){
-                    if self.episodeViewerData != nil {
-                        EpisodeViewer(data:self.episodeViewerData!)
-                        HStack(spacing:0){
-                            FunctionViewer(
-                                synopsisData :self.synopsisData,
-                                srisId: self.srisId,
-                                isBookmark: self.$isBookmark,
-                                isLike: self.$isLike
-                            )
-                            Spacer()
+                VStack(alignment:.leading , spacing:Self.spacing){
+                    if let episodeViewerData = self.episodeViewerData {
+                        Text(episodeViewerData.episodeTitle)
+                            .modifier(BoldTextStyle( size: Font.size.boldExtra ))
+                            .lineLimit(2)
+                            .modifier(ContentHorizontalEdges())
+                            
+                        if self.funtionLayout == .horizontal {
+                            HStack(alignment:.top , spacing:0){
+                                EpisodeViewer(data:episodeViewerData)
+                                Spacer()
+                                FunctionViewer(
+                                    synopsisData :self.synopsisData,
+                                    srisId: self.srisId,
+                                    epsdId:self.epsdId,
+                                    isBookmark: self.$isBookmark,
+                                    isLike: self.$isLike
+                                )
+                            }
+                            
+                        } else {
+                            EpisodeViewer(data:episodeViewerData)
+                            HStack(spacing:0){
+                                FunctionViewer(
+                                    synopsisData :self.synopsisData,
+                                    srisId: self.srisId,
+                                    epsdId:self.epsdId,
+                                    isBookmark: self.$isBookmark,
+                                    isLike: self.$isLike
+                                )
+                                Spacer()
+                            }
                         }
                     }
                     
@@ -198,63 +202,20 @@ struct SynopsisBody: PageComponent{
                         )
                     }
                 }
-                .modifier(ListRowInset(index:1, spacing: Dimen.margin.regular, marginTop:Dimen.margin.regular))
+                .modifier(ListRowInset(index:1, spacing: Self.spacing, marginTop:Self.spacing))
                 
-                if self.hasRelationVod != nil {
-                    if self.hasRelationVod == false {
-                        Text(String.pageText.synopsisRelationVod)
-                            .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
-                            .frame(height:Dimen.tab.regular)
-                            .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
-                        EmptyAlert(text:String.pageText.synopsisNoRelationVod)
-                            .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
-                        
-                    } else if self.relationTab.count == 1 {
-                        Text(self.relationTab.first!.data)
-                            .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
-                            .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
-                    } else{
-                        CPTabDivisionNavigation(
-                            viewModel:self.tabNavigationModel,
-                            buttons: self.relationTab
+                if let hasRelationVod = self.hasRelationVod {
+                    RelationVodList(
+                        componentViewModel: self.componentViewModel,
+                        relationContentsModel: self.relationContentsModel,
+                        tabNavigationModel: self.tabNavigationModel,
+                        seris: self.$seris,
+                        synopsisData: self.synopsisData,
+                        relationTab: self.relationTab,
+                        relationDatas: self.relationDatas,
+                        hasRelationVod: hasRelationVod,
+                        screenSize: self.sceneObserver.screenSize.width
                         )
-                        .frame(height:Dimen.tab.regular)
-                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
-                    }
-                } else {
-                    Spacer().frame(height:Dimen.tab.regular)
-                        .modifier(ListRowInset(spacing: 0))
-                }
-                
-                if !self.seris.isEmpty {
-                    SerisTab(
-                        data:self.relationContentsModel,
-                        seris: self.$seris
-                    ){ season in
-                        self.componentViewModel.uiEvent = .changeSynopsis(season.synopsisData)
-                    }
-                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.thin))
-                    ForEach(self.seris) { data in
-                        SerisItem( data:data, isSelected: self.synopsisData?.epsdId == data.contentID )
-                            .onTapGesture {
-                                self.componentViewModel.uiEvent = .changeVod(data.epsdId)
-                            }
-                            .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))
-                    }
-                
-                } else if !self.relationDatas.isEmpty {
-                    ForEach(self.relationDatas) { data in
-                        PosterSet( data:data ){data in
-                            self.componentViewModel.uiEvent = .changeSynopsis(data.synopsisData)
-                        }
-                        .frame(height: PosterSet.listSize(data: data, screenWidth: self.sceneObserver.screenSize.width).height)
-                        .modifier(ListRowInset( spacing: Dimen.margin.thin))
-                    }
-                }
-                if self.relationDatas.isEmpty && self.seris.isEmpty {
-                    Spacer()
-                        .modifier(MatchHorizontal(height:self.hasRelationVod == false ? 0 : sceneObserver.screenSize.height))
-                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.regular))
                 }
             }
         }

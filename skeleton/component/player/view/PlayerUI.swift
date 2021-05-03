@@ -11,11 +11,16 @@ import SwiftUI
 import Combine
 
 extension PlayerUI {
-    static let padding = Dimen.margin.thin
-    static let paddingFullScreen = Dimen.margin.regular
+    static let padding = SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.thin
+    static let paddingFullScreen = SystemEnvironment.isTablet ? Dimen.margin.lightExtra : Dimen.margin.regular
     
-    static let uiHeight:CGFloat = 44
-    static let uiHeightFullScreen:CGFloat  = 64
+    static let uiHeight:CGFloat = SystemEnvironment.isTablet ? 64 : 44
+    static let uiHeightFullScreen:CGFloat  = SystemEnvironment.isTablet ? 110 : 64
+    
+    static let timeTextWidth:CGFloat  = SystemEnvironment.isTablet ? 87 : 55
+    
+    static let spacing:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.lightExtra : Dimen.margin.light
+    static let fullScreenSpacing:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.light : Dimen.margin.regular
 }
 
 struct PlayerUI: PageComponent {
@@ -67,8 +72,9 @@ struct PlayerUI: PageComponent {
                 Spacer()
                 HStack(alignment:.center, spacing:Dimen.margin.thin){
                     Text(self.time)
+                        .kerning(Font.kern.thin)
                         .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.white))
-                        .frame(width:55)
+                        .frame(width:Self.timeTextWidth)
                         .fixedSize(horizontal: true, vertical: false)
                     
                     ProgressSlider(
@@ -86,7 +92,7 @@ struct PlayerUI: PageComponent {
                     
                     Text(self.duration)
                         .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.greyLightExtra))
-                        .frame(width:55)
+                        .frame(width:Self.timeTextWidth)
                         .fixedSize(horizontal: true, vertical: false)
 
                     ImageButton(
@@ -114,7 +120,9 @@ struct PlayerUI: PageComponent {
                         defaultImage: Asset.player.resume,
                         activeImage: Asset.player.pause,
                         isSelected: self.isPlaying,
-                        size: CGSize(width:Dimen.icon.heavyExtra,height:Dimen.icon.heavyExtra)
+                        size: (SystemEnvironment.isTablet && self.isFullScreen)
+                        ? CGSize(width:Dimen.icon.heavy,height:Dimen.icon.heavy)
+                        : CGSize(width:Dimen.icon.heavyExtra,height:Dimen.icon.heavyExtra)
                     ){ _ in
                         self.viewModel.event = .togglePlay
                     }

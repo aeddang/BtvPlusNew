@@ -6,13 +6,20 @@
 //
 import Foundation
 import SwiftUI
-struct PageSynopsis: PageView {
+extension PageSynopsis {
     enum ComponentEvent {
         case changeVod(String?), changeSynopsis(SynopsisData?), changeOption(PurchaseModel?), purchase
     }
     class ComponentViewModel:ComponentObservable{
         @Published var uiEvent:ComponentEvent? = nil {didSet{ if uiEvent != nil { uiEvent = nil} }}
     }
+    
+    static let listWidth:CGFloat = 384
+}
+
+
+struct PageSynopsis: PageView {
+    
     
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
@@ -29,6 +36,7 @@ struct PageSynopsis: PageView {
     @ObservedObject var peopleScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var prerollModel = PrerollModel()
     @ObservedObject var playerListViewModel: InfinityScrollModel = InfinityScrollModel()
+    @ObservedObject var relationBodyModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var tabNavigationModel:NavigationModel = NavigationModel()
     
     @State var synopsisData:SynopsisData? = nil
@@ -36,6 +44,8 @@ struct PageSynopsis: PageView {
     @State var isFullScreen:Bool = false
     @State var useTracking:Bool = false
     @State var isUiActive:Bool = true
+    @State var sceneOrientation: SceneOrientation = .portrait
+    @State var playerWidth: CGFloat  = 0
     var body: some View {
         GeometryReader { geometry in
             PageDataProviderContent(
@@ -45,87 +55,114 @@ struct PageSynopsis: PageView {
                     viewModel:self.pageDragingModel,
                     axis:.horizontal
                 ) {
-                    VStack(spacing:0){
-                        
-                        SynopsisTop(
-                            pageObservable: self.pageObservable,
-                            playerModel: self.playerModel,
-                            playerListViewModel: self.playerListViewModel,
-                            prerollModel: self.prerollModel,
-                            title: self.title,
-                            imgBg: self.imgBg,
-                            imgContentMode: self.imgContentMode,
-                            textInfo: self.textInfo,
-                            epsdId: self.epsdId,
-                            playListData: self.playListData,
-                            isPlayAble: self.isPlayAble,
-                            isPlayViewActive: self.isPlayViewActive)
-                        .modifier(Ratio16_9( geometry:geometry, isFullScreen: self.isFullScreen))
-                        .padding(.top, self.sceneObserver.safeAreaTop)
-                        .onReceive(self.playerModel.$btvPlayerEvent){evt in
-                            guard let evt = evt else { return }
-                            switch evt {
-                            case .nextView : self.nextVod(auto: false)
-                            case .continueView: self.continueVod()
-                            case .changeView(let epsdId) : self.changeVod(epsdId:epsdId)
+                    HStack(spacing:0){
+                        VStack(spacing:0){
+                            SynopsisTop(
+                                pageObservable: self.pageObservable,
+                                playerModel: self.playerModel,
+                                playerListViewModel: self.playerListViewModel,
+                                prerollModel: self.prerollModel,
+                                title: self.title,
+                                imgBg: self.imgBg,
+                                imgContentMode: self.imgContentMode,
+                                textInfo: self.textInfo,
+                                epsdId: self.epsdId,
+                                playListData: self.playListData,
+                                isPlayAble: self.isPlayAble,
+                                isPlayViewActive: self.isPlayViewActive)
+                                .modifier(Ratio16_9( width:self.playerWidth, isFullScreen: self.isFullScreen))
+                            .padding(.top, self.sceneObserver.safeAreaTop)
+                            .onReceive(self.playerModel.$btvPlayerEvent){evt in
+                                guard let evt = evt else { return }
+                                switch evt {
+                                case .nextView : self.nextVod(auto: false)
+                                case .continueView: self.continueVod()
+                                case .changeView(let epsdId) : self.changeVod(epsdId:epsdId)
+                                }
                             }
-                        }
-                       
-                        if !self.isFullScreen {
-                            if self.isUIView && self.isUiActive && !self.progressError {
-                                SynopsisBody(
-                                    componentViewModel: self.componentViewModel,
-                                    infinityScrollModel: self.infinityScrollModel,
-                                    relationContentsModel: self.relationContentsModel,
-                                    peopleScrollModel: self.peopleScrollModel,
-                                    pageDragingModel: self.pageDragingModel,
-                                    tabNavigationModel: self.tabNavigationModel,
-                                    isBookmark: self.$isBookmark,
-                                    isLike: self.$isLike,
-                                    seris: self.$seris,
-                                    topIdx : self.topIdx,
-                                    synopsisData: self.synopsisData,
-                                    isPairing: self.isPairing,
-                                    episodeViewerData: self.episodeViewerData,
-                                    purchasViewerData: self.purchasViewerData,
-                                    summaryViewerData: self.summaryViewerData,
-                                    srisId: self.srisId, epsdId: self.epsdId,
-                                    hasAuthority: self.hasAuthority,
-                                    relationTab: self.relationTab,
-                                    relationDatas: self.relationDatas,
-                                    hasRelationVod: self.hasRelationVod,
-                                    useTracking:self.useTracking)
-                                   
-                                    .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
-                                    .onReceive(self.peopleScrollModel.$event){evt in
-                                        guard let evt = evt else {return}
-                                        switch evt {
-                                        case .pullCompleted :
-                                            self.pageDragingModel.uiEvent = .pullCompleted(geometry)
-                                        case .pullCancel :
-                                            self.pageDragingModel.uiEvent = .pullCancel(geometry)
-                                        default : do{}
+                           
+                            if !self.isFullScreen {
+                                if self.isUIView && self.isUiActive && !self.progressError {
+                                    SynopsisBody(
+                                        componentViewModel: self.componentViewModel,
+                                        infinityScrollModel: self.infinityScrollModel,
+                                        relationContentsModel: self.relationContentsModel,
+                                        peopleScrollModel: self.peopleScrollModel,
+                                        pageDragingModel: self.pageDragingModel,
+                                        tabNavigationModel: self.tabNavigationModel,
+                                        isBookmark: self.$isBookmark,
+                                        isLike: self.$isLike,
+                                        seris: self.$seris,
+                                        topIdx : self.topIdx,
+                                        synopsisData: self.synopsisData,
+                                        isPairing: self.isPairing,
+                                        episodeViewerData: self.episodeViewerData,
+                                        purchasViewerData: self.purchasViewerData,
+                                        summaryViewerData: self.summaryViewerData,
+                                        srisId: self.srisId, epsdId: self.epsdId,
+                                        hasAuthority: self.hasAuthority,
+                                        relationTab: self.relationTab,
+                                        relationDatas: self.relationDatas,
+                                        hasRelationVod: self.sceneOrientation == .portrait ? self.hasRelationVod : nil,
+                                        useTracking:self.useTracking,
+                                        funtionLayout : (self.sceneOrientation == .portrait && SystemEnvironment.isTablet)
+                                            ? .horizontal : .vertical
+                                        )
+                                       
+                                        .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                                        .onReceive(self.peopleScrollModel.$event){evt in
+                                            guard let evt = evt else {return}
+                                            switch evt {
+                                            case .pullCompleted :
+                                                self.pageDragingModel.uiEvent = .pullCompleted(geometry)
+                                            case .pullCancel :
+                                                self.pageDragingModel.uiEvent = .pullCancel(geometry)
+                                            default : do{}
+                                            }
+                                        }
+                                        .onReceive(self.peopleScrollModel.$pullPosition){ pos in
+                                            self.pageDragingModel.uiEvent = .pull(geometry, pos)
+                                        }
+                                    
+                                } else {
+                                    ZStack{
+                                        if self.progressError {
+                                            EmptyAlert(text: self.synopsisData == nil ? String.alert.dataError : String.alert.apiErrorServer)
+                                                
+                                        } else {
+                                            Spacer().modifier(MatchParent())
                                         }
                                     }
-                                    .onReceive(self.peopleScrollModel.$pullPosition){ pos in
-                                        self.pageDragingModel.uiEvent = .pull(geometry, pos)
-                                    }
-                                
-                            } else {
-                                ZStack{
-                                    if self.progressError {
-                                        EmptyAlert(text: self.synopsisData == nil ? String.alert.dataError : String.alert.apiErrorServer)
-                                            
-                                    } else {
-                                        Spacer().modifier(MatchParent())
-                                    }
+                                    .modifier(MatchParent())
+                                    .background(Color.brand.bg)
+                                    .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                                 }
-                                .modifier(MatchParent())
-                                .background(Color.brand.bg)
-                                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                            }
+                        } // vstack
+                        if self.sceneOrientation == .landscape && !self.isFullScreen {
+                            if let hasRelationVod = self.hasRelationVod {
+                                RelationVodBody(
+                                    componentViewModel: self.componentViewModel,
+                                    infinityScrollModel: self.relationBodyModel,
+                                    relationContentsModel: self.relationContentsModel,
+                                    tabNavigationModel: self.tabNavigationModel,
+                                    seris: self.$seris,
+                                    synopsisData: self.synopsisData,
+                                    relationTab: self.relationTab,
+                                    relationDatas: self.relationDatas,
+                                    hasRelationVod: hasRelationVod,
+                                    screenSize : Self.listWidth
+                                    )
+                                    .frame(width: Self.listWidth)
+                                    .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                            } else {
+                                Spacer()
+                                    .frame(width: Self.listWidth)
+                                    .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                             }
                         }
-                    }
+                        
+                    }// hstack
                     .onReceive(self.tabNavigationModel.$index ){ idx in
                         if idx == self.selectedRelationTabIdx { return }
                         self.selectedRelationContent(idx:idx)
@@ -239,7 +276,23 @@ struct PageSynopsis: PageView {
                     self.initPage()
                 }
             }
+            .onReceive(self.sceneObserver.$isUpdated){ _ in
+                self.sceneOrientation = self.sceneObserver.sceneOrientation
+                self.playerWidth = self.sceneOrientation == .landscape
+                    ? geometry.size.width - Self.listWidth
+                    : geometry.size.width
+                if self.relationDatas.isEmpty == false {
+                    let relationDatas = self.relationContentsModel.getRelationContentSets(idx: self.selectedRelationTabIdx, row: self.relationRow)
+                    self.relationDatas = relationDatas
+                }
+                
+            }
             .onAppear{
+                self.sceneOrientation = self.sceneObserver.sceneOrientation
+                self.playerWidth = self.sceneOrientation == .landscape
+                    ? geometry.size.width - Self.listWidth
+                    : geometry.size.width
+                
                 guard let obj = self.pageObject  else { return }
                 self.synopsisData = obj.getParamValue(key: .data) as? SynopsisData
                 if self.synopsisData == nil {
@@ -709,6 +762,14 @@ struct PageSynopsis: PageView {
         self.onAllProgressCompleted()
     }
     
+    
+    var relationRow:Int {
+       get {
+           return
+               self.sceneOrientation == .landscape ? 2
+               : SystemEnvironment.isTablet ? 4 : 3
+       }
+   }
     private func selectedRelationContent (idx:Int){
         self.updateRelationTabButtons(idx: idx)
         self.selectedRelationTabIdx = idx
@@ -728,10 +789,12 @@ struct PageSynopsis: PageView {
         } 
         if self.relationContentsModel.relationContents.isEmpty { return }
         if relationContentsIdx >= self.relationContentsModel.relationContents.count  { return }
-        let relationDatas = self.relationContentsModel.getRelationContentSets(idx: relationContentsIdx)
+        
+        let relationDatas = self.relationContentsModel.getRelationContentSets(idx: relationContentsIdx, row: self.relationRow)
         self.relationDatas = relationDatas
-
     }
+    
+    
     private func updateRelationTabButtons(idx:Int){
         self.relationTab = NavigationBuilder(
             index:idx,

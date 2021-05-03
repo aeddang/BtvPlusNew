@@ -307,6 +307,7 @@ struct BtvPlayer: PageComponent{
             .onReceive(self.sceneObserver.$isUpdated){ update in
                 if !update {return}
                 if self.viewModel.isLock { return }
+                if SystemEnvironment.isTablet  { return }
                 switch self.sceneObserver.sceneOrientation {
                 case .landscape : self.pagePresenter.fullScreenEnter()
                 case .portrait : self.pagePresenter.fullScreenExit()

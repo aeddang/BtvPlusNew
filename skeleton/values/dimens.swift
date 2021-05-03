@@ -12,6 +12,7 @@ import SwiftUI
 struct Dimen{
     private static let isPad =  AppUtil.isPad()
     struct margin {
+        
         public static let heavy:CGFloat = isPad ? 100 : 46 //*
         public static let heavyExtra:CGFloat = isPad ? 76 : 40 //*
         public static let medium:CGFloat = isPad ? 69 : 30 //*
@@ -32,10 +33,10 @@ struct Dimen{
     }
 
     struct icon {
-        public static let heavy:CGFloat = 69 //*
-        public static let heavyExtra:CGFloat = 58 //*
-        public static let mediumUltra:CGFloat = 48 //*
-        public static let medium:CGFloat = 40 //*
+        public static let heavy:CGFloat = isPad ? 123 : 69 //*
+        public static let heavyExtra:CGFloat = isPad ? 98 : 58 //*
+        public static let mediumUltra:CGFloat = isPad ? 84 : 48 //*
+        public static let medium:CGFloat = isPad ? 54 : 40 //*
         public static let mediumExtra:CGFloat = isPad ? 52 : 38  //*
         public static let regular:CGFloat = isPad ? 48 : 36 //*
         public static let regularExtra:CGFloat = isPad ? 38 : 32 //*
@@ -63,7 +64,7 @@ struct Dimen{
     }
     
     struct button {
-        public static let heavy:CGFloat = 80 //*
+        public static let heavy:CGFloat =  80 //*
         public static let heavyExtra:CGFloat = isPad ? 76 : 64 //*
         public static let medium:CGFloat = isPad ? 60 : 50 //*
         public static let regular:CGFloat = isPad ? 56 : 40 //*
@@ -72,11 +73,11 @@ struct Dimen{
         public static let lightExtra:CGFloat = 30//*
         public static let thin:CGFloat = 20//*
         
-        public static let heavyRect:CGSize = CGSize(width: 90, height: 42)//*
-        public static let mediumRect:CGSize = CGSize(width: 79, height: 30)//*
-        public static let mediumExtraRect:CGSize = CGSize(width: 62, height: 30)//*
-        public static let regularRect:CGSize = CGSize(width: 48, height: 25)//*
-        public static let lightRect:CGSize = CGSize(width: 38, height: 20)//*
+        public static let heavyRect:CGSize = isPad ? CGSize(width: 130, height: 60) : CGSize(width: 90, height: 42)//*
+        public static let mediumRect:CGSize = isPad ? CGSize(width: 130, height: 52) : CGSize(width: 79, height: 30)//*
+        public static let mediumExtraRect:CGSize = isPad ? CGSize(width: 120, height: 52) : CGSize(width: 62, height: 30)//*
+        public static let regularRect:CGSize = isPad ? CGSize(width: 78, height: 40) : CGSize(width: 48, height: 25)//*
+        public static let lightRect:CGSize = isPad ? CGSize(width: 61, height: 29) : CGSize(width: 38, height: 20)//*
     }
 
     struct radius {

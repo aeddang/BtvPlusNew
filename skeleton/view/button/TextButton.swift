@@ -31,11 +31,13 @@ struct TextButton: View, SelecterbleProtocol{
                     .font(.custom(textModifier.family, size: textModifier.size))
                     .underline()
                     .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+                    .lineLimit(1)
                 } else {
                     
                     Text(self.isSelected ? ( self.activeText ?? self.defaultText ) : self.defaultText)
                     .font(.custom(textModifier.family, size: textModifier.size))
                     .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+                    .lineLimit(1)
                 }
                 if self.image != nil {
                     Image(self.image!)

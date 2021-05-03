@@ -21,6 +21,8 @@ extension PlayerTop{
         color: Color.app.greyLight,
         activeColor: Color.app.white
     )
+    
+    
 }
 
 
@@ -38,8 +40,8 @@ struct PlayerTop: PageView{
     
     var body: some View {
         ZStack(alignment: .topLeading){
-            VStack(alignment :.trailing, spacing:Dimen.margin.light){
-                HStack(spacing:self.isFullScreen ? Dimen.margin.regular : Dimen.margin.light){
+            VStack(alignment :.trailing, spacing:SystemEnvironment.isTablet ? Dimen.margin.thin : Dimen.margin.light){
+                HStack(spacing: self.isFullScreen ? PlayerUI.fullScreenSpacing : PlayerUI.spacing){
                     if !self.isSimple{
                         Button(action: {
                             self.pagePresenter.goBack()

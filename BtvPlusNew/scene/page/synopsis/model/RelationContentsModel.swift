@@ -61,7 +61,8 @@ class RelationContentsModel {
         self.isReady = true
         self.serisTitle = synopsis.srisTitle
         if let list = synopsis.seriesInfoList {
-            self.seris = list.map{SerisData().setData(data: $0, title: self.serisTitle)}
+            self.seris = zip(list, 0...list.count).map{data, idx in
+                SerisData().setData(data: data, title: self.serisTitle, idx: idx)}
             self.playList = zip(list, 0...list.count).map{ data, idx in
                 VideoData().setData(data: data, title: self.serisTitle, idx: idx)}
         }
@@ -130,10 +131,10 @@ class RelationContentsModel {
         })
     }
     
-    func getRelationContentSets(idx:Int) -> [PosterDataSet] {
+    func getRelationContentSets(idx:Int, row:Int = 3 ) -> [PosterDataSet] {
         if self.relationContents.count <= idx { return [] }
         let datas = self.relationContents[idx]
-        let count = 3
+        let count = row
         var rows:[PosterDataSet] = []
         var cells:[PosterData] = []
         datas.forEach{ d in

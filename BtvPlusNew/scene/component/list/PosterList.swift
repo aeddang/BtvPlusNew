@@ -338,6 +338,7 @@ struct PosterSet: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
     var pageObservable:PageObservable = PageObservable()
     var data:PosterDataSet
+    var screenSize:CGFloat? = nil
     var action: ((_ data:PosterData) -> Void)? = nil
     
     @State var cellDatas:[PosterData] = []
@@ -374,10 +375,10 @@ struct PosterSet: PageComponent{
             }
         }
         .padding(.horizontal, Self.padding)
-        .frame(width: self.sceneObserver.screenSize.width)
+        .frame(width: self.screenSize ?? self.sceneObserver.screenSize.width)
         .onAppear {
             if self.data.datas.isEmpty { return }
-            let size = Self.listSize(data: self.data, screenWidth: sceneObserver.screenSize.width)
+            let size = Self.listSize(data: self.data, screenWidth: self.screenSize ?? sceneObserver.screenSize.width)
             self.cellDatas = self.data.datas.map{
                 $0.setCardType(width: size.width, height: size.height, padding: Self.padding)
             }

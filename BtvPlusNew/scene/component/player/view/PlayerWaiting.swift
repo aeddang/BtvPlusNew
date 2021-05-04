@@ -20,7 +20,7 @@ struct PlayerWaiting: PageComponent{
         ZStack{
             ThumbImageViewer(imgBg: self.imgBg, contentMode: self.contentMode)
             VStack(spacing:0){
-                HStack(spacing:self.isFullScreen ? Dimen.margin.regular : Dimen.margin.light){
+                HStack(spacing:self.isFullScreen ? PlayerUI.fullScreenSpacing : PlayerUI.spacing){
                     Button(action: {
                         self.pagePresenter.goBack()
                     }) {

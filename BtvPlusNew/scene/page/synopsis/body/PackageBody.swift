@@ -7,6 +7,9 @@
 
 import Foundation
 import SwiftUI
+extension PackageBody {
+    static let spacing:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.regular
+}
 struct PackageBody: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
@@ -19,6 +22,7 @@ struct PackageBody: PageComponent{
     var contentID:String? = nil
     var episodeViewerData:EpisodeViewerData? = nil
     var summaryViewerData:SummaryViewerData? = nil
+    var useTop:Bool = true
     var useTracking:Bool = false
     var action: ((_ data:PosterData) -> Void)? = nil
     var body: some View {
@@ -30,15 +34,17 @@ struct PackageBody: PageComponent{
             isRecycle:false,
             useTracking:false
             ){
-            
-            TopViewer( data: self.synopsisPackageModel)
-                .modifier(ListRowInset(spacing: Dimen.margin.regular))
-            
-            if !self.synopsisPackageModel.posters.isEmpty {
+            if self.useTop {
+                TopViewer( data: synopsisPackageModel)
+                    .frame(height:TopViewer.height)
+                    .modifier(ListRowInset(spacing: Dimen.margin.regular))
+            }
+            if !self.synopsisPackageModel.posters.isEmpty == true {
                 VStack(alignment: .leading, spacing: 0){
                     Text(String.pageText.synopsisPackageContent + " " + self.synopsisPackageModel.posters.count.description)
                         .modifier(BlockTitle())
                         .modifier(ContentHorizontalEdges())
+                        
                     PosterViewList(
                         viewModel: self.synopsisListViewModel,
                         datas: self.synopsisPackageModel.posters,
@@ -55,18 +61,13 @@ struct PackageBody: PageComponent{
                             + Dimen.margin.thin + Dimen.button.lightExtra
                             + Dimen.margin.thin
                 )
-                .modifier(ListRowInset(spacing: Dimen.margin.regular))
-            } else {
-                Spacer().modifier(MatchParent())
-                    .modifier(ListRowInset(spacing: 0))
+                .padding(.top, self.useTop ? 0 : Self.spacing)
+                .modifier(ListRowInset(spacing:  Self.spacing))
             }
             
             if self.episodeViewerData != nil {
                 EpisodeViewer(data:self.episodeViewerData!)
-                    .modifier(ListRowInset(spacing: Dimen.margin.regular))
-            } else {
-                Spacer().modifier(MatchParent())
-                    .modifier(ListRowInset(spacing: 0))
+                    .modifier(ListRowInset(spacing:  Self.spacing))
             }
                 
             if self.summaryViewerData != nil {
@@ -76,15 +77,13 @@ struct PackageBody: PageComponent{
                     useTracking: self.useTracking,
                     isSimple : true
                 )
-                .modifier(ListRowInset(spacing: Dimen.margin.regular))
-            } else {
-                Spacer().modifier(MatchParent())
-                    .modifier(ListRowInset(spacing: 0))
+                .modifier(ListRowInset(spacing:  Self.spacing))
             }
         }
         
     }//body
    
 }
+
 
 

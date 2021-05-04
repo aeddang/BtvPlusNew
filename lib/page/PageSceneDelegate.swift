@@ -92,6 +92,8 @@ final class PagePresenter:ObservableObject{
     func fullScreenEnter(isLock:Bool = false, changeOrientation:UIInterfaceOrientationMask = .landscape){
         if self.isFullScreen {return}
         self.isFullScreen = true
+        
+        
         PageSceneDelegate.instance?.onFullScreenEnter(isLock: isLock, changeOrientation:changeOrientation)
         PageLog.d("fullScreenEnter", tag: "PagePresenter")
     }
@@ -457,7 +459,9 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
             controller.isFullScreen = true
         }
         if isLock { AppDelegate.orientationLock = changeOrientation }
-        self.requestDeviceOrientation(changeOrientation)
+        if self.needOrientationChange(changeOrientation: changeOrientation) {
+            self.requestDeviceOrientation(changeOrientation)
+        }
         
         
     }
@@ -466,8 +470,22 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
             controller.isFullScreen = false
         }
         AppDelegate.orientationLock = pageModel.getPageOrientationLock(nil) ?? .all
-        if let mask = changeOrientation { self.requestDeviceOrientation(mask) }
+
+        if let mask = changeOrientation, self.needOrientationChange(changeOrientation: changeOrientation) {
+            self.requestDeviceOrientation(mask)
+        }
     
+    }
+    
+    func needOrientationChange(changeOrientation:UIInterfaceOrientationMask? = nil) -> Bool {
+        guard let willChangeOrientation = changeOrientation else { return false }
+        let interfaceOrientation = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation ?? UIInterfaceOrientation.unknown
+        if willChangeOrientation == .portrait {
+            if interfaceOrientation == .portrait || interfaceOrientation == .portraitUpsideDown { return false }
+        } else {
+            if interfaceOrientation == .landscapeLeft || interfaceOrientation == .landscapeRight { return false }
+        }
+        return true
     }
     
     func requestDeviceOrientationLock(_ lock:Bool){

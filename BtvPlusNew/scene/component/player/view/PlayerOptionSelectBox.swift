@@ -77,7 +77,7 @@ struct PlayerOptionSelectBox: PageView{
                 Spacer()
             }
             .padding(.all, self.isFullScreen ? PlayerUI.paddingFullScreen : PlayerUI.padding)
-            HStack(spacing:self.isFullScreen ? Dimen.margin.regular : Dimen.margin.thinExtra){
+            HStack(spacing: self.isFullScreen ? PlayerUI.fullScreenSpacing : PlayerUI.spacing ){
                 ForEach(self.btns) { btn in
                     StrokeRectButton(
                         text: btn.title,

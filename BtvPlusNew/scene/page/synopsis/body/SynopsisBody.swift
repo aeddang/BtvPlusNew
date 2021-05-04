@@ -122,7 +122,8 @@ struct SynopsisBody: PageComponent{
                     SummaryViewer(
                         peopleScrollModel:self.peopleScrollModel,
                         data: self.summaryViewerData!,
-                        useTracking: self.usePullTracking
+                        useTracking: self.usePullTracking,
+                        isSimple: self.hasRelationVod == nil ? true : false
                     )
                     .modifier(ListRowInset(spacing: Self.spacing))
                 }

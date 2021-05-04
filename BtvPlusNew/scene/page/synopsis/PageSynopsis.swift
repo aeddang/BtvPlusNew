@@ -70,7 +70,10 @@ struct PageSynopsis: PageView {
                                 playListData: self.playListData,
                                 isPlayAble: self.isPlayAble,
                                 isPlayViewActive: self.isPlayViewActive)
-                                .modifier(Ratio16_9( width:self.playerWidth, isFullScreen: self.isFullScreen))
+                                .modifier(Ratio16_9(
+                                            geometry:  self.isFullScreen ? geometry : nil,
+                                            width:self.playerWidth,
+                                            isFullScreen: self.isFullScreen))
                             .padding(.top, self.sceneObserver.safeAreaTop)
                             .onReceive(self.playerModel.$btvPlayerEvent){evt in
                                 guard let evt = evt else { return }

@@ -11,6 +11,7 @@ class SynopsisPackageModel : PageProtocol {
     private(set) var packages:[PackageContentsItem] = []
     private(set) var posters:[PosterData] = []
     private(set) var image:String = Asset.noImg9_16
+    private(set) var bg:String = Asset.noImg9_16
     private(set) var hasAuthority:Bool = false
     private(set) var distStsCd:DistStsCd = .synced
     private(set) var srisId:String? = nil
@@ -25,15 +26,13 @@ class SynopsisPackageModel : PageProtocol {
         self.prdPrcId = contents.prd_prc_id
         self.packages = contents.contents ?? []
         self.image = ImagePath.thumbImagePath(filePath:  contents.mbtv_bg_img_path, size: CGSize(width: 0, height: TopViewer.height)) ?? image
-        
+        self.bg = ImagePath.thumbImagePath(filePath:  contents.mbtv_bg_img_path, size: CGSize(width: 0, height: TopViewer.height/2 ), convType: .blur) ?? bg
         if let price = contents.sale_prc_vat {
             self.salePrice = price.currency + String.app.cash
         }
         if let price = contents.prd_prc_vat {
             self.price = price.currency + String.app.cash
         }
-        
-        
         if let dist = DistStsCd(rawValue: contents.dist_sts_cd ?? "") {
             self.distStsCd = dist
         }

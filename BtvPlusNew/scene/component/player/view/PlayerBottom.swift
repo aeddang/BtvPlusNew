@@ -36,7 +36,7 @@ struct PlayerBottom: PageView{
         ZStack(alignment: .topLeading){
             VStack(alignment :.trailing, spacing:Dimen.margin.thinExtra){
                 Spacer()
-                HStack(spacing:self.isFullScreen ? Dimen.margin.regular : Dimen.margin.light){
+                HStack(spacing:self.isFullScreen ? PlayerUI.fullScreenSpacing : PlayerUI.spacing){
                     Spacer()
                     if self.showDirectview {
                         RectButton(

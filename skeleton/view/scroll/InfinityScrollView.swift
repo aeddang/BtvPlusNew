@@ -169,9 +169,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
             .opacity(self.progress / self.progressMax)
             .coordinateSpace(name: self.tag)
             .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                DispatchQueue.main.async {
-                    self.onPreferenceChange(value: value)
-                }
+                self.onPreferenceChange(value: value)
+                
             }
             
             .onReceive(self.viewModel.$scrollStatus){ stat in
@@ -229,36 +228,38 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                 self.isTracking = false
             }
         }else{
-            GeometryReader { outsideProxy in
-                if self.axes == .vertical {
-                    if self.isRecycle {
-                        List {
-                            self.content
-                                .padding(.top, self.marginTop)
-                            Spacer().modifier(MatchHorizontal(height: self.marginBottom))
-                                .modifier(ListRowInset(spacing: 0))
-                            
-                            
+            if self.axes == .vertical {
+                if self.isRecycle {
+                    List {
+                        if self.marginTop > Dimen.margin.regular {
+                            Spacer()
+                            .modifier(MatchHorizontal(height: self.marginTop))
+                            .modifier(ListRowInset(spacing: 0))
                         }
-                        .padding(.horizontal, self.marginHorizontal)
-                        .coordinateSpace(name: self.tag)
-                        .listStyle(PlainListStyle())
-                        .background(self.bgColor)
-                        .onAppear(){
-                            //self.isTracking = true
-                            UITableView.appearance().allowsSelection = false
-                            UITableViewCell.appearance().selectionStyle = .none
-                            UITableView.appearance().backgroundColor = self.bgColor.uiColor()
-                            UITableView.appearance().separatorStyle = .none
-                            UITableView.appearance().separatorColor = .clear
-                        }
-                        .onDisappear{
-                            //self.isTracking = false
-                        }
-                    } else{
+                        self.content
+                        Spacer().modifier(MatchHorizontal(height: self.marginBottom))
+                        .modifier(ListRowInset(spacing: 0))
+                    }
+                    .padding(.horizontal, self.marginHorizontal)
+                    .listStyle(PlainListStyle())
+                    .background(self.bgColor)
+                    .modifier(MatchParent())
+                    .onAppear(){
+                        //self.isTracking = true
+                        UITableView.appearance().allowsSelection = false
+                        UITableViewCell.appearance().selectionStyle = .none
+                        UITableView.appearance().backgroundColor = self.bgColor.uiColor()
+                        UITableView.appearance().separatorStyle = .none
+                        UITableView.appearance().separatorColor = .clear
+                    }
+                    .onDisappear{
+                        //self.isTracking = false
+                    }
+                } else{
+                    GeometryReader { outsideProxy in
                         ScrollView(.vertical, showsIndicators: false) {
                             ZStack(alignment: .topLeading) {
-                                if self.useTracking{
+                                if self.useTracking && self.isTracking{
                                     GeometryReader { insideProxy in
                                         Color.clear
                                             .preference(key: ScrollOffsetPreferenceKey.self,
@@ -274,60 +275,81 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                 .padding(.horizontal, self.marginHorizontal)
                             }
                         }
-                        .modifier(MatchParent())
+                        .frame(width:outsideProxy.size.width)
                         .coordinateSpace(name: self.tag)
                         .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
                             self.onPreferenceChange(value: value)
                         }
                         .onAppear(){
-                            self.isTracking = true
+                            self.trackingStart()
                             self.onReady()
                             
                         }
                         .onDisappear{
-                            self.isTracking = false
+                            self.trackingCancel()
                         }
-                    }
-                    
-                    
-                }else{
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        ZStack(alignment: .leading) {
-                            /*
-                            if self.useTracking{
-                                GeometryReader { insideProxy in
-                                    Color.clear
-                                        .preference(key: ScrollOffsetPreferenceKey.self,
-                                            value: [self.calculateContentOffset(
-                                                insideProxy: insideProxy, outsideProxy: outsideProxy)])
-                                }
-                            }
-                            */
-                            HStack(spacing:self.spacing){
-                                self.content
-                            }
-                            .padding(.top, self.marginTop)
-                            .padding(.bottom, self.marginBottom)
-                            .padding(.horizontal, self.marginHorizontal)
-                        }
-                    }
-                    .modifier(MatchParent())
-                    .coordinateSpace(name: self.tag)
-                    .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                        self.onPreferenceChange(value: value)
-                    }
-                    .onAppear(){
-                        self.isTracking = true
-                        self.onReady()
-                    }
-                    .onDisappear{
-                        self.isTracking = false
-                        
                     }
                 }
-            }//if
-        }
+                
+                
+            }else{
+                ScrollView(.horizontal, showsIndicators: false) {
+                    ZStack(alignment: .leading) {
+                        /*
+                        if self.useTracking{
+                            GeometryReader { insideProxy in
+                                Color.clear
+                                    .preference(key: ScrollOffsetPreferenceKey.self,
+                                        value: [self.calculateContentOffset(
+                                            insideProxy: insideProxy, outsideProxy: outsideProxy)])
+                            }
+                        }
+                        */
+                        HStack(spacing:self.spacing){
+                            self.content
+                        }
+                        .padding(.top, self.marginTop)
+                        .padding(.bottom, self.marginBottom)
+                        .padding(.horizontal, self.marginHorizontal)
+                    }
+                }
+                .coordinateSpace(name: self.tag)
+                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                    self.onPreferenceChange(value: value)
+                }
+                .onAppear(){
+                    //self.trackingStart()
+                    self.onReady()
+                }
+                .onDisappear{
+                    //self.trackingCancel()
+                    
+                }
+            }
+        }//if
+       
     }//body
+    
+    @State var trackingStartSubscription:AnyCancellable?
+    func trackingStart(){
+        self.trackingCancel()
+        self.trackingStartSubscription = Timer.publish(
+            every: 0.5, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                self.trackingStartSubscription?.cancel()
+                self.trackingStartSubscription = nil
+                self.isTracking = true
+            }
+        
+    }
+    
+    func trackingCancel(){
+        //ComponentLog.d("autoChangeCancel" + self.pageID, tag:self.tag)
+        self.trackingStartSubscription?.cancel()
+        self.trackingStartSubscription = nil
+        self.isTracking = false
+    }
     
     private func onPreferenceChange(value:[CGFloat]){
         if !self.useTracking {return}
@@ -351,7 +373,6 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
             return insideProxy.frame(in: .global).minX - outProxy.minX
         }
     }
-
 }
 
 struct ScrollOffsetPreferenceKey: PreferenceKey {

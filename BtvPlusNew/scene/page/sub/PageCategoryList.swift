@@ -26,6 +26,7 @@ struct PageCategoryList: PageView {
     @State var menuId:String? = nil
     @State var blockData:BlockData? = nil
     @State var useTracking:Bool = false
+    @State var marginBottom:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -44,14 +45,16 @@ struct PageCategoryList: PageView {
                         infinityScrollModel:self.infinityScrollModel,
                         viewModel:self.viewModel,
                         useTracking:self.useTracking,
-                        marginBottom:Dimen.margin.regular
+                        marginBottom:Dimen.app.bottom 
                     )
                     .background(Color.brand.bg)
                     
                 }
+                .padding(.bottom, self.marginBottom )
                 .modifier(PageFull(style:.dark))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
+            
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
                     if let data = self.blockData {
@@ -67,6 +70,9 @@ struct PageCategoryList: PageView {
            
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 self.useTracking = page?.id == self.pageObject?.id
+            }
+            .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
+                self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }

@@ -203,26 +203,24 @@ struct PageSearch: PageView {
                 self.useTracking = ani
                 if ani {
                     self.isInputSearch = true
+                    self.viewModel.onAppear()
+                    self.dataProvider.requestData(q: .init(id: self.tag, type: .getSearchKeywords, isOptional: true))
                 }
             }
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 if page?.id == self.pageObject?.id {
                     if self.useTracking {return}
                     self.useTracking = true
-                    DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.5) {
-                        DispatchQueue.main.async {
-                            self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.app.bottom
-                        }
-                    }
                 } else {
                     if !self.useTracking {return}
                     self.useTracking = false
-                    self.marginBottom = 0
                 }
             }
+            .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
+                self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
+            }
             .onAppear{
-                self.viewModel.onAppear()
-                self.dataProvider.requestData(q: .init(id: self.tag, type: .getSearchKeywords, isOptional: true))
+                
             }
             
         }//geo

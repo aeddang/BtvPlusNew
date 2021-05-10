@@ -97,6 +97,11 @@ enum TicketType {
     }
 }
 
+extension TicketList{
+    static let headerSize:Int = 2
+    static let spacing:CGFloat = Dimen.margin.tiny
+}
+
 struct TicketList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
@@ -107,8 +112,8 @@ struct TicketList: PageComponent{
     var data: BlockData? = nil
     var datas:[TicketData]
     var useTracking:Bool = false
-    var margin:CGFloat = Dimen.margin.thin
-    var spacing:CGFloat = Dimen.margin.tiny
+    
+   
     @State var subDatas:[PosterData]? = nil
     var headerSize:Int = 2
     var body: some View {
@@ -116,14 +121,15 @@ struct TicketList: PageComponent{
             viewModel: self.viewModel,
             axes: .horizontal,
             marginVertical: 0,
-            marginHorizontal: margin ,
+            marginHorizontal: Dimen.margin.thin ,
             spacing: 0,
-            isRecycle: false,
+            isRecycle: true,
             useTracking: self.useTracking
             ){
+            
             ForEach(self.datas) { data in
                 TicketItem( data:data )
-                    .modifier(HolizentalListRowInset(spacing: self.spacing))
+                    .modifier(HolizentalListRowInset(spacing: Self.spacing))
                     .onTapGesture {
                         if !data.hasAuth {
                             let status = self.pairing.status
@@ -164,18 +170,39 @@ struct TicketList: PageComponent{
                         }
                 }
             }
+            
             if let subDatas = self.subDatas {
-                ForEach(subDatas) { data in
-                    PosterItem( data:data )
-                        .frame(width:ListItem.poster.type01.width)
-                        .modifier(HolizentalListRowInset(spacing: self.spacing))
-                        .onTapGesture {
-                            self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(.synopsis)
-                                    .addParam(key: .data, value: data.synopsisData)
-                            )
+                if Self.headerSize < subDatas.count {
+                    HStack(spacing:0){
+                        ForEach( subDatas[0...Self.headerSize]) { data in
+                            PosterItem( data:data )
+                                .frame(width:ListItem.poster.type01.width)
+                                .modifier(HolizentalListRowInset(spacing: Self.spacing))
+                                .onTapGesture {
+                                    self.onTap(data: data)
+                                }
                         }
+                    }
+                    
+                    ForEach( subDatas[(Self.headerSize+1)...(subDatas.count-1)]) { data in
+                        PosterItem( data:data )
+                            .frame(width:ListItem.poster.type01.width)
+                            .modifier(HolizentalListRowInset(spacing: Self.spacing))
+                            .onTapGesture {
+                                self.onTap(data: data)
+                            }
+                    }
+                } else {
+                    ForEach(subDatas) { data in
+                        PosterItem( data:data )
+                            .frame(width:ListItem.poster.type01.width)
+                            .modifier(HolizentalListRowInset(spacing: Self.spacing))
+                            .onTapGesture {
+                                self.onTap(data: data)
+                            }
+                    }
                 }
+                
                 
             }
         }
@@ -203,6 +230,13 @@ struct TicketList: PageComponent{
             }
         }
     }//body
+    
+    func onTap(data:PosterData)  {
+        self.pagePresenter.openPopup(
+            PageProvider.getPageObject(.synopsis)
+                .addParam(key: .data, value: data.synopsisData)
+        )
+    }
 }
 
 struct TicketItem: PageView {

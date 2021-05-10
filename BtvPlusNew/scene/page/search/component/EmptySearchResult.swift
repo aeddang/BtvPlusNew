@@ -51,6 +51,7 @@ struct EmptySearchResult: PageComponent{
                     }
                 } else {
                     Spacer().modifier(MatchParent())
+                        .modifier(ListRowInset( spacing:0))
                 }
             }
             .background(Color.brand.bg)

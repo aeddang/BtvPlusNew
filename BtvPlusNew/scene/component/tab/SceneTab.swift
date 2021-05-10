@@ -32,8 +32,8 @@ struct SceneTab: PageComponent{
     
     @State var headerBannerData:BannerData? = nil
     var body: some View {
-        GeometryReader { geometry in
-            ZStack{
+        ZStack{
+            VStack{
                 ZStack{
                     Image(Asset.shape.bgGradientTop)
                         .resizable()
@@ -45,118 +45,101 @@ struct SceneTab: PageComponent{
                             HeaderBanner(data:bannerData) {
                                 self.headerBannerData = nil
                                 self.updateTopPos()
-                            } 
+                            }
                         }
                         TopTab()
                     }
+                    .padding(.top, self.safeAreaTop)
                 }
-                .modifier(
-                    LayoutTop(
-                        geometry: geometry,
-                        height: self.headerHeight,
-                        margin: self.positionTop)
-                )
                 .opacity(self.useTop ? 1 : 0)
-                
-                BottomTab()
-                    .modifier(
-                        LayoutBotttom(
-                            geometry: geometry,
-                            height:Dimen.app.bottom + self.safeAreaBottom,
-                            margin: self.positionBottom )
-                    )
-                    .opacity(self.useBottom ? 1 : 0)
-                
-                if self.isDimed {
-                    Button(action: {
-                        self.appSceneObserver.cancelAll()
-                    }) {
-                        Spacer().modifier(MatchParent())
-                            .background(Color.transparent.black45)
-                    }
-                }
-    
+                .padding(.top, self.positionTop)
+                Spacer()
                 if self.isLoading {
                     ActivityIndicator(isAnimating: self.$isLoading)
-                        .modifier(
-                            LayoutBotttom(
-                                geometry: geometry,
-                                height:50,
-                                margin: self.positionLoading )
-                        )
                 }
-                
+                BottomTab()
+                .padding(.bottom, self.positionBottom)
+                .opacity(self.useBottom ? 1 : 0)
             }
-            .modifier(MatchParent())
-            .onReceive (self.appSceneObserver.$isApiLoading) { loading in
-                DispatchQueue.main.async {
-                    withAnimation{
-                        self.isLoading = loading
-                    }
+            if self.isDimed {
+                Button(action: {
+                    self.appSceneObserver.cancelAll()
+                }) {
+                    Spacer().modifier(MatchParent())
+                        .background(Color.transparent.black45)
                 }
             }
-            .onReceive (self.sceneObserver.$safeAreaTop){ pos in
-                if self.safeAreaTop != pos {
-                    self.safeAreaTop = pos
-                    self.updateTopPos()
-                }
-            }
-            .onReceive (self.sceneObserver.$safeAreaBottom){ pos in
-                if self.safeAreaBottom != pos {
-                    self.safeAreaBottom = pos
-                    self.updateBottomPos()
-                }
-            }
-            .onReceive (self.pairing.$status){ stat in
-                switch stat {
-                case .pairing :
-                    if self.headerBannerData != nil {
-                        self.headerBannerData = nil
-                        self.updateTopPos()
-                    }
-                case .disConnect :
-                    if self.headerBannerData == nil {
-                        self.headerBannerData = BannerData().setPairing()
-                        self.updateTopPos()
-                    }
-                default : break
-                }
-            }
-            .onReceive(self.appSceneObserver.$event){ evt in
-                guard let evt = evt else { return }
-                switch evt  {
-                case .headerBanner(let data):
-                    self.headerBannerData = data
-                    self.updateTopPos()
-                default: break
-                }
-            }
-            .onReceive (self.appSceneObserver.$useTopFix) { use in
-                guard let use = use else {return}
-                self.appSceneObserver.useTop = use
-            }
-            
-            .onReceive (self.appSceneObserver.$useTop) { use in
+        }
+        .modifier(MatchParent())
+        .onReceive (self.appSceneObserver.$isApiLoading) { loading in
+            DispatchQueue.main.async {
                 withAnimation{
-                    self.useTop = use
+                    self.isLoading = loading
                 }
+            }
+        }
+        .onReceive (self.sceneObserver.$safeAreaTop){ pos in
+            if self.safeAreaTop != pos {
+                self.safeAreaTop = pos
                 self.updateTopPos()
             }
-            .onReceive (self.appSceneObserver.$useBottom) { use in
-                withAnimation{
-                    self.useBottom = use
-                }
+        }
+        .onReceive (self.sceneObserver.$safeAreaBottom){ pos in
+            if self.safeAreaBottom != pos {
+                self.safeAreaBottom = pos
                 self.updateBottomPos()
             }
-            .onReceive (self.appSceneObserver.$useTopImmediately) { use in
+        }
+        .onReceive (self.pairing.$status){ stat in
+            switch stat {
+            case .pairing :
+                if self.headerBannerData != nil {
+                    self.headerBannerData = nil
+                    self.updateTopPos()
+                }
+            case .disConnect :
+                if self.headerBannerData == nil {
+                    self.headerBannerData = BannerData().setPairing()
+                    self.updateTopPos()
+                }
+            default : break
+            }
+        }
+        .onReceive(self.appSceneObserver.$event){ evt in
+            guard let evt = evt else { return }
+            switch evt  {
+            case .headerBanner(let data):
+                self.headerBannerData = data
+                self.updateTopPos()
+            default: break
+            }
+        }
+        .onReceive (self.appSceneObserver.$useTopFix) { use in
+            guard let use = use else {return}
+            self.appSceneObserver.useTop = use
+        }
+        
+        .onReceive (self.appSceneObserver.$useTop) { use in
+            withAnimation{
                 self.useTop = use
-                self.updateTopPos()
             }
-            .onReceive (self.appSceneObserver.$useBottomImmediately) { use in
+            self.updateTopPos()
+        }
+        .onReceive (self.appSceneObserver.$useBottom) { use in
+            withAnimation{
                 self.useBottom = use
-                self.updateBottomPos()
             }
-        }//geometry
+            self.updateBottomPos()
+        }
+        .onReceive (self.appSceneObserver.$useTopImmediately) { use in
+            self.useTop = use
+            self.updateTopPos()
+        }
+        .onReceive (self.appSceneObserver.$useBottomImmediately) { use in
+            self.useBottom = use
+            self.updateBottomPos()
+        }
+        
     }
     func updateTopPos(){
         var headerHeight = self.headerBannerData == nil ? 0 : HeaderBanner.height

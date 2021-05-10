@@ -185,7 +185,7 @@ class BlockData:InfinityData, ObservableObject{
     }
     
     func setDatabindingCompleted(total:Int? = nil){
-        if status != .initate { return }
+        if self.status != .initate { return }
         if isCountView, let count = total {
             self.subName = count.description
         }
@@ -194,7 +194,7 @@ class BlockData:InfinityData, ObservableObject{
                 data.setRank(idx)
             }
         }
-        status = .active
+        self.status = .active
     }
     
     func setError(_ err:ApiResultError?){

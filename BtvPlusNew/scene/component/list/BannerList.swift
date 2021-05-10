@@ -50,6 +50,7 @@ struct BannerSet: PageComponent{
         }
         .padding(.horizontal, Self.padding)
         .frame(width: self.sceneObserver.screenSize.width)
+       
         .onAppear {
             if self.data.datas.isEmpty { return }
             let size = Self.listSize(data: self.data, screenWidth: sceneObserver.screenSize.width)
@@ -76,25 +77,16 @@ struct BannerItem: PageView {
         ZStack{
             switch self.data.type {
             case .cell(let size, _) :
-                ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg16_9)
+                ImageView(
+                    url: self.data.image,
+                    contentMode: .fill,
+                    noImg: Asset.noImgBanner)
                     .frame(width: size.width, height: size.height)
-            /*
-            case .list :
-                
-                KFImage(URL(string: self.data.image))
-                    .resizable()
-                    .placeholder {
-                        Image(Asset.noImg16_9)
-                            .resizable()
-                    }
-                    .cancelOnDisappear(true)
-                    .loadImmediately()
-                    .aspectRatio(contentMode: .fill)
-                    .modifier(MatchHorizontal(height: ListItem.banner.type01.height))
-            */
             default :
-               
-                ImageView(url: self.data.image, contentMode: SystemEnvironment.isTablet ? .fit : .fill, noImg: Asset.noImg16_9)
+                ImageView(
+                    url: self.data.image,
+                    contentMode: SystemEnvironment.isTablet ? .fit : .fill,
+                    noImg: Asset.noImgBanner)
                     .modifier(MatchHorizontal(height: ListItem.banner.type01.height))
             }
         }

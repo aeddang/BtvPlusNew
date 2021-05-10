@@ -24,7 +24,7 @@ struct PageWatchedList: PageView {
     @State var title:String? = nil
     @State var menuId:String? = nil
     @State var useTracking:Bool = false
-  
+    @State var marginBottom:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -45,6 +45,7 @@ struct PageWatchedList: PageView {
                         useTracking:self.useTracking
                     )
                 }
+                .padding(.bottom, self.marginBottom )
                 .modifier(PageFull(style:.dark))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
@@ -54,6 +55,9 @@ struct PageWatchedList: PageView {
                 if ani {
                     self.viewModel.update(menuId:self.menuId, key:nil)
                 }
+            }
+            .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
+                self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }

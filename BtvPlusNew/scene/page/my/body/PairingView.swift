@@ -106,7 +106,9 @@ struct PairingView: PageComponent{
                         pageDragingModel:self.pageDragingModel,
                         data: data,
                         margin:SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.thin ,
-                        useTracking:true)
+                        useTracking:true,
+                        useEmpty:true
+                        )
                         .padding(.top, Dimen.margin.medium)
                 }
             }
@@ -151,8 +153,10 @@ struct PairingView: PageComponent{
                 .padding(.top, Dimen.margin.medium)
             }
         }
+        
         .padding(.top, Dimen.margin.light)
         .padding(.bottom, Dimen.margin.thin + self.safeAreaBottom)
+        .modifier(MatchParent())
         .background(Color.brand.bg)
     
         .onReceive(self.pairing.$user){ user in
@@ -198,8 +202,11 @@ struct PairingView: PageComponent{
             .setData(title: String.pageTitle.watched, cardType:.watchedVideo, dataType:.watched, uiType:.video, isCountView: true)
         blockData.videos = videos
         blockData.setDatabindingCompleted(total: resData.watch_tot?.toInt() ?? 0)
-        self.watchedData = blockData
-        withAnimation{ self.isCompleted = true }
+        DispatchQueue.main.async {
+            self.watchedData = blockData
+            withAnimation{ self.isCompleted = true }
+        }
+       
     }
     
     

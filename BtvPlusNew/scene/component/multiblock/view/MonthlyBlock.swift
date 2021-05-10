@@ -82,34 +82,29 @@ struct MonthlyBlock: PageComponent {
             .padding(.top, Dimen.margin.lightExtra)
             .onTapGesture {
                 if self.hasAuth {return}
-                
                 let status = self.pairing.status
                 if status != .pairing {
                     self.appSceneObserver.alert = .needPairing()
                     return 
                 }
-                
                 self.pagePresenter.openPopup(
                     PageProvider.getPageObject(.purchase)
                         .addParam(key: .data, value: currentData)
                 )
             }
         }
-        
         .onAppear(){
             if self.monthlyDatas.isEmpty {return}
             if let data = self.monthlyDatas.first(where: { $0.isSelected }) {
                 self.selectedData(data: data)
             }
             self.initSubscription()
-            
             if let data = self.currentData {
                 let idx  = data.index
                 if idx > 0 {
                     self.viewModel.uiEvent = .scrollTo(max(0,idx-1))
                 }
             }
-            
         }
         .onDisappear(){
             self.anyCancellable.forEach{$0.cancel()}

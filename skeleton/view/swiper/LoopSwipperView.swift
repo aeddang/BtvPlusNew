@@ -31,7 +31,7 @@ struct LoopSwipperView : View , PageProtocol, Swipper {
                     .clipped()
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
-                    if #available(iOS 15.0, *) {
+                    if #available(iOS 14.0, *) {
                         LazyHStack(alignment: .center, spacing: 0) {
                             self.pages.last?.contentBody
                                 .frame(

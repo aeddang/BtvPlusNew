@@ -21,7 +21,7 @@ extension TopBanner{
 }
 struct TopBanner: PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
-    @ObservedObject var pageObservable:PageObservable = PageObservable()
+    @ObservedObject var pageObservable:PageObservable 
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     var datas: [BannerData]
@@ -71,13 +71,17 @@ struct TopBanner: PageComponent {
             default : return
             }
         }
-        
-        .onAppear(){
-            self.isInit = true
-            self.pages = datas.map{data in
-                TopBannerItem(data: data)
+        .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+            if ani {
+                self.isInit = true
+                self.pages = datas.map{data in
+                    TopBannerItem(data: data)
+                }
+                self.autoChange()
             }
-            self.autoChange()
+        }
+        .onAppear(){
+            
         }
         .onDisappear(){
             self.isInit = false
@@ -90,9 +94,12 @@ struct TopBanner: PageComponent {
     @State var isTop = false
     @State var autoChangeSubscription:AnyCancellable?
     func autoChange(){
+        ComponentLog.d("autoChange init " + self.isTop.description, tag:self.tag)
         self.autoChangeCancel()
         if !self.isTop { return }
         if !self.isInit { return }
+        
+        
         //ComponentLog.d("autoChange init " + self.pageID, tag:self.tag)
         self.autoChangeSubscription = Timer.publish(
             every: 5, on: .current, in: .common)
@@ -101,6 +108,7 @@ struct TopBanner: PageComponent {
                 self.viewModel.request = .next
                 ComponentLog.d("autoChange com " + self.pageID, tag:self.tag)
             }
+        
     }
     
     func autoChangeCancel(){
@@ -163,14 +171,4 @@ struct TopBannerItem: PageComponent, Identifiable {
     }
 }
 
-#if DEBUG
-struct TopBanner_Previews: PreviewProvider {
-    static var previews: some View {
-        Form{
-            TopBanner(
-             datas: [BannerData(),BannerData(),BannerData(),BannerData()])
-            .frame(width:375, height: 477, alignment: .center)
-        }
-    }
-}
-#endif
+

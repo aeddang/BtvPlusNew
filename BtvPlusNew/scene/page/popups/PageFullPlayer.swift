@@ -33,9 +33,17 @@ struct PageFullPlayer: PageView {
             default : break
             }
         }
+        .onReceive(self.playerModel.$btvPlayerEvent){evt in
+            guard let evt = evt else { return }
+            switch evt {
+            case .close : self.onClose()
+            default : break
+            }
+        }
         .onReceive(self.sceneObserver.$isUpdated){ update in
             if !update {return}
             if !isInit {return}
+            if SystemEnvironment.isTablet {return}
             switch self.sceneObserver.sceneOrientation {
             case .portrait :
                 self.onClose()
@@ -57,17 +65,14 @@ struct PageFullPlayer: PageView {
             }
         }
         .onAppear{
-           
+            if !self.pagePresenter.isFullScreen {
+                self.pagePresenter.fullScreenEnter(changeOrientation: nil)
+            }
         }
-        .onDisappear{
-           
-        }
-       
     }//body
    
     private func onClose(){
         self.playerModel.event = .pause
-        PageLog.d("play time " +  self.playerModel.time.description, tag:self.tag)
         self.pagePresenter.onPageEvent(self.pageObject, event: .init(type: .timeChange, data: self.playerModel.time))
         self.pagePresenter.closePopup(self.pageObject?.id)
     }

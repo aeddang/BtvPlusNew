@@ -11,7 +11,7 @@ import SwiftUI
 import Combine
 import struct Kingfisher.KFImage
 struct TopBannerBg: PageComponent {
-    @ObservedObject var pageObservable:PageObservable = PageObservable()
+    @ObservedObject var pageObservable:PageObservable
     var viewModel:ViewPagerModel = ViewPagerModel()
     var datas: [BannerData]
      
@@ -48,18 +48,25 @@ struct TopBannerBg: PageComponent {
                 .padding(.bottom, TopBanner.marginBottomBar + TopBanner.imageHeight - TopBanner.height)
             }
         }
-        .onAppear(){
-            self.pages = datas.map{data in
-                TopBannerBgItem(data: data)
-            }
-            self.setBar(idx:self.viewModel.index)
-        }
         .onReceive( self.viewModel.$index ){ idx in
             self.setBar(idx:idx)
         }
+        .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+            if ani {
+                self.pages = datas.map{data in
+                    TopBannerBgItem(data: data)
+                }
+                self.setBar(idx:self.viewModel.index)
+            }
+        }
+        .onAppear(){
+            
+        }
+        
     }
     
     private func setBar(idx:Int){
+        if self.pages.isEmpty {return}
         let count = self.datas.count
         let minSize:CGFloat = 240.0
         let size = min(TopBanner.barWidth, minSize/CGFloat(count))
@@ -89,7 +96,7 @@ struct TopBannerBgItem: PageComponent, Identifiable {
                 .loadImmediately()
                 .aspectRatio(contentMode:  .fill)
                 .modifier(MatchHorizontal(height:TopBanner.imageHeight))
-                //.frame(height:TopBanner.imageHeight)
+               
             if !SystemEnvironment.isTablet {
                 VStack{
                     Image(Asset.shape.bgGradientTop)
@@ -163,18 +170,8 @@ struct TopBannerBgItem: PageComponent, Identifiable {
            
         }
         .modifier(MatchHorizontal(height: TopBanner.imageHeight))
-        .clipped()
+        
     }
 }
 
-#if DEBUG
-struct TopBannerBg_Previews: PreviewProvider {
-    static var previews: some View {
-        Form{
-            TopBannerBg(
-             datas: [BannerData(),BannerData(),BannerData(),BannerData()])
-            .frame(width:375, height: 477, alignment: .center)
-        }
-    }
-}
-#endif
+

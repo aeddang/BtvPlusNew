@@ -17,6 +17,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var data: BlockData
     var useTracking:Bool = false
+    var useEmpty:Bool = false
     @State var datas:[PosterData] = []
     @State var listHeight:CGFloat = ListItem.poster.type01.height
     @State var isUiActive:Bool = true
@@ -24,32 +25,34 @@ struct PosterBlock:PageComponent, BlockProtocol {
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             if self.isUiActive {
-                HStack(alignment: .bottom, spacing:Dimen.margin.thin){
-                    VStack(alignment: .leading , spacing:Dimen.margin.tiny){
-                        Spacer().modifier(MatchHorizontal(height: 0))
-                        HStack( spacing:Dimen.margin.thin){
-                            Text(data.name).modifier(BlockTitle())
-                                .lineLimit(1)
-                            Text(data.subName).modifier(BlockTitle(color:Color.app.grey))
-                                .lineLimit(1)
+                if !self.datas.isEmpty || self.useEmpty {
+                    HStack(alignment: .bottom, spacing:Dimen.margin.thin){
+                        VStack(alignment: .leading , spacing:Dimen.margin.tiny){
+                            Spacer().modifier(MatchHorizontal(height: 0))
+                            HStack( spacing:Dimen.margin.thin){
+                                Text(data.name).modifier(BlockTitle())
+                                    .lineLimit(1)
+                                Text(data.subName).modifier(BlockTitle(color:Color.app.grey))
+                                    .lineLimit(1)
+                            }
+                        }
+                        if self.hasMore {
+                            TextButton(
+                                defaultText: String.button.all,
+                                textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
+                            ){_ in
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(.categoryList)
+                                        .addParam(key: .data, value: data)
+                                        .addParam(key: .type, value: CateBlock.ListType.poster)
+                                        .addParam(key: .subType, value:data.cardType)
+                                )
+                            }
                         }
                     }
-                    if self.hasMore {
-                        TextButton(
-                            defaultText: String.button.all,
-                            textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
-                        ){_ in
-                            self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(.categoryList)
-                                    .addParam(key: .data, value: data)
-                                    .addParam(key: .type, value: CateBlock.ListType.poster)
-                                    .addParam(key: .subType, value:data.cardType)
-                            )
-                        }
-                    }
+                    .modifier(MatchHorizontal(height: Dimen.tab.thin))
+                    .modifier(ContentHorizontalEdges())
                 }
-                .modifier(MatchHorizontal(height: Dimen.tab.thin))
-                .modifier(ContentHorizontalEdges())
                 if !self.datas.isEmpty {
                     PosterList(
                         viewModel:self.viewModel,
@@ -70,7 +73,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
                             self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
                         }
                 
-                } else {
+                } else if self.useEmpty {
                     EmptyAlert( text: self.data.dataType != .watched
                                 ? String.pageText.myWatchedEmpty
                                 : String.alert.dataError)
@@ -90,7 +93,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
                 self.datas = datas
                 self.updateListSize()
                 ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
-                
+                return
             }
             if let apiQ = self.getRequestApi(pairing:self.pairing.status) {
                 dataProvider.requestData(q: apiQ)
@@ -148,6 +151,8 @@ struct PosterBlock:PageComponent, BlockProtocol {
                 
             default: do {}
             }
+            
+            if allDatas.isEmpty { return onBlank() }
             self.datas = allDatas
             self.updateListSize()
             self.data.posters = allDatas

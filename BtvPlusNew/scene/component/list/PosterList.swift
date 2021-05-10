@@ -220,6 +220,10 @@ enum PosterType {
         }
     }
 }
+extension PosterList{
+    static let headerSize:Int = 2
+    static let spacing:CGFloat = Dimen.margin.tiny
+}
 
 struct PosterList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
@@ -237,8 +241,8 @@ struct PosterList: PageComponent{
             axes: .horizontal,
             marginVertical: 0,
             marginHorizontal: self.margin,
-            spacing: Dimen.margin.tiny,
-            isRecycle: self.banners?.isEmpty == false ? false : true,
+            spacing: Self.spacing,
+            isRecycle: true, //self.banners?.isEmpty == false ? false : true,
             useTracking: self.useTracking
             ){
             if let banners = self.banners {
@@ -246,32 +250,58 @@ struct PosterList: PageComponent{
                     BannerItem(data: data)
                 }
             }
-            ForEach(self.datas) { data in
-                PosterItem( data:data , isSelected: self.contentID == nil
-                                ? false
-                                : self.contentID == data.epsdId)
-                .onTapGesture {
-                    if let action = self.action {
-                        action(data)
-                    }else{
-                        if let synopsisData = data.synopsisData {
-                            self.pagePresenter.openPopup(
-                                PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
-                                    .addParam(key: .data, value: synopsisData)
-                                    .addParam(key: .watchLv, value: data.watchLv)
-                            )
-                        } else {
-                            self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(.person)
-                                    .addParam(key: .data, value: data)
-                                    .addParam(key: .watchLv, value: data.watchLv)
-                            )
+            if Self.headerSize < self.datas.count && self.banners?.isEmpty == false {
+                HStack(spacing:Self.spacing){
+                    ForEach( self.datas[0...Self.headerSize]) { data in
+                        PosterItem( data:data , isSelected: self.contentID == nil
+                                        ? false
+                                        : self.contentID == data.epsdId)
+                        .onTapGesture {
+                            self.onTap(data: data)
                         }
+                    }
+                }
+                
+                ForEach( self.datas[(Self.headerSize+1)...(self.datas.count-1)]) { data in
+                    PosterItem( data:data , isSelected: self.contentID == nil
+                                    ? false
+                                    : self.contentID == data.epsdId)
+                    .onTapGesture {
+                        self.onTap(data: data)
+                    }
+                }
+            } else {
+                ForEach(self.datas) { data in
+                    PosterItem( data:data , isSelected: self.contentID == nil
+                                    ? false
+                                    : self.contentID == data.epsdId)
+                    .onTapGesture {
+                        self.onTap(data: data)
                     }
                 }
             }
         }
     }//body
+    
+    func onTap(data:PosterData)  {
+        if let action = self.action {
+            action(data)
+        }else{
+            if let synopsisData = data.synopsisData {
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
+                        .addParam(key: .data, value: synopsisData)
+                        .addParam(key: .watchLv, value: data.watchLv)
+                )
+            } else {
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.person)
+                        .addParam(key: .data, value: data)
+                        .addParam(key: .watchLv, value: data.watchLv)
+                )
+            }
+        }
+    }
 }
 
 struct PosterViewList: PageComponent{

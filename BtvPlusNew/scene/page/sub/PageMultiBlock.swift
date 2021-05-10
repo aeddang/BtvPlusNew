@@ -40,7 +40,7 @@ struct PageMultiBlock: PageView {
                             viewModel:self.cateBlockViewModel,
                             useTracking:self.useTracking,
                             marginTop: self.marginTop + self.sceneObserver.safeAreaTop + Dimen.app.top,
-                            marginBottom: 0
+                            marginBottom: Dimen.app.bottom
                         )
                         
                     } else {
@@ -52,9 +52,8 @@ struct PageMultiBlock: PageView {
                             useBodyTracking: self.themaType == .ticket ? false : self.useTracking,
                             useTracking:self.useTracking,
                             marginTop: self.marginTop  + Dimen.margin.thin + self.sceneObserver.safeAreaTop + Dimen.app.top,
-                            marginBottom: self.marginBottom
+                            marginBottom: Dimen.app.bottom
                         )
-                        
                         .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
                             guard let evt = evt else {return}
                             switch evt {
@@ -67,7 +66,6 @@ struct PageMultiBlock: PageView {
                             default: break
                             }
                         }
-                        
                     }
                     ZStack(alignment: .topLeading){
                         if self.tabDatas != nil && self.isTop != nil {
@@ -91,7 +89,7 @@ struct PageMultiBlock: PageView {
                     .modifier(MatchHorizontal(height: (self.isTop == true ? self.marginTop  : 0) + Dimen.app.pageTop  + self.sceneObserver.safeAreaTop))
                     .background(Color.app.blueDeep)
                 }
-                //.padding(.bottom, self.marginBottom)
+                .padding(.bottom, self.marginBottom )
                 .onReceive(self.infinityScrollModel.$event){evt in
                     guard let evt = evt else {return}
                     if self.isTop == nil {return}
@@ -140,7 +138,7 @@ struct PageMultiBlock: PageView {
                 }
             }
             .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
-                self.marginBottom = self.sceneObserver.safeAreaBottom + Dimen.app.bottom
+                self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
             }
             .onReceive(self.appSceneObserver.$event){ evt in
                 guard let evt = evt else { return }

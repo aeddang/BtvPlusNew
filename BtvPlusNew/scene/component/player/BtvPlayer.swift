@@ -48,7 +48,7 @@ enum BtvUiEvent {
 }
 
 enum BtvPlayerEvent {
-    case nextView, continueView, changeView(String)
+    case nextView, continueView, changeView(String), close
 }
 
 enum BtvPlayerType {
@@ -71,6 +71,7 @@ class BtvPlayerModel:PlayerModel{
     var continuousTime:Double = 0
     var checkPreroll = true
     var isPrerollPlay = false
+    
     private(set) var playData:PlayInfo? = nil
     private(set) var btvPlayType:BtvPlayType? = nil
     private(set) var qualitys:[Quality] = []
@@ -207,7 +208,9 @@ struct BtvPlayer: PageComponent{
         GeometryReader { geometry in
             ZStack{
                 ZStack(alignment:.bottom){
-                    CPPlayer( viewModel : self.viewModel)
+                    CPPlayer(
+                        viewModel : self.viewModel,
+                        pageObservable : self.pageObservable)
                     PlayerEffect(viewModel: self.viewModel)
                     PlayerTop(viewModel: self.viewModel, title: self.title)
                     PlayerBottom(viewModel: self.viewModel)
@@ -452,10 +455,13 @@ struct BtvPlayer: PageComponent{
         let path = quality.path + leading +
             "device_id" + SystemEnvironment.getGuestDeviceId() +
             "&token=" + (repository.getDrmId() ?? "")
-       // ComponentLog.d("path : " + path, tag: self.tag)
+        ComponentLog.d("path : " + path, tag: self.tag + " " + self.viewModel.id)
         let t = self.viewModel.continuousTime > 0 ? self.viewModel.continuousTime : self.viewModel.time
         self.viewModel.continuousTime = 0
-        self.viewModel.event = .load(path, true , t, self.viewModel.header)
+        DispatchQueue.main.async {
+            self.viewModel.event = .load(path, true , t, self.viewModel.header)
+        }
+        
     }
     
     @State var isWaiting:Bool? = nil

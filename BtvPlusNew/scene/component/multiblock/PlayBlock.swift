@@ -25,7 +25,6 @@ class PlayBlockModel: PageDataProviderModel {
     }
 }
 
-
 struct PlayBlock: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
@@ -123,11 +122,13 @@ struct PlayBlock: PageComponent{
             if !update {return}
             if self.pagePresenter.currentTopPage?.id != self.pageObject?.id {return}
             if self.playerModel.playData == nil { return }
+            /*
             switch self.sceneObserver.sceneOrientation {
             case .landscape :
                 self.pagePresenter.fullScreenEnter()
             default : break
             }
+            */
         }
         .onReceive(self.pagePresenter.$isFullScreen){ isFullScreen in
             if self.pagePresenter.currentTopPage?.id != self.pageObject?.id {return}
@@ -201,6 +202,7 @@ struct PlayBlock: PageComponent{
             default : break
             }
         }
+        
         .onAppear(){
             self.playerModel.isMute = true
         }
@@ -226,12 +228,17 @@ struct PlayBlock: PageComponent{
                 .addParam(key: .initTime, value: self.playerModel.time)
         )
     }
+    
     private func closeFullScreen(){
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.isFullScreen = false
             if let posIdx = self.finalIndex {
                 self.infinityScrollModel.uiEvent = .scrollTo(posIdx)
                 self.pagePresenter.orientationLock(lockOrientation: .all)
+                self.focusIndex = posIdx
+                //self.delayUpdate()
+                
+                PageLog.d("onCloseFullScreen " + (self.selectedData?.title ?? "no"), tag:self.tag)
             }
         }
     }
@@ -239,8 +246,8 @@ struct PlayBlock: PageComponent{
     private func onPlaytimeChanged(t:Double){
         guard let data = self.selectedData else { return }
         data.playTime = t
+        PageLog.d("onPlaytimeChanged playTime " + t.description, tag:self.tag)
     }
-    
     
     @State var isError:Bool = false
     @State var datas:[PlayData] = []
@@ -257,7 +264,6 @@ struct PlayBlock: PageComponent{
         self.infinityScrollModel.reload()
         self.load()
     }
-    
     
     func load(){
         if  !self.infinityScrollModel.isLoadable { return }

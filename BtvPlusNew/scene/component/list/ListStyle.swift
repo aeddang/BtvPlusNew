@@ -108,16 +108,16 @@ struct ListRowInset: ViewModifier {
     func body(content: Content) -> some View {
         return content
             .padding(
-                EdgeInsets(
+                .init(
                     top: (index == firstIndex) ? marginTop : 0,
                     leading:  marginHorizontal,
                     bottom: spacing,
                     trailing: marginHorizontal)
             )
             .listRowInsets(
-                EdgeInsets()
+                .init(
+                    )
             )
-
             .listRowBackground(bgColor)
         
     }
@@ -141,7 +141,9 @@ struct HolizentalListRowInset: ViewModifier {
                     trailing: spacing)
             )
             .listRowInsets(
-                EdgeInsets()
+                EdgeInsets(
+                    top: 0, leading: 0, bottom: 0, trailing: 0
+                )
             )
 
             .listRowBackground(bgColor)

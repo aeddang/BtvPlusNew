@@ -56,6 +56,7 @@ struct ThemaBlock:BlockProtocol, PageComponent {
                     ThemaData().setData(data: d, cardType: data.cardType)
                 }
                 self.updateListSize()
+                ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
                 return
             }
             if let apiQ = self.getRequestApi(pairing:pairing.status) {

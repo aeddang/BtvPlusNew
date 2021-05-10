@@ -37,7 +37,7 @@ struct SearchResult: PageComponent{
                 datas: self.datas,
                 useTracking:self.useTracking,
                 marginTop:Dimen.margin.regular,
-                marginBottom: Dimen.margin.regular,
+                marginBottom: Dimen.app.bottom,
                 isRecycle:true,
                 isLegacy:false
                 )

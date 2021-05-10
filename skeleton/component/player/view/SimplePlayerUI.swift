@@ -13,6 +13,7 @@ import Combine
 
 
 struct SimplePlayerUI: PageComponent {
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var viewModel:PlayerModel
     @ObservedObject var pageObservable:PageObservable
@@ -67,8 +68,12 @@ struct SimplePlayerUI: PageComponent {
                         size: CGSize(width:Dimen.icon.regular,height:Dimen.icon.regular)
                     ){ _ in
                         if self.viewModel.useFullScreenAction {
+                            let changeOrientation:UIInterfaceOrientationMask = SystemEnvironment.isTablet
+                            ? (self.sceneObserver.sceneOrientation == .portrait ? .portrait :.landscape)
+                            : (self.isFullScreen ? .portrait : .landscape)
+                            
                             self.isFullScreen
-                                ? self.pagePresenter.fullScreenExit(changeOrientation: .portrait)
+                                ? self.pagePresenter.fullScreenExit(changeOrientation: changeOrientation)
                                 : self.pagePresenter.fullScreenEnter()
                         } else{
                             self.viewModel.event = .fullScreen(!self.isFullScreen)

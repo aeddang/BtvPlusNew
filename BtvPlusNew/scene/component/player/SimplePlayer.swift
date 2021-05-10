@@ -30,7 +30,11 @@ struct SimplePlayer: PageComponent{
         GeometryReader { geometry in
             ZStack{
                 ZStack(alignment:.bottom){
-                    CPPlayer( viewModel : self.viewModel, isSimple: true)
+                    CPPlayer(
+                        viewModel : self.viewModel,
+                        pageObservable: self.pageObservable,
+                        isSimple: true)
+                    
                     PlayerEffect(viewModel: self.viewModel)
                     PlayerTop(viewModel: self.viewModel, title: self.title, isSimple: true)
                     PlayerOptionSelectBox(viewModel: self.viewModel)
@@ -51,6 +55,7 @@ struct SimplePlayer: PageComponent{
             .onReceive(self.sceneObserver.$isUpdated){ update in
                 if !update {return}
                 if self.viewModel.isLock { return }
+                if SystemEnvironment.isTablet  { return }
                 switch self.sceneObserver.sceneOrientation {
                 case .landscape : self.pagePresenter.fullScreenEnter()
                 case .portrait : self.pagePresenter.fullScreenExit()

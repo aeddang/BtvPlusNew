@@ -71,7 +71,7 @@ struct WatchedList: PageComponent{
             axes: .vertical,
             scrollType : .reload(isDragEnd:false),
             marginTop: Dimen.margin.regular,
-            marginBottom: Dimen.margin.tinyExtra,
+            marginBottom: Dimen.app.bottom,
             spacing:0,
             isRecycle: true,
             useTracking: self.useTracking
@@ -79,6 +79,7 @@ struct WatchedList: PageComponent{
             
             InfoAlert(text: String.pageText.myWatchedInfo)
                 .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.thin))
+            
             if !self.datas.isEmpty {
                 ForEach(self.datas) { data in
                     WatchedItem( data:data , delete:self.delete)

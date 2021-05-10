@@ -59,7 +59,7 @@ struct Dimen{
         public static let regular:CGFloat = isPad ? 63 : 46 //*
         public static let regularExtra:CGFloat = isPad ? 52 : 38 //*
         public static let light:CGFloat =  isPad ? 42 : 36//*
-        public static let lightExtra:CGFloat = 24//*
+        public static let lightExtra:CGFloat = isPad ? 30 : 24//*
         public static let thin:CGFloat = isPad ? 26 : 18 //*
     }
     

@@ -16,8 +16,6 @@ extension PageMyBenefits{
 }
 
 struct PageMyBenefits: PageView {
-    
-    
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var repository:Repository
@@ -59,22 +57,26 @@ struct PageMyBenefits: PageView {
                         style: .dark
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    CPPageViewPager(
-                        pageObservable: self.pageObservable,
-                        viewModel: self.viewPagerModel,
-                        pages: self.pages,
-                        titles: self.titles,
-                        isDivisionTab: SystemEnvironment.isTablet ? true : false
-                        )
-                        { idx in
-                            switch idx {
-                            case 0 : self.couponModel.initUpdate()
-                            case 1 : self.pointModel.initUpdate()
-                            case 2 : self.cashModel.initUpdate()
-                            case 3 : self.cardModel.initUpdate(type: .member)
-                            default : break
+                    if !self.pages.isEmpty {
+                        CPPageViewPager(
+                            pageObservable: self.pageObservable,
+                            viewModel: self.viewPagerModel,
+                            pages: self.pages,
+                            titles: self.titles,
+                            isDivisionTab: SystemEnvironment.isTablet ? true : false
+                            )
+                            { idx in
+                                switch idx {
+                                case 0 : self.couponModel.initUpdate()
+                                case 1 : self.pointModel.initUpdate()
+                                case 2 : self.cashModel.initUpdate()
+                                case 3 : self.cardModel.initUpdate(type: .member)
+                                default : break
+                                }
                             }
-                        }
+                    } else {
+                        Spacer()
+                    }
                 }
                 .modifier(PageFull(style:.dark))
                 .modifier(PageDragingSecondPriority(geometry: geometry, pageDragingModel: self.pageDragingModel))
@@ -93,6 +95,35 @@ struct PageMyBenefits: PageView {
             
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
+                if ani {
+                    self.pages = [
+                        CouponBlock(
+                            infinityScrollModel:self.couponScrollModel,
+                            viewModel:self.couponModel,
+                            pageObservable:self.pageObservable,
+                            useTracking:true,
+                            type: .coupon
+                        ),
+                        CouponBlock(
+                            infinityScrollModel:self.pointScrollModel,
+                            viewModel:self.pointModel,
+                            pageObservable:self.pageObservable,
+                            useTracking:true,
+                            type: .point
+                        ),
+                        CouponBlock(
+                            infinityScrollModel:self.cashScrollModel,
+                            viewModel:self.cashModel,
+                            pageObservable:self.pageObservable,
+                            useTracking:true,
+                            type: .cash
+                        ),
+                        DiscountView(
+                            cardModel: self.cardModel,
+                            pageObservable: self.pageObservable
+                        )
+                    ]
+                }
             }
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 self.useTracking = page?.id == self.pageObject?.id
@@ -114,33 +145,7 @@ struct PageMyBenefits: PageView {
                         self.viewPagerModel.index = idx
                     }
                 }
-                self.pages = [
-                    CouponBlock(
-                        infinityScrollModel:self.couponScrollModel,
-                        viewModel:self.couponModel,
-                        pageObservable:self.pageObservable,
-                        useTracking:true,
-                        type: .coupon
-                    ),
-                    CouponBlock(
-                        infinityScrollModel:self.pointScrollModel,
-                        viewModel:self.pointModel,
-                        pageObservable:self.pageObservable,
-                        useTracking:true,
-                        type: .point
-                    ),
-                    CouponBlock(
-                        infinityScrollModel:self.cashScrollModel,
-                        viewModel:self.cashModel,
-                        pageObservable:self.pageObservable,
-                        useTracking:true,
-                        type: .cash
-                    ),
-                    DiscountView(
-                        cardModel: self.cardModel,
-                        pageObservable: self.pageObservable
-                    )
-                ]
+                
             }
             .onDisappear{
                

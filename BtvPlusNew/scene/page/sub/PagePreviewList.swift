@@ -24,7 +24,8 @@ struct PagePreviewList: PageView {
     @State var title:String? = nil
     @State var menuId:String? = nil
     @State var useTracking:Bool = false
-  
+    @State var safeAreaTop:CGFloat = 0
+    @State var marginBottom:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -37,7 +38,7 @@ struct PagePreviewList: PageView {
                         isBack : true,
                         style: .dark
                     )
-                    .padding(.top, self.sceneObserver.safeAreaTop)
+                    .padding(.top, self.safeAreaTop)
                     PlayBlock(
                         infinityScrollModel:self.infinityScrollModel,
                         viewModel:self.viewModel,
@@ -45,10 +46,11 @@ struct PagePreviewList: PageView {
                         playerModel:self.playerModel,
                         useTracking:self.useTracking,
                         marginTop: Dimen.margin.thin,
-                        marginBottom: Dimen.margin.thin
+                        marginBottom: Dimen.app.bottom
                     )
                     
                 }
+                .padding(.bottom, self.marginBottom )
                 .modifier(PageFull(style:.dark))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
@@ -61,8 +63,16 @@ struct PagePreviewList: PageView {
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 self.useTracking = page?.id == self.pageObject?.id
             }
-           
+            .onReceive(self.sceneObserver.$isUpdated){ update in
+                if update {
+                    self.safeAreaTop = self.sceneObserver.safeAreaTop
+                }
+            }
+            .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
+                self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
+            }
             .onAppear{
+                self.safeAreaTop = self.sceneObserver.safeAreaTop
                 guard let obj = self.pageObject  else { return }
                 
                 if let data = obj.getParamValue(key: .data) as? CateData {

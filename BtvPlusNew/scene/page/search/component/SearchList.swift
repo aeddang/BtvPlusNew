@@ -33,7 +33,8 @@ struct SearchList: PageComponent{
         InfinityScrollView(
             viewModel: self.viewModel,
             axes: .vertical,
-            marginVertical: Dimen.margin.regular,
+            marginTop: Dimen.margin.regular,
+            marginBottom: Dimen.app.bottom,
             marginHorizontal: 0,
             spacing: 0,
             isRecycle:true,
@@ -50,6 +51,7 @@ struct SearchList: PageComponent{
                 }
             } else {
                 Spacer().modifier(MatchParent())
+                    .modifier(ListRowInset(spacing: 0))
             }
         }
         .modifier(ContentHorizontalEdges())
@@ -95,6 +97,7 @@ struct SearchItem: PageView {
                                 .colorMultiply(Color.app.grey)
                         }
                     }
+                    .buttonStyle(BorderlessButtonStyle())
                 }
             }
             .modifier(MatchParent())

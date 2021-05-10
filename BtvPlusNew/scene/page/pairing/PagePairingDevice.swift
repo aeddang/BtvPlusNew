@@ -48,6 +48,7 @@ struct PagePairingDevice: PageView {
                             viewModel: self.infinityScrollModel,
                             marginBottom:self.sceneObserver.safeAreaBottom,
                             useTracking:self.useTracking
+                            
                         ){
                             
                             VStack(alignment:.leading , spacing:0) {
@@ -67,12 +68,20 @@ struct PagePairingDevice: PageView {
                                         .padding(.top, Dimen.margin.heavy)
                                 }
                             }
-                            .padding(.horizontal, self.sceneOrientation == .landscape ? Dimen.margin.heavy : Dimen.margin.regular)
-                            StbList(datas: self.datas){ stb in
-                                self.selectePairingDevice(stb: stb)
+                            .modifier(ListRowInset(
+                                        marginHorizontal:self.sceneOrientation == .landscape ? Dimen.margin.heavy : Dimen.margin.regular,
+                                        spacing: 0))
+                            //.padding(.horizontal, self.sceneOrientation == .landscape ? Dimen.margin.heavy : Dimen.margin.regular)
+                            if !self.datas.isEmpty {
+                                StbList(datas: self.datas){ stb in
+                                    self.selectePairingDevice(stb: stb)
+                                }
+                                .padding(.top, Dimen.margin.heavy)
+                                .modifier(ListRowInset(
+                                            marginHorizontal:self.sceneOrientation == .landscape ? Dimen.margin.heavy : 0,
+                                            spacing: 0))
                             }
-                            .padding(.top, Dimen.margin.heavy)
-                            .padding(.horizontal, self.sceneOrientation == .landscape ? Dimen.margin.heavy : 0)
+                            //.padding(.horizontal, self.sceneOrientation == .landscape ? Dimen.margin.heavy : 0)
                         }
                     }
                     .background(Color.brand.bg)
@@ -93,9 +102,6 @@ struct PagePairingDevice: PageView {
                 }
                 .onReceive(self.infinityScrollModel.$pullPosition){ pos in
                     self.pageDragingModel.uiEvent = .pull(geometry, pos)
-                }
-                .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                    self.useTracking = ani
                 }
             }
            
@@ -146,24 +152,16 @@ struct PagePairingDevice: PageView {
             .onReceive(self.sceneObserver.$isUpdated){ _ in
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
             }
-            
+            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                self.useTracking = ani
+                if ani {
+                    self.pageInit()
+                }
+            }
             .onAppear{
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
                 guard let obj = self.pageObject  else { return }
                 self.pairingType = (obj.getParamValue(key: .type) as? PairingRequest) ?? self.pairingType
-
-                switch self.pairingType {
-                case .user :
-                    self.title = String.pageTitle.connectCertificationUser
-                    self.findDevice()
-                case .wifi :
-                    self.title = String.pageTitle.connectWifi
-                    self.findSSID()
-                default : do{}
-                }
-
-                self.isReady = true
-               
             }
             .onDisappear{
                 self.pairing.requestPairing(.cancel)
@@ -172,8 +170,18 @@ struct PagePairingDevice: PageView {
         }//geo
     }//body
     
-    func getMyStbDevice(cid:String) {
-        
+    func pageInit() {
+        switch self.pairingType {
+        case .user :
+            self.title = String.pageTitle.connectCertificationUser
+            self.findDevice()
+        case .wifi :
+            self.title = String.pageTitle.connectWifi
+            self.findSSID()
+        default : do{}
+        }
+
+        self.isReady = true
     }
     
     @State var isLocationRequest:Bool = false

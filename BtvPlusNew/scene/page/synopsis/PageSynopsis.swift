@@ -81,6 +81,7 @@ struct PageSynopsis: PageView {
                                 case .nextView : self.nextVod(auto: false)
                                 case .continueView: self.continueVod()
                                 case .changeView(let epsdId) : self.changeVod(epsdId:epsdId)
+                                default : break
                                 }
                             }
                            

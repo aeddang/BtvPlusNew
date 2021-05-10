@@ -95,8 +95,10 @@ struct PageDataProviderContent<Content>: PageComponent  where Content: View{
         self.content.modifier(MatchParent())
         .onReceive(self.viewModel.$request){ apiQ in
             guard let apiQ = apiQ else { return }
+            DataLog.d("requestA " + apiQ.id, tag: "request")
             //apiQ.copy(newId: self.tag)
             self.dataProvider.requestData(q:apiQ)
+            
         }
         .onReceive(self.viewModel.$requests){ apiQs in
             guard let apiQs = apiQs else { return }

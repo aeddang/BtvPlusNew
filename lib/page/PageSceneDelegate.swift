@@ -89,11 +89,9 @@ final class PagePresenter:ObservableObject{
         PageLog.d("orientationLock " + isLock.description , tag: "PagePresenter")
     }
     
-    func fullScreenEnter(isLock:Bool = false, changeOrientation:UIInterfaceOrientationMask = .landscape){
+    func fullScreenEnter(isLock:Bool = false, changeOrientation:UIInterfaceOrientationMask? = .landscape){
         if self.isFullScreen {return}
         self.isFullScreen = true
-        
-        
         PageSceneDelegate.instance?.onFullScreenEnter(isLock: isLock, changeOrientation:changeOrientation)
         PageLog.d("fullScreenEnter", tag: "PagePresenter")
     }
@@ -454,10 +452,11 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         
     }
     
-    func onFullScreenEnter(isLock:Bool = false, changeOrientation:UIInterfaceOrientationMask = .landscape){
+    func onFullScreenEnter(isLock:Bool = false, changeOrientation:UIInterfaceOrientationMask? = .landscape){
         if let controller = self.window?.rootViewController as? PageHostingController<AnyView> {
             controller.isFullScreen = true
         }
+        guard let changeOrientation = changeOrientation else { return }
         if isLock { AppDelegate.orientationLock = changeOrientation }
         if self.needOrientationChange(changeOrientation: changeOrientation) {
             self.requestDeviceOrientation(changeOrientation)

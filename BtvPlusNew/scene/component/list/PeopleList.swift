@@ -14,7 +14,7 @@ class PeopleData:InfinityData{
     private(set) var image: String = Asset.noImg1_1
     private(set) var name: String? = nil
     private(set) var role:RoleType = .unknown
-    private(set) var description: String? = nil
+    private(set) var descriptionRole: String? = nil
     private(set) var prsId: String? = nil
     private(set) var epsdId: String? = nil
     func setData(data:PeoplesItem, epsdId: String?, idx:Int = -1) -> PeopleData {
@@ -24,9 +24,9 @@ class PeopleData:InfinityData{
         role = RoleType.getType(data.prs_role_cd)
         switch role {
         case .director, .author, .step:
-            description = data.prs_role_nm
+            descriptionRole = data.prs_role_nm
         default:
-            description = data.prs_plrl_nm
+            descriptionRole = data.prs_plrl_nm
         }
         if let thumb = data.img_path {
             image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.people.size) ?? image
@@ -36,7 +36,7 @@ class PeopleData:InfinityData{
     }
     func setDummy(_ idx:Int = -1) -> PeopleData {
         name = "우민호"
-        description = "감독(연출)"
+        descriptionRole = "감독(연출)"
         role = .director
         index = idx
         return self
@@ -143,8 +143,8 @@ struct PeopleItem: PageView {
                     .padding(.bottom, Dimen.margin.micro)
                     
             }
-            if self.data.description != nil {
-                Text(self.data.description!)
+            if self.data.descriptionRole != nil {
+                Text(self.data.descriptionRole!)
                     .modifier(MediumTextStyle(
                         size: Font.size.thinExtra,
                         color: self.data.role.getColor()

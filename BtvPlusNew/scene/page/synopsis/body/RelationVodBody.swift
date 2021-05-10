@@ -53,7 +53,8 @@ struct RelationVodBody: PageComponent{
                     relationDatas: self.relationDatas,
                     hasRelationVod: self.hasRelationVod,
                     screenSize: self.screenSize,
-                    serisType: .small
+                    serisType: .small,
+                    useIndex: true
                     )
             }
             
@@ -120,8 +121,11 @@ struct RelationVodHeader: PageComponent{
                 .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
                 .frame(height:Dimen.tab.regular)
                 .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: RelationVodList.spacing))
-            EmptyAlert(text:String.pageText.synopsisNoRelationVod)
-                .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: RelationVodList.spacing))
+            VStack(spacing:0){
+                EmptyAlert(text:String.pageText.synopsisNoRelationVod)
+                Spacer().modifier(MatchHorizontal(height: 0))
+            }
+            .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: RelationVodList.spacing))
         } else if self.relationTab.count == 1 {
             Text(self.relationTab.first!.data)
                 .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
@@ -159,20 +163,31 @@ struct RelationVodListBody: PageComponent{
     var hasRelationVod:Bool
     var screenSize:CGFloat
     var serisType:SerisType = .big
+    var useIndex:Bool = false
     var body: some View {
         if !self.seris.isEmpty {
-            ForEach(self.seris) { data in
-                SerisItem( data:data.setListType(self.serisType), isSelected: self.synopsisData?.epsdId == data.contentID )
-                    .id(data.index)
-                    .onTapGesture {
-                        self.componentViewModel.uiEvent = .changeVod(data.epsdId)
-                    }
-                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))
-            }
-            .onAppear(){
-                guard let infinityScrollModel = self.infinityScrollModel  else {return}
-                guard let find = self.seris.first(where: {self.synopsisData?.epsdId == $0.contentID}) else {return}
-                infinityScrollModel.uiEvent = .scrollTo(find.index)
+            if self.useIndex {
+                ForEach(self.seris) { data in
+                    SerisItem( data:data.setListType(self.serisType), isSelected: self.synopsisData?.epsdId == data.contentID )
+                        .id(data.index)
+                        .onTapGesture {
+                            self.componentViewModel.uiEvent = .changeVod(data.epsdId)
+                        }
+                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))
+                }
+                .onAppear(){
+                    guard let infinityScrollModel = self.infinityScrollModel  else {return}
+                    guard let find = self.seris.first(where: {self.synopsisData?.epsdId == $0.contentID}) else {return}
+                    infinityScrollModel.uiEvent = .scrollTo(find.index)
+                }
+            } else {
+                ForEach(self.seris) { data in
+                    SerisItem( data:data.setListType(self.serisType), isSelected: self.synopsisData?.epsdId == data.contentID )
+                        .onTapGesture {
+                            self.componentViewModel.uiEvent = .changeVod(data.epsdId)
+                        }
+                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))
+                }
             }
         
         } else if !self.relationDatas.isEmpty {
@@ -187,12 +202,7 @@ struct RelationVodListBody: PageComponent{
                 .modifier(ListRowInset( spacing: Dimen.margin.thin))
             }
         } else {
-            Text(String.pageText.synopsisRelationVod)
-                .modifier(BoldTextStyle( size: Font.size.regular, color:Color.app.white ))
-                .frame(height:Dimen.tab.regular)
-                .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: RelationVodList.spacing))
-            EmptyAlert(text:String.pageText.synopsisNoRelationVod)
-                .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: RelationVodList.spacing))
+            Spacer().modifier(MatchHorizontal(height: RelationVodList.spacing ))
         }
     }//body
    

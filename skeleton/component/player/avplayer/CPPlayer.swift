@@ -9,11 +9,16 @@ struct CPPlayer: PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var viewModel:PlayerModel = PlayerModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
-    @State var screenRatio = CGSize(width:1, height:1)
     var isSimple:Bool = false
+    @State var screenRatio = CGSize(width:1, height:1)
+    @State var bindUpdate:Bool = false //for ios13
     var body: some View {
         ZStack(alignment: .center){
-            CustomAVPlayer( viewModel : self.viewModel)
+            CustomAVPlayer(
+                viewModel : self.viewModel,
+                pageObservable : self.pageObservable,
+                bindUpdate: self.$bindUpdate
+                )
             if !self.viewModel.useAvPlayerController {
                 HStack(spacing:0){
                     Spacer().modifier(MatchParent())
@@ -55,6 +60,10 @@ struct CPPlayer: PageComponent {
             case .fixUiStatus: self.autoUiHidden?.cancel()
             default : do{}
             }
+        }
+        .onReceive(self.viewModel.$status) { stat in
+            if #available(iOS 14.0, *) { return }
+            self.bindUpdate.toggle()
         }
         .onReceive(self.viewModel.$streamEvent) { evt in
             guard let evt = evt else { return }

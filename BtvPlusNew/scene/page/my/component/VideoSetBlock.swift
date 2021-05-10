@@ -76,7 +76,7 @@ struct VideoSetBlock:BlockProtocol, PageComponent {
     @State var datas:[VideoDataSet] = []
     @State var hasMore:Bool = true
     func setVideoSets() {
-        datas = []
+        self.datas = []
         guard let videos = data.videos else {return}
         let count:Int = self.sceneObserver.sceneOrientation == .portrait ? 3 : 4
         var rows:[VideoDataSet] = []

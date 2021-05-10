@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 import Combine
 extension PageHome{
-    static let bodyOffset:CGFloat = 100
     static fileprivate(set) var finalSelectedMonthlyId:String? = nil
 }
 
@@ -45,7 +44,7 @@ struct PageHome: PageView {
                 useTracking:false,
                 marginHeader : self.marginHeader,
                 marginTop:self.headerHeight,
-                marginBottom: self.marginBottom,
+                marginBottom: Dimen.app.bottom,
                 topDatas: self.topDatas,
                 monthlyViewModel : self.monthlyViewModel,
                 monthlyDatas: self.monthlyDatas,
@@ -57,7 +56,7 @@ struct PageHome: PageView {
                     
             }
         }
-        .padding(.bottom, -Self.bodyOffset)
+        .padding(.bottom, self.marginBottom )
         .modifier(PageFull())
         
         .onReceive(self.dataProvider.bands.$event){ evt in
@@ -82,12 +81,10 @@ struct PageHome: PageView {
         }
         .onReceive(self.appSceneObserver.$safeHeaderHeight){ hei in
             withAnimation{
-                self.marginHeader = self.topDatas == nil ? 0 : self.appSceneObserver.safeHeaderHeight
+                self.marginHeader = self.topDatas == nil ? 0 : hei
             }
         }
-        .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-            self.useTracking = ani
-        }
+        
         .onReceive(self.pagePresenter.$currentTopPage){ page in
             if page?.id == self.pageObject?.id {
                 if self.useTracking {return}
@@ -119,8 +116,21 @@ struct PageHome: PageView {
             switch evt {
             case .onResult(_, let res, _):
                 switch res.type {
-                case .getEventBanner :
-                    self.respondTopBanner(res: res)
+                case .getEventBanner(_, let type) :
+                    if self.topDatas != nil {return}
+                    if res.id == self.menuId && type == .page {
+                        self.respondTopBanner(res: res)
+                        self.requestBand()
+                    }
+                default: break
+                }
+            case .onError(_, let res, _) :
+                switch res.type {
+                case .getEventBanner(_, let type) :
+                    if self.topDatas != nil {return}
+                    if res.id == self.menuId && type == .page {
+                        self.requestBand()
+                    }
                 default: break
                 }
                
@@ -128,15 +138,18 @@ struct PageHome: PageView {
             }
         }
         .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
-            self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.app.bottom + Self.bodyOffset
+            self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
+        }
+        .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+            self.useTracking = ani
+            if ani {
+                self.reload()
+            }
         }
         .onAppear{
             guard let obj = self.pageObject  else { return }
-            DispatchQueue.main.async {
-                self.menuId = (obj.getParamValue(key: .id) as? String) ?? self.menuId
-                self.openId = obj.getParamValue(key: .subId) as? String
-                self.reload()
-            }
+            self.menuId = (obj.getParamValue(key: .id) as? String) ?? self.menuId
+            self.openId = obj.getParamValue(key: .subId) as? String
         }
         .onDisappear{
             self.appSceneObserver.useTopFix = nil
@@ -155,34 +168,24 @@ struct PageHome: PageView {
     @State var openId:String? = nil
     @State var useFooter:Bool = false
     
+    
     private func reload(selectedMonthlyId:String? = nil){
+       
         self.selectedMonthlyId = selectedMonthlyId ?? self.selectedMonthlyId
         self.monthlyDatas?.forEach{$0.reset()}
-        guard let band = self.dataProvider.bands.getData(menuId: self.menuId) else { return }
-        self.currentBand = band
-        switch band.gnbTypCd {
-        case EuxpNetwork.GnbTypeCode.GNB_HOME.rawValue :
-            self.useFooter = true
-            self.setupBlocks()
-        case EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue:
-            self.setupOcean()
-            self.setupBlocks()
-        case EuxpNetwork.GnbTypeCode.GNB_MONTHLY.rawValue :
-            self.setupOriginMonthly()
-        default: self.setupBlocks()
-        }
         self.requestTopBanner()
     }
     
     private func requestTopBanner(){
         if self.dataProvider.bands.getData(menuId: self.menuId)?.bnrUse == true && self.topDatas == nil{
             self.viewModel.request = .init(
-                id: self.menuId,
+                id: self.menuId ,
                 type: .getEventBanner(self.menuId, .page),  isOptional: true)
         } else {
             if self.pagePresenter.currentTopPage?.pageID == PageID.home {
                 self.appSceneObserver.useTopFix = true
             }
+            self.requestBand()
         }
     }
     
@@ -207,6 +210,22 @@ struct PageHome: PageView {
             withAnimation{
                 self.marginHeader = self.topDatas == nil ? 0 : self.appSceneObserver.safeHeaderHeight
             }
+        }
+    }
+    
+    private func requestBand(){
+        guard let band = self.dataProvider.bands.getData(menuId: self.menuId) else { return }
+        self.currentBand = band
+        switch band.gnbTypCd {
+        case EuxpNetwork.GnbTypeCode.GNB_HOME.rawValue :
+            self.useFooter = true
+            self.setupBlocks()
+        case EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue:
+            self.setupOcean()
+            self.setupBlocks()
+        case EuxpNetwork.GnbTypeCode.GNB_MONTHLY.rawValue :
+            self.setupOriginMonthly()
+        default: self.setupBlocks()
         }
     }
     
@@ -333,6 +352,7 @@ struct PageHome: PageView {
     private func requestBlocks(blocksData:[BlockItem]){
         self.viewModel.update(datas: blocksData , openId: self.openId, selectedTicketId:self.selectedMonthlyId)
         self.openId = nil
+       
     }
     //Block init
     

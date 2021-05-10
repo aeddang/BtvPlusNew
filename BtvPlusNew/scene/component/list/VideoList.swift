@@ -355,7 +355,7 @@ struct VideoSet: PageComponent{
                 }
             }
         }
-        .padding(.horizontal, Self.padding)
+        .padding(.horizontal, self.paddingHorizontal ?? Self.padding)
         .frame(width: self.sceneObserver.screenSize.width)
         .onAppear {
             if self.data.datas.isEmpty { return }

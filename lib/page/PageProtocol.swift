@@ -124,22 +124,22 @@ open class PageSceneObserver: ObservableObject{
     func update(geometry:GeometryProxy) {
         var willUpdate = false
         if geometry.safeAreaInsets.bottom != self.safeAreaBottom{
-            self.safeAreaBottom = round( geometry.safeAreaInsets.bottom )
+            self.safeAreaBottom = ceil( geometry.safeAreaInsets.bottom )
             if self.safeAreaBottom < 100 {
                 self.safeAreaIgnoreKeyboardBottom = self.safeAreaBottom
             }
             willUpdate = true
         }
         if geometry.safeAreaInsets.top != self.safeAreaTop{
-            self.safeAreaTop = round( geometry.safeAreaInsets.top )
+            self.safeAreaTop = ceil( geometry.safeAreaInsets.top )
             willUpdate = true
         }
         if geometry.safeAreaInsets.leading != self.safeAreaStart{
-            self.safeAreaStart = round(geometry.safeAreaInsets.leading)
+            self.safeAreaStart = ceil(geometry.safeAreaInsets.leading)
             willUpdate = true
         }
         if geometry.safeAreaInsets.trailing != self.safeAreaEnd {
-            self.safeAreaEnd = round(geometry.safeAreaInsets.trailing)
+            self.safeAreaEnd = ceil(geometry.safeAreaInsets.trailing)
             willUpdate = true
         }
         if geometry.size != self.screenSize {

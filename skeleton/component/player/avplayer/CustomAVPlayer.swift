@@ -32,9 +32,10 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
             playerController.view = playerScreenView
             return playerController
         }
-        
     }
+    
     func updateUIViewController(_ uiViewController: UIViewController, context: UIViewControllerRepresentableContext<CustomAVPlayer>) {
+        ComponentLog.d("updateUIView status " + viewModel.status.rawValue , tag: self.tag)
         if viewModel.status != .update { return }
         guard let evt = viewModel.event else { return }
         guard let player = (uiViewController as? CustomPlayerController)?.playerScreenView else { return }
@@ -279,10 +280,12 @@ extension MPVolumeView {
 
 struct CustomAVPlayer {
     @ObservedObject var viewModel:PlayerModel
+    @ObservedObject var pageObservable:PageObservable
+    @Binding var bindUpdate:Bool 
     func makeCoordinator() -> Coordinator { return Coordinator(viewModel:self.viewModel) }
     
     class Coordinator:NSObject, AVPlayerViewControllerDelegate, PageProtocol {
-        @ObservedObject var viewModel:PlayerModel
+        var viewModel:PlayerModel
         init(viewModel:PlayerModel){
             self.viewModel = viewModel
         }
@@ -383,7 +386,7 @@ open class CustomAVPlayerViewController: AVPlayerViewController, CustomPlayerCon
     }
 }
 
-open class CustomPlayerViewController: UIViewController,  CustomPlayerController {
+open class CustomPlayerViewController: UIViewController, CustomPlayerController {
     var playerScreenView: PlayerScreenView
     @ObservedObject var viewModel:PlayerModel
     init(viewModel:PlayerModel, playerScreenView:PlayerScreenView) {

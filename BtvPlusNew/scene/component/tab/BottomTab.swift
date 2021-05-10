@@ -48,7 +48,7 @@ struct BottomTab: PageComponent{
             }
             .padding(.bottom, self.sceneObserver.safeAreaBottom)
         }
-        .modifier(MatchParent())
+        .modifier(MatchHorizontal(height: self.sceneObserver.safeAreaBottom + Dimen.app.bottom))
         .background(Color.brand.bg)
         
         .onReceive (self.pagePresenter.$currentPage) { page in

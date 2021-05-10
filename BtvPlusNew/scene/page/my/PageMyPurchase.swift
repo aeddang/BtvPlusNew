@@ -41,19 +41,23 @@ struct PageMyPurchase: PageView {
                         style: .dark
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    CPPageViewPager(
-                        pageObservable: self.pageObservable,
-                        viewModel: self.viewPagerModel,
-                        pages: self.pages,
-                        titles: self.titles,
-                        usePull: .horizontal)
-                        { idx in
-                            switch idx {
-                            case 0 : self.purchaseModel.initUpdate()
-                            case 1 : self.collectionModel.initUpdate()
-                            default : break
+                    if !self.pages.isEmpty {
+                        CPPageViewPager(
+                            pageObservable: self.pageObservable,
+                            viewModel: self.viewPagerModel,
+                            pages: self.pages,
+                            titles: self.titles,
+                            usePull: .horizontal)
+                            { idx in
+                                switch idx {
+                                case 0 : self.purchaseModel.initUpdate()
+                                case 1 : self.collectionModel.initUpdate()
+                                default : break
+                                }
                             }
-                        }
+                    } else {
+                        Spacer()
+                    }
                 }
                 .modifier(PageFull(style:.dark))
                 .modifier(PageDragingSecondPriority(geometry: geometry, pageDragingModel: self.pageDragingModel))
@@ -80,27 +84,30 @@ struct PageMyPurchase: PageView {
             
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
+                if ani {
+                    self.pages = [
+                        PurchaseBlock(
+                            infinityScrollModel:self.purchaseScrollModel,
+                            viewModel:self.purchaseModel,
+                            pageObservable:self.pageObservable,
+                            useTracking:true,
+                            type: .normal
+                        ),
+                        PurchaseBlock(
+                            infinityScrollModel:self.collectionScrollModel,
+                            viewModel:self.collectionModel,
+                            pageObservable:self.pageObservable,
+                            useTracking:true,
+                            type: .collection
+                        )
+                    ]
+                }
             }
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 self.useTracking = page?.id == self.pageObject?.id
             }
             .onAppear{
-                self.pages = [
-                    PurchaseBlock(
-                        infinityScrollModel:self.purchaseScrollModel,
-                        viewModel:self.purchaseModel,
-                        pageObservable:self.pageObservable,
-                        useTracking:true,
-                        type: .normal
-                    ),
-                    PurchaseBlock(
-                        infinityScrollModel:self.collectionScrollModel,
-                        viewModel:self.collectionModel,
-                        pageObservable:self.pageObservable,
-                        useTracking:true,
-                        type: .collection
-                    )
-                ]
+                
             }
             .onDisappear{
                

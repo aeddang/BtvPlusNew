@@ -37,11 +37,12 @@ struct BannerBlock:BlockProtocol, PageComponent {
         }
         .padding(.horizontal, Dimen.margin.thin)
         .frame( height: self.listHeight)
-        
         .onAppear{
             if let datas = data.banners {
                 self.bannerData = datas.first
                 self.updateListSize()
+                ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
+                return
             }
             if let apiQ = self.getRequestApi(pairing:self.pairing.status) {
                 dataProvider.requestData(q: apiQ)

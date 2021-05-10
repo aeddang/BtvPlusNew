@@ -58,9 +58,10 @@ struct AlramList: PageComponent{
                             }
                             self.dataProvider.requestData(q: .init(type: .updateAgreement(true)))
                         }
+                        .buttonStyle(BorderlessButtonStyle())
                     }
                 }
-                .padding(.horizontal, Dimen.margin.heavy)
+                .modifier(ListRowInset(marginHorizontal:Dimen.margin.heavy ,spacing: 0))
                 .modifier(PageBody())
             }
         }
@@ -183,6 +184,7 @@ struct AlramItem: PageView {
                         .rotationEffect(.degrees(self.isExpand ? 180 : 0))
                         .padding(.horizontal, Dimen.margin.light)
                 }
+                .buttonStyle(BorderlessButtonStyle())
             }
         }
         .padding(.vertical, Dimen.margin.thin)

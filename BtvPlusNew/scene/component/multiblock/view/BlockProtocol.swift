@@ -17,6 +17,7 @@ protocol BlockProtocol {
 }
 extension BlockProtocol {
     func getRequestApi(pairing:PairingStatus) -> ApiQ? {
+        ComponentLog.d("getRequestApi " + data.status.rawValue , tag: "BlockProtocol")
         if data.status != .initate  { return nil }
         return data.getRequestApi(pairing: pairing)
     }

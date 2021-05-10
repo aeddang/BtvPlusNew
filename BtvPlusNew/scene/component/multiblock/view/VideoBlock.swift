@@ -18,6 +18,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
     var data: BlockData
     var margin:CGFloat = Dimen.margin.thin
     var useTracking:Bool = false
+    var useEmpty:Bool = false
     @State var datas:[VideoData] = []
     @State var listHeight:CGFloat = ListItem.video.size.height + ListItem.video.type01
     @State var isUiActive:Bool = true
@@ -25,32 +26,34 @@ struct VideoBlock:BlockProtocol, PageComponent {
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             if self.isUiActive {
-                HStack(alignment: .bottom, spacing:Dimen.margin.thin){
-                    VStack(alignment: .leading, spacing:0){
-                        Spacer().modifier(MatchHorizontal(height: 0))
-                        HStack( spacing:Dimen.margin.thin){
-                            Text(data.name).modifier(BlockTitle())
-                                .lineLimit(1)
-                            Text(data.subName).modifier(BlockTitle(color:Color.app.grey))
-                                .lineLimit(1)
+                if !self.datas.isEmpty || self.useEmpty {
+                    HStack(alignment: .bottom, spacing:Dimen.margin.thin){
+                        VStack(alignment: .leading, spacing:0){
+                            Spacer().modifier(MatchHorizontal(height: 0))
+                            HStack( spacing:Dimen.margin.thin){
+                                Text(data.name).modifier(BlockTitle())
+                                    .lineLimit(1)
+                                Text(data.subName).modifier(BlockTitle(color:Color.app.grey))
+                                    .lineLimit(1)
+                            }
+                        }
+                        if self.hasMore {
+                            TextButton(
+                                defaultText: String.button.all,
+                                textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
+                            ){_ in
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(data.dataType == .watched ? .watchedList : .categoryList)
+                                        .addParam(key: .data, value: data)
+                                        .addParam(key: .type, value: CateBlock.ListType.video)
+                                        .addParam(key: .subType, value:data.cardType)
+                                )
+                            }
                         }
                     }
-                    if self.hasMore {
-                        TextButton(
-                            defaultText: String.button.all,
-                            textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
-                        ){_ in
-                            self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(data.dataType == .watched ? .watchedList : .categoryList)
-                                    .addParam(key: .data, value: data)
-                                    .addParam(key: .type, value: CateBlock.ListType.video)
-                                    .addParam(key: .subType, value:data.cardType)
-                            )
-                        }
-                    }
+                    .modifier(MatchHorizontal(height: Dimen.tab.thin))
+                    .padding( .horizontal , self.margin)
                 }
-                .modifier(MatchHorizontal(height: Dimen.tab.thin))
-                .padding( .horizontal , self.margin)
                 if !self.datas.isEmpty {
                     VideoList(
                         viewModel:self.viewModel,
@@ -72,7 +75,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                             self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
                         }
                         
-                } else {
+                } else if self.useEmpty {
                     EmptyAlert( text: self.data.dataType != .watched
                                 ? String.pageText.myWatchedEmpty
                                 : String.alert.dataError)
@@ -90,6 +93,8 @@ struct VideoBlock:BlockProtocol, PageComponent {
                 }
                 self.datas = datas
                 self.updateListSize()
+                ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
+                return
             }
             if let apiQ = self.getRequestApi(pairing: self.pairing.status) {
                 dataProvider.requestData(q: apiQ)
@@ -146,6 +151,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                 allDatas.append(contentsOf: addDatas)
             default: do {}
             }
+            if allDatas.isEmpty { return onBlank() }
             self.datas = allDatas
             self.updateListSize()
             self.data.videos = allDatas

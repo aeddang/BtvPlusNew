@@ -71,7 +71,6 @@ struct MatchParent: ViewModifier {
             .offset(x:mx, y:my)
     }
 }
-
 struct MatchHorizontal: ViewModifier {
     var height:CGFloat = 0
     var margin:CGFloat = 0

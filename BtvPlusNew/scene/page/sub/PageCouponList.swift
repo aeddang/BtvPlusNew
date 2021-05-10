@@ -24,7 +24,7 @@ struct PageCouponList: PageView {
     
    
     @State var useTracking:Bool = false
-  
+    @State var marginBottom:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -45,6 +45,7 @@ struct PageCouponList: PageView {
                         useTracking:self.useTracking
                     )
                 }
+                .padding(.bottom, self.marginBottom )
                 .modifier(PageFull(style:.dark))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
@@ -57,6 +58,9 @@ struct PageCouponList: PageView {
             }
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 self.useTracking = page?.id == self.pageObject?.id
+            }
+            .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
+                self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
             }
             .onAppear{
                 

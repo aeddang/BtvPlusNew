@@ -10,6 +10,13 @@ import SwiftUI
 import UIKit
 import CryptoKit
 import CryptoSwift
+import AudioToolbox
+
+extension UIDevice {
+    static func vibrate() {
+        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+    }
+}
 
 extension Double {
     func toInt() -> Int {

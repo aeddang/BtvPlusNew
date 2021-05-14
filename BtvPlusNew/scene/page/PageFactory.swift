@@ -52,6 +52,7 @@ extension PageID{
     
     static let couponList:PageID = "couponList"
     static let privacyAndAgree:PageID = "PrivacyAndAgree"
+    static let remotecon:PageID = "remotecon"
 }
 
 struct PageProvider {
@@ -86,7 +87,7 @@ struct PageProvider {
              .pairingSetupUser, .pairingBtv,
              .pairingDevice, .pairingUser, .pairingManagement, .pairingEmptyDevice, .pairingGuide,
              .purchase , .webview, .schedule, .modifyProile,
-             .adultCertification, .watchHabit, .myPurchaseTicketList :
+             .adultCertification, .watchHabit, .myPurchaseTicketList, .remotecon :
             return  .vertical
         case .fullPlayer :
             return .none
@@ -214,6 +215,7 @@ struct PageFactory{
         case .myPurchaseTicketList : return PageMyPurchaseTicketList()
         case .couponList : return PageCouponList()
         case .privacyAndAgree : return PagePrivacyAndAgree()
+        case .remotecon : return PageRemotecon()
         default : return PageTest()
         }
     }
@@ -284,7 +286,7 @@ struct PageSceneModel: PageModel {
     
     static func needKeyboard(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
-        case .pairingSetupUser, .pairingBtv, .search, .modifyProile, .confirmNumber, .pairingManagement, .setup: return true
+        case .pairingSetupUser, .pairingBtv, .search, .modifyProile, .confirmNumber, .pairingManagement, .setup, .remotecon: return true
         default : return false
         }
     }

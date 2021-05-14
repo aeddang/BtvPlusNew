@@ -333,6 +333,15 @@ extension String {
         public static let adMore = "playerAdMore".loaalized()
         public static let adCancel = "playerAdCancel".loaalized()
     }
+    struct remote {
+        public static let playEmpty = "remotePlayEmpty".loaalized()
+        public static let inputChannel = "remoteInputChannel".loaalized()
+        public static let inputText = "remoteInputText".loaalized()
+        public static let inputChannelHolder = "remoteInputChannelHolder".loaalized()
+        public static let inputTextHolder = "remoteInputTextHolder".loaalized()
+    }
+    
+    
     
     struct monthly {
         public static let title = "monthlyTitle".loaalized()
@@ -391,11 +400,9 @@ extension String {
     }
     
     struct pageText {
+        public static let pairingText = "pairingText".loaalized()
         public static let pairingText1 = "pairingText1".loaalized()
-        public static let pairingText2_1 = "pairingText2_1".loaalized()
-        public static let pairingText2_2 = "pairingText2_2".loaalized()
-        public static let pairingText2_3 = "pairingText2_3".loaalized()
-        public static let pairingText2_4 = "pairingText2_4".loaalized()
+       
         public static let pairingTitle1 = "pairingTitle1".loaalized()
         public static let pairingTitle2 = "pairingTitle2".loaalized()
         public static let pairingBtnGuide = "pairingBtnGuide".loaalized()

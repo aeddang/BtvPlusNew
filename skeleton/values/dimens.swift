@@ -27,12 +27,11 @@ struct Dimen{
         public static let tinyExtra:CGFloat = isPad ? 8 : 5 //*
         public static let micro:CGFloat = isPad ? 4 : 2
         public static let microExtra:CGFloat = isPad ? 2 : 1
-        public static let header:CGFloat = 50 //*
-        public static let footer:CGFloat = 42 //*
-        //public static let listBottom:CGFloat = 25 //*
+      
     }
 
     struct icon {
+        public static let heavyUltra:CGFloat = isPad ? 198 : 157 //*
         public static let heavy:CGFloat = isPad ? 123 : 69 //*
         public static let heavyExtra:CGFloat = isPad ? 98 : 58 //*
         public static let mediumUltra:CGFloat = isPad ? 84 : 48 //*
@@ -78,6 +77,9 @@ struct Dimen{
         public static let mediumExtraRect:CGSize = isPad ? CGSize(width: 120, height: 52) : CGSize(width: 62, height: 30)//*
         public static let regularRect:CGSize = isPad ? CGSize(width: 78, height: 40) : CGSize(width: 48, height: 25)//*
         public static let lightRect:CGSize = isPad ? CGSize(width: 61, height: 29) : CGSize(width: 38, height: 20)//*
+        
+        public static let regularHorizontal:CGFloat = isPad ?  374 : 259
+       
     }
 
     struct radius {
@@ -113,6 +115,7 @@ struct Dimen{
         public static let bottom:CGFloat = isPad ? 65 : 60 //*
         public static let top:CGFloat = isPad ? 86 : 80 //*
         public static let pageTop:CGFloat = isPad ? 64 : 62 //*
+        public static let keyboard:CGFloat = isPad ? 400 : 300
     }
     
 }

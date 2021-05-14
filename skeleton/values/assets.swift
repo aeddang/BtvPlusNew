@@ -20,6 +20,7 @@ extension Asset {
     public static let test = "test"
 }
 extension Asset{
+    private static let isPad =  AppUtil.isPad()
     struct brand {
         public static let logoLauncher =  "icLauncherSIos"
         public static let logoSplash =  "imgSplashLogo"
@@ -180,6 +181,73 @@ extension Asset{
        
     }
     
+    struct remote {
+        public static let center =  "icRemoteCenterNor"
+        public static let centerUp =  "icRemoteCenter01Pre"
+        public static let centerDown =  "icRemoteCenter02Pre"
+        public static let centerLeft =  "icRemoteCenter03Pre"
+        public static let centerRight =  "icRemoteCenter04Pre"
+        public static let centerOk = "icRemoteCenterOk"
+        public static let centerPlayStop = "icRemoteCenterPlayStop"
+        
+        public static let centerSkip = "icRemoteCenterSkipNor"
+        public static let centerSkipPrev = "icRemoteCenterSkip01Pre"
+        public static let centerSkipNext = "icRemoteCenterSkip02Pre"
+        
+        public static let channel = "icRemoteChannelNor"
+        public static let channelUp = "icRemoteChannelUpPre"
+        public static let channelDown = "icRemoteChannelDownPre"
+        
+        public static let chlist = "icRemoteChlistNor"
+        public static let chlistOn = "icRemoteChlistPre"
+        
+        public static let chNumber = "icRemoteChNumberNor"
+        public static let chNumberOn = "icRemoteChNumberPre"
+        
+        public static let close = "icRemoteClose"
+        
+        public static let earphone = "icRemoteEarphoneOff"
+        public static let earphoneOn = "icRemoteEarphoneOn"
+        
+        public static let exit = "icRemoteExitNor"
+        public static let exitOn = "icRemoteExitPre"
+        
+        public static let fastForward = "icRemoteFastForwardNor"
+        public static let fastForwardOn = "icRemoteFastForwardPreT"
+        public static let rewind = "icRemoteRewindNorT"
+        public static let rewindOn = "icRemoteRewindPre"
+        
+        public static let refresh = "icRemoteRefresh"
+        
+        public static let home = "icRemoteHomeNor"
+        public static let homeOn = "icRemoteHomePre"
+        
+        public static let text = "icRemoteTextNor"
+        public static let textOn = "icRemoteTextPre"
+        
+        public static let multiview = "icRemoteMultiviewNor"
+        public static let multiviewOn = "icRemoteMultiviewPre"
+        
+        public static let mute = "icRemoteMuteOff"
+        public static let muteOn = "icRemoteMuteOn"
+        
+        public static let onair = "icRemoteOnair"
+        
+        public static let on = "icRemoteOnNor"
+        public static let onOn = "icRemoteOnPre"
+        
+        public static let previous = "icRemotePreviousNor"
+        public static let previousOn = "icRemotePreviousPre"
+        
+        public static let vibrate = "icRemoteVibrateOff"
+        public static let vibrateOn = "icRemoteVibrateOn"
+        
+        public static let volume = "icRemoteVolumeNor"
+        public static let volumeUp = "icRemoteVolumePlusPre"
+        public static let volumeDown = "icRemoteVolumeMinusPre"
+        public static let bg = isPad ? "imgRemoteBg01" : "imgRemoteBg02"
+    }
+    
     struct shape {
         public static let radioBtnOn = "icRadioSOn"
         public static let radioBtnOff = "icRadioSOff"
@@ -226,6 +294,7 @@ extension Asset{
         
         public static let empty = "imgMyEmpty01"
         public static let myEmpty = "imgMyEmpty01"
+        public static let pairingCharacter = "imgPairingCharacter"
         public static let deviceEmpty = "imgPairingNostbB"
     }
     

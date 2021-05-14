@@ -9,9 +9,11 @@ import Foundation
 import SwiftUI
 
 struct InfoAlert: PageView {
+    
     let text:String
+   
     var body: some View {
-        HStack(alignment: .top, spacing: Dimen.margin.tinyExtra){
+       HStack(alignment: .top, spacing: Dimen.margin.tinyExtra){
             Image(Asset.icon.alert)
                 .renderingMode(.original)
                 .resizable()
@@ -33,7 +35,7 @@ struct EmptyMyData: PageView {
                 .renderingMode(.original)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 157, height: 157)
+                .frame(width: Dimen.icon.heavyUltra, height: Dimen.icon.heavyUltra)
             Text(text)
                 .modifier(MediumTextStyle(size: Font.size.regular, color: Color.app.greyLight))
                 .multilineTextAlignment(.center)
@@ -67,7 +69,7 @@ struct EmptyCard: PageView {
                     .renderingMode(.original)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 157, height: 157)
+                    .frame(width: Dimen.icon.heavyUltra, height: Dimen.icon.heavyUltra)
                 Text(text)
                     .modifier(MediumTextStyle(size: Font.size.regular, color: Color.app.white))
                     .multilineTextAlignment(.center)
@@ -89,6 +91,7 @@ struct EmptyCard: PageView {
 struct EmptyAlert: PageView {
     var icon:String = Asset.icon.alert
     var text:String = String.alert.dataError
+    var confirm:(() -> Void)? = nil
     var body: some View {
         VStack(alignment: .center, spacing: 0){
             Image(icon)
@@ -100,6 +103,17 @@ struct EmptyAlert: PageView {
                 .modifier(MediumTextStyle(size: Font.size.regular, color: Color.app.greyLight))
                 .multilineTextAlignment(.center)
                 .padding(.top, Dimen.margin.mediumExtra)
+            if let confirm = self.confirm {
+                FillButton(
+                    text: String.app.corfirm,
+                    isSelected: true,
+                    size: Dimen.button.regular
+                ){_ in
+                    confirm()
+                }
+                .padding(.top, Dimen.margin.regular)
+                .frame( width:  Dimen.button.regularHorizontal )
+            }
         }
         .padding(.all, Dimen.margin.medium)
     }//body
@@ -132,7 +146,7 @@ struct AdultAlert: PageView {
                     )
                 }
                 .padding(.top, Dimen.margin.regular)
-                .frame(width: 247)
+                .frame( width:  Dimen.button.regularHorizontal )
             }
         }
         .padding(.all, Dimen.margin.medium)        

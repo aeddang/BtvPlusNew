@@ -98,8 +98,19 @@
 		3167642A25CD11E8003A7721 /* PlayerBottom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3167642925CD11E8003A7721 /* PlayerBottom.swift */; };
 		316955AB25DF9D1500848507 /* Pss.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316955AA25DF9D1500848507 /* Pss.swift */; };
 		316955B425DFA41500848507 /* PairingUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316955B325DFA41500848507 /* PairingUserInfo.swift */; };
+		316B614C264A272B00C2DC25 /* RemoteCon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B614B264A272B00C2DC25 /* RemoteCon.swift */; };
+		316B614E264A2B5400C2DC25 /* EffectButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B614D264A2B5400C2DC25 /* EffectButton.swift */; };
+		316C45D0264DE7D800A8D7F5 /* InputRemoteBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316C45CF264DE7D800A8D7F5 /* InputRemoteBox.swift */; };
 		316DF2D125C29EC500915B27 /* CustomAVPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316DF2D025C29EC500915B27 /* CustomAVPlayer.swift */; };
 		316DF2DF25C2AA3C00915B27 /* CPAirPlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316DF2DE25C2AA3C00915B27 /* CPAirPlayButton.swift */; };
+		316ECDF6264B4274008D2544 /* BlankButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316ECDF5264B4274008D2544 /* BlankButton.swift */; };
+		316ECDF8264B45CB008D2544 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 316ECDF7264B45CB008D2544 /* GoogleService-Info.plist */; };
+		316ECDF9264B4676008D2544 /* VerticalButtonBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316ECDF3264B3F3E008D2544 /* VerticalButtonBox.swift */; };
+		316ECDFB264B49BE008D2544 /* RemoteStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316ECDFA264B49BE008D2544 /* RemoteStyle.swift */; };
+		316ECDFD264B6478008D2544 /* CurrentPlayBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316ECDFC264B6478008D2544 /* CurrentPlayBox.swift */; };
+		316ECDFF264B73B6008D2544 /* ControlBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316ECDFE264B73B6008D2544 /* ControlBox.swift */; };
+		316ECE01264B8009008D2544 /* PageRemotecon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316ECE00264B8009008D2544 /* PageRemotecon.swift */; };
+		316ECE03264CCAEB008D2544 /* PlayControlBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316ECE02264CCAEB008D2544 /* PlayControlBox.swift */; };
 		317335FF26130003009B211B /* PageSynopsisPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317335FE26130003009B211B /* PageSynopsisPlayer.swift */; };
 		3174067225F702CD00201850 /* Nf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3174067125F702CD00201850 /* Nf.swift */; };
 		3174067725F709E600201850 /* NotificationVod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3174067625F709E600201850 /* NotificationVod.swift */; };
@@ -204,7 +215,6 @@
 		31A4A0082627F0A90065E6C6 /* TipTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A4A0072627F0A90065E6C6 /* TipTab.swift */; };
 		31A4A00E26281B840065E6C6 /* TipBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A4A00D26281B840065E6C6 /* TipBlock.swift */; };
 		31A73BCD261D99B1009A143C /* PageMyPurchase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A73BCC261D99B1009A143C /* PageMyPurchase.swift */; };
-		31C4BC8C262D154800BB2167 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31C4BC8B262D154800BB2167 /* GoogleService-Info.plist */; };
 		31C4BC97262D2D8600BB2167 /* NotificationCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BC96262D2D8600BB2167 /* NotificationCoreData.swift */; };
 		31C4BCC0262D71BA00BB2167 /* KeywordCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BCBF262D71BA00BB2167 /* KeywordCoreData.swift */; };
 		31C4BCCE262D745B00BB2167 /* AlramList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BCCD262D745B00BB2167 /* AlramList.swift */; };
@@ -498,8 +508,19 @@
 		3167642925CD11E8003A7721 /* PlayerBottom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerBottom.swift; sourceTree = "<group>"; };
 		316955AA25DF9D1500848507 /* Pss.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pss.swift; sourceTree = "<group>"; };
 		316955B325DFA41500848507 /* PairingUserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingUserInfo.swift; sourceTree = "<group>"; };
+		316B614B264A272B00C2DC25 /* RemoteCon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCon.swift; sourceTree = "<group>"; };
+		316B614D264A2B5400C2DC25 /* EffectButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectButton.swift; sourceTree = "<group>"; };
+		316C45CF264DE7D800A8D7F5 /* InputRemoteBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputRemoteBox.swift; sourceTree = "<group>"; };
 		316DF2D025C29EC500915B27 /* CustomAVPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAVPlayer.swift; sourceTree = "<group>"; };
 		316DF2DE25C2AA3C00915B27 /* CPAirPlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPAirPlayButton.swift; sourceTree = "<group>"; };
+		316ECDF3264B3F3E008D2544 /* VerticalButtonBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalButtonBox.swift; sourceTree = "<group>"; };
+		316ECDF5264B4274008D2544 /* BlankButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlankButton.swift; sourceTree = "<group>"; };
+		316ECDF7264B45CB008D2544 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		316ECDFA264B49BE008D2544 /* RemoteStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteStyle.swift; sourceTree = "<group>"; };
+		316ECDFC264B6478008D2544 /* CurrentPlayBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentPlayBox.swift; sourceTree = "<group>"; };
+		316ECDFE264B73B6008D2544 /* ControlBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlBox.swift; sourceTree = "<group>"; };
+		316ECE00264B8009008D2544 /* PageRemotecon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageRemotecon.swift; sourceTree = "<group>"; };
+		316ECE02264CCAEB008D2544 /* PlayControlBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayControlBox.swift; sourceTree = "<group>"; };
 		317335FE26130003009B211B /* PageSynopsisPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisPlayer.swift; sourceTree = "<group>"; };
 		3174067125F702CD00201850 /* Nf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nf.swift; sourceTree = "<group>"; };
 		3174067625F709E600201850 /* NotificationVod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationVod.swift; sourceTree = "<group>"; };
@@ -606,7 +627,6 @@
 		31A4A0072627F0A90065E6C6 /* TipTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipTab.swift; sourceTree = "<group>"; };
 		31A4A00D26281B840065E6C6 /* TipBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipBlock.swift; sourceTree = "<group>"; };
 		31A73BCC261D99B1009A143C /* PageMyPurchase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyPurchase.swift; sourceTree = "<group>"; };
-		31C4BC8B262D154800BB2167 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		31C4BC96262D2D8600BB2167 /* NotificationCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCoreData.swift; sourceTree = "<group>"; };
 		31C4BCBF262D71BA00BB2167 /* KeywordCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordCoreData.swift; sourceTree = "<group>"; };
 		31C4BCCD262D745B00BB2167 /* AlramList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlramList.swift; sourceTree = "<group>"; };
@@ -1210,6 +1230,30 @@
 			path = model;
 			sourceTree = "<group>";
 		};
+		316ECDEF264B3F00008D2544 /* remotecon */ = {
+			isa = PBXGroup;
+			children = (
+				316ECDF2264B3F39008D2544 /* view */,
+				316B614B264A272B00C2DC25 /* RemoteCon.swift */,
+				316C45CF264DE7D800A8D7F5 /* InputRemoteBox.swift */,
+				316ECDFA264B49BE008D2544 /* RemoteStyle.swift */,
+			);
+			path = remotecon;
+			sourceTree = "<group>";
+		};
+		316ECDF2264B3F39008D2544 /* view */ = {
+			isa = PBXGroup;
+			children = (
+				316B614D264A2B5400C2DC25 /* EffectButton.swift */,
+				316ECDF5264B4274008D2544 /* BlankButton.swift */,
+				316ECDF3264B3F3E008D2544 /* VerticalButtonBox.swift */,
+				316ECDFC264B6478008D2544 /* CurrentPlayBox.swift */,
+				316ECDFE264B73B6008D2544 /* ControlBox.swift */,
+				316ECE02264CCAEB008D2544 /* PlayControlBox.swift */,
+			);
+			path = view;
+			sourceTree = "<group>";
+		};
 		3174066F25F702B600201850 /* nf */ = {
 			isa = PBXGroup;
 			children = (
@@ -1402,6 +1446,7 @@
 				3183B37C26168F03004F5C0D /* PageAdultCertification.swift */,
 				3182A0B526188B8100F7F07D /* PageConfirmNumber.swift */,
 				3177AB30263B6F550054BFA4 /* PagePrivacyAndAgree.swift */,
+				316ECE00264B8009008D2544 /* PageRemotecon.swift */,
 			);
 			path = popups;
 			sourceTree = "<group>";
@@ -1597,7 +1642,7 @@
 				D5717869258304D000BF2612 /* LaunchScreen.storyboard */,
 				D56C692A257D9EE600CF9AB8 /* Assets.xcassets */,
 				D56C6934257D9EE600CF9AB8 /* Info.plist */,
-				31C4BC8B262D154800BB2167 /* GoogleService-Info.plist */,
+				316ECDF7264B45CB008D2544 /* GoogleService-Info.plist */,
 				D56C6931257D9EE600CF9AB8 /* BtvPlus.xcdatamodeld */,
 				D56C692C257D9EE600CF9AB8 /* Preview Content */,
 			);
@@ -2152,6 +2197,7 @@
 				D56C6B64257DBAC800CF9AB8 /* tab */,
 				3167196625FEF699005AC3D2 /* banner */,
 				3167195725FEC869005AC3D2 /* footer */,
+				316ECDEF264B3F00008D2544 /* remotecon */,
 				D56CC2ED25902E5400CA1D54 /* multiblock */,
 				3167642525CD0A0C003A7721 /* webview */,
 				31061E6A25C8D21A00543FC0 /* player */,
@@ -2292,6 +2338,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				316ECDF8264B45CB008D2544 /* GoogleService-Info.plist in Resources */,
 				318B53B925F236960052E4E0 /* SKBtvLight.ttf in Resources */,
 				D571786A258304D000BF2612 /* LaunchScreen.storyboard in Resources */,
 				318B53CD25F236A50052E4E0 /* Roboto-Light.ttf in Resources */,
@@ -2304,7 +2351,6 @@
 				318B53C925F236A20052E4E0 /* Roboto-Medium.ttf in Resources */,
 				31373F6325C7E726004353DA /* YTPlayerView-iframe-playerIPAD.html in Resources */,
 				31373F6225C7E726004353DA /* YTPlayerView-iframe-player.html in Resources */,
-				31C4BC8C262D154800BB2167 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2462,6 +2508,7 @@
 				310F6FBA25C13AE8005718B0 /* Preview.swift in Sources */,
 				D56C6B37257DACD800CF9AB8 /* ApiManager.swift in Sources */,
 				3152B46825D9E3FF00147C86 /* PeopleList.swift in Sources */,
+				316B614E264A2B5400C2DC25 /* EffectButton.swift in Sources */,
 				D56C6A54257DA0C700CF9AB8 /* RectButton.swift in Sources */,
 				312BB07925DCF2AB00AC03BC /* ThumbImageViewer.swift in Sources */,
 				314D588225B64EB6007BCA34 /* PairingView.swift in Sources */,
@@ -2508,6 +2555,7 @@
 				D56C6A5B257DA0C700CF9AB8 /* CheckBox.swift in Sources */,
 				D56C6A55257DA0C700CF9AB8 /* ImageButton.swift in Sources */,
 				D50AB90C2580779500649C4A /* Synopsis.swift in Sources */,
+				316ECE01264B8009008D2544 /* PageRemotecon.swift in Sources */,
 				D56C603C25933EBD009AE769 /* MdnsPairingManager.swift in Sources */,
 				31E76D0B2632634A00710624 /* ShareManager.swift in Sources */,
 				D56C6A30257DA0C700CF9AB8 /* ViewPager.swift in Sources */,
@@ -2533,13 +2581,16 @@
 				31061E6625C8CF5800543FC0 /* BtvWebView.swift in Sources */,
 				D56C6A60257DA0C700CF9AB8 /* InputAccssory.swift in Sources */,
 				3159B05025B17B0B008CA85B /* Kms.swift in Sources */,
+				316ECDFF264B73B6008D2544 /* ControlBox.swift in Sources */,
 				3174067C25F763BD00201850 /* PageWebview.swift in Sources */,
 				310F6FC725C16916005718B0 /* Play.swift in Sources */,
 				318F7B692625820900774B17 /* TvPoint.swift in Sources */,
 				315544CF25B83F8C00086510 /* MetvModel.swift in Sources */,
 				317C9754262426CD008F267D /* PageCouponList.swift in Sources */,
+				316ECDF6264B4274008D2544 /* BlankButton.swift in Sources */,
 				318BA3982608C2660093BC7D /* CompleteKeyword.swift in Sources */,
 				D568892E259C592000F2F67A /* PagePairingSetupUser.swift in Sources */,
+				316C45D0264DE7D800A8D7F5 /* InputRemoteBox.swift in Sources */,
 				31740C30261C32780052A9C2 /* PurchaseList.swift in Sources */,
 				31373F6025C7E726004353DA /* CustomYTPlayer.swift in Sources */,
 				318E7F0C25E8B01800B2AAAF /* MonthlyInfo.swift in Sources */,
@@ -2553,6 +2604,7 @@
 				D5E27EDF2586F29200B2CD5D /* ImageViewButton.swift in Sources */,
 				31373F6125C7E726004353DA /* CPYTPlayer.swift in Sources */,
 				3185FE1E25EF11B2005074AA /* PageCategory.swift in Sources */,
+				316ECDF9264B4676008D2544 /* VerticalButtonBox.swift in Sources */,
 				3192317225A3FDBE00020388 /* coordinator.swift in Sources */,
 				D56C6A41257DA0C700CF9AB8 /* Player.swift in Sources */,
 				318BA3872608B8C50093BC7D /* EmptySearchResult.swift in Sources */,
@@ -2574,6 +2626,7 @@
 				3167641A25CCC1C5003A7721 /* PlayViewer.swift in Sources */,
 				D56C6A53257DA0C700CF9AB8 /* FillButton.swift in Sources */,
 				3163300325EF70B000581FA7 /* TextTabList.swift in Sources */,
+				316B614C264A272B00C2DC25 /* RemoteCon.swift in Sources */,
 				D56C699F257DA09E00CF9AB8 /* PageDragingProtocol.swift in Sources */,
 				3167199B260039C8005AC3D2 /* HeaderBanner.swift in Sources */,
 				D56C6A44257DA0C700CF9AB8 /* TextStyle.swift in Sources */,
@@ -2603,6 +2656,7 @@
 				D5DC475625820DC3007EDD86 /* GatewaySynopsis.swift in Sources */,
 				318BA3952608C2660093BC7D /* Web.swift in Sources */,
 				D56C69AF257DA09E00CF9AB8 /* DynamicLinkManager.swift in Sources */,
+				316ECDFD264B6478008D2544 /* CurrentPlayBox.swift in Sources */,
 				D56C69AD257DA09E00CF9AB8 /* InfinityScroll.swift in Sources */,
 				3158232925A704F800E4E9C8 /* LocationObserver.swift in Sources */,
 				318FC00625E4CA5800ABC241 /* CateBlock.swift in Sources */,
@@ -2632,6 +2686,7 @@
 				315544C225B79FAA00086510 /* PageServiceError.swift in Sources */,
 				D5469F5725835231009CED2D /* Bands.swift in Sources */,
 				D56C6A24257DA0C600CF9AB8 /* strings.swift in Sources */,
+				316ECE03264CCAEB008D2544 /* PlayControlBox.swift in Sources */,
 				319B07A4263A398C008C11A8 /* ConnectTitle.swift in Sources */,
 				D5DC47662582131E007EDD86 /* GnbBlock.swift in Sources */,
 				3167640F25CCBE79003A7721 /* PlayerGuide.swift in Sources */,
@@ -2682,6 +2737,7 @@
 				D56C69A0257DA09E00CF9AB8 /* PageContentBody.swift in Sources */,
 				D51AA9F02599A2870035CD51 /* ConnectButton.swift in Sources */,
 				31631C6525D2516E00E501F7 /* SynopsisPrerollData.swift in Sources */,
+				316ECDFB264B49BE008D2544 /* RemoteStyle.swift in Sources */,
 				D56C6A50257DA0C700CF9AB8 /* Select.swift in Sources */,
 				3182A0B626188B8100F7F07D /* PageConfirmNumber.swift in Sources */,
 				D56C69AA257DA09E00CF9AB8 /* Network.swift in Sources */,
@@ -2993,7 +3049,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 22;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -3017,7 +3073,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.018;
+				MARKETING_VERSION = 1.019;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BtvPlusNew/store/Store-Bridging-Header.h";
@@ -3067,7 +3123,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 22;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -3086,7 +3142,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.018;
+				MARKETING_VERSION = 1.019;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BtvPlusNew/store/Store-Bridging-Header.h";

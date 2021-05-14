@@ -37,7 +37,7 @@ struct PageConfirmNumber: PageView {
     @State var inputSizeMin:Int? = nil
     @State var tip:String? = nil
     @State var msg:String? = nil // String.alert.watchLvInfoError
-    @State var safeAreaBottom:CGFloat = 0
+    @State var safeAreaBottom:CGFloat = Dimen.app.keyboard
     @State var isFocus:Bool = false
     @State var isSecure:Bool = false
     @State var requestData:Any? = nil

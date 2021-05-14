@@ -42,7 +42,7 @@ extension Font{
     }
     
     struct size {
-        public static let black:CGFloat =  32 //*
+        public static let black:CGFloat =  isPad ? 52 : 32 //*
         public static let bold:CGFloat = isPad ? 42 : 26 //*
         public static let boldExtra:CGFloat = isPad ? 32 : 24 //*
         public static let large:CGFloat =  isPad ? 30 : 22 //*

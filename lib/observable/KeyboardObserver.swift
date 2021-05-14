@@ -31,7 +31,7 @@ class KeyboardObserver: ObservableObject {
             else if self.keyboardHeight > 0.0 && !self.isOn { self.isOn = true }
             
             //ComponentLog.d("isOn  " + isOn .description, tag: "SceneObserver")
-            //ComponentLog.d("keyboardHeight " + keyboardHeight.description, tag: "SceneObserver")
+            ComponentLog.d("keyboardHeight " + keyboardHeight.description, tag: "SceneObserver")
         }
     }
 

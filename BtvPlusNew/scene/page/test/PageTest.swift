@@ -29,7 +29,7 @@ struct PageTest: PageView {
             {
                 Spacer()
             }//VStack
-            .padding([.bottom], Dimen.margin.footer)
+            .padding([.bottom], Dimen.margin.heavy)
             .background(Color.app.white)
         }//GeometryReader
         .onAppear{

@@ -11,7 +11,7 @@ import SwiftUI
 
 struct InputBox: PageComponent {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
-    
+   
     struct Data:Identifiable{
         let id:String = UUID().uuidString
         var idx:Int = 0
@@ -170,9 +170,9 @@ struct InputBox: PageComponent {
             .padding(.top, Dimen.margin.regular)
             .frame( width: self.size )
             .background(Color.app.blue)
-            
         }
         .modifier(MatchParent())
+        
         .onAppear(){
             guard let radios = self.radios else {return}
             self.selectedIdx = radios.first?.idx
@@ -189,8 +189,6 @@ struct InputBox: PageComponent {
         } else{
             return self.input.count == size
         }
-        
-        
     }
 }
 

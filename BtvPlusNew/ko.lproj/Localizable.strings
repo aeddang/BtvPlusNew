@@ -345,11 +345,9 @@
 /*
  PagePairing
 */
-"pairingText1" = "가족과 함께 B tv를 모바일로\n편리하게 즐겨 보세요.";
-"pairingText2_1" = "최대 4대의 스마트 기기";
-"pairingText2_2" = "를 우리집 B tv에 연결하여";
-"pairingText2_3" = "보던 콘텐츠를 이어보고 구매도 하실 수 있어요.";
-"pairingText2_4" = "리모컨, 편성표 등 B tv를 더 편리하게 이용해 보세요.";
+"pairingText" = "B tv 이용 중이라면 필수!\n모바일 B tv";
+"pairingText1" = "B tv 영화, 방송, 키즈 VOD와\n무료 VOD까지 스마트폰과\n태블릿에서 마음껏 즐길 수 있어요.";
+"pairingText1Tablet" = "B tv 영화, 방송, 키즈 VOD와 무료 VOD까지 스마트폰과\n태블릿에서 마음껏 즐길 수 있어요.";
 
 "pairingBtnGuide" = "B tv 연결 방법 안내";
 
@@ -363,7 +361,7 @@
 "pairingBtnUserCertification" = "가입자 인증으로 연결하기";
 "pairingBtnUserCertificationSub" = "B tv 가입자의 휴대폰 인증이 필요합니다.";
 
-"pairingText1Tablet" = "가족과 함께 B tv를\n모바일로 편리하게\n즐겨 보세요.";
+
 "pairingTitle1Tablet" = "집 안에서 쉽게\nB tv 연결하기";
 "pairingTitle2Tablet" = "집 밖에서 TV 없이\n간편하게 연결하기";
 "pairingBtnWifiSubTablet" = "B tv와 동일한\n네트워크 연결이 필요합니다.";
@@ -634,6 +632,14 @@
 "playerAdCancel" = "광고 건너뛰기";
 "playerMoveSec" = "초 이동";
 
+/*
+ Remote
+*/
+"remotePlayEmpty" = "프로그램 정보가 보이지 않으면\n새로고침 버튼을 눌러주세요.";
+"remoteInputChannel" = "채널번호 입력";
+"remoteInputText" = "문자 입력";
+"remoteInputChannelHolder" = "000";
+"remoteInputTextHolder" = "문자 입력";
 /*
  Monthly
 */

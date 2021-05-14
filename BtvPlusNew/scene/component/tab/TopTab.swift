@@ -12,6 +12,8 @@ import SwiftUI
 struct TopTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var pairing:Pairing
     
     var body: some View {
         HStack(alignment: .bottom ,spacing:Dimen.margin.tiny){
@@ -64,8 +66,19 @@ struct TopTab: PageComponent{
                            height: Dimen.icon.regular)
             }
             Button(action: {
-                
+                /*
+                if self.pairing.status != .pairing {
+                    self.appSceneObserver.alert = .needPairing()
+                } else {
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.remotecon)
+                    )
+                }*/
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.remotecon)
+                )
             }) {
+                
                 Image(Asset.gnbTop.remote)
                     .renderingMode(.original)
                     .resizable()

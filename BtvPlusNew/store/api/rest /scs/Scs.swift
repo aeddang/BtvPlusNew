@@ -30,7 +30,7 @@ extension ScsNetwork{
     }
     
     static func getReqData(date:Date) -> String{
-        return date.toTimestamp(dateFormat: "yyyy-MM-dd_HH:mm:ss", local: "en_US_POSIX")
+        return date.toDateFormatter(dateFormat: "yyyy-MM-dd_HH:mm:ss", local: "en_US_POSIX")
     }
     
     enum ConfirmType: String {

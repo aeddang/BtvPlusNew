@@ -101,6 +101,12 @@
 		316B614C264A272B00C2DC25 /* RemoteCon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B614B264A272B00C2DC25 /* RemoteCon.swift */; };
 		316B614E264A2B5400C2DC25 /* EffectButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B614D264A2B5400C2DC25 /* EffectButton.swift */; };
 		316C45D0264DE7D800A8D7F5 /* InputRemoteBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316C45CF264DE7D800A8D7F5 /* InputRemoteBox.swift */; };
+		316C45D42651F92C00A8D7F5 /* Wepg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316C45D32651F92C00A8D7F5 /* Wepg.swift */; };
+		316C45D62651FBD700A8D7F5 /* AllChannels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316C45D52651FBD700A8D7F5 /* AllChannels.swift */; };
+		316C45D8265200A500A8D7F5 /* Broadcasting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316C45D7265200A500A8D7F5 /* Broadcasting.swift */; };
+		316C45DA265203CF00A8D7F5 /* BroadcastManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316C45D9265203CF00A8D7F5 /* BroadcastManager.swift */; };
+		316C45DC265215AB00A8D7F5 /* CurrentChannels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316C45DB265215AB00A8D7F5 /* CurrentChannels.swift */; };
+		316C45DE2652160000A8D7F5 /* WepgModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316C45DD2652160000A8D7F5 /* WepgModel.swift */; };
 		316DF2D125C29EC500915B27 /* CustomAVPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316DF2D025C29EC500915B27 /* CustomAVPlayer.swift */; };
 		316DF2DF25C2AA3C00915B27 /* CPAirPlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316DF2DE25C2AA3C00915B27 /* CPAirPlayButton.swift */; };
 		316ECDF6264B4274008D2544 /* BlankButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316ECDF5264B4274008D2544 /* BlankButton.swift */; };
@@ -511,6 +517,12 @@
 		316B614B264A272B00C2DC25 /* RemoteCon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCon.swift; sourceTree = "<group>"; };
 		316B614D264A2B5400C2DC25 /* EffectButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectButton.swift; sourceTree = "<group>"; };
 		316C45CF264DE7D800A8D7F5 /* InputRemoteBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputRemoteBox.swift; sourceTree = "<group>"; };
+		316C45D32651F92C00A8D7F5 /* Wepg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wepg.swift; sourceTree = "<group>"; };
+		316C45D52651FBD700A8D7F5 /* AllChannels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllChannels.swift; sourceTree = "<group>"; };
+		316C45D7265200A500A8D7F5 /* Broadcasting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Broadcasting.swift; sourceTree = "<group>"; };
+		316C45D9265203CF00A8D7F5 /* BroadcastManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BroadcastManager.swift; sourceTree = "<group>"; };
+		316C45DB265215AB00A8D7F5 /* CurrentChannels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentChannels.swift; sourceTree = "<group>"; };
+		316C45DD2652160000A8D7F5 /* WepgModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WepgModel.swift; sourceTree = "<group>"; };
 		316DF2D025C29EC500915B27 /* CustomAVPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAVPlayer.swift; sourceTree = "<group>"; };
 		316DF2DE25C2AA3C00915B27 /* CPAirPlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPAirPlayButton.swift; sourceTree = "<group>"; };
 		316ECDF3264B3F3E008D2544 /* VerticalButtonBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalButtonBox.swift; sourceTree = "<group>"; };
@@ -1230,6 +1242,25 @@
 			path = model;
 			sourceTree = "<group>";
 		};
+		316C45D12651F8FD00A8D7F5 /* wepg */ = {
+			isa = PBXGroup;
+			children = (
+				316C45D22651F92000A8D7F5 /* model */,
+				316C45D32651F92C00A8D7F5 /* Wepg.swift */,
+			);
+			path = wepg;
+			sourceTree = "<group>";
+		};
+		316C45D22651F92000A8D7F5 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				316C45D52651FBD700A8D7F5 /* AllChannels.swift */,
+				316C45DB265215AB00A8D7F5 /* CurrentChannels.swift */,
+				316C45DD2652160000A8D7F5 /* WepgModel.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
 		316ECDEF264B3F00008D2544 /* remotecon */ = {
 			isa = PBXGroup;
 			children = (
@@ -1430,14 +1461,6 @@
 			path = model;
 			sourceTree = "<group>";
 		};
-		31D3F4C925E3364D008FDFEC /* web */ = {
-			isa = PBXGroup;
-			children = (
-				31D3F4CA25E3368A008FDFEC /* WepManager.swift */,
-			);
-			path = web;
-			sourceTree = "<group>";
-		};
 		31D3F4DB25E365F3008FDFEC /* popups */ = {
 			isa = PBXGroup;
 			children = (
@@ -1533,6 +1556,7 @@
 				3177732325FAF916006382AE /* User.swift */,
 				3177732825FAF92D006382AE /* HostDevice.swift */,
 				3177732E25FAFA2C006382AE /* Authority.swift */,
+				316C45D7265200A500A8D7F5 /* Broadcasting.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -1596,13 +1620,15 @@
 			path = libs;
 			sourceTree = "<group>";
 		};
-		D56C603A25933EAB009AE769 /* account */ = {
+		D56C603A25933EAB009AE769 /* manager */ = {
 			isa = PBXGroup;
 			children = (
+				31D3F4CA25E3368A008FDFEC /* WepManager.swift */,
 				315730ED25AFC1B600D9A693 /* AccountManager.swift */,
 				D56C603B25933EBD009AE769 /* MdnsPairingManager.swift */,
+				316C45D9265203CF00A8D7F5 /* BroadcastManager.swift */,
 			);
-			path = account;
+			path = manager;
 			sourceTree = "<group>";
 		};
 		D56C691A257D9EE500CF9AB8 = {
@@ -2028,9 +2054,8 @@
 			isa = PBXGroup;
 			children = (
 				D50AB8EB257F30EC00649C4A /* model */,
+				D56C603A25933EAB009AE769 /* manager */,
 				319BAFA1260439AD0007273F /* voice */,
-				31D3F4C925E3364D008FDFEC /* web */,
-				D56C603A25933EAB009AE769 /* account */,
 				D5DABD6F258972D100DF5701 /* coreData */,
 				31E76D092632633200710624 /* share */,
 				D56C6B1C257DACD800CF9AB8 /* storage */,
@@ -2107,6 +2132,7 @@
 		D56C6B25257DACD800CF9AB8 /* rest  */ = {
 			isa = PBXGroup;
 			children = (
+				316C45D12651F8FD00A8D7F5 /* wepg */,
 				3166CBE22611A14C00282891 /* eps */,
 				318BA38E2608C2660093BC7D /* web */,
 				3174066F25F702B600201850 /* nf */,
@@ -2491,7 +2517,10 @@
 				D57298DD259D69EB00ED2CE6 /* PickerSelect.swift in Sources */,
 				D56C6A5D257DA0C700CF9AB8 /* CircularSpinner.swift in Sources */,
 				318FBFF725E4882700ABC241 /* PageCategoryList.swift in Sources */,
+				316C45DC265215AB00A8D7F5 /* CurrentChannels.swift in Sources */,
 				31895B0F2601CEEC002DE02E /* SynopsisData.swift in Sources */,
+				316C45D8265200A500A8D7F5 /* Broadcasting.swift in Sources */,
+				316C45DA265203CF00A8D7F5 /* BroadcastManager.swift in Sources */,
 				3166CBEA2611A52200282891 /* TotalPoint.swift in Sources */,
 				D56C6A59257DA0C700CF9AB8 /* TextButton.swift in Sources */,
 				D56CC31225907F3700CA1D54 /* ThemaBlock.swift in Sources */,
@@ -2523,6 +2552,7 @@
 				D573784A25A2983800EC571F /* CharacterSelectBox.swift in Sources */,
 				D56C6A4B257DA0C700CF9AB8 /* LoopSwipperView.swift in Sources */,
 				314D589425B685B2007BCA34 /* PagePairingManagement.swift in Sources */,
+				316C45DE2652160000A8D7F5 /* WepgModel.swift in Sources */,
 				3167196825FEF6BE005AC3D2 /* FloatingBanner.swift in Sources */,
 				D57178582582D87500BF2612 /* PageHome.swift in Sources */,
 				31895B172601DF49002DE02E /* PackageBody.swift in Sources */,
@@ -2557,6 +2587,7 @@
 				D50AB90C2580779500649C4A /* Synopsis.swift in Sources */,
 				316ECE01264B8009008D2544 /* PageRemotecon.swift in Sources */,
 				D56C603C25933EBD009AE769 /* MdnsPairingManager.swift in Sources */,
+				316C45D62651FBD700A8D7F5 /* AllChannels.swift in Sources */,
 				31E76D0B2632634A00710624 /* ShareManager.swift in Sources */,
 				D56C6A30257DA0C700CF9AB8 /* ViewPager.swift in Sources */,
 				3182A0A6261877E800F7F07D /* InputBox.swift in Sources */,
@@ -2694,6 +2725,7 @@
 				D56C69B3257DA09E00CF9AB8 /* OffsetKey.swift in Sources */,
 				D56C69A9257DA09E00CF9AB8 /* Rest.swift in Sources */,
 				D56C6A2F257DA0C700CF9AB8 /* CPPageViewPager.swift in Sources */,
+				316C45D42651F92C00A8D7F5 /* Wepg.swift in Sources */,
 				314D739725B5053F00907118 /* EpisodeViewer.swift in Sources */,
 				D56C6A27257DA0C600CF9AB8 /* durations.swift in Sources */,
 				315544C725B7BCF200086510 /* DevicePairingStatus.swift in Sources */,

@@ -63,7 +63,7 @@ extension Date{
         return Double(self.timeIntervalSince1970 * 1000)
     }
     
-    func toTimestamp(dateFormat:String = "yyyy-MM-dd'T'HH:mm:ssZ",
+    func toDateFormatter(dateFormat:String = "yyyy-MM-dd'T'HH:mm:ssZ",
                      local:String="en_US_POSIX") -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: local) // set locale to reliable US_POSIX

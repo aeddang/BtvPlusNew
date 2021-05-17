@@ -66,7 +66,7 @@ class WebManager :PageProtocol{
         info["pushInfo"] = pairing.user?.isAgree1 == true ? 1 : 0
         
         let userInfo = pairing.userInfo?.user
-        info["regionCode"] = self.getRegionCode()
+        info["regionCode"] = pairing.getRegionCode()
         info["svc"] = AppUtil.getSafeString(userInfo?.svc, defaultValue: "0")
         info["ukey_prod_id"] = AppUtil.getSafeString(userInfo?.ukey_prod_id, defaultValue: "null")
         info["combine_product_use"] = AppUtil.getSafeString(userInfo?.combine_product_use, defaultValue: "N")
@@ -108,24 +108,11 @@ class WebManager :PageProtocol{
         return info
     }
     
-    private func getRegionCode()->String {
-        var code = "MBC=1^KBS=41^SBS=61^HD=0"
-        guard let user = pairing.userInfo?.user else {return code}
-        guard let host = pairing.hostDevice else {return code}
-        guard let region = user.region_code else {return code}
-        
-        code = region
-        if !code.contains("^HD=0") { code = code + "^HD=0" }
-        let versions = host.agentVersion?.split(separator: ".")
-        let major = String( versions?.first ?? "0")
-        if major.toInt() >= 3 { code = code + "^UHD=100" }
-        return code
     
-    }
     
     private func getPcid()->String {
         if let id = storage.pcId {return id}
-        let dateId = Date().toTimestamp(dateFormat: "yyyyMMddHHmmssSSS", local: "en_US_POSIX")
+        let dateId = Date().toDateFormatter(dateFormat: "yyyyMMddHHmmssSSS", local: "en_US_POSIX")
         var t = time_t(0)
         srand48( time(&t))
         let randNum = drand48() * 1000000

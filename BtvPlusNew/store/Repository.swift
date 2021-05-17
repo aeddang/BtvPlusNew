@@ -55,8 +55,9 @@ class Repository:ObservableObject, PageProtocol{
     
     private let storage = LocalStorage()
     private let accountManager:AccountManager
+    private let broadcastManager:BroadcastManager
     private var apiManager:ApiManager
-    
+   
     
     private var anyCancellable = Set<AnyCancellable>()
     private var dataCancellable = Set<AnyCancellable>()
@@ -84,6 +85,10 @@ class Repository:ObservableObject, PageProtocol{
             pairing: self.pairing,
             dataProvider: self.dataProvider)
         
+        self.broadcastManager = BroadcastManager(
+            pairing: self.pairing,
+            dataProvider: self.dataProvider)
+        
         self.webManager = WebManager(
             pairing: self.pairing,
             storage: self.storage,
@@ -101,6 +106,7 @@ class Repository:ObservableObject, PageProtocol{
         self.setupApiManager()
         self.setupSetting()
         self.setupPairing()
+        self.broadcastManager.setup()
     }
     
     deinit {
@@ -180,7 +186,7 @@ class Repository:ObservableObject, PageProtocol{
     
     private func setupApiManager(){
         self.accountManager.setupApiManager(self.apiManager)
-        
+        self.broadcastManager.setupApiManager(self.apiManager)
         self.apiManager.$result.sink(receiveValue: { res in
             guard let res = res else { return }
             self.respondApi(res)

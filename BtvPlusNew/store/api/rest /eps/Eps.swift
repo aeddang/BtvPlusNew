@@ -252,7 +252,7 @@ class Eps: Rest{
         hostDevice:HostDevice?, card:OcbItem?, password:String?,
         completion: @escaping (OkCashPoint) -> Void, error: ((_ e:Error) -> Void)? = nil){
 
-        let reqDate = Date().toTimestamp(dateFormat: "yyyyMMddHHmmss")
+        let reqDate = Date().toDateFormatter(dateFormat: "yyyyMMddHHmmss")
         let macAdress = hostDevice?.convertMacAdress ?? ApiConst.defaultMacAdress
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:String]()

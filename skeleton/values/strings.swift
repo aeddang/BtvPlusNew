@@ -335,10 +335,12 @@ extension String {
     }
     struct remote {
         public static let playEmpty = "remotePlayEmpty".loaalized()
+        public static let playError = "remotePlayError".loaalized()
         public static let inputChannel = "remoteInputChannel".loaalized()
         public static let inputText = "remoteInputText".loaalized()
         public static let inputChannelHolder = "remoteInputChannelHolder".loaalized()
         public static let inputTextHolder = "remoteInputTextHolder".loaalized()
+        public static let titleMusicBroadcast = "remoteTitleMusicBroadcast".loaalized()
     }
     
     

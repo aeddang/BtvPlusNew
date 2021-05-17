@@ -232,6 +232,7 @@ extension Asset{
         public static let muteOn = "icRemoteMuteOn"
         
         public static let onair = "icRemoteOnair"
+        public static let vod = "icRemoteVod"
         
         public static let on = "icRemoteOnNor"
         public static let onOn = "icRemoteOnPre"

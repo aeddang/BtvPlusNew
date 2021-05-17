@@ -70,6 +70,7 @@ class ApiManager :PageProtocol, ObservableObject{
     private lazy var pss:Pss = Pss(network: PssNetwork())
     private lazy var nf:Nf = Nf(network: NfNetwork())
     private lazy var eps:Eps = Eps(network: EpsNetwork())
+    private lazy var wepg:Wepg = Wepg(network: WepgNetwork())
     private lazy var web:Web = Web(network: WebNetwork())
     
     private(set) var updateFlag: UpdateFlag = .none
@@ -88,6 +89,7 @@ class ApiManager :PageProtocol, ObservableObject{
         self.nf.clear()
         self.eps.clear()
         self.web.clear()
+        self.wepg.clear()
         self.apiQ.removeAll()
     }
     
@@ -404,8 +406,15 @@ class ApiManager :PageProtocol, ObservableObject{
             hostDevice: device, card: card, password:pw,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        //WEPG
+        case .getAllChannels(let code) : self.wepg.getAllChannels(regionCode: code,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getCurrentChannels(let ver) : self.wepg.getCurrentChannels(epgVersion: ver,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         //WEB
-        case .getSearchKeywords :   self.web.getSearchKeywords(
+        case .getSearchKeywords :  self.web.getSearchKeywords(
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         case .getCompleteKeywords(let word) : self.web.getCompleteKeywords(

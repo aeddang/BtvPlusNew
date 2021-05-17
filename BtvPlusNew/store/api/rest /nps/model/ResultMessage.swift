@@ -20,7 +20,7 @@ struct ResultMessageBody : Decodable {
     /*! 페어링 완료 시 할당된 페어링 아이디로 숫자로된 문자열 */
     private(set) var pairingid:String? = nil
     /*! 응답으로 전달되는 메시지 */
-    private(set) var message:[String:String]? = nil
+    private(set) var message:ResultMessageInfo? = nil
     /*! 서버의 아이피 */
     private(set) var ip:String? = nil
     /*! 서버의 포트 */

@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 enum RemoteConEvent{
-    case toggleOn, multiview, chlist, earphone,
+    case toggleOn, multiview, chlist, earphone, reflash,
          fastForward, rewind, exit, previous,
          home, volumeMove(Int), mute(Bool),
          channelMove(Int),
@@ -16,11 +16,23 @@ enum RemoteConEvent{
          control(ControlBox.Event), playControl(PlayControlBox.Event)
 }
 
+struct RemotePlayData{
+    var progress:Float? = nil
+    var title:String? = nil
+    var subTitle:String? = nil
+    var subText:String? = nil
+    var restrictAgeIcon: String? = nil
+    var isOnAir:Bool = false
+    var isEmpty:Bool = false
+    var isError:Bool = false
+}
+
 
 struct RemoteCon: PageComponent {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var setup:Setup
+    var data:RemotePlayData? = nil
     var action: (RemoteConEvent) -> Void
     var body: some View {
         ZStack(alignment: .top){
@@ -62,7 +74,10 @@ struct RemoteCon: PageComponent {
                 }
                 .modifier(MatchHorizontal(height: RemoteStyle.ui.topBoxHeight))
                 .padding(.top, RemoteStyle.margin.light)
-                CurrentPlayBox().modifier(MatchHorizontal(height: RemoteStyle.ui.playBoxHeight))
+                CurrentPlayBox( data: self.data ) {
+                    self.action(.reflash)
+                }
+                .modifier(MatchHorizontal(height: RemoteStyle.ui.playBoxHeight))
                 HStack(alignment: .center, spacing: 0){
                     VStack(spacing: 0){
                         EffectButton(defaultImage: Asset.remote.fastForward, effectImage: Asset.remote.fastForwardOn)
@@ -79,8 +94,10 @@ struct RemoteCon: PageComponent {
                     }
                     .frame(height: RemoteStyle.ui.verticalButton.height)
                     Spacer()
-                    ControlBox(){ evt in
-                        self.action(.control(evt))
+                    if self.data?.isOnAir == false {
+                        PlayControlBox(){ evt in self.action(.playControl(evt))}
+                    } else {
+                        ControlBox(){ evt in self.action(.control(evt))}
                     }
                     Spacer()
                     VStack(spacing: 0){
@@ -99,8 +116,8 @@ struct RemoteCon: PageComponent {
                     .frame(height: RemoteStyle.ui.verticalButton.height)
                 }
                 .frame(height: RemoteStyle.ui.uiBoxHeight)
-               
                 .padding(.top, RemoteStyle.margin.light)
+                
                 HStack(alignment: .center, spacing: 0){
                     VerticalButtonBox(
                         defaultImage:Asset.remote.volume,

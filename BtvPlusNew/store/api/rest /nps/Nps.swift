@@ -88,7 +88,7 @@ extension NpsNetwork{
     }
     static func checkPairing(res:ApiResultResponds) {
         guard let resData = res.data as? DevicePairingStatus  else { return }
-        //if resData.header?.result != NpsNetwork.resultCode.success.code { return }
+        if resData.header?.result != NpsNetwork.resultCode.success.code { return }
         guard let pairingStatus = resData.body?.pairing_status else { return }
         Self.pairingStatus = pairingStatus
         if pairingStatus == "0" {
@@ -421,7 +421,7 @@ class Nps: Rest{
     
     func sendMessage(data:NpsMessage?,
         customParam:[String: Any] = [String: Any](),
-        completion: @escaping (NpsResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        completion: @escaping (ResultMessage) -> Void, error: ((_ e:Error) -> Void)? = nil){
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-521")
         
         var params = [String: Any]()
@@ -432,7 +432,7 @@ class Nps: Rest{
         
         let msg = data?.messageString ?? ""
         let n = ApiUtil.getNValue()
-        params["message"] = msg
+        params["message"] = data?.messageObj
         params["nvalue"] = n
         params["sc"] = ApiUtil.getEncrypedSCValue(msg, nValue: n, npsPw: NpsNetwork.AES_PW)
        // params["custom_param"] = customParam

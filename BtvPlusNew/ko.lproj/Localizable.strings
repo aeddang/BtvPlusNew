@@ -636,10 +636,15 @@
  Remote
 */
 "remotePlayEmpty" = "프로그램 정보가 보이지 않으면\n새로고침 버튼을 눌러주세요.";
+"remotePlayError" = "일시적으로 정보를 불러올 수 없습니다.\n네트워크 상태를 확인해 주세요.";
 "remoteInputChannel" = "채널번호 입력";
 "remoteInputText" = "문자 입력";
 "remoteInputChannelHolder" = "000";
 "remoteInputTextHolder" = "문자 입력";
+"remoteTitleMusicBroadcast" = "24시간 음악방송";
+
+
+
 /*
  Monthly
 */

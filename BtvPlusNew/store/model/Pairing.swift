@@ -155,6 +155,21 @@ class Pairing:ObservableObject, PageProtocol {
         }
     }
     
+    func getRegionCode()->String {
+        var code = "MBC=1^KBS=41^SBS=61^HD=0"
+        guard let user = userInfo?.user else {return code}
+        guard let host = hostDevice else {return code}
+        guard let region = user.region_code else {return code}
+        
+        code = region
+        if !code.contains("^HD=0") { code = code + "^HD=0" }
+        let versions = host.agentVersion?.split(separator: ".")
+        let major = String( versions?.first ?? "0")
+        if major.toInt() >= 3 { code = code + "^UHD=100" }
+        return code
+    
+    }
+    
     static func getSTBImage(stbModel: String?) -> String {
         switch stbModel {
         case "BKO-AI700":

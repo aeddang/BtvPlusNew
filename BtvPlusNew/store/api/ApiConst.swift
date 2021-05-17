@@ -57,7 +57,7 @@ struct ApiGateway{
                 Self.API_KEY, forHTTPHeaderField: "Api_Key")
             #endif
         }
-        let timestamp = Date().toTimestamp(dateFormat: "yyyyMMddHHmmss.SSS", local: "en_US_POSIX")
+        let timestamp = Date().toDateFormatter(dateFormat: "yyyyMMddHHmmss.SSS", local: "en_US_POSIX")
         authorizationRequest.addValue( timestamp, forHTTPHeaderField: "TimeStamp")
         authorizationRequest.addValue( ApiUtil.getAuthVal(timestamp), forHTTPHeaderField: "Auth_Val")
         authorizationRequest.addValue( NpsNetwork.hostDeviceId ?? SystemEnvironment.getGuestDeviceId() , forHTTPHeaderField: "Client_ID")

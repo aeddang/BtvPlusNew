@@ -118,6 +118,9 @@ enum ApiType{
          getTMembership( HostDevice? ),
          getTvPoint( HostDevice? ),
          getOkCashPoint( HostDevice?, OcbItem?, String?)
+    //WEPG
+    case getAllChannels(String?),
+         getCurrentChannels(String?)
     //WEB
     case getSearchKeywords,
          getCompleteKeywords(String?),

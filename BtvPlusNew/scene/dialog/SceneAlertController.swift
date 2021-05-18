@@ -11,7 +11,7 @@ import SwiftUI
 import Combine
 
 enum SceneAlert:Equatable {
-    case confirm(String?, String?,(Bool) -> Void), alert(String?, String?, (() -> Void)? = nil),
+    case confirm(String?, String?,(Bool) -> Void), alert(String?, String?, String? = nil, (() -> Void)? = nil),
          recivedApns(AlramData?), apiError(ApiResultError),
          connectWifi((Bool) -> Void) , notFoundDevice((Bool) -> Void), requestLocation((Bool) -> Void),
          
@@ -77,7 +77,7 @@ struct SceneAlertController: PageComponent{
             buttons: self.buttons
         ){ idx in
             switch self.currentAlert {
-            case .alert(_, _, let completionHandler) :
+            case .alert(_, _, _, let completionHandler) :
                 if let handler = completionHandler { self.selectedAlert(idx, completionHandler:handler) }
             case .confirm(_, _, let completionHandler) : self.selectedConfirm(idx, completionHandler:completionHandler)
             case .apiError(let data): self.selectedApi(idx, data:data)
@@ -113,7 +113,7 @@ struct SceneAlertController: PageComponent{
                     self.reset()
                 }
                 return
-            case .alert(let title,let text, _) : self.setupAlert(title:title, text:text)
+            case .alert(let title,let text, let subText, _) : self.setupAlert(title:title, text:text, subText:subText)
             case .confirm(let title,let text, _) : self.setupConfirm(title:title, text:text)
             case .apiError(let data): self.setupApi(data:data)
             case .connectWifi: self.setupConnectWifi()
@@ -530,9 +530,10 @@ struct SceneAlertController: PageComponent{
         completionHandler(idx == 1)
     }
     
-    func setupAlert(title:String?, text:String?) {
+    func setupAlert(title:String?, text:String?, subText:String? = nil) {
         self.title = title
         self.text = text ?? ""
+        self.subText = subText
         self.buttons = [
             AlertBtnData(title: String.app.corfirm, index: 0)
         ]

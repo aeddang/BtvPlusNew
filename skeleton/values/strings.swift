@@ -73,6 +73,7 @@ extension String {
         public static let bpoint = "bpoint".loaalized()
         public static let bcash = "bcash".loaalized()
         public static let lockAdult = "lockAdult".loaalized()
+        public static let lockAdultProgram = "lockAdultProgram".loaalized()
         public static let purchasePrice = "purchasePrice".loaalized()
         public static let purchaseDate = "purchaseDate".loaalized()
         public static let purchasePeriod = "purchasePeriod".loaalized()
@@ -150,6 +151,11 @@ extension String {
         public static var connect = "alertConnect".loaalized()
         public static var connectWifi = "alertConnectWifi".loaalized()
         public static var connectWifiSub = "alertConnectWifiSub".loaalized()
+        
+        
+        public static var guide = "alertGuide".loaalized()
+        public static var guideNotSupported = "alertGuideNotSupported".loaalized()
+        public static var guideNotSupportedVibrate = "alertGuideNotSupportedVibrate".loaalized()
     
         public static var needConnect = "alertNeedConnect".loaalized()
         public static var needConnectForView = "alertNeedConnectForView".loaalized()
@@ -341,6 +347,16 @@ extension String {
         public static let inputChannelHolder = "remoteInputChannelHolder".loaalized()
         public static let inputTextHolder = "remoteInputTextHolder".loaalized()
         public static let titleMusicBroadcast = "remoteTitleMusicBroadcast".loaalized()
+        public static let titleMirroring = "remoteTitleMirroring".loaalized()
+        
+        public static let setupMirroring = "remoteSetupMirroring".loaalized()
+        public static let closeMirroring = "remoteCloseMirroring".loaalized()
+        public static let searchMirroring = "remoteSearchMirroring".loaalized()
+        public static let errorMirroringWifi = "remoteErrorMirroringWifi".loaalized()
+        public static let errorMirroringWifiText = "remoteErrorMirroringWifiText".loaalized()
+        public static let errorMirroring = "remoteErrorMirroring".loaalized()
+        public static let errorMirroringText = "remoteErrorMirroringText".loaalized()
+        public static let errorMirroringTextSub = "remoteErrorMirroringTextSub".loaalized()
     }
     
     

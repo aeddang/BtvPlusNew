@@ -50,7 +50,7 @@ class Repository:ObservableObject, PageProtocol{
     let voiceRecognition:VoiceRecognition
     let shareManager:ShareManager
     let apiCoreDataManager = ApiCoreDataManager()
-    
+    let audioMirrorManager:AudioMirroring
     let userSetup:Setup
     
     private let storage = LocalStorage()
@@ -81,6 +81,7 @@ class Repository:ObservableObject, PageProtocol{
         self.userSetup = setup ?? Setup()
         self.voiceRecognition = VoiceRecognition(appSceneObserver: sceneObserver)
         self.shareManager = ShareManager(pagePresenter: pagePresenter)
+        self.audioMirrorManager = AudioMirroring(pairing: self.pairing)
         self.accountManager =  AccountManager(
             pairing: self.pairing,
             dataProvider: self.dataProvider)

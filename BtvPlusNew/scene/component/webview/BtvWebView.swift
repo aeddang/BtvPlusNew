@@ -491,7 +491,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                      initiatedByFrame frame: WKFrameInfo,
                      completionHandler: @escaping () -> Void) {
             
-            self.parent.appSceneObserver.alert = .alert(nil,  message, completionHandler)
+            self.parent.appSceneObserver.alert = .alert(nil,  message, nil ,completionHandler)
            
         }
 

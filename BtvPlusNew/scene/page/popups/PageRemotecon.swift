@@ -7,16 +7,19 @@
 import Foundation
 import SwiftUI
 
+
 struct PageRemotecon: PageView {
+    @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var networkObserver:NetworkObserver
+    @EnvironmentObject var locationObserver:LocationObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
 
-    
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -31,7 +34,10 @@ struct PageRemotecon: PageView {
                                     Image(Asset.remote.bg)
                                         .renderingMode(.original).resizable()
                                         .modifier(MatchParent())
-                                    RemoteCon(data:self.remotePlayData){ evt in
+                                    RemoteCon(
+                                        data:self.remotePlayData,
+                                        isEarPhone: self.isAudioMirroring
+                                    ){ evt in
                                         self.action(evt: evt)
                                     }
                                 }
@@ -52,7 +58,10 @@ struct PageRemotecon: PageView {
                                         .background(Color.app.blackExtra)
                                 }
                                 .modifier(MatchParent())
-                                RemoteCon(data:self.remotePlayData){ evt in
+                                RemoteCon(
+                                    data:self.remotePlayData,
+                                    isEarPhone: self.isAudioMirroring
+                                ){ evt in
                                     self.action(evt: evt)
                                 }
                                 .padding(.top, self.sceneObserver.safeAreaTop)
@@ -128,6 +137,29 @@ struct PageRemotecon: PageView {
                 default: break
                 }
             }
+            .onReceive(self.repository.audioMirrorManager.$event){evt in
+                guard let evt = evt  else {return}
+                switch evt {
+                case .dicconnected :
+                    self.appSceneObserver.event = .toast(String.remote.closeMirroring)
+                case .connected :
+                    self.appSceneObserver.loadingInfo = nil
+                    self.appSceneObserver.event = .toast(String.remote.setupMirroring)
+                case .notFound :
+                    self.appSceneObserver.loadingInfo = nil
+                    self.appSceneObserver.alert =
+                        .alert(String.remote.errorMirroring, String.remote.errorMirroringText, String.remote.errorMirroringTextSub)
+                default: break
+                }
+            }
+            .onReceive(self.repository.audioMirrorManager.$status){status in
+                if self.isAudioMirroring == nil {return}
+                switch status {
+                case .mirroring : self.isAudioMirroring = true
+                case .none : self.isAudioMirroring = false
+                default: break
+                }
+            }
             .onReceive(dataProvider.$result) { res in
                 guard let res = res else { return }
                 if res.id != self.tag { return }
@@ -150,13 +182,24 @@ struct PageRemotecon: PageView {
                 self.isUIReady = ani
                 self.checkHostDeviceStatus()
             }
-            
+            .onReceive(self.locationObserver.$event){ evt in
+                guard let evt = evt else {return}
+                switch evt {
+                case .updateAuthorization( _ ) : self.connectEarphone()
+                }
+                
+            }
             .onAppear{
                 self.pairing.requestPairing(.check)
                 self.dataProvider.broadcasting.reset()
+                if self.repository.audioMirrorManager.isAudioMirrorSupported {
+                    self.isAudioMirroring = self.repository.audioMirrorManager.isConnected
+                } else {
+                    self.isAudioMirroring = nil
+                }
             }
             .onDisappear{
-            
+                self.repository.audioMirrorManager.close()
             }
             
         }//geo
@@ -166,7 +209,7 @@ struct PageRemotecon: PageView {
     @State var isInputText:Bool = false
     @State var isInputChannel:Bool = false
     @State var isUIReady:Bool = false
-    
+    @State var isAudioMirroring:Bool? = nil
     @State var remotePlayData:RemotePlayData? = nil
     
     private func checkHostDeviceStatus(){
@@ -187,6 +230,10 @@ struct PageRemotecon: PageView {
         case "VOD":
             self.dataProvider.broadcasting.requestBroadcast(.updateCurrentVod(message.CurCID))
         case "IPTV":
+            if message.CurChNum == "0" {
+                self.remotePlayData =  RemotePlayData(isEmpty: true)
+                return
+            }
             self.dataProvider.broadcasting.requestBroadcast(.updateCurrentBroadcast)
             self.dataProvider.broadcasting.updateChannelNo(message.CurChNum)
         default:
@@ -195,16 +242,24 @@ struct PageRemotecon: PageView {
     }
     
     private func updatedProgram(_ pro:BroadcastProgram){
+        
+        let isLock = !SystemEnvironment.isImageLock ? false : pro.isAdult
         if pro.isOnAir {
             let d = pro.endTime - pro.startTime
             let c = Double(Date().timeIntervalSince1970) - pro.startTime
             self.remotePlayData =  RemotePlayData(
                 progress: Float(c/d),
-                title: pro.title,
+                title: !isLock ? pro.title : String.app.lockAdultProgram,
                 subTitle: pro.channel,
                 subText: (pro.startTimeStr ?? "") + "~" + (pro.endTimeStr ?? ""),
-                restrictAgeIcon: pro.age,
+                restrictAgeIcon: pro.restrictAgeIcon,
                 isOnAir: true)
+        } else {
+            self.remotePlayData =  RemotePlayData(
+                title: !isLock ? pro.title : String.app.lockAdultProgram,
+                subText: pro.duration,
+                restrictAgeIcon: pro.restrictAgeIcon,
+                isOnAir: false)
         }
     }
     
@@ -212,15 +267,49 @@ struct PageRemotecon: PageView {
         switch evt {
         case .close:
             self.pagePresenter.closePopup(self.pageObject?.id)
+        case .reflash:
+            self.checkHostDeviceStatus()
         case .inputMessage:
             withAnimation{ self.isInputText = true }
         case .inputChannel:
             withAnimation{ self.isInputChannel = true }
+        case .earphone:
+            self.connectEarphone()
         default:
             break
         }
     }
     
+    
+    private func connectEarphone(){
+        if self.networkObserver.status != .wifi {
+            self.appSceneObserver.alert = .connectWifi{ retry in
+                if retry { self.connectEarphone() }
+            }
+            return
+        }
+        let status = self.locationObserver.status
+        if status == .authorizedWhenInUse || status == .authorizedAlways {
+            let manager = self.repository.audioMirrorManager
+            if manager.isSkWifi && manager.isAudioMirrorSupported {
+                self.appSceneObserver.loadingInfo = [
+                    String.remote.searchMirroring
+                ]
+                manager.startSearching()
+                
+            } else {
+                self.appSceneObserver.alert =
+                    .alert(String.remote.errorMirroringWifi, String.remote.errorMirroringWifiText)
+            }
+        } else if status == .denied {
+            self.appSceneObserver.alert = .requestLocation{ retry in
+                if retry { AppUtil.goLocationSettings() }
+            }
+        } else {
+            self.locationObserver.requestWhenInUseAuthorization()
+        }
+        
+    }
    
 }
 

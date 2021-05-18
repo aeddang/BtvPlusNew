@@ -29,7 +29,7 @@ struct CurrentPlayBox: PageComponent {
                                         .padding(.bottom, RemoteStyle.margin.thin)
                                 }
                                 if let title = data.title {
-                                    HStack(alignment: .center, spacing: RemoteStyle.margin.tiny){
+                                    HStack(alignment: .top, spacing: RemoteStyle.margin.tiny){
                                         Text(title)
                                             .modifier(BoldTextStyle(size: RemoteStyle.fontSize.title, color: Color.app.white))
                                             .lineLimit(1)
@@ -47,12 +47,15 @@ struct CurrentPlayBox: PageComponent {
                                     HStack(alignment: .center, spacing: RemoteStyle.margin.tiny){
                                         Text(text)
                                             .modifier(BoldTextStyle(size: RemoteStyle.fontSize.subText, color: Color.app.grey))
-                                        Image(data.isOnAir ? Asset.remote.onair : Asset.remote.vod)
-                                            .renderingMode(.original).resizable()
-                                            .scaledToFit()
-                                            .frame(
-                                                width: RemoteStyle.icon.onAir.width,
-                                                height: RemoteStyle.icon.onAir.height)
+                                        
+                                        if let isOnAir = data.isOnAir {
+                                            Image(isOnAir ? Asset.remote.onair : Asset.remote.vod)
+                                                .renderingMode(.original).resizable()
+                                                .scaledToFit()
+                                                .frame(
+                                                    width: RemoteStyle.icon.onAir.width,
+                                                    height: RemoteStyle.icon.onAir.height)
+                                        }
                                     }
                                 }
                             }

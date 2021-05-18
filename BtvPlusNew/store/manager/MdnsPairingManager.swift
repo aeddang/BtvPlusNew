@@ -23,7 +23,7 @@ struct MdnsDevice : Codable {
 
 class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtocol{
     private var client:MDNSServiceProxyClient? = nil
-    let serviceName = "com.skb.btvplus"
+    let serviceName:String = "com.skb.btvplus"
     let querytime:Int32 = 60
     let searchLimitedTime:Int = 5
         

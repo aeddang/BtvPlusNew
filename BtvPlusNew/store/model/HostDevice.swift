@@ -12,6 +12,7 @@ class HostDevice {
     private(set) var convertMacAdress:String = ApiConst.defaultMacAdress
     private(set) var agentVersion:String? = nil
     private(set) var restrictedAge:Int = -1
+    private(set) var patchVersion:String? = nil
     private(set) var adultSafetyMode = false
     var modelName:String? = nil
    
@@ -24,6 +25,7 @@ class HostDevice {
         }
         self.restrictedAge = deviceData.restricted_age?.toInt() ?? -1
         self.agentVersion = deviceData.stb_src_agent_version
+        self.patchVersion = deviceData.stb_patch_version
         self.adultSafetyMode = deviceData.adult_safety_mode?.toBool() ?? false
         return self
     }

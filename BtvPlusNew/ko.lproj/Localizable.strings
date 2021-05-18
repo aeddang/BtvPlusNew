@@ -74,7 +74,7 @@
 "bpoint" = "B포인트";
 "bcash" = "B캐쉬";
 "lockAdult" = "청소년 보호";
-
+"lockAdultProgram" = "청소년 보호 프로그램";
 "purchasePrice" = "구매 금액";
 "purchaseDate" = "구매 일자";
 "purchasePeriod" = "이용 기간";
@@ -191,6 +191,10 @@
 "alertNetworkError" = "네트워크 연결이 원활하지 않습니다.";
 "alertDataError" = "데이타가 없습니다.";
 
+"alertGuide" = "알림";
+"alertGuideNotSupported" = "지원하지 않는 기능입니다.\n이용에 불편을 드려 죄송합니다.";
+"alertGuideNotSupportedVibrate" = "태블릿 기기에서는 진동모드가 지원되지 않습니다.";
+
 "alertConnect" = "B tv 연결알림";
 "alertConnectWifi" = "Wi-Fi 네트워크에 연결해 주세요.";
 "alertConnectWifiSub" = "기기의 [설정 > Wi-Fi] 메뉴에서\nWi-Fi활성화 후 다시 시도해 주세요.";
@@ -229,8 +233,6 @@
 "alertAuthcodeTimeout" = "연결 확인 시간이 초과되었습니다.";
 "alertLimitedConnect" = "연결 가능한 개수를 초과하였습니다.";
 "alertStbConnectFail" = "셋톱박스와 연결에 실패하였습니다.";
-
-
 
 "alertPairingError" = "B tv 연결에 실패하였습니다.\n계속 연결 불가한 경우\n고객센터(국번 없이 106)로\n문의해 주세요.";
 "alertPairingCompleted" = "B tv 연결이 완료되었습니다.\nUI 4.0 버전에서는 B tv에서\n[확인]버튼을 누르셔야 연결이 완료됩니다.";
@@ -642,8 +644,16 @@
 "remoteInputChannelHolder" = "000";
 "remoteInputTextHolder" = "문자 입력";
 "remoteTitleMusicBroadcast" = "24시간 음악방송";
+"remoteTitleMirroring" = "B tv 이어폰 모드 이용 중입니다.";
 
-
+"remoteSetupMirroring" = "B tv 이어폰 모드가 설정되었습니다.";
+"remoteCloseMirroring" = "B tv 이어폰 모드를 종료합니다.";
+"remoteSearchMirroring" = "B tv 이어폰 모드\n이용 환경을 확인 중입니다.\n잠시만 기다려 주세요.";
+"remoteErrorMirroringWifi" = "동일한 Wi-Fi 연결 필요 안내";
+"remoteErrorMirroringWifiText" = "B tv 이어폰 모드는\nSKB가 제공하는\n유무선공유기에 연결 시에만\n사용 가능합니다.";
+"remoteErrorMirroring" = "이어폰 모드 설정 실패 안내";
+"remoteErrorMirroringText" = "B tv 이어폰 모드 설정에 실패하였습니다.\n아래 내용을 확인 후 다시 시도해 주세요.";
+"remoteErrorMirroringTextSub" = "- B tv 셋톱박스가 켜진 상태\n- B tv 셋톱박스와 SKB 공유기가 연결된 상태";
 
 /*
  Monthly

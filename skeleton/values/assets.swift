@@ -309,6 +309,17 @@ extension Asset{
             default: return Asset.icon.ageAll
             }
         }
+        
+        static func getRemoteIcon(age:String?) -> String?{
+            switch age {
+            case "7": return Asset.icon.age7
+            case "12": return Asset.icon.age12
+            case "15": return Asset.icon.age15
+            case "19": return Asset.icon.age19
+            default: return nil
+            }
+        }
+        
         static func getListIcon(age:String?) -> String?{
             switch age {
             case "19": return Asset.icon.itemAge19

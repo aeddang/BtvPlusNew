@@ -22,7 +22,7 @@ struct RemotePlayData{
     var subTitle:String? = nil
     var subText:String? = nil
     var restrictAgeIcon: String? = nil
-    var isOnAir:Bool = false
+    var isOnAir:Bool? = nil
     var isEmpty:Bool = false
     var isError:Bool = false
 }
@@ -33,6 +33,7 @@ struct RemoteCon: PageComponent {
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var setup:Setup
     var data:RemotePlayData? = nil
+    var isEarPhone:Bool? = nil
     var action: (RemoteConEvent) -> Void
     var body: some View {
         ZStack(alignment: .top){
@@ -57,14 +58,18 @@ struct RemoteCon: PageComponent {
                         self.action(.chlist)
                     }
                     .frame(width: RemoteStyle.button.thin, height: RemoteStyle.button.thin)
-                    Spacer().modifier(MatchVertical(width: 1))
-                        .background(Color.app.grey)
-                        .padding(.vertical , Dimen.margin.tiny)
-                    EffectButton(defaultImage: Asset.remote.earphone, effectImage: Asset.remote.earphoneOn)
-                    { _ in
-                        self.action(.earphone)
+                    if let isEarPhone = self.isEarPhone {
+                        Spacer().modifier(MatchVertical(width: 1))
+                            .background(Color.app.grey)
+                            .padding(.vertical , Dimen.margin.tiny)
+                        EffectButton(
+                            defaultImage: isEarPhone ? Asset.remote.earphoneOn : Asset.remote.earphone,
+                            effectImage: Asset.remote.earphoneOn)
+                        { _ in
+                            self.action(.earphone)
+                        }
+                        .frame(width: RemoteStyle.button.thin, height: RemoteStyle.button.thin)
                     }
-                    .frame(width: RemoteStyle.button.thin, height: RemoteStyle.button.thin)
                     Spacer()
                     EffectButton(defaultImage: Asset.remote.close, effectImage: Asset.remote.close)
                     { _ in

@@ -107,6 +107,11 @@
 		316C45DA265203CF00A8D7F5 /* BroadcastManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316C45D9265203CF00A8D7F5 /* BroadcastManager.swift */; };
 		316C45DC265215AB00A8D7F5 /* CurrentChannels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316C45DB265215AB00A8D7F5 /* CurrentChannels.swift */; };
 		316C45DE2652160000A8D7F5 /* WepgModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316C45DD2652160000A8D7F5 /* WepgModel.swift */; };
+		316C45E32653303000A8D7F5 /* libopus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 316C45E226532FF500A8D7F5 /* libopus.a */; };
+		316C45E42653303000A8D7F5 /* libti2-audiomirror-service-proxy-client.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 316C45E026532FF500A8D7F5 /* libti2-audiomirror-service-proxy-client.a */; };
+		316C45E52653303000A8D7F5 /* libwrtp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 316C45E126532FF500A8D7F5 /* libwrtp.a */; };
+		316C45E72653312800A8D7F5 /* AudioMirroring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316C45E62653312800A8D7F5 /* AudioMirroring.swift */; };
+		316C45EA2653832F00A8D7F5 /* AudioMirror.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316C45E92653832F00A8D7F5 /* AudioMirror.swift */; };
 		316DF2D125C29EC500915B27 /* CustomAVPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316DF2D025C29EC500915B27 /* CustomAVPlayer.swift */; };
 		316DF2DF25C2AA3C00915B27 /* CPAirPlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316DF2DE25C2AA3C00915B27 /* CPAirPlayButton.swift */; };
 		316ECDF6264B4274008D2544 /* BlankButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316ECDF5264B4274008D2544 /* BlankButton.swift */; };
@@ -523,6 +528,12 @@
 		316C45D9265203CF00A8D7F5 /* BroadcastManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BroadcastManager.swift; sourceTree = "<group>"; };
 		316C45DB265215AB00A8D7F5 /* CurrentChannels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentChannels.swift; sourceTree = "<group>"; };
 		316C45DD2652160000A8D7F5 /* WepgModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WepgModel.swift; sourceTree = "<group>"; };
+		316C45DF26532FF500A8D7F5 /* AudioMirrorServiceProxyClientIOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioMirrorServiceProxyClientIOS.h; sourceTree = "<group>"; };
+		316C45E026532FF500A8D7F5 /* libti2-audiomirror-service-proxy-client.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libti2-audiomirror-service-proxy-client.a"; sourceTree = "<group>"; };
+		316C45E126532FF500A8D7F5 /* libwrtp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libwrtp.a; sourceTree = "<group>"; };
+		316C45E226532FF500A8D7F5 /* libopus.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopus.a; sourceTree = "<group>"; };
+		316C45E62653312800A8D7F5 /* AudioMirroring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMirroring.swift; sourceTree = "<group>"; };
+		316C45E92653832F00A8D7F5 /* AudioMirror.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMirror.swift; sourceTree = "<group>"; };
 		316DF2D025C29EC500915B27 /* CustomAVPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAVPlayer.swift; sourceTree = "<group>"; };
 		316DF2DE25C2AA3C00915B27 /* CPAirPlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPAirPlayButton.swift; sourceTree = "<group>"; };
 		316ECDF3264B3F3E008D2544 /* VerticalButtonBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalButtonBox.swift; sourceTree = "<group>"; };
@@ -840,6 +851,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				316C45E32653303000A8D7F5 /* libopus.a in Frameworks */,
+				316C45E42653303000A8D7F5 /* libti2-audiomirror-service-proxy-client.a in Frameworks */,
+				316C45E52653303000A8D7F5 /* libwrtp.a in Frameworks */,
 				318BA35626085F8E0093BC7D /* AdSupport.framework in Frameworks */,
 				31631C4F25D22DC100E501F7 /* SKBNewAdSdk.framework in Frameworks */,
 				319BAFA02604394F0007273F /* libTycheSDK.a in Frameworks */,
@@ -1261,6 +1275,15 @@
 			path = model;
 			sourceTree = "<group>";
 		};
+		316C45E8265382F400A8D7F5 /* audiomirror */ = {
+			isa = PBXGroup;
+			children = (
+				316C45E92653832F00A8D7F5 /* AudioMirror.swift */,
+				316C45E62653312800A8D7F5 /* AudioMirroring.swift */,
+			);
+			path = audiomirror;
+			sourceTree = "<group>";
+		};
 		316ECDEF264B3F00008D2544 /* remotecon */ = {
 			isa = PBXGroup;
 			children = (
@@ -1610,6 +1633,10 @@
 		D56C603625933E52009AE769 /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				316C45DF26532FF500A8D7F5 /* AudioMirrorServiceProxyClientIOS.h */,
+				316C45E226532FF500A8D7F5 /* libopus.a */,
+				316C45E026532FF500A8D7F5 /* libti2-audiomirror-service-proxy-client.a */,
+				316C45E126532FF500A8D7F5 /* libwrtp.a */,
 				319BAF9E260439110007273F /* TycheSpeechRecognizer.h */,
 				319BAF9F260439120007273F /* libTycheSDK.a */,
 				3180855C25C233A900AE4A73 /* DrmAgent.h */,
@@ -2055,6 +2082,7 @@
 			children = (
 				D50AB8EB257F30EC00649C4A /* model */,
 				D56C603A25933EAB009AE769 /* manager */,
+				316C45E8265382F400A8D7F5 /* audiomirror */,
 				319BAFA1260439AD0007273F /* voice */,
 				D5DABD6F258972D100DF5701 /* coreData */,
 				31E76D092632633200710624 /* share */,
@@ -2529,6 +2557,7 @@
 				D56C6A37257DA0C700CF9AB8 /* CPCircularNavigation.swift in Sources */,
 				3174067725F709E600201850 /* NotificationVod.swift in Sources */,
 				314D588725B64ECD007BCA34 /* DisconnectView.swift in Sources */,
+				316C45EA2653832F00A8D7F5 /* AudioMirror.swift in Sources */,
 				31895AFA2601C863002DE02E /* PageSynopsisPackage.swift in Sources */,
 				D51AA9F82599BAFB0035CD51 /* PageTab.swift in Sources */,
 				D56C69B4257DA09E00CF9AB8 /* KeyboardObserver.swift in Sources */,
@@ -2556,6 +2585,7 @@
 				3167196825FEF6BE005AC3D2 /* FloatingBanner.swift in Sources */,
 				D57178582582D87500BF2612 /* PageHome.swift in Sources */,
 				31895B172601DF49002DE02E /* PackageBody.swift in Sources */,
+				316C45E72653312800A8D7F5 /* AudioMirroring.swift in Sources */,
 				312BB09125DD102200AC03BC /* PurchaseWebviewModel.swift in Sources */,
 				31895B072601CEB8002DE02E /* SynopsisPackageModel.swift in Sources */,
 				319745C7262010F30072945D /* PageMyPurchaseTicketList.swift in Sources */,

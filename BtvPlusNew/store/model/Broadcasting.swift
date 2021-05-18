@@ -21,10 +21,12 @@ struct BroadcastProgram {
     var endTime: Double = 0
     var startTimeStr: String?
     var endTimeStr: String?
+    var duration: String?
     var title: String?
     var channel: String?
-    var age: String?
+    var restrictAgeIcon: String?
     var isOnAir: Bool = false
+    var isAdult: Bool = false
 }
 
 class Broadcasting:ObservableObject, PageProtocol {
@@ -72,8 +74,30 @@ class Broadcasting:ObservableObject, PageProtocol {
     func updateCurrentVod(synopsis:Synopsis){
         self.resetOnAir()
         self.currentVod = synopsis
-         
         self.status = .none
+        
+        let isAdult = EuxpNetwork.adultCodes.contains(synopsis.contents?.adlt_lvl_cd)
+        let title = synopsis.contents?.title
+        let count = synopsis.contents?.brcast_tseq_nm
+        let episodeTitle = (count == nil || count?.isEmpty == true)
+            ? title
+            : (title ?? "") + " " + count! + String.app.broCount
+        
+        let restrictAgeIcon = synopsis.contents?.wat_lvl_cd != nil
+            ? Asset.age.getIcon(age: synopsis.contents!.wat_lvl_cd!)
+            : nil
+        
+        let duration = synopsis.contents?.play_tms_val != nil
+            ? synopsis.contents!.play_tms_val! + String.app.min
+            : nil
+        
+        self.currentProgram = BroadcastProgram(
+            duration:  duration,
+            title: episodeTitle ,
+            restrictAgeIcon: restrictAgeIcon,
+            isOnAir: false,
+            isAdult: isAdult)
+        
     }
     func errorCurrentVod(){
         self.status = .error
@@ -89,6 +113,7 @@ class Broadcasting:ObservableObject, PageProtocol {
         self.allChannels = updateChannels
         self.updated()
     }
+    
     func errorAllChannels(){
         self.status = .error
         self.updated()
@@ -145,8 +170,9 @@ class Broadcasting:ObservableObject, PageProtocol {
                             endTimeStr: edate.toDateFormatter(dateFormat: "HH:mm") ,
                             title: d.NM_TITLE ,
                             channel: chInfo.NM_CH,
-                            age: d.CD_RATING,
-                            isOnAir: true)
+                            restrictAgeIcon: Asset.age.getRemoteIcon(age:d.CD_RATING),
+                            isOnAir: true,
+                            isAdult: (chInfo.RANK?.toInt() ?? 0) >= 19)
                         
                         return true
                     }
@@ -169,7 +195,7 @@ class Broadcasting:ObservableObject, PageProtocol {
                     endTimeStr: edate?.toDateFormatter(dateFormat: "HH:mm") ?? "",
                     title: String.remote.titleMusicBroadcast,
                     channel: chInfo.NM_CH,
-                    age: "0",
+                    restrictAgeIcon: nil,
                     isOnAir: true)
             } else {
                 DataLog.d("notfound program", tag: self.tag)

@@ -17,7 +17,7 @@ struct SceneTab: PageComponent{
     @EnvironmentObject var pairing:Pairing
     @State var positionTop:CGFloat = -Dimen.app.top
     @State var positionBottom:CGFloat = -Dimen.app.bottom
-    @State var positionLoading:CGFloat = -Dimen.app.bottom
+   
     @State var isDimed:Bool = false
     @State var isLoading:Bool = false
     
@@ -33,7 +33,7 @@ struct SceneTab: PageComponent{
     @State var headerBannerData:BannerData? = nil
     var body: some View {
         ZStack{
-            VStack{
+            VStack(spacing:Dimen.margin.regular){
                 ZStack{
                     Image(Asset.shape.bgGradientTop)
                         .resizable()
@@ -172,9 +172,6 @@ struct SceneTab: PageComponent{
                 ? 0
                 : -(Dimen.app.bottom+self.safeAreaBottom)
             
-            self.positionLoading = self.appSceneObserver.useBottom
-                ? (Dimen.app.bottom + Dimen.margin.heavy + self.safeAreaBottom)
-                : self.safeAreaBottom
         }
     }
     

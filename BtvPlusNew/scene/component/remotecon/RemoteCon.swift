@@ -26,7 +26,9 @@ struct RemotePlayData{
     var isEmpty:Bool = false
     var isError:Bool = false
 }
-
+enum RemoteInputType{
+    case number, text
+}
 
 struct RemoteCon: PageComponent {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
@@ -163,6 +165,10 @@ struct RemoteCon: PageComponent {
                     Spacer()
                     EffectButton(defaultImage: Asset.remote.vibrate, effectImage: Asset.remote.vibrateOn,  useVibrate : false)
                     { _ in
+                        if SystemEnvironment.isTablet {
+                            self.appSceneObserver.event = .toast(String.alert.guideNotSupportedVibrate)
+                            return
+                        }
                         
                         let vibration = !self.setup.remoconVibration
                         self.setup.remoconVibration = vibration

@@ -200,6 +200,9 @@ extension String {
         public static var pairingCompleted = "alertPairingCompleted".loaalized()
         public static var pairingRecovery = "alertPairingRecovery".loaalized()
         public static var pairingDisconnected = "alertPairingDisconnected".loaalized()
+        public static var notPairing = "alertNotPairing".loaalized()
+        public static var notPairingText = "alertNotPairingText".loaalized()
+        
         public static var serviceUnavailable = "alertServiceUnavailable".loaalized()
         public static var serviceUnavailableText = "alertServiceUnavailableText".loaalized()
         public static var serviceUnavailableText1 = "alertServiceUnavailableText1".loaalized()
@@ -348,7 +351,7 @@ extension String {
         public static let inputTextHolder = "remoteInputTextHolder".loaalized()
         public static let titleMusicBroadcast = "remoteTitleMusicBroadcast".loaalized()
         public static let titleMirroring = "remoteTitleMirroring".loaalized()
-        
+        public static let searchLock = "remoteSearchLock".loaalized()
         public static let setupMirroring = "remoteSetupMirroring".loaalized()
         public static let closeMirroring = "remoteCloseMirroring".loaalized()
         public static let searchMirroring = "remoteSearchMirroring".loaalized()

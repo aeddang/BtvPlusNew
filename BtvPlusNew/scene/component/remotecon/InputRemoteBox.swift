@@ -13,17 +13,17 @@ struct InputRemoteBox: PageComponent {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var setup:Setup
-    
+
     var isFocus:Bool = true
     var isInit:Bool = false
     var title:String = ""
-   
+    var type:RemoteInputType = .text
     var placeHolder:String = ""
     var inputSize:Int = 10
     var inputSizeMin:Int? = nil
     var keyboardType:UIKeyboardType = .default
 
-    var action: (_ input:String?) -> Void
+    var action: (_ input:String?, _ type:RemoteInputType) -> Void
     @State var input:String = ""
     @State var selectedText:String? = nil
     @State var selectedInputSize:Int? = nil
@@ -37,7 +37,7 @@ struct InputRemoteBox: PageComponent {
                     if self.setup.remoconVibration {
                         UIDevice.vibrate()
                     }
-                    self.action(nil)
+                    self.action(nil, self.type)
                 }) {
                     Image(Asset.icon.close)
                         .renderingMode(.original)
@@ -67,7 +67,8 @@ struct InputRemoteBox: PageComponent {
                                 self.input = text
                             },
                             inputCopmpleted: { text in
-                                self.action(self.input)
+                                
+                                self.action(text + " ", self.type)
                             })
                         Spacer().modifier(MatchHorizontal(height: 1))
                             .background(Color.app.white.opacity(0.4))
@@ -98,7 +99,7 @@ struct InputRemoteBox: PageComponent {
                             String.alert.incorrectNumberOfCharacter
                             .replace( (self.selectedInputSize ?? self.inputSize).description))
                     } else {
-                        self.action(self.input)
+                        self.action(self.input, self.type)
                     }
                     
                 }
@@ -149,7 +150,7 @@ struct InputRemoteBox_Previews: PreviewProvider {
                 inputSizeMin: 1
                 
                
-            ){ input in
+            ){ input, type in
                 
             }
         }

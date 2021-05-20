@@ -219,15 +219,6 @@ struct PageFactory{
         default : return PageTest()
         }
     }
-   
-    static func getViewPagerModel(_ pageObject:PageObject)-> ViewPagerModel{
-        guard let params = pageObject.params else { return ViewPagerModel() }
-        return ( params[.viewPagerModel] as? ViewPagerModel ) ?? ViewPagerModel()
-    }
-    static func getInfinityScrollModel(_ pageObject:PageObject)-> InfinityScrollModel{
-        guard let params = pageObject.params else { return  InfinityScrollModel() }
-        return ( params[.infinityScrollModel] as? InfinityScrollModel ) ?? InfinityScrollModel()
-    }
 }
 
 struct PageSceneModel: PageModel {

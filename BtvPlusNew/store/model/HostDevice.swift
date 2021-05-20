@@ -10,10 +10,15 @@ import Foundation
 class HostDevice {
     private(set) var macAdress:String? = nil
     private(set) var convertMacAdress:String = ApiConst.defaultMacAdress
-    private(set) var agentVersion:String? = nil
     private(set) var restrictedAge:Int = -1
     private(set) var patchVersion:String? = nil
     private(set) var adultSafetyMode = false
+    
+    private(set) var agentVersion:String? = nil
+    private(set) var major:Int = 0
+    private(set) var minor:Int = 0
+    private(set) var revision:Int = 0
+    
     var modelName:String? = nil
    
     func setData(deviceData:HostDeviceData) -> HostDevice{
@@ -27,18 +32,30 @@ class HostDevice {
         self.agentVersion = deviceData.stb_src_agent_version
         self.patchVersion = deviceData.stb_patch_version
         self.adultSafetyMode = deviceData.adult_safety_mode?.toBool() ?? false
+        self.setupAgentVersion()
         return self
     }
     
-    func isSupportSimplePairing()->Bool{
+    private func setupAgentVersion(){
+        guard let agent = self.agentVersion else { return }
+        if agent.isEmpty {return}
+        if agent == "null" || agent == "0" { return }
+        let agents = agent.split(separator: ".")
+        if agents.count != 3 {return }
+        self.major = String(agents[0]).toInt()
+        self.minor = String(agents[1]).toInt()
+        self.revision = String(agents[2]).toInt()
+    }
+    
+    private func checkAgentVersion()->Bool?{
         guard let agent = agentVersion else { return true }
         if agent.isEmpty {return true}
         if agent == "null" || agent == "0" {return false}
-        let agents = agent.split(separator: ".")
-        if agents.count != 3 {return false}
-        let major:Int = String(agents[0]).toInt()
-        let minor = String(agents[1]).toInt()
-        let revision = String(agents[2]).toInt()
+        return nil
+    }
+    
+    func isSupportSimplePairing()->Bool{
+        if let agentCheck = self.checkAgentVersion() { return agentCheck }
         // legacy  1.2.20 이상
         if (major == 1 && ((minor == 2 && revision >= 20) || minor > 2)) {
             return true
@@ -53,5 +70,82 @@ class HostDevice {
         } else {
             return false
         }
+    }
+    
+    func isEnableGuideKey() -> Bool {
+        if let agentCheck = self.checkAgentVersion() { return agentCheck }
+        if 1 == major {
+            if 2 == minor && 11 <= revision{
+                return true
+            } else if 2 < minor {
+                return true
+            }
+        } else if 2 == major {
+            return true
+        } else if 3 == major {
+            if 1 == minor && 2 <= revision {
+                return true
+            } else if 1 < minor {
+                return true
+            }
+        }
+        return false
+    }
+    func isEnablePIPKey() -> Bool {
+        if let agentCheck = self.checkAgentVersion() { return agentCheck }
+        if 1 == major {
+            if 2 == minor && 20 <= revision {
+                return true
+            } else if 2 < minor {
+                return true
+            }
+        } else if 2 == major {
+            if 1 == minor && 11 <= revision {
+                return true
+            } else if 1 < minor {
+                return true
+            }
+        } else if 3 == major {
+            if 1 == minor && 2 <= revision {
+                return true
+            } else if 1 < minor {
+                return true
+            }
+        }
+        return false
+    }
+    func isEnableStringInput() -> Bool {
+        if let agentCheck = self.checkAgentVersion() { return agentCheck }
+        if 1 == major {
+            if 2 <= minor {
+                return true
+            }
+        } else if 1 < major {
+            return true
+        }
+        return false
+    }
+    func isEnableExitKey() -> Bool {
+        if let agentCheck = self.checkAgentVersion() { return agentCheck }
+        if 1 == major {
+            if 2 == minor && 20 <= revision {
+                return true
+            } else if 2 < minor {
+                return true
+            }
+        } else if 2 == major {
+            if 1 == minor && 16 <= revision {
+                return true
+            } else if 1 < minor {
+                return true
+            }
+        } else if 3 == major {
+            if 1 == minor && 18 <= revision {
+                return true
+            } else if 1 < minor {
+                return true
+            }
+        }
+        return false
     }
 }

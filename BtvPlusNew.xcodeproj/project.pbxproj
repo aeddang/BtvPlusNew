@@ -1011,15 +1011,16 @@
 			path = body;
 			sourceTree = "<group>";
 		};
-		3156F09E25CAC29100C9BE06 /* dialog */ = {
+		3156F09E25CAC29100C9BE06 /* sceneui */ = {
 			isa = PBXGroup;
 			children = (
+				D56C6B07257DAADE00CF9AB8 /* SceneTab.swift */,
 				D56C6B09257DAADE00CF9AB8 /* SceneAlertController.swift */,
 				D56C6B08257DAADE00CF9AB8 /* SceneRadioController.swift */,
 				D56C6B06257DAADE00CF9AB8 /* SceneSelectController.swift */,
 				D57298E4259D6EC100ED2CE6 /* ScenePickerController.swift */,
 			);
-			path = dialog;
+			path = sceneui;
 			sourceTree = "<group>";
 		};
 		3159B04E25B1700B008CA85B /* kms */ = {
@@ -2064,12 +2065,12 @@
 		D56C6A70257DA4AD00CF9AB8 /* scene */ = {
 			isa = PBXGroup;
 			children = (
-				3156F09E25CAC29100C9BE06 /* dialog */,
 				3192317025A3FD6200020388 /* value */,
 				D56C6A73257DA4D200CF9AB8 /* view */,
 				D5DABD942589F1D400DF5701 /* component */,
 				D5E27EF1258755FE00B2CD5D /* viewmodel */,
 				D56C6A72257DA4C700CF9AB8 /* page */,
+				3156F09E25CAC29100C9BE06 /* sceneui */,
 				D56C6B0C257DAADE00CF9AB8 /* AppLayout.swift */,
 				D56C6B0A257DAADE00CF9AB8 /* AppSceneObserver.swift */,
 				D56C6B0B257DAADE00CF9AB8 /* SceneDelegate.swift */,
@@ -2191,7 +2192,6 @@
 			children = (
 				318FBFFD25E48F5B00ABC241 /* SortTab.swift */,
 				318F7B462625708100774B17 /* DivisionTab.swift */,
-				D56C6B07257DAADE00CF9AB8 /* SceneTab.swift */,
 				D56C6B65257DBAC800CF9AB8 /* TopTab.swift */,
 				D56C6B68257DBAC800CF9AB8 /* BottomTab.swift */,
 				D51AA9F72599BAFB0035CD51 /* PageTab.swift */,
@@ -2246,8 +2246,8 @@
 		D5DABD942589F1D400DF5701 /* component */ = {
 			isa = PBXGroup;
 			children = (
-				D506D715258C8FCD00F27C00 /* list */,
 				3182A0A4261877B600F7F07D /* util */,
+				D506D715258C8FCD00F27C00 /* list */,
 				D56C6B64257DBAC800CF9AB8 /* tab */,
 				3167196625FEF699005AC3D2 /* banner */,
 				3167195725FEC869005AC3D2 /* footer */,

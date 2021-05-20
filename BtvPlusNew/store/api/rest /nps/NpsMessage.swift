@@ -8,7 +8,18 @@
 import Foundation
 
 enum NpsCtrlType:String{
-    case SeamlessLive, SeamlessVod, SendMsg, Refresh, PlayCtrl
+    case SeamlessLive, SeamlessVod, SendMsg,
+         Refresh, PlayCtrl, PowerCtrl,
+         VOLUp, VOLDown,
+         CHUp, CHDown,
+         Ok, Left, Up, Right, Down,
+         ButtonExit, ButtonHome, ButtonCancel,
+         Mute, PIP, Guide,
+         CHNumInput, StrInput, NumInput
+}
+
+enum NpsCtrlValue:String{
+    case REW, Stop, Play, FF, Prev, Next
 }
 
 enum NpsQuery:String{
@@ -22,6 +33,9 @@ class NpsMessage{
     private(set) var count:Int = 0
     
     @discardableResult
+    func setMessage(type:NpsCtrlType, value:NpsCtrlValue) -> NpsMessage {
+        return setMessage(type: type, value: value.rawValue, query: nil)
+    }
     func setMessage(type:NpsCtrlType, value:String? = nil, query:NpsQuery? = nil) -> NpsMessage {
         self.ctrlType = type
         self.ctrlValue = value ?? ""
@@ -94,4 +108,6 @@ extension NpsNetwork{
             return count
         }
     }
+    
+    
 }

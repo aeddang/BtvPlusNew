@@ -6,7 +6,10 @@
 //
 import Foundation
 import SwiftUI
-
+extension PageRemotecon {
+    static let delayLock:Double = 0.1
+    static let delayUpdate:Double = 0.2
+}
 
 struct PageRemotecon: PageView {
     @EnvironmentObject var repository:Repository
@@ -79,27 +82,31 @@ struct PageRemotecon: PageView {
                         InputRemoteBox(
                             isInit: true,
                             title: String.remote.inputText,
+                            type: .text,
                             placeHolder:String.remote.inputTextHolder,
                             inputSize: 8,
                             inputSizeMin: 1
-                        ){ input in
+                        ){ input, type in
                             withAnimation{
                                 self.isInputText = false
                             }
+                            self.remoconInput(type: type, string: input)
                         }
                     }
                     if self.isInputChannel {
                         InputRemoteBox(
                             isInit: true,
                             title: String.remote.inputChannel,
+                            type: .number,
                             placeHolder:String.remote.inputChannelHolder,
                             inputSize: 3,
                             inputSizeMin: 1,
                             keyboardType: .numberPad
-                        ){ input in
+                        ){ input, type in
                             withAnimation{
                                 self.isInputChannel = false
                             }
+                            self.remoconInput(type: type, string: input)
                         }
                     }
                 }
@@ -164,8 +171,8 @@ struct PageRemotecon: PageView {
                 guard let res = res else { return }
                 if res.id != self.tag { return }
                 switch res.type {
-                case .sendMessage :
-                    self.checkBroadcast(res: res)
+                case .sendMessage(let message):
+                    self.actionResult(npsMessage: message, res:res)
                 default: break
                 }
             }
@@ -173,8 +180,8 @@ struct PageRemotecon: PageView {
                 guard let err = err else { return }
                 if err.id != self.tag { return }
                 switch err.type {
-                case .sendMessage :
-                    self.remotePlayData =  RemotePlayData(isError: true)
+                case .sendMessage(let message) :
+                    self.actionError(npsMessage: message, err: err)
                 default: break
                 }
             }
@@ -242,7 +249,6 @@ struct PageRemotecon: PageView {
     }
     
     private func updatedProgram(_ pro:BroadcastProgram){
-        
         let isLock = !SystemEnvironment.isImageLock ? false : pro.isAdult
         if pro.isOnAir {
             let d = pro.endTime - pro.startTime
@@ -263,7 +269,19 @@ struct PageRemotecon: PageView {
         }
     }
     
+    @State var isActionLock:Bool = false
     private func action(evt:RemoteConEvent) {
+        if isActionLock {
+            self.appSceneObserver.event = .toast(String.remote.searchLock)
+            return
+        }
+        guard let host = self.pairing.hostDevice else {
+            self.appSceneObserver.alert =
+                .alert(String.alert.notPairing, String.alert.notPairingText)
+            return
+        }
+        self.isActionLock = true
+        var needUpdate:Bool = false
         switch evt {
         case .close:
             self.pagePresenter.closePopup(self.pageObject?.id)
@@ -275,7 +293,131 @@ struct PageRemotecon: PageView {
             withAnimation{ self.isInputChannel = true }
         case .earphone:
             self.connectEarphone()
-        default:
+        case .toggleOn:
+            self.sendAction(npsMessage: NpsMessage().setMessage(type: .PowerCtrl))
+            needUpdate = true
+        case .multiview:
+            if host.isEnablePIPKey() {
+                self.sendAction(npsMessage: NpsMessage().setMessage(type: .PIP))
+            }else {
+                self.appSceneObserver.event = .toast(String.alert.guideNotSupported)
+            }
+        case .chlist:
+            if host.isEnableGuideKey() {
+                self.sendAction(npsMessage: NpsMessage().setMessage(type: .Guide))
+            }else {
+                self.appSceneObserver.event = .toast(String.alert.guideNotSupported)
+            }
+        case .fastForward:
+            self.sendAction(npsMessage: NpsMessage().setMessage(type: .PlayCtrl, value: .FF))
+        case .rewind:
+            self.sendAction(npsMessage: NpsMessage().setMessage(type: .PlayCtrl, value: .REW))
+        case .playControl(let playEvt) :
+            switch playEvt {
+            case .togglePlay:
+                self.sendAction(npsMessage: NpsMessage().setMessage(type: .PlayCtrl, value: .Play))
+            case .next:
+                self.sendAction(npsMessage: NpsMessage().setMessage(type: .PlayCtrl, value: .Next))
+            case .prev:
+                self.sendAction(npsMessage: NpsMessage().setMessage(type: .PlayCtrl, value: .Prev))
+            }
+        case .control(let conEvt):
+            switch conEvt {
+            case .ok:
+                self.sendAction(npsMessage: NpsMessage().setMessage(type: .Ok))
+                needUpdate = true
+            case .left:
+                self.sendAction(npsMessage: NpsMessage().setMessage(type: .Left))
+            case .right:
+                self.sendAction(npsMessage: NpsMessage().setMessage(type: .Right))
+            case .up:
+                self.sendAction(npsMessage: NpsMessage().setMessage(type: .Up))
+            case .down:
+                self.sendAction(npsMessage: NpsMessage().setMessage(type: .Down))
+            }
+        case .volumeMove(let v) :
+            self.sendAction(npsMessage: NpsMessage().setMessage(type: v>0 ? .VOLUp : .VOLDown))
+        case .channelMove(let c) :
+            self.sendAction(npsMessage: NpsMessage().setMessage(type: c>0 ? .CHUp : .CHDown))
+            needUpdate = true
+        case .exit :
+            if host.isEnableExitKey() {
+                self.sendAction(npsMessage: NpsMessage().setMessage(type: .ButtonExit))
+                needUpdate = true
+            }else {
+                self.appSceneObserver.event = .toast(String.alert.guideNotSupported)
+            }
+        case .previous :
+            self.sendAction(npsMessage: NpsMessage().setMessage(type: .ButtonCancel))
+            needUpdate = true
+        case .home :
+            self.sendAction(npsMessage: NpsMessage().setMessage(type: .ButtonHome))
+            needUpdate = true
+        case .mute(let isMute) :
+            if isMute {
+                self.sendAction(npsMessage: NpsMessage().setMessage(type: .Mute))
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + Self.delayLock) {
+            self.isActionLock = false
+        }
+        if needUpdate {
+            DispatchQueue.main.asyncAfter(deadline: .now() + Self.delayUpdate) {
+                self.checkHostDeviceStatus()
+            }
+        }
+    }
+    
+    private func remoconInput(type: RemoteInputType, string: String?) {
+        guard let string = string else { return }
+        if string.isEmpty { return }
+        guard let host = self.pairing.hostDevice else {
+            self.appSceneObserver.alert =
+                .alert(String.alert.notPairing, String.alert.notPairingText)
+            return
+        }
+        var ctrl:NpsCtrlType = .NumInput
+        var value = string
+        
+        switch type {
+        case .number:
+            value = String(Int(string) ?? 0)
+            if host.isEnableStringInput() {
+                ctrl = .CHNumInput
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + Self.delayUpdate) {
+                self.checkHostDeviceStatus()
+            }
+        case .text:
+            if host.isEnableStringInput() {
+                ctrl = .StrInput
+            }
+        }
+        self.sendAction(npsMessage: NpsMessage().setMessage(type: ctrl, value: value))
+        
+    }
+    
+    private func sendAction(npsMessage:NpsMessage) {
+        self.dataProvider.requestData(
+            q: .init(id: self.tag, type: .sendMessage(npsMessage))
+        )
+    }
+    private func actionResult(npsMessage:NpsMessage?, res:ApiResultResponds) {
+        guard let npsMessage = npsMessage else { return }
+        switch npsMessage.ctrlType {
+        case .Refresh:
+            self.checkBroadcast(res: res)
+         default:
+            break
+        }
+    }
+    
+    private func actionError(npsMessage:NpsMessage?, err:ApiResultError) {
+        guard let npsMessage = npsMessage else { return }
+        switch npsMessage.ctrlType {
+        case .Refresh:
+            self.remotePlayData =  RemotePlayData(isError: true)
+         default:
             break
         }
     }

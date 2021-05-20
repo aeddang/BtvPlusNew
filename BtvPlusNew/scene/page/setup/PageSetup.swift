@@ -46,12 +46,14 @@ struct PageSetup: PageView {
                                         title: String.pageText.setupAppAutoRemocon ,
                                         subTitle: String.pageText.setupAppAutoRemoconText
                                     )
-                                    Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
-                                    SetupItem (
-                                        isOn: self.$isRemoconVibration,
-                                        title: String.pageText.setupAppRemoconVibration ,
-                                        subTitle: String.pageText.setupAppRemoconVibrationText
-                                    )
+                                    if !SystemEnvironment.isTablet {
+                                        Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
+                                        SetupItem (
+                                            isOn: self.$isRemoconVibration,
+                                            title: String.pageText.setupAppRemoconVibration ,
+                                            subTitle: String.pageText.setupAppRemoconVibrationText
+                                        )
+                                    }
                                 }
                                 .background(Color.app.blueLight)
                             }

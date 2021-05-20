@@ -19,8 +19,6 @@ struct AppLayout: PageComponent{
     @EnvironmentObject var setup:Setup
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     
-    @State var positionTop:CGFloat = 0
-    @State var positionBottom:CGFloat = 50
     
     @State var loadingInfo:[String]? = nil
     @State var isLoading = false

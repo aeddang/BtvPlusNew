@@ -7,6 +7,8 @@
 import Foundation
 import SwiftUI
 struct PageMyAlram: PageView {
+    @EnvironmentObject var repository:Repository
+    @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
@@ -40,11 +42,20 @@ struct PageMyAlram: PageView {
                 .modifier(PageFull())
                 .modifier(PageDragingSecondPriority(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
+            .onReceive(self.repository.alram.$isChangeNotification){ isChange in
+                if self.pairing.status != .pairing {return}
+                if isChange {
+                    self.update()
+                }
+            }
+            .onReceive(self.pairing.$status){ status in
+                if status != .pairing {return}
+                self.update()
+            }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    let historys = NotificationCoreData().getAllNotices()
-                    self.datas = historys.map{AlramData().setData(data: $0)}
-                    self.appSceneObserver.isApiLoading = false
+                    self.isInit = true
+                    self.update()
                 }
             }
             .onAppear{
@@ -55,8 +66,20 @@ struct PageMyAlram: PageView {
             }
         }//geo
     }//body
-    
-   
+    @State var isInit:Bool = false
+    private func update(){
+        if !self.isInit {return}
+        if self.pairing.status != .pairing {
+            self.appSceneObserver.isApiLoading = false
+            return
+        }
+        self.appSceneObserver.isApiLoading = true
+        DispatchQueue.main.async {
+            let historys = self.repository.alram.getHistorys()
+            self.datas = historys.map{AlramData().setData(data: $0)}
+            self.appSceneObserver.isApiLoading = false
+        }
+    }
 }
 
 #if DEBUG

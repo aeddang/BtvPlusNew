@@ -8,9 +8,7 @@
 import Foundation
 struct KmsNetwork : Network{
     var enviroment: NetworkEnvironment = ApiPath.getRestApiPath(.KMS)
-    func onRequestIntercepter(request: URLRequest) -> URLRequest {
-        return ApiGateway.setDefaultheader(request: request)
-    }
+    
 }
 extension KmsNetwork{
     static let RESPONSE_FORMET = "json"
@@ -27,8 +25,11 @@ class Kms: Rest{
         ci:String?,
         completion: @escaping (StbInfo) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
-        params["ci"] = ci ?? ""
-        params["mode"] = "test"
+        if let ci = ci {
+            params["ci"] = ApiUtil.string(byUrlEncoding: ci)
+        }
+        
+        //params["mode"] = "test"
         fetch(route: KmsStbList(query: params), completion: completion, error:error)
     }
 }
@@ -37,4 +38,6 @@ struct KmsStbList:NetworkRoute{
    var method: HTTPMethod = .get
    var path: String = "/api/v3.0/userstb/list"
    var query: [String : String]? = nil
+   var withAllowedCharacters:CharacterSet? = nil
+    
 }

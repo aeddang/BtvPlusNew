@@ -46,6 +46,7 @@ struct MonthlyBlock: PageComponent {
                                 .addParam(key: .type, value: BlockData.ThemaType.ticket)
                         )
                     }
+                   
                 } else{
                     Spacer()
                 }

@@ -27,6 +27,7 @@ protocol NetworkRoute:PageProtocol {
     var body: [String: Any]? { get set }
     var bodys: [Any]? { get set }
     var contentType:String? { get set }
+    var withAllowedCharacters:CharacterSet? { get set }
     func onRequestIntercepter(request:URLRequest)
 }
 
@@ -36,9 +37,12 @@ extension NetworkRoute {
     var body: [String: Any]?  { get{nil} set{body=nil} }
     var bodys: [Any]?  { get{nil} set{bodys=nil} }
     var contentType:String? { get{nil} set{contentType = nil} }
-    
+    var withAllowedCharacters:CharacterSet? { get{.urlQueryAllowed} set{withAllowedCharacters = .urlQueryAllowed} }
     func create(for enviroment:NetworkEnvironment) -> URLRequest {
-        let path = getURL(enviroment).addingPercentEncoding( withAllowedCharacters: .urlQueryAllowed)
+        let path = withAllowedCharacters == nil
+            ? getURL(enviroment)
+            : getURL(enviroment).addingPercentEncoding( withAllowedCharacters: withAllowedCharacters!)
+        
         var request = URLRequest(url: URL(string:path!)!)
         if let type = contentType { request.addValue(type, forHTTPHeaderField: "Content-type") }
         else {  request.addValue("application/json", forHTTPHeaderField: "Content-type") }

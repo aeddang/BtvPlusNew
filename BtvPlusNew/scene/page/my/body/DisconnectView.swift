@@ -51,7 +51,7 @@ struct DisconnectView: PageComponent{
                     FillButton(
                         text: String.button.alarm,
                         image: Asset.icon.alarm,
-                        isNew: true
+                        isNew: false
                     ){_ in
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject(.myAlram)
@@ -62,7 +62,7 @@ struct DisconnectView: PageComponent{
                     FillButton(
                         text: String.button.notice,
                         image: Asset.icon.notice,
-                        isNew: true
+                        isNew: false
                     ){_ in
                         self.pagePresenter.openPopup(
                             PageProvider

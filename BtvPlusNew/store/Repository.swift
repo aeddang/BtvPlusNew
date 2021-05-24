@@ -45,7 +45,8 @@ class Repository:ObservableObject, PageProtocol{
     let pagePresenter:PagePresenter?
     let dataProvider:DataProvider
     let pairing:Pairing
-    let webManager:WebManager
+    let webBridge:WebBridge
+    let alram:Alram = Alram()
     let networkObserver:NetworkObserver
     let voiceRecognition:VoiceRecognition
     let shareManager:ShareManager
@@ -90,7 +91,7 @@ class Repository:ObservableObject, PageProtocol{
             pairing: self.pairing,
             dataProvider: self.dataProvider)
         
-        self.webManager = WebManager(
+        self.webBridge = WebBridge(
             pairing: self.pairing,
             storage: self.storage,
             setup: self.userSetup,
@@ -153,7 +154,7 @@ class Repository:ObservableObject, PageProtocol{
                 self.storage.saveUser(nil)
                 self.storage.clearDevice()
                 self.dataProvider.requestData(q: .init(type: .getGnb))
-                NotificationCoreData().removeAllNotice()
+                //NotificationCoreData().removeAllNotice()
                 
             case .pairingCompleted :
                 self.storage.saveUser(self.pairing.user)

@@ -35,7 +35,7 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
     }
     
     func updateUIViewController(_ uiViewController: UIViewController, context: UIViewControllerRepresentableContext<CustomAVPlayer>) {
-        ComponentLog.d("updateUIView status " + viewModel.status.rawValue , tag: self.tag)
+        //ComponentLog.d("updateUIView status " + viewModel.status.rawValue , tag: self.tag)
         if viewModel.status != .update { return }
         guard let evt = viewModel.event else { return }
         guard let player = (uiViewController as? CustomPlayerController)?.playerScreenView else { return }

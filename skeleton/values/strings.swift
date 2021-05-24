@@ -275,6 +275,8 @@ extension String {
         public static var purchaseHiddenLimit = "alertPurchaseHiddenLimit".loaalized()
         public static var purchaseHiddenLimitText = "alertPurchaseHiddenLimitText".loaalized()
         
+        public static var newAlram = "alertNewAlram".loaalized()
+        
     }
     
     struct button {

@@ -112,7 +112,7 @@ extension AlramItem{
 
 
 struct AlramItem: PageView {
-    
+    @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
@@ -175,7 +175,10 @@ struct AlramItem: PageView {
                 Button(action: {
                     withAnimation{ self.isExpand.toggle() }
                     self.data.isExpand = self.isExpand
-                    if !self.isRead { self.read() }
+                    if !self.isRead {
+                        self.read()
+                        
+                    }
                 }) {
                     Image(Asset.icon.down)
                         .renderingMode(.original).resizable()
@@ -246,6 +249,9 @@ struct AlramItem: PageView {
         self.data.isRead = true
         if !self.data.isCoreData { return }
         NotificationCoreData().readNotice(title: data.title ?? "", body: data.text ?? "")
+        DispatchQueue.main.async {
+            self.repository.alram.updatedNotification()
+        }
     }
     
     private func checkExpand() {

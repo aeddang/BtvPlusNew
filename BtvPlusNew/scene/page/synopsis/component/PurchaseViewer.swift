@@ -229,25 +229,45 @@ struct PurchaseViewer: PageComponent{
                             .lineLimit(1)
                     }
                     if self.data.infoTip != nil {
-                        VStack(spacing:0){
-                            Tooltip(
-                                title: self.data.infoLeading,
-                                text: self.data.infoTip
-                            )
-                            .opacity( self.showInfo ? 1.0 : 0)
-                            .padding(.top, -(Tooltip.size.height+Dimen.margin.thinExtra))
-                            //.padding(.leading, -(Tooltip.size.width - Dimen.icon.tiny)/2)
-                            Button(action: {
-                                withAnimation { self.showInfo.toggle() }
-                            }){
-                                Image( Asset.icon.info )
-                                    .renderingMode(.original).resizable()
-                                    .scaledToFit()
-                                    .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
+                        if SystemEnvironment.isTablet {
+                            HStack(spacing:Dimen.margin.tiny){
+                                Button(action: {
+                                    withAnimation { self.showInfo.toggle() }
+                                }){
+                                    Image( Asset.icon.info )
+                                        .renderingMode(.original).resizable()
+                                        .scaledToFit()
+                                        .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
+                                }
+                                .buttonStyle(BorderlessButtonStyle())
+                                Tooltip(
+                                    title: self.data.infoLeading,
+                                    text: self.data.infoTip
+                                )
+                                .opacity( self.showInfo ? 1.0 : 0)
                             }
-                            .buttonStyle(BorderlessButtonStyle())
+                        } else {
+                            VStack(spacing:0){
+                                Tooltip(
+                                    title: self.data.infoLeading,
+                                    text: self.data.infoTip
+                                )
+                                .opacity( self.showInfo ? 1.0 : 0)
+                                .padding(.top, -(Tooltip.size.height+Dimen.margin.thinExtra))
+                                //.padding(.leading, -(Tooltip.size.width - Dimen.icon.tiny)/2)
+                                Button(action: {
+                                    withAnimation { self.showInfo.toggle() }
+                                }){
+                                    Image( Asset.icon.info )
+                                        .renderingMode(.original).resizable()
+                                        .scaledToFit()
+                                        .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
+                                }
+                                .buttonStyle(BorderlessButtonStyle())
+                            }
+                            .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
                         }
-                        .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
+                        
                     }
                 }
                 

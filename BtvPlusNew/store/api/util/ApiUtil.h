@@ -38,4 +38,7 @@
 + (NSString *) getAuthVal:(NSString *)timestamp;
 + (NSString *) convertMacAddress:(NSString *)macAddr;
 + (NSString *) getSCSVerfReqData:(NSString *)stbId plainText:(NSString *)plainText date:(NSDate *)date;
+
+
++ (NSString *) stringByUrlEncoding:(NSString *)_str;
 @end

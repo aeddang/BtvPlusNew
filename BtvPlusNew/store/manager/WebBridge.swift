@@ -9,7 +9,7 @@
 import Foundation
 import Combine
 
-class WebManager :PageProtocol{
+class WebBridge :PageProtocol{
     private let pairing:Pairing
     private let storage:LocalStorage
     private let setup:Setup

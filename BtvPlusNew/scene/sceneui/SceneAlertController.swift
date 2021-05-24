@@ -159,6 +159,7 @@ struct SceneAlertController: PageComponent{
     }
 
     func setupRecivedApns(alram:AlramData?) -> Bool{
+        
         if let data = alram {
             self.title = data.title
             self.text = data.text
@@ -189,6 +190,7 @@ struct SceneAlertController: PageComponent{
                     AlertBtnData(title: String.app.corfirm, index: 0)
                 ]
             }
+            
             return true
         }
     }
@@ -196,7 +198,6 @@ struct SceneAlertController: PageComponent{
     func selectedRecivedApns(_ idx:Int, alram:AlramData?) {
         if idx == 1 {
             if let data = alram {
-
                 if let move = data.move {
                     switch move {
                     case .home, .category:
@@ -236,6 +237,7 @@ struct SceneAlertController: PageComponent{
                 NotificationCoreData().readNotice(title: data.title ?? "", body: data.text ?? "")
                 
             } else{
+                
                 guard let page = self.appObserver.page?.page else { return }
                 if page.isPopup {
                     self.pagePresenter.openPopup(page)
@@ -243,6 +245,11 @@ struct SceneAlertController: PageComponent{
                     self.pagePresenter.changePage(page)
                 }
             }
+            
+        }
+        self.repository.alram.changedNotification()
+        DispatchQueue.main.async {
+            self.repository.alram.updatedNotification()
         }
         self.appObserver.resetApns()
     }

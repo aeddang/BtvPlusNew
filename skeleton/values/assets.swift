@@ -256,8 +256,8 @@ extension Asset{
         public static let checkBoxOn2 = "icCheckboxOn02"
         public static let checkBoxOff = "icCheckboxOff"
         public static let spinner = "icSpinner"
-        public static let tooltip = "icSynopTooltip"
-        
+        public static let tooltip = isPad ? "icSynopTooltipT" : "icSynopTooltip" 
+        public static let topTooltip = "icTopTooltip"
         public static let bgGradientBottom = "bgGradientBottom"
         public static let bgGradientTop = "bgGradientTop"
         public static let bgCoupon = "imgMyListCoupon01"
@@ -331,6 +331,7 @@ extension Asset{
     struct ani {
         public static let mic:[String] = (1...27).map{ "imgSearchMic" + $0.description.toFixLength(2) }
         public static let record:[String] = (1...10).map{ "icRecoqIng" + $0.description.toFixLength(2) }
+        public static let alarm:[String] = (1...20).map{ "imgMyAlarm" + $0.description.toFixLength(2) }
     }
     
     

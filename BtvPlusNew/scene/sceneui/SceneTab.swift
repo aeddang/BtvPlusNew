@@ -10,6 +10,7 @@ import Foundation
 import Foundation
 import SwiftUI
 struct SceneTab: PageComponent{
+    @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appObserver:AppObserver
     @EnvironmentObject var sceneObserver:PageSceneObserver
@@ -31,16 +32,18 @@ struct SceneTab: PageComponent{
     @State var headerBgTop:CGFloat = 0
     
     @State var headerBannerData:BannerData? = nil
+    @State var showAlram:Bool = false
+    @State var readShowAlram:Bool = false
     var body: some View {
         ZStack{
             VStack(spacing:Dimen.margin.regular){
-                ZStack{
+                ZStack(alignment: .topLeading){
                     Image(Asset.shape.bgGradientTop)
                         .resizable()
                         .modifier(MatchHorizontal(height: self.headerBgHeight))
                         .padding(.top, self.headerBgTop )
                     
-                    VStack(spacing:0){
+                    VStack(alignment:.leading, spacing:0){
                         if let bannerData = self.headerBannerData {
                             HeaderBanner(data:bannerData) {
                                 self.headerBannerData = nil
@@ -48,8 +51,22 @@ struct SceneTab: PageComponent{
                             }
                         }
                         TopTab()
+                        if self.showAlram && !self.readShowAlram {
+                            TooltipBottom(text: String.alert.newAlram){
+                                withAnimation{self.readShowAlram = true}
+                            }
+                            .padding(.leading, Dimen.margin.thin)
+                        }
                     }
                     .padding(.top, self.safeAreaTop)
+                    .onReceive(self.repository.alram.$newCount){ count in
+                        withAnimation{self.showAlram = count>0}
+                    }
+                    .onReceive(self.repository.alram.$isChangeNotification) { isChange in
+                        if isChange {
+                            withAnimation{self.readShowAlram = false}
+                        }
+                    }
                 }
                 .opacity(self.useTop ? 1 : 0)
                 .padding(.top, self.positionTop)
@@ -90,6 +107,7 @@ struct SceneTab: PageComponent{
                 self.updateBottomPos()
             }
         }
+        
         .onReceive (self.pairing.$status){ stat in
             switch stat {
             case .pairing :
@@ -144,6 +162,9 @@ struct SceneTab: PageComponent{
     func updateTopPos(){
         var headerHeight = self.headerBannerData == nil ? 0 : HeaderBanner.height
         headerHeight = headerHeight + self.safeAreaTop + Dimen.app.top
+        if self.appSceneObserver.useTop {
+            self.repository.alram.updateNew()
+        }
         
         let top = self.appSceneObserver.useTop
             ? 0
@@ -165,6 +186,7 @@ struct SceneTab: PageComponent{
                 : Dimen.app.top
             
         }
+        
     }
     func updateBottomPos(){
         withAnimation{
@@ -185,6 +207,7 @@ struct SceneTab_Previews: PreviewProvider {
     static var previews: some View {
         Form{
             SceneTab()
+            .environmentObject(Repository())
             .environmentObject(AppObserver())
             .environmentObject(PageSceneObserver())
             .environmentObject(AppSceneObserver())

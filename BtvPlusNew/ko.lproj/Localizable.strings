@@ -319,7 +319,7 @@
 
 "alertPurchaseHiddenLimit" = "구매내역 삭제 건수 제한 안내";
 "alertPurchaseHiddenLimitText" = "구매 내역은 한 번에 최대 100건까지 삭제 가능합니다. 구매 내역을 100건 이하로 선택 후 다시 시도해주세요.";
-
+"alertNewAlram" = "새로운 알림을 확인해보세요.";
 
 /*
  PageTitle

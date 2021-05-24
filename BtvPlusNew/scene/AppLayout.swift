@@ -118,6 +118,7 @@ struct AppLayout: PageComponent{
         }
         .onReceive (self.appObserver.$alram) { alram in
             if alram == nil {return}
+            
             if !self.isInit { return }
             self.appSceneObserver.alert = .recivedApns(alram)
         }

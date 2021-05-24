@@ -94,7 +94,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
             ScrollView(self.isScroll ? self.axes : [], showsIndicators: self.showIndicators) {
                 ScrollViewReader{ reader in
                     if self.axes == .vertical {
-                        ZStack(alignment: .topLeading) {
+                        VStack(alignment: .leading, spacing:0) {
                             if self.useTracking {
                                 GeometryReader { insideProxy in
                                     Color.clear
@@ -128,7 +128,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                         })
                     
                     } else {
-                        ZStack(alignment: .topLeading) {
+                        HStack(alignment: .top, spacing:0) {
                             if self.useTracking {
                                 GeometryReader { insideProxy in
                                     Color.clear
@@ -142,6 +142,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                 .padding(.top, self.marginTop)
                                 .padding(.bottom, self.marginBottom)
                                 .padding(.horizontal, self.marginHorizontal)
+                                
                             } else {
                                 HStack (alignment: .top, spacing: self.spacing){
                                     self.content
@@ -161,18 +162,14 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                             reader.scrollTo(idx, anchor: anchor)
                         })
                     }
-                    
                 }
-                
             }
             .modifier(MatchParent())
             .opacity(self.progress / self.progressMax)
             .coordinateSpace(name: self.tag)
             .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
                 self.onPreferenceChange(value: value)
-                
             }
-            
             .onReceive(self.viewModel.$scrollStatus){ stat in
                 if self.scrollType != .web() {return}
                 switch stat  {
@@ -245,16 +242,13 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                     .background(self.bgColor)
                     .modifier(MatchParent())
                     .onAppear(){
-                        //self.isTracking = true
                         UITableView.appearance().allowsSelection = false
                         UITableViewCell.appearance().selectionStyle = .none
                         UITableView.appearance().backgroundColor = self.bgColor.uiColor()
                         UITableView.appearance().separatorStyle = .none
                         UITableView.appearance().separatorColor = .clear
                     }
-                    .onDisappear{
-                        //self.isTracking = false
-                    }
+                    
                 } else{
                     GeometryReader { outsideProxy in
                         ScrollView(.vertical, showsIndicators: false) {
@@ -295,16 +289,6 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
             }else{
                 ScrollView(.horizontal, showsIndicators: false) {
                     ZStack(alignment: .leading) {
-                        /*
-                        if self.useTracking{
-                            GeometryReader { insideProxy in
-                                Color.clear
-                                    .preference(key: ScrollOffsetPreferenceKey.self,
-                                        value: [self.calculateContentOffset(
-                                            insideProxy: insideProxy, outsideProxy: outsideProxy)])
-                            }
-                        }
-                        */
                         HStack(spacing:self.spacing){
                             self.content
                         }
@@ -318,13 +302,9 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                     self.onPreferenceChange(value: value)
                 }
                 .onAppear(){
-                    //self.trackingStart()
                     self.onReady()
                 }
-                .onDisappear{
-                    //self.trackingCancel()
-                    
-                }
+                
             }
         }//if
        
@@ -374,6 +354,9 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         }
     }
 }
+
+
+
 
 struct ScrollOffsetPreferenceKey: PreferenceKey {
     typealias Value = [CGFloat]

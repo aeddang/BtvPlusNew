@@ -341,13 +341,13 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                         
                         switch fn {
                         case WebviewMethod.getNetworkState.rawValue :
-                            dic = self.parent.repository.webManager.getNetworkState()
+                            dic = self.parent.repository.webBridge.getNetworkState()
                         case WebviewMethod.getSTBInfo.rawValue :
-                            dic = self.parent.repository.webManager.getSTBInfo()
+                            dic = self.parent.repository.webBridge.getSTBInfo()
                         case WebviewMethod.getLogInfo.rawValue :
-                            dic = self.parent.repository.webManager.getLogInfo()
+                            dic = self.parent.repository.webBridge.getLogInfo()
                         case WebviewMethod.bpn_requestPassAge.rawValue :
-                            value = self.parent.repository.webManager.getPassAge()
+                            value = self.parent.repository.webBridge.getPassAge()
                             
                         case WebviewMethod.bpn_showSynopsis.rawValue :
                             if let jsonString = jsonParam {

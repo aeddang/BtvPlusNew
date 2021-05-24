@@ -278,4 +278,18 @@
     return pKey;
 }
 
+
++ (NSString *) stringByUrlEncoding:(NSString *)_str
+{
+    if (_str && [_str length]>0) {
+        return (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(
+                                                                                     kCFAllocatorDefault,
+                                                                                     (CFStringRef)_str,
+                                                                                     NULL,
+                                                                                     CFSTR(":/?#[]@!$&'()*+,;="),
+                                                                                     kCFStringEncodingUTF8));
+    }
+    return @"";
+}
+
 @end

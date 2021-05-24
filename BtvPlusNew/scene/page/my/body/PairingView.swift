@@ -10,6 +10,7 @@ import SwiftUI
 struct PairingView: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var repository:Repository
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
     
@@ -20,6 +21,7 @@ struct PairingView: PageComponent{
     @State var safeAreaBottom:CGFloat = 0
     @State var character:String = Asset.characterList[0]
     @State var nick:String = ""
+    @State var newAlramCount:Int = 0
     
     var body: some View {
         VStack (alignment: .center, spacing:0){
@@ -65,8 +67,10 @@ struct PairingView: PageComponent{
             HStack(spacing: 0){
                 FillButton(
                     text: String.button.alarm,
+                    imageAni: self.newAlramCount > 0 ? Asset.ani.alarm : nil,
                     image: Asset.icon.alarm,
-                    isNew: true
+                    isNew: self.newAlramCount > 0,
+                    count: self.newAlramCount
                 ){_ in
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.myAlram)
@@ -77,7 +81,7 @@ struct PairingView: PageComponent{
                 FillButton(
                     text: String.button.notice,
                     image: Asset.icon.notice,
-                    isNew: true
+                    isNew: false
                 ){_ in
                     self.pagePresenter.openPopup(
                         PageProvider
@@ -171,6 +175,14 @@ struct PairingView: PageComponent{
             default : break
             }
         }
+        .onReceive(self.repository.alram.$needUpdateNew){ update in
+            if update {
+                self.repository.alram.updateNew()
+            }
+        }
+        .onReceive(self.repository.alram.$newCount){ count in
+            self.newAlramCount = count
+        }
         .onReceive(self.dataProvider.$error){ err in
             guard let err = err else {return}
             switch err.type {
@@ -185,12 +197,13 @@ struct PairingView: PageComponent{
         }
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
             if ani {
+                self.repository.alram.updateNew()
                 self.dataProvider.requestData(q: .init(type: .getWatch(false), isOptional: true))
             }
         }
         
     }//body
-    
+   
     @State var isCompleted:Bool = false
     @State var watchedData:BlockData? = nil
     func onWatchedData(res:ApiResultResponds){
@@ -221,11 +234,12 @@ struct PairingBlock_Previews: PreviewProvider {
         Form{
             PairingView(
             )
-                .environmentObject(PagePresenter())
-                .environmentObject(PageSceneObserver())
-                .environmentObject(Pairing())
-                .frame(width:320,height:600)
-                .background(Color.brand.bg)
+            .environmentObject(Repository())
+            .environmentObject(PagePresenter())
+            .environmentObject(PageSceneObserver())
+            .environmentObject(Pairing())
+            .frame(width:320,height:600)
+            .background(Color.brand.bg)
         }
     }
 }

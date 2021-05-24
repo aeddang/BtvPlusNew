@@ -98,7 +98,7 @@ enum TicketType {
 }
 
 extension TicketList{
-    static let headerSize:Int = 2
+    static let headerSize:Int = 3
     static let spacing:CGFloat = Dimen.margin.tiny
 }
 

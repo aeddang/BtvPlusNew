@@ -14,6 +14,7 @@ struct FillButton: View, SelecterbleProtocol{
     var strikeText:String? = nil
     var index: Int = 0
     var isSelected: Bool = true
+    var imageAni:[String]? = nil
     var image:String? = nil
     var imageOn:String? = nil
     var textModifier:TextModifier = TextModifier(
@@ -28,6 +29,7 @@ struct FillButton: View, SelecterbleProtocol{
     var strokeWidth:CGFloat = 0
     var margin:CGFloat = Dimen.margin.regular
     var isNew: Bool = false
+    var count: Int? = nil
     var isMore: Bool = false
     var icon:String? = nil
     var iconSize:CGFloat = Dimen.icon.thin
@@ -39,6 +41,7 @@ struct FillButton: View, SelecterbleProtocol{
         strikeText:String? = nil,
         index: Int = 0,
         isSelected: Bool = true,
+        imageAni:[String]? = nil,
         image:String? = nil,
         imageOn:String? = nil,
         textModifier:TextModifier? = nil,
@@ -68,13 +71,17 @@ struct FillButton: View, SelecterbleProtocol{
     // type new
     init(
         text:String,
+        imageAni:[String]? = nil,
         image:String?,
         isNew: Bool,
+        count: Int? = nil,
         action:@escaping (_ idx:Int) -> Void )
     {
         self.text = text
+        self.imageAni = imageAni
         self.image = image
         self.isNew = isNew
+        self.count = count
         self.textModifier = TextModifier(
             family: Font.family.bold,
             size: Font.size.lightExtra,
@@ -133,7 +140,11 @@ struct FillButton: View, SelecterbleProtocol{
                     if self.isMore{
                         Spacer().frame(width: Dimen.margin.thin)
                     }
-                    if let image = self.image  {
+                    if let ani = self.imageAni  {
+                        ImageAnimation(images: ani, isRunning: .constant(true))
+                            .frame(width: self.imageSize*1.2, height: self.imageSize*1.2)
+                    }
+                    else if let image = self.image  {
                         Image(self.isSelected ? ( self.imageOn ?? image )  : image)
                         .renderingMode(.original).resizable()
                         .scaledToFit()
@@ -160,10 +171,23 @@ struct FillButton: View, SelecterbleProtocol{
                         }
                     }
                     if self.isNew {
-                        Image(Asset.icon.new)
-                        .renderingMode(.original).resizable()
-                        .scaledToFit()
-                        .frame(width: Dimen.icon.tinyExtra, height: Dimen.icon.tinyExtra)
+                        if let count = self.count {
+                            Text(count.description)
+                                .modifier(BoldTextStyle(
+                                    size: Font.size.micro,
+                                    color: Color.app.white
+                                ))
+                                .frame(width: Dimen.icon.tinyExtra, height: Dimen.icon.tinyExtra)
+                                .background(Color.brand.primary)
+                                .clipShape(Circle())
+                            
+                        } else {
+                            Image(Asset.icon.new)
+                            .renderingMode(.original).resizable()
+                            .scaledToFit()
+                            .frame(width: Dimen.icon.tinyExtra, height: Dimen.icon.tinyExtra)
+                        }
+                        
                     }
                     if let icon = self.icon {
                         Spacer()

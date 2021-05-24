@@ -161,6 +161,8 @@
 		3183B37D26168F03004F5C0D /* PageAdultCertification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3183B37C26168F03004F5C0D /* PageAdultCertification.swift */; };
 		3185FE1925EF017A005074AA /* CateList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3185FE1825EF017A005074AA /* CateList.swift */; };
 		3185FE1E25EF11B2005074AA /* PageCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3185FE1D25EF11B2005074AA /* PageCategory.swift */; };
+		31863E08265B364A0086C40D /* Alram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31863E07265B364A0086C40D /* Alram.swift */; };
+		31863E0E265B4ED40086C40D /* ToolTipBottom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31863E0D265B4ED40086C40D /* ToolTipBottom.swift */; };
 		31895AFA2601C863002DE02E /* PageSynopsisPackage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31895AF92601C863002DE02E /* PageSynopsisPackage.swift */; };
 		31895AFF2601CDDE002DE02E /* DirectPackageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31895AFE2601CDDE002DE02E /* DirectPackageView.swift */; };
 		31895B072601CEB8002DE02E /* SynopsisPackageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31895B062601CEB8002DE02E /* SynopsisPackageModel.swift */; };
@@ -229,7 +231,7 @@
 		31C4BC97262D2D8600BB2167 /* NotificationCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BC96262D2D8600BB2167 /* NotificationCoreData.swift */; };
 		31C4BCC0262D71BA00BB2167 /* KeywordCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BCBF262D71BA00BB2167 /* KeywordCoreData.swift */; };
 		31C4BCCE262D745B00BB2167 /* AlramList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BCCD262D745B00BB2167 /* AlramList.swift */; };
-		31D3F4CB25E3368A008FDFEC /* WepManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4CA25E3368A008FDFEC /* WepManager.swift */; };
+		31D3F4CB25E3368A008FDFEC /* WebBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4CA25E3368A008FDFEC /* WebBridge.swift */; };
 		31D3F4DE25E36625008FDFEC /* PageMultiBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */; };
 		31D3F4E625E3A57A008FDFEC /* BannerBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */; };
 		31D3F4EC25E3A7D4008FDFEC /* BannerList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4EB25E3A7D4008FDFEC /* BannerList.swift */; };
@@ -584,6 +586,8 @@
 		3183B37C26168F03004F5C0D /* PageAdultCertification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageAdultCertification.swift; sourceTree = "<group>"; };
 		3185FE1825EF017A005074AA /* CateList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CateList.swift; sourceTree = "<group>"; };
 		3185FE1D25EF11B2005074AA /* PageCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCategory.swift; sourceTree = "<group>"; };
+		31863E07265B364A0086C40D /* Alram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alram.swift; sourceTree = "<group>"; };
+		31863E0D265B4ED40086C40D /* ToolTipBottom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolTipBottom.swift; sourceTree = "<group>"; };
 		31895AF92601C863002DE02E /* PageSynopsisPackage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisPackage.swift; sourceTree = "<group>"; };
 		31895AFE2601CDDE002DE02E /* DirectPackageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectPackageView.swift; sourceTree = "<group>"; };
 		31895B062601CEB8002DE02E /* SynopsisPackageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisPackageModel.swift; sourceTree = "<group>"; };
@@ -653,7 +657,7 @@
 		31C4BC96262D2D8600BB2167 /* NotificationCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCoreData.swift; sourceTree = "<group>"; };
 		31C4BCBF262D71BA00BB2167 /* KeywordCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordCoreData.swift; sourceTree = "<group>"; };
 		31C4BCCD262D745B00BB2167 /* AlramList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlramList.swift; sourceTree = "<group>"; };
-		31D3F4CA25E3368A008FDFEC /* WepManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WepManager.swift; sourceTree = "<group>"; };
+		31D3F4CA25E3368A008FDFEC /* WebBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebBridge.swift; sourceTree = "<group>"; };
 		31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMultiBlock.swift; sourceTree = "<group>"; };
 		31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerBlock.swift; sourceTree = "<group>"; };
 		31D3F4EB25E3A7D4008FDFEC /* BannerList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerList.swift; sourceTree = "<group>"; };
@@ -1366,6 +1370,27 @@
 			path = sub;
 			sourceTree = "<group>";
 		};
+		31863E0A265B37620086C40D /* provider */ = {
+			isa = PBXGroup;
+			children = (
+				D56C6B1F257DACD800CF9AB8 /* DataProvider.swift */,
+				D56C603A25933EAB009AE769 /* manager */,
+				D50AB8EB257F30EC00649C4A /* model */,
+			);
+			path = provider;
+			sourceTree = "<group>";
+		};
+		31863E0B265B37BE0086C40D /* manager */ = {
+			isa = PBXGroup;
+			children = (
+				319BAFA1260439AD0007273F /* voice */,
+				316C45E8265382F400A8D7F5 /* audiomirror */,
+				31D3F4CA25E3368A008FDFEC /* WebBridge.swift */,
+				31863E07265B364A0086C40D /* Alram.swift */,
+			);
+			path = manager;
+			sourceTree = "<group>";
+		};
 		318B53AF25F2354C0052E4E0 /* font */ = {
 			isa = PBXGroup;
 			children = (
@@ -1651,7 +1676,6 @@
 		D56C603A25933EAB009AE769 /* manager */ = {
 			isa = PBXGroup;
 			children = (
-				31D3F4CA25E3368A008FDFEC /* WepManager.swift */,
 				315730ED25AFC1B600D9A693 /* AccountManager.swift */,
 				D56C603B25933EBD009AE769 /* MdnsPairingManager.swift */,
 				316C45D9265203CF00A8D7F5 /* BroadcastManager.swift */,
@@ -2081,15 +2105,12 @@
 		D56C6A71257DA4BF00CF9AB8 /* store */ = {
 			isa = PBXGroup;
 			children = (
-				D50AB8EB257F30EC00649C4A /* model */,
-				D56C603A25933EAB009AE769 /* manager */,
-				316C45E8265382F400A8D7F5 /* audiomirror */,
-				319BAFA1260439AD0007273F /* voice */,
+				31863E0A265B37620086C40D /* provider */,
+				31863E0B265B37BE0086C40D /* manager */,
 				D5DABD6F258972D100DF5701 /* coreData */,
 				31E76D092632633200710624 /* share */,
 				D56C6B1C257DACD800CF9AB8 /* storage */,
 				D56C6B21257DACD800CF9AB8 /* api */,
-				D56C6B1F257DACD800CF9AB8 /* DataProvider.swift */,
 				D56C6B1E257DACD800CF9AB8 /* Repository.swift */,
 				D56C604125934050009AE769 /* Store-Bridging-Header.h */,
 			);
@@ -2131,6 +2152,7 @@
 				314D73BE25B550F900907118 /* BtvButton.swift */,
 				31E3974925B595FC00CE6E21 /* ShareButton.swift */,
 				312BB07325DCDCBB00AC03BC /* Tooltip.swift */,
+				31863E0D265B4ED40086C40D /* ToolTipBottom.swift */,
 				318B537525F050CC0052E4E0 /* AlramButton.swift */,
 				316719A626008680005AC3D2 /* Alerts.swift */,
 			);
@@ -2627,7 +2649,7 @@
 				D56C6933257D9EE600CF9AB8 /* BtvPlus.xcdatamodeld in Sources */,
 				318B53AB25F20A350052E4E0 /* PlayBlock.swift in Sources */,
 				D56C6B39257DACD800CF9AB8 /* ApiConst.swift in Sources */,
-				31D3F4CB25E3368A008FDFEC /* WepManager.swift in Sources */,
+				31D3F4CB25E3368A008FDFEC /* WebBridge.swift in Sources */,
 				D56C6A5F257DA0C700CF9AB8 /* ActivityIndicator.swift in Sources */,
 				D5688929259C4C0800F2F67A /* MoreInfoButton.swift in Sources */,
 				31E50C6C261AA05400D0762C /* PageWatchHabit.swift in Sources */,
@@ -2642,6 +2664,7 @@
 				31061E6625C8CF5800543FC0 /* BtvWebView.swift in Sources */,
 				D56C6A60257DA0C700CF9AB8 /* InputAccssory.swift in Sources */,
 				3159B05025B17B0B008CA85B /* Kms.swift in Sources */,
+				31863E0E265B4ED40086C40D /* ToolTipBottom.swift in Sources */,
 				316ECDFF264B73B6008D2544 /* ControlBox.swift in Sources */,
 				3174067C25F763BD00201850 /* PageWebview.swift in Sources */,
 				310F6FC725C16916005718B0 /* Play.swift in Sources */,
@@ -2693,6 +2716,7 @@
 				D56C6A44257DA0C700CF9AB8 /* TextStyle.swift in Sources */,
 				318C874D25E64AA400ADDFE0 /* TopBanner.swift in Sources */,
 				D56C6A23257DA0C600CF9AB8 /* util.swift in Sources */,
+				31863E08265B364A0086C40D /* Alram.swift in Sources */,
 				3166CBE42611A15900282891 /* Eps.swift in Sources */,
 				D56C6A2A257DA0C700CF9AB8 /* CPImagePicker.swift in Sources */,
 				D506D722258C924500F27C00 /* ListStyle.swift in Sources */,
@@ -3111,7 +3135,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -3135,7 +3159,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.019;
+				MARKETING_VERSION = 1.020;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BtvPlusNew/store/Store-Bridging-Header.h";
@@ -3185,7 +3209,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -3204,7 +3228,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.019;
+				MARKETING_VERSION = 1.020;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BtvPlusNew/store/Store-Bridging-Header.h";

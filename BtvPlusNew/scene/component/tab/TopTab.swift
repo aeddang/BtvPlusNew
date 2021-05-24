@@ -10,11 +10,12 @@ import Foundation
 import SwiftUI
 
 struct TopTab: PageComponent{
+    @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
-    
+    @State var showAlram:Bool = false
     var body: some View {
         HStack(alignment: .bottom ,spacing:Dimen.margin.tiny){
             Button(action: {
@@ -22,15 +23,26 @@ struct TopTab: PageComponent{
                     PageProvider.getPageObject(.my)
                 )
             }) {
-                Image(Asset.gnbTop.my)
-                    .renderingMode(.original)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: Dimen.icon.regular,
-                           height: Dimen.icon.regular)
+                ZStack(alignment: .topLeading){
+                    Image(Asset.gnbTop.my)
+                        .renderingMode(.original)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: Dimen.icon.regular,
+                               height: Dimen.icon.regular)
+                    if self.showAlram {
+                        Image(Asset.icon.new)
+                            .renderingMode(.original).resizable()
+                            .scaledToFit()
+                            .frame(width: Dimen.icon.tinyExtra, height: Dimen.icon.tinyExtra)
+                            .padding(.leading, Dimen.icon.regular - (Dimen.icon.tinyExtra/2))
+                    }
+                }
+                .frame(width: Dimen.icon.regular,
+                       height: Dimen.icon.regular,
+                       alignment: .topLeading)
             }
             Spacer()
-            
             Button(action: {
                 
             }) {
@@ -66,17 +78,15 @@ struct TopTab: PageComponent{
                            height: Dimen.icon.regular)
             }
             Button(action: {
-                /*
+                
                 if self.pairing.status != .pairing {
                     self.appSceneObserver.alert = .needPairing()
                 } else {
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.remotecon)
                     )
-                }*/
-                self.pagePresenter.openPopup(
-                    PageProvider.getPageObject(.remotecon)
-                )
+                }
+                
             }) {
                 
                 Image(Asset.gnbTop.remote)
@@ -89,6 +99,18 @@ struct TopTab: PageComponent{
             
         }
         .modifier(ContentHorizontalEdges())
+        .onReceive(self.repository.alram.$newCount){ count in
+            withAnimation{self.showAlram = count>0}
+        }
+        .onReceive(self.repository.alram.$needUpdateNew){ update in
+            if update {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    self.repository.alram.updateNew()
+                }
+            }
+        }
+        .onAppear(){
+        }
         
     }
 }

@@ -163,6 +163,8 @@
 		3185FE1E25EF11B2005074AA /* PageCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3185FE1D25EF11B2005074AA /* PageCategory.swift */; };
 		31863E08265B364A0086C40D /* Alram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31863E07265B364A0086C40D /* Alram.swift */; };
 		31863E0E265B4ED40086C40D /* ToolTipBottom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31863E0D265B4ED40086C40D /* ToolTipBottom.swift */; };
+		31863E10265C8F530086C40D /* PlayerGrade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31863E0F265C8F530086C40D /* PlayerGrade.swift */; };
+		31863E12265C914D0086C40D /* PlayGradeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31863E11265C914D0086C40D /* PlayGradeData.swift */; };
 		31895AFA2601C863002DE02E /* PageSynopsisPackage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31895AF92601C863002DE02E /* PageSynopsisPackage.swift */; };
 		31895AFF2601CDDE002DE02E /* DirectPackageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31895AFE2601CDDE002DE02E /* DirectPackageView.swift */; };
 		31895B072601CEB8002DE02E /* SynopsisPackageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31895B062601CEB8002DE02E /* SynopsisPackageModel.swift */; };
@@ -170,6 +172,16 @@
 		31895B172601DF49002DE02E /* PackageBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31895B162601DF49002DE02E /* PackageBody.swift */; };
 		31895B1C2601F0F3002DE02E /* TopViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31895B1B2601F0F3002DE02E /* TopViewer.swift */; };
 		31895B242601F609002DE02E /* SimpleSummaryViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31895B232601F609002DE02E /* SimpleSummaryViewer.swift */; };
+		318AA03B265DD99200C089EC /* SetupApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318AA03A265DD99200C089EC /* SetupApp.swift */; };
+		318AA03D265DDA9400C089EC /* SetupPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318AA03C265DDA9400C089EC /* SetupPlay.swift */; };
+		318AA03F265DDB1D00C089EC /* SetupAlram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318AA03E265DDB1D00C089EC /* SetupAlram.swift */; };
+		318AA041265DDBCA00C089EC /* SetupCertification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318AA040265DDBCA00C089EC /* SetupCertification.swift */; };
+		318AA043265DE83500C089EC /* SetupChildren.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318AA042265DE83500C089EC /* SetupChildren.swift */; };
+		318AA045265DE8D100C089EC /* SetupHappySenior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318AA044265DE8D100C089EC /* SetupHappySenior.swift */; };
+		318AA047265DE90B00C089EC /* SetupGuideNVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318AA046265DE90B00C089EC /* SetupGuideNVersion.swift */; };
+		318AA04A265DE96900C089EC /* SetupTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318AA049265DE96900C089EC /* SetupTest.swift */; };
+		318AA04C265DFA4F00C089EC /* SetupPossession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318AA04B265DFA4F00C089EC /* SetupPossession.swift */; };
+		318AA04E265E3E3F00C089EC /* MySetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318AA04D265E3E3F00C089EC /* MySetup.swift */; };
 		318B537125F049DA0052E4E0 /* PlayList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318B537025F049DA0052E4E0 /* PlayList.swift */; };
 		318B537625F050CC0052E4E0 /* AlramButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318B537525F050CC0052E4E0 /* AlramButton.swift */; };
 		318B537C25F05BAB0052E4E0 /* PagePreviewList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318B537B25F05BAB0052E4E0 /* PagePreviewList.swift */; };
@@ -588,6 +600,8 @@
 		3185FE1D25EF11B2005074AA /* PageCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCategory.swift; sourceTree = "<group>"; };
 		31863E07265B364A0086C40D /* Alram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alram.swift; sourceTree = "<group>"; };
 		31863E0D265B4ED40086C40D /* ToolTipBottom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolTipBottom.swift; sourceTree = "<group>"; };
+		31863E0F265C8F530086C40D /* PlayerGrade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerGrade.swift; sourceTree = "<group>"; };
+		31863E11265C914D0086C40D /* PlayGradeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayGradeData.swift; sourceTree = "<group>"; };
 		31895AF92601C863002DE02E /* PageSynopsisPackage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisPackage.swift; sourceTree = "<group>"; };
 		31895AFE2601CDDE002DE02E /* DirectPackageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectPackageView.swift; sourceTree = "<group>"; };
 		31895B062601CEB8002DE02E /* SynopsisPackageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisPackageModel.swift; sourceTree = "<group>"; };
@@ -595,6 +609,16 @@
 		31895B162601DF49002DE02E /* PackageBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageBody.swift; sourceTree = "<group>"; };
 		31895B1B2601F0F3002DE02E /* TopViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopViewer.swift; sourceTree = "<group>"; };
 		31895B232601F609002DE02E /* SimpleSummaryViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleSummaryViewer.swift; sourceTree = "<group>"; };
+		318AA03A265DD99200C089EC /* SetupApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupApp.swift; sourceTree = "<group>"; };
+		318AA03C265DDA9400C089EC /* SetupPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupPlay.swift; sourceTree = "<group>"; };
+		318AA03E265DDB1D00C089EC /* SetupAlram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupAlram.swift; sourceTree = "<group>"; };
+		318AA040265DDBCA00C089EC /* SetupCertification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupCertification.swift; sourceTree = "<group>"; };
+		318AA042265DE83500C089EC /* SetupChildren.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupChildren.swift; sourceTree = "<group>"; };
+		318AA044265DE8D100C089EC /* SetupHappySenior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupHappySenior.swift; sourceTree = "<group>"; };
+		318AA046265DE90B00C089EC /* SetupGuideNVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupGuideNVersion.swift; sourceTree = "<group>"; };
+		318AA049265DE96900C089EC /* SetupTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupTest.swift; sourceTree = "<group>"; };
+		318AA04B265DFA4F00C089EC /* SetupPossession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupPossession.swift; sourceTree = "<group>"; };
+		318AA04D265E3E3F00C089EC /* MySetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySetup.swift; sourceTree = "<group>"; };
 		318B537025F049DA0052E4E0 /* PlayList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayList.swift; sourceTree = "<group>"; };
 		318B537525F050CC0052E4E0 /* AlramButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlramButton.swift; sourceTree = "<group>"; };
 		318B537B25F05BAB0052E4E0 /* PagePreviewList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePreviewList.swift; sourceTree = "<group>"; };
@@ -916,6 +940,7 @@
 				31E8D7C025CA85190034BBC4 /* PlayerOptionSelectBox.swift */,
 				317A8F5B25CBE1AE00E41226 /* PlayerMoreBox.swift */,
 				31061E7625C934B600543FC0 /* PlayerEffect.swift */,
+				31863E0F265C8F530086C40D /* PlayerGrade.swift */,
 				31E8D7BB25CA5D470034BBC4 /* PlayerTop.swift */,
 				3167642925CD11E8003A7721 /* PlayerBottom.swift */,
 				31631C5325D22E7900E501F7 /* Preroll.swift */,
@@ -985,6 +1010,7 @@
 			isa = PBXGroup;
 			children = (
 				31740C2B261C1BB60052A9C2 /* component */,
+				318AA039265DD96E00C089EC /* body */,
 				314D6B0125D0E9A50003C749 /* PageSetup.swift */,
 				31E50C6B261AA05400D0762C /* PageWatchHabit.swift */,
 			);
@@ -1138,6 +1164,7 @@
 				31626EF025B9092400F4031D /* PurchaseModel.swift */,
 				3167641E25CCC80E003A7721 /* SynopsisPlayerData.swift */,
 				31631C6425D2516E00E501F7 /* SynopsisPrerollData.swift */,
+				31863E11265C914D0086C40D /* PlayGradeData.swift */,
 				3152B46C25DA0D3E00147C86 /* RelationContentsModel.swift */,
 			);
 			path = model;
@@ -1164,6 +1191,7 @@
 				319B07A5263A8807008C11A8 /* VideoSetBlock.swift */,
 				314D588B25B66868007BCA34 /* ValueInfo.swift */,
 				3166CBF12611AD0000282891 /* MyPointInfo.swift */,
+				318AA04D265E3E3F00C089EC /* MySetup.swift */,
 			);
 			path = component;
 			sourceTree = "<group>";
@@ -1374,8 +1402,8 @@
 			isa = PBXGroup;
 			children = (
 				D56C6B1F257DACD800CF9AB8 /* DataProvider.swift */,
-				D56C603A25933EAB009AE769 /* manager */,
 				D50AB8EB257F30EC00649C4A /* model */,
+				D56C603A25933EAB009AE769 /* manager */,
 			);
 			path = provider;
 			sourceTree = "<group>";
@@ -1389,6 +1417,22 @@
 				31863E07265B364A0086C40D /* Alram.swift */,
 			);
 			path = manager;
+			sourceTree = "<group>";
+		};
+		318AA039265DD96E00C089EC /* body */ = {
+			isa = PBXGroup;
+			children = (
+				318AA03A265DD99200C089EC /* SetupApp.swift */,
+				318AA03C265DDA9400C089EC /* SetupPlay.swift */,
+				318AA03E265DDB1D00C089EC /* SetupAlram.swift */,
+				318AA040265DDBCA00C089EC /* SetupCertification.swift */,
+				318AA042265DE83500C089EC /* SetupChildren.swift */,
+				318AA044265DE8D100C089EC /* SetupHappySenior.swift */,
+				318AA046265DE90B00C089EC /* SetupGuideNVersion.swift */,
+				318AA04B265DFA4F00C089EC /* SetupPossession.swift */,
+				318AA049265DE96900C089EC /* SetupTest.swift */,
+			);
+			path = body;
 			sourceTree = "<group>";
 		};
 		318B53AF25F2354C0052E4E0 /* font */ = {
@@ -2582,6 +2626,8 @@
 				316C45EA2653832F00A8D7F5 /* AudioMirror.swift in Sources */,
 				31895AFA2601C863002DE02E /* PageSynopsisPackage.swift in Sources */,
 				D51AA9F82599BAFB0035CD51 /* PageTab.swift in Sources */,
+				318AA043265DE83500C089EC /* SetupChildren.swift in Sources */,
+				318AA04E265E3E3F00C089EC /* MySetup.swift in Sources */,
 				D56C69B4257DA09E00CF9AB8 /* KeyboardObserver.swift in Sources */,
 				D56C69A1257DA09E00CF9AB8 /* PageProtocol.swift in Sources */,
 				D56C6A4E257DA0C700CF9AB8 /* ImageView.swift in Sources */,
@@ -2623,6 +2669,7 @@
 				31A4A00E26281B840065E6C6 /* TipBlock.swift in Sources */,
 				3198FED9262FAF77008DCB2C /* PageMyAlram.swift in Sources */,
 				315B55DC25A8026700B5B351 /* DevicePairingInfo.swift in Sources */,
+				318AA03D265DDA9400C089EC /* SetupPlay.swift in Sources */,
 				3167196225FEED00005AC3D2 /* PageAuth.swift in Sources */,
 				D56C6A5C257DA0C700CF9AB8 /* StrokeRectButton.swift in Sources */,
 				31DF151E25F9A89A00F0A38D /* TicketList.swift in Sources */,
@@ -2678,6 +2725,7 @@
 				31740C30261C32780052A9C2 /* PurchaseList.swift in Sources */,
 				31373F6025C7E726004353DA /* CustomYTPlayer.swift in Sources */,
 				318E7F0C25E8B01800B2AAAF /* MonthlyInfo.swift in Sources */,
+				318AA04C265DFA4F00C089EC /* SetupPossession.swift in Sources */,
 				317C976126243D31008F267D /* BPoints.swift in Sources */,
 				310D7E2C25A42D05000BE173 /* StbList.swift in Sources */,
 				314D6B0225D0E9A50003C749 /* PageSetup.swift in Sources */,
@@ -2693,6 +2741,7 @@
 				D56C6A41257DA0C700CF9AB8 /* Player.swift in Sources */,
 				318BA3872608B8C50093BC7D /* EmptySearchResult.swift in Sources */,
 				31A3E8782605F3F800BF044B /* SearchList.swift in Sources */,
+				318AA03B265DD99200C089EC /* SetupApp.swift in Sources */,
 				31C4BCC0262D71BA00BB2167 /* KeywordCoreData.swift in Sources */,
 				317C974F26241B76008F267D /* Coupons.swift in Sources */,
 				319BAFAE26043DCA0007273F /* Voice.swift in Sources */,
@@ -2703,6 +2752,7 @@
 				D506D732258CA3E300F27C00 /* ThemaList.swift in Sources */,
 				319B07A6263A8807008C11A8 /* VideoSetBlock.swift in Sources */,
 				316719A02600642D005AC3D2 /* PageIntro.swift in Sources */,
+				31863E10265C8F530086C40D /* PlayerGrade.swift in Sources */,
 				D56C5FE825930060009AE769 /* BookMark.swift in Sources */,
 				D56C69A8257DA09E00CF9AB8 /* ImageLoader.swift in Sources */,
 				31E8D7C125CA85190034BBC4 /* PlayerOptionSelectBox.swift in Sources */,
@@ -2759,6 +2809,7 @@
 				D56C6B0F257DAADE00CF9AB8 /* SceneRadioController.swift in Sources */,
 				31E8D7BC25CA5D470034BBC4 /* PlayerTop.swift in Sources */,
 				D5DC474E25820A02007EDD86 /* RelationContent.swift in Sources */,
+				318AA041265DDBCA00C089EC /* SetupCertification.swift in Sources */,
 				D5E27EEA258751A200B2CD5D /* BlockData.swift in Sources */,
 				318F7B412625444C00774B17 /* CardList.swift in Sources */,
 				31632FFB25EF386F00581FA7 /* MultiBlockBody.swift in Sources */,
@@ -2832,6 +2883,7 @@
 				D56C6A4D257DA0C700CF9AB8 /* ProgressSlider.swift in Sources */,
 				315A8FD425ADADD600498B03 /* GuestAgreementInfo.swift in Sources */,
 				31740C39261C3AE70052A9C2 /* PurchaseBlock.swift in Sources */,
+				318AA04A265DE96900C089EC /* SetupTest.swift in Sources */,
 				D56C6A34257DA0C700CF9AB8 /* Navigation.swift in Sources */,
 				314D73BF25B550F900907118 /* BtvButton.swift in Sources */,
 				318E7F0425E8990900B2AAAF /* MonthlyBlock.swift in Sources */,
@@ -2842,6 +2894,7 @@
 				3177732925FAF92D006382AE /* HostDevice.swift in Sources */,
 				31626EEB25B8FB3000F4031D /* FunctionViewer.swift in Sources */,
 				D56C6B69257DBAC800CF9AB8 /* TopTab.swift in Sources */,
+				31863E12265C914D0086C40D /* PlayGradeData.swift in Sources */,
 				D56CC30A2590703200CA1D54 /* BlockProtocol.swift in Sources */,
 				31626EE025B8EF1900F4031D /* Like.swift in Sources */,
 				3159B05925B17BED008CA85B /* KmsModel.swift in Sources */,
@@ -2887,6 +2940,7 @@
 				317F0AAA2609537400EB9F6B /* SearchResult.swift in Sources */,
 				D56CC2FA2590313A00CA1D54 /* PosterBlock.swift in Sources */,
 				312BB08525DCF92400AC03BC /* PagePurchase.swift in Sources */,
+				318AA047265DE90B00C089EC /* SetupGuideNVersion.swift in Sources */,
 				31EA9FBD25F5ACAC0059E19B /* SimplePlayerUI.swift in Sources */,
 				31E3974225B5906E00CE6E21 /* RatingPoint.swift in Sources */,
 				31626F0125B9151E00F4031D /* DirectView.swift in Sources */,
@@ -2917,8 +2971,10 @@
 				318BA3992608C2660093BC7D /* SearchCategory.swift in Sources */,
 				318F7B502625739A00774B17 /* CardBlock.swift in Sources */,
 				31373F6425C7E726004353DA /* YTPlayerView.swift in Sources */,
+				318AA03F265DDB1D00C089EC /* SetupAlram.swift in Sources */,
 				D56C6A42257DA0C700CF9AB8 /* CustomToggleStyle.swift in Sources */,
 				D56C6A3E257DA0C700CF9AB8 /* CPPlayer.swift in Sources */,
+				318AA045265DE8D100C089EC /* SetupHappySenior.swift in Sources */,
 				D56C6A52257DA0C700CF9AB8 /* Toast.swift in Sources */,
 				D56C6B35257DACD800CF9AB8 /* DataProvider.swift in Sources */,
 				D56C6A4F257DA0C700CF9AB8 /* Alert.swift in Sources */,
@@ -3135,7 +3191,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -3159,7 +3215,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.020;
+				MARKETING_VERSION = 1.022;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BtvPlusNew/store/Store-Bridging-Header.h";
@@ -3209,7 +3265,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -3228,7 +3284,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.020;
+				MARKETING_VERSION = 1.022;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BtvPlusNew/store/Store-Bridging-Header.h";

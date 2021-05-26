@@ -93,6 +93,20 @@ extension Asset{
         public static let age15 = "icSynopAge15"
         public static let age12 = "icSynopAge12"
         public static let age7 = "icSynopAge7"
+        
+        public static let agePlayerAll = "icPlayerGradeAll"
+        public static let agePlayer19 = "icPlayerGrade18"
+        public static let agePlayer15 = "icPlayerGrade15"
+        public static let agePlayer12 = "icPlayerGrade12"
+        
+        public static let playerContentInfo1 = "icPlayerContentInfo01"
+        public static let playerContentInfo2 = "icPlayerContentInfo02"
+        public static let playerContentInfo3 = "icPlayerContentInfo03"
+        public static let playerContentInfo4 = "icPlayerContentInfo04"
+        public static let playerContentInfo5 = "icPlayerContentInfo05"
+        public static let playerContentInfo6 = "icPlayerContentInfo06"
+        public static let playerContentInfo7 = "icPlayerContentInfo07"
+        
         public static let trophy = "icSynopTrophy"
         public static let ratingPrimary = "icSynopRatingS"
         
@@ -130,6 +144,7 @@ extension Asset{
         public static let onAir = "tagSynopOnair"
         public static let onAirOff = "tagSynopOffair"
         public static let btvlite = "tagMyBtvlite"
+        public static let btvliteFamily = "tagMyBtvliteFamily"
         public static let imminent = "tagMyEndSoon"
         public static let expiration = "tagMyEnd"
         public static let used = "tagMyUsed"
@@ -148,6 +163,10 @@ extension Asset{
         public static let noticePoint = "icNoticePointNor"
         public static let noticeRelease = "icNoticeReleaseNor"
         public static let noticeReserve = "icNoticeReserveNor"
+        
+        public static let readAllOff = "icMyReadDim"
+        public static let readAll = "icMyReadNor"
+        public static let recommend = "icMyRecommend"
     }
     
     
@@ -299,6 +318,9 @@ extension Asset{
         public static let deviceEmpty = "imgPairingNostbB"
     }
     
+    
+    
+    
     struct age {
         static func getIcon(age:String?) -> String {
             switch age {
@@ -317,6 +339,16 @@ extension Asset{
             case "15": return Asset.icon.age15
             case "19": return Asset.icon.age19
             default: return nil
+            }
+        }
+        
+        static func getPlayerIcon(age:String?) -> String?{
+            guard let age = age else{return nil}
+            switch age {
+            case "12": return Asset.icon.agePlayer12
+            case "15": return Asset.icon.agePlayer15
+            case "19": return Asset.icon.agePlayer19
+            default: return Asset.icon.agePlayerAll
             }
         }
         

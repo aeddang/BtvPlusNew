@@ -25,6 +25,7 @@ struct RemotePlayData{
     var isOnAir:Bool? = nil
     var isEmpty:Bool = false
     var isError:Bool = false
+    var isNoInfo:Bool = false
 }
 enum RemoteInputType{
     case number, text

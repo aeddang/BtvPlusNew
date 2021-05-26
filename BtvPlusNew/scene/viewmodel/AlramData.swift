@@ -128,7 +128,7 @@ enum AlramLandingType:String {
 }
 
 
-class AlramData:InfinityData{
+class AlramData:InfinityData,ObservableObject{
     private(set) var type:AlramType = .none
     private(set) var imageType:AlramImageType = .none
     private(set) var msgType:AlramMsgType = .none
@@ -144,7 +144,7 @@ class AlramData:InfinityData{
     private(set) var moveTitle: String? = nil
     private(set) var moveButton: String? = nil
     var isExpand:Bool = false
-    var isRead:Bool = false
+    @Published var isRead:Bool = false
     
     private(set) var move:PageID? = nil
     private(set) var moveData:[PageParam:Any]? = nil

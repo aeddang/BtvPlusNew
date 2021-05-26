@@ -14,6 +14,7 @@ import Combine
 enum WebviewMethod:String {
     case getSTBInfo, getNetworkState, getLogInfo, stopLoading
     case requestVoiceSearch, requestSTBViewInfo
+    case externalBrowser
     case bpn_showSynopsis,
          bpn_backWebView, bpn_closeWebView, bpn_showModalWebView,
          bpn_setShowModalWebViewResult,bpn_setIdentityVerfResult, bpn_setPurchaseResult,
@@ -26,7 +27,7 @@ enum WebviewMethod:String {
          bpn_requestFocus,bpn_showComingSoon,bpn_showMyPairing,bpn_familyInvite
 }
 enum WebviewRespond:String {
-    case responseVoiceSearch
+    case responseVoiceSearch, responseSTBViewInfo
 }
 
 extension BtvWebView {
@@ -189,6 +190,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                 DispatchQueue.main.async { callJS(uiView, fn: first)}
             }
         })
+        
     }
     
     fileprivate func callJS(_ uiView: WKWebView, fn: String, dic:[String: Any]? = nil) {
@@ -244,10 +246,14 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             uiView.loadHTMLString(html, baseURL: nil)
             return
         case .evaluateJavaScript(let jsStr):
-            self.callJS(uiView, jsStr: jsStr)
+            DispatchQueue.main.async {
+                self.callJS(uiView, jsStr: jsStr)
+            }
             return
         case .evaluateJavaScriptMethod(let fn, let dic):
-            self.callJS(uiView, fn: fn, dic: dic)
+            DispatchQueue.main.async {
+                self.callJS(uiView, fn: fn, dic: dic)
+            }
             return
         case .back:
             if uiView.canGoBack {uiView.goBack()}
@@ -361,6 +367,13 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                                     )
                                 } catch {
                                     ComponentLog.e("json parse error", tag:"WebviewMethod.bpn_showSynopsis")
+                                }
+                            }
+                        case WebviewMethod.externalBrowser.rawValue :
+                            if let jsonString = jsonParam {
+                                let jsonData = AppUtil.getJsonParam(jsonString: jsonString)
+                                if let url = jsonData?["url"] as? String {
+                                    AppUtil.openURL(url)
                                 }
                             }
                         
@@ -499,7 +512,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                      initiatedByFrame frame: WKFrameInfo,
                      completionHandler: @escaping (Bool) -> Void) {
             
-            self.parent.appSceneObserver.alert = .confirm(nil,  message, completionHandler)
+            self.parent.appSceneObserver.alert = .confirm(nil,  message, nil, completionHandler)
         }
 
         func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String,

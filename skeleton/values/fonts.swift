@@ -56,6 +56,7 @@ extension Font{
         public static let tiny:CGFloat = isPad ? 16 : 11 //*
         public static let tinyExtra:CGFloat = isPad ? 15 : 10 //*
         public static let micro:CGFloat = isPad ? 13 : 9 //*
+        public static let microExtra:CGFloat = isPad ? 10 : 6 //*
     }
 
 }

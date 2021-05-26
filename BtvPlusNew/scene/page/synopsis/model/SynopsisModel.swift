@@ -45,7 +45,7 @@ class SynopsisModel : PageProtocol {
     private(set) var imgBg:String? = nil
     private(set) var imgContentMode:ContentMode = .fit
     private(set) var cwCallId:String? = nil
-    
+    private(set) var playGradeData:PlayGradeData? = nil
     
     init(type:MetvNetwork.SynopsisType = .none ) {
         self.synopsisType = type
@@ -66,11 +66,12 @@ class SynopsisModel : PageProtocol {
         self.siries = data.series
         
         if let contents = data.contents{
+            self.playGradeData = PlayGradeData().setData(data: contents)
             self.srisTitle = contents.title
             self.kidsYn = contents.kids_yn
             self.setupThumbImage(contents: contents)
             self.hasExamPreview = contents.pre_exam_yn?.toBool() ?? false
-            if let preview = contents.preview {
+            if let preview = contents.preview { 
                 self.previews = preview
                 self.hasPreview = !preview.isEmpty
             }

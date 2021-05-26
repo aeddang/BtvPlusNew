@@ -28,9 +28,9 @@ struct HeaderBanner: PageComponent {
                     .renderingMode(.original)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    //.modifier(MatchParent())
+                    .modifier(MatchParent())
                     
-                    .background(Color.app.grey)
+                    
             } else {
                 KFImage(URL(string: self.data.image))
                     .resizable()
@@ -41,7 +41,7 @@ struct HeaderBanner: PageComponent {
                     .cancelOnDisappear(true)
                     .loadImmediately()
                     .aspectRatio(contentMode: .fit)
-                    //.modifier(MatchParent())
+                    .modifier(MatchParent())
                     
             }
             Spacer()
@@ -60,6 +60,7 @@ struct HeaderBanner: PageComponent {
             }
         }
         .padding(.trailing, Dimen.margin.thin)
+        .modifier(MatchHorizontal(height: Self.height))
         .background(Color.brand.primary)
         .onTapGesture {
             if let move = data.move {
@@ -95,7 +96,7 @@ struct HeaderBanner: PageComponent {
                 )
             }
         }
-        .modifier(MatchHorizontal(height: Self.height))
+        
 
     }
     

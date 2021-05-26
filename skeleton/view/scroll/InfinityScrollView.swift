@@ -94,7 +94,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
             ScrollView(self.isScroll ? self.axes : [], showsIndicators: self.showIndicators) {
                 ScrollViewReader{ reader in
                     if self.axes == .vertical {
-                        VStack(alignment: .leading, spacing:0) {
+                        ZStack {
                             if self.useTracking {
                                 GeometryReader { insideProxy in
                                     Color.clear
@@ -128,7 +128,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                         })
                     
                     } else {
-                        HStack(alignment: .top, spacing:0) {
+                        ZStack {
+                        //HStack(alignment: .top, spacing:0) {
                             if self.useTracking {
                                 GeometryReader { insideProxy in
                                     Color.clear

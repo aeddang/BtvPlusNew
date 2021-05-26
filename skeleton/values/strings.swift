@@ -91,6 +91,14 @@ extension String {
         public static let vip = "vip".loaalized()
         public static let gold = "gold".loaalized()
         public static let silver = "silver".loaalized()
+        
+        
+        public static let low = "low".loaalized()
+        public static let middle = "middle".loaalized()
+        public static let high = "high".loaalized()
+        public static let highst = "highst".loaalized()
+        public static let mutual = "mutual".loaalized()
+        public static let gradeNo = "gradeNo".loaalized()
     }
     
     struct week {
@@ -276,6 +284,18 @@ extension String {
         public static var purchaseHiddenLimitText = "alertPurchaseHiddenLimitText".loaalized()
         
         public static var newAlram = "alertNewAlram".loaalized()
+        public static var newAlramAllRead = "alertNewAlramAllRead".loaalized()
+
+        public static var possession = "alertPossession".loaalized()
+        public static var possessionText = "alertPossessionText".loaalized()
+        public static var possessionInfo = "alertPossessionInfo".loaalized()
+        public static var possessionDelete = "alertPossessionDelete".loaalized()
+        public static var possessionComplete = "alertPossessionComplete".loaalized()
+        public static var possessionStbNone = "alertPossessionStbNone".loaalized()
+        public static var possessionVodNone = "alertPossessionVodNone".loaalized()
+        public static var possessionDiableAlready = "alertPossessionDiableAlready".loaalized()
+        public static var possessionDiableAlreadyChange = "alertPossessionDiableAlreadyChange".loaalized()
+        public static var possessionDeleteConfirm = "alertPossessionDeleteConfirm".loaalized()
         
     }
     
@@ -328,6 +348,7 @@ extension String {
         public static let lookup =  "btnLookup".loaalized()
         public static let alramOn = "btnAlramOn".loaalized()
         public static let agree = "btnAgree".loaalized()
+        public static let readAll = "btnReadAll".loaalized()
     }
     struct player {
         public static let moveSec = "playerMoveSec".loaalized()
@@ -347,6 +368,7 @@ extension String {
     struct remote {
         public static let playEmpty = "remotePlayEmpty".loaalized()
         public static let playError = "remotePlayError".loaalized()
+        public static let playNoInfo = "remotePlayNoInfo".loaalized()
         public static let inputChannel = "remoteInputChannel".loaalized()
         public static let inputText = "remoteInputText".loaalized()
         public static let inputChannelHolder = "remoteInputChannelHolder".loaalized()
@@ -420,6 +442,7 @@ extension String {
         public static let purchaseTicketList = "titlePurchaseTicketList".loaalized()
         public static let myBenefits = "titleMyBenefits".loaalized()
         public static let myAlram = "titleMyAlram".loaalized()
+        public static let recommandFriend = "titleRecommandFriend".loaalized()
     }
     
     struct pageText {
@@ -519,6 +542,10 @@ extension String {
         public static let setupHappySenior = "setupHappySenior".loaalized()
         public static let setupHappySeniorPicture = "setupHappySeniorPicture".loaalized()
         public static let setupHappySeniorPictureText = "setupHappySeniorPictureText".loaalized()
+        
+        public static var setupPossession = "setupPossession".loaalized()
+        public static var setupPossessionSet = "setupPossessionSet".loaalized()
+        public static var setupPossessionSetText = "setupPossessionSetText".loaalized()
 
         public static let setupGuideNVersion = "setupGuideNVersion".loaalized()
         public static let setupGuide = "setupGuide".loaalized()
@@ -550,6 +577,25 @@ extension String {
         public static let myModifyNickname = "myModifyNickname".loaalized()
         public static let myModifyNicknameText = "myModifyNicknameText".loaalized()
         public static let myModifyNicknameTip = "myModifyNicknameTip".loaalized()
+        
+        public static let mySetup = "mySetup".loaalized()
+        public static let myRecommandFriend = "myRecommandFriend".loaalized()
+        public static let myRecommandFriendReword = "myRecommandFriendReword".loaalized()
+        
+        public static let recommandFriendText1 = "recommandFriendText1".loaalized()
+        public static let recommandFriendText2 = "recommandFriendText2".loaalized()
+        public static let recommandFriendText3 = "recommandFriendText3".loaalized()
+        public static let recommandFriendText4 = "recommandFriendText4".loaalized()
+        public static let recommandFriendTable1 = "recommandFriendTable1".loaalized()
+        public static let recommandFriendTable1Sub1 = "recommandFriendTable1Sub1".loaalized()
+        public static let recommandFriendTable1Sub2 = "recommandFriendTable1Sub2".loaalized()
+        public static let recommandFriendTable1Sub3 = "recommandFriendTable1Sub3".loaalized()
+
+        public static let recommandFriendTable2 = "recommandFriendTable2".loaalized()
+        public static let recommandFriendTable2Sub1 = "recommandFriendTable2Sub1".loaalized()
+        public static let recommandFriendTable2Sub2 = "recommandFriendTable2Sub2".loaalized()
+        public static let recommandFriendTable2Sub3 = "recommandFriendTable2Sub3".loaalized()
+        
         
         public static let myBenefitsCoupon = "myBenefitsCoupon".loaalized()
         public static let myBenefitsCouponText = "myBenefitsCouponText".loaalized()

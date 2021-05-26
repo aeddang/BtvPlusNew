@@ -11,7 +11,9 @@ import SwiftUI
 struct FillButton: View, SelecterbleProtocol{
     let text:String
     var trailText:String? = nil
+    var trailTextColor:CGFloat? = nil
     var strikeText:String? = nil
+    var moreText:String? = nil
     var index: Int = 0
     var isSelected: Bool = true
     var imageAni:[String]? = nil
@@ -25,6 +27,7 @@ struct FillButton: View, SelecterbleProtocol{
     )
     var size:CGFloat = Dimen.button.medium
     var imageSize:CGFloat = Dimen.icon.light
+    var moreSize:CGFloat = Dimen.icon.regular
     var bgColor:Color = Color.brand.primary
     var strokeWidth:CGFloat = 0
     var margin:CGFloat = Dimen.margin.regular
@@ -111,6 +114,33 @@ struct FillButton: View, SelecterbleProtocol{
         self.margin = Dimen.margin.light
         self.size = Dimen.button.heavyExtra
     }
+    
+    // type more + text
+    init(
+        text:String,
+        isMore: Bool,
+        moreText:String,
+        image:String? = nil,
+        bgColor:Color = Color.transparent.clearUi,
+        action:@escaping (_ idx:Int) -> Void )
+    {
+        self.text = text
+        self.moreText = moreText
+        self.isMore = isMore
+        self.bgColor = bgColor
+        self.action = action
+        self.image = image
+        self.imageSize = Dimen.icon.regularExtra
+        self.moreSize = Dimen.icon.tiny
+        self.margin = Dimen.margin.light
+        self.size = Dimen.button.heavyExtra
+        self.textModifier = TextModifier(
+            family: Font.family.bold,
+            size: Font.size.lightExtra,
+            color: Color.app.white,
+            activeColor: Color.app.white
+        )
+    }
    
     // type stroke
     init(
@@ -162,11 +192,11 @@ struct FillButton: View, SelecterbleProtocol{
                             Text(strikeText)
                                 .font(.custom(textModifier.family, size: Font.size.thinExtra))
                                 .strikethrough()
-                                .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+                                .foregroundColor(self.isSelected ? self.textModifier.activeColor : textModifier.color)
                         }
                         if let trailText = self.trailText {
                             Text(trailText )
-                                .font(.custom(textModifier.family, size: textModifier.size))
+                                .font(.custom(textModifier.family, size:  self.textModifier.size))
                                 .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
                         }
                     }
@@ -198,10 +228,17 @@ struct FillButton: View, SelecterbleProtocol{
                     }
                     if self.isMore{
                         Spacer()
+                        if let moreText = self.moreText {
+                            Text(moreText)
+                                .modifier(MediumTextStyle(
+                                    size: Font.size.thinExtra,
+                                    color: Color.app.greyLight
+                                ))
+                        }
                         Image(Asset.icon.more)
                         .renderingMode(.original).resizable()
                         .scaledToFit()
-                        .frame(width: Dimen.icon.regular, height: Dimen.icon.regular)
+                        .frame(width: self.moreSize, height: self.moreSize)
                         .padding(.trailing, Dimen.margin.tinyExtra)
                     }
                 }

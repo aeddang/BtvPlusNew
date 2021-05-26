@@ -62,6 +62,7 @@ struct PageSynopsis: PageView {
                                 playerModel: self.playerModel,
                                 playerListViewModel: self.playerListViewModel,
                                 prerollModel: self.prerollModel,
+                                playGradeData: self.synopsisModel?.playGradeData,
                                 title: self.title,
                                 imgBg: self.imgBg,
                                 imgContentMode: self.imgContentMode,

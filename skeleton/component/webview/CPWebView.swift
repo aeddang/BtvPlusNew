@@ -197,7 +197,7 @@ struct CustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                      initiatedByFrame frame: WKFrameInfo,
                      completionHandler: @escaping (Bool) -> Void) {
             
-            self.parent.appSceneObserver.alert = .confirm(nil,  message, completionHandler)
+            self.parent.appSceneObserver.alert = .confirm(nil,  message, nil, completionHandler)
         }
 
         func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String,

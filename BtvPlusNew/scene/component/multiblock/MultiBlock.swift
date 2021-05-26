@@ -8,6 +8,12 @@
 import Foundation
 import SwiftUI
 
+struct BlockDataSet:Identifiable {
+    private(set) var id = UUID().uuidString
+    var datas:[BlockData] = []
+    var index:Int = -1
+}
+
 extension MultiBlock{
     static let spacing:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.medium
     static let headerSize:Int = 3
@@ -69,12 +75,12 @@ struct MultiBlock:PageComponent {
                    )
                    .modifier(ListRowInset(spacing: Self.spacing))
                 }
+                if let data = self.tipBlock {
+                    TipBlock(data:data)
+                        .modifier(ListRowInset(spacing: Self.spacing))
+                }
+                
                 if !self.datas.isEmpty  {
-                    if let data = self.tipBlock {
-                        TipBlock(data:data)
-                            .modifier(ListRowInset(spacing: Self.spacing))
-                    }
-                    
                     if Self.headerSize < self.datas.count && (self.topDatas?.isEmpty == false || self.monthlyDatas?.isEmpty == false) {
                         VStack(spacing:Self.spacing){
                             ForEach( self.datas[0...Self.headerSize]) { data in
@@ -121,6 +127,7 @@ struct MultiBlock:PageComponent {
                     }
                 }
             }
+            
         } else {
             InfinityScrollView(
                 viewModel: self.viewModel,
@@ -238,6 +245,7 @@ struct MultiBlock:PageComponent {
                 }
             }
         }
+    
     
     struct MultiBlockCell:PageComponent {
         var pageObservable:PageObservable

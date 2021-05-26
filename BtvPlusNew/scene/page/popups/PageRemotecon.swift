@@ -234,17 +234,22 @@ struct PageRemotecon: PageView {
         guard let type = message.SvcType else { return }
         
         switch type {
-        case "VOD":
+        case BroadcastingType.VOD.rawValue:
             self.dataProvider.broadcasting.requestBroadcast(.updateCurrentVod(message.CurCID))
-        case "IPTV":
+        case BroadcastingType.IPTV.rawValue:
             if message.CurChNum == "0" {
                 self.remotePlayData =  RemotePlayData(isEmpty: true)
+                self.dataProvider.broadcasting.reset()
                 return
             }
             self.dataProvider.broadcasting.requestBroadcast(.updateCurrentBroadcast)
             self.dataProvider.broadcasting.updateChannelNo(message.CurChNum)
+        case BroadcastingType.OAP.rawValue: 
+            self.remotePlayData =  RemotePlayData(isNoInfo: true)
+            self.dataProvider.broadcasting.reset()
         default:
             self.remotePlayData =  RemotePlayData(isEmpty: true)
+            self.dataProvider.broadcasting.reset()
         }
     }
     
@@ -263,7 +268,7 @@ struct PageRemotecon: PageView {
         } else {
             self.remotePlayData =  RemotePlayData(
                 title: !isLock ? pro.title : String.app.lockAdultProgram,
-                subText: pro.duration,
+                subText: pro.duration != nil ? (pro.duration!+String.app.min) : nil,
                 restrictAgeIcon: pro.restrictAgeIcon,
                 isOnAir: false)
         }

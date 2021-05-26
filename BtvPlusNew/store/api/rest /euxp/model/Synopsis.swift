@@ -133,7 +133,28 @@ struct SynopsisContentsItem : Codable {
     private(set) var contrp_id:String? = nil  // CP 계약 코드
     private(set) var vc_bg_img_path:String? = nil
     private(set) var vc_dark_img_yn:String? = nil
-    private(set) var epsd_sales_vas_itm_id:String? = nil
+    private(set) var epsd_sales_vas_itm_id:String? = nil //
+    private(set) var orgn_epsd_id: String? = nil // 클립 영상의 본편 에피소드 id
+    private(set) var manufco_nm: String? = nil // 제작사명
+    private(set) var pcim_lvl_cls_no: String? = nil   // 영상등급분류번호
+    private(set) var pcim_lvl_cls_dy: String? = nil   // 영상등급분류일자
+    private(set) var pcim_lvl1_exps_yn: String? = nil   // 영상등급1노출여부
+    private(set) var pcim_lvl2_exps_yn: String? = nil   // 영상등급2노출여부
+    private(set) var pcim_lvl3_exps_yn: String? = nil   // 영상등급3노출여부
+    private(set) var pcim_lvl4_exps_yn: String? = nil   // 영상등급4노출여부
+    private(set) var pcim_lvl5_exps_yn: String? = nil   // 영상등급5노출여부
+    private(set) var pcim_lvl6_exps_yn: String? = nil   // 영상등급6노출여부
+    private(set) var pcim_lvl7_exps_yn: String? = nil   // 영상등급7노출여부
+    private(set) var pcim_lvl1_wat_age_cd: String? = nil   // 영상등급1시청연령코드(0:낮음, 12:보통, 15:다소높음, 19:높음)
+    private(set) var pcim_lvl2_wat_age_cd: String? = nil   // 영상등급2시청연령코드(0:낮음, 12:보통, 15:다소높음, 19:높음)
+    private(set) var pcim_lvl3_wat_age_cd: String? = nil   // 영상등급3시청연령코드(0:낮음, 12:보통, 15:다소높음, 19:높음)
+    private(set) var pcim_lvl4_wat_age_cd: String? = nil   // 영상등급4시청연령코드(0:낮음, 12:보통, 15:다소높음, 19:높음)
+    private(set) var pcim_lvl5_wat_age_cd: String? = nil   // 영상등급5시청연령코드(0:낮음, 12:보통, 15:다소높음, 19:높음)
+    private(set) var pcim_lvl6_wat_age_cd: String? = nil   // 영상등급6시청연령코드(0:낮음, 12:보통, 15:다소높음, 19:높음)
+    private(set) var pcim_lvl7_wat_age_cd: String? = nil   // 영상등급7시청연령코드(0:낮음, 12:보통, 15:다소높음, 19:높음)
+    private(set) var wat_lvl_phrs: String? = nil   // 시청등급문구
+    
+    
 }
 
 struct EpsdRsluInfo: Codable {

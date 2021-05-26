@@ -14,6 +14,7 @@ struct SynopsisTop: PageComponent{
     @ObservedObject var playerModel: BtvPlayerModel = BtvPlayerModel()
     var playerListViewModel: InfinityScrollModel = InfinityScrollModel()
     var prerollModel = PrerollModel()
+    var playGradeData: PlayGradeData? = nil;
     var title:String? = nil
     var imgBg:String? = nil
     var imgContentMode:ContentMode = .fit
@@ -30,6 +31,7 @@ struct SynopsisTop: PageComponent{
                 viewModel:self.playerModel,
                 prerollModel:self.prerollModel,
                 listViewModel: self.playerListViewModel,
+                playGradeData: self.playGradeData,
                 title: self.title,
                 thumbImage: self.imgBg,
                 thumbContentMode: self.imgContentMode,

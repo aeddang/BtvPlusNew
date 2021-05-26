@@ -235,39 +235,36 @@ struct PosterList: PageComponent{
     var useTracking:Bool = false
     var margin:CGFloat = Dimen.margin.thin
     var action: ((_ data:PosterData) -> Void)? = nil
+    
+   
+    @State var subDataSets:[PosterDataSet]? = nil
+    
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
             axes: .horizontal,
             marginVertical: 0,
             marginHorizontal: self.margin,
-            spacing: Self.spacing,
+            spacing: 0,
             isRecycle: true, //self.banners?.isEmpty == false ? false : true,
             useTracking: self.useTracking
             ){
-            if let banners = self.banners {
+            if banners?.isEmpty == false, let banners = self.banners {
                 ForEach(banners) { data in
                     BannerItem(data: data)
+                        .modifier(HolizentalListRowInset(spacing: Self.spacing))
                 }
-            }
-            if Self.headerSize < self.datas.count && self.banners?.isEmpty == false {
-                HStack(spacing:Self.spacing){
-                    ForEach( self.datas[0...Self.headerSize]) { data in
-                        PosterItem( data:data , isSelected: self.contentID == nil
-                                        ? false
-                                        : self.contentID == data.epsdId)
-                        .onTapGesture {
-                            self.onTap(data: data)
+                if let subDataSets = self.subDataSets {
+                    ForEach(subDataSets) {sets in
+                        HStack(spacing:Self.spacing){
+                            ForEach(sets.datas) { data in
+                                PosterItem( data:data )
+                                    .onTapGesture {
+                                        self.onTap(data: data)
+                                    }
+                            }
                         }
-                    }
-                }
-                
-                ForEach( self.datas[(Self.headerSize+1)...(self.datas.count-1)]) { data in
-                    PosterItem( data:data , isSelected: self.contentID == nil
-                                    ? false
-                                    : self.contentID == data.epsdId)
-                    .onTapGesture {
-                        self.onTap(data: data)
+                        .modifier(HolizentalListRowInset(spacing: Self.spacing))
                     }
                 }
             } else {
@@ -275,13 +272,43 @@ struct PosterList: PageComponent{
                     PosterItem( data:data , isSelected: self.contentID == nil
                                     ? false
                                     : self.contentID == data.epsdId)
-                    .onTapGesture {
-                        self.onTap(data: data)
-                    }
+                        .modifier(HolizentalListRowInset(spacing: Self.spacing))
+                        .onTapGesture {
+                            self.onTap(data: data)
+                        }
                 }
             }
         }
+        .onAppear{
+            guard let banners = self.banners else {return}
+            if banners.isEmpty {return}
+            self.onBindingData(datas: self.datas)
+        }
     }//body
+    
+    func onBindingData(datas:[PosterData]?)  {
+        let count:Int = 2
+        var rows:[PosterDataSet] = []
+        var cells:[PosterData] = []
+        var total = self.datas.count
+        datas?.forEach{ d in
+            if cells.count < count {
+                cells.append(d)
+            }else{
+                rows.append(
+                    PosterDataSet( count: count, datas: cells, isFull: true, index: total)
+                )
+                cells = [d]
+                total += 1
+            }
+        }
+        if !cells.isEmpty {
+            rows.append(
+                PosterDataSet( count: count, datas: cells,isFull: cells.count == count, index: total)
+            )
+        }
+        self.subDataSets = rows
+    }
     
     func onTap(data:PosterData)  {
         if let action = self.action {
@@ -343,7 +370,7 @@ struct PosterViewList: PageComponent{
 
 struct PosterDataSet:Identifiable {
     private(set) var id = UUID().uuidString
-    var count:Int = 3
+    var count:Int = 2
     var datas:[PosterData] = []
     var isFull = false
     var index:Int = -1

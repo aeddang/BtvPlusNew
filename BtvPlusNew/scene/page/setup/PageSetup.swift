@@ -32,184 +32,26 @@ struct PageSetup: PageView {
                     
                     InfinityScrollView( viewModel: self.infinityScrollModel ){
                         VStack(alignment:.leading , spacing:Dimen.margin.medium) {
-                            VStack(alignment:.leading , spacing:Dimen.margin.thinExtra) {
-                                Text(String.pageText.setupApp).modifier(ContentTitle())
-                                VStack(alignment:.leading , spacing:0) {
-                                    SetupItem (
-                                        isOn: self.$isDataAlram,
-                                        title: String.pageText.setupAppDataAlram ,
-                                        subTitle: String.pageText.setupAppDataAlramText
-                                    )
-                                    Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
-                                    SetupItem (
-                                        isOn: self.$isAutoRemocon,
-                                        title: String.pageText.setupAppAutoRemocon ,
-                                        subTitle: String.pageText.setupAppAutoRemoconText
-                                    )
-                                    if !SystemEnvironment.isTablet {
-                                        Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
-                                        SetupItem (
-                                            isOn: self.$isRemoconVibration,
-                                            title: String.pageText.setupAppRemoconVibration ,
-                                            subTitle: String.pageText.setupAppRemoconVibrationText
-                                        )
-                                    }
-                                }
-                                .background(Color.app.blueLight)
+                            SetupApp(isDataAlram: self.$isDataAlram, isAutoRemocon: self.$isAutoRemocon, isRemoconVibration: self.$isRemoconVibration)
+                            SetupPlay(isAutoPlay: self.$isAutoPlay, isNextPlay: self.$isNextPlay)
+                            SetupAlram(isPush:self.$isPush)
+                            SetupCertification(
+                                isPurchaseAuth: self.$isPurchaseAuth,
+                                isSetWatchLv: self.$isSetWatchLv,
+                                watchLvs: self.watchLvs,
+                                selectedWatchLv: self.selectedWatchLv){ select in
+                                self.setupWatchLv(select: select)
                             }
+                            SetupChildren(){
+                                self.setupWatchHabit()
+                            }
+                            SetupPossession(isPossession: self.$isPossession)
+                            SetupHappySenior()
+                            SetupGuideNVersion()
+                            #if DEBUG
+                                SetupTest()
+                            #endif
                             
-                            VStack(alignment:.leading , spacing:Dimen.margin.thinExtra) {
-                                Text(String.pageText.setupPlay).modifier(ContentTitle())
-                                VStack(alignment:.leading , spacing:0) {
-                                    SetupItem (
-                                        isOn: self.$isAutoPlay,
-                                        title: String.pageText.setupPlayAuto ,
-                                        subTitle: String.pageText.setupPlayAutoText
-                                    )
-                                    Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
-                                    SetupItem (
-                                        isOn: self.$isNextPlay,
-                                        title: String.pageText.setupPlayNext ,
-                                        subTitle: String.pageText.setupPlayNextText
-                                    )
-
-                                }
-                                .background(Color.app.blueLight)
-                            }
-                            
-                            VStack(alignment:.leading , spacing:Dimen.margin.thinExtra) {
-                                Text(String.pageText.setupAlram).modifier(ContentTitle())
-                                VStack(alignment:.leading , spacing:0) {
-                                    SetupItem (
-                                        isOn: self.$isPush,
-                                        title: String.pageText.setupAlramMarketing ,
-                                        subTitle: String.pageText.setupAlramMarketingText,
-                                        tips: [
-                                            String.pageText.setupAlramMarketingTip1,
-                                            String.pageText.setupAlramMarketingTip2,
-                                            String.pageText.setupAlramMarketingTip3,
-                                            String.pageText.setupAlramMarketingTip4,
-                                            String.pageText.setupAlramMarketingTip5
-                                        ]
-                                    )
-                                }
-                                .background(Color.app.blueLight)
-                            }
-                            
-                            VStack(alignment:.leading , spacing:Dimen.margin.thinExtra) {
-                                Text(String.pageText.setupCertification).modifier(ContentTitle())
-                                VStack(alignment:.leading , spacing:0) {
-                                    SetupItem (
-                                        isOn: self.$isPurchaseAuth,
-                                        title: String.pageText.setupCertificationPurchase,
-                                        subTitle: String.pageText.setupCertificationPurchaseText
-                                    )
-                                    Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
-                                    SetupItem (
-                                        isOn: self.$isSetWatchLv,
-                                        title: String.pageText.setupCertificationAge,
-                                        subTitle: String.pageText.setupCertificationAgeText,
-                                        radios: self.isSetWatchLv ? self.watchLvs : nil,
-                                        selectedRadio: self.isSetWatchLv ? self.selectedWatchLv : nil,
-                                        selected: { select in
-                                            self.setupWatchLv(select: select)
-                                        }
-                                    )
-                                }
-                                .background(Color.app.blueLight)
-                            }
-                            
-                            VStack(alignment:.leading , spacing:Dimen.margin.thinExtra) {
-                                Text(String.pageText.setupChildren).modifier(ContentTitle())
-                                VStack(alignment:.leading , spacing:0) {
-                                    SetupItem (
-                                        isOn: .constant(true),
-                                        title: String.pageText.setupChildrenHabit,
-                                        subTitle: String.pageText.setupChildrenHabitText,
-                                        more:{
-                                            self.setupWatchHabit()
-                                        }
-                                    )
-                                }
-                                .background(Color.app.blueLight)
-                            }
-                            
-                            VStack(alignment:.leading , spacing:Dimen.margin.thinExtra) {
-                                Text(String.pageText.setupHappySenior).modifier(ContentTitle())
-                                VStack(alignment:.leading , spacing:0) {
-                                    SetupItem (
-                                        isOn: .constant(true),
-                                        title: String.pageText.setupHappySeniorPicture,
-                                        subTitle: String.pageText.setupHappySeniorPictureText,
-                                        more:{
-                                            AppUtil.openURL(ApiPath.getRestApiPath(.WEB) + BtvWebView.happySenior)
-                                        }
-                                    )
-                                }
-                                .background(Color.app.blueLight)
-                            }
-                            
-                            VStack(alignment:.leading , spacing:Dimen.margin.thinExtra) {
-                                Text(String.pageText.setupGuideNVersion).modifier(ContentTitle())
-                                VStack(alignment:.leading , spacing:0) {
-                                    SetupItem (
-                                        isOn: .constant(true),
-                                        title: String.pageText.setupGuide,
-                                        more:{
-                                            self.pagePresenter.openPopup(
-                                                PageProvider
-                                                    .getPageObject(.webview)
-                                                    .addParam(key: .data, value: BtvWebView.faq)
-                                                    .addParam(key: .title , value: String.pageText.setupGuide)
-                                            )
-                                        }
-                                    )
-                                    Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
-                                    SetupItem (
-                                        isOn: .constant(true),
-                                        title: SystemEnvironment.bundleVersion + "(" + SystemEnvironment.buildNumber + ")",
-                                        statusText: SystemEnvironment.needUpdate ? nil : String.pageText.setupVersionLatest,
-                                        more:{
-                                            
-                                        }
-                                    )
-                                    Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
-                                    SetupItem (
-                                        isOn: .constant(true),
-                                        title: String.pageText.setupOpensource,
-                                        more:{
-                                            self.pagePresenter.openPopup(
-                                                PageProvider
-                                                    .getPageObject(.webview)
-                                                    .addParam(key: .data, value: BtvWebView.opensrcLicense)
-                                                    .addParam(key: .title , value: String.pageText.setupOpensource)
-                                            )
-                                        }
-                                    )
-                                   
-                                    #if DEBUG
-                                        Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
-                                        SetupItem (
-                                            isOn: .constant(true),
-                                            title: "실서버",
-                                            more:{
-                                                self.isInitate = false
-                                                self.repository.reset(isReleaseMode: true, isEvaluation: false)
-                                            }
-                                        )
-                                        Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
-                                        SetupItem (
-                                            isOn: .constant(true),
-                                            title: "스테이지",
-                                            more:{
-                                                self.isInitate = false
-                                                self.repository.reset(isReleaseMode: false, isEvaluation: false)
-                                            }
-                                        )
-                                    #endif
-                                }
-                                .background(Color.app.blueLight)
-                            }
                         }
                         .padding(.vertical, Dimen.margin.medium)
                        
@@ -293,6 +135,14 @@ struct PageSetup: PageView {
                 self.appSceneObserver.event = .toast(
                     self.isNextPlay ? String.alert.nextPlayOn : String.alert.nextPlayOff
                 )
+            }
+            .onReceive( [self.isPossession].publisher ) { value in
+                if !self.isInitate { return }
+                if self.willPossession != nil { return }
+                if !value { return }
+                self.setupPossession()
+               
+                
             }
             .onReceive( [self.isPurchaseAuth].publisher ) { value in
                 if !self.isInitate { return }
@@ -387,20 +237,19 @@ struct PageSetup: PageView {
     @State var isSetWatchLv:Bool = false
     @State var isPurchaseAuth:Bool = false
     @State var willPurchaseAuth:Bool? = nil
-    
-    @State var watchLvs:[String]? = nil
-    @State var selectedWatchLv:String? = nil
+    @State var isPossession:Bool = false
+    @State var willPossession:Bool? = nil
     @State var willSelectedWatchLv:String? = nil
     
     @State var isInitate:Bool = false
-    
+    @State var watchLvs:[String]? = nil
+    @State var selectedWatchLv:String? = nil
     
     func resetSetup(status:PairingStatus){
         switch status {
         case .pairing : self.isPairing = true
         default : self.isPairing = false
         }
-        
         self.isDataAlram = self.setup.dataAlram
         self.isAutoRemocon = self.isPairing ? self.setup.autoRemocon : false
         self.isRemoconVibration = self.isPairing ? self.setup.remoconVibration : false
@@ -411,10 +260,32 @@ struct PageSetup: PageView {
         self.watchLvs = Setup.WatchLv.allCases.map{$0.getName()}
         self.selectedWatchLv = Setup.WatchLv.getLv(SystemEnvironment.watchLv)?.getName()
         self.isPush = self.pairing.user?.isAgree3 ?? false
+        self.isPossession = self.setup.possession.isEmpty == false
         self.isInitate = true
     }
     
+    private func setupPossession(){
+        self.willPossession = true
+        self.appSceneObserver.alert = .needCertification(
+            String.alert.possession, String.alert.possessionText, String.alert.possessionInfo){
+            
+            self.setupPossessionCancel()
+        }
+    }
+    private func setupPossessionCancel(){
+        self.willPossession = nil
+        self.isPossession = false
+    }
+    
+    private func setupPossessionCertificationCompleted(){
+        
+    }
+    
     private func setupWatchLv(select:String?){
+        if self.isPairing == false {
+            self.appSceneObserver.alert = .needPairing()
+            return
+        }
         self.willSelectedWatchLv = select ?? ""
         self.pagePresenter.openPopup(
             PageProvider.getPageObject(.confirmNumber)
@@ -423,6 +294,7 @@ struct PageSetup: PageView {
     }
    
     private func onSetupWatchLv(select:String){
+        if self.isPairing == false { return }
         if select.isEmpty {
             self.isSetWatchLv = false
             self.repository.updateWatchLv(nil)
@@ -438,6 +310,7 @@ struct PageSetup: PageView {
     }
     
     private func setupPurchaseAuth(_ select:Bool){
+        if self.isPairing == false { return }
         self.willPurchaseAuth = select
         self.pagePresenter.openPopup(
             PageProvider.getPageObject(.confirmNumber)
@@ -453,6 +326,17 @@ struct PageSetup: PageView {
     }
     
     private func setupWatchHabit(){
+        if self.isPairing == false {
+            self.appSceneObserver.alert = .needPairing()
+            return
+        }
+        if !SystemEnvironment.isAdultAuth {
+            self.pagePresenter.openPopup(
+                PageProvider.getPageObject(.adultCertification)
+            )
+            self.isSetWatchLv = false
+            return
+        }
         let move = PageProvider.getPageObject(.watchHabit)
         move.isPopup = true
         self.pagePresenter.openPopup(
@@ -463,6 +347,7 @@ struct PageSetup: PageView {
     }
     
     private func setupPush(_ select:Bool){
+        if self.isPairing == false { return }
         self.willPush = select
         self.dataProvider.requestData(q: .init(type: .updateAgreement(select)))
     }

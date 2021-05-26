@@ -11,16 +11,18 @@ import SwiftUI
 import Combine
 
 enum SceneAlert:Equatable {
-    case confirm(String?, String?,(Bool) -> Void), alert(String?, String?, String? = nil, (() -> Void)? = nil),
+    case confirm(String?, String?, String? = nil, (Bool) -> Void), alert(String?, String?, String? = nil, (() -> Void)? = nil),
          recivedApns(AlramData?), apiError(ApiResultError),
          connectWifi((Bool) -> Void) , notFoundDevice((Bool) -> Void), requestLocation((Bool) -> Void),
          
          limitedDevice(PairingInfo?), pairingError(NpsCommonHeader?), pairingUpdated(PairingUpdateData),
          pairingRecovery, needPairing(String? = nil), pairingCheckFail,
         
-         needPurchase( PurchaseWebviewModel ),
+         needPurchase( PurchaseWebviewModel ), needCertification( String?, String?, String? = nil, () -> Void ),
          serviceUnavailable(String?), serviceSelect(String?, String? , (String?) -> Void),
          like(String, Bool?), updateAlram(String, Bool),
+         
+         
          cancel
     
     static func ==(lhs: SceneAlert, rhs: SceneAlert) -> Bool {
@@ -79,7 +81,7 @@ struct SceneAlertController: PageComponent{
             switch self.currentAlert {
             case .alert(_, _, _, let completionHandler) :
                 if let handler = completionHandler { self.selectedAlert(idx, completionHandler:handler) }
-            case .confirm(_, _, let completionHandler) : self.selectedConfirm(idx, completionHandler:completionHandler)
+            case .confirm(_, _, _, let completionHandler) : self.selectedConfirm(idx, completionHandler:completionHandler)
             case .apiError(let data): self.selectedApi(idx, data:data)
             case .connectWifi(let completionHandler): self.selectedConnectWifi(idx, completionHandler:completionHandler)
             case .notFoundDevice(let completionHandler) : self.selectedNotFoundDevice(idx, completionHandler:completionHandler)
@@ -91,6 +93,7 @@ struct SceneAlertController: PageComponent{
             case .pairingRecovery: self.selectedPairingRecovery(idx)
             case .needPairing: self.selectedNeedPairing(idx)
             case .needPurchase(let data): self.selectedNeedPurchase(idx, model: data)
+            case .needCertification(_, _, _, let cancleHandler): self.selectedNeedCertification(idx, canclenHandler: cancleHandler) 
             case .serviceUnavailable(let path): self.selectedServiceUnavailable(idx, path: path)
             case .serviceSelect(_ , let value, let completionHandler) : self.selectedServiceSelect(idx, value:value, completionHandler:completionHandler)
             case .pairingCheckFail : self.selectedPairingCheckFail(idx)
@@ -114,7 +117,7 @@ struct SceneAlertController: PageComponent{
                 }
                 return
             case .alert(let title,let text, let subText, _) : self.setupAlert(title:title, text:text, subText:subText)
-            case .confirm(let title,let text, _) : self.setupConfirm(title:title, text:text)
+            case .confirm(let title,let text, let subText, _) : self.setupConfirm(title:title, text:text, subText:subText)
             case .apiError(let data): self.setupApi(data:data)
             case .connectWifi: self.setupConnectWifi()
             case .notFoundDevice: self.setupNotFoundDevice()
@@ -129,6 +132,7 @@ struct SceneAlertController: PageComponent{
             case .pairingRecovery: self.setupPairingRecovery()
             case .needPairing(let msg): self.setupNeedPairing(msg:msg)
             case .needPurchase: self.setupNeedPurchase()
+            case .needCertification(let title,let text, let subText, _): self.setupNeedCertification(title: title, text: text, subText: subText)
             case .serviceUnavailable(let path): self.setupServiceUnavailable(path: path)
             case .serviceSelect(let text, _ , _) : self.setupServiceSelect(text: text)
             case .pairingCheckFail : self.setupPairingCheckFail()
@@ -524,10 +528,28 @@ struct SceneAlertController: PageComponent{
         }
     }
     
-    
-    func setupConfirm(title:String?, text:String?) {
+    func setupNeedCertification(title:String?, text:String?, subText:String? = nil) {
         self.title = title
         self.text = text ?? ""
+        self.subText = subText
+        self.buttons = [
+            AlertBtnData(title: String.app.cancel, index: 0),
+            AlertBtnData(title: String.button.certification, index: 1)
+        ]
+    }
+    func selectedNeedCertification(_ idx:Int, canclenHandler: @escaping () -> Void) {
+        if idx == 1 {
+            
+        } else {
+            canclenHandler()
+        }
+    }
+    
+    
+    func setupConfirm(title:String?, text:String?, subText:String? = nil) {
+        self.title = title
+        self.text = text ?? ""
+        self.subText = subText
         self.buttons = [
             AlertBtnData(title: String.app.cancel, index: 0),
             AlertBtnData(title: String.app.corfirm, index: 1)

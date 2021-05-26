@@ -92,6 +92,15 @@
 "vip" = "VIP";
 "gold" = "GOLD";
 "silver" = "SILVER";
+
+"low" = "낮음";
+"middle" = "보통";
+"high" = "다소높음";
+"highst" = "높음";
+
+"mutual" = "상호";
+"gradeNo" = "등급분류번호";
+
 /*
   Button
 */
@@ -145,6 +154,8 @@
 "btnLookup" = "조회하기";
 "btnAlramOn" = "알림 설정 켜기";
 "btnAgree" = "동의";
+"btnReadAll" = "전체 읽기";
+
 /*
  Sort
 */
@@ -320,6 +331,21 @@
 "alertPurchaseHiddenLimit" = "구매내역 삭제 건수 제한 안내";
 "alertPurchaseHiddenLimitText" = "구매 내역은 한 번에 최대 100건까지 삭제 가능합니다. 구매 내역을 100건 이하로 선택 후 다시 시도해주세요.";
 "alertNewAlram" = "새로운 알림을 확인해보세요.";
+"alertNewAlramAllRead" = "모든 신규 알림을 읽은 상태로 표시하시겠습니까?";
+
+"alertPossession" = "해지 후 소장 VOD 이용 안내";
+"alertPossessionText" = "해지한 B tv의 가입자 본인 확인 후 해지 전 B tv에서 구매한 소장 VOD를 가져오실 수 있습니다.";
+"alertPossessionInfo" = "스마트 기기 1대에서만 이용 가능합니다.";
+
+"alertPossessionDelete" = "소장 VOD 가져오기 설정을 해제했습니다.";
+"alertPossessionComplete" = "소장 VOD 가져오기를 완료했습니다.\n가져온 소장 VOD는 MY > 이전 구매/소장\n목록에서 이용하실 수 있습니다.";
+
+"alertPossessionStbNone" = "소장 VOD를 시청할 수 있는\n이전 B tv가 없습니다.";
+"alertPossessionVodNone" = "소장 VOD 시청 가능 B tv 없음";
+
+"alertPossessionDiableAlready" = "선택하신 B tv의 소장 VOD를\n다른 기기에서 이용 중입니다.\n동일한 B tv의 소장 VOD는 한 대의 기기에서만\n가져올 수 있습니다.\n다른 기기의 가져오기 해제 후 이용해 주세요.";
+"alertPossessionDiableAlreadyChange" = "이미 다른 기기에서 소장 VOD를\n이용 중인 B tv입니다.\n기존 기기에서 이용을 중지하고\n현재 기기에서 시청하시겠습니까?";
+"alertPossessionDeleteConfirm" = "설정을 해지하시면 구매/소장 목록에서\n이전 B tv의 소장 VOD를\n이용하실 수 없습니다.\n설정을 해제하시겠습니까?";
 
 /*
  PageTitle
@@ -347,6 +373,7 @@
 "titlePurchaseTicketList" = "이용권";
 "titleMyBenefits" = "나의 할인 해택";
 "titleMyAlram" = "알림 목록";
+"titleRecommandFriend" = "친구에게 추천하기";
 
 /*
  PagePairing
@@ -449,6 +476,29 @@
 "myModifyNicknameText" = "설정하실 B tv의 닉네임을 입력해주세요.";
 "myModifyNicknameTip" = "※ 한글,영문,숫자를 포함하여 최대 8자까지 입력가능.";
 
+"mySetup" = "간편한 B tv 설정";
+"myRecommandFriend" = "친구 추천";
+"myRecommandFriendReword" = "콘텐츠 추천하고 할인 받기";
+
+/*
+ PageRecommandFriend
+*/
+"recommandFriendText1" = "내가 본 VOD를 친구에게 추천하면";
+"recommandFriendText2" = "친구도 나도 할인!";
+"recommandFriendText3" = "구매한 작품이 추천 가능한지 확인해 보세요!\n추천 가능한 작품에만 추천하기 버튼이 표시됩니다.";
+"recommandFriendText4" = "※ 추천 가능한 작품은 계속 변경되며, 이 중 구매한 작품이 있을 경우\n추천이 가능합니다.";
+
+"recommandFriendTable1" = "나의 친구 추천 현황";
+"recommandFriendTable1Sub1" = "추천하기";
+"recommandFriendTable1Sub2" = "추천 성공";
+"recommandFriendTable1Sub3" = "누적 혜택";
+
+"recommandFriendTable2" = "추천 성공 내역";
+"recommandFriendTable2Sub1" = "추천일";
+"recommandFriendTable2Sub2" = "추천 작품";
+"recommandFriendTable2Sub3" = "받은 혜택";
+
+
 /*
  PageMyBenefits
 */
@@ -539,6 +589,10 @@
 "setupHappySeniorPicture" = "가족사진 등록";
 "setupHappySeniorPictureText" = "B tv Lite 효 상품을 이용중인 셋톱박스 해피시니어 홈 화면에 가족사진을 등록할 수 있습니다.";
 
+"setupPossession" = "소장 VOD 가져오기";
+"setupPossessionSet" = "B tv 해지 고객 소장 VOD 가져오기";
+"setupPossessionSetText" = "B tv 가입자 인증 후 B tv 이용 중 구매하신 소장 VOD를\n해지 후에도 모바일 B tv에서 시청하실 수 있습니다.";
+
 "setupGuideNVersion" = "도움말 및 버전 정보";
 "setupGuide" = "도움말";
 "setupVersionLatest" = "최신 버전 이용 중";
@@ -620,6 +674,9 @@
 "privacyAndAgreeText2" = "셋톱박스 연결 및 맞춤형 서비스 제공, 할인, 이벤트 등 다양한 혜택 정보와 업데이트, 콘텐츠 추천 등 서비스 이용에 필요한 정보 안내";
 "privacyAndAgreeText3" = "셋톱연결 해지 후 익일 24시까지";
 
+
+
+
 /*
  Player
 */
@@ -643,6 +700,7 @@
 */
 "remotePlayEmpty" = "프로그램 정보가 보이지 않으면\n새로고침 버튼을 눌러주세요.";
 "remotePlayError" = "일시적으로 정보를 불러올 수 없습니다.\n네트워크 상태를 확인해 주세요.";
+"remotePlayNoInfo" = "콘텐츠 정보가 없습니다.";
 "remoteInputChannel" = "채널번호 입력";
 "remoteInputText" = "문자 입력";
 "remoteInputChannelHolder" = "000";
@@ -659,6 +717,8 @@
 "remoteErrorMirroring" = "이어폰 모드 설정 실패 안내";
 "remoteErrorMirroringText" = "B tv 이어폰 모드 설정에 실패하였습니다.\n아래 내용을 확인 후 다시 시도해 주세요.";
 "remoteErrorMirroringTextSub" = "- B tv 셋톱박스가 켜진 상태\n- B tv 셋톱박스와 SKB 공유기가 연결된 상태";
+
+
 
 /*
  Monthly

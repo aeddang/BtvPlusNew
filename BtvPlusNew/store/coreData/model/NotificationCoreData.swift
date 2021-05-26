@@ -70,6 +70,21 @@ class NotificationCoreData:PageProtocol {
         self.saveContext()
     }
     
+    func readAllNotice(){
+        let container = self.persistentContainer
+        do {
+            let fetchRequest:NSFetchRequest<NotificationEntity> = NotificationEntity.fetchRequest()
+            fetchRequest.predicate = NSPredicate.init(format: "isRead == 'false'")
+            let objects = try container.viewContext.fetch(fetchRequest)
+            for obj in objects {
+                obj.setValue(true, forKey: Self.Keys.isRead)
+            }
+            self.saveContext()
+        } catch {
+            DataLog.e(error.localizedDescription, tag: self.tag)
+        }
+    }
+    
     func readNotice(title:String, body:String){
         let container = self.persistentContainer
         do {

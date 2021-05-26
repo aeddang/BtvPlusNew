@@ -103,6 +103,7 @@ struct TopTab: PageComponent{
             withAnimation{self.showAlram = count>0}
         }
         .onReceive(self.repository.alram.$needUpdateNew){ update in
+            if self.pairing.status != .pairing {return}
             if update {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     self.repository.alram.updateNew()

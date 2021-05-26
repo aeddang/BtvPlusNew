@@ -98,7 +98,7 @@ enum TicketType {
 }
 
 extension TicketList{
-    static let headerSize:Int = 3
+    static let headerSize:Int = 2
     static let spacing:CGFloat = Dimen.margin.tiny
 }
 
@@ -115,6 +115,7 @@ struct TicketList: PageComponent{
     
    
     @State var subDatas:[PosterData]? = nil
+    @State var subDataSets:[PosterDataSet]? = nil
     var headerSize:Int = 2
     var body: some View {
         InfinityScrollView(
@@ -170,7 +171,22 @@ struct TicketList: PageComponent{
                         }
                 }
             }
-            
+            if let subDataSets = self.subDataSets {
+
+                ForEach(subDataSets) {sets in
+                    HStack(spacing:Self.spacing){
+                        ForEach(sets.datas) { data in
+                            PosterItem( data:data )
+                                .frame(width:ListItem.poster.type01.width)
+                                
+                                .onTapGesture {
+                                    self.onTap(data: data)
+                                }
+                        }
+                    }
+                    .modifier(HolizentalListRowInset(spacing: Self.spacing))
+                }
+            }
             if let subDatas = self.subDatas {
                 if Self.headerSize < subDatas.count {
                     HStack(spacing:0){
@@ -202,9 +218,8 @@ struct TicketList: PageComponent{
                             }
                     }
                 }
-                
-                
             }
+            
         }
         .onReceive(dataProvider.$result) { res in
             guard let data = res?.data as? GridEvent else { return }
@@ -212,8 +227,8 @@ struct TicketList: PageComponent{
             guard let id = first.menuId else { return }
             if res?.id != id {return}
             first.subDatas = data.contents?.map{PosterData().setData(data: $0)}
-            self.subDatas = first.subDatas
-            self.data?.posters = first.subDatas
+            self.onBindingData(datas: first.subDatas)
+            
         }
         .onAppear{
             if let first = self.datas.first {
@@ -224,7 +239,7 @@ struct TicketList: PageComponent{
                             q:.init(id:id, type:.getGridEvent(id))
                         )
                     }else{
-                        self.subDatas = first.subDatas
+                        self.onBindingData(datas: first.subDatas)
                     }
                 }
             }
@@ -236,6 +251,32 @@ struct TicketList: PageComponent{
             PageProvider.getPageObject(.synopsis)
                 .addParam(key: .data, value: data.synopsisData)
         )
+    }
+    
+    func onBindingData(datas:[PosterData]?)  {
+        let count:Int = 2
+        var rows:[PosterDataSet] = []
+        var cells:[PosterData] = []
+        var total = self.datas.count
+        datas?.forEach{ d in
+            if cells.count < count {
+                cells.append(d)
+            }else{
+                rows.append(
+                    PosterDataSet( count: count, datas: cells, isFull: true, index: total)
+                )
+                cells = [d]
+                total += 1
+            }
+        }
+        if !cells.isEmpty {
+            rows.append(
+                PosterDataSet( count: count, datas: cells,isFull: cells.count == count, index: total)
+            )
+        }
+        self.subDataSets = rows
+        //self.subDatas = first.subDatas
+        self.data?.posters = datas
     }
 }
 

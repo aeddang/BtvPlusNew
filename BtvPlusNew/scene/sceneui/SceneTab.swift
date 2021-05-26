@@ -60,6 +60,7 @@ struct SceneTab: PageComponent{
                     }
                     .padding(.top, self.safeAreaTop)
                     .onReceive(self.repository.alram.$newCount){ count in
+                        if self.pairing.status != .pairing {return}
                         withAnimation{self.showAlram = count>0}
                     }
                     .onReceive(self.repository.alram.$isChangeNotification) { isChange in

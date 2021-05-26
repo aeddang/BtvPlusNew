@@ -22,7 +22,10 @@ struct CurrentPlayBox: PageComponent {
                             } else if data.isError{
                                 Text(String.remote.playError)
                                     .modifier(BoldTextStyle(size: RemoteStyle.fontSize.subTitle, color: Color.app.grey))
-                            } else {
+                            } else if data.isNoInfo{
+                                Text(String.remote.playNoInfo)
+                                    .modifier(BoldTextStyle(size: RemoteStyle.fontSize.subTitle, color: Color.app.grey))
+                            }else {
                                 if let title = data.subTitle {
                                     Text(title)
                                         .modifier(BoldTextStyle(size: RemoteStyle.fontSize.subTitle, color: Color.app.grey))

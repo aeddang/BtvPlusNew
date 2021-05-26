@@ -137,7 +137,7 @@ struct PageConfirmNumber: PageView {
         }
         .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
             withAnimation{
-                self.safeAreaBottom = pos
+                self.safeAreaBottom = max(pos, Dimen.app.keyboard)
             }
         }
         .onAppear{

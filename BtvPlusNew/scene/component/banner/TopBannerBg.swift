@@ -48,6 +48,7 @@ struct TopBannerBg: PageComponent {
                 .padding(.bottom, TopBanner.marginBottomBar + TopBanner.imageHeight - TopBanner.height)
             }
         }
+       
         .onReceive( self.viewModel.$index ){ idx in
             self.setBar(idx:idx)
         }

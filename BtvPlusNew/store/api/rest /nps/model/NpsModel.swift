@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct NpsCommonHeader : Decodable {
+struct NpsCommonHeader : Codable {
     private(set) var if_no:String? = nil // API 일련번호 (IF-NPS-XXX)
     private(set) var ver:String? = nil //API 버전 (5.0)
     private(set) var response_format:String? = nil //응답 형식 (json)

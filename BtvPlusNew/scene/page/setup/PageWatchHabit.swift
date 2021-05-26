@@ -8,6 +8,7 @@ import Foundation
 import SwiftUI
 
 struct PageWatchHabit: PageView {
+    @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
@@ -86,10 +87,47 @@ struct PageWatchHabit: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
+                if ani {
+                    let path = ApiPath.getRestApiPath(.WEB) + BtvWebView.watchHabit
+                    self.webViewModel.request = .link(path)
+                }
+            }
+            .onReceive(dataProvider.$result) { res in
+                guard let res = res else { return }
+                if res.id != self.tag { return }
+                switch res.type {
+                case .sendMessage :
+                    guard let result = res.data as? ResultMessage else { return }
+                    if result.header?.result != ApiCode.success { return }
+                    guard let message =  result.body?.message else { return }
+                    guard let type = message.SvcType else { return }
+                    self.message = result
+                    switch type {
+                    case BroadcastingType.VOD.rawValue:
+                        self.dataProvider.broadcasting.requestBroadcast(.updateCurrentVod(message.CurCID))
+                    case BroadcastingType.IPTV.rawValue:
+                        if message.CurChNum == "0" {
+                            self.dataProvider.broadcasting.reset()
+                            return
+                        }
+                        self.dataProvider.broadcasting.requestBroadcast(.updateCurrentBroadcast)
+                        self.dataProvider.broadcasting.updateChannelNo(message.CurChNum)
+
+                    default: self.dataProvider.broadcasting.reset()
+                    }
+                default: break
+                }
+            }
+            .onReceive(self.dataProvider.broadcasting.$currentProgram){program in
+
+                guard let message = self.message else { return }
+                let dic = self.repository.webBridge.getSTBPlayInfo(result: message, broadcastProgram: program)
+                let js = BtvWebView.callJsPrefix + WebviewRespond.responseSTBViewInfo.rawValue
+                self.webViewModel.request = .evaluateJavaScriptMethod(js, dic)
             }
             .onAppear{
-                let path = ApiPath.getRestApiPath(.WEB) + BtvWebView.watchHabit
-                self.webViewModel.request = .link(path)
+                
+                
             }
             .onDisappear{
             }
@@ -97,7 +135,9 @@ struct PageWatchHabit: PageView {
         }//geo
     }//body
     
+    @State var message:ResultMessage? = nil
     func checkHostDeviceStatus(){
+        self.message = nil
         self.dataProvider.requestData(
             q: .init(id: self.tag, type: .sendMessage(NpsMessage().setMessage(type: .Refresh)), isOptional: true)
         )

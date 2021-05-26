@@ -23,6 +23,7 @@ struct AlramList: PageComponent{
     var useTracking:Bool = false
     var marginBottom:CGFloat = Dimen.margin.tinyExtra
     
+    @State var hasNew:Bool = false
     @State var isPush:Bool = false
     @State var horizontalMargin:CGFloat = Dimen.margin.thin
     var body: some View {
@@ -35,8 +36,26 @@ struct AlramList: PageComponent{
             spacing: 0,
             useTracking: self.useTracking
         ){
-            InfoAlert(text: String.pageText.myAlramInfo)
-                .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.thin))
+            HStack{
+                InfoAlert(text: String.pageText.myAlramInfo)
+                Spacer()
+                Button(action: {
+                    self.readAll()
+                }) {
+                    HStack(alignment:.center, spacing: Dimen.margin.tinyExtra){
+                        Image(self.hasNew ? Asset.icon.readAll : Asset.icon.readAllOff)
+                            .renderingMode(.original).resizable()
+                            .scaledToFit()
+                            .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
+                        Text(String.button.readAll)
+                            .modifier(BoldTextStyle(
+                                        size: Font.size.light,
+                                        color: self.hasNew ? Color.app.white : Color.app.grey))
+                    }
+                }
+                .buttonStyle(BorderlessButtonStyle())
+            }
+            .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.thin))
             if !self.datas.isEmpty {
                 ForEach(self.datas) { data in
                     AlramItem( data:data )
@@ -77,6 +96,9 @@ struct AlramList: PageComponent{
             self.horizontalMargin
                 = self.sceneObserver.sceneOrientation == .portrait ? Dimen.margin.thin : Dimen.margin.heavy
         }
+        .onReceive(self.repository.alram.$newCount){ count in
+            self.hasNew = count>0
+        }
         .onAppear(){
             self.isPush = self.pairing.user?.isAgree3 ?? false
             self.horizontalMargin
@@ -84,6 +106,21 @@ struct AlramList: PageComponent{
         }
        
     }//body
+    
+    private func readAll(){
+        if !self.hasNew {return}
+        
+        self.appSceneObserver.alert = .confirm(nil,  String.alert.newAlramAllRead){ isOk in
+            if !isOk {return}
+            self.hasNew = false
+            self.datas.filter{!$0.isRead}.forEach{$0.isRead = true}
+            NotificationCoreData().readAllNotice()
+            DispatchQueue.main.async {
+                self.repository.alram.updatedNotification()
+            }
+        }
+    }
+    
     private func onUpdatedPush(_ res:ApiResultResponds, isAgree:Bool){
         guard let data = res.data as? NpsResult  else { return onUpdatePushError() }
         guard let resultCode = data.header?.result else { return onUpdatePushError() }
@@ -116,7 +153,7 @@ struct AlramItem: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
-    var data:AlramData
+    @ObservedObject var data:AlramData
     @State var needExpand = false
     @State var isExpand = false
     @State var isRead = false
@@ -232,13 +269,14 @@ struct AlramItem: PageView {
                 )
             }
         }
+        .onReceive(self.data.$isRead) { isRead in
+            self.isRead = isRead
+        }
         .onReceive(self.sceneObserver.$isUpdated){ update in
             if !update {return}
             self.checkExpand()
-            
         }
         .onAppear{
-            self.isRead = self.data.isRead
             self.isExpand = self.data.isExpand
             self.checkExpand()
         }

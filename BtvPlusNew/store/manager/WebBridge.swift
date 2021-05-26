@@ -78,6 +78,49 @@ class WebBridge :PageProtocol{
       
         return info
     }
+    
+    func getSTBPlayInfo(result:ResultMessage, broadcastProgram:BroadcastProgram?)->[String: Any] {
+        var info = [String: Any]()
+        var subInfo = [String: Any]()
+        let type =  result.body?.message?.SvcType ?? ""
+        if let program =  broadcastProgram {
+            if program.isOnAir {
+                subInfo["serviceId"] = program.serviceId
+                subInfo["channelNo"] = program.channelNo
+                subInfo["channelName"] = program.channel
+                subInfo["channelImageName"] = program.image
+                if let programTitle = program.title {
+                    subInfo["currentProgramName"] = programTitle
+                    subInfo["programRating"] = program.rating
+                    subInfo["isAdultProgram"] = program.isAdult
+                    subInfo["lStartTime"] = program.startTime
+                    subInfo["lEndTime"] = program.endTime
+                }
+            } else{
+                subInfo["playTime"] = program.duration
+                subInfo["rating"] = program.rating
+                subInfo["contentId"] = result.body?.message?.CurCID
+                subInfo["poster"] = program.image
+                subInfo["isAdult"] = program.isAdult
+                subInfo["title"] = program.title
+                subInfo["seriesNo"] = program.seriesNo
+                subInfo["isSeries"] = program.isSeries
+                
+            }
+            info["isPlaying"] = true
+        } else {
+            if type == "OAP" {
+                info["isPlaying"] = true
+                subInfo["title"] = String.remote.playNoInfo
+            } else {
+                info["isPlaying"] = false
+            }
+        }
+        info["result"] = result.header?.result?.toInt() ?? -1
+        info["svcType"] = type
+        info["stbViewInfo"] = subInfo
+        return info
+    }
 
     func getPassAge()-> String {
         return SystemEnvironment.watchLv.description

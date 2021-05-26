@@ -94,9 +94,32 @@ struct PairingView: PageComponent{
             .background(Color.app.blueLight)
             .modifier(ContentHorizontalEdgesTablet())
             .padding(.top, Dimen.margin.regular)
+            
             MyPointInfo()
                 .modifier(ContentHorizontalEdgesTablet())
                 .padding(.top, Dimen.margin.regularExtra)
+            
+            VStack (alignment: .center, spacing: 0){
+                FillButton(
+                    text: String.pageText.myRecommandFriend,
+                    isMore: true,
+                    moreText: String.pageText.myRecommandFriendReword,
+                    image: Asset.icon.recommend
+                ){_ in
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.setup)
+                    )
+                }
+                Spacer().modifier(LineHorizontal())
+            }
+            .modifier(ContentHorizontalEdgesTablet())
+            .padding(.top, Dimen.margin.tiny)
+            
+            MySetup()
+                .modifier(ContentHorizontalEdgesTablet())
+                .padding(.top, Dimen.margin.mediumExtra)
+            
+            
             if let data = self.watchedData {
                 if SystemEnvironment.isTablet {
                     VideoSetBlock(
@@ -116,6 +139,7 @@ struct PairingView: PageComponent{
                         .padding(.top, Dimen.margin.medium)
                 }
             }
+            
             if self.isCompleted {
                 VStack (alignment: .center, spacing: 0){
                     Spacer().modifier(LineHorizontal())
@@ -143,15 +167,6 @@ struct PairingView: PageComponent{
                         )
                     }
                     
-                    FillButton(
-                        text: String.pageText.myRegistPictureFammly,
-                        isMore: false,
-                        icon: Asset.icon.btvlite,
-                        bgColor : Color.app.blueLight
-                    ){_ in
-                        
-                        AppUtil.openURL(ApiPath.getRestApiPath(.WEB) + BtvWebView.happySenior)
-                    }
                 }
                 .modifier(ContentHorizontalEdgesTablet())
                 .padding(.top, Dimen.margin.medium)
@@ -224,6 +239,8 @@ struct PairingView: PageComponent{
     
     
     
+    
+    
 }
 
 
@@ -238,6 +255,7 @@ struct PairingBlock_Previews: PreviewProvider {
             .environmentObject(PagePresenter())
             .environmentObject(PageSceneObserver())
             .environmentObject(Pairing())
+            .environmentObject(DataProvider())
             .frame(width:320,height:600)
             .background(Color.brand.bg)
         }

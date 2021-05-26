@@ -23,9 +23,9 @@ class MultiBlockModel: PageDataProviderModel {
 
     init(requestSize:Int? = nil) {
         if #available(iOS 14.0, *)  {
-            self.requestSize = requestSize ?? 10
+            self.requestSize = requestSize ?? 12
         } else {
-            self.requestSize = requestSize ?? 10
+            self.requestSize = requestSize ?? 12
         }
     }
     
@@ -119,8 +119,10 @@ struct MultiBlockBody: PageComponent {
                                 pageObservable : self.pageObservable,
                                 viewModel:self.viewPagerModel,
                                 datas: self.topDatas! )
+        
                                 .padding(.top, max(self.headerOffset, -TopBanner.imageHeight))
                                 .offset(y: self.marginHeader )
+                                
                         }
                         ReflashSpinner(
                             progress: self.$reloadDegree,
@@ -203,6 +205,7 @@ struct MultiBlockBody: PageComponent {
             let willOffset = min(ceil(pos),0)
             if  willOffset != self.headerOffset {
                 self.headerOffset = willOffset
+                
             }
         }
         .onReceive(self.infinityScrollModel.$pullPosition){ pos in
@@ -362,6 +365,7 @@ struct MultiBlockBody: PageComponent {
     @State var originBlocks:[BlockData] = []
     @State var loadingBlocks:[BlockData] = []
     @State var blocks:[BlockData] = []
+    @State var blockSets:[BlockDataSet] = []
     @State var anyCancellable = Set<AnyCancellable>()
     @State var isError:Bool = false
    
@@ -407,7 +411,7 @@ struct MultiBlockBody: PageComponent {
             PageLog.d("self.blocks " + self.blocks.count.description, tag: self.tag)
             self.loadingBlocks = []
         }
-        if self.blocks.isEmpty {
+        if self.blocks.isEmpty && self.blockSets.isEmpty {
             self.isError = true
         }
     }
@@ -448,15 +452,39 @@ struct MultiBlockBody: PageComponent {
         
     }
     
-
-    
     private func addLoadedBlocks (_ loadedBlocks:[BlockData]){
         var idx = self.blocks.count
         loadedBlocks.forEach{
             $0.index = idx
             idx += 1
         }
+        //self.blockSets.append(contentsOf: self.getBindingData(datas: loadedBlocks))
         self.blocks.append(contentsOf: loadedBlocks)
+    }
+    
+    // test
+    func getBindingData(datas:[BlockData]) -> [BlockDataSet] {
+        let count:Int = 3
+        var rows:[BlockDataSet] = []
+        var cells:[BlockData] = []
+        var total = datas.count
+        datas.forEach{ d in
+            if cells.count < count {
+                cells.append(d)
+            }else{
+                rows.append(
+                    BlockDataSet( datas: cells,  index: total)
+                )
+                cells = [d]
+                total += 1
+            }
+        }
+        if !cells.isEmpty {
+            rows.append(
+                BlockDataSet( datas: cells, index: total)
+            )
+        }
+        return rows
     }
     
     private func addBlock(){

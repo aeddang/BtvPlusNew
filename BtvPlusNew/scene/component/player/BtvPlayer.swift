@@ -198,6 +198,7 @@ struct BtvPlayer: PageComponent{
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
     @ObservedObject var prerollModel: PrerollModel = PrerollModel()
     @ObservedObject var listViewModel: InfinityScrollModel = InfinityScrollModel()
+    var playGradeData: PlayGradeData? = nil
     var title:String? = nil
     var thumbImage:String? = nil
     var thumbContentMode:ContentMode = .fit
@@ -211,6 +212,12 @@ struct BtvPlayer: PageComponent{
                     CPPlayer(
                         viewModel : self.viewModel,
                         pageObservable : self.pageObservable)
+                    if let grade = self.playGradeData {
+                        PlayerGrade(
+                            viewModel: self.viewModel,
+                            data:grade
+                        )
+                    }
                     PlayerEffect(viewModel: self.viewModel)
                     PlayerTop(viewModel: self.viewModel, title: self.title)
                     PlayerBottom(viewModel: self.viewModel)

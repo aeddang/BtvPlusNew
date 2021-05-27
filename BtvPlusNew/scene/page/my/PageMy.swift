@@ -55,7 +55,9 @@ struct PageMy: PageView {
                             }
                             
                         }else {
-                            DisconnectView()
+                            DisconnectView(
+                                pageObservable:self.pageObservable
+                            )
                         }
                     }
                 }

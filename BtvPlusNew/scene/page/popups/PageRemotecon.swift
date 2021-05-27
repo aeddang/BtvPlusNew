@@ -30,83 +30,85 @@ struct PageRemotecon: PageView {
                 axis:.vertical
             ) {
                 ZStack(alignment: SystemEnvironment.isTablet ?.center : .top){
-                    if let isPairing = self.isPairing {
-                        if isPairing  {
-                            if SystemEnvironment.isTablet {
-                                ZStack{
-                                    Image(Asset.remote.bg)
-                                        .renderingMode(.original).resizable()
-                                        .modifier(MatchParent())
+                    if self.isUIReady {
+                        if let isPairing = self.isPairing {
+                            if isPairing  {
+                                if SystemEnvironment.isTablet {
+                                    ZStack{
+                                        Image(Asset.remote.bg)
+                                            .renderingMode(.original).resizable()
+                                            .modifier(MatchParent())
+                                        RemoteCon(
+                                            data:self.remotePlayData,
+                                            isEarPhone: self.isAudioMirroring
+                                        ){ evt in
+                                            self.action(evt: evt)
+                                        }
+                                    }
+                                    .frame(
+                                        width:  RemoteStyle.ui.size.width,
+                                        height:  RemoteStyle.ui.size.height)
+                                    
+                                } else {
+                                    VStack( spacing: 0 ){
+                                        Spacer()
+                                            .modifier(MatchHorizontal(height: self.sceneObserver.safeAreaTop))
+                                            .background(Color.app.blackExtra)
+                                        Image(Asset.remote.bg)
+                                            .renderingMode(.original).resizable()
+                                            .modifier(MatchHorizontal(height: RemoteStyle.ui.size.height))
+                                        Spacer()
+                                            .modifier(MatchParent())
+                                            .background(Color.app.blackExtra)
+                                    }
+                                    .modifier(MatchParent())
                                     RemoteCon(
                                         data:self.remotePlayData,
                                         isEarPhone: self.isAudioMirroring
                                     ){ evt in
                                         self.action(evt: evt)
                                     }
+                                    .padding(.top, self.sceneObserver.safeAreaTop)
                                 }
-                                .frame(
-                                    width:  RemoteStyle.ui.size.width,
-                                    height:  RemoteStyle.ui.size.height)
-                                
                             } else {
-                                VStack( spacing: 0 ){
-                                    Spacer()
-                                        .modifier(MatchHorizontal(height: self.sceneObserver.safeAreaTop))
-                                        .background(Color.app.blackExtra)
-                                    Image(Asset.remote.bg)
-                                        .renderingMode(.original).resizable()
-                                        .modifier(MatchHorizontal(height: RemoteStyle.ui.size.height))
-                                    Spacer()
-                                        .modifier(MatchParent())
-                                        .background(Color.app.blackExtra)
+                                EmptyAlert(text: String.alert.pairingError){
+                                    self.pagePresenter.closePopup(self.pageObject?.id)
                                 }
-                                .modifier(MatchParent())
-                                RemoteCon(
-                                    data:self.remotePlayData,
-                                    isEarPhone: self.isAudioMirroring
-                                ){ evt in
-                                    self.action(evt: evt)
-                                }
-                                .padding(.top, self.sceneObserver.safeAreaTop)
                             }
+                            
                         } else {
-                            EmptyAlert(text: String.alert.pairingError){
-                                self.pagePresenter.closePopup(self.pageObject?.id)
+                            Spacer().modifier(MatchParent())
+                        }
+                        if self.isInputText {
+                            InputRemoteBox(
+                                isInit: true,
+                                title: String.remote.inputText,
+                                type: .text,
+                                placeHolder:String.remote.inputTextHolder,
+                                inputSize: 8,
+                                inputSizeMin: 1
+                            ){ input, type in
+                                withAnimation{
+                                    self.isInputText = false
+                                }
+                                self.remoconInput(type: type, string: input)
                             }
                         }
-                        
-                    } else {
-                        Spacer().modifier(MatchParent())
-                    }
-                    if self.isInputText {
-                        InputRemoteBox(
-                            isInit: true,
-                            title: String.remote.inputText,
-                            type: .text,
-                            placeHolder:String.remote.inputTextHolder,
-                            inputSize: 8,
-                            inputSizeMin: 1
-                        ){ input, type in
-                            withAnimation{
-                                self.isInputText = false
+                        if self.isInputChannel {
+                            InputRemoteBox(
+                                isInit: true,
+                                title: String.remote.inputChannel,
+                                type: .number,
+                                placeHolder:String.remote.inputChannelHolder,
+                                inputSize: 3,
+                                inputSizeMin: 1,
+                                keyboardType: .numberPad
+                            ){ input, type in
+                                withAnimation{
+                                    self.isInputChannel = false
+                                }
+                                self.remoconInput(type: type, string: input)
                             }
-                            self.remoconInput(type: type, string: input)
-                        }
-                    }
-                    if self.isInputChannel {
-                        InputRemoteBox(
-                            isInit: true,
-                            title: String.remote.inputChannel,
-                            type: .number,
-                            placeHolder:String.remote.inputChannelHolder,
-                            inputSize: 3,
-                            inputSizeMin: 1,
-                            keyboardType: .numberPad
-                        ){ input, type in
-                            withAnimation{
-                                self.isInputChannel = false
-                            }
-                            self.remoconInput(type: type, string: input)
                         }
                     }
                 }
@@ -186,8 +188,12 @@ struct PageRemotecon: PageView {
                 }
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.isUIReady = ani
-                self.checkHostDeviceStatus()
+                if ani {
+                    withAnimation{
+                        self.isUIReady = ani
+                    }
+                    self.checkHostDeviceStatus()
+                }
             }
             .onReceive(self.locationObserver.$event){ evt in
                 guard let evt = evt else {return}

@@ -32,6 +32,16 @@ class Kms: Rest{
         //params["mode"] = "test"
         fetch(route: KmsStbList(query: params), completion: completion, error:error)
     }
+    
+    func getTerminateStbList(
+        ci:String?,
+        completion: @escaping (StbInfo) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        var params = [String:String]()
+        if let ci = ci {
+            params["ci"] = ApiUtil.string(byUrlEncoding: ci)
+        }
+        fetch(route: KmsTerminateStbList(query: params), completion: completion, error:error)
+    }
 }
 
 struct KmsStbList:NetworkRoute{
@@ -39,5 +49,13 @@ struct KmsStbList:NetworkRoute{
    var path: String = "/api/v3.0/userstb/list"
    var query: [String : String]? = nil
    var withAllowedCharacters:CharacterSet? = nil
+}
+
+struct KmsTerminateStbList:NetworkRoute{
+   var method: HTTPMethod = .get
+   var path: String = "/api/v3.0/terminatestb/list"
+   var query: [String : String]? = nil
+   var withAllowedCharacters:CharacterSet? = nil
     
 }
+

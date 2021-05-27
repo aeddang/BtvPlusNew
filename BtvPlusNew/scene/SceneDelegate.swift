@@ -75,11 +75,12 @@ class SceneDelegate: PageSceneDelegate {
                 return false
             }
         }
+        if self.repository?.pairing.status != .pairing {return true}
         
+        //시청연령제한
         if !SystemEnvironment.isAdultAuth ||
             ( !SystemEnvironment.isWatchAuth && SystemEnvironment.watchLv != 0 ),
             let watchLv = watchLv {
-                
                 if SystemEnvironment.watchLv != 0 && SystemEnvironment.watchLv <= watchLv {
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.confirmNumber)

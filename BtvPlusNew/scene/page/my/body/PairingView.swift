@@ -107,7 +107,7 @@ struct PairingView: PageComponent{
                     image: Asset.icon.recommend
                 ){_ in
                     self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.setup)
+                        PageProvider.getPageObject(.myRecommand)
                     )
                 }
                 Spacer().modifier(LineHorizontal())

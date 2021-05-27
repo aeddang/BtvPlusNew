@@ -73,7 +73,7 @@ class WebBridge :PageProtocol{
         info["combine_product_list"] = AppUtil.getSafeString(userInfo?.combine_product_list, defaultValue: "null")
         info["isSupportSimplePairing"] = pairing.hostDevice?.isSupportSimplePairing() ?? false
         info["evaluation"] = SystemEnvironment.isEvaluation 
-        info["clientId"] = SystemEnvironment.deviceId
+        info["clientId"] = SystemEnvironment.getGuestDeviceId
         info["expiredSTB"] = false
       
         return info

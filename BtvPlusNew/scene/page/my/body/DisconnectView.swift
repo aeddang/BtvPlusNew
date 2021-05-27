@@ -11,10 +11,14 @@ import SwiftUI
 
 
 struct DisconnectView: PageComponent{
+    @EnvironmentObject var setup:Setup
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    
+    var pageObservable:PageObservable = PageObservable()
     @State var safeAreaBottom:CGFloat = 0
     @State var sceneOrientation: SceneOrientation = .portrait
+    @State var isPossession:Bool = false
     var body: some View {
         HStack ( spacing: Dimen.margin.regular ){
             VStack (alignment: .leading, spacing: Dimen.margin.lightExtra){
@@ -73,13 +77,17 @@ struct DisconnectView: PageComponent{
                     }
                 }
                 .background(Color.app.blueLight)
-                FillButton(
-                    text: String.pageTitle.myPurchase,
-                    isMore: true
-                ){_ in
-                    self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.pairing)
-                    )
+                if self.isPossession {
+                    FillButton(
+                        text: String.pageTitle.myTerminatePurchase,
+                        isMore: true
+                    ){_ in
+                        /*
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.pairing)
+                        )
+                         */
+                    }
                 }
             }
             if self.sceneOrientation == .landscape {
@@ -106,9 +114,14 @@ struct DisconnectView: PageComponent{
             if !update {return}
             self.sceneOrientation  = self.sceneObserver.sceneOrientation
         }
+        .onReceive(self.pagePresenter.$currentTopPage){ page in
+            self.isPossession = self.setup.possession.isEmpty == false
+        }
         .onAppear{
             self.sceneOrientation  = self.sceneObserver.sceneOrientation
+            self.isPossession = self.setup.possession.isEmpty == false
         }
+        
     }//body
 }
 
@@ -119,6 +132,7 @@ struct DisconnectBlock_Previews: PreviewProvider {
     static var previews: some View {
         Form{
             DisconnectView()
+                .environmentObject(Setup())
                 .environmentObject(PagePresenter())
                 .environmentObject(PageSceneObserver())
                 .frame(width:320,height:600)

@@ -7,7 +7,18 @@
 import Foundation
 import SwiftUI
 struct SetupAlram: PageView {
+    @EnvironmentObject var repository:Repository
+    @EnvironmentObject var setup:Setup
+    @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var dataProvider:DataProvider
+    var isInitate:Bool = false
+    var isPairing:Bool = false
+    
     @Binding var isPush:Bool
+    @State var willPush:Bool? = nil
+    
     var body: some View {
         VStack(alignment:.leading , spacing:Dimen.margin.thinExtra) {
             Text(String.pageText.setupAlram).modifier(ContentTitle())
@@ -27,8 +38,61 @@ struct SetupAlram: PageView {
             }
             .background(Color.app.blueLight)
         }
+        .onReceive( [self.isPush].publisher ) { value in
+            if !self.isInitate { return }
+            if self.willPush != nil { return }
+            
+            if self.pairing.user?.isAgree3 == self.isPush { return }
+            if self.isPairing == false {
+                if value {
+                    self.appSceneObserver.alert = .needPairing()
+                    self.isPush = false
+                }
+                return
+            }
+            self.setupPush(value)
+        }
+        .onReceive(self.dataProvider.$result){ res in
+            guard let res = res else { return }
+            switch res.type {
+            case .updateAgreement(let isAgree) : self.onUpdatedPush(res, isAgree: isAgree)
+            default: do{}
+            }
+        }
+        .onReceive(self.dataProvider.$error){ err in
+            guard let err = err else { return }
+            switch err.type {
+            case .updateAgreement : self.onUpdatePushError()
+            default: do{}
+            }
+        }
     }//body
     
+    private func setupPush(_ select:Bool){
+        if self.isPairing == false { return }
+        self.willPush = select
+        self.dataProvider.requestData(q: .init(type: .updateAgreement(select)))
+    }
+    
+    private func onUpdatedPush(_ res:ApiResultResponds, isAgree:Bool){
+        guard let data = res.data as? NpsResult  else { return onUpdatePushError() }
+        guard let resultCode = data.header?.result else { return onUpdatePushError() }
+        if resultCode == NpsNetwork.resultCode.success.code {
+            self.repository.updatePush(isAgree)
+            self.isPush = isAgree
+            self.appSceneObserver.event = .toast(
+                isAgree ? String.alert.pushOn : String.alert.pushOff
+            )
+            self.willPush = nil
+        } else {
+            onUpdatePushError()
+        }
+    }
+    
+    private func onUpdatePushError(){
+        self.appSceneObserver.event = .toast( String.alert.pushError )
+        self.willPush = nil
+    }
 }
 
 #if DEBUG

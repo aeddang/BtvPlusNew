@@ -70,6 +70,7 @@ struct PageMyAlram: PageView {
     private func update(){
         if !self.isInit {return}
         if self.pairing.status != .pairing {
+            self.datas = []
             self.appSceneObserver.isApiLoading = false
             return
         }

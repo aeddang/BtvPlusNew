@@ -37,6 +37,12 @@ extension ScsNetwork{
         case adult = "adult"
         case purchase = "purchase"
     }
+    
+    enum ConnectType: String {
+        case regist = "reg"
+        case delete = "del"
+        case info = "info"
+    }
 }
 
 class Scs: Rest{
@@ -145,6 +151,24 @@ class Scs: Rest{
         
         fetch(route: ScsConfirmPassword(query: params), completion: completion, error:error)
     }
+    
+    /**
+     * 모바일 해지 셋탑 연결 정보 등록 (IF-SCS-STB-UI522-004)
+     * @param stbId 연결할 해지된 셋탑 * mode 파라메터 값이 info 일 경우는 noStbId 로 값을 넣는다.
+     */
+    func connectTerminateStb(
+        type:ScsNetwork.ConnectType, stbId:String?,
+        completion: @escaping (ConnectTerminateStb) -> Void, error: ((_ e:Error) -> Void)? = nil){
+          
+        var params = [String:Any]()
+        params["if"] = "IF-SCS-STB-UI522-004"
+        params["ver"] = ScsNetwork.VERSION
+        params["stb_id"] = stbId ?? "noStbId"
+        params["mode"] = type.rawValue
+        params["mbtv_key"] = type == .info ? "noMbtvKey" : SystemEnvironment.getGuestDeviceId()
+        params["method"] = "post"
+        fetch(route: ScsConnectTerminateStb(body: params), completion: completion, error:error)
+    }
 }
 
 struct ScsPreview:NetworkRoute{
@@ -165,13 +189,13 @@ struct ScsPlay:NetworkRoute{
 }
 
 struct ScsConfirmPassword:NetworkRoute{
-   var method: HTTPMethod = .get
+   var method: HTTPMethod = .post
    var path: String = "/scs/v5/password/confirm/mobilebtv"
    var query: [String : String]? = nil
 }
 
-
-
-
-
-
+struct ScsConnectTerminateStb:NetworkRoute{
+   var method: HTTPMethod = .post
+   var path: String = "/scs/v522/mcancelstblink/mobilebtv"
+   var body: [String : Any]? = nil
+}

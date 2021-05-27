@@ -357,10 +357,12 @@
 "titleMy" = "MY";
 "titlePairingManagement" = "B tv 연결 관리";
 "titlePairingGuide" = "B tv 연결 안내";
-"titleMyPurchase" = "이전 B tv 구매/소장 목록";
+"titleMyTerminatePurchase" = "이전 B tv 구매/소장 목록";
+"titleTerminateStb" = "소장 VOD 시청 B tv 선택";
 "titleSetup" = "설정";
 "titlePurchase" = "상품구매";
-"titleCertificationUser" = "성인인증";
+"titleCertificationAdult" = "성인인증";
+"titleCertificationUser" = "본인인증";
 "titlePrivacy" = "개인정보 처리방침";
 "titleServiceTerms" = "이용약관 및 청소년 보호정책";
 "titlePrivacyAndAgree" = "개인정보 수집 및 이용동의";
@@ -445,6 +447,9 @@
 "pairingBtvText4" = "B tv에서 [홈 > MY > 설정 > 모바일 B tv 연결] 선택";
 "pairingBtvText5" = "셋톱박스의 채널버튼을 3초간 누르기";
 
+"terminateBtvText1" = "모바일 B tv에서 소장 VOD를\n시청하실 B tv를 선택해주세요.";
+"terminateBtvText2" = "소장 VOD 시청 가능한 B tv";
+"terminateBtvDate" = "해지일";
 
 /*
  PageMy

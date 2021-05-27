@@ -426,10 +426,13 @@ extension String {
         public static let my = "titleMy".loaalized()
         public static let pairingManagement =  "titlePairingManagement".loaalized()
         public static let pairingGuide = "titlePairingGuide".loaalized()
-        public static let myPurchase =  "titleMyPurchase".loaalized()
+        public static let myTerminatePurchase =  "titleMyTerminatePurchase".loaalized()
+        public static let terminateStb = "titleTerminateStb".loaalized()
         public static let setup = "titleSetup".loaalized()
         public static let purchase = "titlePurchase".loaalized()
+        public static let certificationAdult = "titleCertificationAdult".loaalized()
         public static let certificationUser = "titleCertificationUser".loaalized()
+     
         public static let privacy = "titlePrivacy".loaalized()
         public static let privacyAndAgree = "titlePrivacyAndAgree".loaalized()
         public static let serviceTerms = "titleServiceTerms".loaalized()
@@ -505,6 +508,10 @@ extension String {
         public static let pairingGuideTitle4 = "pairingGuideTitle4".loaalized()
         public static let pairingGuideText4 = "pairingGuideText4".loaalized()
         public static let pairingGuideInfo4 = "pairingGuideInfo4".loaalized()
+        
+        public static let terminateBtvText1 = "terminateBtvText1".loaalized()
+        public static let terminateBtvText2 = "terminateBtvText2".loaalized()
+        public static let terminateBtvDate = "terminateBtvDate".loaalized()
         
         public static let setupApp = "setupApp".loaalized()
         public static let setupAppDataAlram = "setupAppDataAlram".loaalized()

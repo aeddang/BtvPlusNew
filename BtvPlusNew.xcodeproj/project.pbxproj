@@ -201,6 +201,11 @@
 		318BA3972608C2660093BC7D /* SearchPopularityVod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318BA3922608C2660093BC7D /* SearchPopularityVod.swift */; };
 		318BA3982608C2660093BC7D /* CompleteKeyword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318BA3932608C2660093BC7D /* CompleteKeyword.swift */; };
 		318BA3992608C2660093BC7D /* SearchCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318BA3942608C2660093BC7D /* SearchCategory.swift */; };
+		318C36B4265F0806009B7EC3 /* PageCertification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C36B3265F0805009B7EC3 /* PageCertification.swift */; };
+		318C36B6265F216D009B7EC3 /* PageTerminateStb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C36B5265F216D009B7EC3 /* PageTerminateStb.swift */; };
+		318C36B8265F3099009B7EC3 /* ConnectTerminateStb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C36B7265F3099009B7EC3 /* ConnectTerminateStb.swift */; };
+		318C36BB265F6C4D009B7EC3 /* PageMyRecommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C36BA265F6C4D009B7EC3 /* PageMyRecommand.swift */; };
+		318C36BE265F704B009B7EC3 /* DivisionTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C36BD265F704B009B7EC3 /* DivisionTable.swift */; };
 		318C874D25E64AA400ADDFE0 /* TopBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C874C25E64AA400ADDFE0 /* TopBanner.swift */; };
 		318C875825E64C3200ADDFE0 /* BannerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C875725E64C3200ADDFE0 /* BannerData.swift */; };
 		318CB5AE263124D800BCA5C3 /* AlramData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318CB5AD263124D800BCA5C3 /* AlramData.swift */; };
@@ -638,6 +643,11 @@
 		318BA3922608C2660093BC7D /* SearchPopularityVod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchPopularityVod.swift; sourceTree = "<group>"; };
 		318BA3932608C2660093BC7D /* CompleteKeyword.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompleteKeyword.swift; sourceTree = "<group>"; };
 		318BA3942608C2660093BC7D /* SearchCategory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchCategory.swift; sourceTree = "<group>"; };
+		318C36B3265F0805009B7EC3 /* PageCertification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCertification.swift; sourceTree = "<group>"; };
+		318C36B5265F216D009B7EC3 /* PageTerminateStb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTerminateStb.swift; sourceTree = "<group>"; };
+		318C36B7265F3099009B7EC3 /* ConnectTerminateStb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectTerminateStb.swift; sourceTree = "<group>"; };
+		318C36BA265F6C4D009B7EC3 /* PageMyRecommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyRecommand.swift; sourceTree = "<group>"; };
+		318C36BD265F704B009B7EC3 /* DivisionTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DivisionTable.swift; sourceTree = "<group>"; };
 		318C874C25E64AA400ADDFE0 /* TopBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBanner.swift; sourceTree = "<group>"; };
 		318C875725E64C3200ADDFE0 /* BannerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerData.swift; sourceTree = "<group>"; };
 		318CB5AD263124D800BCA5C3 /* AlramData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlramData.swift; sourceTree = "<group>"; };
@@ -965,6 +975,7 @@
 				310F6FBE25C167EC005718B0 /* ScsModel.swift */,
 				310F6FB925C13AE8005718B0 /* Preview.swift */,
 				310F6FC625C16916005718B0 /* Play.swift */,
+				318C36B7265F3099009B7EC3 /* ConnectTerminateStb.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -1013,6 +1024,7 @@
 				318AA039265DD96E00C089EC /* body */,
 				314D6B0125D0E9A50003C749 /* PageSetup.swift */,
 				31E50C6B261AA05400D0762C /* PageWatchHabit.swift */,
+				318C36B5265F216D009B7EC3 /* PageTerminateStb.swift */,
 			);
 			path = setup;
 			sourceTree = "<group>";
@@ -1427,8 +1439,8 @@
 				318AA03E265DDB1D00C089EC /* SetupAlram.swift */,
 				318AA040265DDBCA00C089EC /* SetupCertification.swift */,
 				318AA042265DE83500C089EC /* SetupChildren.swift */,
-				318AA044265DE8D100C089EC /* SetupHappySenior.swift */,
 				318AA046265DE90B00C089EC /* SetupGuideNVersion.swift */,
+				318AA044265DE8D100C089EC /* SetupHappySenior.swift */,
 				318AA04B265DFA4F00C089EC /* SetupPossession.swift */,
 				318AA049265DE96900C089EC /* SetupTest.swift */,
 			);
@@ -1466,6 +1478,14 @@
 				318BA3942608C2660093BC7D /* SearchCategory.swift */,
 			);
 			path = model;
+			sourceTree = "<group>";
+		};
+		318C36BC265F6FFB009B7EC3 /* table */ = {
+			isa = PBXGroup;
+			children = (
+				318C36BD265F704B009B7EC3 /* DivisionTable.swift */,
+			);
+			path = table;
 			sourceTree = "<group>";
 		};
 		318FC01525E4D7C100ABC241 /* view */ = {
@@ -1559,10 +1579,11 @@
 			children = (
 				31EA9FC125F5D23B0059E19B /* PageFullPlayer.swift */,
 				3174067B25F763BD00201850 /* PageWebview.swift */,
-				3183B37C26168F03004F5C0D /* PageAdultCertification.swift */,
 				3182A0B526188B8100F7F07D /* PageConfirmNumber.swift */,
 				3177AB30263B6F550054BFA4 /* PagePrivacyAndAgree.swift */,
 				316ECE00264B8009008D2544 /* PageRemotecon.swift */,
+				3183B37C26168F03004F5C0D /* PageAdultCertification.swift */,
+				318C36B3265F0805009B7EC3 /* PageCertification.swift */,
 			);
 			path = popups;
 			sourceTree = "<group>";
@@ -1579,6 +1600,7 @@
 				317C9773262443D4008F267D /* PageMyBenefits.swift */,
 				3198FED8262FAF77008DCB2C /* PageMyAlram.swift */,
 				319745C6262010F30072945D /* PageMyPurchaseTicketList.swift */,
+				318C36BA265F6C4D009B7EC3 /* PageMyRecommand.swift */,
 			);
 			path = my;
 			sourceTree = "<group>";
@@ -2314,6 +2336,7 @@
 			children = (
 				3182A0A4261877B600F7F07D /* util */,
 				D506D715258C8FCD00F27C00 /* list */,
+				318C36BC265F6FFB009B7EC3 /* table */,
 				D56C6B64257DBAC800CF9AB8 /* tab */,
 				3167196625FEF699005AC3D2 /* banner */,
 				3167195725FEC869005AC3D2 /* footer */,
@@ -2636,6 +2659,7 @@
 				3152B46825D9E3FF00147C86 /* PeopleList.swift in Sources */,
 				316B614E264A2B5400C2DC25 /* EffectButton.swift in Sources */,
 				D56C6A54257DA0C700CF9AB8 /* RectButton.swift in Sources */,
+				318C36B4265F0806009B7EC3 /* PageCertification.swift in Sources */,
 				312BB07925DCF2AB00AC03BC /* ThumbImageViewer.swift in Sources */,
 				314D588225B64EB6007BCA34 /* PairingView.swift in Sources */,
 				31D3F4E625E3A57A008FDFEC /* BannerBlock.swift in Sources */,
@@ -2684,6 +2708,7 @@
 				D56C6A5B257DA0C700CF9AB8 /* CheckBox.swift in Sources */,
 				D56C6A55257DA0C700CF9AB8 /* ImageButton.swift in Sources */,
 				D50AB90C2580779500649C4A /* Synopsis.swift in Sources */,
+				318C36BB265F6C4D009B7EC3 /* PageMyRecommand.swift in Sources */,
 				316ECE01264B8009008D2544 /* PageRemotecon.swift in Sources */,
 				D56C603C25933EBD009AE769 /* MdnsPairingManager.swift in Sources */,
 				316C45D62651FBD700A8D7F5 /* AllChannels.swift in Sources */,
@@ -2761,6 +2786,7 @@
 				D56C6A53257DA0C700CF9AB8 /* FillButton.swift in Sources */,
 				3163300325EF70B000581FA7 /* TextTabList.swift in Sources */,
 				316B614C264A272B00C2DC25 /* RemoteCon.swift in Sources */,
+				318C36B6265F216D009B7EC3 /* PageTerminateStb.swift in Sources */,
 				D56C699F257DA09E00CF9AB8 /* PageDragingProtocol.swift in Sources */,
 				3167199B260039C8005AC3D2 /* HeaderBanner.swift in Sources */,
 				D56C6A44257DA0C700CF9AB8 /* TextStyle.swift in Sources */,
@@ -2817,6 +2843,7 @@
 				31A4A0082627F0A90065E6C6 /* TipTab.swift in Sources */,
 				315B55D225A7E2DC00B5B351 /* Nps.swift in Sources */,
 				D56C6AFF257DAAC000CF9AB8 /* AppDelegate.swift in Sources */,
+				318C36B8265F3099009B7EC3 /* ConnectTerminateStb.swift in Sources */,
 				3159B05E25B17C14008CA85B /* StbInfo.swift in Sources */,
 				31671A052600930D005AC3D2 /* PagePerson.swift in Sources */,
 				315544C225B79FAA00086510 /* PageServiceError.swift in Sources */,
@@ -2947,6 +2974,7 @@
 				317A8F4925CBA81700E41226 /* PlayerScreenView.swift in Sources */,
 				315730EE25AFC1B600D9A693 /* AccountManager.swift in Sources */,
 				310D7E2425A42B72000BE173 /* PagePairingDevice.swift in Sources */,
+				318C36BE265F704B009B7EC3 /* DivisionTable.swift in Sources */,
 				D56C6A5E257DA0C700CF9AB8 /* MultiStrokeSpinner.swift in Sources */,
 				319BAFC1260450390007273F /* PageSearch.swift in Sources */,
 				31895B242601F609002DE02E /* SimpleSummaryViewer.swift in Sources */,

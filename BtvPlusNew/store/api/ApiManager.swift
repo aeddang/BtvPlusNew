@@ -313,6 +313,9 @@ class ApiManager :PageProtocol, ObservableObject{
         case .getStbInfo(let cid): self.kms.getStbList(ci: cid,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .getTerminateStbInfo(let cid): self.kms.getTerminateStbList(ci: cid,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         //SMD
         case .getLike(let seriesId, let device) : self.smd.getLike(
             seriesId: seriesId, hostDevice: device,
@@ -337,6 +340,10 @@ class ApiManager :PageProtocol, ObservableObject{
             error:error)
         case .confirmPassword(let pw, let device, let pwType) : self.scs.confirmPassword(
             pw: pw, hostDevice: device, type: pwType,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .connectTerminateStb(let cType, let stbId) : self.scs.connectTerminateStb(
+            type: cType, stbId: stbId,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         //PSS

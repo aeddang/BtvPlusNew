@@ -11,7 +11,7 @@ import SwiftUI
 import Combine
 
 enum SceneAlert:Equatable {
-    case confirm(String?, String?, String? = nil, (Bool) -> Void), alert(String?, String?, String? = nil, (() -> Void)? = nil),
+    case confirm(String?, String? = nil , String? = nil, (Bool) -> Void), alert(String?, String? = nil, String? = nil, (() -> Void)? = nil),
          recivedApns(AlramData?), apiError(ApiResultError),
          connectWifi((Bool) -> Void) , notFoundDevice((Bool) -> Void), requestLocation((Bool) -> Void),
          
@@ -539,7 +539,9 @@ struct SceneAlertController: PageComponent{
     }
     func selectedNeedCertification(_ idx:Int, canclenHandler: @escaping () -> Void) {
         if idx == 1 {
-            
+            self.pagePresenter.openPopup(
+                PageProvider.getPageObject(.userCertification)
+            )
         } else {
             canclenHandler()
         }

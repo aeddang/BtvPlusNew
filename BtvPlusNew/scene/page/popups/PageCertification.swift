@@ -7,12 +7,12 @@
 import Foundation
 import SwiftUI
 
-struct PageAdultCertification: PageView {
+struct PageCertification: PageView {
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
-    @EnvironmentObject var pairing:Pairing
+    
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -21,9 +21,7 @@ struct PageAdultCertification: PageView {
     @State var webViewHeight:CGFloat = 0
     @State var useTracking:Bool = false
     @State var movePage:PageObject? = nil
-    @State var isInfo:Bool = true
-    @State var isfail:Bool = false
-    
+    @State var isCompleted:Bool = false
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -32,7 +30,7 @@ struct PageAdultCertification: PageView {
             ) {
                 VStack(spacing:0){
                     PageTab(
-                        title: isfail ? String.alert.adultCertificationFail : String.alert.adultCertification,
+                        title: String.pageTitle.certificationUser,
                         isClose: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
@@ -54,51 +52,6 @@ struct PageAdultCertification: PageView {
                                         - self.sceneObserver.safeAreaTop
                                         - self.sceneObserver.safeAreaBottom
                                 }
-                        }
-                        if isInfo {
-                            VStack(alignment:.leading , spacing:0) {
-                                VStack(alignment:.leading , spacing:Dimen.margin.regular) {
-                                    Text(String.pageText.adultCertificationText1)
-                                        .modifier(MediumTextStyle( size: Font.size.bold ))
-                                        .fixedSize(horizontal: false, vertical: true)
-                                    Text(String.pageText.adultCertificationText2)
-                                        .modifier(MediumTextStyle( size: Font.size.light, color: Color.app.whiteDeep ))
-                                        .fixedSize(horizontal: false, vertical: true)
-                                    Text(String.pageText.adultCertificationText3)
-                                        .modifier(MediumTextStyle( size: Font.size.thin, color: Color.app.grey))
-                                        .fixedSize(horizontal: false, vertical: true)
-                                }
-                                .padding(.top, Dimen.margin.medium)
-                                .padding(.horizontal, Dimen.margin.regular)
-                                Spacer()
-                                FillButton(
-                                    text: String.button.certification,
-                                    isSelected: true
-                                ){_ in
-                                    withAnimation{
-                                        self.isInfo = false
-                                    }
-                                    let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.identity
-                                    self.webViewModel.request = .link(linkUrl)
-                                }
-                            }
-                            .background(Color.brand.bg)
-                        }
-                        if isfail {
-                            VStack(alignment:.leading , spacing:0) {
-                                AdultAlert(
-                                    text: String.alert.adultCertificationNotAllowed,
-                                    useCertificationBtn: false)
-                                    .modifier(MatchParent())
-                                FillButton(
-                                    text: String.app.corfirm ,
-                                    isSelected: true
-                                ){_ in
-                                    self.pagePresenter.closePopup(self.pageObject?.id)
-                                }
-                            }
-                            .background(Color.brand.bg)
-                           
                         }
                         
                     }
@@ -129,28 +82,26 @@ struct PageAdultCertification: PageView {
                 case .callFuncion(let method, let json, _) :
                     if method == WebviewMethod.bpn_setIdentityVerfResult.rawValue {
                         if let jsonData = json?.parseJson() {
-                            if (jsonData["ci"] as? String) != nil {
+                            if let ci = jsonData["ci"] as? String {
+                                self.isCompleted = true
                                 self.appSceneObserver.alert = .alert(
-                                    String.alert.identifySuccess, String.alert.identifySuccessMe, nil)
-                                
-                                withAnimation{
-                                    if let isAdult = jsonData["adult"] as? Bool {
-                                        self.isfail = !isAdult
-                                    } else {
-                                        self.isfail = true
-                                    }
-                                    self.isInfo = false
+                                    String.alert.identifySuccess, String.alert.identifySuccessMe, nil){
+                                    
+                                    self.pagePresenter.onPageEvent(
+                                        self.pageObject,
+                                        event:.init(type: .certification, data: ci))
+                                    
                                 }
-                                self.repository.updateAdultAuth(able:true)
+                                
                                 if let page = self.movePage {
                                     if page.isPopup {
-                                        self.pagePresenter.openPopup(page)
+                                        self.pagePresenter.openPopup(page.addParam(key: .cid, value: ci))
                                     } else {
-                                        self.pagePresenter.changePage(page)
+                                        self.pagePresenter.changePage(page.addParam(key: .cid, value: ci))
                                     }
                                 }
                                 self.pagePresenter.closePopup(self.pageObject?.id)
-                                
+                               
                             }else{
                                 self.appSceneObserver.alert = .alert(
                                     String.alert.identifyFail, String.alert.identifyFailMe, nil)
@@ -166,6 +117,10 @@ struct PageAdultCertification: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
+                if ani {
+                    let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.identity
+                    self.webViewModel.request = .link(linkUrl)
+                }
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
@@ -174,6 +129,11 @@ struct PageAdultCertification: PageView {
                 }
             }
             .onDisappear{
+                if !self.isCompleted {
+                    self.pagePresenter.onPageEvent(
+                        self.pageObject,
+                        event:.init(type: .certification, data: nil))
+                }
             }
             
         }//geo
@@ -183,15 +143,15 @@ struct PageAdultCertification: PageView {
 }
 
 #if DEBUG
-struct PageAdultCertification_Previews: PreviewProvider {
+struct PageCertification_Previews: PreviewProvider {
     static var previews: some View {
         Form{
-            PageAdultCertification().contentBody
+            PageCertification().contentBody
                 .environmentObject(PagePresenter())
                 .environmentObject(PageSceneObserver())
                 .environmentObject(AppSceneObserver())
                 .environmentObject(KeyboardObserver())
-                .environmentObject(Pairing())
+               
                 .frame(width: 375, height: 640, alignment: .center)
         }
     }

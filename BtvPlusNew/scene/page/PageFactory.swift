@@ -25,8 +25,10 @@ extension PageID{
     static let myBenefits:PageID = "myBenefits"
     static let myAlram:PageID = "myAlram"
     static let myPurchaseTicketList:PageID = "myPurchaseTicketList"
+    static let myRecommand:PageID = "myRecommand"
     static let modifyProile:PageID = "modifyProile"
     static let setup:PageID = "setup"
+    static let terminateStb:PageID = "terminateStb"
     static let pairingSetupUser:PageID = "pairingSetupUser"
     static let pairingDevice:PageID = "pairingDevice"
     static let pairingBtv:PageID = "pairingBtv"
@@ -46,6 +48,7 @@ extension PageID{
     static let search:PageID = "search"
     static let schedule:PageID = "schedule"
     static let adultCertification:PageID = "adultCertification"
+    static let userCertification:PageID = "userCertification"
     static let confirmNumber:PageID = "confirmNumber"
     static let watchHabit:PageID = "watchHabit"
     static let purchaseList:PageID = "purchaseList"
@@ -87,7 +90,8 @@ struct PageProvider {
              .pairingSetupUser, .pairingBtv,
              .pairingDevice, .pairingUser, .pairingManagement, .pairingEmptyDevice, .pairingGuide,
              .purchase , .webview, .schedule, .modifyProile,
-             .adultCertification, .watchHabit, .myPurchaseTicketList, .remotecon :
+             .adultCertification, .userCertification, .terminateStb,
+             .watchHabit, .myPurchaseTicketList, .remotecon :
             return  .vertical
         case .fullPlayer :
             return .none
@@ -127,6 +131,7 @@ struct PageProvider {
 
 extension PageParam {
     static let id = "id"
+    static let cid = "cid" // Certification
     static let subId = "subId"
     static let link = "link"
     static let data = "data"
@@ -149,6 +154,8 @@ extension PageEventType {
     static let timeChange = "timeChange"
     static let completed = "completed"
     static let cancel = "cancel"
+    static let certification = "certification"
+    static let selected = "selected"
 }
 
 enum PageStyle{
@@ -185,8 +192,10 @@ struct PageFactory{
         case .myPurchase : return PageMyPurchase()
         case .myBenefits : return PageMyBenefits()
         case .myAlram : return PageMyAlram()
+        case .myRecommand : return PageMyRecommand()
         case .modifyProile : return PageModifyProfile()
         case .setup : return PageSetup()
+        case .terminateStb : return PageTerminateStb()
         case .synopsis : return PageSynopsis()
         case .synopsisPackage : return PageSynopsisPackage()
         case .synopsisPlayer : return PageSynopsisPlayer()
@@ -209,6 +218,7 @@ struct PageFactory{
         case .search : return PageSearch()
         case .schedule : return PageSchedule()
         case .adultCertification : return PageAdultCertification()
+        case .userCertification : return PageCertification()
         case .confirmNumber : return PageConfirmNumber()
         case .watchHabit : return PageWatchHabit()
         case .purchaseList : return PagePurchaseList()

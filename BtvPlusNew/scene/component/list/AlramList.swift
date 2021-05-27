@@ -39,21 +39,23 @@ struct AlramList: PageComponent{
             HStack{
                 InfoAlert(text: String.pageText.myAlramInfo)
                 Spacer()
-                Button(action: {
-                    self.readAll()
-                }) {
-                    HStack(alignment:.center, spacing: Dimen.margin.tinyExtra){
-                        Image(self.hasNew ? Asset.icon.readAll : Asset.icon.readAllOff)
-                            .renderingMode(.original).resizable()
-                            .scaledToFit()
-                            .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
-                        Text(String.button.readAll)
-                            .modifier(BoldTextStyle(
-                                        size: Font.size.light,
-                                        color: self.hasNew ? Color.app.white : Color.app.grey))
+                if !self.datas.isEmpty {
+                    Button(action: {
+                        self.readAll()
+                    }) {
+                        HStack(alignment:.center, spacing: Dimen.margin.tinyExtra){
+                            Image(self.hasNew ? Asset.icon.readAll : Asset.icon.readAllOff)
+                                .renderingMode(.original).resizable()
+                                .scaledToFit()
+                                .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
+                            Text(String.button.readAll)
+                                .modifier(BoldTextStyle(
+                                            size: Font.size.light,
+                                            color: self.hasNew ? Color.app.white : Color.app.grey))
+                        }
                     }
+                    .buttonStyle(BorderlessButtonStyle())
                 }
-                .buttonStyle(BorderlessButtonStyle())
             }
             .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.thin))
             if !self.datas.isEmpty {
@@ -91,6 +93,9 @@ struct AlramList: PageComponent{
             default: do{}
             }
         }
+        .onReceive(self.pairing.$status){ status in
+            self.isPush = self.pairing.user?.isAgree3 ?? false
+        }
         .onReceive(self.sceneObserver.$isUpdated){ update in
             if !update {return}
             self.horizontalMargin
@@ -100,7 +105,7 @@ struct AlramList: PageComponent{
             self.hasNew = count>0
         }
         .onAppear(){
-            self.isPush = self.pairing.user?.isAgree3 ?? false
+            
             self.horizontalMargin
                 = self.sceneObserver.sceneOrientation == .portrait ? Dimen.margin.thin : Dimen.margin.heavy
         }

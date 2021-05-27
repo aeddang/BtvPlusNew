@@ -21,6 +21,7 @@ struct InfoAlert: PageView {
                 .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
             Text(text)
                 .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
+                .padding(.top, Dimen.margin.microExtra)
         }
     }//body
 }

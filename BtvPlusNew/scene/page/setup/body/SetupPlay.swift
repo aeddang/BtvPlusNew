@@ -7,6 +7,13 @@
 import Foundation
 import SwiftUI
 struct SetupPlay: PageView {
+    @EnvironmentObject var setup:Setup
+    @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
+    
+    var isInitate:Bool = false
+    var isPairing:Bool = false
+    
     @Binding var isAutoPlay:Bool
     @Binding var isNextPlay:Bool
 
@@ -28,6 +35,21 @@ struct SetupPlay: PageView {
 
             }
             .background(Color.app.blueLight)
+        }
+        .onReceive( [self.isAutoPlay].publisher ) { value in
+            if !self.isInitate { return }
+            if self.setup.autoPlay == self.isAutoPlay { return }
+            self.setup.autoPlay = self.isAutoPlay
+            self.appSceneObserver.event = .toast(
+                self.isAutoPlay ? String.alert.autoPlayOn : String.alert.autoPlayOff
+            )
+        }.onReceive( [self.isNextPlay].publisher ) { value in
+            if !self.isInitate { return }
+            if self.setup.nextPlay == self.isNextPlay { return }
+            self.setup.nextPlay = self.isNextPlay
+            self.appSceneObserver.event = .toast(
+                self.isNextPlay ? String.alert.nextPlayOn : String.alert.nextPlayOff
+            )
         }
     }//body
     

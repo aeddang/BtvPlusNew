@@ -88,7 +88,8 @@ enum ApiType{
          sendMessage(NpsMessage?)
          
     //KMS
-    case getStbInfo(String?)
+    case getStbInfo(String?),
+         getTerminateStbInfo(String?)
     //SMD
     case getLike(String?, HostDevice?),
          registLike(Bool?, String?, HostDevice?)
@@ -97,7 +98,8 @@ enum ApiType{
     case getPreview(String?, HostDevice?),
          getPreplay(String?, Bool?),
          getPlay(String?, HostDevice?),
-         confirmPassword(String?, HostDevice?, ScsNetwork.ConfirmType)
+         confirmPassword(String?, HostDevice?, ScsNetwork.ConfirmType),
+         connectTerminateStb(ScsNetwork.ConnectType, String?)
     //PSS
     case getPairingUserInfo(String?, String? = nil),
          getPairingUserInfoByPackageID(String?)

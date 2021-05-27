@@ -153,6 +153,7 @@ class Repository:ObservableObject, PageProtocol{
                 self.appSceneObserver?.event = .toast(String.alert.pairingDisconnected)
                 self.storage.saveUser(nil)
                 self.storage.clearDevice()
+                self.resetSystemEnvironment()
                 self.dataProvider.requestData(q: .init(type: .getGnb))
                 //NotificationCoreData().removeAllNotice()
                 
@@ -162,6 +163,7 @@ class Repository:ObservableObject, PageProtocol{
                 self.pairing.hostDevice?.modelName = self.storage.pairingModelName
                 self.dataProvider.requestData(q: .init(type: .getGnb))
                 self.appSceneObserver?.event = .toast(String.alert.pairingCompleted)
+                
                 
             case .syncError :
                 self.appSceneObserver?.alert = .pairingRecovery
@@ -369,6 +371,16 @@ class Repository:ObservableObject, PageProtocol{
         SystemEnvironment.watchLv = lv?.rawValue ?? 0
         self.userSetup.watchLv = SystemEnvironment.watchLv
         self.appSceneObserver?.alert = .alert(String.alert.watchLvCompleted, String.alert.watchLvCompletedInfo)
+        self.event = .updatedWatchLv
+    }
+    
+    func resetSystemEnvironment(){
+        SystemEnvironment.watchLv = 0
+        SystemEnvironment.isAdultAuth = false
+        SystemEnvironment.isImageLock = false
+        self.userSetup.watchLv = 0
+        self.userSetup.isAdultAuth = false
+        
         self.event = .updatedWatchLv
     }
     

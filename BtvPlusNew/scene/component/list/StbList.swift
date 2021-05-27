@@ -25,6 +25,7 @@ class StbData:InfinityData{
     private(set) var port:String? = nil
     private(set) var address:String? = nil
     private(set) var isAdultSafetyMode:Bool? = nil
+    private(set) var terminateDate:String? = nil
     
     func setData(data:MdnsDevice) -> StbData {
         macAddress = data.stb_mac_address
@@ -61,9 +62,11 @@ class StbData:InfinityData{
         port = ""
         address = ""
         isAdultSafetyMode = false
-        
+        terminateDate = data.svcTermDt
         title = data.model_name
-        if let mac = data.mac_address {
+        if let date = terminateDate {
+            subTitle = String.pageText.terminateBtvDate + " : " + date
+        } else if let mac = macAddress {
             subTitle = String.app.macAdress + " : " + mac
         }
         image = Pairing.getSTBImage(stbModel: data.model_name)

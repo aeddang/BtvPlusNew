@@ -7,6 +7,13 @@
 import Foundation
 import SwiftUI
 struct SetupApp: PageView {
+    @EnvironmentObject var setup:Setup
+    @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
+    
+    var isInitate:Bool = false
+    var isPairing:Bool = false
+    
     @Binding var isDataAlram:Bool
     @Binding var isAutoRemocon:Bool
     @Binding var isRemoconVibration:Bool
@@ -36,6 +43,34 @@ struct SetupApp: PageView {
             }
             .background(Color.app.blueLight)
         }
+        .onReceive( [self.isAutoRemocon].publisher ) { value in
+            if !self.isInitate { return }
+            if self.setup.autoRemocon == self.isAutoRemocon { return }
+            if self.isPairing == false && value == true {
+                self.appSceneObserver.alert = .needPairing()
+                self.isAutoRemocon = false
+                return
+            }
+            self.setup.autoRemocon = self.isAutoRemocon
+            self.appSceneObserver.event = .toast(
+                self.isAutoRemocon ? String.alert.autoRemoconOn : String.alert.autoRemoconOff
+            )
+            
+        }
+        .onReceive( [self.isRemoconVibration].publisher ) { value in
+            if !self.isInitate { return }
+            if self.setup.remoconVibration == self.isRemoconVibration { return }
+            if self.isPairing == false && value == true {
+                self.appSceneObserver.alert = .needPairing()
+                self.isRemoconVibration = false
+                return
+            }
+            self.setup.remoconVibration = self.isRemoconVibration
+            self.appSceneObserver.event = .toast(
+                self.isRemoconVibration ? String.alert.remoconVibrationOn : String.alert.remoconVibrationOff
+            )
+            
+        }
     }//body
     
 }
@@ -47,6 +82,12 @@ struct SetupApp_Previews: PreviewProvider {
             SetupApp(isDataAlram: .constant(false),
                      isAutoRemocon: .constant(false),
                      isRemoconVibration: .constant(false))
+                .environmentObject(PagePresenter())
+                .environmentObject(PageSceneObserver())
+                .environmentObject(AppSceneObserver())
+                .environmentObject(Repository())
+                .environmentObject(DataProvider())
+                .environmentObject(Pairing())
                 .frame(width: 375, height: 640, alignment: .center)
         }
     }

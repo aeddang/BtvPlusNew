@@ -10,6 +10,7 @@ import SwiftUI
 
 struct FunctionViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
+    var componentViewModel:PageSynopsis.ComponentViewModel
     var synopsisData:SynopsisData? = nil
     var srisId:String?
     var epsdId:String?
@@ -34,9 +35,9 @@ struct FunctionViewer: PageComponent{
                     }
                     .buttonStyle(BorderlessButtonStyle())
                 }
-                BtvButton(
-                    id:""
-                )
+                BtvButton(){
+                    self.componentViewModel.uiEvent = .watchBtv
+                }
                 .buttonStyle(BorderlessButtonStyle())
                 if let srisId = self.srisId{
                     ShareButton(
@@ -62,6 +63,7 @@ struct FunctionViewer_Previews: PreviewProvider {
     static var previews: some View {
         VStack{
             FunctionViewer(
+                componentViewModel: .init(),
                 synopsisData:SynopsisData(),
                 isBookmark: .constant(false),
                 isLike: .constant(.unlike)

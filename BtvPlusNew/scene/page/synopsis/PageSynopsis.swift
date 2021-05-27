@@ -8,7 +8,7 @@ import Foundation
 import SwiftUI
 extension PageSynopsis {
     enum ComponentEvent {
-        case changeVod(String?), changeSynopsis(SynopsisData?), changeOption(PurchaseModel?), purchase
+        case changeVod(String?), changeSynopsis(SynopsisData?), changeOption(PurchaseModel?), purchase, watchBtv
     }
     class ComponentViewModel:ComponentObservable{
         @Published var uiEvent:ComponentEvent? = nil {didSet{ if uiEvent != nil { uiEvent = nil} }}
@@ -179,6 +179,7 @@ struct PageSynopsis: PageView {
                         case .changeSynopsis(let data): self.changeVod(synopsisData: data)
                         case .changeOption(let option) : self.changeOption(option)
                         case .purchase : self.purchase()
+                        case .watchBtv : self.watchBtv()
                         }
                     }
                     .modifier(PageFull())
@@ -927,6 +928,27 @@ struct PageSynopsis: PageView {
             PageProvider.getPageObject(.purchase)
                 .addParam(key: .data, value: model)
         )
+    }
+    func watchBtv(){
+        guard let isPurchased = self.synopsisModel?.isPurchased else { return }
+        if !isPurchased {
+            guard  let model = self.purchaseWebviewModel else { return }
+            self.appSceneObserver.alert = .needPurchase(model, String.alert.purchaseContinueBtv)
+            
+        } else {
+            let msg:NpsMessage = NpsMessage().setPlayVodMessage(
+                contentId: self.epsdRsluId ,
+                playTime: self.playerModel.time)
+            
+            self.pageDataProviderModel.request = .init(type: .sendMessage( msg))
+            
+            if self.setup.autoRemocon {
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.remotecon)
+                )
+            }
+            self.playerModel.event = .pause
+        }
     }
 }
 

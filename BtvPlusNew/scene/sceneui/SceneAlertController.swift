@@ -18,7 +18,7 @@ enum SceneAlert:Equatable {
          limitedDevice(PairingInfo?), pairingError(NpsCommonHeader?), pairingUpdated(PairingUpdateData),
          pairingRecovery, needPairing(String? = nil), pairingCheckFail,
         
-         needPurchase( PurchaseWebviewModel ), needCertification( String?, String?, String? = nil, () -> Void ),
+         needPurchase( PurchaseWebviewModel , String? = nil), needCertification( String?, String?, String? = nil, () -> Void ),
          serviceUnavailable(String?), serviceSelect(String?, String? , (String?) -> Void),
          like(String, Bool?), updateAlram(String, Bool),
          
@@ -92,7 +92,7 @@ struct SceneAlertController: PageComponent{
             case .pairingError(_): self.selectedPairingError(idx)
             case .pairingRecovery: self.selectedPairingRecovery(idx)
             case .needPairing: self.selectedNeedPairing(idx)
-            case .needPurchase(let data): self.selectedNeedPurchase(idx, model: data)
+            case .needPurchase(let data, _): self.selectedNeedPurchase(idx, model: data)
             case .needCertification(_, _, _, let cancleHandler): self.selectedNeedCertification(idx, canclenHandler: cancleHandler) 
             case .serviceUnavailable(let path): self.selectedServiceUnavailable(idx, path: path)
             case .serviceSelect(_ , let value, let completionHandler) : self.selectedServiceSelect(idx, value:value, completionHandler:completionHandler)
@@ -131,7 +131,7 @@ struct SceneAlertController: PageComponent{
             case .pairingError(let data): self.setupPairingError(data: data)
             case .pairingRecovery: self.setupPairingRecovery()
             case .needPairing(let msg): self.setupNeedPairing(msg:msg)
-            case .needPurchase: self.setupNeedPurchase()
+            case .needPurchase(_ , let msg): self.setupNeedPurchase(msg: msg)
             case .needCertification(let title,let text, let subText, _): self.setupNeedCertification(title: title, text: text, subText: subText)
             case .serviceUnavailable(let path): self.setupServiceUnavailable(path: path)
             case .serviceSelect(let text, _ , _) : self.setupServiceSelect(text: text)
@@ -446,9 +446,9 @@ struct SceneAlertController: PageComponent{
         }
     }
     
-    func setupNeedPurchase() {
+    func setupNeedPurchase(msg:String?) {
         self.title = String.alert.purchase
-        self.text = String.alert.purchaseContinue
+        self.text = msg ?? String.alert.purchaseContinue
         
         self.buttons = [
             AlertBtnData(title: String.app.cancel, index: 0),

@@ -230,6 +230,7 @@ extension String {
         
         public static var purchase = "alertPurchase".loaalized()
         public static var purchaseContinue = "alertPurchaseContinue".loaalized()
+        public static var purchaseContinueBtv = "alertPurchaseContinueBtv".loaalized()
         
         public static var dataAlramOn = "alertDataAlramOn".loaalized()
         public static var dataAlramOff = "alertDataAlramOff".loaalized()

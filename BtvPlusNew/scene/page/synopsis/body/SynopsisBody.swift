@@ -75,6 +75,7 @@ struct SynopsisBody: PageComponent{
                             EpisodeViewer(data:episodeViewerData)
                             Spacer()
                             FunctionViewer(
+                                componentViewModel: self.componentViewModel,
                                 synopsisData :self.synopsisData,
                                 srisId: self.srisId,
                                 epsdId:self.epsdId,
@@ -88,6 +89,7 @@ struct SynopsisBody: PageComponent{
                             .modifier(ListRowInset(spacing: Self.spacing))
                         HStack(spacing:0){
                             FunctionViewer(
+                                componentViewModel: self.componentViewModel,
                                 synopsisData :self.synopsisData,
                                 srisId: self.srisId,
                                 epsdId:self.epsdId,
@@ -155,6 +157,7 @@ struct SynopsisBody: PageComponent{
                                 EpisodeViewer(data:episodeViewerData)
                                 Spacer()
                                 FunctionViewer(
+                                    componentViewModel: self.componentViewModel,
                                     synopsisData :self.synopsisData,
                                     srisId: self.srisId,
                                     epsdId:self.epsdId,
@@ -167,6 +170,7 @@ struct SynopsisBody: PageComponent{
                             EpisodeViewer(data:episodeViewerData)
                             HStack(spacing:0){
                                 FunctionViewer(
+                                    componentViewModel: self.componentViewModel,
                                     synopsisData :self.synopsisData,
                                     srisId: self.srisId,
                                     epsdId:self.epsdId,

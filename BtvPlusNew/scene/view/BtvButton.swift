@@ -15,14 +15,14 @@ import SwiftUI
 struct BtvButton: PageView {
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var appSceneObserver:AppSceneObserver
-    var id:String
-    
+    var action: () -> Void
     var body: some View {
         Button(action: {
             if self.pairing.status != .pairing {
                 self.appSceneObserver.alert = .needPairing()
             }
             else{
+                action()
                 
             }
         }) {
@@ -51,9 +51,9 @@ struct BtvButton_Previews: PreviewProvider {
     
     static var previews: some View {
         Form{
-            BtvButton(
-                id:""
-            )
+            BtvButton(){
+                
+            }
             .environmentObject(Pairing())
             .environmentObject(AppSceneObserver())
             .environmentObject(Pairing())

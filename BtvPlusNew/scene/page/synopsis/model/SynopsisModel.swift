@@ -463,25 +463,27 @@ class SynopsisModel : PageProtocol {
                 }
             }
         }
+        #if DEBUG
+            //log
+            watchOptions.forEach({
+                DataLog.d("watchOption : " + $0.debugString, tag: self.tag)
+            })
+            purchasableItems.forEach({
+                DataLog.d("purchasable : " + $0.debugString, tag: self.tag)
+            })
         
-        //log
-        watchOptions.forEach({
-            DataLog.d("watchOption : " + $0.debugString, tag: self.tag)
-        })
-        purchasableItems.forEach({
-            DataLog.d("purchasable : " + $0.debugString, tag: self.tag)
-        })
-    
-        DataLog.d("isNScreen : " + self.isNScreen.description , tag: self.tag)
-        DataLog.d("isPurchasedPPM : " + self.isPurchasedPPM.description  , tag: self.tag)
-        DataLog.d("isContainPPM : " + self.isContainPPM.description , tag: self.tag)
-        DataLog.d("isContainPPS : " + self.isContainPPS.description , tag: self.tag)
-        DataLog.d("isPurchased : " + self.isPurchased.description , tag: self.tag)
-        DataLog.d("holdbackType : " + self.holdbackType.name , tag: self.tag)
-        DataLog.d("purchasedPPMItem : " + (self.purchasedPPMItem?.ppm_prd_nm ?? "nil") , tag: self.tag)
-        DataLog.d("hasExamPreview : " + self.hasExamPreview.description , tag: self.tag)
-        DataLog.d("hasPreview : " + self.hasPreview.description , tag: self.tag)
-        DataLog.d("curSynopsisItem : " + (curSynopsisItem?.debugString ?? "nil") , tag: self.tag)
+            
+            DataLog.d("isNScreen : " + self.isNScreen.description , tag: self.tag)
+            DataLog.d("isPurchasedPPM : " + self.isPurchasedPPM.description  , tag: self.tag)
+            DataLog.d("isContainPPM : " + self.isContainPPM.description , tag: self.tag)
+            DataLog.d("isContainPPS : " + self.isContainPPS.description , tag: self.tag)
+            DataLog.d("isPurchased : " + self.isPurchased.description , tag: self.tag)
+            DataLog.d("holdbackType : " + self.holdbackType.name , tag: self.tag)
+            DataLog.d("purchasedPPMItem : " + (self.purchasedPPMItem?.ppm_prd_nm ?? "nil") , tag: self.tag)
+            DataLog.d("hasExamPreview : " + self.hasExamPreview.description , tag: self.tag)
+            DataLog.d("hasPreview : " + self.hasPreview.description , tag: self.tag)
+            DataLog.d("curSynopsisItem : " + (curSynopsisItem?.debugString ?? "nil") , tag: self.tag)
+        #endif
     }
     
     var isFree: Bool {
@@ -556,12 +558,10 @@ class SynopsisModel : PageProtocol {
     
     
     
-    private var isPurchased: Bool {
+    var isPurchased: Bool {
         purchaseModels.contains(where: {$0.isDirectview})
     }
     
-    
-   
 
     // 현재 시놉의 시즌 전체 시청 가능 여부( 시리즈 아이디로 pps 캐싱된거있나 찾음)
     private var isSeasonWatchAll: Bool {

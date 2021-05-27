@@ -277,6 +277,7 @@
 
 "alertPurchase" = "구매";
 "alertPurchaseContinue" = "전체 영상은 구매 후 시청 가능합니다.\n구매 후 계속 시청하시겠습니까?";
+"alertPurchaseContinueBtv" = "구매 후 이용 가능합니다.\n구매 화면으로 이동하시겠습니까?";
 
 
 "alertDataAlramOn" = "데이타 연결 알림이 설정되었습니다.";

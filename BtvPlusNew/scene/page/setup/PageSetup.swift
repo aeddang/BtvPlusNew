@@ -34,7 +34,7 @@ struct PageSetup: PageView {
                     
                     InfinityScrollView( viewModel: self.infinityScrollModel ){
                         if self.sceneOrientation == .landscape {
-                            VStack(alignment:.leading , spacing:Dimen.margin.thin) {
+                            HStack(alignment:.center , spacing:Dimen.margin.thin) {
                                 VStack(alignment:.leading , spacing:Dimen.margin.medium) {
                                     SetupApp(
                                         isInitate:self.isInitate, isPairing: self.isPairing,
@@ -64,10 +64,7 @@ struct PageSetup: PageView {
                                     SetupPossession(
                                         isInitate:self.isInitate)
                                     SetupHappySenior()
-                                    SetupGuideNVersion()
-                                    #if DEBUG
-                                        SetupTest()
-                                    #endif
+                                   
                                 }
                             }
                             .padding(.vertical, Dimen.margin.medium)
@@ -107,7 +104,6 @@ struct PageSetup: PageView {
                             .padding(.vertical, Dimen.margin.medium)
                         }
                         
-                       
                     }
                     .modifier(ContentHorizontalEdges())
                     .modifier(MatchParent())

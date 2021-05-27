@@ -15,7 +15,8 @@ enum NpsCtrlType:String{
          Ok, Left, Up, Right, Down,
          ButtonExit, ButtonHome, ButtonCancel,
          Mute, PIP, Guide,
-         CHNumInput, StrInput, NumInput
+         CHNumInput, StrInput, NumInput,
+         PlayVod, TakeoutTV
 }
 
 enum NpsCtrlValue:String{

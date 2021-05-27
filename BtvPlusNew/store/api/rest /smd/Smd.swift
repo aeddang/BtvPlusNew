@@ -47,7 +47,7 @@ class Smd: Rest{
         
         var params = [String:String]()
         params["response_format"] = SmdNetwork.RESPONSE_FORMET
-        params["IF"] = "IF-SMTDV-V5-005"
+        params["IF"] = "IF-SMTDV-V5-004"
         params["m"] = "registerLikeHate"
         params["stb_id"] = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         params["version_sw"] = hostDevice?.agentVersion ?? ""

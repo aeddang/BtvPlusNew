@@ -26,6 +26,7 @@ extension PageID{
     static let myAlram:PageID = "myAlram"
     static let myPurchaseTicketList:PageID = "myPurchaseTicketList"
     static let myRecommand:PageID = "myRecommand"
+    static let myPossessionPurchase:PageID = "myPossessionPurchase"
     static let modifyProile:PageID = "modifyProile"
     static let setup:PageID = "setup"
     static let terminateStb:PageID = "terminateStb"
@@ -193,6 +194,7 @@ struct PageFactory{
         case .myBenefits : return PageMyBenefits()
         case .myAlram : return PageMyAlram()
         case .myRecommand : return PageMyRecommand()
+        case .myPossessionPurchase : return PageMyPossessionPurchase()
         case .modifyProile : return PageModifyProfile()
         case .setup : return PageSetup()
         case .terminateStb : return PageTerminateStb()

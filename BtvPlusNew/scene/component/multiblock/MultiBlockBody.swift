@@ -103,6 +103,7 @@ struct MultiBlockBody: PageComponent {
     @State var reloadDegreeMax:Double = Double(InfinityScrollModel.PULL_COMPLETED_RANGE)
     @State var headerOffset:CGFloat = 0
     @State var needAdult:Bool = false
+    
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -265,7 +266,6 @@ struct MultiBlockBody: PageComponent {
                     data.themas = blocks[0...min(max, blocks.count-1)].map{ d in
                         ThemaData().setData(data: d, cardType: data.cardType)
                     }
-                    
                 default: break
                 }
                 
@@ -315,13 +315,10 @@ struct MultiBlockBody: PageComponent {
                 guard let resData = res?.data as? EventBanner else {return data.setBlank()}
                 guard let banners = resData.banners else {return data.setBlank()}
                 if banners.isEmpty {return data.setBlank()}
-                switch data.uiType {
-                case .banner :
                     data.banners = banners.map{ d in
-                        BannerData().setData(data: d)
-                    }
-                default: break
+                        BannerData().setData(data: d, cardType:data.cardType)
                 }
+
             default: do {}
             }
             
@@ -401,19 +398,23 @@ struct MultiBlockBody: PageComponent {
         self.addBlock()
     }
     
-   
+    
     @State var requestNum = 0
     @State var completedNum = 0
+    
     private func requestBlockCompleted(){
         PageLog.d("addBlock completed", tag: self.tag)
+
         if !self.loadingBlocks.isEmpty {
             self.addLoadedBlocks(self.loadingBlocks) 
             PageLog.d("self.blocks " + self.blocks.count.description, tag: self.tag)
             self.loadingBlocks = []
         }
-        if self.blocks.isEmpty && self.blockSets.isEmpty {
+       
+        if self.blocks.isEmpty {
             self.isError = true
         }
+        
     }
     private func onBlock(stat:BlockStatus, block:BlockData){
         switch stat {
@@ -452,40 +453,17 @@ struct MultiBlockBody: PageComponent {
         
     }
     
+    
     private func addLoadedBlocks (_ loadedBlocks:[BlockData]){
         var idx = self.blocks.count
         loadedBlocks.forEach{
             $0.index = idx
             idx += 1
         }
-        //self.blockSets.append(contentsOf: self.getBindingData(datas: loadedBlocks))
         self.blocks.append(contentsOf: loadedBlocks)
     }
     
-    // test
-    func getBindingData(datas:[BlockData]) -> [BlockDataSet] {
-        let count:Int = 3
-        var rows:[BlockDataSet] = []
-        var cells:[BlockData] = []
-        var total = datas.count
-        datas.forEach{ d in
-            if cells.count < count {
-                cells.append(d)
-            }else{
-                rows.append(
-                    BlockDataSet( datas: cells,  index: total)
-                )
-                cells = [d]
-                total += 1
-            }
-        }
-        if !cells.isEmpty {
-            rows.append(
-                BlockDataSet( datas: cells, index: total)
-            )
-        }
-        return rows
-    }
+    
     
     private func addBlock(){
         var max = 0

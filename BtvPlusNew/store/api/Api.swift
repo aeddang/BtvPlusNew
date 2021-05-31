@@ -71,7 +71,8 @@ enum ApiType{
          postBookMark(SynopsisData),
          deleteBookMark(SynopsisData),
          getDirectView(SynopsisModel),
-         getPackageDirectView(SynopsisPackageModel, Bool = false)
+         getPackageDirectView(SynopsisPackageModel, Bool = false),
+         getPossessionPurchase(String, Int? = nil , Int? = nil)
     
     //NPS
     case registHello,

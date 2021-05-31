@@ -355,6 +355,28 @@ class Metv: Rest{
         params["yn_ppm"] = isPpm ? "Y": "N"
         fetch(route: MetvPackageDirectview( body: params), completion: completion, error:error)
     }
+    
+    /**
+    * 해지고객 소장용 구매내역 조회 (IF-ME-932)
+    * @param stbId STB ID
+    * @param pageNo 요청할 페이지의 번호 (Default: 1)
+    * @param entryNo 요청한 페이지에 보여질 개수 (Default: 10)
+    */
+    func getPossessionPurchase(
+        stbId:String , page:Int?, pageCnt:Int?,
+        completion: @escaping (Purchase) -> Void, error: ((_ e:Error) -> Void)? = nil){
+
+        var params = [String:String]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["ver"] = MetvNetwork.VERSION
+        params["IF"] = "IF-ME-932"
+        params["stb_id"] = stbId
+        params["page_no"] = page?.description ?? "1"
+        params["entry_no"] = pageCnt?.description ?? "999"
+        params["hash_id"] = ApiUtil.getHashId(stbId)
+        
+        fetch(route: MetvPossessionPurchase(query: params), completion: completion, error:error)
+    }
 }
 
 struct MetvPurchase:NetworkRoute{
@@ -435,6 +457,11 @@ struct MetvPackageDirectview:NetworkRoute{
    var body: [String : Any]? = nil
 }
 
+struct MetvPossessionPurchase:NetworkRoute{
+   var method: HTTPMethod = .get
+   var path: String = "/metv/v5/purchase/closeduser-unlimited"
+   var query: [String : String]? = nil
+}
 
 
 

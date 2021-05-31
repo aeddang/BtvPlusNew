@@ -589,7 +589,7 @@ extension String {
         public static let mySetup = "mySetup".loaalized()
         public static let myRecommandFriend = "myRecommandFriend".loaalized()
         public static let myRecommandFriendReword = "myRecommandFriendReword".loaalized()
-        
+        public static let myTerminatePurchaseInfo = "myTerminatePurchaseInfo".loaalized()
         public static let recommandFriendText1 = "recommandFriendText1".loaalized()
         public static let recommandFriendText2 = "recommandFriendText2".loaalized()
         public static let recommandFriendText3 = "recommandFriendText3".loaalized()

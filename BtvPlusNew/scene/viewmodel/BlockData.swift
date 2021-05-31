@@ -116,8 +116,8 @@ class BlockData:InfinityData, ObservableObject{
         cardType = findType(data)
         dataType = findDataType(data)
         blocks = data.blocks
-        switch cardType {
-        case .banner: self.originData = data
+        switch dataType {
+        case .banner : self.originData = data
         default: break
         }
         uiType = findUiType(themaType:themaType)
@@ -224,7 +224,10 @@ class BlockData:InfinityData, ObservableObject{
             case ("20", _, "04"): return .circleTheme
             case ("20", _, "02"): return .bigTheme
             case ("20", _, "01"): return .squareThema
-            case ("70", _, _): return .banner
+                
+            case ("70", _, _):
+                return data.exps_rslu_cd == "20" ? .bannerList : .banner
+                
             default:
                 if data.gnb_sub_typ_cd == "BP_03_04" && data.btm_bnr_blk_exps_cd == "03" { return .contentBanner }
                 else if data.svc_prop_cd == "501" { return .bookmarkedPoster }
@@ -237,6 +240,7 @@ class BlockData:InfinityData, ObservableObject{
     
     private func findDataType(_ data:BlockItem) -> DataType{
         if self.cardType == .banner {return .banner}
+        if self.cardType == .bannerList {return .banner}
         
         if data.svc_prop_cd == "501", data.gnb_typ_cd == EuxpNetwork.GnbTypeCode.GNB_HOME.rawValue {
             return .bookMark
@@ -265,6 +269,8 @@ class BlockData:InfinityData, ObservableObject{
             return .theme
         case .banner :
             return .banner
+        case .bannerList :
+            return .bannerList
         default:
             return .poster
         }
@@ -274,6 +280,7 @@ class BlockData:InfinityData, ObservableObject{
         case none,
         homeBigBanner,
         banner,
+        bannerList,
         contentBanner,
         
         smallPoster,
@@ -305,7 +312,8 @@ class BlockData:InfinityData, ObservableObject{
         video,
         theme,
         ticket,
-        banner
+        banner,
+        bannerList
     }
     
     enum ThemaType: String, Codable {

@@ -42,16 +42,17 @@ class WebBridge :PageProtocol{
         info["networkState"] = self.networkObserver.status == .wifi ? 1 : 0
         info["pairingState"] = pairing.status == .pairing ? 0 : 1
         info["pairingType"] = 0
-        info["stbId"] = pairing.stbId
+        info["stbId"] = AppUtil.getSafeString(pairing.stbId, defaultValue: "null")
         info["hashId"] = ApiUtil.getHashId(pairing.stbId)
         info["stbName"] = nil
-        info["macAddress"] = pairing.hostDevice?.convertMacAdress ?? "null"
+        info["macAddress"] = AppUtil.getSafeString(pairing.hostDevice?.convertMacAdress, defaultValue: "null")
         //var adultMenuLimit = false
+        
+        
         var RCUAgentVersion:String? = nil
         if let hostDevice = pairing.hostDevice {
-           // adultMenuLimit = hostDevice.adultAafetyMode
+            // adultMenuLimit = hostDevice.adultAafetyMode
             RCUAgentVersion = hostDevice.agentVersion
-           
         }
         info["isAdultAuth"] = setup.isAdultAuth       // 성인인증 ON/OFF
         info["isPurchaseAuth"] = setup.isPurchaseAuth   // 구매인증 ON/OFF
@@ -69,13 +70,15 @@ class WebBridge :PageProtocol{
         info["regionCode"] = pairing.getRegionCode()
         info["svc"] = AppUtil.getSafeString(userInfo?.svc, defaultValue: "0")
         info["ukey_prod_id"] = AppUtil.getSafeString(userInfo?.ukey_prod_id, defaultValue: "null")
+        
         info["combine_product_use"] = AppUtil.getSafeString(userInfo?.combine_product_use, defaultValue: "N")
         info["combine_product_list"] = AppUtil.getSafeString(userInfo?.combine_product_list, defaultValue: "null")
         info["isSupportSimplePairing"] = pairing.hostDevice?.isSupportSimplePairing() ?? false
-        info["evaluation"] = SystemEnvironment.isEvaluation 
-        info["clientId"] = SystemEnvironment.getGuestDeviceId
+        
+        info["evaluation"] = SystemEnvironment.isEvaluation
+        info["clientId"] = SystemEnvironment.getGuestDeviceId()
         info["expiredSTB"] = false
-      
+        
         return info
     }
     

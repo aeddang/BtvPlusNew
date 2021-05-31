@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import struct Kingfisher.KFImage
+//import struct Kingfisher.KFImage
 
 struct BannerDataSet:Identifiable {
     private(set) var id = UUID().uuidString
@@ -67,6 +67,34 @@ struct BannerSet: PageComponent{
     }//body
 }
 
+extension BannerList{
+    static let spacing:CGFloat = Dimen.margin.tiny
+}
+struct BannerList: PageComponent{
+    @EnvironmentObject var pagePresenter:PagePresenter
+    var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var datas:[BannerData]
+    var useTracking:Bool = false
+    var margin:CGFloat = Dimen.margin.thin
+
+    var body: some View {
+        InfinityScrollView(
+            viewModel: self.viewModel,
+            axes: .horizontal,
+            marginVertical: 0,
+            marginHorizontal: self.margin ,
+            spacing: 0,
+            isRecycle:  true,
+            useTracking: self.useTracking
+            ){
+            ForEach(self.datas) { data in
+                BannerItem( data:data )
+                    .modifier(HolizentalListRowInset(spacing: Self.spacing))
+            }
+        }
+    }//body
+}
+
 
 
 struct BannerItem: PageView {
@@ -82,6 +110,12 @@ struct BannerItem: PageView {
                     contentMode: .fill,
                     noImg: Asset.noImgBanner)
                     .frame(width: size.width, height: size.height)
+            case .horizontalList :
+                ImageView(
+                    url: self.data.image,
+                    contentMode: .fill,
+                    noImg: Asset.noImg1_1)
+                    .frame(width: self.data.type.size.width, height: self.data.type.size.height)
             default :
                 ImageView(
                     url: self.data.image,

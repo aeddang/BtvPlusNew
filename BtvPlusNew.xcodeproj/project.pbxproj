@@ -209,6 +209,8 @@
 		318C874D25E64AA400ADDFE0 /* TopBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C874C25E64AA400ADDFE0 /* TopBanner.swift */; };
 		318C875825E64C3200ADDFE0 /* BannerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C875725E64C3200ADDFE0 /* BannerData.swift */; };
 		318CB5AE263124D800BCA5C3 /* AlramData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318CB5AD263124D800BCA5C3 /* AlramData.swift */; };
+		318D12DA2664869700BF1DD8 /* BannerListBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318D12D92664869700BF1DD8 /* BannerListBlock.swift */; };
+		318D12DC2664919F00BF1DD8 /* PageMyPossessionPurchase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318D12DB2664919F00BF1DD8 /* PageMyPossessionPurchase.swift */; };
 		318E7EFE25E8814C00B2AAAF /* MonthlyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E7EFD25E8814C00B2AAAF /* MonthlyList.swift */; };
 		318E7F0425E8990900B2AAAF /* MonthlyBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E7F0325E8990900B2AAAF /* MonthlyBlock.swift */; };
 		318E7F0C25E8B01800B2AAAF /* MonthlyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E7F0B25E8B01800B2AAAF /* MonthlyInfo.swift */; };
@@ -651,6 +653,8 @@
 		318C874C25E64AA400ADDFE0 /* TopBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBanner.swift; sourceTree = "<group>"; };
 		318C875725E64C3200ADDFE0 /* BannerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerData.swift; sourceTree = "<group>"; };
 		318CB5AD263124D800BCA5C3 /* AlramData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlramData.swift; sourceTree = "<group>"; };
+		318D12D92664869700BF1DD8 /* BannerListBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerListBlock.swift; sourceTree = "<group>"; };
+		318D12DB2664919F00BF1DD8 /* PageMyPossessionPurchase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyPossessionPurchase.swift; sourceTree = "<group>"; };
 		318E7EFD25E8814C00B2AAAF /* MonthlyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyList.swift; sourceTree = "<group>"; };
 		318E7F0325E8990900B2AAAF /* MonthlyBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyBlock.swift; sourceTree = "<group>"; };
 		318E7F0B25E8B01800B2AAAF /* MonthlyInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyInfo.swift; sourceTree = "<group>"; };
@@ -1413,6 +1417,7 @@
 		31863E0A265B37620086C40D /* provider */ = {
 			isa = PBXGroup;
 			children = (
+				D50AB8EC257F311800649C4A /* SystemEnvironment.swift */,
 				D56C6B1F257DACD800CF9AB8 /* DataProvider.swift */,
 				D50AB8EB257F30EC00649C4A /* model */,
 				D56C603A25933EAB009AE769 /* manager */,
@@ -1497,6 +1502,7 @@
 				D56CC31125907F3700CA1D54 /* ThemaBlock.swift */,
 				31DF152825F9AC4600F0A38D /* TicketBlock.swift */,
 				31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */,
+				318D12D92664869700BF1DD8 /* BannerListBlock.swift */,
 				318E7F0325E8990900B2AAAF /* MonthlyBlock.swift */,
 				31A4A00D26281B840065E6C6 /* TipBlock.swift */,
 			);
@@ -1601,6 +1607,7 @@
 				3198FED8262FAF77008DCB2C /* PageMyAlram.swift */,
 				319745C6262010F30072945D /* PageMyPurchaseTicketList.swift */,
 				318C36BA265F6C4D009B7EC3 /* PageMyRecommand.swift */,
+				318D12DB2664919F00BF1DD8 /* PageMyPossessionPurchase.swift */,
 			);
 			path = my;
 			sourceTree = "<group>";
@@ -1664,7 +1671,6 @@
 		D50AB8EB257F30EC00649C4A /* model */ = {
 			isa = PBXGroup;
 			children = (
-				D50AB8EC257F311800649C4A /* SystemEnvironment.swift */,
 				314D6B1C25D122610003C749 /* Setup.swift */,
 				D5469F5625835231009CED2D /* Bands.swift */,
 				D56C60532593462B009AE769 /* Pairing.swift */,
@@ -2791,6 +2797,7 @@
 				3167199B260039C8005AC3D2 /* HeaderBanner.swift in Sources */,
 				D56C6A44257DA0C700CF9AB8 /* TextStyle.swift in Sources */,
 				318C874D25E64AA400ADDFE0 /* TopBanner.swift in Sources */,
+				318D12DC2664919F00BF1DD8 /* PageMyPossessionPurchase.swift in Sources */,
 				D56C6A23257DA0C600CF9AB8 /* util.swift in Sources */,
 				31863E08265B364A0086C40D /* Alram.swift in Sources */,
 				3166CBE42611A15900282891 /* Eps.swift in Sources */,
@@ -2826,6 +2833,7 @@
 				D56C69AC257DA09E00CF9AB8 /* SelecterbleView.swift in Sources */,
 				3167197325FF27AA005AC3D2 /* WatchedList.swift in Sources */,
 				3166CBDB26119C1B00282891 /* MonthlyPurchaseInfo.swift in Sources */,
+				318D12DA2664869700BF1DD8 /* BannerListBlock.swift in Sources */,
 				D56C69B5257DA09E00CF9AB8 /* NetworkObserver.swift in Sources */,
 				3152B47225DA310000147C86 /* SerisList.swift in Sources */,
 				D56C6A40257DA0C700CF9AB8 /* PlayerUI.swift in Sources */,

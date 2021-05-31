@@ -88,6 +88,7 @@ struct PurchaseList: PageComponent{
     var datas:[PurchaseData]
     var useTracking:Bool = false
     var marginBottom:CGFloat = Dimen.margin.tinyExtra
+    var type:PurchaseBlock.ListType? = nil
     var onBottom: ((_ data:PurchaseData) -> Void)? = nil
     @State var isEdit:Bool = false
    
@@ -101,7 +102,10 @@ struct PurchaseList: PageComponent{
             spacing: 0,
             useTracking: self.useTracking
         ){
-            
+            if type == .possession {
+                InfoAlert(text: String.pageText.myTerminatePurchaseInfo)
+                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.thin))
+            }
             if !self.datas.isEmpty {
                 ForEach(self.datas) { data in
                     PurchaseItem( data:data )

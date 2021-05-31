@@ -263,6 +263,10 @@ class ApiManager :PageProtocol, ObservableObject{
             data: data, isPpm:isPpm,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .getPossessionPurchase(let stbId ,let page, let count) : self.metv.getPossessionPurchase(
+            stbId:stbId, page: page, pageCnt: count,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         //NPS
         case .registHello : self.nps.postHello(
             completion: {res in self.complated(id: apiID, type: type, res: res)},

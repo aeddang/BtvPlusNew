@@ -91,8 +91,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     }
     var body: some View {
         if #available(iOS 14.0, *) {
-            ScrollView(self.isScroll ? self.axes : [], showsIndicators: self.showIndicators) {
-                ScrollViewReader{ reader in
+            ScrollViewReader{ reader in
+                ScrollView(self.isScroll ? self.axes : [], showsIndicators: self.showIndicators) {
                     if self.axes == .vertical {
                         ZStack {
                             if self.useTracking {
@@ -118,18 +118,10 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                             }
                         }
                         .frame(alignment: .topLeading)
-                        .onChange(of: self.scrollPos, perform: { pos in
-                            guard let pos = pos else {return}
-                            reader.scrollTo(pos)
-                        })
-                        .onChange(of: self.scrollIdx, perform: { idx in
-                            guard let idx = idx else {return}
-                            reader.scrollTo(idx, anchor: anchor)
-                        })
+                        
                     
                     } else {
                         ZStack {
-                        //HStack(alignment: .top, spacing:0) {
                             if self.useTracking {
                                 GeometryReader { insideProxy in
                                     Color.clear
@@ -154,77 +146,78 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                             }
                         }
                         .frame(alignment: .topLeading)
-                        .onChange(of: self.scrollPos, perform: { pos in
-                            guard let pos = pos else {return}
-                            reader.scrollTo(pos)
-                        })
-                        .onChange(of: self.scrollIdx, perform: { idx in
-                            guard let idx = idx else {return}
-                            reader.scrollTo(idx, anchor: anchor)
-                        })
+                        
                     }
                 }
-            }
-            .modifier(MatchParent())
-            .opacity(self.progress / self.progressMax)
-            .coordinateSpace(name: self.tag)
-            .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                self.onPreferenceChange(value: value)
-            }
-            .onReceive(self.viewModel.$scrollStatus){ stat in
-                if self.scrollType != .web() {return}
-                switch stat  {
-                case .pull :
-                    self.isScroll = false
-                default: break
+                .modifier(MatchParent())
+                .opacity(self.progress / self.progressMax)
+                .coordinateSpace(name: self.tag)
+                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                    self.onPreferenceChange(value: value)
                 }
-            }
-            .onReceive(self.viewModel.$event){ evt in
-                guard let evt = evt else{ return }
-                switch evt  {
-                case .pullCancel : withAnimation{ self.progress = self.progressMax }
-                case .pullCompleted : withAnimation{ self.progress = self.scrollType == .reload() ? self.progressMax : 0 }
-                default: break
-                }
-                
-                if self.scrollType != .web() {return}
-                switch evt  {
-                case .pullCompleted, .pullCancel :
-                    self.isScroll = true
-                    self.onMove(pos: 1)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        self.onMove(pos: 0)
+                .onChange(of: self.scrollPos, perform: { pos in
+                    guard let pos = pos else {return}
+                    reader.scrollTo(pos)
+                })
+                .onChange(of: self.scrollIdx, perform: { idx in
+                    guard let idx = idx else {return}
+                    reader.scrollTo(idx, anchor: anchor)
+                })
+                .onReceive(self.viewModel.$scrollStatus){ stat in
+                    if self.scrollType != .web() {return}
+                    switch stat  {
+                    case .pull :
+                        self.isScroll = false
+                    default: break
                     }
-                default: break
+                }
+                .onReceive(self.viewModel.$event){ evt in
+                    guard let evt = evt else{ return }
+                    switch evt  {
+                    case .pullCancel : withAnimation{ self.progress = self.progressMax }
+                    case .pullCompleted : withAnimation{ self.progress = self.scrollType == .reload() ? self.progressMax : 0 }
+                    default: break
+                    }
+                    
+                    if self.scrollType != .web() {return}
+                    switch evt  {
+                    case .pullCompleted, .pullCancel :
+                        self.isScroll = true
+                        self.onMove(pos: 1)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            self.onMove(pos: 0)
+                        }
+                    default: break
+                    }
+                }
+                .onReceive(self.viewModel.$pullPosition){ pos in
+                    if pos < self.viewModel.pullRange { return }
+                    self.progress = self.progressMax - Double(pos - self.viewModel.pullRange)
+                }
+                .onReceive(self.viewModel.$uiEvent){ evt in
+                    guard let evt = evt else{ return }
+                    switch evt {
+                    case .scrollTo(let idx, let anchor):
+                        self.anchor = anchor
+                        self.scrollIdx = idx
+                    case .scrollMove(let pos, let anchor):
+                        self.anchor = anchor
+                        self.scrollPos = pos
+                    default: break
+                    }
+                }
+                .onAppear(){
+                    let max = Double(viewModel.pullRange + viewModel.pullCompletedRange )
+                    self.progress = max
+                    self.progressMax = max
+                    self.isTracking = true
+                    self.onReady()
+                }
+                .onDisappear{
+                    self.isTracking = false
                 }
             }
-            .onReceive(self.viewModel.$pullPosition){ pos in
-                if pos < self.viewModel.pullRange { return }
-                self.progress = self.progressMax - Double(pos - self.viewModel.pullRange)
-            }
-            .onReceive(self.viewModel.$uiEvent){ evt in
-                guard let evt = evt else{ return }
-                switch evt {
-                case .scrollTo(let idx, let anchor):
-                    self.anchor = anchor
-                    self.scrollIdx = idx
-                case .scrollMove(let pos, let anchor):
-                    self.anchor = anchor
-                    self.scrollPos = pos
-                default: break
-                }
-            }
-            .onAppear(){
-                let max = Double(viewModel.pullRange + viewModel.pullCompletedRange )
-                self.progress = max
-                self.progressMax = max
-                self.isTracking = true
-                self.onReady()
-                
-            }
-            .onDisappear{
-                self.isTracking = false
-            }
+            
         }else{
             if self.axes == .vertical {
                 if self.isRecycle {

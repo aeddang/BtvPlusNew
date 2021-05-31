@@ -44,7 +44,7 @@ struct PageHome: PageView {
                 useTracking:false,
                 marginHeader : self.marginHeader,
                 marginTop:self.headerHeight,
-                marginBottom: Dimen.app.bottom,
+                marginBottom: self.marginBottom ,
                 topDatas: self.topDatas,
                 monthlyViewModel : self.monthlyViewModel,
                 monthlyDatas: self.monthlyDatas,
@@ -56,7 +56,7 @@ struct PageHome: PageView {
                     
             }
         }
-        .padding(.bottom, self.marginBottom )
+        //.padding(.bottom, self.marginBottom )
         .modifier(PageFull())
         
         .onReceive(self.dataProvider.bands.$event){ evt in
@@ -138,7 +138,7 @@ struct PageHome: PageView {
             }
         }
         .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
-            self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
+            self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.app.bottom
         }
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
             self.useTracking = ani

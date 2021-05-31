@@ -82,11 +82,10 @@ struct DisconnectView: PageComponent{
                         text: String.pageTitle.myTerminatePurchase,
                         isMore: true
                     ){_ in
-                        /*
+                        
                         self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.pairing)
+                            PageProvider.getPageObject(.myPossessionPurchase)
                         )
-                         */
                     }
                 }
             }

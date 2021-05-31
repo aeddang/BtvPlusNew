@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct BlockDataSet:Identifiable {
+class BlockDataSet:Identifiable {
     private(set) var id = UUID().uuidString
     var datas:[BlockData] = []
     var index:Int = -1
@@ -16,7 +16,7 @@ struct BlockDataSet:Identifiable {
 
 extension MultiBlock{
     static let spacing:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.medium
-    static let headerSize:Int = 3
+    static let headerSize:Int = 5
 }
 struct MultiBlock:PageComponent {
     @EnvironmentObject var sceneObserver:PageSceneObserver
@@ -52,36 +52,41 @@ struct MultiBlock:PageComponent {
                 spacing: 0,
                 isRecycle : self.isRecycle,
                 useTracking:self.useBodyTracking){
-                
-                if self.topDatas != nil  && self.topDatas?.isEmpty == false{
-                    TopBanner(
-                        pageObservable: self.pageObservable,
-                        viewModel:self.viewPagerModel,
-                        infinityScrollModel:self.viewModel,
-                        datas: self.topDatas! )
-                        .modifier(MatchHorizontal(height:  TopBanner.uiRange
-                    ))
-                    .modifier(ListRowInset(spacing: TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange))
+                if self.topDatas != nil || self.monthlyDatas != nil || self.tipBlock != nil {
+                    VStack(spacing:Self.spacing){
+                        if let topDatas = self.topDatas ,!topDatas.isEmpty {
+                            TopBanner(
+                                pageObservable: self.pageObservable,
+                                viewModel:self.viewPagerModel,
+                                infinityScrollModel:self.viewModel,
+                                datas: topDatas
+                            )
+                            .modifier(MatchHorizontal(height:  TopBanner.uiRange))
+                            .padding(.bottom, TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange - Self.spacing)
+                        }
+                        
+                        if let datas = self.monthlyDatas  {
+                           MonthlyBlock(
+                                viewModel:self.monthlyViewModel ?? InfinityScrollModel(),
+                                pageDragingModel:self.pageDragingModel,
+                                monthlyDatas:datas,
+                                allData: self.monthlyAllData,
+                                useTracking:self.useTracking,
+                                action:self.action
+                           )
+                        }
+                        
+                        if let data = self.tipBlock {
+                            TipBlock(data:data)
+                        }
+                    }
+                    .modifier(ListRowInset(spacing: Self.spacing))
                 }
                 
-                if let datas = self.monthlyDatas  {
-                   MonthlyBlock(
-                        viewModel:self.monthlyViewModel ?? InfinityScrollModel(),
-                        pageDragingModel:self.pageDragingModel,
-                        monthlyDatas:datas,
-                        allData: self.monthlyAllData,
-                        useTracking:self.useTracking,
-                        action:self.action
-                   )
-                   .modifier(ListRowInset(spacing: Self.spacing))
-                }
-                if let data = self.tipBlock {
-                    TipBlock(data:data)
-                        .modifier(ListRowInset(spacing: Self.spacing))
-                }
+                
                 
                 if !self.datas.isEmpty  {
-                    if Self.headerSize < self.datas.count && (self.topDatas?.isEmpty == false || self.monthlyDatas?.isEmpty == false) {
+                    if Self.headerSize < self.datas.count { //&& (self.topDatas?.isEmpty == false || self.monthlyDatas?.isEmpty == false) {
                         VStack(spacing:Self.spacing){
                             ForEach( self.datas[0...Self.headerSize]) { data in
                                 MultiBlockCell(
@@ -205,48 +210,6 @@ struct MultiBlock:PageComponent {
         }
     }
     
-    
-    private func view(data:BlockData) -> some View {
-            return Group {
-                switch data.uiType {
-                case .poster :
-                    PosterBlock(
-                        pageObservable:self.pageObservable,
-                        pageDragingModel:self.pageDragingModel,
-                        data: data,
-                        useTracking:self.useTracking
-                        )
-                case .video :
-                    VideoBlock(
-                        pageObservable:self.pageObservable,
-                        pageDragingModel:self.pageDragingModel,
-                        data: data,
-                        useTracking:self.useTracking
-                        )
-                case .theme :
-                    ThemaBlock(
-                        pageObservable:self.pageObservable,
-                        pageDragingModel:self.pageDragingModel,
-                        data: data,
-                        useTracking:self.useTracking
-                        )
-                case .ticket :
-                    TicketBlock(
-                        pageObservable:self.pageObservable,
-                        pageDragingModel:self.pageDragingModel,
-                        data: data,
-                        useTracking:self.useTracking
-                        )
-                case .banner :
-                    BannerBlock(
-                        pageObservable:self.pageObservable,
-                        data: data)
-                
-                }
-            }
-        }
-    
-    
     struct MultiBlockCell:PageComponent {
         var pageObservable:PageObservable
         var pageDragingModel:PageDragingModel
@@ -285,9 +248,18 @@ struct MultiBlock:PageComponent {
             case .banner :
                 BannerBlock(
                     pageObservable:self.pageObservable,
-                    data: data)
+                    data: data
+                )
+            case .bannerList :
+                BannerListBlock(
+                    pageObservable:self.pageObservable,
+                    pageDragingModel:self.pageDragingModel,
+                    data: data,
+                    useTracking:self.useTracking
+                )
             
             }
+            
         }//body
     }
 }

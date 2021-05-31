@@ -32,7 +32,7 @@ class PurchaseBlockModel: PageDataProviderModel {
 
 extension PurchaseBlock{
     enum ListType:String {
-        case normal, collection
+        case normal, collection, possession
     }
 }
 
@@ -43,6 +43,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var setup:Setup
     
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var viewModel:PurchaseBlockModel = PurchaseBlockModel()
@@ -91,11 +92,13 @@ struct PurchaseBlock: PageComponent, Identifiable{
                         ReflashSpinner(
                             progress: self.$reloadDegree)
                             .padding(.top, Dimen.margin.regular)
+                        
                         PurchaseList(
                             purchaseBlockModel:self.viewModel,
                             viewModel:self.infinityScrollModel,
                             datas: self.datas,
                             useTracking:self.useTracking,
+                            type: self.type,
                             onBottom: { _ in
                                 self.load()
                             }
@@ -106,6 +109,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
                     .background(Color.brand.bg)
                     .onReceive(self.infinityScrollModel.$event){evt in
                         guard let evt = evt else {return}
+                        if self.type == .possession {return}
                         switch evt {
                         case .pullCompleted :
                             if !self.infinityScrollModel.isLoading { self.reload() }
@@ -177,12 +181,13 @@ struct PurchaseBlock: PageComponent, Identifiable{
                 switch res.type {
                 case .getPurchase : if self.type == .normal { self.loaded(res) }
                 case .getCollectiblePurchase : if self.type == .collection { self.loaded(res) }
+                case .getPossessionPurchase : if self.type == .possession { self.loaded(res) }
                 case .deletePurchase : if self.type == .normal { self.deleted(res) }
                 default : break
                 }
             case .onError(_,  let err, _):
                 switch err.type {
-                case .getPurchase, .getCollectiblePurchase : self.onError()
+                case .getPurchase, .getCollectiblePurchase, .getPossessionPurchase : self.onError()
                 case .deletePurchase :
                     PageLog.d("delete error", tag:self.tag)
                     
@@ -193,6 +198,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
             }
         }
         .onReceive(self.pairing.$event){evt in
+            if self.type == .possession {return}
             guard let _ = evt else {return}
             switch evt {
             case .pairingCompleted : self.initLoad()
@@ -240,10 +246,18 @@ struct PurchaseBlock: PageComponent, Identifiable{
         self.reload()
     }
     func reload(){
-        if self.pairing.status != .pairing {
-            withAnimation{ self.isError = true}
-            return
+        if self.type == .possession {
+            if self.setup.possession.isEmpty {
+                withAnimation{ self.isError = true}
+                return
+            }
+        } else {
+            if self.pairing.status != .pairing {
+                withAnimation{ self.isError = true}
+                return
+            }
         }
+        
         withAnimation{
             self.isError = nil
             self.datas = []
@@ -267,6 +281,11 @@ struct PurchaseBlock: PageComponent, Identifiable{
             self.viewModel.request = .init(
                 id: self.tag,
                 type: .getCollectiblePurchase( self.infinityScrollModel.page + 1 )
+            )
+        case .possession:
+            self.viewModel.request = .init(
+                id: self.tag,
+                type: .getPossessionPurchase( self.setup.possession , self.infinityScrollModel.page + 1 )
             )
         }
         

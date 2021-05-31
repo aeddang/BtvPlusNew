@@ -84,8 +84,8 @@ class ImageLoader: ObservableObject, PageProtocol{
     }
     
     private func loadCash(path:String){
-        cache.retrieveImage(forKey: path) {  [weak self] (result) in
-            guard let self = self else { return }
+        cache.retrieveImage(forKey: path) {   (result) in //[weak self]
+            //guard let self = self else { return }
             switch result {
             case .success(let value):
                 guard let img = value.image else {
@@ -106,8 +106,8 @@ class ImageLoader: ObservableObject, PageProtocol{
     }
     
     private func loadServer(url: URL, path:String){
-        self.task = downloader.downloadImage(with: url, options: nil, progressBlock: nil) {  [weak self] (result) in
-            guard let self = self else { return }
+        self.task = downloader.downloadImage(with: url, options: nil, progressBlock: nil) {  (result) in
+            //guard let self = self else { return }
             switch result {
             case .success(let value):
                 self.cache.storeToDisk(value.originalData, forKey: path)

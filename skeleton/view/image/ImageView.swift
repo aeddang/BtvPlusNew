@@ -9,7 +9,6 @@
 import Foundation
 import SwiftUI
 import Combine
-import struct Kingfisher.KFImage
 struct ImageView : View, PageProtocol {
     @ObservedObject var imageLoader: ImageLoader = ImageLoader()
     let url:String?
@@ -34,7 +33,6 @@ struct ImageView : View, PageProtocol {
             }
             .onDisappear(){
                 self.clearAutoReload()
-                
             }
         
     }

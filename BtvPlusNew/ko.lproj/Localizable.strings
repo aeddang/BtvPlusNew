@@ -486,6 +486,8 @@
 "myRecommandFriend" = "친구 추천";
 "myRecommandFriendReword" = "콘텐츠 추천하고 할인 받기";
 
+"myTerminatePurchaseInfo" = "스마트 기기 시청을 지원하지 않는 콘텐츠는 시청하실 수 없습니다.";
+
 /*
  PageRecommandFriend
 */

@@ -2,12 +2,13 @@ import Foundation
 import SwiftUI
 
 enum BannerType {
-    case top, list, cell(CGSize, CGFloat)
+    case top, list, cell(CGSize, CGFloat), horizontalList
     var size:CGSize {
         get{
             switch self {
             case .list: return ListItem.banner.type01
             case .cell(let size, _ ): return size
+            case .horizontalList : return ListItem.banner.type04
             case .top : return CGSize()
             }
         }
@@ -27,19 +28,24 @@ class BannerData:InfinityData, PageProtocol{
     private(set) var move:PageID? = nil
     private(set) var moveData:[PageParam:Any]? = nil
     private(set) var bgColor:Color? = nil
-    private(set) var type:BannerType = .list
+    private(set) var type:BannerType = .list 
     func setPairing()->BannerData {
         self.move = .pairing
         self.resourceImage = Asset.source.bannerTopPairing
         return self
     }
     
-    func setData(data:EventBannerItem, type: EuxpNetwork.BannerType = .list, isFloat:Bool = false ,idx:Int = -1) -> BannerData {
+    func setData(data:EventBannerItem, type: EuxpNetwork.BannerType = .list, cardType:BlockData.CardType? = nil,  isFloat:Bool = false ,idx:Int = -1) -> BannerData {
         switch type {
         case .list:
-            image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: ListItem.banner.type01)  ?? image
-            self.type = .list
-            
+            if cardType == .bannerList {
+                self.type = .horizontalList
+                image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size:  self.type.size)  ?? image
+            } else {
+                self.type = .list
+                image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: ListItem.banner.type01)  ?? image
+            }
+        
         case .page:
             if isFloat {
                 image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: CGSize(width: 240, height: 0))  ?? image

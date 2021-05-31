@@ -189,6 +189,7 @@ struct Tag: PageView {
                 Spacer()
                 
                 if let icon = data.ppmIcon {
+                    
                     KFImage(URL(string: icon))
                         .resizable()
                         .cancelOnDisappear(true)
@@ -196,6 +197,7 @@ struct Tag: PageView {
                         .aspectRatio(contentMode: .fit)
                         .frame(height: Dimen.icon.lightExtra, alignment: .trailing)
                         .padding(.bottom, Dimen.margin.microExtra)
+                    
                 }
             }
             .padding(.all, Dimen.margin.tinyExtra)

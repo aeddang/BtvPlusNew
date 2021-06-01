@@ -28,6 +28,17 @@ extension Color {
         public static let accent =  Color.init(red: 190/255, green:25/255, blue: 25/255)
         public static let bg =  app.blue
     }
+    struct kids {
+        public static let primary = Color.init(red: 255/255, green: 96/255, blue: 42/255)
+        public static let primaryExtra = Color.init(red: 241/255, green: 177/255, blue: 134/255)
+        public static let primaryLight = Color.init(red: 219/255, green: 144/255, blue: 82/255)
+        //public static let secondary = Color.init(red: 60/255, green:61/255, blue: 83/255)
+        //public static let thirdly = Color.init(red: 82/255, green:165/255, blue: 255/255)
+        
+        public static let bg =  app.ivory
+        
+    
+    }
     struct app {
         public static let black =  Color.black
         public static let blackExtra =  Color.init(red: 20/255, green: 20/255, blue: 20/255)
@@ -48,6 +59,12 @@ extension Color {
         public static let blue = Color.init(red: 17/255, green: 3/255, blue: 58/255)
         public static let blueExtra = Color.init(red: 0/255, green: 78/255, blue: 162/255)
         public static let blueDeep = Color.init(red: 11/255, green: 1/255, blue: 39/255)
+        
+        public static let brown = Color.init(red: 135/255, green: 67/255, blue: 45/255)
+        public static let brownDeep = Color.init(red: 80/255, green: 48/255, blue: 37/255)
+        
+        public static let ivory = Color.init(red: 255/255, green: 236/255, blue: 206/255)
+        public static let ivoryLight = Color.init(red: 250/255, green: 239/255, blue: 216/255)
         
         
     }

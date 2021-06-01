@@ -46,8 +46,8 @@ struct InputCell: PageView {
                             
                         } else {
                             FocusableTextView(
-                                placeholder: "",
                                 text:self.$input,
+                                placeholder: "",
                                 isfocus: true,
                                 textModifier:RegularTextStyle(size: Self.inputFontSize).textModifier,
                                 usefocusAble: false,

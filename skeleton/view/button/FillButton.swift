@@ -71,13 +71,14 @@ struct FillButton: View, SelecterbleProtocol{
         self.strokeWidth = strokeWidth ?? self.strokeWidth
         self.margin = margin ?? self.margin
     }
-    // type new
+    // type center + new
     init(
         text:String,
         imageAni:[String]? = nil,
         image:String?,
         isNew: Bool,
         count: Int? = nil,
+        bgColor:Color = Color.app.blueLight,
         action:@escaping (_ idx:Int) -> Void )
     {
         self.text = text
@@ -92,7 +93,7 @@ struct FillButton: View, SelecterbleProtocol{
             activeColor: Color.app.white
         )
         self.imageSize = Dimen.icon.thinExtra
-        self.bgColor = Color.app.blueLight
+        self.bgColor = bgColor
         self.action = action
     }
     

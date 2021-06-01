@@ -53,13 +53,13 @@ struct PageContentBody: PageView  {
                 .offset(
                     x: self.offsetX ,
                     y: self.offsetY)
-            if self.isBelow {
+            //if self.isBelow {
                 Spacer().modifier(MatchParent()).background(Color.transparent.black70)
                     .opacity(self.dragOpacity)
                     .onTapGesture {
                         self.pageChanger.goBack()
                     }
-            }
+            //}
             
         }
         .opacity(self.opacity)
@@ -78,8 +78,10 @@ struct PageContentBody: PageView  {
                 self.isTop = true
                 self.isBelow = false
                 withAnimation{
+                   
                     self.pageOffsetX = 0.0
                     self.pageOffsetY = 0.0
+                    self.dragOpacity = 0
                 }
                 
             } else {
@@ -87,7 +89,9 @@ struct PageContentBody: PageView  {
                 
                 let below = self.pageChanger.getBelowPage(page: page)
                 self.isBelow = below == pageObject
-                self.dragOpacity = 1
+                withAnimation{
+                    self.dragOpacity = 1
+                }
                 if !self.useBelowPageMove {return}
                 withAnimation{
                     switch self.topPageType {

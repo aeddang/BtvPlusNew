@@ -8,6 +8,7 @@ import Foundation
 import SwiftUI
 
 struct PagePairingUser: PageView {
+    @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
@@ -90,6 +91,7 @@ struct PagePairingUser: PageView {
                     if method == WebviewMethod.bpn_setIdentityVerfResult.rawValue {
                         if let jsonData = json?.parseJson() {
                             if let cid = jsonData["ci"] as? String {
+                                self.repository.updateFirstMemberAuth()
                                 self.appSceneObserver.alert = .alert(
                                     String.alert.identifySuccess, String.alert.identifySuccessMe){
                                         self.pagePresenter.openPopup(

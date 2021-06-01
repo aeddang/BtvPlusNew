@@ -90,11 +90,18 @@ class SceneDelegate: PageSceneDelegate {
                     return false
                 }
             }
+        
+        SystemEnvironment.currentPageType = PageType.getType(page?.pageGroupID)
         return true
     }
     
     override func getPageContentProtocol(_ page: PageObject) -> PageViewProtocol {
-        return PageFactory.getPage(page)
+        switch PageType.getType(page.pageGroupID) {
+        case .btv: return PageFactory.getPage(page)
+        case .kids: return PageKidsFactory.getPage(page)
+        }
+        
+        
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {

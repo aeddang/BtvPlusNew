@@ -59,15 +59,14 @@ struct PagePairingBtv: PageView {
                         .modifier(BoldTextStyle(size: Font.size.light))
                     VStack(alignment: .center, spacing:0){
                         FocusableTextField(
+                            text:self.$input,
                             keyboardType: .numberPad, returnVal: .done,
                             placeholder: String.app.certificationNumberHolder,
                             maxLength: 6,
                             kern: 8,
                             textModifier: BoldTextStyle( size: Font.size.black ).textModifier,
                             isfocus: self.isFocus,
-                            inputChanged: { text in
-                                self.input = text
-                            },
+                           
                             inputCopmpleted: { text in
                                 self.isFocus = false
                             })

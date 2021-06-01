@@ -84,9 +84,10 @@ struct PageCertification: PageView {
                         if let jsonData = json?.parseJson() {
                             if let ci = jsonData["ci"] as? String {
                                 self.isCompleted = true
+                                self.repository.updateFirstMemberAuth()
                                 self.appSceneObserver.alert = .alert(
                                     String.alert.identifySuccess, String.alert.identifySuccessMe, nil){
-                                    
+        
                                     self.pagePresenter.onPageEvent(
                                         self.pageObject,
                                         event:.init(type: .certification, data: ci))

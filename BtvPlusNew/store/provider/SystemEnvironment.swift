@@ -8,6 +8,9 @@
 import Foundation
 import UIKit
 
+
+
+
 struct SystemEnvironment {
     static let model:String = AppUtil.model
     static let systemVersion:String = UIDevice.current.systemVersion
@@ -21,6 +24,9 @@ struct SystemEnvironment {
     static var needUpdate = false
     static var isTablet = AppUtil.isPad()
     static var isPurchaseAuth = false
+    static var currentPageType:PageType = .btv
+    
+    static var isFirstMemberAuth = false
     static var isAdultAuth = false { didSet { setImageLock()} }
     static var isWatchAuth = false { didSet { setImageLock()} }
     static var watchLv = 0 { didSet {

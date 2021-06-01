@@ -238,6 +238,7 @@ class Repository:ObservableObject, PageProtocol{
         }
         SystemEnvironment.isAdultAuth = self.userSetup.isAdultAuth
         SystemEnvironment.watchLv = self.userSetup.watchLv
+        SystemEnvironment.isFirstMemberAuth = self.userSetup.isFirstMemberAuth
         
         if self.storage.retryPushToken != "" {
             self.registerPushToken(self.storage.retryPushToken)
@@ -366,6 +367,9 @@ class Repository:ObservableObject, PageProtocol{
             SystemEnvironment.isImageLock = false
             self.event = .updatedWatchLv
         }
+        if able {
+            self.updateFirstMemberAuth()
+        }
     }
     func updateWatchLv(_ lv:Setup.WatchLv?){
         SystemEnvironment.watchLv = lv?.rawValue ?? 0
@@ -374,10 +378,16 @@ class Repository:ObservableObject, PageProtocol{
         self.event = .updatedWatchLv
     }
     
+    func updateFirstMemberAuth(){
+        self.userSetup.isFirstMemberAuth = true
+        SystemEnvironment.isFirstMemberAuth = true
+    }
+    
     func resetSystemEnvironment(){
         SystemEnvironment.watchLv = 0
         SystemEnvironment.isAdultAuth = false
         SystemEnvironment.isImageLock = false
+        
         self.userSetup.watchLv = 0
         self.userSetup.isAdultAuth = false
         

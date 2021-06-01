@@ -124,7 +124,9 @@ struct PairingView: PageComponent{
                 if SystemEnvironment.isTablet {
                     VideoSetBlock(
                         pageObservable: self.pageObservable,
-                        data: data)
+                        data: data,
+                        limitedLine : 2
+                        )
                         .padding(.top, Dimen.margin.medium)
                 } else {
                     VideoBlock(
@@ -141,35 +143,76 @@ struct PairingView: PageComponent{
             }
             
             if self.isCompleted {
-                VStack (alignment: .center, spacing: 0){
-                    Spacer().modifier(LineHorizontal())
-                    FillButton(
-                        text: String.pageTitle.bookmarkList,
-                        isMore: true
-                    ){_ in
-                        
-                        let blockData = BlockData()
-                            .setData(title: String.pageTitle.bookmarkList, cardType:.bookmarkedPoster, dataType:.bookMark, uiType:.poster)
-                        
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.categoryList)
-                                .addParam(key: .data, value: blockData)
-                        )
+                if SystemEnvironment.isTablet {
+                    HStack(spacing:0){
+                        FillButton(
+                            text: String.pageTitle.bookmarkList,
+                            image: Asset.icon.heartOff,
+                            isNew: false,
+                            bgColor: Color.transparent.clearUi
+                            
+                        ){_ in
+                            
+                            let blockData = BlockData()
+                                .setData(title: String.pageTitle.bookmarkList, cardType:.bookmarkedPoster, dataType:.bookMark, uiType:.poster)
+                            
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.categoryList)
+                                    .addParam(key: .data, value: blockData)
+                            )
+                        }
+            
+                        Spacer().modifier(MatchVertical(width: 1))
+                            .background(Color.app.blueLightExtra)
+                        FillButton(
+                            text: String.pageTitle.purchaseList,
+                            image: Asset.icon.purchase,
+                            isNew: false,
+                            bgColor: Color.transparent.clearUi
+                            
+                        ){_ in
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.myPurchase)
+                            )
+                        }
                     }
-        
-                    Spacer().modifier(LineHorizontal())
-                    FillButton(
-                        text: String.pageTitle.purchaseList,
-                        isMore: true
-                    ){_ in
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.myPurchase)
-                        )
+                    .modifier(MatchHorizontal(height: Dimen.tab.regularExtra))
+                    .overlay(
+                        Rectangle().stroke( Color.app.blueLightExtra ,lineWidth: 1)
+                    )
+                    .modifier(ContentHorizontalEdgesTablet())
+                    .padding(.top, Dimen.margin.medium)
+                } else {
+                    VStack (alignment: .center, spacing: 0){
+                        Spacer().modifier(LineHorizontal())
+                        FillButton(
+                            text: String.pageTitle.bookmarkList,
+                            isMore: true
+                        ){_ in
+                            
+                            let blockData = BlockData()
+                                .setData(title: String.pageTitle.bookmarkList, cardType:.bookmarkedPoster, dataType:.bookMark, uiType:.poster)
+                            
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.categoryList)
+                                    .addParam(key: .data, value: blockData)
+                            )
+                        }
+            
+                        Spacer().modifier(LineHorizontal())
+                        FillButton(
+                            text: String.pageTitle.purchaseList,
+                            isMore: true
+                        ){_ in
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.myPurchase)
+                            )
+                        }
+                        
                     }
-                    
+                    .modifier(ContentHorizontalEdgesTablet())
+                    .padding(.top, Dimen.margin.medium)
                 }
-                .modifier(ContentHorizontalEdgesTablet())
-                .padding(.top, Dimen.margin.medium)
             }
         }
         
@@ -232,10 +275,13 @@ struct PairingView: PageComponent{
         blockData.setDatabindingCompleted(total: resData.watch_tot?.toInt() ?? 0)
         DispatchQueue.main.async {
             self.watchedData = blockData
+            
             withAnimation{ self.isCompleted = true }
         }
        
     }
+    
+    
     
     
     

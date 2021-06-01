@@ -8,6 +8,7 @@
 import Foundation
 struct ScsNetwork : Network{
     var enviroment: NetworkEnvironment = ApiPath.getRestApiPath(.SCS2)
+    
     func onRequestIntercepter(request: URLRequest) -> URLRequest {
         return ApiGateway.setGatewayheader(request: request)
     }
@@ -189,9 +190,10 @@ struct ScsPlay:NetworkRoute{
 }
 
 struct ScsConfirmPassword:NetworkRoute{
-   var method: HTTPMethod = .post
+   var method: HTTPMethod = .get
    var path: String = "/scs/v5/password/confirm/mobilebtv"
    var query: [String : String]? = nil
+ 
 }
 
 struct ScsConnectTerminateStb:NetworkRoute{

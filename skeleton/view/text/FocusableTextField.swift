@@ -9,6 +9,7 @@
 import Foundation
 import SwiftUI
 struct FocusableTextField: UIViewRepresentable {
+    @Binding var text:String
     var keyboardType: UIKeyboardType = .default
     var returnVal: UIReturnKeyType = .default
     var placeholder: String = ""
@@ -17,11 +18,13 @@ struct FocusableTextField: UIViewRepresentable {
     var textModifier:TextModifier = RegularTextStyle().textModifier
     var isfocus:Bool
     var isSecureTextEntry:Bool = false
+    var inputChange: ((_ text:String) -> Void)? = nil
     var inputChanged: ((_ text:String) -> Void)? = nil
     var inputCopmpleted: ((_ text:String) -> Void)? = nil
     
     func makeUIView(context: Context) -> UITextField {
         let textField = UITextField(frame: .zero)
+        textField.text = self.text
         textField.keyboardType = self.keyboardType
         textField.returnKeyType = self.returnVal
         textField.delegate = context.coordinator
@@ -47,6 +50,7 @@ struct FocusableTextField: UIViewRepresentable {
                 uiView.resignFirstResponder()
             }
         }
+        if uiView.text != self.text { uiView.text = self.text }
     }
 
     func makeCoordinator() -> Coordinator {
@@ -70,11 +74,16 @@ struct FocusableTextField: UIViewRepresentable {
                 if parent.maxLength != -1 {
                     if updatedText.count > parent.maxLength {return false}
                 }
-                guard let  inputChanged = self.inputChanged else { return true}
-                inputChanged(updatedText)
+                parent.inputChange?(updatedText)
             }
             return true
         }
+        func textFieldDidChangeSelection(_ textField: UITextField) {
+            let text = textField.text ?? ""
+            self.parent.text = text
+            parent.inputChanged?(text)
+        }
+        
         
         func updatefocus(textfield: UITextField) {
             textfield.becomeFirstResponder()

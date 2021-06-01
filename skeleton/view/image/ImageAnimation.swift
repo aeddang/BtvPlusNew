@@ -12,7 +12,8 @@ import SwiftUI
 struct ImageAnimation : View, AnimateDrawViewProtocol, PageProtocol {
     var images:[String] = []
     var contentMode:ContentMode  = .fit
-    var fps:Double = 0.33
+    var fps:Double = 0.05
+    var isLoof:Bool = true
     @Binding var isRunning: Bool
     @State var isDrawing: Bool = false
     @State var currentFrm:Int = 0
@@ -40,12 +41,16 @@ struct ImageAnimation : View, AnimateDrawViewProtocol, PageProtocol {
     func startAnimation() {
         //ComponentLog.d("startAnimation" , tag: self.tag)
         isDrawing = true
-        createJob(duration: 0, fps: 0.05)
+        createJob(duration: isLoof ? 0 : fps*Double(images.count) , fps: self.fps)
     }
     func stopAnimation() {
         //ComponentLog.d("stopAnimation" , tag: self.tag)
         isDrawing = false
-        currentFrm = 0
+    }
+    func onComplete(frm:Int){
+        if !isLoof {
+            self.isRunning = false
+        }
     }
     
     func onStart() {

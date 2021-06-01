@@ -18,6 +18,7 @@ enum PageAnimationType {
 class PageObject : Equatable, Identifiable{
     let pageID: PageID
     var pageIDX:Int
+    var pageGroupID:String? = nil
     var params:[PageParam:Any]?
     var isPopup:Bool
     var zIndex:Int = 0
@@ -29,14 +30,15 @@ class PageObject : Equatable, Identifiable{
     init(
         pageID:PageID,
         pageIDX:Int = 0,
+        pageGroupID:String? = nil,
         params:[PageParam:Any]? = nil,
         isPopup:Bool = false,
         isDimed:Bool = false,
-        
         pageKey:String = UUID().uuidString
     ){
         self.pageID = pageID
         self.pageIDX = pageIDX
+        self.pageGroupID = pageGroupID
         self.params = params
         self.isPopup = isPopup
         self.isDimed = isDimed

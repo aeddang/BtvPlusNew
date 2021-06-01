@@ -15,6 +15,8 @@ struct VideoSetBlock:BlockProtocol, PageComponent {
     var pageObservable:PageObservable
     var data: BlockData
     
+    var limitedLine: Int? = nil
+    
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             HStack(alignment: .bottom, spacing:Dimen.margin.thin){
@@ -77,8 +79,16 @@ struct VideoSetBlock:BlockProtocol, PageComponent {
     @State var hasMore:Bool = true
     func setVideoSets() {
         self.datas = []
-        guard let videos = data.videos else {return}
+        guard let originVideos = data.videos else {return}
         let count:Int = self.sceneObserver.sceneOrientation == .portrait ? 3 : 4
+        let max = originVideos.count
+        var videos:ArraySlice<VideoData> = []
+        if let limitedLine = self.limitedLine {
+            let len = min(max,  (limitedLine*count) ) - 1
+            videos = originVideos[0...len]
+        } else {
+            videos = originVideos[0...max]
+        }
         var rows:[VideoDataSet] = []
         var cells:[VideoData] = []
         var total = videos.count

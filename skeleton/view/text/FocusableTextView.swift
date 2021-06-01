@@ -9,10 +9,10 @@
 import Foundation
 import SwiftUI
 struct FocusableTextView: UIViewRepresentable {
+    @Binding var text:String
     var keyboardType: UIKeyboardType = .default
     var returnVal: UIReturnKeyType = .done
     var placeholder: String = ""
-    @Binding var text:String
     var isfocus:Bool
     var textModifier:TextModifier = RegularTextStyle().textModifier
     var usefocusAble:Bool = true
@@ -33,7 +33,6 @@ struct FocusableTextView: UIViewRepresentable {
         textView.delegate = context.coordinator
         textView.autocorrectionType = .yes
         textView.textAlignment = self.textAlignment
-        textView.textColor = UIColor.white
         textView.sizeToFit()
         textView.textContentType = .oneTimeCode
         textView.isSecureTextEntry = self.isSecureTextEntry
@@ -58,6 +57,7 @@ struct FocusableTextView: UIViewRepresentable {
                 uiView.resignFirstResponder()
             }
         }
+        if uiView.text != self.text { uiView.text = self.text }
     }
 
     func makeCoordinator() -> Coordinator {
@@ -83,16 +83,14 @@ struct FocusableTextView: UIViewRepresentable {
                 if self.parent.limitedSize != -1 {
                     if updatedText.count > self.parent.limitedSize { return false }
                 }
-                guard let  inputChange = self.parent.inputChange else { return true}
-                inputChange(updatedText, textView.contentSize)
+                self.parent.inputChange?(updatedText, textView.contentSize)
             }
             return true
         }
         
         func textViewDidChange(_ textView: UITextView) {
             self.parent.text = textView.text
-            guard let  inputChanged = self.parent.inputChanged else { return }
-            inputChanged(textView.text , textView.contentSize)
+            self.parent.inputChanged?(textView.text , textView.contentSize)
         }
        
     

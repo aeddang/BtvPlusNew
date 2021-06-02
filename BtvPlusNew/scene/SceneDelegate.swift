@@ -15,18 +15,14 @@ class SceneDelegate: PageSceneDelegate {
     override func onInitController(controller: PageContentController) {
         controller.pageControllerObservable.overlayView = AppLayout()
     }
-    override func onInitPage() {
-        
-    }
+    override func onInitPage() {}
     override func getPageModel() -> PageModel { return PageSceneModel()}
     override func adjustEnvironmentObjects<T>(_ view: T) -> AnyView where T : View
     {
-        
         let sceneObserver = AppSceneObserver()
         let dataProvider = DataProvider()
         let pairing = Pairing()
         let networkObserver = NetworkObserver()
-        
         let setup = Setup()
         self.pagePresenter.bodyColor = Color.brand.bg
         let res = Repository(
@@ -52,7 +48,6 @@ class SceneDelegate: PageSceneDelegate {
             .environmentObject(keyboardObserver)
             .environmentObject(locationObserver)
             .environmentObject(setup)
-            
         return AnyView(environmentView)
     }
     
@@ -75,7 +70,10 @@ class SceneDelegate: PageSceneDelegate {
                 return false
             }
         }
-        if self.repository?.pairing.status != .pairing {return true}
+        if self.repository?.pairing.status != .pairing {
+            SystemEnvironment.currentPageType = PageType.getType(page?.pageGroupID)
+            return true
+        }
         
         //시청연령제한
         if !SystemEnvironment.isAdultAuth ||

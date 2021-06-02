@@ -118,5 +118,8 @@ struct Dimen{
         public static let keyboard:CGFloat = isPad ? 400 : 300
     }
     
+    struct item {
+        static let profile:CGSize = CGSize(width: 110, height: 110)
+    }
 }
 

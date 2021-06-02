@@ -16,7 +16,8 @@ class BlockDataSet:Identifiable {
 
 extension MultiBlock{
     static let spacing:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.medium
-    static let headerSize:Int = 5
+    static let headerSize:Int = 4
+    static let headerSizeMin:Int = 2
 }
 struct MultiBlock:PageComponent {
     @EnvironmentObject var sceneObserver:PageSceneObserver
@@ -83,12 +84,10 @@ struct MultiBlock:PageComponent {
                     .modifier(ListRowInset(spacing: Self.spacing))
                 }
                 
-                
-                
-                if !self.datas.isEmpty  {
-                    if Self.headerSize < self.datas.count { //&& (self.topDatas?.isEmpty == false || self.monthlyDatas?.isEmpty == false) {
+                if !self.datas.isEmpty, let header = (self.topDatas?.isEmpty != false ? Self.headerSize : Self.headerSizeMin)  {
+                    if header < self.datas.count {
                         VStack(spacing:Self.spacing){
-                            ForEach( self.datas[0...Self.headerSize]) { data in
+                            ForEach( self.datas[0...header]) { data in
                                 MultiBlockCell(
                                     pageObservable:self.pageObservable,
                                     pageDragingModel: self.pageDragingModel,
@@ -97,7 +96,7 @@ struct MultiBlock:PageComponent {
                             }
                         }
                         .modifier(ListRowInset(spacing: Self.spacing))
-                        ForEach( self.datas[(Self.headerSize+1)...(self.datas.count-1)]) { data in
+                        ForEach( self.datas[(header+1)...(self.datas.count-1)]) { data in
                             MultiBlockCell(
                                 pageObservable:self.pageObservable,
                                 pageDragingModel: self.pageDragingModel,

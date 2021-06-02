@@ -35,6 +35,19 @@ extension Font{
         public static let robotoLight = "Roboto-Light"
     }
     
+    struct familyKids {
+        public static let thin =  "SKBtvLight"
+        public static let light =  "SKBtvLight"
+        public static let regular = "SKBtvMedium"
+        public static let medium =  "SKBtvMedium"
+        public static let bold =  "SKBtvBold"
+        public static let black =  "SKBtvBold"
+        
+        public static let robotoBold = "Roboto-Bold"
+        public static let robotoMedium = "Roboto-Medium"
+        public static let robotoLight = "Roboto-Light"
+    }
+    
     struct kern {
         public static let thin:CGFloat =  -0.7
         public static let regular:CGFloat = 0
@@ -58,5 +71,24 @@ extension Font{
         public static let micro:CGFloat = isPad ? 13 : 9 //*
         public static let microExtra:CGFloat = isPad ? 10 : 6 //*
     }
+    
+    
+    struct sizeKids {
+        public static let black:CGFloat =  isPad ? 52 : 32
+        public static let bold:CGFloat = isPad ? 42 : 26
+        public static let large:CGFloat =  isPad ? 30 : 22
+        public static let medium:CGFloat = isPad ? 29 : 20 //**
+        public static let mediumExtra:CGFloat = isPad ? 27 : 19 //**
+        public static let regular:CGFloat = isPad ? 23 : 18 //*
+        public static let regularExtra:CGFloat = isPad ? 22 : 16//*
+        public static let light:CGFloat =  isPad ? 21 : 15 //**
+        public static let lightExtra:CGFloat =  isPad ? 20 : 14 //**
+        public static let thin:CGFloat = isPad ? 18 : 13 //**
+        public static let thinExtra:CGFloat = isPad ? 17 : 12 //**
+        public static let tiny:CGFloat = isPad ? 16 : 11//**
+        public static let tinyExtra:CGFloat = isPad ? 15 : 10//**
+        public static let micro:CGFloat = isPad ? 13 : 9
+    }
+
 
 }

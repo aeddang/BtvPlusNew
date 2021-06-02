@@ -26,12 +26,13 @@ extension AssetKids{
         public static let monthly = "zemkidsMGnbTopNorMonthly"
         public static let exit = "zemkidsMGnbTopNorOut"
         public static let search = "zemkidsMGnbTopNorSearch"
+        public static let addProfile = "zemkidsMGnbNorSetprofile"
     }
     
    
     
     struct icon {
-        public static let new =  "tagMyNewS"
+        
     }
     
     
@@ -75,7 +76,7 @@ extension AssetKids{
     }
     
     struct image {
-        
+        public static let noProfile = "zemkidsMGnbNorProfileDefault"
     }
     
     struct source {
@@ -85,8 +86,25 @@ extension AssetKids{
     struct ani {
         public static let splash:[String] = (0...47).map{ "zemkidsMSplash" + $0.description.toFixLength(2) }
         public static let loading:[String] = (0...59).map{ "zemkidsMLoading" + $0.description.toFixLength(2) }
-        
     }
     
+    static let characterList = [
+        "zemkidsMImgKidsprofileBoy01",
+        "zemkidsMImgKidsprofileBoy02",
+        "zemkidsMImgKidsprofileBoy03",
+        "zemkidsMImgKidsprofileGirl01",
+        "zemkidsMImgKidsprofileGirl02",
+        "zemkidsMImgKidsprofileGirl03",
+       
+    ]
+    
+    static let characterGnbList = [
+        "zemkidsMImgKidsprofileBoy01",
+        "zemkidsMImgKidsprofileBoy02",
+        "zemkidsMImgKidsprofileBoy03",
+        "zemkidsMImgKidsprofileGirl01",
+        "zemkidsMImgKidsprofileGirl02",
+        "zemkidsMImgKidsprofileGirl03",
+    ]
     
 }

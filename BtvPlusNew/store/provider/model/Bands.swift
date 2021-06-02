@@ -20,6 +20,7 @@ class Bands:ObservableObject, PageProtocol {
     @Published private(set) var status:BandsStatus = .initate
     @Published private(set) var event:BandsEvent? = nil
     private(set) var datas:Array<Band> = []
+    let kidsGnbModel = KidsGnbModel()
     
     func resetData(){
         self.datas = []
@@ -32,7 +33,12 @@ class Bands:ObservableObject, PageProtocol {
         guard let data = data else { return }
         if let gnbs = data.gnbs {
             self.datas = gnbs.map{ gnb in
-                Band().setDate(gnb)
+                if gnb.gnb_typ_cd == EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue {
+                    if let kidsData = gnb.blocks?.first(where: {$0.menu_id == EuxpNetwork.MenuTypeCode.MENU_KIDS.rawValue}) {
+                        kidsGnbModel.setData(data: kidsData)
+                    }
+                }
+                return Band().setDate(gnb)
             }
         }
         self.status = .ready
@@ -84,7 +90,7 @@ class Band {
         gnbTypCd = data.gnb_typ_cd ?? ""
         pagePath = data.page_path ?? ""
         
-        let size = CGSize(width: 100, height: 100)
+        let size = CGSize(width: 50, height: 50)
         if data.menu_off_img_path != nil {
             defaultIcon =  ImagePath.thumbImagePath(filePath: data.menu_off_img_path, size: size, convType: .alpha)  ?? defaultIcon
         }

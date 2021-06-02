@@ -92,7 +92,7 @@ struct SceneTab: PageComponent{
         .onReceive (self.appSceneObserver.$isApiLoading) { loading in
             DispatchQueue.main.async {
                 withAnimation{
-                    self.isLoading = loading
+                    self.isLoading = SystemEnvironment.currentPageType == .btv ? loading : false
                 }
             }
         }
@@ -133,20 +133,15 @@ struct SceneTab: PageComponent{
             default: break
             }
         }
-        .onReceive (self.appSceneObserver.$useTopFix) { use in
-            guard let use = use else {return}
-            self.appSceneObserver.useTop = use
-        }
-        
         .onReceive (self.appSceneObserver.$useTop) { use in
             withAnimation{
-                self.useTop = use
+                self.useTop = SystemEnvironment.currentPageType == .btv ? use : false
             }
             self.updateTopPos()
         }
         .onReceive (self.appSceneObserver.$useBottom) { use in
             withAnimation{
-                self.useBottom = use
+                self.useBottom = SystemEnvironment.currentPageType == .btv ? use : false
             }
             self.updateBottomPos()
         }
@@ -161,6 +156,7 @@ struct SceneTab: PageComponent{
         
     }
     func updateTopPos(){
+        if SystemEnvironment.currentPageType != .btv {return}
         var headerHeight = self.headerBannerData == nil ? 0 : HeaderBanner.height
         headerHeight = headerHeight + self.safeAreaTop + Dimen.app.top
         if self.appSceneObserver.useTop {

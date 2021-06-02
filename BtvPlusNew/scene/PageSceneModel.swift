@@ -4,7 +4,6 @@
 //
 //  Created by JeongCheol Kim on 2021/06/01.
 //
-
 import Foundation
 
 extension PageParam {
@@ -36,7 +35,6 @@ extension PageEventType {
     static let selected = "selected"
 }
 
-
 struct PageSceneModel: PageModel {
     var currentPageObject: PageObject? = nil
     var topPageObject: PageObject? = nil
@@ -59,6 +57,7 @@ struct PageSceneModel: PageModel {
             }
         }
     }
+    
     func getPageOrientationLock(_ pageObject:PageObject?) -> UIInterfaceOrientationMask? {
         if SystemEnvironment.isTablet { return UIInterfaceOrientationMask.all }
         guard let pageObject = pageObject ?? self.topPageObject else {
@@ -71,6 +70,7 @@ struct PageSceneModel: PageModel {
             return getPageOrientation(pageObject)
         }
     }
+    
     func getCloseExceptions() -> [PageID]? {
         return []
     }
@@ -92,7 +92,8 @@ struct PageSceneModel: PageModel {
     
     static func needTopTab(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
-        case .home, .category: return true
+        case .home, .category : return true
+        case .kidsHome : return true
         default : return false
         }
     }

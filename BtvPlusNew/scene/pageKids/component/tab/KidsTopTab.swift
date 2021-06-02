@@ -16,20 +16,19 @@ struct KidsTopTab: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
-    @State var showAlram:Bool = false
+ 
     var body: some View {
-        HStack(alignment: .bottom ,spacing:Dimen.margin.tiny){
+        HStack(alignment: .center ,spacing:Dimen.margin.tiny){
             Spacer()
             Button(action: {
                 self.pagePresenter.changePage(PageKidsProvider.getPageObject(.kidsIntro))
-                
             }) {
                 Image(AssetKids.gnbTop.monthly)
                     .renderingMode(.original)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: Dimen.icon.mediumExtra,
-                           height: Dimen.icon.mediumExtra)
+                    .frame(width: DimenKids.icon.regular,
+                           height: DimenKids.icon.regular)
             }
             Button(action: {
                 
@@ -57,8 +56,6 @@ struct KidsTopTab: PageComponent{
                            height: Dimen.icon.regular)
             }
         }
-        .modifier(ContentHorizontalEdges())
-        
         .onAppear(){
         }
         

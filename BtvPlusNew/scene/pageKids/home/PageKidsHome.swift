@@ -16,8 +16,7 @@ struct PageKidsHome: PageView {
      
     var body: some View {
         VStack{
-            KidsTopTab()
-                .modifier(MatchHorizontal(height: 100))
+            
             Spacer().modifier(MatchParent())
         }
         .padding(.all, DimenKids.margin.medium)

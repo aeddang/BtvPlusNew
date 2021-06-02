@@ -27,9 +27,13 @@ struct AppLayout: PageComponent{
     @State var toastMsg:String = ""
     @State var isToastShowing:Bool = false
     @State var floatBannerDatas:[BannerData]? = nil
+    @State var pageType:PageType = .btv
+    
     var body: some View {
         ZStack{
             SceneTab()
+            SceneKidsTab()
+           
             if let datas = self.floatBannerDatas {
                 FloatingBanner(datas:datas){ today in
                     if today {self.floatingBannerToDayUnvisible()}
@@ -96,10 +100,25 @@ struct AppLayout: PageComponent{
             default: break
             }
         }
+        .onReceive (self.appSceneObserver.$useTopFix) { use in
+            guard let use = use else {return}
+            self.appSceneObserver.useTop = use
+        }
         .onReceive(self.pagePresenter.$currentTopPage){ page in
             guard let cPage = page else { return }
             PageLog.d("currentTopPage " + cPage.pageID.debugDescription, tag:self.tag)
             PageLog.d("current useTopFix " + (self.appSceneObserver.useTopFix?.description ?? "nil"), tag:self.tag)
+            self.pageType = SystemEnvironment.currentPageType
+            PageLog.d("currentPageType " + self.pageType.rawValue, tag:self.tag)
+            
+            switch self.pageType {
+            case .btv :
+                self.pagePresenter.bodyColor = Color.brand.bg
+            case .kids :
+                self.pagePresenter.bodyColor = Color.kids.bg
+            }
+            
+            
             if self.appSceneObserver.useTopFix != false {
                 self.appSceneObserver.useTop = PageSceneModel.needTopTab(cPage)
             }
@@ -109,7 +128,6 @@ struct AppLayout: PageComponent{
                 self.keyboardObserver.start()
             }else{
                 self.keyboardObserver.cancel()
-               
             }
         }
         .onReceive (self.appObserver.$page) { iwg in

@@ -65,6 +65,10 @@ extension EuxpNetwork{
         }
     }
     
+    enum MenuTypeCode: String {
+        case MENU_KIDS = "NM2000002471"  // kids
+    }
+   
     enum SrisTypCd: String {
         case none = "00" // error
         case season = "01"

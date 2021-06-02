@@ -61,7 +61,6 @@ struct PlayerEffect: PageView{
                                         color: Color.app.greyLight)
                                 )
                         }
-                        
                     }
                     
                     if self.message != nil {
@@ -191,7 +190,7 @@ struct PlayerEffect: PageView{
                 self.brightness = brightness
                 let value = min(brightness*100.0, 100)
                 let lv = Int( ceil( value / 100 * 5 ) )
-                self.imgBrightness = Asset.brightnessList[lv]
+                self.imgBrightness = Asset.ani.brightnessList[lv]
                 self.textBrightness = Double(value).toInt().description
                 self.delayBrightnessHidden()
             }
@@ -204,7 +203,7 @@ struct PlayerEffect: PageView{
                 self.volume = volume
                 let value = min(volume*100.0, 100.0)
                 let lv = Int( ceil( value / 100 * 3 ) )
-                self.imgVolume = Asset.volumeList[lv]
+                self.imgVolume = Asset.ani.volumeList[lv]
                 self.textVolume = Double(value).toInt().description
                 self.delayVolumeHidden()
             }

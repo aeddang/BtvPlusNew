@@ -362,10 +362,68 @@ extension Asset{
     }
     
     struct ani {
-        public static let mic:[String] = (1...27).map{ "imgSearchMic" + $0.description.toFixLength(2) }
-        public static let record:[String] = (1...10).map{ "icRecoqIng" + $0.description.toFixLength(2) }
-        public static let alarm:[String] = (1...20).map{ "imgMyAlarm" + $0.description.toFixLength(2) }
+        static let brightnessList = [
+            Asset.player.brightnessLv0,
+            Asset.player.brightnessLv1,
+            Asset.player.brightnessLv2,
+            Asset.player.brightnessLv3,
+            Asset.player.brightnessLv4,
+            Asset.player.brightnessLv5
+        ]
+        
+        static let volumeList = [
+            Asset.player.volumeLv0,
+            Asset.player.volumeLv1,
+            Asset.player.volumeLv2,
+            Asset.player.volumeLv3
+        ]
+        static let mic:[String] = (1...27).map{ "imgSearchMic" + $0.description.toFixLength(2) }
+        static let record:[String] = (1...10).map{ "icRecoqIng" + $0.description.toFixLength(2) }
+        static let alarm:[String] = (1...20).map{ "imgMyAlarm" + $0.description.toFixLength(2) }
     }
+    
+    static let characterList = [
+        "imgProfile37",
+        "imgProfile38",
+        "imgProfile39",
+        "imgProfile40",
+        "imgProfile01",
+        "imgProfile02",
+        "imgProfile03",
+        "imgProfile04",
+        "imgProfile05",
+        "imgProfile06",
+        "imgProfile07",
+        "imgProfile08",
+        "imgProfile09",
+        "imgProfile10",
+        "imgProfile11",
+        "imgProfile12",
+        "imgProfile13",
+        "imgProfile14",
+        "imgProfile15",
+        "imgProfile16",
+        "imgProfile17",
+        "imgProfile18",
+        "imgProfile19",
+        "imgProfile20",
+        "imgProfile21",
+        "imgProfile22",
+        "imgProfile23",
+        "imgProfile24",
+        "imgProfile25",
+        "imgProfile26",
+        "imgProfile27",
+        "imgProfile28",
+        "imgProfile29",
+        "imgProfile30",
+        "imgProfile31",
+        "imgProfile32",
+        "imgProfile33",
+        "imgProfile34",
+        "imgProfile35",
+        "imgProfile36"
+    ]
     
     
 }

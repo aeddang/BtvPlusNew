@@ -9,7 +9,7 @@
 import Foundation
 import SwiftUI
 
-struct KidsTextModifier {
+struct TextModifierKids {
     var family:String = Font.familyKids.regular
     var size:CGFloat = Font.sizeKids.regular
     var color: Color = Color.app.brownDeep
@@ -22,9 +22,9 @@ struct KidsTextModifier {
 }
 
 
-struct KidsBlackTextStyle: ViewModifier {
-    var textModifier = KidsTextModifier(family:Font.familyKids.black, size:Font.sizeKids.black)
-    init(textModifier:KidsTextModifier) {self.textModifier = textModifier}
+struct BlackTextStyleKids: ViewModifier {
+    var textModifier = TextModifierKids(family:Font.familyKids.black, size:Font.sizeKids.black)
+    init(textModifier:TextModifierKids) {self.textModifier = textModifier}
     init(size:CGFloat? = nil, color: Color? = nil) {
         if let size = size {
             self.textModifier.size = size
@@ -43,9 +43,9 @@ struct KidsBlackTextStyle: ViewModifier {
     }
 }
 
-struct KidsBoldTextStyle: ViewModifier {
-    var textModifier = KidsTextModifier(family:Font.familyKids.bold,size:Font.sizeKids.bold)
-    init(textModifier:KidsTextModifier) {self.textModifier = textModifier}
+struct BoldTextStyleKids: ViewModifier {
+    var textModifier = TextModifierKids(family:Font.familyKids.bold,size:Font.sizeKids.bold)
+    init(textModifier:TextModifierKids) {self.textModifier = textModifier}
     init(size:CGFloat? = nil, color: Color? = nil) {
         if let size = size {
             self.textModifier.size = size
@@ -64,9 +64,9 @@ struct KidsBoldTextStyle: ViewModifier {
             
     }
 }
-struct KidsMediumTextStyle: ViewModifier {
-    var textModifier = KidsTextModifier(family:Font.familyKids.medium,size:Font.sizeKids.medium)
-    init(textModifier:KidsTextModifier) {self.textModifier = textModifier}
+struct MediumTextStyleKids: ViewModifier {
+    var textModifier = TextModifierKids(family:Font.familyKids.medium,size:Font.sizeKids.medium)
+    init(textModifier:TextModifierKids) {self.textModifier = textModifier}
     init(size:CGFloat? = nil, color: Color? = nil) {
         if let size = size {
             self.textModifier.size = size
@@ -85,9 +85,9 @@ struct KidsMediumTextStyle: ViewModifier {
     }
 }
 
-struct KidsRegularTextStyle: ViewModifier {
-    var textModifier = KidsTextModifier(family:Font.familyKids.regular,size:Font.sizeKids.regular)
-    init(textModifier:KidsTextModifier) {self.textModifier = textModifier}
+struct RegularTextStyleKids: ViewModifier {
+    var textModifier = TextModifierKids(family:Font.familyKids.regular,size:Font.sizeKids.regular)
+    init(textModifier:TextModifierKids) {self.textModifier = textModifier}
     init(size:CGFloat? = nil, color: Color? = nil) {
         if let size = size {
             self.textModifier.size = size
@@ -106,9 +106,9 @@ struct KidsRegularTextStyle: ViewModifier {
     }
 }
 
-struct KidsLightTextStyle: ViewModifier {
-    var textModifier = KidsTextModifier(family:Font.familyKids.light,size:Font.sizeKids.light)
-    init(textModifier:KidsTextModifier) {self.textModifier = textModifier}
+struct LightTextStyleKids: ViewModifier {
+    var textModifier = TextModifierKids(family:Font.familyKids.light,size:Font.sizeKids.light)
+    init(textModifier:TextModifierKids) {self.textModifier = textModifier}
     init(size:CGFloat? = nil, color: Color? = nil) {
         if let size = size {
             self.textModifier.size = size

@@ -10,15 +10,13 @@ import Foundation
 import SwiftUI
 
 struct KidsTopTab: PageComponent{
-    @EnvironmentObject var repository:Repository
-    @EnvironmentObject var dataProvider:DataProvider
+   
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:PageSceneObserver
-    @EnvironmentObject var appSceneObserver:AppSceneObserver
-    @EnvironmentObject var pairing:Pairing
- 
+    @EnvironmentObject var dataProvider:DataProvider
+    
     var body: some View {
-        HStack(alignment: .center ,spacing:Dimen.margin.tiny){
+        HStack(alignment: .center ,spacing:DimenKids.margin.light){
+            KidProfile()
             Spacer()
             Button(action: {
                 self.pagePresenter.changePage(PageKidsProvider.getPageObject(.kidsIntro))
@@ -41,8 +39,8 @@ struct KidsTopTab: PageComponent{
                            height: Dimen.icon.regular)
             }
             Button(action: {
-                if let home  = dataProvider.bands.getHome() {
-                    pagePresenter.changePage(
+                if let home  = self.dataProvider.bands.getHome() {
+                    self.pagePresenter.changePage(
                         PageProvider.getPageObject(.home)
                             .addParam(key: .id, value: home.menuId)
                     )
@@ -56,6 +54,7 @@ struct KidsTopTab: PageComponent{
                            height: Dimen.icon.regular)
             }
         }
+       
         .onAppear(){
         }
         
@@ -67,8 +66,10 @@ struct KidsTopTab_Previews: PreviewProvider {
     
     static var previews: some View {
         Form{
-            KidsTopTab().environmentObject(PagePresenter()).frame(width:320,height:100)
-                .background(Color.app.blue)
+            KidsTopTab()
+                .environmentObject(PagePresenter())
+                .environmentObject(DataProvider())
+                .frame(width:320,height:100)
         }
     }
 }

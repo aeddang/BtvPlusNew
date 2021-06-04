@@ -8,10 +8,9 @@
 import Foundation
 import SwiftUI
 
-struct AlertBox: PageComponent {
+struct AlertBoxKids: PageComponent {
     let maxTextCount:Int = 200
     @Binding var isShowing: Bool
-    
     var title: String?
     var image: UIImage?
     var text: String?
@@ -27,16 +26,16 @@ struct AlertBox: PageComponent {
             VStack (alignment: .center, spacing:0){
                 if (self.text?.count ?? 0) > self.maxTextCount {
                     ScrollView{
-                        AlertBody(title: self.title, image: self.image, text: self.text, subText: self.subText, tipText: self.tipText, referenceText: self.referenceText)
+                        AlertBodyKids(title: self.title, image: self.image, text: self.text, subText: self.subText, tipText: self.tipText, referenceText: self.referenceText)
                     }
-                    .padding(.top, Dimen.margin.regular)
-                    .padding(.bottom, Dimen.margin.medium)
-                    .padding(.horizontal, Dimen.margin.regular)
+                    .padding(.top, DimenKids.margin.medium)
+                    .padding(.bottom, DimenKids.margin.mediumExtra)
+                    .padding(.horizontal, DimenKids.margin.medium)
                 } else {
-                    AlertBody(title: self.title, image: self.image, text: self.text, subText: self.subText, tipText: self.tipText, referenceText: self.referenceText)
-                        .padding(.top, Dimen.margin.regular)
-                        .padding(.bottom, Dimen.margin.medium)
-                        .padding(.horizontal, Dimen.margin.regular)
+                    AlertBodyKids(title: self.title, image: self.image, text: self.text, subText: self.subText, tipText: self.tipText, referenceText: self.referenceText)
+                        .padding(.top, Dimen.margin.medium)
+                        .padding(.bottom, Dimen.margin.mediumExtra)
+                        .padding(.horizontal, Dimen.margin.medium)
                 }
                 if self.imgButtons != nil {
                     HStack(spacing:Dimen.margin.regular){
@@ -46,7 +45,7 @@ struct AlertBox: PageComponent {
                                 text: btn.title,
                                 isSelected: true ,
                                 index: btn.index,
-                                size: CGSize(width: Dimen.icon.heavyExtra, height: Dimen.icon.heavyExtra)
+                                size: CGSize(width: DimenKids.icon.heavy, height: DimenKids.icon.heavy)
                                 
                             ){idx in
                                 self.action(idx)
@@ -56,25 +55,14 @@ struct AlertBox: PageComponent {
                             }
                         }
                     }
-                    .padding(.bottom, Dimen.margin.medium)
+                    .padding(.bottom, DimenKids.margin.medium)
                 }
-                HStack(spacing:0){
+                HStack(spacing:DimenKids.margin.thin){
                     ForEach(self.buttons) { btn in
-                        FillButton(
+                        RectButtonKids(
                             text: btn.title,
                             index: btn.index,
-                            isSelected: true ,
-                            textModifier: TextModifier(
-                                family: Font.family.bold,
-                                size: Font.size.lightExtra,
-                                color: Color.app.white,
-                                activeColor: Color.app.white
-                            ),
-                            size: Dimen.button.regular,
-                            margin: Dimen.margin.thin,
-                            bgColor: self.buttons.count == 1
-                                ? Color.brand.primary
-                                :(btn.index % 2 == 1) ? Color.brand.primary  : Color.brand.secondary
+                            isSelected: btn.index == self.buttons.count-1
                         ){idx in
                             self.action(idx)
                             withAnimation{
@@ -83,25 +71,23 @@ struct AlertBox: PageComponent {
                         }
                     }
                 }
+                .padding(.bottom, DimenKids.margin.medium)
             }
-            .background(Color.app.blue)
+            .background(Color.app.ivory)
+            .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.heavy))
         }
         .frame(
             minWidth: 0,
-            idealWidth: SystemEnvironment.isTablet ? 370 : 247,
-            maxWidth:  SystemEnvironment.isTablet ? 480 : 320,
+            idealWidth: SystemEnvironment.isTablet ? 565: 326,
+            maxWidth:  SystemEnvironment.isTablet ? 820 : 428,
             minHeight: 0,
-            maxHeight: (self.text?.count ?? 0) > self.maxTextCount
-                ? (SystemEnvironment.isTablet ? 480 : 320)
-                : .infinity
+            maxHeight: .infinity
         )
-        
         .padding(.all, Dimen.margin.heavy)
-        
     }
 }
 
-struct AlertBody: PageComponent{
+struct AlertBodyKids: PageComponent{
     var title: String?
     var image: UIImage?
     var text: String?
@@ -112,50 +98,53 @@ struct AlertBody: PageComponent{
         VStack (alignment: .center, spacing:0){
             if self.title != nil{
                 Text(self.title!)
-                    .modifier(BoldTextStyle(size: Font.size.regular))
+                    .modifier(BoldTextStyleKids(size: Font.sizeKids.regular, color: Color.app.brown))
                     .fixedSize(horizontal: false, vertical: true)
                     
+            }
+            if self.referenceText != nil {
+                Text(self.referenceText!)
+                    .multilineTextAlignment(.center)
+                    .modifier(BoldTextStyleKids(size: Font.sizeKids.thinExtra, color: Color.app.brown))
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, DimenKids.margin.tiny)
+                Spacer().modifier(LineHorizontal(color: Color.app.black))
+                    .padding(.top, DimenKids.margin.tiny)
             }
             if self.image != nil{
                 Image(uiImage: self.image!)
                     .renderingMode(.original)
                     .resizable()
                     .scaledToFit()
-                    .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
-                    .padding(.top, Dimen.margin.medium)
+                    .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.thin))
+                    .padding(.top, DimenKids.margin.light)
                     
             }
             if self.text != nil{
                 Text(self.text!)
                     .multilineTextAlignment(.center)
-                    .modifier(MediumTextStyle(size: Font.size.lightExtra))
+                    .modifier(BoldTextStyleKids(size: Font.sizeKids.lightExtra, color: Color.app.brownLight))
                     .fixedSize(horizontal: false, vertical: true)
-                    .padding(.top, Dimen.margin.medium)
+                    .padding(.top, DimenKids.margin.light)
             }
             if self.subText != nil{
                 Text(self.subText!)
                     .multilineTextAlignment(.center)
-                    .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyDeep))
+                    .modifier(BoldTextStyle(size: Font.sizeKids.thinExtra, color: Color.app.brownLight))
                     .lineLimit(nil)
                     .fixedSize(horizontal: false, vertical: true)
-                    .padding(.top, Dimen.margin.tiny)
+                    .padding(.top, DimenKids.margin.thinExtra)
             }
             if self.tipText != nil{
                 Text(self.tipText!)
                     .multilineTextAlignment(.center)
-                    .modifier(MediumTextStyle(size: Font.size.tiny, color: Color.brand.primary))
+                    .modifier(MediumTextStyleKids(size: Font.sizeKids.tiny, color: Color.app.brownLight))
                     .lineLimit(nil)
                     .fixedSize(horizontal: false, vertical: true)
-                    .padding(.top, Dimen.margin.regular)
+                    .padding(.top, DimenKids.margin.tiny)
             }
-            if self.referenceText != nil{
-                Text(self.referenceText!)
-                    .multilineTextAlignment(.center)
-                    .modifier(MediumTextStyle(size: Font.size.tiny, color: Color.app.greyLight))
-                    .lineLimit(nil)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.top, Dimen.margin.tiny)
-            }
+            
         }
     }
 }

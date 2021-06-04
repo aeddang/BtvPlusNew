@@ -61,7 +61,13 @@ struct AppLayout: PageComponent{
                         Spacer().modifier(MatchParent())
                     }
                 }
-                ActivityIndicator(isAnimating: self.$isLoading, style: .large)
+                if SystemEnvironment.currentPageType == .btv {
+                    ActivityIndicator(isAnimating: self.$isLoading, style: .large)
+                } else {
+                    AnimateSpinner(isAnimating: self.$isLoading).frame(
+                        width: DimenKids.loading.large.width,
+                        height: DimenKids.loading.large.height)
+                }
             }
         }
         .toast(isShowing: self.$isToastShowing , text: self.toastMsg)

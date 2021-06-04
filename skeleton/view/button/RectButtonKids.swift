@@ -8,13 +8,13 @@
 
 import Foundation
 import SwiftUI
-struct KidsRectButton: View, SelecterbleProtocol{
+struct RectButtonKids: View, SelecterbleProtocol{
     let text:String
     var index: Int = 0
     var isSelected: Bool = false
-    var textModifier:KidsTextModifier = KidsTextModifier(
+    var textModifier:TextModifierKids = TextModifierKids(
         family:Font.familyKids.bold,
-        size:SystemEnvironment.isTablet ? Font.sizeKids.mediumExtra : Font.sizeKids.lightExtra,
+        size: Font.sizeKids.lightExtra,
         color: Color.app.brownDeep,
         activeColor: Color.app.white
     )
@@ -42,11 +42,11 @@ struct KidsRectButton: View, SelecterbleProtocol{
     }
 }
 #if DEBUG
-struct KidsRectButton_Previews: PreviewProvider {
+struct RectButtonKids_Previews: PreviewProvider {
     
     static var previews: some View {
         Form{
-            KidsRectButton(
+            RectButtonKids(
             text: "test",
                 isSelected: true
                 ){_ in

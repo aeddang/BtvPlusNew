@@ -41,7 +41,8 @@ struct KidsContentVerticalEdges: ViewModifier {
 struct PageKidsTitle: ViewModifier {
     func body(content: Content) -> some View {
         return content
-            .modifier(KidsBlackTextStyle(size: SystemEnvironment.isTablet ? Font.sizeKids.medium : Font.sizeKids.regular))
+            .modifier(BlackTextStyleKids(
+                size: SystemEnvironment.isTablet ? Font.sizeKids.light : Font.sizeKids.regular))
     }
 }
 
@@ -50,8 +51,8 @@ struct KidsBlockTitle: ViewModifier {
     var color:Color = Color.app.white
     func body(content: Content) -> some View {
         return content
-            .modifier(KidsBoldTextStyle(
-                size: SystemEnvironment.isTablet ? Font.sizeKids.medium : Font.sizeKids.light,
+            .modifier(BoldTextStyleKids(
+                size: Font.sizeKids.light,
                 color:color
             ))
     }
@@ -60,8 +61,8 @@ struct KidsBlockTitle: ViewModifier {
 struct KidsContentTitle: ViewModifier {
     func body(content: Content) -> some View {
         return content
-            .modifier(KidsMediumTextStyle(
-                size: SystemEnvironment.isTablet ? Font.sizeKids.light : Font.sizeKids.thin
+            .modifier(MediumTextStyleKids(
+                size: Font.sizeKids.thin
             ))
     }
 }

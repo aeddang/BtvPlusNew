@@ -66,11 +66,11 @@ extension AssetKids{
     
     
     struct shape {
-        public static let radioBtnOn = "icRadioSOn"
-        public static let radioBtnOff = "icRadioSOff"
-        public static let checkBoxOn = "icCheckboxOn"
-        public static let checkBoxOn2 = "icCheckboxOn02"
-        public static let checkBoxOff = "icCheckboxOff"
+        public static let radioBtnOn = "zemkidsMRadioButtonPre"
+        public static let radioBtnOff = "zemkidsMRadioButtonNor"
+        public static let checkBoxOn = "zemkidsMProfileImgSel"
+        public static let checkBoxOn2 = "zemkidsMPopupCheckSel"
+        public static let checkBoxOff = "zemkidsMProfileImgNor"
         public static let spinner = "icSpinner"
        
     }
@@ -99,12 +99,12 @@ extension AssetKids{
     ]
     
     static let characterGnbList = [
-        "zemkidsMImgKidsprofileBoy01",
-        "zemkidsMImgKidsprofileBoy02",
-        "zemkidsMImgKidsprofileBoy03",
-        "zemkidsMImgKidsprofileGirl01",
-        "zemkidsMImgKidsprofileGirl02",
-        "zemkidsMImgKidsprofileGirl03",
+        "zemkidsMImgGnbKidsprofileBoy01",
+        "zemkidsMImgGnbKidsprofileBoy02",
+        "zemkidsMImgGnbKidsprofileBoy03",
+        "zemkidsMImgGnbKidsprofileGirl01",
+        "zemkidsMImgGnbKidsprofileGirl02",
+        "zemkidsMImgGnbKidsprofileGirl03",
     ]
     
 }

@@ -48,8 +48,6 @@ class KidsGnbItemData:InfinityData, ObservableObject{
     func setHomeData(data:BlockItem) -> KidsGnbItemData {
         self.isHome = true
         self.blocks = data.blocks?.dropFirst().map{$0}
-        self.imageOn = AssetKids.characterGnbList.first ?? self.imageOn
-        self.imageOff = AssetKids.characterGnbList.first ?? self.imageOff
         return self
     }
     func setData(data:BlockItem) -> KidsGnbItemData {
@@ -65,13 +63,9 @@ class KidsGnbItemData:InfinityData, ObservableObject{
 
 
 struct KidsGnb: PageComponent{
-    @EnvironmentObject var repository:Repository
-    @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
-    @EnvironmentObject var pairing:Pairing
- 
+    @EnvironmentObject var dataProvider:DataProvider
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @State var datas:[KidsGnbItemData] = []
     var body: some View {
@@ -93,7 +87,6 @@ struct KidsGnb: PageComponent{
                 datas: self.datas)
  `          */
         }
-        
         .onReceive (self.appSceneObserver.$useTop) { use in
             if !use {return}
             if SystemEnvironment.currentPageType == .btv {return}
@@ -131,26 +124,55 @@ struct KidsGnbList: PageComponent{
 }
 
 struct KidsGnbItem: PageView {
+    @EnvironmentObject var pairing:Pairing
     var data:KidsGnbItemData
     @State var isSelected:Bool = false
+    @State var profileImg:String = Asset.gnbTop.zemkids
+    @State var title:String = String.app.home
     var body: some View {
         ZStack(){
-            KFImage(URL(string: self.data.imageOff))
-                .resizable()
-                .cancelOnDisappear(true)
-                .loadImmediately()
-                .aspectRatio(contentMode: .fit)
-                .modifier(MatchParent())
-                
-            KFImage(URL(string: self.data.imageOn))
-                .resizable()
-                .cancelOnDisappear(true)
-                .loadImmediately()
-                .aspectRatio(contentMode: .fit)
-                .modifier(MatchParent())
-                .opacity(self.isSelected ? 1.0 : 0.0)
+            if self.data.isHome {
+                VStack(spacing:0){
+                    Image(self.profileImg)
+                        .renderingMode(.original)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: DimenKids.item.profileGnb.width,
+                               height: DimenKids.item.profileGnb.height)
+                    Text(self.title)
+                        .modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color: Color.app.brownDeep))
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.top, DimenKids.margin.micro)
+                }
+            } else {
+                KFImage(URL(string: self.data.imageOff))
+                    .resizable()
+                    .cancelOnDisappear(true)
+                    .loadImmediately()
+                    .aspectRatio(contentMode: .fit)
+                    .modifier(MatchParent())
+                    
+                KFImage(URL(string: self.data.imageOn))
+                    .resizable()
+                    .cancelOnDisappear(true)
+                    .loadImmediately()
+                    .aspectRatio(contentMode: .fit)
+                    .modifier(MatchParent())
+                    .opacity(self.isSelected ? 1.0 : 0.0)
+            }
+            
         }
         .frame(width: DimenKids.icon.heavy, height:DimenKids.icon.heavy)
+        .onReceive(self.pairing.$kid) { kid in
+            if !self.data.isHome {return}
+            if let kid = kid {
+                self.profileImg = AssetKids.characterGnbList[kid.characterIdx]
+                self.title = kid.nickName
+            } else {
+                self.profileImg = Asset.gnbTop.zemkids
+                self.title = String.app.home
+            }
+        }
     }
 }
 

@@ -511,7 +511,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
             switch mask {
                 case .landscape, .landscapeRight: return .landscapeRight
                 case .landscapeLeft: return .landscapeLeft
-                case .portraitUpsideDown:return .portraitUpsideDown
+                //ase .portraitUpsideDown:return .portraitUpsideDown
                 default:return nil
             }
         }
@@ -519,13 +519,13 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
             switch mask {
                 case .landscape, .landscapeRight: return .landscapeRight
                 case .landscapeLeft: return .landscapeLeft
-                case .portrait:return .portrait
+                //case .portrait:return .portrait
                 default:return nil
             }
         }
         else if UIDevice.current.orientation == .landscapeRight{
             switch mask {
-                case .landscapeLeft: return .landscapeLeft
+                //case .landscapeLeft: return .landscapeLeft
                 case .portrait:return .portrait
                 case .portraitUpsideDown:return .portraitUpsideDown
                 default:return nil
@@ -533,7 +533,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         }
         else if UIDevice.current.orientation == .landscapeLeft{
             switch mask {
-                case .landscapeRight: return .landscapeRight
+                //case .landscapeRight: return .landscapeRight
                 case .portrait:return .portrait
                 case .portraitUpsideDown:return .portraitUpsideDown
                 default:return nil

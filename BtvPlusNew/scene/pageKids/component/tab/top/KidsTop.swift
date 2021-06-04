@@ -12,12 +12,9 @@ extension KidsTop {
     static let marginTop:CGFloat = DimenKids.margin.thin
 }
 struct KidsTop: PageComponent{
-    @EnvironmentObject var repository:Repository
-    @EnvironmentObject var dataProvider:DataProvider
-    @EnvironmentObject var pagePresenter:PagePresenter
+   
     @EnvironmentObject var sceneObserver:PageSceneObserver
-    @EnvironmentObject var appSceneObserver:AppSceneObserver
-    @EnvironmentObject var pairing:Pairing
+  
     var body: some View {
         VStack(alignment: .leading, spacing:0){
             KidsTopTab()
@@ -42,7 +39,7 @@ struct KidsTop_Previews: PreviewProvider {
     
     static var previews: some View {
         Form{
-            KidsTop().environmentObject(PagePresenter()).frame(width:320,height:100)
+            KidsTop().environmentObject(PageSceneObserver()).frame(width:320,height:100)
                 .background(Color.app.blue)
         }
     }

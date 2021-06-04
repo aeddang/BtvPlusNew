@@ -11,10 +11,14 @@
 
 "nickName" = "닉네임";
 "nickNameHolder" = "닉네임을 입력하세요.";
+"nickNameKids" = "별명";
+"nickNameHolderKids" = "아이의 별명을 입력해주세요.";
 "nickNameValidation" = "사용할 수 있는 닉네임입니다";
 "nickNameInvalidation" = "8자 이내 한글/영문/숫자 입력 가능(숫자만 입력은 불가)";
 
 "birth" = "출생연도";
+"birthKids" = "생년월일";
+"birthKidsPlaceholder" = "0000 년 00 월";
 "gender" = "성별";
 "mail" = "남";
 "femail" = "여";
@@ -34,6 +38,8 @@
 "fri" = "금요일";
 "sat" = "토요일";
 "sun" = "일요일";
+
+"home" = "홈";
 
 "certificationNumber" = "인증번호";
 "certificationNumberHolder" = "000000";
@@ -60,6 +66,7 @@
 "location" = "위치";
 "select" = "선택";
 "todayUnvisible" = "오늘 하루 보지 않기";
+"weekUnvisible" = "일주일 동안 보지 않기";
 "watch" = "시청";
 "watchAble" = "시청가능";
 "cast" = "출연";
@@ -155,7 +162,7 @@
 "btnAlramOn" = "알림 설정 켜기";
 "btnAgree" = "동의";
 "btnReadAll" = "전체 읽기";
-
+"btnRegist" = "적용";
 /*
  Sort
 */
@@ -682,9 +689,6 @@
 "privacyAndAgreeText2" = "셋톱박스 연결 및 맞춤형 서비스 제공, 할인, 이벤트 등 다양한 혜택 정보와 업데이트, 콘텐츠 추천 등 서비스 이용에 필요한 정보 안내";
 "privacyAndAgreeText3" = "셋톱연결 해지 후 익일 24시까지";
 
-
-
-
 /*
  Player
 */
@@ -764,3 +768,19 @@
 "shareSynopsis" = "추천 영상을 모바일 Btv에서 확인해 보세요!";
 "shareComplete" = "공유 완료 되었습니다.";
 "shareFail" = "공유 실패 하였습니다. 다시 시도해 주세요.";
+
+
+
+
+///Kids
+
+
+/*
+ PageRegistKid
+*/
+"registKidTitle" = "자녀 프로필을 만드시겠습니까?";
+"registKidText" = "자녀 프로필을 만들면 맞춤 추천/학습 서비스를 이용할 수 있어요.";
+"registKidCharacter" = "캐릭터 선택";
+"registKidCharacterText" = "아이에게 어울리는 캐릭터를 선택해주세요";
+"registKidCreate" = "자녀 프로필 만들기";
+

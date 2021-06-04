@@ -13,7 +13,11 @@ extension String{
     }
     
     struct kidsText {
-        //public static let pairingText = "pairingText".loaalized()
+        public static let registKidTitle = "registKidTitle".loaalized()
+        public static let registKidText = "registKidText".loaalized()
+        public static let registKidCharacter = "registKidCharacter".loaalized()
+        public static let registKidCharacterText = "registKidCharacterText".loaalized()
+        public static let registKidCreate = "registKidCreate".loaalized()
     }
     
 }

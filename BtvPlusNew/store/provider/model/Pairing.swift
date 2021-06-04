@@ -10,7 +10,8 @@ import Foundation
 
 enum PairingRequest:Equatable{
     case wifi , btv, user(String?), cancel, hostInfo(auth:String?, device:String?, prevResult:NpsCommonHeader?),
-         recovery, device(StbData), auth(String) , unPairing, check, userInfo
+         recovery, device(StbData), auth(String) , unPairing, check,
+         userInfo, updateKids, registKid(Kid)
     static func ==(lhs: PairingRequest, rhs: PairingRequest) -> Bool {
         switch (lhs, rhs) {
         case ( .wifi, .wifi):return true
@@ -33,7 +34,8 @@ enum PairingEvent{
          connectError(NpsCommonHeader?), disConnectError(NpsCommonHeader?), connectErrorReason(PairingInfo?),
          findMdnsDevice([MdnsDevice]), findStbInfoDevice([StbInfoDataItem]),  notFoundDevice,
          syncError(NpsCommonHeader?),
-         pairingCompleted, pairingCheckCompleted(Bool)
+         pairingCompleted, pairingCheckCompleted(Bool),
+         updatedKids
 }
 
 
@@ -45,7 +47,7 @@ class Pairing:ObservableObject, PageProtocol {
     @Published private(set) var event:PairingEvent? = nil {didSet{ if event != nil { event = nil} }}
     @Published private(set) var status:PairingStatus = .disConnect
     
-    @Published var user:User? = nil 
+    @Published var user:User? = nil
     private(set) var isPairingUser:Bool = false
     private(set) var isPairingAgreement:Bool = false
    
@@ -54,11 +56,19 @@ class Pairing:ObservableObject, PageProtocol {
     private(set) var phoneNumer:String = "01000000000"
     
     @Published var userInfo:PairingUserInfo? = nil
+    @Published var kid:Kid? = nil
+    private(set) var kids:[Kid] = []
+    
     let authority:Authority = Authority()
     
     func requestPairing(_ request:PairingRequest){
-        if request == .recovery {
+        switch request {
+        case .recovery :
             self.status = .connect
+        case .registKid(let kid) :
+            self.kid = kid
+            self.kids.append(kid)
+        default : break
         }
         self.request = request
         

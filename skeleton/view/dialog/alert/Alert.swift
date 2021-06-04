@@ -71,20 +71,36 @@ struct Alert<Presenting>: View where Presenting: View {
     
     var body: some View {
         ZStack(alignment: .center) {
-            AlertBox(
-                isShowing: self.$isShowing,
-                title: self.title,
-                image: self.image,
-                text: self.text,
-                subText: self.subText,
-                tipText: self.tipText,
-                referenceText: self.referenceText,
-                imgButtons: self.imgButtons,
-                buttons: self.buttons,
-                action: self.action)
+            if SystemEnvironment.currentPageType == .btv {
+                AlertBox(
+                    isShowing: self.$isShowing,
+                    title: self.title,
+                    image: self.image,
+                    text: self.text,
+                    subText: self.subText,
+                    tipText: self.tipText,
+                    referenceText: self.referenceText,
+                    imgButtons: self.imgButtons,
+                    buttons: self.buttons,
+                    action: self.action)
+            } else {
+                AlertBoxKids(
+                    isShowing: self.$isShowing,
+                    title: self.title,
+                    image: self.image,
+                    text: self.text,
+                    subText: self.subText,
+                    tipText: self.tipText,
+                    referenceText: self.referenceText,
+                    imgButtons: self.imgButtons,
+                    buttons: self.buttons,
+                    action: self.action)
+            }
         }
         .modifier(MatchParent())
-        .background(Color.transparent.black70)
+        .background(SystemEnvironment.currentPageType == .btv
+                        ? Color.transparent.black70
+                        : Color.transparent.black50 )
         .opacity(self.isShowing ? 1 : 0)
         
     }

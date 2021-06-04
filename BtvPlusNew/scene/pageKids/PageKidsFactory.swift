@@ -12,7 +12,7 @@ import SwiftUI
 extension PageID{
     static let kidsIntro:PageID = "kidsIntro"
     static let kidsHome:PageID = "kidsHome"
-    
+    static let registKid:PageID = "registKid"
 }
 
 struct PageKidsProvider {
@@ -43,10 +43,10 @@ struct PageKidsProvider {
     
     static func getType(_ pageID:PageID)-> PageAnimationType{
         switch pageID {
-        case .kidsHome :
-            return  .vertical
+        case .registKid :
+            return  .opacity
        
-        default : return  .horizontal
+        default : return  .vertical
         }
     }
     
@@ -78,12 +78,12 @@ struct PageKidsProvider {
     }
 }
 
-
 struct PageKidsFactory{
     static func getPage(_ pageObject:PageObject) -> PageViewProtocol{
         switch pageObject.pageID {
         case .kidsIntro : return PageKidsIntro()
         case .kidsHome : return PageKidsHome()
+        case .registKid : return PageRegistKid()
         default : return PageTest()
         }
     }

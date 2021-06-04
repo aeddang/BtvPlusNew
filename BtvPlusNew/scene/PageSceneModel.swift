@@ -77,8 +77,8 @@ struct PageSceneModel: PageModel {
     
     func isHistoryPage(_ pageObject:PageObject ) -> Bool {
         switch pageObject.pageID {
-        case .serviceError, .fullPlayer, .auth : return false
-        case .kidsIntro: return false
+        case .serviceError, .fullPlayer, .auth, .confirmNumber, .adultCertification, .certification : return false
+        case .kidsIntro, .registKid: return false
         default : return true
         }
     }
@@ -101,6 +101,7 @@ struct PageSceneModel: PageModel {
     static func needKeyboard(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
         case .pairingSetupUser, .pairingBtv, .search, .modifyProile, .confirmNumber, .pairingManagement, .setup, .remotecon: return true
+        case .registKid : return true
         default : return false
         }
     }

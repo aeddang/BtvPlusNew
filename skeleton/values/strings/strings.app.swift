@@ -15,10 +15,14 @@ extension String {
         public static let retry = "retry".loaalized()
         
         public static let nickName = "nickName".loaalized()
+        public static let nickNameKids = "nickNameKids".loaalized()
         public static let nickNameHolder = "nickNameHolder".loaalized()
+        public static let nickNameHolderKids = "nickNameHolderKids".loaalized()
         public static let nickNameValidation = "nickNameValidation".loaalized()
         public static let nickNameInvalidation = "nickNameInvalidation".loaalized()
         public static let birth = "birth".loaalized()
+        public static let birthKids = "birthKids".loaalized()
+        public static let birthKidsPlaceholder = "birthKidsPlaceholder".loaalized()
         public static let gender = "gender".loaalized()
         public static let mail = "mail".loaalized()
         public static let femail = "femail".loaalized()
@@ -53,6 +57,7 @@ extension String {
         public static let location = "location".loaalized()
         public static let select = "select".loaalized()
         public static let todayUnvisible = "todayUnvisible".loaalized()
+        public static let weekUnvisible = "weekUnvisible".loaalized()
         public static let watch = "watch".loaalized()
         public static let watchAble = "watchAble".loaalized()
         public static let cast = "cast".loaalized()
@@ -93,5 +98,7 @@ extension String {
         public static let highst = "highst".loaalized()
         public static let mutual = "mutual".loaalized()
         public static let gradeNo = "gradeNo".loaalized()
+        
+        public static let home = "home".loaalized()
     }
 }

@@ -76,18 +76,18 @@ extension Font{
     struct sizeKids {
         public static let black:CGFloat =  isPad ? 52 : 32
         public static let bold:CGFloat = isPad ? 42 : 26
-        public static let large:CGFloat =  isPad ? 30 : 22
-        public static let medium:CGFloat = isPad ? 29 : 20 //**
-        public static let mediumExtra:CGFloat = isPad ? 27 : 19 //**
-        public static let regular:CGFloat = isPad ? 23 : 18 //*
-        public static let regularExtra:CGFloat = isPad ? 22 : 16//*
-        public static let light:CGFloat =  isPad ? 21 : 15 //**
-        public static let lightExtra:CGFloat =  isPad ? 20 : 14 //**
-        public static let thin:CGFloat = isPad ? 18 : 13 //**
-        public static let thinExtra:CGFloat = isPad ? 17 : 12 //**
-        public static let tiny:CGFloat = isPad ? 16 : 11//**
-        public static let tinyExtra:CGFloat = isPad ? 15 : 10//**
-        public static let micro:CGFloat = isPad ? 13 : 9
+        public static let large:CGFloat =  isPad ? 42 : 22 //**
+        public static let medium:CGFloat = isPad ? 38 : 20 //**
+        public static let mediumExtra:CGFloat = isPad ? 36 : 19 //**
+        public static let regular:CGFloat = isPad ? 34 : 18 //*
+        public static let regularExtra:CGFloat = isPad ? 31 : 16//*
+        public static let light:CGFloat =  isPad ? 29 : 15 //**
+        public static let lightExtra:CGFloat =  isPad ? 27 : 14 //**
+        public static let thin:CGFloat = isPad ? 25 : 13 //**
+        public static let thinExtra:CGFloat = isPad ? 23 : 12 //**
+        public static let tiny:CGFloat = isPad ? 20 : 11//**
+        public static let tinyExtra:CGFloat = isPad ? 19 : 10//**
+        public static let micro:CGFloat = isPad ? 17 : 9
     }
 
 

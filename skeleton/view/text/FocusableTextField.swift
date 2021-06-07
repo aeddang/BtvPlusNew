@@ -14,7 +14,7 @@ struct FocusableTextField: UIViewRepresentable {
     var returnVal: UIReturnKeyType = .default
     var placeholder: String = ""
     var maxLength: Int = -1
-    var kern: Int = 1
+    var kern: CGFloat = 1
     var textModifier:TextModifier = RegularTextStyle().textModifier
     var isfocus:Bool
     var isSecureTextEntry:Bool = false

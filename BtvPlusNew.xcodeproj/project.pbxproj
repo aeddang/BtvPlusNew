@@ -221,6 +221,12 @@
 		318E7EFE25E8814C00B2AAAF /* MonthlyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E7EFD25E8814C00B2AAAF /* MonthlyList.swift */; };
 		318E7F0425E8990900B2AAAF /* MonthlyBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E7F0325E8990900B2AAAF /* MonthlyBlock.swift */; };
 		318E7F0C25E8B01800B2AAAF /* MonthlyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E7F0B25E8B01800B2AAAF /* MonthlyInfo.swift */; };
+		318ECEF8266DAD1800380B59 /* MultiPickerSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318ECEF7266DAD1800380B59 /* MultiPickerSelect.swift */; };
+		318ECEFB266DBD8A00380B59 /* PickerBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318ECEFA266DBD8A00380B59 /* PickerBox.swift */; };
+		318ECEFD266DC14000380B59 /* PickerBoxKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318ECEFC266DC14000380B59 /* PickerBoxKids.swift */; };
+		318ECF01266DD7FC00380B59 /* SKBtvOTFBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 318ECEFE266DD6A300380B59 /* SKBtvOTFBold.otf */; };
+		318ECF02266DD7FF00380B59 /* SKBtvOTFLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 318ECEFF266DD6A400380B59 /* SKBtvOTFLight.otf */; };
+		318ECF03266DD80100380B59 /* SKBtvOTFMedium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 318ECF00266DD6A400380B59 /* SKBtvOTFMedium.otf */; };
 		318F7B412625444C00774B17 /* CardList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318F7B402625444C00774B17 /* CardList.swift */; };
 		318F7B472625708100774B17 /* DivisionTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318F7B462625708100774B17 /* DivisionTab.swift */; };
 		318F7B502625739A00774B17 /* CardBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318F7B4F2625739A00774B17 /* CardBlock.swift */; };
@@ -691,6 +697,12 @@
 		318E7EFD25E8814C00B2AAAF /* MonthlyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyList.swift; sourceTree = "<group>"; };
 		318E7F0325E8990900B2AAAF /* MonthlyBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyBlock.swift; sourceTree = "<group>"; };
 		318E7F0B25E8B01800B2AAAF /* MonthlyInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyInfo.swift; sourceTree = "<group>"; };
+		318ECEF7266DAD1800380B59 /* MultiPickerSelect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiPickerSelect.swift; sourceTree = "<group>"; };
+		318ECEFA266DBD8A00380B59 /* PickerBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerBox.swift; sourceTree = "<group>"; };
+		318ECEFC266DC14000380B59 /* PickerBoxKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerBoxKids.swift; sourceTree = "<group>"; };
+		318ECEFE266DD6A300380B59 /* SKBtvOTFBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SKBtvOTFBold.otf; sourceTree = "<group>"; };
+		318ECEFF266DD6A400380B59 /* SKBtvOTFLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SKBtvOTFLight.otf; sourceTree = "<group>"; };
+		318ECF00266DD6A400380B59 /* SKBtvOTFMedium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SKBtvOTFMedium.otf; sourceTree = "<group>"; };
 		318F7B402625444C00774B17 /* CardList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardList.swift; sourceTree = "<group>"; };
 		318F7B462625708100774B17 /* DivisionTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DivisionTab.swift; sourceTree = "<group>"; };
 		318F7B4F2625739A00774B17 /* CardBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBlock.swift; sourceTree = "<group>"; };
@@ -1511,6 +1523,9 @@
 				318B53B125F235600052E4E0 /* Roboto-Bold.ttf */,
 				318B53B525F235610052E4E0 /* Roboto-Light.ttf */,
 				318B53B025F235600052E4E0 /* Roboto-Medium.ttf */,
+				318ECEFE266DD6A300380B59 /* SKBtvOTFBold.otf */,
+				318ECEFF266DD6A400380B59 /* SKBtvOTFLight.otf */,
+				318ECF00266DD6A400380B59 /* SKBtvOTFMedium.otf */,
 				318B53B225F235600052E4E0 /* SKBtvBold.ttf */,
 				318B53B325F235610052E4E0 /* SKBtvLight.ttf */,
 				318B53B425F235610052E4E0 /* SKBtvMedium.ttf */,
@@ -1571,6 +1586,17 @@
 				318D100F2668B7D600B66977 /* PageSelectKidCharacter.swift */,
 			);
 			path = my;
+			sourceTree = "<group>";
+		};
+		318ECEF9266DBCEA00380B59 /* picker */ = {
+			isa = PBXGroup;
+			children = (
+				318ECEF7266DAD1800380B59 /* MultiPickerSelect.swift */,
+				D57298DC259D69EB00ED2CE6 /* PickerSelect.swift */,
+				318ECEFA266DBD8A00380B59 /* PickerBox.swift */,
+				318ECEFC266DC14000380B59 /* PickerBoxKids.swift */,
+			);
+			path = picker;
 			sourceTree = "<group>";
 		};
 		318FC01525E4D7C100ABC241 /* view */ = {
@@ -2270,8 +2296,8 @@
 		D56C6A02257DA0C600CF9AB8 /* dialog */ = {
 			isa = PBXGroup;
 			children = (
+				318ECEF9266DBCEA00380B59 /* picker */,
 				3192EFDB26675C150012F238 /* alert */,
-				D57298DC259D69EB00ED2CE6 /* PickerSelect.swift */,
 				D56C6A04257DA0C600CF9AB8 /* Select.swift */,
 				D56C6A05257DA0C600CF9AB8 /* Radio.swift */,
 				D56C6A06257DA0C600CF9AB8 /* Toast.swift */,
@@ -2655,15 +2681,18 @@
 			files = (
 				316ECDF8264B45CB008D2544 /* GoogleService-Info.plist in Resources */,
 				318B53B925F236960052E4E0 /* SKBtvLight.ttf in Resources */,
+				318ECF02266DD7FF00380B59 /* SKBtvOTFLight.otf in Resources */,
 				D571786A258304D000BF2612 /* LaunchScreen.storyboard in Resources */,
 				318B53CD25F236A50052E4E0 /* Roboto-Light.ttf in Resources */,
 				318B53C525F236A00052E4E0 /* Roboto-Bold.ttf in Resources */,
 				D568891C259C24A200F2F67A /* Localizable.strings in Resources */,
 				318B53C125F2369E0052E4E0 /* SKBtvMedium.ttf in Resources */,
+				318ECF01266DD7FC00380B59 /* SKBtvOTFBold.otf in Resources */,
 				D56C692E257D9EE600CF9AB8 /* Preview Assets.xcassets in Resources */,
 				318B53BD25F2369B0052E4E0 /* SKBtvBold.ttf in Resources */,
 				D56C692B257D9EE600CF9AB8 /* Assets.xcassets in Resources */,
 				318B53C925F236A20052E4E0 /* Roboto-Medium.ttf in Resources */,
+				318ECF03266DD80100380B59 /* SKBtvOTFMedium.otf in Resources */,
 				31373F6325C7E726004353DA /* YTPlayerView-iframe-playerIPAD.html in Resources */,
 				31373F6225C7E726004353DA /* YTPlayerView-iframe-player.html in Resources */,
 			);
@@ -2956,6 +2985,7 @@
 				D5688924259C29DE00F2F67A /* SpanText.swift in Sources */,
 				D506D732258CA3E300F27C00 /* ThemaList.swift in Sources */,
 				319B07A6263A8807008C11A8 /* VideoSetBlock.swift in Sources */,
+				318ECEF8266DAD1800380B59 /* MultiPickerSelect.swift in Sources */,
 				316719A02600642D005AC3D2 /* PageIntro.swift in Sources */,
 				31863E10265C8F530086C40D /* PlayerGrade.swift in Sources */,
 				3192EFD22666F8760012F238 /* KidsGnb.swift in Sources */,
@@ -2968,6 +2998,7 @@
 				D56C6A53257DA0C700CF9AB8 /* FillButton.swift in Sources */,
 				3163300325EF70B000581FA7 /* TextTabList.swift in Sources */,
 				316B614C264A272B00C2DC25 /* RemoteCon.swift in Sources */,
+				318ECEFD266DC14000380B59 /* PickerBoxKids.swift in Sources */,
 				318C36B6265F216D009B7EC3 /* PageTerminateStb.swift in Sources */,
 				D56C699F257DA09E00CF9AB8 /* PageDragingProtocol.swift in Sources */,
 				3167199B260039C8005AC3D2 /* HeaderBanner.swift in Sources */,
@@ -3109,6 +3140,7 @@
 				318E7F0425E8990900B2AAAF /* MonthlyBlock.swift in Sources */,
 				317A8F4E25CBBB2700E41226 /* PageHostingController.swift in Sources */,
 				D56C69B0257DA09E00CF9AB8 /* SocialMediaSharingManager.swift in Sources */,
+				318ECEFB266DBD8A00380B59 /* PickerBox.swift in Sources */,
 				D5DC477E25821DFA007EDD86 /* CWGrid.swift in Sources */,
 				3192EFD826674DAE0012F238 /* PageKidsStyle.swift in Sources */,
 				318B53A125F1DA8E0052E4E0 /* TopBannerBg.swift in Sources */,

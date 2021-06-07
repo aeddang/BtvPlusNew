@@ -16,7 +16,7 @@ struct PageKidsIntro: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
-     
+    @EnvironmentObject var setup:Setup
     @State var isPlay:Bool = false
     var body: some View {
         ZStack{
@@ -42,10 +42,20 @@ struct PageKidsIntro: PageView {
             }
         }
         .onAppear{
+            //guard let prevDateKey =  self.setup.kidsRegistUnvisibleDate
+            //let currentDateKey = self.getFloatingDateKey()
+           
+            
             
         }
     }//body
     
+    private func getFloatingDateKey() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
+        let todayString: String = dateFormatter.string(from: Date())
+        return todayString
+    }
 
 }
 

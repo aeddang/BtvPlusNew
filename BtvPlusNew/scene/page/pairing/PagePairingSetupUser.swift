@@ -241,16 +241,7 @@ struct PagePairingSetupUser: PageView {
                 if self.pageObservable.layer != .top { return }
                 self.updatekeyboardStatus(on:on)
             }
-            .onReceive(self.appSceneObserver.$selectResult){ result in
-                guard let result = result else { return }
-                switch result {
-                    case .complete(let type, let idx) : do {
-                        if type.check(key: self.tag){
-                            self.onBirthSelected(idx:idx)
-                        }
-                    }
-                }
-            }
+            
             
             .onAppear{
                 guard let obj = self.pageObject  else { return }
@@ -354,7 +345,9 @@ struct PagePairingSetupUser: PageView {
             self.editType = .birth
         }
         let pic = self.birthList.firstIndex(of: self.birth) ?? 0
-        self.appSceneObserver.select = .picker((self.tag, self.birthList), pic)
+        self.appSceneObserver.select = .picker((self.tag, self.birthList), pic){ idx in
+            self.onBirthSelected(idx:idx)
+        }
     }
     
     private func onBirthSelected(idx:Int){

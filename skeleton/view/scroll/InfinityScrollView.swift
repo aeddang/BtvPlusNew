@@ -349,9 +349,6 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     }
 }
 
-
-
-
 struct ScrollOffsetPreferenceKey: PreferenceKey {
     typealias Value = [CGFloat]
     static var defaultValue: [CGFloat] = [0]

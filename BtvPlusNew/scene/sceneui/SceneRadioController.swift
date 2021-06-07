@@ -78,7 +78,6 @@ struct SceneRadioController: PageComponent{
         self.currentRadio = nil
     }
     
-
     func setupSort(data:(String,[String])) {
         let range = 0 ..< data.1.count
         self.buttons = zip(range,data.1).map {index, text in
@@ -88,8 +87,6 @@ struct SceneRadioController: PageComponent{
     func selectedSort(_ idx:Int, data:(String,[String])) {
         self.sceneObserver.radioResult = .complete(.sort(data), idx)
     }
-    
-   
 }
 
 

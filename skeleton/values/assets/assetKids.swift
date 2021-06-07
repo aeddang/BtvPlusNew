@@ -89,12 +89,12 @@ extension AssetKids{
     }
     
     static let characterList = [
-        "zemkidsMImgKidsprofileBoy01",
-        "zemkidsMImgKidsprofileBoy02",
-        "zemkidsMImgKidsprofileBoy03",
-        "zemkidsMImgKidsprofileGirl01",
-        "zemkidsMImgKidsprofileGirl02",
-        "zemkidsMImgKidsprofileGirl03",
+        "zemkidsTIImgKidsprofileBoy01",
+        "zemkidsTIImgKidsprofileBoy02",
+        "zemkidsTIImgKidsprofileBoy03",
+        "zemkidsTIImgKidsprofileGirl01",
+        "zemkidsTIImgKidsprofileGirl02",
+        "zemkidsTIImgKidsprofileGirl03",
        
     ]
     

@@ -15,27 +15,33 @@ struct CharacterKidItem: PageView {
             Image(data.image)
             .renderingMode(.original)
             .resizable()
+            .scaledToFit()
             .frame(
-                width: ListItem.character.size.width,
-                height: ListItem.character.size.height)
+                width: DimenKids.item.profileRegist.width,
+                height: DimenKids.item.profileRegist.height)
             .overlay(
                Circle()
                 .stroke(
                     self.isSelected ? Color.kids.primary : Color.transparent.clear,
                     lineWidth: Dimen.stroke.regular)
             )
-            
+            //.padding(.all, DimenKids.margin.tinyExtra)
             Image(self.isSelected
                     ? AssetKids.shape.checkBoxOn
                     : AssetKids.shape.checkBoxOff)
                 .renderingMode(.original).resizable()
                 .scaledToFit()
                 .frame(width: DimenKids.icon.light, height: DimenKids.icon.light)
+                .padding(.trailing, -DimenKids.margin.tinyExtra)
+                
         }
     }
 }
 
-
+extension PageSelectKidCharacter {
+    static let spacing:CGFloat = SystemEnvironment.isTablet
+        ? DimenKids.margin.lightExtra : DimenKids.margin.light
+}
 
 
 struct PageSelectKidCharacter: PageView {
@@ -46,8 +52,13 @@ struct PageSelectKidCharacter: PageView {
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
 
     @State var characterIdx:Int = 0
-    @State var boxPos:CGFloat = -100
+    @State var boxPos:CGFloat = -300
     
+    let characterSets:[CharacterRows] = CharacterRowData(
+        datas: zip(0 ..< AssetKids.characterList.count, AssetKids.characterList)
+            .map {index, character in CharacterData(idx:index, image:character)}).getRow(lineNum: 3)
+    
+
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -60,9 +71,18 @@ struct PageSelectKidCharacter: PageView {
                             .modifier(BoldTextStyleKids(size: Font.sizeKids.lightExtra, color: Color.app.brownLight))
                             .fixedSize(horizontal: false, vertical: true)
                        
-                        VStack (alignment: .center, spacing: DimenKids.margin.light){
-                            HStack(alignment: .top, spacing: DimenKids.margin.light) {
-                                
+                        VStack (alignment: .center, spacing: Self.spacing){
+                            ForEach(self.characterSets) { set in
+                                HStack(alignment: .top, spacing: Self.spacing) {
+                                    ForEach( set.cells) { data in
+                                        CharacterKidItem(
+                                            isSelected: self.characterIdx == data.idx,
+                                            data: data)
+                                            .onTapGesture {
+                                                self.characterIdx = data.idx
+                                            }
+                                    }
+                                }
                             }
                         }
                         HStack(spacing:DimenKids.margin.thin){
@@ -76,14 +96,16 @@ struct PageSelectKidCharacter: PageView {
                                 text: String.button.regist,
                                 isSelected: true
                             ){idx in
-                                
+                                self.pagePresenter.onPageEvent(
+                                    self.pageObject, event: .init(id:self.tag, type: .selected, data: self.characterIdx))
+                                self.pagePresenter.closePopup(self.pageObject?.id)
                             }
                         }
-
                     }
                     .padding(.all, DimenKids.margin.mediumExtra)
                     .background(Color.app.ivory)
                     .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.heavy))
+                    
                     .padding(.bottom, self.boxPos)
                 }
                 .modifier(MatchParent())
@@ -107,10 +129,8 @@ struct PageSelectKidCharacter: PageView {
             
         }//geo
     }//body
-    
-  
-   
 }
+
 
 #if DEBUG
 struct PageSelectKidCharacter_Previews: PreviewProvider {

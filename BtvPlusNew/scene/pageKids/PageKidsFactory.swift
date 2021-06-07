@@ -13,6 +13,8 @@ extension PageID{
     static let kidsIntro:PageID = "kidsIntro"
     static let kidsHome:PageID = "kidsHome"
     static let registKid:PageID = "registKid"
+    static let selectKidCharacter:PageID = "selectKidCharacter"
+    
 }
 
 struct PageKidsProvider {
@@ -43,7 +45,7 @@ struct PageKidsProvider {
     
     static func getType(_ pageID:PageID)-> PageAnimationType{
         switch pageID {
-        case .registKid :
+        case .registKid, .selectKidCharacter:
             return  .opacity
        
         default : return  .vertical
@@ -84,6 +86,7 @@ struct PageKidsFactory{
         case .kidsIntro : return PageKidsIntro()
         case .kidsHome : return PageKidsHome()
         case .registKid : return PageRegistKid()
+        case .selectKidCharacter : return PageSelectKidCharacter()
         default : return PageTest()
         }
     }

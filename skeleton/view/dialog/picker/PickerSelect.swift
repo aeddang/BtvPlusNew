@@ -36,7 +36,7 @@ struct PickerSelect<Presenting>: View where Presenting: View {
                 withAnimation{
                     self.isShowing = false
                 }
-               self.action(self.selected)
+                self.action(self.selected)
             
             }) {
                Spacer().modifier(MatchParent())

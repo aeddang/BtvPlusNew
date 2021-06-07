@@ -82,9 +82,10 @@ struct PageRegistKid: PageView {
                                     input: self.$birth,
                                     inputFontSize:Font.sizeKids.large,
                                     isFocus: self.editType == .birth,
-                                    isEditable : false
+                                    isEditable : false,
+                                    kern: Font.kern.thin
                                 )
-                                .frame(width: SystemEnvironment.isTablet ? 278 : 145)
+                                .frame(width: SystemEnvironment.isTablet ? 278 : 150)
                                 .onTapGesture {
                                     self.selectBirth()
                                 }
@@ -152,6 +153,16 @@ struct PageRegistKid: PageView {
                 default: break
                 }
             }
+            .onReceive(self.pagePresenter.$event){ evt in
+                guard let evt = evt else {return}
+                if evt.id != "PageSelectKidCharacter" {return}
+                switch evt.type {
+                case .selected :
+                    guard let selectIdx = evt.data as? Int else { return }
+                    self.characterIdx = selectIdx
+                default : break
+                }
+            }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
                     withAnimation{
@@ -194,16 +205,38 @@ struct PageRegistKid: PageView {
             self.editType = .none
         }
         AppUtil.hideKeyboard()
+        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.selectKidCharacter))
         
     }
     
+    let birthYearList = AppUtil.getYearRange(len: 13, offset:0).map{
+        $0.description + String.app.year
+    }
+    let birthMonthList = (1...12).map{
+        $0.description.toFixLength(2) + String.app.month
+    }
+    
+    @State var birthYear:String = ""
+    @State var birthMonth:String = ""
     func selectBirth() {
         withAnimation{
             self.editType = .birth
         }
         AppUtil.hideKeyboard()
-        
+        let picYear = self.birthYearList.firstIndex(of: self.birthYear) ?? 0
+        let picMonth = self.birthMonthList.firstIndex(of: self.birthMonth) ?? 0
+        self.appSceneObserver.select =
+            .multiPicker((self.tag, [self.birthYearList, birthMonthList]), [picYear,picMonth])
+            { idxYear, idxMonth, _, _ in
+                self.birthYear = self.birthYearList[idxYear]
+                self.birthMonth = self.birthMonthList[idxMonth]
+                self.birth = self.birthYear + " " + self.birthMonth
+                withAnimation{
+                    self.editType = .none
+                }
+            }
     }
+    
     
     func selectWeek() {
         

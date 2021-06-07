@@ -44,21 +44,26 @@ class AppSceneObserver:ObservableObject{
 }
 
 enum SceneSelect:Equatable {
-    case select((String,[String]),Int), selectBtn((String,[SelectBtnData]),Int), picker((String,[String]),Int)
+    case select((String,[String]),Int, ((Int) -> Void)? = nil),
+         selectBtn((String,[SelectBtnData]),Int, ((Int) -> Void)? = nil),
+         picker((String,[String]),Int, ((Int) -> Void)? = nil),
+         multiPicker((String,[[String]]),[Int], ((Int,Int,Int,Int) -> Void)? = nil)
     
     func check(key:String)-> Bool{
         switch (self) {
-        case let .selectBtn(v, _): return v.0 == key
-        case let .select(v, _): return v.0 == key
-        case let .picker(v, _): return v.0 == key
+        case let .selectBtn(v, _, _): return v.0 == key
+        case let .select(v, _, _): return v.0 == key
+        case let .picker(v, _, _): return v.0 == key
+        case let .multiPicker(v, _, _): return v.0 == key
         }
     }
     
     static func ==(lhs: SceneSelect, rhs: SceneSelect) -> Bool {
         switch (lhs, rhs) {
-        case (let .selectBtn(lh,_), let .selectBtn(rh,_)): return lh.0 == rh.0
-        case (let .select(lh,_), let .select(rh,_)): return lh.0 == rh.0
-        case (let .picker(lh,_), let .picker(rh,_)): return lh.0 == rh.0
+        case (let .selectBtn(lh,_, _), let .selectBtn(rh,_, _)): return lh.0 == rh.0
+        case (let .select(lh,_, _), let .select(rh,_, _)): return lh.0 == rh.0
+        case (let .picker(lh,_, _), let .picker(rh,_, _)): return lh.0 == rh.0
+        case (let .multiPicker(lh,_, _), let .multiPicker(rh,_, _)): return lh.0 == rh.0
         default : return false
         }
     }

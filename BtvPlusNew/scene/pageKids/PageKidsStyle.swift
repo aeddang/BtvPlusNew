@@ -70,3 +70,32 @@ struct KidsContentTitle: ViewModifier {
 
 
 
+struct Shadow: ViewModifier {
+    var color:Color = Color.app.blackDeep
+    var opacity:Double = 0.25
+    func body(content: Content) -> some View {
+        return content
+            .shadow(color: color.opacity(opacity), radius: Dimen.radius.thin, x: 0, y: 7)
+    }
+}
+
+struct ShadowTop: ViewModifier {
+    var color:Color = Color.app.grey
+    var opacity:Double = 0.12
+    func body(content: Content) -> some View {
+        return content
+            .shadow(color: color.opacity(opacity), radius: Dimen.radius.thin, x: 0, y: -7)
+    }
+}
+
+
+struct ContentBox: ViewModifier {
+    var margin:CGFloat = DimenKids.margin.medium
+    func body(content: Content) -> some View {
+        return content
+            .padding(.all, margin)
+            .background(Color.kids.bg)
+            .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.heavy))
+            .modifier(Shadow())
+    }
+}

@@ -502,7 +502,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         let changeOrientation:UIInterfaceOrientation? = getChangeDeviceOrientation(mask: mask)
         guard let change = changeOrientation else { return }
         UIDevice.current.setValue(change.rawValue, forKey: "orientation")
-        //PageLog.d("requestDeviceOrientation mask" , tag: "PageScene")
+        PageLog.d("requestDeviceOrientation mask" , tag: "PageScene")
         UINavigationController.attemptRotationToDeviceOrientation()
     }
 
@@ -540,11 +540,14 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
             }
         }
         else {
+            /*
             switch mask {
             case .landscape: return .landscapeLeft
             case .portrait: return .portrait
             default:return nil
             }
+            */
+            return nil
         }
     }
     final func getDeviceOrientationMask(orientation:UIInterfaceOrientation) -> UIInterfaceOrientationMask {

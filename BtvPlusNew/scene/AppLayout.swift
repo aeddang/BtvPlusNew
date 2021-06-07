@@ -174,7 +174,8 @@ struct AppLayout: PageComponent{
                 let names = UIFont.fontNames(forFamilyName: family)
                 PageLog.d("Family: \(family) Font names: \(names)")
             }
-            */
+             */
+            
         }
     }
     func onStoreInit(){

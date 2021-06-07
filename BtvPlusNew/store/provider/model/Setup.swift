@@ -24,9 +24,10 @@ class Setup:ObservableObject, PageProtocol {
         static let isShowRemoconSelectPopup = "isShowRemoconSelectPopup" + VS
         static let isShowAutoRemocon = "isShowAutoRemocon" + VS
         
-        static let floatingUnvisibleDate = "floatingUnvisibleDate" + VS
-        
         static let possession = "possession" + VS
+        
+        static let floatingUnvisibleDate = "floatingUnvisibleDate" + VS
+        static let kidsRegistUnvisibleDate = "kidsRegistUnvisibleDate" + VS
     }
     
     enum WatchLv:Int, CaseIterable {
@@ -118,6 +119,15 @@ class Setup:ObservableObject, PageProtocol {
         }
         get{
             return storage.string(forKey: Keys.floatingUnvisibleDate) ?? ""
+        }
+    }
+    
+    var kidsRegistUnvisibleDate:String{
+        set(newVal){
+            storage.set(newVal, forKey: Keys.kidsRegistUnvisibleDate)
+        }
+        get{
+            return storage.string(forKey: Keys.kidsRegistUnvisibleDate) ?? ""
         }
     }
     

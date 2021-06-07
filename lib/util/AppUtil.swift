@@ -81,6 +81,7 @@ struct AppUtil{
         return ranges
     }
     
+    
     static func networkTimeDate() -> Date {
         let client = TrueTimeClient.sharedInstance
         return client.referenceTime?.now() ?? Date()

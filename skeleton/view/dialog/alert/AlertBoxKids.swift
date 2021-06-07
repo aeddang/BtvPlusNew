@@ -7,7 +7,10 @@
 
 import Foundation
 import SwiftUI
-
+extension AlertBoxKids {
+    static let idealWidth:CGFloat = SystemEnvironment.isTablet ? 565: 326
+    static let maxWidth:CGFloat = SystemEnvironment.isTablet ? 820 : 428
+}
 struct AlertBoxKids: PageComponent {
     let maxTextCount:Int = 200
     @Binding var isShowing: Bool
@@ -28,14 +31,12 @@ struct AlertBoxKids: PageComponent {
                     ScrollView{
                         AlertBodyKids(title: self.title, image: self.image, text: self.text, subText: self.subText, tipText: self.tipText, referenceText: self.referenceText)
                     }
-                    .padding(.top, DimenKids.margin.medium)
                     .padding(.bottom, DimenKids.margin.mediumExtra)
-                    .padding(.horizontal, DimenKids.margin.medium)
+                    
                 } else {
                     AlertBodyKids(title: self.title, image: self.image, text: self.text, subText: self.subText, tipText: self.tipText, referenceText: self.referenceText)
                         .padding(.top, Dimen.margin.medium)
                         .padding(.bottom, Dimen.margin.mediumExtra)
-                        .padding(.horizontal, Dimen.margin.medium)
                 }
                 if self.imgButtons != nil {
                     HStack(spacing:Dimen.margin.regular){
@@ -73,16 +74,15 @@ struct AlertBoxKids: PageComponent {
                 }
                 .padding(.bottom, DimenKids.margin.medium)
             }
-            .background(Color.app.ivory)
-            .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.heavy))
         }
         .frame(
             minWidth: 0,
-            idealWidth: SystemEnvironment.isTablet ? 565: 326,
-            maxWidth:  SystemEnvironment.isTablet ? 820 : 428,
+            idealWidth: Self.idealWidth,
+            maxWidth: Self.maxWidth,
             minHeight: 0,
             maxHeight: .infinity
         )
+        .modifier(ContentBox())
         .padding(.all, Dimen.margin.heavy)
     }
 }

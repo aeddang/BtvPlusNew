@@ -13,6 +13,7 @@ struct PageKidsHome: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
+    
      
     var body: some View {
         VStack{
@@ -22,9 +23,12 @@ struct PageKidsHome: PageView {
         .padding(.all, DimenKids.margin.medium)
         .modifier(PageFull(style:.kids))
         .onAppear{
+           
         
         }
     }//body
+    
+    
     
 
 }

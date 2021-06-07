@@ -13,7 +13,7 @@ struct InputCellKids: PageView {
     var tip:String? = nil
     var isEditable:Bool = true
     var isSecure:Bool = false
-   
+    var kern: CGFloat? = nil
     var actionTitle:String? = nil
     var action:(() -> Void)? = nil
     var body: some View {
@@ -32,6 +32,7 @@ struct InputCellKids: PageView {
                                             size: self.inputFontSize, color: Color.kids.primary))
                         }else{
                             TextField(self.placeHolder, text: self.$input)
+                                
                                 .keyboardType(self.keyboardType)
                                 .modifier(BoldTextStyleKids(
                                             size: self.inputFontSize, color: Color.kids.primary))
@@ -47,6 +48,7 @@ struct InputCellKids: PageView {
                                 size:self.inputFontSize,
                                 color: Color.kids.primary),
                             usefocusAble: false,
+                            kern: self.kern,
                             inputChanged: {text , size in
                                 //self.input = text
                                 //self.inputHeight = min(size.height, (Self.inputHeight * CGFloat(self.lineLimited)))
@@ -55,10 +57,11 @@ struct InputCellKids: PageView {
                     }
                 }else{
                     Text(self.input)
-                    .modifier(BoldTextStyleKids(
-                                size: self.inputFontSize,
-                        color: Color.app.brown)
-                    )
+                        .kerning(self.kern ?? Font.kern.regular)
+                        .modifier(BoldTextStyleKids(
+                                    size: self.inputFontSize,
+                            color: Color.app.brown)
+                        )
                 }
                 if self.actionTitle != nil{
                     TextButton(
@@ -75,7 +78,7 @@ struct InputCellKids: PageView {
                 }
             }
             .modifier(MatchHorizontal(height: DimenKids.tab.light))
-            .padding(.horizontal, DimenKids.margin.light)
+            .padding(.horizontal, DimenKids.margin.tiny)
             .background(Color.app.white)
             .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.light))
             .overlay(

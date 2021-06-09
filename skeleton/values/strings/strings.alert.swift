@@ -172,5 +172,9 @@ extension String {
         public static var possessionDiableAlreadyChange = "alertPossessionDiableAlreadyChange".loaalized()
         public static var possessionDeleteConfirm = "alertPossessionDeleteConfirm".loaalized()
         
+        
+        public static var kidsExit = "alertKidsExit".loaalized()
+        public static var kidsExitText = "alertKidsExitText".loaalized()
+        
     }
 }

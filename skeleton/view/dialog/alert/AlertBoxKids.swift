@@ -35,8 +35,7 @@ struct AlertBoxKids: PageComponent {
                     
                 } else {
                     AlertBodyKids(title: self.title, image: self.image, text: self.text, subText: self.subText, tipText: self.tipText, referenceText: self.referenceText)
-                        .padding(.top, Dimen.margin.medium)
-                        .padding(.bottom, Dimen.margin.mediumExtra)
+                        .padding(.bottom, DimenKids.margin.mediumExtra)
                 }
                 if self.imgButtons != nil {
                     HStack(spacing:Dimen.margin.regular){
@@ -72,17 +71,16 @@ struct AlertBoxKids: PageComponent {
                         }
                     }
                 }
-                .padding(.bottom, DimenKids.margin.medium)
             }
+            .modifier(ContentBox())
         }
         .frame(
             minWidth: 0,
             idealWidth: Self.idealWidth,
             maxWidth: Self.maxWidth,
             minHeight: 0,
-            maxHeight: .infinity
+            maxHeight:.infinity
         )
-        .modifier(ContentBox())
         .padding(.all, Dimen.margin.heavy)
     }
 }

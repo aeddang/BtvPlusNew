@@ -596,7 +596,8 @@ struct PageSynopsis: PageView {
         self.playListData = PlayListData(
             listTitle: String.pageText.synopsisSirisView,
             title: self.relationContentsModel.serisTitle,
-            datas: self.relationContentsModel.playList
+            datas: self.relationContentsModel.playList,
+            kidsDatas: self.relationContentsModel.playPlayerList
             )
          
         PageLog.d("request synopsisRelationData", tag: self.tag)

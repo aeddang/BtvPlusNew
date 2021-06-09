@@ -26,17 +26,20 @@ extension Double {
             return 0
         }
     }
-    
-    func secToMinString(_ div:String = ":") -> String {
+    func secToMin() -> String {
+        let min = floor( Double(self / 60) ).toInt()
+        return min.description
+    }
+    func secToMinString(_ div:String = ":", fix:Int = 2) -> String {
         let sec = self.toInt() % 60
         let min = floor( Double(self / 60) ).toInt()
-        return min.description.toFixLength(2) + div + sec.description.toFixLength(2)
+        return min.description.toFixLength(fix) + div + sec.description.toFixLength(fix)
     }
-    func secToHourString(_ div:String = ":") -> String {
+    func secToHourString(_ div:String = ":", fix:Int = 2) -> String {
         let sec = self.toInt() % 60
         let min = floor( Double(self / 60) ).toInt() % 60
         let hour = floor( Double(self / 3600) ).toInt()
-        return hour.description.toFixLength(2) + div + min.description.toFixLength(2) + div + sec.description.toFixLength(2)
+        return hour.description.toFixLength(fix) + div + min.description.toFixLength(fix) + div + sec.description.toFixLength(fix)
     }
     
     func millisecToSec() -> Double {

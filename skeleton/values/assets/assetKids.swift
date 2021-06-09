@@ -27,41 +27,42 @@ extension AssetKids{
         public static let exit = "zemkidsMGnbTopNorOut"
         public static let search = "zemkidsMGnbTopNorSearch"
         public static let addProfile = "zemkidsMGnbNorSetprofile"
+        
+        public static let homeOff = "zemkidsMGnbNorHome"
+        public static let homeOn = "zemkidsMGnbSelHome"
+        public static let bgOn = "zemkidsMGnbSelBg"
     }
     
    
     
     struct icon {
-        
+        public static let delete = "zemkidsMPopupInputDelNor"
     }
     
     
     struct player {
-        public static let more = "icPlayerFullMore"
-        public static let lock = "icPlayerFullLock"
-        public static let resume = "icPlayerPlay"
-        public static let pause = "icPlayerPause"
+        public static let back = "zemkidsMBackBtnW"
+        public static let close = "zemkidsMPlayerBtnCloseHarf"
+        public static let more = "zemkidsMPlayerBtnOptionHarf"
+        public static let lock = "zemkidsMPlayerBtnLock1Harf"
+        public static let lockOn = "zemkidsMPlayerBtnLock2Harf"
+        public static let lockText = "zemkidsMLockBubbleHalf"
+        public static let resume = "zemkidsMPlayerPlayBtnHarf"
+        public static let pause = "zemkidsMPlayerPauseBtnHarf"
+        public static let replay = "zemkidsMPlayerBtnRepeat1Harf"
         
-        public static let fullScreen = "icPlayerHalfScalemax"
-        public static let fullScreenOff = "icPlayerFullScalemin"
-        public static let volumeOn = "icPlayerHalfVolume"
-        public static let volumeOff = "icPlayerHalfVolumeMute"
-        public static let seekForward = "icPlayerHalfTimeNext"
-        public static let seekBackward = "icPlayerHalfTimePrevious"
-        public static let volumeLv0 = "icPlayerHalfVolume0"
-        public static let volumeLv1 = "icPlayerHalfVolume1"
-        public static let volumeLv2 = "icPlayerHalfVolume6"
-        public static let volumeLv3 = "icPlayerHalfVolume11"
-        public static let brightnessLv0 = "icPlayerHalfBrightness0"
-        public static let brightnessLv1 = "icPlayerHalfBrightness1"
-        public static let brightnessLv2 = "icPlayerHalfBrightness4"
-        public static let brightnessLv3 = "icPlayerHalfBrightness8"
-        public static let brightnessLv4 = "icPlayerHalfBrightness12"
-        public static let brightnessLv5 = "icPlayerHalfBrightness15"
+        public static let fullScreen = "zemkidsMPlayerBtnChangeHarf"
+        public static let fullScreenOff = "zemkidsMPlayerBtnChange"
+        public static let volumeOn = "zemkidsMPlayerBtnSound1Harf"
+        public static let volumeOff = "zemkidsMPlayerBtnSound2Harf"
+        public static let seekForward = "zemkidsMPlayerIc10SRightHalf"
+        public static let seekBackward = "zemkidsMPlayerIc10SLeftHalf"
+       
+        public static let noImg = "zemkidsMPlayerDefaultImgHarf"
+        public static let listBg = "zemkidsMPlayerThumbnailFrameNor"
+        public static let listBgOn = "zemkidsMPlayerThumbnailFrameSel"
         
-        public static let guide = "playerCoachmarkFull"
-        public static let popupBgFull = "icPlayerFullPopup"
-        public static let popupBg = "icPlayerHalfPopup"
+      
     }
     
     

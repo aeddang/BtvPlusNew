@@ -42,20 +42,28 @@ class KidsGnbItemData:InfinityData, ObservableObject{
     private(set) var imageOn: String = Asset.noImg1_1
     private(set) var imageOff: String = Asset.noImg1_1
     private(set) var title: String? = nil
+    private(set) var menuId: String? = nil
     private(set) var blocks: [BlockItem]? = nil
     private(set) var isHome:Bool = false
     fileprivate(set) var idx:Int = -1
     func setHomeData(data:BlockItem) -> KidsGnbItemData {
         self.isHome = true
+        self.title = data.menu_nm
+        self.menuId = data.menu_id
+        self.imageOn = AssetKids.gnbTop.homeOn
+        self.imageOff = AssetKids.gnbTop.homeOff
         self.blocks = data.blocks?.dropFirst().map{$0}
         return self
     }
     func setData(data:BlockItem) -> KidsGnbItemData {
+        self.title = data.menu_nm
+        self.menuId = data.menu_id
+        
         self.blocks = data.blocks?.map{$0}
         let size = CGSize(width: DimenKids.icon.heavy, height: DimenKids.icon.heavy)
         
-        self.imageOff =  ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: size, convType: .alpha) ?? self.imageOn
-        self.imageOn =  ImagePath.thumbImagePath(filePath: data.bnr_on_img_path, size: size, convType: .alpha) ?? self.imageOff
+        self.imageOff = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: size, convType: .alpha) ?? self.imageOn
+        self.imageOn = ImagePath.thumbImagePath(filePath: data.bnr_on_img_path, size: size, convType: .alpha) ?? self.imageOff
         return self
     }
    
@@ -81,11 +89,6 @@ struct KidsGnb: PageComponent{
                     }
                 }
             }
-            /*
-            KidsGnbList(
-                viewModel:self.infinityScrollModel,
-                datas: self.datas)
- `          */
         }
         .onReceive (self.appSceneObserver.$useTop) { use in
             if !use {return}
@@ -114,6 +117,7 @@ struct KidsGnbList: PageComponent{
             useTracking: false
             ){
             ForEach(self.datas) { data in
+                
                 KidsGnbItem( data:data )
                 .onTapGesture {
                     
@@ -126,23 +130,66 @@ struct KidsGnbList: PageComponent{
 struct KidsGnbItem: PageView {
     @EnvironmentObject var pairing:Pairing
     var data:KidsGnbItemData
-    @State var isSelected:Bool = false
-    @State var profileImg:String = Asset.gnbTop.zemkids
-    @State var title:String = String.app.home
+    @State var isSelected:Bool = true
+    @State var profileImg:String? = nil
+    @State var title:String? = nil
+    @State var subTitle:String? = nil
     var body: some View {
         ZStack(){
             if self.data.isHome {
-                VStack(spacing:0){
-                    Image(self.profileImg)
+                if let profileImg = self.profileImg {
+                    Image(AssetKids.gnbTop.bgOn)
                         .renderingMode(.original)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: DimenKids.item.profileGnb.width,
-                               height: DimenKids.item.profileGnb.height)
-                    Text(self.title)
-                        .modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color: Color.app.brownDeep))
-                        .fixedSize(horizontal: false, vertical: true)
-                        .padding(.top, DimenKids.margin.micro)
+                        .modifier(MatchParent())
+                        .opacity(self.isSelected ? 1.0 : 0.0)
+                    
+                    VStack(spacing:DimenKids.margin.micro){
+                        Image(self.isSelected ? profileImg : Asset.gnbTop.zemkids)
+                            .renderingMode(.original)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: DimenKids.item.profileGnb.width,
+                                   height: DimenKids.item.profileGnb.height)
+                        HStack(spacing:DimenKids.margin.microExtra){
+                            if let title = self.title {
+                                Text(title)
+                                    .modifier(BoldTextStyleKids(
+                                                size: Font.sizeKids.tinyExtra,
+                                                color: self.isSelected ? Color.app.white : Color.app.brownDeep))
+                            }
+                            Text(String.app.home)
+                                .modifier(BoldTextStyleKids(
+                                            size: Font.sizeKids.tinyExtra,
+                                            color: self.isSelected ? Color.app.white : Color.app.brownDeep))
+                                .fixedSize(horizontal: true, vertical: true)
+                        }
+                        if self.isSelected ,let subTitle = self.subTitle {
+                            Text(subTitle)
+                                .modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color: Color.app.white))
+                                .fixedSize(horizontal: true, vertical: true)
+                                .padding(.vertical, DimenKids.margin.micro)
+                                .padding(.horizontal, DimenKids.margin.thin)
+                                .background(Color.kids.secondary)
+                                .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.lightExtra))
+                                
+                        } else {
+                            Spacer()
+                        }
+                    }.padding(.all, DimenKids.margin.tinyExtra)
+                } else {
+                    Image(self.data.imageOff)
+                        .renderingMode(.original)
+                        .resizable()
+                        .scaledToFit()
+                        .modifier(MatchParent())
+                    Image(self.data.imageOn)
+                        .renderingMode(.original)
+                        .resizable()
+                        .scaledToFit()
+                        .modifier(MatchParent())
+                        .opacity(self.isSelected ? 1.0 : 0.0)
                 }
             } else {
                 KFImage(URL(string: self.data.imageOff))
@@ -162,15 +209,20 @@ struct KidsGnbItem: PageView {
             }
             
         }
-        .frame(width: DimenKids.icon.heavy, height:DimenKids.icon.heavy)
+        .frame(
+            width: SystemEnvironment.isTablet ? DimenKids.icon.heavy : DimenKids.icon.heavyExtra,
+            height: SystemEnvironment.isTablet ? DimenKids.icon.heavy : DimenKids.icon.heavyExtra)
         .onReceive(self.pairing.$kid) { kid in
             if !self.data.isHome {return}
             if let kid = kid {
                 self.profileImg = AssetKids.characterGnbList[kid.characterIdx]
                 self.title = kid.nickName
+                if let age = kid.age {
+                    self.subTitle = age.description + String.app.ageCount
+                }
             } else {
                 self.profileImg = Asset.gnbTop.zemkids
-                self.title = String.app.home
+                self.title = nil
             }
         }
     }

@@ -10,6 +10,7 @@ struct CPPlayer: PageComponent {
     @ObservedObject var viewModel:PlayerModel = PlayerModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     var isSimple:Bool = false
+    var type:PageType = .btv
     @State var screenRatio = CGSize(width:1, height:1)
     @State var bindUpdate:Bool = false //for ios13
     var body: some View {
@@ -45,7 +46,11 @@ struct CPPlayer: PageComponent {
                 if self.isSimple {
                     SimplePlayerUI(viewModel : self.viewModel, pageObservable:self.pageObservable)
                 }else{
-                    PlayerUI(viewModel : self.viewModel, pageObservable:self.pageObservable)
+                    if self.type == .btv {
+                        PlayerUI(viewModel : self.viewModel, pageObservable:self.pageObservable)
+                    } else {
+                        KidsPlayerUI(viewModel : self.viewModel, pageObservable:self.pageObservable)
+                    }
                 }
             }
         }

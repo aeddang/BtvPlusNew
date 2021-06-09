@@ -19,7 +19,7 @@ struct PageRegistKid: PageView {
     @EnvironmentObject var keyboardObserver:KeyboardObserver
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
-   
+    @EnvironmentObject var setup:Setup
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -27,7 +27,6 @@ struct PageRegistKid: PageView {
     @State var editType:EditType = .none
     @State var nickName:String = ""
     @State var characterIdx:Int = 0
-    @State var gender:Gender = .mail
     @State var birthDate:Date? = nil
     @State var birth:String = String.app.birthKidsPlaceholder
     @State var boxPos:CGFloat = -100
@@ -122,7 +121,7 @@ struct PageRegistKid: PageView {
                                 isSelected: true,
                                 size: DimenKids.button.heavyRect
                             ){idx in
-                                
+                                self.registKid()
                             }
                             .opacity(self.isInputCompleted() ? 1.0 : 0.3)
                         }
@@ -182,7 +181,7 @@ struct PageRegistKid: PageView {
         }//geo
     }//body
     
-    func isInputCompleted() -> Bool {
+    private func isInputCompleted() -> Bool {
         var complete = false
         if self.nickName.isNickNameType() && self.birthDate != nil {
             complete = true
@@ -190,7 +189,7 @@ struct PageRegistKid: PageView {
         return complete
     }
     
-    func updatekeyboardStatus(on:Bool) {
+    private func updatekeyboardStatus(on:Bool) {
         withAnimation{
             self.editType = on
                 ? .nickName
@@ -200,7 +199,7 @@ struct PageRegistKid: PageView {
         }
     }
     
-    func selectCharacter() {
+    private func selectCharacter() {
         withAnimation{
             self.editType = .none
         }
@@ -209,16 +208,16 @@ struct PageRegistKid: PageView {
         
     }
     
-    let birthYearList = AppUtil.getYearRange(len: 13, offset:0).map{
+    private let birthYearList = AppUtil.getYearRange(len: 13, offset:0).map{
         $0.description + String.app.year
     }
-    let birthMonthList = (1...12).map{
+    private let birthMonthList = (1...12).map{
         $0.description.toFixLength(2) + String.app.month
     }
     
-    @State var birthYear:String = ""
-    @State var birthMonth:String = ""
-    func selectBirth() {
+    @State private var birthYear:String = ""
+    @State private var birthMonth:String = ""
+    private func selectBirth() {
         withAnimation{
             self.editType = .birth
         }
@@ -231,6 +230,9 @@ struct PageRegistKid: PageView {
                 self.birthYear = self.birthYearList[idxYear]
                 self.birthMonth = self.birthMonthList[idxMonth]
                 self.birth = self.birthYear + " " + self.birthMonth
+                self.birthDate = self.birth.toDate(
+                    dateFormat: "yyyy" + String.app.year + "MM" + String.app.month)
+                
                 withAnimation{
                     self.editType = .none
                 }
@@ -238,8 +240,15 @@ struct PageRegistKid: PageView {
     }
     
     
-    func selectWeek() {
-        
+    private func selectWeek() {
+        self.setup.kidsRegistUnvisibleDate = Setup.getDateKey()
+        self.pagePresenter.closePopup(self.pageObject?.id)
+    }
+    
+    private func registKid() {
+        if !self.isInputCompleted() {return}
+        let kid = Kid(nickName: self.nickName, characterIdx: self.characterIdx, birthDate: self.birthDate)
+        self.pairing.requestPairing(.registKid(kid))
         self.pagePresenter.closePopup(self.pageObject?.id)
     }
    

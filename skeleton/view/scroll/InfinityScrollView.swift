@@ -49,7 +49,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         spacing: CGFloat = 0,
         isRecycle:Bool = true,
         useTracking:Bool = true,
-        bgColor:Color = Color.brand.bg,
+        bgColor:Color = SystemEnvironment.currentPageType == .btv ? Color.brand.bg : Color.kids.bg,
         @ViewBuilder content: () -> Content) {
         
         self.viewModel = viewModel
@@ -71,7 +71,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     init(
         viewModel: InfinityScrollModel,
         scrollType:InfinityScrollType? = nil,
-        bgColor:Color = Color.brand.bg,
+        bgColor:Color = SystemEnvironment.currentPageType == .btv ? Color.brand.bg : Color.kids.bg,
         @ViewBuilder content: () -> Content) {
         
         self.viewModel = viewModel
@@ -84,7 +84,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         self.spacing = 0
         self.isRecycle = false
         self.useTracking = false
-        self.bgColor = Color.brand.bg
+        self.bgColor = bgColor
         self.scrollType = scrollType ?? ( self.axes == .vertical ? .vertical(isDragEnd: false) : .horizontal(isDragEnd: false) )
         viewModel.setup(type: self.scrollType)
 

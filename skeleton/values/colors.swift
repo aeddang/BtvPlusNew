@@ -32,7 +32,7 @@ extension Color {
         public static let primary = Color.init(red: 255/255, green: 96/255, blue: 42/255)
         public static let primaryExtra = Color.init(red: 241/255, green: 177/255, blue: 134/255)
         public static let primaryLight = Color.init(red: 219/255, green: 144/255, blue: 82/255)
-        //public static let secondary = Color.init(red: 60/255, green:61/255, blue: 83/255)
+        public static let secondary = Color.init(red: 211/255, green:69/255, blue: 21/255)
         //public static let thirdly = Color.init(red: 82/255, green:165/255, blue: 255/255)
         
         public static let bg =  app.ivory
@@ -42,7 +42,8 @@ extension Color {
     struct app {
         public static let black =  Color.black
         public static let blackExtra =  Color.init(red: 20/255, green: 20/255, blue: 20/255)
-        public static let blackDeep =  Color.init(red: 65/255, green: 65/255, blue: 65/255)
+        public static let blackMedium =  Color.init(red: 46/255, green: 46/255, blue: 46/255)
+        public static let blackRegular =  Color.init(red: 65/255, green: 65/255, blue: 65/255)
         public static let blackLight =  Color.init(red: 83/255, green: 83/255, blue: 83/255)
        
         public static let grey = Color.init(red: 136/255, green: 136/255, blue: 136/255)
@@ -64,8 +65,12 @@ extension Color {
         public static let brown = Color.init(red: 102/255, green: 63/255, blue: 44/255)
         public static let brownDeep = Color.init(red: 80/255, green: 48/255, blue: 37/255)
         
+        public static let ivoryDeep = Color.init(red: 245/255, green: 223/255, blue: 178/255)
         public static let ivory = Color.init(red: 255/255, green: 236/255, blue: 206/255)
         public static let ivoryLight = Color.init(red: 250/255, green: 239/255, blue: 216/255)
+        
+        public static let sepia = Color.init(red: 135/255, green: 67/255, blue: 45/255)
+        public static let sepiaLight = Color.init(red: 135/255, green: 67/255, blue: 45/255).opacity(0.6)
         
         
     }

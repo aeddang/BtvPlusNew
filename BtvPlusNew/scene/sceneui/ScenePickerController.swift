@@ -84,7 +84,7 @@ struct ScenePickerController: PageComponent{
             let buttons = zip(range, set).map {idx, text in
                 SelectBtnData(title: text, index: idx)
             }
-            self.sets.append(SelectBtnDataSet(idx:idxs[index], title: data.0, datas: buttons))
+            self.sets.append(SelectBtnDataSet(idx:index, selectIdx:idxs[index], title: data.0, datas: buttons))
         }
     }
     func selectedPicker(_ idx:Int, data:(String,[String])) {

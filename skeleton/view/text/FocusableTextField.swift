@@ -32,7 +32,7 @@ struct FocusableTextField: UIViewRepresentable {
         textField.autocorrectionType = .no
         textField.adjustsFontSizeToFitWidth = true
         textField.textAlignment = .center
-        textField.textColor = UIColor.white
+        textField.textColor = textModifier.color == Color.app.white ? UIColor.white : textModifier.color.uiColor()
         textField.isSecureTextEntry = self.isSecureTextEntry
         textField.defaultTextAttributes.updateValue(self.kern, forKey: .kern)
         textField.attributedPlaceholder = NSAttributedString(string: self.placeholder , attributes: [ NSAttributedString.Key.kern: self.kern])
@@ -84,11 +84,6 @@ struct FocusableTextField: UIViewRepresentable {
             parent.inputChanged?(text)
         }
         
-        
-        func updatefocus(textfield: UITextField) {
-            textfield.becomeFirstResponder()
-        }
-
         func textFieldShouldReturn(_ textField: UITextField) -> Bool {
             guard let  inputCopmpleted = self.inputCopmpleted else { return true }
             inputCopmpleted(textField.text ?? "")

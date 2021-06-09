@@ -25,6 +25,7 @@ extension View {
 struct SelectBtnDataSet:Identifiable, Equatable{
     let id = UUID.init()
     var idx:Int = 0
+    var selectIdx:Int = 0
     let title:String
     let datas:[SelectBtnData]
     var size:CGFloat = SystemEnvironment.isTablet ? 60 : 120
@@ -46,10 +47,10 @@ struct MultiPickerSelect<Presenting>: View where Presenting: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             Button(action: {
-                let a = self.sets.count > 0 ? self.sets[0].idx : -1
-                let b = self.sets.count > 1 ? self.sets[1].idx : -1
-                let c = self.sets.count > 2 ? self.sets[2].idx : -1
-                let d = self.sets.count > 3 ? self.sets[3].idx : -1
+                let a = self.sets.count > 0 ? self.sets[0].selectIdx : -1
+                let b = self.sets.count > 1 ? self.sets[1].selectIdx : -1
+                let c = self.sets.count > 2 ? self.sets[2].selectIdx : -1
+                let d = self.sets.count > 3 ? self.sets[3].selectIdx : -1
                 self.action(a,b,c,d)
                 withAnimation{
                     self.isShowing = false
@@ -62,6 +63,7 @@ struct MultiPickerSelect<Presenting>: View where Presenting: View {
                 PickerBox(
                     title:self.title,
                     sets:self.sets,
+                    isShowing:self.isShowing,
                     selectedA:self.$selectedA,
                     selectedB:self.$selectedB,
                     selectedC:self.$selectedC,
@@ -87,10 +89,10 @@ struct MultiPickerSelect<Presenting>: View where Presenting: View {
             if self.sets.isEmpty {return}
             if isShow {
                 if self.isUpdated {return}
-                self.selectedA = self.sets.count > 0 ? self.sets[0].idx : -1
-                self.selectedB = self.sets.count > 1 ? self.sets[1].idx : -1
-                self.selectedC = self.sets.count > 2 ? self.sets[2].idx : -1
-                self.selectedD = self.sets.count > 3 ? self.sets[3].idx : -1
+                self.selectedA = self.sets.count > 0 ? self.sets[0].selectIdx : -1
+                self.selectedB = self.sets.count > 1 ? self.sets[1].selectIdx : -1
+                self.selectedC = self.sets.count > 2 ? self.sets[2].selectIdx : -1
+                self.selectedD = self.sets.count > 3 ? self.sets[3].selectIdx : -1
                 self.isUpdated = true
             } else {
                 self.isUpdated = false

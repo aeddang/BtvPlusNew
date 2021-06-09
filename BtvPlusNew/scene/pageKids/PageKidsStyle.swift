@@ -71,7 +71,7 @@ struct KidsContentTitle: ViewModifier {
 
 
 struct Shadow: ViewModifier {
-    var color:Color = Color.app.blackDeep
+    var color:Color = Color.app.blackRegular
     var opacity:Double = 0.25
     func body(content: Content) -> some View {
         return content

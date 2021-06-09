@@ -15,6 +15,7 @@ struct PickerBox: PageComponent{
     let margin:CGFloat = Dimen.margin.heavy
     var title: String?
     var sets: [SelectBtnDataSet]
+    var isShowing: Bool
     @Binding var selectedA:Int
     @Binding var selectedB:Int
     @Binding var selectedC:Int
@@ -86,7 +87,9 @@ struct PickerBox: PageComponent{
                     .padding(.bottom, self.sceneObserver.safeAreaBottom)
                 }
                 .background(Color.app.blue)
+                
             }
+            .offset(y:self.isShowing ? 0 : 200)
         }//geo
     }
     

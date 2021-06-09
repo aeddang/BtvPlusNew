@@ -12,19 +12,28 @@ import SwiftUI
 struct PageKidsHome: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     
      
     var body: some View {
-        VStack{
-            
+        ZStack{
             Spacer().modifier(MatchParent())
         }
-        .padding(.all, DimenKids.margin.medium)
         .modifier(PageFull(style:.kids))
         .onAppear{
+            
+            /*
+            self.appSceneObserver.alert = .confirm(
+                "TITLE",
+                "TITLETITLETITLETITLETITLETITLETITLETITLETITLETITLETITLE",
+                "TITLE"){ _ in
+                
+            }
            
-        
+            self.appSceneObserver.select =
+                .select((self.tag , ["시즌 1", "시즌 1", "시즌 3"]), 1)
+            */
         }
     }//body
     

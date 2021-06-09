@@ -39,7 +39,7 @@ struct FocusableTextView: UIViewRepresentable {
                 = [.kern: kern, .font: UIFont(name: textModifier.family, size: textModifier.size) as Any]
         }
         let textView = UITextView(frame: .zero)
-        textView.textColor = textModifier.color.uiColor()
+        textView.textColor = textModifier.color == Color.app.white ? UIColor.white : textModifier.color.uiColor()
         //
         textView.keyboardType = self.keyboardType
         textView.returnKeyType = self.returnVal

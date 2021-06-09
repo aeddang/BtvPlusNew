@@ -74,8 +74,10 @@ extension Font{
     
     
     struct sizeKids {
-        public static let black:CGFloat =  isPad ? 52 : 32
-        public static let bold:CGFloat = isPad ? 42 : 26
+        public static let black:CGFloat =  isPad ? 58 : 30 //**
+      
+        public static let bold:CGFloat = isPad ? 50 : 28
+        public static let boldExtra:CGFloat = isPad ? 46 : 24
         public static let large:CGFloat =  isPad ? 42 : 22 //**
         public static let medium:CGFloat = isPad ? 38 : 20 //**
         public static let mediumExtra:CGFloat = isPad ? 36 : 19 //**
@@ -87,7 +89,8 @@ extension Font{
         public static let thinExtra:CGFloat = isPad ? 23 : 12 //**
         public static let tiny:CGFloat = isPad ? 20 : 11//**
         public static let tinyExtra:CGFloat = isPad ? 19 : 10//**
-        public static let micro:CGFloat = isPad ? 17 : 9
+        public static let microUltra:CGFloat = isPad ? 15 : 9//**
+        public static let micro:CGFloat = isPad ? 13 : 7//**
     }
 
 

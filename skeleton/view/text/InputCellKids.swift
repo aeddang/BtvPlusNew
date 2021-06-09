@@ -85,7 +85,7 @@ struct InputCellKids: PageView {
                 RoundedRectangle(cornerRadius: DimenKids.radius.light)
                 .stroke(
                     self.isFocus ? Color.kids.primary : Color.transparent.clear,
-                    lineWidth: DimenKids.stroke.medium )
+                    lineWidth: DimenKids.stroke.mediumExtra )
             )
             if self.tip != nil{
                 Spacer().frame(height:DimenKids.margin.thinExtra)

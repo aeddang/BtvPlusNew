@@ -13,6 +13,8 @@ struct ProgressSlider: PageView {
     var useGesture:Bool = true
     var progressHeight:CGFloat = Dimen.stroke.regular
     var thumbSize:CGFloat = 0
+    var color:Color = Color.brand.primary
+    var radius:CGFloat = 0
     var onChange: ((Float) -> Void)? = nil
     var onChanged: ((Float) -> Void)? = nil
     
@@ -23,26 +25,28 @@ struct ProgressSlider: PageView {
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
-                Rectangle()
-                    .foregroundColor(Color.app.white)
-                    .frame(
-                        width: geometry.size.width,
-                        height: progressHeight
-                    )
-                    .opacity(0.15)
-                Rectangle()
-                    .foregroundColor(Color.brand.primary)
-                    .frame(
-                        width: geometry.size.width * CGFloat(max(self.progress,0)),
-                        height: progressHeight
-                    )
-                Rectangle()
-                    .foregroundColor(Color.app.white)
-                    .opacity(self.dragOpacity)
-                    .frame(
-                        width: geometry.size.width * CGFloat(self.drag),
-                        height: progressHeight)
-                
+                ZStack(alignment: .leading) {
+                    Rectangle()
+                        .foregroundColor(Color.app.white)
+                        .frame(
+                            width: geometry.size.width,
+                            height: progressHeight
+                        )
+                        .opacity(0.15)
+                    Rectangle()
+                        .foregroundColor(self.color)
+                        .frame(
+                            width: geometry.size.width * CGFloat(max(self.progress,0)),
+                            height: progressHeight
+                        )
+                    Rectangle()
+                        .foregroundColor(Color.app.white)
+                        .opacity(self.dragOpacity)
+                        .frame(
+                            width: geometry.size.width * CGFloat(self.drag),
+                            height: progressHeight)
+                }
+                .clipShape(RoundedRectangle(cornerRadius: self.radius))
                 if self.thumbSize > 0 {
                     Circle()
                         .foregroundColor(Color.brand.primary)

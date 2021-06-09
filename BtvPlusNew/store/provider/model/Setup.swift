@@ -7,6 +7,7 @@
 
 import Foundation
 class Setup:ObservableObject, PageProtocol {
+    
     struct Keys {
         static let VS = "1.000"
         static let dataAlram = "dataAlram" + VS
@@ -53,6 +54,14 @@ class Setup:ObservableObject, PageProtocol {
             default: return nil
             }
         }
+    }
+    
+    static let dateFormat = "yyyyMMdd"
+    static func getDateKey() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = Self.dateFormat
+        let todayString: String = dateFormatter.string(from: Date())
+        return todayString
     }
     
     let storage = UserDefaults.init()

@@ -143,6 +143,8 @@
 
 "btnScreenLock" = "화면잠금";
 "btnScreenRatio" = "화면비율";
+"btnPlayQuality" = "화질 변경";
+"btnPlayRate" = "배속 설정";
 "btnGuide" = "도움말";
 "btnRecieveAlram" = "알림 받기";
 "btnBroadband" = "© SK Broadband";
@@ -354,6 +356,10 @@
 "alertPossessionDiableAlready" = "선택하신 B tv의 소장 VOD를\n다른 기기에서 이용 중입니다.\n동일한 B tv의 소장 VOD는 한 대의 기기에서만\n가져올 수 있습니다.\n다른 기기의 가져오기 해제 후 이용해 주세요.";
 "alertPossessionDiableAlreadyChange" = "이미 다른 기기에서 소장 VOD를\n이용 중인 B tv입니다.\n기존 기기에서 이용을 중지하고\n현재 기기에서 시청하시겠습니까?";
 "alertPossessionDeleteConfirm" = "설정을 해지하시면 구매/소장 목록에서\n이전 B tv의 소장 VOD를\n이용하실 수 없습니다.\n설정을 해제하시겠습니까?";
+
+"alertKidsExit" = "ZEM 키즈 종료";
+"alertKidsExitText" = "ZEM 키즈를 종료하려면 성인인증번호를 입력해 주세요.";
+
 
 /*
  PageTitle
@@ -692,8 +698,8 @@
 /*
  Player
 */
-"playerPreplay" = "3분 미리보기";
-"playerPreplaying" = "3분 미리보기 중";
+"playerPreplay" = "미리보기";
+"playerPreplaying" = " 중";
 "playerContinueView" = "계속 보기";
 "playerPreview" = "예고편";
 "playerCookie" = "쿠키 영상";

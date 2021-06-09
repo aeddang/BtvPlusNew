@@ -540,14 +540,12 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
             }
         }
         else {
-            /*
             switch mask {
             case .landscape: return .landscapeLeft
             case .portrait: return .portrait
             default:return nil
             }
-            */
-            return nil
+            
         }
     }
     final func getDeviceOrientationMask(orientation:UIInterfaceOrientation) -> UIInterfaceOrientationMask {

@@ -39,6 +39,8 @@ extension String {
         
         public static let screenLock = "btnScreenLock".loaalized()
         public static let screenRatio = "btnScreenRatio".loaalized()
+        public static let playQuality = "btnPlayQuality".loaalized()
+        public static let playRate = "btnPlayRate".loaalized()
         public static let guide = "btnGuide".loaalized()
         public static let recieveAlram = "btnRecieveAlram".loaalized()
         public static let broadband = "btnBroadband".loaalized()

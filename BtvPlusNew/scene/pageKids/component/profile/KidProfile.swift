@@ -56,11 +56,11 @@ struct KidProfile: PageComponent{
         .onReceive(self.pairing.$kid) { kid in
             if let kid = kid {
                 self.profileImg = AssetKids.characterList[kid.characterIdx]
-                let now = Date()
-                let yy = now.toDateFormatter(dateFormat:"yyyy")
-                let birthYY = kid.birth.subString(start: 0, len: 4)
-                let age = (yy.toInt() - birthYY.toInt() + 1).description
-                self.title = kid.nickName + " | " + age
+                if let age = kid.age {
+                    self.title = kid.nickName + " | " + age.description + String.app.ageCount
+                } else {
+                    self.title = kid.nickName
+                }
             } else {
                 self.profileImg = AssetKids.image.noProfile
                 self.title = nil

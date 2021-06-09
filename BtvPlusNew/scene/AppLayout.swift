@@ -195,8 +195,13 @@ struct AppLayout: PageComponent{
         if !self.appObserverMove(self.appObserver.page) {
             let initMenuId = self.dataProvider.bands.datas.first?.menuId
             self.pagePresenter.changePage(
+                /*
+                PageKidsProvider.getPageObject(.kidsHome)
+                    .addParam(key: .id, value: initMenuId)
+                */
                 PageProvider.getPageObject(.home)
                     .addParam(key: .id, value: initMenuId)
+                
             )
         }
         if let alram = self.appObserver.alram  {
@@ -229,7 +234,7 @@ struct AppLayout: PageComponent{
             return
         }
         if datas.isEmpty {return}
-        if self.getFloatingDateKey() == self.setup.floatingUnvisibleDate {return}
+        if Setup.getDateKey() == self.setup.floatingUnvisibleDate {return}
         
         DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.2) {
             DispatchQueue.main.async {
@@ -240,17 +245,10 @@ struct AppLayout: PageComponent{
     }
     
     func floatingBannerToDayUnvisible() {
-        self.setup.floatingUnvisibleDate = self.getFloatingDateKey()
+        self.setup.floatingUnvisibleDate = Setup.getDateKey()
     }
     
-    private func getFloatingDateKey() -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd"
-        let todayString: String = dateFormatter.string(from: Date())
-        return todayString
-    }
-    
-    
+
     @discardableResult
     func appObserverMove(_ iwg:IwillGo? = nil) -> Bool {
         guard let page = iwg?.page else { return false }

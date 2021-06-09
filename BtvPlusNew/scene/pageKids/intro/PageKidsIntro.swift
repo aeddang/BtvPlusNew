@@ -10,12 +10,15 @@ import SwiftUI
 extension PageKidsIntro {
     static let fps:Double = 0.05
     static let ani:[String] = AssetKids.ani.splash
+    
 }
+
 
 struct PageKidsIntro: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
+    @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var setup:Setup
     @State var isPlay:Bool = false
     var body: some View {
@@ -37,25 +40,30 @@ struct PageKidsIntro: PageView {
                 DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + duration) {
                     DispatchQueue.main.async {
                         self.pagePresenter.changePage(PageKidsProvider.getPageObject(.kidsHome))
+                        if !self.pairing.kids.isEmpty {return}
+                        let prevDateKey = self.setup.kidsRegistUnvisibleDate
+                        if !prevDateKey.isEmpty,
+                           let prevDate = prevDateKey.toDate(dateFormat: Setup.dateFormat)
+                        {
+                            let diffTime = abs(prevDate.timeIntervalSinceNow)
+                            let diffDay = diffTime / (24 * 60 * 60 * 1000)
+                            if diffDay < 7 {
+                                return
+                            }
+                        }
+                        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.registKid))
                     }
                 }
             }
         }
         .onAppear{
-            //guard let prevDateKey =  self.setup.kidsRegistUnvisibleDate
-            //let currentDateKey = self.getFloatingDateKey()
-           
             
             
         }
     }//body
     
-    private func getFloatingDateKey() -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd"
-        let todayString: String = dateFormatter.string(from: Date())
-        return todayString
-    }
+    
+    
 
 }
 

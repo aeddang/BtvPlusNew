@@ -14,6 +14,7 @@ import SwiftUI
 
 struct ShareButton: PageView {
     @EnvironmentObject var repository:Repository
+    var type:PageType = .btv
     var srisId:String? = nil
     var epsdId:String? = nil
     var body: some View {
@@ -30,21 +31,32 @@ struct ShareButton: PageView {
             )
             
         }) {
-            VStack(spacing:0){
-                Image(  Asset.icon.share)
+            if self.type == .btv { 
+                VStack(spacing:0){
+               
+                    Image(  Asset.icon.share)
+                        .renderingMode(.original).resizable()
+                        .scaledToFit()
+                        .frame(
+                            width: Dimen.icon.regular,
+                            height: Dimen.icon.regular)
+                    
+                    Text(String.button.share)
+                    .modifier(MediumTextStyle(
+                        size: Font.size.tiny,
+                        color: Color.app.greyLight
+                    ))
+                    .fixedSize(horizontal: true, vertical: false)
+                }
+            } else {
+                Image(  AssetKids.icon.share)
                     .renderingMode(.original).resizable()
                     .scaledToFit()
                     .frame(
-                        width: Dimen.icon.regular,
-                        height: Dimen.icon.regular)
-                
-                Text(String.button.share)
-                .modifier(MediumTextStyle(
-                    size: Font.size.tiny,
-                    color: Color.app.greyLight
-                ))
-                .fixedSize(horizontal: true, vertical: false)
+                        width: DimenKids.icon.light,
+                        height: DimenKids.icon.light)
             }
+            
         }//btn
         
     }//body

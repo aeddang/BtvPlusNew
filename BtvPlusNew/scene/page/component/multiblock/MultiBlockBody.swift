@@ -71,7 +71,10 @@ extension MultiBlockBody {
             else { return true }
         }
     }
+    
+    static let tabHeight = Dimen.tab.thin + Dimen.margin.thinExtra
 }
+
 
 struct MultiBlockBody: PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
@@ -218,7 +221,7 @@ struct MultiBlockBody: PageComponent {
         }
         .onReceive(dataProvider.$result) { res in
             guard let data = self.loadingBlocks.first(where: { $0.id == res?.id}) else {return}
-            var banners:[BannerData]? = nil
+            var leadingBanners:[BannerData]? = nil
             var total:Int? = nil
             let max = Self.isRecycle ? 100 : 10
             switch data.dataType {
@@ -269,8 +272,8 @@ struct MultiBlockBody: PageComponent {
                 default: break
                 }
                 
-                banners = resData.banners?.map{d in
-                    BannerData().setData(data: d, type: .list)
+                leadingBanners = resData.banners?.map{d in
+                    BannerData().setData(data: d, type: .list, cardType: .bigPoster)
                 }
                 
             case .bookMark:
@@ -291,6 +294,7 @@ struct MultiBlockBody: PageComponent {
                 }
                
             case .watched:
+                
                 guard let resData = res?.data as? Watch else {return data.setBlank()}
                 guard let originWatchBlocks = resData.watchList else {return data.setBlank()}
                 var watchBlocks:[WatchItem] = originWatchBlocks
@@ -318,30 +322,39 @@ struct MultiBlockBody: PageComponent {
                     data.banners = banners.map{ d in
                         BannerData().setData(data: d, cardType:data.cardType)
                 }
-
+                
             default: do {}
             }
             
             var listHeight:CGFloat = 0
+            var blockHeight:CGFloat = 0
             var padding = Dimen.margin.thin
             if let size = data.posters?.first?.type {
                 listHeight = size.size.height
+                blockHeight = listHeight + Self.tabHeight
             }
-            if let video = data.videos?.first{
-                listHeight = video.type.size.height + video.bottomHeight
+            if let size = data.videos?.first{
+                listHeight = size.type.size.height + size.bottomHeight
+                blockHeight = listHeight + Self.tabHeight
             }
             if let size = data.themas?.first?.type {
                 listHeight = size.size.height
+                blockHeight = listHeight + Self.tabHeight
                 padding = size.spacing
             }
-            if listHeight != 0 {
-                if let banner = banners {
+            
+            if let size = data.banners?.first?.type {
+                listHeight = size.size.height
+                blockHeight = listHeight
+            }
+            if blockHeight != 0 {
+                if let banner = leadingBanners {
                     let ratio = ListItem.banner.type03
-                    let w = listHeight * ratio.width/ratio.height
+                    let w = round(listHeight * ratio.width/ratio.height)
                     banner.forEach{ $0.setBannerSize(width: w , height: listHeight, padding: padding) }
                     data.leadingBanners = banner
                 }
-                data.listHeight = listHeight
+                data.listHeight = blockHeight
             }
             data.setDatabindingCompleted(total: total)
             
@@ -490,7 +503,17 @@ struct MultiBlockBody: PageComponent {
                 if let apiQ = s.getRequestApi(pairing:self.pairing.status) {
                     dataProvider.requestData(q: apiQ)
                 } else{
-                    if s.dataType == .theme , let _ = s.blocks {
+                    
+                    if s.dataType == .theme , let blocks = s.blocks {
+                        if s.uiType == .theme { // ticket 인경우 block에서 처리
+                            let themas = blocks.map{ data in
+                                ThemaData().setData(data: data, cardType: s.cardType)
+                            }
+                            if let size = themas.first?.type {
+                                s.listHeight = size.size.height + Self.tabHeight
+                            }
+                            s.themas = themas
+                        }
                         s.setDatabindingCompleted()
                         return
                     } else{

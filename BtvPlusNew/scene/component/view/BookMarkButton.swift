@@ -14,6 +14,7 @@ struct BookMarkButton: PageView {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
+    var type:PageType = .btv
     var data:SynopsisData
     var isSimple:Bool = false
     @Binding var isBookmark:Bool?
@@ -30,28 +31,49 @@ struct BookMarkButton: PageView {
             }
         }) {
             if !self.isSimple{
-                VStack(spacing:0){
-                    Image( self.isBookmark == true ? Asset.icon.heartOn : Asset.icon.heartOff )
+                if self.type == .btv {
+                    VStack(spacing:0){
+                        Image( self.isBookmark == true ? Asset.icon.heartOn : Asset.icon.heartOff )
+                            .renderingMode(.original).resizable()
+                            .scaledToFit()
+                            .frame(
+                                width: Dimen.icon.regular,
+                                height: Dimen.icon.regular)
+                        
+                        Text(String.button.heart)
+                        .modifier(MediumTextStyle(
+                            size: Font.size.tiny,
+                            color: Color.app.greyLight
+                        ))
+                        .fixedSize(horizontal: true, vertical: false)
+                    }
+                } else{
+                    Image( self.isBookmark == true
+                            ? AssetKids.icon.heartOn : AssetKids.icon.heartOff )
                         .renderingMode(.original).resizable()
                         .scaledToFit()
                         .frame(
-                            width: Dimen.icon.regular,
-                            height: Dimen.icon.regular)
+                            width: DimenKids.icon.light,
+                            height: DimenKids.icon.light)
                     
-                    Text(String.button.heart)
-                    .modifier(MediumTextStyle(
-                        size: Font.size.tiny,
-                        color: Color.app.greyLight
-                    ))
-                    .fixedSize(horizontal: true, vertical: false)
                 }
             } else {
-                Image( self.isBookmark == true ? Asset.icon.heartSmallOn : Asset.icon.heartSmallOff )
-                    .renderingMode(.original).resizable()
-                    .scaledToFit()
-                    .frame(
-                        width: Dimen.icon.medium,
-                        height: Dimen.icon.medium)
+                if self.type == .btv {
+                    Image( self.isBookmark == true ? Asset.icon.heartSmallOn : Asset.icon.heartSmallOff )
+                        .renderingMode(.original).resizable()
+                        .scaledToFit()
+                        .frame(
+                            width: Dimen.icon.medium,
+                            height: Dimen.icon.medium)
+                } else {
+                    Image( self.isBookmark == true
+                            ? AssetKids.icon.heartOn : AssetKids.icon.heartOff )
+                        .renderingMode(.original).resizable()
+                        .scaledToFit()
+                        .frame(
+                            width: DimenKids.icon.medium,
+                            height: DimenKids.icon.medium)
+                }
             }
         }//btn
         

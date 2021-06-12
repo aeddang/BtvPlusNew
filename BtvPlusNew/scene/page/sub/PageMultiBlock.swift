@@ -89,7 +89,6 @@ struct PageMultiBlock: PageView {
                     .modifier(MatchHorizontal(height: (self.isTop == true ? self.marginTop  : 0) + Dimen.app.pageTop  + self.sceneObserver.safeAreaTop))
                     .background(Color.app.blueDeep)
                 }
-                //.padding(.bottom, self.marginBottom )
                 .onReceive(self.infinityScrollModel.$event){evt in
                     guard let evt = evt else {return}
                     if self.isTop == nil {return}
@@ -105,7 +104,6 @@ struct PageMultiBlock: PageView {
                     }
                     
                 }
-                
                 .modifier(PageFull())
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }

@@ -19,7 +19,6 @@ struct BannerListBlock:BlockProtocol, PageComponent {
     var useTracking:Bool = false
     
     @State var datas:[BannerData] = []
-    @State var listHeight:CGFloat = ListItem.banner.type04.height
     @State var isUiActive:Bool = true
     var body :some View {
         ZStack() {
@@ -30,7 +29,7 @@ struct BannerListBlock:BlockProtocol, PageComponent {
                         datas: self.datas,
                         useTracking:self.useTracking
                         )
-                        .modifier(MatchHorizontal(height: self.listHeight))
+                        
                         .onReceive(self.viewModel.$event){evt in
                             guard let evt = evt else {return}
                             switch evt {
@@ -40,17 +39,17 @@ struct BannerListBlock:BlockProtocol, PageComponent {
                             }
                         }
                         .onReceive(self.viewModel.$pullPosition){ pos in
-                            self.pageDragingModel.updateNestedScroll(evt: .pull(pos)) 
+                            self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
                         }
                 
                 }
             }
         }
-        .frame( height: self.listHeight)
+        .modifier(MatchParent())
+        
         .onAppear{
             if let datas = data.banners {
                 self.datas = datas
-                self.updateListSize()
                 ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
                 return
             }
@@ -95,7 +94,6 @@ struct BannerListBlock:BlockProtocol, PageComponent {
     
     func updateListSize(){
         if !self.datas.isEmpty {
-            self.listHeight = self.datas.first!.type.size.height
             onDataBinding()
         }
         else { onBlank() }

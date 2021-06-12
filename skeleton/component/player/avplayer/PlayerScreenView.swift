@@ -17,6 +17,71 @@ protocol PlayerScreenViewDelegate{
     func onPlayerBecomeActive()
     func onPlayerVolumeChanged(_ v:Float)
 }
+extension PlayerScreenView: AVAssetResourceLoaderDelegate {
+    
+    func setDrm(_ data:FairPlayDrm?) {
+        self.drmData = data
+    }
+    
+    func resourceLoader(
+    _ resourceLoader: AVAssetResourceLoader,
+    shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
+        guard let drmData = self.drmData else {
+            ComponentLog.e("Unable to read the drmData." , tag: self.tag + " DRM")
+            loadingRequest.finishLoading(with: NSError(domain: "com.icapps.error", code: -4, userInfo: nil))
+            return false
+        }
+        // We first check if a url is set in the manifest.
+        guard let url = loadingRequest.request.url else {
+            ComponentLog.e("Unable to read the url/host data." , tag: self.tag + " DRM")
+            loadingRequest.finishLoading(with: NSError(domain: "com.icapps.error", code: -1, userInfo: nil))
+            return false
+        }
+        ComponentLog.d("🔑 " + url.absoluteString , tag: self.tag + " DRM")
+                
+            // When the url is correctly found we try to load the certificate date. Watch out! For this
+            // example the certificate resides inside the bundle. But it should be preferably fetched from
+            // the server.
+        guard
+            let certificateURL = Bundle.main.url(forResource: "certificate", withExtension: "der"),
+            let certificateData = try? Data(contentsOf: certificateURL) else {
+            ComponentLog.e("Unable to read the certificate data." , tag: self.tag + " DRM")
+            loadingRequest.finishLoading(with: NSError(domain: "com.icapps.error", code: -2, userInfo: nil))
+            return false
+        }
+
+        // Request the Server Playback Context.
+        let contentId = drmData.contentId //"hls.icapps.com"
+        guard
+            let contentIdData = contentId.data(using: String.Encoding.utf8),
+            let spcData = try? loadingRequest.streamingContentKeyRequestData(forApp: certificateData, contentIdentifier: contentIdData, options: nil),
+            let dataRequest = loadingRequest.dataRequest else {
+            loadingRequest.finishLoading(with: NSError(domain: "com.icapps.error", code: -3, userInfo: nil))
+            ComponentLog.e("Unable to read the SPC data." , tag: self.tag + " DRM")
+            return false
+        }
+
+        // Request the Content Key Context from the Key Server Module.
+        let ckcURL = URL(string: drmData.ckcURL)!  //"https://hls.icapps.com/ckc"
+        var request = URLRequest(url: ckcURL)
+        request.httpMethod = "POST"
+        request.httpBody = spcData
+        let session = URLSession(configuration: URLSessionConfiguration.default)
+        let task = session.dataTask(with: request) { data, response, error in
+            if let data = data {
+                // The CKC is correctly returned and is now send to the `AVPlayer` instance so we
+                // can continue to play the stream.
+                dataRequest.respond(with: data)
+                loadingRequest.finishLoading()
+            } else {
+                ComponentLog.e("Unable to fetch the CKC.", tag: self.tag + " DRM")
+                loadingRequest.finishLoading(with: NSError(domain: "com.icapps.error", code: -4, userInfo: nil))
+            }
+        }
+        task.resume()
+        return true
+    }
+}
 
 class PlayerScreenView: UIView, PageProtocol {
     
@@ -57,7 +122,9 @@ class PlayerScreenView: UIView, PageProtocol {
         }
     }
     
+    
     private var recoveryTime:Double = -1
+    private var drmData:FairPlayDrm? = nil
     var playerLayer:AVPlayerLayer? = nil
     var playerController : UIViewController? = nil
    
@@ -104,29 +171,38 @@ class PlayerScreenView: UIView, PageProtocol {
         return player
     }
     
+    private let queue = DispatchQueue(label: "com.icapps.fairplay.queue")
     private func startPlayer(_ url:URL, header:[String:String]){
         var assetHeader = [String: Any]()
         assetHeader["AVURLAssetHTTPHeaderFieldsKey"] = header
         let key = "playable"
         let asset = AVURLAsset(url: url, options: assetHeader)
+        asset.resourceLoader.setDelegate(self, queue: .main)
         asset.loadValuesAsynchronously(forKeys: [key]){
-            DispatchQueue.main.async {
+            DispatchQueue.global(qos: .background).async {
                 let status = asset.statusOfValue(forKey: key, error: nil)
                 switch (status)
                 {
                 case AVKeyValueStatus.failed, AVKeyValueStatus.cancelled, AVKeyValueStatus.unknown:
                     ComponentLog.d("certification fail " + url.absoluteString , tag: self.tag)
-                    self.onError(.certification(status.rawValue.description))
+                    DispatchQueue.main.async {
+                        self.onError(.certification(status.rawValue.description))
+                    }
+                    
                 default:
                     ComponentLog.d("certification success " + url.absoluteString , tag: self.tag)
-                    let item = AVPlayerItem(asset: asset)
-                    self.player?.replaceCurrentItem(with: item )
-                    self.startPlayer()
+                    DispatchQueue.main.async {
+                        let item = AVPlayerItem(asset: asset)
+                        self.player?.replaceCurrentItem(with: item )
+                        self.startPlayer()
+                    }
                     break;
                 }
             }
         }
     }
+    
+    
     
     static let VOLUME_NOTIFY_KEY = "AVSystemController_SystemVolumeDidChangeNotification"
     static let VOLUME_PARAM_KEY = "AVSystemController_AudioVolumeNotificationParameter"

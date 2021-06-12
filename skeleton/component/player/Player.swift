@@ -13,6 +13,7 @@ open class PlayerModel: ComponentObservable {
     static let TIME_SCALE:Double = 600
     var useAvPlayerController:Bool = false
     var useFullScreenAction:Bool = true
+    var drm:FairPlayDrm? = nil
     @Published var path:String = ""
     @Published var isMute:Bool = false
     @Published var isLock:Bool = false
@@ -56,6 +57,7 @@ open class PlayerModel: ComponentObservable {
     @Published fileprivate(set) var streamStatus:PlayerStreamStatus? = nil
     @Published var playerUiStatus:PlayerUiStatus = .hidden
     @Published var error:PlayerError? = nil
+    
     
     fileprivate var seekTime:Double? = nil
     convenience init(path: String) {
@@ -115,6 +117,10 @@ open class PlayerModel: ComponentObservable {
     }
 }
 
+struct FairPlayDrm{
+    let contentId:String
+    let ckcURL:String
+}
 
 
 enum PlayerUIEvent {//input

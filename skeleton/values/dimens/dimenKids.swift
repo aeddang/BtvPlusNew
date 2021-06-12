@@ -36,6 +36,7 @@ struct DimenKids{
         public static let regular:CGFloat = isPad ? 53 : 32 //*
         public static let light:CGFloat = isPad ? 50 : 26//*
         public static let thin:CGFloat = isPad ? 40 : 22//*
+        public static let thinExtra:CGFloat = isPad ? 39 : 20//*
         public static let tiny:CGFloat = isPad ? 33 : 18//*
         public static let tinyExtra:CGFloat = isPad ? 26 : 16//*
         public static let micro:CGFloat = isPad ? 16 : 9//*

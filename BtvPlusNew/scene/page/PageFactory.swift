@@ -57,6 +57,8 @@ extension PageID{
     static let couponList:PageID = "couponList"
     static let privacyAndAgree:PageID = "PrivacyAndAgree"
     static let remotecon:PageID = "remotecon"
+    static let playerTest:PageID = "playerTest"
+    
 }
 
 struct PageProvider {
@@ -92,7 +94,7 @@ struct PageProvider {
              .pairingDevice, .pairingUser, .pairingManagement, .pairingEmptyDevice, .pairingGuide,
              .purchase , .webview, .schedule, .modifyProile,
              .adultCertification, .userCertification, .terminateStb,
-             .watchHabit, .myPurchaseTicketList, .remotecon :
+             .watchHabit, .myPurchaseTicketList, .remotecon, .playerTest :
             return  .vertical
         case .fullPlayer :
             return .none
@@ -151,7 +153,7 @@ struct PageFactory{
         case .modifyProile : return PageModifyProfile()
         case .setup : return PageSetup()
         case .terminateStb : return PageTerminateStb()
-        case .synopsis : return PageSynopsis()
+        case .synopsis : return PageSynopsis(type : .btv)
         case .synopsisPackage : return PageSynopsisPackage()
         case .synopsisPlayer : return PageSynopsisPlayer()
         case .pairing : return PagePairing()
@@ -181,6 +183,7 @@ struct PageFactory{
         case .couponList : return PageCouponList()
         case .privacyAndAgree : return PagePrivacyAndAgree()
         case .remotecon : return PageRemotecon()
+        case .playerTest : return PagePlayerTest()
         default : return PageTest()
         }
     }

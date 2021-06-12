@@ -25,6 +25,7 @@ extension Asset{
         public static let logoLauncher =  "icLauncherSIos"
         public static let logoSplash =  "imgSplashLogo"
         public static let logoWhite =  "icHalfLogoBtv"
+        public static let logo =  "imgSplashLogoBtv"
     }
     
     struct gnbTop {

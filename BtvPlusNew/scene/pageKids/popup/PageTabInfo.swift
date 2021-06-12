@@ -82,23 +82,25 @@ struct PageTabInfo: PageView {
         }
         .modifier(MatchParent())
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-           
-        }
-        .onReceive(self.tabNavigationModel.$index){ idx in
-            self.tabIdx = idx
-            if idx >= self.tabs.count {return}
-            self.text = self.datas[idx].text
-        }
-        .onAppear{
             guard let obj = self.pageObject  else { return }
             if let datas = obj.getParamValue(key: .datas) as? [TabInfoData] {
                 self.datas = datas
             }
             self.tabs = self.datas.map{$0.title}
-            
             if let idx = obj.getParamValue(key: .selected) as? Int {
                 self.tabNavigationModel.index = idx
             }
+        }
+        .onReceive(self.tabNavigationModel.$index){ idx in
+            if self.tabs.isEmpty {return}
+            
+            if idx >= self.tabs.count {return}
+            withAnimation{
+                self.tabIdx = idx
+                self.text = self.datas[idx].text
+            }
+        }
+        .onAppear{
         }
         .onDisappear{
             

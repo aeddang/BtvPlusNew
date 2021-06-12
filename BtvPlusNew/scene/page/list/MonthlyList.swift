@@ -24,6 +24,8 @@ class MonthlyData:InfinityData,ObservableObject{
     private(set) var isSubJoin: Bool = false
     private(set) var isSelected: Bool = false
     private(set) var blocks:[BlockItem]? = nil
+    
+    private(set) var sortIdx:Int = 0
   
     @Published private(set) var isUpdated: Bool = false
         {didSet{ if isUpdated { isUpdated = false} }}
@@ -56,8 +58,10 @@ class MonthlyData:InfinityData,ObservableObject{
     func setData(data:MonthlyInfoItem, isLow:Bool) -> MonthlyData {
         if isLow {
             self.isSubJoin = true
+            self.sortIdx += 10
         }else{
             self.isJoin = true
+            self.sortIdx += 100
         }
         self.isUpdated = true
         return self
@@ -67,6 +71,7 @@ class MonthlyData:InfinityData,ObservableObject{
         self.isSubJoin = false
         self.isJoin = false
         self.isUpdated = true
+        self.sortIdx = 0
     }
     
     func setDummy(_ idx:Int = -1) -> MonthlyData {

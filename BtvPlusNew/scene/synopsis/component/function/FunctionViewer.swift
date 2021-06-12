@@ -12,8 +12,8 @@ struct FunctionViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     var componentViewModel:PageSynopsis.ComponentViewModel
     var synopsisData:SynopsisData? = nil
-    var srisId:String?
-    var epsdId:String?
+    //var srisId:String?
+    //var epsdId:String?
     @Binding var isBookmark:Bool?
     @Binding var isLike:LikeStatus?
     var body: some View {
@@ -26,7 +26,7 @@ struct FunctionViewer: PageComponent{
                     )
                     .buttonStyle(BorderlessButtonStyle())
                 }
-                if let srisId = self.srisId{
+                if let srisId = self.synopsisData?.srisId{
                     LikeButton(
                         srisId: srisId,
                         isLike: self.$isLike
@@ -39,10 +39,10 @@ struct FunctionViewer: PageComponent{
                     self.componentViewModel.uiEvent = .watchBtv
                 }
                 .buttonStyle(BorderlessButtonStyle())
-                if let srisId = self.srisId{
+                if let srisId = self.synopsisData?.srisId{
                     ShareButton(
                         srisId:srisId,
-                        epsdId:self.epsdId
+                        epsdId:self.synopsisData?.epsdId
                     )
                     .buttonStyle(BorderlessButtonStyle())
                 }

@@ -224,6 +224,10 @@ enum VideoType {
         }
     }
 }
+extension VideoList{
+    static let spacing:CGFloat = Dimen.margin.tiny
+}
+
 
 struct VideoList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
@@ -240,8 +244,8 @@ struct VideoList: PageComponent{
             axes: .horizontal,
             marginVertical: 0,
             marginHorizontal: self.margin,
-            spacing: Dimen.margin.tiny,
-            isRecycle: self.banners?.isEmpty == false ? false : true,
+            spacing: Self.spacing,
+            isRecycle: true,
             useTracking: self.useTracking
         ){
             if let banners = self.banners {

@@ -53,13 +53,13 @@ struct PageContentBody: PageView  {
                 .offset(
                     x: self.offsetX ,
                     y: self.offsetY)
-            //if self.isBelow {
+            if !self.isTop {
                 Spacer().modifier(MatchParent()).background(Color.transparent.black70)
                     .opacity(self.dragOpacity)
                     .onTapGesture {
                         self.pageChanger.goBack()
                     }
-            //}
+            }
             
         }
         .opacity(self.opacity)

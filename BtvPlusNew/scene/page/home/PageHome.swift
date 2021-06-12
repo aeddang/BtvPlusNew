@@ -31,10 +31,12 @@ struct PageHome: PageView {
     @State var marginHeader:CGFloat = 0
     @State var marginBottom:CGFloat = 0
     var body: some View {
+        GeometryReader { geometry in
         PageDataProviderContent(
             pageObservable:self.pageObservable,
             viewModel : self.viewModel
         ){
+           
             MultiBlockBody (
                 pageObservable: self.pageObservable,
                 viewModel: self.viewModel,
@@ -44,7 +46,7 @@ struct PageHome: PageView {
                 useTracking:false,
                 marginHeader : self.marginHeader,
                 marginTop:self.headerHeight,
-                marginBottom: self.marginBottom ,
+                marginBottom: self.marginBottom,
                 topDatas: self.topDatas,
                 monthlyViewModel : self.monthlyViewModel,
                 monthlyDatas: self.monthlyDatas,
@@ -55,8 +57,10 @@ struct PageHome: PageView {
                     self.reload(selectedMonthlyId: data.prdPrcId)
                     
             }
+            
         }
-        //.padding(.bottom, self.marginBottom )
+        
+        .padding(.bottom, self.sceneObserver.safeAreaBottom )
         .modifier(PageFull())
         
         .onReceive(self.dataProvider.bands.$event){ evt in
@@ -154,7 +158,7 @@ struct PageHome: PageView {
         .onDisappear{
             self.appSceneObserver.useTopFix = nil
         }
-        
+        }
     }//body
     
     @State var currentBand:Band? = nil
@@ -327,6 +331,8 @@ struct PageHome: PageView {
             guard let monthlyData = self.originMonthlyDatas?[id] else {return}
             monthlyData.setData(data:purchas, isLow:lowLevelPpm)
         }
+        self.monthlyDatas?.sort(by: {$0.sortIdx > $1.sortIdx})
+        
     }
     
     

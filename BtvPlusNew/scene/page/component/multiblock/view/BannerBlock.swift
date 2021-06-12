@@ -15,32 +15,22 @@ struct BannerBlock:BlockProtocol, PageComponent {
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var data: BlockData
     @State var bannerData:BannerData? = nil
-    @State var listHeight:CGFloat = ListItem.banner.type01.height
     @State var isUiActive:Bool = true
     var body :some View {
         ZStack() {
             if self.isUiActive {
-                if self.bannerData != nil {
-                    BannerItem(data: self.bannerData!)
+                if let banner = self.bannerData {
+                    BannerItem(data: banner)
                         .modifier(MatchParent())
-                } else {
-                    Image(Asset.noImgBanner)
-                        .renderingMode(.original)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .modifier(MatchParent())
-                        .clipped()
-                        .background(Color.app.black)
-                        .opacity(0.5)
                 }
             }
         }
         .padding(.horizontal, Dimen.margin.thin)
-        .frame( height: self.listHeight)
+        .modifier(MatchParent())
+       
         .onAppear{
             if let datas = data.banners {
                 self.bannerData = datas.first
-                self.updateListSize()
                 ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
                 return
             }
@@ -85,7 +75,6 @@ struct BannerBlock:BlockProtocol, PageComponent {
     
     func updateListSize(){
         if self.bannerData != nil {
-            self.listHeight = ListItem.banner.type01.height
             onDataBinding()
         }
         else { onBlank() }

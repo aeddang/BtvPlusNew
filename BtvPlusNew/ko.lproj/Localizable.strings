@@ -699,7 +699,7 @@
  Player
 */
 "playerPreplay" = "미리보기";
-"playerPreplaying" = " 중";
+"playerPreplaying" = "미리보기 중";
 "playerContinueView" = "계속 보기";
 "playerPreview" = "예고편";
 "playerCookie" = "쿠키 영상";

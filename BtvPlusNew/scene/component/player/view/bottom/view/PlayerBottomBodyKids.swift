@@ -40,8 +40,8 @@ struct PlayerBottomBodyKids: PageComponent{
                                             Font.familyKids.bold,
                                             size:  Font.sizeKids.lightExtra ))
                                         .foregroundColor(Color.app.white)
-                            } else {
-                                Text(self.viewModel.playInfo!)
+                            } else if let info = self.viewModel.playInfo{
+                                Text(info)
                                     .modifier(BoldTextStyleKids(
                                                 size:  Font.sizeKids.lightExtra ,
                                                 color: Color.app.white))
@@ -67,8 +67,8 @@ struct PlayerBottomBodyKids: PageComponent{
                                         Font.familyKids.bold,
                                         size:  Font.sizeKids.tiny ))
                                     .foregroundColor(Color.app.white)
-                        } else {
-                            Text(self.viewModel.playInfo!)
+                        } else if let info = self.viewModel.playInfo{
+                            Text(info)
                                 .modifier(BoldTextStyleKids(
                                             size:  Font.sizeKids.tiny,
                                             color: Color.app.white))
@@ -80,7 +80,7 @@ struct PlayerBottomBodyKids: PageComponent{
         .padding(.bottom,
                  self.isUiShowing
                     ? self.isFullScreen
-                        ? PlayerUI.uiHeightFullScreen : PlayerUI.uiHeight
+                        ? KidsPlayerUI.uiHeightFullScreen : KidsPlayerUI.uiHeight
                     : 0
                  )
         

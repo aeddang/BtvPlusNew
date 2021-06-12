@@ -37,6 +37,13 @@ extension AssetKids{
     
     struct icon {
         public static let delete = "zemkidsMPopupInputDelNor"
+        
+        public static let heartOff = "zemkidsMBtnSynopsisFavoriteOff"
+        public static let heartOn = "zemkidsMBtnSynopsisFavoriteOn"
+        
+        public static let watchBTv = "zemkidsMBtnSynopsisBtvNor"
+        public static let playInfo = "zemkidsMBtnSynopsisInfoNor"
+        public static let share = " zemkidsMBtnSynopsisShareNor"
     }
     
     
@@ -75,7 +82,15 @@ extension AssetKids{
         public static let spinner = "icSpinner"
        
     }
-    
+    struct age {
+        static func getIcon(age:String?) -> String {
+            switch age {
+            case "7": return "zemkidsMFlagKidsAgeAll"
+            case "12": return "zemkidsMFlagKidsAge12"
+            default: return "zemkidsMFlagKidsAgeAll"
+            }
+        }
+    }
     struct image {
         public static let noProfile = "zemkidsMGnbNorProfileDefault"
     }

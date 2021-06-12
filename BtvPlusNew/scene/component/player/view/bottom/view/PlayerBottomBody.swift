@@ -43,8 +43,24 @@ struct PlayerBottomBody: PageComponent{
                 if self.showPreplay {
                     if self.isFullScreen {
                         if self.isPlaying {
-                            Text( (self.viewModel.playInfo ?? "") + String.player.preplaying )
-                                .modifier(BoldTextStyle(size: Font.size.thin, color: Color.app.white))
+                            if let limited = self.viewModel.limitedDuration {
+                                Text(limited.secToMin())
+                                    .font(.custom(
+                                            Font.family.bold,
+                                            size: Font.size.thin ))
+                                    .foregroundColor(Color.brand.primary)
+                                    
+                                + Text(String.app.min + " " + String.player.preplay)
+                                    .font(.custom(
+                                            Font.family.bold,
+                                            size:  Font.size.thin))
+                                        .foregroundColor(Color.app.white)
+                            } else if let info = self.viewModel.playInfo{
+                                Text(info)
+                                    .modifier(BoldTextStyle(
+                                                size:  Font.size.thin,
+                                                color: Color.app.white))
+                            }
                         }
                         RectButton(
                             text: String.player.continueView,
@@ -54,10 +70,23 @@ struct PlayerBottomBody: PageComponent{
                             self.viewModel.btvPlayerEvent = .continueView
                         }
                     }else{
-                        RectButton(
-                            text: self.viewModel.playInfo ?? String.player.preplay
-                            ){_ in
-                            
+                        if let limited = self.viewModel.limitedDuration {
+                            Text(limited.secToMin())
+                                .font(.custom(
+                                        Font.family.bold,
+                                        size: Font.size.thin ))
+                                .foregroundColor(Color.brand.primary)
+                                
+                            + Text(String.app.min + " " + String.player.preplay)
+                                .font(.custom(
+                                        Font.family.bold,
+                                        size:  Font.size.thin))
+                                    .foregroundColor(Color.app.white)
+                        } else if let info = self.viewModel.playInfo{
+                            Text(info)
+                                .modifier(BoldTextStyle(
+                                            size:  Font.size.thin,
+                                            color: Color.app.white))
                         }
                     }
                 }

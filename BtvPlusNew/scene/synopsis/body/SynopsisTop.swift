@@ -26,7 +26,7 @@ struct SynopsisTop: PageComponent{
   
     var body: some View {
         ZStack {
-            KidsPlayer(
+            BtvPlayer(
                 pageObservable:self.pageObservable,
                 viewModel:self.playerModel,
                 prerollModel:self.prerollModel,

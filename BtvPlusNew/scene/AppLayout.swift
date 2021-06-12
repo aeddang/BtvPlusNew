@@ -167,7 +167,7 @@ struct AppLayout: PageComponent{
         }
         .onAppear(){
             self.isLoading = true
-           
+            //UIScrollView.appearance().bounces = false
             //UITableView.appearance().separatorStyle = .none
             /*
             for family in UIFont.familyNames.sorted() {

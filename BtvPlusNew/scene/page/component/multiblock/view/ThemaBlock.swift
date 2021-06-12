@@ -17,45 +17,39 @@ struct ThemaBlock:BlockProtocol, PageComponent {
     var data: BlockData
     var useTracking:Bool = false
     @State var datas:[ThemaData] = []
-    @State var listHeight:CGFloat = ListItem.thema.type01.height
     @State var isUiActive:Bool = true
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             if self.isUiActive {
+                Text(data.name).modifier(BlockTitle())
+                    .frame(height:Dimen.tab.thin)
+                    .modifier(ContentHorizontalEdges())
                 if !self.datas.isEmpty {
-                    Text(data.name).modifier(BlockTitle())
-                        .frame(height:Dimen.tab.thin)
-                        .modifier(ContentHorizontalEdges())
-                }
-                ThemaList(
-                    viewModel:self.viewModel,
-                    banners: self.data.leadingBanners,
-                    datas: self.datas,
-                    useTracking:self.useTracking)
-                    .modifier(MatchHorizontal(height: self.listHeight))
-                    .onReceive(self.viewModel.$event){evt in
-                        guard let evt = evt else {return}
-                        switch evt {
-                        case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
-                        case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
-                        default : do{}
+                    ThemaList(
+                        viewModel:self.viewModel,
+                        banners: self.data.leadingBanners,
+                        datas: self.datas,
+                        useTracking:self.useTracking)
+                        
+                        .onReceive(self.viewModel.$event){evt in
+                            guard let evt = evt else {return}
+                            switch evt {
+                            case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
+                            case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
+                            default : do{}
+                            }
                         }
-                    }
-                    .onReceive(self.viewModel.$pullPosition){ pos in
-                        self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
-                    }
+                        .onReceive(self.viewModel.$pullPosition){ pos in
+                            self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
+                        }
+                }
             }
         }
-        .frame( height:
-                    (self.data.listHeight ?? self.listHeight)
-                    + Dimen.tab.thin + Dimen.margin.thinExtra)
+        .modifier(MatchParent())
+        
         .onAppear{
-            self.datas = []
-            if data.dataType == .theme , let blocks = data.blocks {
-                self.datas = blocks.map{ d in
-                    ThemaData().setData(data: d, cardType: data.cardType)
-                }
-                self.updateListSize()
+            if let datas = data.themas {
+                self.datas = datas
                 ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
                 return
             }
@@ -109,7 +103,6 @@ struct ThemaBlock:BlockProtocol, PageComponent {
     }
     func updateListSize(){
         if !self.datas.isEmpty {
-            self.listHeight = self.datas.first!.type.size.height
             onDataBinding()
         }
         else { onBlank() }

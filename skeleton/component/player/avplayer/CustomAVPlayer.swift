@@ -14,6 +14,7 @@ import MediaPlayer
 extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenViewDelegate {
     func makeUIViewController(context: UIViewControllerRepresentableContext<CustomAVPlayer>) -> UIViewController {
         let playerScreenView = PlayerScreenView(frame: .infinite)
+        playerScreenView.setDrm(self.viewModel.drm) 
         playerScreenView.mute(self.viewModel.isMute)
         playerScreenView.currentRate = self.viewModel.rate
         playerScreenView.currentVideoGravity = self.viewModel.screenGravity

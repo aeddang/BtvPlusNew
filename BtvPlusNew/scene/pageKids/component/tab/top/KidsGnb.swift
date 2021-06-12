@@ -130,7 +130,7 @@ struct KidsGnbList: PageComponent{
 struct KidsGnbItem: PageView {
     @EnvironmentObject var pairing:Pairing
     var data:KidsGnbItemData
-    @State var isSelected:Bool = true
+    @State var isSelected:Bool = false
     @State var profileImg:String? = nil
     @State var title:String? = nil
     @State var subTitle:String? = nil
@@ -210,8 +210,10 @@ struct KidsGnbItem: PageView {
             
         }
         .frame(
-            width: SystemEnvironment.isTablet ? DimenKids.icon.heavy : DimenKids.icon.heavyExtra,
-            height: SystemEnvironment.isTablet ? DimenKids.icon.heavy : DimenKids.icon.heavyExtra)
+            minWidth: SystemEnvironment.isTablet ? DimenKids.icon.medium : DimenKids.icon.medium,
+            maxWidth: SystemEnvironment.isTablet ? DimenKids.icon.heavy : DimenKids.icon.heavyExtra,
+            minHeight: SystemEnvironment.isTablet ? DimenKids.icon.heavy : DimenKids.icon.heavyExtra,
+            maxHeight: SystemEnvironment.isTablet ? DimenKids.icon.heavy : DimenKids.icon.heavyExtra)
         .onReceive(self.pairing.$kid) { kid in
             if !self.data.isHome {return}
             if let kid = kid {

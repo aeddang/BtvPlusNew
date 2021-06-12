@@ -45,7 +45,8 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
         } else if !synopsisModel.isNScreen {
             serviceInfo = purchas.hasAuthority
                 ? String.pageText.synopsisWatchOnlyBtv
-                : String.pageText.synopsisOnlyBtv
+                : synopsisModel.holdbackType == .holdOut
+                    ? String.pageText.synopsisOnlyBtvFree : String.pageText.synopsisOnlyBtv
             isPlayAble = false
             
         } else if synopsisModel.isOnlyPurchasedBtv && !purchas.hasAuthority {
@@ -54,7 +55,15 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
             
         } else {
             switch synopsisModel.holdbackType {
-            case .none :
+            case .holdOut :
+                if purchas.hasAuthority == true{
+                    self.setupBtvWatchInfo(synopsisModel: synopsisModel, isPairing: isPairing, purchas: purchas)
+                    self.setupOption(watchItems: synopsisModel.watchOptionItems, purchas: purchas)
+                } else {
+                    serviceInfo = String.pageText.synopsisOnlyBtvFree
+                }
+                isPlayAble = true
+            default :
                 self.setupBtvWatchInfo(synopsisModel: synopsisModel, isPairing: isPairing, purchas: purchas)
                 if isPairing == true {
                     self.setupOption(purchasableItems: synopsisModel.purchasableItems, purchas: purchas)
@@ -62,15 +71,23 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                 if purchas.hasAuthority == true{
                     self.setupOption(watchItems: synopsisModel.watchOptionItems, purchas: purchas)
                 }
-                
+                isPlayAble = true
+            /*
             case .holdIn :
-                serviceInfo = (purchas.isDirectview && purchas.isFree)
-                    ? String.pageText.synopsisWatchOnlyBtv
-                    : String.pageText.synopsisOnlyBtv
-                
-            case .holdOut : serviceInfo = String.pageText.synopsisOnlyBtvFree
+                if purchas.hasAuthority == true{
+                    self.setupBtvWatchInfo(synopsisModel: synopsisModel, isPairing: isPairing, purchas: purchas)
+                    self.setupOption(watchItems: synopsisModel.watchOptionItems, purchas: purchas)
+                } else {
+                    serviceInfo = (purchas.isDirectview && purchas.isFree)
+                        ? String.pageText.synopsisWatchOnlyBtv
+                        : String.pageText.synopsisOnlyBtv
+    
+                }
+                isPlayAble = true
+            */
+           
             }
-            isPlayAble = true
+            
         }
         return self
     }

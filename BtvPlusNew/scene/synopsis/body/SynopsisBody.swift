@@ -31,8 +31,8 @@ struct SynopsisBody: PageComponent{
     var episodeViewerData:EpisodeViewerData? = nil
     var purchasViewerData:PurchaseViewerData? = nil
     var summaryViewerData:SummaryViewerData? = nil
-    var srisId:String? = nil
-    var epsdId:String? = nil
+    //var srisId:String? = nil
+    //var epsdId:String? = nil
     var hasAuthority:Bool? = nil
 
     var relationTab:[NavigationButton] = []
@@ -77,8 +77,6 @@ struct SynopsisBody: PageComponent{
                             FunctionViewer(
                                 componentViewModel: self.componentViewModel,
                                 synopsisData :self.synopsisData,
-                                srisId: self.srisId,
-                                epsdId:self.epsdId,
                                 isBookmark: self.$isBookmark,
                                 isLike: self.$isLike
                             )
@@ -91,8 +89,6 @@ struct SynopsisBody: PageComponent{
                             FunctionViewer(
                                 componentViewModel: self.componentViewModel,
                                 synopsisData :self.synopsisData,
-                                srisId: self.srisId,
-                                epsdId:self.epsdId,
                                 isBookmark: self.$isBookmark,
                                 isLike: self.$isLike
                             )
@@ -159,8 +155,6 @@ struct SynopsisBody: PageComponent{
                                 FunctionViewer(
                                     componentViewModel: self.componentViewModel,
                                     synopsisData :self.synopsisData,
-                                    srisId: self.srisId,
-                                    epsdId:self.epsdId,
                                     isBookmark: self.$isBookmark,
                                     isLike: self.$isLike
                                 )
@@ -172,8 +166,6 @@ struct SynopsisBody: PageComponent{
                                 FunctionViewer(
                                     componentViewModel: self.componentViewModel,
                                     synopsisData :self.synopsisData,
-                                    srisId: self.srisId,
-                                    epsdId:self.epsdId,
                                     isBookmark: self.$isBookmark,
                                     isLike: self.$isLike
                                 )

@@ -16,7 +16,7 @@ class BlockDataSet:Identifiable {
 
 extension MultiBlock{
     static let spacing:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.medium
-    static let headerSize:Int = 4
+    static let headerSize:Int = 5
     static let headerSizeMin:Int = 2
 }
 struct MultiBlock:PageComponent {
@@ -53,38 +53,59 @@ struct MultiBlock:PageComponent {
                 spacing: 0,
                 isRecycle : self.isRecycle,
                 useTracking:self.useBodyTracking){
-                if self.topDatas != nil || self.monthlyDatas != nil || self.tipBlock != nil {
+                
+                if let topDatas = self.topDatas ,!topDatas.isEmpty {
                     VStack(spacing:Self.spacing){
-                        if let topDatas = self.topDatas ,!topDatas.isEmpty {
-                            TopBanner(
-                                pageObservable: self.pageObservable,
-                                viewModel:self.viewPagerModel,
-                                infinityScrollModel:self.viewModel,
-                                datas: topDatas
-                            )
-                            .modifier(MatchHorizontal(height:  TopBanner.uiRange))
-                            .padding(.bottom, TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange - Self.spacing)
-                        }
-                        
-                        if let datas = self.monthlyDatas  {
-                           MonthlyBlock(
-                                viewModel:self.monthlyViewModel ?? InfinityScrollModel(),
-                                pageDragingModel:self.pageDragingModel,
-                                monthlyDatas:datas,
-                                allData: self.monthlyAllData,
-                                useTracking:self.useTracking,
-                                action:self.action
-                           )
-                        }
+                        TopBanner(
+                            pageObservable: self.pageObservable,
+                            viewModel:self.viewPagerModel,
+                            infinityScrollModel:self.viewModel,
+                            datas: topDatas
+                        )
+                        .modifier(MatchHorizontal(height:  TopBanner.uiRange))
+                        .padding(.bottom, TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange - Self.spacing)
+                        //.modifier(ListRowInset(spacing: TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange))
                         
                         if let data = self.tipBlock {
                             TipBlock(data:data)
+                                .modifier(MatchHorizontal(height:  Dimen.tab.light))
+                                
                         }
                     }
                     .modifier(ListRowInset(spacing: Self.spacing))
                 }
-                
-                if !self.datas.isEmpty, let header = (self.topDatas?.isEmpty != false ? Self.headerSize : Self.headerSizeMin)  {
+            
+                if let datas = self.monthlyDatas  {
+                   MonthlyBlock(
+                        viewModel:self.monthlyViewModel ?? InfinityScrollModel(),
+                        pageDragingModel:self.pageDragingModel,
+                        monthlyDatas:datas,
+                        allData: self.monthlyAllData,
+                        useTracking:self.useTracking,
+                        action:self.action
+                   )
+                   .modifier(MatchHorizontal(height:  MonthlyBlock.height))
+                   .modifier(ListRowInset(spacing: Self.spacing))
+                }
+                /*
+                if !self.datas.isEmpty {
+                    ForEach( self.datas) { data in
+                        MultiBlockCell(
+                            pageObservable:self.pageObservable,
+                            pageDragingModel: self.pageDragingModel,
+                            data: data ,
+                            useTracking: self.useTracking)
+                            .modifier(ListRowInset(spacing: Self.spacing))
+                            .onAppear(){
+                                if data.index == self.datas.last?.index {
+                                    self.viewModel.event = .bottom
+                                }
+                            }
+                    }
+                }
+                 */
+                if !self.datas.isEmpty, let header = (self.topDatas?.isEmpty == false ? Self.headerSizeMin : Self.headerSize)  {
+                    
                     if header < self.datas.count {
                         VStack(spacing:Self.spacing){
                             ForEach( self.datas[0...header]) { data in
@@ -125,11 +146,13 @@ struct MultiBlock:PageComponent {
                         }
                     }
                     
+                    
                     if self.useFooter {
                         Footer()
                             .modifier(ListRowInset(spacing: Dimen.margin.regular))
                     }
                 }
+                
             }
             
         } else {
@@ -223,6 +246,9 @@ struct MultiBlock:PageComponent {
                     data: data,
                     useTracking:self.useTracking
                     )
+                .frame(height:data.listHeight)
+                
+                
             case .video :
                 VideoBlock(
                     pageObservable:self.pageObservable,
@@ -230,6 +256,8 @@ struct MultiBlock:PageComponent {
                     data: data,
                     useTracking:self.useTracking
                     )
+                .frame(height:data.listHeight)
+                
             case .theme :
                 ThemaBlock(
                     pageObservable:self.pageObservable,
@@ -237,18 +265,15 @@ struct MultiBlock:PageComponent {
                     data: data,
                     useTracking:self.useTracking
                     )
-            case .ticket :
-                TicketBlock(
-                    pageObservable:self.pageObservable,
-                    pageDragingModel:self.pageDragingModel,
-                    data: data,
-                    useTracking:self.useTracking
-                    )
+                .frame(height:data.listHeight)
+                
             case .banner :
                 BannerBlock(
                     pageObservable:self.pageObservable,
                     data: data
                 )
+                .frame(height:data.listHeight)
+                
             case .bannerList :
                 BannerListBlock(
                     pageObservable:self.pageObservable,
@@ -256,7 +281,16 @@ struct MultiBlock:PageComponent {
                     data: data,
                     useTracking:self.useTracking
                 )
-            
+                .frame(height:data.listHeight)
+                
+            case .ticket :
+                TicketBlock(
+                    pageObservable:self.pageObservable,
+                    pageDragingModel:self.pageDragingModel,
+                    data: data,
+                    useTracking:self.useTracking
+                    )
+                    // ticket 인경우 block에서 height 처리
             }
             
         }//body

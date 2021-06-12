@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-
+import Combine
 struct VideoBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
@@ -20,49 +20,49 @@ struct VideoBlock:BlockProtocol, PageComponent {
     var useTracking:Bool = false
     var useEmpty:Bool = false
     @State var datas:[VideoData] = []
-    @State var listHeight:CGFloat = ListItem.video.size.height + ListItem.video.type01
+   
     @State var isUiActive:Bool = true
     @State var hasMore:Bool = true
+    @State var skeletonSize:CGSize = CGSize()
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             if self.isUiActive {
-                if !self.datas.isEmpty || self.useEmpty {
-                    HStack(alignment: .bottom, spacing:Dimen.margin.thin){
-                        VStack(alignment: .leading, spacing:0){
-                            Spacer().modifier(MatchHorizontal(height: 0))
-                            HStack( spacing:Dimen.margin.thin){
-                                Text(data.name).modifier(BlockTitle())
-                                    .lineLimit(1)
-                                Text(data.subName).modifier(BlockTitle(color:Color.app.grey))
-                                    .lineLimit(1)
-                            }
-                        }
-                        if self.hasMore {
-                            TextButton(
-                                defaultText: String.button.all,
-                                textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
-                            ){_ in
-                                self.pagePresenter.openPopup(
-                                    PageProvider.getPageObject(data.dataType == .watched ? .watchedList : .categoryList)
-                                        .addParam(key: .data, value: data)
-                                        .addParam(key: .type, value: CateBlock.ListType.video)
-                                        .addParam(key: .subType, value:data.cardType)
-                                )
-                            }
+                
+                HStack(alignment: .bottom, spacing:Dimen.margin.thin){
+                    VStack(alignment: .leading, spacing:0){
+                        Spacer().modifier(MatchHorizontal(height: 0))
+                        HStack( spacing:Dimen.margin.thin){
+                            Text(data.name).modifier(BlockTitle())
+                                .lineLimit(1)
+                            Text(data.subName).modifier(BlockTitle(color:Color.app.grey))
+                                .lineLimit(1)
                         }
                     }
-                    .modifier(MatchHorizontal(height: Dimen.tab.thin))
-                    .padding( .horizontal , self.margin)
+                    if self.hasMore {
+                        TextButton(
+                            defaultText: String.button.all,
+                            textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
+                        ){_ in
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(data.dataType == .watched ? .watchedList : .categoryList)
+                                    .addParam(key: .data, value: data)
+                                    .addParam(key: .type, value: CateBlock.ListType.video)
+                                    .addParam(key: .subType, value:data.cardType)
+                            )
+                        }
+                    }
                 }
+                .modifier(MatchHorizontal(height: Dimen.tab.thin))
+                .padding( .horizontal , self.margin)
+                
                 if !self.datas.isEmpty {
                     VideoList(
                         viewModel:self.viewModel,
                         banners: self.data.leadingBanners,
                         datas: self.datas,
                         margin:self.margin,
-                        useTracking:self.useTracking
-                        )
-                        .modifier(MatchHorizontal(height: self.listHeight))
+                        useTracking:self.useTracking)
+                        
                         .onReceive(self.viewModel.$event){evt in
                             guard let evt = evt else {return}
                             switch evt {
@@ -80,20 +80,28 @@ struct VideoBlock:BlockProtocol, PageComponent {
                                 ? String.pageText.myWatchedEmpty
                                 : String.alert.dataError)
                         .modifier(MatchParent())
+                }else {
+                    SkeletonBlock(
+                        len:3,
+                        spacing:VideoList.spacing,
+                        size:self.skeletonSize
+                    )
+                    .modifier(MatchParent())
                 }
             }
         }
-        .frame( height:
-                    (self.data.listHeight ?? self.listHeight)
-                    + Dimen.tab.thin + Dimen.margin.thinExtra)
+        .modifier(MatchParent())
+        
         .onAppear{
-            if let datas = data.videos {
+            if let datas = self.data.videos {
                 if data.allVideos?.isEmpty == true {
                     self.hasMore = false
                 }
-                self.datas = datas
-                self.updateListSize()
+                if let size = datas.first?.type.size {
+                    self.skeletonSize = size
+                }
                 ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
+                self.creatDataBinding()
                 return
             }
             if let apiQ = self.getRequestApi(pairing: self.pairing.status) {
@@ -101,6 +109,10 @@ struct VideoBlock:BlockProtocol, PageComponent {
             } else {
                 self.data.setRequestFail()
             }
+        }
+        .onDisappear{
+            self.datas.removeAll()
+            self.clearDataBinding()
         }
         .onReceive(self.pageObservable.$layer ){ layer  in
             switch layer {
@@ -166,7 +178,6 @@ struct VideoBlock:BlockProtocol, PageComponent {
     }
     func updateListSize(){
         if !self.datas.isEmpty {
-            self.listHeight = ListItem.video.size.height + self.datas.first!.bottomHeight
             onDataBinding()
         }
         else { onBlank() }
@@ -192,5 +203,24 @@ struct VideoBlock:BlockProtocol, PageComponent {
         default: break
         }
         
+    }
+    
+    @State var dataBindingSubscription:AnyCancellable?
+    func creatDataBinding() {
+        self.dataBindingSubscription?.cancel()
+        self.dataBindingSubscription = Timer.publish(
+            every: 0.5, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                self.clearDataBinding()
+                if let datas = data.videos {
+                    withAnimation{ self.datas = datas }
+                }
+            }
+    }
+    func clearDataBinding() {
+        self.dataBindingSubscription?.cancel()
+        self.dataBindingSubscription = nil
+       
     }
 }

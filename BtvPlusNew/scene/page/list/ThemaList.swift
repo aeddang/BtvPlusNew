@@ -126,7 +126,7 @@ struct ThemaList: PageComponent{
             marginVertical: 0,
             marginHorizontal: self.margin ,
             spacing: datas.isEmpty ? 0 : datas[0].type.spacing,
-            isRecycle: self.banners?.isEmpty == false ? false : true,
+            isRecycle: true,
             useTracking: self.useTracking
             ){
             if let banners = self.banners {

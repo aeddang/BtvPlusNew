@@ -64,6 +64,7 @@ struct PlayViewer: PageComponent{
             .opacity(self.isActive ? 1.0 : 0.5)
         }
         .modifier(MatchParent())
+        .background(Color.app.black)
         .clipped()
         
         .onReceive(self.pagePresenter.$isFullScreen){ fullScreen in

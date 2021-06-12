@@ -2,14 +2,14 @@ import Foundation
 import SwiftUI
 
 enum BannerType {
-    case top, list, cell(CGSize, CGFloat), horizontalList
+    case top, list, cell(CGSize, CGFloat), horizontalList, leading
     var size:CGSize {
         get{
             switch self {
             case .list: return ListItem.banner.type01
             case .cell(let size, _ ): return size
             case .horizontalList : return ListItem.banner.type04
-            case .top : return CGSize()
+            default : return CGSize()
             }
         }
     }
@@ -38,12 +38,12 @@ class BannerData:InfinityData, PageProtocol{
     func setData(data:EventBannerItem, type: EuxpNetwork.BannerType = .list, cardType:BlockData.CardType? = nil,  isFloat:Bool = false ,idx:Int = -1) -> BannerData {
         switch type {
         case .list:
-            if cardType == .bannerList {
-                self.type = .horizontalList
-                image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size:  self.type.size)  ?? image
+            if  cardType == .bigPoster {
+                self.type = .leading
+                image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: ListItem.banner.type03)  ?? image
             } else {
-                self.type = .list
-                image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: ListItem.banner.type01)  ?? image
+                self.type = cardType == .bannerList ? .horizontalList : .list
+                image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size:  self.type.size)  ?? image
             }
         
         case .page:

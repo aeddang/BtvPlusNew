@@ -155,13 +155,13 @@ struct KidsPlayerUI: PageComponent {
                                         size: self.isFullScreen ? Font.sizeKids.medium : Font.sizeKids.tiny))
                                 .foregroundColor(Color.kids.primary)
                                 
-                            + Text( String.app.min + " " + String.player.preplay)
+                            + Text( String.app.min + " " + String.player.preplaying)
                                 .font(.custom(
                                         Font.familyKids.bold,
                                         size: self.isFullScreen ? Font.sizeKids.medium : Font.sizeKids.tiny))
                                     .foregroundColor(Color.app.white)
-                        } else {
-                            Text(self.viewModel.playInfo!)
+                        } else if let info = self.viewModel.playInfo {
+                            Text(info)
                                 .modifier(BoldTextStyleKids(
                                             size: self.isFullScreen ? Font.sizeKids.medium : Font.sizeKids.tiny,
                                             color: Color.app.white))

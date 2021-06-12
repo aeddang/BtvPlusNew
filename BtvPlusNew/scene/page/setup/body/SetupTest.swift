@@ -30,6 +30,15 @@ struct SetupTest: PageView {
                         self.repository.reset(isReleaseMode: false, isEvaluation: false)
                     }
                 )
+                Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
+                SetupItem (
+                    isOn: .constant(true),
+                    title: "DRM 플레이어",
+                    more:{
+                        //self.isInitate = false
+                        self.pagePresenter.openPopup(PageProvider.getPageObject(.playerTest))
+                    }
+                )
             }
             .background(Color.app.blueLight)
         }

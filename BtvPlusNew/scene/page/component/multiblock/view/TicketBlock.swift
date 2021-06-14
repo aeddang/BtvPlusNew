@@ -63,8 +63,10 @@ struct TicketBlock:BlockProtocol, PageComponent {
                 return
             }
             if let apiQ = self.getRequestApi(pairing:pairing.status) {
+                ComponentLog.d("RequestData " + data.name, tag: "BlockProtocolA")
                 dataProvider.requestData(q: apiQ)
             } else {
+                ComponentLog.d("RequestData Fail" + data.name, tag: "BlockProtocolA")
                 self.data.setRequestFail()
             }
         }

@@ -449,6 +449,7 @@ struct PosterSet: PageComponent{
     }//body
 }
 
+
 struct PosterItem: PageView {
     @EnvironmentObject var repository:Repository
     var data:PosterData
@@ -456,8 +457,10 @@ struct PosterItem: PageView {
     @State var isBookmark:Bool? = nil
     var body: some View {
         ZStack(alignment: .topLeading){
-            ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg9_16)
+           
+            ImageView(url: self.data.image, contentMode: .fit, noImg: Asset.noImg9_16)
                 .modifier(MatchParent())
+            
             if let tag = self.data.tagData {
                 Tag(data: tag)
                     .modifier(MatchParent())

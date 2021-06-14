@@ -7,7 +7,10 @@
 
 import Foundation
 import SwiftUI
-
+import Combine
+extension ThemaBlock{
+    static let skeletonNum:Int = SystemEnvironment.isTablet ? 8 : 4
+}
 struct ThemaBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
@@ -18,6 +21,7 @@ struct ThemaBlock:BlockProtocol, PageComponent {
     var useTracking:Bool = false
     @State var datas:[ThemaData] = []
     @State var isUiActive:Bool = true
+    @State var skeletonSize:CGSize = CGSize()
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             if self.isUiActive {
@@ -42,22 +46,43 @@ struct ThemaBlock:BlockProtocol, PageComponent {
                         .onReceive(self.viewModel.$pullPosition){ pos in
                             self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
                         }
+                } else {
+                    SkeletonBlock(
+                        len:Self.skeletonNum,
+                        spacing:VideoList.spacing,
+                        size:self.skeletonSize
+                    )
+                    Spacer()
+                    
                 }
             }
         }
         .modifier(MatchParent())
-        
         .onAppear{
+            if !self.datas.isEmpty {
+                ComponentLog.d("RecycleData " + data.name, tag: "BlockProtocol")
+                return
+            }
             if let datas = data.themas {
-                self.datas = datas
+                if let size = datas.first?.type.size {
+                    self.skeletonSize = size
+                }
                 ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
+                self.creatDataBinding()
                 return
             }
             if let apiQ = self.getRequestApi(pairing:pairing.status) {
+                ComponentLog.d("RequestData " + data.name, tag: "BlockProtocolA")
                 dataProvider.requestData(q: apiQ)
             } else {
+                ComponentLog.d("RequestData Fail" + data.name, tag: "BlockProtocolA")
                 self.data.setRequestFail()
             }
+        }
+        .onDisappear{
+            
+            //self.datas.removeAll()
+            self.clearDataBinding()
         }
         .onReceive(self.pageObservable.$layer ){ layer  in
             switch layer {
@@ -108,4 +133,23 @@ struct ThemaBlock:BlockProtocol, PageComponent {
         else { onBlank() }
     }
     
+    @State var dataBindingSubscription:AnyCancellable?
+    func creatDataBinding() {
+    
+        self.dataBindingSubscription?.cancel()
+        self.dataBindingSubscription = Timer.publish(
+            every: SkeletonBlock.dataBindingDelay, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                self.clearDataBinding()
+                if let datas = data.themas {
+                    withAnimation{ self.datas = datas }
+                }
+            }
+    }
+    func clearDataBinding() {
+        self.dataBindingSubscription?.cancel()
+        self.dataBindingSubscription = nil
+       
+    }
 }

@@ -28,6 +28,7 @@ struct ImageView : View, PageProtocol {
                 self.onImageEvent(evt: evt)
             }
             .onAppear(){
+                
                 self.imageLoader.cash(url: self.url)
                 self.creatAutoReload()
             }

@@ -55,24 +55,21 @@ struct MultiBlock:PageComponent {
                 useTracking:self.useBodyTracking){
                 
                 if let topDatas = self.topDatas ,!topDatas.isEmpty {
-                    VStack(spacing:Self.spacing){
-                        TopBanner(
-                            pageObservable: self.pageObservable,
-                            viewModel:self.viewPagerModel,
-                            infinityScrollModel:self.viewModel,
-                            datas: topDatas
-                        )
-                        .modifier(MatchHorizontal(height:  TopBanner.uiRange))
-                        .padding(.bottom, TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange - Self.spacing)
-                        //.modifier(ListRowInset(spacing: TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange))
-                        
-                        if let data = self.tipBlock {
-                            TipBlock(data:data)
-                                .modifier(MatchHorizontal(height:  Dimen.tab.light))
-                                
-                        }
-                    }
-                    .modifier(ListRowInset(spacing: Self.spacing))
+                    TopBanner(
+                        pageObservable: self.pageObservable,
+                        viewModel:self.viewPagerModel,
+                        infinityScrollModel:self.viewModel,
+                        datas: topDatas
+                    )
+                    .modifier(MatchHorizontal(height:  TopBanner.uiRange))
+                    .modifier(ListRowInset(spacing: TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange))
+                       
+                }
+                if let data = self.tipBlock {
+                    TipBlock(data:data)
+                        .modifier(MatchHorizontal(height:  Dimen.tab.light))
+                        .modifier(ListRowInset(spacing: Self.spacing))
+                         
                 }
             
                 if let datas = self.monthlyDatas  {
@@ -103,7 +100,7 @@ struct MultiBlock:PageComponent {
                             }
                     }
                 }
-                 */
+                */
                 if !self.datas.isEmpty, let header = (self.topDatas?.isEmpty == false ? Self.headerSizeMin : Self.headerSize)  {
                     
                     if header < self.datas.count {
@@ -145,14 +142,14 @@ struct MultiBlock:PageComponent {
                                 }
                         }
                     }
-                    
+                   
                     
                     if self.useFooter {
                         Footer()
                             .modifier(ListRowInset(spacing: Dimen.margin.regular))
                     }
                 }
-                
+                 
             }
             
         } else {

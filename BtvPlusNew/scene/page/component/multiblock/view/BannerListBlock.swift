@@ -7,7 +7,10 @@
 
 import Foundation
 import SwiftUI
-
+import Combine
+extension BannerListBlock{
+    static let skeletonNum:Int = SystemEnvironment.isTablet ? 6 : 3
+}
 struct BannerListBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
@@ -20,6 +23,7 @@ struct BannerListBlock:BlockProtocol, PageComponent {
     
     @State var datas:[BannerData] = []
     @State var isUiActive:Bool = true
+    @State var skeletonSize:CGSize = CGSize()
     var body :some View {
         ZStack() {
             if self.isUiActive {
@@ -42,22 +46,45 @@ struct BannerListBlock:BlockProtocol, PageComponent {
                             self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
                         }
                 
+                } else {
+                    SkeletonBlock(
+                        len:Self.skeletonNum,
+                        spacing:PosterList.spacing,
+                        size:self.skeletonSize
+                    )
+                    .modifier(MatchParent())
                 }
             }
         }
         .modifier(MatchParent())
         
         .onAppear{
+            if !self.datas.isEmpty {
+                ComponentLog.d("RecycleData " + data.name, tag: "BlockProtocol")
+                return
+                
+            }
             if let datas = data.banners {
-                self.datas = datas
+                
                 ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
+                if let size = datas.first?.type.size {
+                    self.skeletonSize = size
+                }
+                self.creatDataBinding()
                 return
             }
             if let apiQ = self.getRequestApi(pairing:self.pairing.status) {
+                ComponentLog.d("RequestData " + data.name, tag: "BlockProtocolA")
                 dataProvider.requestData(q: apiQ)
             } else {
+                ComponentLog.d("RequestData Fail" + data.name, tag: "BlockProtocolA")
                 self.data.setRequestFail()
             }
+        }
+        .onDisappear{
+            
+            //self.datas.removeAll()
+            self.clearDataBinding()
         }
         .onReceive(self.pageObservable.$layer ){ layer  in
             switch layer {
@@ -97,6 +124,26 @@ struct BannerListBlock:BlockProtocol, PageComponent {
             onDataBinding()
         }
         else { onBlank() }
+    }
+    
+    @State var dataBindingSubscription:AnyCancellable?
+    func creatDataBinding() {
+    
+        self.dataBindingSubscription?.cancel()
+        self.dataBindingSubscription = Timer.publish(
+            every: SkeletonBlock.dataBindingDelay, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                self.clearDataBinding()
+                if let datas = data.banners {
+                    withAnimation{ self.datas = datas }
+                }
+            }
+    }
+    func clearDataBinding() {
+        self.dataBindingSubscription?.cancel()
+        self.dataBindingSubscription = nil
+       
     }
     
 }

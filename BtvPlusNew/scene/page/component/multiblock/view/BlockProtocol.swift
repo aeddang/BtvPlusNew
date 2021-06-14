@@ -16,11 +16,13 @@ protocol BlockProtocol {
     
 }
 extension BlockProtocol {
+
     func getRequestApi(pairing:PairingStatus) -> ApiQ? {
         ComponentLog.d("getRequestApi " + data.status.rawValue , tag: "BlockProtocol")
         if data.status != .initate  { return nil }
         return data.getRequestApi(pairing: pairing)
     }
+    
     func onDataBinding(){
         ComponentLog.d("onDataBinding " + data.name, tag: "BlockProtocol")
         self.data.setDatabindingCompleted()
@@ -30,10 +32,11 @@ extension BlockProtocol {
         ComponentLog.d("onBlank " + data.name, tag: "BlockProtocol")
         self.data.setBlank()
     }
+    
     func onError(_ err:ApiResultError?){
         ComponentLog.d("onError " + data.name + " " + err.debugDescription, tag: "BlockProtocol")
         self.data.setError(err)
-        
     }
 
+   
 }

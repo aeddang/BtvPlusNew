@@ -8,6 +8,9 @@
 import Foundation
 import SwiftUI
 import Combine
+extension VideoBlock{
+    static let skeletonNum:Int = SystemEnvironment.isTablet ? 6 : 3
+}
 struct VideoBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
@@ -62,7 +65,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                         datas: self.datas,
                         margin:self.margin,
                         useTracking:self.useTracking)
-                        
+                    
                         .onReceive(self.viewModel.$event){evt in
                             guard let evt = evt else {return}
                             switch evt {
@@ -82,17 +85,22 @@ struct VideoBlock:BlockProtocol, PageComponent {
                         .modifier(MatchParent())
                 }else {
                     SkeletonBlock(
-                        len:3,
+                        len:Self.skeletonNum,
                         spacing:VideoList.spacing,
                         size:self.skeletonSize
                     )
-                    .modifier(MatchParent())
+                    Spacer()
+                    
                 }
             }
         }
         .modifier(MatchParent())
         
         .onAppear{
+            if !self.datas.isEmpty {
+                ComponentLog.d("RecycleData " + data.name, tag: "BlockProtocol")
+                return
+            }
             if let datas = self.data.videos {
                 if data.allVideos?.isEmpty == true {
                     self.hasMore = false
@@ -105,13 +113,15 @@ struct VideoBlock:BlockProtocol, PageComponent {
                 return
             }
             if let apiQ = self.getRequestApi(pairing: self.pairing.status) {
+                ComponentLog.d("RequestData " + data.name, tag: "BlockProtocolA")
                 dataProvider.requestData(q: apiQ)
             } else {
+                ComponentLog.d("RequestData Fail " + data.name, tag: "BlockProtocolA")
                 self.data.setRequestFail()
             }
         }
         .onDisappear{
-            self.datas.removeAll()
+            
             self.clearDataBinding()
         }
         .onReceive(self.pageObservable.$layer ){ layer  in
@@ -209,7 +219,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
     func creatDataBinding() {
         self.dataBindingSubscription?.cancel()
         self.dataBindingSubscription = Timer.publish(
-            every: 0.5, on: .current, in: .common)
+            every: SkeletonBlock.dataBindingDelay, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
                 self.clearDataBinding()

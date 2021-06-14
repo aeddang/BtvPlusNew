@@ -89,12 +89,12 @@ class ImageLoader: ObservableObject, PageProtocol{
             switch result {
             case .success(let value):
                 guard let img = value.image else {
-                    DataLog.d("cache error crear" + path , tag:self.tag)
+                    DataLog.e("cache error crear" + path , tag:self.tag)
                     self.cache.removeImage(forKey: path)
                     self.isLoading = false
                     return
                 }
-               // DataLog.d("cached image" + path , tag:self.tag)
+                //DataLog.d("cached image" + path , tag:self.tag)
                 self.event = .complete(img)
                 self.isLoading = false
                 

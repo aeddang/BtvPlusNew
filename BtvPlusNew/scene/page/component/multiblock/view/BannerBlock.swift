@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 struct BannerBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
@@ -16,6 +17,7 @@ struct BannerBlock:BlockProtocol, PageComponent {
     var data: BlockData
     @State var bannerData:BannerData? = nil
     @State var isUiActive:Bool = true
+   
     var body :some View {
         ZStack() {
             if self.isUiActive {
@@ -27,18 +29,23 @@ struct BannerBlock:BlockProtocol, PageComponent {
         }
         .padding(.horizontal, Dimen.margin.thin)
         .modifier(MatchParent())
-       
         .onAppear{
+            if self.bannerData != nil { return }
             if let datas = data.banners {
                 self.bannerData = datas.first
                 ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
                 return
             }
             if let apiQ = self.getRequestApi(pairing:self.pairing.status) {
+                ComponentLog.d("RequestData " + data.name, tag: "BlockProtocolA")
                 dataProvider.requestData(q: apiQ)
             } else {
+                ComponentLog.d("RequestDataFail " + data.name, tag: "BlockProtocolA")
                 self.data.setRequestFail()
             }
+        }
+        .onDisappear{
+           
         }
         .onReceive(self.pageObservable.$layer ){ layer  in
             switch layer {
@@ -79,5 +86,7 @@ struct BannerBlock:BlockProtocol, PageComponent {
         }
         else { onBlank() }
     }
+    
+    
     
 }

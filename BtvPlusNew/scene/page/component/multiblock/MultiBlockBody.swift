@@ -242,6 +242,7 @@ struct MultiBlockBody: PageComponent {
                                 VideoData().setData(data: d, cardType: data.cardType)
                             }
                         case .theme :
+                            return data.setBlank()
                             data.themas = blocks[0...min(max, blocks.count-1)].map{ d in
                                 ThemaData().setData(data: d, cardType: data.cardType)
                             }
@@ -266,6 +267,7 @@ struct MultiBlockBody: PageComponent {
                     }
                     
                 case .theme :
+                    return data.setBlank()
                     data.themas = blocks[0...min(max, blocks.count-1)].map{ d in
                         ThemaData().setData(data: d, cardType: data.cardType)
                     }
@@ -417,7 +419,6 @@ struct MultiBlockBody: PageComponent {
     
     private func requestBlockCompleted(){
         PageLog.d("addBlock completed", tag: self.tag)
-
         if !self.loadingBlocks.isEmpty {
             self.addLoadedBlocks(self.loadingBlocks) 
             PageLog.d("self.blocks " + self.blocks.count.description, tag: self.tag)
@@ -499,25 +500,28 @@ struct MultiBlockBody: PageComponent {
             self.blocks.append(contentsOf: set)
         }else{
             self.loadingBlocks.append(contentsOf: set)
-            self.loadingBlocks.forEach{ s in
-                if let apiQ = s.getRequestApi(pairing:self.pairing.status) {
+            self.loadingBlocks.forEach{ block in
+                if let apiQ = block.getRequestApi(pairing:self.pairing.status) {
                     dataProvider.requestData(q: apiQ)
                 } else{
                     
-                    if s.dataType == .theme , let blocks = s.blocks {
-                        if s.uiType == .theme { // ticket 인경우 block에서 처리
+                    if block.dataType == .theme , let blocks = block.blocks {
+                        if block.uiType == .theme { // ticket 인경우 block에서 처리
                             let themas = blocks.map{ data in
-                                ThemaData().setData(data: data, cardType: s.cardType)
+                                ThemaData().setData(data: data, cardType: block.cardType)
                             }
                             if let size = themas.first?.type {
-                                s.listHeight = size.size.height + Self.tabHeight
+                                block.listHeight = size.size.height + Self.tabHeight
                             }
-                            s.themas = themas
+                            block.themas = themas
+                            DataLog.d("ThemaData " + block.name, tag: "BlockProtocolA")
+                        } else {
+                            DataLog.d("TicketData " + block.name, tag: "BlockProtocolA")
                         }
-                        s.setDatabindingCompleted()
+                        block.setDatabindingCompleted()
                         return
                     } else{
-                        s.setRequestFail()
+                        block.setRequestFail()
                     }
                 }
             }

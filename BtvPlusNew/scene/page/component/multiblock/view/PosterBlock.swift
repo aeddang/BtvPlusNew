@@ -8,6 +8,10 @@
 import Foundation
 import SwiftUI
 import Combine
+extension PosterBlock{
+    static let skeletonNum:Int = SystemEnvironment.isTablet ? 8 : 4
+}
+
 struct PosterBlock:PageComponent, BlockProtocol {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
@@ -22,7 +26,6 @@ struct PosterBlock:PageComponent, BlockProtocol {
     
     @State var isUiActive:Bool = true
     @State var hasMore:Bool = true
-    @State var listHeight:CGFloat = 0
     @State var skeletonSize:CGSize = CGSize()
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
@@ -60,7 +63,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
                         banners: self.data.leadingBanners,
                         datas: self.datas,
                         useTracking:self.useTracking)
-                        .modifier(MatchHorizontal(height: self.listHeight))
+                        
                         .onReceive(self.viewModel.$event){evt in
                             guard let evt = evt else {return}
                             switch evt {
@@ -81,7 +84,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
                         .modifier(MatchParent())
                 } else {
                     SkeletonBlock(
-                        len:4,
+                        len:Self.skeletonNum,
                         spacing:PosterList.spacing,
                         size:self.skeletonSize
                     )
@@ -92,12 +95,15 @@ struct PosterBlock:PageComponent, BlockProtocol {
         .modifier(MatchParent())
         //.background(Color.app.grey)
         .onAppear{
+            if !self.datas.isEmpty {
+                ComponentLog.d("RecycleData " + data.name, tag: "BlockProtocol")
+                return
+            }
             if let datas = data.posters {
                 if data.allPosters?.isEmpty == true {
                     self.hasMore = false
                 }
                 if let size = datas.first?.type.size {
-                    self.listHeight = datas.first?.type.size.height ?? 0
                     self.skeletonSize = size
                 }
                 ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
@@ -105,15 +111,16 @@ struct PosterBlock:PageComponent, BlockProtocol {
                 return
             }
             if let apiQ = self.getRequestApi(pairing:self.pairing.status) {
+                ComponentLog.d("RequestData " + data.name, tag: "BlockProtocolA")
                 dataProvider.requestData(q: apiQ)
             } else {
+                ComponentLog.d("RequestData Fail" + data.name, tag: "BlockProtocolA")
                 self.data.setRequestFail()
             }
-            
-            
         }
         .onDisappear{
-            self.datas.removeAll()
+            
+            //self.datas.removeAll()
             self.clearDataBinding()
         }
         .onReceive(self.pageObservable.$layer ){ layer  in
@@ -190,7 +197,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
     
         self.dataBindingSubscription?.cancel()
         self.dataBindingSubscription = Timer.publish(
-            every: 0.5, on: .current, in: .common)
+            every: SkeletonBlock.dataBindingDelay , on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
                 self.clearDataBinding()

@@ -103,7 +103,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
             application.registerUserNotificationSettings(settings)
         }
         application.registerForRemoteNotifications()
-        Self.appURLSession = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: nil)
+        let queue = OperationQueue()
+        queue.qualityOfService = .utility
+        Self.appURLSession = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: queue)
         let launchedURL = launchOptions?[UIApplication.LaunchOptionsKey.url] as? URL
         return AppDelegate.appObserver.handleDynamicLink(launchedURL)
         

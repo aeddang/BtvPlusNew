@@ -399,8 +399,7 @@ struct VideoItem: PageView {
                 }
                 VStack(alignment: .leading, spacing:0){
                     if let tag = self.data.tagData {
-                        Tag(data: tag)
-                            .modifier(MatchParent())
+                        Tag(data: tag).modifier(MatchParent())
                     }else if let time = self.data.playTime {
                         ZStack(alignment:.bottomTrailing){
                             Spacer().modifier(MatchParent())

@@ -45,12 +45,12 @@ struct PageCategoryList: PageView {
                         infinityScrollModel:self.infinityScrollModel,
                         viewModel:self.viewModel,
                         useTracking:self.useTracking,
-                        marginBottom:Dimen.app.bottom 
+                        marginBottom:self.marginBottom
                     )
                     .background(Color.brand.bg)
                     
                 }
-                .padding(.bottom, self.marginBottom )
+                
                 .modifier(PageFull(style:.dark))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
@@ -67,12 +67,11 @@ struct PageCategoryList: PageView {
                 }
                 self.useTracking = ani
             }
-           
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 self.useTracking = page?.id == self.pageObject?.id
             }
             .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
-                self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
+                self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.app.bottom
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }

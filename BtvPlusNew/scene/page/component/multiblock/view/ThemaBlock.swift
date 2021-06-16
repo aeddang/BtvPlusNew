@@ -22,6 +22,23 @@ struct ThemaBlock:BlockProtocol, PageComponent {
     @State var datas:[ThemaData] = []
     @State var isUiActive:Bool = true
     @State var skeletonSize:CGSize = CGSize()
+    
+    @State var list: ThemaList?
+    private func getList() -> some View {
+        if let list = self.list {return list}
+        let newList = ThemaList(
+            viewModel:self.viewModel,
+            banners: self.data.leadingBanners,
+            datas: self.datas,
+            useTracking:self.useTracking)
+            
+        DispatchQueue.main.async {
+            self.list = newList
+            
+        }
+        return newList
+    }
+    
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             if self.isUiActive {
@@ -29,12 +46,7 @@ struct ThemaBlock:BlockProtocol, PageComponent {
                     .frame(height:Dimen.tab.thin)
                     .modifier(ContentHorizontalEdges())
                 if !self.datas.isEmpty {
-                    ThemaList(
-                        viewModel:self.viewModel,
-                        banners: self.data.leadingBanners,
-                        datas: self.datas,
-                        useTracking:self.useTracking)
-                        
+                    self.getList()
                         .onReceive(self.viewModel.$event){evt in
                             guard let evt = evt else {return}
                             switch evt {
@@ -52,8 +64,6 @@ struct ThemaBlock:BlockProtocol, PageComponent {
                         spacing:VideoList.spacing,
                         size:self.skeletonSize
                     )
-                    Spacer()
-                    
                 }
             }
         }
@@ -80,8 +90,6 @@ struct ThemaBlock:BlockProtocol, PageComponent {
             }
         }
         .onDisappear{
-            
-            //self.datas.removeAll()
             self.clearDataBinding()
         }
         .onReceive(self.pageObservable.$layer ){ layer  in

@@ -93,7 +93,9 @@ struct ListItem{
         static let height:CGFloat = 140
     }
     
-   
+    struct coupon {
+        static let height:CGFloat = isPad ? 170 : 110
+    }
    
 }
 

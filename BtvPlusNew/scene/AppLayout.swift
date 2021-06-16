@@ -19,7 +19,6 @@ struct AppLayout: PageComponent{
     @EnvironmentObject var setup:Setup
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     
-    
     @State var loadingInfo:[String]? = nil
     @State var isLoading = false
     @State var isInit = false
@@ -31,6 +30,7 @@ struct AppLayout: PageComponent{
     
     var body: some View {
         ZStack{
+            
             SceneTab()
             SceneKidsTab()
            
@@ -178,6 +178,7 @@ struct AppLayout: PageComponent{
             
         }
     }
+    
     func onStoreInit(){
         //self.appSceneObserver.event = .debug("onStoreInit")
         if SystemEnvironment.firstLaunch {
@@ -188,6 +189,7 @@ struct AppLayout: PageComponent{
         }
         self.onPageInit()
     }
+    
     func onPageInit(){
         self.isInit = true
         self.isLoading = false
@@ -203,6 +205,8 @@ struct AppLayout: PageComponent{
                     .addParam(key: .id, value: initMenuId)
                 
             )
+            
+            //self.pagePresenter.openPopup(PageProvider.getPageObject(.playerTest))
         }
         if let alram = self.appObserver.alram  {
             self.appSceneObserver.event = .debug("apns exist")

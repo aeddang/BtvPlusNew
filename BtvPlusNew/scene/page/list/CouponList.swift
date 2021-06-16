@@ -101,17 +101,9 @@ struct CouponList: PageComponent{
     var onBottom: ((_ data:CouponData) -> Void)? = nil
     
     @State var horizontalMargin:CGFloat = Dimen.margin.thin
-    
+    @State var isTop:Bool = true
     var body: some View {
-        InfinityScrollView(
-            viewModel: self.viewModel,
-            axes: .vertical,
-            scrollType : .reload(isDragEnd:false),
-            marginTop: Dimen.margin.medium,
-            marginBottom: self.marginBottom,
-            spacing: 0,
-            useTracking: self.useTracking
-        ){
+        ZStack(alignment: .topLeading){
             if let type = self.type {
                 HStack(spacing: Dimen.margin.tiny){
                     VStack(alignment: .leading, spacing: 0){
@@ -144,23 +136,55 @@ struct CouponList: PageComponent{
                     }
                     .buttonStyle(BorderlessButtonStyle())
                 }
-                .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.regularExtra))
+                .padding(.top, Dimen.margin.medium)
+                .padding(.horizontal, self.horizontalMargin )
+                .opacity(self.isTop ? 1 : 0 )
             }
-            if !self.datas.isEmpty {
-                ForEach(self.datas) { data in
-                    CouponItem( data:data )
-                    .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.tinyExtra))
-                    .onAppear{
-                        if data.index == self.datas.last?.index {
-                            self.onBottom?(data)
+            InfinityScrollView(
+                viewModel: self.viewModel,
+                axes: .vertical,
+                scrollType : .reload(isDragEnd:false),
+                marginTop: Dimen.margin.medium + (type != nil ? Dimen.tab.light : 0),
+                marginBottom: self.marginBottom,
+                spacing: 0,
+                useTracking: self.useTracking
+            ){
+                
+                if !self.datas.isEmpty {
+                    ForEach(self.datas) { data in
+                        CouponItem( data:data )
+                        .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.tinyExtra))
+                        .onAppear{
+                            if data.index == self.datas.last?.index {
+                                self.onBottom?(data)
+                            }
                         }
                     }
+                } else {
+                    EmptyMyData(
+                        text: self.type?.empty ?? String.alert.dataError)
+                        .modifier(PageBody())
                 }
-            } else {
-                EmptyMyData(
-                    text: self.type?.empty ?? String.alert.dataError)
-                    .modifier(PageBody())
             }
+        }
+        .onReceive(self.viewModel.$event){evt in
+            guard let evt = evt else {return}
+            switch evt {
+            case .top :
+                if !self.isTop {
+                    withAnimation{ self.isTop = true }
+                }
+            case .down :
+                if self.isTop {
+                    withAnimation{  self.isTop = false }
+                }
+            case .pull :
+                if self.isTop {
+                    withAnimation{  self.isTop = false }
+                }
+            default : break
+            }
+            
         }
         .onReceive(self.sceneObserver.$isUpdated){ update in
             if !update {return}
@@ -217,7 +241,7 @@ struct CouponItem: PageView {
                 }
             }
             .padding(.all, Dimen.margin.regularExtra)
-           
+            .modifier(MatchParent())
             .background(Color.app.blueLight)
             .clipShape( RoundedRectangle(cornerRadius: Dimen.radius.light))
             LineVerticalDotted()
@@ -231,6 +255,7 @@ struct CouponItem: PageView {
                 .background(Color.app.blueLight)
                 .clipShape( RoundedRectangle(cornerRadius:Dimen.radius.light))
         }
+        .frame(height:ListItem.coupon.height)
         .background(
             HStack{
                 Spacer()

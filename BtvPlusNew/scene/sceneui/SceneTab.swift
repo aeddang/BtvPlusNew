@@ -46,7 +46,7 @@ struct SceneTab: PageComponent{
                     VStack(alignment:.leading, spacing:0){
                         if let bannerData = self.headerBannerData {
                             HeaderBanner(data:bannerData) {
-                                self.headerBannerData = nil
+                                withAnimation{self.headerBannerData = nil}
                                 self.updateTopPos()
                             }
                         }

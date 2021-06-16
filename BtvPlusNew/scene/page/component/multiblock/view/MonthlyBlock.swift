@@ -8,6 +8,14 @@
 import Foundation
 import SwiftUI
 import Combine
+
+class MonthlyBlockModel: InfinityScrollModel {
+    @Published var isUpdate = false {
+        didSet{ if self.isUpdate { self.isUpdate = false} }
+    }
+}
+
+
 extension MonthlyBlock{
     static let height:CGFloat = ListItem.monthly.size.height + Font.size.regular
         + Dimen.button.regularExtra + (Dimen.margin.thinExtra * 3) + Dimen.margin.lightExtra
@@ -19,7 +27,7 @@ struct MonthlyBlock: PageComponent {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
-    @ObservedObject var viewModel: InfinityScrollModel = InfinityScrollModel()
+    @ObservedObject var viewModel: MonthlyBlockModel = MonthlyBlockModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var monthlyDatas:[MonthlyData] = []
     var allData:BlockItem? = nil
@@ -52,27 +60,19 @@ struct MonthlyBlock: PageComponent {
                 }
             }
             .modifier(ContentHorizontalEdges())
-            MonthlyList(
-                viewModel:self.viewModel,
-                datas: self.monthlyDatas,
-                useTracking:self.useTracking
-            ){ data in
-                if let action = self.action {
-                    action(data)
+            if let list = self.list {
+                list.modifier(MatchHorizontal(height: ListItem.monthly.size.height))
+                .onReceive(self.viewModel.$event){evt in
+                    guard let evt = evt else {return}
+                    switch evt {
+                    case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
+                    case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
+                    default : do{}
+                    }
                 }
-                self.selectedData(data: data)
-            }
-            .modifier(MatchHorizontal(height: ListItem.monthly.size.height))
-            .onReceive(self.viewModel.$event){evt in
-                guard let evt = evt else {return}
-                switch evt {
-                case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
-                case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
-                default : do{}
+                .onReceive(self.viewModel.$pullPosition){ pos in
+                    self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
                 }
-            }
-            .onReceive(self.viewModel.$pullPosition){ pos in
-                self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
             }
             TipTab(
                 leading: self.hasAuth ? String.monthly.textEnjoy : String.monthly.textRecommand,
@@ -96,16 +96,18 @@ struct MonthlyBlock: PageComponent {
         }
         .onAppear(){
             if self.monthlyDatas.isEmpty {return}
-            if let data = self.monthlyDatas.first(where: { $0.isSelected }) {
-                self.selectedData(data: data)
-            }
+            self.getList()
             self.initSubscription()
-            if let data = self.currentData {
-                let idx  = data.index
-                if idx > 0 {
-                    self.viewModel.uiEvent = .scrollTo(max(0,idx-1))
+            if self.currentData == nil {
+                if let data = self.monthlyDatas.first(where: { $0.isSelected }) {
+                    self.selectedData(data: data)
                 }
+            } else {
+                self.moveScroll()
             }
+        }
+        .onReceive(self.viewModel.$isUpdate){ update in
+            self.getList()
         }
         .onDisappear(){
             self.anyCancellable.forEach{$0.cancel()}
@@ -113,10 +115,55 @@ struct MonthlyBlock: PageComponent {
         }
     }
     
+    
+   
+    private func moveScroll(){
+        if let data = self.currentData {
+            let idx  = self.monthlyDatas.firstIndex(of: data) ?? 0
+            ComponentLog.d("idx " + idx.description, tag: self.tag)
+            if idx > 0 {
+                self.viewModel.uiEvent = .scrollTo(max(0,idx), .center)
+            }
+        }
+    }
+    
+    @State var list: MonthlyList?
+    @State var listId:String = ""
+    
+    @discardableResult
+    private func getList() -> some View {
+        let key = self.monthlyDatas.reduce("", {$0 + "|" + $1.sortIdx.description})
+        if  self.listId == key, let list = self.list {
+            ComponentLog.d("Recycle List" , tag: self.tag)
+            return list
+        }
+        
+        
+        let newList = MonthlyList(
+            viewModel:self.viewModel,
+            datas: self.monthlyDatas,
+            useTracking:self.useTracking
+        ){ data in
+            
+            if let action = self.action {
+                action(data)
+            }
+            self.selectedData(data: data)
+        }
+        ComponentLog.d("New List" , tag: self.tag)
+        DispatchQueue.main.async {
+            self.listId = key
+            self.list = newList
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.1){
+            self.moveScroll()
+        }
+        return newList
+    }
+    
     @State var anyCancellable = Set<AnyCancellable>()
     @State var currentData:MonthlyData? = nil
     @State var hasAuth:Bool = false
-    
     private func initSubscription(){
         self.anyCancellable.forEach{$0.cancel()}
         self.anyCancellable.removeAll()
@@ -134,7 +181,5 @@ struct MonthlyBlock: PageComponent {
     private func selectedData(data:MonthlyData){
         self.currentData = data
         self.hasAuth = data.hasAuth
-       
-        
     }
 }

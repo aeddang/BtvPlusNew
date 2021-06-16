@@ -24,7 +24,7 @@ struct PageHome: PageView {
     @ObservedObject var viewPagerModel:ViewPagerModel = ViewPagerModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
-    @ObservedObject var monthlyViewModel: InfinityScrollModel = InfinityScrollModel()
+    @ObservedObject var monthlyViewModel: MonthlyBlockModel = MonthlyBlockModel()
 
     @State var useTracking:Bool = false
     @State var headerHeight:CGFloat = 0
@@ -32,133 +32,143 @@ struct PageHome: PageView {
     @State var marginBottom:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
-        PageDataProviderContent(
-            pageObservable:self.pageObservable,
-            viewModel : self.viewModel
-        ){
-           
-            MultiBlockBody (
-                pageObservable: self.pageObservable,
-                viewModel: self.viewModel,
-                infinityScrollModel: self.infinityScrollModel,
-                viewPagerModel:self.viewPagerModel,
-                useBodyTracking:self.useTracking,
-                useTracking:false,
-                marginHeader : self.marginHeader,
-                marginTop:self.headerHeight,
-                marginBottom: self.marginBottom,
-                topDatas: self.topDatas,
-                monthlyViewModel : self.monthlyViewModel,
-                monthlyDatas: self.monthlyDatas,
-                monthlyAllData: self.monthlyAllData,
-                tipBlock: self.tipBlockData,
-                useFooter: self.useFooter
-                ){ data in
-                    self.reload(selectedMonthlyId: data.prdPrcId)
-                    
+            PageDataProviderContent(
+                pageObservable:self.pageObservable,
+                viewModel : self.viewModel
+            ){
+               
+                MultiBlockBody (
+                    pageObservable: self.pageObservable,
+                    viewModel: self.viewModel,
+                    infinityScrollModel: self.infinityScrollModel,
+                    viewPagerModel:self.viewPagerModel,
+                    useBodyTracking:self.useTracking,
+                    useTracking:false,
+                    marginHeader : self.marginHeader,
+                    marginTop:self.headerHeight,
+                    marginBottom: self.marginBottom,
+                    topDatas: self.topDatas,
+                    monthlyViewModel : self.monthlyViewModel,
+                    monthlyDatas: self.sortedMonthlyDatas ,
+                    monthlyAllData: self.monthlyAllData,
+                    tipBlock: self.tipBlockData,
+                    useFooter: self.useFooter
+                    ){ data in
+                        self.reload(selectedMonthlyId: data.prdPrcId)
+                        
+                }
+                
             }
             
-        }
-        
-        .padding(.bottom, self.sceneObserver.safeAreaBottom )
-        .modifier(PageFull())
-        
-        .onReceive(self.dataProvider.bands.$event){ evt in
-            guard let evt = evt else { return }
-            switch evt {
-            case .updated: self.reload()
-            default: do{}
-            }
-        }
-        .onReceive(self.infinityScrollModel.$event){evt in
-            guard let evt = evt else {return}
-            if self.pagePresenter.currentTopPage?.pageID == .home {
+            .padding(.bottom, self.sceneObserver.safeAreaBottom )
+            .modifier(PageFull())
+            
+            .onReceive(self.dataProvider.bands.$event){ evt in
+                guard let evt = evt else { return }
                 switch evt {
-                case .top : self.appSceneObserver.useTopFix = true
-                case .down : self.appSceneObserver.useTopFix = false
+                case .updated: self.reload()
+                default: do{}
+                }
+            }
+            .onReceive(self.infinityScrollModel.$event){evt in
+                guard let evt = evt else {return}
+                if self.pagePresenter.currentTopPage?.pageID == .home {
+                    switch evt {
+                    case .top : self.appSceneObserver.useTopFix = true
+                    case .down : self.appSceneObserver.useTopFix = false
+                    default : break
+                    }
+                }
+            }
+            .onReceive(self.appSceneObserver.$headerHeight){ hei in
+                self.headerHeight = hei
+            }
+            .onReceive(self.appSceneObserver.$safeHeaderHeight){ hei in
+                withAnimation{
+                    self.marginHeader = self.topDatas == nil ? 0 : hei
+                }
+            }
+            
+            .onReceive(self.pagePresenter.$currentTopPage){ page in
+                if page?.id == self.pageObject?.id {
+                    if self.useTracking {return}
+                    self.useTracking = true
+                } else {
+                    if !self.useTracking {return}
+                    self.useTracking = false
+                   
+                }
+            }
+            .onReceive(self.pairing.authority.$purchaseLowLevelTicketList){ list in
+                guard let list = list else { return }
+                self.updatedMonthly(purchases: list, lowLevelPpm: true)
+            }
+            .onReceive(self.pairing.authority.$purchaseTicketList){ list in
+                guard let list = list else { return }
+                self.updatedMonthly(purchases: list, lowLevelPpm: false)
+            }
+            .onReceive(self.pairing.authority.$monthlyPurchaseInfo){ info in
+                guard let info = info else { return }
+                self.updatedMonthlyPurchaseInfo(info)
+            }
+            .onReceive(self.pairing.authority.$periodMonthlyPurchaseInfo){ info in
+                guard let info = info else { return }
+                self.updatedPeriodMonthlyPurchaseInfo(info)
+            }
+            .onReceive(self.pairing.authority.$event){ evt in
+                guard let evt = evt else { return }
+                switch evt {
+                case .updateMyinfoError :
+                    self.syncronizeMonthly()
                 default : break
                 }
             }
-        }
-        .onReceive(self.appSceneObserver.$headerHeight){ hei in
-            self.headerHeight = hei
-        }
-        .onReceive(self.appSceneObserver.$safeHeaderHeight){ hei in
-            withAnimation{
-                self.marginHeader = self.topDatas == nil ? 0 : hei
-            }
-        }
-        
-        .onReceive(self.pagePresenter.$currentTopPage){ page in
-            if page?.id == self.pageObject?.id {
-                if self.useTracking {return}
-                self.useTracking = true
-            } else {
-                if !self.useTracking {return}
-                self.useTracking = false
-               
-            }
-        }
-        .onReceive(self.pairing.authority.$purchaseLowLevelTicketList){ list in
-            guard let list = list else { return }
-            self.updatedMonthly(purchases: list, lowLevelPpm: true)
-        }
-        .onReceive(self.pairing.authority.$purchaseTicketList){ list in
-            guard let list = list else { return }
-            self.updatedMonthly(purchases: list, lowLevelPpm: false)
-        }
-        .onReceive(self.pairing.authority.$monthlyPurchaseInfo){ info in
-            guard let info = info else { return }
-            self.updatedMonthlyPurchaseInfo(info)
-        }
-        .onReceive(self.pairing.authority.$periodMonthlyPurchaseInfo){ info in
-            guard let info = info else { return }
-            self.updatedPeriodMonthlyPurchaseInfo(info)
-        }
-        .onReceive(self.viewModel.$event){evt in
-            guard let evt = evt else { return }
-            switch evt {
-            case .onResult(_, let res, _):
-                switch res.type {
-                case .getEventBanner(_, let type) :
-                    if self.topDatas != nil {return}
-                    if res.id == self.menuId && type == .page {
-                        self.respondTopBanner(res: res)
-                        self.requestBand()
+            .onReceive(self.viewModel.$event){evt in
+                guard let evt = evt else { return }
+                switch evt {
+                case .onResult(_, let res, _):
+                    switch res.type {
+                    case .getEventBanner(_, let type) :
+                        if self.topDatas != nil {return}
+                        if res.id == self.menuId && type == .page {
+                            self.respondTopBanner(res: res)
+                            self.requestBand()
+                        }
+                    default: break
                     }
-                default: break
-                }
-            case .onError(_, let res, _) :
-                switch res.type {
-                case .getEventBanner(_, let type) :
-                    if self.topDatas != nil {return}
-                    if res.id == self.menuId && type == .page {
-                        self.requestBand()
+                case .onError(_, let res, _) :
+                    switch res.type {
+                    case .getEventBanner(_, let type) :
+                        if self.topDatas != nil {return}
+                        if res.id == self.menuId && type == .page {
+                            self.requestBand()
+                        }
+                    default: break
                     }
-                default: break
+                   
+                default : break
                 }
-               
-            default : break
             }
-        }
-        .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
-            self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.app.bottom
-        }
-        .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-            self.useTracking = ani
-            if ani {
-                self.reload()
+            .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
+                self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.app.bottom
             }
-        }
-        .onAppear{
-            guard let obj = self.pageObject  else { return }
-            self.menuId = (obj.getParamValue(key: .id) as? String) ?? self.menuId
-            self.openId = obj.getParamValue(key: .subId) as? String
-        }
-        .onDisappear{
-            self.appSceneObserver.useTopFix = nil
-        }
-        }
+            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                self.useTracking = ani
+                if ani {
+                    self.reload()
+                }
+            }
+            .onAppear{
+                guard let obj = self.pageObject  else { return }
+                self.menuId = (obj.getParamValue(key: .id) as? String) ?? self.menuId
+                self.openId = obj.getParamValue(key: .subId) as? String
+                
+            }
+            .onDisappear{
+                self.appSceneObserver.useTopFix = nil
+                
+            }
+        }//geo
     }//body
     
     @State var currentBand:Band? = nil
@@ -166,17 +176,17 @@ struct PageHome: PageView {
     @State var originMonthlyDatas:[String:MonthlyData]? = nil
     @State var monthlyAllData:BlockItem? = nil
     @State var monthlyDatas:Array<MonthlyData>? = nil
+    @State var sortedMonthlyDatas:Array<MonthlyData>? = nil
     @State var tipBlockData:TipBlockData? = nil
     @State var selectedMonthlyId:String? = nil
     @State var menuId:String = ""
     @State var openId:String? = nil
     @State var useFooter:Bool = false
     
-    
     private func reload(selectedMonthlyId:String? = nil){
        
         self.selectedMonthlyId = selectedMonthlyId ?? self.selectedMonthlyId
-        self.monthlyDatas?.forEach{$0.reset()}
+        self.sortedMonthlyDatas?.forEach{$0.reset()}
         self.requestTopBanner()
     }
     
@@ -305,6 +315,7 @@ struct PageHome: PageView {
             }
             .forEach{ data in
                 let monthly = MonthlyData().setData(data: data, idx: idx)
+                monthly.posIdx = idx
                 if monthly.prdPrcId == self.selectedMonthlyId { monthly.setSelected(true) }
                 originMonthlyDatas[monthly.prdPrcId] = monthly
                 if monthlyDatas.count < maxCount { monthlyDatas.append(monthly) }
@@ -313,15 +324,19 @@ struct PageHome: PageView {
             self.originMonthlyDatas = originMonthlyDatas
             if !monthlyDatas.isEmpty {
                 self.monthlyDatas = monthlyDatas
+                
             }
         }
         self.requestMonthly()
-        self.setupMonthly()
     }
 
     private func requestMonthly(){
         self.originMonthlyDatas?.forEach{$1.resetJoin()}
-        self.pairing.authority.requestAuth(.updateTicket)
+        if self.pairing.status == .pairing {
+            self.pairing.authority.requestAuth(.updateTicket)
+        } else {
+            self.syncronizeMonthly()
+        }
     }
     
     private func updatedMonthly( purchases:[MonthlyInfoItem], lowLevelPpm:Bool){
@@ -332,13 +347,24 @@ struct PageHome: PageView {
             monthlyData.setData(data:purchas, isLow:lowLevelPpm)
         }
         self.monthlyDatas?.sort(by: {$0.sortIdx > $1.sortIdx})
-        
+        var idx = 0
+        self.monthlyDatas?.forEach{
+            $0.posIdx = idx
+            idx += 1
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.1){
+            self.syncronizeMonthly()
+        }
+    }
+
+    private func syncronizeMonthly(){
+        self.sortedMonthlyDatas = self.monthlyDatas
+        self.setupMonthly()
+        self.monthlyViewModel.isUpdate = true
     }
     
-    
-    
     private func setupMonthly(){
-        guard let monthlyDatas = self.monthlyDatas else { return }
+        guard let monthlyDatas = self.sortedMonthlyDatas else { return }
         if monthlyDatas.isEmpty { return }
         if self.selectedMonthlyId == nil { self.selectedMonthlyId = monthlyDatas.first?.prdPrcId }
         if self.originMonthlyDatas?[self.selectedMonthlyId ?? ""] == nil { self.selectedMonthlyId = monthlyDatas.first?.prdPrcId }

@@ -26,6 +26,7 @@ class MonthlyData:InfinityData,ObservableObject{
     private(set) var blocks:[BlockItem]? = nil
     
     private(set) var sortIdx:Int = 0
+    var posIdx:Int = UUID.init().hashValue
   
     @Published private(set) var isUpdated: Bool = false
         {didSet{ if isUpdated { isUpdated = false} }}
@@ -126,7 +127,7 @@ struct MonthlyList: PageComponent{
             useTracking: self.useTracking
             ){
             ForEach(self.datas) { data in
-                if data.index == -1 {
+                if data.posIdx == -1 {
                     MonthlyItem( data:data )
                     .onTapGesture {
                         if let action = self.action {
@@ -135,7 +136,7 @@ struct MonthlyList: PageComponent{
                     }
                 }else{
                     MonthlyItem( data:data )
-                        .id(data.index)
+                        .id(data.posIdx)
                     .onTapGesture {
                         if let action = self.action {
                             action(data)

@@ -10,7 +10,8 @@ import SwiftUI
 
 struct SearchResult: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
-    var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var viewModel: MultiBlockModel = MultiBlockModel()
+    var infinityScrollModel:InfinityScrollModel = InfinityScrollModel()
     var pageObservable:PageObservable
     var pageDragingModel:PageDragingModel
     var total:Int = 0
@@ -32,6 +33,7 @@ struct SearchResult: PageComponent{
             }
             MultiBlock(
                 viewModel: self.viewModel,
+                infinityScrollModel: self.infinityScrollModel,
                 pageObservable: self.pageObservable,
                 pageDragingModel: self.pageDragingModel,
                 datas: self.datas,

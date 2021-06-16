@@ -169,7 +169,7 @@ class BlockData:InfinityData, ObservableObject{
                 isOptional: isOption)
        
         default:
-            DataLog.d("onRequestFail " + self.name, tag: "BlockProtocol")
+            DataLog.d("RequestFail " + self.name, tag: "BlockProtocol")
             return nil
         }
     }

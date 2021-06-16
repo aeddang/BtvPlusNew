@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUI
 
-
 struct KidsPlayer: PageComponent{
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var sceneObserver:PageSceneObserver

@@ -41,6 +41,7 @@ struct PageMy: PageView {
                                 pageDragingModel: self.pageDragingModel,
                                 watchedScrollModel:self.watchedScrollModel
                             )
+                            .padding(.bottom, self.marginBottom)
                             .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
                                 guard let evt = evt else {return}
                                 switch evt {
@@ -58,13 +59,15 @@ struct PageMy: PageView {
                             DisconnectView(
                                 pageObservable:self.pageObservable
                             )
+                            .padding(.bottom, self.marginBottom)
                         }
                     }
+                   
                 }
                 .modifier(PageFull())
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }//PageDragingBody
-            .padding(.bottom, self.marginBottom)
+            
             .onReceive(self.pairing.$status){status in
                 self.isPairing = ( status == .pairing )
             }

@@ -40,7 +40,7 @@ struct PageMultiBlock: PageView {
                             viewModel:self.cateBlockViewModel,
                             useTracking:self.useTracking,
                             marginTop: self.marginTop + self.sceneObserver.safeAreaTop + Dimen.app.top,
-                            marginBottom: Dimen.app.bottom
+                            marginBottom: self.marginBottom
                         )
                         
                     } else {
@@ -124,15 +124,10 @@ struct PageMultiBlock: PageView {
                 if page?.id == self.pageObject?.id {
                     if self.useTracking {return}
                     self.useTracking = true
-                    /*
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        withAnimation{ self.marginBottom = self.sceneObserver.safeAreaBottom + Dimen.app.bottom }
-                    }
-                    */
+                    
                 } else {
                     if !self.useTracking {return}
                     self.useTracking = false
-                    //self.marginBottom = 0
                 }
             }
             .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in

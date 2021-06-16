@@ -385,8 +385,11 @@ struct VideoItem: PageView {
     var body: some View {
         VStack(alignment: .leading, spacing:0){
             ZStack{
+                
                 ImageView(url: self.data.image,contentMode: .fill, noImg: Asset.noImg16_9)
                     .modifier(MatchParent())
+                 
+                
                 if self.data.isInside {
                     Spacer().modifier(MatchParent()).background(
                         self.isSelected ? Color.transparent.black45 : Color.transparent.black70)

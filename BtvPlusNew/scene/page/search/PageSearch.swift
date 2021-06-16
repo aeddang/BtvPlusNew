@@ -69,7 +69,7 @@ struct PageSearch: PageView {
                         ZStack(){
                             if !self.searchDatas.isEmpty {
                                 SearchResult(
-                                    viewModel: self.resultScrollModel,
+                                    infinityScrollModel: self.resultScrollModel,
                                     pageObservable: self.pageObservable,
                                     pageDragingModel: self.pageDragingModel,
                                     total:self.total,

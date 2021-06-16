@@ -20,13 +20,15 @@ struct PagePlayerTest: PageView {
    
     @State var ckcURL:String = ""
     @State var contentId:String = ""
-    @State var videoPath:String = ""
+    @State var videoPath:String = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
     
     var body: some View {
         VStack(alignment: .center, spacing:10)
         {
             PageTab( isClose: true)
-            
+            CPPlayer(
+                viewModel : self.playerModel ,
+                pageObservable : self.pageObservable)
             InputCell(
                 title: "Api",
                 input: self.$ckcURL
@@ -45,9 +47,7 @@ struct PagePlayerTest: PageView {
                     ckcURL: self.ckcURL)
                 self.playerModel.event = .load(self.videoPath, true)
             }
-            CPPlayer(
-                viewModel : self.playerModel ,
-                pageObservable : self.pageObservable)
+            .padding(.bottom, 20)
             
             
         }//VStack

@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftUI
+import AudioToolbox
 
 extension Color {
     func uiColor() -> UIColor {
@@ -58,5 +59,39 @@ extension UIImage {
         let img = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return img!
+    }
+}
+
+extension UIDevice {
+    static func vibrate() {
+        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+    }
+}
+
+
+extension UIView {
+    func takeScreenshot() -> UIImage {
+        // Begin context
+        UIGraphicsBeginImageContextWithOptions(self.bounds.size, false, UIScreen.main.scale)
+        // Draw view in that context
+        drawHierarchy(in: self.bounds, afterScreenUpdates: true)
+        // And finally, get image
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        if (image != nil) {
+            UIImageWriteToSavedPhotosAlbum(image!, nil, nil, nil);
+            return image!
+        }
+
+        return UIImage()
+    }
+}
+
+extension SwiftUI.View {
+    func toVC() -> UIViewController {
+        let vc = UIHostingController(rootView: self)
+        vc.view.frame = UIScreen.main.bounds
+        return vc
     }
 }

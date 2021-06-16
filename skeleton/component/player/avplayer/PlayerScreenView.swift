@@ -17,74 +17,8 @@ protocol PlayerScreenViewDelegate{
     func onPlayerBecomeActive()
     func onPlayerVolumeChanged(_ v:Float)
 }
-extension PlayerScreenView: AVAssetResourceLoaderDelegate {
-    
-    func setDrm(_ data:FairPlayDrm?) {
-        self.drmData = data
-    }
-    
-    func resourceLoader(
-    _ resourceLoader: AVAssetResourceLoader,
-    shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
-        guard let drmData = self.drmData else {
-            ComponentLog.e("Unable to read the drmData." , tag: self.tag + " DRM")
-            loadingRequest.finishLoading(with: NSError(domain: "com.icapps.error", code: -4, userInfo: nil))
-            return false
-        }
-        // We first check if a url is set in the manifest.
-        guard let url = loadingRequest.request.url else {
-            ComponentLog.e("Unable to read the url/host data." , tag: self.tag + " DRM")
-            loadingRequest.finishLoading(with: NSError(domain: "com.icapps.error", code: -1, userInfo: nil))
-            return false
-        }
-        ComponentLog.d("🔑 " + url.absoluteString , tag: self.tag + " DRM")
-                
-            // When the url is correctly found we try to load the certificate date. Watch out! For this
-            // example the certificate resides inside the bundle. But it should be preferably fetched from
-            // the server.
-        guard
-            let certificateURL = Bundle.main.url(forResource: "certificate", withExtension: "der"),
-            let certificateData = try? Data(contentsOf: certificateURL) else {
-            ComponentLog.e("Unable to read the certificate data." , tag: self.tag + " DRM")
-            loadingRequest.finishLoading(with: NSError(domain: "com.icapps.error", code: -2, userInfo: nil))
-            return false
-        }
-
-        // Request the Server Playback Context.
-        let contentId = drmData.contentId //"hls.icapps.com"
-        guard
-            let contentIdData = contentId.data(using: String.Encoding.utf8),
-            let spcData = try? loadingRequest.streamingContentKeyRequestData(forApp: certificateData, contentIdentifier: contentIdData, options: nil),
-            let dataRequest = loadingRequest.dataRequest else {
-            loadingRequest.finishLoading(with: NSError(domain: "com.icapps.error", code: -3, userInfo: nil))
-            ComponentLog.e("Unable to read the SPC data." , tag: self.tag + " DRM")
-            return false
-        }
-
-        // Request the Content Key Context from the Key Server Module.
-        let ckcURL = URL(string: drmData.ckcURL)!  //"https://hls.icapps.com/ckc"
-        var request = URLRequest(url: ckcURL)
-        request.httpMethod = "POST"
-        request.httpBody = spcData
-        let session = URLSession(configuration: URLSessionConfiguration.default)
-        let task = session.dataTask(with: request) { data, response, error in
-            if let data = data {
-                // The CKC is correctly returned and is now send to the `AVPlayer` instance so we
-                // can continue to play the stream.
-                dataRequest.respond(with: data)
-                loadingRequest.finishLoading()
-            } else {
-                ComponentLog.e("Unable to fetch the CKC.", tag: self.tag + " DRM")
-                loadingRequest.finishLoading(with: NSError(domain: "com.icapps.error", code: -4, userInfo: nil))
-            }
-        }
-        task.resume()
-        return true
-    }
-}
 
 class PlayerScreenView: UIView, PageProtocol {
-    
     var delegate:PlayerScreenViewDelegate?
     var player:AVPlayer? = nil
     {
@@ -94,6 +28,7 @@ class PlayerScreenView: UIView, PageProtocol {
             }
         }
     }
+    
     var currentRatio:CGFloat = 1.0
     {
         didSet{
@@ -122,9 +57,8 @@ class PlayerScreenView: UIView, PageProtocol {
         }
     }
     
-    
     private var recoveryTime:Double = -1
-    private var drmData:FairPlayDrm? = nil
+    var drmData:FairPlayDrm? = nil
     var playerLayer:AVPlayerLayer? = nil
     var playerController : UIViewController? = nil
    
@@ -135,12 +69,14 @@ class PlayerScreenView: UIView, PageProtocol {
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
+    
     required init?(coder: NSCoder) {fatalError("init(coder:) has not been implemented")}
     
     deinit {
         ComponentLog.d("deinit" , tag: self.tag)
         destory()
     }
+    
     func destory(){
         ComponentLog.d("destory" , tag: self.tag)
         destoryPlayer()
@@ -159,25 +95,26 @@ class PlayerScreenView: UIView, PageProtocol {
     
     private func createPlayer(_ url:URL, buffer:Double = 2.0, header:[String:String]? = nil) -> AVPlayer?{
         destoryPlayer()
+        player = AVPlayer()
         if let header = header {
-            player = AVPlayer(url: url)
             startPlayer(url, header: header)
         }else{
-            player = AVPlayer(url: url)
-            startPlayer()
+            startPlayer(url)
         }
         if self.isAutoPlay { resume() }
         else { pause() }
         return player
     }
     
-    private let queue = DispatchQueue(label: "com.icapps.fairplay.queue")
+    private let loaderQueue = DispatchQueue(label: "resourceLoader")
+    
     private func startPlayer(_ url:URL, header:[String:String]){
+    
         var assetHeader = [String: Any]()
         assetHeader["AVURLAssetHTTPHeaderFieldsKey"] = header
         let key = "playable"
         let asset = AVURLAsset(url: url, options: assetHeader)
-        asset.resourceLoader.setDelegate(self, queue: .main)
+        
         asset.loadValuesAsynchronously(forKeys: [key]){
             DispatchQueue.global(qos: .background).async {
                 let status = asset.statusOfValue(forKey: key, error: nil)
@@ -188,7 +125,6 @@ class PlayerScreenView: UIView, PageProtocol {
                     DispatchQueue.main.async {
                         self.onError(.certification(status.rawValue.description))
                     }
-                    
                 default:
                     ComponentLog.d("certification success " + url.absoluteString , tag: self.tag)
                     DispatchQueue.main.async {
@@ -202,7 +138,51 @@ class PlayerScreenView: UIView, PageProtocol {
         }
     }
     
+    private func startPlayer(_ url:URL){
+        
+        /*
+        let videoPlusSubtitles = AVMutableComposition()
+        let videoTrack = videoPlusSubtitles.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
+
+        do{
+            guard asset.tracks.count > 0 else{ return }
+            try? videoTrack?.insertTimeRange(
+                CMTimeRangeMake(
+                    start: CMTime.zero,
+                    duration: asset.duration),
+                    of: asset.tracks(withMediaType: .video)[0],
+                    at: CMTime.zero)
+        }
+        //https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/s1/en/fileSequence0.webvtt
+        let subtitleURL = URL(fileURLWithPath:  "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/s1/en/fileSequence")
+        let subtitleAsset = AVURLAsset(url: subtitleURL)
+        let subtitleTrack = videoPlusSubtitles.addMutableTrack(withMediaType: .text, preferredTrackID: kCMPersistentTrackID_Invalid)
+        do{
+            guard subtitleAsset.tracks.count > 0 else{ return }
+            try? subtitleTrack?.insertTimeRange(
+                CMTimeRangeMake(
+                    start: CMTime.zero, duration: asset.duration),
+                    of: subtitleAsset.tracks(withMediaType: .text)[0],
+                    at: CMTime.zero)
+        }
+        */
+        let resourceLoaderDelegate = CustomResourceLoaderDelegate(m3u8URL: url,vttURL: nil)
+        let customScheme = CustomResourceLoaderDelegate.mainScheme
+        guard let customURL = replaceURLWithScheme(customScheme,url:url) else { return }
+        let asset = AVURLAsset(url: customURL)
+        asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: self.loaderQueue)
+        let item = AVPlayerItem(asset: asset)
+        self.player?.replaceCurrentItem(with: item )
+        self.startPlayer()
+    }
     
+    private func replaceURLWithScheme(_ scheme: String, url: URL) -> URL? {
+        let urlString = url.absoluteString
+        guard let index = urlString.firstIndex(of: ":") else { return nil }
+        let rest = urlString[index...]
+        let newUrlString = scheme + rest
+        return URL(string: newUrlString)
+    }
     
     static let VOLUME_NOTIFY_KEY = "AVSystemController_SystemVolumeDidChangeNotification"
     static let VOLUME_PARAM_KEY = "AVSystemController_AudioVolumeNotificationParameter"
@@ -218,7 +198,6 @@ class PlayerScreenView: UIView, PageProtocol {
             ComponentLog.e("Setting category to AVAudioSessionCategoryPlayback failed." , tag: self.tag)
         }
         
-        
         if let avPlayerViewController = playerController as? AVPlayerViewController {
             avPlayerViewController.player = player
             avPlayerViewController.updatesNowPlayingInfoCenter = false
@@ -232,10 +211,9 @@ class PlayerScreenView: UIView, PageProtocol {
         ComponentLog.d("startPlayer currentVolume " + currentVolume.description , tag: self.tag)
         ComponentLog.d("startPlayer currentRate " + currentRate.description , tag: self.tag)
         ComponentLog.d("startPlayer videoGravity " + currentVideoGravity.rawValue , tag: self.tag)
-        
+
         //player?.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.new, .initial], context: nil)
         //player?.addObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status), options:[.new, .initial], context: nil)
-        
         let center = NotificationCenter.default
         NotificationCenter.default.removeObserver(self)
         center.addObserver(self, selector:#selector(newErrorLogEntry), name: .AVPlayerItemNewErrorLogEntry, object: nil)
@@ -248,7 +226,6 @@ class PlayerScreenView: UIView, PageProtocol {
     private func destoryPlayer(){
         ComponentLog.d("destoryPlayer " + player.debugDescription, tag: self.tag)
         guard let prevPlayer = player else { return }
-        
         prevPlayer.pause()
         playerLayer?.player = nil
         if let avPlayerViewController = playerController as? AVPlayerViewController {
@@ -259,8 +236,8 @@ class PlayerScreenView: UIView, PageProtocol {
     }
     
     private func onError(_ e:PlayerStreamError){
-         delegate?.onPlayerError(e)
-         destoryPlayer()
+        delegate?.onPlayerError(e)
+        destoryPlayer()
     }
     
     @objc func newErrorLogEntry(_ notification: Notification) {
@@ -317,8 +294,6 @@ class PlayerScreenView: UIView, PageProtocol {
         destoryPlayer()
     }
     
-    
-    
     @discardableResult
     func resume() -> Bool {
         guard let currentPlayer = player else { return false }
@@ -342,7 +317,6 @@ class PlayerScreenView: UIView, PageProtocol {
         currentPlayer.seek(to: cmt)
         return true
     }
-    
     
     @discardableResult
     func mute(_ isMute:Bool) -> Bool {

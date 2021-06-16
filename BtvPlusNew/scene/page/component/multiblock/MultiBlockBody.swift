@@ -93,7 +93,7 @@ struct MultiBlockBody: PageComponent {
     var marginBottom : CGFloat = 0
     
     var topDatas:[BannerData]? = nil
-    var monthlyViewModel: InfinityScrollModel = InfinityScrollModel()
+    var monthlyViewModel: MonthlyBlockModel = MonthlyBlockModel()
     var monthlyDatas:[MonthlyData]? = nil
     var monthlyAllData:BlockItem? = nil
     var tipBlock:TipBlockData? = nil
@@ -135,7 +135,8 @@ struct MultiBlockBody: PageComponent {
                         .padding(.top, self.topDatas != nil ? (TopBanner.height + self.marginHeader)  : self.marginTop)
                                  
                         MultiBlock(
-                            viewModel: self.infinityScrollModel,
+                            viewModel: self.viewModel,
+                            infinityScrollModel: self.infinityScrollModel,
                             viewPagerModel:self.viewPagerModel,
                             pageObservable: self.pageObservable,
                             pageDragingModel: self.pageDragingModel,
@@ -162,7 +163,8 @@ struct MultiBlockBody: PageComponent {
                         .padding(.top, self.topDatas != nil ? (TopBanner.height + self.marginHeader)  : self.marginTop)
                         
                         MultiBlock(
-                            viewModel: self.infinityScrollModel,
+                            viewModel: self.viewModel,
+                            infinityScrollModel: self.infinityScrollModel,
                             viewPagerModel:self.viewPagerModel,
                             pageObservable: self.pageObservable,
                             pageDragingModel: self.pageDragingModel,
@@ -197,7 +199,8 @@ struct MultiBlockBody: PageComponent {
                     self.addBlock()
                 }
             case .pullCompleted :
-                if !self.infinityScrollModel.isLoading { self.viewModel.reload() }
+                PageLog.d("reload pullCompleted " + self.infinityScrollModel.isLoading.description, tag: self.tag)
+                if !self.isLoading { self.viewModel.reload() }
                 withAnimation{ self.reloadDegree = 0}
             case .pullCancel :
                 withAnimation{ self.reloadDegree = 0}
@@ -217,7 +220,11 @@ struct MultiBlockBody: PageComponent {
             self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
         }
         .onReceive(self.viewModel.$isUpdate){ update in
-            if update { self.reload() }
+            if update {
+                PageLog.d("reload self.viewModel.$isUpdate " + self.infinityScrollModel.isLoading.description, tag: self.tag)
+                if !self.isLoading { self.reload() }
+                
+            }
         }
         .onReceive(dataProvider.$result) { res in
             guard let data = self.loadingBlocks.first(where: { $0.id == res?.id}) else {return}
@@ -242,7 +249,6 @@ struct MultiBlockBody: PageComponent {
                                 VideoData().setData(data: d, cardType: data.cardType)
                             }
                         case .theme :
-                            return data.setBlank()
                             data.themas = blocks[0...min(max, blocks.count-1)].map{ d in
                                 ThemaData().setData(data: d, cardType: data.cardType)
                             }
@@ -267,7 +273,6 @@ struct MultiBlockBody: PageComponent {
                     }
                     
                 case .theme :
-                    return data.setBlank()
                     data.themas = blocks[0...min(max, blocks.count-1)].map{ d in
                         ThemaData().setData(data: d, cardType: data.cardType)
                     }
@@ -296,14 +301,13 @@ struct MultiBlockBody: PageComponent {
                 }
                
             case .watched:
-                
                 guard let resData = res?.data as? Watch else {return data.setBlank()}
                 guard let originWatchBlocks = resData.watchList else {return data.setBlank()}
                 var watchBlocks:[WatchItem] = originWatchBlocks
                 if let ticketId = self.viewModel.selectedTicketId {
                     watchBlocks = originWatchBlocks.filter{$0.prod_id == ticketId}
                 }
-                if watchBlocks.isEmpty {return data.setBlank()}
+                if watchBlocks.count < 1 {return data.setBlank()}
                 total = resData.watch_tot?.toInt()
                 switch data.uiType {
                 case .poster :
@@ -380,6 +384,7 @@ struct MultiBlockBody: PageComponent {
     @State var blockSets:[BlockDataSet] = []
     @State var anyCancellable = Set<AnyCancellable>()
     @State var isError:Bool = false
+    @State var isLoading:Bool = false
    
     func reload(){
         if self.viewModel.isAdult && !SystemEnvironment.isAdultAuth {
@@ -429,27 +434,35 @@ struct MultiBlockBody: PageComponent {
             self.isError = true
         }
         
+        
     }
     private func onBlock(stat:BlockStatus, block:BlockData){
-        switch stat {
-        case .passive: self.removeBlock(block)
-        case .active: break
-        default: return
-        }
-        self.completedNum += 1
-        PageLog.d("completedNum " + completedNum.description, tag: self.tag)
-        if self.completedNum == self.requestNum {
-            self.completedNum = 0
-            if !Self.isPreLoad {
-                self.addBlock()
-            } else{
-                self.addLoadedBlocks(self.loadingBlocks)
-                PageLog.d("self.blocks " + self.blocks.count.description, tag: self.tag)
-                self.loadingBlocks = []
-                if self.blocks.isEmpty {
+        DispatchQueue.main.async {
+            switch stat {
+            case .passive:
+                DataLog.d("passive " + block.name, tag: "BlockProtocolB")
+                self.removeBlock(block)
+            case .active:
+                DataLog.d("active " + block.name, tag: "BlockProtocolB")
+                break
+            default: return
+            }
+            self.completedNum += 1
+            PageLog.d("requestNum " + requestNum.description, tag: "BlockProtocolB")
+            PageLog.d("completedNum " + completedNum.description, tag: "BlockProtocolB")
+            if self.completedNum == self.requestNum {
+                self.completedNum = 0
+                if !Self.isPreLoad {
                     self.addBlock()
-                } else if !Self.isRecycle {
-                    self.delayAddBlock()
+                } else{
+                    self.addLoadedBlocks(self.loadingBlocks)
+                    PageLog.d("self.blocks " + self.blocks.count.description, tag: self.tag)
+                    self.loadingBlocks = []
+                    if self.blocks.isEmpty {
+                        self.addBlock()
+                    } else if !Self.isRecycle {
+                        self.delayAddBlock()
+                    }
                 }
             }
         }
@@ -470,15 +483,18 @@ struct MultiBlockBody: PageComponent {
     
     private func addLoadedBlocks (_ loadedBlocks:[BlockData]){
         var idx = self.blocks.count
-        loadedBlocks.forEach{
+        let addBlocks = loadedBlocks
+            .filter{$0.status == .active}
+            .map{$0}
+        addBlocks.forEach{
+            DataLog.d("addLoadedBlocks " + $0.name + " " + $0.status.rawValue, tag: "BlockProtocolB")
             $0.index = idx
             idx += 1
         }
-        self.blocks.append(contentsOf: loadedBlocks)
+        self.blocks.append(contentsOf: addBlocks)
+        self.isLoading = false
     }
-    
-    
-    
+
     private func addBlock(){
         var max = 0
         if  !Self.isPreLoad {
@@ -492,13 +508,14 @@ struct MultiBlockBody: PageComponent {
         }
         let set = self.originBlocks[..<max]
         self.originBlocks.removeSubrange(..<max)
-        PageLog.d("self.originBlocks " + self.originBlocks.count.description, tag: self.tag)
-        PageLog.d("set.blocks " + set.count.description, tag: self.tag)
+        PageLog.d("addBlockLoad originBlocks " + self.originBlocks.count.description, tag: self.tag)
+        PageLog.d("addBlockLoad blocks " + set.count.description, tag: self.tag)
         if set.isEmpty { return }
         self.requestNum = set.count
         if  !Self.isPreLoad {
             self.blocks.append(contentsOf: set)
         }else{
+            self.isLoading = true
             self.loadingBlocks.append(contentsOf: set)
             self.loadingBlocks.forEach{ block in
                 if let apiQ = block.getRequestApi(pairing:self.pairing.status) {
@@ -506,7 +523,7 @@ struct MultiBlockBody: PageComponent {
                 } else{
                     
                     if block.dataType == .theme , let blocks = block.blocks {
-                        if block.uiType == .theme { // ticket 인경우 block에서 처리
+                        if block.uiType == .theme { 
                             let themas = blocks.map{ data in
                                 ThemaData().setData(data: data, cardType: block.cardType)
                             }
@@ -516,6 +533,13 @@ struct MultiBlockBody: PageComponent {
                             block.themas = themas
                             DataLog.d("ThemaData " + block.name, tag: "BlockProtocolA")
                         } else {
+                            let tickets = blocks.map{ data in
+                                TicketData().setData(data: data, cardType: block.cardType)
+                            }
+                            if let size = tickets.first?.type {
+                                block.listHeight = size.size.height + Self.tabHeight
+                            }
+                            block.tickets = tickets
                             DataLog.d("TicketData " + block.name, tag: "BlockProtocolA")
                         }
                         block.setDatabindingCompleted()
@@ -532,11 +556,6 @@ struct MultiBlockBody: PageComponent {
         if !Self.isPreLoad {
             if let find = self.blocks.firstIndex(of: block) {
                 self.blocks.remove(at: find)
-                return
-            }
-        } else{
-            if let find = self.loadingBlocks.firstIndex(of: block) {
-                self.loadingBlocks.remove(at: find)
                 return
             }
         }

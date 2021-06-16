@@ -457,7 +457,7 @@ struct PosterItem: PageView {
     @State var isBookmark:Bool? = nil
     var body: some View {
         ZStack(alignment: .topLeading){
-           
+            
             ImageView(url: self.data.image, contentMode: .fit, noImg: Asset.noImg9_16)
                 .modifier(MatchParent())
             

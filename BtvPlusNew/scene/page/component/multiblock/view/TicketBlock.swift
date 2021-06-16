@@ -17,7 +17,7 @@ struct TicketBlock:BlockProtocol, PageComponent {
     var data: BlockData
     var useTracking:Bool = false
     @State var datas:[TicketData]? = nil
-    @State var listHeight:CGFloat = ListItem.ticket.type01.height
+  
     @State var isUiActive:Bool = true
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
@@ -33,7 +33,6 @@ struct TicketBlock:BlockProtocol, PageComponent {
                         data:self.data,
                         datas: datas,
                         useTracking:self.useTracking)
-                        .modifier(MatchHorizontal(height: self.listHeight + 1))
                         .onReceive(self.viewModel.$event){evt in
                             guard let evt = evt else {return}
                             switch evt {
@@ -48,11 +47,15 @@ struct TicketBlock:BlockProtocol, PageComponent {
                 }
             }
         }
-        .frame( height:
-                    (self.data.listHeight ?? self.listHeight)
-                    + Dimen.tab.thin + Dimen.margin.thinExtra)
         .onAppear{
-            self.datas = nil
+            if self.datas?.isEmpty == false {
+                ComponentLog.d("RecycleData " + data.name, tag: "BlockProtocol")
+                return
+            }
+            if let datas = data.tickets {
+                self.datas = datas
+                return
+            }
             
             if data.dataType == .theme , let blocks = data.blocks {
                 self.datas = blocks.map{ d in
@@ -114,7 +117,6 @@ struct TicketBlock:BlockProtocol, PageComponent {
     }
     func updateListSize(){
         if self.datas?.isEmpty == false {
-            self.listHeight = self.datas!.first!.type.size.height
             onDataBinding()
         }
         else { onBlank() }

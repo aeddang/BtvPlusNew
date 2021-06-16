@@ -84,7 +84,6 @@ struct TopBanner: PageComponent {
             
         }
         .onDisappear(){
-            self.isInit = false
             self.autoChangeCancel()
         }
 
@@ -94,7 +93,8 @@ struct TopBanner: PageComponent {
     @State var isTop = false
     @State var autoChangeSubscription:AnyCancellable?
     func autoChange(){
-        ComponentLog.d("autoChange init " + self.isTop.description, tag:self.tag)
+        ComponentLog.d("autoChange isTop " + self.isTop.description, tag:self.tag)
+        ComponentLog.d("autoChange isInit " + self.isInit.description, tag:self.tag)
         self.autoChangeCancel()
         if !self.isTop { return }
         if !self.isInit { return }
@@ -127,7 +127,7 @@ struct TopBannerItem: PageComponent, Identifiable {
     let data: BannerData
    
     var body: some View {
-        ZStack(alignment: .top) {
+        //ZStack(alignment: .top) {
            Spacer()
             .modifier(MatchParent())
             .background(Color.transparent.clearUi)
@@ -165,8 +165,8 @@ struct TopBannerItem: PageComponent, Identifiable {
                     )
                 }
             }
-        }
-        .modifier(MatchParent())
+        //}
+        //.modifier(MatchParent())
         
     }
 }

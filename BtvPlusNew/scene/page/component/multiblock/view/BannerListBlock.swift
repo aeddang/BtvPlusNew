@@ -24,16 +24,26 @@ struct BannerListBlock:BlockProtocol, PageComponent {
     @State var datas:[BannerData] = []
     @State var isUiActive:Bool = true
     @State var skeletonSize:CGSize = CGSize()
+    
+    @State var list: BannerList?
+    private func getList() -> some View {
+        if let list = self.list {return list}
+        let newList = BannerList(
+            viewModel:self.viewModel,
+            datas: self.datas,
+            useTracking:self.useTracking)
+            
+        DispatchQueue.main.async {
+            self.list = newList
+            
+        }
+        return newList
+    }
     var body :some View {
         ZStack() {
             if self.isUiActive {
                 if !self.datas.isEmpty {
-                    BannerList(
-                        viewModel:self.viewModel,
-                        datas: self.datas,
-                        useTracking:self.useTracking
-                        )
-                        
+                    self.getList()
                         .onReceive(self.viewModel.$event){evt in
                             guard let evt = evt else {return}
                             switch evt {
@@ -62,10 +72,8 @@ struct BannerListBlock:BlockProtocol, PageComponent {
             if !self.datas.isEmpty {
                 ComponentLog.d("RecycleData " + data.name, tag: "BlockProtocol")
                 return
-                
             }
             if let datas = data.banners {
-                
                 ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
                 if let size = datas.first?.type.size {
                     self.skeletonSize = size
@@ -82,8 +90,6 @@ struct BannerListBlock:BlockProtocol, PageComponent {
             }
         }
         .onDisappear{
-            
-            //self.datas.removeAll()
             self.clearDataBinding()
         }
         .onReceive(self.pageObservable.$layer ){ layer  in

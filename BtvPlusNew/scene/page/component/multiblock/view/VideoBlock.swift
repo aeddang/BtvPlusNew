@@ -27,6 +27,38 @@ struct VideoBlock:BlockProtocol, PageComponent {
     @State var isUiActive:Bool = true
     @State var hasMore:Bool = true
     @State var skeletonSize:CGSize = CGSize()
+
+    @State var list: VideoList?
+    @State var listId:String = ""
+    @State var isListUpdated:Bool = true
+    private func getList() -> some View {
+        let key = (self.datas.first?.epsdId ?? "") + self.datas.count.description
+        let type = self.datas.first?.type
+        if key == self.listId,  let list = self.list {
+            switch type {
+            case .watching: ComponentLog.d("Recycle List " + key , tag: self.tag + "List")
+            default : break
+            }
+            return list
+        }
+        switch type {
+        case .watching:  ComponentLog.d("New List " + key , tag: self.tag + "List")
+        default : break
+        }
+        
+        let newList = VideoList(
+            viewModel:self.viewModel,
+            banners: self.data.leadingBanners,
+            datas: self.datas,
+            useTracking:self.useTracking)
+        DispatchQueue.main.async {
+            self.listId = key
+            self.list = newList
+            
+        }
+        return newList
+    }
+    
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             if self.isUiActive {
@@ -58,14 +90,8 @@ struct VideoBlock:BlockProtocol, PageComponent {
                 .modifier(MatchHorizontal(height: Dimen.tab.thin))
                 .padding( .horizontal , self.margin)
                 
-                if !self.datas.isEmpty {
-                    VideoList(
-                        viewModel:self.viewModel,
-                        banners: self.data.leadingBanners,
-                        datas: self.datas,
-                        margin:self.margin,
-                        useTracking:self.useTracking)
-                    
+                if !self.datas.isEmpty  && self.isListUpdated{
+                    self.getList()
                         .onReceive(self.viewModel.$event){evt in
                             guard let evt = evt else {return}
                             switch evt {
@@ -77,7 +103,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                         .onReceive(self.viewModel.$pullPosition){ pos in
                             self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
                         }
-                        
+                    
                 } else if self.useEmpty {
                     EmptyAlert( text: self.data.dataType != .watched
                                 ? String.pageText.myWatchedEmpty
@@ -95,7 +121,6 @@ struct VideoBlock:BlockProtocol, PageComponent {
             }
         }
         .modifier(MatchParent())
-        
         .onAppear{
             if !self.datas.isEmpty {
                 ComponentLog.d("RecycleData " + data.name, tag: "BlockProtocol")
@@ -121,7 +146,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
             }
         }
         .onDisappear{
-            
+            //self.datas.removeAll()
             self.clearDataBinding()
         }
         .onReceive(self.pageObservable.$layer ){ layer  in
@@ -199,6 +224,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
         switch res.type {
         case .deleteWatch(let list, let isAll):
             if self.data.dataType != .watched {return}
+            self.isListUpdated = false
             if isAll {
                 self.hasMore = false
                 self.datas.removeAll()
@@ -209,6 +235,9 @@ struct VideoBlock:BlockProtocol, PageComponent {
                         self.datas.remove(at: f)
                     }
                 }
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.isListUpdated = true
             }
         default: break
         }

@@ -23,10 +23,26 @@ struct PosterBlock:PageComponent, BlockProtocol {
     var useTracking:Bool = false
     var useEmpty:Bool = false
     @State var datas:[PosterData] = []
-    
     @State var isUiActive:Bool = true
     @State var hasMore:Bool = true
     @State var skeletonSize:CGSize = CGSize()
+    
+    @State var list: PosterList?
+    private func getList() -> some View {
+        if let list = self.list {return list}
+        let newList = PosterList(
+            viewModel:self.viewModel,
+            banners: self.data.leadingBanners,
+            datas: self.datas,
+            useTracking:self.useTracking)
+            
+            
+        DispatchQueue.main.async {
+            self.list = newList
+        }
+        return newList
+    }
+    
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             if self.isUiActive {
@@ -58,12 +74,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
                 .modifier(ContentHorizontalEdges())
                 
                 if !self.datas.isEmpty {
-                    PosterList(
-                        viewModel:self.viewModel,
-                        banners: self.data.leadingBanners,
-                        datas: self.datas,
-                        useTracking:self.useTracking)
-                        
+                    self.getList()
                         .onReceive(self.viewModel.$event){evt in
                             guard let evt = evt else {return}
                             switch evt {
@@ -75,7 +86,6 @@ struct PosterBlock:PageComponent, BlockProtocol {
                         .onReceive(self.viewModel.$pullPosition){ pos in
                             self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
                         }
-                        
                 
                 } else if self.useEmpty {
                     EmptyAlert( text: self.data.dataType != .watched
@@ -93,7 +103,6 @@ struct PosterBlock:PageComponent, BlockProtocol {
             }
         }
         .modifier(MatchParent())
-        //.background(Color.app.grey)
         .onAppear{
             if !self.datas.isEmpty {
                 ComponentLog.d("RecycleData " + data.name, tag: "BlockProtocol")
@@ -119,7 +128,6 @@ struct PosterBlock:PageComponent, BlockProtocol {
             }
         }
         .onDisappear{
-            
             //self.datas.removeAll()
             self.clearDataBinding()
         }

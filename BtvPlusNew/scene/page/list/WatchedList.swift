@@ -65,43 +65,64 @@ struct WatchedList: PageComponent{
     var delete: ((_ data:WatchedData) -> Void)? = nil
     var onBottom: ((_ data:WatchedData) -> Void)? = nil
     @State var horizontalMargin:CGFloat = Dimen.margin.thin
+    @State var isTop:Bool = true
     var body: some View {
-        InfinityScrollView(
-            viewModel: self.viewModel,
-            axes: .vertical,
-            scrollType : .reload(isDragEnd:false),
-            marginTop: Dimen.margin.regular,
-            marginBottom: Dimen.app.bottom,
-            spacing:0,
-            isRecycle: true,
-            useTracking: self.useTracking
-        ){
-            
+        ZStack(alignment:.topLeading){
             InfoAlert(text: String.pageText.myWatchedInfo)
-                .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.thin))
+                .padding(.top , Dimen.margin.regular)
+                .padding(.horizontal, self.horizontalMargin )
+                .opacity(self.isTop ? 1 : 0 )
             
-            if !self.datas.isEmpty {
-                ForEach(self.datas) { data in
-                    WatchedItem( data:data , delete:self.delete)
-                        .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.tinyExtra))
-                        .onTapGesture {
-                            guard let synopsisData = data.synopsisData else { return }
-                            self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(.synopsis)
-                                    .addParam(key: .data, value: synopsisData)
-                            )
-                        }
-                        .onAppear{
-                            if data.index == self.datas.last?.index {
-                                self.onBottom?(data)
+            InfinityScrollView(
+                viewModel: self.viewModel,
+                axes: .vertical,
+                scrollType : .reload(isDragEnd:false),
+                marginTop: Dimen.margin.regular + Dimen.tab.light,
+                marginBottom: Dimen.app.bottom,
+                spacing:0,
+                isRecycle: true,
+                useTracking: self.useTracking
+            ){
+                if !self.datas.isEmpty {
+                    ForEach(self.datas) { data in
+                        WatchedItem( data:data , delete:self.delete)
+                            .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.tinyExtra))
+                            .onTapGesture {
+                                guard let synopsisData = data.synopsisData else { return }
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(.synopsis)
+                                        .addParam(key: .data, value: synopsisData)
+                                )
                             }
-                        }
+                            .onAppear{
+                                if data.index == self.datas.last?.index {
+                                    self.onBottom?(data)
+                                }
+                            }
+                    }
+                } else {
+                    EmptyMyData(
+                        text:String.pageText.myWatchedEmpty)
+                        .modifier(PageBody())
                 }
-            } else {
-                EmptyMyData(
-                    text:String.pageText.myWatchedEmpty)
-                    .modifier(PageBody())
             }
+           
+            
+        }
+        .onReceive(self.viewModel.$event){evt in
+            guard let evt = evt else {return}
+            switch evt {
+            case .top :
+                if !self.isTop {
+                    withAnimation{ self.isTop = true }
+                }
+            case .down :
+                if self.isTop {
+                    withAnimation{  self.isTop = false }
+                }
+            default : break
+            }
+            
         }
         .onReceive(self.sceneObserver.$isUpdated){ update in
             if !update {return}
@@ -113,6 +134,8 @@ struct WatchedList: PageComponent{
                 = self.sceneObserver.sceneOrientation == .portrait ? Dimen.margin.thin : Dimen.margin.heavy
         }
     }//body
+    
+    
 }
 
 struct WatchedItem: PageView {

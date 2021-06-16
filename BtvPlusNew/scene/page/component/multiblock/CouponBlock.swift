@@ -254,11 +254,15 @@ struct CouponBlock: PageComponent, Identifiable{
         }
         let start = self.datas.count
         let end = datas.count
-        let loadedDatas:[CouponData] = zip(start...end, datas).map { idx, d in
-            return CouponData().setData(data: d, idx: idx)
+        if !datas.isEmpty {
+            let loadedDatas:[CouponData] = zip(start...end, datas).map { idx, d in
+                return CouponData().setData(data: d, idx: idx)
+            }
+            self.datas.append(contentsOf: loadedDatas)
+            self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)
+        } else {
+            self.infinityScrollModel.onComplete(itemCount: 0)
         }
-        self.datas.append(contentsOf: loadedDatas)
-        self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)
         withAnimation{ self.isError = false }
     }
     

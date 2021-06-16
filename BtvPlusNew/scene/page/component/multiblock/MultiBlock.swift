@@ -17,12 +17,12 @@ class BlockDataSet:Identifiable {
 extension MultiBlock{
     static let spacing:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.medium
     static let headerSize:Int = 5
-    static let headerSizeMin:Int = 2
+    static let headerSizeMin:Int = 3
 }
 struct MultiBlock:PageComponent {
     @EnvironmentObject var sceneObserver:PageSceneObserver
-    
-    var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var viewModel:MultiBlockModel = MultiBlockModel()
+    var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     var viewPagerModel:ViewPagerModel = ViewPagerModel()
     var pageObservable:PageObservable = PageObservable()
     var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -33,7 +33,7 @@ struct MultiBlock:PageComponent {
     var marginHeader : CGFloat = 0
     var marginTop : CGFloat = 0
     var marginBottom : CGFloat = 0
-    var monthlyViewModel: InfinityScrollModel? = nil
+    var monthlyViewModel: MonthlyBlockModel? = nil
     var monthlyDatas:[MonthlyData]? = nil
     var monthlyAllData:BlockItem? = nil
     var tipBlock:TipBlockData? = nil
@@ -42,10 +42,61 @@ struct MultiBlock:PageComponent {
     var isLegacy:Bool = false
     var action: ((_ data:MonthlyData) -> Void)? = nil
 
+    
+    @State var topBanner:TopBanner?
+    private func getTopBanner() -> TopBanner {
+        if let top = self.topBanner {
+            //ComponentLog.d("Recycle Top", tag: self.tag + "Top")
+            return top
+        }
+        let newTop = TopBanner(
+            pageObservable: self.pageObservable,
+            viewModel:self.viewPagerModel,
+            infinityScrollModel:self.infinityScrollModel,
+            datas: self.topDatas ?? []
+        )
+        ComponentLog.d("New Top" , tag: self.tag + "Top")
+        DispatchQueue.main.async {
+            self.topBanner = newTop
+        }
+        return newTop
+    }
+    
+    @State var headerBlock:HeaderBlockCell?
+    @State var headerCount:Int = 0
+    @State var headerId:String = ""
+    @discardableResult
+    private func getHeaderBlock() -> HeaderBlockCell{
+        let count = min((self.topDatas?.isEmpty == false ? Self.headerSizeMin : Self.headerSize), self.datas.count)
+        let key = self.datas[0..<count].reduce("", {$0 + "|" + ($1.menuId ?? "")})
+        if key == self.headerId, let header = self.headerBlock {
+            //ComponentLog.d("Recycle Header " + key , tag: self.tag + "Header")
+            DispatchQueue.main.async {
+                self.headerCount = count
+            }
+            return header
+        }
+        
+        let newHeader =
+            HeaderBlockCell(
+                pageObservable: self.pageObservable,
+                pageDragingModel: self.pageDragingModel,
+                tipBlock: self.tipBlock,
+                datas: self.datas[0..<count],
+                useTracking:self.useTracking
+            )
+        ComponentLog.d("New Header " + key , tag: self.tag + "Header")
+        DispatchQueue.main.async {
+            self.headerId = key
+            self.headerCount = count
+            self.headerBlock = newHeader
+        }
+        return newHeader
+    }
     var body :some View {
         if !self.isLegacy  { //#
             InfinityScrollView(
-                viewModel: self.viewModel,
+                viewModel: self.infinityScrollModel,
                 axes: .vertical,
                 scrollType : .reload(isDragEnd: false),
                 marginTop : self.marginTop,
@@ -54,107 +105,64 @@ struct MultiBlock:PageComponent {
                 isRecycle : self.isRecycle,
                 useTracking:self.useBodyTracking){
                 
+                
                 if let topDatas = self.topDatas ,!topDatas.isEmpty {
-                    TopBanner(
-                        pageObservable: self.pageObservable,
-                        viewModel:self.viewPagerModel,
-                        infinityScrollModel:self.viewModel,
-                        datas: topDatas
-                    )
+                    self.getTopBanner()
                     .modifier(MatchHorizontal(height:  TopBanner.uiRange))
                     .modifier(ListRowInset(spacing: TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange))
-                       
                 }
-                if let data = self.tipBlock {
-                    TipBlock(data:data)
-                        .modifier(MatchHorizontal(height:  Dimen.tab.light))
-                        .modifier(ListRowInset(spacing: Self.spacing))
-                         
-                }
-            
+                
                 if let datas = self.monthlyDatas  {
                    MonthlyBlock(
-                        viewModel:self.monthlyViewModel ?? InfinityScrollModel(),
+                        viewModel:self.monthlyViewModel ?? MonthlyBlockModel(),
                         pageDragingModel:self.pageDragingModel,
                         monthlyDatas:datas,
                         allData: self.monthlyAllData,
-                        useTracking:self.useTracking,
-                        action:self.action
-                   )
+                        useTracking:self.useTracking
+                   ){ data in
+                        self.headerCount = 999
+                        self.action?(data)
+                   }
                    .modifier(MatchHorizontal(height:  MonthlyBlock.height))
                    .modifier(ListRowInset(spacing: Self.spacing))
                 }
-                /*
+                
                 if !self.datas.isEmpty {
-                    ForEach( self.datas) { data in
-                        MultiBlockCell(
-                            pageObservable:self.pageObservable,
-                            pageDragingModel: self.pageDragingModel,
-                            data: data ,
-                            useTracking: self.useTracking)
-                            .modifier(ListRowInset(spacing: Self.spacing))
-                            .onAppear(){
-                                if data.index == self.datas.last?.index {
-                                    self.viewModel.event = .bottom
-                                }
-                            }
-                    }
-                }
-                */
-                if !self.datas.isEmpty, let header = (self.topDatas?.isEmpty == false ? Self.headerSizeMin : Self.headerSize)  {
-                    
-                    if header < self.datas.count {
-                        VStack(spacing:Self.spacing){
-                            ForEach( self.datas[0...header]) { data in
+                    if let headerBlock = self.getHeaderBlock() {
+                        headerBlock
+                        if headerCount < self.datas.count {
+                            ForEach( self.datas[headerCount..<self.datas.count]) { data in
                                 MultiBlockCell(
                                     pageObservable:self.pageObservable,
                                     pageDragingModel: self.pageDragingModel,
-                                    data: data,
+                                    data: data ,
                                     useTracking: self.useTracking)
+                                    .modifier(ListRowInset(spacing: Self.spacing))
+                                    .onAppear(){
+                                        if data.index == self.datas.last?.index {
+                                            self.infinityScrollModel.event = .bottom
+                                        }
+                                    }
                             }
                         }
-                        .modifier(ListRowInset(spacing: Self.spacing))
-                        ForEach( self.datas[(header+1)...(self.datas.count-1)]) { data in
-                            MultiBlockCell(
-                                pageObservable:self.pageObservable,
-                                pageDragingModel: self.pageDragingModel,
-                                data: data ,
-                                useTracking: self.useTracking)
-                                .modifier(ListRowInset(spacing: Self.spacing))
-                                .onAppear(){
-                                    if data.index == self.datas.last?.index {
-                                        self.viewModel.event = .bottom
-                                    }
-                                }
+                        if self.useFooter {
+                            Footer()
+                                .modifier(ListRowInset(spacing: Dimen.margin.regular))
                         }
-                    } else {
-                        ForEach( self.datas) { data in
-                            MultiBlockCell(
-                                pageObservable:self.pageObservable,
-                                pageDragingModel: self.pageDragingModel,
-                                data: data ,
-                                useTracking: self.useTracking)
-                                .modifier(ListRowInset(spacing: Self.spacing))
-                                .onAppear(){
-                                    if data.index == self.datas.last?.index {
-                                        self.viewModel.event = .bottom
-                                    }
-                                }
-                        }
-                    }
-                   
-                    
-                    if self.useFooter {
-                        Footer()
-                            .modifier(ListRowInset(spacing: Dimen.margin.regular))
                     }
                 }
-                 
+            }
+            .onAppear(){
+                
+            }
+            .onReceive(self.viewModel.$isUpdate){ update in
+                
+                //if update { self.getHeaderBlock() }
             }
             
         } else {
             InfinityScrollView(
-                viewModel: self.viewModel,
+                viewModel: self.infinityScrollModel,
                 axes: .vertical,
                 scrollType : .reload(isDragEnd: false),
                 marginTop : 0,
@@ -174,7 +182,7 @@ struct MultiBlock:PageComponent {
                             TopBanner(
                                 pageObservable: self.pageObservable,
                                 viewModel:self.viewPagerModel,
-                                infinityScrollModel:self.viewModel,
+                                infinityScrollModel:self.infinityScrollModel,
                                 datas: self.topDatas! )
                                 
                         }
@@ -184,7 +192,7 @@ struct MultiBlock:PageComponent {
                        
                     } else if self.monthlyDatas != nil {
                         MonthlyBlock(
-                             viewModel:self.monthlyViewModel ?? InfinityScrollModel(),
+                             viewModel:self.monthlyViewModel ?? MonthlyBlockModel(),
                              pageDragingModel:self.pageDragingModel,
                              monthlyDatas:self.monthlyDatas!,
                              useTracking:self.useTracking,
@@ -209,12 +217,12 @@ struct MultiBlock:PageComponent {
                             .modifier(ListRowInset(spacing: Self.spacing))
                             .onAppear(){
                                 if data.index == self.datas.last?.index  {
-                                    self.viewModel.event = .bottom
+                                    self.infinityScrollModel.event = .bottom
                                 }
-                                self.viewModel.onAppear(idx: data.index + 2)
+                                self.infinityScrollModel.onAppear(idx: data.index + 2)
                             }
                             .onDisappear(){
-                                self.viewModel.onDisappear(idx: data.index + 2)
+                                self.infinityScrollModel.onDisappear(idx: data.index + 2)
                             }
                     }
                     if self.useFooter {
@@ -227,6 +235,32 @@ struct MultiBlock:PageComponent {
                 }
             }
         }
+    }
+    
+    
+    struct HeaderBlockCell:PageComponent {
+        var pageObservable:PageObservable
+        var pageDragingModel:PageDragingModel
+        var tipBlock:TipBlockData? = nil
+        var datas:ArraySlice<BlockData>
+        var useTracking:Bool = false
+        var body :some View {
+            VStack(spacing:MultiBlock.spacing){
+                if let data = self.tipBlock {
+                    TipBlock(data:data)
+                        .modifier(MatchHorizontal(height:  Dimen.tab.light))
+                }
+                ForEach( self.datas ) { data in
+                    MultiBlockCell(
+                        pageObservable:self.pageObservable,
+                        pageDragingModel: self.pageDragingModel,
+                        data: data,
+                        useTracking: self.useTracking)
+                }
+            }
+            .modifier(ListRowInset(spacing: MultiBlock.spacing))
+            
+        }//body
     }
     
     struct MultiBlockCell:PageComponent {
@@ -244,7 +278,6 @@ struct MultiBlock:PageComponent {
                     useTracking:self.useTracking
                     )
                 .frame(height:data.listHeight)
-                
                 
             case .video :
                 VideoBlock(
@@ -286,10 +319,9 @@ struct MultiBlock:PageComponent {
                     pageDragingModel:self.pageDragingModel,
                     data: data,
                     useTracking:self.useTracking
-                    )
-                    // ticket 인경우 block에서 height 처리
+                )
+                .frame(height:data.listHeight)   
             }
-            
         }//body
     }
 }

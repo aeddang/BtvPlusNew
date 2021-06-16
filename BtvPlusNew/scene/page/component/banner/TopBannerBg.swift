@@ -87,6 +87,7 @@ struct TopBannerBgItem: PageComponent, Identifiable {
    
     var body: some View {
         ZStack(){
+            
             KFImage(URL(string: self.data.image))
                 .resizable()
                 .placeholder {
@@ -97,7 +98,7 @@ struct TopBannerBgItem: PageComponent, Identifiable {
                 .loadImmediately()
                 .aspectRatio(contentMode:  .fill)
                 .modifier(MatchHorizontal(height:TopBanner.imageHeight))
-               
+              
             if !SystemEnvironment.isTablet {
                 VStack{
                     Image(Asset.shape.bgGradientTop)

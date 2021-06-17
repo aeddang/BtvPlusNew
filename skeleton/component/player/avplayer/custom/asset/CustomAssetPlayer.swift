@@ -1,17 +1,16 @@
 import Foundation
 import AVFoundation
 
-class CustomVTTPlayer: AVPlayer {
-    private var loaderQueue = DispatchQueue(label: "resourceLoader")
+class CustomAssetPlayer: AVPlayer , PageProtocol{
+    private var loaderQueue = DispatchQueue(label: "CustomAssetPlayer")
     private var m3u8URL: URL
-    private var delegate: CustomResourceLoaderDelegate
+    private var delegate: CustomAssetResourceLoader
     
-    init?(m3u8URL: URL, vttURL: URL) {
+    init?(m3u8URL: URL) {
         self.m3u8URL = m3u8URL
-        self.delegate = CustomResourceLoaderDelegate(m3u8URL: m3u8URL,
-                                                     vttURL: vttURL)
+        self.delegate = CustomAssetResourceLoader(m3u8URL:m3u8URL)
         super.init()
-        let customScheme = CustomResourceLoaderDelegate.mainScheme
+        let customScheme = CustomAssetResourceLoader.scheme
         guard let customURL = replaceURLWithScheme(customScheme,
                                                    url: m3u8URL) else {
                                                     return nil
@@ -27,11 +26,8 @@ class CustomVTTPlayer: AVPlayer {
     }
     
     func replaceURLWithScheme(_ scheme: String, url: URL) -> URL? {
-        let urlString = url.absoluteString
-        guard let index = urlString.firstIndex(of: ":") else { return nil }
-        let rest = urlString[index...]
-        let newUrlString = scheme + rest
-        return URL(string: newUrlString)
+        let urlString = scheme + url.absoluteString
+        return URL(string: urlString)
     }
     
 }

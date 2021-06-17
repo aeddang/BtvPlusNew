@@ -35,10 +35,8 @@ open class PlayerModel: ComponentObservable {
     @Published var event:PlayerUIEvent? = nil{
         willSet{
             self.status = .update
-            ComponentLog.d("willSet event " + self.status.rawValue, tag: self.tag)
         }
         didSet{
-            ComponentLog.d("didSet event " + (self.event?.decription ?? ""), tag: self.tag)
             if event == nil { self.status = .ready }
         }
     }

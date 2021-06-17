@@ -11,10 +11,10 @@ import SwiftUI
 import Combine
 import AVKit
 import MediaPlayer
-extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenViewDelegate {
-    func makeUIViewController(context: UIViewControllerRepresentableContext<CustomAVPlayer>) -> UIViewController {
+extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, PlayerScreenViewDelegate {
+    func makeUIViewController(context: UIViewControllerRepresentableContext<CustomAVPlayerController>) -> UIViewController {
         let playerScreenView = PlayerScreenView(frame: .infinite)
-        playerScreenView.setDrm(self.viewModel.drm) 
+        playerScreenView.drmData = self.viewModel.drm
         playerScreenView.mute(self.viewModel.isMute)
         playerScreenView.currentRate = self.viewModel.rate
         playerScreenView.currentVideoGravity = self.viewModel.screenGravity
@@ -25,17 +25,19 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
             playerController.delegate = context.coordinator
             playerScreenView.delegate = self
             playerScreenView.playerController = playerController
+            
             return playerController
         }else{
             let playerController = CustomPlayerViewController(viewModel: self.viewModel, playerScreenView: playerScreenView)
             playerScreenView.delegate = self
+            
             playerScreenView.playerLayer = AVPlayerLayer()
             playerController.view = playerScreenView
             return playerController
         }
     }
     
-    func updateUIViewController(_ uiViewController: UIViewController, context: UIViewControllerRepresentableContext<CustomAVPlayer>) {
+    func updateUIViewController(_ uiViewController: UIViewController, context: UIViewControllerRepresentableContext<CustomAVPlayerController>) {
         //ComponentLog.d("updateUIView status " + viewModel.status.rawValue , tag: self.tag)
         if viewModel.status != .update { return }
         guard let evt = viewModel.event else { return }
@@ -169,7 +171,10 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
         var job:AnyCancellable? = nil
         var timeControlStatus:AVPlayer.TimeControlStatus? = nil
         var status:AVPlayer.Status? = nil
+        var isCheckStatus:Bool = false
         viewModel.isRunning = true
+        
+       
         job = Timer.publish(every: 0.1, on:.current, in: .common)
             .autoconnect()
             .sink{_ in
@@ -191,6 +196,7 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
                 }
                 self.onTimeChange(Double(t))
                 player.layer.setNeedsDisplay()
+                
                 if currentPlayer.timeControlStatus != timeControlStatus {
                     switch currentPlayer.timeControlStatus{
                     case .paused:
@@ -213,23 +219,37 @@ extension CustomAVPlayer: UIViewControllerRepresentable, PlayBack, PlayerScreenV
                     }
                     timeControlStatus = currentPlayer.timeControlStatus
                 }
-                if(status != currentPlayer.status){
-                    switch currentPlayer.status {
-                    case .failed: self.cancel(job, reason: "failed")
-                    case .unknown:break
-                    case .readyToPlay: do {
-                        if let d = currentPlayer.currentItem?.asset.duration {
-                            let willDuration = Double(CMTimeGetSeconds(d))
-                            if willDuration != viewModel.originDuration {
-                                self.onDurationChange(willDuration)
-                                player.playInit()
+                if !isCheckStatus {
+                    DispatchQueue.global(qos: .background).async {
+                        if(status != currentPlayer.status){
+                            isCheckStatus = true
+                            switch currentPlayer.status {
+                            case .failed:
+                                DispatchQueue.main.async {
+                                    self.cancel(job, reason: "failed")
+                                }
+                            case .unknown:break
+                            case .readyToPlay: do {
+                                if let d = currentPlayer.currentItem?.asset.duration {
+                                    let willDuration = Double(CMTimeGetSeconds(d))
+                                    if willDuration != viewModel.originDuration {
+                                        DispatchQueue.main.async {
+                                            self.onDurationChange(willDuration)
+                                            player.playInit()
+                                        }
+                                       
+                                    }
+                                }
+                                DispatchQueue.main.async {
+                                    self.onReadyToPlay()
+                                }
                             }
+                            @unknown default:break
+                            }
+                            status = currentPlayer.status
+                            isCheckStatus = false
                         }
-                        self.onReadyToPlay()
                     }
-                    @unknown default:break
-                    }
-                    status = currentPlayer.status
                 }
         }
     }
@@ -279,7 +299,7 @@ extension MPVolumeView {
     }
 }
 
-struct CustomAVPlayer {
+struct CustomAVPlayerController {
     @ObservedObject var viewModel:PlayerModel
     @ObservedObject var pageObservable:PageObservable
     @Binding var bindUpdate:Bool 

@@ -13,7 +13,7 @@ import AVFoundation
  the VTT for us.
  */
 
-class CustomResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
+class CustomVTTResourceLoader: NSObject, AVAssetResourceLoaderDelegate, PageProtocol {
     static let mainScheme = "mainm3u8"
     private let fragmentsScheme = "fragmentsm3u8"
     private let subtitlesScheme = "subtitlesm3u8"
@@ -23,7 +23,7 @@ class CustomResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
     private var m3u8String: String? = nil
     private var playlistDuration: Double = 0.0
     
-    init(m3u8URL: URL, vttURL: URL? = nil) {
+    init(m3u8URL: URL, vttURL: URL) {
         self.m3u8URL = m3u8URL
         self.vttURL = vttURL
         super.init()
@@ -35,9 +35,9 @@ class CustomResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
         guard let scheme = loadingRequest.request.url?.scheme else {
             return false
         }
-        
+        DataLog.d(scheme , tag: "scheme")
         switch (scheme) {
-        case CustomResourceLoaderDelegate.mainScheme:
+        case Self.mainScheme:
             return handleMainRequest(loadingRequest)
         case fragmentsScheme:
             return handleFragments(loadingRequest)
@@ -99,6 +99,7 @@ class CustomResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
             }
         }
         m3u8String = newLines.joined(separator: "\n")
+        DataLog.d(m3u8String ?? "", tag: "m3u8String")
     }
     
     func appendBasePath(_ string: String) -> String {

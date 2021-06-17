@@ -137,7 +137,7 @@
 		316C45E52653303000A8D7F5 /* libwrtp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 316C45E126532FF500A8D7F5 /* libwrtp.a */; };
 		316C45E72653312800A8D7F5 /* AudioMirroring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316C45E62653312800A8D7F5 /* AudioMirroring.swift */; };
 		316C45EA2653832F00A8D7F5 /* AudioMirror.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316C45E92653832F00A8D7F5 /* AudioMirror.swift */; };
-		316DF2D125C29EC500915B27 /* CustomAVPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316DF2D025C29EC500915B27 /* CustomAVPlayer.swift */; };
+		316DF2D125C29EC500915B27 /* CustomAVPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316DF2D025C29EC500915B27 /* CustomAVPlayerController.swift */; };
 		316DF2DF25C2AA3C00915B27 /* CPAirPlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316DF2DE25C2AA3C00915B27 /* CPAirPlayButton.swift */; };
 		316ECDF6264B4274008D2544 /* BlankButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316ECDF5264B4274008D2544 /* BlankButton.swift */; };
 		316ECDF8264B45CB008D2544 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 316ECDF7264B45CB008D2544 /* GoogleService-Info.plist */; };
@@ -287,6 +287,8 @@
 		3195C1C526660F54001F513E /* KidsTopTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3195C1C426660F54001F513E /* KidsTopTab.swift */; };
 		319745BB261FEE7D0072945D /* PurchaseTicketList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319745BA261FEE7D0072945D /* PurchaseTicketList.swift */; };
 		319745C7262010F30072945D /* PageMyPurchaseTicketList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319745C6262010F30072945D /* PageMyPurchaseTicketList.swift */; };
+		3197FC80267AE511006918BA /* CustomAssetPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3197FC7F267AE511006918BA /* CustomAssetPlayer.swift */; };
+		3197FC82267AE53E006918BA /* CustomAssetResourceLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3197FC81267AE53E006918BA /* CustomAssetResourceLoader.swift */; };
 		3198FED9262FAF77008DCB2C /* PageMyAlram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3198FED8262FAF77008DCB2C /* PageMyAlram.swift */; };
 		319B07A4263A398C008C11A8 /* ConnectTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B07A3263A398C008C11A8 /* ConnectTitle.swift */; };
 		319B07A6263A8807008C11A8 /* VideoSetBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B07A5263A8807008C11A8 /* VideoSetBlock.swift */; };
@@ -312,8 +314,7 @@
 		31D3F4DE25E36625008FDFEC /* PageMultiBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */; };
 		31D3F4E625E3A57A008FDFEC /* BannerBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */; };
 		31D3F4EC25E3A7D4008FDFEC /* BannerList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4EB25E3A7D4008FDFEC /* BannerList.swift */; };
-		31D453DE2678631300E08CB2 /* CustomResourceLoaderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D453DD2678631300E08CB2 /* CustomResourceLoaderDelegate.swift */; };
-		31D453E02678646B00E08CB2 /* PlayerScreenViewAVAssetResourceLoaderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D453DF2678646B00E08CB2 /* PlayerScreenViewAVAssetResourceLoaderDelegate.swift */; };
+		31D453DE2678631300E08CB2 /* CustomVTTResourceLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D453DD2678631300E08CB2 /* CustomVTTResourceLoader.swift */; };
 		31D453E2267886A100E08CB2 /* CustomVTTPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D453E1267886A100E08CB2 /* CustomVTTPlayer.swift */; };
 		31DF151E25F9A89A00F0A38D /* TicketList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DF151D25F9A89A00F0A38D /* TicketList.swift */; };
 		31DF152925F9AC4600F0A38D /* TicketBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DF152825F9AC4600F0A38D /* TicketBlock.swift */; };
@@ -648,7 +649,7 @@
 		316C45E226532FF500A8D7F5 /* libopus.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopus.a; sourceTree = "<group>"; };
 		316C45E62653312800A8D7F5 /* AudioMirroring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMirroring.swift; sourceTree = "<group>"; };
 		316C45E92653832F00A8D7F5 /* AudioMirror.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMirror.swift; sourceTree = "<group>"; };
-		316DF2D025C29EC500915B27 /* CustomAVPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAVPlayer.swift; sourceTree = "<group>"; };
+		316DF2D025C29EC500915B27 /* CustomAVPlayerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAVPlayerController.swift; sourceTree = "<group>"; };
 		316DF2DE25C2AA3C00915B27 /* CPAirPlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPAirPlayButton.swift; sourceTree = "<group>"; };
 		316ECDF3264B3F3E008D2544 /* VerticalButtonBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalButtonBox.swift; sourceTree = "<group>"; };
 		316ECDF5264B4274008D2544 /* BlankButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlankButton.swift; sourceTree = "<group>"; };
@@ -799,6 +800,8 @@
 		3195C1C426660F54001F513E /* KidsTopTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsTopTab.swift; sourceTree = "<group>"; };
 		319745BA261FEE7D0072945D /* PurchaseTicketList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseTicketList.swift; sourceTree = "<group>"; };
 		319745C6262010F30072945D /* PageMyPurchaseTicketList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyPurchaseTicketList.swift; sourceTree = "<group>"; };
+		3197FC7F267AE511006918BA /* CustomAssetPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAssetPlayer.swift; sourceTree = "<group>"; };
+		3197FC81267AE53E006918BA /* CustomAssetResourceLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAssetResourceLoader.swift; sourceTree = "<group>"; };
 		3198FED8262FAF77008DCB2C /* PageMyAlram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyAlram.swift; sourceTree = "<group>"; };
 		319B07A3263A398C008C11A8 /* ConnectTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectTitle.swift; sourceTree = "<group>"; };
 		319B07A5263A8807008C11A8 /* VideoSetBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSetBlock.swift; sourceTree = "<group>"; };
@@ -825,8 +828,7 @@
 		31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMultiBlock.swift; sourceTree = "<group>"; };
 		31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerBlock.swift; sourceTree = "<group>"; };
 		31D3F4EB25E3A7D4008FDFEC /* BannerList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerList.swift; sourceTree = "<group>"; };
-		31D453DD2678631300E08CB2 /* CustomResourceLoaderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomResourceLoaderDelegate.swift; sourceTree = "<group>"; };
-		31D453DF2678646B00E08CB2 /* PlayerScreenViewAVAssetResourceLoaderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerScreenViewAVAssetResourceLoaderDelegate.swift; sourceTree = "<group>"; };
+		31D453DD2678631300E08CB2 /* CustomVTTResourceLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomVTTResourceLoader.swift; sourceTree = "<group>"; };
 		31D453E1267886A100E08CB2 /* CustomVTTPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomVTTPlayer.swift; sourceTree = "<group>"; };
 		31DF151D25F9A89A00F0A38D /* TicketList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketList.swift; sourceTree = "<group>"; };
 		31DF152825F9AC4600F0A38D /* TicketBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketBlock.swift; sourceTree = "<group>"; };
@@ -1929,6 +1931,32 @@
 			path = view;
 			sourceTree = "<group>";
 		};
+		3197FC7D267AE495006918BA /* custom */ = {
+			isa = PBXGroup;
+			children = (
+				3197FC7E267AE4B4006918BA /* asset */,
+				31D453DC267856D300E08CB2 /* vtt */,
+			);
+			path = custom;
+			sourceTree = "<group>";
+		};
+		3197FC7E267AE4B4006918BA /* asset */ = {
+			isa = PBXGroup;
+			children = (
+				3197FC7F267AE511006918BA /* CustomAssetPlayer.swift */,
+				3197FC81267AE53E006918BA /* CustomAssetResourceLoader.swift */,
+			);
+			path = asset;
+			sourceTree = "<group>";
+		};
+		3197FC83267B1960006918BA /* view */ = {
+			isa = PBXGroup;
+			children = (
+				316DF2DE25C2AA3C00915B27 /* CPAirPlayButton.swift */,
+			);
+			path = view;
+			sourceTree = "<group>";
+		};
 		319B07A2263A394E008C11A8 /* body */ = {
 			isa = PBXGroup;
 			children = (
@@ -1998,14 +2026,13 @@
 			path = popups;
 			sourceTree = "<group>";
 		};
-		31D453DC267856D300E08CB2 /* asset */ = {
+		31D453DC267856D300E08CB2 /* vtt */ = {
 			isa = PBXGroup;
 			children = (
-				31D453DD2678631300E08CB2 /* CustomResourceLoaderDelegate.swift */,
 				31D453E1267886A100E08CB2 /* CustomVTTPlayer.swift */,
-				31D453DF2678646B00E08CB2 /* PlayerScreenViewAVAssetResourceLoaderDelegate.swift */,
+				31D453DD2678631300E08CB2 /* CustomVTTResourceLoader.swift */,
 			);
-			path = asset;
+			path = vtt;
 			sourceTree = "<group>";
 		};
 		31E3974E25B59CC600CE6E21 /* my */ = {
@@ -2485,10 +2512,10 @@
 		D56C69E9257DA0C600CF9AB8 /* avplayer */ = {
 			isa = PBXGroup;
 			children = (
-				31D453DC267856D300E08CB2 /* asset */,
+				3197FC83267B1960006918BA /* view */,
+				3197FC7D267AE495006918BA /* custom */,
 				D56C69EA257DA0C600CF9AB8 /* CPPlayer.swift */,
-				316DF2D025C29EC500915B27 /* CustomAVPlayer.swift */,
-				316DF2DE25C2AA3C00915B27 /* CPAirPlayButton.swift */,
+				316DF2D025C29EC500915B27 /* CustomAVPlayerController.swift */,
 				317A8F4825CBA81700E41226 /* PlayerScreenView.swift */,
 			);
 			path = avplayer;
@@ -3144,7 +3171,6 @@
 				316B614E264A2B5400C2DC25 /* EffectButton.swift in Sources */,
 				D56C6A54257DA0C700CF9AB8 /* RectButton.swift in Sources */,
 				318D10002668403300B66977 /* AlertBoxKids.swift in Sources */,
-				31D453E02678646B00E08CB2 /* PlayerScreenViewAVAssetResourceLoaderDelegate.swift in Sources */,
 				318C36B4265F0806009B7EC3 /* PageCertification.swift in Sources */,
 				312BB07925DCF2AB00AC03BC /* ThumbImageViewer.swift in Sources */,
 				314D588225B64EB6007BCA34 /* PairingView.swift in Sources */,
@@ -3165,11 +3191,11 @@
 				31895B172601DF49002DE02E /* PackageBody.swift in Sources */,
 				316C45E72653312800A8D7F5 /* AudioMirroring.swift in Sources */,
 				312BB09125DD102200AC03BC /* PurchaseWebviewModel.swift in Sources */,
-				31D453DE2678631300E08CB2 /* CustomResourceLoaderDelegate.swift in Sources */,
+				31D453DE2678631300E08CB2 /* CustomVTTResourceLoader.swift in Sources */,
 				31895B072601CEB8002DE02E /* SynopsisPackageModel.swift in Sources */,
 				319745C7262010F30072945D /* PageMyPurchaseTicketList.swift in Sources */,
 				D56C6A43257DA0C700CF9AB8 /* LayoutAlignment.swift in Sources */,
-				316DF2D125C29EC500915B27 /* CustomAVPlayer.swift in Sources */,
+				316DF2D125C29EC500915B27 /* CustomAVPlayerController.swift in Sources */,
 				3190E6242674993D000CBCB9 /* SkeletonBlock.swift in Sources */,
 				319BAFDD2604A2FE0007273F /* SearchTab.swift in Sources */,
 				3180855825C2287300AE4A73 /* BtvPlayer.swift in Sources */,
@@ -3335,6 +3361,7 @@
 				316A707D2670360500A93B83 /* KidsPlayerUI.swift in Sources */,
 				D56C69AC257DA09E00CF9AB8 /* SelecterbleView.swift in Sources */,
 				3167197325FF27AA005AC3D2 /* WatchedList.swift in Sources */,
+				3197FC82267AE53E006918BA /* CustomAssetResourceLoader.swift in Sources */,
 				3166CBDB26119C1B00282891 /* MonthlyPurchaseInfo.swift in Sources */,
 				318D12DA2664869700BF1DD8 /* BannerListBlock.swift in Sources */,
 				316A707B2670349900A93B83 /* BtvPlayerModel.swift in Sources */,
@@ -3399,6 +3426,7 @@
 				318F7B632625818900774B17 /* OkCashPoint.swift in Sources */,
 				D56C6B0E257DAADE00CF9AB8 /* SceneTab.swift in Sources */,
 				317A8F5C25CBE1AE00E41226 /* PlayerMoreBox.swift in Sources */,
+				3197FC80267AE511006918BA /* CustomAssetPlayer.swift in Sources */,
 				3177732425FAF916006382AE /* User.swift in Sources */,
 				318BA36726089A6C0093BC7D /* PageSearchWebview.swift in Sources */,
 				D56C6A26257DA0C600CF9AB8 /* dimen.swift in Sources */,
@@ -3764,7 +3792,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 34;
+				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -3788,7 +3816,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.031;
+				MARKETING_VERSION = 1.032;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3840,7 +3868,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 34;
+				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -3859,7 +3887,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.031;
+				MARKETING_VERSION = 1.032;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

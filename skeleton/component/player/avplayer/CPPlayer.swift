@@ -15,7 +15,7 @@ struct CPPlayer: PageComponent {
     @State var bindUpdate:Bool = false //for ios13
     var body: some View {
         ZStack(alignment: .center){
-            CustomAVPlayer(
+            CustomAVPlayerController(
                 viewModel : self.viewModel,
                 pageObservable : self.pageObservable,
                 bindUpdate: self.$bindUpdate

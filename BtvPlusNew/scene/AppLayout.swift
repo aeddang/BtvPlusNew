@@ -206,7 +206,7 @@ struct AppLayout: PageComponent{
                 
             )
             
-            //self.pagePresenter.openPopup(PageProvider.getPageObject(.playerTest))
+            self.pagePresenter.openPopup(PageProvider.getPageObject(.playerTest))
         }
         if let alram = self.appObserver.alram  {
             self.appSceneObserver.event = .debug("apns exist")

@@ -156,10 +156,11 @@ struct PlayerUI: PageComponent {
         }
         .toast(isShowing: self.$isError, text: self.errorMessage)
         .onReceive(self.viewModel.$time) { tm in
+            if tm < 0 {return}
             self.time = tm.secToHourString()
             if self.viewModel.duration <= 0.0 {return}
             if !self.isSeeking {
-                self.progress = Float(self.viewModel.time / self.viewModel.duration)
+                self.progress = Float(tm / self.viewModel.duration)
             }
         }
         .onReceive(self.viewModel.$duration) { tm in

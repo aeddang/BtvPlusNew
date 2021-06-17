@@ -57,6 +57,7 @@ class PlayerScreenView: UIView, PageProtocol {
         }
     }
     
+    
     private var recoveryTime:Double = -1
     var drmData:FairPlayDrm? = nil
     var playerLayer:AVPlayerLayer? = nil
@@ -95,7 +96,6 @@ class PlayerScreenView: UIView, PageProtocol {
     
     private func createPlayer(_ url:URL, buffer:Double = 2.0, header:[String:String]? = nil) -> AVPlayer?{
         destoryPlayer()
-        player = AVPlayer()
         if let header = header {
             startPlayer(url, header: header)
         }else{
@@ -109,12 +109,11 @@ class PlayerScreenView: UIView, PageProtocol {
     private let loaderQueue = DispatchQueue(label: "resourceLoader")
     
     private func startPlayer(_ url:URL, header:[String:String]){
-    
+        player = AVPlayer()
         var assetHeader = [String: Any]()
         assetHeader["AVURLAssetHTTPHeaderFieldsKey"] = header
         let key = "playable"
         let asset = AVURLAsset(url: url, options: assetHeader)
-        
         asset.loadValuesAsynchronously(forKeys: [key]){
             DispatchQueue.global(qos: .background).async {
                 let status = asset.statusOfValue(forKey: key, error: nil)
@@ -166,31 +165,29 @@ class PlayerScreenView: UIView, PageProtocol {
                     at: CMTime.zero)
         }
         */
-        let resourceLoaderDelegate = CustomResourceLoaderDelegate(m3u8URL: url,vttURL: nil)
-        let customScheme = CustomResourceLoaderDelegate.mainScheme
-        guard let customURL = replaceURLWithScheme(customScheme,url:url) else { return }
-        let asset = AVURLAsset(url: customURL)
-        asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: self.loaderQueue)
+        player = CustomAssetPlayer(m3u8URL: url)
+        
+        /*
+        let vtt = URL(string: "https://www.iandevlin.com/html5test/webvtt/upc-video-subtitles-en.vtt")
+        //
+        let asset = AVURLAsset(url: url)
         let item = AVPlayerItem(asset: asset)
+        player = AVPlayer()
         self.player?.replaceCurrentItem(with: item )
+        */
         self.startPlayer()
     }
     
-    private func replaceURLWithScheme(_ scheme: String, url: URL) -> URL? {
-        let urlString = url.absoluteString
-        guard let index = urlString.firstIndex(of: ":") else { return nil }
-        let rest = urlString[index...]
-        let newUrlString = scheme + rest
-        return URL(string: newUrlString)
-    }
     
     static let VOLUME_NOTIFY_KEY = "AVSystemController_SystemVolumeDidChangeNotification"
     static let VOLUME_PARAM_KEY = "AVSystemController_AudioVolumeNotificationParameter"
     private func startPlayer(){
+        
         player?.allowsExternalPlayback = true
         player?.usesExternalPlaybackWhileExternalScreenIsActive = true
         player?.preventsDisplaySleepDuringVideoPlayback = true
         player?.volume = currentVolume
+        player?.isClosedCaptionDisplayEnabled = true
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
         }
@@ -211,7 +208,6 @@ class PlayerScreenView: UIView, PageProtocol {
         ComponentLog.d("startPlayer currentVolume " + currentVolume.description , tag: self.tag)
         ComponentLog.d("startPlayer currentRate " + currentRate.description , tag: self.tag)
         ComponentLog.d("startPlayer videoGravity " + currentVideoGravity.rawValue , tag: self.tag)
-
         //player?.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.new, .initial], context: nil)
         //player?.addObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status), options:[.new, .initial], context: nil)
         let center = NotificationCenter.default
@@ -288,6 +284,18 @@ class PlayerScreenView: UIView, PageProtocol {
         guard let currentPlayer = player else { return }
         currentPlayer.rate = self.currentRate
         if !self.isAutoPlay { pause() }
+        
+        guard let currentItem = currentPlayer.currentItem else { return }
+        currentItem.asset.allMediaSelections.forEach{ item in
+            
+            DataLog.d("MediaSelection " + item.description, tag: self.tag)
+        }
+        currentItem.asset.availableMediaCharacteristicsWithMediaSelectionOptions.forEach{ item in
+            DataLog.d("MediaCharacteristics " + item.rawValue, tag: self.tag)
+        }
+        currentItem.asset.availableMetadataFormats.forEach{ item in
+            DataLog.d("MetadataFormat " + item.rawValue, tag: self.tag)
+        }
     }
     
     func stop() {

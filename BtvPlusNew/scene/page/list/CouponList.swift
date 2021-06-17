@@ -79,11 +79,7 @@ class CouponData:InfinityData{
                 }
             }
         }
-        
-        
     }
-    
-    
 }
 
 

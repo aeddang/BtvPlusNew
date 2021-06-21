@@ -93,12 +93,14 @@ struct PosterBlock:PageComponent, BlockProtocol {
                                 : String.alert.dataError)
                         .modifier(MatchParent())
                 } else {
+                    
                     SkeletonBlock(
                         len:Self.skeletonNum,
                         spacing:PosterList.spacing,
                         size:self.skeletonSize
                     )
                     .modifier(MatchParent())
+                    
                 }
             }
         }
@@ -116,6 +118,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
                     self.skeletonSize = size
                 }
                 ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
+               
                 self.creatDataBinding()
                 return
             }
@@ -210,7 +213,9 @@ struct PosterBlock:PageComponent, BlockProtocol {
             .sink() {_ in
                 self.clearDataBinding()
                 if let datas = data.posters {
-                    withAnimation{ self.datas = datas }
+                    DispatchQueue.global(qos: .background).async {
+                        withAnimation{ self.datas = datas }
+                    }
                 }
             }
     }

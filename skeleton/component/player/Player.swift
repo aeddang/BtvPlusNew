@@ -21,6 +21,7 @@ open class PlayerModel: ComponentObservable {
     @Published var screenRatio:CGFloat = 1.0
     @Published var rate:Float = 1.0
     @Published var playInfo:String? = nil
+    @Published var assetInfo:AssetPlayerInfo? = nil
     
     @Published var screenGravity:AVLayerVideoGravity = .resizeAspect
     @Published fileprivate(set) var initTime:Double? = nil

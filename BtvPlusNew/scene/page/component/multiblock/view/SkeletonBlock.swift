@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 extension SkeletonBlock{
-    static let dataBindingDelay:Double = 0.5
+    static let dataBindingDelay:Double = 0.25
 }
 
 struct SkeletonBlock:View {

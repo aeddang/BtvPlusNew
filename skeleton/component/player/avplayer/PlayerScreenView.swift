@@ -12,13 +12,16 @@ import AVKit
 import MediaPlayer
 
 protocol PlayerScreenViewDelegate{
+    func onPlayerAssetInfo(_ info:AssetPlayerInfo)
     func onPlayerError(_ error:PlayerStreamError)
     func onPlayerCompleted()
     func onPlayerBecomeActive()
     func onPlayerVolumeChanged(_ v:Float)
 }
 
-class PlayerScreenView: UIView, PageProtocol {
+class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
+    
+    
     var delegate:PlayerScreenViewDelegate?
     var player:AVPlayer? = nil
     {
@@ -94,12 +97,12 @@ class PlayerScreenView: UIView, PageProtocol {
         playerLayer?.frame = CGRect(x: x, y: y, width: w, height: h)
     }
     
-    private func createPlayer(_ url:URL, buffer:Double = 2.0, header:[String:String]? = nil) -> AVPlayer?{
+    private func createPlayer(_ url:URL, buffer:Double = 2.0, header:[String:String]? = nil, assetInfo:AssetPlayerInfo? = nil) -> AVPlayer?{
         destoryPlayer()
         if let header = header {
             startPlayer(url, header: header)
         }else{
-            startPlayer(url)
+            startPlayer(url, assetInfo:assetInfo)
         }
         if self.isAutoPlay { resume() }
         else { pause() }
@@ -137,7 +140,7 @@ class PlayerScreenView: UIView, PageProtocol {
         }
     }
     
-    private func startPlayer(_ url:URL){
+    private func startPlayer(_ url:URL, assetInfo:AssetPlayerInfo? = nil){
         
         /*
         let videoPlusSubtitles = AVMutableComposition()
@@ -165,20 +168,13 @@ class PlayerScreenView: UIView, PageProtocol {
                     at: CMTime.zero)
         }
         */
-        player = CustomAssetPlayer(m3u8URL: url)
-        
-        /*
-        let vtt = URL(string: "https://www.iandevlin.com/html5test/webvtt/upc-video-subtitles-en.vtt")
-        //
-        let asset = AVURLAsset(url: url)
-        let item = AVPlayerItem(asset: asset)
-        player = AVPlayer()
-        self.player?.replaceCurrentItem(with: item )
-        */
+        player = CustomAssetPlayer(m3u8URL: url, playerDelegate: self, assetInfo:assetInfo)
         self.startPlayer()
     }
-    
-    
+    func onFindAllInfo(_ info: AssetPlayerInfo) {
+        self.delegate?.onPlayerAssetInfo(info)
+    }
+
     static let VOLUME_NOTIFY_KEY = "AVSystemController_SystemVolumeDidChangeNotification"
     static let VOLUME_PARAM_KEY = "AVSystemController_AudioVolumeNotificationParameter"
     private func startPlayer(){
@@ -266,14 +262,14 @@ class PlayerScreenView: UIView, PageProtocol {
     
     
     @discardableResult
-    func load(_ path:String, isAutoPlay:Bool = false , initTime:Double = 0, buffer:Double = 2.0, header:[String:String]? = nil) -> AVPlayer? {
+    func load(_ path:String, isAutoPlay:Bool = false , initTime:Double = 0, buffer:Double = 2.0, header:[String:String]? = nil, assetInfo:AssetPlayerInfo? = nil) -> AVPlayer? {
         guard let url = URL(string: path) else {
            return nil
         }
         self.initTime = initTime
         self.isAutoPlay = isAutoPlay
     
-        let player = createPlayer(url, buffer:buffer, header:header)
+        let player = createPlayer(url, buffer:buffer, header:header, assetInfo: assetInfo)
         return player
     }
     
@@ -335,3 +331,5 @@ class PlayerScreenView: UIView, PageProtocol {
         return true
     }
 }
+
+

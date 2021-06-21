@@ -115,7 +115,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
             if path == "" {viewModel.error = .connect(path)}
             viewModel.path = path
             self.onLoad()
-            player.load(path, isAutoPlay: isAutoPlay, initTime: initTime, header:header) 
+            player.load(path, isAutoPlay: isAutoPlay, initTime: initTime, header:header, assetInfo: self.viewModel.assetInfo) 
             run(player)
         case .check:
             if self.viewModel.isRunning {return}
@@ -260,6 +260,12 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
             ComponentLog.d("cancel reason " + msg , tag: self.tag)
         }
         job?.cancel()
+    }
+    
+    func onPlayerAssetInfo(_ info:AssetPlayerInfo) {
+        DispatchQueue.main.async {
+            self.viewModel.assetInfo = info
+        }
     }
     
     func onPlayerCompleted(){

@@ -98,6 +98,7 @@ class AudioMirroring : NSObject, ObservableObject, AudioMirrorServiceProxyClient
     }
 
     func stopSearching() {
+        self.isConnectng = false
         DataLog.d("stopSearching ", tag: self.tag)
         if self.status == .connecting {
             self.status = .none
@@ -254,16 +255,19 @@ class AudioMirroring : NSObject, ObservableObject, AudioMirrorServiceProxyClient
         DataLog.d("audioMirrorServiceTVAudioOutEnabled " + Int(state).description, tag: self.tag)
     }
     
+    private var isConnectng:Bool = false
     func audioMirrorServiceFound(_ serviceJsonString: UnsafeMutablePointer<CChar>!) {
         if self.isConnected {return}
+        if self.isConnectng {return}
         guard let client = self.client else {return}
         let jsonString = String(cString: serviceJsonString).replace("\n", with: "")
         guard let data = AppUtil.getJsonParam(jsonString: jsonString) else {return}
         guard let service = data["service"] as? String else {return}
         guard let address = data["address"] as? String else {return}
         guard let port = data["port"] as? String else {return}
-        guard let mac = pairing.hostDevice?.convertMacAdress else {return}
+        guard let mac = pairing.hostDevice?.convertMacAdress.replace(":", with: "").uppercased() else {return}
         if service.contains(mac) {
+            self.isConnectng = true
             client.connect(
                 UnsafeMutablePointer(mutating: (address as NSString).utf8String),
                 serverPortNumber: Int32(port.toInt()) ,

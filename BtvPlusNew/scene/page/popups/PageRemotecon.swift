@@ -212,7 +212,10 @@ struct PageRemotecon: PageView {
                 }
             }
             .onDisappear{
-                self.repository.audioMirrorManager.close()
+                if self.repository.audioMirrorManager.isConnected {
+                    self.repository.audioMirrorManager.close()
+                    self.appSceneObserver.event = .toast(String.remote.closeMirroring)
+                }
             }
             
         }//geo
@@ -435,6 +438,11 @@ struct PageRemotecon: PageView {
     
     
     private func connectEarphone(){
+        if self.repository.audioMirrorManager.isConnected {
+            self.repository.audioMirrorManager.close()
+            return
+        }
+        
         if self.networkObserver.status != .wifi {
             self.appSceneObserver.alert = .connectWifi{ retry in
                 if retry { self.connectEarphone() }

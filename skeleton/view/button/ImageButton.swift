@@ -14,6 +14,7 @@ struct ImageButton: View, SelecterbleProtocol{
     let defaultImage:String
     let activeImage:String
     let size:CGSize
+    let padding:CGFloat
     let text:String?
     let textSize:CGFloat
     let defaultTextColor:Color
@@ -28,6 +29,7 @@ struct ImageButton: View, SelecterbleProtocol{
         index: Int = 0,
         size:CGSize = CGSize(width: Dimen.icon.light, height: Dimen.icon.light),
         textSize:CGFloat = Font.size.thin,
+        padding:CGFloat = 0,
         defaultTextColor:Color = Color.app.whiteDeep,
         activeTextColor:Color = Color.app.white,
         action:@escaping (_ idx:Int) -> Void
@@ -40,6 +42,7 @@ struct ImageButton: View, SelecterbleProtocol{
         self.isSelected = isSelected ?? false
         self.size = size
         self.textSize = textSize
+        self.padding = padding
         self.defaultTextColor = defaultTextColor
         self.activeTextColor = activeTextColor
         self.action = action
@@ -53,7 +56,8 @@ struct ImageButton: View, SelecterbleProtocol{
                         self.activeImage : self.defaultImage)
                     .renderingMode(.original).resizable()
                     .scaledToFit()
-                    .frame(width: size.width, height: size.height)
+                    .padding(.all, floor(self.padding/2))
+                    .frame(width: size.width + self.padding, height: size.height + self.padding)
                 if self.text != nil {
                     Text(self.text!)
                         .modifier(BoldTextStyle(
@@ -63,6 +67,7 @@ struct ImageButton: View, SelecterbleProtocol{
                         ))
                 }
             }
+            .background(Color.transparent.clearUi)
         }
     }
 }

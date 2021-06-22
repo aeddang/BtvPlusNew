@@ -75,13 +75,14 @@ struct PlayerTopBodyKids: PageView{
                             ? Self.lockTextSizeFull.height : Self.lockTextSize.height)
                     .offset(x: DimenKids.margin.tiny)
             }
-            VStack( spacing:self.isFullScreen ? KidsPlayerUI.fullScreenSpacing : KidsPlayerUI.spacing){
+            VStack( spacing:0){
                 if !self.isSimple{
                     ImageButton(
                         defaultImage: AssetKids.player.more,
                         activeImage: AssetKids.player.lock,
                         isSelected: self.isLock,
-                        size: self.isFullScreen ? KidsPlayerUI.iconFullScreen : KidsPlayerUI.icon
+                        size: self.isFullScreen ? KidsPlayerUI.iconFullScreen : KidsPlayerUI.icon,
+                        padding: self.isFullScreen ? KidsPlayerUI.fullScreenSpacing : KidsPlayerUI.spacing
                     ){ _ in
                         if self.isLock {
                             self.viewModel.isLock = false
@@ -97,7 +98,8 @@ struct PlayerTopBodyKids: PageView{
                         defaultImage: AssetKids.player.volumeOn,
                         activeImage: AssetKids.player.volumeOff,
                         isSelected: self.isMute,
-                        size: self.isFullScreen ? KidsPlayerUI.iconFullScreen : KidsPlayerUI.icon
+                        size: self.isFullScreen ? KidsPlayerUI.iconFullScreen : KidsPlayerUI.icon,
+                        padding: self.isFullScreen ? KidsPlayerUI.fullScreenSpacing : KidsPlayerUI.spacing
                     ){ _ in
                         if self.isMute {
                             if self.viewModel.volume == 0 {
@@ -111,7 +113,8 @@ struct PlayerTopBodyKids: PageView{
                     }
                     ImageButton(
                         defaultImage: AssetKids.player.lockOn,
-                        size: self.isFullScreen ? KidsPlayerUI.iconFullScreen : KidsPlayerUI.icon
+                        size: self.isFullScreen ? KidsPlayerUI.iconFullScreen : KidsPlayerUI.icon,
+                        padding: self.isFullScreen ? KidsPlayerUI.fullScreenSpacing : KidsPlayerUI.spacing
                     ){ _ in
                         self.viewModel.isLock = true
                     }

@@ -28,6 +28,11 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
     private(set) var watchOptions:[PurchaseModel]? = nil
     private(set) var isPlayAble:Bool = false
     fileprivate(set) var optionIdx = 0
+    let type:PageType
+    init(type:PageType){
+        self.type = type
+        
+    }
     
     func setData(synopsisModel:SynopsisModel?, isPairing:Bool? ) -> PurchaseViewerData? {
         guard let synopsisModel = synopsisModel else { return nil }
@@ -116,7 +121,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                     infoTrailing = String.pageText.synopsisTerminationBtv
                 }else{
                     if synopsisModel.isContainPPM {
-                        infoIcon = Asset.icon.tip
+                        infoIcon = self.type == .btv ? Asset.icon.tip : AssetKids.icon.tip
                         infoTrailing = String.pageText.synopsisFreeWatchMonthly
                     }
                 }
@@ -127,7 +132,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                 infoTrailing = String.pageText.synopsisFreeWatchBtv
             } else {
                 if synopsisModel.isContainPPM {
-                    infoIcon = Asset.icon.tip
+                    infoIcon = self.type == .btv ? Asset.icon.tip : AssetKids.icon.tip
                     infoTrailing = String.pageText.synopsisFreeWatchMonthly
                 }
             }
@@ -342,11 +347,11 @@ struct PurchaseViewer: PageComponent{
 
 #if DEBUG
 struct PurchaseViewer_Previews: PreviewProvider {
-    
+
     static var previews: some View {
         VStack{
             PurchaseViewer(
-                data:PurchaseViewerData().setDummy()
+                data:PurchaseViewerData(type: .btv).setDummy()
             )
             .environmentObject(DataProvider())
             .environmentObject(PagePresenter())

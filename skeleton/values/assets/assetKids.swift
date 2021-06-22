@@ -18,6 +18,7 @@ extension AssetKids {
     public static let noImgBanner = "img09CardBannerDefault"
 }
 extension AssetKids{
+    private static let isPad =  AppUtil.isPad()
     struct brand {
        
     }
@@ -37,13 +38,14 @@ extension AssetKids{
     
     struct icon {
         public static let delete = "zemkidsMPopupInputDelNor"
-        
+        public static let back = "zemkidsMBackBtn"
         public static let heartOff = "zemkidsMBtnSynopsisFavoriteOff"
         public static let heartOn = "zemkidsMBtnSynopsisFavoriteOn"
-        
+        public static let info = "zemkidsMBtnSynopsisTololtipInfoNor"
+        public static let tip = "zemkidsMIcSysnopsisTip"
         public static let watchBTv = "zemkidsMBtnSynopsisBtvNor"
         public static let playInfo = "zemkidsMBtnSynopsisInfoNor"
-        public static let share = " zemkidsMBtnSynopsisShareNor"
+        public static let share = "zemkidsMBtnSynopsisShareNor"
     }
     
     
@@ -79,6 +81,8 @@ extension AssetKids{
         public static let checkBoxOn = "zemkidsMProfileImgSel"
         public static let checkBoxOn2 = "zemkidsMPopupCheckSel"
         public static let checkBoxOff = "zemkidsMProfileImgNor"
+       
+        public static let tooltip = isPad ? "zemkidsTTooltipBubble29" : "zemkidsMTooltipBubble29"
         public static let spinner = "icSpinner"
        
     }
@@ -93,6 +97,8 @@ extension AssetKids{
     }
     struct image {
         public static let noProfile = "zemkidsMGnbNorProfileDefault"
+        public static let synopsisBg = isPad ? "zemkidsTIBgSynopsisEnter" : "zemkidsMBgSynopsisEnter"
+      
     }
     
     struct source {

@@ -10,11 +10,25 @@ import SwiftUI
 
 
 class SummaryViewerData {
+    private(set) var title: String = ""
+    private(set) var count: String? = nil
+    private(set) var seasonTitle: String = ""
     private(set) var summry: String? = nil
     private(set) var peoples:[PeopleData]? = nil
-   
+    var episodeTitle:String {
+        guard let count = self.count else { return self.title }
+        if count.isEmpty { return self.title }
+        return count + String.app.broCount + ") " + self.title 
+    }
+    
     func setData(data:SynopsisContentsItem) -> SummaryViewerData {
+        self.title = data.title ?? ""
         self.summry = data.epsd_snss_cts
+        if data.sris_typ_cd == SrisTypCd.season.rawValue {
+            self.seasonTitle = data.sson_choic_nm ?? ""
+            self.count = data.brcast_tseq_nm
+        }
+        
         self.peoples = data.peoples?.map {
             PeopleData().setData(data: $0, epsdId: data.epsd_id)
         }

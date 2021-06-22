@@ -134,15 +134,6 @@ struct KidsPlayer: PageComponent{
             }
             .modifier(MatchParent())
             .background(Color.app.black)
-            .onReceive(self.sceneObserver.$isUpdated){ update in
-                if !update {return}
-                if self.viewModel.isLock { return }
-                if SystemEnvironment.isTablet  { return }
-                switch self.sceneObserver.sceneOrientation {
-                case .landscape : self.pagePresenter.fullScreenEnter()
-                case .portrait : self.pagePresenter.fullScreenExit()
-                }
-            }
             
             .onReceive(self.viewModel.$event) { evt in
                 guard let evt = evt else { return }

@@ -11,6 +11,8 @@ extension KidsSynopsis {
     static let topHeight:CGFloat = SystemEnvironment.isTablet ? 252 : 99
     static let bottomHeight:CGFloat = SystemEnvironment.isTablet ? 164 : 70
     static let listWidth:CGFloat = SystemEnvironment.isTablet ? 243 : 150
+    
+    static let playerSize:CGSize = SystemEnvironment.isTablet ? CGSize(width: 705, height: 394) : CGSize(width: 368, height: 206)
 }
 
 struct KidsSynopsis: PageComponent{
@@ -64,15 +66,42 @@ struct KidsSynopsis: PageComponent{
     var topIdx:Int
     var useTracking:Bool
     
-    @State var playerWidth: CGFloat = 0
-   
     var body: some View {
-        HStack(spacing:0){
-            VStack(spacing:0){
-                if let episodeViewerData = self.episodeViewerData {
-                    EpisodeViewerKids(
-                        data: episodeViewerData,
-                        purchaseViewerData: self.purchasViewerData) 
+        HStack(alignment: .top, spacing:0){
+            if !self.isFullScreen {
+                Button(action: {
+                    self.pagePresenter.goBack()
+                }) {
+                    Image(AssetKids.icon.back)
+                        .renderingMode(.original)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: DimenKids.icon.regularExtra,
+                               height: DimenKids.icon.regularExtra)
+                }
+                .padding(.trailing, DimenKids.margin.light)
+                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+            }
+            VStack(alignment: .leading,spacing:0){
+                if !self.isFullScreen {
+                    if let episodeViewerData = self.episodeViewerData, let purchasViewerData = self.purchasViewerData {
+                        EpisodeViewerKids(
+                            episodeViewerData: episodeViewerData,
+                            purchaseViewerData: purchasViewerData)
+                            .fixedSize(horizontal: true, vertical: false)
+                            .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                    }
+                    
+                    if SystemEnvironment.isTablet {
+                        FunctionViewerKids(
+                            componentViewModel: self.componentViewModel,
+                            synopsisData: self.synopsisData,
+                            summaryViewerData: self.summaryViewerData,
+                            isBookmark: self.$isBookmark
+                        )
+                        .padding(.top, DimenKids.margin.medium)
+                        .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel)) 
+                    }
                 }
                 HStack{
                     ZStack {
@@ -102,15 +131,28 @@ struct KidsSynopsis: PageComponent{
                     }
                     .modifier(Ratio16_9(
                                 geometry:  self.isFullScreen ? geometry : nil,
-                                width:self.playerWidth,
+                                width:Self.playerSize.width,
                                 isFullScreen: self.isFullScreen))
-                    FunctionViewerKids(
-                        componentViewModel: self.componentViewModel,
-                        isBookmark: self.$isBookmark
+                    .clipShape(RoundedRectangle(cornerRadius: self.isFullScreen ? 0 : DimenKids.radius.heavy))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: self.isFullScreen ? 0 : DimenKids.radius.heavy)
+                            .stroke(Color.app.ivoryDeep,
+                                    lineWidth: self.isFullScreen ? 0 : DimenKids.stroke.heavy)
                     )
-                
+                    if !SystemEnvironment.isTablet && !self.isFullScreen{
+                        FunctionViewerKids(
+                            componentViewModel: self.componentViewModel,
+                            synopsisData: self.synopsisData,
+                            summaryViewerData: self.summaryViewerData,
+                            isBookmark: self.$isBookmark
+                        )
+                        .modifier(KidsContentHorizontalEdges())
+                        .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                    }
                 }
-                
+                .padding(.top, self.isFullScreen
+                            ? 0
+                            : (SystemEnvironment.isTablet ?  DimenKids.margin.regularExtra : DimenKids.margin.medium ) )
             } // vstack
             
             if self.sceneOrientation == .landscape && !self.isFullScreen {
@@ -136,16 +178,22 @@ struct KidsSynopsis: PageComponent{
                  }
             }
         }
+        .padding(.top,self.isFullScreen ? 0 : DimenKids.margin.mediumExtra)
         .modifier(MatchParent())
+        .background(
+            Image(AssetKids.image.synopsisBg)
+                .renderingMode(.original)
+                .resizable()
+                .scaledToFill()
+                .modifier(MatchParent())
+                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+        )
+        
         .onReceive(self.sceneObserver.$isUpdated){ _ in
-            self.playerWidth = self.sceneObserver.sceneOrientation == .landscape
-                ? geometry.size.width - Self.listWidth
-                : geometry.size.width
+            
         }
         .onAppear{
-            self.playerWidth = self.sceneObserver.sceneOrientation == .landscape
-                ? geometry.size.width - Self.listWidth
-                : geometry.size.width
+            
         }
     }//body
 }

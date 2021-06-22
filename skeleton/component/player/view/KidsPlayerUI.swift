@@ -76,13 +76,16 @@ struct KidsPlayerUI: PageComponent {
             VStack{
                 Spacer()
                 
-                HStack(alignment:.center, spacing:Self.spacing){
+                HStack(alignment:.center, spacing:0){
                     ImageButton(
                         defaultImage: AssetKids.player.replay,
-                        size: self.isFullScreen ? Self.iconFullScreen : Self.icon
+                        size: self.isFullScreen ? Self.iconFullScreen : Self.icon,
+                        padding: Self.spacing
+                        
                     ){ _ in
                         self.viewModel.event = .seekTime(0,true)
                     }
+                    .buttonStyle(BorderlessButtonStyle())
                     VStack(spacing:DimenKids.margin.micro){
                         ProgressSlider(
                             progress: min(self.progress, 1.0),
@@ -116,19 +119,18 @@ struct KidsPlayerUI: PageComponent {
                         defaultImage: AssetKids.player.fullScreen,
                         activeImage: AssetKids.player.fullScreenOff,
                         isSelected: self.isFullScreen,
-                        size: self.isFullScreen ? Self.iconFullScreen : Self.icon
+                        size: self.isFullScreen ? Self.iconFullScreen : Self.icon,
+                        padding: Self.spacing
                     ){ _ in
                         if self.viewModel.useFullScreenAction {
-                            let changeOrientation:UIInterfaceOrientationMask = SystemEnvironment.isTablet
-                            ? (self.sceneObserver.sceneOrientation == .portrait ? .portrait :.landscape)
-                            : (self.isFullScreen ? .portrait : .landscape)
                             self.isFullScreen
-                                ? self.pagePresenter.fullScreenExit(changeOrientation: changeOrientation)
-                                : self.pagePresenter.fullScreenEnter(changeOrientation: changeOrientation)
+                                ? self.pagePresenter.fullScreenExit(changeOrientation: nil)
+                                : self.pagePresenter.fullScreenEnter(changeOrientation: nil)
                         } else{
                             self.viewModel.event = .fullScreen(!self.isFullScreen)
                         }
                     }
+                    .buttonStyle(BorderlessButtonStyle())
                 }
                 .frame(height: self.isFullScreen ? Self.uiHeightFullScreen : Self.uiHeight)
                 .padding(.all, self.isFullScreen ? Self.paddingFullScreen : Self.padding)

@@ -263,6 +263,8 @@
 		318FC00625E4CA5800ABC241 /* CateBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318FC00525E4CA5800ABC241 /* CateBlock.swift */; };
 		3190E6242674993D000CBCB9 /* SkeletonBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190E6232674993D000CBCB9 /* SkeletonBlock.swift */; };
 		3192318025A40A7D00020388 /* ReflashSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192317F25A40A7D00020388 /* ReflashSpinner.swift */; };
+		3192CA6926818FAB007B3C29 /* ToolTipKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192CA6826818FAB007B3C29 /* ToolTipKids.swift */; };
+		3192CA6C26819953007B3C29 /* PageDetailInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192CA6B26819953007B3C29 /* PageDetailInfo.swift */; };
 		3192EFD22666F8760012F238 /* KidsGnb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192EFD12666F8760012F238 /* KidsGnb.swift */; };
 		3192EFD4266709E30012F238 /* SceneKidsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192EFD3266709E30012F238 /* SceneKidsTab.swift */; };
 		3192EFD626670ECD0012F238 /* KidsTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192EFD526670ECD0012F238 /* KidsTop.swift */; };
@@ -776,6 +778,8 @@
 		318FC00525E4CA5800ABC241 /* CateBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CateBlock.swift; sourceTree = "<group>"; };
 		3190E6232674993D000CBCB9 /* SkeletonBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonBlock.swift; sourceTree = "<group>"; };
 		3192317F25A40A7D00020388 /* ReflashSpinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflashSpinner.swift; sourceTree = "<group>"; };
+		3192CA6826818FAB007B3C29 /* ToolTipKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolTipKids.swift; sourceTree = "<group>"; };
+		3192CA6B26819953007B3C29 /* PageDetailInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageDetailInfo.swift; sourceTree = "<group>"; };
 		3192EFD12666F8760012F238 /* KidsGnb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsGnb.swift; sourceTree = "<group>"; };
 		3192EFD3266709E30012F238 /* SceneKidsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneKidsTab.swift; sourceTree = "<group>"; };
 		3192EFD526670ECD0012F238 /* KidsTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsTop.swift; sourceTree = "<group>"; };
@@ -1331,11 +1335,11 @@
 		3166CBA626115CC700282891 /* component */ = {
 			isa = PBXGroup;
 			children = (
+				3192CA6A26819267007B3C29 /* purchase */,
 				31F2803D267332F700F40B09 /* episode */,
 				31F2803626732D0800F40B09 /* function */,
 				31F280292671E9E100F40B09 /* play */,
 				31895B1B2601F0F3002DE02E /* TopViewer.swift */,
-				314F815F25BE30AA00E76508 /* PurchaseViewer.swift */,
 				3152B45F25D9DDE100147C86 /* SummaryViewer.swift */,
 				31895B232601F609002DE02E /* SimpleSummaryViewer.swift */,
 				3152B47925DA799000147C86 /* SerisTab.swift */,
@@ -1462,6 +1466,7 @@
 			children = (
 				316A7074266F3CDD00A93B83 /* PageKidsConfirmNumber.swift */,
 				316A7076266F4A1200A93B83 /* PageTabInfo.swift */,
+				3192CA6B26819953007B3C29 /* PageDetailInfo.swift */,
 			);
 			path = popup;
 			sourceTree = "<group>";
@@ -1555,6 +1560,7 @@
 				316A7071266F28C200A93B83 /* InputNumberBox.swift */,
 				316A709A2670708400A93B83 /* ThumbImageViewerKids.swift */,
 				31F2803B2673305A00F40B09 /* PlayInfoButton.swift */,
+				3192CA6826818FAB007B3C29 /* ToolTipKids.swift */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -1831,6 +1837,14 @@
 			path = view;
 			sourceTree = "<group>";
 		};
+		3192CA6A26819267007B3C29 /* purchase */ = {
+			isa = PBXGroup;
+			children = (
+				314F815F25BE30AA00E76508 /* PurchaseViewer.swift */,
+			);
+			path = purchase;
+			sourceTree = "<group>";
+		};
 		3192EFDB26675C150012F238 /* alert */ = {
 			isa = PBXGroup;
 			children = (
@@ -1878,7 +1892,6 @@
 				316A709F2670801600A93B83 /* list */,
 				3195C1C226660EBE001F513E /* component */,
 				318D100A266884DF00B66977 /* my */,
-				31F280242671BE5D00F40B09 /* synopsis */,
 				316A7073266F3CA500A93B83 /* popup */,
 				3195C1BF26660D88001F513E /* home */,
 				3195C1BC2665F350001F513E /* intro */,
@@ -2080,13 +2093,6 @@
 				316A707C2670360500A93B83 /* KidsPlayerUI.swift */,
 			);
 			path = view;
-			sourceTree = "<group>";
-		};
-		31F280242671BE5D00F40B09 /* synopsis */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = synopsis;
 			sourceTree = "<group>";
 		};
 		31F280292671E9E100F40B09 /* play */ = {
@@ -3171,6 +3177,7 @@
 				316B614E264A2B5400C2DC25 /* EffectButton.swift in Sources */,
 				D56C6A54257DA0C700CF9AB8 /* RectButton.swift in Sources */,
 				318D10002668403300B66977 /* AlertBoxKids.swift in Sources */,
+				3192CA6926818FAB007B3C29 /* ToolTipKids.swift in Sources */,
 				318C36B4265F0806009B7EC3 /* PageCertification.swift in Sources */,
 				312BB07925DCF2AB00AC03BC /* ThumbImageViewer.swift in Sources */,
 				314D588225B64EB6007BCA34 /* PairingView.swift in Sources */,
@@ -3257,6 +3264,7 @@
 				D56C6A2E257DA0C700CF9AB8 /* CustomImagePicker.swift in Sources */,
 				D56C6B13257DAADE00CF9AB8 /* AppLayout.swift in Sources */,
 				314F816025BE30AA00E76508 /* PurchaseViewer.swift in Sources */,
+				3192CA6C26819953007B3C29 /* PageDetailInfo.swift in Sources */,
 				31061E6625C8CF5800543FC0 /* BtvWebView.swift in Sources */,
 				D56C6A60257DA0C700CF9AB8 /* InputAccssory.swift in Sources */,
 				3159B05025B17B0B008CA85B /* Kms.swift in Sources */,

@@ -75,9 +75,7 @@ class EpisodeViewerData {
                     })
                     self.awardDetail = detail
                 }
-                
             }
-        
         }
         return self
     }

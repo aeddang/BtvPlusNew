@@ -33,7 +33,9 @@ struct DimenKids{
         public static let heavy:CGFloat = isPad ? 123 : 76//*
         public static let heavyExtra:CGFloat = isPad ? 110 : 70//*
         public static let medium:CGFloat = isPad ? 76 : 42//*
+        
         public static let regular:CGFloat = isPad ? 53 : 32 //*
+        public static let regularExtra:CGFloat = isPad ? 50 : 30 //*
         public static let light:CGFloat = isPad ? 50 : 26//*
         public static let thin:CGFloat = isPad ? 40 : 22//*
         public static let thinExtra:CGFloat = isPad ? 39 : 20//*

@@ -163,7 +163,7 @@ struct PageSynopsis: PageView {
                             topIdx: self.topIdx,
                             useTracking: self.useTracking
                         )
-                        .modifier(PageFull(style:.kids))
+                        .modifier(PageFull(style:.kidsLight))
                     }
                 }//PageDragingBody
                 .onReceive(self.playerModel.$btvPlayerEvent){evt in
@@ -655,7 +655,7 @@ struct PageSynopsis: PageView {
            
             if self.isPairing == false {
                 self.synopsisModel?.setData(directViewdata: nil)
-                self.purchasViewerData = PurchaseViewerData().setData(
+                self.purchasViewerData = PurchaseViewerData(type: self.type).setData(
                         synopsisModel: self.synopsisModel,
                         isPairing: self.isPairing)
                 self.hasAuthority = false
@@ -684,7 +684,7 @@ struct PageSynopsis: PageView {
         self.purchaseWebviewModel?.setParam(directView: data, monthlyPid: nil)
         self.synopsisModel?.setData(directViewdata: data)
         self.isBookmark = self.synopsisModel?.isBookmark
-        self.purchasViewerData = PurchaseViewerData().setData(
+        self.purchasViewerData = PurchaseViewerData(type: self.type).setData(
                 synopsisModel: self.synopsisModel,
                 isPairing: self.isPairing)
         

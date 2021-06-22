@@ -12,43 +12,71 @@ struct FunctionViewerKids: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     var componentViewModel:PageSynopsis.ComponentViewModel
     var synopsisData:SynopsisData? = nil
-   
+    var summaryViewerData:SummaryViewerData? = nil
     @Binding var isBookmark:Bool?
    
     var body: some View {
-        VStack(alignment:.center , spacing:0) {
-            PlayInfoButton()
-            .buttonStyle(BorderlessButtonStyle())
-            BtvButton(type: .kids){
-                self.componentViewModel.uiEvent = .watchBtv
-            }
-            .buttonStyle(BorderlessButtonStyle())
-            if let synopsisData = self.synopsisData {
-                BookMarkButton(
-                    type: .kids,
-                    data:synopsisData,
-                    isBookmark: self.$isBookmark
-                )
-                .buttonStyle(BorderlessButtonStyle())
-            }
-            
-            
-            if let srisId = self.synopsisData?.srisId{
-                ShareButton(
-                    type: .kids,
-                    srisId:srisId,
-                    epsdId:self.synopsisData?.epsdId
-                )
-                .buttonStyle(BorderlessButtonStyle())
+        ZStack{
+            if SystemEnvironment.isTablet {
+                HStack(alignment:.center , spacing:DimenKids.margin.regularExtra) {
+                    FunctionViewerKidsBody(
+                        componentViewModel: self.componentViewModel,
+                        synopsisData: self.synopsisData,
+                        summaryViewerData:self.summaryViewerData,
+                        isBookmark: self.$isBookmark)
+                }
+            } else {
+                VStack(alignment:.center , spacing:DimenKids.margin.regularExtra) {
+                    FunctionViewerKidsBody(
+                        componentViewModel: self.componentViewModel,
+                        synopsisData: self.synopsisData,
+                        summaryViewerData:self.summaryViewerData,
+                        isBookmark: self.$isBookmark)
+                }
             }
         }
-        .modifier(ContentHorizontalEdges())
         .onAppear{
             
         }
     }//body
 }
 
+struct FunctionViewerKidsBody: PageComponent{
+    @EnvironmentObject var pagePresenter:PagePresenter
+    var componentViewModel:PageSynopsis.ComponentViewModel
+    var synopsisData:SynopsisData? = nil
+    var summaryViewerData:SummaryViewerData? = nil
+    @Binding var isBookmark:Bool?
+   
+    var body: some View {
+        if let data = summaryViewerData {
+            PlayInfoButton(data: data)
+            .buttonStyle(BorderlessButtonStyle())
+        }
+        BtvButton(type: .kids){
+            self.componentViewModel.uiEvent = .watchBtv
+        }
+        .buttonStyle(BorderlessButtonStyle())
+        if let synopsisData = self.synopsisData {
+            BookMarkButton(
+                type: .kids,
+                data:synopsisData,
+                isBookmark: self.$isBookmark
+            )
+            .buttonStyle(BorderlessButtonStyle())
+        }
+        
+        
+        if let srisId = self.synopsisData?.srisId{
+            ShareButton(
+                type: .kids,
+                srisId:srisId,
+                epsdId:self.synopsisData?.epsdId
+            )
+            .buttonStyle(BorderlessButtonStyle())
+        }
+    }//body
+}
 
 
 #if DEBUG

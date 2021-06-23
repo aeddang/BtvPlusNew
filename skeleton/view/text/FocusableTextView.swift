@@ -115,7 +115,7 @@ struct FocusableTextView: UIViewRepresentable {
         }
         
         func textViewDidChange(_ textView: UITextView) {
-            //self.parent.text = textView.text
+            self.parent.text = textView.text
             self.parent.inputChanged?(textView.text , textView.contentSize)
         }
        

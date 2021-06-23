@@ -226,7 +226,6 @@ struct PageSearch: PageView {
         }//geo
     }//body
     
-    
     @State var keyword:String = ""
     @State var datas:[SearchData] = []
     @State var emptyDatas:[PosterDataSet] = []

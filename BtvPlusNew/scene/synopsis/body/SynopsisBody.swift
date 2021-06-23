@@ -98,10 +98,10 @@ struct SynopsisBody: PageComponent{
                     }
                 }
                 
-                if self.hasAuthority != nil && self.purchasViewerData != nil {
+                if self.hasAuthority != nil , let purchasViewerData = self.purchasViewerData {
                     PurchaseViewer(
                         componentViewModel: self.componentViewModel,
-                        data:self.purchasViewerData! )
+                        data: purchasViewerData )
                         .modifier(ListRowInset(spacing: Self.spacing))
                 }
                 if self.hasAuthority == false && self.isPairing == false {

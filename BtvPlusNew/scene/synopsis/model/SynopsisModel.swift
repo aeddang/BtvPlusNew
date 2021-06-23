@@ -205,12 +205,23 @@ class SynopsisModel : PageProtocol {
     private(set) var metvSeasonWatchAll:Bool = false
     private(set) var isBookmark:Bool = false
     
+    private func resetPurchase(){
+        salePPMItem = nil
+        purchasedPPMItems = []
+        purchasedPPSItems = []
+        purchasableItems = []
+        watchOptionItems = nil
+        curSynopsisItem = nil
+        metvSeasonWatchAll = false
+    }
     
     var purchasedPid:String? = nil
     func setData(directViewdata:DirectView?){
+        self.resetPurchase()
         self.isBookmark = directViewdata?.is_bookmark?.toBool() ?? false
         self.metvSeasonWatchAll = directViewdata?.yn_season_watch_all?.toBool() ?? false
         self.purchaseModels.forEach({ model in
+            
             if let metvItem = directViewdata?.ppv_products?.first(where: {model.epsd_id == $0.epsd_id && model.prd_prc_id == $0.prd_prc_id}) {
                 model.mePPVProduct = metvItem
             }

@@ -41,7 +41,8 @@ struct DimenKids{
         public static let thinExtra:CGFloat = isPad ? 39 : 20//*
         public static let tiny:CGFloat = isPad ? 33 : 18//*
         public static let tinyExtra:CGFloat = isPad ? 26 : 16//*
-        public static let micro:CGFloat = isPad ? 16 : 9//*
+        public static let micro:CGFloat = isPad ? 20 : 10//*
+        public static let microExtra:CGFloat = isPad ? 16 : 9//*
     }
     
     struct tab {
@@ -50,6 +51,7 @@ struct DimenKids{
         public static let medium:CGFloat = isPad ? 80 : 56
         public static let regular:CGFloat = isPad ? 63 : 46
         public static let light:CGFloat =  isPad ? 63 : 33//*
+        public static let lightExtra:CGFloat =  isPad ? 54 : 28//*
         public static let thin:CGFloat = isPad ? 48 : 18 //* pad
     }
     
@@ -71,6 +73,7 @@ struct DimenKids{
         public static let heavy:CGFloat = isPad ? 38 : 20//**
         public static let heavyExtra:CGFloat = isPad ? 33 : 18//*pad
         public static let medium:CGFloat = isPad ? 24 : 17//**
+       
         public static let regular:CGFloat = isPad ? 20 : 12
         public static let light:CGFloat =  isPad ? 15 : 8//**
         public static let lightExtra:CGFloat =  isPad ? 9 : 6//**

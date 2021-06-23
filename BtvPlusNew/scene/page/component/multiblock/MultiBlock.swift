@@ -269,6 +269,7 @@ struct MultiBlock:PageComponent {
         var data:BlockData
         var useTracking:Bool = false
         var body :some View {
+            
             switch data.uiType {
             case .poster :
                 PosterBlock(
@@ -320,7 +321,7 @@ struct MultiBlock:PageComponent {
                     data: data,
                     useTracking:self.useTracking
                 )
-                .frame(height:data.listHeight)   
+                .frame(height:data.listHeight)
             }
         }//body
     }

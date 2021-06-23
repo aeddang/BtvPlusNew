@@ -21,6 +21,7 @@ struct RectButtonKids: View, SelecterbleProtocol{
     var bgColor = Color.app.white
     var bgActiveColor = Color.kids.primary
     var size:CGSize = DimenKids.button.mediumRect
+    var isFixSize:Bool = true
     var cornerRadius:CGFloat = DimenKids.radius.light
     
     let action: (_ idx:Int) -> Void
@@ -30,11 +31,19 @@ struct RectButtonKids: View, SelecterbleProtocol{
             self.action(self.index)
         }) {
             ZStack{
-                Text(self.text)
-                    .font(.custom(textModifier.family, size: textModifier.size))
-                    .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+                if self.isFixSize {
+                    Text(self.text)
+                        .font(.custom(textModifier.family, size: textModifier.size))
+                        .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+                        .frame(width:self.size.width)
+                } else {
+                    Text(self.text)
+                        .font(.custom(textModifier.family, size: textModifier.size))
+                        .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+                }
             }
-            .frame(width:self.size.width, height:self.size.height)
+            .padding(.horizontal, DimenKids.margin.regular)
+            .frame(height:self.size.height)
             .background(self.isSelected ? self.bgActiveColor : self.bgColor)
             .clipShape(RoundedRectangle(cornerRadius: self.cornerRadius))
             
@@ -48,7 +57,8 @@ struct RectButtonKids_Previews: PreviewProvider {
         Form{
             RectButtonKids(
             text: "test",
-                isSelected: true
+                isSelected: true,
+                isFixSize: false
                 ){_ in
                 
             }

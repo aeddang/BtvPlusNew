@@ -64,7 +64,8 @@ class BlockData:InfinityData, ObservableObject{
         self.allPosters = datas
         let len = min(datas.count, max)
         self.posters = datas.isEmpty ? datas : datas[0..<len].map{$0}
-        self.listHeight = self.posters?.first?.type.size.height ?? 0
+        self.listHeight = (self.posters?.first?.type.size.height ?? 0) + MultiBlockBody.tabHeight
+       
         self.subName = datas.count.description
         return self
     }
@@ -77,9 +78,9 @@ class BlockData:InfinityData, ObservableObject{
         self.videos = datas.isEmpty ? datas : datas[0..<len].map{$0}
         self.subName = datas.count.description
         if let video = self.videos?.first{
-            listHeight = video.type.size.height + video.bottomHeight
+            listHeight = video.type.size.height + video.bottomHeight + MultiBlockBody.tabHeight
         } else {
-            listHeight = 0
+            listHeight = MultiBlockBody.tabHeight
         }
         return self
     }
@@ -101,9 +102,9 @@ class BlockData:InfinityData, ObservableObject{
         }
         self.subName = idx.description
         if let video = self.videos?.first{
-            listHeight = video.type.size.height + video.bottomHeight
+            listHeight = video.type.size.height + video.bottomHeight + MultiBlockBody.tabHeight
         } else {
-            listHeight = 0
+            listHeight = MultiBlockBody.tabHeight
         }
         return self
     }

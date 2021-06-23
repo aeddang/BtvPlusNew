@@ -40,6 +40,10 @@ open class PageDataProviderModel:ObservableObject{
         copy.isProcess = true
         self.requests = [copy]
     }
+    func requestProgressSkip(){
+        self.completedCount = self.requests?.count ?? 0
+        next()
+    }
     func requestProgress(qs:Array<ApiQ>){
         if isProgress { return }
         let copys:Array<ApiQ> = qs.map { q in

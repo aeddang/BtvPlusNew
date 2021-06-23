@@ -90,7 +90,7 @@ struct KidsPlayerUI: PageComponent {
                         ProgressSlider(
                             progress: min(self.progress, 1.0),
                             progressHeight: self.isFullScreen ? DimenKids.stroke.heavy: DimenKids.stroke.medium,
-                            thumbSize: self.isFullScreen ? DimenKids.icon.tinyExtra : DimenKids.icon.micro,
+                            thumbSize: self.isFullScreen ? DimenKids.icon.tinyExtra : DimenKids.icon.microExtra,
                             color:Color.kids.primary,
                             radius: self.isFullScreen ? DimenKids.radius.tiny :  DimenKids.radius.micro,
                             onChange: { pct in

@@ -157,11 +157,7 @@ struct PageSynopsis: PageView {
                             isUIView: self.isUIView,
                             sceneOrientation: self.sceneOrientation,
                             isBookmark: self.$isBookmark,
-                            seris: self.$seris,
-                            
-                            infinityScrollModel: self.infinityScrollModel,
-                            topIdx: self.topIdx,
-                            useTracking: self.useTracking
+                            seris: self.$seris
                         )
                         .modifier(PageFull(style:.kidsLight))
                     }
@@ -347,6 +343,7 @@ struct PageSynopsis: PageView {
     @State var synopsisPlayType:SynopsisPlayType = .unknown
     
     @State var prevSrisId:String? = nil
+    @State var isPrevSrisWatchAll:Bool = false
     @State var srisCount:String? = nil
     @State var isBookmark:Bool? = nil
     @State var isLike:LikeStatus? = nil
@@ -436,7 +433,11 @@ struct PageSynopsis: PageView {
                 return
             }
             if self.isPairing == true {
-                self.pageDataProviderModel.requestProgress(q: .init(type: .getDirectView(model)))
+                if model.synopsisType == .seriesChange && self.isPrevSrisWatchAll {
+                    self.pageDataProviderModel.requestProgressSkip()
+                } else {
+                    self.pageDataProviderModel.requestProgress(q: .init(type: .getDirectView(model)))
+                }
             }else{
                 if model.hasExamPreview{
                     self.synopsisPlayType = .preplay()
@@ -644,13 +645,13 @@ struct PageSynopsis: PageView {
             self.summaryViewerData = SummaryViewerData().setData(data: content)
             if self.synopsisData?.srisId != self.prevSrisId {
                 self.prevSrisId = self.synopsisData?.srisId
-                if self.synopsisModel == nil {
-                    self.synopsisModel = SynopsisModel(type: .seasonFirst).setData(data: data)
-                }else {
-                    self.synopsisModel = SynopsisModel(type: .seriesChange).setData(data: data)
-                }
+                self.synopsisModel = SynopsisModel(type: .seasonFirst).setData(data: data)
+                
             } else if self.episodeViewerData?.count != self.srisCount {
-                self.synopsisModel = SynopsisModel(type: .title).setData(data: data)
+                if let prev = self.synopsisModel {
+                    self.isPrevSrisWatchAll = prev.metvSeasonWatchAll
+                }
+                self.synopsisModel = SynopsisModel(type: .seriesChange).setData(data: data)
             }
            
             if self.isPairing == false {
@@ -702,6 +703,7 @@ struct PageSynopsis: PageView {
         self.epsdRsluId = self.synopsisModel?.curSynopsisItem?.epsd_rslu_id ?? self.synopsisModel?.epsdRsluId ?? ""
         if let curSynopsisItem = self.synopsisModel?.curSynopsisItem {
             self.hasAuthority = curSynopsisItem.hasAuthority
+            ComponentLog.d("hasAuthority " + (hasAuthority?.description ?? "nil"), tag: self.tag)
         }
         withAnimation{self.isPlayAble = true}
         if self.isPlayAble {

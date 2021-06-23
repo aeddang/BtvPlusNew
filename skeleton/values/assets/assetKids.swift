@@ -42,6 +42,7 @@ extension AssetKids{
         public static let heartOff = "zemkidsMBtnSynopsisFavoriteOff"
         public static let heartOn = "zemkidsMBtnSynopsisFavoriteOn"
         public static let info = "zemkidsMBtnSynopsisTololtipInfoNor"
+        public static let warn = "zemkidsMIcSysnopsisWarn"
         public static let tip = "zemkidsMIcSysnopsisTip"
         public static let watchBTv = "zemkidsMBtnSynopsisBtvNor"
         public static let playInfo = "zemkidsMBtnSynopsisInfoNor"
@@ -81,6 +82,9 @@ extension AssetKids{
         public static let checkBoxOn = "zemkidsMProfileImgSel"
         public static let checkBoxOn2 = "zemkidsMPopupCheckSel"
         public static let checkBoxOff = "zemkidsMProfileImgNor"
+        
+        public static let checkOption = "zemkidsMToggleOptionIcSel"
+        
        
         public static let tooltip = isPad ? "zemkidsTTooltipBubble29" : "zemkidsMTooltipBubble29"
         public static let spinner = "icSpinner"

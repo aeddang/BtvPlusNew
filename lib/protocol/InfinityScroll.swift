@@ -51,7 +51,9 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
     }
     @Published var event:InfinityScrollEvent? = nil
     @Published var scrollStatus:InfinityScrollStatus = .scroll
-    @Published var itemEvent:InfinityScrollItemEvent? = nil
+    @Published var itemEvent:InfinityScrollItemEvent? = nil {
+        didSet{if self.itemEvent != nil { self.itemEvent = nil}}
+    }
     @Published private(set) var isCompleted = false
     @Published private(set) var isLoading = false
     @Published private(set) var page = 0

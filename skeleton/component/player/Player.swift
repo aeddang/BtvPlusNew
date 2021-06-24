@@ -69,6 +69,7 @@ open class PlayerModel: ComponentObservable {
     }
     
     open func reset(){
+        time = 0
         limitedDuration = nil
         playInfo = nil
         reload()

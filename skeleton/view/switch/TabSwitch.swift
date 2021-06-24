@@ -15,6 +15,7 @@ struct TabSwitch : PageComponent {
     var tabs:[String] = []
     var selectedIdx:Int = 0
     var height:CGFloat = DimenKids.tab.lightExtra
+    var fontSize:CGFloat = Font.sizeKids.thinExtra
     var bgColor:Color = Color.app.white
     var useCheck:Bool = true
     let action: (_ idx:Int) -> Void
@@ -45,13 +46,15 @@ struct TabSwitch : PageComponent {
                                     .frame(width: DimenKids.icon.micro)
                                 }
                                 Text(tab)
+                                    .kerning(Font.kern.thin)
                                     .modifier(
                                         BoldTextStyle(
-                                            size: Font.sizeKids.thinExtra,
+                                            size: self.fontSize,
                                             color: idx == self.selectedIdx
                                                 ? Color.app.white : Color.app.brownDeep
                                     ))
                             }
+                            .padding(.horizontal, DimenKids.margin.tiny)
                         }
                         .modifier(MatchParent())
                         .buttonStyle(BorderlessButtonStyle())

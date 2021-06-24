@@ -43,19 +43,20 @@ struct KidsPlayer: PageComponent{
                     PlayerBottom(viewModel: self.viewModel, type: .kids)
                     PlayerTop(viewModel: self.viewModel, title: self.title, type: .kids)
                     PlayerListTabKids( viewModel: self.viewModel, listTitle:self.listData.listTitle, title: self.listData.title,
-                                  listOffset:self.playListOffset + ListItemKids.videoPlayer.size.height)
+                                  listOffset:self.playListOffset + ListItemKids.video.size.height)
                         .opacity( self.playListTapOpacity )
                         
-                    VideoPlayerList(
+                    PlayerListKids(
                         viewModel:self.listViewModel,
-                        datas: self.listData.kidsDatas,
+                        datas: self.listData.datas,
                         contentID: self.contentID,
                         margin:KidsPlayerUI.paddingFullScreen + PlayerListTabKids.padding
                         ){ data in
                             guard let epsdId = data.epsdId else { return }
                             self.viewModel.btvPlayerEvent = .changeView(epsdId)
+                            self.listViewModel.itemEvent = .select(data)
                         }
-                        .modifier(MatchHorizontal(height: ListItemKids.videoPlayer.size.height))
+                        .modifier(MatchHorizontal(height: ListItemKids.video.size.height))
                         .opacity( self.isFullScreen && (self.isUiShowing || self.isPlayListShowing) ? 1.0 : 0)
                         .padding(.bottom, self.playListOffset)
                     
@@ -166,7 +167,6 @@ struct KidsPlayer: PageComponent{
                 }
             }
             .onReceive(self.viewModel.$currentQuality){ quality in
-                self.viewModel.event = .stop
                 if self.isPreroll {
                     self.isPreroll = false
                     self.viewModel.isPrerollPlay = false
@@ -177,7 +177,9 @@ struct KidsPlayer: PageComponent{
                 }
                 if quality == nil { return }
                 let autoPlay = self.viewModel.initPlay ?? self.setup.autoPlay
+                self.viewModel.continuousTime = self.viewModel.time
                 ComponentLog.d("autoPlay " + autoPlay.description, tag: self.tag)
+               
                 if autoPlay {
                     self.initPlayer()
                 } else  {
@@ -220,8 +222,8 @@ struct KidsPlayer: PageComponent{
             .onReceive(self.prerollModel.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
-                case .finish :
-                    self.initPlay()
+                case .start : self.viewModel.event = .pause
+                case .finish : self.initPlay()
                 default : do{}
                 }
             }
@@ -274,7 +276,8 @@ struct KidsPlayer: PageComponent{
             "device_id" + SystemEnvironment.getGuestDeviceId() +
             "&token=" + (repository.getDrmId() ?? "")
         ComponentLog.d("path : " + path, tag: self.tag + " " + self.viewModel.id)
-        let t = self.viewModel.continuousTime > 0 ? self.viewModel.continuousTime : self.viewModel.time
+        let t = self.viewModel.continuousTime
+        ComponentLog.d("continuousTime " + t.description, tag: self.tag)
         self.viewModel.continuousTime = 0
         DispatchQueue.main.async {
             self.viewModel.event = .load(path, true , t, self.viewModel.header)
@@ -296,7 +299,7 @@ struct KidsPlayer: PageComponent{
     @State var isUiShowing:Bool = false
     @State var isPlayListShowing:Bool = false
     @State var startPlayListOffset:CGFloat = -1
-    @State var playListOffset:CGFloat = -ListItemKids.videoPlayer.size.height
+    @State var playListOffset:CGFloat = -ListItemKids.video.size.height
     @State var playListTapOpacity:Double = 0
     
     func resetDragGesture(){
@@ -312,11 +315,11 @@ struct KidsPlayer: PageComponent{
         if self.listData.datas.isEmpty { return }
         var willPos = self.playListOffset
         if !self.isFullScreen {
-            willPos = -ListItemKids.videoPlayer.size.height
+            willPos = -ListItemKids.video.size.height
         }else{
             willPos = self.isPlayListShowing
                 ? PlayerUI.paddingFullScreen
-                : -ListItemKids.videoPlayer.size.height + PlayerUI.paddingFullScreen
+                : -ListItemKids.video.size.height + PlayerUI.paddingFullScreen
         }
         withAnimation{
             self.playListOffset = willPos
@@ -329,7 +332,7 @@ struct KidsPlayer: PageComponent{
             self.playListTapOpacity = 0
             return
         }
-        let top = ListItemKids.videoPlayer.size.height
+        let top = ListItemKids.video.size.height
         let pos = top + self.playListOffset
         self.playListTapOpacity = Double( pos / top )
     }
@@ -340,7 +343,7 @@ struct KidsPlayer: PageComponent{
         self.updateListTapOpacity()
     }
     func onPlaylistChangeCompleted(){
-        if self.playListOffset >= -ListItemKids.videoPlayer.size.height/2 {
+        if self.playListOffset >= -ListItemKids.video.size.height/2 {
             self.isPlayListShowing = true
         }else{
             self.isPlayListShowing = false

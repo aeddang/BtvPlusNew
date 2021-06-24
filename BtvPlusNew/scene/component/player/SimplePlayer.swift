@@ -88,7 +88,7 @@ struct SimplePlayer: PageComponent{
                 }
             }
             .onReceive(self.viewModel.$currentQuality){ quality in
-                self.viewModel.event = .stop
+
                 if self.isPreroll {
                     self.isPreroll = false
                     self.viewModel.isPrerollPlay = false
@@ -99,6 +99,7 @@ struct SimplePlayer: PageComponent{
                 }
                 if quality == nil { return }
                 let autoPlay = self.viewModel.initPlay ?? self.setup.autoPlay
+                self.viewModel.continuousTime = self.viewModel.time
                 ComponentLog.d("autoPlay " + autoPlay.description, tag: self.tag)
                 if autoPlay {
                     self.initPlayer()
@@ -121,8 +122,8 @@ struct SimplePlayer: PageComponent{
             .onReceive(self.prerollModel.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
-                case .finish :
-                    self.initPlay()
+                case .start : self.viewModel.event = .pause
+                case .finish : self.initPlay()
                 default : do{}
                 }
             }
@@ -184,7 +185,7 @@ struct SimplePlayer: PageComponent{
             "device_id" + SystemEnvironment.getGuestDeviceId() +
             "&token=" + (repository.getDrmId() ?? "")
        // ComponentLog.d("path : " + path, tag: self.tag)
-        let t = self.viewModel.continuousTime > 0 ? self.viewModel.continuousTime : self.viewModel.time
+        let t = self.viewModel.continuousTime 
         self.viewModel.event = .load(path, true , t, self.viewModel.header)
     }
 }

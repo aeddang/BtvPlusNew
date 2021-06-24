@@ -100,6 +100,7 @@ struct RelationVodList: PageComponent{
             hasRelationVod: self.hasRelationVod,
             screenSize: self.screenSize
             )
+        
     }//body
    
 }
@@ -150,6 +151,7 @@ struct RelationVodHeader: PageComponent{
             .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.thin))
         }
     }//body
+    
    
 }
 

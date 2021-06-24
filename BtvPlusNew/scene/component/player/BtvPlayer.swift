@@ -46,14 +46,14 @@ struct BtvPlayer: PageComponent{
                                   listOffset:self.playListOffset + ListItem.video.size.height)
                         .opacity( self.playListTapOpacity )
                         
-                    VideoList(viewModel:self.listViewModel,
-                              datas: self.listData.datas,
-                              contentID: self.contentID,
-                              margin:PlayerUI.paddingFullScreen + PlayerListTab.padding,
-                              useTracking : false ){ data in
-                        
-                        guard let epsdId = data.epsdId else { return }
-                        self.viewModel.btvPlayerEvent = .changeView(epsdId)
+                    PlayerList(
+                        viewModel:self.listViewModel,
+                        datas: self.listData.datas,
+                        contentID: self.contentID,
+                        margin:PlayerUI.paddingFullScreen + PlayerListTab.padding){ data in
+                            guard let epsdId = data.epsdId else { return }
+                            self.viewModel.btvPlayerEvent = .changeView(epsdId)
+                            self.listViewModel.itemEvent = .select(data)
                         }
                         .modifier(MatchHorizontal(height: ListItem.video.size.height))
                         .opacity( self.isFullScreen && (self.isUiShowing || self.isPlayListShowing) ? 1.0 : 0)
@@ -176,7 +176,6 @@ struct BtvPlayer: PageComponent{
                 }
             }
             .onReceive(self.viewModel.$currentQuality){ quality in
-                self.viewModel.event = .stop
                 if self.isPreroll {
                     self.isPreroll = false
                     self.viewModel.isPrerollPlay = false
@@ -187,6 +186,7 @@ struct BtvPlayer: PageComponent{
                 }
                 if quality == nil { return }
                 let autoPlay = self.viewModel.initPlay ?? self.setup.autoPlay
+                self.viewModel.continuousTime = self.viewModel.time
                 ComponentLog.d("autoPlay " + autoPlay.description, tag: self.tag)
                 if autoPlay {
                     self.initPlayer()
@@ -230,8 +230,8 @@ struct BtvPlayer: PageComponent{
             .onReceive(self.prerollModel.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
-                case .finish :
-                    self.initPlay()
+                case .start : self.viewModel.event = .pause
+                case .finish : self.initPlay()
                 default : do{}
                 }
             }
@@ -284,8 +284,9 @@ struct BtvPlayer: PageComponent{
             "device_id" + SystemEnvironment.getGuestDeviceId() +
             "&token=" + (repository.getDrmId() ?? "")
         ComponentLog.d("path : " + path, tag: self.tag + " " + self.viewModel.id)
-        let t = self.viewModel.continuousTime > 0 ? self.viewModel.continuousTime : self.viewModel.time
+        let t = self.viewModel.continuousTime 
         self.viewModel.continuousTime = 0
+        ComponentLog.d("continuousTime " + t.description, tag: self.tag)
         DispatchQueue.main.async {
             self.viewModel.event = .load(path, true , t, self.viewModel.header)
         }

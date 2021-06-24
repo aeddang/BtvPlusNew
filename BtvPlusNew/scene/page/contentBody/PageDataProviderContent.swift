@@ -42,7 +42,9 @@ open class PageDataProviderModel:ObservableObject{
     }
     func requestProgressSkip(){
         self.completedCount = self.requests?.count ?? 0
-        next()
+        self.progress += 1
+        self.completedCount = 0
+        self.event = .willRequest(progress)
     }
     func requestProgress(qs:Array<ApiQ>){
         if isProgress { return }

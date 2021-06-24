@@ -42,6 +42,7 @@ struct BtvSynopsis: PageComponent{
     var hasRelationVod:Bool?
     
     var title:String?
+    var epsdId:String?
     var imgBg:String?
     var imgContentMode:ContentMode
     var textInfo:String?
@@ -77,10 +78,10 @@ struct BtvSynopsis: PageComponent{
                     prerollModel: self.prerollModel,
                     playGradeData: self.synopsisModel?.playGradeData,
                     title: self.title,
+                    epsdId: self.epsdId,
                     imgBg: self.imgBg,
                     imgContentMode: self.imgContentMode,
                     textInfo: self.textInfo,
-                    epsdId: self.synopsisData?.epsdId,
                     playListData: self.playListData,
                     isPlayAble: self.isPlayAble,
                     isPlayViewActive: self.isPlayViewActive)

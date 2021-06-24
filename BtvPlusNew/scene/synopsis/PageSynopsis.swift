@@ -81,6 +81,7 @@ struct PageSynopsis: PageView {
                             hasRelationVod: self.hasRelationVod,
                         
                             title: self.title,
+                            epsdId: self.epsdId,
                             imgBg: self.imgBg,
                             imgContentMode: self.imgContentMode,
                             textInfo: self.textInfo,
@@ -143,6 +144,7 @@ struct PageSynopsis: PageView {
                             hasRelationVod: self.hasRelationVod,
                         
                             title: self.title,
+                            epsdId: self.epsdId,
                             imgBg: self.imgBg,
                             imgContentMode: self.imgContentMode,
                             textInfo: self.textInfo,
@@ -295,8 +297,7 @@ struct PageSynopsis: PageView {
             }
             .onAppear{
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
-               
-                
+            
                 guard let obj = self.pageObject  else { return }
                 self.synopsisData = obj.getParamValue(key: .data) as? SynopsisData
                 if self.synopsisData == nil {
@@ -342,20 +343,17 @@ struct PageSynopsis: PageView {
     @State var playListData:PlayListData = PlayListData()
     @State var synopsisPlayType:SynopsisPlayType = .unknown
     
-    @State var prevSrisId:String? = nil
-    @State var isPrevSrisWatchAll:Bool = false
-    @State var srisCount:String? = nil
+   
     @State var isBookmark:Bool? = nil
     @State var isLike:LikeStatus? = nil
-    @State var epsdRsluId:String = ""
-    @State var purchasedPid:String? = nil
+   
     @State var hasAuthority:Bool? = nil
     @State var relationTab:[NavigationButton] = []
     @State var selectedRelationTabIdx:Int = 0
     @State var seris:[SerisData] = []
     @State var relationDatas:[PosterDataSet] = []
     @State var hasRelationVod:Bool? = nil
-    @State var relationTabIdx:Int = 0
+    
     @State var isFinalPlaying:Bool = false
     @State var isPlayAble:Bool = false
     @State var isPlayViewActive = false
@@ -363,6 +361,11 @@ struct PageSynopsis: PageView {
     @State var isPageDataReady = false
     @State var topIdx:Int = 0
     @State var isUIView:Bool = false
+    
+    /*동기화 value*/
+    @State var epsdId:String? = nil
+    @State var epsdRsluId:String = ""
+    @State var purchasedPid:String? = nil
     
     func initPage(){
         if self.synopsisData == nil {
@@ -427,18 +430,16 @@ struct PageSynopsis: PageView {
         
         case 1 :
             guard let model = self.synopsisModel else {return}
-            if self.purchasViewerData?.isPlayAble == false {
-                self.completedProgress()
-                self.progressCompleted = true
-                return
-            }
+           
             if self.isPairing == true {
-                if model.synopsisType == .seriesChange && self.isPrevSrisWatchAll {
+                if model.synopsisType == .seriesChange , let prevDirectView = self.prevDirectView {
+                    self.setupDirectView(prevDirectView, isSeasonWatchAll:true) // 권한 대이타 재사용
                     self.pageDataProviderModel.requestProgressSkip()
                 } else {
                     self.pageDataProviderModel.requestProgress(q: .init(type: .getDirectView(model)))
                 }
             }else{
+                
                 if model.hasExamPreview{
                     self.synopsisPlayType = .preplay()
                     self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.epsdRsluId,  true )))
@@ -455,6 +456,7 @@ struct PageSynopsis: PageView {
             }
             
         case 2 :
+            
             guard let model = self.synopsisModel else {return}
             if self.hasAuthority == false{
                 if model.hasExamPreview{
@@ -580,11 +582,9 @@ struct PageSynopsis: PageView {
     
     private func completedProgress(){
         PageLog.d("completedProgress", tag: self.tag)
-        if self.purchasViewerData?.isPlayAble == false {
-            withAnimation{
-                self.isPlayAble = false
-                self.isPlayViewActive = true
-            }
+        withAnimation{
+            self.isPlayAble = true
+            self.isPlayViewActive = true
         }
         
         guard let synopsisModel = self.synopsisModel else { return }
@@ -599,8 +599,7 @@ struct PageSynopsis: PageView {
         self.playListData = PlayListData(
             listTitle: String.pageText.synopsisSirisView,
             title: self.relationContentsModel.serisTitle,
-            datas: self.relationContentsModel.playList,
-            kidsDatas: self.relationContentsModel.playPlayerList
+            datas: self.relationContentsModel.playList
             )
          
         PageLog.d("request synopsisRelationData", tag: self.tag)
@@ -620,6 +619,7 @@ struct PageSynopsis: PageView {
             self.isPlayAble = false
             self.isPlayViewActive = true
         }
+        self.playerModel.event = .stop
         self.onAllProgressCompleted()
     }
     
@@ -632,26 +632,41 @@ struct PageSynopsis: PageView {
         }
     }
     
-
+    
+    
+    @State var prevSrisId:String? = nil
+    @State var prevDirectView:DirectView? = nil
+  
     private func setupSynopsis (_ data:Synopsis) {
         
         if self.synopsisData?.srisId?.isEmpty != false { self.synopsisData?.srisId = data.contents?.sris_id }
         if self.synopsisData?.epsdId?.isEmpty != false { self.synopsisData?.epsdId = data.contents?.epsd_id }
         PageLog.d("srisId " + (self.synopsisData?.srisId ?? "nil"), tag: self.tag)
         PageLog.d("epsdId " + (self.synopsisData?.epsdId ?? "nil"), tag: self.tag)
+        
         self.purchaseWebviewModel = PurchaseWebviewModel().setParam(synopsisData: data)
         if let content = data.contents {
             self.episodeViewerData = EpisodeViewerData().setData(data: content)
             self.summaryViewerData = SummaryViewerData().setData(data: content)
-            if self.synopsisData?.srisId != self.prevSrisId {
-                self.prevSrisId = self.synopsisData?.srisId
-                self.synopsisModel = SynopsisModel(type: .seasonFirst).setData(data: data)
-                
-            } else if self.episodeViewerData?.count != self.srisCount {
-                if let prev = self.synopsisModel {
-                    self.isPrevSrisWatchAll = prev.metvSeasonWatchAll
+            if let prev = self.synopsisModel { //페이지 변경
+                if self.synopsisData?.srisId != self.prevSrisId { // 시리즈변경
+                    self.prevSrisId = self.synopsisData?.srisId
+                    self.prevDirectView = nil
+                    self.synopsisModel = SynopsisModel(type: .seasonFirst).setData(data: data)
+                    
+                } else { //회차변경    // if self.episodeViewerData?.count != self.srisCount
+                    if prev.metvSeasonWatchAll {
+                        self.prevDirectView = prev.directViewdata
+                        self.synopsisModel = SynopsisModel(type: .seriesChange).setData(data: data)
+                    }else{
+                        self.prevDirectView = nil
+                        self.synopsisModel = SynopsisModel(type: .seriesChange).setData(data: data)
+                    }
                 }
-                self.synopsisModel = SynopsisModel(type: .seriesChange).setData(data: data)
+            } else { //최초진입
+                self.prevSrisId = self.synopsisData?.srisId
+                self.prevDirectView = nil
+                self.synopsisModel = SynopsisModel(type: .seasonFirst).setData(data: data)
             }
            
             if self.isPairing == false {
@@ -664,6 +679,7 @@ struct PageSynopsis: PageView {
             
             if let kidYn = self.synopsisModel?.kidsYn {self.synopsisData?.kidZone = kidYn }
 
+            self.epsdId = self.synopsisModel?.epsdId
             self.epsdRsluId = self.synopsisModel?.epsdRsluId ?? self.epsdRsluId
             self.synopsisData?.epsdRsluId = self.epsdRsluId
             self.synopsisModel?.purchasedPid = self.purchasedPid
@@ -671,6 +687,8 @@ struct PageSynopsis: PageView {
             self.imgBg = self.synopsisModel?.imgBg
             self.imgContentMode = self.synopsisModel?.imgContentMode ?? .fit
             self.relationContentsModel.reset(synopsisType: self.synopsisModel?.synopsisType)
+            
+            DataLog.d("PageSynopsis epsdId  : " + (self.epsdId ?? "nil"), tag: self.tag)
             DataLog.d("PageSynopsis epsdRsluId  : " + self.epsdRsluId, tag: self.tag)
             
         } else {
@@ -680,11 +698,13 @@ struct PageSynopsis: PageView {
         
     }
         
-    private func setupDirectView (_ data:DirectView){
+    private func setupDirectView (_ data:DirectView, isSeasonWatchAll:Bool = false){
         PageLog.d("setupDirectView", tag: self.tag)
         self.purchaseWebviewModel?.setParam(directView: data, monthlyPid: nil)
-        self.synopsisModel?.setData(directViewdata: data)
+        self.synopsisModel?.setData(directViewdata: data, isSeasonWatchAll: isSeasonWatchAll)
         self.isBookmark = self.synopsisModel?.isBookmark
+        PageLog.d("self.isBookmark " + (self.isBookmark?.description ?? "nil"), tag: self.tag)
+        
         self.purchasViewerData = PurchaseViewerData(type: self.type).setData(
                 synopsisModel: self.synopsisModel,
                 isPairing: self.isPairing)
@@ -701,14 +721,12 @@ struct PageSynopsis: PageView {
         }
         self.textInfo = self.purchasViewerData?.serviceInfo
         self.epsdRsluId = self.synopsisModel?.curSynopsisItem?.epsd_rslu_id ?? self.synopsisModel?.epsdRsluId ?? ""
-        if let curSynopsisItem = self.synopsisModel?.curSynopsisItem {
+        if self.purchasViewerData?.isPlayAble == true, let curSynopsisItem = self.synopsisModel?.curSynopsisItem {
             self.hasAuthority = curSynopsisItem.hasAuthority
-            ComponentLog.d("hasAuthority " + (hasAuthority?.description ?? "nil"), tag: self.tag)
+        } else{
+            self.hasAuthority = false
         }
-        withAnimation{self.isPlayAble = true}
-        if self.isPlayAble {
-            self.playerModel.event = .stop
-        }
+        ComponentLog.d("hasAuthority " + (hasAuthority?.description ?? "nil"), tag: self.tag)
         self.infinityScrollModel.uiEvent = .scrollTo(self.topIdx)
     }
     
@@ -785,8 +803,9 @@ struct PageSynopsis: PageView {
    }
     private func selectedRelationContent (idx:Int){
         self.updateRelationTabButtons(idx: idx)
+        self.tabNavigationModel.index = idx
         self.selectedRelationTabIdx = idx
-        self.relationTabIdx = idx
+       
         PageLog.d("selectedRelationContent", tag: self.tag)
         self.seris = []
         self.relationDatas = []

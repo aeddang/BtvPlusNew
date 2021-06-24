@@ -10,6 +10,7 @@ import Foundation
 class HostDevice {
     private(set) var macAdress:String? = nil
     private(set) var convertMacAdress:String = ApiConst.defaultMacAdress
+    private(set) var apiMacAdress:String = ApiConst.defaultMacAdress
     private(set) var restrictedAge:Int = -1
     private(set) var patchVersion:String? = nil
     private(set) var adultSafetyMode = false
@@ -27,6 +28,13 @@ class HostDevice {
             self.convertMacAdress = ApiUtil.getDecyptedData(
                 forNps: ma,
                 npsKey: NpsNetwork.AES_KEY, npsIv: NpsNetwork.AES_IV)
+            let ipA = self.convertMacAdress.split(separator: ":")
+            if ipA.count > 0 {
+                self.apiMacAdress = ipA.dropFirst()
+                    .reduce(ipA[0].description, {$0 + ":" + ( ($1.hasPrefix("0") && $1.count==2) ? $1.dropFirst() : $1 )})
+            }
+            //DataLog.d("self.apiMacAdress " + self.apiMacAdress , tag: "HostDevice")
+           
         }
         self.restrictedAge = deviceData.restricted_age?.toInt() ?? -1
         self.agentVersion = deviceData.stb_src_agent_version

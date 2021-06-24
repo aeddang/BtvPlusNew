@@ -34,7 +34,7 @@ class Eps: Rest{
         hostDevice:HostDevice?,
         completion: @escaping (TotalPointInfo) -> Void, error: ((_ e:Error) -> Void)? = nil){
 
-        let macAdress = hostDevice?.convertMacAdress ?? ApiConst.defaultMacAdress
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:String]()
         params["response_format"] = EpsNetwork.RESPONSE_FORMET
@@ -55,7 +55,7 @@ class Eps: Rest{
         hostDevice:HostDevice?, isSimple:Bool = true,
         completion: @escaping (TotalPoint) -> Void, error: ((_ e:Error) -> Void)? = nil){
 
-        let macAdress = hostDevice?.convertMacAdress ?? ApiConst.defaultMacAdress
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:String]()
         params["response_format"] = EpsNetwork.RESPONSE_FORMET
@@ -78,7 +78,7 @@ class Eps: Rest{
         hostDevice:HostDevice?, page:Int?, pageCnt:Int?,
         completion: @escaping (Coupons) -> Void, error: ((_ e:Error) -> Void)? = nil){
 
-        let macAdress = hostDevice?.convertMacAdress ?? ApiConst.defaultMacAdress
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:String]()
         params["response_format"] = EpsNetwork.RESPONSE_FORMET
@@ -101,7 +101,7 @@ class Eps: Rest{
         hostDevice:HostDevice?, couponNum:String?,
         completion: @escaping (RegistEps) -> Void, error: ((_ e:Error) -> Void)? = nil){
 
-        let macAdress = hostDevice?.convertMacAdress ?? ApiConst.defaultMacAdress
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:Any]()
         params["response_format"] = EpsNetwork.RESPONSE_FORMET
@@ -123,7 +123,7 @@ class Eps: Rest{
         hostDevice:HostDevice?, page:Int?, pageCnt:Int?,
         completion: @escaping (BPoints) -> Void, error: ((_ e:Error) -> Void)? = nil){
 
-        let macAdress = hostDevice?.convertMacAdress ?? ApiConst.defaultMacAdress
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:String]()
         params["response_format"] = EpsNetwork.RESPONSE_FORMET
@@ -146,7 +146,7 @@ class Eps: Rest{
         hostDevice:HostDevice?, pointId:String?,
         completion: @escaping (RegistEps) -> Void, error: ((_ e:Error) -> Void)? = nil){
 
-        let macAdress = hostDevice?.convertMacAdress ?? ApiConst.defaultMacAdress
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:Any]()
         params["response_format"] = EpsNetwork.RESPONSE_FORMET
@@ -168,7 +168,7 @@ class Eps: Rest{
         hostDevice:HostDevice?, page:Int?, pageCnt:Int?,
         completion: @escaping (BCashes) -> Void, error: ((_ e:Error) -> Void)? = nil){
 
-        let macAdress = hostDevice?.convertMacAdress ?? ApiConst.defaultMacAdress
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:String]()
         params["response_format"] = EpsNetwork.RESPONSE_FORMET
@@ -190,7 +190,7 @@ class Eps: Rest{
         hostDevice:HostDevice?, cashId:String?,
         completion: @escaping (RegistEps) -> Void, error: ((_ e:Error) -> Void)? = nil){
 
-        let macAdress = hostDevice?.convertMacAdress ?? ApiConst.defaultMacAdress
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:Any]()
         params["response_format"] = EpsNetwork.RESPONSE_FORMET
@@ -210,7 +210,7 @@ class Eps: Rest{
         hostDevice:HostDevice?,
         completion: @escaping (TMembership) -> Void, error: ((_ e:Error) -> Void)? = nil){
 
-        let macAdress = hostDevice?.convertMacAdress ?? ApiConst.defaultMacAdress
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:String]()
         params["response_format"] = EpsNetwork.RESPONSE_FORMET
@@ -230,7 +230,7 @@ class Eps: Rest{
         hostDevice:HostDevice?,
         completion: @escaping (TvPoint) -> Void, error: ((_ e:Error) -> Void)? = nil){
 
-        let macAdress = hostDevice?.convertMacAdress ?? ApiConst.defaultMacAdress
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:String]()
         params["response_format"] = EpsNetwork.RESPONSE_FORMET
@@ -253,7 +253,7 @@ class Eps: Rest{
         completion: @escaping (OkCashPoint) -> Void, error: ((_ e:Error) -> Void)? = nil){
 
         let reqDate = Date().toDateFormatter(dateFormat: "yyyyMMddHHmmss")
-        let macAdress = hostDevice?.convertMacAdress ?? ApiConst.defaultMacAdress
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:String]()
         params["response_format"] = EpsNetwork.RESPONSE_FORMET

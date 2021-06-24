@@ -10,6 +10,7 @@ import SwiftUI
 
 
 
+
 struct SerisTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver

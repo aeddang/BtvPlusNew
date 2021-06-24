@@ -19,7 +19,7 @@ import SwiftUI
 
 struct ListItemKids{
     private static let isPad =  AppUtil.isPad()
-    struct videoPlayer {
+    struct video {
         static let size:CGSize = isPad ? CGSize(width: 327, height: 199) : CGSize(width: 170, height: 103)
     }
 }

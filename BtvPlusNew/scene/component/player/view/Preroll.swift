@@ -14,7 +14,7 @@ enum PrerollRequest {
 }
 
 enum PrerollEvent {
-    case event(OneAdEvent), finish
+    case event(OneAdEvent), finish, start
 }
 class PrerollModel: ComponentObservable{
     @Published var request:PrerollRequest? = nil{ willSet{ self.status = .update } }
@@ -89,7 +89,7 @@ struct Preroll: UIViewRepresentable, PageProtocol {
             case .ClickAd: do{}
             case .CloseLandingPage: do{}
             case .DidReceiveAd:
-                
+                self.parent.viewModel.event = .start
                 self.parent.viewModel.request = .play
                 
             case .FailReceiveAd,

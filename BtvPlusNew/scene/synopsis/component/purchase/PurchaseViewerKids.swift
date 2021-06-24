@@ -42,6 +42,7 @@ struct PurchaseViewerKids: PageComponent{
                         self.componentViewModel.uiEvent = .changeOption(watchOptions[idx])
                     }
                 }
+                .frame(width: SystemEnvironment.isTablet ? 242 : 134)
             }//option
             Spacer()
             

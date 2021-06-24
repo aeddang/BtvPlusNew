@@ -42,7 +42,7 @@ struct RectButtonKids: View, SelecterbleProtocol{
                         .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
                 }
             }
-            .padding(.horizontal, DimenKids.margin.regular)
+            .padding(.horizontal, self.isFixSize ? 0 : DimenKids.margin.regular)
             .frame(height:self.size.height)
             .background(self.isSelected ? self.bgActiveColor : self.bgColor)
             .clipShape(RoundedRectangle(cornerRadius: self.cornerRadius))

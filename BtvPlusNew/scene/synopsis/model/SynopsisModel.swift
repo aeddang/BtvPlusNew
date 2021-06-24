@@ -204,26 +204,24 @@ class SynopsisModel : PageProtocol {
     private(set) var curSynopsisItem: PurchaseModel?
     private(set) var metvSeasonWatchAll:Bool = false
     private(set) var isBookmark:Bool = false
-    
-    private func resetPurchase(){
-        salePPMItem = nil
-        purchasedPPMItems = []
-        purchasedPPSItems = []
-        purchasableItems = []
-        watchOptionItems = nil
-        curSynopsisItem = nil
-        metvSeasonWatchAll = false
-    }
-    
+
+    private(set) var directViewdata:DirectView? = nil
     var purchasedPid:String? = nil
-    func setData(directViewdata:DirectView?){
-        self.resetPurchase()
-        self.isBookmark = directViewdata?.is_bookmark?.toBool() ?? false
+    func setData(directViewdata:DirectView?, isSeasonWatchAll:Bool = false){
+        self.directViewdata = directViewdata
+        if !isSeasonWatchAll {
+            self.isBookmark = directViewdata?.is_bookmark?.toBool() ?? false
+        }
         self.metvSeasonWatchAll = directViewdata?.yn_season_watch_all?.toBool() ?? false
         self.purchaseModels.forEach({ model in
-            
-            if let metvItem = directViewdata?.ppv_products?.first(where: {model.epsd_id == $0.epsd_id && model.prd_prc_id == $0.prd_prc_id}) {
-                model.mePPVProduct = metvItem
+            if isSeasonWatchAll {//시리즈 권한 재사용시 권한있는 상품 강제 매핑
+                if let metvItem = directViewdata?.ppv_products?.first(where: {$0.yn_directview?.toBool() ?? false}) {
+                    model.mePPVProduct = metvItem
+                }
+            } else {
+                if let metvItem = directViewdata?.ppv_products?.first(where: {model.epsd_id == $0.epsd_id && model.prd_prc_id == $0.prd_prc_id}) {
+                    model.mePPVProduct = metvItem
+                }
             }
             if let metvItem = directViewdata?.pps_products?.first(where: {model.prd_prc_id == $0.prd_prc_id}) {
                 model.mePPSProduct = metvItem

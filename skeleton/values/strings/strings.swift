@@ -40,6 +40,8 @@ extension String {
         public static let none = "sortNone".loaalized()
         public static let count = "sortCount".loaalized()
         public static let latest = "sortLatest".loaalized()
+        public static let countKids = "sortCountKids".loaalized()
+        public static let latestKids = "sortLatestKids".loaalized()
         public static let popularity = "sortPopularity".loaalized()
         public static let title = "sortTitle".loaalized()
         public static let price = "sortPrice".loaalized()

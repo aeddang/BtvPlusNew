@@ -213,11 +213,13 @@ struct PlayerUI: PageComponent {
         .onReceive(self.viewModel.$error) { err in
             guard let error = err else { return }
             ComponentLog.d("error " + err.debugDescription, tag: self.tag)
-            self.isError = true
+           
             self.viewModel.playerUiStatus = .view
             switch error{
             case .connect(_) : self.errorMessage = "connect error"
-            case .illegalState(_) : self.errorMessage = "illegalState"
+            case .illegalState(_) :
+                self.errorMessage = "illegalState"
+                return
             case .stream(let e) :
                 switch e {
                 case .pip(let msg): self.errorMessage = msg
@@ -226,6 +228,7 @@ struct PlayerUI: PageComponent {
                 case .certification(let msg): self.errorMessage = msg
                 }
             }
+            self.isError = true
         }
         .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
             self.isFullScreen = fullScreen

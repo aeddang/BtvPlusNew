@@ -171,7 +171,7 @@ class BtvPlayerModel:PlayerModel{
         } else {
             ComponentLog.d("setup initPlay " + self.initPlay.debugDescription , tag: self.tag)
         }
-        
+        ComponentLog.d("setup continuousTime " + self.continuousTime.debugDescription , tag: self.tag)
         if let auto = data.CNT_URL_NS_AUTO { self.appendQuality(name: "AUTO", path: auto) }
         if let fhd = data.CNT_URL_NS_FHD { self.appendQuality(name: "FHD", path: fhd) }
         if let hd = data.CNT_URL_NS_HD  { self.appendQuality(name: "HD", path: hd) }
@@ -185,6 +185,5 @@ class BtvPlayerModel:PlayerModel{
 struct PlayListData{
     var listTitle:String? = nil
     var title:String? = nil
-    var datas:[VideoData] = []
-    var kidsDatas:[VideoPlayerData] = []
+    var datas:[PlayerListData] = []
 }

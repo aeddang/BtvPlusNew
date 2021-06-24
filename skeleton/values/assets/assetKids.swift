@@ -47,6 +47,7 @@ extension AssetKids{
         public static let watchBTv = "zemkidsMBtnSynopsisBtvNor"
         public static let playInfo = "zemkidsMBtnSynopsisInfoNor"
         public static let share = "zemkidsMBtnSynopsisShareNor"
+        public static let sort = "zemkidsMDropdownBriDownNor"
     }
     
     
@@ -101,11 +102,13 @@ extension AssetKids{
     }
     struct image {
         public static let noProfile = "zemkidsMGnbNorProfileDefault"
-        public static let synopsisBg = isPad ? "zemkidsTIBgSynopsisEnter" : "zemkidsMBgSynopsisEnter"
+        
       
     }
     
     struct source {
+        public static let emptyRelationVod = "zemkidsMImgSynopsisNocontents"
+        public static let synopsisBg = isPad ? "zemkidsTIBgSynopsisEnter" : "zemkidsMBgSynopsisEnter"
         
     }
     

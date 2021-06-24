@@ -45,6 +45,7 @@ struct KidsSynopsis: PageComponent{
     var hasRelationVod:Bool?
     
     var title:String?
+    var epsdId:String?
     var imgBg:String?
     var imgContentMode:ContentMode
     var textInfo:String?
@@ -113,7 +114,7 @@ struct KidsSynopsis: PageComponent{
                             title: self.title,
                             thumbImage: self.imgBg,
                             thumbContentMode: self.imgContentMode,
-                            contentID:self.synopsisData?.epsdId,
+                            contentID: self.epsdId,
                             listData: self.playListData
                         )
                         if !self.isPlayAble {
@@ -195,7 +196,7 @@ struct KidsSynopsis: PageComponent{
         .padding(.top,self.isFullScreen ? 0 : DimenKids.margin.mediumExtra)
         .modifier(MatchParent())
         .background(
-            Image(AssetKids.image.synopsisBg)
+            Image(AssetKids.source.synopsisBg)
                 .renderingMode(.original)
                 .resizable()
                 .scaledToFill()

@@ -20,31 +20,34 @@ struct PlayerWaitingKids: PageComponent{
         ZStack{
             ThumbImageViewerKids(
                 imgBg: self.imgBg, contentMode: self.contentMode, isFullScreen: self.isFullScreen)
-            VStack(spacing:0){
-                HStack(spacing:self.isFullScreen ? KidsPlayerUI.fullScreenSpacing : KidsPlayerUI.spacing){
-                    Button(action: {
-                        self.pagePresenter.goBack()
-                    }) {
-                        Image(AssetKids.player.back)
-                            .renderingMode(.original)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(
-                                width: self.isFullScreen
-                                    ? KidsPlayerUI.iconFullScreen.width : KidsPlayerUI.icon.width,
-                                height: self.isFullScreen
-                                    ? KidsPlayerUI.iconFullScreen.height : KidsPlayerUI.icon.height)
+            if self.isFullScreen {
+                VStack(spacing:0){
+                    HStack(spacing:self.isFullScreen ? KidsPlayerUI.fullScreenSpacing : KidsPlayerUI.spacing){
+                        Button(action: {
+                            self.pagePresenter.goBack()
+                        }) {
+                            Image(AssetKids.player.back)
+                                .renderingMode(.original)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(
+                                    width: self.isFullScreen
+                                        ? KidsPlayerUI.iconFullScreen.width : KidsPlayerUI.icon.width,
+                                    height: self.isFullScreen
+                                        ? KidsPlayerUI.iconFullScreen.height : KidsPlayerUI.icon.height)
+                        }
+                        Spacer()
                     }
                     Spacer()
                 }
-                Spacer()
+                .padding(.all, self.isFullScreen ? PlayerUI.paddingFullScreen : PlayerUI.padding)
             }
-            .padding(.all, self.isFullScreen ? PlayerUI.paddingFullScreen : PlayerUI.padding)
-            
             VStack(spacing:DimenKids.margin.regular){
                 ImageButton(
                     defaultImage: AssetKids.player.resume,
-                    size: self.isFullScreen ? KidsPlayerUI.iconFullScreen : KidsPlayerUI.icon
+                    size: self.isFullScreen
+                    ? CGSize(width:DimenKids.icon.heavy,height:DimenKids.icon.heavy)
+                    : CGSize(width:DimenKids.icon.medium,height:DimenKids.icon.medium)
                 ){ _ in
                     self.viewModel.btvUiEvent = .initate
                 }

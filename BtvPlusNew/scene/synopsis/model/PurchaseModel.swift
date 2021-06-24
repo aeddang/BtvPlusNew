@@ -170,7 +170,7 @@ class PurchaseModel {
     var purcWatDDay: String { purc_wat_dd_cnt.description + purcWatDdFgCd.name }
     var salePrice: String {
         let price  = self.sale_prc_vat
-        return price.currency + String.app.cash
+        return price.formatted(style: .decimal) + String.app.cash
     }
     var hasAuthority: Bool { self.isFree || self.isDirectview }
     

@@ -58,8 +58,8 @@ struct ThumbImageViewerKids: PageView{
                                 : SystemEnvironment.isTablet ? 143 : 78
                         )
                 }
-                .background(Color.app.blackMedium)
                 .modifier(MatchParent())
+                .background(Color.app.blackMedium)
             }
         }
         .modifier(MatchParent())

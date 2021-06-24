@@ -29,6 +29,12 @@ enum SerisSortType {
         case .latest: return String.sort.latest
         }
     }
+    var nameKids: String {
+        switch self {
+        case .count: return String.sort.countKids
+        case .latest: return String.sort.latestKids
+        }
+    }
     
 }
 
@@ -40,8 +46,7 @@ class RelationContentsModel {
     
     private(set) var seasons:[SeasonData] = []
     private(set) var seris:[SerisData] = []
-    private(set) var playList:[VideoData] = []
-    private(set) var playPlayerList:[VideoPlayerData] = []
+    private(set) var playList:[PlayerListData] = []
     private(set) var serisSortType:SerisSortType = .latest
     private(set) var relationContents:[[PosterData]] = []
     private(set) var synopsisRelationData:SynopsisRelationData? = nil
@@ -65,9 +70,8 @@ class RelationContentsModel {
             self.seris = zip(list, 0...list.count).map{data, idx in
                 SerisData().setData(data: data, title: self.serisTitle, idx: idx)}
             self.playList = zip(list, 0...list.count).map{ data, idx in
-                VideoData().setData(data: data, title: self.serisTitle, idx: idx)}
-            self.playPlayerList = zip(list, 0...list.count).map{ data, idx in
-                VideoPlayerData().setData(data: data, title: self.serisTitle, idx: idx)}
+                PlayerListData().setData(data: data, title: self.serisTitle, idx: idx)}
+           
         }
         if let list = synopsis.siries {
             self.seasons = list.map{

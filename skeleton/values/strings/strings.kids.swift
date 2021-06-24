@@ -18,6 +18,10 @@ extension String{
         public static let registKidCharacter = "registKidCharacter".loaalized()
         public static let registKidCharacterText = "registKidCharacterText".loaalized()
         public static let registKidCreate = "registKidCreate".loaalized()
+        
+        public static let synopsisRelationVod = "synopsisRelationVodKids".loaalized()
+        public static let synopsisNoRelationVod = "synopsisNoRelationVodKids".loaalized()
+        
     }
     
 }

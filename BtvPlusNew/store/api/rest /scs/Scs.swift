@@ -57,7 +57,7 @@ class Scs: Rest{
         
         let date = Date()
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
-        let macAdress = hostDevice?.convertMacAdress ?? ApiConst.defaultMacAdress
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
         let plainText = ScsNetwork.getPlainText(stbId: stbId , macAdress: macAdress, epsdRsluId: epsdRsluId)
         var params = [String:String]()
         params["if"] = "IF-SCS-PRODUCT-UI520-013"
@@ -114,7 +114,7 @@ class Scs: Rest{
         completion: @escaping (Play) -> Void, error: ((_ e:Error) -> Void)? = nil){
         let date = Date()
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
-        //let macAdress = hostDevice?.convertMacAdress ?? ApiConst.defaultMacAdress
+        //let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
         let plainText = ScsNetwork.getPlainText(stbId: stbId , epsdRsluId: epsdRsluId)
         var params = [String:String]()
         params["if"] = "IF-SCS-PRODUCT-UI512-007"
@@ -139,7 +139,7 @@ class Scs: Rest{
         completion: @escaping (ConfirmPassword) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
-        let macAdress = hostDevice?.convertMacAdress ?? ApiConst.defaultMacAdress
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
         
         var params = [String:String]()
         params["if"] = "IF-SCS-GWSVC-UI5-002"

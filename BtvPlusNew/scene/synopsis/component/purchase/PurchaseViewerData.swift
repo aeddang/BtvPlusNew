@@ -173,9 +173,17 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
         guard let purchasableItem =  purchasableItems.first else { return }
         let leading = purchas.hasAuthority ? String.button.purchasAnother : String.button.purchas
         if purchasableItems.count < 2  {
-            self.purchasBtnTitle =  leading + "(" + purchasableItem.salePrice + ")"
+            if self.type == .btv {
+                self.purchasBtnTitle =  leading + "(₩" + purchasableItem.salePrice + ")"
+            } else {
+                self.purchasBtnTitle =  leading + "  |  " + purchasableItem.salePrice 
+            }
         }else{
-            self.purchasBtnTitle =  leading + "(" + purchasableItem.salePrice + "~)"
+            if self.type == .btv {
+                self.purchasBtnTitle =  leading + "(₩" + purchasableItem.salePrice + "~)"
+            } else {
+                self.purchasBtnTitle =  leading + "  |  " + purchasableItem.salePrice
+            }
         }
     }
     

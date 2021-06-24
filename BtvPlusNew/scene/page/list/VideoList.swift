@@ -22,7 +22,7 @@ class VideoData:InfinityData{
     private(set) var synopsisData:SynopsisData? = nil
     private(set) var epsdId:String? = nil
     private(set) var srisId:String? = nil
-    private(set) var isInside:Bool = false
+  
     private(set) var isClip:Bool = false
     private(set) var tagData: TagData? = nil
     private(set) var playTime:String? = nil
@@ -121,21 +121,7 @@ class VideoData:InfinityData{
         return self
     }
     
-    func setData(data:SeriesInfoItem, title:String? = nil, idx:Int = -1) -> VideoData {
-        self.title = title
-        tagData = TagData().setData(data: data, isAdult: self.isAdult)
-        if let count = data.brcast_tseq_nm {
-            self.title = count + String.app.broCount + " " + (self.title ?? "")
-        }
-        
-        originImage = data.poster_filename_h
-        image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: ListItem.video.size, isAdult: self.isAdult)
-      
-        index = idx
-        epsdId = data.epsd_id
-        isInside = true
-        return self
-    }
+    
     
     func setData(data:CategorySrisItem, idx:Int = -1) -> VideoData {
     
@@ -320,7 +306,7 @@ extension VideoSet{
         let cellW = ( w - ( (spacing ?? padding) * (count-1)) ) / count
         var cellH = round(cellW * ratio)
         
-        if datas.first?.isInside == false && isFull{
+        if isFull{
             cellH = cellH + datas.first!.bottomHeight
         }
         return CGSize(width: cellW, height: cellH )
@@ -385,15 +371,9 @@ struct VideoItem: PageView {
     var body: some View {
         VStack(alignment: .leading, spacing:0){
             ZStack{
-                
                 ImageView(url: self.data.image,contentMode: .fill, noImg: Asset.noImg16_9)
                     .modifier(MatchParent())
                  
-                
-                if self.data.isInside {
-                    Spacer().modifier(MatchParent()).background(
-                        self.isSelected ? Color.transparent.black45 : Color.transparent.black70)
-                }
                 if (self.data.progress != nil || self.isSelected) && self.data.tagData?.isLock != true {
                     Image(Asset.icon.thumbPlay)
                         .renderingMode(.original).resizable()
@@ -418,16 +398,6 @@ struct VideoItem: PageView {
                     } else {
                         Spacer().modifier(MatchParent())
                     }
-                   
-                    if self.data.title != nil && self.data.isInside {
-                        VStack(alignment: .center, spacing:0){
-                            Spacer().modifier(MatchHorizontal(height: 0))
-                            Text(self.data.title!)
-                                .modifier(MediumTextStyle(size: Font.size.thinExtra))
-                                .padding(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/, Dimen.margin.thinExtra)
-                                .lineLimit(1)
-                        }
-                    }
                     if self.data.progress != nil {
                         Spacer().frame(
                             width: ListItem.video.size.width * CGFloat(self.data.progress!),
@@ -441,7 +411,7 @@ struct VideoItem: PageView {
                 width: self.data.type.size.width,
                 height: self.data.type.size.height)
             .clipped()
-            if self.data.title != nil && !self.data.isInside {
+            if self.data.title != nil {
                 VStack(alignment: .leading, spacing:Dimen.margin.tiny){
                     if let title = self.data.title {
                         Text(title)

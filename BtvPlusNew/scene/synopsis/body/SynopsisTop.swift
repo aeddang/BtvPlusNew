@@ -16,10 +16,10 @@ struct SynopsisTop: PageComponent{
     var prerollModel = PrerollModel()
     var playGradeData: PlayGradeData? = nil;
     var title:String? = nil
+    var epsdId:String? = nil
     var imgBg:String? = nil
     var imgContentMode:ContentMode = .fit
     var textInfo:String? = nil
-    var epsdId:String? = nil
     var playListData:PlayListData = PlayListData()
     var isPlayAble:Bool = false
     var isPlayViewActive = false

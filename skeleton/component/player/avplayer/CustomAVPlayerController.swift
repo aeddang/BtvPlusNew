@@ -124,8 +124,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
             if self.viewModel.isPlay {  onPause() } else { onResume() }
         case .resume: onResume()
         case .pause: onPause()
-        case .stop:
-            player.stop()
+        case .stop: player.stop()
         case .volume(let v):
             MPVolumeView.setVolume(v)
             viewModel.volume = v

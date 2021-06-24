@@ -180,6 +180,8 @@
 
 "sortCount" = "1회 부터";
 "sortLatest" = "최신순";
+"sortCountKids" = "첫 화부터";
+"sortLatestKids" = "최신 화부터";
 
 "sortPopularity" = "인기순";
 "sortTitle" = "제목순";
@@ -638,6 +640,9 @@
 "synopsisSummry" = "제작/출연진 및 줄거리";
 "synopsisRelationVod" = "비슷한 영화";
 "synopsisNoRelationVod" = "이 작품과 비슷한 영화를\n찾을 수 없습니다.";
+
+"synopsisRelationVodKids" = "연관 콘텐츠";
+"synopsisNoRelationVodKids" = "이 영상의\n연관 콘텐츠를\n찾을 수 없습니다.";
 
 "synopsisSiris" = "회차";
 "synopsisSirisView" = "회차 보기";

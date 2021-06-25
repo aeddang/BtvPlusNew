@@ -62,7 +62,7 @@ class VideoData:InfinityData{
         title = data.title
         watchLv = data.wat_lvl_cd?.toInt() ?? 0
         isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
-        tagData = TagData().setData(data: data, isAdult: self.isAdult)
+        tagData = TagData().setData(data: data, isAdult: self.isAdult) 
         
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         originImage = data.poster_filename_v

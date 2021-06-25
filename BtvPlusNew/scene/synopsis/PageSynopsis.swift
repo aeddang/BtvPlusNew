@@ -686,7 +686,7 @@ struct PageSynopsis: PageView {
             self.title = self.episodeViewerData?.episodeTitle
             self.imgBg = self.synopsisModel?.imgBg
             self.imgContentMode = self.synopsisModel?.imgContentMode ?? .fit
-            self.relationContentsModel.reset(synopsisType: self.synopsisModel?.synopsisType)
+            self.relationContentsModel.reset(synopsisType: self.synopsisModel?.synopsisType, pageType: self.type)
             
             DataLog.d("PageSynopsis epsdId  : " + (self.epsdId ?? "nil"), tag: self.tag)
             DataLog.d("PageSynopsis epsdRsluId  : " + self.epsdRsluId, tag: self.tag)
@@ -797,7 +797,9 @@ struct PageSynopsis: PageView {
     var relationRow:Int {
        get {
            return
-               self.sceneOrientation == .landscape ? 2
+            self.type == .kids 
+            ? 1
+            :  self.sceneOrientation == .landscape ? 2
                : SystemEnvironment.isTablet ? 4 : 3
        }
    }

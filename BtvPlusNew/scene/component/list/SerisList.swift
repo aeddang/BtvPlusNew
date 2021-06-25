@@ -52,12 +52,13 @@ class SerisData:InfinityData{
 }
 
 enum SerisType {
-    case small, big
+    case small, big, kids
     var size:CGSize {
         get{
             switch self {
             case .small: return ListItem.seris.type01
             case .big: return ListItem.seris.type02
+            case .kids: return ListItemKids.seris.type01
             }
         }
     }
@@ -141,6 +142,58 @@ struct SerisItem: PageView {
     }
     
 }
+
+
+struct SerisItemKids: PageView {
+    var data:SerisData
+    var isSelected:Bool = false
+    var body: some View {
+        VStack(alignment: .center, spacing:DimenKids.margin.tiny){
+            ZStack(alignment:.bottomTrailing){
+                
+                ImageView(url: self.data.image, contentMode: .fill, noImg: AssetKids.noImg16_9)
+                    .modifier(MatchParent())
+                
+                if self.isSelected  {
+                    ZStack(){
+                        Image(AssetKids.icon.thumbPlay)
+                            .renderingMode(.original).resizable()
+                            .scaledToFit()
+                            .frame(width: DimenKids.icon.thin, height: DimenKids.icon.thin)
+                    }
+                    .modifier(MatchParent())
+                }
+                if data.isFree == true {
+                    Text(String.app.free)
+                        .modifier(BoldTextStyleKids(size: Font.sizeKids.thinExtra))
+                        .lineLimit(1)
+                        .padding(.all, Dimen.margin.tiny)
+                }
+            }
+            .frame(
+                width: self.data.type.size.width,
+                height: self.data.type.size.height)
+            .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.light))
+            .overlay(
+                RoundedRectangle(cornerRadius: DimenKids.radius.light)
+                .stroke(
+                    self.isSelected ? Color.kids.primary : Color.transparent.clear,
+                    lineWidth: DimenKids.stroke.heavy)
+            )
+            if self.data.title != nil {
+                Text(self.data.title!)
+                    .modifier(BoldTextStyleKids(
+                                size: SystemEnvironment.isTablet ?  Font.sizeKids.tiny : Font.sizeKids.thinExtra,
+                                color: Color.app.brownDeep))
+                    .lineLimit(1)
+                    .frame(width: self.data.type.size.width)
+            }
+        }
+        .frame(height: self.data.type.size.height + ListItemKids.seris.bottomHeight)
+    }
+    
+}
+
 
 #if DEBUG
 struct SerisList_Previews: PreviewProvider {

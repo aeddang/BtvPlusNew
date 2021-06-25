@@ -22,6 +22,12 @@ class PosterData:InfinityData{
     private(set) var synopsisType:SynopsisType = .title
     private(set) var type:PosterType = .small
     private(set) var synopsisData:SynopsisData? = nil
+    private(set) var pageType:PageType = .btv
+    
+    init(pageType:PageType = .btv) {
+        self.pageType = pageType
+        super.init()
+    }
     
     func setData(data:ContentItem, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
         setCardType(cardType)
@@ -30,7 +36,7 @@ class PosterData:InfinityData{
         isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
         originImage = data.poster_filename_v
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: type.size, isAdult: self.isAdult)
-        tagData = TagData().setData(data: data, isAdult: self.isAdult)
+        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         index = idx
         epsdId = data.epsd_id
         synopsisType = SynopsisType(value: data.synon_typ_cd)
@@ -48,7 +54,7 @@ class PosterData:InfinityData{
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
         watchLv = data.wat_lvl_cd?.toInt() ?? 0
-        tagData = TagData().setData(data: data, isAdult: self.isAdult)
+        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         originImage = data.poster_filename_v
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: type.size, isAdult: self.isAdult)
         
@@ -67,7 +73,7 @@ class PosterData:InfinityData{
         epsdId = data.epsd_id
         isAdult = data.adult?.toBool() ?? false
         watchLv = data.level?.toInt() ?? 0
-        tagData = TagData().setData(data: data, isAdult: self.isAdult)
+        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         originImage = data.poster
         image = ImagePath.thumbImagePath(filePath: data.poster, size: type.size, isAdult: self.isAdult)
         
@@ -85,7 +91,7 @@ class PosterData:InfinityData{
         epsdId = data.epsd_id
         isAdult = data.adult?.toBool() ?? false
         watchLv = data.level?.toInt() ?? 0
-        tagData = TagData().setData(data: data, isAdult: self.isAdult)
+        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         originImage = data.thumbnail
         image = ImagePath.thumbImagePath(filePath: data.thumbnail, size: type.size, isAdult: self.isAdult)
         
@@ -102,7 +108,7 @@ class PosterData:InfinityData{
         epsdId = data.epsd_id
         isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
         watchLv = data.wat_lvl_cd?.toInt() ?? 0
-        tagData = TagData().setData(data: data, isAdult: self.isAdult)
+        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         originImage = data.poster_filename_v
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: type.size, isAdult: self.isAdult)
@@ -119,7 +125,7 @@ class PosterData:InfinityData{
         epsdId = data.epsd_id
         //isAdult = data.adult?.toBool() ?? false
         watchLv = data.level?.toInt() ?? 0
-        tagData = TagData().setData(data: data, isAdult: self.isAdult)
+        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         originImage = data.poster
         image = ImagePath.thumbImagePath(filePath: data.poster , size: type.size, isAdult: self.isAdult)
         
@@ -135,7 +141,7 @@ class PosterData:InfinityData{
         setCardType(cardType)
         title = data.title
         watchLv = data.level?.toInt() ?? 0
-        tagData = TagData().setData(data: data, isAdult: self.isAdult)
+        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         originImage = data.poster
         image = ImagePath.thumbImagePath(filePath: data.poster, size: type.size, isAdult: self.isAdult)
@@ -159,7 +165,7 @@ class PosterData:InfinityData{
     
     func setRank(_ idx:Int){
         if self.tagData == nil {
-            self.tagData = TagData().setRank(idx)
+            self.tagData = TagData(pageType: self.pageType).setRank(idx)
         } else{
             self.tagData?.setRank(idx)
         }
@@ -167,7 +173,10 @@ class PosterData:InfinityData{
     
     private func setCardType(_ cardType:BlockData.CardType){
         self.isBookmark = (cardType == .bookmarkedPoster) ? true : nil
-        
+        if self.pageType == .kids {
+            type = .kids
+            return
+        }
         switch cardType {
         case .bigPoster: type = .big
         case .smallPoster: type = .small
@@ -208,7 +217,7 @@ class PosterData:InfinityData{
 }
 
 enum PosterType {
-    case small, big, banner, cell(CGSize, CGFloat)
+    case small, big, banner, cell(CGSize, CGFloat), kids
     var size:CGSize {
         get{
             switch self {
@@ -216,13 +225,59 @@ enum PosterType {
             case .big: return ListItem.poster.type02
             case .banner: return ListItem.poster.type03
             case .cell(let size, _ ): return size
+            case .kids: return ListItemKids.poster.type01
+            }
+        }
+    }
+    var radius:CGFloat {
+        get{
+            switch self {
+            case .kids: return DimenKids.radius.light
+            default : return 0
+            }
+        }
+    }
+    
+    var noImg:String {
+        get{
+            switch self {
+            case .banner: return Asset.noImg4_3
+            case .kids: return AssetKids.noImg9_16
+            default : return Asset.noImg9_16
+            }
+        }
+    }
+    
+    var selectedColor:Color {
+        get{
+            switch self {
+            case .kids: return Color.kids.primary
+            default : return Color.brand.primary
+            }
+        }
+    }
+    
+    var selectedStroke:CGFloat {
+        get{
+            switch self {
+            case .kids: return 0
+            default : return Dimen.stroke.medium
+            }
+        }
+    }
+    
+    var bgdColor:Color {
+        get{
+            switch self {
+            case .kids: return Color.app.ivoryDeep
+            default : return Color.app.blueLight
             }
         }
     }
 }
+
 extension PosterList{
     static let headerSize:Int = 2
-    static let spacing:CGFloat = Dimen.margin.tiny
 }
 
 struct PosterList: PageComponent{
@@ -233,7 +288,9 @@ struct PosterList: PageComponent{
     var datas:[PosterData]
     var contentID:String? = nil
     var useTracking:Bool = false
-    var margin:CGFloat = Dimen.margin.thin
+ 
+    var margin:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thin
+    var spacing:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.tiny : DimenKids.margin.tiny
     var action: ((_ data:PosterData) -> Void)? = nil
     
    
@@ -252,11 +309,11 @@ struct PosterList: PageComponent{
             if banners?.isEmpty == false, let banners = self.banners {
                 ForEach(banners) { data in
                     BannerItem(data: data)
-                        .modifier(HolizentalListRowInset(spacing: Self.spacing))
+                        .modifier(HolizentalListRowInset(spacing: self.spacing))
                 }
                 if let subDataSets = self.subDataSets {
                     ForEach(subDataSets) {sets in
-                        HStack(spacing:Self.spacing){
+                        HStack(spacing:self.spacing){
                             ForEach(sets.datas) { data in
                                 PosterItem( data:data )
                                     .onTapGesture {
@@ -264,7 +321,7 @@ struct PosterList: PageComponent{
                                     }
                             }
                         }
-                        .modifier(HolizentalListRowInset(spacing: Self.spacing))
+                        .modifier(HolizentalListRowInset(spacing: self.spacing))
                     }
                 }
             } else {
@@ -272,7 +329,7 @@ struct PosterList: PageComponent{
                     PosterItem( data:data , isSelected: self.contentID == nil
                                     ? false
                                     : self.contentID == data.epsdId)
-                        .modifier(HolizentalListRowInset(spacing: Self.spacing))
+                        .modifier(HolizentalListRowInset(spacing: self.spacing))
                         .onTapGesture {
                             self.onTap(data: data)
                         }
@@ -339,7 +396,8 @@ struct PosterViewList: PageComponent{
     var contentID:String? = nil
     var useTracking:Bool = false
     var hasAuthority:Bool = false
-    var margin:CGFloat = Dimen.margin.thin
+    var margin:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thin
+    var spacing:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.tiny : DimenKids.margin.tiny
     var action: ((_ data:PosterData) -> Void)? = nil
     var body: some View {
         InfinityScrollView(
@@ -347,7 +405,7 @@ struct PosterViewList: PageComponent{
             axes: .horizontal,
             marginVertical: 0,
             marginHorizontal: self.margin,
-            spacing: Dimen.margin.tiny,
+            spacing: self.spacing,
             isRecycle:  true,
             useTracking: self.useTracking
             ){
@@ -377,8 +435,11 @@ struct PosterDataSet:Identifiable {
 }
 
 extension PosterSet{
-    static let padding:CGFloat = Dimen.margin.thin
-    static func listSize(data:PosterDataSet, screenWidth:CGFloat ) -> CGSize{
+    
+    static func listSize(data:PosterDataSet, screenWidth:CGFloat,
+                         padding:CGFloat = SystemEnvironment.currentPageType == .btv
+                            ? Dimen.margin.thin
+                            : DimenKids.margin.thin) -> CGSize {
         let datas = data.datas
         let ratio = datas.first!.type.size.height / datas.first!.type.size.width
         let count = CGFloat(data.count)
@@ -396,12 +457,13 @@ struct PosterSet: PageComponent{
     var pageObservable:PageObservable = PageObservable()
     var data:PosterDataSet
     var screenSize:CGFloat? = nil
+    var padding:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thin
     var action: ((_ data:PosterData) -> Void)? = nil
     
     @State var cellDatas:[PosterData] = []
     @State var isUiActive:Bool = true
     var body: some View {
-        HStack(spacing: Self.padding){
+        HStack(spacing: self.padding){
             if self.isUiActive {
                 ForEach(self.cellDatas) { data in
                     PosterItem( data:data )
@@ -431,13 +493,13 @@ struct PosterSet: PageComponent{
                 }
             }
         }
-        .padding(.horizontal, Self.padding)
+        .padding(.horizontal, self.padding)
         .frame(width: self.screenSize ?? self.sceneObserver.screenSize.width)
         .onAppear {
             if self.data.datas.isEmpty { return }
             let size = Self.listSize(data: self.data, screenWidth: self.screenSize ?? sceneObserver.screenSize.width)
             self.cellDatas = self.data.datas.map{
-                $0.setCardType(width: size.width, height: size.height, padding: Self.padding)
+                $0.setCardType(width: size.width, height: size.height, padding: self.padding)
             }
         }
         .onReceive(self.pageObservable.$layer ){ layer  in
@@ -457,16 +519,19 @@ struct PosterItem: PageView {
     @State var isBookmark:Bool? = nil
     var body: some View {
         ZStack(alignment: .topLeading){
-            
-            ImageView(url: self.data.image, contentMode: .fit, noImg: Asset.noImg9_16)
+            ImageView(url: self.data.image, contentMode: .fit, noImg: self.data.type.noImg)
                 .modifier(MatchParent())
             
             if let tag = self.data.tagData {
-                Tag(data: tag)
-                    .modifier(MatchParent())
+                if tag.pageType == .btv {
+                    Tag(data: tag).modifier(MatchParent())
+                } else {
+                    TagKids(data: tag).modifier(MatchParent())
+                }
             }
             if self.isBookmark != nil , let synop = self.data.synopsisData  {
                 BookMarkButton(
+                    type: self.data.pageType,
                     data:synop,
                     isSimple:true,
                     isBookmark: self.$isBookmark
@@ -476,15 +541,18 @@ struct PosterItem: PageView {
                 .buttonStyle(BorderlessButtonStyle())
             }
         }
-        .overlay(
-           Rectangle()
-            .stroke(
-                self.isSelected ? Color.brand.primary : Color.transparent.clear,
-                lineWidth: Dimen.stroke.medium)
-        )
         .frame(
             width: self.data.type.size.width,
             height: self.data.type.size.height)
+        .background(self.data.type.bgdColor)
+        .clipShape(RoundedRectangle(cornerRadius: self.data.type.radius))
+        .overlay(
+            RoundedRectangle(cornerRadius: self.data.type.radius)
+            .stroke(
+                self.isSelected ? self.data.type.selectedColor : Color.transparent.clear,
+                lineWidth: self.data.type.selectedStroke)
+        )
+        
         .onReceive(self.repository.$event){ evt in
             guard let evt = evt else {return}
             switch evt {
@@ -492,8 +560,6 @@ struct PosterItem: PageView {
             default : break
             }
         }
-        .background(Color.app.blueLight)
-        .clipped()
         .onAppear(){
             self.isBookmark = self.data.isBookmark
         }
@@ -507,22 +573,37 @@ struct PosterViewItem: PageView {
     var data:PosterData
     var isSelected:Bool = false
     var hasAuthority:Bool = false
+    var spacing:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thin
     @State var isBookmark:Bool? = nil
     var body: some View {
-        VStack( spacing:Dimen.margin.thin){
+        VStack( spacing:self.spacing){
             PosterItem(data: self.data, isSelected:self.isSelected)
             if self.isSelected {
-                FillButton(
-                    text: self.hasAuthority ? String.button.directview : String.button.preview,
-                    strokeWidth: 1){ _ in
-                    
-                    if let synopsisData = data.synopsisData {
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
-                                .addParam(key: .data, value: synopsisData)
-                                .addParam(key: .watchLv, value: data.watchLv)
-                        )
+                if data.pageType == .btv {
+                    FillButton(
+                        text: self.hasAuthority ? String.button.directview : String.button.preview,
+                        strokeWidth: 1){ _ in
+                        if let synopsisData = data.synopsisData {
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
+                                    .addParam(key: .data, value: synopsisData)
+                                    .addParam(key: .watchLv, value: data.watchLv)
+                            )
+                        }
                     }
+                } else {
+                    RectButtonKids(
+                        text: self.hasAuthority ? String.button.directview : String.button.preview,
+                        size: CGSize(width: data.type.size.width, height: DimenKids.button.light),
+                        isFixSize: true ){ _ in
+                           if let synopsisData = data.synopsisData {
+                               self.pagePresenter.openPopup(
+                                   PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
+                                       .addParam(key: .data, value: synopsisData)
+                                       .addParam(key: .watchLv, value: data.watchLv)
+                               )
+                           }
+                        }
                 }
             }
         }

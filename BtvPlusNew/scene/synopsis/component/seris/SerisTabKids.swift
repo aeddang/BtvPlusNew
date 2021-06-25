@@ -45,6 +45,7 @@ struct SerisTabKids: PageComponent{
                             self.action( self.data.seasons[idx] )
                         }
                 }
+                padding(.top, DimenKids.margin.tiny)
             }
             TabSwitch(
                 tabs: self.sortOption.map{$0.nameKids},

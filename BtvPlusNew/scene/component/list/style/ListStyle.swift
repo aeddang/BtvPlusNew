@@ -104,9 +104,9 @@ struct ListRowInset: ViewModifier {
     var firstIndex = 1
     var index:Int = -1
     var marginHorizontal:CGFloat = 0
-    var spacing:CGFloat = Dimen.margin.thin
+    var spacing:CGFloat =  SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thinUltra
     var marginTop:CGFloat = 0
-    var bgColor:Color = Color.brand.bg
+    var bgColor:Color = SystemEnvironment.currentPageType == .btv ? Color.brand.bg : Color.kids.bg
     
     func body(content: Content) -> some View {
         return content
@@ -130,9 +130,9 @@ struct HolizentalListRowInset: ViewModifier {
     var firstIndex = 1
     var index:Int = -1
     var marginVertical:CGFloat = 0
-    var spacing:CGFloat = Dimen.margin.thin
+    var spacing:CGFloat =  SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thinUltra
     var marginTop:CGFloat = 0
-    var bgColor:Color = Color.brand.bg
+    var bgColor:Color = SystemEnvironment.currentPageType == .btv ? Color.brand.bg : Color.kids.bg
     
     func body(content: Content) -> some View {
         return content

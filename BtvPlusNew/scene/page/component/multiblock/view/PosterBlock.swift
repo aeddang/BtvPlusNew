@@ -96,7 +96,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
                     
                     SkeletonBlock(
                         len:Self.skeletonNum,
-                        spacing:PosterList.spacing,
+                        spacing:Dimen.margin.tiny,
                         size:self.skeletonSize
                     )
                     .modifier(MatchParent())

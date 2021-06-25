@@ -25,6 +25,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     var useTracking:Bool
     var scrollType:InfinityScrollType = .reload(isDragEnd: false)
     var bgColor:Color //List only
+    var isAlignCenter:Bool = false
     let isRecycle: Bool
     
     @State var scrollPos:Float? = nil
@@ -46,6 +47,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         marginTop: CGFloat = 0,
         marginBottom: CGFloat = 0,
         marginHorizontal: CGFloat = 0,
+        isAlignCenter:Bool = false,
         spacing: CGFloat = 0,
         isRecycle:Bool = true,
         useTracking:Bool = true,
@@ -60,6 +62,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         self.marginTop = marginTop + marginVertical
         self.marginBottom = marginBottom + marginVertical
         self.marginHorizontal = marginHorizontal
+        self.isAlignCenter = isAlignCenter
         self.spacing = spacing
         self.isRecycle = isRecycle
         self.useTracking = useTracking
@@ -102,14 +105,14 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                 }
                             }
                             if self.isRecycle {
-                                LazyVStack(alignment: .leading, spacing: self.spacing){
+                                LazyVStack(alignment: self.isAlignCenter ? .center : .leading, spacing: self.spacing){
                                     self.content
                                 }
                                 .padding(.top, self.marginTop)
                                 .padding(.bottom, self.marginBottom)
                                 .padding(.horizontal, self.marginHorizontal)
                             } else {
-                                VStack(alignment: .leading, spacing: self.spacing){
+                                VStack(alignment: self.isAlignCenter ? .center : .leading, spacing: self.spacing){
                                     self.content
                                 }
                                 .padding(.top, self.marginTop)
@@ -129,7 +132,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                 }
                             }
                             if self.isRecycle {
-                                LazyHStack (alignment: .top, spacing: self.spacing){
+                                LazyHStack (alignment: self.isAlignCenter ? .center : .top, spacing: self.spacing){
                                     self.content
                                 }
                                 .padding(.top, self.marginTop)
@@ -137,7 +140,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                 .padding(.horizontal, self.marginHorizontal)
                                 
                             } else {
-                                HStack (alignment: .top, spacing: self.spacing){
+                                HStack (alignment: self.isAlignCenter ? .center : .top, spacing: self.spacing){
                                     self.content
                                 }
                                 .padding(.top, self.marginTop)
@@ -221,7 +224,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         }else{
             if self.axes == .vertical {
                 if self.isRecycle {
-                    List {
+                    List{
                         if self.marginTop > Dimen.margin.regular {
                             Spacer()
                             .modifier(MatchHorizontal(height: self.marginTop))
@@ -255,7 +258,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                                     insideProxy: insideProxy, outsideProxy: outsideProxy)])
                                     }
                                 }
-                                VStack (alignment:.leading, spacing:self.spacing){
+                                VStack (alignment:self.isAlignCenter ? .center : .leading, spacing:self.spacing){
                                     self.content
                                 }
                                 .padding(.top, self.marginTop)
@@ -283,7 +286,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
             }else{
                 ScrollView(.horizontal, showsIndicators: false) {
                     ZStack(alignment: .leading) {
-                        HStack(spacing:self.spacing){
+                        HStack(alignment:self.isAlignCenter ? .center : .top, spacing:self.spacing){
                             self.content
                         }
                         .padding(.top, self.marginTop)

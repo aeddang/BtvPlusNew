@@ -77,6 +77,7 @@ struct KidsSynopsis: PageComponent{
                                height: DimenKids.icon.regularExtra)
                 }
                 .padding(.trailing, DimenKids.margin.light)
+                .padding(.top,self.isFullScreen ? 0 : DimenKids.margin.mediumExtra)
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
             VStack(alignment: .leading,spacing:0){
@@ -170,30 +171,34 @@ struct KidsSynopsis: PageComponent{
                     }
                 }
             } // vstack
-            
+            .padding(.top,self.isFullScreen ? 0 : DimenKids.margin.mediumExtra)
             if self.sceneOrientation == .landscape && !self.isFullScreen {
-                Spacer()
-                    .modifier(MatchParent())
-                    .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
-                 if let hasRelationVod = self.hasRelationVod {
-                     RelationVodBody(
-                         componentViewModel: self.componentViewModel,
-                         infinityScrollModel: self.relationBodyModel,
-                         relationContentsModel: self.relationContentsModel,
-                         tabNavigationModel: self.tabNavigationModel,
-                         seris: self.$seris,
-                         synopsisData: self.synopsisData,
-                         relationTab: self.relationTab,
-                         relationDatas: self.relationDatas,
-                         hasRelationVod: hasRelationVod,
-                         screenSize : Self.listWidth
-                         )
-                         .frame(width: Self.listWidth)
-                         .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
-                 }
+                HStack(alignment: .top, spacing:0){
+                    Spacer()
+                        .modifier(MatchParent())
+                    if let hasRelationVod = self.hasRelationVod {
+                        if hasRelationVod {
+                             RelationVodBodyKids(
+                                 componentViewModel: self.componentViewModel,
+                                 infinityScrollModel: self.relationBodyModel,
+                                 relationContentsModel: self.relationContentsModel,
+                                 seris: self.$seris,
+                                 epsdId: self.epsdId,
+                                 relationDatas: self.relationDatas,
+                                 screenSize : Self.listWidth)
+                                .frame(width: Self.listWidth)
+                                .background(Color.app.white)
+                        } else{
+                            RelationVodEmpty()
+                                .frame(width: Self.listWidth)
+                                .background(Color.app.white)
+                        }
+                    }
+                }
+                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
         }
-        .padding(.top,self.isFullScreen ? 0 : DimenKids.margin.mediumExtra)
+        
         .modifier(MatchParent())
         .background(
             Image(AssetKids.source.synopsisBg)

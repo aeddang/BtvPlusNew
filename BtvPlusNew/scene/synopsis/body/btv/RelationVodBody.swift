@@ -18,7 +18,7 @@ struct RelationVodBody: PageComponent{
     var tabNavigationModel:NavigationModel
     @Binding var seris:[SerisData]
     
-    var synopsisData:SynopsisData? = nil
+    var epsdId:String? = nil
     var relationTab:[NavigationButton] = []
     var relationDatas:[PosterDataSet] = []
     var hasRelationVod:Bool = false
@@ -31,7 +31,7 @@ struct RelationVodBody: PageComponent{
                 relationContentsModel: self.relationContentsModel,
                 tabNavigationModel: self.tabNavigationModel,
                 seris: self.$seris,
-                synopsisData: self.synopsisData,
+                epsdId: self.epsdId,
                 relationTab: self.relationTab,
                 hasRelationVod : self.hasRelationVod
                 )
@@ -49,7 +49,7 @@ struct RelationVodBody: PageComponent{
                     componentViewModel: self.componentViewModel,
                     infinityScrollModel : self.infinityScrollModel,
                     seris: self.$seris,
-                    synopsisData: self.synopsisData,
+                    epsdId: self.epsdId,
                     relationDatas: self.relationDatas,
                     hasRelationVod: self.hasRelationVod,
                     screenSize: self.screenSize,
@@ -76,7 +76,7 @@ struct RelationVodList: PageComponent{
     var tabNavigationModel:NavigationModel
     @Binding var seris:[SerisData]
     
-    var synopsisData:SynopsisData? = nil
+    var epsdId:String? = nil
     var relationTab:[NavigationButton] = []
     var relationDatas:[PosterDataSet] = []
     var hasRelationVod:Bool = false
@@ -87,7 +87,7 @@ struct RelationVodList: PageComponent{
             relationContentsModel: self.relationContentsModel,
             tabNavigationModel: self.tabNavigationModel,
             seris: self.$seris,
-            synopsisData: self.synopsisData,
+            epsdId: self.epsdId,
             relationTab: self.relationTab,
             hasRelationVod : self.hasRelationVod
             )
@@ -95,7 +95,7 @@ struct RelationVodList: PageComponent{
         RelationVodListBody(
             componentViewModel: self.componentViewModel,
             seris: self.$seris,
-            synopsisData: self.synopsisData,
+            epsdId: self.epsdId,
             relationDatas: self.relationDatas,
             hasRelationVod: self.hasRelationVod,
             screenSize: self.screenSize
@@ -112,7 +112,7 @@ struct RelationVodHeader: PageComponent{
     var relationContentsModel:RelationContentsModel
     var tabNavigationModel:NavigationModel
     @Binding var seris:[SerisData]
-    var synopsisData:SynopsisData?
+    var epsdId:String? = nil
     var relationTab:[NavigationButton]
     var hasRelationVod:Bool
  
@@ -160,7 +160,7 @@ struct RelationVodListBody: PageComponent{
     var componentViewModel:PageSynopsis.ComponentViewModel
     var infinityScrollModel: InfinityScrollModel? = nil
     @Binding var seris:[SerisData]
-    var synopsisData:SynopsisData?
+    var epsdId:String? = nil
     var relationDatas:[PosterDataSet]
     var hasRelationVod:Bool
     var screenSize:CGFloat
@@ -170,7 +170,7 @@ struct RelationVodListBody: PageComponent{
         if !self.seris.isEmpty {
             if self.useIndex {
                 ForEach(self.seris) { data in
-                    SerisItem( data:data.setListType(self.serisType), isSelected: self.synopsisData?.epsdId == data.contentID )
+                    SerisItem( data:data.setListType(self.serisType), isSelected: self.epsdId == data.contentID )
                         .id(data.index)
                         .onTapGesture {
                             self.componentViewModel.uiEvent = .changeVod(data.epsdId)
@@ -179,12 +179,12 @@ struct RelationVodListBody: PageComponent{
                 }
                 .onAppear(){
                     guard let infinityScrollModel = self.infinityScrollModel  else {return}
-                    guard let find = self.seris.first(where: {self.synopsisData?.epsdId == $0.contentID}) else {return}
+                    guard let find = self.seris.first(where: {self.epsdId == $0.contentID}) else {return}
                     infinityScrollModel.uiEvent = .scrollTo(find.index)
                 }
             } else {
                 ForEach(self.seris) { data in
-                    SerisItem( data:data.setListType(self.serisType), isSelected: self.synopsisData?.epsdId == data.contentID )
+                    SerisItem( data:data.setListType(self.serisType), isSelected: self.epsdId == data.contentID )
                         .onTapGesture {
                             self.componentViewModel.uiEvent = .changeVod(data.epsdId)
                         }

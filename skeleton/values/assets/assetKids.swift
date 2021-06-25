@@ -9,13 +9,8 @@
 import Foundation
 struct AssetKids {}
 extension AssetKids {
-    public static let noImg16_9 = "imgDefaultPosterThum"
-    public static let noImg4_3 = "imgDefaultMonthlyCardB"
-    public static let noImg1_1 = "img07CardDefault"
-    public static let noImgCircle1_1 = "img05CardDefault"
-    public static let noImg9_16 = "imgDefaultPosterSmall"
-    public static let noImg3_4 = "imgDefaultPosterSmall02"
-    public static let noImgBanner = "img09CardBannerDefault"
+    public static let noImg16_9 = "zemkidsMThumnailDefault"
+    public static let noImg9_16 = "zemkidsMPosterDefault2"
 }
 extension AssetKids{
     private static let isPad =  AppUtil.isPad()
@@ -48,6 +43,7 @@ extension AssetKids{
         public static let playInfo = "zemkidsMBtnSynopsisInfoNor"
         public static let share = "zemkidsMBtnSynopsisShareNor"
         public static let sort = "zemkidsMDropdownBriDownNor"
+        public static let thumbPlay = "zemkidsMIcPlay"
     }
     
     

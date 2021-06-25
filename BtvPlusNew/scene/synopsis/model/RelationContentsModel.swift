@@ -50,10 +50,10 @@ class RelationContentsModel {
     private(set) var serisSortType:SerisSortType = .latest
     private(set) var relationContents:[[PosterData]] = []
     private(set) var synopsisRelationData:SynopsisRelationData? = nil
-    
+    private(set) var pageType:PageType = .btv
     var currentSeasonIdx:Int = -1
     
-    func reset(synopsisType:MetvNetwork.SynopsisType?){
+    func reset(synopsisType:MetvNetwork.SynopsisType?, pageType:PageType = .btv){
         if synopsisType != .title {
             self.relationContents = []
             self.relationTabs = []
@@ -61,6 +61,7 @@ class RelationContentsModel {
             self.serisTitle = nil
             self.isReady = false
         }
+        self.pageType = pageType
     }
     
     func setData(synopsis:SynopsisModel) {
@@ -121,7 +122,7 @@ class RelationContentsModel {
         }
         let tabs:[String] = infos.filter{ $0.sub_title != nil }.map{ $0.sub_title!}
         self.relationContents = infos.filter{ $0.block != nil }.map{
-            $0.block!.map{ PosterData().setData(data: $0) }
+            $0.block!.map{ PosterData(pageType: self.pageType).setData(data: $0) }
         }
         self.createTab(tabs: tabs)
     }
@@ -172,7 +173,10 @@ class RelationContentsModel {
 
     private func createTab(tabs:[String]? = nil){
         self.relationTabs = []
-        if  !self.seris.isEmpty { self.relationTabs.append(String.pageText.synopsisSiris) }
+        if  !self.seris.isEmpty {
+            self.relationTabs.append(String.pageText.synopsisSiris)
+            if self.pageType == .kids {return}
+        }
         if let tabs = tabs {self.relationTabs.append(contentsOf: tabs)}
     }
     

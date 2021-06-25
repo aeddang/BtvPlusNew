@@ -32,9 +32,9 @@ struct SynopsisBody: PageComponent{
     var purchasViewerData:PurchaseViewerData? = nil
     var summaryViewerData:SummaryViewerData? = nil
     //var srisId:String? = nil
-    //var epsdId:String? = nil
+    var epsdId:String? = nil
     var hasAuthority:Bool? = nil
-
+  
     var relationTab:[NavigationButton] = []
     var relationDatas:[PosterDataSet] = []
     var hasRelationVod:Bool? = nil
@@ -131,7 +131,7 @@ struct SynopsisBody: PageComponent{
                         relationContentsModel: self.relationContentsModel,
                         tabNavigationModel: self.tabNavigationModel,
                         seris: self.$seris,
-                        synopsisData: self.synopsisData,
+                        epsdId: self.epsdId,
                         relationTab: self.relationTab,
                         relationDatas: self.relationDatas,
                         hasRelationVod: hasRelationVod,
@@ -207,7 +207,7 @@ struct SynopsisBody: PageComponent{
                         relationContentsModel: self.relationContentsModel,
                         tabNavigationModel: self.tabNavigationModel,
                         seris: self.$seris,
-                        synopsisData: self.synopsisData,
+                        epsdId: self.epsdId,
                         relationTab: self.relationTab,
                         relationDatas: self.relationDatas,
                         hasRelationVod: hasRelationVod,

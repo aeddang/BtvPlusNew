@@ -59,7 +59,7 @@ struct BannerListBlock:BlockProtocol, PageComponent {
                 } else {
                     SkeletonBlock(
                         len:Self.skeletonNum,
-                        spacing:PosterList.spacing,
+                        spacing:Dimen.margin.tiny,
                         size:self.skeletonSize
                     )
                     .modifier(MatchParent())

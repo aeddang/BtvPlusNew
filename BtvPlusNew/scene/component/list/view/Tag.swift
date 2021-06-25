@@ -17,7 +17,12 @@ class TagData{
     private(set) var badgeIcon: String? = nil
     private(set) var ppmIcon: String? = nil
     private(set) var price: String? = nil
-
+    private(set) var pageType:PageType = .btv
+    
+    init(pageType:PageType = .btv) {
+        self.pageType = pageType
+    }
+    
     func setData(data:ContentItem, isAdult:Bool) -> TagData {
         if let prc = data.sale_prc_vat {
             if prc == 0 { isFree = true }
@@ -25,7 +30,7 @@ class TagData{
         }
         self.isAdult = isAdult
         self.isLock = !SystemEnvironment.isImageLock ? false : isAdult
-        self.restrictAgeIcon = Asset.age.getListIcon(age: data.wat_lvl_cd)
+        self.restrictAgeIcon = self.pageType == .btv ? Asset.age.getListIcon(age: data.wat_lvl_cd) : AssetKids.age.getIcon(age: data.wat_lvl_cd)
         self.ppmIcon = ImagePath.thumbImagePath(filePath: data.ppm_grid_icon_img_path,
                                            size:CGSize(width: 0, height: Dimen.icon.light),
                                            convType: .alpha)
@@ -218,6 +223,51 @@ struct Tag: PageView {
     }
     
 }
+
+struct TagKids: PageView {
+    
+    var data:TagData
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0){
+            HStack(alignment: .top, spacing: 0){
+                Spacer()
+                
+            }
+            Spacer().modifier(MatchParent())
+            
+            HStack(alignment: .bottom, spacing: 0){
+                if data.isFree == true {
+                    Text(String.app.free)
+                        .modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color:Color.brand.primary))
+                        .lineLimit(1)
+                        .fixedSize()
+                }else if let price = data.price {
+                    Text(price)
+                        .modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color:Color.app.whiteDeep))
+                        .lineLimit(1)
+                        .fixedSize()
+                }
+                Spacer()
+                if let icon = data.ppmIcon {
+                    KFImage(URL(string: icon))
+                        .resizable()
+                        .cancelOnDisappear(true)
+                        .loadImmediately()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: DimenKids.icon.tiny, alignment: .trailing)
+                }
+            }
+            .padding(.all, DimenKids.margin.tiny)
+            .background(
+                LinearGradient(gradient: Gradient(colors: [Color.transparent.clear, Color.transparent.black70]), startPoint: .top, endPoint: .bottom)
+                
+            )
+        }
+    }
+    
+}
+
 
 
 

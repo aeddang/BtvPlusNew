@@ -146,7 +146,7 @@ struct BtvSynopsis: PageComponent{
                          relationContentsModel: self.relationContentsModel,
                          tabNavigationModel: self.tabNavigationModel,
                          seris: self.$seris,
-                         synopsisData: self.synopsisData,
+                         epsdId: self.epsdId,
                          relationTab: self.relationTab,
                          relationDatas: self.relationDatas,
                          hasRelationVod: hasRelationVod,

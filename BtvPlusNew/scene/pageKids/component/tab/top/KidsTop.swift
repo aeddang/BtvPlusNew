@@ -19,14 +19,11 @@ struct KidsTop: PageComponent{
         VStack(alignment: .leading, spacing:0){
             KidsTopTab()
                 .frame( height: DimenKids.app.top)
-                .modifier(KidsContentHorizontalEdges())
             KidsGnb()
                 .frame( height: DimenKids.app.gnbTop)
-                .modifier(KidsContentHorizontalEdges())
         }
+        .modifier(ContentHorizontalEdgesKids())
         .padding(.top, Self.marginTop)
-        .padding(.leading, self.sceneObserver.safeAreaStart)
-        .padding(.trailing,self.sceneObserver.safeAreaEnd)
         .background(Color.app.white)
         .onAppear(){
         }

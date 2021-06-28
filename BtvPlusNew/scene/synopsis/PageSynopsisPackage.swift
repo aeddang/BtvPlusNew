@@ -10,6 +10,7 @@ extension PageSynopsisPackage{
     static let listWidth:CGFloat = 384
 }
 struct PageSynopsisPackage: PageView {
+    var type:PageType = .btv
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
@@ -36,26 +37,10 @@ struct PageSynopsisPackage: PageView {
                     viewModel:self.pageDragingModel,
                     axis:.horizontal
                 ) {
-                    ZStack{
-                        if self.synopsisPackageModel != nil && self.isUIView && !self.progressError {
-                            if self.sceneOrientation == .portrait {
-                                PackageBody(
-                                    infinityScrollModel: self.infinityScrollModel,
-                                    synopsisListViewModel: self.synopsisListViewModel,
-                                    peopleScrollModel: self.peopleScrollModel,
-                                    synopsisPackageModel: self.synopsisPackageModel!,
-                                    isPairing: self.isPairing,
-                                    contentID: self.synopsisModel?.epsdId,
-                                    episodeViewerData: self.episodeViewerData,
-                                    summaryViewerData: self.summaryViewerData,
-                                    useTracking: self.useTracking){ posterData in
-                                    self.updateSynopsis(posterData)
-                                }
-                                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
-                            } else {
-                                HStack(alignment: .center, spacing: 0){
-                                    TopViewer( data:self.synopsisPackageModel!)
-                                        .modifier(MatchParent())
+                    if self.type == .btv {
+                        ZStack{
+                            if self.synopsisPackageModel != nil && self.isUIView && !self.progressError {
+                                if self.sceneOrientation == .portrait {
                                     PackageBody(
                                         infinityScrollModel: self.infinityScrollModel,
                                         synopsisListViewModel: self.synopsisListViewModel,
@@ -65,29 +50,76 @@ struct PageSynopsisPackage: PageView {
                                         contentID: self.synopsisModel?.epsdId,
                                         episodeViewerData: self.episodeViewerData,
                                         summaryViewerData: self.summaryViewerData,
-                                        useTop: false,
                                         useTracking: self.useTracking){ posterData in
                                         self.updateSynopsis(posterData)
                                     }
-                                    .modifier(MatchVertical(width: Self.listWidth))
+                                    .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                                } else {
+                                    HStack(alignment: .center, spacing: 0){
+                                        TopViewer( data:self.synopsisPackageModel!)
+                                            .modifier(MatchParent())
+                                        PackageBody(
+                                            infinityScrollModel: self.infinityScrollModel,
+                                            synopsisListViewModel: self.synopsisListViewModel,
+                                            peopleScrollModel: self.peopleScrollModel,
+                                            synopsisPackageModel: self.synopsisPackageModel!,
+                                            isPairing: self.isPairing,
+                                            contentID: self.synopsisModel?.epsdId,
+                                            episodeViewerData: self.episodeViewerData,
+                                            summaryViewerData: self.summaryViewerData,
+                                            useTop: false,
+                                            useTracking: self.useTracking){ posterData in
+                                            self.updateSynopsis(posterData)
+                                        }
+                                        .modifier(MatchVertical(width: Self.listWidth))
+                                    }
+                                    .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                                 }
+                            } else {
+                                ZStack{
+                                    if self.progressError {
+                                        EmptyAlert(text: self.synopsisData == nil ? String.alert.dataError : String.alert.apiErrorServer)
+                                            
+                                    } else {
+                                        Spacer().modifier(MatchParent())
+                                    }
+                                }
+                                .modifier(MatchParent())
+                                .background(Color.brand.bg)
                                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                             }
-                        } else {
-                            ZStack{
-                                if self.progressError {
-                                    EmptyAlert(text: self.synopsisData == nil ? String.alert.dataError : String.alert.apiErrorServer)
-                                        
-                                } else {
-                                    Spacer().modifier(MatchParent())
-                                }
-                            }
-                            .modifier(MatchParent())
-                            .background(Color.brand.bg)
-                            .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                         }
+                        .modifier(PageFull(style:.dark))
+                    } else {
+                        ZStack{
+                            if self.synopsisPackageModel != nil && self.isUIView && !self.progressError {
+                                    PackageBodyKids(
+                                        synopsisListViewModel: self.synopsisListViewModel,
+                                        synopsisPackageModel: self.synopsisPackageModel!,
+                                        isPairing: self.isPairing,
+                                        contentID: self.synopsisModel?.epsdId,
+                                        episodeViewerData: self.episodeViewerData,
+                                        useTracking: self.useTracking){ posterData in
+                                        self.updateSynopsis(posterData)
+                                    }
+                                    .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                               
+                            } else {
+                                ZStack{
+                                    if self.progressError {
+                                        EmptyAlert(text: self.synopsisData == nil ? String.alert.dataError : String.alert.apiErrorServer)
+                                            
+                                    } else {
+                                        Spacer().modifier(MatchParent())
+                                    }
+                                }
+                                .modifier(MatchParent())
+                                .background(Color.kids.bg)
+                                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                            }
+                        }
+                        .modifier(PageFullScreen(style:.kidsLight))
                     }
-                    .modifier(PageFull(style:.dark))
                 }//PageDragingBody
                 .onReceive(self.synopsisListViewModel.$event){evt in
                     guard let evt = evt else {return}
@@ -366,7 +398,7 @@ struct PageSynopsisPackage: PageView {
     }
     
     private func setupGatewaySynopsis (_ data:GatewaySynopsis){
-        self.synopsisPackageModel = SynopsisPackageModel().setData(data:data)
+        self.synopsisPackageModel = SynopsisPackageModel(type:self.type).setData(data:data) 
         
     }
     

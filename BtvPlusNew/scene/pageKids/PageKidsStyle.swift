@@ -8,29 +8,42 @@
 import Foundation
 import SwiftUI
 
-struct KidsContentEdges: ViewModifier {
+struct ContentEdgesKids: ViewModifier {
     func body(content: Content) -> some View {
         return content
             .padding(.vertical, DimenKids.margin.thin)
             .padding(.horizontal, DimenKids.margin.regular)
     }
 }
-struct KidsContentHorizontalEdges: ViewModifier {
-    
+struct ContentHorizontalEdgesKids: ViewModifier {
+    @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var sceneObserver:PageSceneObserver
+    @State var marginStart:CGFloat = 0
+    @State var marginEnd:CGFloat = 0
+
     func body(content: Content) -> some View {
         return content
-            .padding(.horizontal, DimenKids.margin.regular)
+            .padding(.leading, self.marginStart + DimenKids.margin.regular)
+            .padding(.trailing, self.marginEnd + DimenKids.margin.regular)
+            .onAppear(){
+                self.marginStart = self.sceneObserver.safeAreaStart
+                self.marginEnd = self.sceneObserver.safeAreaEnd
+            }
+            .onReceive(self.sceneObserver.$isUpdated){ update in
+                if !update {return}
+                if self.pagePresenter.isFullScreen {
+                    self.marginStart = 0
+                    self.marginEnd = 0
+                }else{
+                    self.marginStart = self.sceneObserver.safeAreaStart
+                    self.marginEnd = self.sceneObserver.safeAreaEnd
+                }
+                
+            }
     }
 }
 
-struct KidsContentHorizontalEdgesTablet: ViewModifier {
-    func body(content: Content) -> some View {
-        return content
-            .padding(.horizontal, SystemEnvironment.isTablet ? DimenKids.margin.heavy : DimenKids.margin.regular)
-    }
-}
-
-struct KidsContentVerticalEdges: ViewModifier {
+struct ContentVerticalEdgesKids: ViewModifier {
     var margin:CGFloat = DimenKids.margin.thin
     func body(content: Content) -> some View {
         return content
@@ -47,8 +60,8 @@ struct PageKidsTitle: ViewModifier {
 }
 
 
-struct KidsBlockTitle: ViewModifier {
-    var color:Color = Color.app.white
+struct BlockTitleKids: ViewModifier {
+    var color:Color = Color.app.brownDeep
     func body(content: Content) -> some View {
         return content
             .modifier(BoldTextStyleKids(
@@ -58,7 +71,7 @@ struct KidsBlockTitle: ViewModifier {
     }
 }
 
-struct KidsContentTitle: ViewModifier {
+struct ContentTitleKids: ViewModifier {
     func body(content: Content) -> some View {
         return content
             .modifier(MediumTextStyleKids(

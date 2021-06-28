@@ -72,7 +72,7 @@ class ApiManager :PageProtocol, ObservableObject{
     private lazy var eps:Eps = Eps(network: EpsNetwork())
     private lazy var wepg:Wepg = Wepg(network: WepgNetwork())
     private lazy var web:Web = Web(network: WebNetwork())
-    
+    private lazy var kes:Kes = Kes(network: KesNetwork())
     private(set) var updateFlag: UpdateFlag = .none
     init() {
         self.initateApi()
@@ -90,6 +90,7 @@ class ApiManager :PageProtocol, ObservableObject{
         self.eps.clear()
         self.web.clear()
         self.wepg.clear()
+        self.kes.clear()
         self.apiQ.removeAll()
     }
     
@@ -176,10 +177,15 @@ class ApiManager :PageProtocol, ObservableObject{
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         case .getGnb : self.euxp.getGnbBlock(
+            isKids: false,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
-        case .getCWGrid(let menuId, let cwCallId) : self.euxp.getCWGrid(
-            menuId: menuId, cwCallId: cwCallId,
+        case .getGnbKids : self.euxp.getGnbBlock(
+            isKids: true,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getCWGrid(let menuId, let cwCallId, let isKids) : self.euxp.getCWGrid(
+            menuId: menuId, cwCallId: cwCallId, isKids: isKids,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         case .getGridEvent(let menuId, let sort, let page, let count) : self.euxp.getGridEvent(
@@ -436,6 +442,11 @@ class ApiManager :PageProtocol, ObservableObject{
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         case .getSeachPopularityVod : self.web.getSeachPopularityVod(
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        //KES
+        case .getKidsProfiles(let device): self.kes.getKidsProfiles(
+            hostDevice: device,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         }

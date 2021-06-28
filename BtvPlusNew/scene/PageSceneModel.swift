@@ -47,7 +47,7 @@ struct PageSceneModel: PageModel {
         switch pageObject.pageID {
         case .categoryList, .multiBlock :
             return UIInterfaceOrientationMask.portrait
-        case .fullPlayer, .synopsis: return UIInterfaceOrientationMask.landscape
+        case .fullPlayer, .synopsis, .synopsisPackage: return UIInterfaceOrientationMask.landscape
         default :
             switch pageObject.pageGroupID {
             case PageType.kids.rawValue :
@@ -64,7 +64,7 @@ struct PageSceneModel: PageModel {
             return UIInterfaceOrientationMask.all
         }
         switch pageObject.pageID {
-        case .synopsis, .fullPlayer:
+        case .synopsis, .fullPlayer, .synopsisPackage:
             return UIInterfaceOrientationMask.all
         default :
             return getPageOrientation(pageObject)

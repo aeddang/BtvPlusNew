@@ -57,13 +57,14 @@ struct KidsTopTab: PageComponent{
                 if let home  = self.dataProvider.bands.getHome() {
                     let move = PageProvider.getPageObject(.home).addParam(key: .id, value: home.menuId)
                     
+                    /*
                     self.pagePresenter.openPopup(
                         PageKidsProvider.getPageObject(.kidsConfirmNumber)
                             .addParam(key: .type, value: PageKidsConfirmType.exit)
                             .addParam(key: .data, value: move)
                     )
-                    
-                    //self.pagePresenter.changePage(move)
+                    */
+                    self.pagePresenter.changePage(move)
                 }
             }) {
                 Image(AssetKids.gnbTop.exit)

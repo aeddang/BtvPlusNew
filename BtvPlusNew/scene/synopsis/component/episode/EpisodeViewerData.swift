@@ -10,6 +10,7 @@ import SwiftUI
 class EpisodeViewerData {
     private(set) var image: String = Asset.noImg16_9
     private(set) var title: String = ""
+    private(set) var info: String = ""
     private(set) var count: String? = nil
     private(set) var ratingPct: Double? = nil
     private(set) var ratingPoint: Double? = nil
@@ -44,10 +45,13 @@ class EpisodeViewerData {
         }
         if let age = data.wat_lvl_cd {
             self.restrictAgeIcon = Asset.age.getIcon(age: age)
-            self.restrictAgeIconKids = AssetKids.age.getIcon(age: age) 
+            self.restrictAgeIconKids = AssetKids.age.getIcon(age: age)
+            self.info = age.description + String.app.ageCount
         }
         if let min = data.play_tms_val {
-            self.duration = min + String.app.min
+            let d =  min + String.app.min
+            self.duration = d
+            self.info = self.info.isEmpty ? d : self.info + " | " + d
         }
         if let review = data.site_review {
             if let pnt = review.btv_pnt_info?.first {

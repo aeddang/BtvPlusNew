@@ -15,8 +15,10 @@ struct EuxpNetwork : Network{
 
 extension EuxpNetwork{
     static let RESPONSE_FORMET = "json"
-    static let MENU_STB_SVC_ID = "BTVMOBV430"
+    static let MENU_STB_SVC_ID = "BTVMOBV440"
+   
     static let APP_TYPE_CD = "BTVPLUS"
+    static let APP_TYPE_CD_KIDS = "BTVPLUS_KIDS"
     static let VERSION = "0"
     static let PAGE_COUNT = 30
     static let adultCodes:[String?] = ["01", "03"]
@@ -202,11 +204,12 @@ class Euxp: Rest{
      * GNB/블록 전체메뉴 (IF-EUXP-030)
      */
     func getGnbBlock(
+        isKids:Bool = false,
         completion: @escaping (GnbBlock) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
-        params["app_typ_cd"] = EuxpNetwork.APP_TYPE_CD
+        params["app_typ_cd"] = isKids ? EuxpNetwork.APP_TYPE_CD_KIDS : EuxpNetwork.APP_TYPE_CD
         params["IF"] = "IF-EUXP-030"
         fetch(route: EuxpGnbBlock(query: params), completion: completion, error:error)
     }
@@ -262,12 +265,12 @@ class Euxp: Rest{
     * @param version 버전정보
     */
     func getCWGrid(
-        menuId:String?, cwCallId:String?,
+        menuId:String?, cwCallId:String?, isKids:Bool = false,
         completion: @escaping (CWGrid) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
-        params["app_typ_cd"] = EuxpNetwork.APP_TYPE_CD
+        params["app_typ_cd"] = isKids ? EuxpNetwork.APP_TYPE_CD_KIDS : EuxpNetwork.APP_TYPE_CD
         params["IF"] = "IF-EUXP-009"
         
         params["menu_id"] = menuId ?? ""

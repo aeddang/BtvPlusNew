@@ -82,14 +82,12 @@ struct ApiGateway{
     }
 }
 
-
 struct ApiPrefix {
     static let os =  "ios"
     static let iphone = "iphone"
     static let ipad = "ipad"
     static let service = "btvplus"
     static let device = "I"
-    
 }
 
 struct ApiConst {
@@ -113,7 +111,7 @@ enum ApiValue:String{
 enum ApiServer:String{
     case WEB, NPS, NPS_V5, PSS, RVS, WEPG, VMS, STACM, SRCXPG,
     UPMC, ME, EVENT, EMS, LGS, METV, IMAGE, NAVILOG, NAVILOG_NPI, EUXP, SMD,
-    IIP, METV2, SCS2, EPS, EPS2, NF, RVS2, VLS, KMS, NSUTIL, PUCR, PUSH
+    IIP, METV2, SCS2, EPS, EPS2, NF, RVS2, VLS, KES, KMS, NSUTIL, PUCR, PUSH
     
     var configKey:String {
         get {
@@ -145,7 +143,7 @@ enum ApiServer:String{
             case .METV2: return "metv2"
             case .NF: return "nf"
             case .VLS: return "vls"
-           
+            case .KES: return "kes"
             // vms not define
             case .WEB: return "web"
             case .VMS: return "vms"
@@ -184,6 +182,7 @@ enum ApiServer:String{
         case "metv2": return .METV2
         case "nf": return .NF
         case "vls": return .VLS
+        case "kes": return .KES
         // vms not define
         case "web": return .WEB
         case "vms": return .VMS

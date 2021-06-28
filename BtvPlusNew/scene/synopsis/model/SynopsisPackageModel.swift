@@ -7,7 +7,7 @@
 
 import Foundation
 class SynopsisPackageModel : PageProtocol {
-
+   
     private(set) var packages:[PackageContentsItem] = []
     private(set) var posters:[PosterData] = []
     private(set) var image:String = Asset.noImg9_16
@@ -19,25 +19,35 @@ class SynopsisPackageModel : PageProtocol {
     private(set) var salePrice: String? = nil
     private(set) var price: String? = nil
     private(set) var purchaseWebviewModel:PurchaseWebviewModel? = nil
+    
+    let type:PageType
+    init(type:PageType = .btv) {
+        self.type = type
+    }
+    
     func setData(data:GatewaySynopsis) -> SynopsisPackageModel {
         guard let contents = data.package else { return self}
         self.purchaseWebviewModel = PurchaseWebviewModel().setParam(data: data) 
         self.srisId = contents.sris_id
         self.prdPrcId = contents.prd_prc_id
         self.packages = contents.contents ?? []
-        self.image = ImagePath.thumbImagePath(filePath:  contents.mbtv_bg_img_path, size: CGSize(width: 0, height: TopViewer.height)) ?? image
-        self.bg = ImagePath.thumbImagePath(filePath:  contents.mbtv_bg_img_path, size: CGSize(width: 0, height: TopViewer.height/2 ), convType: .blur) ?? bg
+        if self.type == .btv {
+            self.image = ImagePath.thumbImagePath(filePath:  contents.mbtv_bg_img_path, size: CGSize(width: 0, height: TopViewer.height)) ?? image
+            self.bg = ImagePath.thumbImagePath(filePath:  contents.mbtv_bg_img_path, size: CGSize(width: 0, height: TopViewer.height/2 ), convType: .blur) ?? bg
+        } else {
+            self.image = ImagePath.thumbImagePath(filePath:  contents.mbtv_bg_img_path_h, size: CGSize(width: 0, height: TopViewerKids.height)) ?? image
+        }
         if let price = contents.sale_prc_vat {
-            self.salePrice = price.currency + String.app.cash
+            self.salePrice = (self.type == .btv ? price.currency : price.formatted(style: .decimal)) + String.app.cash
         }
         if let price = contents.prd_prc_vat {
-            self.price = price.currency + String.app.cash
+            self.price = (self.type == .btv ? price.currency : price.formatted(style: .decimal)) + String.app.cash
         }
         if let dist = DistStsCd(rawValue: contents.dist_sts_cd ?? "") {
             self.distStsCd = dist
         }
         self.posters = zip(0...self.packages.count, self.packages).map{ idx, d in
-            PosterData().setData(data: d, prdPrcId: self.prdPrcId ?? "", idx: idx)
+            PosterData(pageType: self.type).setData(data: d, prdPrcId: self.prdPrcId ?? "", idx: idx)
         }
         return self
     }

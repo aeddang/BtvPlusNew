@@ -56,6 +56,10 @@ struct PageFull: ViewModifier {
             .padding(.leading, self.marginStart)
             .padding(.trailing, self.marginEnd)
             .background(self.style.bgColor)
+            .onAppear(){
+                self.marginStart = self.sceneObserver.safeAreaStart
+                self.marginEnd = self.sceneObserver.safeAreaEnd
+            }
             .onReceive(self.sceneObserver.$isUpdated){ update in
                 if !update {return}
                 if self.pagePresenter.isFullScreen {
@@ -67,6 +71,14 @@ struct PageFull: ViewModifier {
                 }
                 
             }
+    }
+}
+
+struct PageFullScreen: ViewModifier {
+    var style:PageStyle = .normal
+    func body(content: Content) -> some View {
+        return content
+            .background(self.style.bgColor)
     }
 }
 

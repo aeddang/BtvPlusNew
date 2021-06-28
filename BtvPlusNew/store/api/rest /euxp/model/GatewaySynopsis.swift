@@ -33,6 +33,7 @@ struct PackageInfo : Codable {
     private(set) var prvw_left_img_path:String? = nil // 프리뷰 왼쪽 이미지 경로
     private(set) var prvw_right_img_path:String? = nil    // 프리뷰 오른쪽 이미지 경로
     private(set) var mbtv_bg_img_path:String? = nil    // 모바일 BTV 배경 이미지
+    private(set) var mbtv_bg_img_path_h:String? = nil     // 모바일 BTV 가로 배경 이미지
 }
 
 struct PackageContentsItem : Codable {

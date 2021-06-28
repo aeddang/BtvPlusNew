@@ -10,6 +10,8 @@ import Foundation
 import SwiftUI
 struct RectButtonKids: View, SelecterbleProtocol{
     let text:String
+    var trailText:String? = nil
+    var strikeText:String? = nil
     var index: Int = 0
     var isSelected: Bool = false
     var textModifier:TextModifierKids = TextModifierKids(
@@ -30,7 +32,7 @@ struct RectButtonKids: View, SelecterbleProtocol{
         Button(action: {
             self.action(self.index)
         }) {
-            ZStack{
+            HStack{
                 if self.isFixSize {
                     Text(self.text)
                         .font(.custom(textModifier.family, size: textModifier.size))
@@ -40,6 +42,21 @@ struct RectButtonKids: View, SelecterbleProtocol{
                     Text(self.text)
                         .font(.custom(textModifier.family, size: textModifier.size))
                         .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+                }
+                if let strikeText = self.strikeText {
+                    Text(strikeText)
+                        .font(.custom(textModifier.family, size: Font.sizeKids.thinExtra))
+                        .strikethrough()
+                        .foregroundColor(self.isSelected ? self.textModifier.activeColor : textModifier.color)
+                        .opacity(0.7)
+                        .padding(.leading, DimenKids.margin.tiny)
+                
+                }
+                if let trailText = self.trailText {
+                    Text(trailText )
+                        .font(.custom(textModifier.family, size:  self.textModifier.size))
+                        .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+                        .padding(.leading, DimenKids.margin.micro)
                 }
             }
             .padding(.horizontal, self.isFixSize ? 0 : DimenKids.margin.regular)

@@ -14,27 +14,18 @@ class KidsGnbModel:Identifiable, ObservableObject{
     private(set) var home: KidsGnbItemData? = nil
     private(set) var datas: [KidsGnbItemData] = []
     @Published var isUpdated:Bool = false  {didSet{ if isUpdated { isUpdated = false} }}
-    func setData(data:BlockItem) {
-        self.home = KidsGnbItemData().setHomeData(data: data)
-        self.datas = data.blocks?.first?.blocks?.map{KidsGnbItemData().setData(data: $0)} ?? []
+
+    func setData(gnb:GnbBlock) {
+        if let gnbs = gnb.gnbs {
+            self.datas = gnbs.map{ gnb in
+                return KidsGnbItemData().setData(gnb)
+            }
+        }
         self.isUpdated = true
     }
     
     func getGnbDatas() -> [KidsGnbItemData] {
-        var gnbs:[KidsGnbItemData] = []
-       
-        let center = floor(Double(self.datas.count/2)).toInt()
-        if datas.count < 2 {
-            if let home = self.home { gnbs.append(home) }
-            gnbs.append(contentsOf: datas)
-            return gnbs
-        }
-        gnbs.append(contentsOf: datas[0...center-1])
-        if let home = self.home { gnbs.append(home) }
-        gnbs.append(contentsOf: datas[center...datas.count-1])
-        zip(gnbs, 0...gnbs.count-1).forEach{ gnb, idx in gnb.idx = idx}
-        return gnbs
-        
+       return datas
     }
 }
 
@@ -46,6 +37,7 @@ class KidsGnbItemData:InfinityData, ObservableObject{
     private(set) var blocks: [BlockItem]? = nil
     private(set) var isHome:Bool = false
     fileprivate(set) var idx:Int = -1
+    /*
     func setHomeData(data:BlockItem) -> KidsGnbItemData {
         self.isHome = true
         self.title = data.menu_nm
@@ -55,7 +47,20 @@ class KidsGnbItemData:InfinityData, ObservableObject{
         self.blocks = data.blocks?.dropFirst().map{$0}
         return self
     }
+    
     func setData(data:BlockItem) -> KidsGnbItemData {
+        self.title = data.menu_nm
+        self.menuId = data.menu_id
+        
+        self.blocks = data.blocks?.map{$0}
+        let size = CGSize(width: DimenKids.icon.heavy, height: DimenKids.icon.heavy)
+        
+        self.imageOff = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: size, convType: .alpha) ?? self.imageOn
+        self.imageOn = ImagePath.thumbImagePath(filePath: data.bnr_on_img_path, size: size, convType: .alpha) ?? self.imageOff
+        return self
+    }
+    */
+    func setData(_ data:GnbItem) -> KidsGnbItemData {
         self.title = data.menu_nm
         self.menuId = data.menu_id
         

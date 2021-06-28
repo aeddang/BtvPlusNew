@@ -249,7 +249,7 @@ class Repository:ObservableObject, PageProtocol{
         DispatchQueue.global(qos: .background).async(){
             var coreData:Codable? = nil
             switch apiQ.type {
-                case .getGnb :
+                case .getGnb:
                     if let savedData:GnbBlock = self.apiCoreDataManager.getData(key: coreDatakey){
                         coreData = savedData
                         DispatchQueue.main.async {
@@ -321,7 +321,7 @@ class Repository:ObservableObject, PageProtocol{
     }
     
     private func onReadyRepository(gnbData:GnbBlock){
-        self.dataProvider.bands.setDate(gnbData)
+        self.dataProvider.bands.setData(gnbData)
         //self.appSceneObserver?.event = .debug("onReadyRepository " + (SystemEnvironment.isStage ? "STAGE" : "RELEASE"))
         DataLog.d("onReadyRepository " + self.status.description , tag:self.tag)
         if self.status == .reset {

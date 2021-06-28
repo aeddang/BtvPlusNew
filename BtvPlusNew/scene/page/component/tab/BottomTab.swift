@@ -15,6 +15,8 @@ struct PageSelecterble : SelecterbleProtocol{
     var off:String = ""
     var text:String = ""
     var menuId:PageID = ""
+    var noImg:String = Asset.noImg1_1
+    var noImgAc:String = Asset.noImg1_1
 }
 
 struct BottomTab: PageComponent{
@@ -33,6 +35,8 @@ struct BottomTab: PageComponent{
                         defaultImage: band.off,
                         activeImage:band.on,
                         text: band.text,
+                        noImg: band.noImg,
+                        noImgAc: band.noImgAc,
                         axis: SystemEnvironment.isTablet ? .horizontal : .vertical
                     ){
                         self.pagePresenter.changePage(
@@ -67,7 +71,8 @@ struct BottomTab: PageComponent{
                         return PageSelecterble(
                             id: page,
                             on: band.activeIcon, off: band.defaultIcon,
-                            text: band.name, menuId: band.menuId)
+                            text: band.name, menuId: band.menuId,
+                            noImg: band.defaultNoImg, noImgAc: band.activeNoImg)
                     }
                 default : do{}
             }

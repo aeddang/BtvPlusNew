@@ -18,13 +18,14 @@ struct SortButtonKids: View{
     let action: () -> Void
     
     var body: some View {
+        
         Button(action: {
             self.action()
         }) {
             ZStack{
                 HStack(spacing:DimenKids.margin.thin){
-                    if self.title != nil {
-                        Text(self.title!)
+                    if let title = self.title  {
+                        Text(title)
                         .font(.custom(textModifier.family, size: textModifier.size))
                         .foregroundColor(textModifier.color)
                         .opacity(0.6)
@@ -48,6 +49,8 @@ struct SortButtonKids: View{
                 RoundedRectangle(cornerRadius: self.cornerRadius))
             
         }
+        .buttonStyle(BorderlessButtonStyle())
+       
     }
 }
 #if DEBUG

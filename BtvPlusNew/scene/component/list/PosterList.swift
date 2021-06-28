@@ -229,6 +229,7 @@ enum PosterType {
             }
         }
     }
+    
     var radius:CGFloat {
         get{
             switch self {
@@ -289,8 +290,8 @@ struct PosterList: PageComponent{
     var contentID:String? = nil
     var useTracking:Bool = false
  
-    var margin:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thin
-    var spacing:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.tiny : DimenKids.margin.tiny
+    var margin:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.regular
+    var spacing:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.tiny : DimenKids.margin.thinUltra
     var action: ((_ data:PosterData) -> Void)? = nil
     
    
@@ -394,10 +395,12 @@ struct PosterViewList: PageComponent{
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[PosterData]
     var contentID:String? = nil
+    var episodeViewerData:EpisodeViewerData? = nil
     var useTracking:Bool = false
     var hasAuthority:Bool = false
-    var margin:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thin
-    var spacing:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.tiny : DimenKids.margin.tiny
+    var isRecycle:Bool = true
+    var margin:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.regular
+    var spacing:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.tiny : DimenKids.margin.thinUltra
     var action: ((_ data:PosterData) -> Void)? = nil
     var body: some View {
         InfinityScrollView(
@@ -405,16 +408,18 @@ struct PosterViewList: PageComponent{
             axes: .horizontal,
             marginVertical: 0,
             marginHorizontal: self.margin,
-            spacing: self.spacing,
-            isRecycle:  true,
+            spacing: 0,
+            isRecycle:  self.isRecycle,
             useTracking: self.useTracking
             ){
             ForEach(self.datas) { data in
-                PosterViewItem( data:data , isSelected: self.contentID == nil
-                                ? false
-                                : self.contentID == data.epsdId,
-                                hasAuthority: self.hasAuthority
-                                )
+                PosterViewItem(
+                    data:data ,
+                    isSelected: self.contentID == nil ? false : self.contentID == data.epsdId,
+                    hasAuthority: self.hasAuthority,
+                    episodeViewerData: self.episodeViewerData
+                )
+                .modifier(HolizentalListRowInset(spacing: self.spacing))
                 .onTapGesture {
                     if let action = self.action {
                         action(data)
@@ -573,11 +578,32 @@ struct PosterViewItem: PageView {
     var data:PosterData
     var isSelected:Bool = false
     var hasAuthority:Bool = false
+    var episodeViewerData:EpisodeViewerData? = nil
     var spacing:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thin
     @State var isBookmark:Bool? = nil
     var body: some View {
         VStack( spacing:self.spacing){
-            PosterItem(data: self.data, isSelected:self.isSelected)
+            ZStack{
+                PosterItem(data: self.data, isSelected:self.isSelected)
+                if self.isSelected , let episodeViewerData = self.episodeViewerData {
+                    VStack(alignment: .leading){
+                        Text(episodeViewerData.episodeTitleKids)
+                            .modifier(BoldTextStyleKids(size: Font.sizeKids.thinExtra, color:Color.app.white))
+                            .fixedSize()
+                        Spacer().modifier(MatchParent())
+                        Text(episodeViewerData.info)
+                            .modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color:Color.app.white))
+                        
+                    }
+                    .padding(.vertical, DimenKids.margin.thinExtra)
+                    .padding(.horizontal, DimenKids.margin.tiny)
+                    .frame(
+                        width: self.data.type.size.width,
+                        height: self.data.type.size.height)
+                    .background(Color.kids.primary.opacity(0.9))
+                    .clipShape(RoundedRectangle(cornerRadius: self.data.type.radius))
+                }
+            }
             if self.isSelected {
                 if data.pageType == .btv {
                     FillButton(

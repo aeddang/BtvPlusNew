@@ -37,7 +37,7 @@ struct SerisTabKids: PageComponent{
             if let textSeason = self.textSeason {
                 SortButtonKids(text: textSeason){
                     self.appSceneObserver.select =
-                        .select((self.tag  ,
+                        .select((self.tag ,
                                  self.data.seasons.map{$0.title ?? ""}),
                                 self.data.currentSeasonIdx){ idx in
                             
@@ -45,7 +45,7 @@ struct SerisTabKids: PageComponent{
                             self.action( self.data.seasons[idx] )
                         }
                 }
-                padding(.top, DimenKids.margin.tiny)
+                .padding(.top, DimenKids.margin.tiny)
             }
             TabSwitch(
                 tabs: self.sortOption.map{$0.nameKids},
@@ -63,7 +63,8 @@ struct SerisTabKids: PageComponent{
             
         }
         .onAppear{
-            if self.data.currentSeasonIdx != -1 && self.data.seasons.count > 1 {
+            if self.data.currentSeasonIdx != -1
+                && self.data.seasons.count > self.data.currentSeasonIdx {
                 self.textSeason = self.data.seasons[data.currentSeasonIdx].title
             }
             self.textSeasonCount = String.app.total + self.data.seris.count.description + String.pageText.synopsisSiris

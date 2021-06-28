@@ -29,21 +29,20 @@ class Bands:ObservableObject, PageProtocol {
         self.event = nil
     }
     
-    func setDate(_ data:GnbBlock?){
+    func setData(_ data:GnbBlock?){
         guard let data = data else { return }
         if let gnbs = data.gnbs {
             self.datas = gnbs.map{ gnb in
-                if gnb.gnb_typ_cd == EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue {
-                    if let kidsData = gnb.blocks?.first(where: {$0.menu_id == EuxpNetwork.MenuTypeCode.MENU_KIDS.rawValue}) {
-                        kidsGnbModel.setData(data: kidsData)
-                    }
-                }
-                return Band().setDate(gnb)
+                return Band().setData(gnb)
             }
         }
         self.status = .ready
         self.event = .updated
         self.event = nil
+    }
+    func setDataKids(_ data:GnbBlock?){
+        guard let data = data else { return }
+        self.kidsGnbModel.setData(gnb: data)
     }
     
     func getData(menuId:String)-> Band? {
@@ -79,11 +78,13 @@ class Band {
     private(set) var btmMenuTreeExps:Bool = false
     private(set) var bnrUse:Bool = false
 
-    private(set) var defaultIcon:String = Asset.noImg1_1
-    private(set) var activeIcon:String = Asset.noImg1_1
+    private(set) var defaultIcon:String = ""
+    private(set) var activeIcon:String = ""
+    private(set) var defaultNoImg:String = Asset.noImg1_1
+    private(set) var activeNoImg:String = Asset.noImg1_1
     private(set) var blocks:Array<BlockItem> = []
     
-    func setDate(_ data:GnbItem) -> Band{
+    func setData(_ data:GnbItem) -> Band{
         name = data.menu_nm ?? ""
         menuId = data.menu_id ?? ""
         isAdult = data.lim_lvl_yn?.toBool() ?? false
@@ -91,11 +92,32 @@ class Band {
         pagePath = data.page_path ?? ""
         
         let size = CGSize(width: 50, height: 50)
-        if data.menu_off_img_path != nil {
-            defaultIcon =  ImagePath.thumbImagePath(filePath: data.menu_off_img_path, size: size, convType: .alpha)  ?? defaultIcon
+        
+        switch gnbTypCd {
+        case EuxpNetwork.GnbTypeCode.GNB_HOME.rawValue :
+            self.defaultNoImg = Asset.gnbBottom.homeOff
+            self.activeNoImg = Asset.gnbBottom.homeOn
+        case EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue :
+            self.defaultNoImg = Asset.gnbBottom.oceanOff
+            self.activeNoImg = Asset.gnbBottom.oceanOn
+        case EuxpNetwork.GnbTypeCode.GNB_MONTHLY.rawValue :
+            self.defaultNoImg = Asset.gnbBottom.paymentOff
+            self.activeNoImg = Asset.gnbBottom.paymentOn
+        case EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue :
+            self.defaultNoImg = Asset.gnbBottom.categoryOff
+            self.activeNoImg = Asset.gnbBottom.categoryOn
+        case EuxpNetwork.GnbTypeCode.GNB_FREE.rawValue :
+            self.defaultNoImg = Asset.gnbBottom.freeOff
+            self.activeNoImg = Asset.gnbBottom.freeOn
+        default:
+            break
         }
-        if data.menu_on_img_path != nil {
-            activeIcon =  ImagePath.thumbImagePath(filePath: data.menu_on_img_path!, size: size, convType: .alpha) ?? activeIcon
+        
+        if let path = data.menu_off_img_path {
+            defaultIcon =  ImagePath.thumbImagePath(filePath: path, size: size, convType: .alpha)  ?? defaultIcon
+        }
+        if let path =  data.menu_on_img_path {
+            activeIcon =  ImagePath.thumbImagePath(filePath: path, size: size, convType: .alpha) ?? activeIcon
         }
         
         btmMenuTreeExps = data.btm_menu_tree_exps_yn?.toBool() ?? false

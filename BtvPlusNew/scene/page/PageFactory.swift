@@ -154,7 +154,7 @@ struct PageFactory{
         case .setup : return PageSetup()
         case .terminateStb : return PageTerminateStb()
         case .synopsis : return PageSynopsis(type : .kids)
-        case .synopsisPackage : return PageSynopsisPackage()
+        case .synopsisPackage : return PageSynopsisPackage(type : .kids)
         case .synopsisPlayer : return PageSynopsisPlayer()
         case .pairing : return PagePairing()
         case .pairingSetupUser : return PagePairingSetupUser()

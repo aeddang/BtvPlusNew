@@ -11,7 +11,6 @@ import SwiftUI
 struct FillButton: View, SelecterbleProtocol{
     let text:String
     var trailText:String? = nil
-    var trailTextColor:CGFloat? = nil
     var strikeText:String? = nil
     var moreText:String? = nil
     var index: Int = 0

@@ -19,6 +19,7 @@ struct ImageViewButton: PageView{
     var defaultTextColor:Color = Color.app.whiteDeep
     var activeTextColor:Color = Color.app.white
     var noImg:String = Asset.noImg1_1
+    var noImgAc:String = Asset.noImg1_1
     var axis: Axis = .vertical
     let action: () -> Void
     
@@ -33,7 +34,7 @@ struct ImageViewButton: PageView{
                             .renderingMode(.original)
                             .resizable()
                             .placeholder {
-                                Image(Asset.noImg1_1)
+                                Image(self.noImgAc)
                                     .resizable()
                             }
                             .loadImmediately()
@@ -43,7 +44,7 @@ struct ImageViewButton: PageView{
                             .renderingMode(.original)
                             .resizable()
                             .placeholder {
-                                Image(Asset.noImg1_1)
+                                Image(self.noImg)
                                     .resizable()
                             }
                             .loadImmediately()
@@ -66,7 +67,7 @@ struct ImageViewButton: PageView{
                             .renderingMode(.original)
                             .resizable()
                             .placeholder {
-                                Image(Asset.noImg1_1)
+                                Image(self.noImgAc)
                                     .resizable()
                             }
                             .loadImmediately()
@@ -76,7 +77,7 @@ struct ImageViewButton: PageView{
                             .renderingMode(.original)
                             .resizable()
                             .placeholder {
-                                Image(Asset.noImg1_1)
+                                Image(self.noImg)
                                     .resizable()
                             }
                             .loadImmediately()

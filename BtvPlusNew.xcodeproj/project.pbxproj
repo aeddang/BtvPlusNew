@@ -267,6 +267,10 @@
 		3190CAF426847D1D00ACB465 /* SortButtonKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CAF326847D1D00ACB465 /* SortButtonKids.swift */; };
 		3190CAFA2685621300ACB465 /* RelationVodBodyKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CAF92685621300ACB465 /* RelationVodBodyKids.swift */; };
 		3190CAFC268570DC00ACB465 /* RelationVodEmpty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CAFB268570DC00ACB465 /* RelationVodEmpty.swift */; };
+		3190CAFE26892E1600ACB465 /* PackageBodyKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CAFD26892E1600ACB465 /* PackageBodyKids.swift */; };
+		3190CB022689300700ACB465 /* TopViewerKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB012689300700ACB465 /* TopViewerKids.swift */; };
+		3190CB07268983EA00ACB465 /* Kes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB06268983EA00ACB465 /* Kes.swift */; };
+		3190CB0A268987C400ACB465 /* KidsProfiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB09268987C400ACB465 /* KidsProfiles.swift */; };
 		3190E6242674993D000CBCB9 /* SkeletonBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190E6232674993D000CBCB9 /* SkeletonBlock.swift */; };
 		3192318025A40A7D00020388 /* ReflashSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192317F25A40A7D00020388 /* ReflashSpinner.swift */; };
 		3192CA6926818FAB007B3C29 /* ToolTipKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192CA6826818FAB007B3C29 /* ToolTipKids.swift */; };
@@ -791,6 +795,10 @@
 		3190CAF326847D1D00ACB465 /* SortButtonKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortButtonKids.swift; sourceTree = "<group>"; };
 		3190CAF92685621300ACB465 /* RelationVodBodyKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelationVodBodyKids.swift; sourceTree = "<group>"; };
 		3190CAFB268570DC00ACB465 /* RelationVodEmpty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelationVodEmpty.swift; sourceTree = "<group>"; };
+		3190CAFD26892E1600ACB465 /* PackageBodyKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageBodyKids.swift; sourceTree = "<group>"; };
+		3190CB012689300700ACB465 /* TopViewerKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopViewerKids.swift; sourceTree = "<group>"; };
+		3190CB06268983EA00ACB465 /* Kes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kes.swift; sourceTree = "<group>"; };
+		3190CB09268987C400ACB465 /* KidsProfiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsProfiles.swift; sourceTree = "<group>"; };
 		3190E6232674993D000CBCB9 /* SkeletonBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonBlock.swift; sourceTree = "<group>"; };
 		3192317F25A40A7D00020388 /* ReflashSpinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflashSpinner.swift; sourceTree = "<group>"; };
 		3192CA6826818FAB007B3C29 /* ToolTipKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolTipKids.swift; sourceTree = "<group>"; };
@@ -1349,14 +1357,13 @@
 		3166CBA626115CC700282891 /* component */ = {
 			isa = PBXGroup;
 			children = (
+				3190CB0026892FE300ACB465 /* summary */,
+				3190CAFF26892FCA00ACB465 /* top */,
 				3190CAF0268477F500ACB465 /* seris */,
 				3192CA6A26819267007B3C29 /* purchase */,
 				31F2803D267332F700F40B09 /* episode */,
 				31F2803626732D0800F40B09 /* function */,
 				31F280292671E9E100F40B09 /* play */,
-				31895B1B2601F0F3002DE02E /* TopViewer.swift */,
-				3152B45F25D9DDE100147C86 /* SummaryViewer.swift */,
-				31895B232601F609002DE02E /* SimpleSummaryViewer.swift */,
 			);
 			path = component;
 			sourceTree = "<group>";
@@ -1897,8 +1904,44 @@
 				31F280272671E85A00F40B09 /* KidsSynopsis.swift */,
 				3190CAF92685621300ACB465 /* RelationVodBodyKids.swift */,
 				3190CAFB268570DC00ACB465 /* RelationVodEmpty.swift */,
+				3190CAFD26892E1600ACB465 /* PackageBodyKids.swift */,
 			);
 			path = kids;
+			sourceTree = "<group>";
+		};
+		3190CAFF26892FCA00ACB465 /* top */ = {
+			isa = PBXGroup;
+			children = (
+				31895B1B2601F0F3002DE02E /* TopViewer.swift */,
+				3190CB012689300700ACB465 /* TopViewerKids.swift */,
+			);
+			path = top;
+			sourceTree = "<group>";
+		};
+		3190CB0026892FE300ACB465 /* summary */ = {
+			isa = PBXGroup;
+			children = (
+				3152B45F25D9DDE100147C86 /* SummaryViewer.swift */,
+				31895B232601F609002DE02E /* SimpleSummaryViewer.swift */,
+			);
+			path = summary;
+			sourceTree = "<group>";
+		};
+		3190CB05268983DC00ACB465 /* kes */ = {
+			isa = PBXGroup;
+			children = (
+				3190CB08268987B200ACB465 /* model */,
+				3190CB06268983EA00ACB465 /* Kes.swift */,
+			);
+			path = kes;
+			sourceTree = "<group>";
+		};
+		3190CB08268987B200ACB465 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				3190CB09268987C400ACB465 /* KidsProfiles.swift */,
+			);
+			path = model;
 			sourceTree = "<group>";
 		};
 		3192CA6A26819267007B3C29 /* purchase */ = {
@@ -2824,6 +2867,7 @@
 		D56C6B25257DACD800CF9AB8 /* rest  */ = {
 			isa = PBXGroup;
 			children = (
+				3190CB05268983DC00ACB465 /* kes */,
 				316C45D12651F8FD00A8D7F5 /* wepg */,
 				3166CBE22611A14C00282891 /* eps */,
 				318BA38E2608C2660093BC7D /* web */,
@@ -3223,6 +3267,7 @@
 				D56CC31225907F3700CA1D54 /* ThemaBlock.swift in Sources */,
 				D56C5FE32592F693009AE769 /* Metv.swift in Sources */,
 				315730F325B01FFF00D9A693 /* PagePairingUser.swift in Sources */,
+				3190CB07268983EA00ACB465 /* Kes.swift in Sources */,
 				316A708926705C8800A93B83 /* PlayerOptionSelectList.swift in Sources */,
 				D56C6A37257DA0C700CF9AB8 /* CPCircularNavigation.swift in Sources */,
 				3195C1B42665E17A001F513E /* strings.kids.swift in Sources */,
@@ -3327,6 +3372,7 @@
 				D56C699E257DA09E00CF9AB8 /* PageContentController.swift in Sources */,
 				31895AFF2601CDDE002DE02E /* DirectPackageView.swift in Sources */,
 				31D3F4DE25E36625008FDFEC /* PageMultiBlock.swift in Sources */,
+				3190CB0A268987C400ACB465 /* KidsProfiles.swift in Sources */,
 				D50AB9042580772A00649C4A /* EventBanner.swift in Sources */,
 				318BA3972608C2660093BC7D /* SearchPopularityVod.swift in Sources */,
 				D56C6A2E257DA0C700CF9AB8 /* CustomImagePicker.swift in Sources */,
@@ -3420,6 +3466,7 @@
 				D571785E2582DBF000BF2612 /* PageDataProviderContent.swift in Sources */,
 				3174067225F702CD00201850 /* Nf.swift in Sources */,
 				3193415425DDDAE8002F2000 /* SynopsisBody.swift in Sources */,
+				3190CB022689300700ACB465 /* TopViewerKids.swift in Sources */,
 				D573785825A2D70B00EC571F /* PagePairingBtv.swift in Sources */,
 				316A706B266F018000A93B83 /* SelectBox.swift in Sources */,
 				D56C6A28257DA0C700CF9AB8 /* asset.swift in Sources */,
@@ -3525,6 +3572,7 @@
 				D56C69A6257DA09E00CF9AB8 /* AppUtil.swift in Sources */,
 				3177AB35263F7D670054BFA4 /* RelationVodBody.swift in Sources */,
 				31F280282671E85A00F40B09 /* KidsSynopsis.swift in Sources */,
+				3190CAFE26892E1600ACB465 /* PackageBodyKids.swift in Sources */,
 				3183B37D26168F03004F5C0D /* PageAdultCertification.swift in Sources */,
 				D50AB8FE25806FB900649C4A /* Euxp.swift in Sources */,
 				316A7068266EF7FC00A93B83 /* MenuTab.swift in Sources */,
@@ -3845,6 +3893,7 @@
 				API_EVENT = "http://58.123.205.82";
 				API_IIP = "http://stimageqa.hanafostv.com:8080";
 				API_IMAGE = "http://stimage.hanafostv.com:8080";
+				API_KES = "https://agw.sk-iptv.com:8443";
 				API_KMS = "http://58.123.205.82:8080";
 				API_LGS = "https://175.113.214.77:8443";
 				API_ME = "http://58.123.205.82";
@@ -3921,6 +3970,7 @@
 				API_EVENT = "http://mobilebtv.com";
 				API_IIP = "http://stimage.hanafostv.com:8080";
 				API_IMAGE = "http://stimage.hanafostv.com:8080";
+				API_KES = "https://agw.sk-iptv.com:8443";
 				API_KMS = "http://mobilebtv.com:8080";
 				API_LGS = "https://lgs.hanafostv.com:8443";
 				API_ME = "http://mobilebtv.com";

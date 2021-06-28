@@ -42,14 +42,14 @@ struct ApiResultError :Identifiable{
     var isProcess:Bool = false
 }
 
-
 enum ApiType{
     // VMS
     case versionCheck
     
     //EUXP
     case getGnb,
-         getCWGrid(String?, String?),
+         getGnbKids,
+         getCWGrid( String?, String?, isKids:Bool = false),
          getGridEvent(String?, EuxpNetwork.SortType? = Optional.none, Int? = nil, Int? = nil),
          getGridPreview(String?, Int? = nil, Int? = nil),
          getGatewaySynopsis(SynopsisData),
@@ -129,6 +129,9 @@ enum ApiType{
          getCompleteKeywords(String?),
          getSeachVod(String?),
          getSeachPopularityVod
+    
+    //KES
+    case getKidsProfiles(HostDevice?)
     
     func coreDataKey() -> String? {
         switch self {

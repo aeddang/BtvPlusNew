@@ -147,7 +147,7 @@ struct KidsSynopsis: PageComponent{
                             summaryViewerData: self.summaryViewerData,
                             isBookmark: self.$isBookmark
                         )
-                        .modifier(KidsContentHorizontalEdges())
+                        .padding(.horizontal, DimenKids.margin.regular)
                         .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                     }
                 }

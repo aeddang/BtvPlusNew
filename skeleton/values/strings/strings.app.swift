@@ -26,6 +26,8 @@ extension String {
         public static let gender = "gender".loaalized()
         public static let mail = "mail".loaalized()
         public static let femail = "femail".loaalized()
+        public static let mailDetail = "mailDetail".loaalized()
+        public static let femailDetail = "femailDetail".loaalized()
         
         public static let min = "min".loaalized()
         public static let hour = "hour".loaalized()

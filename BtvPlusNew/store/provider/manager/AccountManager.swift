@@ -69,6 +69,16 @@ class AccountManager : PageProtocol{
                 self.dataProvider.requestData(q: .init(type: .getDevicePairingStatus, isOptional: true))
             case .userInfo :
                 self.dataProvider.requestData(q: .init(type: .getPairingUserInfo(self.pairing.hostDevice?.apiMacAdress), isOptional: true))
+                
+            case .updateKids :
+                self.dataProvider.requestData(q: .init(type: .getKidsProfiles(self.pairing.hostDevice), isOptional: true))
+            case .registKid(let kid) :
+                self.dataProvider.requestData(q: .init(type: .updateKidsProfiles(self.pairing.hostDevice, [kid]), isOptional: true))
+            case .modifyKid(let kid) :
+                self.dataProvider.requestData(q: .init(type: .updateKidsProfiles(self.pairing.hostDevice, [kid]), isOptional: true))
+            case .deleteKid(let kid) :
+                self.dataProvider.requestData(q: .init(type: .updateKidsProfiles(self.pairing.hostDevice, [kid]), isOptional: true))
+
             default: do{}
             }
         }).store(in: &anyCancellable)
@@ -233,7 +243,19 @@ class AccountManager : PageProtocol{
             case .getPeriodPurchaseMonthly :
                 guard let resData = res.data as? PeriodMonthlyPurchaseInfo else { return }
                 self.pairing.authority.updatedMonthlyPurchaseInfo(resData)
-            default: do{}
+            case .getKidsProfiles :
+                guard let resData = res.data as? KidsProfiles else {
+                    self.pairing.updatedKidsProfiles(nil)
+                    return
+                }
+                self.pairing.updatedKidsProfiles(resData)
+            case .updateKidsProfiles :
+                guard let resData = res.data as? KidsProfiles else {
+                    self.pairing.editedKidsProfiles(nil)
+                    return
+                }
+                self.pairing.editedKidsProfiles(resData)
+            default: break
             
             }
         }).store(in: &dataCancellable)
@@ -246,7 +268,8 @@ class AccountManager : PageProtocol{
             case .getHostDeviceInfo, .postGuestInfo, .postGuestAgreement, .getGuestAgreement: self.pairing.syncError()
             case .getDevicePairingStatus : self.pairing.checkCompleted(isSuccess: false)
             case .getTotalPointInfo, .getPurchaseMonthly, .getPeriodPurchaseMonthly : self.pairing.authority.errorMyInfo(err)
-            default: do{}
+            case .getKidsProfiles : self.pairing.updatedKidsProfiles(nil)
+            default: break
             }
         }).store(in: &dataCancellable)
     }

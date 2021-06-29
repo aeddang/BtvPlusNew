@@ -173,8 +173,13 @@ extension String {
         public static var possessionDeleteConfirm = "alertPossessionDeleteConfirm".loaalized()
         
         
+        public static var kidsDisable = "alertKidsDisable".loaalized()
+        public static var kidsDisableTip = "alertKidsDisableTip".loaalized()
         public static var kidsExit = "alertKidsExit".loaalized()
         public static var kidsExitText = "alertKidsExitText".loaalized()
+        public static var kidsProfileNotfound = "alertKidsProfileNotfound".loaalized()
+        public static var kidsProfileSelect = "alertKidsProfileSelect".loaalized()
+        public static var kidsProfileEmpty = "alertKidsProfileEmpty".loaalized()
         
     }
 }

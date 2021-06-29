@@ -11,15 +11,15 @@ import Foundation
 enum PairingRequest:Equatable{
     case wifi , btv, user(String?), cancel, hostInfo(auth:String?, device:String?, prevResult:NpsCommonHeader?),
          recovery, device(StbData), auth(String) , unPairing, check,
-         userInfo, updateKids, registKid(Kid)
+         userInfo, updateKids, registKid(Kid), selectKid(Kid), modifyKid(Kid), deleteKid(Kid)
     static func ==(lhs: PairingRequest, rhs: PairingRequest) -> Bool {
         switch (lhs, rhs) {
-        case ( .wifi, .wifi):return true
-        case ( .btv, .btv):return true
-        case ( .user, .user):return true
-        case ( .recovery, .recovery):return true
-        case ( .userInfo, .userInfo):return true
-        case (.hostInfo, .hostInfo):return true
+        case ( .wifi, .wifi ):return true
+        case ( .btv, .btv ):return true
+        case ( .user, .user ):return true
+        case ( .recovery, .recovery ):return true
+        case ( .userInfo, .userInfo ):return true
+        case ( .hostInfo, .hostInfo ):return true
         default: return false
         }
     }
@@ -35,10 +35,9 @@ enum PairingEvent{
          findMdnsDevice([MdnsDevice]), findStbInfoDevice([StbInfoDataItem]),  notFoundDevice,
          syncError(NpsCommonHeader?),
          pairingCompleted, pairingCheckCompleted(Bool),
-         updatedKids
+         updatedKids, updatedKidsError, notFoundKid,
+         editedKids, editedKidsError
 }
-
-
 
 class Pairing:ObservableObject, PageProtocol {
     static let LIMITED_DEVICE_NUM = 4
@@ -56,18 +55,26 @@ class Pairing:ObservableObject, PageProtocol {
     private(set) var phoneNumer:String = "01000000000"
     
     @Published var userInfo:PairingUserInfo? = nil
-    @Published var kid:Kid? = nil
+    @Published private(set) var kid:Kid? = nil
     private(set) var kids:[Kid] = []
     
     let authority:Authority = Authority()
+    var storage:LocalStorage? = nil
     
     func requestPairing(_ request:PairingRequest){
         switch request {
         case .recovery :
             self.status = .connect
-        case .registKid(let kid) :
+        case .selectKid(let kid) :
             self.kid = kid
-            self.kids.append(kid)
+            self.storage?.selectedKidsProfileId = kid.id
+        
+        case .registKid(let kid) :
+            kid.updateType = .post
+        case .modifyKid(let kid) :
+            kid.updateType = .put
+        case .deleteKid(let kid) :
+            kid.updateType = .del
         default : break
         }
         self.request = request
@@ -155,6 +162,39 @@ class Pairing:ObservableObject, PageProtocol {
     
     func updateUserAgreement(_ isAgree:Bool){
         self.user?.update(isAgree: isAgree)
+    }
+    
+    func updatedKidsProfiles(_ data:KidsProfiles? = nil){
+        if let data = data {
+            self.kids = data.profiles?.map{ Kid(data: $0) } ?? []
+            if let kidId = self.storage?.selectedKidsProfileId {
+                self.kid = self.kids.first(where: {$0.id == kidId})
+                if self.kid == nil {
+                    self.event = .notFoundKid
+                    return
+                }
+            }
+            self.event = .updatedKids
+        } else {
+            self.event = .updatedKidsError
+        }
+    }
+    
+    func editedKidsProfiles(_ data:KidsProfiles? = nil){
+        if let data = data {
+            /*
+            self.kids = data.profiles?.map{ Kid(data: $0) } ?? []
+            if let kidId = self.storage?.selectedKidsProfileId {
+                self.kid = self.kids.first(where: {$0.id == kidId})
+                if self.kid == nil {
+                    self.event = .notFoundKid
+                    return
+                }
+            }*/
+            self.event = .editedKids
+        } else {
+            self.event = .editedKidsError
+        }
     }
     
     private func checkComple(){

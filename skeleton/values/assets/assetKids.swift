@@ -34,6 +34,9 @@ extension AssetKids{
     struct icon {
         public static let delete = "zemkidsMPopupInputDelNor"
         public static let back = "zemkidsMBackBtn"
+        public static let backTop = "zemkidsMTopBackBtn"
+        public static let setting = "zemkidsMTopSetBtn"
+        
         public static let heartOff = "zemkidsMBtnSynopsisFavoriteOff"
         public static let heartOn = "zemkidsMBtnSynopsisFavoriteOn"
         public static let info = "zemkidsMBtnSynopsisTololtipInfoNor"
@@ -44,6 +47,14 @@ extension AssetKids{
         public static let share = "zemkidsMBtnSynopsisShareNor"
         public static let sort = "zemkidsMDropdownBriDownNor"
         public static let thumbPlay = "zemkidsMIcPlay"
+        
+        public static let editProfileOff = "zemkidsMBtnEditNor"
+        public static let editProfileOn = "zemkidsMBtnEditSel"
+        
+        public static let crownOff = "zemkidsMFlagTypicalNor"
+        public static let crownOn = "zemkidsMFlagTypicalSel"
+        
+        public static let addProfile = "zemkidsMIcKidsprofilePlusNor"
     }
     
     
@@ -82,6 +93,8 @@ extension AssetKids{
         
         public static let checkOption = "zemkidsMToggleOptionIcSel"
         
+        public static let profileBgOff = "zemkidsMMyProfileCardNor"
+        public static let profileBgOn = "zemkidsMMyProfileCardSel"
        
         public static let tooltip = isPad ? "zemkidsTTooltipBubble29" : "zemkidsMTooltipBubble29"
         public static let spinner = "icSpinner"
@@ -120,7 +133,6 @@ extension AssetKids{
         "zemkidsTIImgKidsprofileGirl01",
         "zemkidsTIImgKidsprofileGirl02",
         "zemkidsTIImgKidsprofileGirl03",
-       
     ]
     
     static let characterGnbList = [

@@ -134,6 +134,7 @@ class Repository:ObservableObject, PageProtocol{
     
     private func setupPairing(){
         self.accountManager.setupPairing(savedUser:self.storage.getSavedUser())
+        self.pairing.storage = self.storage
         self.pairing.$request.sink(receiveValue: { req in
             guard let requestPairing = req else { return }
             switch requestPairing{

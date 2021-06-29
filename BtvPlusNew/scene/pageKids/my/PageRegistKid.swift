@@ -117,7 +117,7 @@ struct PageRegistKid: PageView {
                                 self.pagePresenter.closePopup(self.pageObject?.id)
                             }
                             RectButtonKids(
-                                text: String.kidsText.registKidCreate,
+                                text: String.kidsTitle.registKidCreate,
                                 isSelected: true,
                                 size: DimenKids.button.heavyRect
                             ){idx in

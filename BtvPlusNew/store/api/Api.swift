@@ -131,7 +131,8 @@ enum ApiType{
          getSeachPopularityVod
     
     //KES
-    case getKidsProfiles(HostDevice?)
+    case getKidsProfiles(HostDevice?),
+         updateKidsProfiles(HostDevice?, [Kid])
     
     func coreDataKey() -> String? {
         switch self {

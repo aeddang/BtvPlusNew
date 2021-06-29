@@ -19,6 +19,7 @@ enum Gender {
 
 struct ModifyUserData {
     var nickName:String? = nil
+    var birth:String? = nil
     var characterIdx:Int? = nil
 }
 

@@ -271,6 +271,10 @@
 		3190CB022689300700ACB465 /* TopViewerKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB012689300700ACB465 /* TopViewerKids.swift */; };
 		3190CB07268983EA00ACB465 /* Kes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB06268983EA00ACB465 /* Kes.swift */; };
 		3190CB0A268987C400ACB465 /* KidsProfiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB09268987C400ACB465 /* KidsProfiles.swift */; };
+		3190CB0C268ABCDB00ACB465 /* PageKidsProfileManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB0B268ABCDB00ACB465 /* PageKidsProfileManagement.swift */; };
+		3190CB0E268ABD8400ACB465 /* PageKidsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB0D268ABD8400ACB465 /* PageKidsTab.swift */; };
+		3190CB11268AC34200ACB465 /* KidProfileListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB10268AC34200ACB465 /* KidProfileListItem.swift */; };
+		3190CB13268ACC1E00ACB465 /* KidProfileListEmpty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB12268ACC1E00ACB465 /* KidProfileListEmpty.swift */; };
 		3190E6242674993D000CBCB9 /* SkeletonBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190E6232674993D000CBCB9 /* SkeletonBlock.swift */; };
 		3192318025A40A7D00020388 /* ReflashSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192317F25A40A7D00020388 /* ReflashSpinner.swift */; };
 		3192CA6926818FAB007B3C29 /* ToolTipKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192CA6826818FAB007B3C29 /* ToolTipKids.swift */; };
@@ -799,6 +803,10 @@
 		3190CB012689300700ACB465 /* TopViewerKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopViewerKids.swift; sourceTree = "<group>"; };
 		3190CB06268983EA00ACB465 /* Kes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kes.swift; sourceTree = "<group>"; };
 		3190CB09268987C400ACB465 /* KidsProfiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsProfiles.swift; sourceTree = "<group>"; };
+		3190CB0B268ABCDB00ACB465 /* PageKidsProfileManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageKidsProfileManagement.swift; sourceTree = "<group>"; };
+		3190CB0D268ABD8400ACB465 /* PageKidsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageKidsTab.swift; sourceTree = "<group>"; };
+		3190CB10268AC34200ACB465 /* KidProfileListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidProfileListItem.swift; sourceTree = "<group>"; };
+		3190CB12268ACC1E00ACB465 /* KidProfileListEmpty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidProfileListEmpty.swift; sourceTree = "<group>"; };
 		3190E6232674993D000CBCB9 /* SkeletonBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonBlock.swift; sourceTree = "<group>"; };
 		3192317F25A40A7D00020388 /* ReflashSpinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflashSpinner.swift; sourceTree = "<group>"; };
 		3192CA6826818FAB007B3C29 /* ToolTipKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolTipKids.swift; sourceTree = "<group>"; };
@@ -1599,13 +1607,6 @@
 			path = list;
 			sourceTree = "<group>";
 		};
-		316A709F2670801600A93B83 /* list */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = list;
-			sourceTree = "<group>";
-		};
 		316A70A42670887600A93B83 /* bottom */ = {
 			isa = PBXGroup;
 			children = (
@@ -1826,8 +1827,10 @@
 		318D100A266884DF00B66977 /* my */ = {
 			isa = PBXGroup;
 			children = (
+				3190CB0F268AC32D00ACB465 /* component */,
 				318D100B266884F700B66977 /* PageRegistKid.swift */,
 				318D100F2668B7D600B66977 /* PageSelectKidCharacter.swift */,
+				3190CB0B268ABCDB00ACB465 /* PageKidsProfileManagement.swift */,
 			);
 			path = my;
 			sourceTree = "<group>";
@@ -1944,6 +1947,15 @@
 			path = model;
 			sourceTree = "<group>";
 		};
+		3190CB0F268AC32D00ACB465 /* component */ = {
+			isa = PBXGroup;
+			children = (
+				3190CB10268AC34200ACB465 /* KidProfileListItem.swift */,
+				3190CB12268ACC1E00ACB465 /* KidProfileListEmpty.swift */,
+			);
+			path = component;
+			sourceTree = "<group>";
+		};
 		3192CA6A26819267007B3C29 /* purchase */ = {
 			isa = PBXGroup;
 			children = (
@@ -1998,7 +2010,6 @@
 		3195C1B52665E26B001F513E /* pageKids */ = {
 			isa = PBXGroup;
 			children = (
-				316A709F2670801600A93B83 /* list */,
 				3195C1C226660EBE001F513E /* component */,
 				318D100A266884DF00B66977 /* my */,
 				316A7073266F3CA500A93B83 /* popup */,
@@ -2041,6 +2052,7 @@
 			children = (
 				318D100926687FAD00B66977 /* top */,
 				316A7067266EF7FC00A93B83 /* MenuTab.swift */,
+				3190CB0D268ABD8400ACB465 /* PageKidsTab.swift */,
 			);
 			path = tab;
 			sourceTree = "<group>";
@@ -3295,6 +3307,7 @@
 				312BB07925DCF2AB00AC03BC /* ThumbImageViewer.swift in Sources */,
 				314D588225B64EB6007BCA34 /* PairingView.swift in Sources */,
 				31D3F4E625E3A57A008FDFEC /* BannerBlock.swift in Sources */,
+				3190CB0C268ABCDB00ACB465 /* PageKidsProfileManagement.swift in Sources */,
 				D56CC30225906F2500CA1D54 /* VideoBlock.swift in Sources */,
 				D56C6B5C257DB44000CF9AB8 /* AppPageStyle.swift in Sources */,
 				D56C6B54257DB24C00CF9AB8 /* PageFactory.swift in Sources */,
@@ -3372,6 +3385,7 @@
 				D56C699E257DA09E00CF9AB8 /* PageContentController.swift in Sources */,
 				31895AFF2601CDDE002DE02E /* DirectPackageView.swift in Sources */,
 				31D3F4DE25E36625008FDFEC /* PageMultiBlock.swift in Sources */,
+				3190CB0E268ABD8400ACB465 /* PageKidsTab.swift in Sources */,
 				3190CB0A268987C400ACB465 /* KidsProfiles.swift in Sources */,
 				D50AB9042580772A00649C4A /* EventBanner.swift in Sources */,
 				318BA3972608C2660093BC7D /* SearchPopularityVod.swift in Sources */,
@@ -3389,6 +3403,7 @@
 				318F7B692625820900774B17 /* TvPoint.swift in Sources */,
 				315544CF25B83F8C00086510 /* MetvModel.swift in Sources */,
 				317C9754262426CD008F267D /* PageCouponList.swift in Sources */,
+				3190CB11268AC34200ACB465 /* KidProfileListItem.swift in Sources */,
 				316ECDF6264B4274008D2544 /* BlankButton.swift in Sources */,
 				318BA3982608C2660093BC7D /* CompleteKeyword.swift in Sources */,
 				D568892E259C592000F2F67A /* PagePairingSetupUser.swift in Sources */,
@@ -3433,6 +3448,7 @@
 				D56C5FE825930060009AE769 /* BookMark.swift in Sources */,
 				D56C69A8257DA09E00CF9AB8 /* ImageLoader.swift in Sources */,
 				31E8D7C125CA85190034BBC4 /* PlayerOptionSelectBox.swift in Sources */,
+				3190CB13268ACC1E00ACB465 /* KidProfileListEmpty.swift in Sources */,
 				318F7B582625798400774B17 /* TMembership.swift in Sources */,
 				3195C1A82665CD9D001F513E /* strings.page.swift in Sources */,
 				3167641A25CCC1C5003A7721 /* PlayViewer.swift in Sources */,

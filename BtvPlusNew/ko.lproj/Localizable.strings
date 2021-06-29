@@ -22,6 +22,8 @@
 "gender" = "성별";
 "mail" = "남";
 "femail" = "여";
+"mailDetail" = "남자";
+"femailDetail" = "여자";
 
 "min" = "분";
 "hour" = "시";
@@ -359,8 +361,15 @@
 "alertPossessionDiableAlreadyChange" = "이미 다른 기기에서 소장 VOD를\n이용 중인 B tv입니다.\n기존 기기에서 이용을 중지하고\n현재 기기에서 시청하시겠습니까?";
 "alertPossessionDeleteConfirm" = "설정을 해지하시면 구매/소장 목록에서\n이전 B tv의 소장 VOD를\n이용하실 수 없습니다.\n설정을 해제하시겠습니까?";
 
+"alertKidsDisable" = "ZEM 키즈를 실행할 수 없습니다\n네트워크 연결 상태를 확인하시고 다시 시도해 주세요.";
+"alertKidsDisableTip" = "계속 연결 불가한 경우\n고객센터(국번 없이 106)로\n문의해 주세요.";
+
 "alertKidsExit" = "ZEM 키즈 종료";
 "alertKidsExitText" = "ZEM 키즈를 종료하려면 성인인증번호를 입력해 주세요.";
+
+"alertKidsProfileNotfound" = "현재 이용 중인 프로필이\n삭제 되었습니다.\n프로필을 다시 설정해주세요.";
+"alertKidsProfileSelect" = "현재 이용 중인 프로필이\n없습니다.\n프로필을 설정해주세요.";
+"alertKidsProfileEmpty" = "등록된 자녀 \n프로필이 없어요";
 
 
 /*
@@ -784,14 +793,21 @@
 
 
 ///Kids
+"titleRegistKid" = "자녀 프로필 등록";
+"titleRegistKidManagement" = "자녀 프로필 관리";
+"titleRegistKidCreate" = "자녀 프로필 만들기";
 
 
 /*
  PageRegistKid
 */
+"registAddKid" = "자녀 프로필 등록하기";
 "registKidTitle" = "자녀 프로필을 만드시겠습니까?";
 "registKidText" = "자녀 프로필을 만들면 맞춤 추천/학습 서비스를 이용할 수 있어요.";
 "registKidCharacter" = "캐릭터 선택";
 "registKidCharacterText" = "아이에게 어울리는 캐릭터를 선택해주세요";
-"registKidCreate" = "자녀 프로필 만들기";
+
+
+
+
 

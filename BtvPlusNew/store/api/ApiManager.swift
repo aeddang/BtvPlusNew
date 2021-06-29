@@ -449,6 +449,10 @@ class ApiManager :PageProtocol, ObservableObject{
             hostDevice: device,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .updateKidsProfiles(let device, let profiles): self.kes.updateKidsProfiles(
+            hostDevice: device, profiles: profiles,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         }
         return apiID
     }

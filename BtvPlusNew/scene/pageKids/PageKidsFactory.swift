@@ -13,8 +13,8 @@ extension PageID{
     static let kidsIntro:PageID = "kidsIntro"
     static let kidsHome:PageID = "kidsHome"
     static let registKid:PageID = "registKid"
+    static let kidsProfileManagement:PageID = "kidsProfileManagement"
     static let selectKidCharacter:PageID = "selectKidCharacter"
-    
     static let kidsConfirmNumber:PageID = "kidsConfirmNumber"
     static let tabInfo:PageID = "tabInfo"
     static let detailInfo:PageID = "detailInfo"
@@ -53,7 +53,7 @@ struct PageKidsProvider {
         case .registKid, .selectKidCharacter, .kidsConfirmNumber, .tabInfo, .detailInfo:
             return  .opacity
        
-        default : return  .vertical
+        default : return  .horizontal
         }
     }
     
@@ -91,6 +91,7 @@ struct PageKidsFactory{
         case .kidsIntro : return PageKidsIntro()
         case .kidsHome : return PageKidsHome()
         case .registKid : return PageRegistKid()
+        case .kidsProfileManagement : return PageKidsProfileManagement()
         case .selectKidCharacter : return PageSelectKidCharacter()
         case .kidsConfirmNumber : return PageKidsConfirmNumber()
         case .tabInfo : return PageTabInfo()

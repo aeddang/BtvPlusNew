@@ -23,7 +23,7 @@ class LocalStorage {
         static let pairingModelName = "pairingModelName" + VS
         static let restrictedAge = "restrictedAge" + VS
         static let pcId = "pcId" + VS
-       
+        static let selectedKidsProfileId = "selectedKidsProfileId1" + VS // kidsSelectedProfileId
     }
     let defaults = UserDefaults.standard
     
@@ -161,6 +161,15 @@ class LocalStorage {
         }
         get{
             return defaults.string(forKey: Keys.pcId)
+        }
+    }
+    
+    var selectedKidsProfileId:String? {
+        set(newVal){
+            defaults.set(newVal, forKey: Keys.selectedKidsProfileId )
+        }
+        get{
+            return defaults.string(forKey: Keys.selectedKidsProfileId)
         }
     }
 

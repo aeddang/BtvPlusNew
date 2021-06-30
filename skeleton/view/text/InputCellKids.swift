@@ -10,6 +10,7 @@ struct InputCellKids: PageView {
     var isFocus:Bool = false
     var placeHolder:String = ""
     var keyboardType:UIKeyboardType = .default
+    var strokeColor:Color = Color.app.brownLight
     var tip:String? = nil
     var isEditable:Bool = true
     var isSecure:Bool = false
@@ -19,7 +20,7 @@ struct InputCellKids: PageView {
     var body: some View {
         VStack(alignment: .leading, spacing:DimenKids.margin.tinyExtra){
             Text(self.title)
-                .modifier(BoldTextStyleKids(size: Font.size.thin, color:Color.app.brown))
+                .modifier(BoldTextStyleKids(size: Font.sizeKids.thin, color:Color.app.brown))
                 .multilineTextAlignment(.leading)
                
             HStack(alignment: .top, spacing:0){
@@ -84,8 +85,8 @@ struct InputCellKids: PageView {
             .overlay(
                 RoundedRectangle(cornerRadius: DimenKids.radius.light)
                 .stroke(
-                    self.isFocus ? Color.kids.primary : Color.transparent.clear,
-                    lineWidth: DimenKids.stroke.mediumExtra )
+                    self.isFocus ? Color.kids.primary : self.strokeColor,
+                    lineWidth:self.isFocus ? DimenKids.stroke.mediumExtra : DimenKids.stroke.light )
             )
             if self.tip != nil{
                 Spacer().frame(height:DimenKids.margin.thinExtra)

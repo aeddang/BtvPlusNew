@@ -55,6 +55,7 @@ extension AssetKids{
         public static let crownOn = "zemkidsMFlagTypicalSel"
         
         public static let addProfile = "zemkidsMIcKidsprofilePlusNor"
+        public static let profileDelete = "zemkidsMBtnProfileDeleteNor"
     }
     
     
@@ -79,7 +80,7 @@ extension AssetKids{
         public static let noImg = "zemkidsMPlayerDefaultImgHarf"
         public static let listBg = "zemkidsMPlayerThumbnailFrameNor"
         public static let listBgOn = "zemkidsMPlayerThumbnailFrameSel"
-        
+       
       
     }
     
@@ -111,14 +112,15 @@ extension AssetKids{
     }
     struct image {
         public static let noProfile = "zemkidsMGnbNorProfileDefault"
-        
-      
     }
     
     struct source {
         public static let emptyRelationVod = "zemkidsMImgSynopsisNocontents"
         public static let synopsisBg = isPad ? "zemkidsTIBgSynopsisEnter" : "zemkidsMBgSynopsisEnter"
-        
+        public static let homeBg = "zemkidsMBgKidsHome01"
+        public static let profileBg = "zemkidsMMyProfileBg"
+        public static let cardFolder = "zemkidsMMyCardFolder1"
+        public static let cardFolderWide = "zemkidsMMyCardFolder2"
     }
     
     struct ani {

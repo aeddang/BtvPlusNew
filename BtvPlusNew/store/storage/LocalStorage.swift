@@ -23,7 +23,7 @@ class LocalStorage {
         static let pairingModelName = "pairingModelName" + VS
         static let restrictedAge = "restrictedAge" + VS
         static let pcId = "pcId" + VS
-        static let selectedKidsProfileId = "selectedKidsProfileId1" + VS // kidsSelectedProfileId
+        static let selectedKidsProfileId = "selectedKidsProfileId3" + VS // kidsSelectedProfileId
     }
     let defaults = UserDefaults.standard
     

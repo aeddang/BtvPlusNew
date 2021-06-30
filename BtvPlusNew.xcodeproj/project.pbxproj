@@ -275,6 +275,10 @@
 		3190CB0E268ABD8400ACB465 /* PageKidsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB0D268ABD8400ACB465 /* PageKidsTab.swift */; };
 		3190CB11268AC34200ACB465 /* KidProfileListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB10268AC34200ACB465 /* KidProfileListItem.swift */; };
 		3190CB13268ACC1E00ACB465 /* KidProfileListEmpty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB12268ACC1E00ACB465 /* KidProfileListEmpty.swift */; };
+		3190CB15268BE9A600ACB465 /* PageEditKid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB14268BE9A600ACB465 /* PageEditKid.swift */; };
+		3190CB17268C3EA900ACB465 /* PageKidsMy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB16268C3EA900ACB465 /* PageKidsMy.swift */; };
+		3190CB1A268C447C00ACB465 /* VerticalGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB19268C447C00ACB465 /* VerticalGraph.swift */; };
+		3190CB1C268C4B3B00ACB465 /* HorizontalGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB1B268C4B3B00ACB465 /* HorizontalGraph.swift */; };
 		3190E6242674993D000CBCB9 /* SkeletonBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190E6232674993D000CBCB9 /* SkeletonBlock.swift */; };
 		3192318025A40A7D00020388 /* ReflashSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192317F25A40A7D00020388 /* ReflashSpinner.swift */; };
 		3192CA6926818FAB007B3C29 /* ToolTipKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192CA6826818FAB007B3C29 /* ToolTipKids.swift */; };
@@ -807,6 +811,10 @@
 		3190CB0D268ABD8400ACB465 /* PageKidsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageKidsTab.swift; sourceTree = "<group>"; };
 		3190CB10268AC34200ACB465 /* KidProfileListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidProfileListItem.swift; sourceTree = "<group>"; };
 		3190CB12268ACC1E00ACB465 /* KidProfileListEmpty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidProfileListEmpty.swift; sourceTree = "<group>"; };
+		3190CB14268BE9A600ACB465 /* PageEditKid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageEditKid.swift; sourceTree = "<group>"; };
+		3190CB16268C3EA900ACB465 /* PageKidsMy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageKidsMy.swift; sourceTree = "<group>"; };
+		3190CB19268C447C00ACB465 /* VerticalGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalGraph.swift; sourceTree = "<group>"; };
+		3190CB1B268C4B3B00ACB465 /* HorizontalGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalGraph.swift; sourceTree = "<group>"; };
 		3190E6232674993D000CBCB9 /* SkeletonBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonBlock.swift; sourceTree = "<group>"; };
 		3192317F25A40A7D00020388 /* ReflashSpinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflashSpinner.swift; sourceTree = "<group>"; };
 		3192CA6826818FAB007B3C29 /* ToolTipKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolTipKids.swift; sourceTree = "<group>"; };
@@ -1829,8 +1837,10 @@
 			children = (
 				3190CB0F268AC32D00ACB465 /* component */,
 				318D100B266884F700B66977 /* PageRegistKid.swift */,
+				3190CB14268BE9A600ACB465 /* PageEditKid.swift */,
 				318D100F2668B7D600B66977 /* PageSelectKidCharacter.swift */,
 				3190CB0B268ABCDB00ACB465 /* PageKidsProfileManagement.swift */,
+				3190CB16268C3EA900ACB465 /* PageKidsMy.swift */,
 			);
 			path = my;
 			sourceTree = "<group>";
@@ -1954,6 +1964,15 @@
 				3190CB12268ACC1E00ACB465 /* KidProfileListEmpty.swift */,
 			);
 			path = component;
+			sourceTree = "<group>";
+		};
+		3190CB18268C446100ACB465 /* graph */ = {
+			isa = PBXGroup;
+			children = (
+				3190CB19268C447C00ACB465 /* VerticalGraph.swift */,
+				3190CB1B268C4B3B00ACB465 /* HorizontalGraph.swift */,
+			);
+			path = graph;
 			sourceTree = "<group>";
 		};
 		3192CA6A26819267007B3C29 /* purchase */ = {
@@ -2663,6 +2682,7 @@
 		D56C69F4257DA0C600CF9AB8 /* view */ = {
 			isa = PBXGroup;
 			children = (
+				3190CB18268C446100ACB465 /* graph */,
 				31A38DF72682A1870058287B /* switch */,
 				D56C69F5257DA0C600CF9AB8 /* shape */,
 				D56C69F8257DA0C600CF9AB8 /* swiper */,
@@ -3276,6 +3296,7 @@
 				316C45DA265203CF00A8D7F5 /* BroadcastManager.swift in Sources */,
 				3166CBEA2611A52200282891 /* TotalPoint.swift in Sources */,
 				D56C6A59257DA0C700CF9AB8 /* TextButton.swift in Sources */,
+				3190CB1C268C4B3B00ACB465 /* HorizontalGraph.swift in Sources */,
 				D56CC31225907F3700CA1D54 /* ThemaBlock.swift in Sources */,
 				D56C5FE32592F693009AE769 /* Metv.swift in Sources */,
 				315730F325B01FFF00D9A693 /* PagePairingUser.swift in Sources */,
@@ -3375,6 +3396,7 @@
 				D5DC475B25820FC3007EDD86 /* InsideInfo.swift in Sources */,
 				D5DC476E25821825007EDD86 /* GridPreview.swift in Sources */,
 				D56C6933257D9EE600CF9AB8 /* BtvPlus.xcdatamodeld in Sources */,
+				3190CB17268C3EA900ACB465 /* PageKidsMy.swift in Sources */,
 				318B53AB25F20A350052E4E0 /* PlayBlock.swift in Sources */,
 				D56C6B39257DACD800CF9AB8 /* ApiConst.swift in Sources */,
 				31D3F4CB25E3368A008FDFEC /* WebBridge.swift in Sources */,
@@ -3465,6 +3487,7 @@
 				D56C6A23257DA0C600CF9AB8 /* util.swift in Sources */,
 				31A38DFD2682AA270058287B /* PurchaseViewerKids.swift in Sources */,
 				31863E08265B364A0086C40D /* Alram.swift in Sources */,
+				3190CB1A268C447C00ACB465 /* VerticalGraph.swift in Sources */,
 				3166CBE42611A15900282891 /* Eps.swift in Sources */,
 				D56C6A2A257DA0C700CF9AB8 /* CPImagePicker.swift in Sources */,
 				D506D722258C924500F27C00 /* ListStyle.swift in Sources */,
@@ -3522,6 +3545,7 @@
 				D5DC474E25820A02007EDD86 /* RelationContent.swift in Sources */,
 				318AA041265DDBCA00C089EC /* SetupCertification.swift in Sources */,
 				316A70952670692700A93B83 /* PlayerTopBodyKids.swift in Sources */,
+				3190CB15268BE9A600ACB465 /* PageEditKid.swift in Sources */,
 				D5E27EEA258751A200B2CD5D /* BlockData.swift in Sources */,
 				318F7B412625444C00774B17 /* CardList.swift in Sources */,
 				31632FFB25EF386F00581FA7 /* MultiBlockBody.swift in Sources */,

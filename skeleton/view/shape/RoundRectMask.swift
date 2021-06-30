@@ -54,6 +54,7 @@ struct RoundTopRectMask: Shape {
         path.addRelativeArc(center: trc, radius: radius,startAngle: Angle.degrees(270), delta: Angle.degrees(90))
         path.addLine(to: brs)
         path.addLine(to: bls)
+        path.addLine(to: tls)
         return path
     }
 }

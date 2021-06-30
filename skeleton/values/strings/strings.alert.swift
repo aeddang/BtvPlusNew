@@ -181,5 +181,19 @@ extension String {
         public static var kidsProfileSelect = "alertKidsProfileSelect".loaalized()
         public static var kidsProfileEmpty = "alertKidsProfileEmpty".loaalized()
         
+        public static var kidsDeleteConfirm = "alertKidsDeleteConfirm".loaalized()
+        public static var kidsDeleteConfirmTip = "alertKidsDeleteConfirmTip".loaalized()
+        public static var kidsDelete = "alertKidsDelete".loaalized()
+        public static var kidsDeleteText = "alertKidsDeleteText".loaalized()
+       
+
+        public static var kidsAddCompleted = "alertKidAddCompleted".loaalized()
+        public static var kidsEditCompleted = "alertKidEditCompleted".loaalized()
+        public static var kidsDeleteCompleted = "alertKidDeleteCompleted".loaalized()
+
+        public static var kidsAddError = "alertKidAddError".loaalized()
+        public static var kidsEditError = "alertKidEditError".loaalized()
+        public static var kidsDeleteError = "alertKidDeleteError".loaalized()
+        
     }
 }

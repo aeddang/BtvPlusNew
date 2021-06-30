@@ -15,6 +15,9 @@ class Kid:ObservableObject, PageProtocol, Identifiable{
     
     private(set) var birth:String = ""
     private(set) var gender:String = ""
+   
+    var modifyUserData:ModifyUserData? = nil
+    var locVal:Int = -1
     var updateType:KesNetwork.UpdateType? = nil
     
     init(){}
@@ -31,11 +34,25 @@ class Kid:ObservableObject, PageProtocol, Identifiable{
         self.setupAge()
     }
     init(data:KidsProfileItem){
+        self.setData(data)
+    }
+    
+    @discardableResult
+    func setData(_ data:KidsProfileItem)-> Kid{
+        self.modifyUserData = nil
         self.id = data.profile_id ?? UUID().uuidString
         self.nickName = data.profile_nm ?? ""
         self.birth = data.birth_ym ?? ""
         self.setupCharacterIdx(id:data.chrter_img_id)
+        self.locVal = data.prof_loc_val?.number?.toInt() ?? -1
         self.setupAge()
+        return self
+    }
+    
+    @discardableResult
+    func update(_ data:ModifyUserData) -> Kid{
+        self.modifyUserData = data
+        return self
     }
     
     private func setupAge(){
@@ -44,6 +61,7 @@ class Kid:ObservableObject, PageProtocol, Identifiable{
         let birthYear  = self.birth.subString(start: 0, len: 4)
         self.age = nowYear.toInt() - birthYear.toInt() + 1
     }
+    
     private func setupCharacterIdx(id:String?){
         let idx = getCharacterIdxById(id)
         self.setupGender(idx: idx)
@@ -57,13 +75,7 @@ class Kid:ObservableObject, PageProtocol, Identifiable{
         self.characterIdx = idx
     }
     
-    @discardableResult
-    func update(_ data:ModifyUserData) -> Kid{
-        if let value = data.nickName { self.nickName = value }
-        if let value = data.characterIdx { self.characterIdx = value }
-        if let value = data.birth { self.birth = value }
-        return self
-    }
+    
     
     private func getCharacterIdxById(_ id:String?) -> Int {
         switch id {
@@ -76,9 +88,17 @@ class Kid:ObservableObject, PageProtocol, Identifiable{
         default:return 3
         }
     }
-    
+    func getNickname() -> String {
+        let nick = self.modifyUserData?.nickName ?? self.nickName
+        return nick
+    }
+    func getBirth() -> String {
+        let birth = self.modifyUserData?.birth ?? self.birth
+        return birth.subString(start:0,len:6)
+    }
     func getCharacterId() -> String {
-        switch self.characterIdx {
+        let idx = self.modifyUserData?.characterIdx ?? self.characterIdx
+        switch idx {
         case 3: return "1"
         case 4: return "2"
         case 5: return "3"
@@ -89,5 +109,13 @@ class Kid:ObservableObject, PageProtocol, Identifiable{
         }
     }
     
+    func getGenderKey() -> String? {
+        let idx = self.modifyUserData?.characterIdx ?? self.characterIdx
+        if idx < 3 {
+            return Gender.mail.apiValue()
+        } else {
+            return Gender.femail.apiValue()
+        }
+    }
 
 }

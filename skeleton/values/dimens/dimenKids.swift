@@ -12,6 +12,7 @@ import SwiftUI
 struct DimenKids{
     private static let isPad =  AppUtil.isPad()
     struct margin {
+        public static let heavyUltra:CGFloat = isPad ? 140 : 73
         public static let heavy:CGFloat = isPad ? 90 : 46
         public static let heavyExtra:CGFloat = isPad ? 112 : 52//*
         public static let mediumUltra:CGFloat = isPad ? 60 : 40//*
@@ -67,6 +68,7 @@ struct DimenKids{
         
         public static let heavyRect:CGSize = isPad ? CGSize(width: 258, height: 73) : CGSize(width: 159, height: 38)//*
         public static let mediumRect:CGSize = isPad ? CGSize(width: 221, height: 73) : CGSize(width: 115, height: 38) //*
+        public static let mediumRectExtra:CGSize = isPad ? CGSize(width: 192, height: 61) : CGSize(width: 100, height: 32) //*
         public static let regularRect:CGSize = isPad ? CGSize(width: 173, height: 115) : CGSize(width: 90, height: 60) //*
         public static let lightRect:CGSize = isPad ? CGSize(width: 90, height: 60) : CGSize(width: 50, height: 34) //*
        

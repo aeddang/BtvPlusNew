@@ -63,18 +63,20 @@ class Kes: Rest{
         params["menu_stb_svc_id"] = KesNetwork.MENU_STB_SVC_ID
         params["IF"] = "IF-KES-002"
         params["stb_id"] = stbId
-        params["profiles"] = profiles.map{ kid in
+        let profileDatas:[[String:Any]] = profiles.map { kid in
             var profile = [String:Any]()
             if kid.updateType != .post {
-                profile[ "profile_id" ] = kid.id
+                profile[ "profile_id" ] =  kid.id
             }
-            profile[ "profile_nm" ] = kid.nickName
-            profile[ "gender" ] = kid.gender
-            profile[ "birth_ym" ] = kid.birth
+            profile[ "profile_nm" ] = kid.getNickname()
+            profile[ "birth_ym" ] = kid.getBirth()
+            profile[ "gender" ] = kid.getGenderKey()
             profile[ "chrter_img_id" ] = kid.getCharacterId()
-            profile[ "prof_loc_val" ] = ""
+            profile[ "prof_loc_val" ] = kid.locVal
             profile[ "event_typ" ] = kid.updateType?.code ?? ""
+            return profile
         }
+        params["profiles"] = profileDatas
         fetch(route: KesRegistKidsProfile(body: params), completion: completion, error:error)
     }
 }

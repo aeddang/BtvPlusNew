@@ -73,7 +73,8 @@ struct PageRegistKid: PageView {
                                     title: String.app.nickNameKids,
                                     input: self.$nickName,
                                     isFocus: self.editType == .nickName,
-                                    placeHolder: String.app.nickNameHolderKids
+                                    placeHolder: String.app.nickNameHolderKids,
+                                    strokeColor: Color.transparent.clear
                                 )
                                 .frame(width: SystemEnvironment.isTablet ? 357 : 186)
                                 InputCellKids(
@@ -81,6 +82,7 @@ struct PageRegistKid: PageView {
                                     input: self.$birth,
                                     inputFontSize:Font.sizeKids.large,
                                     isFocus: self.editType == .birth,
+                                    strokeColor: Color.transparent.clear,
                                     isEditable : false,
                                     kern: Font.kern.thin
                                 )
@@ -154,7 +156,7 @@ struct PageRegistKid: PageView {
             }
             .onReceive(self.pagePresenter.$event){ evt in
                 guard let evt = evt else {return}
-                if evt.id != "PageSelectKidCharacter" {return}
+                if evt.id != PageSelectKidCharacter.key {return}
                 switch evt.type {
                 case .selected :
                     guard let selectIdx = evt.data as? Int else { return }
@@ -172,6 +174,25 @@ struct PageRegistKid: PageView {
             .onReceive(self.keyboardObserver.$isOn){ on in
                 if self.pageObservable.layer != .top { return }
                 self.updatekeyboardStatus(on:on)
+            }
+            .onReceive(self.pairing.$event){ evt in
+                guard let evt = evt else {return}
+                switch evt {
+                case .updatedKids :
+                    self.appSceneObserver.event = .toast(String.alert.kidsAddCompleted) 
+                    self.pagePresenter.closePopup(self.pageObject?.id)
+                    break
+                case .notFoundKid :
+                    self.appSceneObserver.alert = .alert(nil, String.alert.kidsProfileNotfound )
+                    self.pagePresenter.closePopup(self.pageObject?.id)
+                    break
+                case .editedKidsError(let updateType) :
+                    if updateType == .post {
+                        self.appSceneObserver.alert = .alert(nil,String.alert.kidsAddError)
+                    }
+            
+                default : break
+                }
             }
             .onAppear{
                 
@@ -249,7 +270,7 @@ struct PageRegistKid: PageView {
         if !self.isInputCompleted() {return}
         let kid = Kid(nickName: self.nickName, characterIdx: self.characterIdx, birthDate: self.birthDate)
         self.pairing.requestPairing(.registKid(kid))
-        self.pagePresenter.closePopup(self.pageObject?.id)
+        
     }
    
 }

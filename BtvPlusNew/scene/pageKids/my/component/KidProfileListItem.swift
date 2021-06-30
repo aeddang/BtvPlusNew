@@ -57,19 +57,21 @@ struct KidProfileListItem: PageComponent{
                             .modifier(BoldTextStyleKids(
                                         size: SystemEnvironment.isTablet ? Font.sizeKids.thin : Font.sizeKids.regularExtra ,
                                         color: self.isSelected ? Color.app.white : Color.app.brownExtra))
+                            .padding(.leading, DimenKids.icon.tinyExtra)
+                    }
+                    Button(action: {
+                        self.pagePresenter.openPopup(
+                            PageKidsProvider.getPageObject(.editKid)
+                                .addParam(key: .data, value: self.data)
+                        )
                         
-                    } else {
-                        Button(action: {
-                            self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.registKid))
-                            
-                        }) {
-                            Image(self.isSelected ? AssetKids.icon.editProfileOn : AssetKids.icon.editProfileOff)
-                                .renderingMode(.original)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: DimenKids.icon.tinyExtra,
-                                       height: DimenKids.icon.tinyExtra)
-                        }
+                    }) {
+                        Image(self.isSelected ? AssetKids.icon.editProfileOn : AssetKids.icon.editProfileOff)
+                            .renderingMode(.original)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: DimenKids.icon.tinyExtra,
+                                   height: DimenKids.icon.tinyExtra)
                     }
                 }
                 .padding(.top, DimenKids.margin.thin)

@@ -39,6 +39,7 @@ struct CharacterKidItem: PageView {
 }
 
 extension PageSelectKidCharacter {
+    static let key = "PageSelectKidCharacter"
     static let spacing:CGFloat = SystemEnvironment.isTablet
         ? DimenKids.margin.lightExtra : DimenKids.margin.light
 }

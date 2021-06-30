@@ -42,6 +42,14 @@ struct PageKidsProfileManagement: PageView {
                     }
                     .modifier(MatchParent())
                 }
+                .background(
+                    Image(AssetKids.source.homeBg)
+                        .renderingMode(.original)
+                        .resizable()
+                        .scaledToFill()
+                        .modifier(MatchParent())
+                        
+                )
                 .modifier(PageFullScreen(style:.kids))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }

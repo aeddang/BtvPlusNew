@@ -35,8 +35,9 @@ enum PairingEvent{
          findMdnsDevice([MdnsDevice]), findStbInfoDevice([StbInfoDataItem]),  notFoundDevice,
          syncError(NpsCommonHeader?),
          pairingCompleted, pairingCheckCompleted(Bool),
-         updatedKids, updatedKidsError, notFoundKid,
-         editedKids, editedKidsError
+         
+         updatedKids(KesNetwork.UpdateType?), notFoundKid, editedKids,
+         updatedKidsError, editedKidsError(KesNetwork.UpdateType?)
 }
 
 class Pairing:ObservableObject, PageProtocol {
@@ -71,10 +72,12 @@ class Pairing:ObservableObject, PageProtocol {
         
         case .registKid(let kid) :
             kid.updateType = .post
+            kid.locVal = self.kids.count
         case .modifyKid(let kid) :
             kid.updateType = .put
         case .deleteKid(let kid) :
             kid.updateType = .del
+            kid.modifyUserData = nil
         default : break
         }
         self.request = request
@@ -164,7 +167,7 @@ class Pairing:ObservableObject, PageProtocol {
         self.user?.update(isAgree: isAgree)
     }
     
-    func updatedKidsProfiles(_ data:KidsProfiles? = nil){
+    func updatedKidsProfiles(_ data:KidsProfiles? = nil, updateType:KesNetwork.UpdateType? = nil){
         if let data = data {
             self.kids = data.profiles?.map{ Kid(data: $0) } ?? []
             if let kidId = self.storage?.selectedKidsProfileId {
@@ -174,29 +177,52 @@ class Pairing:ObservableObject, PageProtocol {
                     return
                 }
             }
-            self.event = .updatedKids
+            self.event = .updatedKids(updateType)
         } else {
             self.event = .updatedKidsError
         }
     }
     
-    func editedKidsProfiles(_ data:KidsProfiles? = nil){
+    func editedKidsProfiles(_ data:KidsProfiles? , editedKid:Kid?){
+        guard let editedKid = editedKid else {return}
         if let data = data {
-            /*
-            self.kids = data.profiles?.map{ Kid(data: $0) } ?? []
-            if let kidId = self.storage?.selectedKidsProfileId {
-                self.kid = self.kids.first(where: {$0.id == kidId})
-                if self.kid == nil {
-                    self.event = .notFoundKid
-                    return
+            let updateKids = data.profiles ?? []
+            let originCount = self.kids.count
+            let updateCount = updateKids.count
+            var isSuccess = false
+            var isUpdated = false
+            switch editedKid.updateType {
+            case .post:
+                let f = updateKids.first(where: {$0.profile_nm == editedKid.nickName})
+                isSuccess = f != nil
+                isUpdated = isSuccess ? true : (originCount != updateCount)
+            case .del:
+                let f = updateKids.first(where: {$0.profile_id == editedKid.id})
+                isSuccess = f == nil
+                isUpdated = isSuccess ? true : (originCount != updateCount)
+            case .put:
+                let f = updateKids.first(where: {$0.profile_id == editedKid.id})
+                if let updateData = f {
+                    isSuccess = true
+                    editedKid.setData(updateData)
                 }
-            }*/
-            self.event = .editedKids
+                isUpdated = originCount != updateCount
+            default: return
+            }
+            if isSuccess {
+                if isUpdated { self.updatedKidsProfiles(data, updateType: editedKid.updateType) }
+                else { self.event = .editedKids }
+            } else {
+                self.event = .editedKidsError(editedKid.updateType)
+            }
+            
         } else {
-            self.event = .editedKidsError
+            self.event = .editedKidsError(editedKid.updateType)
         }
     }
-    
+    func editedKidsProfilesError(){
+        self.event = .editedKidsError(nil)
+    }
     private func checkComple(){
         if self.isPairingUser && self.isPairingAgreement && self.hostDevice != nil{
             self.status = .pairing

@@ -21,6 +21,7 @@ class AccountManager : PageProtocol{
     
     var requestDevice:StbData? = nil
     var requestAuthcode:String? = nil
+    var requestKid:Kid? = nil
     func setupPairing(savedUser:User? = nil){
         
         self.pairing.$request.sink(receiveValue: { req in
@@ -73,11 +74,14 @@ class AccountManager : PageProtocol{
             case .updateKids :
                 self.dataProvider.requestData(q: .init(type: .getKidsProfiles(self.pairing.hostDevice), isOptional: true))
             case .registKid(let kid) :
-                self.dataProvider.requestData(q: .init(type: .updateKidsProfiles(self.pairing.hostDevice, [kid]), isOptional: true))
+                self.requestKid = kid
+                self.dataProvider.requestData(q: .init(type: .updateKidsProfiles(self.pairing.hostDevice, [kid]), isOptional: false))
             case .modifyKid(let kid) :
-                self.dataProvider.requestData(q: .init(type: .updateKidsProfiles(self.pairing.hostDevice, [kid]), isOptional: true))
+                self.requestKid = kid
+                self.dataProvider.requestData(q: .init(type: .updateKidsProfiles(self.pairing.hostDevice, [kid]), isOptional: false))
             case .deleteKid(let kid) :
-                self.dataProvider.requestData(q: .init(type: .updateKidsProfiles(self.pairing.hostDevice, [kid]), isOptional: true))
+                self.requestKid = kid
+                self.dataProvider.requestData(q: .init(type: .updateKidsProfiles(self.pairing.hostDevice, [kid]), isOptional: false))
 
             default: do{}
             }
@@ -251,10 +255,12 @@ class AccountManager : PageProtocol{
                 self.pairing.updatedKidsProfiles(resData)
             case .updateKidsProfiles :
                 guard let resData = res.data as? KidsProfiles else {
-                    self.pairing.editedKidsProfiles(nil)
+                    self.pairing.editedKidsProfiles(nil, editedKid: self.requestKid)
+                    self.requestKid = nil
                     return
                 }
-                self.pairing.editedKidsProfiles(resData)
+                self.pairing.editedKidsProfiles(resData, editedKid: self.requestKid)
+                self.requestKid = nil
             default: break
             
             }
@@ -269,6 +275,9 @@ class AccountManager : PageProtocol{
             case .getDevicePairingStatus : self.pairing.checkCompleted(isSuccess: false)
             case .getTotalPointInfo, .getPurchaseMonthly, .getPeriodPurchaseMonthly : self.pairing.authority.errorMyInfo(err)
             case .getKidsProfiles : self.pairing.updatedKidsProfiles(nil)
+            case .updateKidsProfiles :
+                self.pairing.editedKidsProfilesError()
+                self.requestKid = nil
             default: break
             }
         }).store(in: &dataCancellable)

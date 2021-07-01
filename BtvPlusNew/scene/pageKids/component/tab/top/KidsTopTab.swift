@@ -17,7 +17,7 @@ struct KidsTopTab: PageComponent{
     var body: some View {
         HStack(alignment: .center ,spacing:DimenKids.margin.light){
             KidProfile().onTapGesture {
-                self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
+                self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsMy))
             }
             Spacer()
             Button(action: {

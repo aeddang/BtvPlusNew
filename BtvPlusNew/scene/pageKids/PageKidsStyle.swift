@@ -42,6 +42,28 @@ struct ContentHorizontalEdgesKids: ViewModifier {
             }
     }
 }
+struct ContentHeaderEdgesKids: ViewModifier {
+    @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var sceneObserver:PageSceneObserver
+    @State var marginStart:CGFloat = 0
+   
+    func body(content: Content) -> some View {
+        return content
+            .padding(.leading, self.marginStart + DimenKids.margin.regular)
+            .onAppear(){
+                self.marginStart = self.sceneObserver.safeAreaStart
+            }
+            .onReceive(self.sceneObserver.$isUpdated){ update in
+                if !update {return}
+                if self.pagePresenter.isFullScreen {
+                    self.marginStart = 0
+                }else{
+                    self.marginStart = self.sceneObserver.safeAreaStart
+                }
+                
+            }
+    }
+}
 
 struct ContentVerticalEdgesKids: ViewModifier {
     var margin:CGFloat = DimenKids.margin.thin

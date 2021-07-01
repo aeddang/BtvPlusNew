@@ -25,38 +25,38 @@ struct RectButtonKids: View, SelecterbleProtocol{
     var size:CGSize = DimenKids.button.mediumRect
     var isFixSize:Bool = true
     var cornerRadius:CGFloat = DimenKids.radius.light
-    
+    var isMore: Bool = false
     let action: (_ idx:Int) -> Void
+    
     
     var body: some View {
         Button(action: {
             self.action(self.index)
         }) {
-            HStack{
+            HStack(spacing:0){
                 if self.isFixSize {
-                    Text(self.text)
-                        .font(.custom(textModifier.family, size: textModifier.size))
-                        .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
-                        .frame(width:self.size.width)
+                    HStack(spacing:0){
+                        Text(self.text)
+                            .font(.custom(textModifier.family, size: textModifier.size))
+                            .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+                        RectButtonKidsBody(
+                            trailText: self.trailText,
+                            strikeText: self.strikeText,
+                            isSelected: self.isSelected,
+                            textModifier: self.textModifier,
+                            isMore: self.isMore)
+                        }
+                    .frame(width:self.size.width)
                 } else {
                     Text(self.text)
                         .font(.custom(textModifier.family, size: textModifier.size))
                         .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
-                }
-                if let strikeText = self.strikeText {
-                    Text(strikeText)
-                        .font(.custom(textModifier.family, size: Font.sizeKids.thinExtra))
-                        .strikethrough()
-                        .foregroundColor(self.isSelected ? self.textModifier.activeColor : textModifier.color)
-                        .opacity(0.7)
-                        .padding(.leading, DimenKids.margin.tiny)
-                
-                }
-                if let trailText = self.trailText {
-                    Text(trailText )
-                        .font(.custom(textModifier.family, size:  self.textModifier.size))
-                        .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
-                        .padding(.leading, DimenKids.margin.micro)
+                    RectButtonKidsBody(
+                        trailText: self.trailText,
+                        strikeText: self.strikeText,
+                        isSelected: self.isSelected,
+                        textModifier: self.textModifier,
+                        isMore: self.isMore)
                 }
             }
             .padding(.horizontal, self.isFixSize ? 0 : DimenKids.margin.regular)
@@ -66,6 +66,40 @@ struct RectButtonKids: View, SelecterbleProtocol{
             
         }
     }
+    struct RectButtonKidsBody:View {
+        var trailText:String? = nil
+        var strikeText:String? = nil
+        var isSelected: Bool = false
+        var textModifier:TextModifierKids
+        var isMore: Bool = false
+        
+        var body :some View {
+            if let strikeText = self.strikeText {
+                Text(strikeText)
+                    .font(.custom(textModifier.family, size: Font.sizeKids.thinExtra))
+                    .strikethrough()
+                    .foregroundColor(self.isSelected ? self.textModifier.activeColor : textModifier.color)
+                    .opacity(0.7)
+                    .padding(.leading, DimenKids.margin.tiny)
+            
+            }
+            if let trailText = self.trailText {
+                Text(trailText )
+                    .font(.custom(textModifier.family, size:  self.textModifier.size))
+                    .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+                    .padding(.leading, DimenKids.margin.micro)
+            }
+            
+            if self.isMore {
+                Image(AssetKids.icon.more)
+                    .renderingMode(.original).resizable()
+                    .scaledToFit()
+                    .frame(height: DimenKids.icon.microUltra)
+                    .padding(.leading, DimenKids.margin.thin)
+            }
+        }
+    }
+    
 }
 #if DEBUG
 struct RectButtonKids_Previews: PreviewProvider {
@@ -73,7 +107,7 @@ struct RectButtonKids_Previews: PreviewProvider {
     static var previews: some View {
         Form{
             RectButtonKids(
-            text: "test",
+            text: "testㄴㅊㄴㅇㄴ",
                 isSelected: true,
                 isFixSize: false
                 ){_ in

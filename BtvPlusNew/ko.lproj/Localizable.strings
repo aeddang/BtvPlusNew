@@ -41,8 +41,6 @@
 "sat" = "토요일";
 "sun" = "일요일";
 
-"home" = "홈";
-
 "certificationNumber" = "인증번호";
 "certificationNumberHolder" = "000000";
 "macAdress" = "MAC 주소";
@@ -109,6 +107,9 @@
 
 "mutual" = "상호";
 "gradeNo" = "등급분류번호";
+
+"home" = "홈";
+"peerAverage" = "또래평균";
 
 /*
   Button
@@ -815,7 +816,7 @@
 "titleEditKid" = "자녀 프로필 수정";
 "titleRegistKidManagement" = "자녀 프로필 관리";
 "titleRegistKidCreate" = "자녀 프로필 만들기";
-
+"titleKidsMy" = "마이페이지";
 
 /*
  PageRegistKid
@@ -825,6 +826,11 @@
 "registKidText" = "자녀 프로필을 만들면 맞춤 추천/학습 서비스를 이용할 수 있어요.";
 "registKidCharacter" = "캐릭터 선택";
 "registKidCharacterText" = "아이에게 어울리는 캐릭터를 선택해주세요";
+
+/*
+ PageKidsMy
+*/
+"kidsMyNoProfile" = "등록된 자녀\n프로필이 없어요";
 
 
 

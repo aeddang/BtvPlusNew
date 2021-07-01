@@ -102,7 +102,7 @@ extension String {
         public static let gradeNo = "gradeNo".loaalized()
         
         public static let home = "home".loaalized()
-        
+        public static let peerAverage = "peerAverage".loaalized()
         
 
     }

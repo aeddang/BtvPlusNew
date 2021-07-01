@@ -44,6 +44,7 @@ struct DimenKids{
         public static let thinExtra:CGFloat = isPad ? 39 : 20//*
         public static let tiny:CGFloat = isPad ? 33 : 18//*
         public static let tinyExtra:CGFloat = isPad ? 26 : 16//*
+        public static let microUltra:CGFloat = isPad ? 20 : 12//*
         public static let micro:CGFloat = isPad ? 20 : 10//*
         public static let microExtra:CGFloat = isPad ? 16 : 9//*
     }
@@ -63,6 +64,7 @@ struct DimenKids{
         public static let medium:CGFloat = isPad ? 60 : 50
         public static let regular:CGFloat = isPad ? 67 : 32 //*
         public static let regularExtra:CGFloat = isPad ? 49 : 30 //*
+        public static let lightUltra:CGFloat = isPad ? 46 : 28 //*
         public static let light:CGFloat = isPad ? 46 : 24 //*
         public static let thin:CGFloat = isPad ? 46 : 24 
         
@@ -121,11 +123,14 @@ struct DimenKids{
     }
     
     struct item {
+        
         static let profileRegist:CGSize =  isPad ? CGSize(width: 150, height: 150) : CGSize(width: 78, height:  78)//*
         static let profileGnb:CGSize =  isPad ? CGSize(width: 57, height:  57) : CGSize(width: 37, height:  37)//*
         static let profile:CGSize =  isPad ? CGSize(width: 58, height:  58) : CGSize(width: 30, height:  30)//*
         static let profileList:CGSize =  isPad ? CGSize(width: 259, height:  326) : CGSize(width: 160, height:  201)//*
         
+        static let profileBox:CGSize =  isPad ? CGSize(width: 181, height:  280) : CGSize(width: 119, height:  173)//*
+        static let profileBoxImg:CGSize =  isPad ? CGSize(width: 127, height: 127) : CGSize(width: 78, height:  78)//*
         static let inputNum:CGSize =  isPad ? CGSize(width: 88, height:  88) : CGSize(width: 46, height:  46)//*
         
     }

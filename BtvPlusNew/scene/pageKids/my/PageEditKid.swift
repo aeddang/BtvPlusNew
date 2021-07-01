@@ -157,20 +157,6 @@ struct PageEditKid: PageView {
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
               
             }//draging
-            .onReceive(dataProvider.$result) { res in
-                guard let res = res else { return }
-                if res.id != self.tag { return }
-                switch res.type {
-                default: break
-                }
-            }
-            .onReceive(dataProvider.$error) { err in
-                guard let err = err else { return }
-                if err.id != self.tag { return }
-                switch err.type {
-                default: break
-                }
-            }
             .onReceive(self.pagePresenter.$event){ evt in
                 guard let evt = evt else {return}
                 if evt.id != PageSelectKidCharacter.key {return}
@@ -265,7 +251,6 @@ struct PageEditKid: PageView {
         return complete
     }
     
-
     private func selectCharacter() {
         withAnimation{
             self.editType = .none

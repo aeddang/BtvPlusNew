@@ -36,7 +36,7 @@ extension AssetKids{
         public static let back = "zemkidsMBackBtn"
         public static let backTop = "zemkidsMTopBackBtn"
         public static let setting = "zemkidsMTopSetBtn"
-        
+        public static let more = "zemkidsMBtnMore"
         public static let heartOff = "zemkidsMBtnSynopsisFavoriteOff"
         public static let heartOn = "zemkidsMBtnSynopsisFavoriteOn"
         public static let info = "zemkidsMBtnSynopsisTololtipInfoNor"
@@ -96,10 +96,16 @@ extension AssetKids{
         
         public static let profileBgOff = "zemkidsMMyProfileCardNor"
         public static let profileBgOn = "zemkidsMMyProfileCardSel"
-       
+        public static let profileBg = isPad ? "zemkidsTIMyProfileCard" : "zemkidsMMyProfileCard"
+        
         public static let tooltip = isPad ? "zemkidsTTooltipBubble29" : "zemkidsMTooltipBubble29"
         public static let spinner = "icSpinner"
-       
+        
+        public static let graphAverage = "zemkidsMImgGraphBallonGreen"
+        public static let graphThumbBg = "zemkidsMImgGraphMeRed"
+        
+        public static let graphGuideNum = "zemkidsMImgGraphRecomNum"
+        public static let graphGuideTime = "zemkidsMImgGraphRecomTime"
     }
     struct age {
         static func getIcon(age:String?) -> String {
@@ -111,7 +117,7 @@ extension AssetKids{
         }
     }
     struct image {
-        public static let noProfile = "zemkidsMGnbNorProfileDefault"
+        public static let noProfile = "zemkidsMImgKidsprofileDefault"
     }
     
     struct source {

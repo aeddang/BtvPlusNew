@@ -9,40 +9,85 @@ import Foundation
 import SwiftUI
 
 struct HorizontalGraph: PageView {
-    var percent: Float = 0.5
-    var unit:String = "%"
+    var percent: Float = 0.3
+    var thumbImg:String? = nil
+    
+    var guidePercent: Float = 0.0
+    var guideImg:String? = nil
     var paddingTop:CGFloat = SystemEnvironment.isTablet ? 8 : 5
     var size:CGSize = CGSize(width: 100, height: 15)
     var color:Color = Color.brand.primary
     var radius:CGFloat = DimenKids.radius.tiny
 
     var body: some View {
-        ZStack(alignment: .leading) {
+        ZStack(alignment: .top){
             ZStack(alignment: .leading) {
                 Spacer()
-                .modifier(MatchParent())
-                .background(self.color)
+                    .modifier(MatchParent())
+                ZStack(alignment: .topTrailing) {
+                    Spacer()
+                    .modifier(MatchParent())
+                    .background(self.color)
+                    .mask(
+                        RoundedRectangle(cornerRadius: self.radius)
+                    )
+                    .padding(.top, self.paddingTop)
+                    Spacer()
+                    .frame(width: 4, height: 2)
+                    .background(Color.app.white.opacity(0.2))
+                    .mask(
+                        RoundedRectangle(cornerRadius: self.radius)
+                    )
+                    .padding(.top, DimenKids.margin.micro)
+                    .padding(.trailing, size.height*1.2/2 + DimenKids.margin.micro)
+                }
+                
+                .background(self.color.opacity(0.7))
                 .mask(
                     RoundedRectangle(cornerRadius: self.radius)
                 )
+                .frame(width:size.width*CGFloat(self.percent), height: size.height)
             }
-            .padding(.top, self.paddingTop)
-            .background(self.color.opacity(0.7))
+            .frame(width: size.width, height: size.height)
+            .background(self.color.opacity(0.2))
             .mask(
                 RoundedRectangle(cornerRadius: self.radius)
             )
-            .frame(width:size.width*CGFloat(self.percent), height: size.height)
+            if let guide = self.guideImg {
+                HStack{
+                    Spacer()
+                        .frame(width:size.width*CGFloat(self.guidePercent) - (DimenKids.icon.micro/2) )
+                    Image(guide)
+                        .renderingMode(.original)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: DimenKids.icon.micro)
+                    Spacer()
+                }
+                .frame(width: size.width)
+            }
             HStack{
                 Spacer()
-                
+                    .frame(width:size.width*CGFloat(self.percent) - (self.size.height*1.2/2) )
+                if let thumbImg = self.thumbImg {
+                    Image(thumbImg)
+                        .renderingMode(.original)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: self.size.height*1.2,
+                               height: self.size.height*1.2)
+                        .clipShape(Circle())
+                        .overlay(
+                            Circle().stroke( self.color.toneDown(0.15) ,lineWidth: DimenKids.stroke.regular)
+                        )
+                }
                 Spacer()
             }
+            .frame(width: size.width)
+            
+            
+            
         }
-        .frame(width: size.width, height: size.height)
-        .background(self.color.opacity(0.2))
-        .mask(
-            RoundedRectangle(cornerRadius: self.radius)
-        )
     }
     
 }
@@ -51,7 +96,10 @@ struct HorizontalGraph_Previews: PreviewProvider {
     static var previews: some View {
         VStack{
             HorizontalGraph(
-               
+                percent: 0.6,
+                thumbImg: AssetKids.image.noProfile,
+                guidePercent: 0.3,
+                guideImg: AssetKids.shape.graphGuideTime
             )
             
         }.frame(width: 100, height: 300)

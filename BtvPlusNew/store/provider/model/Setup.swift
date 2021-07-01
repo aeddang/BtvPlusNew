@@ -29,6 +29,11 @@ class Setup:ObservableObject, PageProtocol {
         
         static let floatingUnvisibleDate = "floatingUnvisibleDate" + VS
         static let kidsRegistUnvisibleDate = "kidsRegistUnvisibleDate" + VS
+        
+        static let listApi = "listApi" + VS
+        static let drmApi = "drmApi" + VS
+        static let drmId = "drmId" + VS
+        static let videoPath = "videoPath" + VS
     }
     
     enum WatchLv:Int, CaseIterable {
@@ -202,6 +207,40 @@ class Setup:ObservableObject, PageProtocol {
         }
         get{
             return storage.bool(forKey: Keys.isShowAutoRemocon)
+        }
+    }
+    
+    
+    var listApi:String{
+        set(newVal){
+            storage.set(newVal, forKey: Keys.listApi)
+        }
+        get{
+            return storage.string(forKey: Keys.listApi) ?? ""
+        }
+    }
+    var drmApi:String{
+        set(newVal){
+            storage.set(newVal, forKey: Keys.drmApi)
+        }
+        get{
+            return storage.string(forKey: Keys.drmApi) ?? ""
+        }
+    }
+    var drmId:String{
+        set(newVal){
+            storage.set(newVal, forKey: Keys.drmId)
+        }
+        get{
+            return storage.string(forKey: Keys.drmId) ?? ""
+        }
+    }
+    var videoPath:String{
+        set(newVal){
+            storage.set(newVal, forKey: Keys.videoPath)
+        }
+        get{
+            return storage.string(forKey: Keys.videoPath) ?? ""
         }
     }
     

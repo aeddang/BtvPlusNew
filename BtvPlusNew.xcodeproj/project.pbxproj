@@ -279,6 +279,10 @@
 		3190CB17268C3EA900ACB465 /* PageKidsMy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB16268C3EA900ACB465 /* PageKidsMy.swift */; };
 		3190CB1A268C447C00ACB465 /* VerticalGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB19268C447C00ACB465 /* VerticalGraph.swift */; };
 		3190CB1C268C4B3B00ACB465 /* HorizontalGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB1B268C4B3B00ACB465 /* HorizontalGraph.swift */; };
+		3190CB1E268D221E00ACB465 /* PagePlayerTestList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB1D268D221E00ACB465 /* PagePlayerTestList.swift */; };
+		3190CB20268D676700ACB465 /* KidProfileBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB1F268D676700ACB465 /* KidProfileBox.swift */; };
+		3190CB22268D83C200ACB465 /* Kids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB21268D83C200ACB465 /* Kids.swift */; };
+		3190CB24268D890500ACB465 /* MenuNavi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB23268D890500ACB465 /* MenuNavi.swift */; };
 		3190E6242674993D000CBCB9 /* SkeletonBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190E6232674993D000CBCB9 /* SkeletonBlock.swift */; };
 		3192318025A40A7D00020388 /* ReflashSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192317F25A40A7D00020388 /* ReflashSpinner.swift */; };
 		3192CA6926818FAB007B3C29 /* ToolTipKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192CA6826818FAB007B3C29 /* ToolTipKids.swift */; };
@@ -815,6 +819,10 @@
 		3190CB16268C3EA900ACB465 /* PageKidsMy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageKidsMy.swift; sourceTree = "<group>"; };
 		3190CB19268C447C00ACB465 /* VerticalGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalGraph.swift; sourceTree = "<group>"; };
 		3190CB1B268C4B3B00ACB465 /* HorizontalGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalGraph.swift; sourceTree = "<group>"; };
+		3190CB1D268D221E00ACB465 /* PagePlayerTestList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePlayerTestList.swift; sourceTree = "<group>"; };
+		3190CB1F268D676700ACB465 /* KidProfileBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidProfileBox.swift; sourceTree = "<group>"; };
+		3190CB21268D83C200ACB465 /* Kids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kids.swift; sourceTree = "<group>"; };
+		3190CB23268D890500ACB465 /* MenuNavi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuNavi.swift; sourceTree = "<group>"; };
 		3190E6232674993D000CBCB9 /* SkeletonBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonBlock.swift; sourceTree = "<group>"; };
 		3192317F25A40A7D00020388 /* ReflashSpinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflashSpinner.swift; sourceTree = "<group>"; };
 		3192CA6826818FAB007B3C29 /* ToolTipKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolTipKids.swift; sourceTree = "<group>"; };
@@ -1962,6 +1970,7 @@
 			children = (
 				3190CB10268AC34200ACB465 /* KidProfileListItem.swift */,
 				3190CB12268ACC1E00ACB465 /* KidProfileListEmpty.swift */,
+				3190CB1F268D676700ACB465 /* KidProfileBox.swift */,
 			);
 			path = component;
 			sourceTree = "<group>";
@@ -2071,6 +2080,7 @@
 			children = (
 				318D100926687FAD00B66977 /* top */,
 				316A7067266EF7FC00A93B83 /* MenuTab.swift */,
+				3190CB23268D890500ACB465 /* MenuNavi.swift */,
 				3190CB0D268ABD8400ACB465 /* PageKidsTab.swift */,
 			);
 			path = tab;
@@ -2311,6 +2321,7 @@
 				3177732825FAF92D006382AE /* HostDevice.swift */,
 				3177732E25FAFA2C006382AE /* Authority.swift */,
 				316C45D7265200A500A8D7F5 /* Broadcasting.swift */,
+				3190CB21268D83C200ACB465 /* Kids.swift */,
 				318D100426686DFE00B66977 /* Kid.swift */,
 			);
 			path = model;
@@ -2491,9 +2502,9 @@
 			isa = PBXGroup;
 			children = (
 				D56C6985257DA09E00CF9AB8 /* Log.swift */,
-				D56C6987257DA09E00CF9AB8 /* UnitUtil.swift */,
 				D56C6988257DA09E00CF9AB8 /* AppUtil.swift */,
 				D56C6989257DA09E00CF9AB8 /* UIKitUtil.swift */,
+				D56C6987257DA09E00CF9AB8 /* UnitUtil.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -2923,6 +2934,7 @@
 				D56C6B71257DBAE700CF9AB8 /* PageSample.swift */,
 				D56C6B70257DBAE700CF9AB8 /* PageTest.swift */,
 				31F280212671ACA300F40B09 /* PagePlayerTest.swift */,
+				3190CB1D268D221E00ACB465 /* PagePlayerTestList.swift */,
 			);
 			path = test;
 			sourceTree = "<group>";
@@ -3343,6 +3355,7 @@
 				3167196825FEF6BE005AC3D2 /* FloatingBanner.swift in Sources */,
 				D57178582582D87500BF2612 /* PageHome.swift in Sources */,
 				31895B172601DF49002DE02E /* PackageBody.swift in Sources */,
+				3190CB1E268D221E00ACB465 /* PagePlayerTestList.swift in Sources */,
 				316C45E72653312800A8D7F5 /* AudioMirroring.swift in Sources */,
 				312BB09125DD102200AC03BC /* PurchaseWebviewModel.swift in Sources */,
 				31D453DE2678631300E08CB2 /* CustomVTTResourceLoader.swift in Sources */,
@@ -3428,11 +3441,13 @@
 				3190CB11268AC34200ACB465 /* KidProfileListItem.swift in Sources */,
 				316ECDF6264B4274008D2544 /* BlankButton.swift in Sources */,
 				318BA3982608C2660093BC7D /* CompleteKeyword.swift in Sources */,
+				3190CB22268D83C200ACB465 /* Kids.swift in Sources */,
 				D568892E259C592000F2F67A /* PagePairingSetupUser.swift in Sources */,
 				316C45D0264DE7D800A8D7F5 /* InputRemoteBox.swift in Sources */,
 				31740C30261C32780052A9C2 /* PurchaseList.swift in Sources */,
 				31373F6025C7E726004353DA /* CustomYTPlayer.swift in Sources */,
 				316A7090267061F800A93B83 /* PlayerMoreBoxKids.swift in Sources */,
+				3190CB20268D676700ACB465 /* KidProfileBox.swift in Sources */,
 				318D100E2668A67700B66977 /* InputCellKids.swift in Sources */,
 				318E7F0C25E8B01800B2AAAF /* MonthlyInfo.swift in Sources */,
 				318AA04C265DFA4F00C089EC /* SetupPossession.swift in Sources */,
@@ -3471,6 +3486,7 @@
 				D56C69A8257DA09E00CF9AB8 /* ImageLoader.swift in Sources */,
 				31E8D7C125CA85190034BBC4 /* PlayerOptionSelectBox.swift in Sources */,
 				3190CB13268ACC1E00ACB465 /* KidProfileListEmpty.swift in Sources */,
+				3190CB24268D890500ACB465 /* MenuNavi.swift in Sources */,
 				318F7B582625798400774B17 /* TMembership.swift in Sources */,
 				3195C1A82665CD9D001F513E /* strings.page.swift in Sources */,
 				3167641A25CCC1C5003A7721 /* PlayViewer.swift in Sources */,

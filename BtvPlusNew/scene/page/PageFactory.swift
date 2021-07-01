@@ -58,7 +58,7 @@ extension PageID{
     static let privacyAndAgree:PageID = "PrivacyAndAgree"
     static let remotecon:PageID = "remotecon"
     static let playerTest:PageID = "playerTest"
-    
+    static let playerTestList:PageID = "playerTestList"
 }
 
 struct PageProvider {
@@ -184,6 +184,7 @@ struct PageFactory{
         case .privacyAndAgree : return PagePrivacyAndAgree()
         case .remotecon : return PageRemotecon()
         case .playerTest : return PagePlayerTest()
+        case .playerTestList : return PagePlayerTestList()   
         default : return PageTest()
         }
     }

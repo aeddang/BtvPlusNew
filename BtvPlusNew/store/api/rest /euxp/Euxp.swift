@@ -52,7 +52,7 @@ extension EuxpNetwork{
         case GNB_FREE = "BP_04"  // 무료
         case GNB_SCHEDULED = "BP_05"  // 공개 예정
         case GNB_OCEAN = "BP_08"  // 오션 월정액
-        
+        case GNB_KIDS = "BP_07"
         static func getType(_ value:String?)->GnbTypeCode?{
             guard let key = value?.subString(start: 0, len: 5) else {return nil}
             switch key {
@@ -62,13 +62,19 @@ extension EuxpNetwork{
                 case "BP_04": return .GNB_FREE
                 case "BP_05": return .GNB_SCHEDULED
                 case "BP_08": return .GNB_OCEAN
+                case "BP_07": return .GNB_KIDS
                 default : return nil
             }
         }
     }
     
+    
+    
     enum MenuTypeCode: String {
         case MENU_KIDS = "NM2000002471"  // kids
+        case MENU_KIDS_HOME = "NM2000031454"
+        case MENU_KIDS_HOME_FIRST = "NM2000031456"  // kids
+        case MENU_KIDS_MY = "NM2000031458"  // kids
     }
    
     enum SrisTypCd: String {

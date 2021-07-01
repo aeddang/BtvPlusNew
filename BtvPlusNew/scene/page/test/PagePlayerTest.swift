@@ -12,13 +12,18 @@ import WebKit
 import Combine
 import Firebase
 
+
+
 struct PagePlayerTest: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appObserver:AppObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var setup:Setup
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var playerModel = PlayerModel()
    
+    @State var title:String = "PLAYER TEST"
+    @State var listURL:String = ""
     @State var ckcURL:String = ""
     @State var contentId:String = ""
     @State var videoPath:String = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
@@ -28,46 +33,80 @@ struct PagePlayerTest: PageView {
     @State var selectedCaption:String? = nil
     @State var selectedAudio:String? = nil
     
-    @State var debugingInfo:String? = nil
-    @State var debugInfo:String? = nil
+    @State var debugingInfo:String? = "test debuging"
+    @State var debugInfo:String? = "test debug"
+    
     
     var body: some View {
-        VStack(alignment: .center, spacing:10)
+        VStack(alignment: .leading, spacing:10)
         {
             PageTab( isClose: true)
             Text(self.debugingInfo ?? "")
                 .lineLimit(1).onTapGesture {
                     UIPasteboard.general.string = self.debugingInfo
+                    self.appSceneObserver.event = .toast("복사되었습니다")
                 }
+                .multilineTextAlignment(.leading)
+                .padding(.all, 10)
+                .modifier(MatchHorizontal(height: 30))
+                .background(Color.app.white)
+                
             Text(self.debugInfo ?? "")
                 .lineLimit(1).onTapGesture {
                     UIPasteboard.general.string = self.debugInfo
+                    self.appSceneObserver.event = .toast("복사되었습니다")
                 }
+                .multilineTextAlignment(.leading)
+                .padding(.all, 10)
+                .modifier(MatchHorizontal(height: 30))
+                .background(Color.app.white)
+            
             CPPlayer(
                 viewModel : self.playerModel ,
                 pageObservable : self.pageObservable)
-            InputCell(
-                title: "DRM API",
-                input: self.$ckcURL
-            )
-            InputCell(
-                title: "DRM ID",
-                input: self.$contentId
-            )
-            InputCell(
-                title: "Path",
-                input: self.$videoPath
-            )
-            FillButton(text: "go") { _ in
-                self.playerModel.drm = FairPlayDrm(
-                    contentId: self.contentId,
-                    ckcURL: self.ckcURL)
-                self.playerModel.event = .load(self.videoPath, true)
+            HStack{
+                InputCell(
+                    title: "List",
+                    input: self.$listURL
+                )
+                FillButton(text: "go") { _ in
+                    self.setup.listApi = self.listURL
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.playerTestList)
+                            .addParam(key: .data, value: self.listURL)
+                    )
+                    
+                }.frame(width: 100)
             }
+            .padding(.all, 10)
+            .background(Color.app.blueDeep)
+            
+            VStack{
+                InputCell(
+                    title: "DRM API",
+                    input: self.$ckcURL
+                )
+                InputCell(
+                    title: "DRM ID",
+                    input: self.$contentId
+                )
+                HStack{
+                    InputCell(
+                        title: "Path",
+                        input: self.$videoPath
+                    )
+                    FillButton(text: "go") { _ in
+                        self.playVideo()
+                    }.frame(width: 100)
+                }
+            }
+            .padding(.all, 10)
+            .background(Color.app.blueDeep)
+            
             if let info = self.currentInfo {
-                VStack{
+                HStack{
                     FillButton(
-                        text: "resolution " + (self.selectedResolution ?? "Auto"),
+                        text: self.selectedResolution ?? "Resolution",
                         isSelected: self.selectedResolution != nil
                     ) { _ in
                         
@@ -78,7 +117,7 @@ struct PagePlayerTest: PageView {
                         }
                     }
                     FillButton(
-                        text: "caption " + (self.selectedCaption ?? "Auto"),
+                        text: self.selectedCaption ?? "Caption",
                         isSelected: self.selectedCaption != nil
                     ) { _ in
                         self.appSceneObserver.select = .select((self.tag, info.captions), 0){ select in
@@ -88,7 +127,7 @@ struct PagePlayerTest: PageView {
                         }
                     }
                     FillButton(
-                        text: "audio " + (self.selectedAudio ?? "Auto"),
+                        text: self.selectedAudio ?? "Audio",
                         isSelected: self.selectedAudio != nil
                     ) { _ in
                         self.appSceneObserver.select = .select((self.tag, info.audios), 0){ select in
@@ -107,16 +146,49 @@ struct PagePlayerTest: PageView {
         .onReceive(self.playerModel.$assetInfo){ info in
             self.currentInfo = info
         }
+        .onReceive(self.playerModel.$error){ error in
+            guard let error = error else {return}
+            switch error {
+            case .connect(let msg) :
+                self.debugInfo = "connect error : " + msg
+            case .illegalState(let evt) :
+                self.debugingInfo = "illegalState : " + evt.decription
+            case .stream(let err) :
+                self.debugInfo = "stream error : " + err.getDescription()
+            }
+        }
+        .onReceive(self.pagePresenter.$event){ evt in
+            guard let evt = evt else {return}
+            if evt.id != "PagePlayerTestList" {return}
+            switch evt.type {
+            case .selected :
+                guard let item = evt.data as? VideoListData else { return } 
+                self.contentId = item.contentId
+                self.ckcURL = item.ckcURL
+                self.videoPath = item.videoPath
+                self.playVideo()
+            default : break
+            }
+        }
         .onAppear{
             
              
         }
     }//body
     
-    func onPageReload() {
-        PageLog.log("PAGE  VIEW EVENT")
-    }
+   
     
+    func playVideo(){
+        self.playerModel.drm = FairPlayDrm(
+            contentId: self.contentId,
+            ckcURL: self.ckcURL)
+        
+        self.setup.drmId = self.contentId
+        self.setup.drmApi = self.ckcURL
+        self.setup.videoPath = self.videoPath
+        
+        self.playerModel.event = .load(self.videoPath, true)
+    }
 }
 
 

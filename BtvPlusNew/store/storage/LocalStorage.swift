@@ -53,8 +53,11 @@ class LocalStorage {
         self.birth = user?.birth
         self.character = user?.characterIdx
         self.gender = user?.gender.apiValue()
+        
         if user == nil {
             self.pairingDate = nil
+            self.selectedKidsProfileId = nil
+            
         }else if self.pairingDate == nil {
             self.pairingDate = Date().localDate().description
         }

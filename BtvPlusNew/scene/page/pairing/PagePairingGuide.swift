@@ -11,7 +11,7 @@ struct PagePairingGuide: PageView {
     
     let datas: [GuideViewData] = [
         GuideViewData(
-            img: Asset.source.pairingTutorial01,
+            img: Asset.image.pairingTutorial01,
             title: nil,
             text: String.pageText.pairingGuideText1,
             info: String.pageText.pairingGuideInfo1,
@@ -19,20 +19,20 @@ struct PagePairingGuide: PageView {
             textHorizontal: String.pageText.pairingGuideText1Horizontal
             ),
         GuideViewData(
-            img: Asset.source.pairingTutorial02,
+            img: Asset.image.pairingTutorial02,
             title: String.pageText.pairingGuideTitle2,
             text: String.pageText.pairingGuideText2,
             info: String.pageText.pairingGuideInfo2,
             titleHorizontal: String.pageText.pairingGuideTitle2Horizontal
             ),
         GuideViewData(
-            img: Asset.source.pairingTutorial03,
+            img: Asset.image.pairingTutorial03,
             title: String.pageText.pairingGuideTitle3,
             text: String.pageText.pairingGuideText3,
             info: String.pageText.pairingGuideInfo3,
             titleHorizontal: String.pageText.pairingGuideTitle3Horizontal),
         GuideViewData(
-            img: Asset.source.pairingTutorial04,
+            img: Asset.image.pairingTutorial04,
             title:String.pageText.pairingGuideTitle4,
             text: String.pageText.pairingGuideText4,
             info: String.pageText.pairingGuideInfo4,

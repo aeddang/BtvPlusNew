@@ -9,10 +9,26 @@ import Foundation
 import SwiftUI
 extension KidsSynopsis {
     static let topHeight:CGFloat = SystemEnvironment.isTablet ? 192 : 40
-    static let bottomHeight:CGFloat = SystemEnvironment.isTablet ? 164 : 70
-    static let listWidth:CGFloat = SystemEnvironment.isTablet ? 243 : 150
+    static let bottomHeight:CGFloat = DimenKids.button.mediumRect.height
+    static let listWidth:CGFloat = SystemEnvironment.isTablet ? 260 : 150
     static let playerAreaWidth:CGFloat = SystemEnvironment.isTablet ? 705 : 440
     static let playerSize:CGSize = SystemEnvironment.isTablet ? CGSize(width: 705, height: 394) : CGSize(width: 368, height: 206)
+    
+    func getPlayerAreaWidth(sceneObserver:PageSceneObserver) -> CGFloat {
+        let h = sceneObserver.screenSize.height
+            - Self.topHeight - Self.bottomHeight
+            - (DimenKids.margin.regularExtra * 2) - DimenKids.margin.thin
+            - (sceneObserver.safeAreaTop + sceneObserver.safeAreaBottom)
+        
+        let limitW = sceneObserver.screenSize.width
+            - Self.listWidth - DimenKids.icon.regularExtra
+            - (DimenKids.margin.regularExtra * 2) - DimenKids.margin.thin
+            - (sceneObserver.safeAreaStart + sceneObserver.safeAreaEnd)
+        
+        let idealW = floor(h * 16 / 9)
+        
+        return min(limitW,idealW)
+    }
 }
 
 struct KidsSynopsis: PageComponent{
@@ -132,7 +148,7 @@ struct KidsSynopsis: PageComponent{
                     }
                     .modifier(Ratio16_9(
                                 geometry:  self.isFullScreen ? geometry : nil,
-                                width:Self.playerSize.width,
+                                width:getPlayerAreaWidth(sceneObserver: self.sceneObserver),
                                 isFullScreen: self.isFullScreen))
                     .clipShape(RoundedRectangle(cornerRadius: self.isFullScreen ? 0 : DimenKids.radius.heavy))
                     .overlay(
@@ -201,7 +217,7 @@ struct KidsSynopsis: PageComponent{
         
         .modifier(MatchParent())
         .background(
-            Image(AssetKids.source.synopsisBg)
+            Image(AssetKids.image.synopsisBg)
                 .renderingMode(.original)
                 .resizable()
                 .scaledToFill()

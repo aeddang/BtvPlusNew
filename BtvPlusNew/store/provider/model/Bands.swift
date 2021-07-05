@@ -32,7 +32,7 @@ class Bands:ObservableObject, PageProtocol {
     func setData(_ data:GnbBlock?){
         guard let data = data else { return }
         if let gnbs = data.gnbs {
-            self.datas = gnbs.map{ gnb in
+            self.datas = gnbs.filter{$0.gnb_typ_cd != EuxpNetwork.GnbTypeCode.GNB_KIDS.rawValue}.map{ gnb in
                 return Band().setData(gnb)
             }
         }

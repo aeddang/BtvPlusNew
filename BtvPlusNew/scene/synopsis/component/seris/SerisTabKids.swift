@@ -46,6 +46,7 @@ struct SerisTabKids: PageComponent{
                         }
                 }
                 .padding(.top, DimenKids.margin.tiny)
+                .padding(.horizontal, DimenKids.margin.thin)
             }
             TabSwitch(
                 tabs: self.sortOption.map{$0.nameKids},
@@ -58,7 +59,7 @@ struct SerisTabKids: PageComponent{
                 self.sortIdx = idx
                 self.seris = self.data.getSerisDatas(sort: self.sortOption[idx])
             }
-            .frame(width: SystemEnvironment.isTablet ? 194 : 130)
+            .padding(.horizontal, DimenKids.margin.thin)
             .padding(.top, SystemEnvironment.isTablet ? DimenKids.margin.thinUltra : DimenKids.margin.light)
             
         }

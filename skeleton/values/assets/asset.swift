@@ -292,9 +292,6 @@ extension Asset{
         public static let cardMembership = "imgMyCardMembership"
         public static let cardOkcashbag = "imgMyCardOkcashbag"
         public static let cardTvpoint = "imgMyCardTvpoint"
-    }
-    
-    struct source {
         public static let pairingTutorial = "pairingTutorialS"
         public static let myConnectIos = "imgMyConnectIos"
         public static let bannerTopPairing = "imgBannerTopPairing"
@@ -302,26 +299,19 @@ extension Asset{
         public static let intro02 = "imgIosIntro02"
         public static let intro03 = "imgIosIntro03"
         public static let intro04 = "imgIosIntro04"
-        
         public static let introT01 = "imgIntro01T"
         public static let introT02 = "imgIntro02T"
         public static let introT03 = "imgIntro03T"
         public static let introT04 = "imgIntro04T"
-       
-        
         public static let pairingTutorial01 = "imgPairingTutorial01"
         public static let pairingTutorial02 = "imgPairingTutorial02"
         public static let pairingTutorial03 = "imgPairingTutorial03"
         public static let pairingTutorial04 = "imgPairingTutorial04"
-        
         public static let empty = "imgMyEmpty01"
         public static let myEmpty = "imgMyEmpty01"
         public static let pairingCharacter = "imgPairingCharacter"
         public static let deviceEmpty = "imgPairingNostbB"
     }
-    
-    
-    
     
     struct age {
         static func getIcon(age:String?) -> String {

@@ -63,13 +63,13 @@ extension PageID{
 
 struct PageProvider {
     
-    static func getPageObject(_ pageID:PageID)-> PageObject {
+    static func getPageObject(_ pageID:PageID, animationType:PageAnimationType? = nil)-> PageObject {
         let pobj = PageObject(pageID: pageID, pageGroupID:PageType.btv.rawValue)
         pobj.pageIDX = getPageIdx(pageID)
         pobj.isHome = isHome(pageID)
         pobj.isAnimation = !pobj.isHome
         pobj.isDimed = getDimed(pageID)
-        pobj.animationType = getType(pageID)
+        pobj.animationType = animationType ?? getType(pageID)
         pobj.zIndex = isTop(pageID) ? 1 : 0
         return pobj
     }

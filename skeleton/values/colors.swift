@@ -69,6 +69,7 @@ extension Color {
         public static let ivoryDeep = Color.init(red: 245/255, green: 223/255, blue: 178/255)
         public static let ivory = Color.init(red: 255/255, green: 236/255, blue: 206/255)
         public static let ivoryLight = Color.init(red: 255/255, green: 244/255, blue: 219/255)  //Color.init(red: 250/255, green: 239/255, blue: 216/255)
+        public static let sepiaDeep = Color.init(red: 178/255, green: 90/255, blue: 60/255)
         public static let sepia = Color.init(red: 135/255, green: 67/255, blue: 45/255)
         public static let sepiaLight = Color.init(red: 135/255, green: 67/255, blue: 45/255).opacity(0.6)
         

@@ -16,8 +16,9 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     let axes: Axis.Set 
     let showIndicators: Bool
     let content: Content
-    
     var contentSize: CGFloat = -1
+    var header:PageViewProtocol? = nil
+    var headerSize: CGFloat = 0
     var marginTop: CGFloat
     var marginBottom: CGFloat
     var marginHorizontal: CGFloat
@@ -28,6 +29,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     var isAlignCenter:Bool = false
     let isRecycle: Bool
     
+    @State var isTop:Bool = true
     @State var scrollPos:Float? = nil
     @State var scrollIdx:Int? = nil
     @State var isTracking = false
@@ -43,6 +45,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         scrollType:InfinityScrollType? = nil,
         showIndicators: Bool = false,
         contentSize : CGFloat = -1,
+        header:PageViewProtocol? = nil,
+        headerSize: CGFloat = 0,
         marginVertical: CGFloat = 0,
         marginTop: CGFloat = 0,
         marginBottom: CGFloat = 0,
@@ -58,6 +62,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         self.axes = axes
         self.showIndicators = showIndicators
         self.content = content()
+        self.header = header
+        self.headerSize = header != nil ? headerSize : 0
         self.contentSize = contentSize
         self.marginTop = marginTop + marginVertical
         self.marginBottom = marginBottom + marginVertical
@@ -73,12 +79,13 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     
     init(
         viewModel: InfinityScrollModel,
+        axes: Axis.Set = .vertical,
         scrollType:InfinityScrollType? = nil,
         bgColor:Color = SystemEnvironment.currentPageType == .btv ? Color.brand.bg : Color.kids.bg,
         @ViewBuilder content: () -> Content) {
         
         self.viewModel = viewModel
-        self.axes = .vertical
+        self.axes = axes
         self.showIndicators = false
         self.content = content()
         self.marginTop = 0
@@ -97,7 +104,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
             ScrollViewReader{ reader in
                 ScrollView(self.isScroll ? self.axes : [], showsIndicators: self.showIndicators) {
                     if self.axes == .vertical {
-                        ZStack {
+                        ZStack(alignment: self.isAlignCenter ? .top : .topLeading){
                             if self.useTracking {
                                 GeometryReader { insideProxy in
                                     Color.clear
@@ -108,23 +115,27 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                 LazyVStack(alignment: self.isAlignCenter ? .center : .leading, spacing: self.spacing){
                                     self.content
                                 }
-                                .padding(.top, self.marginTop)
+                                .padding(.top, self.marginTop + self.headerSize)
                                 .padding(.bottom, self.marginBottom)
                                 .padding(.horizontal, self.marginHorizontal)
                             } else {
                                 VStack(alignment: self.isAlignCenter ? .center : .leading, spacing: self.spacing){
                                     self.content
                                 }
-                                .padding(.top, self.marginTop)
+                                .padding(.top, self.marginTop + self.headerSize)
                                 .padding(.bottom, self.marginBottom)
                                 .padding(.horizontal, self.marginHorizontal)
                             }
+                            if let header = self.header {
+                                header.contentBody
+                                    .padding(.top, self.marginTop)
+                                    
+                            }
                         }
-                        .frame(alignment: .topLeading)
+                        //.frame(alignment: .topLeading)
                         
-                    
                     } else {
-                        ZStack {
+                        ZStack (alignment: self.isAlignCenter ? .leading : .topLeading) {
                             if self.useTracking {
                                 GeometryReader { insideProxy in
                                     Color.clear
@@ -135,9 +146,10 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                 LazyHStack (alignment: self.isAlignCenter ? .center : .top, spacing: self.spacing){
                                     self.content
                                 }
-                                .padding(.top, self.marginTop)
+                                .padding(.top, self.marginTop + self.headerSize)
                                 .padding(.bottom, self.marginBottom)
-                                .padding(.horizontal, self.marginHorizontal)
+                                .padding(.leading, self.marginHorizontal + self.headerSize)
+                                .padding(.trailing, self.marginHorizontal)
                                 
                             } else {
                                 HStack (alignment: self.isAlignCenter ? .center : .top, spacing: self.spacing){
@@ -145,10 +157,16 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                 }
                                 .padding(.top, self.marginTop)
                                 .padding(.bottom, self.marginBottom)
-                                .padding(.horizontal, self.marginHorizontal)
+                                .padding(.leading, self.marginHorizontal + self.headerSize)
+                                .padding(.trailing, self.marginHorizontal)
+                            }
+                            if let header = self.header {
+                                header.contentBody
+                                    .padding(.leading, self.marginHorizontal)
+                                    
                             }
                         }
-                        .frame(alignment: .topLeading)
+                        //.frame(alignment: .topLeading)
                         
                     }
                 }
@@ -176,6 +194,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                 }
                 .onReceive(self.viewModel.$event){ evt in
                     guard let evt = evt else{ return }
+                    self.onTopChange(evt: evt)
+                    
                     switch evt  {
                     case .pullCancel : withAnimation{ self.progress = self.progressMax }
                     case .pullCompleted : withAnimation{ self.progress = self.scrollType == .reload() ? self.progressMax : 0 }
@@ -199,6 +219,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                 }
                 .onReceive(self.viewModel.$uiEvent){ evt in
                     guard let evt = evt else{ return }
+                    
                     switch evt {
                     case .scrollTo(let idx, let anchor):
                         self.anchor = anchor
@@ -209,6 +230,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                     default: break
                     }
                 }
+                
                 .onAppear(){
                     let max = Double(viewModel.pullRange + viewModel.pullCompletedRange )
                     self.progress = max
@@ -227,29 +249,44 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                     List{
                         if self.marginTop > Dimen.margin.regular {
                             Spacer()
-                            .modifier(MatchHorizontal(height: self.marginTop))
-                            .modifier(ListRowInset(spacing: 0))
+                                .modifier(MatchHorizontal(height: self.marginTop))
+                                .modifier(ListRowInset(spacing: 0))
                         }
-                        self.content
-                        Spacer().modifier(MatchHorizontal(height: self.marginBottom))
-                        .modifier(ListRowInset(spacing: 0))
+                        if let header = self.header {
+                            header.contentBody
+                                .modifier(MatchHorizontal(height: self.headerSize))
+                                .modifier(ListRowInset(spacing: 0))
+                        }
+                        if self.isAlignCenter {
+                            self.content
+                                .modifier(LayoutCenter())
+                        } else {
+                            self.content
+                        }
+                        Spacer()
+                            .modifier(MatchHorizontal(height: self.marginBottom))
+                            .modifier(ListRowInset(spacing: 0))
                     }
                     .padding(.horizontal, self.marginHorizontal)
                     .listStyle(PlainListStyle())
                     .background(self.bgColor)
                     .modifier(MatchParent())
+                    .onReceive(self.viewModel.$event){evt in
+                        self.onTopChange(evt: evt)
+                    }
                     .onAppear(){
                         UITableView.appearance().allowsSelection = false
                         UITableViewCell.appearance().selectionStyle = .none
                         UITableView.appearance().backgroundColor = self.bgColor.uiColor()
                         UITableView.appearance().separatorStyle = .none
                         UITableView.appearance().separatorColor = .clear
+                        self.onReady()
                     }
                     
                 } else{
                     GeometryReader { outsideProxy in
                         ScrollView(.vertical, showsIndicators: false) {
-                            ZStack(alignment: .topLeading) {
+                            ZStack(alignment: self.isAlignCenter ? .top : .topLeading) {
                                 if self.useTracking && self.isTracking{
                                     GeometryReader { insideProxy in
                                         Color.clear
@@ -259,11 +296,16 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                     }
                                 }
                                 VStack (alignment:self.isAlignCenter ? .center : .leading, spacing:self.spacing){
+                                    if let header = self.header {
+                                        header.contentBody
+                                    }
                                     self.content
                                 }
                                 .padding(.top, self.marginTop)
                                 .padding(.bottom, self.marginBottom)
                                 .padding(.horizontal, self.marginHorizontal)
+                                
+                                
                             }
                         }
                         .frame(width:outsideProxy.size.width)
@@ -271,13 +313,16 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                         .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
                             self.onPreferenceChange(value: value)
                         }
+                        .onReceive(self.viewModel.$event){evt in
+                            self.onTopChange(evt: evt)
+                        }
                         .onAppear(){
-                            self.trackingStart()
+                            self.isTracking = true
                             self.onReady()
                             
                         }
                         .onDisappear{
-                            self.trackingCancel()
+                            self.isTracking = false
                         }
                     }
                 }
@@ -287,11 +332,15 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                 ScrollView(.horizontal, showsIndicators: false) {
                     ZStack(alignment: .leading) {
                         HStack(alignment:self.isAlignCenter ? .center : .top, spacing:self.spacing){
+                            if let header = self.header {
+                                header.contentBody
+                            }
                             self.content
                         }
                         .padding(.top, self.marginTop)
                         .padding(.bottom, self.marginBottom)
-                        .padding(.horizontal, self.marginHorizontal)
+                        .padding(.leading, self.marginHorizontal)
+                        .padding(.trailing, self.marginHorizontal)
                     }
                 }
                 .coordinateSpace(name: self.tag)
@@ -301,31 +350,21 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                 .onAppear(){
                     self.onReady()
                 }
-                
             }
         }//if
-       
     }//body
     
-    @State var trackingStartSubscription:AnyCancellable?
-    func trackingStart(){
-        self.trackingCancel()
-        self.trackingStartSubscription = Timer.publish(
-            every: 0.5, on: .current, in: .common)
-            .autoconnect()
-            .sink() {_ in
-                self.trackingStartSubscription?.cancel()
-                self.trackingStartSubscription = nil
-                self.isTracking = true
-            }
-        
-    }
-    
-    func trackingCancel(){
-        //ComponentLog.d("autoChangeCancel" + self.pageID, tag:self.tag)
-        self.trackingStartSubscription?.cancel()
-        self.trackingStartSubscription = nil
-        self.isTracking = false
+    private func onTopChange(evt:InfinityScrollEvent?){
+        guard let evt = evt else {return}
+        switch evt {
+        case .top :
+            if !self.isTop { withAnimation{ self.isTop = true }}
+        case .down :
+            if self.isTop { withAnimation{ self.isTop = false }}
+        case .pull :
+            if self.isTop { withAnimation{ self.isTop = false }}
+        default : break
+        }
     }
     
     private func onPreferenceChange(value:[CGFloat]){

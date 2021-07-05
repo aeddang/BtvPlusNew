@@ -35,7 +35,7 @@ struct TopBanner: PageComponent {
             viewModel : self.viewModel,
             pages: self.pages
             )
-        .modifier(MatchParent())
+        .modifier(MatchHorizontal(height: TopBanner.uiRange))
         .onReceive(self.pagePresenter.$currentTopPage){ page in
             self.isTop = self.pageObservable.pageObject?.id == page?.id
             self.isTop ? self.autoChange() : self.autoChangeCancel()

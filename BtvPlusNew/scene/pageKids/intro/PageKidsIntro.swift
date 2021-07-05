@@ -13,7 +13,6 @@ extension PageKidsIntro {
     
 }
 
-
 struct PageKidsIntro: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
@@ -23,8 +22,7 @@ struct PageKidsIntro: PageView {
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var setup:Setup
     @State var isPlay:Bool = false
-    
-    
+    @State var movePage:PageObject? = nil
     var body: some View {
         ZStack{
             ImageAnimation(
@@ -93,6 +91,11 @@ struct PageKidsIntro: PageView {
             if err?.id != self.tag { return }
         }
         .onAppear{
+            if let obj = self.pageObject {
+                if let data = obj.getParamValue(key: .data) as? PageObject {
+                    self.movePage = data
+                }
+            }
             self.dataProvider.requestData(q: .init(id:self.tag, type: .getGnbKids))
             if self.pairing.status == .pairing {
                 self.pairing.requestPairing(.updateKids)
@@ -109,9 +112,17 @@ struct PageKidsIntro: PageView {
         if !self.isAnimationCompleted {return}
         if !self.isDataCompleted {return}
         if !self.isKidsProfileCompleted {return}
-        
-        self.pagePresenter.changePage(PageKidsProvider.getPageObject(.kidsHome))
-       
+        if let movePage = self.movePage {
+            if movePage.isPopup {
+                self.pagePresenter.changePage(PageKidsProvider.getPageObject(.kidsHome))
+                self.pagePresenter.openPopup(movePage)
+            } else {
+                self.pagePresenter.changePage(movePage)
+            }
+            
+        } else {
+            self.pagePresenter.changePage(PageKidsProvider.getPageObject(.kidsHome))
+        }
         
         if self.pairing.kid == nil {
             switch self.kidsProfileEvent {

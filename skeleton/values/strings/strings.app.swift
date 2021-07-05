@@ -104,6 +104,9 @@ extension String {
         public static let home = "home".loaalized()
         public static let peerAverage = "peerAverage".loaalized()
         
-
+        public static let watchTime = "watchTime".loaalized()
+        public static let watchCount = "watchCount".loaalized()
+        public static let watchCountUnit = "watchCountUnit".loaalized()
+        public static let recommend = "recommend".loaalized()
     }
 }

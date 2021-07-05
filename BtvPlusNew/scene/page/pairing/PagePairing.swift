@@ -16,7 +16,7 @@ struct PagePairingBody: PageView {
             ZStack(alignment: .topLeading){
                 HStack{
                     Spacer()
-                    Image(Asset.source.pairingCharacter)
+                    Image(Asset.image.pairingCharacter)
                         .renderingMode(.original)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
@@ -123,7 +123,7 @@ struct PagePairingBodyTablet: PageView {
                     }
                     .padding(.top, Dimen.margin.regularExtra)
                 }
-                Image(Asset.source.pairingCharacter)
+                Image(Asset.image.pairingCharacter)
                     .renderingMode(.original)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -181,7 +181,7 @@ struct PagePairingBodyTabletHorizontal: PageView {
         InfinityScrollView( viewModel: self.infinityScrollModel ){
             VStack(alignment:.leading , spacing:0) {
                 HStack( spacing: Dimen.margin.mediumExtra ){
-                    Image(Asset.source.pairingCharacter)
+                    Image(Asset.image.pairingCharacter)
                         .renderingMode(.original)
                         .resizable()
                         .aspectRatio(contentMode: .fit)

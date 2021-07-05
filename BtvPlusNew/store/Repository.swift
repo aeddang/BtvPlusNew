@@ -388,6 +388,9 @@ class Repository:ObservableObject, PageProtocol{
         SystemEnvironment.watchLv = 0
         SystemEnvironment.isAdultAuth = false
         SystemEnvironment.isImageLock = false
+        if #available(iOS 14.0, *) { SystemEnvironment.isLegacy = false }
+        else { SystemEnvironment.isLegacy = true }
+        
         
         self.userSetup.watchLv = 0
         self.userSetup.isAdultAuth = false

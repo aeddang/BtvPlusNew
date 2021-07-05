@@ -56,7 +56,7 @@ extension MultiBlockBody {
     private static var isLegacy:Bool {
         get{
             if #available(iOS 14.0, *) { return false }
-            else { return true }
+            else { return false }
         }
     }
     private static var isRecycle:Bool {

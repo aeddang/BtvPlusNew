@@ -46,7 +46,7 @@ struct MultiBlock:PageComponent {
     @State var topBanner:TopBanner?
     private func getTopBanner() -> TopBanner {
         if let top = self.topBanner {
-            //ComponentLog.d("Recycle Top", tag: self.tag + "Top")
+           // ComponentLog.d("Recycle Top", tag: self.tag + "Top")
             return top
         }
         let newTop = TopBanner(
@@ -61,6 +61,25 @@ struct MultiBlock:PageComponent {
         }
         return newTop
     }
+    
+    @State var topBannerBg:TopBannerBg?
+    private func getTopBannerBg() -> TopBannerBg {
+        if let top = self.topBannerBg {
+           // ComponentLog.d("Recycle TopBg", tag: self.tag + "Top")
+            return top
+        }
+        let newTop = TopBannerBg(
+            pageObservable : self.pageObservable,
+            viewModel:self.viewPagerModel,
+            datas: self.topDatas! )
+        ComponentLog.d("New TopBg" , tag: self.tag + "Top")
+        DispatchQueue.main.async {
+            self.topBannerBg = newTop
+        }
+        return newTop
+    }
+    
+   
     
     @State var headerBlock:HeaderBlockCell?
     @State var headerCount:Int = 0
@@ -91,6 +110,7 @@ struct MultiBlock:PageComponent {
             self.headerCount = count
             self.headerBlock = newHeader
         }
+
         return newHeader
     }
     var body :some View {
@@ -174,17 +194,9 @@ struct MultiBlock:PageComponent {
                 VStack(spacing: Self.spacing){
                     if self.topDatas != nil  && self.topDatas?.isEmpty == false {
                         ZStack{
-                            TopBannerBg(
-                                pageObservable : self.pageObservable,
-                                viewModel:self.viewPagerModel,
-                                datas: self.topDatas! )
+                            self.getTopBannerBg()
                                 .offset(y:(TopBanner.imageHeight - TopBanner.height)/2)
-                            TopBanner(
-                                pageObservable: self.pageObservable,
-                                viewModel:self.viewPagerModel,
-                                infinityScrollModel:self.infinityScrollModel,
-                                datas: self.topDatas! )
-                                
+                            self.getTopBanner()
                         }
                         .modifier(MatchHorizontal(height: TopBanner.height))
                         .clipped()

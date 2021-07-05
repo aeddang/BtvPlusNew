@@ -80,6 +80,7 @@ struct CateBlock: PageComponent{
     
     @State var reloadDegree:Double = 0
     @State var needAdult:Bool = false
+    
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -93,30 +94,27 @@ struct CateBlock: PageComponent{
                     ReflashSpinner(
                         progress: self.$reloadDegree)
                         .padding(.top, self.marginTop)
+                    
                     InfinityScrollView(
                         viewModel: self.infinityScrollModel,
                         axes: .vertical,
                         scrollType : .reload(isDragEnd:false),
-                        marginTop : self.marginTop,
+                        header:self.useTop ?
+                            CateBlockHeader(
+                                totalCount: self.totalCount,
+                                isSortAble: self.isSortAble,
+                                info: self.viewModel.info,
+                                marginTop: self.marginTop,
+                                action: self.sortAction)
+                            : nil,
+                        headerSize: Dimen.tab.lightExtra + self.spacing,
+                        marginTop : self.marginTop ,
                         marginBottom : self.marginBottom,
                         marginHorizontal : 0,
                         spacing:0,
                         isRecycle: true,
                         useTracking:self.useTracking
                     ){
-                        if self.useTop {
-                            SortTab(
-                                count:self.totalCount,
-                                isSortAble: self.isSortAble,
-                                info: self.viewModel.info
-                                ){ sort in
-                                    self.sortType = sort
-                                    self.reload()
-                                }
-                            .modifier(ListRowInset(
-                                        marginHorizontal:Dimen.margin.thin,
-                                        spacing: self.spacing))
-                        }
                         
                         ForEach(self.posters) { data in
                             PosterSet(
@@ -177,6 +175,7 @@ struct CateBlock: PageComponent{
         .onReceive(self.infinityScrollModel.$event){evt in
             guard let evt = evt else {return}
             switch evt {
+           
             case .pullCompleted :
                 if !self.infinityScrollModel.isLoading { self.reload() }
                 withAnimation{ self.reloadDegree = 0 }
@@ -210,6 +209,30 @@ struct CateBlock: PageComponent{
         }
         
     }//body
+    
+    struct CateBlockHeader:PageComponent {
+        var totalCount:Int
+        var isSortAble:Bool
+        var info:String?
+        var marginTop : CGFloat
+
+        let action: (_ type:EuxpNetwork.SortType) -> Void
+        var body :some View {
+            SortTab(
+                count:self.totalCount,
+                isSortAble: self.isSortAble,
+                info: info
+                ){ sort in
+                    self.action(sort)
+                }
+            .modifier(ContentHorizontalEdges())
+        }
+    }
+    
+    func sortAction(_ sort:EuxpNetwork.SortType) {
+        self.sortType = sort
+        self.reload()
+    }
     
     @State var sortType:EuxpNetwork.SortType = SortTab.finalSortType
     @State var totalCount:Int = 0

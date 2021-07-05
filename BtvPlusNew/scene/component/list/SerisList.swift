@@ -178,7 +178,7 @@ struct SerisItemKids: PageView {
                 RoundedRectangle(cornerRadius: DimenKids.radius.light)
                 .stroke(
                     self.isSelected ? Color.kids.primary : Color.transparent.clear,
-                    lineWidth: DimenKids.stroke.heavy)
+                    lineWidth:  DimenKids.stroke.medium )
             )
             if self.data.title != nil {
                 Text(self.data.title!)

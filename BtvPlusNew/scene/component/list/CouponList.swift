@@ -97,50 +97,22 @@ struct CouponList: PageComponent{
     var onBottom: ((_ data:CouponData) -> Void)? = nil
     
     @State var horizontalMargin:CGFloat = Dimen.margin.thin
-    @State var isTop:Bool = true
+   
     var body: some View {
         ZStack(alignment: .topLeading){
-            if let type = self.type {
-                HStack(spacing: Dimen.margin.tiny){
-                    VStack(alignment: .leading, spacing: 0){
-                        if let title = self.title {
-                            HStack(spacing: Dimen.margin.micro){
-                                if let leading = self.type?.text {
-                                    Text(leading).modifier(MediumTextStyle(size: Font.size.regular))
-                                }
-                                Text(title).modifier(BoldTextStyle(size: Font.size.regular))
-                            }
-                        }
-                        Spacer().modifier(MatchHorizontal(height: 0))
-                    }
-                    Button(action: {
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.confirmNumber)
-                                .addParam(key: .type, value: type)
-                        )
-                        
-                        
-                    }) {
-                        HStack(alignment:.center, spacing: Dimen.margin.micro){
-                            Image(Asset.icon.add)
-                                .renderingMode(.original).resizable()
-                                .scaledToFit()
-                                .frame(width: Dimen.icon.micro, height: Dimen.icon.micro)
-                            Text(type.regist)
-                                .modifier(BoldTextStyle(size: Font.size.light, color: Color.brand.primary))
-                        }
-                    }
-                    .buttonStyle(BorderlessButtonStyle())
-                }
-                .padding(.top, Dimen.margin.medium)
-                .padding(.horizontal, self.horizontalMargin )
-                .opacity(self.isTop ? 1 : 0 )
-            }
+            
             InfinityScrollView(
                 viewModel: self.viewModel,
                 axes: .vertical,
                 scrollType : .reload(isDragEnd:false),
-                marginTop: Dimen.margin.medium + (type != nil ? Dimen.tab.light : 0),
+                header:self.type != nil ?
+                    CouponHeader(
+                        type: type!,
+                        title:self.title,
+                        horizontalMargin: self.horizontalMargin)
+                    : nil,
+                headerSize: Dimen.tab.lightExtra + Dimen.margin.tinyExtra,
+                marginTop: Dimen.margin.medium,
                 marginBottom: self.marginBottom,
                 spacing: 0,
                 useTracking: self.useTracking
@@ -163,25 +135,7 @@ struct CouponList: PageComponent{
                 }
             }
         }
-        .onReceive(self.viewModel.$event){evt in
-            guard let evt = evt else {return}
-            switch evt {
-            case .top :
-                if !self.isTop {
-                    withAnimation{ self.isTop = true }
-                }
-            case .down :
-                if self.isTop {
-                    withAnimation{  self.isTop = false }
-                }
-            case .pull :
-                if self.isTop {
-                    withAnimation{  self.isTop = false }
-                }
-            default : break
-            }
-            
-        }
+       
         .onReceive(self.sceneObserver.$isUpdated){ update in
             if !update {return}
             self.horizontalMargin
@@ -195,6 +149,48 @@ struct CouponList: PageComponent{
         
     }//body
 }
+
+struct CouponHeader: PageComponent{
+    @EnvironmentObject var pagePresenter:PagePresenter
+    var type:CouponBlock.ListType
+    var title:String?
+    var horizontalMargin:CGFloat
+    var body: some View {
+        HStack(spacing: Dimen.margin.tiny){
+            VStack(alignment: .leading, spacing: 0){
+                if let title = self.title {
+                    HStack(spacing: Dimen.margin.micro){
+                        if let leading = self.type.text {
+                            Text(leading).modifier(MediumTextStyle(size: Font.size.regular))
+                        }
+                        Text(title).modifier(BoldTextStyle(size: Font.size.regular))
+                    }
+                }
+                Spacer().modifier(MatchHorizontal(height: 0))
+            }
+            Button(action: {
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.confirmNumber)
+                        .addParam(key: .type, value: type)
+                )
+                
+                
+            }) {
+                HStack(alignment:.center, spacing: Dimen.margin.micro){
+                    Image(Asset.icon.add)
+                        .renderingMode(.original).resizable()
+                        .scaledToFit()
+                        .frame(width: Dimen.icon.micro, height: Dimen.icon.micro)
+                    Text(type.regist)
+                        .modifier(BoldTextStyle(size: Font.size.light, color: Color.brand.primary))
+                }
+            }
+            .buttonStyle(BorderlessButtonStyle())
+        }
+        .padding(.horizontal, self.horizontalMargin )
+    }
+}
+
 
 struct CouponItem: PageView {
     var data:CouponData

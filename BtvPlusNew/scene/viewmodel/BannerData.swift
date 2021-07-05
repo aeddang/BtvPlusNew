@@ -31,7 +31,7 @@ class BannerData:InfinityData, PageProtocol{
     private(set) var type:BannerType = .list 
     func setPairing()->BannerData {
         self.move = .pairing
-        self.resourceImage = Asset.source.bannerTopPairing
+        self.resourceImage = Asset.image.bannerTopPairing
         return self
     }
     

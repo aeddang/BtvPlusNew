@@ -43,7 +43,7 @@ struct PageKidsProfileManagement: PageView {
                     .modifier(MatchParent())
                 }
                 .background(
-                    Image(AssetKids.source.homeBg)
+                    Image(AssetKids.image.homeBg)
                         .renderingMode(.original)
                         .resizable()
                         .scaledToFill()

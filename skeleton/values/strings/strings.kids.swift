@@ -21,10 +21,22 @@ extension String{
         public static let registKidText = "registKidText".loaalized()
         public static let registKidCharacter = "registKidCharacter".loaalized()
         public static let registKidCharacterText = "registKidCharacterText".loaalized()
+        public static let registKidNeedPairing = "registKidNeedPairing".loaalized()
+        
         public static let synopsisRelationVod = "synopsisRelationVodKids".loaalized()
         public static let synopsisNoRelationVod = "synopsisNoRelationVodKids".loaalized()
         
         public static let kidsMyNoProfile = "kidsMyNoProfile".loaalized()
+        public static let kidsMyDiagnosticReport = "kidsMyDiagnosticReport".loaalized()
+        public static let kidsMyDiagnosticReportText = "kidsMyDiagnosticReportText".loaalized()
+        public static let kidsMyDiagnosticReportStart = "kidsMyDiagnosticReportStart".loaalized()
+        public static let kidsMyDiagnosticReportDate = "kidsMyDiagnosticReportDate".loaalized()
+
+        public static let kidsMyMonthlyReport = "kidsMyMonthlyReport".loaalized()
+        public static let kidsMyMonthlyReportText = "kidsMyMonthlyReportText".loaalized()
+        public static let kidsMyMonthlyReportStart = "kidsMyMonthlyReportStart".loaalized()
+        public static let kidsMyNeedPairing = "kidsMyNeedPairing".loaalized()
+        public static let kidsMyNeedPairingSub = "kidsMyNeedPairingSub".loaalized()
     }
     
 }

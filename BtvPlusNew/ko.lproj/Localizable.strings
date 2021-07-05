@@ -110,7 +110,10 @@
 
 "home" = "홈";
 "peerAverage" = "또래평균";
-
+"watchTime" = "시청 시간";
+"watchCount" = "시청 편수";
+"watchCountUnit" = "편";
+"recommend" = "권장";
 /*
   Button
 */
@@ -193,6 +196,14 @@
 "sortPopularity" = "인기순";
 "sortTitle" = "제목순";
 "sortPrice" = "가격순";
+
+"sortEnglish" = "영어";
+"sortInfantDevelopment" = "유아발달";
+"sortCreativeObservation" = "창의력 관찰";
+
+"sortFairytale" = "동화";
+"sortCreativity" = "창의누리";
+"sortElementarySchool" = "초등교과";
 
 
 /*
@@ -389,6 +400,9 @@
 "alertKidAddError" = "프로필등록이 실패했습니다. 다시시도해주세요";
 "alertKidEditError" = "프로필수정이 실패했습니다. 다시시도해주세요";
 "alertKidDeleteError" = "프로필삭제가 실패했습니다. 다시시도해주세요";
+
+"alertNeedPairingMoveBtv" = "* B tv 연결 진행 시, 모바일 B tv 페어링 화면으로 이동합니다.";
+
 
 
 /*
@@ -826,12 +840,23 @@
 "registKidText" = "자녀 프로필을 만들면 맞춤 추천/학습 서비스를 이용할 수 있어요.";
 "registKidCharacter" = "캐릭터 선택";
 "registKidCharacterText" = "아이에게 어울리는 캐릭터를 선택해주세요";
+"registKidNeedPairing" = "자녀 프로필을 등록하려면 B tv 연결이 필요합니다.";
 
 /*
  PageKidsMy
 */
 "kidsMyNoProfile" = "등록된 자녀\n프로필이 없어요";
 
+"kidsMyDiagnosticReport" = "진단 리포트";
+"kidsMyDiagnosticReportText" = "학습도 하고, 진단 결과도 받고!";
+"kidsMyDiagnosticReportStart" = "진단 평가 하기";
+"kidsMyDiagnosticReportDate" = "마지막 응시 일자";
 
+"kidsMyMonthlyReport" = "월별 리포트";
+"kidsMyMonthlyReportText" = "영어, 유아발달, 창의력 관찰, 교과지식, 놀이활동\n총 5가지 학습 이력 별로 월별 리포트를 확인할 수 있어요!";
+"kidsMyMonthlyReportStart" = "지금 바로, 다양한 학습 콘텐츠를 즐겨보세요";
+
+"kidsMyNeedPairing" = "마이페이지 서비스를 이용하려면 B tv 연결이 필요합니다.";
+"kidsMyNeedPairingSub" = "아이 별 최근 시청 내역 관리가 가능해요";
 
 

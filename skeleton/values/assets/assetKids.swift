@@ -54,6 +54,7 @@ extension AssetKids{
         public static let crownOff = "zemkidsMFlagTypicalNor"
         public static let crownOn = "zemkidsMFlagTypicalSel"
         
+        public static let addReport = "zemkidsMBtnKidsprofilePlusNor"
         public static let addProfile = "zemkidsMIcKidsprofilePlusNor"
         public static let profileDelete = "zemkidsMBtnProfileDeleteNor"
     }
@@ -106,7 +107,26 @@ extension AssetKids{
         
         public static let graphGuideNum = "zemkidsMImgGraphRecomNum"
         public static let graphGuideTime = "zemkidsMImgGraphRecomTime"
+        
+        public static let cardFolder = "zemkidsMMyCardFolder1"
+        public static let cardFolderWide = "zemkidsMMyCardFolder2"
     }
+    
+    struct image {
+        public static let noProfile = "zemkidsMImgKidsprofileDefault"
+        public static let emptyRelationVod = "zemkidsMImgSynopsisNocontents"
+        public static let synopsisBg = isPad ? "zemkidsTIBgSynopsisEnter" : "zemkidsMBgSynopsisEnter"
+        public static let homeBg = "zemkidsMBgKidsHome01"
+        public static let profileBg = "zemkidsMMyProfileBg"
+        public static let reportImg = "zemkidsMMyReportImg"
+        public static let needPairing = "imgZemkidsTIImgMySharing"
+    }
+    
+    struct ani {
+        public static let splash:[String] = (0...47).map{ "zemkidsMSplash" + $0.description.toFixLength(2) }
+        public static let loading:[String] = (0...59).map{ "zemkidsMLoading" + $0.description.toFixLength(2) }
+    }
+    
     struct age {
         static func getIcon(age:String?) -> String {
             switch age {
@@ -115,23 +135,6 @@ extension AssetKids{
             default: return "zemkidsMFlagKidsAgeAll"
             }
         }
-    }
-    struct image {
-        public static let noProfile = "zemkidsMImgKidsprofileDefault"
-    }
-    
-    struct source {
-        public static let emptyRelationVod = "zemkidsMImgSynopsisNocontents"
-        public static let synopsisBg = isPad ? "zemkidsTIBgSynopsisEnter" : "zemkidsMBgSynopsisEnter"
-        public static let homeBg = "zemkidsMBgKidsHome01"
-        public static let profileBg = "zemkidsMMyProfileBg"
-        public static let cardFolder = "zemkidsMMyCardFolder1"
-        public static let cardFolderWide = "zemkidsMMyCardFolder2"
-    }
-    
-    struct ani {
-        public static let splash:[String] = (0...47).map{ "zemkidsMSplash" + $0.description.toFixLength(2) }
-        public static let loading:[String] = (0...59).map{ "zemkidsMLoading" + $0.description.toFixLength(2) }
     }
     
     static let characterList = [

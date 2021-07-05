@@ -316,6 +316,8 @@
 		3198FED9262FAF77008DCB2C /* PageMyAlram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3198FED8262FAF77008DCB2C /* PageMyAlram.swift */; };
 		319B07A4263A398C008C11A8 /* ConnectTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B07A3263A398C008C11A8 /* ConnectTitle.swift */; };
 		319B07A6263A8807008C11A8 /* VideoSetBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B07A5263A8807008C11A8 /* VideoSetBlock.swift */; };
+		319B7EC1268E8EE900B7DAAF /* DiagnosticReportCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B7EC0268E8EE900B7DAAF /* DiagnosticReportCard.swift */; };
+		319B7EC3268E9D0A00B7DAAF /* ReportPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B7EC2268E9D0A00B7DAAF /* ReportPage.swift */; };
 		319BAFA02604394F0007273F /* libTycheSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 319BAF9F260439120007273F /* libTycheSDK.a */; };
 		319BAFA326043A2F0007273F /* VoiceRecognition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319BAFA226043A2F0007273F /* VoiceRecognition.swift */; };
 		319BAFAE26043DCA0007273F /* Voice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319BAFAD26043DCA0007273F /* Voice.swift */; };
@@ -337,6 +339,16 @@
 		31C4BC97262D2D8600BB2167 /* NotificationCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BC96262D2D8600BB2167 /* NotificationCoreData.swift */; };
 		31C4BCC0262D71BA00BB2167 /* KeywordCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BCBF262D71BA00BB2167 /* KeywordCoreData.swift */; };
 		31C4BCCE262D745B00BB2167 /* AlramList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BCCD262D745B00BB2167 /* AlramList.swift */; };
+		31C4D29426926A69000C7E83 /* MonthlyReportCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4D29326926A69000C7E83 /* MonthlyReportCard.swift */; };
+		31C4D2962692A403000C7E83 /* MonthlyReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4D2952692A403000C7E83 /* MonthlyReport.swift */; };
+		31C4D2982692A505000C7E83 /* KidsReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4D2972692A505000C7E83 /* KidsReport.swift */; };
+		31C4D29A2692AF77000C7E83 /* ReadingReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4D2992692AF77000C7E83 /* ReadingReport.swift */; };
+		31C4D29C2692B43E000C7E83 /* KesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4D29B2692B43E000C7E83 /* KesModel.swift */; };
+		31C4D2A02692D40D000C7E83 /* CreativeReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4D29F2692D40C000C7E83 /* CreativeReport.swift */; };
+		31C4D2A22692D616000C7E83 /* EnglishReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4D2A12692D616000C7E83 /* EnglishReport.swift */; };
+		31C4D2A42692D867000C7E83 /* EvaluationReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4D2A32692D867000C7E83 /* EvaluationReport.swift */; };
+		31C4D2A72692E0CE000C7E83 /* PairingKidsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4D2A62692E0CE000C7E83 /* PairingKidsView.swift */; };
+		31C4D2A92693040A000C7E83 /* NeedPairingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4D2A82693040A000C7E83 /* NeedPairingInfo.swift */; };
 		31D3F4CB25E3368A008FDFEC /* WebBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4CA25E3368A008FDFEC /* WebBridge.swift */; };
 		31D3F4DE25E36625008FDFEC /* PageMultiBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */; };
 		31D3F4E625E3A57A008FDFEC /* BannerBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */; };
@@ -856,6 +868,8 @@
 		3198FED8262FAF77008DCB2C /* PageMyAlram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyAlram.swift; sourceTree = "<group>"; };
 		319B07A3263A398C008C11A8 /* ConnectTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectTitle.swift; sourceTree = "<group>"; };
 		319B07A5263A8807008C11A8 /* VideoSetBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSetBlock.swift; sourceTree = "<group>"; };
+		319B7EC0268E8EE900B7DAAF /* DiagnosticReportCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticReportCard.swift; sourceTree = "<group>"; };
+		319B7EC2268E9D0A00B7DAAF /* ReportPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportPage.swift; sourceTree = "<group>"; };
 		319BAF9E260439110007273F /* TycheSpeechRecognizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TycheSpeechRecognizer.h; sourceTree = "<group>"; };
 		319BAF9F260439120007273F /* libTycheSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTycheSDK.a; sourceTree = "<group>"; };
 		319BAFA226043A2F0007273F /* VoiceRecognition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecognition.swift; sourceTree = "<group>"; };
@@ -878,6 +892,16 @@
 		31C4BC96262D2D8600BB2167 /* NotificationCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCoreData.swift; sourceTree = "<group>"; };
 		31C4BCBF262D71BA00BB2167 /* KeywordCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordCoreData.swift; sourceTree = "<group>"; };
 		31C4BCCD262D745B00BB2167 /* AlramList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlramList.swift; sourceTree = "<group>"; };
+		31C4D29326926A69000C7E83 /* MonthlyReportCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyReportCard.swift; sourceTree = "<group>"; };
+		31C4D2952692A403000C7E83 /* MonthlyReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyReport.swift; sourceTree = "<group>"; };
+		31C4D2972692A505000C7E83 /* KidsReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsReport.swift; sourceTree = "<group>"; };
+		31C4D2992692AF77000C7E83 /* ReadingReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingReport.swift; sourceTree = "<group>"; };
+		31C4D29B2692B43E000C7E83 /* KesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KesModel.swift; sourceTree = "<group>"; };
+		31C4D29F2692D40C000C7E83 /* CreativeReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreativeReport.swift; sourceTree = "<group>"; };
+		31C4D2A12692D616000C7E83 /* EnglishReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnglishReport.swift; sourceTree = "<group>"; };
+		31C4D2A32692D867000C7E83 /* EvaluationReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvaluationReport.swift; sourceTree = "<group>"; };
+		31C4D2A62692E0CE000C7E83 /* PairingKidsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingKidsView.swift; sourceTree = "<group>"; };
+		31C4D2A82693040A000C7E83 /* NeedPairingInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeedPairingInfo.swift; sourceTree = "<group>"; };
 		31D3F4CA25E3368A008FDFEC /* WebBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebBridge.swift; sourceTree = "<group>"; };
 		31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMultiBlock.swift; sourceTree = "<group>"; };
 		31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerBlock.swift; sourceTree = "<group>"; };
@@ -1607,6 +1631,7 @@
 				316A709A2670708400A93B83 /* ThumbImageViewerKids.swift */,
 				31F2803B2673305A00F40B09 /* PlayInfoButton.swift */,
 				3192CA6826818FAB007B3C29 /* ToolTipKids.swift */,
+				31C4D2A82693040A000C7E83 /* NeedPairingInfo.swift */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -1844,6 +1869,7 @@
 			isa = PBXGroup;
 			children = (
 				3190CB0F268AC32D00ACB465 /* component */,
+				31C4D2A52692E0B6000C7E83 /* body */,
 				318D100B266884F700B66977 /* PageRegistKid.swift */,
 				3190CB14268BE9A600ACB465 /* PageEditKid.swift */,
 				318D100F2668B7D600B66977 /* PageSelectKidCharacter.swift */,
@@ -1961,6 +1987,13 @@
 			isa = PBXGroup;
 			children = (
 				3190CB09268987C400ACB465 /* KidsProfiles.swift */,
+				31C4D2972692A505000C7E83 /* KidsReport.swift */,
+				31C4D2992692AF77000C7E83 /* ReadingReport.swift */,
+				31C4D2952692A403000C7E83 /* MonthlyReport.swift */,
+				31C4D29F2692D40C000C7E83 /* CreativeReport.swift */,
+				31C4D2A12692D616000C7E83 /* EnglishReport.swift */,
+				31C4D2A32692D867000C7E83 /* EvaluationReport.swift */,
+				31C4D29B2692B43E000C7E83 /* KesModel.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -1971,6 +2004,9 @@
 				3190CB10268AC34200ACB465 /* KidProfileListItem.swift */,
 				3190CB12268ACC1E00ACB465 /* KidProfileListEmpty.swift */,
 				3190CB1F268D676700ACB465 /* KidProfileBox.swift */,
+				319B7EC0268E8EE900B7DAAF /* DiagnosticReportCard.swift */,
+				31C4D29326926A69000C7E83 /* MonthlyReportCard.swift */,
+				319B7EC2268E9D0A00B7DAAF /* ReportPage.swift */,
 			);
 			path = component;
 			sourceTree = "<group>";
@@ -2173,6 +2209,14 @@
 				31C4BCBF262D71BA00BB2167 /* KeywordCoreData.swift */,
 			);
 			path = model;
+			sourceTree = "<group>";
+		};
+		31C4D2A52692E0B6000C7E83 /* body */ = {
+			isa = PBXGroup;
+			children = (
+				31C4D2A62692E0CE000C7E83 /* PairingKidsView.swift */,
+			);
+			path = body;
 			sourceTree = "<group>";
 		};
 		31D3F4DB25E365F3008FDFEC /* popups */ = {
@@ -3320,6 +3364,7 @@
 				3174067725F709E600201850 /* NotificationVod.swift in Sources */,
 				314D588725B64ECD007BCA34 /* DisconnectView.swift in Sources */,
 				316C45EA2653832F00A8D7F5 /* AudioMirror.swift in Sources */,
+				31C4D2A92693040A000C7E83 /* NeedPairingInfo.swift in Sources */,
 				31895AFA2601C863002DE02E /* PageSynopsisPackage.swift in Sources */,
 				D51AA9F82599BAFB0035CD51 /* PageTab.swift in Sources */,
 				318AA043265DE83500C089EC /* SetupChildren.swift in Sources */,
@@ -3349,6 +3394,7 @@
 				31631C6D25D2895000E501F7 /* PlayerWaiting.swift in Sources */,
 				3152B46025D9DDE100147C86 /* SummaryViewer.swift in Sources */,
 				D573784A25A2983800EC571F /* CharacterSelectBox.swift in Sources */,
+				31C4D29C2692B43E000C7E83 /* KesModel.swift in Sources */,
 				D56C6A4B257DA0C700CF9AB8 /* LoopSwipperView.swift in Sources */,
 				314D589425B685B2007BCA34 /* PagePairingManagement.swift in Sources */,
 				316C45DE2652160000A8D7F5 /* WepgModel.swift in Sources */,
@@ -3378,6 +3424,7 @@
 				315B55DC25A8026700B5B351 /* DevicePairingInfo.swift in Sources */,
 				318AA03D265DDA9400C089EC /* SetupPlay.swift in Sources */,
 				3167196225FEED00005AC3D2 /* PageAuth.swift in Sources */,
+				31C4D29A2692AF77000C7E83 /* ReadingReport.swift in Sources */,
 				D56C6A5C257DA0C700CF9AB8 /* StrokeRectButton.swift in Sources */,
 				31DF151E25F9A89A00F0A38D /* TicketList.swift in Sources */,
 				316A70932670680700A93B83 /* PlayerTopBody.swift in Sources */,
@@ -3414,6 +3461,7 @@
 				D56C6B39257DACD800CF9AB8 /* ApiConst.swift in Sources */,
 				31D3F4CB25E3368A008FDFEC /* WebBridge.swift in Sources */,
 				D56C6A5F257DA0C700CF9AB8 /* ActivityIndicator.swift in Sources */,
+				31C4D2982692A505000C7E83 /* KidsReport.swift in Sources */,
 				D5688929259C4C0800F2F67A /* MoreInfoButton.swift in Sources */,
 				31E50C6C261AA05400D0762C /* PageWatchHabit.swift in Sources */,
 				316A70A12670804A00A93B83 /* ListStyleKids.swift in Sources */,
@@ -3498,6 +3546,7 @@
 				D56C699F257DA09E00CF9AB8 /* PageDragingProtocol.swift in Sources */,
 				3167199B260039C8005AC3D2 /* HeaderBanner.swift in Sources */,
 				D56C6A44257DA0C700CF9AB8 /* TextStyle.swift in Sources */,
+				319B7EC1268E8EE900B7DAAF /* DiagnosticReportCard.swift in Sources */,
 				318C874D25E64AA400ADDFE0 /* TopBanner.swift in Sources */,
 				318D12DC2664919F00BF1DD8 /* PageMyPossessionPurchase.swift in Sources */,
 				D56C6A23257DA0C600CF9AB8 /* util.swift in Sources */,
@@ -3515,6 +3564,7 @@
 				D5E27EE42587115900B2CD5D /* ImageConst.swift in Sources */,
 				3190CAFA2685621300ACB465 /* RelationVodBodyKids.swift in Sources */,
 				31F2803826732D3000F40B09 /* FunctionViewerKids.swift in Sources */,
+				31C4D29426926A69000C7E83 /* MonthlyReportCard.swift in Sources */,
 				D56C6A29257DA0C700CF9AB8 /* colors.swift in Sources */,
 				D56C6B12257DAADE00CF9AB8 /* SceneDelegate.swift in Sources */,
 				D51AA9E72599A24A0035CD51 /* PagePairing.swift in Sources */,
@@ -3574,6 +3624,7 @@
 				3159B05E25B17C14008CA85B /* StbInfo.swift in Sources */,
 				31671A052600930D005AC3D2 /* PagePerson.swift in Sources */,
 				3195C1B22665E0F8001F513E /* dimenKids.swift in Sources */,
+				31C4D2A42692D867000C7E83 /* EvaluationReport.swift in Sources */,
 				315544C225B79FAA00086510 /* PageServiceError.swift in Sources */,
 				D5469F5725835231009CED2D /* Bands.swift in Sources */,
 				D56C6A24257DA0C600CF9AB8 /* strings.swift in Sources */,
@@ -3593,6 +3644,7 @@
 				31740C3E261C3F6C0052A9C2 /* Purchase.swift in Sources */,
 				31A4A0002627D7700065E6C6 /* GuideView.swift in Sources */,
 				D56C6A46257DA0C700CF9AB8 /* RatioSize.swift in Sources */,
+				31C4D2A22692D616000C7E83 /* EnglishReport.swift in Sources */,
 				D56C6A57257DA0C700CF9AB8 /* RadioButton.swift in Sources */,
 				D56C6A2C257DA0C700CF9AB8 /* CustomPHPicker.swift in Sources */,
 				316A706F266F05E300A93B83 /* SelectButtonKids.swift in Sources */,
@@ -3641,9 +3693,11 @@
 				31631C6525D2516E00E501F7 /* SynopsisPrerollData.swift in Sources */,
 				316ECDFB264B49BE008D2544 /* RemoteStyle.swift in Sources */,
 				D56C6A50257DA0C700CF9AB8 /* Select.swift in Sources */,
+				319B7EC3268E9D0A00B7DAAF /* ReportPage.swift in Sources */,
 				3182A0B626188B8100F7F07D /* PageConfirmNumber.swift in Sources */,
 				D56C69AA257DA09E00CF9AB8 /* Network.swift in Sources */,
 				31671A132600B379005AC3D2 /* SynopsisParam.swift in Sources */,
+				31C4D2962692A403000C7E83 /* MonthlyReport.swift in Sources */,
 				318B537625F050CC0052E4E0 /* AlramButton.swift in Sources */,
 				D56C6A4D257DA0C700CF9AB8 /* ProgressSlider.swift in Sources */,
 				315A8FD425ADADD600498B03 /* GuestAgreementInfo.swift in Sources */,
@@ -3667,6 +3721,7 @@
 				D56CC30A2590703200CA1D54 /* BlockProtocol.swift in Sources */,
 				31626EE025B8EF1900F4031D /* Like.swift in Sources */,
 				3159B05925B17BED008CA85B /* KmsModel.swift in Sources */,
+				31C4D2A72692E0CE000C7E83 /* PairingKidsView.swift in Sources */,
 				3192EFD626670ECD0012F238 /* KidsTop.swift in Sources */,
 				3195C1A62665CD35001F513E /* strings.button.swift in Sources */,
 				317C974A26240945008F267D /* CouponBlock.swift in Sources */,
@@ -3765,6 +3820,7 @@
 				D56C6B35257DACD800CF9AB8 /* DataProvider.swift in Sources */,
 				D56C6A4F257DA0C700CF9AB8 /* Alert.swift in Sources */,
 				314D73A725B5108900907118 /* LikeButton.swift in Sources */,
+				31C4D2A02692D40D000C7E83 /* CreativeReport.swift in Sources */,
 				31F280222671ACA300F40B09 /* PagePlayerTest.swift in Sources */,
 				317C97442623EEF7008F267D /* CouponList.swift in Sources */,
 				D506D72D258C9ECE00F27C00 /* VideoList.swift in Sources */,

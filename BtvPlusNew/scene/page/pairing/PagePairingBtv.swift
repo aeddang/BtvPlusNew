@@ -101,7 +101,7 @@ struct PagePairingBtv: PageView {
                                     .padding(.horizontal, Dimen.margin.regular)
                             }
                             VStack(alignment:.center , spacing:Dimen.margin.regularExtra) {
-                                Image(Asset.source.pairingTutorial)
+                                Image(Asset.image.pairingTutorial)
                                     .renderingMode(.original)
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
@@ -127,7 +127,7 @@ struct PagePairingBtv: PageView {
                                     .padding(.vertical, Dimen.margin.medium)
                             }
                            
-                            Image(Asset.source.pairingTutorial)
+                            Image(Asset.image.pairingTutorial)
                                 .renderingMode(.original)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)

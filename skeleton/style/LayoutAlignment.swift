@@ -59,6 +59,16 @@ struct LayoutRight: ViewModifier {
     }
 }
 
+struct LayoutCenter: ViewModifier {
+    func body(content: Content) -> some View {
+        HStack {
+            Spacer()
+            content
+            Spacer()
+        }
+    }
+}
+
 struct MatchParent: ViewModifier {
     var marginX:CGFloat = 0
     var marginY:CGFloat = 0

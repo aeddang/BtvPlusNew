@@ -11,7 +11,7 @@ struct RelationVodEmpty: PageView{
     
     var body: some View {
         ZStack(alignment: .bottomTrailing){
-            Image(AssetKids.source.emptyRelationVod)
+            Image(AssetKids.image.emptyRelationVod)
                 .renderingMode(.original)
                 .resizable()
                 .aspectRatio(contentMode: .fit)

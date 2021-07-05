@@ -27,6 +27,7 @@ struct SystemEnvironment {
     static var currentPageType:PageType = .btv
     
     static var isFirstMemberAuth = false
+    static var isInitKidsPage:Bool = false
     static var isAdultAuth = false { didSet { setImageLock()} }
     static var isWatchAuth = false { didSet { setImageLock()} }
     static var watchLv = 0 { didSet {
@@ -56,6 +57,7 @@ struct SystemEnvironment {
         return ApiPrefix.device + SystemEnvironment.deviceId
     }
     
+    static var isLegacy:Bool = false
     //"cfb87121-4f7b-4d88-99ff-2b446c00e1c4"
     //"8LrhdsQYra5WG/o15zaCpsKz9uyy/WuqT2qTqo2oix340pJIxMFFwx+7smR8iEsL"
 }

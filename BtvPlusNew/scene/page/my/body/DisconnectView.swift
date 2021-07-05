@@ -31,7 +31,7 @@ struct DisconnectView: PageComponent{
                         .modifier(MediumTextStyle(size: Font.size.light, color: Color.app.greyLight))
                         .padding(.top, Dimen.margin.lightExtra)
                     if self.sceneOrientation == .portrait {
-                        Image(Asset.source.myConnectIos)
+                        Image(Asset.image.myConnectIos)
                             .renderingMode(.original)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
@@ -90,7 +90,7 @@ struct DisconnectView: PageComponent{
                 }
             }
             if self.sceneOrientation == .landscape {
-                Image(Asset.source.myConnectIos)
+                Image(Asset.image.myConnectIos)
                     .renderingMode(.original)
                     .resizable()
                     .aspectRatio(contentMode: .fit)

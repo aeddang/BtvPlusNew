@@ -111,7 +111,7 @@ struct GuideView_Previews: PreviewProvider {
     static var previews: some View {
         ZStack{
             GuideView(
-                data: .init(img: Asset.source.pairingTutorial01, title: "title", text: "text", info: "info")
+                data: .init(img: Asset.image.pairingTutorial01, title: "title", text: "text", info: "info")
             )
         }.background(Color.brand.bg)
     }

@@ -44,7 +44,7 @@ struct PagePairingEmptyDevice: PageView {
                                 .padding(.horizontal, Dimen.margin.regular )
                                 .fixedSize(horizontal: false, vertical:true)
                         }
-                        Image(Asset.source.deviceEmpty)
+                        Image(Asset.image.deviceEmpty)
                             .renderingMode(.original)
                             .resizable()
                             .aspectRatio(contentMode: .fit)

@@ -114,6 +114,7 @@ struct AppLayout: PageComponent{
             guard let cPage = page else { return }
             PageLog.d("currentTopPage " + cPage.pageID.debugDescription, tag:self.tag)
             PageLog.d("current useTopFix " + (self.appSceneObserver.useTopFix?.description ?? "nil"), tag:self.tag)
+            SystemEnvironment.currentPageType = PageType.getType(cPage.pageGroupID)
             self.pageType = SystemEnvironment.currentPageType
             PageLog.d("currentPageType " + self.pageType.rawValue, tag:self.tag)
             
@@ -196,17 +197,17 @@ struct AppLayout: PageComponent{
         //self.appSceneObserver.event = .debug("onPageInit")
         if !self.appObserverMove(self.appObserver.page) {
             let initMenuId = self.dataProvider.bands.datas.first?.menuId
+            self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
+            /*
             self.pagePresenter.changePage(
-                /*
-                PageKidsProvider.getPageObject(.kidsHome)
-                    .addParam(key: .id, value: initMenuId)
-                */
-                PageProvider.getPageObject(.home)
-                    .addParam(key: .id, value: initMenuId)
-                
+                PageKidsProvider.getPageObject(.kidsProfileManagement)
             )
-            
-           // self.pagePresenter.openPopup(PageProvider.getPageObject(.playerTest))
+            */
+             /*
+             PageProvider.getPageObject(.home)
+                 .addParam(key: .id, value: initMenuId)
+             */
+            // self.pagePresenter.openPopup(PageProvider.getPageObject(.playerTest))
         }
         if let alram = self.appObserver.alram  {
             self.appSceneObserver.event = .debug("apns exist")

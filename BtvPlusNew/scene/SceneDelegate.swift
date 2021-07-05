@@ -52,6 +52,17 @@ class SceneDelegate: PageSceneDelegate {
     }
     
     override func willChangeAblePage(_ page:PageObject?)->Bool{
+        if let willPage = page {
+            if PageType.getType(willPage.pageGroupID) == .kids && SystemEnvironment.currentPageType != .kids {
+                if page?.pageID != .kidsIntro && !SystemEnvironment.isInitKidsPage {
+                    self.pagePresenter.changePage(
+                        PageKidsProvider.getPageObject(.kidsIntro)
+                            .addParam(key: .data, value: page)
+                    )
+                    return false
+                }
+            }
+        }
         
         if page?.getParamValue(key: .needAdult) as? Bool == true {
             page?.addParam(key: .watchLv, value: Setup.WatchLv.lv4.rawValue )
@@ -70,10 +81,6 @@ class SceneDelegate: PageSceneDelegate {
                 return false
             }
         }
-        if self.repository?.pairing.status != .pairing {
-            SystemEnvironment.currentPageType = PageType.getType(page?.pageGroupID)
-            return true
-        }
         
         //시청연령제한
         if !SystemEnvironment.isAdultAuth ||
@@ -88,8 +95,6 @@ class SceneDelegate: PageSceneDelegate {
                     return false
                 }
             }
-        
-        SystemEnvironment.currentPageType = PageType.getType(page?.pageGroupID)
         return true
     }
     

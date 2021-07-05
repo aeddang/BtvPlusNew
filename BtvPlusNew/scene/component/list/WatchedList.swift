@@ -65,19 +65,16 @@ struct WatchedList: PageComponent{
     var delete: ((_ data:WatchedData) -> Void)? = nil
     var onBottom: ((_ data:WatchedData) -> Void)? = nil
     @State var horizontalMargin:CGFloat = Dimen.margin.thin
-    @State var isTop:Bool = true
+   
     var body: some View {
         ZStack(alignment:.topLeading){
-            InfoAlert(text: String.pageText.myWatchedInfo)
-                .padding(.top , Dimen.margin.regular)
-                .padding(.horizontal, self.horizontalMargin )
-                .opacity(self.isTop ? 1 : 0 )
-            
             InfinityScrollView(
                 viewModel: self.viewModel,
                 axes: .vertical,
                 scrollType : .reload(isDragEnd:false),
-                marginTop: Dimen.margin.regular + Dimen.tab.light,
+                header: InfoAlert(text: String.pageText.myWatchedInfo, horizontalMargin: self.horizontalMargin),
+                headerSize: Dimen.tab.lightExtra + Dimen.margin.tinyExtra,
+                marginTop: Dimen.margin.regular ,
                 marginBottom: Dimen.app.bottom,
                 spacing:0,
                 isRecycle: true,
@@ -107,21 +104,6 @@ struct WatchedList: PageComponent{
                 }
             }
            
-            
-        }
-        .onReceive(self.viewModel.$event){evt in
-            guard let evt = evt else {return}
-            switch evt {
-            case .top :
-                if !self.isTop {
-                    withAnimation{ self.isTop = true }
-                }
-            case .down :
-                if self.isTop {
-                    withAnimation{  self.isTop = false }
-                }
-            default : break
-            }
             
         }
         .onReceive(self.sceneObserver.$isUpdated){ update in

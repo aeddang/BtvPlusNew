@@ -132,7 +132,9 @@ enum ApiType{
     
     //KES
     case getKidsProfiles(HostDevice?),
-         updateKidsProfiles(HostDevice?, [Kid])
+         updateKidsProfiles(HostDevice?, [Kid]),
+         getEnglishReport(Kid),
+         getMonthlyReport(Kid, Date? = nil)
     
     func coreDataKey() -> String? {
         switch self {

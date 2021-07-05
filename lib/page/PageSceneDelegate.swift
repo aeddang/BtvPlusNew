@@ -508,6 +508,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
 
     final func getChangeDeviceOrientation(mask:UIInterfaceOrientationMask) -> UIInterfaceOrientation? {
         if UIDevice.current.orientation == .portrait {
+           
             switch mask {
                 case .landscape, .landscapeRight: return .landscapeRight
                 case .landscapeLeft: return .landscapeLeft

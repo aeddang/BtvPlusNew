@@ -59,6 +59,7 @@ class Pairing:ObservableObject, PageProtocol {
     @Published private(set) var kid:Kid? = nil
     private(set) var kids:[Kid] = []
     
+    
     let authority:Authority = Authority()
     var storage:LocalStorage? = nil
     
@@ -99,6 +100,8 @@ class Pairing:ObservableObject, PageProtocol {
         self.status = .disConnect
         self.event = .disConnected
         self.authority.reset()
+        self.kids = []
+        self.kid = nil
     }
     
     
@@ -181,6 +184,7 @@ class Pairing:ObservableObject, PageProtocol {
         } else {
             self.event = .updatedKidsError
         }
+        SystemEnvironment.isInitKidsPage = true
     }
     
     func editedKidsProfiles(_ data:KidsProfiles? , editedKid:Kid?){

@@ -73,15 +73,15 @@ struct PageIntro: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
     let pages: [PageViewProtocol] = SystemEnvironment.isTablet ? [
-        IntroItem(title: String.pageText.introTitle1, text: String.pageText.introText1, asset:  Asset.source.introT01),
-        IntroItem(title: String.pageText.introTitle2, text: String.pageText.introText2, asset:  Asset.source.introT02),
-        IntroItem(title: String.pageText.introTitle3, text: String.pageText.introText3, asset:  Asset.source.introT03),
-        IntroItem(title: String.pageText.introTitle4, text: String.pageText.introText4, asset:  Asset.source.introT04)
+        IntroItem(title: String.pageText.introTitle1, text: String.pageText.introText1, asset:  Asset.image.introT01),
+        IntroItem(title: String.pageText.introTitle2, text: String.pageText.introText2, asset:  Asset.image.introT02),
+        IntroItem(title: String.pageText.introTitle3, text: String.pageText.introText3, asset:  Asset.image.introT03),
+        IntroItem(title: String.pageText.introTitle4, text: String.pageText.introText4, asset:  Asset.image.introT04)
     ] :
     [
-        ResourceItem(asset: Asset.source.intro01),
-        ResourceItem(asset: Asset.source.intro02),
-        ResourceItem(asset: Asset.source.intro03)
+        ResourceItem(asset: Asset.image.intro01),
+        ResourceItem(asset: Asset.image.intro02),
+        ResourceItem(asset: Asset.image.intro03)
     ]
     @State var index: Int = 0
     @State var leading:CGFloat = 0

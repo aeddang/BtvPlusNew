@@ -45,6 +45,14 @@ extension String {
         public static let popularity = "sortPopularity".loaalized()
         public static let title = "sortTitle".loaalized()
         public static let price = "sortPrice".loaalized()
+        
+        public static let english = "sortEnglish".loaalized()
+        public static let infantDevelopment = "sortInfantDevelopment".loaalized()
+        public static let creativeObservation = "sortCreativeObservation".loaalized()
+
+        public static let fairytale = "sortFairytale".loaalized()
+        public static let creativity = "sortCreativity".loaalized()
+        public static let elementarySchool = "sortElementarySchool".loaalized()
     }
     
 

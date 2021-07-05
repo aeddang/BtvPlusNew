@@ -8,8 +8,6 @@ import Foundation
 import SwiftUI
 
 
-
-
 struct PageKidsMy: PageView {
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
@@ -20,10 +18,10 @@ struct PageKidsMy: PageView {
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
-    @ObservedObject var tabNavigationModel:NavigationModel = NavigationModel()
+    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     
-    @State var kid:Kid? = nil
-    
+  
+    @State var isPairing:Bool = false
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -35,90 +33,54 @@ struct PageKidsMy: PageView {
                     PageKidsTab(
                         title:String.kidsTitle.kidsMy,
                         isBack: true)
-                        
-                    HStack(alignment: .center, spacing: 0) {
-                        ZStack{
-                            Spacer().modifier(MatchVertical(width: 0))
-                            VStack(spacing:DimenKids.margin.thin){
-                                if let kid = self.kid{
-                                    KidProfileBox(data: kid)
-                                } else {
-                                    KidProfileBox(data: Kid(), isEmpty:true)
-                                }
-                                RectButtonKids(
-                                    text: String.kidsTitle.registKidManagement,
-                                    textModifier: BoldTextStyleKids(
-                                        size: Font.sizeKids.tiny,
-                                        color: Color.app.sepia).textModifier,
-                                    bgColor: Color.app.ivoryLight,
-                                    size: CGSize(
-                                        width:DimenKids.item.profileBox.width ,
-                                        height: DimenKids.button.lightUltra),
-                                    cornerRadius:  DimenKids.radius.medium,
-                                    isMore: true
-                                ) { _ in
-                                    
-                                    self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
-                                }
-                            }
-                            .padding(.horizontal, DimenKids.margin.light)
-                        }
-                        .background(
-                            Image(AssetKids.source.profileBg)
-                                .renderingMode(.original)
-                                .resizable()
-                                .scaledToFill()
-                                .modifier(MatchParent())
-                        )
-                        .clipped()
-                        VStack{
-                            if !self.tabs.isEmpty {
-                                MenuNavi(viewModel: self.tabNavigationModel, buttons: self.tabs, selectedIdx: self.tabIdx)
-                            }
-                        }
-                        .modifier(MatchParent())
-                        
+                    
+                    if self.isPairing {
+                        PairingKidsView(
+                            pageObservable: self.pageObservable,
+                            pageDragingModel: self.pageDragingModel,
+                            infinityScrollModel: self.infinityScrollModel)
+                    } else {
+                        NeedPairingInfo(
+                            title: String.kidsText.kidsMyNeedPairing,
+                            text: String.kidsText.kidsMyNeedPairingSub)
+                            .modifier(MatchParent())
                     }
-                    .modifier(ContentHeaderEdgesKids())
                     
                 }
-
+                .background(
+                    Image(AssetKids.image.homeBg)
+                        .renderingMode(.original)
+                        .resizable()
+                        .scaledToFill()
+                        .modifier(MatchParent())
+                        .opacity(self.isPairing ? 0 : 1)
+                )
                 .modifier(PageFullScreen(style:.kids))
+                .onReceive(self.infinityScrollModel.$event){evt in
+                    guard let evt = evt else {return}
+                    switch evt {
+                    case .pullCompleted:
+                        self.pageDragingModel.uiEvent = .pullCompleted(geometry)
+                    case .pullCancel :
+                        self.pageDragingModel.uiEvent = .pullCancel(geometry)
+                    default : break
+                    }
+                }
+                .onReceive(self.infinityScrollModel.$pullPosition){ pos in
+                    self.pageDragingModel.uiEvent = .pull(geometry, pos)
+                }
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
               
             }//draging
-            .onReceive(dataProvider.$result) { res in
-                guard let res = res else { return }
-                if res.id != self.tag { return }
-                switch res.type {
-                default: break
-                }
-            }
-            .onReceive(dataProvider.$error) { err in
-                guard let err = err else { return }
-                if err.id != self.tag { return }
-                switch err.type {
-                default: break
-                }
-            }
-            
-            
-            .onReceive(self.pairing.$kid){ kid in
-                self.kid = kid
+            .onReceive(self.pairing.$status){status in
+                self.isPairing = ( status == .pairing )
             }
             .onAppear{
-                self.tabDatas = self.dataProvider.bands.kidsGnbModel
-                    .getMyDatas()?
-                    .filter{$0.menu_nm != nil} ?? []
                 
-                self.tabs = self.tabDatas.map{$0.menu_nm ?? ""}
             }
         }//geo
     }//body
     
-    @State var tabIdx:Int = 0
-    @State var tabDatas:[BlockItem] = []
-    @State var tabs:[String] = []
 }
 
 #if DEBUG

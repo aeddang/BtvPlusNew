@@ -11,7 +11,7 @@ import SwiftUI
 struct InfoAlert: PageView {
     
     let text:String
-   
+    var horizontalMargin:CGFloat = 0
     var body: some View {
        HStack(alignment: .top, spacing: Dimen.margin.tinyExtra){
             Image(Asset.icon.alert)
@@ -23,11 +23,12 @@ struct InfoAlert: PageView {
                 .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
                 .padding(.top, Dimen.margin.microExtra)
         }
+       .padding(.horizontal, self.horizontalMargin )
     }//body
 }
 
 struct EmptyMyData: PageView {
-    var icon:String = Asset.source.myEmpty
+    var icon:String = Asset.image.myEmpty
     var text:String = String.alert.dataError
     var tip:String? = nil
     var body: some View {
@@ -54,7 +55,7 @@ struct EmptyMyData: PageView {
 }
 
 struct EmptyCard: PageView {
-    var icon:String = Asset.source.myEmpty
+    var icon:String = Asset.image.myEmpty
     var text:String = String.alert.dataError
     var tip:String? = nil
     var body: some View {

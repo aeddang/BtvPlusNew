@@ -453,6 +453,14 @@ class ApiManager :PageProtocol, ObservableObject{
             hostDevice: device, profiles: profiles,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .getEnglishReport(let kid): self.kes.getEnglishReport(
+            profile: kid,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getMonthlyReport(let kid, let date): self.kes.getMonthlyReport(
+            profile: kid, date: date, 
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         }
         return apiID
     }

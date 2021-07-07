@@ -24,6 +24,8 @@
 "femail" = "여";
 "mailDetail" = "남자";
 "femailDetail" = "여자";
+"parent" = "부모";
+"kid" = "아이";
 
 "min" = "분";
 "hour" = "시";
@@ -831,6 +833,7 @@
 "titleRegistKidManagement" = "자녀 프로필 관리";
 "titleRegistKidCreate" = "자녀 프로필 만들기";
 "titleKidsMy" = "마이페이지";
+"titleKidsMyDiagnostic" = "진단 리포트";
 
 /*
  PageRegistKid
@@ -852,6 +855,7 @@
 "kidsMyDiagnosticReportStart" = "진단 평가 하기";
 "kidsMyDiagnosticReportDate" = "마지막 응시 일자";
 
+
 "kidsMyMonthlyReport" = "월별 리포트";
 "kidsMyMonthlyReportText" = "영어, 유아발달, 창의력 관찰, 교과지식, 놀이활동\n총 5가지 학습 이력 별로 월별 리포트를 확인할 수 있어요!";
 "kidsMyMonthlyReportStart" = "지금 바로, 다양한 학습 콘텐츠를 즐겨보세요";
@@ -859,4 +863,28 @@
 "kidsMyNeedPairing" = "마이페이지 서비스를 이용하려면 B tv 연결이 필요합니다.";
 "kidsMyNeedPairingSub" = "아이 별 최근 시청 내역 관리가 가능해요";
 
+"kidsMyReportStart" = "진단 시작하기";
+"kidsMyEnglishText" = "‘%s’, 영어 수준이 궁금하시죠?";
+"kidsMyInfantDevelopmentText" = "‘%s’, 발달 특성이 궁금하시죠?";
+"kidsMyCreativeObservationText" = "‘%s’, 창의 발달 유형이 궁금하시죠?";
+"kidsMyEnglishReport" = "15만개 문항 데이터에서 엄선하여 추출한 레벨 테스트로 영어 실력을 확인하세요. \n레벨테스트를 연령별로 나누어 제공해, 보다 정확하게 실력을 분석해요";
+"kidsMyInfantDevelopmentReport" = "한솔 교육 연구원의 영유가 전문가가 개발한 검사로 \n발달 특성을 영역별로 진단하고 아이에게 맞는 동화책을 추천해 드려요";
+"kidsMyCreativeObservationReport" = "5대 창의 요소와 9가지 확산적 사고 요인을 통해 개발한 창의력 관찰검사로 \n아이의 창의 유형에 딱 맞는 콘텐츠를 추천해 드려요";
 
+"kidsMyResultDate" = "최근 응시일";
+"kidsMyResultRetryCount" = "재응시 횟수";
+"kidsMyResultRetryStart" = "진단 다시하기";
+"kidsMyResultCommentView" = "총평 자세히 보기";
+"kidsMyResultRecommandView" = "추천 콘텐츠 바로가기";
+
+"kidsMyEnglishResultLv" = "영어 레벨";
+"kidsMyEnglishResultRetry" = "레벨 테스트 다시하기";
+"kidsMyEnglishResultAnswerView" = "내 답안 보기";
+"kidsMyEnglishResultCommentText" = "Listening·Reading·Phonics";
+
+"kidsMyInfantDevelopmentResultAnother" = "다른 항목 진단하기";
+"kidsMyInfantDevelopmentLv1" = "빠름"
+"kidsMyInfantDevelopmentLv2" = "약간 빠름"
+"kidsMyInfantDevelopmentLv3" = "보통"
+"kidsMyInfantDevelopmentLv4" = "약간 느림"
+"kidsMyInfantDevelopmentLv5" = "느림"

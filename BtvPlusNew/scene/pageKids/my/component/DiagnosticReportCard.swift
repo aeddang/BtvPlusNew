@@ -8,36 +8,18 @@
 import Foundation
 import SwiftUI
 
-enum DiagnosticReportType:String, CaseIterable{
-    case english ,infantDevelopment, creativeObservation
-    
-    var name: String {
-        switch self {
-        case .english: return String.sort.english
-        case .infantDevelopment: return String.sort.infantDevelopment
-        case .creativeObservation: return String.sort.creativeObservation
-        
-        }
-    }
-    
-}
 
-class DiagnosticReportData:ObservableObject, PageProtocol{
-    @Published private(set) var isUpdated:Bool = false
-    var kid:Kid? = nil
-    
-    func setData(_ data:EnglishReport){
-        
-    }
+extension DiagnosticReportCard{
+    static let cardWidth:CGFloat = SystemEnvironment.isTablet ? 344 : 179
+    static let cardWidthWide:CGFloat = SystemEnvironment.isTablet ? 574 : 302
 }
 
 struct DiagnosticReportCard: PageComponent{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pagePresenter:PagePresenter
-    @ObservedObject var viewModel:DiagnosticReportData = DiagnosticReportData()
-    
-    @State var isEmpty:Bool = true
-    @State var selectedType:DiagnosticReportType? = nil
+    @EnvironmentObject var dataProvider:DataProvider
+    @ObservedObject var viewModel:DiagnosticReportModel = DiagnosticReportModel()
+
     var body: some View {
         ZStack{
             ZStack(alignment: .bottom){
@@ -47,18 +29,19 @@ struct DiagnosticReportCard: PageComponent{
                 }
             }
             .padding(.all, DimenKids.margin.tiny)
-            Image( AssetKids.shape.cardFolder)
+            Image( self.selectedType == .creativeObservation ? AssetKids.shape.cardFolderWide : AssetKids.shape.cardFolder)
                 .renderingMode(.original)
                 .resizable()
                 .scaledToFill()
                 .modifier(MatchParent())
             VStack(alignment: .center ,spacing:0){
-                HStack{
+                HStack(spacing:0){
                     Text(String.kidsText.kidsMyDiagnosticReport)
                         .modifier(BoldTextStyleKids(
                                     size: Font.sizeKids.light,
                                     color:  Color.app.brownDeep))
-                        .padding(.all, DimenKids.margin.thin)
+                        .padding(.leading, DimenKids.margin.light)
+                        .padding(.vertical, DimenKids.margin.thin)
                         .fixedSize()
                     if self.isEmpty {
                         Spacer().modifier(MatchHorizontal(height: 1))
@@ -73,9 +56,17 @@ struct DiagnosticReportCard: PageComponent{
                     }
                 }
                 Spacer()
-                if self.isEmpty {
+                if self.isLoading {
+                    AnimateSpinner(isAnimating: self.$isLoading).frame(
+                        width: DimenKids.loading.small.width,
+                        height: DimenKids.loading.small.height)
+                    
+                } else if self.isError {
+                    ErrorKidsData()
+                        .modifier(MatchParent())
+                }else if self.isEmpty || self.isEmptyResult{
                     Button(action: {
-                        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.registKid))
+                        self.moveResultPage()
                         
                     }) {
                         Image( AssetKids.icon.addReport)
@@ -97,42 +88,228 @@ struct DiagnosticReportCard: PageComponent{
                                     color:  Color.app.brownDeep))
                         .padding(.top, DimenKids.margin.tinyExtra)
                 } else {
-                    
+                    if let lvGraphBoxData = self.lvGraphBoxData {
+                        LvGraphBox(thumb: self.profile, data: lvGraphBoxData)
+                            .padding(.horizontal, DimenKids.margin.light)
+                            .padding(.vertical, DimenKids.margin.thin)
+                            .onTapGesture {
+                                self.moveResultPage()
+                            }
+                    }
+                    if let creativeGraphBoxData = self.creativeGraphBoxData {
+                        CreativeGraphBox( data: creativeGraphBoxData)
+                            .padding(.horizontal, DimenKids.margin.light)
+                            .padding(.bottom, DimenKids.margin.thin)
+                            .onTapGesture {
+                                self.moveResultPage()
+                            }
+                    }
                 }
                 Spacer()
             }
         }
         .frame(
-            width: SystemEnvironment.isTablet ? 344 : 179,
+            width:self.cardWidth,
             height: SystemEnvironment.isTablet ? 359 : 187)
+        
         .onReceive(self.viewModel.$isUpdated){ isUpdated in
             if !isUpdated {return}
+            self.updatedData()
+        }
+        .onReceive(dataProvider.$result) { res in
+            guard let res = res else { return }
+            switch res.type {
+            case .getEnglishLvReportResult :
+                if self.selectedType != .english {return}
+                guard let report  = res.data as? KidsReport  else { return self.setupEmptyResult() }
+                self.setupKidsReport(report)
+            case .getReadingReport:
+                if self.selectedType != .infantDevelopment {return}
+                guard let report  = res.data as? ReadingReport  else { return self.setupEmptyResult() }
+                self.setupReadingReport(report)
+            case .getReadingReportResult(_, let area):
+                if self.selectedType != .infantDevelopment {return}
+                if self.viewModel.readingArea != area {return}
+                guard let report  = res.data as? KidsReport  else { return self.setupEmptyResult() }
+                self.setupKidsReport(report)
+            case .getCreativeReportResult:
+                if self.selectedType != .creativeObservation {return}
+                guard let report  = res.data as? CreativeReport  else { return self.setupEmptyResult() }
+                self.setupCreativeReport(report)
+            default: break
+            }
+        }
+        .onReceive(dataProvider.$error) { err in
+            guard let err = err else { return }
+            switch err.type {
+            case .getEnglishLvReportResult :
+                if self.selectedType != .english {return}
+                self.setupErrorResult()
+            case .getReadingReportResult(_, let area):
+                if self.selectedType != .infantDevelopment {return}
+                if self.viewModel.readingArea != area {return}
+                self.setupErrorResult()
+            case .getReadingReport:
+                if self.selectedType != .infantDevelopment {return}
+                self.setupErrorResult()
+            case .getCreativeReportResult:
+                if self.selectedType != .creativeObservation {return}
+                self.setupErrorResult()
+            default: break
+            }
         }
         .onAppear(){
         }
     }
-    func selectData(){
+    @State var cardWidth:CGFloat = Self.cardWidth
+    @State var isLoading:Bool = false
+    @State var isError:Bool = false
+    @State var isEmpty:Bool = true
+    @State var isEmptyResult:Bool = false
+    @State var selectedType:DiagnosticReportType? = nil
+    
+    @State var kid:Kid? = nil
+    @State var profile:String = AssetKids.image.noProfile
+    @State var lvGraphBoxData:LvGraphBoxData? = nil
+    @State var creativeGraphBoxData:CreativeGraphBoxData? = nil
+    @State var reportContents:KidsReportContents? = nil
+    private func selectData(){
         let selectIdx = self.selectedType == nil
             ? -1
             : DiagnosticReportType.allCases.firstIndex(of: self.selectedType!)
         self.appSceneObserver.select =
             .select(
                 (self.tag , DiagnosticReportType.allCases.map{$0.name} ), selectIdx ?? -1){ idx in
-                withAnimation{
-                    self.selectedType = DiagnosticReportType.allCases[idx]
-                }
+                self.selectedData(DiagnosticReportType.allCases[idx])
             }
     }
     
-    func updatedData(){
-        self.isEmpty = self.viewModel.kid == nil
-        if self.isEmpty {
-            self.selectedType = nil
+    private func updatedData(){
+        self.kid = self.viewModel.kid
+        if self.viewModel.kid == nil {
+            self.profile = AssetKids.image.noProfile
+            self.isEmpty = true
+            withAnimation{
+                self.selectedType = nil
+                self.cardWidth = Self.cardWidth
+            }
         } else {
-            
+            self.isEmpty = false
+            if let kid = self.viewModel.kid {
+                self.profile = AssetKids.characterList[ kid.characterIdx ]
+            } else {
+                self.profile = AssetKids.image.noProfile
+            }
+            self.selectedData( self.selectedType ?? .english )
         }
     }
     
+    private func resetPage(){
+        self.isError = false
+        self.isEmptyResult = false
+        self.lvGraphBoxData = nil
+        self.creativeGraphBoxData = nil
+        self.reportContents = nil
+    }
+    
+    private func selectedData(_ select:DiagnosticReportType){
+        guard let kid = self.kid else { return }
+        withAnimation{
+            self.selectedType = select
+            self.cardWidth = select == .creativeObservation ? Self.cardWidthWide : Self.cardWidth
+        }
+        self.isLoading = true
+        self.resetPage()
+        switch select {
+        case .english:
+            self.dataProvider.requestData(q: .init(type: .getEnglishLvReportResult(kid)))
+        case .infantDevelopment:
+            if self.viewModel.studyData.resultSentence != nil {
+                if let area = self.viewModel.readingArea {
+                    self.dataProvider.requestData(q: .init(type: .getReadingReportResult(kid, area: area)))
+                } else {
+                    self.dataProvider.requestData(q: .init(type: .getReadingReport(kid)))
+                }
+            } else {
+                self.setupEmptyResult()
+            }
+        case .creativeObservation:
+            self.dataProvider.requestData(q: .init(type: .getCreativeReportResult(kid)))
+        }
+    }
+    
+    private func setupEmptyResult(){
+        self.isLoading = false
+        withAnimation{
+            self.isEmptyResult = true
+        }
+    }
+    
+    private func setupErrorResult(){
+        self.isLoading = false
+        withAnimation{
+            self.isError = true
+        }
+    }
+    
+    private func setupKidsReport(_ report:KidsReport){
+        if report.contents?.test_rslt_yn?.bool == true {
+            self.isLoading = false
+            self.isEmptyResult = false
+            self.reportContents = report.contents
+            withAnimation{
+                if self.selectedType == .english {
+                    self.lvGraphBoxData = LvGraphBoxData().setDataLv(report)
+                } else {
+                    self.lvGraphBoxData = LvGraphBoxData().setDataGraph(report)
+                }
+            }
+        } else {
+            self.setupEmptyResult()
+        }
+    }
+    
+    private func setupReadingReport(_ report:ReadingReport){
+        guard let kid = self.kid else { return }
+        if let resultSentence = self.viewModel.studyData.resultSentence {
+            guard let find = report.contents?.areas?.first(where: {$0.hcls_area_nm == resultSentence}) else {
+                self.setupEmptyResult()
+                return
+            }
+            guard let area = find.hcls_area_cd else {
+                self.setupEmptyResult()
+                return
+            }
+            self.viewModel.readingArea = area
+            self.dataProvider.requestData(q: .init(type: .getReadingReportResult(kid, area: area)))
+        } else {
+            self.setupEmptyResult()
+        }
+    }
+    
+    private func setupCreativeReport(_ report: CreativeReport){
+        if report.contents?.test_rslt_yn?.bool == true {
+            self.isLoading = false
+            self.isEmptyResult = false
+            self.reportContents = report.contents
+            withAnimation{
+                self.creativeGraphBoxData = CreativeGraphBoxData().setData(report)
+            }
+        } else {
+            self.setupEmptyResult()
+        }
+    }
+    
+    private func moveResultPage(){
+        self.pagePresenter.openPopup(
+            PageKidsProvider
+                .getPageObject(.kidsMyDiagnostic)
+                .addParam(key: .type, value: self.selectedType)
+                .addParam(key: .subType, value: self.viewModel.readingArea)
+                .addParam(key: .id, value: self.viewModel.studyData.resultSentence)
+                .addParam(key: .data, value: self.reportContents)
+        )
+    }
 }
 
 #if DEBUG

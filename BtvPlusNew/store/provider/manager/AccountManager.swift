@@ -72,16 +72,16 @@ class AccountManager : PageProtocol{
                 self.dataProvider.requestData(q: .init(type: .getPairingUserInfo(self.pairing.hostDevice?.apiMacAdress), isOptional: true))
                 
             case .updateKids :
-                self.dataProvider.requestData(q: .init(type: .getKidsProfiles(self.pairing.hostDevice), isOptional: true))
+                self.dataProvider.requestData(q: .init(type: .getKidsProfiles, isOptional: true))
             case .registKid(let kid) :
                 self.requestKid = kid
-                self.dataProvider.requestData(q: .init(type: .updateKidsProfiles(self.pairing.hostDevice, [kid]), isOptional: false))
+                self.dataProvider.requestData(q: .init(type: .updateKidsProfiles([kid]), isOptional: false))
             case .modifyKid(let kid) :
                 self.requestKid = kid
-                self.dataProvider.requestData(q: .init(type: .updateKidsProfiles(self.pairing.hostDevice, [kid]), isOptional: false))
+                self.dataProvider.requestData(q: .init(type: .updateKidsProfiles([kid]), isOptional: false))
             case .deleteKid(let kid) :
                 self.requestKid = kid
-                self.dataProvider.requestData(q: .init(type: .updateKidsProfiles(self.pairing.hostDevice, [kid]), isOptional: false))
+                self.dataProvider.requestData(q: .init(type: .updateKidsProfiles([kid]), isOptional: false))
 
             default: do{}
             }

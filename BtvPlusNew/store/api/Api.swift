@@ -131,10 +131,27 @@ enum ApiType{
          getSeachPopularityVod
     
     //KES
-    case getKidsProfiles(HostDevice?),
-         updateKidsProfiles(HostDevice?, [Kid]),
+    case getKidsProfiles,
+         updateKidsProfiles([Kid]),
+         getKidStudy(Kid),
          getEnglishReport(Kid),
-         getMonthlyReport(Kid, Date? = nil)
+         getReadingReport(Kid),
+         getMonthlyReport(Kid, Date? = nil),
+         
+         getEnglishLvReportExam(Kid, target:String? ),
+         getEnglishLvReportQuestion(Kid, String , Int, [KidsExamQuestion]),
+         getEnglishLvReportResult( Kid ),
+    
+         getReadingReportExam(Kid, area:String?),
+         getReadingReportQuestion(Kid, String , Int, [KidsExamQuestion]),
+         getReadingReportResult( Kid, area:String?),
+         
+         getCreativeReportExam(Kid),
+         getCreativeReportQuestion(Kid, String , Int, [KidsExamQuestion]),
+         getCreativeReportResult( Kid),
+    
+         getEvaluationReportExam(Kid, srisId:String?),
+         getEvaluationReportQuestion(Kid, String , Int, [KidsExamQuestion])
     
     func coreDataKey() -> String? {
         switch self {

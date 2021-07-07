@@ -8,11 +8,7 @@
 import Foundation
 
 struct CreativeReport: Decodable {
-    private(set) var contents: CreativeReportContents?
+    private(set) var contents: KidsReportContents?
 }
 
-struct CreativeReportContents: Decodable {
-    private(set) var parents: [Int]?
-    private(set) var childs: [Int]?
-    private(set) var labels: [String]?
-}
+

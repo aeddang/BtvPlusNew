@@ -41,16 +41,23 @@ struct KidsReport: Decodable {
 }
 
 struct KidsReportContents: Decodable {
-    private(set) var test_rslt_yn: String? // 시험결과여부
-    private(set) var subm_dtm: String? // 검사일
-    private(set) var retry_cnt: Int? // 재응시 횟수
-    private(set) var graphs: [Int]? // 5점척도 그래프
-    private(set) var level_cd: String? // 레벨코드(공통코드 LEVEL_CD 참고)
+    private(set) var parents: [Int]? //creative
+    private(set) var childs: [Int]?
+    private(set) var labels: [String]?
+    
+    private(set) var graphs: [Int]? // 5점척도 그래프 reading
+    
+    private(set) var level_cd: String? // 레벨코드(공통코드 LEVEL_CD 참고) 
     private(set) var level_avgs: [Int]? // 레벨 평균 분포
     private(set) var level_labels: [String]? // 레벨 이름
     private(set) var peer_avgs: [Int]? // 또래 평균
     private(set) var my_levels: [Int]? // 나의 레벨
     private(set) var max_val: Int? // 그래프의 max값
+    
+    private(set) var test_rslt_yn: DynamicValue? // 시험결과여부
+    private(set) var subm_dtm: String? // 검사일
+    private(set) var retry_cnt: Int? // 재응시 횟수
+
     private(set) var total_cn: String? // 총평
     private(set) var cn_items_cnt: Int? // 진단결과 리스트 개수
     private(set) var cn_items: [KidsReportResult]? // 진단결과 리스트

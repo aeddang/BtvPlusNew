@@ -19,7 +19,8 @@ struct PageKidsMy: PageView {
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
-    
+    @ObservedObject var diagnosticReportModel:DiagnosticReportModel = DiagnosticReportModel()
+    @ObservedObject var monthlyReportModel:MonthlyReportModel = MonthlyReportModel()
   
     @State var isPairing:Bool = false
     var body: some View {
@@ -38,7 +39,9 @@ struct PageKidsMy: PageView {
                         PairingKidsView(
                             pageObservable: self.pageObservable,
                             pageDragingModel: self.pageDragingModel,
-                            infinityScrollModel: self.infinityScrollModel)
+                            infinityScrollModel: self.infinityScrollModel,
+                            diagnosticReportModel: self.diagnosticReportModel,
+                            monthlyReportModel: self.monthlyReportModel)
                     } else {
                         NeedPairingInfo(
                             title: String.kidsText.kidsMyNeedPairing,

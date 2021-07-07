@@ -70,6 +70,8 @@ struct DimenKids{
         public static let thin:CGFloat = isPad ? 40 : 20
         
         public static let heavyRect:CGSize = isPad ? CGSize(width: 258, height: 73) : CGSize(width: 159, height: 38)//*
+        
+        public static let mediumRectUltra:CGSize = isPad ? CGSize(width: 282, height:51) : CGSize(width: 178, height: 31) //*
         public static let mediumRect:CGSize = isPad ? CGSize(width: 221, height: 73) : CGSize(width: 115, height: 38) //*
         public static let mediumRectExtra:CGSize = isPad ? CGSize(width: 192, height: 61) : CGSize(width: 100, height: 32) //*
         public static let regularRect:CGSize = isPad ? CGSize(width: 173, height: 115) : CGSize(width: 90, height: 60) //*
@@ -99,7 +101,7 @@ struct DimenKids{
         public static let heavy:CGFloat = 10
         public static let medium:CGFloat = isPad ? 4 : 3
         public static let regular:CGFloat = isPad ? 3 : 2
-        public static let light:CGFloat = 1
+        public static let light:CGFloat = isPad ? 2 : 1
     }
     
     struct stroke {
@@ -120,7 +122,7 @@ struct DimenKids{
     
     struct loading {
         static let large:CGSize = isPad ? CGSize(width: 436, height: 530) : CGSize(width: 227, height:  276)//*
-        static let small:CGSize = isPad ?  CGSize(width: 60, height: 72) : CGSize(width: 40, height:  48) //*
+        static let small:CGSize = isPad ?  CGSize(width: 120, height: 144) : CGSize(width: 80, height:  96) //*
     }
     
     struct item {
@@ -133,6 +135,10 @@ struct DimenKids{
         static let profileBox:CGSize =  isPad ? CGSize(width: 181, height:  280) : CGSize(width: 119, height:  173)//*
         static let profileBoxImg:CGSize =  isPad ? CGSize(width: 127, height: 127) : CGSize(width: 78, height:  78)//*
         static let inputNum:CGSize =  isPad ? CGSize(width: 88, height:  88) : CGSize(width: 46, height:  46)//*
+        
+        static let graphHorizontal:CGSize =  isPad ? CGSize(width: 199, height: 30) : CGSize(width: 100, height: 15)//*
+        static let graphVertical:CGSize =  isPad ? CGSize(width: 49, height: 160) : CGSize(width: 28, height: 90)//*
+        static let graphVerticalExtra:CGSize =  isPad ? CGSize(width: 44, height: 131) : CGSize(width: 23, height: 69)//*
         
     }
 }

@@ -117,7 +117,6 @@ class Kes: Rest{
     * 젬키즈 프로필 목록 조회 (IF-KES-001)
     */
     func getKidsProfiles(
-        hostDevice:HostDevice?,
         completion: @escaping (KidsProfiles) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
@@ -135,7 +134,7 @@ class Kes: Rest{
     * 프로필 등록/수정/삭제 (IF-KES-002)
     */
     func updateKidsProfiles(
-        hostDevice:HostDevice?, profiles:[Kid],
+        profiles:[Kid],
         completion: @escaping (KidsProfiles) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
@@ -161,11 +160,26 @@ class Kes: Rest{
         fetch(route: KesRegistKidsProfile(body: params), completion: completion, error:error)
     }
     
+    func getKidStudy(
+        profile:Kid,
+        completion: @escaping (KidStudy) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:Any]()
+        params["response_format"] = KesNetwork.RESPONSE_FORMET
+        params["menu_stb_svc_id"] = KesNetwork.MENU_STB_SVC_ID
+        params["IF"] = "IF-KES-003"
+        params["stb_id"] = stbId
+        
+        params["profile_id"] = profile.id
+        fetch(route: KesKidStudy(body: params), completion: completion, error:error)
+    }
+    
     /**
     * 수준 진단평가 정보 조회 / 영어
     */
     func getEnglishLvReportExam(
-        profile:Kid, target:KesNetwork.TargetCode,
+        profile:Kid, target:String?,
         completion: @escaping (KidsExams) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
@@ -175,7 +189,7 @@ class Kes: Rest{
         params["IF"] = "IF-KES-101"
         params["stb_id"] = stbId
         params["profile_id"] = profile.id
-        params["tgt_cd"] = target.rawValue
+        params["tgt_cd"] = target
         fetch(route: KesEnglishLvReportExam(body: params), completion: completion, error:error)
     }
     /**
@@ -248,7 +262,7 @@ class Kes: Rest{
     * 독서 유형별 진단결과 정보 (IF-KES-105)
     */
     func getReadingReportExam(
-        profile:Kid, area:KesNetwork.HclsAreaCode,
+        profile:Kid, area:String?,
         completion: @escaping (KidsExams) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
@@ -258,14 +272,14 @@ class Kes: Rest{
         params["IF"] = "IF-KES-105"
         params["stb_id"] = stbId
         params["profile_id"] = profile.id
-        params["hcls_area_cd"] = area.rawValue
+        params["hcls_area_cd"] = area
         
         fetch(route: KesReadingReportExam(body: params), completion: completion, error:error)
     }
     /**
     * 성향 진단평가 정보 저장 / 독서 (IF-KES-106)
     */
-    func getReadingReportExamQuestion(
+    func getReadingReportQuestion(
         profile:Kid, epNo: String , epTpNo: Int, questions: [KidsExamQuestion],
         completion: @escaping (KidsExamQuestionResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
@@ -301,7 +315,7 @@ class Kes: Rest{
     * 성향 진단평가 정보 결과 / 독서 결과 (IF-KES-107)
     */
     func getReadingReportResult(
-        profile:Kid, area:KesNetwork.HclsAreaCode,
+        profile:Kid, area:String?,
         completion: @escaping (KidsReport) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
@@ -311,7 +325,7 @@ class Kes: Rest{
         params["IF"] = "IF-KES-107"
         params["stb_id"] = stbId
         params["profile_id"] = profile.id
-        params["hcls_area_cd"] = area.rawValue
+        params["hcls_area_cd"] = area
         
         fetch(route: KesReadingReportResult(body: params), completion: completion, error:error)
     }
@@ -337,7 +351,7 @@ class Kes: Rest{
     /**
     * 성향 진단평가 정보 저장 / 창의 (IF-KES-109)
     */
-    func getCreativeReportExamQuestion(
+    func getCreativeReportQuestion(
         profile:Kid, epNo: String , epTpNo: Int, questions: [KidsExamQuestion],
         completion: @escaping (KidsExamQuestionResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
@@ -390,7 +404,7 @@ class Kes: Rest{
     * 차시 평가(퀴즈) 정보 조회 / 영어, 창의, 교과 (IF-KES-111)
     */
     func getEvaluationReportExam(
-        profile:Kid, srisId:String,
+        profile:Kid, srisId:String?,
         completion: @escaping (EvaluationExams) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
@@ -407,7 +421,7 @@ class Kes: Rest{
     /**
     * 차시 평가(퀴즈) 정보 저장 (IF-KES-112)
     */
-    func getEvaluationReportExamQuestion(
+    func getEvaluationReportQuestion(
         profile:Kid, epNo: String , epTpNo: Int, questions: [KidsExamQuestion],
         completion: @escaping (KidsExamQuestionResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
@@ -485,6 +499,12 @@ struct KesKidsProfiles:NetworkRoute{
 struct KesRegistKidsProfile:NetworkRoute{
     var method: HTTPMethod = .post
     var path: String = "/kes/v1/profile"
+    var body: [String : Any]? = nil
+}
+
+struct KesKidStudy:NetworkRoute{
+    var method: HTTPMethod = .post
+    var path: String = "/kes/v1/mystudy/item"
     var body: [String : Any]? = nil
 }
 

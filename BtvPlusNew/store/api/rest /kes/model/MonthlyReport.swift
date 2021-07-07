@@ -8,6 +8,10 @@
 import Foundation
 
 struct MonthlyReport: Decodable {
+    private(set) var contents:MonthlyReportContents?
+}
+
+struct MonthlyReportContents: Decodable {
     private(set) var infos_cnt: Int? // 월간리포트 정보 리스트 개수
     private(set) var infos: [MonthlyReportItem]? // 월간리포트 정보 리스트
 }

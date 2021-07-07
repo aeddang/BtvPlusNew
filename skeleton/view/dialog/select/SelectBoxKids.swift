@@ -25,9 +25,9 @@ struct SelectBoxKids: PageComponent {
     
     var body: some View {
         VStack{
-            VStack( spacing:DimenKids.margin.thin ){
+            VStack( spacing:DimenKids.margin.light ){
                 if self.buttons.count > Self.scrollNum {
-                    ScrollView{
+                    ScrollView(.vertical, showsIndicators: false){
                         SelectBoxKidsBody(index: self.$index, buttons: self.buttons, action: self.action)
                     }
                 } else {
@@ -41,6 +41,7 @@ struct SelectBoxKids: PageComponent {
                         self.isShowing = false
                     }
                 }
+    
             }
             .modifier(ContentBox())
         }

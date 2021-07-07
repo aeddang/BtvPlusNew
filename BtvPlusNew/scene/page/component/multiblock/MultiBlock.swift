@@ -125,7 +125,6 @@ struct MultiBlock:PageComponent {
                 isRecycle : self.isRecycle,
                 useTracking:self.useBodyTracking){
                 
-                
                 if let topDatas = self.topDatas ,!topDatas.isEmpty {
                     self.getTopBanner()
                     .modifier(MatchHorizontal(height:  TopBanner.uiRange))

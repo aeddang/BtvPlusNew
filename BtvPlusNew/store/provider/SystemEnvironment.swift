@@ -9,8 +9,6 @@ import Foundation
 import UIKit
 
 
-
-
 struct SystemEnvironment {
     static let model:String = AppUtil.model
     static let systemVersion:String = UIDevice.current.systemVersion

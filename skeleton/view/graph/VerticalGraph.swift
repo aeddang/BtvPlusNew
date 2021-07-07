@@ -9,9 +9,10 @@ import Foundation
 import SwiftUI
 
 struct VerticalGraph: PageView {
-    var percent:Float = 0.0
-    var maxValue:Float = 100
-    var unit:String = "%"
+    var value:Float = 0.0
+    var maxValue:Float = 1
+    var viewText:String? = nil
+    var unit:String = ""
     var thumbText:String? = nil
     var thumbImg:String? = nil
     var title:String? = nil
@@ -54,10 +55,15 @@ struct VerticalGraph: PageView {
                                 .renderingMode(.original)
                                 .resizable()
                                 .scaledToFit()
-                                .padding(.all, DimenKids.stroke.medium)
-                                .frame(width: self.size.width,
-                                       height: self.size.width)
+                                
+                                .frame(width: self.size.width ,
+                                       height: self.size.width )
                                 .clipShape(Circle())
+                                .overlay(
+                                    Circle()
+                                        .stroke( self.value == 0 ? Color.app.grey : self.color ,lineWidth: DimenKids.stroke.regular )
+                                )
+                                
                                 .padding(.bottom, self.size.width/3)
                         }
                         .padding(.bottom, -DimenKids.margin.micro)
@@ -66,7 +72,7 @@ struct VerticalGraph: PageView {
                         Spacer()
                         .modifier(MatchParent())
                             .background(
-                                (self.percent == 0 ? Color.app.grey : self.color).opacity(0.8))
+                                (self.value == 0 ? Color.app.grey : self.color).opacity(0.8))
                         .mask(
                             ZStack(alignment: .bottom){
                                 RoundedRectangle(cornerRadius: self.radius)
@@ -75,7 +81,7 @@ struct VerticalGraph: PageView {
                         )
                     }
                     .padding(.top, self.radius)
-                    .background((self.percent == 0 ? Color.app.grey : self.color).opacity(0.5))
+                    .background((self.value == 0 ? Color.app.grey : self.color).opacity(0.5))
                     .mask(
                         ZStack(alignment: .bottom){
                             RoundedRectangle(cornerRadius: self.radius)
@@ -84,18 +90,21 @@ struct VerticalGraph: PageView {
                     )
                     .overlay(
                         RoundTopRectMask(radius: self.radius)
-                            .stroke( self.percent == 0 ? Color.app.grey : self.color ,lineWidth: 1 )
+                            .stroke( self.value == 0 ? Color.app.grey : self.color ,lineWidth: DimenKids.stroke.light )
                     )
-                    .frame(width: size.width, height: max(self.radius,size.height*CGFloat(self.percent)))
-                    .padding(.top, self.percent == 0 ? self.radius + Font.sizeKids.tinyExtra : 0)
+                    .frame(width: size.width, height: max(self.radius,size.height*CGFloat(self.value)))
+                    .padding(.top, self.value == 0 ? self.radius + Font.sizeKids.tinyExtra : 0)
+                    
                 }
-                Text( Int(round(self.maxValue * self.percent)).description + self.unit )
+                Text( self.viewText ??  Int(round(self.maxValue * self.value)).description + self.unit  )
                     .modifier(BoldTextStyleKids(
                                 size: Font.sizeKids.microUltra,
-                                color: self.percent == 0 ? Color.app.grey : Color.app.white))
-                    .padding(.bottom, self.percent == 0
-                                ? (self.radius + DimenKids.margin.micro) : DimenKids.margin.micro)
+                                color: self.value == 0 ? Color.app.grey : Color.app.white))
+                    .padding(.bottom,
+                              self.value == 0 ? (self.radius + DimenKids.margin.micro) : DimenKids.margin.micro
+                    )
             }
+            .padding(.horizontal, DimenKids.stroke.regular)
             .clipped()
             if let title = self.title {
                 Text(title)
@@ -110,7 +119,7 @@ struct VerticalGraph_Previews: PreviewProvider {
     static var previews: some View {
         VStack{
             VerticalGraph(
-                percent: 0.6,
+                value: 0.6,
                 maxValue: 100,
                 unit: "%",
                 thumbText: "또래평균",

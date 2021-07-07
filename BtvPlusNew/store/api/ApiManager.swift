@@ -445,22 +445,79 @@ class ApiManager :PageProtocol, ObservableObject{
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         //KES
-        case .getKidsProfiles(let device): self.kes.getKidsProfiles(
-            hostDevice: device,
+        case .getKidsProfiles: self.kes.getKidsProfiles(
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
-        case .updateKidsProfiles(let device, let profiles): self.kes.updateKidsProfiles(
-            hostDevice: device, profiles: profiles,
+        case .updateKidsProfiles(let profiles): self.kes.updateKidsProfiles(
+            profiles: profiles,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
-        case .getEnglishReport(let kid): self.kes.getEnglishReport(
+        case .getKidStudy(let kid): self.kes.getKidStudy(
             profile: kid,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+            
         case .getMonthlyReport(let kid, let date): self.kes.getMonthlyReport(
             profile: kid, date: date, 
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+            
+        case .getEnglishReport(let kid): self.kes.getEnglishReport(
+            profile: kid,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getEnglishLvReportExam(let kid, let target): self.kes.getEnglishLvReportExam(
+            profile: kid, target: target,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getEnglishLvReportQuestion(let kid, let epNo, let epTpNo, let questions ): self.kes.getEnglishLvReportQuestion(
+            profile: kid, epNo: epNo, epTpNo: epTpNo, questions: questions,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getEnglishLvReportResult(let kid): self.kes.getEnglishLvReportResult(
+            profile: kid,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+            
+        case .getReadingReport(let kid): self.kes.getReadingReport(
+            profile: kid,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getReadingReportExam(let kid, let area): self.kes.getReadingReportExam(
+            profile: kid, area: area,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getReadingReportQuestion(let kid, let epNo, let epTpNo, let questions ): self.kes.getReadingReportQuestion(
+            profile: kid, epNo: epNo, epTpNo: epTpNo, questions: questions,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getReadingReportResult(let kid, let area): self.kes.getReadingReportResult(
+            profile: kid, area: area,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        
+        case .getCreativeReportExam(let kid): self.kes.getCreativeReportExam(
+            profile: kid,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getCreativeReportQuestion(let kid, let epNo, let epTpNo, let questions ): self.kes.getCreativeReportQuestion(
+            profile: kid, epNo: epNo, epTpNo: epTpNo, questions: questions,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getCreativeReportResult(let kid): self.kes.getCreativeReportResult(
+            profile: kid,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+
+        case .getEvaluationReportExam(let kid, let srisId): self.kes.getEvaluationReportExam(
+            profile: kid, srisId: srisId, 
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getEvaluationReportQuestion(let kid, let epNo, let epTpNo, let questions ): self.kes.getEvaluationReportQuestion(
+            profile: kid, epNo: epNo, epTpNo: epTpNo, questions: questions,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+      
         }
         return apiID
     }

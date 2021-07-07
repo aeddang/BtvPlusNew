@@ -19,11 +19,10 @@ struct PairingKidsView: PageComponent {
     var pageObservable:PageObservable = PageObservable()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
+    var diagnosticReportModel:DiagnosticReportModel = DiagnosticReportModel()
+    var monthlyReportModel:MonthlyReportModel = MonthlyReportModel()
     
     @ObservedObject var tabNavigationModel:NavigationModel = NavigationModel()
-    @ObservedObject var diagnosticReportData:DiagnosticReportData = DiagnosticReportData()
-    @ObservedObject var monthlyReportData:MonthlyReportData = MonthlyReportData()
-    
     @State var kid:Kid? = nil
     
     var body: some View {
@@ -75,8 +74,8 @@ struct PairingKidsView: PageComponent {
                     useTracking: true
                     ){
                     HStack(spacing:DimenKids.margin.thin){
-                        DiagnosticReportCard(viewModel:self.diagnosticReportData)
-                        MonthlyReportCard(viewModel:self.monthlyReportData)
+                        DiagnosticReportCard(viewModel:self.diagnosticReportModel)
+                        MonthlyReportCard(viewModel:self.monthlyReportModel)
                     }
                     .padding(.leading, DimenKids.margin.thin)
                     .padding(.trailing, DimenKids.margin.thin + self.sceneObserver.safeAreaEnd)
@@ -92,18 +91,21 @@ struct PairingKidsView: PageComponent {
         .modifier(ContentHeaderEdgesKids())
         .onReceive(dataProvider.$result) { res in
             guard let res = res else { return }
-            if res.id != self.tag { return }
             switch res.type {
             case .getMonthlyReport :
-                break
-            case .getEnglishReport :
-                break
+                guard let monthlyReport  = res.data as? MonthlyReport  else { return }
+                self.monthlyReportModel.setData(monthlyReport, kid: self.kid, date: self.currentDate)
+                
+            case .getKidStudy :
+                guard let study  = res.data as? KidStudy  else { return }
+                self.diagnosticReportModel.setData(study, kid: self.kid) 
+            
             default: break
             }
         }
         .onReceive(dataProvider.$error) { err in
             guard let err = err else { return }
-            if err.id != self.tag { return }
+            
             switch err.type {
             default: break
             }
@@ -131,11 +133,12 @@ struct PairingKidsView: PageComponent {
     @State var tabIdx:Int = 0
     @State var tabDatas:[BlockItem] = []
     @State var tabs:[String] = []
+    @State var currentDate:Date = Date()
     
     private func setupInitData (){
         guard let kid = self.kid else {return}
-        self.dataProvider.requestData(q: .init(type: .getEnglishReport(kid), isOptional: false))
-        self.dataProvider.requestData(q: .init(type: .getMonthlyReport(kid, Date()), isOptional: false))
+        self.dataProvider.requestData(q: .init(type: .getKidStudy(kid), isOptional: false))
+        self.dataProvider.requestData(q: .init(type: .getMonthlyReport(kid, self.currentDate), isOptional: false))
     }
 }
 

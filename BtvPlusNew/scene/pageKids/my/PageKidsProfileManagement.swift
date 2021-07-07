@@ -20,7 +20,7 @@ struct PageKidsProfileManagement: PageView {
     
     @State var currentKid:Kid? = nil
     @State var kids:[Kid] = []
-    @State var useEmpty:Bool = true
+    @State var useEmpty:Bool = false
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -66,9 +66,17 @@ struct PageKidsProfileManagement: PageView {
             .onReceive(self.pairing.$kid) { kid in
                 self.currentKid = kid
             }
+            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                if ani {
+                    withAnimation{
+                        self.kids = self.pairing.kids
+                        self.useEmpty = self.kids.count < Self.maxUser
+                    }
+                }
+            }
             .onAppear{
-                self.kids = self.pairing.kids
-                self.useEmpty = self.kids.count < Self.maxUser
+                
+                
             }
         }
     }//body

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct HorizontalGraph: PageView {
-    var percent: Float = 0.3
+    var value: Float = 0.3
     var thumbImg:String? = nil
     
     var guidePercent: Float = 0.0
@@ -46,17 +46,18 @@ struct HorizontalGraph: PageView {
                 .mask(
                     RoundedRectangle(cornerRadius: self.radius)
                 )
-                .frame(width:size.width*CGFloat(self.percent), height: size.height)
+                .frame(width:size.width*CGFloat(self.value), height: size.height)
             }
             .frame(width: size.width, height: size.height)
             .background(self.color.opacity(0.2))
             .mask(
                 RoundedRectangle(cornerRadius: self.radius)
             )
+            .padding(.top, self.size.height*0.1)
             if let guide = self.guideImg {
                 HStack{
                     Spacer()
-                        .frame(width:size.width*CGFloat(self.guidePercent) - (DimenKids.icon.micro/2) )
+                        .frame(width:max(size.width*CGFloat(self.guidePercent) - (DimenKids.icon.micro/2),0))
                     Image(guide)
                         .renderingMode(.original)
                         .resizable()
@@ -68,7 +69,7 @@ struct HorizontalGraph: PageView {
             }
             HStack{
                 Spacer()
-                    .frame(width:size.width*CGFloat(self.percent) - (self.size.height*1.2/2) )
+                    .frame(width:max(size.width*CGFloat(self.value) - (self.size.height*1.2/2),0))
                 if let thumbImg = self.thumbImg {
                     Image(thumbImg)
                         .renderingMode(.original)
@@ -96,7 +97,7 @@ struct HorizontalGraph_Previews: PreviewProvider {
     static var previews: some View {
         VStack{
             HorizontalGraph(
-                percent: 0.6,
+                value: 0.6,
                 thumbImg: AssetKids.image.noProfile,
                 guidePercent: 0.3,
                 guideImg: AssetKids.shape.graphGuideTime

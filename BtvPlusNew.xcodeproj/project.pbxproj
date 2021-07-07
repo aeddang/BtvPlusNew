@@ -231,6 +231,8 @@
 		318C36B8265F3099009B7EC3 /* ConnectTerminateStb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C36B7265F3099009B7EC3 /* ConnectTerminateStb.swift */; };
 		318C36BB265F6C4D009B7EC3 /* PageMyRecommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C36BA265F6C4D009B7EC3 /* PageMyRecommand.swift */; };
 		318C36BE265F704B009B7EC3 /* DivisionTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C36BD265F704B009B7EC3 /* DivisionTable.swift */; };
+		318C5A092694032800A2FD66 /* MonthlyGraphBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C5A082694032800A2FD66 /* MonthlyGraphBox.swift */; };
+		318C5A0B2694195C00A2FD66 /* KidStudy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C5A0A2694195C00A2FD66 /* KidStudy.swift */; };
 		318C874D25E64AA400ADDFE0 /* TopBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C874C25E64AA400ADDFE0 /* TopBanner.swift */; };
 		318C875825E64C3200ADDFE0 /* BannerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C875725E64C3200ADDFE0 /* BannerData.swift */; };
 		318CB5AE263124D800BCA5C3 /* AlramData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318CB5AD263124D800BCA5C3 /* AlramData.swift */; };
@@ -325,6 +327,13 @@
 		319BAFCC26046B240007273F /* ImageAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319BAFCB26046B240007273F /* ImageAnimation.swift */; };
 		319BAFD7260478540007273F /* VoiceRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319BAFD6260478540007273F /* VoiceRecorder.swift */; };
 		319BAFDD2604A2FE0007273F /* SearchTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319BAFDC2604A2FE0007273F /* SearchTab.swift */; };
+		319CF658269522DB00159575 /* LvGraphBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF657269522DB00159575 /* LvGraphBox.swift */; };
+		319CF65A269545D400159575 /* CreativeGraphBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF659269545D400159575 /* CreativeGraphBox.swift */; };
+		319CF65C2695662500159575 /* PageKidsMyDiagnostic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF65B2695662500159575 /* PageKidsMyDiagnostic.swift */; };
+		319CF65E2695843A00159575 /* EmptyDiagnosticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF65D2695843A00159575 /* EmptyDiagnosticView.swift */; };
+		319CF6612695C33800159575 /* DiagnosticReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF6602695C33800159575 /* DiagnosticReport.swift */; };
+		319CF6632695D0B700159575 /* AlertsKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF6622695D0B700159575 /* AlertsKids.swift */; };
+		319CF6652695D8BF00159575 /* ResultEnglishReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF6642695D8BF00159575 /* ResultEnglishReportView.swift */; };
 		31A38DF92682A1BE0058287B /* TabSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A38DF82682A1BE0058287B /* TabSwitch.swift */; };
 		31A38DFB2682A9EB0058287B /* PurchaseViewerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A38DFA2682A9EB0058287B /* PurchaseViewerData.swift */; };
 		31A38DFD2682AA270058287B /* PurchaseViewerKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A38DFC2682AA270058287B /* PurchaseViewerKids.swift */; };
@@ -783,6 +792,8 @@
 		318C36B7265F3099009B7EC3 /* ConnectTerminateStb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectTerminateStb.swift; sourceTree = "<group>"; };
 		318C36BA265F6C4D009B7EC3 /* PageMyRecommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyRecommand.swift; sourceTree = "<group>"; };
 		318C36BD265F704B009B7EC3 /* DivisionTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DivisionTable.swift; sourceTree = "<group>"; };
+		318C5A082694032800A2FD66 /* MonthlyGraphBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyGraphBox.swift; sourceTree = "<group>"; };
+		318C5A0A2694195C00A2FD66 /* KidStudy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidStudy.swift; sourceTree = "<group>"; };
 		318C874C25E64AA400ADDFE0 /* TopBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBanner.swift; sourceTree = "<group>"; };
 		318C875725E64C3200ADDFE0 /* BannerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerData.swift; sourceTree = "<group>"; };
 		318CB5AD263124D800BCA5C3 /* AlramData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlramData.swift; sourceTree = "<group>"; };
@@ -878,6 +889,13 @@
 		319BAFCB26046B240007273F /* ImageAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAnimation.swift; sourceTree = "<group>"; };
 		319BAFD6260478540007273F /* VoiceRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecorder.swift; sourceTree = "<group>"; };
 		319BAFDC2604A2FE0007273F /* SearchTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTab.swift; sourceTree = "<group>"; };
+		319CF657269522DB00159575 /* LvGraphBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LvGraphBox.swift; sourceTree = "<group>"; };
+		319CF659269545D400159575 /* CreativeGraphBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreativeGraphBox.swift; sourceTree = "<group>"; };
+		319CF65B2695662500159575 /* PageKidsMyDiagnostic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageKidsMyDiagnostic.swift; sourceTree = "<group>"; };
+		319CF65D2695843A00159575 /* EmptyDiagnosticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyDiagnosticView.swift; sourceTree = "<group>"; };
+		319CF6602695C33800159575 /* DiagnosticReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticReport.swift; sourceTree = "<group>"; };
+		319CF6622695D0B700159575 /* AlertsKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsKids.swift; sourceTree = "<group>"; };
+		319CF6642695D8BF00159575 /* ResultEnglishReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultEnglishReportView.swift; sourceTree = "<group>"; };
 		31A38DF82682A1BE0058287B /* TabSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabSwitch.swift; sourceTree = "<group>"; };
 		31A38DFA2682A9EB0058287B /* PurchaseViewerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseViewerData.swift; sourceTree = "<group>"; };
 		31A38DFC2682AA270058287B /* PurchaseViewerKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseViewerKids.swift; sourceTree = "<group>"; };
@@ -1632,6 +1650,7 @@
 				31F2803B2673305A00F40B09 /* PlayInfoButton.swift */,
 				3192CA6826818FAB007B3C29 /* ToolTipKids.swift */,
 				31C4D2A82693040A000C7E83 /* NeedPairingInfo.swift */,
+				319CF6622695D0B700159575 /* AlertsKids.swift */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -1868,6 +1887,7 @@
 		318D100A266884DF00B66977 /* my */ = {
 			isa = PBXGroup;
 			children = (
+				319CF65F2695C32600159575 /* model */,
 				3190CB0F268AC32D00ACB465 /* component */,
 				31C4D2A52692E0B6000C7E83 /* body */,
 				318D100B266884F700B66977 /* PageRegistKid.swift */,
@@ -1875,6 +1895,7 @@
 				318D100F2668B7D600B66977 /* PageSelectKidCharacter.swift */,
 				3190CB0B268ABCDB00ACB465 /* PageKidsProfileManagement.swift */,
 				3190CB16268C3EA900ACB465 /* PageKidsMy.swift */,
+				319CF65B2695662500159575 /* PageKidsMyDiagnostic.swift */,
 			);
 			path = my;
 			sourceTree = "<group>";
@@ -1988,6 +2009,7 @@
 			children = (
 				3190CB09268987C400ACB465 /* KidsProfiles.swift */,
 				31C4D2972692A505000C7E83 /* KidsReport.swift */,
+				318C5A0A2694195C00A2FD66 /* KidStudy.swift */,
 				31C4D2992692AF77000C7E83 /* ReadingReport.swift */,
 				31C4D2952692A403000C7E83 /* MonthlyReport.swift */,
 				31C4D29F2692D40C000C7E83 /* CreativeReport.swift */,
@@ -2007,6 +2029,9 @@
 				319B7EC0268E8EE900B7DAAF /* DiagnosticReportCard.swift */,
 				31C4D29326926A69000C7E83 /* MonthlyReportCard.swift */,
 				319B7EC2268E9D0A00B7DAAF /* ReportPage.swift */,
+				318C5A082694032800A2FD66 /* MonthlyGraphBox.swift */,
+				319CF657269522DB00159575 /* LvGraphBox.swift */,
+				319CF659269545D400159575 /* CreativeGraphBox.swift */,
 			);
 			path = component;
 			sourceTree = "<group>";
@@ -2194,6 +2219,14 @@
 			path = model;
 			sourceTree = "<group>";
 		};
+		319CF65F2695C32600159575 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				319CF6602695C33800159575 /* DiagnosticReport.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
 		31A38DF72682A1870058287B /* switch */ = {
 			isa = PBXGroup;
 			children = (
@@ -2215,6 +2248,8 @@
 			isa = PBXGroup;
 			children = (
 				31C4D2A62692E0CE000C7E83 /* PairingKidsView.swift */,
+				319CF65D2695843A00159575 /* EmptyDiagnosticView.swift */,
+				319CF6642695D8BF00159575 /* ResultEnglishReportView.swift */,
 			);
 			path = body;
 			sourceTree = "<group>";
@@ -3333,6 +3368,7 @@
 				D56C6A25257DA0C600CF9AB8 /* font.swift in Sources */,
 				317EF18625DB46D6004A6A5E /* PlayerListTab.swift in Sources */,
 				3167197B25FF4159005AC3D2 /* PageWatchedList.swift in Sources */,
+				319CF6612695C33800159575 /* DiagnosticReport.swift in Sources */,
 				318FBFFE25E48F5B00ABC241 /* SortTab.swift in Sources */,
 				D56C6A51257DA0C700CF9AB8 /* Radio.swift in Sources */,
 				D50AB91125807AAA00649C4A /* EuxpModel.swift in Sources */,
@@ -3421,6 +3457,7 @@
 				31A4A00E26281B840065E6C6 /* TipBlock.swift in Sources */,
 				3198FED9262FAF77008DCB2C /* PageMyAlram.swift in Sources */,
 				3195C1AC2665DE67001F513E /* assetKids.swift in Sources */,
+				319CF65A269545D400159575 /* CreativeGraphBox.swift in Sources */,
 				315B55DC25A8026700B5B351 /* DevicePairingInfo.swift in Sources */,
 				318AA03D265DDA9400C089EC /* SetupPlay.swift in Sources */,
 				3167196225FEED00005AC3D2 /* PageAuth.swift in Sources */,
@@ -3628,6 +3665,7 @@
 				315544C225B79FAA00086510 /* PageServiceError.swift in Sources */,
 				D5469F5725835231009CED2D /* Bands.swift in Sources */,
 				D56C6A24257DA0C600CF9AB8 /* strings.swift in Sources */,
+				319CF65C2695662500159575 /* PageKidsMyDiagnostic.swift in Sources */,
 				3195C1C126660D96001F513E /* PageKidsHome.swift in Sources */,
 				316ECE03264CCAEB008D2544 /* PlayControlBox.swift in Sources */,
 				319B07A4263A398C008C11A8 /* ConnectTitle.swift in Sources */,
@@ -3656,8 +3694,10 @@
 				D506D717258C8FFB00F27C00 /* PosterList.swift in Sources */,
 				D56C69AE257DA09E00CF9AB8 /* AnimateDrawView.swift in Sources */,
 				317C976926243DC3008F267D /* BCashes.swift in Sources */,
+				319CF6632695D0B700159575 /* AlertsKids.swift in Sources */,
 				319BAFCC26046B240007273F /* ImageAnimation.swift in Sources */,
 				318F7B632625818900774B17 /* OkCashPoint.swift in Sources */,
+				319CF6652695D8BF00159575 /* ResultEnglishReportView.swift in Sources */,
 				D56C6B0E257DAADE00CF9AB8 /* SceneTab.swift in Sources */,
 				317A8F5C25CBE1AE00E41226 /* PlayerMoreBox.swift in Sources */,
 				3197FC80267AE511006918BA /* CustomAssetPlayer.swift in Sources */,
@@ -3668,6 +3708,7 @@
 				314D738A25B4F8B100907118 /* PageSynopsis.swift in Sources */,
 				316955AB25DF9D1500848507 /* Pss.swift in Sources */,
 				D56C69AB257DA09E00CF9AB8 /* Resource.swift in Sources */,
+				318C5A0B2694195C00A2FD66 /* KidStudy.swift in Sources */,
 				310F6FAC25C0FE53005718B0 /* Watch.swift in Sources */,
 				D56C6B33257DACD800CF9AB8 /* LocalStorage.swift in Sources */,
 				31A3E86A2605E59500BF044B /* PageSearchModel.swift in Sources */,
@@ -3690,6 +3731,7 @@
 				D56C69A0257DA09E00CF9AB8 /* PageContentBody.swift in Sources */,
 				D51AA9F02599A2870035CD51 /* ConnectButton.swift in Sources */,
 				318D10032668418400B66977 /* AnimateSpinner.swift in Sources */,
+				319CF65E2695843A00159575 /* EmptyDiagnosticView.swift in Sources */,
 				31631C6525D2516E00E501F7 /* SynopsisPrerollData.swift in Sources */,
 				316ECDFB264B49BE008D2544 /* RemoteStyle.swift in Sources */,
 				D56C6A50257DA0C700CF9AB8 /* Select.swift in Sources */,
@@ -3759,6 +3801,7 @@
 				3166CBF22611AD0000282891 /* MyPointInfo.swift in Sources */,
 				31D453E2267886A100E08CB2 /* CustomVTTPlayer.swift in Sources */,
 				D57298E5259D6EC100ED2CE6 /* ScenePickerController.swift in Sources */,
+				318C5A092694032800A2FD66 /* MonthlyGraphBox.swift in Sources */,
 				314F816525BE3CFA00E76508 /* SynopsisConst.swift in Sources */,
 				D56C6A36257DA0C700CF9AB8 /* CPTabNavigation.swift in Sources */,
 				D56C6A33257DA0C700CF9AB8 /* WebView.swift in Sources */,
@@ -3794,6 +3837,7 @@
 				319745BB261FEE7D0072945D /* PurchaseTicketList.swift in Sources */,
 				317C9774262443D4008F267D /* PageMyBenefits.swift in Sources */,
 				D56C6A48257DA0C700CF9AB8 /* RoundRectMask.swift in Sources */,
+				319CF658269522DB00159575 /* LvGraphBox.swift in Sources */,
 				D56C699D257DA09E00CF9AB8 /* PageSceneDelegate.swift in Sources */,
 				310F6FBF25C167EC005718B0 /* ScsModel.swift in Sources */,
 				D50AB8ED257F311800649C4A /* SystemEnvironment.swift in Sources */,

@@ -57,6 +57,9 @@ extension AssetKids{
         public static let addReport = "zemkidsMBtnKidsprofilePlusNor"
         public static let addProfile = "zemkidsMIcKidsprofilePlusNor"
         public static let profileDelete = "zemkidsMBtnProfileDeleteNor"
+        
+        public static let trophy = "zemkidsMImgReportLevelS"
+        public static let medal = "zemkidsMIcBtnRecommend"
     }
     
     
@@ -117,9 +120,17 @@ extension AssetKids{
         public static let emptyRelationVod = "zemkidsMImgSynopsisNocontents"
         public static let synopsisBg = isPad ? "zemkidsTIBgSynopsisEnter" : "zemkidsMBgSynopsisEnter"
         public static let homeBg = "zemkidsMBgKidsHome01"
+        public static let myBg = "zemkidsTIBgKidsMy01"
         public static let profileBg = "zemkidsMMyProfileBg"
         public static let reportImg = "zemkidsMMyReportImg"
         public static let needPairing = "imgZemkidsTIImgMySharing"
+       
+        public static let englishReport = "zemkidsTIImgNotEnglish"
+        public static let infantDevelopmentReport = "zemkidsTIImgReportNotBook"
+        public static let creativeObservationReport = "zemkidsTIImgReportNotCreativity"
+        
+        public static let resultEnglish = "zemkidsMEngTestResult"
+        public static let resultDiagnostic = "zemkidsMCreateTestResult"
     }
     
     struct ani {

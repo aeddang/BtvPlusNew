@@ -327,6 +327,10 @@ extension String{
         return self.getArrayAfterRegex(regex: ruleNum ).reduce("", {$0 + $1})
     }
     
+    func isNumric()-> Bool {
+        return self.onlyNumric() == self
+    }
+    
     func isNickNameType() -> Bool {
         let n = self.count
         if n < 1 { return false }

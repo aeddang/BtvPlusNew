@@ -33,9 +33,7 @@ struct SceneKidsTab: PageComponent{
                 .fixedSize(horizontal: false, vertical: true)
                 Spacer()
                 if self.isLoading {
-                    AnimateSpinner(isAnimating: self.$isLoading).frame(
-                        width: DimenKids.loading.small.width,
-                        height: DimenKids.loading.small.height)
+                    ActivityIndicator(isAnimating: self.$isLoading)
                 }
             }
             if self.isDimed {

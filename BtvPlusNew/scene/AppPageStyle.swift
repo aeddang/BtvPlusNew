@@ -19,7 +19,7 @@ enum PageType:String{
 
 
 enum PageStyle{
-    case dark, white, normal, kids, kidsLight, kidsWhite
+    case dark, white, normal, kids, kidsLight, kidsWhite, kidsClear
     var textColor:Color {
         get{
             switch self {
@@ -29,6 +29,7 @@ enum PageStyle{
             case .kids: return Color.app.brownDeep
             case .kidsLight : return Color.app.brownDeep
             case .kidsWhite : return Color.app.brownDeep
+            case .kidsClear : return Color.app.brownDeep
             }
         }
     }
@@ -41,6 +42,7 @@ enum PageStyle{
             case .kids: return Color.kids.bg
             case .kidsLight: return Color.app.ivoryLight
             case .kidsWhite : return Color.app.white
+            case .kidsClear : return Color.transparent.clear
             }
         }
     }

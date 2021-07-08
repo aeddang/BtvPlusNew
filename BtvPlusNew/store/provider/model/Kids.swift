@@ -55,8 +55,8 @@ class KidsGnbItemData:InfinityData, ObservableObject{
         self.blocks = data.blocks?.map{$0}
         let size = CGSize(width: DimenKids.icon.heavy, height: DimenKids.icon.heavy)
         
-        self.imageOff = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: size, convType: .alpha) ?? self.imageOn
-        self.imageOn = ImagePath.thumbImagePath(filePath: data.bnr_on_img_path, size: size, convType: .alpha) ?? self.imageOff
+        self.imageOff = ImagePath.thumbImagePath(filePath: data.menu_off_img_path, size: size, convType: .alpha) ?? self.imageOn
+        self.imageOn = ImagePath.thumbImagePath(filePath: data.menu_on_img_path, size: size, convType: .alpha) ?? self.imageOff
         return self
     }
     

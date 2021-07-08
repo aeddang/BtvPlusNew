@@ -7,6 +7,9 @@
 //
 import Foundation
 import SwiftUI
+extension VerticalGraph {
+    static let minValue:Float = 0.2
+}
 
 struct VerticalGraph: PageView {
     var value:Float = 0.0
@@ -38,9 +41,13 @@ struct VerticalGraph: PageView {
                             
                             Text(thumbText)
                                 .modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color: Color.app.white))
+                                .lineLimit(1)
                                 .padding(.bottom, self.size.width/3)
+                                .fixedSize()
                         }
+                        .fixedSize()
                         .padding(.bottom, -DimenKids.margin.micro)
+                        
                     }
                     if let thumbImg = self.thumbImg {
                         ZStack(){
@@ -61,7 +68,7 @@ struct VerticalGraph: PageView {
                                 .clipShape(Circle())
                                 .overlay(
                                     Circle()
-                                        .stroke( self.value == 0 ? Color.app.grey : self.color ,lineWidth: DimenKids.stroke.regular )
+                                        .stroke( self.color ,lineWidth: DimenKids.stroke.regular )
                                 )
                                 
                                 .padding(.bottom, self.size.width/3)
@@ -71,8 +78,7 @@ struct VerticalGraph: PageView {
                     ZStack(alignment: .bottom) {
                         Spacer()
                         .modifier(MatchParent())
-                            .background(
-                                (self.value == 0 ? Color.app.grey : self.color).opacity(0.8))
+                            .background(self.color.opacity(0.8))
                         .mask(
                             ZStack(alignment: .bottom){
                                 RoundedRectangle(cornerRadius: self.radius)
@@ -81,7 +87,7 @@ struct VerticalGraph: PageView {
                         )
                     }
                     .padding(.top, self.radius)
-                    .background((self.value == 0 ? Color.app.grey : self.color).opacity(0.5))
+                    .background(self.color.opacity(0.5))
                     .mask(
                         ZStack(alignment: .bottom){
                             RoundedRectangle(cornerRadius: self.radius)
@@ -90,22 +96,22 @@ struct VerticalGraph: PageView {
                     )
                     .overlay(
                         RoundTopRectMask(radius: self.radius)
-                            .stroke( self.value == 0 ? Color.app.grey : self.color ,lineWidth: DimenKids.stroke.light )
+                            .stroke( self.color ,lineWidth: DimenKids.stroke.light )
                     )
                     .frame(width: size.width, height: max(self.radius,size.height*CGFloat(self.value)))
-                    .padding(.top, self.value == 0 ? self.radius + Font.sizeKids.tinyExtra : 0)
+                    .padding(.top, self.value < Self.minValue ? self.radius + Font.sizeKids.tinyExtra : 0)
                     
                 }
                 Text( self.viewText ??  Int(round(self.maxValue * self.value)).description + self.unit  )
                     .modifier(BoldTextStyleKids(
                                 size: Font.sizeKids.microUltra,
-                                color: self.value == 0 ? Color.app.grey : Color.app.white))
+                                color: self.value < Self.minValue ? Color.app.grey : Color.app.white))
                     .padding(.bottom,
-                              self.value == 0 ? (self.radius + DimenKids.margin.micro) : DimenKids.margin.micro
+                              self.value < Self.minValue ? (self.radius + DimenKids.margin.micro) : DimenKids.margin.micro
                     )
             }
-            .padding(.horizontal, DimenKids.stroke.regular)
-            .clipped()
+            //.padding(.horizontal, DimenKids.stroke.regular)
+            //.clipped()
             if let title = self.title {
                 Text(title)
                     .modifier(BoldTextStyleKids(size: Font.sizeKids.microUltra, color: self.titleColor))

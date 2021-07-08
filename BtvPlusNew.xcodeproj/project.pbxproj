@@ -334,6 +334,22 @@
 		319CF6612695C33800159575 /* DiagnosticReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF6602695C33800159575 /* DiagnosticReport.swift */; };
 		319CF6632695D0B700159575 /* AlertsKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF6622695D0B700159575 /* AlertsKids.swift */; };
 		319CF6652695D8BF00159575 /* ResultEnglishReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF6642695D8BF00159575 /* ResultEnglishReportView.swift */; };
+		319CF66726966CAC00159575 /* TrophyBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF66626966CAC00159575 /* TrophyBox.swift */; };
+		319CF66926966F3300159575 /* LvGraphList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF66826966F3300159575 /* LvGraphList.swift */; };
+		319CF66B26967EAC00159575 /* ResultReadingReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF66A26967EAC00159575 /* ResultReadingReportView.swift */; };
+		319CF66D2696828F00159575 /* ResultReportBottom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF66C2696828F00159575 /* ResultReportBottom.swift */; };
+		319CF66F2696844C00159575 /* CommentBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF66E2696844C00159575 /* CommentBox.swift */; };
+		319CF671269699EB00159575 /* ResultCreativeReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF670269699EB00159575 /* ResultCreativeReportView.swift */; };
+		319CF6732696ABE400159575 /* ResultReadingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF6722696ABE400159575 /* ResultReadingListView.swift */; };
+		319CF6752696D45100159575 /* PageKidsEnglishLvTestSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF6742696D45100159575 /* PageKidsEnglishLvTestSelect.swift */; };
+		319CF67826970DE900159575 /* PageKidsExam.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF67726970DE900159575 /* PageKidsExam.swift */; };
+		319CF67C269715D600159575 /* AnswerBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF67B269715D600159575 /* AnswerBox.swift */; };
+		319CF67E2697211600159575 /* ProgressBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF67D2697211600159575 /* ProgressBox.swift */; };
+		319CF6802697223D00159575 /* ExamProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF67F2697223D00159575 /* ExamProgress.swift */; };
+		319CF68226972D6A00159575 /* ExamResultBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF68126972D6A00159575 /* ExamResultBox.swift */; };
+		319CF68426972FCA00159575 /* SoundBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF68326972FCA00159575 /* SoundBox.swift */; };
+		319CF6862697338700159575 /* ExamControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF6852697338700159575 /* ExamControl.swift */; };
+		319CF688269738CF00159575 /* ExamBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF687269738CF00159575 /* ExamBody.swift */; };
 		31A38DF92682A1BE0058287B /* TabSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A38DF82682A1BE0058287B /* TabSwitch.swift */; };
 		31A38DFB2682A9EB0058287B /* PurchaseViewerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A38DFA2682A9EB0058287B /* PurchaseViewerData.swift */; };
 		31A38DFD2682AA270058287B /* PurchaseViewerKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A38DFC2682AA270058287B /* PurchaseViewerKids.swift */; };
@@ -896,6 +912,22 @@
 		319CF6602695C33800159575 /* DiagnosticReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticReport.swift; sourceTree = "<group>"; };
 		319CF6622695D0B700159575 /* AlertsKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsKids.swift; sourceTree = "<group>"; };
 		319CF6642695D8BF00159575 /* ResultEnglishReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultEnglishReportView.swift; sourceTree = "<group>"; };
+		319CF66626966CAC00159575 /* TrophyBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrophyBox.swift; sourceTree = "<group>"; };
+		319CF66826966F3300159575 /* LvGraphList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LvGraphList.swift; sourceTree = "<group>"; };
+		319CF66A26967EAC00159575 /* ResultReadingReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultReadingReportView.swift; sourceTree = "<group>"; };
+		319CF66C2696828F00159575 /* ResultReportBottom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultReportBottom.swift; sourceTree = "<group>"; };
+		319CF66E2696844C00159575 /* CommentBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentBox.swift; sourceTree = "<group>"; };
+		319CF670269699EB00159575 /* ResultCreativeReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultCreativeReportView.swift; sourceTree = "<group>"; };
+		319CF6722696ABE400159575 /* ResultReadingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultReadingListView.swift; sourceTree = "<group>"; };
+		319CF6742696D45100159575 /* PageKidsEnglishLvTestSelect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageKidsEnglishLvTestSelect.swift; sourceTree = "<group>"; };
+		319CF67726970DE900159575 /* PageKidsExam.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageKidsExam.swift; sourceTree = "<group>"; };
+		319CF67B269715D600159575 /* AnswerBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerBox.swift; sourceTree = "<group>"; };
+		319CF67D2697211600159575 /* ProgressBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBox.swift; sourceTree = "<group>"; };
+		319CF67F2697223D00159575 /* ExamProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamProgress.swift; sourceTree = "<group>"; };
+		319CF68126972D6A00159575 /* ExamResultBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamResultBox.swift; sourceTree = "<group>"; };
+		319CF68326972FCA00159575 /* SoundBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundBox.swift; sourceTree = "<group>"; };
+		319CF6852697338700159575 /* ExamControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamControl.swift; sourceTree = "<group>"; };
+		319CF687269738CF00159575 /* ExamBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamBody.swift; sourceTree = "<group>"; };
 		31A38DF82682A1BE0058287B /* TabSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabSwitch.swift; sourceTree = "<group>"; };
 		31A38DFA2682A9EB0058287B /* PurchaseViewerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseViewerData.swift; sourceTree = "<group>"; };
 		31A38DFC2682AA270058287B /* PurchaseViewerKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseViewerKids.swift; sourceTree = "<group>"; };
@@ -1896,6 +1928,7 @@
 				3190CB0B268ABCDB00ACB465 /* PageKidsProfileManagement.swift */,
 				3190CB16268C3EA900ACB465 /* PageKidsMy.swift */,
 				319CF65B2695662500159575 /* PageKidsMyDiagnostic.swift */,
+				319CF6742696D45100159575 /* PageKidsEnglishLvTestSelect.swift */,
 			);
 			path = my;
 			sourceTree = "<group>";
@@ -2031,7 +2064,10 @@
 				319B7EC2268E9D0A00B7DAAF /* ReportPage.swift */,
 				318C5A082694032800A2FD66 /* MonthlyGraphBox.swift */,
 				319CF657269522DB00159575 /* LvGraphBox.swift */,
+				319CF66826966F3300159575 /* LvGraphList.swift */,
 				319CF659269545D400159575 /* CreativeGraphBox.swift */,
+				319CF66626966CAC00159575 /* TrophyBox.swift */,
+				319CF66E2696844C00159575 /* CommentBox.swift */,
 			);
 			path = component;
 			sourceTree = "<group>";
@@ -2100,6 +2136,7 @@
 			isa = PBXGroup;
 			children = (
 				3195C1C226660EBE001F513E /* component */,
+				319CF67626970DD800159575 /* exam */,
 				318D100A266884DF00B66977 /* my */,
 				316A7073266F3CA500A93B83 /* popup */,
 				3195C1BF26660D88001F513E /* home */,
@@ -2227,6 +2264,37 @@
 			path = model;
 			sourceTree = "<group>";
 		};
+		319CF67626970DD800159575 /* exam */ = {
+			isa = PBXGroup;
+			children = (
+				319CF67A2697156500159575 /* component */,
+				319CF6792697155F00159575 /* body */,
+				319CF67726970DE900159575 /* PageKidsExam.swift */,
+			);
+			path = exam;
+			sourceTree = "<group>";
+		};
+		319CF6792697155F00159575 /* body */ = {
+			isa = PBXGroup;
+			children = (
+				319CF67D2697211600159575 /* ProgressBox.swift */,
+				319CF6852697338700159575 /* ExamControl.swift */,
+				319CF687269738CF00159575 /* ExamBody.swift */,
+			);
+			path = body;
+			sourceTree = "<group>";
+		};
+		319CF67A2697156500159575 /* component */ = {
+			isa = PBXGroup;
+			children = (
+				319CF67F2697223D00159575 /* ExamProgress.swift */,
+				319CF68126972D6A00159575 /* ExamResultBox.swift */,
+				319CF67B269715D600159575 /* AnswerBox.swift */,
+				319CF68326972FCA00159575 /* SoundBox.swift */,
+			);
+			path = component;
+			sourceTree = "<group>";
+		};
 		31A38DF72682A1870058287B /* switch */ = {
 			isa = PBXGroup;
 			children = (
@@ -2250,6 +2318,10 @@
 				31C4D2A62692E0CE000C7E83 /* PairingKidsView.swift */,
 				319CF65D2695843A00159575 /* EmptyDiagnosticView.swift */,
 				319CF6642695D8BF00159575 /* ResultEnglishReportView.swift */,
+				319CF66A26967EAC00159575 /* ResultReadingReportView.swift */,
+				319CF670269699EB00159575 /* ResultCreativeReportView.swift */,
+				319CF66C2696828F00159575 /* ResultReportBottom.swift */,
+				319CF6722696ABE400159575 /* ResultReadingListView.swift */,
 			);
 			path = body;
 			sourceTree = "<group>";
@@ -3401,6 +3473,7 @@
 				314D588725B64ECD007BCA34 /* DisconnectView.swift in Sources */,
 				316C45EA2653832F00A8D7F5 /* AudioMirror.swift in Sources */,
 				31C4D2A92693040A000C7E83 /* NeedPairingInfo.swift in Sources */,
+				319CF688269738CF00159575 /* ExamBody.swift in Sources */,
 				31895AFA2601C863002DE02E /* PageSynopsisPackage.swift in Sources */,
 				D51AA9F82599BAFB0035CD51 /* PageTab.swift in Sources */,
 				318AA043265DE83500C089EC /* SetupChildren.swift in Sources */,
@@ -3483,6 +3556,8 @@
 				D50AB90C2580779500649C4A /* Synopsis.swift in Sources */,
 				318C36BB265F6C4D009B7EC3 /* PageMyRecommand.swift in Sources */,
 				316ECE01264B8009008D2544 /* PageRemotecon.swift in Sources */,
+				319CF66D2696828F00159575 /* ResultReportBottom.swift in Sources */,
+				319CF6802697223D00159575 /* ExamProgress.swift in Sources */,
 				D56C603C25933EBD009AE769 /* MdnsPairingManager.swift in Sources */,
 				316C45D62651FBD700A8D7F5 /* AllChannels.swift in Sources */,
 				31E76D0B2632634A00710624 /* ShareManager.swift in Sources */,
@@ -3524,15 +3599,19 @@
 				315544CF25B83F8C00086510 /* MetvModel.swift in Sources */,
 				317C9754262426CD008F267D /* PageCouponList.swift in Sources */,
 				3190CB11268AC34200ACB465 /* KidProfileListItem.swift in Sources */,
+				319CF67826970DE900159575 /* PageKidsExam.swift in Sources */,
+				319CF6732696ABE400159575 /* ResultReadingListView.swift in Sources */,
 				316ECDF6264B4274008D2544 /* BlankButton.swift in Sources */,
 				318BA3982608C2660093BC7D /* CompleteKeyword.swift in Sources */,
 				3190CB22268D83C200ACB465 /* Kids.swift in Sources */,
 				D568892E259C592000F2F67A /* PagePairingSetupUser.swift in Sources */,
 				316C45D0264DE7D800A8D7F5 /* InputRemoteBox.swift in Sources */,
 				31740C30261C32780052A9C2 /* PurchaseList.swift in Sources */,
+				319CF67E2697211600159575 /* ProgressBox.swift in Sources */,
 				31373F6025C7E726004353DA /* CustomYTPlayer.swift in Sources */,
 				316A7090267061F800A93B83 /* PlayerMoreBoxKids.swift in Sources */,
 				3190CB20268D676700ACB465 /* KidProfileBox.swift in Sources */,
+				319CF68426972FCA00159575 /* SoundBox.swift in Sources */,
 				318D100E2668A67700B66977 /* InputCellKids.swift in Sources */,
 				318E7F0C25E8B01800B2AAAF /* MonthlyInfo.swift in Sources */,
 				318AA04C265DFA4F00C089EC /* SetupPossession.swift in Sources */,
@@ -3587,6 +3666,7 @@
 				318C874D25E64AA400ADDFE0 /* TopBanner.swift in Sources */,
 				318D12DC2664919F00BF1DD8 /* PageMyPossessionPurchase.swift in Sources */,
 				D56C6A23257DA0C600CF9AB8 /* util.swift in Sources */,
+				319CF6862697338700159575 /* ExamControl.swift in Sources */,
 				31A38DFD2682AA270058287B /* PurchaseViewerKids.swift in Sources */,
 				31863E08265B364A0086C40D /* Alram.swift in Sources */,
 				3190CB1A268C447C00ACB465 /* VerticalGraph.swift in Sources */,
@@ -3680,6 +3760,7 @@
 				D56C6A27257DA0C600CF9AB8 /* durations.swift in Sources */,
 				315544C725B7BCF200086510 /* DevicePairingStatus.swift in Sources */,
 				31740C3E261C3F6C0052A9C2 /* Purchase.swift in Sources */,
+				319CF671269699EB00159575 /* ResultCreativeReportView.swift in Sources */,
 				31A4A0002627D7700065E6C6 /* GuideView.swift in Sources */,
 				D56C6A46257DA0C700CF9AB8 /* RatioSize.swift in Sources */,
 				31C4D2A22692D616000C7E83 /* EnglishReport.swift in Sources */,
@@ -3707,6 +3788,7 @@
 				31A49FF82627D1620065E6C6 /* PagePairingGuide.swift in Sources */,
 				314D738A25B4F8B100907118 /* PageSynopsis.swift in Sources */,
 				316955AB25DF9D1500848507 /* Pss.swift in Sources */,
+				319CF66B26967EAC00159575 /* ResultReadingReportView.swift in Sources */,
 				D56C69AB257DA09E00CF9AB8 /* Resource.swift in Sources */,
 				318C5A0B2694195C00A2FD66 /* KidStudy.swift in Sources */,
 				310F6FAC25C0FE53005718B0 /* Watch.swift in Sources */,
@@ -3722,6 +3804,7 @@
 				3177AB35263F7D670054BFA4 /* RelationVodBody.swift in Sources */,
 				31F280282671E85A00F40B09 /* KidsSynopsis.swift in Sources */,
 				3190CAFE26892E1600ACB465 /* PackageBodyKids.swift in Sources */,
+				319CF66F2696844C00159575 /* CommentBox.swift in Sources */,
 				3183B37D26168F03004F5C0D /* PageAdultCertification.swift in Sources */,
 				D50AB8FE25806FB900649C4A /* Euxp.swift in Sources */,
 				316A7068266EF7FC00A93B83 /* MenuTab.swift in Sources */,
@@ -3736,6 +3819,7 @@
 				316ECDFB264B49BE008D2544 /* RemoteStyle.swift in Sources */,
 				D56C6A50257DA0C700CF9AB8 /* Select.swift in Sources */,
 				319B7EC3268E9D0A00B7DAAF /* ReportPage.swift in Sources */,
+				319CF6752696D45100159575 /* PageKidsEnglishLvTestSelect.swift in Sources */,
 				3182A0B626188B8100F7F07D /* PageConfirmNumber.swift in Sources */,
 				D56C69AA257DA09E00CF9AB8 /* Network.swift in Sources */,
 				31671A132600B379005AC3D2 /* SynopsisParam.swift in Sources */,
@@ -3756,6 +3840,7 @@
 				D5DC477E25821DFA007EDD86 /* CWGrid.swift in Sources */,
 				3192EFD826674DAE0012F238 /* PageKidsStyle.swift in Sources */,
 				318B53A125F1DA8E0052E4E0 /* TopBannerBg.swift in Sources */,
+				319CF66926966F3300159575 /* LvGraphList.swift in Sources */,
 				3177732925FAF92D006382AE /* HostDevice.swift in Sources */,
 				31626EEB25B8FB3000F4031D /* FunctionViewer.swift in Sources */,
 				D56C6B69257DBAC800CF9AB8 /* TopTab.swift in Sources */,
@@ -3786,6 +3871,7 @@
 				D5DABD792589746400DF5701 /* ApiCoreDataManager.swift in Sources */,
 				318D100526686DFE00B66977 /* Kid.swift in Sources */,
 				D56C60542593462B009AE769 /* Pairing.swift in Sources */,
+				319CF66726966CAC00159575 /* TrophyBox.swift in Sources */,
 				31E3975025B5A0A300CE6E21 /* PageMy.swift in Sources */,
 				317F0AB32609DD9E00EB9F6B /* PageSchedule.swift in Sources */,
 				3190CAF22684789000ACB465 /* SerisTabKids.swift in Sources */,
@@ -3802,6 +3888,7 @@
 				31D453E2267886A100E08CB2 /* CustomVTTPlayer.swift in Sources */,
 				D57298E5259D6EC100ED2CE6 /* ScenePickerController.swift in Sources */,
 				318C5A092694032800A2FD66 /* MonthlyGraphBox.swift in Sources */,
+				319CF67C269715D600159575 /* AnswerBox.swift in Sources */,
 				314F816525BE3CFA00E76508 /* SynopsisConst.swift in Sources */,
 				D56C6A36257DA0C700CF9AB8 /* CPTabNavigation.swift in Sources */,
 				D56C6A33257DA0C700CF9AB8 /* WebView.swift in Sources */,
@@ -3834,6 +3921,7 @@
 				314D6B0725D0E9DE0003C749 /* SetupItem.swift in Sources */,
 				314D73BA25B54FD900907118 /* BookMarkButton.swift in Sources */,
 				31C4BC97262D2D8600BB2167 /* NotificationCoreData.swift in Sources */,
+				319CF68226972D6A00159575 /* ExamResultBox.swift in Sources */,
 				319745BB261FEE7D0072945D /* PurchaseTicketList.swift in Sources */,
 				317C9774262443D4008F267D /* PageMyBenefits.swift in Sources */,
 				D56C6A48257DA0C700CF9AB8 /* RoundRectMask.swift in Sources */,

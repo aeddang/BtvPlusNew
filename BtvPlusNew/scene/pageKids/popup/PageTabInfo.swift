@@ -39,13 +39,40 @@ struct PageTabInfo: PageView {
             VStack{
                 VStack (alignment: .center, spacing:DimenKids.margin.regularExtra){
                     if !self.tabs.isEmpty {
-                        MenuTab(
-                            viewModel: self.tabNavigationModel,
-                            buttons: self.tabs,
-                            selectedIdx: self.tabIdx,
-                            bgColor: Color.app.ivoryDeep,
-                            isDivision: true)
-                            .frame(width: Self.tabWidth * CGFloat(self.tabs.count))
+                        if self.tabs.count > 3{
+                            ZStack{
+                                ScrollView(.horizontal, showsIndicators: false){
+                                    MenuTab(
+                                        viewModel: self.tabNavigationModel,
+                                        buttons: self.tabs,
+                                        selectedIdx: self.tabIdx,
+                                        bgColor: Color.app.ivoryDeep,
+                                        isDivision: false)
+                                        .padding(.horizontal, DimenKids.margin.regular)
+                                }
+                                HStack(spacing:0){
+                                    LinearGradient(
+                                        gradient:Gradient(colors: [Color.kids.bg, Color.kids.bg.opacity(0)]),
+                                        startPoint: .leading, endPoint: .trailing)
+                                        .modifier(MatchVertical(width:DimenKids.margin.regular))
+                                    Spacer()
+                                    LinearGradient(
+                                        gradient:Gradient(colors: [Color.kids.bg.opacity(0), Color.kids.bg]),
+                                        startPoint: .leading, endPoint: .trailing)
+                                        .modifier(MatchVertical(width:DimenKids.margin.regular))
+                                }
+                                .frame(height:SystemEnvironment.isTablet ? DimenKids.tab.thin : DimenKids.tab.light)
+                            }
+                        } else {
+                            MenuTab(
+                                viewModel: self.tabNavigationModel,
+                                buttons: self.tabs,
+                                selectedIdx: self.tabIdx,
+                                bgColor: Color.app.ivoryDeep,
+                                isDivision: true)
+                                .frame(width: Self.tabWidth * CGFloat(self.tabs.count))
+                        }
+                        
                     }
                     
                     if self.text.count > self.maxTextCount {

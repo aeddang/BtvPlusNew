@@ -54,6 +54,7 @@ extension Color {
         
         public static let white =  Color.white
         public static let whiteDeep = Color.init(red: 245/255, green: 245/255, blue: 245/255)
+        public static let whiteExtra = Color.init(red: 255/255, green: 251/255, blue: 244/255)
         
         public static let blueLight = Color.init(red: 29/255, green: 21/255, blue: 80/255)
         public static let blueLightExtra = Color.init(red: 49/255, green: 39/255, blue: 117/255)
@@ -72,7 +73,7 @@ extension Color {
         public static let sepiaDeep = Color.init(red: 178/255, green: 90/255, blue: 60/255)
         public static let sepia = Color.init(red: 135/255, green: 67/255, blue: 45/255)
         public static let sepiaLight = Color.init(red: 135/255, green: 67/255, blue: 45/255).opacity(0.6)
-        
+         
         public static let yellow = Color.init(red: 242/255, green: 143/255, blue: 30/255)
         public static let green = Color.init(red: 122/255, green: 178/255, blue: 63/255)
         public static let red = Color.init(red: 255/255, green: 119/255, blue: 87/255)

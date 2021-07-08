@@ -13,12 +13,13 @@ struct ErrorKidsData: PageView {
     var text:String = String.alert.apiErrorServer
     var tip:String? = nil
     var body: some View {
-        VStack(alignment: .center, spacing: 0){
+        VStack(alignment: .center, spacing: DimenKids.margin.regular){
             Image(icon)
-                .renderingMode(.original)
+                .renderingMode(.template)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: Dimen.icon.heavyUltra, height: Dimen.icon.heavyUltra)
+                .foregroundColor(Color.app.sepia)
+                .frame(width: DimenKids.icon.mediumUltra, height:  DimenKids.icon.mediumUltra)
             Text(String.alert.apiErrorServer)
                 .modifier(BoldTextStyleKids(
                             size: Font.sizeKids.thin,

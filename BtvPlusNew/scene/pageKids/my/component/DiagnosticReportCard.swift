@@ -57,9 +57,7 @@ struct DiagnosticReportCard: PageComponent{
                 }
                 Spacer()
                 if self.isLoading {
-                    AnimateSpinner(isAnimating: self.$isLoading).frame(
-                        width: DimenKids.loading.small.width,
-                        height: DimenKids.loading.small.height)
+                    Spacer()
                     
                 } else if self.isError {
                     ErrorKidsData()

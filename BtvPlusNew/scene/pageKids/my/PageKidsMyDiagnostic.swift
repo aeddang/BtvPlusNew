@@ -21,7 +21,7 @@ struct PageKidsMyDiagnostic: PageView {
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
-    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
+    @ObservedObject var readingListScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var tabNavigationModel:NavigationModel = NavigationModel()
   
     @State var isPairing:Bool = false
@@ -51,13 +51,41 @@ struct PageKidsMyDiagnostic: PageView {
                         .padding(.bottom, DimenKids.margin.thin)
                         .background(Color.app.white)
                         if self.isEmptyResult {
-                            EmptyDiagnosticView(type: self.type, kid: self.kid ?? Kid())
-                                .modifier(MatchParent())
+                            EmptyDiagnosticView(type: self.type, kid: self.kid ?? Kid()){ type in
+                                self.startReport(startType: type)
+                            }
+                            .modifier(MatchParent())
                         } else if self.isError {
                             ErrorKidsData()
                                 .modifier(MatchParent())
                         } else{
-                            Spacer().modifier(MatchParent())
+                            if self.isReadingSelect {
+                                ResultReadingListView(
+                                    infinityScrollModel: self.readingListScrollModel,
+                                    kid: self.kid ?? Kid() ){ data in
+                                    self.selectReadingArea(data: data)
+                                }
+                                .modifier(MatchParent())
+                            } else if let resultData = self.resultEnglishReportViewData {
+                                ResultEnglishReportView(data: resultData){
+                                    self.moveExamPage(moveType: .english)
+                                }
+                                .modifier(MatchParent())
+                            } else if let resultData = self.resultReadingReportViewData {
+                                ResultReadingReportView(data: resultData){ isRetry in
+                                    if isRetry {
+                                        self.moveExamPage(moveType: .infantDevelopment)
+                                    } else {
+                                        self.startReport(startType: .infantDevelopment)
+                                    }
+                                }
+                                .modifier(MatchParent())
+                            } else if let resultData = self.resultCreativeReportViewData {
+                                ResultCreativeReportView(data: resultData)
+                                    .modifier(MatchParent())
+                            } else {
+                                Spacer()
+                            }
                         }
                         
                         
@@ -82,7 +110,7 @@ struct PageKidsMyDiagnostic: PageView {
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
               
             }//draging
-            .onReceive(self.infinityScrollModel.$event){evt in
+            .onReceive(self.readingListScrollModel.$event){evt in
                 guard let evt = evt else {return}
                 switch evt {
                 case .pullCompleted:
@@ -92,7 +120,7 @@ struct PageKidsMyDiagnostic: PageView {
                 default : break
                 }
             }
-            .onReceive(self.infinityScrollModel.$pullPosition){ pos in
+            .onReceive(self.readingListScrollModel.$pullPosition){ pos in
                 self.pageDragingModel.uiEvent = .pull(geometry, pos)
             }
             .onReceive(self.pairing.$status){status in
@@ -104,14 +132,8 @@ struct PageKidsMyDiagnostic: PageView {
             }
             .onReceive(self.pairing.$kid){ kid in
                 self.kid = kid
-            }
-            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                if ani {
-                    self.isInitPage = true
-                    if self.result == nil {
-                        self.loadResult(self.type)
-                    }
-                }
+                if !self.isInitPage {return}
+                self.loadResult(self.type)
             }
             .onReceive(dataProvider.$result) { res in
                 guard let res = res else { return }
@@ -159,6 +181,16 @@ struct PageKidsMyDiagnostic: PageView {
                 default: break
                 }
             }
+            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                if ani {
+                    self.isInitPage = true
+                    if let result = self.result  {
+                        self.setupKidsReportContent(result)
+                    } else {
+                        self.loadResult(self.type)
+                    }
+                }
+            }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
                 if let type = obj.getParamValue(key: .type) as? DiagnosticReportType {
@@ -184,13 +216,21 @@ struct PageKidsMyDiagnostic: PageView {
     @State var isError:Bool = false
     @State var isEmpty:Bool = true
     @State var isEmptyResult:Bool = false
+    @State var isReadingSelect:Bool = false
     
     @State var resultSentence:String? = nil
     @State var readingArea:String? = nil
     
+    @State var resultEnglishReportViewData:ResultEnglishReportViewData? = nil
+    @State var resultReadingReportViewData:ResultReadingReportViewData? = nil
+    @State var resultCreativeReportViewData:ResultCreativeReportViewData? = nil
     private func resetPage(){
         self.isError = false
         self.isEmptyResult = false
+        self.isReadingSelect = false
+        self.resultEnglishReportViewData = nil
+        self.resultReadingReportViewData = nil
+        self.resultCreativeReportViewData = nil
     }
     
     private func loadResult(_ type:DiagnosticReportType){
@@ -239,14 +279,27 @@ struct PageKidsMyDiagnostic: PageView {
         }
     }
     private func setupKidsReport(_ report:KidsReport){
-        if report.contents?.test_rslt_yn?.bool == true {
+        if report.contents?.test_rslt_yn?.bool == true , let contents = report.contents {
             self.isLoading = false
-            withAnimation{
-                
-            }
+            self.setupKidsReportContent(contents)
         } else {
             setupEmptyResult()
         }
+    }
+    
+    private func setupKidsReportContent(_ contents:KidsReportContents){
+        withAnimation{
+            switch self.type {
+            case .english :
+                self.resultEnglishReportViewData = ResultEnglishReportViewData().setData(contents, kid: self.kid)
+            case .infantDevelopment :
+                self.resultReadingReportViewData = ResultReadingReportViewData().setData(contents, kid: self.kid)
+            case .creativeObservation :
+                self.resultCreativeReportViewData = ResultCreativeReportViewData().setData(contents, kid: self.kid)
+                break
+            }
+        }
+        
     }
     
     private func setupReadingReport(_ report:ReadingReport){
@@ -268,19 +321,65 @@ struct PageKidsMyDiagnostic: PageView {
     }
     
     private func setupCreativeReport(_ report: CreativeReport){
-        if report.contents?.test_rslt_yn?.bool == true {
+        if report.contents?.test_rslt_yn?.bool == true, let contents = report.contents {
             self.isLoading = false
-            withAnimation{
-                
-            }
+            self.setupKidsReportContent(contents)
         } else {
             setupEmptyResult()
+        }
+    }
+    
+    private func startReport(startType: DiagnosticReportType){
+        switch startType {
+        case .infantDevelopment:
+            self.isReadingSelect = true
+        default:
+            self.moveExamPage(moveType: startType)
+            break
+        }
+    }
+    
+    private func selectReadingArea(data: ReadingListData){
+        self.type = .infantDevelopment
+        if data.isComplete {
+            if data.area == self.readingArea {
+                self.isReadingSelect = false
+                if self.resultReadingReportViewData == nil {
+                    self.loadResult(.infantDevelopment)
+                }
+            } else {
+                self.resultSentence = data.title
+                self.readingArea = data.area
+                self.loadResult(.infantDevelopment)
+            }
+        } else {
+            self.moveExamPage(moveType: .infantDevelopment, moveId: data.type.code)
+        }
+    }
+    
+    private func moveExamPage(moveType: DiagnosticReportType, moveId:String? = nil){
+        switch moveType {
+        case .english:
+            self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsEnglishLvTestSelect))
+        case .infantDevelopment:
+            self.pagePresenter.openPopup(
+                PageKidsProvider.getPageObject(.kidsExam)
+                    .addParam(key: .type, value: DiagnosticReportType.infantDevelopment)
+                    .addParam(key: .id, value: moveId ?? self.readingArea)
+            )
+            break
+        case .creativeObservation:
+            self.pagePresenter.openPopup(
+                PageKidsProvider.getPageObject(.kidsExam)
+                    .addParam(key: .type, value: DiagnosticReportType.creativeObservation)
+            )
+            break
         }
     }
 }
 
 #if DEBUG
-struct PageKidsMyDiagnostic_Previews: PreviewProvider {
+struct PageKidsMyDiagnostic_Previews: PreviewProvider { 
     static var previews: some View {
         ZStack{
             PageKidsMyDiagnostic().contentBody

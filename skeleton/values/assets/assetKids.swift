@@ -34,6 +34,7 @@ extension AssetKids{
     struct icon {
         public static let delete = "zemkidsMPopupInputDelNor"
         public static let back = "zemkidsMBackBtn"
+        public static let close = "zemkidsMQuizBtnClose"
         public static let backTop = "zemkidsMTopBackBtn"
         public static let setting = "zemkidsMTopSetBtn"
         public static let more = "zemkidsMBtnMore"
@@ -60,6 +61,8 @@ extension AssetKids{
         
         public static let trophy = "zemkidsMImgReportLevelS"
         public static let medal = "zemkidsMIcBtnRecommend"
+        
+        
     }
     
     
@@ -88,6 +91,40 @@ extension AssetKids{
       
     }
     
+    struct exam {
+        public static let answerBg = isPad ? "zemkidsTIAnswerBg" : "zemkidsMAnswerBg"
+        public static let listenBg = isPad ? "zemkidsTIAnswerListenBg" : "zemkidsMAnswerListenBg"
+        
+        public static let sound = "zemkidsMTestBtnSound"
+        public static let check = "zemkidsTIIcCheck"
+        
+        public static let answer =  isPad
+            ? [ "zemkidsTIBtnAnswer1", "zemkidsTIBtnAnswer2", "zemkidsTIBtnAnswer3" ]
+            : [ "zemkidsMBtnAnswer1", "zemkidsMBtnAnswer2", "zemkidsMBtnAnswer3" ]
+      
+        public static let answerRight = isPad ? "zemkidsTIBtnAnswerRight" : "zemkidsMBtnAnswerRight"
+        public static let answerWrong = isPad ? "zemkidsTIBtnAnswerWrong" : "zemkidsMBtnAnswerWrong"
+        
+        public static let next = "zemkidsMLevelTestBtnR"
+        public static let prev = "zemkidsMLevelTestBtnL"
+        public static let exit = "zemkidsMLevelTestBtnROut"
+        
+        public static let timerNext = [
+            "zemkidsMLevelTestBtnNext1", "zemkidsMLevelTestBtnNext2", "zemkidsMLevelTestBtnNext3"
+        ]
+        
+        public static let timerExit = [
+            "zemkidsMLevelTestBtnROut1", "zemkidsMLevelTestBtnROut2", "zemkidsMLevelTestBtnROut3"
+        ]
+         
+        public static let timerResult = [
+            "zemkidsMLevelTestBtnRResults1", "zemkidsMLevelTestBtnRResults2", "zemkidsMLevelTestBtnRResults3"
+        ]
+       
+        public static let graphic1 = "zemkidsMBgLevelTestGraphic01"
+        public static let graphic2 = "zemkidsMBgLevelTestGraphic02"
+    }
+    
     
     struct shape {
         public static let radioBtnOn = "zemkidsMRadioButtonPre"
@@ -113,6 +150,8 @@ extension AssetKids{
         
         public static let cardFolder = "zemkidsMMyCardFolder1"
         public static let cardFolderWide = "zemkidsMMyCardFolder2"
+        
+        
     }
     
     struct image {
@@ -131,11 +170,27 @@ extension AssetKids{
         
         public static let resultEnglish = "zemkidsMEngTestResult"
         public static let resultDiagnostic = "zemkidsMCreateTestResult"
+        
+        public static let resultReading1 = "zemkidsMImgReportSports"
+        public static let resultReading2 = "zemkidsMImgReportCardLanguage"
+        public static let resultReading3 = "zemkidsMImgReportCardCognitive"
+        public static let resultReading4 = "zemkidsMImgReportCardSociety"
+        public static let resultReading5 = "zemkidsMImgReportLife"
+        
+        public static let testEnglish1 = "zemkidsMEngTestImg1"
+        public static let testEnglish2 = "zemkidsMEngTestImg2"
+        public static let testEnglish3 = "zemkidsMEngTestImg3"
+        
     }
     
     struct ani {
         public static let splash:[String] = (0...47).map{ "zemkidsMSplash" + $0.description.toFixLength(2) }
         public static let loading:[String] = (0...59).map{ "zemkidsMLoading" + $0.description.toFixLength(2) }
+        
+        public static let testStart:[String] = (1...30).map{ "zemkidsTITestStart0" + $0.description.toFixLength(2) }
+        public static let testEnd:[String] = (1...31).map{ "zemkidsTITestEnd0" + $0.description.toFixLength(2) }
+        public static let answer:[String] = (1...61).map{ "zemkidsTITestGood0" + $0.description.toFixLength(2) }
+        public static let answerWrong:[String] = (1...60).map{ "zemkidsTITestBad0" + $0.description.toFixLength(2) }
     }
     
     struct age {

@@ -60,7 +60,7 @@ struct MenuTab : PageComponent {
                         size: Font.sizeKids.lightExtra,
                 color: menu.idx == self.selectedIdx ? Color.app.white : Color.app.brownDeep
             ))
-            .padding(.horizontal, DimenKids.margin.tinyExtra)
+            .padding(.horizontal, DimenKids.margin.regular)
             .fixedSize(horizontal: true, vertical: false)
     }
     

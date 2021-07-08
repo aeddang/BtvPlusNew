@@ -9,7 +9,8 @@
 import Foundation
 import SwiftUI
 struct RectButtonKids: View, SelecterbleProtocol{
-    let text:String
+    var text:String
+    var icon:String? = nil
     var trailText:String? = nil
     var strikeText:String? = nil
     var index: Int = 0
@@ -36,10 +37,9 @@ struct RectButtonKids: View, SelecterbleProtocol{
             HStack(spacing:0){
                 if self.isFixSize {
                     HStack(spacing:0){
-                        Text(self.text)
-                            .font(.custom(textModifier.family, size: textModifier.size))
-                            .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
                         RectButtonKidsBody(
+                            text: self.text,
+                            icon: self.icon,
                             trailText: self.trailText,
                             strikeText: self.strikeText,
                             isSelected: self.isSelected,
@@ -48,10 +48,10 @@ struct RectButtonKids: View, SelecterbleProtocol{
                         }
                     .frame(width:self.size.width)
                 } else {
-                    Text(self.text)
-                        .font(.custom(textModifier.family, size: textModifier.size))
-                        .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+                    
                     RectButtonKidsBody(
+                        text: self.text,
+                        icon: self.icon,
                         trailText: self.trailText,
                         strikeText: self.strikeText,
                         isSelected: self.isSelected,
@@ -67,6 +67,8 @@ struct RectButtonKids: View, SelecterbleProtocol{
         }
     }
     struct RectButtonKidsBody:View {
+        var text:String
+        var icon:String? = nil
         var trailText:String? = nil
         var strikeText:String? = nil
         var isSelected: Bool = false
@@ -74,6 +76,16 @@ struct RectButtonKids: View, SelecterbleProtocol{
         var isMore: Bool = false
         
         var body :some View {
+            if let icon = self.icon {
+                Image(icon)
+                    .renderingMode(.original).resizable()
+                    .scaledToFit()
+                    .frame(width: SystemEnvironment.isTablet ? DimenKids.icon.tinyExtra :  DimenKids.icon.tiny)
+                    .padding(.trailing, DimenKids.margin.tiny)
+            }
+            Text(self.text)
+                .font(.custom(textModifier.family, size: textModifier.size))
+                .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
             if let strikeText = self.strikeText {
                 Text(strikeText)
                     .font(.custom(textModifier.family, size: Font.sizeKids.thinExtra))

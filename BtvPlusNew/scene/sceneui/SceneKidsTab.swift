@@ -34,6 +34,7 @@ struct SceneKidsTab: PageComponent{
                 Spacer()
                 if self.isLoading {
                     ActivityIndicator(isAnimating: self.$isLoading)
+                        .padding(.bottom, DimenKids.margin.thin + self.sceneObserver.safeAreaBottom)
                 }
             }
             if self.isDimed {

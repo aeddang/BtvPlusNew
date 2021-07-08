@@ -12,6 +12,7 @@ struct EmptyDiagnosticView: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     var type:DiagnosticReportType = .english
     var kid:Kid = Kid()
+    var action: ((DiagnosticReportType) -> Void)? = nil
     var body: some View {
         VStack(spacing:DimenKids.margin.mediumUltra){
             HStack(spacing:DimenKids.margin.thin){
@@ -40,9 +41,7 @@ struct EmptyDiagnosticView: PageView {
                 size: DimenKids.button.mediumRectUltra,
                 isFixSize: true
             ){ _ in
-                self.pagePresenter.openPopup(
-                    PageProvider.getPageObject(.pairing, animationType: .opacity)
-                )
+                self.action?(self.type)
             }
         }
         

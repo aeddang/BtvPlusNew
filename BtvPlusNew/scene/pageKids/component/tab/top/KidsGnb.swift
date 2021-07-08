@@ -22,9 +22,7 @@ struct KidsGnb: PageComponent{
         VStack(alignment: .leading){
             HStack(spacing:0){
                 ForEach(self.datas) { data in
-                    if data.idx != 0 {
-                        Spacer()
-                    }
+                    
                     KidsGnbItem( data:data )
                     .onTapGesture {
                         
@@ -53,13 +51,12 @@ struct KidsGnbList: PageComponent{
             viewModel: self.viewModel,
             axes: .horizontal,
             marginVertical:0,
-            marginHorizontal: Dimen.margin.thin ,
+            marginHorizontal: 0,
             spacing: 0,
             isRecycle: false,
             useTracking: false
             ){
             ForEach(self.datas) { data in
-                
                 KidsGnbItem( data:data )
                 .onTapGesture {
                     
@@ -67,6 +64,10 @@ struct KidsGnbList: PageComponent{
             }
         }
     }//body
+}
+
+extension KidsGnbItem{
+    static let size:CGFloat = SystemEnvironment.isTablet ? 76 : 48
 }
 
 struct KidsGnbItem: PageView {
@@ -87,7 +88,7 @@ struct KidsGnbItem: PageView {
                         .modifier(MatchParent())
                         .opacity(self.isSelected ? 1.0 : 0.0)
                     
-                    VStack(spacing:DimenKids.margin.micro){
+                    VStack(spacing:DimenKids.margin.microExtra){
                         Image(self.isSelected ? profileImg : Asset.gnbTop.zemkids)
                             .renderingMode(.original)
                             .resizable()
@@ -138,24 +139,26 @@ struct KidsGnbItem: PageView {
                     .resizable()
                     .cancelOnDisappear(true)
                     .loadImmediately()
-                    .aspectRatio(contentMode: .fit)
+                    .aspectRatio(contentMode: .fill)
                     .modifier(MatchParent())
                     
                 KFImage(URL(string: self.data.imageOn))
                     .resizable()
                     .cancelOnDisappear(true)
                     .loadImmediately()
-                    .aspectRatio(contentMode: .fit)
+                    .aspectRatio(contentMode: .fill)
                     .modifier(MatchParent())
                     .opacity(self.isSelected ? 1.0 : 0.0)
             }
-            
         }
+        .frame(height: Self.size)
+        /*
         .frame(
             minWidth: SystemEnvironment.isTablet ? DimenKids.icon.medium : DimenKids.icon.medium,
             maxWidth: SystemEnvironment.isTablet ? DimenKids.icon.heavy : DimenKids.icon.heavyExtra,
             minHeight: SystemEnvironment.isTablet ? DimenKids.icon.heavy : DimenKids.icon.heavyExtra,
             maxHeight: SystemEnvironment.isTablet ? DimenKids.icon.heavy : DimenKids.icon.heavyExtra)
+        */
         .onReceive(self.pairing.$kid) { kid in
             if !self.data.isHome {return}
             if let kid = kid {

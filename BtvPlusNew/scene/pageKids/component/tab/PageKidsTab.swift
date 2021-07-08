@@ -17,7 +17,7 @@ struct PageKidsTab: PageComponent{
     var isClose:Bool = false
     var isSetting:Bool = false
     var style:PageStyle = .kidsWhite
-    
+    var close: (() -> Void)? = nil
     var body: some View {
         ZStack(alignment: .leading){
             if self.title != nil {
@@ -59,6 +59,22 @@ struct PageKidsTab: PageComponent{
                             .colorMultiply(self.style.textColor)
                             .frame(width: DimenKids.icon.mediumExtra,
                                    height: DimenKids.icon.mediumExtra)
+                    }
+                }
+                if self.isClose {
+                    Button(action: {
+                        if let close = self.close{
+                            close()
+                        } else {
+                            self.pagePresenter.goBack()
+                        }
+                    }) {
+                        Image(AssetKids.icon.close)
+                            .renderingMode(.original)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: DimenKids.icon.regularUltra,
+                                   height: DimenKids.icon.regularUltra)
                     }
                 }
             }

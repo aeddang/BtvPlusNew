@@ -14,6 +14,7 @@ extension String{
         public static let registKidCreate = "titleRegistKidCreate".loaalized()
         public static let kidsMy = "titleKidsMy".loaalized()
         public static let kidsMyDiagnostic = "titleKidsMyDiagnostic".loaalized()
+        public static let kidsEnglishLvTestSelect = "titleKidsEnglishLvTestSelect".loaalized()
     }
     
     struct kidsText {
@@ -40,6 +41,7 @@ extension String{
         public static let kidsMyNeedPairingSub = "kidsMyNeedPairingSub".loaalized()
         
         public static let kidsMyReportStart = "kidsMyReportStart".loaalized()
+        public static let kidsMyReportCompleted = "kidsMyReportCompleted".loaalized()
         public static let kidsMyEnglishText = "kidsMyEnglishText".loaalized()
         public static let kidsMyInfantDevelopmentText = "kidsMyInfantDevelopmentText".loaalized()
         public static let kidsMyCreativeObservationText = "kidsMyCreativeObservationText".loaalized()
@@ -59,11 +61,33 @@ extension String{
         public static let kidsMyEnglishResultCommentText = "kidsMyEnglishResultCommentText".loaalized()
 
         public static let kidsMyInfantDevelopmentResultAnother = "kidsMyInfantDevelopmentResultAnother".loaalized()
+        public static let kidsMyInfantDevelopmentDescription = "kidsMyInfantDevelopmentDescription".loaalized()
         public static let kidsMyInfantDevelopmentLv1 = "kidsMyInfantDevelopmentLv1".loaalized()
         public static let kidsMyInfantDevelopmentLv2 = "kidsMyInfantDevelopmentLv2".loaalized()
         public static let kidsMyInfantDevelopmentLv3 = "kidsMyInfantDevelopmentLv3".loaalized()
         public static let kidsMyInfantDevelopmentLv4 = "kidsMyInfantDevelopmentLv4".loaalized()
         public static let kidsMyInfantDevelopmentLv5 = "kidsMyInfantDevelopmentLv5".loaalized()
+        
+        public static let kidsMyInfantDevelopmentDescription1 = "kidsMyInfantDevelopmentDescription1".loaalized()
+        public static let kidsMyInfantDevelopmentDescription2 = "kidsMyInfantDevelopmentDescription2".loaalized()
+        public static let kidsMyInfantDevelopmentDescription3 = "kidsMyInfantDevelopmentDescription3".loaalized()
+        public static let kidsMyInfantDevelopmentDescription4 = "kidsMyInfantDevelopmentDescription4".loaalized()
+        public static let kidsMyInfantDevelopmentDescription5 = "kidsMyInfantDevelopmentDescription5".loaalized()
+        
+        public static let kidsEnglishLvTestText = "kidsEnglishLvTestText".loaalized()
+        public static let kidsEnglishLvTestRecommend1 = "kidsEnglishLvTestRecommend1".loaalized()
+        public static let kidsEnglishLvTestRecommend2 = "kidsEnglishLvTestRecommend2".loaalized()
+        public static let kidsEnglishLvTestRecommend3 = "kidsEnglishLvTestRecommend3".loaalized()
+        
+        public static let kidsExamListen = "kidsExamListen".loaalized()
+        public static let kidsExamRepeat = "kidsExamRepeat".loaalized()
+        public static let kidsExamRemainQuestion = "kidsExamRemainQuestion".loaalized()
+        public static let kidsExamLastQuestion = "kidsExamLastQuestion".loaalized()
+        public static let kidsExamSelectExample = "kidsExamSelectExample".loaalized()
+
+        public static let kidsExamForkid = "kidsExamForkid".loaalized()
+        public static let kidsExamForParent = "kidsExamForParent".loaalized()
+
     }
     
 }

@@ -18,10 +18,16 @@ struct CompareData:Identifiable{
 class CreativeGraphBoxData{
     private(set) var lvCount:Int = 5
     private(set) var compares:[CompareData] = []
-    private(set) var date:String = ""
+    private(set) var date:String? = nil
     func setData(_ data:CreativeReport) -> CreativeGraphBoxData{
         guard let content = data.contents else { return self}
+        self.setData(content: content)
         self.date = content.subm_dtm?.replace("-", with: ".") ?? ""
+        return self
+    }
+    
+    @discardableResult
+    func setData(content:KidsReportContents) -> CreativeGraphBoxData{
         if let labels = content.labels, let children = content.childs, let parents = content.parents {
             let max:Float = 100
             self.compares = zip(labels, zip(children, parents)).map{ title, data in
@@ -36,10 +42,9 @@ class CreativeGraphBoxData{
 struct CreativeGraphBox: PageComponent{
     var data:CreativeGraphBoxData
     var sortSize:CGSize = SystemEnvironment.isTablet ? CGSize(width: 33, height: 19) : CGSize(width: 15, height: 9)
-    @State var mePct:Float = 0
-    @State var avgPct:Float = 0
-    @State var meTitle:String = ""
-    @State var avgTitle:String = ""
+    
+    var colorKid:Color = Color.app.sky
+    var colorParent:Color = Color.app.red
     var body: some View {
         VStack(spacing:0){
             ZStack(alignment: .top){
@@ -47,7 +52,7 @@ struct CreativeGraphBox: PageComponent{
                     HStack(spacing:DimenKids.margin.micro){
                         Spacer()
                             .frame(width: sortSize.width, height: sortSize.height)
-                            .background(Color.app.sky)
+                            .background(self.colorKid)
                             .mask(RoundedRectangle(cornerRadius: DimenKids.radius.tiny))
                         Text(String.app.kid)
                             .modifier(BoldTextStyleKids(
@@ -57,7 +62,7 @@ struct CreativeGraphBox: PageComponent{
                     HStack(spacing:DimenKids.margin.micro){
                         Spacer()
                             .frame(width: sortSize.width, height: sortSize.height)
-                            .background(Color.app.red)
+                            .background(self.colorParent)
                             .mask(RoundedRectangle(cornerRadius: DimenKids.radius.tiny))
                         Text(String.app.parent)
                             .modifier(BoldTextStyleKids(
@@ -73,17 +78,21 @@ struct CreativeGraphBox: PageComponent{
                             title: compare.title,
                             lvCount: self.data.lvCount,
                             valueA: compare.valueA,
-                            valueB: compare.valueB
+                            valueB: compare.valueB,
+                            colorA: self.colorKid,
+                            colorB: self.colorParent
                         )
                     }
                 }
                 .padding(.top, DimenKids.margin.tiny)
             }
-            Text(String.kidsText.kidsMyDiagnosticReportDate + " " + self.data.date)
-                .modifier(BoldTextStyleKids(
-                            size: Font.sizeKids.microUltra,
-                            color:  Color.app.sepia))
-                .padding(.top, DimenKids.margin.thinExtra)
+            if let date = self.data.date {
+                Text(String.kidsText.kidsMyDiagnosticReportDate + " " + date)
+                    .modifier(BoldTextStyleKids(
+                                size: Font.sizeKids.microUltra,
+                                color:  Color.app.sepia))
+                    .padding(.top, DimenKids.margin.thinExtra)
+            }
         }
         
     }
@@ -95,6 +104,8 @@ struct CreativeGraph: PageComponent{
     var valueA:Float = 0
     var valueB:Float = 0
     var width:CGFloat = SystemEnvironment.isTablet ? 200 : 101
+    var colorA:Color = Color.app.sky
+    var colorB:Color = Color.app.red
     
     @State var valueAPct:Float = 0
     @State var valueBPct:Float = 0
@@ -113,13 +124,13 @@ struct CreativeGraph: PageComponent{
                         value: self.valueAPct,
                         viewText: "",
                         size: DimenKids.item.graphVerticalExtra,
-                        color: Color.app.sky)
+                        color: self.colorA)
                         
                     VerticalGraph(
                         value: self.valueBPct,
                         viewText: "",
                         size: DimenKids.item.graphVerticalExtra,
-                        color: Color.app.red)
+                        color: self.colorB)
                        
                 }
                 

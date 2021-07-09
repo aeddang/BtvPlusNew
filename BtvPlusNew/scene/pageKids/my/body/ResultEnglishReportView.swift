@@ -30,6 +30,7 @@ class ResultEnglishReportViewData{
     private(set) var date:String = ""
     private(set) var retryCount:Int = 0
     private(set) var retryCountStr:String = ""
+    private(set) var title:String? = nil
     
     func setData(_ content:KidsReportContents, kid:Kid?) -> ResultEnglishReportViewData{
         self.kid = kid
@@ -68,7 +69,7 @@ class ResultEnglishReportViewData{
                 QuestionData().setData(q)
             }
         }
-        
+        self.title = content.ep_tit_nm
         self.avgLv = content.peer_avgs?.firstIndex(of: 1) ?? 0
         self.meLv = content.my_levels?.firstIndex(of: 1) ?? 0
         self.lvDescription = content.level_cd
@@ -111,6 +112,7 @@ class ResultEnglishReportViewData{
 }
 
 struct ResultEnglishReportView: PageComponent{
+    @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     var data:ResultEnglishReportViewData
     var action: (() -> Void)? = nil
@@ -154,8 +156,16 @@ struct ResultEnglishReportView: PageComponent{
                             size: DimenKids.button.lightRectExtra,
                             cornerRadius:  DimenKids.radius.medium
                         ) { _ in
+                            var move = PageKidsProvider.getPageObject(.kidsExamViewer)
+                                .addParam(key: .type, value: DiagnosticReportType.english)
+                                .addParam(key: .datas, value: self.data.questions)
+                            if let title = self.data.title {
+                                move = move.addParam(key: .title, value: title )
+                            }
                             
-                            //self.action?(true)
+                            self.pagePresenter.openPopup(
+                                move
+                            )
                         }
                     }
                 }

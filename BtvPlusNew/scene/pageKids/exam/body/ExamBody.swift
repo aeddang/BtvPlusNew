@@ -7,27 +7,55 @@
 
 import Foundation
 import SwiftUI
-
+import struct Kingfisher.KFImage
 
 
 struct ExamBody: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @ObservedObject var viewModel:KidsExamModel = KidsExamModel()
+    var type:DiagnosticReportType = .english
+    var isView:Bool = false
     var body: some View {
-        HStack( spacing: DimenKids.margin.light){
-            VStack(){
-                Spacer()
-                ProgressBox(
-                    progress: 5,
-                    max: 10,
-                    hold: 2){ move in
-                    
+        ZStack{
+            HStack( spacing: DimenKids.margin.light){
+                ZStack(alignment: .bottom){
+                    KFImage(URL(string: self.image ?? ""))
+                        .resizable()
+                        .cancelOnDisappear(true)
+                        .loadImmediately()
+                        .aspectRatio(contentMode: .fit)
+                        .modifier(MatchParent())
+                        .padding(.bottom, SystemEnvironment.isTablet ? 106 : 48)
+                    if isView {
+                        ProgressBox(viewModel: self.viewModel){ move in
+                            self.viewModel.move(move)
+                        }
+                    } else {
+                        ProgressBox(viewModel: self.viewModel)
+                    }
                 }
+                .padding(.bottom, self.sceneObserver.safeAreaBottom + DimenKids.margin.thin)
+                ExamControl(
+                    viewModel: self.viewModel,
+                    isView: self.isView
+                )
             }
-            .padding(.bottom, self.sceneObserver.safeAreaBottom + DimenKids.margin.thin)
-            ExamControl()
+            .modifier(ContentHorizontalEdgesKids())
+            
         }
-        .modifier(ContentHorizontalEdgesKids())
+        
+        .onReceive(self.viewModel.$event){evt in
+            switch evt {
+            case .quest(_ , let question ) :
+                withAnimation{
+                    self.image = question.imagePath
+                }
+            default : break
+            }
+        }
     }
+    @State var image:String? = nil
+   
 }
 
 #if DEBUG

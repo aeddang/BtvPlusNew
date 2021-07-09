@@ -39,6 +39,22 @@ enum DiagnosticReportType:String, CaseIterable{
         case .creativeObservation: return String.kidsText.kidsMyCreativeObservationReport
         }
     }
+    
+    var startBg: String {
+        switch self {
+        case .english: return AssetKids.exam.startBg1
+        case .infantDevelopment: return AssetKids.exam.startBg2
+        case .creativeObservation: return AssetKids.exam.startBg3
+        }
+    }
+    
+    var completeBg: String {
+        switch self {
+        case .english: return AssetKids.exam.completeBg1
+        case .infantDevelopment: return AssetKids.exam.completeBg2
+        case .creativeObservation: return AssetKids.exam.completeBg3
+        }
+    }
 }
 
 class StudyData{
@@ -75,23 +91,3 @@ struct CommentData:Identifiable{
     let text:String
 }
 
-class QuestionData:Identifiable{
-    let id:String = UUID().uuidString
-    var data:KidsExamQuestion? = nil
-    var audioPath:String? = nil
-    var imagePath:String? = nil
-    var answer:String? = nil
-    var submit:String? = nil
-    var count:Int = 0
-    
-    func setData(_ data:KidsExamQuestion) -> QuestionData {
-        self.data = data
-        self.audioPath = data.q_aud_url
-        self.imagePath = data.q_img_url
-        self.count = data.q_ex_cnt ?? 0
-        self.submit = data.subm_ansr_cn
-        self.answer = data.q_cans_cn
-        return self
-    }
-    
-}

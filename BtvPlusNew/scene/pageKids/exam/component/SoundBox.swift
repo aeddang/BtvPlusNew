@@ -14,7 +14,8 @@ extension SoundBox {
 }
 
 struct SoundBox: PageComponent{
-    var isPlay:Bool = false
+    var soundPath:String? = nil
+    @State var isPlay:Bool = false
     var body: some View {
         ZStack(alignment: .leading){
             Image( AssetKids.exam.listenBg)
@@ -50,7 +51,7 @@ struct SoundBox_Previews: PreviewProvider {
     static var previews: some View {
         Form{
             SoundBox(
-               isPlay: true
+              
             )
         }
     }

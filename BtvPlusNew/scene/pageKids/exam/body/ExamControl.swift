@@ -16,7 +16,8 @@ extension ExamControl {
 }
 
 struct ExamControl: PageComponent{
-   
+    @ObservedObject var viewModel:KidsExamModel = KidsExamModel()
+    var isView:Bool = false
     var body: some View {
         ZStack(alignment: .topLeading){
             Image( AssetKids.exam.answerBg)
@@ -24,23 +25,105 @@ struct ExamControl: PageComponent{
                 .scaledToFit()
                 .frame(width: Self.bgSize.width, height: Self.bgSize.height)
                 .padding(.top ,Self.bodySize.height - Self.bgSize.height)
-            VStack( spacing: DimenKids.margin.light ){
-                SoundBox()
+            VStack( spacing: 0 ){
+                if let soundPath = self.soundPath {
+                    SoundBox(
+                        soundPath: soundPath
+                    )
                     .padding(.trailing, SystemEnvironment.isTablet ? 28 : 32)
-                AnswerBox(right: 0, answer: 1, exNum: 3){ answer in
-                    
+                    .opacity(self.answer == -1 || isView ? 1 : 0.3)
                 }
+                if self.question != nil {
+                    if !isView {
+                        AnswerBox(
+                            right: self.right,
+                            answer: self.answer,
+                            submit:self.submit,
+                            exNum: self.exCount)
+                        { sumit in
+                            if self.viewModel.status == .quest {
+                                self.viewModel.solve(submit: sumit)
+                            }
+                        }
+                        .padding(.top, DimenKids.margin.light)
+                    } else {
+                        AnswerBox(
+                            right: self.right,
+                            answer: self.answer,
+                            submit:self.submit,
+                            exNum: self.exCount)
+                        .padding(.top, DimenKids.margin.light)
+                    }
+                }
+                Spacer()
                 
             }
             .frame(width: Self.bodySize.width, height: Self.bodySize.height)
-            ExamResultBox(right: 0, answer: 1)
-                .padding(.leading ,
-                         Self.bodySize.width - ExamResultBox.size.width
-                         - (SystemEnvironment.isTablet ? 28 : 32)
-                )
+            if self.viewModel.type == .solve {
+                ExamResultBox(right: self.right, answer: self.answer)
+                    .padding(.leading ,
+                             Self.bodySize.width - ExamResultBox.size.width
+                             - (SystemEnvironment.isTablet ? 28 : 32)
+                    )
+            }
         }
         .frame(width: Self.bodySize.width, height: Self.bodySize.height)
+        .onReceive(self.viewModel.$request){evt in
+            switch evt {
+            case .solve(let submit) :
+                withAnimation {
+                    self.submit = submit
+                }
+            default : break
+            }
+        }
+        .onReceive(self.viewModel.$event){evt in
+            switch evt {
+            case .quest(_ , let question ) :
+                withAnimation {
+                    self.submit = -1
+                    self.exCount = question.count
+                    if self.viewModel.type == .solve{
+                        self.answer = -1
+                        self.right = -1
+                    } else {
+                        self.answer = question.submit ?? -1
+                        self.right = question.answer
+                        
+                        DataLog.d("answer right " + self.right.description, tag: self.tag)
+                        DataLog.d("answer " + self.answer.description, tag: self.tag)
+                    }
+                }
+                self.question = question
+                self.soundPath = question.audioPath
+                
+            case .answer(let answer) :
+                withAnimation {
+                    self.right = answer
+                    self.answer = self.submit
+                }
+               
+            case .complete :
+                withAnimation {
+                    self.submit = -1
+                    self.answer = -1
+                    self.right = -1
+                }
+            default : break
+            }
+        }
+        
     }
+    @State var question:QuestionData? = nil
+   
+    @State var right:Int = -1
+    @State var submit:Int = -1
+    @State var answer:Int = -1
+    @State var exCount:Int = 0
+    
+    @State var soundPath:String? = nil
+    
+    
 }
 
 #if DEBUG

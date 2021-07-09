@@ -8,13 +8,15 @@
 import Foundation
 
 struct KidsExams: Decodable {
+    private(set) var result: String?    // 요청 결과.
+    private(set) var reason: String?
     private(set) var contents: KidsExam?
 }
 
 struct KidsExam: Decodable {
     private(set) var ep_no: DynamicValue? // 시험지번호
     private(set) var ep_tit_nm: String? // 시험지제목명
-    private(set) var ep_tp_no: Int? // 시험지유형번호
+    private(set) var ep_tp_no: DynamicValue? // 시험지유형번호
     private(set) var q_items_cnt: Int? // 문항 개수
     private(set) var q_items: [ KidsExamQuestion]? // 문항 정보 리스트
 }

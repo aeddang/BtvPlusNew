@@ -47,6 +47,7 @@ enum ReadingHclsAreaType{
             }
         }
     }
+    
     var image:String {
         get {
             switch self {
@@ -77,7 +78,6 @@ class ReadingListData:InfinityData{
         self.isComplete = self.date?.isEmpty == false
         return self
     }
-    
 }
 
 struct ResultReadingListView: PageComponent{
@@ -198,7 +198,6 @@ struct ReadingListItem: PageComponent{
                             .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.regular))
                     }
                 }
-                
             }
         }
         .frame(

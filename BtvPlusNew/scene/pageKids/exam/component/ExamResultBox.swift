@@ -19,7 +19,7 @@ struct ExamResultBox: PageComponent{
     
     var body: some View {
         ZStack(){
-            if self.answer == -1{
+            if self.answer == -1 || self.right == -1 {
                 Spacer()
             } else if self.right == self.answer {
                 ImageAnimation(

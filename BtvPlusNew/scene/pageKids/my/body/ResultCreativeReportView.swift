@@ -42,6 +42,7 @@ class ResultCreativeReportViewData{
             String.kidsText.kidsMyInfantDevelopmentLv5
         ]
         self.comment = content.total_cn
+        
         if let cns = content.cn_items {
             self.comments = cns.map{ cn in
                 CommentData(title: cn.title ?? "", text: cn.cn ?? "")
@@ -69,7 +70,7 @@ class ResultCreativeReportViewData{
 struct ResultCreativeReportView: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
     var data:ResultCreativeReportViewData
-    
+    var action: (() -> Void)? = nil
     
     var body: some View {
         VStack(spacing:DimenKids.margin.thin){
@@ -97,6 +98,7 @@ struct ResultCreativeReportView: PageComponent{
                         cornerRadius:  DimenKids.radius.medium
                     ) { _ in
                         
+                        self.action?()
                        
                     }
                 }

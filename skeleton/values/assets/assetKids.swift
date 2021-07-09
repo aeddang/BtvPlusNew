@@ -110,19 +110,29 @@ extension AssetKids{
         public static let exit = "zemkidsMLevelTestBtnROut"
         
         public static let timerNext = [
-            "zemkidsMLevelTestBtnNext1", "zemkidsMLevelTestBtnNext2", "zemkidsMLevelTestBtnNext3"
+            "zemkidsMLevelTestBtnNext3", "zemkidsMLevelTestBtnNext2", "zemkidsMLevelTestBtnNext1"
         ]
         
         public static let timerExit = [
-            "zemkidsMLevelTestBtnROut1", "zemkidsMLevelTestBtnROut2", "zemkidsMLevelTestBtnROut3"
+            "zemkidsMLevelTestBtnROut3", "zemkidsMLevelTestBtnROut2", "zemkidsMLevelTestBtnROut1"
         ]
          
         public static let timerResult = [
-            "zemkidsMLevelTestBtnRResults1", "zemkidsMLevelTestBtnRResults2", "zemkidsMLevelTestBtnRResults3"
+            "zemkidsMLevelTestBtnRResults3", "zemkidsMLevelTestBtnRResults2", "zemkidsMLevelTestBtnRResults1"
         ]
        
         public static let graphic1 = "zemkidsMBgLevelTestGraphic01"
         public static let graphic2 = "zemkidsMBgLevelTestGraphic02"
+        
+        public static let completeBg1 = "zemkidsMTestEnd1Eng"
+        public static let completeBg2 = "zemkidsMTestEnd2Kidsdev"
+        public static let completeBg3 = "zemkidsMTestEnd3Creative"
+        public static let completeBg4 = "zemkidsMTestEnd4Quiz"
+        
+        public static let startBg1 = "zemkidsMTestStart1Eng"
+        public static let startBg2 = "zemkidsMTestStart2Kidsdev"
+        public static let startBg3 = "zemkidsMTestStart3Creative"
+        public static let startBg4 = "zemkidsMTestStart4Quiz"
     }
     
     

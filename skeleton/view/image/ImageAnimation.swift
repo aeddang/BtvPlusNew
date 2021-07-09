@@ -18,6 +18,7 @@ struct ImageAnimation : View, AnimateDrawViewProtocol, PageProtocol {
     @State var isDrawing: Bool = false
     @State var currentFrm:Int = 0
    
+    var completed:(()->Void)? = nil
     var body: some View {
         if self.images.isEmpty {
             Spacer()
@@ -50,6 +51,7 @@ struct ImageAnimation : View, AnimateDrawViewProtocol, PageProtocol {
     func onComplete(frm:Int){
         if !isLoof {
             self.isRunning = false
+            self.completed?()
         }
     }
     

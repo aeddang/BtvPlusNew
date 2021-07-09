@@ -50,7 +50,14 @@ struct PageKidsMyDiagnostic: PageView {
                         }
                         .padding(.bottom, DimenKids.margin.thin)
                         .background(Color.app.white)
-                        if self.isEmptyResult {
+                        if self.isReadingSelect {
+                            ResultReadingListView(
+                                infinityScrollModel: self.readingListScrollModel,
+                                kid: self.kid ?? Kid() ){ data in
+                                self.selectReadingArea(data: data)
+                            }
+                            .modifier(MatchParent())
+                        }else if self.isEmptyResult {
                             EmptyDiagnosticView(type: self.type, kid: self.kid ?? Kid()){ type in
                                 self.startReport(startType: type)
                             }
@@ -59,14 +66,7 @@ struct PageKidsMyDiagnostic: PageView {
                             ErrorKidsData()
                                 .modifier(MatchParent())
                         } else{
-                            if self.isReadingSelect {
-                                ResultReadingListView(
-                                    infinityScrollModel: self.readingListScrollModel,
-                                    kid: self.kid ?? Kid() ){ data in
-                                    self.selectReadingArea(data: data)
-                                }
-                                .modifier(MatchParent())
-                            } else if let resultData = self.resultEnglishReportViewData {
+                            if let resultData = self.resultEnglishReportViewData {
                                 ResultEnglishReportView(data: resultData){
                                     self.moveExamPage(moveType: .english)
                                 }
@@ -81,8 +81,10 @@ struct PageKidsMyDiagnostic: PageView {
                                 }
                                 .modifier(MatchParent())
                             } else if let resultData = self.resultCreativeReportViewData {
-                                ResultCreativeReportView(data: resultData)
-                                    .modifier(MatchParent())
+                                ResultCreativeReportView(data: resultData){
+                                    self.moveExamPage(moveType: .creativeObservation)
+                                }
+                                .modifier(MatchParent())
                             } else {
                                 Spacer()
                             }
@@ -158,6 +160,21 @@ struct PageKidsMyDiagnostic: PageView {
                     if self.type != .creativeObservation {return}
                     guard let report  = res.data as? CreativeReport  else { return self.setupEmptyResult() }
                     self.setupCreativeReport(report)
+                    
+                case .getEnglishLvReportQuestion :
+                    guard let result = res.data as? KidsExamQuestionResult else { return }
+                    if result.result != ApiCode.success { return }
+                    self.loadResult(.english)
+                case .getReadingReportQuestion :
+                    guard let result = res.data as? KidsExamQuestionResult else { return }
+                    if result.result != ApiCode.success { return }
+                    self.resultSentence = nil
+                    self.readingArea = nil
+                    self.loadResult(.infantDevelopment)
+                case .getCreativeReportQuestion :
+                    guard let result = res.data as? KidsExamQuestionResult else { return }
+                    if result.result != ApiCode.success { return }
+                    self.loadResult(.creativeObservation)
                 default: break
                 }
             }
@@ -335,7 +352,6 @@ struct PageKidsMyDiagnostic: PageView {
             self.isReadingSelect = true
         default:
             self.moveExamPage(moveType: startType)
-            break
         }
     }
     
@@ -353,11 +369,11 @@ struct PageKidsMyDiagnostic: PageView {
                 self.loadResult(.infantDevelopment)
             }
         } else {
-            self.moveExamPage(moveType: .infantDevelopment, moveId: data.type.code)
+            self.moveExamPage(moveType: .infantDevelopment, moveId: data.type.code, moveTitle:data.title)
         }
     }
     
-    private func moveExamPage(moveType: DiagnosticReportType, moveId:String? = nil){
+    private func moveExamPage(moveType: DiagnosticReportType, moveId:String? = nil, moveTitle:String? = nil){
         switch moveType {
         case .english:
             self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsEnglishLvTestSelect))
@@ -366,6 +382,7 @@ struct PageKidsMyDiagnostic: PageView {
                 PageKidsProvider.getPageObject(.kidsExam)
                     .addParam(key: .type, value: DiagnosticReportType.infantDevelopment)
                     .addParam(key: .id, value: moveId ?? self.readingArea)
+                    .addParam(key: .text, value: moveTitle ?? self.resultSentence)
             )
             break
         case .creativeObservation:

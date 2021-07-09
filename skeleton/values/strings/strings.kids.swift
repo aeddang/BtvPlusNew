@@ -87,6 +87,7 @@ extension String{
 
         public static let kidsExamForkid = "kidsExamForkid".loaalized()
         public static let kidsExamForParent = "kidsExamForParent".loaalized()
+        public static let kidsExamInfantDevelopmentCompleted = "kidsExamInfantDevelopmentCompleted".loaalized()
 
     }
     

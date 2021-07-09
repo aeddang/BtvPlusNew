@@ -63,14 +63,13 @@ struct VerticalGraph: PageView {
                                 .resizable()
                                 .scaledToFit()
                                 
-                                .frame(width: self.size.width ,
-                                       height: self.size.width )
+                                .frame(width: self.size.width - DimenKids.stroke.regular ,
+                                       height: self.size.width - DimenKids.stroke.regular)
                                 .clipShape(Circle())
                                 .overlay(
                                     Circle()
                                         .stroke( self.color ,lineWidth: DimenKids.stroke.regular )
                                 )
-                                
                                 .padding(.bottom, self.size.width/3)
                         }
                         .padding(.bottom, -DimenKids.margin.micro)

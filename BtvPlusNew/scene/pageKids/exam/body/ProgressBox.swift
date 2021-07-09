@@ -13,9 +13,8 @@ extension ProgressBox {
 }
 
 struct ProgressBox: PageComponent{
-    var progress:Int = 0
-    var max:Int = 0
-    var hold:Int = 2
+    @ObservedObject var viewModel:KidsExamModel = KidsExamModel()
+    
     var move:((Int) -> Void)? = nil
     
     var body: some View {
@@ -78,7 +77,7 @@ struct ProgressBox: PageComponent{
                            
                     }
                 } else {
-                    if self.hold > 0 {
+                    if self.hold >= 0 {
                         Image(self.progress == self.max
                                 ? AssetKids.exam.timerResult[self.hold]
                                 : AssetKids.exam.timerNext[self.hold])
@@ -100,7 +99,26 @@ struct ProgressBox: PageComponent{
             .background(Color.app.ivoryDeep)
             .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.light))
         }
+        .onReceive(self.viewModel.$event){evt in
+            switch evt {
+            case .ready(let max):
+                self.max = max
+            case .quest(let step, _ ) :
+                withAnimation{
+                    self.hold = -1
+                    self.progress = step
+                }
+            case .hold(let count) :
+                withAnimation{
+                    self.hold = count
+                }
+            default : break
+            }
+        }
     }
+    @State var progress:Int = 0
+    @State var max:Int = 0
+    @State var hold:Int = -1
 }
 
 #if DEBUG
@@ -109,7 +127,7 @@ struct ProgressBox_Previews: PreviewProvider {
     static var previews: some View {
         Form{
             ProgressBox(
-               progress: 0, max: 2
+               progress: 1, max: 2
             )
         }
     }

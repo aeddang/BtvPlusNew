@@ -13,6 +13,8 @@ import SwiftUI
 struct PageKidsTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     var title:String? = nil
+    var titleTip:String? = nil
+    var titleTipColor:Color = Color.app.sepia
     var isBack:Bool = false
     var isClose:Bool = false
     var isSetting:Bool = false
@@ -20,16 +22,26 @@ struct PageKidsTab: PageComponent{
     var close: (() -> Void)? = nil
     var body: some View {
         ZStack(alignment: .leading){
-            if self.title != nil {
-                Text(self.title!)
-                    .modifier(BoldTextStyleKids(
-                                size: SystemEnvironment.isTablet ?  Font.sizeKids.light : Font.sizeKids.regular,
-                                color: self.style.textColor))
-                    .lineLimit(1)
-                    .padding(.horizontal, DimenKids.icon.mediumExtra)
-                    .frame(maxWidth: .infinity)
-                    .padding(.top, 1)
-                    
+            if let title = self.title {
+                HStack(spacing:Dimen.margin.thin) {
+                    Text(title)
+                        .modifier(BoldTextStyleKids(
+                                    size: SystemEnvironment.isTablet ?  Font.sizeKids.light : Font.sizeKids.regular,
+                                    color: self.style.textColor))
+                        .lineLimit(1)
+                    if let tip = self.titleTip {
+                        Text(tip)
+                            .modifier(BoldTextStyleKids(
+                                        size: SystemEnvironment.isTablet ?  Font.sizeKids.tiny : Font.sizeKids.thinExtra,
+                                        color: Color.app.white))
+                            .padding(.all, DimenKids.margin.tinyExtra)
+                            .background(self.titleTipColor)
+                            .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.regular))
+                    }
+                }
+                .padding(.horizontal, DimenKids.icon.mediumExtra)
+                .frame(maxWidth: .infinity)
+                .padding(.top, 1)
             }
             HStack{
                 if self.isBack {

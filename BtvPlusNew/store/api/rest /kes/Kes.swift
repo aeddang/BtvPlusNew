@@ -196,7 +196,7 @@ class Kes: Rest{
     * 수준 진단평가 정보 저장
     */
     func getEnglishLvReportQuestion(
-        profile:Kid, epNo: String , epTpNo: Int, questions: [KidsExamQuestion],
+        profile:Kid, epNo: String? , epTpNo: Int?, questions: [QuestionData],
         completion: @escaping (KidsExamQuestionResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
@@ -209,19 +209,7 @@ class Kes: Rest{
        
         params["ep_no"] = epNo
         params["ep_tp_no"] = epTpNo
-        let questionDatas:[[String:Any]] = questions.map { q in
-            var question = [String:Any]()
-            question[ "q_id" ] = q.q_id
-            question[ "q_sort_or" ] = q.q_sort_or
-            question[ "q_bdlt_tp_cd" ] = q.q_bdlt_tp_cd
-            question[ "q_cans_cn" ] = q.q_cans_cn
-            question[ "q_img_url" ] = q.q_img_url
-            question[ "q_aud_url" ] = q.q_aud_url
-            question[ "q_ex_cnt" ] = q.q_ex_cnt
-            question[ "subm_ansr_cn" ] = q.subm_ansr_cn
-            question[ "tgt_per_cd" ] = q.tgt_per_cd
-            return question
-        }
+        let questionDatas:[[String:Any]] = questions.map { $0.getSaveData() }
         params["q_items"] = questionDatas
         fetch(route: KesEnglishLvReportExamQuestion(body: params), completion: completion, error:error)
     }
@@ -280,7 +268,7 @@ class Kes: Rest{
     * 성향 진단평가 정보 저장 / 독서 (IF-KES-106)
     */
     func getReadingReportQuestion(
-        profile:Kid, epNo: String , epTpNo: Int, questions: [KidsExamQuestion],
+        profile:Kid, epNo: String? , epTpNo: Int?, questions: [QuestionData],
         completion: @escaping (KidsExamQuestionResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
@@ -293,19 +281,7 @@ class Kes: Rest{
          
         params["ep_no"] = epNo
         params["ep_tp_no"] = epTpNo
-        let questionDatas:[[String:Any]] = questions.map { q in
-            var question = [String:Any]()
-            question[ "q_id" ] = q.q_id
-            question[ "q_sort_or" ] = q.q_sort_or
-            question[ "q_bdlt_tp_cd" ] = q.q_bdlt_tp_cd
-            question[ "q_cans_cn" ] = q.q_cans_cn
-            question[ "q_img_url" ] = q.q_img_url
-            question[ "q_aud_url" ] = q.q_aud_url
-            question[ "q_ex_cnt" ] = q.q_ex_cnt
-            question[ "subm_ansr_cn" ] = q.subm_ansr_cn
-            question[ "tgt_per_cd" ] = q.tgt_per_cd
-            return question
-        }
+        let questionDatas:[[String:Any]] = questions.map { $0.getSaveData() }
         params["q_items"] = questionDatas
         
         fetch(route: KesReadingReportExamQuestion(body: params), completion: completion, error:error)
@@ -352,7 +328,7 @@ class Kes: Rest{
     * 성향 진단평가 정보 저장 / 창의 (IF-KES-109)
     */
     func getCreativeReportQuestion(
-        profile:Kid, epNo: String , epTpNo: Int, questions: [KidsExamQuestion],
+        profile:Kid, epNo: String? , epTpNo: Int?, questions: [QuestionData],
         completion: @escaping (KidsExamQuestionResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
@@ -364,19 +340,7 @@ class Kes: Rest{
         params["profile_id"] = profile.id
         params["ep_no"] = epNo
         params["ep_tp_no"] = epTpNo
-        let questionDatas:[[String:Any]] = questions.map { q in
-            var question = [String:Any]()
-            question[ "q_id" ] = q.q_id
-            question[ "q_sort_or" ] = q.q_sort_or
-            question[ "q_bdlt_tp_cd" ] = q.q_bdlt_tp_cd
-            question[ "q_cans_cn" ] = q.q_cans_cn
-            question[ "q_img_url" ] = q.q_img_url
-            question[ "q_aud_url" ] = q.q_aud_url
-            question[ "q_ex_cnt" ] = q.q_ex_cnt
-            question[ "subm_ansr_cn" ] = q.subm_ansr_cn
-            question[ "tgt_per_cd" ] = q.tgt_per_cd
-            return question
-        }
+        let questionDatas:[[String:Any]] = questions.map { $0.getSaveData() }
         params["q_items"] = questionDatas
          
         fetch(route: KesCreativeReportExamQuestion(body: params), completion: completion, error:error)
@@ -422,7 +386,7 @@ class Kes: Rest{
     * 차시 평가(퀴즈) 정보 저장 (IF-KES-112)
     */
     func getEvaluationReportQuestion(
-        profile:Kid, epNo: String , epTpNo: Int, questions: [KidsExamQuestion],
+        profile:Kid, epNo: String? , epTpNo: Int?, questions: [QuestionData],
         completion: @escaping (KidsExamQuestionResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
@@ -434,19 +398,7 @@ class Kes: Rest{
         params["profile_id"] = profile.id
         params["ep_no"] = epNo
         params["ep_tp_no"] = epTpNo
-        let questionDatas:[[String:Any]] = questions.map { q in
-            var question = [String:Any]()
-            question[ "q_id" ] = q.q_id
-            question[ "q_sort_or" ] = q.q_sort_or
-            question[ "q_bdlt_tp_cd" ] = q.q_bdlt_tp_cd
-            question[ "q_cans_cn" ] = q.q_cans_cn
-            question[ "q_img_url" ] = q.q_img_url
-            question[ "q_aud_url" ] = q.q_aud_url
-            question[ "q_ex_cnt" ] = q.q_ex_cnt
-            question[ "subm_ansr_cn" ] = q.subm_ansr_cn
-            question[ "tgt_per_cd" ] = q.tgt_per_cd
-            return question
-        }
+        let questionDatas:[[String:Any]] = questions.map { $0.getSaveData() }
         params["q_items"] = questionDatas
          
         fetch(route: KesEvaluationReportExamQuestion(body: params), completion: completion, error:error)

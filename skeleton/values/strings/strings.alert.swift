@@ -195,6 +195,9 @@ extension String {
         public static var kidsEditError = "alertKidEditError".loaalized()
         public static var kidsDeleteError = "alertKidDeleteError".loaalized()
         
-        public static var needPairingMoveBtv =  "alertNeedPairingMoveBtv".loaalized()
+        public static var needPairingMoveBtv = "alertNeedPairingMoveBtv".loaalized()
+        
+        public static var kidExamSaveCompleted = "alertKidExamSaveCompleted".loaalized()
+        public static var kidExamSaveError = "alertKidExamSaveError".loaalized()
     }
 }

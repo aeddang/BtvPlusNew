@@ -16,6 +16,8 @@
 		310F6FBA25C13AE8005718B0 /* Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F6FB925C13AE8005718B0 /* Preview.swift */; };
 		310F6FBF25C167EC005718B0 /* ScsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F6FBE25C167EC005718B0 /* ScsModel.swift */; };
 		310F6FC725C16916005718B0 /* Play.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F6FC625C16916005718B0 /* Play.swift */; };
+		3112DA382698018F004D0E09 /* ExamEffectViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3112DA372698018F004D0E09 /* ExamEffectViewer.swift */; };
+		3112DA3A26980EE7004D0E09 /* PageKidsExamViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3112DA3926980EE7004D0E09 /* PageKidsExamViewer.swift */; };
 		312BB07425DCDCBB00AC03BC /* Tooltip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312BB07325DCDCBB00AC03BC /* Tooltip.swift */; };
 		312BB07925DCF2AB00AC03BC /* ThumbImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312BB07825DCF2AB00AC03BC /* ThumbImageViewer.swift */; };
 		312BB08525DCF92400AC03BC /* PagePurchase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312BB08425DCF92400AC03BC /* PagePurchase.swift */; };
@@ -350,6 +352,8 @@
 		319CF68426972FCA00159575 /* SoundBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF68326972FCA00159575 /* SoundBox.swift */; };
 		319CF6862697338700159575 /* ExamControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF6852697338700159575 /* ExamControl.swift */; };
 		319CF688269738CF00159575 /* ExamBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF687269738CF00159575 /* ExamBody.swift */; };
+		319CF68B2697B69900159575 /* KidsExamModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF68A2697B69900159575 /* KidsExamModel.swift */; };
+		319CF68D2697B9DB00159575 /* QuestionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF68C2697B9DB00159575 /* QuestionData.swift */; };
 		31A38DF92682A1BE0058287B /* TabSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A38DF82682A1BE0058287B /* TabSwitch.swift */; };
 		31A38DFB2682A9EB0058287B /* PurchaseViewerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A38DFA2682A9EB0058287B /* PurchaseViewerData.swift */; };
 		31A38DFD2682AA270058287B /* PurchaseViewerKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A38DFC2682AA270058287B /* PurchaseViewerKids.swift */; };
@@ -589,6 +593,8 @@
 		310F6FB925C13AE8005718B0 /* Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preview.swift; sourceTree = "<group>"; };
 		310F6FBE25C167EC005718B0 /* ScsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScsModel.swift; sourceTree = "<group>"; };
 		310F6FC625C16916005718B0 /* Play.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Play.swift; sourceTree = "<group>"; };
+		3112DA372698018F004D0E09 /* ExamEffectViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamEffectViewer.swift; sourceTree = "<group>"; };
+		3112DA3926980EE7004D0E09 /* PageKidsExamViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageKidsExamViewer.swift; sourceTree = "<group>"; };
 		312BB07325DCDCBB00AC03BC /* Tooltip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tooltip.swift; sourceTree = "<group>"; };
 		312BB07825DCF2AB00AC03BC /* ThumbImageViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbImageViewer.swift; sourceTree = "<group>"; };
 		312BB08425DCF92400AC03BC /* PagePurchase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePurchase.swift; sourceTree = "<group>"; };
@@ -928,6 +934,8 @@
 		319CF68326972FCA00159575 /* SoundBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundBox.swift; sourceTree = "<group>"; };
 		319CF6852697338700159575 /* ExamControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamControl.swift; sourceTree = "<group>"; };
 		319CF687269738CF00159575 /* ExamBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamBody.swift; sourceTree = "<group>"; };
+		319CF68A2697B69900159575 /* KidsExamModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsExamModel.swift; sourceTree = "<group>"; };
+		319CF68C2697B9DB00159575 /* QuestionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionData.swift; sourceTree = "<group>"; };
 		31A38DF82682A1BE0058287B /* TabSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabSwitch.swift; sourceTree = "<group>"; };
 		31A38DFA2682A9EB0058287B /* PurchaseViewerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseViewerData.swift; sourceTree = "<group>"; };
 		31A38DFC2682AA270058287B /* PurchaseViewerKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseViewerKids.swift; sourceTree = "<group>"; };
@@ -2267,9 +2275,11 @@
 		319CF67626970DD800159575 /* exam */ = {
 			isa = PBXGroup;
 			children = (
+				319CF6892697B67D00159575 /* model */,
 				319CF67A2697156500159575 /* component */,
 				319CF6792697155F00159575 /* body */,
 				319CF67726970DE900159575 /* PageKidsExam.swift */,
+				3112DA3926980EE7004D0E09 /* PageKidsExamViewer.swift */,
 			);
 			path = exam;
 			sourceTree = "<group>";
@@ -2291,8 +2301,18 @@
 				319CF68126972D6A00159575 /* ExamResultBox.swift */,
 				319CF67B269715D600159575 /* AnswerBox.swift */,
 				319CF68326972FCA00159575 /* SoundBox.swift */,
+				3112DA372698018F004D0E09 /* ExamEffectViewer.swift */,
 			);
 			path = component;
+			sourceTree = "<group>";
+		};
+		319CF6892697B67D00159575 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				319CF68A2697B69900159575 /* KidsExamModel.swift */,
+				319CF68C2697B9DB00159575 /* QuestionData.swift */,
+			);
+			path = model;
 			sourceTree = "<group>";
 		};
 		31A38DF72682A1870058287B /* switch */ = {
@@ -3540,12 +3560,14 @@
 				316A70932670680700A93B83 /* PlayerTopBody.swift in Sources */,
 				315B55E725A84B0900B5B351 /* DevicePairing.swift in Sources */,
 				D56C69A3257DA09E00CF9AB8 /* Log.swift in Sources */,
+				3112DA382698018F004D0E09 /* ExamEffectViewer.swift in Sources */,
 				310F6FB225C1267D005718B0 /* Scs.swift in Sources */,
 				31A73BCD261D99B1009A143C /* PageMyPurchase.swift in Sources */,
 				D56C6A4A257DA0C700CF9AB8 /* Swipper.swift in Sources */,
 				318D100826687B6100B66977 /* KidProfile.swift in Sources */,
 				31E50C79261AEBFE00D0762C /* ResultMessage.swift in Sources */,
 				316A708226704F6800A93B83 /* PlayerEffectSeek.swift in Sources */,
+				319CF68B2697B69900159575 /* KidsExamModel.swift in Sources */,
 				31626EF125B9092400F4031D /* PurchaseModel.swift in Sources */,
 				3152B46D25DA0D3E00147C86 /* RelationContentsModel.swift in Sources */,
 				316A709B2670708400A93B83 /* ThumbImageViewerKids.swift in Sources */,
@@ -3790,6 +3812,7 @@
 				316955AB25DF9D1500848507 /* Pss.swift in Sources */,
 				319CF66B26967EAC00159575 /* ResultReadingReportView.swift in Sources */,
 				D56C69AB257DA09E00CF9AB8 /* Resource.swift in Sources */,
+				3112DA3A26980EE7004D0E09 /* PageKidsExamViewer.swift in Sources */,
 				318C5A0B2694195C00A2FD66 /* KidStudy.swift in Sources */,
 				310F6FAC25C0FE53005718B0 /* Watch.swift in Sources */,
 				D56C6B33257DACD800CF9AB8 /* LocalStorage.swift in Sources */,
@@ -3838,6 +3861,7 @@
 				D56C69B0257DA09E00CF9AB8 /* SocialMediaSharingManager.swift in Sources */,
 				318ECEFB266DBD8A00380B59 /* PickerBox.swift in Sources */,
 				D5DC477E25821DFA007EDD86 /* CWGrid.swift in Sources */,
+				319CF68D2697B9DB00159575 /* QuestionData.swift in Sources */,
 				3192EFD826674DAE0012F238 /* PageKidsStyle.swift in Sources */,
 				318B53A125F1DA8E0052E4E0 /* TopBannerBg.swift in Sources */,
 				319CF66926966F3300159575 /* LvGraphList.swift in Sources */,

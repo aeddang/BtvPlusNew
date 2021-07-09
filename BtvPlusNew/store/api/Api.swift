@@ -139,19 +139,19 @@ enum ApiType{
          getMonthlyReport(Kid, Date? = nil),
          
          getEnglishLvReportExam(Kid, target:String? ),
-         getEnglishLvReportQuestion(Kid, String , Int, [KidsExamQuestion]),
+         getEnglishLvReportQuestion(Kid, String? , Int?, [QuestionData]),
          getEnglishLvReportResult( Kid ),
     
          getReadingReportExam(Kid, area:String?),
-         getReadingReportQuestion(Kid, String , Int, [KidsExamQuestion]),
+         getReadingReportQuestion(Kid, String?, Int?, [QuestionData]),
          getReadingReportResult( Kid, area:String?),
          
          getCreativeReportExam(Kid),
-         getCreativeReportQuestion(Kid, String , Int, [KidsExamQuestion]),
+         getCreativeReportQuestion(Kid, String? , Int?, [QuestionData]),
          getCreativeReportResult( Kid),
     
          getEvaluationReportExam(Kid, srisId:String?),
-         getEvaluationReportQuestion(Kid, String , Int, [KidsExamQuestion])
+         getEvaluationReportQuestion(Kid, String? , Int?, [QuestionData])
     
     func coreDataKey() -> String? {
         switch self {

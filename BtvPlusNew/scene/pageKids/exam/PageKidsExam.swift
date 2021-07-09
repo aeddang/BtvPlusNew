@@ -16,6 +16,7 @@ struct PageKidsExam: PageView {
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
     
+    @ObservedObject var viewModel:KidsExamModel = KidsExamModel(type: .solve)
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
    
@@ -35,8 +36,11 @@ struct PageKidsExam: PageView {
                                 ErrorKidsData()
                                     .modifier(MatchParent())
                             } else {
-                                ExamBody()
-                                    .modifier(MatchParent())
+                                ExamBody(
+                                    viewModel:self.viewModel,
+                                    type:self.type
+                                )
+                                .modifier(MatchParent())
         
                             }
                             
@@ -50,10 +54,38 @@ struct PageKidsExam: PageView {
                     }
                     .padding(.top, DimenKids.app.pageTop)
                     PageKidsTab(
-                        title:String.kidsTitle.kidsMy,
+                        title:self.title,
+                        titleTip: self.titleTip,
+                        titleTipColor: self.titleTopColor,
                         isBack: false,
                         isClose: true,
                         style: .kidsClear)
+                    
+                    if self.isStart {
+                        ExamEffectViewer(
+                            type: self.type,
+                            text: self.typeText,
+                            isComplete: false
+                        ){
+                            withAnimation{
+                                self.isStart = false
+                            }
+                            self.viewModel.start()
+                        }
+                        .modifier(MatchParent())
+                    }
+                    if self.isCompleted {
+                        ExamEffectViewer(
+                            type: self.type,
+                            text: self.type == .infantDevelopment
+                                ? String.kidsText.kidsExamInfantDevelopmentCompleted.replace(self.typeText ?? "")
+                                : nil,
+                            isComplete: true
+                        ){
+                            self.isAniCompleted = true
+                        }
+                        .modifier(MatchParent())
+                    }
                 }
                 .background(
                     Image(AssetKids.image.homeBg)
@@ -67,6 +99,7 @@ struct PageKidsExam: PageView {
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
               
             }//draging
+            
             .onReceive(self.pairing.$status){status in
                 self.isPairing = ( status == .pairing )
             }
@@ -83,7 +116,28 @@ struct PageKidsExam: PageView {
                 switch res.type {
                 case .getEnglishLvReportExam, .getReadingReportExam,  .getCreativeReportExam :
                     guard let exams  = res.data as? KidsExams else { return }
-                    self.setupExam(exams)
+                    if exams.result == ApiCode.success {
+                        self.setupExam(exams)
+                    } else {
+                        self.appSceneObserver.alert = .alert(
+                            nil ,
+                            exams.reason ?? String.alert.apiErrorServer ){
+                                self.pagePresenter.closePopup(self.pageObject?.id)
+                        }
+                    }
+                   
+                
+                case .getEnglishLvReportQuestion, .getReadingReportQuestion,  .getCreativeReportQuestion :
+                    guard let result = res.data as? KidsExamQuestionResult else {
+                        self.saveError()
+                        return
+                    }
+                    if result.result == ApiCode.success {
+                        self.appSceneObserver.event = .toast(String.alert.kidExamSaveCompleted)
+                        self.pagePresenter.closePopup(self.pageObject?.id)
+                    } else {
+                        self.saveError()
+                    }
                 default: break
                 }
             }
@@ -92,7 +146,25 @@ struct PageKidsExam: PageView {
                 switch err.type {
                 case .getEnglishLvReportExam, .getReadingReportExam,  .getCreativeReportExam :
                     self.isError = true
+                case .getEnglishLvReportQuestion, .getReadingReportQuestion,  .getCreativeReportQuestion :
+                    self.saveError()
                 default: break
+                }
+            }
+            .onReceive(self.viewModel.$event){evt in
+                switch evt {
+                case .ready : self.isStart = true
+                case .quest(_ , let question ) :
+                    withAnimation{
+                        self.titleTip = question.targetType.name
+                        self.titleTopColor = question.targetType.color
+                    }
+                case .complete : self.isCompleted = true
+                case .completed :
+                    if self.isSaveCompleted {return}
+                    self.isSaveCompleted = true
+                    self.saveData()
+                default : break
                 }
             }
             .onAppear{
@@ -103,15 +175,29 @@ struct PageKidsExam: PageView {
                 if let value = obj.getParamValue(key: .id) as? String {
                     self.value = value
                 }
+                if let value = obj.getParamValue(key: .text) as? String {
+                    self.typeText = value
+                }
                 
             }
         }//geo
     }//body
     
     @State var kid:Kid = Kid()
+    @State var typeText:String? = nil
     @State var type:DiagnosticReportType = .english
     @State var value:String? = nil
     @State var isError:Bool = false
+    @State var title:String = ""
+    @State var titleTip:String? = nil
+    @State var titleTopColor:Color = Color.app.sepia
+    
+    @State var isStart:Bool = false
+   
+    @State var isCompleted:Bool = false
+    
+    @State var isAniCompleted:Bool = false
+    @State var isSaveCompleted:Bool = false
     
     private func initPage(){
         self.isError = false
@@ -123,7 +209,6 @@ struct PageKidsExam: PageView {
         case .creativeObservation:
             self.dataProvider.requestData(q: .init(type: .getCreativeReportExam(kid)))
         }
-        
     }
     
     private func setupExam(_ data:KidsExams){
@@ -131,9 +216,46 @@ struct PageKidsExam: PageView {
             self.isError = true
             return
         }
-        
+        self.viewModel.setData(exam, reportType: self.type)
+        self.title = self.viewModel.title ?? ""
     }
     
+    private func saveData(){
+        switch self.type {
+        case .english:
+            self.dataProvider.requestData(
+                q: .init(type: .getEnglishLvReportQuestion(
+                            self.kid,
+                            self.viewModel.epNo,
+                            self.viewModel.epTpNo,
+                            self.viewModel.questions)))
+        case .infantDevelopment:
+            self.dataProvider.requestData(
+                q: .init(type: .getReadingReportQuestion(
+                            self.kid,
+                            self.viewModel.epNo,
+                            self.viewModel.epTpNo,
+                            self.viewModel.questions)))
+        case .creativeObservation:
+            self.dataProvider.requestData(
+                q: .init(type: .getCreativeReportQuestion(
+                            self.kid,
+                            self.viewModel.epNo,
+                            self.viewModel.epTpNo,
+                            self.viewModel.questions)))
+        }
+    }
+    
+    private func saveError(){
+        self.appSceneObserver.alert = .confirm( nil , String.alert.kidExamSaveError ){ isOk in
+            if isOk {
+                self.saveData()
+            } else {
+                self.pagePresenter.closePopup(self.pageObject?.id)
+            }
+        }
+        self.pagePresenter.closePopup(self.pageObject?.id)
+    }
 }
 
 #if DEBUG

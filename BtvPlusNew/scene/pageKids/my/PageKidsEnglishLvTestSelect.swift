@@ -7,7 +7,6 @@
 import Foundation
 import SwiftUI
 
-
 struct PageKidsEnglishLvTestSelect: PageView {
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
@@ -118,7 +117,9 @@ struct PageKidsEnglishLvTestSelect: PageView {
             PageKidsProvider.getPageObject(.kidsExam)
                 .addParam(key: .type, value: DiagnosticReportType.english)
                 .addParam(key: .id, value: data.type.code)
+                .addParam(key: .text, value: data.title)
         )
+        self.pagePresenter.closePopup(self.pageObject?.id)
     }
 }
 
@@ -144,6 +145,7 @@ enum EnglishLvType{
             }
         }
     }
+    
     var recommend:String {
         get {
             switch self {
@@ -170,9 +172,7 @@ enum EnglishLvType{
 
 class EnglishLvTestData:InfinityData{
     private(set) var title:String = ""
-   
     private(set) var type:EnglishLvType = .unowned(nil)
-   
     func setData(_ data:EnglishReportItem) -> EnglishLvTestData {
         self.type = EnglishLvType.setType(data.tgt_cd)
         self.title = data.tgt_nm ?? ""

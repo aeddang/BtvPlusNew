@@ -59,7 +59,18 @@ struct PageKidsExam: PageView {
                         titleTipColor: self.titleTopColor,
                         isBack: false,
                         isClose: true,
-                        style: .kidsClear)
+                        style: .kidsClear){
+                        
+                        self.appSceneObserver.alert = .confirm(
+                            nil ,
+                            self.title + String.kidsText.kidsExamCloseConfirm,
+                            String.kidsText.kidsExamCloseConfirmTip
+                            ){ isOk in
+                            if isOk {
+                                self.pagePresenter.closePopup(self.pageObject?.id)
+                            }
+                        }
+                    }
                     
                     if self.isStart {
                         ExamEffectViewer(

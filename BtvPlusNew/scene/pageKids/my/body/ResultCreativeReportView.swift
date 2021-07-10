@@ -79,7 +79,8 @@ struct ResultCreativeReportView: PageComponent{
                     CreativeGraphBox(
                         data: self.data.creativeGraphBoxData,
                         sortSize: SystemEnvironment.isTablet ? CGSize(width: 28, height: 16) : CGSize(width: 17, height: 10),
-                        colorKid: Color.app.yellow,
+                        size: SystemEnvironment.isTablet ?  DimenKids.item.graphVerticalExtra :  DimenKids.item.graphVertical,
+                        colorKid: Color.app.yellow, 
                         colorParent: Color.app.green
                     )
                     .padding(.horizontal, DimenKids.margin.regular)
@@ -115,8 +116,6 @@ struct ResultCreativeReportView: PageComponent{
                     comment: self.data.comment,
                     comments: self.data.comments
                 )
-                .modifier(MatchVertical(width: SystemEnvironment.isTablet ? 289 : 178))
-                .background(Color.app.whiteExtra)
                 .modifier(MatchVertical(width: SystemEnvironment.isTablet ? 436 : 269))
                 .background(Color.app.whiteExtra)
             }

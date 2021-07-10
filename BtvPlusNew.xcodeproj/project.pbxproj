@@ -233,7 +233,7 @@
 		318C36B8265F3099009B7EC3 /* ConnectTerminateStb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C36B7265F3099009B7EC3 /* ConnectTerminateStb.swift */; };
 		318C36BB265F6C4D009B7EC3 /* PageMyRecommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C36BA265F6C4D009B7EC3 /* PageMyRecommand.swift */; };
 		318C36BE265F704B009B7EC3 /* DivisionTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C36BD265F704B009B7EC3 /* DivisionTable.swift */; };
-		318C5A092694032800A2FD66 /* MonthlyGraphBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C5A082694032800A2FD66 /* MonthlyGraphBox.swift */; };
+		318C5A092694032800A2FD66 /* MonthlyGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C5A082694032800A2FD66 /* MonthlyGraph.swift */; };
 		318C5A0B2694195C00A2FD66 /* KidStudy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C5A0A2694195C00A2FD66 /* KidStudy.swift */; };
 		318C874D25E64AA400ADDFE0 /* TopBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C874C25E64AA400ADDFE0 /* TopBanner.swift */; };
 		318C875825E64C3200ADDFE0 /* BannerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318C875725E64C3200ADDFE0 /* BannerData.swift */; };
@@ -250,6 +250,9 @@
 		318E7EFE25E8814C00B2AAAF /* MonthlyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E7EFD25E8814C00B2AAAF /* MonthlyList.swift */; };
 		318E7F0425E8990900B2AAAF /* MonthlyBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E7F0325E8990900B2AAAF /* MonthlyBlock.swift */; };
 		318E7F0C25E8B01800B2AAAF /* MonthlyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E7F0B25E8B01800B2AAAF /* MonthlyInfo.swift */; };
+		318EBEA32699FBEE003661CC /* PageKidsMyMonthly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318EBEA22699FBEE003661CC /* PageKidsMyMonthly.swift */; };
+		318EBEA52699FD3B003661CC /* MonthlyReportModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318EBEA42699FD3B003661CC /* MonthlyReportModel.swift */; };
+		318EBEA7269A16A4003661CC /* MonthlyGraphBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318EBEA6269A16A4003661CC /* MonthlyGraphBox.swift */; };
 		318ECEF8266DAD1800380B59 /* MultiPickerSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318ECEF7266DAD1800380B59 /* MultiPickerSelect.swift */; };
 		318ECEFB266DBD8A00380B59 /* PickerBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318ECEFA266DBD8A00380B59 /* PickerBox.swift */; };
 		318ECEFD266DC14000380B59 /* PickerBoxKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318ECEFC266DC14000380B59 /* PickerBoxKids.swift */; };
@@ -333,7 +336,7 @@
 		319CF65A269545D400159575 /* CreativeGraphBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF659269545D400159575 /* CreativeGraphBox.swift */; };
 		319CF65C2695662500159575 /* PageKidsMyDiagnostic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF65B2695662500159575 /* PageKidsMyDiagnostic.swift */; };
 		319CF65E2695843A00159575 /* EmptyDiagnosticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF65D2695843A00159575 /* EmptyDiagnosticView.swift */; };
-		319CF6612695C33800159575 /* DiagnosticReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF6602695C33800159575 /* DiagnosticReport.swift */; };
+		319CF6612695C33800159575 /* DiagnosticReportModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF6602695C33800159575 /* DiagnosticReportModel.swift */; };
 		319CF6632695D0B700159575 /* AlertsKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF6622695D0B700159575 /* AlertsKids.swift */; };
 		319CF6652695D8BF00159575 /* ResultEnglishReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF6642695D8BF00159575 /* ResultEnglishReportView.swift */; };
 		319CF66726966CAC00159575 /* TrophyBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF66626966CAC00159575 /* TrophyBox.swift */; };
@@ -814,7 +817,7 @@
 		318C36B7265F3099009B7EC3 /* ConnectTerminateStb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectTerminateStb.swift; sourceTree = "<group>"; };
 		318C36BA265F6C4D009B7EC3 /* PageMyRecommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyRecommand.swift; sourceTree = "<group>"; };
 		318C36BD265F704B009B7EC3 /* DivisionTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DivisionTable.swift; sourceTree = "<group>"; };
-		318C5A082694032800A2FD66 /* MonthlyGraphBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyGraphBox.swift; sourceTree = "<group>"; };
+		318C5A082694032800A2FD66 /* MonthlyGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyGraph.swift; sourceTree = "<group>"; };
 		318C5A0A2694195C00A2FD66 /* KidStudy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidStudy.swift; sourceTree = "<group>"; };
 		318C874C25E64AA400ADDFE0 /* TopBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBanner.swift; sourceTree = "<group>"; };
 		318C875725E64C3200ADDFE0 /* BannerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerData.swift; sourceTree = "<group>"; };
@@ -831,6 +834,9 @@
 		318E7EFD25E8814C00B2AAAF /* MonthlyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyList.swift; sourceTree = "<group>"; };
 		318E7F0325E8990900B2AAAF /* MonthlyBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyBlock.swift; sourceTree = "<group>"; };
 		318E7F0B25E8B01800B2AAAF /* MonthlyInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyInfo.swift; sourceTree = "<group>"; };
+		318EBEA22699FBEE003661CC /* PageKidsMyMonthly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageKidsMyMonthly.swift; sourceTree = "<group>"; };
+		318EBEA42699FD3B003661CC /* MonthlyReportModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyReportModel.swift; sourceTree = "<group>"; };
+		318EBEA6269A16A4003661CC /* MonthlyGraphBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyGraphBox.swift; sourceTree = "<group>"; };
 		318ECEF7266DAD1800380B59 /* MultiPickerSelect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiPickerSelect.swift; sourceTree = "<group>"; };
 		318ECEFA266DBD8A00380B59 /* PickerBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerBox.swift; sourceTree = "<group>"; };
 		318ECEFC266DC14000380B59 /* PickerBoxKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerBoxKids.swift; sourceTree = "<group>"; };
@@ -915,7 +921,7 @@
 		319CF659269545D400159575 /* CreativeGraphBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreativeGraphBox.swift; sourceTree = "<group>"; };
 		319CF65B2695662500159575 /* PageKidsMyDiagnostic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageKidsMyDiagnostic.swift; sourceTree = "<group>"; };
 		319CF65D2695843A00159575 /* EmptyDiagnosticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyDiagnosticView.swift; sourceTree = "<group>"; };
-		319CF6602695C33800159575 /* DiagnosticReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticReport.swift; sourceTree = "<group>"; };
+		319CF6602695C33800159575 /* DiagnosticReportModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticReportModel.swift; sourceTree = "<group>"; };
 		319CF6622695D0B700159575 /* AlertsKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsKids.swift; sourceTree = "<group>"; };
 		319CF6642695D8BF00159575 /* ResultEnglishReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultEnglishReportView.swift; sourceTree = "<group>"; };
 		319CF66626966CAC00159575 /* TrophyBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrophyBox.swift; sourceTree = "<group>"; };
@@ -1936,6 +1942,7 @@
 				3190CB0B268ABCDB00ACB465 /* PageKidsProfileManagement.swift */,
 				3190CB16268C3EA900ACB465 /* PageKidsMy.swift */,
 				319CF65B2695662500159575 /* PageKidsMyDiagnostic.swift */,
+				318EBEA22699FBEE003661CC /* PageKidsMyMonthly.swift */,
 				319CF6742696D45100159575 /* PageKidsEnglishLvTestSelect.swift */,
 			);
 			path = my;
@@ -2070,7 +2077,8 @@
 				319B7EC0268E8EE900B7DAAF /* DiagnosticReportCard.swift */,
 				31C4D29326926A69000C7E83 /* MonthlyReportCard.swift */,
 				319B7EC2268E9D0A00B7DAAF /* ReportPage.swift */,
-				318C5A082694032800A2FD66 /* MonthlyGraphBox.swift */,
+				318C5A082694032800A2FD66 /* MonthlyGraph.swift */,
+				318EBEA6269A16A4003661CC /* MonthlyGraphBox.swift */,
 				319CF657269522DB00159575 /* LvGraphBox.swift */,
 				319CF66826966F3300159575 /* LvGraphList.swift */,
 				319CF659269545D400159575 /* CreativeGraphBox.swift */,
@@ -2267,7 +2275,8 @@
 		319CF65F2695C32600159575 /* model */ = {
 			isa = PBXGroup;
 			children = (
-				319CF6602695C33800159575 /* DiagnosticReport.swift */,
+				319CF6602695C33800159575 /* DiagnosticReportModel.swift */,
+				318EBEA42699FD3B003661CC /* MonthlyReportModel.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -3460,7 +3469,7 @@
 				D56C6A25257DA0C600CF9AB8 /* font.swift in Sources */,
 				317EF18625DB46D6004A6A5E /* PlayerListTab.swift in Sources */,
 				3167197B25FF4159005AC3D2 /* PageWatchedList.swift in Sources */,
-				319CF6612695C33800159575 /* DiagnosticReport.swift in Sources */,
+				319CF6612695C33800159575 /* DiagnosticReportModel.swift in Sources */,
 				318FBFFE25E48F5B00ABC241 /* SortTab.swift in Sources */,
 				D56C6A51257DA0C700CF9AB8 /* Radio.swift in Sources */,
 				D50AB91125807AAA00649C4A /* EuxpModel.swift in Sources */,
@@ -3644,6 +3653,7 @@
 				314D6B0225D0E9A50003C749 /* PageSetup.swift in Sources */,
 				31895B1C2601F0F3002DE02E /* TopViewer.swift in Sources */,
 				31631C5425D22E7900E501F7 /* Preroll.swift in Sources */,
+				318EBEA32699FBEE003661CC /* PageKidsMyMonthly.swift in Sources */,
 				D56C6A32257DA0C700CF9AB8 /* CPWebView.swift in Sources */,
 				D56CC2EF25902E6600CA1D54 /* MultiBlock.swift in Sources */,
 				31F2803F2673331300F40B09 /* EpisodeViewerKids.swift in Sources */,
@@ -3843,6 +3853,7 @@
 				D56C6A50257DA0C700CF9AB8 /* Select.swift in Sources */,
 				319B7EC3268E9D0A00B7DAAF /* ReportPage.swift in Sources */,
 				319CF6752696D45100159575 /* PageKidsEnglishLvTestSelect.swift in Sources */,
+				318EBEA52699FD3B003661CC /* MonthlyReportModel.swift in Sources */,
 				3182A0B626188B8100F7F07D /* PageConfirmNumber.swift in Sources */,
 				D56C69AA257DA09E00CF9AB8 /* Network.swift in Sources */,
 				31671A132600B379005AC3D2 /* SynopsisParam.swift in Sources */,
@@ -3887,6 +3898,7 @@
 				D56C69A2257DA09E00CF9AB8 /* PageComponentProtocol.swift in Sources */,
 				3190CAFC268570DC00ACB465 /* RelationVodEmpty.swift in Sources */,
 				D56C6B38257DACD800CF9AB8 /* Api.swift in Sources */,
+				318EBEA7269A16A4003661CC /* MonthlyGraphBox.swift in Sources */,
 				D56C6A63257DA0C700CF9AB8 /* FocusableTextField.swift in Sources */,
 				319BAFD7260478540007273F /* VoiceRecorder.swift in Sources */,
 				31D3F4EC25E3A7D4008FDFEC /* BannerList.swift in Sources */,
@@ -3911,7 +3923,7 @@
 				3166CBF22611AD0000282891 /* MyPointInfo.swift in Sources */,
 				31D453E2267886A100E08CB2 /* CustomVTTPlayer.swift in Sources */,
 				D57298E5259D6EC100ED2CE6 /* ScenePickerController.swift in Sources */,
-				318C5A092694032800A2FD66 /* MonthlyGraphBox.swift in Sources */,
+				318C5A092694032800A2FD66 /* MonthlyGraph.swift in Sources */,
 				319CF67C269715D600159575 /* AnswerBox.swift in Sources */,
 				314F816525BE3CFA00E76508 /* SynopsisConst.swift in Sources */,
 				D56C6A36257DA0C700CF9AB8 /* CPTabNavigation.swift in Sources */,

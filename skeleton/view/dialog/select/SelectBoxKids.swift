@@ -12,7 +12,7 @@ import SwiftUI
 extension SelectBoxKids {
     static let idealWidth:CGFloat = SystemEnvironment.isTablet ? 565: 294
     static let maxWidth:CGFloat = SystemEnvironment.isTablet ? 565: 294
-    static let scrollNum:Int = 4
+    static let scrollNum:Int = 5
 }
 struct SelectBoxKids: PageComponent {
     @EnvironmentObject var sceneObserver:PageSceneObserver

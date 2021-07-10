@@ -48,7 +48,7 @@ struct LvGraphListItem: PageComponent{
             thumbImg: self.data.thumb,
             title: self.data.title,
             titleColor: self.data.titleColor,
-            size: DimenKids.item.graphVertical,
+            size: DimenKids.item.graphVerticalExtra,
             color: self.data.color)
              
         .onAppear(){

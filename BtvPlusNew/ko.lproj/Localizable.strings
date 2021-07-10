@@ -391,6 +391,7 @@
 "alertKidsProfileSelect" = "현재 이용 중인 프로필이\n없습니다.\n프로필을 설정해주세요.";
 "alertKidsProfileEmpty" = "등록된 자녀 \n프로필이 없어요";
 
+
 "alertKidsDeleteConfirm" = "선택하신 프로필을 삭제하시겠습니까?";
 "alertKidsDeleteConfirmTip" =  "※ 삭제 시, 프로필의 시청과 학습 이력이 Btv와 모바일Btv에서 모두 삭제되며, 다시 복구할 수 없습니다.";
 "alertKidsDelete" = "자녀 프로필 삭제";
@@ -404,11 +405,16 @@
 "alertKidAddError" = "프로필등록이 실패했습니다.\n다시시도해주세요";
 "alertKidEditError" = "프로필수정이 실패했습니다.\n다시시도해주세요";
 "alertKidDeleteError" = "프로필삭제가 실패했습니다.\n다시시도해주세요";
+"alertKidDuplicationNickError" = "입력하신 별명과 동일한 별명을 가진 프로필이 존재합니다.\n다시 입력해주세요.";
+"alertKidChange" = "대표 프로필을 \'\%s\'으로\n변경하시겠습니까?";
+"alertKidChangeTip" = "대표 프로필에 맞는 추천 및 학습 환경으로 재 설정합니다.";
 
 "alertNeedPairingMoveBtv" = "* B tv 연결 진행 시, 모바일 B tv 페어링 화면으로 이동합니다.";
 
 "alertKidExamSaveCompleted" = "저장되었습니다.";
 "alertKidExamSaveError" = "결과저장이 실패했습니다.\n다시시도해주세요";
+
+
 
 /*
  PageTitle
@@ -862,9 +868,13 @@
 "kidsMyMonthlyReport" = "월별 리포트";
 "kidsMyMonthlyReportText" = "영어, 유아발달, 창의력 관찰, 교과지식, 놀이활동\n총 5가지 학습 이력 별로 월별 리포트를 확인할 수 있어요!";
 "kidsMyMonthlyReportStart" = "지금 바로, 다양한 학습 콘텐츠를 즐겨보세요";
+"kidsMyMonthlyReportTime" = "오늘까지 권장 시간";
+"kidsMyMonthlyReportCount" = "오늘까지 권장 편수";
+"kidsMyMonthlyReportComment" = "이 달의 총 평";
 
 "kidsMyNeedPairing" = "마이페이지 서비스를 이용하려면 B tv 연결이 필요합니다.";
 "kidsMyNeedPairingSub" = "아이 별 최근 시청 내역 관리가 가능해요";
+"kidsMyReportNeedProfile" = "프로필 등록 완료 후 평가를 진행할 수 있습니다.\n프로필 등록을 완료 해 주세요";
 
 "kidsMyReportStart" = "진단 시작하기";
 "kidsMyReportCompleted" = "검사완료";
@@ -901,10 +911,6 @@
 "kidsMyInfantDevelopmentDescription5" = "자조행동 발달은 일상에서 자신의 신변을 처리하고 자신의 일을 스스로 해결할 수 있는 능력을 의미합니다. 독립적이고 책임감 있는 생활 능력의 기반이 되는 영역입니다.";
 
 "kidsEnglishLvTestText" = "‘%s’님 연령대에 맞는 진단 레벨로 테스트를 시작해 주세요.\n권장 레벨의 문제를 모두 맞췄을 경우 정확한 진단을 위해\n다음 레벨의 테스트에 도전해 보세요!";
-
-/*
- PageKidsEnglishLvTest
-*/
 "kidsEnglishLvTestRecommend1" = "7세 이하 권장";
 "kidsEnglishLvTestRecommend2" = "초등 1,2학년 권장";
 "kidsEnglishLvTestRecommend3" = "초등 3학년 이상 권장";
@@ -921,4 +927,8 @@
 "kidsExamForkid" = "자녀용";
 "kidsExamForParent" = "부모용";
 "kidsExamInfantDevelopmentCompleted" = "유아 발달 진단 테스트 종료! (%s)";
+"kidsExamCreativeObservationConfirm" = "PDM 창의력 관찰 검사를 시작합니다.\n창의력 검사는 부모와 아이가\n함께 받는 검사입니다. 지금, 아이와\n함께 있다면 시작해 주세요";
+"kidsExamCloseConfirm" = "를\n그만하시겠습니까?";
+"kidsExamCloseConfirmTip" = "* 종료 시 테스트 내역이 초기화 됩니다.";
+
 

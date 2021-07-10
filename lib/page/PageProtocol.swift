@@ -386,6 +386,7 @@ protocol PageModel {
     func isChangePageAble(_ pageObject: PageObject) -> Bool
     func getPageOrientation(_ pageObject:PageObject?) -> UIInterfaceOrientationMask?
     func getPageOrientationLock(_ pageObject:PageObject?) -> UIInterfaceOrientationMask?
+    func getUIStatusBarStyle(_ pageObject:PageObject?) -> UIStatusBarStyle?
     func getCloseExceptions() -> [PageID]?
 }
 extension PageModel{
@@ -396,6 +397,7 @@ extension PageModel{
     func isChangePageAble(_ pageObject: PageObject) -> Bool { return true }
     func getPageOrientation(_ pageObject:PageObject?) -> UIInterfaceOrientationMask? { return nil }
     func getPageOrientationLock(_ pageObject:PageObject?) -> UIInterfaceOrientationMask? { return nil }
+    func getUIStatusBarStyle(_ pageObject:PageObject?) -> UIStatusBarStyle? { return nil }
     func getCloseExceptions() -> [PageID]? { return nil }
 }
 

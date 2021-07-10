@@ -310,6 +310,10 @@ struct PageEditKid: PageView {
     private func registKid() {
         if !self.isInputCompleted() {return}
         if let kid = self.editKid {
+            if let _ = self.pairing.kids.filter({ $0.id != kid.id }).first(where: {$0.nickName == self.nickName}){
+                self.appSceneObserver.event = .toast(String.alert.kidsDuplicationNickError)
+                return
+            }
             kid.update(
                 ModifyUserData(
                     nickName: self.nickName,
@@ -319,6 +323,10 @@ struct PageEditKid: PageView {
             )
             self.pairing.requestPairing(.modifyKid(kid))
         }else{
+            if let _ = self.pairing.kids.first(where: {$0.nickName == self.nickName}){
+                self.appSceneObserver.event = .toast(String.alert.kidsDuplicationNickError)
+                return
+            }
             let kid = Kid(nickName: self.nickName, characterIdx: self.characterIdx, birthDate: self.birthDate)
             self.pairing.requestPairing(.registKid(kid))
             

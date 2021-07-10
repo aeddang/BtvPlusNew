@@ -27,6 +27,7 @@ struct DimenKids{
         public static let thinExtra:CGFloat = isPad ? 14 : 8//*
         public static let tiny:CGFloat = isPad ? 10 : 6//*
         public static let tinyExtra:CGFloat = isPad ? 9 : 5//*
+        public static let microUltra:CGFloat = isPad ? 7 : 4
         public static let micro:CGFloat = isPad ? 4 : 2
         public static let microExtra:CGFloat = isPad ? 2 : 1
     }
@@ -84,7 +85,7 @@ struct DimenKids{
         public static let heavy:CGFloat = isPad ? 38 : 20//**
         public static let heavyExtra:CGFloat = isPad ? 33 : 18//*pad
         public static let medium:CGFloat = isPad ? 24 : 17//**
-       
+        public static let mediumExtra:CGFloat = isPad ? 23 : 14//**
         public static let regular:CGFloat = isPad ? 17: 10//**
         public static let light:CGFloat =  isPad ? 15 : 8//**
         public static let lightExtra:CGFloat =  isPad ? 9 : 6//**
@@ -141,7 +142,7 @@ struct DimenKids{
         
         static let graphHorizontal:CGSize =  isPad ? CGSize(width: 199, height: 30) : CGSize(width: 100, height: 15)//*
         static let graphVertical:CGSize =  isPad ? CGSize(width: 49, height: 160) : CGSize(width: 28, height: 90)//*
-        static let graphVerticalExtra:CGSize =  isPad ? CGSize(width: 44, height: 131) : CGSize(width: 23, height: 69)//*
+        static let graphVerticalExtra:CGSize =  isPad ? CGSize(width: 49, height: 300) : CGSize(width: 23, height: 69)//*
         
     }
 }

@@ -10,9 +10,7 @@ import SwiftUI
 
 extension ExamControl {
     static let bgSize:CGSize = SystemEnvironment.isTablet ? CGSize(width: 223, height: 667) : CGSize(width: 138, height: 365)
-    
     static let bodySize:CGSize = SystemEnvironment.isTablet ? CGSize(width: 223, height: 667) : CGSize(width: 138, height: 307)
-
 }
 
 struct ExamControl: PageComponent{
@@ -26,13 +24,13 @@ struct ExamControl: PageComponent{
                 .frame(width: Self.bgSize.width, height: Self.bgSize.height)
                 .padding(.top ,Self.bodySize.height - Self.bgSize.height)
             VStack( spacing: 0 ){
-                if let soundPath = self.soundPath {
-                    SoundBox(
-                        soundPath: soundPath
-                    )
-                    .padding(.trailing, SystemEnvironment.isTablet ? 28 : 32)
-                    .opacity(self.answer == -1 || isView ? 1 : 0.3)
-                }
+                SoundBox(
+                    viewModel: self.viewModel,
+                    isView: self.isView
+                )
+                .padding(.trailing, SystemEnvironment.isTablet ? 30 : 32)
+                .opacity(self.answer == -1 || isView ? 1 : 0.3)
+                
                 if self.question != nil {
                     if !isView {
                         AnswerBox(
@@ -95,7 +93,6 @@ struct ExamControl: PageComponent{
                     }
                 }
                 self.question = question
-                self.soundPath = question.audioPath
                 
             case .answer(let answer) :
                 withAnimation {
@@ -115,15 +112,11 @@ struct ExamControl: PageComponent{
         
     }
     @State var question:QuestionData? = nil
-   
     @State var right:Int = -1
     @State var submit:Int = -1
     @State var answer:Int = -1
     @State var exCount:Int = 0
-    
-    @State var soundPath:String? = nil
-    
-    
+
 }
 
 #if DEBUG

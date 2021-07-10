@@ -24,7 +24,7 @@ struct PageTabInfo: PageView {
     
     
     @State var datas:[TabInfoData] = []
-    let maxTextCount:Int = 200
+    let maxTextCount:Int = SystemEnvironment.isTablet ? 400 : 200
     @State var text = ""
     @State var tabIdx:Int = 0
     @State var tabs:[String] = []

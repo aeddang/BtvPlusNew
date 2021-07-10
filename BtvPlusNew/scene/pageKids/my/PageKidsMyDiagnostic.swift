@@ -66,31 +66,32 @@ struct PageKidsMyDiagnostic: PageView {
                             ErrorKidsData()
                                 .modifier(MatchParent())
                         } else{
-                            if let resultData = self.resultEnglishReportViewData {
-                                ResultEnglishReportView(data: resultData){
-                                    self.moveExamPage(moveType: .english)
-                                }
-                                .modifier(MatchParent())
-                            } else if let resultData = self.resultReadingReportViewData {
-                                ResultReadingReportView(data: resultData){ isRetry in
-                                    if isRetry {
-                                        self.moveExamPage(moveType: .infantDevelopment)
-                                    } else {
-                                        self.startReport(startType: .infantDevelopment)
+                            ZStack{
+                                if let resultData = self.resultEnglishReportViewData {
+                                    ResultEnglishReportView(data: resultData){
+                                        self.moveExamPage(moveType: .english)
                                     }
+                                    .modifier(MatchParent())
+                                } else if let resultData = self.resultReadingReportViewData {
+                                    ResultReadingReportView(data: resultData){ isRetry in
+                                        if isRetry {
+                                            self.moveExamPage(moveType: .infantDevelopment)
+                                        } else {
+                                            self.startReport(startType: .infantDevelopment)
+                                        }
+                                    }
+                                    .modifier(MatchParent())
+                                } else if let resultData = self.resultCreativeReportViewData {
+                                    ResultCreativeReportView(data: resultData){
+                                        self.moveExamPage(moveType: .creativeObservation)
+                                    }
+                                    .modifier(MatchParent())
+                                } else {
+                                    Spacer()
                                 }
-                                .modifier(MatchParent())
-                            } else if let resultData = self.resultCreativeReportViewData {
-                                ResultCreativeReportView(data: resultData){
-                                    self.moveExamPage(moveType: .creativeObservation)
-                                }
-                                .modifier(MatchParent())
-                            } else {
-                                Spacer()
                             }
+                            .padding(.vertical, SystemEnvironment.isTablet ? DimenKids.margin.heavy : 0)
                         }
-                        
-                        
                     } else {
                         NeedPairingInfo(
                             title: String.kidsText.kidsMyNeedPairing,
@@ -252,10 +253,11 @@ struct PageKidsMyDiagnostic: PageView {
     
     private func loadResult(_ type:DiagnosticReportType){
         guard let kid = self.kid else { return }
-        self.isLoading = false
+       
         self.resetPage()
         withAnimation{ self.type = type }
         self.result = nil
+        self.isLoading = true
         switch type {
         case .english:
             self.dataProvider.requestData(q: .init(type: .getEnglishLvReportResult(kid)))
@@ -384,13 +386,17 @@ struct PageKidsMyDiagnostic: PageView {
                     .addParam(key: .id, value: moveId ?? self.readingArea)
                     .addParam(key: .text, value: moveTitle ?? self.resultSentence)
             )
-            break
+           
         case .creativeObservation:
-            self.pagePresenter.openPopup(
-                PageKidsProvider.getPageObject(.kidsExam)
-                    .addParam(key: .type, value: DiagnosticReportType.creativeObservation)
-            )
-            break
+            
+            self.appSceneObserver.alert = .confirm( nil , String.kidsText.kidsExamCreativeObservationConfirm ){ isOk in
+                if isOk {
+                    self.pagePresenter.openPopup(
+                        PageKidsProvider.getPageObject(.kidsExam)
+                            .addParam(key: .type, value: DiagnosticReportType.creativeObservation)
+                    )
+                }
+            }
         }
     }
 }

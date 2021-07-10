@@ -11,8 +11,9 @@ import SwiftUI
 class PageHostingController<ContentView> : UIHostingController<ContentView> where ContentView : View {
     var sceneObserver:PageSceneObserver? = nil
     var isFullScreen = false
+    var statusBarStyle:UIStatusBarStyle = .lightContent
     override dynamic open var preferredStatusBarStyle: UIStatusBarStyle {
-        .lightContent
+        self.statusBarStyle
     }
     override var prefersHomeIndicatorAutoHidden: Bool {
         //PageLog.d("prefersHomeIndicatorAutoHidden " + self.isFullScreen.description , tag: "PagePresenter")

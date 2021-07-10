@@ -33,7 +33,15 @@ struct PageKidsProfileManagement: PageView {
                         ForEach(self.kids) { kid in
                             KidProfileListItem(data: kid, isSelected : self.currentKid?.id == kid.id)
                                 .onTapGesture {
-                                    self.pairing.requestPairing(.selectKid(kid))
+                                    self.appSceneObserver.alert = .confirm(
+                                        nil ,
+                                        String.alert.kidsChange.replace(kid.nickName),
+                                        String.alert.kidsChangeTip
+                                        ){ isOk in
+                                        if isOk {
+                                            self.pairing.requestPairing(.selectKid(kid))
+                                        }
+                                    }
                                 }
                         }
                         if self.useEmpty {

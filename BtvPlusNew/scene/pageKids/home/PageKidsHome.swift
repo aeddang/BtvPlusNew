@@ -13,6 +13,7 @@ struct PageKidsHome: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     
      
@@ -21,6 +22,33 @@ struct PageKidsHome: PageView {
             Spacer().modifier(MatchParent())
         }
         .modifier(PageFull(style:.kids))
+        .onReceive(self.pairing.$status){status in
+            if status == .pairing {
+                if self.pairing.kids.isEmpty {
+                    self.pairing.requestPairing(.updateKids)
+                }
+            }
+        }
+        .onReceive(pairing.$event) { evt in
+            guard let evt = evt else { return }
+            switch evt {
+            case .updatedKids, .notFoundKid:
+                if pairing.kids.isEmpty {
+                    self.appSceneObserver.alert = .confirm(nil, String.alert.kidsProfileEmpty,nil) { isOk in
+                        if isOk {
+                            self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.editKid))
+                        }
+                    }
+                } else {
+                    self.appSceneObserver.alert = .confirm(nil, String.alert.kidsProfileSelect ,nil) { isOk in
+                        if isOk {
+                            self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
+                        }
+                    }
+                }
+            default : break
+            }
+        }
         .onAppear{
             
             /*

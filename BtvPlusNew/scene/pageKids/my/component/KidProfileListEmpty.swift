@@ -20,7 +20,9 @@ struct KidProfileListEmpty: PageComponent{
             VStack(alignment: .center ,spacing:0){
                 
                 Button(action: {
-                    self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.registKid))
+                    self.pagePresenter.openPopup(
+                        PageKidsProvider.getPageObject(.editKid)
+                    )
                     
                 }) {
                     Image( AssetKids.icon.addProfile)

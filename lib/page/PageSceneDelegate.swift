@@ -140,7 +140,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     
     private var changeSubscription:AnyCancellable?
     private var popupSubscriptions:[String:AnyCancellable] = [String:AnyCancellable]()
-    
+   
     deinit {
         changeSubscription?.cancel()
         changeSubscription = nil
@@ -154,9 +154,8 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         PageSceneDelegate.instance = self
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-            setupRootViewController(window)
             self.window = window
-            //window.backgroundColor = UIColor.black
+            setupRootViewController(window)
             window.makeKeyAndVisible()
         }
         onInitPage()
@@ -175,6 +174,20 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         window.rootViewController = rootViewController
         window.overrideUserInterfaceStyle = .light
        
+    }
+    
+    private func updateUserInterfaceStyle(style:UIStatusBarStyle){
+        guard let window = self.window , let rootViewController = window.rootViewController as? PageHostingController<AnyView> else {return}
+        rootViewController.statusBarStyle = style
+        switch style {
+        case .default:
+            window.overrideUserInterfaceStyle = .unspecified
+        case .lightContent:
+            window.overrideUserInterfaceStyle = .light
+        case .darkContent:
+            window.overrideUserInterfaceStyle = .dark
+        default: break
+        }
     }
     
     private let preventDelay =  0.5
@@ -444,6 +457,9 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         }
         pagePresenter.currentTopPage = willChangePage
         pageModel.topPageObject = willChangePage
+        if let style =  pageModel.getUIStatusBarStyle(willChangePage){
+            self.updateUserInterfaceStyle(style: style)
+        }
         let willChangeOrientationMask = pageModel.getPageOrientation(willChangePage)
         AppDelegate.orientationLock = pageModel.getPageOrientationLock(willChangePage) ?? .all
         guard let willChangeOrientation = willChangeOrientationMask else { return }
@@ -541,9 +557,10 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
             }
         }
         else {
+            let sceneOrientation = sceneObserver.sceneOrientation
             switch mask {
-            case .landscape: return .landscapeLeft
-            case .portrait: return .portrait
+            case .landscape: return sceneOrientation == .landscape ? nil : .landscapeLeft
+            case .portrait: return sceneOrientation == .portrait ? nil : .portrait
             default:return nil
             }
             

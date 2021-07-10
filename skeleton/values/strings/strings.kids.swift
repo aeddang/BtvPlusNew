@@ -37,9 +37,14 @@ extension String{
         public static let kidsMyMonthlyReport = "kidsMyMonthlyReport".loaalized()
         public static let kidsMyMonthlyReportText = "kidsMyMonthlyReportText".loaalized()
         public static let kidsMyMonthlyReportStart = "kidsMyMonthlyReportStart".loaalized()
+        public static let kidsMyMonthlyReportTime = "kidsMyMonthlyReportTime".loaalized()
+        public static let kidsMyMonthlyReportCount = "kidsMyMonthlyReportCount".loaalized()
+        public static let kidsMyMonthlyReportComment = "kidsMyMonthlyReportComment".loaalized()
+        
         public static let kidsMyNeedPairing = "kidsMyNeedPairing".loaalized()
         public static let kidsMyNeedPairingSub = "kidsMyNeedPairingSub".loaalized()
         
+        public static let kidsMyReportNeedProfile = "kidsMyReportNeedProfile".loaalized()
         public static let kidsMyReportStart = "kidsMyReportStart".loaalized()
         public static let kidsMyReportCompleted = "kidsMyReportCompleted".loaalized()
         public static let kidsMyEnglishText = "kidsMyEnglishText".loaalized()
@@ -88,7 +93,9 @@ extension String{
         public static let kidsExamForkid = "kidsExamForkid".loaalized()
         public static let kidsExamForParent = "kidsExamForParent".loaalized()
         public static let kidsExamInfantDevelopmentCompleted = "kidsExamInfantDevelopmentCompleted".loaalized()
-
+        public static let kidsExamCreativeObservationConfirm = "kidsExamCreativeObservationConfirm".loaalized()
+        public static let kidsExamCloseConfirm = "kidsExamCloseConfirm".loaalized()
+        public static let kidsExamCloseConfirmTip = "kidsExamCloseConfirmTip".loaalized()
     }
     
 }

@@ -86,7 +86,7 @@ struct LvGraphBox: PageComponent{
     var thumb:String
     var data:LvGraphBoxData
     var width:CGFloat = SystemEnvironment.isTablet ? 188 : 100
-    
+    var size:CGSize = DimenKids.item.graphVertical
     var colorAvg:Color = Color.app.sky
     var colorMe:Color = Color.app.red
     @State var mePct:Float = 0
@@ -108,14 +108,14 @@ struct LvGraphBox: PageComponent{
                         value: self.avgPct,
                         viewText: self.avgTitle,
                         thumbText: String.app.peerAverage,
-                        size: DimenKids.item.graphVertical,
+                        size: self.size,
                         color: self.colorAvg)
                         .modifier(MatchParent())
                     VerticalGraph(
                         value: self.mePct,
                         viewText: self.meTitle,
                         thumbImg: self.thumb,
-                        size: DimenKids.item.graphVertical,
+                        size: self.size,
                         color: self.colorMe)
                         .modifier(MatchParent())
                 }

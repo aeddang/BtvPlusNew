@@ -18,6 +18,7 @@ struct DiagnosticReportCard: PageComponent{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var pairing:Pairing
     @ObservedObject var viewModel:DiagnosticReportModel = DiagnosticReportModel()
 
     var body: some View {
@@ -64,6 +65,7 @@ struct DiagnosticReportCard: PageComponent{
                         .modifier(MatchParent())
                 }else if self.isEmpty || self.isEmptyResult{
                     Button(action: {
+                        
                         self.moveResultPage()
                         
                     }) {
@@ -299,6 +301,21 @@ struct DiagnosticReportCard: PageComponent{
     }
     
     private func moveResultPage(){
+        if self.kid == nil {
+            self.appSceneObserver.alert = .confirm(
+                nil ,
+                String.kidsText.kidsMyReportNeedProfile
+                ){ isOk in
+                if isOk {
+                    if self.pairing.kids.isEmpty {
+                        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.editKid))
+                    } else {
+                        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
+                    }
+                }
+            }
+            return
+        }
         self.pagePresenter.openPopup(
             PageKidsProvider
                 .getPageObject(.kidsMyDiagnostic)

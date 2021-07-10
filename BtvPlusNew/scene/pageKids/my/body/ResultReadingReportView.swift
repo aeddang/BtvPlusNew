@@ -96,6 +96,7 @@ struct ResultReadingReportView: PageComponent{
                             thumb: self.data.profile,
                             data: self.data.lvGraphBoxData,
                             width: Self.graphWidth,
+                            size: SystemEnvironment.isTablet ?  DimenKids.item.graphVerticalExtra :  DimenKids.item.graphVertical,
                             colorAvg: Color.app.green,
                             colorMe: Color.app.yellow)
                             .frame(width: Self.graphWidth)
@@ -144,8 +145,7 @@ struct ResultReadingReportView: PageComponent{
                     comment: self.data.comment,
                     comments: self.data.comments
                 )
-                .modifier(MatchVertical(width: SystemEnvironment.isTablet ? 289 : 178))
-                .background(Color.app.whiteExtra)
+                
                 .modifier(MatchVertical(width: SystemEnvironment.isTablet ? 436 : 269))
                 .background(Color.app.whiteExtra)
             }

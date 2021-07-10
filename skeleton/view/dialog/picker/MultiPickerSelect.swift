@@ -28,7 +28,7 @@ struct SelectBtnDataSet:Identifiable, Equatable{
     var selectIdx:Int = 0
     let title:String
     let datas:[SelectBtnData]
-    var size:CGFloat = SystemEnvironment.isTablet ? 60 : 120
+    var size:CGFloat = SystemEnvironment.isTablet ? 240 : 120
 }
 
 

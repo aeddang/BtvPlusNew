@@ -18,7 +18,7 @@ import Foundation
 import SwiftUI
 
 struct KidProfile: PageComponent{
-   
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
     
@@ -39,7 +39,16 @@ struct KidProfile: PageComponent{
                     .padding(.leading, DimenKids.margin.thinExtra)
             } else {
                 Button(action: {
-                    self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.registKid))
+                    let status = self.pairing.status
+                    if status != .pairing {
+                        self.appSceneObserver.alert = .needPairing()
+                        return
+                    }
+                    if self.pairing.kids.isEmpty {
+                        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.editKid))
+                    } else {
+                        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
+                    }
                     
                 }) {
                     Image(AssetKids.gnbTop.addProfile)
@@ -51,7 +60,6 @@ struct KidProfile: PageComponent{
                 }
                 .padding(.leading, DimenKids.margin.micro)
             }
-            
         }
         .onReceive(self.pairing.$kid) { kid in
             if let kid = kid {

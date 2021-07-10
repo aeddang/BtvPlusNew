@@ -62,7 +62,12 @@ extension AssetKids{
         public static let trophy = "zemkidsMImgReportLevelS"
         public static let medal = "zemkidsMIcBtnRecommend"
         
+        public static let graphGuideNum = "zemkidsMImgRecomNum"
+        public static let graphGuideTime = "zemkidsMImgRecomTime"
         
+        public static let arrowL = "zemkidsMMonthlyReportArrowLN"
+        public static let arrowR = "zemkidsMMonthlyReportArrowRN"
+       
     }
     
     
@@ -158,6 +163,7 @@ extension AssetKids{
         public static let graphGuideNum = "zemkidsMImgGraphRecomNum"
         public static let graphGuideTime = "zemkidsMImgGraphRecomTime"
         
+        public static let monthlyResultBg = "zemkidsMImgMonthlyResultEng"
         public static let cardFolder = "zemkidsMMyCardFolder1"
         public static let cardFolderWide = "zemkidsMMyCardFolder2"
         

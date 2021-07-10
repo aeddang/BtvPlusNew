@@ -181,7 +181,7 @@ struct ResultEnglishReportView: PageComponent{
                     icon: AssetKids.image.resultEnglish,
                     text: String.kidsText.kidsMyEnglishResultCommentText,
                     comments: self.data.comments)
-                    .modifier(MatchVertical(width: SystemEnvironment.isTablet ? 289 : 178))
+                    .modifier(MatchVertical(width: SystemEnvironment.isTablet ? 320 : 178))
                     .background(Color.app.whiteExtra)
             }
             .modifier(MatchParent())

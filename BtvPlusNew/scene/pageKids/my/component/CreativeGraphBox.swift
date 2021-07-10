@@ -42,7 +42,7 @@ class CreativeGraphBoxData{
 struct CreativeGraphBox: PageComponent{
     var data:CreativeGraphBoxData
     var sortSize:CGSize = SystemEnvironment.isTablet ? CGSize(width: 33, height: 19) : CGSize(width: 15, height: 9)
-    
+    var size:CGSize = DimenKids.item.graphVertical
     var colorKid:Color = Color.app.sky
     var colorParent:Color = Color.app.red
     var body: some View {
@@ -79,6 +79,7 @@ struct CreativeGraphBox: PageComponent{
                             lvCount: self.data.lvCount,
                             valueA: compare.valueA,
                             valueB: compare.valueB,
+                            size: self.size,
                             colorA: self.colorKid,
                             colorB: self.colorParent
                         )
@@ -104,6 +105,7 @@ struct CreativeGraph: PageComponent{
     var valueA:Float = 0
     var valueB:Float = 0
     var width:CGFloat = SystemEnvironment.isTablet ? 200 : 101
+    var size:CGSize = DimenKids.item.graphVertical
     var colorA:Color = Color.app.sky
     var colorB:Color = Color.app.red
     
@@ -123,13 +125,13 @@ struct CreativeGraph: PageComponent{
                     VerticalGraph(
                         value: self.valueAPct,
                         viewText: "",
-                        size: DimenKids.item.graphVerticalExtra,
+                        size: size,
                         color: self.colorA)
                         
                     VerticalGraph(
                         value: self.valueBPct,
                         viewText: "",
-                        size: DimenKids.item.graphVerticalExtra,
+                        size: size,
                         color: self.colorB)
                        
                 }

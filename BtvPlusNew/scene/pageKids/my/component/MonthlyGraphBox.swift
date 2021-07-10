@@ -7,41 +7,51 @@
 
 import Foundation
 import SwiftUI
-
+extension MonthlyGraphBox{
+    static let size:CGSize = SystemEnvironment.isTablet ? CGSize(width: 308, height: 294) : CGSize(width: 190, height: 182)
+}
 struct MonthlyGraphBox: PageComponent{
     var title:String
     var value:String
     var subTitle:String
     var thumbImg:String
-    var valurPct:Float
-    var guideImg:String? = nil
-    var guidePct:Float
+    var valuePct:Float = 0
+    var guideImg:String
+    var guidePct:Float = 0
     var color:Color
+    
+    var icon:String
+    var text:String
+    
     var body: some View {
-        VStack(spacing:0){
-            Text(self.title)
-                .modifier(BoldTextStyleKids(
-                            size: Font.sizeKids.tinyExtra,
-                            color:  Color.app.brownDeep))
-            Text(self.value)
-                .modifier(BoldTextStyleKids(
-                            size: Font.sizeKids.regular,
-                            color:  Color.app.brownDeep))
-                .padding(.top, DimenKids.margin.thinExtra)
-            Text(self.subTitle)
-                .modifier(BoldTextStyleKids(
-                            size: Font.sizeKids.microUltra,
-                            color:  Color.app.sepia))
-                .padding(.top, DimenKids.margin.micro)
-            HorizontalGraph(
-                value: self.valurPct,
-                thumbImg: self.thumbImg,
-                guidePercent: self.guidePct,
-                guideImg: self.guideImg,
-                size: DimenKids.item.graphHorizontal,
-                color: self.color
+        VStack(spacing:DimenKids.margin.microUltra){
+            MonthlyGraph(
+                title:self.title,
+                value:self.value,
+                subTitle:self.subTitle,
+                thumbImg:self.thumbImg,
+                valuePct:self.valuePct,
+                guideImg:self.guideImg,
+                guidePct:self.guidePct,
+                color:self.color
             )
-            .padding(.top, DimenKids.margin.thin)
+            HStack(spacing:DimenKids.margin.micro){
+                Image(self.icon)
+                    .renderingMode(.original)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: DimenKids.icon.microUltra,
+                           height: DimenKids.icon.microUltra)
+                    
+                Text(self.text)
+                    .modifier(BoldTextStyleKids(
+                                size: Font.sizeKids.microUltra,
+                                color:  Color.app.yellow))
+                    .padding(.top, DimenKids.margin.micro)
+            }
         }
+        .frame(width: Self.size.width, height: Self.size.height)
+        .background(Color.app.white)
+        .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.light))
     }
 }

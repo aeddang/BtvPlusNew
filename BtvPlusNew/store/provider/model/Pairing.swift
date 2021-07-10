@@ -75,6 +75,7 @@ class Pairing:ObservableObject, PageProtocol {
             kid.updateType = .post
             kid.locVal = self.kids.count
         case .modifyKid(let kid) :
+            
             kid.updateType = .put
         case .deleteKid(let kid) :
             kid.updateType = .del

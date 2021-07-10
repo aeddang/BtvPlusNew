@@ -190,10 +190,13 @@ extension String {
         public static var kidsAddCompleted = "alertKidAddCompleted".loaalized()
         public static var kidsEditCompleted = "alertKidEditCompleted".loaalized()
         public static var kidsDeleteCompleted = "alertKidDeleteCompleted".loaalized()
+        public static var kidsChange = "alertKidChange".loaalized()
+        public static var kidsChangeTip = "alertKidChangeTip".loaalized()
 
         public static var kidsAddError = "alertKidAddError".loaalized()
         public static var kidsEditError = "alertKidEditError".loaalized()
         public static var kidsDeleteError = "alertKidDeleteError".loaalized()
+        public static var kidsDuplicationNickError = "alertKidDuplicationNickError".loaalized()
         
         public static var needPairingMoveBtv = "alertNeedPairingMoveBtv".loaalized()
         

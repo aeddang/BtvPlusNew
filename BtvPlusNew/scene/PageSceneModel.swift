@@ -9,6 +9,7 @@ import Foundation
 extension PageParam {
     static let id = "id"
     static let cid = "cid" // Certification
+    static let index = "index" // Certification
     static let subId = "subId"
     static let link = "link"
     static let data = "data"
@@ -68,6 +69,14 @@ struct PageSceneModel: PageModel {
             return UIInterfaceOrientationMask.all
         default :
             return getPageOrientation(pageObject)
+        }
+    }
+    
+    func getUIStatusBarStyle(_ pageObject:PageObject?) -> UIStatusBarStyle? {
+        if pageObject?.pageGroupID == PageType.kids.rawValue {
+            return .darkContent
+        } else {
+            return .lightContent
         }
     }
     

@@ -10,14 +10,16 @@ import Foundation
 import SwiftUI
 import Combine
 
-
+extension MenuTab{
+    static let height:CGFloat = SystemEnvironment.isTablet ? DimenKids.tab.thin : DimenKids.tab.light
+}
 
 
 struct MenuTab : PageComponent {
     @ObservedObject var viewModel:NavigationModel = NavigationModel()
     let buttons:[String]
     var selectedIdx:Int = 0
-    var height:CGFloat = SystemEnvironment.isTablet ? DimenKids.tab.thin : DimenKids.tab.light
+    var height:CGFloat = Self.height
     var bgColor:Color = Color.app.ivoryLight
     var isDivision:Bool = true
     @State var menus:[MenuBtn] = []

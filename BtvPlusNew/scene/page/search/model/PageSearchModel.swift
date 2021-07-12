@@ -97,22 +97,22 @@ class PageSearchModel :ObservableObject, PageProtocol {
         
         if let datas = result.results_vod {
             let allPosters:[PosterData] = datas.map{ PosterData().setData(data: $0)}
-            let block = BlockData().setDate(title: String.app.vod, datas: allPosters)
+            let block = BlockData().setData(title: String.app.vod, datas: allPosters)
             blocks.append(block)
         }
         if let datas = result.results_vod_tseq {
             let allPosters:[VideoData] = datas.map{ VideoData().setData(data: $0)}
-            let block = BlockData().setDate(title: String.app.sris, datas: allPosters)
+            let block = BlockData().setData(title: String.app.sris, datas: allPosters)
             blocks.append(block)
         }
         if let datas = result.results_corner {
             let allPosters:[VideoData] = datas.map{ VideoData().setData(data: $0)}
-            let block = BlockData().setDate(title: String.app.corner, datas: allPosters)
+            let block = BlockData().setData(title: String.app.corner, datas: allPosters)
             blocks.append(block)
         }
         if let datas = result.results_people {
             let allPosters:[PosterData] = datas.map{ PosterData().setData(data: $0)}
-            let block = BlockData().setDate(title: String.app.people, datas: allPosters)
+            let block = BlockData().setData(title: String.app.people, datas: allPosters)
             blocks.append(block)
         }
         return blocks

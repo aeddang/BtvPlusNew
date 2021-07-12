@@ -155,7 +155,7 @@ struct PagePurchase: PageView {
                 
                 if let data = obj.getParamValue(key: .data) as? MonthlyData {
                     self.purchaseWebviewModel = PurchaseWebviewModel().setParam(data:data)
-                    guard let block = data.blocks?.first( where: { BlockData().setDate($0).dataType == .grid }) else {return}
+                    guard let block = data.blocks?.first( where: { BlockData().setData($0).dataType == .grid }) else {return}
                     let menuId = block.menu_id ?? data.menuId
                     self.dataProvider.requestData(
                         q:.init(

@@ -48,7 +48,7 @@ extension AssetKids{
         public static let share = "zemkidsMBtnSynopsisShareNor"
         public static let sort = "zemkidsMDropdownBriDownNor"
         public static let thumbPlay = "zemkidsMIcPlay"
-        
+        public static let thumbPlayVideo = "zemkidsMThumbnailPlayIcon"
         public static let editProfileOff = "zemkidsMBtnEditNor"
         public static let editProfileOn = "zemkidsMBtnEditSel"
         

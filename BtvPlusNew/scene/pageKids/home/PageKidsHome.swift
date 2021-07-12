@@ -1,74 +1,130 @@
 //
-//  PopupPairing.swift
+//  PageHome.swift
 //  BtvPlusNew
 //
-//  Created by KimJeongCheol on 2020/12/28.
+//  Created by KimJeongCheol on 2020/12/11.
 //
+
 import Foundation
 import SwiftUI
-
+import Combine
 
 
 struct PageKidsHome: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var repository:Repository
+    @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
-    @ObservedObject var pageObservable:PageObservable = PageObservable()
     
-     
+    @ObservedObject var viewModel:MultiBlockModel = MultiBlockModel()
+   
+    @ObservedObject var pageObservable:PageObservable = PageObservable()
+    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
+  
+    @State var useTracking:Bool = false
+    
     var body: some View {
-        ZStack{
-            Spacer().modifier(MatchParent())
-        }
-        .modifier(PageFull(style:.kids))
-        .onReceive(self.pairing.$status){status in
-            if status == .pairing {
-                if self.pairing.kids.isEmpty {
-                    self.pairing.requestPairing(.updateKids)
+        GeometryReader { geometry in
+            PageDataProviderContent(
+                pageObservable:self.pageObservable,
+                viewModel : self.viewModel
+            ){
+                MultiBlockBody (
+                    pageObservable: self.pageObservable,
+                    viewModel: self.viewModel,
+                    infinityScrollModel: self.infinityScrollModel,
+                    useBodyTracking:self.useTracking,
+                    useTracking:false,
+                    marginTop:KidsTop.height + DimenKids.margin.thin,
+                    marginBottom: self.sceneObserver.safeAreaBottom
+                    )
+            }
+            .background(
+                Image(AssetKids.image.homeBg)
+                    .renderingMode(.original)
+                    .resizable()
+                    .scaledToFill()
+                    .modifier(MatchParent())
+                    
+            )
+            .modifier(PageFullScreen(style:.kids))
+           
+            .onReceive(self.dataProvider.bands.$event){ evt in
+                guard let evt = evt else { return }
+                switch evt {
+                case .updated:
+                    self.reload()
+                default: do{}
                 }
             }
-        }
-        .onReceive(pairing.$event) { evt in
-            guard let evt = evt else { return }
-            switch evt {
-            case .updatedKids, .notFoundKid:
-                if pairing.kids.isEmpty {
-                    self.appSceneObserver.alert = .confirm(nil, String.alert.kidsProfileEmpty,nil) { isOk in
-                        if isOk {
-                            self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.editKid))
-                        }
+            .onReceive(self.pairing.$kid){ kid in
+                self.reload()
+            }
+            .onReceive(self.infinityScrollModel.$event){evt in
+                guard let evt = evt else {return}
+                if self.pagePresenter.currentTopPage?.pageID == .kidsHome {
+                    switch evt {
+                    case .top : self.appSceneObserver.useTopFix = true
+                    case .down : self.appSceneObserver.useTopFix = false
+                    default : break
                     }
+                }
+            }
+            .onReceive(self.pagePresenter.$currentTopPage){ page in
+                if page?.id == self.pageObject?.id {
+                    if self.useTracking {return}
+                    self.useTracking = true
                 } else {
-                    self.appSceneObserver.alert = .confirm(nil, String.alert.kidsProfileSelect ,nil) { isOk in
-                        if isOk {
-                            self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
-                        }
-                    }
+                    if !self.useTracking {return}
+                    self.useTracking = false
+                   
                 }
-            default : break
             }
-        }
-        .onAppear{
-            
-            /*
-            self.appSceneObserver.alert = .confirm(
-                "TITLE",
-                "TITLETITLETITLETITLETITLETITLETITLETITLETITLETITLETITLE",
-                "TITLE"){ _ in
+            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                self.useTracking = ani
+                if ani {
+                    self.reload()
+                }
+            }
+            .onAppear{
+                if let obj = self.pageObject {
+                    self.menuId = (obj.getParamValue(key: .id) as? String) ?? self.menuId
+                    self.openId = obj.getParamValue(key: .subId) as? String
+                }
+                if self.menuId.isEmpty {
+                    self.menuId = self.dataProvider.bands.kidsGnbModel.home?.menuId ?? ""
+                }
                 
             }
-           
-            self.appSceneObserver.select =
-                .select((self.tag , ["시즌 1", "시즌 1", "시즌 3"]), 1)
-            */
-        }
+            .onDisappear{
+                self.appSceneObserver.useTopFix = nil
+            }
+        }//geo
     }//body
     
+    @State var menuId:String = ""
+    @State var openId:String? = nil
     
-    
+    private func reload(){
+        if self.pagePresenter.currentTopPage?.pageID == PageID.kidsHome {
+            self.appSceneObserver.useTopFix = true
+        }
+        guard let blockData = self.dataProvider.bands.kidsGnbModel.getGnbData(menuId: self.menuId) else { return }
+        let isHome  = self.menuId == EuxpNetwork.MenuTypeCode.MENU_KIDS_HOME.rawValue
+        if isHome {
+            self.viewModel.updateKids(datas: blockData.blocks ?? [] , openId: self.openId)
+        } else {
+            self.viewModel.updateKids(data: blockData , openId: self.openId)
+        }
+        
+    }
 
+    //Block init
+    
 }
+
 
 #if DEBUG
 struct PageKidsHome_Previews: PreviewProvider {
@@ -77,12 +133,12 @@ struct PageKidsHome_Previews: PreviewProvider {
             PageKidsHome().contentBody
                 .environmentObject(PagePresenter())
                 .environmentObject(PageSceneObserver())
-                .environmentObject(AppSceneObserver())
-                .environmentObject(NetworkObserver())
+                .environmentObject(Repository())
                 .environmentObject(DataProvider())
-                .environmentObject(Pairing())
-                .frame(width: 420, height: 640, alignment: .center)
+                .environmentObject(AppSceneObserver())
+                .frame(width: 375, height: 640, alignment: .center)
         }
     }
 }
 #endif
+

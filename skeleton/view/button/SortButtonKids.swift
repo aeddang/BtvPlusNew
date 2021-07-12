@@ -33,6 +33,7 @@ struct SortButtonKids: View{
                     Text(self.text)
                     .font(.custom(textModifier.family, size: textModifier.size))
                     .foregroundColor(textModifier.color)
+                    .lineLimit(1)
                     if self.isFill {
                         Spacer().modifier(MatchParent())
                     }

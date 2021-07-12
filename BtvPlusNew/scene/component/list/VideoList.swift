@@ -26,6 +26,12 @@ class VideoData:InfinityData{
     private(set) var isClip:Bool = false
     private(set) var tagData: TagData? = nil
     private(set) var playTime:String? = nil
+    private(set) var pageType:PageType = .btv
+    init(pageType:PageType = .btv) {
+        self.pageType = pageType
+        super.init()
+    }
+    
     func setData(data:ContentItem, cardType:BlockData.CardType = .video, idx:Int = -1) -> VideoData {
         setCardType(cardType)
         if let typeCd = data.svc_typ_cd {
@@ -38,7 +44,9 @@ class VideoData:InfinityData{
         isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
         originImage = data.poster_filename_h
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: ListItem.video.size, isAdult: self.isAdult)
-        
+        if let rt = data.kes?.watching_progress?.toInt() {
+            self.progress = Float(rt) / 100.0 
+        }
         if self.isClip {
             playTime = data.play_tms_hms?.toHMS()
         } else {
@@ -159,6 +167,9 @@ class VideoData:InfinityData{
     
     var bottomHeight:CGFloat {
         get{
+            if self.pageType == .kids {
+                return 0
+            }
             if (self.title != nil && self.subTitle != nil) || self.isClip {
                 return ListItem.video.type02
             } else {
@@ -167,10 +178,38 @@ class VideoData:InfinityData{
         }
     }
     
+    
+    
     private func setCardType(_ cardType:BlockData.CardType){
-        switch cardType {
-        case .watchedVideo: type = .watching
-        default: type = .nomal
+        if self.pageType == .kids {
+            switch cardType {
+            case .watchedVideo: type = .watchingKids
+            default: type = .kids
+            }
+            return
+        } else {
+            switch cardType {
+            case .watchedVideo: type = .watching
+            default: type = .nomal
+            }
+        }
+        
+    }
+    
+    var moveSynopsis:PageObject
+    {
+        get {
+            if self.pageType == .btv {
+                return PageProvider.getPageObject(
+                    self.synopsisType == .package
+                        ? .synopsisPackage
+                        : self.isClip ? .synopsisPlayer : .synopsis)
+            } else {
+                return PageKidsProvider.getPageObject(
+                    self.synopsisType == .package
+                        ? .kidsSynopsisPackage
+                        : self.isClip ? .synopsisPlayer : .kidsSynopsis)
+            }
         }
     }
     
@@ -193,22 +232,41 @@ class VideoData:InfinityData{
         title = "[Q&A] 이민?레나채널 삭제 안하는 이유?외국인남친?"
         subTitle = "subTitlesubTitlesubTitle"
         index = idx
-        type = .watching
+        type = .watching 
         return self
     }
 }
 
 enum VideoType {
-    case nomal, watching, cell(CGSize, CGFloat)
+    case nomal, watching, cell(CGSize, CGFloat), kids, watchingKids
     var size:CGSize {
         get{
             switch self {
             case .nomal: return ListItem.video.size
             case .watching: return ListItem.video.size
+            case .kids: return ListItemKids.video.type01
+            case .watchingKids: return ListItemKids.video.type01
             case .cell(let size, _ ): return size
             }
         }
     }
+    var bgColor:Color {
+        get{
+            switch self {
+            case .kids, .watchingKids: return Color.app.white
+            default : return Color.app.blueLight
+            }
+        }
+    }
+    var radius:CGFloat {
+        get{
+            switch self {
+            case .kids, .watchingKids: return DimenKids.radius.light
+            default : return 0
+            }
+        }
+    }
+    
 }
 extension VideoList{
     static let spacing:CGFloat = Dimen.margin.tiny
@@ -250,10 +308,7 @@ struct VideoList: PageComponent{
                         }else{
                             guard let synopsisData = data.synopsisData else { return }
                             self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(
-                                    data.synopsisType == .package
-                                        ? .synopsisPackage
-                                        : data.isClip ? .synopsisPlayer : .synopsis)
+                                data.moveSynopsis
                                     .addParam(key: .data, value: synopsisData)
                                     .addParam(key: .watchLv, value: data.watchLv)
                             )
@@ -270,10 +325,7 @@ struct VideoList: PageComponent{
                         }else{
                             guard let synopsisData = data.synopsisData else { return }
                             self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(
-                                    data.synopsisType == .package
-                                        ? .synopsisPackage
-                                        : data.isClip ? .synopsisPlayer : .synopsis)
+                                data.moveSynopsis
                                     .addParam(key: .data, value: synopsisData)
                                     .addParam(key: .watchLv, value: data.watchLv)
                             )
@@ -300,14 +352,15 @@ extension VideoSet{
     static func listSize(data:VideoDataSet, screenWidth:CGFloat, isFull:Bool = false,
                          paddingHorizontal:CGFloat? = nil , spacing:CGFloat? = nil) -> CGSize{
         let datas = data.datas
-        let ratio = ListItem.video.size.height / ListItem.video.size.width
+        let dataCell = datas.first ?? VideoData()
+        let ratio = dataCell.type.size.height / dataCell.type.size.width
         let count = CGFloat(data.count)
         let w = screenWidth - ( (paddingHorizontal ?? padding) * 2)
         let cellW = ( w - ( (spacing ?? padding) * (count-1)) ) / count
         var cellH = round(cellW * ratio)
         
         if isFull{
-            cellH = cellH + datas.first!.bottomHeight
+            cellH = cellH + dataCell.bottomHeight
         }
         return CGSize(width: cellW, height: cellH )
     }
@@ -331,10 +384,7 @@ struct VideoSet: PageComponent{
                     .onTapGesture {
                         guard let synopsisData = data.synopsisData else { return }
                         self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(
-                                data.synopsisType == .package
-                                    ? .synopsisPackage
-                                    : data.isClip ? .synopsisPlayer : .synopsis)
+                            data.moveSynopsis
                                 .addParam(key: .data, value: synopsisData)
                                 .addParam(key: .watchLv, value: data.watchLv)
                         )
@@ -370,66 +420,14 @@ struct VideoItem: PageView {
     var isSelected:Bool = false
     var body: some View {
         VStack(alignment: .leading, spacing:0){
-            ZStack{
-                ImageView(url: self.data.image,contentMode: .fill, noImg: Asset.noImg16_9)
-                    .modifier(MatchParent())
-                 
-                if (self.data.progress != nil || self.isSelected) && self.data.tagData?.isLock != true {
-                    Image(Asset.icon.thumbPlay)
-                        .renderingMode(.original).resizable()
-                        .scaledToFit()
-                        .frame(width: Dimen.icon.regularExtra, height: Dimen.icon.regularExtra)
-                }
-                VStack(alignment: .leading, spacing:0){
-                    if let tag = self.data.tagData {
-                        Tag(data: tag).modifier(MatchParent())
-                    }else if let time = self.data.playTime {
-                        ZStack(alignment:.bottomTrailing){
-                            Spacer().modifier(MatchParent())
-                            Text(time)
-                                .modifier(BoldTextStyle(size: Font.size.tiny))
-                                .lineLimit(1)
-                                .padding(.all, Dimen.margin.micro)
-                                .background(Color.transparent.black70)
-                                .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
-                                .padding(.all, Dimen.margin.tinyExtra)
-                        }
-                        .modifier(MatchParent())
-                    } else {
-                        Spacer().modifier(MatchParent())
-                    }
-                    if self.data.progress != nil {
-                        Spacer().frame(
-                            width: ListItem.video.size.width * CGFloat(self.data.progress!),
-                            height: Dimen.line.regular)
-                            .background(Color.brand.primary)
-                    }
-                }
-                
-            }
-            .frame(
-                width: self.data.type.size.width,
-                height: self.data.type.size.height)
-            .clipped()
-            if self.data.title != nil {
-                VStack(alignment: .leading, spacing:Dimen.margin.tiny){
-                    if let title = self.data.title {
-                        Text(title)
-                            .modifier(MediumTextStyle(size: Font.size.thinExtra))
-                            .lineLimit(self.data.isClip ? 2 : 1)
-                    }
-                    if let subTitle = self.data.subTitle {
-                        Text(subTitle)
-                            .modifier(MediumTextStyle(size: Font.size.tiny, color:Color.app.grey))
-                            .lineLimit(1) 
-                    }
-                }
-                .padding(.horizontal, Dimen.margin.thin)
-                .frame(height:self.data.bottomHeight)
+            if self.data.pageType == .btv {
+                VideoItemBody( data: self.data, isSelected: self.isSelected)
+            } else {
+                VideoItemBodyKids( data: self.data, isSelected: self.isSelected)
             }
         }
-        .frame(width: self.data.type.size.width)
-        .background(Color.app.blueLight)
+        .background(self.data.type.bgColor)
+        .clipShape(RoundedRectangle(cornerRadius:  self.data.type.radius))
         .onReceive(self.repository.$event){ evt in
             guard let evt = evt else {return}
             switch evt {
@@ -440,6 +438,138 @@ struct VideoItem: PageView {
         .onAppear(){
         }
     }
+    
+}
+
+struct VideoItemBody: PageView {
+    @EnvironmentObject var repository:Repository
+    var data:VideoData
+    var isSelected:Bool = false
+    var body: some View {
+        ZStack{
+            ImageView(url: self.data.image,contentMode: .fill, noImg: Asset.noImg16_9)
+                .modifier(MatchParent())
+             
+            if (self.data.progress != nil || self.isSelected) && self.data.tagData?.isLock != true {
+                Image(Asset.icon.thumbPlay)
+                    .renderingMode(.original).resizable()
+                    .scaledToFit()
+                    .frame(width: Dimen.icon.regularExtra, height: Dimen.icon.regularExtra)
+            }
+            VStack(alignment: .leading, spacing:0){
+                if let tag = self.data.tagData {
+                    Tag(data: tag).modifier(MatchParent())
+                }else if let time = self.data.playTime {
+                    ZStack(alignment:.bottomTrailing){
+                        Spacer().modifier(MatchParent())
+                        Text(time)
+                            .modifier(BoldTextStyle(size: Font.size.tiny))
+                            .lineLimit(1)
+                            .padding(.all, Dimen.margin.micro)
+                            .background(Color.transparent.black70)
+                            .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
+                            .padding(.all, Dimen.margin.tinyExtra)
+                    }
+                    .modifier(MatchParent())
+                } else {
+                    Spacer().modifier(MatchParent())
+                }
+                if self.data.progress != nil {
+                    Spacer().frame(
+                        width: self.data.type.size.width * CGFloat(self.data.progress!),
+                        height: Dimen.line.regular)
+                        .background(Color.brand.primary)
+                }
+            }
+            
+        }
+        .frame(
+            width: self.data.type.size.width,
+            height: self.data.type.size.height)
+        
+        if self.data.title != nil {
+            VStack(alignment: .leading, spacing:Dimen.margin.tiny){
+                if let title = self.data.title {
+                    Text(title)
+                        .modifier(MediumTextStyle(size: Font.size.thinExtra))
+                        .lineLimit(self.data.isClip ? 2 : 1)
+                }
+                if let subTitle = self.data.subTitle {
+                    Text(subTitle)
+                        .modifier(MediumTextStyle(size: Font.size.tiny, color:Color.app.grey))
+                        .lineLimit(1)
+                }
+            }
+            .padding(.horizontal, Dimen.margin.thin)
+            .frame(
+                width: self.data.type.size.width,
+                height:self.data.bottomHeight)
+        }
+    }
+    
+}
+extension VideoItemBodyKids {
+    static let bottomHeight:CGFloat = SystemEnvironment.isTablet ? 68 : 38
+}
+
+struct VideoItemBodyKids: PageView {
+    @EnvironmentObject var repository:Repository
+    var data:VideoData
+    var isSelected:Bool = false
+    var body: some View {
+        VStack(spacing:0){
+            ZStack{
+                ImageView(url: self.data.image,contentMode: .fill, noImg: Asset.noImg16_9)
+                    .modifier(MatchParent())
+                 
+                if (self.data.progress != nil || self.isSelected) && self.data.tagData?.isLock != true {
+                    Image(AssetKids.icon.thumbPlayVideo)
+                        .renderingMode(.original).resizable()
+                        .scaledToFit()
+                        .frame(width: DimenKids.icon.regular, height: DimenKids.icon.regular)
+                }
+                VStack(alignment: .leading, spacing:0){
+                    if let tag = self.data.tagData {
+                        TagKids(data: tag).modifier(MatchParent())
+                    }else {
+                        Spacer().modifier(MatchParent())
+                    }
+                    if self.data.progress != nil {
+                        Spacer().frame(
+                            width: (self.data.type.size.width + (DimenKids.margin.thinExtra*2)) * CGFloat(self.data.progress!),
+                            height: DimenKids.line.medium)
+                            .background(Color.kids.primary)
+                    }
+                }
+            }
+            .modifier(MatchParent())
+            .clipShape(RoundedRectangle(cornerRadius:  DimenKids.radius.light))
+            .padding(.top, DimenKids.margin.thinExtra)
+            .padding(.horizontal, DimenKids.margin.thinExtra)
+            
+            if self.data.title != nil {
+                VStack(alignment: .leading, spacing:Dimen.margin.tiny){
+                    if let title = self.data.title {
+                        Text(title)
+                            .modifier(BoldTextStyleKids(size: Font.sizeKids.thinExtra, color:Color.app.brownDeep))
+                            .lineLimit(self.data.isClip ? 2 : 1)
+                    }
+                    if let subTitle = self.data.subTitle {
+                        Text(subTitle)
+                            .modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color:Color.app.brownDeep.opacity(0.7)))
+                            .lineLimit(1)
+                    }
+                }
+                .padding(.horizontal, DimenKids.margin.thin)
+                .frame(height:Self.bottomHeight)
+            }
+        }
+        .frame(
+            width: self.data.type.size.width,
+            height: self.data.type.size.height)
+        
+    }
+    
     
 }
 

@@ -18,7 +18,7 @@ class TextTabData:InfinityData{
         title = data.menu_nm ?? ""
         menuId = data.menu_id
         
-        let blockData = BlockData().setDate(data)
+        let blockData = BlockData().setData(data)
         switch blockData.cardType {
         case .smallPoster, .bigPoster, .bookmarkedPoster, .rankingPoster :
             listType = .poster

@@ -239,7 +239,7 @@ struct TagKids: PageView {
             HStack(alignment: .bottom, spacing: 0){
                 if data.isFree == true {
                     Text(String.app.free)
-                        .modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color:Color.brand.primary))
+                        .modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color:Color.app.white))
                         .lineLimit(1)
                         .fixedSize()
                 }else if let price = data.price {

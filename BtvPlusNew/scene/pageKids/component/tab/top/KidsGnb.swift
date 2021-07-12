@@ -18,16 +18,38 @@ struct KidsGnb: PageComponent{
     @EnvironmentObject var dataProvider:DataProvider
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @State var datas:[KidsGnbItemData] = []
+    
+    @State var selectedPage:PageObject? = nil
+    @State var selectedMenuId:String? = nil
     var body: some View {
         VStack(alignment: .leading){
             HStack(spacing:0){
                 ForEach(self.datas) { data in
-                    
-                    KidsGnbItem( data:data )
+                    KidsGnbItem(
+                        data:data,
+                        isSelected:self.selectedMenuId == data.menuId
+                    )
                     .onTapGesture {
-                        
+                        self.pagePresenter.changePage(
+                            PageKidsProvider
+                                .getPageObject(.kidsHome)
+                                .addParam(key: .id, value: data.menuId)
+                                .addParam(key: UUID().uuidString , value: "")
+                        )
+                        self.selectedMenuId = data.menuId
                     }
                 }
+            }
+        }
+        .onReceive (self.pagePresenter.$currentPage) { page in
+            if page?.pageID != .kidsHome {
+                self.selectedMenuId = nil
+                return
+            }
+            if let id = page?.getParamValue(key: .id) as? String {
+                self.selectedMenuId = id
+            } else {
+                self.selectedMenuId = self.dataProvider.bands.kidsGnbModel.home?.menuId 
             }
         }
         .onReceive (self.appSceneObserver.$useTop) { use in
@@ -40,6 +62,7 @@ struct KidsGnb: PageComponent{
         }
         
     }
+  
 }
 
 struct KidsGnbList: PageComponent{
@@ -73,7 +96,7 @@ extension KidsGnbItem{
 struct KidsGnbItem: PageView {
     @EnvironmentObject var pairing:Pairing
     var data:KidsGnbItemData
-    @State var isSelected:Bool = false
+    var isSelected:Bool = false
     @State var profileImg:String? = nil
     @State var title:String? = nil
     @State var subTitle:String? = nil

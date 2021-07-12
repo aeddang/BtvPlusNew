@@ -50,6 +50,7 @@ enum ApiType{
     case getGnb,
          getGnbKids,
          getCWGrid( String?, String?, isKids:Bool = false),
+         getCWGridKids(Kid? , String?, String?, EuxpNetwork.SortType?),
          getGridEvent(String?, EuxpNetwork.SortType? = Optional.none, Int? = nil, Int? = nil),
          getGridPreview(String?, Int? = nil, Int? = nil),
          getGatewaySynopsis(SynopsisData),
@@ -57,6 +58,7 @@ enum ApiType{
          getInsideInfo(SynopsisData),
          getRelationContents(SynopsisRelationData),
          getEventBanner(String?, EuxpNetwork.BannerType = .page)
+    
     
     //METV
     case getPurchase(Int? = nil , Int? = nil),

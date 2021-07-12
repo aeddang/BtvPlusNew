@@ -29,7 +29,7 @@ class PosterData:InfinityData{
         super.init()
     }
     
-    func setData(data:ContentItem, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
+    func setData(data:ContentItem, cardType:BlockData.CardType = .smallPoster , idx:Int = -1) -> PosterData {
         setCardType(cardType)
         title = data.title
         watchLv = data.wat_lvl_cd?.toInt() ?? 0
@@ -184,6 +184,17 @@ class PosterData:InfinityData{
         }
     }
     
+    var moveSynopsis:PageObject
+    {
+        get {
+            if self.pageType == .btv {
+                return PageProvider.getPageObject(self.synopsisType == .package ? .synopsisPackage : .synopsis)
+            } else {
+                return PageKidsProvider.getPageObject(self.synopsisType == .package ? .kidsSynopsisPackage : .kidsSynopsis)
+            }
+        }
+    }
+    
     fileprivate func updatedImage(){
         image = ImagePath.thumbImagePath(filePath: self.originImage, size: type.size, isAdult: self.isAdult)
     }
@@ -267,7 +278,7 @@ enum PosterType {
         }
     }
     
-    var bgdColor:Color {
+    var bgColor:Color {
         get{
             switch self {
             case .kids: return Color.app.ivoryDeep
@@ -374,7 +385,7 @@ struct PosterList: PageComponent{
         }else{
             if let synopsisData = data.synopsisData {
                 self.pagePresenter.openPopup(
-                    PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
+                    data.moveSynopsis
                         .addParam(key: .data, value: synopsisData)
                         .addParam(key: .watchLv, value: data.watchLv)
                 )
@@ -478,7 +489,7 @@ struct PosterSet: PageComponent{
                         }else{
                             if let synopsisData = data.synopsisData {
                                 self.pagePresenter.openPopup(
-                                    PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
+                                    data.moveSynopsis
                                         .addParam(key: .data, value: synopsisData)
                                         .addParam(key: .watchLv, value: data.watchLv)
                                 )
@@ -549,7 +560,7 @@ struct PosterItem: PageView {
         .frame(
             width: self.data.type.size.width,
             height: self.data.type.size.height)
-        .background(self.data.type.bgdColor)
+        .background(self.data.type.bgColor)
         .clipShape(RoundedRectangle(cornerRadius: self.data.type.radius))
         .overlay(
             RoundedRectangle(cornerRadius: self.data.type.radius)
@@ -611,7 +622,7 @@ struct PosterViewItem: PageView {
                         strokeWidth: 1){ _ in
                         if let synopsisData = data.synopsisData {
                             self.pagePresenter.openPopup(
-                                PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
+                               data.moveSynopsis
                                     .addParam(key: .data, value: synopsisData)
                                     .addParam(key: .watchLv, value: data.watchLv)
                             )
@@ -624,7 +635,7 @@ struct PosterViewItem: PageView {
                         isFixSize: true ){ _ in
                            if let synopsisData = data.synopsisData {
                                self.pagePresenter.openPopup(
-                                   PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
+                                    data.moveSynopsis
                                        .addParam(key: .data, value: synopsisData)
                                        .addParam(key: .watchLv, value: data.watchLv)
                                )

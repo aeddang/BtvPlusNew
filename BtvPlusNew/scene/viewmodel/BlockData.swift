@@ -24,6 +24,7 @@ class BlockData:InfinityData, ObservableObject{
     private(set) var isCountView:Bool = false
     @Published private(set) var status:BlockStatus = .initate
     
+    var kid:Kid? = nil
     var leadingBanners:[BannerData]? = nil
     var posters:[PosterData]? = nil
     var videos:[VideoData]? = nil
@@ -58,7 +59,7 @@ class BlockData:InfinityData, ObservableObject{
         return self
     }
     
-    func setDate(title:String, datas:[PosterData], max:Int = 10) -> BlockData{
+    func setData(title:String, datas:[PosterData], max:Int = 10) -> BlockData{
         name = title
         uiType = .poster
         self.allPosters = datas
@@ -70,7 +71,7 @@ class BlockData:InfinityData, ObservableObject{
         return self
     }
     
-    func setDate(title:String, datas:[VideoData], max:Int = 10) -> BlockData{
+    func setData(title:String, datas:[VideoData], max:Int = 10) -> BlockData{
         name = title
         uiType = .video
         self.allVideos = datas
@@ -85,7 +86,7 @@ class BlockData:InfinityData, ObservableObject{
         return self
     }
     
-    func setDate(title:String, datas:[CategoryCornerItem], max:Int = 10) -> BlockData{
+    func setData(title:String, datas:[CategoryCornerItem], max:Int = 10) -> BlockData{
         name = title
         uiType = .video
        
@@ -109,7 +110,7 @@ class BlockData:InfinityData, ObservableObject{
         return self
     }
             
-    func setDate(_ data:BlockItem, themaType:ThemaType = .category) -> BlockData{
+    func setData(_ data:BlockItem, themaType:ThemaType = .category) -> BlockData{
         name = data.menu_nm ?? ""
         menuId = data.menu_id
         cwCallId = data.cw_call_id_val
@@ -125,7 +126,46 @@ class BlockData:InfinityData, ObservableObject{
         return self
     }
     
-    func getRequestApi(apiId:String? = nil, pairing:PairingStatus, sortType:EuxpNetwork.SortType? = Optional.none, page:Int = 1, isOption:Bool = true) -> ApiQ? {
+    func setDataKids(_ data:BlockItem) -> BlockData{
+        name = data.menu_nm ?? ""
+        menuId = data.menu_id
+        cwCallId = data.cw_call_id_val
+        if data.btm_bnr_blk_exps_cd == "03" {
+            self.uiType = .kidsHome
+            self.dataType = .none
+            self.cardType = .none
+            self.blocks = data.blocks
+        
+        } else {
+            switch data.scn_mthd_cd {
+            case  "514":
+                self.uiType = .video
+                self.dataType = .cwGridKids
+                self.cardType = .watchedVideo
+            case  "522":
+                self.uiType = .poster
+                self.dataType = .cwGridKids
+                self.cardType = .smallPoster
+            default :
+                return self.setData(data)
+            }
+        }
+        return self
+    }
+    
+    func setDataKids(data:KidsGnbItemData) -> BlockData{
+        self.uiType = .kidsHome
+        name = data.title ?? ""
+        menuId = data.menuId
+        self.dataType = .none
+        self.cardType = .none
+        self.blocks = data.blocks
+        return self
+    }
+    
+    func getRequestApi(apiId:String? = nil, pairing:PairingStatus, kid:Kid? = nil, sortType:EuxpNetwork.SortType? = Optional.none, page:Int = 1, isOption:Bool = true) -> ApiQ? {
+        self.kid = kid
+        
         switch self.dataType {
         case .cwGrid:
             DataLog.d("Request cwGrid " + self.name, tag: "BlockProtocol")
@@ -134,6 +174,15 @@ class BlockData:InfinityData, ObservableObject{
                 type: .getCWGrid(
                     self.menuId,
                     self.cwCallId),
+                isOptional: isOption)
+        case .cwGridKids:
+            DataLog.d("Request cwGridKids " + self.name, tag: "BlockProtocol")
+            return .init(
+                id: apiId ?? self.id,
+                type: .getCWGridKids(
+                    kid,
+                    self.menuId,
+                    self.cwCallId, self.cardType == .watchedVideo ? .latest : .popularity),
                 isOptional: isOption)
         case .grid:
             DataLog.d("Request grid " + self.name, tag: "BlockProtocol")
@@ -238,7 +287,6 @@ class BlockData:InfinityData, ObservableObject{
         }
     }
     
-    
     private func findDataType(_ data:BlockItem) -> DataType{
         if self.cardType == .banner {return .banner}
         if self.cardType == .bannerList {return .banner}
@@ -304,6 +352,7 @@ class BlockData:InfinityData, ObservableObject{
         grid,
         watched,
         cwGrid,
+        cwGridKids,
         theme,
         banner
     }
@@ -314,7 +363,8 @@ class BlockData:InfinityData, ObservableObject{
         theme,
         ticket,
         banner,
-        bannerList
+        bannerList,
+        kidsHome
     }
     
     enum ThemaType: String, Codable {

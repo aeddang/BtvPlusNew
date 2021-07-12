@@ -38,7 +38,6 @@ struct ContentHorizontalEdgesKids: ViewModifier {
                     self.marginStart = self.sceneObserver.safeAreaStart
                     self.marginEnd = self.sceneObserver.safeAreaEnd
                 }
-                
             }
     }
 }

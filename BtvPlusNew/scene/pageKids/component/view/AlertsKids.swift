@@ -34,3 +34,4 @@ struct ErrorKidsData: PageView {
         .padding(.all, DimenKids.margin.light)
     }//body
 }
+

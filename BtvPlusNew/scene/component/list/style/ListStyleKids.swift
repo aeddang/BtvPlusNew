@@ -24,11 +24,11 @@ struct ListItemKids{
         
     }
     struct video {
+        static let type01:CGSize = isPad ? CGSize(width: 310, height: 251) : CGSize(width: 170, height: 136)
         static let size:CGSize = isPad ? CGSize(width: 327, height: 199) : CGSize(width: 170, height: 103)
     }
     struct seris {
         static let type01:CGSize =  isPad ? CGSize(width: 172, height: 94) : CGSize(width: 106, height: 58)
-        
         static let bottomHeight:CGFloat = isPad ? 32 : 20
         
     }

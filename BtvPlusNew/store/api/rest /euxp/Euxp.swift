@@ -25,13 +25,16 @@ extension EuxpNetwork{
     
 
     enum SortType: String {
-        case popularity = "10" // 기본, 사용자 정의
+        case none = "10" // 기본
+        case popularity = "50" // 인기
         case latest = "20" // 최신순
         case title = "30" // 타이틀
         case price = "40" // 가격
         
+        
         var name: String {
             switch self {
+            case .none : return ""
             case .popularity: return String.sort.popularity
             case .latest: return String.sort.latest
             case .title: return String.sort.title
@@ -258,7 +261,7 @@ class Euxp: Rest{
         params["menu_id"] = menuId ?? ""
         params["page_no"] = page?.description ?? "1"
         params["page_cnt"] = pageCnt?.description ?? EuxpNetwork.PAGE_COUNT.description
-        params["sort_typ_cd"] = sortType?.rawValue ?? EuxpNetwork.SortType.popularity.rawValue
+        params["sort_typ_cd"] = sortType?.rawValue ?? EuxpNetwork.SortType.none.rawValue
         params["version"] = version ?? EuxpNetwork.VERSION
         fetch(route: EuxpGridEvent(query: params), completion: completion, error:error)
     }
@@ -287,6 +290,30 @@ class Euxp: Rest{
         params["cw_call_id"] = cwCallId ?? ""
         params["type"] = "all"
         fetch(route: EuxpCWGrid(query: params), completion: completion, error:error)
+    }
+    
+    /**
+    * 키즈 전용 KES CW그리드 정보를 조회하여 그 데이터를 기반으로 CMS의 그리드 정보를 결합하여 제공한다. (IF-EUXP-001)
+    */
+    
+    func getCWGridKids(
+        kid:Kid? , menuId:String?, cwCallId:String?, sortType:EuxpNetwork.SortType?,
+        completion: @escaping (CWGridKids) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        var params = [String:String]()
+        params["response_format"] = EuxpNetwork.RESPONSE_FORMET
+        params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
+        params["app_typ_cd"] = EuxpNetwork.APP_TYPE_CD
+        params["IF"] = "IF-EUXP-091"
+        
+        params["stb_id"] = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        
+        params["profile_id"] = kid?.id
+        params["sort_typ_cd"] = sortType?.rawValue ?? EuxpNetwork.SortType.none.rawValue
+        
+        params["inspect_yn"] = "N"
+        params["cw_call_id"] = cwCallId ?? ""
+        params["type"] = "all"
+        fetch(route: EuxpCWGridKids(query: params), completion: completion, error:error)
     }
 }
 
@@ -345,7 +372,12 @@ struct EuxpCWGrid:NetworkRoute{
    var query: [String : String]? = nil
 }
 
-
+struct EuxpCWGridKids:NetworkRoute{
+   var method: HTTPMethod = .get
+   var path: String = "/euxp/v5/inter/kesgrid"
+   var query: [String : String]? = nil
+}
+              
 
 
 

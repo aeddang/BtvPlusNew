@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 class MultiBlockModel: PageDataProviderModel {
-   
+    private(set) var type:PageType = .btv
     private(set) var datas:[BlockData]? = nil
     private(set) var requestSize:Int = 0
     private(set) var isAdult:Bool = false
@@ -35,8 +35,9 @@ class MultiBlockModel: PageDataProviderModel {
     }
     
     func update(datas:[BlockItem], openId:String?, selectedTicketId:String? = nil, themaType:BlockData.ThemaType = .category, isAdult:Bool = false) {
+        self.type = .btv
         self.datas = datas.map{ block in
-            BlockData().setDate(block, themaType:themaType)
+            BlockData().setData(block, themaType:themaType)
         }
         .filter{ block in
             switch block.dataType {
@@ -48,6 +49,29 @@ class MultiBlockModel: PageDataProviderModel {
         self.selectedTicketId = selectedTicketId
         self.openId = openId
         self.isAdult = isAdult
+        self.isUpdate = true
+    }
+    
+    func updateKids(datas:[BlockItem], openId:String?) {
+        self.type = .kids
+        self.datas = datas.map{ block in
+            BlockData().setDataKids(block)
+        }
+        .filter{ block in
+            switch block.dataType {
+            case .cwGrid : return block.menuId != nil && block.cwCallId != nil
+            case .grid : return block.menuId != nil
+            default : return true
+            }
+        }
+        self.openId = openId
+        self.isUpdate = true
+    }
+    
+    func updateKids(data:KidsGnbItemData, openId:String?) {
+        self.type = .kids
+        self.datas = [ BlockData().setDataKids(data: data) ]
+        self.openId = openId
         self.isUpdate = true
     }
 }
@@ -72,7 +96,10 @@ extension MultiBlockBody {
         }
     }
     
-    static let tabHeight = Dimen.tab.thin + Dimen.margin.thinExtra
+    static let tabHeight:CGFloat = Dimen.tab.thin + Dimen.margin.thinExtra
+    static let tabHeightKids:CGFloat = DimenKids.tab.thin + DimenKids.margin.thinExtra
+    static let kisHomeHeight:CGFloat = SystemEnvironment.isTablet ? 410 : 205
+    
 }
 
 
@@ -91,7 +118,7 @@ struct MultiBlockBody: PageComponent {
     var marginHeader : CGFloat = 0
     var marginTop : CGFloat = 0
     var marginBottom : CGFloat = 0
-    
+    var marginHorizontal : CGFloat = 0
     var topDatas:[BannerData]? = nil
     var monthlyViewModel: MonthlyBlockModel = MonthlyBlockModel()
     var monthlyDatas:[MonthlyData]? = nil
@@ -147,6 +174,7 @@ struct MultiBlockBody: PageComponent {
                             marginHeader:self.marginHeader,
                             marginTop:self.marginTop,
                             marginBottom: self.marginBottom,
+                            marginHorizontal: self.marginHorizontal,
                             monthlyViewModel : self.monthlyViewModel,
                             monthlyDatas: self.monthlyDatas,
                             monthlyAllData: self.monthlyAllData,
@@ -175,6 +203,7 @@ struct MultiBlockBody: PageComponent {
                             marginHeader:self.marginHeader,
                             marginTop: self.topDatas == nil ? self.marginTop : self.marginHeader,
                             marginBottom: self.marginBottom,
+                            marginHorizontal: self.marginHorizontal,
                             monthlyViewModel : self.monthlyViewModel,
                             monthlyDatas: self.monthlyDatas,
                             monthlyAllData: self.monthlyAllData,
@@ -186,8 +215,13 @@ struct MultiBlockBody: PageComponent {
                     }
                 }
             } else {
-                EmptyAlert()
-                    .modifier(MatchParent())
+                if self.viewModel.type == .btv {
+                    EmptyAlert()
+                        .modifier(MatchParent())
+                } else {
+                    ErrorKidsData(text:String.alert.dataError)
+                        .modifier(MatchParent())
+                }
             }
         }
         .modifier(MatchParent())
@@ -251,6 +285,26 @@ struct MultiBlockBody: PageComponent {
                         case .theme :
                             data.themas = blocks[0...min(max, blocks.count-1)].map{ d in
                                 ThemaData().setData(data: d, cardType: data.cardType)
+                            }
+                        default: break
+                        }
+                    }
+                }
+            case .cwGridKids:
+                guard let resData = res?.data as? CWGridKids else {return data.setBlank()}
+                guard let grid = resData.grid else {return data.setBlank()}
+                if grid.isEmpty {return data.setBlank()}
+                total = resData.total_count
+                grid.forEach{ g in
+                    if let blocks = g.block {
+                        switch data.uiType {
+                        case .poster :
+                            data.posters = blocks[0...min(max, blocks.count-1)].map{ d in
+                                PosterData(pageType: .kids).setData(data: d, cardType: data.cardType)
+                            }
+                        case .video :
+                            data.videos = blocks[0...min(max, blocks.count-1)].map{ d in
+                                VideoData(pageType: .kids).setData(data: d, cardType: data.cardType)
                             }
                         default: break
                         }
@@ -328,24 +382,24 @@ struct MultiBlockBody: PageComponent {
                     data.banners = banners.map{ d in
                         BannerData().setData(data: d, cardType:data.cardType)
                 }
-                
             default: do {}
             }
             
             var listHeight:CGFloat = 0
             var blockHeight:CGFloat = 0
-            var padding = Dimen.margin.thin
+            let tabHeight:CGFloat = self.viewModel.type == .btv ? Self.tabHeight : Self.tabHeightKids
+            var padding = self.viewModel.type == .btv ? Dimen.margin.thin : DimenKids.margin.thin
             if let size = data.posters?.first?.type {
                 listHeight = size.size.height
-                blockHeight = listHeight + Self.tabHeight
+                blockHeight = listHeight + tabHeight
             }
             if let size = data.videos?.first{
                 listHeight = size.type.size.height + size.bottomHeight
-                blockHeight = listHeight + Self.tabHeight
+                blockHeight = listHeight + tabHeight
             }
             if let size = data.themas?.first?.type {
                 listHeight = size.size.height
-                blockHeight = listHeight + Self.tabHeight
+                blockHeight = listHeight + tabHeight
                 padding = size.spacing
             }
             
@@ -362,6 +416,7 @@ struct MultiBlockBody: PageComponent {
                 }
                 data.listHeight = blockHeight
             }
+            
             data.setDatabindingCompleted(total: total)
             
         }
@@ -518,11 +573,14 @@ struct MultiBlockBody: PageComponent {
             self.isLoading = true
             self.loadingBlocks.append(contentsOf: set)
             self.loadingBlocks.forEach{ block in
-                if let apiQ = block.getRequestApi(pairing:self.pairing.status) {
+                if let apiQ = block.getRequestApi(pairing:self.pairing.status, kid:self.pairing.kid) {
                     dataProvider.requestData(q: apiQ)
                 } else{
-                    
-                    if block.dataType == .theme , let blocks = block.blocks {
+                    if block.uiType == .kidsHome {
+                        block.listHeight = Self.kisHomeHeight
+                        block.setDatabindingCompleted()
+                        
+                    }else if block.dataType == .theme , let blocks = block.blocks {
                         if block.uiType == .theme { 
                             let themas = blocks.map{ data in
                                 ThemaData().setData(data: data, cardType: block.cardType)

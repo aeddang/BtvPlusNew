@@ -197,7 +197,8 @@ struct AppLayout: PageComponent{
         //self.appSceneObserver.event = .debug("onPageInit")
         if !self.appObserverMove(self.appObserver.page) {
             let initMenuId = self.dataProvider.bands.datas.first?.menuId
-            self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsMy))
+            self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsHome))
+            //self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsMy))
             /*
             self.pagePresenter.changePage(
                 PageKidsProvider.getPageObject(.kidsProfileManagement)

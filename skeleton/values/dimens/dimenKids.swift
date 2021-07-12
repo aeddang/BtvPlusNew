@@ -101,7 +101,7 @@ struct DimenKids{
     
     struct line {
         public static let heavy:CGFloat = 10
-        public static let medium:CGFloat = isPad ? 4 : 3
+        public static let medium:CGFloat = isPad ? 8 : 4//*
         public static let regular:CGFloat = isPad ? 3 : 2
         public static let light:CGFloat = isPad ? 2 : 1
     }

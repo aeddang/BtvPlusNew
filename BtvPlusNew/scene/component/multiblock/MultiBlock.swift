@@ -33,6 +33,7 @@ struct MultiBlock:PageComponent {
     var marginHeader : CGFloat = 0
     var marginTop : CGFloat = 0
     var marginBottom : CGFloat = 0
+    var marginHorizontal : CGFloat = 0
     var monthlyViewModel: MonthlyBlockModel? = nil
     var monthlyDatas:[MonthlyData]? = nil
     var monthlyAllData:BlockItem? = nil
@@ -121,6 +122,7 @@ struct MultiBlock:PageComponent {
                 scrollType : .reload(isDragEnd: false),
                 marginTop : self.marginTop,
                 marginBottom : self.marginBottom,
+                marginHorizontal: self.marginHorizontal,
                 spacing: 0,
                 isRecycle : self.isRecycle,
                 useTracking:self.useBodyTracking){
@@ -186,6 +188,7 @@ struct MultiBlock:PageComponent {
                 scrollType : .reload(isDragEnd: false),
                 marginTop : 0,
                 marginBottom : self.marginBottom + self.sceneObserver.safeAreaBottom,
+                marginHorizontal: self.marginHorizontal,
                 spacing: 0,
                 isRecycle : self.isRecycle,
                 useTracking:self.useBodyTracking){
@@ -283,22 +286,42 @@ struct MultiBlock:PageComponent {
             
             switch data.uiType {
             case .poster :
-                PosterBlock(
-                    pageObservable:self.pageObservable,
-                    pageDragingModel:self.pageDragingModel,
-                    data: data,
-                    useTracking:self.useTracking
-                    )
-                .frame(height:data.listHeight)
+                if data.dataType == .cwGridKids {
+                    PosterBlockKids(
+                        pageObservable:self.pageObservable,
+                        pageDragingModel:self.pageDragingModel,
+                        data: data,
+                        useTracking:self.useTracking
+                        )
+                    .frame(height:data.listHeight)
+                } else {
+                    PosterBlock(
+                        pageObservable:self.pageObservable,
+                        pageDragingModel:self.pageDragingModel,
+                        data: data,
+                        useTracking:self.useTracking
+                        )
+                    .frame(height:data.listHeight)
+                }
                 
             case .video :
-                VideoBlock(
-                    pageObservable:self.pageObservable,
-                    pageDragingModel:self.pageDragingModel,
-                    data: data,
-                    useTracking:self.useTracking
-                    )
-                .frame(height:data.listHeight)
+                if data.dataType == .cwGridKids {
+                    VideoBlockKids(
+                        pageObservable:self.pageObservable,
+                        pageDragingModel:self.pageDragingModel,
+                        data: data,
+                        useTracking:self.useTracking
+                        )
+                    .frame(height:data.listHeight)
+                } else {
+                    VideoBlock(
+                        pageObservable:self.pageObservable,
+                        pageDragingModel:self.pageDragingModel,
+                        data: data,
+                        useTracking:self.useTracking
+                        )
+                    .frame(height:data.listHeight)
+                }
                 
             case .theme :
                 ThemaBlock(
@@ -333,6 +356,13 @@ struct MultiBlock:PageComponent {
                     useTracking:self.useTracking
                 )
                 .frame(height:data.listHeight)
+
+            case .kidsHome :
+                Spacer(
+                    
+                )
+                .frame(width:250, height:data.listHeight)
+                .background(Color.app.yellow)
             }
         }//body
     }

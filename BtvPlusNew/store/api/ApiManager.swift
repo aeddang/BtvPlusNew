@@ -188,6 +188,10 @@ class ApiManager :PageProtocol, ObservableObject{
             menuId: menuId, cwCallId: cwCallId, isKids: isKids,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .getCWGridKids(let kid , let menuId, let cwCallId, let sortType) : self.euxp.getCWGridKids(
+            kid:kid, menuId: menuId, cwCallId: cwCallId, sortType: sortType,  
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         case .getGridEvent(let menuId, let sort, let page, let count) : self.euxp.getGridEvent(
             menuId: menuId, sortType: sort, page: page, pageCnt: count, version: nil,
             completion: {res in self.complated(id: apiID, type: type, res: res)},

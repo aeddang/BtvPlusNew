@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 extension KidsTop {
     static let marginTop:CGFloat = DimenKids.margin.thin
+    static let height:CGFloat = Self.marginTop + DimenKids.app.gnbTop + DimenKids.app.top
 }
 struct KidsTop: PageComponent{
    

@@ -153,7 +153,7 @@ struct TicketList: PageComponent{
                                         .addParam(key: .data, value: data.blocks)
                                 )
                             } else {
-                                let block = BlockData().setDate(data.blocks!.first!)
+                                let block = BlockData().setData(data.blocks!.first!)
                                 self.pagePresenter.openPopup(
                                     PageProvider.getPageObject(.categoryList)
                                         .addParam(key: .title, value: block.name)

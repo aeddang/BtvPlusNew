@@ -31,7 +31,6 @@ struct PageMultiBlock: PageView {
                 viewModel:self.pageDragingModel,
                 axis:.horizontal
             ) {
-                
                 ZStack(alignment: .topLeading){
                     if self.cateData != nil {
                         CateBlock(
@@ -92,7 +91,6 @@ struct PageMultiBlock: PageView {
                 .onReceive(self.infinityScrollModel.$event){evt in
                     guard let evt = evt else {return}
                     if self.isTop == nil {return}
-                   
                     switch evt {
                     case .top :
                         if self.isTop == true {return}

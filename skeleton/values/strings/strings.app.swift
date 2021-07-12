@@ -111,5 +111,7 @@ extension String {
         public static let watchCountUnit = "watchCountUnit".loaalized()
         public static let recommend = "recommend".loaalized()
         public static let empty = "empty".loaalized()
+        
+        public static let sir = "sir".loaalized()
     }
 }

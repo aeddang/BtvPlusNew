@@ -44,17 +44,17 @@ class AssetPlayerInfo {
 
 protocol CustomAssetPlayerDelegate{
     func onFindAllInfo(_ info: AssetPlayerInfo)
+    func onAssetLoadError(_ error: PlayerError)
 }
-
 
 class CustomAssetPlayer: AVPlayer , PageProtocol{
     private var loaderQueue = DispatchQueue(label: "CustomAssetPlayer")
     private var m3u8URL: URL
     private var delegate: CustomAssetResourceLoader
     
-    init?(m3u8URL: URL, playerDelegate:CustomAssetPlayerDelegate? = nil, assetInfo:AssetPlayerInfo? = nil) {
+    init?(m3u8URL: URL, playerDelegate:CustomAssetPlayerDelegate? = nil, assetInfo:AssetPlayerInfo? = nil, drm:FairPlayDrm? = nil) {
         self.m3u8URL = m3u8URL
-        self.delegate = CustomAssetResourceLoader(m3u8URL:m3u8URL, playerDelegate: playerDelegate, assetInfo:assetInfo)
+        self.delegate = CustomAssetResourceLoader(m3u8URL:m3u8URL, playerDelegate: playerDelegate, assetInfo:assetInfo, drm: drm)
         super.init()
         let customScheme = CustomAssetResourceLoader.scheme
         guard let customURL = replaceURLWithScheme(customScheme,

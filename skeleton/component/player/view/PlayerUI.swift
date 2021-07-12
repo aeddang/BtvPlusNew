@@ -220,6 +220,9 @@ struct PlayerUI: PageComponent {
             case .illegalState(_) :
                 self.errorMessage = "illegalState"
                 return
+            case .drm(_) :
+                self.errorMessage = "illegalState"
+                return
             case .stream(let e) :
                 switch e {
                 case .pip(let msg): self.errorMessage = msg

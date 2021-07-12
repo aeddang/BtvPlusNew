@@ -14,14 +14,13 @@ import MediaPlayer
 protocol PlayerScreenViewDelegate{
     func onPlayerAssetInfo(_ info:AssetPlayerInfo)
     func onPlayerError(_ error:PlayerStreamError)
+    func onPlayerError(playerError:PlayerError)
     func onPlayerCompleted()
     func onPlayerBecomeActive()
     func onPlayerVolumeChanged(_ v:Float)
 }
 
 class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
-    
-    
     var delegate:PlayerScreenViewDelegate?
     var player:AVPlayer? = nil
     {
@@ -141,39 +140,11 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
     }
     
     private func startPlayer(_ url:URL, assetInfo:AssetPlayerInfo? = nil){
-        
-        /*
-        let videoPlusSubtitles = AVMutableComposition()
-        let videoTrack = videoPlusSubtitles.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
-
-        do{
-            guard asset.tracks.count > 0 else{ return }
-            try? videoTrack?.insertTimeRange(
-                CMTimeRangeMake(
-                    start: CMTime.zero,
-                    duration: asset.duration),
-                    of: asset.tracks(withMediaType: .video)[0],
-                    at: CMTime.zero)
-        }
-        //https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/s1/en/fileSequence0.webvtt
-        let subtitleURL = URL(fileURLWithPath:  "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/s1/en/fileSequence")
-        let subtitleAsset = AVURLAsset(url: subtitleURL)
-        let subtitleTrack = videoPlusSubtitles.addMutableTrack(withMediaType: .text, preferredTrackID: kCMPersistentTrackID_Invalid)
-        do{
-            guard subtitleAsset.tracks.count > 0 else{ return }
-            try? subtitleTrack?.insertTimeRange(
-                CMTimeRangeMake(
-                    start: CMTime.zero, duration: asset.duration),
-                    of: subtitleAsset.tracks(withMediaType: .text)[0],
-                    at: CMTime.zero)
-        }
-        */
-        player = CustomAssetPlayer(m3u8URL: url, playerDelegate: self, assetInfo:assetInfo)
+        ComponentLog.d("DrmData " +  (drmData?.contentId ?? "none drm") , tag: self.tag)
+        player = CustomAssetPlayer(m3u8URL: url, playerDelegate: self, assetInfo:assetInfo, drm: self.drmData)
         self.startPlayer()
     }
-    func onFindAllInfo(_ info: AssetPlayerInfo) {
-        self.delegate?.onPlayerAssetInfo(info)
-    }
+    
 
     static let VOLUME_NOTIFY_KEY = "AVSystemController_SystemVolumeDidChangeNotification"
     static let VOLUME_PARAM_KEY = "AVSystemController_AudioVolumeNotificationParameter"
@@ -262,13 +233,17 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
     
     
     @discardableResult
-    func load(_ path:String, isAutoPlay:Bool = false , initTime:Double = 0, buffer:Double = 2.0, header:[String:String]? = nil, assetInfo:AssetPlayerInfo? = nil) -> AVPlayer? {
+    func load(_ path:String, isAutoPlay:Bool = false , initTime:Double = 0,buffer:Double = 2.0,
+              header:[String:String]? = nil,
+              assetInfo:AssetPlayerInfo? = nil,
+              drmData:FairPlayDrm? = nil
+              ) -> AVPlayer? {
         guard let url = URL(string: path) else {
            return nil
         }
         self.initTime = initTime
         self.isAutoPlay = isAutoPlay
-    
+        self.drmData = drmData
         let player = createPlayer(url, buffer:buffer, header:header, assetInfo: assetInfo)
         return player
     }
@@ -329,6 +304,15 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
         currentPlayer.volume = currentVolume
 
         return true
+    }
+    
+    // asset delegate
+    func onFindAllInfo(_ info: AssetPlayerInfo) {
+        self.delegate?.onPlayerAssetInfo(info)
+    }
+    
+    func onAssetLoadError(_ error: PlayerError) {
+        self.delegate?.onPlayerError(playerError: error)
     }
 }
 

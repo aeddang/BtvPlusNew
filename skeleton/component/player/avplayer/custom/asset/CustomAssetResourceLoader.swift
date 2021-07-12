@@ -13,14 +13,16 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
     private let fragmentsScheme = "fragmentsm3u8"
     private var m3u8String: String? = nil
     private var baseURL:String = ""
-    private var delegate: CustomAssetPlayerDelegate? = nil
+    private var delegate: CustomAssetPlayerDelegate?
+    private var drm:FairPlayDrm? = nil
     private var info:AssetPlayerInfo? = nil
-    init(m3u8URL: URL, playerDelegate:CustomAssetPlayerDelegate? = nil, assetInfo:AssetPlayerInfo? = nil) {
+    init(m3u8URL: URL, playerDelegate:CustomAssetPlayerDelegate? = nil, assetInfo:AssetPlayerInfo? = nil, drm:FairPlayDrm? = nil) {
         if var components = URLComponents(string: m3u8URL.absoluteString) {
             components.query = nil
             self.baseURL = components.url?.deletingLastPathComponent().absoluteString ?? ""
         }
-        delegate = playerDelegate
+        self.drm = drm
+        self.delegate = playerDelegate
         self.info = assetInfo
         super.init()
     }
@@ -29,13 +31,81 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
                         shouldWaitForLoadingOfRequestedResource
         loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
         
-        guard let path = loadingRequest.request.url?.absoluteString else {return false}
+         
+        if self.drm?.isCompleted == false, let drmData = self.drm {
+            DataLog.d("DRM: init", tag: self.tag)
+            //guard let originPath = loadingRequest.request.url?.absoluteString.replace(Self.scheme, with: "") else {return false}
+            guard let certificate = drmData.certificate else {
+                self.getCertificateData(loadingRequest, path: drmData.certificateURL)
+                return false
+            }
+
+            let contentId = drmData.contentId // content id
+            guard let contentIdData = contentId.data(using: String.Encoding.utf8),
+                let spcData = try? loadingRequest.streamingContentKeyRequestData(forApp: certificate, contentIdentifier: contentIdData, options: nil),
+                let dataRequest = loadingRequest.dataRequest else {
+                loadingRequest.finishLoading(with: NSError(domain: "spcData", code: -3, userInfo: nil))
+                DataLog.e("DRM: false to get SPC Data from video", tag: self.tag)
+                self.delegate?.onAssetLoadError(.drm(reason: "spcData"))
+                return false
+            }
+            
+            guard let ckcServer = URL(string: drmData.ckcURL) else {
+                DataLog.e("ckc url error", tag: self.tag)
+                self.delegate?.onAssetLoadError(.drm(reason: "ckcServer url"))
+                loadingRequest.finishLoading(with: NSError(domain: "ckcURL", code: -3, userInfo: nil))
+                return false
+            }
+            var request = URLRequest(url: ckcServer)
+            request.httpMethod = "GET"
+            request.httpBody = spcData
+            let session = URLSession(configuration: .default)
+            let task = session.dataTask(with: request) { data, response, error in
+                guard let data = data else {
+                    DataLog.e("DRM: unable to fetch ckc key :/", tag: self.tag)
+                    self.delegate?.onAssetLoadError(.drm(reason: "ckcServer data"))
+                    loadingRequest.finishLoading(with: NSError(domain: "ckcURL", code: -4, userInfo: nil))
+                    return
+                }
+                dataRequest.respond(with: data)
+                self.drm?.isCompleted = true
+                loadingRequest.finishLoading()
+            }
+            task.resume()
+            return false
+        }
         
+        guard let path = loadingRequest.request.url?.absoluteString else {return false}
         if !path.hasPrefix(Self.scheme)  { return false }
         guard let originPath = loadingRequest.request.url?.absoluteString.replace(Self.scheme, with: "") else {return false}
         if !originPath.hasSuffix(".m3u8") { return false }
         return handleRequest(loadingRequest, path: originPath)
     }
+    
+    func getCertificateData(_ request: AVAssetResourceLoadingRequest, path:String){
+        DataLog.d(path, tag:self.tag)
+        guard let url = URL(string:path) else {
+            DataLog.e("certificateData url error", tag: self.tag)
+            self.delegate?.onAssetLoadError(.drm(reason: "certificate url"))
+            request.finishLoading(with: NSError(domain: "certificateData", code: -3, userInfo: nil))
+            return
+        }
+        let task = URLSession.shared.dataTask(with: url) {
+            [weak self] (data, response, error) in
+            guard error == nil, let data = data else
+            {
+                DataLog.e("certificateData error", tag: self?.tag ?? "")
+                self?.delegate?.onAssetLoadError(.drm(reason: "certificate data"))
+                request.finishLoading(with: error)
+                return
+            }
+            self?.drm?.certificate = data
+            request.finishLoading()
+        }
+        task.resume()
+    }
+    
+    
     
     func handleRequest(_ request: AVAssetResourceLoadingRequest, path:String) -> Bool {
         DataLog.d(path, tag:self.tag)

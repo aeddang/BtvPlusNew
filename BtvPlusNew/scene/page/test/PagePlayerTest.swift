@@ -148,13 +148,15 @@ struct PagePlayerTest: PageView {
         }
         .onReceive(self.playerModel.$error){ error in
             guard let error = error else {return}
-            switch error {
+            switch error { 
             case .connect(let msg) :
                 self.debugInfo = "connect error : " + msg
             case .illegalState(let evt) :
                 self.debugingInfo = "illegalState : " + evt.decription
             case .stream(let err) :
                 self.debugInfo = "stream error : " + err.getDescription()
+            case .drm(let reason):
+                self.debugInfo = "drm error : " + reason
             }
         }
         .onReceive(self.pagePresenter.$event){ evt in
@@ -163,8 +165,8 @@ struct PagePlayerTest: PageView {
             switch evt.type {
             case .selected :
                 guard let item = evt.data as? VideoListData else { return } 
-                self.contentId = item.contentId
-                self.ckcURL = item.ckcURL
+                self.contentId = item.contentId ?? ""
+                self.ckcURL = item.ckcURL ?? ""
                 self.videoPath = item.videoPath
                 self.playVideo()
             default : break
@@ -179,10 +181,15 @@ struct PagePlayerTest: PageView {
    
     
     func playVideo(){
-        self.playerModel.drm = FairPlayDrm(
-            contentId: self.contentId,
-            ckcURL: self.ckcURL)
-        
+        if !self.contentId.isEmpty && !self.ckcURL.isEmpty {
+            self.playerModel.drm = FairPlayDrm(
+                contentId: self.contentId,
+                ckcURL: self.ckcURL,
+                certificateURL: ""
+            )
+        } else {
+            self.playerModel.drm = nil
+        }
         self.setup.drmId = self.contentId
         self.setup.drmApi = self.ckcURL
         self.setup.videoPath = self.videoPath

@@ -12,13 +12,33 @@ import WebKit
 import Combine
 import Firebase
 
+struct SampleVideos: Codable {
+    var name: String?
+    var samples: [SampleVideo]?
+}
+struct SampleVideo: Codable {
+    var name: String?
+    var contentId: String?
+    var uri: String?
+    var drm_scheme: String?
+    var drm_license_url: String?
+}
+
 class VideoListData:InfinityData{
     var title:String = "sample"
-    var ckcURL:String = ""
-    var contentId:String = ""
+    var subTitle:String = ""
+    var ckcURL:String? = nil
+    var contentId:String? = nil
     var videoPath:String = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
     init(title:String) {
         self.title = title
+    }
+    func setData(_ data:SampleVideo) -> VideoListData {
+        subTitle = data.name ?? ""
+        ckcURL = data.drm_license_url
+        contentId = data.contentId
+        videoPath = data.uri ?? ""
+        return self
     }
 }
 
@@ -28,6 +48,9 @@ struct VideoListItem: PageView {
     var body: some View {
         VStack(spacing:Dimen.margin.thin){
             Text(data.title)
+                .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.grey))
+                .lineLimit(1)
+            Text(data.subTitle)
                 .modifier(BoldTextStyle(size: Font.size.thinExtra))
                 .lineLimit(1)
                 
@@ -46,30 +69,7 @@ struct PagePlayerTestList: PageView {
     
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     @State var apiPath:String = "http://api.geonames.org/citiesJSON?north=44.1&south=-9.9&east=-22.4&west=55.2&lang=de&username=demo"
-    @State var lists:[VideoListData] = [
-        VideoListData(title: "sample1"),
-        VideoListData(title: "sample2"),
-        VideoListData(title: "sample3"),
-        VideoListData(title: "sample4"),
-        VideoListData(title: "sample5"),
-        VideoListData(title: "sample6"),
-        VideoListData(title: "sample7"),
-        VideoListData(title: "sample8"),
-        VideoListData(title: "sample9"),
-        VideoListData(title: "sample10"),
-        VideoListData(title: "sample11"),
-        VideoListData(title: "sample1"),
-        VideoListData(title: "sample2"),
-        VideoListData(title: "sample3"),
-        VideoListData(title: "sample4"),
-        VideoListData(title: "sample5"),
-        VideoListData(title: "sample6"),
-        VideoListData(title: "sample7"),
-        VideoListData(title: "sample8"),
-        VideoListData(title: "sample9"),
-        VideoListData(title: "sample10"),
-        VideoListData(title: "sample11")
-    ]
+    @State var lists:[VideoListData] = []
     var body: some View {
         VStack(alignment: .center)
         {
@@ -97,13 +97,29 @@ struct PagePlayerTestList: PageView {
         .onAppear{
             guard let obj = self.pageObject  else { return }
             if let apiPath = obj.getParamValue(key: .data) as? String {
-                load()
+                if !apiPath.isEmpty {
+                    self.apiPath = apiPath
+                    load()
+                    return
+                }
+                
             }
-           
-            //
+            self.loadAsset()
+
         }
     
     }//body
+    
+    private func loadAsset(){
+        let url = Bundle.main.url(forResource: "resource_fairplay", withExtension: "json")!
+        let data = try! Data(contentsOf: url)
+        let decoder = JSONDecoder()
+        let sets = try? decoder.decode([SampleVideos].self, from: data)
+        sets?.forEach{ sample in
+            self.lists = sample.samples?.map{ VideoListData(title: sample.name ?? "").setData($0)} ?? []
+        }
+       
+    }
     
     private func load(){
         let net = TestNetwork(enviroment: self.apiPath)

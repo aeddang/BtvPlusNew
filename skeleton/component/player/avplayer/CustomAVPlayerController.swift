@@ -12,9 +12,9 @@ import Combine
 import AVKit
 import MediaPlayer
 extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, PlayerScreenViewDelegate {
+    
     func makeUIViewController(context: UIViewControllerRepresentableContext<CustomAVPlayerController>) -> UIViewController {
         let playerScreenView = PlayerScreenView(frame: .infinite)
-        playerScreenView.drmData = self.viewModel.drm
         playerScreenView.mute(self.viewModel.isMute)
         playerScreenView.currentRate = self.viewModel.rate
         playerScreenView.currentVideoGravity = self.viewModel.screenGravity
@@ -115,7 +115,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
             if path == "" {viewModel.error = .connect(path)}
             viewModel.path = path
             self.onLoad()
-            player.load(path, isAutoPlay: isAutoPlay, initTime: initTime, header:header, assetInfo: self.viewModel.assetInfo) 
+            player.load(path, isAutoPlay: isAutoPlay, initTime: initTime, header:header, assetInfo: self.viewModel.assetInfo, drmData: viewModel.drm)
             run(player)
         case .check:
             if self.viewModel.isRunning {return}
@@ -273,6 +273,10 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
 
     func onPlayerError(_ error:PlayerStreamError){
         self.onError(error)
+    }
+    
+    func onPlayerError(playerError:PlayerError){
+        self.onError(playerError:playerError)
     }
 
     func onPlayerBecomeActive(){

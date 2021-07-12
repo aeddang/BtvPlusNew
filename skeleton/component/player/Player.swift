@@ -120,6 +120,9 @@ open class PlayerModel: ComponentObservable {
 struct FairPlayDrm{
     let contentId:String
     let ckcURL:String
+    let certificateURL:String
+    var certificate:Data? = nil
+    var isCompleted:Bool = false
 }
 
 
@@ -174,7 +177,7 @@ enum PlayerStreamStatus {
 }
 
 enum PlayerError{
-    case connect(String), stream(PlayerStreamError), illegalState(PlayerUIEvent)
+    case connect(String), stream(PlayerStreamError), illegalState(PlayerUIEvent), drm(reason:String)
 }
 enum PlayerStreamError{
     case playback(String), unknown(String), pip(String), certification(String)
@@ -212,6 +215,7 @@ protocol PlayBack:PageProtocol {
     func onStoped()
     func onCompleted()
     func onError(_ error:PlayerStreamError)
+    func onError(playerError:PlayerError)
 }
 
 extension PlayBack {
@@ -335,5 +339,15 @@ extension PlayBack {
         viewModel.streamStatus = .stop
         viewModel.playerStatus = .error
         viewModel.updateType = .recovery(viewModel.time)
+    }
+    
+    func onError(playerError:PlayerError){
+        DispatchQueue.main.async {
+            viewModel.error = playerError
+            viewModel.streamEvent = .stoped
+            viewModel.streamStatus = .stop
+            viewModel.playerStatus = .error
+        }
+        
     }
 }

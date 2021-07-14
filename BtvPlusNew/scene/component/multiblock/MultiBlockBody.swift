@@ -80,13 +80,13 @@ extension MultiBlockBody {
     private static var isLegacy:Bool {
         get{
             if #available(iOS 14.0, *) { return false }
-            else { return false }
+            else { return true }
         }
     }
     private static var isRecycle:Bool {
         get{
             if #available(iOS 14.0, *) { return true }
-            else { return false }
+            else { return true }
         }
     }
     private static var isPreLoad:Bool {
@@ -95,7 +95,7 @@ extension MultiBlockBody {
             else { return true }
         }
     }
-    
+    static let maxCellCount:Int = Self.isRecycle ? 100 : 10
     static let tabHeight:CGFloat = Dimen.tab.thin + Dimen.margin.thinExtra
     static let tabHeightKids:CGFloat = DimenKids.tab.thin + DimenKids.margin.thinExtra
     static let kisHomeHeight:CGFloat = SystemEnvironment.isTablet ? 410 : 205
@@ -264,7 +264,7 @@ struct MultiBlockBody: PageComponent {
             guard let data = self.loadingBlocks.first(where: { $0.id == res?.id}) else {return}
             var leadingBanners:[BannerData]? = nil
             var total:Int? = nil
-            let max = Self.isRecycle ? 100 : 10
+            let max = Self.maxCellCount
             switch data.dataType {
             case .cwGrid:
                 guard let resData = res?.data as? CWGrid else {return data.setBlank()}
@@ -295,21 +295,26 @@ struct MultiBlockBody: PageComponent {
                 guard let grid = resData.grid else {return data.setBlank()}
                 if grid.isEmpty {return data.setBlank()}
                 total = resData.total_count
-                grid.forEach{ g in
-                    if let blocks = g.block {
-                        switch data.uiType {
-                        case .poster :
-                            data.posters = blocks[0...min(max, blocks.count-1)].map{ d in
-                                PosterData(pageType: .kids).setData(data: d, cardType: data.cardType)
+                if grid.count == 1 {
+                    grid.forEach{ g in
+                        if let blocks = g.block {
+                            switch data.uiType {
+                            case .poster :
+                                data.posters = blocks[0...min(max, blocks.count-1)].map{ d in
+                                    PosterData(pageType: .kids).setData(data: d, cardType: data.cardType)
+                                }
+                            case .video :
+                                data.videos = blocks[0...min(max, blocks.count-1)].map{ d in
+                                    VideoData(pageType: .kids).setData(data: d, cardType: data.cardType)
+                                }
+                            default: break
                             }
-                        case .video :
-                            data.videos = blocks[0...min(max, blocks.count-1)].map{ d in
-                                VideoData(pageType: .kids).setData(data: d, cardType: data.cardType)
-                            }
-                        default: break
                         }
                     }
+                } else {
+                    data.setData(grids: grid)
                 }
+                
             case .grid:
                 guard let resData = res?.data as? GridEvent else {return data.setBlank()}
                 guard let blocks = resData.contents else {return data.setBlank()}
@@ -538,10 +543,13 @@ struct MultiBlockBody: PageComponent {
     
     private func addLoadedBlocks (_ loadedBlocks:[BlockData]){
         var idx = self.blocks.count
-        let addBlocks = loadedBlocks
-            .filter{$0.status == .active}
-            .map{$0}
-        addBlocks.forEach{
+        var addBlocks:[BlockData] = []
+        loadedBlocks.filter{$0.status == .active}.forEach{
+            if $0.childrenBlock.isEmpty {
+                addBlocks.append($0)
+            } else {
+                addBlocks.append(contentsOf:$0.childrenBlock)
+            }
             DataLog.d("addLoadedBlocks " + $0.name + " " + $0.status.rawValue, tag: "BlockProtocolB")
             $0.index = idx
             idx += 1

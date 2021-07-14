@@ -29,7 +29,7 @@ class VideoListData:InfinityData{
     var subTitle:String = ""
     var ckcURL:String? = nil
     var contentId:String? = nil
-    var videoPath:String = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+    var videoPath:String = ""//"https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
     init(title:String) {
         self.title = title
     }
@@ -65,6 +65,7 @@ struct VideoListItem: PageView {
 struct PagePlayerTestList: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appObserver:AppObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     
     var viewModel: InfinityScrollModel = InfinityScrollModel()
@@ -126,10 +127,13 @@ struct PagePlayerTestList: PageView {
         let rest = TestRest(network: net)
         rest.getList(
             completion: {res in
-                PageLog.d(res.debugDescription, tag: self.tag)
+                res.forEach{ sample in
+                    self.lists = sample.samples?.map{ VideoListData(title: sample.name ?? "").setData($0)} ?? []
+                }
             },
             error: {err in
                 PageLog.e("error " + self.apiPath, tag: self.tag)
+                self.appSceneObserver.event = .toast("API 형식이 다릅니다")
             }
         )
     }
@@ -141,7 +145,7 @@ struct PagePlayerTestList: PageView {
     class TestRest: Rest{
         
         func getList(
-            completion: @escaping ([String:Any]) -> Void, error: ((_ e:Error) -> Void)? = nil){
+            completion: @escaping ([SampleVideos]) -> Void, error: ((_ e:Error) -> Void)? = nil){
             fetch(route: TestRoute(), completion: completion, error:error)
         }
     }

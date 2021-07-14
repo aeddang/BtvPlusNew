@@ -149,26 +149,42 @@ struct MultiBlock:PageComponent {
                 }
                 
                 if !self.datas.isEmpty {
-                    if let headerBlock = self.getHeaderBlock() {
-                        headerBlock
-                        if headerCount < self.datas.count {
-                            ForEach( self.datas[headerCount..<self.datas.count]) { data in
-                                MultiBlockCell(
-                                    pageObservable:self.pageObservable,
-                                    pageDragingModel: self.pageDragingModel,
-                                    data: data ,
-                                    useTracking: self.useTracking)
-                                    .modifier(ListRowInset(spacing: Self.spacing))
-                                    .onAppear(){
-                                        if data.index == self.datas.last?.index {
-                                            self.infinityScrollModel.event = .bottom
+                    if self.viewModel.type == .btv {
+                        if let headerBlock = self.getHeaderBlock() {
+                            headerBlock
+                            if headerCount < self.datas.count {
+                                ForEach( self.datas[headerCount..<self.datas.count]) { data in
+                                    MultiBlockCell(
+                                        pageObservable:self.pageObservable,
+                                        pageDragingModel: self.pageDragingModel,
+                                        data: data ,
+                                        useTracking: self.useTracking)
+                                        .modifier(ListRowInset(spacing: Self.spacing))
+                                        .onAppear(){
+                                            if data.index == self.datas.last?.index {
+                                                self.infinityScrollModel.event = .bottom
+                                            }
                                         }
-                                    }
+                                }
+                            }
+                            if self.useFooter {
+                                Footer()
+                                    .modifier(ListRowInset(spacing: Dimen.margin.regular))
                             }
                         }
-                        if self.useFooter {
-                            Footer()
-                                .modifier(ListRowInset(spacing: Dimen.margin.regular))
+                    } else {
+                        ForEach( self.datas) { data in
+                            MultiBlockCell(
+                                pageObservable:self.pageObservable,
+                                pageDragingModel: self.pageDragingModel,
+                                data: data ,
+                                useTracking: self.useTracking)
+                                .modifier(ListRowInset(spacing: Self.spacing))
+                                .onAppear(){
+                                    if data.index == self.datas.last?.index {
+                                        self.infinityScrollModel.event = .bottom
+                                    }
+                                }
                         }
                     }
                 }
@@ -358,11 +374,12 @@ struct MultiBlock:PageComponent {
                 .frame(height:data.listHeight)
 
             case .kidsHome :
-                Spacer(
-                    
+                KidsHomeBlock(
+                    pageObservable:self.pageObservable,
+                    pageDragingModel:self.pageDragingModel,
+                    data: data
                 )
-                .frame(width:250, height:data.listHeight)
-                .background(Color.app.yellow)
+                .frame(height:data.listHeight)
             }
         }//body
     }

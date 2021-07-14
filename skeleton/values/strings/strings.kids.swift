@@ -18,6 +18,8 @@ extension String{
     }
     
     struct kidsText {
+        public static let kidsHomeNoProfile = "kidsHomeNoProfile".loaalized()
+        
         public static let registAddKid = "registAddKid".loaalized()
         public static let registKidTitle = "registKidTitle".loaalized()
         public static let registKidText = "registKidText".loaalized()

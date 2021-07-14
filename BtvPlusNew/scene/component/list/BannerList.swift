@@ -108,24 +108,30 @@ struct BannerItem: PageView {
                 ImageView(
                     url: self.data.image,
                     contentMode: .fill,
-                    noImg: Asset.noImgBanner)
+                    noImg: self.data.type.noImage)
                     .frame(width: size.width, height: size.height)
             case .horizontalList :
                 ImageView(
                     url: self.data.image,
                     contentMode: .fill,
-                    noImg: Asset.noImg1_1)
+                    noImg: self.data.type.noImage)
+                    .frame(width: self.data.type.size.width, height: self.data.type.size.height)
+            case .kids :
+                ImageView(
+                    url: self.data.image,
+                    contentMode: .fill,
+                    noImg: self.data.type.noImage)
                     .frame(width: self.data.type.size.width, height: self.data.type.size.height)
             default :
                 ImageView(
                     url: self.data.image,
                     contentMode: SystemEnvironment.isTablet ? .fit : .fill,
-                    noImg: Asset.noImgBanner)
+                    noImg: self.data.type.noImage)
                     .modifier(MatchHorizontal(height: ListItem.banner.type01.height))
             }
         }
         .background(self.data.bgColor ?? Color.app.blueLight)
-        .clipped()
+        .clipShape(RoundedRectangle(cornerRadius: self.data.type.radius)) 
         .onTapGesture {
             if let move = data.move {
                 switch move {

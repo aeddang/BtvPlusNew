@@ -119,6 +119,7 @@
 "empty" = "없음";
 
 "sir" ="‘%s’님이";
+"forSir" ="‘%s’님에게 필요한";
 
 /*
   Button
@@ -859,6 +860,8 @@
 /*
  PageKidsMy
 */
+"kidsHomeNoProfile" = "프로필을 등록하고 아이 연령에 맞는 잼키즈 홈을 만나보세요!";
+
 "kidsMyNoProfile" = "등록된 자녀\n프로필이 없어요";
 
 "kidsMyDiagnosticReport" = "진단 리포트";

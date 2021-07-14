@@ -197,20 +197,9 @@ struct AppLayout: PageComponent{
         //self.appSceneObserver.event = .debug("onPageInit")
         if !self.appObserverMove(self.appObserver.page) {
             let initMenuId = self.dataProvider.bands.datas.first?.menuId
-            //self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsHome))
-            //self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsMy))
-            /*
-            self.pagePresenter.changePage(
-                PageKidsProvider.getPageObject(.kidsProfileManagement)
-            )
-            */
-             
-             
-            self.pagePresenter.changePage(
-                PageProvider.getPageObject(.home)
-                    .addParam(key: .id, value: initMenuId)
-            )
-             self.pagePresenter.openPopup(PageProvider.getPageObject(.playerTest))
+            //self.pagePresenter.changePage(PageKidsProvider.getPageObject(.kidsHome))
+            self.pagePresenter.changePage(PageProvider.getPageObject(.home).addParam(key: .id, value: initMenuId))
+            //self.pagePresenter.openPopup(PageProvider.getPageObject(.playerTest))
         }
         if let alram = self.appObserver.alram  {
             self.appSceneObserver.event = .debug("apns exist")

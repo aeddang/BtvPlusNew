@@ -32,6 +32,10 @@ struct ListItemKids{
         static let bottomHeight:CGFloat = isPad ? 32 : 20
         
     }
+    
+    struct banner {
+        static let type01:CGSize = isPad ? CGSize(width: 382, height: 344) : CGSize(width: 199, height: 179)
+    }
 }
 
 

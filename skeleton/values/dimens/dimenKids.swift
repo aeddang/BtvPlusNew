@@ -139,7 +139,6 @@ struct DimenKids{
         static let inputNum:CGSize =  isPad ? CGSize(width: 88, height:  88) : CGSize(width: 46, height:  46)//*
         
         static let reportComment:CGSize =  isPad ? CGSize(width: 102, height: 102) : CGSize(width: 63, height: 63)//*
-        
         static let graphHorizontal:CGSize =  isPad ? CGSize(width: 199, height: 30) : CGSize(width: 100, height: 15)//*
         static let graphVertical:CGSize =  isPad ? CGSize(width: 49, height: 160) : CGSize(width: 28, height: 90)//*
         static let graphVerticalExtra:CGSize =  isPad ? CGSize(width: 49, height: 300) : CGSize(width: 23, height: 69)//*

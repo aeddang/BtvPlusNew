@@ -30,7 +30,6 @@ extension Preroll{
         let isStage = SystemEnvironment.isStage
         OneAdSdk.setEnvironment( isStage ? .STAGE : .PROD)
         OneAdSdk.setDebug(SystemEnvironment.isReleaseMode ? true : isStage)
-       
         Self.isInit = true
     }
 }

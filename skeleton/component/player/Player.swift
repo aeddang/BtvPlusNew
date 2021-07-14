@@ -116,13 +116,21 @@ open class PlayerModel: ComponentObservable {
             }
     }
 }
-
-struct FairPlayDrm{
-    let contentId:String
+class FairPlayDrm{
+    
     let ckcURL:String
     let certificateURL:String
+    var contentId:String? = nil
     var certificate:Data? = nil
     var isCompleted:Bool = false
+    init( ckcURL:String,
+          certificateURL:String) {
+        
+        
+        self.ckcURL = ckcURL
+        self.certificateURL = certificateURL
+            
+    }
 }
 
 

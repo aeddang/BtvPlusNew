@@ -11,6 +11,7 @@ struct AssetKids {}
 extension AssetKids {
     public static let noImg16_9 = "zemkidsMThumnailDefault"
     public static let noImg9_16 = "zemkidsMPosterDefault2"
+    public static let noImgBanner = "blockLDefaultM"
 }
 extension AssetKids{
     private static let isPad =  AppUtil.isPad()
@@ -67,7 +68,7 @@ extension AssetKids{
         
         public static let arrowL = "zemkidsMMonthlyReportArrowLN"
         public static let arrowR = "zemkidsMMonthlyReportArrowRN"
-       
+        public static let cardMore = "icCardEnterM"
     }
     
     
@@ -197,6 +198,17 @@ extension AssetKids{
         public static let testEnglish2 = "zemkidsMEngTestImg2"
         public static let testEnglish3 = "zemkidsMEngTestImg3"
         
+        public static let cateBlockBg = "zemkidsMContentsFrameNote2"
+        public static let myBlockBg = "zemkidsMHomeMypage"
+        public static let myBlockBgEmpty = "zemkidsMHomeRegisterProfile"
+        
+        public static let cardBlockBg = "zemkidsMContentsFrameNote"
+        public static let homeCardBg1 = "zemkidsMCategoryDefault01"
+        public static let homeCardBg2 = "zemkidsMCategoryDefault02"
+        public static let homeCardBg3 = "zemkidsMCategoryDefault03"
+        public static let homeCardBg4 = "zemkidsMCategoryDefault04"
+        public static let homeCardBg5 = "zemkidsMCategoryDefault05"
+        
     }
     
     struct ani {
@@ -235,6 +247,15 @@ extension AssetKids{
         "zemkidsMImgGnbKidsprofileGirl01",
         "zemkidsMImgGnbKidsprofileGirl02",
         "zemkidsMImgGnbKidsprofileGirl03",
+    ]
+    
+    static let characterCateList = [
+        "zemkidsMImgKidsprofileBoy01Pose",
+        "zemkidsMImgKidsprofileBoy02Pose",
+        "zemkidsMImgKidsprofileBoy03Pose",
+        "zemkidsMImgKidsprofileGirl01Pose",
+        "zemkidsMImgKidsprofileGirl02Pose2",
+        "zemkidsMImgKidsprofileGirl03Pose",
     ]
     
 }

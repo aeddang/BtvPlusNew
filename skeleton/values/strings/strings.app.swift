@@ -113,5 +113,6 @@ extension String {
         public static let empty = "empty".loaalized()
         
         public static let sir = "sir".loaalized()
+        public static let forSir = "forSir".loaalized()
     }
 }

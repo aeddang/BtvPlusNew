@@ -519,9 +519,9 @@ struct VideoItemBodyKids: PageView {
     var body: some View {
         VStack(spacing:0){
             ZStack{
-                ImageView(url: self.data.image,contentMode: .fill, noImg: Asset.noImg16_9)
+                ImageView(url: self.data.image,contentMode: .fit, noImg: Asset.noImg16_9)
                     .modifier(MatchParent())
-                 
+                    
                 if (self.data.progress != nil || self.isSelected) && self.data.tagData?.isLock != true {
                     Image(AssetKids.icon.thumbPlayVideo)
                         .renderingMode(.original).resizable()
@@ -536,7 +536,7 @@ struct VideoItemBodyKids: PageView {
                     }
                     if self.data.progress != nil {
                         Spacer().frame(
-                            width: (self.data.type.size.width + (DimenKids.margin.thinExtra*2)) * CGFloat(self.data.progress!),
+                            width: (self.data.type.size.width - (DimenKids.margin.thinExtra*2)) * CGFloat(self.data.progress!),
                             height: DimenKids.line.medium)
                             .background(Color.kids.primary)
                     }
@@ -546,6 +546,7 @@ struct VideoItemBodyKids: PageView {
             .clipShape(RoundedRectangle(cornerRadius:  DimenKids.radius.light))
             .padding(.top, DimenKids.margin.thinExtra)
             .padding(.horizontal, DimenKids.margin.thinExtra)
+            
             
             if self.data.title != nil {
                 VStack(alignment: .leading, spacing:Dimen.margin.tiny){

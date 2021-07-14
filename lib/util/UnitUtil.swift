@@ -372,6 +372,12 @@ extension String{
     }
     
     
+    func toPercentEscape()-> String {
+        var chSet = CharacterSet.alphanumerics
+        chSet.insert(charactersIn: "-._*")
+        return self.addingPercentEncoding(withAllowedCharacters: chSet)?.replace(" ", with: "+") ?? self
+    }
+    
 }
 
 extension Formatter {
@@ -450,3 +456,5 @@ extension Color {
     
     
 }
+
+

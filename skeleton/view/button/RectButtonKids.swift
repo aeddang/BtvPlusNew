@@ -13,6 +13,7 @@ struct RectButtonKids: View, SelecterbleProtocol{
     var icon:String? = nil
     var trailText:String? = nil
     var strikeText:String? = nil
+    var trailIcon:String? = nil
     var index: Int = 0
     var isSelected: Bool = false
     var textModifier:TextModifierKids = TextModifierKids(
@@ -42,10 +43,12 @@ struct RectButtonKids: View, SelecterbleProtocol{
                             icon: self.icon,
                             trailText: self.trailText,
                             strikeText: self.strikeText,
+                            trailIcon: self.trailIcon,
                             isSelected: self.isSelected,
                             textModifier: self.textModifier,
                             isMore: self.isMore)
-                        }
+                    }
+                    .padding(.horizontal, DimenKids.margin.thin)
                     .frame(width:self.size.width)
                 } else {
                     
@@ -54,6 +57,7 @@ struct RectButtonKids: View, SelecterbleProtocol{
                         icon: self.icon,
                         trailText: self.trailText,
                         strikeText: self.strikeText,
+                        trailIcon: self.trailIcon,
                         isSelected: self.isSelected,
                         textModifier: self.textModifier,
                         isMore: self.isMore)
@@ -71,6 +75,7 @@ struct RectButtonKids: View, SelecterbleProtocol{
         var icon:String? = nil
         var trailText:String? = nil
         var strikeText:String? = nil
+        var trailIcon:String? = nil
         var isSelected: Bool = false
         var textModifier:TextModifierKids
         var isMore: Bool = false
@@ -83,13 +88,21 @@ struct RectButtonKids: View, SelecterbleProtocol{
                     .frame(width: SystemEnvironment.isTablet ? DimenKids.icon.tinyExtra :  DimenKids.icon.tiny)
                     .padding(.trailing, DimenKids.margin.tiny)
             }
-            Text(self.text)
-                .font(.custom(textModifier.family, size: textModifier.size))
-                .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+            ZStack{
+                if self.trailIcon != nil {
+                    Spacer().modifier(MatchHorizontal(height: 0))
+                }
+                Text(self.text)
+                    .kerning(Font.kern.regular)
+                    .font(.custom(textModifier.family, size: textModifier.size))
+                    .lineLimit(1)
+                    .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+            }
             if let strikeText = self.strikeText {
                 Text(strikeText)
                     .font(.custom(textModifier.family, size: Font.sizeKids.thinExtra))
                     .strikethrough()
+                    .lineLimit(1)
                     .foregroundColor(self.isSelected ? self.textModifier.activeColor : textModifier.color)
                     .opacity(0.7)
                     .padding(.leading, DimenKids.margin.tiny)
@@ -98,8 +111,16 @@ struct RectButtonKids: View, SelecterbleProtocol{
             if let trailText = self.trailText {
                 Text(trailText )
                     .font(.custom(textModifier.family, size:  self.textModifier.size))
+                    .lineLimit(1)
                     .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
                     .padding(.leading, DimenKids.margin.micro)
+            }
+            if let trailIcon = self.trailIcon {
+                Image(trailIcon)
+                    .renderingMode(.original).resizable()
+                    .scaledToFit()
+                    .frame(width: DimenKids.icon.tinyExtra, height: DimenKids.icon.tinyExtra)
+                    .padding(.leading, DimenKids.margin.thin)
             }
             
             if self.isMore {

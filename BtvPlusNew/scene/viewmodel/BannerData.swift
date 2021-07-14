@@ -2,36 +2,65 @@ import Foundation
 import SwiftUI
 
 enum BannerType {
-    case top, list, cell(CGSize, CGFloat), horizontalList, leading
+    case top, list, kids, cell(CGSize, CGFloat), horizontalList, leading
     var size:CGSize {
         get{
             switch self {
             case .list: return ListItem.banner.type01
+            case .kids: return ListItemKids.banner.type01
             case .cell(let size, _ ): return size
             case .horizontalList : return ListItem.banner.type04
             default : return CGSize()
             }
         }
     }
+    var radius:CGFloat {
+        get{
+            switch self {
+            case .kids: return DimenKids.radius.light
+            default : return 0
+            }
+        }
+    }
+    
+    var noImage:String {
+        get{
+            switch self {
+            case .kids: return AssetKids.noImgBanner
+            case .horizontalList:return  Asset.noImg1_1
+            default : return  Asset.noImgBanner
+            }
+        }
+    }
+    
+   
+    
 }
 
 class BannerData:InfinityData, PageProtocol{
     private(set) var image: String = Asset.noImgBanner
     private(set) var resourceImage: String? = nil
     private(set) var logo: String? = nil
-    
     private(set) var title: String? = nil
     private(set) var subTitle: String? = nil
-    
     private(set) var outLink:String? = nil
     private(set) var inLink:String? = nil
     private(set) var move:PageID? = nil
     private(set) var moveData:[PageParam:Any]? = nil
     private(set) var bgColor:Color? = nil
     private(set) var type:BannerType = .list 
-    func setPairing()->BannerData {
+    func setPairing()-> BannerData {
         self.move = .pairing
         self.resourceImage = Asset.image.bannerTopPairing
+        return self
+    }
+    
+    func setDataKids(data:EventBannerItem) -> BannerData {
+        self.type = .kids
+        self.bgColor = Color.app.ivoryDeep
+        image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: ListItemKids.banner.type01)  ?? image
+        title = data.menu_nm
+        parseAction(data: data)
         return self
     }
     
@@ -75,9 +104,9 @@ class BannerData:InfinityData, PageProtocol{
                     }
                 }
             }
-            
             self.type = .top
         }
+            
         if let colorCode = data.img_bagr_color_code {
             bgColor = colorCode.toColor()
         }

@@ -297,7 +297,7 @@ class Euxp: Rest{
     */
     
     func getCWGridKids(
-        kid:Kid? , menuId:String?, cwCallId:String?, sortType:EuxpNetwork.SortType?,
+        kid:Kid? , cwCallId:String?, sortType:EuxpNetwork.SortType?, type:String? = "all",
         completion: @escaping (CWGridKids) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
@@ -312,7 +312,7 @@ class Euxp: Rest{
         
         params["inspect_yn"] = "N"
         params["cw_call_id"] = cwCallId ?? ""
-        params["type"] = "all"
+        params["type"] = type
         fetch(route: EuxpCWGridKids(query: params), completion: completion, error:error)
     }
 }

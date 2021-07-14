@@ -36,7 +36,6 @@ struct PagePlayerTest: PageView {
     @State var debugingInfo:String? = "test debuging"
     @State var debugInfo:String? = "test debug"
     
-    
     var body: some View {
         VStack(alignment: .leading, spacing:10)
         {
@@ -111,6 +110,7 @@ struct PagePlayerTest: PageView {
                     ) { _ in
                         
                         self.appSceneObserver.select = .select((self.tag, info.resolutions), 0){ select in
+                            if info.resolutions.isEmpty {return}
                             self.selectedResolution = info.resolutions[select]
                             info.selectedResolution = self.selectedResolution
                             self.playerModel.event = .load(self.videoPath, true)
@@ -121,6 +121,7 @@ struct PagePlayerTest: PageView {
                         isSelected: self.selectedCaption != nil
                     ) { _ in
                         self.appSceneObserver.select = .select((self.tag, info.captions), 0){ select in
+                            if info.captions.isEmpty {return}
                             self.selectedCaption = info.captions[select]
                             info.selectedCaption = self.selectedCaption
                             self.playerModel.event = .load(self.videoPath, true)
@@ -131,6 +132,7 @@ struct PagePlayerTest: PageView {
                         isSelected: self.selectedAudio != nil
                     ) { _ in
                         self.appSceneObserver.select = .select((self.tag, info.audios), 0){ select in
+                            if info.audios.isEmpty {return}
                             self.selectedAudio = info.audios[select]
                             info.selectedAudio = self.selectedAudio
                             self.playerModel.event = .load(self.videoPath, true)
@@ -182,15 +184,16 @@ struct PagePlayerTest: PageView {
     
     func playVideo(){
         if !self.contentId.isEmpty && !self.ckcURL.isEmpty {
-            self.playerModel.drm = FairPlayDrm(
-                contentId: self.contentId,
+            let drm = FairPlayDrm(
                 ckcURL: self.ckcURL,
-                certificateURL: ""
+                certificateURL: "https://ecdnlicense-poc.hanafostv.com/vod/01010377_202107121124_00000000991/pa2My2mO0gRaDlp6y%2F%2BcsWqvNX5%2FF1iU2h1W1OTqbWvYxGl8OrgdoxKdRjn3b%2BdfJ9bgn6vJ0poQKQLej6nF%2F7miCDvvyrYggssUKka14u%2FNVir%2BPqwLvln82V0wKb%2FcUfhX1oQ%2BOFpl1GvCFKlxI9RnxuByVIeOOfkcteKOXZ9jCqiroLhWK%2BCW8z1a6rAT7CArXU%2BnJ8OUJ0PBeKhvrbA85Ie44Ikbnr1C6Yy9dccO3NbXDz5CefQyn7e47rQKDy1rmAVXP%2BYbp9efMk1%2FsIb9%2FF2y0eJlLMPhtZJZvUlHPQ7pTfTwx1mAehjfL2aXR%2BXutSFIDLro2hkkX9583tK7C0R%2FctQpNBouZJZ2vZkYagelfMj1Qh98JWjhxnpTf7jFoRLdu35wLbHPF753ylakl3meb8qN1DQPxQDaZpMnFnUJaw3M53ys4SlGdGfMkOllWSz5PF92ZzRNOYkiYqhTiIGxBN8Pw08DrUtxSeBgqIMZ7afLk4lH%2BkYlkb15UQ4EeAV8OmeUwIQQS%2FAaFiZS0wQUSULRb2G%2B8Dns5a1FK%2F4KGSsXcGIt%2B7FUk6wVRlKpkaCY2gjcL7gcSj%2B1W3HCuPB%2BIajIjCr%2FwrRShwPNPJW1jVd6e21OMe8slij90HnitKXRKXNz2JTnmOVhaFgAg7LJqWUeAvi7yVmQZIX0kQEtUNOq%2B0mbWuRL2OxSGUcbGxxtWGFuT4%2FHp7u9bq64aBXPUP7YLDqfW2BAxxVeHvZmx9yzTari41rIz5zcs2fXvQKyEU8S74YoaFHTmuDG8%2Fz4KteIylazqa6kAD13vjUpolfzu0DLNM%2FqX3MPiSF81%2FALDPlD8CQyOn3obp9pO0HXr%2FX9hfDPwMsHerErGlJCpyofBpXBb%2F8OFU8WqDsYVOKvAI2uI4cdDGO%2Bo%2BVMfoNr2GAngZWSO9IorN8t7E%2F6iwpn2WNobLC1%2F26Wyw44muelgNM%3D/CD1010011879_20210706210704.m3u8"
             )
+            drm.certificate = self.playerModel.drm?.certificate
+            self.playerModel.drm = drm
         } else {
             self.playerModel.drm = nil
         }
-        self.setup.drmId = self.contentId
+
         self.setup.drmApi = self.ckcURL
         self.setup.videoPath = self.videoPath
         

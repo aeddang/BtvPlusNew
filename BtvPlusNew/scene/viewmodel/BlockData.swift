@@ -11,6 +11,7 @@ enum BlockStatus:String{
 }
 
 class BlockData:InfinityData, ObservableObject{
+    
     private(set) var name:String = ""
     private(set) var subName:String = ""
     private(set) var isAdult:Bool = false
@@ -22,6 +23,8 @@ class BlockData:InfinityData, ObservableObject{
     private(set) var blocks:[BlockItem]? = nil
     private(set) var originData:BlockItem? = nil
     private(set) var isCountView:Bool = false
+    private(set) var childrenBlock:[BlockData] = []
+    
     @Published private(set) var status:BlockStatus = .initate
     
     var kid:Kid? = nil
@@ -46,6 +49,56 @@ class BlockData:InfinityData, ObservableObject{
         videos = nil
         themas = nil
         banners = nil
+    }
+    
+    @discardableResult
+    func setData(grids:[GridsItemKids]) -> BlockData{
+        childrenBlock = grids.map{ g in
+            BlockData().setData(parent:self, grid: g)
+        }
+        return self
+    }
+    
+    func setData(parent:BlockData, grid:GridsItemKids) -> BlockData{
+        self.uiType = parent.uiType
+        self.cardType = parent.cardType
+        self.dataType = parent.dataType
+        self.name = grid.sub_title ?? parent.name
+        self.menuId = grid.session_id
+        self.cwCallId = grid.cw_call_id
+        
+        let max = MultiBlockBody.maxCellCount
+        if let blocks = grid.block {
+            switch self.uiType {
+            case .poster :
+                posters = blocks[0...min(max, blocks.count-1)].map{ d in
+                    PosterData(pageType: .kids).setData(data: d, cardType: cardType)
+                }
+            case .video :
+                videos = blocks[0...min(max, blocks.count-1)].map{ d in
+                    VideoData(pageType: .kids).setData(data: d, cardType: cardType)
+                }
+            default: break
+            }
+        }
+        
+        var listHeight:CGFloat = 0
+        var blockHeight:CGFloat = 0
+        let tabHeight:CGFloat =  MultiBlockBody.tabHeightKids
+        
+        if let size = posters?.first?.type {
+            listHeight = size.size.height
+            blockHeight = listHeight + tabHeight
+        }
+        if let size = videos?.first{
+            listHeight = size.type.size.height + size.bottomHeight
+            blockHeight = listHeight + tabHeight
+        }
+        if blockHeight != 0 {
+            self.listHeight = blockHeight
+        }
+        self.setDatabindingCompleted(total: grid.block_cnt?.toInt() ?? 0)
+        return self
     }
     
     
@@ -181,7 +234,6 @@ class BlockData:InfinityData, ObservableObject{
                 id: apiId ?? self.id,
                 type: .getCWGridKids(
                     kid,
-                    self.menuId,
                     self.cwCallId, self.cardType == .watchedVideo ? .latest : .popularity),
                 isOptional: isOption)
         case .grid:

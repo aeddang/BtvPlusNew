@@ -143,7 +143,8 @@ struct KidsGnbItem: PageView {
                         } else {
                             Spacer()
                         }
-                    }.padding(.all, DimenKids.margin.tinyExtra)
+                    }
+                    .padding(.all, DimenKids.margin.tinyExtra)
                 } else {
                     Image(self.data.imageOff)
                         .renderingMode(.original)

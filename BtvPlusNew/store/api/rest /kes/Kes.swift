@@ -30,78 +30,7 @@ extension KesNetwork{
         }
     }
     
-    enum TargetCode: String {
-        case level1_2 = "1" // 1~2 Level
-        case level3_4 = "2" // 3~4 Level
-        case level5_6 = "3" // 5~6 Level
-    }
-
-    enum QbdltTypeCode: String {
-        case IMG = "01"
-        case IMG_AUD = "02"
-    }
-
-    enum HclsAreaCode: String{
-        case athletic = "21" // 운동발달
-        case language = "22" // 언어발달
-        case cognitive = "23" // 인지발달
-        case social = "24" // 사회정서발달
-        case selfhelf = "25" // 자조행동발달
-    }
-
-    enum FldCode: String {
-        case reading = "02" //<독서
-        case create = "03" //<창의
-    }
-
-    enum LvCode: String {
-        case level_pre = "10" // PRE
-        case level1 = "11" // 1레벨
-        case level2 = "12" // 2레벨
-        case level3 = "13" // 3레벨
-        case level4 = "14" // 4레벨
-        case level5 = "15" // 5레벨
-        case level6 = "16" // 6레벨
-        case level_plus = "17" // PLUS
-    }
-
-    enum CwId: String {
-        case KESV50101 // 선생님이 추천해요(영어)
-        case KESV50102 // 최근에 봤어요(영어)
-        case KESV50103 // 좋아하는 것이에요(영어)
-        case KESV50104 // 친구들이 많이봐요(영어)
-        case KESV50201 // 선생님이 추천해요(동화)
-        case KESV50202 // 최근에 봤어요(동화)
-        case KESV50203 // 좋아하는 것이에요(동화)
-        case KESV50204 // 친구들이 많이봐요(동화)
-        case KESV50301 // 선생님이 추천해요(창의누리)
-        case KESV50302 // 최근에 봤어요(창의누리)
-        case KESV50303 // 좋아하는 것이에요(창의누리)
-        case KESV50304 // 친구들이 많이봐요(창의누리)
-        case KESV50401 // 선생님이 추천해요(교과지식)
-        case KESV50402 // 최근에 봤어요(교과지식)
-        case KESV50403 // 좋아하는 것이에요(교과지식)
-        case KESV50404 // 친구들이 많이봐요(교과지식)
-        case KESV50502 // 최근에 봤어요(놀이활동)
-        case KESV50503 // 좋아하는 것이에요(놀이활동)
-        case KESV50504 // 친구들이 많이봐요(놀이활동)
-        case KESV50505 // 새로 왔어요(놀이활동)
-        case KESV50506 // 무료 추천(놀이활동)
-        case KESV50602 // 최근에 봤어요(전체)
-    }
-
-    enum TargetPerCode: String {
-        case parents = "31" //<부모
-        case kids = "32" //<자녀
-    }
-
-    enum SvcPropCode: String{
-        case play = "512" // 놀이활동    UI5.0-KES(놀이활동)
-        case english = "513" // 영어    UI5.0-KES(영어)
-        case tale = "514" // 동화    UI5.0-KES(동화)
-        case create = "515" // 창의누리    UI5.0-KES(창의누리)
-        case subject = "516" // 교과지식    UI5.0-KES(교과지식)
-    }
+  
 
     enum ScnMethodCode: String {
         case last = "514" // 최근에봤어요  513:UI5.0-KES_LAST

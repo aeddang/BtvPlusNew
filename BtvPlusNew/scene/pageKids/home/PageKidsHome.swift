@@ -37,7 +37,7 @@ struct PageKidsHome: PageView {
                     infinityScrollModel: self.infinityScrollModel,
                     useBodyTracking:self.useTracking,
                     useTracking:false,
-                    marginTop:KidsTop.height + DimenKids.margin.thin,
+                    marginTop:KidsTop.height + DimenKids.margin.regular + self.sceneObserver.safeAreaTop,
                     marginBottom: self.sceneObserver.safeAreaBottom
                     )
             }

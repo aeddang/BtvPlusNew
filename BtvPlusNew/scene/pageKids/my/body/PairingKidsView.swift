@@ -136,7 +136,11 @@ struct PairingKidsView: PageComponent {
     @State var currentDate:Date = Date()
     
     private func setupInitData (){
-        guard let kid = self.kid else {return}
+        guard let kid = self.kid else {
+            self.monthlyReportModel.reset()
+            self.diagnosticReportModel.reset()
+            return
+        }
         self.dataProvider.requestData(q: .init(type: .getKidStudy(kid), isOptional: false))
         self.dataProvider.requestData(q: .init(type: .getMonthlyReport(kid, self.currentDate), isOptional: false))
     }

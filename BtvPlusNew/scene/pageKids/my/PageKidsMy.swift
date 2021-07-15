@@ -78,6 +78,11 @@ struct PageKidsMy: PageView {
             .onReceive(self.pairing.$status){status in
                 self.isPairing = ( status == .pairing )
             }
+            .onReceive(self.pairing.$kid){kid in
+                if kid == nil {
+                    
+                }
+            }
             .onAppear{
                 
             }

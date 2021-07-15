@@ -28,6 +28,7 @@ class BlockData:InfinityData, ObservableObject{
     @Published private(set) var status:BlockStatus = .initate
     
     var kid:Kid? = nil
+    var kidsHomeBlockData:KidsHomeBlockData? = nil
     var leadingBanners:[BannerData]? = nil
     var posters:[PosterData]? = nil
     var videos:[VideoData]? = nil

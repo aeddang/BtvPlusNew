@@ -17,6 +17,7 @@ struct PageKidsExam: PageView {
     @EnvironmentObject var dataProvider:DataProvider
     
     @ObservedObject var viewModel:KidsExamModel = KidsExamModel(type: .solve)
+    @ObservedObject var soundBoxModel:SoundBoxModel = SoundBoxModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
    
@@ -38,6 +39,7 @@ struct PageKidsExam: PageView {
                             } else {
                                 ExamBody(
                                     viewModel:self.viewModel,
+                                    soundBoxModel: self.soundBoxModel,
                                     type:self.type
                                 )
                                 .modifier(MatchParent())

@@ -84,7 +84,11 @@ class MonthlyReportModel:ObservableObject, PageProtocol{
     private(set) var kid:Kid? = nil
     private(set) var date:Date = Date()
     private(set) var datas:[MonthlyReportData] = []
- 
+    func reset(){
+        self.kid = nil
+        self.datas = []
+        self.isUpdated = true
+    }
     func setData(_ data:MonthlyReport, kid:Kid? = nil , date:Date? = nil){
         self.kid = kid
         self.date = date ?? Date()

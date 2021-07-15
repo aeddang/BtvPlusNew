@@ -122,10 +122,10 @@ class FairPlayDrm{
     let certificateURL:String
     var contentId:String? = nil
     var certificate:Data? = nil
+ 
     var isCompleted:Bool = false
     init( ckcURL:String,
           certificateURL:String) {
-        
         
         self.ckcURL = ckcURL
         self.certificateURL = certificateURL

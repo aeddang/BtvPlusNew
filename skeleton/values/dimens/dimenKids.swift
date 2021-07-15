@@ -35,6 +35,7 @@ struct DimenKids{
     struct icon {
         public static let heavy:CGFloat = isPad ? 123 : 76//*
         public static let heavyExtra:CGFloat = isPad ? 110 : 70//*
+       
         public static let mediumUltra:CGFloat = isPad ? 89 : 46//*
         public static let mediumUltraExtra:CGFloat = isPad ? 83 : 43//*
         public static let medium:CGFloat = isPad ? 76 : 42//*

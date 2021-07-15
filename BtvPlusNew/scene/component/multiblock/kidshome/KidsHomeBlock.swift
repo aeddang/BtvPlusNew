@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 import Combine
 
-
 struct KidsHomeBlock:PageComponent, BlockProtocol {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
@@ -37,8 +36,15 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
                             if let playData = data as? KidsPlayListData {
                                 KidsPlayList(data:playData)
                             }
-                        case .cateHeader: Spacer().background(Color.app.yellow)
-                        case .cateList: Spacer().background(Color.app.red)
+                        case .cateHeader:
+                            if let cateData = data as? KidsCategoryItemData {
+                                KidsCategoryItem(data:cateData)
+                            }
+                            
+                        case .cateList:
+                            if let listData = data as? KidsCategoryListData {
+                                KidsCategoryList(data: listData)
+                            }
                         case .banner:
                             if let bannerData = data as? KidsBannerData {
                                 KidsBanner(data: bannerData)
@@ -50,13 +56,19 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
             }
             .modifier(ContentHorizontalEdgesKids())
             .opacity(self.isUiView ? 1 : 0)
-            
         }
         .modifier(MatchParent())
         .onAppear{
-            self.homeBlockData = KidsHomeBlockData().setData(data: self.data)
-            withAnimation{
+            if let prevData =  self.data.kidsHomeBlockData {
+                self.homeBlockData = prevData
                 self.isUiView = true
+            } else {
+                let homeData = KidsHomeBlockData().setData(data: self.data)
+                self.homeBlockData = homeData
+                self.data.kidsHomeBlockData = homeData
+                withAnimation{
+                    self.isUiView = true
+                }
             }
         }
         .onDisappear{

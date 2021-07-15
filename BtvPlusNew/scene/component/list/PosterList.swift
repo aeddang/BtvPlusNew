@@ -23,9 +23,10 @@ class PosterData:InfinityData{
     private(set) var type:PosterType = .small
     private(set) var synopsisData:SynopsisData? = nil
     private(set) var pageType:PageType = .btv
-    
-    init(pageType:PageType = .btv) {
+    private(set) var useTag:Bool = true
+    init(pageType:PageType = .btv, useTag:Bool = true) {
         self.pageType = pageType
+        self.useTag = useTag
         super.init()
     }
     
@@ -36,7 +37,9 @@ class PosterData:InfinityData{
         isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
         originImage = data.poster_filename_v
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: type.size, isAdult: self.isAdult)
-        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        if self.useTag {
+            tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        }
         index = idx
         epsdId = data.epsd_id
         synopsisType = SynopsisType(value: data.synon_typ_cd)
@@ -54,7 +57,9 @@ class PosterData:InfinityData{
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
         watchLv = data.wat_lvl_cd?.toInt() ?? 0
-        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        if self.useTag {
+            tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        }
         originImage = data.poster_filename_v
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: type.size, isAdult: self.isAdult)
         
@@ -73,7 +78,9 @@ class PosterData:InfinityData{
         epsdId = data.epsd_id
         isAdult = data.adult?.toBool() ?? false
         watchLv = data.level?.toInt() ?? 0
-        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        if self.useTag {
+            tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        }
         originImage = data.poster
         image = ImagePath.thumbImagePath(filePath: data.poster, size: type.size, isAdult: self.isAdult)
         
@@ -91,7 +98,9 @@ class PosterData:InfinityData{
         epsdId = data.epsd_id
         isAdult = data.adult?.toBool() ?? false
         watchLv = data.level?.toInt() ?? 0
-        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        if self.useTag {
+            tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        }
         originImage = data.thumbnail
         image = ImagePath.thumbImagePath(filePath: data.thumbnail, size: type.size, isAdult: self.isAdult)
         
@@ -108,7 +117,9 @@ class PosterData:InfinityData{
         epsdId = data.epsd_id
         isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
         watchLv = data.wat_lvl_cd?.toInt() ?? 0
-        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        if self.useTag {
+            tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        }
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         originImage = data.poster_filename_v
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: type.size, isAdult: self.isAdult)
@@ -125,7 +136,9 @@ class PosterData:InfinityData{
         epsdId = data.epsd_id
         //isAdult = data.adult?.toBool() ?? false
         watchLv = data.level?.toInt() ?? 0
-        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        if self.useTag {
+            tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        }
         originImage = data.poster
         image = ImagePath.thumbImagePath(filePath: data.poster , size: type.size, isAdult: self.isAdult)
         
@@ -141,7 +154,9 @@ class PosterData:InfinityData{
         setCardType(cardType)
         title = data.title
         watchLv = data.level?.toInt() ?? 0
-        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        if self.useTag {
+            tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        }
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         originImage = data.poster
         image = ImagePath.thumbImagePath(filePath: data.poster, size: type.size, isAdult: self.isAdult)

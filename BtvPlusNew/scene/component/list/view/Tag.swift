@@ -19,6 +19,10 @@ class TagData{
     private(set) var price: String? = nil
     private(set) var pageType:PageType = .btv
     
+    private(set) var isQuiz:Bool = false
+    private(set) var studyIcon:String? = nil
+    private(set) var translation:String? = nil
+    
     init(pageType:PageType = .btv) {
         self.pageType = pageType
     }
@@ -28,6 +32,9 @@ class TagData{
             if prc == 0 { isFree = true }
             self.price = prc.formatted(style: .decimal) + String.app.cash
         }
+        self.isQuiz = data.quiz_yn?.toBool() ?? false
+        self.setTranslation(code: data.epsd_lag_capt_typ_cd)
+        self.studyIcon = AssetKids.study.getIcon(watchingProgress: data.kes?.watching_progress)
         self.isAdult = isAdult
         self.isLock = !SystemEnvironment.isImageLock ? false : isAdult
         self.restrictAgeIcon = self.pageType == .btv ? Asset.age.getListIcon(age: data.wat_lvl_cd) : AssetKids.age.getIcon(age: data.wat_lvl_cd)
@@ -39,6 +46,7 @@ class TagData{
     
     func setData(data:PackageContentsItem, isAdult:Bool) -> TagData {
         self.isAdult = isAdult
+        self.setTranslation(code: data.lag_capt_typ_cd)
         self.isLock = !SystemEnvironment.isImageLock ? false : isAdult
         self.restrictAgeIcon = Asset.age.getListIcon(age: data.wat_lvl_cd)
         return self
@@ -122,10 +130,19 @@ class TagData{
         return self
     }
     
+    private func setTranslation(code:String?){
+        switch code {
+        case "01" : translation = String.sort.dubbingKor
+        case "02" : translation = String.sort.subtitleKor
+        default : break
+        }
+    }
+    
     fileprivate func updatedImage(){
         self.isLock = !SystemEnvironment.isImageLock ? false : isAdult
     }
 }
+
 
 
 
@@ -224,6 +241,11 @@ struct Tag: PageView {
     
 }
 
+
+extension TagKids{
+    public static let studyIconSize:CGSize = SystemEnvironment.isTablet ? CGSize(width: 104, height: 50) :   CGSize(width: 54, height: 26)
+}
+
 struct TagKids: PageView {
     
     var data:TagData
@@ -231,9 +253,36 @@ struct TagKids: PageView {
     var body: some View {
         VStack(alignment: .leading, spacing: 0){
             HStack(alignment: .top, spacing: 0){
+                /*
+                if !data.isQuiz ,let icon = data.studyIcon  {
+                    Image(icon)
+                        .renderingMode(.original)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(
+                            width:Self.studyIconSize.width,
+                            height: Self.studyIconSize.height)
+                }*/
                 Spacer()
+                if let translation = data.translation {
+                    Text(translation)
+                        .modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color:Color.app.white))
+                        .lineLimit(1)
+                        .fixedSize()
+                        .padding(.horizontal, DimenKids.margin.tiny)
+                        .padding(.vertical, DimenKids.margin.micro)
+                        .background(Color.app.brownDeep.opacity(0.7)) 
+                        .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.lightExtra))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: DimenKids.radius.lightExtra)
+                                .stroke( Color.app.white ,lineWidth:  DimenKids.stroke.light )
+                        )
+                }
                 
             }
+            .padding(.top, DimenKids.margin.tiny)
+            .padding(.trailing, DimenKids.margin.tiny)
+            
             Spacer().modifier(MatchParent())
             
             HStack(alignment: .bottom, spacing: 0){

@@ -73,6 +73,11 @@ class DiagnosticReportModel:ObservableObject, PageProtocol{
     private(set) var kid:Kid? = nil
     private(set) var studyData:StudyData = StudyData()
     var readingArea:String? = nil
+    func reset(){
+        self.kid = nil
+        self.studyData = StudyData()
+        self.isUpdated = true
+    }
     
     @discardableResult
     func setData(_ data:KidStudy, kid:Kid?) -> DiagnosticReportModel {

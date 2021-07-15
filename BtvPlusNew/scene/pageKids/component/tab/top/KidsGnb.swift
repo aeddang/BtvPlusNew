@@ -193,6 +193,7 @@ struct KidsGnbItem: PageView {
                 }
             } else {
                 self.profileImg = Asset.gnbTop.zemkids
+                self.subTitle = nil
                 self.title = nil
             }
         }

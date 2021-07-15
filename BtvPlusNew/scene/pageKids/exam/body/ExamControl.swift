@@ -15,6 +15,7 @@ extension ExamControl {
 
 struct ExamControl: PageComponent{
     @ObservedObject var viewModel:KidsExamModel = KidsExamModel()
+    @ObservedObject var soundBoxModel:SoundBoxModel = SoundBoxModel()
     var isView:Bool = false
     var body: some View {
         ZStack(alignment: .topLeading){
@@ -26,6 +27,7 @@ struct ExamControl: PageComponent{
             VStack( spacing: 0 ){
                 SoundBox(
                     viewModel: self.viewModel,
+                    soundBoxModel: self.soundBoxModel,
                     isView: self.isView
                 )
                 .padding(.trailing, SystemEnvironment.isTablet ? 30 : 32)
@@ -98,6 +100,7 @@ struct ExamControl: PageComponent{
                 withAnimation {
                     self.right = answer
                     self.answer = self.submit
+                    self.soundBoxModel.isRight = self.right == self.answer
                 }
                
             case .complete :

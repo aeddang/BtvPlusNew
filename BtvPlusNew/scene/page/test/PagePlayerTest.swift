@@ -23,7 +23,7 @@ struct PagePlayerTest: PageView {
     @ObservedObject var playerModel = PlayerModel()
    
     @State var title:String = "PLAYER TEST"
-    @State var listURL:String = ""
+    @State var listURL:String = ""//"https://ecdn-fairplay.digicaps.dev/player/2021_mig/resource.json"
     @State var ckcURL:String = ""
     @State var contentId:String = ""
     @State var videoPath:String = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
@@ -183,10 +183,13 @@ struct PagePlayerTest: PageView {
    
     
     func playVideo(){
+        self.debugingInfo = nil
+        self.debugInfo = nil
+        
         if !self.contentId.isEmpty && !self.ckcURL.isEmpty {
             let drm = FairPlayDrm(
                 ckcURL: self.ckcURL,
-                certificateURL: "https://ecdnlicense-poc.hanafostv.com/vod/01010377_202107121124_00000000991/pa2My2mO0gRaDlp6y%2F%2BcsWqvNX5%2FF1iU2h1W1OTqbWvYxGl8OrgdoxKdRjn3b%2BdfJ9bgn6vJ0poQKQLej6nF%2F7miCDvvyrYggssUKka14u%2FNVir%2BPqwLvln82V0wKb%2FcUfhX1oQ%2BOFpl1GvCFKlxI9RnxuByVIeOOfkcteKOXZ9jCqiroLhWK%2BCW8z1a6rAT7CArXU%2BnJ8OUJ0PBeKhvrbA85Ie44Ikbnr1C6Yy9dccO3NbXDz5CefQyn7e47rQKDy1rmAVXP%2BYbp9efMk1%2FsIb9%2FF2y0eJlLMPhtZJZvUlHPQ7pTfTwx1mAehjfL2aXR%2BXutSFIDLro2hkkX9583tK7C0R%2FctQpNBouZJZ2vZkYagelfMj1Qh98JWjhxnpTf7jFoRLdu35wLbHPF753ylakl3meb8qN1DQPxQDaZpMnFnUJaw3M53ys4SlGdGfMkOllWSz5PF92ZzRNOYkiYqhTiIGxBN8Pw08DrUtxSeBgqIMZ7afLk4lH%2BkYlkb15UQ4EeAV8OmeUwIQQS%2FAaFiZS0wQUSULRb2G%2B8Dns5a1FK%2F4KGSsXcGIt%2B7FUk6wVRlKpkaCY2gjcL7gcSj%2B1W3HCuPB%2BIajIjCr%2FwrRShwPNPJW1jVd6e21OMe8slij90HnitKXRKXNz2JTnmOVhaFgAg7LJqWUeAvi7yVmQZIX0kQEtUNOq%2B0mbWuRL2OxSGUcbGxxtWGFuT4%2FHp7u9bq64aBXPUP7YLDqfW2BAxxVeHvZmx9yzTari41rIz5zcs2fXvQKyEU8S74YoaFHTmuDG8%2Fz4KteIylazqa6kAD13vjUpolfzu0DLNM%2FqX3MPiSF81%2FALDPlD8CQyOn3obp9pO0HXr%2FX9hfDPwMsHerErGlJCpyofBpXBb%2F8OFU8WqDsYVOKvAI2uI4cdDGO%2Bo%2BVMfoNr2GAngZWSO9IorN8t7E%2F6iwpn2WNobLC1%2F26Wyw44muelgNM%3D/CD1010011879_20210706210704.m3u8"
+                certificateURL:self.ckcURL
             )
             drm.certificate = self.playerModel.drm?.certificate
             self.playerModel.drm = drm

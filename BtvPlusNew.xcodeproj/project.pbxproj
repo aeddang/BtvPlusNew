@@ -185,6 +185,11 @@
 		317EF18625DB46D6004A6A5E /* PlayerListTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317EF18525DB46D6004A6A5E /* PlayerListTab.swift */; };
 		317F0AAA2609537400EB9F6B /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317F0AA92609537400EB9F6B /* SearchResult.swift */; };
 		317F0AB32609DD9E00EB9F6B /* PageSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317F0AB22609DD9E00EB9F6B /* PageSchedule.swift */; };
+		318000B1269FDACC002CC991 /* FairplayPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318000B0269FDACC002CC991 /* FairplayPlayer.swift */; };
+		318000B3269FDAE5002CC991 /* FairplayResourceLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318000B2269FDAE5002CC991 /* FairplayResourceLoader.swift */; };
+		318000B526A00ECB002CC991 /* resource_fairplay_20210715.json in Resources */ = {isa = PBXBuildFile; fileRef = 318000B426A00ECB002CC991 /* resource_fairplay_20210715.json */; };
+		318000B726A03993002CC991 /* resource_fairplay_202107151800.json in Resources */ = {isa = PBXBuildFile; fileRef = 318000B626A03993002CC991 /* resource_fairplay_202107151800.json */; };
+		318000B926A071D7002CC991 /* SoundToolBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318000B826A071D7002CC991 /* SoundToolBox.swift */; };
 		3180855825C2287300AE4A73 /* BtvPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3180855725C2287300AE4A73 /* BtvPlayer.swift */; };
 		3180855E25C233A900AE4A73 /* libPoCDrmAgent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */; };
 		3182A0A6261877E800F7F07D /* InputBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3182A0A5261877E800F7F07D /* InputBox.swift */; };
@@ -311,9 +316,9 @@
 		31956F4C269D0FA30044CF1D /* KidsHomeBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F4B269D0FA30044CF1D /* KidsHomeBlock.swift */; };
 		31956F4F269D10040044CF1D /* KidsMyItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F4E269D10040044CF1D /* KidsMyItem.swift */; };
 		31956F53269D11F20044CF1D /* KidsHomeBlockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F52269D11F20044CF1D /* KidsHomeBlockData.swift */; };
-		31956F55269D1DED0044CF1D /* CategoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F54269D1DED0044CF1D /* CategoryItem.swift */; };
+		31956F55269D1DED0044CF1D /* KidsCategoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F54269D1DED0044CF1D /* KidsCategoryItem.swift */; };
 		31956F57269D1E5B0044CF1D /* KidsPlayList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F56269D1E5B0044CF1D /* KidsPlayList.swift */; };
-		31956F59269D1EE10044CF1D /* CategoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F58269D1EE10044CF1D /* CategoryList.swift */; };
+		31956F59269D1EE10044CF1D /* KidsCategoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F58269D1EE10044CF1D /* KidsCategoryList.swift */; };
 		3195C1A22665CC9D001F513E /* strings.app.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3195C1A12665CC9D001F513E /* strings.app.swift */; };
 		3195C1A42665CCE8001F513E /* strings.alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3195C1A32665CCE8001F513E /* strings.alert.swift */; };
 		3195C1A62665CD35001F513E /* strings.button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3195C1A52665CD35001F513E /* strings.button.swift */; };
@@ -779,6 +784,11 @@
 		317EF18525DB46D6004A6A5E /* PlayerListTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerListTab.swift; sourceTree = "<group>"; };
 		317F0AA92609537400EB9F6B /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
 		317F0AB22609DD9E00EB9F6B /* PageSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSchedule.swift; sourceTree = "<group>"; };
+		318000B0269FDACC002CC991 /* FairplayPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FairplayPlayer.swift; sourceTree = "<group>"; };
+		318000B2269FDAE5002CC991 /* FairplayResourceLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FairplayResourceLoader.swift; sourceTree = "<group>"; };
+		318000B426A00ECB002CC991 /* resource_fairplay_20210715.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = resource_fairplay_20210715.json; sourceTree = "<group>"; };
+		318000B626A03993002CC991 /* resource_fairplay_202107151800.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = resource_fairplay_202107151800.json; sourceTree = "<group>"; };
+		318000B826A071D7002CC991 /* SoundToolBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundToolBox.swift; sourceTree = "<group>"; };
 		3180855725C2287300AE4A73 /* BtvPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtvPlayer.swift; sourceTree = "<group>"; };
 		3180855C25C233A900AE4A73 /* DrmAgent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrmAgent.h; sourceTree = "<group>"; };
 		3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPoCDrmAgent.a; sourceTree = "<group>"; };
@@ -906,9 +916,9 @@
 		31956F4B269D0FA30044CF1D /* KidsHomeBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsHomeBlock.swift; sourceTree = "<group>"; };
 		31956F4E269D10040044CF1D /* KidsMyItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsMyItem.swift; sourceTree = "<group>"; };
 		31956F52269D11F20044CF1D /* KidsHomeBlockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsHomeBlockData.swift; sourceTree = "<group>"; };
-		31956F54269D1DED0044CF1D /* CategoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryItem.swift; sourceTree = "<group>"; };
+		31956F54269D1DED0044CF1D /* KidsCategoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsCategoryItem.swift; sourceTree = "<group>"; };
 		31956F56269D1E5B0044CF1D /* KidsPlayList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsPlayList.swift; sourceTree = "<group>"; };
-		31956F58269D1EE10044CF1D /* CategoryList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryList.swift; sourceTree = "<group>"; };
+		31956F58269D1EE10044CF1D /* KidsCategoryList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsCategoryList.swift; sourceTree = "<group>"; };
 		3195C1A12665CC9D001F513E /* strings.app.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = strings.app.swift; sourceTree = "<group>"; };
 		3195C1A32665CCE8001F513E /* strings.alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = strings.alert.swift; sourceTree = "<group>"; };
 		3195C1A52665CD35001F513E /* strings.button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = strings.button.swift; sourceTree = "<group>"; };
@@ -1345,6 +1355,8 @@
 		313F8D14269C60610055F775 /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				318000B626A03993002CC991 /* resource_fairplay_202107151800.json */,
+				318000B426A00ECB002CC991 /* resource_fairplay_20210715.json */,
 				313F8D15269C60700055F775 /* resource_fairplay.json */,
 			);
 			path = assets;
@@ -1866,6 +1878,15 @@
 			path = schedule;
 			sourceTree = "<group>";
 		};
+		318000AF269FDAB4002CC991 /* drm */ = {
+			isa = PBXGroup;
+			children = (
+				318000B0269FDACC002CC991 /* FairplayPlayer.swift */,
+				318000B2269FDAE5002CC991 /* FairplayResourceLoader.swift */,
+			);
+			path = drm;
+			sourceTree = "<group>";
+		};
 		3182A0BD26188BC300F7F07D /* sub */ = {
 			isa = PBXGroup;
 			children = (
@@ -2172,8 +2193,8 @@
 			children = (
 				31956F4E269D10040044CF1D /* KidsMyItem.swift */,
 				31956F56269D1E5B0044CF1D /* KidsPlayList.swift */,
-				31956F54269D1DED0044CF1D /* CategoryItem.swift */,
-				31956F58269D1EE10044CF1D /* CategoryList.swift */,
+				31956F54269D1DED0044CF1D /* KidsCategoryItem.swift */,
+				31956F58269D1EE10044CF1D /* KidsCategoryList.swift */,
 				319462A5269F00910074FE79 /* KidsBanner.swift */,
 			);
 			path = list;
@@ -2283,6 +2304,7 @@
 		3197FC7D267AE495006918BA /* custom */ = {
 			isa = PBXGroup;
 			children = (
+				318000AF269FDAB4002CC991 /* drm */,
 				3197FC7E267AE4B4006918BA /* asset */,
 				31D453DC267856D300E08CB2 /* vtt */,
 			);
@@ -2795,6 +2817,7 @@
 			children = (
 				D56C6994257DA09E00CF9AB8 /* DynamicLinkManager.swift */,
 				D56C6995257DA09E00CF9AB8 /* SocialMediaSharingManager.swift */,
+				318000B826A071D7002CC991 /* SoundToolBox.swift */,
 			);
 			path = manager;
 			sourceTree = "<group>";
@@ -3409,6 +3432,8 @@
 				318ECF02266DD7FF00380B59 /* SKBtvOTFLight.otf in Resources */,
 				D571786A258304D000BF2612 /* LaunchScreen.storyboard in Resources */,
 				318B53CD25F236A50052E4E0 /* Roboto-Light.ttf in Resources */,
+				318000B526A00ECB002CC991 /* resource_fairplay_20210715.json in Resources */,
+				318000B726A03993002CC991 /* resource_fairplay_202107151800.json in Resources */,
 				318B53C525F236A00052E4E0 /* Roboto-Bold.ttf in Resources */,
 				D568891C259C24A200F2F67A /* Localizable.strings in Resources */,
 				318B53C125F2369E0052E4E0 /* SKBtvMedium.ttf in Resources */,
@@ -3687,7 +3712,7 @@
 				D56C6B39257DACD800CF9AB8 /* ApiConst.swift in Sources */,
 				31D3F4CB25E3368A008FDFEC /* WebBridge.swift in Sources */,
 				D56C6A5F257DA0C700CF9AB8 /* ActivityIndicator.swift in Sources */,
-				31956F55269D1DED0044CF1D /* CategoryItem.swift in Sources */,
+				31956F55269D1DED0044CF1D /* KidsCategoryItem.swift in Sources */,
 				31C4D2982692A505000C7E83 /* KidsReport.swift in Sources */,
 				D5688929259C4C0800F2F67A /* MoreInfoButton.swift in Sources */,
 				31E50C6C261AA05400D0762C /* PageWatchHabit.swift in Sources */,
@@ -3764,6 +3789,7 @@
 				31863E10265C8F530086C40D /* PlayerGrade.swift in Sources */,
 				3192EFD22666F8760012F238 /* KidsGnb.swift in Sources */,
 				D56C5FE825930060009AE769 /* BookMark.swift in Sources */,
+				318000B3269FDAE5002CC991 /* FairplayResourceLoader.swift in Sources */,
 				D56C69A8257DA09E00CF9AB8 /* ImageLoader.swift in Sources */,
 				31E8D7C125CA85190034BBC4 /* PlayerOptionSelectBox.swift in Sources */,
 				3190CB13268ACC1E00ACB465 /* KidProfileListEmpty.swift in Sources */,
@@ -3802,7 +3828,7 @@
 				31F2803826732D3000F40B09 /* FunctionViewerKids.swift in Sources */,
 				31C4D29426926A69000C7E83 /* MonthlyReportCard.swift in Sources */,
 				D56C6A29257DA0C700CF9AB8 /* colors.swift in Sources */,
-				31956F59269D1EE10044CF1D /* CategoryList.swift in Sources */,
+				31956F59269D1EE10044CF1D /* KidsCategoryList.swift in Sources */,
 				D56C6B12257DAADE00CF9AB8 /* SceneDelegate.swift in Sources */,
 				D51AA9E72599A24A0035CD51 /* PagePairing.swift in Sources */,
 				D571785E2582DBF000BF2612 /* PageDataProviderContent.swift in Sources */,
@@ -3915,6 +3941,7 @@
 				31956F57269D1E5B0044CF1D /* KidsPlayList.swift in Sources */,
 				310F6FAC25C0FE53005718B0 /* Watch.swift in Sources */,
 				D56C6B33257DACD800CF9AB8 /* LocalStorage.swift in Sources */,
+				318000B1269FDACC002CC991 /* FairplayPlayer.swift in Sources */,
 				31A3E86A2605E59500BF044B /* PageSearchModel.swift in Sources */,
 				3167642A25CD11E8003A7721 /* PlayerBottom.swift in Sources */,
 				314C7ECB25ABC32200C489FC /* Hello.swift in Sources */,
@@ -4043,6 +4070,7 @@
 				D56C6A5E257DA0C700CF9AB8 /* MultiStrokeSpinner.swift in Sources */,
 				319BAFC1260450390007273F /* PageSearch.swift in Sources */,
 				31895B242601F609002DE02E /* SimpleSummaryViewer.swift in Sources */,
+				318000B926A071D7002CC991 /* SoundToolBox.swift in Sources */,
 				31F2803C2673305A00F40B09 /* PlayInfoButton.swift in Sources */,
 				3167198425FF42A8005AC3D2 /* WatchedBlock.swift in Sources */,
 				D56C6A56257DA0C700CF9AB8 /* CircleButton.swift in Sources */,

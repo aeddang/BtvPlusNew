@@ -13,19 +13,27 @@ extension KidsTop {
     static let height:CGFloat = Self.marginTop + DimenKids.app.gnbTop + DimenKids.app.top
 }
 struct KidsTop: PageComponent{
-   
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var sceneObserver:PageSceneObserver
   
+    @State var useGnb:Bool = true
     var body: some View {
         VStack(alignment: .leading, spacing:0){
             KidsTopTab()
                 .frame( height: DimenKids.app.top)
             KidsGnb()
-                .frame( height: DimenKids.app.gnbTop)
+                .frame( height: self.useGnb ? DimenKids.app.gnbTop : 0)
+                .opacity(self.useGnb ? 1 : 0)
         }
         .modifier(ContentHorizontalEdgesKids())
         .padding(.top, Self.marginTop)
         .background(Color.app.white)
+        .onReceive (self.appSceneObserver.$useGnb) { use in
+            withAnimation{
+                self.useGnb = use
+            }
+           
+        }
         .onAppear(){
         }
         

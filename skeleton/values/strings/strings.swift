@@ -36,6 +36,11 @@ extension String {
         public static let endubbing = "sortEndubbing".loaalized()
         public static let cndubbing = "sortCndubbing".loaalized()
         public static let folansubtitle = "sortFolansubtitle".loaalized()
+        
+        
+        public static let subtitleKor = "sortSubtitleKor".loaalized()
+        public static let dubbingKor = "sortDubbingKor".loaalized()
+        
         public static let etc = "sortEtc".loaalized()
         public static let none = "sortNone".loaalized()
         public static let count = "sortCount".loaalized()

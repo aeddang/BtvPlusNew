@@ -51,14 +51,15 @@ struct ContentItem : Codable {
     private(set) var play_tms_hms: String? = nil   //클립 재생 시간 (시분초) 
     private(set) var i_img_cd:String? = nil // 벳지 이미지var
     private(set) var svc_typ_cd: String? = nil // 서비스 유형 코드
-    private(set) var kes:ProgressItem?
+    private(set) var kes:StudyProgressItem?
+    private(set) var quiz_yn: String? // 퀴즈 여부
     private(set) var epsd_lag_capt_typ_cd: String? // 에피소드 언어 자막 유형 코드
     private(set) var sris_lag_capt_typ_cd: String? // 시리즈 언어 자막 유형 코드
     // private(set) var quiz_yn:String? = nil // JSON 데이타로는 넘어오는데 스펙에는 없슴.
     init(json: [String:Any]) throws {}
 }
 
-class ProgressItem: Codable {
+class StudyProgressItem: Codable {
     private(set) var watching_progress: String? // 에피소드 시청 진행율 (단위 %)
     private(set) var position: Int? // 강조할 에피소드의 번호 (blocks>items>position)
     init(json: [String:Any]) throws {}

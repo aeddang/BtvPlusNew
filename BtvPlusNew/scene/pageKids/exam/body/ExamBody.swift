@@ -13,6 +13,7 @@ import struct Kingfisher.KFImage
 struct ExamBody: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @ObservedObject var viewModel:KidsExamModel = KidsExamModel()
+    @ObservedObject var soundBoxModel:SoundBoxModel = SoundBoxModel()
     var type:DiagnosticReportType = .english
     var isView:Bool = false
     var body: some View {
@@ -37,6 +38,7 @@ struct ExamBody: PageComponent{
                 .padding(.bottom, self.sceneObserver.safeAreaBottom + DimenKids.margin.thin)
                 ExamControl(
                     viewModel: self.viewModel,
+                    soundBoxModel: self.soundBoxModel,
                     isView: self.isView
                 )
             }

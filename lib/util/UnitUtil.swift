@@ -458,3 +458,9 @@ extension Color {
 }
 
 
+extension Data {
+    var base64encodedDataPadded: Data {
+        let data = last == 46 ? dropLast() : self
+        return data + .init(repeating: 65, count: data.count % 3)
+    }
+}

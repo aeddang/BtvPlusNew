@@ -121,6 +121,7 @@
 "sir" ="‘%s’님이";
 "forSir" ="‘%s’님에게 필요한";
 
+
 /*
   Button
 */
@@ -192,6 +193,10 @@
 "sortEndubbing" = "영어더빙";
 "sortCndubbing" = "중국어더빙";
 "sortFolansubtitle" = "다국어자막";
+
+"sortSubtitleKor" = "한글자막";
+"sortDubbingKor" = "우리말";
+
 "sortEtc" = "기타";
 "sortNone" = "없음";
 

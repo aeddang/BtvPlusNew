@@ -94,7 +94,9 @@ class CustomAssetPlayer: AVPlayer , PageProtocol{
             delegate?.onAssetLoadError(.drm(reason: "certificate url"))
             return
         }
-        let task = URLSession.shared.dataTask(with: url) {
+        var certificateRequest = URLRequest(url: url)
+        certificateRequest.httpMethod = "POST"
+        let task = URLSession.shared.dataTask(with:certificateRequest) {
             [weak self] (data, response, error) in
             guard error == nil, let data = data else
             {
@@ -105,7 +107,8 @@ class CustomAssetPlayer: AVPlayer , PageProtocol{
             if let self = self {
                 let cerData = data
                 drm.certificate = cerData
-                DataLog.d("DRM: certificate " + cerData.base64EncodedString() , tag: self.tag)
+                let str = String(decoding: cerData, as: UTF8.self)
+                DataLog.d("DRM: certificate " + str , tag: self.tag)
                 self.playAsset(drm: drm)
             }
         }

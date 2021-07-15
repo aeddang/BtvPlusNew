@@ -8,9 +8,11 @@
 
 import Foundation
 import SwiftUI
-
+import AVKit
+import AudioToolbox
 struct ImageAnimation : View, AnimateDrawViewProtocol, PageProtocol {
     var images:[String] = []
+    var sound:String? = nil
     var contentMode:ContentMode  = .fit
     var fps:Double = 0.05
     var isLoof:Bool = true
@@ -42,7 +44,10 @@ struct ImageAnimation : View, AnimateDrawViewProtocol, PageProtocol {
     func startAnimation() {
         //ComponentLog.d("startAnimation" , tag: self.tag)
         isDrawing = true
+        playSound()
         createJob(duration: isLoof ? 0 : fps*Double(images.count) , fps: self.fps)
+        
+        
     }
     func stopAnimation() {
         //ComponentLog.d("stopAnimation" , tag: self.tag)
@@ -66,6 +71,12 @@ struct ImageAnimation : View, AnimateDrawViewProtocol, PageProtocol {
     func onDraw(frm: Int) {
         self.currentFrm = frm % self.images.count
         //ComponentLog.d("onDraw " + self.currentFrm.description, tag: self.tag)
+    }
+    
+    private func playSound(){
+        guard let snd = self.sound  else {return}
+        SoundToolBox().play(snd: snd)
+        
     }
 }
 

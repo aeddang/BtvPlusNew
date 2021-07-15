@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-
+import struct Kingfisher.KFImage
 enum KidsPlayType {
     case play, english , tale, create, subject, unknown(String? = nil)
     static func getType(_ value:String?)->KidsPlayType{
@@ -139,17 +139,28 @@ struct KidsPlayListItem:PageView  {
             ZStack{
                 ZStack{
                     if let img = self.poster?.image {
-                        ImageView(url:img ,contentMode: .fill, noImg: self.data.defaultImage)
+                        KFImage(URL(string: img))
+                            .resizable()
+                            .placeholder {
+                                Image(self.data.defaultImage)
+                                    .resizable()
+                            }
+                            .cancelOnDisappear(true)
+                            .loadImmediately()
+                            .aspectRatio(contentMode: .fit)
                             .modifier(MatchParent())
+                       
                     } else {
                         Image(self.data.defaultImage)
                             .renderingMode(.original).resizable()
                             .scaledToFit()
                             .modifier(MatchParent())
                     }
+                    /*
                      if let tag = self.poster?.tagData {
                         Tag(data: tag).modifier(MatchParent())
                     }
+                    */
                 }
                 .frame(
                     width: Self.imgSize.width,
@@ -163,6 +174,23 @@ struct KidsPlayListItem:PageView  {
             .frame(
                 width: Self.size.width,
                 height: Self.size.height)
+            .onTapGesture {
+                if let poster = self.poster {
+                    if let synopsisData = poster.synopsisData {
+                        self.pagePresenter.openPopup(
+                            poster.moveSynopsis
+                                .addParam(key: .data, value: synopsisData)
+                                .addParam(key: .watchLv, value: poster.watchLv)
+                        )
+                    } else {
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.person)
+                                .addParam(key: .data, value: poster)
+                                .addParam(key: .watchLv, value: poster.watchLv)
+                        )
+                    }
+                }
+            }
             
         }
         .onReceive(dataProvider.$result) { res in
@@ -170,7 +198,7 @@ struct KidsPlayListItem:PageView  {
             guard let resData = res?.data as? CWGridKids else { return }
             guard let grids = resData.grid else { return }
             guard let block = grids.first?.block?.first else { return }
-            let poster = PosterData().setData(data: block)
+            let poster = PosterData(pageType: .kids).setData(data: block)
             self.data.poster = poster
             withAnimation{
                 self.poster = poster

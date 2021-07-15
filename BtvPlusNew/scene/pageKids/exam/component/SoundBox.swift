@@ -17,7 +17,7 @@ extension SoundBox {
 
 struct SoundBox: PageComponent{
     @ObservedObject var viewModel:KidsExamModel = KidsExamModel()
-    @ObservedObject fileprivate var soundBoxModel:SoundBoxModel = SoundBoxModel()
+    @ObservedObject var soundBoxModel:SoundBoxModel = SoundBoxModel()
     var isView:Bool = false
     var body: some View {
         ZStack(alignment: .leading){
@@ -79,6 +79,14 @@ struct SoundBox: PageComponent{
         .onReceive(self.soundBoxModel.$isCompleted){isCompleted in
             self.isPlay = !isCompleted
         }
+        .onReceive(self.soundBoxModel.$isRight){isRight in
+            switch isRight {
+            case true: self.playSound(asset: AssetKids.sound.right)
+            case false: self.playSound(asset: AssetKids.sound.wrong)
+            default: break
+                
+            }
+        }
         .onAppear(){
             self.audioDelegate.parent = self
         }
@@ -109,6 +117,36 @@ struct SoundBox: PageComponent{
                     if !self.isView {
                         audioPlayer.play()
                     } 
+                    DispatchQueue.main.async {
+                        ableSound()
+                    }
+                } catch let error {
+                    ComponentLog.e("playSound error: \(error.localizedDescription)", tag: self.tag)
+                    DispatchQueue.main.async {
+                        unableSound()
+                    }
+                }
+            }
+        } else {
+            unableSound()
+        }
+    }
+    
+    private func playSound(asset: String)
+    {
+        
+        self.stopSound()
+        if let asset = NSDataAsset(name: asset) {
+            self.setAudioSession(isActive: true)
+            DispatchQueue.global(qos: .background).async {
+                do{
+                    
+                    let audioPlayer = try AVAudioPlayer(data: asset.data)
+                    self.audioPlayer = audioPlayer
+                    audioPlayer.prepareToPlay()
+                    audioPlayer.delegate = self.audioDelegate
+                    audioPlayer.play()
+                    
                     DispatchQueue.main.async {
                         ableSound()
                     }
@@ -163,6 +201,8 @@ struct SoundBox: PageComponent{
 
 class SoundBoxModel:ObservableObject, PageProtocol{
     @Published fileprivate var isCompleted:Bool = false
+    
+    @Published var isRight:Bool? = nil
 }
 class  AudioDelegate:NSObject, AVAudioPlayerDelegate {
     fileprivate var parent: SoundBox? = nil

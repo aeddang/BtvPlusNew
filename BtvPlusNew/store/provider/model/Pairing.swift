@@ -6,12 +6,11 @@
 //
 
 import Foundation
-
-
 enum PairingRequest:Equatable{
     case wifi , btv, user(String?), cancel, hostInfo(auth:String?, device:String?, prevResult:NpsCommonHeader?),
          recovery, device(StbData), auth(String) , unPairing, check,
-         userInfo, updateKids, registKid(Kid), selectKid(Kid), modifyKid(Kid), deleteKid(Kid)
+         userInfo, updateKids, registKid(Kid), selectKid(Kid), modifyKid(Kid), deleteKid(Kid),
+         updateKidStudy
     static func ==(lhs: PairingRequest, rhs: PairingRequest) -> Bool {
         switch (lhs, rhs) {
         case ( .wifi, .wifi ):return true
@@ -57,6 +56,8 @@ class Pairing:ObservableObject, PageProtocol {
     
     @Published var userInfo:PairingUserInfo? = nil
     @Published private(set) var kid:Kid? = nil
+    @Published private(set) var kidStudyData:KidStudy? = nil
+    
     private(set) var kids:[Kid] = []
     
     
@@ -69,6 +70,7 @@ class Pairing:ObservableObject, PageProtocol {
             self.status = .connect
         case .selectKid(let kid) :
             self.kid = kid
+            self.kidStudyData = nil
             self.storage?.selectedKidsProfileId = kid.id
         
         case .registKid(let kid) :
@@ -80,6 +82,8 @@ class Pairing:ObservableObject, PageProtocol {
         case .deleteKid(let kid) :
             kid.updateType = .del
             kid.modifyUserData = nil
+        case .updateKidStudy :
+            if self.kid == nil { return }
         default : break
         }
         self.request = request
@@ -103,6 +107,7 @@ class Pairing:ObservableObject, PageProtocol {
         self.authority.reset()
         self.kids = []
         self.kid = nil
+        self.kidStudyData = nil
     }
     
     
@@ -177,6 +182,7 @@ class Pairing:ObservableObject, PageProtocol {
             if let kidId = self.storage?.selectedKidsProfileId {
                 self.kid = self.kids.first(where: {$0.id == kidId})
                 if self.kid == nil {
+                    self.storage?.selectedKidsProfileId = nil
                     self.event = .notFoundKid
                     return
                 }
@@ -227,6 +233,10 @@ class Pairing:ObservableObject, PageProtocol {
     }
     func editedKidsProfilesError(){
         self.event = .editedKidsError(nil)
+    }
+    
+    func updatedKidStudy(_ data:KidStudy){
+        self.kidStudyData = data
     }
     private func checkComple(){
         if self.isPairingUser && self.isPairingAgreement && self.hostDevice != nil{

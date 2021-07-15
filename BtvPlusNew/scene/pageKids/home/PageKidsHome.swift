@@ -61,13 +61,25 @@ struct PageKidsHome: PageView {
             }
             .onReceive(self.pairing.$kid){ kid in
                 self.reload()
+                if kid != nil {
+                    if self.pairing.kidStudyData == nil {
+                        self.pairing.requestPairing(.updateKidStudy)
+                    }
+                }
+            }
+            .onReceive(self.pairing.$event){evt in
+                guard let evt = evt else {return}
+                switch evt {
+                case .pairingCompleted : self.pairing.requestPairing(.updateKids)
+                default : break
+                }
             }
             .onReceive(self.infinityScrollModel.$event){evt in
                 guard let evt = evt else {return}
                 if self.pagePresenter.currentTopPage?.pageID == .kidsHome {
                     switch evt {
-                    case .top : self.appSceneObserver.useTopFix = true
-                    case .down : self.appSceneObserver.useTopFix = false
+                    case .top : self.appSceneObserver.useGnb = true
+                    case .down : self.appSceneObserver.useGnb = false
                     default : break
                     }
                 }
@@ -99,7 +111,8 @@ struct PageKidsHome: PageView {
                 
             }
             .onDisappear{
-                self.appSceneObserver.useTopFix = nil
+                //self.appSceneObserver.useGnb = true
+                
             }
         }//geo
     }//body
@@ -109,7 +122,7 @@ struct PageKidsHome: PageView {
     
     private func reload(){
         if self.pagePresenter.currentTopPage?.pageID == PageID.kidsHome {
-            self.appSceneObserver.useTopFix = true
+            self.appSceneObserver.useGnb = true
         }
         guard let blockData = self.dataProvider.bands.kidsGnbModel.getGnbData(menuId: self.menuId) else { return }
         let isHome  = self.menuId == EuxpNetwork.MenuTypeCode.MENU_KIDS_HOME.rawValue

@@ -12,6 +12,8 @@ extension AssetKids {
     public static let noImg16_9 = "zemkidsMThumnailDefault"
     public static let noImg9_16 = "zemkidsMPosterDefault2"
     public static let noImgBanner = "blockLDefaultM"
+    public static let noImgCard = "blockMDefaultM"
+    public static let noImgCardHalf = "blockSDefaultM"
 }
 extension AssetKids{
     private static let isPad =  AppUtil.isPad()
@@ -69,6 +71,8 @@ extension AssetKids{
         public static let arrowL = "zemkidsMMonthlyReportArrowLN"
         public static let arrowR = "zemkidsMMonthlyReportArrowRN"
         public static let cardMore = "icCardEnterM"
+        
+       
     }
     
     
@@ -230,6 +234,24 @@ extension AssetKids{
             }
         }
     }
+    
+    struct study {
+        static func getIcon(watchingProgress:String?) -> String? {
+            guard let progress = watchingProgress?.toInt() else {
+                return nil
+            }
+            if progress == -1 { return nil }
+            if progress == 0 { return "zemkidsMFlagStudyBefore" }
+            if progress == 100 { return "zemkidsMFlagStudyFinish" }
+            return "zemkidsMFlagStudyIng"
+        }
+    }
+    
+    struct sound {
+        public static let right = "zemkids_test_good_sound"
+        public static let wrong = "zemkids_test_bad_sound"
+    }
+    
     
     static let characterList = [
         "zemkidsTIImgKidsprofileBoy01",

@@ -82,7 +82,11 @@ class AccountManager : PageProtocol{
             case .deleteKid(let kid) :
                 self.requestKid = kid
                 self.dataProvider.requestData(q: .init(type: .updateKidsProfiles([kid]), isOptional: false))
-
+            case .updateKidStudy :
+                if let kid = self.pairing.kid {
+                    self.dataProvider.requestData(q: .init(type: .getKidStudy(kid), isOptional: false))
+                }
+                
             default: do{}
             }
         }).store(in: &anyCancellable)
@@ -261,6 +265,10 @@ class AccountManager : PageProtocol{
                 }
                 self.pairing.editedKidsProfiles(resData, editedKid: self.requestKid)
                 self.requestKid = nil
+            case .getKidStudy(let kid) :
+                if kid.id != self.pairing.kid?.id {return}
+                guard let resData = res.data as? KidStudy else { return }
+                self.pairing.updatedKidStudy(resData)
             default: break
             
             }

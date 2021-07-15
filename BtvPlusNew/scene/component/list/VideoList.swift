@@ -44,9 +44,11 @@ class VideoData:InfinityData{
         isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
         originImage = data.poster_filename_h
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: ListItem.video.size, isAdult: self.isAdult)
+        /*
         if let rt = data.kes?.watching_progress?.toInt() {
             self.progress = Float(rt) / 100.0 
         }
+        */
         if self.isClip {
             playTime = data.play_tms_hms?.toHMS()
         } else {

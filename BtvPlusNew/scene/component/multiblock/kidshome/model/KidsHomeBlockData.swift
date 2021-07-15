@@ -17,12 +17,13 @@ class KidsHomeBlockData:Identifiable, ObservableObject{
                 switch svcPropCd {
                 case "519" :
                     self.datas.append(KidsMyItemData().setData(data: data))
-                default : break
+                default :
+                    self.datas.append(KidsCategoryItemData().setData(data: data))
                 }
             } else {
                 switch data.btm_bnr_blk_exps_cd {
-                case "07" : break
-                case "08" : break
+                case "07", "08", "05" :
+                    self.datas.append(KidsCategoryListData().setData(data: data))
                 case "09" :
                     self.datas.append(KidsPlayListData().setData(data: data))
                 default :

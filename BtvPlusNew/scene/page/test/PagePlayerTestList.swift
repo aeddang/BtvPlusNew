@@ -112,13 +112,18 @@ struct PagePlayerTestList: PageView {
     }//body
     
     private func loadAsset(){
-        let url = Bundle.main.url(forResource: "resource_fairplay", withExtension: "json")!
+        let url = Bundle.main.url(forResource: "resource_fairplay_202107151800", withExtension: "json")!
         let data = try! Data(contentsOf: url)
         let decoder = JSONDecoder()
-        let sets = try? decoder.decode([SampleVideos].self, from: data)
-        sets?.forEach{ sample in
-            self.lists = sample.samples?.map{ VideoListData(title: sample.name ?? "").setData($0)} ?? []
+        do {
+            let sets = try decoder.decode([SampleVideos].self, from: data)
+            sets.forEach{ sample in
+                self.lists = sample.samples?.map{ VideoListData(title: sample.name ?? "").setData($0)} ?? []
+            }
+        } catch let e {
+            PageLog.e("parse error " + e.localizedDescription, tag: self.tag)
         }
+       
        
     }
     

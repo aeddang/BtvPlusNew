@@ -38,7 +38,7 @@ struct PageKidsHome: PageView {
                     useBodyTracking:self.useTracking,
                     useTracking:false,
                     marginTop:KidsTop.height + DimenKids.margin.regular + self.sceneObserver.safeAreaTop,
-                    marginBottom: self.sceneObserver.safeAreaBottom
+                    marginBottom: self.sceneObserver.safeAreaIgnoreKeyboardBottom
                     )
             }
             .background(

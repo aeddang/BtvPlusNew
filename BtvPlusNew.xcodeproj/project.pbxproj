@@ -348,6 +348,9 @@
 		319BAFCC26046B240007273F /* ImageAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319BAFCB26046B240007273F /* ImageAnimation.swift */; };
 		319BAFD7260478540007273F /* VoiceRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319BAFD6260478540007273F /* VoiceRecorder.swift */; };
 		319BAFDD2604A2FE0007273F /* SearchTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319BAFDC2604A2FE0007273F /* SearchTab.swift */; };
+		319C47E726A1743400C61EF8 /* PageKidsMultiBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319C47E626A1743400C61EF8 /* PageKidsMultiBlock.swift */; };
+		319C47E926A1946400C61EF8 /* ScrollMenuTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319C47E826A1946400C61EF8 /* ScrollMenuTab.swift */; };
+		319C47EB26A1C06100C61EF8 /* SkeletonBlockKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319C47EA26A1C06100C61EF8 /* SkeletonBlockKids.swift */; };
 		319CF658269522DB00159575 /* LvGraphBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF657269522DB00159575 /* LvGraphBox.swift */; };
 		319CF65A269545D400159575 /* CreativeGraphBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF659269545D400159575 /* CreativeGraphBox.swift */; };
 		319CF65C2695662500159575 /* PageKidsMyDiagnostic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF65B2695662500159575 /* PageKidsMyDiagnostic.swift */; };
@@ -949,6 +952,9 @@
 		319BAFCB26046B240007273F /* ImageAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAnimation.swift; sourceTree = "<group>"; };
 		319BAFD6260478540007273F /* VoiceRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecorder.swift; sourceTree = "<group>"; };
 		319BAFDC2604A2FE0007273F /* SearchTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTab.swift; sourceTree = "<group>"; };
+		319C47E626A1743400C61EF8 /* PageKidsMultiBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageKidsMultiBlock.swift; sourceTree = "<group>"; };
+		319C47E826A1946400C61EF8 /* ScrollMenuTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollMenuTab.swift; sourceTree = "<group>"; };
+		319C47EA26A1C06100C61EF8 /* SkeletonBlockKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonBlockKids.swift; sourceTree = "<group>"; };
 		319CF657269522DB00159575 /* LvGraphBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LvGraphBox.swift; sourceTree = "<group>"; };
 		319CF659269545D400159575 /* CreativeGraphBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreativeGraphBox.swift; sourceTree = "<group>"; };
 		319CF65B2695662500159575 /* PageKidsMyDiagnostic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageKidsMyDiagnostic.swift; sourceTree = "<group>"; };
@@ -1346,6 +1352,7 @@
 		313F8D0F269C1A020055F775 /* itemKids */ = {
 			isa = PBXGroup;
 			children = (
+				319C47EA26A1C06100C61EF8 /* SkeletonBlockKids.swift */,
 				313F8D10269C1A490055F775 /* PosterBlockKids.swift */,
 				313F8D12269C3F8E0055F775 /* VideoBlockKids.swift */,
 			);
@@ -2256,6 +2263,7 @@
 				319CF67626970DD800159575 /* exam */,
 				318D100A266884DF00B66977 /* my */,
 				316A7073266F3CA500A93B83 /* popup */,
+				319C47E526A1741A00C61EF8 /* sub */,
 				3195C1BF26660D88001F513E /* home */,
 				3195C1BC2665F350001F513E /* intro */,
 				3195C1BA2665F121001F513E /* PageKidsFactory.swift */,
@@ -2297,6 +2305,7 @@
 				316A7067266EF7FC00A93B83 /* MenuTab.swift */,
 				3190CB23268D890500ACB465 /* MenuNavi.swift */,
 				3190CB0D268ABD8400ACB465 /* PageKidsTab.swift */,
+				319C47E826A1946400C61EF8 /* ScrollMenuTab.swift */,
 			);
 			path = tab;
 			sourceTree = "<group>";
@@ -2372,6 +2381,14 @@
 				31A3E8692605E59500BF044B /* PageSearchModel.swift */,
 			);
 			path = model;
+			sourceTree = "<group>";
+		};
+		319C47E526A1741A00C61EF8 /* sub */ = {
+			isa = PBXGroup;
+			children = (
+				319C47E626A1743400C61EF8 /* PageKidsMultiBlock.swift */,
+			);
+			path = sub;
 			sourceTree = "<group>";
 		};
 		319CF65F2695C32600159575 /* model */ = {
@@ -3682,6 +3699,7 @@
 				31A73BCD261D99B1009A143C /* PageMyPurchase.swift in Sources */,
 				D56C6A4A257DA0C700CF9AB8 /* Swipper.swift in Sources */,
 				318D100826687B6100B66977 /* KidProfile.swift in Sources */,
+				319C47E926A1946400C61EF8 /* ScrollMenuTab.swift in Sources */,
 				31E50C79261AEBFE00D0762C /* ResultMessage.swift in Sources */,
 				316A708226704F6800A93B83 /* PlayerEffectSeek.swift in Sources */,
 				319CF68B2697B69900159575 /* KidsExamModel.swift in Sources */,
@@ -3718,6 +3736,7 @@
 				31E50C6C261AA05400D0762C /* PageWatchHabit.swift in Sources */,
 				316A70A12670804A00A93B83 /* ListStyleKids.swift in Sources */,
 				D56C699E257DA09E00CF9AB8 /* PageContentController.swift in Sources */,
+				319C47E726A1743400C61EF8 /* PageKidsMultiBlock.swift in Sources */,
 				31895AFF2601CDDE002DE02E /* DirectPackageView.swift in Sources */,
 				31D3F4DE25E36625008FDFEC /* PageMultiBlock.swift in Sources */,
 				3190CB0E268ABD8400ACB465 /* PageKidsTab.swift in Sources */,
@@ -3828,6 +3847,7 @@
 				31F2803826732D3000F40B09 /* FunctionViewerKids.swift in Sources */,
 				31C4D29426926A69000C7E83 /* MonthlyReportCard.swift in Sources */,
 				D56C6A29257DA0C700CF9AB8 /* colors.swift in Sources */,
+				319C47EB26A1C06100C61EF8 /* SkeletonBlockKids.swift in Sources */,
 				31956F59269D1EE10044CF1D /* KidsCategoryList.swift in Sources */,
 				D56C6B12257DAADE00CF9AB8 /* SceneDelegate.swift in Sources */,
 				D51AA9E72599A24A0035CD51 /* PagePairing.swift in Sources */,

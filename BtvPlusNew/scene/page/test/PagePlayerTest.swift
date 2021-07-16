@@ -23,7 +23,7 @@ struct PagePlayerTest: PageView {
     @ObservedObject var playerModel = PlayerModel()
    
     @State var title:String = "PLAYER TEST"
-    @State var listURL:String = ""//"https://ecdn-fairplay.digicaps.dev/player/2021_mig/resource.json"
+    @State var listURL:String = "https://ecdn-fairplay.digicaps.dev/player/2021_mig/resource.json"
     @State var ckcURL:String = ""
     @State var contentId:String = ""
     @State var videoPath:String = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"

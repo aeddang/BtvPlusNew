@@ -92,7 +92,12 @@ struct PosterBlockKids:PageComponent, BlockProtocol {
                                 : String.alert.dataError)
                         .modifier(MatchParent())
                 } else {
-                    Spacer()
+                    SkeletonBlockKids(
+                        len:7,
+                        spacing: DimenKids.margin.thinUltra,
+                        size:ListItemKids.poster.type01
+                    )
+                    .modifier(MatchParent())
                 }
             }
         }
@@ -171,7 +176,7 @@ struct PosterBlockKids:PageComponent, BlockProtocol {
     
         self.dataBindingSubscription?.cancel()
         self.dataBindingSubscription = Timer.publish(
-            every: SkeletonBlock.dataBindingDelay , on: .current, in: .common)
+            every: SkeletonBlockKids.dataBindingDelay , on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
                 self.clearDataBinding()

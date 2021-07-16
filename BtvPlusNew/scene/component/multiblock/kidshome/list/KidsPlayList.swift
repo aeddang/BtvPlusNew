@@ -135,6 +135,12 @@ struct KidsPlayListItem:PageView  {
             
             ){ _ in
                 
+                self.pagePresenter.openPopup(
+                    PageKidsProvider.getPageObject(.kidsMultiBlock)
+                        .addParam(key: .datas, value: data.blocks)
+                        .addParam(key: .title, value: data.title)
+                )
+                
             }
             ZStack{
                 ZStack{

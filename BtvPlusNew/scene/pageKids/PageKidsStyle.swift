@@ -26,8 +26,9 @@ struct ContentHorizontalEdgesKids: ViewModifier {
             .padding(.leading, self.marginStart + DimenKids.margin.regular)
             .padding(.trailing, self.marginEnd + DimenKids.margin.regular)
             .onAppear(){
-                self.marginStart = self.sceneObserver.safeAreaStart
-                self.marginEnd = self.sceneObserver.safeAreaEnd
+                let margin = max(self.sceneObserver.safeAreaStart,self.sceneObserver.safeAreaEnd)
+                self.marginStart = margin
+                self.marginEnd = margin
             }
             .onReceive(self.sceneObserver.$isUpdated){ update in
                 if !update {return}
@@ -35,8 +36,9 @@ struct ContentHorizontalEdgesKids: ViewModifier {
                     self.marginStart = 0
                     self.marginEnd = 0
                 }else{
-                    self.marginStart = self.sceneObserver.safeAreaStart
-                    self.marginEnd = self.sceneObserver.safeAreaEnd
+                    let margin = max(self.sceneObserver.safeAreaStart,self.sceneObserver.safeAreaEnd)
+                    self.marginStart = margin
+                    self.marginEnd = margin
                 }
             }
     }

@@ -372,10 +372,15 @@ extension String{
     }
     
     
-    func toPercentEscape()-> String {
+    func toPercentEncoding()-> String {
         var chSet = CharacterSet.alphanumerics
         chSet.insert(charactersIn: "-._*")
         return self.addingPercentEncoding(withAllowedCharacters: chSet)?.replace(" ", with: "+") ?? self
+    }
+    func toPercentDecoding()-> String {
+        var chSet = CharacterSet.alphanumerics
+        chSet.insert(charactersIn: "-._*")
+        return self.addingPercentEncoding(withAllowedCharacters: chSet)?.replace("%2B", with: "+") ?? self
     }
     
 }

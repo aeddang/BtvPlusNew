@@ -302,7 +302,7 @@ struct MultiBlock:PageComponent {
             
             switch data.uiType {
             case .poster :
-                if data.dataType == .cwGridKids {
+                if data.pageType == .kids {
                     PosterBlockKids(
                         pageObservable:self.pageObservable,
                         pageDragingModel:self.pageDragingModel,
@@ -321,7 +321,7 @@ struct MultiBlock:PageComponent {
                 }
                 
             case .video :
-                if data.dataType == .cwGridKids {
+                if data.pageType == .kids {
                     VideoBlockKids(
                         pageObservable:self.pageObservable,
                         pageDragingModel:self.pageDragingModel,

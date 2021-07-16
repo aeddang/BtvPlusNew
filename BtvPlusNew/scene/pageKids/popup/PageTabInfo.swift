@@ -15,13 +15,13 @@ extension PageTabInfo{
     static let idealWidth:CGFloat = SystemEnvironment.isTablet ? 565: 326
     static let maxWidth:CGFloat = SystemEnvironment.isTablet ? 820 : 428
     static let tabWidth:CGFloat = SystemEnvironment.isTablet ? 219 : 123
+    static let scrollTabSize:Int = SystemEnvironment.isTablet ? 3 : 3
 }
 
 struct PageTabInfo: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var tabNavigationModel:NavigationModel = NavigationModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
-    
     
     @State var datas:[TabInfoData] = []
     let maxTextCount:Int = SystemEnvironment.isTablet ? 400 : 200
@@ -39,40 +39,13 @@ struct PageTabInfo: PageView {
             VStack{
                 VStack (alignment: .center, spacing:DimenKids.margin.regularExtra){
                     if !self.tabs.isEmpty {
-                        if self.tabs.count > 3{
-                            ZStack{
-                                ScrollView(.horizontal, showsIndicators: false){
-                                    MenuTab(
-                                        viewModel: self.tabNavigationModel,
-                                        buttons: self.tabs,
-                                        selectedIdx: self.tabIdx,
-                                        bgColor: Color.app.ivoryDeep,
-                                        isDivision: false)
-                                        .padding(.horizontal, DimenKids.margin.regular)
-                                }
-                                HStack(spacing:0){
-                                    LinearGradient(
-                                        gradient:Gradient(colors: [Color.kids.bg, Color.kids.bg.opacity(0)]),
-                                        startPoint: .leading, endPoint: .trailing)
-                                        .modifier(MatchVertical(width:DimenKids.margin.regular))
-                                    Spacer()
-                                    LinearGradient(
-                                        gradient:Gradient(colors: [Color.kids.bg.opacity(0), Color.kids.bg]),
-                                        startPoint: .leading, endPoint: .trailing)
-                                        .modifier(MatchVertical(width:DimenKids.margin.regular))
-                                }
-                                .frame(height:SystemEnvironment.isTablet ? DimenKids.tab.thin : DimenKids.tab.light)
-                            }
-                        } else {
-                            MenuTab(
-                                viewModel: self.tabNavigationModel,
-                                buttons: self.tabs,
-                                selectedIdx: self.tabIdx,
-                                bgColor: Color.app.ivoryDeep,
-                                isDivision: true)
-                                .frame(width: Self.tabWidth * CGFloat(self.tabs.count))
-                        }
-                        
+                        ScrollMenuTab(
+                            viewModel:  self.tabNavigationModel,
+                            tabIdx: self.tabIdx,
+                            tabs: self.tabs,
+                            scrollTabSize: Self.scrollTabSize,
+                            tabWidth: Self.tabWidth
+                        )
                     }
                     
                     if self.text.count > self.maxTextCount {

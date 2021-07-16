@@ -76,7 +76,7 @@ class FairplayResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageProt
         var params = [String:String]()
         params["spc"] = spcData.base64EncodedString()
         params["assetId"] = contentId
-        licenseRequest.httpBody = params.map{$0.key + "=" + $0.value.toPercentEscape()}.joined(separator: "&").data(using: .utf8)
+        licenseRequest.httpBody = params.map{$0.key + "=" + $0.value.toPercentEncoding()}.joined(separator: "&").data(using: .utf8)
         
         
         let task = URLSession(configuration: URLSessionConfiguration.default).dataTask(with: licenseRequest) { data, response, error in
@@ -86,28 +86,28 @@ class FairplayResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageProt
                 request.finishLoading(with: NSError(domain: "ckc", code: -4, userInfo: nil))
                 return
             }
+            var responseString = String(data: data, encoding: .utf8)
+            responseString = responseString?.replacingOccurrences(of: "<ckc>", with: "").replacingOccurrences(of: "</ckc>", with: "")
+            responseString = responseString?.decoded
+            guard let str = responseString  else { return }
+            DataLog.d("license key data " + str, tag: self.tag)
             
-            var str = String(decoding: data, as: UTF8.self)
-            //str = str.replace("<ckc>", with: "")
-            //str = str.replace("</ckc>", with: "")
-            str = str.replace("\n", with: "")
-            DataLog.e("licenseData " + str, tag: self.tag)
+            //request.dataRequest?.respond(with: data)
+            //request.finishLoading()
+            //self.drm.isCompleted = true
             
-            //let modifyData:Data = Data(base64Encoded: str)
-            guard let ckcData = Data(base64Encoded: data)  else {
+            
+            guard let ckcData = Data(base64Encoded: data, options: .ignoreUnknownCharacters)  else {
                 DataLog.e("ckc base64Encoded", tag: self.tag)
                 self.delegate?.onAssetLoadError(.drm(reason: "ckcServer data"))
                 request.finishLoading(with: NSError(domain: "ckc", code: -4, userInfo: nil))
                 return
             }
-            self.drm.isCompleted = true
-            //let base64String = Array(str.utf8).toBase64()!
-            //let strData = base64String.data(using: .utf8)!
-            //request.dataRequest?.respond(with: data)
-            //request.finishLoading()
+            
+            
             var persistentKeyData: Data?
             do {
-                persistentKeyData = try request.persistentContentKey(fromKeyVendorResponse: ckcData, options: nil)
+                persistentKeyData = try request.persistentContentKey(fromKeyVendorResponse:ckcData , options: nil)
             } catch {
                 DataLog.e("ckc persistentContentKey", tag: self.tag)
                 self.delegate?.onAssetLoadError(.drm(reason: "ckc persistentContentKey"))
@@ -116,7 +116,8 @@ class FairplayResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageProt
             request.contentInformationRequest?.contentType = AVStreamingKeyDeliveryPersistentContentKeyType
             request.dataRequest?.respond(with: persistentKeyData!)
             request.finishLoading()
-        
+            self.drm.isCompleted = true
+             
         }
         task.resume()
         return true

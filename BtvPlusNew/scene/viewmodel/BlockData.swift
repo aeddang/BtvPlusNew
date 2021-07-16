@@ -24,6 +24,7 @@ class BlockData:InfinityData, ObservableObject{
     private(set) var originData:BlockItem? = nil
     private(set) var isCountView:Bool = false
     private(set) var childrenBlock:[BlockData] = []
+    var errorMassage:String? = nil
     
     @Published private(set) var status:BlockStatus = .initate
     
@@ -43,6 +44,13 @@ class BlockData:InfinityData, ObservableObject{
         return l.id == r.id
     }
     
+    private(set) var pageType:PageType = .btv
+  
+    init(pageType:PageType = .btv) {
+        self.pageType = pageType
+        super.init()
+    }
+    
     func reset(){
         status = .initate
         leadingBanners = nil
@@ -55,7 +63,7 @@ class BlockData:InfinityData, ObservableObject{
     @discardableResult
     func setData(grids:[GridsItemKids]) -> BlockData{
         childrenBlock = grids.map{ g in
-            BlockData().setData(parent:self, grid: g)
+            BlockData(pageType: .kids).setData(parent:self, grid: g)
         }
         return self
     }
@@ -196,7 +204,8 @@ class BlockData:InfinityData, ObservableObject{
                 self.uiType = .video
                 self.dataType = .cwGridKids
                 self.cardType = .watchedVideo
-            case  "522":
+
+            case  "522", "516":
                 self.uiType = .poster
                 self.dataType = .cwGridKids
                 self.cardType = .smallPoster
@@ -302,7 +311,7 @@ class BlockData:InfinityData, ObservableObject{
     
     func setError(_ err:ApiResultError?){
         if status != .initate { return }
-        status = .passive
+        self.status = .passive
     }
     
     private func findType(_ data:BlockItem) -> CardType {

@@ -115,7 +115,13 @@ struct VideoBlockKids:BlockProtocol, PageComponent {
                         .modifier(MatchParent())
                    
                 }else {
-                    Spacer()
+                    SkeletonBlockKids(
+                        len:4,
+                        spacing: DimenKids.margin.thinUltra,
+                        size:ListItemKids.video.type01
+                    )
+                    .modifier(ContentHorizontalEdgesKids())
+                    .modifier(MatchParent())
                 }
             }
         }
@@ -226,7 +232,7 @@ struct VideoBlockKids:BlockProtocol, PageComponent {
     func creatDataBinding() {
         self.dataBindingSubscription?.cancel()
         self.dataBindingSubscription = Timer.publish(
-            every: SkeletonBlock.dataBindingDelay, on: .current, in: .common)
+            every: SkeletonBlockKids.dataBindingDelay, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
                 self.clearDataBinding()

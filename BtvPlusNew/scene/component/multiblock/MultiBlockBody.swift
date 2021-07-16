@@ -55,10 +55,11 @@ class MultiBlockModel: PageDataProviderModel {
     func updateKids(datas:[BlockItem], openId:String?) {
         self.type = .kids
         self.datas = datas.map{ block in
-            BlockData().setDataKids(block)
+            BlockData(pageType: .kids).setDataKids(block)
         }
         .filter{ block in
             switch block.dataType {
+            case .cwGridKids : return block.cwCallId != nil
             case .cwGrid : return block.menuId != nil && block.cwCallId != nil
             case .grid : return block.menuId != nil
             default : return true
@@ -70,7 +71,7 @@ class MultiBlockModel: PageDataProviderModel {
     
     func updateKids(data:KidsGnbItemData, openId:String?) {
         self.type = .kids
-        self.datas = [ BlockData().setDataKids(data: data) ]
+        self.datas = [ BlockData(pageType: .kids).setDataKids(data: data) ]
         self.openId = openId
         self.isUpdate = true
     }
@@ -142,7 +143,8 @@ struct MultiBlockBody: PageComponent {
             if self.needAdult{
                 AdultAlert()
                     .modifier(MatchParent())
-            } else if !self.isError {
+            } else {
+                
                 ZStack(alignment: .topLeading){
                     if !Self.isLegacy  {
                         if self.topDatas != nil && self.topDatas?.isEmpty == false {
@@ -213,15 +215,19 @@ struct MultiBlockBody: PageComponent {
                             isLegacy:Self.isLegacy,
                             action:self.action)
                     }
+                    if self.isError {
+                        if self.viewModel.type == .btv {
+                            EmptyAlert()
+                                .modifier(MatchParent())
+                        } else {
+                            ErrorKidsData(
+                                icon: self.errorMsg == nil ?  Asset.icon.alert : nil,
+                                text:self.errorMsg ?? String.alert.dataError) 
+                                .modifier(MatchParent())
+                        }
+                    }
                 }
-            } else {
-                if self.viewModel.type == .btv {
-                    EmptyAlert()
-                        .modifier(MatchParent())
-                } else {
-                    ErrorKidsData(text:String.alert.dataError)
-                        .modifier(MatchParent())
-                }
+                
             }
         }
         .modifier(MatchParent())
@@ -261,7 +267,9 @@ struct MultiBlockBody: PageComponent {
             }
         }
         .onReceive(dataProvider.$result) { res in
+           
             guard let data = self.loadingBlocks.first(where: { $0.id == res?.id}) else {return}
+            
             var leadingBanners:[BannerData]? = nil
             var total:Int? = nil
             let max = Self.maxCellCount
@@ -276,11 +284,11 @@ struct MultiBlockBody: PageComponent {
                         switch data.uiType {
                         case .poster :
                             data.posters = blocks[0...min(max, blocks.count-1)].map{ d in
-                                PosterData().setData(data: d, cardType: data.cardType)
+                                PosterData(pageType: self.pageType).setData(data: d, cardType: data.cardType)
                             }
                         case .video :
                             data.videos = blocks[0...min(max, blocks.count-1)].map{ d in
-                                VideoData().setData(data: d, cardType: data.cardType)
+                                VideoData(pageType: self.pageType).setData(data: d, cardType: data.cardType)
                             }
                         case .theme :
                             data.themas = blocks[0...min(max, blocks.count-1)].map{ d in
@@ -292,6 +300,7 @@ struct MultiBlockBody: PageComponent {
                 }
             case .cwGridKids:
                 guard let resData = res?.data as? CWGridKids else {return data.setBlank()}
+                data.errorMassage = resData.status_reason
                 guard let grid = resData.grid else {return data.setBlank()}
                 if grid.isEmpty {return data.setBlank()}
                 total = resData.total_count
@@ -301,11 +310,11 @@ struct MultiBlockBody: PageComponent {
                             switch data.uiType {
                             case .poster :
                                 data.posters = blocks[0...min(max, blocks.count-1)].map{ d in
-                                    PosterData(pageType: .kids).setData(data: d, cardType: data.cardType)
+                                    PosterData(pageType: self.pageType).setData(data: d, cardType: data.cardType)
                                 }
                             case .video :
                                 data.videos = blocks[0...min(max, blocks.count-1)].map{ d in
-                                    VideoData(pageType: .kids).setData(data: d, cardType: data.cardType)
+                                    VideoData(pageType: self.pageType).setData(data: d, cardType: data.cardType)
                                 }
                             default: break
                             }
@@ -323,12 +332,12 @@ struct MultiBlockBody: PageComponent {
                 switch data.uiType {
                 case .poster :
                     data.posters = blocks[0...min(max, blocks.count-1)].map{ d in
-                        PosterData().setData(data: d, cardType: data.cardType)
+                        PosterData(pageType: self.pageType).setData(data: d, cardType: data.cardType)
                     }
 
                 case .video :
                     data.videos = blocks[0...min(max, blocks.count-1)].map{ d in
-                        VideoData().setData(data: d, cardType: data.cardType)
+                        VideoData(pageType: self.pageType).setData(data: d, cardType: data.cardType)
                     }
                     
                 case .theme :
@@ -350,11 +359,11 @@ struct MultiBlockBody: PageComponent {
                 switch data.uiType {
                 case .poster :
                     data.posters = blocks[0...min(max, blocks.count-1)].map{ d in
-                        PosterData().setData(data: d, cardType: data.cardType)
+                        PosterData(pageType: self.pageType).setData(data: d, cardType: data.cardType)
                     }
                 case .video :
                     data.videos = blocks[0...min(max, blocks.count-1)].map{ d in
-                        VideoData().setData(data: d, cardType: data.cardType)
+                        VideoData(pageType: self.pageType).setData(data: d, cardType: data.cardType)
                     }
                 default: break
                 }
@@ -371,11 +380,11 @@ struct MultiBlockBody: PageComponent {
                 switch data.uiType {
                 case .poster :
                     data.posters = watchBlocks.map{ d in
-                        PosterData().setData(data: d, cardType: data.cardType)
+                        PosterData(pageType: self.pageType).setData(data: d, cardType: data.cardType)
                     }
                 case .video :
                     data.videos = watchBlocks.map{ d in
-                        VideoData().setData(data: d, cardType: data.cardType)
+                        VideoData(pageType: self.pageType).setData(data: d, cardType: data.cardType)
                     }
                 default: break
                 }
@@ -438,6 +447,8 @@ struct MultiBlockBody: PageComponent {
         }
     }//body
 
+    @State var pageType:PageType = .btv
+    @State var firstBlock:BlockData? = nil
     @State var originBlocks:[BlockData] = []
     @State var loadingBlocks:[BlockData] = []
     @State var blocks:[BlockData] = []
@@ -445,6 +456,7 @@ struct MultiBlockBody: PageComponent {
     @State var anyCancellable = Set<AnyCancellable>()
     @State var isError:Bool = false
     @State var isLoading:Bool = false
+    @State var errorMsg:String? = nil
    
     func reload(){
         if self.viewModel.isAdult && !SystemEnvironment.isAdultAuth {
@@ -454,15 +466,20 @@ struct MultiBlockBody: PageComponent {
         if needAdult {
             withAnimation {self.needAdult = false}
         }
-    
+        self.pageType = self.viewModel.type
         self.isError = false
+        self.errorMsg = nil
         self.anyCancellable.forEach{$0.cancel()}
         self.anyCancellable.removeAll()
         self.blocks = []
+        self.firstBlock = nil
+        
         self.infinityScrollModel.reload()
         self.originBlocks = viewModel.datas ?? []
-        PageLog.d("reload self.originBlocks " + self.originBlocks.count.description, tag: self.tag)
-        
+        if self.originBlocks.count == 1, let data = self.originBlocks.first {
+            self.firstBlock = data
+        }
+       
         if SystemEnvironment.isEvaluation {
             self.originBlocks = self.originBlocks.filter{!$0.isAdult}
         }
@@ -491,11 +508,19 @@ struct MultiBlockBody: PageComponent {
         }
        
         if self.blocks.isEmpty {
-            self.isError = true
+            if let data = self.firstBlock {
+                if let msg = data.errorMassage {
+                    self.errorMsg = msg
+                }else if data.dataType == .watched || data.cardType == .watchedVideo {
+                    self.errorMsg = String.pageText.myWatchedEmpty
+                }
+            }
+            withAnimation {
+                self.isError = true
+            }
         }
-        
-        
     }
+    
     private func onBlock(stat:BlockStatus, block:BlockData){
         DispatchQueue.main.async {
             switch stat {
@@ -580,6 +605,7 @@ struct MultiBlockBody: PageComponent {
         }else{
             self.isLoading = true
             self.loadingBlocks.append(contentsOf: set)
+    
             self.loadingBlocks.forEach{ block in
                 if let apiQ = block.getRequestApi(pairing:self.pairing.status, kid:self.pairing.kid) {
                     dataProvider.requestData(q: apiQ)

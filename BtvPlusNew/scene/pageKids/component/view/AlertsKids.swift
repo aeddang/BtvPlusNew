@@ -9,21 +9,23 @@ import Foundation
 import SwiftUI
 
 struct ErrorKidsData: PageView {
-    var icon:String = Asset.icon.alert
+    var icon:String? = Asset.icon.alert
     var text:String = String.alert.apiErrorServer
     var tip:String? = nil
     var body: some View {
         VStack(alignment: .center, spacing: DimenKids.margin.regular){
-            Image(icon)
-                .renderingMode(.template)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .foregroundColor(Color.app.sepia)
-                .frame(width: DimenKids.icon.mediumUltra, height:  DimenKids.icon.mediumUltra)
-            Text(String.alert.apiErrorServer)
+            if let icon = self.icon {
+                Image(icon)
+                    .renderingMode(.template)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .foregroundColor(Color.app.sepia)
+                    .frame(width: DimenKids.icon.mediumUltra, height:  DimenKids.icon.mediumUltra)
+            }
+            Text(self.text)
                 .modifier(BoldTextStyleKids(
-                            size: Font.sizeKids.thin,
-                            color:  Color.app.brownDeep))
+                            size: Font.sizeKids.light,
+                            color:  Color.app.sepia))
             if let tip = self.tip{
                 Text(tip)
                     .modifier(MediumTextStyleKids(size: Font.sizeKids.thinExtra, color: Color.app.greyLight))

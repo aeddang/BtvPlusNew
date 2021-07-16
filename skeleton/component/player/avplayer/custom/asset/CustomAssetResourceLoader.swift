@@ -86,7 +86,7 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
         var params = [String:String]()
         params["spc"] = spcData.base64EncodedString()
         params["assetId"] = contentId
-        licenseRequest.httpBody = params.map{$0.key + "=" + $0.value.toPercentEscape()}.joined(separator: "&").data(using: .utf8)
+        licenseRequest.httpBody = params.map{$0.key + "=" + $0.value.toPercentEncoding()}.joined(separator: "&").data(using: .utf8)
         
         let task = URLSession.shared.dataTask(with: licenseRequest) { data, response, error in
             guard let data = data else {

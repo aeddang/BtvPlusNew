@@ -419,8 +419,9 @@ struct SceneAlertController: PageComponent{
         if idx == 0 {
             if self.pairing.user != nil { self.pairing.requestPairing(.recovery) }
             else {
+                let ani:PageAnimationType = SystemEnvironment.currentPageType == .btv ? .horizontal : .opacity
                 self.pagePresenter.openPopup(
-                    PageProvider.getPageObject(.pairingSetupUser)
+                    PageProvider.getPageObject(.pairingSetupUser,animationType: ani)
                         .addParam(key: PageParam.type, value: PairingRequest.recovery)
                 )
             }
@@ -440,8 +441,10 @@ struct SceneAlertController: PageComponent{
     }
     func selectedNeedPairing(_ idx:Int) {
         if idx == 1 {
+            
+            let ani:PageAnimationType = SystemEnvironment.currentPageType == .btv ? .horizontal : .opacity
             self.pagePresenter.openPopup(
-                PageProvider.getPageObject(.pairing)
+                PageProvider.getPageObject(.pairing, animationType: ani)
             )
         }
     }
@@ -457,8 +460,9 @@ struct SceneAlertController: PageComponent{
     }
     func selectedNeedPurchase(_ idx:Int,  model:PurchaseWebviewModel) {
         if idx == 1 {
+            let ani:PageAnimationType = SystemEnvironment.currentPageType == .btv ? .horizontal : .opacity
             self.pagePresenter.openPopup(
-                PageProvider.getPageObject(.purchase)
+                PageProvider.getPageObject(.purchase, animationType: ani)
                     .addParam(key: .data, value: model)
             )
         }

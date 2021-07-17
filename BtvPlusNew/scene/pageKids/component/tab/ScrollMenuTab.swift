@@ -17,10 +17,12 @@ struct ScrollMenuTab: PageComponent {
     var tabColor:Color = Color.app.ivoryDeep
     var bgColor:Color = Color.kids.bg
     var marginHorizontal:CGFloat = DimenKids.margin.regular
+    var isDivision:Bool = true
     var body: some View {
-        if self.tabs.count > self.scrollTabSize {
+        if self.tabs.count > self.scrollTabSize || !self.isDivision {
             ZStack{
                 ScrollView(.horizontal, showsIndicators: false){
+                    if self.isDivision {
                     MenuTab(
                         viewModel: self.viewModel,
                         buttons: self.tabs,
@@ -29,6 +31,15 @@ struct ScrollMenuTab: PageComponent {
                         isDivision: true)
                         .frame(width: self.tabWidth * CGFloat(self.tabs.count))
                         .padding(.horizontal, self.marginHorizontal)
+                    } else {
+                        MenuTab(
+                            viewModel: self.viewModel,
+                            buttons: self.tabs,
+                            selectedIdx: self.tabIdx,
+                            bgColor: self.tabColor,
+                            isDivision: false)
+                            .padding(.horizontal, self.marginHorizontal)
+                    }
                 }
                 HStack(spacing:0){
                     LinearGradient(

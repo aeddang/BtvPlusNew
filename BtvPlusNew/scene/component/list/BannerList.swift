@@ -18,14 +18,14 @@ struct BannerDataSet:Identifiable {
 }
 
 extension BannerSet{
-    static let padding:CGFloat = Dimen.margin.thin
+    static let padding = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thinUltra
     static func listSize(data:BannerDataSet, screenWidth:CGFloat, isFull:Bool = false) -> CGSize{
         let ratio =  ListItem.banner.type02.height / ListItem.banner.type02.width
         let count = CGFloat(data.count)
         let w = screenWidth - ( padding * 2)
         let cellW = ( w - (padding*(count-1)) ) / count
         let cellH = round(cellW * ratio)
-        return CGSize(width: cellW, height: cellH )
+        return CGSize(width: floor(cellW), height: cellH )
     }
 }
 
@@ -34,7 +34,7 @@ struct BannerSet: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
     var pageObservable:PageObservable = PageObservable()
     var data:BannerDataSet
-    
+    var screenSize:CGFloat? = nil
     @State var cellDatas:[BannerData] = []
     @State var isUiActive:Bool = true
     var body: some View {
@@ -53,7 +53,7 @@ struct BannerSet: PageComponent{
        
         .onAppear {
             if self.data.datas.isEmpty { return }
-            let size = Self.listSize(data: self.data, screenWidth: sceneObserver.screenSize.width)
+            let size = Self.listSize(data: self.data, screenWidth: self.screenSize ?? sceneObserver.screenSize.width)
             self.cellDatas = self.data.datas.map{
                 $0.setBannerSize(width: size.width, height: size.height, padding: Self.padding)
             }
@@ -75,21 +75,21 @@ struct BannerList: PageComponent{
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[BannerData]
     var useTracking:Bool = false
-    var margin:CGFloat = Dimen.margin.thin
-
+    var margin:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.regular
+    var spacing:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.tiny : DimenKids.margin.thinUltra
+   
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
             axes: .horizontal,
             marginVertical: 0,
             marginHorizontal: self.margin ,
-            spacing: 0,
+            spacing: self.spacing,
             isRecycle:  true,
             useTracking: self.useTracking
             ){
             ForEach(self.datas) { data in
                 BannerItem( data:data )
-                    .modifier(HolizentalListRowInset(spacing: Self.spacing))
             }
         }
     }//body

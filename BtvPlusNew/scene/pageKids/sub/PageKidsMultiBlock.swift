@@ -12,6 +12,7 @@ import Combine
 extension PageKidsMultiBlock{
     static let tabWidth:CGFloat = SystemEnvironment.isTablet ? 186 : 123
     static let tabMargin:CGFloat = DimenKids.margin.regular
+    static let tabLimitedTitleSize:Int  = 10
 }
 
 struct PageKidsMultiBlock: PageView {
@@ -28,7 +29,7 @@ struct PageKidsMultiBlock: PageView {
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @State var scrollTabSize:Int = 3
-    
+    @State var isDivisionTab:Bool = true
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -66,7 +67,7 @@ struct PageKidsMultiBlock: PageView {
                             style: .kidsWhite
                         )
                         .fixedSize(horizontal: false, vertical: true)
-                        if self.tabs.count > 1 && self.isUiInit {
+                        if self.tabs.count > 1 {
                             ScrollMenuTab(
                                 viewModel: self.tabNavigationModel,
                                 tabIdx: self.selectedTabIdx,
@@ -75,7 +76,8 @@ struct PageKidsMultiBlock: PageView {
                                 tabWidth: Self.tabWidth,
                                 tabColor: Color.app.ivoryLight,
                                 bgColor: Color.app.white,
-                                marginHorizontal: Self.tabMargin
+                                marginHorizontal: Self.tabMargin,
+                                isDivision: self.isDivisionTab
                             )
                             .opacity(self.isTop ? 1 : 0)
                             .modifier(ContentHorizontalEdgesKids(margin:Self.tabMargin))
@@ -154,8 +156,16 @@ struct PageKidsMultiBlock: PageView {
                 self.openId = obj.getParamValue(key: .subId) as? String
                 self.title = obj.getParamValue(key: .title) as? String
                 self.tabDatas = obj.getParamValue(key: .datas) as? [BlockItem] ?? []
+                
+                
+                
                 self.tabs = self.tabDatas.map{$0.menu_nm ?? ""}
-                if self.tabDatas.count > 1 { self.marginTop =  MenuTab.height + DimenKids.margin.thin}
+                if self.tabDatas.count > 1 {
+                    if self.tabs.first(where: {$0.count > Self.tabLimitedTitleSize}) != nil {
+                        self.isDivisionTab = false
+                    }
+                    self.marginTop =  MenuTab.height + DimenKids.margin.thin
+                }
                 self.themaType = obj.getParamValue(key: .type) as? BlockData.ThemaType ?? .category
             }
             

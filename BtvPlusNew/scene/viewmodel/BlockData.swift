@@ -192,7 +192,7 @@ class BlockData:InfinityData, ObservableObject{
         name = data.menu_nm ?? ""
         menuId = data.menu_id
         cwCallId = data.cw_call_id_val
-        if data.btm_bnr_blk_exps_cd == "03" {
+        if data.btm_bnr_blk_exps_cd == KidsHomeBlockData.code {
             self.uiType = .kidsHome
             self.dataType = .none
             self.cardType = .none

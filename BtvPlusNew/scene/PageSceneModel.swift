@@ -48,7 +48,7 @@ struct PageSceneModel: PageModel {
         switch pageObject.pageID {
         case .categoryList, .multiBlock :
             return UIInterfaceOrientationMask.portrait
-        case .fullPlayer: return UIInterfaceOrientationMask.landscape
+        case .fullPlayer, .synopsisPlayer: return UIInterfaceOrientationMask.landscape
         default :
             switch pageObject.pageGroupID {
             case PageType.kids.rawValue :
@@ -65,7 +65,7 @@ struct PageSceneModel: PageModel {
             return UIInterfaceOrientationMask.all
         }
         switch pageObject.pageID {
-        case .fullPlayer:
+        case .fullPlayer, .synopsis:
             return UIInterfaceOrientationMask.all
         default :
             return getPageOrientation(pageObject)
@@ -110,7 +110,7 @@ struct PageSceneModel: PageModel {
     static func needKeyboard(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
         case .pairingSetupUser, .pairingBtv, .search, .modifyProile, .confirmNumber, .pairingManagement, .setup, .remotecon: return true
-        case .registKid : return true
+        case .registKid, .confirmNumber : return true
         default : return false
         }
     }

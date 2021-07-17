@@ -64,8 +64,13 @@ struct PageFull: ViewModifier {
             .padding(.trailing, self.marginEnd)
             .background(self.style.bgColor)
             .onAppear(){
-                self.marginStart = self.sceneObserver.safeAreaStart
-                self.marginEnd = self.sceneObserver.safeAreaEnd
+                if self.pagePresenter.isFullScreen {
+                    self.marginStart = 0
+                    self.marginEnd = 0
+                }else{
+                    self.marginStart = self.sceneObserver.safeAreaStart
+                    self.marginEnd = self.sceneObserver.safeAreaEnd
+                }
             }
             .onReceive(self.sceneObserver.$isUpdated){ update in
                 if !update {return}

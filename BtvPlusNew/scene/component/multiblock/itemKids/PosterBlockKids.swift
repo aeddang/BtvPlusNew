@@ -43,12 +43,12 @@ struct PosterBlockKids:PageComponent, BlockProtocol {
     }
     
     var body :some View {
-        VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
+        VStack(alignment: .leading , spacing: DimenKids.margin.thinExtra) {
             if self.isUiActive {
-                HStack(alignment: .bottom, spacing:Dimen.margin.thin){
-                    VStack(alignment: .leading , spacing:Dimen.margin.tiny){
+                HStack(alignment: .bottom, spacing:DimenKids.margin.thin){
+                    VStack(alignment: .leading , spacing:DimenKids.margin.tiny){
                         Spacer().modifier(MatchHorizontal(height: 0))
-                        HStack( spacing:Dimen.margin.thin){
+                        HStack( spacing:DimenKids.margin.thin){
                             Text(data.name).modifier(BlockTitleKids())
                                 .lineLimit(1)
                             Text(data.subName).modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color:Color.app.brownDeep))
@@ -61,7 +61,7 @@ struct PosterBlockKids:PageComponent, BlockProtocol {
                             textModifier: TextModifier (family:Font.familyKids.bold, size: Font.sizeKids.thinExtra, color: Color.app.brownExtra)
                         ){_ in
                             self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(.categoryList)
+                                PageKidsProvider.getPageObject(.kidsCategoryList)
                                     .addParam(key: .data, value: data)
                                     .addParam(key: .type, value: CateBlock.ListType.poster)
                                     .addParam(key: .subType, value:data.cardType)

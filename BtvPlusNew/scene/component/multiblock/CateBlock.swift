@@ -10,6 +10,7 @@ import SwiftUI
 
 
 class CateBlockModel: PageDataProviderModel {
+    private(set) var type:PageType = .btv
     private(set) var listType:CateBlock.ListType = .poster
     private(set) var dataType:BlockData.DataType = .grid
     private(set) var cardType:BlockData.CardType? = nil
@@ -21,9 +22,14 @@ class CateBlockModel: PageDataProviderModel {
     @Published private(set) var isUpdate = false {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
+    init(pageType:PageType = .btv) {
+        self.type = pageType
+        
+    }
     
     func update(data:BlockData, listType:CateBlock.ListType,
                 cardType:BlockData.CardType? = nil, isAdult:Bool = false, key:String? = nil) {
+        
         self.data = data
         self.listType = listType
         self.cardType = cardType
@@ -59,6 +65,9 @@ extension CateBlock{
     static let videoCellsize:CGFloat = ListItem.video.size.width
     static let posterCellsize:CGFloat = ListItem.poster.type01.width
     static let bannerCellsize:CGFloat = ListItem.banner.type02.width
+    
+    static let kidsVideoCellsize:CGFloat = ListItemKids.video.size.width
+    static let kidsPosterCellsize:CGFloat = ListItemKids.poster.type01.width
     static let headerSize:Int = 0
     enum ListType:String {
         case video, poster, banner
@@ -101,6 +110,7 @@ struct CateBlock: PageComponent{
                         scrollType : .reload(isDragEnd:false),
                         header:self.useTop ?
                             CateBlockHeader(
+                                pageType: self.viewModel.type,
                                 totalCount: self.totalCount,
                                 isSortAble: self.isSortAble,
                                 info: self.viewModel.info,
@@ -119,7 +129,8 @@ struct CateBlock: PageComponent{
                         ForEach(self.posters) { data in
                             PosterSet(
                                 pageObservable:self.pageObservable,
-                                data:data )
+                                data:data,
+                                screenSize: self.screenSize)
                                 .frame(height:self.posterCellHeight)
                                 .modifier(ListRowInset( spacing: self.spacing))
                                 .onAppear(){
@@ -131,7 +142,8 @@ struct CateBlock: PageComponent{
                         ForEach(self.videos) { data in
                             VideoSet(
                                 pageObservable:self.pageObservable,
-                                data:data )
+                                data:data,
+                                screenSize: self.screenSize)
                                 .frame(height:self.videoCellHeight)
                                 .modifier(ListRowInset( spacing: self.spacing))
                                 .onAppear(){
@@ -143,7 +155,8 @@ struct CateBlock: PageComponent{
                         ForEach(self.banners) { data in
                             BannerSet(
                                 pageObservable:self.pageObservable,
-                                data:data )
+                                data:data,
+                                screenSize: self.screenSize)
                                 .frame(height:self.bannerCellHeight)
                                 .modifier(ListRowInset( spacing: self.spacing))
                                 .onAppear(){
@@ -162,13 +175,18 @@ struct CateBlock: PageComponent{
                 }
                
             } else {
-                if self.viewModel.data?.dataType == .bookMark {
-                    EmptyMyData( text:String.pageText.myBookMarkedEmpty ).modifier(MatchParent())
-                } else  if self.viewModel.data?.dataType == .watched {
-                    EmptyMyData( text:String.pageText.myWatchedEmpty ).modifier(MatchParent())
+                if self.viewModel.type == .btv {
+                    if self.viewModel.data?.dataType == .bookMark {
+                        EmptyMyData( text:String.pageText.myBookMarkedEmpty ).modifier(MatchParent())
+                    } else  if self.viewModel.data?.dataType == .watched {
+                        EmptyMyData( text:String.pageText.myWatchedEmpty ).modifier(MatchParent())
+                    } else {
+                        EmptyAlert().modifier(MatchParent())
+                    }
                 } else {
-                    EmptyAlert().modifier(MatchParent())
+                    ErrorKidsData( text: String.alert.dataError).modifier(MatchParent())
                 }
+                
             }
             
         }
@@ -211,6 +229,7 @@ struct CateBlock: PageComponent{
     }//body
     
     struct CateBlockHeader:PageComponent {
+        var pageType:PageType
         var totalCount:Int
         var isSortAble:Bool
         var info:String?
@@ -218,14 +237,24 @@ struct CateBlock: PageComponent{
 
         let action: (_ type:EuxpNetwork.SortType) -> Void
         var body :some View {
-            SortTab(
-                count:self.totalCount,
-                isSortAble: self.isSortAble,
-                info: info
+            if pageType == .btv {
+                SortTab(
+                    count:self.totalCount,
+                    isSortAble: self.isSortAble,
+                    info: info
+                    ){ sort in
+                        self.action(sort)
+                    }
+                .modifier(ContentHorizontalEdges())
+            } else {
+                SortTabKids(
+                    count: self.totalCount,
+                    isSortAble: self.isSortAble
                 ){ sort in
                     self.action(sort)
                 }
-            .modifier(ContentHorizontalEdges())
+                .padding(.horizontal, DimenKids.margin.thinUltra)
+            }
         }
     }
     
@@ -249,6 +278,8 @@ struct CateBlock: PageComponent{
     @State var loadedVideoDatas:[VideoData]? = nil
     @State var loadedBannerDatas:[BannerData]? = nil
     
+    @State var screenSize:CGFloat = 0
+   
     @State var posterCellHeight:CGFloat = 0
     @State var videoCellHeight:CGFloat = 0
     @State var bannerCellHeight:CGFloat = 0
@@ -315,6 +346,16 @@ struct CateBlock: PageComponent{
     }
     
     private func resetSize(){
+        
+        //PageLog.d( "page screenSize " + self.sceneObserver.screenSize.width.description, tag: "resetSize" )
+        self.screenSize =  self.viewModel.type == .btv
+            ?  self.sceneObserver.screenSize.width
+            : (
+                self.sceneObserver.screenSize.width
+                - (DimenKids.margin.regular*2)
+            )
+    
+        
         if let loadedVideo = self.loadedVideoDatas {
             self.loadedVideoDatas = nil
             self.videos = []
@@ -348,6 +389,25 @@ struct CateBlock: PageComponent{
     private func loadedBlock(_ res:ApiResultResponds) {
         guard let data = self.viewModel.data else { return self.onError() }
         switch data.dataType {
+        case .cwGridKids:
+            guard let resData = res.data as? CWGridKids else {return }
+            guard let grid = resData.grid else { return self.onError() }
+            if grid.isEmpty { return self.onError() }
+            
+            var allDatas:[ContentItem] = []
+            grid.forEach{ g in
+                if let blocks = g.block {
+                    allDatas.append(contentsOf: blocks)
+                }
+            }
+            self.totalCount = allDatas.count
+            if self.viewModel.listType == .poster {
+                setPosterSets(datas: allDatas)
+            }else{
+                setVideoSets(datas: allDatas)
+            }
+            
+            
         case .cwGrid:
             guard let resData = res.data as? CWGrid else {return}
             guard let grid = resData.grid else { return self.onError() }
@@ -402,8 +462,9 @@ struct CateBlock: PageComponent{
             if self.posters.isEmpty { self.onError() }
             return
         }
+        let type = self.viewModel.type
         let loadedDatas:[PosterData] = datas.map { d in
-            return PosterData().setData(data: d, cardType: .bookmarkedPoster)
+            return PosterData(pageType: type).setData(data: d, cardType: .bookmarkedPoster)
         }
         setPosterSets(loadedDatas: loadedDatas)
     }
@@ -425,8 +486,9 @@ struct CateBlock: PageComponent{
             if self.posters.isEmpty { self.onError() }
             return
         }
+        let type = self.viewModel.type
         let loadedDatas:[PosterData] = datas.map { d in
-            return PosterData().setData(data: d)
+            return PosterData(pageType: type).setData(data: d)
         }
         
         setPosterSets(loadedDatas: loadedDatas)
@@ -437,8 +499,9 @@ struct CateBlock: PageComponent{
             if self.videos.isEmpty {  self.onError() }
             return
         }
+        let type = self.viewModel.type
         let loadedDatas:[VideoData] = datas.map{ d in
-            return VideoData().setData(data: d, cardType: self.viewModel.cardType ?? .watchedVideo)
+            return VideoData(pageType: type).setData(data: d, cardType: self.viewModel.cardType ?? .watchedVideo)
         }
         setVideoSets(loadedDatas: loadedDatas)
     }
@@ -448,8 +511,9 @@ struct CateBlock: PageComponent{
             if self.posters.isEmpty { self.onError() }
             return
         }
+        let type = self.viewModel.type
         let loadedDatas:[PosterData] = datas.map { d in
-            return PosterData().setData(data: d)
+            return PosterData(pageType: type).setData(data: d)
         }
         setPosterSets(loadedDatas: loadedDatas)
     }
@@ -459,8 +523,9 @@ struct CateBlock: PageComponent{
             if self.videos.isEmpty {  self.onError() }
             return
         }
+        let type = self.viewModel.type
         let loadedDatas:[VideoData] = datas.map{ d in
-            return VideoData().setData(data: d, cardType: self.viewModel.cardType ?? .video)
+            return VideoData(pageType: type).setData(data: d, cardType: self.viewModel.cardType ?? .video)
         }
         setVideoSets(loadedDatas: loadedDatas)
     }
@@ -476,8 +541,15 @@ struct CateBlock: PageComponent{
         setBannerSets(loadedDatas: loadedDatas)
     }
     
+    private func modifyCount(_ count:Int) -> Int{
+        if count <= 3 {return count} //123
+        if count == 4 {return 3}
+        if count <= 6 {return count} //56
+        if count <= 8 {return 6}
+        return 10
+    }
     
-    func setPosterSets(loadedDatas:[PosterData]) {
+    private func setPosterSets(loadedDatas:[PosterData]) {
         withAnimation{self.useTop = true}
         if self.loadedPosterDatas != nil {
             self.loadedPosterDatas?.append(contentsOf: loadedDatas)
@@ -490,7 +562,9 @@ struct CateBlock: PageComponent{
             }
         }
         
-        let count:Int = Int(floor(self.sceneObserver.screenSize.width / Self.posterCellsize))
+        
+        let cellSize = self.viewModel.type == .btv ? Self.posterCellsize : Self.kidsPosterCellsize
+        let count:Int = modifyCount(Int(floor(self.screenSize / cellSize)))
         var rows:[PosterDataSet] = []
         var cells:[PosterData] = []
         var total = self.posters.count
@@ -513,21 +587,24 @@ struct CateBlock: PageComponent{
         self.posters.append(contentsOf: rows)
         if self.posters.isEmpty { self.onError() }
         if let data = self.posters.first {
-            let size = PosterSet.listSize(data: data, screenWidth: self.sceneObserver.screenSize.width)
+            let size = PosterSet.listSize(data: data, screenWidth: self.screenSize )
             self.posterCellHeight = size.height
         }
         self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)
     }
     
-    func setVideoSets(loadedDatas:[VideoData]) {
+    private func setVideoSets(loadedDatas:[VideoData]) {
         withAnimation{self.useTop = true}
         if self.loadedVideoDatas != nil {
             self.loadedVideoDatas?.append(contentsOf: loadedDatas)
         } else{
             self.loadedVideoDatas = loadedDatas
         }
+       
+        let cellSize = self.viewModel.type == .btv ? Self.videoCellsize : Self.kidsVideoCellsize
+        let count:Int = modifyCount(Int(floor(self.screenSize / cellSize)))
         
-        let count:Int = Int(floor(self.sceneObserver.screenSize.width / Self.videoCellsize))
+        
         var rows:[VideoDataSet] = []
         var cells:[VideoData] = []
         var total = self.videos.count
@@ -551,13 +628,13 @@ struct CateBlock: PageComponent{
         if self.videos.isEmpty { self.onError() }
         
         if let data = self.videos.first {
-            let size = VideoSet.listSize(data: data, screenWidth: self.sceneObserver.screenSize.width, isFull:true)
+            let size = VideoSet.listSize(data: data, screenWidth: self.screenSize, isFull:true)
             self.videoCellHeight = size.height
         }
         self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)
     }
     
-    func setBannerSets(loadedDatas:[BannerData]) {
+    private func setBannerSets(loadedDatas:[BannerData]) {
         withAnimation{self.useTop = false}
         if self.loadedBannerDatas != nil {
             self.loadedBannerDatas?.append(contentsOf: loadedDatas)
@@ -565,7 +642,7 @@ struct CateBlock: PageComponent{
             self.loadedBannerDatas = loadedDatas
         }
         
-        let count:Int = Int(round(self.sceneObserver.screenSize.width / Self.bannerCellsize))
+        let count:Int = modifyCount(Int(round(self.screenSize / Self.bannerCellsize)))
         var rows:[BannerDataSet] = []
         var cells:[BannerData] = []
         var total = self.banners.count
@@ -588,7 +665,7 @@ struct CateBlock: PageComponent{
         self.banners.append(contentsOf: rows)
         if self.banners.isEmpty { self.onError() }
         if let data = self.banners.first {
-            let size = BannerSet.listSize(data: data, screenWidth: self.sceneObserver.screenSize.width)
+            let size = BannerSet.listSize(data: data, screenWidth: self.screenSize)
             self.bannerCellHeight = size.height
         }
         self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)

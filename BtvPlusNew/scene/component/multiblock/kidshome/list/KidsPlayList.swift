@@ -11,6 +11,7 @@ import struct Kingfisher.KFImage
 
 
 class KidsPlayListData: KidsHomeBlockListData {
+    static let code = "09"
     private(set) var title:String? = nil
     private(set) var menuId:String? = nil
     private(set) var cwCallId:String? = nil
@@ -56,6 +57,7 @@ class KidsPlayListItemData: InfinityData {
 struct KidsPlayList:PageView  {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var dataProvider:DataProvider
     var data:KidsPlayListData
     @State var title:String = String.kidsText.kidsHomeNoProfile
     @State var filterList:[KidsPlayListItemData] = []
@@ -90,6 +92,9 @@ struct KidsPlayList:PageView  {
             } else {
                 self.filterList = self.data.datas
             }
+        }
+        .onAppear(){
+            self.dataProvider.bands.kidsGnbModel.playListData = self.data
         }
         
     }

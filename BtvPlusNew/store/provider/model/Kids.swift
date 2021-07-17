@@ -9,6 +9,8 @@ import Foundation
 class KidsGnbModel:Identifiable, ObservableObject{
     private(set) var home: KidsGnbItemData? = nil
     private(set) var datas: [KidsGnbItemData] = []
+    var playListData:KidsPlayListData? = nil
+    
     @Published var isUpdated:Bool = false  {didSet{ if isUpdated { isUpdated = false} }}
 
     func setData(gnb:GnbBlock) {

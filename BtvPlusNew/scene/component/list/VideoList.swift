@@ -220,7 +220,9 @@ class VideoData:InfinityData{
     }
     
     fileprivate func setCardType(width:CGFloat, height:CGFloat, padding:CGFloat) -> VideoData {
-        self.type = .cell(CGSize(width: width, height: height), padding)
+        self.type =  self.pageType == .btv
+            ? .cell(CGSize(width: width, height: height), padding)
+            : .cellKids(CGSize(width: width, height: height), padding)
         return self
     }
     
@@ -240,7 +242,7 @@ class VideoData:InfinityData{
 }
 
 enum VideoType {
-    case nomal, watching, cell(CGSize, CGFloat), kids, watchingKids
+    case nomal, watching, cell(CGSize, CGFloat), kids, cellKids(CGSize, CGFloat), watchingKids
     var size:CGSize {
         get{
             switch self {
@@ -249,13 +251,14 @@ enum VideoType {
             case .kids: return ListItemKids.video.type01
             case .watchingKids: return ListItemKids.video.type01
             case .cell(let size, _ ): return size
+            case .cellKids(let size, _ ): return size
             }
         }
     }
     var bgColor:Color {
         get{
             switch self {
-            case .kids, .watchingKids: return Color.app.white
+            case .kids, .watchingKids, .cellKids: return Color.app.white
             default : return Color.app.blueLight
             }
         }
@@ -263,15 +266,12 @@ enum VideoType {
     var radius:CGFloat {
         get{
             switch self {
-            case .kids, .watchingKids: return DimenKids.radius.light
+            case .kids, .watchingKids, .cellKids: return DimenKids.radius.light 
             default : return 0
             }
         }
     }
     
-}
-extension VideoList{
-    static let spacing:CGFloat = Dimen.margin.tiny
 }
 
 
@@ -281,7 +281,9 @@ struct VideoList: PageComponent{
     var banners:[BannerData]? = nil
     var datas:[VideoData]
     var contentID:String? = nil
-    var margin:CGFloat = Dimen.margin.thin
+    var margin:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.regular
+    var spacing:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.tiny : DimenKids.margin.thinUltra
+   
     var useTracking:Bool = false
     var action: ((_ data:VideoData) -> Void)? = nil
     var body: some View {
@@ -290,7 +292,7 @@ struct VideoList: PageComponent{
             axes: .horizontal,
             marginVertical: 0,
             marginHorizontal: self.margin,
-            spacing: Self.spacing,
+            spacing: self.spacing,
             isRecycle: true,
             useTracking: self.useTracking
         ){
@@ -350,9 +352,14 @@ struct VideoDataSet:Identifiable {
 }
 
 extension VideoSet{
-    static let padding:CGFloat = Dimen.margin.thin
-    static func listSize(data:VideoDataSet, screenWidth:CGFloat, isFull:Bool = false,
-                         paddingHorizontal:CGFloat? = nil , spacing:CGFloat? = nil) -> CGSize{
+   
+    static func listSize(data:VideoDataSet, screenWidth:CGFloat,
+                         padding:CGFloat = SystemEnvironment.currentPageType == .btv
+                            ? Dimen.margin.thin
+                            : DimenKids.margin.thinUltra,
+                         isFull:Bool = false,
+                         paddingHorizontal:CGFloat? = nil ,
+                         spacing:CGFloat? = nil) -> CGSize{
         let datas = data.datas
         let dataCell = datas.first ?? VideoData()
         let ratio = dataCell.type.size.height / dataCell.type.size.width
@@ -364,7 +371,7 @@ extension VideoSet{
         if isFull{
             cellH = cellH + dataCell.bottomHeight
         }
-        return CGSize(width: cellW, height: cellH )
+        return CGSize(width: floor(cellW), height: cellH )
     }
     
 }
@@ -374,12 +381,14 @@ struct VideoSet: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
     var pageObservable:PageObservable = PageObservable()
     var data:VideoDataSet
+    var screenSize:CGFloat? = nil
+    var padding:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thinUltra
     var paddingHorizontal:CGFloat? = nil
     var spacing:CGFloat? = nil
     @State var cellDatas:[VideoData] = []
     @State var isUiActive:Bool = true
     var body: some View {
-        HStack(spacing: (self.spacing ?? Self.padding) ){
+        HStack(spacing: (self.spacing ?? self.padding) ){
             if self.isUiActive {
                 ForEach(self.cellDatas) { data in
                     VideoItem( data:data )
@@ -397,13 +406,18 @@ struct VideoSet: PageComponent{
                 }
             }
         }
-        .padding(.horizontal, self.paddingHorizontal ?? Self.padding)
+        .padding(.horizontal, self.paddingHorizontal ?? self.padding)
         .frame(width: self.sceneObserver.screenSize.width)
         .onAppear {
             if self.data.datas.isEmpty { return }
-            let size = Self.listSize(data: self.data, screenWidth: sceneObserver.screenSize.width, isFull: false, paddingHorizontal: self.paddingHorizontal, spacing: self.spacing)
+            let size = Self.listSize(data: self.data,
+                                     screenWidth: self.screenSize ?? sceneObserver.screenSize.width,
+                                     padding: self.padding,
+                                     isFull: false,
+                                     paddingHorizontal:self.paddingHorizontal,
+                                     spacing: self.spacing)
             self.cellDatas = self.data.datas.map{
-                $0.setCardType(width: size.width, height: size.height, padding: Self.padding)
+                $0.setCardType(width: size.width, height: size.height, padding:  self.paddingHorizontal ?? self.padding)
             }
         }
         .onReceive(self.pageObservable.$layer ){ layer  in

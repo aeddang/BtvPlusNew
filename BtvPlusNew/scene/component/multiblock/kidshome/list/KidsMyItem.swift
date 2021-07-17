@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 class KidsMyItemData: KidsHomeBlockListData {
+    static let code :String = "519"
     func setData(data:BlockItem) -> KidsMyItemData{
         self.type = .myHeader
         return self

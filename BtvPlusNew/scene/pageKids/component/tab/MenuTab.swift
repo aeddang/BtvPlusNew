@@ -58,10 +58,12 @@ struct MenuTab : PageComponent {
     
     func createButton(_ menu:MenuBtn) -> some View {
         return Text(menu.text)
+            .kerning(Font.kern.thin)
             .modifier(BoldTextStyle(
                 size: SystemEnvironment.isTablet ? Font.sizeKids.tiny : Font.sizeKids.lightExtra,
                 color: menu.idx == self.selectedIdx ? Color.app.white : Color.app.brownDeep
             ))
+            
             .padding(.horizontal, DimenKids.margin.regular)
             .fixedSize(horizontal: true, vertical: false)
     }

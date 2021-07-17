@@ -23,7 +23,7 @@ struct PageFullPlayer: PageView {
             pageObservable:self.pageObservable,
             viewModel:self.playerModel
         )
-        .modifier(PageFull())
+        .modifier(PageFullScreen())
         .onReceive(self.playerModel.$event){evt in
             guard let evt = evt else {return}
             switch evt {

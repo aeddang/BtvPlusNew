@@ -25,6 +25,8 @@ extension PageID{
     static let kidsConfirmNumber:PageID = "kidsConfirmNumber"
 
     static let kidsMultiBlock:PageID = "kidsMultiBlock"
+    static let kidsCategoryList:PageID = "kidsCategoryList"
+    
     static let kidsSynopsis:PageID = "kidsSynopsis"
     static let kidsSynopsisPackage:PageID = "kidsSynopsisPackage"
     
@@ -114,6 +116,7 @@ struct PageKidsFactory{
         case .selectKidCharacter : return PageSelectKidCharacter()
         case .kidsConfirmNumber : return PageKidsConfirmNumber()
         case .kidsMultiBlock : return PageKidsMultiBlock()
+        case .kidsCategoryList : return PageKidsCategoryList()
         case .kidsSynopsis : return PageSynopsis(type:.kids)
         case .kidsSynopsisPackage : return PageSynopsisPackage(type:.kids)
             

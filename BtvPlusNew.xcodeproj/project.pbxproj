@@ -333,6 +333,8 @@
 		3195C1BE26660B06001F513E /* PageKidsIntro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3195C1BD26660B06001F513E /* PageKidsIntro.swift */; };
 		3195C1C126660D96001F513E /* PageKidsHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3195C1C026660D96001F513E /* PageKidsHome.swift */; };
 		3195C1C526660F54001F513E /* KidsTopTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3195C1C426660F54001F513E /* KidsTopTab.swift */; };
+		31962B1926A32C4A00CA3BC4 /* PageKidsCategortList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31962B1826A32C4A00CA3BC4 /* PageKidsCategortList.swift */; };
+		31962B1B26A34EA200CA3BC4 /* SortTabKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31962B1A26A34EA200CA3BC4 /* SortTabKids.swift */; };
 		319745BB261FEE7D0072945D /* PurchaseTicketList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319745BA261FEE7D0072945D /* PurchaseTicketList.swift */; };
 		319745C7262010F30072945D /* PageMyPurchaseTicketList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319745C6262010F30072945D /* PageMyPurchaseTicketList.swift */; };
 		3197FC80267AE511006918BA /* CustomAssetPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3197FC7F267AE511006918BA /* CustomAssetPlayer.swift */; };
@@ -937,6 +939,8 @@
 		3195C1BD26660B06001F513E /* PageKidsIntro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageKidsIntro.swift; sourceTree = "<group>"; };
 		3195C1C026660D96001F513E /* PageKidsHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageKidsHome.swift; sourceTree = "<group>"; };
 		3195C1C426660F54001F513E /* KidsTopTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsTopTab.swift; sourceTree = "<group>"; };
+		31962B1826A32C4A00CA3BC4 /* PageKidsCategortList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageKidsCategortList.swift; sourceTree = "<group>"; };
+		31962B1A26A34EA200CA3BC4 /* SortTabKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortTabKids.swift; sourceTree = "<group>"; };
 		319745BA261FEE7D0072945D /* PurchaseTicketList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseTicketList.swift; sourceTree = "<group>"; };
 		319745C6262010F30072945D /* PageMyPurchaseTicketList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyPurchaseTicketList.swift; sourceTree = "<group>"; };
 		3197FC7F267AE511006918BA /* CustomAssetPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAssetPlayer.swift; sourceTree = "<group>"; };
@@ -2309,6 +2313,7 @@
 				3190CB23268D890500ACB465 /* MenuNavi.swift */,
 				3190CB0D268ABD8400ACB465 /* PageKidsTab.swift */,
 				319C47E826A1946400C61EF8 /* ScrollMenuTab.swift */,
+				31962B1A26A34EA200CA3BC4 /* SortTabKids.swift */,
 			);
 			path = tab;
 			sourceTree = "<group>";
@@ -2390,6 +2395,7 @@
 			isa = PBXGroup;
 			children = (
 				319C47E626A1743400C61EF8 /* PageKidsMultiBlock.swift */,
+				31962B1826A32C4A00CA3BC4 /* PageKidsCategortList.swift */,
 			);
 			path = sub;
 			sourceTree = "<group>";
@@ -4095,6 +4101,7 @@
 				319BAFC1260450390007273F /* PageSearch.swift in Sources */,
 				31895B242601F609002DE02E /* SimpleSummaryViewer.swift in Sources */,
 				318000B926A071D7002CC991 /* SoundToolBox.swift in Sources */,
+				31962B1926A32C4A00CA3BC4 /* PageKidsCategortList.swift in Sources */,
 				31F2803C2673305A00F40B09 /* PlayInfoButton.swift in Sources */,
 				3167198425FF42A8005AC3D2 /* WatchedBlock.swift in Sources */,
 				D56C6A56257DA0C700CF9AB8 /* CircleButton.swift in Sources */,
@@ -4127,6 +4134,7 @@
 				D56C6A3E257DA0C700CF9AB8 /* CPPlayer.swift in Sources */,
 				318AA045265DE8D100C089EC /* SetupHappySenior.swift in Sources */,
 				3192EFDD26675C2D0012F238 /* AlertBox.swift in Sources */,
+				31962B1B26A34EA200CA3BC4 /* SortTabKids.swift in Sources */,
 				D56C6A52257DA0C700CF9AB8 /* Toast.swift in Sources */,
 				316A708D26705E4A00A93B83 /* PlayerOptionSelectListKids.swift in Sources */,
 				D56C6B35257DACD800CF9AB8 /* DataProvider.swift in Sources */,

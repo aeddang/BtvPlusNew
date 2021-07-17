@@ -28,6 +28,9 @@ class KidsCategoryItemData: KidsHomeBlockListData {
     func setData(data:KidsPlayListItemData){
         self.blocks = data.blocks
     }
+    func setData(datas:[BlockItem]?){
+        self.blocks = datas ?? self.blocks
+    }
 }
 
 class KidStudyRecommandData:Identifiable {
@@ -56,7 +59,7 @@ struct KidsCategoryItem:PageView  {
    
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
-    
+    @EnvironmentObject var dataProvider:DataProvider
     var data:KidsCategoryItemData
     @State var profileImg:String? = nil
     @State var poster:KidStudyRecommandData? = nil
@@ -146,7 +149,27 @@ struct KidsCategoryItem:PageView  {
                 self.data.poster = nil
             }
         }
-       
+        .onReceive(dataProvider.$result) { res in
+        
+        }
+        .onAppear(){
+            if let playListData = self.dataProvider.bands.kidsGnbModel.playListData {
+                if let find = playListData.datas.first(where: {$0.playType == self.data.playType}){
+                    self.data.setData(data: find)
+                }
+            } else {
+                if let findHome = self.dataProvider.bands.kidsGnbModel.home?
+                    .blocks?.first(where: {$0.btm_bnr_blk_exps_cd == KidsHomeBlockData.code}){
+        
+                    if let playListData = findHome.blocks?.first(where: {$0.btm_bnr_blk_exps_cd == KidsPlayListData.code}) {
+                        if let find = playListData.blocks?.first(where: {KidsPlayType.getType($0.svc_prop_cd) == self.data.playType}) {
+                            self.data.setData(datas: find.blocks)
+                        }
+                    }
+                    
+                }
+            }
+        }
     }
     
     private func update(kid:Kid?) {

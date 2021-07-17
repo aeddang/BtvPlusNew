@@ -50,7 +50,7 @@ struct ThemaBlock:BlockProtocol, PageComponent {
                 } else {
                     SkeletonBlock(
                         len:Self.skeletonNum,
-                        spacing:VideoList.spacing,
+                        spacing:Dimen.margin.tiny,
                         size:self.skeletonSize
                     )
                 }

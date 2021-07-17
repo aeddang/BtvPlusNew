@@ -215,7 +215,9 @@ class PosterData:InfinityData{
     }
     
     fileprivate func setCardType(width:CGFloat, height:CGFloat, padding:CGFloat) -> PosterData {
-        self.type = .cell(CGSize(width: width, height: height), padding)
+        self.type =  self.pageType == .btv
+            ? .cell(CGSize(width: width, height: height), padding)
+            : .cellKids(CGSize(width: width, height: height), padding)
         return self
     }
     
@@ -243,7 +245,7 @@ class PosterData:InfinityData{
 }
 
 enum PosterType {
-    case small, big, banner, cell(CGSize, CGFloat), kids
+    case small, big, banner, cell(CGSize, CGFloat), kids, cellKids(CGSize, CGFloat)
     var size:CGSize {
         get{
             switch self {
@@ -251,6 +253,7 @@ enum PosterType {
             case .big: return ListItem.poster.type02
             case .banner: return ListItem.poster.type03
             case .cell(let size, _ ): return size
+            case .cellKids(let size, _ ): return size
             case .kids: return ListItemKids.poster.type01
             }
         }
@@ -259,7 +262,7 @@ enum PosterType {
     var radius:CGFloat {
         get{
             switch self {
-            case .kids: return DimenKids.radius.light
+            case .kids, .cellKids: return DimenKids.radius.light
             default : return 0
             }
         }
@@ -269,7 +272,7 @@ enum PosterType {
         get{
             switch self {
             case .banner: return Asset.noImg4_3
-            case .kids: return AssetKids.noImg9_16
+            case .kids, .cellKids: return AssetKids.noImg9_16
             default : return Asset.noImg9_16
             }
         }
@@ -278,7 +281,7 @@ enum PosterType {
     var selectedColor:Color {
         get{
             switch self {
-            case .kids: return Color.kids.primary
+            case .kids, .cellKids: return Color.kids.primary
             default : return Color.brand.primary
             }
         }
@@ -287,7 +290,7 @@ enum PosterType {
     var selectedStroke:CGFloat {
         get{
             switch self {
-            case .kids: return 0
+            case .kids, .cellKids: return 0
             default : return Dimen.stroke.medium
             }
         }
@@ -296,7 +299,7 @@ enum PosterType {
     var bgColor:Color {
         get{
             switch self {
-            case .kids: return Color.app.ivoryDeep
+            case .kids, .cellKids: return Color.app.ivoryDeep
             default : return Color.app.blueLight
             }
         }
@@ -329,14 +332,14 @@ struct PosterList: PageComponent{
             axes: .horizontal,
             marginVertical: 0,
             marginHorizontal: self.margin,
-            spacing: 0,
+            spacing: self.spacing,
             isRecycle: true, //self.banners?.isEmpty == false ? false : true,
             useTracking: self.useTracking
             ){
             if banners?.isEmpty == false, let banners = self.banners {
                 ForEach(banners) { data in
                     BannerItem(data: data)
-                        .modifier(HolizentalListRowInset(spacing: self.spacing))
+                        //.modifier(HolizentalListRowInset(spacing: self.spacing))
                 }
                 if let subDataSets = self.subDataSets {
                     ForEach(subDataSets) {sets in
@@ -348,7 +351,7 @@ struct PosterList: PageComponent{
                                     }
                             }
                         }
-                        .modifier(HolizentalListRowInset(spacing: self.spacing))
+                        //.modifier(HolizentalListRowInset(spacing: self.spacing))
                     }
                 }
             } else {
@@ -356,7 +359,7 @@ struct PosterList: PageComponent{
                     PosterItem( data:data , isSelected: self.contentID == nil
                                     ? false
                                     : self.contentID == data.epsdId)
-                        .modifier(HolizentalListRowInset(spacing: self.spacing))
+                        //.modifier(HolizentalListRowInset(spacing: self.spacing))
                         .onTapGesture {
                             self.onTap(data: data)
                         }
@@ -470,7 +473,7 @@ extension PosterSet{
     static func listSize(data:PosterDataSet, screenWidth:CGFloat,
                          padding:CGFloat = SystemEnvironment.currentPageType == .btv
                             ? Dimen.margin.thin
-                            : DimenKids.margin.thin) -> CGSize {
+                            : DimenKids.margin.thinUltra) -> CGSize {
         let datas = data.datas
         let ratio = datas.first!.type.size.height / datas.first!.type.size.width
         let count = CGFloat(data.count)
@@ -478,7 +481,7 @@ extension PosterSet{
         let cellW = ( w - (padding*(count-1)) ) / count
         let cellH = round(cellW * ratio)
         
-        return CGSize(width: cellW, height: cellH )
+        return CGSize(width: floor(cellW), height: cellH )
     }
 }
 
@@ -488,7 +491,7 @@ struct PosterSet: PageComponent{
     var pageObservable:PageObservable = PageObservable()
     var data:PosterDataSet
     var screenSize:CGFloat? = nil
-    var padding:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thin
+    var padding:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thinUltra
     var action: ((_ data:PosterData) -> Void)? = nil
     
     @State var cellDatas:[PosterData] = []
@@ -528,7 +531,11 @@ struct PosterSet: PageComponent{
         .frame(width: self.screenSize ?? self.sceneObserver.screenSize.width)
         .onAppear {
             if self.data.datas.isEmpty { return }
-            let size = Self.listSize(data: self.data, screenWidth: self.screenSize ?? sceneObserver.screenSize.width)
+            let size = Self.listSize(
+                data: self.data,
+                screenWidth: self.screenSize ?? sceneObserver.screenSize.width,
+                padding: self.padding)
+            
             self.cellDatas = self.data.datas.map{
                 $0.setCardType(width: size.width, height: size.height, padding: self.padding)
             }

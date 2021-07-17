@@ -52,7 +52,7 @@ class MultiBlockModel: PageDataProviderModel {
         self.isUpdate = true
     }
     
-    func updateKids(datas:[BlockItem], openId:String?) {
+    func updateKids(datas:[BlockItem], openId:String? = nil) {
         self.type = .kids
         self.datas = datas.map{ block in
             BlockData(pageType: .kids).setDataKids(block)
@@ -69,7 +69,7 @@ class MultiBlockModel: PageDataProviderModel {
         self.isUpdate = true
     }
     
-    func updateKids(data:KidsGnbItemData, openId:String?) {
+    func updateKids(data:KidsGnbItemData, openId:String? = nil) {
         self.type = .kids
         self.datas = [ BlockData(pageType: .kids).setDataKids(data: data) ]
         self.openId = openId
@@ -510,7 +510,9 @@ struct MultiBlockBody: PageComponent {
         if self.blocks.isEmpty {
             if let data = self.firstBlock {
                 if let msg = data.errorMassage {
-                    self.errorMsg = msg
+                    if !msg.isEmpty {
+                        self.errorMsg = msg
+                    }
                 }else if data.dataType == .watched || data.cardType == .watchedVideo {
                     self.errorMsg = String.pageText.myWatchedEmpty
                 }

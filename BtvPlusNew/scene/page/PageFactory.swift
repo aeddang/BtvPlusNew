@@ -96,7 +96,7 @@ struct PageProvider {
              .adultCertification, .userCertification, .terminateStb,
              .watchHabit, .myPurchaseTicketList, .remotecon, .playerTest :
             return  .vertical
-        case .fullPlayer :
+        case .fullPlayer, .synopsisPlayer :
             return .none
         case .confirmNumber, .privacyAndAgree:
             return .opacity

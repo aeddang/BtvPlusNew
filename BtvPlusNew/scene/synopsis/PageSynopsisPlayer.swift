@@ -45,7 +45,7 @@ struct PageSynopsisPlayer: PageView {
                         textInfo: self.textInfo,
                         isPlayAble: self.isPlayAble,
                         isPlayViewActive: self.isPlayViewActive)
-                    .modifier(PageFull())
+                    .modifier(PageFullScreen())
                 }
             }
             .onReceive(self.playerModel.$event){evt in

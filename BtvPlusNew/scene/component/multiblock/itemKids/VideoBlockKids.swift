@@ -62,12 +62,12 @@ struct VideoBlockKids:BlockProtocol, PageComponent {
     }
     
     var body :some View {
-        VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
+        VStack(alignment: .leading , spacing: DimenKids.margin.thinExtra) {
             if self.isUiActive {
-                HStack(alignment: .bottom, spacing:Dimen.margin.thin){
-                    VStack(alignment: .leading , spacing:Dimen.margin.tiny){
+                HStack(alignment: .bottom, spacing:DimenKids.margin.thin){
+                    VStack(alignment: .leading , spacing:DimenKids.margin.tiny){
                         Spacer().modifier(MatchHorizontal(height: 0))
-                        HStack( spacing:Dimen.margin.thin){
+                        HStack( spacing:DimenKids.margin.thin){
                             if let kidName = self.kidName {
                                 Text(String.app.sir.replace(kidName)).modifier(BlockTitleKids())
                                     .lineLimit(1)
@@ -84,7 +84,8 @@ struct VideoBlockKids:BlockProtocol, PageComponent {
                             textModifier: TextModifier (family:Font.familyKids.bold, size: Font.sizeKids.thinExtra, color: Color.app.brownExtra)
                         ){_ in
                             self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(data.dataType == .watched ? .watchedList : .categoryList)
+                               
+                                PageKidsProvider.getPageObject(data.cardType == .watchedVideo ? .watchedList : .kidsCategoryList)
                                     .addParam(key: .data, value: data)
                                     .addParam(key: .type, value: CateBlock.ListType.video)
                                     .addParam(key: .subType, value:data.cardType)

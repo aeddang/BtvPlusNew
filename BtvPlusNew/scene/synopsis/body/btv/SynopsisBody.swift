@@ -32,7 +32,7 @@ struct SynopsisBody: PageComponent{
     var purchasViewerData:PurchaseViewerData? = nil
     var summaryViewerData:SummaryViewerData? = nil
     //var srisId:String? = nil
-    var epsdId:String? = nil
+    var epsdId:String?
     var hasAuthority:Bool? = nil
   
     var relationTab:[NavigationButton] = []

@@ -52,6 +52,8 @@ struct FunctionViewerKidsBody: PageComponent{
         if let data = summaryViewerData {
             PlayInfoButton(data: data)
             .buttonStyle(BorderlessButtonStyle())
+        } else {
+            Spacer().frame(width:DimenKids.icon.light, height:DimenKids.icon.light)
         }
         BtvButton(type: .kids){
             self.componentViewModel.uiEvent = .watchBtv
@@ -64,8 +66,9 @@ struct FunctionViewerKidsBody: PageComponent{
                 isBookmark: self.$isBookmark
             )
             .buttonStyle(BorderlessButtonStyle())
+        } else {
+            Spacer().frame(width:DimenKids.icon.light, height:DimenKids.icon.light)
         }
-        
         
         if let srisId = self.synopsisData?.srisId{
             ShareButton(
@@ -74,6 +77,8 @@ struct FunctionViewerKidsBody: PageComponent{
                 epsdId:self.synopsisData?.epsdId
             )
             .buttonStyle(BorderlessButtonStyle())
+        } else {
+            Spacer().frame(width:DimenKids.icon.light, height:DimenKids.icon.light)
         }
     }//body
 }

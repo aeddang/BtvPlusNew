@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 class EpisodeViewerData {
     private(set) var image: String = Asset.noImg16_9
+    private(set) var seasonTitle: String? = nil
     private(set) var title: String = ""
     private(set) var info: String = ""
     private(set) var count: String? = nil
@@ -36,7 +37,7 @@ class EpisodeViewerData {
     
     func setData(data:SynopsisContentsItem) -> EpisodeViewerData {
         self.title = data.title ?? ""
-        
+        self.seasonTitle = data.sson_choic_nm
         self.date = data.brcast_exps_dy
         self.provider = data.brcast_chnl_nm
         if data.sris_typ_cd == SrisTypCd.season.rawValue {

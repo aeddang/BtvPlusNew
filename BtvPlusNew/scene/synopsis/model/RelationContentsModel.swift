@@ -39,7 +39,7 @@ enum SerisSortType {
 }
 
 
-class RelationContentsModel {
+class RelationContentsModel:ObservableObject {
     private(set) var isReady = false
     private(set) var serisTitle:String? = nil
     private(set) var relationTabs:[String] = []
@@ -51,6 +51,9 @@ class RelationContentsModel {
     private(set) var relationContents:[[PosterData]] = []
     private(set) var synopsisRelationData:SynopsisRelationData? = nil
     private(set) var pageType:PageType = .btv
+    
+    @Published var selectedEpsdId:String? = nil
+    
     var currentSeasonIdx:Int = -1
     
     func reset(synopsisType:MetvNetwork.SynopsisType?, pageType:PageType = .btv){
@@ -69,7 +72,7 @@ class RelationContentsModel {
         self.serisTitle = synopsis.srisTitle
         if let list = synopsis.seriesInfoList {
             self.seris = zip(list, 0...list.count).map{data, idx in
-                SerisData().setData(data: data, title: self.serisTitle, idx: idx)}
+                SerisData(pageType: self.pageType).setData(data: data, title: self.serisTitle, idx: idx)}
             self.playList = zip(list, 0...list.count).map{ data, idx in
                 PlayerListData().setData(data: data, title: self.serisTitle, idx: idx)}
            

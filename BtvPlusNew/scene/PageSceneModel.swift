@@ -41,7 +41,7 @@ struct PageSceneModel: PageModel {
     var topPageObject: PageObject? = nil
     
     func getPageOrientation(_ pageObject:PageObject?) -> UIInterfaceOrientationMask? {
-        if SystemEnvironment.isTablet { return UIInterfaceOrientationMask.all }
+        if SystemEnvironment.isTablet && pageObject?.pageGroupID == PageType.btv.rawValue { return UIInterfaceOrientationMask.all }
         guard let pageObject = pageObject ?? self.topPageObject else {
             return UIInterfaceOrientationMask.all
         }

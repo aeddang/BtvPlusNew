@@ -59,7 +59,7 @@ struct MenuTab : PageComponent {
     func createButton(_ menu:MenuBtn) -> some View {
         return Text(menu.text)
             .modifier(BoldTextStyle(
-                        size: Font.sizeKids.lightExtra,
+                size: SystemEnvironment.isTablet ? Font.sizeKids.tiny : Font.sizeKids.lightExtra,
                 color: menu.idx == self.selectedIdx ? Color.app.white : Color.app.brownDeep
             ))
             .padding(.horizontal, DimenKids.margin.regular)

@@ -34,7 +34,7 @@ struct PageKidsIntro: PageView {
                 .modifier(MatchParent())
         }
         .padding(.all, DimenKids.margin.medium)
-        .modifier(PageFull(style:.kids))
+        .modifier(PageFull(style:.kidsPupple))
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
             if ani {
                 self.isPlay = ani

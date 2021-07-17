@@ -376,7 +376,7 @@ struct PageSynopsis: PageView {
         if self.pageObservable.status == .initate { return }
         self.isPairing = self.pairing.status == .pairing
         if self.isInitPage {
-            self.resetPage()
+            self.resetPage(isAllReset: true)
             return
         }
         PageLog.d("initPage", tag: self.tag)
@@ -384,7 +384,7 @@ struct PageSynopsis: PageView {
         self.pageDataProviderModel.initate()
     }
     
-    func resetPage(){
+    private func resetPage(isAllReset:Bool = false){
         PageLog.d("resetPage", tag: self.tag)
         self.isUIView = false
         self.hasAuthority = nil
@@ -398,15 +398,23 @@ struct PageSynopsis: PageView {
         self.title = nil
         self.imgBg = nil
         self.textInfo = nil
-        self.relationTab = []
-        self.seris = []
-        self.relationDatas = []
-        self.hasRelationVod = nil
+        if isAllReset {
+            self.resetRelationVod()
+        } else if self.type == .btv && self.sceneOrientation == .portrait {
+            //self.resetRelationVod()
+        }
         self.pageDataProviderModel.initate()
         self.topIdx = UUID.init().hashValue
         withAnimation{
             self.isPlayViewActive = false
         }
+    }
+    
+    private func resetRelationVod(){
+        self.relationTab = []
+        self.seris = []
+        self.relationDatas = []
+        self.hasRelationVod = nil
     }
 
     private func requestProgress(_ progress:Int){
@@ -678,7 +686,7 @@ struct PageSynopsis: PageView {
             }
             
             if let kidYn = self.synopsisModel?.kidsYn {self.synopsisData?.kidZone = kidYn }
-
+                
             self.epsdId = self.synopsisModel?.epsdId
             self.epsdRsluId = self.synopsisModel?.epsdRsluId ?? self.epsdRsluId
             self.synopsisData?.epsdRsluId = self.epsdRsluId
@@ -687,7 +695,7 @@ struct PageSynopsis: PageView {
             self.imgBg = self.synopsisModel?.imgBg
             self.imgContentMode = self.synopsisModel?.imgContentMode ?? .fit
             self.relationContentsModel.reset(synopsisType: self.synopsisModel?.synopsisType, pageType: self.type)
-            
+            self.relationContentsModel.selectedEpsdId = self.epsdId
             DataLog.d("PageSynopsis epsdId  : " + (self.epsdId ?? "nil"), tag: self.tag)
             DataLog.d("PageSynopsis epsdRsluId  : " + self.epsdRsluId, tag: self.tag)
             
@@ -937,7 +945,7 @@ struct PageSynopsis: PageView {
     func changeVod(synopsisData:SynopsisData?){
         guard let synopsisData = synopsisData else { return }
         self.synopsisData = synopsisData
-        self.resetPage()
+        self.resetPage(isAllReset: true)
     }
     
     func changeVod(epsdId:String?){

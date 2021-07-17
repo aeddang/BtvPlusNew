@@ -78,7 +78,7 @@ extension Color {
         public static let green = Color.init(red: 122/255, green: 178/255, blue: 63/255)
         public static let red = Color.init(red: 255/255, green: 119/255, blue: 87/255)
         public static let sky = Color.init(red: 129/255, green: 197/255, blue: 255/255)
-        
+        public static let pupple = Color.init(red: 143/255, green: 18/255, blue: 156/255)
     }
     
     struct transparent {

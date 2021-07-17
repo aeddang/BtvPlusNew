@@ -17,8 +17,7 @@ struct RelationVodBody: PageComponent{
     var relationContentsModel:RelationContentsModel
     var tabNavigationModel:NavigationModel
     @Binding var seris:[SerisData]
-    
-    var epsdId:String? = nil
+    var epsdId:String?
     var relationTab:[NavigationButton] = []
     var relationDatas:[PosterDataSet] = []
     var hasRelationVod:Bool = false
@@ -46,10 +45,10 @@ struct RelationVodBody: PageComponent{
                 ){
                 
                 RelationVodListBody(
+                    relationContentsModel: self.relationContentsModel,
                     componentViewModel: self.componentViewModel,
                     infinityScrollModel : self.infinityScrollModel,
                     seris: self.$seris,
-                    epsdId: self.epsdId,
                     relationDatas: self.relationDatas,
                     hasRelationVod: self.hasRelationVod,
                     screenSize: self.screenSize,
@@ -75,8 +74,7 @@ struct RelationVodList: PageComponent{
     var relationContentsModel:RelationContentsModel
     var tabNavigationModel:NavigationModel
     @Binding var seris:[SerisData]
-    
-    var epsdId:String? = nil
+    var epsdId:String?
     var relationTab:[NavigationButton] = []
     var relationDatas:[PosterDataSet] = []
     var hasRelationVod:Bool = false
@@ -93,9 +91,9 @@ struct RelationVodList: PageComponent{
             )
         
         RelationVodListBody(
+            relationContentsModel: self.relationContentsModel,
             componentViewModel: self.componentViewModel,
             seris: self.$seris,
-            epsdId: self.epsdId,
             relationDatas: self.relationDatas,
             hasRelationVod: self.hasRelationVod,
             screenSize: self.screenSize
@@ -157,34 +155,42 @@ struct RelationVodHeader: PageComponent{
 
 struct RelationVodListBody: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    var relationContentsModel:RelationContentsModel
     var componentViewModel:PageSynopsis.ComponentViewModel
     var infinityScrollModel: InfinityScrollModel? = nil
     @Binding var seris:[SerisData]
-    var epsdId:String? = nil
+   
     var relationDatas:[PosterDataSet]
     var hasRelationVod:Bool
     var screenSize:CGFloat
     var serisType:SerisType = .big
     var useIndex:Bool = false
+    
     var body: some View {
         if !self.seris.isEmpty {
             if self.useIndex {
                 ForEach(self.seris) { data in
-                    SerisItem( data:data.setListType(self.serisType), isSelected: self.epsdId == data.contentID )
-                        .id(data.index)
+                    SerisItem(
+                        relationContentsModel: self.relationContentsModel,
+                        data:data.setListType(self.serisType) )
+                        //.id(data.index)
                         .onTapGesture {
                             self.componentViewModel.uiEvent = .changeVod(data.epsdId)
                         }
                         .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))
                 }
                 .onAppear(){
+                    /*
                     guard let infinityScrollModel = self.infinityScrollModel  else {return}
                     guard let find = self.seris.first(where: {self.epsdId == $0.contentID}) else {return}
                     infinityScrollModel.uiEvent = .scrollTo(find.index)
+                    */
                 }
             } else {
                 ForEach(self.seris) { data in
-                    SerisItem( data:data.setListType(self.serisType), isSelected: self.epsdId == data.contentID )
+                    SerisItem(
+                        relationContentsModel: self.relationContentsModel,
+                        data:data.setListType(self.serisType) )
                         .onTapGesture {
                             self.componentViewModel.uiEvent = .changeVod(data.epsdId)
                         }
@@ -206,6 +212,7 @@ struct RelationVodListBody: PageComponent{
         } else {
             Spacer().modifier(MatchHorizontal(height: RelationVodList.spacing ))
         }
+        
     }//body
    
 }

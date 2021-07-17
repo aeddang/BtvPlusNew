@@ -104,21 +104,20 @@ struct KidsSynopsis: PageComponent{
                                 episodeViewerData: episodeViewerData,
                                 purchaseViewerData: purchasViewerData)
                                 .fixedSize(horizontal: true, vertical: false)
-                                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                         }
-                        
                         if SystemEnvironment.isTablet {
+                            Spacer()
                             FunctionViewerKids(
                                 componentViewModel: self.componentViewModel,
                                 synopsisData: self.synopsisData,
                                 summaryViewerData: self.summaryViewerData,
                                 isBookmark: self.$isBookmark
                             )
-                            .padding(.top, DimenKids.margin.medium)
-                            .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                            .fixedSize(horizontal: false, vertical: true)
                         }
                     }
                     .frame(height:Self.topHeight)
+                    .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                 }
                 HStack(alignment: .center){
                     ZStack {

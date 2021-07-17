@@ -110,6 +110,7 @@ struct BtvSynopsis: PageComponent{
                             episodeViewerData: self.episodeViewerData,
                             purchasViewerData: self.purchasViewerData,
                             summaryViewerData: self.summaryViewerData,
+                            epsdId: self.epsdId,
                             hasAuthority: self.hasAuthority,
                             relationTab: self.relationTab,
                             relationDatas: self.relationDatas,

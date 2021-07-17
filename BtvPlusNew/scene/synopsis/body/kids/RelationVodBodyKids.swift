@@ -41,7 +41,10 @@ struct RelationVodBodyKids: PageComponent{
                 }
                 .modifier(ListRowInset(spacing: DimenKids.margin.medium, bgColor: Color.app.white))
                 ForEach(self.seris) { data in
-                    SerisItemKids( data:data.setListType(.kids), isSelected: self.epsdId == data.contentID )
+                    SerisItemKids(
+                        relationContentsModel: self.relationContentsModel, 
+                        data:data.setListType(.kids),
+                        isSelected: self.epsdId == data.contentID )
                         .id(data.index)
                         .onTapGesture {
                             self.componentViewModel.uiEvent = .changeVod(data.epsdId)
@@ -49,8 +52,8 @@ struct RelationVodBodyKids: PageComponent{
                         .modifier(ListRowInset(spacing: DimenKids.margin.thinExtra, bgColor: Color.app.white))
                 }
                 .onAppear(){
-                    guard let find = self.seris.first(where: {self.epsdId == $0.contentID}) else {return}
-                    infinityScrollModel.uiEvent = .scrollTo(find.index, .center)
+                   // guard let find = self.seris.first(where: {self.epsdId == $0.contentID}) else {return}
+                    //infinityScrollModel.uiEvent = .scrollTo(find.index, .center)
                 }
             } else if !self.relationDatas.isEmpty {
                 Text(String.kidsText.synopsisRelationVod)

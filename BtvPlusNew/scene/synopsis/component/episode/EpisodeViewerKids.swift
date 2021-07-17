@@ -18,6 +18,12 @@ struct EpisodeViewerKids: PageComponent{
     
     var body: some View { 
         VStack(alignment:.leading , spacing:DimenKids.margin.thinExtra) {
+            if let seasonTitle = episodeViewerData.seasonTitle {
+                Text(seasonTitle)
+                    .modifier(BoldTextStyleKids(
+                        size: Font.sizeKids.tinyExtra,
+                        color: Color.app.sepia.opacity(0.6)))
+            }
             HStack(alignment: .center, spacing:DimenKids.margin.micro){
                 if let restrictAgeIcon = self.episodeViewerData.restrictAgeIconKids {
                     Image( restrictAgeIcon )
@@ -30,7 +36,7 @@ struct EpisodeViewerKids: PageComponent{
                                 size: Font.sizeKids.regularExtra,
                                 color: Color.app.brownDeep
                         ))
-                    .lineLimit(2)
+                    .lineLimit(1)
                   
             }
             if let data = self.purchaseViewerData {

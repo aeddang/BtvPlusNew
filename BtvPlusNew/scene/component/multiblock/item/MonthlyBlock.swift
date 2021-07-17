@@ -62,17 +62,7 @@ struct MonthlyBlock: PageComponent {
             .modifier(ContentHorizontalEdges())
             if let list = self.list {
                 list.modifier(MatchHorizontal(height: ListItem.monthly.size.height))
-                .onReceive(self.viewModel.$event){evt in
-                    guard let evt = evt else {return}
-                    switch evt {
-                    case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
-                    case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
-                    default : do{}
-                    }
-                }
-                .onReceive(self.viewModel.$pullPosition){ pos in
-                    self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
-                }
+                
             }
             TipTab(
                 leading: self.hasAuth ? String.monthly.textEnjoy : String.monthly.textRecommand,
@@ -94,6 +84,11 @@ struct MonthlyBlock: PageComponent {
                 )
             }
         }
+        .modifier(
+            ContentScrollPull(
+                infinityScrollModel: self.viewModel,
+                pageDragingModel: self.pageDragingModel)
+        )
         .onAppear(){
             if self.monthlyDatas.isEmpty {return}
             self.getList()

@@ -20,11 +20,13 @@ struct ContentHorizontalEdgesKids: ViewModifier {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @State var marginStart:CGFloat = 0
     @State var marginEnd:CGFloat = 0
+    
+    var margin:CGFloat = DimenKids.margin.regular
 
     func body(content: Content) -> some View {
         return content
-            .padding(.leading, self.marginStart + DimenKids.margin.regular)
-            .padding(.trailing, self.marginEnd + DimenKids.margin.regular)
+            .padding(.leading, self.marginStart + margin)
+            .padding(.trailing, self.marginEnd + margin)
             .onAppear(){
                 let margin = max(self.sceneObserver.safeAreaStart,self.sceneObserver.safeAreaEnd)
                 self.marginStart = margin

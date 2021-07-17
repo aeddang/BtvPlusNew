@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 enum PageType:String{
     case btv, kids
     static func getType(_ value:String?) -> PageType{
@@ -101,11 +102,43 @@ struct PageBody: ViewModifier {
     }
 }
 
+struct ContentScrollPull: ViewModifier {
+    
+    var infinityScrollModel:InfinityScrollModel
+    var pageDragingModel:PageDragingModel
+    
+    @State var anyCancellable = Set<AnyCancellable>()
+    private func setScrollList(){
+        self.infinityScrollModel.$event.sink(receiveValue: { evt in
+            guard let evt = evt else {return}
+            switch evt {
+            case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
+            case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
+            default : do{}
+            }
+        }).store(in: &anyCancellable)
+        self.infinityScrollModel.$pullPosition.sink(receiveValue: { pos in
+            self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
+        }).store(in: &anyCancellable)
+    }
+   
+    func body(content: Content) -> some View {
+        return content
+            .onAppear(){
+                self.setScrollList()
+            }
+            .onDisappear{
+                self.anyCancellable.forEach{$0.cancel()}
+                self.anyCancellable.removeAll()
+            }
+    }
+}
+
 
 struct PageDraging: ViewModifier {
     var geometry:GeometryProxy
     var pageDragingModel:PageDragingModel
-   
+    
     func body(content: Content) -> some View {
         return content
             .highPriorityGesture(

@@ -12,6 +12,7 @@ class KidsHomeBlockData:Identifiable, ObservableObject{
     var datas:[KidsHomeBlockListData] = []
     
     func setData(data:BlockData) -> KidsHomeBlockData{
+       
         data.blocks?.forEach{ data in
             if let svcPropCd = data.svc_prop_cd {
                 switch svcPropCd {
@@ -33,6 +34,7 @@ class KidsHomeBlockData:Identifiable, ObservableObject{
                 }
             }
         }
+        
         return self
     }
 }

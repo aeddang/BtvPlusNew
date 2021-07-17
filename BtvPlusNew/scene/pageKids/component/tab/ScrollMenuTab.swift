@@ -26,8 +26,9 @@ struct ScrollMenuTab: PageComponent {
                         buttons: self.tabs,
                         selectedIdx: self.tabIdx,
                         bgColor: self.tabColor,
-                        isDivision: false)
-                        .padding(.horizontal, DimenKids.margin.regular)
+                        isDivision: true)
+                        .frame(width: self.tabWidth * CGFloat(self.tabs.count))
+                        .padding(.horizontal, self.marginHorizontal)
                 }
                 HStack(spacing:0){
                     LinearGradient(

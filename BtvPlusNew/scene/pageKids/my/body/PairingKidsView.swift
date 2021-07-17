@@ -114,6 +114,16 @@ struct PairingKidsView: PageComponent {
             self.kid = kid
             self.setupInitData()
         }
+        .onReceive(self.pairing.$event){ evt in
+            guard let evt = evt else { return }
+            
+            switch evt {
+            case .editedKids :
+                self.monthlyReportModel.updatedKid()
+                self.diagnosticReportModel.updatedKid()
+            default: break
+            }
+        }
         .onReceive(self.tabNavigationModel.$index){ idx in
             if self.tabs.isEmpty {return}
             

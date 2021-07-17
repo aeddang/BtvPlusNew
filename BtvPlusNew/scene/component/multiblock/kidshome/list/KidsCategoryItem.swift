@@ -11,14 +11,22 @@ import SwiftUI
 class KidsCategoryItemData: KidsHomeBlockListData {
     private(set) var title:String? = nil
     private(set) var svcPropCd:String? = nil
-   
+    private(set) var playType:KidsPlayType = .unknown()
+    private(set) var blocks:[BlockItem] = []
     fileprivate(set) var poster:KidStudyRecommandData? = nil
     func setData(data:BlockItem) -> KidsCategoryItemData{
+        self.playType = KidsPlayType.getType(data.svc_prop_cd)
+       
+        self.blocks = data.blocks ?? [data]
         self.type = .cateHeader
         self.title = data.menu_nm
         self.svcPropCd = data.svc_prop_cd
-       
+
         return self
+    }
+    
+    func setData(data:KidsPlayListItemData){
+        self.blocks = data.blocks
     }
 }
 
@@ -26,7 +34,7 @@ class KidStudyRecommandData:Identifiable {
     let id:String = UUID().uuidString
     var image:String? = nil
     var svcPropCd:String = ""
-   
+    
     func setData(data:RecommendMenu) -> KidStudyRecommandData {
         self.image = ImagePath.thumbImagePath(filePath: data.ph_poster_url, size: ListItemKids.poster.type01)
         self.svcPropCd = data.svc_prop_cd ?? ""
@@ -45,10 +53,10 @@ extension KidsCategoryItem{
 
 
 struct KidsCategoryItem:PageView  {
-    @EnvironmentObject var appSceneObserver:AppSceneObserver
+   
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
-    @EnvironmentObject var dataProvider:DataProvider
+    
     var data:KidsCategoryItemData
     @State var profileImg:String? = nil
     @State var poster:KidStudyRecommandData? = nil
@@ -61,7 +69,7 @@ struct KidsCategoryItem:PageView  {
                         ImageView(url:img ,contentMode: .fit, noImg: AssetKids.noImg9_16, opacity: 1.0)
                             .modifier(MatchParent())
                     } else {
-                        Image(AssetKids.noImg9_16)
+                        Image(self.data.playType.noImage)
                             .renderingMode(.original).resizable()
                             .scaledToFit()
                             .modifier(MatchParent())
@@ -107,19 +115,21 @@ struct KidsCategoryItem:PageView  {
         }
         .frame(height: Self.size.height)
         .onTapGesture {
-            if self.pairing.kids.isEmpty {
-                self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.editKid))
-            } else if self.pairing.kid == nil {
-                self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
-            } else {
-                self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsMy))
-            }
+            self.pagePresenter.openPopup(
+                PageKidsProvider.getPageObject(.kidsMultiBlock)
+                    .addParam(key: .datas, value: data.blocks)
+                    .addParam(key: .title, value: data.title)
+            )
         }
         .onReceive(self.pairing.$kid) { kid in
-            if let kid = kid {
-                self.profileImg = AssetKids.characterCateList[kid.characterIdx]
-            } else {
-                self.profileImg = nil
+            self.update(kid: kid)
+        }
+        .onReceive(self.pairing.$event){ evt in
+            guard let evt = evt else { return }
+            switch evt {
+            case .editedKids :
+                self.update(kid: self.pairing.kid)
+            default: break
             }
         }
         .onReceive(self.pairing.$kidStudyData) { data in
@@ -136,10 +146,14 @@ struct KidsCategoryItem:PageView  {
                 self.data.poster = nil
             }
         }
-        .onAppear(){
-            
-            
+       
+    }
+    
+    private func update(kid:Kid?) {
+        if let kid = kid {
+            self.profileImg = AssetKids.characterCateList[kid.characterIdx]
+        } else {
+            self.profileImg = nil
         }
-        
     }
 }

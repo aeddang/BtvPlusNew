@@ -100,4 +100,7 @@ class MonthlyReportModel:ObservableObject, PageProtocol{
     func setData(colon:MonthlyReportModel){
         self.datas = colon.datas.map{MonthlyReportData().copy(data: $0)}
     }
+    func updatedKid() {
+        self.isUpdated = true
+    }
 }

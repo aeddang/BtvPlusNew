@@ -294,6 +294,7 @@ struct MultiBlock:PageComponent {
     }
     
     struct MultiBlockCell:PageComponent {
+        
         var pageObservable:PageObservable
         var pageDragingModel:PageDragingModel
         var data:BlockData
@@ -310,6 +311,7 @@ struct MultiBlock:PageComponent {
                         useTracking:self.useTracking
                         )
                     .frame(height:data.listHeight)
+                    
                 } else {
                     PosterBlock(
                         pageObservable:self.pageObservable,
@@ -329,6 +331,7 @@ struct MultiBlock:PageComponent {
                         useTracking:self.useTracking
                         )
                     .frame(height:data.listHeight)
+                   
                 } else {
                     VideoBlock(
                         pageObservable:self.pageObservable,

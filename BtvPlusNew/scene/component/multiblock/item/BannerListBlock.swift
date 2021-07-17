@@ -44,17 +44,7 @@ struct BannerListBlock:BlockProtocol, PageComponent {
             if self.isUiActive {
                 if !self.datas.isEmpty {
                     self.getList()
-                        .onReceive(self.viewModel.$event){evt in
-                            guard let evt = evt else {return}
-                            switch evt {
-                            case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
-                            case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
-                            default : do{}
-                            }
-                        }
-                        .onReceive(self.viewModel.$pullPosition){ pos in
-                            self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
-                        }
+
                 
                 } else {
                     SkeletonBlock(
@@ -67,7 +57,11 @@ struct BannerListBlock:BlockProtocol, PageComponent {
             }
         }
         .modifier(MatchParent())
-        
+        .modifier(
+            ContentScrollPull(
+                infinityScrollModel: self.viewModel,
+                pageDragingModel: self.pageDragingModel)
+        )
         .onAppear{
             if !self.datas.isEmpty {
                 ComponentLog.d("RecycleData " + data.name, tag: "BlockProtocol")

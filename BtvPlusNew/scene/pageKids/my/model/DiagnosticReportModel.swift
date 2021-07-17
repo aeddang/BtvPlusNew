@@ -87,6 +87,11 @@ class DiagnosticReportModel:ObservableObject, PageProtocol{
         self.isUpdated = true
         return self
     }
+    
+    
+    func updatedKid() {
+        self.isUpdated = true
+    }
 }
 
 

@@ -8,31 +8,7 @@
 import Foundation
 import SwiftUI
 import struct Kingfisher.KFImage
-enum KidsPlayType {
-    case play, english , tale, create, subject, unknown(String? = nil)
-    static func getType(_ value:String?)->KidsPlayType{
-        switch value {
-        case "512": return .play
-        case "513": return .english
-        case "514": return .tale
-        case "515": return .create
-        case "516": return .subject
-        default : return .unknown(value)
-        }
-    }
-    var noImage:String {
-        get{
-            switch self {
-            case .play: return AssetKids.image.homeCardBg1
-            case .english: return AssetKids.image.homeCardBg2
-            case .tale: return AssetKids.image.homeCardBg3
-            case .create: return AssetKids.image.homeCardBg4
-            case .subject: return AssetKids.image.homeCardBg5
-            default : return  AssetKids.image.homeCardBg1
-            }
-        }
-    }
-}
+
 
 class KidsPlayListData: KidsHomeBlockListData {
     private(set) var title:String? = nil
@@ -57,17 +33,17 @@ class KidsPlayListItemData: InfinityData {
     private(set) var cwCallId:String? = nil
     private(set) var playType:KidsPlayType = .unknown()
     fileprivate(set) var poster:PosterData? = nil
-    private(set) var defaultImage:String = AssetKids.image.homeCardBg1
+   
     private(set) var blocks:[BlockItem] = []
     private(set) var firstMenuId:String? = nil
     private(set) var firstCwCallId:String? = nil
     func setData(data:BlockItem) -> KidsPlayListItemData{
         self.playType = KidsPlayType.getType(data.svc_prop_cd)
-        self.defaultImage = self.playType.noImage
+       
         self.title = data.menu_nm
         self.menuId = data.menu_id
         self.cwCallId = data.cw_call_id_val
-        self.blocks = data.blocks ?? []
+        self.blocks = data.blocks ?? [data]
         if let firstItem = data.blocks?.first {
             firstMenuId = firstItem.menu_id
             firstCwCallId = firstItem.cw_call_id_val
@@ -82,6 +58,7 @@ struct KidsPlayList:PageView  {
     @EnvironmentObject var pairing:Pairing
     var data:KidsPlayListData
     @State var title:String = String.kidsText.kidsHomeNoProfile
+    @State var filterList:[KidsPlayListItemData] = []
     var body :some View {
         VStack(alignment: .leading , spacing:DimenKids.margin.thinUltra){
             Text(self.title)
@@ -89,7 +66,7 @@ struct KidsPlayList:PageView  {
                 .lineLimit(1)
                 .fixedSize()
             HStack(spacing: DimenKids.margin.thinExtra){
-                ForEach(self.data.datas) { data in
+                ForEach(self.filterList) { data in
                     KidsPlayListItem(data: data)
                 }
             }
@@ -99,6 +76,19 @@ struct KidsPlayList:PageView  {
                 self.title = String.app.forSir.replace(kid.nickName) + (data.title ?? "")
             } else {
                 self.title = String.kidsText.kidsHomeNoProfile
+            }
+            
+            if let age = kid?.age {
+                if age <= 5 {
+                    self.filterList = self.data.datas.filter{$0.playType != .subject}
+                } else if age <= 7 {
+                    self.filterList = self.data.datas
+                }  else {
+                    self.filterList = self.data.datas.filter{$0.playType != .create}
+                }
+                
+            } else {
+                self.filterList = self.data.datas
             }
         }
         
@@ -148,7 +138,7 @@ struct KidsPlayListItem:PageView  {
                         KFImage(URL(string: img))
                             .resizable()
                             .placeholder {
-                                Image(self.data.defaultImage)
+                                Image(self.data.playType.noImage)
                                     .resizable()
                             }
                             .cancelOnDisappear(true)
@@ -157,7 +147,7 @@ struct KidsPlayListItem:PageView  {
                             .modifier(MatchParent())
                        
                     } else {
-                        Image(self.data.defaultImage)
+                        Image(self.data.playType.noImage)
                             .renderingMode(.original).resizable()
                             .scaledToFit()
                             .modifier(MatchParent())
@@ -195,6 +185,12 @@ struct KidsPlayListItem:PageView  {
                                 .addParam(key: .watchLv, value: poster.watchLv)
                         )
                     }
+                } else {
+                    self.pagePresenter.openPopup(
+                        PageKidsProvider.getPageObject(.kidsMultiBlock)
+                            .addParam(key: .datas, value: data.blocks)
+                            .addParam(key: .title, value: data.title)
+                    )
                 }
             }
             

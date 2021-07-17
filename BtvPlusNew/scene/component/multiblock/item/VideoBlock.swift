@@ -92,18 +92,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                 
                 if !self.datas.isEmpty  && self.isListUpdated{
                     self.getList()
-                        .onReceive(self.viewModel.$event){evt in
-                            guard let evt = evt else {return}
-                            switch evt {
-                            case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
-                            case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
-                            default : do{}
-                            }
-                        }
-                        .onReceive(self.viewModel.$pullPosition){ pos in
-                            self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
-                        }
-                    
+                       
                 } else if self.useEmpty {
                     EmptyAlert( text: self.data.dataType != .watched
                                 ? String.pageText.myWatchedEmpty
@@ -121,6 +110,11 @@ struct VideoBlock:BlockProtocol, PageComponent {
             }
         }
         .modifier(MatchParent())
+        .modifier(
+            ContentScrollPull(
+                infinityScrollModel: self.viewModel,
+                pageDragingModel: self.pageDragingModel)
+        )
         .onAppear{
             if !self.datas.isEmpty {
                 ComponentLog.d("RecycleData " + data.name, tag: "BlockProtocol")

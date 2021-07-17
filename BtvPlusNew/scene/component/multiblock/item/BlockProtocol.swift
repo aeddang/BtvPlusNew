@@ -8,8 +8,10 @@
 import Foundation
 import SwiftUI
 
+
 protocol BlockProtocol {
     var data:BlockData { get set }
+  
     func getRequestApi(pairing:PairingStatus) -> ApiQ?
     func onBlank()
     func onError(_ err:ApiResultError?)
@@ -37,6 +39,5 @@ extension BlockProtocol {
         ComponentLog.d("onError " + data.name + " " + err.debugDescription, tag: "BlockProtocol")
         self.data.setError(err)
     }
-
-   
+    
 }

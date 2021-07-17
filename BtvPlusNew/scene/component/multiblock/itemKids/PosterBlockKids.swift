@@ -15,6 +15,7 @@ struct PosterBlockKids:PageComponent, BlockProtocol {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
+    
     var pageObservable:PageObservable
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -24,15 +25,14 @@ struct PosterBlockKids:PageComponent, BlockProtocol {
     @State var datas:[PosterData] = []
     @State var isUiActive:Bool = true
     @State var hasMore:Bool = true
-    
     @State var list: PosterList?
     private func getList() -> some View {
-        if let list = self.list {return list}
+        if let list = self.list { return list }
         let newList = PosterList(
             viewModel:self.viewModel,
             banners: self.data.leadingBanners,
             datas: self.datas,
-            useTracking:self.useTracking,
+            useTracking:true,
             margin:max(self.sceneObserver.safeAreaStart,self.sceneObserver.safeAreaEnd) + DimenKids.margin.regular
             )
             
@@ -74,18 +74,8 @@ struct PosterBlockKids:PageComponent, BlockProtocol {
                 
                 if !self.datas.isEmpty {
                     self.getList()
-                        .onReceive(self.viewModel.$event){evt in
-                            guard let evt = evt else {return}
-                            switch evt {
-                            case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
-                            case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
-                            default : do{}
-                            }
-                        }
-                        .onReceive(self.viewModel.$pullPosition){ pos in
-                            self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
-                        }
-                
+                        
+                        
                 } else if self.useEmpty {
                     ErrorKidsData( text: self.data.cardType != .watchedVideo
                                 ? String.pageText.myWatchedEmpty
@@ -102,6 +92,11 @@ struct PosterBlockKids:PageComponent, BlockProtocol {
             }
         }
         .modifier(MatchParent())
+        .modifier(
+            ContentScrollPull(
+                infinityScrollModel: self.viewModel,
+                pageDragingModel: self.pageDragingModel)
+        )
         .onAppear{
             if !self.datas.isEmpty {
                 ComponentLog.d("RecycleData " + data.name, tag: "BlockProtocol")
@@ -122,9 +117,10 @@ struct PosterBlockKids:PageComponent, BlockProtocol {
                 ComponentLog.d("RequestData Fail" + data.name, tag: "BlockProtocolA")
                 self.data.setRequestFail()
             }
+            
         }
         .onDisappear{
-            //self.datas.removeAll()
+            ComponentLog.d("onDisappear" + data.name, tag: "BlockProtocolA")
             self.clearDataBinding()
         }
         .onReceive(self.pageObservable.$layer ){ layer  in

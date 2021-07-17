@@ -99,7 +99,7 @@ extension PageDragingView{
 
 class PageDragingModel: ObservableObject, PageProtocol, Identifiable{
     static var MIN_DRAG_RANGE:CGFloat = 30
-
+   
     @Published var uiEvent:PageDragingUIEvent? = nil {didSet{ if uiEvent != nil { uiEvent = nil} }}
     @Published var event:PageDragingEvent? = nil {didSet{ if event != nil { event = nil} }}
     @Published var status:PageDragingStatus = .none

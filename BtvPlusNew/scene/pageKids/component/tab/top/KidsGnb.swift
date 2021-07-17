@@ -185,17 +185,29 @@ struct KidsGnbItem: PageView {
         */
         .onReceive(self.pairing.$kid) { kid in
             if !self.data.isHome {return}
-            if let kid = kid {
-                self.profileImg = AssetKids.characterGnbList[kid.characterIdx]
-                self.title = kid.nickName
-                if let age = kid.age {
-                    self.subTitle = age.description + String.app.ageCount
-                }
-            } else {
-                self.profileImg = Asset.gnbTop.zemkids
-                self.subTitle = nil
-                self.title = nil
+            self.update(kid: kid)
+        }
+        .onReceive(self.pairing.$event){ evt in
+            guard let evt = evt else { return }
+            switch evt {
+            case .editedKids :
+                self.update(kid: self.pairing.kid)
+            default: break
             }
+        }
+    }
+    
+    private func update(kid:Kid?) {
+        if let kid = kid {
+            self.profileImg = AssetKids.characterGnbList[kid.characterIdx]
+            self.title = kid.nickName
+            if let age = kid.age {
+                self.subTitle = age.description + String.app.ageCount
+            }
+        } else {
+            self.profileImg = Asset.gnbTop.zemkids
+            self.subTitle = nil
+            self.title = nil
         }
     }
 }

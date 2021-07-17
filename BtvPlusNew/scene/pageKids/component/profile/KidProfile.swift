@@ -62,23 +62,34 @@ struct KidProfile: PageComponent{
             }
         }
         .onReceive(self.pairing.$kid) { kid in
-            if let kid = kid {
-                self.profileImg = AssetKids.characterList[kid.characterIdx]
-                if let age = kid.age {
-                    self.title = kid.nickName + " | " + age.description + String.app.ageCount
-                } else {
-                    self.title = kid.nickName
-                }
-            } else {
-                self.profileImg = AssetKids.image.noProfile
-                self.title = nil
+            self.update(kid: kid)
+        }
+        .onReceive(self.pairing.$event){ evt in
+            guard let evt = evt else { return }
+            switch evt {
+            case .editedKids :
+                self.update(kid: self.pairing.kid)
+            default: break
             }
         }
         .onAppear(){
             
         }
-        
     }
+    private func update(kid:Kid?) {
+        if let kid = kid {
+            self.profileImg = AssetKids.characterList[kid.characterIdx]
+            if let age = kid.age {
+                self.title = kid.nickName + " | " + age.description + String.app.ageCount
+            } else {
+                self.title = kid.nickName
+            }
+        } else {
+            self.profileImg = AssetKids.image.noProfile
+            self.title = nil
+        }
+    }
+    
 }
 
 #if DEBUG

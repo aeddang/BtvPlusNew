@@ -116,6 +116,7 @@ struct DiagnosticReportCard: PageComponent{
             if !isUpdated {return}
             self.updatedData()
         }
+        
         .onReceive(dataProvider.$result) { res in
             guard let res = res else { return }
             switch res.type {

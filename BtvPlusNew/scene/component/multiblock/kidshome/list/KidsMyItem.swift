@@ -66,20 +66,14 @@ struct KidsMyItem:PageView  {
             }
         }
         .onReceive(self.pairing.$kid) { kid in
-            if let kid = kid {
-                self.profileImg = AssetKids.characterGnbList[kid.characterIdx]
-                self.nick = kid.nickName
-                
-                if let age = kid.age {
-                    self.age = "(" + age.description + String.app.ageCount + ")"
-                } else {
-                    self.age = ""
-                }
-                
-            } else {
-                self.profileImg = nil
-                self.nick = ""
-                self.age = ""
+            self.update(kid: kid)
+        }
+        .onReceive(self.pairing.$event){ evt in
+            guard let evt = evt else { return }
+            switch evt {
+            case .editedKids :
+                self.update(kid: self.pairing.kid)
+            default: break
             }
         }
         .onTapGesture {
@@ -95,6 +89,24 @@ struct KidsMyItem:PageView  {
             } else {
                 self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsMy))
             }
+        }
+    }
+    
+    private func update(kid:Kid?) {
+        if let kid = kid {
+            self.profileImg = AssetKids.characterGnbList[kid.characterIdx]
+            self.nick = kid.nickName
+            
+            if let age = kid.age {
+                self.age = "(" + age.description + String.app.ageCount + ")"
+            } else {
+                self.age = ""
+            }
+            
+        } else {
+            self.profileImg = nil
+            self.nick = ""
+            self.age = ""
         }
     }
 }

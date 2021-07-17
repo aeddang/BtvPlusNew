@@ -11,7 +11,7 @@ import Combine
 
 extension PageKidsMultiBlock{
     static let tabWidth:CGFloat = SystemEnvironment.isTablet ? 186 : 123
-    static let tabMargin:CGFloat = DimenKids.margin.medium
+    static let tabMargin:CGFloat = DimenKids.margin.regular
 }
 
 struct PageKidsMultiBlock: PageView {
@@ -66,7 +66,7 @@ struct PageKidsMultiBlock: PageView {
                             style: .kidsWhite
                         )
                         .fixedSize(horizontal: false, vertical: true)
-                        if self.tabs.count > 1 {
+                        if self.tabs.count > 1 && self.isUiInit {
                             ScrollMenuTab(
                                 viewModel: self.tabNavigationModel,
                                 tabIdx: self.selectedTabIdx,
@@ -78,6 +78,7 @@ struct PageKidsMultiBlock: PageView {
                                 marginHorizontal: Self.tabMargin
                             )
                             .opacity(self.isTop ? 1 : 0)
+                            .modifier(ContentHorizontalEdgesKids(margin:Self.tabMargin))
                             .frame( height: self.isTop ? MenuTab.height : 0)
                             .padding(.bottom, self.isTop ? DimenKids.margin.thin : 0)
                             .onReceive(self.tabNavigationModel.$index){ idx in
@@ -146,8 +147,9 @@ struct PageKidsMultiBlock: PageView {
                 }
             }
             .onAppear{
-                let w = Float(geometry.size.width - (Self.tabMargin*2))
-                self.scrollTabSize = Int(ceil(w / Float(Self.tabWidth)))
+                let w = Float(geometry.size.width - (Self.tabMargin*2) - max(geometry.safeAreaInsets.leading,geometry.safeAreaInsets.trailing) )
+                let limit = Int(floor(w / Float(Self.tabWidth)))
+                self.scrollTabSize = limit
                 guard let obj = self.pageObject  else { return }
                 self.openId = obj.getParamValue(key: .subId) as? String
                 self.title = obj.getParamValue(key: .title) as? String

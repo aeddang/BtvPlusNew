@@ -14,6 +14,7 @@ struct VideoBlockKids:BlockProtocol, PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
+    
     var pageObservable:PageObservable
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -51,6 +52,7 @@ struct VideoBlockKids:BlockProtocol, PageComponent {
             margin:max(self.sceneObserver.safeAreaStart,self.sceneObserver.safeAreaEnd) + DimenKids.margin.regular,
             useTracking:self.useTracking
         )
+        
         DispatchQueue.main.async {
             self.listId = key
             self.list = newList
@@ -94,20 +96,9 @@ struct VideoBlockKids:BlockProtocol, PageComponent {
                 .modifier(ContentHorizontalEdgesKids())
                 
                 
-                if !self.datas.isEmpty  && self.isListUpdated{
+                if !self.datas.isEmpty && self.isListUpdated{
                     self.getList()
-                        .onReceive(self.viewModel.$event){evt in
-                            guard let evt = evt else {return}
-                            switch evt {
-                            case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
-                            case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
-                            default : do{}
-                            }
-                        }
-                        .onReceive(self.viewModel.$pullPosition){ pos in
-                            self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
-                        }
-                    
+                       
                 } else if self.useEmpty {
                     ErrorKidsData( text: self.data.cardType != .watchedVideo
                                 ? String.pageText.myWatchedEmpty
@@ -120,12 +111,16 @@ struct VideoBlockKids:BlockProtocol, PageComponent {
                         spacing: DimenKids.margin.thinUltra,
                         size:ListItemKids.video.type01
                     )
-                    .modifier(ContentHorizontalEdgesKids())
                     .modifier(MatchParent())
                 }
             }
         }
         .modifier(MatchParent())
+        .modifier(
+            ContentScrollPull(
+                infinityScrollModel: self.viewModel,
+                pageDragingModel: self.pageDragingModel)
+        )
         .onAppear{
             if !self.datas.isEmpty {
                 ComponentLog.d("RecycleData " + data.name, tag: "BlockProtocol")

@@ -77,10 +77,11 @@ class KidsCategoryListItemData:Identifiable{
     private(set) var title:String? = nil
    
     private(set) var menuId:String? = nil
-    
+    private(set) var blocks:[BlockItem] = []
     func setData(data:BlockItem, size:CGSize) -> KidsCategoryListItemData {
         self.title = data.menu_nm
-        self.menuId = data.menu_id
+        
+        self.blocks = data.blocks ?? [data]
         self.image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: size, convType:.alpha)
         if size.height == KidsCategoryList.sizeHalf.height {
             self.defaultImage = AssetKids.noImgCardHalf
@@ -123,9 +124,6 @@ struct KidsCategoryList:PageView  {
 
 
 struct KidsCategoryListItem:PageView  {
-    @EnvironmentObject var pairing:Pairing
-    @EnvironmentObject var dataProvider:DataProvider
-    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pagePresenter:PagePresenter
     var data:KidsCategoryListItemData
    
@@ -144,6 +142,13 @@ struct KidsCategoryListItem:PageView  {
                     .modifier(MatchParent())
                
             }
+        }
+        .onTapGesture {
+            self.pagePresenter.openPopup(
+                PageKidsProvider.getPageObject(.kidsMultiBlock)
+                    .addParam(key: .datas, value: data.blocks)
+                    .addParam(key: .title, value: data.title)
+            )
         }
     }
 }

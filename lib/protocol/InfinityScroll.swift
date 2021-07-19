@@ -45,7 +45,6 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
     static let PULL_COMPLETED_RANGE:CGFloat = 40
     static let DRAG_RANGE:CGFloat = 70
     static let DRAG_COMPLETED_RANGE:CGFloat = 60
-    
     @Published var uiEvent:InfinityScrollUIEvent? = nil {
         didSet{if self.uiEvent != nil { self.uiEvent = nil}}
     }
@@ -62,11 +61,9 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
     @Published fileprivate(set) var scrollPosition:CGFloat = 0
     fileprivate(set) var prevPosition:CGFloat = 0
     fileprivate(set) var minDiff:CGFloat = 0
-    
     fileprivate(set) var appearList:[Int] = []
     fileprivate(set) var appearValue:Float = 0
-    
-    
+
     var initIndex:Int? = nil
     var initPos:Float? = nil
     let idstr:String = UUID().uuidString
@@ -87,25 +84,35 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
     private(set) var completePullDiff:CGFloat = 40
     private(set) var cancelPullRange:CGFloat = 40
     private(set) var topRange:CGFloat = 80
+    private(set) var type: InfinityScrollType = .vertical(isDragEnd: false)
+    private(set) var scrollSize:CGSize = CGSize(width: 375, height: 740)
+    var isSetup:Bool = false
     
-    func setup(type: InfinityScrollType){
+    @discardableResult
+    func setup(type: InfinityScrollType? = nil, scrollSize:CGSize? = nil) -> InfinityScrollModel {
+        let type:InfinityScrollType = type ?? self.type
+        let size:CGSize = scrollSize ?? self.scrollSize
+        self.type = type
+        self.scrollSize = size
         switch type {
         case .horizontal (let end):
             pullRange = 40
             pullCompletedRange = 50
             updatePullDiff = 0.3
-            cancelPullDiff = 5
-            completePullDiff = 40
+            cancelPullDiff = size.width*5/375
+            completePullDiff = size.width*40/375
             cancelPullRange = pullRange
             isDragEnd = end ?? false
+            
         case .vertical (let end):
             pullRange = InfinityScrollModel.DRAG_RANGE
             pullCompletedRange = InfinityScrollModel.DRAG_COMPLETED_RANGE
             updatePullDiff = 0.3
-            cancelPullDiff = 10
-            completePullDiff = 50
+            cancelPullDiff = size.height*10/740
+            completePullDiff = size.height*50/740
             cancelPullRange = pullRange
             isDragEnd = end ?? false
+            
         case .reload (let end):
             pullRange = InfinityScrollModel.PULL_RANGE
             pullCompletedRange = InfinityScrollModel.PULL_COMPLETED_RANGE
@@ -114,6 +121,7 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
             completePullDiff = 1000
             cancelPullRange = pullRange
             isDragEnd = end ?? false
+            
         case .web (let end):
             pullRange = 0
             pullCompletedRange = InfinityScrollModel.DRAG_RANGE + InfinityScrollModel.DRAG_COMPLETED_RANGE
@@ -123,6 +131,8 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
             cancelPullRange = 30
             isDragEnd = end ?? true
         }
+        self.isSetup = true
+        return self
     }
     
     func reload(){
@@ -293,9 +303,7 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
         self.event = .down
         ComponentLog.d("onDown", tag: "InfinityScrollViewProtocol" + self.idstr)
     }
-    
 }
-
 
 open class InfinityData:Identifiable, Equatable{
     public var id:String = UUID().uuidString
@@ -308,15 +316,14 @@ open class InfinityData:Identifiable, Equatable{
     }
 }
 
-
 protocol InfinityScrollViewProtocol :PageProtocol{
     var viewModel:InfinityScrollModel {get set}
     func onReady()
     func onMove(pos:CGFloat)
     func onAppear(idx:Int)
     func onDisappear(idx:Int)
-   
 }
+
 extension InfinityScrollViewProtocol {
     func onReady(){
         if let idx = self.viewModel.initIndex {

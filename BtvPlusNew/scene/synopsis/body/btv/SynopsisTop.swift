@@ -10,7 +10,9 @@ import SwiftUI
 
 struct SynopsisTop: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @ObservedObject var pageObservable:PageObservable = PageObservable()
+    var geometry:GeometryProxy
+    var pageObservable:PageObservable = PageObservable()
+    var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var playerModel: BtvPlayerModel = BtvPlayerModel()
     var playerListViewModel: InfinityScrollModel = InfinityScrollModel()
     var prerollModel = PrerollModel()
@@ -47,7 +49,7 @@ struct SynopsisTop: PageComponent{
                     contentMode: self.imgContentMode,
                     isActive: self.isPlayViewActive
                 )
-                
+                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
         }
     }//body
@@ -55,17 +57,4 @@ struct SynopsisTop: PageComponent{
 
 
 
-#if DEBUG
-struct SynopsisTop_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        VStack{
-            SynopsisTop(
-                
-            )
-            .environmentObject(PagePresenter())
-        }.background(Color.blue)
-    }
-}
-#endif
 

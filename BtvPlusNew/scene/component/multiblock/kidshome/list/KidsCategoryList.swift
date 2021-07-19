@@ -52,10 +52,11 @@ class KidsCategoryListData: KidsHomeBlockListData {
                 self.sets = rows
             }
         default:
+           
             self.datas = data.blocks?
                 .map{
                     KidsCategoryListItemData()
-                        .setData(data: $0, size: KidsCategoryList.size)
+                        .setData(data: $0, size: KidsCategoryList.sizeLong)
                     
                 } ?? []
         }
@@ -78,9 +79,10 @@ class KidsCategoryListItemData:Identifiable{
    
     private(set) var menuId:String? = nil
     private(set) var blocks:[BlockItem] = []
+    private(set) var size:CGSize = KidsCategoryList.size
     func setData(data:BlockItem, size:CGSize) -> KidsCategoryListItemData {
         self.title = data.menu_nm
-        
+        self.size = size
         self.blocks = data.blocks ?? [data]
         self.image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: size, convType:.alpha)
         if size.height == KidsCategoryList.sizeHalf.height {
@@ -91,6 +93,7 @@ class KidsCategoryListItemData:Identifiable{
 }
 
 extension KidsCategoryList{
+    static let sizeLong:CGSize = SystemEnvironment.isTablet ? CGSize(width: 198, height: 359) : CGSize(width: 103, height: 187)
     static let size:CGSize = SystemEnvironment.isTablet ? CGSize(width: 205, height: 344) : CGSize(width: 107, height: 179)
     static let sizeHalf:CGSize = SystemEnvironment.isTablet ? CGSize(width: 227, height: 162) : CGSize(width: 118, height: 84)
 }
@@ -107,6 +110,7 @@ struct KidsCategoryList:PageView  {
             HStack(alignment: .top, spacing: DimenKids.margin.thinExtra){
                 ForEach(self.data.datas) { data in
                     KidsCategoryListItem(data: data)
+                       
                 }
                 
                 ForEach(self.data.sets) { sets in
@@ -143,6 +147,7 @@ struct KidsCategoryListItem:PageView  {
                
             }
         }
+        .frame(width: data.size.width, height: data.size.height)
         .onTapGesture {
             self.pagePresenter.openPopup(
                 PageKidsProvider.getPageObject(.kidsMultiBlock)
@@ -150,6 +155,7 @@ struct KidsCategoryListItem:PageView  {
                     .addParam(key: .title, value: data.title)
             )
         }
+        
     }
 }
 

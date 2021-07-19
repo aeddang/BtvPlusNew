@@ -18,6 +18,7 @@ class PosterData:InfinityData{
     private(set) var tagData: TagData? = nil
     private(set) var isAdult:Bool = false
     private(set) var watchLv:Int = 0
+   
     fileprivate(set) var isBookmark:Bool? = nil
     private(set) var synopsisType:SynopsisType = .title
     private(set) var type:PosterType = .small
@@ -40,6 +41,7 @@ class PosterData:InfinityData{
         if self.useTag {
             tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         }
+       
         index = idx
         epsdId = data.epsd_id
         synopsisType = SynopsisType(value: data.synon_typ_cd)

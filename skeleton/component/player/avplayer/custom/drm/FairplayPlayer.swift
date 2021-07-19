@@ -39,7 +39,7 @@ class FairplayPlayer: AVPlayer , PageProtocol{
         DataLog.d("getCertificateData", tag: self.tag)
         guard let url = URL(string:drm.certificateURL) else {
             DataLog.e("DRM: certificateData url error", tag: self.tag)
-            delegate?.onAssetLoadError(.drm(reason: "certificate url"))
+            delegate?.onAssetLoadError(.drm(.noCertificate))
             return
         }
         var certificateRequest = URLRequest(url: url)
@@ -49,13 +49,14 @@ class FairplayPlayer: AVPlayer , PageProtocol{
             guard error == nil, let data = data else
             {
                 DataLog.e("DRM: certificateData error", tag: self?.tag ?? "")
-                delegate?.onAssetLoadError(.drm(reason: "certificate data"))
+                delegate?.onAssetLoadError(.drm(.noCertificate))
                 return
             }
             if let self = self {
-                let cerData = data
-                drm.certificate = cerData
-                DataLog.d("DRM: certificate " + cerData.base64EncodedString() , tag: self.tag)
+                let cerData = data.base64EncodedString()
+                DataLog.d("DRM: certificate " + cerData , tag: self.tag)
+                drm.certificate = Data(base64Encoded:cerData, options: .ignoreUnknownCharacters)
+                
                 self.playAsset(drm: drm)
             }
         }

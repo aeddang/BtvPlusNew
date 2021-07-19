@@ -9,8 +9,6 @@ import Foundation
 import AVFoundation
 
 class FairplayResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageProtocol{
-   
-   
     private var originURL:URL
     private var delegate: CustomAssetPlayerDelegate?
     private var drm:FairPlayDrm
@@ -31,8 +29,6 @@ class FairplayResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageProt
         
         if drm.contentId == nil {
             return handleRequest(loadingRequest, path:self.originURL.absoluteString)
-        } else if drm.isCompleted {
-            return redirectRequest(loadingRequest)
         } else {
             return false
         }
@@ -42,12 +38,14 @@ class FairplayResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageProt
     func getLicenseData(_ request: AVAssetResourceLoadingRequest, drmData:FairPlayDrm) -> Bool {
         DataLog.d("getSpcData", tag: self.tag)
         guard let certificate = drmData.certificate else {
-            self.delegate?.onAssetLoadError(.drm(reason: "certificate"))
+            self.delegate?.onAssetLoadError(.drm(.noCertificate))
+            request.finishLoading(with: DRMError.noCertificate)
             return false
         }
         let contentId = drmData.contentId ?? "" // content id
         guard let contentIdData = contentId.data(using: String.Encoding.utf8) else {
-            self.delegate?.onAssetLoadError(.drm(reason: "contentIdData"))
+            self.delegate?.onAssetLoadError(.drm(.noContentIdFound))
+            request.finishLoading(with: DRMError.noContentIdFound)
             return false
         }
         DataLog.d("contentId " + contentId , tag: self.tag)
@@ -59,14 +57,15 @@ class FairplayResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageProt
                 options: [AVAssetResourceLoadingRequestStreamingContentKeyRequestRequiresPersistentKey: true as AnyObject]) else {
             request.finishLoading(with: NSError(domain: "spcData", code: -3, userInfo: nil))
             DataLog.e("DRM: false to get SPC Data from video", tag: self.tag)
-            self.delegate?.onAssetLoadError(.drm(reason: "spcData"))
+            self.delegate?.onAssetLoadError(.drm(.noSPCFound))
+            request.finishLoading(with: DRMError.noSPCFound)
             return false
         }
         
         guard let ckcServer = URL(string: drmData.ckcURL) else {
             DataLog.e("ckc url error", tag: self.tag)
-            self.delegate?.onAssetLoadError(.drm(reason: "ckcServer url"))
-            request.finishLoading(with: NSError(domain: "ckcURL", code: -3, userInfo: nil))
+            self.delegate?.onAssetLoadError(.drm(.noLicenseUrl))
+            request.finishLoading(with: DRMError.noLicenseUrl)
             return false
         }
         
@@ -78,46 +77,45 @@ class FairplayResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageProt
         params["assetId"] = contentId
         licenseRequest.httpBody = params.map{$0.key + "=" + $0.value.toPercentEncoding()}.joined(separator: "&").data(using: .utf8)
         
-        
         let task = URLSession(configuration: URLSessionConfiguration.default).dataTask(with: licenseRequest) { data, response, error in
             guard let data = data else {
                 DataLog.e("ckc nodata", tag: self.tag)
-                self.delegate?.onAssetLoadError(.drm(reason: "ckcServer data"))
-                request.finishLoading(with: NSError(domain: "ckc", code: -4, userInfo: nil))
+                self.delegate?.onAssetLoadError(.drm(.cannotEncodeCKCData))
+                request.finishLoading(with: DRMError.cannotEncodeCKCData)
                 return
             }
             var responseString = String(data: data, encoding: .utf8)
             responseString = responseString?.replacingOccurrences(of: "<ckc>", with: "").replacingOccurrences(of: "</ckc>", with: "")
-            responseString = responseString?.decoded
             guard let str = responseString  else { return }
             DataLog.d("license key data " + str, tag: self.tag)
             
             //request.dataRequest?.respond(with: data)
             //request.finishLoading()
             //self.drm.isCompleted = true
-            
-            
-            guard let ckcData = Data(base64Encoded: data, options: .ignoreUnknownCharacters)  else {
+            guard let ckcData = Data(base64Encoded:str, options: .ignoreUnknownCharacters)  else {
                 DataLog.e("ckc base64Encoded", tag: self.tag)
-                self.delegate?.onAssetLoadError(.drm(reason: "ckcServer data"))
-                request.finishLoading(with: NSError(domain: "ckc", code: -4, userInfo: nil))
+                self.delegate?.onAssetLoadError(.drm(.cannotEncodeCKCData))
+                request.finishLoading(with: DRMError.cannotEncodeCKCData)
                 return
             }
+            request.dataRequest?.respond(with: ckcData)
+            request.finishLoading()
+            self.drm.isCompleted = true
             
-            
+            /*
             var persistentKeyData: Data?
             do {
-                persistentKeyData = try request.persistentContentKey(fromKeyVendorResponse:ckcData , options: nil)
+                persistentKeyData = try request.persistentContentKey(fromKeyVendorResponse: ckcData, options: nil)
             } catch {
-                DataLog.e("ckc persistentContentKey", tag: self.tag)
-                self.delegate?.onAssetLoadError(.drm(reason: "ckc persistentContentKey"))
+                DataLog.e("Failed to get persistent key with error: \(error)", tag: self.tag)
+                self.delegate?.onAssetLoadError(.drm(.unableToGeneratePersistentKey))
+                request.finishLoading(with: DRMError.unableToGeneratePersistentKey)
                 return
             }
             request.contentInformationRequest?.contentType = AVStreamingKeyDeliveryPersistentContentKeyType
             request.dataRequest?.respond(with: persistentKeyData!)
             request.finishLoading()
-            self.drm.isCompleted = true
-             
+            */
         }
         task.resume()
         return true
@@ -158,13 +156,13 @@ class FairplayResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageProt
         guard let contentKeyIdentifierURL = request.request.url,
             let assetIDString = contentKeyIdentifierURL.host
         else {
-            self.delegate?.onAssetLoadError(.drm(reason: "assetID"))
-            request.finishLoading(with: NSError(domain: "assetID", code: -4, userInfo: nil))
+            self.delegate?.onAssetLoadError(.drm(.noContentIdFound))
+            request.finishLoading(with: DRMError.noContentIdFound)
             return false
         }
         if assetIDString == self.originURL.host {
-            self.delegate?.onAssetLoadError(.drm(reason: "assetID"))
-            request.finishLoading(with: NSError(domain: "assetID", code: -4, userInfo: nil))
+            self.delegate?.onAssetLoadError(.drm(.noContentIdFound))
+            request.finishLoading(with: DRMError.noContentIdFound)
             return false
     
         }

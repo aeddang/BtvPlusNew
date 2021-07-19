@@ -157,8 +157,8 @@ struct PagePlayerTest: PageView {
                 self.debugingInfo = "illegalState : " + evt.decription
             case .stream(let err) :
                 self.debugInfo = "stream error : " + err.getDescription()
-            case .drm(let reason):
-                self.debugInfo = "drm error : " + reason
+            case .drm(let err):
+                self.debugInfo = "drm error : " + err.getDescription()
             }
         }
         .onReceive(self.pagePresenter.$event){ evt in

@@ -293,57 +293,21 @@ struct MultiBlock:PageComponent {
         }//body
     }
     
-    struct MultiBlockCell:PageComponent {
+}
+
+
+struct MultiBlockCell:PageComponent {
+    
+    var pageObservable:PageObservable
+    var pageDragingModel:PageDragingModel
+    var data:BlockData
+    var useTracking:Bool = false
+    var body :some View {
         
-        var pageObservable:PageObservable
-        var pageDragingModel:PageDragingModel
-        var data:BlockData
-        var useTracking:Bool = false
-        var body :some View {
-            
-            switch data.uiType {
-            case .poster :
-                if data.pageType == .kids {
-                    PosterBlockKids(
-                        pageObservable:self.pageObservable,
-                        pageDragingModel:self.pageDragingModel,
-                        data: data,
-                        useTracking:self.useTracking
-                        )
-                    .frame(height:data.listHeight)
-                    
-                } else {
-                    PosterBlock(
-                        pageObservable:self.pageObservable,
-                        pageDragingModel:self.pageDragingModel,
-                        data: data,
-                        useTracking:self.useTracking
-                        )
-                    .frame(height:data.listHeight)
-                }
-                
-            case .video :
-                if data.pageType == .kids {
-                    VideoBlockKids(
-                        pageObservable:self.pageObservable,
-                        pageDragingModel:self.pageDragingModel,
-                        data: data,
-                        useTracking:self.useTracking
-                        )
-                    .frame(height:data.listHeight)
-                   
-                } else {
-                    VideoBlock(
-                        pageObservable:self.pageObservable,
-                        pageDragingModel:self.pageDragingModel,
-                        data: data,
-                        useTracking:self.useTracking
-                        )
-                    .frame(height:data.listHeight)
-                }
-                
-            case .theme :
-                ThemaBlock(
+        switch data.uiType {
+        case .poster :
+            if data.pageType == .kids {
+                PosterBlockKids(
                     pageObservable:self.pageObservable,
                     pageDragingModel:self.pageDragingModel,
                     data: data,
@@ -351,39 +315,77 @@ struct MultiBlock:PageComponent {
                     )
                 .frame(height:data.listHeight)
                 
-            case .banner :
-                BannerBlock(
-                    pageObservable:self.pageObservable,
-                    data: data
-                )
-                .frame(height:data.listHeight)
-                
-            case .bannerList :
-                BannerListBlock(
+            } else {
+                PosterBlock(
                     pageObservable:self.pageObservable,
                     pageDragingModel:self.pageDragingModel,
                     data: data,
                     useTracking:self.useTracking
-                )
-                .frame(height:data.listHeight)
-                
-            case .ticket :
-                TicketBlock(
-                    pageObservable:self.pageObservable,
-                    pageDragingModel:self.pageDragingModel,
-                    data: data,
-                    useTracking:self.useTracking
-                )
-                .frame(height:data.listHeight)
-
-            case .kidsHome :
-                KidsHomeBlock(
-                    pageObservable:self.pageObservable,
-                    pageDragingModel:self.pageDragingModel,
-                    data: data
-                )
+                    )
                 .frame(height:data.listHeight)
             }
-        }//body
-    }
+            
+        case .video :
+            if data.pageType == .kids {
+                VideoBlockKids(
+                    pageObservable:self.pageObservable,
+                    pageDragingModel:self.pageDragingModel,
+                    data: data,
+                    useTracking:self.useTracking
+                    )
+                .frame(height:data.listHeight)
+               
+            } else {
+                VideoBlock(
+                    pageObservable:self.pageObservable,
+                    pageDragingModel:self.pageDragingModel,
+                    data: data,
+                    useTracking:self.useTracking
+                    )
+                .frame(height:data.listHeight)
+            }
+            
+        case .theme :
+            ThemaBlock(
+                pageObservable:self.pageObservable,
+                pageDragingModel:self.pageDragingModel,
+                data: data,
+                useTracking:self.useTracking
+                )
+            .frame(height:data.listHeight)
+            
+        case .banner :
+            BannerBlock(
+                pageObservable:self.pageObservable,
+                data: data
+            )
+            .frame(height:data.listHeight)
+            
+        case .bannerList :
+            BannerListBlock(
+                pageObservable:self.pageObservable,
+                pageDragingModel:self.pageDragingModel,
+                data: data,
+                useTracking:self.useTracking
+            )
+            .frame(height:data.listHeight)
+            
+        case .ticket :
+            TicketBlock(
+                pageObservable:self.pageObservable,
+                pageDragingModel:self.pageDragingModel,
+                data: data,
+                useTracking:self.useTracking
+            )
+            .frame(height:data.listHeight)
+
+        case .kidsHome :
+            KidsHomeBlock(
+                pageObservable:self.pageObservable,
+                pageDragingModel:self.pageDragingModel,
+                data: data
+            )
+            .frame(height:data.listHeight)
+        }
+    }//body
 }

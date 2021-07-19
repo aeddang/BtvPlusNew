@@ -45,6 +45,7 @@ struct MenuNavi : PageComponent {
         }
         .frame(height: self.height)
         .onAppear(){
+            
             self.menus = zip(0..<self.buttons.count, self.buttons).map{ idx, btn in
                 MenuBtn(idx: idx, text: btn)
             }
@@ -66,7 +67,7 @@ struct MenuNavi : PageComponent {
     func performAction(_ menu:MenuBtn){
         self.viewModel.selected = menu.text
         self.viewModel.index = menu.idx
-        
+       
     }
     
     struct MenuBtn : SelecterbleProtocol, Identifiable {

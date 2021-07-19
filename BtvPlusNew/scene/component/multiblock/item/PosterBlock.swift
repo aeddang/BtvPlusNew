@@ -34,9 +34,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
             viewModel:self.viewModel,
             banners: self.data.leadingBanners,
             datas: self.datas,
-            useTracking:self.useTracking)
-            
-            
+            useTracking:true)
         DispatchQueue.main.async {
             self.list = newList
         }
@@ -72,7 +70,6 @@ struct PosterBlock:PageComponent, BlockProtocol {
                 }
                 .modifier(MatchHorizontal(height: Dimen.tab.thin))
                 .modifier(ContentHorizontalEdges())
-                
                 if !self.datas.isEmpty {
                     self.getList()
                 
@@ -82,14 +79,12 @@ struct PosterBlock:PageComponent, BlockProtocol {
                                 : String.alert.dataError)
                         .modifier(MatchParent())
                 } else {
-                    
                     SkeletonBlock(
                         len:Self.skeletonNum,
                         spacing:Dimen.margin.tiny,
                         size:self.skeletonSize
                     )
                     .modifier(MatchParent())
-                    
                 }
             }
         }
@@ -112,7 +107,6 @@ struct PosterBlock:PageComponent, BlockProtocol {
                     self.skeletonSize = size
                 }
                 ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
-               
                 self.creatDataBinding()
                 return
             }
@@ -125,7 +119,6 @@ struct PosterBlock:PageComponent, BlockProtocol {
             }
         }
         .onDisappear{
-            //self.datas.removeAll()
             self.clearDataBinding()
         }
         .onReceive(self.pageObservable.$layer ){ layer  in
@@ -173,14 +166,13 @@ struct PosterBlock:PageComponent, BlockProtocol {
                 }
                 allDatas.append(contentsOf: addDatas)
                 
-            default: do {}
+            default: break
             }
             
             if allDatas.isEmpty { return onBlank() }
             self.datas = allDatas
             self.updateListSize()
             self.data.posters = allDatas
-            
             ComponentLog.d("Remote " + data.name, tag: "BlockProtocol")
         }
         .onReceive(dataProvider.$error) { err in

@@ -7,6 +7,10 @@
 import Foundation
 import SwiftUI
 
+extension PageKidsMy {
+    static let recentlyWatchCode:String = "514"
+}
+
 
 struct PageKidsMy: PageView {
     @EnvironmentObject var repository:Repository
@@ -21,7 +25,7 @@ struct PageKidsMy: PageView {
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var diagnosticReportModel:DiagnosticReportModel = DiagnosticReportModel()
     @ObservedObject var monthlyReportModel:MonthlyReportModel = MonthlyReportModel()
-  
+    @ObservedObject var tabNavigationModel:NavigationModel = NavigationModel()
     @State var isPairing:Bool = false
     var body: some View {
         GeometryReader { geometry in
@@ -39,6 +43,7 @@ struct PageKidsMy: PageView {
                         PairingKidsView(
                             pageObservable: self.pageObservable,
                             pageDragingModel: self.pageDragingModel,
+                            tabNavigationModel: self.tabNavigationModel,
                             infinityScrollModel: self.infinityScrollModel,
                             diagnosticReportModel: self.diagnosticReportModel,
                             monthlyReportModel: self.monthlyReportModel)

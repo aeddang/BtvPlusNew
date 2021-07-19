@@ -15,6 +15,7 @@ class BlockData:InfinityData, ObservableObject{
     private(set) var name:String = ""
     private(set) var subName:String = ""
     private(set) var isAdult:Bool = false
+    private(set) var isSortAble:Bool = false
     private(set) var menuId:String? = nil
     private(set) var cwCallId:String? = nil
     private(set) var cardType:CardType = .none
@@ -39,6 +40,7 @@ class BlockData:InfinityData, ObservableObject{
     var listHeight:CGFloat? = nil
     var allPosters:[PosterData]? = nil
     var allVideos:[VideoData]? = nil
+   
     
     public static func == (l:BlockData, r:BlockData)-> Bool {
         return l.id == r.id
@@ -73,8 +75,7 @@ class BlockData:InfinityData, ObservableObject{
         self.cardType = parent.cardType
         self.dataType = parent.dataType
         self.name = grid.sub_title ?? parent.name
-        self.menuId = grid.session_id
-        self.cwCallId = grid.cw_call_id
+        self.cwCallId = parent.cwCallId
         
         let max = MultiBlockBody.maxCellCount
         if let blocks = grid.block {
@@ -87,6 +88,12 @@ class BlockData:InfinityData, ObservableObject{
                 videos = blocks[0...min(max, blocks.count-1)].map{ d in
                     VideoData(pageType: .kids).setData(data: d, cardType: cardType)
                 }
+                /* 전체 데이타 동일시 처리
+                allVideos = blocks.map{ d in
+                    VideoData(pageType: .kids).setData(data: d, cardType: cardType)
+                }
+                self.isSortAble = true
+                */
             default: break
             }
         }
@@ -198,9 +205,9 @@ class BlockData:InfinityData, ObservableObject{
             self.cardType = .none
             self.blocks = data.blocks
         
-        } else {
+        }  else {
             switch data.scn_mthd_cd {
-            case  "514":
+            case  PageKidsMy.recentlyWatchCode:
                 self.uiType = .video
                 self.dataType = .cwGridKids
                 self.cardType = .watchedVideo
@@ -244,7 +251,8 @@ class BlockData:InfinityData, ObservableObject{
                 id: apiId ?? self.id,
                 type: .getCWGridKids(
                     kid,
-                    self.cwCallId, self.cardType == .watchedVideo ? .latest : .popularity),
+                    self.cwCallId,
+                    sortType ?? (self.cardType == .watchedVideo ? .latest : .popularity)),
                 isOptional: isOption)
         case .grid:
             DataLog.d("Request grid " + self.name, tag: "BlockProtocol")
@@ -406,6 +414,7 @@ class BlockData:InfinityData, ObservableObject{
         circleTheme,
         bigTheme,
         squareThema
+        
     }
 
     enum DataType: String, Codable {

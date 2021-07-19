@@ -72,7 +72,9 @@ struct BtvSynopsis: PageComponent{
         HStack(spacing:0){
             VStack(spacing:0){
                 SynopsisTop(
+                    geometry: self.geometry,
                     pageObservable: self.pageObservable,
+                    pageDragingModel: self.pageDragingModel,
                     playerModel: self.playerModel,
                     playerListViewModel: self.playerListViewModel,
                     prerollModel: self.prerollModel,
@@ -119,7 +121,6 @@ struct BtvSynopsis: PageComponent{
                             funtionLayout : (self.sceneOrientation == .portrait && SystemEnvironment.isTablet)
                                 ? .horizontal : .vertical
                             )
-                           
                             .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                             
                         

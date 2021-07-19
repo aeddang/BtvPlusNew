@@ -44,7 +44,8 @@ struct PageKidsCategoryList: PageView {
                         infinityScrollModel:self.infinityScrollModel,
                         viewModel:self.viewModel,
                         useTracking:self.useTracking,
-                        marginBottom:self.marginBottom
+                        marginBottom:self.marginBottom,
+                        spacing: DimenKids.margin.thinUltra
                     )
                     .modifier(ContentHorizontalEdgesKids())
                 }

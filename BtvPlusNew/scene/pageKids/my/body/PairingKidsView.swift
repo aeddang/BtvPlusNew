@@ -18,11 +18,10 @@ struct PairingKidsView: PageComponent {
     
     var pageObservable:PageObservable = PageObservable()
     var pageDragingModel:PageDragingModel = PageDragingModel()
-    var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
-    var diagnosticReportModel:DiagnosticReportModel = DiagnosticReportModel()
-    var monthlyReportModel:MonthlyReportModel = MonthlyReportModel()
-    
     @ObservedObject var tabNavigationModel:NavigationModel = NavigationModel()
+    var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
+    
+    
     @State var kid:Kid? = nil
     
     var body: some View {
@@ -63,25 +62,59 @@ struct PairingKidsView: PageComponent {
             .clipped()
             VStack(alignment: .leading, spacing:0){
                 if !self.tabs.isEmpty {
-                    MenuNavi(viewModel: self.tabNavigationModel, buttons: self.tabs, selectedIdx: self.tabIdx, isDivision: false)
+                    MenuNavi(
+                        viewModel: self.tabNavigationModel,
+                        buttons: self.tabs,
+                        selectedIdx: self.tabIdx,
+                        isDivision: false)
                         .padding(.leading, DimenKids.margin.thin)
                 }
-                InfinityScrollView(
-                    viewModel: self.infinityScrollModel,
-                    axes:.horizontal,
-                    isAlignCenter:true,
-                    isRecycle:false,
-                    useTracking: true
-                    ){
-                    HStack(spacing:DimenKids.margin.thin){
-                        DiagnosticReportCard(viewModel:self.diagnosticReportModel)
-                        MonthlyReportCard(viewModel:self.monthlyReportModel)
-                    }
-                    .padding(.leading, DimenKids.margin.thin)
-                    .padding(.trailing, DimenKids.margin.thin + self.sceneObserver.safeAreaEnd)
+                if self.isLoading {
+                    Spacer()
+                        .modifier(MatchParent())
+                } else if self.isError {
+                    ErrorKidsData(
+                        icon: self.errorMsg == nil ?  Asset.icon.alert : nil,
+                        text:self.errorMsg ?? String.alert.dataError)
+                        .modifier(MatchParent())
+                } else if let cateBlockModel = self.cateBlockModel {
+                    CateBlock(
+                        pageObservable: self.pageObservable,
+                        viewModel:cateBlockModel,
+                        marginBottom:self.sceneObserver.safeAreaBottom +  DimenKids.margin.thinUltra,
+                        marginHorizontal: DimenKids.margin.thin,
+                        spacing: DimenKids.margin.thinUltra,
+                        size : self.cateSize
+                    )
+                    .modifier(MatchParent())
+                    .padding(.trailing,  self.sceneObserver.safeAreaEnd)
                     
+                }else {
+                    InfinityScrollView(
+                        viewModel: self.infinityScrollModel,
+                        axes:.horizontal,
+                        marginStart: DimenKids.margin.thin,
+                        marginEnd: DimenKids.margin.thin + self.sceneObserver.safeAreaEnd,
+                        isAlignCenter:true,
+                        spacing:DimenKids.margin.thinUltra,
+                        isRecycle:false,
+                        useTracking: true
+                        ){
+                        if let diagnosticReportModel = self.diagnosticReportModel, let monthlyReportModel = self.monthlyReportModel {
+                            HStack(spacing:DimenKids.margin.thin){
+                                DiagnosticReportCard(viewModel:diagnosticReportModel)
+                                MonthlyReportCard(viewModel:monthlyReportModel)
+                            }
+                           
+                        } else if let kidsCategoryListData = self.kidsCategoryListData {
+                            KidsCategoryList(data:kidsCategoryListData)
+                                
+                        }  else {
+                            Spacer()
+                        }
+                    }
+                    .modifier(MatchParent())
                 }
-                .modifier(MatchParent())
 
             }
             .padding(.top, DimenKids.margin.mediumExtra)
@@ -94,65 +127,144 @@ struct PairingKidsView: PageComponent {
             switch res.type {
             case .getMonthlyReport :
                 guard let monthlyReport  = res.data as? MonthlyReport  else { return }
-                self.monthlyReportModel.setData(monthlyReport, kid: self.kid, date: self.currentDate)
+                self.monthlyReportModel?.setData(monthlyReport, kid: self.kid, date: self.currentDate)
                 
             case .getKidStudy :
                 guard let study  = res.data as? KidStudy  else { return }
-                self.diagnosticReportModel.setData(study, kid: self.kid) 
-            
+                self.diagnosticReportModel?.setData(study, kid: self.kid)
+               
+                
             default: break
             }
         }
         .onReceive(dataProvider.$error) { err in
             guard let err = err else { return }
-            
             switch err.type {
+            case .getMonthlyReport : self.onError()
+            case .getKidStudy : self.onError()
             default: break
             }
         }
         .onReceive(self.pairing.$kid){ kid in
             self.kid = kid
-            self.setupInitData()
+            self.load()
         }
         .onReceive(self.pairing.$event){ evt in
             guard let evt = evt else { return }
-            
             switch evt {
             case .editedKids :
-                self.monthlyReportModel.updatedKid()
-                self.diagnosticReportModel.updatedKid()
+                self.monthlyReportModel?.updatedKid()
+                self.diagnosticReportModel?.updatedKid()
             default: break
             }
         }
         .onReceive(self.tabNavigationModel.$index){ idx in
             if self.tabs.isEmpty {return}
-            
-            if idx >= self.tabs.count {return}
-            withAnimation{
-                self.tabIdx = idx
+            self.load(idx:idx)
+        }
+        .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+            if ani {
+                self.isUiInit = true
+                self.load()
             }
         }
         .onAppear{
-            self.tabDatas = self.dataProvider.bands.kidsGnbModel
+            let datas = self.dataProvider.bands.kidsGnbModel
                 .getMyDatas()?
                 .filter{$0.menu_nm != nil} ?? []
-            
+            self.tabDatas = datas
             self.tabs = self.tabDatas.map{$0.menu_nm ?? ""}
+            guard let obj = self.pageObject  else { return }
+            
+            if let subId = obj.getParamValue(key: .subId) as? String { //최근본목록 찾기
+                if let find = self.tabDatas.firstIndex(where: {$0.scn_mthd_cd == subId}){
+                    self.tabIdx = find
+                }
+            }else if let openIdx = obj.getParamValue(key: .index) as? Int { // 순서로
+                self.tabIdx = openIdx
+            }
         }
     }//body
+    @State var isUiInit:Bool = false
+    @State var isLoading:Bool = false
     @State var tabIdx:Int = 0
     @State var tabDatas:[BlockItem] = []
     @State var tabs:[String] = []
     @State var currentDate:Date = Date()
+
+    @State var diagnosticReportModel:DiagnosticReportModel? = nil
+    @State var monthlyReportModel:MonthlyReportModel? = nil
+   
+    @State var kidsCategoryListData:KidsCategoryListData? = nil
+    @State var cateBlockModel:CateBlockModel? = nil
+    @State var cateSize:CGFloat = 0
+    private func load (idx:Int? = nil){
+        if !self.isUiInit { return }
+        if self.isLoading { return }
+        self.isLoading = true
+        self.isError = false
+        if let idx = idx {
+            self.tabIdx = idx
+        }
+        self.diagnosticReportModel = nil
+        self.monthlyReportModel = nil
+        self.cateBlockModel = nil
+        self.kidsCategoryListData = nil
+        
+        if tabIdx == 0 {
+            self.loadMyKidData()
+            self.onLoaded()
+            
+            
+        } else {
+            let data = tabDatas[tabIdx]
+            if data.scn_mthd_cd == PageKidsMy.recentlyWatchCode {
+                let watcheBlockData:BlockData = BlockData(pageType: .kids).setDataKids(data)
+                self.cateBlockModel = CateBlockModel(pageType: .kids)
+                self.cateSize = (self.sceneObserver.screenSize.width
+                    - DimenKids.item.profileBox.width
+                    - self.sceneObserver.safeAreaStart
+                    - self.sceneObserver.safeAreaEnd)
+                self.onLoaded()
+                DispatchQueue.main.asyncAfter(deadline: .now()+0.1){
+                    self.cateBlockModel?.update(data: watcheBlockData, listType:.video, cardType: watcheBlockData.cardType)
+                }
+                
+            } else {
+                self.kidsCategoryListData = KidsCategoryListData().setData(data: data)
+                self.onLoaded()
+            }
+        }
+    }
     
-    private func setupInitData (){
+    private func loadMyKidData (){
         guard let kid = self.kid else {
-            self.monthlyReportModel.reset()
-            self.diagnosticReportModel.reset()
+            self.monthlyReportModel?.reset()
+            self.diagnosticReportModel?.reset()
             return
         }
+        self.diagnosticReportModel = DiagnosticReportModel()
+        self.monthlyReportModel = MonthlyReportModel()
         self.dataProvider.requestData(q: .init(type: .getKidStudy(kid), isOptional: false))
         self.dataProvider.requestData(q: .init(type: .getMonthlyReport(kid, self.currentDate), isOptional: false))
+    }
+    
+    
+   
+    
+    
+    @State var isError:Bool = false
+    @State var errorMsg:String? = nil
+    private func onError (msg:String? = nil){
+        errorMsg = msg
+        self.isLoading = false
+        withAnimation{
+            
+            self.isError = true
+        }
+    }
+    private func onLoaded (){
+        self.isLoading = false
     }
 }
 

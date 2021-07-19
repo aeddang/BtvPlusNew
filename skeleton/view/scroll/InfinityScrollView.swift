@@ -11,7 +11,6 @@ import SwiftUI
 import Combine
 
 struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where Content: View {
-    @EnvironmentObject var sceneObserver:PageSceneObserver
     var viewModel: InfinityScrollModel
     let axes: Axis.Set 
     let showIndicators: Bool
@@ -22,6 +21,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     var marginTop: CGFloat
     var marginBottom: CGFloat
     var marginHorizontal: CGFloat
+    var marginStart: CGFloat
+    var marginEnd: CGFloat
     var spacing: CGFloat
     var useTracking:Bool
     var scrollType:InfinityScrollType = .reload(isDragEnd: false)
@@ -35,7 +36,6 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     @State var isTracking = false
     @State var anchor:UnitPoint? = nil
     @State var isScroll:Bool = true
-    
     @State var progress:Double = 1
     @State var progressMax:Double = 1
      
@@ -51,6 +51,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         marginTop: CGFloat = 0,
         marginBottom: CGFloat = 0,
         marginHorizontal: CGFloat = 0,
+        marginStart: CGFloat = 0,
+        marginEnd: CGFloat = 0,
         isAlignCenter:Bool = false,
         spacing: CGFloat = 0,
         isRecycle:Bool = true,
@@ -67,6 +69,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         self.contentSize = contentSize
         self.marginTop = marginTop + marginVertical
         self.marginBottom = marginBottom + marginVertical
+        self.marginStart = marginStart + marginHorizontal
+        self.marginEnd = marginEnd + marginHorizontal
         self.marginHorizontal = marginHorizontal
         self.isAlignCenter = isAlignCenter
         self.spacing = spacing
@@ -74,7 +78,9 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         self.useTracking = useTracking
         self.bgColor = bgColor
         self.scrollType = scrollType ?? ( self.axes == .vertical ? .vertical(isDragEnd: false) : .horizontal(isDragEnd: false) )
-        viewModel.setup(type: self.scrollType)
+        if !viewModel.isSetup {
+            viewModel.setup(type: self.scrollType)
+        }
     }
     
     init(
@@ -91,14 +97,18 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         self.marginTop = 0
         self.marginBottom = 0
         self.marginHorizontal = 0
+        self.marginStart = 0
+        self.marginEnd = 0
         self.spacing = 0
         self.isRecycle = false
         self.useTracking = false
         self.bgColor = bgColor
         self.scrollType = scrollType ?? ( self.axes == .vertical ? .vertical(isDragEnd: false) : .horizontal(isDragEnd: false) )
-        viewModel.setup(type: self.scrollType)
-
+        if !viewModel.isSetup {
+            viewModel.setup(type: self.scrollType)
+        }
     }
+    
     var body: some View {
         if #available(iOS 14.0, *) {
             ScrollViewReader{ reader in
@@ -117,14 +127,16 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                 }
                                 .padding(.top, self.marginTop + self.headerSize)
                                 .padding(.bottom, self.marginBottom)
-                                .padding(.horizontal, self.marginHorizontal)
+                                .padding(.leading, self.marginStart)
+                                .padding(.trailing, self.marginEnd)
                             } else {
                                 VStack(alignment: self.isAlignCenter ? .center : .leading, spacing: self.spacing){
                                     self.content
                                 }
                                 .padding(.top, self.marginTop + self.headerSize)
                                 .padding(.bottom, self.marginBottom)
-                                .padding(.horizontal, self.marginHorizontal)
+                                .padding(.leading, self.marginStart)
+                                .padding(.trailing, self.marginEnd)
                             }
                             if let header = self.header {
                                 header.contentBody
@@ -148,8 +160,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                 }
                                 .padding(.top, self.marginTop + self.headerSize)
                                 .padding(.bottom, self.marginBottom)
-                                .padding(.leading, self.marginHorizontal + self.headerSize)
-                                .padding(.trailing, self.marginHorizontal)
+                                .padding(.leading, self.marginStart + self.headerSize)
+                                .padding(.trailing, self.marginEnd)
                                 
                             } else {
                                 HStack (alignment: self.isAlignCenter ? .center : .top, spacing: self.spacing){
@@ -157,8 +169,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                 }
                                 .padding(.top, self.marginTop)
                                 .padding(.bottom, self.marginBottom)
-                                .padding(.leading, self.marginHorizontal + self.headerSize)
-                                .padding(.trailing, self.marginHorizontal)
+                                .padding(.leading, self.marginStart + self.headerSize)
+                                .padding(.trailing, self.marginEnd)
                             }
                             if let header = self.header {
                                 header.contentBody
@@ -167,7 +179,6 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                             }
                         }
                         //.frame(alignment: .topLeading)
-                        
                     }
                 }
                 .modifier(MatchParent())
@@ -186,7 +197,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                 })
                 .onReceive(self.viewModel.$scrollStatus){ stat in
                     if self.scrollType != .web() {return}
-                    switch stat  {
+                    switch stat {
                     case .pull :
                         self.isScroll = false
                     default: break
@@ -195,15 +206,14 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                 .onReceive(self.viewModel.$event){ evt in
                     guard let evt = evt else{ return }
                     self.onTopChange(evt: evt)
-                    
-                    switch evt  {
+                    switch evt {
                     case .pullCancel : withAnimation{ self.progress = self.progressMax }
                     case .pullCompleted : withAnimation{ self.progress = self.scrollType == .reload() ? self.progressMax : 0 }
                     default: break
                     }
                     
                     if self.scrollType != .web() {return}
-                    switch evt  {
+                    switch evt {
                     case .pullCompleted, .pullCancel :
                         self.isScroll = true
                         self.onMove(pos: 1)
@@ -219,7 +229,6 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                 }
                 .onReceive(self.viewModel.$uiEvent){ evt in
                     guard let evt = evt else{ return }
-                    
                     switch evt {
                     case .scrollTo(let idx, let anchor):
                         self.anchor = anchor
@@ -230,7 +239,6 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                     default: break
                     }
                 }
-                
                 .onAppear(){
                     let max = Double(viewModel.pullRange + viewModel.pullCompletedRange )
                     self.progress = max
@@ -267,7 +275,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                             .modifier(MatchHorizontal(height: self.marginBottom))
                             .modifier(ListRowInset(spacing: 0))
                     }
-                    .padding(.horizontal, self.marginHorizontal)
+                    .padding(.leading, self.marginStart)
+                    .padding(.trailing, self.marginEnd)
                     .listStyle(PlainListStyle())
                     .background(self.bgColor)
                     .modifier(MatchParent())
@@ -303,7 +312,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                                 }
                                 .padding(.top, self.marginTop)
                                 .padding(.bottom, self.marginBottom)
-                                .padding(.horizontal, self.marginHorizontal)
+                                .padding(.leading, self.marginStart)
+                                .padding(.trailing, self.marginEnd)
                                 
                                 
                             }
@@ -339,8 +349,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                         }
                         .padding(.top, self.marginTop)
                         .padding(.bottom, self.marginBottom)
-                        .padding(.leading, self.marginHorizontal)
-                        .padding(.trailing, self.marginHorizontal)
+                        .padding(.leading, self.marginStart)
+                        .padding(.trailing, self.marginEnd)
                     }
                 }
                 .coordinateSpace(name: self.tag)

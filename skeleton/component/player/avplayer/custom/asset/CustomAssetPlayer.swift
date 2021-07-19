@@ -91,7 +91,7 @@ class CustomAssetPlayer: AVPlayer , PageProtocol{
         DataLog.d("getCertificateData", tag: self.tag)
         guard let url = URL(string:drm.certificateURL) else {
             DataLog.e("DRM: certificateData url error", tag: self.tag)
-            delegate?.onAssetLoadError(.drm(reason: "certificate url"))
+            delegate?.onAssetLoadError(.drm(.noCertificate))
             return
         }
         var certificateRequest = URLRequest(url: url)
@@ -101,7 +101,7 @@ class CustomAssetPlayer: AVPlayer , PageProtocol{
             guard error == nil, let data = data else
             {
                 DataLog.e("DRM: certificateData error", tag: self?.tag ?? "")
-                delegate?.onAssetLoadError(.drm(reason: "certificate data"))
+                delegate?.onAssetLoadError(.drm(.noCertificate))
                 return
             }
             if let self = self {

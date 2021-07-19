@@ -18,8 +18,11 @@ struct BannerDataSet:Identifiable {
 }
 
 extension BannerSet{
-    static let padding = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thinUltra
-    static func listSize(data:BannerDataSet, screenWidth:CGFloat, isFull:Bool = false) -> CGSize{
+
+    static func listSize(data:BannerDataSet, screenWidth:CGFloat, isFull:Bool = false,
+                         padding:CGFloat = SystemEnvironment.currentPageType == .btv
+                            ? Dimen.margin.thin
+                            : DimenKids.margin.thinUltra) -> CGSize{
         let ratio =  ListItem.banner.type02.height / ListItem.banner.type02.width
         let count = CGFloat(data.count)
         let w = screenWidth - ( padding * 2)
@@ -35,10 +38,12 @@ struct BannerSet: PageComponent{
     var pageObservable:PageObservable = PageObservable()
     var data:BannerDataSet
     var screenSize:CGFloat? = nil
+    var padding:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thinUltra
+   
     @State var cellDatas:[BannerData] = []
     @State var isUiActive:Bool = true
     var body: some View {
-        HStack(spacing: Self.padding){
+        HStack(spacing: self.padding){
             if self.isUiActive {
                 ForEach(self.cellDatas) { data in
                     BannerItem( data:data )
@@ -48,14 +53,14 @@ struct BannerSet: PageComponent{
                 }
             }
         }
-        .padding(.horizontal, Self.padding)
-        .frame(width: self.sceneObserver.screenSize.width)
+        .padding(.horizontal, self.padding)
+        .frame(width: self.screenSize ??  self.sceneObserver.screenSize.width)
        
         .onAppear {
             if self.data.datas.isEmpty { return }
-            let size = Self.listSize(data: self.data, screenWidth: self.screenSize ?? sceneObserver.screenSize.width)
+            let size = Self.listSize(data: self.data, screenWidth: self.screenSize ?? sceneObserver.screenSize.width, padding: self.padding)
             self.cellDatas = self.data.datas.map{
-                $0.setBannerSize(width: size.width, height: size.height, padding: Self.padding)
+                $0.setBannerSize(width: size.width, height: size.height, padding: self.padding)
             }
         }
         .onReceive(self.pageObservable.$layer ){ layer  in

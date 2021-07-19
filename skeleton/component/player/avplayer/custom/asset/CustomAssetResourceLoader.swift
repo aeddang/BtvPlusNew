@@ -55,12 +55,14 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
     func getLicenseData(_ request: AVAssetResourceLoadingRequest, drmData:FairPlayDrm) -> Bool {
         DataLog.d("getSpcData", tag: self.tag)
         guard let certificate = drmData.certificate else {
-            self.delegate?.onAssetLoadError(.drm(reason: "certificate"))
+            self.delegate?.onAssetLoadError(.drm(.noCertificate))
+            request.finishLoading(with: DRMError.noCertificate)
             return false
         }
         let contentId = drmData.contentId ?? "" // content id
         guard let contentIdData = contentId.data(using:.utf8) else {
-            self.delegate?.onAssetLoadError(.drm(reason: "contentIdData"))
+            self.delegate?.onAssetLoadError(.drm(.noContentIdFound))
+            request.finishLoading(with: DRMError.noContentIdFound)
             return false
         }
         DataLog.d("contentId " + contentId , tag: self.tag)
@@ -69,14 +71,15 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
         guard let spcData = try? request.streamingContentKeyRequestData(forApp: certificate, contentIdentifier: contentIdData, options: nil) else {
             request.finishLoading(with: NSError(domain: "spcData", code: -3, userInfo: nil))
             DataLog.e("DRM: false to get SPC Data from video", tag: self.tag)
-            self.delegate?.onAssetLoadError(.drm(reason: "spcData"))
+            self.delegate?.onAssetLoadError(.drm(.noSPCFound))
+            request.finishLoading(with: DRMError.noSPCFound)
             return false
         }
         
         guard let ckcServer = URL(string: drmData.ckcURL) else {
             DataLog.e("ckc url error", tag: self.tag)
-            self.delegate?.onAssetLoadError(.drm(reason: "ckcServer url"))
-            request.finishLoading(with: NSError(domain: "ckcURL", code: -3, userInfo: nil))
+            self.delegate?.onAssetLoadError(.drm(.noLicenseUrl))
+            request.finishLoading(with: DRMError.noLicenseUrl)
             return false
         }
         
@@ -91,8 +94,8 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
         let task = URLSession.shared.dataTask(with: licenseRequest) { data, response, error in
             guard let data = data else {
                 DataLog.e("DRM: unable to fetch ckc key :/", tag: self.tag)
-                self.delegate?.onAssetLoadError(.drm(reason: "ckcServer data"))
-                request.finishLoading(with: NSError(domain: "ckcURL", code: -4, userInfo: nil))
+                self.delegate?.onAssetLoadError(.drm(.noSPCFound))
+                request.finishLoading(with:  DRMError.noSPCFound)
                 return
             }
             self.drm?.isCompleted = true
@@ -228,8 +231,8 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
     
     func finishRequestWithMainPlaylist(_ request: AVAssetResourceLoadingRequest) {
         guard let data = self.m3u8String?.data(using: .utf8) else {
-            self.delegate?.onAssetLoadError(.drm(reason: "no data MainPlaylist"))
-            request.finishLoading(with: NSError(domain: "no data", code: -1, userInfo: nil))
+            self.delegate?.onAssetLoadError(.drm(.noContentIdFound))
+            request.finishLoading(with: DRMError.noContentIdFound)
             return
         }
         if let drm = self.drm {
@@ -241,8 +244,8 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
                 guard let contentKeyIdentifierURL = request.request.url,
                     let assetIDString = contentKeyIdentifierURL.host
                 else {
-                    self.delegate?.onAssetLoadError(.drm(reason: "assetID"))
-                    request.finishLoading(with: NSError(domain: "assetID", code: -4, userInfo: nil))
+                    self.delegate?.onAssetLoadError(.drm(.noContentIdFound))
+                    request.finishLoading(with: DRMError.noContentIdFound)
                     return
                 }
                 drm.contentId = assetIDString

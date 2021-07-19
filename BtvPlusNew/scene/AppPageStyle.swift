@@ -18,7 +18,6 @@ enum PageType:String{
     }
 }
 
-
 enum PageStyle{
     case dark, white, normal, kids, kidsLight, kidsWhite, kidsClear, kidsPupple
     var textColor:Color {
@@ -57,7 +56,6 @@ struct PageFull: ViewModifier {
     var style:PageStyle = .normal
     @State var marginStart:CGFloat = 0
     @State var marginEnd:CGFloat = 0
-
     func body(content: Content) -> some View {
         return content
             .padding(.leading, self.marginStart)
@@ -81,7 +79,6 @@ struct PageFull: ViewModifier {
                     self.marginStart = self.sceneObserver.safeAreaStart
                     self.marginEnd = self.sceneObserver.safeAreaEnd
                 }
-                
             }
     }
 }
@@ -103,12 +100,11 @@ struct PageBody: ViewModifier {
                 width: self.sceneObserver.screenSize.width,
                 height: self.sceneObserver.screenSize.height - self.sceneObserver.safeAreaTop - Dimen.app.top - self.sceneObserver.safeAreaBottom)
             .background(self.style.bgColor)
-            
     }
 }
 
 struct ContentScrollPull: ViewModifier {
-    
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     var infinityScrollModel:InfinityScrollModel
     var pageDragingModel:PageDragingModel
     
@@ -117,14 +113,17 @@ struct ContentScrollPull: ViewModifier {
         self.infinityScrollModel.$event.sink(receiveValue: { evt in
             guard let evt = evt else {return}
             switch evt {
+            case .ready : self.infinityScrollModel.setup(scrollSize: sceneObserver.screenSize)
             case .pullCompleted : self.pageDragingModel.updateNestedScroll(evt: .pullCompleted)
             case .pullCancel : self.pageDragingModel.updateNestedScroll(evt: .pullCancel)
-            default : do{}
+            default : break
             }
-        }).store(in: &anyCancellable)
+        })
+        .store(in: &anyCancellable)
         self.infinityScrollModel.$pullPosition.sink(receiveValue: { pos in
             self.pageDragingModel.updateNestedScroll(evt: .pull(pos))
-        }).store(in: &anyCancellable)
+        })
+        .store(in: &anyCancellable)
     }
    
     func body(content: Content) -> some View {
@@ -139,11 +138,9 @@ struct ContentScrollPull: ViewModifier {
     }
 }
 
-
 struct PageDraging: ViewModifier {
     var geometry:GeometryProxy
     var pageDragingModel:PageDragingModel
-    
     func body(content: Content) -> some View {
         return content
             .highPriorityGesture(
@@ -155,7 +152,6 @@ struct PageDraging: ViewModifier {
                         self.pageDragingModel.uiEvent = .draged(geometry, value)
                     })
             )
-            
             .gesture(
                 self.pageDragingModel.cancelGesture
                     .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
@@ -167,7 +163,6 @@ struct PageDraging: ViewModifier {
 struct PageDragingSecondPriority: ViewModifier {
     var geometry:GeometryProxy
     var pageDragingModel:PageDragingModel
-   
     func body(content: Content) -> some View {
         return content
             .gesture(
@@ -179,7 +174,6 @@ struct PageDragingSecondPriority: ViewModifier {
                         self.pageDragingModel.uiEvent = .draged(geometry, value)
                     })
             )
-            
             .gesture(
                 self.pageDragingModel.cancelGesture
                     .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})

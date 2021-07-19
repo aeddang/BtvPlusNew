@@ -32,19 +32,12 @@ struct VideoBlockKids:BlockProtocol, PageComponent {
     @State var isListUpdated:Bool = true
     private func getList() -> some View {
         let key = (self.datas.first?.epsdId ?? "") + self.datas.count.description
-        let type = self.datas.first?.type
         if key == self.listId,  let list = self.list {
-            switch type {
-            case .watchingKids: ComponentLog.d("Recycle List " + key , tag: self.tag + "List")
-            default : break
-            }
+            //ComponentLog.d("Recycle List " + key , tag: self.tag + "List")
             return list
         }
-        switch type {
-        case .watchingKids:  ComponentLog.d("New List " + key , tag: self.tag + "List")
-        default : break
-        }
-        
+        ComponentLog.d("New List " + key , tag: self.tag + "List")
+    
         let newList = VideoList(
             viewModel:self.viewModel,
             banners: self.data.leadingBanners,
@@ -83,13 +76,23 @@ struct VideoBlockKids:BlockProtocol, PageComponent {
                             defaultText: String.button.all,
                             textModifier: TextModifier (family:Font.familyKids.bold, size: Font.sizeKids.thinExtra, color: Color.app.brownExtra)
                         ){_ in
-                            self.pagePresenter.openPopup(
-                               
-                                PageKidsProvider.getPageObject(data.cardType == .watchedVideo ? .watchedList : .kidsCategoryList)
-                                    .addParam(key: .data, value: data)
-                                    .addParam(key: .type, value: CateBlock.ListType.video)
-                                    .addParam(key: .subType, value:data.cardType)
-                            )
+                            
+                            if data.cardType == .watchedVideo {
+                                self.pagePresenter.openPopup(
+                                    PageKidsProvider.getPageObject( .kidsMy)
+                                        .addParam(key: .subId, value: PageKidsMy.recentlyWatchCode)
+                                       
+                                )
+                            } else {
+                                self.pagePresenter.openPopup(
+                                    PageKidsProvider.getPageObject( .kidsCategoryList)
+                                        .addParam(key: .data, value: data)
+                                        .addParam(key: .type, value: CateBlock.ListType.video)
+                                        .addParam(key: .subType, value:data.cardType)
+                                )
+                            }
+                            
+                           
                         }
                     }
                 }

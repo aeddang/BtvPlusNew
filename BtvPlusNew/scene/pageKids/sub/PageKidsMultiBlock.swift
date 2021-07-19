@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
-
+import struct Kingfisher.KFImage
 extension PageKidsMultiBlock{
     static let tabWidth:CGFloat = SystemEnvironment.isTablet ? 186 : 123
     static let tabMargin:CGFloat = DimenKids.margin.regular
@@ -30,6 +30,7 @@ struct PageKidsMultiBlock: PageView {
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @State var scrollTabSize:Int = 3
     @State var isDivisionTab:Bool = true
+    @State var guideImage:String? = nil
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -58,6 +59,23 @@ struct PageKidsMultiBlock: PageView {
                             self.pageDragingModel.uiEvent = .pull(geometry, pos)
                         default: break
                         }
+                    }
+                    if let img = self.guideImage {
+                        ZStack(alignment: .top){
+                            KFImage(URL(string: img))
+                                .resizable()
+                                .placeholder {
+                                    Image(AssetKids.noImg16_9)
+                                        .resizable()
+                                }
+                                .cancelOnDisappear(true)
+                                .loadImmediately()
+                                .aspectRatio(contentMode: .fit)
+                                .modifier(MatchParent())
+                        }
+                        .padding(.top, DimenKids.app.pageTop + self.marginTop + self.sceneObserver.safeAreaTop)
+                        .modifier(MatchParent())
+                        .background(Color.kids.bg)
                     }
                     
                     VStack(spacing: 0){
@@ -157,8 +175,6 @@ struct PageKidsMultiBlock: PageView {
                 self.title = obj.getParamValue(key: .title) as? String
                 self.tabDatas = obj.getParamValue(key: .datas) as? [BlockItem] ?? []
                 
-                
-                
                 self.tabs = self.tabDatas.map{$0.menu_nm ?? ""}
                 if self.tabDatas.count > 1 {
                     if self.tabs.first(where: {$0.count > Self.tabLimitedTitleSize}) != nil {
@@ -167,6 +183,7 @@ struct PageKidsMultiBlock: PageView {
                     self.marginTop =  MenuTab.height + DimenKids.margin.thin
                 }
                 self.themaType = obj.getParamValue(key: .type) as? BlockData.ThemaType ?? .category
+                
             }
             
         }//geo
@@ -200,6 +217,13 @@ struct PageKidsMultiBlock: PageView {
         finalSelectedIndex = nil
         selectedTabIdx = moveIdx
         let cdata = self.tabDatas[moveIdx]
+        if cdata.menu_exps_prop_cd == "512" ,let path = cdata.bg_imgs?.first?.img_path {
+            withAnimation{
+                self.guideImage = ImagePath.thumbImagePath(filePath: path, size:CGSize(width: 0, height: 640))
+            }
+            return
+        }
+        
         originDatas = cdata.blocks ?? []
         var delay:Double = 0
         if originDatas.isEmpty {

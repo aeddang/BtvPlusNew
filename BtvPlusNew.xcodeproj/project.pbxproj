@@ -320,6 +320,7 @@
 		31956F55269D1DED0044CF1D /* KidsCategoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F54269D1DED0044CF1D /* KidsCategoryItem.swift */; };
 		31956F57269D1E5B0044CF1D /* KidsPlayList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F56269D1E5B0044CF1D /* KidsPlayList.swift */; };
 		31956F59269D1EE10044CF1D /* KidsCategoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F58269D1EE10044CF1D /* KidsCategoryList.swift */; };
+		3195AF1B26A4E3A90042BAFA /* Drm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3195AF1A26A4E3A90042BAFA /* Drm.swift */; };
 		3195C1A22665CC9D001F513E /* strings.app.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3195C1A12665CC9D001F513E /* strings.app.swift */; };
 		3195C1A42665CCE8001F513E /* strings.alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3195C1A32665CCE8001F513E /* strings.alert.swift */; };
 		3195C1A62665CD35001F513E /* strings.button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3195C1A52665CD35001F513E /* strings.button.swift */; };
@@ -926,6 +927,7 @@
 		31956F54269D1DED0044CF1D /* KidsCategoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsCategoryItem.swift; sourceTree = "<group>"; };
 		31956F56269D1E5B0044CF1D /* KidsPlayList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsPlayList.swift; sourceTree = "<group>"; };
 		31956F58269D1EE10044CF1D /* KidsCategoryList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsCategoryList.swift; sourceTree = "<group>"; };
+		3195AF1A26A4E3A90042BAFA /* Drm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drm.swift; sourceTree = "<group>"; };
 		3195C1A12665CC9D001F513E /* strings.app.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = strings.app.swift; sourceTree = "<group>"; };
 		3195C1A32665CCE8001F513E /* strings.alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = strings.alert.swift; sourceTree = "<group>"; };
 		3195C1A52665CD35001F513E /* strings.button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = strings.button.swift; sourceTree = "<group>"; };
@@ -1896,6 +1898,7 @@
 			children = (
 				318000B0269FDACC002CC991 /* FairplayPlayer.swift */,
 				318000B2269FDAE5002CC991 /* FairplayResourceLoader.swift */,
+				3195AF1A26A4E3A90042BAFA /* Drm.swift */,
 			);
 			path = drm;
 			sourceTree = "<group>";
@@ -3612,6 +3615,7 @@
 				D56C6B10257DAADE00CF9AB8 /* SceneAlertController.swift in Sources */,
 				31E76D132632636500710624 /* Shareable.swift in Sources */,
 				315A8FC125AD114F00498B03 /* ApiUtil.m in Sources */,
+				3195AF1B26A4E3A90042BAFA /* Drm.swift in Sources */,
 				D57298DD259D69EB00ED2CE6 /* PickerSelect.swift in Sources */,
 				D56C6A5D257DA0C700CF9AB8 /* CircularSpinner.swift in Sources */,
 				318FBFF725E4882700ABC241 /* PageCategoryList.swift in Sources */,
@@ -4357,7 +4361,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 42;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -4381,7 +4385,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.037;
+				MARKETING_VERSION = 1.039;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = ".BtvPlusNew_ dev";
@@ -4434,7 +4438,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 42;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -4453,7 +4457,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.037;
+				MARKETING_VERSION = 1.039;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvPlusNew_des;

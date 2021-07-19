@@ -142,6 +142,7 @@ struct KidsSynopsis: PageComponent{
                                 contentMode: self.imgContentMode,
                                 isActive: self.isPlayViewActive
                             )
+                            .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                             
                         }
                     }
@@ -183,6 +184,7 @@ struct KidsSynopsis: PageComponent{
                     } else {
                         Spacer()
                             .modifier(MatchParent())
+                            .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                     }
                 }
             } // vstack

@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 import Combine
 
-
 struct PageKidsHome: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
@@ -19,10 +18,8 @@ struct PageKidsHome: PageView {
     @EnvironmentObject var pairing:Pairing
     
     @ObservedObject var viewModel:MultiBlockModel = MultiBlockModel()
-   
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
-  
     @State var useTracking:Bool = false
     
     var body: some View {
@@ -50,7 +47,6 @@ struct PageKidsHome: PageView {
                     
             )
             .modifier(PageFullScreen(style:.kids))
-           
             .onReceive(self.dataProvider.bands.$event){ evt in
                 guard let evt = evt else { return }
                 switch evt {
@@ -108,18 +104,15 @@ struct PageKidsHome: PageView {
                 if self.menuId.isEmpty {
                     self.menuId = self.dataProvider.bands.kidsGnbModel.home?.menuId ?? ""
                 }
-                
             }
             .onDisappear{
                 //self.appSceneObserver.useGnb = true
-                
             }
         }//geo
     }//body
     
     @State var menuId:String = ""
     @State var openId:String? = nil
-    
     private func reload(){
         if self.pagePresenter.currentTopPage?.pageID == PageID.kidsHome {
             self.appSceneObserver.useGnb = true

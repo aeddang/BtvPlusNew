@@ -31,7 +31,7 @@ struct BannerListBlock:BlockProtocol, PageComponent {
         let newList = BannerList(
             viewModel:self.viewModel,
             datas: self.datas,
-            useTracking:self.useTracking)
+            useTracking:true)
             
         DispatchQueue.main.async {
             self.list = newList

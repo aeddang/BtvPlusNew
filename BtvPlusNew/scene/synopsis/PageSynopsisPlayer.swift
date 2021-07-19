@@ -25,7 +25,7 @@ struct PageSynopsisPlayer: PageView {
     
     @State var synopsisData:SynopsisData? = nil
     @State var isPairing:Bool? = nil
-    
+    @State var isPlayBeforeDraging:Bool = false
     var body: some View {
         GeometryReader { geometry in
             PageDataProviderContent(
@@ -36,7 +36,9 @@ struct PageSynopsisPlayer: PageView {
                     axis:.horizontal
                 ) {
                     SynopsisTop(
+                        geometry: geometry,
                         pageObservable: self.pageObservable,
+                        pageDragingModel: self.pageDragingModel,
                         playerModel: self.playerModel,
                         prerollModel: self.prerollModel,
                         title: self.title,
@@ -56,6 +58,19 @@ struct PageSynopsisPlayer: PageView {
                     self.pagePresenter.closePopup(self.pageObject?.id)
                 default : break
                 }
+            }
+            .onReceive(self.self.pageDragingModel.$event){ evt in
+                guard let evt = evt else {return}
+                switch evt {
+                case .dragInit :
+                    self.isPlayBeforeDraging = self.playerModel.isPlay
+                    self.playerModel.event = .pause
+                case .draged: if self.isPlayBeforeDraging {
+                    self.playerModel.event = .resume
+                }
+                default : break
+                }
+                
             }
             .onReceive(self.pairing.$event){evt in
                 guard let _ = evt else {return}

@@ -17,6 +17,7 @@ class CateBlockModel: PageDataProviderModel {
     private(set) var key:String? = nil
     private(set) var menuId:String? = nil
     private(set) var data:BlockData? = nil
+   
     private(set) var isAdult:Bool = false
     
     @Published private(set) var isUpdate = false {
@@ -34,9 +35,10 @@ class CateBlockModel: PageDataProviderModel {
         self.listType = listType
         self.cardType = cardType
         self.key = key
-        self.isUpdate = true
         self.menuId = data.menuId
         self.isAdult = isAdult
+        self.isUpdate = true
+        
     }
     
     func update(menuId:String?, listType:CateBlock.ListType,
@@ -45,10 +47,13 @@ class CateBlockModel: PageDataProviderModel {
         self.menuId = menuId
         self.cardType = cardType
         self.key = key
-        self.isUpdate = true
         self.data = nil
         self.isAdult = isAdult
+        self.isUpdate = true
+        
     }
+    
+   
     
     var info:String? {
         get{
@@ -66,7 +71,7 @@ extension CateBlock{
     static let posterCellsize:CGFloat = ListItem.poster.type01.width
     static let bannerCellsize:CGFloat = ListItem.banner.type02.width
     
-    static let kidsVideoCellsize:CGFloat = ListItemKids.video.size.width
+    static let kidsVideoCellsize:CGFloat = ListItemKids.video.type02.width
     static let kidsPosterCellsize:CGFloat = ListItemKids.poster.type01.width
     static let headerSize:Int = 0
     enum ListType:String {
@@ -85,7 +90,9 @@ struct CateBlock: PageComponent{
     var useTracking:Bool = false
     var marginTop : CGFloat = Dimen.margin.regular
     var marginBottom : CGFloat = 0
+    var marginHorizontal:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thinUltra
     var spacing: CGFloat = Dimen.margin.thin
+    var size: CGFloat? = nil
     
     @State var reloadDegree:Double = 0
     @State var needAdult:Bool = false
@@ -115,6 +122,7 @@ struct CateBlock: PageComponent{
                                 isSortAble: self.isSortAble,
                                 info: self.viewModel.info,
                                 marginTop: self.marginTop,
+                                marginHorizontal: self.marginHorizontal,
                                 action: self.sortAction)
                             : nil,
                         headerSize: Dimen.tab.lightExtra + self.spacing,
@@ -130,7 +138,9 @@ struct CateBlock: PageComponent{
                             PosterSet(
                                 pageObservable:self.pageObservable,
                                 data:data,
-                                screenSize: self.screenSize)
+                                screenSize: self.screenSize,
+                                padding:self.marginHorizontal
+                                )
                                 .frame(height:self.posterCellHeight)
                                 .modifier(ListRowInset( spacing: self.spacing))
                                 .onAppear(){
@@ -143,7 +153,9 @@ struct CateBlock: PageComponent{
                             VideoSet(
                                 pageObservable:self.pageObservable,
                                 data:data,
-                                screenSize: self.screenSize)
+                                screenSize: self.screenSize,
+                                padding:self.marginHorizontal
+                                )
                                 .frame(height:self.videoCellHeight)
                                 .modifier(ListRowInset( spacing: self.spacing))
                                 .onAppear(){
@@ -156,7 +168,9 @@ struct CateBlock: PageComponent{
                             BannerSet(
                                 pageObservable:self.pageObservable,
                                 data:data,
-                                screenSize: self.screenSize)
+                                screenSize: self.screenSize,
+                                padding:self.marginHorizontal 
+                                )
                                 .frame(height:self.bannerCellHeight)
                                 .modifier(ListRowInset( spacing: self.spacing))
                                 .onAppear(){
@@ -208,10 +222,11 @@ struct CateBlock: PageComponent{
             self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
         }
         .onReceive(self.sceneObserver.$screenSize){ _ in
-            self.resetSize()
+            self.resetLoad()
         }
         .onReceive(self.viewModel.$isUpdate){ update in
             if update {
+                self.sortType = self.viewModel.type == .btv ? SortTab.finalSortType : SortTabKids.finalSortType
                 self.reload()
             }
         }
@@ -225,6 +240,9 @@ struct CateBlock: PageComponent{
             default : break
             }
         }
+        .onAppear(){
+           
+        }
         
     }//body
     
@@ -234,7 +252,7 @@ struct CateBlock: PageComponent{
         var isSortAble:Bool
         var info:String?
         var marginTop : CGFloat
-
+        var marginHorizontal:CGFloat
         let action: (_ type:EuxpNetwork.SortType) -> Void
         var body :some View {
             if pageType == .btv {
@@ -245,7 +263,7 @@ struct CateBlock: PageComponent{
                     ){ sort in
                         self.action(sort)
                     }
-                .modifier(ContentHorizontalEdges())
+                .padding(.horizontal, marginHorizontal)
             } else {
                 SortTabKids(
                     count: self.totalCount,
@@ -253,7 +271,7 @@ struct CateBlock: PageComponent{
                 ){ sort in
                     self.action(sort)
                 }
-                .padding(.horizontal, DimenKids.margin.thinUltra)
+                .padding(.horizontal, marginHorizontal)
             }
         }
     }
@@ -299,24 +317,64 @@ struct CateBlock: PageComponent{
         self.load()
     }
     
+    private func setupSortAble(poster:BlockData?) -> [PosterData]?{
+        guard let data = poster else {return nil}
+        guard let datas = data.allPosters else {return nil}
+        if datas.isEmpty {return nil}
+        let type = self.sortType
+        switch type {
+        case .latest, .title, .price: return nil
+        default :
+            self.totalCount = datas.count
+            self.isSortAble = true
+            withAnimation{self.useTop = true}
+            return datas
+        }
+    }
     
+    private func setupSortAble(video:BlockData?) -> [VideoData]?{
+        guard let data = video else {return nil}
+       
+        guard let datas = data.allVideos else {return nil}
+        if datas.isEmpty {return nil}
+        switch self.sortType {
+        case .latest , .title, .price: return nil
+        default :
+            self.totalCount = datas.count
+            self.isSortAble = true
+            withAnimation{self.useTop = true}
+            return datas
+        }
+    }
+
     func load(){
         if !self.infinityScrollModel.isLoadable { return }
+        self.resetSize()
         withAnimation{ self.isError = false }
         self.infinityScrollModel.onLoad()
-        if let posters = self.viewModel.data?.allPosters {
-            self.setPosterSets(loadedDatas: posters)
+        if let datas = self.setupSortAble(poster:self.viewModel.data) {
+            self.setPosterSets(loadedDatas: datas)
             return
         }
-        if let videos = self.viewModel.data?.allVideos{
-            self.setVideoSets(loadedDatas: videos)
+        if let datas = self.setupSortAble(video:self.viewModel.data) {
+            self.setVideoSets(loadedDatas: datas)
             return
         }
         
-        if let api = self.viewModel.data?.getRequestApi(apiId:self.tag, pairing:self.pairing.status, isOption: false) {
-            if self.viewModel.data!.dataType != .grid {
+        if let api = self.viewModel.data?.getRequestApi(
+            apiId:self.tag,
+            pairing:self.pairing.status,
+            kid: self.pairing.kid,
+            sortType: self.sortType,
+            isOption: false)
+        {
+            guard let blockData = self.viewModel.data else { return }
+            if blockData.dataType != .grid {
                 self.isPaging = false
-                withAnimation{ self.isSortAble = false }
+                withAnimation{
+                    self.isSortAble = blockData.dataType == .cwGridKids && blockData.cardType != .watchedVideo ? true : false
+                    
+                }
                 self.viewModel.request = api
                 return
             }
@@ -345,17 +403,8 @@ struct CateBlock: PageComponent{
         }
     }
     
-    private func resetSize(){
-        
-        //PageLog.d( "page screenSize " + self.sceneObserver.screenSize.width.description, tag: "resetSize" )
-        self.screenSize =  self.viewModel.type == .btv
-            ?  self.sceneObserver.screenSize.width
-            : (
-                self.sceneObserver.screenSize.width
-                - (DimenKids.margin.regular*2)
-            )
-    
-        
+    private func resetLoad(){
+        self.resetSize()
         if let loadedVideo = self.loadedVideoDatas {
             self.loadedVideoDatas = nil
             self.videos = []
@@ -372,7 +421,20 @@ struct CateBlock: PageComponent{
             self.setBannerSets(loadedDatas: loadedBanner)
         }
     }
+    private func resetSize(){
+        if let size = self.size {
+            self.screenSize = size
+        } else {
+        
+            self.screenSize =  self.viewModel.type == .btv
+                ?  self.sceneObserver.screenSize.width
+                : (
+                    self.sceneObserver.screenSize.width
+                    - (DimenKids.margin.regular*2)
+                )
     
+        }
+    }
     private func loadedGrid(_ res:ApiResultResponds){
         guard let data = res.data as? GridEvent else { return }
         if self.infinityScrollModel.page == 0 {
@@ -395,7 +457,9 @@ struct CateBlock: PageComponent{
             if grid.isEmpty { return self.onError() }
             
             var allDatas:[ContentItem] = []
-            grid.forEach{ g in
+            grid.filter{ $0.cw_call_id == self.viewModel.data?.cwCallId }
+                .forEach{ g in
+                
                 if let blocks = g.block {
                     allDatas.append(contentsOf: blocks)
                 }
@@ -539,6 +603,22 @@ struct CateBlock: PageComponent{
             return BannerData().setData(data: d)
         }
         setBannerSets(loadedDatas: loadedDatas)
+    }
+    
+    func setPosterSets(datas:[PosterData]?) {
+        guard let datas = datas else {
+            if self.posters.isEmpty { self.onError() }
+            return
+        }
+        setPosterSets(loadedDatas: datas)
+    }
+    
+    func setVideoSets(datas:[VideoData]?) {
+        guard let datas = datas else {
+            if self.videos.isEmpty {  self.onError() }
+            return
+        }
+        setVideoSets(loadedDatas: datas)
     }
     
     private func modifyCount(_ count:Int) -> Int{

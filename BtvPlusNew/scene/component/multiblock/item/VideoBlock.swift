@@ -23,38 +23,25 @@ struct VideoBlock:BlockProtocol, PageComponent {
     var useTracking:Bool = false
     var useEmpty:Bool = false
     @State var datas:[VideoData] = []
-   
     @State var isUiActive:Bool = true
     @State var hasMore:Bool = true
     @State var skeletonSize:CGSize = CGSize()
-
     @State var list: VideoList?
     @State var listId:String = ""
     @State var isListUpdated:Bool = true
     private func getList() -> some View {
         let key = (self.datas.first?.epsdId ?? "") + self.datas.count.description
-        let type = self.datas.first?.type
         if key == self.listId,  let list = self.list {
-            switch type {
-            case .watching: ComponentLog.d("Recycle List " + key , tag: self.tag + "List")
-            default : break
-            }
             return list
         }
-        switch type {
-        case .watching:  ComponentLog.d("New List " + key , tag: self.tag + "List")
-        default : break
-        }
-        
         let newList = VideoList(
             viewModel:self.viewModel,
             banners: self.data.leadingBanners,
             datas: self.datas,
-            useTracking:self.useTracking)
+            useTracking:true)
         DispatchQueue.main.async {
             self.listId = key
             self.list = newList
-            
         }
         return newList
     }
@@ -62,7 +49,6 @@ struct VideoBlock:BlockProtocol, PageComponent {
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             if self.isUiActive {
-                
                 HStack(alignment: .bottom, spacing:Dimen.margin.thin){
                     VStack(alignment: .leading, spacing:0){
                         Spacer().modifier(MatchHorizontal(height: 0))
@@ -105,7 +91,6 @@ struct VideoBlock:BlockProtocol, PageComponent {
                         size:self.skeletonSize
                     )
                     Spacer()
-                    
                 }
             }
         }
@@ -140,7 +125,6 @@ struct VideoBlock:BlockProtocol, PageComponent {
             }
         }
         .onDisappear{
-            //self.datas.removeAll()
             self.clearDataBinding()
         }
         .onReceive(self.pageObservable.$layer ){ layer  in
@@ -151,7 +135,6 @@ struct VideoBlock:BlockProtocol, PageComponent {
         }
         .onReceive(dataProvider.$result) { res in
             self.checkModifyWatchedItem(res)
-    
             if res?.id != data.id { return }
             var allDatas:[VideoData] = []
             switch data.dataType {

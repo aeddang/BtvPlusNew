@@ -77,7 +77,6 @@ class VideoData:InfinityData{
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         originImage = data.poster_filename_v
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: ListItem.video.size, isAdult: self.isAdult)
-        
         index = idx
         epsdId = data.epsd_id
         srisId = data.sris_id
@@ -95,10 +94,8 @@ class VideoData:InfinityData{
         watchLv = data.level?.toInt() ?? 0
         isAdult = data.adult?.toBool() ?? false
         tagData = TagData().setData(data: data, isAdult: self.isAdult)
-       
         originImage = data.poster
         image = ImagePath.thumbImagePath(filePath: data.poster, size: ListItem.video.size, isAdult: self.isAdult)
-      
         index = idx
         epsdId = data.epsd_id
         srisId = data.sris_id
@@ -120,8 +117,6 @@ class VideoData:InfinityData{
         title = data.title
         originImage = data.thumbnail
         image = ImagePath.thumbImagePath(filePath: data.thumbnail , size: ListItem.video.size, isAdult: self.isAdult)
-      
-        
         index = idx
         epsdId = data.epsd_id
         srisId = data.sris_id
@@ -407,7 +402,7 @@ struct VideoSet: PageComponent{
             }
         }
         .padding(.horizontal, self.paddingHorizontal ?? self.padding)
-        .frame(width: self.sceneObserver.screenSize.width)
+        .frame(width: self.screenSize ?? self.sceneObserver.screenSize.width)
         .onAppear {
             if self.data.datas.isEmpty { return }
             let size = Self.listSize(data: self.data,
@@ -504,16 +499,20 @@ struct VideoItemBody: PageView {
             height: self.data.type.size.height)
         
         if self.data.title != nil {
-            VStack(alignment: .leading, spacing:Dimen.margin.tiny){
+            VStack(alignment: .leading, spacing:0){
+                Spacer().modifier(MatchHorizontal(height: 0))
                 if let title = self.data.title {
                     Text(title)
                         .modifier(MediumTextStyle(size: Font.size.thinExtra))
                         .lineLimit(self.data.isClip ? 2 : 1)
+                        .multilineTextAlignment(.leading)
+
                 }
                 if let subTitle = self.data.subTitle {
                     Text(subTitle)
                         .modifier(MediumTextStyle(size: Font.size.tiny, color:Color.app.grey))
                         .lineLimit(1)
+                        .padding(.top, Dimen.margin.tiny)
                 }
             }
             .padding(.horizontal, Dimen.margin.thin)
@@ -533,7 +532,7 @@ struct VideoItemBodyKids: PageView {
     var data:VideoData
     var isSelected:Bool = false
     var body: some View {
-        VStack(spacing:0){
+        VStack(alignment: .leading, spacing:0){
             ZStack{
                 ImageView(url: self.data.image,contentMode: .fit, noImg: Asset.noImg16_9)
                     .modifier(MatchParent())
@@ -565,20 +564,27 @@ struct VideoItemBodyKids: PageView {
             
             
             if self.data.title != nil {
-                VStack(alignment: .leading, spacing:Dimen.margin.tiny){
+                VStack(alignment: .leading, spacing:0){
+                    Spacer().modifier(MatchHorizontal(height: 0))
                     if let title = self.data.title {
                         Text(title)
                             .modifier(BoldTextStyleKids(size: Font.sizeKids.thinExtra, color:Color.app.brownDeep))
-                            .lineLimit(self.data.isClip ? 2 : 1)
+                            .lineLimit(1)
+                            
                     }
                     if let subTitle = self.data.subTitle {
                         Text(subTitle)
                             .modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color:Color.app.brownDeep.opacity(0.7)))
                             .lineLimit(1)
+                            .padding(.top, DimenKids.margin.tiny)
+                           
                     }
                 }
                 .padding(.horizontal, DimenKids.margin.thin)
-                .frame(height:Self.bottomHeight)
+                .frame(
+                    width: self.data.type.size.width,
+                    height:Self.bottomHeight)
+                
             }
         }
         .frame(

@@ -185,9 +185,9 @@ enum PlayerStreamStatus {
 }
 
 enum PlayerError{
-    case connect(String), stream(PlayerStreamError), illegalState(PlayerUIEvent), drm(reason:String)
+    case connect(String), stream(PlayerStreamError), illegalState(PlayerUIEvent), drm(DRMError)
 }
-enum PlayerStreamError{
+enum PlayerStreamError:Error{
     case playback(String), unknown(String), pip(String), certification(String)
     func getDescription() -> String {
         switch self {

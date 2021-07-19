@@ -117,5 +117,6 @@ struct BlockItem  : Codable {
     private(set) var menu_off_img_path2:String? = nil  // 메뉴 아이콘/뱃지2(Normal)
     private(set) var menu_selected_img_path2:String? = nil // 메뉴 아이콘/뱃지2(Selected)
     private(set) var blocks:Array<BlockItem>? = nil // 블록 목록
+    private(set) var bg_imgs: [ImagePathItem]? = nil // 블록 목록
     init(json: [String:Any]) throws {}
 }

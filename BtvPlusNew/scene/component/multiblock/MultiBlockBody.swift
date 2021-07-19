@@ -144,7 +144,6 @@ struct MultiBlockBody: PageComponent {
                 AdultAlert()
                     .modifier(MatchParent())
             } else {
-                
                 ZStack(alignment: .topLeading){
                     if !Self.isLegacy  {
                         if self.topDatas != nil && self.topDatas?.isEmpty == false {
@@ -227,10 +226,10 @@ struct MultiBlockBody: PageComponent {
                         }
                     }
                 }
-                
             }
         }
         .modifier(MatchParent())
+        
         .onReceive(self.infinityScrollModel.$event){evt in
             guard let evt = evt else {return}
             switch evt {
@@ -244,7 +243,7 @@ struct MultiBlockBody: PageComponent {
                 withAnimation{ self.reloadDegree = 0}
             case .pullCancel :
                 withAnimation{ self.reloadDegree = 0}
-            default : do{}
+            default : break
             }
             
         }
@@ -252,7 +251,6 @@ struct MultiBlockBody: PageComponent {
             let willOffset = min(ceil(pos),0)
             if  willOffset != self.headerOffset {
                 self.headerOffset = willOffset
-                
             }
         }
         .onReceive(self.infinityScrollModel.$pullPosition){ pos in
@@ -263,13 +261,10 @@ struct MultiBlockBody: PageComponent {
             if update {
                 PageLog.d("reload self.viewModel.$isUpdate " + self.infinityScrollModel.isLoading.description, tag: self.tag)
                 if !self.isLoading { self.reload() }
-                
             }
         }
         .onReceive(dataProvider.$result) { res in
-           
             guard let data = self.loadingBlocks.first(where: { $0.id == res?.id}) else {return}
-            
             var leadingBanners:[BannerData]? = nil
             var total:Int? = nil
             let max = Self.maxCellCount
@@ -346,7 +341,6 @@ struct MultiBlockBody: PageComponent {
                     }
                 default: break
                 }
-                
                 leadingBanners = resData.banners?.map{d in
                     BannerData().setData(data: d, type: .list, cardType: .bigPoster)
                 }
@@ -396,7 +390,7 @@ struct MultiBlockBody: PageComponent {
                     data.banners = banners.map{ d in
                         BannerData().setData(data: d, cardType:data.cardType)
                 }
-            default: do {}
+            default: break
             }
             
             var listHeight:CGFloat = 0
@@ -430,14 +424,16 @@ struct MultiBlockBody: PageComponent {
                 }
                 data.listHeight = blockHeight
             }
-            
             data.setDatabindingCompleted(total: total)
-            
         }
         .onReceive(dataProvider.$error) { err in
             guard let data = self.loadingBlocks.first(where: { $0.id == err?.id}) else {return}
             data.setError(err)
-    
+        }
+        .onReceive(self.sceneObserver.$isUpdated){update in
+            if update {
+                self.infinityScrollModel.setup(scrollSize: self.sceneObserver.screenSize)
+            }
         }
         .onDisappear{
             self.addBlockSubscription?.cancel()
@@ -495,10 +491,8 @@ struct MultiBlockBody: PageComponent {
         self.addBlock()
     }
     
-    
     @State var requestNum = 0
     @State var completedNum = 0
-    
     private func requestBlockCompleted(){
         PageLog.d("addBlock completed", tag: self.tag)
         if !self.loadingBlocks.isEmpty {
@@ -564,9 +558,7 @@ struct MultiBlockBody: PageComponent {
                 self.addBlockSubscription?.cancel()
                 self.addBlock()
             }
-        
     }
-    
     
     private func addLoadedBlocks (_ loadedBlocks:[BlockData]){
         var idx = self.blocks.count

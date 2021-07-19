@@ -44,6 +44,7 @@ struct PageSynopsis: PageView {
     @State var isUiActive:Bool = true
     @State var sceneOrientation: SceneOrientation = .portrait
     @State var playerWidth: CGFloat  = 0
+    @State var isPlayBeforeDraging:Bool = false
     var body: some View {
         GeometryReader { geometry in
             PageDataProviderContent(
@@ -292,6 +293,19 @@ struct PageSynopsis: PageView {
                 if self.relationDatas.isEmpty == false {
                     let relationDatas = self.relationContentsModel.getRelationContentSets(idx: self.selectedRelationTabIdx, row: self.relationRow)
                     self.relationDatas = relationDatas
+                }
+                
+            }
+            .onReceive(self.self.pageDragingModel.$event){ evt in
+                guard let evt = evt else {return}
+                switch evt {
+                case .dragInit :
+                    self.isPlayBeforeDraging = self.playerModel.isPlay
+                    self.playerModel.event = .pause
+                case .draged: if self.isPlayBeforeDraging {
+                    self.playerModel.event = .resume
+                }
+                default : break
                 }
                 
             }

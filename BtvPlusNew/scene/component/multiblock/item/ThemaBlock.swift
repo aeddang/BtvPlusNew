@@ -30,7 +30,7 @@ struct ThemaBlock:BlockProtocol, PageComponent {
             viewModel:self.viewModel,
             banners: self.data.leadingBanners,
             datas: self.datas,
-            useTracking:self.useTracking)
+            useTracking:true)
             
         DispatchQueue.main.async {
             self.list = newList

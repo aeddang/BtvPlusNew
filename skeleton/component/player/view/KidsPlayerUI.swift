@@ -236,7 +236,7 @@ struct KidsPlayerUI: PageComponent {
             switch error{
             case .connect(_) : self.errorMessage = "connect error"
             case .illegalState(_) : self.errorMessage = "illegalState"
-            case .drm(let reason): self.errorMessage = "drm " + reason
+            case .drm(let e): self.errorMessage = "drm " + e.getDescription()
             case .stream(let e) :
                 switch e {
                 case .pip(let msg): self.errorMessage = msg

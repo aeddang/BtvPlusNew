@@ -30,8 +30,6 @@ extension EuxpNetwork{
         case latest = "20" // 최신순
         case title = "30" // 타이틀
         case price = "40" // 가격
-        
-        
         var name: String {
             switch self {
             case .none : return ""
@@ -78,6 +76,7 @@ extension EuxpNetwork{
         case MENU_KIDS_HOME = "NM2000031454"
         case MENU_KIDS_HOME_FIRST = "NM2000031456"  // kids
         case MENU_KIDS_MY = "NM2000031458"  // kids
+        case MENU_KIDS_MONTHLY = "NM2000032813"
     }
    
     enum SrisTypCd: String {

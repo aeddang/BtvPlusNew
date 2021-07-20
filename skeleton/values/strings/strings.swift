@@ -119,6 +119,7 @@ extension String {
     struct voice {
         public static let searchTitle = "voiceSearchTitle".loaalized()
         public static let searchText = "voiceSearchText".loaalized()
+        public static let searchTextKids = "voiceSearchTextKids".loaalized()
     }
 
     struct share {

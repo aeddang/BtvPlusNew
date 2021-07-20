@@ -21,7 +21,8 @@ class MultiBlockModel: PageDataProviderModel {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
 
-    init(requestSize:Int? = nil) {
+    init(requestSize:Int? = nil, pageType:PageType = .btv) {
+        self.type = pageType
         if #available(iOS 14.0, *)  {
             self.requestSize = requestSize ?? 12
         } else {
@@ -99,7 +100,7 @@ extension MultiBlockBody {
     static let maxCellCount:Int = Self.isRecycle ? 100 : 10
     static let tabHeight:CGFloat = Dimen.tab.thin + Dimen.margin.thinExtra
     static let tabHeightKids:CGFloat = DimenKids.tab.thin + DimenKids.margin.thinExtra
-    static let kisHomeHeight:CGFloat = SystemEnvironment.isTablet ? 410 : 205
+    static let kisHomeHeight:CGFloat = SystemEnvironment.isTablet ? 410 : 215
     
 }
 

@@ -52,7 +52,7 @@ class VideoData:InfinityData{
         if self.isClip {
             playTime = data.play_tms_hms?.toHMS()
         } else {
-            tagData = TagData().setData(data: data, isAdult: self.isAdult)
+            tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         }
         
         index = idx
@@ -72,7 +72,7 @@ class VideoData:InfinityData{
         title = data.title
         watchLv = data.wat_lvl_cd?.toInt() ?? 0
         isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
-        tagData = TagData().setData(data: data, isAdult: self.isAdult) 
+        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         originImage = data.poster_filename_v
@@ -89,7 +89,7 @@ class VideoData:InfinityData{
     
     func setData(data:BookMarkItem, cardType:BlockData.CardType = .video, idx:Int = -1) -> VideoData {
         setCardType(cardType)
-        tagData = TagData().setData(data: data, isAdult: self.isAdult)
+        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         title = data.title
         watchLv = data.level?.toInt() ?? 0
         isAdult = data.adult?.toBool() ?? false
@@ -110,7 +110,7 @@ class VideoData:InfinityData{
         isClip = cardType == .clip
         watchLv = data.level?.toInt() ?? 0
         isAdult = data.adult?.toBool() ?? false
-        tagData = TagData().setData(data: data, isAdult: self.isAdult)
+        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         if let rt = data.watch_rt?.toInt() {
             self.progress = Float(rt) / 100.0
         }
@@ -129,13 +129,13 @@ class VideoData:InfinityData{
     
     
     func setData(data:CategorySrisItem, idx:Int = -1) -> VideoData {
-    
+        setCardType(.video)
         title = data.title
         subTitle = data.title_sub
         index = idx
         epsdId = data.epsd_id
         watchLv = data.level?.toInt() ?? 0
-        tagData = TagData().setData(data: data, isAdult: self.isAdult)
+        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         
         originImage = data.poster_tseq
         image = ImagePath.thumbImagePath(filePath: data.poster_tseq, size: ListItem.video.size, isAdult: self.isAdult)
@@ -148,6 +148,7 @@ class VideoData:InfinityData{
     }
     
     func setData(data:CategoryCornerItem, idx:Int = -1) -> VideoData {
+        setCardType(.video)
         self.title = data.title
         index = idx
         epsdId = data.epsd_id
@@ -155,7 +156,7 @@ class VideoData:InfinityData{
         originImage = data.thumb
         image = ImagePath.thumbImagePath(filePath: data.thumb, size: ListItem.video.size, isAdult: self.isAdult)
       
-        tagData = TagData().setData(data: data, isAdult: self.isAdult)
+        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         synopsisData = .init(
             srisId: nil, searchType: EuxpNetwork.SearchType.sris.rawValue,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
@@ -523,9 +524,7 @@ struct VideoItemBody: PageView {
     }
     
 }
-extension VideoItemBodyKids {
-    static let bottomHeight:CGFloat = SystemEnvironment.isTablet ? 68 : 38
-}
+
 
 struct VideoItemBodyKids: PageView {
     @EnvironmentObject var repository:Repository
@@ -534,7 +533,7 @@ struct VideoItemBodyKids: PageView {
     var body: some View {
         VStack(alignment: .leading, spacing:0){
             ZStack{
-                ImageView(url: self.data.image,contentMode: .fit, noImg: Asset.noImg16_9)
+                ImageView(url: self.data.image,contentMode: .fit, noImg: AssetKids.noImg16_9)
                     .modifier(MatchParent())
                     
                 if (self.data.progress != nil || self.isSelected) && self.data.tagData?.isLock != true {
@@ -557,7 +556,10 @@ struct VideoItemBodyKids: PageView {
                     }
                 }
             }
-            .modifier(MatchParent())
+            .frame(
+                width: self.data.type.size.width - (DimenKids.margin.thinExtra*2),
+                height: (self.data.type.size.width - (DimenKids.margin.thinExtra*2)) * 9 / 16
+            )
             .clipShape(RoundedRectangle(cornerRadius:  DimenKids.radius.light))
             .padding(.top, DimenKids.margin.thinExtra)
             .padding(.horizontal, DimenKids.margin.thinExtra)
@@ -581,9 +583,7 @@ struct VideoItemBodyKids: PageView {
                     }
                 }
                 .padding(.horizontal, DimenKids.margin.thin)
-                .frame(
-                    width: self.data.type.size.width,
-                    height:Self.bottomHeight)
+                .modifier(MatchParent())
                 
             }
         }

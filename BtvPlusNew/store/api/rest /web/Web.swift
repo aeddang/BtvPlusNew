@@ -25,19 +25,28 @@ class Web: Rest{
         fetch(route: WebSearchKeywords(), completion: completion, error:error)
     }
     func getCompleteKeywords(
-        word:String?,
+        word:String?, type:PageType = .btv,
         completion: @escaping (CompleteKeyword) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
         params["word"] = word ?? ""
-        fetch(route: WebCompleteKeywords(query:params), completion: completion, error:error)
+        if type == .btv {
+            fetch(route: WebCompleteKeywords(query:params), completion: completion, error:error)
+        }else {
+            fetch(route: WebKidsCompleteKeywords(query:params), completion: completion, error:error)
+        }
+        
     }
     
     func getSearchVod(
-        word:String?,
+        word:String?, type:PageType = .btv,
         completion: @escaping (SearchCategory) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
         params["word"] = word ?? ""
-        fetch(route: WebSeachVod(query:params), completion: completion, error:error)
+        if type == .btv {
+            fetch(route: WebSeachVod(query:params), completion: completion, error:error)
+        }else {
+            fetch(route: WebKidsSeachVod(query:params), completion: completion, error:error)
+        }
     }
     
     func getSeachPopularityVod(
@@ -46,6 +55,8 @@ class Web: Rest{
     }
     
 }
+
+
 
 
 struct WebSearchKeywords:NetworkRoute{
@@ -70,7 +81,17 @@ struct WebSeachPopularityVod:NetworkRoute{
    var path: String = "/api/v3.0/search/popular"
 }
 
+struct WebKidsCompleteKeywords:NetworkRoute{
+   var method: HTTPMethod = .get
+   var path: String = "/api/v3.0/searchZemkids/autocomplete/word"
+   var query: [String : String]? = nil
+}
 
+struct WebKidsSeachVod:NetworkRoute{
+   var method: HTTPMethod = .get
+   var path: String = "/api/v3.0/searchZemkids/word"
+   var query: [String : String]? = nil
+}
 
 
 

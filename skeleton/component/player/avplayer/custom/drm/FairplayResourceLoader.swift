@@ -53,8 +53,7 @@ class FairplayResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageProt
                 
         guard let spcData = try? request.streamingContentKeyRequestData(
                 forApp: certificate,
-                contentIdentifier: contentIdData,
-                options: [AVAssetResourceLoadingRequestStreamingContentKeyRequestRequiresPersistentKey: true as AnyObject]) else {
+                contentIdentifier: contentIdData) else {
             request.finishLoading(with: NSError(domain: "spcData", code: -3, userInfo: nil))
             DataLog.e("DRM: false to get SPC Data from video", tag: self.tag)
             self.delegate?.onAssetLoadError(.drm(.noSPCFound))

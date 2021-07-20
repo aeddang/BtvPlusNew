@@ -26,10 +26,10 @@ extension PageID{
 
     static let kidsMultiBlock:PageID = "kidsMultiBlock"
     static let kidsCategoryList:PageID = "kidsCategoryList"
-    
+    static let kidsMonthly:PageID = "kidsMonthly"
     static let kidsSynopsis:PageID = "kidsSynopsis"
     static let kidsSynopsisPackage:PageID = "kidsSynopsisPackage"
-    
+    static let kidsSearch:PageID = "kidsSearch"
     static let tabInfo:PageID = "tabInfo"
     static let detailInfo:PageID = "detailInfo"
     
@@ -117,9 +117,10 @@ struct PageKidsFactory{
         case .kidsConfirmNumber : return PageKidsConfirmNumber()
         case .kidsMultiBlock : return PageKidsMultiBlock()
         case .kidsCategoryList : return PageKidsCategoryList()
+        case .kidsMonthly : return PageKidsMonthly()
         case .kidsSynopsis : return PageSynopsis(type:.kids)
         case .kidsSynopsisPackage : return PageSynopsisPackage(type:.kids)
-            
+        case .kidsSearch : return PageKidsSearch()
         case .tabInfo : return PageTabInfo()
         case .detailInfo : return PageDetailInfo()
         default : return PageTest()

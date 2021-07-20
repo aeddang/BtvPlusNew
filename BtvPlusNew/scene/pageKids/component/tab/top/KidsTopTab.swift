@@ -21,7 +21,9 @@ struct KidsTopTab: PageComponent{
             }
             Spacer()
             Button(action: {
-                
+                self.pagePresenter.openPopup(
+                    PageKidsProvider.getPageObject(.kidsMonthly)
+                )
             }) {
                 Image(AssetKids.gnbTop.monthly)
                     .renderingMode(.original)
@@ -31,9 +33,9 @@ struct KidsTopTab: PageComponent{
                            height: DimenKids.icon.regular)
             }
             Button(action: {
-                
-                
-                
+                self.pagePresenter.openPopup(
+                    PageKidsProvider.getPageObject(.kidsSearch)
+                )
             }) {
                 Image(AssetKids.gnbTop.search)
                     .renderingMode(.original)

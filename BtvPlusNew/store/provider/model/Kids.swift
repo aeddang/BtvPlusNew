@@ -8,6 +8,7 @@
 import Foundation
 class KidsGnbModel:Identifiable, ObservableObject{
     private(set) var home: KidsGnbItemData? = nil
+    private(set) var monthly: KidsGnbItemData? = nil
     private(set) var datas: [KidsGnbItemData] = []
     var playListData:KidsPlayListData? = nil
     
@@ -16,9 +17,18 @@ class KidsGnbModel:Identifiable, ObservableObject{
     func setData(gnb:GnbBlock) {
         if let gnbs = gnb.gnbs {
             self.datas = gnbs.map{ gnb in
-                let item =  gnb.menu_id == EuxpNetwork.MenuTypeCode.MENU_KIDS_HOME.rawValue ? KidsGnbItemData().setHomeData(data: gnb) : KidsGnbItemData().setData(gnb)
-                if item.isHome { self.home = item }
-                return item
+                switch gnb.menu_id {
+                case EuxpNetwork.MenuTypeCode.MENU_KIDS_HOME.rawValue:
+                    let item = KidsGnbItemData().setHomeData(data: gnb)
+                    self.home = item
+                    return item
+                case EuxpNetwork.MenuTypeCode.MENU_KIDS_MONTHLY.rawValue:
+                    let item = KidsGnbItemData().setData(gnb)
+                    self.monthly = item
+                    return item
+                default :
+                    return KidsGnbItemData().setData(gnb)
+                }
             }
         }
         self.isUpdated = true
@@ -27,11 +37,13 @@ class KidsGnbModel:Identifiable, ObservableObject{
     func getGnbDatas() -> [KidsGnbItemData] {
        return datas
     }
+    
     func getGnbData(menuId:String)-> KidsGnbItemData? {
         guard let band = self.datas.first(
                 where: { $0.menuId == menuId }) else { return nil }
         return band
     }
+    
     func getMyDatas() -> [BlockItem]? {
         return self.home?.getMyData() 
     }

@@ -113,7 +113,7 @@ struct VoiceRecorder: PageComponent {
 
 
 #if DEBUG
-struct EVoiceRecorder_Previews: PreviewProvider {
+struct VoiceRecorder_Previews: PreviewProvider {
     
     static var previews: some View {
         ZStack{

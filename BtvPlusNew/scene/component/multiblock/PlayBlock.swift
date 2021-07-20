@@ -301,25 +301,29 @@ struct PlayBlock: PageComponent{
             if self.datas.isEmpty { self.onError() }
             return
         }
-        let start = self.datas.count
-        let end = datas.count
-        let loadedDatas:[PlayData] = zip(start...end, datas).map { idx, d in
-            return PlayData().setData(data: d, idx: idx)
+        if !datas.isEmpty {
+            let start = self.datas.count
+            let end = start + datas.count
+            let loadedDatas:[PlayData] = zip(start...end, datas).map { idx, d in
+                return PlayData().setData(data: d, idx: idx)
+            }
+            self.datas.append(contentsOf: loadedDatas)
+            if self.pairing.status == .pairing {
+                self.viewModel.request = .init(
+                    id: self.tag,
+                    type: .getNotificationVod(
+                        loadedDatas.filter{$0.srisId != nil}.map{$0.srisId!},
+                        loadedDatas.filter{$0.epsdId != nil}.map{$0.epsdId!},
+                        .movie,
+                        returnDatas: loadedDatas
+                        ),
+                    isOptional:true
+                )
+            }
         }
-        self.datas.append(contentsOf: loadedDatas)
+        self.infinityScrollModel.onComplete(itemCount: datas.count)
         
-        if self.pairing.status != .pairing { return }
-        self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)
-        self.viewModel.request = .init(
-            id: self.tag,
-            type: .getNotificationVod(
-                loadedDatas.filter{$0.srisId != nil}.map{$0.srisId!},
-                loadedDatas.filter{$0.epsdId != nil}.map{$0.epsdId!},
-                .movie,
-                returnDatas: loadedDatas
-                ),
-            isOptional:true
-        )
+        
     }
     
     private func loadedNoti(_ res:ApiResultResponds, returnDatas:Any? = nil){

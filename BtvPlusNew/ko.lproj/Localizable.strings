@@ -831,7 +831,7 @@
  */
 "voiceSearchTitle" = "음성 검색";
 "voiceSearchText" = "검색어를 말해보세요.";
-
+"voiceSearchTextKids" = "듣는 중입니다";
 /*
  Share
  */
@@ -852,6 +852,7 @@
 "titleKidsMy" = "마이페이지";
 "titleKidsMyDiagnostic" = "진단 리포트";
 "titleKidsEnglishLvTestSelect" = "레벨 테스트";
+"titleKidsMonthly" = "이용권";
 /*
  PageRegistKid
 */
@@ -940,5 +941,12 @@
 "kidsExamCreativeObservationConfirm" = "PDM 창의력 관찰 검사를 시작합니다.\n창의력 검사는 부모와 아이가\n함께 받는 검사입니다. 지금, 아이와\n함께 있다면 시작해 주세요";
 "kidsExamCloseConfirm" = "를\n그만하시겠습니까?";
 "kidsExamCloseConfirmTip" = "* 종료 시 테스트 내역이 초기화 됩니다.";
+
+/*
+ PageKidsSearch
+*/
+"kidsSearchNoData" = "검색 결과가 없습니다.\n다른 검색어로 검색 해보세요.";
+"kidsSearchText" = "보고 싶은 ZEM키즈 영상을 찾아주세요!";
+"kidsSearchInput" = "검색어를 입력해주세요";
 
 

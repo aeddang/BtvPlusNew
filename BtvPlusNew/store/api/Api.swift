@@ -128,8 +128,8 @@ enum ApiType{
          getCurrentChannels(String?)
     //WEB
     case getSearchKeywords,
-         getCompleteKeywords(String?),
-         getSeachVod(String?),
+         getCompleteKeywords(String?,PageType = .btv),
+         getSeachVod(String?,PageType = .btv),
          getSeachPopularityVod
     
     //KES

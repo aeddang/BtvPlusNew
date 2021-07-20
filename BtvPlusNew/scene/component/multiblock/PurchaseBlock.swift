@@ -338,13 +338,15 @@ struct PurchaseBlock: PageComponent, Identifiable{
             withAnimation{ self.isError = false }
             return
         }
-        let start = self.datas.count
-        let end = datas.count
-        let loadedDatas:[PurchaseData] = zip(start...end, datas).map { idx, d in
-            return PurchaseData().setData(data: d, idx: idx)
+        if !datas.isEmpty {
+            let start = self.datas.count
+            let end = start + datas.count
+            let loadedDatas:[PurchaseData] = zip(start...end, datas).map { idx, d in
+                return PurchaseData().setData(data: d, idx: idx)
+            }
+            self.datas.append(contentsOf: loadedDatas)
         }
-        self.datas.append(contentsOf: loadedDatas)
-        self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)
+        self.infinityScrollModel.onComplete(itemCount: datas.count)
         withAnimation{ self.isError = false }
     }
 }

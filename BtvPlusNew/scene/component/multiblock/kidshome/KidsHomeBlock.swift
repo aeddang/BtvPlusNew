@@ -23,41 +23,56 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
     @State var homeBlockData:KidsHomeBlockData? = nil
     @State var isUiView:Bool = false
     var body :some View {
-        ScrollView(.horizontal,showsIndicators: false) {
-            HStack(alignment: .bottom, spacing:Dimen.margin.light){
-                if let homeBlockData = self.homeBlockData {
-                    ForEach(homeBlockData.datas) { data in
-                        switch data.type {
-                        case .myHeader :
-                            if let myData = data as? KidsMyItemData {
-                                KidsMyItem(data:myData)
+        VStack(alignment: .leading , spacing: DimenKids.margin.thinExtra) {
+            InfinityScrollView(
+                viewModel: self.viewModel,
+                axes: .horizontal,
+                marginVertical: 0,
+                marginHorizontal: max(self.sceneObserver.safeAreaStart,self.sceneObserver.safeAreaEnd) + DimenKids.margin.regular ,
+                spacing: 0,
+                isRecycle: true,
+                useTracking: self.useTracking
+                ){
+                    HStack(alignment: .bottom, spacing:Dimen.margin.regular){
+                        if self.isUiView, let homeBlockData = self.homeBlockData {
+                            ForEach(homeBlockData.datas) { data in
+                                switch data.type {
+                                case .myHeader :
+                                    if let myData = data as? KidsMyItemData {
+                                        KidsMyItem(data:myData)
+                                    }
+                                case .playList:
+                                    if let playData = data as? KidsPlayListData {
+                                        KidsPlayList(data:playData)
+                                    }
+                                case .cateHeader:
+                                    if let cateData = data as? KidsCategoryItemData {
+                                        KidsCategoryItem(data:cateData)
+                                    }
+                                    
+                                case .cateList:
+                                    if let listData = data as? KidsCategoryListData {
+                                        KidsCategoryList(data: listData)
+                                    }
+                                case .banner:
+                                    if let bannerData = data as? KidsBannerData {
+                                        KidsBanner(data: bannerData)
+                                    }
+                                case .none: Spacer()
+                                }
                             }
-                        case .playList:
-                            if let playData = data as? KidsPlayListData {
-                                KidsPlayList(data:playData)
-                            }
-                        case .cateHeader:
-                            if let cateData = data as? KidsCategoryItemData {
-                                KidsCategoryItem(data:cateData)
-                            }
-                            
-                        case .cateList:
-                            if let listData = data as? KidsCategoryListData {
-                                KidsCategoryList(data: listData)
-                            }
-                        case .banner:
-                            if let bannerData = data as? KidsBannerData {
-                                KidsBanner(data: bannerData)
-                            }
-                        case .none: Spacer()
+                        } else {
+                            Spacer()
                         }
                     }
                 }
-            }
-            .modifier(ContentHorizontalEdgesKids())
-            .opacity(self.isUiView ? 1 : 0)
         }
         .modifier(MatchParent())
+        .modifier(
+            ContentScrollPull(
+                infinityScrollModel: self.viewModel,
+                pageDragingModel: self.pageDragingModel)
+        )
         .onAppear{
             if let prevData =  self.data.kidsHomeBlockData {
                 self.homeBlockData = prevData

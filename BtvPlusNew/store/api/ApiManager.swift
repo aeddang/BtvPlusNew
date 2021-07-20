@@ -438,11 +438,12 @@ class ApiManager :PageProtocol, ObservableObject{
         case .getSearchKeywords :  self.web.getSearchKeywords(
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
-        case .getCompleteKeywords(let word) : self.web.getCompleteKeywords(
-            word: word,
+        case .getCompleteKeywords(let word, let pageType) : self.web.getCompleteKeywords(
+            word: word, type:pageType,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
-        case .getSeachVod(let word) : self.web.getSearchVod(word: word,
+        case .getSeachVod(let word, let pageType) : self.web.getSearchVod(
+            word: word, type:pageType,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         case .getSeachPopularityVod : self.web.getSeachPopularityVod(

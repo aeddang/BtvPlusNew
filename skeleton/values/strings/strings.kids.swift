@@ -15,6 +15,7 @@ extension String{
         public static let kidsMy = "titleKidsMy".loaalized()
         public static let kidsMyDiagnostic = "titleKidsMyDiagnostic".loaalized()
         public static let kidsEnglishLvTestSelect = "titleKidsEnglishLvTestSelect".loaalized()
+        public static let kidsMonthly = "titleKidsMonthly".loaalized()
     }
     
     struct kidsText {
@@ -98,6 +99,13 @@ extension String{
         public static let kidsExamCreativeObservationConfirm = "kidsExamCreativeObservationConfirm".loaalized()
         public static let kidsExamCloseConfirm = "kidsExamCloseConfirm".loaalized()
         public static let kidsExamCloseConfirmTip = "kidsExamCloseConfirmTip".loaalized()
+        
+        public static let kidsSearchNoData = "kidsSearchNoData".loaalized()
+        public static let kidsSearchText = "kidsSearchText".loaalized()
+        public static let kidsSearchInput = "kidsSearchInput".loaalized()
+
+        
+        
     }
     
 }

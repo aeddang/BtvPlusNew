@@ -67,12 +67,12 @@ struct MonthlyReportCard: PageComponent{
                 if self.isLoading {
                     Spacer()
                     
-                }else if let currentReport = self.currentReport {
+                }else if self.currentReport != nil {
                     HStack(spacing:DimenKids.margin.mediumExtra){
                         MonthlyGraph(
                             title:String.app.watchTime,
-                            value:currentReport.learningTime.description + String.app.min,
-                            subTitle:self.dateMonth + String.app.recommend + " " + currentReport.recommendTime.description + String.app.min,
+                            value:self.watchTimeValue,
+                            subTitle:self.watchTimeSubTitle,
                             thumbImg:self.profile,
                             valuePct:self.watchTimePct,
                             color:Color.app.yellow
@@ -86,8 +86,8 @@ struct MonthlyReportCard: PageComponent{
                         
                         MonthlyGraph(
                             title:String.app.watchCount,
-                            value:currentReport.learningCount.description + String.app.watchCountUnit,
-                            subTitle:self.dateMonth + String.app.recommend + " " + currentReport.recommendCount.description + String.app.watchCountUnit,
+                            value: self.watchCountValue,
+                            subTitle:self.watchCountSubTitle,
                             thumbImg:self.profile,
                             valuePct:self.watchCountPct,
                             color:Color.app.green
@@ -148,6 +148,12 @@ struct MonthlyReportCard: PageComponent{
    
     @State var watchTimePct:Float = 0
     @State var watchCountPct:Float = 0
+    
+    @State var watchTimeValue:String = ""
+    @State var watchCountValue:String = ""
+    
+    @State var watchTimeSubTitle:String = ""
+    @State var watchCountSubTitle:String = ""
       
     private func selectData(){
         let selectIdx = self.currentReport == nil
@@ -191,6 +197,13 @@ struct MonthlyReportCard: PageComponent{
         }
     }
     private func selectedData(_ select:MonthlyReportData){
+        
+        watchTimeValue = select.learningTime.description + String.app.min
+        watchTimeSubTitle = self.dateMonth + String.app.recommend + " " + select.recommendTime.description + String.app.min
+            
+        watchCountValue = select.learningCount.description + String.app.watchCountUnit
+        watchCountSubTitle = self.dateMonth + String.app.recommend + " " + select.recommendCount.description + String.app.watchCountUnit
+        
         withAnimation{
             self.currentReport = select
             self.isLoading = false

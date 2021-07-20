@@ -72,7 +72,11 @@ extension AssetKids{
         public static let arrowR = "zemkidsMMonthlyReportArrowRN"
         public static let cardMore = "icCardEnterM"
         
-       
+        public static let mic = "zemkidsMSearchBtnVoicePre"
+        public static let micOn = "zemkidsMVoiceBtnRetryPre"
+        public static let search = "zemkidsMBtnSearchNor"
+        public static let searchDelete = "zemkidsMBtnSearchCancleNor"
+      
     }
     
     
@@ -213,6 +217,13 @@ extension AssetKids{
         public static let homeCardBg4 = "zemkidsMCategoryDefault04"
         public static let homeCardBg5 = "zemkidsMCategoryDefault05"
         
+        public static let searchInfo = "zemkidsMImgSearchDefault"
+        public static let searchNodata = "zemkidsMImgNoSearchResults"
+        
+        public static let voiceMic = "zemkidsMVoiceCharacter2"
+        public static let voiceRecord = "zemkidsMVoiceCharacter1"
+        public static let voiceError = "zemkidsMVoiceCharacterNetwork"
+        
     }
     
     struct ani {
@@ -223,6 +234,9 @@ extension AssetKids{
         public static let testEnd:[String] = (1...31).map{ "zemkidsTITestEnd0" + $0.description.toFixLength(2) }
         public static let answer:[String] = (1...61).map{ "zemkidsTITestGood0" + $0.description.toFixLength(2) }
         public static let answerWrong:[String] = (1...60).map{ "zemkidsTITestBad0" + $0.description.toFixLength(2) }
+        
+        static let mic:[String] = (1...27).map{ "zemkidsMVoiceReady0" + $0.description.toFixLength(2) }
+        static let record:[String] = (1...27).map{ "zemkidsMVoicePlay0" + $0.description.toFixLength(2) }
     }
     
     struct age {

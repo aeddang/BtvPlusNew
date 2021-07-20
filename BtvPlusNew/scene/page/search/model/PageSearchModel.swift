@@ -6,9 +6,6 @@
 //
 
 import Foundation
-
-
-
 class PageSearchModel :ObservableObject, PageProtocol {
     
     @Published private(set) var searchDatas:[SearchData] = []

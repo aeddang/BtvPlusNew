@@ -93,7 +93,19 @@ class MonthlyReportModel:ObservableObject, PageProtocol{
         self.kid = kid
         self.date = date ?? Date()
         if let infos = data.contents?.infos {
-            self.datas = infos.map{ MonthlyReportData().setData($0) }
+            
+            if let age = kid?.age {
+                if age <= 5 {
+                    self.datas = infos.filter{KidsPlayType.getType($0.svc_prop_cd) != .subject}.map{ MonthlyReportData().setData($0)}
+                } else if age <= 7 {
+                    self.datas = infos.map{ MonthlyReportData().setData($0) }
+                }  else {
+                    self.datas = infos.filter{KidsPlayType.getType($0.svc_prop_cd) != .create}.map{ MonthlyReportData().setData($0)}
+                }
+                
+            } else {
+                self.datas = infos.map{ MonthlyReportData().setData($0) }
+            }
         }
         self.isUpdated = true
     }

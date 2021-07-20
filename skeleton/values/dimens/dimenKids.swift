@@ -56,8 +56,8 @@ struct DimenKids{
     struct tab {
         public static let titleWidth:CGFloat = isPad ? 100 : 60
         public static let heavy:CGFloat = 72
-        public static let medium:CGFloat = isPad ? 80 : 56
-        public static let regular:CGFloat = isPad ? 63 : 46
+        public static let medium:CGFloat = isPad ? 97 : 60//*
+        public static let regular:CGFloat = isPad ? 65 : 40//*
         public static let light:CGFloat =  isPad ? 63 : 33//*
         public static let lightExtra:CGFloat =  isPad ? 54 : 28//*
         public static let thin:CGFloat = isPad ? 48 : 18 //* pad

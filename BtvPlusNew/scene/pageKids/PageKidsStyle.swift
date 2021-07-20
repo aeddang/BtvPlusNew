@@ -106,7 +106,16 @@ struct ContentTitleKids: ViewModifier {
 }
 
 
-
+struct Grow: ViewModifier {
+    var color:Color = Color.app.blackRegular
+    var amount:CGFloat = 2
+    var opacity:Double = 0.25
+    func body(content: Content) -> some View {
+        return content
+            .shadow(color: color.opacity(opacity), radius: Dimen.radius.thin, x: amount, y: amount)
+            .shadow(color: color.opacity(opacity), radius: Dimen.radius.thin, x: -amount, y: -amount)
+    }
+}
 
 struct Shadow: ViewModifier {
     var color:Color = Color.app.blackRegular

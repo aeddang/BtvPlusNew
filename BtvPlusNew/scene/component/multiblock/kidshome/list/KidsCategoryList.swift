@@ -24,6 +24,7 @@ class KidsCategoryListData: KidsHomeBlockListData {
         case "05":
             self.title = " "
             self.datas = [KidsCategoryListItemData().setData(data: data, size: KidsCategoryList.size)]
+            
         case "08":
             if let blocks = data.blocks {
                 var rows:[KidsCategoryListItemDataSet] = []
@@ -51,8 +52,8 @@ class KidsCategoryListData: KidsHomeBlockListData {
                 }
                 self.sets = rows
             }
+        
         default:
-           
             self.datas = data.blocks?
                 .map{
                     KidsCategoryListItemData()
@@ -84,7 +85,8 @@ class KidsCategoryListItemData:Identifiable{
         self.title = data.menu_nm
         self.size = size
         self.blocks = data.blocks ?? [data]
-        self.image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: size, convType:.alpha)
+        let img = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size:CGSize(width: 0, height: size.height), convType:.alpha)
+        self.image = img
         if size.height == KidsCategoryList.sizeHalf.height {
             self.defaultImage = AssetKids.noImgCardHalf
         }
@@ -93,9 +95,10 @@ class KidsCategoryListItemData:Identifiable{
 }
 
 extension KidsCategoryList{
-    static let sizeLong:CGSize = SystemEnvironment.isTablet ? CGSize(width: 198, height: 359) : CGSize(width: 103, height: 187)
+    static let sizeRound:CGSize = SystemEnvironment.isTablet ? CGSize(width: 198, height: 359) : CGSize(width: 103, height: 187)
     static let size:CGSize = SystemEnvironment.isTablet ? CGSize(width: 205, height: 344) : CGSize(width: 107, height: 179)
     static let sizeHalf:CGSize = SystemEnvironment.isTablet ? CGSize(width: 227, height: 162) : CGSize(width: 118, height: 84)
+    static let sizeLong:CGSize = SystemEnvironment.isTablet ? CGSize(width: 198, height: 359) : CGSize(width: 103, height: 187)
 }
 struct KidsCategoryList:PageView  {
     @EnvironmentObject var pagePresenter:PagePresenter

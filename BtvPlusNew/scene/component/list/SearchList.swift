@@ -8,8 +8,17 @@
 import Foundation
 import SwiftUI
 
+struct SearchPhrase:Identifiable{
+    let id = UUID().uuidString
+    let word:String
+    var isStrong:Bool = false
+}
+
 class SearchData:InfinityData{
+    
+    
     private(set) var keyword: String = ""
+    private(set) var phrases: [SearchPhrase] = []
     private(set) var isDeleteAble: Bool = false
     private(set) var isSection: Bool = false
    
@@ -17,6 +26,23 @@ class SearchData:InfinityData{
         self.keyword = keyword
         self.isDeleteAble = isDeleteAble
         self.isSection = isSection
+        return self
+    }
+    
+    func setData(keyword:String, search:String) -> SearchData {
+        self.keyword = keyword
+        if keyword == search {
+            phrases = [SearchPhrase(word: keyword, isStrong:true)]
+            return self
+        }
+        let boundary = "%08X%08X"
+        let edit = keyword.replace(search, with: boundary + search + boundary)
+        phrases = edit.components(separatedBy: boundary).filter{!$0.isEmpty}.map{ c in
+            SearchPhrase(word: c, isStrong:c == search)
+        }
+        if phrases.isEmpty {
+            phrases = [SearchPhrase(word: keyword)]
+        }
         return self
     }
     
@@ -111,3 +137,20 @@ struct SearchItem: PageView {
 }
 
 
+struct SearchItemKids: PageView {
+    var data:SearchData
+    var delete: ((_ data:SearchData) -> Void)? = nil
+    var body: some View {
+        HStack(spacing:0){
+            ForEach(self.data.phrases) { phrase in
+                Text(phrase.word)
+                    .modifier(BoldTextStyleKids(
+                                size: Font.sizeKids.regular,
+                                color: phrase.isStrong ? Color.kids.primary : Color.app.brownDeep))
+                    .lineLimit(1)
+            }
+        }
+        .frame(height: ListItem.search.height)
+    }
+    
+}

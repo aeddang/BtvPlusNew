@@ -383,7 +383,8 @@ struct MultiBlockCell:PageComponent {
             KidsHomeBlock(
                 pageObservable:self.pageObservable,
                 pageDragingModel:self.pageDragingModel,
-                data: data
+                data: data,
+                useTracking:self.useTracking
             )
             .frame(height:data.listHeight)
         }

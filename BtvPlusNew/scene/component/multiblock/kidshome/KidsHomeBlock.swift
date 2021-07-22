@@ -15,13 +15,14 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
     var pageObservable:PageObservable
-    var viewModel: InfinityScrollModel = InfinityScrollModel()
-    var pageDragingModel:PageDragingModel = PageDragingModel()
+    var viewModel: InfinityScrollModel
+    var pageDragingModel:PageDragingModel
     var data: BlockData
     var useTracking:Bool = false
    
     @State var homeBlockData:KidsHomeBlockData? = nil
     @State var isUiView:Bool = false
+    @State var isUiActive:Bool = true
     var body :some View {
         VStack(alignment: .leading , spacing: DimenKids.margin.thinExtra) {
             InfinityScrollView(
@@ -31,10 +32,10 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
                 marginHorizontal: max(self.sceneObserver.safeAreaStart,self.sceneObserver.safeAreaEnd) + DimenKids.margin.regular ,
                 spacing: 0,
                 isRecycle: true,
-                useTracking: true
+                useTracking: self.useTracking
                 ){
                     HStack(alignment: .bottom, spacing:Dimen.margin.regular){
-                        if self.isUiView, let homeBlockData = self.homeBlockData {
+                        if self.isUiView && isUiActive, let homeBlockData = self.homeBlockData {
                             ForEach(homeBlockData.datas) { data in
                                 switch data.type {
                                 case .myHeader :
@@ -73,24 +74,12 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
                 infinityScrollModel: self.viewModel,
                 pageDragingModel: self.pageDragingModel)
         )
-        /*
-        .onReceive(self.pairing.authority.$monthlyPurchaseInfo){ info in
-            if self.data.uiType != .kidsTicket {return}
-            if let info = info {
-                self.updatedMonthlyPurchaseInfo(info)
-            } else {
-                self.pairing.authority.requestAuth(.updateMonthlyPurchase(isPeriod: false))
+        .onReceive(self.pageObservable.$layer ){ layer  in
+            switch layer {
+            case .bottom : self.isUiActive = false
+            case .top, .below : self.isUiActive = true
             }
         }
-        .onReceive(self.pairing.authority.$periodMonthlyPurchaseInfo){ info in
-            if self.data.uiType != .kidsTicket {return}
-            if let info = info {
-                self.updatedPeriodMonthlyPurchaseInfo(info)
-            } else {
-                self.pairing.authority.requestAuth(.updateMonthlyPurchase(isPeriod: true))
-            }
-        }
-        */
         .onReceive(self.pairing.authority.$purchaseLowLevelTicketList){ list in
             if let list = list {
                 self.updatedMonthly(purchases: list, lowLevelPpm: true)
@@ -117,14 +106,6 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
                 }
             }
             if self.data.uiType == .kidsTicket && self.pairing.status == .pairing {
-                /*
-                if let period = self.pairing.authority.periodMonthlyPurchaseInfo {
-                    self.updatedPeriodMonthlyPurchaseInfo(period)
-                }
-                if let monthly = self.pairing.authority.monthlyPurchaseInfo {
-                    self.updatedMonthlyPurchaseInfo(monthly)
-                }
-                */
                 if let list = self.pairing.authority.purchaseTicketList {
                     self.updatedMonthly(purchases: list, lowLevelPpm: false)
                 }
@@ -142,6 +123,7 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
         guard let homeBlockData = self.homeBlockData   else { return }
         let finds = homeBlockData.datas.filter{$0.type == .cateList}
         purchases.forEach{ purchase in
+            
             finds.forEach{ find in
                 if let find = find as? KidsCategoryListData {
                     if let item = find.datas.first(where: {$0.prdPrcId == purchase.prod_id}){
@@ -151,26 +133,6 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
             }
         }
     }
-    /*
-    private func updatedMonthlyPurchaseInfo( _ info:MonthlyPurchaseInfo){
-        guard let homeBlockData = self.homeBlockData   else { return }
-        guard let find = homeBlockData.datas.first(where: {$0.type == .cateList}) as? KidsCategoryListData else {return}
-        info.purchaseList?.forEach{ purchase in
-            if let item = find.datas.first(where: {$0.prdPrcId == purchase.prod_id}){
-                item.setData(data: purchase)
-            }
-        }
-    }
-    
-    private func updatedPeriodMonthlyPurchaseInfo( _ info:PeriodMonthlyPurchaseInfo){
-        guard let homeBlockData = self.homeBlockData else { return }
-        guard let find = homeBlockData.datas.first(where: {$0.type == .cateList}) as? KidsCategoryListData else {return}
-        info.purchaseList?.forEach{ purchase in
-            if let item = find.datas.first(where: {$0.prdPrcId == purchase.prod_id}){
-                item.setData(data: purchase)
-            }
-        }
-    }
-    */
+   
     
 }

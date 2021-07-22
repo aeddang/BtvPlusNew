@@ -76,7 +76,7 @@ extension AssetKids{
         public static let micOn = "zemkidsMVoiceBtnRetryPre"
         public static let search = "zemkidsMBtnSearchNor"
         public static let searchDelete = "zemkidsMBtnSearchCancleNor"
-      
+        public static let price = "zemkidsMIcSynopPrice"
     }
     
     

@@ -15,16 +15,18 @@ class MonthlyData:InfinityData,ObservableObject{
     private(set) var selectedJoinImage: String? = nil
     private(set) var joinImage: String? = nil
     private(set) var title: String? = nil
+    private(set) var text: String? = nil
     private(set) var subTitle: String? = nil
     private(set) var count: String = "0"
     private(set) var menuId: String? = nil
     private(set) var prdPrcId: String = ""
+    private(set) var parentPrdPrcId: String? = nil
     private(set) var prodTypeCd: String? = nil
     private(set) var isJoin: Bool = false
     private(set) var isSubJoin: Bool = false
     private(set) var isSelected: Bool = false
     private(set) var blocks:[BlockItem]? = nil
-    
+    private(set) var price:String? = nil
     private(set) var sortIdx:Int = 0
     var posIdx:Int = UUID.init().hashValue
   
@@ -32,8 +34,12 @@ class MonthlyData:InfinityData,ObservableObject{
         {didSet{ if isUpdated { isUpdated = false} }}
     
     func setData(data:BlockItem, idx:Int = -1) -> MonthlyData {
-        
+       
         title = data.menu_nm
+        text = data.menu_expl
+        if let prc = data.prd_prc_vat {
+            self.price = String.app.month + " " + prc.formatted(style: .decimal) + String.app.cash
+        }
         if let thumb = data.bnr_off_img_path {
             image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.monthly.size) ?? image
         }
@@ -48,6 +54,7 @@ class MonthlyData:InfinityData,ObservableObject{
         }
         index = idx
         prdPrcId = data.prd_prc_id ?? ""
+        
         prodTypeCd = data.prd_typ_cd
         menuId = data.menu_id
         blocks = data.blocks
@@ -57,6 +64,7 @@ class MonthlyData:InfinityData,ObservableObject{
     
     @discardableResult
     func setData(data:MonthlyInfoItem, isLow:Bool) -> MonthlyData {
+        parentPrdPrcId = data.prod_id
         if isLow {
             self.isSubJoin = true
             self.sortIdx += 10

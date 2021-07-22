@@ -47,7 +47,7 @@ struct PageKidsMultiBlock: PageView {
                         useTracking:self.useTracking,
                         marginTop: DimenKids.app.pageTop + self.marginTop + DimenKids.margin.regular + self.sceneObserver.safeAreaTop,
                         marginBottom: self.sceneObserver.safeAreaIgnoreKeyboardBottom,
-                        header: self.monthlyGuide,
+                        header: self.monthlyPurchaseTicket ?? self.monthlyGuide,
                         headerSize: self.monthlyHeaderSize
                     )
                     .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
@@ -229,6 +229,7 @@ struct PageKidsMultiBlock: PageView {
    
     @State var monthlyData:MonthlyData? = nil
     @State var monthlyGuide:MonthlyGuide? = nil
+    @State var monthlyPurchaseTicket:MonthlyPurchaseTicket?  = nil
     @State var monthlyHeaderSize:CGFloat = 0
     
     @State var tabs:[String] = []
@@ -283,23 +284,44 @@ struct PageKidsMultiBlock: PageView {
     
     private func updatedMonthlyPurchaseInfo( _ info:MonthlyPurchaseInfo){
         guard let monthlyData = self.monthlyData   else { return }
-        if let item = info.purchaseList?.first(where: {$0.prod_id == monthlyData.prdPrcId}){
-            self.monthlyGuide = MonthlyGuide(data: PurchaseTicketData().setData(data: item))
-            self.monthlyHeaderSize = DimenKids.tab.medium
+        if let item = info.purchaseList?
+            .first(where: {$0.prod_id == (monthlyData.isSubJoin ? monthlyData.parentPrdPrcId : monthlyData.prdPrcId)}){
+            self.setupMonthlyGuide(ticketData: PurchaseTicketData().setData(data: item))
         } else {
-            
+            if monthlyData.hasAuth {
+                self.setupMonthlyGuide(ticketData: PurchaseTicketData())
+            } else {
+                self.setupMonthlyPurchaseTicket(monthlyData:monthlyData)
+            }
         }
     }
     
     private func updatedPeriodMonthlyPurchaseInfo( _ info:PeriodMonthlyPurchaseInfo){
         guard let monthlyData = self.monthlyData else { return }
-        if let item = info.purchaseList?.first(where: {$0.prod_id == monthlyData.prdPrcId}){
-            self.monthlyGuide = MonthlyGuide(data: PurchaseTicketData().setData(data: item))
-            self.monthlyHeaderSize = DimenKids.tab.medium
+        if let item = info.purchaseList?
+            .first(where: {$0.prod_id == (monthlyData.isSubJoin ? monthlyData.parentPrdPrcId : monthlyData.prdPrcId)}){
+            self.setupMonthlyGuide(ticketData: PurchaseTicketData().setData(data: item))
+          
         } else {
-            
+            if monthlyData.hasAuth {
+                self.setupMonthlyGuide(ticketData: PurchaseTicketData())
+            } else {
+                self.setupMonthlyPurchaseTicket(monthlyData:monthlyData)
+            }
         }
     }
+    
+    private func setupMonthlyGuide(ticketData:PurchaseTicketData){
+        self.monthlyGuide = MonthlyGuide(data:ticketData)
+        self.monthlyHeaderSize = DimenKids.tab.regular + DimenKids.margin.light
+    }
+    
+    private func setupMonthlyPurchaseTicket(monthlyData:MonthlyData){
+        if monthlyData.price == nil {return}
+        self.monthlyPurchaseTicket = MonthlyPurchaseTicket(data: monthlyData)
+        self.monthlyHeaderSize = DimenKids.tab.heavy + DimenKids.margin.light
+    }
+    
 }
 
 

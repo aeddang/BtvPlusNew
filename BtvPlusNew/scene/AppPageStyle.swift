@@ -105,6 +105,7 @@ struct PageBody: ViewModifier {
 
 struct ContentScrollPull: ViewModifier {
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    var tag:String? = nil
     var infinityScrollModel:InfinityScrollModel
     var pageDragingModel:PageDragingModel
     
@@ -130,10 +131,16 @@ struct ContentScrollPull: ViewModifier {
         return content
             .onAppear(){
                 self.setScrollList()
+                if let tag = self.tag { 
+                    ComponentLog.d("onAppear " + tag,tag: "ContentScrollPull")
+                }
             }
             .onDisappear{
                 self.anyCancellable.forEach{$0.cancel()}
                 self.anyCancellable.removeAll()
+                if let tag = self.tag {
+                    ComponentLog.d("onDisappear " + tag,tag: "ContentScrollPull")
+                }
             }
     }
 }

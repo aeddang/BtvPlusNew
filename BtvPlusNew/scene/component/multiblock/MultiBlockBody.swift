@@ -100,10 +100,8 @@ extension MultiBlockBody {
     static let maxCellCount:Int = Self.isRecycle ? 100 : 10
     static let tabHeight:CGFloat = Dimen.tab.thin + Dimen.margin.thinExtra
     static let tabHeightKids:CGFloat = DimenKids.tab.thin + DimenKids.margin.thinExtra
-    static let kisHomeHeight:CGFloat = SystemEnvironment.isTablet ? 410 : 215
-    
+    static let kisHomeHeight:CGFloat = SystemEnvironment.isTablet ? 410 : 215    
 }
-
 
 struct MultiBlockBody: PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
@@ -113,7 +111,6 @@ struct MultiBlockBody: PageComponent {
     var viewModel:MultiBlockModel = MultiBlockModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     var viewPagerModel:ViewPagerModel = ViewPagerModel()
-    
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var useBodyTracking:Bool = false
     var useTracking:Bool = false

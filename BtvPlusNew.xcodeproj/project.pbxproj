@@ -323,6 +323,7 @@
 		3194718B26A2A1B5006718A6 /* KidsPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194718A26A2A1B5006718A6 /* KidsPlay.swift */; };
 		3194D80026A92D0400BB765E /* TicketPurchase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194D7FF26A92D0400BB765E /* TicketPurchase.swift */; };
 		3194D80226A92D1B00BB765E /* MonthlyGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194D80126A92D1B00BB765E /* MonthlyGuide.swift */; };
+		3194D80426A99B0500BB765E /* MonthlyPurchaseTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194D80326A99B0500BB765E /* MonthlyPurchaseTicket.swift */; };
 		31956F4C269D0FA30044CF1D /* KidsHomeBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F4B269D0FA30044CF1D /* KidsHomeBlock.swift */; };
 		31956F4F269D10040044CF1D /* KidsMyItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F4E269D10040044CF1D /* KidsMyItem.swift */; };
 		31956F53269D11F20044CF1D /* KidsHomeBlockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F52269D11F20044CF1D /* KidsHomeBlockData.swift */; };
@@ -939,6 +940,7 @@
 		3194718A26A2A1B5006718A6 /* KidsPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsPlay.swift; sourceTree = "<group>"; };
 		3194D7FF26A92D0400BB765E /* TicketPurchase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketPurchase.swift; sourceTree = "<group>"; };
 		3194D80126A92D1B00BB765E /* MonthlyGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyGuide.swift; sourceTree = "<group>"; };
+		3194D80326A99B0500BB765E /* MonthlyPurchaseTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyPurchaseTicket.swift; sourceTree = "<group>"; };
 		31956F4B269D0FA30044CF1D /* KidsHomeBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsHomeBlock.swift; sourceTree = "<group>"; };
 		31956F4E269D10040044CF1D /* KidsMyItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsMyItem.swift; sourceTree = "<group>"; };
 		31956F52269D11F20044CF1D /* KidsHomeBlockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsHomeBlockData.swift; sourceTree = "<group>"; };
@@ -1383,6 +1385,7 @@
 				313F8D12269C3F8E0055F775 /* VideoBlockKids.swift */,
 				3194D7FF26A92D0400BB765E /* TicketPurchase.swift */,
 				3194D80126A92D1B00BB765E /* MonthlyGuide.swift */,
+				3194D80326A99B0500BB765E /* MonthlyPurchaseTicket.swift */,
 			);
 			path = itemKids;
 			sourceTree = "<group>";
@@ -3685,6 +3688,7 @@
 				3190CB07268983EA00ACB465 /* Kes.swift in Sources */,
 				316A708926705C8800A93B83 /* PlayerOptionSelectList.swift in Sources */,
 				D56C6A37257DA0C700CF9AB8 /* CPCircularNavigation.swift in Sources */,
+				3194D80426A99B0500BB765E /* MonthlyPurchaseTicket.swift in Sources */,
 				3195C1B42665E17A001F513E /* strings.kids.swift in Sources */,
 				31A38DFB2682A9EB0058287B /* PurchaseViewerData.swift in Sources */,
 				3174067725F709E600201850 /* NotificationVod.swift in Sources */,

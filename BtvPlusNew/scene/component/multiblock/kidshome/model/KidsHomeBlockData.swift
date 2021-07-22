@@ -14,23 +14,23 @@ class KidsHomeBlockData:Identifiable, ObservableObject{
     
     func setData(data:BlockData) -> KidsHomeBlockData{
        
-        data.blocks?.forEach{ data in
-            if let svcPropCd = data.svc_prop_cd {
+        data.blocks?.forEach{ block in
+            if let svcPropCd = block.svc_prop_cd {
                 switch svcPropCd {
                 case KidsMyItemData.code :
-                    self.datas.append(KidsMyItemData().setData(data: data))
+                    self.datas.append(KidsMyItemData().setData(data: block))
                 default :
-                    self.datas.append(KidsCategoryItemData().setData(data: data))
+                    self.datas.append(KidsCategoryItemData().setData(data: block))
                 }
             } else {
-                switch data.btm_bnr_blk_exps_cd {
+                switch block.btm_bnr_blk_exps_cd {
                 case "07", "08", "05" :
-                    self.datas.append(KidsCategoryListData().setData(data: data))
+                    self.datas.append(KidsCategoryListData().setData(data: block, uiType: data.uiType))
                 case KidsPlayListData.code :
-                    self.datas.append(KidsPlayListData().setData(data: data))
+                    self.datas.append(KidsPlayListData().setData(data: block))
                 default :
-                    if data.blk_typ_cd == "70" {
-                        self.datas.append(KidsBannerData().setData(data: data))
+                    if block.blk_typ_cd == "70" {
+                        self.datas.append(KidsBannerData().setData(data: block))
                     }
                 }
             }

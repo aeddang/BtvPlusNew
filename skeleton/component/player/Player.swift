@@ -185,7 +185,7 @@ enum PlayerStreamStatus {
 }
 
 enum PlayerError{
-    case connect(String), stream(PlayerStreamError), illegalState(PlayerUIEvent), drm(DRMError)
+    case connect(String), stream(PlayerStreamError), illegalState(PlayerUIEvent), drm(DRMError), asset(AssetLoadError)
 }
 enum PlayerStreamError:Error{
     case playback(String), unknown(String), pip(String), certification(String)

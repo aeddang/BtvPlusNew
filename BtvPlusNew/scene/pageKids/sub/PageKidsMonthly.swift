@@ -16,7 +16,6 @@ struct PageKidsMonthly: PageView {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
-    
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var viewModel:MultiBlockModel = MultiBlockModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -58,7 +57,6 @@ struct PageKidsMonthly: PageView {
                         }
                     }
                 }
-                
                 .background(
                     Image(AssetKids.image.homeBg)
                         .renderingMode(.original)
@@ -109,7 +107,7 @@ struct PageKidsMonthly: PageView {
     @State var openId:String? = nil
     private func reload(){
         guard let blockData = self.dataProvider.bands.kidsGnbModel.monthly else { return }
-        self.viewModel.updateKids(data: blockData , openId: self.openId)
+        self.viewModel.updateKids(data: blockData , openId: self.openId, isTicket: true)
     }
 
     //Block init

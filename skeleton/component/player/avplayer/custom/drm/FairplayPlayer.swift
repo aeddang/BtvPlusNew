@@ -4,20 +4,25 @@ import AVFoundation
 
 
 
-
+/*
 class FairplayPlayer: AVPlayer , PageProtocol{
     private var loaderQueue = DispatchQueue(label: "CustomAssetPlayer")
     private var m3u8URL: URL
-    private var delegate: FairplayResourceLoader
+    private var delegate: FairplayResourceLoader? = nil
     
-    init?(m3u8URL: URL, playerDelegate:CustomAssetPlayerDelegate? = nil, assetInfo:AssetPlayerInfo? = nil, drm:FairPlayDrm) {
+    init?(m3u8URL: URL, playerDelegate:CustomAssetPlayerDelegate? = nil, assetInfo:AssetPlayerInfo? = nil, drm:FairPlayDrm?) {
+       
         self.m3u8URL = m3u8URL
-        self.delegate = FairplayResourceLoader(m3u8URL: m3u8URL, playerDelegate: playerDelegate, assetInfo:  assetInfo, drm: drm)
         super.init()
-        if drm.certificate != nil {
-            self.playAsset(drm: drm)
+        if let drm = drm  {
+            self.delegate = FairplayResourceLoader(m3u8URL: m3u8URL, playerDelegate: playerDelegate, assetInfo:  assetInfo, drm: drm)
+            if drm.certificate != nil {
+                self.playAsset(drm: drm)
+            } else {
+                self.getCertificateData(drm: drm, delegate: playerDelegate)
+            }
         } else {
-            self.getCertificateData(drm: drm, delegate: playerDelegate)
+            self.playAsset()
         }
     }
     
@@ -28,7 +33,9 @@ class FairplayPlayer: AVPlayer , PageProtocol{
     func playAsset(drm:FairPlayDrm? = nil) {
        
         let asset = AVURLAsset(url: self.m3u8URL)
-        asset.resourceLoader.setDelegate(delegate, queue: loaderQueue)
+        if let delegate = self.delegate {
+            asset.resourceLoader.setDelegate(delegate, queue: loaderQueue)
+        }
         let playerItem = AVPlayerItem(asset: asset)
         self.replaceCurrentItem(with: playerItem)
     }
@@ -54,9 +61,9 @@ class FairplayPlayer: AVPlayer , PageProtocol{
             }
             if let self = self {
                 let cerData = data.base64EncodedString()
+                DataLog.d("DRM: certificate data: \(String(describing: String(data: data, encoding: .utf8)))", tag: self.tag)
                 DataLog.d("DRM: certificate " + cerData , tag: self.tag)
-                drm.certificate = Data(base64Encoded:cerData, options: .ignoreUnknownCharacters)
-                
+                drm.certificate = data
                 self.playAsset(drm: drm)
             }
         }
@@ -64,3 +71,4 @@ class FairplayPlayer: AVPlayer , PageProtocol{
     }
     
 }
+*/

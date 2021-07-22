@@ -82,9 +82,9 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
     
     func destory(){
         ComponentLog.d("destory" , tag: self.tag)
-        destoryPlayer()
         delegate = nil
         playerController = nil
+        destoryPlayer()
     }
     
     override func layoutSubviews() {
@@ -141,12 +141,9 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
     
     private func startPlayer(_ url:URL, assetInfo:AssetPlayerInfo? = nil){
         ComponentLog.d("DrmData " +  (drmData?.contentId ?? "none drm") , tag: self.tag)
-        //player = CustomAssetPlayer(m3u8URL: url, playerDelegate: self, assetInfo:assetInfo, drm: self.drmData)
-        
-        if let drm = self.drmData {
-            player = FairplayPlayer(m3u8URL: url, playerDelegate: self, assetInfo:assetInfo, drm: drm)
-            self.startPlayer()
-        }
+        player = CustomAssetPlayer(m3u8URL: url, playerDelegate: self, assetInfo:assetInfo, drm: self.drmData)
+        //player = FairplayPlayer(m3u8URL: url, playerDelegate: self, assetInfo:assetInfo, drm:self.drmData)
+        self.startPlayer()
     }
     
 
@@ -317,6 +314,13 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
     
     func onAssetLoadError(_ error: PlayerError) {
         self.delegate?.onPlayerError(playerError: error)
+    }
+    
+    func onAssetEvent(_ evt :AssetLoadEvent) {
+        switch evt {
+        case .ready:
+            self.resume()
+        }
     }
 }
 

@@ -108,7 +108,7 @@ struct PagePurchase: PageView {
                     default : break
                     }
                     
-                default : do{}
+                default : break
                 }
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in

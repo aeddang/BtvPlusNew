@@ -321,13 +321,15 @@
 		3193415425DDDAE8002F2000 /* SynopsisBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3193415325DDDAE8002F2000 /* SynopsisBody.swift */; };
 		319462A6269F00910074FE79 /* KidsBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319462A5269F00910074FE79 /* KidsBanner.swift */; };
 		3194718B26A2A1B5006718A6 /* KidsPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194718A26A2A1B5006718A6 /* KidsPlay.swift */; };
+		3194D80026A92D0400BB765E /* TicketPurchase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194D7FF26A92D0400BB765E /* TicketPurchase.swift */; };
+		3194D80226A92D1B00BB765E /* MonthlyGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194D80126A92D1B00BB765E /* MonthlyGuide.swift */; };
 		31956F4C269D0FA30044CF1D /* KidsHomeBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F4B269D0FA30044CF1D /* KidsHomeBlock.swift */; };
 		31956F4F269D10040044CF1D /* KidsMyItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F4E269D10040044CF1D /* KidsMyItem.swift */; };
 		31956F53269D11F20044CF1D /* KidsHomeBlockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F52269D11F20044CF1D /* KidsHomeBlockData.swift */; };
 		31956F55269D1DED0044CF1D /* KidsCategoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F54269D1DED0044CF1D /* KidsCategoryItem.swift */; };
 		31956F57269D1E5B0044CF1D /* KidsPlayList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F56269D1E5B0044CF1D /* KidsPlayList.swift */; };
 		31956F59269D1EE10044CF1D /* KidsCategoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F58269D1EE10044CF1D /* KidsCategoryList.swift */; };
-		3195AF1B26A4E3A90042BAFA /* Drm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3195AF1A26A4E3A90042BAFA /* Drm.swift */; };
+		3195AF1B26A4E3A90042BAFA /* CustomAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3195AF1A26A4E3A90042BAFA /* CustomAsset.swift */; };
 		3195C1A22665CC9D001F513E /* strings.app.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3195C1A12665CC9D001F513E /* strings.app.swift */; };
 		3195C1A42665CCE8001F513E /* strings.alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3195C1A32665CCE8001F513E /* strings.alert.swift */; };
 		3195C1A62665CD35001F513E /* strings.button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3195C1A52665CD35001F513E /* strings.button.swift */; };
@@ -935,13 +937,15 @@
 		3193415325DDDAE8002F2000 /* SynopsisBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisBody.swift; sourceTree = "<group>"; };
 		319462A5269F00910074FE79 /* KidsBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsBanner.swift; sourceTree = "<group>"; };
 		3194718A26A2A1B5006718A6 /* KidsPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsPlay.swift; sourceTree = "<group>"; };
+		3194D7FF26A92D0400BB765E /* TicketPurchase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketPurchase.swift; sourceTree = "<group>"; };
+		3194D80126A92D1B00BB765E /* MonthlyGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyGuide.swift; sourceTree = "<group>"; };
 		31956F4B269D0FA30044CF1D /* KidsHomeBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsHomeBlock.swift; sourceTree = "<group>"; };
 		31956F4E269D10040044CF1D /* KidsMyItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsMyItem.swift; sourceTree = "<group>"; };
 		31956F52269D11F20044CF1D /* KidsHomeBlockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsHomeBlockData.swift; sourceTree = "<group>"; };
 		31956F54269D1DED0044CF1D /* KidsCategoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsCategoryItem.swift; sourceTree = "<group>"; };
 		31956F56269D1E5B0044CF1D /* KidsPlayList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsPlayList.swift; sourceTree = "<group>"; };
 		31956F58269D1EE10044CF1D /* KidsCategoryList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsCategoryList.swift; sourceTree = "<group>"; };
-		3195AF1A26A4E3A90042BAFA /* Drm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drm.swift; sourceTree = "<group>"; };
+		3195AF1A26A4E3A90042BAFA /* CustomAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAsset.swift; sourceTree = "<group>"; };
 		3195C1A12665CC9D001F513E /* strings.app.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = strings.app.swift; sourceTree = "<group>"; };
 		3195C1A32665CCE8001F513E /* strings.alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = strings.alert.swift; sourceTree = "<group>"; };
 		3195C1A52665CD35001F513E /* strings.button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = strings.button.swift; sourceTree = "<group>"; };
@@ -1377,6 +1381,8 @@
 				319C47EA26A1C06100C61EF8 /* SkeletonBlockKids.swift */,
 				313F8D10269C1A490055F775 /* PosterBlockKids.swift */,
 				313F8D12269C3F8E0055F775 /* VideoBlockKids.swift */,
+				3194D7FF26A92D0400BB765E /* TicketPurchase.swift */,
+				3194D80126A92D1B00BB765E /* MonthlyGuide.swift */,
 			);
 			path = itemKids;
 			sourceTree = "<group>";
@@ -1941,7 +1947,6 @@
 			children = (
 				318000B0269FDACC002CC991 /* FairplayPlayer.swift */,
 				318000B2269FDAE5002CC991 /* FairplayResourceLoader.swift */,
-				3195AF1A26A4E3A90042BAFA /* Drm.swift */,
 			);
 			path = drm;
 			sourceTree = "<group>";
@@ -2378,6 +2383,7 @@
 		3197FC7E267AE4B4006918BA /* asset */ = {
 			isa = PBXGroup;
 			children = (
+				3195AF1A26A4E3A90042BAFA /* CustomAsset.swift */,
 				3197FC7F267AE511006918BA /* CustomAssetPlayer.swift */,
 				3197FC81267AE53E006918BA /* CustomAssetResourceLoader.swift */,
 			);
@@ -3661,7 +3667,7 @@
 				D56C6B10257DAADE00CF9AB8 /* SceneAlertController.swift in Sources */,
 				31E76D132632636500710624 /* Shareable.swift in Sources */,
 				315A8FC125AD114F00498B03 /* ApiUtil.m in Sources */,
-				3195AF1B26A4E3A90042BAFA /* Drm.swift in Sources */,
+				3195AF1B26A4E3A90042BAFA /* CustomAsset.swift in Sources */,
 				D57298DD259D69EB00ED2CE6 /* PickerSelect.swift in Sources */,
 				D56C6A5D257DA0C700CF9AB8 /* CircularSpinner.swift in Sources */,
 				318FBFF725E4882700ABC241 /* PageCategoryList.swift in Sources */,
@@ -3749,6 +3755,7 @@
 				3167196225FEED00005AC3D2 /* PageAuth.swift in Sources */,
 				31C4D29A2692AF77000C7E83 /* ReadingReport.swift in Sources */,
 				D56C6A5C257DA0C700CF9AB8 /* StrokeRectButton.swift in Sources */,
+				3194D80226A92D1B00BB765E /* MonthlyGuide.swift in Sources */,
 				31DF151E25F9A89A00F0A38D /* TicketList.swift in Sources */,
 				316A70932670680700A93B83 /* PlayerTopBody.swift in Sources */,
 				315B55E725A84B0900B5B351 /* DevicePairing.swift in Sources */,
@@ -4165,6 +4172,7 @@
 				314D73BA25B54FD900907118 /* BookMarkButton.swift in Sources */,
 				31C4BC97262D2D8600BB2167 /* NotificationCoreData.swift in Sources */,
 				319CF68226972D6A00159575 /* ExamResultBox.swift in Sources */,
+				3194D80026A92D0400BB765E /* TicketPurchase.swift in Sources */,
 				319745BB261FEE7D0072945D /* PurchaseTicketList.swift in Sources */,
 				317C9774262443D4008F267D /* PageMyBenefits.swift in Sources */,
 				D56C6A48257DA0C700CF9AB8 /* RoundRectMask.swift in Sources */,
@@ -4303,7 +4311,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -4360,7 +4368,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -4413,7 +4421,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 43;
+				CURRENT_PROJECT_VERSION = 44;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -4437,7 +4445,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.040;
+				MARKETING_VERSION = 1.041;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = ".BtvPlusNew_ dev";
@@ -4490,7 +4498,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 43;
+				CURRENT_PROJECT_VERSION = 44;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -4509,7 +4517,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.040;
+				MARKETING_VERSION = 1.041;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvPlusNew_des;

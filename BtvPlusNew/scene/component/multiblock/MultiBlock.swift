@@ -38,6 +38,8 @@ struct MultiBlock:PageComponent {
     var monthlyDatas:[MonthlyData]? = nil
     var monthlyAllData:BlockItem? = nil
     var tipBlock:TipBlockData? = nil
+    var header:PageViewProtocol? = nil
+    var headerSize: CGFloat = 0
     var useFooter:Bool = false
     var isRecycle = true
     var isLegacy:Bool = false
@@ -120,6 +122,8 @@ struct MultiBlock:PageComponent {
                 viewModel: self.infinityScrollModel,
                 axes: .vertical,
                 scrollType : .reload(isDragEnd: false),
+                header : self.header,
+                headerSize : self.headerSize,
                 marginTop : self.marginTop,
                 marginBottom : self.marginBottom,
                 marginHorizontal: self.marginHorizontal,
@@ -202,6 +206,8 @@ struct MultiBlock:PageComponent {
                 viewModel: self.infinityScrollModel,
                 axes: .vertical,
                 scrollType : .reload(isDragEnd: false),
+                header : self.header,
+                headerSize : self.headerSize,
                 marginTop : 0,
                 marginBottom : self.marginBottom + self.sceneObserver.safeAreaBottom,
                 marginHorizontal: self.marginHorizontal,
@@ -379,7 +385,7 @@ struct MultiBlockCell:PageComponent {
             )
             .frame(height:data.listHeight)
 
-        case .kidsHome :
+        case .kidsHome, .kidsTicket :
             KidsHomeBlock(
                 pageObservable:self.pageObservable,
                 pageDragingModel:self.pageDragingModel,

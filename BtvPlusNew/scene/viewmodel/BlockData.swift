@@ -223,8 +223,8 @@ class BlockData:InfinityData, ObservableObject{
         return self
     }
     
-    func setDataKids(data:KidsGnbItemData) -> BlockData{
-        self.uiType = .kidsHome
+    func setDataKids(data:KidsGnbItemData, isTicket:Bool = false) -> BlockData{
+        self.uiType = isTicket ? .kidsTicket : .kidsHome
         name = data.title ?? ""
         menuId = data.menuId
         self.dataType = .none
@@ -435,7 +435,8 @@ class BlockData:InfinityData, ObservableObject{
         ticket,
         banner,
         bannerList,
-        kidsHome
+        kidsHome,
+        kidsTicket
     }
     
     enum ThemaType: String, Codable {

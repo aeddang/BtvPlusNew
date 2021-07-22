@@ -30,9 +30,8 @@ class Setup:ObservableObject, PageProtocol {
         static let floatingUnvisibleDate = "floatingUnvisibleDate" + VS
         static let kidsRegistUnvisibleDate = "kidsRegistUnvisibleDate" + VS
         
+        static let drmTestUser = "drmTestUser" + VS
         static let listApi = "listApi" + VS
-        static let drmApi = "drmApi" + VS
-        static let drmId = "drmId" + VS
         static let videoPath = "videoPath" + VS
     }
     
@@ -219,22 +218,15 @@ class Setup:ObservableObject, PageProtocol {
             return storage.string(forKey: Keys.listApi) ?? ""
         }
     }
-    var drmApi:String{
+    var drmTestUser:Bool{
         set(newVal){
-            storage.set(newVal, forKey: Keys.drmApi)
+            storage.set(newVal, forKey: Keys.drmTestUser)
         }
         get{
-            return storage.string(forKey: Keys.drmApi) ?? ""
+            return storage.bool(forKey: Keys.drmTestUser) 
         }
     }
-    var drmId:String{
-        set(newVal){
-            storage.set(newVal, forKey: Keys.drmId)
-        }
-        get{
-            return storage.string(forKey: Keys.drmId) ?? ""
-        }
-    }
+    
     var videoPath:String{
         set(newVal){
             storage.set(newVal, forKey: Keys.videoPath)

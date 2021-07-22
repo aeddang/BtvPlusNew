@@ -79,7 +79,7 @@ struct PlayerUI: PageComponent {
                         .fixedSize(horizontal: true, vertical: false)
                     
                     ProgressSlider(
-                        progress: min(self.progress, 1.0),
+                        progress: self.progress,
                         thumbSize: self.isFullScreen ? Dimen.icon.thinExtra : Dimen.icon.tiny,
                         onChange: { pct in
                             let willTime = self.viewModel.duration * Double(pct)
@@ -158,9 +158,8 @@ struct PlayerUI: PageComponent {
         .onReceive(self.viewModel.$time) { tm in
             if tm < 0 {return}
             self.time = tm.secToHourString()
-            if self.viewModel.duration <= 0.0 {return}
             if !self.isSeeking {
-                self.progress = Float(tm / self.viewModel.duration)
+                self.progress = Float(tm / max(self.viewModel.duration,1))
             }
         }
         .onReceive(self.viewModel.$duration) { tm in
@@ -187,7 +186,7 @@ struct PlayerUI: PageComponent {
             guard let evt = evt else { return }
             switch evt {
             case .seeking(let willTime):
-                self.progress = Float(willTime / self.viewModel.duration)
+                self.progress = Float(willTime / max(self.viewModel.duration,1))
                 if !self.isSeeking {
                     withAnimation{ self.isSeeking = true }
                 }
@@ -217,11 +216,13 @@ struct PlayerUI: PageComponent {
             self.viewModel.playerUiStatus = .view
             switch error{
             case .connect(_) : self.errorMessage = "connect error"
+
             case .illegalState(_) :
                 self.errorMessage = "illegalState"
                 return
-            case .drm(_) :
-                self.errorMessage = "illegalState"
+            case .drm(_) : self.errorMessage = "drm"
+                return
+            case .asset(_) : self.errorMessage = "asset"
                 return
             case .stream(let e) :
                 switch e {

@@ -62,6 +62,7 @@
 "defaultStb" = "B tv 셋톱박스";
 
 "ppmUpdate" = "월정액 업데이트";
+"ppmSubscribe" = "월정액 구독중";
 "open" = "공개";
 
 "mic" = "마이크";

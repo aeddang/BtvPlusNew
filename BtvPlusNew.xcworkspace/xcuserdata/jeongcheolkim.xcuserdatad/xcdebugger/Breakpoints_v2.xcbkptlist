@@ -36,5 +36,117 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4F0D61DA-9C0A-4D69-BD4C-B5C58A238BC9"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "skeleton/component/player/avplayer/PlayerScreenView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "204"
+            endingLineNumber = "204"
+            landmarkName = "onError(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B0D32E4A-7A9D-4A38-9A6F-289A6B2EDDE5"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BtvPlusNew/scene/pageKids/sub/PageKidsMultiBlock.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "296"
+            endingLineNumber = "296"
+            landmarkName = "updatedPeriodMonthlyPurchaseInfo(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "B0D32E4A-7A9D-4A38-9A6F-289A6B2EDDE5 - b8949f2e417af7aa"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BtvPlusNew.PageKidsMultiBlock.updatedPeriodMonthlyPurchaseInfo(BtvPlusNew.PeriodMonthlyPurchaseInfo) -&gt; ()"
+                  moduleName = "BtvPlusNew"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jeongcheolkim/Desktop/project/skb/BtvPlusNew/BtvPlusNew/scene/pageKids/sub/PageKidsMultiBlock.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "296"
+                  endingLineNumber = "296"
+                  offsetFromSymbolStart = "104">
+               </Location>
+               <Location
+                  uuid = "B0D32E4A-7A9D-4A38-9A6F-289A6B2EDDE5 - 5c25067365de0e75"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (BtvPlusNew.PurchaseFixedChargePeriodItem) -&gt; Swift.Bool in BtvPlusNew.PageKidsMultiBlock.updatedPeriodMonthlyPurchaseInfo(BtvPlusNew.PeriodMonthlyPurchaseInfo) -&gt; ()"
+                  moduleName = "BtvPlusNew"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jeongcheolkim/Desktop/project/skb/BtvPlusNew/BtvPlusNew/scene/pageKids/sub/PageKidsMultiBlock.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "296"
+                  endingLineNumber = "296"
+                  offsetFromSymbolStart = "32">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "18D2DD66-E934-4DE4-B21A-06677CA7B799"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BtvPlusNew/scene/pageKids/sub/PageKidsMultiBlock.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "286"
+            endingLineNumber = "286"
+            landmarkName = "updatedMonthlyPurchaseInfo(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "18D2DD66-E934-4DE4-B21A-06677CA7B799 - ab7f22cd243a01f9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BtvPlusNew.PageKidsMultiBlock.updatedMonthlyPurchaseInfo(BtvPlusNew.MonthlyPurchaseInfo) -&gt; ()"
+                  moduleName = "BtvPlusNew"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jeongcheolkim/Desktop/project/skb/BtvPlusNew/BtvPlusNew/scene/pageKids/sub/PageKidsMultiBlock.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "286"
+                  endingLineNumber = "286"
+                  offsetFromSymbolStart = "104">
+               </Location>
+               <Location
+                  uuid = "18D2DD66-E934-4DE4-B21A-06677CA7B799 - 71afb38538aa1971"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (BtvPlusNew.PurchaseFixedChargeItem) -&gt; Swift.Bool in BtvPlusNew.PageKidsMultiBlock.updatedMonthlyPurchaseInfo(BtvPlusNew.MonthlyPurchaseInfo) -&gt; ()"
+                  moduleName = "BtvPlusNew"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jeongcheolkim/Desktop/project/skb/BtvPlusNew/BtvPlusNew/scene/pageKids/sub/PageKidsMultiBlock.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "286"
+                  endingLineNumber = "286"
+                  offsetFromSymbolStart = "32">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

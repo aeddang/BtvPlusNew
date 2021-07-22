@@ -13,17 +13,20 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
     private let fragmentsScheme = "fragmentsm3u8"
     private var m3u8String: String? = nil
     private var originURL:URL
-    private var baseURL:String = ""
+    private var baseURL:String? = nil
     private var delegate: CustomAssetPlayerDelegate?
     private var drm:FairPlayDrm? = nil
     private var info:AssetPlayerInfo? = nil
     init(m3u8URL: URL, playerDelegate:CustomAssetPlayerDelegate? = nil, assetInfo:AssetPlayerInfo? = nil, drm:FairPlayDrm? = nil) {
         self.originURL = m3u8URL
-        if var components = URLComponents(string: m3u8URL.absoluteString) {
-            components.query = nil
-            self.baseURL = components.url?.deletingLastPathComponent().absoluteString ?? ""
+        if let drm = drm {
+            self.drm = drm
+        } else {
+            if var components = URLComponents(string: m3u8URL.absoluteString) {
+                components.query = nil
+                self.baseURL = components.url?.deletingLastPathComponent().absoluteString ?? ""
+            }
         }
-        self.drm = drm
         self.delegate = playerDelegate
         self.info = assetInfo
         super.init()
@@ -33,21 +36,19 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
         _ resourceLoader: AVAssetResourceLoader,
         shouldWaitForLoadingOfRequestedResource
         loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
-        
         if let drmData = self.drm {
-            DataLog.d("DRM: init", tag: self.tag)
+            
             if drmData.contentId == nil {
-                return handleRequest(loadingRequest, path:self.originURL.absoluteString)
-            } else if drmData.isCompleted {
-                //self.delegate?.onAssetLoadError(.drm(reason: "drm"))
-                return handleRequest(loadingRequest, path:self.originURL.absoluteString)
+                DataLog.d("drm handle manifast", tag: self.tag)
+                return handleRequest(loadingRequest) //handleManifast(loadingRequest, path:self.originURL.absoluteString)
             } else {
-                return self.getLicenseData(loadingRequest, drmData: drmData)
+                DataLog.d("drm handle", tag: self.tag)
+                return handleRequest(loadingRequest)
             }
         } else {
             guard let path = loadingRequest.request.url?.absoluteString else { return false }
             let originPath = path.hasPrefix(Self.scheme) ? path.replace(Self.scheme, with: "") : path
-            return handleRequest(loadingRequest, path:originPath)
+            return handleManifast(loadingRequest, path:originPath)
         }
     }
     
@@ -55,31 +56,45 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
     func getLicenseData(_ request: AVAssetResourceLoadingRequest, drmData:FairPlayDrm) -> Bool {
         DataLog.d("getSpcData", tag: self.tag)
         guard let certificate = drmData.certificate else {
-            self.delegate?.onAssetLoadError(.drm(.noCertificate))
-            request.finishLoading(with: DRMError.noCertificate)
+            
+            let drmError:DRMError = .certificate(reason: "not found certificate data")
+            DataLog.e(drmError.getDescription(), tag: self.tag)
+            delegate?.onAssetLoadError(.drm(drmError))
+            request.finishLoading(with:NSError(domain: drmError.getDomain(), code:drmError.getCode(), userInfo: nil))
             return false
         }
-        let contentId = drmData.contentId ?? "" // content id
+        
+        guard let contentId = drmData.contentId else {
+            let drmError:DRMError = .contentId(reason: "not found contentId")
+            DataLog.e(drmError.getDescription(), tag: self.tag)
+            delegate?.onAssetLoadError(.drm(drmError))
+            request.finishLoading(with:NSError(domain: drmError.getDomain(), code:drmError.getCode(), userInfo: nil))
+            return false
+        }
         guard let contentIdData = contentId.data(using:.utf8) else {
-            self.delegate?.onAssetLoadError(.drm(.noContentIdFound))
-            request.finishLoading(with: DRMError.noContentIdFound)
+            let drmError:DRMError = .contentId(reason: "invalid contentId")
+            DataLog.e(drmError.getDescription(), tag: self.tag)
+            delegate?.onAssetLoadError(.drm(drmError))
+            request.finishLoading(with:NSError(domain: drmError.getDomain(), code:drmError.getCode(), userInfo: nil))
             return false
         }
+        
         DataLog.d("contentId " + contentId , tag: self.tag)
         DataLog.d("contentIdData " + contentIdData.base64EncodedString() , tag: self.tag)
                 
         guard let spcData = try? request.streamingContentKeyRequestData(forApp: certificate, contentIdentifier: contentIdData, options: nil) else {
-            request.finishLoading(with: NSError(domain: "spcData", code: -3, userInfo: nil))
-            DataLog.e("DRM: false to get SPC Data from video", tag: self.tag)
-            self.delegate?.onAssetLoadError(.drm(.noSPCFound))
-            request.finishLoading(with: DRMError.noSPCFound)
+            let drmError:DRMError = .spcData(reason: "invalid spcData")
+            DataLog.e(drmError.getDescription(), tag: self.tag)
+            delegate?.onAssetLoadError(.drm(drmError))
+            request.finishLoading(with:NSError(domain: drmError.getDomain(), code:drmError.getCode(), userInfo: nil))
             return false
         }
         
         guard let ckcServer = URL(string: drmData.ckcURL) else {
-            DataLog.e("ckc url error", tag: self.tag)
-            self.delegate?.onAssetLoadError(.drm(.noLicenseUrl))
-            request.finishLoading(with: DRMError.noLicenseUrl)
+            let drmError:DRMError = .ckcData(reason: "invalid license url")
+            DataLog.e(drmError.getDescription(), tag: self.tag)
+            delegate?.onAssetLoadError(.drm(drmError))
+            request.finishLoading(with:NSError(domain: drmError.getDomain(), code:drmError.getCode(), userInfo: nil))
             return false
         }
         
@@ -89,37 +104,74 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
         var params = [String:String]()
         params["spc"] = spcData.base64EncodedString()
         params["assetId"] = contentId
-        licenseRequest.httpBody = params.map{$0.key + "=" + $0.value.toPercentEncoding()}.joined(separator: "&").data(using: .utf8)
-        
+        let body = params.map{$0.key + "=" + $0.value.toPercentEncoding()}.joined(separator: "&").data(using: .utf8)
+        licenseRequest.httpBody = body
+        if let body = body {
+            DataLog.d("body " +  (String(data: body, encoding: .utf8) ?? "invalid data") , tag: self.tag)
+        }
         let task = URLSession.shared.dataTask(with: licenseRequest) { data, response, error in
             guard let data = data else {
-                DataLog.e("DRM: unable to fetch ckc key :/", tag: self.tag)
-                self.delegate?.onAssetLoadError(.drm(.noSPCFound))
-                request.finishLoading(with:  DRMError.noSPCFound)
+                let drmError:DRMError = .ckcData(reason: "no ckcData")
+                DataLog.e(drmError.getDescription(), tag: self.tag)
+                self.delegate?.onAssetLoadError(.drm(drmError))
+                request.finishLoading(with:NSError(domain: drmError.getDomain(), code:drmError.getCode(), userInfo: nil))
                 return
             }
-            self.drm?.isCompleted = true
-            var str = String(decoding: data, as: UTF8.self)
-            str = str.replace("<ckc>", with: "")
-            str = str.replace("</ckc>", with: "")
-            let strData = str.data(using: .utf8)!
             
-            DataLog.e("licenseData " + str, tag: self.tag)
+            guard let responseString = String(data: data, encoding: .utf8) else {
+                let drmError:DRMError = .ckcData(reason: "invalid ckcData")
+                DataLog.e(drmError.getDescription(), tag: self.tag)
+                self.delegate?.onAssetLoadError(.drm(drmError))
+                request.finishLoading(with:NSError(domain: drmError.getDomain(), code:drmError.getCode(), userInfo: nil))
+                return
+            }
             
-            request.dataRequest?.respond(with: data)
-            request.finishLoading()
-        
+            let ckcKey = responseString
+                .replacingOccurrences(of:"\n<ckc>", with: "")
+                .replacingOccurrences(of:"</ckc>\n", with: "")
+                .replacingOccurrences(of: "<ckc>", with: "")
+                .replacingOccurrences(of: "</ckc>", with: "")
+            
+            // DataLog.e("licenseData " + ckcKey, tag: self.tag)
+            if let ckcData = Data(base64Encoded:ckcKey) {
+                DataLog.e("drm play ready", tag: self.tag)
+                self.drm?.isCompleted = true
+                request.dataRequest?.respond(with:ckcData)
+                request.finishLoading()
+                self.delegate?.onAssetEvent(.ready)
+            } else {
+                let drmError:DRMError = .ckcData(reason: "invalid ckc key")
+                DataLog.e(drmError.getDescription(), tag: self.tag)
+                self.delegate?.onAssetLoadError(.drm(drmError))
+                request.finishLoading(with:NSError(domain: drmError.getDomain(), code:drmError.getCode(), userInfo: nil))
+            }
         }
         task.resume()
         return true
     }
+
+    func handleRequest(_ request: AVAssetResourceLoadingRequest) -> Bool {
+        if let drmData = self.drm {
+            guard let host = request.request.url?.host else {
+                    let drmError:DRMError = .contentId(reason: "no contentId")
+                    DataLog.e(drmError.getDescription(), tag: self.tag)
+                    self.delegate?.onAssetLoadError(.drm(drmError))
+                    request.finishLoading(with:NSError(domain: drmError.getDomain(), code:drmError.getCode(), userInfo: nil))
+                    return false
+            }
+            drmData.contentId = host
+            return self.getLicenseData(request, drmData: drmData)
+        } else {
+            let drmError:DRMError = .stream
+            DataLog.e(drmError.getDescription(), tag: self.tag)
+            self.delegate?.onAssetLoadError(.drm(drmError))
+            request.finishLoading(with:NSError(domain: drmError.getDomain(), code:drmError.getCode(), userInfo: nil))
+            return false
+        }
+    }
     
-   
-    
-    @discardableResult
-    func handleRequest(_ request: AVAssetResourceLoadingRequest, path:String) -> Bool {
-        
-        DataLog.d("handleRequest", tag:self.tag)
+
+    func handleManifast(_ request: AVAssetResourceLoadingRequest, path:String) -> Bool {
         guard let url = URL(string:path) else {return false}
         if let prevInfo = self.info { 
             self.info = prevInfo.copy()
@@ -139,10 +191,7 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
                     request.finishLoading(with: error)
                     return
             }
-            if self?.drm?.isCompleted == true {
-                request.dataRequest?.respond(with: data)
-                request.finishLoading()
-            }
+            
             self?.processPlaylistWithData(data)
             self?.finishRequestWithMainPlaylist(request)
             if let info = self?.info {
@@ -166,12 +215,7 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
             if customLine.isEmpty {
                 useLine = false
             } else {
-                if self.drm != nil {
-                    newLines.append(customLine)   //.replace("skd://", with: "https://"))
-                } else{
-                    newLines.append(customLine)
-                }
-                
+                newLines.append(customLine)
                 useLine = true
             }
             
@@ -182,14 +226,19 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
     func modifyLine(_ line: String, useLine:Bool = true)-> String {
         
         let components = line.components(separatedBy: ":")
-        if components.count < 2 { return  line.hasSuffix(".m3u8")
-            ? useLine
-                ? self.baseURL + line
-                : ""
-            : line
+        if components.count < 2 {
+            if let base  = self.baseURL {
+                return
+                    line.hasSuffix(".m3u8")
+                        ? useLine
+                            ? base + line
+                            : ""
+                        : line
+            } else {
+                return line
+            }
         }
         guard let key = components.first else { return line }
-        //DataLog.d(line, tag:self.tag + " origin")
         let datas = components[1].components(separatedBy: ",")
         var isUnSelectedLine = false
         var newLine = datas.reduce(key+":", { pre, cur in
@@ -199,7 +248,13 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
             var value = set[1]
             value = value.replacingOccurrences(of: "\"", with: "", options: NSString.CompareOptions.literal, range:nil)
             switch type {
-            case "URI": return pre + type + "=\"" + self.baseURL + value  + "\","
+            case "URI":
+                if let base = self.baseURL {
+                    return pre + type + "=\"" + base + value  + "\","
+                } else {
+                    return pre + cur  + ","
+                }
+                
             case "RESOLUTION":
                 self.info?.addResolution(value)
                 if let selValue = self.info?.selectedResolution {
@@ -231,34 +286,31 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
     
     func finishRequestWithMainPlaylist(_ request: AVAssetResourceLoadingRequest) {
         guard let data = self.m3u8String?.data(using: .utf8) else {
-            self.delegate?.onAssetLoadError(.drm(.noContentIdFound))
-            request.finishLoading(with: DRMError.noContentIdFound)
+            let error:AssetLoadError = .parse(reason: "invalid m3u8String")
+            DataLog.e(error.getDescription(), tag: self.tag)
+            self.delegate?.onAssetLoadError(.asset(error))
+            request.finishLoading(with:NSError(domain: error.getDomain(), code:error.getCode(), userInfo: nil))
             return
         }
         if let drm = self.drm {
-            
-            if drm.isCompleted {
-                
-                request.finishLoading()
-            } else {
-                guard let contentKeyIdentifierURL = request.request.url,
-                    let assetIDString = contentKeyIdentifierURL.host
-                else {
-                    self.delegate?.onAssetLoadError(.drm(.noContentIdFound))
-                    request.finishLoading(with: DRMError.noContentIdFound)
-                    return
-                }
-                drm.contentId = assetIDString
-                request.dataRequest?.respond(with: data)
-                request.finishLoading()
+            guard let contentKeyIdentifierURL = request.request.url,
+                let assetIDString = contentKeyIdentifierURL.host
+            else {
+                let drmError:DRMError = .contentId(reason: "no contentId")
+                DataLog.e(drmError.getDescription(), tag: self.tag)
+                self.delegate?.onAssetLoadError(.drm(drmError))
+                request.finishLoading(with:NSError(domain: drmError.getDomain(), code:drmError.getCode(), userInfo: nil))
+                return
             }
+            
+            drm.contentId = assetIDString
+            request.dataRequest?.respond(with: data)
+            self.getLicenseData(request, drmData: drm)
         
         } else {
             request.dataRequest?.respond(with: data)
             request.finishLoading()
         }
-        
-       
     }
     
   

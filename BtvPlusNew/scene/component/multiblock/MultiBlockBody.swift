@@ -70,9 +70,9 @@ class MultiBlockModel: PageDataProviderModel {
         self.isUpdate = true
     }
     
-    func updateKids(data:KidsGnbItemData, openId:String? = nil) {
+    func updateKids(data:KidsGnbItemData, openId:String? = nil, isTicket:Bool = false) {
         self.type = .kids
-        self.datas = [ BlockData(pageType: .kids).setDataKids(data: data) ]
+        self.datas = [ BlockData(pageType: .kids).setDataKids(data: data, isTicket:isTicket) ]
         self.openId = openId
         self.isUpdate = true
     }
@@ -126,6 +126,8 @@ struct MultiBlockBody: PageComponent {
     var monthlyDatas:[MonthlyData]? = nil
     var monthlyAllData:BlockItem? = nil
     var tipBlock:TipBlockData? = nil
+    var header:PageViewProtocol? = nil
+    var headerSize:CGFloat = 0
     var useFooter:Bool = false
     var isRecycle = Self.isRecycle
     
@@ -181,6 +183,8 @@ struct MultiBlockBody: PageComponent {
                             monthlyDatas: self.monthlyDatas,
                             monthlyAllData: self.monthlyAllData,
                             tipBlock:self.tipBlock,
+                            header:self.header,
+                            headerSize:self.headerSize,
                             useFooter:self.useFooter,
                             isRecycle:self.isRecycle,
                             isLegacy:Self.isLegacy,
@@ -210,6 +214,8 @@ struct MultiBlockBody: PageComponent {
                             monthlyDatas: self.monthlyDatas,
                             monthlyAllData: self.monthlyAllData,
                             tipBlock:self.tipBlock,
+                            header:self.header,
+                            headerSize:self.headerSize,
                             useFooter:self.useFooter,
                             isRecycle:self.isRecycle,
                             isLegacy:Self.isLegacy,
@@ -605,7 +611,7 @@ struct MultiBlockBody: PageComponent {
                 if let apiQ = block.getRequestApi(pairing:self.pairing.status, kid:self.pairing.kid) {
                     dataProvider.requestData(q: apiQ)
                 } else{
-                    if block.uiType == .kidsHome {
+                    if block.uiType == .kidsHome || block.uiType == .kidsTicket {
                         block.listHeight = Self.kisHomeHeight
                         block.setDatabindingCompleted()
                         

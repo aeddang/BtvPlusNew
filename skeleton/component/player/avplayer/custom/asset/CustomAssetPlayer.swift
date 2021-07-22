@@ -2,48 +2,7 @@ import Foundation
 import AVFoundation
 
 
-class AssetPlayerInfo {
-    private(set) var resolutions:[String] = []
-    private(set) var captions:[String] = []
-    private(set) var audios:[String] = []
-    
-    var selectedResolution:String? = nil
-    var selectedCaption:String? = nil
-    var selectedAudio:String? = nil
-    
-    func reset(){
-        resolutions = []
-        captions = []
-        audios = []
-    }
-    func copy() -> AssetPlayerInfo{
-        let new = AssetPlayerInfo()
-        new.selectedResolution = self.selectedResolution
-        new.selectedCaption = self.selectedCaption
-        new.selectedAudio = self.selectedAudio
-        return new
-    }
-    func addResolution(_ value:String){
-        if self.resolutions.first(where: {$0 == value}) == nil {
-            self.resolutions.append(value)
-        }
-    }
-    func addCaption(_ value:String){
-        if self.captions.first(where: {$0 == value}) == nil {
-            self.captions.append(value)
-        }
-    }
-    func addAudio(_ value:String){
-        if self.audios.first(where: {$0 == value}) == nil {
-            self.audios.append(value)
-        }
-    }
-}
 
-protocol CustomAssetPlayerDelegate{
-    func onFindAllInfo(_ info: AssetPlayerInfo)
-    func onAssetLoadError(_ error: PlayerError)
-}
 
 class CustomAssetPlayer: AVPlayer , PageProtocol{
     private var loaderQueue = DispatchQueue(label: "CustomAssetPlayer")
@@ -90,25 +49,27 @@ class CustomAssetPlayer: AVPlayer , PageProtocol{
     func getCertificateData(drm:FairPlayDrm, delegate: CustomAssetPlayerDelegate? = nil)  {
         DataLog.d("getCertificateData", tag: self.tag)
         guard let url = URL(string:drm.certificateURL) else {
-            DataLog.e("DRM: certificateData url error", tag: self.tag)
-            delegate?.onAssetLoadError(.drm(.noCertificate))
+            let drmError:DRMError = .certificate(reason: "certificateData url error")
+            DataLog.e(drmError.getDescription(), tag: self.tag)
+            delegate?.onAssetLoadError(.drm(drmError))
             return
         }
         var certificateRequest = URLRequest(url: url)
         certificateRequest.httpMethod = "POST"
         let task = URLSession.shared.dataTask(with:certificateRequest) {
             [weak self] (data, response, error) in
-            guard error == nil, let data = data else
-            {
-                DataLog.e("DRM: certificateData error", tag: self?.tag ?? "")
-                delegate?.onAssetLoadError(.drm(.noCertificate))
-                return
-            }
             if let self = self {
-                let cerData = data
-                drm.certificate = cerData
-                let str = String(decoding: cerData, as: UTF8.self)
-                DataLog.d("DRM: certificate " + str , tag: self.tag)
+                guard let data = data else
+                {
+                    let reason = error == nil ? "no certificateData" : error!.localizedDescription
+                    let drmError:DRMError = .certificate(reason: reason)
+                    DataLog.e(drmError.getDescription(), tag: self.tag)
+                    delegate?.onAssetLoadError(.drm(drmError))
+                    return
+                }
+                drm.certificate =  data
+                //let str = String(decoding: data, as: UTF8.self)
+                DataLog.d("certificate success" , tag: self.tag)
                 self.playAsset(drm: drm)
             }
         }

@@ -46,7 +46,9 @@ struct PageKidsMultiBlock: PageView {
                         useBodyTracking: self.themaType == .ticket ? false : self.useTracking,
                         useTracking:self.useTracking,
                         marginTop: DimenKids.app.pageTop + self.marginTop + DimenKids.margin.regular + self.sceneObserver.safeAreaTop,
-                        marginBottom: self.sceneObserver.safeAreaIgnoreKeyboardBottom
+                        marginBottom: self.sceneObserver.safeAreaIgnoreKeyboardBottom,
+                        header: self.monthlyGuide,
+                        headerSize: self.monthlyHeaderSize
                     )
                     .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
                         guard let evt = evt else {return}
@@ -166,6 +168,22 @@ struct PageKidsMultiBlock: PageView {
                 default : break
                 }
             }
+            .onReceive(self.pairing.authority.$monthlyPurchaseInfo){ info in
+                if self.monthlyData == nil {return}
+                if let info = info {
+                    self.updatedMonthlyPurchaseInfo(info)
+                } else {
+                    self.pairing.authority.requestAuth(.updateMonthlyPurchase(isPeriod: false))
+                }
+            }
+            .onReceive(self.pairing.authority.$periodMonthlyPurchaseInfo){ info in
+                if self.monthlyData == nil {return}
+                if let info = info {
+                    self.updatedPeriodMonthlyPurchaseInfo(info)
+                } else {
+                    self.pairing.authority.requestAuth(.updateMonthlyPurchase(isPeriod: true))
+                }
+            }
             .onAppear{
                 let w = Float(geometry.size.width - (Self.tabMargin*2) - max(geometry.safeAreaInsets.leading,geometry.safeAreaInsets.trailing) )
                 let limit = Int(floor(w / Float(Self.tabWidth)))
@@ -173,6 +191,7 @@ struct PageKidsMultiBlock: PageView {
                 guard let obj = self.pageObject  else { return }
                 self.openId = obj.getParamValue(key: .subId) as? String
                 self.title = obj.getParamValue(key: .title) as? String
+                
                 self.tabDatas = obj.getParamValue(key: .datas) as? [BlockItem] ?? []
                 
                 self.tabs = self.tabDatas.map{$0.menu_nm ?? ""}
@@ -184,6 +203,21 @@ struct PageKidsMultiBlock: PageView {
                 }
                 self.themaType = obj.getParamValue(key: .type) as? BlockData.ThemaType ?? .category
                 
+                if let monthly =  obj.getParamValue(key: .data) as? MonthlyData {
+                    self.monthlyData = monthly
+                    if let period = self.pairing.authority.periodMonthlyPurchaseInfo {
+                        self.updatedPeriodMonthlyPurchaseInfo(period)
+                    }else {
+                        self.pairing.authority.requestAuth(.updateMonthlyPurchase(isPeriod: false))
+                    }
+                    if let monthly = self.pairing.authority.monthlyPurchaseInfo {
+                        self.updatedMonthlyPurchaseInfo(monthly)
+                    } else {
+                        self.pairing.authority.requestAuth(.updateMonthlyPurchase(isPeriod: true))
+                    }
+                }
+                
+                
             }
             
         }//geo
@@ -193,6 +227,10 @@ struct PageKidsMultiBlock: PageView {
     @State var marginTop:CGFloat = 0
     @State var isTop:Bool = true
    
+    @State var monthlyData:MonthlyData? = nil
+    @State var monthlyGuide:MonthlyGuide? = nil
+    @State var monthlyHeaderSize:CGFloat = 0
+    
     @State var tabs:[String] = []
     @State var tabDatas:[BlockItem] = []
     @State var selectedTabIdx:Int = -1
@@ -240,6 +278,26 @@ struct PageKidsMultiBlock: PageView {
                 self.multiBlockViewModel.updateKids(
                     datas: self.originDatas, openId: self.openId)
             }
+        }
+    }
+    
+    private func updatedMonthlyPurchaseInfo( _ info:MonthlyPurchaseInfo){
+        guard let monthlyData = self.monthlyData   else { return }
+        if let item = info.purchaseList?.first(where: {$0.prod_id == monthlyData.prdPrcId}){
+            self.monthlyGuide = MonthlyGuide(data: PurchaseTicketData().setData(data: item))
+            self.monthlyHeaderSize = DimenKids.tab.medium
+        } else {
+            
+        }
+    }
+    
+    private func updatedPeriodMonthlyPurchaseInfo( _ info:PeriodMonthlyPurchaseInfo){
+        guard let monthlyData = self.monthlyData else { return }
+        if let item = info.purchaseList?.first(where: {$0.prod_id == monthlyData.prdPrcId}){
+            self.monthlyGuide = MonthlyGuide(data: PurchaseTicketData().setData(data: item))
+            self.monthlyHeaderSize = DimenKids.tab.medium
+        } else {
+            
         }
     }
 }

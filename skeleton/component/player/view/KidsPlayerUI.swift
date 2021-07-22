@@ -88,7 +88,7 @@ struct KidsPlayerUI: PageComponent {
                     .buttonStyle(BorderlessButtonStyle())
                     VStack(spacing:DimenKids.margin.micro){
                         ProgressSlider(
-                            progress: min(self.progress, 1.0),
+                            progress: self.progress,
                             progressHeight: self.isFullScreen ? DimenKids.stroke.heavy: DimenKids.stroke.medium,
                             thumbSize: self.isFullScreen ? DimenKids.icon.tinyExtra : DimenKids.icon.microExtra,
                             color:Color.kids.primary,
@@ -176,9 +176,9 @@ struct KidsPlayerUI: PageComponent {
         .toast(isShowing: self.$isError, text: self.errorMessage)
         .onReceive(self.viewModel.$time) { tm in
             self.time = tm.secToHourString()
-            if self.viewModel.duration <= 0.0 {return}
+        
             if !self.isSeeking {
-                self.progress = Float(self.viewModel.time / self.viewModel.duration)
+                self.progress = Float(self.viewModel.time / max(self.viewModel.duration,1))
             }
         }
         .onReceive(self.viewModel.$duration) { tm in
@@ -205,7 +205,7 @@ struct KidsPlayerUI: PageComponent {
             guard let evt = evt else { return }
             switch evt {
             case .seeking(let willTime):
-                self.progress = Float(willTime / self.viewModel.duration)
+                self.progress = Float(willTime / max(self.viewModel.duration,1))
                 if !self.isSeeking {
                     withAnimation{ self.isSeeking = true }
                 }
@@ -237,6 +237,7 @@ struct KidsPlayerUI: PageComponent {
             case .connect(_) : self.errorMessage = "connect error"
             case .illegalState(_) : self.errorMessage = "illegalState"
             case .drm(let e): self.errorMessage = "drm " + e.getDescription()
+            case .asset(let e): self.errorMessage = "asset " + e.getDescription()
             case .stream(let e) :
                 switch e {
                 case .pip(let msg): self.errorMessage = msg

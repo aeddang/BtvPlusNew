@@ -31,7 +31,7 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
                 marginHorizontal: max(self.sceneObserver.safeAreaStart,self.sceneObserver.safeAreaEnd) + DimenKids.margin.regular ,
                 spacing: 0,
                 isRecycle: true,
-                useTracking: self.useTracking
+                useTracking: true
                 ){
                     HStack(alignment: .bottom, spacing:Dimen.margin.regular){
                         if self.isUiView, let homeBlockData = self.homeBlockData {
@@ -73,6 +73,37 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
                 infinityScrollModel: self.viewModel,
                 pageDragingModel: self.pageDragingModel)
         )
+        /*
+        .onReceive(self.pairing.authority.$monthlyPurchaseInfo){ info in
+            if self.data.uiType != .kidsTicket {return}
+            if let info = info {
+                self.updatedMonthlyPurchaseInfo(info)
+            } else {
+                self.pairing.authority.requestAuth(.updateMonthlyPurchase(isPeriod: false))
+            }
+        }
+        .onReceive(self.pairing.authority.$periodMonthlyPurchaseInfo){ info in
+            if self.data.uiType != .kidsTicket {return}
+            if let info = info {
+                self.updatedPeriodMonthlyPurchaseInfo(info)
+            } else {
+                self.pairing.authority.requestAuth(.updateMonthlyPurchase(isPeriod: true))
+            }
+        }
+        */
+        .onReceive(self.pairing.authority.$purchaseLowLevelTicketList){ list in
+            if let list = list {
+                self.updatedMonthly(purchases: list, lowLevelPpm: true)
+            }
+            
+        }
+        .onReceive(self.pairing.authority.$purchaseTicketList){ list in
+            if let list = list {
+                self.updatedMonthly(purchases: list, lowLevelPpm: false)
+            } else if self.pairing.status == .pairing {
+                self.pairing.authority.requestAuth(.updateTicket)
+            }
+        }
         .onAppear{
             if let prevData =  self.data.kidsHomeBlockData {
                 self.homeBlockData = prevData
@@ -85,12 +116,61 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
                     self.isUiView = true
                 }
             }
+            if self.data.uiType == .kidsTicket && self.pairing.status == .pairing {
+                /*
+                if let period = self.pairing.authority.periodMonthlyPurchaseInfo {
+                    self.updatedPeriodMonthlyPurchaseInfo(period)
+                }
+                if let monthly = self.pairing.authority.monthlyPurchaseInfo {
+                    self.updatedMonthlyPurchaseInfo(monthly)
+                }
+                */
+                if let list = self.pairing.authority.purchaseTicketList {
+                    self.updatedMonthly(purchases: list, lowLevelPpm: false)
+                }
+                if let list = self.pairing.authority.purchaseLowLevelTicketList {
+                    self.updatedMonthly(purchases: list, lowLevelPpm: true)
+                }
+            }
         }
         .onDisappear{
             //self.datas.removeAll()
-          
         }
-       
     }
+    
+    private func updatedMonthly( purchases:[MonthlyInfoItem], lowLevelPpm:Bool){
+        guard let homeBlockData = self.homeBlockData   else { return }
+        let finds = homeBlockData.datas.filter{$0.type == .cateList}
+        purchases.forEach{ purchase in
+            finds.forEach{ find in
+                if let find = find as? KidsCategoryListData {
+                    if let item = find.datas.first(where: {$0.prdPrcId == purchase.prod_id}){
+                        item.setData(data: purchase, lowLevelPpm: lowLevelPpm)
+                    }
+                }
+            }
+        }
+    }
+    /*
+    private func updatedMonthlyPurchaseInfo( _ info:MonthlyPurchaseInfo){
+        guard let homeBlockData = self.homeBlockData   else { return }
+        guard let find = homeBlockData.datas.first(where: {$0.type == .cateList}) as? KidsCategoryListData else {return}
+        info.purchaseList?.forEach{ purchase in
+            if let item = find.datas.first(where: {$0.prdPrcId == purchase.prod_id}){
+                item.setData(data: purchase)
+            }
+        }
+    }
+    
+    private func updatedPeriodMonthlyPurchaseInfo( _ info:PeriodMonthlyPurchaseInfo){
+        guard let homeBlockData = self.homeBlockData else { return }
+        guard let find = homeBlockData.datas.first(where: {$0.type == .cateList}) as? KidsCategoryListData else {return}
+        info.purchaseList?.forEach{ purchase in
+            if let item = find.datas.first(where: {$0.prdPrcId == purchase.prod_id}){
+                item.setData(data: purchase)
+            }
+        }
+    }
+    */
     
 }

@@ -55,6 +55,7 @@ extension String {
         public static let award = "award".loaalized()
         
         public static let ppmUpdate = "ppmUpdate".loaalized()
+        public static let ppmSubscribe = "ppmSubscribe".loaalized()
         public static let open = "open".loaalized()
         
         public static let mic = "mic".loaalized()

@@ -35,6 +35,7 @@ class TipBlockData {
         
         return self
     }
+    
 }
 
 struct TipBlock:PageComponent {

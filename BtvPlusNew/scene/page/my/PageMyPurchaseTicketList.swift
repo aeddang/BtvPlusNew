@@ -117,6 +117,7 @@ struct PageMyPurchaseTicketList: PageView {
                     self.pairing.authority.requestAuth(.updateMonthlyPurchase(isPeriod: true))
                 }
             }
+            
             .onDisappear{
                
             }

@@ -96,9 +96,9 @@ struct PageSetup: PageView {
                                     isInitate:self.isInitate)
                                 SetupHappySenior()
                                 SetupGuideNVersion()
-                                #if DEBUG
+                                //#if DEBUG
                                     SetupTest()
-                                #endif
+                                //#endif
                                 
                             }
                             .padding(.vertical, Dimen.margin.medium)

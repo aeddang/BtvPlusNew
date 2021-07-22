@@ -33,10 +33,11 @@ struct ProgressSlider: PageView {
                             height: progressHeight
                         )
                         .opacity(0.15)
+                    
                     Rectangle()
                         .foregroundColor(self.color)
                         .frame(
-                            width: geometry.size.width * CGFloat(max(self.progress,0)),
+                            width: geometry.size.width * CGFloat(min(1,max(self.progress,0))),
                             height: progressHeight
                         )
                     Rectangle()

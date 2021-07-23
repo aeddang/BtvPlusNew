@@ -13,6 +13,7 @@ struct KidsTopTab: PageComponent{
    
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var setup:Setup
     
     var body: some View {
         HStack(alignment: .center ,spacing:DimenKids.margin.light){
@@ -47,15 +48,16 @@ struct KidsTopTab: PageComponent{
             Button(action: {
                 if let home  = self.dataProvider.bands.getHome() {
                     let move = PageProvider.getPageObject(.home).addParam(key: .id, value: home.menuId)
+                    if self.setup.isKidsExitAuth {
+                        self.pagePresenter.openPopup(
+                            PageKidsProvider.getPageObject(.kidsConfirmNumber)
+                                .addParam(key: .type, value: PageKidsConfirmType.exit)
+                                .addParam(key: .data, value: move)
+                        )
+                    } else {
+                        self.pagePresenter.changePage(move)
+                    }
                     
-                    /*
-                    self.pagePresenter.openPopup(
-                        PageKidsProvider.getPageObject(.kidsConfirmNumber)
-                            .addParam(key: .type, value: PageKidsConfirmType.exit)
-                            .addParam(key: .data, value: move)
-                    )
-                    */
-                    self.pagePresenter.changePage(move)
                 }
             }) {
                 Image(AssetKids.gnbTop.exit)

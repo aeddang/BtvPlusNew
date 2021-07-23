@@ -140,6 +140,11 @@ struct PageConfirmNumber: PageView {
                 self.safeAreaBottom = max(pos, Dimen.app.keyboard)
             }
         }
+        .onReceive(self.keyboardObserver.$isOn){ on in
+            if on {return}
+            if !self.isReady {return}
+            self.pagePresenter.closePopup(self.pageObject?.id)
+        }
         .onAppear{
             guard let obj = self.pageObject  else { return }
             if let data = obj.getParamValue(key: .data) as? PageObject {
@@ -216,11 +221,7 @@ struct PageConfirmNumber: PageView {
             }
             
         }
-        .onReceive(self.keyboardObserver.$isOn){ on in
-            if on {return}
-            if !self.isReady {return}
-            self.pagePresenter.closePopup(self.pageObject?.id)
-        }
+        
         .onDisappear{
             
         }

@@ -35,6 +35,7 @@ struct PageKidsConfirmNumber: PageView {
     var body: some View {
         ZStack{
             InputNumberBox(
+            
                 isInit:self.isFocus,
                 title: self.title,
                 text: self.text,
@@ -111,7 +112,7 @@ struct PageKidsConfirmNumber: PageView {
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
             if ani { self.isFocus = true }
         }
-        
+       
         .onAppear{
             guard let obj = self.pageObject  else { return }
             if let data = obj.getParamValue(key: .data) as? PageObject {

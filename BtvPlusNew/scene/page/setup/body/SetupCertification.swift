@@ -18,12 +18,13 @@ struct SetupCertification: PageView {
     
     @Binding var isPurchaseAuth:Bool
     @Binding var isSetWatchLv:Bool
-    
+    @Binding var isKidsExitAuth:Bool
     @Binding var watchLvs:[String]?
     @Binding var selectedWatchLv:String?
     
     @State var willPurchaseAuth:Bool? = nil
     @State var willSelectedWatchLv:String? = nil
+    @State var willKidsExitAuth:Bool? = nil
     var body: some View {
         VStack(alignment:.leading , spacing:Dimen.margin.thinExtra) {
             Text(String.pageText.setupCertification).modifier(ContentTitle())
@@ -43,6 +44,12 @@ struct SetupCertification: PageView {
                     selected: { select in
                         self.setupWatchLv(select: select)
                     }
+                )
+                Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
+                SetupItem (
+                    isOn: self.$isKidsExitAuth,
+                    title: String.pageText.setupCertificationKidsExit,
+                    subTitle: String.pageText.setupCertificationKidsExitText
                 )
             }
             .background(Color.app.blueLight)
@@ -82,6 +89,22 @@ struct SetupCertification: PageView {
             self.isPurchaseAuth = !value
             
         }
+        .onReceive( [self.isKidsExitAuth].publisher ) { value in
+            if !self.isInitate { return }
+            if self.willPurchaseAuth != nil { return }
+            if self.isPairing && self.setup.isKidsExitAuth == self.isKidsExitAuth{ return }
+            if !self.isPairing && !self.isKidsExitAuth { return }
+            
+            if self.isPairing == false && value == true {
+                self.appSceneObserver.alert = .needPairing()
+                self.isKidsExitAuth = false
+                return
+            }
+            
+            self.setupKidsExitAuth(value)
+            self.isKidsExitAuth = !value
+            
+        }
         .onReceive(self.pagePresenter.$event){ evt in
             guard let evt = evt else {return}
             
@@ -90,8 +113,12 @@ struct SetupCertification: PageView {
                 guard let type = evt.data as? ScsNetwork.ConfirmType  else { return }
                 switch type {
                 case .adult:
-                    guard let willSelectedWatchLv = self.willSelectedWatchLv  else { return }
-                    self.onSetupWatchLv(select: willSelectedWatchLv)
+                    if let willSelectedWatchLv = self.willSelectedWatchLv {
+                        self.onSetupWatchLv(select: willSelectedWatchLv)
+                    }
+                    if let willKidsExitAuth = self.willKidsExitAuth {
+                        self.onKidsExitAuth(willKidsExitAuth)
+                    }
                 case .purchase:
                     guard let willPurchaseAuth = self.willPurchaseAuth  else { return }
                     self.onPurchaseAuth(willPurchaseAuth)
@@ -136,6 +163,15 @@ struct SetupCertification: PageView {
         self.willSelectedWatchLv = nil
     }
     
+    private func setupKidsExitAuth(_ select:Bool){
+        if self.isPairing == false { return }
+        self.willKidsExitAuth = select
+        self.pagePresenter.openPopup(
+            PageProvider.getPageObject(.confirmNumber)
+                .addParam(key: .type, value: ScsNetwork.ConfirmType.adult)
+                .addParam(key: .title, value: String.pageText.setupCertificationKidsExit)
+        )
+    }
     private func setupPurchaseAuth(_ select:Bool){
         if self.isPairing == false { return }
         self.willPurchaseAuth = select
@@ -144,12 +180,23 @@ struct SetupCertification: PageView {
                 .addParam(key: .type, value: ScsNetwork.ConfirmType.purchase)
         )
     }
-   
+    
+    
+    private func onKidsExitAuth(_ select:Bool){
+        self.setup.isKidsExitAuth = select
+        self.isKidsExitAuth = select
+        self.willKidsExitAuth = nil
+        self.appSceneObserver.alert = .alert(
+            select ? String.alert.kidsExitCompleted : String.alert.kidsExitCanceled,
+            select ? String.alert.kidsExitCompletedInfo : String.alert.kidsExitCanceledInfo)
+    }
     private func onPurchaseAuth(_ select:Bool){
         self.setup.isPurchaseAuth = select
         self.isPurchaseAuth = select
         self.willPurchaseAuth = nil
-        self.appSceneObserver.alert = .alert(String.alert.purchaseAuthCompleted, String.alert.purchaseAuthCompleteInfo)
+        self.appSceneObserver.alert = .alert(
+            select ? String.alert.purchaseAuthCompleted : String.alert.purchaseAuthCanceled,
+            select ? String.alert.purchaseAuthCompletedInfo : String.alert.purchaseAuthCanceledInfo)
     }
 }
 
@@ -159,6 +206,7 @@ struct SetupCertification_Previews: PreviewProvider {
         Form{
             SetupCertification(isPurchaseAuth: .constant(false),
                                isSetWatchLv: .constant(false),
+                               isKidsExitAuth: .constant(false),
                                watchLvs:.constant(Setup.WatchLv.allCases.map{$0.getName()}),
                                selectedWatchLv: .constant(nil))
                 .frame(width: 375, height: 640, alignment: .center)

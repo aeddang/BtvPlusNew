@@ -13,17 +13,30 @@ class SerisData:InfinityData{
     private(set) var title: String? = nil
     private(set) var subTitle: String? = nil
     private(set) var isAdult:Bool = false
+    private(set) var srisId:String? = nil
     private(set) var epsdId:String? = nil
     private(set) var brcastTseqNm:Int = -1
     private(set) var price: String? = nil
     private(set) var duration: String? = nil
     private(set) var isFree: Bool? = nil
+    private(set) var isQuiz: Bool = false
+    private(set) var quizTitle: String? = nil
     private(set) var type: SerisType = .big
     private(set) var pageType:PageType = .btv
  
     init(pageType:PageType = .btv) {
         self.pageType = pageType
         super.init()
+    }
+    func setQuiz(synopsis:SynopsisModel, idx:Int = -1) -> SerisData {
+        self.title = String.kidsText.kidsExamQuiz
+        self.quizTitle = synopsis.seasonTitle
+        self.image = AssetKids.exam.thumb
+        self.srisId = synopsis.srisId
+        self.isQuiz = true
+        self.index = idx
+        self.brcastTseqNm = 9999
+        return self
     }
     
     func setData(data:SeriesInfoItem, title:String? = nil, idx:Int = -1) -> SerisData {
@@ -118,6 +131,7 @@ struct SerisItem: PageView {
             ZStack(alignment:.bottomTrailing){
                 ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg16_9)
                     .modifier(MatchParent())
+                
                 if self.isOn  {
                     Image(Asset.icon.thumbPlay)
                         .renderingMode(.original).resizable()
@@ -178,10 +192,15 @@ struct SerisItemKids: PageView {
     var body: some View {
         VStack(alignment: .center, spacing:DimenKids.margin.tiny){
             ZStack(alignment:.bottomTrailing){
-                
-                ImageView(url: self.data.image, contentMode: .fill, noImg: AssetKids.noImg16_9)
-                    .modifier(MatchParent())
-                
+                if self.data.isQuiz {
+                    Image(AssetKids.exam.thumb)
+                        .renderingMode(.original).resizable()
+                        .scaledToFit()
+                        .modifier(MatchParent())
+                } else {
+                    ImageView(url: self.data.image, contentMode: .fill, noImg: AssetKids.noImg16_9)
+                        .modifier(MatchParent())
+                }
                 if self.isOn  {
                     ZStack(){
                         Image(AssetKids.icon.thumbPlay)

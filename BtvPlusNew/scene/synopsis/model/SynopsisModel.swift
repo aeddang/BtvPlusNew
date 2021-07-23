@@ -46,7 +46,8 @@ class SynopsisModel : PageProtocol {
     private(set) var imgContentMode:ContentMode = .fit
     private(set) var cwCallId:String? = nil
     private(set) var playGradeData:PlayGradeData? = nil
-    
+    private(set) var isQuiz:Bool = false
+    private(set) var seasonTitle:String? = nil
     init(type:MetvNetwork.SynopsisType = .none ) {
         self.synopsisType = type
     }
@@ -66,6 +67,8 @@ class SynopsisModel : PageProtocol {
         self.siries = data.series
         
         if let contents = data.contents{
+            self.seasonTitle = contents.sson_choic_nm
+            self.isQuiz = contents.quiz_yn?.toBool() ?? false
             self.playGradeData = PlayGradeData().setData(data: contents)
             self.srisTitle = contents.title
             self.kidsYn = contents.kids_yn

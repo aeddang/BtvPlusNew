@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ReportPage: PageComponent{
    
-    var name:String = DiagnosticReportType.creativeObservation.name
+    var name:String = ""
     var body: some View {
         VStack(alignment: .trailing){
             HStack( spacing: 0 ){

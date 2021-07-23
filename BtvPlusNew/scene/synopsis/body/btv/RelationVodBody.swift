@@ -168,34 +168,17 @@ struct RelationVodListBody: PageComponent{
     
     var body: some View {
         if !self.seris.isEmpty {
-            if self.useIndex {
-                ForEach(self.seris) { data in
-                    SerisItem(
-                        relationContentsModel: self.relationContentsModel,
-                        data:data.setListType(self.serisType) )
-                        //.id(data.index)
-                        .onTapGesture {
-                            self.componentViewModel.uiEvent = .changeVod(data.epsdId)
-                        }
-                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))
-                }
-                .onAppear(){
-                    /*
-                    guard let infinityScrollModel = self.infinityScrollModel  else {return}
-                    guard let find = self.seris.first(where: {self.epsdId == $0.contentID}) else {return}
-                    infinityScrollModel.uiEvent = .scrollTo(find.index)
-                    */
-                }
-            } else {
-                ForEach(self.seris) { data in
-                    SerisItem(
-                        relationContentsModel: self.relationContentsModel,
-                        data:data.setListType(self.serisType) )
-                        .onTapGesture {
-                            self.componentViewModel.uiEvent = .changeVod(data.epsdId)
-                        }
-                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))
-                }
+            ForEach(self.seris) { data in
+                SerisItem(
+                    relationContentsModel: self.relationContentsModel,
+                    data:data.setListType(self.serisType) )
+                    .onTapGesture {
+                        self.componentViewModel.uiEvent = .changeVod(data.epsdId)
+                    }
+                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))
+            }
+            .onAppear(){
+               
             }
         
         } else if !self.relationDatas.isEmpty {

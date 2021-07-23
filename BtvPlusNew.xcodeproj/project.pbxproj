@@ -320,7 +320,6 @@
 		3193414F25DDD847002F2000 /* SynopsisTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3193414E25DDD847002F2000 /* SynopsisTop.swift */; };
 		3193415425DDDAE8002F2000 /* SynopsisBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3193415325DDDAE8002F2000 /* SynopsisBody.swift */; };
 		319462A6269F00910074FE79 /* KidsBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319462A5269F00910074FE79 /* KidsBanner.swift */; };
-		3194718B26A2A1B5006718A6 /* KidsPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194718A26A2A1B5006718A6 /* KidsPlay.swift */; };
 		3194D80026A92D0400BB765E /* TicketPurchase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194D7FF26A92D0400BB765E /* TicketPurchase.swift */; };
 		3194D80226A92D1B00BB765E /* MonthlyGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194D80126A92D1B00BB765E /* MonthlyGuide.swift */; };
 		3194D80426A99B0500BB765E /* MonthlyPurchaseTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194D80326A99B0500BB765E /* MonthlyPurchaseTicket.swift */; };
@@ -350,6 +349,7 @@
 		319745C7262010F30072945D /* PageMyPurchaseTicketList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319745C6262010F30072945D /* PageMyPurchaseTicketList.swift */; };
 		3197FC80267AE511006918BA /* CustomAssetPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3197FC7F267AE511006918BA /* CustomAssetPlayer.swift */; };
 		3197FC82267AE53E006918BA /* CustomAssetResourceLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3197FC81267AE53E006918BA /* CustomAssetResourceLoader.swift */; };
+		3198722926AA593C005E63B6 /* FloatRecommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3198722826AA593C005E63B6 /* FloatRecommand.swift */; };
 		3198FED9262FAF77008DCB2C /* PageMyAlram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3198FED8262FAF77008DCB2C /* PageMyAlram.swift */; };
 		319B07A4263A398C008C11A8 /* ConnectTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B07A3263A398C008C11A8 /* ConnectTitle.swift */; };
 		319B07A6263A8807008C11A8 /* VideoSetBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B07A5263A8807008C11A8 /* VideoSetBlock.swift */; };
@@ -937,7 +937,6 @@
 		3193414E25DDD847002F2000 /* SynopsisTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisTop.swift; sourceTree = "<group>"; };
 		3193415325DDDAE8002F2000 /* SynopsisBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisBody.swift; sourceTree = "<group>"; };
 		319462A5269F00910074FE79 /* KidsBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsBanner.swift; sourceTree = "<group>"; };
-		3194718A26A2A1B5006718A6 /* KidsPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsPlay.swift; sourceTree = "<group>"; };
 		3194D7FF26A92D0400BB765E /* TicketPurchase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketPurchase.swift; sourceTree = "<group>"; };
 		3194D80126A92D1B00BB765E /* MonthlyGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyGuide.swift; sourceTree = "<group>"; };
 		3194D80326A99B0500BB765E /* MonthlyPurchaseTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyPurchaseTicket.swift; sourceTree = "<group>"; };
@@ -967,6 +966,7 @@
 		319745C6262010F30072945D /* PageMyPurchaseTicketList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyPurchaseTicketList.swift; sourceTree = "<group>"; };
 		3197FC7F267AE511006918BA /* CustomAssetPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAssetPlayer.swift; sourceTree = "<group>"; };
 		3197FC81267AE53E006918BA /* CustomAssetResourceLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAssetResourceLoader.swift; sourceTree = "<group>"; };
+		3198722826AA593C005E63B6 /* FloatRecommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatRecommand.swift; sourceTree = "<group>"; };
 		3198FED8262FAF77008DCB2C /* PageMyAlram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyAlram.swift; sourceTree = "<group>"; };
 		319B07A3263A398C008C11A8 /* ConnectTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectTitle.swift; sourceTree = "<group>"; };
 		319B07A5263A8807008C11A8 /* VideoSetBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSetBlock.swift; sourceTree = "<group>"; };
@@ -2281,7 +2281,6 @@
 			isa = PBXGroup;
 			children = (
 				31956F52269D11F20044CF1D /* KidsHomeBlockData.swift */,
-				3194718A26A2A1B5006718A6 /* KidsPlay.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -2401,6 +2400,14 @@
 			path = view;
 			sourceTree = "<group>";
 		};
+		3198722726AA591E005E63B6 /* component */ = {
+			isa = PBXGroup;
+			children = (
+				3198722826AA593C005E63B6 /* FloatRecommand.swift */,
+			);
+			path = component;
+			sourceTree = "<group>";
+		};
 		319B07A2263A394E008C11A8 /* body */ = {
 			isa = PBXGroup;
 			children = (
@@ -2449,6 +2456,7 @@
 		319C47E526A1741A00C61EF8 /* sub */ = {
 			isa = PBXGroup;
 			children = (
+				3198722726AA591E005E63B6 /* component */,
 				319C47E626A1743400C61EF8 /* PageKidsMultiBlock.swift */,
 				31962B1826A32C4A00CA3BC4 /* PageKidsCategortList.swift */,
 				317F990826A6BD9C00016C09 /* PageKidsMonthly.swift */,
@@ -3779,6 +3787,7 @@
 				D56C6A5B257DA0C700CF9AB8 /* CheckBox.swift in Sources */,
 				3195C1BE26660B06001F513E /* PageKidsIntro.swift in Sources */,
 				D56C6A55257DA0C700CF9AB8 /* ImageButton.swift in Sources */,
+				3198722926AA593C005E63B6 /* FloatRecommand.swift in Sources */,
 				317F990726A6730800016C09 /* SearchResultKids.swift in Sources */,
 				316A70A926708BE600A93B83 /* PlayerBottomBodyKids.swift in Sources */,
 				D50AB90C2580779500649C4A /* Synopsis.swift in Sources */,
@@ -3810,7 +3819,6 @@
 				319C47E726A1743400C61EF8 /* PageKidsMultiBlock.swift in Sources */,
 				31895AFF2601CDDE002DE02E /* DirectPackageView.swift in Sources */,
 				31D3F4DE25E36625008FDFEC /* PageMultiBlock.swift in Sources */,
-				3194718B26A2A1B5006718A6 /* KidsPlay.swift in Sources */,
 				3190CB0E268ABD8400ACB465 /* PageKidsTab.swift in Sources */,
 				3190CB0A268987C400ACB465 /* KidsProfiles.swift in Sources */,
 				D50AB9042580772A00649C4A /* EventBanner.swift in Sources */,
@@ -4425,7 +4433,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 45;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -4449,7 +4457,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.041;
+				MARKETING_VERSION = 1.042;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = ".BtvPlusNew_ dev";
@@ -4502,7 +4510,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 45;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -4521,7 +4529,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.041;
+				MARKETING_VERSION = 1.042;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvPlusNew_des;

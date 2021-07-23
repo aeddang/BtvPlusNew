@@ -55,6 +55,7 @@ class KidsExamModel:ObservableObject, PageProtocol{
         case .english : self.type = .solve
         case .infantDevelopment : self.type = .evaluation
         case .creativeObservation : self.type = .evaluation
+        case .finalQuiz : self.type = .solve
         }
         self.title = data.ep_tit_nm
         self.epNo = data.ep_no?.string

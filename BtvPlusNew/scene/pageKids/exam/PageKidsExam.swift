@@ -127,7 +127,7 @@ struct PageKidsExam: PageView {
             .onReceive(dataProvider.$result) { res in
                 guard let res = res else { return }
                 switch res.type {
-                case .getEnglishLvReportExam, .getReadingReportExam,  .getCreativeReportExam :
+                case .getEnglishLvReportExam, .getReadingReportExam,  .getCreativeReportExam, .getEvaluationReportExam :
                     guard let exams  = res.data as? KidsExams else { return }
                     if exams.result == ApiCode.success {
                         self.setupExam(exams)
@@ -140,7 +140,7 @@ struct PageKidsExam: PageView {
                     }
                    
                 
-                case .getEnglishLvReportQuestion, .getReadingReportQuestion,  .getCreativeReportQuestion :
+                case .getEnglishLvReportQuestion, .getReadingReportQuestion,  .getCreativeReportQuestion, .getEvaluationReportQuestion :
                     guard let result = res.data as? KidsExamQuestionResult else {
                         self.saveError()
                         return
@@ -157,9 +157,9 @@ struct PageKidsExam: PageView {
             .onReceive(dataProvider.$error) { err in
                 guard let err = err else { return }
                 switch err.type {
-                case .getEnglishLvReportExam, .getReadingReportExam,  .getCreativeReportExam :
+                case .getEnglishLvReportExam, .getReadingReportExam, .getCreativeReportExam, .getEvaluationReportExam :
                     self.isError = true
-                case .getEnglishLvReportQuestion, .getReadingReportQuestion,  .getCreativeReportQuestion :
+                case .getEnglishLvReportQuestion, .getReadingReportQuestion, .getCreativeReportQuestion, .getEvaluationReportQuestion :
                     self.saveError()
                 default: break
                 }
@@ -221,6 +221,8 @@ struct PageKidsExam: PageView {
             self.dataProvider.requestData(q: .init(type: .getReadingReportExam(kid, area: value)))
         case .creativeObservation:
             self.dataProvider.requestData(q: .init(type: .getCreativeReportExam(kid)))
+        case .finalQuiz:
+            self.dataProvider.requestData(q: .init(type: .getEvaluationReportExam(kid, srisId: value)))
         }
     }
     
@@ -252,6 +254,13 @@ struct PageKidsExam: PageView {
         case .creativeObservation:
             self.dataProvider.requestData(
                 q: .init(type: .getCreativeReportQuestion(
+                            self.kid,
+                            self.viewModel.epNo,
+                            self.viewModel.epTpNo,
+                            self.viewModel.questions)))
+        case .finalQuiz:
+            self.dataProvider.requestData(
+                q: .init(type: .getEvaluationReportQuestion(
                             self.kid,
                             self.viewModel.epNo,
                             self.viewModel.epTpNo,

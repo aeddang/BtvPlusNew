@@ -142,6 +142,14 @@ extension String {
        
         public static var watchLvCompleted = "alertWatchLvCompleted".loaalized()
         public static var watchLvCompletedInfo = "alertWatchLvCompletedInfo".loaalized()
+        public static var watchLvCanceled = "alertWatchLvCanceled".loaalized()
+        public static var watchLvCanceledInfo = "alertWatchLvCanceledInfo".loaalized()
+        
+        
+        public static var kidsExitCompleted = "alertKidsExitCompleted".loaalized()
+        public static var kidsExitCompletedInfo = "alertKidsExitCompletedInfo".loaalized()
+        public static var kidsExitCanceled = "alertKidsExitCanceled".loaalized()
+        public static var kidsExitCanceledInfo = "alertKidsExitCanceledInfo".loaalized()
         
         public static var purchaseAuth = "alertPurchaseAuth".loaalized()
         public static var purchaseAuthInput = "alertPurchaseAuthInput".loaalized()
@@ -151,7 +159,9 @@ extension String {
         public static var okCashDiscountInput =  "alertOkCashDiscountInput".loaalized()
 
         public static var purchaseAuthCompleted = "alertPurchaseAuthCompleted".loaalized()
-        public static var purchaseAuthCompleteInfo = "alertPurchaseAuthCompleteInfo".loaalized()
+        public static var purchaseAuthCompletedInfo = "alertPurchaseAuthCompletedInfo".loaalized()
+        public static var purchaseAuthCanceled = "alertPurchaseAuthCanceled".loaalized()
+        public static var purchaseAuthCanceledInfo = "alertPurchaseAuthCanceledInfo".loaalized()
         public static var purchaseHidden = "alertPurchaseHidden".loaalized()
         public static var purchaseHiddenText = "alertPurchaseHiddenText".loaalized()
         public static var purchaseHiddenInfo = "alertPurchaseHiddenInfo".loaalized()

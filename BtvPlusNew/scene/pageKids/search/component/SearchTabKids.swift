@@ -120,7 +120,7 @@ struct SearchTabKids: PageView {
                 .clipShape(
                     RoundedRectangle(cornerRadius: DimenKids.radius.medium)
                 )
-                .modifier(Grow(color: Color.app.black, opacity: 0.15))
+                .modifier(Grow())
                
                 .padding(.leading, DimenKids.margin.mediumExtra)
                 

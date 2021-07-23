@@ -145,6 +145,7 @@ struct MonthlyReportCard: PageComponent{
     @State var profile:String = AssetKids.image.noProfile
     @State var reports:[MonthlyReportData] = []
     @State var currentReport:MonthlyReportData? = nil
+    @State var reportType:KidsPlayType? = nil
    
     @State var watchTimePct:Float = 0
     @State var watchCountPct:Float = 0
@@ -197,7 +198,7 @@ struct MonthlyReportCard: PageComponent{
         }
     }
     private func selectedData(_ select:MonthlyReportData){
-        
+        reportType = KidsPlayType.getType(select.svcPropCd)
         watchTimeValue = select.learningTime.description + String.app.min
         watchTimeSubTitle = self.dateMonth + String.app.recommend + " " + select.recommendTime.description + String.app.min
             
@@ -236,6 +237,7 @@ struct MonthlyReportCard: PageComponent{
             PageKidsProvider
                 .getPageObject(.kidsMyMonthly)
                 .addParam(key: .data, value: self.viewModel)
+                .addParam(key: .type, value: self.reportType)
         )
     }
     

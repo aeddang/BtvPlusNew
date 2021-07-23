@@ -68,6 +68,7 @@ class RelationContentsModel:ObservableObject {
     }
     
     func setData(synopsis:SynopsisModel) {
+        
         self.isReady = true
         self.serisTitle = synopsis.srisTitle
         if let list = synopsis.seriesInfoList {
@@ -87,7 +88,10 @@ class RelationContentsModel:ObservableObject {
             }
             self.currentSeasonIdx = self.seasons.firstIndex(where:{ $0.srisId == synopsis.srisId }) ?? -1
         }
-        
+        if synopsis.isQuiz {
+            let idx = self.seris.count
+            self.seris.append( SerisData(pageType: self.pageType).setQuiz(synopsis: synopsis, idx: idx))
+        }
         
         
         if let temp = synopsis.cwCallId {

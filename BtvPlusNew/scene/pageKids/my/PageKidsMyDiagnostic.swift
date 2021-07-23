@@ -43,7 +43,7 @@ struct PageKidsMyDiagnostic: PageView {
                             Spacer().modifier(MatchHorizontal(height: 0))
                             MenuTab(
                                 viewModel: self.tabNavigationModel,
-                                buttons: DiagnosticReportType.allCases.map{$0.name},
+                                buttons: DiagnosticReportType.allCases.filter{$0.name != nil}.map{$0.name!},
                                 selectedIdx: DiagnosticReportType.allCases.firstIndex(of: self.type) ?? 0,
                                 isDivision: true)
                                 .frame(width: Self.tabWidth * CGFloat(DiagnosticReportType.allCases.count))
@@ -273,6 +273,7 @@ struct PageKidsMyDiagnostic: PageView {
             }
         case .creativeObservation:
             self.dataProvider.requestData(q: .init(type: .getCreativeReportResult(kid)))
+        default : break
         }
     }
     
@@ -316,6 +317,7 @@ struct PageKidsMyDiagnostic: PageView {
             case .creativeObservation :
                 self.resultCreativeReportViewData = ResultCreativeReportViewData().setData(contents, kid: self.kid)
                 break
+            default : break
             }
         }
         
@@ -397,7 +399,9 @@ struct PageKidsMyDiagnostic: PageView {
                     )
                 }
             }
+        default : break
         }
+        
     }
 }
 

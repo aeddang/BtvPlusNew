@@ -43,7 +43,7 @@ struct PageKidsMultiBlock: PageView {
                         viewModel: self.multiBlockViewModel,
                         infinityScrollModel: self.infinityScrollModel,
                         pageDragingModel: self.pageDragingModel,
-                        useBodyTracking: self.themaType == .ticket ? false : self.useTracking,
+                        useBodyTracking:  self.useTracking,
                         useTracking:self.useTracking,
                         marginTop: DimenKids.app.pageTop + self.marginTop + DimenKids.margin.regular + self.sceneObserver.safeAreaTop,
                         marginBottom: self.sceneObserver.safeAreaIgnoreKeyboardBottom,
@@ -79,6 +79,16 @@ struct PageKidsMultiBlock: PageView {
                         .modifier(MatchParent())
                         .background(Color.kids.bg)
                     }
+                    if let float = self.floatRecommandData {
+                        VStack(){
+                            Spacer()
+                            FloatRecommand(
+                                isClose: self.$isFloatingClose, 
+                                data: float)
+                        }
+                        .modifier(MatchParent())
+                    }
+                    
                     
                     VStack(spacing: 0){
                         PageKidsTab(
@@ -120,6 +130,9 @@ struct PageKidsMultiBlock: PageView {
                     case .down :
                         if self.isTop == false {return}
                         withAnimation{self.isTop = false}
+                        if !self.isFloatingClose {
+                            withAnimation{self.isFloatingClose = true}
+                        }
                     default : do{}
                     }
                     
@@ -143,6 +156,11 @@ struct PageKidsMultiBlock: PageView {
                 default : break
                 }
             }
+            .onReceive(self.pairing.$kidStudyData){ data in
+                if !self.isUiInit {return}
+                guard let _ = data else {return}
+                self.setupRecommandGuide(data: self.tabDatas[self.selectedTabIdx])
+            }
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 if page?.id == self.pageObject?.id {
                     if self.useTracking {return}
@@ -151,21 +169,6 @@ struct PageKidsMultiBlock: PageView {
                 } else {
                     if !self.useTracking {return}
                     self.useTracking = false
-                }
-            }
-            
-            .onReceive(self.appSceneObserver.$event){ evt in
-                guard let evt = evt else { return }
-                switch evt {
-                case .update(let type):
-                    switch type {
-                    case .purchase :
-                        if self.themaType == .ticket {
-                            self.pairing.authority.requestAuth(.updateTicket)
-                        }
-                    default : break
-                    }
-                default : break
                 }
             }
             .onReceive(self.pairing.authority.$monthlyPurchaseInfo){ info in
@@ -201,7 +204,10 @@ struct PageKidsMultiBlock: PageView {
                     }
                     self.marginTop =  MenuTab.height + DimenKids.margin.thin
                 }
-                self.themaType = obj.getParamValue(key: .type) as? BlockData.ThemaType ?? .category
+               
+                if let type =  obj.getParamValue(key: .type) as? KidsPlayType {
+                    self.playType = type
+                }
                 
                 if let monthly =  obj.getParamValue(key: .data) as? MonthlyData {
                     self.monthlyData = monthly
@@ -223,7 +229,6 @@ struct PageKidsMultiBlock: PageView {
         }//geo
     }//body
     @State var isUiInit:Bool = false
-    @State var themaType:BlockData.ThemaType = .category
     @State var marginTop:CGFloat = 0
     @State var isTop:Bool = true
    
@@ -235,6 +240,7 @@ struct PageKidsMultiBlock: PageView {
     @State var tabs:[String] = []
     @State var tabDatas:[BlockItem] = []
     @State var selectedTabIdx:Int = -1
+    @State var playType:KidsPlayType? = nil
     
     @State var originDatas:[BlockItem] = []
     @State var useTracking:Bool = false
@@ -242,6 +248,8 @@ struct PageKidsMultiBlock: PageView {
     @State var finalSelectedIndex:Int? = nil
     @State var openId:String? = nil
     
+    @State var floatRecommandData:FloatRecommandData? = nil
+    @State var isFloatingClose:Bool = false
     private func setupOriginData(idx:Int? = nil){
         var moveIdx:Int = idx ?? 0
         if idx == nil , let findIds = self.openId?.split(separator: "|") {
@@ -263,6 +271,8 @@ struct PageKidsMultiBlock: PageView {
             return
         }
         
+        
+        
         originDatas = cdata.blocks ?? []
         var delay:Double = 0
         if originDatas.isEmpty {
@@ -271,6 +281,41 @@ struct PageKidsMultiBlock: PageView {
         }
         reload(delay: delay)
         self.openId = nil
+        self.setupRecommandGuide(data: cdata)
+    }
+    
+    private func setupRecommandGuide(data:BlockItem){
+        withAnimation{
+            self.floatRecommandData = nil
+        }
+        guard let type = self.playType else { return }
+        guard let cwId = data.cw_call_id_val else { return }
+        guard let studyData = self.pairing.kidStudyData else { return }
+        
+        guard let find = studyData
+                .recomm_menus?.first(where: {KidsPlayType.getType($0.svc_prop_cd)  == type})?
+                .items?.first(where: {$0.cw_id == cwId})
+        else { return }
+        
+        guard let text = find.guidance_sentence else {return}
+        if text.isEmpty {return}
+        let isTextCompleted = find.recent_test_date?.isEmpty == false
+        
+        let recommandData = FloatRecommandData(
+            playType: type,
+            text: text,
+            isMonthlyReport: find.scn_mthd_cd == "514",
+            diagnosticReportType: find.scn_mthd_cd == "518" ? type.diagnosticReportType : nil,
+            isDiagnosticReportCompleted: isTextCompleted)
+        
+        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 1.0) {
+            DispatchQueue.main.async {
+                withAnimation{
+                    self.isFloatingClose = false
+                    self.floatRecommandData = recommandData
+                }
+            }
+        }
     }
     
     private func reload(delay:Double = 0){
@@ -325,19 +370,4 @@ struct PageKidsMultiBlock: PageView {
 }
 
 
-#if DEBUG
-struct PageKidsMultiBlock_Previews: PreviewProvider {
-    static var previews: some View {
-        Form{
-            PageKidsMultiBlock().contentBody
-                .environmentObject(PagePresenter())
-                .environmentObject(PageSceneObserver())
-                .environmentObject(Repository())
-                .environmentObject(DataProvider())
-                .environmentObject(AppSceneObserver())
-                .frame(width: 375, height: 640, alignment: .center)
-        }
-    }
-}
-#endif
 

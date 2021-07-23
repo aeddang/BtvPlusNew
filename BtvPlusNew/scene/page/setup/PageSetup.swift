@@ -56,6 +56,7 @@ struct PageSetup: PageView {
                                         isInitate:self.isInitate, isPairing: self.isPairing,
                                         isPurchaseAuth: self.$isPurchaseAuth,
                                         isSetWatchLv: self.$isSetWatchLv,
+                                        isKidsExitAuth: self.$isKidsExitAuth,
                                         watchLvs: self.$watchLvs,
                                         selectedWatchLv: self.$selectedWatchLv)
                                     
@@ -87,6 +88,7 @@ struct PageSetup: PageView {
                                     isInitate:self.isInitate, isPairing: self.isPairing,
                                     isPurchaseAuth: self.$isPurchaseAuth,
                                     isSetWatchLv: self.$isSetWatchLv,
+                                    isKidsExitAuth: self.$isKidsExitAuth,
                                     watchLvs: self.$watchLvs,
                                     selectedWatchLv: self.$selectedWatchLv)
                                 
@@ -133,7 +135,7 @@ struct PageSetup: PageView {
     @State var isNextPlay:Bool = false
     @State var isSetWatchLv:Bool = false
     @State var isPurchaseAuth:Bool = false
-   
+    @State var isKidsExitAuth:Bool = false
     @State var isInitate:Bool = false
     @State var watchLvs:[String]? = nil
     @State var selectedWatchLv:String? = nil
@@ -148,6 +150,7 @@ struct PageSetup: PageView {
         self.isRemoconVibration = self.isPairing ? self.setup.remoconVibration : false
         self.isAutoPlay = self.setup.autoPlay
         self.isNextPlay = self.setup.nextPlay
+        self.isKidsExitAuth = self.isPairing ? self.setup.isKidsExitAuth : false
         self.isPurchaseAuth = self.isPairing ? self.setup.isPurchaseAuth : false
         self.isSetWatchLv = self.isPairing ? (SystemEnvironment.watchLv > 0) : false
         self.watchLvs = Setup.WatchLv.allCases.map{$0.getName()}

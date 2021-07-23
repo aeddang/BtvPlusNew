@@ -47,7 +47,18 @@ struct RelationVodBodyKids: PageComponent{
                         isSelected: self.epsdId == data.contentID )
                         .id(data.index)
                         .onTapGesture {
-                            self.componentViewModel.uiEvent = .changeVod(data.epsdId)
+                            if data.isQuiz {
+                                self.pagePresenter.openPopup(
+                                    PageKidsProvider.getPageObject(.kidsExam)
+                                        .addParam(key: .type, value: DiagnosticReportType.finalQuiz)
+                                        .addParam(key: .id, value:data.srisId)
+                                        .addParam(key: .text, value:data.quizTitle)
+                                )
+                            } else {
+                                self.componentViewModel.uiEvent = .changeVod(data.epsdId)
+                            }
+                           
+                            
                         }
                         .modifier(ListRowInset(spacing: DimenKids.margin.thinExtra, bgColor: Color.app.white))
                 }

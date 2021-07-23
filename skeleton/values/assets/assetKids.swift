@@ -38,6 +38,7 @@ extension AssetKids{
         public static let delete = "zemkidsMPopupInputDelNor"
         public static let back = "zemkidsMBackBtn"
         public static let close = "zemkidsMQuizBtnClose"
+        public static let closePop =  "zemkidsMBtnNotiPopupClose"
         public static let backTop = "zemkidsMTopBackBtn"
         public static let setting = "zemkidsMTopSetBtn"
         public static let more = "zemkidsMBtnMore"
@@ -77,6 +78,7 @@ extension AssetKids{
         public static let search = "zemkidsMBtnSearchNor"
         public static let searchDelete = "zemkidsMBtnSearchCancleNor"
         public static let price = "zemkidsMIcSynopPrice"
+        
     }
     
     
@@ -147,6 +149,8 @@ extension AssetKids{
         public static let startBg2 = "zemkidsMTestStart2Kidsdev"
         public static let startBg3 = "zemkidsMTestStart3Creative"
         public static let startBg4 = "zemkidsMTestStart4Quiz"
+        
+        public static let thumb = "zemkidsMThumbnailQuiz"
     }
     
     
@@ -175,7 +179,7 @@ extension AssetKids{
         public static let monthlyResultBg = "zemkidsMImgMonthlyResultEng"
         public static let cardFolder = "zemkidsMMyCardFolder1"
         public static let cardFolderWide = "zemkidsMMyCardFolder2"
-        
+        public static let floatingButtonBg = "zemkidsMBtnFloating"
         
     }
     
@@ -224,6 +228,15 @@ extension AssetKids{
         public static let voiceRecord = "zemkidsMVoiceCharacter1"
         public static let voiceError = "zemkidsMVoiceCharacterNetwork"
         
+        public static let goCreativityResult = "zemkidsMBtnCreativity"
+        public static let goCreativityTest = "zemkidsMBtnCreativityStart"
+        public static let goDevelopmentTest = "zemkidsMBtnDevelopmentTest"
+        public static let goDevelopmentResult = "zemkidsMBtnDevelopment"
+        public static let goLevelResult = "zemkidsMBtnLevelTestDetail"
+        public static let goLevelTest = "zemkidsMBtnLevelTestStart"
+        public static let goMonthlyResult = "zemkidsMBtnMonthlyReport"
+   
+        public static let goRegistProfile = "zemkidsMBtnProfile"
     }
     
     struct ani {
@@ -290,7 +303,7 @@ extension AssetKids{
         "zemkidsMImgKidsprofileBoy02Pose",
         "zemkidsMImgKidsprofileBoy03Pose",
         "zemkidsMImgKidsprofileGirl01Pose",
-        "zemkidsMImgKidsprofileGirl02Pose2",
+        "zemkidsMImgKidsprofileGirl02Pose",
         "zemkidsMImgKidsprofileGirl03Pose",
     ]
     

@@ -122,6 +122,7 @@ struct KidsCategoryItem:PageView  {
                 PageKidsProvider.getPageObject(.kidsMultiBlock)
                     .addParam(key: .datas, value: data.blocks)
                     .addParam(key: .title, value: data.title)
+                    .addParam(key: .type, value: data.playType)
             )
         }
         .onReceive(self.pairing.$kid) { kid in

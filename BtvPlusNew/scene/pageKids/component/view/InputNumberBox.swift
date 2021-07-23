@@ -166,7 +166,7 @@ struct InputNumberBox: PageComponent {
             
         }
         .onAppear(){
-           
+            self.focusIdx = 0
         }
     }//body
     

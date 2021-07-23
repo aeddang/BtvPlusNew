@@ -223,6 +223,9 @@ struct PageKidsMyMonthly: PageView {
                     self.viewModel.setData(colon: data)
                     self.setupDate()
                 }
+                if let type = obj.getParamValue(key: .type) as? KidsPlayType {
+                    self.initReportType = type
+                }
             }
         }//geo
     }//body
@@ -237,6 +240,7 @@ struct PageKidsMyMonthly: PageView {
     @State var currentReport:MonthlyReportData? = nil
     @State var tabs:[String] = []
     @State var tabIdx:Int = 0
+    @State var initReportType:KidsPlayType? = nil
     
     @State var isLast:Bool = true
     @State var date:String = ""
@@ -270,6 +274,14 @@ struct PageKidsMyMonthly: PageView {
     private func setupResult(){
         self.isLoading = false
         if self.tabs.isEmpty && !self.viewModel.datas.isEmpty{
+            if let initReport = initReportType ,
+               let find = self.viewModel.datas
+                .firstIndex(where: { KidsPlayType.getType($0.svcPropCd) == initReport }){
+                
+                self.tabIdx = find
+                self.initReportType = nil
+            }
+            
             withAnimation{
                 self.tabs = self.viewModel.datas.map{$0.title}
             }

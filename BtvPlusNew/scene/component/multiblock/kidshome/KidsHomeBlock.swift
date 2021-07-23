@@ -15,7 +15,7 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
     var pageObservable:PageObservable
-    var viewModel: InfinityScrollModel
+    var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel
     var data: BlockData
     var useTracking:Bool = false
@@ -114,9 +114,7 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
                 }
             }
         }
-        .onDisappear{
-            //self.datas.removeAll()
-        }
+        .onDisappear{}
     }
     
     private func updatedMonthly( purchases:[MonthlyInfoItem], lowLevelPpm:Bool){

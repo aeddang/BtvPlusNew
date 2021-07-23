@@ -33,6 +33,10 @@ struct PageKidsProfileManagement: PageView {
                         ForEach(self.kids) { kid in
                             KidProfileListItem(data: kid, isSelected : self.currentKid?.id == kid.id)
                                 .onTapGesture {
+                                    if self.currentKid?.id == kid.id {
+                                        return
+                                    }
+                                    
                                     self.appSceneObserver.alert = .confirm(
                                         nil ,
                                         String.alert.kidsChange.replace(kid.nickName),

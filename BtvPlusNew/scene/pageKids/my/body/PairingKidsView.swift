@@ -110,7 +110,10 @@ struct PairingKidsView: PageComponent {
                             KidsCategoryList(data:kidsCategoryListData)
                                 
                         }  else {
-                            Spacer()
+                            HStack(spacing:DimenKids.margin.thin){
+                                DiagnosticReportCard(viewModel:DiagnosticReportModel())
+                                MonthlyReportCard(viewModel:MonthlyReportModel())
+                            }
                         }
                     }
                     .modifier(MatchParent())

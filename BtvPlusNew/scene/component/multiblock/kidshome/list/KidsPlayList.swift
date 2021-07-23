@@ -134,6 +134,7 @@ struct KidsPlayListItem:PageView  {
                     PageKidsProvider.getPageObject(.kidsMultiBlock)
                         .addParam(key: .datas, value: data.blocks)
                         .addParam(key: .title, value: data.title)
+                        .addParam(key: .type, value: data.playType)
                 )
                 
             }
@@ -195,6 +196,7 @@ struct KidsPlayListItem:PageView  {
                         PageKidsProvider.getPageObject(.kidsMultiBlock)
                             .addParam(key: .datas, value: data.blocks)
                             .addParam(key: .title, value: data.title)
+                            .addParam(key: .type, value: data.playType)
                     )
                 }
             }

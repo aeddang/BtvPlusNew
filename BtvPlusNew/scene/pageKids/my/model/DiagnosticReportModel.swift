@@ -8,12 +8,13 @@
 import Foundation
 
 enum DiagnosticReportType:String, CaseIterable{
-    case english ,infantDevelopment, creativeObservation
-    var name: String {
+    case english ,infantDevelopment, creativeObservation, finalQuiz
+    var name: String? {
         switch self {
         case .english: return String.sort.english
         case .infantDevelopment: return String.sort.infantDevelopment
         case .creativeObservation: return String.sort.creativeObservation
+        default : return nil
         }
     }
     
@@ -22,6 +23,7 @@ enum DiagnosticReportType:String, CaseIterable{
         case .english: return AssetKids.image.englishReport
         case .infantDevelopment: return AssetKids.image.infantDevelopmentReport
         case .creativeObservation: return AssetKids.image.creativeObservationReport
+        default : return ""
         }
     }
     
@@ -30,13 +32,34 @@ enum DiagnosticReportType:String, CaseIterable{
         case .english: return String.kidsText.kidsMyEnglishText
         case .infantDevelopment: return String.kidsText.kidsMyInfantDevelopmentText
         case .creativeObservation: return String.kidsText.kidsMyCreativeObservationText
+        default : return ""
         }
     }
+    
+    var startButton: String {
+        switch self {
+        case .english: return AssetKids.image.goLevelTest
+        case .infantDevelopment: return AssetKids.image.goDevelopmentTest
+        case .creativeObservation: return AssetKids.image.goCreativityTest
+        default : return ""
+        }
+    }
+    var resultButton: String {
+        switch self {
+        case .english: return AssetKids.image.goLevelResult
+        case .infantDevelopment: return AssetKids.image.goDevelopmentResult
+        case .creativeObservation: return AssetKids.image.goCreativityResult
+        default : return ""
+        }
+    }
+    
+   
     var startReport: String {
         switch self {
         case .english: return String.kidsText.kidsMyEnglishReport
         case .infantDevelopment: return String.kidsText.kidsMyMyInfantDevelopmentReport
         case .creativeObservation: return String.kidsText.kidsMyCreativeObservationReport
+        default : return ""
         }
     }
     
@@ -45,6 +68,7 @@ enum DiagnosticReportType:String, CaseIterable{
         case .english: return AssetKids.exam.startBg1
         case .infantDevelopment: return AssetKids.exam.startBg2
         case .creativeObservation: return AssetKids.exam.startBg3
+        case .finalQuiz: return AssetKids.exam.startBg4
         }
     }
     
@@ -53,6 +77,7 @@ enum DiagnosticReportType:String, CaseIterable{
         case .english: return AssetKids.exam.completeBg1
         case .infantDevelopment: return AssetKids.exam.completeBg2
         case .creativeObservation: return AssetKids.exam.completeBg3
+        case .finalQuiz: return AssetKids.exam.completeBg4
         }
     }
 }

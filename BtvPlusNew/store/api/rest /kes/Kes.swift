@@ -298,7 +298,7 @@ class Kes: Rest{
     */
     func getEvaluationReportExam(
         profile:Kid, srisId:String?,
-        completion: @escaping (EvaluationExams) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        completion: @escaping (KidsExams) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:Any]()

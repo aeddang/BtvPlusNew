@@ -130,6 +130,9 @@ extension String{
         public static let setupCertificationPurchaseText = "setupCertificationPurchaseText".loaalized()
         public static let setupCertificationAge = "setupCertificationAge".loaalized()
         public static let setupCertificationAgeText = "setupCertificationAgeText".loaalized()
+        
+        public static let setupCertificationKidsExit = "setupCertificationKidsExit".loaalized()
+        public static let setupCertificationKidsExitText =  "setupCertificationKidsExitText".loaalized()
 
         public static let setupChildren = "setupChildren".loaalized()
         public static let setupChildrenHabit = "setupChildrenHabit".loaalized()

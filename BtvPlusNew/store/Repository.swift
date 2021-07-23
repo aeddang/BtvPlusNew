@@ -375,7 +375,9 @@ class Repository:ObservableObject, PageProtocol{
     func updateWatchLv(_ lv:Setup.WatchLv?){
         SystemEnvironment.watchLv = lv?.rawValue ?? 0
         self.userSetup.watchLv = SystemEnvironment.watchLv
-        self.appSceneObserver?.alert = .alert(String.alert.watchLvCompleted, String.alert.watchLvCompletedInfo)
+        self.appSceneObserver?.alert = .alert(
+            lv == nil ? String.alert.watchLvCanceled : String.alert.watchLvCompleted,
+            lv == nil ? String.alert.watchLvCanceledInfo :  String.alert.watchLvCompletedInfo)
         self.event = .updatedWatchLv
     }
     

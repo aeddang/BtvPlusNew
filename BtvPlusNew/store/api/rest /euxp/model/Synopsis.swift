@@ -153,8 +153,13 @@ struct SynopsisContentsItem : Codable {
     private(set) var pcim_lvl6_wat_age_cd: String? = nil   // 영상등급6시청연령코드(0:낮음, 12:보통, 15:다소높음, 19:높음)
     private(set) var pcim_lvl7_wat_age_cd: String? = nil   // 영상등급7시청연령코드(0:낮음, 12:보통, 15:다소높음, 19:높음)
     private(set) var wat_lvl_phrs: String? = nil   // 시청등급문구
-    
-    
+    private(set) var ppm_free_join_yn: String? = nil   // PPM 무료 가입 여부
+    private(set) var ppm_free_join_perd_cd: String? = nil   // PPM 무료 가입 기간 코드
+    private(set) var rcmd_yn: String? = nil   // 추천 가능 콘텐츠 여부
+    private(set) var pblsr_nm: String? = nil   // 출판사
+    private(set) var quiz_yn: String? = nil   // 퀴즈여부
+    private(set) var quiz_call_url: String? = nil   // 퀴즈url
+    private(set) var epsd_exps_typ_cd: String? = nil   // (키즈) 에피소드 노출 유형 코드 01:일반형, 02:말발굽형 / 기본값 ""
 }
 
 struct EpsdRsluInfo: Codable {

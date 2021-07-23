@@ -20,6 +20,9 @@ class Setup:ObservableObject, PageProtocol {
         static let isPurchaseAuth = "isPurchaseAuth" + VS
         static let isAdultAuth = "isAdultAuth" + VS
         static let watchLv = "watchLv" + VS
+        static let isKidsExitAuth = "isKidsExitAuth" + VS
+        
+        
         static let isFirstMemberAuth = "isFirstMemberAuth" + VS
         
         static let isShowRemoconSelectPopup = "isShowRemoconSelectPopup" + VS
@@ -181,6 +184,16 @@ class Setup:ObservableObject, PageProtocol {
             return storage.integer(forKey: Keys.watchLv)
         }
     }
+    
+    var isKidsExitAuth:Bool{
+        set(newVal){
+            storage.set(newVal, forKey: Keys.isKidsExitAuth)
+        }
+        get{
+            return storage.bool(forKey: Keys.isKidsExitAuth)
+        }
+    }
+    
     
     var isFirstMemberAuth:Bool{
         set(newVal){

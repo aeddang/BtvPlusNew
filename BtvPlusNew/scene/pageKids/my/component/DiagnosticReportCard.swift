@@ -23,10 +23,12 @@ struct DiagnosticReportCard: PageComponent{
 
     var body: some View {
         ZStack{
-            ZStack(alignment: .bottom){
-                ForEach(DiagnosticReportType.allCases, id:\.rawValue) { type in
-                    ReportPage(name: type.name)
-                        .padding(.top, selectedType == type ? 0 : DimenKids.margin.heavy)
+            ZStack(alignment: .bottom){ 
+                ForEach(DiagnosticReportType.allCases , id:\.rawValue) { type in
+                    if let name = type.name {
+                        ReportPage(name: name)
+                            .padding(.top, selectedType == type ? 0 : DimenKids.margin.heavy)
+                    }
                 }
             }
             .padding(.all, DimenKids.margin.tiny)
@@ -180,7 +182,7 @@ struct DiagnosticReportCard: PageComponent{
             : DiagnosticReportType.allCases.firstIndex(of: self.selectedType!)
         self.appSceneObserver.select =
             .select(
-                (self.tag , DiagnosticReportType.allCases.map{$0.name} ), selectIdx ?? -1){ idx in
+                (self.tag , DiagnosticReportType.allCases.filter{$0.name != nil}.map{$0.name!} ), selectIdx ?? -1){ idx in
                 self.selectedData(DiagnosticReportType.allCases[idx])
             }
     }
@@ -236,7 +238,9 @@ struct DiagnosticReportCard: PageComponent{
             }
         case .creativeObservation:
             self.dataProvider.requestData(q: .init(type: .getCreativeReportResult(kid)))
+        default : break
         }
+        
     }
     
     private func setupEmptyResult(){

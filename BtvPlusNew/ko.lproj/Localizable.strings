@@ -183,6 +183,7 @@
 "btnRegist2" = "등록";
 "btnModify" = "수정";
 "btnSubscribe" = "구독하기";
+"btnTestResult" = "진단 결과 보기";
 
 /*
  Sort
@@ -354,12 +355,23 @@
 "alertWatchLv" = "시청 연령 제한 설정";
 "alertWatchLvInput" = "성인인증번호를 입력해주세요.";
 "alertWatchLvCompleted" = "시청 연령 제한 설정 완료";
-"alertWatchLvCompletedInfo" = "시청 연령 제한 설정이 완료되었습니다.";
+"alertWatchLvCompletedInfo" = "시청 연령 제한 설정이\n완료되었습니다.";
+"alertWatchLvCanceled" = "시청 연령 제한 설정 해지";
+"alertWatchLvCanceledInfo" = "시청 연령 제한 설정이\n해지되었습니다.";
+
+"alertKidsExitCompleted" = "ZEM 키즈 종료 인증 설정 완료";
+"alertKidsExitCompletedInfo" = "ZEM 키즈 종료 인증 설정이\n완료되었습니다.";
+"alertKidsExitCanceled" = "ZEM 키즈 종료 인증 설정 해지";
+"alertKidsExitCanceledInfo" = "ZEM 키즈 종료 인증 설정이\n해지되었습니다.";
+
 
 "alertPurchaseAuth" = "구매 인증";
 "alertPurchaseAuthInput" = "구매인증번호를 입력해주세요.";
 "alertPurchaseAuthCompleted" = "구매인증 설정 완료";
-"alertPurchaseAuthCompleteInfo" = "구매인증 설정이 완료되었습니다.";
+"alertPurchaseAuthCompletedInfo" = "구매인증 설정이 완료되었습니다.";
+"alertPurchaseAuthCanceled" = "구매인증 설정 해지";
+"alertPurchaseAuthCanceledInfo" = "구매인증 설정이 해지되었습니다.";
+
 "alertIncorrecPassword" = "인증 번호가 일치하지 않습니다.";
 "alertIncorrectNumberOfCharacter" = "%s자 로 입력해주세요.";
 "alertPasswordInitateInfo" = "※ 인증번호 초기화는 B tv에서 하실 수 잇습니다.";
@@ -665,6 +677,8 @@
 "setupCertificationPurchaseText" = "콘텐츠 구매 시 인증번호 확인을 진행합니다.";
 "setupCertificationAge" = "시청 연령 제한 설정";
 "setupCertificationAgeText" = "시청 연령 이상의 콘텐츠는 인증 후 이용하도록 설정합니다.";
+"setupCertificationKidsExit" = "ZEM 키즈 종료 인증 설정";
+"setupCertificationKidsExitText" = "자녀 보호를 위해 ZEM 키즈 종료 시 성인인증을 진행합니다.";
 
 "setupChildren" = "자녀 안심 설정";
 "setupChildrenHabit" = "시청 습관 관리";
@@ -930,6 +944,7 @@
 /*
  PageKidsExam
 */
+"kidsExamQuiz" = "마무리 퀴즈";
 "kidsExamListen" = "문제 듣기";
 "kidsExamRepeat" = "문제 다시듣기";
 "kidsExamRemainQuestion" = "문제 남았습니다!";

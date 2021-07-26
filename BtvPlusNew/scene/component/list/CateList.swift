@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import struct Kingfisher.KFImage
 enum CateSubType {
-    case prevList, list, event, tip, webview
+    case prevList, list, event, tip, webview, cashCharge
      
     static func getType(id:String?) -> CateSubType{
         switch id {
@@ -38,6 +38,12 @@ class CateData:InfinityData{
     
     var isRowFirst:Bool = false
     
+    func setCashCharge() -> CateData {
+        title = String.button.cashCharge
+        subType = .cashCharge
+        return self
+    }
+
     func setData(data:BlockItem ,idx:Int = -1) -> CateData {
         title = data.menu_nm
         index = idx

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="SKBtvBold.ttf">
+            <string>SKBtvBold</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BuzzvilCustomFeedVC" customModule="BtvPlusNew" customModuleProvider="target">
+            <connections>
+                <outlet property="lblTitle" destination="6bn-Jb-Amr" id="a3I-wu-RyH"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="viewContent" destination="LTV-sz-Uxf" id="Aep-qw-YEZ"/>
+                <outlet property="viewNavigation" destination="KCe-N9-mh7" id="14a-eZ-oAd"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT" userLabel="SuperView">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KCe-N9-mh7" userLabel="viewNavigation">
+                    <rect key="frame" x="0.0" y="44" width="414" height="62"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Ay-t7-SEy" userLabel="BackBtnView">
+                            <rect key="frame" x="0.0" y="0.0" width="62" height="62"/>
+                            <subviews>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icTopBackWhite" translatesAutoresizingMaskIntoConstraints="NO" id="e3F-xX-kGc">
+                                    <rect key="frame" x="13" y="13" width="36" height="36"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="36" id="QEa-fY-el4"/>
+                                        <constraint firstAttribute="width" constant="36" id="ngR-r9-Q5I"/>
+                                    </constraints>
+                                </imageView>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pp6-of-uAW">
+                                    <rect key="frame" x="0.0" y="0.0" width="62" height="62"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="1"/>
+                                    <connections>
+                                        <action selector="actBtnBack:" destination="-1" eventType="touchUpInside" id="Lgd-2k-GJn"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <constraints>
+                                <constraint firstItem="pp6-of-uAW" firstAttribute="width" secondItem="1Ay-t7-SEy" secondAttribute="width" id="6bR-V7-P0c"/>
+                                <constraint firstItem="pp6-of-uAW" firstAttribute="centerY" secondItem="1Ay-t7-SEy" secondAttribute="centerY" id="974-ei-dsQ"/>
+                                <constraint firstItem="pp6-of-uAW" firstAttribute="centerX" secondItem="1Ay-t7-SEy" secondAttribute="centerX" id="CTZ-72-oe4"/>
+                                <constraint firstItem="e3F-xX-kGc" firstAttribute="centerY" secondItem="1Ay-t7-SEy" secondAttribute="centerY" id="JUN-Uw-zt8"/>
+                                <constraint firstItem="pp6-of-uAW" firstAttribute="height" secondItem="1Ay-t7-SEy" secondAttribute="height" id="nbv-G9-F84"/>
+                                <constraint firstItem="e3F-xX-kGc" firstAttribute="centerX" secondItem="1Ay-t7-SEy" secondAttribute="centerX" id="pO1-nD-Sbd"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RjI-ii-gdE" userLabel="InfoView">
+                            <rect key="frame" x="352" y="0.0" width="62" height="62"/>
+                            <subviews>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icCategoryCashTopInfo" translatesAutoresizingMaskIntoConstraints="NO" id="TbV-vK-xe8">
+                                    <rect key="frame" x="13" y="13" width="36" height="36"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="36" id="PMt-Ae-WWi"/>
+                                        <constraint firstAttribute="height" constant="36" id="Yt8-i3-jQJ"/>
+                                    </constraints>
+                                </imageView>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hm3-VW-4Z3">
+                                    <rect key="frame" x="0.0" y="0.0" width="62" height="62"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="1"/>
+                                    <connections>
+                                        <action selector="actBtnInfo:" destination="-1" eventType="touchUpInside" id="pZX-8E-ZNg"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <constraints>
+                                <constraint firstItem="TbV-vK-xe8" firstAttribute="centerX" secondItem="RjI-ii-gdE" secondAttribute="centerX" id="Lk3-MI-x5t"/>
+                                <constraint firstItem="TbV-vK-xe8" firstAttribute="centerY" secondItem="RjI-ii-gdE" secondAttribute="centerY" id="ZoC-bg-n7k"/>
+                            </constraints>
+                        </view>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="B캐쉬 충전소" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6bn-Jb-Amr">
+                            <rect key="frame" x="157" y="21" width="100" height="20.5"/>
+                            <fontDescription key="fontDescription" name="SKBtvBold" family="SK Btv" pointSize="18"/>
+                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="RjI-ii-gdE" firstAttribute="height" secondItem="1Ay-t7-SEy" secondAttribute="height" id="4Bp-0W-urX"/>
+                        <constraint firstItem="1Ay-t7-SEy" firstAttribute="centerY" secondItem="KCe-N9-mh7" secondAttribute="centerY" id="4lc-fF-h8A"/>
+                        <constraint firstItem="1Ay-t7-SEy" firstAttribute="width" secondItem="KCe-N9-mh7" secondAttribute="height" id="5PL-aS-gOC"/>
+                        <constraint firstItem="6bn-Jb-Amr" firstAttribute="centerX" secondItem="KCe-N9-mh7" secondAttribute="centerX" id="9uK-sC-yzc"/>
+                        <constraint firstItem="RjI-ii-gdE" firstAttribute="width" secondItem="1Ay-t7-SEy" secondAttribute="width" id="Enl-qN-PFe"/>
+                        <constraint firstItem="6bn-Jb-Amr" firstAttribute="centerY" secondItem="KCe-N9-mh7" secondAttribute="centerY" id="Quh-2D-xt4"/>
+                        <constraint firstAttribute="trailing" secondItem="RjI-ii-gdE" secondAttribute="trailing" id="XJd-fO-u00"/>
+                        <constraint firstItem="RjI-ii-gdE" firstAttribute="centerY" secondItem="KCe-N9-mh7" secondAttribute="centerY" id="tC9-vD-DLC"/>
+                        <constraint firstItem="1Ay-t7-SEy" firstAttribute="leading" secondItem="KCe-N9-mh7" secondAttribute="leading" id="tCF-br-92i"/>
+                        <constraint firstAttribute="height" constant="62" id="uSy-L4-EuH"/>
+                        <constraint firstItem="1Ay-t7-SEy" firstAttribute="height" secondItem="KCe-N9-mh7" secondAttribute="height" id="weY-hc-JA6"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LTV-sz-Uxf" userLabel="viewContent">
+                    <rect key="frame" x="0.0" y="106" width="414" height="790"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="KCe-N9-mh7" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="0Zh-34-sSN"/>
+                <constraint firstAttribute="bottom" secondItem="LTV-sz-Uxf" secondAttribute="bottom" id="KRM-xT-d2n"/>
+                <constraint firstItem="KCe-N9-mh7" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="OwH-1O-u6Q"/>
+                <constraint firstItem="LTV-sz-Uxf" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="Rkf-NI-VV8"/>
+                <constraint firstItem="LTV-sz-Uxf" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="edy-Vs-oLu"/>
+                <constraint firstItem="KCe-N9-mh7" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="mdO-lM-dfc"/>
+                <constraint firstItem="LTV-sz-Uxf" firstAttribute="top" secondItem="KCe-N9-mh7" secondAttribute="bottom" id="qGo-lp-nUN"/>
+            </constraints>
+            <point key="canvasLocation" x="-57" y="92"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="icCategoryCashTopInfo" width="36" height="36"/>
+        <image name="icTopBackWhite" width="36" height="36"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

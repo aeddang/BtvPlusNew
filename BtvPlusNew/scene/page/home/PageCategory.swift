@@ -153,7 +153,11 @@ struct PageCategory: PageView {
         if self.tabDatas == nil {
             self.tabDatas = tabDatas
             self.navigationModel.index = -1
-            let naviDatas:[(String,String)] = tabDatas.map { ($0.title ?? "", $0.icon ) }
+            var naviDatas:[(String,String)] = tabDatas.map { ($0.title ?? "", $0.icon ) }
+            
+            self.tabDatas?.insert(CateData().setCashCharge(), at: 0)
+            naviDatas.insert((String.button.cashCharge, Asset.icon.cateBCash ), at: 0)
+            
             self.tabs = NavigationBuilder(
                 textModifier: TextModifier(
                     family:Font.family.medium,
@@ -178,7 +182,25 @@ struct PageCategory: PageView {
                     .addParam(key: .needAdult, value: data.isAdult)
                     .addParam(key: .subId, value: openId)
             )
-
+        case .event :
+            self.pagePresenter.openPopup(
+                PageProvider
+                    .getPageObject(.webview)
+                    .addParam(key: .data, value: BtvWebView.event)
+                    .addParam(key: .title , value: data.title)
+            )
+        case .tip :
+            self.pagePresenter.openPopup(
+                PageProvider
+                    .getPageObject(.webview)
+                    .addParam(key: .data, value: BtvWebView.tip)
+                    .addParam(key: .title , value: data.title)
+            )
+        case .cashCharge :
+            self.pagePresenter.openPopup(
+                PageProvider
+                    .getPageObject(.cachCharge)
+            )
         default :
             if data.blocks != nil && data.blocks?.isEmpty == false {
                 self.pagePresenter.openPopup(

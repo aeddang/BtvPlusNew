@@ -42,6 +42,7 @@ extension BtvWebView {
     static let faq = "/view/v3.0/customer/helpfaq"
     static let notice = "/view/v3.0/customer/notice"
     static let event = "/view/v3.0/event/all"
+    static let tip = "/view/v3.0/tip/all"
     static let serviceTerms = "/view/v3.0/terms"
     
     static let happySenior = "/view/v3.0/setting/happysenior"
@@ -367,6 +368,21 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                                     )
                                 } catch {
                                     ComponentLog.e("json parse error", tag:"WebviewMethod.bpn_showSynopsis")
+                                }
+                            }
+                        case WebviewMethod.bpn_showModalWebView.rawValue :
+                            if let jsonString = jsonParam {
+                                let jsonData = jsonString.data(using: .utf8)!
+                                do {
+                                    let data = try JSONDecoder().decode(WebviewJson.self, from: jsonData)
+                                    self.parent.pagePresenter.openPopup(
+                                        PageProvider
+                                            .getPageObject(.webview)
+                                            .addParam(key: .data, value: data.url)
+                                            .addParam(key: .title , value: data.title)
+                                    )
+                                } catch {
+                                    ComponentLog.e("json parse error", tag:"WebviewMethod.bpn_showModalWebView")
                                 }
                             }
                         case WebviewMethod.externalBrowser.rawValue :

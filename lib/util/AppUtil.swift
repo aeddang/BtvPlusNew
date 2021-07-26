@@ -219,5 +219,37 @@ struct AppUtil{
     }
 
     
+    static func setAutolayoutSamesize(item: UIView, toitem: UIView) {
+        item.translatesAutoresizingMaskIntoConstraints = false
+        
+        let top = NSLayoutConstraint(item: item,
+                                     attribute: NSLayoutConstraint.Attribute.centerX,
+                                     relatedBy: NSLayoutConstraint.Relation.equal,
+                                     toItem: toitem,
+                                     attribute: NSLayoutConstraint.Attribute.centerX,
+                                     multiplier: 1.0, constant: 0.0)
+        let bottom = NSLayoutConstraint(item: item,
+                                        attribute: NSLayoutConstraint.Attribute.width,
+                                        relatedBy: NSLayoutConstraint.Relation.equal,
+                                        toItem: toitem,
+                                        attribute: NSLayoutConstraint.Attribute.width,
+                                        multiplier: 1.0, constant: 0.0)
+        let left  = NSLayoutConstraint(item: item,
+                                       attribute: NSLayoutConstraint.Attribute.centerY,
+                                       relatedBy: NSLayoutConstraint.Relation.equal,
+                                       toItem: toitem,
+                                       attribute: NSLayoutConstraint.Attribute.centerY,
+                                       multiplier: 1.0, constant: 0.0)
+        let right = NSLayoutConstraint(item: item,
+                                       attribute: NSLayoutConstraint.Attribute.height,
+                                       relatedBy: NSLayoutConstraint.Relation.equal,
+                                       toItem: toitem,
+                                       attribute: NSLayoutConstraint.Attribute.height,
+                                       multiplier: 1.0, constant: 0.0)
+        let arrconst = [right, left, top, bottom]
+        toitem.addConstraints(arrconst)
+    }
+    
+    
 }
 

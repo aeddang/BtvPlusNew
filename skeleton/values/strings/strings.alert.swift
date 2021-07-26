@@ -209,8 +209,11 @@ extension String {
         public static var kidsDuplicationNickError = "alertKidDuplicationNickError".loaalized()
         
         public static var needPairingMoveBtv = "alertNeedPairingMoveBtv".loaalized()
-        
         public static var kidExamSaveCompleted = "alertKidExamSaveCompleted".loaalized()
         public static var kidExamSaveError = "alertKidExamSaveError".loaalized()
+        
+        public static var cashCharge = "alertCashCharge".loaalized()
+        public static var cashChargeText = "alertCashChargeText".loaalized()
+        public static var cashChargeButton = "alertCashChargeButton".loaalized()
     }
 }

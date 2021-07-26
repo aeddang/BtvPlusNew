@@ -1,0 +1,21 @@
+
+typedef enum {
+  BABRevenueTypeUnknown = 0,
+  BABRevenueTypeCPC,
+  BABRevenueTypeCPM,
+  BABRevenueTypeCPV,
+  BABRevenueTypeCPI,
+  BABRevenueTypeCPE,
+  BABRevenueTypeCPA,
+  BABRevenueTypeCPQ,
+  BABRevenueTypeCPY,
+  BABRevenueTypeCPK,
+  BABRevenueTypeCPL,
+  BABRevenueTypeCPINSTA,
+  BABRevenueTypeCPS,
+  BABRevenueTypeCPYOUTUBE,
+  BABRevenueTypeCAST,
+  BABRevenueTypeCPZ,
+  BABRevenueTypeVCPA,
+  BABRevenueTypeCPF,
+} BABRevenueType;

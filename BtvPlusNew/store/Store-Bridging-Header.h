@@ -8,3 +8,7 @@
 #import "TycheSpeechRecognizer.h"
 #import "SKBNewAdSdk/OneAdSdk.h"
 #import "AudioMirrorServiceProxyClientIOS.h"
+
+//buzzbill
+#import "CarouselView.h"
+#import "SDWebImageCompat.h"

@@ -7,6 +7,12 @@
 import Foundation
 import SwiftUI
 
+struct WebviewJson :Codable{
+    var url:String? = nil
+    var title:String? = nil
+    init(json: [String:Any]) throws {}
+}
+
 struct PageWebview: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver

@@ -176,7 +176,6 @@ struct AppLayout: PageComponent{
                 PageLog.d("Family: \(family) Font names: \(names)")
             }
              */
-            
         }
     }
     
@@ -197,12 +196,12 @@ struct AppLayout: PageComponent{
         //self.appSceneObserver.event = .debug("onPageInit")
         if !self.appObserverMove(self.appObserver.page) {
             let initMenuId = self.dataProvider.bands.datas.first?.menuId
-            
+            /*
             self.pagePresenter.changePage(PageKidsProvider
                                             .getPageObject(.kidsHome)
                                             //.addParam(key: .id, value: "NM2000030726")
-            )
-            //self.pagePresenter.changePage(PageProvider.getPageObject(.home).addParam(key: .id, value: initMenuId))
+            )*/
+            self.pagePresenter.changePage(PageProvider.getPageObject(.home).addParam(key: .id, value: initMenuId))
             if self.setup.drmTestUser {
                 self.pagePresenter.openPopup(PageProvider.getPageObject(.playerTest))
             }

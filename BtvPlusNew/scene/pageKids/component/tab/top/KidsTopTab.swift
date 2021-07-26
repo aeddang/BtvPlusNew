@@ -13,6 +13,7 @@ struct KidsTopTab: PageComponent{
    
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var setup:Setup
     
     var body: some View {
@@ -48,7 +49,8 @@ struct KidsTopTab: PageComponent{
             Button(action: {
                 if let home  = self.dataProvider.bands.getHome() {
                     let move = PageProvider.getPageObject(.home).addParam(key: .id, value: home.menuId)
-                    if self.setup.isKidsExitAuth {
+                   
+                    if pairing.status == .pairing && self.setup.isKidsExitAuth {
                         self.pagePresenter.openPopup(
                             PageKidsProvider.getPageObject(.kidsConfirmNumber)
                                 .addParam(key: .type, value: PageKidsConfirmType.exit)

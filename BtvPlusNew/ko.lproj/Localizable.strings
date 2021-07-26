@@ -184,7 +184,7 @@
 "btnModify" = "수정";
 "btnSubscribe" = "구독하기";
 "btnTestResult" = "진단 결과 보기";
-
+"btnCashCharge" = "캐쉬 충전소";
 /*
  Sort
 */
@@ -434,6 +434,11 @@
 
 "alertKidExamSaveCompleted" = "저장되었습니다.";
 "alertKidExamSaveError" = "결과저장이 실패했습니다.\n다시시도해주세요";
+
+"alertCashCharge" = "B캐쉬 충전소 이용 문의";
+"alertCashChargeText" = "B캐쉬 충전소 이용에 문제가 있다면 아래 문의하기를 선택해 주세요. B캐쉬 충전소 이용 문의 페이지로 연결 됩니다.";
+"alertCashChargeButton" = "문의하기";
+
 
 
 

@@ -30,7 +30,15 @@
 		312825AF26AE7E8100A58DB9 /* BuzzvilCustomFeedVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 312825A426AE7E8100A58DB9 /* BuzzvilCustomFeedVC.xib */; };
 		312825B026AE7E8100A58DB9 /* BuzzvilFeedItemCpsV.xib in Resources */ = {isa = PBXBuildFile; fileRef = 312825A526AE7E8100A58DB9 /* BuzzvilFeedItemCpsV.xib */; };
 		312825B226AE828E00A58DB9 /* BuzzView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312825B126AE828E00A58DB9 /* BuzzView.swift */; };
-		312825B426AE842D00A58DB9 /* PageCachCharge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312825B326AE842D00A58DB9 /* PageCachCharge.swift */; };
+		312825B426AE842D00A58DB9 /* PageCashCharge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312825B326AE842D00A58DB9 /* PageCashCharge.swift */; };
+		312825B726AFA40600A58DB9 /* PairingHitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312825B626AFA40600A58DB9 /* PairingHitch.swift */; };
+		312825BA26AFB09800A58DB9 /* SelectStbBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312825B926AFB09800A58DB9 /* SelectStbBox.swift */; };
+		312825BC26AFBCDA00A58DB9 /* HitchStbItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312825BB26AFBCDA00A58DB9 /* HitchStbItem.swift */; };
+		312825BE26AFE86900A58DB9 /* SelectPairingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312825BD26AFE86900A58DB9 /* SelectPairingType.swift */; };
+		312825C026AFE90100A58DB9 /* HitchPairingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312825BF26AFE90100A58DB9 /* HitchPairingItem.swift */; };
+		312825C226AFF1F300A58DB9 /* RetryStbBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312825C126AFF1F300A58DB9 /* RetryStbBox.swift */; };
+		312825C426B014D400A58DB9 /* PageCashChargePrivacyAndAgree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312825C326B014D400A58DB9 /* PageCashChargePrivacyAndAgree.swift */; };
+		312825C726B0150700A58DB9 /* PageCashChargeGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312825C626B0150700A58DB9 /* PageCashChargeGuide.swift */; };
 		312BB07425DCDCBB00AC03BC /* Tooltip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312BB07325DCDCBB00AC03BC /* Tooltip.swift */; };
 		312BB07925DCF2AB00AC03BC /* ThumbImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312BB07825DCF2AB00AC03BC /* ThumbImageViewer.swift */; };
 		312BB08525DCF92400AC03BC /* PagePurchase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312BB08425DCF92400AC03BC /* PagePurchase.swift */; };
@@ -657,7 +665,15 @@
 		312825A426AE7E8100A58DB9 /* BuzzvilCustomFeedVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BuzzvilCustomFeedVC.xib; sourceTree = "<group>"; };
 		312825A526AE7E8100A58DB9 /* BuzzvilFeedItemCpsV.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BuzzvilFeedItemCpsV.xib; sourceTree = "<group>"; };
 		312825B126AE828E00A58DB9 /* BuzzView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuzzView.swift; sourceTree = "<group>"; };
-		312825B326AE842D00A58DB9 /* PageCachCharge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCachCharge.swift; sourceTree = "<group>"; };
+		312825B326AE842D00A58DB9 /* PageCashCharge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCashCharge.swift; sourceTree = "<group>"; };
+		312825B626AFA40600A58DB9 /* PairingHitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingHitch.swift; sourceTree = "<group>"; };
+		312825B926AFB09800A58DB9 /* SelectStbBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectStbBox.swift; sourceTree = "<group>"; };
+		312825BB26AFBCDA00A58DB9 /* HitchStbItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitchStbItem.swift; sourceTree = "<group>"; };
+		312825BD26AFE86900A58DB9 /* SelectPairingType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPairingType.swift; sourceTree = "<group>"; };
+		312825BF26AFE90100A58DB9 /* HitchPairingItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitchPairingItem.swift; sourceTree = "<group>"; };
+		312825C126AFF1F300A58DB9 /* RetryStbBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryStbBox.swift; sourceTree = "<group>"; };
+		312825C326B014D400A58DB9 /* PageCashChargePrivacyAndAgree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCashChargePrivacyAndAgree.swift; sourceTree = "<group>"; };
+		312825C626B0150700A58DB9 /* PageCashChargeGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCashChargeGuide.swift; sourceTree = "<group>"; };
 		312BB07325DCDCBB00AC03BC /* Tooltip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tooltip.swift; sourceTree = "<group>"; };
 		312BB07825DCF2AB00AC03BC /* ThumbImageViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbImageViewer.swift; sourceTree = "<group>"; };
 		312BB08425DCF92400AC03BC /* PagePurchase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePurchase.swift; sourceTree = "<group>"; };
@@ -1384,6 +1400,37 @@
 				312825A526AE7E8100A58DB9 /* BuzzvilFeedItemCpsV.xib */,
 			);
 			path = BuzzvilCustomVC;
+			sourceTree = "<group>";
+		};
+		312825B526AFA3C200A58DB9 /* pairingHitch */ = {
+			isa = PBXGroup;
+			children = (
+				312825B826AFA5B200A58DB9 /* component */,
+				312825B626AFA40600A58DB9 /* PairingHitch.swift */,
+			);
+			path = pairingHitch;
+			sourceTree = "<group>";
+		};
+		312825B826AFA5B200A58DB9 /* component */ = {
+			isa = PBXGroup;
+			children = (
+				312825B926AFB09800A58DB9 /* SelectStbBox.swift */,
+				312825BD26AFE86900A58DB9 /* SelectPairingType.swift */,
+				312825C126AFF1F300A58DB9 /* RetryStbBox.swift */,
+				312825BB26AFBCDA00A58DB9 /* HitchStbItem.swift */,
+				312825BF26AFE90100A58DB9 /* HitchPairingItem.swift */,
+			);
+			path = component;
+			sourceTree = "<group>";
+		};
+		312825C526B014E500A58DB9 /* cashCharge */ = {
+			isa = PBXGroup;
+			children = (
+				312825B326AE842D00A58DB9 /* PageCashCharge.swift */,
+				312825C626B0150700A58DB9 /* PageCashChargeGuide.swift */,
+				312825C326B014D400A58DB9 /* PageCashChargePrivacyAndAgree.swift */,
+			);
+			path = cashCharge;
 			sourceTree = "<group>";
 		};
 		312BB08325DCF90F00AC03BC /* purchase */ = {
@@ -2613,7 +2660,6 @@
 				316ECE00264B8009008D2544 /* PageRemotecon.swift */,
 				3183B37C26168F03004F5C0D /* PageAdultCertification.swift */,
 				318C36B3265F0805009B7EC3 /* PageCertification.swift */,
-				312825B326AE842D00A58DB9 /* PageCachCharge.swift */,
 			);
 			path = popups;
 			sourceTree = "<group>";
@@ -3285,6 +3331,7 @@
 				317F0AB12609DD8800EB9F6B /* schedule */,
 				319BAFBD26044FE30007273F /* search */,
 				314D6B1125D1070E0003C749 /* setup */,
+				312825C526B014E500A58DB9 /* cashCharge */,
 				31E3974E25B59CC600CE6E21 /* my */,
 				D51AA9E52599A2200035CD51 /* pairing */,
 				3182A0BD26188BC300F7F07D /* sub */,
@@ -3434,6 +3481,7 @@
 			isa = PBXGroup;
 			children = (
 				D56C6A73257DA4D200CF9AB8 /* view */,
+				312825B526AFA3C200A58DB9 /* pairingHitch */,
 				318C36BC265F6FFB009B7EC3 /* table */,
 				D56C6B64257DBAC800CF9AB8 /* tab */,
 				3167196625FEF699005AC3D2 /* banner */,
@@ -3750,10 +3798,12 @@
 				316C45D8265200A500A8D7F5 /* Broadcasting.swift in Sources */,
 				316C45DA265203CF00A8D7F5 /* BroadcastManager.swift in Sources */,
 				3166CBEA2611A52200282891 /* TotalPoint.swift in Sources */,
+				312825C726B0150700A58DB9 /* PageCashChargeGuide.swift in Sources */,
 				D56C6A59257DA0C700CF9AB8 /* TextButton.swift in Sources */,
 				3190CB1C268C4B3B00ACB465 /* HorizontalGraph.swift in Sources */,
 				D56CC31225907F3700CA1D54 /* ThemaBlock.swift in Sources */,
 				D56C5FE32592F693009AE769 /* Metv.swift in Sources */,
+				312825C026AFE90100A58DB9 /* HitchPairingItem.swift in Sources */,
 				315730F325B01FFF00D9A693 /* PagePairingUser.swift in Sources */,
 				3190CB07268983EA00ACB465 /* Kes.swift in Sources */,
 				316A708926705C8800A93B83 /* PlayerOptionSelectList.swift in Sources */,
@@ -3764,6 +3814,7 @@
 				3174067725F709E600201850 /* NotificationVod.swift in Sources */,
 				314D588725B64ECD007BCA34 /* DisconnectView.swift in Sources */,
 				316C45EA2653832F00A8D7F5 /* AudioMirror.swift in Sources */,
+				312825B726AFA40600A58DB9 /* PairingHitch.swift in Sources */,
 				31C4D2A92693040A000C7E83 /* NeedPairingInfo.swift in Sources */,
 				319CF688269738CF00159575 /* ExamBody.swift in Sources */,
 				31895AFA2601C863002DE02E /* PageSynopsisPackage.swift in Sources */,
@@ -3797,7 +3848,9 @@
 				D573784A25A2983800EC571F /* CharacterSelectBox.swift in Sources */,
 				31C4D29C2692B43E000C7E83 /* KesModel.swift in Sources */,
 				D56C6A4B257DA0C700CF9AB8 /* LoopSwipperView.swift in Sources */,
+				312825C426B014D400A58DB9 /* PageCashChargePrivacyAndAgree.swift in Sources */,
 				314D589425B685B2007BCA34 /* PagePairingManagement.swift in Sources */,
+				312825C226AFF1F300A58DB9 /* RetryStbBox.swift in Sources */,
 				316C45DE2652160000A8D7F5 /* WepgModel.swift in Sources */,
 				3167196825FEF6BE005AC3D2 /* FloatingBanner.swift in Sources */,
 				D57178582582D87500BF2612 /* PageHome.swift in Sources */,
@@ -3914,6 +3967,7 @@
 				31740C30261C32780052A9C2 /* PurchaseList.swift in Sources */,
 				319CF67E2697211600159575 /* ProgressBox.swift in Sources */,
 				312825B226AE828E00A58DB9 /* BuzzView.swift in Sources */,
+				312825BC26AFBCDA00A58DB9 /* HitchStbItem.swift in Sources */,
 				31373F6025C7E726004353DA /* CustomYTPlayer.swift in Sources */,
 				316A7090267061F800A93B83 /* PlayerMoreBoxKids.swift in Sources */,
 				3190CB20268D676700ACB465 /* KidProfileBox.swift in Sources */,
@@ -3957,6 +4011,7 @@
 				D56C5FE825930060009AE769 /* BookMark.swift in Sources */,
 				318000B3269FDAE5002CC991 /* FairplayResourceLoader.swift in Sources */,
 				D56C69A8257DA09E00CF9AB8 /* ImageLoader.swift in Sources */,
+				312825BA26AFB09800A58DB9 /* SelectStbBox.swift in Sources */,
 				31E8D7C125CA85190034BBC4 /* PlayerOptionSelectBox.swift in Sources */,
 				3190CB13268ACC1E00ACB465 /* KidProfileListEmpty.swift in Sources */,
 				3190CB24268D890500ACB465 /* MenuNavi.swift in Sources */,
@@ -4069,6 +4124,7 @@
 				319B07A4263A398C008C11A8 /* ConnectTitle.swift in Sources */,
 				D5DC47662582131E007EDD86 /* GnbBlock.swift in Sources */,
 				3167640F25CCBE79003A7721 /* PlayerGuide.swift in Sources */,
+				312825BE26AFE86900A58DB9 /* SelectPairingType.swift in Sources */,
 				31DF152925F9AC4600F0A38D /* TicketBlock.swift in Sources */,
 				D56C69B3257DA09E00CF9AB8 /* OffsetKey.swift in Sources */,
 				D56C69A9257DA09E00CF9AB8 /* Rest.swift in Sources */,
@@ -4283,7 +4339,7 @@
 				316A708D26705E4A00A93B83 /* PlayerOptionSelectListKids.swift in Sources */,
 				D56C6B35257DACD800CF9AB8 /* DataProvider.swift in Sources */,
 				D56C6A4F257DA0C700CF9AB8 /* Alert.swift in Sources */,
-				312825B426AE842D00A58DB9 /* PageCachCharge.swift in Sources */,
+				312825B426AE842D00A58DB9 /* PageCashCharge.swift in Sources */,
 				314D73A725B5108900907118 /* LikeButton.swift in Sources */,
 				31C4D2A02692D40D000C7E83 /* CreativeReport.swift in Sources */,
 				31F280222671ACA300F40B09 /* PagePlayerTest.swift in Sources */,

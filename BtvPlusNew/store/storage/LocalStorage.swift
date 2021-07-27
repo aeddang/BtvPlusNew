@@ -24,6 +24,8 @@ class LocalStorage {
         static let restrictedAge = "restrictedAge" + VS
         static let pcId = "pcId" + VS
         static let selectedKidsProfileId = "selectedKidsProfileId3" + VS // kidsSelectedProfileId
+        
+        static let isFirstCashCharge = "isFirstCashCharge" + VS
     }
     let defaults = UserDefaults.standard
     
@@ -175,5 +177,15 @@ class LocalStorage {
             return defaults.string(forKey: Keys.selectedKidsProfileId)
         }
     }
+    
+    var isFirstCashCharge:Bool{
+        set(newVal){
+            defaults.set(newVal, forKey: Keys.isFirstCashCharge)
+        }
+        get{
+            return defaults.bool(forKey: Keys.isFirstCashCharge)
+        }
+    }
+    
 
 }

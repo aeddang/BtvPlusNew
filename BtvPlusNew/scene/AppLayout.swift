@@ -22,18 +22,19 @@ struct AppLayout: PageComponent{
     @State var loadingInfo:[String]? = nil
     @State var isLoading = false
     @State var isInit = false
-    
     @State var toastMsg:String = ""
     @State var isToastShowing:Bool = false
     @State var floatBannerDatas:[BannerData]? = nil
+    @State var isPairingHitchShowing:Bool = true
     @State var pageType:PageType = .btv
     
     var body: some View {
         ZStack{
-            
             SceneTab()
             SceneKidsTab()
-           
+            if self.isInit && self.isPairingHitchShowing {
+                PairingHitch()
+            }
             if let datas = self.floatBannerDatas {
                 FloatingBanner(datas:datas){ today in
                     if today {self.floatingBannerToDayUnvisible()}
@@ -89,6 +90,10 @@ struct AppLayout: PageComponent{
             guard let evt = evt else { return }
             switch evt  {
             case .initate: self.onPageInit()
+            case .pairingHitchClose:
+                withAnimation{
+                    self.isPairingHitchShowing = false
+                }
             case .toast(let msg):
                 self.toastMsg = msg
                 withAnimation{

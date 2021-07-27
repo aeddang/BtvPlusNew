@@ -84,12 +84,12 @@ struct Dimen{
 
     struct radius {
         
-        public static let heavy:CGFloat = 20//*
-        public static let medium:CGFloat = 14//*
-        public static let regular:CGFloat = 12//*
-        public static let regularExtra:CGFloat = 10//*
-        public static let light:CGFloat = 5//*
-        public static let thin:CGFloat = 2//*
+        public static let heavy:CGFloat = isPad ? 40 : 20//*
+        public static let medium:CGFloat = 14
+        public static let regular:CGFloat = 12
+        public static let regularExtra:CGFloat = isPad ? 15 : 10//*
+        public static let light:CGFloat = 5
+        public static let thin:CGFloat = 2
     }
     
     struct bar {
@@ -120,6 +120,10 @@ struct Dimen{
     
     struct item {
         static let profile:CGSize = CGSize(width: 110, height: 110)
+    }
+    
+    struct popup {
+        public static let regular:CGFloat = isPad ? 346.0 : 247.0
     }
 }
 

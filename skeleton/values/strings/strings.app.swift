@@ -9,7 +9,7 @@ import Foundation
 extension String {
     struct app { 
         public static let appName = "appName".loaalized()
-        public static let corfirm = "corfirm".loaalized()
+        public static let confirm = "confirm".loaalized()
         public static let close = "close".loaalized()
         public static let cancel = "cancel".loaalized()
         public static let retry = "retry".loaalized()

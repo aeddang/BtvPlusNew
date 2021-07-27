@@ -16,6 +16,7 @@ enum SceneUpdateType {
 enum SceneEvent {
     case initate, toast(String), update(SceneUpdateType),
          floatingBanner([BannerData]? = nil), headerBanner(BannerData? = nil),
+         pairingHitch(isOn:Bool = true),  pairingHitchClose,
          debug(String)
 }
 

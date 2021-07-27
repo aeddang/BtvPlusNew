@@ -107,7 +107,7 @@ struct EmptyAlert: PageView {
                 .padding(.top, Dimen.margin.mediumExtra)
             if let confirm = self.confirm {
                 FillButton(
-                    text: String.app.corfirm,
+                    text: String.app.confirm,
                     isSelected: true,
                     size: Dimen.button.regular
                 ){_ in

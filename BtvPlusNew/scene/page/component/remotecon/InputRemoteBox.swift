@@ -39,7 +39,7 @@ struct InputRemoteBox: PageComponent {
                     }
                     self.action(nil, self.type)
                 }) {
-                    Image(Asset.icon.close)
+                    Image(Asset.remote.close)
                         .renderingMode(.original)
                         .resizable()
                         .scaledToFit()
@@ -78,7 +78,7 @@ struct InputRemoteBox: PageComponent {
                     )
                 }
                 FillButton(
-                    text: String.app.corfirm,
+                    text: String.app.confirm,
                     isSelected: self.isInputCompleted() ,
                     textModifier: TextModifier(
                         family: Font.family.bold,

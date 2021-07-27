@@ -215,5 +215,9 @@ extension String {
         public static var cashCharge = "alertCashCharge".loaalized()
         public static var cashChargeText = "alertCashChargeText".loaalized()
         public static var cashChargeButton = "alertCashChargeButton".loaalized()
+        
+        public static var needNickName = "alertNeedNickName".loaalized()
+        public static var needAgreeTermsOfService = "alertNeedAgreeTermsOfService".loaalized()
+        public static var needAgreePrivacy = "alertNeedAgreePrivacy".loaalized()
     }
 }

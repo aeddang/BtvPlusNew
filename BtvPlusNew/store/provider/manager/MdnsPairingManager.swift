@@ -100,7 +100,7 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
         self.notFound = notFound
         switch request {
         case .wifi: self.mdnsServiceFindStart()
-        case .cancel: do{}
+        case .cancel: self.removeClient()
         default : do{}
         }
     }

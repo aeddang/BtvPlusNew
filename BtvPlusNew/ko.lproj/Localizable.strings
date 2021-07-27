@@ -4,7 +4,7 @@
   Created by KimJeongCheol on 2020/12/30.
 */
 "appName" = "모바일 Btv";
-"corfirm" = "확인";
+"confirm" = "확인";
 "cancel" = "취소";
 "retry" = "다시시도";
 "close" = "닫기";
@@ -439,7 +439,9 @@
 "alertCashChargeText" = "B캐쉬 충전소 이용에 문제가 있다면 아래 문의하기를 선택해 주세요. B캐쉬 충전소 이용 문의 페이지로 연결 됩니다.";
 "alertCashChargeButton" = "문의하기";
 
-
+"alertNeedNickName" = "닉네임을 입력 해주셔야 합니다.";
+"alertNeedAgreeTermsOfService" = "이용약관에 동의 해주셔야 합니다.";
+"alertNeedAgreePrivacy" = "개인정보 수집 이용에 동의 해주셔야 합니다.";
 
 
 /*
@@ -471,6 +473,7 @@
 "titleMyBenefits" = "나의 할인 해택";
 "titleMyAlram" = "알림 목록";
 "titleRecommandFriend" = "친구에게 추천하기";
+"titleCashChargeGuide" = "B캐쉬 충전소 이용 안내";
 
 /*
  PagePairing
@@ -782,6 +785,28 @@
 "privacyAndAgreeText3" = "셋톱연결 해지 후 익일 24시까지";
 
 /*
+ PageCashChargeGuide
+*/
+"cashChargeGuideText" = "B캐쉬 충전소에서는 이벤트 응모,\n쇼핑, 설문 참여 등에 따라\nB 캐쉬 적립 혜택을 제공합니다.";
+"cashChargeGuideTip" = "적립한 B캐쉬는 모바일 B tv에서\nVOD 구매 시 이용하실 수 있습니다.";
+"cashChargeGuideAgree" = "B캐쉬 충전소 이용을 위한 개인정보 수집 및 개인정보 제 3자 동의 (필수)";
+"cashChargeGuideButton" = "캐쉬 적립하러 가기";
+
+"cashChargeGuideAgreeTitle1" = "개인정보를 수집하려는 자";
+"cashChargeGuideAgreeText1" = "(주)버즈빌";
+
+"cashChargeGuideAgreeTitle2" = "개인정보 수집 목적";
+"cashChargeGuideAgreeText2" = "리워드 지급, 광고 운영 및 고객 문의 대응";
+
+"cashChargeGuideAgreeTitle3" = "수집하는 개인정보";
+"cashChargeGuideAgreeText3" = "광고식별자(ADID 또는 IDFA), 패키지리스트, IP주소, 성별/ 연령(선택)";
+
+"cashChargeGuideAgreeTitle4" = "개인정보 보유 및 이용기간";
+"cashChargeGuideAgreeText4" = "서비스 종료 또는 동의철회일로부터 1년(단, 관계 법령의 규정에 의하여 별도 보관이 필요한 경우 해당 기간동안 보관함)";
+
+"cashChargeGuideAgreeText" = "사용자는 개인정보 수집 및 이용에\n대해서 거부할 수 있으며, 거부 시에는\n적립 헤택을 받을 수 없습니다.";
+
+/*
  Player
 */
 "playerPreplay" = "미리보기";
@@ -845,6 +870,29 @@
 "footerText1" = "・ 상호 : SK브로드밴드 주식회사\n・ 대표이사 : 최진환\n・ 주소 : 서울특별시 중구 퇴계로 24 SK남산그린빌딩\n・ 통신판매업 신고번호 : 서울 중구 제2008-1608호\n・ 사업자등록번호 : 214-86-18758";
 "footerText2" = "・ 고객센터 : 국번없이 106, 080-8282-106(무료)\n・ 고객지원 이메일 : mobilebtv@skbroadband.com\n・ 호스팅 서비스 제공 : SK브로드밴드 주식회사";
 "footerButton" = "・ 사업자 정보 확인";
+
+/*PairingHitch
+*/
+"pairingHitchAuto" = "아래 확인 버튼을 누르시면\n바로 모바일 B tv를 이용하실 수 있습니다.";
+"pairingHitchAutoSelect" = "연결할 셋톱박스를 선택 후 아래 확인 버튼을 누르시면\n바로 모바일 B tv를 이용하실 수 있습니다.";
+"pairingHitchSelect" = "B tv와 연결하고 B tv의 영화, 방송, 키즈, 무료 VOD까지\n스마트폰과 태블릿에서 마음껏 즐기세요!";
+"pairingHitchFullTop" = "선택하신 셋톱박스는";
+"pairingHitchFullLeading" = "이미";
+"pairingHitchFullCenter" = "대의 기기";
+"pairingHitchFullTrailing" = "가 연결되어 있습니다.";
+"pairingHitchFull" = "연결 기기를 %s대 미만으로 조정 후\n다시 시도하시거나 다른 셋톱박스를 선택해 주세요.";
+
+
+"pairingHitchUserAgreement1" = "모바일 B tv 서비스 이용 약관에 동의합니다. (필수)";
+"pairingHitchUserAgreement2" = "B tv 연결 및 서비스 이용을 위한 개인정보 수집/이용에 동의합니다. (필수)";
+"pairingHitchUserAgreement3" = "인기, 무료 콘텐츠 소식/혜택 및 업데이트 알림을 받고, 이를 위한 개인정보 수집/이용에 동의합니다. (선택)";
+
+"pairingHitchStbName" = "우리집 TV";
+"pairingHitchTypeLeading" = "집 안에서 쉽게";
+"pairingHitchTypeLeading2" = "집 밖에서 TV없이";
+"pairingHitchWifi" = "Wi-Fi 연결하기";
+"pairingHitchBtv" = "인증번호 연결하기";
+"pairingHitchUser" = "가입자 인증하기";
 
 /*
  Voice

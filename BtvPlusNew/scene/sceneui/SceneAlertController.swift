@@ -175,7 +175,7 @@ struct SceneAlertController: PageComponent{
                 ]
             } else {
                 self.buttons = [
-                    AlertBtnData(title: String.app.corfirm, index: 0)
+                    AlertBtnData(title: String.app.confirm, index: 0)
                 ]
             }
             return true
@@ -188,11 +188,11 @@ struct SceneAlertController: PageComponent{
             if (self.appObserver.page?.page) != nil {
                 self.buttons = [
                     AlertBtnData(title: String.app.cancel, index: 0),
-                    AlertBtnData(title: String.app.corfirm, index: 1)
+                    AlertBtnData(title: String.app.confirm, index: 1)
                 ]
             }else{
                 self.buttons = [
-                    AlertBtnData(title: String.app.corfirm, index: 0)
+                    AlertBtnData(title: String.app.confirm, index: 0)
                 ]
             }
             
@@ -275,7 +275,7 @@ struct SceneAlertController: PageComponent{
             }else{
                 self.text = String.alert.apiErrorServer
                 self.buttons = [
-                    AlertBtnData(title: String.app.corfirm, index: 2),
+                    AlertBtnData(title: String.app.confirm, index: 2),
                 ]
             }
         }
@@ -300,7 +300,7 @@ struct SceneAlertController: PageComponent{
         self.subText = String.alert.connectWifiSub
         self.buttons = [
             AlertBtnData(title: String.app.retry, index: 0),
-            AlertBtnData(title: String.app.corfirm, index: 1)
+            AlertBtnData(title: String.app.confirm, index: 1)
         ]
     }
     func selectedConnectWifi(_ idx:Int, completionHandler: @escaping (Bool) -> Void){
@@ -313,7 +313,7 @@ struct SceneAlertController: PageComponent{
         self.subText = String.alert.connectNotFoundSub
         self.buttons = [
             AlertBtnData(title: String.app.retry, index: 0),
-            AlertBtnData(title: String.app.corfirm, index: 1)
+            AlertBtnData(title: String.app.confirm, index: 1)
         ]
     }
     func selectedNotFoundDevice(_ idx:Int, completionHandler: @escaping (Bool) -> Void) {
@@ -346,7 +346,7 @@ struct SceneAlertController: PageComponent{
             }
         }
         self.buttons = [
-            AlertBtnData(title: String.app.corfirm, index: 0)
+            AlertBtnData(title: String.app.confirm, index: 0)
         ]
     }
     func selectedLimitedDevice(_ idx:Int) {}
@@ -367,7 +367,7 @@ struct SceneAlertController: PageComponent{
             self.text = String.alert.stbConnectFail
         }
         self.buttons = [
-            AlertBtnData(title: String.app.corfirm, index: 0)
+            AlertBtnData(title: String.app.confirm, index: 0)
         ]
     }
     func selectedPairingError(_ idx:Int) {}
@@ -386,7 +386,7 @@ struct SceneAlertController: PageComponent{
         default: return
         }
         self.buttons = [
-            AlertBtnData(title: String.app.corfirm, index: 0)
+            AlertBtnData(title: String.app.confirm, index: 0)
         ]
     }
     func selectedPairingUpdated(_ idx:Int) {}
@@ -396,7 +396,7 @@ struct SceneAlertController: PageComponent{
         self.text = String.alert.needConnectStatus
         self.buttons = [
             AlertBtnData(title: String.app.close, index: 0),
-            AlertBtnData(title: String.app.corfirm, index: 1)
+            AlertBtnData(title: String.app.confirm, index: 1)
         ]
     }
     func selectedPairingCheckFail(_ idx:Int) {
@@ -474,7 +474,7 @@ struct SceneAlertController: PageComponent{
         self.text = String.alert.serviceUnavailableText
         
         self.buttons = [
-            AlertBtnData(title: String.app.corfirm, index: 1)
+            AlertBtnData(title: String.app.confirm, index: 1)
         ]
     }
     func selectedServiceUnavailable(_ idx:Int, path:String?) {}
@@ -484,7 +484,7 @@ struct SceneAlertController: PageComponent{
         self.text = text ?? ""
         self.buttons = [
             AlertBtnData(title: String.app.cancel, index: 0),
-            AlertBtnData(title: String.app.corfirm, index: 1)
+            AlertBtnData(title: String.app.confirm, index: 1)
         ]
     }
     func selectedServiceSelect(_ idx:Int, value:String?, completionHandler: @escaping (String?) -> Void) {
@@ -559,7 +559,7 @@ struct SceneAlertController: PageComponent{
         self.subText = subText
         self.buttons = [
             AlertBtnData(title: String.app.cancel, index: 0),
-            AlertBtnData(title: confirmText ?? String.app.corfirm, index: 1)
+            AlertBtnData(title: confirmText ?? String.app.confirm, index: 1)
         ]
     }
     func selectedConfirm(_ idx:Int,  completionHandler: @escaping (Bool) -> Void) {
@@ -571,7 +571,7 @@ struct SceneAlertController: PageComponent{
         self.text = text ?? ""
         self.subText = subText
         self.buttons = [
-            AlertBtnData(title: String.app.corfirm, index: 0)
+            AlertBtnData(title: String.app.confirm, index: 0)
         ]
     }
     func selectedAlert(_ idx:Int, completionHandler: @escaping () -> Void) {

@@ -62,6 +62,7 @@ extension Asset{
         public static let more = "icArrowRight"
         public static let moreSmall = "icArrowRightWhite"
         public static let close = "icTopClose"
+        public static let closeBlack = "icTopPopupCloseBT"
         public static let setting = "icTopSetting"
         
         public static let sortList =  "icSynopSorting"
@@ -71,6 +72,9 @@ extension Asset{
         public static let pairingWifi = "icPairing03"
         public static let pairingBtv = "icPairing02"
         public static let pairingUser = "icPairing01"
+        public static let pairingWifi2 = "icPoupPairing01"
+        public static let pairingBtv2 = "icPoupPairing02"
+        public static let pairingUser2 = "icPoupPairing03"
         
         public static let watchBTv = "icSynopTvNor"
         public static let likeOff = "icSynopRatingDownFoc"
@@ -169,6 +173,10 @@ extension Asset{
         public static let readAll = "icMyReadNor"
         public static let recommend = "icMyRecommend"
         public static let purchase = "icMyPaidT"
+        
+        public static let stb = "icPopupPairingDefault"
+       
+        
     }
     
     
@@ -203,6 +211,7 @@ extension Asset{
     }
     
     struct remote {
+        public static let close = "icRemoteClose"
         public static let center =  "icRemoteCenterNor"
         public static let centerUp =  "icRemoteCenter01Pre"
         public static let centerDown =  "icRemoteCenter02Pre"
@@ -224,8 +233,6 @@ extension Asset{
         
         public static let chNumber = "icRemoteChNumberNor"
         public static let chNumberOn = "icRemoteChNumberPre"
-        
-        public static let close = "icRemoteClose"
         
         public static let earphone = "icRemoteEarphoneOff"
         public static let earphoneOn = "icRemoteEarphoneOn"
@@ -276,6 +283,7 @@ extension Asset{
         public static let checkBoxOn = "icCheckboxOn"
         public static let checkBoxOn2 = "icCheckboxOn02"
         public static let checkBoxOff = "icCheckboxOff"
+        public static let checkBoxOffWhite = "icCheckboxOffWhite"
         public static let spinner = "icSpinner"
         public static let tooltip = isPad ? "icSynopTooltipT" : "icSynopTooltip" 
         public static let topTooltip = "icTopTooltip"
@@ -299,10 +307,10 @@ extension Asset{
         public static let intro02 = "imgIosIntro02"
         public static let intro03 = "imgIosIntro03"
         public static let intro04 = "imgIosIntro04"
-        public static let introT01 = "imgIntro01T"
-        public static let introT02 = "imgIntro02T"
-        public static let introT03 = "imgIntro03T"
-        public static let introT04 = "imgIntro04T"
+        public static let introT01 = "imgIntroIos01T"
+        public static let introT02 = "imgIntroIos02T"
+        public static let introT03 = "imgIntroIos03T"
+        public static let introT04 = "imgIntroIos04T"
         public static let pairingTutorial01 = "imgPairingTutorial01"
         public static let pairingTutorial02 = "imgPairingTutorial02"
         public static let pairingTutorial03 = "imgPairingTutorial03"
@@ -311,6 +319,12 @@ extension Asset{
         public static let myEmpty = "imgMyEmpty01"
         public static let pairingCharacter = "imgPairingCharacter"
         public static let deviceEmpty = "imgPairingNostbB"
+        
+        
+        public static let pairingHitchText01 = "imgPopupTitle01"
+        public static let pairingHitchText02 = "imgPopupTitle02"
+        public static let pairingHitch01 = "imgPopupCharecter01"
+        public static let pairingHitch02 = "imgPopupCharecter02"
     }
     
     struct age {

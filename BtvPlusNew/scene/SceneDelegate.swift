@@ -52,22 +52,37 @@ class SceneDelegate: PageSceneDelegate {
     }
     
     override func willChangeAblePage(_ page:PageObject?)->Bool{
-        if let willPage = page {
-            if PageType.getType(willPage.pageGroupID) == .kids && SystemEnvironment.currentPageType != .kids {
-                if page?.pageID != .kidsIntro && !SystemEnvironment.isInitKidsPage {
-                    self.pagePresenter.changePage(
-                        PageKidsProvider.getPageObject(.kidsIntro)
-                            .addParam(key: .data, value: page)
-                    )
-                    return false
-                }
+        guard let willPage = page else { return false }
+        if PageType.getType(willPage.pageGroupID) == .kids && SystemEnvironment.currentPageType != .kids {
+            if page?.pageID != .kidsIntro && !SystemEnvironment.isInitKidsPage {
+                self.pagePresenter.changePage(
+                    PageKidsProvider.getPageObject(.kidsIntro)
+                        .addParam(key: .data, value: page)
+                )
+                return false
             }
         }
-        
-        if page?.getParamValue(key: .needAdult) as? Bool == true {
-            page?.addParam(key: .watchLv, value: Setup.WatchLv.lv4.rawValue )
+        if PageSceneModel.needPairing(willPage) && self.repository?.pairing.status != .pairing {
+            self.repository?.appSceneObserver?.alert = .needPairing()
+            return false
         }
-        let watchLv = page?.getParamValue(key: .watchLv) as? Int
+        
+        switch willPage.pageID {
+        case .cashCharge:
+            if self.repository?.storage.isFirstCashCharge == true {
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.cashChargeGuide)
+                )
+                return false
+            }
+        default: break
+        }
+        
+        
+        if willPage.getParamValue(key: .needAdult) as? Bool == true {
+            willPage.addParam(key: .watchLv, value: Setup.WatchLv.lv4.rawValue )
+        }
+        let watchLv = willPage.getParamValue(key: .watchLv) as? Int
         if (watchLv ?? 0) >= 19 {
             if self.repository?.pairing.status != .pairing {
                 self.repository?.appSceneObserver?.alert = .needPairing()

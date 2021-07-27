@@ -118,7 +118,8 @@ struct SceneTab: PageComponent{
                 }
             case .disConnect :
                 if self.headerBannerData == nil {
-                    self.headerBannerData = BannerData().setPairing()
+                    self.headerBannerData = nil
+                    //self.headerBannerData = BannerData().setPairing()
                     self.updateTopPos()
                 }
             default : break

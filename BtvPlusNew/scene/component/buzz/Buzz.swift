@@ -28,6 +28,12 @@ class Buzz {
             birthYear: UInt(yyyy.toInt()),
             gender: pairing.user?.gender == .femail ? BABUserGenderFemale : BABUserGenderMale )
         BuzzAdBenefit.setUserProfile(userProfile)
+        
+        let userPreference = BABUserPreference(autoPlayType: BABVideoAutoPlayEnabled)
+        BuzzAdBenefit.setUserPreference(userPreference)
+        
+        let adLauncher = BABCustomLauncher()
+        BuzzAdBenefit.setLauncher(adLauncher)
         NotificationCenter.default.addObserver(self, selector: #selector(loadBABAd), name: NSNotification.Name.BABSessionRegistered, object: nil)
     }
     
@@ -38,8 +44,8 @@ class Buzz {
     }
     
     @objc private func loadBABAd() {
-        let userPreference = BABUserPreference(autoPlayType: BABVideoAutoPlayEnabled)
-        BuzzAdBenefit.setUserPreference(userPreference)
+        
+        
     }
 }
 
@@ -51,4 +57,30 @@ open class BuzzViewModel: ComponentObservable {
 
 enum BuzzViewEvent {
     case close , info(UIViewController)
+}
+
+class BABCustomLauncher: NSObject, BABLauncher {
+    func open(with launchInfo: BABLaunchInfo) {
+        open(with: launchInfo, delegate: nil)
+    }
+    
+    func open(with launchInfo: BABLaunchInfo, delegate: BABLauncherEventDelegate?) {
+        // Custom Browser 실행
+        let vc = CustomBrowserViewController()
+        //        rootViewController?.present(vc, animtated: true, completion:nil)
+        (UIApplication.shared.windows.first!.rootViewController as? UINavigationController)?.viewControllers.first?.present(vc, animated: true, completion: nil)
+    }
+}
+
+class CustomBrowserViewController: UIViewController {
+    private lazy var browserViewController: UIViewController = {
+        BuzzAdBrowser.sharedInstance().browserViewController()
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.addSubview(self.browserViewController.view)
+        self.browserViewController.didMove(toParent: self)
+    }
 }

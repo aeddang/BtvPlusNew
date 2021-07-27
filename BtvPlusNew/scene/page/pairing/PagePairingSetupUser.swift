@@ -241,8 +241,6 @@ struct PagePairingSetupUser: PageView {
                 if self.pageObservable.layer != .top { return }
                 self.updatekeyboardStatus(on:on)
             }
-            
-            
             .onAppear{
                 guard let obj = self.pageObject  else { return }
                 self.birth = self.birthList[20]
@@ -292,6 +290,19 @@ struct PagePairingSetupUser: PageView {
     }
     
     func inputCompleted() {
+        if self.nickName.isEmpty {
+            self.appSceneObserver.event = .toast(String.alert.needNickName)
+            return
+        }
+        if !self.isAgree1 {
+            self.appSceneObserver.event = .toast(String.alert.needAgreeTermsOfService)
+            return
+        }
+        if !self.isAgree2 {
+            self.appSceneObserver.event = .toast(String.alert.needAgreePrivacy)
+            return
+        }
+        
         if !self.isInputCompleted() { return }
         self.pairing.user = User(
             nickName: self.nickName, characterIdx: self.characterIdx, gender: self.gender, birth: self.birth,

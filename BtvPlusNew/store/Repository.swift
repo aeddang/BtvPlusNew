@@ -54,7 +54,7 @@ class Repository:ObservableObject, PageProtocol{
     let audioMirrorManager:AudioMirroring
     let userSetup:Setup
     
-    private let storage = LocalStorage()
+    let storage = LocalStorage()
     private let accountManager:AccountManager
     private let broadcastManager:BroadcastManager
     private var apiManager:ApiManager

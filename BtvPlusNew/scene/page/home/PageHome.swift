@@ -75,7 +75,15 @@ struct PageHome: PageView {
                 if self.pagePresenter.currentTopPage?.pageID == .home {
                     switch evt {
                     case .top : self.appSceneObserver.useTopFix = true
-                    case .down : self.appSceneObserver.useTopFix = false
+                        if self.useTracking {
+                            self.appSceneObserver.event = .pairingHitch(isOn: true)
+                        }
+                    case .down :
+                        self.appSceneObserver.useTopFix = false
+                        self.appSceneObserver.event = .pairingHitch(isOn: false)
+                        
+                    case .up :
+                        self.appSceneObserver.event = .pairingHitch(isOn: false)
                     default : break
                     }
                 }
@@ -156,6 +164,9 @@ struct PageHome: PageView {
                 self.useTracking = ani
                 if ani {
                     self.reload()
+                    if self.pairing.status != .pairing {
+                        self.appSceneObserver.event = .pairingHitch(isOn: true)
+                    }
                 }
             }
             .onAppear{

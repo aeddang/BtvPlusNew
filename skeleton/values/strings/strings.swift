@@ -128,6 +128,29 @@ extension String {
         public static let complete = "shareComplete".loaalized()
         public static let fail = "shareFail".loaalized()
     }
-  
     
+    struct pairingHitch {
+  
+        public static let auto =  "pairingHitchAuto".loaalized()
+        public static let autoSelect =  "pairingHitchAutoSelect".loaalized()
+        public static let select =  "pairingHitchSelect".loaalized()
+        public static let fullTop = "pairingHitchFullTop".loaalized()
+        public static let fullLeading =  "pairingHitchFullLeading".loaalized()
+        public static let fullCenter =  "pairingHitchFullCenter".loaalized()
+        public static let fullTrailing =  "pairingHitchFullTrailing".loaalized()
+        public static let full =  "pairingHitchFull".loaalized()
+
+        public static let userAgreement1 =  "pairingHitchUserAgreement1".loaalized()
+        public static let userAgreement2 =  "pairingHitchUserAgreement2".loaalized()
+        public static let userAgreement3 =  "pairingHitchUserAgreement3".loaalized()
+
+        public static let stbName = "pairingHitchStbName".loaalized()
+        
+       
+        public static let typeLeading = "pairingHitchTypeLeading".loaalized()
+        public static let typeLeading2 = "pairingHitchTypeLeading2".loaalized()
+        public static let wifi = "pairingHitchWifi".loaalized()
+        public static let btv = "pairingHitchBtv".loaalized()
+        public static let user = "pairingHitchUser".loaalized()
+    }
 }

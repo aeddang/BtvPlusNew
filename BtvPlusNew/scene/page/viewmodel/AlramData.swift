@@ -405,7 +405,7 @@ class AlramData:InfinityData,ObservableObject{
         }
         
         if self.move != nil || self.inLink != nil || self.outLink != nil {
-            self.moveButton = self.moveTitle ?? String.app.corfirm
+            self.moveButton = self.moveTitle ?? String.app.confirm
         }
     }
     

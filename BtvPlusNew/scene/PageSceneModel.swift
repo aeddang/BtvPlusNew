@@ -92,6 +92,14 @@ struct PageSceneModel: PageModel {
         }
     }
     
+    
+    static func needPairing(_ pageObject:PageObject) -> Bool{
+        switch pageObject.pageID {
+        case .cashCharge: return true
+        default : return false
+        }
+    }
+    
     static func needBottomTab(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
         case .home, .category, .multiBlock, .search, .my: return true

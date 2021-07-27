@@ -91,7 +91,7 @@ struct PageAdultCertification: PageView {
                                     useCertificationBtn: false)
                                     .modifier(MatchParent())
                                 FillButton(
-                                    text: String.app.corfirm ,
+                                    text: String.app.confirm ,
                                     isSelected: true
                                 ){_ in
                                     self.pagePresenter.closePopup(self.pageObject?.id)

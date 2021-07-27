@@ -88,7 +88,7 @@ class RelationContentsModel:ObservableObject {
             }
             self.currentSeasonIdx = self.seasons.firstIndex(where:{ $0.srisId == synopsis.srisId }) ?? -1
         }
-        if synopsis.isQuiz {
+        if synopsis.isQuiz && self.pageType == .kids{
             let idx = self.seris.count
             self.seris.append( SerisData(pageType: self.pageType).setQuiz(synopsis: synopsis, idx: idx))
         }

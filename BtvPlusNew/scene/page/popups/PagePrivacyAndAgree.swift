@@ -70,7 +70,7 @@ struct PagePrivacyAndAgree: PageView {
                     }
                 }
             }
-            .frame(width: SystemEnvironment.isTablet ? 346.0 : 247.0)
+            .frame(width: Dimen.popup.regular)
             .background(Color.brand.bg)
         }
         .modifier(MatchParent())

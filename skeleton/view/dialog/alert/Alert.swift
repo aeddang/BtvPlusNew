@@ -26,7 +26,7 @@ extension View {
         if buttons == nil {
             let btns = [
                 String.app.cancel,
-                String.app.corfirm
+                String.app.confirm
             ]
             let range = 0 ..< btns.count
             alertBtns = zip(range,btns).map {index, text in AlertBtnData(title: text, index: index)}

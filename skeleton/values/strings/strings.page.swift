@@ -35,6 +35,7 @@ extension String{
         public static let myBenefits = "titleMyBenefits".loaalized()
         public static let myAlram = "titleMyAlram".loaalized()
         public static let recommandFriend = "titleRecommandFriend".loaalized()
+        public static let cashChargeGuide = "titleCashChargeGuide".loaalized()
     }
     
     struct pageText {
@@ -289,6 +290,20 @@ extension String{
         public static let privacyAndAgreeText1 = "privacyAndAgreeText1".loaalized()
         public static let privacyAndAgreeText2 = "privacyAndAgreeText2".loaalized()
         public static let privacyAndAgreeText3 = "privacyAndAgreeText3".loaalized()
+        
+        public static let cashChargeGuideText = "cashChargeGuideText".loaalized()
+        public static let cashChargeGuideTip = "cashChargeGuideTip".loaalized()
+        public static let cashChargeGuideAgree = "cashChargeGuideAgree".loaalized()
+        public static let cashChargeGuideButton = "cashChargeGuideButton".loaalized()
+        public static let cashChargeGuideAgreeTitle1 = "cashChargeGuideAgreeTitle1".loaalized()
+        public static let cashChargeGuideAgreeText1 = "cashChargeGuideAgreeText1".loaalized()
+        public static let cashChargeGuideAgreeTitle2 = "cashChargeGuideAgreeTitle2".loaalized()
+        public static let cashChargeGuideAgreeText2 = "cashChargeGuideAgreeText2".loaalized()
+        public static let cashChargeGuideAgreeTitle3 = "cashChargeGuideAgreeTitle3".loaalized()
+        public static let cashChargeGuideAgreeText3 = "cashChargeGuideAgreeText3".loaalized()
+        public static let cashChargeGuideAgreeTitle4 = "cashChargeGuideAgreeTitle4".loaalized()
+        public static let cashChargeGuideAgreeText4 = "cashChargeGuideAgreeText4".loaalized()
+        public static let cashChargeGuideAgreeText = "cashChargeGuideAgreeText".loaalized()
 
     }
     

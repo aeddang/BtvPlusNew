@@ -199,7 +199,7 @@ struct PageCategory: PageView {
         case .cashCharge :
             self.pagePresenter.openPopup(
                 PageProvider
-                    .getPageObject(.cachCharge)
+                    .getPageObject(.cashCharge)
             )
         default :
             if data.blocks != nil && data.blocks?.isEmpty == false {

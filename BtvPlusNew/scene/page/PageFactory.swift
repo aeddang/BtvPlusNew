@@ -59,8 +59,10 @@ extension PageID{
     static let remotecon:PageID = "remotecon"
     static let playerTest:PageID = "playerTest"
     static let playerTestList:PageID = "playerTestList"
-    static let cachCharge:PageID = "cachCharge"
-    
+    static let cashCharge:PageID = "cashCharge"
+    static let cashChargeGuide:PageID = "cashChargeGuide"
+    static let cashChargePrivacyAndAgree:PageID = "cashChargePrivacyAndAgree"
+
 }
 
 struct PageProvider {
@@ -79,6 +81,8 @@ struct PageProvider {
     static func getPageId(skimlink:String?)-> PageID? {
         guard let skimlink = skimlink else { return nil }
         if let _ = skimlink.range(of: "btvplusapp/MyPairgingManager", options: .caseInsensitive) { return .my }
+        if let _ = skimlink.range(of: "btvplusapp/chargeStation", options: .caseInsensitive) { return .cashCharge }
+        
         return nil
     }
     
@@ -100,7 +104,7 @@ struct PageProvider {
             return  .vertical
         case .fullPlayer, .synopsisPlayer :
             return .none
-        case .confirmNumber, .privacyAndAgree:
+        case .confirmNumber, .privacyAndAgree, .cashChargeGuide, .cashChargePrivacyAndAgree:
             return .opacity
         default : return  .horizontal
         }
@@ -187,7 +191,9 @@ struct PageFactory{
         case .remotecon : return PageRemotecon()
         case .playerTest : return PagePlayerTest()
         case .playerTestList : return PagePlayerTestList()
-        case .cachCharge : return PageCachCharge()
+        case .cashCharge : return PageCashCharge()
+        case .cashChargeGuide : return PageCashChargeGuide()
+        case .cashChargePrivacyAndAgree : return PageCashChargePrivacyAndAgree()
         default : return PageTest()
         }
     }

@@ -149,13 +149,23 @@ class BannerData:InfinityData, PageProtocol{
             if arrParam.count > 0 {
                 
                 let gnbTypeCd: String = arrParam[0]
+                var subMenu: String? = nil
+                var url: String? = nil
                 var param = [PageParam:Any]()
-                param[.id] = gnbTypeCd
-                self.move = gnbTypeCd == EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue ? PageID.category : PageID.home
                 if arrParam.count > 2 {
-                    let subMenu: String = arrParam[2]
-                    let url = arrParam[1] + "/" + subMenu.replace( "|", with: "/")
-                    DataLog.d("page link " + url, tag:self.tag)
+                    subMenu = arrParam[2]
+                    url = arrParam[1] + "/" + subMenu!.replace( "|", with: "/")
+                    DataLog.d("page link " + url!, tag:self.tag)
+                    
+                }
+                if gnbTypeCd == EuxpNetwork.GnbTypeCode.GNB_KIDS.rawValue {
+                    self.move = PageID.kidsHome
+                    param[.id] = subMenu
+                    param[.link] = url
+                   
+                } else {
+                    self.move = gnbTypeCd == EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue ? PageID.category : PageID.home
+                    param[.id] = gnbTypeCd
                     param[.link] = url
                     param[.subId] = subMenu
                 }

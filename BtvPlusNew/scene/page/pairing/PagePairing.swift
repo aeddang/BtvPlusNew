@@ -78,7 +78,7 @@ struct PagePairingBody: PageView {
                     size:Font.size.light,
                     color: Color.brand.primary
                 ))
-                .padding(.top, Dimen.margin.lightExtra)
+                .padding(.top, Dimen.margin.regular)
             
             ConnectButton(
                 image: Asset.icon.pairingUser,
@@ -345,7 +345,7 @@ struct PagePairing: PageView {
                     .addParam(key: PageParam.type, value: PairingRequest.user(nil))
             )
             
-        default: do{}
+        default: break
         }
         
     }

@@ -31,6 +31,8 @@ class AccountManager : PageProtocol{
             self.requestAuthcode = nil
         
             switch requestPairing{
+            case .cancel :
+                self.mdnsPairingManager.requestPairing( requestPairing )
             case .wifi :
                 self.mdnsPairingManager.requestPairing( requestPairing,
                    found: { data in
@@ -136,7 +138,7 @@ class AccountManager : PageProtocol{
             case .pairingCompleted :
                 self.pairing.requestPairing(.userInfo)
         
-            default: do{}
+            default: break
             }
         }).store(in: &anyCancellable)
         

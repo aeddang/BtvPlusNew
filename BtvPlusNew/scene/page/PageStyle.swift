@@ -64,5 +64,18 @@ struct ContentTitle: ViewModifier {
 }
 
 
-
+struct BottomFunctionTab: ViewModifier {
+    var bgColor:Color = Color.app.white
+    func body(content: Content) -> some View {
+        return content
+            .background(bgColor)
+            .mask(
+                ZStack(alignment: .bottom){
+                    RoundedRectangle(cornerRadius: Dimen.radius.heavy)
+                    Rectangle().modifier(MatchHorizontal(height: Dimen.radius.heavy))
+                }
+            )
+            //.modifier(ShadowTop(opacity: isEffect ? 0.45 : 0))
+    }
+}
 

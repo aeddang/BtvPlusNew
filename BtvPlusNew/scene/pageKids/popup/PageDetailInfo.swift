@@ -68,7 +68,7 @@ struct PageDetailInfo: PageView {
                                 .fixedSize(horizontal: false, vertical: true)
                         }
                         RectButtonKids(
-                            text: String.app.corfirm,
+                            text: String.app.confirm,
                             isSelected: true
                         ){idx in
                             self.pagePresenter.closePopup(self.pageObject?.id)

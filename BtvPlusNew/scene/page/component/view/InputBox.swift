@@ -142,7 +142,7 @@ struct InputBox: PageComponent {
                     }
                     
                     FillButton(
-                        text: String.app.corfirm,
+                        text: String.app.confirm,
                         isSelected: self.isInputCompleted() ,
                         textModifier: TextModifier(
                             family: Font.family.bold,

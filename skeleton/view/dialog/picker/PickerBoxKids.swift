@@ -99,7 +99,7 @@ struct PickerBoxKids: PageComponent{
                     
                 }
                 RectButtonKids(
-                    text: String.app.corfirm,
+                    text: String.app.confirm,
                     isSelected: true
                 ){idx in
                     self.action()

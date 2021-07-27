@@ -132,7 +132,7 @@ struct InputNumberBox: PageComponent {
                         }
                         
                         RectButtonKids(
-                            text: String.app.corfirm,
+                            text: String.app.confirm,
                             isSelected: true
                         ){_ in
                             if !self.isInputCompleted() {

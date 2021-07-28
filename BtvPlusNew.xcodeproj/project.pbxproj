@@ -374,6 +374,18 @@
 		3198FED9262FAF77008DCB2C /* PageMyAlram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3198FED8262FAF77008DCB2C /* PageMyAlram.swift */; };
 		319B07A4263A398C008C11A8 /* ConnectTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B07A3263A398C008C11A8 /* ConnectTitle.swift */; };
 		319B07A6263A8807008C11A8 /* VideoSetBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B07A5263A8807008C11A8 /* VideoSetBlock.swift */; };
+		319B378626B0EAE3001501B1 /* Rps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B378526B0EAE3001501B1 /* Rps.swift */; };
+		319B378926B10293001501B1 /* RecommandHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B378826B10293001501B1 /* RecommandHistory.swift */; };
+		319B378B26B1675C001501B1 /* MgmRps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B378A26B1675B001501B1 /* MgmRps.swift */; };
+		319B378D26B1681B001501B1 /* RecommandBenefit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B378C26B1681B001501B1 /* RecommandBenefit.swift */; };
+		319B379026B17958001501B1 /* PageRecommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B378F26B17958001501B1 /* PageRecommand.swift */; };
+		319B379326B17E48001501B1 /* ShareRecommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B379226B17E48001501B1 /* ShareRecommand.swift */; };
+		319B379526B199DC001501B1 /* RecommandReceive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B379426B199DC001501B1 /* RecommandReceive.swift */; };
+		319B379726B19CF2001501B1 /* RecommandReceiveNeedPairing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B379626B19CF2001501B1 /* RecommandReceiveNeedPairing.swift */; };
+		319B379926B19F12001501B1 /* RecommandReceiveCompleted.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B379826B19F12001501B1 /* RecommandReceiveCompleted.swift */; };
+		319B379B26B19FAC001501B1 /* PageRecommandRecieve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B379A26B19FAC001501B1 /* PageRecommandRecieve.swift */; };
+		319B379D26B1A64F001501B1 /* RecommandCoupon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B379C26B1A64F001501B1 /* RecommandCoupon.swift */; };
+		319B379F26B1AAAB001501B1 /* RecommandReceiveError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B379E26B1AAAB001501B1 /* RecommandReceiveError.swift */; };
 		319B7EC1268E8EE900B7DAAF /* DiagnosticReportCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B7EC0268E8EE900B7DAAF /* DiagnosticReportCard.swift */; };
 		319B7EC3268E9D0A00B7DAAF /* ReportPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B7EC2268E9D0A00B7DAAF /* ReportPage.swift */; };
 		319BAFA02604394F0007273F /* libTycheSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 319BAF9F260439120007273F /* libTycheSDK.a */; };
@@ -1013,6 +1025,18 @@
 		3198FED8262FAF77008DCB2C /* PageMyAlram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyAlram.swift; sourceTree = "<group>"; };
 		319B07A3263A398C008C11A8 /* ConnectTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectTitle.swift; sourceTree = "<group>"; };
 		319B07A5263A8807008C11A8 /* VideoSetBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSetBlock.swift; sourceTree = "<group>"; };
+		319B378526B0EAE3001501B1 /* Rps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rps.swift; sourceTree = "<group>"; };
+		319B378826B10293001501B1 /* RecommandHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommandHistory.swift; sourceTree = "<group>"; };
+		319B378A26B1675B001501B1 /* MgmRps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MgmRps.swift; sourceTree = "<group>"; };
+		319B378C26B1681B001501B1 /* RecommandBenefit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommandBenefit.swift; sourceTree = "<group>"; };
+		319B378F26B17958001501B1 /* PageRecommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageRecommand.swift; sourceTree = "<group>"; };
+		319B379226B17E48001501B1 /* ShareRecommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareRecommand.swift; sourceTree = "<group>"; };
+		319B379426B199DC001501B1 /* RecommandReceive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommandReceive.swift; sourceTree = "<group>"; };
+		319B379626B19CF2001501B1 /* RecommandReceiveNeedPairing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommandReceiveNeedPairing.swift; sourceTree = "<group>"; };
+		319B379826B19F12001501B1 /* RecommandReceiveCompleted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommandReceiveCompleted.swift; sourceTree = "<group>"; };
+		319B379A26B19FAC001501B1 /* PageRecommandRecieve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageRecommandRecieve.swift; sourceTree = "<group>"; };
+		319B379C26B1A64F001501B1 /* RecommandCoupon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommandCoupon.swift; sourceTree = "<group>"; };
+		319B379E26B1AAAB001501B1 /* RecommandReceiveError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommandReceiveError.swift; sourceTree = "<group>"; };
 		319B7EC0268E8EE900B7DAAF /* DiagnosticReportCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticReportCard.swift; sourceTree = "<group>"; };
 		319B7EC2268E9D0A00B7DAAF /* ReportPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportPage.swift; sourceTree = "<group>"; };
 		319BAF9E260439110007273F /* TycheSpeechRecognizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TycheSpeechRecognizer.h; sourceTree = "<group>"; };
@@ -2518,6 +2542,48 @@
 			path = body;
 			sourceTree = "<group>";
 		};
+		319B378426B0EAD0001501B1 /* rps */ = {
+			isa = PBXGroup;
+			children = (
+				319B378726B10205001501B1 /* model */,
+				319B378526B0EAE3001501B1 /* Rps.swift */,
+				319B378A26B1675B001501B1 /* MgmRps.swift */,
+			);
+			path = rps;
+			sourceTree = "<group>";
+		};
+		319B378726B10205001501B1 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				319B378826B10293001501B1 /* RecommandHistory.swift */,
+				319B378C26B1681B001501B1 /* RecommandBenefit.swift */,
+				319B379C26B1A64F001501B1 /* RecommandCoupon.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		319B378E26B1793D001501B1 /* recommand */ = {
+			isa = PBXGroup;
+			children = (
+				319B379126B17E1C001501B1 /* component */,
+				319B378F26B17958001501B1 /* PageRecommand.swift */,
+				319B379A26B19FAC001501B1 /* PageRecommandRecieve.swift */,
+			);
+			path = recommand;
+			sourceTree = "<group>";
+		};
+		319B379126B17E1C001501B1 /* component */ = {
+			isa = PBXGroup;
+			children = (
+				319B379226B17E48001501B1 /* ShareRecommand.swift */,
+				319B379426B199DC001501B1 /* RecommandReceive.swift */,
+				319B379626B19CF2001501B1 /* RecommandReceiveNeedPairing.swift */,
+				319B379826B19F12001501B1 /* RecommandReceiveCompleted.swift */,
+				319B379E26B1AAAB001501B1 /* RecommandReceiveError.swift */,
+			);
+			path = component;
+			sourceTree = "<group>";
+		};
 		319BAFA1260439AD0007273F /* voice */ = {
 			isa = PBXGroup;
 			children = (
@@ -3332,6 +3398,7 @@
 				319BAFBD26044FE30007273F /* search */,
 				314D6B1125D1070E0003C749 /* setup */,
 				312825C526B014E500A58DB9 /* cashCharge */,
+				319B378E26B1793D001501B1 /* recommand */,
 				31E3974E25B59CC600CE6E21 /* my */,
 				D51AA9E52599A2200035CD51 /* pairing */,
 				3182A0BD26188BC300F7F07D /* sub */,
@@ -3389,6 +3456,7 @@
 		D56C6B25257DACD800CF9AB8 /* rest  */ = {
 			isa = PBXGroup;
 			children = (
+				319B378426B0EAD0001501B1 /* rps */,
 				3190CB05268983DC00ACB465 /* kes */,
 				316C45D12651F8FD00A8D7F5 /* wepg */,
 				3166CBE22611A14C00282891 /* eps */,
@@ -3800,6 +3868,7 @@
 				3166CBEA2611A52200282891 /* TotalPoint.swift in Sources */,
 				312825C726B0150700A58DB9 /* PageCashChargeGuide.swift in Sources */,
 				D56C6A59257DA0C700CF9AB8 /* TextButton.swift in Sources */,
+				319B378B26B1675C001501B1 /* MgmRps.swift in Sources */,
 				3190CB1C268C4B3B00ACB465 /* HorizontalGraph.swift in Sources */,
 				D56CC31225907F3700CA1D54 /* ThemaBlock.swift in Sources */,
 				D56C5FE32592F693009AE769 /* Metv.swift in Sources */,
@@ -3825,6 +3894,7 @@
 				D56C69B4257DA09E00CF9AB8 /* KeyboardObserver.swift in Sources */,
 				D56C69A1257DA09E00CF9AB8 /* PageProtocol.swift in Sources */,
 				D56C6A4E257DA0C700CF9AB8 /* ImageView.swift in Sources */,
+				319B378926B10293001501B1 /* RecommandHistory.swift in Sources */,
 				310F6FBA25C13AE8005718B0 /* Preview.swift in Sources */,
 				31F280262671C36900F40B09 /* BtvSynopsis.swift in Sources */,
 				D56C6B37257DACD800CF9AB8 /* ApiManager.swift in Sources */,
@@ -3898,6 +3968,7 @@
 				316A708226704F6800A93B83 /* PlayerEffectSeek.swift in Sources */,
 				319CF68B2697B69900159575 /* KidsExamModel.swift in Sources */,
 				31626EF125B9092400F4031D /* PurchaseModel.swift in Sources */,
+				319B379326B17E48001501B1 /* ShareRecommand.swift in Sources */,
 				3152B46D25DA0D3E00147C86 /* RelationContentsModel.swift in Sources */,
 				316A709B2670708400A93B83 /* ThumbImageViewerKids.swift in Sources */,
 				D56C6A5B257DA0C700CF9AB8 /* CheckBox.swift in Sources */,
@@ -4022,6 +4093,7 @@
 				3163300325EF70B000581FA7 /* TextTabList.swift in Sources */,
 				316B614C264A272B00C2DC25 /* RemoteCon.swift in Sources */,
 				318ECEFD266DC14000380B59 /* PickerBoxKids.swift in Sources */,
+				319B379926B19F12001501B1 /* RecommandReceiveCompleted.swift in Sources */,
 				31956F4F269D10040044CF1D /* KidsMyItem.swift in Sources */,
 				318C36B6265F216D009B7EC3 /* PageTerminateStb.swift in Sources */,
 				313F8D13269C3F8E0055F775 /* VideoBlockKids.swift in Sources */,
@@ -4062,6 +4134,7 @@
 				D573785825A2D70B00EC571F /* PagePairingBtv.swift in Sources */,
 				316A706B266F018000A93B83 /* SelectBox.swift in Sources */,
 				D56C6A28257DA0C700CF9AB8 /* asset.swift in Sources */,
+				319B379526B199DC001501B1 /* RecommandReceive.swift in Sources */,
 				318CB5AE263124D800BCA5C3 /* AlramData.swift in Sources */,
 				3166CBB72611639F00282891 /* PageModifyProfile.swift in Sources */,
 				31061E7725C934B600543FC0 /* PlayerEffect.swift in Sources */,
@@ -4072,6 +4145,7 @@
 				D56C69AF257DA09E00CF9AB8 /* DynamicLinkManager.swift in Sources */,
 				316ECDFD264B6478008D2544 /* CurrentPlayBox.swift in Sources */,
 				D56C69AD257DA09E00CF9AB8 /* InfinityScroll.swift in Sources */,
+				319B379B26B19FAC001501B1 /* PageRecommandRecieve.swift in Sources */,
 				3158232925A704F800E4E9C8 /* LocationObserver.swift in Sources */,
 				318FC00625E4CA5800ABC241 /* CateBlock.swift in Sources */,
 				31E50C71261ACA7400D0762C /* NpsMessage.swift in Sources */,
@@ -4092,6 +4166,7 @@
 				D56C6A5A257DA0C700CF9AB8 /* SortButton.swift in Sources */,
 				3192EFDA26674E790012F238 /* KidsTextStyle.swift in Sources */,
 				319BAFA326043A2F0007273F /* VoiceRecognition.swift in Sources */,
+				319B378626B0EAE3001501B1 /* Rps.swift in Sources */,
 				31740C43261C566E0052A9C2 /* PagePurchaseList.swift in Sources */,
 				D56C6B0F257DAADE00CF9AB8 /* SceneRadioController.swift in Sources */,
 				3195C1B72665E3C8001F513E /* PageSceneModel.swift in Sources */,
@@ -4116,6 +4191,7 @@
 				3195C1B22665E0F8001F513E /* dimenKids.swift in Sources */,
 				31C4D2A42692D867000C7E83 /* EvaluationReport.swift in Sources */,
 				315544C225B79FAA00086510 /* PageServiceError.swift in Sources */,
+				319B379026B17958001501B1 /* PageRecommand.swift in Sources */,
 				D5469F5725835231009CED2D /* Bands.swift in Sources */,
 				D56C6A24257DA0C600CF9AB8 /* strings.swift in Sources */,
 				319CF65C2695662500159575 /* PageKidsMyDiagnostic.swift in Sources */,
@@ -4139,6 +4215,7 @@
 				D56C6A46257DA0C700CF9AB8 /* RatioSize.swift in Sources */,
 				31C4D2A22692D616000C7E83 /* EnglishReport.swift in Sources */,
 				317F990926A6BD9C00016C09 /* PageKidsMonthly.swift in Sources */,
+				319B378D26B1681B001501B1 /* RecommandBenefit.swift in Sources */,
 				D56C6A57257DA0C700CF9AB8 /* RadioButton.swift in Sources */,
 				D56C6A2C257DA0C700CF9AB8 /* CustomPHPicker.swift in Sources */,
 				316A706F266F05E300A93B83 /* SelectButtonKids.swift in Sources */,
@@ -4154,6 +4231,7 @@
 				319BAFCC26046B240007273F /* ImageAnimation.swift in Sources */,
 				318F7B632625818900774B17 /* OkCashPoint.swift in Sources */,
 				319CF6652695D8BF00159575 /* ResultEnglishReportView.swift in Sources */,
+				319B379F26B1AAAB001501B1 /* RecommandReceiveError.swift in Sources */,
 				D56C6B0E257DAADE00CF9AB8 /* SceneTab.swift in Sources */,
 				317A8F5C25CBE1AE00E41226 /* PlayerMoreBox.swift in Sources */,
 				3197FC80267AE511006918BA /* CustomAssetPlayer.swift in Sources */,
@@ -4339,6 +4417,7 @@
 				316A708D26705E4A00A93B83 /* PlayerOptionSelectListKids.swift in Sources */,
 				D56C6B35257DACD800CF9AB8 /* DataProvider.swift in Sources */,
 				D56C6A4F257DA0C700CF9AB8 /* Alert.swift in Sources */,
+				319B379D26B1A64F001501B1 /* RecommandCoupon.swift in Sources */,
 				312825B426AE842D00A58DB9 /* PageCashCharge.swift in Sources */,
 				314D73A725B5108900907118 /* LikeButton.swift in Sources */,
 				31C4D2A02692D40D000C7E83 /* CreativeReport.swift in Sources */,
@@ -4346,6 +4425,7 @@
 				3128259826AE74CF00A58DB9 /* Buzz.swift in Sources */,
 				317C97442623EEF7008F267D /* CouponList.swift in Sources */,
 				D506D72D258C9ECE00F27C00 /* VideoList.swift in Sources */,
+				319B379726B19CF2001501B1 /* RecommandReceiveNeedPairing.swift in Sources */,
 				316A70A32670815600A93B83 /* PlayerListKids.swift in Sources */,
 				D56C6A35257DA0C700CF9AB8 /* CpTabDivisionNavigation.swift in Sources */,
 				D56C6B34257DACD800CF9AB8 /* Repository.swift in Sources */,
@@ -4533,6 +4613,7 @@
 				API_ME = "http://58.123.205.82";
 				API_METV = "http://116.126.69.73:8080";
 				API_METV2 = "http://agw-stg.sk-iptv.com:8080";
+				API_MGMRPS = "https://agw-stg.sk-iptv.com:8443/rps/v5/mgmrps/mgmrps-service/";
 				API_NAVILOG = "https://btvplog-dev.skbroadband.com:8443/api/logs";
 				API_NAVILOG_NPI = "https://collection-canvas.skbroadband.com/dev/btvplus/app/track";
 				API_NF = "http://agw-stg.sk-iptv.com:8080";
@@ -4542,12 +4623,14 @@
 				API_PSS = "https://pss.hanafostv.com:8443";
 				API_PUCR = "http://175.113.247.40:8080";
 				API_PUSH = "http://175.113.247.45:8080";
+				API_RPS = "http://175.113.214.105:8080";
 				API_RVS = "http://nsrvs.hanafostv.com:8080";
 				API_RVS2 = "http://agw-stg.sk-iptv.com:8080";
 				API_SCS2 = "https://agw-stg.sk-iptv.com:8443";
 				API_SMD = "http://175.113.214.199:8080";
 				API_SRCXPG = "http://smdxpg.hanafostv.com:8080";
 				API_STACM = "https://stacm.hanafostv.com:8443";
+				API_UORPS = "https://agw-stg.sk-iptv.com:8443/rps/v5/rps/uorps-service/";
 				API_UPMC = "http://ptestpluswas.hanafostv.com:8080/";
 				API_VLS = "http://agw-stg.sk-iptv.com:8080";
 				API_VMS = "http://58.123.205.82:9080";
@@ -4610,6 +4693,7 @@
 				API_ME = "http://mobilebtv.com";
 				API_METV = "http://metv.hanafostv.com:8080";
 				API_METV2 = "http://agw.sk-iptv.com:8080";
+				API_MGMRPS = "https://agw.sk-iptv.com:8443/rps/v5/mgmrps/mgmrps-service/";
 				API_NAVILOG = "https://btvplog-live.skbroadband.com:8443/api/logs";
 				API_NAVILOG_NPI = "https://collection-canvas.skbroadband.com/v2/btvplus/app/track";
 				API_NF = "http://agw.sk-iptv.com:8080";
@@ -4619,12 +4703,14 @@
 				API_PSS = "https://pss.hanafostv.com:8443";
 				API_PUCR = "http://mpush-coreApi.hanafostv.com:8088";
 				API_PUSH = "http://mpush-sendApi.hanafostv.com:8088";
+				API_RPS = "http://rps.hanafostv.com:8080";
 				API_RVS = "http://nsrvs.hanafostv.com:8080";
 				API_RVS2 = "http://agw.sk-iptv.com:8080";
 				API_SCS2 = "https://agw.sk-iptv.com:8443";
 				API_SMD = "http://smd.hanafostv.com:8080";
 				API_SRCXPG = "http://smdxpg.hanafostv.com:8080";
 				API_STACM = "https://stacm.hanafostv.com:8443";
+				API_UORPS = "https://agw.sk-iptv.com:8443/rps/v5/rps/uorps-service/";
 				API_UPMC = "https://mpushupmc.hanafostv.com:8443/";
 				API_VLS = "http://agw.sk-iptv.com:8080";
 				API_VMS = "http://mobilebtv.com:9080";

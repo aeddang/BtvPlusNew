@@ -119,16 +119,16 @@
 "recommend" = "권장";
 "empty" = "없음";
 
-"sir" ="‘%s’님이";
-"forSir" ="‘%s’님에게 필요한";
-
+"sir" = "‘%s’님이";
+"forSir" = "‘%s’님에게 필요한";
+"recivePoint" = "포인트 받기";
 
 /*
   Button
 */
 "btnNext" = "다음";
 "btnComplete" = "완료";
-"btnShare" = "공유하기";
+"btnShare" = "추천하기";
 "btnMore" = "더 보기";
 "btnAll" = "전체보기";
 "btnDetail" = "상세보기";
@@ -588,10 +588,14 @@
 /*
  PageRecommandFriend
 */
-"recommandFriendText1" = "내가 본 VOD를 친구에게 추천하면";
-"recommandFriendText2" = "친구도 나도 할인!";
-"recommandFriendText3" = "구매한 작품이 추천 가능한지 확인해 보세요!\n추천 가능한 작품에만 추천하기 버튼이 표시됩니다.";
-"recommandFriendText4" = "※ 추천 가능한 작품은 계속 변경되며, 이 중 구매한 작품이 있을 경우\n추천이 가능합니다.";
+
+
+"recommandFriendText1" = "추천한 작품을 친구가 구매할 때 마다";
+"recommandFriendText2" = "쌓인 B포인트로 할인을 받을 수 있어요!";
+"recommandFriendText3" = "작품 상세 페이지에서";
+"recommandFriendText4" = "표시가 있는";
+"recommandFriendText5" = "작품을 추천하면 포인트를 받을 수 있습니다.";
+"recommandFriendTip" = "※ B포인트는 친구가 추천한 콘텐츠 구매 완료한 시점에 적립됩니다.";
 
 "recommandFriendTable1" = "나의 친구 추천 현황";
 "recommandFriendTable1Sub1" = "추천하기";
@@ -909,7 +913,46 @@
 "shareComplete" = "공유 완료 되었습니다.";
 "shareFail" = "공유 실패 하였습니다. 다시 시도해 주세요.";
 
+"shareSynopsisRecommand" = "친구가 모바일 B tv에서 작품을 추천했어요!\n추천 작품을 지금 할인된 금액으로 시청해 보세요! (24시간 후 만료)";
 
+"shareSynopsisRecommandBenefitText1" = "내가 본 작품을\n친구에게 추천하고";
+"shareSynopsisRecommandBenefitText2" = "친구도 나도 혜택 받고!";
+"shareSynopsisRecommandBenefitText3" = "추천한 작품을 친구가 구매하면 B포인트가 쌓이고,\nB포인트로 다른 작품을 할인 받을 수 있어요.";
+
+"shareSynopsisRecommandBenefitFriend" = "친구가 받는 혜택";
+"shareSynopsisRecommandBenefitMe" = "내가 받는 혜택";
+"shareSynopsisRecommandVodLeading" = "추천 작품";
+"shareSynopsisRecommandPurchaseLeading" = "구매 금액의";
+"shareSynopsisRecommandVodTrailing" = "% 할인 쿠폰";
+"shareSynopsisRecommandPurchaseTrailing" = "% B포인트 적립";
+
+"shareSynopsisRecommandVodTip" = "추천 작품 구매 시";
+"shareSynopsisRecommandPurchaseTip" = "추천 작품 구매 완료 시";
+
+"shareSynopsisRecommandTip" = "※B포인트는 친구가 추천한 콘텐츠 구매 완료 시점에 적립됩니다.\n※내 추천 현황은 MY > 친구 추천 메뉴에서 확인하실 수 있습니다.";
+"shareSynopsisRecommandButton" = "추천하고 혜택 받기";
+
+"shareSynopsisRecommandReceiveTitleLeading" = "님께서";
+"shareSynopsisRecommandReceiveTitleTrailing" = "작품을 추천하셨네요!";
+
+"shareSynopsisRecommandReceiveText" = "친구가 추천한 작품은\n쿠폰 할인가로 구매하실 수 있어요.";
+"shareSynopsisRecommandReceiveTip" = "구매시 ‘친구 추천 할인 쿠폰’을\n선택하여 구매해 주세요";
+"shareSynopsisRecommandReceiveNeedPairing" = "지금 바로 B tv를 연결하고\n친구가 보낸 할인 쿠폰을 받아보세요!";
+"shareSynopsisRecommandReceiveButton" = "할인 쿠폰 받기";
+
+"shareSynopsisRecommandReceiveCompleted" = "할인 쿠폰이 발급되었습니다.";
+"shareSynopsisRecommandReceiveCompletedTip" = "받은 쿠폰은 지급 후 1일 동안\n이용하실 수 있습니다.";
+
+"shareSynopsisRecommandReceiveError" = "추천 혜택 발급 실패";
+"shareSynopsisRecommandReceiveErrorExpired" = "추천 받은 링크의\n유효기간이 만료되었습니다.";
+"shareSynopsisRecommandReceiveErrorExpiredTip" = "다시 친구에게 추천을 요청하시면\n추천을 받은 다음 날까지\n할인 쿠폰을 받으실수 있습니다.";
+"shareSynopsisRecommandReceiveErrorEqualSTB" = "추천 혜택은 추천한 친구와 다른 B tv를 이용하는 경우\n에만 받으실수 있습니다.";
+"shareSynopsisRecommandReceiveErrorHasCoupon" = "이미 같은 VOD의\n할인 쿠폰을 받으셨습니다.";
+"shareSynopsisRecommandReceiveErrorHasCouponTip" = "받은 할인 쿠폰을 이미 사용한 경우\n이 VOD의 쿠폰은 재발급이 불가합니다.\n쿠폰을 아직 사용하지 않으신 경우\nMY > 쿠폰함에서 확인 후 이용해 주세요.";
+"shareSynopsisRecommandReceiveErrorPurchased" = "작품은 이미 구매 완료되어\n바로 시청하실 수 있습니다.";
+"shareSynopsisRecommandReceiveErrorPurchasedTip" = "구매하신 작품을 추천 받은 경우\n할인 쿠폰이 지급되지 않습니다.";
+
+"shareSynopsisRecommandReceiveErrorFail" ="혜택 쿠폰 발급에 실패했습니다.\n쿠폰 발급을 위해 잠시 후 수신한\n추천 메시지를 다시 선택해 주세요.";
 
 
 ///Kids

@@ -47,6 +47,9 @@ class SynopsisModel : PageProtocol {
     private(set) var cwCallId:String? = nil
     private(set) var playGradeData:PlayGradeData? = nil
     private(set) var isQuiz:Bool = false
+    private(set) var isRecommand:Bool = false
+ 
+    private(set) var isRecommandAble:Bool = false
     private(set) var seasonTitle:String? = nil
     init(type:MetvNetwork.SynopsisType = .none ) {
         self.synopsisType = type
@@ -83,7 +86,7 @@ class SynopsisModel : PageProtocol {
             self.epsdId = contents.epsd_id
             self.nextSrisId = contents.next_sris_id
             self.nextEpsdId = contents.next_epsd_id
-            
+            self.isRecommand = contents.rcmd_yn?.toBool() ?? false
             self.isGstn = contents.gstn_yn?.toBool() ?? false
             self.isNScreen = contents.nscrn_yn?.toBool() ?? false
             self.rsluInfoList = contents.epsd_rslu_info
@@ -99,6 +102,8 @@ class SynopsisModel : PageProtocol {
             self.seriesInfoList = contents.series_info
             self.isDistProgram = self.distStsCd != .stop
             self.cwCallId = contents.cw_call_id_val
+            
+             
         }
         
         //epsdRsluId
@@ -153,7 +158,6 @@ class SynopsisModel : PageProtocol {
         case .seasonFirst :
             self.ppvProducts = productsPpv
             self.ppsProducts = purchasPpv
-            
             var defaultSet = Dictionary<String, String>()
             defaultSet["prd_prc_id"] = "0"
             defaultSet["epsd_id"] = "0"
@@ -170,6 +174,14 @@ class SynopsisModel : PageProtocol {
             self.ppvProducts = purchasPpv
         case .none: do{}
         }
+        
+        self.isRecommandAble = self.distStsCd == .synced
+            && !self.isCancelProgram
+            && self.isRecommand
+            && !self.isGstn
+            && self.purchaseModels.filter({ $0.isUse && $0.isSalesPeriod }).contains(where: { $0.isFree  }) == false
+            && self.purchaseModels.contains(where: { $0.prd_prc_id == "411211275" }) == false//모비 무료관 없음
+        
         return self
     }
     private func getSafePath(_ path:String?)->String?{
@@ -475,6 +487,8 @@ class SynopsisModel : PageProtocol {
                 }
             }
         }
+        
+        
         #if DEBUG
             //log
             watchOptions.forEach({

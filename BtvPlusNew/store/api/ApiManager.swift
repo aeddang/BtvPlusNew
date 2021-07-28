@@ -73,6 +73,8 @@ class ApiManager :PageProtocol, ObservableObject{
     private lazy var wepg:Wepg = Wepg(network: WepgNetwork())
     private lazy var web:Web = Web(network: WebNetwork())
     private lazy var kes:Kes = Kes(network: KesNetwork())
+    private lazy var rps:Rps = Rps(network: RpsNetwork())
+    private lazy var mgmRps:MgmRps = MgmRps(network: MgmRpsNetwork())
     private(set) var updateFlag: UpdateFlag = .none
     init() {
         self.initateApi()
@@ -91,6 +93,8 @@ class ApiManager :PageProtocol, ObservableObject{
         self.web.clear()
         self.wepg.clear()
         self.kes.clear()
+        self.rps.clear()
+        self.mgmRps.clear()
         self.apiQ.removeAll()
     }
     
@@ -99,12 +103,12 @@ class ApiManager :PageProtocol, ObservableObject{
         NpsNetwork.goodbye()
         self.vms.versionCheck(
             completion:{res in
+                
                 DataLog.d("eUpdateFlag " + (res.eUpdateFlag ?? "nil"), tag:self.tag)
                 DataLog.d("releaseNote " + (res.releaseNote ?? "nil"), tag:self.tag)
                 DataLog.d("tstore " + (res.tstore ?? "nil"), tag:self.tag)
                 DataLog.d("update_url " + (res.update_url ?? "nil"), tag:self.tag)
                 DataLog.d("server_conf " + (res.server_conf?.debugDescription ?? "nil"), tag:self.tag)
-                
                 self.updateFlag = UpdateFlag.getFlag(res.eUpdateFlag)
                 DataLog.d("self.updateFlag " +  self.updateFlag.rawValue, tag:self.tag)
                 SystemEnvironment.isEvaluation = (self.updateFlag == .advance)
@@ -522,7 +526,22 @@ class ApiManager :PageProtocol, ObservableObject{
             profile: kid, epNo: epNo, epTpNo: epTpNo, questions: questions,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
-      
+        
+        //RPS
+        case .getRecommendHistory : self.rps.getRecommendHistory(
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getRecommendBenefit : self.mgmRps.getRecommendBenefit(
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .registRecommend(let user, let data) : self.mgmRps.registRecommend(
+            user: user, data: data,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getRecommendCoupon(let mgmId, let srisTypeCd): self.mgmRps.getRecommendCoupon(
+            mgmId: mgmId, srisTypeCd: srisTypeCd,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         }
         return apiID
     }

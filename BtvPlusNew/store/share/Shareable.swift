@@ -36,5 +36,5 @@ class Shareable {
         self.imagePath = imagePath
         self.isPopup = isPopup
         self.useDynamiclink = useDynamiclink
-    }
+    } 
 }

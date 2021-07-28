@@ -12,7 +12,8 @@ import UIKit
 struct SystemEnvironment {
     static let model:String = AppUtil.model
     static let systemVersion:String = UIDevice.current.systemVersion
-    static let bundleVersion:String = "4.4.0" //AppUtil.version
+    static let bundleVersion:String = "4.4.1" //AppUtil.version
+    static let bundleVersionKey:String = "441" //AppUtil.version
     static let buildNumber:String = "1024" //AppUtil.build
     private static let deviceId:String = UIDevice.current.identifierForVendor?.uuidString ?? UUID.init().uuidString
     static var firstLaunch :Bool = false

@@ -8,7 +8,7 @@
 import Foundation
 
 struct CreativeReport: Decodable {
-    private(set) var contents: KidsReportContents?
+    private(set) var contents: KidsReportContents? = nil
 }
 
 

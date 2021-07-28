@@ -116,7 +116,7 @@ extension Asset{
         public static let ratingPrimary = "icSynopRatingS"
         
         public static let watcha = "icSynopWatcha"
-        public static let share = "icSynopShareNor"
+        public static let share = "icSynopRecommendNor"
         public static let tip = "icSynopTip"
         
         public static let alarm = "icMyAlarm"
@@ -175,6 +175,7 @@ extension Asset{
         public static let purchase = "icMyPaidT"
         
         public static let stb = "icPopupPairingDefault"
+        public static let recommendPoint = "icMyRecommendPoint"
        
         
     }
@@ -219,58 +220,41 @@ extension Asset{
         public static let centerRight =  "icRemoteCenter04Pre"
         public static let centerOk = "icRemoteCenterOk"
         public static let centerPlayStop = "icRemoteCenterPlayStop"
-        
         public static let centerSkip = "icRemoteCenterSkipNor"
         public static let centerSkipPrev = "icRemoteCenterSkip01Pre"
         public static let centerSkipNext = "icRemoteCenterSkip02Pre"
-        
         public static let channel = "icRemoteChannelNor"
         public static let channelUp = "icRemoteChannelUpPre"
         public static let channelDown = "icRemoteChannelDownPre"
-        
         public static let chlist = "icRemoteChlistNor"
         public static let chlistOn = "icRemoteChlistPre"
-        
         public static let chNumber = "icRemoteChNumberNor"
         public static let chNumberOn = "icRemoteChNumberPre"
-        
         public static let earphone = "icRemoteEarphoneOff"
         public static let earphoneOn = "icRemoteEarphoneOn"
-        
         public static let exit = "icRemoteExitNor"
         public static let exitOn = "icRemoteExitPre"
-        
         public static let fastForward = "icRemoteFastForwardNor"
         public static let fastForwardOn = "icRemoteFastForwardPreT"
         public static let rewind = "icRemoteRewindNorT"
         public static let rewindOn = "icRemoteRewindPre"
-        
         public static let refresh = "icRemoteRefresh"
-        
         public static let home = "icRemoteHomeNor"
         public static let homeOn = "icRemoteHomePre"
-        
         public static let text = "icRemoteTextNor"
         public static let textOn = "icRemoteTextPre"
-        
         public static let multiview = "icRemoteMultiviewNor"
         public static let multiviewOn = "icRemoteMultiviewPre"
-        
         public static let mute = "icRemoteMuteOff"
         public static let muteOn = "icRemoteMuteOn"
-        
         public static let onair = "icRemoteOnair"
         public static let vod = "icRemoteVod"
-        
         public static let on = "icRemoteOnNor"
         public static let onOn = "icRemoteOnPre"
-        
         public static let previous = "icRemotePreviousNor"
         public static let previousOn = "icRemotePreviousPre"
-        
         public static let vibrate = "icRemoteVibrateOff"
         public static let vibrateOn = "icRemoteVibrateOn"
-        
         public static let volume = "icRemoteVolumeNor"
         public static let volumeUp = "icRemoteVolumePlusPre"
         public static let volumeDown = "icRemoteVolumeMinusPre"
@@ -290,6 +274,8 @@ extension Asset{
         public static let bgGradientBottom = "bgGradientBottom"
         public static let bgGradientTop = "bgGradientTop"
         public static let bgCoupon = "imgMyListCoupon01"
+        public static let recommandTip = isPad ? "icSynopTooltipST" : "icSynopTooltipS"
+        public static let recommendPopupTicket = "icPopupTicket"
     }
     
     struct image {
@@ -325,6 +311,9 @@ extension Asset{
         public static let pairingHitchText02 = "imgPopupTitle02"
         public static let pairingHitch01 = "imgPopupCharecter01"
         public static let pairingHitch02 = "imgPopupCharecter02"
+        
+        public static let recommendDetail = "imgMyRecommendDetail"
+        public static let recommendPopup = "imgSynopsisRecommendPopup"
     }
     
     struct age {

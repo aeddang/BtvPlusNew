@@ -7,8 +7,8 @@
 
 import Foundation
 struct EvaluationExams: Decodable {
-    private(set) var contents: EvaluationExam? 
+    private(set) var contents: EvaluationExam? = nil
 }
 struct EvaluationExam: Decodable {
-    private(set) var sris_id: String? //
+    private(set) var sris_id: String? = nil //
 }

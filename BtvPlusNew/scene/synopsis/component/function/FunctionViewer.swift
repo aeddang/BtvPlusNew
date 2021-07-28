@@ -10,6 +10,7 @@ import SwiftUI
 
 struct FunctionViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var pairing:Pairing
     var componentViewModel:PageSynopsis.ComponentViewModel
     var synopsisData:SynopsisData? = nil
     
@@ -17,9 +18,15 @@ struct FunctionViewer: PageComponent{
     //var epsdId:String?
     @Binding var isBookmark:Bool?
     @Binding var isLike:LikeStatus?
+    var isRecommand:Bool?
+    
+    @State var isPairing:Bool = false
     var body: some View {
-        VStack(alignment:.leading , spacing:0) {
-            HStack(spacing:Dimen.margin.regular){
+        VStack(alignment:.trailing , spacing:0) {
+            if self.isPairing && self.isRecommand == true && SystemEnvironment.isTablet {
+                RecommandTip()
+            }
+            HStack(alignment: .center, spacing:Dimen.margin.regular){
                 if let synopsisData = self.synopsisData {
                     BookMarkButton(
                         data:synopsisData,
@@ -41,13 +48,22 @@ struct FunctionViewer: PageComponent{
                 }
                 .buttonStyle(BorderlessButtonStyle())
                 if let srisId = self.synopsisData?.srisId{
-                    ShareButton(
-                        srisId:srisId,
-                        epsdId:self.synopsisData?.epsdId
-                    )
-                    .buttonStyle(BorderlessButtonStyle())
+                    HStack(alignment: .top, spacing:0){
+                        ShareButton(
+                            srisId:srisId,
+                            epsdId:self.synopsisData?.epsdId,
+                            isRecommand: self.isPairing ? self.isRecommand : false
+                        )
+                        .buttonStyle(BorderlessButtonStyle())
+                        if self.isPairing && self.isRecommand == true && !SystemEnvironment.isTablet {
+                            RecommandTip()
+                        }
+                    }
                 }
             }
+        }
+        .onReceive(self.pairing.$status) { status in
+            self.isPairing = status == .pairing
         }
         .modifier(ContentHorizontalEdges())
         .onAppear{

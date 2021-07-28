@@ -98,6 +98,7 @@ struct PageSynopsis: PageView {
                             sceneOrientation: self.sceneOrientation,
                             isBookmark: self.$isBookmark,
                             isLike: self.$isLike,
+                            isRecommand : self.isRecommand,
                             seris: self.$seris,
                             
                             infinityScrollModel: self.infinityScrollModel,
@@ -359,6 +360,7 @@ struct PageSynopsis: PageView {
     
    
     @State var isBookmark:Bool? = nil
+    @State var isRecommand:Bool? = nil
     @State var isLike:LikeStatus? = nil
    
     @State var hasAuthority:Bool? = nil
@@ -702,6 +704,7 @@ struct PageSynopsis: PageView {
             if let kidYn = self.synopsisModel?.kidsYn {self.synopsisData?.kidZone = kidYn }
                 
             self.epsdId = self.synopsisModel?.epsdId
+            self.isRecommand = self.synopsisModel?.isRecommandAble
             self.epsdRsluId = self.synopsisModel?.epsdRsluId ?? self.epsdRsluId
             self.synopsisData?.epsdRsluId = self.epsdRsluId
             self.synopsisModel?.purchasedPid = self.purchasedPid
@@ -712,6 +715,7 @@ struct PageSynopsis: PageView {
             self.relationContentsModel.selectedEpsdId = self.epsdId
             DataLog.d("PageSynopsis epsdId  : " + (self.epsdId ?? "nil"), tag: self.tag)
             DataLog.d("PageSynopsis epsdRsluId  : " + self.epsdRsluId, tag: self.tag)
+            DataLog.d("PageSynopsis isRecommand  : " + (self.isRecommand.debugDescription ?? "nil"), tag: self.tag)
             
         } else {
             self.progressError = true

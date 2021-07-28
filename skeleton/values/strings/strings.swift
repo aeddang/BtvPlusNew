@@ -127,6 +127,41 @@ extension String {
         public static let synopsis = "shareSynopsis".loaalized()
         public static let complete = "shareComplete".loaalized()
         public static let fail = "shareFail".loaalized()
+        
+        public static let synopsisRecommand = "shareSynopsisRecommand".loaalized()
+        public static let synopsisRecommandBenefitText1 = "shareSynopsisRecommandBenefitText1".loaalized()
+        public static let synopsisRecommandBenefitText2 = "shareSynopsisRecommandBenefitText2".loaalized()
+        public static let synopsisRecommandBenefitText3 = "shareSynopsisRecommandBenefitText3" .loaalized()
+
+        public static let synopsisRecommandBenefitFriend = "shareSynopsisRecommandBenefitFriend".loaalized()
+        public static let synopsisRecommandBenefitMe = "shareSynopsisRecommandBenefitMe".loaalized()
+        public static let synopsisRecommandVodLeading = "shareSynopsisRecommandVodLeading".loaalized()
+        public static let synopsisRecommandPurchaseLeading = "shareSynopsisRecommandPurchaseLeading".loaalized()
+        public static let synopsisRecommandVodTrailing = "shareSynopsisRecommandVodTrailing".loaalized()
+        public static let synopsisRecommandPurchaseTrailing = "shareSynopsisRecommandPurchaseTrailing".loaalized()
+        public static let synopsisRecommandVodTip = "shareSynopsisRecommandVodTip".loaalized()
+        public static let synopsisRecommandPurchaseTip = "shareSynopsisRecommandPurchaseTip".loaalized()
+        public static let synopsisRecommandTip = "shareSynopsisRecommandTip".loaalized()
+        public static let synopsisRecommandButton = "shareSynopsisRecommandButton".loaalized()
+        
+        public static let synopsisRecommandReceiveTitleLeading = "shareSynopsisRecommandReceiveTitleLeading".loaalized()
+        public static let synopsisRecommandReceiveTitleTrailing = "shareSynopsisRecommandReceiveTitleTrailing".loaalized()
+        public static let synopsisRecommandReceiveText = "shareSynopsisRecommandReceiveText".loaalized()
+        public static let synopsisRecommandReceiveTip = "shareSynopsisRecommandReceiveTip".loaalized()
+        public static let synopsisRecommandReceiveButton = "shareSynopsisRecommandReceiveButton".loaalized()
+        public static let synopsisRecommandReceiveNeedPairing = "shareSynopsisRecommandReceiveNeedPairing".loaalized()
+        public static let synopsisRecommandReceiveCompleted = "shareSynopsisRecommandReceiveCompleted".loaalized()
+        public static let synopsisRecommandReceiveCompletedTip = "shareSynopsisRecommandReceiveCompletedTip".loaalized()
+        
+        public static let synopsisRecommandReceiveError = "shareSynopsisRecommandReceiveError".loaalized()
+        public static let synopsisRecommandReceiveErrorExpired = "shareSynopsisRecommandReceiveErrorExpired".loaalized()
+        public static let synopsisRecommandReceiveErrorExpiredTip = "shareSynopsisRecommandReceiveErrorExpiredTip".loaalized()
+        public static let synopsisRecommandReceiveErrorEqualSTB = "shareSynopsisRecommandReceiveErrorEqualSTB".loaalized()
+        public static let synopsisRecommandReceiveErrorHasCoupon = "shareSynopsisRecommandReceiveErrorHasCoupon".loaalized()
+        public static let synopsisRecommandReceiveErrorHasCouponTip = "shareSynopsisRecommandReceiveErrorHasCouponTip".loaalized()
+        public static let synopsisRecommandReceiveErrorPurchased = "shareSynopsisRecommandReceiveErrorPurchased".loaalized()
+        public static let synopsisRecommandReceiveErrorPurchasedTip = "shareSynopsisRecommandReceiveErrorPurchasedTip".loaalized()
+        public static let synopsisRecommandReceiveErrorFail = "shareSynopsisRecommandReceiveErrorFail".loaalized()
     }
     
     struct pairingHitch {

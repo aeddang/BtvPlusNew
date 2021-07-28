@@ -15,7 +15,7 @@ class ShareManager :PageProtocol {
         self.pagePresenter = pagePresenter
     }
     
-    func share(_ shareable:Shareable){
+    func share(_ shareable:Shareable,  completion: ((Bool) -> Void)? = nil){
         if shareable.image == nil , let imagePath = shareable.imagePath{
             share(pageID:shareable.pageID,
                   params:shareable.params,
@@ -23,7 +23,8 @@ class ShareManager :PageProtocol {
                   link: shareable.link,
                   text:shareable.text,
                   image:imagePath,
-                  useDynamiclink: shareable.useDynamiclink
+                  useDynamiclink: shareable.useDynamiclink,
+                  completion:completion
                   )
         }else {
             share(pageID:shareable.pageID,
@@ -32,14 +33,15 @@ class ShareManager :PageProtocol {
                   link: shareable.link,
                   text:shareable.text,
                   image:shareable.image,
-                  useDynamiclink: shareable.useDynamiclink
+                  useDynamiclink: shareable.useDynamiclink,
+                  completion:completion
                   )
         }
     }
     
     func share(pageID:PageID?, params:[PageParam:Any]? = nil, isPopup:Bool = true,
                link:String? = nil, text:String? = nil, image:String,
-               useDynamiclink:Bool = true){
+               useDynamiclink:Bool = true,  completion: ((Bool) -> Void)? = nil){
         self.pagePresenter?.isLoading = true
         var shareImg:UIImage? = nil
         DispatchQueue.global().async {
@@ -59,7 +61,7 @@ class ShareManager :PageProtocol {
     
     func share( pageID:PageID?, params:[PageParam:Any]? = nil, isPopup:Bool = true,
                 link:String? = nil, text:String? = nil, image:UIImage? = nil,
-                useDynamiclink:Bool = true){
+                useDynamiclink:Bool = true,  completion: ((Bool) -> Void)? = nil){
         if let page = pageID {
             guard let qurry = WhereverYouCanGo.qurryIwillGo(
                 pageID: page,
@@ -80,7 +82,7 @@ class ShareManager :PageProtocol {
                                 url:url,
                                 text: text
                             )
-                        SocialMediaSharingManage.share(shareable)
+                        SocialMediaSharingManage.share(shareable, completion: completion)
                     }
                 }
             
@@ -100,7 +102,7 @@ class ShareManager :PageProtocol {
                                 url:url,
                                 text: text
                             )
-                        SocialMediaSharingManage.share(shareable)
+                        SocialMediaSharingManage.share(shareable, completion: completion)
                     }
                 }
             } else {
@@ -111,7 +113,7 @@ class ShareManager :PageProtocol {
                         url: link.toUrl(),
                         text: text
                     )
-                SocialMediaSharingManage.share(shareable)
+                SocialMediaSharingManage.share(shareable, completion: completion)
             }
         }
     }

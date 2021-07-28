@@ -186,6 +186,8 @@ extension String{
         public static let recommandFriendText2 = "recommandFriendText2".loaalized()
         public static let recommandFriendText3 = "recommandFriendText3".loaalized()
         public static let recommandFriendText4 = "recommandFriendText4".loaalized()
+        public static let recommandFriendText5 = "recommandFriendText5".loaalized()
+        public static let recommandFriendTip = "recommandFriendTip".loaalized()
         public static let recommandFriendTable1 = "recommandFriendTable1".loaalized()
         public static let recommandFriendTable1Sub1 = "recommandFriendTable1Sub1".loaalized()
         public static let recommandFriendTable1Sub2 = "recommandFriendTable1Sub2".loaalized()

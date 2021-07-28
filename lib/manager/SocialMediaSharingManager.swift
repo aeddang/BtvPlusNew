@@ -41,13 +41,13 @@ struct SocialMediaSharingManage{
         }
     }
     
-    static func share(_ object: SocialMediaShareable) {
+    static func share(_ object: SocialMediaShareable, completion: ((Bool) -> Void)? = nil) {
         let rootVC = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController
         guard let vc = rootVC else { return }
-        share(object, from: vc)
+        share(object, from: vc, completion:completion)
     }
     
-    static func share(_ object: SocialMediaShareable, from presentingVC: UIViewController) {
+    static func share(_ object: SocialMediaShareable, from presentingVC: UIViewController, completion: ((Bool) -> Void)? = nil ) {
         var sharedObjects: [AnyObject] = []
         if let img = object.image { sharedObjects.append(img) }
         if let url = object.url, let txt = object.text {
@@ -63,6 +63,13 @@ struct SocialMediaSharingManage{
         let activityViewController = UIActivityViewController(activityItems: sharedObjects, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = presentingVC.view
         presentingVC.present(activityViewController, animated: true, completion: nil)
+        activityViewController.completionWithItemsHandler = { (type, completed, items, error) in
+            if completed && error == nil {
+                completion?(true)
+            } else {
+                completion?(false)
+            }
+        }
            
     }
 }

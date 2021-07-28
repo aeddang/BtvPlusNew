@@ -9,29 +9,29 @@ import Foundation
 
 
 struct MonthlyPurchaseInfo : Decodable {
-    private(set) var ver: String?     // 인터페이스 버전
-    private(set) var svc_name: String?    // 서비스이름
-    private(set) var stb_id: String?  // STB ID
-    private(set) var page_tot: String?    // 전체 페이지 개수
-    private(set) var page_no: String?     // 현재 페이지 번호
-    private(set) var purchase_tot: String?    // 즐겨찾기의 전체 개수
-    private(set) var purchase_no: String?     // 현재 페이지의 즐겨찾기 개수
-    private(set) var purchase_cancel_svc: String?     // 월정액 해지 서비스를 사용할 것인지 판단 여부 - Y: 해지 서비스 이용, N: 해지 서비스 이용 안함
-    private(set) var yn_perd: String?     // N : 기존 월정액 구매내역 정보 제공(약정정보 및 커머스 구매내역 포함) Y : 기간권 구매내역 정보 제공
-    private(set) var purchaseList: [PurchaseFixedChargeItem]?   // 즐겨찾기 집합의 이름
+    private(set) var ver: String? = nil     // 인터페이스 버전
+    private(set) var svc_name: String? = nil    // 서비스이름
+    private(set) var stb_id: String? = nil  // STB ID
+    private(set) var page_tot: String? = nil   // 전체 페이지 개수
+    private(set) var page_no: String? = nil    // 현재 페이지 번호
+    private(set) var purchase_tot: String? = nil   // 즐겨찾기의 전체 개수
+    private(set) var purchase_no: String? = nil    // 현재 페이지의 즐겨찾기 개수
+    private(set) var purchase_cancel_svc: String? = nil     // 월정액 해지 서비스를 사용할 것인지 판단 여부 - Y: 해지 서비스 이용, N: 해지 서비스 이용 안함
+    private(set) var yn_perd: String? = nil    // N : 기존 월정액 구매내역 정보 제공(약정정보 및 커머스 구매내역 포함) Y : 기간권 구매내역 정보 제공
+    private(set) var purchaseList: [PurchaseFixedChargeItem]? = nil   // 즐겨찾기 집합의 이름
 }
 
 struct PeriodMonthlyPurchaseInfo : Decodable {
-    private(set) var ver: String?     // 인터페이스 버전
-    private(set) var svc_name: String?    // 서비스이름
-    private(set) var stb_id: String?  // STB ID
-    private(set) var page_tot: String?    // 전체 페이지 개수
-    private(set) var page_no: String?     // 현재 페이지 번호
-    private(set) var purchase_tot: String?    // 즐겨찾기의 전체 개수
-    private(set) var purchase_no: String?     // 현재 페이지의 즐겨찾기 개수
-    private(set) var purchase_cancel_svc: String?     // 월정액 해지 서비스를 사용할 것인지 판단 여부 - Y: 해지 서비스 이용, N: 해지 서비스 이용 안함
-    private(set) var yn_perd: String?     // N : 기존 월정액 구매내역 정보 제공(약정정보 및 커머스 구매내역 포함) Y : 기간권 구매내역 정보 제공
-    private(set) var purchaseList: [PurchaseFixedChargePeriodItem]?  // 즐겨찾기 집합의 이름
+    private(set) var ver: String? = nil     // 인터페이스 버전
+    private(set) var svc_name: String? = nil    // 서비스이름
+    private(set) var stb_id: String? = nil  // STB ID
+    private(set) var page_tot: String? = nil    // 전체 페이지 개수
+    private(set) var page_no: String? = nil     // 현재 페이지 번호
+    private(set) var purchase_tot: String? = nil    // 즐겨찾기의 전체 개수
+    private(set) var purchase_no: String? = nil     // 현재 페이지의 즐겨찾기 개수
+    private(set) var purchase_cancel_svc: String? = nil     // 월정액 해지 서비스를 사용할 것인지 판단 여부 - Y: 해지 서비스 이용, N: 해지 서비스 이용 안함
+    private(set) var yn_perd: String? = nil     // N : 기존 월정액 구매내역 정보 제공(약정정보 및 커머스 구매내역 포함) Y : 기간권 구매내역 정보 제공
+    private(set) var purchaseList: [PurchaseFixedChargePeriodItem]? = nil  // 즐겨찾기 집합의 이름
 }
 
 

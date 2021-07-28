@@ -14,7 +14,7 @@ struct KesNetwork : Network{
 }
 extension KesNetwork{
     static let RESPONSE_FORMET = "json"
-    static let MENU_STB_SVC_ID = "BTVMOBV440"
+    static let MENU_STB_SVC_ID = "BTVMOBV440" //+ SystemEnvironment.bundleVersionKey
     static let PAGE_COUNT = 30
     
     enum UpdateType {

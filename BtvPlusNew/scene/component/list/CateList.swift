@@ -183,7 +183,7 @@ struct CateItem: PageView {
                     .cancelOnDisappear(true)
                     .loadImmediately()
                     .aspectRatio(contentMode: .fill)
-                    .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
+                    .modifier(MatchParent())
             }
             .frame(
                 width: ListItem.cate.size.width,

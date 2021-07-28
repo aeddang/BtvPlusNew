@@ -23,10 +23,12 @@ struct SynopsisBody: PageComponent{
     var tabNavigationModel:NavigationModel
     @Binding var isBookmark:Bool?
     @Binding var isLike:LikeStatus?
+    var isRecommand:Bool?
     @Binding var seris:[SerisData]
   
     var topIdx:Int = UUID.init().hashValue
     var synopsisData:SynopsisData? = nil
+    var synopsisModel:SynopsisModel? = nil
     var isPairing:Bool? = nil
     var episodeViewerData:EpisodeViewerData? = nil
     var purchasViewerData:PurchaseViewerData? = nil
@@ -73,12 +75,13 @@ struct SynopsisBody: PageComponent{
                     if self.funtionLayout == .horizontal {
                         HStack(alignment:.top , spacing:0){
                             EpisodeViewer(data:episodeViewerData)
-                            Spacer()
+                            //Spacer()
                             FunctionViewer(
                                 componentViewModel: self.componentViewModel,
                                 synopsisData :self.synopsisData,
                                 isBookmark: self.$isBookmark,
-                                isLike: self.$isLike
+                                isLike: self.$isLike,
+                                isRecommand: self.isRecommand
                             )
                         }
                         .modifier(ListRowInset(spacing: Self.spacing))
@@ -90,7 +93,8 @@ struct SynopsisBody: PageComponent{
                                 componentViewModel: self.componentViewModel,
                                 synopsisData :self.synopsisData,
                                 isBookmark: self.$isBookmark,
-                                isLike: self.$isLike
+                                isLike: self.$isLike,
+                                isRecommand: self.isRecommand
                             )
                             Spacer()
                         }
@@ -156,7 +160,8 @@ struct SynopsisBody: PageComponent{
                                     componentViewModel: self.componentViewModel,
                                     synopsisData :self.synopsisData,
                                     isBookmark: self.$isBookmark,
-                                    isLike: self.$isLike
+                                    isLike: self.$isLike,
+                                    isRecommand: self.isRecommand
                                 )
                             }
                             
@@ -167,7 +172,8 @@ struct SynopsisBody: PageComponent{
                                     componentViewModel: self.componentViewModel,
                                     synopsisData :self.synopsisData,
                                     isBookmark: self.$isBookmark,
-                                    isLike: self.$isLike
+                                    isLike: self.$isLike,
+                                    isRecommand: self.isRecommand
                                 )
                                 Spacer()
                             }
@@ -211,8 +217,7 @@ struct SynopsisBody: PageComponent{
                         relationTab: self.relationTab,
                         relationDatas: self.relationDatas,
                         hasRelationVod: hasRelationVod,
-                        screenSize: self.sceneObserver.screenSize.width
-                        )
+                        screenSize: self.sceneObserver.screenSize.width)
                 }
             }
         }

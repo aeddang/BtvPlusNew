@@ -48,8 +48,6 @@ class Wepg: Rest{
     }
 }
 
-
-
 struct WepgGetChannels:NetworkRoute{
     var method: HTTPMethod = .get
     var path: String = "/wepg/epg-stbservice"

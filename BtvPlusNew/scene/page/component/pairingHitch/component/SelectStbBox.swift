@@ -136,7 +136,7 @@ struct SelectStbBox: View {
                     .background(Color.brand.primary)
             }
         }
-        .padding(.bottom, SystemEnvironment.isTablet ? Dimen.margin.thin : 0)
+        //.padding(.bottom, SystemEnvironment.isTablet ? Dimen.margin.thin : 0)
         
     }//body
 }

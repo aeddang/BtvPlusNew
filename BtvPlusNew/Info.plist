@@ -64,8 +64,15 @@
 	<string>$(API_VMS)</string>
 	<key>ApiWEB</key>
 	<string>$(API_WEB)</string>
-	<key>ApiWEPG</key>
-	<string>$(API_WEPG)</string>
+    <key>ApiWEPG</key>
+    <string>$(API_WEPG)</string>
+	<key>ApiRPS</key>
+	<string>$(API_RPS)</string>
+    <key>ApiUORPS</key>
+    <string>$(API_UORPS)</string>
+    <key>ApiMGMRPS</key>
+    <string>$(API_MGMRPS)</string>
+    
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>com.skb.btvplus.bgtask</string>

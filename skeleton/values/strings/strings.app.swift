@@ -115,5 +115,6 @@ extension String {
         
         public static let sir = "sir".loaalized()
         public static let forSir = "forSir".loaalized()
+        public static let recivePoint = "recivePoint".loaalized()
     }
 }

@@ -16,7 +16,7 @@ struct EpisodeViewer: PageComponent{
     
     var body: some View {
         VStack(alignment:.leading , spacing:0) {
-            
+            Spacer().modifier(MatchHorizontal(height: 0))
             HStack(alignment: .center, spacing:Dimen.margin.tiny){
                 if let ratingPct = self.data.ratingPct {
                     RatingInfo(

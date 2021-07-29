@@ -161,12 +161,12 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
         self.watchOptions = watchItems
         guard let watchItems =  watchItems else { return }
         if watchItems.count < 2 { return }
-        guard let curIdx = watchItems.firstIndex(where: {$0.prd_prc_id == purchas.prd_prc_id}) else { return }
+        guard let curIdx = watchItems.firstIndex(where: {$0.prdPrcId == purchas.prdPrcId}) else { return }
         self.isOption = true
         self.optionIdx = curIdx
         self.optionTitle = String.sort.langTitle
         self.options = watchItems.map({$0.purStateText})
-        self.optionValues = watchItems.map({$0.prd_prc_id})
+        self.optionValues = watchItems.map({$0.prdPrcId})
     }
     private func setupOption(purchasableItems: [PurchaseModel]?, purchas:PurchaseModel){
         guard let purchasableItems =  purchasableItems else { return }

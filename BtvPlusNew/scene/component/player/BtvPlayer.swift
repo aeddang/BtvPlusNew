@@ -168,6 +168,7 @@ struct BtvPlayer: PageComponent{
                         self.isPrerollPause = true
                         self.isPreroll = false
                         self.viewModel.isPrerollPlay = false
+                        self.viewModel.btvPlayerEvent = .stopAd
                         withAnimation{ self.isWaiting = true }
                     }else{
                         self.recoveryTime = self.viewModel.time

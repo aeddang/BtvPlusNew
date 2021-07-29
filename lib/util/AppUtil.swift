@@ -87,6 +87,36 @@ struct AppUtil{
         return client.referenceTime?.now() ?? Date()
     }
     
+    static func networkTime() -> Int {
+        return Int(networkTimeDate().timeIntervalSince1970)
+    }
+    
+    static func getTime(fromInt: Int) -> String {
+        let date = Date(timeIntervalSince1970: TimeInterval(fromInt))
+        return Self.getTime(fromDate: date)
+    }
+
+    static func getTime(fromDate: Date) -> String {
+        let fmt = DateFormatter()
+        fmt.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        fmt.timeZone = TimeZone.current
+        return fmt.string(from: fromDate)
+    }
+    
+    static func getTime(fromDate: Date, format: String) -> String {
+        let fmt = DateFormatter()
+        fmt.dateFormat = format
+        fmt.timeZone = TimeZone.current
+        return fmt.string(from: fromDate)
+    }
+    
+    static func getDate(dateString: String, format: String) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        dateFormatter.timeZone = TimeZone.current
+        return dateFormatter.date(from: dateString)
+    }
+    
     static func goLocationSettings() {
         if let appSettings = URL(string: UIApplication.openSettingsURLString) {
             UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)

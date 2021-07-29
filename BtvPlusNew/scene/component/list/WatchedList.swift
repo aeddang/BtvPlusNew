@@ -146,7 +146,7 @@ struct WatchedItem: PageView {
                     Spacer().modifier(MatchParent())
                     if self.data.progress != nil {
                         Spacer().frame(
-                            width: ListItem.video.size.width * CGFloat(self.data.progress!),
+                            width: ListItem.watched.size.width * CGFloat(self.data.progress!),
                             height: Dimen.line.regular)
                             .background(Color.brand.primary)
                     }

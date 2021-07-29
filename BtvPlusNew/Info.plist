@@ -26,6 +26,8 @@
 	<string>$(API_METV)</string>
 	<key>ApiMETV2</key>
 	<string>$(API_METV2)</string>
+	<key>ApiMGMRPS</key>
+	<string>$(API_MGMRPS)</string>
 	<key>ApiNAVILOG</key>
 	<string>$(API_NAVILOG)</string>
 	<key>ApiNAVILOG_NPI</key>
@@ -44,6 +46,8 @@
 	<string>$(API_PUCR)</string>
 	<key>ApiPUSH</key>
 	<string>$(API_PUSH)</string>
+	<key>ApiRPS</key>
+	<string>$(API_RPS)</string>
 	<key>ApiRVS</key>
 	<string>$(API_RVS)</string>
 	<key>ApiRVS2</key>
@@ -56,6 +60,8 @@
 	<string>$(API_SRCXPG)</string>
 	<key>ApiSTACM</key>
 	<string>$(API_STACM)</string>
+	<key>ApiUORPS</key>
+	<string>$(API_UORPS)</string>
 	<key>ApiUPMC</key>
 	<string>$(API_UPMC)</string>
 	<key>ApiVLS</key>
@@ -64,15 +70,8 @@
 	<string>$(API_VMS)</string>
 	<key>ApiWEB</key>
 	<string>$(API_WEB)</string>
-    <key>ApiWEPG</key>
-    <string>$(API_WEPG)</string>
-	<key>ApiRPS</key>
-	<string>$(API_RPS)</string>
-    <key>ApiUORPS</key>
-    <string>$(API_UORPS)</string>
-    <key>ApiMGMRPS</key>
-    <string>$(API_MGMRPS)</string>
-    
+	<key>ApiWEPG</key>
+	<string>$(API_WEPG)</string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>com.skb.btvplus.bgtask</string>

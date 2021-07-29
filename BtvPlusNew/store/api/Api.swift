@@ -20,10 +20,11 @@ struct ApiQ :Identifiable{
     var action:ApiAction? = nil
     var isOptional:Bool = false
     var isLock:Bool = false
+    var isLog:Bool = false
     var isProcess:Bool = false
     func copy(newId:String? = nil) -> ApiQ {
         let nid = newId ?? id
-        return ApiQ(id: nid, type: type, action: action, isOptional: isOptional, isLock: isLock)
+        return ApiQ(id: nid, type: type, action: action, isOptional: isOptional, isLock: isLock, isLog:isLog)
     }
 }
 
@@ -38,6 +39,7 @@ struct ApiResultError :Identifiable{
     let type:ApiType
     let error:Error
     var isOptional:Bool = false
+    var isLog:Bool = false
     var isProcess:Bool = false
 }
 
@@ -158,7 +160,11 @@ enum ApiType{
          registRecommend(User, SynopsisData),
          getRecommendCoupon(mgmId:String, srisTypeCd:String?)
     
-   
+    //LGS
+    case postWatchLog(LgsNetwork.PlayEventType, SynopsisPlayData, synopData:SynopsisData, Pairing,
+                      pcId:String, isKidZone:Bool = false, gubun:String? = nil),
+         postWatchLogPossession(LgsNetwork.PlayEventType, SynopsisPlayData, synopData:SynopsisData, Pairing,
+                                mbtvKey:String, pcId:String, isKidZone:Bool = false, gubun:String? = nil)
     
     func coreDataKey() -> String? {
         switch self {
@@ -173,3 +179,5 @@ enum ApiType{
         }
     }
 }
+
+

@@ -201,15 +201,21 @@ struct AppLayout: PageComponent{
         //self.appSceneObserver.event = .debug("onPageInit")
         if !self.appObserverMove(self.appObserver.page) {
             let initMenuId = self.dataProvider.bands.datas.first?.menuId
-            /*
-            self.pagePresenter.changePage(PageKidsProvider
-                                            .getPageObject(.kidsHome)
-                                            //.addParam(key: .id, value: "NM2000030726")
-            )*/
             self.pagePresenter.changePage(PageProvider.getPageObject(.home).addParam(key: .id, value: initMenuId))
+            
             if self.setup.drmTestUser {
                 self.pagePresenter.openPopup(PageProvider.getPageObject(.playerTest))
             }
+            /*
+             self.pagePresenter.changePage(PageKidsProvider
+                                             .getPageObject(.kidsHome)
+                                             //.addParam(key: .id, value: "NM2000030726")
+            self.pagePresenter.openPopup(
+                PageProvider.getPageObject(.recommandReceive)
+                    .addParam(key: .id, value: "e63291c67b5f497c97d265f6409a9e26")
+                    .addParam(key: .type, value: "02")
+            )
+            */
         }
         if let alram = self.appObserver.alram  {
             self.appSceneObserver.event = .debug("apns exist")

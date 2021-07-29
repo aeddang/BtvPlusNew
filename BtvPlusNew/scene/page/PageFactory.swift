@@ -63,7 +63,7 @@ extension PageID{
     static let cashChargeGuide:PageID = "cashChargeGuide"
     static let cashChargePrivacyAndAgree:PageID = "cashChargePrivacyAndAgree"
     static let recommand:PageID = "recommand"
-   
+    static let recommandReceive:PageID = "recommandReceive"
 }
 
 struct PageProvider {
@@ -105,7 +105,8 @@ struct PageProvider {
             return  .vertical
         case .fullPlayer, .synopsisPlayer :
             return .none
-        case .confirmNumber, .privacyAndAgree, .cashChargeGuide, .cashChargePrivacyAndAgree, .recommand:
+        case .confirmNumber, .privacyAndAgree, .cashChargeGuide, .cashChargePrivacyAndAgree,
+             .recommand, .recommandReceive:
             return .opacity
         default : return  .horizontal
         }
@@ -196,6 +197,7 @@ struct PageFactory{
         case .cashChargeGuide : return PageCashChargeGuide()
         case .cashChargePrivacyAndAgree : return PageCashChargePrivacyAndAgree()
         case .recommand : return PageRecommand()
+        case .recommandReceive : return PageRecommandReceive()
         default : return PageTest()
         }
     }

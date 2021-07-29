@@ -134,7 +134,7 @@ class WebBridge :PageProtocol{
         var info = [String: Any]()
         info["log_type"] = SystemEnvironment.isStage ? "dev" : "live"
         info["stb_onead_id"] = nil
-        info["pcid"] = self.getPcid()
+        info["pcid"] = self.storage.getPcid()
         info["session_id"] = self.getSessionId()
         info["stbId"] = pairing.stbId
         info["stb_mac"] = pairing.hostDevice?.convertMacAdress ?? ""
@@ -154,25 +154,12 @@ class WebBridge :PageProtocol{
         return info
     }
     
-    
-    
-    private func getPcid()->String {
-        if let id = storage.pcId {return id}
-        let dateId = Date().toDateFormatter(dateFormat: "yyyyMMddHHmmssSSS", local: "en_US_POSIX")
-        var t = time_t(0)
-        srand48( time(&t))
-        let randNum = drand48() * 1000000
-        let id = dateId + randNum.description.toDigits(6)
-        storage.pcId = id
-        return id
-    
-    }
     private func getSessionId()->String {
         if let id = sessionId {return id}
         var t = time_t(0)
         srand48( time(&t));
         let randNum = drand48() * 100000
-        sessionId = getPcid() + randNum.description.toDigits(5)
+        sessionId = self.storage.getPcid() + randNum.description.toDigits(5)
         return sessionId!
     }
 }

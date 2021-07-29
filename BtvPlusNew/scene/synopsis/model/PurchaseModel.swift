@@ -12,8 +12,8 @@ class PurchaseModel {
     var originType: PurchasDataType = .none
     init(product: ProductItem){
         originType = .product
-        epsd_id = product.epsd_id ?? ""
-        prd_prc_id = product.prd_prc_id ?? ""
+        epsdId = product.epsd_id ?? ""
+        prdPrcId = product.prd_prc_id ?? ""
         prd_typ_cd = product.prd_typ_cd ?? ""
         asis_prd_typ_cd = product.asis_prd_typ_cd ?? ""
         prdPrcFrDt = product.prd_prc_fr_dt?.toDate(dateFormat:"yyyyMMddHHmmss", local:"ko_kr") ?? Date(timeIntervalSince1970: 0)
@@ -41,8 +41,8 @@ class PurchaseModel {
     }
     init(purchas: PurchasItem){
         self.originType = .purchase
-        epsd_id = purchas.epsd_id ?? ""
-        prd_prc_id = purchas.prd_prc_id ?? ""
+        epsdId = purchas.epsd_id ?? ""
+        prdPrcId = purchas.prd_prc_id ?? ""
         prd_typ_cd = purchas.prd_typ_cd ?? ""
         asis_prd_typ_cd = purchas.asis_prd_typ_cd ?? ""
         prdPrcFrDt = purchas.prd_prc_fr_dt?.toDate(dateFormat:"yyyyMMddHHmmss", local:"ko_kr") ?? Date(timeIntervalSince1970: 0)
@@ -76,7 +76,7 @@ class PurchaseModel {
         self.title = contents.title ?? ""
         self.sson_choic_nm = contents.sson_choic_nm ?? ""
         if let series = contents.series_info {
-            if let seris =  series.first(where: { self.epsd_id == $0.epsd_id }) {
+            if let seris =  series.first(where: { self.epsdId == $0.epsd_id }) {
                 self.brcast_tseq_nm = seris.brcast_tseq_nm ?? ""
             }
         }
@@ -161,8 +161,8 @@ class PurchaseModel {
     func forceModifyDirectview(){ self.isDirectview = true }
     private(set) var epsd_rslu_id: String = ""
     func forceModifyEpsdRsluId(_ id:String){ self.epsd_rslu_id = id }
-    private(set) var epsd_id: String = ""
-    func forceModifyEpsdId(_ id:String){ self.epsd_id = id }
+    private(set) var epsdId: String = ""
+    func forceModifyEpsdId(_ id:String){ self.epsdId = id }
 
     var purSubstateText: String { isPossn ? String.app.owner : String.app.rent }
     var pssonRank: Int { isPossn ? 20 : 10 }
@@ -196,7 +196,7 @@ class PurchaseModel {
     
     private(set) var prd_typ_cd: String = ""
     private(set) var asis_prd_typ_cd: String = ""
-    private(set) var prd_prc_id: String = ""
+    private(set) var prdPrcId: String = ""
     private(set) var purc_pref_rank: String = "0"
     private(set) var lag_capt_typ_cd: String = "0"
     private(set) var prd_prc_vat: Double = 0
@@ -220,8 +220,8 @@ class PurchaseModel {
         let startDate = prdPrcFrDt.description
         let endDate = prdPrcToDt.description
         let prdType = prdTypCd.name
-        msg.append("타입: \(prd_typ_cd) (\(prdType)) id:(\(prd_prc_id))")
-        msg.append(", epsdId: \(epsd_id)")
+        msg.append("타입: \(prd_typ_cd) (\(prdType)) id:(\(prdPrcId))")
+        msg.append(", epsdId: \(epsdId)")
         msg.append(", 화질: \(rsluTypCd)")
         msg.append(", 월정액: \(ppm_prd_nm ?? "")")
         msg.append(", 구매순위: \(purc_pref_rank)")

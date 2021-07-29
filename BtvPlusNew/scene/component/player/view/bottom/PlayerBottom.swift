@@ -138,6 +138,13 @@ struct PlayerBottom: PageView{
                     withAnimation { self.showNext = true }
                 }
             }
+            if !self.viewModel.isPlay80 {
+                let rate = t/d
+                if rate >= 0.8 {
+                    self.viewModel.isPlay80 = true
+                    self.viewModel.btvPlayerEvent = .play80
+                }
+            }
         }
     }//body
 }

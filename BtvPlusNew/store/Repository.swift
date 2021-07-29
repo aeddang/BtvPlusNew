@@ -178,7 +178,7 @@ class Repository:ObservableObject, PageProtocol{
             guard let apiQ = req else { return }
             if apiQ.isLock {
                 self.pagePresenter?.isLoading = true
-            }else{
+            }else if !apiQ.isLog{
                 self.appSceneObserver?.isApiLoading = true
             }
             if let coreDatakey = apiQ.type.coreDataKey(){
@@ -205,7 +205,7 @@ class Repository:ObservableObject, PageProtocol{
             guard let err = err else { return }
             if self.status != .ready { self.status = .error(err) }
             self.dataProvider.error = err
-            if !err.isOptional {
+            if !err.isOptional && !err.isLog {
                 self.appSceneObserver?.alert = .apiError(err)
             }
             self.appSceneObserver?.isApiLoading = false

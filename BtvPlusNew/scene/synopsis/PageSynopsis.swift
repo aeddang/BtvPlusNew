@@ -20,6 +20,7 @@ struct PageSynopsis: PageView {
     var type:PageType = .btv
     
     @EnvironmentObject var repository:Repository
+    @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
@@ -174,6 +175,27 @@ struct PageSynopsis: PageView {
                     case .changeView(let epsdId) : self.changeVod(epsdId:epsdId)
                     default : break
                     }
+                    self.onEvent(btvPlayerEvent: evt)
+                }
+                .onReceive(self.playerModel.$btvUiEvent){evt in
+                    guard let evt = evt else { return }
+                    self.onEvent(btvUiEvent: evt)
+                }
+                .onReceive(self.playerModel.$event){evt in
+                    guard let evt = evt else { return }
+                    self.onEvent(event: evt)
+                }
+                .onReceive(self.playerModel.$streamEvent){evt in
+                    guard let evt = evt else { return }
+                    self.onEvent(streamEvent: evt)
+                }
+                .onReceive(self.playerModel.$playerStatus){status in
+                    guard let status = status else { return }
+                    self.onStatus(playerStatus: status)
+                }
+                .onReceive(self.playerModel.$streamStatus){status in
+                    guard let status = status else { return }
+                    self.onStatus(streamStatus: status)
                 }
                 .onReceive(self.tabNavigationModel.$index ){ idx in
                     if idx == self.selectedRelationTabIdx { return }
@@ -312,7 +334,6 @@ struct PageSynopsis: PageView {
             }
             .onAppear{
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
-            
                 guard let obj = self.pageObject  else { return }
                 self.synopsisData = obj.getParamValue(key: .data) as? SynopsisData
                 if self.synopsisData == nil {
@@ -329,9 +350,12 @@ struct PageSynopsis: PageView {
                 }
                 self.initPage()
             }
+            .onDisappear(){
+                if self.isPlayAble {
+                    self.log(type: .playBase) 
+                }
+            }
         }//geo
-        
-        
     }//body
 
     /*
@@ -382,6 +406,9 @@ struct PageSynopsis: PageView {
     @State var epsdId:String? = nil
     @State var epsdRsluId:String = ""
     @State var purchasedPid:String? = nil
+    
+    
+    @State var playStartTime:Int? = nil
     
     func initPage(){
         if self.synopsisData == nil {
@@ -792,6 +819,7 @@ struct PageSynopsis: PageView {
             return
         }
         if let synopsis = self.synopsisModel {
+            self.bindWatchingData()
             let prerollData = SynopsisPrerollData()
                 .setData(data: synopsis, playType: self.synopsisPlayType, epsdRsluId: self.epsdRsluId)
             self.playerData = SynopsisPlayerData().setData(type: self.synopsisPlayType, synopsis: synopsis)

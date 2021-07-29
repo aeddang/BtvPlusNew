@@ -340,6 +340,9 @@
 		3192EFDF26675E660012F238 /* RectButtonKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192EFDE26675E660012F238 /* RectButtonKids.swift */; };
 		3193414F25DDD847002F2000 /* SynopsisTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3193414E25DDD847002F2000 /* SynopsisTop.swift */; };
 		3193415425DDDAE8002F2000 /* SynopsisBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3193415325DDDAE8002F2000 /* SynopsisBody.swift */; };
+		3194318726B2282200C20619 /* Lgs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194318626B2282200C20619 /* Lgs.swift */; };
+		3194318A26B243E300C20619 /* WatchLogResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194318926B243E300C20619 /* WatchLogResult.swift */; };
+		3194318C26B2578D00C20619 /* PageSynopsisWatchLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194318B26B2578D00C20619 /* PageSynopsisWatchLog.swift */; };
 		319462A6269F00910074FE79 /* KidsBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319462A5269F00910074FE79 /* KidsBanner.swift */; };
 		3194D80026A92D0400BB765E /* TicketPurchase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194D7FF26A92D0400BB765E /* TicketPurchase.swift */; };
 		3194D80226A92D1B00BB765E /* MonthlyGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194D80126A92D1B00BB765E /* MonthlyGuide.swift */; };
@@ -991,6 +994,9 @@
 		3192EFDE26675E660012F238 /* RectButtonKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RectButtonKids.swift; sourceTree = "<group>"; };
 		3193414E25DDD847002F2000 /* SynopsisTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisTop.swift; sourceTree = "<group>"; };
 		3193415325DDDAE8002F2000 /* SynopsisBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisBody.swift; sourceTree = "<group>"; };
+		3194318626B2282200C20619 /* Lgs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lgs.swift; sourceTree = "<group>"; };
+		3194318926B243E300C20619 /* WatchLogResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchLogResult.swift; sourceTree = "<group>"; };
+		3194318B26B2578D00C20619 /* PageSynopsisWatchLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisWatchLog.swift; sourceTree = "<group>"; };
 		319462A5269F00910074FE79 /* KidsBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsBanner.swift; sourceTree = "<group>"; };
 		3194D7FF26A92D0400BB765E /* TicketPurchase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketPurchase.swift; sourceTree = "<group>"; };
 		3194D80126A92D1B00BB765E /* MonthlyGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyGuide.swift; sourceTree = "<group>"; };
@@ -1545,6 +1551,7 @@
 				3166CBA626115CC700282891 /* component */,
 				314D739125B501CC00907118 /* body */,
 				314D738925B4F8B100907118 /* PageSynopsis.swift */,
+				3194318B26B2578D00C20619 /* PageSynopsisWatchLog.swift */,
 				31895AF92601C863002DE02E /* PageSynopsisPackage.swift */,
 				317335FE26130003009B211B /* PageSynopsisPlayer.swift */,
 			);
@@ -2380,6 +2387,23 @@
 				318D0FFF2668403300B66977 /* AlertBoxKids.swift */,
 			);
 			path = alert;
+			sourceTree = "<group>";
+		};
+		3194318526B227FD00C20619 /* lgs */ = {
+			isa = PBXGroup;
+			children = (
+				3194318826B243A300C20619 /* model */,
+				3194318626B2282200C20619 /* Lgs.swift */,
+			);
+			path = lgs;
+			sourceTree = "<group>";
+		};
+		3194318826B243A300C20619 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				3194318926B243E300C20619 /* WatchLogResult.swift */,
+			);
+			path = model;
 			sourceTree = "<group>";
 		};
 		31956F4D269D0FD30044CF1D /* list */ = {
@@ -3456,6 +3480,7 @@
 		D56C6B25257DACD800CF9AB8 /* rest  */ = {
 			isa = PBXGroup;
 			children = (
+				3194318526B227FD00C20619 /* lgs */,
 				319B378426B0EAD0001501B1 /* rps */,
 				3190CB05268983DC00ACB465 /* kes */,
 				316C45D12651F8FD00A8D7F5 /* wepg */,
@@ -4133,6 +4158,7 @@
 				3190CB022689300700ACB465 /* TopViewerKids.swift in Sources */,
 				D573785825A2D70B00EC571F /* PagePairingBtv.swift in Sources */,
 				316A706B266F018000A93B83 /* SelectBox.swift in Sources */,
+				3194318A26B243E300C20619 /* WatchLogResult.swift in Sources */,
 				D56C6A28257DA0C700CF9AB8 /* asset.swift in Sources */,
 				319B379526B199DC001501B1 /* RecommandReceive.swift in Sources */,
 				318CB5AE263124D800BCA5C3 /* AlramData.swift in Sources */,
@@ -4177,6 +4203,7 @@
 				316A70952670692700A93B83 /* PlayerTopBodyKids.swift in Sources */,
 				3190CB15268BE9A600ACB465 /* PageEditKid.swift in Sources */,
 				D5E27EEA258751A200B2CD5D /* BlockData.swift in Sources */,
+				3194318726B2282200C20619 /* Lgs.swift in Sources */,
 				318F7B412625444C00774B17 /* CardList.swift in Sources */,
 				31632FFB25EF386F00581FA7 /* MultiBlockBody.swift in Sources */,
 				3167195925FEC876005AC3D2 /* Footer.swift in Sources */,
@@ -4190,6 +4217,7 @@
 				31671A052600930D005AC3D2 /* PagePerson.swift in Sources */,
 				3195C1B22665E0F8001F513E /* dimenKids.swift in Sources */,
 				31C4D2A42692D867000C7E83 /* EvaluationReport.swift in Sources */,
+				3194318C26B2578D00C20619 /* PageSynopsisWatchLog.swift in Sources */,
 				315544C225B79FAA00086510 /* PageServiceError.swift in Sources */,
 				319B379026B17958001501B1 /* PageRecommand.swift in Sources */,
 				D5469F5725835231009CED2D /* Bands.swift in Sources */,
@@ -4642,7 +4670,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 46;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -4666,7 +4694,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.043;
+				MARKETING_VERSION = 1.044;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = ".BtvPlusNew_ dev";
@@ -4722,7 +4750,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 46;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -4741,7 +4769,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.043;
+				MARKETING_VERSION = 1.044;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvPlusNew_des;

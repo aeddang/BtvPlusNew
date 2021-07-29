@@ -133,7 +133,6 @@ class FairPlayDrm{
     }
 }
 
-
 enum PlayerUIEvent {//input
     case load(String, Bool = true, Double = 0.0, Dictionary<String,String>? = nil),
          togglePlay, resume, pause, stop, volume(Float), rate(Float), mute(Bool),
@@ -145,9 +144,6 @@ enum PlayerUIEvent {//input
          screenGravity(AVLayerVideoGravity), screenRatio(CGFloat),
          fullScreen(Bool)
             
-         
-         
-    
     var decription: String {
         switch self {
         case .togglePlay: return "togglePlay"

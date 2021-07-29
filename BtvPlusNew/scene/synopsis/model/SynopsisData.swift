@@ -18,7 +18,6 @@ enum SynopsisType {
     
 }
 
-
 struct SynopsisData{
     var srisId:String? = nil
     var searchType:String? = nil
@@ -26,4 +25,19 @@ struct SynopsisData{
     var epsdRsluId:String? = nil
     var prdPrcId:String? = nil
     var kidZone:String? = nil
+    //watchLog
+    var pId:String? = nil
+    var cpId:String? = nil
+    var contentId:String? = nil
+    var ppmIds:String? = nil
+    var isLimitedWatch:Bool = false
+   
+}
+
+struct SynopsisPlayData{
+    let eventTime:String = AppUtil.getTime(fromInt:AppUtil.networkTime())
+    var start:String? = nil
+    var end:String? = nil
+    var position:String? = nil
+    var rate:String? = nil
 }

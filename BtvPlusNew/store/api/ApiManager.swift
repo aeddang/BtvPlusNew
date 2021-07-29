@@ -75,6 +75,9 @@ class ApiManager :PageProtocol, ObservableObject{
     private lazy var kes:Kes = Kes(network: KesNetwork())
     private lazy var rps:Rps = Rps(network: RpsNetwork())
     private lazy var mgmRps:MgmRps = MgmRps(network: MgmRpsNetwork())
+    
+    // 로그 서버 페이지이동시 켄슬 안함
+    private lazy var lgs:Lgs = Lgs(network: LgsNetwork())
     private(set) var updateFlag: UpdateFlag = .none
     init() {
         self.initateApi()
@@ -157,25 +160,28 @@ class ApiManager :PageProtocol, ObservableObject{
              .postAuthPairing, .getDevicePairingInfo, .postDevicePairing, .postUnPairing :
             if NpsNetwork.sessionId == "" {
                 transition[q.id] = q
-                self.load(.registHello, action: q.action, resultId: q.id, isOptional: q.isOptional, isProcess: q.isProcess)
+                self.load(.registHello, action: q.action, resultId: q.id,
+                          isOptional: q.isOptional, isLock: q.isLock, isLog:q.isLog, isProcess: q.isProcess)
                 return
             }
         default : do{}
         }
-        self.load(q.type, action: q.action, resultId: q.id, isOptional: q.isOptional, isProcess: q.isProcess)
+        self.load(q.type, action: q.action, resultId: q.id,
+                  isOptional: q.isOptional, isLock: q.isLock, isLog:q.isLog, isProcess: q.isProcess)
     }
     
 
     @discardableResult
     func load(_ type:ApiType, action:ApiAction? = nil,
-              resultId:String = "", isOptional:Bool = false, isLock:Bool = false, isProcess:Bool = false)->String
+              resultId:String = "",
+              isOptional:Bool = false, isLock:Bool = false, isLog:Bool = false, isProcess:Bool = false)->String
     {
         let apiID = resultId //+ UUID().uuidString
         if status != .ready{
-            self.apiQ.append(ApiQ(id: resultId, type: type, action: action, isOptional: isOptional, isLock: isLock))
+            self.apiQ.append(ApiQ(id: resultId, type: type, action: action, isOptional: isOptional, isLock: isLock, isLog: isLog))
             return apiID
         }
-        let error = {err in self.onError(id: apiID, type: type, e: err, isOptional: isOptional, isProcess: isProcess)}
+        let error = {err in self.onError(id: apiID, type: type, e: err, isOptional: isOptional, isLog: isLog, isProcess: isProcess)}
         switch type {
         case .versionCheck : self.vms.versionCheck(
             completion: {res in self.complated(id: apiID, type: type, res: res)},
@@ -542,6 +548,24 @@ class ApiManager :PageProtocol, ObservableObject{
             mgmId: mgmId, srisTypeCd: srisTypeCd,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+            
+        //LGS
+        case .postWatchLog(let evt, let playData, let synopData, let pairing,
+                           let pcId, let isKidZone, let gubun) : self.lgs.postWatchLog(
+            evt: evt, playData: playData, synopData: synopData,
+            pairing: pairing, pcId: pcId,
+            isKidZone: isKidZone, gubun: gubun,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+            
+        case .postWatchLogPossession(let evt, let playData, let synopData, let pairing, let mbtvKey,
+                           let pcId, let isKidZone, let gubun) : self.lgs.postWatchLogPossession(
+            evt: evt, playData: playData, synopData: synopData,
+            pairing: pairing,mbtvKey: mbtvKey, pcId: pcId,
+            isKidZone: isKidZone, gubun: gubun,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+            
         }
         return apiID
     }
@@ -601,12 +625,12 @@ class ApiManager :PageProtocol, ObservableObject{
         }
     }
     
-    private func onError(id:String, type:ApiType, e:Error,isOptional:Bool = false, isProcess:Bool = false){
+    private func onError(id:String, type:ApiType, e:Error,isOptional:Bool = false, isLog:Bool = false, isProcess:Bool = false){
         if let trans = transition[id] {
             transition.removeValue(forKey: id)
-            self.error = .init(id: id, type:trans.type, error: e, isOptional:isOptional, isProcess:isProcess)
+            self.error = .init(id: id, type:trans.type, error: e, isOptional:isOptional, isLog:isLog, isProcess:isProcess)
         }else{
-            self.error = .init(id: id, type:type, error: e, isOptional:isOptional, isProcess:isProcess)
+            self.error = .init(id: id, type:type, error: e, isOptional:isOptional, isLog:isLog, isProcess:isProcess)
         }
         
     }

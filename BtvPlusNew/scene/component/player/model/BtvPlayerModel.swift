@@ -48,7 +48,7 @@ enum BtvUiEvent {
 }
 
 enum BtvPlayerEvent {
-    case nextView, continueView, changeView(String), close
+    case nextView, continueView, changeView(String), close, stopAd, play80
 }
 
 enum BtvPlayerType {
@@ -78,6 +78,7 @@ class BtvPlayerModel:PlayerModel{
     private(set) var header:[String:String]? = nil
     var initPlay:Bool? = nil
     var isFirstPlay:Bool = true
+    var isPlay80:Bool = false
     
     var currentEpsdRsluId:String? = nil
     var currentIdx:Int? = nil
@@ -98,6 +99,7 @@ class BtvPlayerModel:PlayerModel{
         self.initPlay = nil
         self.playData = nil
         self.btvPlayType = nil
+        self.isPlay80 = false
         super.reset()
     }
     

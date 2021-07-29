@@ -160,6 +160,7 @@ struct KidsPlayer: PageComponent{
                         self.isPreroll = false
                         self.viewModel.isPrerollPlay = false
                         withAnimation{ self.isWaiting = true }
+                        self.viewModel.btvPlayerEvent = .stopAd
                     }else{
                         self.recoveryTime = self.viewModel.time
                     }

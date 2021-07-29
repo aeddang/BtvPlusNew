@@ -45,10 +45,11 @@ class SynopsisModel : PageProtocol {
     private(set) var imgBg:String? = nil
     private(set) var imgContentMode:ContentMode = .fit
     private(set) var cwCallId:String? = nil
+    private(set) var cpId:String? = nil
     private(set) var playGradeData:PlayGradeData? = nil
     private(set) var isQuiz:Bool = false
     private(set) var isRecommand:Bool = false
- 
+    private(set) var isLimitedWatch:Bool = false
     private(set) var isRecommandAble:Bool = false
     private(set) var seasonTitle:String? = nil
     init(type:MetvNetwork.SynopsisType = .none ) {
@@ -82,8 +83,11 @@ class SynopsisModel : PageProtocol {
                 self.hasPreview = !preview.isEmpty
             }
             self.isCombineProduct = contents.combine_product_yn?.toBool() ?? false
-            
+            self.cpId = contents.contrp_id
             self.epsdId = contents.epsd_id
+            if let watchAble = contents.smtn_wat_abl_yn?.toBool() {
+                self.isLimitedWatch = !watchAble
+            }
             self.nextSrisId = contents.next_sris_id
             self.nextEpsdId = contents.next_epsd_id
             self.isRecommand = contents.rcmd_yn?.toBool() ?? false
@@ -180,7 +184,7 @@ class SynopsisModel : PageProtocol {
             && self.isRecommand
             && !self.isGstn
             && self.purchaseModels.filter({ $0.isUse && $0.isSalesPeriod }).contains(where: { $0.isFree  }) == false
-            && self.purchaseModels.contains(where: { $0.prd_prc_id == "411211275" }) == false//모비 무료관 없음
+            && self.purchaseModels.contains(where: { $0.prdPrcId == "411211275" }) == false//모비 무료관 없음
         
         return self
     }
@@ -234,14 +238,14 @@ class SynopsisModel : PageProtocol {
                     model.mePPVProduct = metvItem
                 }
             } else {
-                if let metvItem = directViewdata?.ppv_products?.first(where: {model.epsd_id == $0.epsd_id && model.prd_prc_id == $0.prd_prc_id}) {
+                if let metvItem = directViewdata?.ppv_products?.first(where: {model.epsdId == $0.epsd_id && model.prdPrcId == $0.prd_prc_id}) {
                     model.mePPVProduct = metvItem
                 }
             }
-            if let metvItem = directViewdata?.pps_products?.first(where: {model.prd_prc_id == $0.prd_prc_id}) {
+            if let metvItem = directViewdata?.pps_products?.first(where: {model.prdPrcId == $0.prd_prc_id}) {
                 model.mePPSProduct = metvItem
             }
-            if model.prd_prc_id == purchasedPid && !model.isDirectview {
+            if model.prdPrcId == purchasedPid && !model.isDirectview {
                 model.forceModifyDirectview()
             }
             if let list = self.rsluInfoList , !list.isEmpty {
@@ -257,7 +261,7 @@ class SynopsisModel : PageProtocol {
                         model.forceModifyEpsdRsluId(rsluItem.epsd_rslu_id!)
                     }
                     if self.srisTypCd == .season {
-                        if self.epsdId != nil && model.epsd_id != self.epsdId {
+                        if self.epsdId != nil && model.epsdId != self.epsdId {
                             //"에피소드 아이디와 시놉시스 에피소드가 다름. 재적용.")
                             model.forceModifyEpsdId(self.epsdId!)
                         }
@@ -297,7 +301,7 @@ class SynopsisModel : PageProtocol {
         let ppmItems = usableItems.filter { PrdTypCd.isPPM(typCd: $0.prdTypCd, all: true) }
         let tempPurPPMItems = ppmItems.filter { $0.isDirectview }
         tempPurPPMItems.forEach { item in
-            if !purchasedPPMItems.contains(where: { item.prd_prc_id == $0.prd_prc_id }) {
+            if !purchasedPPMItems.contains(where: { item.prdPrcId == $0.prdPrcId }) {
                 purchasedPPMItems.append(item)
             }
         }
@@ -308,7 +312,7 @@ class SynopsisModel : PageProtocol {
         if let item = Dictionary(
             grouping: tempPurPpsItems,
             by: { $0.prdPrcFrDt }).sorted(by: { $0.key > $1.key }).first?.value.sorted(by: { $0.pssonRank > $1.pssonRank }).first,
-            !self.purchasedPPSItems.contains(where: {$0.prd_prc_id == item.prd_prc_id}){
+            !self.purchasedPPSItems.contains(where: {$0.prdPrcId == item.prdPrcId}){
                 self.purchasedPPSItems.append(item)
         }
         
@@ -316,9 +320,9 @@ class SynopsisModel : PageProtocol {
         let isOnlyPossonPPV = usableItems.filter({$0.prdTypCd == .ppv}).allSatisfy({$0.isPossn})
         if isPurchasedPPM {
             ppmItems.filter {
-                let prdPrId = $0.prd_prc_id
+                let prdPrId = $0.prdPrcId
                 //더빙|대여 자막|대여 prc_prd_id 는 같은데 epsdId가 다름.
-                return purchasedPPMItems.contains(where: { $0.prd_prc_id == prdPrId })
+                return purchasedPPMItems.contains(where: { $0.prdPrcId == prdPrId })
             }.forEach {
                 if !$0.isDirectview {
                     $0.forceModifyDirectview()
@@ -357,12 +361,12 @@ class SynopsisModel : PageProtocol {
         }
         //pps/ppm 체크해서 권한 설정은 위에서 다 함. 시놉 에피가 아닌 것들 다지움.
         if self.srisTypCd == .season {
-            tempUsableItems = tempUsableItems.filter {  $0.epsd_id == self.epsdId }
+            tempUsableItems = tempUsableItems.filter {  $0.epsdId == self.epsdId }
         }
 
         if let ppsItem = ppsItems.first(where: {
-            let pid = $0.prd_prc_id
-            return purchasedPPSItems.contains(where: { pid == $0.prd_prc_id }) }) {
+            let pid = $0.prdPrcId
+            return purchasedPPSItems.contains(where: { pid == $0.prdPrcId }) }) {
             //회차변경으로 진입시 구매 yes처리.
             if !ppsItem.isDirectview {
                 ppsItem.forceModifyDirectview()
@@ -394,9 +398,9 @@ class SynopsisModel : PageProtocol {
         }
         
         if isPossonVODMode {
-            tempUsableItems = tempUsableItems.filter({ $0.isPossn && $0.epsd_id == self.epsdId })
+            tempUsableItems = tempUsableItems.filter({ $0.isPossn && $0.epsdId == self.epsdId })
         }
-        var tempDic = Dictionary(grouping: tempUsableItems) { $0.epsd_id }
+        var tempDic = Dictionary(grouping: tempUsableItems) { $0.epsdId }
         //"자막/더빙/xx더빙 최신순 필터링")
         tempDic.forEach {
             //tempDic은 구매목록 or 미구매 목록만 넘어옴
@@ -451,11 +455,11 @@ class SynopsisModel : PageProtocol {
         watchOptions = watchOptions.sorted(by: { $0.index < $1.index })
         
         if purchasedPid != nil || purchasedPid != "none" {
-            curSynopsisItem =  watchOptions.first(where: { $0.prd_prc_id == purchasedPid })
+            curSynopsisItem =  watchOptions.first(where: { $0.prdPrcId == purchasedPid })
         }
         //구매한게 ppv 아닐 경우, 시놉시스 와 매핑되는 아이템 사용.
         if curSynopsisItem == nil {
-            if let temp =  watchOptions.first(where: {self.epsdId == $0.epsd_id }) {
+            if let temp =  watchOptions.first(where: {self.epsdId == $0.epsdId }) {
                 curSynopsisItem = temp
             } else {
                 curSynopsisItem =  watchOptions.first
@@ -478,7 +482,7 @@ class SynopsisModel : PageProtocol {
             if !$0.isDirectview && $0.isUse && $0.isSalesPeriod {
                 //단편 등급이 같으면(자막|소장 구매, 우리말|소장 미구매 상태 등) 다른 에피소드(언어타입 다름)
                 if curSynopsisItem.purchaseProductRank == $0.purchaseProductRank {
-                    if self.srisTypCd == .title && curSynopsisItem.epsd_id != $0.epsd_id {
+                    if self.srisTypCd == .title && curSynopsisItem.epsdId != $0.epsdId {
                         purchasableItems.append($0)
                     }
                 //등급이 다르면 기본 체크 사용.
@@ -526,7 +530,7 @@ class SynopsisModel : PageProtocol {
         purchaseModels.filter({PrdTypCd.isPPM(typCd: $0.prdTypCd, all: true)})
         .contains(where: { curPpm in
             purchasedPPMItems.contains(where: {
-                curPpm.prd_prc_id == $0.prd_prc_id
+                curPpm.prdPrcId == $0.prdPrcId
             })
         })
     }
@@ -534,7 +538,7 @@ class SynopsisModel : PageProtocol {
         purchaseModels.filter({PrdTypCd.isPPM(typCd: $0.prdTypCd, all: true)})
        .first(where: { curPpm in
            purchasedPPMItems.contains(where: {
-               curPpm.prd_prc_id == $0.prd_prc_id
+               curPpm.prdPrcId == $0.prdPrcId
            })
        })
     }
@@ -554,11 +558,11 @@ class SynopsisModel : PageProtocol {
             .sorted(by: { $0.prdPrcFrDt > $1.prdPrcFrDt })
         if productList.count > 0,
             let synopEpsdId = self.epsdId,
-            let target = productList.first(where: { $0.epsd_id ==  synopEpsdId }),
+            let target = productList.first(where: { $0.epsdId ==  synopEpsdId }),
             target.sale_prc_vat != 0 {
             //시리즈경우 필터링시 ppv 면서 시놉시스의 에피소드인 아이템만 찾아서 동일하곘지만
             //예외상황 발생체크를 위해 현재 아이템과 다를 경우 로그 출력 추가.
-            if let cur = curSynopsisItem, target.prd_prc_id != cur.prd_prc_id {
+            if let cur = curSynopsisItem, target.prdPrcId != cur.prdPrcId {
                 DataLog.d("cur : " + cur.debugString, tag: self.tag)
             }
             return .holdIn
@@ -568,12 +572,12 @@ class SynopsisModel : PageProtocol {
     
     private var isSingleTrstrs: Bool {
         srisTypCd == .season && purchaseModels.contains(where: {
-            SynopsisModel.singleTrstrsPidList.contains($0.prd_prc_id)
+            SynopsisModel.singleTrstrsPidList.contains($0.prdPrcId)
         })
     }
     private var isTrstrs: Bool {
         srisTypCd == .season && purchaseModels.contains(where: {
-            SynopsisModel.trstrsPidList.contains($0.prd_prc_id)
+            SynopsisModel.trstrsPidList.contains($0.prdPrcId)
         })
     }
     private var isOnlyCommerce: Bool {
@@ -594,7 +598,7 @@ class SynopsisModel : PageProtocol {
         purchaseModels.filter({$0.prdTypCd == .pps})
         .contains(where: { curPps in
             purchasedPPSItems.contains(where: {
-                curPps.prd_prc_id == $0.prd_prc_id
+                curPps.prdPrcId == $0.prdPrcId
             })
         })
     }
@@ -605,7 +609,7 @@ class SynopsisModel : PageProtocol {
         let tempFilteredItems = tempUsableItems.filter({ $0.rsluTypCd <= .fhd })
         //uhd 이상 필터링, 필터링 목록 0개면 포함된 목록 사용.
         let defItems = tempFilteredItems.count > 0 ? tempFilteredItems : tempUsableItems
-        let temp = defItems.contains(where: {$0.isFree }) ? defItems.filter({ $0.isFree }) : defItems.filter({ $0.epsd_id == epsdId })
+        let temp = defItems.contains(where: {$0.isFree }) ? defItems.filter({ $0.isFree }) : defItems.filter({ $0.epsdId == epsdId })
         if !temp.isEmpty {
             if let ppvItem = temp.sorted(by: { $0.prdPrcFrDt > $1.prdPrcFrDt }).first(where: {$0.prdTypCd == .ppv}) {
                 return ppvItem

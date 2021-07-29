@@ -91,7 +91,7 @@ struct PageRecommandReceive: PageView {
         .onAppear(){
             guard let obj = self.pageObject  else { return }
             self.mgmId = obj.getParamValue(key: .id) as? String
-           
+            self.srisTypeCd = obj.getParamValue(key: .type) as? String
         }
         
     }//body

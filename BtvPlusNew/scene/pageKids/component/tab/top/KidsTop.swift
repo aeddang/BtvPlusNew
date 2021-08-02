@@ -15,7 +15,7 @@ extension KidsTop {
 struct KidsTop: PageComponent{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var sceneObserver:PageSceneObserver
-  
+    var positionTop:CGFloat = 0
     @State var useGnb:Bool = true
     var body: some View {
         VStack(alignment: .leading, spacing:0){
@@ -26,7 +26,7 @@ struct KidsTop: PageComponent{
                 .opacity(self.useGnb ? 1 : 0)
         }
         .modifier(ContentHorizontalEdgesKids())
-        .padding(.top, Self.marginTop)
+        .padding(.top, Self.marginTop + self.positionTop)
         .background(Color.app.white)
         .onReceive (self.appSceneObserver.$useGnb) { use in
             withAnimation{

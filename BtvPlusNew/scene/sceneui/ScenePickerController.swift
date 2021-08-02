@@ -29,12 +29,12 @@ struct ScenePickerController: PageComponent{
             sets: self.sets)
         { a, b, c, d in
             switch self.currentSelect {
-                case .picker(let data, _, let handler) :
-                    if let handler = handler {
-                        handler(a)
-                    } else {
-                        self.selectedPicker(a ,data:data)
-                    }
+            case .picker(let data, _, let handler) :
+                if let handler = handler {
+                    handler(a)
+                } else {
+                    self.selectedPicker(a ,data:data)
+                }
             case .multiPicker(_, _, let handler) :
                 if let handler = handler {
                     handler(a, b, c, d)

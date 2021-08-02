@@ -27,16 +27,17 @@ struct SceneKidsTab: PageComponent{
     var body: some View {
         ZStack{
             VStack(spacing:Dimen.margin.regular){
-                KidsTop()
+                KidsTop(positionTop:self.positionTop)
                 .opacity(self.useTop ? 1 : 0)
-                .padding(.top, self.positionTop)
                 .fixedSize(horizontal: false, vertical: true)
+               
                 Spacer()
                 if self.isLoading {
                     ActivityIndicator(isAnimating: self.$isLoading)
                         .padding(.bottom, DimenKids.margin.thin + self.sceneObserver.safeAreaBottom)
                 }
             }
+            
             if self.isDimed {
                 Button(action: {
                     self.appSceneObserver.cancelAll()

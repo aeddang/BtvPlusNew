@@ -35,7 +35,12 @@ extension String{
         public static let myBenefits = "titleMyBenefits".loaalized()
         public static let myAlram = "titleMyAlram".loaalized()
         public static let recommandFriend = "titleRecommandFriend".loaalized()
+        public static let cashCharge = "titleCashCharge".loaalized()
         public static let cashChargeGuide = "titleCashChargeGuide".loaalized()
+        
+        public static let myRegistCardMember = "titleMyRegistCardMember".loaalized()
+        public static let myRegistCardOk = "titleMyRegistCardOk".loaalized()
+        
     }
     
     struct pageText {
@@ -178,6 +183,12 @@ extension String{
         public static let myModifyNicknameText = "myModifyNicknameText".loaalized()
         public static let myModifyNicknameTip = "myModifyNicknameTip".loaalized()
         
+        public static let myRegistCardEmptyCardNo = "myRegistCardEmptyCardNo".loaalized()
+        public static let myRegistCardEmptyPassword = "myRegistCardEmptyPassword".loaalized()
+        public static let myRegistCardEmptyBirth = "myRegistCardEmptyBirth".loaalized()
+        public static let myRegistCardPasswordTip = "myRegistCardPasswordTip".loaalized()
+        public static let myRegistCardPasswordPlaceHolder = "myRegistCardPasswordPlaceHolder".loaalized()
+        
         public static let mySetup = "mySetup".loaalized()
         public static let myRecommandFriend = "myRecommandFriend".loaalized()
         public static let myRecommandFriendReword = "myRecommandFriendReword".loaalized()
@@ -226,12 +237,12 @@ extension String{
         public static let myBenefitsDiscountTv = "myBenefitsDiscountTv".loaalized()
         public static let myBenefitsDiscountTvText1 = "myBenefitsDiscountTvText1".loaalized()
         public static let myBenefitsDiscountTvText2 = "myBenefitsDiscountTvText2".loaalized()
-
         public static let myBenefitsDiscountTInfo1 = "myBenefitsDiscountTInfo1".loaalized()
         public static let myBenefitsDiscountTInfo2 = "myBenefitsDiscountTInfo2".loaalized()
         public static let myBenefitsDiscountOkInfo1 = "myBenefitsDiscountOkInfo1".loaalized()
         public static let myBenefitsDiscountOkInfo2 = "myBenefitsDiscountOkInfo2".loaalized()
-        public static let myBenefitsDiscountOkInfo3 = "myBenefitsDiscountOkInfo3".loaalized()
+        public static let myBenefitsDiscountOkSetup = "myBenefitsDiscountOkSetup".loaalized()
+        public static let myBenefitsDiscountOkDelete = "myBenefitsDiscountOkDelete".loaalized()
         public static let myBenefitsDiscountTvInfo1 = "myBenefitsDiscountTvInfo1".loaalized()
 
         public static let myBenefitsCardEmpty = "myBenefitsCardEmpty".loaalized()

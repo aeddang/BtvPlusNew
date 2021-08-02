@@ -433,8 +433,28 @@ class ApiManager :PageProtocol, ObservableObject{
             hostDevice: device,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .postTMembership(let device, let card) : self.eps.postTMembership(
+            hostDevice: device, card: card,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .deleteTMembership(let device) : self.eps.deleteTMembership(
+            hostDevice: device,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         case .getOkCashPoint(let device,let card, let pw) : self.eps.getOkCashPoint(
             hostDevice: device, card: card, password:pw,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .postOkCashPoint(let device, let card) : self.eps.postOkCashPoint(
+            hostDevice: device, card: card,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .updateOkCashPoint(let device, let card) : self.eps.updateOkCashPoint(
+            hostDevice: device, card: card,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .deleteOkCashPoint(let device, let masterSequence) : self.eps.deleteOkCashPoint(
+            hostDevice: device, masterSequence: masterSequence,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         //WEPG

@@ -21,9 +21,11 @@ extension EpsNetwork{
     static let CLIENT_NAME = "BtvPlus"
     static let UI_NAME = "BTVUH2V500"
     
-    static let AES_KEY_PREFIX = "SK"
-    static let AES_IV = "1161266980123456"
-
+    static let AES_DATE_FORMAT = "yyyyMMddHHmmss"
+    static func toAes(_ value:String?, date:String) -> String?{
+        return value?.toAES256(key: "SK" + date, iv: "1161266980123456")
+    }
+    
 }
 
 class Eps: Rest{
@@ -222,6 +224,48 @@ class Eps: Rest{
         params["mac"] = macAdress
         fetch(route: EpsTMembership(query: params), completion: completion, error:error)
     }
+    func postTMembership(
+        hostDevice:HostDevice?, card:RegistCardData,
+        completion: @escaping (RegistEps) -> Void, error: ((_ e:Error) -> Void)? = nil){
+
+        let reqDate = Date().toDateFormatter(dateFormat: EpsNetwork.AES_DATE_FORMAT)
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:Any]()
+        params["response_format"] = EpsNetwork.RESPONSE_FORMET
+        params["ver"] = EpsNetwork.VERSION
+        params["client_name"] = EpsNetwork.CLIENT_NAME
+        params["ui_name"] = EpsNetwork.UI_NAME
+        params["IF"] = "IF-EPS-510"
+        params["stb_id"] = stbId
+        params["mac"] = macAdress
+        params["requestDateTime"] = reqDate
+      
+        params["cardNo"] = EpsNetwork.toAes(card.no, date:reqDate)
+        params["birthday"] = EpsNetwork.toAes(card.birth.replace("-", with:""), date:reqDate)
+        params["genderCode"] = card.gender == .mail ? "1" : "2"
+        params["isForeigner"] = card.isForeigner
+      
+        fetch(route: EpsPostTMembership(body: params), completion: completion, error:error)
+    }
+    
+    func deleteTMembership(
+        hostDevice:HostDevice?,
+        completion: @escaping (RegistEps) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:Any]()
+        params["response_format"] = EpsNetwork.RESPONSE_FORMET
+        params["ver"] = EpsNetwork.VERSION
+        params["client_name"] = EpsNetwork.CLIENT_NAME
+        params["ui_name"] = EpsNetwork.UI_NAME
+        params["IF"] = "IF-EPS-530"
+        params["stb_id"] = stbId
+        params["mac"] = macAdress
+       
+        fetch(route: EpsDeleteTMembership(body: params), completion: completion, error:error)
+    }
     
     /**
      * TV포인트 계정 정보 및 URL 조회 (IF-EPS-601)
@@ -252,7 +296,7 @@ class Eps: Rest{
         hostDevice:HostDevice?, card:OcbItem?, password:String?,
         completion: @escaping (OkCashPoint) -> Void, error: ((_ e:Error) -> Void)? = nil){
 
-        let reqDate = Date().toDateFormatter(dateFormat: "yyyyMMddHHmmss")
+        let reqDate = Date().toDateFormatter(dateFormat: EpsNetwork.AES_DATE_FORMAT)
         let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:String]()
@@ -264,10 +308,71 @@ class Eps: Rest{
         params["stb_id"] = stbId
         params["mac"] = macAdress
         params["requestDateTime"] = reqDate
-       // params["cardNo"] = card?.cardNo
         params["sequence"] = (card?.sequence ?? 0).description
-        params["password"] = password?.toAES256(key: EpsNetwork.AES_KEY_PREFIX + reqDate, iv: EpsNetwork.AES_IV)
+        params["password"] = EpsNetwork.toAes(password, date:reqDate)
         fetch(route: EpsOKCashPoint(query: params), completion: completion, error:error)
+    }
+    
+    func postOkCashPoint(
+        hostDevice:HostDevice?, card:RegistCardData,
+        completion: @escaping (RegistEps) -> Void, error: ((_ e:Error) -> Void)? = nil){
+
+        let reqDate = Date().toDateFormatter(dateFormat: EpsNetwork.AES_DATE_FORMAT)
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:Any]()
+        params["response_format"] = EpsNetwork.RESPONSE_FORMET
+        params["ver"] = EpsNetwork.VERSION
+        params["client_name"] = EpsNetwork.CLIENT_NAME
+        params["ui_name"] = EpsNetwork.UI_NAME
+        params["IF"] = "IF-EPS-560"
+        params["stb_id"] = stbId
+        params["mac"] = macAdress
+        params["requestDateTime"] = reqDate
+        params["cardNo"] = EpsNetwork.toAes(card.no, date:reqDate)
+        params["isMaster"] = card.isMaster
+        params["password"] = EpsNetwork.toAes(card.password, date:reqDate)
+        fetch(route: EpsPostOKCashPoint(masterSequence: card.masterSequence , body: params), completion: completion, error:error)
+    }
+    
+    func updateOkCashPoint(
+        hostDevice:HostDevice?, card:RegistCardData,
+        completion: @escaping (RegistEps) -> Void, error: ((_ e:Error) -> Void)? = nil){
+
+        let reqDate = Date().toDateFormatter(dateFormat: EpsNetwork.AES_DATE_FORMAT)
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:Any]()
+        params["response_format"] = EpsNetwork.RESPONSE_FORMET
+        params["ver"] = EpsNetwork.VERSION
+        params["client_name"] = EpsNetwork.CLIENT_NAME
+        params["ui_name"] = EpsNetwork.UI_NAME
+        params["IF"] = "IF-EPS-560"
+        params["stb_id"] = stbId
+        params["mac"] = macAdress
+        params["requestDateTime"] = reqDate
+        //params["cardNo"] = EpsNetwork.toAes(card.no, date:reqDate)
+        params["isMaster"] = card.isMaster
+        params["password"] = EpsNetwork.toAes(card.password, date:reqDate)
+        fetch(route: EpsPutOKCashPoint(masterSequence: card.masterSequence , body: params), completion: completion, error:error)
+    }
+    
+    func deleteOkCashPoint(
+        hostDevice:HostDevice?, masterSequence:Int,
+        completion: @escaping (RegistEps) -> Void, error: ((_ e:Error) -> Void)? = nil){
+
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:Any]()
+        params["response_format"] = EpsNetwork.RESPONSE_FORMET
+        params["ver"] = EpsNetwork.VERSION
+        params["client_name"] = EpsNetwork.CLIENT_NAME
+        params["ui_name"] = EpsNetwork.UI_NAME
+        params["IF"] = "IF-EPS-580"
+        params["stb_id"] = stbId
+        params["mac"] = macAdress
+  
+        fetch(route: EpsDeleteOKCashPoint(masterSequence: masterSequence , body: params), completion: completion, error:error)
     }
 }
 
@@ -305,7 +410,7 @@ struct EpsBPoint:NetworkRoute{
 struct EpsPostBPoint:NetworkRoute{
     var method: HTTPMethod = .post
     var path: String { get{
-        return "/eps/v5/newBpoints" + pointId + "?method=POST"
+        return "/eps/v5/newBpoints/" + pointId + "?method=POST"
     }}
     var pointId:String = ""
     var body: [String : Any]? = nil
@@ -319,7 +424,7 @@ struct EpsBCash:NetworkRoute{
 struct EpsPostBCash:NetworkRoute{
     var method: HTTPMethod = .post
     var path: String { get{
-        return "/eps/v5/bcash" + cashId + "?method=POST"
+        return "/eps/v5/bcash/" + cashId + "?method=POST"
     }}
     var cashId:String = ""
     var body: [String : Any]? = nil
@@ -329,6 +434,16 @@ struct EpsTMembership:NetworkRoute{
     var method: HTTPMethod = .get
     var path: String = "/eps/v5/tmembership"
     var query: [String : String]? = nil
+}
+struct EpsPostTMembership:NetworkRoute{
+    var method: HTTPMethod = .post
+    var path: String = "/eps/v5/tmembership?method=POST"
+    var body: [String : Any]? = nil
+}
+struct EpsDeleteTMembership:NetworkRoute{
+    var method: HTTPMethod = .post
+    var path: String = "/eps/v5/tmembership?method=DELETE"
+    var body: [String : Any]? = nil
 }
 
 struct EpsTVPoint:NetworkRoute{
@@ -341,4 +456,32 @@ struct EpsOKCashPoint:NetworkRoute{
     var path: String = "/eps/v5/okcashbag/mobilebtv"
     var query: [String : String]? = nil
 }
+
+struct EpsPostOKCashPoint:NetworkRoute{
+    var method: HTTPMethod = .post
+    var path: String { get{
+        return "/eps/v5/okcashbag/" + masterSequence.description + "?method=POST"
+    }}
+    var masterSequence:Int = 0
+    var body: [String : Any]? = nil
+}
+
+struct EpsPutOKCashPoint:NetworkRoute{
+    var method: HTTPMethod = .post
+    var path: String { get{
+        return "/eps/v5/okcashbag/" + masterSequence.description + "?method=PUT"
+    }}
+    var masterSequence:Int = 0
+    var body: [String : Any]? = nil
+}
+
+struct EpsDeleteOKCashPoint:NetworkRoute{
+    var method: HTTPMethod = .post
+    var path: String { get{
+        return "/eps/v5/okcashbag/" + masterSequence.description + "?method=DELETE"
+    }}
+    var masterSequence:Int = 0
+    var body: [String : Any]? = nil
+}
+
 

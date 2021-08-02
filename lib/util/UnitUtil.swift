@@ -377,12 +377,7 @@ extension String{
         chSet.insert(charactersIn: "-._*")
         return self.addingPercentEncoding(withAllowedCharacters: chSet)?.replace(" ", with: "+") ?? self
     }
-    func toPercentDecoding()-> String {
-        var chSet = CharacterSet.alphanumerics
-        chSet.insert(charactersIn: "-._*")
-        return self.addingPercentEncoding(withAllowedCharacters: chSet)?.replace("%2B", with: "+") ?? self
-    }
-    
+   
 }
 
 extension Formatter {
@@ -467,5 +462,16 @@ extension Data {
     var base64encodedDataPadded: Data {
         let data = last == 46 ? dropLast() : self
         return data + .init(repeating: 65, count: data.count % 3)
+    }
+}
+
+
+extension View {
+    @ViewBuilder func exChangeTextColor(_ color: Color) -> some View {
+        if UITraitCollection.current.userInterfaceStyle == .light {
+            self.colorInvert().colorMultiply(color)
+        } else {
+            self.colorMultiply(color)
+        }
     }
 }

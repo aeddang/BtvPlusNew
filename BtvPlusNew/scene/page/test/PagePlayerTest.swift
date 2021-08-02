@@ -12,8 +12,8 @@ import WebKit
 import Combine
 import Firebase
 extension PagePlayerTest{
-    static let videoPath:String = "https://devmobilemig.hanafostv.com/vod/01010377_202107211401_00000001213/pa2My2mO0gQ2P%2BFa4%2Bt7AbpwrdqjVPEr9fXi1a%2B38q43ivea3S0D8WZtTyteuYenVSsOeRpW9Cria%2FXJ%2FeaPLZmNDmcu0A1mZLh%2Bs9i16PbnM6eQeQf4TRVIbsovJ%2Fsa6A7Hj6cBcfuFnfYb8ilIAdrqeDLzZT1Aq%2FuKjXiNMrsxqU5NE5KUNoP3P3yKXQc2nmEI0LokmpAi9vNxDMBH5LQ0QLYHHd16uTOyQJ3IR5ZiqHa4D5E%2B53KmH9tUi6YmYfq5ehgVYxPztM%2BgzXUsk4cGdKijm8wxPP9D2mFCpN2XM3BJqQHUVHZJA5AmzUpFCmHxy9AAb9oMDErkhHdY6%2BSSUd7vzGSSo%2B50f%2B03qdMyFuWgFZ8U9hfWuAfjc78u01vsZPHXFf%2B2LO01VugusLzfe%2Bpc3vIfbShgvHHVEKyYeM0sKvELu5Pe4MKut93c3UUK%2BmGE4PMzsOEKqDfZa%2BSuBEW6cgoZxCKudyQorpAjIa0q7LdB5W%2FsFsDnBzSq7GnqM%2F%2BWSCqPi7xbHxPenHdFZdMbcW%2B3jH5u4qMUITTdX0klh4HwC5jFZAsmwVljXQArZI5VP9jRrGUhtmhCc3EnIjJbqVbVidyrHfFTWgkMKGtZMHMPdUI8i%2FD3WrurDCMR%2B3PCc4GWr9fW%2FIXhHtq1h5x7moO%2BDZokmQxf3qkh5MoejNv0DMHN3S2RrUeoLZDAAEoOsudxdv4RFtCOdQ5%2B9xKF8HhIFrrVvLNRWRslM2TFA1WJWs7ANtKpCDkcTflfq0JDD%2BlfqpfHGO%2FJIvPvMJFyfgo11ZeGqPXZSvTnhHUr0CHJTiRccurs7y1XInzuX%2FtD7BeRcsMN4uzRg6TClZDUWvKM3U5%2FmjyQ9Tf0cboDwbfoSN5clUgbn48roHXr0M6mq8t1RbZEsOCspu0EZ8ySKUMv6%2BD5dDtgIUEkgf%2FGx2Rdlp11Rf%2Fhkk3Z/CD1010053395_20210706210702.m3u8"
-    static let listURL:String = "https://ecdn-fairplay.digicaps.dev/player/2021_mig/resource.json"
+    static let videoPath:String = "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8"
+    static let listURL:String = "http://1.255.85.174:9093/api/playlist/json/30 "
 }
 
 
@@ -51,9 +51,7 @@ struct PagePlayerTest: PageView {
                 .modifier(MatchHorizontal(height: 30))
                 .background(Color.app.white)
             
-            CPPlayer(
-                viewModel : self.playerModel ,
-                pageObservable : self.pageObservable)
+            
             HStack{
                 InputCell(
                     title: "List",
@@ -84,6 +82,9 @@ struct PagePlayerTest: PageView {
             }
             .padding(.all, 10)
             .background(Color.app.blueDeep)
+            CPPlayer(
+                viewModel : self.playerModel ,
+                pageObservable : self.pageObservable)
             
             if let info = self.currentInfo {
                 HStack{
@@ -221,8 +222,9 @@ struct PagePlayerTest: PageView {
         } else {
             self.playerModel.drm = nil
             playVideoPath = self.videoPath
+            self.setup.videoPath = playVideoPath
         }
-        self.setup.videoPath = playVideoPath
+        
         self.playerModel.event = .load(playVideoPath, true)
     }
 }

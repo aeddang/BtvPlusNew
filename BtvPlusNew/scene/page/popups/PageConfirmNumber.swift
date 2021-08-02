@@ -8,8 +8,16 @@ import Foundation
 import SwiftUI
 
 extension PageConfirmNumber{
-    enum InputType:String {
-        case password, coupon, nickname, okcash
+    enum InputType {
+        case password, coupon, nickname,
+             okcash(OcbItem?), okcashMaster(RegistCardData)
+        
+        func keyboardType() -> UIKeyboardType {
+            switch self {
+            case .nickname : return .default
+            default : return .numberPad
+            }
+        }
     }
 }
 
@@ -40,7 +48,7 @@ struct PageConfirmNumber: PageView {
     @State var safeAreaBottom:CGFloat = Dimen.app.keyboard
     @State var isFocus:Bool = false
     @State var isSecure:Bool = false
-    @State var requestData:Any? = nil
+    
     var body: some View {
         ZStack{
             InputBox(
@@ -53,7 +61,7 @@ struct PageConfirmNumber: PageView {
                 placeHolder: self.placeHolder,
                 inputSize: self.inputSize,
                 inputSizeMin: self.inputSizeMin,
-                keyboardType: self.type == .nickname ? .default : .numberPad,
+                keyboardType: self.type.keyboardType(),
                 isSecure : self.isSecure
             ){ input, _ in
                 guard let input = input else {
@@ -64,7 +72,8 @@ struct PageConfirmNumber: PageView {
                 case .password : self.confirmPassword(input)
                 case .coupon : self.resigistCoupon(input)
                 case .nickname : self.modifyNickName(input)
-                case .okcash : self.confirmOkCash(input)
+                case .okcash(let data) : self.confirmOkCash(input, card:data)
+                case .okcashMaster(let data) : self.confirmOkCashMaster(input, card: data)
                 }
             }
             .padding(.bottom, self.safeAreaBottom)
@@ -119,6 +128,8 @@ struct PageConfirmNumber: PageView {
                 self.modifyNickNameRespond(res, updateData:user)
             case .getOkCashPoint :
                 self.confirmOkCashRespond(res)
+            case .updateOkCashPoint :
+                self.confirmOkCashMasterRespond(res)
             default: break
             }
         }
@@ -126,7 +137,7 @@ struct PageConfirmNumber: PageView {
             guard let err = err else { return }
             if err.id != self.tag { return }
             switch err.type {
-            case .confirmPassword, .postCoupon, .updateUser:
+            case .confirmPassword, .postCoupon, .updateUser, .updateOkCashPoint:
                 self.msg = String.alert.apiErrorClient
             default: break
             }
@@ -149,10 +160,7 @@ struct PageConfirmNumber: PageView {
             guard let obj = self.pageObject  else { return }
             if let data = obj.getParamValue(key: .data) as? PageObject {
                 self.movePage = data
-            }else if let data = obj.getParamValue(key: .data) {
-                self.requestData = data
             }
-          
             if let type = obj.getParamValue(key: .type) as? ScsNetwork.ConfirmType {
                 self.pwType = type
                 switch type {
@@ -200,6 +208,11 @@ struct PageConfirmNumber: PageView {
                 case .okcash:
                     self.title = String.alert.okCashDiscount
                     self.text = String.alert.okCashDiscountInput
+                    self.inputSize = 4
+                    self.isSecure = true
+                case .okcashMaster:
+                    self.title = String.alert.okCashMaster
+                    self.text = String.alert.okCashMasterInput
                     self.inputSize = 4
                     self.isSecure = true
                 
@@ -322,13 +335,13 @@ struct PageConfirmNumber: PageView {
         }
     }
    
-    func confirmOkCash(_ pw:String){
+    func confirmOkCash(_ pw:String, card:OcbItem?){
         if !self.isReady {
             self.appSceneObserver.event = .toast(String.alert.checkConnectStatus)
             return
         }
-        let item = self.requestData as? OcbItem
-        self.dataProvider.requestData(q: .init(id:self.tag, type: .getOkCashPoint(self.pairing.hostDevice, item, pw)))
+        
+        self.dataProvider.requestData(q: .init(id:self.tag, type: .getOkCashPoint(self.pairing.hostDevice, card, pw)))
     }
     
     func confirmOkCashRespond(_ res:ApiResultResponds){
@@ -337,6 +350,25 @@ struct PageConfirmNumber: PageView {
             self.pagePresenter.onPageEvent(self.pageObject, event: .init(type: .completed, data:self.type))
             self.closePage()
             
+        } else{
+            self.msg = String.alert.incorrecPassword
+        }
+    }
+    
+    func confirmOkCashMaster(_ pw:String, card:RegistCardData){
+        if !self.isReady {
+            self.appSceneObserver.event = .toast(String.alert.checkConnectStatus)
+            return
+        }
+        var masterCard = card
+        masterCard.password = pw
+        self.dataProvider.requestData(q: .init(id:self.tag, type: .updateOkCashPoint(self.pairing.hostDevice, masterCard)))
+    }
+    
+    func confirmOkCashMasterRespond(_ res:ApiResultResponds){
+        guard let resData = res.data as? RegistEps else {return}
+        if resData.result == ApiCode.success {
+            self.closePage()
         } else{
             self.msg = String.alert.incorrecPassword
         }

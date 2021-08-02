@@ -46,6 +46,7 @@ struct AppLayout: PageComponent{
             SceneRadioController()
             SceneSelectController()
             ScenePickerController()
+            SceneDatePickerController()
             SceneAlertController()
             
             if self.isLoading {

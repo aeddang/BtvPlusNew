@@ -80,8 +80,12 @@ struct FocusableTextField: UIViewRepresentable {
         }
         func textFieldDidChangeSelection(_ textField: UITextField) {
             let text = textField.text ?? ""
-            self.parent.text = text
-            parent.inputChanged?(text)
+            DispatchQueue.main.async {
+                if self.parent.text != text {
+                    self.parent.text = text
+                    self.parent.inputChanged?(text)
+                }
+            }
         }
         
         func textFieldShouldReturn(_ textField: UITextField) -> Bool {

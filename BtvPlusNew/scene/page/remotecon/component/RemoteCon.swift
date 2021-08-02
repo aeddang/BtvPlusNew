@@ -36,19 +36,26 @@ struct RemoteCon: PageComponent {
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var setup:Setup
     var data:RemotePlayData? = nil
-    var isEarPhone:Bool? = nil
+    var isAudioAble:Bool = false
+    var isAudioMirroring:Bool = false
     var action: (RemoteConEvent) -> Void
+    
+    @State var isVibrate:Bool? = nil
     var body: some View {
         ZStack(alignment: .top){
             Spacer().modifier(MatchVertical(width: 0))
             VStack(alignment: .center, spacing: 0){
                 HStack(alignment: .center, spacing: RemoteStyle.margin.light){
-                    EffectButton(defaultImage: Asset.remote.on, effectImage: Asset.remote.onOn)
+                    EffectButton(
+                        defaultImage: Asset.remote.on,
+                        effectImage: Asset.remote.onOn)
                     { _ in
                         self.action(.toggleOn)
                     }
                     .frame(width: RemoteStyle.button.regular, height: RemoteStyle.button.regular)
-                    EffectButton(defaultImage: Asset.remote.multiview, effectImage: Asset.remote.multiviewOn)
+                    EffectButton(
+                        defaultImage: Asset.remote.multiview,
+                        effectImage: Asset.remote.multiviewOn)
                     { _ in
                         self.action(.multiview)
                     }
@@ -56,18 +63,23 @@ struct RemoteCon: PageComponent {
                     Spacer().modifier(MatchVertical(width: 1))
                         .background(Color.app.grey)
                         .padding(.vertical , Dimen.margin.tiny)
-                    EffectButton(defaultImage: Asset.remote.chlist, effectImage: Asset.remote.chlistOn)
+                    EffectButton(
+                        defaultImage: Asset.remote.chlist,
+                        effectImage: Asset.remote.chlistOn)
                     { _ in
                         self.action(.chlist)
                     }
                     .frame(width: RemoteStyle.button.thin, height: RemoteStyle.button.thin)
-                    if let isEarPhone = self.isEarPhone {
+                    if self.isAudioAble {
                         Spacer().modifier(MatchVertical(width: 1))
                             .background(Color.app.grey)
                             .padding(.vertical , Dimen.margin.tiny)
                         EffectButton(
-                            defaultImage: isEarPhone ? Asset.remote.earphoneOn : Asset.remote.earphone,
-                            effectImage: Asset.remote.earphoneOn)
+                            defaultImage: Asset.remote.earphone,
+                            effectImage: Asset.remote.earphoneOn,
+                            isSelected: self.isAudioMirroring
+                        
+                        )
                         { _ in
                             self.action(.earphone)
                         }
@@ -137,7 +149,9 @@ struct RemoteCon: PageComponent {
                     .frame(width: RemoteStyle.ui.verticalButton.width,
                            height: RemoteStyle.ui.verticalButton.height)
                     Spacer()
-                    EffectButton(defaultImage: Asset.remote.home, effectImage: Asset.remote.homeOn)
+                    EffectButton(
+                        defaultImage: Asset.remote.home,
+                        effectImage: Asset.remote.homeOn)
                     { _ in
                         self.action(.home)
                     }
@@ -158,13 +172,19 @@ struct RemoteCon: PageComponent {
                 
                 
                 HStack(alignment: .center, spacing: 0){
-                    EffectButton(defaultImage: Asset.remote.mute, effectImage: Asset.remote.muteOn)
+                    EffectButton(
+                        defaultImage: Asset.remote.mute,
+                        effectImage: Asset.remote.muteOn)
                     { _ in
                         self.action(.mute(true))
                     }
                     .frame(width: RemoteStyle.button.medium, height: RemoteStyle.button.medium)
                     Spacer()
-                    EffectButton(defaultImage: Asset.remote.vibrate, effectImage: Asset.remote.vibrateOn,  useVibrate : false)
+                    EffectButton(
+                        defaultImage: Asset.remote.vibrate,
+                        effectImage: Asset.remote.vibrateOn,
+                        isSelected: self.isVibrate ,
+                        useVibrate : false)
                     { _ in
                         if SystemEnvironment.isTablet {
                             self.appSceneObserver.event = .toast(String.alert.guideNotSupportedVibrate)
@@ -172,6 +192,7 @@ struct RemoteCon: PageComponent {
                         }
                         
                         let vibration = !self.setup.remoconVibration
+                        self.isVibrate = vibration
                         self.setup.remoconVibration = vibration
                         if vibration {
                             UIDevice.vibrate()
@@ -182,13 +203,17 @@ struct RemoteCon: PageComponent {
                     }
                     .frame(width: RemoteStyle.button.medium, height: RemoteStyle.button.medium)
                     Spacer()
-                    EffectButton(defaultImage: Asset.remote.text, effectImage: Asset.remote.textOn)
+                    EffectButton(
+                        defaultImage: Asset.remote.text,
+                        effectImage: Asset.remote.textOn)
                     { _ in
                         self.action(.inputMessage)
                     }
                     .frame(width: RemoteStyle.button.medium, height: RemoteStyle.button.medium)
                     Spacer()
-                    EffectButton(defaultImage: Asset.remote.chNumber, effectImage: Asset.remote.chNumberOn)
+                    EffectButton(
+                        defaultImage: Asset.remote.chNumber,
+                        effectImage: Asset.remote.chNumberOn)
                     { _ in
                         self.action(.inputChannel)
                     }
@@ -200,6 +225,10 @@ struct RemoteCon: PageComponent {
             .padding(.all, RemoteStyle.margin.regular)
         }
         .modifier(MatchParent())
+        .onAppear(){
+            let isVibrate = self.setup.remoconVibration
+            self.isVibrate = isVibrate
+        }
     }//body
     
     

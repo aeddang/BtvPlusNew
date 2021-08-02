@@ -37,6 +37,7 @@ struct InputCell: PageView {
                                     .keyboardType(self.keyboardType)
                                     .modifier(MediumTextStyle(
                                                 size: Self.inputFontSize))
+                                    
                             }else{
                                 TextField(self.placeHolder, text: self.$input)
                                     .keyboardType(self.keyboardType)

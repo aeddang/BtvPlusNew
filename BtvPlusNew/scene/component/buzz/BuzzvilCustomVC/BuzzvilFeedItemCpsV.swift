@@ -48,7 +48,7 @@ class BuzzvilFeedItemCpsV: BABAdViewHolder, BABNativeAdViewDelegate {
         vc?.backgroundColor = .red
         AppUtil.setAutolayoutSamesize(item: vc!, toitem: self)
         self.addSubview(vc!)
-        
+       
         self.mediaView.layer.cornerRadius = 25
         self.ctaBackView.layer.cornerRadius = 25
 

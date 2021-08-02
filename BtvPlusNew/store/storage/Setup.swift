@@ -9,7 +9,7 @@ import Foundation
 class Setup:ObservableObject, PageProtocol {
     
     struct Keys {
-        static let VS = "1.000"
+        static let VS = "1.001"
         static let dataAlram = "dataAlram" + VS
         static let autoRemocon = "autoRemocon" + VS
         static let remoconVibration = "remoconVibration" + VS

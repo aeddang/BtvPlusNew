@@ -157,6 +157,10 @@ extension String {
         
         public static var okCashDiscount = "alertOkCashDiscount".loaalized()
         public static var okCashDiscountInput =  "alertOkCashDiscountInput".loaalized()
+        
+        public static var okCashMaster = "alertOkCashMaster".loaalized()
+        public static var okCashMasterInput = "alertOkCashMasterInput".loaalized()
+        public static var cardDeleteConfirm = "alertCardDeleteConfirm".loaalized()
 
         public static var purchaseAuthCompleted = "alertPurchaseAuthCompleted".loaalized()
         public static var purchaseAuthCompletedInfo = "alertPurchaseAuthCompletedInfo".loaalized()

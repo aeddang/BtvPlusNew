@@ -56,7 +56,7 @@ struct CheckBox: View, SelecterbleProtocol {
     var subText:String? = nil
     var isStrong:Bool = false
     var isSimple:Bool = false
-    
+    var isFill:Bool = true
     var textColor:String? = nil
     var textSize:String? = nil
    
@@ -102,7 +102,9 @@ struct CheckBox: View, SelecterbleProtocol {
                                 color: Color.app.greyLight))
                     }
                 }.offset(y:3)
-                Spacer()
+                if isFill {
+                    Spacer()
+                }
                 if more != nil {
                     TextButton(
                         defaultText: String.button.view,

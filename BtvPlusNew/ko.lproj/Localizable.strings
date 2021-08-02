@@ -17,6 +17,8 @@
 "nickNameInvalidation" = "8자 이내 한글/영문/숫자 입력 가능(숫자만 입력은 불가)";
 
 "birth" = "출생연도";
+"birthDay" = "생년월일";
+
 "birthKids" = "생년월";
 "birthKidsPlaceholder" = "0000 년 00 월";
 "gender" = "성별";
@@ -123,6 +125,11 @@
 "forSir" = "‘%s’님에게 필요한";
 "recivePoint" = "포인트 받기";
 
+"password" = "비밀번호";
+"cardno" = "카드 번호";
+"local" = "내국인";
+"foreigner" = "외국인";
+
 /*
   Button
 */
@@ -182,6 +189,7 @@
 "btnRegist" = "적용";
 "btnRegist2" = "등록";
 "btnModify" = "수정";
+"btnChange" = "변경";
 "btnSubscribe" = "구독하기";
 "btnTestResult" = "진단 결과 보기";
 "btnCashCharge" = "캐쉬 충전소";
@@ -379,6 +387,11 @@
 "alertOkCashDiscount" = "OK캐쉬백 할인 적용";
 "alertOkCashDiscountInput" = "OK캐쉬백 비밀번호를 입력해주세요.";
 
+"alertOkCashMaster" = "OK캐쉬백 대표카드등록";
+"alertOkCashMasterInput" = "OK캐쉬백 비밀번호를 입력해주세요.";
+"alertCardDeleteConfirm" = "삭제 하시겠습니까?";
+
+
 "alertPurchaseHidden" = "구매 내역 삭제";
 "alertPurchaseHiddenText" = "선택하신 구매내역을 목록에서\n삭제하시려면 구매 인증번호를\n입력해 주세요.";
 "alertPurchaseHiddenInfo" = "※ 구매내역 삭제 후 시청 기간 내에는 시청 가능하며, 삭제한 구매내역 확인은 국번 없이 106으로 문의 바랍니다";
@@ -473,7 +486,11 @@
 "titleMyBenefits" = "나의 할인 해택";
 "titleMyAlram" = "알림 목록";
 "titleRecommandFriend" = "친구에게 추천하기";
+"titleCashCharge" = "B캐쉬 충전소";
 "titleCashChargeGuide" = "B캐쉬 충전소 이용 안내";
+
+"titleMyRegistCardMember" = "T멤버십 카드 등록";
+"titleMyRegistCardOk" = "OK캐쉬백 카드 등록";
 
 /*
  PagePairing
@@ -585,11 +602,15 @@
 
 "myTerminatePurchaseInfo" = "스마트 기기 시청을 지원하지 않는 콘텐츠는 시청하실 수 없습니다.";
 
+"myRegistCardEmptyCardNo" = "카드번호 16자리를 입력해주세요.";
+"myRegistCardEmptyPassword" = "비밀번호 4자리를 입력해주세요.";
+"myRegistCardEmptyBirth" = "생년월일을 입력해주세요.";
+"myRegistCardPasswordTip" = "비밀번호 확인 및 설정은 OK캐쉬백에서 가능합니다.";
+"myRegistCardPasswordPlaceHolder" = "4자리 숫자";
+
 /*
  PageRecommandFriend
 */
-
-
 "recommandFriendText1" = "추천한 작품을 친구가 구매할 때 마다";
 "recommandFriendText2" = "쌓인 B포인트로 할인을 받을 수 있어요!";
 "recommandFriendText3" = "작품 상세 페이지에서";
@@ -638,18 +659,19 @@
 "myBenefitsDiscountTvText1" = "TV 포인트";
 "myBenefitsDiscountTvText2" = "사용 가능 포인트";
 
-"myBenefitsDiscountTInfo1" = "콘텐츠 구매 시 할인이 적용됩니다. (일부 상품 제외)";
-"myBenefitsDiscountTInfo2" = "카드 등록, 변경, 삭제는 B tv에서 하실 수 있습니다.";
-
+"myBenefitsDiscountTInfo1" = "콘텐츠 구매 시, VIP 등급은 20%, Gold 및 Silver 등급은 10%가 할인됩니다. (교육 장르, 성인 장르, 부가서비스 상품 및 일부 제휴 월정액 상품은 제외)";
+"myBenefitsDiscountTInfo2" = "콘텐츠 구매 시 %s가 할인됩니다. (교육 장르, 성인 장르, 부가서비스 상품 및 일부 제휴 월정액 상품은 제외)";
 "myBenefitsDiscountOkInfo1" = "OK캐쉬백 카드는 최대 3개까지 등록 가능합니다.";
-"myBenefitsDiscountOkInfo2" = "OK캐쉬백 카드의 등록, 변경, 삭제는 B tv 에서 하실 수 있습니다.";
-"myBenefitsDiscountOkInfo3" = "콘텐츠 결제 시 할인과 함께 구매 금액의 %s가 OK캐쉬백 포인트로 적립되며 할인 및 적립은 대표 카드로만 가능합니다.";
-
+"myBenefitsDiscountOkInfo2" = "콘텐츠 결제 시 할인과 함께 구매 금액의 1%가\nOK캐쉬백 포인트로 적립되며 할인 및 적립은\n대표 카드로만 가능합니다.";
+"myBenefitsDiscountOkSetup" = "대표 카드로 설정";
+"myBenefitsDiscountOkDelete" = "카드 삭제";
 "myBenefitsDiscountTvInfo1" = "TV포인트 등록 정보 변경 및 충전은 B tv에서 하실 수 있습니다.";
 
 "myBenefitsCardEmpty" = "등록된 카드가 없습니다.";
 "myBenefitsDiscountTvEmpty" = "TV포인트 등록 정보가 없습니다.";
 "myBenefitsDiscountTvEmptyTip" = "B tv에서 TV포인트에 가입해주세요.";
+
+
 
 /*
  PageModifyProfile

@@ -65,24 +65,11 @@ struct PurchaseBlock: PageComponent, Identifiable{
                     if self.type == .normal {
                         HStack(spacing: 0){
                             Spacer()
-                            Button(action: {
+                            EditButton(
+                                icon: Asset.icon.edit,
+                                text: String.button.purchaseEdit){
                                 self.viewModel.isEditmode.toggle()
-                            }) {
-                                if !self.isEdit {
-                                    HStack(alignment:.center, spacing: Dimen.margin.tinyExtra){
-                                        Image(Asset.icon.edit)
-                                            .renderingMode(.original).resizable()
-                                            .scaledToFit()
-                                            .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
-                                        Text(String.button.purchaseEdit)
-                                            .modifier(BoldTextStyle(size: Font.size.light))
-                                    }
-                                } else {
-                                    Text(String.app.cancel)
-                                        .modifier(BoldTextStyle(size: Font.size.light))
-                                }
                             }
-                            .buttonStyle(BorderlessButtonStyle())
                         }
                         .padding(.horizontal, Dimen.margin.thin)
                         .frame(height:Dimen.tab.lightExtra)
@@ -141,19 +128,11 @@ struct PurchaseBlock: PageComponent, Identifiable{
                             }
                         )
                         Spacer()
-                        Button(action: {
+                        EditButton(
+                            icon: Asset.icon.delete,
+                            text: String.button.remove){
                             self.delete()
-                        }) {
-                            HStack(alignment:.center, spacing: Dimen.margin.tinyExtra){
-                                Image(Asset.icon.delete)
-                                    .renderingMode(.original).resizable()
-                                    .scaledToFit()
-                                    .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
-                                Text(String.button.remove)
-                                    .modifier(BoldTextStyle(size: Font.size.light))
-                            }
                         }
-                        .buttonStyle(BorderlessButtonStyle())
                     }
                     .padding(.horizontal, Dimen.margin.regular)
                     .modifier(MatchHorizontal(height: Dimen.tab.medium))

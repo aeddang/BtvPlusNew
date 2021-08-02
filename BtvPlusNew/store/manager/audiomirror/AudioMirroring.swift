@@ -170,6 +170,7 @@ class AudioMirroring : NSObject, ObservableObject, AudioMirrorServiceProxyClient
             }
             return MPRemoteCommandHandlerStatus.success
         }
+        self.isConnected = true
         self.status = .mirroring
         self.event = .connected
     }

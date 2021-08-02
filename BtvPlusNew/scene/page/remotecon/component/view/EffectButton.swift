@@ -30,7 +30,7 @@ struct EffectButton: View, SelecterbleProtocol{
     )
     {
         self.defaultImage = defaultImage
-        self.activeImage = activeImage ?? defaultImage
+        self.activeImage = activeImage ?? effectImage
         self.effectImage = effectImage
         self.index = index
         self.isSelected = isSelected ?? false

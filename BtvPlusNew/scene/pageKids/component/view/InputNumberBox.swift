@@ -190,6 +190,7 @@ struct InputNumberItem: PageView {
     let idx:Int
     @Binding var input:String
     var focusIdx:Int
+    var placeholder:String = "●"
     var action: () -> Void
     
     let radius:CGFloat = DimenKids.radius.lightExtra
@@ -198,7 +199,7 @@ struct InputNumberItem: PageView {
             FocusableTextField(
                 text: self.$input,
                 keyboardType: .numberPad,
-                placeholder: "●",
+                placeholder: self.placeholder,
                 maxLength: 1,
                 textModifier: TextModifier(
                     family: Font.familyKids.bold,

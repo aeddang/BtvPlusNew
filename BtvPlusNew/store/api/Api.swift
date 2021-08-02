@@ -121,8 +121,15 @@ enum ApiType{
          getBCashes( HostDevice?, Int? = nil , Int? = nil),
          postBCash( HostDevice?, String?),
          getTMembership( HostDevice? ),
+         postTMembership( HostDevice?, RegistCardData),
+         deleteTMembership( HostDevice? ),
          getTvPoint( HostDevice? ),
-         getOkCashPoint( HostDevice?, OcbItem?, String?)
+         getOkCashPoint( HostDevice?, OcbItem?, String?),
+         postOkCashPoint( HostDevice?, RegistCardData),
+         updateOkCashPoint( HostDevice?, RegistCardData),
+         deleteOkCashPoint( HostDevice?, masterSequence:Int )
+    
+    
     //WEPG
     case getAllChannels(String?),
          getCurrentChannels(String?)

@@ -88,6 +88,7 @@ struct ListItem{
     
     struct card {
         static let size:CGSize =  isPad ? CGSize(width: 374, height: 232) : CGSize(width: 267, height: 166)
+        static let bottom:CGFloat = isPad ? 70 : 50
     }
     struct alram {
         static let height:CGFloat = 140

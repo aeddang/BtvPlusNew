@@ -18,6 +18,7 @@ class Buzz {
         if isInit {return}
         isInit = true
         let config = BABConfig(appId: SystemEnvironment.isReleaseMode ? BAB_SDK_KR_iOS_PRD_APP_ID : BAB_SDK_KR_iOS_DEV_APP_ID)
+        
         BuzzAdBenefit.initialize(with: config)
     }
     
@@ -67,8 +68,13 @@ class BABCustomLauncher: NSObject, BABLauncher {
     func open(with launchInfo: BABLaunchInfo, delegate: BABLauncherEventDelegate?) {
         // Custom Browser 실행
         let vc = CustomBrowserViewController()
-        //        rootViewController?.present(vc, animtated: true, completion:nil)
-        (UIApplication.shared.windows.first!.rootViewController as? UINavigationController)?.viewControllers.first?.present(vc, animated: true, completion: nil)
+        //rootViewController?.present(vc, animtated: true, completion:nil)
+        
+        ComponentLog.d("BABCustomLauncher " + vc.debugDescription, tag: "BuzzBill")
+        let con = UIApplication.shared.windows.first?.rootViewController
+        ComponentLog.d("UINavigationController " + con.debugDescription, tag: "BuzzBill")
+        con?.children.first?.present(vc, animated: true, completion: nil)
+      //  con?.viewControllers.first?.present(vc, animated: true, completion: nil)
     }
 }
 

@@ -37,7 +37,8 @@ struct PageKidsMy: PageView {
                 VStack (alignment: .center, spacing:0){
                     PageKidsTab(
                         title:String.kidsTitle.kidsMy,
-                        isBack: true)
+                        isBack: true,
+                        isSetting: true)
                     
                     if self.isPairing {
                         PairingKidsView(

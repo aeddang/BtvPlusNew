@@ -21,6 +21,7 @@ extension String {
         public static let nickNameValidation = "nickNameValidation".loaalized()
         public static let nickNameInvalidation = "nickNameInvalidation".loaalized()
         public static let birth = "birth".loaalized()
+        public static let birthDay = "birthDay".loaalized()
         public static let birthKids = "birthKids".loaalized()
         public static let birthKidsPlaceholder = "birthKidsPlaceholder".loaalized()
         public static let gender = "gender".loaalized()
@@ -116,5 +117,10 @@ extension String {
         public static let sir = "sir".loaalized()
         public static let forSir = "forSir".loaalized()
         public static let recivePoint = "recivePoint".loaalized()
+        
+        public static let password = "password".loaalized()
+        public static let cardno = "cardno".loaalized()
+        public static let local = "local".loaalized()
+        public static let foreigner = "foreigner".loaalized()
     }
 }

@@ -40,7 +40,8 @@ struct PageRemotecon: PageView {
                                             .modifier(MatchParent())
                                         RemoteCon(
                                             data:self.remotePlayData,
-                                            isEarPhone: self.isAudioMirroring
+                                            isAudioAble: self.isAudioAble,
+                                            isAudioMirroring: self.isAudioMirroring
                                         ){ evt in
                                             self.action(evt: evt)
                                         }
@@ -64,7 +65,8 @@ struct PageRemotecon: PageView {
                                     .modifier(MatchParent())
                                     RemoteCon(
                                         data:self.remotePlayData,
-                                        isEarPhone: self.isAudioMirroring
+                                        isAudioAble: self.isAudioAble,
+                                        isAudioMirroring: self.isAudioMirroring
                                     ){ evt in
                                         self.action(evt: evt)
                                     }
@@ -162,7 +164,7 @@ struct PageRemotecon: PageView {
                 }
             }
             .onReceive(self.repository.audioMirrorManager.$status){status in
-                if self.isAudioMirroring == nil {return}
+                if !self.isAudioAble {return}
                 switch status {
                 case .mirroring : self.isAudioMirroring = true
                 case .none : self.isAudioMirroring = false
@@ -205,11 +207,14 @@ struct PageRemotecon: PageView {
             .onAppear{
                 self.pairing.requestPairing(.check)
                 self.dataProvider.broadcasting.reset()
+               
                 if self.repository.audioMirrorManager.isAudioMirrorSupported {
+                    self.isAudioAble = true
                     self.isAudioMirroring = self.repository.audioMirrorManager.isConnected
                 } else {
-                    self.isAudioMirroring = nil
+                    self.isAudioMirroring = false
                 }
+                
             }
             .onDisappear{
                 if self.repository.audioMirrorManager.isConnected {
@@ -225,7 +230,10 @@ struct PageRemotecon: PageView {
     @State var isInputText:Bool = false
     @State var isInputChannel:Bool = false
     @State var isUIReady:Bool = false
-    @State var isAudioMirroring:Bool? = nil
+    @State var isEar:Bool? = nil
+    @State var isAudioAble:Bool = false
+    @State var isAudioMirroring:Bool = false
+    
     @State var remotePlayData:RemotePlayData? = nil
     
     private func checkHostDeviceStatus(){

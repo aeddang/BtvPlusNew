@@ -84,6 +84,7 @@ class BuzzvilFeedItemAdsPointV: BABAdViewHolder, BABNativeAdViewDelegate {
                 self.rewardIcon.image = UIImage(named: "icCategoryBtnCheck")
             } else {
                 self.ctaButton.isEnabled = true
+                
                 self.ctaLabel.text = "+\(self.numberToDecimalString(number: Int(ad.reward)))P \(ad.creative.callToAction!)"
                 self.rewardIcon.image = UIImage(named: "021IconIcCategoryBtnBcash")
             }

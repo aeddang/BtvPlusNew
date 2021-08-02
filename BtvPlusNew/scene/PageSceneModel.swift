@@ -117,7 +117,8 @@ struct PageSceneModel: PageModel {
     
     static func needKeyboard(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
-        case .pairingSetupUser, .pairingBtv, .search, .modifyProile, .confirmNumber, .pairingManagement, .setup, .remotecon: return true
+        case .pairingSetupUser, .pairingBtv, .search, .modifyProile,
+             .confirmNumber, .pairingManagement, .setup, .remotecon , .myRegistCard: return true
         case .registKid, .confirmNumber, .kidsSearch : return true
         default : return false
         }

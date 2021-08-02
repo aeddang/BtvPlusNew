@@ -51,24 +51,38 @@ extension CardBlock{
             case .tvPoint: return String.pageText.myBenefitsDiscountTvEmpty
             }
         }
-        var emptyTip: String? {
+        var isAddAble: Bool {
             switch self {
-            case .member: return nil
-            case .okCash: return nil
-            case .tvPoint: return String.pageText.myBenefitsDiscountTvEmptyTip
+            case .tvPoint: return false
+            default : return true
+            }
+        }
+        var emptyTips: [String] {
+            switch self {
+                case .member: return [
+                    String.pageText.myBenefitsDiscountTInfo1
+                ]
+                case .okCash: return [
+                    String.pageText.myBenefitsDiscountOkInfo1,
+                    String.pageText.myBenefitsDiscountOkInfo2
+                ]
+                case .tvPoint: return [
+                    String.pageText.myBenefitsDiscountTvEmptyTip
+                ]
             }
         }
         var tips: [String] {
             switch self {
-            case .member: return [
-                String.pageText.myBenefitsDiscountTInfo1,
-                String.pageText.myBenefitsDiscountTInfo2]
-            case .okCash: return [
-                String.pageText.myBenefitsDiscountOkInfo1,
-                String.pageText.myBenefitsDiscountOkInfo2,
-                String.pageText.myBenefitsDiscountOkInfo3.replace("1")]
-            case .tvPoint: return [
-                String.pageText.myBenefitsDiscountTvInfo1]
+                case .member: return [
+                    String.pageText.myBenefitsDiscountTInfo2
+                ]
+                case .okCash: return [
+                    String.pageText.myBenefitsDiscountOkInfo1,
+                    String.pageText.myBenefitsDiscountOkInfo2
+                ]
+                case .tvPoint: return [
+                    String.pageText.myBenefitsDiscountTvInfo1
+                ]
             }
         }
     }
@@ -81,6 +95,7 @@ struct CardBlock: PageComponent, Identifiable{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var dataProvider:DataProvider
     
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var viewModel:CardBlockModel = CardBlockModel()
@@ -88,7 +103,7 @@ struct CardBlock: PageComponent, Identifiable{
      
     var useTracking:Bool = false
     @State var type:CardBlock.ListType = .member
-    
+    @State var tips:[String] = []
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -97,7 +112,12 @@ struct CardBlock: PageComponent, Identifiable{
             if self.isError == false {
                 VStack(alignment: .center, spacing:Dimen.margin.regular){
                     if self.datas.isEmpty {
-                        EmptyCard(text: self.type.empty, tip: self.type.emptyTip)
+                        if type.isAddAble {
+                            AddCard(type:self.type, text: self.type.empty)
+                        } else {
+                            EmptyCard(text: self.type.empty)
+                        }
+                        
                     } else if self.datas.count == 1 {
                         CardItem(data: self.datas.first!)
                     } else {
@@ -105,11 +125,12 @@ struct CardBlock: PageComponent, Identifiable{
                             viewModel:self.infinityScrollModel,
                             datas: self.datas,
                             useTracking:self.useTracking,
-                            margin: self.sceneObserver.screenSize.width - ListItem.card.size.width
+                            margin: floor((self.sceneObserver.screenSize.width - ListItem.card.size.width)/2)
                         )
+                        .frame(height: ListItem.card.size.height + ListItem.card.bottom )
                     }
                     VStack(alignment: .leading, spacing:Dimen.margin.micro){
-                        ForEach(self.type.tips, id: \.self) { tip in
+                        ForEach(self.tips, id: \.self) { tip in
                             HStack(alignment: .top, spacing: 0){
                                 Text("• ")
                                     .modifier(MediumTextStyle(
@@ -130,8 +151,6 @@ struct CardBlock: PageComponent, Identifiable{
                 .modifier(MatchParent())
                 .background(Color.brand.bg)
                 
-                
-                
             } else if self.isError == true {
                 EmptyAlert().modifier(MatchParent())
             } else {
@@ -142,6 +161,24 @@ struct CardBlock: PageComponent, Identifiable{
         .onReceive(self.viewModel.$isUpdate){ update in
             if update {
                 self.reload()
+            }
+        }
+        .onReceive(dataProvider.$result) { res in
+            guard let res = res else { return }
+            switch res.type {
+            case .postTMembership, .deleteTMembership :
+                if self.type != .member {return}
+                guard let result = res.data as? RegistEps else { return }
+                if result.result == ApiCode.success {
+                    self.reload()
+                }
+            case .postOkCashPoint, .deleteOkCashPoint, .updateOkCashPoint:
+                if self.type != .okCash {return}
+                guard let result = res.data as? RegistEps else { return }
+                if result.result == ApiCode.success {
+                    self.reload()
+                }
+            default: break
             }
         }
         .onReceive(self.viewModel.$event){evt in
@@ -193,10 +230,9 @@ struct CardBlock: PageComponent, Identifiable{
             withAnimation{ self.isError = true }
             return
         }
-        //withAnimation{
-            self.isError = nil
-            self.datas = []
-        //}
+        self.isError = nil
+        self.datas = []
+        self.tips = []
         self.self.type = self.viewModel.type
         self.infinityScrollModel.reload()
         self.load()
@@ -230,27 +266,46 @@ struct CardBlock: PageComponent, Identifiable{
         withAnimation{ self.isError = true }
     }
     private func onEmpty(){
-        withAnimation{ self.isError = false }
+        withAnimation{
+            self.isError = false
+            self.tips = self.type.emptyTips
+        }
     }
 
     private func loadedTMembership(_ res:ApiResultResponds){
         guard let data = res.data as? TMembership else { return }
         guard let tmembership = data.tmembership else { return self.onEmpty() }
-        
-        self.datas.append(CardData().setData(data: tmembership))
+        let card = CardData().setData(data: tmembership)
+        self.datas.append(card)
         self.infinityScrollModel.onComplete(itemCount: 1)
-        withAnimation{ self.isError = false }
+        withAnimation{
+            self.isError = false
+            self.tips = self.type.tips.map{
+                if let sale = card.sale {
+                    return $0.replace(sale)
+                } else {
+                    return $0
+                }
+            }
+        }
     }
     
     private func loadedOkCash(_ res:ApiResultResponds){
         guard let data = res.data as? TotalPoint else { return }
         guard let ocbList = data.ocbList?.ocb else { return self.onEmpty() }
+        if ocbList.isEmpty { return self.onEmpty() }
         let datas:[CardData] = ocbList.map{
             CardData().setData(data: $0, masterSequence: data.ocbMasterSequence)
         }
         self.datas.append(contentsOf: datas)
+        if self.datas.count < 3 {
+            self.datas.append(CardData().setEmpty(type: .okCash, masterSequence: self.datas.count+1))
+        }
         self.infinityScrollModel.onComplete(itemCount: datas.count)
-        withAnimation{ self.isError = false }
+        withAnimation{
+            self.isError = false
+            self.tips = self.type.tips
+        }
     }
     
     private func loadedTvpoint(_ res:ApiResultResponds){
@@ -260,7 +315,10 @@ struct CardBlock: PageComponent, Identifiable{
             self.datas.append(CardData().setData(data: tvpoint))
             self.infinityScrollModel.onComplete(itemCount: 1)
         }
-        withAnimation{ self.isError = false }
+        withAnimation{
+            self.isError = false
+            self.tips = self.type.tips
+        }
     }
 }
 

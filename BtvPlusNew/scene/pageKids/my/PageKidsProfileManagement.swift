@@ -28,7 +28,10 @@ struct PageKidsProfileManagement: PageView {
                 axis:.horizontal
             ) {
                 VStack(alignment: .center, spacing: 0) {
-                    PageKidsTab(title:String.kidsTitle.registKidManagement, isBack: true)
+                    PageKidsTab(
+                        title:String.kidsTitle.registKidManagement,
+                        isBack: true,
+                        isSetting: true)
                     HStack(alignment: .center, spacing: DimenKids.margin.mediumUltra){
                         ForEach(self.kids) { kid in
                             KidProfileListItem(data: kid, isSelected : self.currentKid?.id == kid.id)

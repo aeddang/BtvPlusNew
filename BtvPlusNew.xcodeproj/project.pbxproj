@@ -437,6 +437,13 @@
 		31A4A0082627F0A90065E6C6 /* TipTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A4A0072627F0A90065E6C6 /* TipTab.swift */; };
 		31A4A00E26281B840065E6C6 /* TipBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A4A00D26281B840065E6C6 /* TipBlock.swift */; };
 		31A73BCD261D99B1009A143C /* PageMyPurchase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A73BCC261D99B1009A143C /* PageMyPurchase.swift */; };
+		31AC66BF26B772BA00766995 /* EmptyCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AC66BE26B772BA00766995 /* EmptyCard.swift */; };
+		31AC66C326B7814A00766995 /* EditButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AC66C226B7814A00766995 /* EditButton.swift */; };
+		31AC66C526B78D0B00766995 /* RegistCardData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AC66C426B78D0B00766995 /* RegistCardData.swift */; };
+		31AC66C726B78E3C00766995 /* PageMyRegistCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AC66C626B78E3C00766995 /* PageMyRegistCard.swift */; };
+		31AC66C926B7900E00766995 /* InputNumberGroupBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AC66C826B7900E00766995 /* InputNumberGroupBox.swift */; };
+		31AC66CB26B7A8D900766995 /* DatePickerSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AC66CA26B7A8D900766995 /* DatePickerSelect.swift */; };
+		31AC66CD26B7ADE500766995 /* SceneDatePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AC66CC26B7ADE500766995 /* SceneDatePickerController.swift */; };
 		31C4BC97262D2D8600BB2167 /* NotificationCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BC96262D2D8600BB2167 /* NotificationCoreData.swift */; };
 		31C4BCC0262D71BA00BB2167 /* KeywordCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BCBF262D71BA00BB2167 /* KeywordCoreData.swift */; };
 		31C4BCCE262D745B00BB2167 /* AlramList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BCCD262D745B00BB2167 /* AlramList.swift */; };
@@ -1092,6 +1099,13 @@
 		31A4A0072627F0A90065E6C6 /* TipTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipTab.swift; sourceTree = "<group>"; };
 		31A4A00D26281B840065E6C6 /* TipBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipBlock.swift; sourceTree = "<group>"; };
 		31A73BCC261D99B1009A143C /* PageMyPurchase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyPurchase.swift; sourceTree = "<group>"; };
+		31AC66BE26B772BA00766995 /* EmptyCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyCard.swift; sourceTree = "<group>"; };
+		31AC66C226B7814A00766995 /* EditButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditButton.swift; sourceTree = "<group>"; };
+		31AC66C426B78D0B00766995 /* RegistCardData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistCardData.swift; sourceTree = "<group>"; };
+		31AC66C626B78E3C00766995 /* PageMyRegistCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyRegistCard.swift; sourceTree = "<group>"; };
+		31AC66C826B7900E00766995 /* InputNumberGroupBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputNumberGroupBox.swift; sourceTree = "<group>"; };
+		31AC66CA26B7A8D900766995 /* DatePickerSelect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerSelect.swift; sourceTree = "<group>"; };
+		31AC66CC26B7ADE500766995 /* SceneDatePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDatePickerController.swift; sourceTree = "<group>"; };
 		31C4BC96262D2D8600BB2167 /* NotificationCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCoreData.swift; sourceTree = "<group>"; };
 		31C4BCBF262D71BA00BB2167 /* KeywordCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordCoreData.swift; sourceTree = "<group>"; };
 		31C4BCCD262D745B00BB2167 /* AlramList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlramList.swift; sourceTree = "<group>"; };
@@ -1576,6 +1590,7 @@
 				D56C6B08257DAADE00CF9AB8 /* SceneRadioController.swift */,
 				D56C6B06257DAADE00CF9AB8 /* SceneSelectController.swift */,
 				D57298E4259D6EC100ED2CE6 /* ScenePickerController.swift */,
+				31AC66CC26B7ADE500766995 /* SceneDatePickerController.swift */,
 			);
 			path = sceneui;
 			sourceTree = "<group>";
@@ -1726,6 +1741,7 @@
 		3166CBB226115D6900282891 /* model */ = {
 			isa = PBXGroup;
 			children = (
+				31AC66C426B78D0B00766995 /* RegistCardData.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -1839,9 +1855,10 @@
 		316A70782670345800A93B83 /* component */ = {
 			isa = PBXGroup;
 			children = (
+				31061E6A25C8D21A00543FC0 /* player */,
 				3128259626AE74AA00A58DB9 /* buzz */,
 				D56CC2ED25902E5400CA1D54 /* multiblock */,
-				31061E6A25C8D21A00543FC0 /* player */,
+				31AC66C026B780A000766995 /* block */,
 				D506D715258C8FCD00F27C00 /* list */,
 				31F2803A26732E0F00F40B09 /* view */,
 			);
@@ -1994,7 +2011,7 @@
 			path = audiomirror;
 			sourceTree = "<group>";
 		};
-		316ECDEF264B3F00008D2544 /* remotecon */ = {
+		316ECDEF264B3F00008D2544 /* component */ = {
 			isa = PBXGroup;
 			children = (
 				316ECDF2264B3F39008D2544 /* view */,
@@ -2002,7 +2019,7 @@
 				316C45CF264DE7D800A8D7F5 /* InputRemoteBox.swift */,
 				316ECDFA264B49BE008D2544 /* RemoteStyle.swift */,
 			);
-			path = remotecon;
+			path = component;
 			sourceTree = "<group>";
 		};
 		316ECDF2264B3F39008D2544 /* view */ = {
@@ -2225,6 +2242,7 @@
 			children = (
 				318ECEF7266DAD1800380B59 /* MultiPickerSelect.swift */,
 				D57298DC259D69EB00ED2CE6 /* PickerSelect.swift */,
+				31AC66CA26B7A8D900766995 /* DatePickerSelect.swift */,
 				318ECEFA266DBD8A00380B59 /* PickerBox.swift */,
 				318ECEFC266DC14000380B59 /* PickerBoxKids.swift */,
 			);
@@ -2404,6 +2422,15 @@
 				3194318926B243E300C20619 /* WatchLogResult.swift */,
 			);
 			path = model;
+			sourceTree = "<group>";
+		};
+		3194318D26B2B56100C20619 /* remotecon */ = {
+			isa = PBXGroup;
+			children = (
+				316ECDEF264B3F00008D2544 /* component */,
+				316ECE00264B8009008D2544 /* PageRemotecon.swift */,
+			);
+			path = remotecon;
 			sourceTree = "<group>";
 		};
 		31956F4D269D0FD30044CF1D /* list */ = {
@@ -2717,6 +2744,28 @@
 			path = switch;
 			sourceTree = "<group>";
 		};
+		31AC66C026B780A000766995 /* block */ = {
+			isa = PBXGroup;
+			children = (
+				31AC66C126B780E800766995 /* item */,
+				3167198325FF42A8005AC3D2 /* WatchedBlock.swift */,
+				318B53AA25F20A350052E4E0 /* PlayBlock.swift */,
+				317C974926240945008F267D /* CouponBlock.swift */,
+				31740C38261C3AE70052A9C2 /* PurchaseBlock.swift */,
+				318F7B4F2625739A00774B17 /* CardBlock.swift */,
+			);
+			path = block;
+			sourceTree = "<group>";
+		};
+		31AC66C126B780E800766995 /* item */ = {
+			isa = PBXGroup;
+			children = (
+				31AC66BE26B772BA00766995 /* EmptyCard.swift */,
+				31AC66C226B7814A00766995 /* EditButton.swift */,
+			);
+			path = item;
+			sourceTree = "<group>";
+		};
 		31C4BCB8262D69D200BB2167 /* model */ = {
 			isa = PBXGroup;
 			children = (
@@ -2747,7 +2796,6 @@
 				3174067B25F763BD00201850 /* PageWebview.swift */,
 				3182A0B526188B8100F7F07D /* PageConfirmNumber.swift */,
 				3177AB30263B6F550054BFA4 /* PagePrivacyAndAgree.swift */,
-				316ECE00264B8009008D2544 /* PageRemotecon.swift */,
 				3183B37C26168F03004F5C0D /* PageAdultCertification.swift */,
 				318C36B3265F0805009B7EC3 /* PageCertification.swift */,
 			);
@@ -2777,6 +2825,7 @@
 				319745C6262010F30072945D /* PageMyPurchaseTicketList.swift */,
 				318C36BA265F6C4D009B7EC3 /* PageMyRecommand.swift */,
 				318D12DB2664919F00BF1DD8 /* PageMyPossessionPurchase.swift */,
+				31AC66C626B78E3C00766995 /* PageMyRegistCard.swift */,
 			);
 			path = my;
 			sourceTree = "<group>";
@@ -3422,6 +3471,7 @@
 				319BAFBD26044FE30007273F /* search */,
 				314D6B1125D1070E0003C749 /* setup */,
 				312825C526B014E500A58DB9 /* cashCharge */,
+				3194318D26B2B56100C20619 /* remotecon */,
 				319B378E26B1793D001501B1 /* recommand */,
 				31E3974E25B59CC600CE6E21 /* my */,
 				D51AA9E52599A2200035CD51 /* pairing */,
@@ -3440,6 +3490,7 @@
 			children = (
 				319BAFD6260478540007273F /* VoiceRecorder.swift */,
 				3182A0A5261877E800F7F07D /* InputBox.swift */,
+				31AC66C826B7900E00766995 /* InputNumberGroupBox.swift */,
 				3177AB32263B6F9D0054BFA4 /* TableBox.swift */,
 				312BB07825DCF2AB00AC03BC /* ThumbImageViewer.swift */,
 				D5E27EDE2586F29200B2CD5D /* ImageViewButton.swift */,
@@ -3534,11 +3585,6 @@
 				D56CC2EE25902E6600CA1D54 /* MultiBlock.swift */,
 				31632FFA25EF386F00581FA7 /* MultiBlockBody.swift */,
 				318FC00525E4CA5800ABC241 /* CateBlock.swift */,
-				318B53AA25F20A350052E4E0 /* PlayBlock.swift */,
-				3167198325FF42A8005AC3D2 /* WatchedBlock.swift */,
-				31740C38261C3AE70052A9C2 /* PurchaseBlock.swift */,
-				317C974926240945008F267D /* CouponBlock.swift */,
-				318F7B4F2625739A00774B17 /* CardBlock.swift */,
 			);
 			path = multiblock;
 			sourceTree = "<group>";
@@ -3579,7 +3625,6 @@
 				D56C6B64257DBAC800CF9AB8 /* tab */,
 				3167196625FEF699005AC3D2 /* banner */,
 				3167195725FEC869005AC3D2 /* footer */,
-				316ECDEF264B3F00008D2544 /* remotecon */,
 				3167642525CD0A0C003A7721 /* webview */,
 			);
 			path = component;
@@ -3902,6 +3947,7 @@
 				3190CB07268983EA00ACB465 /* Kes.swift in Sources */,
 				316A708926705C8800A93B83 /* PlayerOptionSelectList.swift in Sources */,
 				D56C6A37257DA0C700CF9AB8 /* CPCircularNavigation.swift in Sources */,
+				31AC66BF26B772BA00766995 /* EmptyCard.swift in Sources */,
 				3194D80426A99B0500BB765E /* MonthlyPurchaseTicket.swift in Sources */,
 				3195C1B42665E17A001F513E /* strings.kids.swift in Sources */,
 				31A38DFB2682A9EB0058287B /* PurchaseViewerData.swift in Sources */,
@@ -3977,6 +4023,7 @@
 				318AA03D265DDA9400C089EC /* SetupPlay.swift in Sources */,
 				3167196225FEED00005AC3D2 /* PageAuth.swift in Sources */,
 				31C4D29A2692AF77000C7E83 /* ReadingReport.swift in Sources */,
+				31AC66C726B78E3C00766995 /* PageMyRegistCard.swift in Sources */,
 				D56C6A5C257DA0C700CF9AB8 /* StrokeRectButton.swift in Sources */,
 				3194D80226A92D1B00BB765E /* MonthlyGuide.swift in Sources */,
 				31DF151E25F9A89A00F0A38D /* TicketList.swift in Sources */,
@@ -4062,6 +4109,7 @@
 				316C45D0264DE7D800A8D7F5 /* InputRemoteBox.swift in Sources */,
 				31740C30261C32780052A9C2 /* PurchaseList.swift in Sources */,
 				319CF67E2697211600159575 /* ProgressBox.swift in Sources */,
+				31AC66C326B7814A00766995 /* EditButton.swift in Sources */,
 				312825B226AE828E00A58DB9 /* BuzzView.swift in Sources */,
 				312825BC26AFBCDA00A58DB9 /* HitchStbItem.swift in Sources */,
 				31373F6025C7E726004353DA /* CustomYTPlayer.swift in Sources */,
@@ -4132,6 +4180,7 @@
 				319CF6862697338700159575 /* ExamControl.swift in Sources */,
 				31A38DFD2682AA270058287B /* PurchaseViewerKids.swift in Sources */,
 				31863E08265B364A0086C40D /* Alram.swift in Sources */,
+				31AC66C526B78D0B00766995 /* RegistCardData.swift in Sources */,
 				312825AD26AE7E8100A58DB9 /* BuzzvilFeedItemCpsV.swift in Sources */,
 				3190CB1A268C447C00ACB465 /* VerticalGraph.swift in Sources */,
 				3166CBE42611A15900282891 /* Eps.swift in Sources */,
@@ -4367,6 +4416,7 @@
 				D56C6B73257DBAE700CF9AB8 /* PageSample.swift in Sources */,
 				316955B425DFA41500848507 /* PairingUserInfo.swift in Sources */,
 				316A7077266F4A1200A93B83 /* PageTabInfo.swift in Sources */,
+				31AC66CD26B7ADE500766995 /* SceneDatePickerController.swift in Sources */,
 				D56C6A2D257DA0C700CF9AB8 /* ImagePicker.swift in Sources */,
 				D573784325A2852900EC571F /* CharacterList.swift in Sources */,
 				3192318025A40A7D00020388 /* ReflashSpinner.swift in Sources */,
@@ -4374,6 +4424,7 @@
 				315B55D725A8006B00B5B351 /* NpsModel.swift in Sources */,
 				D56C6A62257DA0C700CF9AB8 /* SearchBar.swift in Sources */,
 				3166CBF22611AD0000282891 /* MyPointInfo.swift in Sources */,
+				31AC66CB26B7A8D900766995 /* DatePickerSelect.swift in Sources */,
 				31D453E2267886A100E08CB2 /* CustomVTTPlayer.swift in Sources */,
 				D57298E5259D6EC100ED2CE6 /* ScenePickerController.swift in Sources */,
 				318C5A092694032800A2FD66 /* MonthlyGraph.swift in Sources */,
@@ -4458,6 +4509,7 @@
 				D56C6A35257DA0C700CF9AB8 /* CpTabDivisionNavigation.swift in Sources */,
 				D56C6B34257DACD800CF9AB8 /* Repository.swift in Sources */,
 				3177732F25FAFA2C006382AE /* Authority.swift in Sources */,
+				31AC66C926B7900E00766995 /* InputNumberGroupBox.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4670,7 +4722,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 47;
+				CURRENT_PROJECT_VERSION = 49;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -4694,7 +4746,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.044;
+				MARKETING_VERSION = 1.046;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = ".BtvPlusNew_ dev";
@@ -4750,7 +4802,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 47;
+				CURRENT_PROJECT_VERSION = 49;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -4769,7 +4821,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.044;
+				MARKETING_VERSION = 1.046;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvPlusNew_des;

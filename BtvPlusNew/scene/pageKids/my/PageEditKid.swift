@@ -38,7 +38,8 @@ struct PageEditKid: PageView {
                 VStack (alignment: .center, spacing:0){
                     PageKidsTab(
                         title:self.isEdit ? String.kidsTitle.editKid : String.kidsTitle.registKid,
-                        isBack: true)
+                        isBack: true,
+                        isSetting: true)
                         
                     HStack(alignment: .center, spacing: 0) {
                         VStack(spacing:DimenKids.margin.thin){

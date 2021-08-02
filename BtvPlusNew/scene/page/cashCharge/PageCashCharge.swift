@@ -19,6 +19,7 @@ struct PageCashCharge: PageView {
     @State var webViewHeight:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
+        
             PageDragingBody(
                 viewModel:self.pageDragingModel,
                 axis:.horizontal
@@ -29,6 +30,7 @@ struct PageCashCharge: PageView {
                 .modifier(PageFull())
                 
             }//draging
+            
             .onReceive(self.viewModel.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {

@@ -60,15 +60,19 @@ struct PageKidsTab: PageComponent{
                 
                 if self.isSetting {
                     Button(action: {
+                        let move = PageProvider.getPageObject(.setup, animationType: .opacity)
+                        move.isPopup = true
                         self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.setup)
+                            PageKidsProvider.getPageObject(.kidsConfirmNumber)
+                                .addParam(key: .type, value: PageKidsConfirmType.exit)
+                                .addParam(key: .data, value: move)
                         )
-                    }) {
+                        
+                    }) { 
                         Image(AssetKids.icon.setting)
                             .renderingMode(.original)
                             .resizable()
                             .scaledToFit()
-                            .colorMultiply(self.style.textColor)
                             .frame(width: DimenKids.icon.mediumExtra,
                                    height: DimenKids.icon.mediumExtra)
                     }

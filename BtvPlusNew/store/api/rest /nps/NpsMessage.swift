@@ -70,6 +70,7 @@ class NpsMessage{
             dic["CtrlValue"] = ctrlValue
             dic["RCStatusQuery"] = RCStatusQuery.rawValue
             dic["count"] = count.description
+            
             return AppUtil.getJsonString(dic: dic) ?? ""
         }
     }

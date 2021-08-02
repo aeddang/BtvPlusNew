@@ -54,41 +54,7 @@ struct EmptyMyData: PageView {
     }//body
 }
 
-struct EmptyCard: PageView {
-    var icon:String = Asset.image.myEmpty
-    var text:String = String.alert.dataError
-    var tip:String? = nil
-    var body: some View {
-        ZStack(alignment: .bottom){
-            Spacer()
-                .frame(
-                    width: ListItem.card.size.width,
-                    height: ListItem.card.size.height)
-                .background(Color.app.blueLight)
-                .clipShape( RoundedRectangle(cornerRadius: Dimen.radius.light))
-            VStack(alignment: .center, spacing: 0){
-                Image(icon)
-                    .renderingMode(.original)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: Dimen.icon.heavyUltra, height: Dimen.icon.heavyUltra)
-                Text(text)
-                    .modifier(MediumTextStyle(size: Font.size.regular, color: Color.app.white))
-                    .multilineTextAlignment(.center)
-                    .padding(.top, Dimen.margin.mediumExtra)
-                if let tip = self.tip{
-                    Text(tip)
-                        .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
-                        .multilineTextAlignment(.center)
-                        .padding(.top, Dimen.margin.tiny)
-                }
-            }
-            .padding(.all, Dimen.margin.regular)
-        }
-        
-        
-    }//body
-}
+
 
 struct EmptyAlert: PageView {
     var icon:String = Asset.icon.alert
@@ -161,10 +127,11 @@ struct EmptyAlert_Previews: PreviewProvider {
     
     static var previews: some View {
         ZStack{
-            EmptyCard(
-                text: String.pageText.myBenefitsDiscountTvEmpty,
-                tip: String.pageText.myBenefitsDiscountTvEmptyTip
-            )
+            EmptyAlert(
+                
+            ){
+                
+            }
         }
         .frame(width: 350)
         .background(Color.brand.bg)

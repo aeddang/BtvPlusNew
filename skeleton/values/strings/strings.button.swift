@@ -63,6 +63,7 @@ extension String {
         public static let regist = "btnRegist".loaalized()
         public static let regist2 = "btnRegist2".loaalized()
         public static let modify = "btnModify".loaalized()
+        public static let change = "btnChange".loaalized()
         public static let subscribe = "btnSubscribe".loaalized()
         public static let testResult = "btnTestResult".loaalized()
         public static let cashCharge = "btnCashCharge".loaalized()

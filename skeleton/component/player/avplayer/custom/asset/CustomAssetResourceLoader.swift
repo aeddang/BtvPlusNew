@@ -38,12 +38,14 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
         loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
         if let drmData = self.drm {
             
-            if drmData.contentId == nil {
-                DataLog.d("drm handle manifast", tag: self.tag)
-                return handleRequest(loadingRequest) //handleManifast(loadingRequest, path:self.originURL.absoluteString)
-            } else {
+            if loadingRequest.request.url?.absoluteString.hasPrefix("skd://") == true {
                 DataLog.d("drm handle", tag: self.tag)
                 return handleRequest(loadingRequest)
+                
+            } else {
+                DataLog.d("drm handle manifast", tag: self.tag)
+                return handleRequest(loadingRequest)
+               // return handleManifast(loadingRequest, path:self.originURL.absoluteString)
             }
         } else {
             guard let path = loadingRequest.request.url?.absoluteString else { return false }
@@ -78,10 +80,8 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
             request.finishLoading(with:NSError(domain: drmError.getDomain(), code:drmError.getCode(), userInfo: nil))
             return false
         }
-        
         DataLog.d("contentId " + contentId , tag: self.tag)
         DataLog.d("contentIdData " + contentIdData.base64EncodedString() , tag: self.tag)
-                
         guard let spcData = try? request.streamingContentKeyRequestData(forApp: certificate, contentIdentifier: contentIdData, options: nil) else {
             let drmError:DRMError = .spcData(reason: "invalid spcData")
             DataLog.e(drmError.getDescription(), tag: self.tag)
@@ -152,14 +152,15 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
 
     func handleRequest(_ request: AVAssetResourceLoadingRequest) -> Bool {
         if let drmData = self.drm {
-            guard let host = request.request.url?.host else {
+            guard let assetIDString = request.request.url?.absoluteString.replace("skd://", with: "")
+            else {
                     let drmError:DRMError = .contentId(reason: "no contentId")
                     DataLog.e(drmError.getDescription(), tag: self.tag)
                     self.delegate?.onAssetLoadError(.drm(drmError))
                     request.finishLoading(with:NSError(domain: drmError.getDomain(), code:drmError.getCode(), userInfo: nil))
                     return false
             }
-            drmData.contentId = host
+            drmData.contentId = assetIDString
             return self.getLicenseData(request, drmData: drmData)
         } else {
             let drmError:DRMError = .stream
@@ -178,12 +179,12 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
         } else {
             self.info = AssetPlayerInfo()
         }
-        /*
+        
         if let info = self.info {
             DataLog.d(info.selectedResolution ?? "auto" , tag:self.tag + " handleRequest")
             DataLog.d(info.selectedCaption ?? "auto"  , tag:self.tag + " handleRequest")
             DataLog.d(info.selectedAudio ?? "auto"  , tag:self.tag + " handleRequest")
-        }*/
+        }
         let task = URLSession.shared.dataTask(with: url) {
             [weak self] (data, response, error) in
             guard error == nil,
@@ -221,7 +222,7 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
             
         }
         m3u8String = newLines.joined(separator: "\n")
-        //DataLog.d(m3u8String ?? "empty" , tag:self.tag + " m3u8String")
+        DataLog.d(m3u8String ?? "empty" , tag:self.tag + " m3u8String")
     }
     func modifyLine(_ line: String, useLine:Bool = true)-> String {
         
@@ -249,6 +250,9 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
             value = value.replacingOccurrences(of: "\"", with: "", options: NSString.CompareOptions.literal, range:nil)
             switch type {
             case "URI":
+                if self.drm != nil {
+                    return pre + cur  + ","
+                }
                 if let base = self.baseURL {
                     return pre + type + "=\"" + base + value  + "\","
                 } else {
@@ -292,25 +296,10 @@ class CustomAssetResourceLoader: NSObject, AVAssetResourceLoaderDelegate , PageP
             request.finishLoading(with:NSError(domain: error.getDomain(), code:error.getCode(), userInfo: nil))
             return
         }
-        if let drm = self.drm {
-            guard let contentKeyIdentifierURL = request.request.url,
-                let assetIDString = contentKeyIdentifierURL.host
-            else {
-                let drmError:DRMError = .contentId(reason: "no contentId")
-                DataLog.e(drmError.getDescription(), tag: self.tag)
-                self.delegate?.onAssetLoadError(.drm(drmError))
-                request.finishLoading(with:NSError(domain: drmError.getDomain(), code:drmError.getCode(), userInfo: nil))
-                return
-            }
-            
-            drm.contentId = assetIDString
-            request.dataRequest?.respond(with: data)
-            self.getLicenseData(request, drmData: drm)
         
-        } else {
-            request.dataRequest?.respond(with: data)
-            request.finishLoading()
-        }
+        request.dataRequest?.respond(with: data)
+        request.finishLoading()
+    
     }
     
   

@@ -8,11 +8,15 @@
 import Foundation
 import SwiftUI
 struct DiscountView: PageComponent{
+    @EnvironmentObject var dataProvider:DataProvider
+    
     @ObservedObject var viewModel:NavigationModel = NavigationModel()
+    var viewPagerModel:ViewPagerModel = ViewPagerModel()
     @ObservedObject var cardModel:CardBlockModel = CardBlockModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
+    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @State var tabs:[NavigationButton] = []
-    @State var currentType:CardBlock.ListType = .member
+    @State var currentType:CardBlock.ListType? = nil
     
     var body: some View {
         VStack (alignment: .center, spacing: 0){
@@ -22,6 +26,7 @@ struct DiscountView: PageComponent{
                 .frame(width: ListItem.card.size.width)
                 .padding(.top, Dimen.margin.medium)
             CardBlock(
+                infinityScrollModel:self.infinityScrollModel,
                 viewModel: self.cardModel,
                 pageObservable: self.pageObservable,
                 useTracking: true
@@ -29,14 +34,22 @@ struct DiscountView: PageComponent{
         }
         .background(Color.brand.bg)
         .onReceive(self.viewModel.$index) { idx in
+            var willType:CardBlock.ListType? = nil
             switch idx {
-            case 0 : self.currentType = .member
-            case 1 : self.currentType = .okCash
-            case 2 : self.currentType = .tvPoint
+            case 0 : willType = .member
+            case 1 : willType = .okCash
+            case 2 : willType = .tvPoint
             default : break
             }
-            self.cardModel.update(type:self.currentType)
-            self.updateButtons(idx: idx)
+            if willType != self.currentType {
+                self.currentType = willType ?? .member
+                self.cardModel.update(type:self.currentType!)
+                self.updateButtons(idx: idx)
+            }
+            
+        }
+        .onReceive(self.infinityScrollModel.$scrollPosition) { pos in
+            self.viewPagerModel.request = .reset
             
         }
     }//body

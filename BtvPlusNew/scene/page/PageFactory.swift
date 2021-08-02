@@ -27,6 +27,8 @@ extension PageID{
     static let myPurchaseTicketList:PageID = "myPurchaseTicketList"
     static let myRecommand:PageID = "myRecommand"
     static let myPossessionPurchase:PageID = "myPossessionPurchase"
+    static let myRegistCard:PageID = "myRegistCard"
+    
     static let modifyProile:PageID = "modifyProile"
     static let setup:PageID = "setup"
     static let terminateStb:PageID = "terminateStb"
@@ -101,7 +103,8 @@ struct PageProvider {
              .pairingDevice, .pairingUser, .pairingManagement, .pairingEmptyDevice, .pairingGuide,
              .purchase , .webview, .schedule, .modifyProile,
              .adultCertification, .userCertification, .terminateStb,
-             .watchHabit, .myPurchaseTicketList, .remotecon, .playerTest, .myRecommand :
+             .watchHabit, .myPurchaseTicketList, .remotecon, .playerTest,
+             .myRecommand, .myRegistCard :
             return  .vertical
         case .fullPlayer, .synopsisPlayer :
             return .none
@@ -158,6 +161,7 @@ struct PageFactory{
         case .myAlram : return PageMyAlram()
         case .myRecommand : return PageMyRecommand()
         case .myPossessionPurchase : return PageMyPossessionPurchase()
+        case .myRegistCard : return PageMyRegistCard()
         case .modifyProile : return PageModifyProfile()
         case .setup : return PageSetup()
         case .terminateStb : return PageTerminateStb()

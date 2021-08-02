@@ -119,6 +119,7 @@ struct PageMyBenefits: PageView {
                             type: .cash
                         ),
                         DiscountView(
+                            viewPagerModel: self.viewPagerModel,
                             cardModel: self.cardModel,
                             pageObservable: self.pageObservable
                         )

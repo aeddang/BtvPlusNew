@@ -26,7 +26,7 @@ struct IntroItem: PageComponent, Identifiable {
                         .padding(.leading, Dimen.margin.regular)
                         .fixedSize(horizontal: false, vertical: true)
                     Text(self.text)
-                        .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.greyDeep))
+                        .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.greyMedium))
                         .padding(.top, Dimen.margin.thin)
                         .padding(.leading, Dimen.margin.regular)
                         .fixedSize(horizontal: false, vertical: true)
@@ -43,7 +43,7 @@ struct IntroItem: PageComponent, Identifiable {
                             .padding(.top, Dimen.margin.heavyExtra)
                             .fixedSize(horizontal: false, vertical: true)
                         Text(self.text)
-                            .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.greyDeep))
+                            .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.greyMedium))
                             .padding(.top, Dimen.margin.thin)
                             .fixedSize(horizontal: false, vertical: true)
                         

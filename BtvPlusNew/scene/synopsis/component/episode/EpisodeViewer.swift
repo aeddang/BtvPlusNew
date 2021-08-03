@@ -65,7 +65,7 @@ struct EpisodeViewer: PageComponent{
                             .scaledToFit()
                             .frame(width: Dimen.icon.thin, height: Dimen.icon.thin)
                         Text(self.data.award!)
-                            .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyDeep))
+                            .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyMedium))
                         
                     }
                     .padding(.top, Dimen.margin.lightExtra)

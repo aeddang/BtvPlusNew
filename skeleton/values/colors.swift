@@ -46,9 +46,10 @@ extension Color {
         public static let blackRegular =  Color.init(red: 65/255, green: 65/255, blue: 65/255)
         public static let blackLight =  Color.init(red: 83/255, green: 83/255, blue: 83/255)
        
+        public static let greyDeep = Color.init(red: 102/255, green: 102/255, blue: 102/255)
         public static let grey = Color.init(red: 136/255, green: 136/255, blue: 136/255)
         public static let greyExtra = Color.init(red: 153/255, green: 153/255, blue: 153/255)
-        public static let greyDeep = Color.init(red: 170/255, green: 170/255, blue: 170/255)
+        public static let greyMedium = Color.init(red: 170/255, green: 170/255, blue: 170/255)
         public static let greyLight = Color.init(red: 212/255, green: 212/255, blue: 212/255)
         public static let greyLightExtra = Color.init(red: 204/255, green: 204/255, blue: 204/255)
         

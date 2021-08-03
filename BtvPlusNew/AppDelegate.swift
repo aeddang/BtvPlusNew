@@ -10,7 +10,6 @@ import UIKit
 import CoreData
 import Firebase
 
-
 class AppObserver: ObservableObject, PageProtocol {
     @Published fileprivate(set) var page:IwillGo? = nil
     @Published fileprivate(set) var pushToken:String? = nil

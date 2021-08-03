@@ -169,6 +169,7 @@ extension String {
         public static let auto =  "pairingHitchAuto".loaalized()
         public static let autoSelect =  "pairingHitchAutoSelect".loaalized()
         public static let select =  "pairingHitchSelect".loaalized()
+        public static let selectAppleTip = "pairingHitchSelectAppleTip".loaalized()
         public static let fullTop = "pairingHitchFullTop".loaalized()
         public static let fullLeading =  "pairingHitchFullLeading".loaalized()
         public static let fullCenter =  "pairingHitchFullCenter".loaalized()

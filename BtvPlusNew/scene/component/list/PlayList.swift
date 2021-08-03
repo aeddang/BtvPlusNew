@@ -406,7 +406,7 @@ struct PlayItemInfo: PageView {
         
         if self.data.summary != nil  {
             Text(self.data.summary!)
-                .modifier(MediumTextStyle(size: Font.size.thin, color: Color.app.greyDeep))
+                .modifier(MediumTextStyle(size: Font.size.thin, color: Color.app.greyMedium))
                 .lineLimit(3)
                 .multilineTextAlignment(.leading)
                 .padding(.top, Dimen.margin.thin)

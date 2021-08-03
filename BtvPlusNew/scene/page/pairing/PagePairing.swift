@@ -58,7 +58,8 @@ struct PagePairingBody: PageView {
             ConnectButton(
                 image: Asset.icon.pairingWifi,
                 title: String.pageText.pairingBtnWifi,
-                text: String.pageText.pairingBtnWifiSub
+                text: String.pageText.pairingBtnWifiSub,
+                tip: String.pageText.pairingBtnWifiSubTip
             ){
                 self.requestPairing( .wifi )
             }
@@ -137,7 +138,8 @@ struct PagePairingBodyTablet: PageView {
                 ConnectButtonTablet(
                     image: Asset.icon.pairingWifi,
                     title: String.pageText.pairingBtnWifi,
-                    text: String.pageText.pairingBtnWifiSubTablet
+                    text: String.pageText.pairingBtnWifiSubTablet,
+                    tip: String.pageText.pairingBtnWifiSubTip
                 ){
                     self.requestPairing( .wifi )
                 }

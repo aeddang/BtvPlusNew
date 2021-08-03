@@ -135,7 +135,7 @@ struct AlertBody: PageComponent{
             if self.subText != nil{
                 Text(self.subText!)
                     .multilineTextAlignment(.center)
-                    .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyDeep))
+                    .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyMedium))
                     .lineLimit(nil)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.top, Dimen.margin.tiny)

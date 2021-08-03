@@ -78,7 +78,7 @@ struct CheckBox: View, SelecterbleProtocol {
                     }
             }
             if !self.isSimple {
-                VStack(alignment: .leading, spacing: Dimen.margin.tiny){
+                VStack(alignment: .leading, spacing: 0){
                     if self.text != nil {
                         if self.isStrong {
                             Text(self.text!)
@@ -101,7 +101,8 @@ struct CheckBox: View, SelecterbleProtocol {
                                 size: self.style.textSize,
                                 color: Color.app.greyLight))
                     }
-                }.offset(y:3)
+                }
+                .offset(y: self.style == .normal ? 3 : 0)
                 if isFill {
                     Spacer()
                 }

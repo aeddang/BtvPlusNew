@@ -456,6 +456,12 @@
 "alertNeedAgreeTermsOfService" = "이용약관에 동의 해주셔야 합니다.";
 "alertNeedAgreePrivacy" = "개인정보 수집 이용에 동의 해주셔야 합니다.";
 
+"alertNotAvailable" = "이용 제한 안내";
+"alertNotAvailableAppleTv" = "애플 TV 연결 상태에서는\n이용하실 수 없는 기능입니다.";
+"alertNotAvailableAppleTvTip" = "애플 TV 서비스 제공 정책에 따라\n일부 기능 이용이 제한됩니다.";
+
+
+
 
 /*
  PageTitle
@@ -506,6 +512,8 @@
 
 "pairingBtnWifi" = "Wi-Fi로 연결하기";
 "pairingBtnWifiSub" = "B tv와 동일한 네트워크 연결이 필요합니다.";
+"pairingBtnWifiSubTip" = "※ 애플 TV는 Wi-Fi 외 다른 연결 방법을 이용해 주세요.";
+
 "pairingBtnBtvCertification" = "B tv 인증번호로 연결하기";
 "pairingBtnBtvCertificationSub" = "B tv에서 확인한 인증번호를 입력합니다.";
 "pairingBtnUserCertification" = "가입자 인증으로 연결하기";
@@ -524,6 +532,7 @@
 "pairingGuideTitle2" = "집에서 B tv를 켜지 않고도 연결할 수 있는 방법!";
 "pairingGuideText2" = "Wi-Fi로 연결하기";
 "pairingGuideInfo2" = "모바일 B tv가 B tv와 연결된 공유기의\nWi-Fi에 연결되어 있으면 자동으로\nB tv와 연결됩니다.";
+"pairingGuideTip2" = "※ 애플 TV의 경우 Wi-Fi를 통해 연결할 수 없습니다.\n다른 연결 방법을 이용해 주세요.";
 
 "pairingGuideTitle3" = "집에서 B tv를 통해 간편하게 연결하는 방법!";
 "pairingGuideText3" = "B tv 인증번호로 연결하기";
@@ -535,6 +544,7 @@
 
 "pairingGuideText1Horizontal" = "모바일 B tv 서비스를\n이용하기 위해서는\nB tv와 연결이 필요합니다.";
 "pairingGuideTitle2Horizontal" = "집에서 B tv를 켜지 않고도\n연결할 수 있는 방법!";
+"pairingGuideTip2Horizontal" = "※ 애플 TV의 경우 Wi-Fi를 통해 연결할 수 없습니다. 다른 연결 방법을 이용해 주세요.";
 "pairingGuideTitle3Horizontal" = "집에서 B tv를 통해\n간편하게 연결하는 방법!";
 "pairingGuideTitle4Horizontal" = "집 밖에서 B tv 없이도\n연결할 수 있는 방법!";
 /*
@@ -565,6 +575,12 @@
 "terminateBtvText1" = "모바일 B tv에서 소장 VOD를\n시청하실 B tv를 선택해주세요.";
 "terminateBtvText2" = "소장 VOD 시청 가능한 B tv";
 "terminateBtvDate" = "해지일";
+
+/*
+ PagePairingAppletv
+*/
+"PagePairingAppletvText1" = "반가워요, 애플 TV 고객님!";
+"PagePairingAppletvText2" = "아래 확인 버튼을 누르시면 바로\n모바일 B tv를 이용하실 수 있습니다.";
 
 /*
  PageMy
@@ -670,8 +686,6 @@
 "myBenefitsCardEmpty" = "등록된 카드가 없습니다.";
 "myBenefitsDiscountTvEmpty" = "TV포인트 등록 정보가 없습니다.";
 "myBenefitsDiscountTvEmptyTip" = "B tv에서 TV포인트에 가입해주세요.";
-
-
 
 /*
  PageModifyProfile
@@ -902,6 +916,9 @@
 "pairingHitchAuto" = "아래 확인 버튼을 누르시면\n바로 모바일 B tv를 이용하실 수 있습니다.";
 "pairingHitchAutoSelect" = "연결할 셋톱박스를 선택 후 아래 확인 버튼을 누르시면\n바로 모바일 B tv를 이용하실 수 있습니다.";
 "pairingHitchSelect" = "B tv와 연결하고 B tv의 영화, 방송, 키즈, 무료 VOD까지\n스마트폰과 태블릿에서 마음껏 즐기세요!";
+
+"pairingHitchSelectAppleTip" = "※ 애플 TV 연결은 Wi-Fi 외 다른 연결 방법을 이용해 주세요.";
+
 "pairingHitchFullTop" = "선택하신 셋톱박스는";
 "pairingHitchFullLeading" = "이미";
 "pairingHitchFullCenter" = "대의 기기";

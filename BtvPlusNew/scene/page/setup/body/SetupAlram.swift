@@ -15,7 +15,7 @@ struct SetupAlram: PageView {
     @EnvironmentObject var dataProvider:DataProvider
     var isInitate:Bool = false
     var isPairing:Bool = false
-    
+   
     @Binding var isPush:Bool
     @State var willPush:Bool? = nil
     

@@ -52,6 +52,7 @@ extension String{
         public static let pairingBtnGuide = "pairingBtnGuide".loaalized()
         public static let pairingBtnWifi = "pairingBtnWifi".loaalized()
         public static let pairingBtnWifiSub = "pairingBtnWifiSub".loaalized()
+        public static let pairingBtnWifiSubTip = "pairingBtnWifiSubTip".loaalized()
         public static let pairingBtnBtvCertification = "pairingBtnBtvCertification".loaalized()
         public static let pairingBtnBtvCertificationSub = "pairingBtnBtvCertificationSub".loaalized()
         public static let pairingBtnUserCertification = "pairingBtnUserCertification".loaalized()
@@ -75,6 +76,7 @@ extension String{
         
         public static let pairingGuideText1Horizontal = "pairingGuideText1Horizontal".loaalized()
         public static let pairingGuideTitle2Horizontal = "pairingGuideTitle2Horizontal".loaalized()
+        public static let pairingGuideTip2Horizontal = "pairingGuideTip2Horizontal".loaalized()
         public static let pairingGuideTitle3Horizontal = "pairingGuideTitle3Horizontal".loaalized()
         public static let pairingGuideTitle4Horizontal = "pairingGuideTitle4Horizontal".loaalized()
         
@@ -95,6 +97,7 @@ extension String{
         public static let pairingGuideTitle2 = "pairingGuideTitle2".loaalized()
         public static let pairingGuideText2 = "pairingGuideText2".loaalized()
         public static let pairingGuideInfo2 = "pairingGuideInfo2".loaalized()
+        public static let pairingGuideTip2 = "pairingGuideTip2".loaalized()
 
         public static let pairingGuideTitle3 = "pairingGuideTitle3".loaalized()
         public static let pairingGuideText3 = "pairingGuideText3".loaalized()
@@ -107,6 +110,9 @@ extension String{
         public static let terminateBtvText1 = "terminateBtvText1".loaalized()
         public static let terminateBtvText2 = "terminateBtvText2".loaalized()
         public static let terminateBtvDate = "terminateBtvDate".loaalized()
+        
+        public static let pairingAppletvText1 = "PagePairingAppletvText1".loaalized()
+        public static let pairingAppletvText2 = "PagePairingAppletvText2".loaalized()
         
         public static let setupApp = "setupApp".loaalized()
         public static let setupAppDataAlram = "setupAppDataAlram".loaalized()

@@ -99,16 +99,16 @@ struct PagePairingManagement: PageView {
                         if self.sceneOrientation == .portrait {
                             VStack(alignment:.center){
                                 Text(String.pageText.myinviteFammlyText1)
-                                    .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyDeep))
+                                    .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyMedium))
                                 Text(String.pageText.myinviteFammlyText2)
-                                    .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyDeep))
+                                    .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyMedium))
                                 Spacer().modifier(MatchParent())
                             }
                             .padding(.top, Dimen.margin.thin)
                         } else {
                             VStack(alignment: .center, spacing: 0){
                                 Text(String.pageText.myinviteFammlyText1 + " " + String.pageText.myinviteFammlyText2)
-                                    .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyDeep))
+                                    .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyMedium))
                                     .padding(.top, Dimen.margin.thin)
                                 Spacer().modifier(MatchHorizontal(height: 0))
                             }

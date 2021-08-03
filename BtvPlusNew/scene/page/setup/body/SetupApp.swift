@@ -13,7 +13,7 @@ struct SetupApp: PageView {
     
     var isInitate:Bool = false
     var isPairing:Bool = false
-    
+    var pairingType:PairingDeviceType = .btv
     @Binding var isDataAlram:Bool
     @Binding var isAutoRemocon:Bool
     @Binding var isRemoconVibration:Bool
@@ -26,19 +26,22 @@ struct SetupApp: PageView {
                     title: String.pageText.setupAppDataAlram ,
                     subTitle: String.pageText.setupAppDataAlramText
                 )
-                Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
-                SetupItem (
-                    isOn: self.$isAutoRemocon,
-                    title: String.pageText.setupAppAutoRemocon ,
-                    subTitle: String.pageText.setupAppAutoRemoconText
-                )
-                if !SystemEnvironment.isTablet {
+                
+                if self.pairingType == .btv {
                     Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
                     SetupItem (
-                        isOn: self.$isRemoconVibration,
-                        title: String.pageText.setupAppRemoconVibration ,
-                        subTitle: String.pageText.setupAppRemoconVibrationText
+                        isOn: self.$isAutoRemocon,
+                        title: String.pageText.setupAppAutoRemocon ,
+                        subTitle: String.pageText.setupAppAutoRemoconText
                     )
+                    if !SystemEnvironment.isTablet {
+                        Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
+                        SetupItem (
+                            isOn: self.$isRemoconVibration,
+                            title: String.pageText.setupAppRemoconVibration ,
+                            subTitle: String.pageText.setupAppRemoconVibrationText
+                        )
+                    }
                 }
             }
             .background(Color.app.blueLight)

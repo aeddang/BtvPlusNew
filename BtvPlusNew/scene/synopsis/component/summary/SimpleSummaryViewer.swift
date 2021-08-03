@@ -97,7 +97,7 @@ struct SimpleSummaryViewer: PageComponent{
     var data:SimpleSummaryViewerData
     var currentPoster:PosterData? = nil
     
-    let textStyle = MediumTextStyle( size: Font.size.thin, color: Color.app.greyDeep)
+    let textStyle = MediumTextStyle( size: Font.size.thin, color: Color.app.greyMedium)
     @State var castSet:[SimpleSummaryViewerData.CastSummarySet]? = nil
     var body: some View {
         VStack(alignment:.leading , spacing:0) {

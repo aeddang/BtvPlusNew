@@ -13,7 +13,7 @@ struct SetupPlay: PageView {
     
     var isInitate:Bool = false
     var isPairing:Bool = false
-    
+  
     @Binding var isAutoPlay:Bool
     @Binding var isNextPlay:Bool
 

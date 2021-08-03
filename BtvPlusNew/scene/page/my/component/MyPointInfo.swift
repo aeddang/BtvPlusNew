@@ -41,16 +41,18 @@ struct MyPointInfo: View {
                             .addParam(key: .id, value: PageMyBenefits.MenyType.point.rawValue)
                     )
                 }
-            Spacer().modifier(LineVertical())
-                .frame(height:Dimen.button.lightExtra)
-            ValueInfo(key: String.app.bcash, value: self.cash)
-                .modifier(MatchParent())
-                .onTapGesture {
-                    self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.myBenefits)
-                            .addParam(key: .id, value: PageMyBenefits.MenyType.cash.rawValue)
-                    )
-                }
+            if self.pairing.pairingDeviceType == .btv {
+                Spacer().modifier(LineVertical())
+                    .frame(height:Dimen.button.lightExtra)
+                ValueInfo(key: String.app.bcash, value: self.cash)
+                    .modifier(MatchParent())
+                    .onTapGesture {
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.myBenefits)
+                                .addParam(key: .id, value: PageMyBenefits.MenyType.cash.rawValue)
+                        )
+                    }
+            }
         }
         .frame(height:SystemEnvironment.isTablet ? Dimen.tab.heavyExtra : Dimen.tab.heavy)
         .background(Color.app.blueLight)

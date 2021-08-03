@@ -44,21 +44,21 @@ struct HitchPairingItem: PageView {
     var body: some View {
         VStack(alignment:.center , spacing:SystemEnvironment.isTablet ? Dimen.margin.tinyExtra : Dimen.margin.tiny){
             Image(self.type.icon)
-            .renderingMode(.original)
-            .resizable()
-            .frame(
-                width: SystemEnvironment.isTablet ? Dimen.icon.regular : Dimen.icon.medium,
-                height: SystemEnvironment.isTablet ? Dimen.icon.regular : Dimen.icon.medium)
+                .renderingMode(.original)
+                .resizable()
+                .frame(
+                    width: SystemEnvironment.isTablet ? Dimen.icon.regular : Dimen.icon.medium,
+                    height: SystemEnvironment.isTablet ? Dimen.icon.regular : Dimen.icon.medium)
             Text(self.type.text)
                 .modifier(MediumTextStyle(
                             size: SystemEnvironment.isTablet ? Font.size.micro : Font.size.tinyExtra,
                             color: Color.app.blackExtra))
                 .lineLimit(1)
-             Text(self.type.subText)
-                 .modifier(BoldTextStyle(
+            Text(self.type.subText)
+                .modifier(BoldTextStyle(
                              size: SystemEnvironment.isTablet ? Font.size.micro : Font.size.tinyExtra,
                              color: Color.app.blackExtra))
-                 .lineLimit(1)
+                .lineLimit(1)
         }
         .padding(.all, Dimen.margin.micro)
         .frame(

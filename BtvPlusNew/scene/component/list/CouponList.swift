@@ -195,7 +195,7 @@ struct CouponHeader: PageComponent{
 struct CouponItem: PageView {
     var data:CouponData
     
-    let textStyle = MediumTextStyle( size: Font.size.thin, color: Color.app.greyDeep)
+    let textStyle = MediumTextStyle( size: Font.size.thin, color: Color.app.greyMedium)
     var body: some View {
         HStack(spacing:0){
             VStack(alignment: .leading ,spacing:Dimen.margin.thin){

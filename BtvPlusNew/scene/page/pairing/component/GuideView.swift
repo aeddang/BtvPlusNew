@@ -12,10 +12,13 @@ struct GuideViewData {
     var title:String? = nil
     var text:String? = nil
     var info:String? = nil
+    var tip:String? = nil
     var margin:CGFloat = 0
     
     var titleHorizontal:String? = nil
     var textHorizontal:String? = nil
+    var infoHorizontal:String? = nil
+    var tipHorizontal:String? = nil
 }
 
 
@@ -55,6 +58,12 @@ struct GuideView: PageComponent, Identifiable{
                             .modifier(MediumTextStyle(size: Font.size.regular, color: Color.app.grey))
                             .padding(.horizontal, Dimen.margin.regular)
                     }
+                    if let tip = self.data.tip {
+                        Text(tip)
+                            .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.grey))
+                            .padding(.horizontal, Dimen.margin.regular)
+                            .padding(.top, Dimen.margin.light)
+                    }
                 }
             } else {
                 HStack(alignment: .center , spacing:Dimen.margin.thin){
@@ -73,9 +82,15 @@ struct GuideView: PageComponent, Identifiable{
                                 .padding(.horizontal, Dimen.margin.regular)
                         }
                         if let info = self.data.info {
-                            Text(info)
+                            Text(self.data.infoHorizontal ?? info)
                                 .modifier(MediumTextStyle(size: Font.size.regular, color: Color.app.grey))
                                 .padding(.horizontal, Dimen.margin.regular)
+                        }
+                        if let tip = self.data.tip {
+                            Text(self.data.tipHorizontal ?? tip)
+                                .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.grey))
+                                .padding(.horizontal, Dimen.margin.regular)
+                                .padding(.top, Dimen.margin.light)
                         }
                     }
                     .padding(.top, Dimen.margin.thin)

@@ -45,6 +45,14 @@ struct SelectPairingType: View {
                 
             }
             .padding(.top, Dimen.margin.regularExtra)
+            
+            Text( String.pairingHitch.selectAppleTip)
+                .modifier( MediumTextStyle(
+                        size: Font.size.thinExtra,
+                        color: Color.app.greyDeep)
+                )
+                .multilineTextAlignment(.center)
+                .padding(.top, Dimen.margin.light)
         }
         .padding(.bottom, self.sceneObserver.safeAreaBottom + Dimen.margin.thin)
         

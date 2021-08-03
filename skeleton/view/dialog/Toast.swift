@@ -35,7 +35,7 @@ struct Toast<Presenting>: View where Presenting: View {
                     .padding(.all, Dimen.margin.thin)
                     .frame(minWidth: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/,  maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .center)
             }
-            .background(Color.app.greyDeep.opacity(0.7))
+            .background(Color.app.greyMedium.opacity(0.7))
             .padding(.bottom, self.safeAreaBottom)
             .offset(y:self.isShowing ? 0 : 100)
             .opacity(self.isShowing ? 1 : 0)

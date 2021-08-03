@@ -19,6 +19,7 @@ struct PageMyBenefits: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var repository:Repository
+    @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
     
     @ObservedObject var viewPagerModel:ViewPagerModel = ViewPagerModel()
@@ -38,12 +39,7 @@ struct PageMyBenefits: PageView {
    
     @State var useTracking:Bool = false
     @State var pages: [PageViewProtocol] = []
-    let titles: [String] = [
-        String.pageText.myBenefitsCoupon,
-        String.pageText.myBenefitsPoint,
-        String.pageText.myBenefitsCash,
-        String.pageText.myBenefitsDiscount
-    ]
+    @State var titles: [String] = []
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -63,13 +59,20 @@ struct PageMyBenefits: PageView {
                             viewModel: self.viewPagerModel,
                             pages: self.pages,
                             titles: self.titles,
-                            isDivisionTab: SystemEnvironment.isTablet ? true : false
+                            isDivisionTab: SystemEnvironment.isTablet
+                                ? true
+                            : self.pairing.pairingDeviceType == .apple ? true  : false
                             )
                             { idx in
                                 switch idx {
                                 case 0 : self.couponModel.initUpdate()
                                 case 1 : self.pointModel.initUpdate()
-                                case 2 : self.cashModel.initUpdate()
+                                case 2 :
+                                    if self.pairing.pairingDeviceType == .apple {
+                                        self.cardModel.initUpdate(type: .member)
+                                    } else {
+                                        self.cashModel.initUpdate()
+                                    }
                                 case 3 : self.cardModel.initUpdate(type: .member)
                                 default : break
                                 }
@@ -96,34 +99,56 @@ struct PageMyBenefits: PageView {
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
                 if ani {
-                    self.pages = [
-                        CouponBlock(
-                            infinityScrollModel:self.couponScrollModel,
-                            viewModel:self.couponModel,
-                            pageObservable:self.pageObservable,
-                            useTracking:true,
-                            type: .coupon
-                        ),
-                        CouponBlock(
-                            infinityScrollModel:self.pointScrollModel,
-                            viewModel:self.pointModel,
-                            pageObservable:self.pageObservable,
-                            useTracking:true,
-                            type: .point
-                        ),
-                        CouponBlock(
-                            infinityScrollModel:self.cashScrollModel,
-                            viewModel:self.cashModel,
-                            pageObservable:self.pageObservable,
-                            useTracking:true,
-                            type: .cash
-                        ),
-                        DiscountView(
-                            viewPagerModel: self.viewPagerModel,
-                            cardModel: self.cardModel,
-                            pageObservable: self.pageObservable
-                        )
-                    ]
+                    let coupon = CouponBlock(
+                        infinityScrollModel:self.couponScrollModel,
+                        viewModel:self.couponModel,
+                        pageObservable:self.pageObservable,
+                        useTracking:true,
+                        type: .coupon
+                    )
+                    
+                    let point = CouponBlock(
+                        infinityScrollModel:self.pointScrollModel,
+                        viewModel:self.pointModel,
+                        pageObservable:self.pageObservable,
+                        useTracking:true,
+                        type: .point
+                    )
+                    
+                    let cash = CouponBlock(
+                        infinityScrollModel:self.cashScrollModel,
+                        viewModel:self.cashModel,
+                        pageObservable:self.pageObservable,
+                        useTracking:true,
+                        type: .cash
+                    )
+                    
+                    let discount = DiscountView(
+                        viewPagerModel: self.viewPagerModel,
+                        cardModel: self.cardModel,
+                        pageObservable: self.pageObservable
+                    )
+                    if self.pairing.pairingDeviceType == .apple {
+                        self.pages = [
+                            coupon, point, discount
+                        ]
+                        self.titles = [
+                            String.pageText.myBenefitsCoupon,
+                            String.pageText.myBenefitsPoint,
+                            String.pageText.myBenefitsDiscount
+                        ]
+                    } else {
+                        self.pages = [
+                            coupon, point, cash, discount
+                        ]
+                        self.titles = [
+                            String.pageText.myBenefitsCoupon,
+                            String.pageText.myBenefitsPoint,
+                            String.pageText.myBenefitsCash,
+                            String.pageText.myBenefitsDiscount
+                        ]
+                    }
+                    
                 }
             }
             .onReceive(self.pagePresenter.$currentTopPage){ page in

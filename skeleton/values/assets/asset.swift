@@ -314,6 +314,7 @@ extension Asset{
         
         public static let recommendDetail = "imgMyRecommendDetail"
         public static let recommendPopup = "imgSynopsisRecommendPopup"
+        public static let pairindPopup = "imgPairingPopup01"
     }
     
     struct age {

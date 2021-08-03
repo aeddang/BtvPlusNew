@@ -64,7 +64,7 @@ struct TableBoxItemHorizontal: PageView {
                 .kerning(Font.kern.thin)
                 .modifier(MediumTextStyle(
                             size: SystemEnvironment.isTablet ? Font.size.tiny : Font.size.thinExtra,
-                            color: Color.app.greyDeep))
+                            color: Color.app.greyMedium))
                 .padding(.all, SystemEnvironment.isTablet ? Dimen.margin.tiny :  Dimen.margin.thin)
                 .frame(width: self.bodySize, alignment: .leading)
                 .multilineTextAlignment(.leading)
@@ -95,7 +95,7 @@ struct TableBoxItemVertical: PageView {
                 .kerning(Font.kern.thin)
                 .modifier(MediumTextStyle(
                             size: SystemEnvironment.isTablet ? Font.size.tiny : Font.size.thinExtra,
-                            color: Color.app.greyDeep))
+                            color: Color.app.greyMedium))
                 .multilineTextAlignment(.leading)
                 .padding(.top, Dimen.margin.microExtra)
         }

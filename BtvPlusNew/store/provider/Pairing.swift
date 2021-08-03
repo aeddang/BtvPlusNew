@@ -24,6 +24,10 @@ enum PairingRequest:Equatable{
     }
 }
 
+enum PairingDeviceType{
+    case btv, apple
+}
+
 enum PairingStatus{
     case disConnect , connect , pairing, unstablePairing
 }
@@ -45,8 +49,8 @@ class Pairing:ObservableObject, PageProtocol {
     @Published private(set) var request:PairingRequest? = nil
     @Published private(set) var event:PairingEvent? = nil {didSet{ if event != nil { event = nil} }}
     @Published private(set) var status:PairingStatus = .disConnect
-    
     @Published var user:User? = nil
+    private(set) var pairingDeviceType:PairingDeviceType = .apple
     private(set) var isPairingUser:Bool = false
     private(set) var isPairingAgreement:Bool = false
    

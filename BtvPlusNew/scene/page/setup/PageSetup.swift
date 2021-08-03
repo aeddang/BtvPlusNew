@@ -19,6 +19,7 @@ struct PageSetup: PageView {
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     
     @State var sceneOrientation: SceneOrientation = .portrait
+    @State var pairingType:PairingDeviceType = .btv
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -37,12 +38,15 @@ struct PageSetup: PageView {
                             HStack(alignment:.center , spacing:Dimen.margin.thin) {
                                 VStack(alignment:.leading , spacing:Dimen.margin.medium) {
                                     SetupApp(
-                                        isInitate:self.isInitate, isPairing: self.isPairing,
+                                        isInitate:self.isInitate,
+                                        isPairing: self.isPairing,
+                                        pairingType: self.pairingType,
                                         isDataAlram: self.$isDataAlram,
                                         isAutoRemocon: self.$isAutoRemocon,
                                         isRemoconVibration: self.$isRemoconVibration)
                                     SetupPlay(
-                                        isInitate:self.isInitate, isPairing: self.isPairing,
+                                        isInitate:self.isInitate,
+                                        isPairing: self.isPairing,
                                         isAutoPlay: self.$isAutoPlay,
                                         isNextPlay: self.$isNextPlay)
                                     
@@ -53,18 +57,23 @@ struct PageSetup: PageView {
                                 }
                                 VStack(alignment:.leading , spacing:Dimen.margin.medium) {
                                     SetupCertification(
-                                        isInitate:self.isInitate, isPairing: self.isPairing,
+                                        isInitate:self.isInitate,
+                                        isPairing: self.isPairing,
+                                        pairingType: self.pairingType,
                                         isPurchaseAuth: self.$isPurchaseAuth,
                                         isSetWatchLv: self.$isSetWatchLv,
                                         isKidsExitAuth: self.$isKidsExitAuth,
                                         watchLvs: self.$watchLvs,
                                         selectedWatchLv: self.$selectedWatchLv)
                                     
-                                    SetupChildren(
-                                        isInitate:self.isInitate, isPairing: self.isPairing)
-                                    SetupPossession(
-                                        isInitate:self.isInitate)
-                                    SetupHappySenior()
+                                    
+                                    if self.pairingType == .btv {
+                                        SetupChildren(
+                                            isInitate:self.isInitate, isPairing: self.isPairing)
+                                        SetupPossession(
+                                            isInitate:self.isInitate)
+                                        SetupHappySenior()
+                                    }
                                    
                                 }
                             }
@@ -72,31 +81,40 @@ struct PageSetup: PageView {
                         } else {
                             VStack(alignment:.leading , spacing:Dimen.margin.medium) {
                                 SetupApp(
-                                    isInitate:self.isInitate, isPairing: self.isPairing,
+                                    isInitate:self.isInitate,
+                                    isPairing: self.isPairing,
+                                    pairingType: self.pairingType,
                                     isDataAlram: self.$isDataAlram,
                                     isAutoRemocon: self.$isAutoRemocon,
                                     isRemoconVibration: self.$isRemoconVibration)
                                 SetupPlay(
-                                    isInitate:self.isInitate, isPairing: self.isPairing,
+                                    isInitate:self.isInitate,
+                                    isPairing: self.isPairing,
                                     isAutoPlay: self.$isAutoPlay,
                                     isNextPlay: self.$isNextPlay)
                                 
                                 SetupAlram(
-                                    isInitate:self.isInitate, isPairing: self.isPairing,
+                                    isInitate:self.isInitate,
+                                    isPairing: self.isPairing,
                                     isPush:self.$isPush)
                                 SetupCertification(
-                                    isInitate:self.isInitate, isPairing: self.isPairing,
+                                    isInitate:self.isInitate,
+                                    isPairing: self.isPairing,
+                                    pairingType: self.pairingType,
                                     isPurchaseAuth: self.$isPurchaseAuth,
                                     isSetWatchLv: self.$isSetWatchLv,
                                     isKidsExitAuth: self.$isKidsExitAuth,
                                     watchLvs: self.$watchLvs,
                                     selectedWatchLv: self.$selectedWatchLv)
                                 
-                                SetupChildren(
-                                    isInitate:self.isInitate, isPairing: self.isPairing)
-                                SetupPossession(
-                                    isInitate:self.isInitate)
-                                SetupHappySenior()
+                                
+                                if self.pairingType == .btv {
+                                    SetupChildren(
+                                        isInitate:self.isInitate, isPairing: self.isPairing)
+                                    SetupPossession(
+                                        isInitate:self.isInitate)
+                                    SetupHappySenior()
+                                }
                                 SetupGuideNVersion()
                                 //#if DEBUG
                                     SetupTest()
@@ -113,6 +131,17 @@ struct PageSetup: PageView {
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                 .modifier(PageFull())
             }
+            .onReceive(self.pairing.$event){ evt in
+                switch evt{
+                case .connected :
+                    self.pairingType = self.pairing.pairingDeviceType
+                    break
+                case .disConnected :
+                    self.pairingType = self.pairing.pairingDeviceType
+                    break
+                default :break
+                }
+            }
             .onReceive(self.pairing.$status){ status in
                 self.resetSetup(status: status)
             }
@@ -121,6 +150,7 @@ struct PageSetup: PageView {
             }
             .onAppear{
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
+                self.pairingType = self.pairing.pairingDeviceType
             }
             
         }//geo

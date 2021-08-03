@@ -16,6 +16,7 @@ struct TopTab: PageComponent{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @State var showAlram:Bool = false
+    @State var pairingType:PairingDeviceType = .btv
     var body: some View {
         HStack(alignment: .bottom ,spacing:Dimen.margin.tiny){
             Button(action: {
@@ -78,28 +79,40 @@ struct TopTab: PageComponent{
                     .frame(width: Dimen.icon.regular,
                            height: Dimen.icon.regular)
             }
-            Button(action: {
-                
-                if self.pairing.status != .pairing {
-                    self.appSceneObserver.alert = .needPairing()
-                } else {
-                    self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.remotecon)
-                    )
+            if self.pairingType == .btv {
+                Button(action: {
+                    
+                    if self.pairing.status != .pairing {
+                        self.appSceneObserver.alert = .needPairing()
+                    } else {
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.remotecon)
+                        )
+                    }
+                    
+                }) {
+                    
+                    Image(Asset.gnbTop.remote)
+                        .renderingMode(.original)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: Dimen.icon.regular,
+                               height: Dimen.icon.regular)
                 }
-                
-            }) {
-                
-                Image(Asset.gnbTop.remote)
-                    .renderingMode(.original)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: Dimen.icon.regular,
-                           height: Dimen.icon.regular)
             }
-            
         }
         .modifier(ContentHorizontalEdges())
+        .onReceive(self.pairing.$event){ evt in
+            switch evt{
+            case .connected :
+                self.pairingType = self.pairing.pairingDeviceType
+                break
+            case .disConnected :
+                self.pairingType = self.pairing.pairingDeviceType
+                break
+            default :break
+            }
+        }
         .onReceive(self.repository.alram.$newCount){ count in
             withAnimation{self.showAlram = count>0}
         }
@@ -112,6 +125,7 @@ struct TopTab: PageComponent{
             }
         }
         .onAppear(){
+            self.pairingType = self.pairing.pairingDeviceType
         }
         
     }

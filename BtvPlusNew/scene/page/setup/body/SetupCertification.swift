@@ -15,7 +15,7 @@ struct SetupCertification: PageView {
     @EnvironmentObject var dataProvider:DataProvider
     var isInitate:Bool = false
     var isPairing:Bool = false
-    
+    var pairingType:PairingDeviceType = .btv
     @Binding var isPurchaseAuth:Bool
     @Binding var isSetWatchLv:Bool
     @Binding var isKidsExitAuth:Bool
@@ -45,12 +45,14 @@ struct SetupCertification: PageView {
                         self.setupWatchLv(select: select)
                     }
                 )
-                Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
-                SetupItem (
-                    isOn: self.$isKidsExitAuth,
-                    title: String.pageText.setupCertificationKidsExit,
-                    subTitle: String.pageText.setupCertificationKidsExitText
-                )
+                if self.pairingType == .btv {
+                    Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
+                    SetupItem (
+                        isOn: self.$isKidsExitAuth,
+                        title: String.pageText.setupCertificationKidsExit,
+                        subTitle: String.pageText.setupCertificationKidsExitText
+                    )
+                }
             }
             .background(Color.app.blueLight)
         }

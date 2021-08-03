@@ -23,7 +23,9 @@ struct PagePairingGuide: PageView {
             title: String.pageText.pairingGuideTitle2,
             text: String.pageText.pairingGuideText2,
             info: String.pageText.pairingGuideInfo2,
-            titleHorizontal: String.pageText.pairingGuideTitle2Horizontal
+            tip: String.pageText.pairingGuideTip2,
+            titleHorizontal: String.pageText.pairingGuideTitle2Horizontal,
+            tipHorizontal: String.pageText.pairingGuideTip2Horizontal
             ),
         GuideViewData(
             img: Asset.image.pairingTutorial03,

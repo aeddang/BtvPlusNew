@@ -444,6 +444,7 @@
 		31AC66C926B7900E00766995 /* InputNumberGroupBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AC66C826B7900E00766995 /* InputNumberGroupBox.swift */; };
 		31AC66CB26B7A8D900766995 /* DatePickerSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AC66CA26B7A8D900766995 /* DatePickerSelect.swift */; };
 		31AC66CD26B7ADE500766995 /* SceneDatePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AC66CC26B7ADE500766995 /* SceneDatePickerController.swift */; };
+		31AC66CF26B8C82400766995 /* PagePairingAppleTv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AC66CE26B8C82400766995 /* PagePairingAppleTv.swift */; };
 		31C4BC97262D2D8600BB2167 /* NotificationCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BC96262D2D8600BB2167 /* NotificationCoreData.swift */; };
 		31C4BCC0262D71BA00BB2167 /* KeywordCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BCBF262D71BA00BB2167 /* KeywordCoreData.swift */; };
 		31C4BCCE262D745B00BB2167 /* AlramList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BCCD262D745B00BB2167 /* AlramList.swift */; };
@@ -1106,6 +1107,7 @@
 		31AC66C826B7900E00766995 /* InputNumberGroupBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputNumberGroupBox.swift; sourceTree = "<group>"; };
 		31AC66CA26B7A8D900766995 /* DatePickerSelect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerSelect.swift; sourceTree = "<group>"; };
 		31AC66CC26B7ADE500766995 /* SceneDatePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDatePickerController.swift; sourceTree = "<group>"; };
+		31AC66CE26B8C82400766995 /* PagePairingAppleTv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePairingAppleTv.swift; sourceTree = "<group>"; };
 		31C4BC96262D2D8600BB2167 /* NotificationCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCoreData.swift; sourceTree = "<group>"; };
 		31C4BCBF262D71BA00BB2167 /* KeywordCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordCoreData.swift; sourceTree = "<group>"; };
 		31C4BCCD262D745B00BB2167 /* AlramList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlramList.swift; sourceTree = "<group>"; };
@@ -2962,6 +2964,7 @@
 				31740C23261BFB310052A9C2 /* PagePairingEmptyDevice.swift */,
 				314D589325B685B2007BCA34 /* PagePairingManagement.swift */,
 				31A49FF72627D1620065E6C6 /* PagePairingGuide.swift */,
+				31AC66CE26B8C82400766995 /* PagePairingAppleTv.swift */,
 			);
 			path = pairing;
 			sourceTree = "<group>";
@@ -4085,6 +4088,7 @@
 				318BA3972608C2660093BC7D /* SearchPopularityVod.swift in Sources */,
 				D56C6A2E257DA0C700CF9AB8 /* CustomImagePicker.swift in Sources */,
 				D56C6B13257DAADE00CF9AB8 /* AppLayout.swift in Sources */,
+				31AC66CF26B8C82400766995 /* PagePairingAppleTv.swift in Sources */,
 				314F816025BE30AA00E76508 /* PurchaseViewer.swift in Sources */,
 				3192CA6C26819953007B3C29 /* PageDetailInfo.swift in Sources */,
 				31061E6625C8CF5800543FC0 /* BtvWebView.swift in Sources */,

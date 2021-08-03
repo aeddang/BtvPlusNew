@@ -223,5 +223,9 @@ extension String {
         public static var needNickName = "alertNeedNickName".loaalized()
         public static var needAgreeTermsOfService = "alertNeedAgreeTermsOfService".loaalized()
         public static var needAgreePrivacy = "alertNeedAgreePrivacy".loaalized()
+        
+        public static var notAvailable = "alertNotAvailable".loaalized()
+        public static var notAvailableAppleTv = "alertNotAvailableAppleTv".loaalized()
+        public static var notAvailableAppleTvTip = "alertNotAvailableAppleTvTip".loaalized()
     }
 }

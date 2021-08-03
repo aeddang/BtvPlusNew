@@ -440,6 +440,7 @@ struct SceneAlertController: PageComponent{
             AlertBtnData(title: String.button.connectBtv, index: 1)
         ]
     }
+    
     func selectedNeedPairing(_ idx:Int) {
         if idx == 1 {
             

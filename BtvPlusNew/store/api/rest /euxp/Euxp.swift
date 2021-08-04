@@ -72,12 +72,17 @@ extension EuxpNetwork{
     
     
     enum MenuTypeCode: String {
-        case MENU_KIDS = "NM2000002471"  // kids
+        case MENU_KIDS = "NM2000002471"
         case MENU_KIDS_HOME = "NM2000031454"
-        case MENU_KIDS_HOME_FIRST = "NM2000031456"  // kids
-        case MENU_KIDS_MY = "NM2000031458"  // kids
+        case MENU_KIDS_HOME_FIRST = "NM2000031456"
+        case MENU_KIDS_MY = "NM2000031458"
         case MENU_KIDS_MONTHLY = "NM2000032813"
     }
+    
+    enum CwCallId: String {
+        case CALL_KIDS_WATCH = "KESV50602"  // kids
+    }
+    
    
     enum SrisTypCd: String {
         case none = "00" // error
@@ -122,7 +127,7 @@ class Euxp: Rest{
     }
     
     /**
-     * 시놉시스 (IF-EUXP-010)
+     * 시놉시스 (IF-EUXP-010)  0820/  회차리스트 순서 
      * @param srisId 시리즈아이디
      * @param epsdId 에피소드아이디 (search_type 1 경우 필수)
      * @param epsdRsluId 해상도아이디(CID) (search_type 2 경우 필수)

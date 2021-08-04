@@ -13,7 +13,7 @@ import Combine
 import Firebase
 extension PagePlayerTest{
     static let videoPath:String = "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8"
-    static let listURL:String = "http://1.255.85.174:9093/api/playlist/json/30 "
+    static let listURL:String = "http://1.255.85.174:9093/api/playlist/json/30"
 }
 
 
@@ -82,10 +82,15 @@ struct PagePlayerTest: PageView {
             }
             .padding(.all, 10)
             .background(Color.app.blueDeep)
-            CPPlayer(
-                viewModel : self.playerModel ,
-                pageObservable : self.pageObservable)
-            
+            ZStack(alignment: .topTrailing){
+                
+                CPPlayer(
+                    viewModel : self.playerModel ,
+                    pageObservable : self.pageObservable)
+                Text(self.bitrate ?? "")
+                    .modifier(MediumTextStyle(size: Font.size.light, color: Color.app.white))
+                    .padding(.all, Dimen.margin.thin)
+            }
             if let info = self.currentInfo {
                 HStack{
                     FillButton(
@@ -138,6 +143,10 @@ struct PagePlayerTest: PageView {
         .onReceive(self.playerModel.$assetInfo){ info in
             self.currentInfo = info
         }
+        .onReceive(self.playerModel.$bitrate){ bitrate in
+            guard let bitrate = bitrate else {return}
+            self.bitrate = "res : " + bitrate.description
+        }
         .onReceive(self.playerModel.$error){ error in
             guard let error = error else {return}
             switch error { 
@@ -179,6 +188,7 @@ struct PagePlayerTest: PageView {
             
         }
     }//body
+    @State var bitrate:String? = nil
     @State var setuplistApi:String? = nil
     @State var setupVideoPath:String? = nil
     @State var videoPath:String = Self.videoPath

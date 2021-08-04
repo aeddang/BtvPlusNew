@@ -18,6 +18,7 @@ open class PlayerModel: ComponentObservable {
     @Published var isMute:Bool = false
     @Published var isLock:Bool = false
     @Published var volume:Float = -1
+    @Published var bitrate:Double? = nil
     @Published var screenRatio:CGFloat = 1.0
     @Published var rate:Float = 1.0
     @Published var playInfo:String? = nil
@@ -26,6 +27,7 @@ open class PlayerModel: ComponentObservable {
     @Published var screenGravity:AVLayerVideoGravity = .resizeAspect
     @Published fileprivate(set) var initTime:Double? = nil
     @Published fileprivate(set) var isPlay = false
+    var isUserPlay = false
     @Published fileprivate(set) var duration:Double = 0.0
     fileprivate(set) var originDuration:Double = 0
     open var limitedDuration:Double? = nil

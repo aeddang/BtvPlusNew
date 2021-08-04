@@ -22,6 +22,7 @@ class SynopsisModel : PageProtocol {
     private(set) var nextEpsdId:String? = nil
     
     private(set) var srisTypCd:SrisTypCd = .none
+    private(set) var isSrisCompleted:Bool = false
     private(set) var isGstn = false
     private(set) var isPossonVODMode = false
     private(set) var isNScreen = false
@@ -90,6 +91,7 @@ class SynopsisModel : PageProtocol {
             }
             self.nextSrisId = contents.next_sris_id
             self.nextEpsdId = contents.next_epsd_id
+            self.isSrisCompleted = contents.sris_cmpt_yn?.toBool() ?? false
             self.isRecommand = contents.rcmd_yn?.toBool() ?? false
             self.isGstn = contents.gstn_yn?.toBool() ?? false
             self.isNScreen = contents.nscrn_yn?.toBool() ?? false
@@ -106,8 +108,6 @@ class SynopsisModel : PageProtocol {
             self.seriesInfoList = contents.series_info
             self.isDistProgram = self.distStsCd != .stop
             self.cwCallId = contents.cw_call_id_val
-            
-             
         }
         
         //epsdRsluId
@@ -248,6 +248,8 @@ class SynopsisModel : PageProtocol {
             if model.prdPrcId == purchasedPid && !model.isDirectview {
                 model.forceModifyDirectview()
             }
+            
+            //0804 추가된 부분있음
             if let list = self.rsluInfoList , !list.isEmpty {
                 if let rsluItem = list.first(where: { rsluItem in
                     let rsluTypCd = RsluTypCd(value: rsluItem.rslu_typ_cd ?? "")
@@ -397,9 +399,11 @@ class SynopsisModel : PageProtocol {
             }
         }
         
+        //0804 지워야할지 확인
         if isPossonVODMode {
             tempUsableItems = tempUsableItems.filter({ $0.isPossn && $0.epsdId == self.epsdId })
         }
+        
         var tempDic = Dictionary(grouping: tempUsableItems) { $0.epsdId }
         //"자막/더빙/xx더빙 최신순 필터링")
         tempDic.forEach {
@@ -575,11 +579,7 @@ class SynopsisModel : PageProtocol {
             SynopsisModel.singleTrstrsPidList.contains($0.prdPrcId)
         })
     }
-    private var isTrstrs: Bool {
-        srisTypCd == .season && purchaseModels.contains(where: {
-            SynopsisModel.trstrsPidList.contains($0.prdPrcId)
-        })
-    }
+    
     private var isOnlyCommerce: Bool {
         srisTypCd == .season
             && purchaseModels.filter({ $0.sale_tgt_fg_yn == "Y" })
@@ -587,7 +587,11 @@ class SynopsisModel : PageProtocol {
     }
     
     
-    
+    var isTrstrs: Bool {
+        srisTypCd == .season && purchaseModels.contains(where: {
+            SynopsisModel.trstrsPidList.contains($0.prdPrcId)
+        })
+    }
     var isPurchased: Bool {
         purchaseModels.contains(where: {$0.isDirectview})
     }

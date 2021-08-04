@@ -273,6 +273,7 @@ extension String{
         public static let synopsisRelationVod = "synopsisRelationVod".loaalized()
         public static let synopsisNoRelationVod = "synopsisNoRelationVod".loaalized()
         public static let synopsisPackageContent = "synopsisPackageContent".loaalized()
+        public static let synopsisUnavailableSeriesMessage = "synopsisUnavailableSeriesMessage".loaalized()
         
         public static let authTitle = "authTitle".loaalized()
         public static let authText = "authText".loaalized()

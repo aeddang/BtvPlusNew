@@ -100,7 +100,7 @@ struct SerisTab: PageComponent{
                 self.textSeason = self.data.seasons[data.currentSeasonIdx].title
             }
             self.textSeasonCount = String.app.total + self.data.seris.count.description + String.pageText.synopsisSiris
-            self.sortType = self.data.serisSortType
+            self.sortType = self.data.getCurrentSerisSortType()
         }
     }//body
 }

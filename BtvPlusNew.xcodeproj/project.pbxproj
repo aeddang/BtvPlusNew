@@ -445,6 +445,8 @@
 		31AC66CB26B7A8D900766995 /* DatePickerSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AC66CA26B7A8D900766995 /* DatePickerSelect.swift */; };
 		31AC66CD26B7ADE500766995 /* SceneDatePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AC66CC26B7ADE500766995 /* SceneDatePickerController.swift */; };
 		31AC66CF26B8C82400766995 /* PagePairingAppleTv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AC66CE26B8C82400766995 /* PagePairingAppleTv.swift */; };
+		31AC66D226BA1E5F00766995 /* ScrollLazeStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AC66D126BA1E5F00766995 /* ScrollLazeStack.swift */; };
+		31AC66D426BA23B100766995 /* ScrollList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AC66D326BA23B100766995 /* ScrollList.swift */; };
 		31C4BC97262D2D8600BB2167 /* NotificationCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BC96262D2D8600BB2167 /* NotificationCoreData.swift */; };
 		31C4BCC0262D71BA00BB2167 /* KeywordCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BCBF262D71BA00BB2167 /* KeywordCoreData.swift */; };
 		31C4BCCE262D745B00BB2167 /* AlramList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BCCD262D745B00BB2167 /* AlramList.swift */; };
@@ -1108,6 +1110,8 @@
 		31AC66CA26B7A8D900766995 /* DatePickerSelect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerSelect.swift; sourceTree = "<group>"; };
 		31AC66CC26B7ADE500766995 /* SceneDatePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDatePickerController.swift; sourceTree = "<group>"; };
 		31AC66CE26B8C82400766995 /* PagePairingAppleTv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePairingAppleTv.swift; sourceTree = "<group>"; };
+		31AC66D126BA1E5F00766995 /* ScrollLazeStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollLazeStack.swift; sourceTree = "<group>"; };
+		31AC66D326BA23B100766995 /* ScrollList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollList.swift; sourceTree = "<group>"; };
 		31C4BC96262D2D8600BB2167 /* NotificationCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCoreData.swift; sourceTree = "<group>"; };
 		31C4BCBF262D71BA00BB2167 /* KeywordCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordCoreData.swift; sourceTree = "<group>"; };
 		31C4BCCD262D745B00BB2167 /* AlramList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlramList.swift; sourceTree = "<group>"; };
@@ -2768,6 +2772,15 @@
 			path = item;
 			sourceTree = "<group>";
 		};
+		31AC66D026BA1E4500766995 /* body */ = {
+			isa = PBXGroup;
+			children = (
+				31AC66D126BA1E5F00766995 /* ScrollLazeStack.swift */,
+				31AC66D326BA23B100766995 /* ScrollList.swift */,
+			);
+			path = body;
+			sourceTree = "<group>";
+		};
 		31C4BCB8262D69D200BB2167 /* model */ = {
 			isa = PBXGroup;
 			children = (
@@ -3347,6 +3360,7 @@
 		D56C69FC257DA0C600CF9AB8 /* scroll */ = {
 			isa = PBXGroup;
 			children = (
+				31AC66D026BA1E4500766995 /* body */,
 				D56C69FD257DA0C600CF9AB8 /* InfinityScrollView.swift */,
 			);
 			path = scroll;
@@ -4164,6 +4178,7 @@
 				3190CB13268ACC1E00ACB465 /* KidProfileListEmpty.swift in Sources */,
 				3190CB24268D890500ACB465 /* MenuNavi.swift in Sources */,
 				318F7B582625798400774B17 /* TMembership.swift in Sources */,
+				31AC66D226BA1E5F00766995 /* ScrollLazeStack.swift in Sources */,
 				3195C1A82665CD9D001F513E /* strings.page.swift in Sources */,
 				3167641A25CCC1C5003A7721 /* PlayViewer.swift in Sources */,
 				D56C6A53257DA0C700CF9AB8 /* FillButton.swift in Sources */,
@@ -4474,6 +4489,7 @@
 				317C9774262443D4008F267D /* PageMyBenefits.swift in Sources */,
 				D56C6A48257DA0C700CF9AB8 /* RoundRectMask.swift in Sources */,
 				319CF658269522DB00159575 /* LvGraphBox.swift in Sources */,
+				31AC66D426BA23B100766995 /* ScrollList.swift in Sources */,
 				D56C699D257DA09E00CF9AB8 /* PageSceneDelegate.swift in Sources */,
 				310F6FBF25C167EC005718B0 /* ScsModel.swift in Sources */,
 				D50AB8ED257F311800649C4A /* SystemEnvironment.swift in Sources */,
@@ -4726,7 +4742,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 49;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -4750,7 +4766,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.046;
+				MARKETING_VERSION = 1.0467;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = ".BtvPlusNew_ dev";
@@ -4806,7 +4822,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 49;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -4825,7 +4841,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.046;
+				MARKETING_VERSION = 1.0467;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvPlusNew_des;

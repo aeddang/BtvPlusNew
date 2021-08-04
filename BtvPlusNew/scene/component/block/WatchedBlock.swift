@@ -156,9 +156,7 @@ struct WatchedBlock: PageComponent{
         self.infinityScrollModel.onLoad()
         self.viewModel.request = .init(
             id: self.tag,
-            type: .getWatch(
-                false,
-                self.infinityScrollModel.page + 1)
+            type: .getWatch(self.infinityScrollModel.page + 1)
         )
     }
     

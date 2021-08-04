@@ -177,8 +177,9 @@ struct RelationVodListBody: PageComponent{
                     }
                     .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))
             }
-            .onAppear(){
-               
+            if let tip = self.relationContentsModel.serisTip {
+                Text(tip).modifier(LightTextStyle(size: Font.size.tiny, color: Color.app.greyExtra))
+                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))
             }
         
         } else if !self.relationDatas.isEmpty {

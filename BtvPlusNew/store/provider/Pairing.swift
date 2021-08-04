@@ -50,7 +50,7 @@ class Pairing:ObservableObject, PageProtocol {
     @Published private(set) var event:PairingEvent? = nil {didSet{ if event != nil { event = nil} }}
     @Published private(set) var status:PairingStatus = .disConnect
     @Published var user:User? = nil
-    private(set) var pairingDeviceType:PairingDeviceType = .apple
+    private(set) var pairingDeviceType:PairingDeviceType = .btv
     private(set) var isPairingUser:Bool = false
     private(set) var isPairingAgreement:Bool = false
    

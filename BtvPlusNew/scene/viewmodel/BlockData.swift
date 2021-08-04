@@ -279,7 +279,7 @@ class BlockData:InfinityData, ObservableObject{
             DataLog.d("Request watche " + self.name, tag: "BlockProtocol")
             return .init(
                 id: apiId ?? self.id,
-                type: .getWatch(false),
+                type: .getWatch(),
                 isOptional: isOption)
         case .banner:
             DataLog.d("Request banner " + self.name, tag: "BlockProtocol")

@@ -70,6 +70,7 @@ extension NpsNetwork{
         Self.hostDeviceId = nil
         Self.pairingStatus = ""
     }
+    
     static func pairing(res:ApiResultResponds) {
         guard let resData = res.data as? DevicePairing  else { return }
         guard let resultCode = resData.header?.result else { return }

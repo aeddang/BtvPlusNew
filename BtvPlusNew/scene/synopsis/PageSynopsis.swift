@@ -15,10 +15,8 @@ extension PageSynopsis {
     }
 }
 
-
 struct PageSynopsis: PageView {
     var type:PageType = .btv
-    
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pagePresenter:PagePresenter
@@ -364,7 +362,6 @@ struct PageSynopsis: PageView {
     enum SingleRequestType:String {
         case preview, changeOption, relationContents
     }
-    
     @State var isInitPage = false
     @State var progressError = false
     @State var progressCompleted = false
@@ -381,19 +378,15 @@ struct PageSynopsis: PageView {
     @State var textInfo:String? = nil
     @State var playListData:PlayListData = PlayListData()
     @State var synopsisPlayType:SynopsisPlayType = .unknown
-    
-   
     @State var isBookmark:Bool? = nil
     @State var isRecommand:Bool? = nil
     @State var isLike:LikeStatus? = nil
-   
     @State var hasAuthority:Bool? = nil
     @State var relationTab:[NavigationButton] = []
     @State var selectedRelationTabIdx:Int = 0
     @State var seris:[SerisData] = []
     @State var relationDatas:[PosterDataSet] = []
     @State var hasRelationVod:Bool? = nil
-    
     @State var isFinalPlaying:Bool = false
     @State var isPlayAble:Bool = false
     @State var isPlayViewActive = false
@@ -406,10 +399,7 @@ struct PageSynopsis: PageView {
     @State var epsdId:String? = nil
     @State var epsdRsluId:String = ""
     @State var purchasedPid:String? = nil
-    
-    
     @State var playStartTime:Int? = nil
-    
     func initPage(){
         if self.synopsisData == nil {
             self.progressError = true
@@ -429,6 +419,7 @@ struct PageSynopsis: PageView {
     
     private func resetPage(isAllReset:Bool = false){
         PageLog.d("resetPage", tag: self.tag)
+        self.playerModel.event = .stop
         self.isUIView = false
         self.hasAuthority = nil
         self.progressError = false
@@ -481,7 +472,6 @@ struct PageSynopsis: PageView {
         
         case 1 :
             guard let model = self.synopsisModel else {return}
-           
             if self.isPairing == true {
                 if model.synopsisType == .seriesChange , let prevDirectView = self.prevDirectView {
                     self.setupDirectView(prevDirectView, isSeasonWatchAll:true) // 권한 대이타 재사용
@@ -490,7 +480,6 @@ struct PageSynopsis: PageView {
                     self.pageDataProviderModel.requestProgress(q: .init(type: .getDirectView(model)))
                 }
             }else{
-                
                 if model.hasExamPreview{
                     self.synopsisPlayType = .preplay()
                     self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.epsdRsluId,  true )))
@@ -507,9 +496,13 @@ struct PageSynopsis: PageView {
             }
             
         case 2 :
-            
             guard let model = self.synopsisModel else {return}
             if self.hasAuthority == false{
+                if self.purchasViewerData?.isPlayAble == false {
+                    PageLog.d("play unAble ", tag: self.tag)
+                    self.completedProgress()
+                    return
+                }
                 if model.hasExamPreview{
                     self.synopsisPlayType = .preplay()
                     self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.epsdRsluId,  true )))
@@ -526,11 +519,10 @@ struct PageSynopsis: PageView {
             else {
                 self.synopsisPlayType = .vod()
                 self.pageDataProviderModel.requestProgress(q: .init(type: .getPlay(self.epsdRsluId,  self.pairing.hostDevice )))
-                
             }
             self.progressCompleted = true
         //case 3 : self.pageDataProviderModel.requestProgress(q: .init(type: .getGnb))
-        default : do{}
+        default : break
         }
     }
     
@@ -572,7 +564,6 @@ struct PageSynopsis: PageView {
                     return
                 }
                 self.setupPreview(data)
-                
             }else{
                 guard let data = res.data as? Play else {
                     PageLog.d("error Play", tag: self.tag)
@@ -580,10 +571,10 @@ struct PageSynopsis: PageView {
                     return
                 }
                 self.setupPlay(data)
-                
             }
+            
         default :
-            if  res.id.hasPrefix( SingleRequestType.preview.rawValue ) {
+            if res.id.hasPrefix( SingleRequestType.preview.rawValue ) {
                 guard let data = res.data as? Preview else {
                     PageLog.d("error next Preview", tag: self.tag)
                     self.errorProgress()
@@ -591,7 +582,7 @@ struct PageSynopsis: PageView {
                 }
                 self.setupPreview(data)
             }
-            if  res.id.hasPrefix( SingleRequestType.changeOption.rawValue ) {
+            if res.id.hasPrefix( SingleRequestType.changeOption.rawValue ) {
                 guard let data = res.data as? Play else {
                     PageLog.d("error changeOption", tag: self.tag)
                     self.errorProgress()
@@ -599,8 +590,7 @@ struct PageSynopsis: PageView {
                 }
                 self.setupPlay(data)
             }
-            
-            if  res.id.hasPrefix( SingleRequestType.relationContents.rawValue ) {
+            if res.id.hasPrefix( SingleRequestType.relationContents.rawValue ) {
                 guard let data = res.data as? RelationContents else {
                     PageLog.d("error relationContents", tag: self.tag)
                     self.setupRelationContent(nil)
@@ -634,7 +624,7 @@ struct PageSynopsis: PageView {
     private func completedProgress(){
         PageLog.d("completedProgress", tag: self.tag)
         withAnimation{
-            self.isPlayAble = true
+            self.isPlayAble = self.purchasViewerData?.isPlayAble ?? true
             self.isPlayViewActive = true
         }
         
@@ -683,13 +673,9 @@ struct PageSynopsis: PageView {
         }
     }
     
-    
-    
     @State var prevSrisId:String? = nil
     @State var prevDirectView:DirectView? = nil
-  
     private func setupSynopsis (_ data:Synopsis) {
-        
         if self.synopsisData?.srisId?.isEmpty != false { self.synopsisData?.srisId = data.contents?.sris_id }
         if self.synopsisData?.epsdId?.isEmpty != false { self.synopsisData?.epsdId = data.contents?.epsd_id }
         PageLog.d("srisId " + (self.synopsisData?.srisId ?? "nil"), tag: self.tag)
@@ -729,7 +715,6 @@ struct PageSynopsis: PageView {
             }
             
             if let kidYn = self.synopsisModel?.kidsYn {self.synopsisData?.kidZone = kidYn }
-                
             self.epsdId = self.synopsisModel?.epsdId
             self.isRecommand = self.synopsisModel?.isRecommandAble
             self.epsdRsluId = self.synopsisModel?.epsdRsluId ?? self.epsdRsluId
@@ -742,13 +727,11 @@ struct PageSynopsis: PageView {
             self.relationContentsModel.selectedEpsdId = self.epsdId
             DataLog.d("PageSynopsis epsdId  : " + (self.epsdId ?? "nil"), tag: self.tag)
             DataLog.d("PageSynopsis epsdRsluId  : " + self.epsdRsluId, tag: self.tag)
-            DataLog.d("PageSynopsis isRecommand  : " + (self.isRecommand.debugDescription ?? "nil"), tag: self.tag)
-            
+            DataLog.d("PageSynopsis isRecommand  : " + (self.isRecommand.debugDescription), tag: self.tag)
         } else {
             self.progressError = true
             PageLog.d("setupSynopsis error", tag: self.tag)
         }
-        
     }
         
     private func setupDirectView (_ data:DirectView, isSeasonWatchAll:Bool = false){
@@ -757,7 +740,6 @@ struct PageSynopsis: PageView {
         self.synopsisModel?.setData(directViewdata: data, isSeasonWatchAll: isSeasonWatchAll)
         self.isBookmark = self.synopsisModel?.isBookmark
         PageLog.d("self.isBookmark " + (self.isBookmark?.description ?? "nil"), tag: self.tag)
-        
         self.purchasViewerData = PurchaseViewerData(type: self.type).setData(
                 synopsisModel: self.synopsisModel,
                 isPairing: self.isPairing)
@@ -822,7 +804,8 @@ struct PageSynopsis: PageView {
             self.bindWatchingData()
             let prerollData = SynopsisPrerollData()
                 .setData(data: synopsis, playType: self.synopsisPlayType, epsdRsluId: self.epsdRsluId)
-            self.playerData = SynopsisPlayerData().setData(type: self.synopsisPlayType, synopsis: synopsis)
+            self.playerData = SynopsisPlayerData()
+                .setData(type: self.synopsisPlayType, synopsis: synopsis)
             self.playerModel
                 .setData(synopsisPrerollData: prerollData)
                 .setData(synopsisPlayData: self.playerData)
@@ -881,7 +864,6 @@ struct PageSynopsis: PageView {
         let relationDatas = self.relationContentsModel.getRelationContentSets(idx: relationContentsIdx, row: self.relationRow)
         self.relationDatas = relationDatas
     }
-    
     
     private func updateRelationTabButtons(idx:Int){
         self.relationTab = NavigationBuilder(
@@ -991,6 +973,7 @@ struct PageSynopsis: PageView {
     func changeVod(synopsisData:SynopsisData?){
         guard let synopsisData = synopsisData else { return }
         self.synopsisData = synopsisData
+        // 여기서 체크
         self.resetPage(isAllReset: true)
     }
     
@@ -1011,6 +994,7 @@ struct PageSynopsis: PageView {
                 .addParam(key: .data, value: model)
         )
     }
+    
     func watchBtv(){
         guard let isPurchased = self.synopsisModel?.isPurchased else { return }
         if !isPurchased {

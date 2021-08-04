@@ -32,7 +32,7 @@ extension LgsNetwork{
 }
 
 class Lgs: Rest{
-    /**
+    /**0804 ->동시시청 제어 VLS
     * 시청정보전송(Btv Plus 전용) (IF-LGS-CDRLOG-UI5-002)
     */
     func postWatchLog(
@@ -75,7 +75,6 @@ class Lgs: Rest{
         params["end_rate"] = playData.rate
         params["trans_type"] = "3"
         params["yn_kzone"] = isKidZone ? "Y" : "N"
-        
         fetch(route: LgsPostWatchLog(body: params), completion: completion, error:error)
     }
     

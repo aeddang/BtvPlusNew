@@ -27,7 +27,7 @@ extension MetvNetwork{
                 switch self {
                 case .none: return "0"
                 case .title: return "1"
-                case .seriesChange: return "2"
+                case .seriesChange: return "2" //지워
                 case .seasonFirst: return "3"
                 }
             }
@@ -301,7 +301,7 @@ class Metv: Rest{
         fetch(route: MetvDelBookMark(headers: headers, body: params), completion: completion, error:error)
     }
     
-    /**
+    /** 0804 -> SCS -002 synopsisType 2번 사용 안함 빼기
     * 바로보기 (IF-ME-061)
     * @param srisId 최근본회차 시청정보, 즐겨찾기 확인  + 컨텐츠의 sris_id + 필수
     * @param synopsisType 시놉시스 확인 식별자 값 설명 - 1 : 단편시놉 진입시  - 2 : 시즌시놉 회차이동시 - 3. : 시즌시놉 최초진입 또는 시즌변경시
@@ -311,17 +311,14 @@ class Metv: Rest{
     func getDirectView(
         data:SynopsisModel,
         completion: @escaping (DirectView) -> Void, error: ((_ e:Error) -> Void)? = nil){
-        
+
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
-        
         var params = [String:Any]()
         params["response_format"] = MetvNetwork.RESPONSE_FORMET
         params["ver"] = MetvNetwork.VERSION
         params["IF"] = "IF-ME-061"
-        
         params["stb_id"] = stbId
         params["hash_id"] = ApiUtil.getHashId(stbId)
-        
         params["sris_id"] = data.srisId ?? ""
         params["synopsis_type"] = data.synopsisType.code
         //params["muser_num"] = ""
@@ -333,7 +330,7 @@ class Metv: Rest{
         fetch(route: MetvDirectview( body: params), completion: completion, error:error)
     }
     
-    /**
+    /** 0804 -> SCS -002
     * 게이트웨이시놉 바로보기 (IF-ME-062)
     * @param reqPidList 바로보기 확인용 상품ID 리스트 집합
     * @param isPPM 월정액 전용 게이트웨이 시놉 바로보기 확인여부 체크(Y/N)

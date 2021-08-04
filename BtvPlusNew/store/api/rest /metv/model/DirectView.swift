@@ -16,6 +16,7 @@ struct DirectView : Decodable {
     private(set) var yn_season_watch_all: String? = nil   // 시즌시놉인 경우 필수 - 시즌 전체를 시청가능한지여부 (Y/N) 제공
     private(set) var pps_products:[PPSProductItem]? = nil
     private(set) var last_watch_info:LastWatchInfo? = nil  // 시즌별 마지막 시청 정보
+    
 }
 
 

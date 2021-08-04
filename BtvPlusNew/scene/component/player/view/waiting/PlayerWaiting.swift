@@ -43,6 +43,7 @@ struct PlayerWaiting: PageComponent{
                     size: CGSize(width:Dimen.icon.heavyExtra,height:Dimen.icon.heavyExtra)
                 ){ _ in
                     self.viewModel.btvUiEvent = .initate
+                    self.viewModel.isUserPlay = true
                 }
                 if self.viewModel.playInfo != nil  {
                     Text(self.viewModel.playInfo!)

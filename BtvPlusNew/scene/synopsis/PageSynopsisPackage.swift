@@ -323,8 +323,6 @@ struct PageSynopsisPackage: PageView {
             } else {
                 self.completedProgress()
             }
-            
-            
         default : do{}
         }
     }

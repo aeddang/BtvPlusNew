@@ -106,7 +106,6 @@ class BannerData:InfinityData, PageProtocol{
             }
             self.type = .top
         }
-            
         if let colorCode = data.img_bagr_color_code {
             bgColor = colorCode.toColor()
         }
@@ -125,7 +124,6 @@ class BannerData:InfinityData, PageProtocol{
     private func parseAction(data:EventBannerItem){
         guard let callTypeCd = data.call_typ_cd else { return }
         guard let callUrl = data.call_url else { return }
-        
         switch callTypeCd {
         case "2":
             var url = callUrl

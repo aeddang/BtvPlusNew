@@ -10,7 +10,6 @@ import Foundation
 import SwiftUI
 import Combine
 
-
 struct TabSwitch : PageComponent {
     var tabs:[String] = []
     var selectedIdx:Int = 0

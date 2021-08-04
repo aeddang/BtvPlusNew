@@ -83,10 +83,7 @@ class BtvPlayerModel:PlayerModel{
     var currentEpsdRsluId:String? = nil
     var currentIdx:Int? = nil
     
-    private func appendQuality(name:String, path:String){
-        let quality = Quality(name: name, path: path)
-        qualitys.append(quality)
-    }
+    
     
     override func reset() {
         self.currentQuality = nil
@@ -96,7 +93,7 @@ class BtvPlayerModel:PlayerModel{
         self.seeking = 0
         self.qualitys = []
         self.header = nil
-        self.initPlay = nil
+        //self.initPlay = nil
         self.playData = nil
         self.btvPlayType = nil
         self.isPlay80 = false
@@ -125,7 +122,8 @@ class BtvPlayerModel:PlayerModel{
     
     @discardableResult
     func setData(data:PlayInfo, type:BtvPlayType, autoPlay:Bool? = nil, continuousTime:Double? = nil) -> BtvPlayerModel {
-        let isPrevPlay = self.isPlay
+        let isPrevPlay = self.isUserPlay
+        ComponentLog.d("isUserPlay " + self.isUserPlay.description  , tag: self.tag)
         self.reset()
         self.playData = data
         self.btvPlayType = type
@@ -180,8 +178,16 @@ class BtvPlayerModel:PlayerModel{
         if let sd = data.CNT_URL_NS_SD  { self.appendQuality(name: "SD", path: sd) }
         if !qualitys.isEmpty {
             currentQuality = qualitys.first{$0.name == "HD"}
+            if currentQuality == nil {
+                currentQuality = qualitys.first
+            }
         }
         return self
+    }
+    private func appendQuality(name:String, path:String){
+        if path.isEmpty {return}
+        let quality = Quality(name: name, path: path)
+        qualitys.append(quality)
     }
 }
 struct PlayListData{

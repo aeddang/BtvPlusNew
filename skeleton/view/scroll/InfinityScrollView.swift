@@ -20,7 +20,6 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     var headerSize: CGFloat = 0
     var marginTop: CGFloat
     var marginBottom: CGFloat
-    var marginHorizontal: CGFloat
     var marginStart: CGFloat
     var marginEnd: CGFloat
     var spacing: CGFloat
@@ -71,7 +70,6 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         self.marginBottom = marginBottom + marginVertical
         self.marginStart = marginStart + marginHorizontal
         self.marginEnd = marginEnd + marginHorizontal
-        self.marginHorizontal = marginHorizontal
         self.isAlignCenter = isAlignCenter
         self.spacing = spacing
         self.isRecycle = isRecycle
@@ -96,7 +94,6 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         self.content = content()
         self.marginTop = 0
         self.marginBottom = 0
-        self.marginHorizontal = 0
         self.marginStart = 0
         self.marginEnd = 0
         self.spacing = 0
@@ -111,257 +108,48 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     
     var body: some View {
         if #available(iOS 14.0, *) {
-            ScrollViewReader{ reader in
-                ScrollView(self.isScroll ? self.axes : [], showsIndicators: self.showIndicators) {
-                    if self.axes == .vertical {
-                        ZStack(alignment: self.isAlignCenter ? .top : .topLeading){
-                            if self.useTracking {
-                                GeometryReader { insideProxy in
-                                    Color.clear
-                                        .preference(key: ScrollOffsetPreferenceKey.self, value: [self.calculateContentOffset(insideProxy: insideProxy)])
-                                }
-                            }
-                            if self.isRecycle {
-                                LazyVStack(alignment: self.isAlignCenter ? .center : .leading, spacing: self.spacing){
-                                    self.content
-                                }
-                                .padding(.top, self.marginTop + self.headerSize)
-                                .padding(.bottom, self.marginBottom)
-                                .padding(.leading, self.marginStart)
-                                .padding(.trailing, self.marginEnd)
-                            } else {
-                                VStack(alignment: self.isAlignCenter ? .center : .leading, spacing: self.spacing){
-                                    self.content
-                                }
-                                .padding(.top, self.marginTop + self.headerSize)
-                                .padding(.bottom, self.marginBottom)
-                                .padding(.leading, self.marginStart)
-                                .padding(.trailing, self.marginEnd)
-                            }
-                            if let header = self.header {
-                                header.contentBody
-                                    .padding(.top, self.marginTop)
-                                    
-                            }
-                        }
-                        //.frame(alignment: .topLeading)
-                        
-                    } else {
-                        ZStack (alignment: self.isAlignCenter ? .leading : .topLeading) {
-                            if self.useTracking {
-                                GeometryReader { insideProxy in
-                                    Color.clear
-                                        .preference(key: ScrollOffsetPreferenceKey.self, value: [self.calculateContentOffset(insideProxy: insideProxy)])
-                                }
-                            }
-                            if self.isRecycle {
-                                LazyHStack (alignment: self.isAlignCenter ? .center : .top, spacing: self.spacing){
-                                    self.content
-                                }
-                                .padding(.top, self.marginTop + self.headerSize)
-                                .padding(.bottom, self.marginBottom)
-                                .padding(.leading, self.marginStart + self.headerSize)
-                                .padding(.trailing, self.marginEnd)
-                                
-                            } else {
-                                HStack (alignment: self.isAlignCenter ? .center : .top, spacing: self.spacing){
-                                    self.content
-                                }
-                                .padding(.top, self.marginTop)
-                                .padding(.bottom, self.marginBottom)
-                                .padding(.leading, self.marginStart + self.headerSize)
-                                .padding(.trailing, self.marginEnd)
-                            }
-                            if let header = self.header {
-                                header.contentBody
-                                    .padding(.leading, self.marginHorizontal)
-                                    
-                            }
-                        }
-                        //.frame(alignment: .topLeading)
-                    }
-                }
-                .modifier(MatchParent())
-                .opacity(self.progress / self.progressMax)
-                .coordinateSpace(name: self.tag)
-                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                    self.onPreferenceChange(value: value)
-                }
-                .onChange(of: self.scrollPos, perform: { pos in
-                    guard let pos = pos else {return}
-                    reader.scrollTo(pos)
-                })
-                .onChange(of: self.scrollIdx, perform: { idx in
-                    guard let idx = idx else {return}
-                    reader.scrollTo(idx, anchor: anchor)
-                })
-                .onReceive(self.viewModel.$scrollStatus){ stat in
-                    if self.scrollType != .web() {return}
-                    switch stat {
-                    case .pull :
-                        self.isScroll = false
-                    default: break
-                    }
-                }
-                .onReceive(self.viewModel.$event){ evt in
-                    guard let evt = evt else{ return }
-                    self.onTopChange(evt: evt)
-                    switch evt {
-                    case .pullCancel : withAnimation{ self.progress = self.progressMax }
-                    case .pullCompleted : withAnimation{ self.progress = self.scrollType == .reload() ? self.progressMax : 0 }
-                    default: break
-                    }
-                    
-                    if self.scrollType != .web() {return}
-                    switch evt {
-                    case .pullCompleted, .pullCancel :
-                        self.isScroll = true
-                        self.onMove(pos: 1)
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            self.onMove(pos: 0)
-                        }
-                    default: break
-                    }
-                }
-                .onReceive(self.viewModel.$pullPosition){ pos in
-                    if pos < self.viewModel.pullRange { return }
-                    self.progress = self.progressMax - Double(pos - self.viewModel.pullRange)
-                }
-                .onReceive(self.viewModel.$uiEvent){ evt in
-                    guard let evt = evt else{ return }
-                    switch evt {
-                    case .scrollTo(let idx, let anchor):
-                        self.anchor = anchor
-                        self.scrollIdx = idx
-                    case .scrollMove(let pos, let anchor):
-                        self.anchor = anchor
-                        self.scrollPos = pos
-                    default: break
-                    }
-                }
-                .onAppear(){
-                    let max = Double(viewModel.pullRange + viewModel.pullCompletedRange )
-                    self.progress = max
-                    self.progressMax = max
-                    self.isTracking = true
-                    self.onReady()
-                }
-                .onDisappear{
-                    self.isTracking = false
-                }
-            }
+            ScrollLazeStack(
+                viewModel: self.viewModel,
+                axes: self.axes,
+                scrollType: self.scrollType,
+                showIndicators: self.showIndicators,
+                contentSize: self.contentSize,
+                header: self.header,
+                headerSize: self.headerSize,
+                marginTop: self.marginTop,
+                marginBottom: self.marginBottom,
+                marginStart: self.marginStart,
+                marginEnd: self.marginEnd,
+                isAlignCenter: self.isAlignCenter,
+                spacing: self.spacing,
+                isRecycle: self.isRecycle,
+                useTracking: self.useTracking,
+                onReady: {self.onReady()},
+                onMove: {pos in self.onMove(pos:pos)},
+                content: self.content)
             
         }else{
-            if self.axes == .vertical {
-                if self.isRecycle {
-                    List{
-                        if self.marginTop > Dimen.margin.regular {
-                            Spacer()
-                                .modifier(MatchHorizontal(height: self.marginTop))
-                                .modifier(ListRowInset(spacing: 0))
-                        }
-                        if let header = self.header {
-                            header.contentBody
-                                .modifier(MatchHorizontal(height: self.headerSize))
-                                .modifier(ListRowInset(spacing: 0))
-                        }
-                        if self.isAlignCenter {
-                            self.content
-                                .modifier(LayoutCenter())
-                        } else {
-                            self.content
-                        }
-                        Spacer()
-                            .modifier(MatchHorizontal(height: self.marginBottom))
-                            .modifier(ListRowInset(spacing: 0))
-                    }
-                    .padding(.leading, self.marginStart)
-                    .padding(.trailing, self.marginEnd)
-                    .listStyle(PlainListStyle())
-                    .background(self.bgColor)
-                    .modifier(MatchParent())
-                    .onReceive(self.viewModel.$event){evt in
-                        self.onTopChange(evt: evt)
-                    }
-                    .onAppear(){
-                        UITableView.appearance().allowsSelection = false
-                        UITableViewCell.appearance().selectionStyle = .none
-                        UITableView.appearance().backgroundColor = self.bgColor.uiColor()
-                        UITableView.appearance().separatorStyle = .none
-                        UITableView.appearance().separatorColor = .clear
-                        self.onReady()
-                    }
-                    
-                } else{
-                    GeometryReader { outsideProxy in
-                        ScrollView(.vertical, showsIndicators: false) {
-                            ZStack(alignment: self.isAlignCenter ? .top : .topLeading) {
-                                if self.useTracking && self.isTracking{
-                                    GeometryReader { insideProxy in
-                                        Color.clear
-                                            .preference(key: ScrollOffsetPreferenceKey.self,
-                                                value: [self.calculateContentOffset(
-                                                    insideProxy: insideProxy, outsideProxy: outsideProxy)])
-                                    }
-                                }
-                                VStack (alignment:self.isAlignCenter ? .center : .leading, spacing:self.spacing){
-                                    if let header = self.header {
-                                        header.contentBody
-                                    }
-                                    self.content
-                                }
-                                .padding(.top, self.marginTop)
-                                .padding(.bottom, self.marginBottom)
-                                .padding(.leading, self.marginStart)
-                                .padding(.trailing, self.marginEnd)
-                                
-                                
-                            }
-                        }
-                        .frame(width:outsideProxy.size.width)
-                        .coordinateSpace(name: self.tag)
-                        .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                            self.onPreferenceChange(value: value)
-                        }
-                        .onReceive(self.viewModel.$event){evt in
-                            self.onTopChange(evt: evt)
-                        }
-                        .onAppear(){
-                            self.isTracking = true
-                            self.onReady()
-                            
-                        }
-                        .onDisappear{
-                            self.isTracking = false
-                        }
-                    }
-                }
-                
-                
-            }else{
-                ScrollView(.horizontal, showsIndicators: false) {
-                    ZStack(alignment: .leading) {
-                        HStack(alignment:self.isAlignCenter ? .center : .top, spacing:self.spacing){
-                            if let header = self.header {
-                                header.contentBody
-                            }
-                            self.content
-                        }
-                        .padding(.top, self.marginTop)
-                        .padding(.bottom, self.marginBottom)
-                        .padding(.leading, self.marginStart)
-                        .padding(.trailing, self.marginEnd)
-                    }
-                }
-                .coordinateSpace(name: self.tag)
-                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                    self.onPreferenceChange(value: value)
-                }
-                .onAppear(){
-                    self.onReady()
-                }
-            }
-        }//if
+            ScrollList(
+                viewModel: self.viewModel,
+                axes: self.axes,
+                scrollType: self.scrollType,
+                showIndicators: self.showIndicators,
+                contentSize: self.contentSize,
+                header: self.header,
+                headerSize: self.headerSize,
+                marginTop: self.marginTop,
+                marginBottom: self.marginBottom,
+                marginStart: self.marginStart,
+                marginEnd: self.marginEnd,
+                isAlignCenter: self.isAlignCenter,
+                spacing: self.spacing,
+                isRecycle: self.isRecycle,
+                useTracking: self.useTracking,
+                bgColor: self.bgColor,
+                onReady: {self.onReady()},
+                onMove: {pos in self.onMove(pos:pos)},
+                content: self.content)
+        }
     }//body
     
     private func onTopChange(evt:InfinityScrollEvent?){
@@ -401,6 +189,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     }
 }
 
+
 struct ScrollOffsetPreferenceKey: PreferenceKey {
     typealias Value = [CGFloat]
     static var defaultValue: [CGFloat] = [0]
@@ -408,4 +197,3 @@ struct ScrollOffsetPreferenceKey: PreferenceKey {
         value.append(contentsOf: nextValue())
     }
 }
-

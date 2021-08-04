@@ -86,7 +86,6 @@ struct PageProvider {
         guard let skimlink = skimlink else { return nil }
         if let _ = skimlink.range(of: "btvplusapp/MyPairgingManager", options: .caseInsensitive) { return .my }
         if let _ = skimlink.range(of: "btvplusapp/chargeStation", options: .caseInsensitive) { return .cashCharge }
-        
         return nil
     }
     

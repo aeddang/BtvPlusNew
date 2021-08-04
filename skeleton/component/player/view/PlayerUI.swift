@@ -128,7 +128,10 @@ struct PlayerUI: PageComponent {
                         ? CGSize(width:Dimen.icon.heavy,height:Dimen.icon.heavy)
                         : CGSize(width:Dimen.icon.heavyExtra,height:Dimen.icon.heavyExtra)
                     ){ _ in
+                        self.viewModel.isUserPlay = self.isPlaying ? false  : true
                         self.viewModel.event = .togglePlay
+                        ComponentLog.d("BtvPlayerModel isUserPlay set " + self.viewModel.isUserPlay.description  , tag: self.tag)
+                       
                     }
                     if self.isFullScreen && ( self.viewModel.playInfo != nil ) && !self.isPlaying {
                         if let limited = self.viewModel.limitedDuration {

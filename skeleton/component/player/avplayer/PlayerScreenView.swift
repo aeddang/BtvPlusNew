@@ -18,6 +18,7 @@ protocol PlayerScreenViewDelegate{
     func onPlayerCompleted()
     func onPlayerBecomeActive()
     func onPlayerVolumeChanged(_ v:Float)
+    func onPlayerBitrateChanged(_ bitrate:Double)
 }
 
 class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
@@ -185,6 +186,7 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
         center.addObserver(self, selector: #selector(playerItemDidReachEnd), name: .AVPlayerItemDidPlayToEndTime, object: nil)
         center.addObserver(self, selector: #selector(playerDidBecomeActive), name: UIApplication.didBecomeActiveNotification , object: nil)
         center.addObserver(self, selector: #selector(systemVolumeChange), name: NSNotification.Name(rawValue: Self.VOLUME_NOTIFY_KEY) , object: nil)
+        center.addObserver(self, selector: #selector(playerItemBitrateChange), name: .AVPlayerItemNewAccessLogEntry , object: nil)
     }
     
     private func destoryPlayer(){
@@ -233,6 +235,11 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
         delegate?.onPlayerVolumeChanged(volume)
     }
     
+    @objc func playerItemBitrateChange(notification: NSNotification) {
+        guard let item = notification.object as? AVPlayerItem else {return}
+        guard let bitrate = item.accessLog()?.events.last?.indicatedBitrate else {return}
+        delegate?.onPlayerBitrateChanged(bitrate)
+    }
     
     @discardableResult
     func load(_ path:String, isAutoPlay:Bool = false , initTime:Double = 0,buffer:Double = 2.0,

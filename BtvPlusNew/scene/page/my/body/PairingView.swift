@@ -256,7 +256,7 @@ struct PairingView: PageComponent{
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
             if ani {
                 self.repository.alram.updateNew()
-                self.dataProvider.requestData(q: .init(type: .getWatch(false), isOptional: true))
+                self.dataProvider.requestData(q: .init(type: .getWatch(), isOptional: true))
             }
         }
         

@@ -14,6 +14,7 @@ extension PageSynopsis {
     }
     
     func onEvent(btvPlayerEvent:BtvPlayerEvent){
+        /*
         switch btvPlayerEvent {
         case .play80 :
             self.log(type: .play80)
@@ -21,6 +22,7 @@ extension PageSynopsis {
             self.log(type: .stopAd)
         default: break
         }
+        */
     }
     
     func onEvent(event:PlayerUIEvent){
@@ -43,12 +45,14 @@ extension PageSynopsis {
         switch streamEvent {
         case .loaded:
             self.playLog(isPlay: true)
-        case .buffer:
-            self.log(type: .buffering)
+        //case .buffer:
+            //self.log(type: .buffering)
         case .stoped:
-            self.log(type: .playBase)
+            self.playLog(isPlay: false)
+            //self.log(type: .playBase)
         case .completed:
-            self.log(type: .playBase)
+            self.playLog(isPlay: false)
+            //self.log(type: .playBase)
         default: break
         }
     }
@@ -66,7 +70,6 @@ extension PageSynopsis {
         guard let model = self.synopsisModel else {
             return
         }
-        //self.synopsisPlayType
         self.synopsisData?.pId = model.curSynopsisItem?.prdPrcId
         self.synopsisData?.contentId = model.epsdRsluId
         self.synopsisData?.cpId = model.cpId ?? ""

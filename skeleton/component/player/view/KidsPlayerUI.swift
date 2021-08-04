@@ -147,7 +147,9 @@ struct KidsPlayerUI: PageComponent {
                         ? CGSize(width:DimenKids.icon.heavy,height:DimenKids.icon.heavy)
                         : CGSize(width:DimenKids.icon.medium,height:DimenKids.icon.medium)
                     ){ _ in
+                        self.viewModel.isUserPlay = self.isPlaying ? false  : true
                         self.viewModel.event = .togglePlay
+                        ComponentLog.d("BtvPlayerModel isUserPlay set " + self.viewModel.isUserPlay.description  , tag: self.tag)
                     }
                     if self.isFullScreen && ( self.viewModel.playInfo != nil ) && !self.isPlaying {
                         if let limited = self.viewModel.limitedDuration {

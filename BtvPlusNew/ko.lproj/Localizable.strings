@@ -773,6 +773,8 @@
 "synopsisDDay" = "편성 종료 D-";
 "synopsisPackageContent" = "구성 콘텐츠";
 
+"synopsisUnavailableSeriesMessage" = "지상파 콘텐츠의 경우 B tv에서만 시청 가능한 회차는 제공되지 않습니다. 지상파 월정액에 가입하시면 모든 회차를 모바일로 즐기실 수 있습니다.";
+
 /*
  PageAuth
 */

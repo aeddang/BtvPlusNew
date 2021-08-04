@@ -12,7 +12,7 @@ import Combine
 import AVKit
 import MediaPlayer
 extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, PlayerScreenViewDelegate {
-    
+
     func makeUIViewController(context: UIViewControllerRepresentableContext<CustomAVPlayerController>) -> UIViewController {
         let playerScreenView = PlayerScreenView(frame: .infinite)
         playerScreenView.mute(self.viewModel.isMute)
@@ -294,6 +294,9 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
         if viewModel.isMute {
             self.viewModel.event = .volume(v)
         }
+    }
+    func onPlayerBitrateChanged(_ bitrate: Double) {
+        self.viewModel.bitrate = bitrate
     }
 }
 

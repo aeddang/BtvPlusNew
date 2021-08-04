@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUI
 
-
 struct BtvPlayer: PageComponent{
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var sceneObserver:PageSceneObserver
@@ -173,7 +172,7 @@ struct BtvPlayer: PageComponent{
                     }else{
                         self.recoveryTime = self.viewModel.time
                     }
-                default : do{}
+                default : break
                 }
             }
             .onReceive(self.viewModel.$currentQuality){ quality in
@@ -186,6 +185,7 @@ struct BtvPlayer: PageComponent{
                     }
                 }
                 if quality == nil { return }
+                
                 let autoPlay = self.viewModel.initPlay ?? self.setup.autoPlay
                 self.viewModel.continuousTime = self.viewModel.time
                 ComponentLog.d("autoPlay " + autoPlay.description, tag: self.tag)
@@ -238,6 +238,7 @@ struct BtvPlayer: PageComponent{
             }
             .onAppear(){
                 if !Preroll.isInit { Preroll.initate() }
+                self.viewModel.isUserPlay = self.setup.autoPlay
             }
             .onDisappear(){
                 self.pagePresenter.fullScreenExit()

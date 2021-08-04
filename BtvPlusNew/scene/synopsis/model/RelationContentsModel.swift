@@ -47,10 +47,12 @@ class RelationContentsModel:ObservableObject {
     private(set) var seasons:[SeasonData] = []
     private(set) var seris:[SerisData] = []
     private(set) var playList:[PlayerListData] = []
-    private(set) var serisSortType:SerisSortType = .latest
+    private(set) var serisSortType:SerisSortType? = nil
+    private(set) var apiSortType:SerisSortType? = nil
     private(set) var relationContents:[[PosterData]] = []
     private(set) var synopsisRelationData:SynopsisRelationData? = nil
     private(set) var pageType:PageType = .btv
+    private(set) var serisTip:String? = nil
     
     @Published var selectedEpsdId:String? = nil
     
@@ -72,18 +74,25 @@ class RelationContentsModel:ObservableObject {
         self.isReady = true
         self.serisTitle = synopsis.srisTitle
         if let list = synopsis.seriesInfoList {
-            self.seris = zip(list, 0...list.count).map{data, idx in
+            let filterList = synopsis.isTrstrs && !synopsis.isPurchasedPPM ? list.filter{ $0.sale_prc_vat != 0 } : list
+            self.seris = zip(filterList, 0...filterList.count).map{data, idx in
                 SerisData(pageType: self.pageType).setData(data: data, title: self.serisTitle, idx: idx)}
-            self.playList = zip(list, 0...list.count).map{ data, idx in
+            self.playList = zip(filterList, 0...filterList.count).map{ data, idx in
                 PlayerListData().setData(data: data, title: self.serisTitle, idx: idx)}
-           
+            self.apiSortType = synopsis.isSrisCompleted ? .count : .latest
+            if list.count != filterList.count {
+                self.serisTip = String.pageText.synopsisUnavailableSeriesMessage
+            }
+            
         }
+        
         if let list = synopsis.siries {
             self.seasons = list.map{
                 let data = SynopsisData(
                     srisId: $0.sris_id,
                     searchType: EuxpNetwork.SearchType.sris.rawValue,
                     epsdId: $0.epsd_id, epsdRsluId: nil, prdPrcId: nil, kidZone: nil)
+                
                 return SeasonData(title: $0.sson_choic_nm, srisId:$0.sris_id, synopsisData: data)
             }
             self.currentSeasonIdx = self.seasons.firstIndex(where:{ $0.srisId == synopsis.srisId }) ?? -1
@@ -134,9 +143,21 @@ class RelationContentsModel:ObservableObject {
         self.createTab(tabs: tabs)
     }
     
+    func getAvailableSeris()-> SerisData? {
+        if self.seris.isEmpty {return nil}
+        return self.apiSortType == .latest ? self.seris.last :  self.seris.first
+    }
+    
+    func getCurrentSerisSortType()-> SerisSortType{
+        return self.serisSortType ?? self.apiSortType ?? .latest
+    }
+    
     func getSerisDatas(sort:SerisSortType? = nil) -> [SerisData] {
-        let sort = sort ?? self.serisSortType
-        self.serisSortType = sort
+        if sort != nil {
+            self.serisSortType = sort
+        }
+        let sort = sort ?? self.getCurrentSerisSortType()
+        
         if self.seris.isEmpty { return self.seris }
         return self.seris.sorted(by: {
             switch sort {

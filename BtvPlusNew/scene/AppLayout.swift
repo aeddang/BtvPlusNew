@@ -207,7 +207,7 @@ struct AppLayout: PageComponent{
             if self.setup.drmTestUser {
                 self.pagePresenter.openPopup(PageProvider.getPageObject(.playerTest))
             }
-            self.pagePresenter.openPopup(PageProvider.getPageObject(.pairingAppleTv))
+           //self.pagePresenter.openPopup(PageProvider.getPageObject(.pairingAppleTv))
             /*
              self.pagePresenter.changePage(PageKidsProvider
                                              .getPageObject(.kidsHome)

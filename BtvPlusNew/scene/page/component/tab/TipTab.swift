@@ -11,7 +11,9 @@ import SwiftUI
 
 
 struct TipTab: PageComponent{
+    var leadingIcon:String? = nil
     var leading:String? = nil
+    var strong:String? = nil
     var icon:String? = nil
     var trailing:String? = nil
     var isMore:Bool = false
@@ -21,17 +23,38 @@ struct TipTab: PageComponent{
     var body: some View {
         ZStack{
             HStack(alignment:.center, spacing:Dimen.margin.micro){
+                if let icon = self.leadingIcon {
+                    Image(icon).resizable()
+                        .renderingMode(.original).aspectRatio(contentMode: .fit)
+                        .frame(
+                            width: Dimen.icon.regularExtra,
+                            height:Dimen.icon.regularExtra)
+                }
                 if let leading = self.leading {
                     Text(leading)
+                        .kerning(Font.kern.thin)
                         .modifier(MediumTextStyle(size: Font.size.thin, color: self.textColor))
+                        
+                }
+                if let strong = self.strong {
+                    Text(strong)
+                        .kerning(Font.kern.thin)
+                        .modifier(MediumTextStyle(size: Font.size.thin, color: Color.brand.primary))
                 }
                 if let icon = self.icon {
                     Image(icon).resizable()
                         .renderingMode(.original).aspectRatio(contentMode: .fit)
-                        .frame(height:Dimen.icon.tinyExtra)
+                        .frame(
+                            minWidth: Dimen.icon.regularExtra,
+                            maxWidth: Dimen.icon.heavyExtra,
+                            minHeight: Dimen.icon.tinyExtra,
+                            maxHeight: Dimen.icon.regularExtra
+                        )
+                        .fixedSize()
                 }
                 if let trailing = self.trailing {
                     Text(trailing)
+                        .kerning(Font.kern.thin)
                         .modifier(MediumTextStyle(size: Font.size.thin, color: self.textColor))
                 }
                 if self.isMore {

@@ -17,6 +17,8 @@ struct PageCashCharge: PageView {
     @ObservedObject var viewModel:BuzzViewModel = BuzzViewModel()
     @State var title:String? = nil
     @State var webViewHeight:CGFloat = 0
+    @State var isBuzzReady = false
+    @State var isUiReady = false
     var body: some View {
         GeometryReader { geometry in
         
@@ -24,13 +26,16 @@ struct PageCashCharge: PageView {
                 viewModel:self.pageDragingModel,
                 axis:.horizontal
             ) {
-                BuzzView(
-                    viewModel:self.viewModel
-                )
-                .modifier(PageFull())
-                
+                if self.isUiReady{
+                    BuzzView(
+                        viewModel:self.viewModel
+                    )
+                    .modifier(PageFull(style:.white))
+                } else {
+                    Spacer().modifier(MatchParent())
+                        .modifier(PageFull(style:.white))
+                }
             }//draging
-            
             .onReceive(self.viewModel.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
@@ -48,9 +53,22 @@ struct PageCashCharge: PageView {
                 }
                 
             }
+            .onReceive(self.pageObservable.$isAnimationComplete) { ani in
+                if ani {
+                    withAnimation{
+                        self.isUiReady = true
+                    }
+                }
+            }
             .onAppear{
                 Buzz.initate()
-                Buzz().initate(pairing: self.pairing)
+                //self.appSceneObserver.isApiLoading = true
+                Buzz().initate(pairing: self.pairing){
+                    //self.appSceneObserver.isApiLoading = false
+                    withAnimation{
+                        self.isBuzzReady = true
+                    }
+                }
             }
             .onDisappear{
                 Buzz().destory()

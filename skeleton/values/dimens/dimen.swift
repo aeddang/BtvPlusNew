@@ -100,6 +100,7 @@ struct Dimen{
     
     struct line {
         public static let heavy:CGFloat = isPad ? 24 : 22 //*
+        public static let heavyExtra:CGFloat = isPad ? 19 : 12 //*
         public static let medium:CGFloat = isPad ? 4 : 3 //*
         public static let regular:CGFloat = isPad ? 3 : 2 //*
         public static let light:CGFloat = 1 //*

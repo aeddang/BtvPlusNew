@@ -40,6 +40,8 @@ extension PageID{
     static let pairingEmptyDevice:PageID = "pairingEmptyDevice"
     static let pairingGuide:PageID = "pairingGuide"
     static let pairingAppleTv:PageID = "pairingAppleTv"
+    static let pairingFamilyInvite:PageID = "pairingFamilyInvite"
+  
     static let purchase:PageID = "purchase"
     static let multiBlock:PageID = "multiBlock"
     static let categoryList:PageID = "categoryList"
@@ -67,6 +69,7 @@ extension PageID{
     static let cashChargePrivacyAndAgree:PageID = "cashChargePrivacyAndAgree"
     static let recommand:PageID = "recommand"
     static let recommandReceive:PageID = "recommandReceive"
+    static let snsShare:PageID = "snsShare"
 }
 
 struct PageProvider {
@@ -84,8 +87,13 @@ struct PageProvider {
     
     static func getPageId(skimlink:String?)-> PageID? {
         guard let skimlink = skimlink else { return nil }
-        if let _ = skimlink.range(of: "btvplusapp/MyPairgingManager", options: .caseInsensitive) { return .my }
+        if let _ = skimlink.range(of: "btvplusapp/MyPairgingManager", options: .caseInsensitive) { return .pairingManagement }
+        if let _ = skimlink.range(of: "btvplusapp/Pairing", options: .caseInsensitive) { return .pairing }
+        if let _ = skimlink.range(of: "btvplusapp/PairingManager", options: .caseInsensitive) { return .pairingManagement }
+        if let _ = skimlink.range(of: "btvplusapp/Settings", options: .caseInsensitive) { return .my }
         if let _ = skimlink.range(of: "btvplusapp/chargeStation", options: .caseInsensitive) { return .cashCharge }
+        if let _ = skimlink.range(of: "btvplusapp/FamilyInvite", options: .caseInsensitive) { return .snsShare }
+
         return nil
     }
     
@@ -100,7 +108,7 @@ struct PageProvider {
         switch pageID {
         case .home, .category,
              .pairingSetupUser, .pairingBtv,
-             .pairingDevice, .pairingUser, .pairingManagement, .pairingEmptyDevice, .pairingGuide, .pairingAppleTv,
+             .pairingDevice, .pairingUser, .pairingManagement, .pairingEmptyDevice, .pairingGuide,
              .purchase , .webview, .schedule, .modifyProile,
              .adultCertification, .userCertification, .terminateStb,
              .watchHabit, .myPurchaseTicketList, .remotecon, .playerTest,
@@ -109,7 +117,7 @@ struct PageProvider {
         case .fullPlayer, .synopsisPlayer :
             return .none
         case .confirmNumber, .privacyAndAgree, .cashChargeGuide, .cashChargePrivacyAndAgree,
-             .recommand, .recommandReceive:
+             .recommand, .recommandReceive, .snsShare, .pairingAppleTv, .pairingFamilyInvite:
             return .opacity
         default : return  .horizontal
         }
@@ -176,7 +184,8 @@ struct PageFactory{
         case .pairingManagement : return PagePairingManagement()
         case .pairingEmptyDevice : return PagePairingEmptyDevice()
         case .pairingGuide : return PagePairingGuide()
-        case .pairingAppleTv : return PagePagePairingAppleTv()
+        case .pairingAppleTv : return PagePairingAppleTv() 
+        case .pairingFamilyInvite : return PagePairingFamilyInvite()
         case .purchase : return PagePurchase()
         case .multiBlock : return PageMultiBlock()
         case .categoryList : return PageCategoryList()
@@ -203,6 +212,7 @@ struct PageFactory{
         case .cashChargePrivacyAndAgree : return PageCashChargePrivacyAndAgree()
         case .recommand : return PageRecommand()
         case .recommandReceive : return PageRecommandReceive()
+        case .snsShare : return PageSnsShare()
         default : return PageTest()
         }
     }

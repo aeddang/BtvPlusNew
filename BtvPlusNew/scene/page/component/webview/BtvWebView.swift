@@ -54,7 +54,6 @@ extension BtvWebView {
 
 
 struct BtvWebView: PageComponent {
-    
     @ObservedObject var viewModel:WebViewModel = WebViewModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @State private var isLoading:Bool = false
@@ -83,8 +82,10 @@ struct BtvWebView: PageComponent {
 
 struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
     @EnvironmentObject var repository:Repository
+    @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var pairing:Pairing
     @ObservedObject var viewModel:WebViewModel
     var useNativeScroll:Bool = true
     var path: String = ""
@@ -221,18 +222,103 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                 PageProvider.getPageObject(synopsisType == .package ? .synopsisPackage : .synopsis)
                     .addParam(key: .data, value: SynopsisQurry(srisId: srisId, epsdId: epsdId))
             )
-        case "menu": break
-            //menu(param: param)
-        case "event": break
-            //event(param: param)
-        case "point": break
-            //point(param: p aram)
-        case "coupon": break
-            //coupon(param: param)
-        case "bpoint": break
-            //bpoint(param: param)
-        case "family_invite":  break
-            //family_invite(param: param)
+        case "menu":
+            guard let menus = param?.first(where: {$0.name == "menus"})?.value else {return}
+            if menus.isEmpty {return}
+            let menuA = menus.split(separator: "/")
+            if menuA.isEmpty {return}
+            let gnbTypCd:String = String(menuA[0])
+            let menuOpenId:String? =
+                menuA.count > 1 ? menuA[1..<menuA.count].reduce("", {$0 + "|" + $1}) : nil
+            
+            let page:PageID = gnbTypCd.hasPrefix(EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue)
+                ? .category : .home
+            let band = self.dataProvider.bands.getData(gnbTypCd: gnbTypCd)
+            self.pagePresenter.changePage(PageProvider
+                                            .getPageObject(page)
+                                            .addParam(key: .id, value: band?.menuId)
+                                            .addParam(key: .subId, value: menuOpenId)
+            )
+            
+        case "event":
+             if let menuOpenId = param?.first(where: {$0.name == "menu_id"})?.value {
+                let band = self.dataProvider.bands.getData(gnbTypCd: EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue)
+                self.pagePresenter.openPopup(
+                    PageProvider
+                        .getPageObject(.category)
+                        .addParam(key: .id, value: band?.menuId)
+                        .addParam(key: .subId, value: menuOpenId)
+                )
+             } else if let callUrl = param?.first(where: {$0.name == "event_url"})?.value {
+                let data = BannerData().setData(callUrl: callUrl)
+                if let move = data.move {
+                    switch move {
+                    case .home, .category:
+                        if let gnbTypCd = data.moveData?[PageParam.id] as? String {
+                            if let band = dataProvider.bands.getData(gnbTypCd: gnbTypCd) {
+                                self.pagePresenter.changePage(
+                                    PageProvider
+                                        .getPageObject(move)
+                                        .addParam(params: data.moveData)
+                                        .addParam(key: .id, value: band.menuId)
+                                        .addParam(key: UUID().uuidString , value: "")
+                                )
+                            }
+                        }
+                        
+                    default :
+                        let pageObj = PageProvider.getPageObject(move)
+                        pageObj.params = data.moveData
+                        self.pagePresenter.openPopup(pageObj)
+                    }
+                }
+                else if let link = data.outLink {
+                    AppUtil.openURL(link)
+                }
+                else if let link = data.inLink {
+                    self.pagePresenter.openPopup(
+                        PageProvider
+                            .getPageObject(.webview)
+                            .addParam(key: .data, value: link)
+                            .addParam(key: .title , value: data.title)
+                    )
+                }
+             }
+            
+            
+        case "point", "coupon", "bpoint":
+            if self.pairing.status != .pairing {
+                self.appSceneObserver.alert = .needPairing()
+                return
+            }
+            let num:String? = param?.first(where: {$0.name == "extra"})?.value
+            let menuType:PageMyBenefits.MenuType = PageMyBenefits.getType(path)
+            self.pagePresenter.openPopup(
+                PageProvider.getPageObject(.myBenefits)
+                    .addParam(key: .id, value: menuType.rawValue)
+            )
+           
+            self.pagePresenter.openPopup(
+                PageProvider.getPageObject(.confirmNumber)
+                    .addParam(key: .type, value: menuType)
+                    .addParam(key: .data, value: num)
+                    
+            )
+       
+        case "family_invite":
+            if self.pairing.status != .pairing {
+                self.appSceneObserver.alert = .needPairing()
+                return
+            }
+            guard let token:String = param?.first(where: {$0.name == "pairing_token"})?.value else {return}
+            let name:String? = param?.first(where: {$0.name == "nickname"})?.value
+            self.pagePresenter.openPopup(
+                PageProvider
+                    .getPageObject(.pairingFamilyInvite)
+                    .addParam(key: .id, value: token)
+                    .addParam(key: .title , value: name)
+            )
+            
         default: break
         }
         

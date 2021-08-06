@@ -207,8 +207,18 @@ struct AppLayout: PageComponent{
             if self.setup.drmTestUser {
                 self.pagePresenter.openPopup(PageProvider.getPageObject(.playerTest))
             }
-           //self.pagePresenter.openPopup(PageProvider.getPageObject(.pairingAppleTv))
+            //self.pagePresenter.openPopup(PageProvider.getPageObject(.pairingAppleTv))
+            
+            
+            //http://mobilebtv.com:8080/view/v3.0/applink?type=family_invite&pairing_token=ba68a74dd9644a608cabaae0f36c91c6&nickname=%ED%98%B8
+            //type=family_invite&pairing_token=21ed8a3bb05a42d9a2c66f1336a277b4&nickname=%E3%85%87%E3%85%87
             /*
+             
+             self.pagePresenter.openPopup(PageProvider.getPageObject(.pairingFamilyInvite)
+                                             .addParam(key: .title, value: "ㅓㅓ")
+                                             .addParam(key: .id, value: "ba68a74dd9644a608cabaae0f36c91c6")
+             )
+             
              self.pagePresenter.changePage(PageKidsProvider
                                              .getPageObject(.kidsHome)
                                              //.addParam(key: .id, value: "NM2000030726")

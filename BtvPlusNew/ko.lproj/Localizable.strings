@@ -80,6 +80,8 @@
 "sris" = "회차";
 "corner" = "코너";
 "people" = "인물";
+"liveTv" = "실시간 TV";
+"event" = "이벤트";
 
 "ticket" = "월정액";
 "coupon" = "쿠폰";
@@ -583,6 +585,20 @@
 "PagePairingAppletvText2" = "아래 확인 버튼을 누르시면 바로\n모바일 B tv를 이용하실 수 있습니다.";
 
 /*
+ PagePairingInvite
+*/
+"PagePairingFamilyInviteText1" = "님의\n초대를 받으셨네요!";
+"PagePairingFamilyInviteText2" = "아래 확인 버튼을 누르시면 바로\n모바일 B tv를 이용하실 수 있습니다.";
+"PagePairingFamilyInviteError" = "B tv 연결에 실패하였습니다.\n계속 연결 불가한 경우\n고객센터(국번 없이 106)로\n문의해 주세요.";
+"PagePairingFamilyInviteErrorHost" = "초대자가 B tv 연결을 해제하여\nB tv 연결을 완료하실 수 없습니다.\n다시 초대를 요청하시거나\n모바일 B tv에서 직접 B tv를\n연결하실 수 있습니다.";
+"PagePairingFamilyInviteErrorAlreadyPairing" = "초대받은 B tv에\n이미 연결 중입니다.";
+"PagePairingFamilyInviteErrorAnotherPairing" = "다른 B tv에 연결 중에는\n초대받은 B tv 연결을\n완료하실 수 없습니다.";
+"PagePairingFamilyInviteErrorAnotherPairingSub" = "연결된 B tv를 연결 해제하고\n다시 시도해 주세요.";
+
+"PagePairingFamilyInviteErrorExpired" = "초대받은 링크의\n유효 시간이 초과되었습니다.\n다시 초대를 요청하시거나\n모바일 B tv에서 직접 B tv를\n연결하실 수 있습니다.";
+
+
+/*
  PageMy
 */
 "myText1" = "모바일 B tv 서비스를 이용하려면\nB tv 연결이 필요합니다.";
@@ -899,10 +915,20 @@
 "monthlyTextRecommand" = "고객님을 위한 콘텐츠가 가득! 지금, 월정액에 가입해 보세요.";
 "monthlyTextEnjoy" = "아래의 모든 콘텐츠를 마음껏 즐겨보세요!.";
 
+"monthlyTextKidsLeading" = "아이를 위한";
+"monthlyTextKidsTrailing" = "키즈 화면에서 콘텐츠를 시청해 보세요!";
+
+"monthlyTextFirstFreeStrong" = "첫 달 무료!";
+"monthlyTextFirstFreeTrailing" = "지금 월정액에 가입하고 마음껏 즐기세요.";
+
 "monthlyOceanPhaseLeading" = "매주 최신 영화가 쏟아지는";
 "monthlyOceanPhaseTrailing" = "에 가입해 보세요!";
 "monthlyOceanAuth" = "이용중!  아래의 콘텐츠를 즐겨보세요.";
 "monthlyOceanPeriodAuth" = "OCEAN 주말패스 이용중!  아래의 콘텐츠를 즐겨보세요.";
+"monthlyOceanFirstFreeLeading" = "첫 달 무료! 지금";
+"monthlyOceanFirstFreeTrailing" = "에 가입하고 마음껏 즐기세요.";
+
+
 
 /*
  Footer
@@ -954,8 +980,13 @@
 "shareComplete" = "공유 완료 되었습니다.";
 "shareFail" = "공유 실패 하였습니다. 다시 시도해 주세요.";
 
-"shareSynopsisRecommand" = "친구가 모바일 B tv에서 작품을 추천했어요!\n추천 작품을 지금 할인된 금액으로 시청해 보세요! (24시간 후 만료)";
+"shareFamilyInvite" = "우리 가족 B tv 연결 초대하기\n\n
+모바일 B tv에 초대합니다.\n
+▶ 모바일 B tv 앱이 설치되어 있다면 위 링크를 누르시고 바로 이용해보세요.\n\n
+▶ 아직 앱이 설치되어 있지 않다면, 위 링크를 눌러 앱을 설치한 후 다시 이 링크를 눌러 이용하실 수 있습니다.\n\n
+※ B tv 연결은 링크가 유효한 30분 안에 완료해야 합니다.";
 
+"shareSynopsisRecommand" = "친구가 모바일 B tv에서 작품을 추천했어요!\n추천 작품을 지금 할인된 금액으로 시청해 보세요! (24시간 후 만료)";
 "shareSynopsisRecommandBenefitText1" = "내가 본 작품을\n친구에게 추천하고";
 "shareSynopsisRecommandBenefitText2" = "친구도 나도 혜택 받고!";
 "shareSynopsisRecommandBenefitText3" = "추천한 작품을 친구가 구매하면 B포인트가 쌓이고,\nB포인트로 다른 작품을 할인 받을 수 있어요.";

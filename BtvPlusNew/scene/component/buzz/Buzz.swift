@@ -8,12 +8,13 @@
 import Foundation
 import BuzzAdBenefit
 
-class Buzz {
+class Buzz{
     static let BAB_SDK_KR_iOS_DEV_APP_ID: String = "126955102496938"
     static let BAB_SDK_KR_iOS_DEV_UNIT_ID: String = "266121639746153"
     static let BAB_SDK_KR_iOS_PRD_APP_ID: String = "42532489130817"
     static let BAB_SDK_KR_iOS_PRD_UNIT_ID: String = "374217246352253"
     private static var isInit = false
+    var completed: (() -> Void)? = nil
     static func initate(){
         if isInit {return}
         isInit = true
@@ -22,7 +23,8 @@ class Buzz {
         BuzzAdBenefit.initialize(with: config)
     }
     
-    func initate(pairing:Pairing){
+    func initate(pairing:Pairing, completed: (() -> Void)? = nil){
+        self.completed = completed
         let yyyy = pairing.user?.birth.subString(start: 0, len: 4) ?? "0000"
         let userProfile = BABUserProfile(
             userId:pairing.stbId ?? "",
@@ -42,11 +44,12 @@ class Buzz {
         NotificationCenter.default.removeObserver(self)
         BuzzAdBenefit.setUserProfile(nil)
         BuzzAdBenefit.setUserPreference(nil)
+        self.completed = nil
     }
     
     @objc private func loadBABAd() {
         
-        
+        self.completed?()
     }
 }
 

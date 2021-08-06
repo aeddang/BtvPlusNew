@@ -19,7 +19,7 @@ struct InputBox: PageComponent {
         var text:String? = nil
         var inputSize:Int? = nil
     }
-
+    @Binding var input:String 
     var isFocus:Bool = false
     var isInit:Bool = false
     var title:String? = nil
@@ -34,7 +34,7 @@ struct InputBox: PageComponent {
     var radios: [InputBox.Data]? = nil
     var size:CGFloat = SystemEnvironment.isTablet ? 346 : 265
     var action: ((_ input:String?, _ idx:Int?) -> Void)
-    @State var input:String = ""
+    
     @State var selectedText:String? = nil
     @State var selectedIdx:Int? = nil
     @State var selectedInputSize:Int? = nil
@@ -197,6 +197,7 @@ struct InputBox_Previews: PreviewProvider {
     static var previews: some View {
         ZStack{
             InputBox(
+                input: .constant("test"),
                 title: String.alert.watchLv,
                 text: String.alert.watchLvInput,
                 tip: String.alert.incorrectNumberOfCharacter

@@ -48,10 +48,11 @@ struct PageConfirmNumber: PageView {
     @State var safeAreaBottom:CGFloat = Dimen.app.keyboard
     @State var isFocus:Bool = false
     @State var isSecure:Bool = false
-    
+    @State var input:String = ""
     var body: some View {
         ZStack{
             InputBox(
+                input: self.$input,
                 isFocus:self.isFocus,
                 isInit:self.isFocus,
                 title: self.title,
@@ -189,6 +190,9 @@ struct PageConfirmNumber: PageView {
                 case .cash:
                     self.title = String.pageText.myBenefitsCashRegist
                     self.text = String.pageText.myBenefitsCashInput
+                }
+                if let input = obj.getParamValue(key: .data) as? String {
+                    self.input = input
                 }
                 self.inputSize = 16
                 self.placeHolder = String.pageText.myBenefitsNumberTip

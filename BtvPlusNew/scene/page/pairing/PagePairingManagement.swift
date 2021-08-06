@@ -92,7 +92,8 @@ struct PagePairingManagement: PageView {
                             text: String.pageText.myinviteFammly
                         ){_ in
                             self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(.pairing)
+                                PageProvider.getPageObject(.snsShare)
+                                    .addParam(key: .type, value: PageSnsShare.ShareType.familyInvite)
                             )
                         }
                         .padding(.top, Dimen.margin.light)

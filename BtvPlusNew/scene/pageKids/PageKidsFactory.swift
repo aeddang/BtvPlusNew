@@ -64,7 +64,7 @@ struct PageKidsProvider {
     
     static func getType(_ pageID:PageID)-> PageAnimationType{
         switch pageID {
-        case .registKid, .selectKidCharacter, .kidsConfirmNumber, .tabInfo, .detailInfo:
+        case .kidsIntro, .registKid, .selectKidCharacter, .kidsConfirmNumber, .tabInfo, .detailInfo:
             return  .opacity
        
         default : return  .horizontal

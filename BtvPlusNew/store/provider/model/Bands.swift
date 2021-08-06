@@ -53,7 +53,7 @@ class Bands:ObservableObject, PageProtocol {
     
     func getData(gnbTypCd:String)-> Band? {
         guard let band = self.datas.first(
-                where: { $0.gnbTypCd == gnbTypCd }) else { return nil }
+                where: { $0.gnbTypCd.subString(start: 0, len: 5) == gnbTypCd.subString(start: 0, len: 5) }) else { return nil }
         return band
     }
     

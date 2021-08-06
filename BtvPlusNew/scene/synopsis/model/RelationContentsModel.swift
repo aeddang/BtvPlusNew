@@ -53,6 +53,7 @@ class RelationContentsModel:ObservableObject {
     private(set) var synopsisRelationData:SynopsisRelationData? = nil
     private(set) var pageType:PageType = .btv
     private(set) var serisTip:String? = nil
+    private(set) var unavailableSeris:Bool = false
     
     @Published var selectedEpsdId:String? = nil
     
@@ -66,11 +67,12 @@ class RelationContentsModel:ObservableObject {
             self.serisTitle = nil
             self.isReady = false
         }
+        self.unavailableSeris = false
         self.pageType = pageType
     }
     
     func setData(synopsis:SynopsisModel) {
-        
+        self.unavailableSeris = false
         self.isReady = true
         self.serisTitle = synopsis.srisTitle
         if let list = synopsis.seriesInfoList {
@@ -83,7 +85,9 @@ class RelationContentsModel:ObservableObject {
             if list.count != filterList.count {
                 self.serisTip = String.pageText.synopsisUnavailableSeriesMessage
             }
-            
+            if !self.seris.isEmpty && self.seris.first(where: {$0.epsdId == synopsis.epsdId}) == nil {
+                self.unavailableSeris = true
+            }
         }
         
         if let list = synopsis.siries {

@@ -360,13 +360,22 @@ struct MultiBlockCell:PageComponent {
                 )
             .frame(height:data.listHeight)
             
+        case .tv :
+            TvBlock(
+                pageObservable:self.pageObservable,
+                pageDragingModel:self.pageDragingModel,
+                data: data,
+                useTracking:self.useTracking
+            )
+            .frame(height:data.listHeight)
+            
         case .banner :
             BannerBlock(
                 pageObservable:self.pageObservable,
                 data: data
             )
             .frame(height:data.listHeight)
-            
+        
         case .bannerList :
             BannerListBlock(
                 pageObservable:self.pageObservable,

@@ -37,10 +37,11 @@ class BlockData:InfinityData, ObservableObject{
     var themas:[ThemaData]? = nil
     var tickets:[TicketData]? = nil
     var banners:[BannerData]? = nil
+    var tvs:[TvData]? = nil
     var listHeight:CGFloat? = nil
     var allPosters:[PosterData]? = nil
     var allVideos:[VideoData]? = nil
-   
+    var allTvs:[TvData]? = nil
     
     public static func == (l:BlockData, r:BlockData)-> Bool {
         return l.id == r.id
@@ -155,6 +156,17 @@ class BlockData:InfinityData, ObservableObject{
         return self
     }
     
+    func setData(title:String, datas:[TvData], max:Int = 10) -> BlockData{
+        name = title
+        uiType = .tv
+        self.allTvs = datas
+        let len = min(datas.count, max)
+        self.tvs = datas.isEmpty ? datas : datas[0..<len].map{$0}
+        self.listHeight = (self.tvs?.first?.type.size.height ?? 0) + MultiBlockBody.tabHeight
+        self.subName = datas.count.description
+        return self
+    }
+    
     func setData(title:String, datas:[CategoryCornerItem], max:Int = 10) -> BlockData{
         name = title
         uiType = .video
@@ -178,6 +190,7 @@ class BlockData:InfinityData, ObservableObject{
         }
         return self
     }
+    
             
     func setData(_ data:BlockItem, themaType:ThemaType = .category) -> BlockData{
         name = data.menu_nm ?? ""
@@ -434,6 +447,7 @@ class BlockData:InfinityData, ObservableObject{
         theme,
         ticket,
         banner,
+        tv,
         bannerList,
         kidsHome,
         kidsTicket

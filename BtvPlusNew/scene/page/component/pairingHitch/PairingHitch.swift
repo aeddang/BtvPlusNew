@@ -318,10 +318,8 @@ struct PairingHitch: PageComponent {
     }
     
     private func selectePairingDevice(stb:StbData){
-        self.pairing.user = User(
-            nickName: "0000", characterIdx:0, gender: .mail, birth: "2000",
-            isAgree1: true, isAgree2: true, isAgree3: self.isAgreeOption
-        )
+        self.pairing.user = User().setDefault(isAgree: self.isAgreeOption)
+            
         self.selectedDevice = stb
         self.pairing.requestPairing(.device(stb))
     }

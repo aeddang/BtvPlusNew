@@ -56,12 +56,15 @@ struct PageKidsHome: PageView {
                 }
             }
             .onReceive(self.pairing.$kid){ kid in
-                self.reload()
                 if kid != nil {
                     if self.pairing.kidStudyData == nil {
                         self.pairing.requestPairing(.updateKidStudy)
                     }
                 }
+                
+                if !self.isUiInit { return }
+                self.reload()
+                
             }
             .onReceive(self.pairing.$event){evt in
                 guard let evt = evt else {return}
@@ -93,6 +96,7 @@ struct PageKidsHome: PageView {
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
                 if ani {
+                    self.isUiInit = true
                     self.reload()
                 }
             }
@@ -100,6 +104,7 @@ struct PageKidsHome: PageView {
                 if let obj = self.pageObject {
                     self.menuId = (obj.getParamValue(key: .id) as? String) ?? self.menuId
                     self.openId = obj.getParamValue(key: .subId) as? String
+                    self.openPage = obj.getParamValue(key: .data) as? PageObject
                 }
                 if self.menuId.isEmpty {
                     self.menuId = self.dataProvider.bands.kidsGnbModel.home?.menuId ?? ""
@@ -110,21 +115,29 @@ struct PageKidsHome: PageView {
             }
         }//geo
     }//body
-    
+    @State var isUiInit:Bool = false
     @State var menuId:String = ""
     @State var openId:String? = nil
+    @State var openPage:PageObject? = nil
     private func reload(){
         if self.pagePresenter.currentTopPage?.pageID == PageID.kidsHome {
             self.appSceneObserver.useGnb = true
         }
-        guard let blockData = self.dataProvider.bands.kidsGnbModel.getGnbData(menuId: self.menuId) else { return }
+        guard let blockData = self.dataProvider.bands.kidsGnbModel.getGnbData(menuId: self.menuId) else {
+            self.menuId = self.dataProvider.bands.kidsGnbModel.home?.menuId ?? ""
+            if !self.menuId.isEmpty { self.reload() }
+            return
+        }
         let isHome  = self.menuId == EuxpNetwork.MenuTypeCode.MENU_KIDS_HOME.rawValue
         if isHome {
             self.viewModel.updateKids(datas: blockData.blocks ?? [] , openId: self.openId)
         } else {
             self.viewModel.updateKids(data: blockData , openId: self.openId)
         }
-        
+        if let pop = self.openPage {
+            self.pagePresenter.openPopup(pop)
+            self.openPage = nil
+        }
     }
 
     //Block init

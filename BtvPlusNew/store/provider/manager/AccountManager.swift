@@ -21,7 +21,15 @@ class AccountManager : PageProtocol{
     
     var requestDevice:StbData? = nil
     var requestAuthcode:String? = nil
+    var requestToken:String? = nil
     var requestKid:Kid? = nil
+    
+    private func resetRequest(){
+        requestDevice = nil
+        requestAuthcode = nil
+        requestToken = nil
+    }
+    
     func setupPairing(savedUser:User? = nil){
         
         self.pairing.$request.sink(receiveValue: { req in
@@ -47,10 +55,13 @@ class AccountManager : PageProtocol{
             case .device(let device) :
                 self.requestDevice = device
                 self.dataProvider.requestData(q: .init(type: .postDevicePairing(self.pairing.user, device), isOptional: true))
-                
+            
             case .auth(let code) :
                 self.requestAuthcode = code
                 self.dataProvider.requestData(q: .init(type: .postAuthPairing(self.pairing.user, code), isOptional: true))
+            case .token(let token) :
+                self.requestToken = token
+                self.dataProvider.requestData(q: .init(type: .postPairingByToken(self.pairing.user, pairingToken: token), isOptional: true))
                 
             case .hostInfo(let auth, let device, let prevResult) :
                 self.dataProvider.requestData(q: .init(type: .getDevicePairingInfo(auth, device, prevResult:prevResult),  isOptional: true))
@@ -122,8 +133,12 @@ class AccountManager : PageProtocol{
                 self.dataProvider.requestData(q: .init(type: .getHostDeviceInfo, isOptional: true))
                 if let user = self.pairing.user {
                     self.dataProvider.requestData(q: .init(type: .postGuestInfo(user), isOptional: true))
-                    if user.postAgreement { self.dataProvider.requestData(q: .init(type: .postGuestAgreement(user), isOptional: true)) }
-                    else { self.dataProvider.requestData(q: .init(type: .getGuestAgreement, isOptional: true)) }
+                    if user.postAgreement {
+                        self.dataProvider.requestData(q: .init(type: .postGuestAgreement(user), isOptional: true))
+                    }
+                    else {
+                        self.dataProvider.requestData(q: .init(type: .getGuestAgreement, isOptional: true))
+                    }
                 }else{
                     if savedUser == nil {
                         self.pairing.syncError()
@@ -165,7 +180,7 @@ class AccountManager : PageProtocol{
             case .postUnPairing :
                 if !self.checkConnectHeader(res) { return }
                 
-            case .postAuthPairing, .postDevicePairing :
+            case .postAuthPairing, .postDevicePairing, .postPairingByToken :
                 if !self.checkConnectHeader(res) { return }
     
             case .rePairing :
@@ -179,6 +194,9 @@ class AccountManager : PageProtocol{
                 }
                 if let device = self.requestDevice {
                     self.dataProvider.requestData(q: .init(type: .postDevicePairing(user , device), isOptional: true))
+                }
+                if let token = self.requestToken {
+                    self.dataProvider.requestData(q: .init(type: .postPairingByToken(user, pairingToken: token), isOptional: true))
                 }
                 
             case .getHostDeviceInfo :
@@ -279,7 +297,7 @@ class AccountManager : PageProtocol{
         apiManager.$error.sink(receiveValue: { err in
             guard let err = err else { return }
             switch err.type {
-            case .postUnPairing, .postAuthPairing, .postDevicePairing, .rePairing : self.pairing.connectError()
+            case .postUnPairing, .postAuthPairing, .postDevicePairing, .rePairing, .postPairingByToken : self.pairing.connectError()
             case .getDevicePairingInfo(_, _, let prevResult) : self.pairing.connectError(header: prevResult)
             case .getHostDeviceInfo, .postGuestInfo, .postGuestAgreement, .getGuestAgreement: self.pairing.syncError()
             case .getDevicePairingStatus : self.pairing.checkCompleted(isSuccess: false)
@@ -332,6 +350,7 @@ class AccountManager : PageProtocol{
         }
         if resultCode != NpsNetwork.resultCode.success.code {
             self.pairing.connectError(header: data.header)
+            self.resetRequest()
             return false
         }
         return true

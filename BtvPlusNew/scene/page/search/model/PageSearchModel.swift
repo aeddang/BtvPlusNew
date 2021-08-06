@@ -112,6 +112,11 @@ class PageSearchModel :ObservableObject, PageProtocol {
             let block = BlockData().setData(title: String.app.people, datas: allPosters)
             blocks.append(block)
         }
+        if let datas = result.results_tv {
+            let allTvs:[TvData] = datas.map{ TvData().setData(data: $0)}
+            let block = BlockData().setData(title: String.app.liveTv, datas: allTvs) 
+            blocks.append(block)
+        }
         return blocks
     }
     

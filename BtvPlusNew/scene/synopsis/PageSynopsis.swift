@@ -815,6 +815,11 @@ struct PageSynopsis: PageView {
     
     private func setupRelationContent (_ data:RelationContents?){
         self.relationContentsModel.setData(data: data)
+        if self.relationContentsModel.unavailableSeris,
+           let epsdId = self.relationContentsModel.getAvailableSeris()?.epsdId {
+            self.changeVod( epsdId: epsdId)
+            return
+        }
         self.setupRelationContentCompleted ()
     }
     
@@ -973,7 +978,6 @@ struct PageSynopsis: PageView {
     func changeVod(synopsisData:SynopsisData?){
         guard let synopsisData = synopsisData else { return }
         self.synopsisData = synopsisData
-        // 여기서 체크
         self.resetPage(isAllReset: true)
     }
     

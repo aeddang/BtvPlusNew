@@ -59,6 +59,18 @@ class User {
         self.isAgree3 = isAgree
     }
     
+    func setDefault(isAgree:Bool) -> User{
+        nickName = "0000"
+        characterIdx = 0
+        gender = .mail
+        birth = "2000"
+        isAgree1 = true
+        isAgree2 = true
+        self.isAgree3 = isAgree
+        self.postAgreement = true
+        return self
+    }
+    
     func clone() -> User{
         return User(nickName: self.nickName, characterIdx: self.characterIdx, gender: self.gender, birth: self.birth,
                     isAgree1: self.isAgree1, isAgree2: self.isAgree2, isAgree3: self.isAgree3)

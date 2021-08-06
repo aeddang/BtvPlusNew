@@ -32,10 +32,8 @@ enum BannerType {
             }
         }
     }
-    
-   
-    
 }
+
 
 class BannerData:InfinityData, PageProtocol{
     private(set) var image: String = Asset.noImgBanner
@@ -61,6 +59,11 @@ class BannerData:InfinityData, PageProtocol{
         image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: ListItemKids.banner.type01)  ?? image
         title = data.menu_nm
         parseAction(data: data)
+        return self
+    }
+    
+    func setData(callUrl:String) -> BannerData {
+        self.parseAction(callUrl: callUrl)
         return self
     }
     
@@ -120,28 +123,31 @@ class BannerData:InfinityData, PageProtocol{
         self.type = .cell(CGSize(width: width, height: height), padding)
         return self
     }
-
+    private func parseAction(callUrl:String){
+        var url = callUrl
+        if let range = callUrl.range(of: "outlink:", options: .caseInsensitive) {
+            url.removeSubrange(range)
+            self.outLink = url
+        }
+        if let range = callUrl.range(of: "inlink:", options: .caseInsensitive) {
+            url.removeSubrange(range)
+            if url.hasPrefix("http://") ||  url.hasPrefix("https://") {
+                self.inLink = url
+                return
+            }
+            
+            self.move = PageProvider.getPageId(skimlink: url)
+            if self.move == nil {
+                DataLog.d("unknown link " + url, tag:self.tag)
+            }
+        }
+    }
     private func parseAction(data:EventBannerItem){
         guard let callTypeCd = data.call_typ_cd else { return }
         guard let callUrl = data.call_url else { return }
         switch callTypeCd {
         case "2":
-            var url = callUrl
-            if let range = callUrl.range(of: "outlink:", options: .caseInsensitive) {
-                url.removeSubrange(range)
-                self.outLink = url
-            }
-            if let range = callUrl.range(of: "inlink:", options: .caseInsensitive) {
-                url.removeSubrange(range)
-                if url.hasPrefix("http://") ||  url.hasPrefix("https://") {
-                    self.inLink = url
-                    return
-                }
-                self.move = PageProvider.getPageId(skimlink: url)
-                if self.move == nil {
-                    DataLog.d("unknown link " + url, tag:self.tag)
-                }
-            }
+            self.parseAction(callUrl: callUrl)
         case "501":
             let arrParam = callUrl.components(separatedBy: "/")
             if arrParam.count > 0 {

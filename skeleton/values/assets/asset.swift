@@ -162,6 +162,8 @@ extension Asset{
         public static let ticketPeriod = "tagMySubscribe02"
         public static let represent = "tagMyRepresent"
         public static let logoOcean = "logoOcean"
+        public static let logoZem = "icZem"
+        public static let firstFree = "icFree"
         
         public static let noticeAd = "icNoticeAdNor"
         public static let noticeCoupon = "icNoticeCouponNor"
@@ -177,7 +179,7 @@ extension Asset{
         public static let stb = "icPopupPairingDefault"
         public static let recommendPoint = "icMyRecommendPoint"
         public static let addCard = "btnMyAddCard"
-        
+        public static let searchOnlyBtv = "icTagSearchOnlybtv"
     }
     
     

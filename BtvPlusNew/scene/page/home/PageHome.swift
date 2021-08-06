@@ -335,7 +335,6 @@ struct PageHome: PageView {
             self.originMonthlyDatas = originMonthlyDatas
             if !monthlyDatas.isEmpty {
                 self.monthlyDatas = monthlyDatas
-                
             }
         }
         self.requestMonthly()
@@ -356,6 +355,11 @@ struct PageHome: PageView {
             guard let id = purchas.prod_id else {return}
             guard let monthlyData = self.originMonthlyDatas?[id] else {return}
             monthlyData.setData(data:purchas, isLow:lowLevelPpm)
+            if !lowLevelPpm {
+                if self.monthlyDatas?.firstIndex(of: monthlyData) == nil {
+                    self.monthlyDatas?.append(monthlyData)
+                }
+            }
         }
         self.monthlyDatas?.sort(by: {$0.sortIdx > $1.sortIdx})
         var idx = 0

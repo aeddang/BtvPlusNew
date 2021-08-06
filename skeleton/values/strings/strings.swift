@@ -103,10 +103,20 @@ extension String {
         public static let more = "monthlyMore".loaalized()
         public static let textRecommand = "monthlyTextRecommand".loaalized()
         public static let textEnjoy = "monthlyTextEnjoy".loaalized()
+        
+        public static let textKidsLeading = "monthlyTextKidsLeading".loaalized()
+        public static let textKidsTrailing = "monthlyTextKidsTrailing".loaalized()
+
+        public static let textFirstFreeStrong = "monthlyTextFirstFreeStrong".loaalized()
+        public static let textFirstFreeTrailing = "monthlyTextFirstFreeTrailing".loaalized()
+        
         public static let oceanPhaseLeading = "monthlyOceanPhaseLeading".loaalized()
         public static let oceanPhaseTrailing = "monthlyOceanPhaseTrailing".loaalized()
         public static let oceanAuth = "monthlyOceanAuth".loaalized()
         public static let oceanPeriodAuth = "monthlyOceanPeriodAuth".loaalized()
+        
+        public static let oceanFirstFreeLeading = "monthlyOceanFirstFreeLeading".loaalized()
+        public static let oceanFirstFreeTrailing = "monthlyOceanFirstFreeTrailing".loaalized()
     }
     
     struct footer {
@@ -127,7 +137,7 @@ extension String {
         public static let synopsis = "shareSynopsis".loaalized()
         public static let complete = "shareComplete".loaalized()
         public static let fail = "shareFail".loaalized()
-        
+        public static let shareFamilyInvite = "shareFamilyInvite".loaalized()
         public static let synopsisRecommand = "shareSynopsisRecommand".loaalized()
         public static let synopsisRecommandBenefitText1 = "shareSynopsisRecommandBenefitText1".loaalized()
         public static let synopsisRecommandBenefitText2 = "shareSynopsisRecommandBenefitText2".loaalized()

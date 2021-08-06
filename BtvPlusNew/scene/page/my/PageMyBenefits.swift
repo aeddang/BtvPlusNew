@@ -7,11 +7,19 @@
 import Foundation
 import SwiftUI
 extension PageMyBenefits{
-    enum MenyType: Int {
+    enum MenuType: Int {
         case coupon = 0
         case point = 1
         case cash = 2
         case discount = 3
+    }
+    static func getType(_ value:String)->MenuType{
+        switch value {
+            case "point": return .cash
+            case "coupon": return .coupon
+            case "bpoint": return .point
+        default : return .coupon
+        }
     }
 }
 

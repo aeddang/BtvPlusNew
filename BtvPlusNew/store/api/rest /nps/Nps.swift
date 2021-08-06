@@ -419,6 +419,62 @@ class Nps: Rest{
         body["body"] = params
         fetch(route: NpsUpdateUser(body: body), completion: completion, error:error)
     }
+    /*!
+    * @brief 페어링 대상 HostDevice(STB)와 페어링을 하기위한 페어링 토큰을 발급 요청
+    * @param completion 페어링 대상 HostDevice(STB)와 페어링을 하기위한 페어링 토큰을 발급 요청 API response
+    */
+    func getPairingToken(hostDeviceid:String?,
+        customParam:[String: Any] = [String: Any](),
+        completion: @escaping (PairingToken) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-551")
+        var params = [String: Any]()
+        params["service_type"] = NpsNetwork.SERVICE_TYPE
+        params["guest_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["host_deviceid"] = hostDeviceid
+        params["custom_param"] = customParam
+        
+        var body = [String: Any]()
+        body["header"] = headers
+        body["body"] = params
+        
+        fetch(route: NpsGetPairingToken(body: body), completion: completion, error:error)
+    }
+    
+    func validatePairingToken(pairingToken:String,
+        customParam:[String: Any] = [String: Any](),
+        completion: @escaping (DevicePairing) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-552")
+        var params = [String: Any]()
+        params["service_type"] = NpsNetwork.SERVICE_TYPE
+        params["guest_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["pairing_token"] = pairingToken
+        params["custom_param"] = customParam
+        
+        var body = [String: Any]()
+        body["header"] = headers
+        body["body"] = params
+        
+        fetch(route:NpsValidatePairingToken(body: body), completion: completion, error:error)
+    }
+    
+    func postPairingByToken(user:User?, pairingToken:String,
+        customParam:[String: Any] = [String: Any](),
+        completion: @escaping (DevicePairing) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-553")
+        var params = [String: Any]()
+        params["service_type"] = NpsNetwork.SERVICE_TYPE
+        params["guest_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["pairing_token"] = pairingToken
+        params["user_name"] = user?.nickName
+        params["custom_param"] = customParam
+        
+        var body = [String: Any]()
+        body["header"] = headers
+        body["body"] = params
+        
+        fetch(route:NpsPairingByToken(body: body), completion: completion, error:error)
+    }
+    
     
     func sendMessage(data:NpsMessage?,
         customParam:[String: Any] = [String: Any](),
@@ -510,6 +566,26 @@ struct NpsUpdateUser:NetworkRoute{
    var path: String = "/nps/v5/reqUpdateUsername"
    var body: [String : Any]? = nil
 }
+
+struct NpsGetPairingToken:NetworkRoute{
+   var method: HTTPMethod = .post
+   var path: String = "/nps/v5/reqToken"
+   var body: [String : Any]? = nil
+}
+
+struct NpsValidatePairingToken:NetworkRoute{
+   var method: HTTPMethod = .post
+   var path: String = "/nps/v5/reqValidateToken"
+   var body: [String : Any]? = nil
+}
+
+struct NpsPairingByToken:NetworkRoute{
+   var method: HTTPMethod = .post
+   var path: String = "/nps/v5/reqPairingByToken"
+   var body: [String : Any]? = nil
+}
+
+
 
 
 struct NpsSendMessage:NetworkRoute{

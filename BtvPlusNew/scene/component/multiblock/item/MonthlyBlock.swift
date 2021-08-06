@@ -65,14 +65,28 @@ struct MonthlyBlock: PageComponent {
                 
             }
             TipTab(
-                leading: self.hasAuth ? String.monthly.textEnjoy : String.monthly.textRecommand,
-                isMore: !self.hasAuth,
+                leadingIcon: self.tipIconLeading,
+                leading: self.tipLeading,
+                strong: self.tipStrong,
+                icon: self.tipIcon,
+                trailing: self.tipTrailing,
+                isMore: !self.hasAuth || self.isKids,
                 textColor: self.hasAuth ? Color.app.white : Color.app.greyLight,
                 bgColor: self.hasAuth ? Color.brand.primary : Color.app.blueLight)
             .modifier( ContentHorizontalEdges() )
             .padding(.top, Dimen.margin.lightExtra)
             .onTapGesture {
+                if self.isKids {
+                    let move = PageKidsProvider.getPageObject(.kidsMonthly)
+                        .addParam(key: .subId, value: self.currentData?.menuId)
+                    self.pagePresenter.changePage(
+                        PageKidsProvider.getPageObject(.kidsHome)
+                            .addParam(key: .data, value: move)
+                    )
+                    return
+                }
                 if self.hasAuth {return}
+                
                 let status = self.pairing.status
                 if status != .pairing {
                     self.appSceneObserver.alert = .needPairing()
@@ -100,6 +114,7 @@ struct MonthlyBlock: PageComponent {
             } else {
                 self.moveScroll()
             }
+            self.setupTipTab()
         }
         .onReceive(self.viewModel.$isUpdate){ update in
             self.getList()
@@ -132,8 +147,6 @@ struct MonthlyBlock: PageComponent {
             ComponentLog.d("Recycle List" , tag: self.tag)
             return list
         }
-        
-        
         let newList = MonthlyList(
             viewModel:self.viewModel,
             datas: self.monthlyDatas,
@@ -158,7 +171,9 @@ struct MonthlyBlock: PageComponent {
     
     @State var anyCancellable = Set<AnyCancellable>()
     @State var currentData:MonthlyData? = nil
+    
     @State var hasAuth:Bool = false
+    @State var isKids:Bool = false
     private func initSubscription(){
         self.anyCancellable.forEach{$0.cancel()}
         self.anyCancellable.removeAll()
@@ -168,6 +183,7 @@ struct MonthlyBlock: PageComponent {
                 if !update {return}
                 if data.prdPrcId == self.currentData?.prdPrcId {
                     self.hasAuth = data.hasAuth
+                    self.setupTipTab()
                 }
             }).store(in: &anyCancellable)
         }
@@ -177,4 +193,30 @@ struct MonthlyBlock: PageComponent {
         self.currentData = data
         self.hasAuth = data.hasAuth
     }
+    @State var tipIconLeading:String? = nil
+    @State var tipLeading:String? = nil
+    @State var tipStrong:String? = nil
+    @State var tipIcon:String? = nil
+    @State var tipTrailing:String? = nil
+    private func setupTipTab(){
+        self.tipIconLeading = nil
+        self.tipLeading = nil
+        self.tipStrong = nil
+        self.tipIcon = nil
+        self.tipTrailing = nil
+        if self.hasAuth {
+            self.isKids = self.currentData?.isKidszone ?? false
+            if self.isKids {
+                self.tipLeading = String.monthly.textKidsLeading
+                self.tipIcon = Asset.icon.logoZem
+                self.tipTrailing = String.monthly.textKidsTrailing
+            } else {
+                self.tipLeading = String.monthly.textEnjoy
+            }
+            
+        } else{
+            self.tipLeading = String.monthly.textRecommand
+        }
+    }
+    
 }

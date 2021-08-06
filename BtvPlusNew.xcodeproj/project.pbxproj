@@ -328,6 +328,10 @@
 		3190CB22268D83C200ACB465 /* Kids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB21268D83C200ACB465 /* Kids.swift */; };
 		3190CB24268D890500ACB465 /* MenuNavi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190CB23268D890500ACB465 /* MenuNavi.swift */; };
 		3190E6242674993D000CBCB9 /* SkeletonBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190E6232674993D000CBCB9 /* SkeletonBlock.swift */; };
+		3191267E26BCCDA6006F39E7 /* PairingToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3191267D26BCCDA6006F39E7 /* PairingToken.swift */; };
+		3191268026BCE0AD006F39E7 /* PageSnsShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3191267F26BCE0AD006F39E7 /* PageSnsShare.swift */; };
+		3191268426BCFC08006F39E7 /* PagePairingFamilyInvite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3191268326BCFC08006F39E7 /* PagePairingFamilyInvite.swift */; };
+		3191268626BCFC3D006F39E7 /* AgreementBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3191268526BCFC3D006F39E7 /* AgreementBody.swift */; };
 		3192318025A40A7D00020388 /* ReflashSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192317F25A40A7D00020388 /* ReflashSpinner.swift */; };
 		3192CA6926818FAB007B3C29 /* ToolTipKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192CA6826818FAB007B3C29 /* ToolTipKids.swift */; };
 		3192CA6C26819953007B3C29 /* PageDetailInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3192CA6B26819953007B3C29 /* PageDetailInfo.swift */; };
@@ -373,6 +377,8 @@
 		319745C7262010F30072945D /* PageMyPurchaseTicketList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319745C6262010F30072945D /* PageMyPurchaseTicketList.swift */; };
 		3197FC80267AE511006918BA /* CustomAssetPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3197FC7F267AE511006918BA /* CustomAssetPlayer.swift */; };
 		3197FC82267AE53E006918BA /* CustomAssetResourceLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3197FC81267AE53E006918BA /* CustomAssetResourceLoader.swift */; };
+		319867EB26BBA5A6008DDD02 /* TvList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319867EA26BBA5A6008DDD02 /* TvList.swift */; };
+		319867ED26BBAF11008DDD02 /* TvBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319867EC26BBAF11008DDD02 /* TvBlock.swift */; };
 		3198722926AA593C005E63B6 /* FloatRecommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3198722826AA593C005E63B6 /* FloatRecommand.swift */; };
 		3198FED9262FAF77008DCB2C /* PageMyAlram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3198FED8262FAF77008DCB2C /* PageMyAlram.swift */; };
 		319B07A4263A398C008C11A8 /* ConnectTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B07A3263A398C008C11A8 /* ConnectTitle.swift */; };
@@ -992,6 +998,10 @@
 		3190CB21268D83C200ACB465 /* Kids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kids.swift; sourceTree = "<group>"; };
 		3190CB23268D890500ACB465 /* MenuNavi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuNavi.swift; sourceTree = "<group>"; };
 		3190E6232674993D000CBCB9 /* SkeletonBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonBlock.swift; sourceTree = "<group>"; };
+		3191267D26BCCDA6006F39E7 /* PairingToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingToken.swift; sourceTree = "<group>"; };
+		3191267F26BCE0AD006F39E7 /* PageSnsShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSnsShare.swift; sourceTree = "<group>"; };
+		3191268326BCFC08006F39E7 /* PagePairingFamilyInvite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePairingFamilyInvite.swift; sourceTree = "<group>"; };
+		3191268526BCFC3D006F39E7 /* AgreementBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgreementBody.swift; sourceTree = "<group>"; };
 		3192317F25A40A7D00020388 /* ReflashSpinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflashSpinner.swift; sourceTree = "<group>"; };
 		3192CA6826818FAB007B3C29 /* ToolTipKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolTipKids.swift; sourceTree = "<group>"; };
 		3192CA6B26819953007B3C29 /* PageDetailInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageDetailInfo.swift; sourceTree = "<group>"; };
@@ -1037,6 +1047,8 @@
 		319745C6262010F30072945D /* PageMyPurchaseTicketList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyPurchaseTicketList.swift; sourceTree = "<group>"; };
 		3197FC7F267AE511006918BA /* CustomAssetPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAssetPlayer.swift; sourceTree = "<group>"; };
 		3197FC81267AE53E006918BA /* CustomAssetResourceLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAssetResourceLoader.swift; sourceTree = "<group>"; };
+		319867EA26BBA5A6008DDD02 /* TvList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TvList.swift; sourceTree = "<group>"; };
+		319867EC26BBAF11008DDD02 /* TvBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TvBlock.swift; sourceTree = "<group>"; };
 		3198722826AA593C005E63B6 /* FloatRecommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatRecommand.swift; sourceTree = "<group>"; };
 		3198FED8262FAF77008DCB2C /* PageMyAlram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyAlram.swift; sourceTree = "<group>"; };
 		319B07A3263A398C008C11A8 /* ConnectTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectTitle.swift; sourceTree = "<group>"; };
@@ -1679,6 +1691,7 @@
 				315B55DB25A8026700B5B351 /* DevicePairingInfo.swift */,
 				315B55E625A84B0900B5B351 /* DevicePairing.swift */,
 				315544C625B7BCF200086510 /* DevicePairingStatus.swift */,
+				3191267D26BCCDA6006F39E7 /* PairingToken.swift */,
 				314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */,
 				314C7ECA25ABC32200C489FC /* Hello.swift */,
 				31E50C78261AEBFE00D0762C /* ResultMessage.swift */,
@@ -2268,6 +2281,7 @@
 				318D12D92664869700BF1DD8 /* BannerListBlock.swift */,
 				318E7F0325E8990900B2AAAF /* MonthlyBlock.swift */,
 				31A4A00D26281B840065E6C6 /* TipBlock.swift */,
+				319867EC26BBAF11008DDD02 /* TvBlock.swift */,
 			);
 			path = item;
 			sourceTree = "<group>";
@@ -2595,6 +2609,7 @@
 		319B07A2263A394E008C11A8 /* body */ = {
 			isa = PBXGroup;
 			children = (
+				3191268526BCFC3D006F39E7 /* AgreementBody.swift */,
 			);
 			path = body;
 			sourceTree = "<group>";
@@ -2807,6 +2822,7 @@
 		31D3F4DB25E365F3008FDFEC /* popups */ = {
 			isa = PBXGroup;
 			children = (
+				3191267F26BCE0AD006F39E7 /* PageSnsShare.swift */,
 				31EA9FC125F5D23B0059E19B /* PageFullPlayer.swift */,
 				3174067B25F763BD00201850 /* PageWebview.swift */,
 				3182A0B526188B8100F7F07D /* PageConfirmNumber.swift */,
@@ -2917,6 +2933,7 @@
 			children = (
 				3190CAF626853F0E00ACB465 /* view */,
 				3190CAF526853EFE00ACB465 /* style */,
+				319867EA26BBA5A6008DDD02 /* TvList.swift */,
 				D506D716258C8FFB00F27C00 /* PosterList.swift */,
 				D506D72C258C9ECE00F27C00 /* VideoList.swift */,
 				3167197225FF27AA005AC3D2 /* WatchedList.swift */,
@@ -2978,6 +2995,7 @@
 				314D589325B685B2007BCA34 /* PagePairingManagement.swift */,
 				31A49FF72627D1620065E6C6 /* PagePairingGuide.swift */,
 				31AC66CE26B8C82400766995 /* PagePairingAppleTv.swift */,
+				3191268326BCFC08006F39E7 /* PagePairingFamilyInvite.swift */,
 			);
 			path = pairing;
 			sourceTree = "<group>";
@@ -3931,6 +3949,7 @@
 			files = (
 				317F990126A6699300016C09 /* PageKidsSearchModel.swift in Sources */,
 				D56C6A25257DA0C600CF9AB8 /* font.swift in Sources */,
+				3191268626BCFC3D006F39E7 /* AgreementBody.swift in Sources */,
 				317EF18625DB46D6004A6A5E /* PlayerListTab.swift in Sources */,
 				3167197B25FF4159005AC3D2 /* PageWatchedList.swift in Sources */,
 				319CF6612695C33800159575 /* DiagnosticReportModel.swift in Sources */,
@@ -3975,6 +3994,7 @@
 				31C4D2A92693040A000C7E83 /* NeedPairingInfo.swift in Sources */,
 				319CF688269738CF00159575 /* ExamBody.swift in Sources */,
 				31895AFA2601C863002DE02E /* PageSynopsisPackage.swift in Sources */,
+				3191268426BCFC08006F39E7 /* PagePairingFamilyInvite.swift in Sources */,
 				D51AA9F82599BAFB0035CD51 /* PageTab.swift in Sources */,
 				318AA043265DE83500C089EC /* SetupChildren.swift in Sources */,
 				318AA04E265E3E3F00C089EC /* MySetup.swift in Sources */,
@@ -4233,6 +4253,7 @@
 				3166CBB72611639F00282891 /* PageModifyProfile.swift in Sources */,
 				31061E7725C934B600543FC0 /* PlayerEffect.swift in Sources */,
 				31F2802B2671EA0200F40B09 /* PlayViewerKids.swift in Sources */,
+				3191268026BCE0AD006F39E7 /* PageSnsShare.swift in Sources */,
 				D56C69A5257DA09E00CF9AB8 /* UnitUtil.swift in Sources */,
 				D5DC475625820DC3007EDD86 /* GatewaySynopsis.swift in Sources */,
 				318BA3952608C2660093BC7D /* Web.swift in Sources */,
@@ -4359,6 +4380,7 @@
 				319CF66F2696844C00159575 /* CommentBox.swift in Sources */,
 				313F8D0E269BFDEE0055F775 /* CWGridKids.swift in Sources */,
 				3183B37D26168F03004F5C0D /* PageAdultCertification.swift in Sources */,
+				319867ED26BBAF11008DDD02 /* TvBlock.swift in Sources */,
 				D50AB8FE25806FB900649C4A /* Euxp.swift in Sources */,
 				316A7068266EF7FC00A93B83 /* MenuTab.swift in Sources */,
 				D56C6A31257DA0C700CF9AB8 /* CPImageViewPager.swift in Sources */,
@@ -4412,6 +4434,7 @@
 				317C975C262433F9008F267D /* EpsModel.swift in Sources */,
 				318B537C25F05BAB0052E4E0 /* PagePreviewList.swift in Sources */,
 				31513CC025F59C6700D8373A /* SimplePlayer.swift in Sources */,
+				319867EB26BBA5A6008DDD02 /* TvList.swift in Sources */,
 				D57298D8259D4BEF00ED2CE6 /* InputCell.swift in Sources */,
 				318E7EFE25E8814C00B2AAAF /* MonthlyList.swift in Sources */,
 				3193414F25DDD847002F2000 /* SynopsisTop.swift in Sources */,
@@ -4427,6 +4450,7 @@
 				31F28041267336FD00F40B09 /* EpisodeViewerData.swift in Sources */,
 				D5DABD792589746400DF5701 /* ApiCoreDataManager.swift in Sources */,
 				318D100526686DFE00B66977 /* Kid.swift in Sources */,
+				3191267E26BCCDA6006F39E7 /* PairingToken.swift in Sources */,
 				D56C60542593462B009AE769 /* Pairing.swift in Sources */,
 				319CF66726966CAC00159575 /* TrophyBox.swift in Sources */,
 				31E3975025B5A0A300CE6E21 /* PageMy.swift in Sources */,

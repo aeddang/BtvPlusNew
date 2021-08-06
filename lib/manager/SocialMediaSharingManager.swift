@@ -22,6 +22,7 @@ struct SocialMediaShareable {
 extension SocialMediaSharingManage {
     static let sharinglink = "/sharinglink"
     static let familyInvite = "/view/v3.0/applink?type=family_invite"
+    
 }
 
 struct SocialMediaSharingManage{

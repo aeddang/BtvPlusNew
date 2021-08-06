@@ -8,7 +8,8 @@
 import Foundation
 enum PairingRequest:Equatable{
     case wifi , btv, user(String?), cancel, hostInfo(auth:String?, device:String?, prevResult:NpsCommonHeader?),
-         recovery, device(StbData), auth(String) , unPairing, check,
+         recovery, device(StbData), auth(String) , token(String),
+         unPairing, check,
          userInfo, updateKids, registKid(Kid), selectKid(Kid), modifyKid(Kid), deleteKid(Kid),
          updateKidStudy
     static func ==(lhs: PairingRequest, rhs: PairingRequest) -> Bool {

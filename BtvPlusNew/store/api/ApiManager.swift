@@ -321,7 +321,8 @@ class ApiManager :PageProtocol, ObservableObject{
         case .postGuestAgreement(let user) : self.nps.postGuestAgreement(user: user,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
-        case .updateAgreement(let isAgree) : self.nps.postGuestAgreement(user: User(isAgree: isAgree),
+        case .updateAgreement(let isAgree) : self.nps.postGuestAgreement(
+            user: User(isAgree: isAgree),
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         case .postUnPairing, .rePairing : self.nps.postUnPairing(
@@ -330,6 +331,19 @@ class ApiManager :PageProtocol, ObservableObject{
         case .updateUser(let data) : self.nps.updateUser(data: data,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .getPairingToken(let hostDeviceid) : self.nps.getPairingToken(
+            hostDeviceid: hostDeviceid,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .validatePairingToken(let pairingToken) : self.nps.validatePairingToken(
+            pairingToken: pairingToken,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .postPairingByToken(let user, let pairingToken) : self.nps.postPairingByToken(
+            user: user, pairingToken: pairingToken,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        
         case .sendMessage(let data) : self.nps.sendMessage(data: data,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
@@ -604,7 +618,7 @@ class ApiManager :PageProtocol, ObservableObject{
             }
             self.updatePairing(res: result )
             
-        case .postAuthPairing, .postDevicePairing :
+        case .postAuthPairing, .postDevicePairing, .postPairingByToken :
             NpsNetwork.pairing(res: result)
         case .postUnPairing :
             NpsNetwork.unpairing(res: result)

@@ -40,7 +40,7 @@ enum PurchasePType {
             case "20": return .pps
             case "30": return .ppm
             case "40": return .ppp
-            default : return .ppv
+            default : return .ppm
         }
     }
 }

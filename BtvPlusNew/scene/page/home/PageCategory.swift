@@ -69,12 +69,17 @@ struct PageCategory: PageView {
             default : break
             }
         }
+        .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+            if ani {
+                guard let obj = self.pageObject  else { return }
+                let menuId = (obj.getParamValue(key: .id) as? String) ?? ""
+                let openId = (obj.getParamValue(key: .subId) as? String)
+                self.appSceneObserver.useTopFix = true
+                self.setupDatas(menuId:menuId, openId: openId)
+            }
+        }
         .onAppear{
-            guard let obj = self.pageObject  else { return }
-            let menuId = (obj.getParamValue(key: .id) as? String) ?? ""
-            let openId = (obj.getParamValue(key: .subId) as? String)
-            self.appSceneObserver.useTopFix = true
-            self.setupDatas(menuId:menuId, openId: openId)
+           
             
         }
         .onDisappear{
@@ -87,9 +92,6 @@ struct PageCategory: PageView {
     @State var datas:[CateDataSet] = []
     
     @State var tabDatas:[CateData]? = nil
-    
-    //@State var eventData:CateData? = nil
-    //@State var tipData:CateData? = nil
     private func setupDatas(menuId:String, openId:String? = nil){
         guard let blocksData = self.dataProvider.bands.getData(menuId: menuId)?.blocks else { return }
         var cateDatas = blocksData.map{ block in
@@ -101,8 +103,9 @@ struct PageCategory: PageView {
         self.originDatas = cateDatas
         let openData:CateData? = self.resetSize(openId: openId)
         guard let open = openData else { return }
-        self.openPopup(data: open, openId: openId)
-        
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.5){
+            self.openPopup(data: open, openId: openId)
+        }
     }
     
     @discardableResult
@@ -149,7 +152,9 @@ struct PageCategory: PageView {
             )
         }
         rows.forEach{$0.datas.first?.isRowFirst = true}
-        self.datas.append(contentsOf: rows)
+        withAnimation{
+            self.datas.append(contentsOf: rows)
+        }
         if self.tabDatas == nil {
             self.tabDatas = tabDatas
             self.navigationModel.index = -1

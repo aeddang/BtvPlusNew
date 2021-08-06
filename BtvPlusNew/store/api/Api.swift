@@ -88,7 +88,10 @@ enum ApiType{
          postGuestNickname(String?),
          postGuestAgreement(User?), getGuestAgreement, updateAgreement(Bool),
          updateUser(ModifyUserData?),
-         sendMessage(NpsMessage?)
+         getPairingToken(String?),
+         sendMessage(NpsMessage?),
+         validatePairingToken(pairingToken:String),
+         postPairingByToken(User?, pairingToken:String)
          
     //KMS
     case getStbInfo(String?),

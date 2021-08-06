@@ -25,6 +25,7 @@ class MonthlyData:InfinityData,ObservableObject{
     private(set) var isJoin: Bool = false
     private(set) var isSubJoin: Bool = false
     private(set) var isSelected: Bool = false
+    private(set) var isKidszone: Bool = false
     private(set) var blocks:[BlockItem]? = nil
     private(set) var price:String? = nil
     private(set) var sortIdx:Int = 0
@@ -65,6 +66,7 @@ class MonthlyData:InfinityData,ObservableObject{
     @discardableResult
     func setData(data:MonthlyInfoItem, isLow:Bool) -> MonthlyData {
         parentPrdPrcId = data.prod_id
+        isKidszone = data.kzone_yn?.toBool() ?? false
         if isLow {
             self.isSubJoin = true
             self.sortIdx += 10

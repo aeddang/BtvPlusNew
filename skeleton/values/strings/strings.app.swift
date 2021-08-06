@@ -73,6 +73,7 @@ extension String {
         public static let sris = "sris".loaalized()
         public static let corner = "corner".loaalized()
         public static let people = "people".loaalized()
+        public static let liveTv = "liveTv".loaalized()
         public static let ticket = "ticket".loaalized()
         public static let coupon = "coupon".loaalized()
         public static let bpoint = "bpoint".loaalized()

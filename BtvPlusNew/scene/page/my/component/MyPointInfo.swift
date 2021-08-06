@@ -28,7 +28,7 @@ struct MyPointInfo: View {
                 .onTapGesture {
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.myBenefits)
-                            .addParam(key: .id, value: PageMyBenefits.MenyType.coupon.rawValue)
+                            .addParam(key: .id, value: PageMyBenefits.MenuType.coupon.rawValue)
                     )
                 }
             Spacer().modifier(LineVertical())
@@ -38,7 +38,7 @@ struct MyPointInfo: View {
                 .onTapGesture {
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.myBenefits)
-                            .addParam(key: .id, value: PageMyBenefits.MenyType.point.rawValue)
+                            .addParam(key: .id, value: PageMyBenefits.MenuType.point.rawValue)
                     )
                 }
             if self.pairing.pairingDeviceType == .btv {
@@ -49,7 +49,7 @@ struct MyPointInfo: View {
                     .onTapGesture {
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject(.myBenefits)
-                                .addParam(key: .id, value: PageMyBenefits.MenyType.cash.rawValue)
+                                .addParam(key: .id, value: PageMyBenefits.MenuType.cash.rawValue)
                         )
                     }
             }

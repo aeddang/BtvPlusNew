@@ -114,6 +114,15 @@ extension String{
         public static let pairingAppletvText1 = "PagePairingAppletvText1".loaalized()
         public static let pairingAppletvText2 = "PagePairingAppletvText2".loaalized()
         
+        public static let pairingFamilyInviteText1 = "PagePairingFamilyInviteText1".loaalized()
+        public static let pairingFamilyInviteText2 = "PagePairingFamilyInviteText2".loaalized()
+        public static let pairingFamilyInviteError = "PagePairingFamilyInviteError".loaalized()
+        public static let pairingFamilyInviteErrorHost = "PagePairingFamilyInviteErrorHost".loaalized()
+        public static let pairingFamilyInviteErrorAlreadyPairing = "PagePairingFamilyInviteErrorAlreadyPairing".loaalized()
+        public static let pairingFamilyInviteErrorAnotherPairing = "PagePairingFamilyInviteErrorAnotherPairing".loaalized()
+        public static let pairingFamilyInviteErrorAnotherPairingSub = "PagePairingFamilyInviteErrorAnotherPairingSub".loaalized()
+        public static let pairingFamilyInviteErrorExpired = "PagePairingFamilyInviteErrorExpired".loaalized()
+        
         public static let setupApp = "setupApp".loaalized()
         public static let setupAppDataAlram = "setupAppDataAlram".loaalized()
         public static let setupAppDataAlramText = "setupAppDataAlramText".loaalized()

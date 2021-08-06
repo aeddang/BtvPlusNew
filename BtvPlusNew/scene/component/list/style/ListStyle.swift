@@ -97,6 +97,10 @@ struct ListItem{
     struct coupon {
         static let height:CGFloat = isPad ? 170 : 110
     }
+    
+    struct tv {
+        static let size:CGSize =  isPad ? CGSize(width: 248, height: 111) : CGSize(width: 174, height: 76)
+    }
    
 }
 

@@ -45,7 +45,7 @@ struct PageCategoryList: PageView {
                         infinityScrollModel:self.infinityScrollModel,
                         viewModel:self.viewModel,
                         useTracking:self.useTracking,
-                        marginBottom:self.marginBottom
+                        marginBottom:self.marginBottom + Dimen.margin.regular
                     )
                     .background(Color.brand.bg)
                     
@@ -71,7 +71,7 @@ struct PageCategoryList: PageView {
                 self.useTracking = page?.id == self.pageObject?.id
             }
             .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
-                self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.app.bottom
+                self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }

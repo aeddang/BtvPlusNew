@@ -17,13 +17,19 @@ extension LoopSwipperView {
 struct LoopSwipperView : View , PageProtocol, Swipper {
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
     var pages: [PageViewProtocol]
-    @State var index: Int = 0
     var isForground:Bool = true
+    var ratio:CGFloat = 1.0
     var action:(() -> Void)? = nil
+    
+    @State var index: Int = 0
     var body: some View {
         GeometryReader { geometry in
             if self.pages.count <= 1 {
                 self.pages.first?.contentBody
+                    .frame(
+                        width: geometry.size.width * ratio,
+                        height: geometry.size.height * ratio
+                    )
                     .frame(
                         width: geometry.size.width,
                         height: geometry.size.height
@@ -35,21 +41,33 @@ struct LoopSwipperView : View , PageProtocol, Swipper {
                         LazyHStack(alignment: .center, spacing: 0) {
                             self.pages.last?.contentBody
                                 .frame(
-                                    width: geometry.size.width,
+                                    width: geometry.size.width * ratio,
+                                    height: geometry.size.height * ratio
+                                )
+                                .frame(
+                                    width: geometry.size.width ,
                                     height: geometry.size.height
                                 )
                                 .clipped()
                             ForEach(self.pages, id:\.id) { page in
                                 page.contentBody
-                                .frame(
-                                    width: geometry.size.width,
-                                    height: geometry.size.height
-                                )
+                                    .frame(
+                                        width: geometry.size.width * ratio,
+                                        height: geometry.size.height * ratio
+                                    )
+                                    .frame(
+                                        width: geometry.size.width ,
+                                        height: geometry.size.height
+                                    )
                                 .clipped()
                             }
                             self.pages.first?.contentBody
                                 .frame(
-                                    width: geometry.size.width,
+                                    width: geometry.size.width * ratio,
+                                    height: geometry.size.height * ratio
+                                )
+                                .frame(
+                                    width: geometry.size.width ,
                                     height: geometry.size.height
                                 )
                                 .clipped()
@@ -178,7 +196,9 @@ struct LoopSwipperView : View , PageProtocol, Swipper {
                     }
                 }
                 .onAppear(){
-                    self.index = self.viewModel.index
+                    DispatchQueue.main.async {
+                        self.index = self.viewModel.index
+                    }
                 }
                 .onDisappear(){
                     self.autoResetSubscription?.cancel()

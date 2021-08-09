@@ -255,6 +255,10 @@ class ApiManager :PageProtocol, ObservableObject{
             lowLevelPpm:lowLevelPpm, page: page, pageCnt: count,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .getMonthlyData(let prcPrdId, let isDetail) :  self.metv.getMonthlyData(
+            prdPrcId: prcPrdId, isDetail: isDetail,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         case .getWatch(let isPpm, let page, let count) : self.metv.getWatch(
             isPpm:isPpm, page: page, pageCnt: count,
             completion: {res in self.complated(id: apiID, type: type, res: res)},

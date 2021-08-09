@@ -29,7 +29,10 @@ struct PosterBlock:PageComponent, BlockProtocol {
     
     @State var list: PosterList?
     private func getList() -> some View {
-        if let list = self.list {return list}
+        if let list = self.list {
+            ComponentLog.d("Recycle PosterBlock " , tag: "BlockProtocol")
+            return list
+        }
         let newList = PosterList(
             viewModel:self.viewModel,
             banners: self.data.leadingBanners,
@@ -38,6 +41,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
         DispatchQueue.main.async {
             self.list = newList
         }
+        ComponentLog.d("New PosterBlock " , tag: "BlockProtocol")
         return newList
     }
     
@@ -173,7 +177,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
             self.datas = allDatas
             self.updateListSize()
             self.data.posters = allDatas
-            ComponentLog.d("Remote " + data.name, tag: "BlockProtocol")
+           
         }
         .onReceive(dataProvider.$error) { err in
             if err?.id != data.id { return }

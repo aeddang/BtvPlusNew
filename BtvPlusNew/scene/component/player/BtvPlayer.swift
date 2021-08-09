@@ -242,6 +242,7 @@ struct BtvPlayer: PageComponent{
             }
             .onDisappear(){
                 self.pagePresenter.fullScreenExit()
+                self.viewModel.event = .stop
             }
         }//geo
     }//body

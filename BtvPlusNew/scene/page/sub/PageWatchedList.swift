@@ -42,10 +42,10 @@ struct PageWatchedList: PageView {
                         infinityScrollModel:self.infinityScrollModel,
                         viewModel:self.viewModel,
                         pageObservable:self.pageObservable,
-                        useTracking:self.useTracking
+                        useTracking:self.useTracking,
+                        marginBottom: self.marginBottom + Dimen.margin.regular
                     )
                 }
-                .padding(.bottom, self.marginBottom )
                 .modifier(PageFull(style:.dark))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }

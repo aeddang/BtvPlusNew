@@ -27,6 +27,7 @@ struct PageKidsCategoryList: PageView {
     @State var blockData:BlockData? = nil
     @State var useTracking:Bool = false
     @State var marginBottom:CGFloat = 0
+    @State var marginHorizontal:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -45,9 +46,10 @@ struct PageKidsCategoryList: PageView {
                         viewModel:self.viewModel,
                         useTracking:self.useTracking,
                         marginBottom:self.marginBottom,
+                        marginHorizontal: self.marginHorizontal,
                         spacing: DimenKids.margin.thinUltra
                     )
-                    .modifier(ContentHorizontalEdgesKids())
+                    
                 }
                 .modifier(PageFullScreen(style:.kids))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
@@ -68,10 +70,16 @@ struct PageKidsCategoryList: PageView {
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 self.useTracking = page?.id == self.pageObject?.id
             }
-            .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
-                self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom 
+            
+            .onReceive(self.sceneObserver.$isUpdated){ update in
+                if !update {return}
+                self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
+                self.marginHorizontal = max(self.sceneObserver.safeAreaStart,self.sceneObserver.safeAreaEnd) + DimenKids.margin.regular
             }
             .onAppear{
+                self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
+                self.marginHorizontal = max(self.sceneObserver.safeAreaStart,self.sceneObserver.safeAreaEnd) + DimenKids.margin.regular
+                
                 guard let obj = self.pageObject  else { return }
                 if let data = obj.getParamValue(key: .data) as? BlockData {
                     self.title = data.name

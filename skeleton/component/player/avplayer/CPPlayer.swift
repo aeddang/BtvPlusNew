@@ -79,7 +79,7 @@ struct CPPlayer: PageComponent {
         }
         .background(Color.black)
         .onDisappear(){
-            self.viewModel.event = .stop
+            
         }
         
     }

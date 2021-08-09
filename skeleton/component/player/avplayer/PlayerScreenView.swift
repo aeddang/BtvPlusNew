@@ -298,6 +298,7 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
     
     @discardableResult
     func seek(_ t:Double) -> Bool {
+        
         guard let currentPlayer = player else { return false }
         let cmt = CMTime(
             value: CMTimeValue(t * PlayerModel.TIME_SCALE),

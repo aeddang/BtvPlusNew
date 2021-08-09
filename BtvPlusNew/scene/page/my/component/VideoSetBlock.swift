@@ -50,10 +50,9 @@ struct VideoSetBlock:BlockProtocol, PageComponent {
                     ForEach(self.datas) { data in
                         VideoSet(
                             pageObservable:self.pageObservable,
-                            data:data ,
-                            paddingHorizontal: SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.thin,
-                            spacing: Dimen.margin.tiny
+                            data:data
                             )
+                        .padding(.horizontal, SystemEnvironment.isTablet ? (Dimen.margin.heavy-Dimen.margin.thin) : 0)
                     }
                 }
             } else {

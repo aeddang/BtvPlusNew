@@ -353,15 +353,13 @@ extension VideoSet{
                          padding:CGFloat = SystemEnvironment.currentPageType == .btv
                             ? Dimen.margin.thin
                             : DimenKids.margin.thinUltra,
-                         isFull:Bool = false,
-                         paddingHorizontal:CGFloat? = nil ,
-                         spacing:CGFloat? = nil) -> CGSize{
+                         isFull:Bool = false) -> CGSize{
         let datas = data.datas
         let dataCell = datas.first ?? VideoData()
         let ratio = dataCell.type.size.height / dataCell.type.size.width
         let count = CGFloat(data.count)
-        let w = screenWidth - ( (paddingHorizontal ?? padding) * 2)
-        let cellW = ( w - ( (spacing ?? padding) * (count-1)) ) / count
+        let w = screenWidth - (padding * 2)
+        let cellW = ( w - ( padding * (count-1)) ) / count
         var cellH = round(cellW * ratio)
         
         if isFull{
@@ -379,12 +377,11 @@ struct VideoSet: PageComponent{
     var data:VideoDataSet
     var screenSize:CGFloat? = nil
     var padding:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thinUltra
-    var paddingHorizontal:CGFloat? = nil
-    var spacing:CGFloat? = nil
+    
     @State var cellDatas:[VideoData] = []
     @State var isUiActive:Bool = true
     var body: some View {
-        HStack(spacing: (self.spacing ?? self.padding) ){
+        HStack(spacing: self.padding ){
             if self.isUiActive {
                 ForEach(self.cellDatas) { data in
                     VideoItem( data:data )
@@ -402,18 +399,16 @@ struct VideoSet: PageComponent{
                 }
             }
         }
-        .padding(.horizontal, self.paddingHorizontal ?? self.padding)
+        .padding(.horizontal, self.padding)
         .frame(width: self.screenSize ?? self.sceneObserver.screenSize.width)
         .onAppear {
             if self.data.datas.isEmpty { return }
             let size = Self.listSize(data: self.data,
                                      screenWidth: self.screenSize ?? sceneObserver.screenSize.width,
                                      padding: self.padding,
-                                     isFull: false,
-                                     paddingHorizontal:self.paddingHorizontal,
-                                     spacing: self.spacing)
+                                     isFull: false)
             self.cellDatas = self.data.datas.map{
-                $0.setCardType(width: size.width, height: size.height, padding:  self.paddingHorizontal ?? self.padding)
+                $0.setCardType(width: size.width, height: size.height, padding: self.padding)
             }
         }
         .onReceive(self.pageObservable.$layer ){ layer  in

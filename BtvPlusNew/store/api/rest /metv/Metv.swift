@@ -16,7 +16,7 @@ struct MetvNetwork : Network{
 extension MetvNetwork{
     static let RESPONSE_FORMET = "json"
     static let SVC_CODE = "BTV"
-    static let VERSION = "5.0"
+    static let VERSION = "5.3.0"
     static let GROUP_VOD = "VOD"
     static let PAGE_COUNT = 30
 
@@ -128,6 +128,7 @@ class Metv: Rest{
         params["req_perd"] = "N"
         fetch(route: MetvPurchaseMonthly(query: params), completion: completion, error:error)
     }
+    
     func getPeriodPurchaseMonthly(
         page:Int?, pageCnt:Int?,
         completion: @escaping (PeriodMonthlyPurchaseInfo) -> Void, error: ((_ e:Error) -> Void)? = nil){
@@ -170,6 +171,30 @@ class Metv: Rest{
         params["yn_lowlevel_ppm"] = lowLevelPpm ? "Y" : "N"
         fetch(route: MetvMonthly(query: params), completion: completion, error:error)
     }
+    
+    /**
+     * 월정액 가입여부 확인 (IF-ME-039)
+     * @param prd_prc_id 월정액 상품 가격 아이디
+     * @param sel_typ normal : 일반 조회 방식 (default) detail : 상세 조회 방식
+     */
+    func getMonthlyData(
+        prdPrcId:String?, isDetail:Bool = false,
+        completion: @escaping (MonthlyInfoData) -> Void, error: ((_ e:Error) -> Void)? = nil){
+
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:Any]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["ver"] = MetvNetwork.VERSION
+        params["IF"] = "IF-ME-039"
+        
+        params["stb_id"] = stbId
+        params["hash_id"] = ApiUtil.getHashId(stbId)
+        params["svc_code"] = MetvNetwork.SVC_CODE
+        params["prd_prc_id"] = prdPrcId
+        params["sel_typ"] = isDetail ? "detail" : "normal"
+        fetch(route: MetvMonthlyData(body: params), completion: completion, error:error)
+    }
+    
     /**
     * 모바일 최근시청 VOD 조회 (IF-ME-121)
     * @param pageNo 요청할 페이지의 번호 (Default: 1)
@@ -395,8 +420,6 @@ struct MetvCollectiblePurchase:NetworkRoute{
     var query: [String : String]? = nil
 }
 
-
-
 struct MetvPurchaseMonthly:NetworkRoute{
     var method: HTTPMethod = .get
     var path: String = "/metv/v5/purchase/fixedcharge/mobilebtv"
@@ -409,12 +432,19 @@ struct MetvMonthly:NetworkRoute{
     var query: [String : String]? = nil
 }
 
+struct MetvMonthlyData:NetworkRoute{
+    var method: HTTPMethod = .post
+    var path: String = "/metv/v5/setting/chargeconfirm/mobilebtv"
+    var body: [String : Any]? = nil
+}
+
 struct MetvWatch:NetworkRoute{
    var method: HTTPMethod = .get
    //var path: String = "/metv/v5/watch/mbtv-season"
    var path: String = "/metv/v5/watch/season/mobilebtv"
    var query: [String : String]? = nil
 }
+
 struct MetvDelWatch:NetworkRoute{
    var method: HTTPMethod = .post
    //var path: String = "/metv/v5/watch/mbtv-season/del"

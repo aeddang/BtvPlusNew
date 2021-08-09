@@ -18,6 +18,7 @@ struct TipTab: PageComponent{
     var trailing:String? = nil
     var isMore:Bool = false
     var textColor:Color = Color.app.greyLight
+    var textStrongColor:Color = Color.brand.primary
     var bgColor:Color = Color.app.blueLight
     
     var body: some View {
@@ -39,7 +40,7 @@ struct TipTab: PageComponent{
                 if let strong = self.strong {
                     Text(strong)
                         .kerning(Font.kern.thin)
-                        .modifier(MediumTextStyle(size: Font.size.thin, color: Color.brand.primary))
+                        .modifier(BoldTextStyle(size: Font.size.thin, color: self.textStrongColor))
                 }
                 if let icon = self.icon {
                     Image(icon).resizable()

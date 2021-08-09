@@ -87,7 +87,7 @@ struct PurchaseList: PageComponent{
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[PurchaseData]
     var useTracking:Bool = false
-    var marginBottom:CGFloat = Dimen.margin.tinyExtra
+    var marginBottom:CGFloat = Dimen.margin.regular
     var type:PurchaseBlock.ListType? = nil
     var onBottom: ((_ data:PurchaseData) -> Void)? = nil
     @State var isEdit:Bool = false

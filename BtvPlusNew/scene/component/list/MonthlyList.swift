@@ -15,6 +15,7 @@ class MonthlyData:InfinityData,ObservableObject{
     private(set) var selectedJoinImage: String? = nil
     private(set) var joinImage: String? = nil
     private(set) var title: String? = nil
+    private(set) var titlePeriod: String? = nil
     private(set) var text: String? = nil
     private(set) var subTitle: String? = nil
     private(set) var count: String = "0"
@@ -26,6 +27,7 @@ class MonthlyData:InfinityData,ObservableObject{
     private(set) var isSubJoin: Bool = false
     private(set) var isSelected: Bool = false
     private(set) var isKidszone: Bool = false
+    private(set) var isFirstFree: Bool? = nil
     private(set) var blocks:[BlockItem]? = nil
     private(set) var price:String? = nil
     private(set) var sortIdx:Int = 0
@@ -34,8 +36,10 @@ class MonthlyData:InfinityData,ObservableObject{
     @Published private(set) var isUpdated: Bool = false
         {didSet{ if isUpdated { isUpdated = false} }}
     
+    @Published private(set) var isPurchaseUpdated: Bool = false
+        {didSet{ if isPurchaseUpdated { isPurchaseUpdated = false} }}
+    
     func setData(data:BlockItem, idx:Int = -1) -> MonthlyData {
-       
         title = data.menu_nm
         text = data.menu_expl
         if let prc = data.prd_prc_vat {
@@ -68,13 +72,24 @@ class MonthlyData:InfinityData,ObservableObject{
         parentPrdPrcId = data.prod_id
         isKidszone = data.kzone_yn?.toBool() ?? false
         if isLow {
-            self.isSubJoin = true
-            self.sortIdx += 10
+            if !self.isJoin {
+                self.titlePeriod = data.title_perd
+                self.isSubJoin = true
+                self.sortIdx += 10
+            }
         }else{
             self.isJoin = true
             self.sortIdx += 100
         }
         self.isUpdated = true
+        return self
+    }
+    
+    @discardableResult
+    func setData(data:MonthlyInfoData) -> MonthlyData {
+        guard let item  = data.purchaseList?.first else { return self}
+        self.isFirstFree = item.free_ppm_use_yn?.toBool() ?? false
+        self.isPurchaseUpdated = true
         return self
     }
     

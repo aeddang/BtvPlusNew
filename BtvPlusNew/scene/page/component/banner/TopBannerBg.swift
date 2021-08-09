@@ -14,7 +14,7 @@ struct TopBannerBg: PageComponent {
     @ObservedObject var pageObservable:PageObservable
     var viewModel:ViewPagerModel = ViewPagerModel()
     var datas: [BannerData]
-     
+    var ratio:CGFloat = 1.0
     @State var pages: [PageViewProtocol] = []
     @State var index: Int = 0
     @State var leading:CGFloat = 0
@@ -26,9 +26,11 @@ struct TopBannerBg: PageComponent {
             LoopSwipperView(
                 viewModel : self.viewModel,
                 pages: self.pages,
-                isForground : false
+                isForground : false,
+                ratio: self.ratio
                 )
                 .modifier(MatchHorizontal(height: TopBanner.imageHeight))
+                
             if self.pages.count > 1 {
                 HStack(spacing: Dimen.margin.tiny) {
                     Spacer()
@@ -48,7 +50,6 @@ struct TopBannerBg: PageComponent {
                 .padding(.bottom, TopBanner.marginBottomBar + TopBanner.imageHeight - TopBanner.height)
             }
         }
-       
         .onReceive( self.viewModel.$index ){ idx in
             self.setBar(idx:idx)
         }

@@ -93,7 +93,7 @@ class KidsCategoryListItemData:Identifiable, ObservableObject{
     @Published private(set) var isActive: Bool = false
     func setData(data:BlockItem, size:CGSize? = nil, isTicket:Bool = false) -> KidsCategoryListItemData {
         
-        var size = size ?? KidsCategoryList.sizeLong
+        var size = size ?? (isTicket ? KidsCategoryList.sizeLong : KidsCategoryList.size)
         let cardType = data.btm_bnr_blk_exps_cd
         switch cardType {
         case "07":
@@ -153,7 +153,6 @@ struct KidsCategoryList:PageView  {
             HStack(alignment: .top, spacing: DimenKids.margin.thinExtra){
                 ForEach(self.data.datas) { data in
                     KidsCategoryListItem(data: data)
-                       
                 }
                 ForEach(self.data.sets) { sets in
                     VStack(spacing: DimenKids.margin.thinExtra){
@@ -186,7 +185,6 @@ struct KidsCategoryListItem:PageView  {
                     .loadImmediately()
                     .aspectRatio(contentMode: .fit)
                     .modifier(MatchParent())
-               
             }
         }
         .frame(width: data.size.width, height: data.size.height)

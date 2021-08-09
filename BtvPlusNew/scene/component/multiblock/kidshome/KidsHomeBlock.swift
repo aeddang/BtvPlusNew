@@ -4,7 +4,6 @@
 //
 //  Created by KimJeongCheol on 2020/12/21.
 //
-
 import Foundation
 import SwiftUI
 import Combine
@@ -34,7 +33,7 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
                 isRecycle: true,
                 useTracking: self.useTracking
                 ){
-                    HStack(alignment: .bottom, spacing:Dimen.margin.regular){
+                    HStack(alignment: .top, spacing:Dimen.margin.regular){
                         if self.isUiView && isUiActive, let homeBlockData = self.homeBlockData {
                             ForEach(homeBlockData.datas) { data in
                                 switch data.type {
@@ -49,6 +48,7 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
                                 case .cateHeader:
                                     if let cateData = data as? KidsCategoryItemData {
                                         KidsCategoryItem(data:cateData)
+                                            .padding(.top, DimenKids.margin.medium)
                                     }
                                     
                                 case .cateList:
@@ -58,6 +58,7 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
                                 case .banner:
                                     if let bannerData = data as? KidsBannerData {
                                         KidsBanner(data: bannerData)
+                                            .padding(.top, DimenKids.margin.medium)
                                     }
                                 case .none: Spacer()
                                 }

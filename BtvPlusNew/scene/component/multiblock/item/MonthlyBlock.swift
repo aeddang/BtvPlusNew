@@ -72,6 +72,7 @@ struct MonthlyBlock: PageComponent {
                 trailing: self.tipTrailing,
                 isMore: !self.hasAuth || self.isKids,
                 textColor: self.hasAuth ? Color.app.white : Color.app.greyLight,
+                textStrongColor: self.hasAuth ? Color.app.white : Color.brand.primary,
                 bgColor: self.hasAuth ? Color.brand.primary : Color.app.blueLight)
             .modifier( ContentHorizontalEdges() )
             .padding(.top, Dimen.margin.lightExtra)
@@ -118,6 +119,17 @@ struct MonthlyBlock: PageComponent {
         }
         .onReceive(self.viewModel.$isUpdate){ update in
             self.getList()
+        }
+        .onReceive(self.dataProvider.$result) { res in
+            guard let res = res else {return}
+            switch res.type {
+            case .getMonthlyData(let prcPrdId, _) :
+                guard let data = res.data as? MonthlyInfoData else { return }
+                if let monthly = self.monthlyDatas.first(where: {$0.prdPrcId == prcPrdId}) {
+                    monthly.setData(data: data)
+                }
+            default : break
+            }
         }
         .onDisappear(){
             self.anyCancellable.forEach{$0.cancel()}
@@ -186,6 +198,13 @@ struct MonthlyBlock: PageComponent {
                     self.setupTipTab()
                 }
             }).store(in: &anyCancellable)
+            
+            data.$isPurchaseUpdated.sink(receiveValue: { update in
+                if !update {return}
+                if data.prdPrcId == self.currentData?.prdPrcId {
+                    self.setupTipTab()
+                }
+            }).store(in: &anyCancellable)
         }
     }
     
@@ -199,6 +218,7 @@ struct MonthlyBlock: PageComponent {
     @State var tipIcon:String? = nil
     @State var tipTrailing:String? = nil
     private func setupTipTab(){
+        guard let currentData = self.currentData else {return}
         self.tipIconLeading = nil
         self.tipLeading = nil
         self.tipStrong = nil
@@ -211,11 +231,31 @@ struct MonthlyBlock: PageComponent {
                 self.tipIcon = Asset.icon.logoZem
                 self.tipTrailing = String.monthly.textKidsTrailing
             } else {
-                self.tipLeading = String.monthly.textEnjoy
+                if currentData.isSubJoin {
+                    if let titlePeriod = currentData.titlePeriod {
+                        self.tipStrong = titlePeriod
+                        self.tipTrailing = String.monthly.textEnjoyPeriod
+                    } else {
+                        self.tipLeading = String.monthly.textEnjoyPeriod
+                    }
+                } else {
+                    self.tipLeading = String.monthly.textEnjoy
+                }
             }
             
         } else{
-            self.tipLeading = String.monthly.textRecommand
+            if currentData.isFirstFree == true {
+                self.tipIconLeading = Asset.icon.firstFree
+                self.tipStrong = String.monthly.textFirstFreeStrong
+                self.tipTrailing = String.monthly.textFirstFreeTrailing
+            } else {
+                self.tipLeading = String.monthly.textRecommand
+                
+                if currentData.isFirstFree == nil && self.pairing.status == .pairing {
+                    self.dataProvider.requestData(q: .init(type: .getMonthlyData(currentData.prdPrcId, isDetail: false), isOptional:true))
+                }
+            }
+            
         }
     }
     

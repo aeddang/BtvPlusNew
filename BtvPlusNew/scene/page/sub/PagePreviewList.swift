@@ -46,11 +46,10 @@ struct PagePreviewList: PageView {
                         playerModel:self.playerModel,
                         useTracking:self.useTracking,
                         marginTop: Dimen.margin.thin,
-                        marginBottom: Dimen.app.bottom
+                        marginBottom: self.marginBottom +  Dimen.margin.regular
                     )
                     
                 }
-                .padding(.bottom, self.marginBottom )
                 .modifier(PageFull(style:.dark))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }

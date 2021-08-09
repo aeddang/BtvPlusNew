@@ -71,6 +71,7 @@ struct CouponBlock: PageComponent, Identifiable{
     @ObservedObject var pageObservable:PageObservable = PageObservable()
      
     var useTracking:Bool = false
+    var marginBottom:CGFloat = Dimen.margin.regular
     var type:ListType = .coupon
     @State var reloadDegree:Double = 0
     
@@ -92,6 +93,7 @@ struct CouponBlock: PageComponent, Identifiable{
                         viewModel:self.infinityScrollModel,
                         datas: self.datas,
                         useTracking:self.useTracking,
+                        marginBottom:self.marginBottom,
                         onBottom: { _ in
                             self.load()
                         }

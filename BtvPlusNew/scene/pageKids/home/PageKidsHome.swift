@@ -47,6 +47,7 @@ struct PageKidsHome: PageView {
                     
             )
             .modifier(PageFullScreen(style:.kids))
+            
             .onReceive(self.dataProvider.bands.$event){ evt in
                 guard let evt = evt else { return }
                 switch evt {

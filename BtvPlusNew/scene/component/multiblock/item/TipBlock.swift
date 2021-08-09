@@ -8,8 +8,10 @@
 import Foundation
 import SwiftUI
 class TipBlockData {
+    var leadingIcon: String? = nil
     var leading: String? = nil
     var icon: String? = nil
+    var strong: String? = nil
     var trailing: String? = nil
     var isMore: Bool = true
     var textColor:Color =  Color.app.greyLight
@@ -24,7 +26,8 @@ class TipBlockData {
         isMore = false
         return self
     }
-    func setupPurchase(leading:String?=nil, icon:String?=nil , trailing:String?=nil, data:MonthlyData?) ->TipBlockData {
+    func setupPurchase(leadingIcon:String?=nil,  leading:String?=nil, icon:String?=nil , trailing:String?=nil, data:MonthlyData?) ->TipBlockData {
+        self.leadingIcon = leadingIcon
         self.leading = leading
         self.icon = icon
         self.trailing = trailing
@@ -45,11 +48,14 @@ struct TipBlock:PageComponent {
     var data: TipBlockData
     var body :some View {
         TipTab(
+            leadingIcon: data.leadingIcon,
             leading: data.leading,
+            strong: data.strong,
             icon: data.icon,
             trailing: data.trailing,
             isMore: data.isMore,
             textColor: data.textColor,
+            textStrongColor: data.textColor,
             bgColor: data.bgColor)
         .modifier( ContentHorizontalEdges() )
         .onTapGesture {

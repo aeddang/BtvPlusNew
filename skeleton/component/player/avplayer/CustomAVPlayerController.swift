@@ -97,7 +97,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
         
         func onSeek(time:Double, play:Bool){
             if !player.seek(time) { viewModel.error = .illegalState(evt) }
-            var st = min(time, self.viewModel.duration)
+            var st = min(time, self.viewModel.limitedDuration ?? self.viewModel.duration)
             st = max(st, 0)
             //ComponentLog.d("onSeek time " + time.description, tag: self.tag)
             //ComponentLog.d("onSeek st " + st.description, tag: self.tag)
@@ -155,8 +155,8 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
             
         case .seekTime(let t, let play): onSeek(time:t, play: play)
         case .seekMove(let t, let play): onSeek(time:viewModel.time + t, play: play)
-        case .seekForward(let t, let play): onSeek(time:viewModel.time + t, play: play)
-        case .seekBackword(let t, let play): onSeek(time:viewModel.time - t, play: play)
+        case .seekForward(let t, let play): onSeek(time:viewModel.time + t - viewModel.seekMove, play: play)
+        case .seekBackword(let t, let play): onSeek(time:viewModel.time - t - viewModel.seekMove, play: play) 
         case .seekProgress(let pct, let play):
             let t = viewModel.duration * Double(pct)
             onSeek(time:t, play: play)

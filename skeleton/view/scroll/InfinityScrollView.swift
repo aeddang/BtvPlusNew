@@ -124,6 +124,11 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                 spacing: self.spacing,
                 isRecycle: self.isRecycle,
                 useTracking: self.useTracking,
+                onTopButton: SystemEnvironment.currentPageType == .btv ? Asset.icon.onTop : AssetKids.icon.onTop,
+                onTopButtonSize : SystemEnvironment.currentPageType == .btv
+                    ? CGSize(width:60, height:60)
+                    : CGSize(width:93, height:76),
+                onTopButtonMargin : SystemEnvironment.currentPageType == .btv ? Dimen.margin.light : 0,
                 onReady: {self.onReady()},
                 onMove: {pos in self.onMove(pos:pos)},
                 content: self.content)

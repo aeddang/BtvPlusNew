@@ -164,7 +164,7 @@ extension Asset{
         public static let logoOcean = "logoOcean"
         public static let logoZem = "icZem"
         public static let firstFree = "icFree"
-        
+        public static let oceanFree = "icOceanFree"
         public static let noticeAd = "icNoticeAdNor"
         public static let noticeCoupon = "icNoticeCouponNor"
         public static let noticePoint = "icNoticePointNor"
@@ -174,12 +174,15 @@ extension Asset{
         public static let readAllOff = "icMyReadDim"
         public static let readAll = "icMyReadNor"
         public static let recommend = "icMyRecommend"
+        public static let btv = "icMyBtv"
         public static let purchase = "icMyPaidT"
         
         public static let stb = "icPopupPairingDefault"
         public static let recommendPoint = "icMyRecommendPoint"
         public static let addCard = "btnMyAddCard"
         public static let searchOnlyBtv = "icTagSearchOnlybtv"
+        
+        public static let onTop = "icBtnTop"
     }
     
     

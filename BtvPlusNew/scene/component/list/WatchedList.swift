@@ -62,6 +62,7 @@ struct WatchedList: PageComponent{
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[WatchedData]
     var useTracking:Bool = false
+    var marginBottom:CGFloat = Dimen.margin.regular
     var delete: ((_ data:WatchedData) -> Void)? = nil
     var onBottom: ((_ data:WatchedData) -> Void)? = nil
     @State var horizontalMargin:CGFloat = Dimen.margin.thin
@@ -75,7 +76,7 @@ struct WatchedList: PageComponent{
                 header: InfoAlert(text: String.pageText.myWatchedInfo, horizontalMargin: self.horizontalMargin),
                 headerSize: Dimen.tab.lightExtra + Dimen.margin.tinyExtra,
                 marginTop: Dimen.margin.regular ,
-                marginBottom: Dimen.app.bottom,
+                marginBottom: self.marginBottom,
                 spacing:0,
                 isRecycle: true,
                 useTracking: self.useTracking

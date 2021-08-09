@@ -67,6 +67,7 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
     var initIndex:Int? = nil
     var initPos:Float? = nil
     let idstr:String = UUID().uuidString
+    let topIdx:Int = UUID.init().hashValue
     var size = 20
     var isLoadable:Bool {
         get {

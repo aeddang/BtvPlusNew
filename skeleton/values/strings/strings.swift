@@ -103,7 +103,7 @@ extension String {
         public static let more = "monthlyMore".loaalized()
         public static let textRecommand = "monthlyTextRecommand".loaalized()
         public static let textEnjoy = "monthlyTextEnjoy".loaalized()
-        
+        public static let textEnjoyPeriod = "monthlyTextEnjoyPeriod".loaalized()
         public static let textKidsLeading = "monthlyTextKidsLeading".loaalized()
         public static let textKidsTrailing = "monthlyTextKidsTrailing".loaalized()
 

@@ -105,7 +105,7 @@ open class PlayerModel: ComponentObservable {
         return self.seekMove
     }
     
-    private var seekMove:Double = 0
+    private(set)var seekMove:Double = 0
     private var autoResetSeekMove:AnyCancellable?
     private func delayAutoResetSeekMove(){
         self.autoResetSeekMove?.cancel()

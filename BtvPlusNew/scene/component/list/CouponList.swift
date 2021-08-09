@@ -93,7 +93,7 @@ struct CouponList: PageComponent{
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[CouponData]
     var useTracking:Bool = false
-    var marginBottom:CGFloat = Dimen.margin.tinyExtra
+    var marginBottom:CGFloat = Dimen.margin.regular
     var onBottom: ((_ data:CouponData) -> Void)? = nil
     
     @State var horizontalMargin:CGFloat = Dimen.margin.thin

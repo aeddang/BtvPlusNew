@@ -26,7 +26,7 @@ struct PagePlayerTest: PageView {
     @ObservedObject var playerModel = PlayerModel()
    
     @State var title:String = "PLAYER TEST"
-     
+    @State var rate:Float = 1.0
     var body: some View {
         VStack(alignment: .leading, spacing:10)
         {
@@ -91,6 +91,39 @@ struct PagePlayerTest: PageView {
                     .modifier(MediumTextStyle(size: Font.size.light, color: Color.app.white))
                     .padding(.all, Dimen.margin.thin)
             }
+            
+            HStack{
+                FillButton(
+                    text: "X0.5",
+                    isSelected: self.rate == 0.5
+                ) { _ in
+                    self.rate = 0.5
+                    self.playerModel.event = .rate(0.5)
+                }
+                FillButton(
+                    text: "X1.0",
+                    isSelected: self.rate == 1.0
+                ) { _ in
+                    self.rate = 1.0
+                    self.playerModel.event = .rate(1.0)
+                }
+                FillButton(
+                    text: "X2.0",
+                    isSelected: self.rate == 2.0
+                ) { _ in
+                    self.rate = 2.0
+                    self.playerModel.event = .rate(2.0)
+                }
+                FillButton(
+                    text: "X3.0",
+                    isSelected: self.rate == 3.0
+                ) { _ in
+                    self.rate = 3.0
+                    self.playerModel.event = .rate(3.0)
+                }
+            }
+            
+            
             if let info = self.currentInfo {
                 HStack{
                     FillButton(

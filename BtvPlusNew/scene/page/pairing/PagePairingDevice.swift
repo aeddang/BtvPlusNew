@@ -232,10 +232,17 @@ struct PagePairingDevice: PageView {
         case .findMdnsDevice(let findData) : do {
             self.datas = findData.map{StbData().setData(data: $0)}
             self.textAvailableDevice = String.pageText.pairingDeviceText3 + self.datas.count.description + String.pageText.pairingDeviceText4
+            if self.datas.count == 1{
+                self.selectePairingDevice(stb: self.datas.first!)
+            }
         }
         case .findStbInfoDevice(let findData) : do {
             self.datas = findData.filter{$0.status_code != 2}.map{StbData().setData(data: $0)}
             self.textAvailableDevice = String.pageText.pairingDeviceText3 + self.datas.count.description + String.pageText.pairingDeviceText4
+            
+            if self.datas.count == 1{
+                self.selectePairingDevice(stb: self.datas.first!)
+            }
         }
         case .notFoundDevice : do {
             self.datas = []

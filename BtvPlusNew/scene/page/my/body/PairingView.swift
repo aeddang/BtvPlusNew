@@ -22,7 +22,7 @@ struct PairingView: PageComponent{
     @State var character:String = Asset.characterList[0]
     @State var nick:String = ""
     @State var newAlramCount:Int = 0
-    
+    @State var pairingType:PairingDeviceType = .btv
     var body: some View {
         VStack (alignment: .center, spacing:0){
             VStack (alignment: .center, spacing: Dimen.margin.lightExtra){
@@ -45,9 +45,10 @@ struct PairingView: PageComponent{
                     defaultText: self.nick,
                     textModifier: TextModifier( family: Font.family.medium,
                         size: Font.size.mediumExtra, color:Color.app.white),
-                    image: Asset.icon.profileEdit,
+                    image: self.pairingType == .btv ? Asset.icon.profileEdit : nil,
                     imageSize: Dimen.icon.thinExtra
                 ) { _ in
+                        if self.pairingType != .btv {return}
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject(.modifyProile)
                         )
@@ -111,15 +112,25 @@ struct PairingView: PageComponent{
                     )
                 }
                 Spacer().modifier(LineHorizontal())
+                if self.pairingType != .btv {
+                    FillButton(
+                        text: String.pageText.setupChildrenHabit,
+                        isMore: true,
+                        moreText: "",
+                        image: Asset.icon.btv
+                    ){_ in
+                        self.setupWatchHabit()
+                    }
+                    Spacer().modifier(LineHorizontal())
+                }
             }
             .modifier(ContentHorizontalEdgesTablet())
             .padding(.top, Dimen.margin.tiny)
-            
-            MySetup()
-                .modifier(ContentHorizontalEdgesTablet())
-                .padding(.top, Dimen.margin.mediumExtra)
-            
-            
+            if self.pairingType == .btv {
+                MySetup()
+                    .modifier(ContentHorizontalEdgesTablet())
+                    .padding(.top, Dimen.margin.mediumExtra)
+            }
             if let data = self.watchedData {
                 if SystemEnvironment.isTablet {
                     VideoSetBlock(
@@ -224,6 +235,7 @@ struct PairingView: PageComponent{
         .onReceive(self.pairing.$user){ user in
             guard let user = user else {return}
             self.character = Asset.characterList[user.characterIdx]
+            self.pairingType = self.pairing.pairingDeviceType
             self.nick = user.nickName
         }
         .onReceive(self.dataProvider.$result){ res in
@@ -281,9 +293,22 @@ struct PairingView: PageComponent{
        
     }
     
-    
-    
-    
+    private func setupWatchHabit(){
+        if !SystemEnvironment.isAdultAuth {
+            self.pagePresenter.openPopup(
+                PageProvider.getPageObject(.adultCertification)
+            )
+            return
+        }
+        let move = PageProvider.getPageObject(.watchHabit)
+        move.isPopup = true
+        self.pagePresenter.openPopup(
+            PageProvider.getPageObject(.confirmNumber)
+                .addParam(key: .data, value:move)
+                .addParam(key: .type, value: ScsNetwork.ConfirmType.adult)
+        )
+    }
+
     
     
     

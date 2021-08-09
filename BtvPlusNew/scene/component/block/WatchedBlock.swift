@@ -37,6 +37,7 @@ struct WatchedBlock: PageComponent{
     @ObservedObject var pageObservable:PageObservable = PageObservable()
      
     var useTracking:Bool = false
+    var marginBottom : CGFloat = 0
     @State var reloadDegree:Double = 0
    
     var body: some View {
@@ -53,6 +54,7 @@ struct WatchedBlock: PageComponent{
                         viewModel: self.infinityScrollModel,
                         datas: self.datas,
                         useTracking:self.useTracking,
+                        marginBottom:self.marginBottom,
                         delete: { data in
                             self.delete(data:data)
                         },

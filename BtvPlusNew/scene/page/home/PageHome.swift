@@ -142,6 +142,11 @@ struct PageHome: PageView {
                             self.respondTopBanner(res: res)
                             self.requestBand()
                         }
+                    case .getMonthlyData(let prcPrdid, _ ) :
+                        if self.selectedMonthlyId != prcPrdid {return}
+                        guard let data = res.data as? MonthlyInfoData else { return }
+                        self.updatedMonthlyInfoData(data)
+                    
                     default: break
                     }
                 case .onError(_, let res, _) :
@@ -151,6 +156,9 @@ struct PageHome: PageView {
                         if res.id == self.menuId && type == .page {
                             self.requestBand()
                         }
+                    case .getMonthlyData(let prcPrdid, _ ) :
+                        if self.selectedMonthlyId != prcPrdid {return}
+                        self.setupPurchaseTip()
                     default: break
                     }
                    
@@ -192,6 +200,7 @@ struct PageHome: PageView {
     @State var selectedMonthlyId:String? = nil
     @State var menuId:String = ""
     @State var openId:String? = nil
+    @State var prcPrdId:String? = nil
     @State var useFooter:Bool = false
     
     private func reload(selectedMonthlyId:String? = nil){
@@ -268,7 +277,7 @@ struct PageHome: PageView {
     private func updatedMonthlyPurchaseInfo( _ info:MonthlyPurchaseInfo){
         guard let band = self.currentBand  else { return }
         if band.gnbTypCd != EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue {return}
-        if info.purchaseList?.first(where: {$0.title == band.name}) != nil {
+        if info.purchaseList?.first(where: {$0.prod_id == self.selectedMonthlyId}) != nil {
             self.tipBlockData = TipBlockData()
                 .setupTip(
                     icon: Asset.icon.logoOcean,
@@ -276,7 +285,7 @@ struct PageHome: PageView {
             
         } else {
             if self.pageObservable.layer == .top {
-                self.pairing.authority.requestAuth(.updateMonthlyPurchase(isPeriod: false))
+                self.pairing.authority.requestAuth(.updateMonthlyPurchase(isPeriod: true))
             }
         }
     }
@@ -284,25 +293,40 @@ struct PageHome: PageView {
     private func updatedPeriodMonthlyPurchaseInfo( _ info:PeriodMonthlyPurchaseInfo){
         guard let band = self.currentBand  else { return }
         if band.gnbTypCd != EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue {return}
-        if info.purchaseList?.first(where: {$0.title == band.name}) != nil {
+        if info.purchaseList?.first(where: {$0.prod_id == self.selectedMonthlyId}) != nil {
             self.tipBlockData = TipBlockData()
                 .setupTip(leading: String.monthly.oceanPeriodAuth)
             
         } else {
-            self.setupPurchaseTip ()
+            self.viewModel.request = .init(type: .getMonthlyData(self.selectedMonthlyId, isDetail: false), isOptional:true)
+            
         }
     }
+    private func updatedMonthlyInfoData( _ data:MonthlyInfoData){
+        self.setupPurchaseTip (isFirstFree: data.purchaseList?.first?.free_ppm_use_yn?.toBool() ?? false)
+    }
     
-    private func setupPurchaseTip (){
+    private func setupPurchaseTip (isFirstFree:Bool = false){
         guard let band = self.currentBand  else { return }
         guard let oceanBlock = self.dataProvider.bands.getMonthlyBlockData(name: band.name) else { return }
         let phaseData = MonthlyData().setData(data: oceanBlock)
-        self.tipBlockData = TipBlockData()
-            .setupPurchase(
-                leading: String.monthly.oceanPhaseLeading,
-                icon: Asset.icon.logoOcean,
-                trailing: String.monthly.oceanPhaseTrailing,
-                data: phaseData)
+        if isFirstFree {
+            self.tipBlockData = TipBlockData()
+                .setupPurchase(
+                    leadingIcon: Asset.icon.oceanFree,
+                    leading: String.monthly.oceanFirstFreeLeading,
+                    icon: Asset.icon.logoOcean,
+                    trailing: String.monthly.oceanFirstFreeTrailing,
+                    data: phaseData)
+        } else {
+            self.tipBlockData = TipBlockData()
+                .setupPurchase(
+                    leading: String.monthly.oceanPhaseLeading,
+                    icon: Asset.icon.logoOcean,
+                    trailing: String.monthly.oceanPhaseTrailing,
+                    data: phaseData)
+        }
+        
     }
     
     

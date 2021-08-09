@@ -83,9 +83,9 @@ class BannerData:InfinityData, PageProtocol{
                 image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: CGSize(width: 240, height: 0))  ?? image
             } else{
                 if SystemEnvironment.isTablet {
-                    image = ImagePath.thumbImagePath(filePath: data.width_focus_off_path , size: CGSize(width: 480, height: 0))  ?? image
+                    image = ImagePath.thumbImagePath(filePath: data.width_focus_off_path , size: CGSize(width: 640, height: 0))  ?? image
                 } else {
-                    image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: CGSize(width: 240, height: 0))  ?? image
+                    image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: CGSize(width: 360, height: 0))  ?? image
                 }
                 logo = ImagePath.thumbImagePath(filePath: data.logo_img_path, size: CGSize(width: 200, height: 0), convType: .alpha)
                 

@@ -89,10 +89,11 @@ struct CateBlock: PageComponent{
     @ObservedObject var viewModel:CateBlockModel = CateBlockModel()
     var key:String? = nil
     var useTracking:Bool = false
+    var headerSize:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.tab.lightExtra : DimenKids.tab.lightExtra
     var marginTop : CGFloat = Dimen.margin.regular
     var marginBottom : CGFloat = 0
     var marginHorizontal:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thinUltra
-    var spacing: CGFloat = Dimen.margin.thin
+    var spacing: CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thinUltra
     var size: CGFloat? = nil
     
     @State var reloadDegree:Double = 0
@@ -126,7 +127,7 @@ struct CateBlock: PageComponent{
                                 marginHorizontal: self.marginHorizontal,
                                 action: self.sortAction)
                             : nil,
-                        headerSize: Dimen.tab.lightExtra + self.spacing,
+                        headerSize: self.headerSize + self.spacing,
                         marginTop : self.marginTop ,
                         marginBottom : self.marginBottom,
                         marginHorizontal : 0,
@@ -140,10 +141,10 @@ struct CateBlock: PageComponent{
                                 pageObservable:self.pageObservable,
                                 data:data,
                                 screenSize: self.screenSize,
-                                padding:self.marginHorizontal
+                                padding:self.spacing
                                 )
                                 .frame(height:self.posterCellHeight)
-                                .modifier(ListRowInset( spacing: self.spacing))
+                                .modifier(ListRowInset( marginHorizontal: self.marginHorizontal - self.spacing , spacing: self.spacing))
                                 .onAppear(){
                                     if data.index == self.posters.last?.index {
                                         if self.isPaging { self.load() }
@@ -155,10 +156,10 @@ struct CateBlock: PageComponent{
                                 pageObservable:self.pageObservable,
                                 data:data,
                                 screenSize: self.screenSize,
-                                padding:self.marginHorizontal
+                                padding:self.spacing
                                 )
                                 .frame(height:self.videoCellHeight)
-                                .modifier(ListRowInset( spacing: self.spacing))
+                                .modifier(ListRowInset( marginHorizontal: self.marginHorizontal - self.spacing, spacing: self.spacing))
                                 .onAppear(){
                                     if data.index == self.videos.last?.index {
                                         if self.isPaging { self.load() }
@@ -170,10 +171,10 @@ struct CateBlock: PageComponent{
                                 pageObservable:self.pageObservable,
                                 data:data,
                                 screenSize: self.screenSize,
-                                padding:self.marginHorizontal 
+                                padding:self.spacing
                                 )
                                 .frame(height:self.bannerCellHeight)
-                                .modifier(ListRowInset( spacing: self.spacing))
+                                .modifier(ListRowInset( marginHorizontal: self.marginHorizontal - self.spacing, spacing: self.spacing))
                                 .onAppear(){
                                     if data.index == self.banners.last?.index {
                                         if self.isPaging { self.load() }
@@ -185,10 +186,10 @@ struct CateBlock: PageComponent{
                                 pageObservable:self.pageObservable,
                                 data:data,
                                 screenSize: self.screenSize,
-                                padding:self.marginHorizontal
+                                padding:self.spacing
                                 )
                                 .frame(height:self.tvCellHeight)
-                                .modifier(ListRowInset( spacing: self.spacing))
+                                .modifier(ListRowInset(marginHorizontal: self.marginHorizontal - self.spacing, spacing: self.spacing))
                                 .onAppear(){
                                 }
                         }
@@ -462,14 +463,8 @@ struct CateBlock: PageComponent{
         if let size = self.size {
             self.screenSize = size
         } else {
-        
-            self.screenSize =  self.viewModel.type == .btv
-                ?  self.sceneObserver.screenSize.width
-                : (
-                    self.sceneObserver.screenSize.width
-                    - (DimenKids.margin.regular*2)
-                )
-    
+            let safeArea = self.sceneObserver.safeAreaStart + self.sceneObserver.safeAreaEnd
+            self.screenSize = self.sceneObserver.screenSize.width + safeArea - ((self.marginHorizontal - self.spacing)*2)
         }
     }
     private func loadedGrid(_ res:ApiResultResponds){

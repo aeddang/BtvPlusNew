@@ -9,13 +9,17 @@
 import Foundation
 import SwiftUI
 import Combine
+
+
+
+
 struct ImageView : View, PageProtocol {
     @ObservedObject var imageLoader: ImageLoader = ImageLoader()
     let url:String?
     var contentMode:ContentMode  = .fill
     var noImg:String? = nil
     @State var image:UIImage? = nil
-    @State var opacity:Double = 0.3
+    @State var opacity:Double =  0.3
     
     var body: some View {
        
@@ -63,6 +67,7 @@ struct ImageView : View, PageProtocol {
         case .complete(let img) :
             self.image = img
             withAnimation{self.opacity = 1.0}
+            
             self.clearAutoReload()
         case .error :
             self.clearAutoReload()

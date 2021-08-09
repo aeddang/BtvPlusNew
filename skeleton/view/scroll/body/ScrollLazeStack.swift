@@ -27,6 +27,9 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
     var scrollType:InfinityScrollType = .reload(isDragEnd: false)
     var isAlignCenter:Bool = false
     let isRecycle: Bool
+    var onTopButton: String? = nil
+    var onTopButtonSize: CGSize = CGSize(width: 0, height: 0)
+    var onTopButtonMargin:CGFloat = 0
     let onReady:()->Void
     let onMove:(CGFloat)->Void
     
@@ -38,7 +41,7 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
     @State var isScroll:Bool = true
     @State var progress:Double = 1
     @State var progressMax:Double = 1
-     
+ 
     init(
         viewModel:InfinityScrollModel,
         axes: Axis.Set,
@@ -55,6 +58,9 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
         spacing: CGFloat,
         isRecycle:Bool,
         useTracking:Bool,
+        onTopButton: String?,
+        onTopButtonSize: CGSize,
+        onTopButtonMargin:CGFloat,
         onReady:@escaping ()->Void,
         onMove:@escaping (CGFloat)->Void,
         content:Content) {
@@ -76,79 +82,108 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
         self.useTracking = useTracking
         self.onReady = onReady
         self.onMove = onMove
+        self.onTopButton = onTopButton
+        self.onTopButtonSize = onTopButtonSize
+        self.onTopButtonMargin = onTopButtonMargin
         self.scrollType = scrollType 
     }
         
     var body: some View {
         if #available(iOS 14.0, *) {
             ScrollViewReader{ reader in
-                ScrollView(self.isScroll ? self.axes : [], showsIndicators: self.showIndicators) {
-                    if self.axes == .vertical {
-                        ZStack(alignment: self.isAlignCenter ? .top : .topLeading){
-                            if self.useTracking {
-                                GeometryReader { insideProxy in
-                                    Color.clear
-                                        .preference(key: ScrollOffsetPreferenceKey.self, value: [self.calculateContentOffset(insideProxy: insideProxy)])
+                ZStack(alignment:.bottomTrailing){
+                    ScrollView(self.isScroll ? self.axes : [], showsIndicators: self.showIndicators) {
+                        if self.axes == .vertical {
+                            ZStack(alignment: self.isAlignCenter ? .top : .topLeading){
+                                if self.useTracking {
+                                    GeometryReader { insideProxy in
+                                        Color.clear
+                                            .preference(key: ScrollOffsetPreferenceKey.self, value: [self.calculateContentOffset(insideProxy: insideProxy)])
+                                    }
                                 }
-                            }
-                            if self.isRecycle {
-                                LazyVStack(alignment: self.isAlignCenter ? .center : .leading, spacing: self.spacing){
-                                    self.content
-                                }
-                                .padding(.top, self.marginTop + self.headerSize)
-                                .padding(.bottom, self.marginBottom)
-                                .padding(.leading, self.marginStart)
-                                .padding(.trailing, self.marginEnd)
-                            } else {
-                                VStack(alignment: self.isAlignCenter ? .center : .leading, spacing: self.spacing){
-                                    self.content
-                                }
-                                .padding(.top, self.marginTop + self.headerSize)
-                                .padding(.bottom, self.marginBottom)
-                                .padding(.leading, self.marginStart)
-                                .padding(.trailing, self.marginEnd)
-                            }
-                            if let header = self.header {
-                                header.contentBody
-                                    .padding(.top, self.marginTop)
-                                    
-                            }
-                        }
-                        //.frame(alignment: .topLeading)
-                        
-                    } else {
-                        ZStack (alignment: self.isAlignCenter ? .leading : .topLeading) {
-                            if self.useTracking {
-                                GeometryReader { insideProxy in
-                                    Color.clear
-                                        .preference(key: ScrollOffsetPreferenceKey.self, value: [self.calculateContentOffset(insideProxy: insideProxy)])
-                                }
-                            }
-                            if self.isRecycle {
-                                LazyHStack (alignment: self.isAlignCenter ? .center : .top, spacing: self.spacing){
-                                    self.content
-                                }
-                                .padding(.top, self.marginTop + self.headerSize)
-                                .padding(.bottom, self.marginBottom)
-                                .padding(.leading, self.marginStart + self.headerSize)
-                                .padding(.trailing, self.marginEnd)
-                                
-                            } else {
-                                HStack (alignment: self.isAlignCenter ? .center : .top, spacing: self.spacing){
-                                    self.content
-                                }
-                                .padding(.top, self.marginTop)
-                                .padding(.bottom, self.marginBottom)
-                                .padding(.leading, self.marginStart + self.headerSize)
-                                .padding(.trailing, self.marginEnd)
-                            }
-                            if let header = self.header {
-                                header.contentBody
+                                if self.isRecycle {
+                                    LazyVStack(alignment: self.isAlignCenter ? .center : .leading, spacing: self.spacing){
+                                        self.content
+                                    }
+                                    .padding(.top, self.marginTop + self.headerSize)
+                                    .padding(.bottom, self.marginBottom + self.onTopButtonSize.height)
                                     .padding(.leading, self.marginStart)
-                                    
+                                    .padding(.trailing, self.marginEnd)
+                                } else {
+                                    VStack(alignment: self.isAlignCenter ? .center : .leading, spacing: self.spacing){
+                                        self.content
+                                    }
+                                    .padding(.top, self.marginTop + self.headerSize)
+                                    .padding(.bottom, self.marginBottom + self.onTopButtonSize.height)
+                                    .padding(.leading, self.marginStart)
+                                    .padding(.trailing, self.marginEnd)
+                                }
+                                if let header = self.header {
+                                    header.contentBody
+                                        .padding(.top, self.marginTop)
+                                }
+                                Spacer()
+                                    .modifier(MatchHorizontal(height: 1))
+                                    .background(Color.transparent.clearUi)
+                                    .id(self.viewModel.topIdx)
                             }
+                            .frame(alignment: .topLeading)
+                            
+                        } else {
+                            ZStack (alignment: self.isAlignCenter ? .leading : .topLeading) {
+                                if self.useTracking {
+                                    GeometryReader { insideProxy in
+                                        Color.clear
+                                            .preference(key: ScrollOffsetPreferenceKey.self, value: [self.calculateContentOffset(insideProxy: insideProxy)])
+                                    }
+                                }
+                                if self.isRecycle {
+                                    LazyHStack (alignment: self.isAlignCenter ? .center : .top, spacing: self.spacing){
+                                        self.content
+                                    }
+                                    .padding(.top, self.marginTop + self.headerSize)
+                                    .padding(.bottom, self.marginBottom)
+                                    .padding(.leading, self.marginStart + self.headerSize)
+                                    .padding(.trailing, self.marginEnd)
+                                    
+                                } else {
+                                    HStack (alignment: self.isAlignCenter ? .center : .top, spacing: self.spacing){
+                                        self.content
+                                    }
+                                    .padding(.top, self.marginTop)
+                                    .padding(.bottom, self.marginBottom)
+                                    .padding(.leading, self.marginStart + self.headerSize)
+                                    .padding(.trailing, self.marginEnd)
+                                }
+                                if let header = self.header {
+                                    header.contentBody
+                                        .padding(.leading, self.marginStart)
+                                        
+                                }
+                            }
+                            .frame(alignment: .topLeading)
                         }
-                        //.frame(alignment: .topLeading)
+                    }.modifier(MatchParent())
+                    if !self.isTop && self.axes == .vertical, let onTopButton = self.onTopButton {
+                        VStack{
+                            Spacer()
+                            HStack{
+                                Spacer()
+                                Button(action: {
+                                    self.viewModel.uiEvent = .scrollTo(self.viewModel.topIdx, .top)
+                                }){
+                                    Image(onTopButton)
+                                        .renderingMode(.original).resizable()
+                                        .scaledToFit()
+                                        .frame(
+                                            width: self.onTopButtonSize.width,
+                                            height: self.onTopButtonSize.height)
+                                }
+                                .padding(.bottom,  self.marginBottom)
+                                .padding(.trailing,  self.onTopButtonMargin)
+                            }
+                            
+                        }
                     }
                 }
                 .modifier(MatchParent())
@@ -163,7 +198,9 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
                 })
                 .onChange(of: self.scrollIdx, perform: { idx in
                     guard let idx = idx else {return}
+                    if idx == -1 {return}
                     reader.scrollTo(idx, anchor: anchor)
+                    self.scrollIdx = -1
                 })
                 .onReceive(self.viewModel.$scrollStatus){ stat in
                     if self.scrollType != .web() {return}

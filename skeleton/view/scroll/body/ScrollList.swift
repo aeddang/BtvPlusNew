@@ -97,25 +97,20 @@ struct ScrollList<Content>: PageView where Content: View {
     }
     
    
-    
     var body: some View {
         if self.axes == .vertical {
             if self.isRecycle {
                 List{
-                    Section(
-                        header:self.getHeader().modifier(ListRowInset(spacing: 0)),
-                        footer:
-                            Spacer()
-                                .modifier(MatchHorizontal(height: self.marginBottom))
-                                .modifier(ListRowInset(spacing: 0))
-                    ){
-                        if self.isAlignCenter {
-                            self.content
-                                .modifier(LayoutCenter())
-                        } else {
-                            self.content
-                        }
+                    self.getHeader().modifier(ListRowInset(spacing: 0))
+                    if self.isAlignCenter {
+                        self.content
+                            .modifier(LayoutCenter())
+                    } else {
+                        self.content
                     }
+                    Spacer()
+                        .modifier(MatchHorizontal(height: self.marginBottom))
+                        .modifier(ListRowInset(spacing: 0))
                 }
                 .background(self.bgColor)
                 .padding(.leading, self.marginStart)

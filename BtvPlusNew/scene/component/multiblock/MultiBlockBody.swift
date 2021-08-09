@@ -97,7 +97,13 @@ extension MultiBlockBody {
             else { return true }
         }
     }
-    static let maxCellCount:Int = Self.isRecycle ? 100 : 10
+    private static var maxCellCoun:Int {
+        get{
+            if #available(iOS 14.0, *) { return 100 }
+            else { return 4 }
+        }
+    }
+    static let maxCellCount:Int = Self.maxCellCoun
     static let tabHeight:CGFloat = Dimen.tab.thin + Dimen.margin.thinExtra
     static let tabHeightKids:CGFloat = DimenKids.tab.thin + DimenKids.margin.thinExtra
     static let kisHomeHeight:CGFloat = SystemEnvironment.isTablet ? 410 : 215    
@@ -150,10 +156,11 @@ struct MultiBlockBody: PageComponent {
                             TopBannerBg(
                                 pageObservable : self.pageObservable,
                                 viewModel:self.viewPagerModel,
-                                datas: self.topDatas! )
-        
-                                .padding(.top, max(self.headerOffset, -TopBanner.imageHeight))
-                                .offset(y: self.marginHeader )
+                                datas: self.topDatas!,
+                                ratio: 1.0 + (CGFloat(self.reloadDegree/self.reloadDegreeMax)/5)
+                            )
+                            .padding(.top, max(self.headerOffset, -TopBanner.imageHeight))
+                            .offset(y: self.marginHeader )
                                 
                         }
                         ReflashSpinner(

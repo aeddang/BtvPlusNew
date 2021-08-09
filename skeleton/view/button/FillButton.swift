@@ -176,9 +176,9 @@ struct FillButton: View, SelecterbleProtocol{
                     }
                     else if let image = self.image  {
                         Image(self.isSelected ? ( self.imageOn ?? image )  : image)
-                        .renderingMode(.original).resizable()
-                        .scaledToFit()
-                        .frame(width: self.imageSize, height: self.imageSize)
+                            .renderingMode(.original).resizable()
+                            .scaledToFit()
+                            .frame(width: self.imageSize, height: self.imageSize)
                     }
                     Text(self.text)
                         .font(.custom(textModifier.family, size: textModifier.size))

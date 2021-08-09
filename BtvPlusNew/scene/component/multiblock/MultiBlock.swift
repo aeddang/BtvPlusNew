@@ -244,7 +244,7 @@ struct MultiBlock:PageComponent {
                 .modifier(ListRowInset(spacing: 0))
                 
                 if !self.datas.isEmpty {
-                    ForEach(self.datas) { data in
+                    ForEach(self.datas, id: \.id) { data in
                         MultiBlockCell(
                             pageObservable:self.pageObservable,
                             pageDragingModel: self.pageDragingModel,
@@ -255,10 +255,10 @@ struct MultiBlock:PageComponent {
                                 if data.index == self.datas.last?.index  {
                                     self.infinityScrollModel.event = .bottom
                                 }
-                                self.infinityScrollModel.onAppear(idx: data.index + 2)
+                                //self.infinityScrollModel.onAppear(idx: data.index + 2)
                             }
                             .onDisappear(){
-                                self.infinityScrollModel.onDisappear(idx: data.index + 2)
+                                //self.infinityScrollModel.onDisappear(idx: data.index + 2)
                             }
                     }
                     if self.useFooter {

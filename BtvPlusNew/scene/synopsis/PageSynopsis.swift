@@ -13,7 +13,10 @@ extension PageSynopsis {
     class ComponentViewModel:ComponentObservable{
         @Published var uiEvent:ComponentEvent? = nil {didSet{ if uiEvent != nil { uiEvent = nil} }}
     }
+    
 }
+
+
 
 struct PageSynopsis: PageView {
     var type:PageType = .btv
@@ -762,7 +765,7 @@ struct PageSynopsis: PageView {
             self.hasAuthority = false
         }
         ComponentLog.d("hasAuthority " + (hasAuthority?.description ?? "nil"), tag: self.tag)
-        self.infinityScrollModel.uiEvent = .scrollTo(self.topIdx)
+        self.infinityScrollModel.uiEvent = .scrollTo(self.infinityScrollModel.topIdx)
     }
     
     private func setupPreview (_ data:Preview){

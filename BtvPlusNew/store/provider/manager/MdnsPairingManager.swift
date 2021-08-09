@@ -80,7 +80,7 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
         self.client = client
         self.searchLimited = DispatchWorkItem { // Set the work item with the block you want to execute
             DispatchQueue.main.async {
-                if self.retryCount == 2 {
+                if self.retryCount == 1 {
                     self.mdnsServiceNotFound()
                 } else {
                     self.retryCount += 1

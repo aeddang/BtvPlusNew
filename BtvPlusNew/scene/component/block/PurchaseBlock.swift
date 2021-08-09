@@ -50,6 +50,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
     @ObservedObject var pageObservable:PageObservable = PageObservable()
      
     var useTracking:Bool = false
+    var marginBottom : CGFloat = 0
     var type:ListType = .normal
     @State var isEdit:Bool = false
     @State var isSelectAll:Bool = false
@@ -85,6 +86,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
                             viewModel:self.infinityScrollModel,
                             datas: self.datas,
                             useTracking:self.useTracking,
+                            marginBottom: self.marginBottom,
                             type: self.type,
                             onBottom: { _ in
                                 self.load()

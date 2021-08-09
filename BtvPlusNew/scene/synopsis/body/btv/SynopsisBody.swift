@@ -10,6 +10,7 @@ import SwiftUI
 
 extension SynopsisBody {
     static let spacing:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.regular
+    
 }
 
 struct SynopsisBody: PageComponent{
@@ -59,7 +60,7 @@ struct SynopsisBody: PageComponent{
             marginBottom : self.sceneObserver.safeAreaBottom,
             spacing:0,
             isRecycle:true,
-            useTracking:false
+            useTracking:true
             ){
             if #available(iOS 14.0, *) {
                 Spacer().modifier(MatchHorizontal(height: 1)).background(Color.transparent.clearUi)
@@ -208,16 +209,18 @@ struct SynopsisBody: PageComponent{
                 .modifier(ListRowInset(index:1, spacing: Self.spacing, marginTop:Self.spacing))
                 
                 if let hasRelationVod = self.hasRelationVod {
-                    RelationVodList(
-                        componentViewModel: self.componentViewModel,
-                        relationContentsModel: self.relationContentsModel,
-                        tabNavigationModel: self.tabNavigationModel,
-                        seris: self.$seris,
-                        epsdId: self.epsdId,
-                        relationTab: self.relationTab,
-                        relationDatas: self.relationDatas,
-                        hasRelationVod: hasRelationVod,
-                        screenSize: self.sceneObserver.screenSize.width)
+                    if !self.seris.isEmpty {
+                        RelationVodList(
+                            componentViewModel: self.componentViewModel,
+                            relationContentsModel: self.relationContentsModel,
+                            tabNavigationModel: self.tabNavigationModel,
+                            seris: self.$seris,
+                            epsdId: self.epsdId,
+                            relationTab: self.relationTab,
+                            relationDatas: self.relationDatas,
+                            hasRelationVod: hasRelationVod,
+                            screenSize: self.sceneObserver.screenSize.width)
+                    }
                 }
             }
         }

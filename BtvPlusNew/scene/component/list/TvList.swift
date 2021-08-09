@@ -94,12 +94,11 @@ extension TvSet{
                          screenWidth:CGFloat,
                          padding:CGFloat =  Dimen.margin.thin,
                          isFull:Bool = false,
-                         paddingHorizontal:CGFloat? = nil ,
                          spacing:CGFloat? = nil) -> CGSize{
         
         let ratio = ListItem.tv.size.height / ListItem.tv.size.width
         let count = CGFloat(data.count)
-        let w = screenWidth - ( (paddingHorizontal ?? padding) * 2)
+        let w = screenWidth - ( padding * 2)
         let cellW = ( w - ( (spacing ?? padding) * (count-1)) ) / count
         let cellH = round(cellW * ratio)
         return CGSize(width: floor(cellW), height: cellH )
@@ -114,7 +113,6 @@ struct TvSet: PageComponent{
     var data:TvDataSet
     var screenSize:CGFloat? = nil
     var padding:CGFloat = Dimen.margin.thin
-    var paddingHorizontal:CGFloat? = nil
     var spacing:CGFloat? = nil
     @State var cellDatas:[TvData] = []
     @State var isUiActive:Bool = true
@@ -129,7 +127,7 @@ struct TvSet: PageComponent{
                 }
             }
         }
-        .padding(.horizontal, self.paddingHorizontal ?? self.padding)
+        .padding(.horizontal, self.padding)
         .frame(width: self.screenSize ?? self.sceneObserver.screenSize.width)
         .onAppear {
             if self.data.datas.isEmpty { return }
@@ -137,10 +135,9 @@ struct TvSet: PageComponent{
                                      screenWidth: self.screenSize ?? sceneObserver.screenSize.width,
                                      padding: self.padding,
                                      isFull: false,
-                                     paddingHorizontal:self.paddingHorizontal,
                                      spacing: self.spacing)
             self.cellDatas = self.data.datas.map{
-                $0.setCardType(width: size.width, height: size.height, padding:  self.paddingHorizontal ?? self.padding)
+                $0.setCardType(width: size.width, height: size.height, padding:  self.padding)
             }
         }
         .onReceive(self.pageObservable.$layer ){ layer  in

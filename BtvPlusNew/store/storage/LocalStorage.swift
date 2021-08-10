@@ -198,4 +198,14 @@ class LocalStorage {
         return id
     
     }
+    
+    private var sessionId:String? = nil
+    func getSessionId()->String {
+        if let id = sessionId {return id}
+        var t = time_t(0)
+        srand48( time(&t));
+        let randNum = drand48() * 100000
+        sessionId = self.getPcid() + randNum.description.toDigits(5)
+        return sessionId!
+    }
 }

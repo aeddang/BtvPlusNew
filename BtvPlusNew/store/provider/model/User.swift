@@ -15,6 +15,12 @@ enum Gender {
             case .femail : return "F"
         }
     }
+    func logValue() -> String? {
+        switch self {
+            case .mail : return "male"
+            case .femail : return "female"
+        }
+    }
 }
 
 struct ModifyUserData {

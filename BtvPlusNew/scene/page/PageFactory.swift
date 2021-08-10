@@ -18,10 +18,10 @@ extension PageID{
     static let synopsis:PageID = "synopsis"
     static let synopsisPackage:PageID = "synopsisPackage"
     static let synopsisPlayer:PageID = "synopsisPlayer"
-    static let oeean:PageID = "oeean"
     static let pairing:PageID = "pairing"
     static let my:PageID = "my"
     static let myPurchase:PageID = "myPurchase"
+    static let myBookMark:PageID = "myBookMark"
     static let myBenefits:PageID = "myBenefits"
     static let myAlram:PageID = "myAlram"
     static let myPurchaseTicketList:PageID = "myPurchaseTicketList"
@@ -165,6 +165,7 @@ struct PageFactory{
         case .serviceError : return PageServiceError()
         case .my : return PageMy()
         case .myPurchase : return PageMyPurchase()
+        case .myBookMark : return PageCategoryList()
         case .myBenefits : return PageMyBenefits()
         case .myAlram : return PageMyAlram()
         case .myRecommand : return PageMyRecommand()

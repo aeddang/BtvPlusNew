@@ -57,7 +57,7 @@ class Repository:ObservableObject, PageProtocol{
     let storage = LocalStorage()
     private let accountManager:AccountManager
     private let broadcastManager:BroadcastManager
-    private var apiManager:ApiManager
+    private(set) var apiManager:ApiManager
    
     
     private var anyCancellable = Set<AnyCancellable>()

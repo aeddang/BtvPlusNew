@@ -205,7 +205,7 @@ struct PairingView: PageComponent{
                                 .setData(title: String.pageTitle.bookmarkList, cardType:.bookmarkedPoster, dataType:.bookMark, uiType:.poster)
                             
                             self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(.categoryList)
+                                PageProvider.getPageObject(.myBookMark)
                                     .addParam(key: .data, value: blockData)
                             )
                         }

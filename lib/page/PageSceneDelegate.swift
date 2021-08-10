@@ -110,6 +110,7 @@ final class PagePresenter:ObservableObject{
     @Published fileprivate(set) var currentPage:PageObject? = nil
     @Published fileprivate(set) var currentPopup:PageObject? = nil
     @Published fileprivate(set) var currentTopPage:PageObject? = nil
+   
     @Published var isLoading:Bool = false
     @Published var bodyColor:Color = Color.black
     @Published var dragOpercity:Double = 0.0
@@ -205,7 +206,6 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                 self.preventDuplicateSubscription = nil
                 self.preventDuplicate = false
         }
-       
     }
 
     final func changePage(_ newPage:PageObject, isBack:Bool = false){

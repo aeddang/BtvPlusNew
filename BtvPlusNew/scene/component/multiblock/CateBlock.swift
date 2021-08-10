@@ -23,14 +23,13 @@ class CateBlockModel: PageDataProviderModel {
     @Published private(set) var isUpdate = false {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
+    
     init(pageType:PageType = .btv) {
         self.type = pageType
-        
     }
     
     func update(data:BlockData, listType:CateBlock.ListType,
                 cardType:BlockData.CardType? = nil, isAdult:Bool = false, key:String? = nil) {
-        
         self.data = data
         self.listType = listType
         self.cardType = cardType
@@ -38,7 +37,6 @@ class CateBlockModel: PageDataProviderModel {
         self.menuId = data.menuId
         self.isAdult = isAdult
         self.isUpdate = true
-        
     }
     
     func update(menuId:String?, listType:CateBlock.ListType,
@@ -50,10 +48,7 @@ class CateBlockModel: PageDataProviderModel {
         self.data = nil
         self.isAdult = isAdult
         self.isUpdate = true
-        
     }
-    
-   
     
     var info:String? {
         get{
@@ -221,7 +216,6 @@ struct CateBlock: PageComponent{
         .onReceive(self.infinityScrollModel.$event){evt in
             guard let evt = evt else {return}
             switch evt {
-    
             case .pullCompleted :
                 if !self.infinityScrollModel.isLoading { self.reload() }
                 withAnimation{ self.reloadDegree = 0 }

@@ -26,6 +26,7 @@ protocol NetworkRoute:PageProtocol {
     var query: [String: String]? { get set }
     var body: [String: Any]? { get set }
     var bodys: [Any]? { get set }
+    var jsonString: String? { get set }
     var contentType:String? { get set }
     var withAllowedCharacters:CharacterSet? { get set }
     func onRequestIntercepter(request:URLRequest)
@@ -37,6 +38,7 @@ extension NetworkRoute {
     var body: [String: Any]?  { get{nil} set{body=nil} }
     var bodys: [Any]?  { get{nil} set{bodys=nil} }
     var contentType:String? { get{nil} set{contentType = nil} }
+    var jsonString:String? { get{nil} set{jsonString = nil} }
     var withAllowedCharacters:CharacterSet? { get{.urlQueryAllowed} set{withAllowedCharacters = .urlQueryAllowed} }
     func create(for enviroment:NetworkEnvironment) -> URLRequest {
         let path = withAllowedCharacters == nil
@@ -114,6 +116,9 @@ extension NetworkRoute {
         if method == .get {return nil}
         if let params = bodys {
             return try? JSONSerialization.data(withJSONObject:params)
+        }
+        if let params = jsonString {
+            return params.data(using: .utf8)
         }
         
         guard let param = body else { return nil }

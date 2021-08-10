@@ -54,8 +54,10 @@ extension BtvWebView {
 
 
 struct BtvWebView: PageComponent {
+    
     @ObservedObject var viewModel:WebViewModel = WebViewModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
+    
     @State private var isLoading:Bool = false
     var useNativeScroll:Bool = true
     var scriptMessageHandler :WKScriptMessageHandler? = nil
@@ -86,6 +88,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var viewModel:WebViewModel
     var useNativeScroll:Bool = true
     var path: String = ""
@@ -560,7 +563,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             WKWebsiteDataStore.default().httpCookieStore.getAllCookies { (cookies) in
                 for cookie in cookies {
                     if cookie.name.contains("BtvplusWebVer") {
-                        //MenuNaviBuilder.setWebPageVersion(cookie.value)
+                        self.parent.naviLogManager.setupWebPageVersion(cookie.value)
                     }
                 }
             }

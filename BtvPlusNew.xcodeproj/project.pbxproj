@@ -466,6 +466,9 @@
 		31C4D2A42692D867000C7E83 /* EvaluationReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4D2A32692D867000C7E83 /* EvaluationReport.swift */; };
 		31C4D2A72692E0CE000C7E83 /* PairingKidsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4D2A62692E0CE000C7E83 /* PairingKidsView.swift */; };
 		31C4D2A92693040A000C7E83 /* NeedPairingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4D2A82693040A000C7E83 /* NeedPairingInfo.swift */; };
+		31CABAFB26C2022D00B4B3C3 /* NaviLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CABAFA26C2022D00B4B3C3 /* NaviLog.swift */; };
+		31CABAFD26C2043F00B4B3C3 /* NaviLogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CABAFC26C2043F00B4B3C3 /* NaviLogManager.swift */; };
+		31CABB0026C28DCC00B4B3C3 /* Navilog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CABAFF26C28DCC00B4B3C3 /* Navilog.swift */; };
 		31D3F4CB25E3368A008FDFEC /* WebBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4CA25E3368A008FDFEC /* WebBridge.swift */; };
 		31D3F4DE25E36625008FDFEC /* PageMultiBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */; };
 		31D3F4E625E3A57A008FDFEC /* BannerBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */; };
@@ -1137,6 +1140,9 @@
 		31C4D2A32692D867000C7E83 /* EvaluationReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvaluationReport.swift; sourceTree = "<group>"; };
 		31C4D2A62692E0CE000C7E83 /* PairingKidsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingKidsView.swift; sourceTree = "<group>"; };
 		31C4D2A82693040A000C7E83 /* NeedPairingInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeedPairingInfo.swift; sourceTree = "<group>"; };
+		31CABAFA26C2022D00B4B3C3 /* NaviLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaviLog.swift; sourceTree = "<group>"; };
+		31CABAFC26C2043F00B4B3C3 /* NaviLogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaviLogManager.swift; sourceTree = "<group>"; };
+		31CABAFF26C28DCC00B4B3C3 /* Navilog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navilog.swift; sourceTree = "<group>"; };
 		31D3F4CA25E3368A008FDFEC /* WebBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebBridge.swift; sourceTree = "<group>"; };
 		31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMultiBlock.swift; sourceTree = "<group>"; };
 		31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerBlock.swift; sourceTree = "<group>"; };
@@ -2819,6 +2825,23 @@
 			path = body;
 			sourceTree = "<group>";
 		};
+		31CABAF926C2021200B4B3C3 /* log */ = {
+			isa = PBXGroup;
+			children = (
+				31CABAFA26C2022D00B4B3C3 /* NaviLog.swift */,
+				31CABAFC26C2043F00B4B3C3 /* NaviLogManager.swift */,
+			);
+			path = log;
+			sourceTree = "<group>";
+		};
+		31CABAFE26C28DAE00B4B3C3 /* navilog */ = {
+			isa = PBXGroup;
+			children = (
+				31CABAFF26C28DCC00B4B3C3 /* Navilog.swift */,
+			);
+			path = navilog;
+			sourceTree = "<group>";
+		};
 		31D3F4DB25E365F3008FDFEC /* popups */ = {
 			isa = PBXGroup;
 			children = (
@@ -3486,6 +3509,7 @@
 				D5DABD6F258972D100DF5701 /* coreData */,
 				31E76D092632633200710624 /* share */,
 				D56C6B1C257DACD800CF9AB8 /* storage */,
+				31CABAF926C2021200B4B3C3 /* log */,
 				D56C6B21257DACD800CF9AB8 /* api */,
 				D50AB8EC257F311800649C4A /* SystemEnvironment.swift */,
 				D56C6B1E257DACD800CF9AB8 /* Repository.swift */,
@@ -3566,6 +3590,7 @@
 		D56C6B25257DACD800CF9AB8 /* rest  */ = {
 			isa = PBXGroup;
 			children = (
+				31CABAFE26C28DAE00B4B3C3 /* navilog */,
 				3194318526B227FD00C20619 /* lgs */,
 				319B378426B0EAD0001501B1 /* rps */,
 				3190CB05268983DC00ACB465 /* kes */,
@@ -4025,6 +4050,7 @@
 				3152B46025D9DDE100147C86 /* SummaryViewer.swift in Sources */,
 				D573784A25A2983800EC571F /* CharacterSelectBox.swift in Sources */,
 				31C4D29C2692B43E000C7E83 /* KesModel.swift in Sources */,
+				31CABB0026C28DCC00B4B3C3 /* Navilog.swift in Sources */,
 				D56C6A4B257DA0C700CF9AB8 /* LoopSwipperView.swift in Sources */,
 				312825C426B014D400A58DB9 /* PageCashChargePrivacyAndAgree.swift in Sources */,
 				314D589425B685B2007BCA34 /* PagePairingManagement.swift in Sources */,
@@ -4163,6 +4189,7 @@
 				31A38DF92682A1BE0058287B /* TabSwitch.swift in Sources */,
 				314D6B0225D0E9A50003C749 /* PageSetup.swift in Sources */,
 				31895B1C2601F0F3002DE02E /* TopViewer.swift in Sources */,
+				31CABAFB26C2022D00B4B3C3 /* NaviLog.swift in Sources */,
 				31631C5425D22E7900E501F7 /* Preroll.swift in Sources */,
 				318EBEA32699FBEE003661CC /* PageKidsMyMonthly.swift in Sources */,
 				D56C6A32257DA0C700CF9AB8 /* CPWebView.swift in Sources */,
@@ -4369,6 +4396,7 @@
 				31A3E86A2605E59500BF044B /* PageSearchModel.swift in Sources */,
 				3167642A25CD11E8003A7721 /* PlayerBottom.swift in Sources */,
 				314C7ECB25ABC32200C489FC /* Hello.swift in Sources */,
+				31CABAFD26C2043F00B4B3C3 /* NaviLogManager.swift in Sources */,
 				3195C1B92665E73D001F513E /* PageStyle.swift in Sources */,
 				D5DC4776258219CF007EDD86 /* GridEvent.swift in Sources */,
 				31626ED725B8EA0D00F4031D /* Smd.swift in Sources */,

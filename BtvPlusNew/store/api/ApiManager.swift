@@ -78,7 +78,11 @@ class ApiManager :PageProtocol, ObservableObject{
     
     // 로그 서버 페이지이동시 켄슬 안함
     private lazy var lgs:Lgs = Lgs(network: LgsNetwork())
+    private lazy var navilog:Navilog = Navilog(network: NavilogNetwork())
+    private lazy var navilogNpi:Navilog = Navilog(network: NavilogNpiNetwork())
+    
     private(set) var updateFlag: UpdateFlag = .none
+    
     init() {
         self.initateApi()
     }
@@ -603,7 +607,13 @@ class ApiManager :PageProtocol, ObservableObject{
             isKidZone: isKidZone, gubun: gubun,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
-            
+        //NaviLog
+        case .sendNaviLog(let log, let isAnonymous):
+            if isAnonymous {
+                self.navilogNpi.sendLog(log: log, completion: {_ in}, error: nil)
+            } else {
+                self.navilog.sendLog(log: log, completion: {_ in}, error: nil)
+            }
         }
         return apiID
     }

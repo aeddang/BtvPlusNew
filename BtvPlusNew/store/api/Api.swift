@@ -176,6 +176,9 @@ enum ApiType{
                       pcId:String, isKidZone:Bool = false, gubun:String? = nil),
          postWatchLogPossession(LgsNetwork.PlayEventType, SynopsisPlayData, synopData:SynopsisData, Pairing,
                                 mbtvKey:String, pcId:String, isKidZone:Bool = false, gubun:String? = nil)
+    case sendNaviLog(String, isAnonymous:Bool)
+    
+    
     
     func coreDataKey() -> String? {
         switch self {

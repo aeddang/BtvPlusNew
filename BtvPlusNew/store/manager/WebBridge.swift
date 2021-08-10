@@ -14,7 +14,7 @@ class WebBridge :PageProtocol{
     private let storage:LocalStorage
     private let setup:Setup
     private let networkObserver:NetworkObserver
-    private var sessionId:String? = nil
+    
     init(pairing:Pairing,storage:LocalStorage, setup:Setup, networkObserver:NetworkObserver) {
         self.pairing = pairing
         self.storage = storage
@@ -135,7 +135,7 @@ class WebBridge :PageProtocol{
         info["log_type"] = SystemEnvironment.isStage ? "dev" : "live"
         info["stb_onead_id"] = nil
         info["pcid"] = self.storage.getPcid()
-        info["session_id"] = self.getSessionId()
+        info["session_id"] = self.storage.getSessionId()
         info["stbId"] = pairing.stbId
         info["stb_mac"] = pairing.hostDevice?.convertMacAdress ?? ""
         info["app_release_version"] = SystemEnvironment.bundleVersion
@@ -154,12 +154,5 @@ class WebBridge :PageProtocol{
         return info
     }
     
-    private func getSessionId()->String {
-        if let id = sessionId {return id}
-        var t = time_t(0)
-        srand48( time(&t));
-        let randNum = drand48() * 100000
-        sessionId = self.storage.getPcid() + randNum.description.toDigits(5)
-        return sessionId!
-    }
+    
 }

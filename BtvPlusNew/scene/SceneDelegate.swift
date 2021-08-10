@@ -24,6 +24,8 @@ class SceneDelegate: PageSceneDelegate {
         let pairing = Pairing()
         let networkObserver = NetworkObserver()
         let setup = Setup()
+        
+        
         self.pagePresenter.bodyColor = Color.brand.bg
         let res = Repository(
             dataProvider:dataProvider,
@@ -34,7 +36,10 @@ class SceneDelegate: PageSceneDelegate {
             setup:setup
         )
         self.repository = res
-        
+        let naviLogManager = NaviLogManager(
+            pagePresenter: self.pagePresenter,
+            repository: res
+        )
         let keyboardObserver = KeyboardObserver()
         let locationObserver = LocationObserver()
        
@@ -47,7 +52,8 @@ class SceneDelegate: PageSceneDelegate {
             .environmentObject(sceneObserver)
             .environmentObject(keyboardObserver)
             .environmentObject(locationObserver)
-            .environmentObject(setup)
+            .environmentObject(setup) 
+            .environmentObject(naviLogManager)
         return AnyView(environmentView)
     }
     
@@ -62,6 +68,7 @@ class SceneDelegate: PageSceneDelegate {
                 return false
             }
         }
+        
         if PageSceneModel.needPairing(willPage) && self.repository?.pairing.status != .pairing {
             self.repository?.appSceneObserver?.alert = .needPairing()
             return false

@@ -58,8 +58,9 @@ public enum SrisTypCd: String {
         default: return "없음\(self)"
         }
     }
-
 }
+
+
 
 enum PpmPrdTypCd: String {
     case none = "" // 없음
@@ -98,7 +99,7 @@ enum CacbroCd: String {
     case BS //방송사 요청 중지
     case SS //공급중단
     case BC //결방
-    public init(value: String) {
+    init(value: String) {
         let uppercased = value.uppercased()
         switch uppercased {
         case "": self = .BC
@@ -146,7 +147,7 @@ enum RsluTypCd: Int {
     case uhd = 5
     case uhd_hdr = 6
 
-    public init(value: String) {
+    init(value: String) {
         switch value {
         case "105": self = .ld
         case "10", "110": self = .sd

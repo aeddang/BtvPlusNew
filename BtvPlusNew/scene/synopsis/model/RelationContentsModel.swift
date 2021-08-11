@@ -95,7 +95,9 @@ class RelationContentsModel:ObservableObject {
                 let data = SynopsisData(
                     srisId: $0.sris_id,
                     searchType: EuxpNetwork.SearchType.sris.rawValue,
-                    epsdId: $0.epsd_id, epsdRsluId: nil, prdPrcId: nil, kidZone: nil)
+                    epsdId: $0.epsd_id, epsdRsluId: nil, prdPrcId: nil, kidZone: nil,
+                    synopType: .season
+                )
                 
                 return SeasonData(title: $0.sson_choic_nm, srisId:$0.sris_id, synopsisData: data)
             }

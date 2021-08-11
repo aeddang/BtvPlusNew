@@ -316,7 +316,10 @@ class AlramData:InfinityData,ObservableObject{
             self.move = .synopsis
             let synopsisData = SynopsisData(
                 searchType: EuxpNetwork.SearchType.sris.rawValue,
-                epsdId: epsdId
+                epsdId: epsdId,
+                synopType: landingType == .season
+                    ? .season
+                    : landingType == .trailer ? .none : .title
             )
             var param = [PageParam:Any]()
             param[.data] = synopsisData
@@ -360,21 +363,24 @@ class AlramData:InfinityData,ObservableObject{
             var param = [PageParam:Any]()
             
             switch synopsisType {
-            case .title :
-                let synopsisData = SynopsisData(
-                    searchType: EuxpNetwork.SearchType.sris.rawValue,
-                    epsdId: id
-                )
-                param[.data] = synopsisData
-                self.move = .synopsis
             case .package :
                 let synopsisData = SynopsisData(
                     srisId: id,
-                    searchType: EuxpNetwork.SearchType.sris.rawValue
+                    searchType: EuxpNetwork.SearchType.sris.rawValue,
+                    synopType: synopsisType
                 )
                 param[.data] = synopsisData
                 self.move = .synopsisPackage
+            default :
+                let synopsisData = SynopsisData(
+                    searchType: EuxpNetwork.SearchType.sris.rawValue,
+                    epsdId: id,
+                    synopType: synopsisType
+                )
+                param[.data] = synopsisData
+                self.move = .synopsis
             }
+            
             self.moveData = param
             
         case .coupon:

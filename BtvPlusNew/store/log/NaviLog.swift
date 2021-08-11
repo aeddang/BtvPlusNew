@@ -12,20 +12,16 @@ struct NaviLog {
         case play = "/play"                                 // 09. 재생
         case playTouchGuide = "/play/touch_guide"
         case playInside = "/play/inside"                    // 재생 | 인사이드
-                                
+        case popup = "/popup"                               // GNB팝업
+        
         case myConnectStbDetailSubscriberAuthStbSelection = "/my/connect_stb/detail/subscriber_auth/stb_selection" // 세탑 여러개
         case myConnectStbBtvAuthNumberCompleted = "/my/connect_stb/btv_auth_number/completed"
-        case popup = "/popup"                               // GNB팝업
         case searchResult = "/search/result"                      // 검색결과
-        
         case remoteconStatus = "/remotecon/status"          // 리모컨 세부상태
         case appPush = "/app_push"
-        
         case purchaseOrderCompleted = "/purchase/order_completed"   // 상품구매완료
-        
         case zemTabMenu = "/category/zemkids/tabmenu"         // ZEM 키즈 탭메뉴
         case zemSearchResult = "/category/zemkids/search_result" // ZEM 키즈|검색결과
-    
         case zemMonthlyTabMenu = "/category/zemkids/monthly_payment/tab_menu"
         case zemPlay = "/category/zemkids/play" // ZEM 키즈 재생
         case autoPairing = "/autopairing" // 자동연결페어링
@@ -49,8 +45,8 @@ struct NaviLog {
             return nil
         case .category: return "/category"
         case .synopsis: return "/synopsis"
-        case .synopsisPackage: return nil
-        case .synopsisPlayer: return nil
+        case .synopsisPackage: return "/synopsis"
+        case .synopsisPlayer: return "/synopsis"
         
         case .my:
             if repository.pairing.status == .pairing {
@@ -417,8 +413,8 @@ struct MenuNaviContentsBodyItem : Encodable {
     var channel_name:String? = nil     // channel 명
     var genre_text:String? = nil     // 장르, ex)영화
     var genre_code:String? = nil     // 장르, ex)MG0000000001 --> 드라마
-    var paid:Double? = nil                // 유료 여부 ex)true (유료인 경우)
-    var purchase:String? = nil           // 구매 여부 ex)true (구매한 경우)
+    var paid:Bool? = nil                // 유료 여부 ex)true (유료인 경우)
+    var purchase:Bool? = nil           // 구매 여부 ex)true (구매한 경우)
     var episode_id:String? = nil     // episode_id, btv plus 는 episode_id 없음, 5.0
     var episode_resolution_id:String? = nil     // episode_id, btv plus 는 episode_id 없음, 5.0
     var cid:String? = nil           // 4.0

@@ -18,7 +18,7 @@ struct TopViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var sceneObserver:PageSceneObserver
-
+    
     var data:SynopsisPackageModel
    
     @State var isPairing:Bool? = nil

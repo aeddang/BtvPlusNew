@@ -30,7 +30,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
     @State var list: PosterList?
     private func getList() -> some View {
         if let list = self.list {
-            ComponentLog.d("Recycle PosterBlock " , tag: "BlockProtocol")
+            //ComponentLog.d("Recycle PosterBlock " , tag: "BlockProtocol")
             return list
         }
         let newList = PosterList(
@@ -41,7 +41,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
         DispatchQueue.main.async {
             self.list = newList
         }
-        ComponentLog.d("New PosterBlock " , tag: "BlockProtocol")
+        //ComponentLog.d("New PosterBlock " , tag: "BlockProtocol")
         return newList
     }
     

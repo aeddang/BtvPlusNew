@@ -11,6 +11,7 @@ import SwiftUI
 struct PlayViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var pageObservable:PageObservable = PageObservable()
+    var viewModel: BtvPlayerModel? = nil
     var title:String? = nil
     var textInfo:String? = nil
     var imgBg:String? = nil
@@ -26,6 +27,7 @@ struct PlayViewer: PageComponent{
                 VStack(spacing:0){
                     HStack(spacing:self.isFullScreen ? Dimen.margin.regular : Dimen.margin.light){
                         Button(action: {
+                            self.viewModel?.btvPlayerEvent = .close
                             self.pagePresenter.goBack()
                         }) {
                             Image(Asset.icon.back)

@@ -36,7 +36,7 @@ struct PlayerBottomBody: PageComponent{
                     RectButton(
                         text: String.player.directPlay
                         ){_ in
-                        
+                        self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , String.player.directPlay)
                         self.viewModel.event = .seekTime(self.viewModel.openingTime, true)
                     }
                 }
@@ -66,7 +66,7 @@ struct PlayerBottomBody: PageComponent{
                             text: String.player.continueView,
                             icon: Asset.icon.play
                             ){_ in
-                            
+                            self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , String.player.continueView)
                             self.viewModel.btvPlayerEvent = .continueView
                         }
                     }else{
@@ -96,6 +96,7 @@ struct PlayerBottomBody: PageComponent{
                         textTrailing: self.viewModel.synopsisPlayerData?.previewCount ?? ""
                         ){_ in
                         
+                        self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , String.player.cookie)
                     }
                 }
                 
@@ -108,6 +109,7 @@ struct PlayerBottomBody: PageComponent{
                         icon: Asset.icon.play
                         ){_ in
                         
+                        self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , self.nextBtnTitle)
                         self.viewModel.btvPlayerEvent = .nextView
                     }
                 }

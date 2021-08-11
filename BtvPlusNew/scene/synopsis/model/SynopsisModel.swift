@@ -53,6 +53,11 @@ class SynopsisModel : PageProtocol {
     private(set) var isLimitedWatch:Bool = false
     private(set) var isRecommandAble:Bool = false
     private(set) var seasonTitle:String? = nil
+    
+    private(set) var title:String? = nil
+    private(set) var brcastChnlNm:String? = nil
+    private(set) var metaTypCd:String? = nil
+    
     init(type:MetvNetwork.SynopsisType = .none ) {
         self.synopsisType = type
     }
@@ -72,6 +77,9 @@ class SynopsisModel : PageProtocol {
         self.siries = data.series
         
         if let contents = data.contents{
+            self.title = contents.title
+            self.brcastChnlNm = contents.brcast_chnl_nm
+            self.metaTypCd = contents.meta_typ_cd
             self.seasonTitle = contents.sson_choic_nm
             self.isQuiz = contents.quiz_yn?.toBool() ?? false
             self.playGradeData = PlayGradeData().setData(data: contents)

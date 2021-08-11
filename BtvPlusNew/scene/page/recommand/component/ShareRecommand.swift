@@ -15,11 +15,13 @@ extension ShareRecommand {
 }
 
 struct ShareRecommand: PageComponent {
+    
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
    
     var synopsisData:SynopsisData? = nil
     @State var benifitMe:String = ""
@@ -90,7 +92,7 @@ struct ShareRecommand: PageComponent {
                     size: Dimen.button.regular,
                     bgColor:Color.brand.secondary
                 ){_ in
-                    
+                    self.sendLog(category: String.app.close)
                     self.close()
                 }
                 FillButton(
@@ -106,6 +108,8 @@ struct ShareRecommand: PageComponent {
                     margin: 0,
                     bgColor:Color.brand.primary
                 ){_ in
+                    
+                    self.sendLog(category: String.share.synopsisRecommandButton)
                     self.getRecommandCode()
                 }
             }
@@ -189,6 +193,13 @@ struct ShareRecommand: PageComponent {
         dateFormat.dateFormat = "yyyyMMddHHmm"
         dateFormat.locale = Locale(identifier: "en_US_POSIX")
         return dateFormat.string(from: Date())
+    }
+    
+    private func sendLog(category:String){
+       
+        var actionBody = MenuNaviActionBodyItem()
+        actionBody.category = category
+        self.naviLogManager.popupLog(action: .clickPopupButton, actionBody: actionBody)
     }
 }
 

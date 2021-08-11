@@ -14,7 +14,7 @@ enum PrerollRequest {
 }
 
 enum PrerollEvent {
-    case event(OneAdEvent), finish, start
+    case event(OneAdEvent), finish, start, moveAd, skipAd
 }
 class PrerollModel: ComponentObservable{
     @Published var request:PrerollRequest? = nil{ willSet{ self.status = .update } }
@@ -85,7 +85,8 @@ struct Preroll: UIViewRepresentable, PageProtocol {
             //self.parent.viewModel.event = .event(event)
             //ComponentLog.d("Preroll event " + event.debugDescription, tag: self.parent.tag)
             switch event.eventType {
-            case .ClickAd: do{}
+            case .ClickAd:
+                self.parent.viewModel.event = .moveAd
             case .CloseLandingPage: do{}
             case .DidReceiveAd:
                 self.parent.viewModel.event = .start
@@ -94,11 +95,11 @@ struct Preroll: UIViewRepresentable, PageProtocol {
             case .FailReceiveAd,
                  .NotExistReceiveAd,
                  .FinishAd,
-                 .SkipAd,
                  .StopAd:
                 
                 self.parent.viewModel.event = .finish
-            
+            case .SkipAd:
+                 self.parent.viewModel.event = .skipAd
             default: do{}
             }
         }

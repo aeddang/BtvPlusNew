@@ -22,6 +22,7 @@ struct PlayerWaiting: PageComponent{
             VStack(spacing:0){
                 HStack(spacing:self.isFullScreen ? PlayerUI.fullScreenSpacing : PlayerUI.spacing){
                     Button(action: {
+                        self.viewModel.btvPlayerEvent = .close
                         self.pagePresenter.goBack()
                     }) {
                         Image(Asset.icon.back)

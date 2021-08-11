@@ -13,6 +13,7 @@ struct PagePairingFamilyInvite: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var pageObservable:PageObservable = PageObservable()
    
     @State var isAgree1:Bool = true
@@ -67,7 +68,7 @@ struct PagePairingFamilyInvite: PageView {
                         size: Dimen.button.regular,
                         bgColor:Color.brand.secondary
                     ){_ in
-                        
+                        self.sendLog(action: .clickPopupButton, category:  String.app.cancel )
                         self.pagePresenter.closePopup(self.pageObject?.id)
                     }
                     FillButton(
@@ -83,6 +84,8 @@ struct PagePairingFamilyInvite: PageView {
                         margin: 0,
                         bgColor:Color.brand.primary
                     ){_ in
+                        
+                        self.sendLog(action: .clickPopupButton, category: String.app.confirm)
                         if self.pairing.status == .pairing {
                             if self.pairing.stbId == self.inviteHostDeviceid {
                                 self.appSceneObserver.alert = .alert(
@@ -177,7 +180,7 @@ struct PagePairingFamilyInvite: PageView {
             guard let obj = self.pageObject  else { return }
             self.inviteNick = obj.getParamValue(key: .title) as? String ?? ""
             self.pairingToken = obj.getParamValue(key: .id) as? String ?? ""
-            
+            self.sendLog(action: .pageShow, category: !self.inviteNick.isEmpty ? "mobile_invitation" : "etc" )
             
             
         }
@@ -187,6 +190,15 @@ struct PagePairingFamilyInvite: PageView {
     @State var inviteNick:String = ""
     @State var pairingToken:String = ""
     @State var inviteHostDeviceid:String? = nil
+    
+    private func sendLog(action:NaviLog.action, category:String){
+       
+        var actionBody = MenuNaviActionBodyItem()
+        actionBody.menu_id = ""
+        actionBody.menu_name = "연결초대"
+        actionBody.category = category
+        self.naviLogManager.popupLog(action: action, actionBody: actionBody)
+    }
     
 }
 

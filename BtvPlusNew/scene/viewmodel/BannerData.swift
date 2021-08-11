@@ -46,7 +46,10 @@ class BannerData:InfinityData, PageProtocol{
     private(set) var move:PageID? = nil
     private(set) var moveData:[PageParam:Any]? = nil
     private(set) var bgColor:Color? = nil
-    private(set) var type:BannerType = .list 
+    private(set) var type:BannerType = .list
+    
+    private(set) var menuId:String? = nil
+    private(set) var menuNm:String? = nil
     func setPairing()-> BannerData {
         self.move = .pairing
         self.resourceImage = Asset.image.bannerTopPairing
@@ -56,6 +59,8 @@ class BannerData:InfinityData, PageProtocol{
     func setDataKids(data:EventBannerItem) -> BannerData {
         self.type = .kids
         self.bgColor = Color.app.ivoryDeep
+        self.menuId = data.menu_id
+        self.menuNm = data.menu_nm
         image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: ListItemKids.banner.type01)  ?? image
         title = data.menu_nm
         parseAction(data: data)
@@ -68,6 +73,8 @@ class BannerData:InfinityData, PageProtocol{
     }
     
     func setData(data:EventBannerItem, type: EuxpNetwork.BannerType = .list, cardType:BlockData.CardType? = nil,  isFloat:Bool = false ,idx:Int = -1) -> BannerData {
+        self.menuId = data.menu_id
+        self.menuNm = data.menu_nm
         switch type {
         case .list:
             if  cardType == .bigPoster {
@@ -182,7 +189,8 @@ class BannerData:InfinityData, PageProtocol{
             let synopsisData = SynopsisData(
                 srisId: data.shcut_sris_id,
                 searchType: data.synon_typ_cd,
-                epsdId: data.shcut_epsd_id
+                epsdId: data.shcut_epsd_id,
+                synopType: type
             )
             var param = [PageParam:Any]()
             param[.data] = synopsisData

@@ -232,7 +232,7 @@ struct BtvPlayer: PageComponent{
                 guard let evt = evt else {return}
                 switch evt {
                 case .start : self.viewModel.event = .pause
-                case .finish : self.initPlay()
+                case .finish, .skipAd : self.initPlay()
                 default : do{}
                 }
             }

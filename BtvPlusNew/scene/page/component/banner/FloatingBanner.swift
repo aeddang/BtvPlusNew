@@ -12,6 +12,7 @@ import Combine
 import struct Kingfisher.KFImage
 
 struct FloatingBanner: PageComponent {
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
     var datas: [BannerData]
     @State var pages: [PageViewProtocol] = []
@@ -77,6 +78,8 @@ struct FloatingBanner: PageComponent {
                     TextButton(defaultText: String.app.todayUnvisible,
                                textModifier:MediumTextStyle(
                                     size: Font.size.lightExtra, color: Color.app.grey).textModifier ){ _ in
+                        
+                        self.sendLog(action: .clickPopupButton, category: "오늘하루보지않기")
                         self.close?(true)
                     }
                     Spacer()
@@ -84,6 +87,8 @@ struct FloatingBanner: PageComponent {
                     TextButton(defaultText: String.app.close,
                                textModifier:MediumTextStyle(
                                     size: Font.size.lightExtra, color: Color.app.black).textModifier ){ _ in
+                        
+                        self.sendLog(action: .clickPopupButton, category: "닫기")
                         self.close?(false)
                     }
                 }
@@ -106,6 +111,7 @@ struct FloatingBanner: PageComponent {
         }
         .onReceive( self.viewModel.$index ){ idx in
             self.setBar(idx:idx)
+            
         }
     }
     
@@ -117,10 +123,20 @@ struct FloatingBanner: PageComponent {
             self.leading = size * CGFloat(idx)
             self.trailing = size * CGFloat(max(0,(count - idx - 1)))
         }
+        self.sendLog(action: .pageShow)
+    }
+    private func sendLog(action:NaviLog.action, category:String? = "etc"){
+        let data = self.datas[self.viewModel.index]
+        var actionBody = MenuNaviActionBodyItem()
+        actionBody.menu_id = data.menuId
+        actionBody.menu_name = data.menuNm
+        actionBody.category = category
+        self.naviLogManager.popupLog(action: action, actionBody: actionBody)
     }
 }
 
 struct FloatingBannerItem: PageComponent, Identifiable {
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appSceneObserver:AppSceneObserver
@@ -140,6 +156,12 @@ struct FloatingBannerItem: PageComponent, Identifiable {
             .modifier(MatchParent())
         .clipped()
         .onTapGesture {
+            
+            var actionBody = MenuNaviActionBodyItem()
+            actionBody.menu_id = data.menuId
+            actionBody.menu_name = data.menuNm
+            self.naviLogManager.popupLog(action: .clickPopupContents, actionBody: actionBody)
+            
             if let move = data.move {
                 switch move {
                 case .home, .category:

@@ -8,6 +8,7 @@ import Foundation
 import SwiftUI
 
 struct PageRecommand: PageView {
+   
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @State var synopsisData:SynopsisData? = nil
@@ -35,6 +36,9 @@ struct PageRecommand: PageView {
         }
         
     }//body
+    
+    
+   
 }
 
 

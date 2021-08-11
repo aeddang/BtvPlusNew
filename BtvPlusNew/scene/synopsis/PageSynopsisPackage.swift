@@ -39,13 +39,13 @@ struct PageSynopsisPackage: PageView {
                 ) {
                     if self.type == .btv {
                         ZStack{
-                            if self.synopsisPackageModel != nil && self.isUIView && !self.progressError {
+                            if self.isUIView && !self.progressError, let synopsisPackageModel = self.synopsisPackageModel {
                                 if self.sceneOrientation == .portrait {
                                     PackageBody(
                                         infinityScrollModel: self.infinityScrollModel,
                                         synopsisListViewModel: self.synopsisListViewModel,
                                         peopleScrollModel: self.peopleScrollModel,
-                                        synopsisPackageModel: self.synopsisPackageModel!,
+                                        synopsisPackageModel: synopsisPackageModel,
                                         isPairing: self.isPairing,
                                         contentID: self.synopsisModel?.epsdId,
                                         episodeViewerData: self.episodeViewerData,
@@ -62,7 +62,7 @@ struct PageSynopsisPackage: PageView {
                                             infinityScrollModel: self.infinityScrollModel,
                                             synopsisListViewModel: self.synopsisListViewModel,
                                             peopleScrollModel: self.peopleScrollModel,
-                                            synopsisPackageModel: self.synopsisPackageModel!,
+                                            synopsisPackageModel: synopsisPackageModel,
                                             isPairing: self.isPairing,
                                             contentID: self.synopsisModel?.epsdId,
                                             episodeViewerData: self.episodeViewerData,
@@ -229,12 +229,12 @@ struct PageSynopsisPackage: PageView {
                     if let json = obj.getParamValue(key: .data) as? SynopsisJson {
                         self.synopsisData = SynopsisData(
                             srisId: json.srisId, searchType:EuxpNetwork.SearchType.sris.rawValue, epsdId: json.epsdId,
-                            epsdRsluId: json.episodeResolutionId, prdPrcId: json.pid, kidZone: nil)
+                            epsdRsluId: json.episodeResolutionId, prdPrcId: json.pid, kidZone: nil, synopType: .package)
                     }
                     if let qurry = obj.getParamValue(key: .data) as? SynopsisQurry {
                         self.synopsisData = SynopsisData(
                             srisId:  qurry.srisId, searchType:EuxpNetwork.SearchType.sris.rawValue, epsdId:  qurry.epsdId,
-                            epsdRsluId: nil, prdPrcId: nil, kidZone: nil)
+                            epsdRsluId: nil, prdPrcId: nil, kidZone: nil, synopType: .package)
                     }
                 }
                 self.initPage()

@@ -27,15 +27,15 @@ class PageObject : Equatable, Identifiable{
     var isAnimation:Bool = false
     var sendLog:Bool = false
     var animationType:PageAnimationType = .horizontal
-    let id:String
+    let id:String = UUID().uuidString
     init(
         pageID:PageID,
         pageIDX:Int = 0,
         pageGroupID:String? = nil,
         params:[PageParam:Any]? = nil,
         isPopup:Bool = false,
-        isDimed:Bool = false,
-        pageKey:String = UUID().uuidString
+        isDimed:Bool = false
+       // pageKey:String = UUID().uuidString
     ){
         self.pageID = pageID
         self.pageIDX = pageIDX
@@ -43,7 +43,7 @@ class PageObject : Equatable, Identifiable{
         self.params = params
         self.isPopup = isPopup
         self.isDimed = isDimed
-        self.id = pageKey
+        //self.id = pageKey
     }
     
     @discardableResult
@@ -101,6 +101,12 @@ enum PageLayer:String {
 
 enum SceneOrientation :String{
     case portrait, landscape
+    var logConfig: String {
+        switch self {
+        case .portrait: return "vertical"
+        case .landscape: return "horizontal"
+        }
+    }
 }
 
 open class PageObservable: ObservableObject  {
@@ -355,8 +361,9 @@ protocol PageViewProtocol : PageContentProtocol{
     var contentBody:AnyView { get }
 }
 
-protocol PageView : View, PageViewProtocol{}
+protocol PageView : View, PageViewProtocol, Identifiable{}
 extension PageView {
+    
     var childViews:[PageViewProtocol] {
         get{ [] }
     }

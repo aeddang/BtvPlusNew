@@ -207,6 +207,8 @@ struct AppLayout: PageComponent{
             if self.setup.drmTestUser {
                 self.pagePresenter.openPopup(PageProvider.getPageObject(.playerTest))
             }
+            
+            
             //self.pagePresenter.openPopup(PageProvider.getPageObject(.pairingAppleTv))
             
             
@@ -222,11 +224,17 @@ struct AppLayout: PageComponent{
              self.pagePresenter.changePage(PageKidsProvider
                                              .getPageObject(.kidsHome)
                                              //.addParam(key: .id, value: "NM2000030726")
-            self.pagePresenter.openPopup(
-                PageProvider.getPageObject(.recommandReceive)
-                    .addParam(key: .id, value: "e63291c67b5f497c97d265f6409a9e26")
-                    .addParam(key: .type, value: "02")
-            )
+             
+             self.pagePresenter.openPopup(
+                 PageProvider.getPageObject(.recommandReceive)
+                     .addParam(key: .title, value: "test")
+                     .addParam(key: .id, value: "e63291c67b5f497c97d265f6409a9e26")
+                     .addParam(key: .type, value: "02")
+             )
+             self.pagePresenter.openPopup(PageProvider.getPageObject(.pairingFamilyInvite)
+                                             .addParam(key: .title, value: "ㅓㅓ")
+                                             .addParam(key: .id, value: "ba68a74dd9644a608cabaae0f36c91c6")
+             )
             */
         }
         if let alram = self.appObserver.alram  {

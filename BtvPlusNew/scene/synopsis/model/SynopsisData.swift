@@ -7,15 +7,34 @@
 
 import Foundation
 enum SynopsisType {
-    case package, title
+    case none, package, title, season
     public init(value: String?) {
         switch value {
+        case "01": self = .title
+        case "02": self = .season
         case "03": self = .package
         case "41": self = .package
-        default: self = .title
+        default: self = .none
         }
     }
     
+    var logCategory: String {
+        switch self {
+        case .title: return "ppv"
+        case .season: return "pps"
+        case .package: return "ppp"
+        default : return ""
+        }
+    }
+    var logResult: String {
+        switch self {
+        case .title: return "단편"
+        case .season: return "시즌"
+        case .package: return "패키지"
+        default : return ""
+        }
+    }
+
 }
 
 struct SynopsisData{
@@ -31,6 +50,8 @@ struct SynopsisData{
     var contentId:String? = nil
     var ppmIds:String? = nil
     var isLimitedWatch:Bool = false
+    //naviLog
+    var synopType:SynopsisType = SynopsisType.none
    
 }
 

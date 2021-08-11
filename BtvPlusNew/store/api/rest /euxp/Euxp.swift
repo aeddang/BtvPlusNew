@@ -83,22 +83,11 @@ extension EuxpNetwork{
         case CALL_KIDS_WATCH = "KESV50602"  // kids
     }
     
-   
     enum SrisTypCd: String {
         case none = "00" // error
         case season = "01"
         case title = "02"
         case contentsPack = "04"
-        /*
-        var name: String {
-            switch self {
-            case .season: return "시즌"
-            case .title: return "타이틀"
-            case .contentsPack: return "패키지"
-            default: return "없음\(self)"
-            }
-        }
-        */
     }
     
     enum BannerType: String {

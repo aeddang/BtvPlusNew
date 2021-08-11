@@ -16,6 +16,7 @@ struct PageSynopsisPlayer: PageView {
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
     
     @ObservedObject var pageDataProviderModel:PageDataProviderModel = PageDataProviderModel()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -50,6 +51,22 @@ struct PageSynopsisPlayer: PageView {
                     .modifier(PageFullScreen())
                 }
             }
+            .onReceive(self.prerollModel.$event){evt in
+                guard let evt = evt else { return }
+                self.onEvent(prerollEvent: evt)
+            }
+            .onReceive(self.playerModel.$btvPlayerEvent){evt in
+                guard let evt = evt else { return }
+                self.onEvent(btvPlayerEvent: evt)
+            }
+            .onReceive(self.playerModel.$btvUiEvent){evt in
+                guard let evt = evt else { return }
+                self.onEvent(btvUiEvent: evt)
+            }
+            .onReceive(self.playerModel.$streamEvent){evt in
+                guard let evt = evt else { return }
+                self.onEvent(streamEvent: evt)
+            }
             .onReceive(self.playerModel.$event){evt in
                 guard let evt = evt else {return}
                 switch evt {
@@ -58,6 +75,7 @@ struct PageSynopsisPlayer: PageView {
                     self.pagePresenter.closePopup(self.pageObject?.id)
                 default : break
                 }
+                self.onEvent(event: evt)
             }
             .onReceive(self.self.pageDragingModel.$event){ evt in
                 guard let evt = evt else {return}
@@ -70,7 +88,6 @@ struct PageSynopsisPlayer: PageView {
                 }
                 default : break
                 }
-                
             }
             .onReceive(self.pairing.$event){evt in
                 guard let _ = evt else {return}
@@ -106,7 +123,7 @@ struct PageSynopsisPlayer: PageView {
                             self.initPage()
                         }
                     }
-                default : do{}
+                default : break
                 }
             }
             .onReceive(self.appSceneObserver.$alertResult){ result in
@@ -133,12 +150,12 @@ struct PageSynopsisPlayer: PageView {
                     if let json = obj.getParamValue(key: .data) as? SynopsisJson {
                         self.synopsisData = SynopsisData(
                             srisId: json.srisId, searchType:EuxpNetwork.SearchType.sris.rawValue, epsdId: json.epsdId,
-                            epsdRsluId: json.episodeResolutionId, prdPrcId: json.pid, kidZone: nil)
+                            epsdRsluId: json.episodeResolutionId, prdPrcId: json.pid, kidZone: nil, synopType: SynopsisType.none)
                     }
                     if let qurry = obj.getParamValue(key: .data) as? SynopsisQurry {
                         self.synopsisData = SynopsisData(
                             srisId:  qurry.srisId, searchType:EuxpNetwork.SearchType.sris.rawValue, epsdId:  qurry.epsdId,
-                            epsdRsluId: nil, prdPrcId: nil, kidZone: nil)
+                            epsdRsluId: nil, prdPrcId: nil, kidZone: nil, synopType: SynopsisType.none)
                     }
                 }
                 self.initPage()
@@ -276,11 +293,16 @@ struct PageSynopsisPlayer: PageView {
     
     private func onAllProgressCompleted(){
         PageLog.d("onAllProgressCompleted(", tag: self.tag)
+        if self.isPlayViewActive{
+            self.naviLog(
+                action: .pageShow,
+                category: self.synopsisPlayType.logCategory,
+                result: self.synopsisData?.synopType.logResult)
+        }
     }
     
 
     private func setupSynopsis (_ data:Synopsis) {
-        
         if self.synopsisData?.srisId?.isEmpty != false { self.synopsisData?.srisId = data.contents?.sris_id }
         if self.synopsisData?.epsdId?.isEmpty != false { self.synopsisData?.epsdId = data.contents?.epsd_id }
         PageLog.d("srisId " + (self.synopsisData?.srisId ?? "nil"), tag: self.tag)
@@ -334,6 +356,100 @@ struct PageSynopsisPlayer: PageView {
      */
     func playCompleted(){
         
+    }
+    
+    
+    func onEvent(btvUiEvent:BtvUiEvent){
+        switch btvUiEvent {
+        case .guide :
+            self.naviLog(pageID: .playTouchGuide, action: .pageShow, category: nil )
+        case .clickInsideButton(let action, let title) :
+            self.naviLog(pageID: .playInside, action: action, category: title )
+        case .more :
+            self.naviLog(action: .clickVodConfig, config:"etc" )
+        default: break
+        }
+    }
+    
+    func onEvent(btvPlayerEvent:BtvPlayerEvent){
+        switch btvPlayerEvent {
+        case .close :
+            self.naviLog(
+                action: .clickPlayBackList,
+                config: self.sceneObserver.sceneOrientation.logConfig
+                )
+        default: break
+        }
+        
+    }
+    
+    func onEvent(prerollEvent:PrerollEvent){
+        switch prerollEvent {
+        case .moveAd :
+            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고정보더보기")
+        case .skipAd :
+            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고건너뛰기")
+        default: break
+        }
+    }
+    
+    func onEvent(event:PlayerUIEvent){
+        switch event {
+        case .pause :
+            self.playNaviLog(action: .clickVodPause, watchType: .watchPause)
+        case .resume :
+            self.playNaviLog(action: .clickVodPlay, watchType: .watchStart)
+        case .togglePlay :
+            if self.playerModel.isPlay {
+                self.playNaviLog(action: .clickVodPause, watchType: .watchPause)
+            } else {
+                self.playNaviLog(action: .clickVodPlay, watchType: .watchStart)
+            }
+        default: break
+        }
+    }
+    
+    func onEvent(streamEvent:PlayerStreamEvent){
+        switch streamEvent {
+        case .loaded:
+            self.playNaviLog(action: .clickVodPlay, watchType: .watchStart)
+        case .stoped:
+            self.playNaviLog(action: .clickVodStop, watchType: .watchStop)
+        case .completed:
+            self.playNaviLog(action: .clickVodStop, watchType: .watchStop)
+        default: break
+        }
+    }
+    
+    func playNaviLog( action:NaviLog.action, watchType:NaviLog.watchType){
+        self.naviLog(action: action, watchType: watchType)
+    }
+    
+    func naviLog(pageID:NaviLog.PageId? = nil , action:NaviLog.action,
+                 watchType:NaviLog.watchType? = nil,
+                 config:String? = nil
+                 ){
+        let category = self.synopsisPlayType.logCategory
+        self.naviLog(action: action, watchType: watchType, config: config, category: category, result: nil)
+    }
+    
+    func naviLog(pageID:NaviLog.PageId? = nil , action:NaviLog.action,
+                 watchType:NaviLog.watchType? = nil,
+                 config:String? = nil,
+                 category: String?, result: String? = nil
+                 ){
+        if action == .pageShow, let synopsisModel = self.synopsisModel{
+            self.naviLogManager.setupSysnopsis(synopsisModel)
+        }
+        let result = result ?? self.synopsisData?.synopType.logResult
+        self.naviLogManager.playerLog(
+            pageID: .play,
+            action: action,
+            watchType : watchType,
+            category: category,
+            result: result,
+            config:config
+        )
     }
 }
 

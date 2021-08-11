@@ -136,6 +136,7 @@ struct KidsSynopsis: PageComponent{
                         if !self.isPlayAble {
                             PlayViewerKids(
                                 pageObservable:self.pageObservable,
+                                viewModel:self.playerModel,
                                 title: self.title,
                                 textInfo: self.textInfo,
                                 imgBg: self.isPlayViewActive ? self.imgBg : nil,

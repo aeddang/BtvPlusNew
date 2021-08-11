@@ -43,6 +43,7 @@ struct SynopsisTop: PageComponent{
             if !self.isPlayAble {
                 PlayViewer(
                     pageObservable:self.pageObservable,
+                    viewModel:self.playerModel,
                     title: self.title,
                     textInfo: self.textInfo,
                     imgBg: self.isPlayViewActive ? self.imgBg : nil,

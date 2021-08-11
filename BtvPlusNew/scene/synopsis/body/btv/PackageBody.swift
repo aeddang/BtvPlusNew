@@ -35,7 +35,8 @@ struct PackageBody: PageComponent{
             useTracking:false
             ){
             if self.useTop {
-                TopViewer( data: synopsisPackageModel)
+                TopViewer(
+                    data: synopsisPackageModel)
                     .frame(height:TopViewer.height)
                     .modifier(ListRowInset(spacing: Dimen.margin.regular))
             }

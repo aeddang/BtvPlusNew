@@ -13,10 +13,7 @@ extension PageSynopsis {
     class ComponentViewModel:ComponentObservable{
         @Published var uiEvent:ComponentEvent? = nil {didSet{ if uiEvent != nil { uiEvent = nil} }}
     }
-    
 }
-
-
 
 struct PageSynopsis: PageView {
     var type:PageType = .btv
@@ -27,6 +24,7 @@ struct PageSynopsis: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var setup:Setup
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var componentViewModel:ComponentViewModel = ComponentViewModel()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -178,6 +176,10 @@ struct PageSynopsis: PageView {
                     }
                     self.onEvent(btvPlayerEvent: evt)
                 }
+                .onReceive(self.prerollModel.$event){evt in
+                    guard let evt = evt else { return }
+                    self.onEvent(prerollEvent: evt)
+                }
                 .onReceive(self.playerModel.$btvUiEvent){evt in
                     guard let evt = evt else { return }
                     self.onEvent(btvUiEvent: evt)
@@ -281,15 +283,16 @@ struct PageSynopsis: PageView {
                 }
             }
             .onReceive(self.pagePresenter.$currentTopPage){ page in
+                if !self.isPageUiReady {return}
                 if page != self.pageObject {
                     self.isFinalPlaying = self.playerModel.isPrerollPlay ? true : self.playerModel.isPlay
                     self.playerModel.event = .pause
-                    ComponentLog.d("isFinalPlaying pause" , tag: "BtvPlayer")
+                    //ComponentLog.d("isFinalPlaying pause" , tag: "PageSynopsis BtvPlayer")
                 } else {
                     if self.isFinalPlaying == true {
                         self.playerModel.event = .resume
                         self.isFinalPlaying = false
-                        ComponentLog.d("isFinalPlaying resume" , tag: "BtvPlayer")
+                        //ComponentLog.d("isFinalPlaying resume" , tag: "PageSynopsis BtvPlayer")
                     }
                 }
                 self.useTracking = page?.id == self.pageObject?.id
@@ -341,12 +344,16 @@ struct PageSynopsis: PageView {
                     if let json = obj.getParamValue(key: .data) as? SynopsisJson {
                         self.synopsisData = SynopsisData(
                             srisId: json.srisId, searchType:EuxpNetwork.SearchType.sris.rawValue, epsdId: json.epsdId,
-                            epsdRsluId: json.episodeResolutionId, prdPrcId: json.pid, kidZone: nil)
+                            epsdRsluId: json.episodeResolutionId, prdPrcId: json.pid, kidZone: nil,
+                            synopType: SynopsisType(value: json.synopType)
+                        )
                     }
                     if let qurry = obj.getParamValue(key: .data) as? SynopsisQurry {
                         self.synopsisData = SynopsisData(
                             srisId:  qurry.srisId, searchType:EuxpNetwork.SearchType.sris.rawValue, epsdId:  qurry.epsdId,
-                            epsdRsluId: nil, prdPrcId: nil, kidZone: nil)
+                            epsdRsluId: nil, prdPrcId: nil, kidZone: nil,
+                            synopType: SynopsisType.none
+                            )
                     }
                 }
                 self.initPage()
@@ -358,10 +365,9 @@ struct PageSynopsis: PageView {
             }
         }//geo
     }//body
-
     /*
-     Data process
-     */
+    Data process
+    */
     enum SingleRequestType:String {
         case preview, changeOption, relationContents
     }
@@ -674,8 +680,10 @@ struct PageSynopsis: PageView {
         } else {
             self.isUIView = true
         }
+        self.playStartLog()
+        
     }
-    
+        
     @State var prevSrisId:String? = nil
     @State var prevDirectView:DirectView? = nil
     private func setupSynopsis (_ data:Synopsis) {
@@ -938,7 +946,9 @@ struct PageSynopsis: PageView {
             epsdId: playData.nextEpisode,
             epsdRsluId: nil,
             prdPrcId: prevData.prdPrcId,
-            kidZone: prevData.kidZone)
+            kidZone: prevData.kidZone,
+            synopType: prevData.synopType
+        )
         
         self.synopsisData = nextSynopsisData
         self.resetPage()
@@ -989,7 +999,9 @@ struct PageSynopsis: PageView {
         guard let cdata = self.synopsisData else { return }
         self.synopsisData = SynopsisData(
             srisId: cdata.srisId, searchType: cdata.searchType,
-            epsdId: epsdId, epsdRsluId: "", prdPrcId: cdata.prdPrcId, kidZone:cdata.kidZone
+            epsdId: epsdId, epsdRsluId: "",
+            prdPrcId: cdata.prdPrcId, kidZone:cdata.kidZone,
+            synopType: cdata.synopType
         )
         self.resetPage()
     }

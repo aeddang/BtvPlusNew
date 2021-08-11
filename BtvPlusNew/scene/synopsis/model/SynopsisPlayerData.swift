@@ -19,6 +19,13 @@ enum SynopsisPlayType {
         default: return nil
         }
     }
+    var logCategory: String {
+        switch self {
+        case .preview: return "trailer"
+        case .preplay: return "3minute"
+        default: return "common"
+        }
+    }
 }
 
 class SynopsisPlayerData {
@@ -30,6 +37,7 @@ class SynopsisPlayerData {
     private(set) var nextSeason:String? = nil
     private(set) var nextEpisode:String? = nil
     private(set) var openingTime:Double? = nil
+    
     func setData(type:SynopsisPlayType, synopsis:SynopsisModel) -> SynopsisPlayerData {
         self.type = type
         switch type {
@@ -51,12 +59,10 @@ class SynopsisPlayerData {
                     self.openingTime = rslu?.openg_tmtag_tmsc?.number
                 }
             }
-            
-            
-        default:do{}
+        default:break
         }
     
-return self
+        return self
     }
     
     var previewCount:String {
@@ -91,5 +97,4 @@ return self
             return ""
         }
     }
-    
 }

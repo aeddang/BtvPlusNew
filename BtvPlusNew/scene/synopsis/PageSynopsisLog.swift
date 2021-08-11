@@ -10,32 +10,64 @@ import SwiftUI
 extension PageSynopsis {
    
     func onEvent(btvUiEvent:BtvUiEvent){
+        switch btvUiEvent {
+        case .guide :
+            self.naviLog(pageID: .playTouchGuide, action: .pageShow , category:nil)
+        case .clickInsideButton(let action, let title) :
+            self.naviLog(pageID: .playInside, action: action, category: title )
         
+        case .more :
+            self.naviLog(action: self.type == .btv ? .clickVodConfig : .clickVodConfigEtc, config:"etc" )
+        default: break
+        }
     }
     
     func onEvent(btvPlayerEvent:BtvPlayerEvent){
-        /*
+        
         switch btvPlayerEvent {
+        case .close :
+            self.naviLog(
+                action: .clickPlayBackList,
+                config: self.type == .btv ? self.sceneOrientation.logConfig : nil
+                )
+        /*
         case .play80 :
             self.log(type: .play80)
         case .stopAd :
             self.log(type: .stopAd)
+        */
         default: break
         }
-        */
+        
+    }
+    
+    func onEvent(prerollEvent:PrerollEvent){
+        
+        switch prerollEvent {
+        case .moveAd :
+            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고정보더보기")
+        case .skipAd :
+            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고건너뛰기")
+        default: break
+        }
+        
     }
     
     func onEvent(event:PlayerUIEvent){
         switch event {
         case .pause :
             self.playLog(isPlay: false)
+            self.playNaviLog(action: .clickVodPause, watchType: .watchPause)
         case .resume :
             self.playLog(isPlay: true)
+            self.playNaviLog(action: .clickVodPlay, watchType: .watchStart)
         case .togglePlay :
             if self.playerModel.isPlay {
                 self.playLog(isPlay: false)
+                self.playNaviLog(action: .clickVodPause, watchType: .watchPause)
             } else {
                 self.playLog(isPlay: true)
+                self.playNaviLog(action: .clickVodPlay, watchType: .watchStart)
             }
         default: break
         }
@@ -45,13 +77,16 @@ extension PageSynopsis {
         switch streamEvent {
         case .loaded:
             self.playLog(isPlay: true)
+            self.playNaviLog(action: .clickVodPlay, watchType: .watchStart)
         //case .buffer:
             //self.log(type: .buffering)
         case .stoped:
             self.playLog(isPlay: false)
+            self.playNaviLog(action: .clickVodStop, watchType: .watchStop)
             //self.log(type: .playBase)
         case .completed:
             self.playLog(isPlay: false)
+            self.playNaviLog(action: .clickVodStop, watchType: .watchStop)
             //self.log(type: .playBase)
         default: break
         }
@@ -114,6 +149,52 @@ extension PageSynopsis {
                                           isKidZone: self.type == .kids,
                                           gubun: nil), isLog:true))
     
+    }
+    
+    func playStartLog(){
+        if self.isPlayViewActive{
+            self.naviLog(
+                action: .pageShow,
+                category: self.synopsisPlayType.logCategory,
+                result: self.synopsisData?.synopType.logResult)
+        } else {
+            if let synopsisModel = self.synopsisModel{
+                self.naviLogManager.setupSysnopsis(synopsisModel)
+            }
+        }
+    }
+    
+    func playNaviLog( action:NaviLog.action, watchType:NaviLog.watchType){
+        self.naviLog(action: action, watchType: watchType)
+        
+    }
+    
+    func naviLog(pageID:NaviLog.PageId? = nil , action:NaviLog.action,
+                 watchType:NaviLog.watchType? = nil,
+                 config:String? = nil
+                 ){
+        let category = self.synopsisPlayType.logCategory
+       
+        self.naviLog(action: action, watchType: watchType, config: config, category: category, result: nil)
+    }
+    
+    func naviLog(pageID:NaviLog.PageId? = nil , action:NaviLog.action,
+                 watchType:NaviLog.watchType? = nil,
+                 config:String? = nil,
+                 category: String?, result: String? = nil
+                 ){
+        if action == .pageShow, let synopsisModel = self.synopsisModel{
+            self.naviLogManager.setupSysnopsis(synopsisModel)
+        }
+        let result = result ?? self.synopsisData?.synopType.logResult
+        self.naviLogManager.playerLog(
+            pageID: pageID ?? (self.type == .btv ? .play : .zemPlay),
+            action: action,
+            watchType : watchType,
+            category: category,
+            result: result,
+            config:config
+        )
     }
 
 }

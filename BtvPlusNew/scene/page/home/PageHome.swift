@@ -59,15 +59,14 @@ struct PageHome: PageView {
                 }
                 
             }
-            
-            .padding(.bottom, self.sceneObserver.safeAreaBottom )
+            //.padding(.bottom, self.sceneObserver.safeAreaBottom )
             .modifier(PageFull())
             
             .onReceive(self.dataProvider.bands.$event){ evt in
                 guard let evt = evt else { return }
                 switch evt {
-                case .updated: self.reload()
-                default: do{}
+                case .updated: self.reset()
+                default: break
                 }
             }
             .onReceive(self.infinityScrollModel.$event){evt in
@@ -88,15 +87,6 @@ struct PageHome: PageView {
                     }
                 }
             }
-            .onReceive(self.appSceneObserver.$headerHeight){ hei in
-                self.headerHeight = hei
-            }
-            .onReceive(self.appSceneObserver.$safeHeaderHeight){ hei in
-                withAnimation{
-                    self.marginHeader = self.topDatas == nil ? 0 : hei
-                }
-            }
-            
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 if page?.id == self.pageObject?.id {
                     if self.useTracking {return}
@@ -165,8 +155,16 @@ struct PageHome: PageView {
                 default : break
                 }
             }
-            .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
-                self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.app.bottom
+            .onReceive(self.appSceneObserver.$headerHeight){ hei in
+                self.headerHeight = hei
+            }
+            .onReceive(self.appSceneObserver.$safeHeaderHeight){ hei in
+                withAnimation{
+                    self.marginHeader = self.topDatas == nil ? 0 : hei
+                }
+            }
+            .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
+                withAnimation{ self.marginBottom = bottom }
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
@@ -202,6 +200,16 @@ struct PageHome: PageView {
     @State var openId:String? = nil
     @State var prcPrdId:String? = nil
     @State var useFooter:Bool = false
+    
+    private func reset(){
+        guard let obj = self.pageObject  else { return }
+        DataLog.d("UPDATEED GNBDATA reset home", tag:self.tag)
+        self.pagePresenter.changePage(
+            PageProvider.getPageObject(.home)
+                .addParam(key: .id, value: obj.getParamValue(key:.id))
+                .addParam(key: UUID().uuidString , value: "")
+        )
+    }
     
     private func reload(selectedMonthlyId:String? = nil){
        

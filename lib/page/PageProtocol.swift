@@ -25,6 +25,7 @@ class PageObject : Equatable, Identifiable{
     var isDimed:Bool
     var isHome:Bool = false
     var isAnimation:Bool = false
+    var isLayer:Bool = false
     var sendLog:Bool = false
     var animationType:PageAnimationType = .horizontal
     let id:String = UUID().uuidString

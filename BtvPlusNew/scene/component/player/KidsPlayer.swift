@@ -24,7 +24,7 @@ struct KidsPlayer: PageComponent{
     var thumbContentMode:ContentMode = .fit
     var contentID:String? = nil
     var listData:PlayListData = PlayListData()
-    var type:BtvPlayerType = .full
+    var type:BtvPlayerType = .normal
     var body: some View {
         GeometryReader { geometry in
             ZStack{

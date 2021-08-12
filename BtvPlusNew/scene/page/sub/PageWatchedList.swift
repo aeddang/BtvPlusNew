@@ -13,6 +13,7 @@ import Combine
 struct PageWatchedList: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
     
@@ -28,6 +29,7 @@ struct PageWatchedList: PageView {
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
+                pageObservable: self.pageObservable, 
                 viewModel:self.pageDragingModel,
                 axis:.horizontal
             ) {
@@ -43,7 +45,7 @@ struct PageWatchedList: PageView {
                         viewModel:self.viewModel,
                         pageObservable:self.pageObservable,
                         useTracking:self.useTracking,
-                        marginBottom: self.marginBottom + Dimen.margin.regular
+                        marginBottom: self.marginBottom
                     )
                 }
                 .modifier(PageFull(style:.dark))
@@ -56,8 +58,8 @@ struct PageWatchedList: PageView {
                     self.viewModel.update(menuId:self.menuId, key:nil)
                 }
             }
-            .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
-                self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
+            .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
+                withAnimation{ self.marginBottom = bottom }
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }

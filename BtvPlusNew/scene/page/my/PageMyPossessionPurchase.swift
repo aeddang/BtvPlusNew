@@ -9,6 +9,7 @@ import SwiftUI
 struct PageMyPossessionPurchase: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
     
@@ -20,6 +21,7 @@ struct PageMyPossessionPurchase: PageView {
    
     @State var useTracking:Bool = false
     @State var pages: [PageViewProtocol] = []
+    @State var marginBottom:CGFloat = 0
     let titles: [String] = [
         String.app.rent,
         String.app.owner
@@ -27,6 +29,7 @@ struct PageMyPossessionPurchase: PageView {
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
+                pageObservable: self.pageObservable, 
                 viewModel:self.pageDragingModel,
                 axis:.horizontal
             ) {
@@ -42,6 +45,7 @@ struct PageMyPossessionPurchase: PageView {
                         viewModel:self.collectionModel,
                         pageObservable:self.pageObservable,
                         useTracking:true,
+                        marginBottom: self.marginBottom,
                         type: .possession
                     )
                 }
@@ -57,6 +61,9 @@ struct PageMyPossessionPurchase: PageView {
             }
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 self.useTracking = page?.id == self.pageObject?.id
+            }
+            .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
+                withAnimation{ self.marginBottom = bottom }
             }
             .onAppear{
                 

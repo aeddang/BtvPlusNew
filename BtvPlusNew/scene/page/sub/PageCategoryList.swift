@@ -13,6 +13,7 @@ import Combine
 struct PageCategoryList: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
     
@@ -30,6 +31,7 @@ struct PageCategoryList: PageView {
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
+                pageObservable: self.pageObservable, 
                 viewModel:self.pageDragingModel,
                 axis:.horizontal
             ) {
@@ -45,7 +47,7 @@ struct PageCategoryList: PageView {
                         infinityScrollModel:self.infinityScrollModel,
                         viewModel:self.viewModel,
                         useTracking:self.useTracking,
-                        marginBottom:self.marginBottom + Dimen.margin.regular
+                        marginBottom:self.marginBottom 
                     )
                     .background(Color.brand.bg)
                     
@@ -70,8 +72,8 @@ struct PageCategoryList: PageView {
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 self.useTracking = page?.id == self.pageObject?.id
             }
-            .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
-                self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
+            .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
+                withAnimation{ self.marginBottom = bottom }
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }

@@ -24,8 +24,9 @@ struct PlayerWaitingKids: PageComponent{
                 VStack(spacing:0){
                     HStack(spacing:self.isFullScreen ? KidsPlayerUI.fullScreenSpacing : KidsPlayerUI.spacing){
                         Button(action: {
+    
                             self.viewModel.btvPlayerEvent = .close
-                            self.pagePresenter.goBack()
+                            
                         }) {
                             Image(AssetKids.player.back)
                                 .renderingMode(.original)

@@ -83,11 +83,13 @@ struct CateList: PageComponent{
     var datas:[CateDataSet]
     var useTracking:Bool = false
     var margin:CGFloat = Dimen.margin.heavyExtra
+    var marginBottom:CGFloat = 0
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
             axes: .vertical,
             marginTop: margin,
+            marginBottom: marginBottom,
             marginHorizontal: 0,
             spacing: 0,
             isRecycle: true,

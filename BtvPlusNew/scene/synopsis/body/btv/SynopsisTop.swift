@@ -25,7 +25,8 @@ struct SynopsisTop: PageComponent{
     var playListData:PlayListData = PlayListData()
     var isPlayAble:Bool = false
     var isPlayViewActive = false
-  
+    var uiType:PageSynopsis.UiType = .normal
+    
     var body: some View {
         ZStack {
             BtvPlayer(
@@ -38,8 +39,17 @@ struct SynopsisTop: PageComponent{
                 thumbImage: self.imgBg,
                 thumbContentMode: self.imgContentMode,
                 contentID:self.epsdId,
-                listData: self.playListData
+                listData: self.playListData,
+                playerType: self.uiType == .normal ? .normal : .simple
             )
+            .modifier(PageDraging(
+                        geometry: geometry,
+                        pageDragingModel: self.pageDragingModel,
+                        useGesture: PageSynopsis.useLayer ? true : self.uiType == .simple))
+            .onTapGesture {
+                if self.uiType != .simple {return}
+                self.playerModel.event = .togglePlay
+            }
             if !self.isPlayAble {
                 PlayViewer(
                     pageObservable:self.pageObservable,

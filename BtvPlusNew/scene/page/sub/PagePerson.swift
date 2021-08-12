@@ -10,6 +10,7 @@ import SwiftUI
 struct PagePerson: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -20,6 +21,7 @@ struct PagePerson: PageView {
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
+                pageObservable: self.pageObservable, 
                 viewModel:self.pageDragingModel,
                 axis:.horizontal
             ) {
@@ -65,7 +67,9 @@ struct PagePerson: PageView {
                 default : do{}
                 }
             }
+            
             .onAppear{
+                
                 guard let obj = self.pageObject  else { return }
                 if let people = obj.getParamValue(key: .data) as? PeopleData{
                     self.title = people.name ?? ""
@@ -80,6 +84,7 @@ struct PagePerson: PageView {
                     let path = ApiPath.getRestApiPath(.WEB) + BtvWebView.person + "?epsd_id=" + epsdId + "&prs_id=" + prsId
                     self.webViewModel.request = .link(path)
                 }
+               
             }
             .onDisappear{
             }

@@ -30,6 +30,9 @@ class AppSceneObserver:ObservableObject{
     @Published var isApiLoading = false
     @Published var safeHeaderHeight:CGFloat = 0
     @Published var headerHeight:CGFloat = 0
+    @Published var safeBottomHeight:CGFloat = 0  //
+    @Published var safeBottomLayerHeight:CGFloat = 0 // layerPlayer 포함
+    @Published var safeBottom:CGFloat = 0
     
     @Published var loadingInfo:[String]? = nil
     @Published var alert:SceneAlert? = nil
@@ -40,6 +43,8 @@ class AppSceneObserver:ObservableObject{
     @Published var selectResult:SceneSelectResult? = nil {didSet{ if selectResult != nil { selectResult = nil} }}
     @Published var event:SceneEvent? = nil {didSet{ if event != nil { event = nil} }}
     
+    @Published var useLayerPlayer:Bool = false
+    var currentPlayer:PageSynopsis? = nil
     func cancelAll(){
 
     }

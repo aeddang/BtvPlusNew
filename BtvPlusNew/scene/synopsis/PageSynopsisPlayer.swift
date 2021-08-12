@@ -33,6 +33,7 @@ struct PageSynopsisPlayer: PageView {
                 viewModel: self.pageDataProviderModel
             ){
                 PageDragingBody(
+                    pageObservable: self.pageObservable, 
                     viewModel:self.pageDragingModel,
                     axis:.horizontal
                 ) {
@@ -47,7 +48,8 @@ struct PageSynopsisPlayer: PageView {
                         imgContentMode: self.imgContentMode,
                         textInfo: self.textInfo,
                         isPlayAble: self.isPlayAble,
-                        isPlayViewActive: self.isPlayViewActive)
+                        isPlayViewActive: self.isPlayViewActive
+                    )
                     .modifier(PageFullScreen())
                 }
             }
@@ -378,6 +380,7 @@ struct PageSynopsisPlayer: PageView {
                 action: .clickPlayBackList,
                 config: self.sceneObserver.sceneOrientation.logConfig
                 )
+            self.pagePresenter.closePopup(self.pageObject?.id)
         default: break
         }
         

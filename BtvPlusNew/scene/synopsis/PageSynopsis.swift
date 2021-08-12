@@ -13,6 +13,9 @@ extension PageSynopsis {
     class ComponentViewModel:ComponentObservable{
         @Published var uiEvent:ComponentEvent? = nil {didSet{ if uiEvent != nil { uiEvent = nil} }}
     }
+    
+    static let useLayer:Bool = true
+    
 }
 
 struct PageSynopsis: PageView {
@@ -51,8 +54,12 @@ struct PageSynopsis: PageView {
                 viewModel: self.pageDataProviderModel
             ){
                 PageDragingBody(
+                    pageObservable: self.pageObservable, 
                     viewModel:self.pageDragingModel,
-                    axis:.horizontal
+                    axis:(self.type == .btv  && Self.useLayer) ? .vertical : .horizontal,
+                    dragingEndAction: (self.type == .btv  && Self.useLayer)
+                        ? { isBottom in self.onDragEndAction(isBottom: isBottom, geometry:geometry)}
+                        : nil
                 ) {
                     
                     if self.type == .btv {
@@ -103,9 +110,12 @@ struct PageSynopsis: PageView {
                             
                             infinityScrollModel: self.infinityScrollModel,
                             topIdx: self.topIdx,
-                            useTracking: self.useTracking
+                            useTracking: self.useTracking,
+                            uiType:self.uiType,
+                            dragOpacity:self.dragOpacity
                         )
                         .onReceive(self.peopleScrollModel.$event){evt in
+                            if Self.useLayer {return}
                             guard let evt = evt else {return}
                             switch evt {
                             case .pullCompleted :
@@ -116,6 +126,7 @@ struct PageSynopsis: PageView {
                             }
                         }
                         .onReceive(self.peopleScrollModel.$pullPosition){ pos in
+                            if Self.useLayer {return}
                             self.pageDragingModel.uiEvent = .pull(geometry, pos)
                         }
                         .modifier(PageFull())
@@ -168,13 +179,14 @@ struct PageSynopsis: PageView {
                 }//PageDragingBody
                 .onReceive(self.playerModel.$btvPlayerEvent){evt in
                     guard let evt = evt else { return }
+                    self.onEvent(btvPlayerEvent: evt)
                     switch evt {
+                    case .close : self.pagePresenter.closePopup(self.pageObject?.id)
                     case .nextView : self.nextVod(auto: false)
                     case .continueView: self.continueVod()
                     case .changeView(let epsdId) : self.changeVod(epsdId:epsdId)
                     default : break
                     }
-                    self.onEvent(btvPlayerEvent: evt)
                 }
                 .onReceive(self.prerollModel.$event){evt in
                     guard let evt = evt else { return }
@@ -186,6 +198,11 @@ struct PageSynopsis: PageView {
                 }
                 .onReceive(self.playerModel.$event){evt in
                     guard let evt = evt else { return }
+                    switch evt {
+                    case .fullScreen(_) :
+                        self.onFullScreenControl()
+                    default : break
+                    }
                     self.onEvent(event: evt)
                 }
                 .onReceive(self.playerModel.$streamEvent){evt in
@@ -284,6 +301,7 @@ struct PageSynopsis: PageView {
             }
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 if !self.isPageUiReady {return}
+                if Self.useLayer {return}
                 if page != self.pageObject {
                     self.isFinalPlaying = self.playerModel.isPrerollPlay ? true : self.playerModel.isPlay
                     self.playerModel.event = .pause
@@ -323,42 +341,37 @@ struct PageSynopsis: PageView {
                 }
                 
             }
+            .onReceive(self.appSceneObserver.$safeBottomHeight) { _ in
+                self.updateBottomPos(geometry: geometry)
+            }
             .onReceive(self.self.pageDragingModel.$event){ evt in
                 guard let evt = evt else {return}
+                guard let page  = self.pageObject  else { return }
                 switch evt {
                 case .dragInit :
                     self.isPlayBeforeDraging = self.playerModel.isPlay
                     self.playerModel.event = .pause
+                    self.pagePresenter.setLayerPopup(pageObject: page, isLayer: false)
+                    withAnimation{
+                        self.dragOffset = 0
+                    }
+                case .drag(_, let dragOpacity) :
+                    self.dragOpacity = dragOpacity
                 case .draged: if self.isPlayBeforeDraging {
                     self.playerModel.event = .resume
-                }
-                default : break
+                    }
                 }
                 
             }
             .onAppear{
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
+                self.onLayerPlayerAppear() 
                 guard let obj = self.pageObject  else { return }
-                self.synopsisData = obj.getParamValue(key: .data) as? SynopsisData
-                if self.synopsisData == nil {
-                    if let json = obj.getParamValue(key: .data) as? SynopsisJson {
-                        self.synopsisData = SynopsisData(
-                            srisId: json.srisId, searchType:EuxpNetwork.SearchType.sris.rawValue, epsdId: json.epsdId,
-                            epsdRsluId: json.episodeResolutionId, prdPrcId: json.pid, kidZone: nil,
-                            synopType: SynopsisType(value: json.synopType)
-                        )
-                    }
-                    if let qurry = obj.getParamValue(key: .data) as? SynopsisQurry {
-                        self.synopsisData = SynopsisData(
-                            srisId:  qurry.srisId, searchType:EuxpNetwork.SearchType.sris.rawValue, epsdId:  qurry.epsdId,
-                            epsdRsluId: nil, prdPrcId: nil, kidZone: nil,
-                            synopType: SynopsisType.none
-                            )
-                    }
-                }
+                self.synopsisData = self.getSynopData(obj: obj)
                 self.initPage()
             }
             .onDisappear(){
+                self.onLayerPlayerDisappear()
                 if self.isPlayAble {
                     self.log(type: .playBase) 
                 }
@@ -371,6 +384,10 @@ struct PageSynopsis: PageView {
     enum SingleRequestType:String {
         case preview, changeOption, relationContents
     }
+    enum UiType{
+        case simple, normal
+    }
+    
     @State var isInitPage = false
     @State var progressError = false
     @State var progressCompleted = false
@@ -409,6 +426,35 @@ struct PageSynopsis: PageView {
     @State var epsdRsluId:String = ""
     @State var purchasedPid:String? = nil
     @State var playStartTime:Int? = nil
+    
+    /*Layer*/
+    @State var isBottom:Bool = false
+    @State var uiType:UiType = .normal
+    @State var dragOffset:CGFloat = 0
+    @State var dragOpacity:Double = 1
+    
+    func getSynopData(obj:PageObject)->SynopsisData {
+        if let synopsisData = obj.getParamValue(key: .data) as? SynopsisData {
+            return synopsisData
+        } else {
+            if let json = obj.getParamValue(key: .data) as? SynopsisJson {
+                return SynopsisData(
+                    srisId: json.srisId, searchType:EuxpNetwork.SearchType.sris.rawValue, epsdId: json.epsdId,
+                    epsdRsluId: json.episodeResolutionId, prdPrcId: json.pid, kidZone: nil,
+                    synopType: SynopsisType(value: json.synopType)
+                )
+            }
+            if let qurry = obj.getParamValue(key: .data) as? SynopsisQurry {
+                return SynopsisData(
+                    srisId:  qurry.srisId, searchType:EuxpNetwork.SearchType.sris.rawValue, epsdId:  qurry.epsdId,
+                    epsdRsluId: nil, prdPrcId: nil, kidZone: nil,
+                    synopType: SynopsisType.none
+                )
+            }
+        }
+        return SynopsisData()
+    }
+    
     func initPage(){
         if self.synopsisData == nil {
             self.progressError = true

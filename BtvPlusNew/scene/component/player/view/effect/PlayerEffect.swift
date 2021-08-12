@@ -15,7 +15,7 @@ struct PlayerEffect: PageView{
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
     
     var type:PageType = .btv
-    
+  
     @State var brightness:CGFloat? = nil
     @State var volume:Float? = nil
     @State var rate:Float? = nil

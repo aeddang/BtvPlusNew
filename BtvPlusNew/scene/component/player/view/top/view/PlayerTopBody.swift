@@ -46,8 +46,8 @@ struct PlayerTopBody: PageView{
             HStack(spacing: self.isFullScreen ? PlayerUI.fullScreenSpacing : PlayerUI.spacing){
                 if !self.isSimple{
                     Button(action: {
+                        
                         self.viewModel.btvPlayerEvent = .close
-                        self.pagePresenter.goBack()
                         
                     }) {
                         Image(Asset.icon.back)

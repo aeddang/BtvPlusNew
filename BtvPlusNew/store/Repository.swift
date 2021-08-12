@@ -162,6 +162,7 @@ class Repository:ObservableObject, PageProtocol{
                 self.storage.saveUser(self.pairing.user)
                 self.pairing.user?.pairingDate = self.storage.pairingDate
                 self.pairing.hostDevice?.modelName = self.storage.pairingModelName
+                DataLog.d("UPDATEED GNBDATA getGnb", tag:self.tag)
                 self.dataProvider.requestData(q: .init(type: .getGnb))
                 self.appSceneObserver?.event = .toast(String.alert.pairingCompleted)
                 
@@ -255,10 +256,11 @@ class Repository:ObservableObject, PageProtocol{
                         coreData = savedData
                         DispatchQueue.main.async {
                             DataLog.d("respond coreData getGnb", tag:self.tag)
+                            DataLog.d("UPDATEED GNBDATA coreData", tag:self.tag)
                             self.onReadyRepository(gnbData: savedData)
                         }
                     }
-                default: do{}
+                default: break
             }
             DispatchQueue.main.async {
                 if let coreData = coreData {
@@ -277,8 +279,13 @@ class Repository:ObservableObject, PageProtocol{
                 case .getGnb :
                     guard let data = res.data as? GnbBlock  else { return }
                     DataLog.d("save coreData getGnb", tag:self.tag)
+                    
                     self.apiCoreDataManager.setData(key: coreDatakey, data: data)
-                default: do{}
+                    DispatchQueue.main.async {
+                        DataLog.d("UPDATEED GNBDATA apiData", tag:self.tag)
+                        self.onReadyRepository(gnbData: data)
+                    }
+                default: break
             }
         }
     }
@@ -325,6 +332,7 @@ class Repository:ObservableObject, PageProtocol{
         self.dataProvider.bands.setData(gnbData)
         //self.appSceneObserver?.event = .debug("onReadyRepository " + (SystemEnvironment.isStage ? "STAGE" : "RELEASE"))
         DataLog.d("onReadyRepository " + self.status.description , tag:self.tag)
+        DataLog.d("UPDATEED GNBDATA onReadyRepository", tag:self.tag)
         if self.status == .reset {
             self.event = .reset
             self.status = .ready
@@ -364,13 +372,16 @@ class Repository:ObservableObject, PageProtocol{
     func updateAdultAuth(able:Bool){
         self.userSetup.isAdultAuth = able
         SystemEnvironment.isAdultAuth = able
-        if SystemEnvironment.watchLv == 0 {
-            SystemEnvironment.isImageLock = false
-            self.event = .updatedWatchLv
-        }
         if able {
             self.updateFirstMemberAuth()
         }
+        if SystemEnvironment.watchLv == 0 {
+            SystemEnvironment.isImageLock = false
+            self.event = .updatedWatchLv
+        } else {
+            self.event = .updatedAdultAuth
+        }
+        
     }
     func updateWatchLv(_ lv:Setup.WatchLv?){
         SystemEnvironment.watchLv = lv?.rawValue ?? 0

@@ -34,6 +34,7 @@ struct PageSynopsisPackage: PageView {
                 viewModel: self.pageDataProviderModel
             ){
                 PageDragingBody(
+                    pageObservable: self.pageObservable, 
                     viewModel:self.pageDragingModel,
                     axis:.horizontal
                 ) {

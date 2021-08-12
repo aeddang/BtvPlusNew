@@ -128,7 +128,7 @@ extension PageSynopsis {
    
     func log(type:LgsNetwork.PlayEventType){
         
-        self.appSceneObserver.event = .toast(type.rawValue)
+       // self.appSceneObserver.event = .toast(type.rawValue)
         guard let synopsisData = self.synopsisData else { return }
         let d = self.playerModel.duration
         let t = self.playerModel.time

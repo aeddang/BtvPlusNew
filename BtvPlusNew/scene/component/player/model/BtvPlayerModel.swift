@@ -52,7 +52,7 @@ enum BtvPlayerEvent {
 }
 
 enum BtvPlayerType {
-    case full, simple
+    case normal, simple
 }
 
 class BtvPlayerModel:PlayerModel{

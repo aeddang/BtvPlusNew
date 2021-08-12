@@ -9,6 +9,7 @@ import SwiftUI
 struct PageMy: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -20,6 +21,7 @@ struct PageMy: PageView {
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
+                pageObservable: self.pageObservable, 
                 viewModel:self.pageDragingModel,
                 axis:.horizontal
             ) {
@@ -32,6 +34,7 @@ struct PageMy: PageView {
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     InfinityScrollView(
                         viewModel: self.infinityScrollModel,
+                        marginBottom:self.marginBottom,
                         isRecycle:false,
                         useTracking: false
                         ){
@@ -41,7 +44,6 @@ struct PageMy: PageView {
                                 pageDragingModel: self.pageDragingModel,
                                 watchedScrollModel:self.watchedScrollModel
                             )
-                            .padding(.bottom, self.marginBottom)
                             .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
                                 guard let evt = evt else {return}
                                 switch evt {
@@ -59,7 +61,6 @@ struct PageMy: PageView {
                             DisconnectView(
                                 pageObservable:self.pageObservable
                             )
-                            .padding(.bottom, self.marginBottom)
                         }
                     }
                    
@@ -71,8 +72,8 @@ struct PageMy: PageView {
             .onReceive(self.pairing.$status){status in
                 self.isPairing = ( status == .pairing )
             }
-            .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
-                self.marginBottom = self.sceneObserver.safeAreaBottom + Dimen.app.bottom
+            .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
+                withAnimation{ self.marginBottom = bottom }
             }
             .onAppear{
                

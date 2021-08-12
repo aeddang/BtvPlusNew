@@ -20,7 +20,7 @@ struct CPPlayer: PageComponent {
                 pageObservable : self.pageObservable,
                 bindUpdate: self.$bindUpdate
                 )
-            if !self.viewModel.useAvPlayerController {
+            if !self.viewModel.useAvPlayerController && !self.isSimple{
                 HStack(spacing:0){
                     Spacer().modifier(MatchParent())
                         .background(Color.transparent.clearUi)

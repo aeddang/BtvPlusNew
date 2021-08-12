@@ -56,11 +56,13 @@ class BlockData:InfinityData, ObservableObject{
     
     func reset(){
         status = .initate
+        kidsHomeBlockData = nil
         leadingBanners = nil
         posters = nil
         videos = nil
         themas = nil
         banners = nil
+        tvs = nil
     }
     
     @discardableResult

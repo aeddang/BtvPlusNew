@@ -17,9 +17,11 @@ struct PageMyAlram: PageView {
     
     @ObservedObject var alramScrollModel: InfinityScrollModel = InfinityScrollModel()
     @State var datas:[AlramData]? = nil
+    @State var marginBottom:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
+                pageObservable: self.pageObservable, 
                 viewModel:self.pageDragingModel,
                 axis:.horizontal
             ) {
@@ -33,7 +35,7 @@ struct PageMyAlram: PageView {
                         AlramList(
                             viewModel: self.alramScrollModel,
                             datas: datas,
-                            marginBottom: self.sceneObserver.safeAreaBottom
+                            marginBottom: self.marginBottom
                         )
                     } else {
                         Spacer().modifier(MatchParent())
@@ -51,6 +53,9 @@ struct PageMyAlram: PageView {
             .onReceive(self.pairing.$status){ status in
                 if status != .pairing {return}
                 self.update()
+            }
+            .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
+                withAnimation{ self.marginBottom = bottom }
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {

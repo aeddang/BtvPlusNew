@@ -75,7 +75,7 @@ extension PageDragingView{
             let predictedOffset = self.axis == .vertical
                             ? value.predictedEndTranslation.height
                             : max(0,value.predictedEndTranslation.width)
-            ComponentLog.d("predictedOffset " + value.predictedEndTranslation.width.description , tag: "onDragEnd")
+            //ComponentLog.d("predictedOffset " + value.predictedEndTranslation.width.description , tag: "onDragEnd")
             offset = offset + predictedOffset
         }
         //ComponentLog.d("offset " + offset.description , tag: "onDragEnd")
@@ -99,7 +99,7 @@ extension PageDragingView{
 
 class PageDragingModel: ObservableObject, PageProtocol, Identifiable{
     static var MIN_DRAG_RANGE:CGFloat = 30
-   
+
     @Published var uiEvent:PageDragingUIEvent? = nil {didSet{ if uiEvent != nil { uiEvent = nil} }}
     @Published var event:PageDragingEvent? = nil {didSet{ if event != nil { event = nil} }}
     @Published var status:PageDragingStatus = .none
@@ -138,7 +138,9 @@ enum PageDragingUIEvent {
          pullCancel(GeometryProxy? = nil),
          drag(GeometryProxy, DragGesture.Value),
          draged(GeometryProxy, DragGesture.Value),
-         dragCancel
+         dragCancel,
+         setBodyOffset(CGFloat),
+         dragEnd(Bool)
 }
 enum PageDragingEvent {
     case dragInit, drag(CGFloat, Double), draged(Bool,CGFloat)
@@ -157,7 +159,6 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var keyboardObserver:KeyboardObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
-   
     @ObservedObject var viewModel:PageDragingModel = PageDragingModel()
 
     let content: Content
@@ -173,43 +174,49 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     
     private let minDiff:CGFloat = 1.0
     private let maxDiff:CGFloat = 600
+    private var dragingEndAction:((Bool) -> Void)? = nil
+    
     init(
+        pageObservable:PageObservable,
         viewModel: PageDragingModel,
         axis:Axis.Set = .vertical,
         minPullAmount:CGFloat? = nil,
+        dragingEndAction:((Bool) -> Void)? = nil,
         @ViewBuilder content: () -> Content) {
+        self.pageObservable = pageObservable
         self.viewModel = viewModel
         self.axis = axis
         self.content = content()
         self.initPullRange = minPullAmount ?? ( axis == .vertical ? 0 : 0 )
         self.pullOffset = self.initPullRange
+        self.dragingEndAction = dragingEndAction
     }
     
-
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .topLeading){
                 self.content.modifier(MatchParent())
-                Spacer()
-                    .modifier(MatchVertical(width: 15, margin: 0))
-                    .background(Color.transparent.clearUi)
-                    .highPriorityGesture(
-                        DragGesture(minimumDistance: 5, coordinateSpace: .local)
-                            .onChanged({ value in
-                                self.viewModel.uiEvent = .drag(geometry, value)
-                            })
-                            .onEnded({ value in
-                                self.viewModel.uiEvent = .draged(geometry, value)
-                            })
-                    )
-                    .gesture(
-                        self.viewModel.cancelGesture
-                            .onChanged({_ in
-                                self.viewModel.uiEvent = .dragCancel})
-                            .onEnded({_ in
-                                self.viewModel.uiEvent = .dragCancel})
-                    )
-                
+                if self.axis == .horizontal {
+                    Spacer()
+                        .modifier(MatchVertical(width: 15, margin: 0))
+                        .background(Color.transparent.clearUi)
+                        .highPriorityGesture(
+                            DragGesture(minimumDistance: 5, coordinateSpace: .local)
+                                .onChanged({ value in
+                                    self.viewModel.uiEvent = .drag(geometry, value)
+                                })
+                                .onEnded({ value in
+                                    self.viewModel.uiEvent = .draged(geometry, value)
+                                })
+                        )
+                        .gesture(
+                            self.viewModel.cancelGesture
+                                .onChanged({_ in
+                                    self.viewModel.uiEvent = .dragCancel})
+                                .onEnded({_ in
+                                    self.viewModel.uiEvent = .dragCancel})
+                        )
+                }
             }
             .offset(
                 x:self.axis == .horizontal ? self.bodyOffset : 0,
@@ -260,7 +267,12 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
                     }
                     if self.viewModel.status != .drag { return }
                     self.onDragCancel()
-                default : do {}
+                case .dragEnd(let isBottom) : self.onDragEndAction(isBottom: isBottom, offset: 0)
+                case .setBodyOffset(let pos) :
+                    withAnimation{
+                        self.bodyOffset = pos
+                    }
+                default : break
                 }
             }
             .onAppear(){
@@ -273,7 +285,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     }//body
     
     func onDragInit(offset:CGFloat = 0) {
-        if offset < 0 {return}
+       // if offset < 0 {return}
         self.isDragingCompleted = false
         self.isDraging = true
         self.dragInitOffset = offset
@@ -307,9 +319,14 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
         
         //ComponentLog.d("onDragEndAction " + self.isDragingCompleted.description , tag: "InfinityScrollViewProtocol")
         if self.isDragingCompleted {return}
+        if let dragingEndAction = self.dragingEndAction {
+            self.isBottom = isBottom
+            dragingEndAction(isBottom)
+            return
+        }
         if isBottom {
             self.isDragingCompleted = true
-            self.pagePresenter.goBack()
+            self.pagePresenter.closePopup(self.pageObject?.id)
         }
     }
     

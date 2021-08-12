@@ -24,103 +24,111 @@ struct BtvPlayer: PageComponent{
     var thumbContentMode:ContentMode = .fit
     var contentID:String? = nil
     var listData:PlayListData = PlayListData()
-    var type:BtvPlayerType = .full
+    var playerType:BtvPlayerType = .normal
     var body: some View { 
         GeometryReader { geometry in
             ZStack{
                 ZStack(alignment:.bottom){
                     CPPlayer(
                         viewModel : self.viewModel,
-                        pageObservable : self.pageObservable)
-                    if let grade = self.playGradeData {
-                        PlayerGrade(
-                            viewModel: self.viewModel,
-                            data:grade
-                        )
-                    }
-                    PlayerEffect(viewModel: self.viewModel)
-                    PlayerBottom(viewModel: self.viewModel)
-                    PlayerTop(viewModel: self.viewModel, title: self.title)
-                    PlayerListTab( viewModel: self.viewModel, listTitle:self.listData.listTitle, title: self.listData.title,
-                                  listOffset:self.playListOffset + ListItem.video.size.height)
-                        .opacity( self.playListTapOpacity )
-                        
-                    PlayerList(
-                        viewModel:self.listViewModel,
-                        datas: self.listData.datas,
-                        contentID: self.contentID,
-                        margin:PlayerUI.paddingFullScreen + PlayerListTab.padding){ data in
-                            guard let epsdId = data.epsdId else { return }
-                            self.viewModel.btvPlayerEvent = .changeView(epsdId)
-                            self.listViewModel.itemEvent = .select(data)
+                        pageObservable : self.pageObservable,
+                        isSimple: self.playerType == .simple
+                    )
+                    if self.playerType == .normal {
+                        if let grade = self.playGradeData {
+                            PlayerGrade(
+                                viewModel: self.viewModel,
+                                data:grade
+                            )
                         }
-                        .modifier(MatchHorizontal(height: ListItem.video.size.height))
-                        .opacity( self.isFullScreen && (self.isUiShowing || self.isPlayListShowing) ? 1.0 : 0)
-                        .padding(.bottom, self.playListOffset)
-                    
-                    PlayerOptionSelectBox(viewModel: self.viewModel)
-                    PlayerGuide(viewModel: self.viewModel)
+                        PlayerEffect(viewModel: self.viewModel)
+                        PlayerBottom(viewModel: self.viewModel)
+                        PlayerTop(viewModel: self.viewModel, title: self.title)
+                        PlayerListTab( viewModel: self.viewModel, listTitle:self.listData.listTitle, title: self.listData.title,
+                                      listOffset:self.playListOffset + ListItem.video.size.height)
+                            .opacity( self.playListTapOpacity )
+                            
+                        PlayerList(
+                            viewModel:self.listViewModel,
+                            datas: self.listData.datas,
+                            contentID: self.contentID,
+                            margin:PlayerUI.paddingFullScreen + PlayerListTab.padding){ data in
+                                guard let epsdId = data.epsdId else { return }
+                                self.viewModel.btvPlayerEvent = .changeView(epsdId)
+                                self.listViewModel.itemEvent = .select(data)
+                            }
+                            .modifier(MatchHorizontal(height: ListItem.video.size.height))
+                            .opacity( self.isFullScreen && (self.isUiShowing || self.isPlayListShowing) ? 1.0 : 0)
+                            .padding(.bottom, self.playListOffset)
+                        
+                        PlayerOptionSelectBox(viewModel: self.viewModel)
+                        PlayerGuide(viewModel: self.viewModel)
+                    }
                 }
                 .opacity(self.isWaiting == false ? 1.0 : 0)
                 .gesture(
-                    DragGesture(minimumDistance: 5, coordinateSpace: .local)
-                        .onChanged({ value in
-                            if self.viewModel.isLock { return }
-                            if self.isFullScreen
-                                && (self.isUiShowing || self.isPlayListShowing)
-                                && !self.listData.datas.isEmpty {
-                                
-                                let range = geometry.size.height/2
-                                if value.startLocation.y > range {
-                                    self.dragGestureType = .playList
-                                }
-                            }
-                            
-                            if let type = dragGestureType {
-                                switch type {
-                                case .brightness: self.onBrightnessChange(value: value)
-                                case .volume: self.onVolumeChange(value: value)
-                                case .progress: self.onProgressChange(value: value)
-                                case .playList: self.onPlaylistChange(value: value)
-                                }
-                            }else {
-                                let diffX = value.translation.width
-                                let diffY = value.translation.height
-                                if abs(diffX) > abs(diffY) {
-                                    self.dragGestureType = .progress
-                                }else{
-                                    if self.isPlayListShowing {
+                    self.playerType != .simple ?
+                        DragGesture(minimumDistance: 5, coordinateSpace: .local)
+                            .onChanged({ value in
+                                if self.viewModel.isLock { return }
+                                if self.isFullScreen
+                                    && (self.isUiShowing || self.isPlayListShowing)
+                                    && !self.listData.datas.isEmpty {
+                                    
+                                    let range = geometry.size.height/2
+                                    if value.startLocation.y > range {
                                         self.dragGestureType = .playList
-                                    }else{
-                                        let half = geometry.size.width/2
-                                        let posX = value.startLocation.x
-                                        if posX > half {self.dragGestureType = .volume}
-                                        else {self.dragGestureType = .brightness}
                                     }
                                 }
-                                self.viewModel.playerUiStatus = .hidden
-                            }
-                        })
-                        .onEnded({ value in
-                            switch self.dragGestureType {
-                            case .progress:
-                                self.viewModel.event = .seekMove(self.viewModel.seeking, false)
-                                self.viewModel.seeking = 0
-                            case .playList:
-                                self.onPlaylistChangeCompleted()
-                            default:break
-                            }
-                            self.resetDragGesture()
-                        })
+                                
+                                if let type = dragGestureType {
+                                    switch type {
+                                    case .brightness: self.onBrightnessChange(value: value)
+                                    case .volume: self.onVolumeChange(value: value)
+                                    case .progress: self.onProgressChange(value: value)
+                                    case .playList: self.onPlaylistChange(value: value)
+                                    }
+                                }else {
+                                    let diffX = value.translation.width
+                                    let diffY = value.translation.height
+                                    if abs(diffX) > abs(diffY) {
+                                        self.dragGestureType = .progress
+                                    }else{
+                                        if self.isPlayListShowing {
+                                            self.dragGestureType = .playList
+                                        }else{
+                                            let half = geometry.size.width/2
+                                            let posX = value.startLocation.x
+                                            if posX > half {self.dragGestureType = .volume}
+                                            else {self.dragGestureType = .brightness}
+                                        }
+                                    }
+                                    self.viewModel.playerUiStatus = .hidden
+                                }
+                            })
+                            .onEnded({ value in
+                                switch self.dragGestureType {
+                                case .progress:
+                                    self.viewModel.event = .seekMove(self.viewModel.seeking, false)
+                                    self.viewModel.seeking = 0
+                                case .playList:
+                                    self.onPlaylistChangeCompleted()
+                                default:break
+                                }
+                                self.resetDragGesture()
+                            })
+                    : nil
                 )
                 .gesture(
-                    MagnificationGesture(minimumScaleDelta: 0).onChanged { val in
-                        if self.viewModel.isLock { return }
-                        self.onRatioChange(value: val)
-                    }.onEnded { val in
-                        self.resetDragGesture()
-                        self.isChangeRatioCancel = false
-                    }
+                    self.playerType != .simple ?
+                        MagnificationGesture(minimumScaleDelta: 0).onChanged { val in
+                            if self.viewModel.isLock { return }
+                            self.onRatioChange(value: val)
+                        }.onEnded { val in
+                            self.resetDragGesture()
+                            self.isChangeRatioCancel = false
+                        }
+                    : nil
                 )
                 
                 if self.isPreroll {
@@ -136,8 +144,11 @@ struct BtvPlayer: PageComponent{
             .background(Color.app.black)
             .onReceive(self.sceneObserver.$isUpdated){ update in
                 if !update {return}
+                
+                if self.playerType == .simple { return }
                 if self.viewModel.isLock { return }
                 if SystemEnvironment.isTablet  { return }
+                
                 switch self.sceneObserver.sceneOrientation {
                 case .landscape : self.pagePresenter.fullScreenEnter()
                 case .portrait : self.pagePresenter.fullScreenExit()

@@ -102,7 +102,7 @@ struct SceneTab: PageComponent{
                 self.updateTopPos()
             }
         }
-        .onReceive (self.sceneObserver.$safeAreaBottom){ pos in
+        .onReceive (self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ pos in
             if self.safeAreaBottom != pos {
                 self.safeAreaBottom = pos
                 self.updateBottomPos()
@@ -154,6 +154,9 @@ struct SceneTab: PageComponent{
             self.useBottom = use
             self.updateBottomPos()
         }
+        .onReceive (self.appSceneObserver.$useLayerPlayer) { _ in
+            self.updateBottomPos()
+        }
         
     }
     func updateTopPos(){
@@ -193,6 +196,13 @@ struct SceneTab: PageComponent{
                 : -(Dimen.app.bottom+self.safeAreaBottom)
             
         }
+        self.appSceneObserver.safeBottomHeight = self.appSceneObserver.useBottom
+            ? Dimen.app.bottom+self.safeAreaBottom
+            : 0
+        
+        let layer = self.appSceneObserver.useLayerPlayer ? Dimen.app.layerPlayerSize.height : 0
+        self.appSceneObserver.safeBottomLayerHeight =
+            self.appSceneObserver.safeBottomHeight + layer + Dimen.margin.regular
     }
     
     

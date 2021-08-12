@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 class TipBlockData {
+    let id:String = UUID().uuidString
     var leadingIcon: String? = nil
     var leading: String? = nil
     var icon: String? = nil

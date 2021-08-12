@@ -90,9 +90,10 @@ struct MultiBlock:PageComponent {
     @discardableResult
     private func getHeaderBlock() -> HeaderBlockCell{
         let count = min((self.topDatas?.isEmpty == false ? Self.headerSizeMin : Self.headerSize), self.datas.count)
-        let key = self.datas[0..<count].reduce("", {$0 + "|" + ($1.menuId ?? "")})
+        var key:String = self.datas[0..<count].reduce("", {$0 + "|" + ($1.menuId ?? "")}) 
+        key = key + (self.tipBlock?.id ?? "")
         if key == self.headerId, let header = self.headerBlock {
-            //ComponentLog.d("Recycle Header " + key , tag: self.tag + "Header")
+            ComponentLog.d("Recycle Header " + key , tag: self.tag + "Header")
             DispatchQueue.main.async {
                 self.headerCount = count
             }

@@ -63,6 +63,7 @@ struct PageSelectKidCharacter: PageView {
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
+                pageObservable: self.pageObservable, 
                 viewModel:self.pageDragingModel,
                 axis:.vertical
             ) {

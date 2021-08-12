@@ -33,7 +33,6 @@ struct PlayerTopBodyKids: PageView{
             if !self.isSimple && self.isFullScreen {
                 Button(action: {
                     self.viewModel.btvPlayerEvent = .close
-                    self.pagePresenter.goBack()
                     
                 }) {
                     Image(AssetKids.player.back)

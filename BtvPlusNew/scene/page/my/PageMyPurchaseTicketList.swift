@@ -25,9 +25,11 @@ struct PageMyPurchaseTicketList: PageView {
    
     
     @State var useTracking:Bool = false
+    @State var marginBottom:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
+                pageObservable: self.pageObservable, 
                 viewModel:self.pageDragingModel,
                 axis:.vertical
             ) {
@@ -45,7 +47,7 @@ struct PageMyPurchaseTicketList: PageView {
                                 viewModel: self.infinityScrollModel,
                                 dataSets: self.datas,
                                 useTracking:self.useTracking,
-                                marginBottom: self.sceneObserver.safeAreaBottom + Dimen.button.medium + Dimen.margin.thin
+                                marginBottom: self.marginBottom + Dimen.button.medium + Dimen.margin.thin
                             )
                             if let allData = self.monthlyAllData , !SystemEnvironment.isEvaluation {
                                 VStack{
@@ -97,6 +99,9 @@ struct PageMyPurchaseTicketList: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
+            }
+            .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
+                withAnimation{ self.marginBottom = bottom }
             }
             .onReceive(self.pairing.authority.$monthlyPurchaseInfo){ _ in
                 self.updatedTickets()

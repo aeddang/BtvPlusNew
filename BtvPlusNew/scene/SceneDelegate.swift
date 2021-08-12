@@ -59,6 +59,24 @@ class SceneDelegate: PageSceneDelegate {
     
     override func willChangeAblePage(_ page:PageObject?)->Bool{
         guard let willPage = page else { return false }
+        
+        if let layerPlayer = self.repository?.appSceneObserver?.currentPlayer  {
+            if willPage.pageGroupID == PageType.kids.rawValue {
+                self.repository?.pagePresenter?.closePopup(layerPlayer.pageObject?.id)
+            } else {
+            
+                if willPage.pageID == .synopsis {
+                    let synopData = layerPlayer.getSynopData(obj: willPage)
+                    layerPlayer.changeVod(synopsisData: synopData)
+                    layerPlayer.activePlayer()
+                    return false
+                } else {
+                    layerPlayer.passivePlayer()
+                }
+            }
+        
+        }
+        
         if PageType.getType(willPage.pageGroupID) == .kids && SystemEnvironment.currentPageType != .kids {
             if page?.pageID != .kidsIntro && !SystemEnvironment.isInitKidsPage {
                 self.pagePresenter.changePage(

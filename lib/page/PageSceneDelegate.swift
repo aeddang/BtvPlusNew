@@ -37,6 +37,13 @@ final class PagePresenter:ObservableObject{
         guard let pageKey = pageId else { return }
         PageSceneDelegate.instance?.closePopup(pageID:pageKey )
     }
+    func setLayerPopup(pageObject: PageObject, isLayer:Bool){
+        pageObject.isLayer = isLayer
+        self.currentTopPage = isLayer ? getBelowPage(page:pageObject) : pageObject
+        if let top = self.currentTopPage {
+            self.currentPopup = top.isPopup ? top : nil
+        }
+    }
     func closePopup(_ id:String?){
         guard let pageKey = id else { return }
         PageSceneDelegate.instance?.closePopup(id:pageKey )
@@ -55,14 +62,24 @@ final class PagePresenter:ObservableObject{
     
     func getBelowPage(page:PageObject)->PageObject?{
         if page.isPopup {
-            let find = PageSceneDelegate.instance?.popups.firstIndex(of: page)
-            if let find = find , find > 0{
-                return PageSceneDelegate.instance?.popups[find - 1]
+            if page.isLayer {
+                guard let find = PageSceneDelegate.instance?.popups.filter({!$0.isLayer}).last else { return currentPage }
+                return find
+            } else {
+                guard let find = PageSceneDelegate.instance?.popups.filter({!$0.isLayer}).firstIndex(of: page)  else { return currentPage }
+                if find > 0{
+                    return PageSceneDelegate.instance?.popups[find - 1]
+                }
+                return currentPage
             }
-            return currentPage
         } else {
             return nil
         }
+    }
+    
+    func hasLayerPopup()->Bool{
+        let result = PageSceneDelegate.instance?.popups.first{ $0.isLayer }
+        return result !== nil
     }
     
     func hasPopup(find:PageID)->Bool{
@@ -288,7 +305,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                 popupContent.pageObservable.pagePosition.y = UIScreen.main.bounds.height
             case .horizontal:
                 popupContent.pageObservable.pagePosition.x = UIScreen.main.bounds.width
-            default: do{}
+            default: break
             }
             //popupContent.pageObservable.pageOpacity = opacity
         }
@@ -327,7 +344,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                 popupContent.pageObservable.pagePosition.y = UIScreen.main.bounds.height
             case .horizontal:
                 popupContent.pageObservable.pagePosition.x = UIScreen.main.bounds.width
-            default: do{}
+            default: break
             }
             popupContent.pageObservable.pageOpacity = opacity
         }
@@ -448,7 +465,11 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     func willChangeAblePage(_ page:PageObject?)->Bool{ return true }
     
     func onWillChangePage(prevPage:PageObject?, nextPage:PageObject?){
-        guard let willChangePage = nextPage else { return }
+        guard let nextPage = nextPage else {return}
+        guard let willChangePage = ( !nextPage.isLayer
+                ? nextPage
+                : pagePresenter.getBelowPage(page: nextPage) )
+              else { return }
         if willChangePage.isPopup {
             pagePresenter.currentPopup = willChangePage
         }else{
@@ -457,15 +478,12 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         }
         pagePresenter.currentTopPage = willChangePage
         pageModel.topPageObject = willChangePage
-        if let style =  pageModel.getUIStatusBarStyle(willChangePage){
-            self.updateUserInterfaceStyle(style: style)
-        }
+       
         let willChangeOrientationMask = pageModel.getPageOrientation(willChangePage)
         AppDelegate.orientationLock = pageModel.getPageOrientationLock(willChangePage) ?? .all
         guard let willChangeOrientation = willChangeOrientationMask else { return }
         if  willChangeOrientation == .all { return }
         self.requestDeviceOrientation(willChangeOrientation)
-        
     }
     
     func onFullScreenEnter(isLock:Bool = false, changeOrientation:UIInterfaceOrientationMask? = .landscape){
@@ -477,19 +495,15 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         if self.needOrientationChange(changeOrientation: changeOrientation) {
             self.requestDeviceOrientation(changeOrientation)
         }
-        
-        
     }
     func onFullScreenExit(changeOrientation:UIInterfaceOrientationMask? = nil){
         if let controller = self.window?.rootViewController as? PageHostingController<AnyView> {
             controller.isFullScreen = false
         }
         AppDelegate.orientationLock = pageModel.getPageOrientationLock(nil) ?? .all
-
         if let mask = changeOrientation, self.needOrientationChange(changeOrientation: changeOrientation) {
             self.requestDeviceOrientation(mask)
         }
-    
     }
     
     func needOrientationChange(changeOrientation:UIInterfaceOrientationMask? = nil) -> Bool {

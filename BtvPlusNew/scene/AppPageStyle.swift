@@ -148,21 +148,26 @@ struct ContentScrollPull: ViewModifier {
 struct PageDraging: ViewModifier {
     var geometry:GeometryProxy
     var pageDragingModel:PageDragingModel
+    var useGesture:Bool = true
     func body(content: Content) -> some View {
         return content
             .highPriorityGesture(
-                DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
-                    .onChanged({ value in
-                        self.pageDragingModel.uiEvent = .drag(geometry, value)
-                    })
-                    .onEnded({ value in
-                        self.pageDragingModel.uiEvent = .draged(geometry, value)
-                    })
+                self.useGesture ?
+                    DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
+                        .onChanged({ value in
+                            self.pageDragingModel.uiEvent = .drag(geometry, value)
+                        })
+                        .onEnded({ value in
+                            self.pageDragingModel.uiEvent = .draged(geometry, value)
+                        })
+                : nil
             )
             .gesture(
-                self.pageDragingModel.cancelGesture
-                    .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
-                    .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                self.useGesture ?
+                    self.pageDragingModel.cancelGesture
+                        .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                        .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                : nil
             )
     }
 }

@@ -51,8 +51,8 @@ struct SimplePlayerUI: PageComponent {
                     })
             }
             .background(Color.transparent.black45)
-            .opacity(self.isShowing  ? 1 : 0)
-                        
+            .opacity(self.isShowing ? 1 : 0)
+            
             ActivityIndicator( isAnimating: self.$isLoading,
                                style: .large,
                                color: Color.app.white )

@@ -12,6 +12,7 @@ import Combine
 
 
 struct PlayerTop: PageView{
+    
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
     var title:String? = nil

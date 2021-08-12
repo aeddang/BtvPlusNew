@@ -28,6 +28,7 @@ extension PageMyRecommand{
 struct PageMyRecommand: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -40,6 +41,7 @@ struct PageMyRecommand: PageView {
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
+                pageObservable: self.pageObservable, 
                 viewModel:self.pageDragingModel,
                 axis:.vertical
             ) {
@@ -54,7 +56,7 @@ struct PageMyRecommand: PageView {
                             infinityScrollModel: self.infinityScrollModel)
                         InfinityScrollView(
                             viewModel: self.infinityScrollModel,
-                            marginBottom: self.sceneObserver.safeAreaBottom + Dimen.margin.thin,
+                            marginBottom: self.marginBottom,
                             isRecycle:false,
                             useTracking: true
                             ){
@@ -199,6 +201,9 @@ struct PageMyRecommand: PageView {
                     case .getRecommendHistory : break
                     default: break
                     }
+                }
+                .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
+                    withAnimation{ self.marginBottom = bottom }
                 }
                 .onReceive(self.infinityScrollModel.$pullPosition){ pos in
                     self.pageDragingModel.uiEvent = .pull(geometry, pos)

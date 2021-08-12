@@ -27,8 +27,9 @@ struct PlayViewer: PageComponent{
                 VStack(spacing:0){
                     HStack(spacing:self.isFullScreen ? Dimen.margin.regular : Dimen.margin.light){
                         Button(action: {
+                            
                             self.viewModel?.btvPlayerEvent = .close
-                            self.pagePresenter.goBack()
+                           
                         }) {
                             Image(Asset.icon.back)
                                 .renderingMode(.original)

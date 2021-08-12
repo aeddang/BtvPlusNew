@@ -110,6 +110,7 @@ extension MultiBlockBody {
 }
 
 struct MultiBlockBody: PageComponent {
+    @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
@@ -270,8 +271,14 @@ struct MultiBlockBody: PageComponent {
         }
         .onReceive(self.viewModel.$isUpdate){ update in
             if update {
-                PageLog.d("reload self.viewModel.$isUpdate " + self.infinityScrollModel.isLoading.description, tag: self.tag)
                 if !self.isLoading { self.reload() }
+            }
+        }
+        .onReceive(self.repository.$event){ evt in
+            guard let evt = evt else {return}
+            switch evt {
+            case .updatedWatchLv, .updatedAdultAuth :self.reload()
+            default: break
             }
         }
         .onReceive(dataProvider.$result) { res in
@@ -490,6 +497,7 @@ struct MultiBlockBody: PageComponent {
         if SystemEnvironment.isEvaluation {
             self.originBlocks = self.originBlocks.filter{!$0.isAdult}
         }
+        
         self.setupBlocks()
     }
 

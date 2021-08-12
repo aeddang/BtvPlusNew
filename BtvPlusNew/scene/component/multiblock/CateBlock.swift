@@ -76,6 +76,7 @@ extension CateBlock{
 }
 
 struct CateBlock: PageComponent{
+    @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
@@ -236,6 +237,13 @@ struct CateBlock: PageComponent{
             if update {
                 self.sortType = self.viewModel.type == .btv ? SortTab.finalSortType : SortTabKids.finalSortType
                 self.reload()
+            }
+        }
+        .onReceive(self.repository.$event){ evt in
+            guard let evt = evt else {return}
+            switch evt {
+            case .updatedWatchLv, .updatedAdultAuth :self.reload()
+            default: break
             }
         }
         .onReceive(self.viewModel.$event){evt in

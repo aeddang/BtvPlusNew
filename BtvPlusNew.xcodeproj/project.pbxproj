@@ -437,6 +437,7 @@
 		31A38DFD2682AA270058287B /* PurchaseViewerKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A38DFC2682AA270058287B /* PurchaseViewerKids.swift */; };
 		31A3E86A2605E59500BF044B /* PageSearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A3E8692605E59500BF044B /* PageSearchModel.swift */; };
 		31A3E8782605F3F800BF044B /* SearchList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A3E8772605F3F800BF044B /* SearchList.swift */; };
+		31A3FABA26C49BAA00689E09 /* PageSynopsisLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A3FAB926C49BAA00689E09 /* PageSynopsisLayer.swift */; };
 		31A49FD82626751B0065E6C6 /* DiscountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A49FD72626751A0065E6C6 /* DiscountView.swift */; };
 		31A49FF82627D1620065E6C6 /* PagePairingGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A49FF72627D1620065E6C6 /* PagePairingGuide.swift */; };
 		31A4A0002627D7700065E6C6 /* GuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A49FFF2627D7700065E6C6 /* GuideView.swift */; };
@@ -1111,6 +1112,7 @@
 		31A38DFC2682AA270058287B /* PurchaseViewerKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseViewerKids.swift; sourceTree = "<group>"; };
 		31A3E8692605E59500BF044B /* PageSearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSearchModel.swift; sourceTree = "<group>"; };
 		31A3E8772605F3F800BF044B /* SearchList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchList.swift; sourceTree = "<group>"; };
+		31A3FAB926C49BAA00689E09 /* PageSynopsisLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisLayer.swift; sourceTree = "<group>"; };
 		31A49FD72626751A0065E6C6 /* DiscountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscountView.swift; sourceTree = "<group>"; };
 		31A49FF72627D1620065E6C6 /* PagePairingGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePairingGuide.swift; sourceTree = "<group>"; };
 		31A49FFF2627D7700065E6C6 /* GuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideView.swift; sourceTree = "<group>"; };
@@ -1590,6 +1592,7 @@
 				314D739125B501CC00907118 /* body */,
 				314D738925B4F8B100907118 /* PageSynopsis.swift */,
 				3194318B26B2578D00C20619 /* PageSynopsisLog.swift */,
+				31A3FAB926C49BAA00689E09 /* PageSynopsisLayer.swift */,
 				31895AF92601C863002DE02E /* PageSynopsisPackage.swift */,
 				317335FE26130003009B211B /* PageSynopsisPlayer.swift */,
 			);
@@ -4500,6 +4503,7 @@
 				D57298E5259D6EC100ED2CE6 /* ScenePickerController.swift in Sources */,
 				318C5A092694032800A2FD66 /* MonthlyGraph.swift in Sources */,
 				319CF67C269715D600159575 /* AnswerBox.swift in Sources */,
+				31A3FABA26C49BAA00689E09 /* PageSynopsisLayer.swift in Sources */,
 				314F816525BE3CFA00E76508 /* SynopsisConst.swift in Sources */,
 				D56C6A36257DA0C700CF9AB8 /* CPTabNavigation.swift in Sources */,
 				D56C6A33257DA0C700CF9AB8 /* WebView.swift in Sources */,
@@ -4681,7 +4685,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -4738,7 +4742,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -4810,7 +4814,7 @@
 					"$(PROJECT_DIR)/lib",
 				);
 				INFOPLIST_FILE = BtvPlusNew/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -4885,7 +4889,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = BtvPlusNew/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

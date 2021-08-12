@@ -105,14 +105,17 @@ struct PageProvider {
     }
     
     static func getType(_ pageID:PageID)-> PageAnimationType{
+        if pageID == .synopsis {
+            return PageSynopsis.useLayer ? .vertical : .horizontal
+        }
+        
         switch pageID {
-        case .home, .category,
-             .pairingSetupUser, .pairingBtv,
+        case .pairingSetupUser, .pairingBtv,
              .pairingDevice, .pairingUser, .pairingManagement, .pairingEmptyDevice, .pairingGuide,
              .purchase , .webview, .schedule, .modifyProile,
              .adultCertification, .userCertification, .terminateStb,
              .watchHabit, .myPurchaseTicketList, .remotecon, .playerTest,
-             .myRecommand, .myRegistCard :
+             .myRecommand, .myRegistCard:
             return  .vertical
         case .fullPlayer, .synopsisPlayer :
             return .none
@@ -124,8 +127,11 @@ struct PageProvider {
     }
     
     static func isTop(_ pageID:PageID)-> Bool{
+        if pageID == .synopsis {
+            return PageSynopsis.useLayer
+        }
         switch pageID{
-           default : return  false
+        default : return  false
         }
     }
     

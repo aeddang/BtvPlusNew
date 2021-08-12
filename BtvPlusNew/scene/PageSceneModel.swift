@@ -81,7 +81,7 @@ struct PageSceneModel: PageModel {
     }
     
     func getCloseExceptions() -> [PageID]? {
-        return []
+        return [.synopsis]
     }
     
     func isHistoryPage(_ pageObject:PageObject ) -> Bool {

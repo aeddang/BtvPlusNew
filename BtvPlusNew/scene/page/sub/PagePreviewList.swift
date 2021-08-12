@@ -13,6 +13,7 @@ import Combine
 struct PagePreviewList: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
      
@@ -29,6 +30,7 @@ struct PagePreviewList: PageView {
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
+                pageObservable: self.pageObservable, 
                 viewModel:self.pageDragingModel,
                 axis:.horizontal
             ) {
@@ -46,7 +48,7 @@ struct PagePreviewList: PageView {
                         playerModel:self.playerModel,
                         useTracking:self.useTracking,
                         marginTop: Dimen.margin.thin,
-                        marginBottom: self.marginBottom +  Dimen.margin.regular
+                        marginBottom: self.marginBottom 
                     )
                     
                 }
@@ -67,8 +69,8 @@ struct PagePreviewList: PageView {
                     self.safeAreaTop = self.sceneObserver.safeAreaTop
                 }
             }
-            .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
-                self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
+            .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
+                withAnimation{ self.marginBottom = bottom }
             }
             .onAppear{
                 self.safeAreaTop = self.sceneObserver.safeAreaTop

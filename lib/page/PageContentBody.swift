@@ -67,7 +67,7 @@ struct PageContentBody: PageView  {
         .onReceive(self.pageChanger.$currentTopPage){ page in
             guard let page = page else { return }
             if !self.isReady  {return}
-            //PageLog.log("currentTopPage",tag:self.pageID)
+            
             self.topPageType = page.animationType
             guard let pageObject = self.pageObject else { return }
             if pageObject.zIndex != 0 { return }
@@ -75,6 +75,7 @@ struct PageContentBody: PageView  {
             if self.offsetX != 0 || self.offsetY != 0 { return }
             
             if pageObject == page {
+                //PageLog.log("currentTopPage",tag:self.pageID)
                 self.isTop = true
                 self.isBelow = false
                 withAnimation{
@@ -88,6 +89,7 @@ struct PageContentBody: PageView  {
                 self.isTop = false
                 
                 let below = self.pageChanger.getBelowPage(page: page)
+                
                 self.isBelow = below == pageObject
                 withAnimation{
                     self.dragOpacity = 1

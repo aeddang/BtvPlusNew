@@ -56,6 +56,7 @@ struct SynopsisBody: PageComponent{
     var body: some View {
         InfinityScrollView(
             viewModel: self.infinityScrollModel,
+            scrollType: .vertical(isDragEnd: false),
             marginTop : 0,
             marginBottom : self.sceneObserver.safeAreaBottom,
             spacing:0,
@@ -66,69 +67,70 @@ struct SynopsisBody: PageComponent{
                 Spacer().modifier(MatchHorizontal(height: 1)).background(Color.transparent.clearUi)
                     .id(self.topIdx)
                     .modifier(ListRowInset(spacing: Self.spacing))
-                
-                if let episodeViewerData = self.episodeViewerData {
-                    Text(episodeViewerData.episodeTitle)
-                        .modifier(BoldTextStyle( size: Font.size.boldExtra ))
-                        .lineLimit(2)
-                        .modifier(ContentHorizontalEdges())
-                        .modifier(ListRowInset(spacing: SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.lightExtra))
-                    if self.funtionLayout == .horizontal {
-                        HStack(alignment:.top , spacing:0){
-                            EpisodeViewer(data:episodeViewerData)
-                            //Spacer()
-                            FunctionViewer(
-                                componentViewModel: self.componentViewModel,
-                                synopsisData :self.synopsisData,
-                                isBookmark: self.$isBookmark,
-                                isLike: self.$isLike,
-                                isRecommand: self.isRecommand
-                            )
-                        }
-                        .modifier(ListRowInset(spacing: Self.spacing))
-                    } else {
-                        EpisodeViewer(data:episodeViewerData)
+                VStack(alignment: .leading, spacing: 0){
+                    if let episodeViewerData = self.episodeViewerData {
+                        Text(episodeViewerData.episodeTitle)
+                            .modifier(BoldTextStyle( size: Font.size.boldExtra ))
+                            .lineLimit(2)
+                            .modifier(ContentHorizontalEdges())
+                            .modifier(ListRowInset(spacing: SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.lightExtra))
+                        if self.funtionLayout == .horizontal {
+                            HStack(alignment:.top , spacing:0){
+                                EpisodeViewer(data:episodeViewerData)
+                                //Spacer()
+                                FunctionViewer(
+                                    componentViewModel: self.componentViewModel,
+                                    synopsisData :self.synopsisData,
+                                    isBookmark: self.$isBookmark,
+                                    isLike: self.$isLike,
+                                    isRecommand: self.isRecommand
+                                )
+                            }
                             .modifier(ListRowInset(spacing: Self.spacing))
-                        HStack(spacing:0){
-                            FunctionViewer(
-                                componentViewModel: self.componentViewModel,
-                                synopsisData :self.synopsisData,
-                                isBookmark: self.$isBookmark,
-                                isLike: self.$isLike,
-                                isRecommand: self.isRecommand
-                            )
-                            Spacer()
+                        } else {
+                            EpisodeViewer(data:episodeViewerData)
+                                .modifier(ListRowInset(spacing: Self.spacing))
+                            HStack(spacing:0){
+                                FunctionViewer(
+                                    componentViewModel: self.componentViewModel,
+                                    synopsisData :self.synopsisData,
+                                    isBookmark: self.$isBookmark,
+                                    isLike: self.$isLike,
+                                    isRecommand: self.isRecommand
+                                )
+                                Spacer()
+                            }
+                            .modifier(ListRowInset(spacing: Self.spacing))
                         }
-                        .modifier(ListRowInset(spacing: Self.spacing))
                     }
-                }
-                
-                if self.hasAuthority != nil , let purchasViewerData = self.purchasViewerData {
-                    PurchaseViewer(
-                        componentViewModel: self.componentViewModel,
-                        data: purchasViewerData )
-                        .modifier(ListRowInset(spacing: Self.spacing))
-                }
-                if self.hasAuthority == false && self.isPairing == false {
-                    FillButton(
-                        text: String.button.connectBtv
-                    ){_ in
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.pairing)
+                    
+                    if self.hasAuthority != nil , let purchasViewerData = self.purchasViewerData {
+                        PurchaseViewer(
+                            componentViewModel: self.componentViewModel,
+                            data: purchasViewerData )
+                            .modifier(ListRowInset(spacing: Self.spacing))
+                    }
+                    if self.hasAuthority == false && self.isPairing == false {
+                        FillButton(
+                            text: String.button.connectBtv
+                        ){_ in
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.pairing)
+                            )
+                        }
+                        .buttonStyle(BorderlessButtonStyle())
+                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Self.spacing))
+                    }
+                    
+                    if self.summaryViewerData != nil {
+                        SummaryViewer(
+                            peopleScrollModel:self.peopleScrollModel,
+                            data: self.summaryViewerData!,
+                            useTracking: self.usePullTracking,
+                            isSimple: self.hasRelationVod == nil ? true : false
                         )
+                        .modifier(ListRowInset(spacing: Self.spacing))
                     }
-                    .buttonStyle(BorderlessButtonStyle())
-                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Self.spacing))
-                }
-                
-                if self.summaryViewerData != nil {
-                    SummaryViewer(
-                        peopleScrollModel:self.peopleScrollModel,
-                        data: self.summaryViewerData!,
-                        useTracking: self.usePullTracking,
-                        isSimple: self.hasRelationVod == nil ? true : false
-                    )
-                    .modifier(ListRowInset(spacing: Self.spacing))
                 }
                 if let hasRelationVod = self.hasRelationVod {
                     RelationVodList(

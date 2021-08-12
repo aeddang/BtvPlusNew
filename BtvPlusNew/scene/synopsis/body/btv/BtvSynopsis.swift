@@ -66,34 +66,53 @@ struct BtvSynopsis: PageComponent{
     var topIdx:Int
     var useTracking:Bool
     
+    var uiType:PageSynopsis.UiType
+    var dragOpacity: Double
+    
     @State var playerWidth: CGFloat = 0
    
     var body: some View {
-        HStack(spacing:0){
+        HStack( spacing:0){
             VStack(spacing:0){
-                SynopsisTop(
-                    geometry: self.geometry,
-                    pageObservable: self.pageObservable,
-                    pageDragingModel: self.pageDragingModel,
-                    playerModel: self.playerModel,
-                    playerListViewModel: self.playerListViewModel,
-                    prerollModel: self.prerollModel,
-                    playGradeData: self.synopsisModel?.playGradeData,
-                    title: self.title,
-                    epsdId: self.epsdId,
-                    imgBg: self.imgBg,
-                    imgContentMode: self.imgContentMode,
-                    textInfo: self.textInfo,
-                    playListData: self.playListData,
-                    isPlayAble: self.isPlayAble,
-                    isPlayViewActive: self.isPlayViewActive)
-                    .modifier(Ratio16_9(
-                                geometry:  self.isFullScreen ? geometry : nil,
-                                width:self.playerWidth,
-                                isFullScreen: self.isFullScreen))
-                    .padding(.top, self.isFullScreen ? 0 : self.sceneObserver.safeAreaTop)
-                
-               
+                HStack(spacing:0){
+                    SynopsisTop(
+                        geometry: self.geometry,
+                        pageObservable: self.pageObservable,
+                        pageDragingModel: self.pageDragingModel,
+                        playerModel: self.playerModel,
+                        playerListViewModel: self.playerListViewModel,
+                        prerollModel: self.prerollModel,
+                        playGradeData: self.synopsisModel?.playGradeData,
+                        title: self.title,
+                        epsdId: self.epsdId,
+                        imgBg: self.imgBg,
+                        imgContentMode: self.imgContentMode,
+                        textInfo: self.textInfo,
+                        playListData: self.playListData,
+                        isPlayAble: self.isPlayAble,
+                        isPlayViewActive: self.isPlayViewActive,
+                        uiType: self.uiType
+                        )
+                        .modifier(Ratio16_9(
+                                    geometry:  (self.isFullScreen && self.uiType == .normal) ? geometry : nil,
+                                    width:self.uiType == .normal ? self.playerWidth : Dimen.app.layerPlayerSize.width,
+                                    isFullScreen: self.isFullScreen))
+                        .padding(.top, (self.isFullScreen || self.uiType == .simple) ? 0 : self.sceneObserver.safeAreaTop)
+                    if self.uiType == .simple {
+                        VStack(alignment: .leading, spacing: Dimen.margin.thin){
+                            if let episodeViewerData = self.episodeViewerData {
+                                Text(episodeViewerData.episodeTitle)
+                                    .modifier(BoldTextStyle( size: Font.size.regular ))
+                                    .lineLimit(1)
+                                    .modifier(ContentHorizontalEdges())
+                                EpisodeViewer(data:episodeViewerData, isSimple:true)
+                            }
+                        }
+                        .modifier(MatchHorizontal(height: Dimen.app.layerPlayerSize.height))
+                        .background(Color.app.blueLight)
+                        .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                    }
+                }
                 if !self.isFullScreen {
                     if self.isUIView && self.isUiActive && !self.progressError {
                         SynopsisBody(
@@ -124,7 +143,7 @@ struct BtvSynopsis: PageComponent{
                                 ? .horizontal : .vertical
                             )
                             .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
-                            
+                            .opacity(self.dragOpacity)
                         
                     } else {
                         ZStack{
@@ -138,6 +157,7 @@ struct BtvSynopsis: PageComponent{
                         .modifier(MatchParent())
                         .background(Color.brand.bg)
                         .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                        .opacity(self.dragOpacity)
                     }
                 }
             } // vstack
@@ -158,10 +178,12 @@ struct BtvSynopsis: PageComponent{
                          )
                          .frame(width: Self.listWidth)
                          .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                         .opacity(self.dragOpacity)
                  } else {
                      Spacer()
                          .frame(width: Self.listWidth)
                          .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                         .opacity(self.dragOpacity)
                  }
             }
         }

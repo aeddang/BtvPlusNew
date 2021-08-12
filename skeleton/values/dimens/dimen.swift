@@ -118,6 +118,7 @@ struct Dimen{
         public static let top:CGFloat = isPad ? 86 : 80 //*
         public static let pageTop:CGFloat = isPad ? 64 : 62 //*
         public static let keyboard:CGFloat = isPad ? 400 : 300
+        public static let layerPlayerSize:CGSize = isPad ? CGSize(width: 320, height: 180) : CGSize(width: 160, height: 90)
     }
     
     struct item {

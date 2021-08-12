@@ -19,7 +19,7 @@ struct PageCategory: PageView {
     @ObservedObject var navigationModel:NavigationModel = NavigationModel()
     @State var listWidth:CGFloat = 0
     @State var headerHeight:CGFloat = 0
-    
+    @State var marginBottom:CGFloat = 0
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -45,15 +45,21 @@ struct PageCategory: PageView {
                     .frame(width: self.listWidth)
                     .padding(.vertical, Dimen.margin.thin)
             }
-            .padding(.bottom, Dimen.app.bottom + self.sceneObserver.safeAreaBottom)
+            .padding(.bottom, Dimen.margin.thin + self.marginBottom)
         }
         .modifier(PageFull())
         .onReceive(self.appSceneObserver.$headerHeight){ hei in
             withAnimation{ self.headerHeight = hei }
+            
         }
         .onReceive(self.sceneObserver.$screenSize){ _ in
             if SystemEnvironment.isTablet {
                 self.resetSize()
+            }
+        }
+        .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                withAnimation{ self.marginBottom = bottom }
             }
         }
         .onReceive(self.navigationModel.$index) { idx in

@@ -38,6 +38,7 @@ class Bands:ObservableObject, PageProtocol {
         }
         self.status = .ready
         self.event = .updated
+        DataLog.d("UPDATEED GNBDATA", tag:self.tag)
         self.event = nil
     }
     func setDataKids(_ data:GnbBlock?){

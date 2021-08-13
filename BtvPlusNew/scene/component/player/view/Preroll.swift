@@ -16,6 +16,7 @@ enum PrerollRequest {
 enum PrerollEvent {
     case event(OneAdEvent), finish, start, moveAd, skipAd
 }
+
 class PrerollModel: ComponentObservable{
     @Published var request:PrerollRequest? = nil{ willSet{ self.status = .update } }
     @Published fileprivate(set) var event:PrerollEvent? = nil

@@ -204,6 +204,7 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
     
     private func onError(_ e:PlayerStreamError){
         delegate?.onPlayerError(e)
+        ComponentLog.e("onError " + e.getDescription(), tag: self.tag)
         destoryPlayer()
     }
     
@@ -279,6 +280,7 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
     }
     
     func stop() {
+        ComponentLog.d("on Stop", tag: self.tag)
         destoryPlayer()
     }
     

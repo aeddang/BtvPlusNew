@@ -14,8 +14,10 @@ extension PageSynopsis {
         @Published var uiEvent:ComponentEvent? = nil {didSet{ if uiEvent != nil { uiEvent = nil} }}
     }
     
-    static let useLayer:Bool = true
-    
+    static let useLayer:Bool = false
+    static let getSynopData:Int = 0
+    static let getAuth:Int = 1
+    static let getPlay:Int = 2
 }
 
 struct PageSynopsis: PageView {
@@ -48,6 +50,8 @@ struct PageSynopsis: PageView {
     @State var sceneOrientation: SceneOrientation = .portrait
     @State var playerWidth: CGFloat  = 0
     @State var isPlayBeforeDraging:Bool = false
+    
+    
     var body: some View {
         GeometryReader { geometry in
             PageDataProviderContent(
@@ -181,7 +185,7 @@ struct PageSynopsis: PageView {
                     guard let evt = evt else { return }
                     self.onEvent(btvPlayerEvent: evt)
                     switch evt {
-                    case .close : self.pagePresenter.closePopup(self.pageObject?.id)
+                    case .close : self.historyBack()
                     case .nextView : self.nextVod(auto: false)
                     case .continueView: self.continueVod()
                     case .changeView(let epsdId) : self.changeVod(epsdId:epsdId)
@@ -367,7 +371,7 @@ struct PageSynopsis: PageView {
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
                 self.onLayerPlayerAppear() 
                 guard let obj = self.pageObject  else { return }
-                self.synopsisData = self.getSynopData(obj: obj)
+                self.setupHistory(synopsisData:self.getSynopData(obj: obj))
                 self.initPage()
             }
             .onDisappear(){
@@ -382,12 +386,12 @@ struct PageSynopsis: PageView {
     Data process
     */
     enum SingleRequestType:String {
-        case preview, changeOption, relationContents
+        case preview, changeOption, relationContents, prohibitionSimultaneous
     }
     enum UiType{
         case simple, normal
     }
-    
+    @State var historys:[SynopsisData] = []
     @State var isInitPage = false
     @State var progressError = false
     @State var progressCompleted = false
@@ -455,7 +459,7 @@ struct PageSynopsis: PageView {
         return SynopsisData()
     }
     
-    func initPage(){
+    private func initPage(){
         if self.synopsisData == nil {
             self.progressError = true
             return
@@ -471,7 +475,23 @@ struct PageSynopsis: PageView {
         self.isInitPage = true
         self.pageDataProviderModel.initate()
     }
-    
+    func setupHistory(synopsisData:SynopsisData){
+        if let currentSynop = self.synopsisData {
+            if self.historys.last?.epsdId != currentSynop.epsdId {
+                self.historys.append(currentSynop)
+            }
+        }
+        self.synopsisData = synopsisData
+    }
+    func historyBack(){
+        if !self.historys.isEmpty {
+            let history = self.historys.removeLast()
+            self.synopsisData = history
+            self.resetPage(isAllReset: true)
+        } else {
+            self.pagePresenter.closePopup(self.pageObject?.id)
+        }
+    }
     private func resetPage(isAllReset:Bool = false){
         PageLog.d("resetPage", tag: self.tag)
         self.playerModel.event = .stop
@@ -517,7 +537,7 @@ struct PageSynopsis: PageView {
             return
         }
         switch progress {
-        case 0 :
+        case Self.getSynopData :
             guard let data = self.synopsisData else {
                 PageLog.d("requestProgress synopsisData nil", tag: self.tag)
                 self.errorProgress()
@@ -525,7 +545,7 @@ struct PageSynopsis: PageView {
             }
             self.pageDataProviderModel.requestProgress( q: .init(type: .getSynopsis(data)))
         
-        case 1 :
+        case Self.getAuth :
             guard let model = self.synopsisModel else {return}
             if self.isPairing == true {
                 if model.synopsisType == .seriesChange , let prevDirectView = self.prevDirectView {
@@ -550,7 +570,7 @@ struct PageSynopsis: PageView {
                 self.progressCompleted = true
             }
             
-        case 2 :
+        case Self.getPlay :
             guard let model = self.synopsisModel else {return}
             if self.hasAuthority == false{
                 if self.purchasViewerData?.isPlayAble == false {
@@ -585,7 +605,7 @@ struct PageSynopsis: PageView {
         PageLog.d("respondProgress " + progress.description + " " + count.description, tag: self.tag)
         self.progressError = false
         switch progress {
-        case 0 :
+        case Self.getSynopData :
             guard let data = res.data as? Synopsis else {
                 PageLog.d("error Synopsis", tag: self.tag)
                 self.progressError = true
@@ -593,7 +613,7 @@ struct PageSynopsis: PageView {
             }
             self.setupSynopsis(data)
             
-        case 1 :
+        case Self.getAuth :
             if self.isPairing == true {
                 guard let data = res.data as? DirectView else {
                     PageLog.d("error DirectView", tag: self.tag)
@@ -611,7 +631,7 @@ struct PageSynopsis: PageView {
                 self.setupPreview(data)
             }
         
-        case 2 :
+        case Self.getPlay :
             if self.hasAuthority == false{
                 guard let data = res.data as? Preview else {
                     PageLog.d("error Preview", tag: self.tag)
@@ -652,6 +672,10 @@ struct PageSynopsis: PageView {
                     return
                 }
                 self.setupRelationContent(data)
+            }
+            if res.id.hasPrefix( SingleRequestType.prohibitionSimultaneous.rawValue ) {
+                guard let data = res.data as? ProhibitionSimultaneous else { return }
+                self.setupProhibitionSimultaneous(data)
             }
         }
     }
@@ -727,7 +751,27 @@ struct PageSynopsis: PageView {
             self.isUIView = true
         }
         self.playStartLog()
-        
+        if self.pairing.status == .pairing && self.hasAuthority == true , let synopsisData = self.synopsisData {
+            //동시시청체크
+            self.pageDataProviderModel.request = .init(
+                id: SingleRequestType.prohibitionSimultaneous.rawValue,
+                type: .checkProhibitionSimultaneous(
+                    synopsisData ,
+                    self.pairing,
+                    pcId: self.repository.storage.getPcid()), isOptional:true
+            )
+        }
+    }
+    
+    private func setupProhibitionSimultaneous(_ data:ProhibitionSimultaneous){
+        if data.has_authority?.toBool() == false {
+            let reason = VlsNetwork.ProhibitionReason.getType(data.has_authority_reason)
+            self.playerModel.event = .stop
+            self.appSceneObserver.alert = .alert(String.alert.playProhibitionSimultaneous, reason.reason){
+                self.pagePresenter.closePopup(self.pageObject?.id)
+            }
+            self.prohibitionSimultaneousLog(reason: reason) 
+        }
     }
         
     @State var prevSrisId:String? = nil
@@ -893,7 +937,7 @@ struct PageSynopsis: PageView {
     }
     
     
-    var relationRow:Int {
+    private var relationRow:Int {
        get {
            return
             self.type == .kids 
@@ -937,7 +981,7 @@ struct PageSynopsis: PageView {
     /*
      Player process
      */
-    func playCompleted(){
+    private func playCompleted(){
         switch playerData?.type {
         case .preplay:
             self.preplayCompleted()
@@ -953,7 +997,7 @@ struct PageSynopsis: PageView {
         }
     }
     
-    func nextPreview(count:Int)->Bool{
+    private func nextPreview(count:Int)->Bool{
         guard let playData = self.playerData else { return false}
         guard let previews = playData.previews else { return false}
         if !self.setup.nextPlay { return false}
@@ -978,7 +1022,7 @@ struct PageSynopsis: PageView {
     }
     
     @discardableResult
-    func nextVod(auto:Bool = true)->Bool{
+    private func nextVod(auto:Bool = true)->Bool{
         guard let prevData = self.synopsisData else { return false}
         guard let playData = self.playerData else { return false}
         if !self.setup.nextPlay && auto { return false}
@@ -996,25 +1040,25 @@ struct PageSynopsis: PageView {
             synopType: prevData.synopType
         )
         
-        self.synopsisData = nextSynopsisData
+        self.setupHistory(synopsisData:nextSynopsisData)
         self.resetPage()
         return true
     }
     
-    func preplayCompleted(){
+    private func preplayCompleted(){
         PageLog.d("prevplayCompleted", tag: self.tag)
         self.continueVod()
     }
     
-    func previewCompleted(){
+    private func previewCompleted(){
         PageLog.d("previewCompleted", tag: self.tag)
     }
     
-    func vodCompleted(){
+    private func vodCompleted(){
         PageLog.d("vodCompleted", tag: self.tag)
     }
     
-    func continueVod(){
+    private func continueVod(){
         if self.pairing.status != .pairing {
             self.appSceneObserver.alert = .needPairing(String.alert.needConnectForView)
             return
@@ -1034,20 +1078,22 @@ struct PageSynopsis: PageView {
             type: .getPlay(self.epsdRsluId,  self.pairing.hostDevice ))
     }
     
-    func changeVod(synopsisData:SynopsisData?){
+    func changeVod(synopsisData:SynopsisData?, isHistoryBack:Bool=false){
         guard let synopsisData = synopsisData else { return }
-        self.synopsisData = synopsisData
+        self.setupHistory(synopsisData:synopsisData)
         self.resetPage(isAllReset: true)
     }
     
     func changeVod(epsdId:String?){
         guard let epsdId = epsdId else { return }
         guard let cdata = self.synopsisData else { return }
-        self.synopsisData = SynopsisData(
-            srisId: cdata.srisId, searchType: cdata.searchType,
-            epsdId: epsdId, epsdRsluId: "",
-            prdPrcId: cdata.prdPrcId, kidZone:cdata.kidZone,
-            synopType: cdata.synopType
+        self.setupHistory(synopsisData:
+            SynopsisData(
+                srisId: cdata.srisId, searchType: cdata.searchType,
+                epsdId: epsdId, epsdRsluId: "",
+                prdPrcId: cdata.prdPrcId, kidZone:cdata.kidZone,
+                synopType: cdata.synopType
+            )
         )
         self.resetPage()
     }

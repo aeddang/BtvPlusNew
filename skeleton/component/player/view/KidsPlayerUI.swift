@@ -175,10 +175,10 @@ struct KidsPlayerUI: PageComponent {
                 .opacity( (self.isShowing && !self.isLoading  && !self.viewModel.isLock) ? 1 : 0 )
             }
         }
-        .toast(isShowing: self.$isError, text: self.errorMessage)
+        //.toast(isShowing: self.$isError, text: self.errorMessage)
         .onReceive(self.viewModel.$time) { tm in
+            if self.viewModel.duration <= 0 {return}
             self.time = tm.secToHourString()
-        
             if !self.isSeeking {
                 self.progress = Float(self.viewModel.time / max(self.viewModel.duration,1))
             }

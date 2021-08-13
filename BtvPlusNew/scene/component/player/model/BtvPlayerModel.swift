@@ -150,7 +150,7 @@ class BtvPlayerModel:PlayerModel{
                 self.openingTime = playData.openingTime ?? 0
                 self.continuousTime = t
                 self.initPlay = autoPlay
-            default: do{}
+            default: break
             }
         }
         if let autoPlay = autoPlay {

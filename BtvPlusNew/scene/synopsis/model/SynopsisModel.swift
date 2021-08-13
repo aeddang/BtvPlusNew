@@ -55,6 +55,7 @@ class SynopsisModel : PageProtocol {
     private(set) var seasonTitle:String? = nil
     
     private(set) var title:String? = nil
+    private(set) var menuId:String? = nil
     private(set) var brcastChnlNm:String? = nil
     private(set) var metaTypCd:String? = nil
     
@@ -78,6 +79,7 @@ class SynopsisModel : PageProtocol {
         
         if let contents = data.contents{
             self.title = contents.title
+            self.menuId = contents.menu_id
             self.brcastChnlNm = contents.brcast_chnl_nm
             self.metaTypCd = contents.meta_typ_cd
             self.seasonTitle = contents.sson_choic_nm

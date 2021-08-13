@@ -99,7 +99,9 @@ struct SimplePlayer: PageComponent{
                 }
                 if quality == nil { return }
                 let autoPlay = self.viewModel.initPlay ?? self.setup.autoPlay
-                self.viewModel.continuousTime = self.viewModel.time
+                if self.viewModel.time > 1 { //화질전환 이어보기
+                    self.viewModel.continuousTime = self.viewModel.time
+                }
                 ComponentLog.d("autoPlay " + autoPlay.description, tag: self.tag)
                 if autoPlay {
                     self.initPlayer()
@@ -185,7 +187,8 @@ struct SimplePlayer: PageComponent{
             "device_id" + SystemEnvironment.getGuestDeviceId() +
             "&token=" + (repository.getDrmId() ?? "")
        // ComponentLog.d("path : " + path, tag: self.tag)
-        let t = self.viewModel.continuousTime 
+        let t = self.viewModel.continuousTime
+        PageLog.d("initPlay continuousTime " + t.description, tag: self.tag)
         self.viewModel.event = .load(path, true , t, self.viewModel.header)
     }
 }

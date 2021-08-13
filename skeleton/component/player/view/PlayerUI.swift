@@ -157,8 +157,9 @@ struct PlayerUI: PageComponent {
                 .opacity( (self.isShowing && !self.isLoading  && !self.viewModel.isLock) ? 1 : 0 )
             }
         }
-        .toast(isShowing: self.$isError, text: self.errorMessage)
+        //.toast(isShowing: self.$isError, text: self.errorMessage)
         .onReceive(self.viewModel.$time) { tm in
+            if self.viewModel.duration <= 0 {return}
             if tm < 0 {return}
             self.time = tm.secToHourString()
             if !self.isSeeking {

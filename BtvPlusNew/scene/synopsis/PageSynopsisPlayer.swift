@@ -445,13 +445,18 @@ struct PageSynopsisPlayer: PageView {
             self.naviLogManager.setupSysnopsis(synopsisModel)
         }
         let result = result ?? self.synopsisData?.synopType.logResult
+        var actionBody = MenuNaviActionBodyItem()
+        actionBody.menu_name = synopsisModel?.title
+        actionBody.menu_id = synopsisModel?.menuId
+        actionBody.category = category ?? ""
+        actionBody.result = result ?? ""
+        actionBody.config = config
+        
         self.naviLogManager.playerLog(
             pageID: .play,
             action: action,
-            watchType : watchType,
-            category: category,
-            result: result,
-            config:config
+            actionBody: actionBody,
+            watchType : watchType
         )
     }
 }

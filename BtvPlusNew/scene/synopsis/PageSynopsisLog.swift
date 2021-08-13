@@ -125,6 +125,16 @@ extension PageSynopsis {
         self.playStartTime = isPlay ? AppUtil.networkTime() : nil
     }
     
+    func prohibitionSimultaneousLog(reason:VlsNetwork.ProhibitionReason){
+        var actionBody = MenuNaviActionBodyItem()
+        actionBody.menu_id = synopsisModel?.menuId
+        actionBody.config = reason.config
+        self.naviLogManager.playerLog(
+            pageID: .prohibitionSimultaneous,
+            action: .pageShow,
+            actionBody: actionBody
+        )
+    }
    
     func log(type:LgsNetwork.PlayEventType){
         
@@ -187,13 +197,19 @@ extension PageSynopsis {
             self.naviLogManager.setupSysnopsis(synopsisModel)
         }
         let result = result ?? self.synopsisData?.synopType.logResult
+        
+        var actionBody = MenuNaviActionBodyItem()
+        actionBody.menu_name = synopsisModel?.title
+        actionBody.menu_id = synopsisModel?.menuId
+        actionBody.category = category ?? ""
+        actionBody.result = result ?? ""
+        actionBody.config = config
+        
         self.naviLogManager.playerLog(
             pageID: pageID ?? (self.type == .btv ? .play : .zemPlay),
             action: action,
-            watchType : watchType,
-            category: category,
-            result: result,
-            config:config
+            actionBody: actionBody,
+            watchType : watchType
         )
     }
 

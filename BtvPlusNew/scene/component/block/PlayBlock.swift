@@ -404,6 +404,7 @@ struct PlayBlock: PageComponent{
         if self.isFullScreen { return }
         self.onPlaytimeChanged(t:self.playerModel.time)
         self.finalIndex = nil
+        self.playerModel.event = .pause
         self.playerModel.reset()
         self.playerModel.resetCurrentPlayer()
         self.pagePresenter.orientationLock(isLock: false)

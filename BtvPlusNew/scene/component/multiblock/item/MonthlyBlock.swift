@@ -15,12 +15,10 @@ class MonthlyBlockModel: InfinityScrollModel {
     }
 }
 
-
 extension MonthlyBlock{
     static let height:CGFloat = ListItem.monthly.size.height + Font.size.regular
         + Dimen.button.regularExtra + (Dimen.margin.thinExtra * 3) + Dimen.margin.lightExtra
 }
-
 
 struct MonthlyBlock: PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
@@ -54,7 +52,6 @@ struct MonthlyBlock: PageComponent {
                                 .addParam(key: .type, value: BlockData.ThemaType.ticket)
                         )
                     }
-                   
                 } else{
                     Spacer()
                 }
@@ -244,6 +241,7 @@ struct MonthlyBlock: PageComponent {
             }
             
         } else{
+            self.isKids = false
             if currentData.isFirstFree == true {
                 self.tipIconLeading = Asset.icon.firstFree
                 self.tipStrong = String.monthly.textFirstFreeStrong

@@ -438,6 +438,8 @@
 		31A3E86A2605E59500BF044B /* PageSearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A3E8692605E59500BF044B /* PageSearchModel.swift */; };
 		31A3E8782605F3F800BF044B /* SearchList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A3E8772605F3F800BF044B /* SearchList.swift */; };
 		31A3FABA26C49BAA00689E09 /* PageSynopsisLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A3FAB926C49BAA00689E09 /* PageSynopsisLayer.swift */; };
+		31A3FABD26C641A000689E09 /* Vls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A3FABC26C641A000689E09 /* Vls.swift */; };
+		31A3FAC026C6446900689E09 /* ProhibitionSimultaneous.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A3FABF26C6446900689E09 /* ProhibitionSimultaneous.swift */; };
 		31A49FD82626751B0065E6C6 /* DiscountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A49FD72626751A0065E6C6 /* DiscountView.swift */; };
 		31A49FF82627D1620065E6C6 /* PagePairingGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A49FF72627D1620065E6C6 /* PagePairingGuide.swift */; };
 		31A4A0002627D7700065E6C6 /* GuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A49FFF2627D7700065E6C6 /* GuideView.swift */; };
@@ -1113,6 +1115,9 @@
 		31A3E8692605E59500BF044B /* PageSearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSearchModel.swift; sourceTree = "<group>"; };
 		31A3E8772605F3F800BF044B /* SearchList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchList.swift; sourceTree = "<group>"; };
 		31A3FAB926C49BAA00689E09 /* PageSynopsisLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisLayer.swift; sourceTree = "<group>"; };
+		31A3FABC26C641A000689E09 /* Vls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vls.swift; sourceTree = "<group>"; };
+		31A3FABF26C6446900689E09 /* ProhibitionSimultaneous.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProhibitionSimultaneous.swift; sourceTree = "<group>"; };
+		31A3FAC126C6550800689E09 /* libti2-mdns-service-proxy-client.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libti2-mdns-service-proxy-client.a"; path = "../../../../../Downloads/IOS_mdns_lib_mobile_pc/mobile_iosarm/libti2-mdns-service-proxy-client.a"; sourceTree = "<group>"; };
 		31A49FD72626751A0065E6C6 /* DiscountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscountView.swift; sourceTree = "<group>"; };
 		31A49FF72627D1620065E6C6 /* PagePairingGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePairingGuide.swift; sourceTree = "<group>"; };
 		31A49FFF2627D7700065E6C6 /* GuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideView.swift; sourceTree = "<group>"; };
@@ -1203,7 +1208,6 @@
 		D56C5FE22592F693009AE769 /* Metv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metv.swift; sourceTree = "<group>"; };
 		D56C5FE725930060009AE769 /* BookMark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMark.swift; sourceTree = "<group>"; };
 		D56C5FEF25933DA9009AE769 /* libti2-mdns-service-proxy-client.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libti2-mdns-service-proxy-client.a"; path = "libs/libti2-mdns-service-proxy-client.a"; sourceTree = "<group>"; };
-		D56C603725933E52009AE769 /* libti2-mdns-service-proxy-client.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libti2-mdns-service-proxy-client.a"; sourceTree = "<group>"; };
 		D56C603825933E52009AE769 /* mdnsServiceProxyClientIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mdnsServiceProxyClientIOS.h; sourceTree = "<group>"; };
 		D56C603B25933EBD009AE769 /* MdnsPairingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MdnsPairingManager.swift; sourceTree = "<group>"; };
 		D56C604125934050009AE769 /* Store-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Store-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -2774,6 +2778,23 @@
 			path = switch;
 			sourceTree = "<group>";
 		};
+		31A3FABB26C6419400689E09 /* vls */ = {
+			isa = PBXGroup;
+			children = (
+				31A3FABE26C6445800689E09 /* model */,
+				31A3FABC26C641A000689E09 /* Vls.swift */,
+			);
+			path = vls;
+			sourceTree = "<group>";
+		};
+		31A3FABE26C6445800689E09 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				31A3FABF26C6446900689E09 /* ProhibitionSimultaneous.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
 		31AC66C026B780A000766995 /* block */ = {
 			isa = PBXGroup;
 			children = (
@@ -3051,6 +3072,7 @@
 			children = (
 				316C45DF26532FF500A8D7F5 /* AudioMirrorServiceProxyClientIOS.h */,
 				316C45E226532FF500A8D7F5 /* libopus.a */,
+				31A3FAC126C6550800689E09 /* libti2-mdns-service-proxy-client.a */,
 				316C45E026532FF500A8D7F5 /* libti2-audiomirror-service-proxy-client.a */,
 				316C45E126532FF500A8D7F5 /* libwrtp.a */,
 				319BAF9E260439110007273F /* TycheSpeechRecognizer.h */,
@@ -3058,7 +3080,6 @@
 				3180855C25C233A900AE4A73 /* DrmAgent.h */,
 				3180855D25C233A900AE4A73 /* libPoCDrmAgent.a */,
 				D56C603825933E52009AE769 /* mdnsServiceProxyClientIOS.h */,
-				D56C603725933E52009AE769 /* libti2-mdns-service-proxy-client.a */,
 			);
 			path = libs;
 			sourceTree = "<group>";
@@ -3593,6 +3614,7 @@
 		D56C6B25257DACD800CF9AB8 /* rest  */ = {
 			isa = PBXGroup;
 			children = (
+				31A3FABB26C6419400689E09 /* vls */,
 				31CABAFE26C28DAE00B4B3C3 /* navilog */,
 				3194318526B227FD00C20619 /* lgs */,
 				319B378426B0EAD0001501B1 /* rps */,
@@ -4022,6 +4044,7 @@
 				31C4D2A92693040A000C7E83 /* NeedPairingInfo.swift in Sources */,
 				319CF688269738CF00159575 /* ExamBody.swift in Sources */,
 				31895AFA2601C863002DE02E /* PageSynopsisPackage.swift in Sources */,
+				31A3FAC026C6446900689E09 /* ProhibitionSimultaneous.swift in Sources */,
 				3191268426BCFC08006F39E7 /* PagePairingFamilyInvite.swift in Sources */,
 				D51AA9F82599BAFB0035CD51 /* PageTab.swift in Sources */,
 				318AA043265DE83500C089EC /* SetupChildren.swift in Sources */,
@@ -4328,6 +4351,7 @@
 				3167195925FEC876005AC3D2 /* Footer.swift in Sources */,
 				31A4A0082627F0A90065E6C6 /* TipTab.swift in Sources */,
 				317F98FD26A650AB00016C09 /* VoiceRecorderKids.swift in Sources */,
+				31A3FABD26C641A000689E09 /* Vls.swift in Sources */,
 				316A70862670570000A93B83 /* PlayerEffectAnimationKids.swift in Sources */,
 				315B55D225A7E2DC00B5B351 /* Nps.swift in Sources */,
 				D56C6AFF257DAAC000CF9AB8 /* AppDelegate.swift in Sources */,
@@ -4799,7 +4823,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 51;
+				CURRENT_PROJECT_VERSION = 52;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -4823,7 +4847,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.0468;
+				MARKETING_VERSION = 1.0469;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = ".BtvPlusNew_ dev";
@@ -4879,7 +4903,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 51;
+				CURRENT_PROJECT_VERSION = 52;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -4898,7 +4922,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.0468;
+				MARKETING_VERSION = 1.0469;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvPlusNew_des;

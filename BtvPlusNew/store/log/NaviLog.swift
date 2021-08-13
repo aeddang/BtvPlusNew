@@ -14,6 +14,8 @@ struct NaviLog {
         case playInside = "/play/inside"                    // 재생 | 인사이드
         case popup = "/popup"                               // GNB팝업
         
+        case prohibitionSimultaneous = "/limit_multiple_screen"
+        
         case myConnectStbDetailSubscriberAuthStbSelection = "/my/connect_stb/detail/subscriber_auth/stb_selection" // 세탑 여러개
         case myConnectStbBtvAuthNumberCompleted = "/my/connect_stb/btv_auth_number/completed"
         case searchResult = "/search/result"                      // 검색결과

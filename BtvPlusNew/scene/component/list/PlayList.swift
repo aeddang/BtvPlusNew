@@ -293,7 +293,7 @@ struct PlayItem: PageView {
         }
         self.playerModel?.setData(data: dataInfo, type: .preview(epsdRsluId), autoPlay: true, continuousTime: self.data.playTime)
         
-        
+
     }
 }
 

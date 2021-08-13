@@ -7,12 +7,14 @@ let testPath2 = "http://techslides.com/demos/sample-videos/small.mp4"
 
 struct CPPlayer: PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var viewModel:PlayerModel = PlayerModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     var isSimple:Bool = false
     var type:PageType = .btv
     @State var screenRatio = CGSize(width:1, height:1)
     @State var bindUpdate:Bool = false //for ios13
+   
     var body: some View {
         ZStack(alignment: .center){
             CustomAVPlayerController(
@@ -20,7 +22,7 @@ struct CPPlayer: PageComponent {
                 pageObservable : self.pageObservable,
                 bindUpdate: self.$bindUpdate
                 )
-            if !self.viewModel.useAvPlayerController && !self.isSimple{
+            if !self.viewModel.useAvPlayerController{
                 HStack(spacing:0){
                     Spacer().modifier(MatchParent())
                         .background(Color.transparent.clearUi)
@@ -58,14 +60,22 @@ struct CPPlayer: PageComponent {
         .onReceive(self.viewModel.$isPlay) { _ in
             self.autoUiHidden?.cancel()
         }
+        .onReceive(self.viewModel.$duration) { d in
+            ComponentLog.d("on duration " + d.description, tag:self.tag)
+            self.clearWaitDuration()
+        }
+        
         .onReceive(self.viewModel.$event) { evt in
             guard let evt = evt else { return }
             switch evt {
+    
+            case .stop, .pause :  self.creatWaitDuration()
             case .seeking(_): self.autoUiHidden?.cancel()
             case .fixUiStatus: self.autoUiHidden?.cancel()
-            default : do{}
+            default : break
             }
         }
+        
         .onReceive(self.viewModel.$status) { stat in
             if #available(iOS 14.0, *) { return }
             self.bindUpdate.toggle()
@@ -73,13 +83,47 @@ struct CPPlayer: PageComponent {
         .onReceive(self.viewModel.$streamEvent) { evt in
             guard let evt = evt else { return }
             switch evt {
+            case .loaded(_) :
+                if self.viewModel.duration <= 0 {
+                    self.creatWaitDuration()
+                }
             case .seeked: self.delayAutoUiHidden()
-            default : do{}
+            default : break
+            }
+        }
+        .onReceive(self.viewModel.$error) { err in
+            guard let err = err else { return }
+            var msg = ""
+            var code = ""
+            switch err {
+            case .connect(let s):
+                msg = s
+                code = "#connect error"
+            case .stream(let err):
+                msg = err.getDescription()
+                code = "#stream error"
+            case .illegalState(_):
+                return
+            case .drm(let err):
+                msg = err.getDescription()
+                code = "#drm error"
+            case .asset(let err):
+                msg = err.getDescription()
+                code = "#asset error"
+            }
+            ComponentLog.e(code + " : " + msg, tag:self.tag)
+            self.appSceneObserver.alert = .confirm(
+                String.alert.playError, String.alert.playErrorPlayback, code,
+                confirmText: String.button.btnRetry){retry in
+                if retry {
+                    self.viewModel.updateType = .recovery(self.viewModel.initTime ?? 0)
+                    self.viewModel.event = .resume
+                }
             }
         }
         .background(Color.black)
         .onDisappear(){
-            
+            self.creatWaitDuration()
         }
         
     }
@@ -107,6 +151,38 @@ struct CPPlayer: PageComponent {
                 self.viewModel.playerUiStatus = .hidden
                 self.autoUiHidden?.cancel()
             }
+    }
+    
+    
+    @State var waitDurationSubscription:AnyCancellable?
+    @State var waitDurationCount = 0
+    func creatWaitDuration() {
+        //ComponentLog.d("creatWaitDuration", tag:self.tag)
+        self.waitDurationSubscription?.cancel()
+        self.waitDurationCount = 0
+        self.waitDurationSubscription = Timer.publish(
+            every: 1.0, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                self.waitDurationCount += 1
+                if self.waitDurationCount <= 4 && self.viewModel.duration > 0 {
+                    self.clearWaitDuration()
+                    return
+                }
+                if self.waitDurationCount == 5 {
+                    if self.viewModel.duration == 0 {
+                        self.viewModel.event = .stop
+                        self.viewModel.error = .stream(.playback("wait Duration"))
+                    }
+                    self.clearWaitDuration()
+                }
+            }
+    }
+    func clearWaitDuration() {
+        guard let waitDurationSubscription = self.waitDurationSubscription else {return}
+        //ComponentLog.d("clearWaitDuration", tag:self.tag)
+        waitDurationSubscription.cancel()
+        self.waitDurationSubscription = nil
     }
 }
 

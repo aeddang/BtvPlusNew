@@ -91,16 +91,10 @@ class NaviLogManager : ObservableObject, PageProtocol {
         self.currentSysnopsisContentsItem = contentsItem
     }
     
-    
     func playerLog(pageID:NaviLog.PageId, action:NaviLog.action,
-                   watchType:NaviLog.watchType? = nil,
-                   category: String? = nil, result: String? = nil,
-                   config:String? = nil){
-        var actionBody = MenuNaviActionBodyItem()
-        actionBody.category = category ?? ""
-        actionBody.result = result ?? ""
-        actionBody.config = config
-        
+                   actionBody:MenuNaviActionBodyItem,
+                   watchType:NaviLog.watchType? = nil){
+    
         let data = NaviLogData()
         data.actionBody = actionBody
         data.contentsBody = self.currentSysnopsisContentsItem
@@ -122,6 +116,17 @@ class NaviLogManager : ObservableObject, PageProtocol {
         if let anonymousData = self.getAnonymousData(pageID: pageID, action: action,  watchType: watchType, naviLogData: data) {
             self.send(anonymousData, isAnonymous: true)
         }
+    }
+    
+    func playerLog(pageID:NaviLog.PageId, action:NaviLog.action,
+                   watchType:NaviLog.watchType? = nil,
+                   category: String? = nil, result: String? = nil,
+                   config:String? = nil){
+        var actionBody = MenuNaviActionBodyItem()
+        actionBody.category = category ?? ""
+        actionBody.result = result ?? ""
+        actionBody.config = config
+        self.playerLog(pageID: pageID, action: action, actionBody: actionBody, watchType:watchType)
     }
     
     

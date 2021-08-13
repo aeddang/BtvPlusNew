@@ -75,6 +75,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
             self.update(player, evt: evt)
             return
         }
+        ComponentLog.d("recovery " + viewModel.path , tag: self.tag)
         viewModel.event = .load(viewModel.path, isPlay , initTime)
     }
     
@@ -173,6 +174,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
         var timeControlStatus:AVPlayer.TimeControlStatus? = nil
         var status:AVPlayer.Status? = nil
         var isCheckStatus:Bool = false
+        var isCheckTimeControlStatus:Bool = false
         viewModel.isRunning = true
         
        
@@ -197,28 +199,39 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
                 }
                 self.onTimeChange(Double(t))
                 player.layer.setNeedsDisplay()
-                
-                if currentPlayer.timeControlStatus != timeControlStatus {
-                    switch currentPlayer.timeControlStatus{
-                    case .paused:
-                        self.cancel(job, reason: "pause")
-                        self.onPaused()
-    
-                    case .playing: self.onResumed()
-                    case .waitingToPlayAtSpecifiedRate:
-                        switch currentPlayer.reasonForWaitingToPlay {
-                        case .some(let reason):
-                            switch reason {
-                            case .evaluatingBufferingRate: self.onBuffering(rate: 0.0)
-                            case .noItemToPlay: self.cancel(job, reason: "noItemToPlay")
-                            case .toMinimizeStalls: self.onBuffering(rate: 0.0)
+                if !isCheckTimeControlStatus {
+                    DispatchQueue.global(qos: .background).async {
+                        if currentPlayer.timeControlStatus != timeControlStatus {
+                            switch currentPlayer.timeControlStatus{
+                            case .paused:
+                                DispatchQueue.main.async {
+                                    self.cancel(job, reason: "pause")
+                                    self.onPaused()
+                                }
+            
+                            case .playing:
+                                DispatchQueue.main.async {
+                                    self.onResumed()
+                                }
+                            case .waitingToPlayAtSpecifiedRate:
+                                switch currentPlayer.reasonForWaitingToPlay {
+                                case .some(let reason):
+                                    switch reason {
+                                    case .evaluatingBufferingRate:
+                                        DispatchQueue.main.async {self.onBuffering(rate: 0.0)}
+                                    case .noItemToPlay:  DispatchQueue.main.async {self.cancel(job, reason: "noItemToPlay")}
+                                    case .toMinimizeStalls:
+                                        DispatchQueue.main.async {self.onBuffering(rate: 0.0)}
+                                    default:break
+                                    }
+                                default:break
+                                }
                             default:break
                             }
-                        default:break
+                            timeControlStatus = currentPlayer.timeControlStatus
+                            isCheckTimeControlStatus = false
                         }
-                    default:break
                     }
-                    timeControlStatus = currentPlayer.timeControlStatus
                 }
                 if !isCheckStatus {
                     DispatchQueue.global(qos: .background).async {
@@ -228,9 +241,10 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
                             case .failed:
                                 DispatchQueue.main.async {
                                     self.cancel(job, reason: "failed")
+                                    self.onPlayerError(.playback("failed"))
                                 }
                             case .unknown:break
-                            case .readyToPlay: do {
+                            case .readyToPlay:
                                 if let d = currentPlayer.currentItem?.asset.duration {
                                     let willDuration = Double(CMTimeGetSeconds(d))
                                     if willDuration != viewModel.originDuration {
@@ -241,10 +255,11 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
                                        
                                     }
                                 }
+                                
                                 DispatchQueue.main.async {
                                     self.onReadyToPlay()
                                 }
-                            }
+                        
                             @unknown default:break
                             }
                             status = currentPlayer.status

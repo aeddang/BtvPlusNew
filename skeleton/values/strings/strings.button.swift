@@ -32,7 +32,7 @@ extension String {
         public static let notice = "btnNotice".loaalized()
         public static let purchas = "btnPurchas".loaalized()
         public static let purchasAnother = "btnPurchasAnother".loaalized()
-        
+        public static let btnRetry = "btnRetry".loaalized()
         public static let ratioOrigin = "btnRatioOrigin".loaalized()
         public static let ratioFill = "btnRatioFill".loaalized()
         public static let ratioFit = "btnRatioFit".loaalized()

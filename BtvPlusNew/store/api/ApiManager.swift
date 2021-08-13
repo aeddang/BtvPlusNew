@@ -75,7 +75,7 @@ class ApiManager :PageProtocol, ObservableObject{
     private lazy var kes:Kes = Kes(network: KesNetwork())
     private lazy var rps:Rps = Rps(network: RpsNetwork())
     private lazy var mgmRps:MgmRps = MgmRps(network: MgmRpsNetwork())
-    
+    private lazy var vls:Vls = Vls(network: VlsNetwork())
     // 로그 서버 페이지이동시 켄슬 안함
     private lazy var lgs:Lgs = Lgs(network: LgsNetwork())
     private lazy var navilog:Navilog = Navilog(network: NavilogNetwork())
@@ -102,6 +102,7 @@ class ApiManager :PageProtocol, ObservableObject{
         self.kes.clear()
         self.rps.clear()
         self.mgmRps.clear()
+        self.vls.clear()
         self.apiQ.removeAll()
     }
     
@@ -605,6 +606,11 @@ class ApiManager :PageProtocol, ObservableObject{
             evt: evt, playData: playData, synopData: synopData,
             pairing: pairing,mbtvKey: mbtvKey, pcId: pcId,
             isKidZone: isKidZone, gubun: gubun,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+            
+        case .checkProhibitionSimultaneous(let synopData, let pairing, let pcId): self.vls.checkProhibitionSimultaneous(
+            synopData: synopData,pairing: pairing, pcId: pcId,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         //NaviLog

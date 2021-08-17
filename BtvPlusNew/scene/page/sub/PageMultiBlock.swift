@@ -15,6 +15,7 @@ struct PageMultiBlock: PageView {
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var naviLogManager:NaviLogManager
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var multiBlockViewModel:MultiBlockModel = MultiBlockModel()
@@ -167,6 +168,7 @@ struct PageMultiBlock: PageView {
                     
                 }else{
                     self.title = obj.getParamValue(key: .title) as? String
+                    self.titleId = obj.getParamValue(key: .id) as? String
                     self.originDatas = obj.getParamValue(key: .data) as? [BlockItem] ?? []
                 }
                 
@@ -185,6 +187,7 @@ struct PageMultiBlock: PageView {
     @State var originDatas:Array<BlockItem> = []
     @State var useTracking:Bool = false
     @State var title:String? = nil
+    @State var titleId:String? = nil
     @State var finalSelectedIndex:Int? = nil
     @State var openId:String? = nil
     
@@ -207,9 +210,12 @@ struct PageMultiBlock: PageView {
             return
         }
         finalSelectedIndex = nil
+        
+        
         guard let datas = self.tabDatas else { return reload() }
+        let data = datas[moveIdx]
         selectedTabIdx = moveIdx
-        originDatas = datas[moveIdx].blocks ?? []
+        originDatas = data.blocks ?? []
         var delay:Double = 0
         if originDatas.isEmpty {
             if self.cateData == nil {delay = 0.1}
@@ -225,17 +231,31 @@ struct PageMultiBlock: PageView {
     private func reload(delay:Double = 0){
         DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + delay) {
             DispatchQueue.main.async {
+                var title = self.title
+                var menuId = self.titleId
+                
                 if let data = self.cateData {
                     self.cateBlockViewModel.update(menuId:data.menuId,
                                                    listType:data.listType ?? .poster,
                                                    isAdult:data.isAdult , key:nil)
+                    title = data.title
+                    menuId = data.menuId ?? menuId
+                    
                 } else {
+                    if (self.tabDatas?.count ?? 0) > 1, let tabDatas = self.tabDatas {
+                        title = tabDatas[self.selectedTabIdx].title
+                        menuId = tabDatas[self.selectedTabIdx].menuId ?? menuId
+                    }
                     let isAdult = self.tabDatas?[selectedTabIdx].isAdult ?? false
                     self.multiBlockViewModel.update(
                         datas: self.originDatas, openId: self.openId,
-                        themaType: self.themaType, isAdult:isAdult)
+                        themaType: self.themaType, isAdult:isAdult, title: title)
                 }
                 self.tabInfinityScrollModel.uiEvent = .scrollTo(self.selectedTabIdx)
+                
+                self.naviLogManager.actionLog(
+                    .pageShow,
+                    actionBody: .init(menu_id: menuId, menu_name: title))
             }
         }
     }

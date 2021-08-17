@@ -36,7 +36,8 @@ class MultiBlockModel: PageDataProviderModel {
         self.isUpdate = true
     }
     
-    func update(datas:[BlockItem], openId:String?, selectedTicketId:String? = nil, themaType:BlockData.ThemaType = .category, isAdult:Bool = false) {
+    func update(datas:[BlockItem], openId:String?, selectedTicketId:String? = nil,
+                themaType:BlockData.ThemaType = .category, isAdult:Bool = false, title:String? = nil) {
         self.type = .btv
         self.datas = datas.map{ block in
             BlockData().setData(block, themaType:themaType)
@@ -48,6 +49,7 @@ class MultiBlockModel: PageDataProviderModel {
             default : return true
             }
         }
+        self.title = title
         self.selectedTicketId = selectedTicketId
         self.openId = openId
         self.isAdult = isAdult

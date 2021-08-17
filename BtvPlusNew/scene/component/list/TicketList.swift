@@ -149,6 +149,7 @@ struct TicketList: PageComponent{
                             if data.blocks!.count > 1 {
                                 self.pagePresenter.openPopup(
                                     PageProvider.getPageObject(.multiBlock)
+                                        .addParam(key: .id, value: data.menuId)
                                         .addParam(key: .title, value: data.title)
                                         .addParam(key: .data, value: data.blocks)
                                 )

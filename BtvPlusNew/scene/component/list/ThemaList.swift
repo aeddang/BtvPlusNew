@@ -143,6 +143,7 @@ struct ThemaList: PageComponent{
                         if data.blocks != nil && data.blocks?.isEmpty == false {
                             self.pagePresenter.openPopup(
                                 PageProvider.getPageObject(.multiBlock)
+                                    .addParam(key: .id, value: data.menuId)
                                     .addParam(key: .title, value: data.title)
                                     .addParam(key: .data, value: data.blocks)
                             )

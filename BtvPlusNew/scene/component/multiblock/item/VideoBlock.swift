@@ -15,6 +15,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var pageObservable:PageObservable
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -60,10 +61,12 @@ struct VideoBlock:BlockProtocol, PageComponent {
                         }
                     }
                     if self.hasMore {
+                       
                         TextButton(
                             defaultText: String.button.all,
                             textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
                         ){_ in
+                            self.sendLog(self.naviLogManager)
                             self.pagePresenter.openPopup(
                                 PageProvider.getPageObject(data.dataType == .watched ? .watchedList : .categoryList)
                                     .addParam(key: .data, value: data)

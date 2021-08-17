@@ -16,7 +16,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
-  
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var pageObservable:PageObservable
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -64,6 +64,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
                             defaultText: String.button.all,
                             textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
                         ){_ in
+                            self.sendLog(self.naviLogManager)
                             self.pagePresenter.openPopup(
                                 PageProvider.getPageObject(.categoryList)
                                     .addParam(key: .data, value: data)

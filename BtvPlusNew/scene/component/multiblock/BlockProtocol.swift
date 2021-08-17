@@ -41,10 +41,6 @@ extension BlockProtocol {
     }
     
     func sendLog(_ naviLogManager:NaviLogManager){
-        if self.data.parentTitle != nil {
-            naviLogManager.actionLog(.clickViewMore, pageId: .zemTabMenu, actionBody: self.data.getActionLog())
-        } else {
-            naviLogManager.actionLog(.clickViewMore, pageId: .zemkids, actionBody: self.data.getActionLog())
-        }
+        naviLogManager.actionLog(.clickViewMore, actionBody: self.data.getActionLog())
     }
 }

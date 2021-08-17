@@ -26,11 +26,7 @@ struct NaviLog {
         
         case purchaseOrderCompleted = "/purchase/order_completed"   // 상품구매완료
         
-        case zemkids = "/category/zemkids"         // ZEM 키즈 탭메뉴
-        case zemTabMenu = "/category/zemkids/tabmenu"         // ZEM 키즈 탭메뉴
-        
         case appPush = "/app_push"
-       
         case zemSearchResult = "/category/zemkids/search_result" // ZEM 키즈|검색결과
         case zemMonthlyTabMenu = "/category/zemkids/monthly_payment/tab_menu"
        
@@ -88,7 +84,7 @@ struct NaviLog {
         case .pairingFamilyInvite: return nil
       
         case .purchase: return nil
-        case .multiBlock: return nil
+        case .multiBlock: return "/category"
         case .categoryList: return nil
         case .previewList: return "/scheduled"
         case .watchedList: return "/my/recent_contents"
@@ -117,7 +113,7 @@ struct NaviLog {
         case .snsShare: return nil
             
         case .kidsIntro: return nil
-        case .kidsHome: return "/category/zemkids/tabmenu"
+        case .kidsHome: return "/category/zemkids"
         case .registKid: return nil
         case .editKid: return nil
         case .kidsMy: return "/category/zemkids/mypage"
@@ -129,7 +125,7 @@ struct NaviLog {
         case .kidsMyMonthly: return "/category/zemkids/mypage/monthly_report"
         case .selectKidCharacter: return nil
         case .kidsConfirmNumber: return "/zemkids_certification_popup"
-        case .kidsMultiBlock: return nil
+        case .kidsMultiBlock: return "/category/zemkids/tabmenu"
         case .kidsCategoryList: return nil
         case .kidsMonthly: return "/category/zemkids/monthly_payment"
         case .kidsSynopsis: return "/category/zemkids/synopsis"
@@ -137,6 +133,21 @@ struct NaviLog {
         case .kidsSearch: return nil
         case .tabInfo: return nil
         case .detailInfo: return nil
+        default : return nil
+        }
+    }
+    
+    static func getPageAction(page:PageObject, repository:Repository)-> MenuNaviActionBodyItem?{
+        
+        switch page.pageID {
+        case .kidsHome:
+            var actionBody = MenuNaviActionBodyItem()
+            let dataProvider = repository.dataProvider
+            let menuId = page.getParamValue(key: .id) as? String ?? dataProvider.bands.kidsGnbModel.home?.menuId ?? ""
+            let blockData = dataProvider.bands.kidsGnbModel.getGnbData(menuId: menuId)
+            actionBody.menu_id = blockData?.menuId
+            actionBody.menu_name = blockData?.title
+            return actionBody
         default : return nil
         }
     }

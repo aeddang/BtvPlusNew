@@ -141,6 +141,7 @@ struct CateSet: PageComponent{
                         if data.blocks != nil && data.blocks?.isEmpty == false {
                             self.pagePresenter.openPopup(
                                 PageProvider.getPageObject(.multiBlock)
+                                    .addParam(key: .id, value: data.menuId)
                                     .addParam(key: .data, value: data)
                                     .addParam(key: .needAdult, value: data.isAdult)
                             )

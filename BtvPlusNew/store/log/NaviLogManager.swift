@@ -162,6 +162,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
     
     private func pageLog(_ page:PageObject, action:NaviLog.Action){
         let data = NaviLogData()
+        data.actionBody = NaviLog.getPageAction(page: page, repository: self.repository)
         data.member = self.currentMemberItem
         
         if let realNameData = self.getRealNameData(page: page, action: action, naviLogData: data) {

@@ -22,7 +22,7 @@ struct PageKidsMultiBlock: PageView {
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
-    
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var tabNavigationModel:NavigationModel = NavigationModel()
     @ObservedObject var multiBlockViewModel:MultiBlockModel = MultiBlockModel()
@@ -280,6 +280,7 @@ struct PageKidsMultiBlock: PageView {
         reload(delay: delay)
         self.openId = nil
         self.setupRecommandGuide(data: cdata)
+        self.naviLogManager.actionLog(.pageShow, actionBody: .init(menu_id: cdata.menu_id, menu_name: cdata.menu_nm))
     }
     
     private func setupRecommandGuide(data:BlockItem){
@@ -319,14 +320,16 @@ struct PageKidsMultiBlock: PageView {
     private func reload(delay:Double = 0){
         DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + delay) {
             DispatchQueue.main.async {
+                let title = self.tabs.count > 1 ?  self.tabs[self.selectedTabIdx] : nil
                 self.multiBlockViewModel.updateKids(
-                    datas: self.originDatas, openId: self.openId, title: self.tabs[self.selectedTabIdx])
+                    datas: self.originDatas, openId: self.openId, title: title)
             }
         }
+       
     }
     
     private func updatedMonthlyPurchaseInfo( _ info:MonthlyPurchaseInfo){
-        guard let monthlyData = self.monthlyData   else { return }
+        guard let monthlyData = self.monthlyData  else { return }
         if let item = info.purchaseList?
             .first(where: {$0.prod_id == (monthlyData.isSubJoin ? monthlyData.parentPrdPrcId : monthlyData.prdPrcId)}){
             self.setupMonthlyGuide(ticketData: PurchaseTicketData().setData(data: item))

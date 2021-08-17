@@ -30,7 +30,7 @@ struct PairingHitch: PageComponent {
         ZStack(alignment: SystemEnvironment.isTablet ?.center : .bottom){
             Spacer().modifier(MatchParent()).background(Color.transparent.black45)
                 .onTapGesture {
-                    self.closeHitch()
+                    self.closeHitch(sendLog: true)
                 }
                 
             if self.isFullConnected, let fullConnectInfo = self.fullConnectInfo {
@@ -106,7 +106,7 @@ struct PairingHitch: PageComponent {
                                     SelectPairingType()
                                 }
                                 Button(action: {
-                                    self.closeHitch()
+                                    self.closeHitch(sendLog: true)
                                     self.appSceneObserver.event = .pairingHitchClose
                                     
                                 }) {
@@ -176,7 +176,7 @@ struct PairingHitch: PageComponent {
             case .pairingHitch(let isOn) :
                 if isOn {
                     self.initHitch()
-                } else {
+                } else if self.isHitching{
                     self.closeHitch()
                 }
             default : break
@@ -274,7 +274,7 @@ struct PairingHitch: PageComponent {
         }
     }
     
-    func closeHitch(sendLog:Bool = true) {
+    func closeHitch(sendLog:Bool = false) {
         withAnimation{
             self.isAutoPairing = nil
             self.isHitching = false

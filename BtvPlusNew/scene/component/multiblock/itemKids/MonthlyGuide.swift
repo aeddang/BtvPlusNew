@@ -11,6 +11,7 @@ struct MonthlyGuide:PageComponent {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
+    
     var data: PurchaseTicketData 
     var body :some View {
         HStack(spacing:0){

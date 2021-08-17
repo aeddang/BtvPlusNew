@@ -52,6 +52,7 @@ struct SceneAlertController: PageComponent{
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var appObserver:AppObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     
     @State var isShow = false
     @State var title:String? = nil

@@ -29,8 +29,18 @@ struct PPVProductItem : Decodable {
     private(set) var period: String? = nil
     private(set) var period_hour: String? = nil
     private(set) var period_min: String? = nil
+    private(set) var use_ppv_omni_ppm_info:[PPVOmniPpmItem]? = nil
 }
 
+
+struct PPVOmniPpmItem : Decodable {
+    private(set) var omni_m_pid: String? = nil //omni 팩 월정액 상품 가격 id
+    private(set) var omni_m_pname: String? = nil//omni 팩 월정액 상품명
+    private(set) var omni_m_total_count: String? = nil//omni 팩 월 구매 가능한 ppv 총 구매 건수
+    private(set) var omni_m_use_count: String? = nil//omni 팩 월 구매한 ppv 건수
+    private(set) var omni_m_rest_count: String? = nil//omni 팩 월 구매 가능한 ppv 남은 구매 건수
+    private(set) var omni_m_rest_count_valid_date: String? = nil//omni 팩 월 구매 가능한 ppv 구매 건수 유효일(갱신 예정일 - 1일)
+}
 
 
 struct PPSProductItem : Decodable {

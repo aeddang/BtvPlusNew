@@ -43,9 +43,9 @@ struct MultiBlock:PageComponent {
     var useFooter:Bool = false
     var isRecycle = true
     var isLegacy:Bool = false
+
     var action: ((_ data:MonthlyData) -> Void)? = nil
 
-    
     @State var topBanner:TopBanner?
     private func getTopBanner() -> TopBanner {
         if let top = self.topBanner {

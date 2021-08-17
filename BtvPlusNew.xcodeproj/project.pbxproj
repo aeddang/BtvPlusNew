@@ -348,7 +348,6 @@
 		3194318A26B243E300C20619 /* WatchLogResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194318926B243E300C20619 /* WatchLogResult.swift */; };
 		3194318C26B2578D00C20619 /* PageSynopsisLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194318B26B2578D00C20619 /* PageSynopsisLog.swift */; };
 		319462A6269F00910074FE79 /* KidsBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319462A5269F00910074FE79 /* KidsBanner.swift */; };
-		3194D80026A92D0400BB765E /* TicketPurchase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194D7FF26A92D0400BB765E /* TicketPurchase.swift */; };
 		3194D80226A92D1B00BB765E /* MonthlyGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194D80126A92D1B00BB765E /* MonthlyGuide.swift */; };
 		3194D80426A99B0500BB765E /* MonthlyPurchaseTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3194D80326A99B0500BB765E /* MonthlyPurchaseTicket.swift */; };
 		31956F4C269D0FA30044CF1D /* KidsHomeBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31956F4B269D0FA30044CF1D /* KidsHomeBlock.swift */; };
@@ -1024,7 +1023,6 @@
 		3194318926B243E300C20619 /* WatchLogResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchLogResult.swift; sourceTree = "<group>"; };
 		3194318B26B2578D00C20619 /* PageSynopsisLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisLog.swift; sourceTree = "<group>"; };
 		319462A5269F00910074FE79 /* KidsBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsBanner.swift; sourceTree = "<group>"; };
-		3194D7FF26A92D0400BB765E /* TicketPurchase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketPurchase.swift; sourceTree = "<group>"; };
 		3194D80126A92D1B00BB765E /* MonthlyGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyGuide.swift; sourceTree = "<group>"; };
 		3194D80326A99B0500BB765E /* MonthlyPurchaseTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyPurchaseTicket.swift; sourceTree = "<group>"; };
 		31956F4B269D0FA30044CF1D /* KidsHomeBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsHomeBlock.swift; sourceTree = "<group>"; };
@@ -1559,7 +1557,6 @@
 				319C47EA26A1C06100C61EF8 /* SkeletonBlockKids.swift */,
 				313F8D10269C1A490055F775 /* PosterBlockKids.swift */,
 				313F8D12269C3F8E0055F775 /* VideoBlockKids.swift */,
-				3194D7FF26A92D0400BB765E /* TicketPurchase.swift */,
 				3194D80126A92D1B00BB765E /* MonthlyGuide.swift */,
 				3194D80326A99B0500BB765E /* MonthlyPurchaseTicket.swift */,
 			);
@@ -2285,7 +2282,6 @@
 			isa = PBXGroup;
 			children = (
 				3190E6232674993D000CBCB9 /* SkeletonBlock.swift */,
-				D56CC3092590703200CA1D54 /* BlockProtocol.swift */,
 				D56CC2F92590313A00CA1D54 /* PosterBlock.swift */,
 				D56CC30125906F2500CA1D54 /* VideoBlock.swift */,
 				D56CC31125907F3700CA1D54 /* ThemaBlock.swift */,
@@ -3031,6 +3027,7 @@
 		D51AA9E52599A2200035CD51 /* pairing */ = {
 			isa = PBXGroup;
 			children = (
+				312825B526AFA3C200A58DB9 /* pairingHitch */,
 				319B07A2263A394E008C11A8 /* body */,
 				D51AA9EE2599A26B0035CD51 /* component */,
 				D51AA9E62599A24A0035CD51 /* PagePairing.swift */,
@@ -3670,6 +3667,7 @@
 				D56CC2EE25902E6600CA1D54 /* MultiBlock.swift */,
 				31632FFA25EF386F00581FA7 /* MultiBlockBody.swift */,
 				318FC00525E4CA5800ABC241 /* CateBlock.swift */,
+				D56CC3092590703200CA1D54 /* BlockProtocol.swift */,
 			);
 			path = multiblock;
 			sourceTree = "<group>";
@@ -3705,7 +3703,6 @@
 			isa = PBXGroup;
 			children = (
 				D56C6A73257DA4D200CF9AB8 /* view */,
-				312825B526AFA3C200A58DB9 /* pairingHitch */,
 				318C36BC265F6FFB009B7EC3 /* table */,
 				D56C6B64257DBAC800CF9AB8 /* tab */,
 				3167196625FEF699005AC3D2 /* banner */,
@@ -4564,7 +4561,6 @@
 				314D73BA25B54FD900907118 /* BookMarkButton.swift in Sources */,
 				31C4BC97262D2D8600BB2167 /* NotificationCoreData.swift in Sources */,
 				319CF68226972D6A00159575 /* ExamResultBox.swift in Sources */,
-				3194D80026A92D0400BB765E /* TicketPurchase.swift in Sources */,
 				319745BB261FEE7D0072945D /* PurchaseTicketList.swift in Sources */,
 				317C9774262443D4008F267D /* PageMyBenefits.swift in Sources */,
 				D56C6A48257DA0C700CF9AB8 /* RoundRectMask.swift in Sources */,
@@ -4823,7 +4819,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 52;
+				CURRENT_PROJECT_VERSION = 53;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -4847,7 +4843,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.0469;
+				MARKETING_VERSION = 1.0470;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = ".BtvPlusNew_ dev";
@@ -4903,7 +4899,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 52;
+				CURRENT_PROJECT_VERSION = 53;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -4922,7 +4918,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.0469;
+				MARKETING_VERSION = 1.0470;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvPlusNew_des;

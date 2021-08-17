@@ -15,6 +15,7 @@ class MultiBlockModel: PageDataProviderModel {
     private(set) var requestSize:Int = 0
     private(set) var isAdult:Bool = false
     private(set) var openId:String? = nil
+    private(set) var title:String? = nil
     private(set) var selectedTicketId:String? = nil
     
     @Published private(set) var isUpdate = false {
@@ -53,8 +54,9 @@ class MultiBlockModel: PageDataProviderModel {
         self.isUpdate = true
     }
     
-    func updateKids(datas:[BlockItem], openId:String? = nil) {
+    func updateKids(datas:[BlockItem], openId:String? = nil, title:String? = nil) {
         self.type = .kids
+        self.title = title
         self.datas = datas.map{ block in
             BlockData(pageType: .kids).setDataKids(block)
         }
@@ -442,7 +444,7 @@ struct MultiBlockBody: PageComponent {
                 }
                 data.listHeight = blockHeight
             }
-            data.setDatabindingCompleted(total: total)
+            data.setDatabindingCompleted(total: total, title: self.viewModel.title)
         }
         .onReceive(dataProvider.$error) { err in
             guard let data = self.loadingBlocks.first(where: { $0.id == err?.id}) else {return}
@@ -625,7 +627,7 @@ struct MultiBlockBody: PageComponent {
                 } else{
                     if block.uiType == .kidsHome || block.uiType == .kidsTicket {
                         block.listHeight = Self.kisHomeHeight
-                        block.setDatabindingCompleted()
+                        block.setDatabindingCompleted(title: self.viewModel.title)
                         
                     }else if block.dataType == .theme , let blocks = block.blocks {
                         if block.uiType == .theme { 
@@ -647,7 +649,7 @@ struct MultiBlockBody: PageComponent {
                             block.tickets = tickets
                             DataLog.d("TicketData " + block.name, tag: "BlockProtocolA")
                         }
-                        block.setDatabindingCompleted()
+                        block.setDatabindingCompleted(title: self.viewModel.title)
                         return
                     } else{
                         block.setRequestFail()

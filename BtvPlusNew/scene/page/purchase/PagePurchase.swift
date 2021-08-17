@@ -14,6 +14,7 @@ struct PagePurchase: PageView {
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -101,6 +102,7 @@ struct PagePurchase: PageView {
                             self.appSceneObserver.event = .update(.purchase(pid, listPrice, paymentPrice))
                             self.pairing.authority.reset()
                         }
+                        self.sendLog()
                         break
                     case WebviewMethod.bpn_closeWebView.rawValue :
                         self.pagePresenter.goBack()
@@ -171,6 +173,9 @@ struct PagePurchase: PageView {
     }//body
     
    
+    private func sendLog() {
+        self.naviLogManager.contentsLog(pageId: .purchaseOrderCompleted, action: .clickOrderCompletedConfirm)
+    }
 }
 
 #if DEBUG

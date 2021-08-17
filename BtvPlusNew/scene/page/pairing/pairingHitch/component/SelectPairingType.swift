@@ -14,6 +14,7 @@ struct SelectPairingType: View {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var networkObserver:NetworkObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var body: some View {
         VStack(spacing: 0){
             Image( Asset.image.pairingHitchText02 )
@@ -62,6 +63,7 @@ struct SelectPairingType: View {
     private func requestPairing(type:HitchPairingItem.PairingType){
         switch type {
         case .wifi:
+            self.sendLog(menuName: "wifi연결")
             if self.networkObserver.status != .wifi {
                 self.appSceneObserver.alert = .connectWifi{ retry in
                     if retry { self.requestPairing(type: .wifi) }
@@ -73,17 +75,27 @@ struct SelectPairingType: View {
                     .addParam(key: PageParam.type, value: PairingRequest.wifi)
             )
         case .btv:
+            self.sendLog(menuName: "인증번호연결")
             self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.pairingSetupUser)
                     .addParam(key: PageParam.type, value: PairingRequest.btv)
             )
         case .user:
+            self.sendLog(menuName: "가입자인증")
            self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.pairingSetupUser)
                     .addParam(key: PageParam.type, value: PairingRequest.user(nil))
             )
             
         }
+        
+    }
+    
+    private func sendLog(menuName:String? = nil) {
+        var actionBody = MenuNaviActionBodyItem()
+        actionBody.config = "case4"
+        actionBody.menu_name = menuName
+        self.naviLogManager.actionLog(.clickConfirmButton, pageId: .autoPairing, actionBody: actionBody)
         
     }
 }

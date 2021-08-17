@@ -29,6 +29,18 @@ enum PairingDeviceType{
     case btv, apple
 }
 
+enum PairingType{
+    case  wifi, btv, user, token
+    var logConfig: String {
+        switch self {
+        case .wifi: return "wifi"
+        case .btv: return "btv_auth_number"
+        case .user: return "subscriber_auth"
+        case .token: return "token"
+        }
+    }
+}
+
 enum PairingStatus{
     case disConnect , connect , pairing, unstablePairing
 }
@@ -52,6 +64,7 @@ class Pairing:ObservableObject, PageProtocol {
     @Published private(set) var status:PairingStatus = .disConnect
     @Published var user:User? = nil
     private(set) var pairingDeviceType:PairingDeviceType = .btv
+    private(set) var pairingType:PairingType? = nil
     private(set) var isPairingUser:Bool = false
     private(set) var isPairingAgreement:Bool = false
    
@@ -68,6 +81,7 @@ class Pairing:ObservableObject, PageProtocol {
     
     let authority:Authority = Authority()
     var storage:LocalStorage? = nil
+    var naviLogManager:NaviLogManager? = nil
     
     func requestPairing(_ request:PairingRequest){
         switch request {
@@ -89,6 +103,16 @@ class Pairing:ObservableObject, PageProtocol {
             kid.modifyUserData = nil
         case .updateKidStudy :
             if self.kid == nil { return }
+        case .wifi :
+            self.pairingType = .wifi
+        case .btv :
+            self.pairingType = .btv
+        case .user :
+            self.pairingType = .user
+        /*
+        case .token :
+            self.pairingType = .token
+        */
         default : break
         }
         self.request = request
@@ -122,6 +146,13 @@ class Pairing:ObservableObject, PageProtocol {
     }
     
     func connectError(header:NpsCommonHeader? = nil) {
+        switch header?.result {
+        case NpsNetwork.resultCode.pairingLimited.code :
+            self.naviLog(pageID: .pairingLimited)
+            
+        default : break
+           
+        }
         self.status = .disConnect
         self.event = .connectError(header)
     }
@@ -140,6 +171,7 @@ class Pairing:ObservableObject, PageProtocol {
         self.event = .findStbInfoDevice(stbInfoDatas)
     }
     func notFoundDevice(){
+        self.naviLog(pageID: .pairingDeviceNotfound)
         self.event = .notFoundDevice
     }
     
@@ -245,8 +277,15 @@ class Pairing:ObservableObject, PageProtocol {
     }
     private func checkComple(){
         if self.isPairingUser && self.isPairingAgreement && self.hostDevice != nil{
+            self.naviLog(pageID: .pairingCompleted)
             self.status = .pairing
             self.event = .pairingCompleted
+        }
+    }
+    
+    private func naviLog(pageID:NaviLog.PageId){
+        if let pairingType = self.pairingType {
+            self.naviLogManager?.pairingLog(pageId: pageID, config: pairingType.logConfig)
         }
     }
     

@@ -15,6 +15,8 @@ struct PageSearch: PageView {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var keyboardObserver:KeyboardObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
+    
     @ObservedObject var viewModel:PageSearchModel = PageSearchModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -52,6 +54,8 @@ struct PageSearch: PageView {
                                 self.voiceSearch()
                             },
                             goBack: {
+                                
+                                self.sendLog(action: .clickContentsSeriesBack, menuName: self.keyword)
                                 if !self.emptyDatas.isEmpty {
                                     self.emptyDatas = []
                                     self.keyword = ""
@@ -283,6 +287,13 @@ struct PageSearch: PageView {
                 self.changeSearchSubscription?.cancel()
                 self.dataProvider.requestData(q: .init(id: self.tag, type: .getCompleteKeywords(word), isOptional: true))
         }
+    }
+    
+    private func sendLog(action:NaviLog.Action,  menuName:String? = nil) {
+        var actionBody = MenuNaviActionBodyItem()
+        actionBody.menu_name = menuName
+        self.naviLogManager.actionLog(action, pageId: .searchResult , actionBody: actionBody)
+        
     }
     
 }

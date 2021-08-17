@@ -10,7 +10,7 @@ enum SynopsisType {
     case none, package, title, season
     public init(value: String?) {
         switch value {
-        case "01": self = .title
+        case "01", "10": self = .title
         case "02": self = .season
         case "03": self = .package
         case "41": self = .package

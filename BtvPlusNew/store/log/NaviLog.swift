@@ -10,23 +10,31 @@ import Foundation
 struct NaviLog {
     enum PageId: String {
         case play = "/play"                                 // 09. 재생
+        case zemPlay = "/category/zemkids/play" // ZEM 키즈 재생
         case playTouchGuide = "/play/touch_guide"
         case playInside = "/play/inside"                    // 재생 | 인사이드
         case popup = "/popup"                               // GNB팝업
-        
         case prohibitionSimultaneous = "/limit_multiple_screen"
         
-        case myConnectStbDetailSubscriberAuthStbSelection = "/my/connect_stb/detail/subscriber_auth/stb_selection" // 세탑 여러개
-        case myConnectStbBtvAuthNumberCompleted = "/my/connect_stb/btv_auth_number/completed"
+        case pairingLimited = "/my/connect_stb/detail/subscriber_auth/stb_selection" // 세탑 여러개
+        case pairingCompleted = "/my/connect_stb/btv_auth_number/completed"
+        case pairingDeviceNotfound = "/my/connect_stb/detail/subscriber_auth/there_is_no_stb"
+        case autoPairing = "/autopairing" // 자동연결페어링
+        
         case searchResult = "/search/result"                      // 검색결과
         case remoteconStatus = "/remotecon/status"          // 리모컨 세부상태
-        case appPush = "/app_push"
+        
         case purchaseOrderCompleted = "/purchase/order_completed"   // 상품구매완료
+        
+        case zemkids = "/category/zemkids"         // ZEM 키즈 탭메뉴
         case zemTabMenu = "/category/zemkids/tabmenu"         // ZEM 키즈 탭메뉴
+        
+        case appPush = "/app_push"
+       
         case zemSearchResult = "/category/zemkids/search_result" // ZEM 키즈|검색결과
         case zemMonthlyTabMenu = "/category/zemkids/monthly_payment/tab_menu"
-        case zemPlay = "/category/zemkids/play" // ZEM 키즈 재생
-        case autoPairing = "/autopairing" // 자동연결페어링
+       
+        
     }
     
     static func getPageID(page:PageObject, repository:Repository)-> String?{
@@ -74,7 +82,7 @@ struct NaviLog {
         case .pairingBtv: return "/my/connect_stb/btv_auth_number"
         case .pairingUser: return "/my/connect_stb/detail/subscriber_auth"
         case .pairingManagement: return "/my/connect_stb/mgmt"
-        case .pairingEmptyDevice: return "/my/connect_stb/detail/subscriber_auth/there_is_no_stb"
+        case .pairingEmptyDevice: return nil
         case .pairingGuide: return nil
         case .pairingAppleTv: return nil
         case .pairingFamilyInvite: return nil
@@ -109,7 +117,7 @@ struct NaviLog {
         case .snsShare: return nil
             
         case .kidsIntro: return nil
-        case .kidsHome: return nil
+        case .kidsHome: return "/category/zemkids/tabmenu"
         case .registKid: return nil
         case .editKid: return nil
         case .kidsMy: return "/category/zemkids/mypage"
@@ -133,7 +141,7 @@ struct NaviLog {
         }
     }
     
-    enum action: String {
+    enum Action: String {
         case none
         case pageShow = "page_show" // 페이지 진입
         //비기너스 가이드

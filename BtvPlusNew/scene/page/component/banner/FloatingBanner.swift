@@ -125,13 +125,13 @@ struct FloatingBanner: PageComponent {
         }
         self.sendLog(action: .pageShow)
     }
-    private func sendLog(action:NaviLog.action, category:String? = "etc"){
+    private func sendLog(action:NaviLog.Action, category:String? = "etc"){
         let data = self.datas[self.viewModel.index]
         var actionBody = MenuNaviActionBodyItem()
         actionBody.menu_id = data.menuId
         actionBody.menu_name = data.menuNm
         actionBody.category = category
-        self.naviLogManager.popupLog(action: action, actionBody: actionBody)
+        self.naviLogManager.actionLog( action, pageId: .popup, actionBody: actionBody)
     }
 }
 
@@ -160,7 +160,7 @@ struct FloatingBannerItem: PageComponent, Identifiable {
             var actionBody = MenuNaviActionBodyItem()
             actionBody.menu_id = data.menuId
             actionBody.menu_name = data.menuNm
-            self.naviLogManager.popupLog(action: .clickPopupContents, actionBody: actionBody)
+            self.naviLogManager.actionLog(.clickPopupContents, pageId: .popup, actionBody: actionBody)
             
             if let move = data.move {
                 switch move {

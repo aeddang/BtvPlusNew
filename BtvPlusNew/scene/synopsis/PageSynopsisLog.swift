@@ -129,8 +129,8 @@ extension PageSynopsis {
         var actionBody = MenuNaviActionBodyItem()
         actionBody.menu_id = synopsisModel?.menuId
         actionBody.config = reason.config
-        self.naviLogManager.playerLog(
-            pageID: .prohibitionSimultaneous,
+        self.naviLogManager.contentsLog(
+            pageId: .prohibitionSimultaneous,
             action: .pageShow,
             actionBody: actionBody
         )
@@ -148,7 +148,7 @@ extension PageSynopsis {
             start: self.playStartTime == nil ? nil :  AppUtil.getTime(fromInt:self.playStartTime!),
             end: nil,
             position: self.playerModel.time.toTruncateDecimal(n: 0),
-            rate: rate.toTruncateDecimal(n: 2))
+            rate: rate.toTruncateDecimal(n: 0))
         
         self.dataProvider.requestData(
             q: .init(type: .postWatchLog( type,
@@ -174,12 +174,12 @@ extension PageSynopsis {
         }
     }
     
-    func playNaviLog( action:NaviLog.action, watchType:NaviLog.watchType){
+    func playNaviLog( action:NaviLog.Action, watchType:NaviLog.watchType){
         self.naviLog(action: action, watchType: watchType)
         
     }
     
-    func naviLog(pageID:NaviLog.PageId? = nil , action:NaviLog.action,
+    func naviLog(pageID:NaviLog.PageId? = nil , action:NaviLog.Action,
                  watchType:NaviLog.watchType? = nil,
                  config:String? = nil
                  ){
@@ -188,7 +188,7 @@ extension PageSynopsis {
         self.naviLog(action: action, watchType: watchType, config: config, category: category, result: nil)
     }
     
-    func naviLog(pageID:NaviLog.PageId? = nil , action:NaviLog.action,
+    func naviLog(pageID:NaviLog.PageId? = nil , action:NaviLog.Action,
                  watchType:NaviLog.watchType? = nil,
                  config:String? = nil,
                  category: String?, result: String? = nil
@@ -205,8 +205,8 @@ extension PageSynopsis {
         actionBody.result = result ?? ""
         actionBody.config = config
         
-        self.naviLogManager.playerLog(
-            pageID: pageID ?? (self.type == .btv ? .play : .zemPlay),
+        self.naviLogManager.contentsLog(
+            pageId: pageID ?? (self.type == .btv ? .play : .zemPlay),
             action: action,
             actionBody: actionBody,
             watchType : watchType

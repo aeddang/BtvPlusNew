@@ -11,7 +11,7 @@ enum BlockStatus:String{
 }
 
 class BlockData:InfinityData, ObservableObject{
-    
+    private(set) var parentTitle:String? = nil
     private(set) var name:String = ""
     private(set) var subName:String = ""
     private(set) var isAdult:Bool = false
@@ -319,7 +319,7 @@ class BlockData:InfinityData, ObservableObject{
         status = .passive
     }
     
-    func setDatabindingCompleted(total:Int? = nil){
+    func setDatabindingCompleted(total:Int? = nil, title:String? = nil){
         if self.status != .initate { return }
         if isCountView, let count = total {
             self.subName = count.description
@@ -329,6 +329,7 @@ class BlockData:InfinityData, ObservableObject{
                 data.setRank(idx)
             }
         }
+        self.parentTitle = title
         self.status = .active
     }
     
@@ -408,6 +409,15 @@ class BlockData:InfinityData, ObservableObject{
         default:
             return .poster
         }
+    }
+    
+    func getActionLog()->MenuNaviActionBodyItem {
+        var actionBody = MenuNaviActionBodyItem()
+        actionBody.menu_name = self.name.replace(" ", with: "")
+        actionBody.menu_id = self.cwCallId ?? self.menuId
+        actionBody.config = self.parentTitle
+        actionBody.target = self.parentTitle == nil ? "N" : "Y"
+        return actionBody
     }
     
     enum CardType: String, Codable {

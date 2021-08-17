@@ -40,6 +40,8 @@ class User {
     private(set) var isAgree3:Bool = true
     private(set) var postAgreement:Bool = false
     
+    private(set) var isAutoPairing:Bool = false
+    
     init(){}
     init(nickName:String?,characterIdx:Int?,gender:String?,birth:String?){
         self.nickName = nickName ?? ""
@@ -66,12 +68,13 @@ class User {
     }
     
     func setDefault(isAgree:Bool) -> User{
-        nickName = "0000"
-        characterIdx = 0
-        gender = .mail
-        birth = "2000"
-        isAgree1 = true
-        isAgree2 = true
+        self.isAutoPairing = true
+        self.nickName = "0000"
+        self.characterIdx = 0
+        self.gender = .mail
+        self.birth = "2000"
+        self.isAgree1 = true
+        self.isAgree2 = true
         self.isAgree3 = isAgree
         self.postAgreement = true
         return self

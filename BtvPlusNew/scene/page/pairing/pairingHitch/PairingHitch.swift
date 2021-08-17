@@ -23,6 +23,7 @@ struct PairingHitch: PageComponent {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var networkObserver:NetworkObserver
     @EnvironmentObject var locationObserver:LocationObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pairing:Pairing
    
     var body: some View {
@@ -207,13 +208,18 @@ struct PairingHitch: PageComponent {
                 }
             case .connectErrorReason(let info) :
                 if self.isFullConnected {
+                    self.sendLog(action: .clickConfirmButton, category: "확인")
                     self.appSceneObserver.alert = .limitedDevice(info)
                     return
                 }
                 self.fullConnectInfo = info
                 withAnimation{ self.isFullConnected = true }
+                self.sendLog(action: .pageShow)
             default : break
             }
+        }
+        .onAppear(){
+            
         }
         .onDisappear(){
             
@@ -268,12 +274,15 @@ struct PairingHitch: PageComponent {
         }
     }
     
-    func closeHitch() {
+    func closeHitch(sendLog:Bool = true) {
         withAnimation{
             self.isAutoPairing = nil
             self.isHitching = false
         }
         self.pairing.requestPairing(.cancel)
+        if sendLog {
+            self.sendLog(action: .clickCloseButton)
+        }
     }
     
     func findSSID() {
@@ -298,30 +307,48 @@ struct PairingHitch: PageComponent {
     
     
     private func findDeviceCompleted(evt:PairingEvent){
-        
         switch evt {
         case .findMdnsDevice(let findData) :
             self.isStbSearch = true
             if findData.isEmpty {
                 withAnimation{ self.isAutoPairing = false }
+                self.sendLog(action: .pageShow)
             } else {
                 self.stbs = findData.map{StbData().setData(data: $0)}
                 withAnimation{ self.isAutoPairing = true }
+                self.sendLog(action: .pageShow)
             }
         
         case .notFoundDevice :
             self.isStbSearch = true
             withAnimation{ self.isAutoPairing = false }
-        
+            self.sendLog(action: .pageShow)
         default : break
         }
     }
     
     private func selectePairingDevice(stb:StbData){
         self.pairing.user = User().setDefault(isAgree: self.isAgreeOption)
-            
         self.selectedDevice = stb
         self.pairing.requestPairing(.device(stb))
+    }
+    
+    private func sendLog(action:NaviLog.Action,  category:String? = nil) {
+        var actionBody = MenuNaviActionBodyItem()
+        let config = self.isFullConnected
+                    ? "case3"
+                    : self.isAutoPairing == true
+                        ?  self.stbs?.count == 1 ? "case1" : "case2"
+                        : "case4"
+        actionBody.config = config
+        if config == "case2" {
+            actionBody.target = (self.stbs?.count ?? 0).description
+        }
+        
+        actionBody.category = category
+        actionBody.target = (self.stbs?.count ?? 0).description
+        self.naviLogManager.actionLog(action, pageId: .autoPairing, actionBody: actionBody)
+        
     }
 }
 

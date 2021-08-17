@@ -424,11 +424,11 @@ struct PageSynopsisPlayer: PageView {
         }
     }
     
-    func playNaviLog( action:NaviLog.action, watchType:NaviLog.watchType){
+    func playNaviLog( action:NaviLog.Action, watchType:NaviLog.watchType){
         self.naviLog(action: action, watchType: watchType)
     }
     
-    func naviLog(pageID:NaviLog.PageId? = nil , action:NaviLog.action,
+    func naviLog(pageID:NaviLog.PageId? = nil , action:NaviLog.Action,
                  watchType:NaviLog.watchType? = nil,
                  config:String? = nil
                  ){
@@ -436,7 +436,7 @@ struct PageSynopsisPlayer: PageView {
         self.naviLog(action: action, watchType: watchType, config: config, category: category, result: nil)
     }
     
-    func naviLog(pageID:NaviLog.PageId? = nil , action:NaviLog.action,
+    func naviLog(pageID:NaviLog.PageId? = nil , action:NaviLog.Action,
                  watchType:NaviLog.watchType? = nil,
                  config:String? = nil,
                  category: String?, result: String? = nil
@@ -452,8 +452,8 @@ struct PageSynopsisPlayer: PageView {
         actionBody.result = result ?? ""
         actionBody.config = config
         
-        self.naviLogManager.playerLog(
-            pageID: .play,
+        self.naviLogManager.contentsLog(
+            pageId: .play,
             action: action,
             actionBody: actionBody,
             watchType : watchType

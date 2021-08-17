@@ -16,6 +16,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
+  
     var pageObservable:PageObservable
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()

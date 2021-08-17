@@ -20,7 +20,7 @@ extension LgsNetwork{
     static let UI_NAME = "BTVMOBV520"
     enum PlayEventType: String {
         case play = "3" // 3 : 재생 (Btv Plus 에서 전달 가능)
-        case playBase = "4" // 4 : 시청에 대한 기준시점 – HeadEnd 에 상품구매시 전달한 Charge_Period 를 참조하여 처음부터 보기 시청하여 Charge_Period % 가 지난 시점에 리포팅한다(논의가 필요하다)
+        case playBase = "4" // 4 : 시청에 대한 기준시점 – HeadEnd 에 상품구매시 전달한 Charge_Period 를 참조하여 처음부터 보기 시청하여 Charge_Period % 가 지난 시점에 리포팅한다
         case stop = "5" // 5 : 특정위치에서 플레이를 한 후 중지시, 채널변경시 , Home, Power off 시 리포팅 (Btv Plus 에서 전달 가능)
         case buffering = "6" // 6 : 다운로드 버퍼링시
         case play80 = "7" // 7 : 콘텐츠 시청중 80% 시청시

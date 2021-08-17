@@ -95,6 +95,7 @@ class PurchaseModel {
             period_hour = item.period_hour?.toInt() ?? self.period_hour
             period_min = item.period_min?.toInt() ?? self.period_min
             end_date = item.end_date ?? self.end_date
+            
         }
     }
     

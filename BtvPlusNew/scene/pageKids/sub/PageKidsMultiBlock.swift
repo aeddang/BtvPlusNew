@@ -271,9 +271,6 @@ struct PageKidsMultiBlock: PageView {
             }
             return
         }
-        
-        
-        
         originDatas = cdata.blocks ?? []
         var delay:Double = 0
         if originDatas.isEmpty {
@@ -323,7 +320,7 @@ struct PageKidsMultiBlock: PageView {
         DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + delay) {
             DispatchQueue.main.async {
                 self.multiBlockViewModel.updateKids(
-                    datas: self.originDatas, openId: self.openId)
+                    datas: self.originDatas, openId: self.openId, title: self.tabs[self.selectedTabIdx])
             }
         }
     }

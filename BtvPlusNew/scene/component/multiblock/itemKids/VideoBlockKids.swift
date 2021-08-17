@@ -14,6 +14,7 @@ struct VideoBlockKids:BlockProtocol, PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
     
     var pageObservable:PageObservable
     var viewModel: InfinityScrollModel = InfinityScrollModel()
@@ -77,6 +78,7 @@ struct VideoBlockKids:BlockProtocol, PageComponent {
                             textModifier: TextModifier (family:Font.familyKids.bold, size: Font.sizeKids.thinExtra, color: Color.app.brownExtra)
                         ){_ in
                             
+                            self.sendLog(self.naviLogManager)
                             if data.cardType == .watchedVideo {
                                 self.pagePresenter.openPopup(
                                     PageKidsProvider.getPageObject( .kidsMy)

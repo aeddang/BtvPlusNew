@@ -199,7 +199,7 @@ struct ShareRecommand: PageComponent {
        
         var actionBody = MenuNaviActionBodyItem()
         actionBody.category = category
-        self.naviLogManager.popupLog(action: .clickPopupButton, actionBody: actionBody)
+        self.naviLogManager.actionLog( .clickPopupButton, pageId: .popup, actionBody: actionBody)
     }
 }
 

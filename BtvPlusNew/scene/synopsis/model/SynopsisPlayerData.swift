@@ -43,7 +43,7 @@ class SynopsisPlayerData {
         switch type {
         case .preview:
             self.previews = synopsis.previews
-        case .preplay:do{}
+        case .preplay:break
         case .vod, .vodChange, .vodNext:
             if let srisId = synopsis.nextSrisId {
                 if !srisId.isEmpty { self.nextSeason = srisId }

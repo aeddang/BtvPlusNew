@@ -135,11 +135,11 @@ class BannerData:InfinityData, PageProtocol{
         if let range = callUrl.range(of: "outlink:", options: .caseInsensitive) {
             url.removeSubrange(range)
             self.outLink = url
-        }
-        if let range = callUrl.range(of: "inlink:", options: .caseInsensitive) {
+        }else if let range = callUrl.range(of: "inlink:", options: .caseInsensitive) {
             url.removeSubrange(range)
             if url.hasPrefix("http://") ||  url.hasPrefix("https://") {
                 self.inLink = url
+                if self.title == nil { self.title = "" }
                 return
             }
             
@@ -147,6 +147,9 @@ class BannerData:InfinityData, PageProtocol{
             if self.move == nil {
                 DataLog.d("unknown link " + url, tag:self.tag)
             }
+        } else {
+            if self.title == nil { self.title = "" }
+            self.inLink = callUrl
         }
     }
     private func parseAction(data:EventBannerItem){

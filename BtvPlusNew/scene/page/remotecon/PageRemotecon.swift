@@ -20,6 +20,8 @@ struct PageRemotecon: PageView {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var networkObserver:NetworkObserver
     @EnvironmentObject var locationObserver:LocationObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
+    
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
 
@@ -156,11 +158,15 @@ struct PageRemotecon: PageView {
                     self.appSceneObserver.event = .toast(String.remote.closeMirroring)
                 case .connected :
                     self.appSceneObserver.loadingInfo = nil
+                    self.sendLog(action: .pageShow, result: true, category:  String.remote.setupMirroring)
                     self.appSceneObserver.event = .toast(String.remote.setupMirroring)
                 case .notFound :
                     self.appSceneObserver.loadingInfo = nil
+                    self.sendLog(action: .pageShow, result: false, category:  String.remote.errorMirroringText)
                     self.appSceneObserver.alert =
-                        .alert(String.remote.errorMirroring, String.remote.errorMirroringText, String.remote.errorMirroringTextSub)
+                        .alert(String.remote.errorMirroring, String.remote.errorMirroringText, String.remote.errorMirroringTextSub){
+                            self.sendLog(action: .clickStatusButton, result: false)
+                        }
                 default: break
                 }
             }
@@ -468,8 +474,11 @@ struct PageRemotecon: PageView {
                 manager.startSearching()
                 
             } else {
+                self.sendLog(action: .pageShow, result: false, category: String.remote.errorMirroringWifi)
                 self.appSceneObserver.alert =
-                    .alert(String.remote.errorMirroringWifi, String.remote.errorMirroringWifiText)
+                    .alert(String.remote.errorMirroringWifi, String.remote.errorMirroringWifiText){
+                        self.sendLog(action: .clickStatusButton, result: false)
+                    }
             }
         } else if status == .denied {
             self.appSceneObserver.alert = .requestLocation{ retry in
@@ -478,6 +487,14 @@ struct PageRemotecon: PageView {
         } else {
             self.locationObserver.requestWhenInUseAuthorization()
         }
+        
+    }
+    
+    private func sendLog(action:NaviLog.Action, result: Bool, category:String? = nil) {
+        var actionBody = MenuNaviActionBodyItem()
+        actionBody.config = result ? "true" : "false"
+        actionBody.category = category
+        self.naviLogManager.actionLog(action, pageId: .remoteconStatus , actionBody: actionBody)
         
     }
    

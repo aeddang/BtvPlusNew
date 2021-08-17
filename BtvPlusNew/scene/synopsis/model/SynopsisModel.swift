@@ -234,25 +234,27 @@ class SynopsisModel : PageProtocol {
     private(set) var metvSeasonWatchAll:Bool = false
     private(set) var isBookmark:Bool = false
 
-    private(set) var directViewdata:DirectView? = nil
+    private(set) var directViewData:DirectView? = nil
+    private(set) var lastWatchInfo:LastWatchInfo? = nil
     var purchasedPid:String? = nil
-    func setData(directViewdata:DirectView?, isSeasonWatchAll:Bool = false){
-        self.directViewdata = directViewdata
+    func setData(directViewData:DirectView?, isSeasonWatchAll:Bool = false){
+        self.directViewData = directViewData
+        self.lastWatchInfo = isSeasonWatchAll ? directViewData?.last_watch_info : nil
         if !isSeasonWatchAll {
-            self.isBookmark = directViewdata?.is_bookmark?.toBool() ?? false
+            self.isBookmark = directViewData?.is_bookmark?.toBool() ?? false
         }
-        self.metvSeasonWatchAll = directViewdata?.yn_season_watch_all?.toBool() ?? false
+        self.metvSeasonWatchAll = directViewData?.yn_season_watch_all?.toBool() ?? false
         self.purchaseModels.forEach({ model in
             if isSeasonWatchAll {//시리즈 권한 재사용시 권한있는 상품 강제 매핑
-                if let metvItem = directViewdata?.ppv_products?.first(where: {$0.yn_directview?.toBool() ?? false}) {
+                if let metvItem = directViewData?.ppv_products?.first(where: {$0.yn_directview?.toBool() ?? false}) {
                     model.mePPVProduct = metvItem
                 }
             } else {
-                if let metvItem = directViewdata?.ppv_products?.first(where: {model.epsdId == $0.epsd_id && model.prdPrcId == $0.prd_prc_id}) {
+                if let metvItem = directViewData?.ppv_products?.first(where: {model.epsdId == $0.epsd_id && model.prdPrcId == $0.prd_prc_id}) {
                     model.mePPVProduct = metvItem
                 }
             }
-            if let metvItem = directViewdata?.pps_products?.first(where: {model.prdPrcId == $0.prd_prc_id}) {
+            if let metvItem = directViewData?.pps_products?.first(where: {model.prdPrcId == $0.prd_prc_id}) {
                 model.mePPSProduct = metvItem
             }
             if model.prdPrcId == purchasedPid && !model.isDirectview {
@@ -506,6 +508,14 @@ class SynopsisModel : PageProtocol {
             }
         }
         
+        if let info = directViewData?.ppv_products?.first?.use_ppv_omni_ppm_info?.first {
+            DataLog.d("옴니팩 pid : " + (info.omni_m_pid ?? "") , tag: self.tag)
+            DataLog.d("옴니팩 pname : " + (info.omni_m_pname ?? "") , tag: self.tag)
+            DataLog.d("옴니팩 useCnt : " + (info.omni_m_use_count ?? ""), tag: self.tag)
+            DataLog.d("옴니팩 restCnt : " + (info.omni_m_rest_count ?? "") , tag: self.tag)
+            DataLog.d("옴니팩 totalCnt : " + (info.omni_m_total_count ?? "") , tag: self.tag)
+            DataLog.d("옴니팩 date : " + (info.omni_m_rest_count_valid_date ?? "") , tag: self.tag)
+        }
         
         #if DEBUG
             //log
@@ -515,8 +525,6 @@ class SynopsisModel : PageProtocol {
             purchasableItems.forEach({
                 DataLog.d("purchasable : " + $0.debugString, tag: self.tag)
             })
-        
-            
             DataLog.d("isNScreen : " + self.isNScreen.description , tag: self.tag)
             DataLog.d("isPurchasedPPM : " + self.isPurchasedPPM.description  , tag: self.tag)
             DataLog.d("isContainPPM : " + self.isContainPPM.description , tag: self.tag)

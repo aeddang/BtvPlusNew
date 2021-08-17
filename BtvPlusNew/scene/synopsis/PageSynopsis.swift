@@ -555,6 +555,8 @@ struct PageSynopsis: PageView {
                     self.pageDataProviderModel.requestProgress(q: .init(type: .getDirectView(model)))
                 }
             }else{
+                self.pageDataProviderModel.requestProgressSkip()
+                /*
                 if model.hasExamPreview{
                     self.synopsisPlayType = .preplay()
                     self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.epsdRsluId,  true )))
@@ -568,6 +570,7 @@ struct PageSynopsis: PageView {
                     self.errorProgress()
                 }
                 self.progressCompleted = true
+                */
             }
             
         case Self.getPlay :
@@ -794,7 +797,7 @@ struct PageSynopsis: PageView {
                     
                 } else { //회차변경    // if self.episodeViewerData?.count != self.srisCount
                     if prev.metvSeasonWatchAll {
-                        self.prevDirectView = prev.directViewdata
+                        self.prevDirectView = prev.directViewData
                         self.synopsisModel = SynopsisModel(type: .seriesChange).setData(data: data)
                     }else{
                         self.prevDirectView = nil
@@ -808,7 +811,7 @@ struct PageSynopsis: PageView {
             }
            
             if self.isPairing == false {
-                self.synopsisModel?.setData(directViewdata: nil)
+                self.synopsisModel?.setData(directViewData: nil)
                 self.purchasViewerData = PurchaseViewerData(type: self.type).setData(
                         synopsisModel: self.synopsisModel,
                         isPairing: self.isPairing)
@@ -838,20 +841,20 @@ struct PageSynopsis: PageView {
     private func setupDirectView (_ data:DirectView, isSeasonWatchAll:Bool = false){
         PageLog.d("setupDirectView", tag: self.tag)
         self.purchaseWebviewModel?.setParam(directView: data, monthlyPid: nil)
-        self.synopsisModel?.setData(directViewdata: data, isSeasonWatchAll: isSeasonWatchAll)
+        self.synopsisModel?.setData(directViewData: data, isSeasonWatchAll: isSeasonWatchAll)
         self.isBookmark = self.synopsisModel?.isBookmark
         PageLog.d("self.isBookmark " + (self.isBookmark?.description ?? "nil"), tag: self.tag)
         self.purchasViewerData = PurchaseViewerData(type: self.type).setData(
                 synopsisModel: self.synopsisModel,
                 isPairing: self.isPairing)
         
-        if let lastWatch = data.last_watch_info {
+        if !isSeasonWatchAll, let lastWatch = data.last_watch_info {
             if let t = lastWatch.watch_rt?.toInt() {
                 switch self.synopsisPlayType {
                 case .vod(_, let autoPlay): self.synopsisPlayType = .vod(Double(t), autoPlay)
                 case .vodChange(_, let autoPlay): self.synopsisPlayType = .vodChange(Double(t), autoPlay)
                 case .vodNext(_, let autoPlay): self.synopsisPlayType = .vodNext(Double(t), autoPlay)
-                default: do{}
+                default: break
                 }
             }
         }

@@ -191,13 +191,13 @@ struct PagePairingFamilyInvite: PageView {
     @State var pairingToken:String = ""
     @State var inviteHostDeviceid:String? = nil
     
-    private func sendLog(action:NaviLog.action, category:String){
+    private func sendLog(action:NaviLog.Action, category:String){
        
         var actionBody = MenuNaviActionBodyItem()
         actionBody.menu_id = ""
         actionBody.menu_name = "연결초대"
         actionBody.category = category
-        self.naviLogManager.popupLog(action: action, actionBody: actionBody)
+        self.naviLogManager.actionLog(action, pageId: .popup, actionBody: actionBody)
     }
     
 }

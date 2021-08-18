@@ -23,6 +23,7 @@ struct PageMyRegistCard: PageView {
     @EnvironmentObject var keyboardObserver:KeyboardObserver
     @EnvironmentObject var dataProvider:DataProvider 
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -352,7 +353,12 @@ struct PageMyRegistCard: PageView {
             self.dataProvider.requestData(q: .init(id:self.tag, type: .postOkCashPoint(self.pairing.hostDevice, card)))
         default : break
         }
-        
+        self.sendLog()
+    }
+    
+    private func sendLog() {
+        let actionBody = MenuNaviActionBodyItem( category: self.cardType.title, target: self.cardMasterSequence.description)
+        self.naviLogManager.actionLog(.clickCardRegister, actionBody: actionBody)
     }
     
     private func onGenderSelected(_ gen:Gender){

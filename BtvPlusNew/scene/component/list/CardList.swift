@@ -140,6 +140,7 @@ struct CardItem: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var data:CardData
    
     @State var point:String? = nil
@@ -155,7 +156,7 @@ struct CardItem: PageView {
                             EditButton(
                                 icon: Asset.icon.edit,
                                 text: String.button.change ){
-                                
+                                self.sendLog(action: .clickCouponPointOption)
                                 self.pagePresenter.openPopup(
                                      PageProvider.getPageObject(.myRegistCard)
                                         .addParam(key: PageParam.type, value: self.data.type)
@@ -169,6 +170,7 @@ struct CardItem: PageView {
                                 isFill: false,
                                 action:{ ck in
                                     if !ck {
+                                        self.sendLog(action: .clickOkPointCheck)
                                         let card = RegistCardData( 
                                             no: self.data.ocb?.cardNo ?? "",
                                             masterSequence: self.data.ocb?.sequence ?? 1,
@@ -191,7 +193,7 @@ struct CardItem: PageView {
                         EditButton(
                             icon: Asset.icon.delete,
                             text: self.data.type == .member ? String.button.remove :  String.pageText.myBenefitsDiscountOkDelete){
-                           
+                            self.sendLog(action: .clickCouponPointOption)
                             self.appSceneObserver.alert =
                                 .confirm(nil, String.alert.cardDeleteConfirm, nil, confirmText: String.button.remove){ isOk in
                                     if isOk {
@@ -232,11 +234,17 @@ struct CardItem: PageView {
             self.point = self.data.point
         }
     }
+    private func sendLog(action:NaviLog.Action) {
+        let actionBody = MenuNaviActionBodyItem(category: self.data.type.title)
+        self.naviLogManager.actionLog(action, actionBody: actionBody)
+    }
+   
 }
 
 struct CardItemBody: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var data:CardData
     var point:String? = nil
     var body: some View {
@@ -317,6 +325,11 @@ struct CardItemBody: PageView {
         .frame(
             width: ListItem.card.size.width,
             height:  ListItem.card.size.height)
+    }
+    
+    private func sendLog() {
+        let actionBody = MenuNaviActionBodyItem(category: self.data.type.title, target: self.data.masterSequence.description)
+        self.naviLogManager.actionLog(.clickCardRegister, actionBody: actionBody)
     }
 }
 

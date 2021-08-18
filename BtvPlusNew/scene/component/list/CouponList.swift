@@ -152,6 +152,7 @@ struct CouponList: PageComponent{
 
 struct CouponHeader: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var type:CouponBlock.ListType
     var title:String?
     var horizontalMargin:CGFloat
@@ -173,7 +174,7 @@ struct CouponHeader: PageComponent{
                     PageProvider.getPageObject(.confirmNumber)
                         .addParam(key: .type, value: type)
                 )
-                
+                self.naviLogManager.actionLog(.clickCouponPointAdd, actionBody: .init(config: "",  category: self.type.text))
                 
             }) {
                 HStack(alignment:.center, spacing: Dimen.margin.micro){

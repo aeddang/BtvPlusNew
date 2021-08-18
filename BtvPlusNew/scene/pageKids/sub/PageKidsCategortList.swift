@@ -15,7 +15,7 @@ struct PageKidsCategoryList: PageView {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
-    
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -40,7 +40,12 @@ struct PageKidsCategoryList: PageView {
                         title: self.title,
                         isBack : true,
                         style: .kidsWhite
-                    )
+                    ){
+                        if let action = self.blockData?.pageCloseActionLog {
+                            self.naviLogManager.actionLog(.clickContentsSeriesBack, actionBody: action)
+                        }
+                        self.pagePresenter.goBack()
+                    }
                     CateBlock(
                         pageObservable: self.pageObservable,
                         infinityScrollModel:self.infinityScrollModel,
@@ -92,6 +97,9 @@ struct PageKidsCategoryList: PageView {
                 self.title = obj.getParamValue(key: .title) as? String ?? self.title
                 self.listType = obj.getParamValue(key: .type) as? CateBlock.ListType ?? .poster
                 self.cardType = obj.getParamValue(key: .subType) as? BlockData.CardType
+                if let action = self.blockData?.pageShowActionLog {
+                    self.naviLogManager.actionLog(.pageShow, actionBody: action)
+                }
             }
             .onDisappear{
                

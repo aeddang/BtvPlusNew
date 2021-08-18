@@ -9,14 +9,15 @@ import Foundation
 class PageSearchModel :ObservableObject, PageProtocol {
     
     @Published private(set) var searchDatas:[SearchData] = []
-    private var keyword:KeywordCoreData = KeywordCoreData()
+   
+    private var keywordCoreData:KeywordCoreData = KeywordCoreData()
     private var localKeywords:[String] = []
     private var popularityKeywords:[String] = []
     private var popularityDatas:[PosterData] = []
     
     func onAppear() {
         DispatchQueue.global(qos: .background).async(){
-            let localDatas = self.keyword.getAllKeywords()
+            let localDatas = self.keywordCoreData.getAllKeywords()
             DispatchQueue.main.async {
                 self.localKeywords.append(contentsOf: localDatas)
                 self.updateSearchKeyword()
@@ -30,7 +31,7 @@ class PageSearchModel :ObservableObject, PageProtocol {
             self.localKeywords.append(keyword)
             self.updateSearchKeyword()
             DispatchQueue.global(qos: .background).async(){
-                self.keyword.addKeyword(keyword)
+                self.keywordCoreData.addKeyword(keyword)
             }
         }
     }
@@ -41,14 +42,14 @@ class PageSearchModel :ObservableObject, PageProtocol {
         self.localKeywords.remove(at: find)
         self.updateSearchKeyword()
         DispatchQueue.global(qos: .background).async(){
-            self.keyword.removeKeyword(keyword)
+            self.keywordCoreData.removeKeyword(keyword)
         }
     }
     func removeAllSearchKeyword (){
         let removeKeywords = self.localKeywords
         DispatchQueue.global(qos: .background).async(){
             removeKeywords.forEach{
-                self.keyword.removeKeyword($0)
+                self.keywordCoreData.removeKeyword($0)
             }
         }
         self.localKeywords.removeAll()
@@ -85,36 +86,60 @@ class PageSearchModel :ObservableObject, PageProtocol {
     func updatePopularityVod (_ data:SearchPopularityVod? = nil){
         guard let result = data?.data else {return}
         guard let datas = result.results_vod else {return}
-        self.popularityDatas = datas.map{PosterData().setData(data: $0)}
+        self.popularityDatas = datas.map{PosterData().setData(data: $0, searchType: .vod)}
     }
     
-    func updateSearchCategory (_ data:SearchCategory? = nil) ->[BlockData]{
+    func updateSearchCategory (_ data:SearchCategory? = nil, keyword:String? = nil) ->[BlockData]{
         guard let result = data?.data else {return []}
         var blocks:[BlockData] = []
         
+        
         if let datas = result.results_vod {
-            let allPosters:[PosterData] = datas.map{ PosterData().setData(data: $0)}
-            let block = BlockData().setData(title: String.app.vod, datas: allPosters)
+            var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
+            actionData.menu_name = String.app.vod + datas.count.description
+            let allPosters:[PosterData] = datas.map{ PosterData().setData(data: $0, searchType:.vod).setNaviLog(action: actionData)}
+           
+            let block = BlockData()
+                .setData(title: String.app.vod, datas: allPosters, searchType:.vod, keyword: keyword)
+                .setNaviLog(pageCloseActionLog: actionData)
             blocks.append(block)
         }
         if let datas = result.results_vod_tseq {
-            let allPosters:[VideoData] = datas.map{ VideoData().setData(data: $0)}
-            let block = BlockData().setData(title: String.app.sris, datas: allPosters)
+            var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
+            actionData.menu_name = String.app.vod + datas.count.description
+            actionData.category = "회차"
+            let allPosters:[VideoData] = datas.map{ VideoData().setData(data: $0, searchType:.vodSeq).setNaviLog(action: actionData)}
+            let block = BlockData()
+                .setData(title: String.app.sris, datas: allPosters, searchType:.vodSeq, keyword: keyword)
+                .setNaviLog(pageCloseActionLog: actionData)
             blocks.append(block)
         }
         if let datas = result.results_corner {
-            let allPosters:[VideoData] = datas.map{ VideoData().setData(data: $0)}
-            let block = BlockData().setData(title: String.app.corner, datas: allPosters)
+            var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
+            actionData.config = ""
+            actionData.menu_name = String.app.corner + datas.count.description
+            let allPosters:[VideoData] = datas.map{ VideoData().setData(data: $0, searchType:.demand).setNaviLog(action: actionData)}
+            let block = BlockData()
+                .setData(title: String.app.corner, datas: allPosters, searchType:.demand, keyword: keyword)
+                .setNaviLog(pageCloseActionLog: actionData)
             blocks.append(block)
         }
         if let datas = result.results_people {
-            let allPosters:[PosterData] = datas.map{ PosterData().setData(data: $0)}
-            let block = BlockData().setData(title: String.app.people, datas: allPosters)
+            var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
+            actionData.menu_name = String.app.people + datas.count.description
+            let allPosters:[PosterData] = datas.map{ PosterData().setData(data: $0, searchType:.none).setNaviLog(action: actionData)}
+            let block = BlockData()
+                .setData(title: String.app.people, datas: allPosters, searchType:.none, keyword: keyword)
+                .setNaviLog(pageCloseActionLog: actionData)
             blocks.append(block)
         }
         if let datas = result.results_tv {
-            let allTvs:[TvData] = datas.map{ TvData().setData(data: $0)}
-            let block = BlockData().setData(title: String.app.liveTv, datas: allTvs) 
+            var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
+            actionData.menu_name = String.app.liveTv + datas.count.description
+            let allTvs:[TvData] = datas.map{ TvData().setData(data: $0, searchType: .live).setNaviLog(action: actionData)}
+            let block = BlockData()
+                .setData(title: String.app.liveTv, datas: allTvs, searchType:.live, keyword: keyword)
+                .setNaviLog(pageCloseActionLog: actionData)
             blocks.append(block)
         }
         return blocks

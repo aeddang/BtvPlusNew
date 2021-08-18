@@ -195,7 +195,7 @@ struct PageKidsMultiBlock: PageView {
                 guard let obj = self.pageObject  else { return }
                 self.openId = obj.getParamValue(key: .subId) as? String
                 self.title = obj.getParamValue(key: .title) as? String
-                
+                self.pageType = obj.getParamValue(key: .type) as? BlockData.UiType
                 self.tabDatas = obj.getParamValue(key: .datas) as? [BlockItem] ?? []
                 
                 self.tabs = self.tabDatas.map{$0.menu_nm ?? ""}
@@ -242,10 +242,12 @@ struct PageKidsMultiBlock: PageView {
     @State var tabDatas:[BlockItem] = []
     @State var selectedTabIdx:Int = -1
     @State var playType:KidsPlayType? = nil
+   
     
     @State var originDatas:[BlockItem] = []
     @State var useTracking:Bool = false
     @State var title:String? = nil
+    @State var pageType:BlockData.UiType? = nil
     @State var finalSelectedIndex:Int? = nil
     @State var openId:String? = nil
     
@@ -280,7 +282,12 @@ struct PageKidsMultiBlock: PageView {
         reload(delay: delay)
         self.openId = nil
         self.setupRecommandGuide(data: cdata)
-        self.naviLogManager.actionLog(.pageShow, actionBody: .init(menu_id: cdata.menu_id, menu_name: cdata.menu_nm))
+        
+        var actionBody = MenuNaviActionBodyItem()
+        actionBody.menu_id = cdata.menu_id
+        actionBody.menu_name = cdata.menu_nm
+        actionBody.category = EuxpNetwork.AsisPrdType.getType(cdata.asis_prd_typ_cd).logCategory
+        self.naviLogManager.actionLog(.pageShow, actionBody: actionBody)
     }
     
     private func setupRecommandGuide(data:BlockItem){

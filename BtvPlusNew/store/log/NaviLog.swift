@@ -22,25 +22,26 @@ struct NaviLog {
         case autoPairing = "/autopairing" // 자동연결페어링
         
         case searchResult = "/search/result"                      // 검색결과
+        case zemSearchResult = "/category/zemkids/search_result" // ZEM 키즈|검색결과
         case remoteconStatus = "/remotecon/status"          // 리모컨 세부상태
         
         case purchaseOrderCompleted = "/purchase/order_completed"   // 상품구매완료
+        case event = "/event"
         
         case appPush = "/app_push"
-        case zemSearchResult = "/category/zemkids/search_result" // ZEM 키즈|검색결과
-        case zemMonthlyTabMenu = "/category/zemkids/monthly_payment/tab_menu"
-       
         
     }
-    
-    static func getPageID(page:PageObject, repository:Repository)-> String?{
+    static func getPageID(pageID:PageID)-> String?{
+        return getPageID(page: PageProvider.getPageObject(pageID), repository: nil)
+    }
+    static func getPageID(page:PageObject, repository:Repository?)-> String?{
         switch page.pageID {
         case .intro : return "/guide"
         case .auth: return nil
         case .serviceError: return nil
         case .home:
             if let menuId = page.getParamValue(key: .id) as? String,
-               let band = repository.dataProvider.bands.getData(menuId: menuId) {
+               let band = repository?.dataProvider.bands.getData(menuId: menuId) {
                 switch  band.gnbTypCd{
                 case EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue: return "/ocean"
                 case EuxpNetwork.GnbTypeCode.GNB_MONTHLY.rawValue : return "/monthly_payment"
@@ -55,7 +56,7 @@ struct NaviLog {
         case .synopsisPlayer: return "/synopsis"
         
         case .my:
-            if repository.pairing.status == .pairing {
+            if repository?.pairing.status == .pairing {
                 return "/my/profile"
             } else {
                 return "/my/connect_stb"
@@ -80,7 +81,7 @@ struct NaviLog {
         case .pairingManagement: return "/my/connect_stb/mgmt"
         case .pairingEmptyDevice: return nil
         case .pairingGuide: return nil
-        case .pairingAppleTv: return nil
+        case .pairingAppleTv: return "/connect_atlanta"
         case .pairingFamilyInvite: return nil
       
         case .purchase: return nil
@@ -125,11 +126,20 @@ struct NaviLog {
         case .kidsMyMonthly: return "/category/zemkids/mypage/monthly_report"
         case .selectKidCharacter: return nil
         case .kidsConfirmNumber: return "/zemkids_certification_popup"
-        case .kidsMultiBlock: return "/category/zemkids/tabmenu"
+        case .kidsMultiBlock:
+            if let pageType = page.getParamValue(key: .type) as? BlockData.UiType{
+                switch  pageType{
+                case .kidsTicket: return "/category/zemkids/monthly_payment/tab_menu"
+                default: return "/category/zemkids/tabmenu"
+                }
+            } else {
+                return "/category/zemkids/tabmenu"
+            }
+           
         case .kidsCategoryList: return nil
         case .kidsMonthly: return "/category/zemkids/monthly_payment"
         case .kidsSynopsis: return "/category/zemkids/synopsis"
-        case .kidsSynopsisPackage: return nil
+        case .kidsSynopsisPackage: return "/category/zemkids/synopsis"
         case .kidsSearch: return nil
         case .tabInfo: return nil
         case .detailInfo: return nil
@@ -233,9 +243,12 @@ struct NaviLog {
         case clickPaymentTabMenu = "click.payment.tab_menu"         // 1. 탭 메뉴 선택
         case clickPaymentAdd = "click.payment.add"                  // 2. 카드등록 선택
         // 18 쿠폰/포인트
-        case clickCouponPointTabMenu = "click.coupon_point.tab_menu"    // 1. 탭 메뉴 선택
-        case clickCouponPointAdd = "click.coupon_point.add"             // 2. 쿠폰/B포인트 등록 선택
-        case clickCouponPointList = "click.coupon_point.list"           // 3. 쿠폰/B포인트 세부 내역 선택
+        case clickCouponPointTabMenu = "click.coupon_point.tab_menu"
+        case clickCouponPointAdd = "click.coupon_point.add"
+        case clickCouponPointOption = "click.coupon_point.option"
+        case clickOkPointCheck = "click.ok_point.check"
+        case clickCardRegister = "click.card.register"
+       
         // 19.최근시청_찜_구매목록
         case clickRecentContentsList = "click.recent_contents.list"     // 1. 최근시청 목록 내 컨텐츠 선택
         case clickPickContentsList = "click.pick_contents.list"         // 2. 찜 목록 내 컨텐츠 선택

@@ -11,6 +11,7 @@ import SwiftUI
 class KidsBannerData: KidsHomeBlockListData {
     fileprivate(set) var banner:BannerData? = nil
     private(set) var menuId:String? = nil
+    
     func setData(data:BlockItem) -> KidsHomeBlockListData{
         self.type = .banner
         self.menuId = data.menu_id

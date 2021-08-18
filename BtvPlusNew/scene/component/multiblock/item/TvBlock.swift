@@ -14,6 +14,7 @@ extension TvBlock{
 
 struct TvBlock:PageComponent, BlockProtocol {
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var pageObservable:PageObservable
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -60,6 +61,7 @@ struct TvBlock:PageComponent, BlockProtocol {
                             defaultText: String.button.all,
                             textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
                         ){_ in
+                            self.sendLog(self.naviLogManager)
                             self.pagePresenter.openPopup(
                                 PageProvider.getPageObject(.categoryList)
                                     .addParam(key: .data, value: data)

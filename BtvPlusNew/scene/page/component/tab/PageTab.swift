@@ -17,7 +17,7 @@ struct PageTab: PageComponent{
     var isClose:Bool = false
     var isSetting:Bool = false
     var style:PageStyle = .normal
-    
+    var close: (() -> Void)? = nil
     var body: some View {
         ZStack(alignment: .leading){
             if self.title != nil {
@@ -34,7 +34,11 @@ struct PageTab: PageComponent{
             HStack{
                 if self.isBack {
                     Button(action: {
-                        self.pagePresenter.goBack()
+                        if let close = self.close{
+                            close()
+                        } else {
+                            self.pagePresenter.goBack()
+                        }
                     }) {
                         Image(Asset.icon.back)
                             .renderingMode(.original)
@@ -48,7 +52,11 @@ struct PageTab: PageComponent{
                 Spacer()
                 if self.isClose {
                     Button(action: {
-                        self.pagePresenter.goBack()
+                        if let close = self.close{
+                            close()
+                        } else {
+                            self.pagePresenter.goBack()
+                        }
                     }) {
                         Image(Asset.icon.close)
                             .renderingMode(.original)

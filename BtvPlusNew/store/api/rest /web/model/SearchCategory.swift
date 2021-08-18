@@ -34,7 +34,7 @@ struct CategoryVodItem : Decodable {
     private(set) var epsd_id: String? = nil
     private(set) var code: String? = nil
     private(set) var sris_cmpt_yn: String? = nil
-    private(set) var meta_typ_cdd: String? = nil
+    private(set) var meta_typ_cd: String? = nil
     private(set) var level: String? = nil
     private(set) var poster: String? = nil
     private(set) var price: String? = nil

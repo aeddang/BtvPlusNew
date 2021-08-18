@@ -51,11 +51,11 @@ struct PageSearch: PageView {
                                 self.search(keyword: text)
                             },
                             inputVoice: {
+                                self.sendLog(action: .clickSearchVoiceInput)
                                 self.voiceSearch()
                             },
                             goBack: {
-                                
-                                self.sendLog(action: .clickContentsSeriesBack, menuName: self.keyword)
+                                self.sendLog(action: .clickSearchBack) 
                                 if !self.emptyDatas.isEmpty {
                                     self.emptyDatas = []
                                     self.keyword = ""
@@ -63,6 +63,7 @@ struct PageSearch: PageView {
                                 }
                                 if !self.searchDatas.isEmpty {
                                     self.searchDatas = []
+                                    self.updatedLogPage()
                                     return
                                 }
                                 self.pagePresenter.goBack()
@@ -227,7 +228,6 @@ struct PageSearch: PageView {
             .onAppear{
                 
             }
-            
         }//geo
     }//body
     
@@ -244,6 +244,7 @@ struct PageSearch: PageView {
             self.searchDatas = []
         }
         self.viewModel.updateSearchKeyword()
+        self.updatedLogPage()
     }
     
     func voiceSearch(){
@@ -266,15 +267,24 @@ struct PageSearch: PageView {
     }
     
     func searchRespond(res:ApiResultResponds, geometry:GeometryProxy){
-        self.searchDatas = self.viewModel.updateSearchCategory(res.data as? SearchCategory)
+        self.searchDatas = self.viewModel.updateSearchCategory(res.data as? SearchCategory, keyword: self.keyword)
         if self.searchDatas.isEmpty {
             self.emptyDatas = self.viewModel.getPosterSets(screenSize: geometry.size.width)
             if self.emptyDatas.isEmpty {
                 self.dataProvider.requestData(q: .init(id: self.tag, type: .getSeachPopularityVod, isOptional: false))
             }
         } else {
-            self.total = self.searchDatas.reduce(0, {$0 + ($1.allPosters?.count ?? 0) + ($1.allVideos?.count ?? 0)})
+            self.total = self.searchDatas.reduce(0, { $0 + $1.allResultCount })
         }
+        self.updatedLogPage()
+        if !self.searchDatas.isEmpty {
+            self.sendLog(action: .pageShow,
+                         actionBody: MenuNaviActionBodyItem(
+                            search_keyword: self.keyword,
+                            result: self.total.description)
+            )
+        }
+        
     }
     
     @State var changeSearchSubscription:AnyCancellable?
@@ -289,11 +299,12 @@ struct PageSearch: PageView {
         }
     }
     
-    private func sendLog(action:NaviLog.Action,  menuName:String? = nil) {
-        var actionBody = MenuNaviActionBodyItem()
-        actionBody.menu_name = menuName
-        self.naviLogManager.actionLog(action, pageId: .searchResult , actionBody: actionBody)
-        
+    private func updatedLogPage() {
+        self.naviLogManager.setupPageId(self.searchDatas.isEmpty == false ? .searchResult : nil)
+    }
+    
+    private func sendLog(action:NaviLog.Action, actionBody:MenuNaviActionBodyItem? = nil) {
+        self.naviLogManager.actionLog(action, actionBody: actionBody)
     }
     
 }

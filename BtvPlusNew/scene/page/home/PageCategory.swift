@@ -14,6 +14,7 @@ struct PageCategory: PageView {
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel:PageDataProviderModel = PageDataProviderModel()
     @ObservedObject var navigationModel:NavigationModel = NavigationModel()
@@ -194,6 +195,7 @@ struct PageCategory: PageView {
                     .addParam(key: .subId, value: openId)
             )
         case .event :
+            self.sendLog()
             self.pagePresenter.openPopup(
                 PageProvider
                     .getPageObject(.webview)
@@ -235,6 +237,10 @@ struct PageCategory: PageView {
         }
     }
     
+    private func sendLog() {
+        let actionBody = MenuNaviActionBodyItem( category: "")
+        self.naviLogManager.actionLog(.pageShow, pageId: .event,  actionBody: actionBody)
+    }
 }
 
 

@@ -11,6 +11,7 @@ struct PagePairingAppleTv: PageView {
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var pageObservable:PageObservable = PageObservable()
    
     @State var isAgree1:Bool = true
@@ -68,7 +69,7 @@ struct PagePairingAppleTv: PageView {
                         size: Dimen.button.regular,
                         bgColor:Color.brand.secondary
                     ){_ in
-                        
+                        self.sendLog(category: String.app.cancel)
                         self.pagePresenter.closePopup(self.pageObject?.id)
                     }
                     FillButton(
@@ -84,7 +85,7 @@ struct PagePairingAppleTv: PageView {
                         margin: 0,
                         bgColor:Color.brand.primary
                     ){_ in
-                        
+                        self.sendLog(category: String.app.confirm)
                         if !self.isAgree1 {
                             self.appSceneObserver.event = .toast(String.alert.needAgreeTermsOfService)
                             return
@@ -110,7 +111,10 @@ struct PagePairingAppleTv: PageView {
         
     }//body
     
-    
+    private func sendLog(category:String? = nil) {
+        let actionBody = MenuNaviActionBodyItem( category: category)
+        self.naviLogManager.actionLog(.clickConfirmButton, actionBody: actionBody)
+    }
 }
 
 #if DEBUG

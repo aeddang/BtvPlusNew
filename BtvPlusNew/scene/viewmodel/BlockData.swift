@@ -12,6 +12,7 @@ enum BlockStatus:String{
 
 class BlockData:InfinityData, ObservableObject{
     private(set) var parentTitle:String? = nil
+    private(set) var keyword:String? = nil
     private(set) var name:String = ""
     private(set) var subName:String = ""
     private(set) var isAdult:Bool = false
@@ -25,6 +26,7 @@ class BlockData:InfinityData, ObservableObject{
     private(set) var originData:BlockItem? = nil
     private(set) var isCountView:Bool = false
     private(set) var childrenBlock:[BlockData] = []
+    private(set) var searchType:SearchType = .none
     var errorMassage:String? = nil
     
     @Published private(set) var status:BlockStatus = .initate
@@ -42,6 +44,15 @@ class BlockData:InfinityData, ObservableObject{
     var allPosters:[PosterData]? = nil
     var allVideos:[VideoData]? = nil
     var allTvs:[TvData]? = nil
+    
+    private(set) var pageShowActionLog:MenuNaviActionBodyItem? = nil
+    private(set) var pageCloseActionLog:MenuNaviActionBodyItem? = nil
+    
+    var allResultCount:Int {
+        get{
+            return (allPosters?.count ?? 0) + (allVideos?.count ?? 0) + (allTvs?.count ?? 0)
+        }
+    }
     
     public static func == (l:BlockData, r:BlockData)-> Bool {
         return l.id == r.id
@@ -63,6 +74,15 @@ class BlockData:InfinityData, ObservableObject{
         themas = nil
         banners = nil
         tvs = nil
+    }
+    
+    func setNaviLog(pageShowActionLog:MenuNaviActionBodyItem? = nil) -> BlockData {
+        self.pageShowActionLog = pageShowActionLog
+        return self
+    }
+    func setNaviLog(pageCloseActionLog:MenuNaviActionBodyItem? = nil) -> BlockData {
+        self.pageCloseActionLog = pageCloseActionLog
+        return self
     }
     
     @discardableResult
@@ -131,9 +151,10 @@ class BlockData:InfinityData, ObservableObject{
         return self
     }
     
-    func setData(title:String, datas:[PosterData], max:Int = 10) -> BlockData{
+    func setData(title:String, datas:[PosterData], searchType:SearchType, keyword:String?, max:Int = 10) -> BlockData{
         name = title
         uiType = .poster
+        self.searchType = searchType
         self.allPosters = datas
         let len = min(datas.count, max)
         self.posters = datas.isEmpty ? datas : datas[0..<len].map{$0}
@@ -143,9 +164,10 @@ class BlockData:InfinityData, ObservableObject{
         return self
     }
     
-    func setData(title:String, datas:[VideoData], max:Int = 10) -> BlockData{
+    func setData(title:String, datas:[VideoData], searchType:SearchType, keyword:String?, max:Int = 10) -> BlockData{
         name = title
         uiType = .video
+        self.searchType = searchType
         self.allVideos = datas
         let len = min(datas.count, max)
         self.videos = datas.isEmpty ? datas : datas[0..<len].map{$0}
@@ -158,26 +180,27 @@ class BlockData:InfinityData, ObservableObject{
         return self
     }
     
-    func setData(title:String, datas:[TvData], max:Int = 10) -> BlockData{
+    func setData(title:String, datas:[TvData], searchType:SearchType, keyword:String?, max:Int = 10) -> BlockData{
         name = title
         uiType = .tv
         self.allTvs = datas
+        self.searchType = searchType
         let len = min(datas.count, max)
         self.tvs = datas.isEmpty ? datas : datas[0..<len].map{$0}
         self.listHeight = (self.tvs?.first?.type.size.height ?? 0) + MultiBlockBody.tabHeight
         self.subName = datas.count.description
         return self
     }
-    
-    func setData(title:String, datas:[CategoryCornerItem], max:Int = 10) -> BlockData{
+    /*
+    func setData(title:String, datas:[CategoryCornerItem], searchType:SearchType, keyword:String?, max:Int = 10) -> BlockData{
         name = title
         uiType = .video
-       
+        self.searchType = searchType
         self.allVideos = []
         self.videos = []
         var idx:Int = 0
         datas.forEach{
-            let video = VideoData().setData(data: $0)
+            let video = VideoData().setData(data: $0, searchType: searchType)
             self.allVideos?.append(video)
             if idx < max {
                 self.videos?.append(video)
@@ -192,7 +215,7 @@ class BlockData:InfinityData, ObservableObject{
         }
         return self
     }
-    
+    */
             
     func setData(_ data:BlockItem, themaType:ThemaType = .category) -> BlockData{
         name = data.menu_nm ?? ""
@@ -415,8 +438,9 @@ class BlockData:InfinityData, ObservableObject{
         var actionBody = MenuNaviActionBodyItem()
         actionBody.menu_name = self.name.replace(" ", with: "")
         actionBody.menu_id = self.cwCallId ?? self.menuId
-        actionBody.config = self.parentTitle
-        actionBody.target = self.parentTitle == nil ? "N" : "Y"
+        actionBody.config = self.parentTitle?.replace(" ", with: "")
+        actionBody.search_keyword = self.keyword
+        //actionBody.target = self.parentTitle == nil ? "N" : "Y"
         return actionBody
     }
     
@@ -468,5 +492,24 @@ class BlockData:InfinityData, ObservableObject{
     enum ThemaType: String, Codable {
         case category,
         ticket
+    }
+    
+    enum SearchType: String, Codable {
+        case none,
+        vod,
+        live,
+        clip,
+        demand,
+        vodSeq
+        
+        var logType: String {
+            switch self {
+            case .vod, .vodSeq: return "vod"
+            case .live: return "live"
+            case .clip: return "clip"
+            case .demand: return "demand"
+            default : return ""
+            }
+        }
     }
 }

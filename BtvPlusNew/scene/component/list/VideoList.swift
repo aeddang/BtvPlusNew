@@ -27,9 +27,41 @@ class VideoData:InfinityData{
     private(set) var tagData: TagData? = nil
     private(set) var playTime:String? = nil
     private(set) var pageType:PageType = .btv
+    private(set) var actionLog:MenuNaviActionBodyItem? = nil
+    private(set) var contentLog:MenuNaviContentsBodyItem? = nil
+    var hasLog:Bool {
+        get{
+            return actionLog != nil || contentLog != nil
+        }
+    }
+    
     init(pageType:PageType = .btv) {
         self.pageType = pageType
         super.init()
+    }
+    
+    func setNaviLog(action:MenuNaviActionBodyItem?) -> VideoData  {
+        self.actionLog = action
+        return self
+    }
+   
+    func setNaviLog(searchType:BlockData.SearchType, data:CategorySrisItem? = nil) -> VideoData  {
+        self.contentLog = MenuNaviContentsBodyItem(
+            type: searchType.logType,
+            title: self.title,
+            channel_name: nil,
+            genre_text: nil,
+            genre_code: data?.meta_typ_cd,
+            paid: self.tagData?.isFree,
+            purchase: nil,
+            episode_id: self.epsdId,
+            episode_resolution_id: self.synopsisData?.epsdRsluId,
+            product_id: nil,
+            purchase_type: nil,
+            monthly_pay: nil,
+            list_price: data?.price
+        )
+        return self
     }
     
     func setData(data:ContentItem, cardType:BlockData.CardType = .video, idx:Int = -1) -> VideoData {
@@ -128,7 +160,7 @@ class VideoData:InfinityData{
     
     
     
-    func setData(data:CategorySrisItem, idx:Int = -1) -> VideoData {
+    func setData(data:CategorySrisItem, searchType:BlockData.SearchType, idx:Int = -1) -> VideoData {
         setCardType(.video)
         title = data.title
         subTitle = data.title_sub
@@ -144,10 +176,10 @@ class VideoData:InfinityData{
         synopsisData = .init(
             srisId: nil, searchType: EuxpNetwork.SearchType.sris.rawValue,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
-        return self
+        return self.setNaviLog(searchType: searchType, data: data)
     }
     
-    func setData(data:CategoryCornerItem, idx:Int = -1) -> VideoData {
+    func setData(data:CategoryCornerItem, searchType:BlockData.SearchType, idx:Int = -1) -> VideoData {
         setCardType(.video)
         self.title = data.title
         index = idx
@@ -160,7 +192,8 @@ class VideoData:InfinityData{
         synopsisData = .init(
             srisId: nil, searchType: EuxpNetwork.SearchType.sris.rawValue,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
-        return self
+        
+        return self.setNaviLog(searchType: searchType, data: nil)
     }
     
     var bottomHeight:CGFloat {
@@ -273,6 +306,7 @@ enum VideoType {
 
 struct VideoList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var banners:[BannerData]? = nil
     var datas:[VideoData]
@@ -303,16 +337,7 @@ struct VideoList: PageComponent{
                                 ? false
                                 : self.contentID == data.epsdId)
                     .onTapGesture {
-                        if let action = self.action {
-                            action(data)
-                        }else{
-                            guard let synopsisData = data.synopsisData else { return }
-                            self.pagePresenter.openPopup(
-                                data.moveSynopsis
-                                    .addParam(key: .data, value: synopsisData)
-                                    .addParam(key: .watchLv, value: data.watchLv)
-                            )
-                        }
+                        self.onTap(data: data)
                     }
                 } else {
                     VideoItem( data:data , isSelected: self.contentID == nil
@@ -320,23 +345,28 @@ struct VideoList: PageComponent{
                                 : self.contentID == data.epsdId)
                     .id(data.index)
                     .onTapGesture {
-                        if let action = self.action {
-                            action(data)
-                        }else{
-                            guard let synopsisData = data.synopsisData else { return }
-                            self.pagePresenter.openPopup(
-                                data.moveSynopsis
-                                    .addParam(key: .data, value: synopsisData)
-                                    .addParam(key: .watchLv, value: data.watchLv)
-                            )
-                        }
+                        self.onTap(data: data)
                     }
                 }
             }
         }
-        
-        
     }//body
+    
+    func onTap(data:VideoData)  {
+        if data.hasLog {
+            self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog)
+        }
+        if let action = self.action {
+            action(data)
+        }else{
+            guard let synopsisData = data.synopsisData else { return }
+            self.pagePresenter.openPopup(
+                data.moveSynopsis
+                    .addParam(key: .data, value: synopsisData)
+                    .addParam(key: .watchLv, value: data.watchLv)
+            )
+        }
+    }
 }
 
 struct VideoDataSet:Identifiable {
@@ -373,6 +403,7 @@ extension VideoSet{
 struct VideoSet: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var pageObservable:PageObservable = PageObservable()
     var data:VideoDataSet
     var screenSize:CGFloat? = nil
@@ -386,6 +417,9 @@ struct VideoSet: PageComponent{
                 ForEach(self.cellDatas) { data in
                     VideoItem( data:data )
                     .onTapGesture {
+                        if data.hasLog {
+                            self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog)
+                        }
                         guard let synopsisData = data.synopsisData else { return }
                         self.pagePresenter.openPopup(
                             data.moveSynopsis

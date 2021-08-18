@@ -93,7 +93,7 @@ struct MultiBlock:PageComponent {
         var key:String = self.datas[0..<count].reduce("", {$0 + "|" + ($1.menuId ?? "")}) 
         key = key + (self.tipBlock?.id ?? "")
         if key == self.headerId, let header = self.headerBlock {
-            ComponentLog.d("Recycle Header " + key , tag: self.tag + "Header")
+            //ComponentLog.d("Recycle Header " + key , tag: self.tag + "Header")
             DispatchQueue.main.async {
                 self.headerCount = count
             }
@@ -395,12 +395,21 @@ struct MultiBlockCell:PageComponent {
             )
             .frame(height:data.listHeight)
 
-        case .kidsHome, .kidsTicket :
+        case .kidsHome :
             KidsHomeBlock(
                 pageObservable:self.pageObservable,
                 pageDragingModel:self.pageDragingModel,
                 data: data,
                 useTracking:self.useTracking
+            )
+            .frame(height:data.listHeight)
+            
+        case .kidsTicket :
+            KidsHomeBlock(
+                pageObservable:self.pageObservable,
+                pageDragingModel:self.pageDragingModel,
+                data: data,
+                useTracking:false
             )
             .frame(height:data.listHeight)
         }

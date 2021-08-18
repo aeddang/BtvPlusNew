@@ -16,7 +16,39 @@ class TvData:InfinityData{
     private(set) var endDate: Date? = nil
     private(set) var data:CategoryTvItem? = nil
     private(set) var type:TvType = .list
-    func setData(data:CategoryTvItem, idx:Int = -1) -> TvData {
+    private(set) var actionLog:MenuNaviActionBodyItem? = nil
+    private(set) var contentLog:MenuNaviContentsBodyItem? = nil
+    var hasLog:Bool {
+        get{
+            return actionLog != nil || contentLog != nil
+        }
+    }
+    
+    func setNaviLog(action:MenuNaviActionBodyItem?) -> TvData {
+        self.actionLog = action
+        return self
+    }
+  
+    func setNaviLog(searchType:BlockData.SearchType) -> TvData {
+        self.contentLog = MenuNaviContentsBodyItem(
+            type: searchType.logType,
+            title: self.title,
+            channel_name: self.channel,
+            genre_text: nil,
+            genre_code: nil,
+            paid: nil,
+            purchase: nil,
+            episode_id: nil,
+            episode_resolution_id: nil,
+            product_id: nil,
+            purchase_type: nil,
+            monthly_pay: nil,
+            list_price: nil
+        )
+        return self
+    }
+    
+    func setData(data:CategoryTvItem, searchType:BlockData.SearchType, idx:Int = -1) -> TvData {
         self.data = data
         title = data.title
         channel = data.channel_name
@@ -32,7 +64,7 @@ class TvData:InfinityData{
             subTitle = sd.toDateFormatter(dateFormat: "HH:mm") + "~" + ed.toDateFormatter(dateFormat: "HH:mm")
         }
         index = idx
-        return self
+        return self.setNaviLog(searchType:searchType)
     }
     
     fileprivate func setCardType(width:CGFloat, height:CGFloat, padding:CGFloat) -> TvData {
@@ -153,6 +185,7 @@ struct TvSet: PageComponent{
 struct TvItem: PageView {
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var data:TvData
     var isSelected:Bool = false
     var body: some View {
@@ -182,6 +215,9 @@ struct TvItem: PageView {
             
         }
         .onTapGesture {
+            if self.data.hasLog {
+                self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog) 
+            }
             self.pagePresenter.openPopup(PageProvider.getPageObject(.schedule)
                                             .addParam(key: .id, value: self.data.data?.con_id))
             

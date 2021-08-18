@@ -11,7 +11,7 @@ import struct Kingfisher.KFImage
 class KidsCategoryListData: KidsHomeBlockListData {
     private(set) var title:String = " "
     private(set) var svcPropCd:String? = nil
-    
+    private(set) var isTicket:Bool = false
     private(set) var datas:[KidsCategoryListItemData] = []
     private(set) var sets:[KidsCategoryListItemDataSet] = []
    
@@ -19,7 +19,7 @@ class KidsCategoryListData: KidsHomeBlockListData {
         self.type = .cateList
         self.title = data.menu_nm ?? " "
         let cardType = data.btm_bnr_blk_exps_cd
-        let isTicket = uiType == .kidsTicket
+        self.isTicket = uiType == .kidsTicket
         switch cardType {
         case "05":
             self.title = " "
@@ -89,7 +89,7 @@ class KidsCategoryListItemData:Identifiable, ObservableObject{
     private(set) var blocks:[BlockItem] = []
     private(set) var size:CGSize = KidsCategoryList.size
     private(set) var monthlyData:MonthlyData? = nil
-    
+    private(set) var isTicket:Bool = false
     @Published private(set) var isActive: Bool = false
     func setData(data:BlockItem, size:CGSize? = nil, isTicket:Bool = false) -> KidsCategoryListItemData {
         
@@ -100,7 +100,7 @@ class KidsCategoryListItemData:Identifiable, ObservableObject{
             size = KidsCategoryList.sizeRound
         default: break
         }
-        
+        self.isTicket = isTicket
         self.prdPrcId = data.prd_prc_id
         self.title = data.menu_nm
         self.size = size
@@ -197,6 +197,7 @@ struct KidsCategoryListItem:PageView  {
                     .addParam(key: .datas, value: data.blocks)
                     .addParam(key: .data, value: data.monthlyData)
                     .addParam(key: .title, value: data.title)
+                    .addParam(key: .type, value: data.isTicket ? BlockData.UiType.kidsTicket : nil)
             )
         }
         

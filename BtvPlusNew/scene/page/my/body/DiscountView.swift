@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 struct DiscountView: PageComponent{
     @EnvironmentObject var dataProvider:DataProvider
-    
     @ObservedObject var viewModel:NavigationModel = NavigationModel()
     var viewPagerModel:ViewPagerModel = ViewPagerModel()
     @ObservedObject var cardModel:CardBlockModel = CardBlockModel()

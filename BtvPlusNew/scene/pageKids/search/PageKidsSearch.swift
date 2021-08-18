@@ -15,6 +15,8 @@ struct PageKidsSearch: PageView {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var keyboardObserver:KeyboardObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
+    
     @ObservedObject var viewModel:PageKidsSearchModel = PageKidsSearchModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -105,12 +107,14 @@ struct PageKidsSearch: PageView {
                             self.search(keyword: text)
                         },
                         inputVoice: {
+                            self.sendLog(action: .clickSearchVoiceInput) 
                             self.voiceSearch()
                         },
                         search: { keyword in
                             self.search(keyword: keyword)
                         },
                         goBack: {
+                            self.sendLog(action: .clickSearchBack)
                             if self.isVoiceSearch {
                                 self.voiceSearchEnd()
                                 return
@@ -118,6 +122,7 @@ struct PageKidsSearch: PageView {
     
                             if self.searchDatas != nil {
                                 self.searchDatas = nil
+                                self.updatedLogPage()
                                 return
                             }
                             self.pagePresenter.goBack()
@@ -191,6 +196,7 @@ struct PageKidsSearch: PageView {
     
     func resetSearchData() {
         self.searchDatas = nil
+        self.updatedLogPage()
         self.viewModel.updateSearchKeyword()
     }
     
@@ -213,7 +219,17 @@ struct PageKidsSearch: PageView {
     }
     
     func searchRespond(res:ApiResultResponds, geometry:GeometryProxy){
-        self.searchDatas = self.viewModel.updateSearchCategory(res.data as? SearchCategory)
+        let searchDatas = self.viewModel.updateSearchCategory(res.data as? SearchCategory, keyword: self.keyword)
+        self.searchDatas = searchDatas
+        self.updatedLogPage()
+        let total = searchDatas.reduce(0, { $0 + $1.allResultCount })
+        if !searchDatas.isEmpty{
+            self.sendLog(action: .pageShow,
+                         actionBody: MenuNaviActionBodyItem(
+                            search_keyword: self.keyword,
+                            result: total.description)
+            )
+        }
     }
     
     @State var changeSearchSubscription:AnyCancellable?
@@ -226,6 +242,14 @@ struct PageKidsSearch: PageView {
                 self.changeSearchSubscription?.cancel()
                 self.dataProvider.requestData(q: .init(id: self.tag, type: .getCompleteKeywords(word, .kids), isOptional: true))
         }
+    }
+    
+    private func updatedLogPage() {
+        self.naviLogManager.setupPageId(self.searchDatas?.isEmpty == false ? .zemSearchResult : nil)
+    }
+    
+    private func sendLog(action:NaviLog.Action, actionBody:MenuNaviActionBodyItem? = nil) {
+        self.naviLogManager.actionLog(action, actionBody: actionBody)
     }
     
 }

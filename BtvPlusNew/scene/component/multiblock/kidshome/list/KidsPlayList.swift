@@ -19,7 +19,6 @@ class KidsPlayListData: KidsHomeBlockListData {
     private(set) var datas:[KidsPlayListItemData] = []
     func setData(data:BlockItem) -> KidsPlayListData{
         self.type = .playList
-        
         self.title = data.menu_nm
         self.menuId = data.menu_id
         self.cwCallId = data.cw_call_id_val

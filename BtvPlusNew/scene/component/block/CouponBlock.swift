@@ -65,6 +65,7 @@ struct CouponBlock: PageComponent, Identifiable{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
     
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var viewModel:CouponBlockModel = CouponBlockModel()
@@ -299,6 +300,16 @@ struct CouponBlock: PageComponent, Identifiable{
         }
         self.infinityScrollModel.onComplete(itemCount: datas.count)
         withAnimation{ self.isError = false }
+    }
+    
+    private func sendLog(action:NaviLog.Action,
+                         category:String?,
+                         config:String? = nil,
+                         result:String? = nil ,
+                         target:String? = nil) {
+        
+        let actionBody = MenuNaviActionBodyItem( config: config, category: category, target: target, result: result)
+        self.naviLogManager.actionLog(action, actionBody: actionBody)
     }
 }
 

@@ -29,6 +29,7 @@ struct PageMyBenefits: PageView {
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var naviLogManager:NaviLogManager
     
     @ObservedObject var viewPagerModel:ViewPagerModel = ViewPagerModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -74,17 +75,21 @@ struct PageMyBenefits: PageView {
                             )
                             { idx in
                                 switch idx {
-                                case 0 : self.couponModel.initUpdate()
-                                case 1 : self.pointModel.initUpdate()
+                                case 0 :
+                                    self.couponModel.initUpdate()
+                                case 1 :
+                                    self.pointModel.initUpdate()
                                 case 2 :
                                     if self.pairing.pairingDeviceType == .apple {
                                         self.cardModel.initUpdate(type: .member)
                                     } else {
                                         self.cashModel.initUpdate()
                                     }
-                                case 3 : self.cardModel.initUpdate(type: .member)
+                                case 3 :
+                                    self.cardModel.initUpdate(type: .member)
                                 default : break
                                 }
+                                self.sendLog(action: .clickCouponPointTabMenu, category: self.titles[idx])
                             }
                     } else {
                         Spacer()
@@ -187,7 +192,12 @@ struct PageMyBenefits: PageView {
             }
         }//geo
     }//body
-    
+    private func sendLog(action:NaviLog.Action,
+                         category:String?) {
+        
+        let actionBody = MenuNaviActionBodyItem(category: category)
+        self.naviLogManager.actionLog(action, actionBody: actionBody)
+    }
    
 }
 

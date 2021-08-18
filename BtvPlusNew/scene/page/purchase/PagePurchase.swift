@@ -35,7 +35,10 @@ struct PagePurchase: PageView {
                         title: String.pageTitle.purchase,
                         isClose: true,
                         style: .white
-                    )
+                    ){
+                        self.sendLog(action: .clickOrderCompletedConfirm)
+                        self.pagePresenter.goBack()
+                    }
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     ZStack(alignment: .topLeading){
                         DragDownArrow(
@@ -84,7 +87,7 @@ struct PagePurchase: PageView {
                     self.pagePresenter.closePopup(self.pageObject?.id)
                 case .connectError(let header) :
                     self.appSceneObserver.alert = .pairingError(header)
-                default : do{}
+                default : break
                 }
             }
             .onReceive(self.webViewModel.$event){ evt in
@@ -101,8 +104,9 @@ struct PagePurchase: PageView {
                             let paymentPrice = param["paymentPrice"] as? String
                             self.appSceneObserver.event = .update(.purchase(pid, listPrice, paymentPrice))
                             self.pairing.authority.reset()
+                            
                         }
-                        self.sendLog()
+                        
                         break
                     case WebviewMethod.bpn_closeWebView.rawValue :
                         self.pagePresenter.goBack()
@@ -165,6 +169,8 @@ struct PagePurchase: PageView {
                             id: self.tag,
                             type: .getGridEvent(menuId , .popularity , 1, 1)))
                 }
+                
+                self.sendLog(action: .pageShow)
             }
             .onDisappear{
             }
@@ -173,8 +179,8 @@ struct PagePurchase: PageView {
     }//body
     
    
-    private func sendLog() {
-        self.naviLogManager.contentsLog(pageId: .purchaseOrderCompleted, action: .clickOrderCompletedConfirm)
+    private func sendLog(action:NaviLog.Action) {
+        self.naviLogManager.contentsLog(pageId: .purchaseOrderCompleted, action: action)
     }
 }
 

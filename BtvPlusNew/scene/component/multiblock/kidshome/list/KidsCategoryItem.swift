@@ -16,12 +16,10 @@ class KidsCategoryItemData: KidsHomeBlockListData {
     fileprivate(set) var poster:KidStudyRecommandData? = nil
     func setData(data:BlockItem) -> KidsCategoryItemData{
         self.playType = KidsPlayType.getType(data.svc_prop_cd)
-       
         self.blocks = data.blocks ?? [data]
         self.type = .cateHeader
         self.title = data.menu_nm
         self.svcPropCd = data.svc_prop_cd
-
         return self
     }
     

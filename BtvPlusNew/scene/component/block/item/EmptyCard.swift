@@ -40,6 +40,7 @@ struct EmptyCard: PageView {
 
 struct AddCard: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var type:CardBlock.ListType? = nil
     var text:String? = nil
     var idx:Int = 1
@@ -58,6 +59,7 @@ struct AddCard: PageView {
                         .multilineTextAlignment(.center)
                 }
                 Button(action: {
+                    self.naviLogManager.actionLog(.clickCouponPointAdd, actionBody: .init(config: type?.title,  category: String.pageText.myBenefitsDiscount))
                     self.pagePresenter.openPopup(
                          PageProvider.getPageObject(.myRegistCard)
                              .addParam(key: PageParam.type, value: type)

@@ -25,12 +25,42 @@ class PosterData:InfinityData{
     private(set) var synopsisData:SynopsisData? = nil
     private(set) var pageType:PageType = .btv
     private(set) var useTag:Bool = true
+    private(set) var actionLog:MenuNaviActionBodyItem? = nil
+    private(set) var contentLog:MenuNaviContentsBodyItem? = nil
+    
+    var hasLog:Bool {
+        get{
+            return actionLog != nil || contentLog != nil
+        }
+    }
     init(pageType:PageType = .btv, useTag:Bool = true) {
         self.pageType = pageType
         self.useTag = useTag
         super.init()
     }
+    func setNaviLog(action:MenuNaviActionBodyItem?) -> PosterData {
+        self.actionLog = action
+        return self
+    }
     
+    func setNaviLog(searchType:BlockData.SearchType, data:CategoryVodItem? = nil) -> PosterData {
+        self.contentLog = MenuNaviContentsBodyItem(
+            type: searchType.logType,
+            title: self.title,
+            channel_name: nil,
+            genre_text: nil,
+            genre_code: data?.meta_typ_cd,
+            paid: self.tagData?.isFree,
+            purchase: nil,
+            episode_id: self.epsdId,
+            episode_resolution_id: self.synopsisData?.epsdRsluId,
+            product_id: nil,
+            purchase_type: nil,
+            monthly_pay: nil,
+            list_price: data?.price
+        )
+        return self
+    }
     func setData(data:ContentItem, cardType:BlockData.CardType = .smallPoster , idx:Int = -1) -> PosterData {
         setCardType(cardType)
         title = data.title
@@ -133,7 +163,7 @@ class PosterData:InfinityData{
         return self
     }
     
-    func setData(data:SearchPopularityVodItem, idx:Int = -1) -> PosterData {
+    func setData(data:SearchPopularityVodItem, searchType:BlockData.SearchType, idx:Int = -1) -> PosterData {
         title = data.title
         epsdId = data.epsd_id
         //isAdult = data.adult?.toBool() ?? false
@@ -149,10 +179,10 @@ class PosterData:InfinityData{
         synopsisData = .init(
             srisId: nil, searchType: EuxpNetwork.SearchType.sris.rawValue,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "", kidZone:nil)
-        return self
+        return self.setNaviLog(searchType: searchType, data:nil)
     }
     
-    func setData(data:CategoryVodItem, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
+    func setData(data:CategoryVodItem, searchType:BlockData.SearchType, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
         setCardType(cardType)
         title = data.title
         watchLv = data.level?.toInt() ?? 0
@@ -168,16 +198,15 @@ class PosterData:InfinityData{
         synopsisData = .init(
             srisId: nil, searchType: EuxpNetwork.SearchType.sris.rawValue,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "", kidZone:nil)
-        
-        return self
+        return self.setNaviLog(searchType: searchType, data:data)
     }
     
-    func setData(data:CategoryPeopleItem, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
+    func setData(data:CategoryPeopleItem, searchType:BlockData.SearchType , cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
         setCardType(cardType)
         title = data.title
         index = idx
         prsId = data.prs_id
-        return self
+        return self.setNaviLog(searchType: searchType)
     }
     
     func setRank(_ idx:Int){
@@ -315,6 +344,7 @@ extension PosterList{
 struct PosterList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var banners:[BannerData]? = nil
     var datas:[PosterData]
@@ -400,6 +430,10 @@ struct PosterList: PageComponent{
     }
     
     func onTap(data:PosterData)  {
+        if data.hasLog {
+            self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog)
+        }
+        
         if let action = self.action {
             action(data)
         }else{
@@ -490,6 +524,7 @@ extension PosterSet{
 struct PosterSet: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var pageObservable:PageObservable = PageObservable()
     var data:PosterDataSet
     var screenSize:CGFloat? = nil
@@ -504,6 +539,9 @@ struct PosterSet: PageComponent{
                 ForEach(self.cellDatas) { data in
                     PosterItem( data:data )
                     .onTapGesture {
+                        if data.hasLog {
+                            self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog)
+                        }
                         if let action = self.action {
                             action(data)
                         }else{

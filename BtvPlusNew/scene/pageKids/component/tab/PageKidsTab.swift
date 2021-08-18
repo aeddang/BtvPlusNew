@@ -46,7 +46,11 @@ struct PageKidsTab: PageComponent{
             HStack{
                 if self.isBack {
                     Button(action: {
-                        self.pagePresenter.goBack()
+                        if let close = self.close{
+                            close()
+                        } else {
+                            self.pagePresenter.goBack()
+                        }
                     }) {
                         Image(AssetKids.icon.backTop)
                             .renderingMode(.original)

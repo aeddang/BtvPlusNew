@@ -94,6 +94,28 @@ extension EuxpNetwork{
         case page = "10" // error
         case list = "20"
     }
+    enum AsisPrdType: String {
+        case ppv, pps, ppm, none
+        static func getType(_ value:String?)->AsisPrdType{
+            switch value {
+                case "10", "40": return .ppv
+                case "20": return .pps
+                case "30": return .ppm
+            default : return .none
+            }
+        }
+        
+        var logCategory: String {
+            switch self {
+            case .ppv: return "PPV"
+            case .pps: return "PPS"
+            case .ppm: return "PPM"
+            default: return ""
+            }
+        }
+        
+    }
+    
 }
 
 class Euxp: Rest{

@@ -21,7 +21,6 @@ struct PagePurchase: PageView {
     @ObservedObject var webViewModel = WebViewModel()
     
     @State var webViewHeight:CGFloat = 0
-    @State var useTracking:Bool = false
     @State var purchaseWebviewModel:PurchaseWebviewModel? = nil
     var body: some View {
         GeometryReader { geometry in
@@ -47,7 +46,7 @@ struct PagePurchase: PageView {
                             viewModel: self.infinityScrollModel,
                             scrollType : .web(isDragEnd: true),
                             isRecycle:false,
-                            useTracking:self.useTracking
+                            useTracking:true
                         ){
                             BtvWebView( viewModel: self.webViewModel, useNativeScroll:false )
                                 .modifier(MatchHorizontal(height: self.webViewHeight))
@@ -118,9 +117,7 @@ struct PagePurchase: PageView {
                 default : break
                 }
             }
-            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
-            }
+
             .onReceive(dataProvider.$result) { res in
                 guard let res = res else { return }
                 if res.id != self.tag { return }

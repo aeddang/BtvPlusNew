@@ -38,7 +38,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
             viewModel:self.viewModel,
             banners: self.data.leadingBanners,
             datas: self.datas,
-            useTracking:true)
+            useTracking:self.useTracking)
         DispatchQueue.main.async {
             self.list = newList
         }

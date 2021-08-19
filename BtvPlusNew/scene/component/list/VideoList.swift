@@ -15,7 +15,7 @@ class VideoData:InfinityData{
     private(set) var watchLv:Int = 0
     private(set) var isAdult:Bool = false
     private(set) var subTitle: String? = nil
-    private(set) var count: String = "0"
+    private(set) var count: String? = nil
     private(set) var type:VideoType = .nomal
     private(set) var progress:Float? = nil
     private(set) var synopsisType:SynopsisType = .title
@@ -24,6 +24,7 @@ class VideoData:InfinityData{
     private(set) var srisId:String? = nil
   
     private(set) var isClip:Bool = false
+    private(set) var useTag:Bool = true
     private(set) var tagData: TagData? = nil
     private(set) var playTime:String? = nil
     private(set) var pageType:PageType = .btv
@@ -35,8 +36,21 @@ class VideoData:InfinityData{
         }
     }
     
-    init(pageType:PageType = .btv) {
+    var fullTitle:String? {
+        get{
+            guard let title = self.title else {return nil}
+            if let count = self.count {
+                return count + String.app.broCount + " " + title
+            } else {
+                return title
+            }
+            
+        }
+    }
+    
+    init(pageType:PageType = .btv, useTag:Bool = true) {
         self.pageType = pageType
+        self.useTag = useTag
         super.init()
     }
     
@@ -71,6 +85,7 @@ class VideoData:InfinityData{
         } else {
             isClip = cardType == .clip
         }
+        count = data.brcast_tseq_nm
         title = data.title
         watchLv = data.wat_lvl_cd?.toInt() ?? 0
         isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
@@ -498,7 +513,7 @@ struct VideoItemBody: PageView {
                     .frame(width: Dimen.icon.regularExtra, height: Dimen.icon.regularExtra)
             }
             VStack(alignment: .leading, spacing:0){
-                if let tag = self.data.tagData {
+                if self.data.useTag, let tag = self.data.tagData {
                     Tag(data: tag).modifier(MatchParent())
                 }else if let time = self.data.playTime {
                     ZStack(alignment:.bottomTrailing){
@@ -531,7 +546,7 @@ struct VideoItemBody: PageView {
         if self.data.title != nil {
             VStack(alignment: .leading, spacing:0){
                 Spacer().modifier(MatchHorizontal(height: 0))
-                if let title = self.data.title {
+                if let title = self.data.fullTitle {
                     Text(title)
                         .modifier(MediumTextStyle(size: Font.size.thinExtra))
                         .lineLimit(self.data.isClip ? 2 : 1)
@@ -572,7 +587,7 @@ struct VideoItemBodyKids: PageView {
                         .frame(width: DimenKids.icon.regular, height: DimenKids.icon.regular)
                 }
                 VStack(alignment: .leading, spacing:0){
-                    if let tag = self.data.tagData {
+                    if self.data.useTag, let tag = self.data.tagData {
                         TagKids(data: tag).modifier(MatchParent())
                     }else {
                         Spacer().modifier(MatchParent())

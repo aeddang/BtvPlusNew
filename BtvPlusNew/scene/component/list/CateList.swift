@@ -178,14 +178,14 @@ struct CateItem: PageView {
     var data:CateData
     var body: some View {
         
-        VStack(spacing:Dimen.margin.tinyExtra){
+        VStack(spacing:Dimen.margin.tiny){
             ZStack{
                 KFImage(URL(string: self.data.image))
                     .resizable()
                     .placeholder { Image(Asset.noImg1_1).resizable() }
                     .cancelOnDisappear(true)
                     .loadImmediately()
-                    .aspectRatio(contentMode: .fill)
+                    .aspectRatio(contentMode: .fit)
                     .modifier(MatchParent())
             }
             .frame(
@@ -194,7 +194,9 @@ struct CateItem: PageView {
             .background(Color.app.blueLight)
             .clipShape(Circle())
             Text(self.data.title!)
-                .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.greyLight))
+                .modifier(MediumTextStyle(
+                            size: SystemEnvironment.isTablet ? Font.size.thin :  Font.size.lightExtra,
+                            color: Color.app.greyLight))
         }
     }
     

@@ -24,7 +24,6 @@ struct PagePreviewList: PageView {
     @ObservedObject var viewModel:PlayBlockModel = PlayBlockModel()
     @State var title:String? = nil
     @State var menuId:String? = nil
-    @State var useTracking:Bool = false
     @State var safeAreaTop:CGFloat = 0
     @State var marginBottom:CGFloat = 0
     var body: some View {
@@ -46,7 +45,7 @@ struct PagePreviewList: PageView {
                         viewModel:self.viewModel,
                         pageObservable:self.pageObservable,
                         playerModel:self.playerModel,
-                        useTracking:self.useTracking,
+                        useTracking:true,
                         marginTop: Dimen.margin.thin,
                         marginBottom: self.marginBottom 
                     )
@@ -56,13 +55,9 @@ struct PagePreviewList: PageView {
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
                 if ani {
                     self.viewModel.update(menuId:self.menuId, key:nil)
                 }
-            }
-            .onReceive(self.pagePresenter.$currentTopPage){ page in
-                self.useTracking = page?.id == self.pageObject?.id
             }
             .onReceive(self.sceneObserver.$isUpdated){ update in
                 if update {

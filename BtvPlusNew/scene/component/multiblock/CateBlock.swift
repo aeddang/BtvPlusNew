@@ -416,7 +416,7 @@ struct CateBlock: PageComponent{
         }
 
         self.isPaging = true
-        withAnimation{ self.isSortAble = true }
+        withAnimation{ self.isSortAble = self.viewModel.data?.cardType == .rankingPoster  ? false : true }
         self.viewModel.request = .init(
             id: self.tag,
             type: .getGridEvent(

@@ -19,7 +19,6 @@ struct PageMyPossessionPurchase: PageView {
     @ObservedObject var collectionScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var collectionModel:PurchaseBlockModel = PurchaseBlockModel()
    
-    @State var useTracking:Bool = false
     @State var pages: [PageViewProtocol] = []
     @State var marginBottom:CGFloat = 0
     let titles: [String] = [
@@ -54,14 +53,11 @@ struct PageMyPossessionPurchase: PageView {
                 .clipped()
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
                 if ani {
                     self.collectionModel.initUpdate()
                 }
             }
-            .onReceive(self.pagePresenter.$currentTopPage){ page in
-                self.useTracking = page?.id == self.pageObject?.id
-            }
+    
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
                 withAnimation{ self.marginBottom = bottom }
             }

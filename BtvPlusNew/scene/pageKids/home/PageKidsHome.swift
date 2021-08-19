@@ -20,8 +20,7 @@ struct PageKidsHome: PageView {
     @ObservedObject var viewModel:MultiBlockModel = MultiBlockModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
-    @State var useTracking:Bool = false
-    
+      
     var body: some View {
         GeometryReader { geometry in
             PageDataProviderContent(
@@ -32,7 +31,7 @@ struct PageKidsHome: PageView {
                     pageObservable: self.pageObservable,
                     viewModel: self.viewModel,
                     infinityScrollModel: self.infinityScrollModel,
-                    useBodyTracking:self.useTracking,
+                    useBodyTracking:true,
                     useTracking:false,
                     marginTop:KidsTop.height + DimenKids.margin.regular + self.sceneObserver.safeAreaTop,
                     marginBottom: self.sceneObserver.safeAreaIgnoreKeyboardBottom
@@ -84,18 +83,8 @@ struct PageKidsHome: PageView {
                     }
                 }
             }
-            .onReceive(self.pagePresenter.$currentTopPage){ page in
-                if page?.id == self.pageObject?.id {
-                    if self.useTracking {return}
-                    self.useTracking = true
-                } else {
-                    if !self.useTracking {return}
-                    self.useTracking = false
-                   
-                }
-            }
+            
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
                 if ani {
                     self.isUiInit = true
                     self.reload()

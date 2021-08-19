@@ -19,7 +19,7 @@ struct PageCertification: PageView {
     @ObservedObject var webViewModel = WebViewModel()
     
     @State var webViewHeight:CGFloat = 0
-    @State var useTracking:Bool = false
+  
     @State var movePage:PageObject? = nil
     @State var isCompleted:Bool = false
     var body: some View {
@@ -43,7 +43,7 @@ struct PageCertification: PageView {
                             viewModel: self.infinityScrollModel,
                             scrollType : .web(isDragEnd: true),
                             isRecycle:false,
-                            useTracking:self.useTracking
+                            useTracking:true
                         ){
                             BtvWebView( viewModel: self.webViewModel )
                                 .modifier(MatchHorizontal(height: self.webViewHeight))
@@ -118,7 +118,6 @@ struct PageCertification: PageView {
                 }
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
                 if ani {
                     let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.identity
                     self.webViewModel.request = .link(linkUrl)

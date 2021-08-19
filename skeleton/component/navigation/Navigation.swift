@@ -102,13 +102,13 @@ struct NavigationBuilder{
         return NavigationButton(
             id: UUID.init().uuidString,
             body: AnyView(
-                VStack(spacing:Dimen.margin.micro){
+                VStack(spacing:Dimen.margin.tiny){
                     Image(img)
                     .renderingMode(.original).resizable()
                     .scaledToFit()
                     .frame(width:size.width, height: size.height)
                     Text(txt)
-                        .font(.custom(Font.family.black, size: textModifier.size))
+                        .font(.custom(textModifier.family, size: textModifier.size))
                         .foregroundColor(self.index != idx ? textModifier.color : (color ?? textModifier.activeColor))
                        
                 }

@@ -25,7 +25,7 @@ struct PageKidsCategoryList: PageView {
     @State var cardType:BlockData.CardType? = nil
     @State var menuId:String? = nil
     @State var blockData:BlockData? = nil
-    @State var useTracking:Bool = false
+    
     @State var marginBottom:CGFloat = 0
     @State var marginHorizontal:CGFloat = 0
     var body: some View {
@@ -50,7 +50,7 @@ struct PageKidsCategoryList: PageView {
                         pageObservable: self.pageObservable,
                         infinityScrollModel:self.infinityScrollModel,
                         viewModel:self.viewModel,
-                        useTracking:self.useTracking,
+                        useTracking:true,
                         marginBottom:self.marginBottom,
                         marginHorizontal: self.marginHorizontal,
                         spacing: DimenKids.margin.thinUltra
@@ -71,11 +71,8 @@ struct PageKidsCategoryList: PageView {
                                               cardType: self.cardType, isAdult:false, key:nil)
                     }
                 }
-                self.useTracking = ani
             }
-            .onReceive(self.pagePresenter.$currentTopPage){ page in
-                self.useTracking = page?.id == self.pageObject?.id
-            }
+            
             
             .onReceive(self.sceneObserver.$isUpdated){ update in
                 if !update {return}

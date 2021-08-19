@@ -27,7 +27,6 @@ struct PagePairingDevice: PageView {
     @State var datas:[StbData] = []
     
     @State var isReady:Bool = false
-    @State var useTracking:Bool = false
     @State var sceneOrientation: SceneOrientation = .portrait
     var body: some View {
         GeometryReader { geometry in
@@ -48,7 +47,7 @@ struct PagePairingDevice: PageView {
                         InfinityScrollView(
                             viewModel: self.infinityScrollModel,
                             marginBottom:self.sceneObserver.safeAreaBottom,
-                            useTracking:self.useTracking
+                            useTracking:true
                             
                         ){
                             
@@ -154,7 +153,6 @@ struct PagePairingDevice: PageView {
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
                 if ani {
                     self.pageInit()
                 }

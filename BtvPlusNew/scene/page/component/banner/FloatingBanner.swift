@@ -97,7 +97,7 @@ struct FloatingBanner: PageComponent {
                 .background(Color.app.white)
             }
             .frame(width: SystemEnvironment.isTablet ? 420 : 300,
-                   height: SystemEnvironment.isTablet ? 532 :430)
+                   height: SystemEnvironment.isTablet ? 602 :430)
             .background(Color.brand.bg)
             .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.medium))
         }
@@ -126,6 +126,8 @@ struct FloatingBanner: PageComponent {
         self.sendLog(action: .pageShow)
     }
     private func sendLog(action:NaviLog.Action, category:String? = "etc"){
+        if self.viewModel.index < 0 {return}
+        if self.viewModel.index >= self.datas.count {return}
         let data = self.datas[self.viewModel.index]
         var actionBody = MenuNaviActionBodyItem()
         actionBody.menu_id = data.menuId

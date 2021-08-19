@@ -27,8 +27,7 @@ struct PageModifyProfile: PageView {
     @State var characterIdx:Int = 0
   
     @State var safeAreaBottom:CGFloat = 0
-    @State var useTracking:Bool = false
-    
+     
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -49,7 +48,7 @@ struct PageModifyProfile: PageView {
                         InfinityScrollView(
                             viewModel: self.infinityScrollModel,
                             isRecycle:false,
-                            useTracking: self.useTracking
+                            useTracking: true
                             ){
                             VStack(alignment:.leading , spacing:0) {
                                 if self.editType != .nickName {
@@ -116,9 +115,7 @@ struct PageModifyProfile: PageView {
                 }
                 
             }
-            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
-            }
+            
             .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
                 withAnimation{
                     self.safeAreaBottom = pos

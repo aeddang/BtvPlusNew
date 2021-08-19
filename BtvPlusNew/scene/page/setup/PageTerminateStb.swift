@@ -20,7 +20,6 @@ struct PageTerminateStb: PageView {
     
     @State var datas:[StbData] = []
     @State var selectedData:StbData? = nil
-    @State var useTracking:Bool = false
     @State var sceneOrientation: SceneOrientation = .portrait
     var body: some View {
         GeometryReader { geometry in
@@ -41,7 +40,7 @@ struct PageTerminateStb: PageView {
                         InfinityScrollView(
                             viewModel: self.infinityScrollModel,
                             marginBottom:self.sceneObserver.safeAreaBottom,
-                            useTracking:self.useTracking
+                            useTracking:true
                             
                         ){
                             VStack(alignment:.leading , spacing:0) {
@@ -92,12 +91,6 @@ struct PageTerminateStb: PageView {
             }
             .onReceive(self.sceneObserver.$isUpdated){ _ in
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
-            }
-            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
-                if ani {
-                    
-                }
             }
             .onAppear{
                 self.sceneOrientation = self.sceneObserver.sceneOrientation

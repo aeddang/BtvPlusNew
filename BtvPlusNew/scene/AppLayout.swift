@@ -38,7 +38,7 @@ struct AppLayout: PageComponent{
             if let datas = self.floatBannerDatas {
                 FloatingBanner(datas:datas){ today in
                     if today {self.floatingBannerToDayUnvisible()}
-                    withAnimation{
+                    withAnimation(.easeOut(duration: 0.2)){
                         floatBannerDatas = nil
                     }
                 }

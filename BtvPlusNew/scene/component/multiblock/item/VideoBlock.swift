@@ -39,7 +39,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
             viewModel:self.viewModel,
             banners: self.data.leadingBanners,
             datas: self.datas,
-            useTracking:true)
+            useTracking:self.useTracking)
         DispatchQueue.main.async {
             self.listId = key
             self.list = newList

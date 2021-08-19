@@ -173,12 +173,17 @@ struct PageCategory: PageView {
             self.tabs = NavigationBuilder(
                 textModifier: TextModifier(
                     family:Font.family.medium,
-                    size: Font.size.lightExtra,
+                    size: Font.size.thin ,
                     color: Color.app.grey,
                     activeColor: Color.app.white
                     )
                 )
-            .getNavigationButtons(datas: naviDatas) 
+            .getNavigationButtons(
+                datas: naviDatas,
+                size: SystemEnvironment.isTablet
+                    ? CGSize(width: Dimen.icon.regularExtra, height:  Dimen.icon.regularExtra)
+                    : CGSize(width: Dimen.icon.thin, height: Dimen.icon.thin)
+                )
         }
         return openData
     }

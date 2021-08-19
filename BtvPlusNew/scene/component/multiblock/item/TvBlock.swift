@@ -31,7 +31,7 @@ struct TvBlock:PageComponent, BlockProtocol {
         let newList = TvList(
             viewModel:self.viewModel,
             datas: self.datas,
-            useTracking:true)
+            useTracking:self.useTracking)
         DispatchQueue.main.async {
             self.list = newList
         }

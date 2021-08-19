@@ -31,8 +31,7 @@ struct PagePairingSetupUser: PageView {
     @State var isAgree2:Bool = true
     @State var isAgree3:Bool = true
     @State var safeAreaBottom:CGFloat = 0
-    @State var useTracking:Bool = false
-
+   
     let birthList = AppUtil.getYearRange(len: 100, offset:0).map{
         $0.description + String.app.year
     }
@@ -57,7 +56,7 @@ struct PagePairingSetupUser: PageView {
                         InfinityScrollView(
                             viewModel: self.infinityScrollModel,
                             isRecycle:false,
-                            useTracking: self.useTracking
+                            useTracking: true
                             ){
                             VStack(alignment:.leading , spacing:0) {
                                 if self.editType != .nickName {
@@ -228,9 +227,6 @@ struct PagePairingSetupUser: PageView {
                     self.pageDragingModel.uiEvent = .pull(geometry, pos)
                 }
                 
-            }
-            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
             }
             .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
                 //if self.editType == .nickName {return}

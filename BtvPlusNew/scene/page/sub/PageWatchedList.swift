@@ -24,7 +24,6 @@ struct PageWatchedList: PageView {
     @ObservedObject var viewModel:WatchedBlockModel = WatchedBlockModel()
     @State var title:String? = nil
     @State var menuId:String? = nil
-    @State var useTracking:Bool = false
     @State var marginBottom:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
@@ -44,7 +43,7 @@ struct PageWatchedList: PageView {
                         infinityScrollModel:self.infinityScrollModel,
                         viewModel:self.viewModel,
                         pageObservable:self.pageObservable,
-                        useTracking:self.useTracking,
+                        useTracking:true,
                         marginBottom: self.marginBottom
                     )
                 }
@@ -53,7 +52,6 @@ struct PageWatchedList: PageView {
             }
             
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
                 if ani {
                     self.viewModel.update(menuId:self.menuId, key:nil)
                 }

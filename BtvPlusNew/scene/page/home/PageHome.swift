@@ -26,7 +26,6 @@ struct PageHome: PageView {
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var monthlyViewModel: MonthlyBlockModel = MonthlyBlockModel()
 
-    @State var useTracking:Bool = false
     @State var headerHeight:CGFloat = 0
     @State var marginHeader:CGFloat = 0
     @State var marginBottom:CGFloat = 0
@@ -42,7 +41,7 @@ struct PageHome: PageView {
                     viewModel: self.viewModel,
                     infinityScrollModel: self.infinityScrollModel,
                     viewPagerModel:self.viewPagerModel,
-                    useBodyTracking:self.useTracking,
+                    useBodyTracking:true,
                     useTracking:false,
                     marginHeader : self.marginHeader,
                     marginTop:self.headerHeight,
@@ -73,8 +72,9 @@ struct PageHome: PageView {
                 guard let evt = evt else {return}
                 if self.pagePresenter.currentTopPage?.pageID == .home {
                     switch evt {
-                    case .top : self.appSceneObserver.useTopFix = true
-                        if self.useTracking {
+                    case .top :
+                        self.appSceneObserver.useTopFix = true
+                        if self.pageObservable.layer == .top {
                             self.appSceneObserver.event = .pairingHitch(isOn: true)
                         }
                     case .down :
@@ -82,21 +82,13 @@ struct PageHome: PageView {
                         self.appSceneObserver.event = .pairingHitch(isOn: false)
                         
                     case .up :
+                        self.appSceneObserver.useTopFix = true
                         self.appSceneObserver.event = .pairingHitch(isOn: false)
                     default : break
                     }
                 }
             }
-            .onReceive(self.pagePresenter.$currentTopPage){ page in
-                if page?.id == self.pageObject?.id {
-                    if self.useTracking {return}
-                    self.useTracking = true
-                } else {
-                    if !self.useTracking {return}
-                    self.useTracking = false
-                   
-                }
-            }
+            
             .onReceive(self.pairing.authority.$purchaseLowLevelTicketList){ list in
                 guard let list = list else { return }
                 self.updatedMonthly(purchases: list, lowLevelPpm: true)
@@ -167,7 +159,6 @@ struct PageHome: PageView {
                 withAnimation{ self.marginBottom = bottom }
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
                 if ani {
                     self.reload()
                     if self.pairing.status != .pairing {
@@ -200,7 +191,7 @@ struct PageHome: PageView {
     @State var openId:String? = nil
     @State var prcPrdId:String? = nil
     @State var useFooter:Bool = false
-    
+    @State var isFree:Bool = false
     private func reset(){
         guard let obj = self.pageObject  else { return }
         DataLog.d("UPDATEED GNBDATA reset home", tag:self.tag)
@@ -258,6 +249,7 @@ struct PageHome: PageView {
     private func requestBand(){
         guard let band = self.dataProvider.bands.getData(menuId: self.menuId) else { return }
         self.currentBand = band
+        self.isFree = false
         switch band.gnbTypCd {
         case EuxpNetwork.GnbTypeCode.GNB_HOME.rawValue :
             self.useFooter = true
@@ -267,6 +259,9 @@ struct PageHome: PageView {
             self.setupBlocks()
         case EuxpNetwork.GnbTypeCode.GNB_MONTHLY.rawValue :
             self.setupOriginMonthly()
+        case EuxpNetwork.GnbTypeCode.GNB_FREE.rawValue :
+            self.isFree = true
+            self.setupBlocks()
         default: self.setupBlocks()
         }
     }
@@ -429,7 +424,10 @@ struct PageHome: PageView {
     }
     
     private func requestBlocks(blocksData:[BlockItem]){
-        self.viewModel.update(datas: blocksData , openId: self.openId, selectedTicketId:self.selectedMonthlyId)
+        self.viewModel.update(datas: blocksData ,
+                              openId: self.openId,
+                              selectedTicketId:self.selectedMonthlyId,
+                              isFree: self.isFree)
         self.openId = nil
        
     }

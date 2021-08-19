@@ -20,8 +20,7 @@ struct PageKidsMonthly: PageView {
     @ObservedObject var viewModel:MultiBlockModel = MultiBlockModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
-    @State var useTracking:Bool = false
-    
+     
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -40,8 +39,8 @@ struct PageKidsMonthly: PageView {
                         viewModel: self.viewModel,
                         infinityScrollModel: self.infinityScrollModel,
                         pageDragingModel: self.pageDragingModel,
-                        useBodyTracking:self.useTracking,
-                        useTracking:self.useTracking,
+                        useBodyTracking:true,
+                        useTracking:true,
                         marginTop: DimenKids.margin.medium,
                         marginBottom: self.sceneObserver.safeAreaIgnoreKeyboardBottom
                         )
@@ -77,18 +76,7 @@ struct PageKidsMonthly: PageView {
                 default : break
                 }
             }
-            .onReceive(self.pagePresenter.$currentTopPage){ page in
-                if page?.id == self.pageObject?.id {
-                    if self.useTracking {return}
-                    self.useTracking = true
-                } else {
-                    if !self.useTracking {return}
-                    self.useTracking = false
-                   
-                }
-            }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
                 if ani {
                     self.reload()
                 }

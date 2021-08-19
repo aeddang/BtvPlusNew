@@ -45,8 +45,6 @@ struct PageMyBenefits: PageView {
     @ObservedObject var cashModel:CouponBlockModel = CouponBlockModel()
     
     @ObservedObject var cardModel:CardBlockModel = CardBlockModel()
-   
-    @State var useTracking:Bool = false
     @State var pages: [PageViewProtocol] = []
     @State var titles: [String] = []
     var body: some View {
@@ -111,7 +109,6 @@ struct PageMyBenefits: PageView {
             }
             
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
                 if ani {
                     let coupon = CouponBlock(
                         infinityScrollModel:self.couponScrollModel,
@@ -164,9 +161,6 @@ struct PageMyBenefits: PageView {
                     }
                     
                 }
-            }
-            .onReceive(self.pagePresenter.$currentTopPage){ page in
-                self.useTracking = page?.id == self.pageObject?.id
             }
             .onReceive(self.viewPagerModel.$event){evt in
                 guard let evt = evt else {return}

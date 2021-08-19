@@ -25,14 +25,14 @@ extension EuxpNetwork{
     
 
     enum SortType: String {
-        case none = "10" // 기본
-        case popularity = "50" // 인기
+        //case none = "10" // 기본
+        case popularity = "10" // 인기
         case latest = "20" // 최신순
         case title = "30" // 타이틀
         case price = "40" // 가격
         var name: String {
             switch self {
-            case .none : return ""
+            //case .none : return ""
             case .popularity: return String.sort.popularity
             case .latest: return String.sort.latest
             case .title: return String.sort.title
@@ -276,7 +276,7 @@ class Euxp: Rest{
         params["menu_id"] = menuId ?? ""
         params["page_no"] = page?.description ?? "1"
         params["page_cnt"] = pageCnt?.description ?? EuxpNetwork.PAGE_COUNT.description
-        params["sort_typ_cd"] = sortType?.rawValue ?? EuxpNetwork.SortType.none.rawValue
+        params["sort_typ_cd"] = sortType?.rawValue ?? EuxpNetwork.SortType.popularity.rawValue
         params["version"] = version ?? EuxpNetwork.VERSION
         fetch(route: EuxpGridEvent(query: params), completion: completion, error:error)
     }
@@ -323,7 +323,7 @@ class Euxp: Rest{
         params["stb_id"] = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         
         params["profile_id"] = kid?.id
-        params["sort_typ_cd"] = sortType?.rawValue ?? EuxpNetwork.SortType.none.rawValue
+        params["sort_typ_cd"] = sortType?.rawValue ?? EuxpNetwork.SortType.popularity.rawValue
         
         params["inspect_yn"] = "N"
         params["cw_call_id"] = cwCallId ?? ""

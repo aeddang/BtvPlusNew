@@ -20,7 +20,6 @@ struct PagePairingBtv: PageView {
     @State var safeAreaBottom:CGFloat = 0
     @State var isInput = false
     @State var isFocus = false
-    @State var useTracking:Bool = false
     @State var sceneOrientation: SceneOrientation = .portrait
     
     struct TextBlock:PageComponent {
@@ -170,7 +169,6 @@ struct PagePairingBtv: PageView {
                 self.updatekeyboardStatus(on:on)
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
                 if ani {
                     DispatchQueue.main.async {
                         self.isFocus = true

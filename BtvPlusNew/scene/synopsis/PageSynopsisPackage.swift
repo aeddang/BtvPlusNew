@@ -26,7 +26,7 @@ struct PageSynopsisPackage: PageView {
     @ObservedObject var peopleScrollModel: InfinityScrollModel = InfinityScrollModel()
     @State var synopsisData:SynopsisData? = nil
     @State var isPairing:Bool? = nil
-    @State var useTracking:Bool = false
+    
     @State var sceneOrientation: SceneOrientation = .portrait
     var body: some View {
         GeometryReader { geometry in
@@ -51,7 +51,7 @@ struct PageSynopsisPackage: PageView {
                                         contentID: self.synopsisModel?.epsdId,
                                         episodeViewerData: self.episodeViewerData,
                                         summaryViewerData: self.summaryViewerData,
-                                        useTracking: self.useTracking){ posterData in
+                                        useTracking: true){ posterData in
                                         self.updateSynopsis(posterData)
                                     }
                                     .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
@@ -69,7 +69,7 @@ struct PageSynopsisPackage: PageView {
                                             episodeViewerData: self.episodeViewerData,
                                             summaryViewerData: self.summaryViewerData,
                                             useTop: false,
-                                            useTracking: self.useTracking){ posterData in
+                                            useTracking: true){ posterData in
                                             self.updateSynopsis(posterData)
                                         }
                                         .modifier(MatchVertical(width: Self.listWidth))
@@ -100,7 +100,7 @@ struct PageSynopsisPackage: PageView {
                                         isPairing: self.isPairing,
                                         contentID: self.synopsisModel?.epsdId,
                                         episodeViewerData: self.episodeViewerData,
-                                        useTracking: self.useTracking){ posterData in
+                                        useTracking: true){ posterData in
                                         self.updateSynopsis(posterData)
                                     }
                                     .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
@@ -210,14 +210,10 @@ struct PageSynopsisPackage: PageView {
                 }
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
                 if ani {
                     self.isPageUiReady = true
                     self.initPage()
                 }
-            }
-            .onReceive(self.pagePresenter.$currentTopPage){ page in
-                self.useTracking = page?.id == self.pageObject?.id
             }
             .onReceive(self.sceneObserver.$isUpdated){ _ in
                 self.sceneOrientation = self.sceneObserver.sceneOrientation

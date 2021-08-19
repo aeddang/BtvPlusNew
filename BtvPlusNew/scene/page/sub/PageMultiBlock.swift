@@ -39,7 +39,7 @@ struct PageMultiBlock: PageView {
                             pageObservable: self.pageObservable,
                             infinityScrollModel:self.cateInfinityScrollModel,
                             viewModel:self.cateBlockViewModel,
-                            useTracking:self.useTracking,
+                            useTracking:true,
                             marginTop: self.marginTop + self.sceneObserver.safeAreaTop + Dimen.app.top,
                             marginBottom: self.marginBottom
                         )
@@ -50,8 +50,8 @@ struct PageMultiBlock: PageView {
                             viewModel: self.multiBlockViewModel,
                             infinityScrollModel: self.infinityScrollModel,
                             pageDragingModel: self.pageDragingModel,
-                            useBodyTracking: self.themaType == .ticket ? false : self.useTracking,
-                            useTracking:self.useTracking,
+                            useBodyTracking: self.themaType == .ticket ? false : true,
+                            useTracking:true,
                             marginTop: self.marginTop  + Dimen.margin.thin + self.sceneObserver.safeAreaTop + Dimen.app.top,
                             marginBottom: self.marginBottom
                         )
@@ -109,7 +109,6 @@ struct PageMultiBlock: PageView {
             }
 
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
                 if ani { self.setupOriginData() }
             }
             .onReceive(self.pairing.$event){ evt in
@@ -118,16 +117,6 @@ struct PageMultiBlock: PageView {
                 switch evt {
                 case .pairingCompleted : self.setupOriginData(idx: idx )
                 default : break
-                }
-            }
-            .onReceive(self.pagePresenter.$currentTopPage){ page in
-                if page?.id == self.pageObject?.id {
-                    if self.useTracking {return}
-                    self.useTracking = true
-                    
-                } else {
-                    if !self.useTracking {return}
-                    self.useTracking = false
                 }
             }
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
@@ -185,7 +174,7 @@ struct PageMultiBlock: PageView {
     @State var tabDatas:[TextTabData]? = nil
     @State var selectedTabIdx:Int = -1
     @State var originDatas:Array<BlockItem> = []
-    @State var useTracking:Bool = false
+   
     @State var title:String? = nil
     @State var titleId:String? = nil
     @State var finalSelectedIndex:Int? = nil

@@ -149,7 +149,7 @@ class TagData{
 struct Tag: PageView {
     @EnvironmentObject var repository:Repository
     var data:TagData
-    
+    var isBig:Bool = false
     var body: some View {
         VStack(alignment: .leading, spacing: 0){
             HStack(alignment: .top, spacing: 0){
@@ -199,12 +199,12 @@ struct Tag: PageView {
             HStack(alignment: .bottom, spacing: 0){
                 if data.isFree == true {
                     Text(String.app.free)
-                        .modifier(BoldTextStyle(size: Font.size.tiny, color:Color.brand.primary))
+                        .modifier(BoldTextStyle(size: self.isBig ? Font.size.thinExtra : Font.size.tiny, color:Color.brand.primary))
                         .lineLimit(1)
                         .fixedSize()
                 }else if let price = data.price {
                     Text(price)
-                        .modifier(BoldTextStyle(size: Font.size.tiny, color:Color.app.whiteDeep))
+                        .modifier(BoldTextStyle(size:  self.isBig ? Font.size.thinExtra : Font.size.tiny, color:Color.app.whiteDeep))
                         .lineLimit(1)
                         .fixedSize()
                 }
@@ -217,7 +217,7 @@ struct Tag: PageView {
                         .cancelOnDisappear(true)
                         .loadImmediately()
                         .aspectRatio(contentMode: .fit)
-                        .frame(height: Dimen.icon.lightExtra, alignment: .trailing)
+                        .frame(height: self.isBig ? Dimen.icon.light : Dimen.icon.thinExtra, alignment: .trailing)
                         .padding(.bottom, Dimen.margin.microExtra)
                     
                 }

@@ -31,6 +31,7 @@ struct PairingHitch: PageComponent {
             Spacer().modifier(MatchParent()).background(Color.transparent.black45)
                 .onTapGesture {
                     self.closeHitch(sendLog: true)
+                    self.appSceneObserver.event = .pairingHitchClose
                 }
                 
             if self.isFullConnected, let fullConnectInfo = self.fullConnectInfo {

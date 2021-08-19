@@ -45,7 +45,7 @@ struct PageSynopsis: PageView {
     @State var synopsisData:SynopsisData? = nil
     @State var isPairing:Bool? = nil
     @State var isFullScreen:Bool = false
-    @State var useTracking:Bool = false
+    
     @State var isUiActive:Bool = true
     @State var sceneOrientation: SceneOrientation = .portrait
     @State var playerWidth: CGFloat  = 0
@@ -114,7 +114,7 @@ struct PageSynopsis: PageView {
                             
                             infinityScrollModel: self.infinityScrollModel,
                             topIdx: self.topIdx,
-                            useTracking: self.useTracking,
+                            useTracking:true,
                             uiType:self.uiType,
                             dragOpacity:self.dragOpacity
                         )
@@ -317,7 +317,6 @@ struct PageSynopsis: PageView {
                         //ComponentLog.d("isFinalPlaying resume" , tag: "PageSynopsis BtvPlayer")
                     }
                 }
-                self.useTracking = page?.id == self.pageObject?.id
             }
             .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
                 self.isFullScreen = fullScreen
@@ -330,7 +329,6 @@ struct PageSynopsis: PageView {
                 }
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
                 if ani {
                     self.isPageUiReady = true
                     self.initPage()

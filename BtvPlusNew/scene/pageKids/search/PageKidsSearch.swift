@@ -26,7 +26,7 @@ struct PageKidsSearch: PageView {
     @State var isKeyboardOn:Bool = false
     @State var isVoiceSearch:Bool = false
     @State var isInputSearch:Bool = false
-    @State var useTracking:Bool = false
+    
     @State var marginTop:CGFloat = 0
     
     var body: some View {
@@ -60,7 +60,7 @@ struct PageKidsSearch: PageView {
                                         pageObservable: self.pageObservable,
                                         pageDragingModel: self.pageDragingModel,
                                         datas: searchDatas,
-                                        useTracking: self.useTracking
+                                        useTracking:true
                                         )
                                         .modifier(MatchParent())
                                         .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
@@ -165,21 +165,12 @@ struct PageKidsSearch: PageView {
                 if err?.id != self.tag { return }
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
                 if ani {
                     self.isInputSearch = true
                     self.dataProvider.requestData(q: .init(id: self.tag, type: .getSearchKeywords, isOptional: true))
                 }
             }
-            .onReceive(self.pagePresenter.$currentTopPage){ page in
-                if page?.id == self.pageObject?.id {
-                    if self.useTracking {return}
-                    self.useTracking = true
-                } else {
-                    if !self.useTracking {return}
-                    self.useTracking = false
-                }
-            }
+            
             .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
                 self.marginTop = self.sceneObserver.safeAreaTop + DimenKids.margin.light
             }

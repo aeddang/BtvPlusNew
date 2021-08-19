@@ -23,8 +23,6 @@ struct PageCouponList: PageView {
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var viewModel:CouponBlockModel = CouponBlockModel()
     
-   
-    @State var useTracking:Bool = false
     @State var marginBottom:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
@@ -44,7 +42,7 @@ struct PageCouponList: PageView {
                         infinityScrollModel:self.infinityScrollModel,
                         viewModel:self.viewModel,
                         pageObservable:self.pageObservable,
-                        useTracking:self.useTracking,
+                        useTracking:true,
                         marginBottom:self.marginBottom + Dimen.margin.regular
                     )
                 }
@@ -53,13 +51,9 @@ struct PageCouponList: PageView {
             }
             
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
                 if ani {
                     self.viewModel.update(key:nil)
                 }
-            }
-            .onReceive(self.pagePresenter.$currentTopPage){ page in
-                self.useTracking = page?.id == self.pageObject?.id
             }
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
                 withAnimation{ self.marginBottom = bottom }

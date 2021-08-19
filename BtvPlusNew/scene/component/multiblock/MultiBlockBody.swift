@@ -17,6 +17,7 @@ class MultiBlockModel: PageDataProviderModel {
     private(set) var openId:String? = nil
     private(set) var title:String? = nil
     private(set) var selectedTicketId:String? = nil
+    private(set) var isFree:Bool = false
     
     @Published private(set) var isUpdate = false {
         didSet{ if self.isUpdate { self.isUpdate = false} }
@@ -37,8 +38,9 @@ class MultiBlockModel: PageDataProviderModel {
     }
     
     func update(datas:[BlockItem], openId:String?, selectedTicketId:String? = nil,
-                themaType:BlockData.ThemaType = .category, isAdult:Bool = false, title:String? = nil) {
+                themaType:BlockData.ThemaType = .category, isAdult:Bool = false, title:String? = nil, isFree:Bool = false) {
         self.type = .btv
+        self.isFree = isFree
         self.datas = datas.map{ block in
             BlockData().setData(block, themaType:themaType)
         }
@@ -290,6 +292,7 @@ struct MultiBlockBody: PageComponent {
             var leadingBanners:[BannerData]? = nil
             var total:Int? = nil
             let max = Self.maxCellCount
+            let useTag:Bool = !self.viewModel.isFree
             switch data.dataType {
             case .cwGrid:
                 guard let resData = res?.data as? CWGrid else {return data.setBlank()}
@@ -301,11 +304,11 @@ struct MultiBlockBody: PageComponent {
                         switch data.uiType {
                         case .poster :
                             data.posters = blocks[0...min(max, blocks.count-1)].map{ d in
-                                PosterData(pageType: self.pageType).setData(data: d, cardType: data.cardType)
+                                PosterData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
                             }
                         case .video :
                             data.videos = blocks[0...min(max, blocks.count-1)].map{ d in
-                                VideoData(pageType: self.pageType).setData(data: d, cardType: data.cardType)
+                                VideoData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
                             }
                         case .theme :
                             data.themas = blocks[0...min(max, blocks.count-1)].map{ d in
@@ -327,11 +330,11 @@ struct MultiBlockBody: PageComponent {
                             switch data.uiType {
                             case .poster :
                                 data.posters = blocks[0...min(max, blocks.count-1)].map{ d in
-                                    PosterData(pageType: self.pageType).setData(data: d, cardType: data.cardType)
+                                    PosterData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
                                 }
                             case .video :
                                 data.videos = blocks[0...min(max, blocks.count-1)].map{ d in
-                                    VideoData(pageType: self.pageType).setData(data: d, cardType: data.cardType)
+                                    VideoData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
                                 }
                             default: break
                             }
@@ -349,12 +352,12 @@ struct MultiBlockBody: PageComponent {
                 switch data.uiType {
                 case .poster :
                     data.posters = blocks[0...min(max, blocks.count-1)].map{ d in
-                        PosterData(pageType: self.pageType).setData(data: d, cardType: data.cardType)
+                        PosterData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
                     }
 
                 case .video :
                     data.videos = blocks[0...min(max, blocks.count-1)].map{ d in
-                        VideoData(pageType: self.pageType).setData(data: d, cardType: data.cardType)
+                        VideoData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
                     }
                     
                 case .theme :
@@ -375,11 +378,11 @@ struct MultiBlockBody: PageComponent {
                 switch data.uiType {
                 case .poster :
                     data.posters = blocks[0...min(max, blocks.count-1)].map{ d in
-                        PosterData(pageType: self.pageType).setData(data: d, cardType: data.cardType)
+                        PosterData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
                     }
                 case .video :
                     data.videos = blocks[0...min(max, blocks.count-1)].map{ d in
-                        VideoData(pageType: self.pageType).setData(data: d, cardType: data.cardType)
+                        VideoData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
                     }
                 default: break
                 }
@@ -396,11 +399,11 @@ struct MultiBlockBody: PageComponent {
                 switch data.uiType {
                 case .poster :
                     data.posters = watchBlocks.map{ d in
-                        PosterData(pageType: self.pageType).setData(data: d, cardType: data.cardType)
+                        PosterData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
                     }
                 case .video :
                     data.videos = watchBlocks.map{ d in
-                        VideoData(pageType: self.pageType).setData(data: d, cardType: data.cardType)
+                        VideoData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
                     }
                 default: break
                 }

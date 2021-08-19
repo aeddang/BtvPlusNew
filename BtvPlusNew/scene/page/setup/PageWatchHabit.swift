@@ -16,7 +16,6 @@ struct PageWatchHabit: PageView {
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var webViewModel = WebViewModel()
-    @State var useTracking:Bool = false
     @State var webViewHeight:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
@@ -38,7 +37,7 @@ struct PageWatchHabit: PageView {
                             viewModel: self.infinityScrollModel,
                             scrollType : .web(isDragEnd: true),
                             isRecycle:false,
-                            useTracking:self.useTracking ){
+                            useTracking:true ){
                             BtvWebView( viewModel: self.webViewModel )
                                 .modifier(MatchHorizontal(height: self.webViewHeight))
                                 .onReceive(self.webViewModel.$screenHeight){height in
@@ -87,7 +86,6 @@ struct PageWatchHabit: PageView {
                 }
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
                 if ani {
                     let path = ApiPath.getRestApiPath(.WEB) + BtvWebView.watchHabit
                     self.webViewModel.request = .link(path)

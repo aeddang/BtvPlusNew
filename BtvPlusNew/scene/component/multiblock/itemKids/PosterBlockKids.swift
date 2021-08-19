@@ -32,7 +32,7 @@ struct PosterBlockKids:PageComponent, BlockProtocol {
             viewModel:self.viewModel,
             banners: self.data.leadingBanners,
             datas: self.datas,
-            useTracking:true,
+            useTracking:self.useTracking,
             margin:max(self.sceneObserver.safeAreaStart,self.sceneObserver.safeAreaEnd) + DimenKids.margin.regular
             )
             

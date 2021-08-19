@@ -81,7 +81,7 @@ struct PageSceneModel: PageModel {
     }
     
     func getCloseExceptions() -> [PageID]? {
-        return [.synopsis]
+        return PageSynopsis.useLayer ? [.synopsis] : nil
     }
     
     func isHistoryPage(_ pageObject:PageObject ) -> Bool {
@@ -102,7 +102,7 @@ struct PageSceneModel: PageModel {
     
     static func needBottomTab(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
-        case .home, .category, .multiBlock, .search, .my: return true
+        case .home, .category, .multiBlock, .search, .my, .categoryList: return true
         default : return false
         }
     }

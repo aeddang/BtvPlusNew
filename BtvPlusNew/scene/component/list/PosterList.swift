@@ -68,9 +68,7 @@ class PosterData:InfinityData{
         isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
         originImage = data.poster_filename_v
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: type.size, isAdult: self.isAdult)
-        if self.useTag {
-            tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
-        }
+        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
        
         index = idx
         epsdId = data.epsd_id
@@ -89,9 +87,7 @@ class PosterData:InfinityData{
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
         watchLv = data.wat_lvl_cd?.toInt() ?? 0
-        if self.useTag {
-            tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
-        }
+        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         originImage = data.poster_filename_v
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: type.size, isAdult: self.isAdult)
         
@@ -110,9 +106,7 @@ class PosterData:InfinityData{
         epsdId = data.epsd_id
         isAdult = data.adult?.toBool() ?? false
         watchLv = data.level?.toInt() ?? 0
-        if self.useTag {
-            tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
-        }
+        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         originImage = data.poster
         image = ImagePath.thumbImagePath(filePath: data.poster, size: type.size, isAdult: self.isAdult)
         
@@ -130,9 +124,7 @@ class PosterData:InfinityData{
         epsdId = data.epsd_id
         isAdult = data.adult?.toBool() ?? false
         watchLv = data.level?.toInt() ?? 0
-        if self.useTag {
-            tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
-        }
+        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         originImage = data.thumbnail
         image = ImagePath.thumbImagePath(filePath: data.thumbnail, size: type.size, isAdult: self.isAdult)
         
@@ -149,9 +141,8 @@ class PosterData:InfinityData{
         epsdId = data.epsd_id
         isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
         watchLv = data.wat_lvl_cd?.toInt() ?? 0
-        if self.useTag {
-            tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
-        }
+        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         originImage = data.poster_filename_v
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: type.size, isAdult: self.isAdult)
@@ -168,9 +159,7 @@ class PosterData:InfinityData{
         epsdId = data.epsd_id
         //isAdult = data.adult?.toBool() ?? false
         watchLv = data.level?.toInt() ?? 0
-        if self.useTag {
-            tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
-        }
+        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         originImage = data.poster
         image = ImagePath.thumbImagePath(filePath: data.poster , size: type.size, isAdult: self.isAdult)
         
@@ -186,9 +175,8 @@ class PosterData:InfinityData{
         setCardType(cardType)
         title = data.title
         watchLv = data.level?.toInt() ?? 0
-        if self.useTag {
-            tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
-        }
+        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         originImage = data.poster
         image = ImagePath.thumbImagePath(filePath: data.poster, size: type.size, isAdult: self.isAdult)
@@ -286,6 +274,15 @@ enum PosterType {
             case .cell(let size, _ ): return size
             case .cellKids(let size, _ ): return size
             case .kids: return ListItemKids.poster.type01
+            }
+        }
+    }
+    
+    var isBigTag:Bool {
+        get{
+            switch self {
+            case .big: return true
+            default : return false
             }
         }
     }
@@ -600,9 +597,9 @@ struct PosterItem: PageView {
             ImageView(url: self.data.image, contentMode: .fit, noImg: self.data.type.noImg)
                 .modifier(MatchParent())
             
-            if let tag = self.data.tagData {
+            if self.data.useTag, let tag = self.data.tagData {
                 if tag.pageType == .btv {
-                    Tag(data: tag).modifier(MatchParent())
+                    Tag(data: tag, isBig: self.data.type.isBigTag).modifier(MatchParent())
                 } else {
                     TagKids(data: tag).modifier(MatchParent())
                 }

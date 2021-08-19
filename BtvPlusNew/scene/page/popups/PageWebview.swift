@@ -24,7 +24,7 @@ struct PageWebview: PageView {
     @ObservedObject var webViewModel = WebViewModel()
     
     @State var webViewHeight:CGFloat = 0
-    @State var useTracking:Bool = false
+   
     @State var title:String? = nil
 
     var body: some View {
@@ -50,7 +50,7 @@ struct PageWebview: PageView {
                             viewModel: self.infinityScrollModel,
                             scrollType : .web(isDragEnd: true),
                             isRecycle:false,
-                            useTracking:self.useTracking ){
+                            useTracking:true ){
                             BtvWebView( viewModel: self.webViewModel )
                                 .modifier(MatchHorizontal(height: self.webViewHeight))
                                 .onReceive(self.webViewModel.$screenHeight){height in
@@ -94,9 +94,7 @@ struct PageWebview: PageView {
                 default : do{}
                 }
             }
-            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
-            }
+            
             .onAppear{
                 guard let obj = self.pageObject  else { return }
                 self.title = obj.getParamValue(key: .title) as? String

@@ -26,7 +26,6 @@ struct PageSearch: PageView {
     @State var isKeyboardOn:Bool = false
     @State var isVoiceSearch:Bool = false
     @State var isInputSearch:Bool = false
-    @State var useTracking:Bool = false
     @State var marginBottom:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
@@ -81,7 +80,7 @@ struct PageSearch: PageView {
                                     total:self.total,
                                     keyword: self.keyword,
                                     datas: self.searchDatas,
-                                    useTracking: self.useTracking
+                                    useTracking: true
                                     )
                                     .modifier(MatchParent())
                                     .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
@@ -206,20 +205,10 @@ struct PageSearch: PageView {
                 if err?.id != self.tag { return }
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
                 if ani {
                     self.isInputSearch = true
                     self.viewModel.onAppear()
                     self.dataProvider.requestData(q: .init(id: self.tag, type: .getSearchKeywords, isOptional: true))
-                }
-            }
-            .onReceive(self.pagePresenter.$currentTopPage){ page in
-                if page?.id == self.pageObject?.id {
-                    if self.useTracking {return}
-                    self.useTracking = true
-                } else {
-                    if !self.useTracking {return}
-                    self.useTracking = false
                 }
             }
             .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in

@@ -19,7 +19,7 @@ struct PageAdultCertification: PageView {
     @ObservedObject var webViewModel = WebViewModel()
     
     @State var webViewHeight:CGFloat = 0
-    @State var useTracking:Bool = false
+    
     @State var movePage:PageObject? = nil
     @State var isInfo:Bool = true
     @State var isfail:Bool = false
@@ -45,7 +45,7 @@ struct PageAdultCertification: PageView {
                             viewModel: self.infinityScrollModel,
                             scrollType : .web(isDragEnd: true),
                             isRecycle:false,
-                            useTracking:self.useTracking
+                            useTracking:true
                         ){
                             BtvWebView( viewModel: self.webViewModel )
                                 .modifier(MatchHorizontal(height: self.webViewHeight))
@@ -165,9 +165,7 @@ struct PageAdultCertification: PageView {
                 default : do{}
                 }
             }
-            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
-            }
+            
             .onAppear{
                 guard let obj = self.pageObject  else { return }
                 if let data = obj.getParamValue(key: .data) as? PageObject {

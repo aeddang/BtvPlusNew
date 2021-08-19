@@ -171,6 +171,7 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
                                 Spacer()
                                 Button(action: {
                                     self.viewModel.uiEvent = .scrollTo(self.viewModel.topIdx, .top)
+                                    
                                 }){
                                     Image(onTopButton)
                                         .renderingMode(.original).resizable()
@@ -199,7 +200,9 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
                 .onChange(of: self.scrollIdx, perform: { idx in
                     guard let idx = idx else {return}
                     if idx == -1 {return}
-                    reader.scrollTo(idx, anchor: anchor)
+                    withAnimation{
+                        reader.scrollTo(idx, anchor: anchor)
+                    }
                     self.scrollIdx = -1
                 })
                 .onReceive(self.viewModel.$scrollStatus){ stat in

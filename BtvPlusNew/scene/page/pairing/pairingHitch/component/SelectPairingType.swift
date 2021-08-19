@@ -23,8 +23,9 @@ struct SelectPairingType: View {
                 .modifier(MatchHorizontal(height: SystemEnvironment.isTablet ? 33 : 27))
                 .padding(.top, Dimen.margin.medium)
             Text( String.pairingHitch.select)
+                .kerning(Font.kern.thin)
                 .modifier( MediumTextStyle(
-                        size: Font.size.lightExtra,
+                        size: SystemEnvironment.isTablet ? Font.size.thinExtra : Font.size.lightExtra,
                         color: Color.app.blackExtra)
                 )
                 .multilineTextAlignment(.center)
@@ -49,7 +50,7 @@ struct SelectPairingType: View {
             
             Text( String.pairingHitch.selectAppleTip)
                 .modifier( MediumTextStyle(
-                        size: Font.size.thinExtra,
+                        size: SystemEnvironment.isTablet ? Font.size.tinyExtra : Font.size.thinExtra,
                         color: Color.app.greyDeep)
                 )
                 .multilineTextAlignment(.center)

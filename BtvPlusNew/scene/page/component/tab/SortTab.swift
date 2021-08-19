@@ -30,7 +30,7 @@ struct SortTab: PageComponent{
     var body: some View {
         HStack(alignment:.center, spacing: Dimen.margin.thin){
             Text(String.app.total + self.count.description + String.app.count)
-                .modifier(BoldTextStyle(
+                .modifier(MediumTextStyle(
                     size: Font.size.lightExtra,
                     color: Color.app.white)
                 )

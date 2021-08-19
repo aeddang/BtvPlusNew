@@ -39,7 +39,6 @@ struct PageMyRegistCard: PageView {
     @State var birthDate:Date? = nil
     @State var birth:String = ""
     @State var isForeigner:Bool = false
-    @State var useTracking:Bool = false
     @State var safeAreaBottom:CGFloat = 0
     @State var useEdit:[EditType] = []
         
@@ -64,7 +63,7 @@ struct PageMyRegistCard: PageView {
                             viewModel: self.infinityScrollModel,
                             marginBottom:self.safeAreaBottom,
                             isRecycle:false,
-                            useTracking: self.useTracking
+                            useTracking: true
                             ){
                             VStack(alignment:.leading ,
                                    spacing:Self.spacing) {
@@ -220,7 +219,6 @@ struct PageMyRegistCard: PageView {
                 
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                self.useTracking = ani
                 if ani {
                     self.cardNoFocus = 0
                 }

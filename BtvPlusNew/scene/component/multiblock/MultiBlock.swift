@@ -41,6 +41,7 @@ struct MultiBlock:PageComponent {
     var header:PageViewProtocol? = nil
     var headerSize: CGFloat = 0
     var useFooter:Bool = false
+    var isHorizontal:Bool = false
     var isRecycle = true
     var isLegacy:Bool = false
 
@@ -134,8 +135,11 @@ struct MultiBlock:PageComponent {
                 
                 if let topDatas = self.topDatas ,!topDatas.isEmpty {
                     self.getTopBanner()
-                    .modifier(MatchHorizontal(height:  TopBanner.uiRange))
-                    .modifier(ListRowInset(spacing: TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange))
+                        .modifier(MatchHorizontal(height: isHorizontal ? TopBanner.uiRangeHorizontal : TopBanner.uiRange))
+                    .modifier(ListRowInset(spacing: isHorizontal
+                                            ? TopBanner.heightHorizontal - self.marginTop + self.marginHeader - TopBanner.uiRangeHorizontal
+                                            : TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange
+                    ))
                 }
                 
                 if let datas = self.monthlyDatas  {

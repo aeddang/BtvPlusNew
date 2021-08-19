@@ -11,15 +11,20 @@ import SwiftUI
 import Combine
 extension TopBanner{
     static let height:CGFloat = SystemEnvironment.isTablet ? 456 : 477
+    static let heightHorizontal:CGFloat = 532
     static let uiRange:CGFloat = 320
+    static let uiRangeHorizontal:CGFloat = 400
     static let barWidth:CGFloat = Dimen.bar.medium
     static let imageHeight:CGFloat = SystemEnvironment.isTablet ? 500 : 720
+    static let imageHeightHorizontal:CGFloat = 667
     static let barHeight = Dimen.line.medium
     static let marginBottom = SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.medium
     static let marginBottomBar = SystemEnvironment.isTablet ? Dimen.margin.mediumExtra : Dimen.margin.heavy
     static let maginBottomLogo = (Self.imageHeight - Self.height) + (Self.marginBottom + Self.barHeight + Dimen.margin.medium)
+    static let maginBottomLogoHorizontal = (Self.imageHeightHorizontal - Self.heightHorizontal) + (Self.marginBottom + Self.barHeight + Dimen.margin.medium)
 }
 struct TopBanner: PageComponent {
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var pageObservable:PageObservable 
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
@@ -27,7 +32,7 @@ struct TopBanner: PageComponent {
     var datas: [BannerData]
      
     @State var pages: [PageViewProtocol] = []
-    
+    @State var isHorizontal:Bool = false
    
     var action:((_ idx:Int) -> Void)? = nil
     var body: some View {
@@ -35,12 +40,16 @@ struct TopBanner: PageComponent {
             viewModel : self.viewModel,
             pages: self.pages
             )
-        .modifier(MatchHorizontal(height: TopBanner.uiRange))
+        .modifier(MatchHorizontal(height: isHorizontal ? TopBanner.uiRangeHorizontal : TopBanner.uiRange))
         .onReceive(self.pagePresenter.$currentTopPage){ page in
             self.isTop = self.pageObservable.pageObject?.id == page?.id
             self.isTop ? self.autoChange() : self.autoChangeCancel()
         }
-       
+        .onReceive(self.sceneObserver.$isUpdated) { update in
+            if !update {return}
+            if !SystemEnvironment.isTablet {return}
+            self.isHorizontal = self.sceneObserver.sceneOrientation == .landscape
+        }
         .onReceive(self.viewModel.$status){ status in
             switch status {
             case .stop : self.autoChange()
@@ -81,7 +90,9 @@ struct TopBanner: PageComponent {
             }
         }
         .onAppear(){
-            
+            if SystemEnvironment.isTablet {
+                self.isHorizontal = self.sceneObserver.sceneOrientation == .landscape
+            }
         }
         .onDisappear(){
             self.autoChangeCancel()

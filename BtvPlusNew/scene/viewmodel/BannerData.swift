@@ -40,12 +40,23 @@ class BannerData:InfinityData, PageProtocol{
     private(set) var resourceImage: String? = nil
     private(set) var logo: String? = nil
     private(set) var title: String? = nil
-    private(set) var subTitle: String? = nil
     private(set) var outLink:String? = nil
     private(set) var inLink:String? = nil
     private(set) var move:PageID? = nil
     private(set) var moveData:[PageParam:Any]? = nil
     private(set) var bgColor:Color? = nil
+    
+    private(set) var subTitle1: String? = nil
+    private(set) var subTitleColor1:Color = Color.app.grey
+    
+    private(set) var subTitle2: String? = nil
+    private(set) var subTitleColor2:Color = Color.app.grey
+    
+    private(set) var subTitle3: String? = nil
+    private(set) var subTitleColor3:Color = Color.app.grey
+    
+    
+    
     private(set) var type:BannerType = .list
     
     private(set) var menuId:String? = nil
@@ -97,21 +108,16 @@ class BannerData:InfinityData, PageProtocol{
                 logo = ImagePath.thumbImagePath(filePath: data.logo_img_path, size: CGSize(width: 200, height: 0), convType: .alpha)
                 
                 if let str = data.bnr_img_expl {
-                    subTitle = str.isEmpty ? nil : str
+                    subTitle1 = str.isEmpty ? nil : str
+                    subTitleColor1 = getExplainTextColor(data.bnr_img_expl_typ_cd)
                 }
                 if let str = data.bnr_img_btm_expl , !str.isEmpty{
-                    if subTitle == nil || subTitle?.isEmpty == true {
-                        subTitle = str
-                    }else{
-                        subTitle! += ("\n" + str)
-                    }
+                    subTitle2 = str.isEmpty ? nil : str
+                    subTitleColor2 = getExplainTextColor(data.bnr_img_btm_expl_typ_cd)
                 }
                 if let str = data.bnr_img_btm_expl2 , !str.isEmpty {
-                    if subTitle == nil || subTitle?.isEmpty == true {
-                        subTitle = str
-                    }else{
-                        subTitle! += ("\n" + str)
-                    }
+                    subTitle3 = str.isEmpty ? nil : str
+                    subTitleColor3 = getExplainTextColor(data.bnr_img_btm_expl_typ_cd2) 
                 }
             }
             self.type = .top
@@ -123,6 +129,17 @@ class BannerData:InfinityData, PageProtocol{
         index = idx
         parseAction(data: data)
         return self
+    }
+    
+    func getExplainTextColor(_ explainType: String?) -> Color{
+        guard let type = explainType else {
+            return Color.app.grey
+        }
+        switch type {
+        case "03": return Color.brand.primary
+        case "04" : return Color.app.brownExtra
+        default: return  Color.app.grey
+        }
     }
     
     @discardableResult

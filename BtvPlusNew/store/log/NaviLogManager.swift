@@ -140,12 +140,14 @@ class NaviLogManager : ObservableObject, PageProtocol {
     
     func actionLog(_ action:NaviLog.Action = .pageShow, pageId:NaviLog.PageId,
                    actionBody:MenuNaviActionBodyItem? = nil,
-                   contentBody:MenuNaviContentsBodyItem? = nil){
+                   contentBody:MenuNaviContentsBodyItem? = nil,
+                   memberBody:MenuNaviMemberItem? = nil
+                   ){
         
         let data = NaviLogData()
         data.actionBody = actionBody
         data.contentsBody = contentBody
-        data.member = self.currentMemberItem
+        data.member = memberBody ?? self.currentMemberItem
         if let realNameData = self.getRealNameData(pageID: pageId, action: action, naviLogData: data) {
             self.send(realNameData, isAnonymous: false)
         }
@@ -156,12 +158,14 @@ class NaviLogManager : ObservableObject, PageProtocol {
     
     func actionLog(_ action:NaviLog.Action = .pageShow,
                    actionBody:MenuNaviActionBodyItem? = nil,
-                   contentBody:MenuNaviContentsBodyItem? = nil){
+                   contentBody:MenuNaviContentsBodyItem? = nil,
+                   memberBody:MenuNaviMemberItem? = nil
+                   ){
         
         let data = NaviLogData()
         data.actionBody = actionBody
         data.contentsBody = contentBody
-        data.member = self.currentMemberItem
+        data.member = memberBody ?? self.currentMemberItem
         if let realNameData = self.getRealNameData(page:self.currentTopPage, pageID: self.currentPageId, action: action, naviLogData: data) {
             self.send(realNameData, isAnonymous: false)
         }
@@ -191,7 +195,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
         if !isAnonymous {
             DataLog.d("page_id : " + (data.page_id ?? "") , tag: self.tag )
             DataLog.d("action_id : " + (data.action_id ?? "") , tag: self.tag )
-            DataLog.d("vod_watch_type : " + (data.vod_watch_type ?? "") , tag: self.tag )
+            if let watchType = data.vod_watch_type { DataLog.d("vod_watch_type : " + watchType , tag: self.tag )}
             if let action = data.action_body {
                 DataLog.d("send action : "
                             + "config : " +  (action.config ?? "") + " "

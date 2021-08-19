@@ -28,6 +28,8 @@ struct NaviLog {
         case purchaseOrderCompleted = "/purchase/order_completed"   // 상품구매완료
         case event = "/event"
         
+        case networkError = "/network_error"
+        
         case appPush = "/app_push"
         
     }

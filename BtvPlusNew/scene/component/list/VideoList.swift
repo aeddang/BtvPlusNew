@@ -40,6 +40,7 @@ class VideoData:InfinityData{
         get{
             guard let title = self.title else {return nil}
             if let count = self.count {
+                if count.isEmpty {return title}
                 return count + String.app.broCount + " " + title
             } else {
                 return title

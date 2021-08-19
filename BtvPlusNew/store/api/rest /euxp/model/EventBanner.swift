@@ -71,6 +71,7 @@ struct EventBannerItem : Codable {
     private(set) var guide_imgs:Array<ImagePathItem>? = nil // 이용안내 가이드 이미지 목록
     private(set) var bnr_img_expl_typ_cd:String? = nil    // 배너 이미지 설명 유형 코드
     private(set) var bnr_img_btm_expl_typ_cd:String? = nil    // 배너 이미지 하위 설명 유형 코드
+    private(set) var bnr_img_btm_expl_typ_cd2: String?  // 배너 이미지 하위 설명 유형 코드2
     private(set) var bnr_img_expl:String? = nil   // 배너 이미지 설명
     private(set) var bnr_img_btm_expl:String? = nil   // 배너 이미지 하위 설명
     private(set) var bnr_img_btm_expl2:String? = nil   // 배너 이미지 하위 설명

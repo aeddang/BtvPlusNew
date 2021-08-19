@@ -21,7 +21,35 @@ class WatchedData:InfinityData{
     private(set) var synopsisData:SynopsisData? = nil
 
     private(set) var srisId:String? = nil
+    private(set) var actionLog:MenuNaviActionBodyItem? = nil
+    private(set) var contentLog:MenuNaviContentsBodyItem? = nil
+    var hasLog:Bool {
+        get{
+            return actionLog != nil || contentLog != nil
+        }
+    }
     
+    func setNaviLog(data:WatchItem? = nil) -> WatchedData  {
+        self.actionLog = .init(category:"모바일btv")
+        self.contentLog = MenuNaviContentsBodyItem(
+            type: "vod",
+            title: self.title,
+            channel_name: nil,
+            genre_text: nil,
+            genre_code: nil,
+            paid: nil,
+            purchase: nil,
+            episode_id: self.synopsisData?.epsdId,
+            episode_resolution_id: self.synopsisData?.epsdRsluId,
+            product_id: nil,
+            purchase_type: nil,
+            monthly_pay: nil,
+            running_time: data?.watch_time,
+            list_price: nil
+            
+        )
+        return self
+    }
     func setData(data:WatchItem, idx:Int = -1) -> WatchedData {
         if let rt = data.watch_rt?.toInt() {
             self.progress = Float(rt) / 100.0
@@ -40,7 +68,9 @@ class WatchedData:InfinityData{
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
-        return self
+        
+        
+        return self.setNaviLog(data: data)
     }
     
     func setDummy(_ idx:Int = -1) -> WatchedData {
@@ -59,6 +89,7 @@ class WatchedData:InfinityData{
 struct WatchedList: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[WatchedData]
     var useTracking:Bool = false
@@ -87,6 +118,11 @@ struct WatchedList: PageComponent{
                             .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.tinyExtra))
                             .onTapGesture {
                                 guard let synopsisData = data.synopsisData else { return }
+                                
+                                if data.hasLog {
+                                    self.naviLogManager.actionLog(.clickRecentContentsList, actionBody: data.actionLog, contentBody: data.contentLog)
+                                }
+                                
                                 self.pagePresenter.openPopup(
                                     PageProvider.getPageObject(.synopsis)
                                         .addParam(key: .data, value: synopsisData)

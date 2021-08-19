@@ -193,7 +193,7 @@ extension PageSynopsis {
                  config:String? = nil,
                  category: String?, result: String? = nil
                  ){
-        if action == .pageShow, let synopsisModel = self.synopsisModel{
+        if pageID == nil && action == .pageShow, let synopsisModel = self.synopsisModel{
             self.naviLogManager.setupSysnopsis(synopsisModel)
         }
         let result = result ?? self.synopsisData?.synopType.logResult

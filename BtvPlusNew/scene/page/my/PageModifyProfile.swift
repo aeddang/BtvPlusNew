@@ -16,6 +16,7 @@ struct PageModifyProfile: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var keyboardObserver:KeyboardObserver
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var dataProvider:DataProvider
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -171,6 +172,14 @@ struct PageModifyProfile: PageView {
     func inputCompleted() {
         if !self.isInputCompleted() { return }
         guard let user = self.pairing.user else { return }
+        
+        self.naviLogManager.actionLog(.clickProfileConfirm,
+                                      actionBody: .init(
+                                        menu_id: self.characterIdx.description,
+                                        menu_name: self.characterIdx.description),
+                                      memberBody: .init( nickname: self.nickName)
+        )
+            
         if self.nickName != user.nickName{
             let modifyData = ModifyUserData(nickName: self.nickName, characterIdx: self.characterIdx)
             self.dataProvider.requestData(q: .init(type: .updateUser(modifyData), isOptional: false))

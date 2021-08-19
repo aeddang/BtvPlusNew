@@ -92,6 +92,13 @@ class BlockData:InfinityData, ObservableObject{
         }
         return self
     }
+    @discardableResult
+    func setData(grids:[GridsItem]) -> BlockData{
+        childrenBlock = grids.map{ g in
+            BlockData().setData(parent:self, grid: g)
+        }
+        return self
+    }
     
     func setData(parent:BlockData, grid:GridsItemKids) -> BlockData{
         self.uiType = parent.uiType
@@ -117,6 +124,47 @@ class BlockData:InfinityData, ObservableObject{
                 }
                 self.isSortAble = true
                 */
+            default: break
+            }
+        }
+        
+        var listHeight:CGFloat = 0
+        var blockHeight:CGFloat = 0
+        let tabHeight:CGFloat =  MultiBlockBody.tabHeightKids
+        
+        if let size = posters?.first?.type {
+            listHeight = size.size.height
+            blockHeight = listHeight + tabHeight
+        }
+        if let size = videos?.first{
+            listHeight = size.type.size.height + size.bottomHeight
+            blockHeight = listHeight + tabHeight
+        }
+        if blockHeight != 0 {
+            self.listHeight = blockHeight
+        }
+        self.setDatabindingCompleted(total: grid.block_cnt?.toInt() ?? 0)
+        return self
+    }
+    
+    func setData(parent:BlockData, grid:GridsItem) -> BlockData{
+        self.uiType = parent.uiType
+        self.cardType = parent.cardType
+        self.dataType = parent.dataType
+        self.name = grid.sub_title ?? parent.name
+        self.cwCallId = parent.cwCallId
+        
+        let max = MultiBlockBody.maxCellCount
+        if let blocks = grid.block {
+            switch self.uiType {
+            case .poster :
+                posters = blocks[0...min(max, blocks.count-1)].map{ d in
+                    PosterData().setData(data: d, cardType: cardType)
+                }
+            case .video :
+                videos = blocks[0...min(max, blocks.count-1)].map{ d in
+                    VideoData().setData(data: d, cardType: cardType)
+                }
             default: break
             }
         }
@@ -271,7 +319,7 @@ class BlockData:InfinityData, ObservableObject{
         return self
     }
     
-    func getRequestApi(apiId:String? = nil, pairing:PairingStatus, kid:Kid? = nil, sortType:EuxpNetwork.SortType? = Optional.none, page:Int = 1, isOption:Bool = true) -> ApiQ? {
+    func getRequestApi(apiId:String? = nil, pairing:PairingStatus, kid:Kid? = nil, sortType:EuxpNetwork.SortType? = nil, page:Int = 1, isOption:Bool = true) -> ApiQ? {
         self.kid = kid
         
         switch self.dataType {
@@ -342,7 +390,7 @@ class BlockData:InfinityData, ObservableObject{
         status = .passive
     }
     
-    func setDatabindingCompleted(total:Int? = nil, title:String? = nil){
+    func setDatabindingCompleted(total:Int? = nil, parentTitle:String? = nil, modifyTitle:String? = nil){
         if self.status != .initate { return }
         if isCountView, let count = total {
             self.subName = count.description
@@ -352,7 +400,8 @@ class BlockData:InfinityData, ObservableObject{
                 data.setRank(idx)
             }
         }
-        self.parentTitle = title
+        if let modifyTitle = modifyTitle { self.name = modifyTitle }
+        self.parentTitle = parentTitle
         self.status = .active
     }
     
@@ -487,6 +536,14 @@ class BlockData:InfinityData, ObservableObject{
         bannerList,
         kidsHome,
         kidsTicket
+        
+        var listType: CateBlock.ListType? {
+            switch self {
+            case .poster: return .poster
+            case .video: return .video
+            default : return nil
+            }
+        }
     }
     
     enum ThemaType: String, Codable {

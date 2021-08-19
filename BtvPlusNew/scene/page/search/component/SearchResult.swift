@@ -41,8 +41,7 @@ struct SearchResult: PageComponent{
                 marginTop:Dimen.margin.regular,
                 marginBottom: Dimen.app.bottom,
                 isRecycle:true,
-                isLegacy:false
-                )
+                isLegacy:false)
             .background(Color.brand.bg)
         }
     }//body

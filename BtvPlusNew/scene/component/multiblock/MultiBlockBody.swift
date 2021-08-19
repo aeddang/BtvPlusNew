@@ -14,7 +14,7 @@ class MultiBlockModel: PageDataProviderModel {
     private(set) var datas:[BlockData]? = nil
     private(set) var requestSize:Int = 0
     private(set) var isAdult:Bool = false
-    private(set) var openId:String? = nil
+    fileprivate(set) var openId:String? = nil
     private(set) var title:String? = nil
     private(set) var selectedTicketId:String? = nil
     private(set) var isFree:Bool = false
@@ -116,9 +116,11 @@ extension MultiBlockBody {
 }
 
 struct MultiBlockBody: PageComponent {
+   
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
     var pageObservable:PageObservable
     var viewModel:MultiBlockModel = MultiBlockModel()
@@ -147,7 +149,7 @@ struct MultiBlockBody: PageComponent {
     @State var reloadDegreeMax:Double = Double(InfinityScrollModel.PULL_COMPLETED_RANGE)
     @State var headerOffset:CGFloat = 0
     @State var needAdult:Bool = false
-    
+    @State var isHorizontal:Bool = false
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -166,7 +168,10 @@ struct MultiBlockBody: PageComponent {
                                 datas: self.topDatas!,
                                 ratio: 1.0 + (CGFloat(self.reloadDegree/self.reloadDegreeMax)/5)
                             )
-                            .padding(.top, max(self.headerOffset, -TopBanner.imageHeight))
+                            .padding(.top, isHorizontal
+                                        ? max(self.headerOffset, -TopBanner.imageHeightHorizontal)
+                                        : max(self.headerOffset, -TopBanner.imageHeight)
+                            )
                             .offset(y: self.marginHeader )
                                 
                         }
@@ -174,7 +179,11 @@ struct MultiBlockBody: PageComponent {
                             progress: self.$reloadDegree,
                             progressMax: self.reloadDegreeMax
                         )
-                        .padding(.top, self.topDatas != nil ? (TopBanner.height + self.marginHeader)  : self.marginTop)
+                        .padding(.top, self.topDatas != nil
+                                    ? isHorizontal
+                                        ? (TopBanner.heightHorizontal + self.marginHeader)
+                                        : (TopBanner.height + self.marginHeader)
+                                    : self.marginTop)
                                  
                         MultiBlock(
                             viewModel: self.viewModel,
@@ -197,6 +206,7 @@ struct MultiBlockBody: PageComponent {
                             header:self.header,
                             headerSize:self.headerSize,
                             useFooter:self.useFooter,
+                            isHorizontal: self.isHorizontal,
                             isRecycle:self.isRecycle,
                             isLegacy:Self.isLegacy,
                             action:self.action)
@@ -228,6 +238,7 @@ struct MultiBlockBody: PageComponent {
                             header:self.header,
                             headerSize:self.headerSize,
                             useFooter:self.useFooter,
+                            isHorizontal: self.isHorizontal,
                             isRecycle:self.isRecycle,
                             isLegacy:Self.isLegacy,
                             action:self.action)
@@ -293,31 +304,15 @@ struct MultiBlockBody: PageComponent {
             var total:Int? = nil
             let max = Self.maxCellCount
             let useTag:Bool = !self.viewModel.isFree
+             
             switch data.dataType {
             case .cwGrid:
                 guard let resData = res?.data as? CWGrid else {return data.setBlank()}
                 guard let grid = resData.grid else {return data.setBlank()}
                 if grid.isEmpty {return data.setBlank()}
                 total = resData.total_count
-                grid.forEach{ g in
-                    if let blocks = g.block {
-                        switch data.uiType {
-                        case .poster :
-                            data.posters = blocks[0...min(max, blocks.count-1)].map{ d in
-                                PosterData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
-                            }
-                        case .video :
-                            data.videos = blocks[0...min(max, blocks.count-1)].map{ d in
-                                VideoData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
-                            }
-                        case .theme :
-                            data.themas = blocks[0...min(max, blocks.count-1)].map{ d in
-                                ThemaData().setData(data: d, cardType: data.cardType)
-                            }
-                        default: break
-                        }
-                    }
-                }
+                data.setData(grids: grid)
+                
             case .cwGridKids:
                 guard let resData = res?.data as? CWGridKids else {return data.setBlank()}
                 data.errorMassage = resData.status_reason
@@ -449,7 +444,7 @@ struct MultiBlockBody: PageComponent {
                 }
                 data.listHeight = blockHeight
             }
-            data.setDatabindingCompleted(total: total, title: self.viewModel.title)
+            data.setDatabindingCompleted(total: total, parentTitle: self.viewModel.title)
         }
         .onReceive(dataProvider.$error) { err in
             guard let data = self.loadingBlocks.first(where: { $0.id == err?.id}) else {return}
@@ -458,6 +453,13 @@ struct MultiBlockBody: PageComponent {
         .onReceive(self.sceneObserver.$isUpdated){update in
             if update {
                 self.infinityScrollModel.setup(scrollSize: self.sceneObserver.screenSize)
+                if !SystemEnvironment.isTablet {return}
+                self.isHorizontal = self.sceneObserver.sceneOrientation == .landscape
+            }
+        }
+        .onAppear(){
+            if SystemEnvironment.isTablet {
+                self.isHorizontal = self.sceneObserver.sceneOrientation == .landscape
             }
         }
         .onDisappear{
@@ -578,10 +580,10 @@ struct MultiBlockBody: PageComponent {
     @State var addBlockSubscription:AnyCancellable?
     func delayAddBlock(){
         self.addBlockSubscription = Timer.publish(
-            every: 0.5, on: .current, in: .common)
+            every: 0.1, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
-                self.addBlockSubscription?.cancel()
+                
                 self.addBlock()
             }
     }
@@ -601,9 +603,31 @@ struct MultiBlockBody: PageComponent {
         }
         self.blocks.append(contentsOf: addBlocks)
         self.isLoading = false
+        
+        if let openId = self.viewModel.openId {
+            let findIds = openId.split(separator: "|")
+            if let find = addBlocks.first(where:  { block in
+                guard let menuId = block.menuId else {return false}
+                return findIds.first(where: {$0 == menuId}) != nil
+            }) {
+                if let listType = find.uiType.listType {
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.categoryList)
+                            .addParam(key: .data, value: find)
+                            .addParam(key: .type, value: listType)
+                            .addParam(key: .subType, value:find.cardType)
+                    )
+                }
+                self.viewModel.openId = nil
+            } else {
+                self.delayAddBlock()
+            }
+        }
+        
     }
 
     private func addBlock(){
+        self.addBlockSubscription?.cancel()
         var max = 0
         if  !Self.isPreLoad {
             max = self.originBlocks.count
@@ -632,7 +656,7 @@ struct MultiBlockBody: PageComponent {
                 } else{
                     if block.uiType == .kidsHome || block.uiType == .kidsTicket {
                         block.listHeight = Self.kisHomeHeight
-                        block.setDatabindingCompleted(title: self.viewModel.title)
+                        block.setDatabindingCompleted(parentTitle: self.viewModel.title)
                         
                     }else if block.dataType == .theme , let blocks = block.blocks {
                         if block.uiType == .theme { 
@@ -654,7 +678,7 @@ struct MultiBlockBody: PageComponent {
                             block.tickets = tickets
                             DataLog.d("TicketData " + block.name, tag: "BlockProtocolA")
                         }
-                        block.setDatabindingCompleted(title: self.viewModel.title)
+                        block.setDatabindingCompleted(parentTitle: self.viewModel.title)
                         return
                     } else{
                         block.setRequestFail()

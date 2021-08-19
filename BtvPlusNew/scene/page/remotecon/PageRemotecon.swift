@@ -158,14 +158,14 @@ struct PageRemotecon: PageView {
                     self.appSceneObserver.event = .toast(String.remote.closeMirroring)
                 case .connected :
                     self.appSceneObserver.loadingInfo = nil
-                    self.sendLog(action: .pageShow, result: true, category:  String.remote.setupMirroring)
+                    self.sendStatusLog(action: .pageShow, result: true, category:  String.remote.setupMirroring)
                     self.appSceneObserver.event = .toast(String.remote.setupMirroring)
                 case .notFound :
                     self.appSceneObserver.loadingInfo = nil
-                    self.sendLog(action: .pageShow, result: false, category:  String.remote.errorMirroringText)
+                    self.sendStatusLog(action: .pageShow, result: false, category:  String.remote.errorMirroringText)
                     self.appSceneObserver.alert =
                         .alert(String.remote.errorMirroring, String.remote.errorMirroringText, String.remote.errorMirroringTextSub){
-                            self.sendLog(action: .clickStatusButton, result: false)
+                            self.sendStatusLog(action: .clickStatusButton, result: false)
                         }
                 default: break
                 }
@@ -313,34 +313,47 @@ struct PageRemotecon: PageView {
         var needUpdate:Bool = false
         switch evt {
         case .close:
+            self.sendLog(action: .clickRemoteconExit)
             self.pagePresenter.closePopup(self.pageObject?.id)
         case .reflash:
+            self.sendLog(action: .clickWatchingInfoRefresh, actionBody: .init(category: self.remotePlayData?.title ?? ""))
             self.checkHostDeviceStatus()
         case .inputMessage:
+            self.sendLog(action: .clickRemoteconFunction, actionBody: .init(category: "chacter"))
             withAnimation{ self.isInputText = true }
         case .inputChannel:
+            self.sendLog(action: .clickRemoteconFunction, actionBody: .init(category: "channel_number"))
             withAnimation{ self.isInputChannel = true }
         case .earphone:
             self.connectEarphone()
         case .toggleOn:
+            self.sendLog(action: .clickRemoteconPower)
             self.sendAction(npsMessage: NpsMessage().setMessage(type: .PowerCtrl))
             needUpdate = true
         case .multiview:
             if host.isEnablePIPKey() {
+                self.sendLog(action: .clickRemoteconFunction, actionBody: .init(category: "multi_view"))
                 self.sendAction(npsMessage: NpsMessage().setMessage(type: .PIP))
             }else {
                 self.appSceneObserver.event = .toast(String.alert.guideNotSupported)
             }
         case .chlist:
             if host.isEnableGuideKey() {
+                self.sendLog(action: .clickRemoteconFunction, actionBody: .init(category: "epg"))
                 self.sendAction(npsMessage: NpsMessage().setMessage(type: .Guide))
             }else {
                 self.appSceneObserver.event = .toast(String.alert.guideNotSupported)
             }
         case .fastForward:
-            self.sendAction(npsMessage: NpsMessage().setMessage(type: .PlayCtrl, value: .FF))
+            if self.remotePlayData?.isOnAir == false {
+                self.sendLog(action: .clickRemoteconColor, actionBody: .init(category: "blue"))
+                self.sendAction(npsMessage: NpsMessage().setMessage(type: .PlayCtrl, value: .FF))
+            }
         case .rewind:
-            self.sendAction(npsMessage: NpsMessage().setMessage(type: .PlayCtrl, value: .REW))
+            if self.remotePlayData?.isOnAir == false {
+                self.sendLog(action: .clickRemoteconColor, actionBody: .init(category: "red"))
+                self.sendAction(npsMessage: NpsMessage().setMessage(type: .PlayCtrl, value: .REW))
+            }
         case .playControl(let playEvt) :
             switch playEvt {
             case .togglePlay:
@@ -371,19 +384,23 @@ struct PageRemotecon: PageView {
             needUpdate = true
         case .exit :
             if host.isEnableExitKey() {
+                self.sendLog(action: .clickRemoteconHomeMove, actionBody: .init(category: "exit"))
                 self.sendAction(npsMessage: NpsMessage().setMessage(type: .ButtonExit))
                 needUpdate = true
             }else {
                 self.appSceneObserver.event = .toast(String.alert.guideNotSupported)
             }
         case .previous :
+            self.sendLog(action: .clickRemoteconHomeMove, actionBody: .init(category: "back"))
             self.sendAction(npsMessage: NpsMessage().setMessage(type: .ButtonCancel))
             needUpdate = true
         case .home :
+            self.sendLog(action: .clickRemoteconHomeMove, actionBody: .init(category: "home"))
             self.sendAction(npsMessage: NpsMessage().setMessage(type: .ButtonHome))
             needUpdate = true
         case .mute(let isMute) :
             if isMute {
+                self.sendLog(action: .clickRemoteconFunction, actionBody: .init(category: "mute"))
                 self.sendAction(npsMessage: NpsMessage().setMessage(type: .Mute))
             }
         }
@@ -454,6 +471,7 @@ struct PageRemotecon: PageView {
     
     private func connectEarphone(){
         if self.repository.audioMirrorManager.isConnected {
+            self.sendLog(action: .clickFamilyEarphone, actionBody: .init(config:  "off"))
             self.repository.audioMirrorManager.close()
             return
         }
@@ -474,10 +492,11 @@ struct PageRemotecon: PageView {
                 manager.startSearching()
                 
             } else {
-                self.sendLog(action: .pageShow, result: false, category: String.remote.errorMirroringWifi)
+                self.sendStatusLog(action: .pageShow, result: false, category: String.remote.errorMirroringWifi)
+                self.sendLog(action: .clickFamilyEarphone, actionBody: .init(config:  "on"))
                 self.appSceneObserver.alert =
                     .alert(String.remote.errorMirroringWifi, String.remote.errorMirroringWifiText){
-                        self.sendLog(action: .clickStatusButton, result: false)
+                        self.sendStatusLog(action: .clickStatusButton, result: false)
                     }
             }
         } else if status == .denied {
@@ -490,7 +509,12 @@ struct PageRemotecon: PageView {
         
     }
     
-    private func sendLog(action:NaviLog.Action, result: Bool, category:String? = nil) {
+    private func sendLog(action:NaviLog.Action, actionBody:MenuNaviActionBodyItem? = nil) {
+        self.naviLogManager.actionLog(action , actionBody: actionBody)
+        
+    }
+    
+    private func sendStatusLog(action:NaviLog.Action, result: Bool, category:String? = nil) {
         var actionBody = MenuNaviActionBodyItem()
         actionBody.config = result ? "true" : "false"
         actionBody.category = category

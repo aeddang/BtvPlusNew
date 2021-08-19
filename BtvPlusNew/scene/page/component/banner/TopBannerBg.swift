@@ -11,15 +11,18 @@ import SwiftUI
 import Combine
 import struct Kingfisher.KFImage
 struct TopBannerBg: PageComponent {
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @ObservedObject var pageObservable:PageObservable
+   
     var viewModel:ViewPagerModel = ViewPagerModel()
     var datas: [BannerData]
     var ratio:CGFloat = 1.0
+    
     @State var pages: [PageViewProtocol] = []
     @State var index: Int = 0
     @State var leading:CGFloat = 0
     @State var trailing:CGFloat = 0
-    
+    @State var isHorizontal:Bool = false
     var action:((_ idx:Int) -> Void)? = nil
     var body: some View {
         ZStack(alignment: .bottom){
@@ -29,7 +32,7 @@ struct TopBannerBg: PageComponent {
                 isForground : false,
                 ratio: self.ratio
                 )
-                .modifier(MatchHorizontal(height: TopBanner.imageHeight))
+            .modifier(MatchHorizontal(height: isHorizontal ?  TopBanner.imageHeightHorizontal : TopBanner.imageHeight))
                 
             if self.pages.count > 1 {
                 HStack(spacing: Dimen.margin.tiny) {
@@ -47,11 +50,19 @@ struct TopBannerBg: PageComponent {
                         .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
                 }
                 .frame( height:TopBanner.barHeight)
-                .padding(.bottom, TopBanner.marginBottomBar + TopBanner.imageHeight - TopBanner.height)
+                .padding(.bottom, isHorizontal
+                            ? TopBanner.marginBottomBar + TopBanner.imageHeightHorizontal - TopBanner.heightHorizontal
+                            : TopBanner.marginBottomBar + TopBanner.imageHeight - TopBanner.height
+                )
             }
         }
         .onReceive( self.viewModel.$index ){ idx in
             self.setBar(idx:idx)
+        }
+        .onReceive(self.sceneObserver.$isUpdated) { update in
+            if !update {return}
+            if !SystemEnvironment.isTablet {return}
+            self.isHorizontal = self.sceneObserver.sceneOrientation == .landscape
         }
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
             if ani {
@@ -62,7 +73,9 @@ struct TopBannerBg: PageComponent {
             }
         }
         .onAppear(){
-            
+            if SystemEnvironment.isTablet {
+                self.isHorizontal = self.sceneObserver.sceneOrientation == .landscape
+            }
         }
         
     }
@@ -81,14 +94,13 @@ struct TopBannerBg: PageComponent {
 }
 
 struct TopBannerBgItem: PageComponent, Identifiable {
-
     @EnvironmentObject var sceneObserver:PageSceneObserver
     let id = UUID().uuidString
     let data: BannerData
-   
+    
+    @State var isHorizontal:Bool = false
     var body: some View {
         ZStack(){
-            
             KFImage(URL(string: self.data.image))
                 .resizable()
                 .placeholder {
@@ -98,7 +110,7 @@ struct TopBannerBgItem: PageComponent, Identifiable {
                 .cancelOnDisappear(true)
                 .loadImmediately()
                 .aspectRatio(contentMode:  .fill)
-                .modifier(MatchHorizontal(height:TopBanner.imageHeight))
+                .modifier(MatchHorizontal(height:isHorizontal ? TopBanner.imageHeightHorizontal : TopBanner.imageHeight))
               
             if !SystemEnvironment.isTablet {
                 VStack{
@@ -110,11 +122,11 @@ struct TopBannerBgItem: PageComponent, Identifiable {
                     Image(Asset.shape.bgGradientBottom)
                     .renderingMode(.original)
                     .resizable()
-                    .modifier(MatchHorizontal(height:TopBanner.height))
+                        .modifier(MatchHorizontal(height:isHorizontal ? TopBanner.heightHorizontal :TopBanner.height))
                 }
             }
             if SystemEnvironment.isTablet {
-                VStack(alignment:.leading){
+                VStack(alignment:.leading, spacing:0){
                     Spacer().modifier(MatchParent())
                     if let logo = data.logo {
                         KFImage(URL(string: logo))
@@ -122,7 +134,13 @@ struct TopBannerBgItem: PageComponent, Identifiable {
                             .cancelOnDisappear(true)
                             .loadImmediately()
                             .aspectRatio(contentMode: .fit)
-                            .frame(minWidth: 0, maxWidth: 400, minHeight: 0, maxHeight: 120, alignment:.bottomLeading)
+                            .frame(
+                                minWidth: 0,
+                                idealWidth: 300,
+                                maxWidth: 400,
+                                minHeight: 0,
+                                idealHeight : 80,
+                                maxHeight: 120, alignment:.bottomLeading)
                             
                     }
                     else if data.title != nil {
@@ -130,18 +148,30 @@ struct TopBannerBgItem: PageComponent, Identifiable {
                             .modifier(BlackTextStyle(size: Font.size.black) )
                             .multilineTextAlignment(.leading)
                     }
-                    if data.subTitle != nil {
-                        Text(data.subTitle!)
-                            .modifier(MediumTextStyle(size: Font.size.lightExtra, color:Color.app.grey))
+                    if let subTitle = data.subTitle1 {
+                        Text(subTitle)
+                            .modifier(MediumTextStyle(size: Font.size.lightExtra, color:data.subTitleColor1))
                             .multilineTextAlignment(.leading)
                             .padding(.top, Dimen.margin.lightExtra)
-                
                     }
+                    if let subTitle = data.subTitle2 {
+                        Text(subTitle)
+                            .modifier(MediumTextStyle(size: Font.size.lightExtra, color:data.subTitleColor2))
+                            .multilineTextAlignment(.leading)
+                            .padding(.top, Dimen.margin.micro)
+                    }
+                    if let subTitle = data.subTitle3 {
+                        Text(subTitle)
+                            .modifier(MediumTextStyle(size: Font.size.lightExtra, color:data.subTitleColor3))
+                            .multilineTextAlignment(.leading)
+                            .padding(.top, Dimen.margin.micro)
+                    }
+                    
                 }
                 .padding(.horizontal, Dimen.margin.thin)
-                .padding(.bottom, TopBanner.maginBottomLogo)
+                .padding(.bottom, isHorizontal ? TopBanner.maginBottomLogoHorizontal : TopBanner.maginBottomLogo)
             } else {
-                VStack(){
+                VStack(spacing:0){
                     Spacer()
                     if let logo = data.logo {
                         KFImage(URL(string: logo))
@@ -149,31 +179,60 @@ struct TopBannerBgItem: PageComponent, Identifiable {
                             .cancelOnDisappear(true)
                             .loadImmediately()
                             .aspectRatio(contentMode: .fit)
-                            .frame(minWidth: 0, maxWidth: 280, minHeight: 0, maxHeight: 80, alignment:.bottom)
+                            .frame(
+                                minWidth: 0,
+                                idealWidth: 150,
+                                maxWidth: 280,
+                                minHeight: 0,
+                                idealHeight: 60,
+                                maxHeight: 80, alignment:.bottom)
+                            
                             .padding(.horizontal, Dimen.margin.heavy)
-                    }
-                    else if data.title != nil {
+                    } else if data.title != nil {
                         Text(data.title!)
                             .modifier(BlackTextStyle(size: Font.size.black) )
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, Dimen.margin.heavy)
                     }
-                    if data.subTitle != nil {
-                        Text(data.subTitle!)
-                            .modifier(MediumTextStyle(size: Font.size.lightExtra, color:Color.app.grey))
+                    if let subTitle = data.subTitle1 {
+                        Text(subTitle)
+                            .modifier(MediumTextStyle(size: Font.size.light, color:data.subTitleColor1))
                             .multilineTextAlignment(.center)
                             .padding(.top, Dimen.margin.lightExtra)
                             .padding(.horizontal, Dimen.margin.thin)
                     }
+                    if let subTitle = data.subTitle2 {
+                        Text(subTitle)
+                            .modifier(MediumTextStyle(size: Font.size.light, color:data.subTitleColor2))
+                            .multilineTextAlignment(.center)
+                            .padding(.top, Dimen.margin.micro)
+                            .padding(.horizontal, Dimen.margin.thin)
+                    }
+                    if let subTitle = data.subTitle3 {
+                        Text(subTitle)
+                            .modifier(MediumTextStyle(size: Font.size.light, color:data.subTitleColor3))
+                            .multilineTextAlignment(.center)
+                            .padding(.top, Dimen.margin.micro)
+                            .padding(.horizontal, Dimen.margin.thin)
+                    }
                 }
                 .offset(y:TopBanner.height/2 - TopBanner.maginBottomLogo - (TopBanner.imageHeight-TopBanner.height)/2)
-                .modifier(MatchHorizontal(height: TopBanner.height))
+                .modifier(MatchHorizontal(height:isHorizontal ? TopBanner.heightHorizontal : TopBanner.height))
             }
             
            
         }
-        .modifier(MatchHorizontal(height: TopBanner.imageHeight))
-        
+        .modifier(MatchHorizontal(height: isHorizontal ? TopBanner.imageHeightHorizontal : TopBanner.imageHeight))
+        .onReceive(self.sceneObserver.$isUpdated) { update in
+            if !update {return}
+            if !SystemEnvironment.isTablet {return}
+            self.isHorizontal = self.sceneObserver.sceneOrientation == .landscape
+        }
+        .onAppear(){
+            if SystemEnvironment.isTablet {
+                self.isHorizontal = self.sceneObserver.sceneOrientation == .landscape
+            }
+        }
     }
 }
 

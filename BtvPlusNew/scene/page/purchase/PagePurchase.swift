@@ -167,7 +167,7 @@ struct PagePurchase: PageView {
                             type: .getGridEvent(menuId , .popularity , 1, 1)))
                 }
                 
-                self.sendLog(action: .pageShow)
+                //self.sendLog(action: .pageShow)   웹뷰에서 할듯
             }
             .onDisappear{
             }

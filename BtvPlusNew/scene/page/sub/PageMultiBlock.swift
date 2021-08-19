@@ -213,11 +213,11 @@ struct PageMultiBlock: PageView {
             if self.cateData != nil {delay = 0.1}
             self.cateData =  nil
         }
-        reload(delay:delay)
+        reload(delay:delay, openId: self.openId)
         self.openId = nil
     }
     
-    private func reload(delay:Double = 0){
+    private func reload(delay:Double = 0, openId:String? = nil){
         DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + delay) {
             DispatchQueue.main.async {
                 var title = self.title
@@ -237,7 +237,7 @@ struct PageMultiBlock: PageView {
                     }
                     let isAdult = self.tabDatas?[selectedTabIdx].isAdult ?? false
                     self.multiBlockViewModel.update(
-                        datas: self.originDatas, openId: self.openId,
+                        datas: self.originDatas, openId: openId,
                         themaType: self.themaType, isAdult:isAdult, title: title)
                 }
                 self.tabInfinityScrollModel.uiEvent = .scrollTo(self.selectedTabIdx)

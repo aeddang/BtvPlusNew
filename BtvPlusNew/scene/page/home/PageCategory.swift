@@ -229,7 +229,6 @@ struct PageCategory: PageView {
                         .addParam(key: .subId, value: openId)
                 )
             }else{
-                
                 self.pagePresenter.openPopup(
                     PageProvider.getPageObject(.categoryList)
                         .addParam(key: .title, value: data.title)

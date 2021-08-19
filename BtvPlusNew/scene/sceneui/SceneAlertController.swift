@@ -272,6 +272,7 @@ struct SceneAlertController: PageComponent{
                     AlertBtnData(title: String.app.cancel, index: 0),
                     AlertBtnData(title: String.app.retry, index: 1),
                 ]
+                self.naviLogManager.actionLog(.pageShow, pageId:.networkError)
                 
             }else{
                 self.text = String.alert.apiErrorServer
@@ -292,6 +293,7 @@ struct SceneAlertController: PageComponent{
             
         }else if idx == 0  {
             self.appSceneObserver.alertResult = .cancel(nil)
+            self.naviLogManager.actionLog(.clickCloseButton, pageId:.networkError)
         }
     }
     

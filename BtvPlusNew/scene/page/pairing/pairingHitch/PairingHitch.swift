@@ -303,7 +303,7 @@ struct PairingHitch: PageComponent {
     
     func findDevice() {
         self.isLocationRequest = false
-        self.pairing.requestPairing(.wifi)
+        self.pairing.requestPairing(.wifi(retryCount:0))
     }
     
     

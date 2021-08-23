@@ -160,6 +160,8 @@ struct NaviLog {
             actionBody.menu_id = blockData?.menuId
             actionBody.menu_name = blockData?.title
             return actionBody
+        case .myAlram:
+            var actionBody = MenuNaviActionBodyItem(config:repository.pairing.user?.isAgree3 == true ? "ON" : "OFF"))
         default : return nil
         }
     }
@@ -290,6 +292,7 @@ struct NaviLog {
         case clickNotificationList = "click.notification.list"                      // 2. 알림 목록 선택
         case clickNotificationBack = "click.notification.back"                      // 3. 뒤로 가기
         case clickNotificationButton = "click.notification.button"                  // 4. 알림 설정 ON 선택
+        
         // /my/connect_stb/mgmt
         case clickInviteButton = "click.invite.button"                              // 4. MY 연결해제/관리
         // /remotecon

@@ -12,6 +12,7 @@ struct SetupPossession: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var isInitate:Bool = false
     @State var isPossession:Bool = false
     @State var willPossession:Bool? = nil
@@ -192,6 +193,7 @@ struct SetupPossession: PageView {
             String.alert.possessionComplete
         )
         self.pagePresenter.closePopup(pageId: .terminateStb)
+        self.sendLog(category: String.pageText.setupPossessionSet, config: true)
     }
     
     private func deletePossession(){
@@ -217,7 +219,7 @@ struct SetupPossession: PageView {
             } else {
                 self.deletedPossessionCompleted()
             }
-            
+            self.sendLog(category: String.pageText.setupPossessionSet, config: false)
         } else {
             self.appSceneObserver.event = .toast( result.reason ?? String.alert.apiErrorServer )
             self.setupPossessionCancel()
@@ -232,6 +234,11 @@ struct SetupPossession: PageView {
             String.alert.possessionDelete
         )
         self.pagePresenter.closePopup(pageId: .terminateStb)
+    }
+    
+    private func sendLog(category:String, config:Bool) {
+        let actionBody = MenuNaviActionBodyItem( config: config ? "on" : "off", category: category)
+        self.naviLogManager.actionLog(.clickCardRegister, actionBody: actionBody)
     }
 }
 

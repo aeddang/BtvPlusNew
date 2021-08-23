@@ -198,7 +198,7 @@ struct TopBannerBgItem: PageComponent, Identifiable {
                         Text(subTitle)
                             .modifier(MediumTextStyle(size: Font.size.light, color:data.subTitleColor1))
                             .multilineTextAlignment(.center)
-                            .padding(.top, Dimen.margin.lightExtra)
+                            .padding(.top, Dimen.margin.regular)
                             .padding(.horizontal, Dimen.margin.thin)
                     }
                     if let subTitle = data.subTitle2 {

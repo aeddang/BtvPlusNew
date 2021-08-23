@@ -10,7 +10,7 @@ struct SetupApp: PageView {
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
-    
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var isInitate:Bool = false
     var isPairing:Bool = false
     var pairingType:PairingDeviceType = .btv
@@ -46,6 +46,17 @@ struct SetupApp: PageView {
             }
             .background(Color.app.blueLight)
         }
+        .onReceive( [self.isDataAlram].publisher ) { value in
+            if !self.isInitate { return }
+            if self.setup.dataAlram == self.isDataAlram { return }
+            
+            self.setup.dataAlram = self.isDataAlram
+            self.appSceneObserver.event = .toast(
+                self.isDataAlram ? String.alert.dataAlramOn : String.alert.dataAlramOff
+            )
+            self.sendLog(category: String.pageText.setupAppDataAlram , config: self.isDataAlram)
+            
+        }
         .onReceive( [self.isAutoRemocon].publisher ) { value in
             if !self.isInitate { return }
             if self.setup.autoRemocon == self.isAutoRemocon { return }
@@ -58,6 +69,7 @@ struct SetupApp: PageView {
             self.appSceneObserver.event = .toast(
                 self.isAutoRemocon ? String.alert.autoRemoconOn : String.alert.autoRemoconOff
             )
+            self.sendLog(category: String.pageText.setupAppAutoRemocon  , config: self.isAutoRemocon)
             
         }
         .onReceive( [self.isRemoconVibration].publisher ) { value in
@@ -72,9 +84,16 @@ struct SetupApp: PageView {
             self.appSceneObserver.event = .toast(
                 self.isRemoconVibration ? String.alert.remoconVibrationOn : String.alert.remoconVibrationOff
             )
+            self.sendLog(category: String.pageText.setupAppRemoconVibration  , config: self.isRemoconVibration)
             
         }
     }//body
+    
+    private func sendLog(category:String, config:Bool) {
+        let actionBody = MenuNaviActionBodyItem( config: config ? "on" : "off", category: category)
+        self.naviLogManager.actionLog(.clickCardRegister, actionBody: actionBody)
+    }
+    
     
 }
 

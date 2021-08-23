@@ -13,6 +13,7 @@ struct SetupAlram: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var isInitate:Bool = false
     var isPairing:Bool = false
    
@@ -72,6 +73,7 @@ struct SetupAlram: PageView {
         if self.isPairing == false { return }
         self.willPush = select
         self.dataProvider.requestData(q: .init(type: .updateAgreement(select)))
+        self.sendLog(category: String.pageText.setupAlramMarketing, config: select)
     }
     
     private func onUpdatedPush(_ res:ApiResultResponds, isAgree:Bool){
@@ -92,6 +94,11 @@ struct SetupAlram: PageView {
     private func onUpdatePushError(){
         self.appSceneObserver.event = .toast( String.alert.pushError )
         self.willPush = nil
+    }
+    
+    private func sendLog(category:String, config:Bool) {
+        let actionBody = MenuNaviActionBodyItem( config: config ? "on" : "off", category: category)
+        self.naviLogManager.actionLog(.clickCardRegister, actionBody: actionBody)
     }
 }
 

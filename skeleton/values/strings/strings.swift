@@ -120,9 +120,23 @@ extension String {
     }
     
     struct footer {
-        public static let text = "footerText".loaalized()
-        public static let text1 = "footerText1".loaalized() // for pad
-        public static let text2 = "footerText2".loaalized() // for pad
+        public static let title1 = "footerTitle1".loaalized()
+        public static let text1 = "footerText1".loaalized()
+        public static let title2 = "footerTitle2".loaalized()
+        public static let text2 = "footerText2".loaalized()
+        public static let title3 = "footerTitle3".loaalized()
+        public static let text3 = "footerText3".loaalized()
+        public static let title4 = "footerTitle4".loaalized()
+        public static let text4 = "footerText4".loaalized()
+        public static let title5 = "footerTitle5".loaalized()
+        public static let text5 = "footerText6".loaalized()
+        public static let title6 = "footerTitle6".loaalized()
+        public static let text6 = "footerText6".loaalized()
+        public static let title7 = "footerTitle7".loaalized()
+        public static let text7 = "footerText7".loaalized()
+        public static let title8 = "footerTitle8".loaalized()
+        public static let text8 = "footerText8".loaalized()
+       
         public static let button = "footerButton".loaalized()
     }
     

@@ -12,6 +12,7 @@ struct PageMyAlram: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     
@@ -29,7 +30,10 @@ struct PageMyAlram: PageView {
                     PageTab(
                         title: String.pageTitle.myAlram,
                         isBack: true
-                    )
+                    ){
+                        self.pagePresenter.closePopup(self.pageObject?.id)
+                        self.sendLog(action: .clickNotificationBack)
+                    }
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     if let datas = self.datas {
                         AlramList(
@@ -85,6 +89,10 @@ struct PageMyAlram: PageView {
             self.datas = historys.map{AlramData().setData(data: $0)}
             self.appSceneObserver.isApiLoading = false
         }
+    }
+    
+    private func sendLog(action:NaviLog.Action){
+        self.naviLogManager.actionLog(action)
     }
 }
 

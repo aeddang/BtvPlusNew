@@ -40,7 +40,9 @@ struct PageModifyProfile: PageView {
                     PageTab(
                         title: String.pageTitle.modifyProfile,
                         isClose: true
-                    )
+                    ){
+                        self.pagePresenter.closePopup(self.pageObject?.id)
+                    }
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     ZStack(alignment: .topLeading){
                         DragDownArrow(

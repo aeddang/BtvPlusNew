@@ -8,6 +8,7 @@ import Foundation
 import SwiftUI
 struct SetupGuideNVersion: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var body: some View {
         VStack(alignment:.leading , spacing:Dimen.margin.thinExtra) {
             Text(String.pageText.setupGuideNVersion).modifier(ContentTitle())
@@ -16,6 +17,7 @@ struct SetupGuideNVersion: PageView {
                     isOn: .constant(true),
                     title: String.pageText.setupGuide,
                     more:{
+                        self.sendLog(category: String.pageText.setupGuide)
                         self.pagePresenter.openPopup(
                             PageProvider
                                 .getPageObject(.webview)
@@ -38,6 +40,7 @@ struct SetupGuideNVersion: PageView {
                     isOn: .constant(true),
                     title: String.pageText.setupOpensource,
                     more:{
+                        self.sendLog(category: String.pageText.setupOpensource)
                         self.pagePresenter.openPopup(
                             PageProvider
                                 .getPageObject(.webview)
@@ -50,7 +53,10 @@ struct SetupGuideNVersion: PageView {
             .background(Color.app.blueLight)
         }
     }//body
-    
+    private func sendLog(category:String) {
+        let actionBody = MenuNaviActionBodyItem( config: "", category: category)
+        self.naviLogManager.actionLog(.clickCardRegister, actionBody: actionBody)
+    }
 }
 
 #if DEBUG

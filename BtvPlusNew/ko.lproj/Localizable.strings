@@ -944,10 +944,23 @@
 /*
  Footer
  */
-"footerText" = "・ 상호 : SK브로드밴드 주식회사\n・ 대표이사 : 최진환\n・ 주소 : 서울특별시 중구 퇴계로 24 SK남산그린빌딩\n・ 통신판매업 신고번호 : 서울 중구 제2008-1608호\n・ 사업자등록번호 : 214-86-18758\n・ 고객센터 : 국번없이 106, 080-8282-106(무료)\n・ 고객지원 이메일 : mobilebtv@skbroadband.com\n・ 호스팅 서비스 제공 : SK브로드밴드 주식회사";
+"footerTitle1" = "・ 상호 :";
+"footerText1" = "SK브로드밴드 주식회사";
+"footerTitle2" = "・ 대표이사 :";
+"footerText2" = "최진환";
+"footerTitle3" = "・ 주소 :";
+"footerText3" = "서울특별시 중구 퇴계로 24 SK남산그린빌딩";
+"footerTitle4" = "・ 통신판매업 신고번호 :";
+"footerText4" = "서울 중구 제2008-1608호";
+"footerTitle5" = "・ 사업자등록번호 :";
+"footerText5" = "214-86-18758";
+"footerTitle6" = "・ 고객센터 :";
+"footerText6" = "국번없이 106, 080-8282-106(무료)";
+"footerTitle7" = "・ 고객지원 이메일 :";
+"footerText7" = "mobilebtv@skbroadband.com";
+"footerTitle8" = "・ 호스팅 서비스 제공 :";
+"footerText8" = "SK브로드밴드 주식회사";
 
-"footerText1" = "・ 상호 : SK브로드밴드 주식회사\n・ 대표이사 : 최진환\n・ 주소 : 서울특별시 중구 퇴계로 24 SK남산그린빌딩\n・ 통신판매업 신고번호 : 서울 중구 제2008-1608호\n・ 사업자등록번호 : 214-86-18758";
-"footerText2" = "・ 고객센터 : 국번없이 106, 080-8282-106(무료)\n・ 고객지원 이메일 : mobilebtv@skbroadband.com\n・ 호스팅 서비스 제공 : SK브로드밴드 주식회사";
 "footerButton" = "・ 사업자 정보 확인";
 
 /*PairingHitch

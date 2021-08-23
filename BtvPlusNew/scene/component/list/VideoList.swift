@@ -525,7 +525,7 @@ struct VideoItemBody: PageView {
                             .padding(.all, Dimen.margin.micro)
                             .background(Color.transparent.black70)
                             .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
-                            .padding(.all, Dimen.margin.tinyExtra)
+                            .padding(.all, Dimen.margin.microUltra)
                     }
                     .modifier(MatchParent())
                 } else {

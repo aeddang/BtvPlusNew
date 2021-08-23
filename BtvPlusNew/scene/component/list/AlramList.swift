@@ -17,7 +17,7 @@ struct AlramList: PageComponent{
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
-    
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[AlramData]
     var useTracking:Bool = false
@@ -41,6 +41,7 @@ struct AlramList: PageComponent{
                 Spacer()
                 if !self.datas.isEmpty {
                     Button(action: {
+                        self.sendLog(action: .clickNotificationAllasread)
                         self.readAll()
                     }) {
                         HStack(alignment:.center, spacing: Dimen.margin.tinyExtra){
@@ -77,6 +78,7 @@ struct AlramList: PageComponent{
                                 self.appSceneObserver.alert = .needPairing()
                                 return
                             }
+                            self.sendLog(action: .clickNotificationButton)
                             self.dataProvider.requestData(q: .init(type: .updateAgreement(true)))
                         }
                         .buttonStyle(BorderlessButtonStyle())
@@ -116,6 +118,7 @@ struct AlramList: PageComponent{
         if !self.hasNew {return}
         
         self.appSceneObserver.alert = .confirm(nil,  String.alert.newAlramAllRead){ isOk in
+            self.sendLog(action: .clickNotificationPopUp, config: isOk ? "확인": "취소")
             if !isOk {return}
             self.hasNew = false
             self.datas.filter{!$0.isRead}.forEach{$0.isRead = true}
@@ -123,6 +126,7 @@ struct AlramList: PageComponent{
             DispatchQueue.main.async {
                 self.repository.alram.updatedNotification()
             }
+            
         }
     }
     
@@ -141,6 +145,15 @@ struct AlramList: PageComponent{
     }
     private func onUpdatePushError(){
         self.appSceneObserver.event = .toast( String.alert.pushError )
+    }
+    
+    private func sendLog(action:NaviLog.Action, config:String? = nil){
+        if let config = config {
+            self.naviLogManager.actionLog(action, actionBody: .init(config:config))
+        }else {
+            self.naviLogManager.actionLog(action)
+        }
+        
     }
 }
 

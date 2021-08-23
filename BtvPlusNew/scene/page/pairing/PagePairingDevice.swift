@@ -20,7 +20,7 @@ struct PagePairingDevice: PageView {
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @State var title:String? = nil
-    @State var pairingType:PairingRequest = .wifi
+    @State var pairingType:PairingRequest = .wifi() 
     
     @State var textAvailableDevice:String = ""
     @State var textAvailableWifi:String? = nil
@@ -107,7 +107,7 @@ struct PagePairingDevice: PageView {
            
             .onReceive(self.networkObserver.$status){ status in
                 if !self.isReady { return }
-                if self.pairingType != .wifi { return } 
+                if self.pairingType != .wifi() { return }
                 switch status {
                 case .wifi :
                     self.appSceneObserver.alert = .cancel

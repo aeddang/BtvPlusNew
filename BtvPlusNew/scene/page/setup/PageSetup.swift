@@ -14,6 +14,7 @@ struct PageSetup: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()

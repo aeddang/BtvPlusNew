@@ -10,7 +10,6 @@ struct SetupChildren: PageView {
     
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
-    
     var isInitate:Bool = false
     var isPairing:Bool = false
     
@@ -55,6 +54,8 @@ struct SetupChildren: PageView {
                 .addParam(key: .type, value: ScsNetwork.ConfirmType.adult)
         )
     }
+    
+   
 }
 
 #if DEBUG

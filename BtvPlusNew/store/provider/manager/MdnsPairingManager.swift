@@ -25,7 +25,7 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
     private var client:MDNSServiceProxyClient? = nil
     let serviceName:String = "com.skb.btvplus"
     let querytime:Int32 = 60
-    let searchLimitedTime:Int = 5
+    let searchLimitedTime:Int = 3
         
     private var found:(([MdnsDevice]) -> Void)? = nil
     private var notFound: (() -> Void)? = nil
@@ -62,7 +62,7 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
         removeClient()
         notFound?()
     }
-
+    private var limitedRetryCount:Int = 1
     private var retryCount:Int = 0
     private var searchLimited:DispatchWorkItem?? = nil
     private func mdnsServiceFindStart(isRetry:Bool = false) {
@@ -80,7 +80,7 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
         self.client = client
         self.searchLimited = DispatchWorkItem { // Set the work item with the block you want to execute
             DispatchQueue.main.async {
-                if self.retryCount == 1 {
+                if self.retryCount == self.limitedRetryCount {
                     self.mdnsServiceNotFound()
                 } else {
                     self.retryCount += 1
@@ -92,10 +92,11 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(self.searchLimitedTime), execute: self.searchLimited!!)
     }
     
-    func requestPairing(_ request:PairingRequest,
+    func requestPairing(_ request:PairingRequest, retryCount:Int = 1,
                         found:(([MdnsDevice]) -> Void)? = nil,
                         notFound: (() -> Void)? = nil){
         removeClient()
+        self.limitedRetryCount = retryCount
         self.found = found
         self.notFound = notFound
         switch request {

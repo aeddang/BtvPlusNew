@@ -133,7 +133,7 @@ struct PageSynopsis: PageView {
                             if Self.useLayer {return}
                             self.pageDragingModel.uiEvent = .pull(geometry, pos)
                         }
-                        .modifier(PageFull())
+                        .modifier(PageFull(style:.dark))
                     } else {
                         KidsSynopsis(
                             geometry:geometry,
@@ -320,6 +320,9 @@ struct PageSynopsis: PageView {
             }
             .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
                 self.isFullScreen = fullScreen
+                if self.type == .btv {
+                    self.appSceneObserver.useBottom = !fullScreen
+                }
             }
             .onReceive(self.playerModel.$streamEvent){evt in
                 guard let _ = evt else {return}

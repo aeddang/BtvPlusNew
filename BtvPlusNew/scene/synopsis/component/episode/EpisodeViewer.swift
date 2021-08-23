@@ -33,6 +33,7 @@ struct EpisodeViewer: PageComponent{
                     if let date = self.data.date {
                         Text( date )
                             .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.white))
+                            .opacity(0.8)
                         }
                     if let restrictAgeIcon = self.data.restrictAgeIcon {
                         Image( restrictAgeIcon )
@@ -43,10 +44,12 @@ struct EpisodeViewer: PageComponent{
                     if let duration = self.data.duration {
                         Text(duration)
                             .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.white))
+                            .opacity(0.8)
                         }
                     if let provider = self.data.provider {
                         Text( provider )
                             .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.white))
+                            .opacity(0.8)
                         }
                     if let onair = self.data.onAir {
                         Image( onair )

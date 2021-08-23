@@ -107,7 +107,7 @@ struct SimplePlayerUI: PageComponent {
             if !self.isSeeking {
                 VStack(spacing:Dimen.margin.regular){
                     ImageButton(
-                        defaultImage: Asset.player.resume,
+                        defaultImage: Asset.icon.thumbPlay,
                         activeImage: Asset.player.pause,
                         isSelected: self.isPlaying,
                         size: CGSize(width:Dimen.icon.heavyExtra,height:Dimen.icon.heavyExtra)

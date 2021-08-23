@@ -151,6 +151,7 @@ class AlramData:InfinityData,ObservableObject{
     private(set) var outLink:String? = nil
     private(set) var inLink:String? = nil
     private(set) var inLinkTitle:String? = nil
+    private(set) var actionLog:MenuNaviActionBodyItem = MenuNaviActionBodyItem()
     
     func setData(data:NotificationEntity, idx:Int = -1) -> AlramData{
         self.isCoreData = true
@@ -240,6 +241,7 @@ class AlramData:InfinityData,ObservableObject{
                 self.inLink = BtvWebView.notice + "?menuId=" + location
                 self.inLinkTitle = String.button.notice
             }
+            self.actionLog.menu_name = "B1.WEBINAPP"
 
         case .eventWeb:
             guard var url = self.location else { return }
@@ -247,12 +249,12 @@ class AlramData:InfinityData,ObservableObject{
                 if let range = url.range(of: "outlink:", options: .caseInsensitive) {
                     url.removeSubrange(range)
                     self.outLink = url
-                }
-                if let range = url.range(of: "inlink:", options: .caseInsensitive) {
+                    self.actionLog.menu_name = "B3.WEB"
+                }else if let range = url.range(of: "inlink:", options: .caseInsensitive) {
                     url.removeSubrange(range)
                     self.inLink = url
                     self.inLinkTitle = self.text
-                    
+                    self.actionLog.menu_name = "B1.WEBINAPP"
                 } else {
                     self.move = .category
                     var param = [PageParam:Any]()
@@ -260,10 +262,12 @@ class AlramData:InfinityData,ObservableObject{
                     self.moveData = param
                     self.inLink = url
                     self.inLinkTitle = self.text
+                    self.actionLog.menu_name = "B4.MENU"
                 }
             } else {
                 self.inLink = BtvWebView.event + "?menuId=" + url
                 self.inLinkTitle = self.text
+                self.actionLog.menu_name = "B1.WEBINAPP"
             }
             
         case .vodDetail:
@@ -287,6 +291,7 @@ class AlramData:InfinityData,ObservableObject{
             var param = [PageParam:Any]()
             param[.data] = synopsisData
             self.moveData = param
+            self.actionLog.menu_name = "B2.SYNOP"
             
         case .webInApp:
             guard let valueString = self.location else { return }
@@ -300,17 +305,17 @@ class AlramData:InfinityData,ObservableObject{
                 self.inLink = url
                 self.inLinkTitle = self.text
             }
-            
+            self.actionLog.menu_name = "B1.WEBINAPP"
         case .browser:
             guard let url = self.location else { return }
             self.outLink = url
-            
+            self.actionLog.menu_name = "B3.WEB"
         case .home:
             self.move = .home
             var param = [PageParam:Any]()
             param[.id] = EuxpNetwork.GnbTypeCode.GNB_HOME.rawValue
             self.moveData = param
-            
+            self.actionLog.menu_name = "B4.MENU"
         case .trailer, .season, .monthly:
             guard let epsdId = self.location else { return }
             self.move = .synopsis
@@ -323,6 +328,9 @@ class AlramData:InfinityData,ObservableObject{
             )
             var param = [PageParam:Any]()
             param[.data] = synopsisData
+            self.actionLog.menu_name = landingType == .trailer
+                ? "B5.CONTENT"
+                : landingType == .season ? "B6.SEASON" : "B7.MONTH"
             self.moveData = param
             
         case .menu:
@@ -353,6 +361,7 @@ class AlramData:InfinityData,ObservableObject{
                     param[.subId] = url
                 }
             }
+            self.actionLog.menu_name = "B4.MENU"
             self.moveData = param
                 
         case .synop:
@@ -380,7 +389,7 @@ class AlramData:InfinityData,ObservableObject{
                 param[.data] = synopsisData
                 self.move = .synopsis
             }
-            
+            self.actionLog.menu_name = "B2.SYNOP"
             self.moveData = param
             
         case .coupon:
@@ -388,25 +397,28 @@ class AlramData:InfinityData,ObservableObject{
             var param = [PageParam:Any]()
             param[.id] = PageMyBenefits.MenuType.coupon.rawValue
             self.moveData = param
-            
+            self.actionLog.menu_name = "B10.COUPON"
         case .point:
             self.move = .myBenefits
             var param = [PageParam:Any]()
             param[.id] = PageMyBenefits.MenuType.point.rawValue
             self.moveData = param
+            self.actionLog.menu_name = "B9.POINT"
         case .newpoint:
             self.move = .myBenefits
             var param = [PageParam:Any]()
             param[.id] = PageMyBenefits.MenuType.point.rawValue
             self.moveData = param
-            
+            self.actionLog.menu_name = "B11.NEWBPOINT"
         case .reserve:
             guard let svcId = self.location else { return }
             self.move = .schedule
             var param = [PageParam:Any]()
             param[.id] = svcId
             self.moveData = param
+            self.actionLog.menu_name = "B8.RESERVATION"
         default:
+            self.actionLog.menu_name = self.title
             break
         }
         

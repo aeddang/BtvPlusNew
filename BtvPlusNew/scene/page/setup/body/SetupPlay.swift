@@ -10,6 +10,7 @@ struct SetupPlay: PageView {
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     
     var isInitate:Bool = false
     var isPairing:Bool = false
@@ -43,6 +44,8 @@ struct SetupPlay: PageView {
             self.appSceneObserver.event = .toast(
                 self.isAutoPlay ? String.alert.autoPlayOn : String.alert.autoPlayOff
             )
+            self.sendLog(category: String.pageText.setupPlayAuto, config: self.isAutoPlay)
+            
         }.onReceive( [self.isNextPlay].publisher ) { value in
             if !self.isInitate { return }
             if self.setup.nextPlay == self.isNextPlay { return }
@@ -50,8 +53,14 @@ struct SetupPlay: PageView {
             self.appSceneObserver.event = .toast(
                 self.isNextPlay ? String.alert.nextPlayOn : String.alert.nextPlayOff
             )
+            self.sendLog(category: String.pageText.setupPlayNext, config: self.isNextPlay)
         }
     }//body
+    
+    private func sendLog(category:String, config:Bool) {
+        let actionBody = MenuNaviActionBodyItem( config: config ? "on" : "off", category: category)
+        self.naviLogManager.actionLog(.clickCardRegister, actionBody: actionBody)
+    }
     
 }
 

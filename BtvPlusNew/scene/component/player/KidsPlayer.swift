@@ -230,6 +230,7 @@ struct KidsPlayer: PageComponent{
             }
             .onAppear(){
                 if !Preroll.isInit { Preroll.initate() }
+                self.viewModel.isUserPlay = self.setup.autoPlay
             }
             .onDisappear(){
                 self.pagePresenter.fullScreenExit()

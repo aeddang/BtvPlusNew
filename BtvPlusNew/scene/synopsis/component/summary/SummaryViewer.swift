@@ -65,6 +65,7 @@ struct SummaryViewer: PageComponent{
                 if self.isSimple {
                     Text(self.data.summry!)
                         .modifier(MediumTextStyle( size: Font.size.light ))
+                        .lineSpacing(8)
                         .fixedSize(horizontal: false, vertical: true)
                         .modifier(ContentHorizontalEdges())
                      
@@ -72,6 +73,7 @@ struct SummaryViewer: PageComponent{
                     VStack(alignment:.leading , spacing:Dimen.margin.thin) {
                         Text(self.data.summry!)
                             .modifier(MediumTextStyle( size: Font.size.light ))
+                            .lineSpacing(8)
                             .fixedSize(horizontal: false, vertical: true)
                             .lineLimit(self.isExpand ? 999 : 3)
                             

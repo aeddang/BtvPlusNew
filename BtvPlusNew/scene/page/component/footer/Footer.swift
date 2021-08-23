@@ -9,6 +9,21 @@
 import Foundation
 import SwiftUI
 import Combine
+
+struct FooterItem:View {
+    let title:String
+    let text:String
+ 
+    var body: some View {
+        HStack(spacing: Dimen.margin.micro){
+            Text(self.title)
+                .modifier(MediumTextStyle(size: Font.size.tiny , color: Color.app.grey))
+            Text(self.text)
+                .modifier(MediumTextStyle(size: Font.size.tiny , color: Color.app.greyMedium))
+        }
+    }
+}
+
 extension Footer{
     static let height:CGFloat = 50
     static let expandHeight:CGFloat = SystemEnvironment.isTablet ? 300 : 270
@@ -28,7 +43,7 @@ struct Footer: PageComponent {
             HStack(spacing: Self.margin){
                 TextButton(
                     defaultText:String.pageTitle.privacy,
-                    textModifier: MediumTextStyle(size: Font.size.tinyExtra , color: Color.app.grey).textModifier
+                    textModifier: BoldTextStyle(size: Font.size.tinyExtra , color: Color.app.grey).textModifier
                 ){ _ in
                     AppUtil.openURL(Self.privacy)
                 }
@@ -36,7 +51,7 @@ struct Footer: PageComponent {
                     .modifier(MediumTextStyle(size: Font.size.tiny , color: Color.app.grey))
                 TextButton(
                     defaultText:String.pageTitle.serviceTerms,
-                    textModifier: MediumTextStyle(size: Font.size.tiny , color: Color.app.grey).textModifier
+                    textModifier: BoldTextStyle(size: Font.size.tiny , color: Color.app.grey).textModifier
                 ){ _ in
                     
                     self.pagePresenter.openPopup(
@@ -59,7 +74,7 @@ struct Footer: PageComponent {
                     Image(Asset.icon.down)
                         .renderingMode(.original).resizable()
                         .scaledToFit()
-                        .frame(width: Dimen.icon.thinExtra, height: Dimen.icon.thinExtra)
+                        .frame(width: Dimen.icon.micro, height: Dimen.icon.micro)
                         .rotationEffect(.degrees(self.isExpand ? 180 : 0))
                         .opacity(0.8)
                 }
@@ -70,15 +85,23 @@ struct Footer: PageComponent {
                     HStack(alignment: .top, spacing: 0){
                         VStack(alignment: .leading, spacing: 0){
                             Spacer().modifier(MatchHorizontal(height: 0))
-                            Text(String.footer.text1)
-                                .lineSpacing(Self.margin)
-                                .modifier(MediumTextStyle(size: Font.size.micro , color: Color.app.grey))
+                            FooterItem(title: String.footer.title1, text: String.footer.text1)
+                            FooterItem(title: String.footer.title2, text: String.footer.text2)
+                                .padding(.top, Self.margin)
+                            FooterItem(title: String.footer.title3, text: String.footer.text3)
+                                .padding(.top, Self.margin)
+                            FooterItem(title: String.footer.title4, text: String.footer.text4)
+                                .padding(.top, Self.margin)
+                            FooterItem(title: String.footer.title5, text: String.footer.text5)
+                                .padding(.top, Self.margin)
                         }
                         VStack(alignment: .leading, spacing: 0){
                             Spacer().modifier(MatchHorizontal(height: 0))
-                            Text(String.footer.text2)
-                                .lineSpacing(Self.margin)
-                                .modifier(MediumTextStyle(size: Font.size.micro , color: Color.app.grey))
+                            FooterItem(title: String.footer.title6, text: String.footer.text6)
+                            FooterItem(title: String.footer.title7, text: String.footer.text7)
+                                .padding(.top, Self.margin)
+                            FooterItem(title: String.footer.title8, text: String.footer.text8)
+                                .padding(.top, Self.margin)
                             TextButton(
                                 defaultText:String.footer.button,
                                 textModifier: MediumTextStyle(size: Font.size.micro , color: Color.app.grey).textModifier,
@@ -94,9 +117,22 @@ struct Footer: PageComponent {
                 } else {
                     VStack(alignment: .leading, spacing: 0){
                         Spacer().modifier(MatchHorizontal(height: 0))
-                        Text(String.footer.text)
-                            .lineSpacing(Self.margin)
-                            .modifier(MediumTextStyle(size: Font.size.tiny , color: Color.app.grey))
+                        FooterItem(title: String.footer.title1, text: String.footer.text1)
+
+                        FooterItem(title: String.footer.title2, text: String.footer.text2)
+                            .padding(.top, Self.margin)
+                        FooterItem(title: String.footer.title3, text: String.footer.text3)
+                            .padding(.top, Self.margin)
+                        FooterItem(title: String.footer.title4, text: String.footer.text4)
+                            .padding(.top, Self.margin)
+                        FooterItem(title: String.footer.title5, text: String.footer.text5)
+                            .padding(.top, Self.margin)
+                        FooterItem(title: String.footer.title6, text: String.footer.text6)
+                            .padding(.top, Self.margin)
+                        FooterItem(title: String.footer.title7, text: String.footer.text7)
+                            .padding(.top, Self.margin)
+                        FooterItem(title: String.footer.title8, text: String.footer.text8)
+                            .padding(.top, Self.margin)
                         TextButton(
                             defaultText:String.footer.button,
                             textModifier: MediumTextStyle(size: Font.size.tiny , color: Color.app.grey).textModifier,

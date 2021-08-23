@@ -16,6 +16,7 @@ struct DivisionTab : PageComponent {
     var buttons:[NavigationButton]
     var strokeWidth:CGFloat = Dimen.line.light
     var divisionMargin:CGFloat = 0
+    var radius:CGFloat = Dimen.radius.light
     var height:CGFloat = Dimen.tab.regularExtra
     var bgColor:Color = Color.transparent.clear
     var useSelectedEffect:Bool = true
@@ -32,9 +33,9 @@ struct DivisionTab : PageComponent {
         }
         .modifier(MatchHorizontal(height: self.height))
         .background(self.bgColor)
-        .clipShape( RoundedRectangle(cornerRadius: Dimen.radius.light))
+        .clipShape( RoundedRectangle(cornerRadius: self.radius))
         .overlay(
-            RoundedRectangle(cornerRadius: Dimen.radius.light).stroke( Color.app.blueLightExtra ,lineWidth: self.strokeWidth)
+            RoundedRectangle(cornerRadius: self.radius).stroke( Color.app.blueLightExtra ,lineWidth: self.strokeWidth)
         )
         
     }//body

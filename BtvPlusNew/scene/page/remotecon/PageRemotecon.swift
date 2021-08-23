@@ -506,12 +506,10 @@ struct PageRemotecon: PageView {
         } else {
             self.locationObserver.requestWhenInUseAuthorization()
         }
-        
     }
     
     private func sendLog(action:NaviLog.Action, actionBody:MenuNaviActionBodyItem? = nil) {
         self.naviLogManager.actionLog(action , actionBody: actionBody)
-        
     }
     
     private func sendStatusLog(action:NaviLog.Action, result: Bool, category:String? = nil) {

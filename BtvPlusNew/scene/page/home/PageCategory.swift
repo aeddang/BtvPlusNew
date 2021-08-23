@@ -39,6 +39,7 @@ struct PageCategory: PageView {
                     buttons: self.tabs,
                     strokeWidth : 0,
                     divisionMargin: Dimen.margin.thin,
+                    radius: Dimen.radius.regular,
                     height: Dimen.tab.heavyExtra,
                     bgColor : Color.app.blueLight,
                     useSelectedEffect: false
@@ -117,9 +118,13 @@ struct PageCategory: PageView {
     
     @discardableResult
     private func resetSize(openId:String? = nil) -> CateData?{
-        let margin:CGFloat = SystemEnvironment.isTablet
-            ? Dimen.margin.heavy  : Dimen.margin.heavyExtra
-        self.listWidth = self.sceneObserver.screenSize.width - margin * 2.0
+        if SystemEnvironment.isTablet {
+            self.listWidth = self.sceneObserver.sceneOrientation == .portrait ? 530 : 770
+        } else {
+            let margin:CGFloat = Dimen.margin.heavyExtra
+            self.listWidth = self.sceneObserver.screenSize.width - margin * 2.0
+        }
+       
         guard let cateDatas = self.originDatas else { return nil }
         self.datas = []
         var tabDatas:[CateData] = []
@@ -174,7 +179,7 @@ struct PageCategory: PageView {
                 textModifier: TextModifier(
                     family:Font.family.medium,
                     size: Font.size.thin ,
-                    color: Color.app.grey,
+                    color: Color.app.greyLight,
                     activeColor: Color.app.white
                     )
                 )

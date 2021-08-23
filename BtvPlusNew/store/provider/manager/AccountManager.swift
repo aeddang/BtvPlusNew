@@ -41,8 +41,8 @@ class AccountManager : PageProtocol{
             switch requestPairing{
             case .cancel :
                 self.mdnsPairingManager.requestPairing( requestPairing )
-            case .wifi :
-                self.mdnsPairingManager.requestPairing( requestPairing,
+            case .wifi(let retryCount) :
+                self.mdnsPairingManager.requestPairing( requestPairing, retryCount:retryCount,
                    found: { data in
                         self.pairing.foundDevice(mdnsData:data)
                    },notFound: {

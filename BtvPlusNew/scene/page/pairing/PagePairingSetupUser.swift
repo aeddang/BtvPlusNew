@@ -19,7 +19,7 @@ struct PagePairingSetupUser: PageView {
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @State var title:String? = nil
-    @State var pairingType:PairingRequest = .wifi
+    @State var pairingType:PairingRequest = .wifi()
     @State var editType:EditType = .none
     
     @State var nickName:String = ""

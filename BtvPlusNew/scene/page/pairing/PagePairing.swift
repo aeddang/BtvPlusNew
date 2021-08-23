@@ -61,7 +61,7 @@ struct PagePairingBody: PageView {
                 text: String.pageText.pairingBtnWifiSub,
                 tip: String.pageText.pairingBtnWifiSubTip
             ){
-                self.requestPairing( .wifi )
+                self.requestPairing( .wifi() )
             }
             .padding(.top, Dimen.margin.lightExtra)
             
@@ -141,7 +141,7 @@ struct PagePairingBodyTablet: PageView {
                     text: String.pageText.pairingBtnWifiSubTablet,
                     tip: String.pageText.pairingBtnWifiSubTip
                 ){
-                    self.requestPairing( .wifi )
+                    self.requestPairing( .wifi() )
                 }
                 .padding(.leading, Dimen.margin.thinExtra)
                 ConnectButtonTablet(
@@ -218,7 +218,7 @@ struct PagePairingBodyTabletHorizontal: PageView {
                                 title: String.pageText.pairingBtnWifi,
                                 text: String.pageText.pairingBtnWifiSubTablet
                             ){
-                                self.requestPairing( .wifi )
+                                self.requestPairing( .wifi() )
                             }
                             ConnectButtonTablet(
                                 image: Asset.icon.pairingBtv,
@@ -329,7 +329,7 @@ struct PagePairing: PageView {
         case .wifi:
             if self.networkObserver.status != .wifi {
                 self.appSceneObserver.alert = .connectWifi{ retry in
-                    if retry { self.requestPairing(type: .wifi) }
+                    if retry { self.requestPairing(type: .wifi()) }
                 }
                 return
             }

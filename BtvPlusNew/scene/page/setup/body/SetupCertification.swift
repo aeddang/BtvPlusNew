@@ -13,6 +13,7 @@ struct SetupCertification: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var isInitate:Bool = false
     var isPairing:Bool = false
     var pairingType:PairingDeviceType = .btv
@@ -156,6 +157,7 @@ struct SetupCertification: PageView {
             self.repository.updateWatchLv(nil)
             self.selectedWatchLv = nil
             self.willSelectedWatchLv = nil
+            self.sendLog(category: String.pageText.setupCertificationAge, config: false)
             return
         }
         guard let find = self.watchLvs?.firstIndex(where: {$0 == select}) else {return}
@@ -163,6 +165,7 @@ struct SetupCertification: PageView {
         self.repository.updateWatchLv(Setup.WatchLv.allCases[find])
         self.selectedWatchLv = select
         self.willSelectedWatchLv = nil
+        self.sendLog(category: String.pageText.setupCertificationAge, config: true)
     }
     
     private func setupKidsExitAuth(_ select:Bool){
@@ -191,6 +194,8 @@ struct SetupCertification: PageView {
         self.appSceneObserver.alert = .alert(
             select ? String.alert.kidsExitCompleted : String.alert.kidsExitCanceled,
             select ? String.alert.kidsExitCompletedInfo : String.alert.kidsExitCanceledInfo)
+        
+        self.sendLog(category: String.pageText.setupCertificationKidsExit, config: select)
     }
     private func onPurchaseAuth(_ select:Bool){
         self.setup.isPurchaseAuth = select
@@ -199,6 +204,12 @@ struct SetupCertification: PageView {
         self.appSceneObserver.alert = .alert(
             select ? String.alert.purchaseAuthCompleted : String.alert.purchaseAuthCanceled,
             select ? String.alert.purchaseAuthCompletedInfo : String.alert.purchaseAuthCanceledInfo)
+        self.sendLog(category: String.pageText.setupCertificationPurchase, config: select)
+    }
+    
+    private func sendLog(category:String, config:Bool) {
+        let actionBody = MenuNaviActionBodyItem( config: config ? "on" : "off", category: category)
+        self.naviLogManager.actionLog(.clickCardRegister, actionBody: actionBody)
     }
 }
 

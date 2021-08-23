@@ -7,7 +7,7 @@
 
 import Foundation
 enum PairingRequest:Equatable{
-    case wifi , btv, user(String?), cancel, hostInfo(auth:String?, device:String?, prevResult:NpsCommonHeader?),
+    case wifi(retryCount:Int = 2) , btv, user(String?), cancel, hostInfo(auth:String?, device:String?, prevResult:NpsCommonHeader?),
          recovery, device(StbData), auth(String) , token(String),
          unPairing, check,
          userInfo, updateKids, registKid(Kid), selectKid(Kid), modifyKid(Kid), deleteKid(Kid),

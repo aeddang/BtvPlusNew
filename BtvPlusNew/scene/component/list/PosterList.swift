@@ -623,7 +623,7 @@ struct PosterItem: PageView {
         .clipShape(RoundedRectangle(cornerRadius: self.data.type.radius))
         .overlay(
             RoundedRectangle(cornerRadius: self.data.type.radius)
-            .stroke(
+            .strokeBorder(
                 self.isSelected ? self.data.type.selectedColor : Color.transparent.clear,
                 lineWidth: self.data.type.selectedStroke)
         )

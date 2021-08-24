@@ -8,8 +8,8 @@
 import Foundation
 import SwiftUI
 import struct Kingfisher.KFImage
-enum CateSubType {
-    case prevList, list, event, tip, webview, cashCharge
+enum CateSubType:String{
+    case prevList, list, event, tip, webview, cashCharge, kids
      
     static func getType(id:String?) -> CateSubType{
         switch id {
@@ -41,6 +41,12 @@ class CateData:InfinityData{
     func setCashCharge() -> CateData {
         title = String.button.cashCharge
         subType = .cashCharge
+        return self
+    }
+    
+    func setZemkids() -> CateData {
+        title = String.kidsTitle.kids
+        subType = .kids
         return self
     }
 
@@ -178,15 +184,26 @@ struct CateItem: PageView {
     var data:CateData
     var body: some View {
         
-        VStack(spacing:Dimen.margin.tiny){
+        VStack(spacing:Dimen.margin.tinyUltra){
+            
             ZStack{
-                KFImage(URL(string: self.data.image))
-                    .resizable()
-                    .placeholder { Image(Asset.noImg1_1).resizable() }
-                    .cancelOnDisappear(true)
-                    .loadImmediately()
-                    .aspectRatio(contentMode: .fit)
-                    .modifier(MatchParent())
+                if self.data.subType == .kids {
+                    Image(Asset.gnbTop.zemkids)
+                        .renderingMode(.original)
+                        .resizable()
+                        .scaledToFit()
+                        .padding(.all, SystemEnvironment.isTablet ?  Dimen.margin.tiny : Dimen.margin.thin)
+                        .modifier(MatchParent())
+                        .background(Color.app.blueLightExtra)
+                } else {
+                    KFImage(URL(string: self.data.image))
+                        .resizable()
+                        .placeholder { Image(Asset.noImg1_1).resizable() }
+                        .cancelOnDisappear(true)
+                        .loadImmediately()
+                        .aspectRatio(contentMode: .fit)
+                        .modifier(MatchParent())
+                }
             }
             .frame(
                 width: ListItem.cate.size.width,

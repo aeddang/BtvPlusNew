@@ -48,6 +48,7 @@ struct TopViewer: PageComponent{
                     .cancelOnDisappear(true)
                     .loadImmediately()
                     .aspectRatio(contentMode: .fit)
+                    .frame(alignment: .top)
                     .modifier(MatchParent())
                     .padding(.bottom, SystemEnvironment.isTablet ? Dimen.button.regular : 0)
                     
@@ -84,7 +85,7 @@ struct TopViewer: PageComponent{
                             }
                             .padding(.horizontal,  Dimen.margin.thin)
                             .modifier( MatchHorizontal(height:Dimen.button.medium))
-                            .overlay(Rectangle().stroke( Color.app.greyExtra , lineWidth: 1 ))
+                            .overlay(Rectangle().strokeBorder( Color.app.greyExtra , lineWidth: 1 ))
                             
                         } else if self.data.purchaseWebviewModel != nil {
                             FillButton(

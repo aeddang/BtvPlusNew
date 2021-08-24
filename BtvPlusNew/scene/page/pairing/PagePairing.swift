@@ -30,6 +30,7 @@ struct PagePairingBody: PageView {
                         .fixedSize(horizontal: false, vertical: true)
                     Text(String.pageText.pairingText1)
                         .font(.custom(Font.family.medium, size: Font.size.lightExtra))
+                        .lineSpacing(Font.spacing.regular)
                         .foregroundColor(Color.app.greyLight)
                         .padding(.top, Dimen.margin.lightExtra)
                     
@@ -79,7 +80,7 @@ struct PagePairingBody: PageView {
                     size:Font.size.light,
                     color: Color.brand.primary
                 ))
-                .padding(.top, Dimen.margin.regular)
+                .padding(.top, Dimen.margin.medium)
             
             ConnectButton(
                 image: Asset.icon.pairingUser,
@@ -170,7 +171,7 @@ struct PagePairingBodyTablet: PageView {
             }
             .padding(.top, Dimen.margin.medium)
         }
-        
+        .modifier(ContentHorizontalEdges())
         .modifier(MatchParent())
     }//body
 }
@@ -279,7 +280,8 @@ struct PagePairing: PageView {
                 VStack(spacing:0){
                     PageTab(
                         title: String.pageTitle.connectBtv,
-                        isBack : true
+                        isBack : true,
+                        style:.dark
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     if SystemEnvironment.isTablet {
@@ -301,7 +303,7 @@ struct PagePairing: PageView {
                         }
                     }
                 }
-                .modifier(PageFull())
+                .modifier(PageFull(style:.dark))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
             

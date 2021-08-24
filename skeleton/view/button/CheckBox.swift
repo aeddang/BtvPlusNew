@@ -42,7 +42,7 @@ struct CheckBox: View, SelecterbleProtocol {
         var textSize:CGFloat {
             get{
                 switch self {
-                case .white: return  Font.size.thinExtra
+                case .white: return   SystemEnvironment.isTablet ? Font.size.tiny : Font.size.thinExtra
                 case .small: return  Font.size.tiny
                 default : return  Font.size.lightExtra
                 }
@@ -65,7 +65,7 @@ struct CheckBox: View, SelecterbleProtocol {
     
     
     var body: some View {
-        HStack(alignment: .top, spacing: Dimen.margin.thin){
+        HStack(alignment: .center, spacing: Dimen.margin.thin){
            ImageButton(
             defaultImage: self.style.check,
             activeImage: self.isStrong
@@ -79,33 +79,39 @@ struct CheckBox: View, SelecterbleProtocol {
             }
             if !self.isSimple {
                 VStack(alignment: .leading, spacing: 0){
+                    if isFill {
+                        Spacer().modifier(MatchHorizontal(height: 0))
+                    }
                     if self.text != nil {
                         if self.isStrong {
                             Text(self.text!)
+                                .kerning(Font.kern.thin)
                                 .modifier( BoldTextStyle(
                                             size: self.style.textSize,
                                             color: self.style.textColor)
                                 )
+                                .fixedSize(horizontal:false, vertical:true)
                         }else{
                             Text(self.text!)
+                                .kerning(Font.kern.thin)
                                 .modifier( MediumTextStyle(
                                         size: self.style.textSize,
                                         color: self.style.textColor)
                                 )
+                                .fixedSize(horizontal:false, vertical:true)
                         }
 
                     }
                     if self.subText != nil {
                         Text(self.subText!)
+                            .kerning(Font.kern.thin)
                             .modifier(MediumTextStyle(
                                 size: self.style.textSize,
                                 color: Color.app.greyLight))
                     }
                 }
-                .offset(y: self.style == .normal ? 3 : 0)
-                if isFill {
-                    Spacer()
-                }
+               // .offset(y: self.style == .normal ? 3 : 0)
+                
                 if more != nil {
                     TextButton(
                         defaultText: String.button.view,

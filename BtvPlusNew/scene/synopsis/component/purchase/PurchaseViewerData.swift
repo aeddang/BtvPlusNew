@@ -21,7 +21,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
     private(set) var options: [String] = []
     private(set) var optionValues: [String] = []
     private(set) var purchasBtnTitle:String? = nil
-    
+    private(set) var purchasBtnSubTitle:String? = nil
     private(set) var watchOptions:[PurchaseModel]? = nil
     private(set) var isPlayAble:Bool = false
     
@@ -174,13 +174,15 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
         let leading = purchas.hasAuthority ? String.button.purchasAnother : String.button.purchas
         if purchasableItems.count < 2  {
             if self.type == .btv {
-                self.purchasBtnTitle =  leading + "(₩" + purchasableItem.salePrice + ")"
+                self.purchasBtnTitle =  leading
+                self.purchasBtnSubTitle = "(" + purchasableItem.salePrice + ")"
             } else {
                 self.purchasBtnTitle =  leading + "  |  " + purchasableItem.salePrice 
             }
         }else{
             if self.type == .btv {
-                self.purchasBtnTitle =  leading + "(₩" + purchasableItem.salePrice + "~)"
+                self.purchasBtnTitle =  leading 
+                self.purchasBtnSubTitle = "(" + purchasableItem.salePrice + "~)"
             } else {
                 self.purchasBtnTitle =  leading + "  |  " + purchasableItem.salePrice
             }

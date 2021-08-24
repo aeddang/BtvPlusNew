@@ -43,23 +43,27 @@ struct GuideView: PageComponent, Identifiable{
                     if let title = self.data.title {
                         Text(title)
                             .kerning(Font.kern.thin)
+                            .lineSpacing(Font.spacing.regular)
                             .modifier(MediumTextStyle(size: Font.size.mediumExtra, color: Color.brand.primary))
                             .padding(.bottom, Dimen.margin.thin)
                             .padding(.horizontal, Dimen.margin.regular)
                     }
                     if let text = self.data.text {
                         Text(text)
+                            .lineSpacing(Font.spacing.regular)
                             .modifier(MediumTextStyle(size: Font.size.medium, color: Color.app.white))
-                            .padding(.bottom, Dimen.margin.light)
+                            .padding(.bottom, Dimen.margin.regularExtra)
                             .padding(.horizontal, Dimen.margin.regular)
                     }
                     if let info = self.data.info {
                         Text(info)
+                            .lineSpacing(Font.spacing.regular)
                             .modifier(MediumTextStyle(size: Font.size.regular, color: Color.app.grey))
                             .padding(.horizontal, Dimen.margin.regular)
                     }
                     if let tip = self.data.tip {
                         Text(tip)
+                            .lineSpacing(Font.spacing.regular)
                             .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.grey))
                             .padding(.horizontal, Dimen.margin.regular)
                             .padding(.top, Dimen.margin.light)

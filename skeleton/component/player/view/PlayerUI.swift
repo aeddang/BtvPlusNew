@@ -14,7 +14,7 @@ extension PlayerUI {
     static let padding = SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.thin
     static let paddingFullScreen = SystemEnvironment.isTablet ? Dimen.margin.lightExtra : Dimen.margin.regular
     
-    static let uiHeight:CGFloat = SystemEnvironment.isTablet ? 64 : 44
+    static let uiHeight:CGFloat = SystemEnvironment.isTablet ? 48 : 34
     static let uiHeightFullScreen:CGFloat  = SystemEnvironment.isTablet ? 110 : 64
     
     static let timeTextWidth:CGFloat  = SystemEnvironment.isTablet ? 87 : 55
@@ -103,9 +103,7 @@ struct PlayerUI: PageComponent {
                         size: CGSize(width:Dimen.icon.regular,height:Dimen.icon.regular)
                     ){ _ in
                         if self.viewModel.useFullScreenAction {
-                            let changeOrientation:UIInterfaceOrientationMask = SystemEnvironment.isTablet
-                            ? (self.sceneObserver.sceneOrientation == .portrait ? .portrait :.landscape)
-                            : (self.isFullScreen ? .portrait : .landscape)
+                            let changeOrientation:UIInterfaceOrientationMask = self.isFullScreen ? .portrait : .landscape
                             self.isFullScreen
                                 ? self.pagePresenter.fullScreenExit(changeOrientation: changeOrientation)
                                 : self.pagePresenter.fullScreenEnter(changeOrientation: changeOrientation)
@@ -139,13 +137,13 @@ struct PlayerUI: PageComponent {
                                 .font(.custom(
                                         Font.family.bold,
                                         size: Font.size.lightExtra ))
-                                .foregroundColor(Color.brand.primary)
+                                .foregroundColor(Color.app.white)
                                 
                             + Text(String.app.min + " " + String.player.preplaying)
                                 .font(.custom(
                                         Font.family.bold,
                                         size:  Font.size.lightExtra))
-                                    .foregroundColor(Color.app.white)
+                                .foregroundColor(Color.app.white)
                         } else if let info = self.viewModel.playInfo{
                             Text(info)
                                 .modifier(BoldTextStyle(

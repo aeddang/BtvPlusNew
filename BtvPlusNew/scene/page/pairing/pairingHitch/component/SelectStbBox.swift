@@ -64,7 +64,7 @@ struct SelectStbBox: View {
                         )
                     },
                     action:{ ck in
-                        self.isAgree1 = ck
+                        //self.isAgree1 = ck
                     }
                 )
                 
@@ -78,6 +78,7 @@ struct SelectStbBox: View {
                                 .getPageObject(.privacyAndAgree)
                         )
                     },
+                    
                     action:{ ck in
                         self.isAgree2 = ck
                     }
@@ -103,7 +104,7 @@ struct SelectStbBox: View {
                     }
                 )
             }
-            .padding(.all, Dimen.margin.regular)
+            .padding(.all, SystemEnvironment.isTablet ? Dimen.margin.light : Dimen.margin.regular)
             .background(Color.app.whiteDeep)
             .padding(.top, Dimen.margin.regularExtra)
             FillButton(

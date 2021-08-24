@@ -42,7 +42,7 @@ struct PlayerTopBody: PageView{
     var body: some View {
         VStack(
             alignment :.trailing,
-            spacing:SystemEnvironment.isTablet ? Dimen.margin.thin : Dimen.margin.light){
+            spacing:Dimen.margin.thin){
             HStack(spacing: self.isFullScreen ? PlayerUI.fullScreenSpacing : PlayerUI.spacing){
                 if !self.isSimple{
                     Button(action: {

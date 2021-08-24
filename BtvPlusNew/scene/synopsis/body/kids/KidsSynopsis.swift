@@ -154,7 +154,7 @@ struct KidsSynopsis: PageComponent{
                     .clipShape(RoundedRectangle(cornerRadius: self.isFullScreen ? 0 : DimenKids.radius.heavy))
                     .overlay(
                         RoundedRectangle(cornerRadius: self.isFullScreen ? 0 : DimenKids.radius.heavy)
-                            .stroke(Color.app.ivoryDeep,
+                            .strokeBorder(Color.app.ivoryDeep,
                                     lineWidth: self.isFullScreen ? 0 : DimenKids.stroke.heavy)
                     )
                     if !SystemEnvironment.isTablet && !self.isFullScreen{

@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 struct FillButton: View, SelecterbleProtocol{
     let text:String
+    var subText:String? = nil
     var trailText:String? = nil
     var strikeText:String? = nil
     var moreText:String? = nil
@@ -39,6 +40,7 @@ struct FillButton: View, SelecterbleProtocol{
     
     init(
         text:String,
+        subText:String? = nil,
         trailText:String? = nil,
         strikeText:String? = nil,
         index: Int = 0,
@@ -55,6 +57,7 @@ struct FillButton: View, SelecterbleProtocol{
         action:@escaping (_ idx:Int) -> Void )
     {
         self.text = text
+        self.subText = subText
         self.trailText = trailText
         self.strikeText = strikeText
         self.index = index
@@ -185,7 +188,13 @@ struct FillButton: View, SelecterbleProtocol{
                         .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
                         .lineLimit(1)
                         .fixedSize(horizontal: true, vertical: false)
-                    
+                    if let subText = self.subText  {
+                        Text(subText)
+                            .font(.custom(Font.family.medium, size: textModifier.size))
+                            .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
+                            .lineLimit(1)
+                            .padding(.leading, -Dimen.margin.tinyExtra)
+                    }
                     if self.trailText != nil || self.strikeText != nil {
                         Spacer()
                         if let strikeText = self.strikeText {

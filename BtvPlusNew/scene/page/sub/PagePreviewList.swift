@@ -51,7 +51,7 @@ struct PagePreviewList: PageView {
                     )
                     
                 }
-                .modifier(PageFull(style:.normal))
+                .modifier(PageFull(style:.dark))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in

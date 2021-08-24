@@ -149,7 +149,7 @@
 "btnHeart" = "찜하기";
 "btnLike" = "평가하기";
 "btnLikeOn" = "좋아요";
-"btnLikeOff" = "별로여요";
+"btnLikeOff" = "별로예요";
 "btnRetry" = "다시시도";
 "btnWatchBtv" = "B tv로 보기";
 "btnConnectBtv" = "B tv 연결하기";
@@ -212,7 +212,7 @@
 "sortEtc" = "기타";
 "sortNone" = "없음";
 
-"sortCount" = "1회 부터";
+"sortCount" = "1회부터";
 "sortLatest" = "최신순";
 "sortCountKids" = "첫 화부터";
 "sortLatestKids" = "최신 화부터";
@@ -338,7 +338,7 @@
 "alertBS" = "서비스 중지";
 "alertBStext" = "서비스 중지로 인해 시청 불가한 상품입니다.";
 
-"alertPurchase" = "구매";
+"alertPurchase" = "구매 안내";
 "alertPurchaseContinue" = "전체 영상은 구매 후 시청 가능합니다.\n구매 후 계속 시청하시겠습니까?";
 "alertPurchaseContinueBtv" = "구매 후 이용 가능합니다.\n구매 화면으로 이동하시겠습니까?";
 
@@ -509,7 +509,7 @@
 
 "titleMyRegistCardMember" = "T멤버십 카드 등록";
 "titleMyRegistCardOk" = "OK캐쉬백 카드 등록";
-
+"titleKids" = "ZEM 키즈";
 /*
  PagePairing
 */
@@ -571,7 +571,7 @@
 "pairingSetupUserAgreementAll" = "모든 항목에 동의하기";
 "pairingSetupUserAgreement1" = "모바일 B tv 이용약관 동의(필수)";
 "pairingSetupUserAgreement2" = "모바일 B tv 개인정보 수집 이용 동의(필수)";
-"pairingSetupUserAgreement3" = "인기, 무료 콘텐츠 소식/혜택 및 업데이트 알림을 받고, 이를 위한 개인정보 수집/이용에 동의(선택)";
+"pairingSetupUserAgreement3" = "인기, 무료 콘텐츠 소식/혜택 및 업데이트 알림을 받고,\n이를 위한 개인정보 수집/이용에 동의(선택)";
 
 "pairingDeviceText1" = "연결할 B tv를 선택해 주세요.";
 "pairingDeviceText2" = "연결된 Wi-Fi 공유기: ";
@@ -580,9 +580,9 @@
 
 "pairingBtvText1" = "B tv에서 인증번호 6자리를\n확인 후 입력해 주세요.";
 "pairingBtvText2" = "인증번호 확인 방법";
-"pairingBtvText3" = "B tv에서 채널 777번으로 진입";
-"pairingBtvText4" = "B tv에서 [홈 > MY > 설정 > 모바일 B tv 연결] 선택";
-"pairingBtvText5" = "셋톱박스의 채널버튼을 3초간 누르기";
+"pairingBtvText3" = "· B tv에서 채널 777번으로 진입";
+"pairingBtvText4" = "· B tv에서 [홈 > MY > 설정 > 모바일 B tv 연결] 선택";
+"pairingBtvText5" = "· 셋톱박스의 채널버튼을 3초간 누르기";
 
 "terminateBtvText1" = "모바일 B tv에서 소장 VOD를\n시청하실 B tv를 선택해주세요.";
 "terminateBtvText2" = "소장 VOD 시청 가능한 B tv";
@@ -783,7 +783,7 @@
 "synopsisTerminationBtv" = "B tv 해지 후 시청 불가 콘텐츠";
 "synopsisFreeWatch" = "무료 시청 가능";
 "synopsisFreeWatchBtv" = "B tv 연결 후 시청 가능";
-"synopsisFreeWatchMonthly" = "월정액 가입 시 무료로 이용하실 수 있어요!";
+"synopsisFreeWatchMonthly" = "이용권 구독 시 무료로 이용하실 수 있어요!";
 "synopsisWatchPeriod" = "이용 기간 동안 시청 가능";
 "synopsisWatchRent" = "대여 기간 내 시청 가능";
 "synopsisWatchPossn" = "B tv 해지 전 무제한 시청 가능";
@@ -979,8 +979,14 @@
 
 
 "pairingHitchUserAgreement1" = "모바일 B tv 서비스 이용 약관에 동의합니다. (필수)";
-"pairingHitchUserAgreement2" = "B tv 연결 및 서비스 이용을 위한 개인정보 수집/이용에 동의합니다. (필수)";
-"pairingHitchUserAgreement3" = "인기, 무료 콘텐츠 소식/혜택 및 업데이트 알림을 받고, 이를 위한 개인정보 수집/이용에 동의합니다. (선택)";
+"pairingHitchUserAgreement2" = "B tv 연결 및 서비스 이용을 위한 개인정보 수집/이용에\n동의합니다. (필수)";
+"pairingHitchUserAgreement3" = "인기, 무료 콘텐츠 소식/혜택 및 업데이트 알림을 받고,\n이를 위한 개인정보 수집/이용에 동의합니다. (선택)";
+
+"pairingHitchUserAgreement1Tablet" = "모바일 B tv 서비스 이용 약관에\n동의합니다. (필수)";
+"pairingHitchUserAgreement2Tablet" = "B tv 연결 및 서비스 이용을 위한 개인정보\n수집/이용에 동의합니다. (필수)";
+"pairingHitchUserAgreement3Tablet" = "인기, 무료 콘텐츠 소식/혜택 및 업데이트 알림을 받고,\n이를 위한 개인정보 수집/이용에 동의합니다. (선택)";
+
+
 
 "pairingHitchStbName" = "우리집 TV";
 "pairingHitchTypeLeading" = "집 안에서 쉽게";

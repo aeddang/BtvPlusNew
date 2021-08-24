@@ -142,7 +142,7 @@ enum PlayerUIEvent {//input
          seekMove(Double, Bool = true),
          seeking(Double), seekForward(Double, Bool = false), seekBackword(Double, Bool = false),
          addSeekForward(Double, Bool = false), addSeekBackword(Double, Bool = false),
-         check, neetLayoutUpdate, fixUiStatus,
+         check, neetLayoutUpdate, fixUiStatus(Bool),
          screenGravity(AVLayerVideoGravity), screenRatio(CGFloat),
          fullScreen(Bool)
             

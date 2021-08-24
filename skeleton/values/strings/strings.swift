@@ -9,6 +9,7 @@
 import Foundation
 
 extension String {
+    private static let isPad =  AppUtil.isPad()
     func loaalized() -> String {
         return NSLocalizedString(self, comment: "")
     }
@@ -200,10 +201,16 @@ extension String {
         public static let fullTrailing =  "pairingHitchFullTrailing".loaalized()
         public static let full =  "pairingHitchFull".loaalized()
 
-        public static let userAgreement1 =  "pairingHitchUserAgreement1".loaalized()
-        public static let userAgreement2 =  "pairingHitchUserAgreement2".loaalized()
-        public static let userAgreement3 =  "pairingHitchUserAgreement3".loaalized()
-
+        public static let userAgreement1 =  isPad
+            ? "pairingHitchUserAgreement1Tablet".loaalized()
+            : "pairingHitchUserAgreement1".loaalized()
+        public static let userAgreement2 =  isPad
+            ? "pairingHitchUserAgreement2Tablet".loaalized()
+            : "pairingHitchUserAgreement2".loaalized()
+        public static let userAgreement3 =  isPad
+            ? "pairingHitchUserAgreement3Tablet".loaalized()
+            : "pairingHitchUserAgreement3".loaalized()
+        
         public static let stbName = "pairingHitchStbName".loaalized()
         
        

@@ -14,13 +14,13 @@ extension PlayerOptionSelectList{
     static let strokeButtonText = TextModifier(
         family: Font.family.bold,
         size: Font.size.thinExtra,
-        color: Color.app.greyLight,
+        color: Color.app.grey,
         activeColor: Color.app.white
     )
     static let strokeButtonTextFull = TextModifier(
         family: Font.family.bold,
         size: Font.size.lightExtra,
-        color: Color.app.greyLight,
+        color: Color.app.grey,
         activeColor: Color.app.white
     )
 }
@@ -32,7 +32,7 @@ struct PlayerOptionSelectList: PageComponent{
     var buttonSize:CGSize = Dimen.button.mediumRect
     var selectedIdx:Int = -1
     var body: some View {
-        HStack(spacing: self.isFullScreen ? PlayerUI.fullScreenSpacing : PlayerUI.spacing ){
+        HStack(spacing: self.isFullScreen ? Dimen.margin.tinyUltra : Dimen.margin.tinyUltra ){
             ForEach(self.btns) { btn in
                 StrokeRectButton(
                     text: btn.title,

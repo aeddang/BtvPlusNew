@@ -26,7 +26,7 @@ struct PurchaseViewer: PageComponent{
                 }
                 .padding(.horizontal,  Dimen.margin.thin)
                 .modifier( MatchHorizontal(height:Dimen.button.medium))
-                .overlay(Rectangle().stroke( Color.app.greyExtra , lineWidth: 1 ))
+                .overlay(Rectangle().strokeBorder( Color.app.greyExtra , lineWidth: 1 ))
                 if self.data.serviceInfoDesc != nil {
                     Text(self.data.serviceInfoDesc!)
                         .modifier(MediumTextStyle( size: Font.size.light, color:Color.app.white ))
@@ -140,7 +140,8 @@ struct PurchaseViewer: PageComponent{
             
             if self.data.purchasBtnTitle != nil {
                 FillButton(
-                    text: self.data.purchasBtnTitle!
+                    text: self.data.purchasBtnTitle!,
+                    subText : self.data.purchasBtnSubTitle
                 ){_ in
                     self.componentViewModel.uiEvent = .purchase
                 }

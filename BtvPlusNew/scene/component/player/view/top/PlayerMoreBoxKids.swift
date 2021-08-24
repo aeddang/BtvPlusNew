@@ -68,7 +68,10 @@ struct PlayerMoreBoxKids: PageView{
                 case .more :
                     self.isShowing = self.isShowing ? false : true
                     if self.isShowing {
-                        self.viewModel.event = .fixUiStatus
+                        self.viewModel.event = .fixUiStatus(true)
+                    } else {
+                        self.viewModel.event = .fixUiStatus(false)
+                        self.viewModel.playerUiStatus = .hidden
                     }
                 default : break
                 }

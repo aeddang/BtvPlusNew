@@ -156,6 +156,7 @@ class VideoData:InfinityData{
     func setData(data:WatchItem, cardType:BlockData.CardType = .video, idx:Int = -1) -> VideoData {
         setCardType(cardType)
         isClip = cardType == .clip
+        count = data.series_no
         watchLv = data.level?.toInt() ?? 0
         isAdult = data.adult?.toBool() ?? false
         tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)

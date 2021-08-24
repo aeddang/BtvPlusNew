@@ -27,7 +27,7 @@ struct PlayerMoreBox: PageView{
                 .resizable()
                 .aspectRatio(contentMode: .fill)
             
-            VStack(spacing:Dimen.margin.light){
+            VStack(spacing:Dimen.margin.lightExtra){
                 Button(action: {
                     self.viewModel.isLock = true
                     self.hideBox()
@@ -85,7 +85,10 @@ struct PlayerMoreBox: PageView{
                 case .more :
                     self.isShowing = self.isShowing ? false : true
                     if self.isShowing {
-                        self.viewModel.event = .fixUiStatus
+                        self.viewModel.event = .fixUiStatus(true) 
+                    } else {
+                        self.viewModel.event = .fixUiStatus(false)
+                        self.viewModel.playerUiStatus = .hidden
                     }
                 default : break
                 }

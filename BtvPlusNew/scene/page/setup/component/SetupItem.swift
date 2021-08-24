@@ -38,12 +38,15 @@ struct SetupItem: PageView {
                     }
                     if self.subTitle != nil {
                         Text(self.subTitle!)
-                        .modifier(MediumTextStyle(
-                            size: Font.size.thinExtra,
-                            color: Color.app.greyLight
-                        ))
-                        .padding(.top, Dimen.margin.thin)
-                        .fixedSize(horizontal: false, vertical: true)
+                            .kerning(Font.kern.thin)
+                            .truncationMode(.tail)
+                            .lineSpacing(Font.spacing.regular)
+                            .modifier(MediumTextStyle(
+                                size: Font.size.thinExtra,
+                                color: Color.app.greyLight
+                            ))
+                            .padding(.top, Dimen.margin.thin)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
                 
@@ -83,14 +86,16 @@ struct SetupItem: PageView {
                                 color: Color.app.grey
                             ))
                             Text(tip)
-                            .modifier(MediumTextStyle(
-                                size: Font.size.tinyExtra,
-                                color: Color.app.grey
-                            ))
-                            .fixedSize(horizontal: false, vertical: true)
+                                .truncationMode(.tail)
+                                .modifier(MediumTextStyle(
+                                    size: Font.size.tinyExtra,
+                                    color: Color.app.grey
+                                ))
+                                .fixedSize(horizontal: false, vertical: true)
                         }
                     }
                 }
+                .padding(.top, Dimen.margin.thin)
                 .padding(.trailing, Dimen.margin.thin)
             }
             if self.radios != nil {

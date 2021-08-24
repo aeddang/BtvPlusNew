@@ -107,10 +107,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
         Self.appURLSession = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: queue)
         let launchedURL = launchOptions?[UIApplication.LaunchOptionsKey.url] as? URL
         return AppDelegate.appObserver.handleDynamicLink(launchedURL)
-        
-        
     }
-    
     
     func application( _ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any]) -> Bool {
         //[DL]
@@ -118,7 +115,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
                      sourceApplication: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String,
                      annotation: "")
         return dynamicLink
-        
     }
     
     // [Deeplink]
@@ -175,7 +171,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
           }
         }
     }
-
 }
 
 extension AppDelegate : URLSessionDelegate {
@@ -186,7 +181,6 @@ extension AppDelegate : URLSessionDelegate {
 }
 
 extension AppDelegate : UNUserNotificationCenterDelegate {
-    
     // Receive displayed notifications for iOS 10 devices.
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
@@ -207,7 +201,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         completionHandler()
     }
 }
-
 
 /*
 // [END ios_10_message_handling]

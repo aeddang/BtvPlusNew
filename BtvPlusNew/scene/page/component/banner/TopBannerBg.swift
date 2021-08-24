@@ -196,6 +196,7 @@ struct TopBannerBgItem: PageComponent, Identifiable {
                     }
                     if let subTitle = data.subTitle1 {
                         Text(subTitle)
+                            .kerning(Font.kern.thin)
                             .modifier(MediumTextStyle(size: Font.size.light, color:data.subTitleColor1))
                             .multilineTextAlignment(.center)
                             .padding(.top, Dimen.margin.regular)
@@ -203,16 +204,18 @@ struct TopBannerBgItem: PageComponent, Identifiable {
                     }
                     if let subTitle = data.subTitle2 {
                         Text(subTitle)
+                            .kerning(Font.kern.thin)
                             .modifier(MediumTextStyle(size: Font.size.light, color:data.subTitleColor2))
                             .multilineTextAlignment(.center)
-                            .padding(.top, Dimen.margin.micro)
+                            .padding(.top, Dimen.margin.tinyExtra)
                             .padding(.horizontal, Dimen.margin.thin)
                     }
                     if let subTitle = data.subTitle3 {
                         Text(subTitle)
+                            .kerning(Font.kern.thin)
                             .modifier(MediumTextStyle(size: Font.size.light, color:data.subTitleColor3))
                             .multilineTextAlignment(.center)
-                            .padding(.top, Dimen.margin.micro)
+                            .padding(.top, Dimen.margin.tinyExtra)
                             .padding(.horizontal, Dimen.margin.thin)
                     }
                 }

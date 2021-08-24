@@ -49,7 +49,7 @@ struct PageAuth: PageView {
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, Dimen.margin.regular)
             Text(String.pageText.authText)
-                .lineSpacing(8)
+                .lineSpacing(Font.spacing.regular)
                 .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
                 .padding(.top, Dimen.margin.regular)
                 .fixedSize(horizontal: false, vertical: true)

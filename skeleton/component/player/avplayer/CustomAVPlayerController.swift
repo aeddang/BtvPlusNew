@@ -116,6 +116,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
             if path == "" {viewModel.error = .connect(path)}
             viewModel.path = path
             self.onLoad()
+            player.mute(viewModel.isMute)
             player.load(path, isAutoPlay: isAutoPlay, initTime: initTime, header:header, assetInfo: self.viewModel.assetInfo, drmData: viewModel.drm)
             run(player)
         case .check:

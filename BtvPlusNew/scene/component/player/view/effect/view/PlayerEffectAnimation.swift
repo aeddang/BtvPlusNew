@@ -63,7 +63,7 @@ struct PlayerEffectAnimation: PageComponent{
                                 .modifier(MatchHorizontal(height:Dimen.icon.regular))
                             Text(self.textBrightness)
                                 .modifier(BoldTextStyle(
-                                        size: Font.size.boldExtra,
+                                        size: Font.size.mediumExtra,
                                         color: Color.app.greyLight)
                                 )
                         }
@@ -111,7 +111,7 @@ struct PlayerEffectAnimation: PageComponent{
                                 .modifier(MatchHorizontal(height:Dimen.icon.regular))
                             Text(self.textVolume)
                                 .modifier(BoldTextStyle(
-                                        size: Font.size.boldExtra,
+                                        size: Font.size.mediumExtra,
                                         color: Color.app.greyLight)
                                 )
                         }

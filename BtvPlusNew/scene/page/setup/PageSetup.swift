@@ -37,7 +37,7 @@ struct PageSetup: PageView {
                     
                     InfinityScrollView( viewModel: self.infinityScrollModel ){
                         if self.sceneOrientation == .landscape {
-                            HStack(alignment:.center , spacing:Dimen.margin.thin) {
+                            HStack(alignment:.top , spacing:Dimen.margin.thin) {
                                 VStack(alignment:.leading , spacing:Dimen.margin.medium) {
                                     SetupApp(
                                         isInitate:self.isInitate,

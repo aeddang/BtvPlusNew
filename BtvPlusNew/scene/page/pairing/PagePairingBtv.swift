@@ -35,13 +35,13 @@ struct PagePairingBtv: PageView {
                     .padding(.top, Dimen.margin.regular)
                 Text(String.pageText.pairingBtvText3)
                     .modifier(MediumTextStyle( size: Font.size.thin ))
-                    .padding(.top, Dimen.margin.light)
+                    .padding(.top, Dimen.margin.tinyExtra)
                 Text(String.pageText.pairingBtvText4)
                     .modifier(MediumTextStyle( size: Font.size.thin ))
-                    .padding(.top, Dimen.margin.micro)
+                    .padding(.top, Dimen.margin.tinyExtra)
                 Text(String.pageText.pairingBtvText5)
                     .modifier(MediumTextStyle( size: Font.size.thin ))
-                    .padding(.top, Dimen.margin.micro)
+                    .padding(.top, Dimen.margin.tinyExtra)
                 
             }
         }
@@ -56,11 +56,12 @@ struct PagePairingBtv: PageView {
                 HStack(alignment:.center, spacing:Dimen.margin.light){
                     Text(String.app.certificationNumber)
                         .modifier(BoldTextStyle(size: Font.size.light))
-                    VStack(alignment: .center, spacing:0){
+                    VStack(alignment: .center, spacing:Dimen.margin.tiny){
                         FocusableTextField(
                             text:self.$input,
                             keyboardType: .numberPad, returnVal: .done,
                             placeholder: String.app.certificationNumberHolder,
+                            placeholderColor: Color.app.blackLight,
                             maxLength: 6,
                             kern: 8,
                             textModifier: BoldTextStyle( size: Font.size.black ).textModifier,
@@ -71,7 +72,7 @@ struct PagePairingBtv: PageView {
                             })
                             .frame(height:Font.size.black)
                         Spacer().modifier(MatchHorizontal(height: 1))
-                            .background(Color.app.white)
+                            .background(Color.app.blackLight)
                     }
                     .frame(width:173)
                 }
@@ -89,7 +90,8 @@ struct PagePairingBtv: PageView {
                     if !self.isInput || self.sceneOrientation == .portrait {
                         PageTab(
                             title: String.pageTitle.connectCertificationBtv,
-                            isClose: true
+                            isClose: true,
+                            style:.dark
                         )
                         .padding(.top, self.sceneObserver.safeAreaTop)
                     }
@@ -146,7 +148,7 @@ struct PagePairingBtv: PageView {
                     }
                     .padding(.bottom, self.safeAreaBottom)
                 }
-                .modifier(PageFull())
+                .modifier(PageFull(style:.dark))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                 
             }//draging
@@ -179,8 +181,8 @@ struct PagePairingBtv: PageView {
             .onReceive(self.pairing.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
-                case .connected :
-                    self.pagePresenter.closePopup(self.pageObject?.id)
+                case .connected : break
+                   // self.pagePresenter.closePopup(self.pageObject?.id)
                 case .connectError(let header) :
                     if header?.result == NpsNetwork.resultCode.pairingLimited.code {
                         self.pairing.requestPairing(.hostInfo(auth: self.input, device: nil, prevResult: header))

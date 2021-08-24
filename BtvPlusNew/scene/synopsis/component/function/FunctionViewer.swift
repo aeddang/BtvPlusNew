@@ -26,7 +26,7 @@ struct FunctionViewer: PageComponent{
             if self.isPairing && self.isRecommand == true && SystemEnvironment.isTablet {
                 RecommandTip()
             }
-            HStack(alignment: .center, spacing:Dimen.margin.regular){
+            HStack(alignment: .center, spacing:SystemEnvironment.isTablet ?  Dimen.margin.lightExtra : Dimen.margin.regularUltra){
                 if let synopsisData = self.synopsisData {
                     BookMarkButton(
                         data:synopsisData,

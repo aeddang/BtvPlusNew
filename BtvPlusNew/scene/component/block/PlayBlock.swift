@@ -100,7 +100,7 @@ struct PlayBlock: PageComponent{
                     .modifier(MatchParent())
 
                 }
-                .background(Color.brand.bg)
+               
             } else {
                 EmptyAlert()
                 .modifier(MatchParent())

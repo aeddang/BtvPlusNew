@@ -38,7 +38,7 @@ struct AppLayout: PageComponent{
             if let datas = self.floatBannerDatas {
                 FloatingBanner(datas:datas){ today in
                     if today {self.floatingBannerToDayUnvisible()}
-                    withAnimation(.easeOut(duration: 0.2)){
+                    withAnimation(.easeOut(duration: 0.1)){
                         floatBannerDatas = nil
                     }
                 }
@@ -53,9 +53,10 @@ struct AppLayout: PageComponent{
                 Spacer().modifier(MatchParent()).background(Color.transparent.black70)
                 if self.loadingInfo != nil {
                     VStack {
-                        VStack(spacing:0){
+                        VStack(spacing:Dimen.margin.tiny){
                             ForEach(self.loadingInfo!, id: \.self ) { text in
                                 Text( text )
+                                    .lineSpacing(Font.spacing.regular)
                                     .modifier(MediumTextStyle( size: Font.size.bold ))
                             }
                         }
@@ -64,7 +65,8 @@ struct AppLayout: PageComponent{
                     }
                 }
                 if SystemEnvironment.currentPageType == .btv {
-                    ActivityIndicator(isAnimating: self.$isLoading, style: .large)
+                    CircularSpinner(resorce: Asset.ani.loading)
+                    //ActivityIndicator(isAnimating: self.$isLoading, style: .large)
                 } else {
                     AnimateSpinner(isAnimating: self.$isLoading).frame(
                         width: DimenKids.loading.large.width,

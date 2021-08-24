@@ -138,7 +138,7 @@ class BannerData:InfinityData, PageProtocol{
         switch type {
         case "03": return Color.brand.primary
         case "04" : return Color.app.brownExtra
-        default: return  Color.app.grey
+        default: return  Color.app.greyLight
         }
     }
     

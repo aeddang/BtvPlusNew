@@ -83,6 +83,7 @@ struct PlayerBottomBodyKids: PageComponent{
                         ? KidsPlayerUI.uiHeightFullScreen : KidsPlayerUI.uiHeight
                     : 0
                  )
+        .opacity(self.isUiShowing ? 1.0 : 0)
         
         
     }//body

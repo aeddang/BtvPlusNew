@@ -65,7 +65,8 @@ struct SimplePlayer: PageComponent{
             .onReceive(self.viewModel.$event) { evt in
                 guard let evt = evt else { return }
                 switch evt {
-                    
+                case .mute(let isMute) : BtvPlayerModel.isInitMute = isMute
+                case .volume : BtvPlayerModel.isInitMute = false
                 case .resume :
                     if self.isPrerollPause {
                         self.isPrerollPause = false
@@ -98,6 +99,8 @@ struct SimplePlayer: PageComponent{
                     }
                 }
                 if quality == nil { return }
+                self.setup.selectedQuality = quality?.name
+                self.viewModel.selectedQuality = quality?.name
                 let autoPlay = self.viewModel.initPlay ?? self.setup.autoPlay
                 if self.viewModel.time > 1 { //화질전환 이어보기
                     self.viewModel.continuousTime = self.viewModel.time
@@ -131,6 +134,10 @@ struct SimplePlayer: PageComponent{
             }
             .onAppear(){
                 if !Preroll.isInit { Preroll.initate() }
+                self.viewModel.selectedQuality = self.setup.selectedQuality
+                if BtvPlayerModel.isInitMute {
+                    self.viewModel.isMute = true
+                }
             }
             .onDisappear(){
     

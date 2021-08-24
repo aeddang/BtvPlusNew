@@ -108,7 +108,6 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
     
     func getIPAddress() -> UnsafeMutablePointer<Int8>? {
         let address: String? = AppUtil.getIPAddress()
-        
         guard let add = address else {return nil}
         return UnsafeMutablePointer(mutating: (add as NSString).utf8String)
     }

@@ -39,6 +39,8 @@ struct BlackTextStyle: ViewModifier {
         return content
             .font(.custom(textModifier.family, size: textModifier.size))
             .foregroundColor(textModifier.color)
+            .lineSpacing(Font.spacing.regular)
+            .truncationMode(.tail)
             
     }
 }
@@ -60,7 +62,8 @@ struct BoldTextStyle: ViewModifier {
         return content
             .font(.custom(textModifier.family, size: textModifier.size))
             .foregroundColor(textModifier.color)
-            .lineSpacing(2)
+            .truncationMode(.tail)
+            .lineSpacing(Font.spacing.regular)
             
     }
 }
@@ -81,7 +84,8 @@ struct MediumTextStyle: ViewModifier {
         return content
             .font(.custom(textModifier.family, size: textModifier.size))
             .foregroundColor(textModifier.color)
-            .lineSpacing(2)
+            .lineSpacing(Font.spacing.regular)
+            .truncationMode(.tail)
     }
 }
 
@@ -102,7 +106,8 @@ struct RegularTextStyle: ViewModifier {
         return content
             .font(.custom(textModifier.family, size: textModifier.size))
             .foregroundColor(textModifier.color)
-            .lineSpacing(2)
+            .lineSpacing(Font.spacing.regular)
+            .truncationMode(.tail)
     }
 }
 
@@ -123,7 +128,8 @@ struct LightTextStyle: ViewModifier {
         return content
             .font(.custom(textModifier.family, size: textModifier.size))
             .foregroundColor(textModifier.color)
-            .lineSpacing(2)
+            .lineSpacing(Font.spacing.regular)
+            .truncationMode(.tail)
     }
 }
 
@@ -145,7 +151,8 @@ struct NumberBoldTextStyle: ViewModifier {
         return content
             .font(.custom(textModifier.family, size: textModifier.size))
             .foregroundColor(textModifier.color)
-            .lineSpacing(2)
+            .lineSpacing(Font.spacing.regular)
+            .truncationMode(.tail)
     }
 }
 
@@ -166,7 +173,8 @@ struct NumberMediumTextStyle: ViewModifier {
         return content
             .font(.custom(textModifier.family, size: textModifier.size))
             .foregroundColor(textModifier.color)
-            .lineSpacing(2)
+            .lineSpacing(Font.spacing.regular)
+            .truncationMode(.tail)
     }
 }
 
@@ -187,7 +195,8 @@ struct NumberLightTextStyle: ViewModifier {
         return content
             .font(.custom(textModifier.family, size: textModifier.size))
             .foregroundColor(textModifier.color)
-            .lineSpacing(2)
+            .lineSpacing(Font.spacing.regular)
+            .truncationMode(.tail)
     }
 }
 
@@ -200,7 +209,7 @@ struct CustomTextStyle: ViewModifier {
         return content
             .font(.custom(textModifier.family, size: textModifier.size))
             .foregroundColor(textModifier.color)
-            .lineSpacing(2)
+            .lineSpacing(Font.spacing.regular)
     }
 }
 

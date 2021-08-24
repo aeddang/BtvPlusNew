@@ -170,6 +170,8 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
                             HStack{
                                 Spacer()
                                 Button(action: {
+                                    if self.isTop {return}
+                                    self.isTop = true
                                     self.viewModel.uiEvent = .scrollTo(self.viewModel.topIdx, .top)
                                     
                                 }){

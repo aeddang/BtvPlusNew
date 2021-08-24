@@ -48,7 +48,7 @@ struct ConnectButton: View {
         .modifier( MatchHorizontal(height: Dimen.button.heavy + ( self.tip == nil ? 0 : (Dimen.margin.regular))) )
         .background(Color.app.blueLightExtra.opacity(0.2))
         .overlay(
-            Rectangle().stroke(Color.app.blueLightExtra,lineWidth: 2)
+            Rectangle().strokeBorder(Color.app.blueLightExtra,lineWidth: 2)
         )
     }//body
 }

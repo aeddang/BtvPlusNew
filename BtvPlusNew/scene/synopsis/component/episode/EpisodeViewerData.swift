@@ -17,6 +17,7 @@ class EpisodeViewerData {
     private(set) var ratingPoint: Double? = nil
     private(set) var ratingMax: Double? = nil
     private(set) var date: String? = nil
+    private(set) var serviceYear: String? = nil
     private(set) var restrictAgeIcon: String? = nil
     private(set) var restrictAgeIconKids: String? = nil
     private(set) var duration: String? = nil
@@ -27,7 +28,7 @@ class EpisodeViewerData {
     var episodeTitle:String {
         guard let count = self.count else { return self.title }
         if count.isEmpty { return self.title }
-        return self.title + " " + count + String.app.broCount
+        return self.title + " (" + count + String.app.broCount + ")"
     }
     var episodeTitleKids:String {
         guard let count = self.count else { return self.title }
@@ -38,8 +39,9 @@ class EpisodeViewerData {
     func setData(data:SynopsisContentsItem) -> EpisodeViewerData {
         self.title = data.title ?? ""
         self.seasonTitle = data.sson_choic_nm
-        self.date = data.brcast_exps_dy
-        self.provider = data.brcast_chnl_nm
+        self.date = data.brcast_exps_dy?.isEmpty == false ? data.brcast_exps_dy : nil
+        self.serviceYear = data.svc_fr_dt?.isEmpty == false ? data.svc_fr_dt?.subString(start: 0, len: 4) : nil
+        self.provider = data.brcast_chnl_nm?.isEmpty == false ? data.brcast_chnl_nm : nil
         if data.sris_typ_cd == SrisTypCd.season.rawValue {
             self.count = data.brcast_tseq_nm
             self.onAir = (data.sris_cmpt_yn?.toBool() ?? false) ? Asset.icon.onAirOff : Asset.icon.onAir

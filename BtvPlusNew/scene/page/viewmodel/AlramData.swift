@@ -4,7 +4,6 @@
 //
 //  Created by JeongCheol Kim on 2021/04/22.
 //
-
 import Foundation
 import SwiftUI
 
@@ -19,6 +18,7 @@ enum AlramType:String {
         }
     }
 }
+
 enum AlramMsgType: Int {
     case none = -1
     case event
@@ -41,6 +41,7 @@ enum AlramMsgType: Int {
     case "inform" : config = "A5.inform"
     */
 }
+
 enum AlramImageType:String {
     case none, local, poster
     static func getType(_ value:String)->AlramImageType{
@@ -51,6 +52,7 @@ enum AlramImageType:String {
         }
     }
 }
+
 enum AlramLandingType:String {
     case none, notice ,eventWeb, vodDetail, webInApp, browser, home, trailer, menu, synop
     case season, monthly, reserve
@@ -126,7 +128,6 @@ enum AlramLandingType:String {
         }
     }
 }
-
 
 class AlramData:InfinityData,ObservableObject{
     private(set) var type:AlramType = .none

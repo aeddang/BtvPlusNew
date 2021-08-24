@@ -380,6 +380,8 @@ extension Asset{
         static let mic:[String] = (1...27).map{ "imgSearchMic" + $0.description.toFixLength(2) }
         static let record:[String] = (1...10).map{ "icRecoqIng" + $0.description.toFixLength(2) }
         static let alarm:[String] = (1...20).map{ "imgMyAlarm" + $0.description.toFixLength(2) }
+        
+        static let loading = "icPlayerLoadingSeq01"
     }
     
     static let characterList = [

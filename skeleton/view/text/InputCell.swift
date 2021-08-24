@@ -23,7 +23,7 @@ struct InputCell: PageView {
     var body: some View {
         HStack(alignment:.top, spacing:0){
             Text(self.title)
-                .modifier(MediumTextStyle(size: Font.size.light))
+                .modifier(BoldTextStyle(size: Font.size.light))
                 .multilineTextAlignment(.leading)
                 .frame(width:self.titleWidth, alignment: .leading)
                 .padding(.top, 14)
@@ -39,7 +39,11 @@ struct InputCell: PageView {
                                                 size: Self.inputFontSize))
                                     
                             }else{
-                                TextField(self.placeHolder, text: self.$input)
+                                TextField("", text: self.$input)
+                                    .placeholder(when: self.input.isEmpty) {
+                                            Text(self.placeHolder)
+                                                .modifier(MediumTextStyle(size: Self.inputFontSize, color: Color.app.blackLight))
+                                    }
                                     .keyboardType(self.keyboardType)
                                     .modifier(MediumTextStyle(
                                         size: Self.inputFontSize))

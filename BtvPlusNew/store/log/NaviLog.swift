@@ -161,7 +161,8 @@ struct NaviLog {
             actionBody.menu_name = blockData?.title
             return actionBody
         case .myAlram:
-            var actionBody = MenuNaviActionBodyItem(config:repository.pairing.user?.isAgree3 == true ? "ON" : "OFF"))
+            let actionBody = MenuNaviActionBodyItem(config:repository.pairing.user?.isAgree3 == true ? "ON" : "OFF")
+            return actionBody
         default : return nil
         }
     }

@@ -102,7 +102,7 @@ struct PageSceneModel: PageModel {
     
     static func needBottomTab(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
-        case .home, .category, .multiBlock, .search, .my, .categoryList, .synopsis, .synopsisPackage: return true
+        case .home, .category, .multiBlock, .search, .my, .categoryList, .synopsis, .synopsisPackage, .previewList: return true
         default : return false
         }
     }

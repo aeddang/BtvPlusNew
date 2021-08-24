@@ -136,8 +136,8 @@ struct PagePairingDevice: PageView {
                 case .notFoundDevice, .findMdnsDevice, .findStbInfoDevice :
                     if !self.isReady { return }
                     self.findDeviceCompleted(evt: evt)
-                case .connected :
-                    self.pagePresenter.closePopup(self.pageObject?.id)
+                case .connected : break
+                    //self.pagePresenter.closePopup(self.pageObject?.id)
                 case .connectError(let header) :
                     if header?.result == NpsNetwork.resultCode.pairingLimited.code {
                         self.pairing.requestPairing(.hostInfo(auth: nil, device:self.selectedDevice?.stbid, prevResult: header))
@@ -146,7 +146,7 @@ struct PagePairingDevice: PageView {
                     }
                 case .connectErrorReason(let info) :
                     self.appSceneObserver.alert = .limitedDevice(info)
-                default : do{}
+                default : break
                 }
             }
             .onReceive(self.sceneObserver.$isUpdated){ _ in
@@ -262,7 +262,7 @@ struct PagePairingDevice: PageView {
                 }
             }
         }
-        default : do {}
+        default : break
         }
     }
     

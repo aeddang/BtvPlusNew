@@ -217,7 +217,7 @@ struct Tag: PageView {
                         .cancelOnDisappear(true)
                         .loadImmediately()
                         .aspectRatio(contentMode: .fit)
-                        .frame(height: self.isBig ? Dimen.icon.light : Dimen.icon.thinExtra, alignment: .trailing)
+                        .frame(height: self.isBig ? Dimen.icon.light : Dimen.icon.tinyUltra, alignment: .trailing)
                         .padding(.bottom, Dimen.margin.microExtra)
                     
                 }

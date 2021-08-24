@@ -48,7 +48,7 @@ struct PlayerBottomBody: PageComponent{
                                     .font(.custom(
                                             Font.family.bold,
                                             size: Font.size.thin ))
-                                    .foregroundColor(Color.brand.primary)
+                                    .foregroundColor(Color.app.white)
                                     
                                 + Text(String.app.min + " " + String.player.preplay)
                                     .font(.custom(
@@ -75,13 +75,13 @@ struct PlayerBottomBody: PageComponent{
                                 .font(.custom(
                                         Font.family.bold,
                                         size: Font.size.thin ))
-                                .foregroundColor(Color.brand.primary)
+                                .foregroundColor(Color.app.white)
                                 
                             + Text(String.app.min + " " + String.player.preplay)
                                 .font(.custom(
                                         Font.family.bold,
                                         size:  Font.size.thin))
-                                    .foregroundColor(Color.app.white)
+                                .foregroundColor(Color.app.white)
                         } else if let info = self.viewModel.playInfo{
                             Text(info)
                                 .modifier(BoldTextStyle(
@@ -122,7 +122,7 @@ struct PlayerBottomBody: PageComponent{
                     : 0
                  )
         
-        
+        .opacity(self.isUiShowing ? 1.0 : 0.0)
     }//body
 }
 

@@ -35,7 +35,7 @@ struct DivisionTab : PageComponent {
         .background(self.bgColor)
         .clipShape( RoundedRectangle(cornerRadius: self.radius))
         .overlay(
-            RoundedRectangle(cornerRadius: self.radius).stroke( Color.app.blueLightExtra ,lineWidth: self.strokeWidth)
+            RoundedRectangle(cornerRadius: self.radius).strokeBorder( Color.app.blueLightExtra ,lineWidth: self.strokeWidth)
         )
         
     }//body

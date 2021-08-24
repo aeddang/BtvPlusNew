@@ -148,11 +148,10 @@ struct PageMultiBlock: PageView {
                         }
                         .filter({$0.useAble})
                         self.tabDatas = tabs
-                        if (self.tabDatas?.count ?? 0) > 1 {
+                        if (self.tabDatas?.count ?? 0) > 0 {
                             self.marginTop =  TextTabList.height
                             self.isTop = true
                         }
-                        
                     }
                     
                 }else{

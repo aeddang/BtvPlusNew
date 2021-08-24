@@ -113,6 +113,7 @@ struct BtvSynopsis: PageComponent{
                         .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                     }
                 }
+                .background(Color.app.black)
                 if !self.isFullScreen {
                     if self.isUIView && self.isUiActive && !self.progressError {
                         SynopsisBody(

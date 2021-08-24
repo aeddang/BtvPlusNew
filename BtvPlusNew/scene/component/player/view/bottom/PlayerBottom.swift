@@ -20,6 +20,7 @@ struct PlayerBottom: PageView{
     var type:PageType = .btv
     @State var isFullScreen:Bool = false
     @State var isUiShowing:Bool = false
+    @State var isFixUiStatus:Bool = false
     @State var isPlaying:Bool = false
     @State var showDirectview = false
     @State var showPreplay = false
@@ -62,17 +63,40 @@ struct PlayerBottom: PageView{
                     ? self.isFullScreen ? PlayerUI.paddingFullScreen : PlayerUI.padding
                     : self.isFullScreen ? KidsPlayerUI.paddingFullScreen : KidsPlayerUI.padding
         )
+        .onReceive(self.viewModel.$event) { evt in
+            withAnimation{
+                switch evt {
+                case .fixUiStatus(let isFix) :
+                    self.isFixUiStatus = isFix
+                    if isFix { self.isUiShowing = false }
+                default : break
+                }
+            }
+        }
         .onReceive(self.viewModel.$playerUiStatus) { st in
             withAnimation{
                 switch st {
                 case .view :
-                    self.isUiShowing = true
-                default : self.isUiShowing = false
+                    if !self.isFixUiStatus || self.isFullScreen{
+                        self.isUiShowing = true
+                    }
+                default :
+                    self.isUiShowing = false
                 }
             }
         }
         .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
             self.isFullScreen = fullScreen
+            if fullScreen {
+                if self.viewModel.playerUiStatus == .view {
+                    self.isUiShowing = true
+                }
+            } else {
+                if self.isFixUiStatus  {
+                    self.isUiShowing = false
+                }
+            }
+            
         }
         
         .onReceive(self.viewModel.$currentQuality){_ in

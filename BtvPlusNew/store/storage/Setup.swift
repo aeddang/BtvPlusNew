@@ -17,6 +17,8 @@ class Setup:ObservableObject, PageProtocol {
         static let autoPlay = "autoPlay" + VS
         static let nextPlay = "nextPlay" + VS
         
+        static let selectedQuality = "selectedQuality" + VS
+        
         static let isPurchaseAuth = "isPurchaseAuth" + VS
         static let isAdultAuth = "isAdultAuth" + VS
         static let watchLv = "watchLv" + VS
@@ -119,6 +121,16 @@ class Setup:ObservableObject, PageProtocol {
             return storage.bool(forKey: Keys.autoPlay)
         }
     }
+    var selectedQuality:String? {
+        set(newVal){
+            storage.set(newVal, forKey: Keys.selectedQuality )
+        }
+        get{
+            return storage.string(forKey: Keys.selectedQuality)
+        }
+    }
+    
+    
     
     var nextPlay:Bool {
         set(newVal){

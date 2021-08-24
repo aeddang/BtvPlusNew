@@ -139,6 +139,8 @@ struct KidsPlayer: PageComponent{
             .onReceive(self.viewModel.$event) { evt in
                 guard let evt = evt else { return }
                 switch evt {
+                case .mute(let isMute) : BtvPlayerModel.isInitMute = isMute
+                case .volume : BtvPlayerModel.isInitMute = false
                 case .seeking(let willTime):
                     let diff =  willTime - self.viewModel.time
                     self.viewModel.seeking = diff
@@ -177,6 +179,8 @@ struct KidsPlayer: PageComponent{
                     }
                 }
                 if quality == nil { return }
+                self.setup.selectedQuality = quality?.name
+                self.viewModel.selectedQuality = quality?.name
                 let autoPlay = self.viewModel.initPlay ?? self.setup.autoPlay
                 self.viewModel.continuousTime = self.viewModel.time
                 ComponentLog.d("autoPlay " + autoPlay.description, tag: self.tag)
@@ -231,6 +235,10 @@ struct KidsPlayer: PageComponent{
             .onAppear(){
                 if !Preroll.isInit { Preroll.initate() }
                 self.viewModel.isUserPlay = self.setup.autoPlay
+                self.viewModel.selectedQuality = self.setup.selectedQuality
+                if BtvPlayerModel.isInitMute {
+                    self.viewModel.isMute = true
+                }
             }
             .onDisappear(){
                 self.pagePresenter.fullScreenExit()
@@ -378,7 +386,7 @@ struct KidsPlayer: PageComponent{
                 return
             }
         }
-        targetRatio = min(3.0, targetRatio)
+        targetRatio = min(4.0, targetRatio)
         targetRatio = max(1.0, targetRatio)
         
         self.viewModel.event = .screenRatio(targetRatio)

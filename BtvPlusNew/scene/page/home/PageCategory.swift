@@ -109,9 +109,10 @@ struct PageCategory: PageView {
             cateDatas = cateDatas.filter{!$0.isAdult}
         }
         self.originDatas = cateDatas
+        self.originDatas?.insert(CateData().setZemkids(), at: 1)
         let openData:CateData? = self.resetSize(openId: openId)
         guard let open = openData else { return }
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.5){
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.1){
             self.openPopup(data: open, openId: openId)
         }
     }
@@ -204,6 +205,9 @@ struct PageCategory: PageView {
                     .addParam(key: .needAdult, value: data.isAdult)
                     .addParam(key: .subId, value: openId)
             )
+        case .kids :
+            self.pagePresenter.changePage(PageKidsProvider.getPageObject(.kidsIntro))
+            
         case .event :
             self.sendLog()
             self.pagePresenter.openPopup(

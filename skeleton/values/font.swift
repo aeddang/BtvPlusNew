@@ -54,6 +54,12 @@ extension Font{
         public static let large:CGFloat = 0.7
     }
     
+    struct spacing {
+        public static let large:CGFloat =  isPad ? 9 : 6//*
+        public static let regular:CGFloat = isPad ? 6 : 4//*
+        public static let thin:CGFloat =  isPad ? 4 : 2//*
+    }
+    
     struct size {
         public static let black:CGFloat =  isPad ? 52 : 32 //*
         public static let bold:CGFloat = isPad ? 42 : 26 //*

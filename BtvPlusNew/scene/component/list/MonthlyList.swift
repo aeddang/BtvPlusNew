@@ -194,7 +194,7 @@ struct MonthlyItem: PageView {
         }
         .overlay(
            Rectangle()
-            .stroke(
+            .strokeBorder(
                 self.isSelected ? Color.brand.primary : Color.transparent.clear,
                 lineWidth: Dimen.stroke.heavy)
         )

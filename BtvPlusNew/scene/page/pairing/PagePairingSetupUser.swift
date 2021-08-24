@@ -67,8 +67,8 @@ struct PagePairingSetupUser: PageView {
                                     Text(SystemEnvironment.isTablet
                                             ? String.pageText.pairingSetupUserText2Tablet : String.pageText.pairingSetupUserText2)
                                         .modifier(
-                                            MediumTextStyle( size: Font.size.light, color: Color.app.whiteDeep))
-                                        .padding(.top, Dimen.margin.light)
+                                            MediumTextStyle( size: Font.size.light, color: Color.app.greyLight))
+                                        .padding(.top, Dimen.margin.regular)
                                         .fixedSize(horizontal: false, vertical:true)
                                 }
                                 InputCell(

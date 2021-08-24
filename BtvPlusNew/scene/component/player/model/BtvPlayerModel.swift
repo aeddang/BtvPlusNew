@@ -82,8 +82,8 @@ class BtvPlayerModel:PlayerModel{
     
     var currentEpsdRsluId:String? = nil
     var currentIdx:Int? = nil
-    
-    
+    var selectedQuality:String? = nil
+    static var isInitMute:Bool = true
     
     override func reset() {
         self.currentQuality = nil
@@ -177,7 +177,7 @@ class BtvPlayerModel:PlayerModel{
         if let hd = data.CNT_URL_NS_HD  { self.appendQuality(name: "HD", path: hd) }
         if let sd = data.CNT_URL_NS_SD  { self.appendQuality(name: "SD", path: sd) }
         if !qualitys.isEmpty {
-            currentQuality = qualitys.first{$0.name == "HD"}
+            currentQuality = qualitys.first{$0.name == (self.selectedQuality ?? "AUTO")}
             if currentQuality == nil {
                 currentQuality = qualitys.first
             }

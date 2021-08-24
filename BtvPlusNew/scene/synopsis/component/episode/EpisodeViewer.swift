@@ -17,7 +17,7 @@ struct EpisodeViewer: PageComponent{
     var body: some View {
         VStack(alignment:.leading , spacing:0) {
             Spacer().modifier(MatchHorizontal(height: 0))
-            HStack(alignment: .center, spacing:Dimen.margin.tiny){
+            HStack(alignment: .center, spacing:Dimen.margin.thin){
                 if let ratingPct = self.data.ratingPct {
                     RatingInfo(
                         rating: ratingPct
@@ -30,8 +30,12 @@ struct EpisodeViewer: PageComponent{
                     )
                 }
                 if !self.isSimple {
-                    if let date = self.data.date {
+                    if self.data.date?.isEmpty == false, let date = self.data.date {
                         Text( date )
+                            .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.white))
+                            .opacity(0.8)
+                    }else if self.data.serviceYear?.isEmpty == false, let serviceYear = self.data.serviceYear {
+                        Text( serviceYear )
                             .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.white))
                             .opacity(0.8)
                         }
@@ -58,23 +62,24 @@ struct EpisodeViewer: PageComponent{
                             .frame(height: Dimen.icon.thin)
                     }
                 }
-                if self.data.award != nil {
-                    Button(action: {
-                        self.appSceneObserver.alert = .alert(nil, self.data.awardDetail)
-                    }) {
-                        HStack(spacing:Dimen.margin.tinyExtra){
-                            Image( Asset.icon.trophy )
-                                .renderingMode(.original).resizable()
-                                .scaledToFit()
-                                .frame(width: Dimen.icon.thin, height: Dimen.icon.thin)
-                            Text(self.data.award!)
-                                .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyMedium))
-                            
-                        }
-                        .padding(.top, Dimen.margin.lightExtra)
+                
+            }
+            if self.data.award != nil {
+                Button(action: {
+                    self.appSceneObserver.alert = .alert(nil, self.data.awardDetail)
+                }) {
+                    HStack(spacing:Dimen.margin.tinyExtra){
+                        Image( Asset.icon.trophy )
+                            .renderingMode(.original).resizable()
+                            .scaledToFit()
+                            .frame(width: Dimen.icon.thin, height: Dimen.icon.thin)
+                        Text(self.data.award!)
+                            .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyMedium))
+                        
                     }
-                    .buttonStyle(BorderlessButtonStyle())
+                    .padding(.top, Dimen.margin.thinExtra)
                 }
+                .buttonStyle(BorderlessButtonStyle())
             }
             
         }

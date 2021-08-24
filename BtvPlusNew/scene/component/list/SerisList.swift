@@ -45,22 +45,25 @@ class SerisData:InfinityData{
             image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size) ?? image
         }
         self.title = title
-        if let count = data.brcast_tseq_nm {
-            if self.pageType == .btv {
-                self.title = (self.title ?? "") + " " + count + String.app.broCount
-            } else {
-                self.title = count + String.app.broCount + ")" + (self.title ?? "")
-            }
+        if data.brcast_tseq_nm?.isEmpty == false ,let count = data.brcast_tseq_nm {
+            self.title = count + String.app.broCount + " " + (self.title ?? "")
             self.brcastTseqNm = count.toInt()
         }
         if let prc = data.sale_prc_vat {
             if prc == 0 { isFree = true }
             price = prc.formatted(style: .decimal) + String.app.cash
         }
-        duration = data.play_tms_val != nil
-            ? data.play_tms_val!
-            : nil
-        subTitle = data.brcast_exps_dy
+        duration = data.play_tms_val != nil ? data.play_tms_val! : nil
+        let date = data.brcast_exps_dy?.isEmpty == false ? data.brcast_exps_dy : nil
+        
+        if let d = duration, let dt = date {
+            subTitle =  d + String.app.min + " · " + dt
+        } else if let d = duration {
+            subTitle = d + String.app.min
+        } else{
+            subTitle = date
+        }
+        
         index = idx
         contentID = data.epsd_id ?? ""
         epsdId = data.epsd_id
@@ -140,6 +143,7 @@ struct SerisItem: PageView {
                             width:iconSize,
                             height: iconSize)
                         .modifier(MatchParent())
+                        .background(Color.transparent.black45)
                 }
                 if data.isFree == true {
                     Text(String.app.free)
@@ -150,7 +154,7 @@ struct SerisItem: PageView {
             }
             .overlay(
                Rectangle()
-                .stroke(
+                .strokeBorder(
                     self.isOn ? Color.app.white : Color.transparent.clear,
                     lineWidth: Dimen.stroke.regular)
             )
@@ -223,7 +227,7 @@ struct SerisItemKids: PageView {
             .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.light))
             .overlay(
                 RoundedRectangle(cornerRadius: DimenKids.radius.light)
-                .stroke(
+                .strokeBorder(
                     self.isOn ? Color.kids.primary : Color.transparent.clear,
                     lineWidth:  DimenKids.stroke.medium )
             )

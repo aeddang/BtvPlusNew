@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 struct RadioButton: View, SelecterbleProtocol {
     var isChecked: Bool
-    var size:CGSize = CGSize(width: Dimen.icon.light, height: Dimen.icon.light)
+    var size:CGSize = CGSize(width: Dimen.icon.lightExtra, height: Dimen.icon.lightExtra)
     var text:String? = nil
     var textSize:CGFloat = Font.size.lightExtra
     

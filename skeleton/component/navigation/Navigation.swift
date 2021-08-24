@@ -66,7 +66,7 @@ struct NavigationBuilder{
             body: AnyView(
                 Text(txt)
                     .kerning(Font.kern.thin)
-                    .font(.custom(Font.family.black, size: textModifier.size))
+                    .font(.custom(self.index != idx ? Font.family.medium : Font.family.bold , size: textModifier.size))
                     .foregroundColor(self.index != idx ? textModifier.color : (color ?? textModifier.activeColor))
                     .modifier(MatchParent())
             ),

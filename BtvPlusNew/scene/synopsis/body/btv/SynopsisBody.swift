@@ -72,6 +72,7 @@ struct SynopsisBody: PageComponent{
                         Text(episodeViewerData.episodeTitle)
                             .modifier(BoldTextStyle( size: Font.size.boldExtra ))
                             .lineLimit(2)
+                            .truncationMode(.tail)
                             .modifier(ContentHorizontalEdges())
                             .modifier(ListRowInset(spacing: SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.lightExtra))
                         if self.funtionLayout == .horizontal {

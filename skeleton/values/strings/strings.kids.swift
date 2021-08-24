@@ -8,6 +8,7 @@
 import Foundation
 extension String{
     struct kidsTitle {
+        public static let kids = "titleKids".loaalized()
         public static let registKid = "titleRegistKid".loaalized()
         public static let editKid = "titleEditKid".loaalized()
         public static let registKidManagement = "titleRegistKidManagement".loaalized()

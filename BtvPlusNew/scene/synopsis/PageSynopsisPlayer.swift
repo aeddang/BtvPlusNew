@@ -402,9 +402,11 @@ struct PageSynopsisPlayer: PageView {
             self.playNaviLog(action: .clickVodPause, watchType: .watchPause)
         case .resume :
             self.playNaviLog(action: .clickVodPlay, watchType: .watchStart)
+            self.pagePresenter.closePopup(self.pageObject?.id)
         case .togglePlay :
             if self.playerModel.isPlay {
                 self.playNaviLog(action: .clickVodPause, watchType: .watchPause)
+                self.pagePresenter.closePopup(self.pageObject?.id)
             } else {
                 self.playNaviLog(action: .clickVodPlay, watchType: .watchStart)
             }

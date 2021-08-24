@@ -29,12 +29,12 @@ struct SortTab: PageComponent{
     
     var body: some View {
         HStack(alignment:.center, spacing: Dimen.margin.thin){
-            Text(String.app.total + self.count.description + String.app.count)
+            Text(String.app.total + " " + self.count.description + String.app.count)
                 .modifier(MediumTextStyle(
                     size: Font.size.lightExtra,
-                    color: Color.app.white)
+                    color: Color.app.greyMedium)
                 )
-                .opacity(0.5)
+            
             Spacer()
             if let info = self.info {
                 InfoAlert(text: info)

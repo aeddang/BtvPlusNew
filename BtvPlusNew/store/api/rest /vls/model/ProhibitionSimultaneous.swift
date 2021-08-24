@@ -12,7 +12,7 @@ struct ProhibitionSimultaneous: Decodable {
     private(set) var request_id: String? = nil // 내부 요청번호
     private(set) var has_authority: String? = nil  // Y (권한 있음) , N (권한 없음) , U (알수없는 상태-오류) 아래의  result, message 에 따라 권한 상태를 판단하는 것이 아닌 해당 값에 따라 권한 상태를 판단 하세요. 오류 혹은 판단 불가의 상태에 있을 경우 해당 값은 Y 로 셋팅되어 리턴 됩니다 ( 서영아M )"
     private(set) var es_result: String? = nil  // "ES 리턴값 값 (해당 값을 판단하여 has_authority 값 생성) TU : 기본 값 (통신 오류등 판단할 근거를 찾지 못함) T3: ES 검색 결과 중  EVENT_TYPE=3 == (동시시청 중인 상태) T5: ES 검색 결과 중  EVENT_TYPE=5 == (동시시청 중이 아닌 상태) TB: ES 검색 결과 중  결과 없음 == (동시시청 중이 아닌 상태)"
-    private(set) var es_count: String? = nil   // 인터페이스 버전
+    private(set) var es_count: Int? = nil   // 인터페이스 버전
     private(set) var process_time: String? = nil   // 내부 실행 시간
     private(set) var pc_id: String? = nil  // 요청한 PC_ID
     private(set) var stb_id: String? = nil // STB id

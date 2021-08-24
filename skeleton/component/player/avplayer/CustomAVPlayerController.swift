@@ -76,7 +76,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
             return
         }
         ComponentLog.d("recovery " + viewModel.path , tag: self.tag)
-        viewModel.event = .load(viewModel.path, isPlay , initTime)
+        viewModel.event = .load(viewModel.path, isPlay , initTime, viewModel.header)
     }
     
     private func update(_ player:PlayerScreenView, evt:PlayerUIEvent){
@@ -153,7 +153,10 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
             
         case .screenGravity(let gravity):
             viewModel.screenGravity = gravity
+            viewModel.screenRatio = 1
             player.currentVideoGravity = gravity
+            player.currentRatio = 1
+           
             
         case .seekTime(let t, let play): onSeek(time:t, play: play)
         case .seekMove(let t, let play): onSeek(time:viewModel.time + t, play: play)
@@ -165,7 +168,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
             
         case .neetLayoutUpdate :
             player.setNeedsLayout()
-        default : do{}
+        default : break
         }
         viewModel.event = nil
     }

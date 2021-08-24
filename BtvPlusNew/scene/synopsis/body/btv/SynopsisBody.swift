@@ -57,22 +57,19 @@ struct SynopsisBody: PageComponent{
         InfinityScrollView(
             viewModel: self.infinityScrollModel,
             scrollType: .vertical(isDragEnd: false),
-            marginTop : 0,
+            marginTop : Self.spacing,
             marginBottom : self.sceneObserver.safeAreaBottom,
             spacing:0,
             isRecycle:true,
             useTracking:true
             ){
             if #available(iOS 14.0, *) {
-                Spacer().modifier(MatchHorizontal(height: 1)).background(Color.transparent.clearUi)
-                    .id(self.topIdx)
-                    .modifier(ListRowInset(spacing: Self.spacing))
+               
                 VStack(alignment: .leading, spacing: 0){
                     if let episodeViewerData = self.episodeViewerData {
                         Text(episodeViewerData.episodeTitle)
                             .modifier(BoldTextStyle( size: Font.size.boldExtra ))
                             .lineLimit(2)
-                            .truncationMode(.tail)
                             .modifier(ContentHorizontalEdges())
                             .modifier(ListRowInset(spacing: SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.lightExtra))
                         if self.funtionLayout == .horizontal {

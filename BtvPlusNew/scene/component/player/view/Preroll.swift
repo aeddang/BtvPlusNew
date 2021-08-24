@@ -51,7 +51,7 @@ struct Preroll: UIViewRepresentable, PageProtocol {
         return uiView
     }
     func updateUIView(_ uiView: OneAdView, context: Context) {
-        if self.viewModel.status != .update { return }
+        //if self.viewModel.status != .update { return }
         switch viewModel.request {
         case .load(let data):
             var params = [String:String]()
@@ -71,9 +71,9 @@ struct Preroll: UIViewRepresentable, PageProtocol {
             
         case .play:
             uiView.playAd()
-        default:do{}
+        default:break
         }
-        self.viewModel.status = .ready
+        //self.viewModel.status = .ready
     }
     
     class Coordinator: NSObject, OneAdEventDelegate {
@@ -101,7 +101,7 @@ struct Preroll: UIViewRepresentable, PageProtocol {
                 self.parent.viewModel.event = .finish
             case .SkipAd:
                  self.parent.viewModel.event = .skipAd
-            default: do{}
+            default: break
             }
         }
     }

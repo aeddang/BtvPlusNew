@@ -9,8 +9,8 @@ import Foundation
 import SwiftUI
 import struct Kingfisher.KFImage
 extension TopViewer {
-    static let height:CGFloat = SystemEnvironment.isTablet ? 824 : 580
-    static let imgRatio:CGFloat = 532/824
+    static let height:CGFloat = SystemEnvironment.isTablet ? 824 : 560
+    static let imgRatio:CGFloat = 620/824
 }
 
 
@@ -25,7 +25,7 @@ struct TopViewer: PageComponent{
   
     var body: some View {
         GeometryReader { geometry in
-            ZStack(alignment:.bottom) {
+            ZStack(alignment:.top) {
                 if SystemEnvironment.isTablet {
                     KFImage(URL(string: self.data.bg))
                         .resizable()
@@ -48,8 +48,7 @@ struct TopViewer: PageComponent{
                     .cancelOnDisappear(true)
                     .loadImmediately()
                     .aspectRatio(contentMode: .fit)
-                    .frame(alignment: .top)
-                    .modifier(MatchParent())
+                    .modifier(MatchHorizontal(height: geometry.size.width / Self.imgRatio))
                     .padding(.bottom, SystemEnvironment.isTablet ? Dimen.button.regular : 0)
                     
                 VStack(alignment: .leading, spacing:0){

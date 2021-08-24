@@ -20,6 +20,7 @@ class EpisodeViewerData {
     private(set) var serviceYear: String? = nil
     private(set) var restrictAgeIcon: String? = nil
     private(set) var restrictAgeIconKids: String? = nil
+    private(set) var isAdult: Bool = false
     private(set) var duration: String? = nil
     private(set) var provider: String? = nil
     private(set) var award: String? = nil
@@ -47,6 +48,7 @@ class EpisodeViewerData {
             self.onAir = (data.sris_cmpt_yn?.toBool() ?? false) ? Asset.icon.onAirOff : Asset.icon.onAir
         }
         if let age = data.wat_lvl_cd {
+            self.isAdult = age.toInt() >= 19
             self.restrictAgeIcon = Asset.age.getIcon(age: age)
             self.restrictAgeIconKids = AssetKids.age.getIcon(age: age)
             self.info = age.description + String.app.ageCount

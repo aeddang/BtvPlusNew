@@ -196,7 +196,7 @@ struct MonthlyItem: PageView {
            Rectangle()
             .strokeBorder(
                 self.isSelected ? Color.brand.primary : Color.transparent.clear,
-                lineWidth: Dimen.stroke.heavy)
+                lineWidth: Dimen.stroke.medium)
         )
         .frame(
             width: ListItem.monthly.size.width,

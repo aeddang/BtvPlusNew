@@ -69,7 +69,7 @@ struct CPPlayer: PageComponent {
             guard let evt = evt else { return }
             switch evt {
     
-            case .stop, .pause :  self.creatWaitDuration()
+            case .stop, .pause :  self.clearWaitDuration()
             case .seeking(_): self.autoUiHidden?.cancel()
             case .fixUiStatus(let isFix): if isFix { self.autoUiHidden?.cancel()}
             default : break
@@ -123,7 +123,7 @@ struct CPPlayer: PageComponent {
         }
         .background(Color.black)
         .onDisappear(){
-            self.creatWaitDuration()
+            self.clearWaitDuration()
         }
         
     }

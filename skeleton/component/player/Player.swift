@@ -14,6 +14,7 @@ open class PlayerModel: ComponentObservable {
     var useAvPlayerController:Bool = false
     var useFullScreenAction:Bool = true
     var drm:FairPlayDrm? = nil
+    var header:[String:String]? = nil
     @Published var path:String = ""
     @Published var isMute:Bool = false
     @Published var isLock:Bool = false
@@ -74,6 +75,7 @@ open class PlayerModel: ComponentObservable {
         time = 0
         limitedDuration = nil
         playInfo = nil
+        header = nil
         reload()
     }
     

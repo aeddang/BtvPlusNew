@@ -548,7 +548,16 @@ struct PageSynopsis: PageView {
         
         case Self.getAuth :
             guard let model = self.synopsisModel else {return}
+          
             if self.isPairing == true {
+                if self.episodeViewerData?.isAdult == true && !SystemEnvironment.isAdultAuth{
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.adultCertification)
+                            .addParam(key: .data, value:self.pageObject)
+                    )
+                    self.pagePresenter.closePopup(self.pageObject?.id)
+                    return
+                }
                 if model.synopsisType == .seriesChange , let prevDirectView = self.prevDirectView {
                     self.setupDirectView(prevDirectView, isSeasonWatchAll:true) // 권한 대이타 재사용
                     self.pageDataProviderModel.requestProgressSkip()
@@ -556,6 +565,11 @@ struct PageSynopsis: PageView {
                     self.pageDataProviderModel.requestProgress(q: .init(type: .getDirectView(model)))
                 }
             }else{
+                if self.episodeViewerData?.isAdult == true {
+                    self.appSceneObserver.alert = .needPairing()
+                    self.pagePresenter.closePopup(self.pageObject?.id)
+                    return
+                }
                 self.pageDataProviderModel.requestProgressSkip()
                 /*
                 if model.hasExamPreview{
@@ -867,7 +881,7 @@ struct PageSynopsis: PageView {
             self.hasAuthority = false
         }
         ComponentLog.d("hasAuthority " + (hasAuthority?.description ?? "nil"), tag: self.tag)
-        self.infinityScrollModel.uiEvent = .scrollTo(self.infinityScrollModel.topIdx)
+        //self.infinityScrollModel.uiEvent = .scrollTo(self.infinityScrollModel.topIdx)
     }
     
     private func setupPreview (_ data:Preview){

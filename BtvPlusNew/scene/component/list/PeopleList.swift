@@ -119,6 +119,13 @@ struct PeopleItem: PageView {
     
     var body: some View {
         VStack( spacing: 0 ){
+            ImageView(url: self.data.image,
+                      contentMode: .fill,
+                      noImg: self.data.role.getDefaultImg())
+                .frame(width: ListItem.people.size.width, height:ListItem.people.size.height)
+                .clipShape(Circle())
+                .padding(.bottom, Dimen.margin.thin)
+            /*
             KFImage(URL(string: self.data.image))
                 .resizable()
                 .placeholder {
@@ -131,7 +138,7 @@ struct PeopleItem: PageView {
                 .frame(width: ListItem.people.size.width, height:ListItem.people.size.height)
                 .clipShape(Circle())
                 .padding(.bottom, Dimen.margin.thin)
-            
+            */
             
             if self.data.name != nil {
                 Text(self.data.name!)

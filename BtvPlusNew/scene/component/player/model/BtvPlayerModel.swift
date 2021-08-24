@@ -75,7 +75,7 @@ class BtvPlayerModel:PlayerModel{
     private(set) var playData:PlayInfo? = nil
     private(set) var btvPlayType:BtvPlayType? = nil
     private(set) var qualitys:[Quality] = []
-    private(set) var header:[String:String]? = nil
+    
     var initPlay:Bool? = nil
     var isFirstPlay:Bool = true
     var isPlay80:Bool = false
@@ -92,7 +92,7 @@ class BtvPlayerModel:PlayerModel{
         self.openingTime = 0
         self.seeking = 0
         self.qualitys = []
-        self.header = nil
+        
         //self.initPlay = nil
         self.playData = nil
         self.btvPlayType = nil
@@ -129,7 +129,7 @@ class BtvPlayerModel:PlayerModel{
         self.btvPlayType = type
         var header = [String:String]()
         header["x-ids-cinfo"] = type.type + "," + type.cid + "," + type.title
-        self.header = header
+        self.header = header 
         if let playData = self.synopsisPlayerData {
             self.playInfo = playData.type.name
             switch playData.type {

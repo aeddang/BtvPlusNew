@@ -80,6 +80,7 @@ class ApiManager :PageProtocol, ObservableObject{
     private lazy var lgs:Lgs = Lgs(network: LgsNetwork())
     private lazy var navilog:Navilog = Navilog(network: NavilogNetwork())
     private lazy var navilogNpi:Navilog = Navilog(network: NavilogNpiNetwork())
+    private lazy var pucr:Pucr = Pucr(network: PucrNetwork())
     
     private(set) var updateFlag: UpdateFlag = .none
     
@@ -169,7 +170,7 @@ class ApiManager :PageProtocol, ObservableObject{
                           isOptional: q.isOptional, isLock: q.isLock, isLog:q.isLog, isProcess: q.isProcess)
                 return
             }
-        default : do{}
+        default : break
         }
         self.load(q.type, action: q.action, resultId: q.id,
                   isOptional: q.isOptional, isLock: q.isLock, isLog:q.isLog, isProcess: q.isProcess)
@@ -620,6 +621,23 @@ class ApiManager :PageProtocol, ObservableObject{
             } else {
                 self.navilog.sendLog(log: log, completion: {_ in}, error: nil)
             }
+        case .createEndpoint( let token) : self.pucr.createEndpoint(
+            token: token,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .registerToken(let endpointId, let token) : self.pucr.registerToken(
+            endpointId: endpointId, token: token,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .recivePush(let endpointId, let messageId) : self.pucr.recivePush(
+            endpointId: endpointId, messageId: messageId,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .confirmPush(let endpointId, let messageId) : self.pucr.confirmPush(
+            endpointId: endpointId, messageId: messageId,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        
         }
         return apiID
     }

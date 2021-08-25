@@ -52,6 +52,7 @@ class Repository:ObservableObject, PageProtocol{
     let shareManager:ShareManager
     let apiCoreDataManager = ApiCoreDataManager()
     let audioMirrorManager:AudioMirroring
+    let pushManager:PushManager
     let userSetup:Setup
     
     let storage = LocalStorage()
@@ -83,6 +84,7 @@ class Repository:ObservableObject, PageProtocol{
         self.voiceRecognition = VoiceRecognition(appSceneObserver: sceneObserver)
         self.shareManager = ShareManager(pagePresenter: pagePresenter)
         self.audioMirrorManager = AudioMirroring(pairing: self.pairing)
+        self.pushManager = PushManager(storage: self.storage)
         self.accountManager =  AccountManager(
             pairing: self.pairing,
             dataProvider: self.dataProvider)
@@ -101,7 +103,7 @@ class Repository:ObservableObject, PageProtocol{
             self.apiManager.clear()
             self.appSceneObserver?.isApiLoading = false
             self.pagePresenter?.isLoading = false
-            self.retryRegisterPushToken()
+            self.pushManager.retryRegisterPushToken()
         }).store(in: &anyCancellable)
         
         self.setupDataProvider()
@@ -191,6 +193,7 @@ class Repository:ObservableObject, PageProtocol{
     }
     
     private func setupApiManager(){
+        self.pushManager.setupApiManager(self.apiManager)
         self.accountManager.setupApiManager(self.apiManager)
         self.broadcastManager.setupApiManager(self.apiManager)
         self.apiManager.$result.sink(receiveValue: { res in
@@ -242,9 +245,8 @@ class Repository:ObservableObject, PageProtocol{
         SystemEnvironment.watchLv = self.userSetup.watchLv
         SystemEnvironment.isFirstMemberAuth = self.userSetup.isFirstMemberAuth
         
-        if self.storage.retryPushToken != "" {
-            self.registerPushToken(self.storage.retryPushToken)
-        }
+        self.pushManager.retryRegisterPushToken()
+        
     }
     
     private func requestApi(_ apiQ:ApiQ, coreDatakey:String){
@@ -347,17 +349,6 @@ class Repository:ObservableObject, PageProtocol{
         //self.appSceneObserver?.event = .debug("retryRepository")
         self.status = .reset
         self.apiManager.retryApi()
-    }
-    
-    // PushToken
-    func retryRegisterPushToken(){
-        if self.storage.retryPushToken != "" {
-            self.registerPushToken(self.storage.retryPushToken)
-        }
-    }
-    
-    func registerPushToken(_ token:String) {
-        self.storage.retryPushToken = token
     }
     
     func updateUser(_ data:ModifyUserData) {

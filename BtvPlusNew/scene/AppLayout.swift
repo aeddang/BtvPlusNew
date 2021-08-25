@@ -154,9 +154,9 @@ struct AppLayout: PageComponent{
             if !self.isInit { return }
             self.appSceneObserver.alert = .recivedApns(alram)
         }
-        .onReceive (self.appObserver.$pushToken) { token in
+        .onReceive (self.appObserver.$apnsToken) { token in
             guard let token = token else { return }
-            self.repository.registerPushToken(token)
+            self.repository.pushManager.registerPushToken(token)
         }
         
         .onReceive(self.repository.$status){ status in

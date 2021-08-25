@@ -178,10 +178,15 @@ enum ApiType{
                                 mbtvKey:String, pcId:String, isKidZone:Bool = false, gubun:String? = nil)
     
     //VLS
-    case checkProhibitionSimultaneous(SynopsisData, Pairing, pcId:String)
-    case sendNaviLog(String, isAnonymous:Bool)
+    case checkProhibitionSimultaneous(SynopsisData, Pairing, pcId:String),
+         sendNaviLog(String, isAnonymous:Bool)
     
-    
+    //PUCR
+    case createEndpoint(String),
+         registerToken(String, token:String),
+         recivePush(String, messageId:String),
+         confirmPush(String, messageId:String)
+
     
     func coreDataKey() -> String? {
         switch self {

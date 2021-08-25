@@ -55,7 +55,7 @@ extension Font{
     }
     
     struct spacing {
-        public static let large:CGFloat =  isPad ? 9 : 6//*
+        public static let large:CGFloat =  isPad ? 12 : 8//*
         public static let regular:CGFloat = isPad ? 6 : 4//*
         public static let thin:CGFloat =  isPad ? 4 : 2//*
     }

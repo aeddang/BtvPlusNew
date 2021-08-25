@@ -7,14 +7,14 @@
 
 import Foundation
 import UIKit
-
+import CoreTelephony
 
 struct SystemEnvironment {
     static let model:String = AppUtil.model
     static let systemVersion:String = UIDevice.current.systemVersion
     static let bundleVersion:String = "4.4.3" //AppUtil.version
     static let bundleVersionKey:String = "443" //AppUtil.version
-    static let buildNumber:String = "1024" //AppUtil.build
+    static let buildNumber:String = AppUtil.build.description
     private static let deviceId:String = Self.getDeviceId()
     static var firstLaunch :Bool = false
     static var serverConfig: [String:String] = [String:String]()
@@ -71,7 +71,11 @@ struct SystemEnvironment {
         return "I" + newId
     }
     
-    static func getPlmn() -> String{
+    static func getPlmn() -> String?{
+        let netinfo = CTTelephonyNetworkInfo()
+        if let info = netinfo.serviceSubscriberCellularProviders, let carrier = info["serviceSubscriberCellularProvider"] {
+            return (carrier.mobileCountryCode ?? "") + (carrier.mobileNetworkCode ?? "")
+        }
         return ""
     }
     

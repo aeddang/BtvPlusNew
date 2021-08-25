@@ -14,6 +14,8 @@ class LocalStorage {
         static let initate = "initate" + VS
         static let accountId = "accountId" + VS
         static let retryPushToken = "retryPushToken" + VS
+        static let registPushToken = "registPushToken" + VS
+        static let pushEndpoint = "pushEndpoint" + VS
         static let serverConfig = "serverConfig" + VS
         static let nickName = "nickName" + VS
         static let birth = "birth" + VS
@@ -85,6 +87,24 @@ class LocalStorage {
         }
         get{
             return defaults.string(forKey: Keys.retryPushToken) ?? ""
+        }
+    }
+    
+    var registPushToken:String{
+        set(newVal){
+            defaults.set(newVal, forKey: Keys.registPushToken)
+        }
+        get{
+            return defaults.string(forKey: Keys.registPushToken) ?? ""
+        }
+    }
+    
+    var pushEndpoint:String{
+        set(newVal){
+            defaults.set(newVal, forKey: Keys.pushEndpoint)
+        }
+        get{
+            return defaults.string(forKey: Keys.pushEndpoint) ?? ""
         }
     }
     

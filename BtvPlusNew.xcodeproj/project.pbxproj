@@ -49,6 +49,8 @@
 		312D2D7C26D5F3FD002EE783 /* EndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312D2D7B26D5F3FD002EE783 /* EndPoint.swift */; };
 		312D2D7E26D6057B002EE783 /* SceneLogCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312D2D7D26D6057B002EE783 /* SceneLogCollector.swift */; };
 		312D2D8026D60B8F002EE783 /* SceneLoading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312D2D7F26D60B8F002EE783 /* SceneLoading.swift */; };
+		312D2D8226D645DA002EE783 /* PucrResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312D2D8126D645DA002EE783 /* PucrResult.swift */; };
+		312D2D8526D64AB5002EE783 /* PushManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312D2D8426D64AB5002EE783 /* PushManager.swift */; };
 		31373F6025C7E726004353DA /* CustomYTPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31373F5A25C7E726004353DA /* CustomYTPlayer.swift */; };
 		31373F6125C7E726004353DA /* CPYTPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31373F5B25C7E726004353DA /* CPYTPlayer.swift */; };
 		31373F6225C7E726004353DA /* YTPlayerView-iframe-player.html in Resources */ = {isa = PBXBuildFile; fileRef = 31373F5D25C7E726004353DA /* YTPlayerView-iframe-player.html */; };
@@ -727,6 +729,8 @@
 		312D2D7B26D5F3FD002EE783 /* EndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPoint.swift; sourceTree = "<group>"; };
 		312D2D7D26D6057B002EE783 /* SceneLogCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneLogCollector.swift; sourceTree = "<group>"; };
 		312D2D7F26D60B8F002EE783 /* SceneLoading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneLoading.swift; sourceTree = "<group>"; };
+		312D2D8126D645DA002EE783 /* PucrResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PucrResult.swift; sourceTree = "<group>"; };
+		312D2D8426D64AB5002EE783 /* PushManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushManager.swift; sourceTree = "<group>"; };
 		31373F5A25C7E726004353DA /* CustomYTPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomYTPlayer.swift; sourceTree = "<group>"; };
 		31373F5B25C7E726004353DA /* CPYTPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPYTPlayer.swift; sourceTree = "<group>"; };
 		31373F5D25C7E726004353DA /* YTPlayerView-iframe-player.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "YTPlayerView-iframe-player.html"; sourceTree = "<group>"; };
@@ -1559,8 +1563,17 @@
 			isa = PBXGroup;
 			children = (
 				312D2D7B26D5F3FD002EE783 /* EndPoint.swift */,
+				312D2D8126D645DA002EE783 /* PucrResult.swift */,
 			);
 			path = model;
+			sourceTree = "<group>";
+		};
+		312D2D8326D64AA6002EE783 /* push */ = {
+			isa = PBXGroup;
+			children = (
+				312D2D8426D64AB5002EE783 /* PushManager.swift */,
+			);
+			path = push;
 			sourceTree = "<group>";
 		};
 		31373F5925C7E726004353DA /* ytplayer */ = {
@@ -3575,6 +3588,7 @@
 				D56C6B1C257DACD800CF9AB8 /* storage */,
 				312D2D7126D5E8C7002EE783 /* keychain */,
 				31CABAF926C2021200B4B3C3 /* log */,
+				312D2D8326D64AA6002EE783 /* push */,
 				D56C6B21257DACD800CF9AB8 /* api */,
 				D50AB8EC257F311800649C4A /* SystemEnvironment.swift */,
 				D56C6B1E257DACD800CF9AB8 /* Repository.swift */,
@@ -4121,6 +4135,7 @@
 				31CABB0026C28DCC00B4B3C3 /* Navilog.swift in Sources */,
 				D56C6A4B257DA0C700CF9AB8 /* LoopSwipperView.swift in Sources */,
 				312825C426B014D400A58DB9 /* PageCashChargePrivacyAndAgree.swift in Sources */,
+				312D2D8526D64AB5002EE783 /* PushManager.swift in Sources */,
 				314D589425B685B2007BCA34 /* PagePairingManagement.swift in Sources */,
 				312825C226AFF1F300A58DB9 /* RetryStbBox.swift in Sources */,
 				316C45DE2652160000A8D7F5 /* WepgModel.swift in Sources */,
@@ -4469,6 +4484,7 @@
 				3167642A25CD11E8003A7721 /* PlayerBottom.swift in Sources */,
 				314C7ECB25ABC32200C489FC /* Hello.swift in Sources */,
 				31CABAFD26C2043F00B4B3C3 /* NaviLogManager.swift in Sources */,
+				312D2D8226D645DA002EE783 /* PucrResult.swift in Sources */,
 				3195C1B92665E73D001F513E /* PageStyle.swift in Sources */,
 				D5DC4776258219CF007EDD86 /* GridEvent.swift in Sources */,
 				31626ED725B8EA0D00F4031D /* Smd.swift in Sources */,
@@ -4869,7 +4885,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -4893,7 +4909,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.0478;
+				MARKETING_VERSION = 1.0479;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = ".BtvPlusNew_ dev";
@@ -4949,7 +4965,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -4968,7 +4984,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.0478;
+				MARKETING_VERSION = 1.0479;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvPlusNew_des;

@@ -12,6 +12,7 @@ import Firebase
 
 class AppObserver: ObservableObject, PageProtocol {
     @Published fileprivate(set) var page:IwillGo? = nil
+    @Published fileprivate(set) var apnsToken:String? = nil
     @Published fileprivate(set) var pushToken:String? = nil
     @Published private(set) var alram:AlramData? = nil
     func resetToken(){
@@ -160,7 +161,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
     }
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         PageLog.d("APNs token retrieved: \(deviceToken.base64EncodedString())", tag: self.tag)
-       // AppDelegate.appObserver.pushToken = deviceToken.base64EncodedString()
+        AppDelegate.appObserver.apnsToken = deviceToken.base64EncodedString()
         Messaging.messaging().apnsToken = deviceToken
         Messaging.messaging().token { token, error in
           if let error = error {

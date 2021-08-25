@@ -222,7 +222,7 @@ struct Tag: PageView {
                     
                 }
             }
-            .padding(.all, Dimen.margin.tinyExtra)
+            .padding(.all, self.isBig ? Dimen.margin.thinExtra : Dimen.margin.tiny)
             .background(
                 LinearGradient(gradient: Gradient(colors: [Color.transparent.clear, Color.transparent.black70]), startPoint: .top, endPoint: .bottom)
                 

@@ -46,10 +46,11 @@ struct SynopsisTop: PageComponent{
                         geometry: geometry,
                         pageDragingModel: self.pageDragingModel,
                         useGesture: PageSynopsis.useLayer ? true : self.uiType == .simple))
+            /*
             .onTapGesture {
                 if self.uiType != .simple {return}
                 self.playerModel.event = .togglePlay
-            }
+            }*/
             if !self.isPlayAble {
                 PlayViewer(
                     pageObservable:self.pageObservable,

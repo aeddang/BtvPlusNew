@@ -57,7 +57,8 @@ struct PagePairingGuide: PageView {
                 VStack(alignment: .leading, spacing: 0){
                     PageTab(
                         title: String.pageTitle.pairingGuide,
-                        isClose: true
+                        isClose: true,
+                        style:.dark
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     CPPageViewPager(
@@ -83,7 +84,7 @@ struct PagePairingGuide: PageView {
                                     .fixedSize(horizontal: true, vertical: false)
                             }
                             .frame( height: Dimen.line.regular)
-                            .padding(.horizontal, Dimen.margin.tiny)
+                            .padding(.horizontal, Dimen.margin.light)
                             Text((self.pages.count).description.toFixLength(2))
                                 .modifier(NumberMediumTextStyle(size: Font.size.lightExtra, color: Color.app.greyLight))
                             
@@ -93,8 +94,8 @@ struct PagePairingGuide: PageView {
                     }
                     
                 }
-                .padding(.vertical, Dimen.margin.regular)
-                .modifier(PageFull())
+                .padding(.bottom, Dimen.margin.regular)
+                .modifier(PageFull(style:.dark))
                 .modifier(PageDragingSecondPriority(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
             .onReceive(self.viewModel.$event){evt in

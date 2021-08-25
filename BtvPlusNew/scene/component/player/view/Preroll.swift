@@ -47,7 +47,8 @@ struct Preroll: UIViewRepresentable, PageProtocol {
         //ComponentLog.d("Preroll viewModel " + self.viewModel.id , tag: self.tag)
         //ComponentLog.d("Preroll uiView init", tag: self.tag)
         //uiView.backgroundColor = .blue
-        //uiView.setProgressImageResource("loadingImage.Bundle/loading_big_1.png")
+        uiView.setProgressImageResource(Asset.ani.loading)
+    
         return uiView
     }
     func updateUIView(_ uiView: OneAdView, context: Context) {
@@ -82,13 +83,16 @@ struct Preroll: UIViewRepresentable, PageProtocol {
             self.parent = parent
         }
         
+        
+        
+        
         func handle(_ event: OneAdEvent!) {
             //self.parent.viewModel.event = .event(event)
-            //ComponentLog.d("Preroll event " + event.debugDescription, tag: self.parent.tag)
+            ComponentLog.d("Preroll event " + event.debugDescription, tag: self.parent.tag)
             switch event.eventType {
             case .ClickAd:
                 self.parent.viewModel.event = .moveAd
-            case .CloseLandingPage: do{}
+            case .CloseLandingPage: break
             case .DidReceiveAd:
                 self.parent.viewModel.event = .start
                 self.parent.viewModel.request = .play

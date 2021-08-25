@@ -63,7 +63,6 @@ struct BtvSynopsis: PageComponent{
     @Binding var seris:[SerisData]
   
     var infinityScrollModel: InfinityScrollModel
-    var topIdx:Int
     var useTracking:Bool
     
     var uiType:PageSynopsis.UiType
@@ -127,7 +126,6 @@ struct BtvSynopsis: PageComponent{
                             isLike: self.$isLike,
                             isRecommand: self.isRecommand,
                             seris: self.$seris,
-                            topIdx : self.topIdx,
                             synopsisData: self.synopsisData,
                             synopsisModel: self.synopsisModel,
                             isPairing: self.isPairing,

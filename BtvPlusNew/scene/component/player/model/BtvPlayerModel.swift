@@ -60,7 +60,9 @@ class BtvPlayerModel:PlayerModel{
     @Published var seeking:Double = 0
     @Published private(set) var message:String? = nil
     
+    @Published var selectQuality:Quality? = nil
     @Published var currentQuality:Quality? = nil
+    
     @Published var selectFunctionType:SelectOptionType? = nil
     @Published var btvUiEvent:BtvUiEvent? = nil {didSet{ if btvUiEvent != nil { btvUiEvent = nil} }}
     @Published var btvPlayerEvent:BtvPlayerEvent? = nil {didSet{ if btvPlayerEvent != nil { btvPlayerEvent = nil} }}
@@ -119,7 +121,6 @@ class BtvPlayerModel:PlayerModel{
         self.synopsisPlayerData = synopsisPlayData
         return self
     }
-    
     @discardableResult
     func setData(data:PlayInfo, type:BtvPlayType, autoPlay:Bool? = nil, continuousTime:Double? = nil) -> BtvPlayerModel {
         let isPrevPlay = self.isUserPlay

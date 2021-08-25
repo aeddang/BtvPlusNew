@@ -11,12 +11,26 @@ import os.log
 protocol Log {
     static var tag:String { get }
 }
+struct LogManager  {
+    static fileprivate(set) var memoryLog:String = ""
+    static var isMemory = false
+    {
+        didSet{
+            if !isMemory {
+                Self.memoryLog = ""
+            }
+        }
+    }
+}
 
 extension Log {
+   
     static func log(_ message: String, tag:String? = nil , log: OSLog = .default, type: OSLogType = .default) {
         let t = (tag == nil) ? Self.tag : Self.tag + " -> " + tag!
         os_log("%@ %@", log: log, type: type, t, message)
-        
+        if LogManager.isMemory {
+            LogManager.memoryLog += ("\n" + (tag ?? "Log") + " : " + message)
+        }
     }
     
     static func i(_ message: String, tag:String? = nil) {

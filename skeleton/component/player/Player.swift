@@ -76,6 +76,7 @@ open class PlayerModel: ComponentObservable {
         limitedDuration = nil
         playInfo = nil
         header = nil
+        event = .pause
         reload()
     }
     

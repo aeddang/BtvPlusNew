@@ -85,8 +85,13 @@ struct SimplePlayer: PageComponent{
                     }else{
                         self.recoveryTime = self.viewModel.time
                     }
-                default : do{}
+                default : break
                 }
+            }
+            .onReceive(self.viewModel.$selectQuality){ quality in
+                self.setup.selectedQuality = quality?.name
+                self.viewModel.selectedQuality = quality?.name
+                self.viewModel.currentQuality = quality
             }
             .onReceive(self.viewModel.$currentQuality){ quality in
 
@@ -99,15 +104,15 @@ struct SimplePlayer: PageComponent{
                     }
                 }
                 if quality == nil { return }
-                self.setup.selectedQuality = quality?.name
-                self.viewModel.selectedQuality = quality?.name
                 let autoPlay = self.viewModel.initPlay ?? self.setup.autoPlay
                 if self.viewModel.time > 1 { //화질전환 이어보기
                     self.viewModel.continuousTime = self.viewModel.time
                 }
                 ComponentLog.d("autoPlay " + autoPlay.description, tag: self.tag)
                 if autoPlay {
-                    self.initPlayer()
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.05){
+                        self.initPlayer()
+                    }
                 } else  {
                     withAnimation{ self.isWaiting = true }
                 }
@@ -127,7 +132,7 @@ struct SimplePlayer: PageComponent{
             .onReceive(self.prerollModel.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
-                case .start : self.viewModel.event = .pause
+                //case .start : self.viewModel.event = .pause
                 case .finish, .skipAd : self.initPlay()
                 default : do{}
                 }

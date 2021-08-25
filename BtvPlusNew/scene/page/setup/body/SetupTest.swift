@@ -8,6 +8,7 @@ import Foundation
 import SwiftUI
 struct SetupTest: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var repository:Repository
     var body: some View {
         VStack(alignment:.leading , spacing:Dimen.margin.thinExtra) {
@@ -37,6 +38,14 @@ struct SetupTest: PageView {
                     more:{
                         //self.isInitate = false
                         self.pagePresenter.openPopup(PageProvider.getPageObject(.playerTest))
+                    }
+                )
+                Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
+                SetupItem (
+                    isOn: .constant(true),
+                    title: "Log 수집",
+                    more:{
+                        self.appSceneObserver.useLogCollector.toggle()
                     }
                 )
             }

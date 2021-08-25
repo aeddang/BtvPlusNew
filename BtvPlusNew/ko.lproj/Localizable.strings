@@ -472,8 +472,10 @@
 "alertNotAvailableAppleTv" = "애플 TV 연결 상태에서는\n이용하실 수 없는 기능입니다.";
 "alertNotAvailableAppleTvTip" = "애플 TV 서비스 제공 정책에 따라\n일부 기능 이용이 제한됩니다.";
 
-
-
+"alertBtvplaySuccess" = "B tv로 재생합니다.";
+"alertBtvplayFail" = "B tv로 보기에 실패하였습니다.";
+"alertRegistBookmark" = "찜 등록이 완료 되었습니다.";
+"alertDeleteBookmark" = "찜 등록이 해제 되었습니다.";
 
 /*
  PageTitle

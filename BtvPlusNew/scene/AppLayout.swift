@@ -22,6 +22,7 @@ struct AppLayout: PageComponent{
     @State var loadingInfo:[String]? = nil
     @State var isLoading = false
     @State var isInit = false
+    @State var useLogCollector = false
     @State var toastMsg:String = ""
     @State var isToastShowing:Bool = false
     @State var floatBannerDatas:[BannerData]? = nil
@@ -43,26 +44,20 @@ struct AppLayout: PageComponent{
                     }
                 }
             }
-            SceneRadioController()
-            SceneSelectController()
-            ScenePickerController()
-            SceneDatePickerController()
-            SceneAlertController()
-            
-            if self.isLoading {
+            if self.useLogCollector {
+                SceneLogCollector()
+            }
+            Group {
+                SceneRadioController()
+                SceneSelectController()
+                ScenePickerController()
+                SceneDatePickerController()
+                SceneAlertController()
+            }
+            if self.isLoading == true {
                 Spacer().modifier(MatchParent()).background(Color.transparent.black70)
-                if self.loadingInfo != nil {
-                    VStack {
-                        VStack(spacing:Dimen.margin.tiny){
-                            ForEach(self.loadingInfo!, id: \.self ) { text in
-                                Text( text )
-                                    .lineSpacing(Font.spacing.regular)
-                                    .modifier(MediumTextStyle( size: Font.size.bold ))
-                            }
-                        }
-                        .modifier(MatchParent())
-                        Spacer().modifier(MatchParent())
-                    }
+                if let loadingInfo = self.loadingInfo  {
+                    SceneLoading(loadingInfo:loadingInfo)
                 }
                 if SystemEnvironment.currentPageType == .btv {
                     CircularSpinner(resorce: Asset.ani.loading)
@@ -73,6 +68,7 @@ struct AppLayout: PageComponent{
                         height: DimenKids.loading.large.height)
                 }
             }
+            
         }
         .toast(isShowing: self.$isToastShowing , text: self.toastMsg)
         
@@ -88,6 +84,9 @@ struct AppLayout: PageComponent{
             withAnimation{
                 self.isLoading = loadingInfo == nil ? false : true
             }
+        }
+        .onReceive(self.appSceneObserver.$useLogCollector){ logCollector in
+            self.useLogCollector = logCollector
         }
         .onReceive(self.appSceneObserver.$event){ evt in
             guard let evt = evt else { return }

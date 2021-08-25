@@ -158,6 +158,7 @@ struct CPPlayer: PageComponent {
     @State var waitDurationCount = 0
     func creatWaitDuration() {
         //ComponentLog.d("creatWaitDuration", tag:self.tag)
+        let retryCount = 3
         self.waitDurationSubscription?.cancel()
         self.waitDurationCount = 0
         self.waitDurationSubscription = Timer.publish(
@@ -165,11 +166,11 @@ struct CPPlayer: PageComponent {
             .autoconnect()
             .sink() {_ in
                 self.waitDurationCount += 1
-                if self.waitDurationCount <= 4 && self.viewModel.duration > 0 {
+                if self.waitDurationCount < retryCount && self.viewModel.duration > 0 {
                     self.clearWaitDuration()
                     return
                 }
-                if self.waitDurationCount == 5 {
+                if self.waitDurationCount == retryCount {
                     if self.viewModel.duration == 0 {
                         self.viewModel.event = .stop
                         self.viewModel.error = .stream(.playback("wait Duration"))

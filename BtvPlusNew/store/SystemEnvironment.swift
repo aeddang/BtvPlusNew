@@ -15,7 +15,7 @@ struct SystemEnvironment {
     static let bundleVersion:String = "4.4.3" //AppUtil.version
     static let bundleVersionKey:String = "443" //AppUtil.version
     static let buildNumber:String = "1024" //AppUtil.build
-    private static let deviceId:String = UIDevice.current.identifierForVendor?.uuidString ?? UUID.init().uuidString
+    private static let deviceId:String = Self.getDeviceId()
     static var firstLaunch :Bool = false
     static var serverConfig: [String:String] = [String:String]()
     static var isReleaseMode = true
@@ -55,6 +55,27 @@ struct SystemEnvironment {
     static func getGuestDeviceId() -> String{
         return ApiPrefix.device + SystemEnvironment.deviceId
     }
+    
+    static func getDeviceId() -> String{
+        let wrapper = SkbKeychainItemWrapper(identifier: "UUID", accessGroup: nil)
+        
+        if let prevUUID = wrapper?.object(forKey: Security.kSecAttrAccount) as? String {
+            if !prevUUID.isEmpty {
+            DataLog.d( "exist UUID " + prevUUID, tag: "getDeviceId")
+                return "I" + prevUUID
+            }
+        }
+        let newId = UIDevice.current.identifierForVendor?.uuidString ?? UUID.init().uuidString
+        wrapper?.setObject(newId, forKey:  Security.kSecAttrAccount)
+        DataLog.d("new UUID " + newId, tag: "getDeviceId")
+        return "I" + newId
+    }
+    
+    static func getPlmn() -> String{
+        return ""
+    }
+    
+    
     
     static var isLegacy:Bool = false
     //"cfb87121-4f7b-4d88-99ff-2b446c00e1c4"

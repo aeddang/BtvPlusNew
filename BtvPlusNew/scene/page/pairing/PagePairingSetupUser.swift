@@ -90,7 +90,7 @@ struct PagePairingSetupUser: PageView {
                                 
                                 HStack(alignment:.center, spacing:0){
                                     Text(String.app.birth)
-                                        .modifier(MediumTextStyle(size: Font.size.light))
+                                        .modifier(BoldTextStyle(size: Font.size.light))
                                         .frame(width:Dimen.tab.titleWidth, alignment: .leading)
                                         .multilineTextAlignment(.leading)
                                     SortButton(
@@ -99,7 +99,7 @@ struct PagePairingSetupUser: PageView {
                                         self.doBirthSelect()
                                     }
                                     Text(String.app.gender)
-                                        .modifier(MediumTextStyle(size: Font.size.light))
+                                        .modifier(BoldTextStyle(size: Font.size.light))
                                         .padding(.horizontal, Dimen.margin.thin)
                         
                                     HStack(spacing:Dimen.margin.thin){

@@ -138,7 +138,7 @@ struct BtvPlayer: PageComponent{
                     pageObservable:self.pageObservable,
                     viewModel: self.viewModel, imgBg: self.thumbImage, contentMode: self.thumbContentMode)
                     .opacity(self.isWaiting == true ? 1.0 : 0)
-                
+                    
             }
             .modifier(MatchParent())
             .background(Color.app.black)
@@ -188,6 +188,11 @@ struct BtvPlayer: PageComponent{
                 default : break
                 }
             }
+            .onReceive(self.viewModel.$selectQuality){ quality in
+                self.setup.selectedQuality = quality?.name
+                self.viewModel.selectedQuality = quality?.name
+                self.viewModel.currentQuality = quality 
+            }
             .onReceive(self.viewModel.$currentQuality){ quality in
                 if self.isPreroll {
                     self.isPreroll = false
@@ -198,13 +203,13 @@ struct BtvPlayer: PageComponent{
                     }
                 }
                 if quality == nil { return }
-                self.setup.selectedQuality = quality?.name
-                self.viewModel.selectedQuality = quality?.name
                 let autoPlay = self.viewModel.initPlay ?? self.setup.autoPlay
                 self.viewModel.continuousTime = self.viewModel.time
                 ComponentLog.d("autoPlay " + autoPlay.description, tag: self.tag)
                 if autoPlay {
-                    self.initPlayer()
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.05){
+                        self.initPlayer()
+                    }
                 } else  {
                     withAnimation{ self.isWaiting = true }
                 }
@@ -245,7 +250,7 @@ struct BtvPlayer: PageComponent{
             .onReceive(self.prerollModel.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
-                case .start : self.viewModel.event = .pause
+                //case .start : 
                 case .finish, .skipAd : self.initPlay()
                 default : do{}
                 }

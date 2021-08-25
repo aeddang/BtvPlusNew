@@ -44,6 +44,7 @@ class ShareManager :PageProtocol {
                useDynamiclink:Bool = true,  completion: ((Bool) -> Void)? = nil){
         self.pagePresenter?.isLoading = true
         var shareImg:UIImage? = nil
+        
         DispatchQueue.global().async {
             let url = URL(string:image)
             let data = try? Data(contentsOf: url!)
@@ -87,7 +88,15 @@ class ShareManager :PageProtocol {
                 }
             
         } else {
-            guard let link = link else { return }
+            guard let link = link else {
+                let shareable =
+                    SocialMediaShareable(
+                        image: image ,
+                        text: text
+                    )
+                    SocialMediaSharingManage.share(shareable, completion: completion)
+                return
+            }
             
             if useDynamiclink {
                 self.pagePresenter?.isLoading = true

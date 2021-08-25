@@ -131,12 +131,14 @@ struct BookMarkButton: PageView {
         self.isBookmark = true
         action?(true)
         self.isBusy = false
+        self.appSceneObserver.event = .toast(String.alert.registBookmark)
     }
     
     func deleted(_ res:ApiResultResponds){
         self.isBookmark = false
         action?(false)
         self.isBusy = false
+        self.appSceneObserver.event = .toast(String.alert.deleteBookmark)
     }
     
     func error(_ err:ApiResultError){

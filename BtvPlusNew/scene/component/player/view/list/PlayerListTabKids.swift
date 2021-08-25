@@ -33,7 +33,9 @@ struct PlayerListTabKids: PageView{
                         height: KidsPlayerUI.iconFullScreen.height )
             }
             .padding(.all, KidsPlayerUI.paddingFullScreen)
-            Spacer().modifier(MatchParent())
+            Spacer().modifier(MatchParent()).background(Color.transparent.clearUi).onTapGesture {
+                self.viewModel.btvUiEvent = .closeList
+            }
             VStack(alignment :.leading, spacing:DimenKids.margin.tiny){
                 Spacer().modifier(MatchHorizontal(height: 0))
                 if self.listTitle != nil {

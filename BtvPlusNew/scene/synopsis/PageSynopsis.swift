@@ -113,7 +113,6 @@ struct PageSynopsis: PageView {
                             seris: self.$seris,
                             
                             infinityScrollModel: self.infinityScrollModel,
-                            topIdx: self.topIdx,
                             useTracking:true,
                             uiType:self.uiType,
                             dragOpacity:self.dragOpacity
@@ -277,7 +276,7 @@ struct PageSynopsis: PageView {
                             self.initPage()
                         }
                     }
-                default : do{}
+                default : break
                 }
             }
             .onReceive(self.appSceneObserver.$alertResult){ result in
@@ -354,8 +353,10 @@ struct PageSynopsis: PageView {
                 guard let page  = self.pageObject  else { return }
                 switch evt {
                 case .dragInit :
-                    self.isPlayBeforeDraging = self.playerModel.isPlay
-                    self.playerModel.event = .pause
+                    if !self.playerModel.isPrerollPlay {
+                        self.isPlayBeforeDraging = self.playerModel.isPlay
+                        self.playerModel.event = .pause
+                    }
                     self.pagePresenter.setLayerPopup(pageObject: page, isLayer: false)
                     withAnimation{
                         self.dragOffset = 0
@@ -387,7 +388,7 @@ struct PageSynopsis: PageView {
     Data process
     */
     enum SingleRequestType:String {
-        case preview, changeOption, relationContents, prohibitionSimultaneous
+        case preview, changeOption, relationContents, prohibitionSimultaneous, watchBtv
     }
     enum UiType{
         case simple, normal
@@ -423,7 +424,6 @@ struct PageSynopsis: PageView {
     @State var isPlayViewActive = false
     @State var isPageUiReady = false
     @State var isPageDataReady = false
-    @State var topIdx:Int = 0
     @State var isUIView:Bool = false
     
     /*동기화 value*/
@@ -514,7 +514,6 @@ struct PageSynopsis: PageView {
             //self.resetRelationVod()
         }
         self.pageDataProviderModel.initate()
-        self.topIdx = UUID.init().hashValue
         withAnimation{
             self.isPlayViewActive = false
         }
@@ -674,26 +673,26 @@ struct PageSynopsis: PageView {
                     return
                 }
                 self.setupPreview(data)
-            }
-            if res.id.hasPrefix( SingleRequestType.changeOption.rawValue ) {
+            }else if res.id.hasPrefix( SingleRequestType.changeOption.rawValue ) {
                 guard let data = res.data as? Play else {
                     PageLog.d("error changeOption", tag: self.tag)
                     self.errorProgress()
                     return
                 }
                 self.setupPlay(data)
-            }
-            if res.id.hasPrefix( SingleRequestType.relationContents.rawValue ) {
+            }else if res.id.hasPrefix( SingleRequestType.relationContents.rawValue ) {
                 guard let data = res.data as? RelationContents else {
                     PageLog.d("error relationContents", tag: self.tag)
                     self.setupRelationContent(nil)
                     return
                 }
                 self.setupRelationContent(data)
-            }
-            if res.id.hasPrefix( SingleRequestType.prohibitionSimultaneous.rawValue ) {
+            }else if res.id.hasPrefix( SingleRequestType.prohibitionSimultaneous.rawValue ) {
                 guard let data = res.data as? ProhibitionSimultaneous else { return }
                 self.setupProhibitionSimultaneous(data)
+            }else if res.id.hasPrefix( SingleRequestType.watchBtv.rawValue ) {
+                guard let data = res.data as? ResultMessage else { return }
+                self.watchBtvCompleted(isSuccess: data.header?.result == ApiCode.success)
             }
         }
     }
@@ -706,14 +705,14 @@ struct PageSynopsis: PageView {
             if  err.id.hasPrefix( SingleRequestType.relationContents.rawValue ) {
                 PageLog.d("error relationContents", tag: self.tag)
                 self.setupRelationContent(nil)
-            }
-            if  err.id.hasPrefix( SingleRequestType.preview.rawValue ) {
+            }else if  err.id.hasPrefix( SingleRequestType.preview.rawValue ) {
                 PageLog.d("error preview", tag: self.tag)
                 self.errorProgress()
-            }
-            if  err.id.hasPrefix( SingleRequestType.changeOption.rawValue ) {
+            }else if  err.id.hasPrefix( SingleRequestType.changeOption.rawValue ) {
                 PageLog.d("error changeOption", tag: self.tag)
                 self.errorProgress()
+            }else if err.id.hasPrefix( SingleRequestType.watchBtv.rawValue ) {
+                self.watchBtvCompleted(isSuccess: false)
             }
         }
     }
@@ -1135,14 +1134,21 @@ struct PageSynopsis: PageView {
                 contentId: self.epsdRsluId ,
                 playTime: self.playerModel.time)
             
-            self.pageDataProviderModel.request = .init(type: .sendMessage( msg))
-            
+            self.pageDataProviderModel.request = .init(id : SingleRequestType.watchBtv.rawValue, type: .sendMessage( msg))
+            self.playerModel.event = .pause
+        }
+    }
+    
+    func watchBtvCompleted(isSuccess:Bool){
+        if isSuccess {
             if self.setup.autoRemocon {
                 self.pagePresenter.openPopup(
                     PageProvider.getPageObject(.remotecon)
                 )
             }
-            self.playerModel.event = .pause
+            self.appSceneObserver.event = .toast(String.alert.btvplaySuccess)
+        } else {
+            self.appSceneObserver.event = .toast(String.alert.btvplayFail)
         }
     }
 }

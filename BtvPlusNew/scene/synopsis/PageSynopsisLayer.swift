@@ -77,7 +77,6 @@ extension PageSynopsis {
         if !self.isBottom {return}
         let offset = geometry.size.height - self.appSceneObserver.safeBottomHeight - Dimen.app.layerPlayerSize.height
         self.pageDragingModel.uiEvent = .setBodyOffset( offset )
-        
     }
     
 }

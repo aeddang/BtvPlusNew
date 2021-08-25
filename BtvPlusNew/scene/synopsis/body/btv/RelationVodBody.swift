@@ -178,8 +178,13 @@ struct RelationVodListBody: PageComponent{
                     .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))
             }
             if let tip = self.relationContentsModel.serisTip {
-                Text(tip).modifier(LightTextStyle(size: Font.size.tiny, color: Color.app.greyExtra))
-                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))
+                VStack(alignment:.leading, spacing:0){
+                    Text(tip).modifier(LightTextStyle(size: Font.size.tiny, color: Color.app.greyExtra))
+                        .padding(.top, Dimen.margin.thin)
+                    Spacer()
+                }
+                .frame( height: self.seris.first?.type.size.height)
+                .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))
             }
         
         } else if !self.relationDatas.isEmpty {
@@ -191,7 +196,6 @@ struct RelationVodListBody: PageComponent{
                     self.componentViewModel.uiEvent = .changeSynopsis(data.synopsisData)
                 }
                 .frame(height: PosterSet.listSize(data: data, screenWidth: self.screenSize).height)
-                .modifier(ListRowInset( spacing: Dimen.margin.thin))
             }
         } else {
             Spacer().modifier(MatchHorizontal(height: RelationVodList.spacing ))

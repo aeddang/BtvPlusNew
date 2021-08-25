@@ -36,10 +36,10 @@ extension String {
         
         public static var playError = "alertPlayError".loaalized()
         public static var playErrorPlayback = "alertPlayErrorPlayback".loaalized()
-        public static var playProhibitionSimultaneous = "alertPlayErrorSimultaneous".loaalized()
-        public static var playProhibitionSimultaneous1  = "alertPlayErrorSimultaneous1".loaalized()
-        public static var playProhibitionSimultaneous2  = "alertPlayErrorSimultaneous2".loaalized()
-        public static var playProhibitionSimultaneous3 = "alertPlayErrorSimultaneous3".loaalized()
+        public static var playProhibitionSimultaneous = "alertPlayProhibitionSimultaneous".loaalized()
+        public static var playProhibitionSimultaneous1  = "alertPlayProhibitionSimultaneous1".loaalized()
+        public static var playProhibitionSimultaneous2  = "alertPlayProhibitionSimultaneous2".loaalized()
+        public static var playProhibitionSimultaneous3 = "alertPlayProhibitionSimultaneous3".loaalized()
         
         
         
@@ -193,6 +193,11 @@ extension String {
         public static var possessionDiableAlready = "alertPossessionDiableAlready".loaalized()
         public static var possessionDiableAlreadyChange = "alertPossessionDiableAlreadyChange".loaalized()
         public static var possessionDeleteConfirm = "alertPossessionDeleteConfirm".loaalized()
+        
+        public static var btvplaySuccess = "alertBtvplaySuccess".loaalized()
+        public static var btvplayFail = "alertBtvplayFail".loaalized()
+        public static var registBookmark = "alertRegistBookmark".loaalized()
+        public static var deleteBookmark = "alertDeleteBookmark".loaalized()
         
         
         public static var kidsDisable = "alertKidsDisable".loaalized()

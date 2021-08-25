@@ -100,7 +100,7 @@ struct Dimen{
     
     struct bar {
         public static let medium:CGFloat = isPad ? 30 : 20//*
-        public static let regular:CGFloat = 7 //*
+        public static let regular:CGFloat =  isPad ? 25 : 18 //*
     }
     
     struct line {

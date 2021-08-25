@@ -44,6 +44,8 @@ struct TopTab: PageComponent{
                        alignment: .topLeading)
             }
             Spacer()
+            
+            
             Button(action: {
                 self.pagePresenter.changePage(PageKidsProvider.getPageObject(.kidsIntro))
                 

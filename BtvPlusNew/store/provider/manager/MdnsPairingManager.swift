@@ -102,14 +102,26 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
         switch request {
         case .wifi: self.mdnsServiceFindStart()
         case .cancel: self.removeClient()
-        default : do{}
+        default : break
         }
     }
-    
+    /*
     func getIPAddress() -> UnsafeMutablePointer<Int8>? {
         let address: String? = AppUtil.getIPAddress()
         guard let add = address else {return nil}
         return UnsafeMutablePointer(mutating: (add as NSString).utf8String)
+        
+    }
+    */
+    func getIPAddress() -> UnsafeMutablePointer<Int8>? {
+        NSLog(">> getIPAddress")
+        //let address: String? = AppUtil.getIPAddress()
+        let address: String? = ApiUtil.getIPAddress(true)
+        NSLog("++ address:\(address)")
+        guard let add = address else {return nil}
+
+        return UnsafeMutablePointer(mutating: (add as NSString).utf8String)
+        //return UnsafeMutablePointer(mutating: ("192.168.35.31" as NSString).utf8String)
     }
     
 }

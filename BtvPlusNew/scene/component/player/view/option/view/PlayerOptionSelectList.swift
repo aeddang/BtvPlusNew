@@ -50,7 +50,7 @@ struct PlayerOptionSelectList: PageComponent{
                     case .quality :
                         guard let value = btn.value as? Quality else { return }
                         self.viewModel.initPlay = true
-                        self.viewModel.currentQuality = value
+                        self.viewModel.selectQuality = value
                     case .rate :
                         guard let value = btn.value as? Float else { return }
                         self.viewModel.event = .rate(value)

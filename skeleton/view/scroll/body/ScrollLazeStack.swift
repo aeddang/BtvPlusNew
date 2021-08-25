@@ -9,7 +9,7 @@
 import Foundation
 import SwiftUI
 import Combine
-
+import Introspect
 struct ScrollLazeStack<Content>: PageView where Content: View {
     var viewModel: InfinityScrollModel
     let axes: Axis.Set
@@ -163,7 +163,8 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
                             }
                             .frame(alignment: .topLeading)
                         }
-                    }.modifier(MatchParent())
+                    }
+                    .modifier(MatchParent())
                     if !self.isTop && self.axes == .vertical, let onTopButton = self.onTopButton {
                         VStack{
                             Spacer()

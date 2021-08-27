@@ -10,6 +10,7 @@ import SwiftUI
 
 struct AlertBox: PageComponent {
     let maxTextCount:Int = 200
+    let idealTextCount:Int = 30
     @Binding var isShowing: Bool
     
     var title: String?
@@ -88,8 +89,10 @@ struct AlertBox: PageComponent {
         }
         .frame(
             minWidth: 0,
-            idealWidth: SystemEnvironment.isTablet ? 370 : 247,
-            maxWidth:  SystemEnvironment.isTablet ? 480 : 320,
+            idealWidth: SystemEnvironment.isTablet ? 370 : 265,
+            maxWidth:  (self.text?.count ?? 0) > self.idealTextCount
+                ?  SystemEnvironment.isTablet ? 370 : 265
+                :  SystemEnvironment.isTablet ? 370 : 265,
             minHeight: 0,
             maxHeight: (self.text?.count ?? 0) > self.maxTextCount
                 ? (SystemEnvironment.isTablet ? 480 : 320)
@@ -127,6 +130,7 @@ struct AlertBody: PageComponent{
             }
             if self.text != nil{
                 Text(self.text!)
+                    .kerning(Font.kern.thin)
                     .multilineTextAlignment(.center)
                     .modifier(MediumTextStyle(size: Font.size.lightExtra))
                     .fixedSize(horizontal: false, vertical: true)
@@ -134,6 +138,7 @@ struct AlertBody: PageComponent{
             }
             if self.subText != nil{
                 Text(self.subText!)
+                    .kerning(Font.kern.thin)
                     .multilineTextAlignment(.center)
                     .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyMedium))
                     .lineLimit(nil)

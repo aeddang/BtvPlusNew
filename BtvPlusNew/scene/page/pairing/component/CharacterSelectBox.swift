@@ -20,20 +20,27 @@ struct CharacterSelectBox: PageComponent{
     @State var datas:[CharacterRows] = []
     @State var cellSpace:CGFloat = 0
     var body: some View {
-        VStack (alignment: .leading, spacing: Dimen.margin.regular){
+        VStack (alignment: .leading, spacing: 0){
             Text(String.pageText.pairingSetupCharacterSelect)
-                .modifier(MediumTextStyle(size: Font.size.light))
+                .modifier(BoldTextStyle(size: Font.size.regular))
+            Text(String.pageText.pairingSetupCharacterSelectSub)
+                .modifier(MediumTextStyle(size: Font.size.thinExtra))
+                .padding(.top, Dimen.margin.thin)
             CharacterList(
                 selectIdx: self.$selectIdx,
                 datas:self.datas,
                 cellSpace: self.cellSpace
             )
+            .padding(.top, Dimen.margin.medium)
+            .padding(.horizontal, Dimen.margin.thin)
         }
         .padding(.horizontal, Self.horizontalMargin)
         .onReceive(self.sceneObserver.$screenSize){ size in
             let screenWidth = size.width - (2*Self.horizontalMargin)
-            let lineNum = floor(screenWidth /
-                                    (ListItem.character.size.width + Dimen.margin.thin))
+            
+            let lineNum = SystemEnvironment.isTablet
+                ? floor(screenWidth / (ListItem.character.size.width + Dimen.margin.thin*2))
+                : 4
             self.cellSpace = floor((screenWidth - (ListItem.character.size.width * lineNum)) / (lineNum-1))
             self.datas = self.data.getRow(lineNum: Int(lineNum))
         }

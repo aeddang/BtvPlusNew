@@ -81,6 +81,7 @@ class ApiManager :PageProtocol, ObservableObject{
     private lazy var navilog:Navilog = Navilog(network: NavilogNetwork())
     private lazy var navilogNpi:Navilog = Navilog(network: NavilogNpiNetwork())
     private lazy var pucr:Pucr = Pucr(network: PucrNetwork())
+    private lazy var push:Push = Push(network: PushNetwork())
     
     private(set) var updateFlag: UpdateFlag = .none
     
@@ -637,7 +638,14 @@ class ApiManager :PageProtocol, ObservableObject{
             endpointId: endpointId, messageId: messageId,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
-        
+        case .registEndpoint(let endpointId, let isAgree) : self.push.registEndpoint(
+            endpointId: endpointId, isAgree: isAgree,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .updatePushUserAgreement(let isAgree) : self.push.updatePushUserAgreement(
+            isAgree: isAgree,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         }
         return apiID
     }

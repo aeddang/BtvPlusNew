@@ -24,21 +24,29 @@ struct PackageBody: PageComponent{
     var summaryViewerData:SummaryViewerData? = nil
     var useTop:Bool = true
     var useTracking:Bool = false
+    var marginBottom:CGFloat = 0
     var action: ((_ data:PosterData) -> Void)? = nil
     var body: some View {
         InfinityScrollView(
             viewModel: self.infinityScrollModel,
             marginTop : 0,
-            marginBottom : self.sceneObserver.safeAreaBottom,
+            marginBottom : self.marginBottom,
             spacing:0,
             isRecycle:false,
             useTracking:false
             ){
             if self.useTop {
-                TopViewer(
-                    data: synopsisPackageModel)
-                    .frame(height:TopViewer.height)
-                    .modifier(ListRowInset(spacing: Dimen.margin.regular))
+                if SystemEnvironment.isTablet {
+                    TopViewer(
+                        data: synopsisPackageModel)
+                        .frame(height:TopViewer.height)
+                        .modifier(ListRowInset(spacing: Dimen.margin.regular))
+                } else {
+                    TopViewer(
+                        data: synopsisPackageModel)
+                        .frame(height:round(self.sceneObserver.screenSize.width * TopViewer.imgRatio) + TopViewer.bottomHeight)
+                        .modifier(ListRowInset(spacing: Dimen.margin.regular))
+                }
             }
             if !self.synopsisPackageModel.posters.isEmpty == true {
                 VStack(alignment: .leading, spacing: 0){
@@ -60,7 +68,7 @@ struct PackageBody: PageComponent{
                             (ListItem.poster.type01.height)
                             + Dimen.tab.thin + Dimen.margin.thinExtra
                             + Dimen.margin.thin + Dimen.button.lightExtra
-                            + Dimen.margin.thin
+                            + Dimen.margin.light
                 )
                 .padding(.top, self.useTop ? 0 : Self.spacing)
                 .modifier(ListRowInset(spacing:  Self.spacing))

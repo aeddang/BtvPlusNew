@@ -12,11 +12,12 @@ class WatchedData:InfinityData{
     private(set) var originImage: String? = nil
     private(set) var image: String? = nil
     private(set) var title: String? = nil
+    private(set) var count: String? = nil
     private(set) var watchLv:Int = 0
     private(set) var isAdult:Bool = false
     private(set) var isLock:Bool = false
     private(set) var subTitle: String? = nil
-    private(set) var count: String = "0"
+ 
     private(set) var progress:Float? = nil
     private(set) var synopsisData:SynopsisData? = nil
 
@@ -59,7 +60,12 @@ class WatchedData:InfinityData{
         isAdult = data.adult?.toBool() ?? false
         isLock = !SystemEnvironment.isImageLock ? false : isAdult
         title = data.title
-        
+        if data.yn_series == "Y" {
+            if data.series_no?.isEmpty == false , let count = data.series_no {
+                self.count = count
+                title = count + String.app.broCount + " " + (self.title ?? "")
+            }
+        }
         originImage = data.thumbnail
         image = ImagePath.thumbImagePath(filePath: data.thumbnail, size: ListItem.watched.size, isAdult:isAdult)
         
@@ -68,7 +74,6 @@ class WatchedData:InfinityData{
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
-        
         
         return self.setNaviLog(data: data)
     }
@@ -173,10 +178,12 @@ struct WatchedItem: PageView {
                         .aspectRatio(contentMode: .fit)
                         .frame(width:Dimen.icon.light, height: Dimen.icon.light)
                 }else if self.data.progress != nil  {
+                    /*
                     Image(Asset.icon.thumbPlay)
                         .renderingMode(.original).resizable()
                         .scaledToFit()
                         .frame(width: Dimen.icon.regularExtra, height: Dimen.icon.regularExtra)
+                    */
                 }
                 VStack(alignment: .leading, spacing:0){
                     HStack(spacing:0){}

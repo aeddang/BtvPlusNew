@@ -21,7 +21,8 @@ struct DiscountView: PageComponent{
         VStack (alignment: .center, spacing: 0){
             DivisionTab(
                 viewModel: self.viewModel,
-                buttons: self.tabs)
+                buttons: self.tabs
+                )
                 .frame(width: ListItem.card.size.width)
                 .padding(.top, Dimen.margin.medium)
             CardBlock(
@@ -43,7 +44,9 @@ struct DiscountView: PageComponent{
             if willType != self.currentType {
                 self.currentType = willType ?? .member
                 self.cardModel.update(type:self.currentType!)
-                self.updateButtons(idx: idx)
+                DispatchQueue.main.async {
+                    self.updateButtons(idx: idx)
+                }
             }
             
         }
@@ -65,10 +68,9 @@ struct DiscountView: PageComponent{
                 family:Font.family.medium,
                 size: SystemEnvironment.isTablet ?  Font.size.tiny : Font.size.lightExtra,
                 color: Color.app.grey,
-                activeColor: Color.app.white
-                )
+                activeColor: Color.app.white)
             )
-            .getNavigationButtons(texts:titles)
+            .getNavigationButtons(texts:titles,  bgColor:Color.app.blueLight)
         
     }
 }

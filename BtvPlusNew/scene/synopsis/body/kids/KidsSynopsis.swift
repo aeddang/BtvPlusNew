@@ -78,162 +78,195 @@ struct KidsSynopsis: PageComponent{
     
     @Binding var isBookmark:Bool?
     @Binding var seris:[SerisData]
-  
+    @State var playerWidth:CGFloat = 0
+    @State var castleHeight:CGFloat = 0
     var body: some View {
-        HStack(alignment: .top, spacing:0){
-            if !self.isFullScreen {
-                Button(action: {
-                    self.pagePresenter.goBack()
-                }) {
-                    Image(AssetKids.icon.back)
-                        .renderingMode(.original)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: DimenKids.icon.regularExtra,
-                               height: DimenKids.icon.regularExtra)
-                }
-                .padding(.trailing, DimenKids.margin.light)
-                .padding(.top,self.isFullScreen ? 0 : DimenKids.margin.mediumExtra)
-                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+        ZStack(alignment: .center){
+            HStack(alignment: .bottom, spacing:0){
+                Image(AssetKids.image.synopsisKidBg)
+                    .renderingMode(.original)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: SystemEnvironment.isTablet ? 97 : 60,
+                           height: SystemEnvironment.isTablet ? 146 : 90)
+                Spacer().modifier(MatchParent())
+                Spacer().modifier(MatchVertical(width: self.sceneObserver.safeAreaEnd))
+                    .background(Color.app.white)
             }
-            VStack(alignment: .leading,spacing:0){
+            .background(PageStyle.kidsLight.bgColor)
+            .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+            HStack(alignment: .top, spacing:0){
                 if !self.isFullScreen {
-                    VStack(alignment: .leading,spacing:0){
-                        if let episodeViewerData = self.episodeViewerData, let purchasViewerData = self.purchasViewerData {
-                            EpisodeViewerKids(
-                                episodeViewerData: episodeViewerData,
-                                purchaseViewerData: purchasViewerData)
-                                .fixedSize(horizontal: true, vertical: false)
-                        }
-                        if SystemEnvironment.isTablet {
-                            Spacer()
-                            FunctionViewerKids(
-                                componentViewModel: self.componentViewModel,
-                                synopsisData: self.synopsisData,
-                                summaryViewerData: self.summaryViewerData,
-                                isBookmark: self.$isBookmark
-                            )
-                            .fixedSize(horizontal: false, vertical: true)
-                        }
+                    Button(action: {
+                        self.pagePresenter.goBack()
+                    }) {
+                        Image(AssetKids.icon.back)
+                            .renderingMode(.original)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: DimenKids.icon.regularExtra,
+                                   height: DimenKids.icon.regularExtra)
                     }
-                    .frame(height:Self.topHeight)
+                    .padding(.trailing, DimenKids.margin.light)
+                    .padding(.top,self.isFullScreen ? 0 : DimenKids.margin.mediumExtra)
                     .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                 }
-                HStack(alignment: .center){
-                    ZStack {
-                        KidsPlayer(
-                            pageObservable:self.pageObservable,
-                            viewModel:self.playerModel,
-                            prerollModel:self.prerollModel,
-                            listViewModel: self.playerListViewModel,
-                            playGradeData: self.synopsisModel?.playGradeData,
-                            title: self.title,
-                            thumbImage: self.imgBg,
-                            thumbContentMode: self.imgContentMode,
-                            contentID: self.epsdId,
-                            listData: self.playListData
-                        )
-                        if !self.isPlayAble {
-                            PlayViewerKids(
-                                pageObservable:self.pageObservable,
-                                viewModel:self.playerModel,
-                                title: self.title,
-                                textInfo: self.textInfo,
-                                imgBg: self.isPlayViewActive ? self.imgBg : nil,
-                                contentMode: self.imgContentMode,
-                                isActive: self.isPlayViewActive
-                            )
-                            .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                
+                ZStack(alignment: .topLeading){
+                    VStack{
+                        HStack(alignment: .center){
+                            ZStack (alignment: .topLeading){
+                                ZStack {
+                                    KidsPlayer(
+                                        pageObservable:self.pageObservable,
+                                        viewModel:self.playerModel,
+                                        prerollModel:self.prerollModel,
+                                        listViewModel: self.playerListViewModel,
+                                        playGradeData: self.synopsisModel?.playGradeData,
+                                        title: self.title,
+                                        thumbImage: self.imgBg,
+                                        thumbContentMode: self.imgContentMode,
+                                        contentID: self.epsdId,
+                                        listData: self.playListData
+                                    )
+                                    if !self.isPlayAble {
+                                        PlayViewerKids(
+                                            pageObservable:self.pageObservable,
+                                            viewModel:self.playerModel,
+                                            title: self.title,
+                                            textInfo: self.textInfo,
+                                            imgBg: self.isPlayViewActive ? self.imgBg : nil,
+                                            contentMode: self.imgContentMode,
+                                            isActive: self.isPlayViewActive
+                                        )
+                                        .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                                        
+                                    }
+                                    
+                                }
+                                .modifier(Ratio16_9(
+                                            geometry: self.isFullScreen ? geometry : nil,
+                                            width:self.playerWidth,
+                                            isFullScreen: self.isFullScreen))
+                                .clipShape(RoundedRectangle(cornerRadius: self.isFullScreen ? 0 : DimenKids.radius.heavy))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: self.isFullScreen ? 0 : DimenKids.radius.heavy)
+                                        .strokeBorder(Color.app.ivoryDeep,
+                                                lineWidth: self.isFullScreen ? 0 : DimenKids.stroke.heavy)
+                                )
+                                Image(AssetKids.image.synopsisCastleBg)
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: self.playerWidth, height: self.castleHeight)
+                                    .padding(.top, -self.castleHeight)
+                            }
+                            .modifier(Ratio16_9(
+                                        geometry: self.isFullScreen ? geometry : nil,
+                                        width:self.playerWidth,
+                                        isFullScreen: self.isFullScreen))
                             
+                            if !SystemEnvironment.isTablet && !self.isFullScreen{
+                                FunctionViewerKids(
+                                    componentViewModel: self.componentViewModel,
+                                    synopsisData: self.synopsisData,
+                                    summaryViewerData: self.summaryViewerData,
+                                    isBookmark: self.$isBookmark
+                                )
+                                .padding(.horizontal, DimenKids.margin.regular)
+                                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                            }
                         }
-                    }
-                    .modifier(Ratio16_9(
-                                geometry:  self.isFullScreen ? geometry : nil,
-                                width:getPlayerAreaWidth(sceneObserver: self.sceneObserver),
-                                isFullScreen: self.isFullScreen))
-                    .clipShape(RoundedRectangle(cornerRadius: self.isFullScreen ? 0 : DimenKids.radius.heavy))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: self.isFullScreen ? 0 : DimenKids.radius.heavy)
-                            .strokeBorder(Color.app.ivoryDeep,
-                                    lineWidth: self.isFullScreen ? 0 : DimenKids.stroke.heavy)
-                    )
-                    if !SystemEnvironment.isTablet && !self.isFullScreen{
-                        FunctionViewerKids(
-                            componentViewModel: self.componentViewModel,
-                            synopsisData: self.synopsisData,
-                            summaryViewerData: self.summaryViewerData,
-                            isBookmark: self.$isBookmark
-                        )
-                        .padding(.horizontal, DimenKids.margin.regular)
+                        .padding(.top, self.isFullScreen
+                                    ? 0
+                                    : KidsSynopsis.topHeight + (SystemEnvironment.isTablet ?  DimenKids.margin.regularExtra : DimenKids.margin.medium ) )
+                        
+                        if !self.isFullScreen{
+                            if self.hasAuthority != nil, let purchasViewerData = self.purchasViewerData {
+                                PurchaseViewerKids(
+                                    componentViewModel: self.componentViewModel,
+                                    data: purchasViewerData)
+                                    .padding(.top, DimenKids.margin.light)
+                                    .frame(width:
+                                            SystemEnvironment.isTablet
+                                            ? self.playerWidth
+                                            : self.playerWidth + DimenKids.icon.light + DimenKids.margin.regular)
+                                    .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                                
+                            } else {
+                                Spacer()
+                                    .modifier(MatchParent())
+                                    .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                            }
+                        }
+                    }// vstack
+                    if !self.isFullScreen {
+                        VStack(alignment: .leading,spacing:0){
+                            if let episodeViewerData = self.episodeViewerData, let purchasViewerData = self.purchasViewerData {
+                                EpisodeViewerKids(
+                                    episodeViewerData: episodeViewerData,
+                                    purchaseViewerData: purchasViewerData)
+                                    .fixedSize(horizontal: true, vertical: false)
+                            }
+                            if SystemEnvironment.isTablet {
+                                Spacer()
+                                FunctionViewerKids(
+                                    componentViewModel: self.componentViewModel,
+                                    synopsisData: self.synopsisData,
+                                    summaryViewerData: self.summaryViewerData,
+                                    isBookmark: self.$isBookmark
+                                )
+                                .fixedSize(horizontal: false, vertical: true)
+                            }
+                        }
+                        .frame(height:KidsSynopsis.topHeight)
                         .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                     }
-                }
-                .padding(.top, self.isFullScreen
-                            ? 0
-                            : (SystemEnvironment.isTablet ?  DimenKids.margin.regularExtra : DimenKids.margin.medium ) )
+                }// zstack
+                .padding(.top,self.isFullScreen ? 0 : DimenKids.margin.mediumExtra)
                 
-                if !self.isFullScreen{
-                    if self.hasAuthority != nil, let purchasViewerData = self.purchasViewerData {
-                        PurchaseViewerKids(
-                            componentViewModel: self.componentViewModel,
-                            data: purchasViewerData)
-                            .padding(.top, DimenKids.margin.regularExtra)
-                            .padding(.trailing, DimenKids.margin.regular)
-                            .frame(width: Self.playerAreaWidth)
-                            .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
-                        
-                    } else {
+                if self.sceneOrientation == .landscape && !self.isFullScreen {
+                    HStack(alignment: .top, spacing:0){
                         Spacer()
                             .modifier(MatchParent())
-                            .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
-                    }
-                }
-            } // vstack
-            .padding(.top,self.isFullScreen ? 0 : DimenKids.margin.mediumExtra)
-            if self.sceneOrientation == .landscape && !self.isFullScreen {
-                HStack(alignment: .top, spacing:0){
-                    Spacer()
-                        .modifier(MatchParent())
-                    if let hasRelationVod = self.hasRelationVod {
-                        if hasRelationVod {
-                             RelationVodBodyKids(
-                                 componentViewModel: self.componentViewModel,
-                                 infinityScrollModel: self.relationBodyModel,
-                                 relationContentsModel: self.relationContentsModel,
-                                 seris: self.$seris,
-                                 epsdId: self.epsdId,
-                                 relationDatas: self.relationDatas,
-                                 screenSize : Self.listWidth)
-                                .frame(width: Self.listWidth)
-                                .background(Color.app.white)
-                        } else{
-                            RelationVodEmpty()
-                                .frame(width: Self.listWidth)
-                                .background(Color.app.white)
+                        if let hasRelationVod = self.hasRelationVod {
+                            if hasRelationVod {
+                                 RelationVodBodyKids(
+                                     componentViewModel: self.componentViewModel,
+                                     infinityScrollModel: self.relationBodyModel,
+                                     relationContentsModel: self.relationContentsModel,
+                                     seris: self.$seris,
+                                     epsdId: self.epsdId,
+                                     relationDatas: self.relationDatas,
+                                     screenSize : Self.listWidth)
+                                    .frame(width: Self.listWidth)
+                                    .background(Color.app.white)
+                            } else{
+                                RelationVodEmpty()
+                                    .frame(width: Self.listWidth)
+                                    .background(Color.app.white)
+                            }
                         }
+                        
                     }
+                    .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                 }
-                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
+            .modifier(PageFullMargin())
         }
-        
-        .modifier(MatchParent())
-        .background(
-            Image(AssetKids.image.synopsisBg)
-                .renderingMode(.original)
-                .resizable()
-                .scaledToFill()
-                .modifier(MatchParent())
-                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
-        )
         
         .onReceive(self.sceneObserver.$isUpdated){ _ in
-            
+            self.updatePlayerSize()
         }
         .onAppear{
-            
+            self.updatePlayerSize()
         }
     }//body
+    
+    private func updatePlayerSize(){
+        self.playerWidth = self.getPlayerAreaWidth(sceneObserver: self.sceneObserver)
+        self.castleHeight = self.playerWidth * 80/368
+    }
 }
 
 

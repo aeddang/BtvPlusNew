@@ -13,7 +13,7 @@ struct FunctionViewer: PageComponent{
     @EnvironmentObject var pairing:Pairing
     var componentViewModel:PageSynopsis.ComponentViewModel
     var synopsisData:SynopsisData? = nil
-    
+    var funtionLayout:Axis = .vertical
     //var srisId:String?
     //var epsdId:String?
     @Binding var isBookmark:Bool?
@@ -23,16 +23,17 @@ struct FunctionViewer: PageComponent{
     @State var isPairing:Bool = false
     var body: some View {
         VStack(alignment:.trailing , spacing:0) {
-            if self.isPairing && self.isRecommand == true && SystemEnvironment.isTablet {
-                RecommandTip()
+            if self.isPairing && self.isRecommand == true && self.funtionLayout == .horizontal {
+                RecommandTip(funtionLayout: self.funtionLayout)
             }
-            HStack(alignment: .center, spacing:SystemEnvironment.isTablet ?  Dimen.margin.lightExtra : Dimen.margin.regularUltra){
+            HStack(alignment: .center, spacing:SystemEnvironment.isTablet ?  Dimen.margin.thinExtra : Dimen.margin.regularUltra){
                 if let synopsisData = self.synopsisData {
                     BookMarkButton(
                         data:synopsisData,
                         isBookmark: self.$isBookmark
                     )
                     .buttonStyle(BorderlessButtonStyle())
+                    .fixedSize()
                 }
                 if let srisId = self.synopsisData?.srisId{
                     LikeButton(
@@ -47,6 +48,7 @@ struct FunctionViewer: PageComponent{
                     self.componentViewModel.uiEvent = .watchBtv
                 }
                 .buttonStyle(BorderlessButtonStyle())
+                .fixedSize()
                 if let srisId = self.synopsisData?.srisId{
                     HStack(alignment: .top, spacing:0){
                         ShareButton(
@@ -55,8 +57,9 @@ struct FunctionViewer: PageComponent{
                             isRecommand: self.isPairing ? self.isRecommand : false
                         )
                         .buttonStyle(BorderlessButtonStyle())
-                        if self.isPairing && self.isRecommand == true && !SystemEnvironment.isTablet {
-                            RecommandTip()
+                        .fixedSize()
+                        if self.isPairing && self.isRecommand == true && self.funtionLayout == .vertical  {
+                            RecommandTip(funtionLayout: self.funtionLayout)
                         }
                     }
                 }

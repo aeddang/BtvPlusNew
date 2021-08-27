@@ -26,6 +26,14 @@ enum SynopsisPlayType {
         default: return "common"
         }
     }
+    
+    var logSynopCategory: String {
+        switch self {
+        case .preview: return "미리보기"
+        case .preplay: return "미리보기"
+        default: return "시청하기"
+        }
+    }
 }
 
 class SynopsisPlayerData {

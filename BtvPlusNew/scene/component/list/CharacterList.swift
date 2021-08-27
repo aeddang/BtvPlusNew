@@ -86,7 +86,7 @@ struct CharacterItem: PageView {
            Circle()
             .stroke(
                 self.selected ? Color.app.white : Color.transparent.clear,
-                lineWidth: Dimen.stroke.regular)
+                lineWidth: Dimen.stroke.medium)
         )
         
     }

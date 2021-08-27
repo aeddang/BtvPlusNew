@@ -198,83 +198,9 @@ struct MultiBlock:PageComponent {
                     }
                 }
             }
-            .onAppear(){
-                
-            }
-            .onReceive(self.viewModel.$isUpdate){ update in
-                
-                //if update { self.getHeaderBlock() }
-            }
             
         } else {
-            InfinityScrollView(
-                viewModel: self.infinityScrollModel,
-                axes: .vertical,
-                scrollType : .reload(isDragEnd: false),
-                header : self.header,
-                headerSize : self.headerSize,
-                marginTop : 0,
-                marginBottom : self.marginBottom + self.sceneObserver.safeAreaBottom,
-                marginHorizontal: self.marginHorizontal,
-                spacing: 0,
-                isRecycle : self.isRecycle,
-                useTracking:self.useBodyTracking){
-                
-                VStack(spacing: Self.spacing){
-                    if self.topDatas != nil  && self.topDatas?.isEmpty == false {
-                        ZStack{
-                            self.getTopBannerBg()
-                                .offset(y:(TopBanner.imageHeight - TopBanner.height)/2)
-                            self.getTopBanner()
-                        }
-                        .modifier(MatchHorizontal(height: TopBanner.height))
-                        .clipped()
-                        .padding(.top, self.marginHeader)
-                       
-                    } else if self.monthlyDatas != nil {
-                        MonthlyBlock(
-                             viewModel:self.monthlyViewModel ?? MonthlyBlockModel(),
-                             pageDragingModel:self.pageDragingModel,
-                             monthlyDatas:self.monthlyDatas!,
-                             useTracking:self.useTracking,
-                             action:self.action
-                        )
-                        .padding(.top, self.marginTop)
-                        .padding(.bottom, Self.spacing)
-                        
-                    } else {
-                        Spacer().modifier(MatchHorizontal(height: self.marginTop))
-                    }
-                }
-                .modifier(ListRowInset(spacing: 0))
-                
-                if !self.datas.isEmpty {
-                    ForEach(self.datas, id: \.id) { data in
-                        MultiBlockCell(
-                            pageObservable:self.pageObservable,
-                            pageDragingModel: self.pageDragingModel,
-                            data: data ,
-                            useTracking: self.useTracking)
-                            .modifier(ListRowInset(spacing: Self.spacing))
-                            .onAppear(){
-                                if data.index == self.datas.last?.index  {
-                                    self.infinityScrollModel.event = .bottom
-                                }
-                                //self.infinityScrollModel.onAppear(idx: data.index + 2)
-                            }
-                            .onDisappear(){
-                                //self.infinityScrollModel.onDisappear(idx: data.index + 2)
-                            }
-                    }
-                    if self.useFooter {
-                        Footer()
-                            .modifier(ListRowInset(spacing: Dimen.margin.regular))
-                    }
-                } else {
-                    Spacer().modifier(MatchParent())
-                        .modifier(ListRowInset(spacing: 0))
-                }
-            }
+            
         }
     }
     

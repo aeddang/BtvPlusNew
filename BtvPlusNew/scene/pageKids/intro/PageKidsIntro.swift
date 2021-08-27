@@ -25,15 +25,18 @@ struct PageKidsIntro: PageView {
     @State var movePage:PageObject? = nil
     var body: some View {
         ZStack{
+            Spacer().modifier(MatchParent())
             ImageAnimation(
                 images: Self.ani,
                 fps:Self.fps,
-                isLoof: false,
+                isLoof: true,
                 isRunning: self.$isPlay
                 )
-                .modifier(MatchParent())
+                .frame(
+                    width: SystemEnvironment.isTablet ? 365 : 225,
+                    height:  SystemEnvironment.isTablet ? 267 : 165)
+            
         }
-        .padding(.all, DimenKids.margin.medium)
         .modifier(PageFull(style:.kidsPupple))
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
             if ani {

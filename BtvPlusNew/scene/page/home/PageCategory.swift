@@ -32,7 +32,9 @@ struct PageCategory: PageView {
                 } else {
                     CateList( datas: self.datas)
                         .padding(.top, self.headerHeight)
-                        .modifier(MatchVertical(width: self.listWidth))
+                        .modifier(MatchVertical(
+                                    width: self.listWidth - Dimen.margin.lightExtra
+                                    + (ListItem.cate.width - ListItem.cate.size.width)))
                 }
                 DivisionTab(
                     viewModel: self.navigationModel,
@@ -41,8 +43,8 @@ struct PageCategory: PageView {
                     divisionMargin: Dimen.margin.thin,
                     radius: Dimen.radius.regular,
                     height: Dimen.tab.heavyExtra,
-                    bgColor : Color.app.blueLight,
-                    useSelectedEffect: false
+                    strokeColor : Color.app.white.opacity(0.1),
+                    bgColor : Color.app.blueLight
                     )
                     .frame(width: self.listWidth)
                     .padding(.vertical, Dimen.margin.thin)
@@ -109,10 +111,15 @@ struct PageCategory: PageView {
             cateDatas = cateDatas.filter{!$0.isAdult}
         }
         self.originDatas = cateDatas
-        self.originDatas?.insert(CateData().setZemkids(), at: 1)
+        if !cateDatas.isEmpty {
+            self.originDatas?.insert(CateData().setZemkids(), at: 1)
+        }else{
+            self.originDatas?.append(CateData().setZemkids())
+        }
+        
         let openData:CateData? = self.resetSize(openId: openId)
         guard let open = openData else { return }
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.1){
+        DispatchQueue.main.async{
             self.openPopup(data: open, openId: openId)
         }
     }
@@ -206,7 +213,10 @@ struct PageCategory: PageView {
                     .addParam(key: .subId, value: openId)
             )
         case .kids :
-            self.pagePresenter.changePage(PageKidsProvider.getPageObject(.kidsIntro))
+            self.pagePresenter.changePage(PageKidsProvider
+                                            .getPageObject(.kidsHome)
+                                            .addParam(key: .id, value: openId)
+            )
             
         case .event :
             self.sendLog()

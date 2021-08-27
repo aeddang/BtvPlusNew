@@ -15,11 +15,11 @@ struct StrokeRectButton: View, SelecterbleProtocol{
     var textModifier:TextModifier = TextModifier(
         family: Font.family.bold,
         size: Font.size.tinyExtra,
-        color: Color.app.greyLight,
+        color: Color.app.white,
         activeColor: Color.app.white
     )
     
-    var strokeColor = Color.app.grey
+    var strokeColor = Color.app.white
     var strokeActiveColor = Color.app.white
     var cornerRadius:CGFloat = 0
     var size:CGSize = CGSize(width: Dimen.button.heavy, height: Dimen.button.thin)
@@ -54,7 +54,7 @@ struct StrokeRectButton: View, SelecterbleProtocol{
                 }
             }
             .frame(width:self.size.width, height:self.size.height)
-            .background(Color.transparent.clearUi)
+            .background(self.isSelected ? Color.app.white.opacity(0.2) : Color.transparent.clearUi)
             .clipShape(RoundedRectangle(cornerRadius: self.cornerRadius))
             .overlay(
                 RoundedRectangle(cornerRadius: self.cornerRadius)

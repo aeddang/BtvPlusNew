@@ -14,8 +14,11 @@ extension PlayerUI {
     static let padding = SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.thin
     static let paddingFullScreen = SystemEnvironment.isTablet ? Dimen.margin.lightExtra : Dimen.margin.regular
     
-    static let uiHeight:CGFloat = SystemEnvironment.isTablet ? 48 : 34
-    static let uiHeightFullScreen:CGFloat  = SystemEnvironment.isTablet ? 110 : 64
+    static let uiHeight:CGFloat = SystemEnvironment.isTablet ? 62 : 48
+    static let uiHeightFullScreen:CGFloat  = SystemEnvironment.isTablet ? 110 : 80
+    
+    static let uiRealHeight:CGFloat = SystemEnvironment.isTablet ? 52 : 34
+    static let uiRealHeightFullScreen:CGFloat  = SystemEnvironment.isTablet ? 80 : 56
     
     static let timeTextWidth:CGFloat  = SystemEnvironment.isTablet ? 87 : 55
     
@@ -106,13 +109,15 @@ struct PlayerUI: PageComponent {
                             let changeOrientation:UIInterfaceOrientationMask = self.isFullScreen ? .portrait : .landscape
                             self.isFullScreen
                                 ? self.pagePresenter.fullScreenExit(changeOrientation: changeOrientation)
-                                : self.pagePresenter.fullScreenEnter(changeOrientation: changeOrientation)
+                                : self.pagePresenter.fullScreenEnter(
+                                    isLock: SystemEnvironment.isTablet ,
+                                    changeOrientation: changeOrientation)
                         } else{
                             self.viewModel.event = .fullScreen(!self.isFullScreen)
                         }
                     }
                 }
-                .padding(.all, self.isFullScreen ? Self.paddingFullScreen : Self.padding)
+                .padding(.horizontal, self.isFullScreen ? Self.paddingFullScreen : Self.padding)
             }
             .opacity(self.isShowing && !self.viewModel.isLock ? 1 : 0)
             

@@ -83,6 +83,38 @@ struct PageFull: ViewModifier {
     }
 }
 
+struct PageFullMargin: ViewModifier {
+    @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var sceneObserver:PageSceneObserver
+    @State var marginStart:CGFloat = 0
+    @State var marginEnd:CGFloat = 0
+    func body(content: Content) -> some View {
+        return content
+            .padding(.leading, self.marginStart)
+            .padding(.trailing, self.marginEnd)
+            .onAppear(){
+                if self.pagePresenter.isFullScreen {
+                    self.marginStart = 0
+                    self.marginEnd = 0
+                }else{
+                    self.marginStart = self.sceneObserver.safeAreaStart
+                    self.marginEnd = self.sceneObserver.safeAreaEnd
+                }
+            }
+            .onReceive(self.sceneObserver.$isUpdated){ update in
+                if !update {return}
+                if self.pagePresenter.isFullScreen {
+                    self.marginStart = 0
+                    self.marginEnd = 0
+                }else{
+                    self.marginStart = self.sceneObserver.safeAreaStart
+                    self.marginEnd = self.sceneObserver.safeAreaEnd
+                }
+            }
+    }
+}
+
+
 struct PageFullScreen: ViewModifier {
     var style:PageStyle = .normal
     func body(content: Content) -> some View {

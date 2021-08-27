@@ -314,7 +314,7 @@ struct PageSynopsisPlayer: PageView {
             self.synopsisModel = SynopsisModel(type: .seasonFirst).setData(data: data)
             self.epsdRsluId = self.synopsisModel?.epsdRsluId ?? self.epsdRsluId
             self.synopsisData?.epsdRsluId = self.epsdRsluId
-            self.title = self.episodeViewerData?.episodeTitle
+            self.title = self.episodeViewerData?.episodeSubTitle
             self.epsdId = self.synopsisModel?.epsdId
             self.imgBg = self.synopsisModel?.imgBg
             self.imgContentMode = self.synopsisModel?.imgContentMode ?? .fit
@@ -406,7 +406,6 @@ struct PageSynopsisPlayer: PageView {
         case .togglePlay :
             if self.playerModel.isPlay {
                 self.playNaviLog(action: .clickVodPause, watchType: .watchPause)
-                self.pagePresenter.closePopup(self.pageObject?.id)
             } else {
                 self.playNaviLog(action: .clickVodPlay, watchType: .watchStart)
             }
@@ -422,6 +421,7 @@ struct PageSynopsisPlayer: PageView {
             self.playNaviLog(action: .clickVodStop, watchType: .watchStop)
         case .completed:
             self.playNaviLog(action: .clickVodStop, watchType: .watchStop)
+            self.pagePresenter.closePopup(self.pageObject?.id)
         default: break
         }
     }

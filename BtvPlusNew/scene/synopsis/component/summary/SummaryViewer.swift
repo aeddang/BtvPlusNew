@@ -37,6 +37,7 @@ class SummaryViewerData {
 }
 
 struct SummaryViewer: PageComponent{
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     var peopleScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -93,6 +94,9 @@ struct SummaryViewer: PageComponent{
                     .modifier(ContentHorizontalEdges())
                     .onTapGesture {
                         if self.needExpand {
+                            if !self.isExpand {
+                                self.naviLogManager.contentsLog(action: .clickViewMore)
+                            }
                             withAnimation{ self.isExpand.toggle() }
                         }
                     }

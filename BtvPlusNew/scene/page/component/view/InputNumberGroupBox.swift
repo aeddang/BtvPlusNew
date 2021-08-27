@@ -105,6 +105,7 @@ struct InputNumberGroupItem: PageView {
                 text: self.$input,
                 keyboardType: .numberPad,
                 placeholder: self.placeholder,
+                textAlignment: .left,
                 maxLength:self.maxLength,
                 isfocus: self.focusIdx == self.idx,
                 isSecureTextEntry:false,
@@ -115,6 +116,7 @@ struct InputNumberGroupItem: PageView {
                     }
                 })
         }
+        .padding(.horizontal, Dimen.margin.thin)
         .modifier(MatchParent())
         .background(Color.app.blueLight)
         .overlay(

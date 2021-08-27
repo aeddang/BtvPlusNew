@@ -13,13 +13,15 @@ struct VideoSetBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var sceneObserver:PageSceneObserver
 
     var pageObservable:PageObservable
+    var geometry:GeometryProxy
     var data: BlockData
     
     var limitedLine: Int? = nil
-    
+    var margin:CGFloat = Dimen.margin.heavy - VideoSet.listPadding
     var body :some View {
+        
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
-            HStack(alignment: .bottom, spacing:Dimen.margin.thin){
+            HStack(alignment: .center, spacing:0){
                 VStack(alignment: .leading, spacing:0){
                     Spacer().modifier(MatchHorizontal(height: 0))
                     HStack( spacing:Dimen.margin.thin){
@@ -46,15 +48,18 @@ struct VideoSetBlock:BlockProtocol, PageComponent {
             .modifier(MatchHorizontal(height: Dimen.tab.thin))
             .modifier(ContentHorizontalEdgesTablet())
             if !self.datas.isEmpty {
-                VStack(alignment: .leading, spacing:Dimen.margin.tiny){
+                VStack(alignment: .center, spacing:VideoSet.listPadding){
                     ForEach(self.datas) { data in
                         VideoSet(
                             pageObservable:self.pageObservable,
-                            data:data
-                            )
-                        .padding(.horizontal, SystemEnvironment.isTablet ? (Dimen.margin.heavy-Dimen.margin.thin) : 0)
+                            data:data,
+                            screenSize : geometry.size.width
+                                - (SystemEnvironment.isTablet ? (margin * 2) : 0)
+                        )
                     }
+                    
                 }
+                .padding(.horizontal, SystemEnvironment.isTablet ? margin : 0)
             } else {
                 EmptyAlert( text: self.data.dataType != .watched
                             ? String.pageText.myWatchedEmpty
@@ -79,7 +84,7 @@ struct VideoSetBlock:BlockProtocol, PageComponent {
     func setVideoSets() {
         self.datas = []
         guard let originVideos = data.videos else {return}
-        let count:Int = self.sceneObserver.sceneOrientation == .portrait ? 3 : 4
+        let count:Int = 3
         let max = originVideos.count
         var videos:ArraySlice<VideoData> = []
         if let limitedLine = self.limitedLine {

@@ -64,7 +64,9 @@ struct PagePairingBtv: PageView {
                             placeholderColor: Color.app.blackLight,
                             maxLength: 6,
                             kern: 8,
-                            textModifier: BoldTextStyle( size: Font.size.black ).textModifier,
+                            textModifier: BoldTextStyle(
+                                size: Font.size.black )
+                                .textModifier,
                             isfocus: self.isFocus,
                            
                             inputCopmpleted: { text in
@@ -74,7 +76,7 @@ struct PagePairingBtv: PageView {
                         Spacer().modifier(MatchHorizontal(height: 1))
                             .background(Color.app.blackLight)
                     }
-                    .frame(width:173)
+                    .frame(width:SystemEnvironment.isTablet ? 250 : 173)
                 }
             }
         }
@@ -181,8 +183,8 @@ struct PagePairingBtv: PageView {
             .onReceive(self.pairing.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
-                case .connected : break
-                   // self.pagePresenter.closePopup(self.pageObject?.id)
+                case .connected : 
+                    self.pagePresenter.closePopup(self.pageObject?.id)
                 case .connectError(let header) :
                     if header?.result == NpsNetwork.resultCode.pairingLimited.code {
                         self.pairing.requestPairing(.hostInfo(auth: self.input, device: nil, prevResult: header))

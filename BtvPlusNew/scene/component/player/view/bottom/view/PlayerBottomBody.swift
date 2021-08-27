@@ -118,7 +118,7 @@ struct PlayerBottomBody: PageComponent{
         .padding(.bottom,
                  self.isUiShowing
                     ? self.isFullScreen
-                        ? PlayerUI.uiHeightFullScreen : PlayerUI.uiHeight
+                        ? PlayerUI.uiRealHeightFullScreen : PlayerUI.uiRealHeight
                     : 0
                  )
         

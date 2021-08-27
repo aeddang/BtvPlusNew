@@ -17,7 +17,7 @@ struct EpisodeViewer: PageComponent{
     var body: some View {
         VStack(alignment:.leading , spacing:0) {
             Spacer().modifier(MatchHorizontal(height: 0))
-            HStack(alignment: .center, spacing:Dimen.margin.thin){
+            HStack(alignment: .center, spacing: SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin){
                 if let ratingPct = self.data.ratingPct {
                     RatingInfo(
                         rating: ratingPct
@@ -66,7 +66,7 @@ struct EpisodeViewer: PageComponent{
             }
             if self.data.award != nil {
                 Button(action: {
-                    self.appSceneObserver.alert = .alert(nil, self.data.awardDetail)
+                    self.appSceneObserver.alert = .alert(String.pageText.synopsisAward, self.data.awardDetail)
                 }) {
                     HStack(spacing:Dimen.margin.tinyExtra){
                         Image( Asset.icon.trophy )

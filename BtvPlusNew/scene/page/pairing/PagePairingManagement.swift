@@ -9,6 +9,7 @@ import SwiftUI
 struct PagePairingManagement: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -38,10 +39,10 @@ struct PagePairingManagement: PageView {
                             .modifier(MediumTextStyle(size: Font.size.regular, color: Color.app.white))
                             .padding(.top, Dimen.margin.medium)
                         VStack(alignment:.leading, spacing:Dimen.margin.thin){
-                            Text(String.app.nickName + ":" + self.nick)
+                            Text(String.app.nickName + " : " + self.nick)
                                 .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.white))
                             HStack{
-                                Text(String.pageText.myPairingDate + ":" + self.pairingDate)
+                                Text(String.pageText.myPairingDate + " : " + self.pairingDate)
                                     .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
                                 Spacer()
                             }
@@ -66,22 +67,27 @@ struct PagePairingManagement: PageView {
                                     Text(self.modelName)
                                         .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.white))
         
-                                    Text(String.app.macAdress + ":" + self.macAdress)
+                                    Text(String.app.macAdress + " : " + self.macAdress)
                                         .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
                                     
                                 }
                                 Spacer()
                             }
                             HStack(spacing:Dimen.margin.thin){
-                                FillButton(text: String.button.disConnectBtv, strokeWidth: 1){ _ in
-                                    self.pairing.requestPairing(.unPairing)
-                                }
                                 FillButton(text: String.button.modifyNick, strokeWidth: 1){ _ in
                                     self.pagePresenter.openPopup(
                                         PageProvider.getPageObject(.confirmNumber)
                                             .addParam(key: .type, value: PageConfirmNumber.InputType.nickname)
-                                    )
+                                    ) 
                                 }
+                                FillButton(text: String.button.disConnectBtv, strokeWidth: 1){ _ in
+                                    self.appSceneObserver.alert = .confirm(String.alert.disConnect, String.alert.disConnectText){ isOk in
+                                        if isOk {
+                                            self.pairing.requestPairing(.unPairing)
+                                        }
+                                    }
+                                }
+                                
                             }
                         }
                         .padding(.vertical, SystemEnvironment.isTablet ? Dimen.margin.lightExtra : Dimen.margin.regular)
@@ -99,7 +105,7 @@ struct PagePairingManagement: PageView {
                         }
                         .padding(.top, Dimen.margin.light)
                         if self.sceneOrientation == .portrait {
-                            VStack(alignment:.center){
+                            VStack(alignment:.center, spacing:Dimen.margin.tiny){
                                 Text(String.pageText.myinviteFammlyText1)
                                     .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyMedium))
                                 Text(String.pageText.myinviteFammlyText2)
@@ -110,6 +116,7 @@ struct PagePairingManagement: PageView {
                         } else {
                             VStack(alignment: .center, spacing: 0){
                                 Text(String.pageText.myinviteFammlyText1 + " " + String.pageText.myinviteFammlyText2)
+    
                                     .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyMedium))
                                     .padding(.top, Dimen.margin.thin)
                                 Spacer().modifier(MatchHorizontal(height: 0))
@@ -133,7 +140,7 @@ struct PagePairingManagement: PageView {
             .onReceive(self.pairing.$user){ user in
                 guard let user = user else {return}
                 self.nick = user.nickName
-                self.pairingDate = user.pairingDate ?? "i don't know"
+                self.pairingDate = user.pairingDate ?? ""
             }
             .onReceive(self.pairing.$hostDevice){ device in
                 guard let device = device else {return}

@@ -85,31 +85,8 @@ class MultiBlockModel: PageDataProviderModel {
 }
 
 extension MultiBlockBody {
-    private static var isLegacy:Bool {
-        get{
-            if #available(iOS 14.0, *) { return false }
-            else { return true }
-        }
-    }
-    private static var isRecycle:Bool {
-        get{
-            if #available(iOS 14.0, *) { return true }
-            else { return true }
-        }
-    }
-    private static var isPreLoad:Bool {
-        get{
-            if #available(iOS 14.0, *) { return true }
-            else { return true }
-        }
-    }
-    private static var maxCellCoun:Int {
-        get{
-            if #available(iOS 14.0, *) { return 100 }
-            else { return 4 }
-        }
-    }
-    static let maxCellCount:Int = Self.maxCellCoun
+ 
+    static let maxCellCount:Int = 100
     static let tabHeight:CGFloat = Dimen.tab.thin + Dimen.margin.thinExtra
     static let tabHeightKids:CGFloat = DimenKids.tab.thin + DimenKids.margin.thinExtra
     static let kisHomeHeight:CGFloat = SystemEnvironment.isTablet ? 410 : 215    
@@ -141,8 +118,7 @@ struct MultiBlockBody: PageComponent {
     var header:PageViewProtocol? = nil
     var headerSize:CGFloat = 0
     var useFooter:Bool = false
-    var isRecycle = Self.isRecycle
-    
+     
     var action: ((_ data:MonthlyData) -> Void)? = nil
     
     @State var reloadDegree:Double = 0
@@ -160,89 +136,55 @@ struct MultiBlockBody: PageComponent {
                     .modifier(MatchParent())
             } else {
                 ZStack(alignment: .topLeading){
-                    if !Self.isLegacy  {
-                        if self.topDatas != nil && self.topDatas?.isEmpty == false {
-                            TopBannerBg(
-                                pageObservable : self.pageObservable,
-                                viewModel:self.viewPagerModel,
-                                datas: self.topDatas!,
-                                ratio: 1.0 + (CGFloat(self.reloadDegree/self.reloadDegreeMax)/5)
-                            )
-                            .padding(.top, isHorizontal
-                                        ? max(self.headerOffset, -TopBanner.imageHeightHorizontal)
-                                        : max(self.headerOffset, -TopBanner.imageHeight)
-                            )
-                            .offset(y: self.marginHeader )
-                                
-                        }
-                        ReflashSpinner(
-                            progress: self.$reloadDegree,
-                            progressMax: self.reloadDegreeMax
+                    if self.topDatas != nil && self.topDatas?.isEmpty == false {
+                        TopBannerBg(
+                            pageObservable : self.pageObservable,
+                            viewModel:self.viewPagerModel,
+                            datas: self.topDatas!,
+                            ratio: 1.0 + (CGFloat(self.reloadDegree/self.reloadDegreeMax)/5)
                         )
-                        .padding(.top, self.topDatas != nil
-                                    ? isHorizontal
-                                        ? (TopBanner.heightHorizontal + self.marginHeader)
-                                        : (TopBanner.height + self.marginHeader)
-                                    : self.marginTop)
-                                 
-                        MultiBlock(
-                            viewModel: self.viewModel,
-                            infinityScrollModel: self.infinityScrollModel,
-                            viewPagerModel:self.viewPagerModel,
-                            pageObservable: self.pageObservable,
-                            pageDragingModel: self.pageDragingModel,
-                            topDatas: self.topDatas,
-                            datas: self.blocks,
-                            useBodyTracking:self.useBodyTracking,
-                            useTracking:self.useTracking,
-                            marginHeader:self.marginHeader,
-                            marginTop:self.marginTop,
-                            marginBottom: self.marginBottom,
-                            marginHorizontal: self.marginHorizontal,
-                            monthlyViewModel : self.monthlyViewModel,
-                            monthlyDatas: self.monthlyDatas,
-                            monthlyAllData: self.monthlyAllData,
-                            tipBlock:self.tipBlock,
-                            header:self.header,
-                            headerSize:self.headerSize,
-                            useFooter:self.useFooter,
-                            isHorizontal: self.isHorizontal,
-                            isRecycle:self.isRecycle,
-                            isLegacy:Self.isLegacy,
-                            action:self.action)
-                    } else {
-                        ReflashSpinner(
-                            progress: self.$reloadDegree,
-                            progressMax: self.reloadDegreeMax
+                        .padding(.top, isHorizontal
+                                    ? max(self.headerOffset, -TopBanner.imageHeightHorizontal)
+                                    : max(self.headerOffset, -TopBanner.imageHeight)
                         )
-                        .padding(.top, self.topDatas != nil ? (TopBanner.height + self.marginHeader)  : self.marginTop)
-                        
-                        MultiBlock(
-                            viewModel: self.viewModel,
-                            infinityScrollModel: self.infinityScrollModel,
-                            viewPagerModel:self.viewPagerModel,
-                            pageObservable: self.pageObservable,
-                            pageDragingModel: self.pageDragingModel,
-                            topDatas: self.topDatas,
-                            datas: self.blocks,
-                            useBodyTracking:self.useBodyTracking,
-                            useTracking:self.useTracking,
-                            marginHeader:self.marginHeader,
-                            marginTop: self.topDatas == nil ? self.marginTop : self.marginHeader,
-                            marginBottom: self.marginBottom,
-                            marginHorizontal: self.marginHorizontal,
-                            monthlyViewModel : self.monthlyViewModel,
-                            monthlyDatas: self.monthlyDatas,
-                            monthlyAllData: self.monthlyAllData,
-                            tipBlock:self.tipBlock,
-                            header:self.header,
-                            headerSize:self.headerSize,
-                            useFooter:self.useFooter,
-                            isHorizontal: self.isHorizontal,
-                            isRecycle:self.isRecycle,
-                            isLegacy:Self.isLegacy,
-                            action:self.action)
+                        .offset(y: self.marginHeader )
+                            
                     }
+                    ReflashSpinner(
+                        progress: self.$reloadDegree,
+                        progressMax: self.reloadDegreeMax
+                    )
+                    .padding(.top, self.topDatas != nil
+                                ? isHorizontal
+                                    ? (TopBanner.heightHorizontal + self.marginHeader)
+                                    : (TopBanner.height + self.marginHeader)
+                                : self.marginTop)
+                             
+                    MultiBlock(
+                        viewModel: self.viewModel,
+                        infinityScrollModel: self.infinityScrollModel,
+                        viewPagerModel:self.viewPagerModel,
+                        pageObservable: self.pageObservable,
+                        pageDragingModel: self.pageDragingModel,
+                        topDatas: self.topDatas,
+                        datas: self.blocks,
+                        useBodyTracking:self.useBodyTracking,
+                        useTracking:self.useTracking,
+                        marginHeader:self.marginHeader,
+                        marginTop:self.marginTop,
+                        marginBottom: self.marginBottom,
+                        marginHorizontal: self.marginHorizontal,
+                        monthlyViewModel : self.monthlyViewModel,
+                        monthlyDatas: self.monthlyDatas,
+                        monthlyAllData: self.monthlyAllData,
+                        tipBlock:self.tipBlock,
+                        header:self.header,
+                        headerSize:self.headerSize,
+                        useFooter:self.useFooter,
+                        isHorizontal: self.isHorizontal,
+                        isRecycle:true,
+                        action:self.action)
+                    
                     if self.isError {
                         if self.viewModel.type == .btv {
                             EmptyAlert()
@@ -263,9 +205,8 @@ struct MultiBlockBody: PageComponent {
             guard let evt = evt else {return}
             switch evt {
             case .bottom :
-                if Self.isRecycle {
-                    self.addBlock()
-                }
+                self.addBlock()
+                
             case .pullCompleted :
                 PageLog.d("reload pullCompleted " + self.infinityScrollModel.isLoading.description, tag: self.tag)
                 if !self.isLoading { self.viewModel.reload() }
@@ -396,10 +337,12 @@ struct MultiBlockBody: PageComponent {
                     data.posters = watchBlocks.map{ d in
                         PosterData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
                     }
+                    .filter{$0.isContinueWatch}
                 case .video :
                     data.videos = watchBlocks.map{ d in
                         VideoData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
                     }
+                    .filter{$0.isContinueWatch}
                 default: break
                 }
             
@@ -550,10 +493,8 @@ struct MultiBlockBody: PageComponent {
             switch stat {
             case .passive:
                 DataLog.d("passive " + block.name, tag: "BlockProtocolB")
-                self.removeBlock(block)
             case .active:
                 DataLog.d("active " + block.name, tag: "BlockProtocolB")
-                break
             default: return
             }
             self.completedNum += 1
@@ -561,17 +502,11 @@ struct MultiBlockBody: PageComponent {
             PageLog.d("completedNum " + completedNum.description, tag: "BlockProtocolB")
             if self.completedNum == self.requestNum {
                 self.completedNum = 0
-                if !Self.isPreLoad {
+                self.addLoadedBlocks(self.loadingBlocks)
+                PageLog.d("self.blocks " + self.blocks.count.description, tag: self.tag)
+                self.loadingBlocks = []
+                if self.blocks.isEmpty {
                     self.addBlock()
-                } else{
-                    self.addLoadedBlocks(self.loadingBlocks)
-                    PageLog.d("self.blocks " + self.blocks.count.description, tag: self.tag)
-                    self.loadingBlocks = []
-                    if self.blocks.isEmpty {
-                        self.addBlock()
-                    } else if !Self.isRecycle {
-                        self.delayAddBlock()
-                    }
                 }
             }
         }
@@ -580,7 +515,7 @@ struct MultiBlockBody: PageComponent {
     @State var addBlockSubscription:AnyCancellable?
     func delayAddBlock(){
         self.addBlockSubscription = Timer.publish(
-            every: 0.1, on: .current, in: .common)
+            every: 0.05, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
                 
@@ -628,12 +563,7 @@ struct MultiBlockBody: PageComponent {
 
     private func addBlock(){
         self.addBlockSubscription?.cancel()
-        var max = 0
-        if  !Self.isPreLoad {
-            max = self.originBlocks.count
-        } else {
-            max = min(self.viewModel.requestSize, self.originBlocks.count)
-        }
+        let max = min(self.viewModel.requestSize, self.originBlocks.count)
         if max == 0 {
             self.requestBlockCompleted()
             return
@@ -644,55 +574,41 @@ struct MultiBlockBody: PageComponent {
         PageLog.d("addBlockLoad blocks " + set.count.description, tag: self.tag)
         if set.isEmpty { return }
         self.requestNum = set.count
-        if  !Self.isPreLoad {
-            self.blocks.append(contentsOf: set)
-        }else{
-            self.isLoading = true
-            self.loadingBlocks.append(contentsOf: set)
-    
-            self.loadingBlocks.forEach{ block in
-                if let apiQ = block.getRequestApi(pairing:self.pairing.status, kid:self.pairing.kid) {
-                    dataProvider.requestData(q: apiQ)
-                } else{
-                    if block.uiType == .kidsHome || block.uiType == .kidsTicket {
-                        block.listHeight = Self.kisHomeHeight
-                        block.setDatabindingCompleted(parentTitle: self.viewModel.title)
-                        
-                    }else if block.dataType == .theme , let blocks = block.blocks {
-                        if block.uiType == .theme { 
-                            let themas = blocks.map{ data in
-                                ThemaData().setData(data: data, cardType: block.cardType)
-                            }
-                            if let size = themas.first?.type {
-                                block.listHeight = size.size.height + Self.tabHeight
-                            }
-                            block.themas = themas
-                            DataLog.d("ThemaData " + block.name, tag: "BlockProtocolA")
-                        } else {
-                            let tickets = blocks.map{ data in
-                                TicketData().setData(data: data, cardType: block.cardType)
-                            }
-                            if let size = tickets.first?.type {
-                                block.listHeight = size.size.height + Self.tabHeight
-                            }
-                            block.tickets = tickets
-                            DataLog.d("TicketData " + block.name, tag: "BlockProtocolA")
+        self.isLoading = true
+        self.loadingBlocks.append(contentsOf: set)
+        self.loadingBlocks.forEach{ block in
+            if let apiQ = block.getRequestApi(pairing:self.pairing.status, kid:self.pairing.kid) {
+                dataProvider.requestData(q: apiQ)
+            } else{
+                if block.uiType == .kidsHome || block.uiType == .kidsTicket {
+                    block.listHeight = Self.kisHomeHeight
+                    block.setDatabindingCompleted(parentTitle: self.viewModel.title)
+                    
+                }else if block.dataType == .theme , let blocks = block.blocks {
+                    if block.uiType == .theme {
+                        let themas = blocks.map{ data in
+                            ThemaData().setData(data: data, cardType: block.cardType)
                         }
-                        block.setDatabindingCompleted(parentTitle: self.viewModel.title)
-                        return
-                    } else{
-                        block.setRequestFail()
+                        if let size = themas.first?.type {
+                            block.listHeight = size.size.height + Self.tabHeight
+                        }
+                        block.themas = themas
+                        DataLog.d("ThemaData " + block.name, tag: "BlockProtocolA")
+                    } else {
+                        let tickets = blocks.map{ data in
+                            TicketData().setData(data: data, cardType: block.cardType)
+                        }
+                        if let size = tickets.first?.type {
+                            block.listHeight = size.size.height + Self.tabHeight
+                        }
+                        block.tickets = tickets
+                        DataLog.d("TicketData " + block.name, tag: "BlockProtocolA")
                     }
+                    block.setDatabindingCompleted(parentTitle: self.viewModel.title)
+                    return
+                } else{
+                    block.setRequestFail()
                 }
-            }
-        }
-    }
-    
-    private func removeBlock(_ block:BlockData){
-        if !Self.isPreLoad {
-            if let find = self.blocks.firstIndex(of: block) {
-                self.blocks.remove(at: find)
-                return
             }
         }
     }

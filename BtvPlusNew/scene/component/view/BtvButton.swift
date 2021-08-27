@@ -24,7 +24,6 @@ struct BtvButton: PageView {
             }
             else{
                 action()
-                
             }
         }) {
             if self.type == .btv {

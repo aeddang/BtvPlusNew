@@ -154,6 +154,9 @@ class AlramData:InfinityData,ObservableObject{
     private(set) var inLinkTitle:String? = nil
     private(set) var actionLog:MenuNaviActionBodyItem = MenuNaviActionBodyItem()
     
+    private(set) var messageId:String? = nil
+    private(set) var ackUrl:String? = nil
+    private(set) var blob:String? = nil
     func setData(data:NotificationEntity, idx:Int = -1) -> AlramData{
         self.isCoreData = true
         if let userData = data.userInfo as? [String: Any] {
@@ -182,7 +185,27 @@ class AlramData:InfinityData,ObservableObject{
         self.parseAction()
         return self
     }
-    
+    private func setSystemData(_ systemData:[String: Any]){
+        if let value = systemData["messageId"] as? String {
+            self.messageId = value
+        }
+       
+        if let value = systemData["ackUrl"] as? String {
+            self.ackUrl = value
+        }
+        
+        if let value = systemData["blob"] as? String {
+            self.blob = value
+        }
+        /*
+        if let value = systemData["hasMore"] as? String {
+            self.imageType = AlramImageType.getType(value)
+        }
+        
+        if let value = systemData["type"] as? String {
+            self.image = value
+        }*/
+    }
     
     private func setUserData(_ userData:[String: Any]){
         if let value = userData["notiType"] as? String {

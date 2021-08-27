@@ -63,8 +63,8 @@
 "free" = "무료";
 "defaultStb" = "B tv 셋톱박스";
 
-"ppmUpdate" = "월정액 업데이트";
-"ppmSubscribe" = "월정액 구독중";
+"ppmUpdate" = "이용권 업데이트";
+"ppmSubscribe" = "이용권 구독중";
 "open" = "공개";
 
 "mic" = "마이크";
@@ -83,7 +83,7 @@
 "liveTv" = "실시간 TV";
 "event" = "이벤트";
 
-"ticket" = "월정액";
+"ticket" = "이용권";
 "coupon" = "쿠폰";
 "bpoint" = "B포인트";
 "bcash" = "B캐쉬";
@@ -245,7 +245,7 @@
 "alertApnsMenu" = "메뉴이동";
 "alertApnsSynop" = "시놉이동";
 "alertApnsSeason" = "시즌 공개예정 알림";
-"alertApnsMonthly" = "월정액 공개예정 알림";
+"alertApnsMonthly" = "이용권 공개예정 알림";
 "alertApnsReserve" = "시청예약 알림";
 
 
@@ -258,7 +258,7 @@
 "alertPlayError" = "재생오류";
 "alertPlayErrorPlayback" = "재생중 문제가 발생하였습니다. 다시 시도해 주세요.";
 "alertPlayProhibitionSimultaneous" = "동시 시청 제한 안내";
-"alertPlayProhibitionSimultaneous1" = "현재 지상파 방송사의 영상을 다른 기기에서 시청 중입니다.\n\n콘텐츠 제공사의 요청으로 지상파 월정액에 포함된 영상은 동시 시청이 불가하오니 다른 기기의 시청 종료 후 이용해 주세요.";
+"alertPlayProhibitionSimultaneous1" = "현재 지상파 방송사의 영상을 다른 기기에서 시청 중입니다.\n\n콘텐츠 제공사의 요청으로 지상파 이용권에 포함된 영상은 동시 시청이 불가하오니 다른 기기의 시청 종료 후 이용해 주세요.";
 "alertPlayProhibitionSimultaneous2" = "현재 선택하신 영상과 동일한 제공사의 영상을 다른 기기에서 시청 중입니다.\n\n콘텐츠 제공사의 요청으로 일부 제공사의 영상은 동시 시청이 불가하오니 다른 기기의 시청 종료 후 이용해 주세요.";
 "alertPlayProhibitionSimultaneous3" = "현재 이 영상을\n다른 기기에서 시청 중입니다.\n\n콘텐츠 제공사의 요청으로\n동일 영상은 동시 시청이 불가하오니\n시청 종료 후 이용해 주세요.";
 
@@ -279,6 +279,10 @@
 "alertNeedConnectForView" = "전체 영상은 B tv와 연결 후 시청 가능합니다.\n연결하시겠습니까?";
 "alertNeedConnectStatus" = "B tv와 연결 상태 확인이 필요합니다.\n다시 시도 하시겠습니까?";
 "alertCheckConnectStatus" = "B tv와 연결 상태 확인 중 입니다.";
+
+
+"alertDisConnect" = "B tv 연결해제";
+"alertDisConnectText" = "휴대폰과 연결을 해제하시면\n휴대폰에 등록된 정보가 모두 삭제됩니다.\n해제하시겠습니까?";
 
 "alertUserCertification" = "휴대폰 본인 인증 안내";
 "alertUserCertificationPairing" = "B tv 연결을 위해 휴대폰 인증을 진행합니다. B tv를 이용 중인 가입자 본인의 휴대폰으로 본인확인을 해주세요.";
@@ -432,16 +436,20 @@
 
 "alertKidsExit" = "ZEM 키즈 종료";
 "alertKidsExitText" = "ZEM 키즈를 종료하려면 성인인증번호를 입력해 주세요.";
+"alertKidsExitSetup" = "모바일 B tv 설정";
+"alertKidsExitSetupText" = "모바일 Btv '설정'으로 이동하려면 성인인증번호를 입력해주세요.";
 
 "alertKidsProfileNotfound" = "현재 이용 중인 프로필이\n삭제 되었습니다.\n프로필을 다시 설정해주세요.";
 "alertKidsProfileSelect" = "현재 이용 중인 프로필이\n없습니다.\n프로필을 설정해주세요.";
 "alertKidsProfileEmpty" = "등록된 자녀 \n프로필이 없어요";
-
+"alertKidsProfileEmpty" = "등록된 자녀 \n프로필이 없어요";
 
 "alertKidsDeleteConfirm" = "선택하신 프로필을 삭제하시겠습니까?";
 "alertKidsDeleteConfirmTip" =  "※ 삭제 시, 프로필의 시청과 학습 이력이 Btv와 모바일Btv에서 모두 삭제되며, 다시 복구할 수 없습니다.";
 "alertKidsDelete" = "자녀 프로필 삭제";
 "alertKidsDeleteText" = "프로필을 삭제하려면 성인인증 번호를 입력해 주세요.";
+
+"alertKidProfileSelected" = "대표 프로필이 설정 되었습니다.";
 
 
 "alertKidAddCompleted" = "프로필이 등록 되었습니다.";
@@ -503,7 +511,7 @@
 "titleBookmarkList" = "찜 목록";
 "titlePurchaseList" = "구매 목록";
 "titlePurchaseTicketList" = "이용권";
-"titleMyBenefits" = "나의 할인 해택";
+"titleMyBenefits" = "나의 할인 혜택";
 "titleMyAlram" = "알림 목록";
 "titleRecommandFriend" = "친구에게 추천하기";
 "titleCashCharge" = "B캐쉬 충전소";
@@ -569,7 +577,7 @@
 "pairingSetupUserText2Tablet" = "등록하신 프로필로 취향에 맞는 영상 추천과 서비스에 유용한 정보를 전달해 드립니다.";
 
 "pairingSetupCharacterSelect" = "캐릭터 선택";
-
+"pairingSetupCharacterSelectSub" = "변경할 캐릭터 이미지를 선택해 주세요.";
 "pairingSetupUserAgreementAll" = "모든 항목에 동의하기";
 "pairingSetupUserAgreement1" = "모바일 B tv 이용약관 동의(필수)";
 "pairingSetupUserAgreement2" = "모바일 B tv 개인정보 수집 이용 동의(필수)";
@@ -622,7 +630,7 @@
 "myPairingDate" = "연결일";
 "myinviteFammly" = "우리 가족 B tv 연결 초대하기";
 "myinviteFammlyText1" = "가족들이 더욱 쉽고 빠르게";
-"myinviteFammlyText2" = "B tv를 연결할 수 있도록 SMS를 전송해보세요!";
+"myinviteFammlyText2" = "B tv를 연결할 수 있도록 메시지를 전송해보세요!";
 
 "myRegistPictureFammly" = "B tv에 가족사진 등록하기";
 "myWatchedInfo" = "최근 1개월 간 시청한 VOD 목록입니다.";
@@ -632,7 +640,8 @@
 "myPurchaseEmpty" = "구매 내역이 없습니다.";
 "myCollectedEmpty" = "구매하신 소장 VOD가 없습니다.";
 "myAlramEmpty" = "수신한 알림 메시지가 없습니다.";
-"myAlramEmptyTip" = "공개 예정인 작품의 업데이트 알림이나 놓칠 수 없는 실시간 방송의 알림을 설정해서 받아보세요.";
+"myAlramEmptyPushOn" = "알림 메시지 수신을 설정하시면\n신작 업데이트나 이벤트 정보를\n빠르게 받으실 수 있어요.";
+"myAlramEmptyTip" = "공개 예정인 작품의 업데이트 알림이나\n놓칠 수 없는 실시간 방송의 알림을\n설정해서 받아보세요.";
 "myBookMarkedEmpty" = "찜한 콘텐츠가 없습니다.";
 "myBookMarkedInfo" = "찜 목록은 60개까지 저장됩니다.";
 
@@ -697,19 +706,19 @@
 "myBenefitsNumberTip" = "16자리 숫자를 입력하세요.";
 
 "myBenefitsDiscount" = "다른 할인 수단";
-"myBenefitsDiscountT" = "T맴버쉽";
+"myBenefitsDiscountT" = "T멤버십";
 "myBenefitsDiscountOk" = "OK캐쉬백";
 "myBenefitsDiscountTv" = "TV포인트";
 "myBenefitsDiscountTvText1" = "TV 포인트";
 "myBenefitsDiscountTvText2" = "사용 가능 포인트";
 
-"myBenefitsDiscountTInfo1" = "콘텐츠 구매 시, VIP 등급은 20%, Gold 및 Silver 등급은 10%가 할인됩니다. (교육 장르, 성인 장르, 부가서비스 상품 및 일부 제휴 월정액 상품은 제외)";
-"myBenefitsDiscountTInfo2" = "콘텐츠 구매 시 %s가 할인됩니다. (교육 장르, 성인 장르, 부가서비스 상품 및 일부 제휴 월정액 상품은 제외)";
+"myBenefitsDiscountTInfo1" = "콘텐츠 구매 시, VIP 등급은 20%, Gold 및 Silver 등급은 10%가 할인됩니다. (교육 장르, 성인 장르, 부가서비스 상품 및 일부 제휴 이용권 상품은 제외)";
+"myBenefitsDiscountTInfo2" = "콘텐츠 구매 시 %s가 할인됩니다. (교육 장르, 성인 장르, 부가서비스 상품 및 일부 제휴 이용권 상품은 제외)";
 "myBenefitsDiscountOkInfo1" = "OK캐쉬백 카드는 최대 3개까지 등록 가능합니다.";
 "myBenefitsDiscountOkInfo2" = "콘텐츠 결제 시 할인과 함께 구매 금액의 1%가\nOK캐쉬백 포인트로 적립되며 할인 및 적립은\n대표 카드로만 가능합니다.";
 "myBenefitsDiscountOkSetup" = "대표 카드로 설정";
 "myBenefitsDiscountOkDelete" = "카드 삭제";
-"myBenefitsDiscountTvInfo1" = "TV포인트 등록 정보 변경 및 충전은 B tv에서 하실 수 있습니다.";
+"myBenefitsDiscountTvInfo1" = "TV포인트 등록 정보 변경 및 충전은\nB tv에서 하실 수 있습니다.";
 
 "myBenefitsCardEmpty" = "등록된 카드가 없습니다.";
 "myBenefitsDiscountTvEmpty" = "TV포인트 등록 정보가 없습니다.";
@@ -801,8 +810,8 @@
 "synopsisDDay" = "편성 종료 D-";
 "synopsisPackageContent" = "구성 콘텐츠";
 
-"synopsisUnavailableSeriesMessage" = "지상파 콘텐츠의 경우 B tv에서만 시청 가능한 회차는 제공되지 않습니다. 지상파 월정액에 가입하시면 모든 회차를 모바일로 즐기실 수 있습니다.";
-
+"synopsisUnavailableSeriesMessage" = "지상파 콘텐츠의 경우 B tv에서만 시청 가능한 회차는 제공되지 않습니다. 지상파 이용권에 구독하시면 모든 회차를 모바일로 즐기실 수 있습니다.";
+"synopsisAward" = "수상이력"; 
 /*
  PageAuth
 */
@@ -815,7 +824,7 @@
  PageIntro
  */
 "introTitle1" = "모바일과 태블릿으로\n즐기는 모바일 B tv.";
-"introText1" = "B tv의 VOD 16만편과 모든 월정액 콘텐츠를\n모바일과 태블릿으로 시청해 보세요.\nB tv에서 보시던 VOD 이어보기는 물론,\n모바일 리모컨까지 이용하실 수 있습니다.";
+"introText1" = "B tv의 VOD 16만편과 모든 이용권 콘텐츠를\n모바일과 태블릿으로 시청해 보세요.\nB tv에서 보시던 VOD 이어보기는 물론,\n모바일 리모컨까지 이용하실 수 있습니다.";
 "introTitle2" = "우리 가족 최대 4명까지\n온 가족 모두 즐기는 모바일 B tv";
 "introText2" = "가족별로 나만의 B tv를 만들어 보세요.";
 "introTitle3" = "복잡한 가입 절차 없이\n간편하게 지금 모바일 B tv를 이용해 보세요.";
@@ -922,24 +931,25 @@
 /*
  Monthly
 */
-"monthlyTitle" = "B tv 월정액";
+"monthlyTitle" = "B tv 이용권";
 "monthlyMore" = "전체 상품 보기";
-"monthlyTextRecommand" = "고객님을 위한 콘텐츠가 가득! 지금, 월정액에 가입해 보세요.";
-"monthlyTextEnjoy" = "아래의 모든 콘텐츠를 마음껏 즐겨보세요!.";
+"monthlyTextRecommand" = "고객님을 위한 콘텐츠가 가득! 지금, 이용권에 구독해 보세요";
+"monthlyTextEnjoy" = "아래의 모든 콘텐츠를 마음껏 즐겨보세요!";
 "monthlyTextEnjoyPeriod" = "이용 기간 동안 마음껏 즐기세요!";
 
 "monthlyTextKidsLeading" = "아이를 위한";
 "monthlyTextKidsTrailing" = "키즈 화면에서 콘텐츠를 시청해 보세요!";
 
 "monthlyTextFirstFreeStrong" = "첫 달 무료!";
-"monthlyTextFirstFreeTrailing" = "지금 월정액에 가입하고 마음껏 즐기세요.";
+"monthlyTextFirstFreeTrailing" = "지금 이용권을 구독하고 마음껏 즐기세요";
 
-"monthlyOceanPhaseLeading" = "매주 최신 영화가 쏟아지는";
-"monthlyOceanPhaseTrailing" = "에 가입해 보세요!";
-"monthlyOceanAuth" = "이용중!  아래의 콘텐츠를 즐겨보세요.";
-"monthlyOceanPeriodAuth" = "OCEAN 주말패스 이용중!  아래의 콘텐츠를 즐겨보세요.";
+"monthlyOceanPurchaseLeading" = "매주 최신 영화가 쏟아지는";
+"monthlyOceanPurchaseTrailing" = "에 가입해 보세요!";
+"monthlyOceanAuthLeading" = "이용중!";
+"monthlyOceanAuth" = " 아래의 콘텐츠를 즐겨보세요";
+"monthlyOceanPeriodAuth" = "OCEAN 주말패스 이용중!  아래의 콘텐츠를 즐겨보세요";
 "monthlyOceanFirstFreeLeading" = "첫 달 무료! 지금";
-"monthlyOceanFirstFreeTrailing" = "에 가입하고 마음껏 즐기세요.";
+"monthlyOceanFirstFreeTrailing" = "에 가입하고 마음껏 즐기세요";
 
 
 
@@ -1012,8 +1022,7 @@
 "shareComplete" = "공유 완료 되었습니다.";
 "shareFail" = "공유 실패 하였습니다. 다시 시도해 주세요.";
 
-"shareFamilyInvite" = "우리 가족 B tv 연결 초대하기\n\n
-모바일 B tv에 초대합니다.\n
+"shareFamilyInvite" = "모바일 B tv에 초대합니다.\n
 ▶ 모바일 B tv 앱이 설치되어 있다면 위 링크를 누르시고 바로 이용해보세요.\n\n
 ▶ 아직 앱이 설치되어 있지 않다면, 위 링크를 눌러 앱을 설치한 후 다시 이 링크를 눌러 이용하실 수 있습니다.\n\n
 ※ B tv 연결은 링크가 유효한 30분 안에 완료해야 합니다.";

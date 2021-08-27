@@ -13,15 +13,15 @@ struct InfoAlert: PageView {
     let text:String
     var horizontalMargin:CGFloat = 0
     var body: some View {
-       HStack(alignment: .top, spacing: Dimen.margin.tinyExtra){
-            Image(Asset.icon.alert)
+       HStack(alignment: .center, spacing: Dimen.margin.tinyExtra){
+            Image(Asset.icon.alertInfo)
                 .renderingMode(.original)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
             Text(text)
                 .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
-                .padding(.top, Dimen.margin.microExtra)
+               
         }
        .padding(.horizontal, self.horizontalMargin )
     }//body
@@ -39,14 +39,15 @@ struct EmptyMyData: PageView {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: Dimen.icon.heavyUltra, height: Dimen.icon.heavyUltra)
             Text(text)
-                .modifier(MediumTextStyle(size: Font.size.regular, color: Color.app.greyLight))
-                .multilineTextAlignment(.center)
-                .padding(.top, Dimen.margin.mediumExtra)
+                    .modifier(BoldTextStyle(size: Font.size.regular, color: Color.app.greyLight))
+                    .multilineTextAlignment(.center)
+                    .padding(.top, Dimen.margin.mediumExtra)
+            
             if let tip = self.tip{
                 Text(tip)
-                    .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
-                    .multilineTextAlignment(.leading)
-                    .padding(.top, Dimen.margin.tiny)
+                    .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.greyMedium))
+                    .multilineTextAlignment(.center)
+                    .padding(.top, Dimen.margin.light)
             }
         }
         .padding(.all, Dimen.margin.medium)

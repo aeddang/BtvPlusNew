@@ -12,6 +12,8 @@ import SwiftUI
 
 struct PageKidsTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var setup:Setup
     var title:String? = nil
     var titleTip:String? = nil
     var titleTipColor:Color = Color.app.sepia
@@ -66,11 +68,15 @@ struct PageKidsTab: PageComponent{
                     Button(action: {
                         let move = PageProvider.getPageObject(.setup, animationType: .opacity)
                         move.isPopup = true
-                        self.pagePresenter.openPopup(
-                            PageKidsProvider.getPageObject(.kidsConfirmNumber)
-                                .addParam(key: .type, value: PageKidsConfirmType.exit)
-                                .addParam(key: .data, value: move)
-                        )
+                        if pairing.status == .pairing && self.setup.isKidsExitAuth { 
+                            self.pagePresenter.openPopup(
+                                PageKidsProvider.getPageObject(.kidsConfirmNumber)
+                                    .addParam(key: .type, value: PageKidsConfirmType.exitSetup)
+                                    .addParam(key: .data, value: move)
+                            )
+                        } else {
+                            self.pagePresenter.openPopup(move)
+                        }
                         
                     }) { 
                         Image(AssetKids.icon.setting)

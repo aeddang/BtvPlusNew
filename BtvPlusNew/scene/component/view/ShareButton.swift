@@ -16,6 +16,7 @@ struct ShareButton: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var type:PageType = .btv
     var srisId:String? = nil
     var epsdId:String? = nil
@@ -68,6 +69,7 @@ struct ShareButton: PageView {
             )
             
         } else {
+            self.naviLogManager.contentsLog(action: .clickContentsShare,  actionBody:.init(config: ""))
             let link = ApiPath.getRestApiPath(.WEB)
                 + SocialMediaSharingManage.sharinglink + "/" + srisId + "/" + epsdId + "?from=share"
             self.repository.shareManager.share(
@@ -82,12 +84,15 @@ struct ShareButton: PageView {
         
     }
 }
-
+extension RecommandTip{
+    static let height:CGFloat = SystemEnvironment.isTablet ? 31 : 22
+}
 
 struct RecommandTip: PageView {
+    var funtionLayout:Axis = .vertical
     var body: some View {
         ZStack{
-            Image( Asset.shape.recommandTip)
+            Image( self.funtionLayout == .horizontal ? Asset.shape.recommandTipHorizontal : Asset.shape.recommandTip)
                 .renderingMode(.original).resizable()
                 .scaledToFit()
                 .modifier(MatchParent())
@@ -104,11 +109,11 @@ struct RecommandTip: PageView {
                     color: Color.app.white
                 ))
             }
-            .padding(.top, SystemEnvironment.isTablet ? -5 : 0 )
+            .padding(.top, self.funtionLayout == .horizontal ? -5 : 0 )
         }
         .frame(
             width: SystemEnvironment.isTablet ? 94 : 88,
-            height: SystemEnvironment.isTablet ? 31 : 22)
+            height: Self.height)
         
     }//body
 }

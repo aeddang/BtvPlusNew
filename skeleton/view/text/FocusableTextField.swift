@@ -13,7 +13,8 @@ struct FocusableTextField: UIViewRepresentable {
     var keyboardType: UIKeyboardType = .default
     var returnVal: UIReturnKeyType = .default
     var placeholder: String = ""
-    var placeholderColor:Color = Color.app.white.opacity(0.45)
+    var placeholderColor:Color = Color.app.blackLight
+    var textAlignment:NSTextAlignment = .center
     var maxLength: Int = -1
     var kern: CGFloat = 1
     var textModifier:TextModifier = RegularTextStyle().textModifier
@@ -25,6 +26,7 @@ struct FocusableTextField: UIViewRepresentable {
     
     func makeUIView(context: Context) -> UITextField {
         let textField = UITextField(frame: .zero)
+        let font =  UIFont(name: self.textModifier.family, size: self.textModifier.size)
         textField.text = self.text
         textField.keyboardType = self.keyboardType
         textField.returnKeyType = self.returnVal
@@ -32,7 +34,7 @@ struct FocusableTextField: UIViewRepresentable {
         textField.placeholder = self.placeholder
         textField.autocorrectionType = .no
         textField.adjustsFontSizeToFitWidth = true
-        textField.textAlignment = .center
+        textField.textAlignment = self.textAlignment
         let color = textModifier.color == Color.app.white ? UIColor.white : textModifier.color.uiColor()
         textField.textColor = color
         textField.isSecureTextEntry = self.isSecureTextEntry
@@ -41,9 +43,10 @@ struct FocusableTextField: UIViewRepresentable {
             string: self.placeholder ,
             attributes: [
                 NSAttributedString.Key.kern: self.kern,
+                NSAttributedString.Key.font: font ?? UIFont.init(),
                 NSAttributedString.Key.foregroundColor: placeholderColor.uiColor()
             ])
-        textField.font = UIFont(name: self.textModifier.family, size: self.textModifier.size)
+        textField.font = font
         return textField
     }
 

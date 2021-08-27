@@ -13,12 +13,13 @@ class PosterData:InfinityData{
     private(set) var originImage: String? = nil
     private(set) var title: String? = nil
     private(set) var subTitle: String? = nil
+    private(set) var progress:Float? = nil
     private(set) var epsdId:String? = nil
     private(set) var prsId:String? = nil
     private(set) var tagData: TagData? = nil
     private(set) var isAdult:Bool = false
     private(set) var watchLv:Int = 0
-   
+    private(set) var isContinueWatch:Bool = false
     fileprivate(set) var isBookmark:Bool? = nil
     private(set) var synopsisType:SynopsisType = .title
     private(set) var type:PosterType = .small
@@ -43,24 +44,7 @@ class PosterData:InfinityData{
         return self
     }
     
-    func setNaviLog(searchType:BlockData.SearchType, data:CategoryVodItem? = nil) -> PosterData {
-        self.contentLog = MenuNaviContentsBodyItem(
-            type: searchType.logType,
-            title: self.title,
-            channel_name: nil,
-            genre_text: nil,
-            genre_code: data?.meta_typ_cd,
-            paid: self.tagData?.isFree,
-            purchase: nil,
-            episode_id: self.epsdId,
-            episode_resolution_id: self.synopsisData?.epsdRsluId,
-            product_id: nil,
-            purchase_type: nil,
-            monthly_pay: nil,
-            list_price: data?.price
-        )
-        return self
-    }
+    
     func setData(data:ContentItem, cardType:BlockData.CardType = .smallPoster , idx:Int = -1) -> PosterData {
         setCardType(cardType)
         title = data.title
@@ -125,13 +109,18 @@ class PosterData:InfinityData{
         isAdult = data.adult?.toBool() ?? false
         watchLv = data.level?.toInt() ?? 0
         tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        if let rt = data.watch_rt?.toInt() {
+            self.progress = Float(rt) / 100.0
+            self.isContinueWatch = rt > 1
+        }
         originImage = data.thumbnail
         image = ImagePath.thumbImagePath(filePath: data.thumbnail, size: type.size, isAdult: self.isAdult)
         
         index = idx
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
-            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "", kidZone:nil)
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id,
+            prdPrcId: "", kidZone:nil, progress:self.progress)
         return self
     }
     
@@ -151,6 +140,26 @@ class PosterData:InfinityData{
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "", kidZone:nil)
+        return self.setNaviLog(data: data)
+    }
+    
+    func setNaviLog(data:CWBlockItem? = nil) -> PosterData {
+        self.contentLog = MenuNaviContentsBodyItem(
+            type: "vod",
+            title: self.title,
+            channel_name: nil,
+            genre_text: nil,
+            genre_code: data?.meta_typ_cd,
+            paid: self.tagData?.isFree,
+            purchase: nil,
+            episode_id: self.epsdId,
+            episode_resolution_id: self.synopsisData?.epsdRsluId,
+            product_id: nil,
+            purchase_type: nil,
+            monthly_pay: nil,
+            list_price: self.tagData?.price,
+            payment_price: nil
+        )
         return self
     }
     
@@ -195,6 +204,25 @@ class PosterData:InfinityData{
         index = idx
         prsId = data.prs_id
         return self.setNaviLog(searchType: searchType)
+    }
+    
+    func setNaviLog(searchType:BlockData.SearchType, data:CategoryVodItem? = nil) -> PosterData {
+        self.contentLog = MenuNaviContentsBodyItem(
+            type: searchType.logType,
+            title: self.title,
+            channel_name: nil,
+            genre_text: nil,
+            genre_code: data?.meta_typ_cd,
+            paid: self.tagData?.isFree,
+            purchase: nil,
+            episode_id: self.epsdId,
+            episode_resolution_id: self.synopsisData?.epsdRsluId,
+            product_id: nil,
+            purchase_type: nil,
+            monthly_pay: nil,
+            list_price: data?.price
+        )
+        return self
     }
     
     func setRank(_ idx:Int){
@@ -504,9 +532,7 @@ struct PosterDataSet:Identifiable {
 extension PosterSet{
     
     static func listSize(data:PosterDataSet, screenWidth:CGFloat,
-                         padding:CGFloat = SystemEnvironment.currentPageType == .btv
-                            ? Dimen.margin.thin
-                            : DimenKids.margin.thinUltra) -> CGSize {
+                         padding:CGFloat = Self.listPadding) -> CGSize {
         let datas = data.datas
         let ratio = datas.first!.type.size.height / datas.first!.type.size.width
         let count = CGFloat(data.count)
@@ -516,6 +542,9 @@ extension PosterSet{
         
         return CGSize(width: floor(cellW), height: cellH )
     }
+    static let listPadding:CGFloat = SystemEnvironment.currentPageType == .btv
+        ? SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin
+        : DimenKids.margin.thinUltra
 }
 
 struct PosterSet: PageComponent{
@@ -525,7 +554,7 @@ struct PosterSet: PageComponent{
     var pageObservable:PageObservable = PageObservable()
     var data:PosterDataSet
     var screenSize:CGFloat? = nil
-    var padding:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thinUltra
+    var padding:CGFloat = Self.listPadding
     var action: ((_ data:PosterData) -> Void)? = nil
     
     @State var cellDatas:[PosterData] = []
@@ -596,7 +625,10 @@ struct PosterItem: PageView {
         ZStack(alignment: .topLeading){
             ImageView(url: self.data.image, contentMode: .fit, noImg: self.data.type.noImg)
                 .modifier(MatchParent())
-            
+            Image(Asset.shape.listGradient)
+                .resizable()
+                .scaledToFill()
+                .modifier(MatchParent())
             if self.data.useTag, let tag = self.data.tagData {
                 if tag.pageType == .btv {
                     Tag(data: tag, isBig: self.data.type.isBigTag).modifier(MatchParent())

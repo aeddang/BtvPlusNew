@@ -10,12 +10,14 @@ import SwiftUI
 
 extension PageSynopsis {
     func onLayerPlayerAppear(){
+        if self.type == .kids  {return}
         self.appSceneObserver.currentPlayer = self
         if !Self.useLayer {return}
         self.playerModel.useFullScreenAction = self.type == .kids
         
     }
     func onLayerPlayerDisappear(){
+        if self.type == .kids  {return}
         if self.appSceneObserver.currentPlayer?.pageObject?.id == self.pageObject?.id {
             self.appSceneObserver.currentPlayer = nil
             self.appSceneObserver.useLayerPlayer = false
@@ -24,12 +26,14 @@ extension PageSynopsis {
     
     func activePlayer(){
         if !Self.useLayer {return}
+        if self.type == .kids  {return}
         if self.isBottom {
             self.pageDragingModel.uiEvent = .dragEnd(false)
         }
     }
     func passivePlayer(){
         if !Self.useLayer {return}
+        if self.type == .kids  {return}
         if !self.isBottom {
             self.pageDragingModel.uiEvent = .dragEnd(true)
         }

@@ -122,18 +122,20 @@ struct KidsGnbItem: PageView {
                             if let title = self.title {
                                 Text(title)
                                     .modifier(BoldTextStyleKids(
-                                                size: Font.sizeKids.tinyExtra,
+                                                size: SystemEnvironment.isTablet ? Font.sizeKids.micro : Font.sizeKids.tinyExtra,
                                                 color: self.isSelected ? Color.app.white : Color.app.brownDeep))
                             }
                             Text(String.app.home)
                                 .modifier(BoldTextStyleKids(
-                                            size: Font.sizeKids.tinyExtra,
+                                            size: SystemEnvironment.isTablet ? Font.sizeKids.micro : Font.sizeKids.tinyExtra,
                                             color: self.isSelected ? Color.app.white : Color.app.brownDeep))
                                 .fixedSize(horizontal: true, vertical: true)
                         }
                         if self.isSelected ,let subTitle = self.subTitle {
                             Text(subTitle)
-                                .modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color: Color.app.white))
+                                .modifier(BoldTextStyleKids(
+                                            size: SystemEnvironment.isTablet ? Font.sizeKids.micro : Font.sizeKids.tinyExtra,
+                                            color: Color.app.white))
                                 .fixedSize(horizontal: true, vertical: true)
                                 .padding(.vertical, DimenKids.margin.micro)
                                 .padding(.horizontal, DimenKids.margin.thin)

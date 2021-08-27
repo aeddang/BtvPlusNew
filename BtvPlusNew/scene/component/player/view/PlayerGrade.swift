@@ -69,7 +69,7 @@ struct PlayerGrade: PageView{
             .padding(.top,
                      self.isUiShowing
                         ? self.isFullScreen
-                            ? PlayerUI.uiHeightFullScreen : PlayerUI.uiHeight
+                            ? PlayerUI.uiRealHeightFullScreen : PlayerUI.uiRealHeight
                         : 0
                      )
             .padding(.bottom, self.isFullScreen ? Dimen.margin.lightExtra : Dimen.margin.thinExtra)
@@ -90,14 +90,16 @@ struct PlayerGrade: PageView{
             }
             Spacer()
             if let info = self.data.gradeInfo {
-                Text(info).modifier(MediumTextStyle(
+                Text(info)
+                    .modifier(MediumTextStyle(
                                         size: self.isFullScreen ? Self.textSizeFull : Self.textSize,
                                         color: Color.app.white))
-                    .frame(height:Dimen.button.light)
+                    
+                    .multilineTextAlignment(.leading)
                     .padding(.bottom,
                              self.isUiShowing
                                 ? self.isFullScreen
-                                    ? PlayerUI.uiHeightFullScreen : PlayerUI.uiHeight
+                                    ? PlayerUI.uiRealHeightFullScreen : PlayerUI.uiRealHeight
                                 : 0
                              )
             }

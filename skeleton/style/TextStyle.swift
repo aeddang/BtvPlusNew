@@ -84,8 +84,9 @@ struct MediumTextStyle: ViewModifier {
         return content
             .font(.custom(textModifier.family, size: textModifier.size))
             .foregroundColor(textModifier.color)
-            .lineSpacing(Font.spacing.regular)
             .truncationMode(.tail)
+            .lineSpacing(Font.spacing.regular)
+            
     }
 }
 

@@ -11,6 +11,7 @@ class EpisodeViewerData {
     private(set) var image: String = Asset.noImg16_9
     private(set) var seasonTitle: String? = nil
     private(set) var title: String = ""
+    private(set) var subTitle: String = ""
     private(set) var info: String = ""
     private(set) var count: String? = nil
     private(set) var ratingPct: Double? = nil
@@ -29,8 +30,15 @@ class EpisodeViewerData {
     var episodeTitle:String {
         guard let count = self.count else { return self.title }
         if count.isEmpty { return self.title }
-        return self.title + " (" + count + String.app.broCount + ")"
+        return self.title + " " + count + String.app.broCount 
     }
+    
+    var episodeSubTitle:String {
+        guard let count = self.count else { return self.subTitle }
+        if count.isEmpty { return self.subTitle }
+        return self.subTitle + " " + count + String.app.broCount
+    }
+    
     var episodeTitleKids:String {
         guard let count = self.count else { return self.title }
         if count.isEmpty { return self.title }
@@ -39,6 +47,7 @@ class EpisodeViewerData {
     
     func setData(data:SynopsisContentsItem) -> EpisodeViewerData {
         self.title = data.title ?? ""
+        self.subTitle = data.epsd_snss_cts ?? data.title ?? ""
         self.seasonTitle = data.sson_choic_nm
         self.date = data.brcast_exps_dy?.isEmpty == false ? data.brcast_exps_dy : nil
         self.serviceYear = data.svc_fr_dt?.isEmpty == false ? data.svc_fr_dt?.subString(start: 0, len: 4) : nil

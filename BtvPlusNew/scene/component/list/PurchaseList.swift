@@ -17,6 +17,7 @@ class PurchaseData:InfinityData,ObservableObject{
     private(set) var date:String? = nil
     private(set) var period:String? = nil
     private(set) var isImminent:Bool? = nil
+    private(set) var isUseable:Bool = true
     private(set) var srisId:String? = nil
     private(set) var epsdId:String? = nil
     private(set) var purchaseId:String? = nil
@@ -38,9 +39,8 @@ class PurchaseData:InfinityData,ObservableObject{
         title = data.title
         
         if let prc = data.selling_price {
-            
             price = String.app.purchasePrice + " : "
-                + max(prc.toInt(),0).formatted(style: .decimal) + String.app.cash + " (" + String.app.vat + ")"
+                + prc + " (" + String.app.vat + ")"
         }
         
         if let dat = data.reg_date {
@@ -48,6 +48,7 @@ class PurchaseData:InfinityData,ObservableObject{
         }
         if data.period == "-1" {
             period = String.app.purchasePeriod + " : " + String.app.expirePeriod
+            isUseable = false
         } else if let prd = data.period_detail {
             period = String.app.purchasePeriod + " : " + prd
         }
@@ -165,6 +166,9 @@ struct PurchaseItem: PageView {
                 ZStack{
                     ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg9_16)
                         .modifier(MatchParent())
+                    if !self.data.isUseable {
+                        Spacer().modifier(MatchParent()).background(Color.transparent.black50)
+                    }
                     if self.data.isLock {
                         VStack(alignment: .center, spacing: Dimen.margin.thin){
                             Image(Asset.icon.itemRock)
@@ -194,23 +198,26 @@ struct PurchaseItem: PageView {
                     VStack(alignment: .leading, spacing:Dimen.margin.tinyExtra){
                         if let title = self.data.title {
                             Text(title)
-                                .modifier(BoldTextStyle(size: Font.size.light))
+                                .modifier(BoldTextStyle(size: Font.size.light, color: self.data.isUseable ? Color.app.white :Color.app.greyMedium))
                                 .multilineTextAlignment(.leading)
                         }
                         if let price = self.data.price {
                             Text(price)
-                                .modifier(MediumTextStyle(size: Font.size.thin, color: Color.app.greyLight))
+                                .modifier(MediumTextStyle(size: Font.size.thin,
+                                                          color: self.data.isUseable ? Color.app.greyLightExtra : Color.app.greyMedium))
                             
                         }
                     }
                     VStack(alignment: .leading, spacing:Dimen.margin.tinyExtra) {
                         if let date = self.data.date {
                             Text(date)
-                                .modifier(MediumTextStyle(size: Font.size.tiny, color: Color.app.greyLight))
+                                .modifier(MediumTextStyle(size: Font.size.tiny,
+                                                          color: self.data.isUseable ? Color.app.greyLightExtra : Color.app.greyMedium))
                         }
                         if let period = self.data.period {
                             Text(period)
-                                .modifier(MediumTextStyle(size: Font.size.tiny, color: Color.app.greyLight))
+                                .modifier(MediumTextStyle(size: Font.size.tiny,
+                                                          color: self.data.isUseable ? Color.app.greyLightExtra : Color.app.greyMedium))
                         }
                     }
                     .padding(.top, Dimen.margin.thin)

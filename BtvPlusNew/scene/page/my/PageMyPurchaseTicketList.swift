@@ -24,6 +24,7 @@ struct PageMyPurchaseTicketList: PageView {
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
 
     @State var marginBottom:CGFloat = 0
+    @State var sceneOrientation: SceneOrientation = .portrait
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -45,8 +46,12 @@ struct PageMyPurchaseTicketList: PageView {
                                 viewModel: self.infinityScrollModel,
                                 dataSets: self.datas,
                                 useTracking:true,
+                                padding: SystemEnvironment.isTablet
+                                    ? self.sceneOrientation == .landscape ? Dimen.margin.heavy :  Dimen.margin.thin
+                                    : Dimen.margin.thin,
                                 marginBottom: self.marginBottom + Dimen.button.medium + Dimen.margin.thin
                             )
+                            
                             if let allData = self.monthlyAllData , !SystemEnvironment.isEvaluation {
                                 VStack{
                                     Spacer().modifier(MatchParent())
@@ -93,6 +98,7 @@ struct PageMyPurchaseTicketList: PageView {
                     }
                    
                 }
+                
                 .modifier(PageFull())
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }
@@ -109,8 +115,12 @@ struct PageMyPurchaseTicketList: PageView {
                 if !update {return}
                 self.updatedTickets()
             }
+            .onReceive(self.sceneObserver.$isUpdated){ _ in
+                self.sceneOrientation = self.sceneObserver.sceneOrientation
+            }
             .onAppear(){
                 self.setupMonthlyDatas()
+                self.sceneOrientation = self.sceneObserver.sceneOrientation
                 if self.pairing.authority.monthlyPurchaseInfo == nil {
                     self.pairing.authority.requestAuth(.updateMonthlyPurchase(isPeriod: false))
                 }
@@ -150,7 +160,7 @@ struct PageMyPurchaseTicketList: PageView {
         allTickets.append(contentsOf: mTickets)
         allTickets.append(contentsOf: pTickets)
         
-        let count:Int = Int(round(self.sceneObserver.screenSize.width / ListItem.purchaseTicket.size.width))
+        let count:Int = SystemEnvironment.isTablet ? 2 : 1 //Int(round(self.sceneObserver.screenSize.width / ListItem.purchaseTicket.size.width))
         var rows:[PurchaseTicketDataSet] = []
         var cells:[PurchaseTicketData] = []
         var total = 0

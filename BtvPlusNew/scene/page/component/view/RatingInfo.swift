@@ -15,9 +15,10 @@ struct RatingInfo: View {
                 .renderingMode(.original).resizable()
                 .scaledToFit()
                 .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
+                .padding(.top, -Dimen.margin.microExtra)
             Text(self.rating.toPercent())
                 .modifier(BoldTextStyle(size: Font.size.light, color: Color.brand.primary))
-                .padding(.top, 4)
+                
         }
     }//body
 }

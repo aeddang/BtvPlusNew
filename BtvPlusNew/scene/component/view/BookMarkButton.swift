@@ -13,6 +13,7 @@ import SwiftUI
 struct BookMarkButton: PageView {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pairing:Pairing
     var type:PageType = .btv
     var data:SynopsisData
@@ -63,8 +64,8 @@ struct BookMarkButton: PageView {
                         .renderingMode(.original).resizable()
                         .scaledToFit()
                         .frame(
-                            width: Dimen.icon.medium,
-                            height: Dimen.icon.medium)
+                            width: Dimen.icon.regularExtra,
+                            height: Dimen.icon.regularExtra)
                 } else {
                     Image( self.isBookmark == true
                             ? AssetKids.icon.heartOn : AssetKids.icon.heartOff )
@@ -118,6 +119,7 @@ struct BookMarkButton: PageView {
         guard let epsdId = self.data.epsdId else { return }
         self.isBusy = true
         self.dataProvider.requestData(q: .init(id: epsdId, type: .postBookMark(self.data)))
+        self.naviLogManager.contentsLog(action: .clickContentsPick,  actionBody:.init(config: "pick"))
     }
     
     func delete(){
@@ -125,6 +127,7 @@ struct BookMarkButton: PageView {
         guard let epsdId = self.data.epsdId else { return }
         self.isBusy = true
         self.dataProvider.requestData(q: .init(id: epsdId, type: .deleteBookMark(self.data)))
+        self.naviLogManager.contentsLog(action: .clickContentsPick,  actionBody:.init(config: "un-pick"))
     }
     
     func added(_ res:ApiResultResponds){
@@ -132,6 +135,7 @@ struct BookMarkButton: PageView {
         action?(true)
         self.isBusy = false
         self.appSceneObserver.event = .toast(String.alert.registBookmark)
+        
     }
     
     func deleted(_ res:ApiResultResponds){
@@ -139,6 +143,7 @@ struct BookMarkButton: PageView {
         action?(false)
         self.isBusy = false
         self.appSceneObserver.event = .toast(String.alert.deleteBookmark)
+       
     }
     
     func error(_ err:ApiResultError){

@@ -14,6 +14,7 @@ struct SortButton: View{
     var size:CGFloat = Dimen.tab.regular
     var padding:CGFloat = Dimen.margin.thin
     var bgColor:Color = Color.app.blueLight
+    var strokeColor:Color = Color.app.greyExtra
     var cornerRadius:CGFloat = 0
     let action: () -> Void
     
@@ -50,7 +51,7 @@ struct SortButton: View{
                 RoundedRectangle(cornerRadius: self.cornerRadius)
                         .stroke(
                             self.isFocus ? Color.app.white
-                            :  self.isFill ? Color.app.greyExtra : Color.app.blueLight,
+                            :  self.isFill ? self.strokeColor : Color.app.blueLight,
                             lineWidth: self.isFill ? 1 : 3)
                 
             )

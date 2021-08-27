@@ -49,8 +49,8 @@ struct PosterBlock:PageComponent, BlockProtocol {
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
             if self.isUiActive {
-                HStack(alignment: .bottom, spacing:Dimen.margin.thin){
-                    VStack(alignment: .leading , spacing:Dimen.margin.tiny){
+                HStack(alignment: .center, spacing:Dimen.margin.thin){
+                    VStack(alignment: .leading , spacing:0){
                         Spacer().modifier(MatchHorizontal(height: 0))
                         HStack( spacing:Dimen.margin.thin){
                             Text(data.name).modifier(BlockTitle())

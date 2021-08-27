@@ -196,6 +196,7 @@ struct RelationVodListBody: PageComponent{
                     self.componentViewModel.uiEvent = .changeSynopsis(data.synopsisData)
                 }
                 .frame(height: PosterSet.listSize(data: data, screenWidth: self.screenSize).height)
+                .modifier(ListRowInset(spacing: Dimen.margin.thin))
             }
         } else {
             Spacer().modifier(MatchHorizontal(height: RelationVodList.spacing ))

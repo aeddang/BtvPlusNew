@@ -110,7 +110,7 @@ struct PagePairingUser: PageView {
                         }
                         self.pagePresenter.closePopup(self.pageObject?.id)
                     }
-                default : do{}
+                default : break
                 }
             }
             .onAppear{

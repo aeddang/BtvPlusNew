@@ -196,7 +196,6 @@ struct SceneAlertController: PageComponent{
                     AlertBtnData(title: String.app.confirm, index: 0)
                 ]
             }
-            
             return true
         }
     }
@@ -241,6 +240,7 @@ struct SceneAlertController: PageComponent{
                     )
                 }
                 NotificationCoreData().readNotice(title: data.title ?? "", body: data.text ?? "")
+                self.repository.pushManager.confirmPush(data.messageId) 
                 
             } else{
                 
@@ -515,11 +515,23 @@ struct SceneAlertController: PageComponent{
     }
     func selectedLike(_ idx:Int, id:String, isLike:Bool?) {
         if idx == 1 {
-            if isLike == true { self.dataProvider.requestData(q: .init(id:id, type: .registLike(nil, id, self.pairing.hostDevice))) }
-            else { self.dataProvider.requestData(q: .init(id:id, type: .registLike(true, id, self.pairing.hostDevice))) }
+            if isLike == true {
+                self.dataProvider.requestData(q: .init(id:id, type: .registLike(nil, id, self.pairing.hostDevice)))
+                self.naviLogManager.contentsLog(action: .clickContentsLike,  actionBody:.init(config: ""))
+            }
+            else {
+                self.dataProvider.requestData(q: .init(id:id, type: .registLike(true, id, self.pairing.hostDevice)))
+                self.naviLogManager.contentsLog(action: .clickContentsLike,  actionBody:.init(config: "like"))
+            }
         }else if idx == 2 {
-            if isLike == false { self.dataProvider.requestData(q: .init(id:id, type: .registLike(nil, id, self.pairing.hostDevice))) }
-            else { self.dataProvider.requestData(q: .init(id:id, type: .registLike(false, id, self.pairing.hostDevice))) }
+            if isLike == false {
+                self.dataProvider.requestData(q: .init(id:id, type: .registLike(nil, id, self.pairing.hostDevice)))
+                self.naviLogManager.contentsLog(action: .clickContentsLike,  actionBody:.init(config: ""))
+            }
+            else {
+                self.dataProvider.requestData(q: .init(id:id, type: .registLike(false, id, self.pairing.hostDevice)))
+                self.naviLogManager.contentsLog(action: .clickContentsLike,  actionBody:.init(config: "dislike"))
+            }
         }
     }
     

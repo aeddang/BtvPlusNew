@@ -13,14 +13,16 @@ class TipBlockData {
     var leading: String? = nil
     var icon: String? = nil
     var strong: String? = nil
+    var strongTrailing: String? = nil
     var trailing: String? = nil
     var isMore: Bool = true
     var textColor:Color =  Color.app.greyLight
     var bgColor:Color =  Color.app.blueLight
     var data:MonthlyData? = nil
-    func setupTip(leading:String?=nil, icon:String?=nil , trailing:String?=nil) ->TipBlockData {
+    func setupTip(leading:String?=nil, icon:String?=nil , strongTrailing: String? = nil, trailing:String?=nil) ->TipBlockData {
         self.leading = leading
         self.icon = icon
+        self.strongTrailing = strongTrailing
         self.trailing = trailing
         textColor = Color.app.white
         bgColor = Color.brand.primary
@@ -53,6 +55,7 @@ struct TipBlock:PageComponent {
             leading: data.leading,
             strong: data.strong,
             icon: data.icon,
+            strongTrailing: data.strongTrailing,
             trailing: data.trailing,
             isMore: data.isMore,
             textColor: data.textColor,

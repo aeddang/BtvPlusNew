@@ -88,6 +88,13 @@ struct PageKidsProfileManagement: PageView {
                         self.kids = self.pairing.kids
                         self.useEmpty = self.kids.count < Self.maxUser
                     }
+                    if self.pairing.kids.count == 1 && self.pairing.kid == nil {
+                        self.pairing.requestPairing(.selectKid( self.pairing.kids.first! ))
+                        self.appSceneObserver.alert = .alert(nil, String.alert.kidsProfileSelected,nil) {
+                            self.pagePresenter.closePopup(self.pageObject?.id)
+                        }
+                       
+                    }
                 }
             }
             .onAppear{

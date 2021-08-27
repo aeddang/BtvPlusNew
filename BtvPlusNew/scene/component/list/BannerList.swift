@@ -30,6 +30,10 @@ extension BannerSet{
         let cellH = round(cellW * ratio)
         return CGSize(width: floor(cellW), height: cellH )
     }
+    
+    static let listPadding:CGFloat = SystemEnvironment.currentPageType == .btv
+        ? SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin
+        : DimenKids.margin.thinUltra
 }
 
 struct BannerSet: PageComponent{
@@ -38,7 +42,7 @@ struct BannerSet: PageComponent{
     var pageObservable:PageObservable = PageObservable()
     var data:BannerDataSet
     var screenSize:CGFloat? = nil
-    var padding:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thinUltra
+    var padding:CGFloat = Self.listPadding
    
     @State var cellDatas:[BannerData] = []
     @State var isUiActive:Bool = true

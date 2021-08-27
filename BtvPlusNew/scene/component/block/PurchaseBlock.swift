@@ -67,9 +67,10 @@ struct PurchaseBlock: PageComponent, Identifiable{
                         HStack(spacing: 0){
                             Spacer()
                             EditButton(
-                                icon: Asset.icon.edit,
-                                text: String.button.purchaseEdit){
+                                icon: self.viewModel.isEditmode ? "" : Asset.icon.edit,
+                                text: self.viewModel.isEditmode ? String.app.cancel : String.button.purchaseEdit){
                                 self.viewModel.isEditmode.toggle()
+                                self.viewModel.isSelectAll = false
                             }
                         }
                         .padding(.horizontal, Dimen.margin.thin)

@@ -15,7 +15,7 @@ struct SystemEnvironment {
     static let bundleVersion:String = "4.4.3" //AppUtil.version
     static let bundleVersionKey:String = "443" //AppUtil.version
     static let buildNumber:String = AppUtil.build.description
-    private static let deviceId:String = Self.getDeviceId()
+    static let deviceId:String = Self.getDeviceId()
     static var firstLaunch :Bool = false
     static var serverConfig: [String:String] = [String:String]()
     static var isReleaseMode = true
@@ -56,7 +56,7 @@ struct SystemEnvironment {
         return ApiPrefix.device + SystemEnvironment.deviceId
     }
     
-    static func getDeviceId() -> String{
+    private static func getDeviceId() -> String{
         let wrapper = SkbKeychainItemWrapper(identifier: "UUID", accessGroup: nil)
         
         if let prevUUID = wrapper?.object(forKey: Security.kSecAttrAccount) as? String {

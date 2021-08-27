@@ -27,7 +27,7 @@ struct PageRegistKid: PageView {
     @State var editType:EditType = .none
     @State var nickName:String = ""
     @State var characterIdx:Int = 0
-    @State var birthDate:Date? = nil
+    @State var birthDate:Date = Date()
     @State var birth:String = String.app.birthKidsPlaceholder
     @State var boxPos:CGFloat = -100
     
@@ -196,6 +196,8 @@ struct PageRegistKid: PageView {
                 }
             }
             .onAppear{
+                self.birth = self.birthDate.toDateFormatter(
+                    dateFormat: "yyyy" + String.app.year + "MM" + String.app.month)
                 
             }
            
@@ -205,7 +207,7 @@ struct PageRegistKid: PageView {
     
     private func isInputCompleted() -> Bool {
         var complete = false
-        if self.nickName.isNickNameType() && self.birthDate != nil {
+        if self.nickName.isNickNameType() {
             complete = true
         }
         return complete
@@ -253,7 +255,7 @@ struct PageRegistKid: PageView {
                 self.birthMonth = self.birthMonthList[idxMonth]
                 self.birth = self.birthYear + " " + self.birthMonth
                 self.birthDate = self.birth.toDate(
-                    dateFormat: "yyyy" + String.app.year + "MM" + String.app.month)
+                    dateFormat: "yyyy" + String.app.year + "MM" + String.app.month) ?? Date()
                 
                 withAnimation{
                     self.editType = .none

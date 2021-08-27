@@ -33,7 +33,11 @@ struct InputCell: PageView {
                     if self.isEditable {
                         if self.lineLimited == -1 {
                             if self.isSecure{
-                                SecureField(self.placeHolder, text: self.$input)
+                                SecureField("", text: self.$input)
+                                    .placeholder(when: self.input.isEmpty) {
+                                            Text(self.placeHolder)
+                                                .modifier(MediumTextStyle(size: Self.inputFontSize, color: Color.app.blackLight))
+                                    }
                                     .keyboardType(self.keyboardType)
                                     .modifier(MediumTextStyle(
                                                 size: Self.inputFontSize))

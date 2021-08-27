@@ -114,8 +114,11 @@ struct CardBlock: PageComponent, Identifiable{
                     if self.datas.isEmpty {
                         if type.isAddAble {
                             AddCard(type:self.type, text: self.type.empty)
+                        } else if self.type == .tvPoint {
+                            EmptyMyData(text: self.type.empty, tip: self.type.emptyTips.first)
                         } else {
                             EmptyCard(text: self.type.empty)
+                            
                         }
                         
                     } else if self.datas.count == 1 {
@@ -129,22 +132,24 @@ struct CardBlock: PageComponent, Identifiable{
                         )
                         .frame(height: ListItem.card.size.height + ListItem.card.bottom )
                     }
-                    VStack(alignment: .leading, spacing:Dimen.margin.micro){
-                        ForEach(self.tips, id: \.self) { tip in
-                            HStack(alignment: .top, spacing: 0){
-                                Text("• ")
-                                    .modifier(MediumTextStyle(
-                                        size: Font.size.thinExtra,
-                                        color: Color.app.grey
-                                    ))
-                                Text(tip)
-                                    .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.grey))
-                                    .multilineTextAlignment(.leading)
-                                    .fixedSize(horizontal: false, vertical: true)
+                    if self.type != .tvPoint {
+                        VStack(alignment: .leading, spacing:Dimen.margin.micro){
+                            ForEach(self.tips, id: \.self) { tip in
+                                HStack(alignment: .top, spacing: 0){
+                                    Text("• ")
+                                        .modifier(MediumTextStyle(
+                                            size: Font.size.thinExtra,
+                                            color: Color.app.grey
+                                        ))
+                                    Text(tip)
+                                        .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.grey))
+                                        .multilineTextAlignment(.leading)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                }
                             }
                         }
+                        .frame(width: ListItem.card.size.width)
                     }
-                    .frame(width: ListItem.card.size.width)
                     Spacer()
                 }
                 .padding(.top, Dimen.margin.medium)

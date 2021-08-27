@@ -366,7 +366,7 @@ struct PageKidsMultiBlock: PageView {
     
     private func setupMonthlyGuide(ticketData:PurchaseTicketData){
         self.monthlyGuide = MonthlyGuide(data:ticketData)
-        self.monthlyHeaderSize = DimenKids.tab.regular + DimenKids.margin.light
+        self.monthlyHeaderSize = DimenKids.tab.heavy + DimenKids.margin.light
     }
     
     private func setupMonthlyPurchaseTicket(monthlyData:MonthlyData){

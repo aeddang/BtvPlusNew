@@ -234,6 +234,12 @@ struct PageEditKid: PageView {
                         self.birthYear = birthDate.toDateFormatter(dateFormat: "yyyy")
                         self.birthMonth = birthDate.toDateFormatter(dateFormat: "MM")
                     }
+                } else {
+                    self.birthDate = Date()
+                    if let birthDate = self.birthDate {
+                        self.birthYear = birthDate.toDateFormatter(dateFormat: "yyyy")
+                        self.birthMonth = birthDate.toDateFormatter(dateFormat: "MM")
+                    }
                 }
             }
         }//geo

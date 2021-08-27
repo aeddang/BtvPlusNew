@@ -112,7 +112,7 @@ struct CardList: PageComponent{
     var datas:[CardData]
     var useTracking:Bool = false
     var margin:CGFloat = Dimen.margin.thin
-    var spacing:CGFloat = Dimen.margin.thin
+    var spacing:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.thin : Dimen.margin.regular
    
     var headerSize:Int = 2
     var body: some View {
@@ -128,7 +128,7 @@ struct CardList: PageComponent{
             ){
             
             ForEach(self.datas) { data in
-                CardItem( data:data )
+                CardItem( data:data , cardCount: self.datas.count)
                     .modifier(HolizentalListRowInset(spacing: self.spacing))
             }
         }
@@ -142,7 +142,7 @@ struct CardItem: PageView {
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var naviLogManager:NaviLogManager
     var data:CardData
-   
+    var cardCount:Int = 1
     @State var point:String? = nil
     var body: some View {
         VStack(spacing:0){
@@ -162,7 +162,10 @@ struct CardItem: PageView {
                                         .addParam(key: PageParam.type, value: self.data.type)
                                 )
                             }
-                        } else {
+                            Spacer().modifier(MatchVertical(width: 1))
+                                .background(Color.app.blueLightExtra)
+                                .frame(height: Dimen.line.heavy)
+                        } else if self.cardCount > 2 {
                             CheckBox(
                                 isChecked: (self.data.isRepresent),
                                 text: String.pageText.myBenefitsDiscountOkSetup,
@@ -185,10 +188,11 @@ struct CardItem: PageView {
                                     }
                                 }
                             )
+                            Spacer().modifier(MatchVertical(width: 1))
+                                .background(Color.app.blueLightExtra)
+                                .frame(height: Dimen.line.heavy)
                         }
-                        Spacer().modifier(MatchVertical(width: 1))
-                            .background(Color.app.blueLightExtra)
-                            .frame(height: Dimen.line.heavy)
+                        
                             
                         EditButton(
                             icon: Asset.icon.delete,

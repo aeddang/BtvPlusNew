@@ -15,6 +15,8 @@ class LocalStorage {
         static let accountId = "accountId" + VS
         static let retryPushToken = "retryPushToken" + VS
         static let registPushToken = "registPushToken" + VS
+        static let registEndpoint = "registEndpoint" + VS
+        static let registPushUserAgreement = "registPushUserAgreement" + VS
         static let pushEndpoint = "pushEndpoint" + VS
         static let serverConfig = "serverConfig" + VS
         static let nickName = "nickName" + VS
@@ -82,31 +84,29 @@ class LocalStorage {
     
     
     var retryPushToken:String{
-        set(newVal){
-            defaults.set(newVal, forKey: Keys.retryPushToken)
-        }
-        get{
-            return defaults.string(forKey: Keys.retryPushToken) ?? ""
-        }
+        set(newVal){ defaults.set(newVal, forKey: Keys.retryPushToken) }
+        get{ return defaults.string(forKey: Keys.retryPushToken) ?? "" }
     }
     
     var registPushToken:String{
-        set(newVal){
-            defaults.set(newVal, forKey: Keys.registPushToken)
-        }
-        get{
-            return defaults.string(forKey: Keys.registPushToken) ?? ""
-        }
+        set(newVal){  defaults.set(newVal, forKey: Keys.registPushToken)}
+        get{return defaults.string(forKey: Keys.registPushToken) ?? ""}
     }
     
     var pushEndpoint:String{
-        set(newVal){
-            defaults.set(newVal, forKey: Keys.pushEndpoint)
-        }
-        get{
-            return defaults.string(forKey: Keys.pushEndpoint) ?? ""
-        }
+        set(newVal){defaults.set(newVal, forKey: Keys.pushEndpoint)}
+        get{return defaults.string(forKey: Keys.pushEndpoint) ?? ""}
     }
+    
+    var registEndpoint:String{
+        set(newVal){  defaults.set(newVal, forKey: Keys.registEndpoint)}
+        get{return defaults.string(forKey: Keys.registEndpoint) ?? ""}
+    }
+    var registPushUserAgreement:Bool{
+        set(newVal){defaults.set(newVal, forKey: Keys.registPushUserAgreement)}
+        get{return defaults.bool(forKey: Keys.registPushUserAgreement)}
+    }
+    
     
     var initate:Bool{
         set(newVal){

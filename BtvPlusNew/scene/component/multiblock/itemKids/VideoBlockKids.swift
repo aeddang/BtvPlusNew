@@ -58,8 +58,8 @@ struct VideoBlockKids:BlockProtocol, PageComponent {
     var body :some View {
         VStack(alignment: .leading , spacing: DimenKids.margin.thinExtra) {
             if self.isUiActive {
-                HStack(alignment: .bottom, spacing:DimenKids.margin.thin){
-                    VStack(alignment: .leading , spacing:DimenKids.margin.tiny){
+                HStack(alignment: .center, spacing:DimenKids.margin.thin){
+                    VStack(alignment: .leading , spacing:0){
                         Spacer().modifier(MatchHorizontal(height: 0))
                         HStack( spacing:DimenKids.margin.thin){
                             if let kidName = self.kidName {
@@ -93,8 +93,6 @@ struct VideoBlockKids:BlockProtocol, PageComponent {
                                         .addParam(key: .subType, value:data.cardType)
                                 )
                             }
-                            
-                           
                         }
                     }
                 }

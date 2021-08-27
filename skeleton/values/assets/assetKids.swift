@@ -188,6 +188,8 @@ extension AssetKids{
         public static let noProfile = "zemkidsMImgKidsprofileDefault"
         public static let emptyRelationVod = "zemkidsMImgSynopsisNocontents"
         public static let synopsisBg = isPad ? "zemkidsTIBgSynopsisEnter" : "zemkidsMBgSynopsisEnter"
+        public static let synopsisKidBg =  "zemkidsMBgSynopsisKids"
+        public static let synopsisCastleBg =  "zemkidsMBgSynopsisCastle"
         public static let homeBg = "zemkidsMBgKidsHome01"
         public static let myBg = "zemkidsTIBgKidsMy01"
         public static let profileBg = "zemkidsMMyProfileBg"
@@ -241,7 +243,7 @@ extension AssetKids{
     }
     
     struct ani {
-        public static let splash:[String] = (0...47).map{ "zemkidsMSplash" + $0.description.toFixLength(2) }
+        public static let splash:[String] = (0...29).map{ "zemkidsMSplash" + $0.description.toFixLength(2) }
         public static let loading:[String] = (0...59).map{ "zemkidsMLoading" + $0.description.toFixLength(2) }
         
         public static let testStart:[String] = (1...30).map{ "zemkidsTITestStart0" + $0.description.toFixLength(2) }

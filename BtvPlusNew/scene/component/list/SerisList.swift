@@ -23,6 +23,14 @@ class SerisData:InfinityData{
     private(set) var quizTitle: String? = nil
     private(set) var type: SerisType = .big
     private(set) var pageType:PageType = .btv
+    private(set) var actionLog:MenuNaviActionBodyItem? = nil
+    private(set) var contentLog:MenuNaviContentsBodyItem? = nil
+    
+    var hasLog:Bool {
+        get{
+            return actionLog != nil || contentLog != nil
+        }
+    }
  
     init(pageType:PageType = .btv) {
         self.pageType = pageType
@@ -44,7 +52,7 @@ class SerisData:InfinityData{
         if let thumb = data.poster_filename_h {
             image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size) ?? image
         }
-        self.title = title
+        self.title = data.sub_title
         if data.brcast_tseq_nm?.isEmpty == false ,let count = data.brcast_tseq_nm {
             self.title = count + String.app.broCount + " " + (self.title ?? "")
             self.brcastTseqNm = count.toInt()
@@ -67,6 +75,25 @@ class SerisData:InfinityData{
         index = idx
         contentID = data.epsd_id ?? ""
         epsdId = data.epsd_id
+        return self.setNaviLog(data: data)
+    }
+    func setNaviLog(data:SeriesInfoItem? = nil) -> SerisData {
+        self.contentLog = MenuNaviContentsBodyItem(
+            type: "vod",
+            title: self.title,
+            channel_name: nil,
+            genre_text: nil,
+            genre_code: nil,
+            paid: self.isFree,
+            purchase: nil,
+            episode_id: self.epsdId,
+            episode_resolution_id: nil,
+            product_id: nil,
+            purchase_type: nil,
+            monthly_pay: nil,
+            list_price: self.price,
+            payment_price: nil
+        )
         return self
     }
     
@@ -156,7 +183,7 @@ struct SerisItem: PageView {
                Rectangle()
                 .strokeBorder(
                     self.isOn ? Color.app.white : Color.transparent.clear,
-                    lineWidth: Dimen.stroke.regular)
+                    lineWidth: Dimen.stroke.medium)
             )
             .frame(
                 width: self.data.type.size.width,

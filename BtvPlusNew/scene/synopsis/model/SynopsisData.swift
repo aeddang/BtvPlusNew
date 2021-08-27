@@ -50,6 +50,7 @@ struct SynopsisData{
     var contentId:String? = nil
     var ppmIds:String? = nil
     var isLimitedWatch:Bool = false
+    var progress:Float? = nil
     //naviLog
     var synopType:SynopsisType = SynopsisType.none
    

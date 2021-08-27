@@ -7,7 +7,7 @@
 import Foundation
 import SwiftUI
 extension PageSynopsisPackage{
-    static let listWidth:CGFloat = 384
+    static let listWidth:CGFloat = 420
 }
 struct PageSynopsisPackage: PageView {
     var type:PageType = .btv
@@ -26,7 +26,7 @@ struct PageSynopsisPackage: PageView {
     @ObservedObject var peopleScrollModel: InfinityScrollModel = InfinityScrollModel()
     @State var synopsisData:SynopsisData? = nil
     @State var isPairing:Bool? = nil
-    
+    @State var marginBottom:CGFloat = 0
     @State var sceneOrientation: SceneOrientation = .portrait
     var body: some View {
         GeometryReader { geometry in
@@ -51,7 +51,9 @@ struct PageSynopsisPackage: PageView {
                                         contentID: self.synopsisModel?.epsdId,
                                         episodeViewerData: self.episodeViewerData,
                                         summaryViewerData: self.summaryViewerData,
-                                        useTracking: true){ posterData in
+                                        useTracking: true,
+                                        marginBottom: self.marginBottom)
+                                    { posterData in
                                         self.updateSynopsis(posterData)
                                     }
                                     .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
@@ -59,6 +61,7 @@ struct PageSynopsisPackage: PageView {
                                     HStack(alignment: .center, spacing: 0){
                                         TopViewer( data:self.synopsisPackageModel!)
                                             .modifier(MatchParent())
+                                            .padding(.bottom, Dimen.app.bottom)
                                         PackageBody(
                                             infinityScrollModel: self.infinityScrollModel,
                                             synopsisListViewModel: self.synopsisListViewModel,
@@ -69,7 +72,9 @@ struct PageSynopsisPackage: PageView {
                                             episodeViewerData: self.episodeViewerData,
                                             summaryViewerData: self.summaryViewerData,
                                             useTop: false,
-                                            useTracking: true){ posterData in
+                                            useTracking: true,
+                                            marginBottom: self.marginBottom
+                                        ){ posterData in
                                             self.updateSynopsis(posterData)
                                         }
                                         .modifier(MatchVertical(width: Self.listWidth))
@@ -184,7 +189,7 @@ struct PageSynopsisPackage: PageView {
                             self.initPage()
                         }
                     }
-                default : do{}
+                default : break
                 }
             }
             .onReceive(self.appSceneObserver.$alertResult){ result in
@@ -217,6 +222,9 @@ struct PageSynopsisPackage: PageView {
             }
             .onReceive(self.sceneObserver.$isUpdated){ _ in
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
+            }
+            .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
+                withAnimation{ self.marginBottom = bottom }
             }
             .onAppear{
                 self.sceneOrientation = self.sceneObserver.sceneOrientation

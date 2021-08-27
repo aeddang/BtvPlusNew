@@ -15,13 +15,13 @@ extension ShareRecommand {
 }
 
 struct ShareRecommand: PageComponent {
-    
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
-    @EnvironmentObject var naviLogManager:NaviLogManager
+
    
     var synopsisData:SynopsisData? = nil
     @State var benifitMe:String = ""
@@ -168,6 +168,8 @@ struct ShareRecommand: PageComponent {
     }
     
     private func share(mgmId:String){
+        self.naviLogManager.contentsLog(action: .clickContentsShare,  actionBody:.init(config: "Y"))
+        
         let epsdId = self.synopsisData?.epsdId ?? ""
         let srisId = self.synopsisData?.srisId ?? ""
         let link = ApiPath.getRestApiPath(.WEB)

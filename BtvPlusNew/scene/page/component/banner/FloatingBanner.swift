@@ -117,11 +117,16 @@ struct FloatingBanner: PageComponent {
     
     private func setBar(idx:Int){
         let count = self.datas.count
+        let realPos = idx == -1
+            ? 0
+            : idx == count
+                ? (count-1)
+                : idx
         let minSize:CGFloat = 150.0 / CGFloat(count)
         let size = min(Dimen.bar.regular, minSize)
         withAnimation{
-            self.leading = size * CGFloat(idx)
-            self.trailing = size * CGFloat(max(0,(count - idx - 1)))
+            self.leading = size * CGFloat(realPos)
+            self.trailing = size * CGFloat(max(0,(count - realPos - 1)))
         }
         self.sendLog(action: .pageShow)
     }

@@ -124,18 +124,19 @@ struct TvDataSet:Identifiable {
 extension TvSet{
     static func listSize(data:TvDataSet,
                          screenWidth:CGFloat,
-                         padding:CGFloat =  Dimen.margin.thin,
-                         isFull:Bool = false,
-                         spacing:CGFloat? = nil) -> CGSize{
+                         padding:CGFloat =  Self.listPadding,
+                         isFull:Bool = false) -> CGSize{
         
         let ratio = ListItem.tv.size.height / ListItem.tv.size.width
         let count = CGFloat(data.count)
         let w = screenWidth - ( padding * 2)
-        let cellW = ( w - ( (spacing ?? padding) * (count-1)) ) / count
+        let cellW = ( w - ( padding * (count-1)) ) / count
         let cellH = round(cellW * ratio)
         return CGSize(width: floor(cellW), height: cellH )
     }
-    
+    static let listPadding:CGFloat = SystemEnvironment.currentPageType == .btv
+        ? SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin
+        : DimenKids.margin.thinUltra
 }
 
 struct TvSet: PageComponent{
@@ -144,12 +145,12 @@ struct TvSet: PageComponent{
     var pageObservable:PageObservable = PageObservable()
     var data:TvDataSet
     var screenSize:CGFloat? = nil
-    var padding:CGFloat = Dimen.margin.thin
-    var spacing:CGFloat? = nil
+    var padding:CGFloat = Self.listPadding
+    
     @State var cellDatas:[TvData] = []
     @State var isUiActive:Bool = true
     var body: some View {
-        HStack(spacing: (self.spacing ?? self.padding) ){
+        HStack(spacing:self.padding){
             if self.isUiActive {
                 ForEach(self.cellDatas) { data in
                     TvItem( data:data )
@@ -166,8 +167,7 @@ struct TvSet: PageComponent{
             let size = Self.listSize(data: self.data,
                                      screenWidth: self.screenSize ?? sceneObserver.screenSize.width,
                                      padding: self.padding,
-                                     isFull: false,
-                                     spacing: self.spacing)
+                                     isFull: false)
             self.cellDatas = self.data.datas.map{
                 $0.setCardType(width: size.width, height: size.height, padding:  self.padding)
             }

@@ -11,7 +11,7 @@ struct RatingPoint: View {
     var rating:Double
     var ratingMax:Double
     var body: some View {
-        HStack(alignment: .center , spacing:Dimen.margin.micro){
+        HStack(alignment: .center , spacing:Dimen.margin.microUltra){
             Image( Asset.icon.watcha )
                 .renderingMode(.original).resizable()
                 .scaledToFit()

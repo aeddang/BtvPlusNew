@@ -52,7 +52,7 @@ struct PageKidsHome: PageView {
                 switch evt {
                 case .updated:
                     self.reload()
-                default: do{}
+                default: break
                 }
             }
             .onReceive(self.pairing.$kid){ kid in
@@ -63,8 +63,9 @@ struct PageKidsHome: PageView {
                 }
                 
                 if !self.isUiInit { return }
-                self.reload()
-                
+                DispatchQueue.main.async {
+                    self.reload()
+                }
             }
             .onReceive(self.pairing.$event){evt in
                 guard let evt = evt else {return}
@@ -83,7 +84,6 @@ struct PageKidsHome: PageView {
                     }
                 }
             }
-            
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
                     self.isUiInit = true
@@ -129,7 +129,6 @@ struct PageKidsHome: PageView {
             self.openPage = nil
         }
     }
-
     //Block init
     
 }

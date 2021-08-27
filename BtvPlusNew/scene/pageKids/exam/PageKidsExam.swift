@@ -37,14 +37,13 @@ struct PageKidsExam: PageView {
                             if self.isError {
                                 ErrorKidsData()
                                     .modifier(MatchParent())
-                            } else {
+                            } else if self.kid != nil{
                                 ExamBody(
                                     viewModel:self.viewModel,
                                     soundBoxModel: self.soundBoxModel,
                                     type:self.type
                                 )
                                 .modifier(MatchParent())
-        
                             }
                             
                         } else {
@@ -116,12 +115,20 @@ struct PageKidsExam: PageView {
             
             .onReceive(self.pairing.$status){status in
                 self.isPairing = ( status == .pairing )
+                
             }
             .onReceive(self.pairing.$kid){ kid in
-                self.kid = kid ?? Kid()
+                self.kid = kid
+                if !self.isInit {return}
+                if kid != nil {
+                    self.initPage()
+                } else {
+                    
+                }
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
+                    self.isInit = true
                     self.initPage()
                 }
             }
@@ -197,7 +204,7 @@ struct PageKidsExam: PageView {
         }//geo
     }//body
     
-    @State var kid:Kid = Kid()
+    @State var kid:Kid? = nil
     @State var typeText:String? = nil
     @State var type:DiagnosticReportType = .english
     @State var value:String? = nil
@@ -206,6 +213,8 @@ struct PageKidsExam: PageView {
     @State var titleTip:String? = nil
     @State var titleTopColor:Color = Color.app.sepia
     
+    
+    @State var isInit:Bool = false
     @State var isStart:Bool = false
    
     @State var isCompleted:Bool = false
@@ -215,6 +224,8 @@ struct PageKidsExam: PageView {
     
     private func initPage(){
         self.isError = false
+        if  !self.isPairing {return}
+        guard let kid = self.kid else { return }
         switch self.type {
         case .english:
             self.dataProvider.requestData(q: .init(type: .getEnglishLvReportExam(kid, target: value)))
@@ -237,32 +248,33 @@ struct PageKidsExam: PageView {
     }
     
     private func saveData(){
+        guard let kid = self.kid else { return }
         switch self.type {
         case .english:
             self.dataProvider.requestData(
                 q: .init(type: .getEnglishLvReportQuestion(
-                            self.kid,
+                            kid,
                             self.viewModel.epNo,
                             self.viewModel.epTpNo,
                             self.viewModel.questions)))
         case .infantDevelopment:
             self.dataProvider.requestData(
                 q: .init(type: .getReadingReportQuestion(
-                            self.kid,
+                            kid,
                             self.viewModel.epNo,
                             self.viewModel.epTpNo,
                             self.viewModel.questions)))
         case .creativeObservation:
             self.dataProvider.requestData(
                 q: .init(type: .getCreativeReportQuestion(
-                            self.kid,
+                            kid,
                             self.viewModel.epNo,
                             self.viewModel.epTpNo,
                             self.viewModel.questions)))
         case .finalQuiz:
             self.dataProvider.requestData(
                 q: .init(type: .getEvaluationReportQuestion(
-                            self.kid,
+                            kid,
                             self.viewModel.epNo,
                             self.viewModel.epTpNo,
                             self.viewModel.questions)))

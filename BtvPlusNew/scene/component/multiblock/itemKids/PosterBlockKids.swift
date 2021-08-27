@@ -45,8 +45,8 @@ struct PosterBlockKids:PageComponent, BlockProtocol {
     var body :some View {
         VStack(alignment: .leading , spacing: DimenKids.margin.thinExtra) {
             if self.isUiActive {
-                HStack(alignment: .bottom, spacing:DimenKids.margin.thin){
-                    VStack(alignment: .leading , spacing:DimenKids.margin.tiny){
+                HStack(alignment: .center, spacing:DimenKids.margin.thin){
+                    VStack(alignment: .leading , spacing:0){
                         Spacer().modifier(MatchHorizontal(height: 0))
                         HStack( spacing:DimenKids.margin.thin){
                             Text(data.name).modifier(BlockTitleKids())
@@ -76,7 +76,6 @@ struct PosterBlockKids:PageComponent, BlockProtocol {
                 
                 if !self.datas.isEmpty {
                     self.getList()
-                        
                         
                 } else if self.useEmpty {
                     ErrorKidsData( text: self.data.cardType != .watchedVideo

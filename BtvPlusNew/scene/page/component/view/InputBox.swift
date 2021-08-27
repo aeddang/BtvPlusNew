@@ -32,7 +32,7 @@ struct InputBox: PageComponent {
     var keyboardType:UIKeyboardType = .default
     var isSecure:Bool = false
     var radios: [InputBox.Data]? = nil
-    var size:CGFloat = SystemEnvironment.isTablet ? 346 : 265
+    var size:CGFloat = SystemEnvironment.isTablet ? 370 : 275
     var action: ((_ input:String?, _ idx:Int?) -> Void)
     
     @State var selectedText:String? = nil
@@ -48,7 +48,7 @@ struct InputBox: PageComponent {
             }
                 
             VStack{
-                VStack (alignment: .leading, spacing:0){
+                VStack (alignment: .center, spacing:0){
                     if let title = self.title{
                         ZStack{
                             Spacer().modifier(MatchHorizontal(height: 0))
@@ -87,6 +87,7 @@ struct InputBox: PageComponent {
                             .modifier(MediumTextStyle(size: Font.size.lightExtra))
                             .fixedSize(horizontal: false, vertical: true)
                             .padding(.top, Dimen.margin.regular)
+                            .multilineTextAlignment(.center)
                     }
                     ZStack{
                         if self.isInit {
@@ -112,13 +113,16 @@ struct InputBox: PageComponent {
                         Text(tip)
                             .modifier(MediumTextStyle(
                                 size: Font.size.tiny,color:Color.app.grey ))
+                            .multilineTextAlignment(.center)
                             .padding(.top, Dimen.margin.thin)
+                            
                             
                     }
                     if let msg = self.msg{
                         Text(msg)
                             .modifier(MediumTextStyle(
                                         size: Font.size.tiny,color: Color.brand.primary))
+                            .multilineTextAlignment(.center)
                             .padding(.top, Dimen.margin.thin)
                             
                     }
@@ -163,7 +167,7 @@ struct InputBox: PageComponent {
                         
                     }
                 }
-                .padding(.top, Dimen.margin.medium)
+                .padding(.top, Dimen.margin.regular)
             }
             .padding(.top, Dimen.margin.regular)
             .frame( width: self.size )

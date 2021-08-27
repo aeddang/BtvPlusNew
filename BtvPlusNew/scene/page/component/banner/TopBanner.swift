@@ -10,18 +10,20 @@ import Foundation
 import SwiftUI
 import Combine
 extension TopBanner{
-    static let height:CGFloat = SystemEnvironment.isTablet ? 456 : 477
+    static let height:CGFloat = SystemEnvironment.isTablet ? 456 : 528
     static let heightHorizontal:CGFloat = 532
-    static let uiRange:CGFloat = 320
+    static let uiRange:CGFloat = 350
     static let uiRangeHorizontal:CGFloat = 400
     static let barWidth:CGFloat = Dimen.bar.medium
-    static let imageHeight:CGFloat = SystemEnvironment.isTablet ? 500 : 720
+    static let imageHeight:CGFloat = SystemEnvironment.isTablet ? 500 : 750
     static let imageHeightHorizontal:CGFloat = 667
     static let barHeight = Dimen.line.medium
     static let marginBottom = SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.medium
     static let marginBottomBar = SystemEnvironment.isTablet ? Dimen.margin.mediumExtra : Dimen.margin.heavy
-    static let maginBottomLogo = (Self.imageHeight - Self.height) + (Self.marginBottom + Self.barHeight + Dimen.margin.medium)
-    static let maginBottomLogoHorizontal = (Self.imageHeightHorizontal - Self.heightHorizontal) + (Self.marginBottom + Self.barHeight + Dimen.margin.medium)
+    static let marginBottomBarVertical = Self.marginBottomBar + Self.imageHeight - Self.height
+    static let marginBottomBarHorizontal = Self.marginBottomBar + Self.imageHeightHorizontal - Self.heightHorizontal
+    static let maginBottomLogo = Self.marginBottomBarVertical + Dimen.margin.medium
+    static let maginBottomLogoHorizontal = Self.marginBottomBarHorizontal + Dimen.margin.medium
 }
 struct TopBanner: PageComponent {
     @EnvironmentObject var sceneObserver:PageSceneObserver
@@ -41,6 +43,7 @@ struct TopBanner: PageComponent {
             pages: self.pages
             )
         .modifier(MatchHorizontal(height: isHorizontal ? TopBanner.uiRangeHorizontal : TopBanner.uiRange))
+       
         .onReceive(self.pagePresenter.$currentTopPage){ page in
             self.isTop = self.pageObservable.pageObject?.id == page?.id
             self.isTop ? self.autoChange() : self.autoChangeCancel()
@@ -109,7 +112,6 @@ struct TopBanner: PageComponent {
         self.autoChangeCancel()
         if !self.isTop { return }
         if !self.isInit { return }
-        
         
         //ComponentLog.d("autoChange init " + self.pageID, tag:self.tag)
         self.autoChangeSubscription = Timer.publish(

@@ -241,6 +241,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                                             .getPageObject(page)
                                             .addParam(key: .id, value: band?.menuId)
                                             .addParam(key: .subId, value: menuOpenId)
+                                            .addParam(key: UUID().uuidString, value: "")
             )
             
         case "event":

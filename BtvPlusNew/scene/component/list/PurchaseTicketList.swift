@@ -112,7 +112,7 @@ struct PurchaseTicketDataSet:Identifiable {
 extension PurchaseTicketSet{
     static let padding:CGFloat = Dimen.margin.thin
     static let spacing:CGFloat = Dimen.margin.tinyExtra
-    static func listSize(data:PurchaseTicketDataSet, screenWidth:CGFloat, isFull:Bool = false) -> CGSize{
+    static func listSize(data:PurchaseTicketDataSet, screenWidth:CGFloat, padding:CGFloat = Self.padding ,isFull:Bool = false) -> CGSize{
         let count = CGFloat(data.count)
         let w = screenWidth - ( padding * 2)
         let cellW = ( w - (spacing*(count-1)) ) / count
@@ -126,6 +126,8 @@ struct PurchaseTicketSet: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
     var pageObservable:PageObservable = PageObservable()
     var data:PurchaseTicketDataSet
+    
+    var padding:CGFloat = Self.padding
     
     @State var cellDatas:[PurchaseTicketData] = []
     @State var isUiActive:Bool = true
@@ -141,13 +143,13 @@ struct PurchaseTicketSet: PageComponent{
                 }
             }
         }
-        .padding(.horizontal, Self.padding)
+        .padding(.horizontal, self.padding)
         .frame(width: self.sceneObserver.screenSize.width)
         .onAppear {
             if self.data.datas.isEmpty { return }
-            let size = Self.listSize(data: self.data, screenWidth: sceneObserver.screenSize.width)
+            let size = Self.listSize(data: self.data, screenWidth: sceneObserver.screenSize.width,  padding: self.padding)
             self.cellDatas = self.data.datas.map{
-                $0.setTicketSize(width: size.width, height: size.height, padding: Self.padding)
+                $0.setTicketSize(width: size.width, height: size.height, padding: self.padding)
             }
         }
         .onReceive(self.pageObservable.$layer ){ layer  in
@@ -171,6 +173,7 @@ struct PurchaseTicketList: PageComponent{
     var datas:[PurchaseTicketData] = []
     var dataSets:[PurchaseTicketDataSet] = []
     var useTracking:Bool = false
+    var padding:CGFloat = PurchaseTicketSet.padding
     var spacing:CGFloat = PurchaseTicketSet.padding
     var marginBottom:CGFloat = Dimen.margin.tinyExtra
     var body: some View {
@@ -185,9 +188,9 @@ struct PurchaseTicketList: PageComponent{
         ){
             
             InfoAlert(text: String.pageText.myTicketInfo)
-                .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: self.spacing))
+                .modifier(ListRowInset(marginHorizontal:self.padding ,spacing: self.spacing))
             ForEach(self.dataSets) { data in
-                PurchaseTicketSet( data:data )
+                PurchaseTicketSet( data:data , padding:self.padding)
                     .modifier(ListRowInset(marginHorizontal:0 ,spacing: self.spacing))
             }
             

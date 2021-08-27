@@ -50,7 +50,6 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
                                         KidsCategoryItem(data:cateData)
                                             .padding(.top, DimenKids.margin.medium)
                                     }
-                                    
                                 case .cateList:
                                     if let listData = data as? KidsCategoryListData {
                                         KidsCategoryList(data: listData)

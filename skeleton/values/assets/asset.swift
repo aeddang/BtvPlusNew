@@ -67,7 +67,7 @@ extension Asset{
         
         public static let sortList =  "icSynopSorting"
         public static let dropDown =  "icSynopDropdownArrow"
-       
+        public static let alertInfo = "icMyAlert"
         public static let alertSmall = "icAlertS"
         public static let pairingWifi = "icPairing03"
         public static let pairingBtv = "icPairing02"
@@ -270,6 +270,7 @@ extension Asset{
         public static let radioBtnOn = "icRadioSOn"
         public static let radioBtnOff = "icRadioSOff"
         public static let checkBoxOn = "icCheckboxOn"
+        public static let checkBoxDisable = "icCheckboxDisable"
         public static let checkBoxOn2 = "icCheckboxOn02"
         public static let checkBoxOff = "icCheckboxOff"
         public static let checkBoxOffWhite = "icCheckboxOffWhite"
@@ -279,8 +280,11 @@ extension Asset{
         public static let bgGradientBottom = "bgGradientBottom"
         public static let bgGradientTop = "bgGradientTop"
         public static let bgCoupon = "imgMyListCoupon01"
-        public static let recommandTip = isPad ? "icSynopTooltipST" : "icSynopTooltipS"
+        public static let recommandTip = "icSynopTooltipS"
+        public static let recommandTipHorizontal = "icSynopTooltipST"
         public static let recommendPopupTicket = "icPopupTicket"
+        public static let listGradient = "listGradient"
+        public static let listGradientH = "listGradientH"
     }
     
     struct image {
@@ -308,6 +312,7 @@ extension Asset{
         public static let pairingTutorial04 = "imgPairingTutorial04"
         public static let empty = "imgMyEmpty01"
         public static let myEmpty = "imgMyEmpty01"
+        public static let myEmpty2 = "imgMyEmpty02"
         public static let pairingCharacter = "imgPairingCharacter"
         public static let deviceEmpty = "imgPairingNostbB"
         

@@ -226,6 +226,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     }
 
     final func changePage(_ newPage:PageObject, isBack:Bool = false){
+        PageLog.d("changePage" + newPage.pageID + " " + isBack.description, tag: self.tag)
         if pageModel.currentPageObject?.pageID == newPage.pageID {
             if( pageModel.currentPageObject?.params?.keys == newPage.params?.keys){
                 pageModel.currentPageObject?.params = newPage.params
@@ -283,6 +284,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     }
     
     final func openPopup(_ popup:PageObject){
+        PageLog.d("openPopup " + popup.pageID, tag: self.tag)
         if !popups.isEmpty {
             if let prev = popups.last {
                 if prev.pageID == popup.pageID && self.preventDuplicate { return }
@@ -296,6 +298,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         popupContent.setPageObject(popup)
         onWillChangePage(prevPage: nil, nextPage: popup)
        
+        
         var delay = self.changeDelay
         if let pageObject = popupContent.pageObject {
             delay = pageObject.animationType == .none ? self.changeDelay : self.changeAniDelay
@@ -325,10 +328,12 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         popupSubscriptions.updateValue(subscription, forKey: key)
     }
     final func closePopup(pageID:PageID){
+        PageLog.d("closePopup " + pageID, tag: self.tag)
         guard let findIdx = popups.firstIndex(where: { $0.pageID == pageID}) else { return }
         self.closePopup(id:popups[findIdx].id)
     }
     final func closePopup(id:String){
+        PageLog.d("closePopup " + id, tag: self.tag)
         guard let findIdx = popups.firstIndex(where: { $0.id == id}) else { return }
         popups.remove(at: findIdx)
         pagePresenter.hasPopup = !popups.isEmpty
@@ -367,14 +372,19 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     }
     
     final func closeAllPopup(exception pageKey:String = "", exceptions:[PageID]? = nil){
+        PageLog.d("closeAllPopup", tag: self.tag)
         if popups.isEmpty { return }
         
         let key = UUID().description
+        var removePops:[String] = []
         popups.removeAll( where: { pop in
             var remove = true
             if pop.id == pageKey { remove = false }
             if let exps = exceptions {
                 if let _ = exps.first(where: { pop.pageID == $0 }) { remove = false }
+            }
+            if remove {
+                removePops.append(pop.id)
             }
             return remove
         })
@@ -421,7 +431,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                 .sink() {_ in
                     self.popupSubscriptions[key]?.cancel()
                     self.popupSubscriptions.removeValue(forKey: key)
-                    self.contentController?.removeAllPopup(pageKey, exceptions: exceptions)
+                    self.contentController?.removeAllPopup(removePops:removePops)
             }
         popupSubscriptions.updateValue(subscription, forKey: key)
     }

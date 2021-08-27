@@ -284,6 +284,7 @@ struct PageHome: PageView {
             self.tipBlockData = TipBlockData()
                 .setupTip(
                     icon: Asset.icon.logoOcean,
+                    strongTrailing: String.monthly.oceanAuthLeading,
                     trailing: String.monthly.oceanAuth)
             
         } else {
@@ -324,9 +325,9 @@ struct PageHome: PageView {
         } else {
             self.tipBlockData = TipBlockData()
                 .setupPurchase(
-                    leading: String.monthly.oceanPhaseLeading,
+                    leading: String.monthly.oceanPurchaseLeading,
                     icon: Asset.icon.logoOcean,
-                    trailing: String.monthly.oceanPhaseTrailing,
+                    trailing: String.monthly.oceanPurchaseTrailing,
                     data: phaseData)
         }
         
@@ -394,7 +395,7 @@ struct PageHome: PageView {
             $0.posIdx = idx
             idx += 1
         }
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.1){
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.02){
             self.syncronizeMonthly()
         }
     }

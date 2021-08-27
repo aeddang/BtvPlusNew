@@ -50,6 +50,7 @@ extension Font{
     
     struct kern {
         public static let thin:CGFloat =  -0.7
+        public static let medium:CGFloat =  -0.4
         public static let regular:CGFloat = 0
         public static let large:CGFloat = 0.7
     }
@@ -74,6 +75,7 @@ extension Font{
         public static let thinExtra:CGFloat = isPad ? 17 : 12 //*
         public static let tiny:CGFloat = isPad ? 16 : 11 //*
         public static let tinyExtra:CGFloat = isPad ? 15 : 10 //*
+        public static let microUltra:CGFloat = isPad ? 14 : 9 //*
         public static let micro:CGFloat = isPad ? 13 : 9 //*
         public static let microExtra:CGFloat = isPad ? 10 : 6 //*
     }

@@ -10,9 +10,9 @@ import SwiftUI
 import struct Kingfisher.KFImage
 extension TopViewer {
     static let height:CGFloat = SystemEnvironment.isTablet ? 824 : 560
-    static let imgRatio:CGFloat = 620/824
+    static let imgRatio:CGFloat = 1016/750
+    static let bottomHeight:CGFloat = Dimen.button.medium + Dimen.margin.thin//  하단 사이즈
 }
-
 
 struct TopViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
@@ -48,8 +48,8 @@ struct TopViewer: PageComponent{
                     .cancelOnDisappear(true)
                     .loadImmediately()
                     .aspectRatio(contentMode: .fit)
-                    .modifier(MatchHorizontal(height: geometry.size.width / Self.imgRatio))
-                    .padding(.bottom, SystemEnvironment.isTablet ? Dimen.button.regular : 0)
+                    .modifier(MatchParent())
+                    .padding(.bottom, SystemEnvironment.isTablet ? Dimen.button.regular : Self.bottomHeight)
                     
                 VStack(alignment: .leading, spacing:0){
                    
@@ -104,11 +104,7 @@ struct TopViewer: PageComponent{
                     }
                     .padding(.horizontal, SystemEnvironment.isTablet
                                 ? self.getContententMargin(geo: geometry) : Dimen.margin.thin)
-                    /*
-                    Text(String.app.watchAble)
-                        .modifier(BoldTextStyle( size: Font.size.light, color:Color.app.white ))
-                        .padding(.top, Dimen.margin.tinyExtra)
-                    */
+                    
                 }
                 .modifier(MatchParent())
                
@@ -125,7 +121,7 @@ struct TopViewer: PageComponent{
     func getContententMargin(geo:GeometryProxy) -> CGFloat {
         let contententHeight:CGFloat = geo.size.height
             - (SystemEnvironment.isTablet ? Dimen.button.regular : 0)
-        let contententWidth:CGFloat = contententHeight * Self.imgRatio
+        let contententWidth:CGFloat = contententHeight / Self.imgRatio
         
         return round((geo.size.width - contententWidth) / 2)
     }

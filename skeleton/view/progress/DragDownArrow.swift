@@ -28,7 +28,8 @@ struct DragDownArrow: PageComponent {
             }
         }
         .modifier(MatchHorizontal(height: 90, margin: 0))
-        .opacity(self.progress / self.progressMax)
+        .opacity(0)
+        //.opacity(self.progress / self.progressMax)
         .onReceive(self.infinityScrollModel.$event){evt in
             if #available(iOS 14.0, *) {
                 guard let evt = evt else {return}

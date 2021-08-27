@@ -90,7 +90,7 @@ struct PairingHitch: PageComponent {
                                         .frame(width: Dimen.icon.regularExtra,
                                                height: Dimen.icon.regularExtra)
                                 }
-                                .padding(.all, Dimen.margin.thin)
+                                .padding(.all, Dimen.margin.tinyUltra)
                             }
                             .frame(width: 446)
                             .background(Color.app.white)

@@ -34,12 +34,13 @@ struct NavigationBuilder{
     var marginV:CGFloat = Dimen.margin.thin
     var imgSize:CGSize = CGSize(width: Dimen.icon.thin, height: Dimen.icon.thin)
     
-    func getNavigationButtons(texts:[String], color:Color? = nil) -> [NavigationButton] {
+    func getNavigationButtons(texts:[String], color:Color? = nil, bgColor:Color? = nil) -> [NavigationButton] {
         let range = 0 ..< texts.count
         return zip(range, texts).map {index, text in
-            self.createButton(txt:text, idx:index, color:color)
+            self.createButton(txt:text, idx:index, color:color, bgColor:bgColor)
         }
     }
+    
     func getNavigationButtons(datas:[(String,String)], size:CGSize? = nil,  color:Color? = nil) -> [NavigationButton] {
         let range = 0 ..< datas.count
         return zip(range, datas ).map {index, data in
@@ -59,7 +60,7 @@ struct NavigationBuilder{
         }
     }
     
-    private func createButton(txt:String, idx:Int, color:Color? = nil) -> NavigationButton {
+    private func createButton(txt:String, idx:Int, color:Color? = nil, bgColor:Color? = nil) -> NavigationButton {
         let size = txt.textSizeFrom( fontSize: textModifier.size )
         return NavigationButton(
             id: UUID.init().uuidString,
@@ -69,6 +70,9 @@ struct NavigationBuilder{
                     .font(.custom(self.index != idx ? Font.family.medium : Font.family.bold , size: textModifier.size))
                     .foregroundColor(self.index != idx ? textModifier.color : (color ?? textModifier.activeColor))
                     .modifier(MatchParent())
+                    .background(self.index != idx
+                                    ? Color.transparent.clearUi
+                                    : bgColor ?? Color.transparent.clearUi)
             ),
             idx:idx,
             frame: CGSize (

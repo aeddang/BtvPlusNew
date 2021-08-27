@@ -91,7 +91,7 @@ struct PageModifyProfile: PageView {
                     .background(Color.brand.bg)
                     
                     FillButton(
-                        text: String.button.next,
+                        text: String.app.confirm,
                         isSelected: self.isInputCompleted()
                     ){_ in
                         self.inputCompleted()

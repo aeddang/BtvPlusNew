@@ -111,8 +111,9 @@ extension String {
         public static let textFirstFreeStrong = "monthlyTextFirstFreeStrong".loaalized()
         public static let textFirstFreeTrailing = "monthlyTextFirstFreeTrailing".loaalized()
         
-        public static let oceanPhaseLeading = "monthlyOceanPhaseLeading".loaalized()
-        public static let oceanPhaseTrailing = "monthlyOceanPhaseTrailing".loaalized()
+        public static let oceanPurchaseLeading = "monthlyOceanPurchaseLeading".loaalized()
+        public static let oceanPurchaseTrailing = "monthlyOceanPurchaseTrailing".loaalized()
+        public static let oceanAuthLeading = "monthlyOceanAuthLeading".loaalized()
         public static let oceanAuth = "monthlyOceanAuth".loaalized()
         public static let oceanPeriodAuth = "monthlyOceanPeriodAuth".loaalized()
         

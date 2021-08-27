@@ -73,6 +73,10 @@ extension CateBlock{
     enum ListType:String {
         case video, poster, banner, tv
     }
+    
+    static let listPadding:CGFloat = SystemEnvironment.currentPageType == .btv
+        ? SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin
+        : DimenKids.margin.thinUltra
 }
 
 struct CateBlock: PageComponent{
@@ -88,8 +92,8 @@ struct CateBlock: PageComponent{
     var headerSize:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.tab.lightExtra : DimenKids.tab.lightExtra
     var marginTop : CGFloat = Dimen.margin.regular
     var marginBottom : CGFloat = 0
-    var marginHorizontal:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thinUltra
-    var spacing: CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thinUltra
+    var marginHorizontal:CGFloat = Self.listPadding
+    var spacing: CGFloat = Self.listPadding
     var size: CGFloat? = nil
     
     @State var reloadDegree:Double = 0
@@ -659,10 +663,10 @@ struct CateBlock: PageComponent{
     
     private func modifyCount(_ count:Int) -> Int{
         if count <= 3 {return count} //123
-        if count == 4 {return 3}
-        if count <= 6 {return count} //56
+        if count == 4 {return count}
+        if count <= 6 {return 5} //56
         if count <= 8 {return 6}
-        return 10
+        return 8
     }
     
     private func setPosterSets(loadedDatas:[PosterData]) {
@@ -703,7 +707,7 @@ struct CateBlock: PageComponent{
         self.posters.append(contentsOf: rows)
         if self.posters.isEmpty { self.onError() }
         if let data = self.posters.first {
-            let size = PosterSet.listSize(data: data, screenWidth: self.screenSize )
+            let size = PosterSet.listSize(data: data, screenWidth: self.screenSize , padding: self.spacing)
             self.posterCellHeight = size.height
         }
         self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)
@@ -744,7 +748,7 @@ struct CateBlock: PageComponent{
         if self.videos.isEmpty { self.onError() }
         
         if let data = self.videos.first {
-            let size = VideoSet.listSize(data: data, screenWidth: self.screenSize, isFull:true)
+            let size = VideoSet.listSize(data: data, screenWidth: self.screenSize, padding: self.spacing, isFull:true)
             self.videoCellHeight = size.height
         }
         self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)
@@ -781,7 +785,7 @@ struct CateBlock: PageComponent{
         self.banners.append(contentsOf: rows)
         if self.banners.isEmpty { self.onError() }
         if let data = self.banners.first {
-            let size = BannerSet.listSize(data: data, screenWidth: self.screenSize)
+            let size = BannerSet.listSize(data: data, screenWidth: self.screenSize, padding: self.spacing)
             self.bannerCellHeight = size.height
         }
         self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)
@@ -818,7 +822,7 @@ struct CateBlock: PageComponent{
         self.tvs.append(contentsOf: rows)
         if self.tvs.isEmpty { self.onError() }
         if let data = self.tvs.first {
-            let size = TvSet.listSize(data: data, screenWidth: self.screenSize)
+            let size = TvSet.listSize(data: data, screenWidth: self.screenSize, padding: self.spacing)
             self.tvCellHeight = size.height
         }
         self.infinityScrollModel.onComplete(itemCount: loadedDatas.count)

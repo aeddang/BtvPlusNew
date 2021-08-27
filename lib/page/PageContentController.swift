@@ -167,7 +167,14 @@ struct PageContentController: View{
         pageControllerObservable.overlayView?.pageRemoved( pop.pageObject )
         pageControllerObservable.updatePageIndex()
     }
-    
+    func removeAllPopup(removePops:[String]){
+        pageControllerObservable.popups.removeAll( where: { pop in
+           return removePops.first(where: { pop.id == $0 }) != nil
+        })
+        pageControllerObservable.pages.forEach({ $0.pageRemoved( nil )})
+        pageControllerObservable.overlayView?.pageRemoved(nil)
+        pageControllerObservable.updatePageIndex()
+    }
     func removeAllPopup(_ pageKey:String = "", exceptions:[PageID]? = nil){
         pageControllerObservable.popups.removeAll( where: { pop in
             var remove = true

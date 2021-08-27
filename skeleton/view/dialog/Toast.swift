@@ -31,11 +31,13 @@ struct Toast<Presenting>: View where Presenting: View {
             self.presenting()
             VStack{
                 Text(self.text)
-                    .modifier(MediumTextStyle(size: Font.size.light, color: Color.app.white))
-                    .padding(.all, Dimen.margin.thin)
+                    .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.white))
+                    .multilineTextAlignment(.center)
+                    .padding(.vertical, Dimen.margin.thin)
+                    .padding(.horizontal, Dimen.margin.mediumExtra)
                     .frame(minWidth: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/,  maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .center)
             }
-            .background(Color.app.greyMedium.opacity(0.7))
+            .background( SystemEnvironment.currentPageType == .btv ? Color.app.blueLight : Color.app.ivoryDeep)
             .padding(.bottom, self.safeAreaBottom)
             .offset(y:self.isShowing ? 0 : 100)
             .opacity(self.isShowing ? 1 : 0)

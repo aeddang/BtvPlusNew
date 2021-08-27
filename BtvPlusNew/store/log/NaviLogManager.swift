@@ -97,7 +97,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
         self.currentPlayStartTime = nil
     }
     
-    func contentsLog(pageId:NaviLog.PageId, action:NaviLog.Action,
+    func contentsLog(pageId:NaviLog.PageId? = nil, action:NaviLog.Action,
                    actionBody:MenuNaviActionBodyItem? = nil,
                    watchType:NaviLog.watchType? = nil){
     
@@ -114,16 +114,23 @@ class NaviLogManager : ObservableObject, PageProtocol {
         if let playStartTime = self.currentPlayStartTime {
             self.currentSysnopsisContentsItem?.running_time = (Date().timeIntervalSince1970 - playStartTime).description
         }
-        
-        if let realNameData = self.getRealNameData(pageID: pageId, action: action,  watchType: watchType, naviLogData: data) {
-            self.send(realNameData, isAnonymous: false)
-        }
-        if let anonymousData = self.getAnonymousData(pageID: pageId, action: action,  watchType: watchType, naviLogData: data) {
-            self.send(anonymousData, isAnonymous: true)
+        if let pageId = pageId {
+            if let realNameData = self.getRealNameData(pageID: pageId, action: action,  watchType: watchType, naviLogData: data) {
+                self.send(realNameData, isAnonymous: false)
+            }
+            if let anonymousData = self.getAnonymousData(pageID: pageId, action: action,  watchType: watchType, naviLogData: data) {
+                self.send(anonymousData, isAnonymous: true)
+            }
+        } else {
+            if let realNameData = self.getRealNameData(page:self.currentTopPage, pageID: self.currentPageId, action: action, naviLogData: data) {
+                self.send(realNameData, isAnonymous: false)
+            }
+            if let anonymousData = self.getAnonymousData(page:self.currentTopPage, pageID: self.currentPageId, action: action, naviLogData: data) {
+                self.send(anonymousData, isAnonymous: true)
+            }
         }
     }
     
-   
     func pairingLog(pageId:NaviLog.PageId, config:String){
         var actionBody = MenuNaviActionBodyItem()
         actionBody.config = config
@@ -138,7 +145,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
         }
     }
     
-    func actionLog(_ action:NaviLog.Action = .pageShow, pageId:NaviLog.PageId,
+    func actionLog(_ action:NaviLog.Action = .pageShow, pageId:NaviLog.PageId? = nil,
                    actionBody:MenuNaviActionBodyItem? = nil,
                    contentBody:MenuNaviContentsBodyItem? = nil,
                    memberBody:MenuNaviMemberItem? = nil
@@ -148,31 +155,23 @@ class NaviLogManager : ObservableObject, PageProtocol {
         data.actionBody = actionBody
         data.contentsBody = contentBody
         data.member = memberBody ?? self.currentMemberItem
-        if let realNameData = self.getRealNameData(pageID: pageId, action: action, naviLogData: data) {
-            self.send(realNameData, isAnonymous: false)
-        }
-        if let anonymousData = self.getAnonymousData(pageID: pageId, action: action, naviLogData: data) {
-            self.send(anonymousData, isAnonymous: true)
+        if let pageId = pageId {
+            if let realNameData = self.getRealNameData(pageID: pageId, action: action, naviLogData: data) {
+                self.send(realNameData, isAnonymous: false)
+            }
+            if let anonymousData = self.getAnonymousData(pageID: pageId, action: action, naviLogData: data) {
+                self.send(anonymousData, isAnonymous: true)
+            }
+        } else {
+            if let realNameData = self.getRealNameData(page:self.currentTopPage, pageID: self.currentPageId, action: action, naviLogData: data) {
+                self.send(realNameData, isAnonymous: false)
+            }
+            if let anonymousData = self.getAnonymousData(page:self.currentTopPage, pageID: self.currentPageId, action: action, naviLogData: data) {
+                self.send(anonymousData, isAnonymous: true)
+            }
         }
     }
     
-    func actionLog(_ action:NaviLog.Action = .pageShow,
-                   actionBody:MenuNaviActionBodyItem? = nil,
-                   contentBody:MenuNaviContentsBodyItem? = nil,
-                   memberBody:MenuNaviMemberItem? = nil
-                   ){
-        
-        let data = NaviLogData()
-        data.actionBody = actionBody
-        data.contentsBody = contentBody
-        data.member = memberBody ?? self.currentMemberItem
-        if let realNameData = self.getRealNameData(page:self.currentTopPage, pageID: self.currentPageId, action: action, naviLogData: data) {
-            self.send(realNameData, isAnonymous: false)
-        }
-        if let anonymousData = self.getAnonymousData(page:self.currentTopPage, pageID: self.currentPageId, action: action, naviLogData: data) {
-            self.send(anonymousData, isAnonymous: true)
-        }
-    }
     
     func setupPageId(_ pageId:NaviLog.PageId? = nil){
         self.currentPageId = pageId

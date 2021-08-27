@@ -21,7 +21,7 @@ struct SelectPairingType: View {
                 .renderingMode(.original).resizable()
                 .scaledToFit()
                 .modifier(MatchHorizontal(height: SystemEnvironment.isTablet ? 33 : 27))
-                .padding(.top, Dimen.margin.medium)
+                .padding(.top, SystemEnvironment.isTablet ?  Dimen.margin.mediumExtra : Dimen.margin.medium)
             Text( String.pairingHitch.select)
                 .kerning(Font.kern.thin)
                 .modifier( MediumTextStyle(
@@ -54,9 +54,11 @@ struct SelectPairingType: View {
                         color: Color.app.greyDeep)
                 )
                 .multilineTextAlignment(.center)
-                .padding(.top, Dimen.margin.light)
+                .padding(.top, Dimen.margin.thin)
         }
-        .padding(.bottom, self.sceneObserver.safeAreaBottom + Dimen.margin.thin)
+        .padding(.bottom, SystemEnvironment.isTablet
+                    ?  Dimen.margin.thin
+                    : self.sceneObserver.safeAreaBottom + Dimen.margin.thin)
         
     }//body
     

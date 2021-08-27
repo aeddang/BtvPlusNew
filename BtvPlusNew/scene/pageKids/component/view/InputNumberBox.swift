@@ -104,6 +104,7 @@ struct InputNumberBox: PageComponent {
                         
                         if let text = self.text{
                             Text(text)
+                                .kerning(Font.kern.thin)
                                 .modifier(BoldTextStyleKids(size: Font.sizeKids.tiny, color:Color.app.brownLight))
                                 .fixedSize(horizontal: false, vertical: true)
                                 
@@ -200,10 +201,11 @@ struct InputNumberItem: PageView {
                 text: self.$input,
                 keyboardType: .numberPad,
                 placeholder: self.placeholder,
+                placeholderColor : Color.app.grey,
                 maxLength: 1,
                 textModifier: TextModifier(
-                    family: Font.familyKids.bold,
-                    size: Font.sizeKids.black,
+                    family: Font.familyKids.medium,
+                    size: Font.sizeKids.regular,
                     color: Color.app.brownDeep),
                 isfocus: self.focusIdx == self.idx,
                 isSecureTextEntry:true,

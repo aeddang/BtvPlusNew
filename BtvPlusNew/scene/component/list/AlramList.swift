@@ -26,6 +26,7 @@ struct AlramList: PageComponent{
     @State var hasNew:Bool = false
     @State var isPush:Bool = false
     @State var horizontalMargin:CGFloat = Dimen.margin.thin
+    @State var isHorizontal:Bool = false
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
@@ -67,21 +68,28 @@ struct AlramList: PageComponent{
             } else {
                 VStack{
                     EmptyMyData(
-                        text: String.pageText.myAlramEmpty,
-                        tip : String.pageText.myAlramEmptyTip)
+                        icon: Asset.image.myEmpty2,
+                        text: !self.isPush ?  String.pageText.myAlramEmptyPushOn : String.pageText.myAlramEmpty,
+                        tip : !self.isPush ? nil : String.pageText.myAlramEmptyTip)
                     if !self.isPush {
-                        FillButton(
-                            text: String.button.alramOn,
-                            size: Dimen.button.regular
-                        ){ _ in
-                            if self.pairing.status != .pairing {
-                                self.appSceneObserver.alert = .needPairing()
-                                return
+                        if SystemEnvironment.isTablet {
+                            FillButton(
+                                text: String.button.alramOn,
+                                size: Dimen.button.regular
+                            ){ _ in
+                                self.onPush()
                             }
-                            self.sendLog(action: .clickNotificationButton)
-                            self.dataProvider.requestData(q: .init(type: .updateAgreement(true)))
+                            .buttonStyle(BorderlessButtonStyle())
+                            .frame(width: 400)
+                        } else {
+                            FillButton(
+                                text: String.button.alramOn,
+                                size: Dimen.button.regular
+                            ){ _ in
+                                self.onPush()
+                            }
+                            .buttonStyle(BorderlessButtonStyle())
                         }
-                        .buttonStyle(BorderlessButtonStyle())
                     }
                 }
                 .modifier(ListRowInset(marginHorizontal:Dimen.margin.heavy ,spacing: 0))
@@ -92,8 +100,11 @@ struct AlramList: PageComponent{
             guard let res = res else { return }
             switch res.type {
             case .updateAgreement(let isAgree) : self.onUpdatedPush(res, isAgree: isAgree)
-            default: do{}
+            default: break
             }
+        }
+        .onReceive(self.sceneObserver.$isUpdated){ isUpdate in
+            self.isHorizontal = self.sceneObserver.sceneOrientation == .landscape
         }
         .onReceive(self.pairing.$status){ status in
             self.isPush = self.pairing.user?.isAgree3 ?? false
@@ -107,11 +118,10 @@ struct AlramList: PageComponent{
             self.hasNew = count>0
         }
         .onAppear(){
-            
+            self.isHorizontal = self.sceneObserver.sceneOrientation == .landscape
             self.horizontalMargin
                 = self.sceneObserver.sceneOrientation == .portrait ? Dimen.margin.thin : Dimen.margin.heavy
         }
-       
     }//body
     
     private func readAll(){
@@ -136,8 +146,9 @@ struct AlramList: PageComponent{
         if resultCode == NpsNetwork.resultCode.success.code {
             self.repository.updatePush(isAgree)
             self.isPush = isAgree
+            let today = Date().toDateFormatter(dateFormat: "yyyy.MM.dd")
             self.appSceneObserver.event = .toast(
-                isAgree ? String.alert.pushOn : String.alert.pushOff
+                isAgree ? today+"\n"+String.alert.pushOn : today+"\n"+String.alert.pushOff
             )
         } else {
             onUpdatePushError()
@@ -153,7 +164,15 @@ struct AlramList: PageComponent{
         }else {
             self.naviLogManager.actionLog(action)
         }
-        
+    }
+    
+    private func onPush(){
+        if self.pairing.status != .pairing {
+            self.appSceneObserver.alert = .needPairing()
+            return
+        }
+        self.sendLog(action: .clickNotificationButton)
+        self.dataProvider.requestData(q: .init(type: .updateAgreement(true)))
     }
 }
 
@@ -305,6 +324,7 @@ struct AlramItem: PageView {
         self.data.isRead = true
         if !self.data.isCoreData { return }
         NotificationCoreData().readNotice(title: data.title ?? "", body: data.text ?? "")
+        self.repository.pushManager.confirmPush(data.messageId) 
         DispatchQueue.main.async {
             self.repository.alram.updatedNotification()
         }

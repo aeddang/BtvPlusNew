@@ -22,6 +22,14 @@ struct CheckBox: View, SelecterbleProtocol {
                 }
             }
         }
+        var disable:String{
+            get{
+                switch self {
+                case .white: return Asset.shape.checkBoxDisable
+                default : return Asset.shape.checkBoxDisable
+                }
+            }
+        }
         var checkOn:String{
             get{
                 switch self {
@@ -52,6 +60,7 @@ struct CheckBox: View, SelecterbleProtocol {
     
     var style:CheckBoxStyle = .normal
     var isChecked: Bool
+    var isCheckAble: Bool = true
     var text:String? = nil
     var subText:String? = nil
     var isStrong:Bool = false
@@ -59,7 +68,6 @@ struct CheckBox: View, SelecterbleProtocol {
     var isFill:Bool = true
     var textColor:String? = nil
     var textSize:String? = nil
-   
     var more: (() -> Void)? = nil
     var action: ((_ check:Bool) -> Void)? = nil
     
@@ -67,12 +75,15 @@ struct CheckBox: View, SelecterbleProtocol {
     var body: some View {
         HStack(alignment: .center, spacing: Dimen.margin.thin){
            ImageButton(
-            defaultImage: self.style.check,
-            activeImage: self.isStrong
-                ? Asset.shape.checkBoxOn :self.style.checkOn,
+            defaultImage: self.isCheckAble ? self.style.check : self.style.disable,
+            activeImage: self.isCheckAble
+                ? self.isStrong
+                    ? Asset.shape.checkBoxOn : self.style.checkOn
+                : self.style.disable,
                 isSelected: self.isChecked,
                 size: CGSize(width: Dimen.icon.thinExtra, height: Dimen.icon.thinExtra)
                 ){_ in
+                    if !self.isCheckAble {return}
                     if self.action != nil {
                         self.action!(!self.isChecked)
                     }

@@ -84,6 +84,29 @@ struct PageKidsMy: PageView {
             }//draging
             .onReceive(self.pairing.$status){status in
                 self.isPairing = ( status == .pairing )
+                if self.isPairing {
+                    self.pairing.requestPairing(.updateKids)
+                }
+            }
+            .onReceive(pairing.$event) { evt in
+                guard let evt = evt else { return }
+                if self.pairing.kid != nil {return}
+                switch evt {
+                case .updatedKids :
+                    self.registKid()
+                    
+                case .notFoundKid :
+                    self.appSceneObserver.alert = .confirm(nil, String.alert.kidsProfileNotfound ,nil) { isOk in
+                        if isOk {
+                            self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
+                        }
+                    }
+                case .updatedKidsError :
+                    self.appSceneObserver.alert = .alert(nil,  String.alert.kidsDisable, String.alert.kidsDisableTip){
+                        self.pagePresenter.goBack()
+                    }
+                default : break
+                }
             }
             .onReceive(self.pairing.$kid){kid in
                 if kid == nil {
@@ -95,6 +118,23 @@ struct PageKidsMy: PageView {
             }
         }//geo
     }//body
+    
+    private func registKid(){
+        if self.pairing.kid != nil {return}
+        if pairing.kids.isEmpty {
+            self.appSceneObserver.alert = .confirm(nil, String.alert.kidsProfileEmpty,nil) { isOk in
+                if isOk {
+                    self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.registKid))
+                }
+            }
+        } else {
+            self.appSceneObserver.alert = .confirm(nil, String.alert.kidsProfileSelect ,nil) { isOk in
+                if isOk {
+                    self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
+                }
+            }
+        }
+    }
     
 }
 

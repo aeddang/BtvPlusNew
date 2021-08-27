@@ -47,6 +47,7 @@ class CateData:InfinityData{
     func setZemkids() -> CateData {
         title = String.kidsTitle.kids
         subType = .kids
+        menuId = EuxpNetwork.MenuTypeCode.MENU_KIDS.rawValue
         return self
     }
 
@@ -78,7 +79,7 @@ class CateData:InfinityData{
 }
 
 extension CateList{
-    static let magin:CGFloat = Dimen.margin.regularExtra
+    static let magin:CGFloat = Dimen.margin.mediumExtra
     static let cellCount = 3
     static let horizenlalCellCount = 4
 }
@@ -88,7 +89,7 @@ struct CateList: PageComponent{
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[CateDataSet]
     var useTracking:Bool = false
-    var margin:CGFloat = Dimen.margin.heavyExtra
+    var margin:CGFloat = 0
     var marginBottom:CGFloat = 0
     var body: some View {
         InfinityScrollView(
@@ -132,8 +133,11 @@ struct CateSet: PageComponent{
                     Spacer()
                 }
                 CateItem( data:data )
+                .frame(width: ListItem.cate.width)
                 .onTapGesture {
                     switch data.subType {
+                    case .kids : 
+                        self.pagePresenter.changePage(PageKidsProvider.getPageObject(.kidsIntro))
                     case .prevList :
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject(.previewList)
@@ -171,7 +175,7 @@ struct CateSet: PageComponent{
                 let add = self.data.count - self.data.datas.count - 1
                 ForEach(0...add, id: \.self) { data in
                     Spacer()
-                    Spacer().frame(width: ListItem.cate.size.width, height: ListItem.cate.size.height)
+                    Spacer().frame(width: ListItem.cate.width, height: ListItem.cate.size.height)
                 }
                 
             }
@@ -185,7 +189,6 @@ struct CateItem: PageView {
     var body: some View {
         
         VStack(spacing:Dimen.margin.tinyUltra){
-            
             ZStack{
                 if self.data.subType == .kids {
                     Image(Asset.gnbTop.zemkids)

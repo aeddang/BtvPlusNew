@@ -14,13 +14,13 @@ extension PlayerOptionSelectList{
     static let strokeButtonText = TextModifier(
         family: Font.family.bold,
         size: Font.size.thinExtra,
-        color: Color.app.grey,
+        color: Color.app.white,
         activeColor: Color.app.white
     )
     static let strokeButtonTextFull = TextModifier(
         family: Font.family.bold,
         size: Font.size.lightExtra,
-        color: Color.app.grey,
+        color: Color.app.white,
         activeColor: Color.app.white
     )
 }

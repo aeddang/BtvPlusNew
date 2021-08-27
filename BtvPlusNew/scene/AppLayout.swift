@@ -39,7 +39,7 @@ struct AppLayout: PageComponent{
             if let datas = self.floatBannerDatas {
                 FloatingBanner(datas:datas){ today in
                     if today {self.floatingBannerToDayUnvisible()}
-                    withAnimation(.easeOut(duration: 0.1)){
+                    withAnimation(.easeOut(duration: 0.0)){
                         floatBannerDatas = nil
                     }
                 }
@@ -150,9 +150,10 @@ struct AppLayout: PageComponent{
         }
         .onReceive (self.appObserver.$alram) { alram in
             if alram == nil {return}
-            
             if !self.isInit { return }
             self.appSceneObserver.alert = .recivedApns(alram)
+            self.repository.pushManager.recivePush(alram?.messageId)
+            
         }
         .onReceive (self.appObserver.$apnsToken) { token in
             guard let token = token else { return }

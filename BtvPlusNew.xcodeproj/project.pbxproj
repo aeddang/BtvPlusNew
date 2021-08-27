@@ -387,6 +387,7 @@
 		319867EB26BBA5A6008DDD02 /* TvList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319867EA26BBA5A6008DDD02 /* TvList.swift */; };
 		319867ED26BBAF11008DDD02 /* TvBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319867EC26BBAF11008DDD02 /* TvBlock.swift */; };
 		3198722926AA593C005E63B6 /* FloatRecommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3198722826AA593C005E63B6 /* FloatRecommand.swift */; };
+		3198CF8526D8B0BC00918217 /* KidsPlayerBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3198CF8426D8B0BC00918217 /* KidsPlayerBody.swift */; };
 		3198FED9262FAF77008DCB2C /* PageMyAlram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3198FED8262FAF77008DCB2C /* PageMyAlram.swift */; };
 		319B07A4263A398C008C11A8 /* ConnectTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B07A3263A398C008C11A8 /* ConnectTitle.swift */; };
 		319B07A6263A8807008C11A8 /* VideoSetBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319B07A5263A8807008C11A8 /* VideoSetBlock.swift */; };
@@ -497,6 +498,8 @@
 		31E76D132632636500710624 /* Shareable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E76D122632636500710624 /* Shareable.swift */; };
 		31E8D7BC25CA5D470034BBC4 /* PlayerTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E8D7BB25CA5D470034BBC4 /* PlayerTop.swift */; };
 		31E8D7C125CA85190034BBC4 /* PlayerOptionSelectBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E8D7C025CA85190034BBC4 /* PlayerOptionSelectBox.swift */; };
+		31EA0D9126D705E8007BECAB /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EA0D9026D705E8007BECAB /* Push.swift */; };
+		31EA0D9326D70848007BECAB /* PushResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EA0D9226D70848007BECAB /* PushResult.swift */; };
 		31EA9FBD25F5ACAC0059E19B /* SimplePlayerUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EA9FBC25F5ACAC0059E19B /* SimplePlayerUI.swift */; };
 		31EA9FC225F5D23B0059E19B /* PageFullPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EA9FC125F5D23B0059E19B /* PageFullPlayer.swift */; };
 		31F280222671ACA300F40B09 /* PagePlayerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F280212671ACA300F40B09 /* PagePlayerTest.swift */; };
@@ -1071,6 +1074,7 @@
 		319867EA26BBA5A6008DDD02 /* TvList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TvList.swift; sourceTree = "<group>"; };
 		319867EC26BBAF11008DDD02 /* TvBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TvBlock.swift; sourceTree = "<group>"; };
 		3198722826AA593C005E63B6 /* FloatRecommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatRecommand.swift; sourceTree = "<group>"; };
+		3198CF8426D8B0BC00918217 /* KidsPlayerBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsPlayerBody.swift; sourceTree = "<group>"; };
 		3198FED8262FAF77008DCB2C /* PageMyAlram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyAlram.swift; sourceTree = "<group>"; };
 		319B07A3263A398C008C11A8 /* ConnectTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectTitle.swift; sourceTree = "<group>"; };
 		319B07A5263A8807008C11A8 /* VideoSetBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSetBlock.swift; sourceTree = "<group>"; };
@@ -1183,6 +1187,8 @@
 		31E76D122632636500710624 /* Shareable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shareable.swift; sourceTree = "<group>"; };
 		31E8D7BB25CA5D470034BBC4 /* PlayerTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTop.swift; sourceTree = "<group>"; };
 		31E8D7C025CA85190034BBC4 /* PlayerOptionSelectBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerOptionSelectBox.swift; sourceTree = "<group>"; };
+		31EA0D9026D705E8007BECAB /* Push.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Push.swift; sourceTree = "<group>"; };
+		31EA0D9226D70848007BECAB /* PushResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushResult.swift; sourceTree = "<group>"; };
 		31EA9FBC25F5ACAC0059E19B /* SimplePlayerUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimplePlayerUI.swift; sourceTree = "<group>"; };
 		31EA9FC125F5D23B0059E19B /* PageFullPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageFullPlayer.swift; sourceTree = "<group>"; };
 		31F280212671ACA300F40B09 /* PagePlayerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePlayerTest.swift; sourceTree = "<group>"; };
@@ -2393,6 +2399,7 @@
 			isa = PBXGroup;
 			children = (
 				31F280272671E85A00F40B09 /* KidsSynopsis.swift */,
+				3198CF8426D8B0BC00918217 /* KidsPlayerBody.swift */,
 				3190CAF92685621300ACB465 /* RelationVodBodyKids.swift */,
 				3190CAFB268570DC00ACB465 /* RelationVodEmpty.swift */,
 				3190CAFD26892E1600ACB465 /* PackageBodyKids.swift */,
@@ -2977,6 +2984,23 @@
 				31E76D122632636500710624 /* Shareable.swift */,
 			);
 			path = share;
+			sourceTree = "<group>";
+		};
+		31EA0D8E26D705CA007BECAB /* push */ = {
+			isa = PBXGroup;
+			children = (
+				31EA0D8F26D705DD007BECAB /* model */,
+				31EA0D9026D705E8007BECAB /* Push.swift */,
+			);
+			path = push;
+			sourceTree = "<group>";
+		};
+		31EA0D8F26D705DD007BECAB /* model */ = {
+			isa = PBXGroup;
+			children = (
+				31EA0D9226D70848007BECAB /* PushResult.swift */,
+			);
+			path = model;
 			sourceTree = "<group>";
 		};
 		31EA9FBB25F5ABDD0059E19B /* view */ = {
@@ -3669,6 +3693,7 @@
 		D56C6B25257DACD800CF9AB8 /* rest  */ = {
 			isa = PBXGroup;
 			children = (
+				31EA0D8E26D705CA007BECAB /* push */,
 				312D2D7726D5F349002EE783 /* pucr */,
 				31A3FABB26C6419400689E09 /* vls */,
 				31CABAFE26C28DAE00B4B3C3 /* navilog */,
@@ -4474,6 +4499,7 @@
 				316955AB25DF9D1500848507 /* Pss.swift in Sources */,
 				319CF66B26967EAC00159575 /* ResultReadingReportView.swift in Sources */,
 				D56C69AB257DA09E00CF9AB8 /* Resource.swift in Sources */,
+				31EA0D9126D705E8007BECAB /* Push.swift in Sources */,
 				3112DA3A26980EE7004D0E09 /* PageKidsExamViewer.swift in Sources */,
 				318C5A0B2694195C00A2FD66 /* KidStudy.swift in Sources */,
 				31956F57269D1E5B0044CF1D /* KidsPlayList.swift in Sources */,
@@ -4507,6 +4533,7 @@
 				318D10032668418400B66977 /* AnimateSpinner.swift in Sources */,
 				319CF65E2695843A00159575 /* EmptyDiagnosticView.swift in Sources */,
 				313F8D11269C1A490055F775 /* PosterBlockKids.swift in Sources */,
+				3198CF8526D8B0BC00918217 /* KidsPlayerBody.swift in Sources */,
 				31631C6525D2516E00E501F7 /* SynopsisPrerollData.swift in Sources */,
 				316ECDFB264B49BE008D2544 /* RemoteStyle.swift in Sources */,
 				D56C6A50257DA0C700CF9AB8 /* Select.swift in Sources */,
@@ -4667,6 +4694,7 @@
 				317C97442623EEF7008F267D /* CouponList.swift in Sources */,
 				D506D72D258C9ECE00F27C00 /* VideoList.swift in Sources */,
 				319B379726B19CF2001501B1 /* RecommandReceiveNeedPairing.swift in Sources */,
+				31EA0D9326D70848007BECAB /* PushResult.swift in Sources */,
 				316A70A32670815600A93B83 /* PlayerListKids.swift in Sources */,
 				D56C6A35257DA0C700CF9AB8 /* CpTabDivisionNavigation.swift in Sources */,
 				D56C6B34257DACD800CF9AB8 /* Repository.swift in Sources */,
@@ -4885,7 +4913,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = 63;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -4909,7 +4937,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.0479;
+				MARKETING_VERSION = 1.0480;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = ".BtvPlusNew_ dev";
@@ -4965,7 +4993,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = 63;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = T2EEC8Y4JA;
 				ENABLE_BITCODE = NO;
@@ -4984,7 +5012,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 1.0479;
+				MARKETING_VERSION = 1.0480;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.BtvPlusNew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvPlusNew_des;

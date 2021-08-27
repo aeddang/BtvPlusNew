@@ -120,7 +120,7 @@ struct PagePairingDevice: PageView {
                 switch status {
                 case .enterForeground :
                     if self.isLocationRequest { self.updateSSID() }
-                default : do{}
+                default : break
                 }
             }
             .onReceive(self.locationObserver.$event){ evt in
@@ -136,8 +136,8 @@ struct PagePairingDevice: PageView {
                 case .notFoundDevice, .findMdnsDevice, .findStbInfoDevice :
                     if !self.isReady { return }
                     self.findDeviceCompleted(evt: evt)
-                case .connected : break
-                    //self.pagePresenter.closePopup(self.pageObject?.id)
+                case .connected :
+                    self.pagePresenter.closePopup(self.pageObject?.id)
                 case .connectError(let header) :
                     if header?.result == NpsNetwork.resultCode.pairingLimited.code {
                         self.pairing.requestPairing(.hostInfo(auth: nil, device:self.selectedDevice?.stbid, prevResult: header))

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct EditButton: PageView {
-    var icon:String
+    var icon:String?
     var text:String
     var action:()->Void
     var body: some View {
@@ -17,10 +17,12 @@ struct EditButton: PageView {
             self.action()
         }) {
             HStack(alignment:.center, spacing: Dimen.margin.tinyExtra){
-                Image(icon)
-                    .renderingMode(.original).resizable()
-                    .scaledToFit()
-                    .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
+                if let icon = self.icon {
+                    Image(icon)
+                        .renderingMode(.original).resizable()
+                        .scaledToFit()
+                        .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
+                }
                 Text(text)
                     .modifier(BoldTextStyle(size: Font.size.lightExtra))
             }

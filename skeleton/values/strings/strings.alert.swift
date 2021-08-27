@@ -53,6 +53,9 @@ extension String {
         public static var checkConnectStatus = "alertCheckConnectStatus".loaalized()
         public static var connectNotFound = "alertConnectNotFound".loaalized()
         public static var connectNotFoundSub = "alertConnectNotFoundSub".loaalized()
+        
+        public static var disConnect = "alertDisConnect".loaalized()
+        public static var disConnectText = "alertDisConnectText".loaalized()
      
         public static var pushOn =  "alertPushOn".loaalized()
         public static var pushOff =  "alertPushOff".loaalized()
@@ -159,6 +162,8 @@ extension String {
         public static var kidsExitCanceled = "alertKidsExitCanceled".loaalized()
         public static var kidsExitCanceledInfo = "alertKidsExitCanceledInfo".loaalized()
         
+        
+        
         public static var purchaseAuth = "alertPurchaseAuth".loaalized()
         public static var purchaseAuthInput = "alertPurchaseAuthInput".loaalized()
         public static var purchaseAuthInfo = "alertPurchaseAuthInfo".loaalized()
@@ -204,9 +209,15 @@ extension String {
         public static var kidsDisableTip = "alertKidsDisableTip".loaalized()
         public static var kidsExit = "alertKidsExit".loaalized()
         public static var kidsExitText = "alertKidsExitText".loaalized()
+        public static var KidsExitSetup = "alertKidsExitSetup".loaalized()
+        public static var KidsExitSetupText = "alertKidsExitSetupText".loaalized()
         public static var kidsProfileNotfound = "alertKidsProfileNotfound".loaalized()
         public static var kidsProfileSelect = "alertKidsProfileSelect".loaalized()
         public static var kidsProfileEmpty = "alertKidsProfileEmpty".loaalized()
+        
+        public static var kidsProfileSelected = "alertKidProfileSelected".loaalized()
+        public static var kidsProfileSelectConfirm = "alertKidProfileSelectConfirm".loaalized()
+        public static var kidsProfileSelectConfirmInfo = "alertKidProfileSelectConfirmInfo".loaalized()
         
         public static var kidsDeleteConfirm = "alertKidsDeleteConfirm".loaalized()
         public static var kidsDeleteConfirmTip = "alertKidsDeleteConfirmTip".loaalized()
@@ -219,6 +230,7 @@ extension String {
         public static var kidsDeleteCompleted = "alertKidDeleteCompleted".loaalized()
         public static var kidsChange = "alertKidChange".loaalized()
         public static var kidsChangeTip = "alertKidChangeTip".loaalized()
+        
 
         public static var kidsAddError = "alertKidAddError".loaalized()
         public static var kidsEditError = "alertKidEditError".loaalized()

@@ -35,11 +35,10 @@ struct DisconnectView: PageComponent{
                             .renderingMode(.original)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .modifier(MatchParent())
                             .padding(.vertical, Dimen.margin.medium)
-                        Spacer().modifier(MatchHorizontal(height: 0))
+                            .modifier(MatchParent())
                     } else {
-                        Spacer().modifier(MatchHorizontal(height: Dimen.margin.medium))
+                        Spacer().modifier(MatchParent())
                     }
                    
                 }
@@ -101,7 +100,7 @@ struct DisconnectView: PageComponent{
         .padding(.horizontal ,
                  (SystemEnvironment.isTablet && self.sceneOrientation == .portrait )
                     ? Dimen.margin.heavy : Dimen.margin.thin)
-        .padding(.bottom, Dimen.margin.thin + self.safeAreaBottom)
+        .padding(.bottom, Dimen.margin.thin )
         .modifier(MatchParent())
         .background(Color.brand.bg)
         .onReceive(self.sceneObserver.$safeAreaBottom){ pos in

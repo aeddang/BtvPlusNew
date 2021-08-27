@@ -14,6 +14,7 @@ class VideoData:InfinityData{
     private(set) var title: String? = nil
     private(set) var watchLv:Int = 0
     private(set) var isAdult:Bool = false
+    private(set) var isContinueWatch:Bool = false
     private(set) var subTitle: String? = nil
     private(set) var count: String? = nil
     private(set) var type:VideoType = .nomal
@@ -156,12 +157,13 @@ class VideoData:InfinityData{
     func setData(data:WatchItem, cardType:BlockData.CardType = .video, idx:Int = -1) -> VideoData {
         setCardType(cardType)
         isClip = cardType == .clip
-        count = data.series_no
+        count = data.yn_series == "Y" ? data.series_no : nil
         watchLv = data.level?.toInt() ?? 0
         isAdult = data.adult?.toBool() ?? false
         tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         if let rt = data.watch_rt?.toInt() {
             self.progress = Float(rt) / 100.0
+            self.isContinueWatch = rt > 1
         }
         title = data.title
         originImage = data.thumbnail
@@ -171,7 +173,8 @@ class VideoData:InfinityData{
         srisId = data.sris_id
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
-            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id,
+            prdPrcId: "",  kidZone:nil, progress:self.progress)
         return self
     }
     
@@ -397,9 +400,7 @@ struct VideoDataSet:Identifiable {
 extension VideoSet{
    
     static func listSize(data:VideoDataSet, screenWidth:CGFloat,
-                         padding:CGFloat = SystemEnvironment.currentPageType == .btv
-                            ? Dimen.margin.thin
-                            : DimenKids.margin.thinUltra,
+                         padding:CGFloat = Self.listPadding,
                          isFull:Bool = false) -> CGSize{
         let datas = data.datas
         let dataCell = datas.first ?? VideoData()
@@ -415,6 +416,10 @@ extension VideoSet{
         return CGSize(width: floor(cellW), height: cellH )
     }
     
+    static let listPadding:CGFloat = SystemEnvironment.currentPageType == .btv
+        ? SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin
+        : DimenKids.margin.thinUltra
+    
 }
 
 struct VideoSet: PageComponent{
@@ -424,7 +429,7 @@ struct VideoSet: PageComponent{
     var pageObservable:PageObservable = PageObservable()
     var data:VideoDataSet
     var screenSize:CGFloat? = nil
-    var padding:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thinUltra
+    var padding:CGFloat = Self.listPadding
     
     @State var cellDatas:[VideoData] = []
     @State var isUiActive:Bool = true
@@ -507,7 +512,12 @@ struct VideoItemBody: PageView {
         ZStack{
             ImageView(url: self.data.image,contentMode: .fill, noImg: Asset.noImg16_9)
                 .modifier(MatchParent())
-             
+            if !self.data.isClip {
+                Image(Asset.shape.listGradientH)
+                    .resizable()
+                    .scaledToFill()
+                    .modifier(MatchParent())
+            }
             if (self.data.progress != nil || self.isSelected) && self.data.tagData?.isLock != true {
                 Image(Asset.icon.thumbPlay)
                     .renderingMode(.original).resizable()
@@ -523,7 +533,9 @@ struct VideoItemBody: PageView {
                         Text(time)
                             .modifier(BoldTextStyle(size: Font.size.tiny))
                             .lineLimit(1)
-                            .padding(.all, Dimen.margin.micro)
+                            .padding(.horizontal, Dimen.margin.micro)
+                            .padding(.top, Dimen.margin.micro)
+                            .padding(.bottom, Dimen.margin.microExtra)
                             .background(Color.transparent.black70)
                             .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
                             .padding(.all, Dimen.margin.microUltra)
@@ -550,6 +562,7 @@ struct VideoItemBody: PageView {
                 Spacer().modifier(MatchHorizontal(height: 0))
                 if let title = self.data.fullTitle {
                     Text(title)
+                        .kerning(Font.kern.thin)
                         .modifier(MediumTextStyle(size: Font.size.thinExtra))
                         .lineLimit(self.data.isClip ? 2 : 1)
                         .multilineTextAlignment(.leading)
@@ -557,6 +570,7 @@ struct VideoItemBody: PageView {
                 }
                 if let subTitle = self.data.subTitle {
                     Text(subTitle)
+                        .kerning(Font.kern.thin)
                         .modifier(MediumTextStyle(size: Font.size.tiny, color:Color.app.grey))
                         .lineLimit(1)
                         .padding(.top, Dimen.margin.tiny)
@@ -581,7 +595,10 @@ struct VideoItemBodyKids: PageView {
             ZStack{
                 ImageView(url: self.data.image,contentMode: .fit, noImg: AssetKids.noImg16_9)
                     .modifier(MatchParent())
-                    
+                Image(Asset.shape.listGradientH)
+                    .resizable()
+                    .scaledToFill()
+                    .modifier(MatchParent())
                 if (self.data.progress != nil || self.isSelected) && self.data.tagData?.isLock != true {
                     Image(AssetKids.icon.thumbPlayVideo)
                         .renderingMode(.original).resizable()

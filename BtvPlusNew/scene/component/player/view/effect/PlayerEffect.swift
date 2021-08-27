@@ -41,6 +41,8 @@ struct PlayerEffect: PageView{
     @State var showSeekForward:Bool = false
     @State var showSeekBackward:Bool = false
     
+    
+    @State var isInitVolumeSet:Bool = true
     var body: some View {
         
         ZStack(alignment: .bottom){
@@ -126,7 +128,12 @@ struct PlayerEffect: PageView{
             let lv = Int( ceil( value / 100 * 3 ) )
             self.imgVolume = Asset.ani.volumeList[lv]
             self.textVolume = Double(value).toInt().description
+            if self.isInitVolumeSet {
+                self.isInitVolumeSet = false
+                return
+            }
             self.delayVolumeHidden()
+            
         }
         .onReceive(self.viewModel.$message){ message in
             guard let message = message else { return }

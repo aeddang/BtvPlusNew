@@ -77,7 +77,8 @@ class Pairing:ObservableObject, PageProtocol {
     @Published private(set) var kidStudyData:KidStudy? = nil
     
     private(set) var kids:[Kid] = []
-    
+    private(set) var isKidsSearch:Bool = false
+    private(set) var isFirstKidRegist:Bool = false
     
     let authority:Authority = Authority()
     var storage:LocalStorage? = nil
@@ -88,16 +89,20 @@ class Pairing:ObservableObject, PageProtocol {
         case .recovery :
             self.status = .connect
         case .selectKid(let kid) :
-            self.kid = kid
-            self.kidStudyData = nil
-            self.storage?.selectedKidsProfileId = kid.id
+            self.selectKid(kid)
         
         case .registKid(let kid) :
             kid.updateType = .post
             kid.locVal = self.kids.count
+            if self.kids.isEmpty {
+                self.isFirstKidRegist = true
+            }
         case .modifyKid(let kid) :
             
             kid.updateType = .put
+        case .updateKids :
+            if isKidsSearch {return}
+            self.isKidsSearch = true
         case .deleteKid(let kid) :
             kid.updateType = .del
             kid.modifyUserData = nil
@@ -214,6 +219,7 @@ class Pairing:ObservableObject, PageProtocol {
     }
     
     func updatedKidsProfiles(_ data:KidsProfiles? = nil, updateType:KesNetwork.UpdateType? = nil){
+        self.isKidsSearch = false
         if let data = data {
             self.kids = data.profiles?.map{ Kid(data: $0) } ?? []
             if let kidId = self.storage?.selectedKidsProfileId {
@@ -224,11 +230,24 @@ class Pairing:ObservableObject, PageProtocol {
                     return
                 }
             }
+            if self.isFirstKidRegist {
+                self.isFirstKidRegist = false
+                if !self.kids.isEmpty {
+                    self.selectKid(self.kids.first!)
+                }
+            }
             self.event = .updatedKids(updateType)
         } else {
+            self.isFirstKidRegist = false
             self.event = .updatedKidsError
         }
         SystemEnvironment.isInitKidsPage = true
+    }
+    
+    private func selectKid(_ kid:Kid){
+        self.kid = kid
+        self.kidStudyData = nil
+        self.storage?.selectedKidsProfileId = kid.id
     }
     
     func editedKidsProfiles(_ data:KidsProfiles? , editedKid:Kid?){

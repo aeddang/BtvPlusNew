@@ -54,6 +54,7 @@ struct SelectStbBox: View {
                 CheckBox(
                     style: .white,
                     isChecked: self.isAgree1,
+                    isCheckAble: false,
                     text:String.pairingHitch.userAgreement1,
                     more:{
                         self.pagePresenter.openPopup(
@@ -62,38 +63,22 @@ struct SelectStbBox: View {
                                 .addParam(key: .data, value: BtvWebView.serviceTerms)
                                 .addParam(key: .title , value: String.pageTitle.serviceTerms)
                         )
-                    },
-                    action:{ ck in
-                        //self.isAgree1 = ck
                     }
                 )
                 
                 CheckBox(
                     style: .white,
                     isChecked: self.isAgree2,
+                    isCheckAble: false,
                     text:String.pairingHitch.userAgreement2,
                     more:{
                         self.pagePresenter.openPopup(
                             PageProvider
                                 .getPageObject(.privacyAndAgree)
                         )
-                    },
-                    
-                    action:{ ck in
-                        self.isAgree2 = ck
                     }
                 )
-                .onReceive(self.pagePresenter.$event){ evt in
-                    if evt?.id != "PagePrivacyAndAgree" {return}
-                    guard let evt = evt else {return}
-                    switch evt.type {
-                    case .completed :
-                        self.isAgree2 = true
-                    case .cancel :
-                        self.isAgree2 = false
-                    default : break
-                    }
-                }
+                
                 
                 CheckBox(
                     style: .white,

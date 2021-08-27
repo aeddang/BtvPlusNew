@@ -32,7 +32,7 @@ struct TopBannerBg: PageComponent {
                 isForground : false,
                 ratio: self.ratio
                 )
-            .modifier(MatchHorizontal(height: isHorizontal ?  TopBanner.imageHeightHorizontal : TopBanner.imageHeight))
+            .modifier(MatchParent())
                 
             if self.pages.count > 1 {
                 HStack(spacing: Dimen.margin.tiny) {
@@ -51,11 +51,12 @@ struct TopBannerBg: PageComponent {
                 }
                 .frame( height:TopBanner.barHeight)
                 .padding(.bottom, isHorizontal
-                            ? TopBanner.marginBottomBar + TopBanner.imageHeightHorizontal - TopBanner.heightHorizontal
-                            : TopBanner.marginBottomBar + TopBanner.imageHeight - TopBanner.height
+                            ? TopBanner.marginBottomBarHorizontal
+                            : TopBanner.marginBottomBarVertical
                 )
             }
         }
+        .modifier(MatchHorizontal(height: isHorizontal ?  TopBanner.imageHeightHorizontal : TopBanner.imageHeight))
         .onReceive( self.viewModel.$index ){ idx in
             self.setBar(idx:idx)
         }
@@ -83,12 +84,18 @@ struct TopBannerBg: PageComponent {
     private func setBar(idx:Int){
         if self.pages.isEmpty {return}
         let count = self.datas.count
+        let realPos = idx == -1
+            ? 0
+            : idx == count
+                ? (count-1)
+                : idx
         let minSize:CGFloat = 240.0
         let size = min(TopBanner.barWidth, minSize/CGFloat(count))
     
         withAnimation{
-            self.leading = size * CGFloat(idx)
-            self.trailing = size * CGFloat(max(0,(count - idx - 1)))
+            
+            self.leading = size * CGFloat(realPos)
+            self.trailing = size * CGFloat(max(0,(count - realPos - 1)))
         }
     }
 }
@@ -150,19 +157,19 @@ struct TopBannerBgItem: PageComponent, Identifiable {
                     }
                     if let subTitle = data.subTitle1 {
                         Text(subTitle)
-                            .modifier(MediumTextStyle(size: Font.size.lightExtra, color:data.subTitleColor1))
+                            .modifier(MediumTextStyle(size: Font.size.thinExtra, color:data.subTitleColor1))
                             .multilineTextAlignment(.leading)
                             .padding(.top, Dimen.margin.lightExtra)
                     }
                     if let subTitle = data.subTitle2 {
                         Text(subTitle)
-                            .modifier(MediumTextStyle(size: Font.size.lightExtra, color:data.subTitleColor2))
+                            .modifier(MediumTextStyle(size: Font.size.thinExtra, color:data.subTitleColor2))
                             .multilineTextAlignment(.leading)
                             .padding(.top, Dimen.margin.micro)
                     }
                     if let subTitle = data.subTitle3 {
                         Text(subTitle)
-                            .modifier(MediumTextStyle(size: Font.size.lightExtra, color:data.subTitleColor3))
+                            .modifier(MediumTextStyle(size: Font.size.thinExtra, color:data.subTitleColor3))
                             .multilineTextAlignment(.leading)
                             .padding(.top, Dimen.margin.micro)
                     }
@@ -219,8 +226,8 @@ struct TopBannerBgItem: PageComponent, Identifiable {
                             .padding(.horizontal, Dimen.margin.thin)
                     }
                 }
-                .offset(y:TopBanner.height/2 - TopBanner.maginBottomLogo - (TopBanner.imageHeight-TopBanner.height)/2)
-                .modifier(MatchHorizontal(height:isHorizontal ? TopBanner.heightHorizontal : TopBanner.height))
+                .padding(.bottom,  TopBanner.maginBottomLogo)
+                .modifier(MatchParent())
             }
             
            

@@ -18,7 +18,7 @@ class KidsMyItemData: KidsHomeBlockListData {
 extension KidsMyItem{
     static let size:CGSize = SystemEnvironment.isTablet ? CGSize(width: 196, height: 339) : CGSize(width: 101, height: 177)
     static let profile:CGSize = SystemEnvironment.isTablet ? CGSize(width: 103, height: 103) : CGSize(width: 55, height: 55)
-    static let profileTop:CGFloat = SystemEnvironment.isTablet ? 22 : 38
+    static let profileTop:CGFloat = SystemEnvironment.isTablet ? 56 : 38
 }
 
 struct KidsMyItem:PageView  {
@@ -80,7 +80,7 @@ struct KidsMyItem:PageView  {
         .onTapGesture {
             let status = self.pairing.status
             if status != .pairing {
-                self.appSceneObserver.alert = .needPairing()
+                self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsMy))
                 return
             }
             if self.pairing.kids.isEmpty {

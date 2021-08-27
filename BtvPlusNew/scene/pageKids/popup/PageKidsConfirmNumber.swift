@@ -8,7 +8,7 @@ import Foundation
 import SwiftUI
 
 enum PageKidsConfirmType:String {
-    case exit, deleteKid
+    case exit, exitSetup, deleteKid
 }
 struct PageKidsConfirmNumber: PageView {
     @EnvironmentObject var repository:Repository
@@ -48,7 +48,7 @@ struct PageKidsConfirmNumber: PageView {
                     return
                 }
                 switch self.type {
-                case .exit, .deleteKid : self.confirmPassword(input)
+                case .exit, .deleteKid , .exitSetup : self.confirmPassword(input)
                 }
             }
             .modifier(MatchParent())
@@ -126,7 +126,10 @@ struct PageKidsConfirmNumber: PageView {
                     self.pwType = .adult
                     self.title = String.alert.kidsExit
                     self.text = String.alert.kidsExitText
-                    
+                case .exitSetup:
+                    self.pwType = .adult
+                    self.title = String.alert.KidsExitSetup
+                    self.text = String.alert.KidsExitSetupText
                 case .deleteKid:
                     self.pwType = .adult
                     self.title = String.alert.kidsDelete

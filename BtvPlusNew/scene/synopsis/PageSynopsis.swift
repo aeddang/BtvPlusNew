@@ -177,7 +177,7 @@ struct PageSynopsis: PageView {
                             isBookmark: self.$isBookmark,
                             seris: self.$seris
                         )
-                        .modifier(PageFull(style:.kidsLight))
+                        .modifier(PageFullScreen(style:.kidsLight))
                     }
                 }//PageDragingBody
                 .onReceive(self.playerModel.$btvPlayerEvent){evt in
@@ -233,6 +233,7 @@ struct PageSynopsis: PageView {
                     case .purchase : self.purchase()
                     case .watchBtv : self.watchBtv()
                     }
+                    self.onEvent(componentEvent: evt)
                 }
             }//PageDataProviderContent
             
@@ -549,12 +550,17 @@ struct PageSynopsis: PageView {
             guard let model = self.synopsisModel else {return}
           
             if self.isPairing == true {
-                if self.episodeViewerData?.isAdult == true && !SystemEnvironment.isAdultAuth{
-                    self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.adultCertification)
-                            .addParam(key: .data, value:self.pageObject)
-                    )
-                    self.pagePresenter.closePopup(self.pageObject?.id)
+                if self.episodeViewerData?.isAdult == true && !SystemEnvironment.isAdultAuth, let currentPage = self.pageObject{
+                    let redirectPage = PageProvider
+                        .getPageObject(currentPage.pageID)
+                        .addParam(key: .data, value: currentPage.getParamValue(key:.data))
+                        .addParam(key: .watchLv, value: 19)
+                    self.onLayerPlayerDisappear()
+                    self.pagePresenter.closePopup(currentPage.id)
+                    DispatchQueue.main.async {
+                        self.pagePresenter.openPopup(redirectPage)
+                    }
+                   
                     return
                 }
                 if model.synopsisType == .seriesChange , let prevDirectView = self.prevDirectView {
@@ -570,21 +576,7 @@ struct PageSynopsis: PageView {
                     return
                 }
                 self.pageDataProviderModel.requestProgressSkip()
-                /*
-                if model.hasExamPreview{
-                    self.synopsisPlayType = .preplay()
-                    self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.epsdRsluId,  true )))
-                }
-                else if model.hasPreview{
-                    self.synopsisPlayType = .preview(0)
-                    let item = model.previews[0]
-                    self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(item.epsd_rslu_id,  false )))
-                } else {
-                    PageLog.d("no preview", tag: self.tag)
-                    self.errorProgress()
-                }
-                self.progressCompleted = true
-                */
+                
             }
             
         case Self.getPlay :
@@ -928,6 +920,7 @@ struct PageSynopsis: PageView {
                 .setData(synopsisPrerollData: prerollData)
                 .setData(synopsisPlayData: self.playerData)
                 .setData(data: dataInfo, type: .vod(self.epsdRsluId,self.title))
+            self.playerModel.continuousProgress = self.synopsisData?.progress
         }
     }
     
@@ -986,6 +979,7 @@ struct PageSynopsis: PageView {
         
         let relationDatas = self.relationContentsModel.getRelationContentSets(idx: relationContentsIdx, row: self.relationRow)
         self.relationDatas = relationDatas
+        self.contentsListTabLog(idx: idx)
     }
     
     private func updateRelationTabButtons(idx:Int){
@@ -1125,6 +1119,7 @@ struct PageSynopsis: PageView {
     
     func watchBtv(){
         guard let isPurchased = self.synopsisModel?.isPurchased else { return }
+        /*
         if !isPurchased {
             guard  let model = self.purchaseWebviewModel else { return }
             self.appSceneObserver.alert = .needPurchase(model, String.alert.purchaseContinueBtv)
@@ -1137,6 +1132,13 @@ struct PageSynopsis: PageView {
             self.pageDataProviderModel.request = .init(id : SingleRequestType.watchBtv.rawValue, type: .sendMessage( msg))
             self.playerModel.event = .pause
         }
+        */
+        let msg:NpsMessage = NpsMessage().setPlayVodMessage(
+            contentId: self.epsdRsluId ,
+            playTime: self.playerModel.time)
+        
+        self.pageDataProviderModel.request = .init(id : SingleRequestType.watchBtv.rawValue, type: .sendMessage( msg))
+        self.playerModel.event = .pause
     }
     
     func watchBtvCompleted(isSuccess:Bool){

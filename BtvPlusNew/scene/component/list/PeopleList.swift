@@ -81,11 +81,13 @@ extension PeopleList{
     static let height = ListItem.people.size.height
         + (Dimen.margin.micro + Dimen.margin.thin)
         + Font.size.lightExtra + Font.size.thinExtra + Dimen.margin.micro
+        + Dimen.margin.lightExtra
 }
 
 
 struct PeopleList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[PeopleData]
     var useTracking:Bool = false
@@ -107,6 +109,10 @@ struct PeopleList: PageComponent{
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.person)
                             .addParam(key: .data, value: data)
+                    )
+                    self.naviLogManager.contentsLog(
+                        action: .clickContentsProductionActor,
+                        actionBody:.init(target:(data.name ?? "") + "|" + (data.descriptionRole ?? ""))
                     )
                 }
             }
@@ -158,6 +164,7 @@ struct PeopleItem: PageView {
                     ))
                     .frame(width: ListItem.people.size.width)
                     .lineLimit(1)
+                   
                     
             }
         }

@@ -187,6 +187,9 @@ enum ApiType{
          recivePush(String, messageId:String),
          confirmPush(String, messageId:String)
 
+    //PUSH
+    case registEndpoint(String, isAgree:Bool),
+         updatePushUserAgreement(Bool)
     
     func coreDataKey() -> String? {
         switch self {

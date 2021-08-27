@@ -21,6 +21,7 @@ struct PageSetup: PageView {
     
     @State var sceneOrientation: SceneOrientation = .portrait
     @State var pairingType:PairingDeviceType = .btv
+    
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -69,12 +70,10 @@ struct PageSetup: PageView {
                                         selectedWatchLv: self.$selectedWatchLv)
                                     
                                     
-                                    if self.pairingType == .btv {
-                                        SetupChildren(
-                                            isInitate:self.isInitate, isPairing: self.isPairing)
-                                        SetupPossession(
-                                            isInitate:self.isInitate)
-                                        SetupHappySenior()
+                                    if self.pairingType == .btv && !self.isPairing{
+                                        //SetupChildren(isInitate:self.isInitate, isPairing: self.isPairing)
+                                        SetupPossession(isInitate:self.isInitate)
+                                        //SetupHappySenior()
                                     }
                                    
                                 }
@@ -110,12 +109,10 @@ struct PageSetup: PageView {
                                     selectedWatchLv: self.$selectedWatchLv)
                                 
                                 
-                                if self.pairingType == .btv {
-                                    SetupChildren(
-                                        isInitate:self.isInitate, isPairing: self.isPairing)
-                                    SetupPossession(
-                                        isInitate:self.isInitate)
-                                    SetupHappySenior()
+                                if self.pairingType == .btv && !self.isPairing {
+                                    // SetupChildren(isInitate:self.isInitate, isPairing: self.isPairing)
+                                    SetupPossession(isInitate:self.isInitate)
+                                    //SetupHappySenior()
                                 }
                                 SetupGuideNVersion()
                                 //#if DEBUG

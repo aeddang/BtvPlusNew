@@ -27,7 +27,7 @@ struct PlayerMoreBox: PageView{
                 .resizable()
                 .aspectRatio(contentMode: .fill)
             
-            VStack(spacing:Dimen.margin.lightExtra){
+            VStack(spacing:self.isFullScreen ? Dimen.margin.regularExtra : Dimen.margin.light){
                 Button(action: {
                     self.viewModel.isLock = true
                     self.hideBox()
@@ -47,7 +47,6 @@ struct PlayerMoreBox: PageView{
                 }
                 
                 Button(action: {
-                    
                     self.hideBox()
                     
                 }) {
@@ -68,7 +67,7 @@ struct PlayerMoreBox: PageView{
                     }
                 }
             }
-            
+            .padding(.top, Dimen.margin.tiny)
         }
         .frame(
             width: self.isFullScreen

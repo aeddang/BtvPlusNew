@@ -41,7 +41,7 @@ struct KidProfile: PageComponent{
                 Button(action: {
                     let status = self.pairing.status
                     if status != .pairing {
-                        self.appSceneObserver.alert = .needPairing()
+                        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsMy))
                         return
                     }
                     if self.pairing.kids.isEmpty {

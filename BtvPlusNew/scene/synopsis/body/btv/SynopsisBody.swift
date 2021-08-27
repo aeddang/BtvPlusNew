@@ -70,16 +70,23 @@ struct SynopsisBody: PageComponent{
                         .modifier(ContentHorizontalEdges())
                         .modifier(ListRowInset(spacing: SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.lightExtra))
                     if self.funtionLayout == .horizontal {
-                        HStack(alignment:.top , spacing:0){
-                            EpisodeViewer(data:episodeViewerData)
-                            //Spacer()
-                            FunctionViewer(
-                                componentViewModel: self.componentViewModel,
-                                synopsisData :self.synopsisData,
-                                isBookmark: self.$isBookmark,
-                                isLike: self.$isLike,
-                                isRecommand: self.isRecommand
-                            )
+                        ZStack(alignment:.top ){
+                            HStack(spacing:0){
+                                EpisodeViewer(data:episodeViewerData)
+                                Spacer()
+                            }
+                            HStack(spacing:0){
+                                Spacer()
+                                FunctionViewer(
+                                    componentViewModel: self.componentViewModel,
+                                    synopsisData :self.synopsisData,
+                                    funtionLayout:self.funtionLayout,
+                                    isBookmark: self.$isBookmark,
+                                    isLike: self.$isLike,
+                                    isRecommand: self.isRecommand
+                                )
+                            }
+                            .padding(.top, self.isRecommand == true ? -RecommandTip.height : 0)
                         }
                         .modifier(ListRowInset(spacing: SynopsisBody.spacing))
                     } else {
@@ -89,6 +96,7 @@ struct SynopsisBody: PageComponent{
                             FunctionViewer(
                                 componentViewModel: self.componentViewModel,
                                 synopsisData :self.synopsisData,
+                                funtionLayout:self.funtionLayout,
                                 isBookmark: self.$isBookmark,
                                 isLike: self.$isLike,
                                 isRecommand: self.isRecommand

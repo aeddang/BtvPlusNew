@@ -32,17 +32,18 @@ struct PageMy: PageView {
                         isSetting: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    InfinityScrollView(
-                        viewModel: self.infinityScrollModel,
-                        marginBottom:self.marginBottom,
-                        isRecycle:false,
-                        useTracking: false
-                        ){
-                        if self.isPairing {
+                    if self.isPairing {
+                        InfinityScrollView(
+                            viewModel: self.infinityScrollModel,
+                            marginBottom:self.marginBottom,
+                            isRecycle:false,
+                            useTracking: false
+                            ){
                             PairingView(
                                 pageObservable:self.pageObservable,
                                 pageDragingModel: self.pageDragingModel,
-                                watchedScrollModel:self.watchedScrollModel
+                                watchedScrollModel:self.watchedScrollModel,
+                                geometry: geometry
                             )
                             .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
                                 guard let evt = evt else {return}
@@ -56,14 +57,13 @@ struct PageMy: PageView {
                                 default: break
                                 }
                             }
-                            
-                        }else {
-                            DisconnectView(
-                                pageObservable:self.pageObservable
-                            )
                         }
+                    } else {
+                        DisconnectView(
+                            pageObservable:self.pageObservable
+                        )
+                        .padding(.bottom, self.marginBottom)
                     }
-                   
                 }
                 .modifier(PageFull())
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
@@ -73,7 +73,9 @@ struct PageMy: PageView {
                 self.isPairing = ( status == .pairing )
             }
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
-                withAnimation{ self.marginBottom = bottom }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    withAnimation{ self.marginBottom = bottom }
+                }
             }
             .onAppear{
                

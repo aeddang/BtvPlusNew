@@ -69,6 +69,7 @@ extension String{
         public static let pairingSetupUserText2 = "pairingSetupUserText2".loaalized()
         public static let pairingSetupUserText2Tablet = "pairingSetupUserText2Tablet".loaalized()
         public static let pairingSetupCharacterSelect = "pairingSetupCharacterSelect".loaalized()
+        public static let pairingSetupCharacterSelectSub = "pairingSetupCharacterSelectSub".loaalized()
         public static let pairingSetupUserAgreementAll = "pairingSetupUserAgreementAll".loaalized()
         public static let pairingSetupUserAgreement1 = "pairingSetupUserAgreement1".loaalized()
         public static let pairingSetupUserAgreement2 = "pairingSetupUserAgreement2".loaalized()
@@ -192,6 +193,7 @@ extension String{
         public static let myTicketInfo = "myTicketInfo".loaalized()
         public static let myAlramInfo = "myAlramInfo".loaalized()
         public static let myAlramEmpty = "myAlramEmpty".loaalized()
+        public static let myAlramEmptyPushOn = "myAlramEmptyPushOn".loaalized()
         public static let myAlramEmptyTip = "myAlramEmptyTip".loaalized()
         
         public static let myModifyNickname = "myModifyNickname".loaalized()
@@ -283,7 +285,7 @@ extension String{
         public static let synopsisNoRelationVod = "synopsisNoRelationVod".loaalized()
         public static let synopsisPackageContent = "synopsisPackageContent".loaalized()
         public static let synopsisUnavailableSeriesMessage = "synopsisUnavailableSeriesMessage".loaalized()
-        
+        public static let synopsisAward = "synopsisAward".loaalized()
         public static let authTitle = "authTitle".loaalized()
         public static let authText = "authText".loaalized()
         public static let authTextMic = "authTextMic".loaalized()

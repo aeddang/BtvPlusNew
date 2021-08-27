@@ -158,6 +158,7 @@ class Repository:ObservableObject, PageProtocol{
                 self.storage.clearDevice()
                 self.resetSystemEnvironment()
                 self.dataProvider.requestData(q: .init(type: .getGnb))
+                self.pushManager.updateUserAgreement(false)
                 //NotificationCoreData().removeAllNotice()
                 
             case .pairingCompleted :
@@ -167,7 +168,7 @@ class Repository:ObservableObject, PageProtocol{
                 DataLog.d("UPDATEED GNBDATA getGnb", tag:self.tag)
                 self.dataProvider.requestData(q: .init(type: .getGnb))
                 self.appSceneObserver?.event = .toast(String.alert.pairingCompleted)
-                
+                self.pushManager.updateUserAgreement(self.pairing.user?.isAgree3 ?? false)
                 
             case .syncError :
                 self.appSceneObserver?.alert = .pairingRecovery
@@ -246,7 +247,6 @@ class Repository:ObservableObject, PageProtocol{
         SystemEnvironment.isFirstMemberAuth = self.userSetup.isFirstMemberAuth
         
         self.pushManager.retryRegisterPushToken()
-        
     }
     
     private func requestApi(_ apiQ:ApiQ, coreDatakey:String){
@@ -358,6 +358,7 @@ class Repository:ObservableObject, PageProtocol{
     
     func updatePush(_ isAgree:Bool) {
         self.pairing.updateUserAgreement(isAgree)
+        self.pushManager.updateUserAgreement(isAgree)
     }
     
     func updateAdultAuth(able:Bool){

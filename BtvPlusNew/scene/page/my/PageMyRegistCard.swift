@@ -69,7 +69,7 @@ struct PageMyRegistCard: PageView {
                                    spacing:Self.spacing) {
                                 VStack(alignment:.leading, spacing:Self.titleSpacing){
                                     Text(String.app.cardno)
-                                        .modifier(MediumTextStyle(size: Font.size.light))
+                                        .modifier(BoldTextStyle(size: Font.size.light))
                                     InputNumberGroupBox(
                                         isInit:true,
                                         focusIdx: self.$cardNoFocus,
@@ -89,7 +89,7 @@ struct PageMyRegistCard: PageView {
                                 if self.useEdit.firstIndex(of: .pw) != nil {
                                     VStack(alignment:.leading, spacing:0){
                                         Text(String.app.password)
-                                            .modifier(MediumTextStyle(size: Font.size.light))
+                                            .modifier(BoldTextStyle(size: Font.size.light))
                                         Text(String.pageText.myRegistCardPasswordTip)
                                             .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
                                             .multilineTextAlignment(.leading)
@@ -117,7 +117,7 @@ struct PageMyRegistCard: PageView {
                                 if self.useEdit.firstIndex(of: .foreigner) != nil {
                                     VStack(alignment:.leading, spacing:Self.titleSpacing){
                                         Text(String.app.local + "/" + String.app.foreigner)
-                                            .modifier(MediumTextStyle(size: Font.size.light))
+                                            .modifier(BoldTextStyle(size: Font.size.light))
                                     
                                         HStack(spacing:Dimen.margin.thin){
                                             RadioButton(
@@ -142,7 +142,7 @@ struct PageMyRegistCard: PageView {
                                 if self.useEdit.firstIndex(of: .gender) != nil {
                                     VStack(alignment:.leading, spacing:Self.titleSpacing){
                                         Text(String.app.gender)
-                                            .modifier(MediumTextStyle(size: Font.size.light))
+                                            .modifier(BoldTextStyle(size: Font.size.light))
                                          
                                         HStack(spacing:Dimen.margin.thin){
                                             RadioButton(
@@ -167,12 +167,14 @@ struct PageMyRegistCard: PageView {
                                 if self.useEdit.firstIndex(of: .birth) != nil {
                                     VStack(alignment:.leading, spacing:Self.titleSpacing){
                                         Text(String.app.birthDay)
-                                            .modifier(MediumTextStyle(size: Font.size.light))
+                                            .modifier(BoldTextStyle(size: Font.size.light))
                                            
                                         SortButton(
                                             text: self.birth,
                                             isFocus: self.editType == .birth,
-                                            isFill:false)
+                                            isFill:true,
+                                            strokeColor: Color.app.blueLight
+                                            )
                                         {
                                             self.doBirthSelect()
                                         }

@@ -131,7 +131,7 @@ struct DimenKids{
     struct item {
         
         static let profileRegist:CGSize =  isPad ? CGSize(width: 150, height: 150) : CGSize(width: 78, height:  78)//*
-        static let profileGnb:CGSize =  isPad ? CGSize(width: 57, height:  57) : CGSize(width: 37, height:  37)//*
+        static let profileGnb:CGSize =  isPad ? CGSize(width: 42, height:  42) : CGSize(width: 37, height:  37)//*
         static let profile:CGSize =  isPad ? CGSize(width: 58, height:  58) : CGSize(width: 30, height:  30)//*
         static let profileList:CGSize =  isPad ? CGSize(width: 259, height:  326) : CGSize(width: 160, height:  201)//*
         

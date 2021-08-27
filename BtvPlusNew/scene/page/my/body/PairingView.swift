@@ -17,7 +17,7 @@ struct PairingView: PageComponent{
     var pageObservable:PageObservable = PageObservable()
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var watchedScrollModel: InfinityScrollModel = InfinityScrollModel()
-    
+    var geometry:GeometryProxy
     @State var safeAreaBottom:CGFloat = 0
     @State var character:String = Asset.characterList[0]
     @State var nick:String = ""
@@ -135,6 +135,7 @@ struct PairingView: PageComponent{
                 if SystemEnvironment.isTablet {
                     VideoSetBlock(
                         pageObservable: self.pageObservable,
+                        geometry:self.geometry,
                         data: data,
                         limitedLine : 2
                         )
@@ -280,7 +281,10 @@ struct PairingView: PageComponent{
         guard let resData = res.data as? Watch else { return }
         let blocks:[WatchItem] = resData.watchList ?? [] 
         //if blocks.isEmpty { return }
-        let videos = blocks.map{ d in VideoData().setData(data: d) }
+        var videos = blocks.map{ d in VideoData().setData(data: d) }.filter{$0.isContinueWatch}
+        if SystemEnvironment.isTablet && videos.count > 6 {
+            videos = videos[ 0...6 ].map{$0}
+        }
         let blockData = BlockData()
             .setData(title: String.pageTitle.watched, cardType:.watchedVideo, dataType:.watched, uiType:.video, isCountView: true)
         blockData.videos = videos
@@ -319,9 +323,11 @@ struct PairingView: PageComponent{
 struct PairingBlock_Previews: PreviewProvider {
     
     static var previews: some View {
+        GeometryReader { geometry in
         Form{
             PairingView(
-            )
+                geometry:geometry
+            ) 
             .environmentObject(Repository())
             .environmentObject(PagePresenter())
             .environmentObject(PageSceneObserver())
@@ -329,6 +335,7 @@ struct PairingBlock_Previews: PreviewProvider {
             .environmentObject(DataProvider())
             .frame(width:320,height:600)
             .background(Color.brand.bg)
+        }
         }
     }
 }

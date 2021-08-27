@@ -154,14 +154,17 @@ struct Tag: PageView {
         VStack(alignment: .leading, spacing: 0){
             HStack(alignment: .top, spacing: 0){
                 if let rank = data.rank {
-                    Text(rank.description)
-                        .modifier(BoldTextStyle(size: Font.size.tiny))
-                        .frame(width:Dimen.icon.thinExtra, height: Dimen.icon.lightExtra)
-                        .background(
-                            Image(Asset.icon.itemRangking)
-                                .renderingMode(.original)
-                                .resizable()
-                        )
+                    ZStack{
+                        Text(rank.description)
+                            .modifier(BoldTextStyle(size: Font.size.thinExtra))
+                    }
+                    .padding(.bottom, Dimen.margin.micro)
+                    .frame(width:Dimen.icon.thinExtra, height: Dimen.icon.lightExtra)
+                    .background(
+                        Image(Asset.icon.itemRangking)
+                            .renderingMode(.original)
+                            .resizable()
+                    )
                 }
                 if let icon = data.badgeIcon {
                     Image(icon)
@@ -199,19 +202,20 @@ struct Tag: PageView {
             HStack(alignment: .bottom, spacing: 0){
                 if data.isFree == true {
                     Text(String.app.free)
-                        .modifier(BoldTextStyle(size: self.isBig ? Font.size.thinExtra : Font.size.tiny, color:Color.brand.primary))
+                        .modifier(BoldTextStyle(size: self.isBig ? Font.size.thin : Font.size.tiny, color:Color.brand.primary))
                         .lineLimit(1)
                         .fixedSize()
+                        .padding(.bottom, -1)
                 }else if let price = data.price {
                     Text(price)
-                        .modifier(BoldTextStyle(size:  self.isBig ? Font.size.thinExtra : Font.size.tiny, color:Color.app.whiteDeep))
+                        .modifier(BoldTextStyle(size:  self.isBig ? Font.size.thin : Font.size.tiny, color:Color.app.greyLight))
                         .lineLimit(1)
                         .fixedSize()
+                        .padding(.bottom, -1)
                 }
                 Spacer()
                 
                 if let icon = data.ppmIcon {
-                    
                     KFImage(URL(string: icon))
                         .resizable()
                         .cancelOnDisappear(true)
@@ -222,11 +226,8 @@ struct Tag: PageView {
                     
                 }
             }
-            .padding(.all, self.isBig ? Dimen.margin.thinExtra : Dimen.margin.tiny)
-            .background(
-                LinearGradient(gradient: Gradient(colors: [Color.transparent.clear, Color.transparent.black70]), startPoint: .top, endPoint: .bottom)
-                
-            )
+            .padding(.vertical, self.isBig ? Dimen.margin.tinyUltra : Dimen.margin.tinyExtra)
+            .padding(.horizontal, self.isBig ? Dimen.margin.thinExtra : Dimen.margin.tiny)
             .onReceive(self.repository.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {

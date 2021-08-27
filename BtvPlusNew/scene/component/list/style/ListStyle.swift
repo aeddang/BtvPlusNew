@@ -43,7 +43,7 @@ struct ListItem{
     }
     
     struct character {
-        static let size:CGSize = isPad ? CGSize(width: 90, height: 90) : CGSize(width: 62, height: 62)
+        static let size:CGSize = isPad ? CGSize(width: 90, height: 90) : CGSize(width: 70, height: 70)
     }
     
     struct people {
@@ -68,7 +68,8 @@ struct ListItem{
     }
     
     struct cate {
-        static let size:CGSize = isPad ? CGSize(width: 88, height: 88) :  CGSize(width: 62, height: 62)
+        static let size:CGSize = isPad ? CGSize(width: 88, height: 88) :  CGSize(width: 68, height: 68)
+        static let width:CGFloat  = isPad ? 100 : 80
     }
     
     struct play {

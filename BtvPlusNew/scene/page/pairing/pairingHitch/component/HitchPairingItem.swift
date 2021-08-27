@@ -42,7 +42,7 @@ struct HitchPairingItem: PageView {
     var type:PairingType
     var isSelected:Bool
     var body: some View {
-        VStack(alignment:.center , spacing:0){
+        VStack(alignment:.center , spacing:Dimen.margin.micro){
             Image(self.type.icon)
                 .renderingMode(.original)
                 .resizable()
@@ -51,13 +51,13 @@ struct HitchPairingItem: PageView {
                     height: SystemEnvironment.isTablet ? Dimen.icon.regular : Dimen.icon.medium)
             Text(self.type.text)
                 .modifier(MediumTextStyle(
-                            size: SystemEnvironment.isTablet ? Font.size.tinyExtra : Font.size.thinExtra,
+                            size: SystemEnvironment.isTablet ? Font.size.microUltra : Font.size.thinExtra,
                             color: Color.app.blackExtra))
                 .lineLimit(1)
-                .padding(.top, SystemEnvironment.isTablet ? Dimen.margin.tinyExtra : Dimen.margin.tiny)
+                .padding(.top, SystemEnvironment.isTablet ? Dimen.margin.microUltra : Dimen.margin.tiny)
             Text(self.type.subText)
                 .modifier(BoldTextStyle(
-                             size: SystemEnvironment.isTablet ? Font.size.tinyExtra : Font.size.thinExtra,
+                             size: SystemEnvironment.isTablet ? Font.size.microUltra : Font.size.thinExtra,
                              color: Color.app.blackExtra))
                 .lineLimit(1)
         }

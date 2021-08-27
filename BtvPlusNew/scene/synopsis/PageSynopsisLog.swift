@@ -42,7 +42,6 @@ extension PageSynopsis {
     }
     
     func onEvent(prerollEvent:PrerollEvent){
-        
         switch prerollEvent {
         case .moveAd :
             self.naviLog(pageID: .play, action: .clickAdButton, category: "광고정보더보기")
@@ -50,7 +49,6 @@ extension PageSynopsis {
             self.naviLog(pageID: .play, action: .clickAdButton, category: "광고건너뛰기")
         default: break
         }
-        
     }
     
     func onEvent(event:PlayerUIEvent){
@@ -78,6 +76,10 @@ extension PageSynopsis {
         case .loaded:
             self.playLog(isPlay: true)
             self.playNaviLog(action: .clickVodPlay, watchType: .watchStart)
+            self.naviLogManager.contentsLog(
+                action: .clickContentsPreviewWatching,
+                actionBody:.init(category:self.synopsisPlayType.logSynopCategory)
+            )
         //case .buffer:
             //self.log(type: .buffering)
         case .stoped:
@@ -92,13 +94,20 @@ extension PageSynopsis {
         }
     }
     
+    func onEvent(componentEvent:PageSynopsis.ComponentEvent){
+        switch componentEvent {
+        case .watchBtv:
+            self.naviLogManager.contentsLog(action: .clickContentsWatchBtv)
+        case .purchase:
+            self.naviLogManager.contentsLog(action: .clickContentsOrder)
+        default: break
+        }
+    }
+
     func onStatus(playerStatus:PlayerStatus){
-        
     }
     
     func onStatus(streamStatus:PlayerStreamStatus){
-       
-
     }
     
     func bindWatchingData(){
@@ -125,6 +134,7 @@ extension PageSynopsis {
         self.playStartTime = isPlay ? AppUtil.networkTime() : nil
     }
     
+    //page log
     func prohibitionSimultaneousLog(reason:VlsNetwork.ProhibitionReason){
         var actionBody = MenuNaviActionBodyItem()
         actionBody.menu_id = synopsisModel?.menuId
@@ -135,7 +145,21 @@ extension PageSynopsis {
             actionBody: actionBody
         )
     }
+    
+    //page log
+    func contentsListTabLog(idx:Int){
+        if self.relationContentsModel.relationTabs.count <= idx {return}
+        let tab = self.relationContentsModel.relationTabs[idx]
+        if tab == String.pageText.synopsisSiris {
+            self.naviLogManager.contentsLog(action: .clickContentsOrder, actionBody:.init(config:"sequence"))
+        } else if tab.contains("비슷한") {
+            self.naviLogManager.contentsLog(action: .clickContentsOrder, actionBody:.init(config:"similar_contents"))
+        } else {
+            self.naviLogManager.contentsLog(action: .clickContentsOrder, actionBody:.init(config:"relevance_contents"))
+        }
+    }
    
+    //player watch log
     func log(type:LgsNetwork.PlayEventType){
         
        // self.appSceneObserver.event = .toast(type.rawValue)
@@ -179,7 +203,8 @@ extension PageSynopsis {
         
     }
     
-    func naviLog(pageID:NaviLog.PageId? = nil , action:NaviLog.Action,
+    //player log
+    func naviLog(action:NaviLog.Action,
                  watchType:NaviLog.watchType? = nil,
                  config:String? = nil
                  ){
@@ -188,6 +213,7 @@ extension PageSynopsis {
         self.naviLog(action: action, watchType: watchType, config: config, category: category, result: nil)
     }
     
+    //player log
     func naviLog(pageID:NaviLog.PageId? = nil , action:NaviLog.Action,
                  watchType:NaviLog.watchType? = nil,
                  config:String? = nil,

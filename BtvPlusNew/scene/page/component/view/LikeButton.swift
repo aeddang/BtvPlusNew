@@ -26,6 +26,7 @@ enum LikeStatus :String {
 struct LikeButton: PageView {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pairing:Pairing
     var srisId:String
     @Binding var isLike:LikeStatus?

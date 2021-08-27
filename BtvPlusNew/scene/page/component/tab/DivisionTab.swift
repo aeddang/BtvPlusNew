@@ -18,15 +18,18 @@ struct DivisionTab : PageComponent {
     var divisionMargin:CGFloat = 0
     var radius:CGFloat = Dimen.radius.light
     var height:CGFloat = Dimen.tab.regularExtra
+    var strokeColor:Color = Color.app.blueLight
+    var bgActiveColor:Color =  Color.app.blueLight
     var bgColor:Color = Color.transparent.clear
-    var useSelectedEffect:Bool = true
+  
+    
     var body: some View {
         HStack(spacing:0){
             ForEach(self.buttons) { btn in
                 self.createButton(btn)
                 if btn.idx != (self.buttons.count - 1) {
                     Spacer().modifier(MatchVertical(width: 1))
-                        .background(Color.app.blueLightExtra)
+                        .background(self.strokeColor)
                         .padding(.vertical , self.divisionMargin)
                 }
             }
@@ -35,9 +38,9 @@ struct DivisionTab : PageComponent {
         .background(self.bgColor)
         .clipShape( RoundedRectangle(cornerRadius: self.radius))
         .overlay(
-            RoundedRectangle(cornerRadius: self.radius).strokeBorder( Color.app.blueLightExtra ,lineWidth: self.strokeWidth)
+            RoundedRectangle(cornerRadius: self.radius).strokeBorder( self.strokeColor ,lineWidth: self.strokeWidth)
         )
-        
+       
     }//body
     
     func createButton(_ btn:NavigationButton) -> some View {
@@ -45,13 +48,11 @@ struct DivisionTab : PageComponent {
             action: { self.performAction(btn.id, index: btn.idx)}
         ){ btn.body }
         .modifier(MatchParent())
-        .background( btn.id == self.viewModel.selected ? Color.app.blueLightExtra : Color.transparent.clearUi)
         .buttonStyle(BorderlessButtonStyle())
         
     }
     
     func performAction(_ btnID:String, index:Int){
-        if self.useSelectedEffect { self.viewModel.selected = btnID }
         self.viewModel.index = index
     }
     

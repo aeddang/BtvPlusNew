@@ -30,6 +30,7 @@ struct FillButton: View, SelecterbleProtocol{
     var moreSize:CGFloat = Dimen.icon.regular
     var bgColor:Color = Color.brand.primary
     var strokeWidth:CGFloat = 0
+    var strokeColor:Color = Color.app.greyExtra
     var margin:CGFloat = Dimen.margin.regular
     var isNew: Bool = false
     var count: Int? = nil
@@ -159,9 +160,10 @@ struct FillButton: View, SelecterbleProtocol{
             activeColor: Color.app.white
         )
         self.strokeWidth = strokeWidth ?? 1
+        self.strokeColor = Color.app.white.opacity(0.3)
         self.bgColor = Color.transparent.clearUi
         self.action = action
-        self.size = Dimen.button.regularExtra
+        self.size = Dimen.button.regular
     }
     
     var body: some View {
@@ -259,7 +261,7 @@ struct FillButton: View, SelecterbleProtocol{
             .modifier( MatchHorizontal(height: self.size) )
             .background(self.bgColor )
             .overlay(
-                Rectangle().stroke( Color.app.greyExtra ,lineWidth: self.strokeWidth )
+                Rectangle().stroke( self.strokeColor ,lineWidth: self.strokeWidth )
             )
         }
         

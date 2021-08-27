@@ -12,6 +12,7 @@ import SwiftUI
 struct RelationVodBodyKids: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var componentViewModel:PageSynopsis.ComponentViewModel
     var infinityScrollModel: InfinityScrollModel
     var relationContentsModel:RelationContentsModel
@@ -47,6 +48,10 @@ struct RelationVodBodyKids: PageComponent{
                         isSelected: self.epsdId == data.contentID )
                         .id(data.index)
                         .onTapGesture {
+                            if data.hasLog {
+                                self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog)
+                            }
+                            
                             if data.isQuiz {
                                 self.pagePresenter.openPopup(
                                     PageKidsProvider.getPageObject(.kidsExam)

@@ -155,9 +155,11 @@ struct RelationVodHeader: PageComponent{
 
 struct RelationVodListBody: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var relationContentsModel:RelationContentsModel
     var componentViewModel:PageSynopsis.ComponentViewModel
     var infinityScrollModel: InfinityScrollModel? = nil
+    
     @Binding var seris:[SerisData]
    
     var relationDatas:[PosterDataSet]
@@ -173,6 +175,9 @@ struct RelationVodListBody: PageComponent{
                     relationContentsModel: self.relationContentsModel,
                     data:data.setListType(self.serisType) )
                     .onTapGesture {
+                        if data.hasLog {
+                            self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog)
+                        }
                         self.componentViewModel.uiEvent = .changeVod(data.epsdId)
                     }
                     .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))

@@ -286,8 +286,8 @@ struct PageKidsMultiBlock: PageView {
         var actionBody = MenuNaviActionBodyItem()
         actionBody.menu_id = cdata.menu_id
         actionBody.menu_name = cdata.menu_nm
-        actionBody.category = EuxpNetwork.AsisPrdType.getType(cdata.asis_prd_typ_cd).logCategory
-        self.naviLogManager.actionLog(.pageShow, actionBody: actionBody)
+        //actionBody.category = EuxpNetwork.AsisPrdType.getType(cdata.asis_prd_typ_cd).logCategory
+        self.naviLogManager.actionLog(.clickTabMenuButton, actionBody: actionBody)
     }
     
     private func setupRecommandGuide(data:BlockItem){

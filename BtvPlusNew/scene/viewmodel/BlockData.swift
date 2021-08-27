@@ -390,7 +390,7 @@ class BlockData:InfinityData, ObservableObject{
         status = .passive
     }
     
-    func setDatabindingCompleted(total:Int? = nil, parentTitle:String? = nil, modifyTitle:String? = nil){
+    func setDatabindingCompleted(total:Int? = nil, parentTitle:String? = nil, modifyTitle:String? = nil, idx:Int = -1){
         if self.status != .initate { return }
         if isCountView, let count = total {
             self.subName = count.description
@@ -403,6 +403,40 @@ class BlockData:InfinityData, ObservableObject{
         if let modifyTitle = modifyTitle { self.name = modifyTitle }
         self.parentTitle = parentTitle
         self.status = .active
+        
+        let isRace = self.cwCallId?.contains("RACE") ?? false
+        if self.posters?.first?.pageType == .kids, let datas = self.posters {
+            let count = datas.count
+            var action = MenuNaviActionBodyItem(
+                menu_id: self.menuId,
+                menu_name: self.name,
+                config: parentTitle,
+                target: isRace ? "Y" : "N"
+            )
+            zip(0...count, datas).forEach{idx, data in
+                data.actionLogKids = action
+                action.position = idx.description + "@" + count.description
+                action.category = ""
+                action.result = data.synopsisType.logResult
+            }
+        }
+        
+        if self.videos?.first?.pageType == .kids, let datas = self.posters {
+            let count = datas.count
+            var action = MenuNaviActionBodyItem(
+                menu_id: self.menuId,
+                menu_name: self.name,
+                config: parentTitle,
+                target: isRace ? "Y" : "N"
+            )
+            zip(0...count, datas).forEach{idx, data in
+                data.actionLogKids = action
+                action.position = idx.description + "@" + count.description
+                action.category = ""
+                action.result = data.synopsisType.logResult
+            }
+        }
+        
     }
     
     func setError(_ err:ApiResultError?){
@@ -489,7 +523,7 @@ class BlockData:InfinityData, ObservableObject{
         actionBody.menu_id = self.cwCallId ?? self.menuId
         actionBody.config = self.parentTitle?.replace(" ", with: "")
         actionBody.search_keyword = self.keyword
-        //actionBody.target = self.parentTitle == nil ? "N" : "Y"
+        actionBody.target = (self.cwCallId?.contains("RACE") ?? false) ? "Y" : "N"
         return actionBody
     }
     

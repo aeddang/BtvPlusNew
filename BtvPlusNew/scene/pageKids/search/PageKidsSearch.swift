@@ -107,10 +107,11 @@ struct PageKidsSearch: PageView {
                             self.search(keyword: text)
                         },
                         inputVoice: {
-                            self.sendLog(action: .clickSearchVoiceInput) 
+                            self.sendLog(action: .clickVoiceTextButton, actionBody: .init(search_keyword: keyword))
                             self.voiceSearch()
                         },
                         search: { keyword in
+                            self.sendLog(action: .clickTextSearchButton, actionBody: .init(search_keyword: keyword))
                             self.search(keyword: keyword)
                         },
                         goBack: {

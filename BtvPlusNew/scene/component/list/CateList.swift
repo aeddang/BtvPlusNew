@@ -125,6 +125,7 @@ struct CateDataSet:Identifiable {
 
 struct CateSet: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var data:CateDataSet
     var body: some View {
         HStack(spacing: 0){
@@ -135,8 +136,15 @@ struct CateSet: PageComponent{
                 CateItem( data:data )
                 .frame(width: ListItem.cate.width)
                 .onTapGesture {
+                    self.naviLogManager.actionLog(.clickCategoryMenu,
+                                                  actionBody: .init(
+                                                    menu_id: data.menuId,
+                                                    menu_name: data.title,
+                                                    result: data.isAdult ? "Y" : "N"))
+                    
                     switch data.subType {
-                    case .kids : 
+                    case .kids :
+                        
                         self.pagePresenter.changePage(PageKidsProvider.getPageObject(.kidsIntro))
                     case .prevList :
                         self.pagePresenter.openPopup(

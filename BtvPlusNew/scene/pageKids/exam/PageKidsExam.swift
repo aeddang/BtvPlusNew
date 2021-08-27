@@ -15,7 +15,7 @@ struct PageKidsExam: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
-    
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var viewModel:KidsExamModel = KidsExamModel(type: .solve)
     @ObservedObject var soundBoxModel:SoundBoxModel = SoundBoxModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -69,6 +69,7 @@ struct PageKidsExam: PageView {
                             String.kidsText.kidsExamCloseConfirmTip
                             ){ isOk in
                             if isOk {
+                                self.naviLogManager.actionLog(.clickExitButton)
                                 self.pagePresenter.closePopup(self.pageObject?.id)
                             }
                         }

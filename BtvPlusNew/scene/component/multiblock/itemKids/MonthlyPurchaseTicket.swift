@@ -11,6 +11,7 @@ struct MonthlyPurchaseTicket:PageComponent {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
    
     var data:MonthlyData
     var body :some View {
@@ -43,10 +44,13 @@ struct MonthlyPurchaseTicket:PageComponent {
                         self.appSceneObserver.alert = .needPairing()
                         return
                     }
+                    self.naviLogManager.actionLog(.clickSubscriptionButton, actionBody: .init(config:self.data.title))
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.purchase)
                             .addParam(key: .data, value: self.data)
                     )
+                    
+                       
                     
                 }
                 .buttonStyle(BorderlessButtonStyle())

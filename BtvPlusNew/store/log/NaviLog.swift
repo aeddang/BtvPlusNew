@@ -22,7 +22,7 @@ struct NaviLog {
         case autoPairing = "/autopairing" // 자동연결페어링
         
         case searchResult = "/search/result"                      // 검색결과
-        case zemSearchResult = "/category/zemkids/search_result" // ZEM 키즈|검색결과
+        case zemSearchResult = "/category/zemkids/search" // ZEM 키즈|검색결과
         case remoteconStatus = "/remotecon/status"          // 리모컨 세부상태
         
         case purchaseOrderCompleted = "/purchase/order_completed"   // 상품구매완료
@@ -122,8 +122,16 @@ struct NaviLog {
         case .kidsMy: return "/category/zemkids/mypage"
         case .kidsMyDiagnostic: return "/category/zemkids/mypage/level_test_report"
         case .kidsProfileManagement: return "/category/zemkids/mypage/profile"
-        case .kidsEnglishLvTestSelect: return nil
-        case .kidsExam: return "/category/zemkids/mypage/level_test"
+        case .kidsEnglishLvTestSelect: return "/category/zemkids/mypage/level_test"
+        case .kidsExam:
+            /*
+            if let type = page.getParamValue(key: .type) as? DiagnosticReportType {
+                switch  type {
+                case .english, .creativeObservation, .infantDevelopment : return "/category/zemkids/mypage/level_test"
+                default: return nil
+                }
+            }*/
+            return nil
         case .kidsExamViewer: return nil
         case .kidsMyMonthly: return "/category/zemkids/mypage/monthly_report"
         case .selectKidCharacter: return nil

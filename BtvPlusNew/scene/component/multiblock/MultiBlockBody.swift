@@ -25,11 +25,7 @@ class MultiBlockModel: PageDataProviderModel {
 
     init(requestSize:Int? = nil, pageType:PageType = .btv) {
         self.type = pageType
-        if #available(iOS 14.0, *)  {
-            self.requestSize = requestSize ?? 12
-        } else {
-            self.requestSize = requestSize ?? 12
-        }
+        self.requestSize = requestSize ?? 12
     }
     
     func reload() {
@@ -126,6 +122,7 @@ struct MultiBlockBody: PageComponent {
     @State var headerOffset:CGFloat = 0
     @State var needAdult:Bool = false
     @State var isHorizontal:Bool = false
+   
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,

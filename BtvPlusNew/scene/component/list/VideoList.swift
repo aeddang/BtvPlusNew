@@ -31,11 +31,9 @@ class VideoData:InfinityData{
     private(set) var pageType:PageType = .btv
     private(set) var actionLog:MenuNaviActionBodyItem? = nil
     private(set) var contentLog:MenuNaviContentsBodyItem? = nil
-    var hasLog:Bool {
-        get{
-            return actionLog != nil || contentLog != nil
-        }
-    }
+    var actionLogKids:MenuNaviActionBodyItem? = nil
+    var hasLog:Bool { get{ return actionLog != nil || contentLog != nil } }
+    var hasLogKids:Bool { get{ return actionLogKids != nil }}
     
     var fullTitle:String? {
         get{
@@ -373,7 +371,9 @@ struct VideoList: PageComponent{
     }//body
     
     func onTap(data:VideoData)  {
-        if data.hasLog {
+        if data.hasLogKids {
+            self.naviLogManager.actionLog(.clickContentsButton, actionBody: data.actionLog, contentBody: data.contentLog)
+        }else if data.hasLog {
             self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog)
         }
         if let action = self.action {
@@ -439,7 +439,9 @@ struct VideoSet: PageComponent{
                 ForEach(self.cellDatas) { data in
                     VideoItem( data:data )
                     .onTapGesture {
-                        if data.hasLog {
+                        if data.hasLogKids {
+                            self.naviLogManager.actionLog(.clickContentsButton, actionBody: data.actionLog, contentBody: data.contentLog)
+                        }else if data.hasLog {
                             self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog)
                         }
                         guard let synopsisData = data.synopsisData else { return }

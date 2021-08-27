@@ -224,6 +224,10 @@ struct PageSynopsis: PageView {
                     if idx == self.selectedRelationTabIdx { return }
                     self.selectedRelationContent(idx:idx)
                 }
+                .onReceive(self.pairing.$event){evt in
+                    guard let evt = evt else { return }
+                    self.onEvent(pairingEvent: evt)
+                }
                 .onReceive(self.componentViewModel.$uiEvent){evt in
                     guard let evt = evt else { return }
                     switch evt {

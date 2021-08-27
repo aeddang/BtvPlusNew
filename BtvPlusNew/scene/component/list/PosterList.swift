@@ -28,12 +28,10 @@ class PosterData:InfinityData{
     private(set) var useTag:Bool = true
     private(set) var actionLog:MenuNaviActionBodyItem? = nil
     private(set) var contentLog:MenuNaviContentsBodyItem? = nil
+    var actionLogKids:MenuNaviActionBodyItem? = nil
+    var hasLog:Bool { get{ return actionLog != nil || contentLog != nil } }
+    var hasLogKids:Bool { get{ return actionLogKids != nil }}
     
-    var hasLog:Bool {
-        get{
-            return actionLog != nil || contentLog != nil
-        }
-    }
     init(pageType:PageType = .btv, useTag:Bool = true) {
         self.pageType = pageType
         self.useTag = useTag
@@ -455,7 +453,9 @@ struct PosterList: PageComponent{
     }
     
     func onTap(data:PosterData)  {
-        if data.hasLog {
+        if data.hasLogKids {
+            self.naviLogManager.actionLog(.clickContentsButton, actionBody: data.actionLog, contentBody: data.contentLog)
+        }else if data.hasLog {
             self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog)
         }
         
@@ -565,7 +565,9 @@ struct PosterSet: PageComponent{
                 ForEach(self.cellDatas) { data in
                     PosterItem( data:data )
                     .onTapGesture {
-                        if data.hasLog {
+                        if data.hasLogKids {
+                            self.naviLogManager.actionLog(.clickContentsButton, actionBody: data.actionLog, contentBody: data.contentLog)
+                        }else if data.hasLog {
                             self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog)
                         }
                         if let action = self.action {

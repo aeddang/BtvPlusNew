@@ -46,7 +46,11 @@ struct PageKidsHome: PageView {
                     
             )
             .modifier(PageFullScreen(style:.kids))
-            
+            .onReceive(self.pagePresenter.$currentTopPage){ topPage in
+                if self.pagePresenter.currentTopPage?.pageID != self.pageID {return}
+                if !self.isUiInit { return }
+                self.pairing.requestPairing(.updateKids)
+            }
             .onReceive(self.dataProvider.bands.$event){ evt in
                 guard let evt = evt else { return }
                 switch evt {
@@ -71,9 +75,18 @@ struct PageKidsHome: PageView {
                 guard let evt = evt else {return}
                 switch evt {
                 case .pairingCompleted : self.pairing.requestPairing(.updateKids)
+                case .notFoundKid :
+                    if self.pagePresenter.currentTopPage?.pageID != self.pageID {return}
+                    self.appSceneObserver.alert = .confirm(nil, String.alert.kidsProfileNotfound ,nil) { isOk in
+                        if isOk {
+                            if self.pagePresenter.currentTopPage?.pageID == .kidsProfileManagement { return }
+                            self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
+                        }
+                    }
                 default : break
                 }
             }
+           
             .onReceive(self.infinityScrollModel.$event){evt in
                 guard let evt = evt else {return}
                 if self.pagePresenter.currentTopPage?.pageID == .kidsHome {

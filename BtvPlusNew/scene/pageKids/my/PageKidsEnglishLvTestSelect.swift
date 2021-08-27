@@ -14,7 +14,7 @@ struct PageKidsEnglishLvTestSelect: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
-    
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
    
@@ -114,6 +114,7 @@ struct PageKidsEnglishLvTestSelect: PageView {
     }
     
     private func movePage(data:EnglishLvTestData){
+        self.naviLogManager.actionLog(.clickTestLevelOption, actionBody: .init(category:data.type.logCategory))
         self.pagePresenter.openPopup(
             PageKidsProvider.getPageObject(.kidsExam)
                 .addParam(key: .type, value: DiagnosticReportType.english)
@@ -142,6 +143,17 @@ enum EnglishLvType{
             case .level1_2 : return "1"
             case .level3_4: return "2"
             case .level5_6 : return "3"
+            case .unowned(let cd) : return cd ?? ""
+            }
+        }
+    }
+    
+    var logCategory:String {
+        get {
+            switch self {
+            case .level1_2 : return "level1-2"
+            case .level3_4: return "level3-4"
+            case .level5_6 : return "level5-6"
             case .unowned(let cd) : return cd ?? ""
             }
         }

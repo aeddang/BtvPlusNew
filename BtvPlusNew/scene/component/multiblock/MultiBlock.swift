@@ -158,7 +158,7 @@ struct MultiBlock:PageComponent {
                 }
                 
                 if !self.datas.isEmpty {
-                    if self.viewModel.type == .btv {
+                    //if self.viewModel.type == .btv {
                         if let headerBlock = self.getHeaderBlock() {
                             headerBlock
                             if headerCount < self.datas.count {
@@ -181,6 +181,7 @@ struct MultiBlock:PageComponent {
                                     .modifier(ListRowInset(spacing: Dimen.margin.regular))
                             }
                         }
+                    /*
                     } else {
                         ForEach( self.datas) { data in
                             MultiBlockCell(
@@ -195,7 +196,7 @@ struct MultiBlock:PageComponent {
                                     }
                                 }
                         }
-                    }
+                    }*/
                 }
             }
             

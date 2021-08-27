@@ -69,7 +69,13 @@ struct PageCategory: PageView {
         .onReceive(self.navigationModel.$index) { idx in
             guard let datas = self.tabDatas else { return }
             if idx < 0 || idx >= datas.count { return }
-            self.openPopup(data: datas[idx])
+            let data = datas[idx]
+            self.naviLogManager.actionLog(.clickCategoryMenu,
+                                          actionBody: .init(
+                                            menu_id: data.menuId,
+                                            menu_name: data.title,
+                                            result:  "N"))
+            self.openPopup(data: data)
             
         }
         .onReceive(self.viewModel.$event ){ evt in
@@ -219,7 +225,7 @@ struct PageCategory: PageView {
             )
             
         case .event :
-            self.sendLog()
+            
             self.pagePresenter.openPopup(
                 PageProvider
                     .getPageObject(.webview)
@@ -260,10 +266,7 @@ struct PageCategory: PageView {
         }
     }
     
-    private func sendLog() {
-        let actionBody = MenuNaviActionBodyItem( category: "")
-        self.naviLogManager.actionLog(.pageShow, pageId: .event,  actionBody: actionBody)
-    }
+   
 }
 
 

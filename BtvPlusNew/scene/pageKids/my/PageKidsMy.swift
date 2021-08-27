@@ -98,6 +98,7 @@ struct PageKidsMy: PageView {
                 case .notFoundKid :
                     self.appSceneObserver.alert = .confirm(nil, String.alert.kidsProfileNotfound ,nil) { isOk in
                         if isOk {
+                            if self.pagePresenter.currentTopPage?.pageID == .kidsProfileManagement { return }
                             self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
                         }
                     }

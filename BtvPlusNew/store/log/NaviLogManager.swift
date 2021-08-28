@@ -281,7 +281,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
             return nil
         }
         var item = MenuNaviItem()
-        item.log_type = SystemEnvironment.isReleaseMode ? "live": "dev"
+        item.log_type = SystemEnvironment.isStage ? "dev" : "live"
         item.poc_type = "mobile_app"
         item.page_id = logPageId
         item.action_id = action?.rawValue ?? ""

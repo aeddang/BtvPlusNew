@@ -96,7 +96,7 @@ struct PageSceneModel: PageModel {
     static func needPairing(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
         case .kidsExam: return true
-        case .cashCharge, .synopsisPlayer: return true
+        case .cashCharge, .synopsisPlayer, .snsShare: return true
         default : return false
         }
     }

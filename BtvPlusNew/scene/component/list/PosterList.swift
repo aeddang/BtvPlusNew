@@ -16,6 +16,7 @@ class PosterData:InfinityData{
     private(set) var progress:Float? = nil
     private(set) var epsdId:String? = nil
     private(set) var prsId:String? = nil
+    private(set) var prodId:String? = nil
     private(set) var tagData: TagData? = nil
     private(set) var isAdult:Bool = false
     private(set) var watchLv:Int = 0
@@ -104,12 +105,13 @@ class PosterData:InfinityData{
         setCardType(cardType)
         title = data.title
         epsdId = data.epsd_id
+        prodId = data.prod_id
         isAdult = data.adult?.toBool() ?? false
         watchLv = data.level?.toInt() ?? 0
         tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         if let rt = data.watch_rt?.toInt() {
             self.progress = Float(rt) / 100.0
-            self.isContinueWatch = rt > 1
+            self.isContinueWatch = MetvNetwork.isWatchCardRateIn(data: data)
         }
         originImage = data.thumbnail
         image = ImagePath.thumbImagePath(filePath: data.thumbnail, size: type.size, isAdult: self.isAdult)

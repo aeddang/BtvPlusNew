@@ -16,6 +16,8 @@ struct SimplePlayer: PageComponent{
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var networkObserver:NetworkObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
     @ObservedObject var prerollModel: PrerollModel = PrerollModel()
@@ -81,6 +83,7 @@ struct SimplePlayer: PageComponent{
                         self.isPrerollPause = true
                         self.isPreroll = false
                         self.viewModel.isPrerollPlay = false
+                        self.viewModel.btvPlayerEvent = .stopAd
                         withAnimation{ self.isWaiting = true }
                     }else{
                         self.recoveryTime = self.viewModel.time
@@ -94,7 +97,6 @@ struct SimplePlayer: PageComponent{
                 self.viewModel.currentQuality = quality
             }
             .onReceive(self.viewModel.$currentQuality){ quality in
-
                 if self.isPreroll {
                     self.isPreroll = false
                     self.viewModel.isPrerollPlay = false
@@ -134,7 +136,7 @@ struct SimplePlayer: PageComponent{
                 switch evt {
                 //case .start : self.viewModel.event = .pause
                 case .finish, .skipAd : self.initPlay()
-                default : do{}
+                default : break
                 }
             }
             .onAppear(){
@@ -158,6 +160,9 @@ struct SimplePlayer: PageComponent{
     @State var isFullScreen:Bool = false
     
     func initPlayer(){
+        if self.setup.dataAlram && self.networkObserver.status == .cellular {
+            self.appSceneObserver.event = .toast(String.alert.dataNetwork)
+        }
         ComponentLog.d("initPlayer", tag: self.tag)
         withAnimation{ self.isWaiting = false }
         if self.viewModel.checkPreroll {

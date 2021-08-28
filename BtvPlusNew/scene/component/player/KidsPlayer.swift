@@ -14,6 +14,8 @@ struct KidsPlayer: PageComponent{
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var networkObserver:NetworkObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
     @ObservedObject var prerollModel: PrerollModel = PrerollModel()
@@ -161,12 +163,13 @@ struct KidsPlayer: PageComponent{
                         self.isPrerollPause = true
                         self.isPreroll = false
                         self.viewModel.isPrerollPlay = false
-                        withAnimation{ self.isWaiting = true }
                         self.viewModel.btvPlayerEvent = .stopAd
+                        withAnimation{ self.isWaiting = true }
+                        
                     }else{
                         self.recoveryTime = self.viewModel.time
                     }
-                default : do{}
+                default :  break
                 }
             }
             .onReceive(self.viewModel.$selectQuality){ quality in
@@ -187,7 +190,6 @@ struct KidsPlayer: PageComponent{
                 let autoPlay = self.viewModel.initPlay ?? self.setup.autoPlay
                 self.viewModel.continuousTime = self.viewModel.time
                 ComponentLog.d("autoPlay " + autoPlay.description, tag: self.tag)
-               
                 if autoPlay {
                     DispatchQueue.main.asyncAfter(deadline: .now()+0.05){
                         self.initPlayer()
@@ -253,6 +255,9 @@ struct KidsPlayer: PageComponent{
     }//body
     
     func initPlayer(){
+        if self.setup.dataAlram && self.networkObserver.status == .cellular {
+            self.appSceneObserver.event = .toast(String.alert.dataNetwork)
+        }
         ComponentLog.d("initPlayer", tag: self.tag)
         withAnimation{ self.isWaiting = false }
         if self.viewModel.checkPreroll {

@@ -117,7 +117,9 @@ class MonthlyData:InfinityData,ObservableObject{
         self.isSelected = false
         self.isSubJoin = false
         self.isJoin = false
+        self.sortIdx = 0
         self.isUpdated = true
+        
     }
     func setSelected(_ isSelected:Bool) {
         self.isSelected = isSelected

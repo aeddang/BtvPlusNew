@@ -147,14 +147,14 @@ struct LoopSwipperView : View , PageProtocol, Swipper {
                             self.index = idx
                             self.viewModel.index = idx
                         case .prev:
-                            let willIdx = self.index == 0 ? self.pages.count : self.index - 1
+                            let willIdx = self.index == 0 ? self.pages.count-1 : self.index-1
                             self.offset = CGFloat(willIdx) * -geometry.size.width
                             self.viewModel.status = .move
                             self.viewModel.request = .drag(self.offset)
                             self.isUserSwiping = true
                             self.reset(idx: willIdx)
                         case .next:
-                            let willIdx = self.index >= self.pages.count ? 0 : self.index + 1
+                            let willIdx = self.index >= self.pages.count ? 0 : self.index+1
                             self.offset = CGFloat(willIdx) * -geometry.size.width
                             self.viewModel.status = .move
                             self.viewModel.request = .drag(self.offset)

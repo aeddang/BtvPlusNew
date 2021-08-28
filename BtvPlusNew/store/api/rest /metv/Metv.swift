@@ -33,6 +33,24 @@ extension MetvNetwork{
             }
         }
     }
+    
+    static func isWatchCardRateIn(data:WatchItem) -> Bool {
+        /* [러닝 타임별 기준]
+            •    러닝 타임 5분 미만 : 러닝 타임의 15% 이상 시청 시 시청 내역 표시
+            •    러닝 타임 5-30분 미만 : 러닝 타임의 10% 이상 시청 시 시청 내역 표시
+            •    러닝 타임 30분 이상 : 러닝 타임의 5% 이상 시청 시 시청 내역 표시
+               [장르별 기준]
+            •    단편 : 90% 이상 시청 시에는 시청 내역에서 제외
+            •    시즌 : 공통 기준만 고려하며, 100% 시청 시에도 시청 내역에서 제외하지 않음 */
+        let watch: Int = Int(data.watch_rt ?? "0") ?? 0
+        let runTime: Int = (Int(data.running_time ?? "0") ?? 0) / 60
+        let runningTimeCheck: Bool = (runTime < 5 && watch >= 15) ||
+                ((5...29).contains(runTime) && watch >= 10) ||
+                (runTime >= 30 && watch >= 5)
+        let genreCheck: Bool = ("N" == data.yn_series && watch < 90) || "Y" == data.yn_series
+
+        return runningTimeCheck && genreCheck
+    }
 }
 
 class Metv: Rest{
@@ -213,7 +231,7 @@ class Metv: Rest{
         params["stb_id"] = stbId
        // params["mobile_id"] = SystemEnvironment.getGuestDeviceId()
         params["page_no"] = page?.description ?? "1"
-        params["entry_no"] = pageCnt?.description ?? MetvNetwork.PAGE_COUNT.description
+        params["entry_no"] = pageCnt?.description ?? "9999"
         params["hash_id"] = ApiUtil.getHashId(stbId)
         params["svc_code"] = MetvNetwork.SVC_CODE
         params["yn_ppm"] = isPpm ? "Y" : "N"

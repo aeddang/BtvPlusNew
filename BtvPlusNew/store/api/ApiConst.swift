@@ -12,10 +12,11 @@ import UIKit
 
 struct ApiPath {
     static func getRestApiPath(_ server:ApiServer) -> String {
-        if SystemEnvironment.isReleaseMode {
+        if SystemEnvironment.isReleaseMode == true {
             if server == .VMS {
                 return SystemEnvironment.VMS
             }
+            
             if server == .WEB {
                 return SystemEnvironment.WEB
             }
@@ -45,9 +46,9 @@ struct ApiGateway{
         var authorizationRequest = request
         authorizationRequest.addValue(
             "application/json", forHTTPHeaderField: "Accept")
-        if SystemEnvironment.isReleaseMode {
+        if let isReleaseMode = SystemEnvironment.isReleaseMode  { 
             authorizationRequest.addValue(
-                Self.API_KEY, forHTTPHeaderField: "Api_Key")
+                isReleaseMode ? Self.API_KEY : Self.DEBUG_API_KEY, forHTTPHeaderField: "Api_Key")
         }else{
             #if DEBUG
             authorizationRequest.addValue(
@@ -77,9 +78,9 @@ struct ApiGateway{
             ApiPrefix.service+"/"+SystemEnvironment.bundleVersion , forHTTPHeaderField: "x-service-info")
         authorizationRequest.addValue(
             ApiPrefix.device + SystemEnvironment.getGuestDeviceId() , forHTTPHeaderField: "x-did-info")
-        
         return authorizationRequest
     }
+    
 }
 
 struct ApiPrefix {

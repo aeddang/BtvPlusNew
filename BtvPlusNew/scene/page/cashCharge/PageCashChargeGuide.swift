@@ -85,7 +85,7 @@ struct PageCashChargeGuide: PageView {
                             return
                         }
                         self.pagePresenter.closePopup(self.pageObject?.id)
-                        self.repository.storage.isFirstCashCharge = false
+                        self.repository.userSetup.isFirstCashCharge = false
                         self.pagePresenter.openPopup(
                             PageProvider
                                 .getPageObject(.cashCharge)

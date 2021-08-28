@@ -65,7 +65,6 @@ struct PageKidsHome: PageView {
                         self.pairing.requestPairing(.updateKidStudy)
                     }
                 }
-                
                 if !self.isUiInit { return }
                 DispatchQueue.main.async {
                     self.reload()

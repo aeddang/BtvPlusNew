@@ -17,7 +17,7 @@ class WatchedData:InfinityData{
     private(set) var isAdult:Bool = false
     private(set) var isLock:Bool = false
     private(set) var subTitle: String? = nil
- 
+    private(set) var isContinueWatch:Bool = false
     private(set) var progress:Float? = nil
     private(set) var synopsisData:SynopsisData? = nil
 
@@ -55,6 +55,7 @@ class WatchedData:InfinityData{
         if let rt = data.watch_rt?.toInt() {
             self.progress = Float(rt) / 100.0
             self.subTitle = rt.description + "% " + String.app.watch
+            self.isContinueWatch = MetvNetwork.isWatchCardRateIn(data: data)
         }
         watchLv = data.level?.toInt() ?? 0
         isAdult = data.adult?.toBool() ?? false
@@ -73,7 +74,8 @@ class WatchedData:InfinityData{
         srisId = data.sris_id
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
-            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id,
+            prdPrcId: "",  kidZone:nil, progress:self.progress)
         
         return self.setNaviLog(data: data)
     }

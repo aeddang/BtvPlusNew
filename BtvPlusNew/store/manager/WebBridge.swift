@@ -9,16 +9,65 @@
 import Foundation
 import Combine
 
+enum WebviewMethod:String {
+    case getSTBInfo, getNetworkState, getLogInfo, stopLoading
+    case requestVoiceSearch, requestSTBViewInfo
+    case externalBrowser
+    case bpn_showSynopsis,
+         bpn_backWebView, bpn_closeWebView, bpn_showModalWebView,
+         bpn_setShowModalWebViewResult,bpn_setIdentityVerfResult, bpn_setPurchaseResult,
+         bpn_setKidsMode,
+         bpn_showTopBar,bpn_changeTopBar,bpn_hideTopBar,bpn_setTopBarTitle,
+         bpn_requestGnbBlockData,bpn_requestMoveWebByCallUrl,
+         bpn_setPassAge, bpn_requestPassAge,bpn_showMyBtv,
+         bpn_requestHlsTokenInfo,bpn_setMute,bpn_requestMuteState,
+         bpn_setMoveListener,bpn_setBackListener,
+         bpn_requestFocus,bpn_showComingSoon,bpn_showMyPairing,bpn_familyInvite
+}
+enum WebviewRespond:String {
+    case responseVoiceSearch, responseSTBViewInfo
+}
+
+struct DeepLinkItem{
+    var path:String? = nil
+    var querys:[URLQueryItem]? = nil
+    
+    var funcName:String? = nil
+    var query:String? = nil
+    var jsonParam:String?  = nil
+    var cbName:String?  = nil
+    
+    var dic:[String: Any]? = nil
+    var value:String? = nil
+
+    var isForceRetry:Bool = false
+    var isCallFuncion:Bool = false
+}
+
+
 class WebBridge :PageProtocol{
     private let pairing:Pairing
     private let storage:LocalStorage
     private let setup:Setup
     private let networkObserver:NetworkObserver
+    private let pagePresenter:PagePresenter?
+    private let dataProvider:DataProvider
+    private let appSceneObserver:AppSceneObserver?
     
-    init(pairing:Pairing,storage:LocalStorage, setup:Setup, networkObserver:NetworkObserver) {
+    init(pagePresenter:PagePresenter?,
+         dataProvider: DataProvider,
+         appSceneObserver:AppSceneObserver?,
+         pairing:Pairing,
+         storage:LocalStorage,
+         setup:Setup,
+         networkObserver:NetworkObserver) {
+        
         self.pairing = pairing
         self.storage = storage
         self.setup = setup
+        self.pagePresenter = pagePresenter
+        self.dataProvider = dataProvider
+        self.appSceneObserver = appSceneObserver
         self.networkObserver = networkObserver
     }
     func getNetworkState()->[String: Any] {
@@ -56,12 +105,12 @@ class WebBridge :PageProtocol{
         }
         info["isAdultAuth"] = setup.isAdultAuth       // 성인인증 ON/OFF
         info["isPurchaseAuth"] = setup.isPurchaseAuth   // 구매인증 ON/OFF
-        info["isMemberAuth"] = true//setting.isFirstAdultAuth   // 최초 본인 인증 여부
-        info["restrictedAge"] = setup.isAdultAuth ? (storage.restrictedAge ?? 0) : 0
+        info["isMemberAuth"] = setup.isFirstMemberAuth   // 최초 본인 인증 여부
+        info["restrictedAge"] = setup.isAdultAuth ? (setup.restrictedAge ?? 0) : 0 
         info["RCUAgentVersion"] = AppUtil.getSafeString(RCUAgentVersion, defaultValue: "0.0.0")
         info["userAgent"] = ScsNetwork.getUserAgentParameter()
-        info["isShowRemoconSelectPopup"] = setup.isShowRemoconSelectPopup
-        info["isShowAutoRemocon"] = setup.isShowAutoRemocon
+        info["isShowRemoconSelectPopup"] = setup.autoRemocon
+        info["isShowAutoRemocon"] = setup.autoRemocon
         
         info["marketingInfo"] = pairing.user?.isAgree3 == true ? 1 : 0
         info["pushInfo"] = pairing.user?.isAgree1 == true ? 1 : 0
@@ -154,5 +203,236 @@ class WebBridge :PageProtocol{
         return info
     }
     
-    
+    func parseUrl(_ url:String?) -> DeepLinkItem?{
+        if (url?.hasPrefix("btvplus://"))! {
+            if let urlStr = url {
+                if let components = URLComponents(string: urlStr) {
+                    if let path = components.host {
+                        let param = components.queryItems
+                        ComponentLog.d("path " + path, tag: self.tag)
+                        ComponentLog.d("param " + (param?.debugDescription ?? ""), tag: self.tag)
+                        self.callPage(path, param: param)
+                        return DeepLinkItem(path: path, querys: param)
+                    }
+                }
+            }
+            return DeepLinkItem()
+        }
+        if (url?.hasPrefix("btvplusapp://"))! {
+            var deepLinkItem = DeepLinkItem()
+            var funcName:String? = nil
+            var query:String? = nil
+            var jsonParam:String?  = nil
+            var cbName:String?  = nil
+            if let path = url?.replace("btvplusapp://", with: "") {
+                let paths = path.components(separatedBy: "?")
+                if paths.count > 0  { funcName = paths[0] }
+                if paths.count > 1  { query = paths[1] }
+                if (query?.count ?? 0) > 0 {
+                    for pair in query!.components(separatedBy: "&") {
+                        let key = pair.components(separatedBy: "=")[0]
+                        let value = pair
+                            .components(separatedBy:"=")[1]
+                            .replacingOccurrences(of: "+", with: " ")
+                            .removingPercentEncoding ?? ""
+                        switch key {
+                        case "jsonParam": jsonParam = value
+                        case "cbName": cbName = value
+                        default:break
+                        }
+                    }
+                }
+                if let fn = funcName {
+                    ComponentLog.d("funcName " + fn, tag: self.tag)
+                    ComponentLog.d("query " + (query ?? ""), tag: self.tag)
+                    ComponentLog.d("jsonParam " + (jsonParam ?? ""), tag: self.tag)
+                    ComponentLog.d("cbName " + (cbName ?? ""), tag: self.tag)
+                    var dic:[String: Any]? = nil
+                    var value:String? = nil
+                    
+                    switch fn {
+                    case WebviewMethod.getNetworkState.rawValue :
+                        dic = self.getNetworkState()
+                    case WebviewMethod.getSTBInfo.rawValue :
+                        dic = self.getSTBInfo()
+                    case WebviewMethod.getLogInfo.rawValue :
+                        dic = self.getLogInfo()
+                    case WebviewMethod.bpn_requestPassAge.rawValue :
+                        value = self.getPassAge()
+                        
+                    case WebviewMethod.bpn_showSynopsis.rawValue :
+                        if let jsonString = jsonParam {
+                            let jsonData = jsonString.data(using: .utf8)!
+                            do {
+                                let data = try JSONDecoder().decode(SynopsisJson.self, from: jsonData)
+                                let type = SynopsisType(value: data.synopType)
+                                self.pagePresenter?.openPopup(
+                                    PageProvider.getPageObject(type == .package ? .synopsisPackage : .synopsis)
+                                        .addParam(key: .data, value: data)
+                                )
+                            } catch {
+                                ComponentLog.e("json parse error", tag:"WebviewMethod.bpn_showSynopsis")
+                            }
+                        }
+                    case WebviewMethod.bpn_showModalWebView.rawValue :
+                        if let jsonString = jsonParam {
+                            let jsonData = jsonString.data(using: .utf8)!
+                            do {
+                                let data = try JSONDecoder().decode(WebviewJson.self, from: jsonData)
+                                self.pagePresenter?.openPopup(
+                                    PageProvider
+                                        .getPageObject(.webview)
+                                        .addParam(key: .data, value: data.url)
+                                        .addParam(key: .title , value: data.title)
+                                )
+                            } catch {
+                                ComponentLog.e("json parse error", tag:"WebviewMethod.bpn_showModalWebView")
+                            }
+                        }
+                    case WebviewMethod.externalBrowser.rawValue :
+                        if let jsonString = jsonParam {
+                            let jsonData = AppUtil.getJsonParam(jsonString: jsonString)
+                            if let url = jsonData?["url"] as? String {
+                                AppUtil.openURL(url)
+                            }
+                        }
+                    
+                    case WebviewMethod.stopLoading.rawValue :
+                        deepLinkItem.isForceRetry = true
+                        //self.forceRetry(webView: webView)
+                    default :
+                        deepLinkItem.isCallFuncion = true
+                        //self.parent.viewModel.event = .callFuncion(fn, jsonParam, cbName )
+                    }
+                    deepLinkItem.dic = dic
+                    deepLinkItem.value = value
+                    
+                }
+            }
+            deepLinkItem.funcName = funcName
+            deepLinkItem.query = query
+            deepLinkItem.jsonParam = jsonParam
+            deepLinkItem.cbName = cbName
+            return deepLinkItem
+        }
+        
+        return nil
+    }
+   
+    func callPage(_ path:String, param:[URLQueryItem]? = nil) {
+        
+        switch path {
+        case "synopsis":
+            let id = param?.first(where: {$0.name == "id"})?.value
+            let contentId = param?.first(where: {$0.name == "contentId"})?.value
+            let cid = param?.first(where: {$0.name == "cid"})?.value
+            let type = param?.first(where: {$0.name == "type"})?.value
+            let synopsisType = SynopsisType(value:type)
+            let epsdId = synopsisType != .package ? ((id ?? contentId) ?? cid) : cid
+            let srisId = synopsisType == .package ? ((id ?? contentId) ?? cid) : nil
+            self.pagePresenter?.openPopup(
+                PageProvider.getPageObject(synopsisType == .package ? .synopsisPackage : .synopsis)
+                    .addParam(key: .data, value: SynopsisQurry(srisId: srisId, epsdId: epsdId))
+                    .addParam(key: .datas, value: param)
+            )
+        case "menu":
+            guard let menus = param?.first(where: {$0.name == "menus"})?.value else {return}
+            if menus.isEmpty {return}
+            let menuA = menus.split(separator: "/")
+            if menuA.isEmpty {return}
+            let gnbTypCd:String = String(menuA[0])
+            let menuOpenId:String? =
+                menuA.count > 1 ? menuA[1..<menuA.count].reduce("", {$0 + "|" + $1}) : nil
+            
+            let page:PageID = gnbTypCd.hasPrefix(EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue)
+                ? .category : .home
+            let band = self.dataProvider.bands.getData(gnbTypCd: gnbTypCd)
+            self.pagePresenter?.changePage(PageProvider
+                                            .getPageObject(page)
+                                            .addParam(key: .id, value: band?.menuId)
+                                            .addParam(key: .subId, value: menuOpenId)
+                                            .addParam(key: UUID().uuidString, value: "")
+            )
+            
+        case "event":
+             if let menuOpenId = param?.first(where: {$0.name == "menu_id"})?.value {
+                let band = self.dataProvider.bands.getData(gnbTypCd: EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue)
+                self.pagePresenter?.openPopup(
+                    PageProvider
+                        .getPageObject(.category)
+                        .addParam(key: .id, value: band?.menuId)
+                        .addParam(key: .subId, value: menuOpenId)
+                )
+             } else if let callUrl = param?.first(where: {$0.name == "event_url"})?.value {
+                let data = BannerData().setData(callUrl: callUrl)
+                if let move = data.move {
+                    switch move {
+                    case .home, .category:
+                        if let gnbTypCd = data.moveData?[PageParam.id] as? String {
+                            if let band = dataProvider.bands.getData(gnbTypCd: gnbTypCd) {
+                                self.pagePresenter?.changePage(
+                                    PageProvider
+                                        .getPageObject(move)
+                                        .addParam(params: data.moveData)
+                                        .addParam(key: .id, value: band.menuId)
+                                        .addParam(key: UUID().uuidString , value: "")
+                                )
+                            }
+                        }
+                        
+                    default :
+                        let pageObj = PageProvider.getPageObject(move)
+                        pageObj.params = data.moveData
+                        self.pagePresenter?.openPopup(pageObj)
+                    }
+                }
+                else if let link = data.outLink {
+                    AppUtil.openURL(link)
+                }
+                else if let link = data.inLink {
+                    self.pagePresenter?.openPopup(
+                        PageProvider
+                            .getPageObject(.webview)
+                            .addParam(key: .data, value: link)
+                            .addParam(key: .title , value: data.title)
+                    )
+                }
+             }
+            
+            
+        case "point", "coupon", "bpoint":
+            if self.pairing.status != .pairing {
+                self.appSceneObserver?.alert = .needPairing()
+                return
+            }
+            let num:String? = param?.first(where: {$0.name == "extra"})?.value
+            let menuType:PageMyBenefits.MenuType = PageMyBenefits.getType(path)
+            self.pagePresenter?.openPopup(
+                PageProvider.getPageObject(.myBenefits)
+                    .addParam(key: .id, value: menuType.rawValue)
+            )
+           
+            self.pagePresenter?.openPopup(
+                PageProvider.getPageObject(.confirmNumber)
+                    .addParam(key: .type, value: menuType)
+                    .addParam(key: .data, value: num)
+                    
+            )
+       
+        case "family_invite":
+            
+            guard let token:String = param?.first(where: {$0.name == "pairing_token"})?.value else {return}
+            let name:String? = param?.first(where: {$0.name == "nickname"})?.value
+            self.pagePresenter?.openPopup(
+                PageProvider
+                    .getPageObject(.pairingFamilyInvite)
+                    .addParam(key: .id, value: token)
+                    .addParam(key: .title , value: name)
+            )
+            
+        default: break
+        }
+        
+    }
+
 }

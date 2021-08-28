@@ -20,7 +20,9 @@ struct AgreementBody: PageComponent {
             CheckBox(
                 style:.small,
                 isChecked: self.isAgree1,
-                text:String.pairingHitch.userAgreement1,
+                isCheckAble: false,
+                text:String.pairingHitch.userAgreement1.replace("\n", with: ""),
+                alignment: .top,
                 more:{
                     self.pagePresenter.openPopup(
                         PageProvider
@@ -28,41 +30,27 @@ struct AgreementBody: PageComponent {
                             .addParam(key: .data, value: BtvWebView.serviceTerms)
                             .addParam(key: .title , value: String.pageTitle.serviceTerms)
                     )
-                },
-                action:{ ck in
-                    self.isAgree1 = ck
                 }
             )
             CheckBox(
                 style:.small,
                 isChecked: self.isAgree2,
-                text:String.pairingHitch.userAgreement2,
+                isCheckAble: false,
+                text:String.pairingHitch.userAgreement2.replace("\n", with: ""),
+                alignment: .top,
                 more:{
                     self.pagePresenter.openPopup(
                         PageProvider
                             .getPageObject(.privacyAndAgree)
                     )
-                },
-                action:{ ck in
-                    self.isAgree2 = ck
                 }
             )
-            .onReceive(self.pagePresenter.$event){ evt in
-                if evt?.id != "PagePrivacyAndAgree" {return}
-                guard let evt = evt else {return}
-                switch evt.type {
-                case .completed :
-                    self.isAgree2 = true
-                case .cancel :
-                    self.isAgree2 = false
-                default : break
-                }
-            }
             
             CheckBox(
                 style:.small,
                 isChecked: self.isAgree3,
-                text:String.pairingHitch.userAgreement3,
+                text:String.pairingHitch.userAgreement3.replace("\n", with: ""),
+                alignment: .top,
                 action:{ ck in
                     self.isAgree3 = ck
                 }

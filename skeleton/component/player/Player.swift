@@ -181,8 +181,17 @@ enum PlayerUiStatus:String {
     case view, hidden
 }
 
-enum PlayerStreamStatus {
+enum PlayerStreamStatus :Equatable{
     case buffering(Double), playing, stop
+    
+    public static func == (l:PlayerStreamStatus, r:PlayerStreamStatus)-> Bool {
+        switch (l, r) {
+        case ( .buffering, .buffering):return true
+        case ( .playing, .playing):return true
+        case ( .stop, .stop):return true
+        default: return false
+        }
+    }
 }
 
 enum PlayerError{

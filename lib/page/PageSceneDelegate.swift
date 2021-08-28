@@ -11,19 +11,19 @@ import Combine
 
 
 final class PagePresenter:ObservableObject{
-    func changePage(_ pageObject:PageObject ){
+    func changePage(_ pageObject:PageObject , isCloseAllPopup:Bool = true){
         if isBusy { return }
-        PageSceneDelegate.instance?.changePage( pageObject )
+        PageSceneDelegate.instance?.changePage( pageObject, isCloseAllPopup:isCloseAllPopup )
     }
-    func changePage(_ pageID:PageID, idx:Int = 0, params:[String:Any]? = nil){
+    func changePage(_ pageID:PageID, idx:Int = 0, params:[String:Any]? = nil, isCloseAllPopup:Bool = true){
         if isBusy { return }
         let page = PageObject(pageID: pageID, pageIDX: idx, params: params, isPopup: false)
-        PageSceneDelegate.instance?.changePage( page )
+        PageSceneDelegate.instance?.changePage( page , isCloseAllPopup:isCloseAllPopup)
     }
-    func changePage(_ pageID:PageID, params:[String:Any]? = nil, idx:Int = 0){
+    func changePage(_ pageID:PageID, params:[String:Any]? = nil, idx:Int = 0, isCloseAllPopup:Bool = true){
         if isBusy { return }
         let page = PageObject(pageID: pageID, pageIDX: idx, params: params, isPopup: false)
-        PageSceneDelegate.instance?.changePage( page )
+        PageSceneDelegate.instance?.changePage( page , isCloseAllPopup:isCloseAllPopup)
     }
     func openPopup(_ pageObject:PageObject ){
         pageObject.isPopup = true
@@ -225,7 +225,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         }
     }
 
-    final func changePage(_ newPage:PageObject, isBack:Bool = false){
+    final func changePage(_ newPage:PageObject, isBack:Bool = false, isCloseAllPopup:Bool = true){
         PageLog.d("changePage" + newPage.pageID + " " + isBack.description, tag: self.tag)
         if pageModel.currentPageObject?.pageID == newPage.pageID {
             if( pageModel.currentPageObject?.params?.keys == newPage.params?.keys){
@@ -243,7 +243,9 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
             prevContent?.pageReload()
             return
         }
-        closeAllPopup(exception: "", exceptions: self.pageModel.getCloseExceptions())
+        if isCloseAllPopup {
+            closeAllPopup(exception: "", exceptions: self.pageModel.getCloseExceptions())
+        }
         pagePresenter.isBusy = true
         var pageOffset:CGFloat = 0
         if let historyPage = prevPage {
@@ -264,7 +266,9 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         let nextContent = getPageContentBody(newPage)
         nextContent.setPageObject(newPage)
         nextContent.pageObservable.pagePosition.x = pageOffset
-        onWillChangePage(prevPage: prevPage, nextPage: newPage)
+        if self.popups.filter({!$0.isLayer}).isEmpty {
+            onWillChangePage(prevPage: prevPage, nextPage: newPage)
+        }
         contentController?.addPage(nextContent)
         if pageModel.isChangedCategory(prevPage: prevPage, nextPage: newPage) { nextContent.categoryChanged(prevPage) }
         

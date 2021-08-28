@@ -100,7 +100,7 @@ struct DisconnectView: PageComponent{
         .padding(.horizontal ,
                  (SystemEnvironment.isTablet && self.sceneOrientation == .portrait )
                     ? Dimen.margin.heavy : Dimen.margin.thin)
-        .padding(.bottom, Dimen.margin.thin )
+        
         .modifier(MatchParent())
         .background(Color.brand.bg)
         .onReceive(self.sceneObserver.$safeAreaBottom){ pos in

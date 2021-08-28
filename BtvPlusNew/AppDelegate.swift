@@ -12,6 +12,7 @@ import Firebase
 
 class AppObserver: ObservableObject, PageProtocol {
     @Published fileprivate(set) var page:IwillGo? = nil
+    @Published fileprivate(set) var deepLinkUrl:URL? = nil
     @Published fileprivate(set) var apnsToken:String? = nil
     @Published fileprivate(set) var pushToken:String? = nil
     @Published private(set) var alram:AlramData? = nil
@@ -52,6 +53,7 @@ class AppObserver: ObservableObject, PageProtocol {
     func handleUniversalLink(_ deepLink: URL?)-> Bool{
         guard let url =  deepLink else { return false }
         return DynamicLinks.dynamicLinks().handleUniversalLink(url) { (dynamiclink, error) in
+            self.deepLinkUrl = dynamiclink?.url
             if let query = dynamiclink?.url?.query{
                 PageLog.d("Deeplink dynamiclink : \(query)", tag: self.tag)
                 self.page = WhereverYouCanGo.parseIwillGo(qurryString: query)
@@ -64,6 +66,7 @@ class AppObserver: ObservableObject, PageProtocol {
     @discardableResult
     func handleDynamicLink(_ deepLink: URL?)-> Bool{
         guard let url =  deepLink else { return false }
+    
         if let dynamiclink = DynamicLinks.dynamicLinks().dynamicLink(fromCustomSchemeURL: url) {
             if let query = dynamiclink.url?.query{
                 PageLog.d("Deeplink dynamiclink : \(query)", tag: self.tag)
@@ -71,8 +74,9 @@ class AppObserver: ObservableObject, PageProtocol {
             }else{
                 PageLog.d("Deeplink dynamiclink : no query", tag: self.tag)
             }
-             return true
+            return true
         }else{
+            self.deepLinkUrl = url
             return false
         }
     }
@@ -129,7 +133,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
         PageLog.d("Deeplink start", tag: self.tag)
         return AppDelegate.appObserver.handleDynamicLink(url)
     }
-    
     
     // MARK: UISceneSession Lifecycle
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {

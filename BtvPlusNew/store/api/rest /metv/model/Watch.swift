@@ -20,6 +20,9 @@ struct Watch : Decodable {
     private(set) var watchList: Array<WatchItem>? = nil // 시청 집합의 이름
 }
 
+
+
+
 struct WatchItem : Decodable {
     private(set) var ver: String? = nil    // 인터페이스 버전
     private(set) var sris_id: String? = nil    // VOD 컨텐츠의 시즌ID
@@ -39,5 +42,5 @@ struct WatchItem : Decodable {
     private(set) var material_cd: String? = nil    // 시즌ID별 최근 시청한 컨텐츠의 소재상태코드(65:배포승인, 80:배포만료 등)
     private(set) var prod_id: String? = nil    // 시청한 상품ID (상품ID가 없는 경우, "" 로 제공, 구매한 상품ID 아님)
     private(set) var running_time: String? = nil    // 시청한 컨텐츠의 총 러닝타임(/second)
-
+    
 }

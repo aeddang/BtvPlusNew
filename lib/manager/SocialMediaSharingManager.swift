@@ -53,12 +53,12 @@ struct SocialMediaSharingManage{
         if let img = object.image { sharedObjects.append(img) }
         if let url = object.url, let txt = object.text {
             sharedObjects.append(
-                ShareActivityItemSource(url: url , icon: object.image, title: txt, isUrl: false)
+                ShareActivityItemSource(url: url , icon: object.image, title: txt, isUrl: false, linkText: url.absoluteString)
             )
         }
         if let url = object.url {
             sharedObjects.append(
-                ShareActivityItemSource(url: url, icon: object.image, title: object.text, isUrl: true)
+                ShareActivityItemSource(url: url, icon: nil, title: object.text, isUrl: true, linkText: object.text)
             )
         }
         let activityViewController = UIActivityViewController(activityItems: sharedObjects, applicationActivities: nil)
@@ -71,7 +71,6 @@ struct SocialMediaSharingManage{
                 completion?(false)
             }
         }
-           
     }
 }
 
@@ -82,12 +81,16 @@ class ShareActivityItemSource: NSObject, UIActivityItemSource {
     private let icon: UIImage?
     private let title: String
     private let isUrl: Bool
-
-    init(url: URL, icon: UIImage? = nil, title: String? = nil, isUrl: Bool = true) {
+    private let isEmpty: Bool
+    private let linkText: String?
+    
+    init(url: URL, icon: UIImage? = nil, title: String? = nil, isUrl: Bool = true, isEmpty: Bool = false, linkText: String? = nil) {
         self.url = url
         self.icon = icon
         self.title = title ?? ""
         self.isUrl = isUrl
+        self.isEmpty = isEmpty
+        self.linkText = linkText
         super.init()
     }
 
@@ -96,6 +99,8 @@ class ShareActivityItemSource: NSObject, UIActivityItemSource {
     }
 
     func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
+        if linkText != nil { return linkText }
+        if isEmpty { return nil }
         if activityType == .message {
             if isUrl {
                 return self.title + "\n" + self.url.absoluteString
@@ -111,7 +116,7 @@ class ShareActivityItemSource: NSObject, UIActivityItemSource {
             return nil
         } else {
             let metadata = LPLinkMetadata()
-            let shareIcon = icon ?? UIImage(named: Asset.appIcon) ?? UIImage()
+            let shareIcon = icon ?? UIImage(named: "AppIcon") ?? UIImage()
             metadata.iconProvider = NSItemProvider(object: shareIcon )
             metadata.title = title
             metadata.url = url

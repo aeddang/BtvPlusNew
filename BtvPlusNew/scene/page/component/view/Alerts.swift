@@ -69,6 +69,7 @@ struct EmptyAlert: PageView {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
             Text(text)
+                .kerning(Font.kern.thin)
                 .modifier(MediumTextStyle(size: Font.size.regular, color: Color.app.greyLight))
                 .multilineTextAlignment(.center)
                 .padding(.top, Dimen.margin.mediumExtra)

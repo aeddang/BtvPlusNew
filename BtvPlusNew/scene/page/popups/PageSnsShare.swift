@@ -54,6 +54,8 @@ struct PageSnsShare: PageView {
             if let type = obj.getParamValue(key: .type) as? ShareType {
                 self.type = type
             }
+            
+            
             switch type {
             case .familyInvite :
                 self.dataProvider.requestData(q: .init(type: .getPairingToken(self.pairing.stbId)))
@@ -73,7 +75,7 @@ struct PageSnsShare: PageView {
             Shareable(
                 link:link,
                 text: String.share.shareFamilyInvite,
-                useDynamiclink:false
+                useDynamiclink:true
             )
         ){ isComplete in
            

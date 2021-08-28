@@ -11,7 +11,7 @@ import SwiftUI
 import Combine
 
 enum InfinityScrollUIEvent {
-    case reload, scrollMove(Float, UnitPoint? = nil), scrollTo(Int, UnitPoint? = nil)
+    case reload, scrollMove(Int, UnitPoint? = nil), scrollTo(Int, UnitPoint? = nil)
 }
 enum InfinityScrollEvent {
     case up, down, bottom, top, pull, pullCompleted, pullCancel, ready
@@ -65,7 +65,7 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
     fileprivate(set) var appearValue:Float = 0
 
     var initIndex:Int? = nil
-    var initPos:Float? = nil
+   
     let idstr:String = UUID().uuidString
     let topIdx:Int = UUID.init().hashValue
     var size = 20
@@ -330,11 +330,6 @@ extension InfinityScrollViewProtocol {
         if let idx = self.viewModel.initIndex {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.viewModel.uiEvent = .scrollTo(idx)
-            }
-        }
-        if let pos = self.viewModel.initPos {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.viewModel.uiEvent = .scrollMove(pos)
             }
         }
         self.viewModel.event = .ready

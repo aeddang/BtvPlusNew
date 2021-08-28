@@ -18,17 +18,18 @@ class Buzz{
     static func initate(){
         if isInit {return}
         isInit = true
-        let config = BABConfig(appId: SystemEnvironment.isReleaseMode ? BAB_SDK_KR_iOS_PRD_APP_ID : BAB_SDK_KR_iOS_DEV_APP_ID)
+        let config = BABConfig(appId: SystemEnvironment.isStage ? BAB_SDK_KR_iOS_DEV_APP_ID : BAB_SDK_KR_iOS_PRD_APP_ID )
         
         BuzzAdBenefit.initialize(with: config)
     }
     
     func initate(pairing:Pairing, completed: (() -> Void)? = nil){
         self.completed = completed
-        let yyyy = pairing.user?.birth.subString(start: 0, len: 4) ?? "0000"
+        let birth = pairing.user?.birth.isEmpty == false ? (pairing.user?.birth ?? "0000") :  "0000"
+        let yyyy = (birth.count) >= 4 ? birth.subString(start: 0, len: 4) : birth
         let userProfile = BABUserProfile(
             userId:pairing.stbId ?? "",
-            birthYear: UInt(yyyy.toInt()),
+            birthYear: UInt(yyyy.toInt()), 
             gender: pairing.user?.gender == .femail ? BABUserGenderFemale : BABUserGenderMale )
         BuzzAdBenefit.setUserProfile(userProfile)
         

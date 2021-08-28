@@ -20,7 +20,7 @@ struct PageCategory: PageView {
     @ObservedObject var navigationModel:NavigationModel = NavigationModel()
     @State var listWidth:CGFloat = 0
     @State var headerHeight:CGFloat = 0
-    @State var marginBottom:CGFloat = 0
+    @State var marginBottom:CGFloat = Dimen.app.bottom
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -95,8 +95,7 @@ struct PageCategory: PageView {
             }
         }
         .onAppear{
-           
-            
+            self.marginBottom = self.appSceneObserver.safeBottomLayerHeight
         }
         .onDisappear{
             self.appSceneObserver.useTopFix = nil

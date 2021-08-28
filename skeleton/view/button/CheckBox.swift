@@ -66,6 +66,7 @@ struct CheckBox: View, SelecterbleProtocol {
     var isStrong:Bool = false
     var isSimple:Bool = false
     var isFill:Bool = true
+    var alignment:VerticalAlignment = .center
     var textColor:String? = nil
     var textSize:String? = nil
     var more: (() -> Void)? = nil
@@ -73,7 +74,7 @@ struct CheckBox: View, SelecterbleProtocol {
     
     
     var body: some View {
-        HStack(alignment: .center, spacing: Dimen.margin.thin){
+        HStack(alignment: self.alignment, spacing: Dimen.margin.thin){
            ImageButton(
             defaultImage: self.isCheckAble ? self.style.check : self.style.disable,
             activeImage: self.isCheckAble

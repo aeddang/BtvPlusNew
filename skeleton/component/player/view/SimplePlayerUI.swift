@@ -53,10 +53,14 @@ struct SimplePlayerUI: PageComponent {
             .background(Color.transparent.black45)
             .opacity(self.isShowing ? 1 : 0)
             
+            if self.isLoading {
+                CircularSpinner(resorce: Asset.ani.loading)
+            }
+            /*
             ActivityIndicator( isAnimating: self.$isLoading,
                                style: .large,
                                color: Color.app.white )
-            
+            */
             VStack(spacing:0){
                 Spacer()
                 HStack(alignment:.center, spacing:Dimen.margin.thin){
@@ -144,7 +148,10 @@ struct SimplePlayerUI: PageComponent {
                 switch st {
                 case .view :
                     self.isShowing = true
-                default : self.isShowing = false
+                    
+                default :
+                    self.isShowing = false
+                    if self.viewModel.streamStatus == .buffering(0) { withAnimation{self.isLoading = true} }
                 }
             }
         }
@@ -165,7 +172,7 @@ struct SimplePlayerUI: PageComponent {
             case .seeked: withAnimation{
                 self.isSeeking = false
             }
-            default : do{}
+            default : break
             }
         }
         .onReceive(self.viewModel.$playerStatus) { st in
@@ -174,7 +181,8 @@ struct SimplePlayerUI: PageComponent {
         .onReceive(self.viewModel.$streamStatus) { st in
             guard let status = st else { return }
             switch status {
-            case .buffering(_) : self.isLoading = true
+            case .buffering(_) :
+                if self.viewModel.playerUiStatus == .hidden{ self.isLoading = true }
             default : self.isLoading = false
             }
         }

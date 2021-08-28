@@ -12,13 +12,13 @@ import CoreTelephony
 struct SystemEnvironment {
     static let model:String = AppUtil.model
     static let systemVersion:String = UIDevice.current.systemVersion
-    static let bundleVersion:String = "4.4.3" //AppUtil.version
+    static let bundleVersion:String = AppUtil.version
     static let bundleVersionKey:String = "443" //AppUtil.version
     static let buildNumber:String = AppUtil.build.description
     static let deviceId:String = Self.getDeviceId()
     static var firstLaunch :Bool = false
     static var serverConfig: [String:String] = [String:String]()
-    static var isReleaseMode = true
+    static var isReleaseMode:Bool? = nil
     static var isEvaluation = false
     static var needUpdate = false
     static var isTablet = AppUtil.isPad()
@@ -62,7 +62,7 @@ struct SystemEnvironment {
         if let prevUUID = wrapper?.object(forKey: Security.kSecAttrAccount) as? String {
             if !prevUUID.isEmpty {
             DataLog.d( "exist UUID " + prevUUID, tag: "getDeviceId")
-                return "I" + prevUUID
+                return prevUUID
             }
         }
         let newId = UIDevice.current.identifierForVendor?.uuidString ?? UUID.init().uuidString
@@ -73,7 +73,7 @@ struct SystemEnvironment {
     
     static func getPlmn() -> String?{
         let netinfo = CTTelephonyNetworkInfo()
-        if let info = netinfo.serviceSubscriberCellularProviders, let carrier = info["serviceSubscriberCellularProvider"] {
+        if let info = netinfo.serviceSubscriberCellularProviders, let carrier = info.first(where: {$0.value.mobileCountryCode?.isEmpty == false})?.value {
             return (carrier.mobileCountryCode ?? "") + (carrier.mobileNetworkCode ?? "")
         }
         return ""

@@ -148,6 +148,10 @@ struct AppLayout: PageComponent{
             if !self.isInit { return }
             self.appObserverMove(iwg)
         }
+        .onReceive (self.appObserver.$deepLinkUrl) { url in
+            if !self.isInit { return }
+            self.deepLinkMove(url)
+        }
         .onReceive (self.appObserver.$alram) { alram in
             if alram == nil {return}
             if !self.isInit { return }
@@ -202,6 +206,7 @@ struct AppLayout: PageComponent{
         self.isInit = true
         self.isLoading = false
         //self.appSceneObserver.event = .debug("onPageInit")
+       
         if !self.appObserverMove(self.appObserver.page) {
             let initMenuId = self.dataProvider.bands.datas.first?.menuId
             self.pagePresenter.changePage(PageProvider.getPageObject(.home).addParam(key: .id, value: initMenuId))
@@ -239,10 +244,10 @@ struct AppLayout: PageComponent{
              )
             */
         }
+        self.deepLinkMove(self.appObserver.deepLinkUrl)
         if let alram = self.appObserver.alram  {
             self.appSceneObserver.event = .debug("apns exist")
             self.appSceneObserver.alert = .recivedApns(alram)
-            return
         }
     }
     
@@ -295,6 +300,12 @@ struct AppLayout: PageComponent{
         }
         self.appObserver.reset()
         return !page.isPopup
+    }
+    
+    @discardableResult
+    func deepLinkMove(_ link:URL? = nil)  -> Bool {
+        guard let link = link else { return false }
+        return self.repository.webBridge.parseUrl(link.absoluteString) != nil
     }
     
 }

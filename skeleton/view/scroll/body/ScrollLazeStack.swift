@@ -34,10 +34,10 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
     let onMove:(CGFloat)->Void
     
     @State var isTop:Bool = true
-    @State var scrollPos:Float? = nil
     @State var scrollIdx:Int? = nil
     @State var isTracking = false
     @State var anchor:UnitPoint? = nil
+    @State var isSmothMove:Bool = false
     @State var isScroll:Bool = true
     @State var progress:Double = 1
     @State var progressMax:Double = 1
@@ -173,7 +173,7 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
                                 Button(action: {
                                     if self.isTop {return}
                                     self.isTop = true
-                                    self.viewModel.uiEvent = .scrollTo(self.viewModel.topIdx, .top)
+                                    self.viewModel.uiEvent = .scrollMove(self.viewModel.topIdx, .top)
                                     
                                 }){
                                     Image(onTopButton)
@@ -196,14 +196,12 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
                 .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
                     self.onPreferenceChange(value: value)
                 }
-                .onChange(of: self.scrollPos, perform: { pos in
-                    guard let pos = pos else {return}
-                    reader.scrollTo(pos)
-                })
                 .onChange(of: self.scrollIdx, perform: { idx in
                     guard let idx = idx else {return}
                     if idx == -1 {return}
-                    withAnimation{
+                    if self.isSmothMove {
+                        withAnimation{ reader.scrollTo(idx, anchor: anchor)}
+                    } else {
                         reader.scrollTo(idx, anchor: anchor)
                     }
                     self.scrollIdx = -1
@@ -245,10 +243,12 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
                     switch evt {
                     case .scrollTo(let idx, let anchor):
                         self.anchor = anchor
+                        self.isSmothMove = false
                         self.scrollIdx = idx
-                    case .scrollMove(let pos, let anchor):
+                    case .scrollMove(let idx, let anchor):
                         self.anchor = anchor
-                        self.scrollPos = pos
+                        self.isSmothMove = true
+                        self.scrollIdx = idx
                     default: break
                     }
                 }

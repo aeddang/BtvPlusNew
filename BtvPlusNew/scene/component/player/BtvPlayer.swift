@@ -14,6 +14,8 @@ struct BtvPlayer: PageComponent{
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var networkObserver:NetworkObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel() 
     @ObservedObject var prerollModel: PrerollModel = PrerollModel()
@@ -261,7 +263,7 @@ struct BtvPlayer: PageComponent{
                 switch evt {
                 //case .start : 
                 case .finish, .skipAd : self.initPlay()
-                default : do{}
+                default : break
                 }
             }
             .onAppear(){
@@ -280,6 +282,10 @@ struct BtvPlayer: PageComponent{
     }//body
     
     func initPlayer(){
+        if self.setup.dataAlram && self.networkObserver.status == .cellular {
+            self.appSceneObserver.event = .toast(String.alert.dataNetwork)
+        }
+        
         ComponentLog.d("initPlayer", tag: self.tag)
         withAnimation{ self.isWaiting = false }
         if self.viewModel.checkPreroll {

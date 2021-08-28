@@ -269,7 +269,7 @@ struct PairingView: PageComponent{
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
             if ani {
                 self.repository.alram.updateNew()
-                self.dataProvider.requestData(q: .init(type: .getWatch(), isOptional: true))
+                self.dataProvider.requestData(q: .init(type: .getWatch(isPpm:false, 1, 9999), isOptional: true))
             }
         }
         
@@ -282,13 +282,14 @@ struct PairingView: PageComponent{
         let blocks:[WatchItem] = resData.watchList ?? [] 
         //if blocks.isEmpty { return }
         var videos = blocks.map{ d in VideoData().setData(data: d) }.filter{$0.isContinueWatch}
+        let total = videos.count //resData.watch_tot?.toInt()
         if SystemEnvironment.isTablet && videos.count > 6 {
             videos = videos[ 0...6 ].map{$0}
         }
         let blockData = BlockData()
             .setData(title: String.pageTitle.watched, cardType:.watchedVideo, dataType:.watched, uiType:.video, isCountView: true)
         blockData.videos = videos
-        blockData.setDatabindingCompleted(total: resData.watch_tot?.toInt() ?? 0)
+        blockData.setDatabindingCompleted(total: total)
         DispatchQueue.main.async {
             self.watchedData = blockData
             

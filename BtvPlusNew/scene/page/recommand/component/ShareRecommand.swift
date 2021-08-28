@@ -172,7 +172,11 @@ struct ShareRecommand: PageComponent {
         
         let epsdId = self.synopsisData?.epsdId ?? ""
         let srisId = self.synopsisData?.srisId ?? ""
-        let link = ApiPath.getRestApiPath(.WEB)
+        let shareFullpath = ApiPath.getRestApiPath(.WEB)
+        guard  let shareHost = shareFullpath.toUrl()?.host else {return}
+        let domain = shareFullpath.hasPrefix("https://") ? "https://" : "http://"
+        
+        let link =  domain + shareHost
             + SocialMediaSharingManage.sharinglink + "/" + srisId + "/" + epsdId
             + "?from=mgm&created="
             + self.getCreated()
@@ -182,7 +186,7 @@ struct ShareRecommand: PageComponent {
             Shareable(
                 link:link,
                 text: String.share.synopsisRecommand,
-                useDynamiclink:false
+                useDynamiclink:true
             )
         ){ isComplete in
             

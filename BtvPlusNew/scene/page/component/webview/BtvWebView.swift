@@ -11,24 +11,7 @@ import SwiftUI
 import WebKit
 import Combine
 
-enum WebviewMethod:String {
-    case getSTBInfo, getNetworkState, getLogInfo, stopLoading
-    case requestVoiceSearch, requestSTBViewInfo
-    case externalBrowser
-    case bpn_showSynopsis,
-         bpn_backWebView, bpn_closeWebView, bpn_showModalWebView,
-         bpn_setShowModalWebViewResult,bpn_setIdentityVerfResult, bpn_setPurchaseResult,
-         bpn_setKidsMode,
-         bpn_showTopBar,bpn_changeTopBar,bpn_hideTopBar,bpn_setTopBarTitle,
-         bpn_requestGnbBlockData,bpn_requestMoveWebByCallUrl,
-         bpn_setPassAge, bpn_requestPassAge,bpn_showMyBtv,
-         bpn_requestHlsTokenInfo,bpn_setMute,bpn_requestMuteState,
-         bpn_setMoveListener,bpn_setBackListener,
-         bpn_requestFocus,bpn_showComingSoon,bpn_showMyPairing,bpn_familyInvite
-}
-enum WebviewRespond:String {
-    case responseVoiceSearch, responseSTBViewInfo
-}
+
 
 extension BtvWebView {
     static let identity = "/view/v3.0/identityverification"
@@ -44,14 +27,10 @@ extension BtvWebView {
     static let event = "/view/v3.0/event/all"
     static let tip = "/view/v3.0/tip/all"
     static let serviceTerms = "/view/v3.0/terms"
-    
     static let happySenior = "/view/v3.0/setting/happysenior"
-    
     static let callJsPrefix = "javascript:"
     
 }
-
-
 
 struct BtvWebView: PageComponent {
     
@@ -210,124 +189,6 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         self.callJS(uiView, jsStr: jsStr)
     }
     
-    fileprivate func callPage(_ path:String, param:[URLQueryItem]? = nil) {
-        
-        switch path {
-        case "synopsis":
-            let id = param?.first(where: {$0.name == "id"})?.value
-            let contentId = param?.first(where: {$0.name == "contentId"})?.value
-            let cid = param?.first(where: {$0.name == "cid"})?.value
-            let type = param?.first(where: {$0.name == "type"})?.value
-            let synopsisType = SynopsisType(value:type)
-            let epsdId = synopsisType == .title ? ((id ?? contentId) ?? cid) : cid
-            let srisId = synopsisType == .package ? ((id ?? contentId) ?? cid) : nil
-            self.pagePresenter.openPopup(
-                PageProvider.getPageObject(synopsisType == .package ? .synopsisPackage : .synopsis)
-                    .addParam(key: .data, value: SynopsisQurry(srisId: srisId, epsdId: epsdId))
-            )
-        case "menu":
-            guard let menus = param?.first(where: {$0.name == "menus"})?.value else {return}
-            if menus.isEmpty {return}
-            let menuA = menus.split(separator: "/")
-            if menuA.isEmpty {return}
-            let gnbTypCd:String = String(menuA[0])
-            let menuOpenId:String? =
-                menuA.count > 1 ? menuA[1..<menuA.count].reduce("", {$0 + "|" + $1}) : nil
-            
-            let page:PageID = gnbTypCd.hasPrefix(EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue)
-                ? .category : .home
-            let band = self.dataProvider.bands.getData(gnbTypCd: gnbTypCd)
-            self.pagePresenter.changePage(PageProvider
-                                            .getPageObject(page)
-                                            .addParam(key: .id, value: band?.menuId)
-                                            .addParam(key: .subId, value: menuOpenId)
-                                            .addParam(key: UUID().uuidString, value: "")
-            )
-            
-        case "event":
-             if let menuOpenId = param?.first(where: {$0.name == "menu_id"})?.value {
-                let band = self.dataProvider.bands.getData(gnbTypCd: EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue)
-                self.pagePresenter.openPopup(
-                    PageProvider
-                        .getPageObject(.category)
-                        .addParam(key: .id, value: band?.menuId)
-                        .addParam(key: .subId, value: menuOpenId)
-                )
-             } else if let callUrl = param?.first(where: {$0.name == "event_url"})?.value {
-                let data = BannerData().setData(callUrl: callUrl)
-                if let move = data.move {
-                    switch move {
-                    case .home, .category:
-                        if let gnbTypCd = data.moveData?[PageParam.id] as? String {
-                            if let band = dataProvider.bands.getData(gnbTypCd: gnbTypCd) {
-                                self.pagePresenter.changePage(
-                                    PageProvider
-                                        .getPageObject(move)
-                                        .addParam(params: data.moveData)
-                                        .addParam(key: .id, value: band.menuId)
-                                        .addParam(key: UUID().uuidString , value: "")
-                                )
-                            }
-                        }
-                        
-                    default :
-                        let pageObj = PageProvider.getPageObject(move)
-                        pageObj.params = data.moveData
-                        self.pagePresenter.openPopup(pageObj)
-                    }
-                }
-                else if let link = data.outLink {
-                    AppUtil.openURL(link)
-                }
-                else if let link = data.inLink {
-                    self.pagePresenter.openPopup(
-                        PageProvider
-                            .getPageObject(.webview)
-                            .addParam(key: .data, value: link)
-                            .addParam(key: .title , value: data.title)
-                    )
-                }
-             }
-            
-            
-        case "point", "coupon", "bpoint":
-            if self.pairing.status != .pairing {
-                self.appSceneObserver.alert = .needPairing()
-                return
-            }
-            let num:String? = param?.first(where: {$0.name == "extra"})?.value
-            let menuType:PageMyBenefits.MenuType = PageMyBenefits.getType(path)
-            self.pagePresenter.openPopup(
-                PageProvider.getPageObject(.myBenefits)
-                    .addParam(key: .id, value: menuType.rawValue)
-            )
-           
-            self.pagePresenter.openPopup(
-                PageProvider.getPageObject(.confirmNumber)
-                    .addParam(key: .type, value: menuType)
-                    .addParam(key: .data, value: num)
-                    
-            )
-       
-        case "family_invite":
-            if self.pairing.status != .pairing {
-                self.appSceneObserver.alert = .needPairing()
-                return
-            }
-            guard let token:String = param?.first(where: {$0.name == "pairing_token"})?.value else {return}
-            let name:String? = param?.first(where: {$0.name == "nickname"})?.value
-            self.pagePresenter.openPopup(
-                PageProvider
-                    .getPageObject(.pairingFamilyInvite)
-                    .addParam(key: .id, value: token)
-                    .addParam(key: .title , value: name)
-            )
-            
-        default: break
-        }
-        
-    }
-    
     private func update(_ uiView: WKWebView, evt:WebViewRequest){
         switch evt {
         case .home:
@@ -389,6 +250,35 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                 // 편성표를 back으로 오는 경우에는 reload한다.
             }
             ComponentLog.d(url ?? "", tag:"WebView")
+            if let deepLinkItem = self.parent.repository.webBridge.parseUrl(url) {
+                if let path = deepLinkItem.path {
+                    self.parent.viewModel.event = .callPage(path, deepLinkItem.querys)
+                } else {
+                    if deepLinkItem.isForceRetry {
+                        self.forceRetry(webView: webView)
+                    } else if deepLinkItem.isCallFuncion, let funcName = deepLinkItem.funcName {
+                        self.parent.viewModel.event = .callFuncion(funcName, deepLinkItem.jsonParam, deepLinkItem.cbName )
+                    }
+                    if let dic = deepLinkItem.dic, let cb = deepLinkItem.cbName, !cb.isEmpty {
+                        let js = BtvWebView.callJsPrefix + cb
+                        DispatchQueue.main.async {
+                            self.parent.callJS(webView, fn: js, dic: dic)
+                        }
+                    }
+                    if let value = deepLinkItem.value, let cb = deepLinkItem.cbName, !cb.isEmpty {
+                        let js = BtvWebView.callJsPrefix + cb + "(" + value + ");"
+                        DispatchQueue.main.async {
+                            self.parent.callJS(webView, jsStr: js)
+                        }
+                    }
+                }
+                decisionHandler(.cancel, preferences)
+                return
+            } else {
+                decisionHandler(.allow, preferences)
+            }
+            
+            /*
             if (url?.hasPrefix("btvplus://"))! {
                 if let urlStr = url {
                     if let components = URLComponents(string: urlStr) {
@@ -396,7 +286,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                             let param = components.queryItems
                             ComponentLog.d("path " + path, tag: self.tag)
                             ComponentLog.d("param " + (param?.debugDescription ?? ""), tag: self.tag)
-                            self.parent.callPage(path, param: param)
+                            self.parent.repository.webBridge.callPage(path, param: param) 
                             self.parent.viewModel.event = .callPage(path, param)
                         }
                     }
@@ -506,6 +396,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                 return
             }
             decisionHandler(.allow, preferences)
+            */
         }
         
         func forceRetry(webView: WKWebView) {

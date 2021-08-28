@@ -16,6 +16,7 @@ struct PageMy: PageView {
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var watchedScrollModel: InfinityScrollModel = InfinityScrollModel()
     
+    
     @State var isPairing:Bool = false
     @State var marginBottom:CGFloat = 0
     var body: some View {
@@ -78,7 +79,7 @@ struct PageMy: PageView {
                 }
             }
             .onAppear{
-               
+                self.marginBottom = self.appSceneObserver.safeBottomLayerHeight
             }
         }//geo
     }//body

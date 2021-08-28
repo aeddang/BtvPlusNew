@@ -20,9 +20,9 @@ enum RepositoryStatus:Equatable{
         case .ready: return "ready"
         case .reset: return "reset"
         case .error: return "error"
-            
         }
     }
+    
     static func ==(lhs: RepositoryStatus, rhs: RepositoryStatus) -> Bool {
         switch (lhs, rhs) {
         case ( .initate, .initate):return true
@@ -94,6 +94,9 @@ class Repository:ObservableObject, PageProtocol{
             dataProvider: self.dataProvider)
         
         self.webBridge = WebBridge(
+            pagePresenter: self.pagePresenter,
+            dataProvider: self.dataProvider,
+            appSceneObserver:self.appSceneObserver,
             pairing: self.pairing,
             storage: self.storage,
             setup: self.userSetup,
@@ -106,11 +109,14 @@ class Repository:ObservableObject, PageProtocol{
             self.pushManager.retryRegisterPushToken()
         }).store(in: &anyCancellable)
         
+        let initate = self.setupSetting()
         self.setupDataProvider()
         self.setupApiManager()
-        self.setupSetting()
         self.setupPairing()
         self.broadcastManager.setup()
+        if initate {
+            self.pairing.requestPairing(.unPairing)
+        }
     }
     
     deinit {
@@ -121,27 +127,29 @@ class Repository:ObservableObject, PageProtocol{
         self.dataCancellable.removeAll()
     }
     
-    func reset(isReleaseMode:Bool = true, isEvaluation:Bool = SystemEnvironment.isEvaluation){
+    func reset(isReleaseMode:Bool? = nil, isEvaluation:Bool = SystemEnvironment.isEvaluation){
         SystemEnvironment.isReleaseMode = isReleaseMode
         SystemEnvironment.isEvaluation = isEvaluation
+        self.storage.isReleaseMode = isReleaseMode
         self.status = .reset
         self.dataCancellable.forEach{$0.cancel()}
         self.dataCancellable.removeAll()
         self.apiManager.clear()
         self.apiManager = ApiManager()
+        
         self.setupApiManager()
         DataLog.d("reset", tag:self.tag)
     }
     
     
     private func setupPairing(){
-        self.accountManager.setupPairing(savedUser:self.storage.getSavedUser())
-        self.pairing.storage = self.storage
+        self.accountManager.setupPairing(savedUser:self.userSetup.getSavedUser())
+        self.pairing.storage = self.userSetup
         self.pairing.$request.sink(receiveValue: { req in
             guard let requestPairing = req else { return }
             switch requestPairing{
             case .user , .device, .auth:
-                self.storage.clearDevice()
+                self.userSetup.clearDevice()
             default : do{}
             }
         }).store(in: &anyCancellable)
@@ -150,21 +158,21 @@ class Repository:ObservableObject, PageProtocol{
             guard let evt = evt else { return }
             switch evt{
             case .connected(let stbData) :
-                self.storage.saveDevice(stbData)
+                self.userSetup.saveDevice(stbData)
                 
             case .disConnected :
                 self.appSceneObserver?.event = .toast(String.alert.pairingDisconnected)
-                self.storage.saveUser(nil)
-                self.storage.clearDevice()
+                self.userSetup.saveUser(nil)
+                self.userSetup.clearDevice()
                 self.resetSystemEnvironment()
                 self.dataProvider.requestData(q: .init(type: .getGnb))
                 self.pushManager.updateUserAgreement(false)
                 //NotificationCoreData().removeAllNotice()
                 
             case .pairingCompleted :
-                self.storage.saveUser(self.pairing.user)
-                self.pairing.user?.pairingDate = self.storage.pairingDate
-                self.pairing.hostDevice?.modelName = self.storage.pairingModelName
+                self.userSetup.saveUser(self.pairing.user)
+                self.pairing.user?.pairingDate = self.userSetup.pairingDate
+                self.pairing.hostDevice?.modelName = self.userSetup.pairingModelName
                 DataLog.d("UPDATEED GNBDATA getGnb", tag:self.tag)
                 self.dataProvider.requestData(q: .init(type: .getGnb))
                 self.appSceneObserver?.event = .toast(String.alert.pairingCompleted)
@@ -194,6 +202,7 @@ class Repository:ObservableObject, PageProtocol{
     }
     
     private func setupApiManager(){
+        self.apiManager.initateApi()
         self.pushManager.setupApiManager(self.apiManager)
         self.accountManager.setupApiManager(self.apiManager)
         self.broadcastManager.setupApiManager(self.apiManager)
@@ -236,17 +245,21 @@ class Repository:ObservableObject, PageProtocol{
         }).store(in: &dataCancellable)
     }
     
-    private func setupSetting(){
-        if !self.storage.initate {
-            self.storage.initate = true
+    private func setupSetting()->Bool{
+        if self.storage.initate {
+            self.storage.initate = false
             SystemEnvironment.firstLaunch = true
             self.userSetup.initateSetup()
+            return true
+        }
+        if  SystemEnvironment.isReleaseMode == nil {
+            SystemEnvironment.isReleaseMode = storage.isReleaseMode
         }
         SystemEnvironment.isAdultAuth = self.userSetup.isAdultAuth
         SystemEnvironment.watchLv = self.userSetup.watchLv
         SystemEnvironment.isFirstMemberAuth = self.userSetup.isFirstMemberAuth
-        
         self.pushManager.retryRegisterPushToken()
+        return false
     }
     
     private func requestApi(_ apiQ:ApiQ, coreDatakey:String){
@@ -352,7 +365,7 @@ class Repository:ObservableObject, PageProtocol{
     }
     
     func updateUser(_ data:ModifyUserData) {
-        self.storage.updateUser(data)
+        self.userSetup.updateUser(data)
         self.pairing.updateUser(data)
     }
     

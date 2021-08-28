@@ -23,7 +23,7 @@ class VideoData:InfinityData{
     private(set) var synopsisData:SynopsisData? = nil
     private(set) var epsdId:String? = nil
     private(set) var srisId:String? = nil
-  
+    private(set) var prodId:String? = nil
     private(set) var isClip:Bool = false
     private(set) var useTag:Bool = true
     private(set) var tagData: TagData? = nil
@@ -146,6 +146,7 @@ class VideoData:InfinityData{
         index = idx
         epsdId = data.epsd_id
         srisId = data.sris_id
+        
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:data.yn_kzone)
@@ -161,7 +162,7 @@ class VideoData:InfinityData{
         tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         if let rt = data.watch_rt?.toInt() {
             self.progress = Float(rt) / 100.0
-            self.isContinueWatch = rt > 1
+            self.isContinueWatch = MetvNetwork.isWatchCardRateIn(data: data)
         }
         title = data.title
         originImage = data.thumbnail
@@ -169,6 +170,7 @@ class VideoData:InfinityData{
         index = idx
         epsdId = data.epsd_id
         srisId = data.sris_id
+        prodId = data.prod_id
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id,

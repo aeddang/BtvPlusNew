@@ -10,13 +10,18 @@ import Foundation
 struct PucrNetwork : Network{
     var enviroment: NetworkEnvironment = ApiPath.getRestApiPath(.PUCR)
     func onRequestIntercepter(request: URLRequest) -> URLRequest {
-        return ApiGateway.setDefaultheader(request: request)
+        var authorizationRequest = request
+        authorizationRequest.addValue(
+            "Basic MTcyOWQ3M2QxOTcwNGI0NGExZTg2OTdkZjM0NWYzZDI6Zjc5YzMyOTI4MGY5NGE4M2I1MmJiYmUyMDYzYTA0ZGE=",
+            forHTTPHeaderField: "Authorization")
+        return authorizationRequest
     }
 }
 extension PucrNetwork{
     static let DEVICE_TYPE = "iOS"
     static let SDK_VS = "iOS:4.0"
     static let MANYFACTURER = "Apple"
+    static let CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8"
 }
 
 class Pucr: Rest{
@@ -24,17 +29,19 @@ class Pucr: Rest{
      * 유저 Endpoint 생성 (IF-PUCR-010)
      */
     func createEndpoint(
-        token:String,
         completion: @escaping (EndPoint) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
+        let plmn = SystemEnvironment.getPlmn()
         var params = [String:Any]()
         params["device_type"] = PucrNetwork.DEVICE_TYPE
-        params["device_token"] = token
-        params["sdk_version"] = PucrNetwork.SDK_VS
+        params["device_token"] = SystemEnvironment.deviceId
+        params["sdk_version"] = "sdk_type:" + PucrNetwork.SDK_VS
         params["os_version"] = SystemEnvironment.systemVersion
         params["manufacturer"] = PucrNetwork.MANYFACTURER
         params["model"] = SystemEnvironment.model
         params["product"] = SystemEnvironment.model
+        params["plmn"] = plmn
+        params["sim_plmn"] = plmn
         fetch(route: PucrCreateEndPoint(body: params), completion: completion, error:error)
     }
     
@@ -96,6 +103,7 @@ struct PucrRecivePush:NetworkRoute{
         return "/push/v3/messages/" + messageId + "/ack"
     }}
     var body: [String : Any]? = nil
+    var contentType: String? = PucrNetwork.CONTENT_TYPE
 }
 
 struct PucrConfirmPush:NetworkRoute{
@@ -105,6 +113,7 @@ struct PucrConfirmPush:NetworkRoute{
         return "/push/v3/messages/" + messageId + "/response"
     }}
     var body: [String : Any]? = nil
+    var contentType: String? = PucrNetwork.CONTENT_TYPE
 }
 
 

@@ -81,12 +81,7 @@ struct InputNumberBox: PageComponent {
                                         }
                                 }
                                 Button(action: {
-                                    self.input1 = ""
-                                    self.input2 = ""
-                                    self.input3 = ""
-                                    self.input4 = ""
-                                    self.focusIdx = 0
-                                    
+                                    self.focusIdx = self.delete()
                                     
                                 }) {
                                     Image(AssetKids.icon.delete)
@@ -170,6 +165,33 @@ struct InputNumberBox: PageComponent {
             self.focusIdx = 0
         }
     }//body
+    
+    private func delete(isAll:Bool = false) -> Int {
+        if isAll {
+            self.input1 = ""
+            self.input2 = ""
+            self.input3 = ""
+            self.input4 = ""
+            return 0
+        }
+        if !self.input4.isEmpty {
+            self.input4 = ""
+            return 3
+        }
+        if !self.input3.isEmpty {
+            self.input3 = ""
+            return 2
+        }
+        if !self.input2.isEmpty {
+            self.input2 = ""
+            return 1
+        }
+        if !self.input1.isEmpty {
+            self.input1 = ""
+            return 0
+        }
+        return 0
+    }
     
     private func findFocus() -> Int {
         if self.input1.isEmpty {return 0}

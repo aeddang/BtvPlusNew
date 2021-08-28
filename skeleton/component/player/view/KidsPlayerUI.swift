@@ -69,9 +69,9 @@ struct KidsPlayerUI: PageComponent {
             .background(Color.transparent.black45)
             .opacity(self.isShowing  ? 1 : 0)
                         
-            ActivityIndicator( isAnimating: self.$isLoading,
-                               style: .large,
-                               color: Color.app.white )
+            if self.isLoading {
+                CircularSpinner(resorce: Asset.ani.loading)
+            }
             
             VStack{
                 Spacer()
@@ -199,7 +199,9 @@ struct KidsPlayerUI: PageComponent {
                 switch st {
                 case .view :
                     self.isShowing = true
-                default : self.isShowing = false
+                default :
+                    self.isShowing = false
+                    if self.viewModel.streamStatus == .buffering(0) { self.isLoading = true }
                 }
             }
         }
@@ -226,7 +228,8 @@ struct KidsPlayerUI: PageComponent {
         .onReceive(self.viewModel.$streamStatus) { st in
             guard let status = st else { return }
             switch status {
-            case .buffering(_) : self.isLoading = true
+            case .buffering(_) : 
+                if self.viewModel.playerUiStatus == .hidden{ withAnimation{self.isLoading = true} }
             default : self.isLoading = false
             }
         }

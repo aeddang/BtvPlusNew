@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>557387977629-djlpjj4ubjvr0m1vlosfdaijiiaaon71.apps.googleusercontent.com</string>
+	<string>1083952928169-pvoeqe4oefta8k6gip5qhvohic7g9gqn.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.557387977629-djlpjj4ubjvr0m1vlosfdaijiiaaon71</string>
+	<string>com.googleusercontent.apps.1083952928169-pvoeqe4oefta8k6gip5qhvohic7g9gqn</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAW8_ogvDOMoTc9WaKhLzpra22khLVK0Tc</string>
+	<string>AIzaSyDHxT_POBIRf3Ef0BEuE5a1F85u-_yW89k</string>
 	<key>GCM_SENDER_ID</key>
-	<string>557387977629</string>
+	<string>1083952928169</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.skb.btvplus.BtvPlusNew</string>
+	<string>com.skb.btvplus</string>
 	<key>PROJECT_ID</key>
-	<string>btvplusnew</string>
+	<string>sk-broadband</string>
 	<key>STORAGE_BUCKET</key>
-	<string>btvplusnew.appspot.com</string>
+	<string>sk-broadband.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:557387977629:ios:91e08d4a22e7b5a27d5574</string>
+	<string>1:1083952928169:ios:af9be6f41476e7d9fde0b8</string>
+	<key>DATABASE_URL</key>
+	<string>https://sk-broadband.firebaseio.com</string>
 </dict>
 </plist>

@@ -29,13 +29,13 @@ struct PageHome: PageView {
     @State var headerHeight:CGFloat = 0
     @State var marginHeader:CGFloat = 0
     @State var marginBottom:CGFloat = 0
+    @State var isTop:Bool = true
     var body: some View {
         GeometryReader { geometry in
             PageDataProviderContent(
                 pageObservable:self.pageObservable,
                 viewModel : self.viewModel
             ){
-               
                 MultiBlockBody (
                     pageObservable: self.pageObservable,
                     viewModel: self.viewModel,
@@ -47,16 +47,15 @@ struct PageHome: PageView {
                     marginTop:self.headerHeight,
                     marginBottom: self.marginBottom,
                     topDatas: self.topDatas,
+                    /*
                     monthlyViewModel : self.monthlyViewModel,
                     monthlyDatas: self.sortedMonthlyDatas ,
                     monthlyAllData: self.monthlyAllData,
+                    */
                     tipBlock: self.tipBlockData,
-                    useFooter: self.useFooter
-                    ){ data in
-                        self.reload(selectedMonthlyId: data.prdPrcId)
-                        
-                }
-                
+                    header: self.monthlyheader,
+                    headerSize: MonthlyBlock.height + MultiBlock.spacing,
+                    useFooter: self.useFooter)
             }
             //.padding(.bottom, self.sceneObserver.safeAreaBottom )
             .modifier(PageFull())
@@ -73,11 +72,13 @@ struct PageHome: PageView {
                 if self.pagePresenter.currentTopPage?.pageID == .home {
                     switch evt {
                     case .top :
+                        withAnimation { self.isTop = true }
                         self.appSceneObserver.useTopFix = true
                         if self.pageObservable.layer == .top {
                             self.appSceneObserver.event = .pairingHitch(isOn: true)
                         }
                     case .down :
+                        withAnimation{ self.isTop = false }
                         self.appSceneObserver.useTopFix = false
                         self.appSceneObserver.event = .pairingHitch(isOn: false)
                         
@@ -151,8 +152,12 @@ struct PageHome: PageView {
                 self.headerHeight = hei
             }
             .onReceive(self.appSceneObserver.$safeHeaderHeight){ hei in
+                var margin:CGFloat = self.topDatas == nil ? 0 : hei
+                if self.monthlyDatas != nil {
+                    margin += (MonthlyBlock.height + Dimen.margin.thin)
+                }
                 withAnimation{
-                    self.marginHeader = self.topDatas == nil ? 0 : hei
+                    self.marginHeader = margin
                 }
             }
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
@@ -192,18 +197,39 @@ struct PageHome: PageView {
     @State var prcPrdId:String? = nil
     @State var useFooter:Bool = false
     @State var isFree:Bool = false
+    @State var monthlyheader:MonthlyBlock? = nil
+    
     private func reset(){
+        /*
+        self.currentBand  = nil
+        self.topDatas = nil
+        self.originMonthlyDatas = nil
+        self.monthlyheader = nil
+        self.monthlyAllData = nil
+        self.monthlyDatas = nil
+        self.sortedMonthlyDatas = nil
+        self.tipBlockData = nil
+        self.monthlyViewModel.isUpdate = true
+        if self.pairing.status != .pairing {
+            self.selectedMonthlyId = nil
+        }
+        self.reload()
+        */
+        if self.pairing.status != .pairing {
+            Self.finalSelectedMonthlyId = nil
+        }
         guard let obj = self.pageObject  else { return }
         DataLog.d("UPDATEED GNBDATA reset home", tag:self.tag)
-        self.pagePresenter.changePage(
-            PageProvider.getPageObject(.home)
-                .addParam(key: .id, value: obj.getParamValue(key:.id))
-                .addParam(key: UUID().uuidString , value: "")
-        )
+        DispatchQueue.main.async {
+            self.pagePresenter.changePage(
+                PageProvider.getPageObject(.home)
+                    .addParam(key: .id, value: obj.getParamValue(key:.id)).addParam(key: UUID().uuidString , value: ""),
+                isCloseAllPopup: false
+            )
+        }
     }
     
     private func reload(selectedMonthlyId:String? = nil){
-       
         self.selectedMonthlyId = selectedMonthlyId ?? self.selectedMonthlyId
         self.sortedMonthlyDatas?.forEach{$0.reset()}
         self.requestTopBanner()
@@ -395,15 +421,23 @@ struct PageHome: PageView {
             $0.posIdx = idx
             idx += 1
         }
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.02){
-            self.syncronizeMonthly()
-        }
+        self.syncronizeMonthly()
     }
 
     private func syncronizeMonthly(){
         self.sortedMonthlyDatas = self.monthlyDatas
-        self.setupMonthly()
-        self.monthlyViewModel.isUpdate = true
+        if self.sortedMonthlyDatas?.isEmpty == false, let datas = self.sortedMonthlyDatas {
+           self.monthlyheader =  MonthlyBlock(
+                viewModel:self.monthlyViewModel ,
+                monthlyDatas:datas,
+                allData: self.monthlyAllData,
+                useTracking:false
+           ){ data in
+               self.reload(selectedMonthlyId: data.prdPrcId)
+           }
+           self.setupMonthly()
+          // self.monthlyViewModel.isUpdate = true
+        }
     }
     
     private func setupMonthly(){

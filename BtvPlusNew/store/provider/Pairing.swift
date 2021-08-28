@@ -81,7 +81,7 @@ class Pairing:ObservableObject, PageProtocol {
     private(set) var isFirstKidRegist:Bool = false
     
     let authority:Authority = Authority()
-    var storage:LocalStorage? = nil
+    var storage:Setup? = nil
     var naviLogManager:NaviLogManager? = nil
     
     func requestPairing(_ request:PairingRequest){

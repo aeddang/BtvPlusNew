@@ -83,8 +83,7 @@ struct MultiBlock:PageComponent {
         return newTop
     }
     
-   
-    
+     
     @State var headerBlock:HeaderBlockCell?
     @State var headerCount:Int = 0
     @State var headerId:String = ""
@@ -141,7 +140,7 @@ struct MultiBlock:PageComponent {
                                             : TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange
                     ))
                 }
-                
+                /*
                 if let datas = self.monthlyDatas  {
                    MonthlyBlock(
                         viewModel:self.monthlyViewModel ?? MonthlyBlockModel(),
@@ -156,7 +155,7 @@ struct MultiBlock:PageComponent {
                    .modifier(MatchHorizontal(height:  MonthlyBlock.height))
                    .modifier(ListRowInset(spacing: Self.spacing))
                 }
-                
+                */
                 if !self.datas.isEmpty {
                     //if self.viewModel.type == .btv {
                         if let headerBlock = self.getHeaderBlock() {

@@ -58,9 +58,9 @@ struct MonthlyBlock: PageComponent {
                 }
             }
             .modifier(ContentHorizontalEdges())
+           
             if let list = self.list {
                 list.modifier(MatchHorizontal(height: ListItem.monthly.size.height))
-                
             }
             TipTab(
                 leadingIcon: self.tipIconLeading,
@@ -104,7 +104,7 @@ struct MonthlyBlock: PageComponent {
         )
         .onAppear(){
             if self.monthlyDatas.isEmpty {return}
-            self.getList()
+            self.list = self.getList()
             self.initSubscription()
             if self.currentData == nil {
                 if let data = self.monthlyDatas.first(where: { $0.isSelected }) {
@@ -116,7 +116,7 @@ struct MonthlyBlock: PageComponent {
             self.setupTipTab()
         }
         .onReceive(self.viewModel.$isUpdate){ update in
-            self.getList()
+            self.list = self.getList()
         }
         .onReceive(self.dataProvider.$result) { res in
             guard let res = res else {return}
@@ -129,20 +129,19 @@ struct MonthlyBlock: PageComponent {
             default : break
             }
         }
+        
         .onDisappear(){
             self.anyCancellable.forEach{$0.cancel()}
             self.anyCancellable.removeAll()
         }
     }
     
-    
-   
     private func moveScroll(){
         if let data = self.currentData {
             let idx  = self.monthlyDatas.firstIndex(of: data) ?? 0
             ComponentLog.d("idx " + idx.description, tag: self.tag)
             if idx > 0 {
-                self.viewModel.uiEvent = .scrollTo(max(0,idx), .center)
+                self.viewModel.uiEvent = .scrollTo(max(0,idx), .none)
             }
         }
     }
@@ -151,8 +150,9 @@ struct MonthlyBlock: PageComponent {
     @State var listId:String = ""
     
     @discardableResult
-    private func getList() -> some View {
-        let key = self.monthlyDatas.reduce("", {$0 + "|" + $1.sortIdx.description})
+    private func getList() -> MonthlyList {
+        let key = self.monthlyDatas.reduce("", {$0 + "|" + $1.prdPrcId + $1.sortIdx.description})
+        ComponentLog.d("key " + key , tag: self.tag)
         if  self.listId == key, let list = self.list {
             ComponentLog.d("Recycle List" , tag: self.tag)
             return list
@@ -169,10 +169,7 @@ struct MonthlyBlock: PageComponent {
             self.selectedData(data: data)
         }
         ComponentLog.d("New List" , tag: self.tag)
-        DispatchQueue.main.async {
-            self.listId = key
-            self.list = newList
-        }
+        self.listId = key
         DispatchQueue.main.asyncAfter(deadline: .now()+0.1){
             self.moveScroll()
         }

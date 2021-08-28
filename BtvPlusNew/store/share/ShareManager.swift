@@ -101,30 +101,47 @@ class ShareManager :PageProtocol {
             if useDynamiclink {
                 self.pagePresenter?.isLoading = true
                 DispatchQueue.global().async {
-                    let linkBuilder = DynamicLinkMamager.getDynamicLinkBuilder(link)
-                    linkBuilder?.shorten() { url, warnings, error in
-                        guard let url = url else { return }
-                        self.pagePresenter?.isLoading = false
-                        let shareable =
-                            SocialMediaShareable(
-                                image: image ,
-                                url:url,
-                                text: text
-                            )
-                        SocialMediaSharingManage.share(shareable, completion: completion)
+                    if let linkBuilder = DynamicLinkMamager.getDynamicLinkBuilder(link) {
+                        linkBuilder.shorten() { url, warnings, error in
+                            self.pagePresenter?.isLoading = false
+                            if let shorten = url?.absoluteString {
+                                if let shareHost = ApiPath.getRestApiPath(.WEB).toUrl()?.host{
+                                    let replaceUrl = shareHost + "/s"
+                                    if shorten.contains(DynamicLinkMamager.urlPreFix) {
+                                        let replaced = shorten.replace( DynamicLinkMamager.urlPreFix, with: replaceUrl)
+                                        let shareable =
+                                            SocialMediaShareable(
+                                                image: image ,
+                                                url:replaced.toUrl(),
+                                                text: text
+                                            )
+                                        SocialMediaSharingManage.share(shareable, completion: completion)
+                                        return
+                                    }
+                                }
+                            }
+                            share(originLink: link)
+                        }
+                        
+                    } else {
+                        share(originLink: link)
                     }
                 }
             } else {
-
-                let shareable =
-                    SocialMediaShareable(
-                        image: image ,
-                        url: link.toUrl(),
-                        text: text
-                    )
-                SocialMediaSharingManage.share(shareable, completion: completion)
+                share(originLink: link)
             }
         }
+        
+        func share(originLink:String){
+            let shareable =
+                SocialMediaShareable(
+                    image: image ,
+                    url: originLink.toUrl(),
+                    text: text
+                )
+            SocialMediaSharingManage.share(shareable, completion: completion)
+        }
     }
+    
 
 }

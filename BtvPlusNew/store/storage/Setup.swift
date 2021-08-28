@@ -10,30 +10,29 @@ class Setup:ObservableObject, PageProtocol {
     
     struct Keys {
         static let VS = "1.001"
-        static let dataAlram = "dataAlram" + VS
-        static let autoRemocon = "autoRemocon" + VS
-        static let remoconVibration = "remoconVibration" + VS
-        
-        static let autoPlay = "autoPlay" + VS
-        static let nextPlay = "nextPlay" + VS
-        
+        static let dataAlram = "isAlarmMobieNetworkV4"
+        static let autoRemocon = "isShowRemoconSelectPopup"
+        static let remoconVibration = "isHapticFeedbackV4"
+        static let autoPlay = "isAutoPlayV4"
+        static let nextPlay = "isSeriesAutoPlayV4"
         static let selectedQuality = "selectedQuality" + VS
-        
-        static let isPurchaseAuth = "isPurchaseAuth" + VS
-        static let isAdultAuth = "isAdultAuth" + VS
-        static let watchLv = "watchLv" + VS
-        static let isKidsExitAuth = "isKidsExitAuth" + VS
-        
-        
-        static let isFirstMemberAuth = "isFirstMemberAuth" + VS
-        
-        static let isShowRemoconSelectPopup = "isShowRemoconSelectPopup" + VS
-        static let isShowAutoRemocon = "isShowAutoRemocon" + VS
-        
-        static let possession = "possession" + VS
-        
+        static let isPurchaseAuth = "isPurchaseAuth"
+        static let isAdultAuth = "isAdultAuth"
+        static let watchLv = "restrictedAge"
+        static let isKidsExitAuth = "isKidsExitAuth"
+        static let isFirstMemberAuth = "isFirstAdultAuth"
+        static let possession = "terminatedStbId"
         static let floatingUnvisibleDate = "floatingUnvisibleDate" + VS
         static let kidsRegistUnvisibleDate = "kidsRegistUnvisibleDate" + VS
+        static let nickName = "profileNickname"
+        static let birth = "profileBirthYear"
+        static let character = "profileCharacter"
+        static let gender = "profileGender"
+        static let selectedKidsProfileId = "kidsSelectedProfileId"
+        static let pairingDate = "pairingDate"
+        static let pairingModelName = "stbModelName"
+        static let restrictedAge = "restrictedAge"
+        static let isFirstCashCharge = "isFirstCashCharge" + VS
         
         static let drmTestUser = "drmTestUser" + VS
         static let listApi = "listApi" + VS
@@ -73,7 +72,7 @@ class Setup:ObservableObject, PageProtocol {
         return todayString
     }
     
-    let storage = UserDefaults.init()
+    let storage = UserDefaults.standard
     
     func initateSetup(){
         self.autoPlay = true
@@ -84,6 +83,49 @@ class Setup:ObservableObject, PageProtocol {
         self.isPurchaseAuth = true
         self.isFirstMemberAuth = false
     }
+    
+    func getSavedUser()-> User?{
+        let nicName = self.nickName
+        let birth = self.birth
+        let character = self.character
+        let gender = self.gender
+        
+        if nicName != nil && birth != nil && character != nil && gender != nil {
+            let savedUser = User(nickName: nicName, character: character, gender: gender, birth: birth)
+            savedUser.pairingDate = self.pairingDate
+            return savedUser
+        }
+        return nil
+    }
+    
+    func saveUser(_ user:User? = nil){
+        self.nickName = user?.nickName
+        self.birth = user?.birth
+        self.character = User.getCharacter(idx: user?.characterIdx ?? 0) 
+        self.gender = user?.gender.apiValue()
+        
+        if user == nil {
+            self.pairingDate = nil
+            self.selectedKidsProfileId = nil
+            
+        }else if self.pairingDate == nil {
+            self.pairingDate = Date().localDate().description
+        }
+    }
+    
+    func updateUser(_ data:ModifyUserData){
+        if let value = data.nickName { self.nickName = value }
+        if let value = data.characterIdx { self.character = Asset.characterList[value] }
+    }
+    
+    func saveDevice(_ stbData:StbData? = nil){
+        guard let stbData = stbData else { return }
+        self.pairingModelName = stbData.stbName
+    }
+    func clearDevice(){
+        self.pairingModelName = nil
+    }
+    
     
     var dataAlram:Bool {
         set(newVal){
@@ -215,25 +257,88 @@ class Setup:ObservableObject, PageProtocol {
             return storage.bool(forKey: Keys.isFirstMemberAuth)
         }
     }
-    
-    var isShowRemoconSelectPopup:Bool{
+        
+    var nickName:String? {
         set(newVal){
-            storage.set(newVal, forKey: Keys.isShowRemoconSelectPopup)
+            storage.set(newVal, forKey: Keys.nickName)
         }
         get{
-            return storage.bool(forKey: Keys.isShowRemoconSelectPopup)
+            return storage.string(forKey: Keys.nickName)
         }
     }
     
-    var isShowAutoRemocon:Bool{
+    var birth:String? {
         set(newVal){
-            storage.set(newVal, forKey: Keys.isShowAutoRemocon)
+            storage.set(newVal, forKey: Keys.birth)
         }
         get{
-            return storage.bool(forKey: Keys.isShowAutoRemocon)
+            return storage.string(forKey: Keys.birth)
         }
     }
     
+    var gender:String? {
+        set(newVal){
+            storage.set(newVal, forKey: Keys.gender)
+        }
+        get{
+            return storage.string(forKey: Keys.gender)
+        }
+    }
+
+    var character:String? {
+        set(newVal){
+            storage.set(newVal, forKey: Keys.character )
+        }
+        get{
+            return storage.string(forKey: Keys.character )
+        }
+    }
+    
+    var selectedKidsProfileId:String? {
+        set(newVal){
+            storage.set(newVal, forKey: Keys.selectedKidsProfileId )
+        }
+        get{
+            return storage.string(forKey: Keys.selectedKidsProfileId)
+        }
+    }
+    
+    
+    var pairingDate:String? {
+        set(newVal){
+            storage.set(newVal, forKey: Keys.pairingDate )
+        }
+        get{
+            return storage.string(forKey: Keys.pairingDate)
+        }
+    }
+    
+    var pairingModelName:String? {
+        set(newVal){
+            storage.set(newVal, forKey: Keys.pairingModelName )
+        }
+        get{
+            return storage.string(forKey: Keys.pairingModelName)
+        }
+    }
+    
+    var restrictedAge:Int? {
+        set(newVal){
+            storage.set(newVal, forKey: Keys.restrictedAge )
+        }
+        get{
+            return storage.integer(forKey: Keys.restrictedAge )
+        }
+    }
+    
+    var isFirstCashCharge:Bool{
+        set(newVal){
+           storage.set(newVal, forKey: Keys.isFirstCashCharge)
+        }
+        get{
+            return storage.bool(forKey: Keys.isFirstCashCharge)
+        }
+    }
     
     var listApi:String{
         set(newVal){

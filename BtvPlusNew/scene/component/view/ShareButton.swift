@@ -70,13 +70,16 @@ struct ShareButton: PageView {
             
         } else {
             self.naviLogManager.contentsLog(action: .clickContentsShare,  actionBody:.init(config: ""))
-            let link = ApiPath.getRestApiPath(.WEB)
-                + SocialMediaSharingManage.sharinglink + "/" + srisId + "/" + epsdId + "?from=share"
+            let shareFullpath = ApiPath.getRestApiPath(.WEB)
+            guard  let shareHost = shareFullpath.toUrl()?.host else {return}
+            let domain = shareFullpath.hasPrefix("https://") ? "https://" : "http://"
+            let link = domain + shareHost + SocialMediaSharingManage.sharinglink + "/" + srisId + "/" + epsdId  + "?from=share"
+           
             self.repository.shareManager.share(
                 Shareable(
                     link:link,
                     text: String.share.synopsis,
-                    useDynamiclink:false
+                    useDynamiclink:true
                 )
             )
         }

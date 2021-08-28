@@ -60,7 +60,7 @@ class ApiManager :PageProtocol, ObservableObject{
     
     private var anyCancellable = Set<AnyCancellable>()
     private var apiQ :[ ApiQ ] = []
-    private let vms:Vms = Vms(network: VmsNetwork())
+    private lazy var vms:Vms = Vms(network: VmsNetwork())
     private lazy var euxp:Euxp = Euxp(network: EuxpNetwork())
     private lazy var metv:Metv = Metv(network: MetvNetwork())
     private lazy var nps:Nps = Nps(network: NpsNetwork())
@@ -85,10 +85,6 @@ class ApiManager :PageProtocol, ObservableObject{
     
     private(set) var updateFlag: UpdateFlag = .none
     
-    init() {
-        self.initateApi()
-    }
-    
     func clear(){
         if self.status == .initate {return}
         self.euxp.clear()
@@ -108,7 +104,7 @@ class ApiManager :PageProtocol, ObservableObject{
         self.apiQ.removeAll()
     }
     
-    private func initateApi()
+    func initateApi()
     {
         NpsNetwork.goodbye()
         self.vms.versionCheck(
@@ -622,8 +618,7 @@ class ApiManager :PageProtocol, ObservableObject{
             } else {
                 self.navilog.sendLog(log: log, completion: {_ in}, error: nil)
             }
-        case .createEndpoint( let token) : self.pucr.createEndpoint(
-            token: token,
+        case .createEndpoint(_) : self.pucr.createEndpoint(
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         case .registerToken(let endpointId, let token) : self.pucr.registerToken(

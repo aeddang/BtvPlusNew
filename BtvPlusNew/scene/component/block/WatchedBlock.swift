@@ -210,6 +210,8 @@ struct WatchedBlock: PageComponent{
             let loadedDatas:[WatchedData] = zip(start...end, datas).map { idx, d in
                 return WatchedData().setData(data: d, idx: idx)
             }
+            .filter{$0.isContinueWatch} 
+            
             self.datas.append(contentsOf: loadedDatas)
             
         }

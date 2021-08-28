@@ -12,7 +12,7 @@ import Combine
 
 struct CircularSpinner: View {
     static private let animation = Animation
-        .linear(duration: 2)
+        .linear(duration: 4)
         .repeatForever(autoreverses: false)
 
     var resorce:String
@@ -20,7 +20,7 @@ struct CircularSpinner: View {
     var body: some View {
         Group{
             Image(resorce).renderingMode(.original)
-                .rotationEffect(.degrees(self.isReverse ? 0 : -360))
+                .rotationEffect(.degrees(self.isReverse ? 0 : -720))
                 .animation(CircularSpinner.animation)
         }
         .onAppear(){

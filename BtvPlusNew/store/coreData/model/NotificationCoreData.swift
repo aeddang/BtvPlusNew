@@ -28,12 +28,10 @@ class NotificationCoreData:PageProtocol {
         
         if let aps = userInfo["aps"] as? [String: Any] {
             if let mutableContent = aps["mutable-content"] as? String {
-                //if mutableContent == "1" { return }
+                if mutableContent == "1" { return nil }
             } else if let mutableContent = aps["mutable-content"] as? Int {
-               // if mutableContent == 1 { return }
+                if mutableContent == 1 { return nil }
             }
-            
-            
             if let value = aps["badge"] as? Int { badge = value }
             if let alert = aps["alert"] as? [String: Any] {
                 if let value = alert["title"] as? String { title = value }

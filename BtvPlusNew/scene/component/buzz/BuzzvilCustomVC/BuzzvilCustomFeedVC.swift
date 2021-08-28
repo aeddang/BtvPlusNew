@@ -64,8 +64,8 @@ class BuzzvilCustomFeedVC: UIViewController {
         
     }
     private func buzzAdConfigSetting() -> BABFeedConfig {
-        let unitid: String = SystemEnvironment.isReleaseMode
-            ? Buzz.BAB_SDK_KR_iOS_PRD_UNIT_ID : Buzz.BAB_SDK_KR_iOS_DEV_UNIT_ID
+        let unitid: String = SystemEnvironment.isStage
+            ? Buzz.BAB_SDK_KR_iOS_DEV_UNIT_ID : Buzz.BAB_SDK_KR_iOS_PRD_UNIT_ID 
         let config = BABFeedConfig(unitId: unitid)
         //툴바 타이틀 내용
         config.title = String.pageTitle.cashCharge //"꿀 피드"

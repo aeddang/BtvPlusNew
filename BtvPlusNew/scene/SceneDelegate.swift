@@ -79,7 +79,7 @@ class SceneDelegate: PageSceneDelegate {
         
         switch willPage.pageID {
         case .cashCharge:
-            if self.repository?.storage.isFirstCashCharge == true {
+            if self.repository?.userSetup.isFirstCashCharge == true {
                 self.pagePresenter.openPopup(
                     PageProvider.getPageObject(.cashChargeGuide)
                 )
@@ -151,17 +151,17 @@ class SceneDelegate: PageSceneDelegate {
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         PageLog.d("Deeplink openURLContexts", tag: self.tag)
-        //guard let url = URLContexts.first?.url else { return }
+        guard let url = URLContexts.first?.url else { return }
         
         //[DL]
-        //AppDelegate.appObserver.handleDynamicLink(url)
+        AppDelegate.appObserver.handleDynamicLink(url)
                         
     }
     
     override func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         PageLog.d("Deeplink willConnectTo", tag: self.tag)
-        //AppDelegate.appObserver.handleDynamicLink(connectionOptions.urlContexts.first?.url)
-        //AppDelegate.appObserver.handleUniversalLink(connectionOptions.userActivities.first?.webpageURL)
+        AppDelegate.appObserver.handleDynamicLink(connectionOptions.urlContexts.first?.url)
+        AppDelegate.appObserver.handleUniversalLink(connectionOptions.userActivities.first?.webpageURL)
         super.scene(scene, willConnectTo: session, options: connectionOptions)
     }
     

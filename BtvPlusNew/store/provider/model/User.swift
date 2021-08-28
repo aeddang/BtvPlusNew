@@ -32,6 +32,14 @@ struct ModifyUserData {
 class User {
     private(set) var nickName:String = ""
     var characterIdx:Int = 0
+    
+    static func getCharacter(idx:Int) -> String {
+        let max = Asset.characterList.count
+        if idx >= max { return Asset.characterList[0] }
+        if idx < 0 { return Asset.characterList[0] }
+        return Asset.characterList[idx]
+    }
+    
     var pairingDate:String? = nil
     private(set) var gender:Gender = .mail
     private(set) var birth:String = ""
@@ -43,9 +51,14 @@ class User {
     private(set) var isAutoPairing:Bool = false
     
     init(){}
-    init(nickName:String?,characterIdx:Int?,gender:String?,birth:String?){
+    init(nickName:String?,character:String?,gender:String?,birth:String?){
         self.nickName = nickName ?? ""
-        self.characterIdx = characterIdx ?? 0
+        if let character = character {
+            let key = character.replace(".png", with: "").replace(".jpg", with: "").replace(".jpeg", with: "")
+            self.characterIdx = Asset.characterList.firstIndex(of: key) ?? 0
+        }else {
+            self.characterIdx = 0
+        }
         self.gender = gender == "M" ? .mail : .femail
         self.birth = birth ?? ""
     }
@@ -63,6 +76,8 @@ class User {
         self.postAgreement = true
     }
     
+    
+    
     init(isAgree:Bool){
         self.isAgree3 = isAgree
     }
@@ -72,7 +87,7 @@ class User {
         self.nickName = "0000"
         self.characterIdx = 0
         self.gender = .mail
-        self.birth = "2000"
+        self.birth = "1990"
         self.isAgree1 = true
         self.isAgree2 = true
         self.isAgree3 = isAgree

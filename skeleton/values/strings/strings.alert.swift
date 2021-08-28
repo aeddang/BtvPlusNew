@@ -56,7 +56,7 @@ extension String {
         
         public static var disConnect = "alertDisConnect".loaalized()
         public static var disConnectText = "alertDisConnectText".loaalized()
-     
+        public static var dataNetwork = "alertDataNetwork".loaalized()
         public static var pushOn =  "alertPushOn".loaalized()
         public static var pushOff =  "alertPushOff".loaalized()
         public static var pushError =  "alertPushError".loaalized()

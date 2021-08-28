@@ -35,13 +35,15 @@ struct PagePairingFamilyInvite: PageView {
                         height: SystemEnvironment.isTablet ? 125 : 104)
                 Text(self.inviteNick + String.pageText.pairingFamilyInviteText1)
                     .modifier(BoldTextStyle(size: Font.size.regular, color: Color.app.white))
+                    .multilineTextAlignment(.center)
                     .padding(.top, Dimen.margin.microExtra)
+                    .fixedSize(horizontal: false, vertical: true)
                 
                 Text(String.pageText.pairingFamilyInviteText2)
                     .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.white))
                     .multilineTextAlignment(.center)
                     .padding(.top, Dimen.margin.regular)
-                
+                    .fixedSize(horizontal: false, vertical: true)
                 
                 Spacer().modifier(LineHorizontal(height: Dimen.line.light, margin: Dimen.margin.regular))
                     .padding(.top, Dimen.margin.thin)
@@ -59,6 +61,7 @@ struct PagePairingFamilyInvite: PageView {
                     FillButton(
                         text: String.app.cancel,
                         isSelected: true ,
+                        
                         textModifier: TextModifier(
                             family: Font.family.bold,
                             size: Font.size.lightExtra,

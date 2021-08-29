@@ -247,8 +247,20 @@ struct AppUtil{
         }
         return nil
     }
-
     
+    static func getQurryString(dic:[String:String], prefix:String = "?") -> String {
+        if !dic.isEmpty {
+            var query = dic.keys.reduce("", {
+                let v = dic[$1] ?? ""
+                return $0 + "&" + $1 + "=" + v
+            })
+            query.removeFirst()
+            return prefix + query
+        } else {
+            return prefix
+        }
+    }
+
     static func setAutolayoutSamesize(item: UIView, toitem: UIView) {
         item.translatesAutoresizingMaskIntoConstraints = false
         

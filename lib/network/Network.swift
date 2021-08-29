@@ -118,6 +118,7 @@ extension NetworkRoute {
             return try? JSONSerialization.data(withJSONObject:params)
         }
         if let params = jsonString {
+            DataLog.d("jsonString : " + params, tag: self.tag)
             return params.data(using: .utf8)
         }
         

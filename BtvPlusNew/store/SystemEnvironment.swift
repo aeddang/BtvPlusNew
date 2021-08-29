@@ -71,14 +71,15 @@ struct SystemEnvironment {
         
         if let prevUUID = wrapper?.object(forKey: Security.kSecAttrAccount) as? String {
             if !prevUUID.isEmpty {
-            DataLog.d( "exist UUID " + prevUUID, tag: "getDeviceId")
-                return prevUUID
+                DataLog.d( "exist UUID " + prevUUID, tag: "getDeviceId")
+                if prevUUID.hasSuffix("I") { return prevUUID }
+                else { return "I" + prevUUID }
             }
         }
-        let newId = UIDevice.current.identifierForVendor?.uuidString ?? UUID.init().uuidString
+        let newId = "I" + (UIDevice.current.identifierForVendor?.uuidString ?? UUID.init().uuidString)
         wrapper?.setObject(newId, forKey:  Security.kSecAttrAccount)
         DataLog.d("new UUID " + newId, tag: "getDeviceId")
-        return "I" + newId
+        return newId
     }
     
     static func getPlmn() -> String?{

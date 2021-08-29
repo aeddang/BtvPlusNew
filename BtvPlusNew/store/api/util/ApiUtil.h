@@ -46,5 +46,6 @@
 
 
 + (NSString *) stringByUrlEncoding:(NSString *)_str;
+
 + (NSString *) getIPAddress:(BOOL)preferIPv4;
 @end

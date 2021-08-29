@@ -81,7 +81,9 @@ class Setup:ObservableObject, PageProtocol {
         self.autoRemocon = true
         self.remoconVibration = true
         self.isPurchaseAuth = true
+        
         self.isFirstMemberAuth = false
+        self.isFirstCashCharge = true
     }
     
     func getSavedUser()-> User?{

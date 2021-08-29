@@ -31,19 +31,16 @@ class Pucr: Rest{
     func createEndpoint(
         completion: @escaping (EndPoint) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
-        let plmn = SystemEnvironment.getPlmn()
-        var params = [String:Any]()
-        params["device_type"] = PucrNetwork.DEVICE_TYPE
-        params["device_token"] = SystemEnvironment.deviceId
-        params["sdk_version"] = "sdk_type:" + PucrNetwork.SDK_VS
-        params["os_version"] = SystemEnvironment.systemVersion
-        params["manufacturer"] = PucrNetwork.MANYFACTURER
-        params["model"] = SystemEnvironment.model
-        params["product"] = SystemEnvironment.model
-        params["plmn"] = plmn
-        params["sim_plmn"] = plmn
-        params["method"] = "post"
-        fetch(route: PucrCreateEndPoint(body: params), completion: completion, error:error)
+        let qurryString =
+            "device_type=" + ApiUtil.string(byUrlEncoding: PucrNetwork.DEVICE_TYPE) +
+            "&device_token=" + ApiUtil.string(byUrlEncoding:SystemEnvironment.deviceId) +
+            "&sdk_version=" + ApiUtil.string(byUrlEncoding:PucrNetwork.SDK_VS) +
+            "&os_version=" + ApiUtil.string(byUrlEncoding:SystemEnvironment.systemVersion) +
+            "&manufacturer=" + ApiUtil.string(byUrlEncoding:PucrNetwork.MANYFACTURER) +
+            "&model=" + ApiUtil.string(byUrlEncoding:SystemEnvironment.model) +
+            "&product=" + ApiUtil.string(byUrlEncoding:SystemEnvironment.model)
+        
+        fetch(route: PucrCreateEndPoint(jsonString: qurryString), completion: completion, error:error)
     }
     
     /**
@@ -88,7 +85,8 @@ class Pucr: Rest{
 struct PucrCreateEndPoint:NetworkRoute{
     var method: HTTPMethod = .post
     var path: String = "/push/v3/endpoints"
-    var body: [String : Any]? = nil
+    var jsonString: String?
+    //var body: [String : Any]? = nil
 }
 
 struct PucrRegisterToken:NetworkRoute{

@@ -151,7 +151,7 @@ class Repository:ObservableObject, PageProtocol{
             switch requestPairing{
             case .user , .device, .auth:
                 self.userSetup.clearDevice()
-            default : do{}
+            default : break
             }
         }).store(in: &anyCancellable)
         

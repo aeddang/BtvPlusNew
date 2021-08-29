@@ -38,7 +38,7 @@ struct PageCashChargeGuide: PageView {
                     style:.small,
                     isChecked: self.isAgree,
                     text:String.pageText.cashChargeGuideAgree,
-                
+                    alignment: .top,
                     more:{
                         self.pagePresenter.openPopup(
                             PageProvider

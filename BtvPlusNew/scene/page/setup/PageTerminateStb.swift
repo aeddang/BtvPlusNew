@@ -95,7 +95,7 @@ struct PageTerminateStb: PageView {
             .onAppear{
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
                 guard let obj = self.pageObject  else { return }
-                guard let data = (obj.getParamValue(key: .data) as? [StbInfoDataItem]) else { return }
+                guard let data = (obj.getParamValue(key: .data) as? [StbListInfoDataItem]) else { return }
                 self.datas = data.map{ StbData().setData(data: $0) }
             }
             .onDisappear{

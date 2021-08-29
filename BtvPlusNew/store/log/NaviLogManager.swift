@@ -189,6 +189,10 @@ class NaviLogManager : ObservableObject, PageProtocol {
             self.send(anonymousData, isAnonymous: true)
         }
     }
+    func send(logString:String){
+        self.repository.apiManager.load(.sendNaviLog(logString, isAnonymous: true))
+        self.repository.apiManager.load(.sendNaviLog(logString, isAnonymous: false))
+    }
     
     private func send(_ data:MenuNaviItem, isAnonymous:Bool){
         if !isAnonymous {

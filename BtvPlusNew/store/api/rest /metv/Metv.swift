@@ -417,6 +417,40 @@ class Metv: Rest{
         
         fetch(route: MetvPossessionPurchase(query: params), completion: completion, error:error)
     }
+    
+    /**
+    * 출석체크 저장 (IF-EVENT-001)
+    */
+    func postAttendance(
+        pcId:String,
+        completion: @escaping (UpdateMetv) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:Any]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["IF"] = "IF-EVENT-001"
+        params["stb_id"] = stbId
+        params["pcid"] = pcId
+        params["dvc_id"] = SystemEnvironment.deviceId
+        fetch(route: MetvPostAttendance(body: params), completion: completion, error:error)
+    }
+    /**
+    * 출석체크 조회 (IF-EVENT-002)
+    */
+    func getAttendance(
+        pcId:String,
+        completion: @escaping (Attendance) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:Any]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["IF"] = "IF-EVENT-002"
+        params["stb_id"] = stbId
+        params["pcid"] = pcId
+        params["dvc_id"] = SystemEnvironment.deviceId
+        fetch(route: MetvGetAttendance(body: params), completion: completion, error:error)
+    }
+    
 }
 
 struct MetvPurchase:NetworkRoute{
@@ -508,6 +542,17 @@ struct MetvPossessionPurchase:NetworkRoute{
    var query: [String : String]? = nil
 }
 
+struct MetvPostAttendance:NetworkRoute{
+   var method: HTTPMethod = .post
+   var path: String = "/metv/v5/vodcomments/setevent/mobilebtv"
+   var body: [String : Any]? = nil
+}
+
+struct MetvGetAttendance:NetworkRoute{
+   var method: HTTPMethod = .post
+   var path: String = "/metv/v5/vodcomments/getevent/mobilebtv"
+   var body: [String : Any]? = nil
+}
 
 
 

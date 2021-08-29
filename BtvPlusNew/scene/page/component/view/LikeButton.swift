@@ -119,8 +119,14 @@ struct LikeButton: PageView {
     
     func regist(_ res:ApiResultResponds){
         guard let data = res.data as? RegistLike else {
+            self.appSceneObserver.event = .toast(String.alert.apiErrorServer)
             return
         }
+        if data.result != ApiCode.success {
+            self.appSceneObserver.event = .toast(String.alert.apiErrorServer)
+            return
+        }
+        
         if data.like_action == "1" {
             self.isLike = .like
             action?(self.isLike)

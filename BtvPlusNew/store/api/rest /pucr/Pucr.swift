@@ -14,6 +14,7 @@ struct PucrNetwork : Network{
         authorizationRequest.addValue(
             "Basic MTcyOWQ3M2QxOTcwNGI0NGExZTg2OTdkZjM0NWYzZDI6Zjc5YzMyOTI4MGY5NGE4M2I1MmJiYmUyMDYzYTA0ZGE=",
             forHTTPHeaderField: "Authorization")
+        authorizationRequest.addValue( "application/x-www-form-urlencoded; charset=UTF-8",forHTTPHeaderField: "Content-Type")
         return authorizationRequest
     }
 }
@@ -21,7 +22,6 @@ extension PucrNetwork{
     static let DEVICE_TYPE = "iOS"
     static let SDK_VS = "iOS:4.0"
     static let MANYFACTURER = "Apple"
-    static let CONTENT_TYPE = "application/x-www-form-urlencoded; charset=UTF-8"
 }
 
 class Pucr: Rest{
@@ -42,6 +42,7 @@ class Pucr: Rest{
         params["product"] = SystemEnvironment.model
         params["plmn"] = plmn
         params["sim_plmn"] = plmn
+        params["method"] = "post"
         fetch(route: PucrCreateEndPoint(body: params), completion: completion, error:error)
     }
     
@@ -53,6 +54,7 @@ class Pucr: Rest{
         completion: @escaping (PucrResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:Any]()
         params["token"] = token
+        params["method"] = "post"
         fetch(route: PucrRegisterToken( endpointId: endpointId, body: params), completion: completion, error:error)
     }
     
@@ -65,6 +67,7 @@ class Pucr: Rest{
     
         var params = [String:Any]()
         params["endpoint_id"] = endpointId
+        params["method"] = "post"
         fetch(route: PucrRecivePush( messageId: messageId, body: params), completion: completion, error:error)
     }
     
@@ -77,6 +80,7 @@ class Pucr: Rest{
     
         var params = [String:Any]()
         params["endpoint_id"] = endpointId
+        params["method"] = "post"
         fetch(route: PucrConfirmPush( messageId:messageId, body: params), completion: completion, error:error)
     }
 }
@@ -103,7 +107,6 @@ struct PucrRecivePush:NetworkRoute{
         return "/push/v3/messages/" + messageId + "/ack"
     }}
     var body: [String : Any]? = nil
-    var contentType: String? = PucrNetwork.CONTENT_TYPE
 }
 
 struct PucrConfirmPush:NetworkRoute{
@@ -113,7 +116,6 @@ struct PucrConfirmPush:NetworkRoute{
         return "/push/v3/messages/" + messageId + "/response"
     }}
     var body: [String : Any]? = nil
-    var contentType: String? = PucrNetwork.CONTENT_TYPE
 }
 
 

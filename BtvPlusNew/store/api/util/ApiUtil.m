@@ -9,10 +9,10 @@
 #import "ApiUtil.h"
 #import <CommonCrypto/CommonCryptor.h>
 #import <CommonCrypto/CommonDigest.h>
-
 #include <ifaddrs.h>
 #include <arpa/inet.h>
 #include <net/if.h>
+#import "BtvPlusNew-Swift.h"
 
 @implementation ApiUtil
 /**
@@ -285,6 +285,45 @@
     return pKey;
 }
 
+
+
++ (NSString *)getCBSEncrypted:(NSString *)_input uuid:(NSString *)_uuid
+{
+    // 2) UUID →  SHA256 적용
+    NSString *sha256UUID= [ApiUtil getSHA256:_uuid];
+    
+    // 3) 암호화 KEY와 IV 추출
+    NSString *keyStr = [sha256UUID substringWithRange:NSMakeRange(0, 32)];
+    NSString *ivLast = [sha256UUID substringWithRange:NSMakeRange((sha256UUID.length - 10), 10)];
+    NSString *ivStr = [NSString stringWithFormat:@"BWORLD%@", ivLast];
+    
+    // 4) 추출된 KEY와 IV로 문자열 AES암호화 적용 (BASE64 Encoding 포함)
+
+    NSString *cipherText = [CryptoUtil aes256WithPlain:_input key:keyStr iv:ivStr]; 
+//    NSData *ivData = [ivStr dataUsingEncoding:NSUTF8StringEncoding];
+//    const char *iv = [ivData bytes];
+//    NSData *rawkeyData = [keyStr dataUsingEncoding:NSUTF8StringEncoding];
+//    const char *rawkey = [rawkeyData bytes];
+//    NSData *data = [_input dataUsingEncoding:NSUTF8StringEncoding];
+//    NSData *result = [self AES256EncryptWithKey:rawkey theData:data andIv:iv];
+//    NSString *cipherText = [result base64EncodedStringWithOptions:0];
+    
+    // 5) equal 문자 제거
+    NSString *removeEqual = [cipherText stringByReplacingOccurrencesOfString:@"=" withString:@""];
+    
+    // 6) URL Encoding 적용
+    NSString *urlEncoded = [ApiUtil stringByUrlEncoding:removeEqual];
+    
+    return urlEncoded;
+}
+
++ (NSString *)getSHA256:(NSString *)_input
+{
+    NSData *data = [self SHAx:_input];
+    NSString *result = [self hexEncode:data];
+    
+    return result;
+}
 
 + (NSString *) stringByUrlEncoding:(NSString *)_str
 {

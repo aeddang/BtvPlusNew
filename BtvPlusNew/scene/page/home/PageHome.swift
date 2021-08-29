@@ -220,13 +220,13 @@ struct PageHome: PageView {
         }
         guard let obj = self.pageObject  else { return }
         DataLog.d("UPDATEED GNBDATA reset home", tag:self.tag)
-        DispatchQueue.main.async {
+        //DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.pagePresenter.changePage(
                 PageProvider.getPageObject(.home)
                     .addParam(key: .id, value: obj.getParamValue(key:.id)).addParam(key: UUID().uuidString , value: ""),
                 isCloseAllPopup: false
             )
-        }
+        //}
     }
     
     private func reload(selectedMonthlyId:String? = nil){

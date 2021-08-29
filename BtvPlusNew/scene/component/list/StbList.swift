@@ -49,7 +49,7 @@ class StbData:InfinityData{
         return self
     }
     
-    func setData(data:StbInfoDataItem) -> StbData {
+    func setData(data:StbListInfoDataItem) -> StbData {
         macAddress = data.mac_address
         uiAppVer = ""
         adult = ""

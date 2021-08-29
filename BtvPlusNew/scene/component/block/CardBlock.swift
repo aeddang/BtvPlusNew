@@ -37,6 +37,20 @@ extension CardBlock{
     enum ListType:String {
         case member, okCash, tvPoint
         
+        static func getType(_ value:String)->ListType{
+            switch value {
+                case "1": return .okCash
+                case "2": return .member
+            /*
+            case "3":
+                controller.categories = .memberShipTransform
+            case "4":
+                controller.categories = .tmemberShipRegi
+            */
+            default : return .member
+            }
+        }
+        
         var title: String {
             switch self {
             case .member: return String.pageText.myBenefitsDiscountT

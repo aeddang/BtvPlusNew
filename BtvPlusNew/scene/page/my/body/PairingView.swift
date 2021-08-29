@@ -131,30 +131,31 @@ struct PairingView: PageComponent{
                     .modifier(ContentHorizontalEdgesTablet())
                     .padding(.top, Dimen.margin.mediumExtra)
             }
-            if let data = self.watchedData {
-                if SystemEnvironment.isTablet {
-                    VideoSetBlock(
-                        pageObservable: self.pageObservable,
-                        geometry:self.geometry,
-                        data: data,
-                        limitedLine : 2
-                        )
-                        .padding(.top, Dimen.margin.medium)
-                } else {
-                    VideoBlock(
-                        pageObservable:self.pageObservable,
-                        viewModel:self.watchedScrollModel,
-                        pageDragingModel:self.pageDragingModel,
-                        data: data,
-                        margin:SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.thin ,
-                        useTracking:true,
-                        useEmpty:true
-                        )
-                        .padding(.top, Dimen.margin.medium)
-                }
-            }
+            
             
             if self.isCompleted {
+                if let data = self.watchedData {
+                    if SystemEnvironment.isTablet {
+                        VideoSetBlock(
+                            pageObservable: self.pageObservable,
+                            geometry:self.geometry,
+                            data: data,
+                            limitedLine : 2
+                            )
+                            .padding(.top, Dimen.margin.medium)
+                    } else {
+                        VideoBlock(
+                            pageObservable:self.pageObservable,
+                            viewModel:self.watchedScrollModel,
+                            pageDragingModel:self.pageDragingModel,
+                            data: data,
+                            margin:SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.thin ,
+                            useTracking:true,
+                            useEmpty:self.isEmpty
+                            )
+                            .padding(.top, Dimen.margin.medium)
+                    }
+                }
                 if SystemEnvironment.isTablet {
                     HStack(spacing:0){
                         FillButton(
@@ -276,6 +277,7 @@ struct PairingView: PageComponent{
     }//body
    
     @State var isCompleted:Bool = false
+    @State var isEmpty:Bool = false
     @State var watchedData:BlockData? = nil
     func onWatchedData(res:ApiResultResponds){
         guard let resData = res.data as? Watch else { return }
@@ -290,12 +292,11 @@ struct PairingView: PageComponent{
             .setData(title: String.pageTitle.watched, cardType:.watchedVideo, dataType:.watched, uiType:.video, isCountView: true)
         blockData.videos = videos
         blockData.setDatabindingCompleted(total: total)
-        DispatchQueue.main.async {
-            self.watchedData = blockData
-            
-            withAnimation{ self.isCompleted = true }
-        }
-       
+        
+        self.watchedData = blockData
+        self.isEmpty = self.watchedData?.blocks?.isEmpty == true
+        withAnimation{ self.isCompleted = true }
+    
     }
     
     private func setupWatchHabit(){

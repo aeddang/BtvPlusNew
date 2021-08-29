@@ -149,11 +149,15 @@ extension String {
     }
 
     struct share {
+        public static let eventTitle = "shareEventTitle".loaalized()
         public static let inviteMsg =  "shareInviteMsg".loaalized()
         public static let synopsis = "shareSynopsis".loaalized()
         public static let complete = "shareComplete".loaalized()
         public static let fail = "shareFail".loaalized()
         public static let shareFamilyInvite = "shareFamilyInvite".loaalized()
+        public static let shareFamilyInviteComplete = "shareFamilyInviteComplete".loaalized()
+        public static let shareFamilyInviteFail = "shareFamilyInviteFail".loaalized()
+        
         public static let synopsisRecommand = "shareSynopsisRecommand".loaalized()
         public static let synopsisRecommandBenefitText1 = "shareSynopsisRecommandBenefitText1".loaalized()
         public static let synopsisRecommandBenefitText2 = "shareSynopsisRecommandBenefitText2".loaalized()

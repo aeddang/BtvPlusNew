@@ -100,6 +100,7 @@ class Repository:ObservableObject, PageProtocol{
             pairing: self.pairing,
             storage: self.storage,
             setup: self.userSetup,
+            shareManager:self.shareManager,
             networkObserver: self.networkObserver)
         
         self.pagePresenter?.$currentPage.sink(receiveValue: { evt in

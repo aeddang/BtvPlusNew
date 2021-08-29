@@ -78,7 +78,8 @@ struct PageSnsShare: PageView {
                 useDynamiclink:true
             )
         ){ isComplete in
-           
+            self.appSceneObserver.event = .toast(isComplete ? String.share.shareFamilyInviteComplete : String.share.shareFamilyInviteFail)
+            
         }
         self.pagePresenter.closePopup(self.pageObject?.id)
     }

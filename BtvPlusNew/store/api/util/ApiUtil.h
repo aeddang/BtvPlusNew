@@ -26,6 +26,11 @@
 + (NSString *) getEncrypedSCValue:(NSString *)message nValue:(NSString *)nValue npsPw:(NSString *)pw;
 
 /**
+ * CBS 값 암호화
+ */
++ (NSString *)getCBSEncrypted:(NSString *)_input uuid:(NSString *)_uuid;
+
+/**
  * HASH ID 반환
  */
 + (NSString *) getHashId:(NSString *)strSTBId;

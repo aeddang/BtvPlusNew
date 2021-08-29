@@ -7,21 +7,21 @@
 
 import Foundation
 
-struct StbInfo : Decodable {
+struct StbListItem : Decodable {
     private(set) var statusCode:String? = nil
     private(set) var statusMessage:String? = nil
-    private(set) var data:StbInfoData? = nil
+    private(set) var data:StbListInfoData? = nil
 }
 
-struct StbInfoData: Decodable {
+struct StbListInfoData: Decodable {
     private(set) var ver:String? = nil
     private(set) var result:String? = nil
     private(set) var reason:String? = nil
     private(set) var IF:String? = nil
-    private(set) var stb_infos:[StbInfoDataItem]? = nil
+    private(set) var stb_infos:[StbListInfoDataItem]? = nil
 }
 
-struct StbInfoDataItem: Decodable {
+struct StbListInfoDataItem: Decodable {
     private(set) var stb_id:String? = nil
     private(set) var mac_address:String? = nil
     private(set) var svc_num:String? = nil

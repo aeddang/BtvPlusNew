@@ -142,6 +142,8 @@ extension String {
         public static var adultCertificationNotAllowed = "alertAdultCertificationNotAllowed".loaalized()
         public static var needAdultCertification = "alertNeedAdultCertification".loaalized()
         
+        public static var couponRegistSuccess = "alertCouponRegistSuccess".loaalized()
+        public static var couponRegistFail = "alertCouponRegistFail".loaalized()
         
         
         public static var incorrectNumberOfCharacter = "alertIncorrectNumberOfCharacter".loaalized()

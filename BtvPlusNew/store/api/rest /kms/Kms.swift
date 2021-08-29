@@ -23,7 +23,7 @@ class Kms: Rest{
      */
     func getStbList(
         ci:String?,
-        completion: @escaping (StbInfo) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        completion: @escaping (StbListItem) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
         if let ci = ci {
             params["ci"] = ApiUtil.string(byUrlEncoding: ci)
@@ -35,7 +35,7 @@ class Kms: Rest{
     
     func getTerminateStbList(
         ci:String?,
-        completion: @escaping (StbInfo) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        completion: @escaping (StbListItem) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
         if let ci = ci {
             params["ci"] = ApiUtil.string(byUrlEncoding: ci)

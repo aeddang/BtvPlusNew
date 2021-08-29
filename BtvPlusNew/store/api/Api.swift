@@ -17,14 +17,13 @@ struct ApiError :Error,Identifiable{
 struct ApiQ :Identifiable{
     var id:String = UUID().uuidString
     let type:ApiType
-    var action:ApiAction? = nil
     var isOptional:Bool = false
     var isLock:Bool = false
     var isLog:Bool = false
     var isProcess:Bool = false
     func copy(newId:String? = nil) -> ApiQ {
         let nid = newId ?? id
-        return ApiQ(id: nid, type: type, action: action, isOptional: isOptional, isLock: isLock, isLog:isLog)
+        return ApiQ(id: nid, type: type, isOptional: isOptional, isLock: isLock, isLog:isLog)
     }
 }
 
@@ -76,6 +75,9 @@ enum ApiType{
          getDirectView(SynopsisModel),
          getPackageDirectView(SynopsisPackageModel, Bool = false),
          getPossessionPurchase(String, Int? = nil , Int? = nil)
+    //METV event
+    case postAttendance(pcid:String,callback:String? = nil),
+         getAttendance(pcid:String,callback:String? = nil)
     
     //NPS
     case registHello,
@@ -95,7 +97,7 @@ enum ApiType{
          postPairingByToken(User?, pairingToken:String)
          
     //KMS
-    case getStbInfo(String?),
+    case getStbList(String?),
          getTerminateStbInfo(String?)
     //SMD
     case getLike(String?, HostDevice?),
@@ -106,7 +108,8 @@ enum ApiType{
          getPreplay(String?, Bool?),
          getPlay(String?, HostDevice?),
          confirmPassword(String?, HostDevice?, ScsNetwork.ConfirmType),
-         connectTerminateStb(ScsNetwork.ConnectType, String?)
+         connectTerminateStb(ScsNetwork.ConnectType, String?),
+         getStbInfo(HostDevice?)
     //PSS
     case getPairingUserInfo(String?, String? = nil),
          getPairingUserInfoByPackageID(String?)
@@ -166,7 +169,7 @@ enum ApiType{
          getEvaluationReportExam(Kid, srisId:String?),
          getEvaluationReportQuestion(Kid, String? , Int?, [QuestionData])
     //RPS
-    case getRecommendHistory,
+    case getRecommendHistory(callback:String? = nil),
          getRecommendBenefit,
          registRecommend(User, SynopsisData),
          getRecommendCoupon(mgmId:String, srisTypeCd:String?)
@@ -190,6 +193,11 @@ enum ApiType{
     //PUSH
     case registEndpoint(String, isAgree:Bool),
          updatePushUserAgreement(Bool)
+    
+    //CBS
+    case certificationCoupon(String, StbInfo),
+         requestBPointIssuance(pointPolicyNum:String, pointAmount:Int, callback:String? = nil)
+    
     
     func coreDataKey() -> String? {
         switch self {

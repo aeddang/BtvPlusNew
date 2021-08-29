@@ -170,6 +170,27 @@ class Scs: Rest{
         params["method"] = "post"
         fetch(route: ScsConnectTerminateStb(body: params), completion: completion, error:error)
     }
+    
+    /**
+     * STB 정보 확인 (IF-SCS-STBINFO-UI5-001)
+     */
+    func getStbInfo(
+        hostDevice:HostDevice?,
+        completion: @escaping (StbInfo) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
+        
+        var params = [String:Any]()
+        params["if"] = "IF-SCS-STB-UI5-001"
+        params["ver"] = ScsNetwork.VERSION
+        params["stb_id"] = stbId
+        params["mac_address"] = macAdress
+      
+        params["method"] = "post"
+        
+        fetch(route: ScsStbInfo(body: params), completion: completion, error:error)
+    }
 }
 
 struct ScsPreview:NetworkRoute{
@@ -201,3 +222,11 @@ struct ScsConnectTerminateStb:NetworkRoute{
    var path: String = "/scs/v522/mcancelstblink/mobilebtv"
    var body: [String : Any]? = nil
 }
+
+struct ScsStbInfo:NetworkRoute{
+   var method: HTTPMethod = .post
+   var path: String = "/scs/v5/stbmapping"
+   var body: [String : Any]? = nil
+}
+
+

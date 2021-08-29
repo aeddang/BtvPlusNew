@@ -21,6 +21,8 @@ extension PageMyBenefits{
         default : return .coupon
         }
     }
+    
+    
 }
 
 struct PageMyBenefits: PageView {

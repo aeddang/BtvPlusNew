@@ -189,7 +189,7 @@ struct ShareRecommand: PageComponent {
                 useDynamiclink:true
             )
         ){ isComplete in
-            
+            self.appSceneObserver.event = .toast(isComplete ? String.share.complete : String.share.fail)
             self.close()
         }
     }

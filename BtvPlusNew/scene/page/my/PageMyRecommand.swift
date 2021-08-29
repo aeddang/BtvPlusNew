@@ -215,7 +215,7 @@ struct PageMyRecommand: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    self.dataProvider.requestData(q: .init(type: .getRecommendHistory))
+                    self.dataProvider.requestData(q: .init(type: .getRecommendHistory()))
                 }
             }
             .onAppear{

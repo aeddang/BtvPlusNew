@@ -15,7 +15,7 @@ struct DynamicLinkMamager{
     //private static let packageName = "com.skb.btvplus"
     
     static func getDynamicLinkBuilder(_ link:String = deepLink) -> DynamicLinkComponents?{
-        guard let link = URL(string: link) else { return nil }
+        guard let link = URL(string: link.addingPercentEncoding( withAllowedCharacters: .urlQueryAllowed) ?? "") else { return nil }
         guard  let linkBuilder = DynamicLinkComponents(link: link, domainURIPrefix: urlPreFix) else { return nil}
         //linkBuilder.iOSParameters = DynamicLinkIOSParameters(bundleID: bundleID)
         //linkBuilder.androidParameters = DynamicLinkAndroidParameters(packageName: packageName)

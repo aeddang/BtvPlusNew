@@ -123,7 +123,7 @@ struct SetupPossession: PageView {
             return
         #endif
         */
-        guard let data = res.data as? StbInfo  else {
+        guard let data = res.data as? StbListItem  else {
             self.appSceneObserver.event = .toast( String.alert.possessionStbNone )
             self.setupPossessionCancel()
             return

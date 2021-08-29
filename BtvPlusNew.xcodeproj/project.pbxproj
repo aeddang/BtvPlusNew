@@ -76,6 +76,14 @@
 		314D73AC25B5276700907118 /* SelectButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D73AB25B5276700907118 /* SelectButton.swift */; };
 		314D73BA25B54FD900907118 /* BookMarkButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D73B925B54FD900907118 /* BookMarkButton.swift */; };
 		314D73BF25B550F900907118 /* BtvButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D73BE25B550F900907118 /* BtvButton.swift */; };
+		314E755E26DB310300A8C924 /* BtvCustomWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314E755D26DB310300A8C924 /* BtvCustomWebView.swift */; };
+		314E756026DB4F2400A8C924 /* Attendance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314E755F26DB4F2400A8C924 /* Attendance.swift */; };
+		314E756226DB507000A8C924 /* BtvWebViewEventAttendance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314E756126DB507000A8C924 /* BtvWebViewEventAttendance.swift */; };
+		314E756626DB563F00A8C924 /* Cbs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314E756526DB563F00A8C924 /* Cbs.swift */; };
+		314E756826DB5B9300A8C924 /* StbInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314E756726DB5B9300A8C924 /* StbInfo.swift */; };
+		314E756A26DB641200A8C924 /* CryptoUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314E756926DB641200A8C924 /* CryptoUtil.swift */; };
+		314E756D26DB6C2B00A8C924 /* CertificationCoupon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314E756C26DB6C2B00A8C924 /* CertificationCoupon.swift */; };
+		314E756F26DB6CAB00A8C924 /* BPointIssuance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314E756E26DB6CAB00A8C924 /* BPointIssuance.swift */; };
 		314F816025BE30AA00E76508 /* PurchaseViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314F815F25BE30AA00E76508 /* PurchaseViewer.swift */; };
 		314F816525BE3CFA00E76508 /* SynopsisConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314F816425BE3CFA00E76508 /* SynopsisConst.swift */; };
 		31513CC025F59C6700D8373A /* SimplePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31513CBF25F59C6700D8373A /* SimplePlayer.swift */; };
@@ -92,7 +100,7 @@
 		3158232925A704F800E4E9C8 /* LocationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3158232825A704F800E4E9C8 /* LocationObserver.swift */; };
 		3159B05025B17B0B008CA85B /* Kms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3159B04F25B17B0B008CA85B /* Kms.swift */; };
 		3159B05925B17BED008CA85B /* KmsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3159B05825B17BED008CA85B /* KmsModel.swift */; };
-		3159B05E25B17C14008CA85B /* StbInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3159B05D25B17C14008CA85B /* StbInfo.swift */; };
+		3159B05E25B17C14008CA85B /* StbListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3159B05D25B17C14008CA85B /* StbListItem.swift */; };
 		315A8FC125AD114F00498B03 /* ApiUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 315A8FBF25AD114F00498B03 /* ApiUtil.m */; };
 		315A8FD425ADADD600498B03 /* GuestAgreementInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315A8FD325ADADD600498B03 /* GuestAgreementInfo.swift */; };
 		315B55D225A7E2DC00B5B351 /* Nps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315B55D125A7E2DC00B5B351 /* Nps.swift */; };
@@ -760,6 +768,14 @@
 		314D73AB25B5276700907118 /* SelectButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectButton.swift; sourceTree = "<group>"; };
 		314D73B925B54FD900907118 /* BookMarkButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMarkButton.swift; sourceTree = "<group>"; };
 		314D73BE25B550F900907118 /* BtvButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtvButton.swift; sourceTree = "<group>"; };
+		314E755D26DB310300A8C924 /* BtvCustomWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtvCustomWebView.swift; sourceTree = "<group>"; };
+		314E755F26DB4F2400A8C924 /* Attendance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attendance.swift; sourceTree = "<group>"; };
+		314E756126DB507000A8C924 /* BtvWebViewEventAttendance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtvWebViewEventAttendance.swift; sourceTree = "<group>"; };
+		314E756526DB563F00A8C924 /* Cbs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cbs.swift; sourceTree = "<group>"; };
+		314E756726DB5B9300A8C924 /* StbInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StbInfo.swift; sourceTree = "<group>"; };
+		314E756926DB641200A8C924 /* CryptoUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoUtil.swift; sourceTree = "<group>"; };
+		314E756C26DB6C2B00A8C924 /* CertificationCoupon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificationCoupon.swift; sourceTree = "<group>"; };
+		314E756E26DB6CAB00A8C924 /* BPointIssuance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPointIssuance.swift; sourceTree = "<group>"; };
 		314F815F25BE30AA00E76508 /* PurchaseViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseViewer.swift; sourceTree = "<group>"; };
 		314F816425BE3CFA00E76508 /* SynopsisConst.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisConst.swift; sourceTree = "<group>"; };
 		31513CBF25F59C6700D8373A /* SimplePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimplePlayer.swift; sourceTree = "<group>"; };
@@ -776,7 +792,7 @@
 		3158232825A704F800E4E9C8 /* LocationObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationObserver.swift; sourceTree = "<group>"; };
 		3159B04F25B17B0B008CA85B /* Kms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kms.swift; sourceTree = "<group>"; };
 		3159B05825B17BED008CA85B /* KmsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KmsModel.swift; sourceTree = "<group>"; };
-		3159B05D25B17C14008CA85B /* StbInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StbInfo.swift; sourceTree = "<group>"; };
+		3159B05D25B17C14008CA85B /* StbListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StbListItem.swift; sourceTree = "<group>"; };
 		315A8FBF25AD114F00498B03 /* ApiUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiUtil.m; sourceTree = "<group>"; };
 		315A8FC025AD114F00498B03 /* ApiUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiUtil.h; sourceTree = "<group>"; };
 		315A8FD325ADADD600498B03 /* GuestAgreementInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestAgreementInfo.swift; sourceTree = "<group>"; };
@@ -1469,6 +1485,7 @@
 				310F6FB925C13AE8005718B0 /* Preview.swift */,
 				310F6FC625C16916005718B0 /* Play.swift */,
 				318C36B7265F3099009B7EC3 /* ConnectTerminateStb.swift */,
+				314E756726DB5B9300A8C924 /* StbInfo.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -1672,6 +1689,32 @@
 			path = body;
 			sourceTree = "<group>";
 		};
+		314E756326DB507C00A8C924 /* component */ = {
+			isa = PBXGroup;
+			children = (
+				314E755D26DB310300A8C924 /* BtvCustomWebView.swift */,
+			);
+			path = component;
+			sourceTree = "<group>";
+		};
+		314E756426DB562400A8C924 /* cbs */ = {
+			isa = PBXGroup;
+			children = (
+				314E756B26DB6BD400A8C924 /* model */,
+				314E756526DB563F00A8C924 /* Cbs.swift */,
+			);
+			path = cbs;
+			sourceTree = "<group>";
+		};
+		314E756B26DB6BD400A8C924 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				314E756C26DB6C2B00A8C924 /* CertificationCoupon.swift */,
+				314E756E26DB6CAB00A8C924 /* BPointIssuance.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
 		3156F09E25CAC29100C9BE06 /* sceneui */ = {
 			isa = PBXGroup;
 			children = (
@@ -1701,7 +1744,7 @@
 			isa = PBXGroup;
 			children = (
 				3159B05825B17BED008CA85B /* KmsModel.swift */,
-				3159B05D25B17C14008CA85B /* StbInfo.swift */,
+				3159B05D25B17C14008CA85B /* StbListItem.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -1711,6 +1754,7 @@
 			children = (
 				315A8FC025AD114F00498B03 /* ApiUtil.h */,
 				315A8FBF25AD114F00498B03 /* ApiUtil.m */,
+				314E756926DB641200A8C924 /* CryptoUtil.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -1754,6 +1798,7 @@
 				3166CBDA26119C1B00282891 /* MonthlyPurchaseInfo.swift */,
 				315544CE25B83F8C00086510 /* MetvModel.swift */,
 				31740C3D261C3F6C0052A9C2 /* Purchase.swift */,
+				314E755F26DB4F2400A8C924 /* Attendance.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -1903,8 +1948,10 @@
 		3167642525CD0A0C003A7721 /* webview */ = {
 			isa = PBXGroup;
 			children = (
+				314E756326DB507C00A8C924 /* component */,
 				31671A112600B359005AC3D2 /* model */,
 				31061E6525C8CF5800543FC0 /* BtvWebView.swift */,
+				314E756126DB507000A8C924 /* BtvWebViewEventAttendance.swift */,
 			);
 			path = webview;
 			sourceTree = "<group>";
@@ -3696,6 +3743,7 @@
 		D56C6B25257DACD800CF9AB8 /* rest  */ = {
 			isa = PBXGroup;
 			children = (
+				314E756426DB562400A8C924 /* cbs */,
 				31EA0D8E26D705CA007BECAB /* push */,
 				312D2D7726D5F349002EE783 /* pucr */,
 				31A3FABB26C6419400689E09 /* vls */,
@@ -4102,6 +4150,7 @@
 				318FBFF725E4882700ABC241 /* PageCategoryList.swift in Sources */,
 				316C45DC265215AB00A8D7F5 /* CurrentChannels.swift in Sources */,
 				31895B0F2601CEEC002DE02E /* SynopsisData.swift in Sources */,
+				314E756F26DB6CAB00A8C924 /* BPointIssuance.swift in Sources */,
 				316A70A72670895900A93B83 /* PlayerBottomBody.swift in Sources */,
 				316C45D8265200A500A8D7F5 /* Broadcasting.swift in Sources */,
 				316C45DA265203CF00A8D7F5 /* BroadcastManager.swift in Sources */,
@@ -4258,6 +4307,7 @@
 				D50AB9042580772A00649C4A /* EventBanner.swift in Sources */,
 				318BA3972608C2660093BC7D /* SearchPopularityVod.swift in Sources */,
 				D56C6A2E257DA0C700CF9AB8 /* CustomImagePicker.swift in Sources */,
+				314E756826DB5B9300A8C924 /* StbInfo.swift in Sources */,
 				D56C6B13257DAADE00CF9AB8 /* AppLayout.swift in Sources */,
 				31AC66CF26B8C82400766995 /* PagePairingAppleTv.swift in Sources */,
 				314F816025BE30AA00E76508 /* PurchaseViewer.swift in Sources */,
@@ -4287,6 +4337,7 @@
 				31AC66C326B7814A00766995 /* EditButton.swift in Sources */,
 				312825B226AE828E00A58DB9 /* BuzzView.swift in Sources */,
 				312825BC26AFBCDA00A58DB9 /* HitchStbItem.swift in Sources */,
+				314E756626DB563F00A8C924 /* Cbs.swift in Sources */,
 				31373F6025C7E726004353DA /* CustomYTPlayer.swift in Sources */,
 				316A7090267061F800A93B83 /* PlayerMoreBoxKids.swift in Sources */,
 				3190CB20268D676700ACB465 /* KidProfileBox.swift in Sources */,
@@ -4366,6 +4417,7 @@
 				317335FF26130003009B211B /* PageSynopsisPlayer.swift in Sources */,
 				318F7B472625708100774B17 /* DivisionTab.swift in Sources */,
 				31785808260AB2400058A039 /* SwipperView.swift in Sources */,
+				314E756A26DB641200A8C924 /* CryptoUtil.swift in Sources */,
 				D56C6A4C257DA0C700CF9AB8 /* InfinityScrollView.swift in Sources */,
 				3177AB33263B6F9D0054BFA4 /* TableBox.swift in Sources */,
 				D5E27EE42587115900B2CD5D /* ImageConst.swift in Sources */,
@@ -4402,6 +4454,7 @@
 				319B379B26B19FAC001501B1 /* PageRecommandRecieve.swift in Sources */,
 				3158232925A704F800E4E9C8 /* LocationObserver.swift in Sources */,
 				318FC00625E4CA5800ABC241 /* CateBlock.swift in Sources */,
+				314E756D26DB6C2B00A8C924 /* CertificationCoupon.swift in Sources */,
 				31E50C71261ACA7400D0762C /* NpsMessage.swift in Sources */,
 				D56C6A61257DA0C700CF9AB8 /* FocusableTextView.swift in Sources */,
 				316A707D2670360500A93B83 /* KidsPlayerUI.swift in Sources */,
@@ -4415,6 +4468,7 @@
 				D56C69B5257DA09E00CF9AB8 /* NetworkObserver.swift in Sources */,
 				3195C1BB2665F121001F513E /* PageKidsFactory.swift in Sources */,
 				3152B47225DA310000147C86 /* SerisList.swift in Sources */,
+				314E755E26DB310300A8C924 /* BtvCustomWebView.swift in Sources */,
 				317F990526A6719000016C09 /* EmptySearchResultKids.swift in Sources */,
 				D56C6A40257DA0C700CF9AB8 /* PlayerUI.swift in Sources */,
 				D56C6A5A257DA0C700CF9AB8 /* SortButton.swift in Sources */,
@@ -4443,7 +4497,7 @@
 				315B55D225A7E2DC00B5B351 /* Nps.swift in Sources */,
 				D56C6AFF257DAAC000CF9AB8 /* AppDelegate.swift in Sources */,
 				318C36B8265F3099009B7EC3 /* ConnectTerminateStb.swift in Sources */,
-				3159B05E25B17C14008CA85B /* StbInfo.swift in Sources */,
+				3159B05E25B17C14008CA85B /* StbListItem.swift in Sources */,
 				31671A052600930D005AC3D2 /* PagePerson.swift in Sources */,
 				3195C1B22665E0F8001F513E /* dimenKids.swift in Sources */,
 				31C4D2A42692D867000C7E83 /* EvaluationReport.swift in Sources */,
@@ -4575,8 +4629,10 @@
 				3159B05925B17BED008CA85B /* KmsModel.swift in Sources */,
 				31C4D2A72692E0CE000C7E83 /* PairingKidsView.swift in Sources */,
 				3192EFD626670ECD0012F238 /* KidsTop.swift in Sources */,
+				314E756226DB507000A8C924 /* BtvWebViewEventAttendance.swift in Sources */,
 				3195C1A62665CD35001F513E /* strings.button.swift in Sources */,
 				317C974A26240945008F267D /* CouponBlock.swift in Sources */,
+				314E756026DB4F2400A8C924 /* Attendance.swift in Sources */,
 				D56C6A38257DA0C700CF9AB8 /* ImageItem.swift in Sources */,
 				317C975C262433F9008F267D /* EpsModel.swift in Sources */,
 				318B537C25F05BAB0052E4E0 /* PagePreviewList.swift in Sources */,
@@ -4876,6 +4932,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 82C464328C07082311FF19F2 /* Pods-BtvPlusNew.debug.xcconfig */;
 			buildSettings = {
+				API_CBS = "https://1.255.102.229:9090";
 				API_EMS = "https://ems.hanafostv.com:8443";
 				API_EPS = "https://agw-stg.sk-iptv.com:8443";
 				API_EUXP = "https://agw-stg.sk-iptv.com:8443";
@@ -4905,6 +4962,7 @@
 				API_SMD = "http://175.113.214.199:8080";
 				API_SRCXPG = "http://smdxpg.hanafostv.com:8080";
 				API_STACM = "https://stacm.hanafostv.com:8443";
+				API_TEST = "";
 				API_UORPS = "https://agw-stg.sk-iptv.com:8443/rps/v5/rps/uorps-service/";
 				API_UPMC = "http://ptestpluswas.hanafostv.com:8080/";
 				API_VLS = "http://agw-stg.sk-iptv.com:8080";
@@ -4918,6 +4976,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 7428;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				ENABLE_BITCODE = NO;
@@ -4956,6 +5015,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 01E5590AFE81BD86D6657D56 /* Pods-BtvPlusNew.release.xcconfig */;
 			buildSettings = {
+				API_CBS = "https://btvcpas.skbroadband.com:9090";
 				API_EMS = "https://ems.hanafostv.com:8443";
 				API_EPS = "https://agw.sk-iptv.com:8443";
 				API_EUXP = "https://agw.sk-iptv.com:8443";
@@ -4985,6 +5045,7 @@
 				API_SMD = "http://smd.hanafostv.com:8080";
 				API_SRCXPG = "http://smdxpg.hanafostv.com:8080";
 				API_STACM = "https://stacm.hanafostv.com:8443";
+				API_TEST = "";
 				API_UORPS = "https://agw.sk-iptv.com:8443/rps/v5/rps/uorps-service/";
 				API_UPMC = "https://mpushupmc.hanafostv.com:8443/";
 				API_VLS = "http://agw.sk-iptv.com:8080";
@@ -4998,6 +5059,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 7428;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				ENABLE_BITCODE = NO;

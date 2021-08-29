@@ -32,7 +32,7 @@ struct PageRecommand: PageView {
         .onAppear(){
             guard let obj = self.pageObject  else { return }
             self.synopsisData = obj.getParamValue(key: .data) as? SynopsisData
-           
+            
         }
         
     }//body

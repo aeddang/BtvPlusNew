@@ -48,7 +48,7 @@ enum PairingStatus{
 enum PairingEvent{
     case connected(StbData?), disConnected,
          connectError(NpsCommonHeader?), disConnectError(NpsCommonHeader?), connectErrorReason(PairingInfo?),
-         findMdnsDevice([MdnsDevice]), findStbInfoDevice([StbInfoDataItem]),  notFoundDevice,
+         findMdnsDevice([MdnsDevice]), findStbInfoDevice([StbListInfoDataItem]),  notFoundDevice,
          syncError(NpsCommonHeader?),
          pairingCompleted, pairingCheckCompleted(Bool),
          
@@ -172,7 +172,7 @@ class Pairing:ObservableObject, PageProtocol {
     func foundDevice(mdnsData:[MdnsDevice]){
         self.event = .findMdnsDevice(mdnsData)
     }
-    func foundDevice(stbInfoDatas:[StbInfoDataItem]){
+    func foundDevice(stbInfoDatas:[StbListInfoDataItem]){
         self.event = .findStbInfoDevice(stbInfoDatas)
     }
     func notFoundDevice(){

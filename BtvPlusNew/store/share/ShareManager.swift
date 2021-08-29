@@ -22,6 +22,7 @@ class ShareManager :PageProtocol {
                   isPopup:shareable.isPopup,
                   link: shareable.link,
                   text:shareable.text,
+                  linkText: shareable.linkText,
                   image:imagePath,
                   useDynamiclink: shareable.useDynamiclink,
                   completion:completion
@@ -32,6 +33,7 @@ class ShareManager :PageProtocol {
                   isPopup:shareable.isPopup,
                   link: shareable.link,
                   text:shareable.text,
+                  linkText: shareable.linkText,
                   image:shareable.image,
                   useDynamiclink: shareable.useDynamiclink,
                   completion:completion
@@ -40,7 +42,7 @@ class ShareManager :PageProtocol {
     }
     
     func share(pageID:PageID?, params:[PageParam:Any]? = nil, isPopup:Bool = true,
-               link:String? = nil, text:String? = nil, image:String,
+               link:String? = nil, text:String? = nil, linkText:String? = nil,  image:String,
                useDynamiclink:Bool = true,  completion: ((Bool) -> Void)? = nil){
         self.pagePresenter?.isLoading = true
         var shareImg:UIImage? = nil
@@ -61,7 +63,7 @@ class ShareManager :PageProtocol {
     }
     
     func share( pageID:PageID?, params:[PageParam:Any]? = nil, isPopup:Bool = true,
-                link:String? = nil, text:String? = nil, image:UIImage? = nil,
+                link:String? = nil, text:String? = nil, linkText:String? = nil, image:UIImage? = nil,
                 useDynamiclink:Bool = true,  completion: ((Bool) -> Void)? = nil){
         if let page = pageID {
             guard let qurry = WhereverYouCanGo.qurryIwillGo(
@@ -103,28 +105,33 @@ class ShareManager :PageProtocol {
                 DispatchQueue.global().async {
                     if let linkBuilder = DynamicLinkMamager.getDynamicLinkBuilder(link) {
                         linkBuilder.shorten() { url, warnings, error in
-                            self.pagePresenter?.isLoading = false
-                            if let shorten = url?.absoluteString {
-                                if let shareHost = ApiPath.getRestApiPath(.WEB).toUrl()?.host{
-                                    let replaceUrl = shareHost + "/s"
-                                    if shorten.contains(DynamicLinkMamager.urlPreFix) {
-                                        let replaced = shorten.replace( DynamicLinkMamager.urlPreFix, with: replaceUrl)
-                                        let shareable =
-                                            SocialMediaShareable(
-                                                image: image ,
-                                                url:replaced.toUrl(),
-                                                text: text
-                                            )
-                                        SocialMediaSharingManage.share(shareable, completion: completion)
-                                        return
+                            DispatchQueue.main.async {
+                                self.pagePresenter?.isLoading = false
+                                if let shorten = url?.absoluteString {
+                                    if let shareHost = ApiPath.getRestApiPath(.WEB).toUrl()?.host{
+                                        let replaceUrl = shareHost + "/s"
+                                        if shorten.contains(DynamicLinkMamager.urlPreFix) {
+                                            let replaced = shorten.replace( DynamicLinkMamager.urlPreFix, with: replaceUrl)
+                                            let shareable =
+                                                SocialMediaShareable(
+                                                    image: image ,
+                                                    url:replaced.toUrl(),
+                                                    text: text,
+                                                    linkText: linkText
+                                                )
+                                            SocialMediaSharingManage.share(shareable, completion: completion)
+                                            return
+                                        }
                                     }
                                 }
+                                share(originLink: link)
                             }
-                            share(originLink: link)
                         }
                         
                     } else {
-                        share(originLink: link)
+                        DispatchQueue.main.async {
+                            share(originLink: link)
+                        }
                     }
                 }
             } else {
@@ -137,7 +144,8 @@ class ShareManager :PageProtocol {
                 SocialMediaShareable(
                     image: image ,
                     url: originLink.toUrl(),
-                    text: text
+                    text: text,
+                    linkText: linkText
                 )
             SocialMediaSharingManage.share(shareable, completion: completion)
         }

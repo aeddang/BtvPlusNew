@@ -14,6 +14,7 @@ import SwiftUI
 
 struct ShareButton: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var naviLogManager:NaviLogManager
@@ -81,7 +82,9 @@ struct ShareButton: PageView {
                     text: String.share.synopsis,
                     useDynamiclink:true
                 )
-            )
+            ){ isComplete in
+                self.appSceneObserver.event = .toast(isComplete ? String.share.complete : String.share.fail)
+            }
         }
         
         

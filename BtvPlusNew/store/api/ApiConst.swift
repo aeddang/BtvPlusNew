@@ -13,13 +13,7 @@ import UIKit
 struct ApiPath {
     static func getRestApiPath(_ server:ApiServer) -> String {
         if SystemEnvironment.isReleaseMode == true {
-            if server == .VMS {
-                return SystemEnvironment.VMS
-            }
-            
-            if server == .WEB {
-                return SystemEnvironment.WEB
-            }
+            if server == .VMS { return SystemEnvironment.VMS }
         }
         
         if let vmsPath = SystemEnvironment.serverConfig[server.configKey] {
@@ -28,6 +22,16 @@ struct ApiPath {
         }
         
         DataLog.d(server.configKey + " : use local data", tag: "ApiPath")
+        if let isReleaseMode = SystemEnvironment.isReleaseMode {
+            switch server {
+            case .WEB: return isReleaseMode ? SystemEnvironment.WEB : SystemEnvironment.WEB_STG
+            case .KMS: return isReleaseMode ? SystemEnvironment.KMS : SystemEnvironment.KMS_STG
+            case .CBS: return isReleaseMode ? SystemEnvironment.CBS : SystemEnvironment.CBS_STG
+            case .SMD: return isReleaseMode ? SystemEnvironment.SMD : SystemEnvironment.SMD_STG
+            default: break
+            }
+        }
+        
         if let path = Bundle.main.path(forResource: "Info", ofType: "plist") {
             let dictRoot = NSDictionary(contentsOfFile: path)
             if let dict = dictRoot {
@@ -99,6 +103,7 @@ struct ApiConst {
 
 struct ApiCode {
     static let success = "0000"
+    static let success2 = "000"
 }
 
 enum ApiAction:String{
@@ -111,7 +116,7 @@ enum ApiValue:String{
 
 enum ApiServer:String{
     case WEB, NPS, NPS_V5, PSS, RVS, WEPG, VMS, STACM, SRCXPG,
-    UPMC, ME, EVENT, EMS, LGS, METV, IMAGE, NAVILOG, NAVILOG_NPI, EUXP, SMD,
+    UPMC, ME, EVENT, EMS, LGS, METV, IMAGE, NAVILOG, NAVILOG_NPI, EUXP, SMD, CBS,
     IIP, METV2, SCS2, EPS, EPS2, NF, RVS2, VLS, KES, KMS, NSUTIL, PUCR, PUSH,
     RPS, UORPS, MGMRPS
     
@@ -149,9 +154,11 @@ enum ApiServer:String{
             case .RPS:return "rps"
             case .UORPS:return "uorps"
             case .MGMRPS:return "mgmrps"
+            
             // vms not define
             case .WEB: return "web"
             case .VMS: return "vms"
+            case .CBS:return "cbs"
             case .SRCXPG: return "srcxpg"
             case .SMD: return "smd"
             case .KMS: return "kms"

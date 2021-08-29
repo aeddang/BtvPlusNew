@@ -62,7 +62,7 @@ struct AddCard: PageView {
                     self.naviLogManager.actionLog(.clickCouponPointAdd, actionBody: .init(config: type?.title,  category: String.pageText.myBenefitsDiscount))
                     self.pagePresenter.openPopup(
                          PageProvider.getPageObject(.myRegistCard)
-                             .addParam(key: PageParam.type, value: type)
+                            .addParam(key: PageParam.type, value: type)
                             .addParam(key: PageParam.index, value: self.idx)
                      )
                     

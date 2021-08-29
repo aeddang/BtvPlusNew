@@ -231,23 +231,23 @@ extension Network {
     }
     
     private func debug(request:URLRequest){
-        #if DEBUG
+        //#if DEBUG
         guard let headers = request.allHTTPHeaderFields else { return }
         let str = headers.reduce("headers :"){
             $0 + "\n" + $1.key + " : " + $1.value
         }
         DataLog.d(str, tag: self.tag)
-        #endif
+        //#endif
     }
     private func debug(data:Data?){
-        #if DEBUG
+        //#if DEBUG
             guard let data = data else {
                  DataLog.d("no data", tag: self.tag)
                 return
             }
             let str = String(decoding: data, as: UTF8.self)
             DataLog.d(str, tag: self.tag)
-        #endif
+        //#endif
     }
 }
 

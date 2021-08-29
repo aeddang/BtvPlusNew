@@ -17,11 +17,13 @@ struct SocialMediaShareable {
     var image:UIImage?
     var url:URL?
     var text:String?
+    var linkText:String?
 }
 
 extension SocialMediaSharingManage {
     static let sharinglink = "/sharinglink"
     static let familyInvite = "/view/v3.0/applink?type=family_invite"
+    static let event = "/view/v3.0/applink?type=event_url"
     
 }
 
@@ -58,7 +60,7 @@ struct SocialMediaSharingManage{
         }
         if let url = object.url {
             sharedObjects.append(
-                ShareActivityItemSource(url: url, icon: nil, title: object.text, isUrl: true, linkText: object.text)
+                ShareActivityItemSource(url: url, icon: nil, title: object.text, isUrl: true, linkText: object.linkText ?? object.text)
             )
         }
         let activityViewController = UIActivityViewController(activityItems: sharedObjects, applicationActivities: nil)

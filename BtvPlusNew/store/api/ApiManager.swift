@@ -76,13 +76,15 @@ class ApiManager :PageProtocol, ObservableObject{
     private lazy var rps:Rps = Rps(network: RpsNetwork())
     private lazy var mgmRps:MgmRps = MgmRps(network: MgmRpsNetwork())
     private lazy var vls:Vls = Vls(network: VlsNetwork())
+    private lazy var cbs:Cbs = Cbs(network: CbsNetwork())
+    
     // 로그 서버 페이지이동시 켄슬 안함
     private lazy var lgs:Lgs = Lgs(network: LgsNetwork())
     private lazy var navilog:Navilog = Navilog(network: NavilogNetwork())
     private lazy var navilogNpi:Navilog = Navilog(network: NavilogNpiNetwork())
     private lazy var pucr:Pucr = Pucr(network: PucrNetwork())
     private lazy var push:Push = Push(network: PushNetwork())
-    
+    private lazy var metvEvent:Metv = Metv(network: MetvNetwork())
     private(set) var updateFlag: UpdateFlag = .none
     
     func clear(){
@@ -101,6 +103,7 @@ class ApiManager :PageProtocol, ObservableObject{
         self.rps.clear()
         self.mgmRps.clear()
         self.vls.clear()
+        self.cbs.clear()
         self.apiQ.removeAll()
     }
     
@@ -163,25 +166,24 @@ class ApiManager :PageProtocol, ObservableObject{
              .postAuthPairing, .getDevicePairingInfo, .postDevicePairing, .postUnPairing :
             if NpsNetwork.sessionId == "" {
                 transition[q.id] = q
-                self.load(.registHello, action: q.action, resultId: q.id,
+                self.load(.registHello, resultId: q.id,
                           isOptional: q.isOptional, isLock: q.isLock, isLog:q.isLog, isProcess: q.isProcess)
                 return
             }
         default : break
         }
-        self.load(q.type, action: q.action, resultId: q.id,
+        self.load(q.type, resultId: q.id,
                   isOptional: q.isOptional, isLock: q.isLock, isLog:q.isLog, isProcess: q.isProcess)
     }
     
 
     @discardableResult
-    func load(_ type:ApiType, action:ApiAction? = nil,
-              resultId:String = "",
+    func load(_ type:ApiType, resultId:String = "",
               isOptional:Bool = false, isLock:Bool = false, isLog:Bool = false, isProcess:Bool = false)->String
     {
         let apiID = resultId //+ UUID().uuidString
         if status != .ready{
-            self.apiQ.append(ApiQ(id: resultId, type: type, action: action, isOptional: isOptional, isLock: isLock, isLog: isLog))
+            self.apiQ.append(ApiQ(id: resultId, type: type, isOptional: isOptional, isLock: isLock, isLog: isLog))
             return apiID
         }
         let error = {err in self.onError(id: apiID, type: type, e: err, isOptional: isOptional, isLog: isLog, isProcess: isProcess)}
@@ -294,6 +296,14 @@ class ApiManager :PageProtocol, ObservableObject{
             stbId:stbId, page: page, pageCnt: count,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .postAttendance(let pcid, _): self.metvEvent.postAttendance(
+            pcId: pcid,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getAttendance(let pcid, _): self.metvEvent.getAttendance(
+            pcId: pcid,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
         //NPS
         case .registHello : self.nps.postHello(
             completion: {res in self.complated(id: apiID, type: type, res: res)},
@@ -355,7 +365,7 @@ class ApiManager :PageProtocol, ObservableObject{
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         //KMS
-        case .getStbInfo(let cid): self.kms.getStbList(ci: cid,
+        case .getStbList(let cid): self.kms.getStbList(ci: cid,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         case .getTerminateStbInfo(let cid): self.kms.getTerminateStbList(ci: cid,
@@ -389,6 +399,10 @@ class ApiManager :PageProtocol, ObservableObject{
             error:error)
         case .connectTerminateStb(let cType, let stbId) : self.scs.connectTerminateStb(
             type: cType, stbId: stbId,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .getStbInfo(let device) : self.scs.getStbInfo(
+            hostDevice: device,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         //PSS
@@ -609,6 +623,16 @@ class ApiManager :PageProtocol, ObservableObject{
             
         case .checkProhibitionSimultaneous(let synopData, let pairing, let pcId): self.vls.checkProhibitionSimultaneous(
             synopData: synopData,pairing: pairing, pcId: pcId,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+            
+        //CBS
+        case .certificationCoupon(let no, let device): self.cbs.certificationCoupon(
+            couponNum: no, stbInfo: device,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+        case .requestBPointIssuance(let pointPolicyNum, let pointAmount, _): self.cbs.requestBPointIssuance(
+            pointPolicyNum: pointPolicyNum, pointAmount: pointAmount,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         //NaviLog

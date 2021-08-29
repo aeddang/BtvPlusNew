@@ -50,7 +50,7 @@ class AccountManager : PageProtocol{
                    })
             
             case .user(let cid) :
-                self.dataProvider.requestData(q: .init(type: .getStbInfo(cid), isOptional: false))
+                self.dataProvider.requestData(q: .init(type: .getStbList(cid), isOptional: false))
             
             case .device(let device) :
                 self.requestDevice = device
@@ -236,8 +236,8 @@ class AccountManager : PageProtocol{
                 }
                 self.pairing.syncPairingAgreement(agreement)
                 
-            case .getStbInfo :
-                guard let data = res.data as? StbInfo else {
+            case .getStbList :
+                guard let data = res.data as? StbListItem else {
                     self.pairing.notFoundDevice()
                     return
                 }

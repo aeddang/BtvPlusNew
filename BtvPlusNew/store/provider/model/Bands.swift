@@ -62,6 +62,14 @@ class Bands:ObservableObject, PageProtocol {
         return self.datas.first
     }
     
+    func getPreviewBlockData()->  BlockItem?  {
+        guard let band = self.datas.first(
+                where: { $0.gnbTypCd == EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue }) else { return nil }
+        return band.blocks.first(
+            where: { CateSubType.getType(id:$0.gnb_sub_typ_cd) == .prevList}
+        )
+    }
+    
     func getMonthlyBlockData(name:String?)-> BlockItem? {
         guard let name = name else { return nil }
         guard let band = getData(gnbTypCd: EuxpNetwork.GnbTypeCode.GNB_MONTHLY.rawValue) else {return nil}

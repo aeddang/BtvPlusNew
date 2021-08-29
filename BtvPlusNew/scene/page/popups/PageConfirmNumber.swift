@@ -114,7 +114,7 @@ struct PageConfirmNumber: PageView {
                         self.closePage()
                     }
                 }
-            default : do{}
+            default : break
             }
         }
         .onReceive(dataProvider.$result) { res in
@@ -123,7 +123,7 @@ struct PageConfirmNumber: PageView {
             switch res.type {
             case .confirmPassword :
                 self.confirmPasswordRespond(res)
-            case .postCoupon :
+            case .postCoupon, .getStbInfo, .certificationCoupon :
                 self.resigistCouponRespond(res)
             case .updateUser (let user):
                 self.modifyNickNameRespond(res, updateData:user)
@@ -291,7 +291,8 @@ struct PageConfirmNumber: PageView {
         
         switch couponType {
         case .coupon:
-            self.dataProvider.requestData(q: .init(id:self.tag, type: .postCoupon(self.pairing.hostDevice, number)))
+            self.dataProvider.requestData(q: .init(id:self.tag, type: .getStbInfo(self.pairing.hostDevice) ))
+            //self.dataProvider.requestData(q: .init(id:self.tag, type: .postCoupon(self.pairing.hostDevice, number)))
         case .point:
             self.dataProvider.requestData(q: .init(id:self.tag, type: .postBPoint(self.pairing.hostDevice, number)))
         case .cash:
@@ -299,21 +300,38 @@ struct PageConfirmNumber: PageView {
         }
     }
     func resigistCouponRespond(_ res:ApiResultResponds){
-        guard let resData = res.data as? RegistEps else {return}
-        
-        if resData.result == ApiCode.success {
-            if let page = self.movePage {
-                if page.isPopup {
-                    self.pagePresenter.openPopup(page)
-                } else {
-                    self.pagePresenter.changePage(page)
-                }
+        if let resData = res.data as? RegistEps {
+            if resData.result == ApiCode.success {
+                self.registCouponSuccess()
+            } else{
+                self.msg = resData.reason
             }
-            self.pagePresenter.onPageEvent(self.pageObject, event: .init(type: .completed, data:self.couponType))
-            self.closePage()
-        } else{
-            self.msg = resData.reason
+        } else if let  resData = res.data as? StbInfo {
+            if resData.result == ApiCode.success {
+                self.dataProvider.requestData(q: .init(id:self.tag, type: .certificationCoupon(self.input, resData) ))
+            } else{
+                self.msg = resData.reason
+            }
+        } else if let resData = res.data as? CertificationCoupon {
+            if resData.result == ApiCode.success2 {
+                self.registCouponSuccess()
+            } else{
+                self.msg = CbsNetwork.getCertificationErrorMeassage(resData.result , reason: resData.reason)
+            }
         }
+    }
+    
+    private func registCouponSuccess(){
+        if let page = self.movePage {
+            if page.isPopup {
+                self.pagePresenter.openPopup(page)
+            } else {
+                self.pagePresenter.changePage(page)
+            }
+        }
+        self.appSceneObserver.event = .toast(String.alert.couponRegistSuccess)
+        self.pagePresenter.onPageEvent(self.pageObject, event: .init(type: .completed, data:self.couponType))
+        self.closePage()
     }
     
     func modifyNickName(_ name:String){

@@ -407,6 +407,9 @@
 "alertOkCashMasterInput" = "OK캐쉬백 비밀번호를 입력해주세요.";
 "alertCardDeleteConfirm" = "삭제 하시겠습니까?";
 
+"alertCouponRegistSuccess" = "쿠폰 등록이 완료되었습니다.";
+"alertCouponRegistFail" = "알 수 없는 오류로 쿠폰 등록에 실패하였습니다.\n106 고객센터로 문의해주세요.";
+
 
 "alertPurchaseHidden" = "구매 내역 삭제";
 "alertPurchaseHiddenText" = "선택하신 구매내역을 목록에서\n삭제하시려면 구매 인증번호를\n입력해 주세요.";
@@ -998,9 +1001,6 @@
 "pairingHitchUserAgreement2Tablet" = "B tv 연결 및 서비스 이용을 위한 개인정보\n수집/이용에 동의합니다. (필수)";
 "pairingHitchUserAgreement3Tablet" = "인기, 무료 콘텐츠 소식/혜택 및 업데이트 알림을 받고,\n이를 위한 개인정보 수집/이용에 동의합니다. (선택)";
 
-
-
-
 "pairingHitchStbName" = "우리집 TV";
 "pairingHitchTypeLeading" = "집 안에서 쉽게";
 "pairingHitchTypeLeading2" = "집 밖에서 TV없이";
@@ -1017,6 +1017,8 @@
 /*
  Share
  */
+"shareEventTitle" = "친구에게 추천하기 이벤트";
+
 "shareInviteMsg" = "모바일 B tv에 초대합니다.\n\n%s\n▶ 모바일 B tv 앱이 설치되어 있다면 위 링크를 누르시고 바로 이용해보세요.\n\n▶ 아직 앱이 설치되어 있지 않다면, 위 링크를 눌러 앱을 설치한 후 다시 이 링크를 눌러 이용하실 수 있습니다.\n\n※ B tv 연결은 링크가 유효한 30분 안에 완료해야 합니다.";
 
 "shareSynopsis" = "추천 영상을 모바일 Btv에서 확인해 보세요!";
@@ -1027,6 +1029,9 @@
 ▶ 모바일 B tv 앱이 설치되어 있다면 위 링크를 누르시고 바로 이용해보세요.\n\n
 ▶ 아직 앱이 설치되어 있지 않다면, 위 링크를 눌러 앱을 설치한 후 다시 이 링크를 눌러 이용하실 수 있습니다.\n\n
 ※ B tv 연결은 링크가 유효한 30분 안에 완료해야 합니다.";
+
+"shareFamilyInviteComplete" = "초대 완료 하였습니다.";
+"shareFamilyInviteFail" = "초대 실패 하였습니다. 다시 시도해 주세요.";
 
 "shareSynopsisRecommand" = "친구가 모바일 B tv에서 작품을 추천했어요!\n추천 작품을 지금 할인된 금액으로 시청해 보세요! (24시간 후 만료)";
 "shareSynopsisRecommandBenefitText1" = "내가 본 작품을\n친구에게 추천하고";

@@ -23,6 +23,15 @@ enum WebviewMethod:String {
          bpn_requestHlsTokenInfo,bpn_setMute,bpn_requestMuteState,
          bpn_setMoveListener,bpn_setBackListener,
          bpn_requestFocus,bpn_showComingSoon,bpn_showMyPairing,bpn_familyInvite
+    case bpn_registPaymentMethod,
+         bpn_reqSendEventpageLog,
+         bpn_eventSharing,
+         bpn_getAttendanceInfo,
+         bpn_reqAttendance,
+         bpn_getNickName,
+         bpn_getRecomCntNPoint,
+         bpn_eventMonthlyPoint,
+         bpn_eventCommerce
 }
 enum WebviewRespond:String {
     case responseVoiceSearch, responseSTBViewInfo
@@ -40,6 +49,7 @@ struct DeepLinkItem{
     var dic:[String: Any]? = nil
     var value:String? = nil
 
+    //webview action
     var isForceRetry:Bool = false
     var isCallFuncion:Bool = false
 }
@@ -49,6 +59,7 @@ class WebBridge :PageProtocol{
     private let pairing:Pairing
     private let storage:LocalStorage
     private let setup:Setup
+    private let shareManager:ShareManager
     private let networkObserver:NetworkObserver
     private let pagePresenter:PagePresenter?
     private let dataProvider:DataProvider
@@ -60,11 +71,13 @@ class WebBridge :PageProtocol{
          pairing:Pairing,
          storage:LocalStorage,
          setup:Setup,
+         shareManager:ShareManager,
          networkObserver:NetworkObserver) {
         
         self.pairing = pairing
         self.storage = storage
         self.setup = setup
+        self.shareManager = shareManager
         self.pagePresenter = pagePresenter
         self.dataProvider = dataProvider
         self.appSceneObserver = appSceneObserver
@@ -177,7 +190,9 @@ class WebBridge :PageProtocol{
     func getPassAge()-> String {
         return SystemEnvironment.watchLv.description
     }
-
+    func getNickname()-> String {
+        return self.pairing.user?.nickName ?? ""
+    }
     
     func getLogInfo()->[String: Any] {
         var info = [String: Any]()
@@ -259,6 +274,8 @@ class WebBridge :PageProtocol{
                         dic = self.getLogInfo()
                     case WebviewMethod.bpn_requestPassAge.rawValue :
                         value = self.getPassAge()
+                    case WebviewMethod.bpn_getNickName.rawValue :
+                        value = self.getNickname()
                         
                     case WebviewMethod.bpn_showSynopsis.rawValue :
                         if let jsonString = jsonParam {
@@ -274,6 +291,40 @@ class WebBridge :PageProtocol{
                                 ComponentLog.e("json parse error", tag:"WebviewMethod.bpn_showSynopsis")
                             }
                         }
+                    case WebviewMethod.bpn_showComingSoon.rawValue :
+                        if let block = self.dataProvider.bands.getPreviewBlockData()  {
+                            let data = CateData().setData(data: block)
+                            self.pagePresenter?.openPopup(
+                                PageProvider.getPageObject(.previewList)
+                                    .addParam(key: .title, value: data.title)
+                                    .addParam(key: .id, value: data.menuId)
+                                    .addParam(key: .data, value: data)
+                                    .addParam(key: .needAdult, value: data.isAdult)
+                            )
+                            
+                        } else {
+                            ComponentLog.e("band notfound", tag:"WebviewMethod.bpn_showComingSoon")
+                        }
+                    case WebviewMethod.bpn_showMyPairing.rawValue :
+                        if self.pairing.status == .pairing  {
+                            self.pagePresenter?.openPopup(
+                                PageProvider.getPageObject(.pairingManagement)
+                            )
+                        }
+                    case WebviewMethod.bpn_registPaymentMethod.rawValue :
+                        if self.pairing.status == .pairing ,  let jsonString = jsonParam  {
+                            let jsonData = AppUtil.getJsonParam(jsonString: jsonString)
+                            if let type = jsonData?["type"] as? String {
+                                //let purchaseUrl = jsonData?["purchaseUrl"] as? String
+                                self.pagePresenter?.openPopup(
+                                    PageProvider.getPageObject(.myRegistCard)
+                                        .addParam(key: PageParam.type, value: CardBlock.ListType.getType(type))
+                                )
+                            } else {
+                                ComponentLog.e("type notfound", tag:"WebviewMethod.bpn_registPaymentMethod")
+                            }
+                        }
+                        
                     case WebviewMethod.bpn_showModalWebView.rawValue :
                         if let jsonString = jsonParam {
                             let jsonData = jsonString.data(using: .utf8)!
@@ -296,7 +347,16 @@ class WebBridge :PageProtocol{
                                 AppUtil.openURL(url)
                             }
                         }
-                    
+                    case WebviewMethod.bpn_eventSharing.rawValue:
+                        if let jsonString = jsonParam {
+                            let jsonData = AppUtil.getJsonParam(jsonString: jsonString)
+                            let title = jsonData?["title"] as? String
+                            let descript = jsonData?["descript"] as? String
+                            if let url = jsonData?["url"] as? String{
+                                self.shareEvent(eventLink: url, text: title, linkText: descript)
+                            }
+                        }
+                        
                     case WebviewMethod.stopLoading.rawValue :
                         deepLinkItem.isForceRetry = true
                         //self.forceRetry(webView: webView)
@@ -317,6 +377,24 @@ class WebBridge :PageProtocol{
         }
         
         return nil
+    }
+    
+    func shareEvent(eventLink :String, text:String? = nil, linkText:String? = nil){
+       
+        let link = ApiPath.getRestApiPath(.WEB)
+            + SocialMediaSharingManage.event
+            + "&id=" + eventLink
+            
+        self.shareManager.share(
+            Shareable(
+                link:link,
+                text: text ?? String.share.eventTitle,
+                linkText: linkText,
+                useDynamiclink:true
+            )
+        ){ isComplete in
+            self.appSceneObserver?.event = .toast(isComplete ? String.share.complete : String.share.fail)
+        }
     }
    
     func callPage(_ path:String, param:[URLQueryItem]? = nil) {

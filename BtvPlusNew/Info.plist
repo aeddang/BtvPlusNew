@@ -72,6 +72,8 @@
 	<string>$(API_WEB)</string>
 	<key>ApiWEPG</key>
 	<string>$(API_WEPG)</string>
+	<key>ApiCBS</key>
+	<string>$(API_CBS)</string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>com.skb.btvplus.bgtask</string>

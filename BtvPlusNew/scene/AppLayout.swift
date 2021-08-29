@@ -268,6 +268,7 @@ struct AppLayout: PageComponent{
     }
     
     func onFloatingBannerView(datas:[BannerData]?) {
+        if datas != nil && self.pagePresenter.hasPopup {return}
         guard let datas = datas else {
             if floatBannerDatas == nil {return}
             withAnimation{ floatBannerDatas = nil }

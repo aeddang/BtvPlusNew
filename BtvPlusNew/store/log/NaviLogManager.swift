@@ -190,8 +190,8 @@ class NaviLogManager : ObservableObject, PageProtocol {
         }
     }
     func send(logString:String){
-        self.repository.apiManager.load(.sendNaviLog(logString, isAnonymous: true))
-        self.repository.apiManager.load(.sendNaviLog(logString, isAnonymous: false))
+        self.repository.apiManager.load(.sendNaviLog(logString, isAnonymous: true), isOptional: true)
+        self.repository.apiManager.load(.sendNaviLog(logString, isAnonymous: false), isOptional: true)
     }
     
     private func send(_ data:MenuNaviItem, isAnonymous:Bool){
@@ -234,10 +234,10 @@ class NaviLogManager : ObservableObject, PageProtocol {
         menuNaviItem.vod_watch_type = watchType?.rawValue
         menuNaviItem.service_name = "btv_plus_pi"
         menuNaviItem.device_base_time = naviLogData?.now.toDateFormatter(dateFormat: "yyyyMMddHHmmss.SSS")
-        menuNaviItem.pcid = self.repository.storage.getPcid()
+        menuNaviItem.pcid = self.repository.namedStorage?.getPcid()
         menuNaviItem.stb_id = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         menuNaviItem.stb_mac = self.repository.pairing.hostDevice?.convertMacAdress  ?? ""
-        menuNaviItem.session_id = self.repository.storage.getSessionId()
+        menuNaviItem.session_id = self.repository.namedStorage?.getSessionId()
         menuNaviItem.action_body = naviLogData?.actionBody// ?? MenuNaviActionBodyItem()
         menuNaviItem.url = "";
         menuNaviItem.client_ip = AppUtil.getIPAddress() ?? "0.0.0.0"

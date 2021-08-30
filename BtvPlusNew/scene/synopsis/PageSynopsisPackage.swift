@@ -323,7 +323,7 @@ struct PageSynopsisPackage: PageView {
         case 1 :
             guard let model = self.synopsisPackageModel else {return}
             if self.isPairing == true {
-                self.pageDataProviderModel.requestProgress(q: .init(type: .getPackageDirectView(model, false)))
+                self.pageDataProviderModel.requestProgress(q: .init(type: .getPackageDirectView(model, isPpm: false)))
                 self.progressCompleted = true
             } else {
                 self.completedProgress()

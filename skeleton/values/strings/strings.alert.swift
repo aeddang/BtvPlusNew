@@ -206,6 +206,21 @@ extension String {
         public static var registBookmark = "alertRegistBookmark".loaalized()
         public static var deleteBookmark = "alertDeleteBookmark".loaalized()
         
+        public static var eventParticipate = "alertEventParticipate".loaalized()
+        public static var eventParticipateMonthlyPoint = "alertEventParticipateMonthlyPoint".loaalized()
+        public static var eventPointIssuanceComplete = "alertEventPointIssuanceComplete".loaalized()
+        public static var eventPointIssuanceCompleteText = "alertEventPointIssuanceCompleteText".loaalized()
+
+        public static var eventPointIssuancePartComplete = "alertEventPointIssuancePartComplete".loaalized()
+        public static var eventPointIssuancePartCompleteText = "alertEventPointIssuancePartCompleteText".loaalized()
+
+        public static var eventPointIssuanceUnable = "alertEventPointIssuanceUnable".loaalized()
+        public static var eventPointIssuanceUnableAlready = "alertEventPointIssuanceUnableAlready".loaalized()
+        public static var eventPointIssuanceUnableFail = "alertEventPointIssuanceUnableFail".loaalized()
+        
+        public static var eventMonthlyView = "alertEventMonthlyView".loaalized()
+        public static var eventAlreadyPurchase = "alertEventAlreadyPurchase".loaalized()
+        public static var eventJoinAndPurchase = "alertEventJoinAndPurchase".loaalized()
         
         public static var kidsDisable = "alertKidsDisable".loaalized()
         public static var kidsDisableTip = "alertKidsDisableTip".loaalized()

@@ -164,7 +164,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
     }
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         PageLog.d("APNs token retrieved: \(deviceToken.base64EncodedString())", tag: self.tag)
-        AppDelegate.appObserver.apnsToken = deviceToken.base64EncodedString()
+        AppDelegate.appObserver.apnsToken = deviceToken.toHexString()
         Messaging.messaging().apnsToken = deviceToken
         Messaging.messaging().token { token, error in
           if let error = error {

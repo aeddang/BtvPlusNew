@@ -39,8 +39,8 @@ extension CbsNetwork{
         } else {
             return String.alert.couponRegistFail
         }
-       
     }
+    
 }
 
 class Cbs: Rest{

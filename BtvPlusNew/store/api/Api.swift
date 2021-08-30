@@ -73,7 +73,7 @@ enum ApiType{
          postBookMark(SynopsisData),
          deleteBookMark(SynopsisData),
          getDirectView(SynopsisModel),
-         getPackageDirectView(SynopsisPackageModel, Bool = false),
+         getPackageDirectView(SynopsisPackageModel? = nil, isPpm:Bool = false, pidList:[String]? = nil),
          getPossessionPurchase(String, Int? = nil , Int? = nil)
     //METV event
     case postAttendance(pcid:String,callback:String? = nil),

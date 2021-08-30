@@ -45,8 +45,11 @@ class AccountManager : PageProtocol{
                 self.mdnsPairingManager.requestPairing( requestPairing, retryCount:retryCount,
                    found: { data in
                         self.pairing.foundDevice(mdnsData:data)
+                        
+                        
                    },notFound: {
                         self.pairing.notFoundDevice()
+                        
                    })
             
             case .user(let cid) :

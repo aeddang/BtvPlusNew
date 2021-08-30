@@ -54,8 +54,8 @@ class Repository:ObservableObject, PageProtocol{
     let audioMirrorManager:AudioMirroring
     let pushManager:PushManager
     let userSetup:Setup
-    
     let storage = LocalStorage()
+    var namedStorage:LocalNamedStorage? = nil
     private let accountManager:AccountManager
     private let broadcastManager:BroadcastManager
     private(set) var apiManager:ApiManager
@@ -64,7 +64,7 @@ class Repository:ObservableObject, PageProtocol{
     private var anyCancellable = Set<AnyCancellable>()
     private var dataCancellable = Set<AnyCancellable>()
     private let drmAgent = DrmAgent.initialize() as? DrmAgent
-    
+    private(set) var isFirstLaunch = false
     
     init(
         dataProvider:DataProvider? = nil,
@@ -107,17 +107,18 @@ class Repository:ObservableObject, PageProtocol{
             self.apiManager.clear()
             self.appSceneObserver?.isApiLoading = false
             self.pagePresenter?.isLoading = false
-            self.pushManager.retryRegisterPushToken()
+            if self.apiManager.status == .ready{
+                self.pushManager.retryRegisterPushToken()
+            }
         }).store(in: &anyCancellable)
         
-        let initate = self.setupSetting()
+        self.isFirstLaunch = self.setupSetting()
+        self.setupNamedStorage()
         self.setupDataProvider()
         self.setupApiManager()
         self.setupPairing()
         self.broadcastManager.setup()
-        if initate {
-            self.pairing.requestPairing(.unPairing)
-        }
+        
     }
     
     deinit {
@@ -133,15 +134,22 @@ class Repository:ObservableObject, PageProtocol{
         SystemEnvironment.isEvaluation = isEvaluation
         self.storage.isReleaseMode = isReleaseMode
         self.status = .reset
+        
         self.dataCancellable.forEach{$0.cancel()}
         self.dataCancellable.removeAll()
         self.apiManager.clear()
         self.apiManager = ApiManager()
-        
+        self.setupNamedStorage()
         self.setupApiManager()
-        DataLog.d("reset", tag:self.tag)
+        //self.appSceneObserver?.event = .toast("reset " + (isReleaseMode?.description ?? ""))
     }
     
+    private func setupNamedStorage(){
+        let storage = LocalNamedStorage(name:  SystemEnvironment.isStage ? "Stage" : "Release")
+        self.namedStorage = storage
+        self.webBridge.namedStorage = storage
+        self.pushManager.setupStorage(storage: storage)
+    }
     
     private func setupPairing(){
         self.accountManager.setupPairing(savedUser:self.userSetup.getSavedUser())
@@ -218,7 +226,8 @@ class Repository:ObservableObject, PageProtocol{
         
         self.apiManager.$error.sink(receiveValue: { err in
             guard let err = err else { return }
-            if self.status != .ready { self.status = .error(err) }
+           
+            if self.status != .ready && !err.isOptional && !err.isLog{ self.status = .error(err) }
             self.dataProvider.error = err
             if !err.isOptional && !err.isLog {
                 self.appSceneObserver?.alert = .apiError(err)
@@ -242,6 +251,7 @@ class Repository:ObservableObject, PageProtocol{
         self.pagePresenter?.isLoading = true
         self.apiManager.$status.sink(receiveValue: { status in
             self.pagePresenter?.isLoading = false
+            //self.appSceneObserver?.event = .toast("status " + status.rawValue)
             if status == .ready { self.onReadyApiManager() }
         }).store(in: &dataCancellable)
     }
@@ -259,7 +269,7 @@ class Repository:ObservableObject, PageProtocol{
         SystemEnvironment.isAdultAuth = self.userSetup.isAdultAuth
         SystemEnvironment.watchLv = self.userSetup.watchLv
         SystemEnvironment.isFirstMemberAuth = self.userSetup.isFirstMemberAuth
-        self.pushManager.retryRegisterPushToken()
+        
         return false
     }
     
@@ -318,10 +328,10 @@ class Repository:ObservableObject, PageProtocol{
                 self.status = .error(nil)
                 return
             }
-            //self.appSceneObserver?.event = .debug("respondApi getGnb")
+           // self.appSceneObserver?.event = .toast("respondApi getGnb")
             self.onReadyRepository(gnbData: data)
         
-        default: do{}
+        default: break
         }
     }
     
@@ -340,13 +350,16 @@ class Repository:ObservableObject, PageProtocol{
                 self.storage.setServerConfig(configKey: config.key, path: config.value)
             }
         }
-        //self.appSceneObserver?.event = .debug("onReadyApiManager")
+        if self.isFirstLaunch {
+            self.apiManager.load(.postUnPairing, isOptional: true)
+        }
+        //self.appSceneObserver?.event = .toast("onReadyApiManager")
         self.dataProvider.requestData(q: .init(type: .getGnb))
     }
     
     private func onReadyRepository(gnbData:GnbBlock){
         self.dataProvider.bands.setData(gnbData)
-        //self.appSceneObserver?.event = .debug("onReadyRepository " + (SystemEnvironment.isStage ? "STAGE" : "RELEASE"))
+        //self.appSceneObserver?.event = .toast("onReadyRepository " + (SystemEnvironment.isStage ? "STAGE" : "RELEASE"))
         DataLog.d("onReadyRepository " + self.status.description , tag:self.tag)
         DataLog.d("UPDATEED GNBDATA onReadyRepository", tag:self.tag)
         if self.status == .reset {

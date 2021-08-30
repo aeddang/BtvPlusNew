@@ -379,7 +379,7 @@ class Metv: Rest{
     * @param isPPM 월정액 전용 게이트웨이 시놉 바로보기 확인여부 체크(Y/N)
     */
     func getPackageDirectView(
-        data:SynopsisPackageModel, isPpm:Bool = false ,
+        data:SynopsisPackageModel? = nil, isPpm:Bool = false , pidList:[String]? = nil,
         completion: @escaping (DirectPackageView) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
@@ -391,7 +391,7 @@ class Metv: Rest{
         
         params["stb_id"] = stbId
         params["hash_id"] = ApiUtil.getHashId(stbId)
-        params["req_pidList"] = [ data.prdPrcId ?? "" ]
+        params["req_pidList"] = pidList ?? [ data?.prdPrcId ?? "" ]
         params["yn_ppm"] = isPpm ? "Y": "N"
         fetch(route: MetvPackageDirectview( body: params), completion: completion, error:error)
     }
@@ -432,6 +432,7 @@ class Metv: Rest{
         params["stb_id"] = stbId
         params["pcid"] = pcId
         params["dvc_id"] = SystemEnvironment.deviceId
+        params["method"] = "post"
         fetch(route: MetvPostAttendance(body: params), completion: completion, error:error)
     }
     /**
@@ -440,17 +441,15 @@ class Metv: Rest{
     func getAttendance(
         pcId:String,
         completion: @escaping (Attendance) -> Void, error: ((_ e:Error) -> Void)? = nil){
-        
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:Any]()
-        params["response_format"] = MetvNetwork.RESPONSE_FORMET
         params["IF"] = "IF-EVENT-002"
         params["stb_id"] = stbId
         params["pcid"] = pcId
         params["dvc_id"] = SystemEnvironment.deviceId
+       
         fetch(route: MetvGetAttendance(body: params), completion: completion, error:error)
     }
-    
 }
 
 struct MetvPurchase:NetworkRoute{
@@ -545,13 +544,15 @@ struct MetvPossessionPurchase:NetworkRoute{
 struct MetvPostAttendance:NetworkRoute{
    var method: HTTPMethod = .post
    var path: String = "/metv/v5/vodcomments/setevent/mobilebtv"
-   var body: [String : Any]? = nil
+   var body:[String: Any]? = nil
+   
 }
 
 struct MetvGetAttendance:NetworkRoute{
    var method: HTTPMethod = .post
    var path: String = "/metv/v5/vodcomments/getevent/mobilebtv"
-   var body: [String : Any]? = nil
+   var body:[String: Any]? = nil
+    
 }
 
 

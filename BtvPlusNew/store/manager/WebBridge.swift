@@ -58,6 +58,7 @@ struct DeepLinkItem{
 class WebBridge :PageProtocol{
     private let pairing:Pairing
     private let storage:LocalStorage
+    var namedStorage:LocalNamedStorage? = nil
     private let setup:Setup
     private let shareManager:ShareManager
     private let networkObserver:NetworkObserver
@@ -198,8 +199,8 @@ class WebBridge :PageProtocol{
         var info = [String: Any]()
         info["log_type"] = SystemEnvironment.isStage ? "dev" : "live"
         info["stb_onead_id"] = nil
-        info["pcid"] = self.storage.getPcid()
-        info["session_id"] = self.storage.getSessionId()
+        info["pcid"] = self.namedStorage?.getPcid()
+        info["session_id"] = self.namedStorage?.getSessionId()
         info["stbId"] = pairing.stbId
         info["stb_mac"] = pairing.hostDevice?.convertMacAdress ?? ""
         info["app_release_version"] = SystemEnvironment.bundleVersion

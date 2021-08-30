@@ -11,10 +11,10 @@ struct PucrNetwork : Network{
     var enviroment: NetworkEnvironment = ApiPath.getRestApiPath(.PUCR)
     func onRequestIntercepter(request: URLRequest) -> URLRequest {
         var authorizationRequest = request
-        authorizationRequest.addValue(
+        authorizationRequest.setValue(
             "Basic MTcyOWQ3M2QxOTcwNGI0NGExZTg2OTdkZjM0NWYzZDI6Zjc5YzMyOTI4MGY5NGE4M2I1MmJiYmUyMDYzYTA0ZGE=",
             forHTTPHeaderField: "Authorization")
-        authorizationRequest.addValue( "application/x-www-form-urlencoded; charset=UTF-8",forHTTPHeaderField: "Content-Type")
+        authorizationRequest.setValue( "application/x-www-form-urlencoded; charset=UTF-8",forHTTPHeaderField: "Content-Type")
         return authorizationRequest
     }
 }
@@ -48,11 +48,9 @@ class Pucr: Rest{
      */
     func registerToken(
         endpointId:String, token:String,
-        completion: @escaping (PucrResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
-        var params = [String:Any]()
-        params["token"] = token
-        params["method"] = "post"
-        fetch(route: PucrRegisterToken( endpointId: endpointId, body: params), completion: completion, error:error)
+        completion: @escaping (Blank) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        let qurryString = "token=" + ApiUtil.string(byUrlEncoding: token).replace(" ", with:"")
+        fetch(route: PucrRegisterToken( endpointId: endpointId, jsonString: qurryString ), completion: completion, error:error)
     }
     
     /**
@@ -61,11 +59,8 @@ class Pucr: Rest{
     func recivePush(
         endpointId:String, messageId:String,
         completion: @escaping (PucrResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
-    
-        var params = [String:Any]()
-        params["endpoint_id"] = endpointId
-        params["method"] = "post"
-        fetch(route: PucrRecivePush( messageId: messageId, body: params), completion: completion, error:error)
+        let qurryString = "endpoint_id=" + ApiUtil.string(byUrlEncoding: endpointId)
+        fetch(route: PucrRecivePush( messageId: messageId, jsonString: qurryString), completion: completion, error:error)
     }
     
     /**
@@ -74,11 +69,9 @@ class Pucr: Rest{
     func confirmPush(
         endpointId:String, messageId:String,
         completion: @escaping (PucrResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
-    
-        var params = [String:Any]()
-        params["endpoint_id"] = endpointId
-        params["method"] = "post"
-        fetch(route: PucrConfirmPush( messageId:messageId, body: params), completion: completion, error:error)
+        
+        let qurryString = "endpoint_id=" + ApiUtil.string(byUrlEncoding: endpointId)
+        fetch(route: PucrConfirmPush( messageId:messageId, jsonString: qurryString), completion: completion, error:error)
     }
 }
 
@@ -86,7 +79,7 @@ struct PucrCreateEndPoint:NetworkRoute{
     var method: HTTPMethod = .post
     var path: String = "/push/v3/endpoints"
     var jsonString: String?
-    //var body: [String : Any]? = nil
+   
 }
 
 struct PucrRegisterToken:NetworkRoute{
@@ -95,7 +88,7 @@ struct PucrRegisterToken:NetworkRoute{
     var path: String { get{
         return "/push/v3/endpoints/" + endpointId + "/tokens/apns"
     }}
-    var body: [String : Any]? = nil
+    var jsonString: String?
 }
 
 struct PucrRecivePush:NetworkRoute{
@@ -104,7 +97,7 @@ struct PucrRecivePush:NetworkRoute{
     var path: String { get{
         return "/push/v3/messages/" + messageId + "/ack"
     }}
-    var body: [String : Any]? = nil
+    var jsonString: String?
 }
 
 struct PucrConfirmPush:NetworkRoute{
@@ -113,7 +106,7 @@ struct PucrConfirmPush:NetworkRoute{
     var path: String { get{
         return "/push/v3/messages/" + messageId + "/response"
     }}
-    var body: [String : Any]? = nil
+    var jsonString: String?
 }
 
 

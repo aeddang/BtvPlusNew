@@ -47,7 +47,7 @@ struct PageCategory: PageView {
                     bgColor : Color.app.blueLight
                     )
                     .frame(width: self.listWidth)
-                    .padding(.vertical, Dimen.margin.thin)
+                    .padding(.bottom, Dimen.margin.thin)
             }
             .padding(.bottom, Dimen.margin.thin + self.marginBottom)
         }

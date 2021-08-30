@@ -179,7 +179,7 @@ extension PageSynopsis {
                                           playData,
                                           synopData: synopsisData,
                                           self.pairing,
-                                          pcId: self.repository.storage.getPcid(),
+                                          pcId: self.repository.namedStorage?.getPcid() ?? "",
                                           isKidZone: self.type == .kids,
                                           gubun: nil), isLog:true))
     

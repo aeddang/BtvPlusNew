@@ -31,6 +31,7 @@ extension BtvWebView {
 }
 
 struct BtvWebView: PageComponent {
+    @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var naviLogManager:NaviLogManager
@@ -61,10 +62,9 @@ struct BtvWebView: PageComponent {
         }
         .onReceive(dataProvider.$error) { err in
             guard let err = err else { return }
-            switch err.type {
-            case .getRecommendHistory : break
-            default: break
-            }
+            if !err.id.hasPrefix(self.tag) { return }
+            self.errorCallFuncion(err: err)
+            
         }
         .onReceive(self.viewModel.$status){ stat in
             if stat == .complete {self.isLoading = false}
@@ -85,19 +85,24 @@ struct BtvWebView: PageComponent {
         }
     }
     
+    @State var eventData:Any? = nil
+    
     func callFuncion(fn:String, jsonParams:String?, callback:String? ){
         switch fn {
         case WebviewMethod.bpn_getRecomCntNPoint.rawValue :
             if self.pairing.status != .pairing {return}
             self.dataProvider.requestData(q: .init(id:self.tag, type: .getRecommendHistory(callback:callback)))
-            break
+            return
         case WebviewMethod.bpn_reqSendEventpageLog.rawValue:
             guard let log = jsonParams else { return }
             self.naviLogManager.send(logString: log)
-            break
+            return
                    
         default : break
         }
+        self.callFuncionEventAttendance(fn: fn, jsonParams: jsonParams, callback: callback)
+        self.callFuncionEventMonthlyPoint(fn: fn, jsonParams: jsonParams, callback: callback)
+        self.callFuncionEventCommerce(fn: fn, jsonParams: jsonParams, callback: callback)
     }
     
     func respondCallFuncion(res:ApiResultResponds){
@@ -110,8 +115,19 @@ struct BtvWebView: PageComponent {
             dic["recomSuccessCnt"] = Int(historys.rec_succ_cnt ?? "0") ?? 0
             dic["myPoint"] = Int(historys.bpoint_total ?? "0") ?? 0
             self.viewModel.request = .evaluateJavaScriptMethod( callback, dic)
+            return
         default: break
         }
+        self.respondCallFuncionEventAttendance(res: res)
+        self.respondCallFuncionEventMonthlyPoint(res: res)
+        self.respondCallFuncionEventCommerce(res: res)
+        
+    }
+    
+    func errorCallFuncion(err:ApiResultError) {
+        self.errorCallFuncionEventAttendance(err:err)
+        self.errorCallFuncionEventMonthlyPoint(err:err)
+        self.errorCallFuncionEventCommerce(err:err)
     }
 }
 

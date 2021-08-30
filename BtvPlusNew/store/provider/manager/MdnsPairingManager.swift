@@ -5,6 +5,7 @@
 //  Created by KimJeongCheol on 2020/12/23.
 //
 import Foundation
+import Combine
 struct MdnsDevice : Codable {
     private(set) var stb_mac_address:String? = nil
     private(set) var ui_app_ver:String? = nil
@@ -25,25 +26,35 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
     private var client:MDNSServiceProxyClient? = nil
     let serviceName:String = "com.skb.btvplus"
     let querytime:Int32 = 60
-    let searchLimitedTime:Int = 3
-        
+    let searchLimitedTime:Double = 3
+    private var searchLimitCount = 1
+    private var searchRetryCount = 0
+    private var searchingTimer:AnyCancellable? = nil
+    private var find:[MdnsDevice] = []
     private var found:(([MdnsDevice]) -> Void)? = nil
     private var notFound: (() -> Void)? = nil
+    private var delayComplete:AnyCancellable? = nil
     
     private func removeClient(){
-        searchLimited??.cancel()
-        searchLimited = nil
-        client?.stopSearching()
-        client?.delegate = nil
-        client = nil
+        self.searchingTimer?.cancel()
+        self.searchingTimer = nil
+        self.delayComplete?.cancel()
+        self.delayComplete = nil
+        self.client?.stopSearching()
+        self.client?.delegate = nil
+        self.client = nil
+        self.find = []
     }
     
     func mdnsServiceFound(_ serviceJsonString: UnsafeMutablePointer<Int8>) {
-        removeClient()
-        let mdnsData = String(cString: serviceJsonString)
+        
+        
+        let mdnsData = String(cString: serviceJsonString).replace("\n", with: "")
         guard let data = mdnsData.data(using: .utf8) else {
             ComponentLog.e("foundDevice : jsonString data error", tag: self.tag)
-            notFound?()
+            DispatchQueue.main.async {
+                self.notFound?()
+            }
             return
         }
         do {
@@ -51,52 +62,61 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
             ComponentLog.d("stb_mac_address :" + (findDevice.stb_mac_address ?? ""), tag: self.tag)
             ComponentLog.d("stbid :" + (findDevice.stbid ?? ""), tag: self.tag)
             ComponentLog.d("rcu_agent_ver :" + (findDevice.rcu_agent_ver ?? ""), tag: self.tag)
-            found?([findDevice])
+            DispatchQueue.main.async {
+                self.find.append(findDevice)
+                self.delayFound()
+            }
         } catch {
             ComponentLog.e("foundDevice : JSONDecoder " + error.localizedDescription, tag: self.tag)
         }
-       
+    }
+    private func delayFound() {
+        self.delayComplete?.cancel()
+        self.delayComplete = Timer.publish(
+            every: 0.1, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                if self.find.isEmpty {
+                    self.notFound?()
+                } else {
+                    self.found?(self.find)
+                }
+                self.removeClient()
+            }
+        
+    }
+    private func mdnsServiceNotFound() {
+        self.removeClient()
+        self.notFound?()
     }
     
-    private func mdnsServiceNotFound() {
-        removeClient()
-        notFound?()
-    }
-    private var limitedRetryCount:Int = 1
-    private var retryCount:Int = 0
-    private var searchLimited:DispatchWorkItem?? = nil
     private func mdnsServiceFindStart(isRetry:Bool = false) {
-        if !isRetry {self.retryCount = 0}
+        self.removeClient()
         let client = MDNSServiceProxyClient()
         client.delegate = self
-        
-        if let ip = self.getIPAddress() {
-            client.startSearching(
-                ip,
-                serviceName: UnsafeMutablePointer(mutating: (serviceName as NSString).utf8String),
-                querytime: querytime)
-            
-        }
         self.client = client
-        self.searchLimited = DispatchWorkItem { // Set the work item with the block you want to execute
-            DispatchQueue.main.async {
-                if self.retryCount == self.limitedRetryCount {
-                    self.mdnsServiceNotFound()
-                } else {
-                    self.retryCount += 1
-                    self.removeClient()
-                    self.mdnsServiceFindStart(isRetry: true)
-                }
+        DispatchQueue.global(qos: .background).async {
+            if let ip = self.getIPAddress() {
+                client.startSearching(
+                    ip,
+                    serviceName: UnsafeMutablePointer(mutating: (self.serviceName as NSString).utf8String),
+                    querytime: self.querytime)
             }
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(self.searchLimitedTime), execute: self.searchLimited!!)
+        
+        self.searchingTimer = Timer.publish(
+            every: self.searchLimitedTime, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+               self.mdnsServiceNotFound()
+            }
     }
     
     func requestPairing(_ request:PairingRequest, retryCount:Int = 1,
                         found:(([MdnsDevice]) -> Void)? = nil,
                         notFound: (() -> Void)? = nil){
         removeClient()
-        self.limitedRetryCount = retryCount
+        self.searchLimitCount = retryCount
         self.found = found
         self.notFound = notFound
         switch request {
@@ -114,10 +134,9 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
     }
     */
     func getIPAddress() -> UnsafeMutablePointer<Int8>? {
-        NSLog(">> getIPAddress")
+     
         //let address: String? = AppUtil.getIPAddress()
         let address: String? = ApiUtil.getIPAddress(true)
-        NSLog("++ address:\(address)")
         guard let add = address else {return nil}
 
         return UnsafeMutablePointer(mutating: (add as NSString).utf8String)

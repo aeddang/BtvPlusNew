@@ -67,6 +67,18 @@ struct PageHome: PageView {
                 default: break
                 }
             }
+            .onReceive(self.appSceneObserver.$event){ evt in
+                guard let evt = evt else { return }
+                switch evt {
+                case .update(let type):
+                    switch type {
+                    case .purchase(_, _, _) :
+                        self.reset()
+                    default : break
+                    }
+                default : break
+                }
+            }
             .onReceive(self.infinityScrollModel.$event){evt in
                 guard let evt = evt else {return}
                 if self.pagePresenter.currentTopPage?.pageID == .home {
@@ -165,7 +177,7 @@ struct PageHome: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    self.reload()
+                    self.reload(selectedMonthlyId: self.selectedMonthlyId)
                     if self.pairing.status != .pairing {
                         self.appSceneObserver.event = .pairingHitch(isOn: true)
                     }
@@ -175,7 +187,7 @@ struct PageHome: PageView {
                 guard let obj = self.pageObject  else { return }
                 self.menuId = (obj.getParamValue(key: .id) as? String) ?? self.menuId
                 self.openId = obj.getParamValue(key: .subId) as? String
-                
+                self.selectedMonthlyId = obj.getParamValue(key: .type) as? String
             }
             .onDisappear{
                 self.appSceneObserver.useTopFix = nil
@@ -193,6 +205,7 @@ struct PageHome: PageView {
     @State var tipBlockData:TipBlockData? = nil
     @State var selectedMonthlyId:String? = nil
     @State var menuId:String = ""
+
     @State var openId:String? = nil
     @State var prcPrdId:String? = nil
     @State var useFooter:Bool = false
@@ -363,7 +376,7 @@ struct PageHome: PageView {
     //Monthly
     private func setupOriginMonthly(){
         if self.originMonthlyDatas == nil {
-            self.selectedMonthlyId = Self.finalSelectedMonthlyId
+            if self.selectedMonthlyId == nil { self.selectedMonthlyId = Self.finalSelectedMonthlyId }
             var originMonthlyDatas = [String:MonthlyData]()
             let maxCount = 8
             var idx = 0

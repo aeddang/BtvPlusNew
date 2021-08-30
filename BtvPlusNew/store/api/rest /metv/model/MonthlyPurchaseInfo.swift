@@ -19,6 +19,9 @@ struct MonthlyPurchaseInfo : Decodable {
     private(set) var purchase_cancel_svc: String? = nil     // 월정액 해지 서비스를 사용할 것인지 판단 여부 - Y: 해지 서비스 이용, N: 해지 서비스 이용 안함
     private(set) var yn_perd: String? = nil    // N : 기존 월정액 구매내역 정보 제공(약정정보 및 커머스 구매내역 포함) Y : 기간권 구매내역 정보 제공
     private(set) var purchaseList: [PurchaseFixedChargeItem]? = nil   // 즐겨찾기 집합의 이름
+    
+    private(set) var purchaseNormalList: [PurchaseFixedChargeItem]? = nil   // 월정액 구매내역 집합의 이름
+    private(set) var purchasePredList: [PurchaseFixedChargePeriodItem]?   // 월정액 구매내역 집합의 이름
 }
 
 struct PeriodMonthlyPurchaseInfo : Decodable {

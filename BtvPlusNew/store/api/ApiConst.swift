@@ -12,9 +12,6 @@ import UIKit
 
 struct ApiPath {
     static func getRestApiPath(_ server:ApiServer) -> String {
-        if SystemEnvironment.isReleaseMode == true {
-            if server == .VMS { return SystemEnvironment.VMS }
-        }
         
         if let vmsPath = SystemEnvironment.serverConfig[server.configKey] {
             //DataLog.d(server.configKey + " : " +  vmsPath, tag: "ApiPath")
@@ -24,6 +21,7 @@ struct ApiPath {
         DataLog.d(server.configKey + " : use local data", tag: "ApiPath")
         if let isReleaseMode = SystemEnvironment.isReleaseMode {
             switch server {
+            case .VMS: return isReleaseMode ? SystemEnvironment.VMS : SystemEnvironment.VMS_STG
             case .WEB: return isReleaseMode ? SystemEnvironment.WEB : SystemEnvironment.WEB_STG
             case .KMS: return isReleaseMode ? SystemEnvironment.KMS : SystemEnvironment.KMS_STG
             case .CBS: return isReleaseMode ? SystemEnvironment.CBS : SystemEnvironment.CBS_STG
@@ -48,11 +46,12 @@ struct ApiGateway{
     
     static func setGatewayheader( request:URLRequest) -> URLRequest{
         var authorizationRequest = request
+        authorizationRequest.addValue("application/json", forHTTPHeaderField: "Accept")
         authorizationRequest.addValue(
-            "application/json", forHTTPHeaderField: "Accept")
-        if let isReleaseMode = SystemEnvironment.isReleaseMode  { 
-            authorizationRequest.addValue(
-                isReleaseMode ? Self.API_KEY : Self.DEBUG_API_KEY, forHTTPHeaderField: "Api_Key")
+            SystemEnvironment.isStage ?  Self.DEBUG_API_KEY : Self.API_KEY, forHTTPHeaderField: "Api_Key")
+        /*
+        if let isReleaseMode = SystemEnvironment.isReleaseMode {
+           
         }else{
             #if DEBUG
             authorizationRequest.addValue(
@@ -61,7 +60,7 @@ struct ApiGateway{
             authorizationRequest.addValue(
                 Self.API_KEY, forHTTPHeaderField: "Api_Key")
             #endif
-        }
+        }*/
         let timestamp = Date().toDateFormatter(dateFormat: "yyyyMMddHHmmss.SSS", local: "en_US_POSIX")
         authorizationRequest.addValue( timestamp, forHTTPHeaderField: "TimeStamp")
         authorizationRequest.addValue( ApiUtil.getAuthVal(timestamp), forHTTPHeaderField: "Auth_Val")

@@ -428,6 +428,20 @@
     return [addresses count] ? addresses : nil;
 }
 
-
++ (NSString *)hexadecimalStringFromData:(NSData *)_deviceToken
+{
+    NSUInteger _dataLength = _deviceToken.length;
+    
+    if( _dataLength == 0) {
+        return nil;
+    }
+    const unsigned char *_pDataBuffer = (const unsigned char *)_deviceToken.bytes;
+    NSMutableString *_pHexString = [NSMutableString stringWithCapacity:(_dataLength * 2)];
+    
+    for( NSInteger _index = 0; _index < _dataLength; ++_index) {
+        [_pHexString appendFormat:@"%02x", _pDataBuffer[_index]];
+    }
+    return [_pHexString copy];
+}
 
 @end

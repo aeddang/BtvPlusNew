@@ -20,7 +20,7 @@ extension BtvWebView{
             self.dataProvider.requestData(
                 q: .init(
                     id:self.tag,
-                    type:.getAttendance(pcid: self.repository.storage.getPcid(),callback:callback)
+                    type:.getAttendance(pcid: self.repository.namedStorage?.getPcid() ?? "",callback:callback)
                 )
             )
             break
@@ -35,7 +35,7 @@ extension BtvWebView{
                 return
             }
             let jsonData = AppUtil.getJsonParam(jsonString:jsonString)
-            guard let pointPolicyNum = jsonData?["type"] as? String else {
+            guard let pointPolicyNum = jsonData?["pointpolicynum"] as? String else {
                 ComponentLog.e("pointPolicyNum notfound", tag:"WebviewMethod.bpn_reqAttendance")
                 return
             }
@@ -70,22 +70,41 @@ extension BtvWebView{
             
         case .requestBPointIssuance( _ , _ , let callback) :
             guard let callback = callback else { return }
-            self.dataProvider.requestData(
-                q: .init(
-                    id:self.tag,
-                    type: .postAttendance(pcid: self.repository.storage.getPcid(),callback:callback)
+            guard let result = res.data as? BPointIssuance else { return }
+            if result.code == ApiCode.success2 {
+                self.dataProvider.requestData(
+                    q: .init(
+                        id:self.tag,
+                        type: .postAttendance(pcid: self.repository.namedStorage?.getPcid() ?? "",callback:callback)
+                    )
                 )
-            )
+            } else {
+                self.viewModel.request = .evaluateJavaScriptMethod( callback, nil)
+            }
             
         case .postAttendance( _ , let callback) :
             guard let callback = callback else { return }
-           
             guard let result = res.data as? UpdateMetv else { return }
             var dic:[String : Any] = [:]
             dic["result"] = result.result ?? ""
             dic["reason"] = result.reason ?? ""
             self.viewModel.request = .evaluateJavaScriptMethod( callback, dic)
         
+        default: break
+        }
+    }
+    
+    func errorCallFuncionEventAttendance(err:ApiResultError) {
+        switch err.type {
+        case .getAttendance( _ , let callback) :
+            guard let callback = callback else { return }
+            self.viewModel.request = .evaluateJavaScriptMethod( callback, nil) 
+        case .requestBPointIssuance( _ , _ , let callback) :
+            guard let callback = callback else { return }
+            self.viewModel.request = .evaluateJavaScriptMethod( callback, nil)
+        case .postAttendance( _ , let callback) :
+            guard let callback = callback else { return }
+            self.viewModel.request = .evaluateJavaScriptMethod( callback, nil)
         default: break
         }
     }

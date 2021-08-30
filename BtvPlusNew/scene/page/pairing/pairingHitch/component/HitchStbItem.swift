@@ -40,7 +40,7 @@ struct HitchStbItem: PageView {
         .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.regularExtra))
         .overlay(
             RoundedRectangle(cornerRadius: Dimen.radius.regularExtra)
-                .stroke( self.isSelected ? Color.brand.primary : Color.app.greyExtra ,lineWidth: self.isSelected ? 3 : 1 )
+                .stroke( self.isSelected ? Color.brand.primary : Color.app.greyMedium ,lineWidth: self.isSelected ? 3 : 1 )
         )
     }
 }

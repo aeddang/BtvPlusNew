@@ -101,9 +101,8 @@ struct PagePurchase: PageView {
                             if !result { return }
                             let listPrice = param["listPrice"] as? String
                             let paymentPrice = param["paymentPrice"] as? String
-                            self.appSceneObserver.event = .update(.purchase(pid, listPrice, paymentPrice))
                             self.pairing.authority.reset()
-                            
+                            self.appSceneObserver.event = .update(.purchase(pid, listPrice, paymentPrice))
                         }
                         
                         break

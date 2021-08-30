@@ -488,6 +488,26 @@
 "alertRegistBookmark" = "찜 등록이 완료 되었습니다.";
 "alertDeleteBookmark" = "찜 등록이 해제 되었습니다.";
 
+"alertEventParticipate" = "이벤트 참여 안내";
+"alertEventParticipateMonthlyPoint" = "월정액 상품 가입 시에만 혜택이 제공됩니다.";
+
+"alertEventPointIssuanceComplete" = "포인트 지급 완료";
+"alertEventPointIssuanceCompleteText" = "포인트 지급이 완료되었습니다.\n포인트 내역은 MY > B포인트에서\n확인해주세요.";
+
+"alertEventPointIssuanceComplete" = "포인트 지급 완료";
+"alertEventPointIssuanceCompleteText" = "포인트 지급이 완료되었습니다.\n포인트 내역은 MY > B포인트에서\n확인해주세요.";
+
+"alertEventPointIssuancePartComplete" = "포인트 일부 지급 완료";
+"alertEventPointIssuancePartCompleteText" = "일부 포인트의 지급이\n완료되었습니다.\n\nMY > B포인트에서 지급된\n포인트 내역 확인 후\n못 받은 포인트가 있다면\n다시 포인트 받기 버튼을 눌러 주세요.";
+
+"alertEventPointIssuanceUnable" = "포인트 지급 불가";
+"alertEventPointIssuanceUnableAlready" = "이미 포인트 혜택을 받으셨습니다.\n포인트 혜택은 한 달에 한 번만\n받으실 수 있습니다.";
+"alertEventPointIssuanceUnableFail" = "포인트를 지급할 수 없는 상태입니다.\n고객센터로 문의해 주세요.\n(오류코드 : \(%s))";
+
+"alertEventMonthlyView" = "월정액 보러가기";
+"alertEventAlreadyPurchase" = "이미 구매한 상품입니다.";
+"alertEventJoinAndPurchase" = "가입 후\n구매할 수 있는 상품입니다.";
+    
 /*
  PageTitle
 */

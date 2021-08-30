@@ -6,15 +6,8 @@
 //
 
 import Foundation
-//
-//  VoiceRecorder.swift
-//  BtvPlusNew
-//
-//  Created by JeongCheol Kim on 2021/03/19.
-//
-
-import Foundation
 import SwiftUI
+import Combine
 
 struct PairingHitch: PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
@@ -198,8 +191,10 @@ struct PairingHitch: PageComponent {
             guard let evt = evt else {return}
             switch evt {
             case .notFoundDevice, .findMdnsDevice, .findStbInfoDevice :
-                self.findDeviceCompleted(evt: evt)
-           
+                DispatchQueue.main.async {
+                    self.findDeviceCompleted(evt: evt)
+                }
+            
             case .connectError(let header) :
                 if header?.result == NpsNetwork.resultCode.pairingLimited.code {
                     self.pairing.requestPairing(.hostInfo(auth: nil, device:self.selectedDevice?.stbid, prevResult: header))

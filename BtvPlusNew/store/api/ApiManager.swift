@@ -8,7 +8,7 @@
 
 import Foundation
 import Combine
-enum ApiStatus{
+enum ApiStatus:String{
     case initate, ready
 }
 
@@ -288,8 +288,8 @@ class ApiManager :PageProtocol, ObservableObject{
             data: data,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
-        case .getPackageDirectView(let data, let isPpm): self.metv.getPackageDirectView(
-            data: data, isPpm:isPpm,
+        case .getPackageDirectView(let data, let isPpm, let pidList): self.metv.getPackageDirectView(
+            data: data, isPpm:isPpm, pidList: pidList,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
         case .getPossessionPurchase(let stbId ,let page, let count) : self.metv.getPossessionPurchase(

@@ -449,6 +449,9 @@
 		319CF688269738CF00159575 /* ExamBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF687269738CF00159575 /* ExamBody.swift */; };
 		319CF68B2697B69900159575 /* KidsExamModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF68A2697B69900159575 /* KidsExamModel.swift */; };
 		319CF68D2697B9DB00159575 /* QuestionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF68C2697B9DB00159575 /* QuestionData.swift */; };
+		319D7BAD26DC442F00DFAA69 /* LocalNamedStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319D7BAC26DC442F00DFAA69 /* LocalNamedStorage.swift */; };
+		319D7BB026DCF8C500DFAA69 /* BtvWebViewEventMonthlyPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319D7BAF26DCF8C500DFAA69 /* BtvWebViewEventMonthlyPoint.swift */; };
+		319D7BB226DD116800DFAA69 /* BtvWebViewEventCommerce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319D7BB126DD116800DFAA69 /* BtvWebViewEventCommerce.swift */; };
 		31A38DF92682A1BE0058287B /* TabSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A38DF82682A1BE0058287B /* TabSwitch.swift */; };
 		31A38DFB2682A9EB0058287B /* PurchaseViewerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A38DFA2682A9EB0058287B /* PurchaseViewerData.swift */; };
 		31A38DFD2682AA270058287B /* PurchaseViewerKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A38DFC2682AA270058287B /* PurchaseViewerKids.swift */; };
@@ -1146,6 +1149,9 @@
 		319CF687269738CF00159575 /* ExamBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamBody.swift; sourceTree = "<group>"; };
 		319CF68A2697B69900159575 /* KidsExamModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsExamModel.swift; sourceTree = "<group>"; };
 		319CF68C2697B9DB00159575 /* QuestionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionData.swift; sourceTree = "<group>"; };
+		319D7BAC26DC442F00DFAA69 /* LocalNamedStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNamedStorage.swift; sourceTree = "<group>"; };
+		319D7BAF26DCF8C500DFAA69 /* BtvWebViewEventMonthlyPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtvWebViewEventMonthlyPoint.swift; sourceTree = "<group>"; };
+		319D7BB126DD116800DFAA69 /* BtvWebViewEventCommerce.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtvWebViewEventCommerce.swift; sourceTree = "<group>"; };
 		31A38DF82682A1BE0058287B /* TabSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabSwitch.swift; sourceTree = "<group>"; };
 		31A38DFA2682A9EB0058287B /* PurchaseViewerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseViewerData.swift; sourceTree = "<group>"; };
 		31A38DFC2682AA270058287B /* PurchaseViewerKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseViewerKids.swift; sourceTree = "<group>"; };
@@ -1154,7 +1160,7 @@
 		31A3FAB926C49BAA00689E09 /* PageSynopsisLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisLayer.swift; sourceTree = "<group>"; };
 		31A3FABC26C641A000689E09 /* Vls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vls.swift; sourceTree = "<group>"; };
 		31A3FABF26C6446900689E09 /* ProhibitionSimultaneous.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProhibitionSimultaneous.swift; sourceTree = "<group>"; };
-		31A3FAC126C6550800689E09 /* libti2-mdns-service-proxy-client.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libti2-mdns-service-proxy-client.a"; path = "../../../../../Downloads/IOS_mdns_lib_mobile_pc/mobile_iosarm/libti2-mdns-service-proxy-client.a"; sourceTree = "<group>"; };
+		31A3FAC126C6550800689E09 /* libti2-mdns-service-proxy-client.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libti2-mdns-service-proxy-client.a"; sourceTree = "<group>"; };
 		31A49FD72626751A0065E6C6 /* DiscountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscountView.swift; sourceTree = "<group>"; };
 		31A49FF72627D1620065E6C6 /* PagePairingGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePairingGuide.swift; sourceTree = "<group>"; };
 		31A49FFF2627D7700065E6C6 /* GuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideView.swift; sourceTree = "<group>"; };
@@ -1952,6 +1958,8 @@
 				31671A112600B359005AC3D2 /* model */,
 				31061E6525C8CF5800543FC0 /* BtvWebView.swift */,
 				314E756126DB507000A8C924 /* BtvWebViewEventAttendance.swift */,
+				319D7BAF26DCF8C500DFAA69 /* BtvWebViewEventMonthlyPoint.swift */,
+				319D7BB126DD116800DFAA69 /* BtvWebViewEventCommerce.swift */,
 			);
 			path = webview;
 			sourceTree = "<group>";
@@ -3039,6 +3047,7 @@
 		31EA0D8E26D705CA007BECAB /* push */ = {
 			isa = PBXGroup;
 			children = (
+				315A8FBE25AD10BA00498B03 /* util */,
 				31EA0D8F26D705DD007BECAB /* model */,
 				31EA0D9026D705E8007BECAB /* Push.swift */,
 			);
@@ -3723,6 +3732,7 @@
 			children = (
 				314D6B1C25D122610003C749 /* Setup.swift */,
 				D56C6B1D257DACD800CF9AB8 /* LocalStorage.swift */,
+				319D7BAC26DC442F00DFAA69 /* LocalNamedStorage.swift */,
 			);
 			path = storage;
 			sourceTree = "<group>";
@@ -3730,7 +3740,6 @@
 		D56C6B21257DACD800CF9AB8 /* api */ = {
 			isa = PBXGroup;
 			children = (
-				315A8FBE25AD10BA00498B03 /* util */,
 				D56C6B25257DACD800CF9AB8 /* rest  */,
 				D56C6B22257DACD800CF9AB8 /* ApiManager.swift */,
 				D56C6B23257DACD800CF9AB8 /* Api.swift */,
@@ -3880,6 +3889,7 @@
 				D56C6920257D9EE500CF9AB8 /* Frameworks */,
 				D56C6921257D9EE500CF9AB8 /* Resources */,
 				09C20F62D5408021A395E69D /* [CP] Embed Pods Frameworks */,
+				319D7BAE26DCA2AB00DFAA69 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -4078,6 +4088,25 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		319D7BAE26DCA2AB00DFAA69 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)\n",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
+		};
 		6361995C88A682594D94DC06 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -4153,6 +4182,7 @@
 				314E756F26DB6CAB00A8C924 /* BPointIssuance.swift in Sources */,
 				316A70A72670895900A93B83 /* PlayerBottomBody.swift in Sources */,
 				316C45D8265200A500A8D7F5 /* Broadcasting.swift in Sources */,
+				319D7BB226DD116800DFAA69 /* BtvWebViewEventCommerce.swift in Sources */,
 				316C45DA265203CF00A8D7F5 /* BroadcastManager.swift in Sources */,
 				3166CBEA2611A52200282891 /* TotalPoint.swift in Sources */,
 				312825C726B0150700A58DB9 /* PageCashChargeGuide.swift in Sources */,
@@ -4707,6 +4737,7 @@
 				318000B926A071D7002CC991 /* SoundToolBox.swift in Sources */,
 				31962B1926A32C4A00CA3BC4 /* PageKidsCategortList.swift in Sources */,
 				31F2803C2673305A00F40B09 /* PlayInfoButton.swift in Sources */,
+				319D7BB026DCF8C500DFAA69 /* BtvWebViewEventMonthlyPoint.swift in Sources */,
 				3167198425FF42A8005AC3D2 /* WatchedBlock.swift in Sources */,
 				D56C6A56257DA0C700CF9AB8 /* CircleButton.swift in Sources */,
 				314D6B0725D0E9DE0003C749 /* SetupItem.swift in Sources */,
@@ -4720,6 +4751,7 @@
 				31AC66D426BA23B100766995 /* ScrollList.swift in Sources */,
 				D56C699D257DA09E00CF9AB8 /* PageSceneDelegate.swift in Sources */,
 				310F6FBF25C167EC005718B0 /* ScsModel.swift in Sources */,
+				319D7BAD26DC442F00DFAA69 /* LocalNamedStorage.swift in Sources */,
 				D50AB8ED257F311800649C4A /* SystemEnvironment.swift in Sources */,
 				316A709E26707C6100A93B83 /* PlayerListTabKids.swift in Sources */,
 				3190CAED268463AE00ACB465 /* PlayerList.swift in Sources */,
@@ -4975,7 +5007,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7428;
+				CURRENT_PROJECT_VERSION = 7437;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
@@ -5000,7 +5032,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 443;
+				MARKETING_VERSION = 4.4.35;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvplusDevelopment;
@@ -5058,7 +5090,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7428;
+				CURRENT_PROJECT_VERSION = 7437;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
@@ -5078,7 +5110,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 443;
+				MARKETING_VERSION = 4.4.35;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvplusDistribution;

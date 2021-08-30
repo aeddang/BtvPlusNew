@@ -787,7 +787,7 @@ struct PageSynopsis: PageView {
                 type: .checkProhibitionSimultaneous(
                     synopsisData ,
                     self.pairing,
-                    pcId: self.repository.storage.getPcid()), isOptional:true
+                    pcId: self.repository.namedStorage?.getPcid() ?? "" ), isOptional:true
             )
         }
     }

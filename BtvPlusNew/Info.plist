@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>ApiCBS</key>
+	<string>$(API_CBS)</string>
 	<key>ApiEMS</key>
 	<string>$(API_EMS)</string>
 	<key>ApiEPS</key>
@@ -72,8 +74,6 @@
 	<string>$(API_WEB)</string>
 	<key>ApiWEPG</key>
 	<string>$(API_WEPG)</string>
-	<key>ApiCBS</key>
-	<string>$(API_CBS)</string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>com.skb.btvplus.bgtask</string>

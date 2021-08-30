@@ -48,4 +48,5 @@
 + (NSString *) stringByUrlEncoding:(NSString *)_str;
 
 + (NSString *) getIPAddress:(BOOL)preferIPv4;
++ (NSString *)hexadecimalStringFromData:(NSData *)_deviceToken;
 @end

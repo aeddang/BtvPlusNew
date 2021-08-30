@@ -19,6 +19,14 @@ enum PurchaseSynopsisType {
             }
         }
     }
+    static func getType(_ value:String?) -> PurchaseSynopsisType{
+        switch value {
+            case "02": return .season
+            case "01": return .title 
+            case "03": return .package
+            default : return .title
+        }
+    }
 }
 
 enum PurchasePType {
@@ -206,6 +214,16 @@ class PurchaseWebviewModel {
     func setParam(seriesId: String? = nil , epsId: String? = nil) -> PurchaseWebviewModel{
         if let epsId = epsId { addEpsdId(epsdId: epsId) }
         if let seriesId = seriesId { self.srisId = seriesId }
+        return self
+    }
+    
+    @discardableResult
+    func setParam(synopsisType: String, pType: String, title: String, pId: String, pIdOnly: String) -> PurchaseWebviewModel{
+        self.ptype = PurchasePType.getType(pType)
+        self.synopsisType = PurchaseSynopsisType.getType(synopsisType)
+        self.conTitle = title
+        self.pid = pId
+        self.pidOnly = pIdOnly
         return self
     }
     

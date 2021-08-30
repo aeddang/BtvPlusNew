@@ -235,6 +235,24 @@ struct AppUtil{
         }
     }
     
+    static func getJsonArray(jsonString: String) -> [Any]? {
+        guard let data = jsonString.data(using: .utf8) else {
+            DataLog.e("parse : jsonString data error", tag: "getJsonArray")
+            return nil
+        }
+        do{
+            let value = try JSONSerialization.jsonObject(with: data , options: [])
+            guard let arr = value as? [Any] else {
+                DataLog.e("parse : array error", tag: "getJsonArray")
+                return nil
+            }
+            return arr
+        } catch {
+           DataLog.e("parse : JSONSerialization " + error.localizedDescription, tag: "getJsonArray")
+           return nil
+        }
+    }
+    
     static func getQurry(url: String, key:String) -> String? {
         if let components = URLComponents(string: url) {
             if let queryItems = components.queryItems {

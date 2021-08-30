@@ -13,7 +13,7 @@ struct SystemEnvironment {
     static let model:String = AppUtil.model
     static let systemVersion:String = UIDevice.current.systemVersion
     static let bundleVersion:String = AppUtil.version
-    static let bundleVersionKey:String = "443" //AppUtil.version
+    static let bundleVersionKey:String = AppUtil.version
     static let buildNumber:String = AppUtil.build.description
     static let deviceId:String = Self.getDeviceId()
     static var firstLaunch :Bool = false
@@ -51,6 +51,7 @@ struct SystemEnvironment {
     static let SMD = "http://smd.hanafostv.com:8080"
     static let KMS = "http://mobilebtv.com:8080"
     
+    static let VMS_STG = "http://58.123.205.82:9080"
     static let WEB_STG = "http://58.123.205.82:8080"
     static let CBS_STG = "https://1.255.102.229:9090"
     static let SMD_STG = "http://175.113.214.199:8080"
@@ -63,7 +64,7 @@ struct SystemEnvironment {
     }
     
     static func getGuestDeviceId() -> String{
-        return ApiPrefix.device + SystemEnvironment.deviceId
+        return  SystemEnvironment.deviceId
     }
     
     private static func getDeviceId() -> String{

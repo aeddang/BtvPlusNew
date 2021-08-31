@@ -21,7 +21,7 @@ struct PagePairingBtv: PageView {
     @State var isInput = false
     @State var isFocus = false
     @State var sceneOrientation: SceneOrientation = .portrait
-    
+    @State var errorMsg:String? = nil
     struct TextBlock:PageComponent {
         var body :some View {
             VStack(alignment:.leading , spacing:0) {
@@ -104,7 +104,7 @@ struct PagePairingBtv: PageView {
                                     .padding(.vertical, Dimen.margin.regularExtra)
                                     .padding(.horizontal, Dimen.margin.regular)
                             }
-                            VStack(alignment:.center , spacing:Dimen.margin.regularExtra) {
+                            VStack(alignment:.center , spacing:0) {
                                 Image(Asset.image.pairingTutorial)
                                     .renderingMode(.original)
                                     .resizable()
@@ -112,6 +112,16 @@ struct PagePairingBtv: PageView {
                                     .frame(height:SystemEnvironment.isTablet ? 336 : 200)
                                 
                                 InputBlock(input: self.$input, isFocus: self.$isFocus)
+                                    .padding(.top, Dimen.margin.regularExtra)
+                                
+                                if let errorMsg = self.errorMsg {
+                                    Text(errorMsg)
+                                        .multilineTextAlignment(.leading)
+                                        .modifier(MediumTextStyle(
+                                            size: Font.size.tiny, color: Color.brand.primary
+                                        ))
+                                        .padding(.top, Dimen.margin.tiny)
+                                }
                                 Spacer().modifier(MatchParent())
                             }
                         }
@@ -129,6 +139,14 @@ struct PagePairingBtv: PageView {
                                 }
                                 InputBlock(input: self.$input, isFocus: self.$isFocus)
                                     .padding(.vertical, Dimen.margin.medium)
+                                if let errorMsg = self.errorMsg {
+                                    Text(errorMsg)
+                                        .multilineTextAlignment(.leading)
+                                        .modifier(MediumTextStyle(
+                                            size: Font.size.tiny, color: Color.brand.primary
+                                        ))
+                                        .padding(.top, Dimen.margin.tiny)
+                                }
                             }
                            
                             Image(Asset.image.pairingTutorial)
@@ -189,7 +207,8 @@ struct PagePairingBtv: PageView {
                     if header?.result == NpsNetwork.resultCode.pairingLimited.code {
                         self.pairing.requestPairing(.hostInfo(auth: self.input, device: nil, prevResult: header))
                     } else {
-                        self.appSceneObserver.alert = .pairingError(header)
+                        self.errorMsg = NpsNetwork.getConnectErrorMeassage(data: header)
+                       // self.appSceneObserver.alert = .pairingError(header)
                     }
                 case .connectErrorReason(let info) :
                     self.appSceneObserver.alert = .limitedDevice(info)
@@ -224,6 +243,7 @@ struct PagePairingBtv: PageView {
     
     func inputCompleted() {
         if !self.isInputCompleted() { return }
+        self.errorMsg = nil
         self.pairing.requestPairing(.auth(self.input))
     }
 }

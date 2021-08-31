@@ -227,14 +227,14 @@ struct PageCategory: PageView {
             
             self.pagePresenter.openPopup(
                 PageProvider
-                    .getPageObject(.webview)
+                    .getPageObject(.webviewList)
                     .addParam(key: .data, value: BtvWebView.event)
                     .addParam(key: .title , value: data.title)
             )
         case .tip :
             self.pagePresenter.openPopup(
                 PageProvider
-                    .getPageObject(.webview)
+                    .getPageObject(.webviewList)
                     .addParam(key: .data, value: BtvWebView.tip)
                     .addParam(key: .title , value: data.title)
             )

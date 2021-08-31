@@ -338,7 +338,7 @@ class ApiManager :PageProtocol, ObservableObject{
         case .postGuestAgreement(let user) : self.nps.postGuestAgreement(user: user,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
-        case .updateAgreement(let isAgree) : self.nps.postGuestAgreement(
+        case .updateAgreement(let isAgree, _) : self.nps.postGuestAgreement(
             user: User(isAgree: isAgree),
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)

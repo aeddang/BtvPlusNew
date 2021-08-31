@@ -80,8 +80,8 @@ class Setup:ObservableObject, PageProtocol {
         self.dataAlram = true
         self.autoRemocon = true
         self.remoconVibration = true
-        self.isPurchaseAuth = true
-        
+        self.isPurchaseAuth = false
+        self.watchLv = 0
         self.isFirstMemberAuth = false
         self.isFirstCashCharge = true
     }

@@ -157,8 +157,10 @@ class VideoData:InfinityData{
         setCardType(cardType)
         isClip = cardType == .clip
         count = data.yn_series == "Y" ? data.series_no : nil
-        watchLv = data.level?.toInt() ?? 0
-        isAdult = data.adult?.toBool() ?? false
+        if !isClip {
+            watchLv = data.level?.toInt() ?? 0
+            isAdult = data.adult?.toBool() ?? false
+        }
         tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         if let rt = data.watch_rt?.toInt() {
             self.progress = Float(rt) / 100.0

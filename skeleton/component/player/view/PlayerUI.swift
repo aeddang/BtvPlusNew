@@ -39,7 +39,7 @@ struct PlayerUI: PageComponent {
     @State var isSeeking = false
     @State var isError = false
     @State var errorMessage = ""
-    
+    @State var useFullScreen:Bool = true
     @State var isFullScreen:Bool = false
     @State var isShowing: Bool = false
     var body: some View {
@@ -98,22 +98,23 @@ struct PlayerUI: PageComponent {
                         .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.greyLightExtra))
                         .frame(width:Self.timeTextWidth)
                         .fixedSize(horizontal: true, vertical: false)
-
-                    ImageButton(
-                        defaultImage: Asset.player.fullScreen,
-                        activeImage: Asset.player.fullScreenOff,
-                        isSelected: self.isFullScreen,
-                        size: CGSize(width:Dimen.icon.regular,height:Dimen.icon.regular)
-                    ){ _ in
-                        if self.viewModel.useFullScreenAction {
-                            let changeOrientation:UIInterfaceOrientationMask = self.isFullScreen ? .portrait : .landscape
-                            self.isFullScreen
-                                ? self.pagePresenter.fullScreenExit(changeOrientation: changeOrientation)
-                                : self.pagePresenter.fullScreenEnter(
-                                    isLock: SystemEnvironment.isTablet ,
-                                    changeOrientation: changeOrientation)
-                        } else{
-                            self.viewModel.event = .fullScreen(!self.isFullScreen)
+                    if self.useFullScreen {
+                        ImageButton(
+                            defaultImage: Asset.player.fullScreen,
+                            activeImage: Asset.player.fullScreenOff,
+                            isSelected: self.isFullScreen,
+                            size: CGSize(width:Dimen.icon.regular,height:Dimen.icon.regular)
+                        ){ _ in
+                            if self.viewModel.useFullScreenAction {
+                                let changeOrientation:UIInterfaceOrientationMask = self.isFullScreen ? .portrait : .landscape
+                                self.isFullScreen
+                                    ? self.pagePresenter.fullScreenExit(changeOrientation: changeOrientation)
+                                    : self.pagePresenter.fullScreenEnter(
+                                        isLock: SystemEnvironment.isTablet ,
+                                        changeOrientation: changeOrientation)
+                            } else{
+                                self.viewModel.event = .fullScreen(!self.isFullScreen)
+                            }
                         }
                     }
                 }
@@ -249,6 +250,7 @@ struct PlayerUI: PageComponent {
         }
         .onAppear{
             self.isFullScreen = self.pagePresenter.isFullScreen
+            self.useFullScreen = self.viewModel.useFullScreenButton
         }
     }
     

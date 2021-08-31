@@ -11,8 +11,8 @@ extension KidsSynopsis {
     static let topHeight:CGFloat = SystemEnvironment.isTablet ? 192 : 40
     static let bottomHeight:CGFloat = DimenKids.button.mediumRect.height
     static let listWidth:CGFloat = SystemEnvironment.isTablet ? 260 : 150
-    static let playerAreaWidth:CGFloat = SystemEnvironment.isTablet ? 705 : 440
-    static let playerSize:CGSize = SystemEnvironment.isTablet ? CGSize(width: 705, height: 394) : CGSize(width: 368, height: 206)
+    //static let playerAreaWidth:CGFloat = SystemEnvironment.isTablet ? 705 : 440
+    //static let playerSize:CGSize = SystemEnvironment.isTablet ? CGSize(width: 705, height: 394) : CGSize(width: 368, height: 206)
     
     func getPlayerAreaWidth(sceneObserver:PageSceneObserver) -> CGFloat {
         let h = sceneObserver.screenSize.height
@@ -21,9 +21,12 @@ extension KidsSynopsis {
             - (sceneObserver.safeAreaTop + sceneObserver.safeAreaBottom)
         
         let limitW = sceneObserver.screenSize.width
-            - Self.listWidth - DimenKids.icon.regularExtra
-            - (DimenKids.margin.regularExtra * 2) - DimenKids.margin.thin
-            - (sceneObserver.safeAreaStart + sceneObserver.safeAreaEnd)
+            - Self.listWidth
+            - ( DimenKids.icon.regularExtra + DimenKids.margin.light ) //뒤로버튼 영역
+            - ( SystemEnvironment.isTablet
+                    ? -DimenKids.margin.thin
+                    : (DimenKids.margin.regularExtra * 2) - DimenKids.margin.thin ) //기능 박스 영역
+            - (DimenKids.margin.mediumExtra*2) //좌우 여백
         
         let idealW = floor(h * 16 / 9)
         

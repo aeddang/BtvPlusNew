@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-
+import struct Kingfisher.KFImage
 class WatchedData:InfinityData{
     private(set) var originImage: String? = nil
     private(set) var image: String? = nil
@@ -171,8 +171,17 @@ struct WatchedItem: PageView {
     var body: some View {
         HStack( spacing:Dimen.margin.light){
             ZStack{
-                ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg9_16)
+                KFImage(URL(string: self.data.image ?? ""))
+                    .resizable()
+                    .placeholder {
+                        Image(Asset.noImg16_9)
+                            .resizable()
+                    }
+                    .cancelOnDisappear(true)
+                    .loadImmediately()
+                    .aspectRatio(contentMode: .fill)
                     .modifier(MatchParent())
+                
                 if self.data.isLock {
                     Image(Asset.icon.itemRock)
                         .renderingMode(.original)

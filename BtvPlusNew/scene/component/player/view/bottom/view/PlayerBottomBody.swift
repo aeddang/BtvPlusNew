@@ -122,7 +122,7 @@ struct PlayerBottomBody: PageComponent{
                     : 0
                  )
         
-        .opacity(self.isUiShowing ? 1.0 : 0.0)
+        .opacity(!self.isUiShowing && self.showPreplay ? 0.0 : 1.0)
     }//body
 }
 

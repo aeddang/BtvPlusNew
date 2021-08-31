@@ -45,6 +45,9 @@ class AppSceneObserver:ObservableObject{
     @Published var event:SceneEvent? = nil {didSet{ if event != nil { event = nil} }}
     
     @Published var useLayerPlayer:Bool = false
+    
+    var pairingCompletedMovePage:PageObject? = nil
+    
     var currentPlayer:PageSynopsis? = nil
     func cancelAll(){
 

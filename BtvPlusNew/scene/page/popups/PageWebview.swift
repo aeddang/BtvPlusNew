@@ -26,7 +26,7 @@ struct PageWebview: PageView {
     @State var webViewHeight:CGFloat = 0
    
     @State var title:String? = nil
-
+    @State var marginBottom:CGFloat = Dimen.app.bottom
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -59,7 +59,7 @@ struct PageWebview: PageView {
                                     ComponentLog.d("webViewHeight " + webViewHeight.description)
                                 }
                         }
-                        .padding(.bottom, self.sceneObserver.safeAreaBottom)
+                        .padding(.bottom, self.marginBottom)
                         .modifier(MatchParent())
         
                         .onReceive(self.infinityScrollModel.$event){evt in
@@ -94,8 +94,13 @@ struct PageWebview: PageView {
                 default : do{}
                 }
             }
-            
+            .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    withAnimation{ self.marginBottom = bottom }
+                }
+            }
             .onAppear{
+                self.marginBottom = self.appSceneObserver.safeBottomLayerHeight
                 guard let obj = self.pageObject  else { return }
                 self.title = obj.getParamValue(key: .title) as? String
                 if let link = obj.getParamValue(key: .data) as? String{

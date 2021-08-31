@@ -69,10 +69,7 @@ struct PageMyBenefits: PageView {
                             viewModel: self.viewPagerModel,
                             pages: self.pages,
                             titles: self.titles,
-                            isDivisionTab: SystemEnvironment.isTablet
-                                ? true
-                            : self.pairing.pairingDeviceType == .apple ? true  : false
-                            )
+                            isDivisionTab: true)
                             { idx in
                                 switch idx {
                                 case 0 :

@@ -320,10 +320,19 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
 }
 
 extension MPVolumeView {
+    static func moveVolume(_ move: Float) -> Void {
+        let volumeView = MPVolumeView(frame: .zero)
+        let slider = volumeView.subviews.first(where: { $0 is UISlider }) as? UISlider
+       
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.01) {
+            let v = ( slider?.value ?? 0 ) + move
+            slider?.value = v
+            volumeView.showsVolumeSlider = false
+        }
+    }
     static func setVolume(_ volume: Float) -> Void {
         let volumeView = MPVolumeView(frame: .zero)
         let slider = volumeView.subviews.first(where: { $0 is UISlider }) as? UISlider
-        volumeView.showsVolumeSlider = false
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.01) {
             slider?.value = volume
             volumeView.showsVolumeSlider = false

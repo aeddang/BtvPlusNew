@@ -17,6 +17,7 @@ struct AppLayout: PageComponent{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var keyboardObserver:KeyboardObserver
     @EnvironmentObject var setup:Setup
+    @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     
     @State var loadingInfo:[String]? = nil
@@ -88,6 +89,7 @@ struct AppLayout: PageComponent{
         .onReceive(self.appSceneObserver.$useLogCollector){ logCollector in
             self.useLogCollector = logCollector
         }
+        
         .onReceive(self.appSceneObserver.$event){ evt in
             guard let evt = evt else { return }
             switch evt  {
@@ -142,6 +144,22 @@ struct AppLayout: PageComponent{
                 self.keyboardObserver.start()
             }else{
                 self.keyboardObserver.cancel()
+            }
+        }
+        
+        .onReceive(self.pairing.$event){ evt in
+            guard let evt = evt else {return}
+            switch evt {
+            case .pairingCompleted :
+                if let movePage = self.appSceneObserver.pairingCompletedMovePage {
+                    if movePage.isPopup {
+                        self.pagePresenter.openPopup(movePage)
+                    } else {
+                        self.pagePresenter.changePage(movePage)
+                    }
+                   
+                }
+            default : break
             }
         }
         .onReceive (self.appObserver.$page) { iwg in

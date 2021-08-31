@@ -128,7 +128,7 @@ struct InputRemoteBox: PageComponent {
     func isInputCompleted() -> Bool {
         let size = self.selectedInputSize ?? self.inputSize
         if let min = self.inputSizeMin {
-            return min < self.input.count && self.input.count <= size
+            return min <= self.input.count && self.input.count <= size
         } else{
             return self.input.count == size
         }

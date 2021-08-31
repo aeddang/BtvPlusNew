@@ -103,7 +103,8 @@ struct PageSceneModel: PageModel {
     
     static func needBottomTab(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
-        case .home, .category, .multiBlock, .search, .my, .categoryList, .synopsis, .synopsisPackage, .previewList, .setup: return true
+        case .home, .category, .multiBlock, .search, .my, .webviewList,
+             .categoryList, .synopsis, .synopsisPackage, .previewList, .setup: return true
         default : return false
         }
     }
@@ -118,7 +119,7 @@ struct PageSceneModel: PageModel {
     
     static func needKeyboard(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
-        case .pairingSetupUser, .pairingBtv, .search, .modifyProile,
+        case .pairingSetupUser, .pairingBtv, .search, .modifyProile, .webviewList,
              .confirmNumber, .pairingManagement, .setup, .remotecon , .myRegistCard: return true
         case .registKid, .confirmNumber, .kidsSearch : return true
         default : return false

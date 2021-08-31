@@ -179,8 +179,15 @@ struct PageRegistKid: PageView {
             .onReceive(self.pairing.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
-                case .updatedKids :
-                    self.appSceneObserver.event = .toast(String.alert.kidsAddCompleted) 
+                case .updatedKids(let updateType) :
+                    guard let type = updateType else {return}
+                    var msg:String = ""
+                    switch type {
+                    case .post : msg = String.alert.kidsAddCompleted
+                    case .put : msg = String.alert.kidsEditCompleted
+                    case .del : msg = String.alert.kidsDeleteCompleted
+                    }
+                    self.appSceneObserver.event = .toast(msg) 
                     self.pagePresenter.closePopup(self.pageObject?.id)
                     break
                 case .notFoundKid :

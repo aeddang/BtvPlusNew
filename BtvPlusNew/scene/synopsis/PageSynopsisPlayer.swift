@@ -21,7 +21,8 @@ struct PageSynopsisPlayer: PageView {
     @ObservedObject var pageDataProviderModel:PageDataProviderModel = PageDataProviderModel()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
-    @ObservedObject var playerModel: BtvPlayerModel = BtvPlayerModel(useFullScreenAction:false)
+    @ObservedObject var playerModel: BtvPlayerModel =
+        BtvPlayerModel(useFullScreenAction:false, useFullScreenButton: false)
     @ObservedObject var prerollModel = PrerollModel()
     
     @State var synopsisData:SynopsisData? = nil

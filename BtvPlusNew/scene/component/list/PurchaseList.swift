@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-
+import struct Kingfisher.KFImage
 class PurchaseData:InfinityData,ObservableObject{
     private(set) var originImage: String? = nil
     private(set) var image: String? = nil
@@ -164,8 +164,17 @@ struct PurchaseItem: PageView {
                     .padding(.trailing, Dimen.margin.thin)
                 }
                 ZStack{
-                    ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg9_16)
+                    KFImage(URL(string: self.data.image ?? ""))
+                        .resizable()
+                        .placeholder {
+                            Image(Asset.noImg16_9)
+                                .resizable()
+                        }
+                        .cancelOnDisappear(true)
+                        .loadImmediately()
+                        .aspectRatio(contentMode: .fill)
                         .modifier(MatchParent())
+                    
                     if !self.data.isUseable {
                         Spacer().modifier(MatchParent()).background(Color.transparent.black50)
                     }

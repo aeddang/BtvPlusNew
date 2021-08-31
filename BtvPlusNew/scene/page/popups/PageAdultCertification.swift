@@ -162,7 +162,7 @@ struct PageAdultCertification: PageView {
                             
                         }
                     }
-                default : do{}
+                default : break
                 }
             }
             

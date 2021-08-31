@@ -10,7 +10,8 @@ import Foundation
 import Combine
 
 enum WebviewMethod:String {
-    case getSTBInfo, getNetworkState, getLogInfo, stopLoading
+    case getSTBInfo, getNetworkState, getLogInfo, stopLoading,
+         setUserAgreementInfo, requestRemoconFunction
     case requestVoiceSearch, requestSTBViewInfo
     case externalBrowser
     case bpn_showSynopsis,
@@ -127,7 +128,7 @@ class WebBridge :PageProtocol{
         info["isShowAutoRemocon"] = setup.autoRemocon
         
         info["marketingInfo"] = pairing.user?.isAgree3 == true ? 1 : 0
-        info["pushInfo"] = pairing.user?.isAgree1 == true ? 1 : 0
+        info["pushInfo"] = pairing.user?.isAgree3 == true ? 1 : 0
         
         let userInfo = pairing.userInfo?.user
         info["regionCode"] = pairing.getRegionCode()
@@ -381,6 +382,24 @@ class WebBridge :PageProtocol{
     }
     
     func shareEvent(eventLink :String, text:String? = nil, linkText:String? = nil){
+       
+        let link = ApiPath.getRestApiPath(.WEB)
+            + SocialMediaSharingManage.event
+            + "&id=" + eventLink
+            
+        self.shareManager.share(
+            Shareable(
+                link:link,
+                text: text ?? String.share.eventTitle,
+                linkText: linkText,
+                useDynamiclink:true
+            )
+        ){ isComplete in
+            self.appSceneObserver?.event = .toast(isComplete ? String.share.complete : String.share.fail)
+        }
+    }
+    
+    func requestRemocon(eventLink :String, text:String? = nil, linkText:String? = nil){
        
         let link = ApiPath.getRestApiPath(.WEB)
             + SocialMediaSharingManage.event

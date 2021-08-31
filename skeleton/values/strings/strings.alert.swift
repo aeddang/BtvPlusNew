@@ -75,6 +75,7 @@ extension String {
         public static var upgradePairing = "alertUpgradePairing".loaalized()
         public static var upgradePairingSub = "alertUpgradePairingSub".loaalized()
         
+        public static var limitedDeviceSimple = "alertLimitedDeviceSimple".loaalized()
         public static var limitedDevice = "alertLimitedDevice".loaalized()
         public static var limitedDeviceSub = "alertLimitedDeviceSub".loaalized()
         public static var limitedDeviceTip = "alertLimitedDeviceTip".loaalized()

@@ -143,7 +143,7 @@ class Metv: Rest{
         params["entry_no"] = pageCnt?.description ?? "999"
         params["hash_id"] = ApiUtil.getHashId(stbId)
         params["svc_code"] = MetvNetwork.SVC_CODE
-        params["req_perd"] = "N"
+        params["req_perd"] = "Y"
         fetch(route: MetvPurchaseMonthly(query: params), completion: completion, error:error)
     }
     
@@ -187,6 +187,7 @@ class Metv: Rest{
         params["hash_id"] = ApiUtil.getHashId(stbId)
         params["svc_code"] = MetvNetwork.SVC_CODE
         params["yn_lowlevel_ppm"] = lowLevelPpm ? "Y" : "N"
+        params["yn_lowlevel_perd"] = "Y" //??
         fetch(route: MetvMonthly(query: params), completion: completion, error:error)
     }
     

@@ -55,7 +55,10 @@ extension BtvWebView{
         switch res.type {
         case .getAttendance(let pcid , let callback) :
             guard let callback = callback else { return }
-            guard let result = res.data as? Attendance else { return }
+            guard let result = res.data as? Attendance else {
+                self.errorCallbackEventAttendance(callback)
+                return
+            }
             var dic:[String : Any] = [:]
             dic["event_month"] = result.event_month ?? ""
             dic["total_event_cnt"] = result.total_event_cnt ?? ""
@@ -79,7 +82,7 @@ extension BtvWebView{
                     )
                 )
             } else {
-                self.viewModel.request = .evaluateJavaScriptMethod( callback, nil)
+                self.errorCallbackEventAttendance(callback)
             }
             
         case .postAttendance( _ , let callback) :
@@ -98,14 +101,23 @@ extension BtvWebView{
         switch err.type {
         case .getAttendance( _ , let callback) :
             guard let callback = callback else { return }
-            self.viewModel.request = .evaluateJavaScriptMethod( callback, nil) 
+            self.errorCallbackEventAttendance(callback)
         case .requestBPointIssuance( _ , _ , let callback) :
             guard let callback = callback else { return }
-            self.viewModel.request = .evaluateJavaScriptMethod( callback, nil)
+            self.errorCallbackEventAttendance(callback)
         case .postAttendance( _ , let callback) :
             guard let callback = callback else { return }
-            self.viewModel.request = .evaluateJavaScriptMethod( callback, nil)
+            self.errorCallbackEventAttendance(callback)
         default: break
         }
     }
+    
+    private func errorCallbackEventAttendance(_ callback:String){
+        var dic:[String : Any] = [:]
+        dic["result"] = ""
+        dic["reason"] = ""
+        self.viewModel.request = .evaluateJavaScriptMethod( callback, dic)
+    }
+    
+    
 }

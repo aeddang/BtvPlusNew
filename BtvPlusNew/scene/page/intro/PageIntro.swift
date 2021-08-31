@@ -81,7 +81,8 @@ struct PageIntro: PageView {
     [
         ResourceItem(asset: Asset.image.intro01),
         ResourceItem(asset: Asset.image.intro02),
-        ResourceItem(asset: Asset.image.intro03)
+        ResourceItem(asset: Asset.image.intro03),
+        ResourceItem(asset: Asset.image.intro04)
     ]
     @State var index: Int = 0
     @State var leading:CGFloat = 0

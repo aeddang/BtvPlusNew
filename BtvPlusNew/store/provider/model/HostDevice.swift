@@ -19,9 +19,9 @@ class HostDevice {
     private(set) var major:Int = 0
     private(set) var minor:Int = 0
     private(set) var revision:Int = 0
+    private(set) var modelViewName:String? = nil
+    var modelName:String? = nil // mdns
     
-    var modelName:String? = nil
-   
     func setData(deviceData:HostDeviceData) -> HostDevice{
         self.macAdress = deviceData.stb_mac_address
         if let ma = self.macAdress {
@@ -36,6 +36,7 @@ class HostDevice {
             //DataLog.d("self.apiMacAdress " + self.apiMacAdress , tag: "HostDevice")
            
         }
+        self.modelViewName = deviceData.model_name
         self.restrictedAge = deviceData.restricted_age?.toInt() ?? -1
         self.agentVersion = deviceData.stb_src_agent_version
         self.patchVersion = deviceData.stb_patch_version

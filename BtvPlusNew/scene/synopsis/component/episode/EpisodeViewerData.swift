@@ -42,7 +42,7 @@ class EpisodeViewerData {
     var episodeTitleKids:String {
         guard let count = self.count else { return self.title }
         if count.isEmpty { return self.title }
-        return count + String.app.broCount + " " + self.title
+        return count + String.app.broCount + ") " + self.title
     }
     
     func setData(data:SynopsisContentsItem) -> EpisodeViewerData {

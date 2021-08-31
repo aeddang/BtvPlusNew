@@ -140,7 +140,9 @@ struct PagePairingManagement: PageView {
             .onReceive(self.pairing.$user){ user in
                 guard let user = user else {return}
                 self.nick = user.nickName
-                self.pairingDate = user.pairingDate ?? ""
+                if let date = user.pairingDate {
+                    self.pairingDate =  date.count > 10 ? date.subString(start: 0, len: 10) : date
+                }
             }
             .onReceive(self.pairing.$hostDevice){ device in
                 guard let device = device else {return}
@@ -149,7 +151,7 @@ struct PagePairingManagement: PageView {
                         forNps: adress,
                         npsKey: NpsNetwork.AES_KEY, npsIv: NpsNetwork.AES_IV)
                 }
-                self.modelName = device.modelName ?? String.app.defaultStb
+                self.modelName = device.modelViewName ?? device.modelName ?? String.app.defaultStb
                 self.modelImage = Pairing.getSTBImage(stbModel: self.modelName)
             }
             .onReceive(self.sceneObserver.$isUpdated){ update in

@@ -10,7 +10,7 @@ import SwiftUI
 extension PageKidsIntro {
     static let fps:Double = 0.05
     static let ani:[String] = AssetKids.ani.splash
-    
+    static private var isFirst:Bool = true
 }
 
 struct PageKidsIntro: PageView {
@@ -22,22 +22,24 @@ struct PageKidsIntro: PageView {
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var setup:Setup
     @State var isPlay:Bool = false
+    @State var isFirst:Bool = false
     @State var movePage:PageObject? = nil
     var body: some View {
         ZStack{
             Spacer().modifier(MatchParent())
-            ImageAnimation(
-                images: Self.ani,
-                fps:Self.fps,
-                isLoof: true,
-                isRunning: self.$isPlay
-                )
-                .frame(
-                    width: SystemEnvironment.isTablet ? 365 : 225,
-                    height:  SystemEnvironment.isTablet ? 267 : 165)
-            
+            if self.isFirst{
+                ImageAnimation(
+                    images: Self.ani,
+                    fps:Self.fps,
+                    isLoof: true,
+                    isRunning: self.$isPlay
+                    )
+                    .frame(
+                        width: SystemEnvironment.isTablet ? 365 : 225,
+                        height:  SystemEnvironment.isTablet ? 267 : 165)
+            }
         }
-        .modifier(PageFull(style:.kidsPupple))
+        .modifier(PageFull(style:self.isFirst ? .kidsPupple : .kidsClear ))
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
             if ani {
                 self.isPlay = ani
@@ -94,6 +96,13 @@ struct PageKidsIntro: PageView {
             if err?.id != self.tag { return }
         }
         .onAppear{
+            self.isFirst = Self.isFirst
+            if Self.isFirst {
+                Self.isFirst = false
+            } else {
+                self.isAnimationCompleted = true
+            }
+           
             if let obj = self.pageObject {
                 if let data = obj.getParamValue(key: .data) as? PageObject {
                     self.movePage = data

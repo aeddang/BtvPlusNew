@@ -35,6 +35,7 @@ class PlayData:InfinityData,ObservableObject{
         summary = data.epsd_snss_cts
         epsdId = data.epsd_id
         epsdRsluId = data.epsd_rslu_id
+        restrictAgeIcon = Asset.age.getListIcon(age: data.wat_lvl_cd) 
         if let poster = data.poster_filename_h {
             image = ImagePath.thumbImagePath(filePath: poster, size: ListItem.play.size)
         }

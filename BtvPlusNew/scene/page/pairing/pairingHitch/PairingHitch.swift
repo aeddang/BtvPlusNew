@@ -21,11 +21,13 @@ struct PairingHitch: PageComponent {
    
     var body: some View {
         ZStack(alignment: SystemEnvironment.isTablet ?.center : .bottom){
+            
             Spacer().modifier(MatchParent()).background(Color.transparent.black45)
                 .onTapGesture {
                     self.closeHitch(sendLog: true)
                     self.appSceneObserver.event = .pairingHitchClose
                 }
+                .opacity(self.isAutoPairing == nil ? 0 : 1)
                 
             if self.isFullConnected, let fullConnectInfo = self.fullConnectInfo {
                 ZStack(){
@@ -37,10 +39,17 @@ struct PairingHitch: PageComponent {
                                 RetryStbBox(
                                     datas: self.stbs ,
                                     info:fullConnectInfo,
-                                    selected: self.selectedDevice
-                                ) {select in
-                                    self.selectePairingDevice(stb: select)
-                                }
+                                    selected: self.selectedDevice,
+                                    select: {select in
+                                        self.selectedDevice = select
+                                    },
+                                    action:{select in
+                                        self.selectePairingDevice(stb: select)
+                                    },
+                                    close:{
+                                        self.closeHitch(sendLog: true)
+                                    }
+                                )
                             }
                             .frame(width: SystemEnvironment.isTablet ? 446 : 329)
                             .background(Color.app.white)
@@ -187,7 +196,7 @@ struct PairingHitch: PageComponent {
            
         }
         .onReceive(self.pairing.$event){ evt in
-            if !self.isHitching {return}
+            if !self.isHitching || self.hasPopup {return}
             guard let evt = evt else {return}
             switch evt {
             case .notFoundDevice, .findMdnsDevice, .findStbInfoDevice :
@@ -205,7 +214,8 @@ struct PairingHitch: PageComponent {
             case .connectErrorReason(let info) :
                 if self.isFullConnected {
                     self.sendLog(action: .clickConfirmButton, category: "확인")
-                    self.appSceneObserver.alert = .limitedDevice(info)
+                    self.appSceneObserver.event =
+                        .toast(String.alert.limitedDeviceSimple.replace(info?.count?.description ?? ""))
                     return
                 }
                 self.fullConnectInfo = info

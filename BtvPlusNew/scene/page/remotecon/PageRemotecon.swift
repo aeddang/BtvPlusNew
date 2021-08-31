@@ -6,6 +6,7 @@
 //
 import Foundation
 import SwiftUI
+import MediaPlayer
 extension PageRemotecon {
     static let delayLock:Double = 0.1
     static let delayUpdate:Double = 0.2
@@ -379,6 +380,8 @@ struct PageRemotecon: PageView {
             }
         case .volumeMove(let v) :
             self.sendAction(npsMessage: NpsMessage().setMessage(type: v>0 ? .VOLUp : .VOLDown))
+            MPVolumeView.moveVolume(v>0 ? 0.1 : -0.1)
+            
         case .channelMove(let c) :
             self.sendAction(npsMessage: NpsMessage().setMessage(type: c>0 ? .CHUp : .CHDown))
             needUpdate = true

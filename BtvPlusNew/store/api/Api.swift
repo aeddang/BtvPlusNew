@@ -89,7 +89,7 @@ enum ApiType{
          getHostDeviceInfo,
          postGuestInfo(User?),
          postGuestNickname(String?),
-         postGuestAgreement(User?), getGuestAgreement, updateAgreement(Bool),
+         postGuestAgreement(User?), getGuestAgreement, updateAgreement(Bool, callback:String? = nil),
          updateUser(ModifyUserData?),
          getPairingToken(String?),
          sendMessage(NpsMessage?),

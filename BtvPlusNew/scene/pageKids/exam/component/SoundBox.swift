@@ -29,12 +29,10 @@ struct SoundBox: PageComponent{
             ZStack{
                 if self.isPlayAble {
                     Button(action: {
-                        guard let player = self.audioPlayer else {return}
-                        if player.isPlaying {
-                            player.pause()
-                        } else {
-                            player.play()
-                        }
+        
+                        guard let path = self.currentPath else {return}
+                        self.playSound(soundUrl: path)
+                        
                     }) {
                         HStack( spacing: DimenKids.margin.tiny ){
                             Image( AssetKids.exam.sound)
@@ -66,9 +64,11 @@ struct SoundBox: PageComponent{
             switch evt {
             case .quest(_ , let question ) :
                 if let path = question.audioPath {
+                    self.currentPath = path
                     self.playSound(soundUrl: path)
                 } else {
                     unableSound()
+                    self.currentPath = nil
                     self.stopSound()
                     
                 }
@@ -95,6 +95,7 @@ struct SoundBox: PageComponent{
             self.setAudioSession(isActive: false)
         }
     }
+    @State var currentPath:String? = nil
     @State var isPlay:Bool = false
     @State var isPlayAble:Bool = false
     @State var audioPlayer:AVAudioPlayer? = nil
@@ -145,6 +146,7 @@ struct SoundBox: PageComponent{
                     self.audioPlayer = audioPlayer
                     audioPlayer.prepareToPlay()
                     audioPlayer.delegate = self.audioDelegate
+                    audioPlayer.volume = 1.5
                     audioPlayer.play()
                     
                     DispatchQueue.main.async {

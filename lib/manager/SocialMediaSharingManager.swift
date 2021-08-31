@@ -65,6 +65,11 @@ struct SocialMediaSharingManage{
         }
         let activityViewController = UIActivityViewController(activityItems: sharedObjects, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = presentingVC.view
+        
+        activityViewController.popoverPresentationController?.sourceRect = CGRect(
+            x: presentingVC.view.bounds.width / 2,
+            y: presentingVC.view.bounds.height / 2, width: 0, height: 0)
+        activityViewController.excludedActivityTypes =  [ UIActivity.ActivityType.airDrop]
         presentingVC.present(activityViewController, animated: true, completion: nil)
         activityViewController.completionWithItemsHandler = { (type, completed, items, error) in
             if completed && error == nil {
@@ -73,6 +78,7 @@ struct SocialMediaSharingManage{
                 completion?(false)
             }
         }
+        
     }
 }
 

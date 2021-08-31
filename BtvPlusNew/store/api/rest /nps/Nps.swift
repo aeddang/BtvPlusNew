@@ -154,6 +154,21 @@ extension NpsNetwork{
                 }
             }
         }
+    
+    }
+    static func getConnectErrorMeassage(data:NpsCommonHeader?)->String {
+        switch data?.result {
+            case NpsNetwork.resultCode.authcodeInvalid.code :
+                return String.alert.authcodeInvalid
+            case NpsNetwork.resultCode.authcodeWrong.code :
+                return String.alert.authcodeWrong
+            case NpsNetwork.resultCode.authcodeTimeout.code :
+                return String.alert.authcodeTimeout
+            case NpsNetwork.resultCode.pairingLimited.code :
+                return String.alert.limitedConnect
+            default :
+                return String.alert.stbConnectFail
+        }
     }
 }
 

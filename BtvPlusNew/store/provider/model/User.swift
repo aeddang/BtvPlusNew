@@ -63,10 +63,11 @@ class User {
         self.birth = birth ?? ""
     }
     
-    init(nickName:String,characterIdx:Int,gender:Gender,birth:String,
+    init(nickName:String,pairingDate:String?,characterIdx:Int,gender:Gender,birth:String,
          isAgree1:Bool = false,isAgree2:Bool = false,isAgree3:Bool = false){
         
         self.nickName = nickName
+        self.pairingDate = pairingDate
         self.characterIdx = characterIdx
         self.gender = gender
         self.birth = birth
@@ -96,7 +97,9 @@ class User {
     }
     
     func clone() -> User{
-        return User(nickName: self.nickName, characterIdx: self.characterIdx, gender: self.gender, birth: self.birth,
+        return User(nickName: self.nickName, pairingDate:self.pairingDate,
+                    characterIdx: self.characterIdx,
+                    gender: self.gender, birth: self.birth,
                     isAgree1: self.isAgree1, isAgree2: self.isAgree2, isAgree3: self.isAgree3)
     }
     

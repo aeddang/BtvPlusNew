@@ -12,6 +12,7 @@ import Combine
 open class PlayerModel: ComponentObservable {
     static let TIME_SCALE:Double = 600
     var useAvPlayerController:Bool = false
+    var useFullScreenButton:Bool = true
     var useFullScreenAction:Bool = true
     var drm:FairPlayDrm? = nil
     var header:[String:String]? = nil
@@ -66,8 +67,9 @@ open class PlayerModel: ComponentObservable {
         self.init()
         self.path = path
     }
-    convenience init(useFullScreenAction: Bool) {
+    convenience init(useFullScreenAction: Bool, useFullScreenButton: Bool = true) {
         self.init()
+        self.useFullScreenButton = useFullScreenButton
         self.useFullScreenAction = useFullScreenAction
     }
     

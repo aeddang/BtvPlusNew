@@ -17,7 +17,7 @@ enum SceneAlert:Equatable {
          connectWifi((Bool) -> Void) , notFoundDevice((Bool) -> Void), requestLocation((Bool) -> Void),
          
          limitedDevice(PairingInfo?), pairingError(NpsCommonHeader?), pairingUpdated(PairingUpdateData),
-         pairingRecovery, needPairing(String? = nil), pairingCheckFail,
+         pairingRecovery, needPairing(String? = nil, move:PageObject? = nil), pairingCheckFail,
         
          needPurchase( PurchaseWebviewModel , String? = nil), needCertification( String?, String?, String? = nil, () -> Void ),
          serviceUnavailable(String?), serviceSelect(String?, String? , (String?) -> Void),
@@ -93,7 +93,7 @@ struct SceneAlertController: PageComponent{
             case .pairingUpdated(_) : self.selectedPairingUpdated(idx)
             case .pairingError(_): self.selectedPairingError(idx)
             case .pairingRecovery: self.selectedPairingRecovery(idx)
-            case .needPairing: self.selectedNeedPairing(idx)
+            case .needPairing(_, let move): self.selectedNeedPairing(idx, move: move)
             case .needPurchase(let data, _): self.selectedNeedPurchase(idx, model: data)
             case .needCertification(_, _, _, let cancleHandler): self.selectedNeedCertification(idx, canclenHandler: cancleHandler) 
             case .serviceUnavailable(let path): self.selectedServiceUnavailable(idx, path: path)
@@ -101,7 +101,7 @@ struct SceneAlertController: PageComponent{
             case .pairingCheckFail : self.selectedPairingCheckFail(idx)
             case .like(let id, let isLike) : self.selectedLike(idx, id: id, isLike:isLike)
             case .updateAlram(let id, let isAlram) : self.selectedUpdateAlram(idx, id: id, isAlram:isAlram)
-            default: do { return }
+            default: return 
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.reset()
@@ -132,7 +132,7 @@ struct SceneAlertController: PageComponent{
             case .limitedDevice(let data) : self.setupLimitedDevice(data: data)
             case .pairingError(let data): self.setupPairingError(data: data)
             case .pairingRecovery: self.setupPairingRecovery()
-            case .needPairing(let msg): self.setupNeedPairing(msg:msg)
+            case .needPairing(let msg, _): self.setupNeedPairing(msg:msg)
             case .needPurchase(_ , let msg): self.setupNeedPurchase(msg: msg)
             case .needCertification(let title,let text, let subText, _): self.setupNeedCertification(title: title, text: text, subText: subText)
             case .serviceUnavailable(let path): self.setupServiceUnavailable(path: path)
@@ -357,18 +357,8 @@ struct SceneAlertController: PageComponent{
     
     func setupPairingError(data:NpsCommonHeader?) {
         self.title = String.alert.connect
-        switch data?.result {
-        case NpsNetwork.resultCode.authcodeInvalid.code :
-            self.text = String.alert.authcodeInvalid
-        case NpsNetwork.resultCode.authcodeWrong.code :
-            self.text = String.alert.authcodeWrong
-        case NpsNetwork.resultCode.authcodeTimeout.code :
-            self.text = String.alert.authcodeTimeout
-        case NpsNetwork.resultCode.pairingLimited.code :
-            self.text = String.alert.limitedConnect
-        default :
-            self.text = String.alert.stbConnectFail
-        }
+        self.text = NpsNetwork.getConnectErrorMeassage(data: data)
+        
         self.buttons = [
             AlertBtnData(title: String.app.confirm, index: 0)
         ]
@@ -435,6 +425,7 @@ struct SceneAlertController: PageComponent{
     }
     
     func setupNeedPairing(msg:String? = nil) {
+        
         self.title = String.alert.connect
         self.text = msg ?? String.alert.needConnect
         
@@ -444,13 +435,15 @@ struct SceneAlertController: PageComponent{
         ]
     }
     
-    func selectedNeedPairing(_ idx:Int) {
+    func selectedNeedPairing(_ idx:Int, move:PageObject? = nil) {
         if idx == 1 {
-            
+            self.appSceneObserver.pairingCompletedMovePage = move
             let ani:PageAnimationType = SystemEnvironment.currentPageType == .btv ? .horizontal : .opacity
             self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.pairing, animationType: ani)
             )
+        } else {
+            self.appSceneObserver.pairingCompletedMovePage = nil
         }
     }
     

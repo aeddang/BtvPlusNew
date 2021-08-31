@@ -60,8 +60,8 @@ class SceneDelegate: PageSceneDelegate {
     }
     
     override func willChangeAblePage(_ page:PageObject?)->Bool{
+       
         guard let willPage = page else { return false }
-        
         if PageType.getType(willPage.pageGroupID) == .kids && SystemEnvironment.currentPageType != .kids {
             if page?.pageID != .kidsIntro && !SystemEnvironment.isInitKidsPage {
                 self.pagePresenter.changePage(
@@ -73,7 +73,7 @@ class SceneDelegate: PageSceneDelegate {
         }
         
         if PageSceneModel.needPairing(willPage) && self.repository?.pairing.status != .pairing {
-            self.repository?.appSceneObserver?.alert = .needPairing()
+            self.repository?.appSceneObserver?.alert = .needPairing(move:willPage)
             return false
         }
         
@@ -136,6 +136,9 @@ class SceneDelegate: PageSceneDelegate {
                 }
             }
         
+        }
+        if self.repository?.appSceneObserver?.pairingCompletedMovePage?.pageID == willPage.pageID {
+            self.repository?.appSceneObserver?.pairingCompletedMovePage = nil
         }
         return true
     }

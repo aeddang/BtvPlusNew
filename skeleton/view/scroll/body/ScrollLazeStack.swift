@@ -164,8 +164,9 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
                             .frame(alignment: .topLeading)
                         }
                     }
+                   
                     .modifier(MatchParent())
-                    if !self.isTop && self.axes == .vertical, let onTopButton = self.onTopButton {
+                    if !self.isTop && self.axes == .vertical && self.scrollType != .web(), let onTopButton = self.onTopButton {
                         VStack{
                             Spacer()
                             HStack{

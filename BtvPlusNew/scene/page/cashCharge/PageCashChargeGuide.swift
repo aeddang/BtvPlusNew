@@ -13,7 +13,7 @@ struct PageCashChargeGuide: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
    
-    @State var isAgree = true
+    @State var isAgree = false
     var body: some View {
         ZStack(alignment: .center) {
             Button(action: {

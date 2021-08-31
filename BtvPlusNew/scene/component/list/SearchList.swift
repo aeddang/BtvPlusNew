@@ -69,7 +69,9 @@ struct SearchList: PageComponent{
             if !self.datas.isEmpty {
                 ForEach(self.datas) { data in
                     SearchItem( data:data , delete:delete)
-                        .modifier(ListRowInset(spacing: 0))
+                        .modifier(ListRowInset(spacing:
+                            data.keyword == String.pageText.searchPopularity ? Dimen.margin.heavyExtra : 0
+                        ))
                         .onTapGesture {
                             if data.isSection {return}
                             action?(data)

@@ -15,8 +15,9 @@ struct RetryStbBox: View {
     var datas:[StbData]? = nil
     var info:PairingInfo? = nil
     var selected:StbData? = nil
+    let select: (StbData) -> Void
     let action: (StbData) -> Void
-   
+    let close: () -> Void
     var body: some View {
         VStack(spacing: 0){
             VStack(spacing: Dimen.margin.micro){
@@ -61,16 +62,47 @@ struct RetryStbBox: View {
                             width: SystemEnvironment.isTablet ? 122 : 96,
                             height: SystemEnvironment.isTablet ? 122 : 96)
                         .onTapGesture {
-                            self.action(data)
+                            self.select(data) 
                         }
                     }
                 }
                 .padding(.top, Dimen.margin.regularExtra)
             }
+            HStack(spacing:0){
+                FillButton(
+                    text: String.app.cancel,
+                    isSelected: true ,
+                    textModifier: TextModifier(
+                        family: Font.family.bold,
+                        size: Font.size.lightExtra,
+                        color: Color.app.white,
+                        activeColor: Color.app.white
+                    ),
+                    size: Dimen.button.regular,
+                    bgColor:Color.brand.secondary
+                ){_ in
+                    self.close()
+                }
+                FillButton(
+                    text: String.app.confirm,
+                    isSelected: true,
+                    textModifier: TextModifier(
+                        family: Font.family.bold,
+                        size: Font.size.lightExtra,
+                        color: Color.app.white,
+                        activeColor: Color.app.white
+                    ),
+                    size: Dimen.button.regular,
+                    margin: 0,
+                    bgColor:Color.brand.primary
+                ){_ in
+                    guard let sel = self.selected  else {return}
+                    self.action(sel)
+                }
+            }
+            .padding(.top, Dimen.margin.regularExtra)
         }
-        .padding(.bottom, SystemEnvironment.isTablet
-                    ? Dimen.margin.thin
-                    : (self.sceneObserver.safeAreaBottom + Dimen.margin.thin))
+        
     }//body
 }
 
@@ -81,10 +113,17 @@ struct RetryStbBox_Previews: PreviewProvider {
     static var previews: some View {
         Form{
             RetryStbBox(
-                datas: [StbData()]
-            ){ _ in
-                
-            }
+                datas: [StbData()],
+                select: { _ in
+                    
+                },
+                action:{ _ in
+                    
+                },
+                close:{
+                    
+                }
+            )
             .frame( width: 300)
         }
     }

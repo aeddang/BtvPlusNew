@@ -73,7 +73,7 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
     private func delayFound() {
         self.delayComplete?.cancel()
         self.delayComplete = Timer.publish(
-            every: 0.1, on: .current, in: .common)
+            every: 0.5, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
                 if self.find.isEmpty {

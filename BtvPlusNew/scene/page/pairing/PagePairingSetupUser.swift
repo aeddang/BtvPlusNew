@@ -75,18 +75,14 @@ struct PagePairingSetupUser: PageView {
                                     title: String.app.nickName,
                                     input: self.$nickName,
                                     isFocus: self.editType == .nickName,
-                                    placeHolder: String.app.nickNameHolder
+                                    placeHolder: String.app.nickNameHolder,
+                                    message: self.nickName.isEmpty
+                                        ? " "
+                                        : self.nickName.isNickNameType()
+                                            ? String.app.nickNameValidation
+                                            : String.app.nickNameInvalidation
                                 )
                                 .padding(.top, Dimen.margin.heavy)
-                                
-                                Text(self.nickName.isNickNameType()
-                                    ? String.app.nickNameValidation
-                                    : String.app.nickNameInvalidation)
-                                    .modifier(MediumTextStyle(
-                                        size: Font.size.tiny, color: Color.brand.primary
-                                    ))
-                                    .padding(.leading, Dimen.tab.titleWidth)
-                                    .padding(.top, Dimen.margin.tiny)
                                 
                                 HStack(alignment:.center, spacing:0){
                                     Text(String.app.birth)
@@ -250,7 +246,7 @@ struct PagePairingSetupUser: PageView {
                 default : self.title = String.pageTitle.connectWifi
                 }
                 
-                if let user = self.pairing.user {
+                if self.pairing.status == .pairing ,let user = self.pairing.user {
                     self.nickName = user.nickName
                     self.characterIdx = user.characterIdx
                     self.birth = user.birth
@@ -302,7 +298,7 @@ struct PagePairingSetupUser: PageView {
         
         if !self.isInputCompleted() { return }
         self.pairing.user = User(
-            nickName: self.nickName, characterIdx: self.characterIdx, gender: self.gender, birth: self.birth,
+            nickName: self.nickName, pairingDate: nil, characterIdx: self.characterIdx, gender: self.gender, birth: self.birth,
             isAgree1: self.isAgree1, isAgree2: self.isAgree2, isAgree3: self.isAgree3
         )
         //self.pagePresenter.goBack()

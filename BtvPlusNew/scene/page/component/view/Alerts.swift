@@ -13,15 +13,15 @@ struct InfoAlert: PageView {
     let text:String
     var horizontalMargin:CGFloat = 0
     var body: some View {
-       HStack(alignment: .center, spacing: Dimen.margin.tinyExtra){
+       HStack(alignment: .top, spacing: Dimen.margin.tinyExtra){
             Image(Asset.icon.alertInfo)
                 .renderingMode(.original)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
+                .padding(.top, -Dimen.margin.micro)
             Text(text)
                 .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
-               
         }
        .padding(.horizontal, self.horizontalMargin )
     }//body

@@ -50,6 +50,7 @@ extension PageID{
     static let fullPlayer:PageID = "fullPlayer"
     
     static let webview:PageID = "webview"
+    static let webviewList:PageID = "webviewList"
     static let person:PageID = "person"
     static let search:PageID = "search"
     static let schedule:PageID = "schedule"
@@ -112,7 +113,7 @@ struct PageProvider {
         switch pageID {
         case .pairingSetupUser, .pairingBtv,
              .pairingDevice, .pairingUser, .pairingManagement, .pairingEmptyDevice, .pairingGuide,
-             .purchase , .webview, .schedule, .modifyProile,
+             .purchase , .webview, .webviewList, .schedule, .modifyProile,
              .adultCertification, .userCertification, .terminateStb,
              .watchHabit, .myPurchaseTicketList, .remotecon, .playerTest,
              .myRecommand, .myRegistCard:
@@ -200,6 +201,7 @@ struct PageFactory{
         case .previewList : return PagePreviewList()
         case .fullPlayer : return PageFullPlayer()
         case .webview : return PageWebview()
+        case .webviewList : return PageWebview()
         case .person : return PagePerson()
         case .search : return PageSearch()
         case .schedule : return PageSchedule()

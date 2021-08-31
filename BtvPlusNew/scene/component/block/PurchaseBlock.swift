@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
-
+import struct Kingfisher.KFImage
 class PurchaseBlockModel: PageDataProviderModel {
     private(set) var key:String? = nil
     @Published private(set) var isUpdate = false {
@@ -120,7 +120,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
                 } else {
                     Spacer().modifier(MatchParent())
                 }
-                if self.isEdit {
+                if self.isEdit && !self.datas.isEmpty {
                     HStack(spacing: 0){
                         CheckBox(
                             isChecked: self.isSelectAll,

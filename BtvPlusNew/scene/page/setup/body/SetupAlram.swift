@@ -56,7 +56,7 @@ struct SetupAlram: PageView {
         .onReceive(self.dataProvider.$result){ res in
             guard let res = res else { return }
             switch res.type {
-            case .updateAgreement(let isAgree) : self.onUpdatedPush(res, isAgree: isAgree)
+            case .updateAgreement(let isAgree, _) : self.onUpdatedPush(res, isAgree: isAgree)
             default: do{}
             }
         }
@@ -80,7 +80,7 @@ struct SetupAlram: PageView {
         guard let data = res.data as? NpsResult  else { return onUpdatePushError() }
         guard let resultCode = data.header?.result else { return onUpdatePushError() }
         if resultCode == NpsNetwork.resultCode.success.code {
-            self.repository.updatePush(isAgree)
+            //self.repository.updatePush(isAgree)
             self.isPush = isAgree
             let today = Date().toDateFormatter(dateFormat: "yyyy.MM.dd")
             self.appSceneObserver.event = .toast(

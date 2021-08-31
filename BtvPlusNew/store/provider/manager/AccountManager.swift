@@ -262,17 +262,28 @@ class AccountManager : PageProtocol{
                 self.pairing.updateUserinfo(data)
                 
             case .getMonthly(let lowLevelPpm , _ , _) :
-                guard let resData = res.data as? MonthlyInfo else { return }
-                guard let purchases = resData.purchaseList else { return }
+                guard let resData = res.data as? MonthlyInfo, let purchases = resData.purchaseList else {
+                    self.pairing.authority.updatedPurchaseTicket([], lowLevelPpm: lowLevelPpm)
+                    return
+                }
                 self.pairing.authority.updatedPurchaseTicket(purchases, lowLevelPpm: lowLevelPpm)
             case .getTotalPointInfo :
-                guard let resData = res.data as? TotalPointInfo else { return }
+                guard let resData = res.data as? TotalPointInfo else {
+                    self.pairing.authority.errorMyInfo(nil)
+                    return
+                }
                 self.pairing.authority.updatedTotalPointInfo(resData)
             case .getPurchaseMonthly :
-                guard let resData = res.data as? MonthlyPurchaseInfo else { return }
+                guard let resData = res.data as? MonthlyPurchaseInfo else {
+                    self.pairing.authority.errorMyInfo(nil)
+                    return
+                }
                 self.pairing.authority.updatedMonthlyPurchaseInfo(resData)
             case .getPeriodPurchaseMonthly :
-                guard let resData = res.data as? PeriodMonthlyPurchaseInfo else { return }
+                guard let resData = res.data as? PeriodMonthlyPurchaseInfo else {
+                    self.pairing.authority.errorMyInfo(nil)
+                    return
+                }
                 self.pairing.authority.updatedMonthlyPurchaseInfo(resData)
             case .getKidsProfiles :
                 guard let resData = res.data as? KidsProfiles else {
@@ -304,6 +315,7 @@ class AccountManager : PageProtocol{
             case .getDevicePairingInfo(_, _, let prevResult) : self.pairing.connectError(header: prevResult)
             case .getHostDeviceInfo, .postGuestInfo, .postGuestAgreement, .getGuestAgreement: self.pairing.syncError()
             case .getDevicePairingStatus : self.pairing.checkCompleted(isSuccess: false)
+            case .getMonthly(let lowLevelPpm , _ , _) :  self.pairing.authority.updatedPurchaseTicket([], lowLevelPpm: lowLevelPpm)
             case .getTotalPointInfo, .getPurchaseMonthly, .getPeriodPurchaseMonthly : self.pairing.authority.errorMyInfo(err)
             case .getKidsProfiles : self.pairing.updatedKidsProfiles(nil)
             case .updateKidsProfiles :

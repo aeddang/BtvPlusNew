@@ -143,6 +143,22 @@ class Repository:ObservableObject, PageProtocol{
         self.setupApiManager()
         //self.appSceneObserver?.event = .toast("reset " + (isReleaseMode?.description ?? ""))
     }
+    private func setupSetting()->Bool{
+        if self.storage.initate {
+            self.storage.initate = false
+            SystemEnvironment.firstLaunch = true
+            self.userSetup.initateSetup()
+            return true
+        }
+        if  SystemEnvironment.isReleaseMode == nil {
+            SystemEnvironment.isReleaseMode = storage.isReleaseMode
+        }
+        SystemEnvironment.isAdultAuth = self.userSetup.isAdultAuth
+        SystemEnvironment.watchLv = self.userSetup.watchLv
+        SystemEnvironment.isFirstMemberAuth = self.userSetup.isFirstMemberAuth
+        
+        return false
+    }
     
     private func setupNamedStorage(){
         let storage = LocalNamedStorage(name:  SystemEnvironment.isStage ? "Stage" : "Release")
@@ -256,22 +272,7 @@ class Repository:ObservableObject, PageProtocol{
         }).store(in: &dataCancellable)
     }
     
-    private func setupSetting()->Bool{
-        if self.storage.initate {
-            self.storage.initate = false
-            SystemEnvironment.firstLaunch = true
-            self.userSetup.initateSetup()
-            return true
-        }
-        if  SystemEnvironment.isReleaseMode == nil {
-            SystemEnvironment.isReleaseMode = storage.isReleaseMode
-        }
-        SystemEnvironment.isAdultAuth = self.userSetup.isAdultAuth
-        SystemEnvironment.watchLv = self.userSetup.watchLv
-        SystemEnvironment.isFirstMemberAuth = self.userSetup.isFirstMemberAuth
-        
-        return false
-    }
+    
     
     private func requestApi(_ apiQ:ApiQ, coreDatakey:String){
         DispatchQueue.global(qos: .background).async(){
@@ -330,7 +331,12 @@ class Repository:ObservableObject, PageProtocol{
             }
            // self.appSceneObserver?.event = .toast("respondApi getGnb")
             self.onReadyRepository(gnbData: data)
-        
+        case .updateAgreement(let isAgree, _) :
+            guard let data = res.data as? NpsResult else { return }
+            guard let resultCode = data.header?.result else { return }
+            if resultCode == NpsNetwork.resultCode.success.code {
+                self.updatePush(isAgree)
+            }
         default: break
         }
     }
@@ -383,7 +389,7 @@ class Repository:ObservableObject, PageProtocol{
         self.pairing.updateUser(data)
     }
     
-    func updatePush(_ isAgree:Bool) {
+    private func updatePush(_ isAgree:Bool) {
         self.pairing.updateUserAgreement(isAgree)
         self.pushManager.updateUserAgreement(isAgree)
     }

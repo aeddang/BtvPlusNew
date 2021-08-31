@@ -283,10 +283,10 @@ struct PurchaseTicketItem: PageView {
                 }
                
             }
-            .padding(.horizontal, SystemEnvironment.isTablet ? Dimen.margin.tinyExtra : Dimen.margin.thin)
+            .padding(.horizontal,
+                      SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.regularExtra)
         }
         .padding(.vertical, SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.regularExtra)
-        
         .background(Color.app.white)
     }
 }
@@ -297,12 +297,10 @@ struct PurchaseTicketValue: View{
     var body: some View {
         HStack(alignment: .top, spacing: Dimen.margin.micro){
             Text("・ " + title + " ")
-                .kerning(Font.kern.thin)
                 .modifier(MediumTextStyle(
                             size: SystemEnvironment.isTablet ? Font.size.micro : Font.size.thinExtra,
                             color: Color.app.grey))
             Text(value)
-                .kerning(Font.kern.thin)
                 .modifier(MediumTextStyle(
                             size: SystemEnvironment.isTablet ? Font.size.micro : Font.size.thinExtra,
                             color: Color.app.black))

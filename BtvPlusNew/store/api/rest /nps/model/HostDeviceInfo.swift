@@ -29,6 +29,8 @@ struct HostDeviceData : Decodable {
     private(set) var stb_patch_version:String? = nil //patch 버전 정보
     private(set) var stb_mac_address:String? = nil //host device의 MacAdress 정보. 암호화하여 입력, 보안 관련 문서는 별도 참조
     private(set) var stb_ui_version:String? = nil //UI 버전 정보
+    private(set) var model_name:String? = nil                 // Host device의 모델 정보
+    private(set) var pairing_owner:String? = nil             // Host device의 모델 정보
 }
 
 

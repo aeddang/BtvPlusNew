@@ -97,6 +97,13 @@ struct BtvWebView: PageComponent {
             guard let log = jsonParams else { return }
             self.naviLogManager.send(logString: log)
             return
+        case WebviewMethod.setUserAgreementInfo.rawValue:
+            if self.pairing.status != .pairing {
+                self.appSceneObserver.alert = .needPairing()
+                return
+            }
+            self.dataProvider.requestData(q: .init(id:self.tag, type: .updateAgreement(true, callback:callback)))
+            return
                    
         default : break
         }
@@ -116,6 +123,13 @@ struct BtvWebView: PageComponent {
             dic["myPoint"] = Int(historys.bpoint_total ?? "0") ?? 0
             self.viewModel.request = .evaluateJavaScriptMethod( callback, dic)
             return
+        case .updateAgreement(_ , let callback) :
+            guard let callback = callback else { return }
+            let result = res.data as? NpsResult
+            let code = result?.header?.result ?? ""
+            let jsonString = code == ApiCode.success ? "0" : code
+            self.viewModel.request = .evaluateJavaScript(callback + "(\'" + jsonString + "\')")
+            
         default: break
         }
         self.respondCallFuncionEventAttendance(res: res)

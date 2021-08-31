@@ -66,7 +66,7 @@ struct PageCertification: PageView {
                             self.pageDragingModel.uiEvent = .pullCompleted(geometry)
                         case .pullCancel :
                             self.pageDragingModel.uiEvent = .pullCancel(geometry)
-                        default : do{}
+                        default : break
                         }
                     }
                     .onReceive(self.infinityScrollModel.$pullPosition){ pos in
@@ -114,7 +114,7 @@ struct PageCertification: PageView {
                             
                         }
                     }
-                default : do{}
+                default : break
                 }
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in

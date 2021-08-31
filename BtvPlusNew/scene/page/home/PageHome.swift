@@ -9,7 +9,8 @@ import Foundation
 import SwiftUI
 import Combine
 extension PageHome{
-    static fileprivate(set) var finalSelectedMonthlyId:String? = nil
+    static fileprivate(set) var finalSelectedMonthlyId:String? = nil //현제 기획요청으로 사용안함
+    static let maxMonthlyConty = 8
 }
 
 struct PageHome: PageView {
@@ -378,7 +379,7 @@ struct PageHome: PageView {
         if self.originMonthlyDatas == nil {
             if self.selectedMonthlyId == nil { self.selectedMonthlyId = Self.finalSelectedMonthlyId }
             var originMonthlyDatas = [String:MonthlyData]()
-            let maxCount = 8
+            let maxCount = Self.maxMonthlyConty
             var idx = 0
             var monthlyDatas = Array<MonthlyData>()
             guard let blocksData = self.dataProvider.bands.getData(menuId: self.menuId)?.blocks else {return}
@@ -438,7 +439,11 @@ struct PageHome: PageView {
     }
 
     private func syncronizeMonthly(){
-        self.sortedMonthlyDatas = self.monthlyDatas
+        if (self.monthlyDatas?.count ?? 0) > Self.maxMonthlyConty, let monthlyDatas = self.monthlyDatas {
+            self.sortedMonthlyDatas = monthlyDatas[0...Self.maxMonthlyConty].map{$0} 
+        } else {
+            self.sortedMonthlyDatas = self.monthlyDatas
+        }
         if self.sortedMonthlyDatas?.isEmpty == false, let datas = self.sortedMonthlyDatas {
            self.monthlyheader =  MonthlyBlock(
                 viewModel:self.monthlyViewModel ,
@@ -459,7 +464,7 @@ struct PageHome: PageView {
         if self.selectedMonthlyId == nil { self.selectedMonthlyId = monthlyDatas.first?.prdPrcId }
         if self.originMonthlyDatas?[self.selectedMonthlyId ?? ""] == nil { self.selectedMonthlyId = monthlyDatas.first?.prdPrcId }
         guard let selectData = self.originMonthlyDatas?[self.selectedMonthlyId ?? ""] else { return }
-        Self.finalSelectedMonthlyId = self.selectedMonthlyId
+        //Self.finalSelectedMonthlyId = self.selectedMonthlyId
         selectData.setSelected(true)
         guard let blocksData = selectData.blocks else {return}
         self.requestBlocks(blocksData: blocksData)

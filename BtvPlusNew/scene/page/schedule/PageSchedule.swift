@@ -31,7 +31,8 @@ struct PageSchedule: PageView {
                 VStack(spacing:0){
                     PageTab(
                         title: String.pageTitle.schedule,
-                        isClose: true
+                        isClose: true,
+                        style: .dark
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     ZStack(alignment: .topLeading){
@@ -64,14 +65,14 @@ struct PageSchedule: PageView {
                             self.pageDragingModel.uiEvent = .pullCompleted(geometry)
                         case .pullCancel :
                             self.pageDragingModel.uiEvent = .pullCancel(geometry)
-                        default : do{}
+                        default : break
                         }
                     }
                     .onReceive(self.infinityScrollModel.$pullPosition){ pos in
                         self.pageDragingModel.uiEvent = .pull(geometry, pos)
                     }
                 }
-                .modifier(PageFull())
+                .modifier(PageFull(style: .dark))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }//draging
             
@@ -87,7 +88,7 @@ struct PageSchedule: PageView {
                     default : break
                     }
                     
-                default : do{}
+                default : break
                 }
             }
             .onAppear{

@@ -19,7 +19,7 @@
 "birth" = "출생연도";
 "birthDay" = "생년월일";
 
-"birthKids" = "생년월";
+"birthKids" = "생년 월";
 "birthKidsPlaceholder" = "0000 년 00 월";
 "gender" = "성별";
 "mail" = "남";
@@ -302,6 +302,7 @@
 "alertUpgradePairing" = "B tv 연결 업그레이드";
 "alertUpgradePairingSub" = "%s1 요금제로 변경하셨네요!\n이용 중인 B tv에 스마트 기기를\n\%s2대 더 연결하여 이용해 보세요.";
 
+"alertLimitedDeviceSimple" = "해당 셋톱박스에는 이미\n%s대의 디바이스가 연결되어 있습니다.";
 "alertLimitedDevice" = "이미 %s대의 디바이스가\n연결되어 있습니다.";
 "alertLimitedDeviceSub" = "1대의 B tv에는 최대 %s대의\n스마트 기기 연결이 가능합니다.\nB tv에서 현재 연결 중인 기기를\n조정 후 다시 연결해 주세요.";
 "alertLimitedDeviceTip" = "상위 요금제로 변경 시 %s대까지 연결 가능합니다.";
@@ -316,7 +317,7 @@
 "alertPairingError" = "B tv 연결에 실패하였습니다.\n계속 연결 불가한 경우\n고객센터(국번 없이 106)로\n문의해 주세요.";
 "alertPairingCompleted" = "B tv 연결이 완료되었습니다.\nUI 4.0 버전에서는 B tv에서\n[확인]버튼을 누르셔야 연결이 완료됩니다.";
 "alertPairingRecovery" = "완료되지않은  B tv 연결이 있습니다.\n연결을 완료 하시겠습니까?";
-"alertPairingDisconnected" = "B tv 연결이 끊어젔습니다.";
+"alertPairingDisconnected" = "B tv 연결이 해제되었습니다.";
 
 "alertNotPairing" = "셋톱박스 연결";
 "alertNotPairingText" = "셋톱과의 연결이 되어있지 않습니다.";
@@ -348,18 +349,18 @@
 
 
 "alertDataAlramOn" = "데이타 연결 알림이 설정되었습니다.";
-"alertDataAlramOff" = "데이타 연결 알림이 해재되었습니다.";
+"alertDataAlramOff" = "데이타 연결 알림이 해제되었습니다.";
 "alertAutoRemoconOn" = "리모컨 자동 전환이 설정되었습니다.";
-"alertAutoRemoconOff" = "리모컨 자동 전환이 해재되었습니다.";
+"alertAutoRemoconOff" = "리모컨 자동 전환이 해제되었습니다.";
 "alertRemoconVibrationOn" = "리모컨 진동 효과가 설정되었습니다.";
-"alertRemoconVibrationOff" = "리모컨 진동 효과가 해재되었습니다.";
+"alertRemoconVibrationOff" = "리모컨 진동 효과가 해제되었습니다.";
 "alertAutoPlayOn" = "플레이어 자동 재생이 설정되었습니다.";
-"alertAutoPlayOff" = "플레이어 자동 재생이 해재되었습니다.";
+"alertAutoPlayOff" = "플레이어 자동 재생이 해제되었습니다.";
 "alertNextPlayOn" = "다음 영상 연속 재생이 설정되었습니다.";
-"alertNextPlayOff" = "다음 영상 연속 재생이 해재되었습니다.";
+"alertNextPlayOff" = "다음 영상 연속 재생이 해제되었습니다.";
 
-"alertPushOn" = "알림 수신 동의 처리가 완료되엇습니다.";
-"alertPushOff" = "알림 수신 거부 처리가 완료되엇습니다.";
+"alertPushOn" = "알림 수신 동의 처리가 완료되었습니다.";
+"alertPushOff" = "알림 수신 거부 처리가 완료되었습니다.";
 "alertPushError" = "알림 수신 변경이 실패하였습니다.";
 
 "alertUpdateAlram" = "작품 업데이트 알림";
@@ -398,7 +399,7 @@
 
 "alertIncorrecPassword" = "인증 번호가 일치하지 않습니다.";
 "alertIncorrectNumberOfCharacter" = "%s자 로 입력해주세요.";
-"alertPasswordInitateInfo" = "※ 인증번호 초기화는 B tv에서 하실 수 잇습니다.";
+"alertPasswordInitateInfo" = "※ 인증번호 초기화는 B tv에서 하실 수 있습니다.";
 
 "alertOkCashDiscount" = "OK캐쉬백 할인 적용";
 "alertOkCashDiscountInput" = "OK캐쉬백 비밀번호를 입력해주세요.";
@@ -471,8 +472,8 @@
 "alertKidExamSaveCompleted" = "저장되었습니다.";
 "alertKidExamSaveError" = "결과저장이 실패했습니다.\n다시시도해주세요";
 
-"alertCashCharge" = "B캐쉬 충전소 이용 문의";
-"alertCashChargeText" = "B캐쉬 충전소 이용에 문제가 있다면 아래 문의하기를 선택해 주세요. B캐쉬 충전소 이용 문의 페이지로 연결 됩니다.";
+"alertCashCharge" = "B포인트 충전소 이용 문의";
+"alertCashChargeText" = "B포인트 충전소 이용에 문제가 있다면 아래 문의하기를 선택해 주세요. B포인트 충전소 이용 문의 페이지로 연결 됩니다.";
 "alertCashChargeButton" = "문의하기";
 
 "alertNeedNickName" = "닉네임을 입력 해주셔야 합니다.";
@@ -537,8 +538,8 @@
 "titleMyBenefits" = "나의 할인 혜택";
 "titleMyAlram" = "알림 목록";
 "titleRecommandFriend" = "친구에게 추천하기";
-"titleCashCharge" = "B캐쉬 충전소";
-"titleCashChargeGuide" = "B캐쉬 충전소 이용 안내";
+"titleCashCharge" = "B포인트 충전소";
+"titleCashChargeGuide" = "B포인트 충전소 이용 안내";
 
 "titleMyRegistCardMember" = "T멤버십 카드 등록";
 "titleMyRegistCardOk" = "OK캐쉬백 카드 등록";
@@ -860,7 +861,7 @@
  PageSearch
 */
 "searchLatest" = "최근 검색어";
-"searchPopularity" = "인기 검색어";
+"searchPopularity" = "급상승 검색어";
 "searchResult" = "에 대한\n검색결과가 %s건 있습니다.";
 "searchEmpty" = "에 대한\n검색결과가 없습니다.";
 "searchEmptyGuide" = "검색어의 철자, 띄어쓰기를 다시 한번 확인해 주세요.";
@@ -889,9 +890,9 @@
 /*
  PageCashChargeGuide
 */
-"cashChargeGuideText" = "B캐쉬 충전소에서는 이벤트 응모,\n쇼핑, 설문 참여 등에 따라\nB 캐쉬 적립 혜택을 제공합니다.";
+"cashChargeGuideText" = "B포인트 충전소에서는 이벤트 응모,\n쇼핑, 설문 참여 등에 따라\nB 캐쉬 적립 혜택을 제공합니다.";
 "cashChargeGuideTip" = "적립한 B캐쉬는 모바일 B tv에서\nVOD 구매 시 이용하실 수 있습니다.";
-"cashChargeGuideAgree" = "B캐쉬 충전소 이용을 위한 개인정보 수집 및 개인정보 제 3자 동의 (필수)";
+"cashChargeGuideAgree" = "B포인트 충전소 이용을 위한 개인정보 수집 및 개인정보 제 3자 동의 (필수)";
 "cashChargeGuideButton" = "캐쉬 적립하러 가기";
 
 "cashChargeGuideAgreeTitle1" = "개인정보를 수집하려는 자";

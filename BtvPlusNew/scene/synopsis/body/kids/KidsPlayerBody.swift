@@ -123,9 +123,9 @@ struct KidsPlayerBody: PageComponent{
                         PurchaseViewerKids(
                             componentViewModel: self.componentViewModel,
                             data: purchasViewerData)
-                            .padding(.top, DimenKids.margin.regularExtra)
+                            .padding(.top, DimenKids.margin.light)
                             //.padding(.trailing, DimenKids.margin.regular)
-                            .frame(width: KidsSynopsis.playerAreaWidth + DimenKids.icon.light + DimenKids.margin.regular)
+                            .frame(width:self.playerWidth + DimenKids.icon.light + DimenKids.margin.regular)
                             .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                         
                     } else {

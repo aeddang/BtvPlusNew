@@ -27,7 +27,7 @@ struct PageKidsMultiBlock: PageView {
     @ObservedObject var tabNavigationModel:NavigationModel = NavigationModel()
     @ObservedObject var multiBlockViewModel:MultiBlockModel = MultiBlockModel()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
-    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
+    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel(limitedScrollIndex: 1)
     @State var scrollTabSize:Int = 3
     @State var isDivisionTab:Bool = true
     @State var guideImage:String? = nil

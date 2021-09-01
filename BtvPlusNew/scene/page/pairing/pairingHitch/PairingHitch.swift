@@ -228,7 +228,7 @@ struct PairingHitch: PageComponent {
             
         }
         .onDisappear(){
-            
+            self.pairing.requestPairing(.cancel)
         }
     }//body
     @State var hasPopup:Bool = false

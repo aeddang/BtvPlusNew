@@ -77,6 +77,7 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
     
     fileprivate(set) var isScrollEnd:Bool = false
     private(set) var isDragEnd:Bool = false
+    private(set) var limitedScrollIndex:Int = -1
     private(set) var pullRange:CGFloat = 40
     private(set) var pullCompletedRange:CGFloat = 50
     private(set) var updateScrollDiff:CGFloat = 1.0
@@ -86,15 +87,20 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
     private(set) var cancelPullRange:CGFloat = 40
     private(set) var topRange:CGFloat = 80
     private(set) var type: InfinityScrollType = .vertical(isDragEnd: false)
-    private(set) var scrollSize:CGSize = CGSize(width: 375, height: 740)
+    private(set) var scrollSizeVertical:CGSize = CGSize(width: 375, height: 740)
+    private(set) var scrollSizeHorizental:CGSize = CGSize(width: 375, height: 740)
     var isSetup:Bool = false
+    init(limitedScrollIndex:Int = -1) {
+        self.limitedScrollIndex = limitedScrollIndex
+        super.init()
+    }
     
     @discardableResult
     func setup(type: InfinityScrollType? = nil, scrollSize:CGSize? = nil) -> InfinityScrollModel {
         let type:InfinityScrollType = type ?? self.type
-        let size:CGSize = scrollSize ?? self.scrollSize
+        let size:CGSize = scrollSize ?? self.scrollSizeVertical
         self.type = type
-        self.scrollSize = size
+    
         switch type {
         case .horizontal (let end):
             pullRange = 40
@@ -164,7 +170,7 @@ class InfinityScrollModel:ComponentObservable, Identifiable{
             return
         }
         let diff = self.prevPosition - pos
-    
+       // ComponentLog.d("diff " + diff.description, tag: "InfinityScrollViewProtocol")
         if abs(diff) > 10000 { return }
         if abs(diff) > self.minDiff{
             self.scrollPosition = pos

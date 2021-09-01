@@ -199,7 +199,9 @@ struct PageSearch: PageView {
                 if res.id != self.tag { return }
                 switch res.type {
                 case .getSearchKeywords : self.viewModel.updatePopularityKeywords(res.data as? SearchKeyword)
-                case .getCompleteKeywords : self.viewModel.updateCompleteKeywords(res.data as? CompleteKeyword)
+                case .getCompleteKeywords(let word, _):
+                    if self.keyword != word {return} 
+                    self.viewModel.updateCompleteKeywords(res.data as? CompleteKeyword)
                 case .getSeachVod : self.searchRespond(res: res, geometry: geometry)
                 case .getSeachPopularityVod :
                     self.viewModel.updatePopularityVod(res.data as? SearchPopularityVod)

@@ -230,8 +230,7 @@ struct KidsSynopsis: PageComponent{
                 
                 if self.sceneOrientation == .landscape && !self.isFullScreen {
                     HStack(alignment: .top, spacing:0){
-                        Spacer()
-                            .modifier(MatchParent())
+                        Spacer().modifier(MatchParent())
                         if let hasRelationVod = self.hasRelationVod {
                             if hasRelationVod {
                                  RelationVodBodyKids(
@@ -249,6 +248,10 @@ struct KidsSynopsis: PageComponent{
                                     .frame(width: Self.listWidth)
                                     .background(Color.app.white)
                             }
+                        } else {
+                            Spacer()
+                                .frame(width: Self.listWidth)
+                                .background(Color.app.white)
                         }
                         
                     }

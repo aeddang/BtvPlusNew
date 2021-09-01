@@ -392,7 +392,6 @@ struct MultiBlockBody: PageComponent {
         }
         .onReceive(self.sceneObserver.$isUpdated){update in
             if update {
-                self.infinityScrollModel.setup(scrollSize: self.sceneObserver.screenSize)
                 if !SystemEnvironment.isTablet {return}
                 self.isHorizontal = self.sceneObserver.sceneOrientation == .landscape
             }
@@ -457,6 +456,7 @@ struct MultiBlockBody: PageComponent {
             }).store(in: &anyCancellable)
         }
         self.addBlock()
+    
     }
     
     @State var requestNum = 0
@@ -464,7 +464,7 @@ struct MultiBlockBody: PageComponent {
     private func requestBlockCompleted(){
         PageLog.d("addBlock completed", tag: self.tag)
         if !self.loadingBlocks.isEmpty {
-            self.addLoadedBlocks(self.loadingBlocks) 
+            self.addLoadedBlocks(self.loadingBlocks)
             PageLog.d("self.blocks " + self.blocks.count.description, tag: self.tag)
             self.loadingBlocks = []
         }

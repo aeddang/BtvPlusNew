@@ -543,12 +543,12 @@ struct VideoItemBody: PageView {
         ZStack{
             ImageView(url: self.data.image,contentMode: .fill, noImg: Asset.noImg16_9)
                 .modifier(MatchParent())
-            if !self.data.isClip {
-                Image(Asset.shape.listGradientH)
-                    .resizable()
-                    .scaledToFill()
-                    .modifier(MatchParent())
-            }
+            
+            Image(Asset.shape.listGradientH)
+                .resizable()
+                .scaledToFill()
+                .modifier(MatchParent())
+            
             if (self.data.progress != nil || self.isSelected) && self.data.tagData?.isLock != true {
                 Image(Asset.icon.thumbPlay)
                     .renderingMode(.original).resizable()
@@ -630,6 +630,7 @@ struct VideoItemBodyKids: PageView {
                     .resizable()
                     .scaledToFill()
                     .modifier(MatchParent())
+                    .opacity(0.3)
                 if (self.data.progress != nil || self.isSelected) && self.data.tagData?.isLock != true {
                     Image(AssetKids.icon.thumbPlayVideo)
                         .renderingMode(.original).resizable()

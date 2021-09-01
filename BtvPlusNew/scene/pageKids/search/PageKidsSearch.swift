@@ -157,7 +157,9 @@ struct PageKidsSearch: PageView {
                 guard let res = res else { return }
                 if res.id != self.tag { return }
                 switch res.type {
-                case .getCompleteKeywords : self.viewModel.updateCompleteKeywords(res.data as? CompleteKeyword, searchKeyword: self.keyword)
+                case .getCompleteKeywords (let word, _):
+                    if self.keyword != word {return} 
+                    self.viewModel.updateCompleteKeywords(res.data as? CompleteKeyword, searchKeyword: self.keyword)
                 case .getSeachVod : self.searchRespond(res: res, geometry: geometry)
                 default : break
                 }

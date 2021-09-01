@@ -502,7 +502,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     
     func onFullScreenEnter(isLock:Bool = false, changeOrientation:UIInterfaceOrientationMask? = .landscape){
         if let controller = self.window?.rootViewController as? PageHostingController<AnyView> {
-            controller.isFullScreen = true
+            controller.isIndicatorAutoHidden = true
         }
         guard let changeOrientation = changeOrientation else { return }
         if isLock { AppDelegate.orientationLock = changeOrientation }
@@ -512,7 +512,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     }
     func onFullScreenExit(changeOrientation:UIInterfaceOrientationMask? = nil){
         if let controller = self.window?.rootViewController as? PageHostingController<AnyView> {
-            controller.isFullScreen = false
+            controller.isIndicatorAutoHidden = false
         }
         AppDelegate.orientationLock = pageModel.getPageOrientationLock(nil) ?? .all
         if let mask = changeOrientation, self.needOrientationChange(changeOrientation: changeOrientation) {
@@ -544,6 +544,16 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     
     final func  requestDeviceOrientation(_ mask:UIInterfaceOrientationMask){
         let changeOrientation:UIInterfaceOrientation? = getChangeDeviceOrientation(mask: mask)
+        if let controller = self.window?.rootViewController as? PageHostingController<AnyView> {
+            switch changeOrientation {
+                case .landscapeLeft, .landscapeRight:
+                    controller.isIndicatorAutoHidden = true
+                case .portrait, .portraitUpsideDown:
+                    controller.isIndicatorAutoHidden = false
+                default:break
+            }
+        }
+        
         guard let change = changeOrientation else { return }
         UIDevice.current.setValue(change.rawValue, forKey: "orientation")
         PageLog.d("requestDeviceOrientation mask" , tag: "PageScene")

@@ -123,6 +123,7 @@ struct MultiBlock:PageComponent {
                 viewModel: self.infinityScrollModel,
                 axes: .vertical,
                 scrollType : .reload(isDragEnd: false),
+                contentNum: self.datas.count,
                 header : self.header,
                 headerSize : self.headerSize,
                 marginTop : self.marginTop,
@@ -339,7 +340,7 @@ struct MultiBlockCell:PageComponent {
                 pageObservable:self.pageObservable,
                 pageDragingModel:self.pageDragingModel,
                 data: data,
-                useTracking:false
+                useTracking:self.useTracking
             )
             .frame(height:data.listHeight)
         }

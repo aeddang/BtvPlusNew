@@ -127,7 +127,11 @@ struct KidsPlayer: PageComponent{
                 )
                 
                 if self.isPreroll {
-                    Preroll(viewModel: self.prerollModel)
+                    PrerollUi(
+                        viewModel: self.viewModel,
+                        prerollModel: self.prerollModel,
+                        type: .kids
+                    )
                 }
                 PlayerWaitingKids(
                     pageObservable:self.pageObservable,

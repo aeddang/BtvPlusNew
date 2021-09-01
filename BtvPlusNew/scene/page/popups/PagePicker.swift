@@ -37,7 +37,7 @@ struct PagePicker: PageView {
                             isClose: true,
                             style:.dark
                         )
-                        .padding(.top, self.sceneObserver.safeAreaTop)
+                       
                     }
                     ZStack(alignment: .bottomLeading){
                         /*
@@ -57,7 +57,7 @@ struct PagePicker: PageView {
                             self.pagePresenter.closePopup(self.pageObject?.id)
                         }
                         .modifier(MatchParent())
-                        
+                        .clipped()
                         .onReceive(self.infinityScrollModel.$event){evt in
                             guard let evt = evt else {return}
                             switch evt {
@@ -82,19 +82,17 @@ struct PagePicker: PageView {
                                 .frame(width: Dimen.icon.medium,
                                        height: Dimen.icon.medium)
                         }
-                        .padding(.bottom, Dimen.margin.regular)
+    
                     }
-                    .padding(.top, self.sceneObserver.safeAreaTop + Dimen.margin.regular)
-                    .padding(.bottom, self.marginBottom)
                     .padding(.horizontal, Dimen.margin.heavy)
                 }
+                .padding(.top, self.sceneObserver.safeAreaTop + Dimen.margin.regular)
+                .padding(.bottom, self.marginBottom + Dimen.app.bottom)
                 .modifier(PageFull(style: .dark))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }//draging
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    withAnimation{ self.marginBottom = bottom }
-                }
+                withAnimation{ self.marginBottom = bottom }
             }
             .onAppear{
                 self.marginBottom = self.appSceneObserver.safeBottomLayerHeight
@@ -102,9 +100,15 @@ struct PagePicker: PageView {
                 self.title = obj.getParamValue(key: .title) as? String
                 self.pickerId = obj.getParamValue(key: .id) as? String
                 self.selectedIdx = obj.getParamValue(key: .index) as? Int ?? -1
+                
                 if let pickers = obj.getParamValue(key: .datas) as? [String]{
                     self.datas = zip(0...pickers.count, pickers).map{ idx , pic in
                         PickerData().setData(title: pic, idx: idx) 
+                    }
+                }
+                if self.selectedIdx != -1 {
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                        self.infinityScrollModel.uiEvent = .scrollMove(self.selectedIdx, .center)
                     }
                 }
             }

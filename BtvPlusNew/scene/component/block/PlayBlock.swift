@@ -190,7 +190,7 @@ struct PlayBlock: PageComponent{
             case .pairingCheckCompleted(let isSuccess) :
                 if isSuccess { self.reload() }
                 else { self.appSceneObserver.alert = .pairingCheckFail }
-            default : do{}
+            default : break
             }
         }
         .onReceive(self.pagePresenter.$event){ evt in

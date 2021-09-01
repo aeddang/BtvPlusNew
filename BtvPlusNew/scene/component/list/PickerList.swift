@@ -24,7 +24,7 @@ struct PickerList: PageComponent{
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[PickerData]
     var selectedIdx:Int = -1
-    var verticalMargin:CGFloat = Dimen.margin.heavy
+    var verticalMargin:CGFloat = Dimen.margin.heavyUltra
     var bgColor:Color = Color.app.blueDeep
     var action: ((_ data:PickerData) -> Void)? = nil
     var body: some View {
@@ -32,16 +32,19 @@ struct PickerList: PageComponent{
             InfinityScrollView(
                 viewModel: self.viewModel,
                 axes: .vertical,
+                scrollType: .vertical(isDragEnd: false),
                 marginTop: self.verticalMargin,
                 marginBottom: self.verticalMargin,
                 marginHorizontal: 0,
                 spacing: 0,
                 isRecycle:false,
-                useTracking: true
+                useTracking: true,
+                useTopButton:false
             ){
                 if !self.datas.isEmpty {
                     ForEach(self.datas) { data in
                         PickerItem( data:data, isSelected: self.selectedIdx == data.index )
+                            .id(data.index)
                             .frame(height: self.selectedIdx == data.index ? Font.size.bold  : Font.size.mediumExtra )
                             .modifier(ListRowInset(
                                 spacing:Dimen.margin.medium
@@ -66,7 +69,7 @@ struct PickerList: PageComponent{
                     startPoint: .top, endPoint: .bottom)
                     .modifier(MatchHorizontal(height:  self.verticalMargin))
             }
-            .modifier(MatchParent())
+            .allowsHitTesting(false)
         }
         .modifier(MatchParent())
     }//body

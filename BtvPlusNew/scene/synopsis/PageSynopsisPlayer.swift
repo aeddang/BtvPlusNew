@@ -161,7 +161,6 @@ struct PageSynopsisPlayer: PageView {
                             epsdRsluId: nil, prdPrcId: nil, kidZone: nil, synopType: SynopsisType.none)
                     }
                 }
-                self.initPage()
             }
             .onDisappear{
                 self.pagePresenter.fullScreenExit()

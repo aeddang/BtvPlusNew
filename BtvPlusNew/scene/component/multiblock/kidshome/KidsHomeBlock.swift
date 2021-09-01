@@ -96,7 +96,10 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
         .onAppear{
             if let prevData =  self.data.kidsHomeBlockData {
                 self.homeBlockData = prevData
-                self.isUiView = true
+                withAnimation{
+                    self.isUiView = true
+                }
+                
             } else {
                 let homeData = KidsHomeBlockData().setData(data: self.data)
                 self.homeBlockData = homeData

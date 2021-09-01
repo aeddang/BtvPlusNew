@@ -27,10 +27,10 @@ struct AppLayout: PageComponent{
         ZStack{
             SceneTab()
             SceneKidsTab()
-            if self.isInit && self.isPairingHitchShowing {
+            if self.isInit && self.isPairingHitchShowing && self.pageType == .btv {
                 PairingHitch()
             }
-            if let datas = self.floatBannerDatas {
+            if self.pageType == .btv && !self.hasPopup, let datas = self.floatBannerDatas {
                 FloatingBanner(datas:datas){ today in
                     if today {self.floatingBannerToDayUnvisible()}
                     withAnimation(.easeOut(duration: 0.0)){
@@ -124,7 +124,10 @@ struct AppLayout: PageComponent{
             PageLog.d("currentTopPage " + cPage.pageID.debugDescription, tag:self.tag)
             PageLog.d("current useTopFix " + (self.appSceneObserver.useTopFix?.description ?? "nil"), tag:self.tag)
             SystemEnvironment.currentPageType = PageType.getType(cPage.pageGroupID)
-            self.pageType = SystemEnvironment.currentPageType
+            withAnimation{
+                self.pageType = SystemEnvironment.currentPageType
+                self.hasPopup = self.pagePresenter.hasPopup
+            }
             PageLog.d("currentPageType " + self.pageType.rawValue, tag:self.tag)
             
             switch self.pageType {
@@ -146,7 +149,6 @@ struct AppLayout: PageComponent{
                 self.keyboardObserver.cancel()
             }
         }
-        
         .onReceive(self.pairing.$event){ evt in
             guard let evt = evt else {return}
             switch evt {
@@ -218,7 +220,7 @@ struct AppLayout: PageComponent{
     @State var floatBannerDatas:[BannerData]? = nil
     @State var isPairingHitchShowing:Bool = true
     @State var pageType:PageType = .btv
-    
+    @State var hasPopup:Bool = false
     func onDataAlram(){
         if isInitDataAlram {return}
         self.isInitDataAlram = true
@@ -312,7 +314,6 @@ struct AppLayout: PageComponent{
     }
     
     func onFloatingBannerView(datas:[BannerData]?) {
-        if datas != nil && self.pagePresenter.hasPopup {return}
         guard let datas = datas else {
             if floatBannerDatas == nil {return}
             withAnimation{ floatBannerDatas = nil }

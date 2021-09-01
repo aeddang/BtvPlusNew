@@ -34,7 +34,7 @@ struct SerisTabKids: PageComponent{
                     size: Font.sizeKids.lightExtra,
                     color: Color.app.sepia)
                 )
-            if let textSeason = self.textSeason {
+            if self.data.seasons.count > 1 , let textSeason = self.textSeason {
                 SortButtonKids(text: textSeason){
                     self.appSceneObserver.select =
                         .select((self.tag ,

@@ -107,8 +107,8 @@ struct TopBanner: PageComponent {
     @State var isTop = false
     @State var autoChangeSubscription:AnyCancellable?
     func autoChange(){
-        ComponentLog.d("autoChange isTop " + self.isTop.description, tag:self.tag)
-        ComponentLog.d("autoChange isInit " + self.isInit.description, tag:self.tag)
+       //ComponentLog.d("autoChange isTop " + self.isTop.description, tag:self.tag)
+       // ComponentLog.d("autoChange isInit " + self.isInit.description, tag:self.tag)
         self.autoChangeCancel()
         if !self.isTop { return }
         if !self.isInit { return }
@@ -119,7 +119,7 @@ struct TopBanner: PageComponent {
             .autoconnect()
             .sink() {_ in
                 self.viewModel.request = .next
-                ComponentLog.d("autoChange com " + self.pageID, tag:self.tag)
+                //ComponentLog.d("autoChange com " + self.pageID, tag:self.tag)
             }
         
     }

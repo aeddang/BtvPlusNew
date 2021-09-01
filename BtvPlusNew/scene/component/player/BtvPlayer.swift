@@ -134,7 +134,11 @@ struct BtvPlayer: PageComponent{
                 )
                 
                 if self.isPreroll {
-                    Preroll(viewModel: self.prerollModel)
+                    PrerollUi(
+                        viewModel: self.viewModel,
+                        prerollModel: self.prerollModel,
+                        type: .btv
+                    )
                 }
                 PlayerWaiting(
                     pageObservable:self.pageObservable,
@@ -146,8 +150,8 @@ struct BtvPlayer: PageComponent{
             .background(Color.app.black)
             .onReceive(self.sceneObserver.$isUpdated){ update in
                 if !update {return}
-                
-                if self.playerType == .simple { return }
+                if !self.viewModel.useFullScreenAction { return }
+                //if self.playerType == .simple { return }
                 if self.viewModel.isLock { return }
                 if SystemEnvironment.isTablet  { return }
                 

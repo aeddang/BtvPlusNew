@@ -12,7 +12,7 @@ import SwiftUI
 struct Dimen{
     private static let isPad =  AppUtil.isPad()
     struct margin {
-        
+        public static let heavyUltra:CGFloat = isPad ? 150 : 100 //*
         public static let heavy:CGFloat = isPad ? 100 : 46 //*
         public static let heavyExtra:CGFloat = isPad ? 76 : 40 //*
         public static let mediumUltra:CGFloat = isPad ? 72 : 35 //*

@@ -19,8 +19,10 @@ struct PageKidsHome: PageView {
     
     @ObservedObject var viewModel:MultiBlockModel = MultiBlockModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
-    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
+    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel(limitedScrollIndex: 1)
       
+    @State var marginTop:CGFloat = DimenKids.margin.regular
+    @State var marginBottom:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
             PageDataProviderContent(
@@ -33,8 +35,8 @@ struct PageKidsHome: PageView {
                     infinityScrollModel: self.infinityScrollModel,
                     useBodyTracking:true,
                     useTracking:false,
-                    marginTop:KidsTop.height + DimenKids.margin.regular + self.sceneObserver.safeAreaTop,
-                    marginBottom: self.sceneObserver.safeAreaIgnoreKeyboardBottom
+                    marginTop:self.marginTop,
+                    marginBottom: self.marginBottom
                     )
             }
             .background(
@@ -55,6 +57,7 @@ struct PageKidsHome: PageView {
                 guard let evt = evt else { return }
                 switch evt {
                 case .updated:
+                    if !self.isUiInit { return }
                     self.reload()
                 default: break
                 }
@@ -71,6 +74,12 @@ struct PageKidsHome: PageView {
                 if !self.isUiInit { return }
                 DispatchQueue.main.async {
                     self.reload()
+                }
+            }
+            .onReceive(self.sceneObserver.$isUpdated){ updated in
+                if updated {
+                    self.marginTop = KidsTop.height + DimenKids.margin.regular + self.sceneObserver.safeAreaTop
+                    self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
                 }
             }
             .onReceive(self.pairing.$event){evt in
@@ -102,10 +111,14 @@ struct PageKidsHome: PageView {
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
                     self.isUiInit = true
-                    self.reload()
+                    DispatchQueue.main.async {
+                        self.reload()
+                    }
                 }
             }
             .onAppear{
+                self.marginTop = KidsTop.height + DimenKids.margin.regular + self.sceneObserver.safeAreaTop
+                self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
                 if let obj = self.pageObject {
                     self.menuId = (obj.getParamValue(key: .id) as? String) ?? self.menuId
                     self.openId = obj.getParamValue(key: .subId) as? String

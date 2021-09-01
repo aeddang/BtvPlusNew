@@ -226,20 +226,30 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
                 case .pull(let geo, let value) :
                     if #available(iOS 14.0, *) {
                         if value < self.initPullRange { return }
-                        if self.pullOffset == self.initPullRange {
+                        var isInit = false
+                        if self.viewModel.status != .pull {
                             self.viewModel.status = .pull
+                            isInit = true
+                           
+                        }
+                        let diff = value - self.pullOffset
+                        let dr:CGFloat = diff > 0 ? 1 : -1
+                        var d = dr * max(abs(diff),minDiff)
+                        let m:CGFloat = self.axis == .horizontal ? 1.3 : 1.3
+                        if dr == 1 {d = d * m}
+                        //ComponentLog.d("pull value " + value.description , tag: "InfinityScrollViewProtocol")
+                        if self.viewModel.status != .drag && self.viewModel.status != .pull  {return}
+                       
+                        if isInit {
+                            withAnimation{
+                                self.onPull(geometry: geo, value: d)
+                            }
+                            
                         } else {
-                            let diff = value - self.pullOffset
-                            let dr:CGFloat = diff > 0 ? 1 : -1
-                            var d = dr * max(abs(diff),minDiff)
-                            let m:CGFloat = self.axis == .horizontal ? 2.0 : 1.0
-                            if dr == 1 {d = d * m}
-                            //ComponentLog.d("pull value " + value.description , tag: "InfinityScrollViewProtocol")
-                            if self.viewModel.status != .drag && self.viewModel.status != .pull  {return}
                             self.onPull(geometry: geo, value: d)
-
                         }
                         self.pullOffset = value
+                        
                     }
                 case .pullCompleted:
                     if #available(iOS 14.0, *) {

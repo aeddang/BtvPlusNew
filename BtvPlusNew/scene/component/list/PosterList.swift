@@ -650,6 +650,7 @@ struct PosterItem: PageView {
                     .resizable()
                     .scaledToFill()
                     .modifier(MatchParent())
+                    .opacity(self.data.pageType == .btv ? 1 : 0.3)
             }
             if self.data.useTag, let tag = self.data.tagData {
                 if tag.pageType == .btv {

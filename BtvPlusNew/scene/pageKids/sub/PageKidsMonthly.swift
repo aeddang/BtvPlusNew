@@ -19,7 +19,7 @@ struct PageKidsMonthly: PageView {
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var viewModel:MultiBlockModel = MultiBlockModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
-    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
+    @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel(limitedScrollIndex: 1)
      
     var body: some View {
         GeometryReader { geometry in
@@ -41,7 +41,7 @@ struct PageKidsMonthly: PageView {
                         pageDragingModel: self.pageDragingModel,
                         useBodyTracking:true,
                         useTracking:true,
-                        marginTop: DimenKids.margin.medium,
+                        marginTop: DimenKids.margin.medium ,
                         marginBottom: self.sceneObserver.safeAreaIgnoreKeyboardBottom
                         )
                     .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in

@@ -82,6 +82,7 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
         self.useTracking = useTracking
         self.onReady = onReady
         self.onMove = onMove
+       
         self.onTopButton = onTopButton
         self.onTopButtonSize = onTopButtonSize
         self.onTopButtonMargin = onTopButtonMargin
@@ -90,6 +91,7 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
         
     var body: some View {
         if #available(iOS 14.0, *) {
+            
             ScrollViewReader{ reader in
                 ZStack(alignment:.bottomTrailing){
                     ScrollView(self.isScroll ? self.axes : [], showsIndicators: self.showIndicators) {

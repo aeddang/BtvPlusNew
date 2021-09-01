@@ -177,7 +177,7 @@ struct PagePairingDevice: PageView {
         case .wifi :
             self.title = String.pageTitle.connectWifi
             self.findSSID()
-        default : do{}
+        default : break
         }
 
         self.isReady = true

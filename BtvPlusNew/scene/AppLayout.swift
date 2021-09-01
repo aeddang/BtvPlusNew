@@ -15,20 +15,13 @@ struct AppLayout: PageComponent{
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appObserver:AppObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var networkObserver:NetworkObserver
     @EnvironmentObject var keyboardObserver:KeyboardObserver
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     
-    @State var loadingInfo:[String]? = nil
-    @State var isLoading = false
-    @State var isInit = false
-    @State var useLogCollector = false
-    @State var toastMsg:String = ""
-    @State var isToastShowing:Bool = false
-    @State var floatBannerDatas:[BannerData]? = nil
-    @State var isPairingHitchShowing:Bool = true
-    @State var pageType:PageType = .btv
+   
     
     var body: some View {
         ZStack{
@@ -89,7 +82,14 @@ struct AppLayout: PageComponent{
         .onReceive(self.appSceneObserver.$useLogCollector){ logCollector in
             self.useLogCollector = logCollector
         }
-        
+        .onReceive(self.networkObserver.$status){ status in
+            if !self.setup.dataAlram {return}
+            switch status {
+            case .cellular :
+                self.onDataAlram()
+            default : break
+            }
+        }
         .onReceive(self.appSceneObserver.$event){ evt in
             guard let evt = evt else { return }
             switch evt  {
@@ -157,7 +157,6 @@ struct AppLayout: PageComponent{
                     } else {
                         self.pagePresenter.changePage(movePage)
                     }
-                   
                 }
             default : break
             }
@@ -209,6 +208,33 @@ struct AppLayout: PageComponent{
         }
     }
     
+    @State var loadingInfo:[String]? = nil
+    @State var isLoading = false
+    @State var isInit = false
+    @State var isInitDataAlram = false
+    @State var useLogCollector = false
+    @State var toastMsg:String = ""
+    @State var isToastShowing:Bool = false
+    @State var floatBannerDatas:[BannerData]? = nil
+    @State var isPairingHitchShowing:Bool = true
+    @State var pageType:PageType = .btv
+    
+    func onDataAlram(){
+        if isInitDataAlram {return}
+        self.isInitDataAlram = true
+        self.appSceneObserver.alert = .confirm(String.alert.apns, String.alert.dataAlram , confirmText: nil) { isOk in
+            if !isOk {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        exit(0)
+                    }
+                }
+
+            }
+        }
+    }
+    
     func onStoreInit(){
         //self.appSceneObserver.event = .debug("onStoreInit")
         if SystemEnvironment.firstLaunch {
@@ -223,8 +249,7 @@ struct AppLayout: PageComponent{
     func onPageInit(){
         self.isInit = true
         self.isLoading = false
-        //self.appSceneObserver.event = .debug("onPageInit")
-       
+         
         if !self.appObserverMove(self.appObserver.page) {
             let initMenuId = self.dataProvider.bands.datas.first?.menuId
             self.pagePresenter.changePage(PageProvider.getPageObject(.home).addParam(key: .id, value: initMenuId))
@@ -262,15 +287,16 @@ struct AppLayout: PageComponent{
              )
             */
         }
-        self.deepLinkMove(self.appObserver.deepLinkUrl)
-        if let alram = self.appObserver.alram  {
-            self.appSceneObserver.event = .debug("apns exist")
-            self.appSceneObserver.alert = .recivedApns(alram)
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+            self.deepLinkMove(self.appObserver.deepLinkUrl)
+            if let alram = self.appObserver.alram  {
+                self.appSceneObserver.alert = .recivedApns(alram)
+            }
         }
     }
     
     func onPageReset(){
-        self.appSceneObserver.event = .debug("onPageReset")
+        self.appSceneObserver.event = .toast("on PageReset " + (SystemEnvironment.isStage ? "stage" : "release"))
         let initMenuId = self.dataProvider.bands.datas.first?.menuId
         self.pagePresenter.changePage(
             PageProvider.getPageObject(.home)
@@ -324,6 +350,7 @@ struct AppLayout: PageComponent{
     @discardableResult
     func deepLinkMove(_ link:URL? = nil)  -> Bool {
         guard let link = link else { return false }
+        self.appObserver.resetDeeplink()
         return self.repository.webBridge.parseUrl(link.absoluteString) != nil
     }
     

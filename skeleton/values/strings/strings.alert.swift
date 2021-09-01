@@ -24,7 +24,7 @@ extension String {
         public static var apnsMonthly = "alertApnsMonthly".loaalized()
         public static var apnsReserve = "alertApnsReserve".loaalized()
         
-        
+        public static var dataAlram = "alertDataAlram".loaalized()
         public static var api = "alertApi".loaalized()
         public static var apiErrorServer = "alertApiErrorServer".loaalized()
         public static var apiErrorClient = "alertApiErrorClient".loaalized()

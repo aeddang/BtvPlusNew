@@ -60,6 +60,9 @@ struct PageKidsHome: PageView {
                 }
             }
             .onReceive(self.pairing.$kid){ kid in
+                if let current = self.currentKid {
+                    if current.id == kid?.id { return }
+                }
                 if kid != nil {
                     if self.pairing.kidStudyData == nil {
                         self.pairing.requestPairing(.updateKidStudy)
@@ -121,7 +124,9 @@ struct PageKidsHome: PageView {
     @State var menuId:String = ""
     @State var openId:String? = nil
     @State var openPage:PageObject? = nil
+    @State var currentKid:Kid? = nil
     private func reload(){
+        self.currentKid = self.pairing.kid
         if self.pagePresenter.currentTopPage?.pageID == PageID.kidsHome {
             self.appSceneObserver.useGnb = true
         }

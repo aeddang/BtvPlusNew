@@ -21,7 +21,7 @@ struct SelectBox: PageComponent {
     
     var body: some View {
         VStack{
-            Spacer()
+            
             VStack (alignment: .leading, spacing:0){
                 VStack(alignment: .leading, spacing:0){
                     ForEach(self.buttons) { btn in

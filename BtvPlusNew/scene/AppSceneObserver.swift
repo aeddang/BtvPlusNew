@@ -27,7 +27,7 @@ class AppSceneObserver:ObservableObject{
     @Published var useBottom = false
     @Published var useBottomImmediately = false
     @Published var useGnb:Bool = true
-    @Published var useLogCollector:Bool = false
+    @Published var useLogCollector:Bool = SystemEnvironment.isLaunchTrace
     @Published var isApiLoading = false
     @Published var safeHeaderHeight:CGFloat = 0
     @Published var headerHeight:CGFloat = 0

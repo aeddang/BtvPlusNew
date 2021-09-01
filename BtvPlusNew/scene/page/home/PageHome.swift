@@ -58,7 +58,6 @@ struct PageHome: PageView {
                     headerSize: MonthlyBlock.height + MultiBlock.spacing,
                     useFooter: self.useFooter)
             }
-            //.padding(.bottom, self.sceneObserver.safeAreaBottom )
             .modifier(PageFull())
             
             .onReceive(self.dataProvider.bands.$event){ evt in
@@ -440,7 +439,7 @@ struct PageHome: PageView {
 
     private func syncronizeMonthly(){
         if (self.monthlyDatas?.count ?? 0) > Self.maxMonthlyConty, let monthlyDatas = self.monthlyDatas {
-            self.sortedMonthlyDatas = monthlyDatas[0...Self.maxMonthlyConty].map{$0} 
+            self.sortedMonthlyDatas = monthlyDatas[0..<Self.maxMonthlyConty].map{$0} 
         } else {
             self.sortedMonthlyDatas = self.monthlyDatas
         }

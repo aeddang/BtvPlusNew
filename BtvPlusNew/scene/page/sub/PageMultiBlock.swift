@@ -172,7 +172,7 @@ struct PageMultiBlock: PageView {
     @State var cateData:TextTabData? = nil
     @State var tabDatas:[TextTabData]? = nil
     @State var selectedTabIdx:Int = -1
-    @State var originDatas:Array<BlockItem> = []
+    @State var originDatas:[BlockItem] = []
    
     @State var title:String? = nil
     @State var titleId:String? = nil
@@ -205,9 +205,9 @@ struct PageMultiBlock: PageView {
         selectedTabIdx = moveIdx
         originDatas = data.blocks ?? []
         var delay:Double = 0
-        if originDatas.isEmpty {
+        if originDatas.isEmpty || data.isDropBox {
             if self.cateData == nil {delay = 0.1}
-            self.cateData = self.tabDatas?[moveIdx]
+            self.cateData = data
         } else {
             if self.cateData != nil {delay = 0.1}
             self.cateData =  nil
@@ -223,12 +223,21 @@ struct PageMultiBlock: PageView {
                 var menuId = self.titleId
                 
                 if let data = self.cateData {
-                    self.cateBlockViewModel.update(menuId:data.menuId,
-                                                   listType:data.listType ?? .poster,
-                                                   isAdult:data.isAdult , key:nil)
+                    if data.isDropBox {
+                        let dropMenus:[BlockData] = self.originDatas.map{ BlockData().setData($0) }
+                        self.cateBlockViewModel.setupDropDown(datas: dropMenus)
+                        if let first = dropMenus.first {
+                            self.cateBlockViewModel
+                                .update(data:first, listType: first.uiType.listType ?? .poster, idx: 0)
+                        }
+                    } else {
+                        self.cateBlockViewModel.update(menuId:data.menuId,
+                                                       listType:data.listType ?? .poster,
+                                                       isAdult:data.isAdult , key:nil)
+                        
+                    }
                     title = data.title
                     menuId = data.menuId ?? menuId
-                    
                 } else {
                     if (self.tabDatas?.count ?? 0) > 1, let tabDatas = self.tabDatas {
                         title = tabDatas[self.selectedTabIdx].title

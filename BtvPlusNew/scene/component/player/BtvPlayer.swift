@@ -203,6 +203,11 @@ struct BtvPlayer: PageComponent{
                     self.viewModel.continuousProgress = nil
                     ComponentLog.d("continuousProgress play" , tag: self.tag)
                 }
+                if let progressTime = self.viewModel.continuousProgressTime {
+                    self.viewModel.event = .seekTime(progressTime)
+                    self.viewModel.continuousProgressTime = nil
+                    ComponentLog.d("continuousProgressTime play" , tag: self.tag)
+                }
             }
             .onReceive(self.viewModel.$currentQuality){ quality in
                 if self.isPreroll {

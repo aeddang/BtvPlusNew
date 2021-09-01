@@ -79,6 +79,7 @@
 "vod" = "VOD";
 "sris" = "회차";
 "corner" = "코너";
+"clip" = "클립";
 "people" = "인물";
 "liveTv" = "실시간 TV";
 "event" = "이벤트";
@@ -268,7 +269,7 @@
 "alertGuide" = "안내";
 "alertGuideNotSupported" = "지원하지 않는 기능입니다.\n이용에 불편을 드려 죄송합니다.";
 "alertGuideNotSupportedVibrate" = "태블릿 기기에서는 진동모드가 지원되지 않습니다.";
-
+"alertDataAlram" = "무선 네트워크 연결을 이용하시겠습니까?\n무선 네트워크 이용 시 가입하신\n요금제에 따라 많은 양의\n데이터 통화료가 발생할 수 있습니다.";
 
 "alertConnect" = "B tv 연결알림";
 "alertConnectWifi" = "Wi-Fi 네트워크에 연결해 주세요.";
@@ -491,9 +492,6 @@
 
 "alertEventParticipate" = "이벤트 참여 안내";
 "alertEventParticipateMonthlyPoint" = "월정액 상품 가입 시에만 혜택이 제공됩니다.";
-
-"alertEventPointIssuanceComplete" = "포인트 지급 완료";
-"alertEventPointIssuanceCompleteText" = "포인트 지급이 완료되었습니다.\n포인트 내역은 MY > B포인트에서\n확인해주세요.";
 
 "alertEventPointIssuanceComplete" = "포인트 지급 완료";
 "alertEventPointIssuanceCompleteText" = "포인트 지급이 완료되었습니다.\n포인트 내역은 MY > B포인트에서\n확인해주세요.";
@@ -835,7 +833,12 @@
 "synopsisPackageContent" = "구성 콘텐츠";
 
 "synopsisUnavailableSeriesMessage" = "지상파 콘텐츠의 경우 B tv에서만 시청 가능한 회차는 제공되지 않습니다. 지상파 이용권에 구독하시면 모든 회차를 모바일로 즐기실 수 있습니다.";
-"synopsisAward" = "수상이력"; 
+"synopsisAward" = "수상이력";
+
+"synopsisCornerPlayNeedPurchased" = "선택하신 코너 영상은 구매 후 시청하실 수 있습니다. 구매하시겠습니까?";
+"synopsisCornerPlayNotNscreen" = "선택하신 코너 영상은 모바일 시청을 지원하지 않습니다. B tv에서 시청해 주세요.";
+"synopsisCornerPlayOnlyPurchasedBtv" = "선택하신 코너 영상은 B tv에서 구매 후 시청 가능합니다. B tv에서 구매해 주세요.";
+
 /*
  PageAuth
 */
@@ -866,7 +869,7 @@
 "searchEmpty" = "에 대한\n검색결과가 없습니다.";
 "searchEmptyGuide" = "검색어의 철자, 띄어쓰기를 다시 한번 확인해 주세요.";
 "searchEmptyTitle" = "최근 많이 찾는 작품";
-
+"searchDeleteAllConfirm" = "최근 검색어를\n모두 삭제하시겠숩니까?";
 
 /*
  PageAdultCertification
@@ -890,10 +893,10 @@
 /*
  PageCashChargeGuide
 */
-"cashChargeGuideText" = "B포인트 충전소에서는 이벤트 응모,\n쇼핑, 설문 참여 등에 따라\nB 캐쉬 적립 혜택을 제공합니다.";
-"cashChargeGuideTip" = "적립한 B캐쉬는 모바일 B tv에서\nVOD 구매 시 이용하실 수 있습니다.";
+"cashChargeGuideText" = "B포인트 충전소에서는 이벤트 응모,\n쇼핑, 설문 참여 등에 따라\nB 포인트 적립 혜택을 제공합니다.";
+"cashChargeGuideTip" = "적립한 B포인트는 모바일 B tv에서\nVOD 구매 시 이용하실 수 있습니다.";
 "cashChargeGuideAgree" = "B포인트 충전소 이용을 위한 개인정보 수집 및 개인정보 제 3자 동의 (필수)";
-"cashChargeGuideButton" = "캐쉬 적립하러 가기";
+"cashChargeGuideButton" = "포인트 적립하러 가기";
 
 "cashChargeGuideAgreeTitle1" = "개인정보를 수집하려는 자";
 "cashChargeGuideAgreeText1" = "(주)버즈빌";

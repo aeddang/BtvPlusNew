@@ -153,27 +153,31 @@ class SceneDelegate: PageSceneDelegate {
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        PageLog.d("Deeplink openURLContexts", tag: self.tag)
+        //PageLog.t("Deeplink openURLContexts", tag: self.tag)
         guard let url = URLContexts.first?.url else { return }
-        
+        //PageLog.t("Deeplink openURLContexts " + url.absoluteString, tag: self.tag)
         //[DL]
         AppDelegate.appObserver.handleDynamicLink(url)
                         
     }
     
     override func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        PageLog.d("Deeplink willConnectTo", tag: self.tag)
-        AppDelegate.appObserver.handleDynamicLink(connectionOptions.urlContexts.first?.url)
-        AppDelegate.appObserver.handleUniversalLink(connectionOptions.userActivities.first?.webpageURL)
+        let url = connectionOptions.urlContexts.first?.url
+        let link = connectionOptions.userActivities.first?.webpageURL
+        //PageLog.t("Deeplink willConnectTo url " + (url?.absoluteString ?? ""))
+        //PageLog.t("Deeplink willConnectTo link " + (link?.absoluteString ?? ""))
+        AppDelegate.appObserver.handleDynamicLink(url)
+        AppDelegate.appObserver.handleUniversalLink(link)
         super.scene(scene, willConnectTo: session, options: connectionOptions)
     }
     
-    /*
+    
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+        
         PageLog.d("Deeplink continue userActivity", tag: self.tag)
-        AppDelegate.appObserver.handleUniversalLink(userActivity.webpageURL)
+        //AppDelegate.appObserver.handleUniversalLink(userActivity.webpageURL)
     }
-    */
+    
     
     func scene(_ scene: UIScene, didUpdate userActivity: NSUserActivity) {
         PageLog.d("Deeplink didUpdate userActivity", tag: self.tag)

@@ -53,6 +53,8 @@ struct DeepLinkItem{
     //webview action
     var isForceRetry:Bool = false
     var isCallFuncion:Bool = false
+    
+    
 }
 
 
@@ -221,6 +223,7 @@ class WebBridge :PageProtocol{
     }
     
     func parseUrl(_ url:String?) -> DeepLinkItem?{
+        ComponentLog.d("url : " + (url ?? ""), tag:"WebBridge")
         if (url?.hasPrefix("btvplus://"))! {
             if let urlStr = url {
                 if let components = URLComponents(string: urlStr) {
@@ -228,6 +231,8 @@ class WebBridge :PageProtocol{
                         let param = components.queryItems
                         ComponentLog.d("path " + path, tag: self.tag)
                         ComponentLog.d("param " + (param?.debugDescription ?? ""), tag: self.tag)
+                        
+                       
                         self.callPage(path, param: param)
                         return DeepLinkItem(path: path, querys: param)
                     }
@@ -438,6 +443,8 @@ class WebBridge :PageProtocol{
             if menus.isEmpty {return}
             let menuA = menus.split(separator: "/")
             if menuA.isEmpty {return}
+            
+            
             let gnbTypCd:String = String(menuA[0])
             let menuOpenId:String? =
                 menuA.count > 1 ? menuA[1..<menuA.count].reduce("", {$0 + "|" + $1}) : nil
@@ -445,6 +452,8 @@ class WebBridge :PageProtocol{
             let page:PageID = gnbTypCd.hasPrefix(EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue)
                 ? .category : .home
             let band = self.dataProvider.bands.getData(gnbTypCd: gnbTypCd)
+            
+            PageLog.t("callPage menu " + page)
             self.pagePresenter?.changePage(PageProvider
                                             .getPageObject(page)
                                             .addParam(key: .id, value: band?.menuId)

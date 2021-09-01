@@ -118,7 +118,6 @@ class Repository:ObservableObject, PageProtocol{
         self.setupApiManager()
         self.setupPairing()
         self.broadcastManager.setup()
-        
     }
     
     deinit {
@@ -133,14 +132,16 @@ class Repository:ObservableObject, PageProtocol{
         SystemEnvironment.isReleaseMode = isReleaseMode
         SystemEnvironment.isEvaluation = isEvaluation
         self.storage.isReleaseMode = isReleaseMode
-        self.status = .reset
-        
         self.dataCancellable.forEach{$0.cancel()}
         self.dataCancellable.removeAll()
         self.apiManager.clear()
         self.apiManager = ApiManager()
         self.setupNamedStorage()
         self.setupApiManager()
+        self.status = .reset
+        if isReleaseMode != nil {
+            self.event = .reset
+        }
         //self.appSceneObserver?.event = .toast("reset " + (isReleaseMode?.description ?? ""))
     }
     private func setupSetting()->Bool{
@@ -198,10 +199,11 @@ class Repository:ObservableObject, PageProtocol{
                 self.userSetup.saveUser(self.pairing.user)
                 self.pairing.user?.pairingDate = self.userSetup.pairingDate
                 self.pairing.hostDevice?.modelName = self.userSetup.pairingModelName
-                DataLog.d("UPDATEED GNBDATA getGnb", tag:self.tag)
                 self.dataProvider.requestData(q: .init(type: .getGnb))
-                self.appSceneObserver?.event = .toast(String.alert.pairingCompleted)
                 self.pushManager.updateUserAgreement(self.pairing.user?.isAgree3 ?? false)
+                if !NpsNetwork.isAutoPairing {
+                    self.appSceneObserver?.event = .toast(String.alert.pairingCompleted)
+                }
                 
             case .syncError :
                 self.appSceneObserver?.alert = .pairingRecovery

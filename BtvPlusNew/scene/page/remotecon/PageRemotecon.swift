@@ -480,9 +480,7 @@ struct PageRemotecon: PageView {
         }
         
         if self.networkObserver.status != .wifi {
-            self.appSceneObserver.alert = .connectWifi{ retry in
-                if retry { self.connectEarphone() }
-            }
+            self.appSceneObserver.alert = .connectWifi
             return
         }
         let status = self.locationObserver.status

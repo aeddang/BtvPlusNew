@@ -21,9 +21,12 @@ class SearchData:InfinityData{
     private(set) var phrases: [SearchPhrase] = []
     private(set) var isDeleteAble: Bool = false
     private(set) var isSection: Bool = false
-   
+    private(set) var isSectionChange = false
     func setData(keyword:String, isDeleteAble: Bool = false, isSection: Bool = false) -> SearchData {
         self.keyword = keyword
+        if keyword == String.pageText.searchPopularity && isSection {
+            isSectionChange = true
+        }
         self.isDeleteAble = isDeleteAble
         self.isSection = isSection
         return self
@@ -69,8 +72,10 @@ struct SearchList: PageComponent{
             if !self.datas.isEmpty {
                 ForEach(self.datas) { data in
                     SearchItem( data:data , delete:delete)
-                        .modifier(ListRowInset(spacing:
-                            data.keyword == String.pageText.searchPopularity ? Dimen.margin.heavyExtra : 0
+                        .modifier(ListRowInset(
+                            firstIndex: data.isSectionChange ? -1 : 1,
+                            spacing: 0,
+                            marginTop: data.isSectionChange ? Dimen.margin.heavyExtra : 0
                         ))
                         .onTapGesture {
                             if data.isSection {return}

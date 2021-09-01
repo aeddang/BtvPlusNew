@@ -78,6 +78,7 @@ class VideoData:InfinityData{
         return self
     }
     
+    
     func setData(data:ContentItem, cardType:BlockData.CardType = .video, idx:Int = -1) -> VideoData {
         setCardType(cardType)
         if let typeCd = data.svc_typ_cd {
@@ -87,8 +88,7 @@ class VideoData:InfinityData{
         }
         count = data.brcast_tseq_nm
         title = data.title
-        watchLv = data.wat_lvl_cd?.toInt() ?? 0
-        isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
+       
         originImage = data.poster_filename_h
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: ListItem.video.size, isAdult: self.isAdult)
         /*
@@ -99,6 +99,8 @@ class VideoData:InfinityData{
         if self.isClip {
             playTime = data.play_tms_hms?.toHMS()
         } else {
+            watchLv = data.wat_lvl_cd?.toInt() ?? 0
+            isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
             tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         }
         
@@ -117,8 +119,11 @@ class VideoData:InfinityData{
         setCardType(cardType)
         isClip = cardType == .clip
         title = data.title
-        watchLv = data.wat_lvl_cd?.toInt() ?? 0
-        isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
+        if !isClip {
+            watchLv = data.wat_lvl_cd?.toInt() ?? 0
+            isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
+        }
+       
         tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         
         synopsisType = SynopsisType(value: data.synon_typ_cd)
@@ -179,9 +184,24 @@ class VideoData:InfinityData{
             prdPrcId: "",  kidZone:nil, progress:self.progress)
         return self
     }
-    
-    
-    
+
+    func setData(data:CategoryClipItem, searchType:BlockData.SearchType, idx:Int = -1) -> VideoData {
+        setCardType(.clip)
+        isClip = true
+        count = data.no_epsd
+        playTime = data.running_time?.toHMS()
+        title = data.title
+        index = idx
+        epsdId = data.epsd_id
+        tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        originImage = data.thumb
+        image = ImagePath.thumbImagePath(filePath: data.thumb, size: ListItem.video.size, isAdult: self.isAdult)
+        synopsisType = SynopsisType(value: data.synon_typ_cd)
+        synopsisData = .init(
+            srisId: nil, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
+        return self.setNaviLog(searchType: searchType, data: nil)
+    }
     func setData(data:CategorySrisItem, searchType:BlockData.SearchType, idx:Int = -1) -> VideoData {
         setCardType(.video)
         title = data.title
@@ -203,7 +223,7 @@ class VideoData:InfinityData{
     
     func setData(data:CategoryCornerItem, searchType:BlockData.SearchType, idx:Int = -1) -> VideoData {
         setCardType(.video)
-        self.title = data.title
+        title = data.title
         index = idx
         epsdId = data.epsd_id
         watchLv = data.level?.toInt() ?? 0
@@ -211,9 +231,14 @@ class VideoData:InfinityData{
         image = ImagePath.thumbImagePath(filePath: data.thumb, size: ListItem.video.size, isAdult: self.isAdult)
       
         tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        
+        var progressTime:Double? = nil
+        if let startTime = data.start_time?.toInt(){
+            progressTime = Double(startTime)
+        }
         synopsisData = .init(
             srisId: nil, searchType: EuxpNetwork.SearchType.sris.rawValue,
-            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil, progressTime:progressTime)
         
         return self.setNaviLog(searchType: searchType, data: nil)
     }

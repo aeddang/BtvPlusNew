@@ -72,6 +72,7 @@ extension String {
         public static let vod = "vod".loaalized()
         public static let sris = "sris".loaalized()
         public static let corner = "corner".loaalized()
+        public static let clip = "clip".loaalized()
         public static let people = "people".loaalized()
         public static let liveTv = "liveTv".loaalized()
         public static let ticket = "ticket".loaalized()

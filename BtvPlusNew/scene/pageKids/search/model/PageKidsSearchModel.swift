@@ -56,6 +56,16 @@ class PageKidsSearchModel :ObservableObject, PageProtocol {
                 .setNaviLog(pageCloseActionLog: actionData)
             blocks.append(block)
         }
+        if let datas = result.results_clip {
+            var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
+            actionData.menu_name = String.app.clip + datas.count.description
+            actionData.category = "클립"
+            let allPosters:[VideoData] = datas.map{ VideoData(pageType: .kids, useTag:false).setData(data: $0, searchType:.clip).setNaviLog(action: actionData)}
+            let block = BlockData(pageType: .kids)
+                .setData(title: String.app.clip, datas: allPosters, searchType:.clip, keyword: keyword)
+                .setNaviLog(pageCloseActionLog: actionData)
+            blocks.append(block)
+        }
         if let datas = result.results_corner {
             var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
             actionData.config = ""

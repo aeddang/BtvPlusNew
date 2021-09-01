@@ -72,6 +72,7 @@ class BtvPlayerModel:PlayerModel{
     private(set) var openingTime:Double = 0
     var continuousTime:Double = 0
     var continuousProgress:Float? = nil
+    var continuousProgressTime:Double? = nil
     var checkPreroll = true
     var isPrerollPlay = false
     

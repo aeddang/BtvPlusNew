@@ -19,6 +19,12 @@ struct SortTab: PageComponent{
     var count:Int = 0
     var isSortAble:Bool = false
     var info:String? = nil
+    
+    var menuTitle:String? = nil
+    var selectedTitle:String? = nil
+    var selectedMenuIdx:Int = -1
+    var menus:[String]? = nil
+    var menuAction: ((_ menuIdx:Int) -> Void)? = nil
     let action: (_ type:EuxpNetwork.SortType) -> Void
     
     @State var sortType:EuxpNetwork.SortType = Self.finalSortType
@@ -29,13 +35,26 @@ struct SortTab: PageComponent{
     
     var body: some View {
         HStack(alignment:.center, spacing: Dimen.margin.thin){
-            Text(String.app.total + " " + self.count.description + String.app.count)
-                .modifier(MediumTextStyle(
-                    size: Font.size.lightExtra,
-                    color: Color.app.greyMedium)
-                )
-            
-            Spacer()
+            VStack(alignment:.leading, spacing:0){
+                Spacer().modifier(MatchHorizontal(height: 0))
+                HStack(alignment:.center, spacing: Dimen.margin.thin){
+                    if let menus = self.menus, let title = self.selectedTitle {
+                        DropDownButton(
+                            title: title,
+                            openTitle: self.menuTitle,
+                            selectedIndex: self.selectedMenuIdx,
+                            menus: menus
+                        ){ idx in
+                                self.menuAction?(idx)
+                        }
+                    }
+                    Text(String.app.total + " " + self.count.description + String.app.count)
+                        .modifier(MediumTextStyle(
+                            size: Font.size.lightExtra,
+                            color: Color.app.greyMedium)
+                        )
+                }
+            }
             if let info = self.info {
                 InfoAlert(text: info)
             }

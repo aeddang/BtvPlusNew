@@ -96,6 +96,12 @@ class TagData{
         }
         return self
     }
+    func setData(data:CategoryClipItem, isAdult:Bool) -> TagData {
+        self.isAdult = isAdult
+        self.isLock = !SystemEnvironment.isImageLock ? false : isAdult
+        return self
+    }
+   
     func setData(data:SeriesInfoItem, isAdult:Bool) -> TagData {
         self.isAdult = isAdult
         self.isLock = !SystemEnvironment.isImageLock ? false : isAdult
@@ -110,10 +116,11 @@ class TagData{
         self.isAdult = isAdult
         self.isLock = !SystemEnvironment.isImageLock ? false : isAdult
         self.restrictAgeIcon = Asset.age.getListIcon(age: data.level)
+        /*
         if let prc = data.price?.toInt() {
             if prc == 0 { isFree = true }
             price = prc.formatted(style: .decimal) + String.app.cash
-        }
+        }*/
         return self
     }
     

@@ -29,7 +29,7 @@
  * CBS 값 암호화
  */
 + (NSString *)getCBSEncrypted:(NSString *)_input uuid:(NSString *)_uuid;
-
++ (NSString *)getCBSBPointEncrypted:(NSString *)_input key:(NSString *)_key;
 /**
  * HASH ID 반환
  */

@@ -62,6 +62,10 @@
 		313F8D16269C60700055F775 /* resource_fairplay.json in Resources */ = {isa = PBXBuildFile; fileRef = 313F8D15269C60700055F775 /* resource_fairplay.json */; };
 		314C7ECB25ABC32200C489FC /* Hello.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314C7ECA25ABC32200C489FC /* Hello.swift */; };
 		314C7EE125AC13C600C489FC /* HostDeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */; };
+		314D0E2B26DF973600BDCD5B /* PageDropBoxList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D0E2A26DF973600BDCD5B /* PageDropBoxList.swift */; };
+		314D0E2D26DF99A900BDCD5B /* DropDownButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D0E2C26DF99A900BDCD5B /* DropDownButton.swift */; };
+		314D0E3126DF9D0300BDCD5B /* PickerList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D0E3026DF9D0300BDCD5B /* PickerList.swift */; };
+		314D0E3326DFA0EE00BDCD5B /* PagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D0E3226DFA0EE00BDCD5B /* PagePicker.swift */; };
 		314D588225B64EB6007BCA34 /* PairingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D588125B64EB6007BCA34 /* PairingView.swift */; };
 		314D588725B64ECD007BCA34 /* DisconnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D588625B64ECD007BCA34 /* DisconnectView.swift */; };
 		314D588C25B66868007BCA34 /* ValueInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D588B25B66868007BCA34 /* ValueInfo.swift */; };
@@ -757,6 +761,10 @@
 		313F8D15269C60700055F775 /* resource_fairplay.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = resource_fairplay.json; sourceTree = "<group>"; };
 		314C7ECA25ABC32200C489FC /* Hello.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hello.swift; sourceTree = "<group>"; };
 		314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostDeviceInfo.swift; sourceTree = "<group>"; };
+		314D0E2A26DF973600BDCD5B /* PageDropBoxList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageDropBoxList.swift; sourceTree = "<group>"; };
+		314D0E2C26DF99A900BDCD5B /* DropDownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownButton.swift; sourceTree = "<group>"; };
+		314D0E3026DF9D0300BDCD5B /* PickerList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerList.swift; sourceTree = "<group>"; };
+		314D0E3226DFA0EE00BDCD5B /* PagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePicker.swift; sourceTree = "<group>"; };
 		314D588125B64EB6007BCA34 /* PairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingView.swift; sourceTree = "<group>"; };
 		314D588625B64ECD007BCA34 /* DisconnectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisconnectView.swift; sourceTree = "<group>"; };
 		314D588B25B66868007BCA34 /* ValueInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueInfo.swift; sourceTree = "<group>"; };
@@ -2259,6 +2267,7 @@
 			children = (
 				31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */,
 				318FBFF625E4882700ABC241 /* PageCategoryList.swift */,
+				314D0E2A26DF973600BDCD5B /* PageDropBoxList.swift */,
 				318B537B25F05BAB0052E4E0 /* PagePreviewList.swift */,
 				3167197A25FF4159005AC3D2 /* PageWatchedList.swift */,
 				31671A042600930D005AC3D2 /* PagePerson.swift */,
@@ -2993,6 +3002,7 @@
 				3177AB30263B6F550054BFA4 /* PagePrivacyAndAgree.swift */,
 				3183B37C26168F03004F5C0D /* PageAdultCertification.swift */,
 				318C36B3265F0805009B7EC3 /* PageCertification.swift */,
+				314D0E3226DFA0EE00BDCD5B /* PagePicker.swift */,
 			);
 			path = popups;
 			sourceTree = "<group>";
@@ -3047,7 +3057,6 @@
 		31EA0D8E26D705CA007BECAB /* push */ = {
 			isa = PBXGroup;
 			children = (
-				315A8FBE25AD10BA00498B03 /* util */,
 				31EA0D8F26D705DD007BECAB /* model */,
 				31EA0D9026D705E8007BECAB /* Push.swift */,
 			);
@@ -3136,6 +3145,7 @@
 				317C97432623EEF7008F267D /* CouponList.swift */,
 				318F7B402625444C00774B17 /* CardList.swift */,
 				31C4BCCD262D745B00BB2167 /* AlramList.swift */,
+				314D0E3026DF9D0300BDCD5B /* PickerList.swift */,
 			);
 			path = list;
 			sourceTree = "<group>";
@@ -3723,6 +3733,7 @@
 				31863E0D265B4ED40086C40D /* ToolTipBottom.swift */,
 				318B537525F050CC0052E4E0 /* AlramButton.swift */,
 				316719A626008680005AC3D2 /* Alerts.swift */,
+				314D0E2C26DF99A900BDCD5B /* DropDownButton.swift */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -3740,6 +3751,7 @@
 		D56C6B21257DACD800CF9AB8 /* api */ = {
 			isa = PBXGroup;
 			children = (
+				315A8FBE25AD10BA00498B03 /* util */,
 				D56C6B25257DACD800CF9AB8 /* rest  */,
 				D56C6B22257DACD800CF9AB8 /* ApiManager.swift */,
 				D56C6B23257DACD800CF9AB8 /* Api.swift */,
@@ -4326,6 +4338,7 @@
 				31956F55269D1DED0044CF1D /* KidsCategoryItem.swift in Sources */,
 				31C4D2982692A505000C7E83 /* KidsReport.swift in Sources */,
 				D5688929259C4C0800F2F67A /* MoreInfoButton.swift in Sources */,
+				314D0E3326DFA0EE00BDCD5B /* PagePicker.swift in Sources */,
 				31E50C6C261AA05400D0762C /* PageWatchHabit.swift in Sources */,
 				316A70A12670804A00A93B83 /* ListStyleKids.swift in Sources */,
 				D56C699E257DA09E00CF9AB8 /* PageContentController.swift in Sources */,
@@ -4350,6 +4363,7 @@
 				3174067C25F763BD00201850 /* PageWebview.swift in Sources */,
 				310F6FC725C16916005718B0 /* Play.swift in Sources */,
 				318F7B692625820900774B17 /* TvPoint.swift in Sources */,
+				314D0E2D26DF99A900BDCD5B /* DropDownButton.swift in Sources */,
 				315544CF25B83F8C00086510 /* MetvModel.swift in Sources */,
 				317C9754262426CD008F267D /* PageCouponList.swift in Sources */,
 				3190CB11268AC34200ACB465 /* KidProfileListItem.swift in Sources */,
@@ -4397,6 +4411,7 @@
 				31A3E8782605F3F800BF044B /* SearchList.swift in Sources */,
 				318AA03B265DD99200C089EC /* SetupApp.swift in Sources */,
 				31C4BCC0262D71BA00BB2167 /* KeywordCoreData.swift in Sources */,
+				314D0E2B26DF973600BDCD5B /* PageDropBoxList.swift in Sources */,
 				317C974F26241B76008F267D /* Coupons.swift in Sources */,
 				319BAFAE26043DCA0007273F /* Voice.swift in Sources */,
 				31C4BCCE262D745B00BB2167 /* AlramList.swift in Sources */,
@@ -4584,6 +4599,7 @@
 				D56C6A26257DA0C600CF9AB8 /* dimen.swift in Sources */,
 				31A49FF82627D1620065E6C6 /* PagePairingGuide.swift in Sources */,
 				314D738A25B4F8B100907118 /* PageSynopsis.swift in Sources */,
+				314D0E3126DF9D0300BDCD5B /* PickerList.swift in Sources */,
 				316955AB25DF9D1500848507 /* Pss.swift in Sources */,
 				319CF66B26967EAC00159575 /* ResultReadingReportView.swift in Sources */,
 				D56C69AB257DA09E00CF9AB8 /* Resource.swift in Sources */,
@@ -5007,7 +5023,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7439;
+				CURRENT_PROJECT_VERSION = 7441;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
@@ -5090,7 +5106,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7439;
+				CURRENT_PROJECT_VERSION = 7441;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;

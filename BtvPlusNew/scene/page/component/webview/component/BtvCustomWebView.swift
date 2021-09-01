@@ -60,6 +60,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         if self.viewModel.status != .update { return }
         switch self.viewModel.request{
         case .evaluateJavaScript : break
+        case .evaluateJavaScriptMethod : break
         default :
             if uiView.isLoading {
                 self.viewModel.status = .error

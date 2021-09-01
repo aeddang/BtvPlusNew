@@ -317,6 +317,11 @@
     return urlEncoded;
 }
 
++ (NSString *)getCBSBPointEncrypted:(NSString *)_input key:(NSString *)_key
+{
+    return [CryptoUtil cbsEncodeWithPlain:_input keyStr:_key];
+}
+
 + (NSString *)getSHA256:(NSString *)_input
 {
     NSData *data = [self SHAx:_input];

@@ -71,6 +71,7 @@ extension PageID{
     static let recommand:PageID = "recommand"
     static let recommandReceive:PageID = "recommandReceive"
     static let snsShare:PageID = "snsShare"
+    static let picker:PageID = "picker"
 }
 
 struct PageProvider {
@@ -116,7 +117,7 @@ struct PageProvider {
              .purchase , .webview, .webviewList, .schedule, .modifyProile,
              .adultCertification, .userCertification, .terminateStb,
              .watchHabit, .myPurchaseTicketList, .remotecon, .playerTest,
-             .myRecommand, .myRegistCard:
+             .myRecommand, .myRegistCard, .picker:
             return  .vertical
         case .fullPlayer, .synopsisPlayer :
             return .none
@@ -222,6 +223,7 @@ struct PageFactory{
         case .recommand : return PageRecommand()
         case .recommandReceive : return PageRecommandReceive()
         case .snsShare : return PageSnsShare()
+        case .picker : return PagePicker()
         default : return PageTest()
         }
     }

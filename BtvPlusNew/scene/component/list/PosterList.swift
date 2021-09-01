@@ -27,6 +27,7 @@ class PosterData:InfinityData{
     private(set) var synopsisData:SynopsisData? = nil
     private(set) var pageType:PageType = .btv
     private(set) var useTag:Bool = true
+    private(set) var isPeople:Bool = false
     private(set) var actionLog:MenuNaviActionBodyItem? = nil
     private(set) var contentLog:MenuNaviContentsBodyItem? = nil
     var actionLogKids:MenuNaviActionBodyItem? = nil
@@ -203,6 +204,7 @@ class PosterData:InfinityData{
         title = data.title
         index = idx
         prsId = data.prs_id
+        isPeople = true
         return self.setNaviLog(searchType: searchType)
     }
     
@@ -626,13 +628,29 @@ struct PosterItem: PageView {
     var isSelected:Bool = false
     @State var isBookmark:Bool? = nil
     var body: some View {
-        ZStack(alignment: .topLeading){
-            ImageView(url: self.data.image, contentMode: .fit, noImg: self.data.type.noImg)
-                .modifier(MatchParent())
-            Image(Asset.shape.listGradient)
-                .resizable()
-                .scaledToFill()
-                .modifier(MatchParent())
+        ZStack(alignment: self.data.isPeople ? .center : .topLeading){
+            
+            if self.data.isPeople {
+                VStack(alignment: .center, spacing: Dimen.margin.thin){
+                    Image(Asset.icon.person)
+                        .renderingMode(.original)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width:Dimen.icon.light, height: Dimen.icon.light)
+                    if let title = self.data.title {
+                        Text(title)
+                            .modifier(MediumTextStyle(size: Font.size.tiny, color:Color.white))
+                            .opacity(0.3)
+                    }
+                }
+            } else {
+                ImageView(url: self.data.image, contentMode: .fit, noImg: self.data.type.noImg)
+                    .modifier(MatchParent())
+                Image(Asset.shape.listGradient)
+                    .resizable()
+                    .scaledToFill()
+                    .modifier(MatchParent())
+            }
             if self.data.useTag, let tag = self.data.tagData {
                 if tag.pageType == .btv {
                     Tag(data: tag, isBig: self.data.type.isBigTag).modifier(MatchParent())
@@ -655,7 +673,7 @@ struct PosterItem: PageView {
         .frame(
             width: self.data.type.size.width,
             height: self.data.type.size.height)
-        .background(self.data.type.bgColor)
+        .background(self.data.isPeople ? Color.app.black : self.data.type.bgColor)
         .clipShape(RoundedRectangle(cornerRadius: self.data.type.radius))
         .overlay(
             RoundedRectangle(cornerRadius: self.data.type.radius)

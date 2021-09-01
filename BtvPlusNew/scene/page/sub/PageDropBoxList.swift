@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 
-struct PageCategoryList: PageView {
+struct PageDropBoxList: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
@@ -30,7 +30,7 @@ struct PageCategoryList: PageView {
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
-                pageObservable: self.pageObservable, 
+                pageObservable: self.pageObservable,
                 viewModel:self.pageDragingModel,
                 axis:.horizontal
             ) {
@@ -51,7 +51,7 @@ struct PageCategoryList: PageView {
                         infinityScrollModel:self.infinityScrollModel,
                         viewModel:self.viewModel,
                         useTracking:true,
-                        marginBottom:self.marginBottom 
+                        marginBottom:self.marginBottom
                     )
                     .background(Color.brand.bg)
                     
@@ -85,12 +85,7 @@ struct PageCategoryList: PageView {
                     self.menuId = obj.getParamValue(key: .id) as? String
                     
                 }
-                
-                if let datas = obj.getParamValue(key: .datas) as? [BlockData] {
-                    self.viewModel.setupDropDown(datas: datas)
-                }
-                
-                self.title = obj.getParamValue(key: .title) as? String ?? self.title 
+                self.title = obj.getParamValue(key: .title) as? String ?? self.title
                 self.listType = obj.getParamValue(key: .type) as? CateBlock.ListType ?? .poster
                 self.cardType = obj.getParamValue(key: .subType) as? BlockData.CardType
                 if let action = self.blockData?.pageShowActionLog {
@@ -107,19 +102,4 @@ struct PageCategoryList: PageView {
 }
 
 
-#if DEBUG
-struct PageCate_Previews: PreviewProvider {
-    static var previews: some View {
-        Form{
-            PageCategoryList().contentBody
-                .environmentObject(PagePresenter())
-                .environmentObject(PageSceneObserver())
-                .environmentObject(Repository())
-                .environmentObject(DataProvider())
-                .environmentObject(AppSceneObserver())
-                .frame(width: 375, height: 640, alignment: .center)
-        }
-    }
-}
-#endif
 

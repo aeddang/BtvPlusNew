@@ -29,9 +29,20 @@ class PageSearchModel :ObservableObject, PageProtocol {
         let find = self.localKeywords.first(where: {$0 == keyword})
         if find == nil {
             self.localKeywords.append(keyword)
-            self.updateSearchKeyword()
-            DispatchQueue.global(qos: .background).async(){
-                self.keywordCoreData.addKeyword(keyword)
+            if self.localKeywords.count > 9 {
+                self.removeSearchKeyword(keyword: self.localKeywords.first!)
+                DispatchQueue.main.asyncAfter(deadline: .now()+0.1){
+                    self.updateSearchKeyword()
+                    DispatchQueue.global(qos: .background).async(){
+                        self.keywordCoreData.addKeyword(keyword)
+                    }
+                }
+            }
+            else {
+                self.updateSearchKeyword()
+                DispatchQueue.global(qos: .background).async(){
+                    self.keywordCoreData.addKeyword(keyword)
+                }
             }
         }
     }
@@ -114,9 +125,19 @@ class PageSearchModel :ObservableObject, PageProtocol {
                 .setNaviLog(pageCloseActionLog: actionData)
             blocks.append(block)
         }
+        if let datas = result.results_clip {
+            var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
+            actionData.menu_name = String.app.clip + datas.count.description
+            actionData.category = "클립"
+            let allPosters:[VideoData] = datas.map{ VideoData(useTag:false).setData(data: $0, searchType:.clip).setNaviLog(action: actionData)}
+            let block = BlockData()
+                .setData(title: String.app.clip, datas: allPosters, searchType:.clip, keyword: keyword)
+                .setNaviLog(pageCloseActionLog: actionData)
+            blocks.append(block)
+        }
         if let datas = result.results_corner {
             var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
-            actionData.config = ""
+            actionData.config = "코너"
             actionData.menu_name = String.app.corner + datas.count.description
             let allPosters:[VideoData] = datas.map{ VideoData().setData(data: $0, searchType:.demand).setNaviLog(action: actionData)}
             let block = BlockData()

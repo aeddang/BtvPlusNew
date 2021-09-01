@@ -14,9 +14,12 @@ class TextTabData:InfinityData{
     private(set) var blocks:[BlockItem]? = nil
     private(set) var listType:CateBlock.ListType? = nil
     private(set) var isAdult:Bool = false
+    private(set) var isDropBox:Bool = false
     func setData(data:BlockItem ,idx:Int) -> TextTabData {
         title = data.menu_nm ?? ""
         menuId = data.menu_id
+        
+        isDropBox = data.blk_typ_cd == "20" && data.btm_bnr_blk_exps_cd == "06"
         
         let blockData = BlockData().setData(data)
         switch blockData.cardType {

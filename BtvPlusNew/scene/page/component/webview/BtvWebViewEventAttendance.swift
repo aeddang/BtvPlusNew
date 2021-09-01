@@ -17,13 +17,14 @@ extension BtvWebView{
                 self.appSceneObserver.alert = .needPairing()
                 return
             }
+            
             self.dataProvider.requestData(
                 q: .init(
                     id:self.tag,
                     type:.getAttendance(pcid: self.repository.namedStorage?.getPcid() ?? "",callback:callback)
                 )
             )
-            break
+            
             
         case WebviewMethod.bpn_reqAttendance.rawValue:
             if self.pairing.status != .pairing {
@@ -45,7 +46,7 @@ extension BtvWebView{
                     type: .requestBPointIssuance(pointPolicyNum: pointPolicyNum, pointAmount: 0, callback:callback)
                 )
             )
-            break
+         
                    
         default : break
         }
@@ -69,6 +70,7 @@ extension BtvWebView{
             dic["pcid"] = pcid
             dic["stb_id"] = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
             dic["dvc_id"] = SystemEnvironment.deviceId
+            self.eventData = dic
             self.viewModel.request = .evaluateJavaScriptMethod( callback, dic)
             
         case .requestBPointIssuance( _ , _ , let callback) :
@@ -82,7 +84,11 @@ extension BtvWebView{
                     )
                 )
             } else {
-                self.errorCallbackEventAttendance(callback)
+                //self.errorCallbackEventAttendance(callback)
+                var dic:[String : Any] = [:]
+                dic["result"] = result.code ?? ""
+                dic["reason"] = result.msg ?? ""
+                self.viewModel.request = .evaluateJavaScriptMethod( callback, dic)
             }
             
         case .postAttendance( _ , let callback) :

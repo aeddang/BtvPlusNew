@@ -20,6 +20,7 @@ struct SearchCategoryResult : Decodable {
     private(set) var results_vod_tseq: [CategorySrisItem]? = nil
     private(set) var results_corner: [CategoryCornerItem]? = nil
     private(set) var results_people: [CategoryPeopleItem]? = nil
+    private(set) var results_clip: [CategoryClipItem]? = nil
     private(set) var results_tv: [CategoryTvItem]? = nil
 }
 
@@ -81,6 +82,21 @@ struct CategoryCornerItem : Decodable {
     private(set) var ocr_title: String? = nil
     private(set) var section_flag: String? = nil
     private(set) var start_time: String? = nil
+    private(set) var thumb: String? = nil
+    private(set) var title: String? = nil
+}
+
+struct CategoryClipItem : Decodable {
+    private(set) var synon_typ_cd: String? = nil
+    private(set) var code: String? = nil
+    private(set) var epsd_id: String? = nil
+    private(set) var epsd_rslu_id: String? = nil
+    private(set) var level: String? = nil
+    private(set) var hd_flag: String? = nil
+    private(set) var no_epsd: String? = nil
+    private(set) var running_time: String? = nil
+    private(set) var sris_cmpt_yn: String? = nil
+    private(set) var title_sris: String? = nil
     private(set) var thumb: String? = nil
     private(set) var title: String? = nil
 }

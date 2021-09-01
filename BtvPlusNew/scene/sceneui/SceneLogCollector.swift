@@ -11,6 +11,7 @@ import SwiftUI
 
 struct SceneLogCollector: PageComponent {
     @EnvironmentObject var repository:Repository
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @State var isCollection = false
     var body: some View {
         VStack(alignment: .trailing){
@@ -56,6 +57,7 @@ struct SceneLogCollector: PageComponent {
     }
    
     func share(){
+        self.appSceneObserver.alert = .alert(nil,LogManager.traceLog)
         self.repository.shareManager.share(
             Shareable(
                 pageID: .home,

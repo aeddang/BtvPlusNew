@@ -23,7 +23,7 @@ enum WebViewEvent {
 
 open class WebViewModel: ComponentObservable {
     @Published var path:String = ""
-    @Published var request:WebViewRequest? = nil{ willSet{ self.status = .update } }
+    @Published var request:WebViewRequest? = nil{willSet{ self.status = .update }}
     @Published var event:WebViewEvent? = nil{didSet{ if event != nil { event = nil} }}
     @Published var error:WebViewError? = nil
     @Published var screenHeight:CGFloat = 0

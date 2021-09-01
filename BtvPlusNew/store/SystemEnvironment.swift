@@ -20,6 +20,7 @@ struct SystemEnvironment {
     static var serverConfig: [String:String] = [String:String]()
     static var isReleaseMode:Bool? = nil
     static var isEvaluation = false
+    static var isLaunchTrace = false
     static var needUpdate = false
     static var isTablet = AppUtil.isPad()
     static var isPurchaseAuth = false

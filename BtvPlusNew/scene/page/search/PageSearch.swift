@@ -106,7 +106,13 @@ struct PageSearch: PageView {
                                     datas:self.datas,
                                     delete: { data in
                                         if data.isSection {
-                                            self.viewModel.removeAllSearchKeyword()
+                                            self.appSceneObserver.alert =
+                                                .confirm(nil, String.pageText.searchDeleteAllConfirm, confirmText: String.button.remove) { isOk in
+                                                if isOk {
+                                                    self.viewModel.removeAllSearchKeyword()
+                                                }
+                                            }
+                                            
                                         } else {
                                             self.viewModel.removeSearchKeyword(keyword: data.keyword)
                                         }

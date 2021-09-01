@@ -68,9 +68,7 @@ struct SelectPairingType: View {
         case .wifi:
             self.sendLog(menuName: "wifi연결")
             if self.networkObserver.status != .wifi {
-                self.appSceneObserver.alert = .connectWifi{ retry in
-                    if retry { self.requestPairing(type: .wifi) }
-                }
+                self.appSceneObserver.alert = .connectWifi
                 return
             }
             self.pagePresenter.openPopup(

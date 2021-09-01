@@ -17,7 +17,8 @@ class CateBlockModel: PageDataProviderModel {
     private(set) var key:String? = nil
     private(set) var menuId:String? = nil
     private(set) var data:BlockData? = nil
-   
+    private(set) var datas:[BlockData]? = nil
+    private(set) var selectIdx:Int = -1
     private(set) var isAdult:Bool = false
     
     @Published private(set) var isUpdate = false {
@@ -28,9 +29,14 @@ class CateBlockModel: PageDataProviderModel {
         self.type = pageType
     }
     
-    func update(data:BlockData, listType:CateBlock.ListType,
+    func setupDropDown(datas:[BlockData]) {
+        self.datas = datas
+    }
+    
+    func update(data:BlockData, listType:CateBlock.ListType, idx:Int = -1,
                 cardType:BlockData.CardType? = nil, isAdult:Bool = false, key:String? = nil) {
         self.data = data
+        self.selectIdx = idx
         self.listType = listType
         self.cardType = cardType
         self.key = key
@@ -98,7 +104,10 @@ struct CateBlock: PageComponent{
     
     @State var reloadDegree:Double = 0
     @State var needAdult:Bool = false
+    @State var menus:[String]? = nil
     
+    @State var selectedMenuIdx:Int = -1
+    @State var selectedTitle:String? = nil
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -123,8 +132,13 @@ struct CateBlock: PageComponent{
                                 totalCount: self.totalCount,
                                 isSortAble: self.isSortAble,
                                 info: self.viewModel.info,
+                                menuTitle: nil,
+                                selectedTitle: self.selectedTitle,
+                                selectedMenuIdx: self.selectedMenuIdx,
+                                menus: self.menus,
                                 marginTop: self.marginTop,
                                 marginHorizontal: self.marginHorizontal,
+                                menuAction: self.menuAction,
                                 action: self.sortAction)
                             : nil,
                         headerSize: self.headerSize + self.spacing,
@@ -240,6 +254,7 @@ struct CateBlock: PageComponent{
         .onReceive(self.viewModel.$isUpdate){ update in
             if update {
                 self.sortType = self.viewModel.type == .btv ? SortTab.finalSortType : SortTabKids.finalSortType
+                self.setupMenu()
                 self.reload()
             }
         }
@@ -271,18 +286,27 @@ struct CateBlock: PageComponent{
         var totalCount:Int
         var isSortAble:Bool
         var info:String?
+        var menuTitle:String? = nil
+        var selectedTitle:String? = nil
+        var selectedMenuIdx:Int = -1
+        var menus:[String]? = nil
         var marginTop : CGFloat
         var marginHorizontal:CGFloat
+        let menuAction: (_ menuIdx:Int) -> Void
         let action: (_ type:EuxpNetwork.SortType) -> Void
         var body :some View {
             if pageType == .btv {
                 SortTab(
                     count:self.totalCount,
                     isSortAble: self.isSortAble,
-                    info: info
-                    ){ sort in
-                        self.action(sort)
-                    }
+                    info: info,
+                    menuTitle:menuTitle,
+                    selectedTitle:selectedTitle,
+                    selectedMenuIdx:selectedMenuIdx,
+                    menus:menus,
+                    menuAction: self.menuAction, 
+                    action:self.action
+                )
                 .padding(.horizontal, marginHorizontal)
             } else {
                 SortTabKids(
@@ -296,11 +320,30 @@ struct CateBlock: PageComponent{
         }
     }
     
+    func setupMenu() {
+        if let datas = self.viewModel.datas {
+            self.selectedMenuIdx = self.viewModel.selectIdx
+            let menus:[String] = datas.map{$0.name}
+            if self.selectedMenuIdx >= 0 && self.selectedMenuIdx < menus.count {
+                self.selectedTitle = menus[self.selectedMenuIdx]
+                self.menus = menus
+            }
+        }
+    }
+    func menuAction(_ idx:Int) {
+        guard let menus = self.menus else { return }
+        if idx >= 0 && idx < menus.count {
+            guard let select = self.viewModel.datas?[idx] else { return }
+            self.viewModel
+                .update(data:select, listType: select.uiType.listType ?? .poster, idx: idx)
+        }
+    }
     func sortAction(_ sort:EuxpNetwork.SortType) {
         self.sortType = sort
         self.reload()
     }
     
+    @State var title:String? = nil  // 현제 사용안함
     @State var sortType:EuxpNetwork.SortType = SortTab.finalSortType
     @State var totalCount:Int = 0
     @State var isError:Bool = false
@@ -366,6 +409,7 @@ struct CateBlock: PageComponent{
         default :
             self.totalCount = datas.count
             self.isSortAble = false
+            self.isPaging = false
             withAnimation{self.useTop = true}
             return datas
         }
@@ -399,7 +443,7 @@ struct CateBlock: PageComponent{
             self.setTvSets(loadedDatas: datas)
             return
         }
-        
+       
         if let api = self.viewModel.data?.getRequestApi(
             apiId:self.tag,
             pairing:self.pairing.status,

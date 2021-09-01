@@ -119,11 +119,11 @@ struct PageConfirmNumber: PageView {
         }
         .onReceive(dataProvider.$result) { res in
             guard let res = res else { return }
-            if res.id != self.tag { return }
+            if !res.id.hasPrefix(self.tag) { return }
             switch res.type {
             case .confirmPassword :
                 self.confirmPasswordRespond(res)
-            case .postCoupon, .getStbInfo, .certificationCoupon :
+            case .postCoupon, .getStbInfo, .certificationCoupon, .postBPoint :
                 self.resigistCouponRespond(res)
             case .updateUser (let user):
                 self.modifyNickNameRespond(res, updateData:user)
@@ -138,7 +138,7 @@ struct PageConfirmNumber: PageView {
             guard let err = err else { return }
             if err.id != self.tag { return }
             switch err.type {
-            case .confirmPassword, .postCoupon, .updateUser, .updateOkCashPoint:
+            case .confirmPassword, .postCoupon, .updateUser, .postBPoint, .updateOkCashPoint, .certificationCoupon, .getStbInfo:
                 self.msg = String.alert.apiErrorClient
             default: break
             }

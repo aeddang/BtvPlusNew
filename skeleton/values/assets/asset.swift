@@ -63,6 +63,7 @@ extension Asset{
         public static let moreSmall = "icArrowRightWhite"
         public static let close = "icTopClose"
         public static let closeBlack = "icTopPopupCloseBT"
+        public static let closeCircle = "icCategoryClose"
         public static let setting = "icTopSetting"
         
         public static let sortList =  "icSynopSorting"
@@ -127,6 +128,7 @@ extension Asset{
         public static let info = "icSynopInfo"
         public static let thumbPlay = "icThumPlay"
         public static let play = "icPlayerPlayS"
+        public static let person = "ic-search-person-s"
         
         public static let cateEvent = "icCategoryBtnEvent"
         public static let cateTip = "icCategoryBtnTip"

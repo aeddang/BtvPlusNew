@@ -14,7 +14,7 @@ enum SceneAlert:Equatable {
     case confirm(String?, String? = nil , String? = nil, confirmText:String? = nil, (Bool) -> Void),
          alert(String?, String? = nil, String? = nil, (() -> Void)? = nil),
          recivedApns(AlramData?), apiError(ApiResultError),
-         connectWifi((Bool) -> Void) , notFoundDevice((Bool) -> Void), requestLocation((Bool) -> Void),
+         connectWifi , notFoundDevice((Bool) -> Void), requestLocation((Bool) -> Void),
          
          limitedDevice(PairingInfo?), pairingError(NpsCommonHeader?), pairingUpdated(PairingUpdateData),
          pairingRecovery, needPairing(String? = nil, move:PageObject? = nil), pairingCheckFail,
@@ -85,7 +85,7 @@ struct SceneAlertController: PageComponent{
                 if let handler = completionHandler { self.selectedAlert(idx, completionHandler:handler) }
             case .confirm(_, _, _, _, let completionHandler) : self.selectedConfirm(idx, completionHandler:completionHandler)
             case .apiError(let data): self.selectedApi(idx, data:data)
-            case .connectWifi(let completionHandler): self.selectedConnectWifi(idx, completionHandler:completionHandler)
+            case .connectWifi: self.selectedConnectWifi(idx)
             case .notFoundDevice(let completionHandler) : self.selectedNotFoundDevice(idx, completionHandler:completionHandler)
             case .recivedApns(let data): self.selectedRecivedApns(idx, alram:data)
             case .requestLocation(let completionHandler): self.selectedRequestLocation(idx, completionHandler:completionHandler)
@@ -302,12 +302,11 @@ struct SceneAlertController: PageComponent{
         self.text = String.alert.connectWifi
         self.subText = String.alert.connectWifiSub
         self.buttons = [
-            AlertBtnData(title: String.app.retry, index: 0),
             AlertBtnData(title: String.app.confirm, index: 1)
         ]
     }
-    func selectedConnectWifi(_ idx:Int, completionHandler: @escaping (Bool) -> Void){
-        completionHandler(idx == 0)
+    func selectedConnectWifi(_ idx:Int){
+       
     }
     
     func setupNotFoundDevice() {

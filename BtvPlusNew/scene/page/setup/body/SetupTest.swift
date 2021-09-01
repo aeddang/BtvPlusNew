@@ -18,7 +18,6 @@ struct SetupTest: PageView {
                     isOn: .constant(true),
                     title: "실서버",
                     more:{
-                        //self.isInitate = false
                         self.repository.reset(isReleaseMode: true, isEvaluation: false)
                     }
                 )
@@ -27,7 +26,6 @@ struct SetupTest: PageView {
                     isOn: .constant(true),
                     title: "스테이지",
                     more:{
-                        //self.isInitate = false
                         self.repository.reset(isReleaseMode: false, isEvaluation: false)
                     }
                 )
@@ -36,7 +34,6 @@ struct SetupTest: PageView {
                     isOn: .constant(true),
                     title: "DRM 플레이어",
                     more:{
-                        //self.isInitate = false
                         self.pagePresenter.openPopup(PageProvider.getPageObject(.playerTest))
                     }
                 )

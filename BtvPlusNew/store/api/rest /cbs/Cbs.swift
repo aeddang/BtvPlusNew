@@ -10,8 +10,8 @@ struct CbsNetwork : Network{
     var enviroment: NetworkEnvironment = ApiPath.getRestApiPath(.CBS)
     func onRequestIntercepter(request: URLRequest) -> URLRequest {
         var authorizationRequest = request
-        authorizationRequest.addValue( "application/x-www-form-urlencoded; charset=UTF-8",forHTTPHeaderField: "Content-Type")
-        authorizationRequest.addValue( "application/json;charset=utf-8",forHTTPHeaderField: "Accept")
+        authorizationRequest.setValue( "application/x-www-form-urlencoded; charset=UTF-8",forHTTPHeaderField: "Content-Type")
+        authorizationRequest.setValue( "application/json;charset=utf-8",forHTTPHeaderField: "Accept")
         
         return authorizationRequest
     }
@@ -21,8 +21,12 @@ extension CbsNetwork{
     static let KEY_STBID_SVCNUM = "BtvcmoneyissueWithSKBroadband120"
     static let KEY_DATA = "BtvcmoneyissueWithSKBroadband123"
     
-    static func getClientTime()->String {
+    static func getClientTimeHeader()->String {
         return Date().toDateFormatter(dateFormat: "YYYY-MM-DD hh:mm:ss", local: "en_US_POSIX")
+    }
+    
+    static func getClientTime()->String {
+        return Date().toDateFormatter(dateFormat: "yyyyMMddHHmmss", local: "en_US_POSIX")
     }
     
     static func getCertificationErrorMeassage(_ result:String?, reason:String?)->String {
@@ -55,19 +59,24 @@ class Cbs: Rest{
        
         var headers = [String:String]()
         headers["UUID"] = uuid
-        headers["User-Service-Num"] = stbInfo.svc_num
+        headers["User-Service-Num"] = stbInfo.svc_num?.isEmpty == false ? ApiUtil.getCBSEncrypted(stbInfo.svc_num, uuid: uuid) : ""
         headers["Client-ID"] = "Mobile-POC"
         headers["Client-Name"] = "pocwrk1stg"
-        headers["Client-Time"] = CbsNetwork.getClientTime()
+        headers["Client-Time"] = CbsNetwork.getClientTimeHeader()
         headers["API-ID"] = "CBS-POC-011"
+        
+        let qurryString =
+            "noConfirm=" + ApiUtil.string(byUrlEncoding:ApiUtil.getCBSEncrypted(couponNum, uuid: uuid)) +
+            "&fgCd=" + ApiUtil.string(byUrlEncoding:ApiUtil.getCBSEncrypted("10", uuid: uuid)) +
+            "&reqId=" + ApiUtil.string(byUrlEncoding:ApiUtil.getCBSEncrypted("MobileBtv", uuid: uuid))
         
         
         var params = [String:Any]()
-        params["noConfirm"] = ApiUtil.getCBSEncrypted(couponNum, uuid: uuid)
-        params["fgCd"] =  ApiUtil.getCBSEncrypted("10", uuid: uuid)
-        params["reqId"] = ApiUtil.getCBSEncrypted("MobileBtv", uuid: uuid)
-       // params["method"] = "post"
-        fetch(route: CbsCertificationCoupon(headers:headers, body: params), completion: completion, error:error)
+        params["noConfirm"] = ApiUtil.string(byUrlEncoding:ApiUtil.getCBSEncrypted(couponNum, uuid: uuid))
+        params["fgCd"] =  ApiUtil.string(byUrlEncoding:ApiUtil.getCBSEncrypted("10", uuid: uuid))
+        params["reqId"] = ApiUtil.string(byUrlEncoding:ApiUtil.getCBSEncrypted("MobileBtv", uuid: uuid))
+        
+        fetch(route: CbsCertificationCoupon(headers:headers, bodys: qurryString ), completion: completion, error:error)
     }
     
     /**
@@ -83,17 +92,22 @@ class Cbs: Rest{
         params["ENCRYPT_YN"] = "Y"
         params["CPN_BPNT_POCY_NO"] = pointPolicyNum
         params["OP_ORG"] = "0000"
+        params["AMT_CMONEY"] = 0
         params["AMT_BPOINT"] = pointAmount
         params["IF_GUBUN"] = "SKBIFC003"
-        params["OP_ORG"] = CbsNetwork.getClientTime()
-         
-        let encryptedStbId = ApiUtil.getCBSEncrypted(stbId, uuid: CbsNetwork.KEY_STBID_SVCNUM) ?? ""
-        let encryptedData = ApiUtil.getCBSEncrypted(AppUtil.getJsonString(dic: params), uuid: CbsNetwork.KEY_DATA) ?? ""
-        
-       // params["method"] = "post"
-        fetch(route: CbsRequestBPointIssuance(
-                encryptedStbId:encryptedStbId,
-                encryptedData:encryptedData), completion: completion, error:error)
+        params["OP_TIME"] = CbsNetwork.getClientTime()
+        let jsonString = AppUtil.getJsonString(dic: params)
+        let encryptedStbId = ApiUtil.getCBSBPointEncrypted(stbId, key: CbsNetwork.KEY_STBID_SVCNUM) ?? ""
+        let encryptedData = ApiUtil.getCBSBPointEncrypted(jsonString, key: CbsNetwork.KEY_DATA) ?? ""
+        let qurryString = "STB_ID=" + ApiUtil.string(byUrlEncoding: encryptedStbId)
+            + "&SERVICE_NUM=&DATA=" + ApiUtil.string(byUrlEncoding: encryptedData)
+        /*
+        var body = [String:Any]()
+        body["STB_ID"] = ApiUtil.string(byUrlEncoding: encryptedStbId)
+        body["SERVICE_NUM"] = ""
+        body["DATA"] = ApiUtil.string(byUrlEncoding: encryptedData)
+        */
+        fetch(route: CbsRequestBPointIssuance( jsonString:qurryString), completion: completion, error:error)
     }
     
 }
@@ -103,16 +117,15 @@ struct CbsCertificationCoupon:NetworkRoute{
     var path: String = "/mpoc/v1/confirmCoupon"
     var headers: [String: String]?
     var body: [String : Any]?
+    var bodys: String?
 }
 
 struct CbsRequestBPointIssuance:NetworkRoute{
     var method: HTTPMethod = .post
-    var encryptedStbId : String = ""
-    var encryptedData : String = ""
-    
-    var path: String { get{
-        return "/CPAS/issue?STB_ID=" + encryptedStbId + "$SERVICE_NUM=&DATA=" + encryptedData
-    }}
+    //var body: [String : Any]?
+    var path: String = "/CPAS/issue"
+    var jsonString: String?
+
 }
 
 

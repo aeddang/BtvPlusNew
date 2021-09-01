@@ -44,6 +44,7 @@ extension NpsNetwork{
     static private(set) var pairingId = ""
     static private(set) var pairingStatus = ""
     static private(set) var hostDeviceId:String? = nil
+    static private(set) var isAutoPairing = false
     
     static func goodbye() {
         Self.sessionId = ""
@@ -55,6 +56,9 @@ extension NpsNetwork{
         guard let sessionId = resData.body?.sessionid else { return nil }
         Self.sessionId = sessionId
         Self.pairingId = resData.body?.pairingid ?? ""
+        if !Self.pairingId.isEmpty {
+            Self.isAutoPairing = true
+        }
         Self.hostDeviceId = resData.body?.host_deviceid
         if Self.hostDeviceId == "" { Self.hostDeviceId = nil }
         guard let body = resData.body else { return nil }
@@ -86,6 +90,7 @@ extension NpsNetwork{
         Self.pairingId = ""
         Self.hostDeviceId = nil
         Self.pairingStatus = ""
+        Self.isAutoPairing = false
     }
     static func checkPairing(res:ApiResultResponds) {
         guard let resData = res.data as? DevicePairingStatus  else { return }

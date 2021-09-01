@@ -286,6 +286,12 @@ extension String{
         public static let synopsisPackageContent = "synopsisPackageContent".loaalized()
         public static let synopsisUnavailableSeriesMessage = "synopsisUnavailableSeriesMessage".loaalized()
         public static let synopsisAward = "synopsisAward".loaalized()
+        
+        
+        public static let synopsisCornerPlayNeedPurchased = "synopsisCornerPlayNeedPurchased".loaalized()
+        public static let synopsisCornerPlayNotNscreen = "synopsisCornerPlayNotNscreen".loaalized()
+        public static let synopsisCornerPlayOnlyPurchasedBtv = "synopsisCornerPlayOnlyPurchasedBtv".loaalized()
+        
         public static let authTitle = "authTitle".loaalized()
         public static let authText = "authText".loaalized()
         public static let authTextMic = "authTextMic".loaalized()
@@ -306,6 +312,7 @@ extension String{
         public static let searchEmpty = "searchEmpty".loaalized()
         public static let searchEmptyGuide = "searchEmptyGuide".loaalized()
         public static let searchEmptyTitle = "searchEmptyTitle".loaalized()
+        public static let searchDeleteAllConfirm = "searchDeleteAllConfirm".loaalized()
         
         public static let modifyProfileText1 = "modifyProfileText1".loaalized()
         public static let modifyProfileText2 = "modifyProfileText2".loaalized()

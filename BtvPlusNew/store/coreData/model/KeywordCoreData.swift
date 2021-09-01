@@ -15,6 +15,7 @@ class KeywordCoreData:PageProtocol {
     }
     
     func addKeyword(_ word:String){
+        
         let container = self.persistentContainer
         guard let entity = NSEntityDescription.entity(forEntityName: Self.model, in: container.viewContext) else { return }
         let item = NSManagedObject(entity: entity, insertInto: container.viewContext)
@@ -23,8 +24,9 @@ class KeywordCoreData:PageProtocol {
     }
 
     func removeKeyword(_ word:String){
-        let container = self.persistentContainer
+        
         do {
+            let container = self.persistentContainer
             let fetchRequest:NSFetchRequest<KeywordEntity> = KeywordEntity.fetchRequest()
             fetchRequest.predicate = NSPredicate.init(format: "id = '\(word)'")
             let objects = try container.viewContext.fetch(fetchRequest)
@@ -38,9 +40,12 @@ class KeywordCoreData:PageProtocol {
     }
     
     func getAllKeywords()->[String]{
-        let container = self.persistentContainer
+        
         do {
-            let items = try container.viewContext.fetch(KeywordEntity.fetchRequest()) as! [KeywordEntity]
+            let request = NSFetchRequest<KeywordEntity>(entityName: KeywordCoreData.model)
+            let container = self.persistentContainer
+            let items = try container.viewContext.fetch(request) as [KeywordEntity]
+            if items.isEmpty { return [] }
             return items.filter{$0.id != nil}.map{($0.id!)}
             
         } catch {

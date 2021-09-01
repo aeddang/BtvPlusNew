@@ -110,7 +110,7 @@ struct PageSetup: PageView {
                                 
                                 
                                 if self.pairingType == .btv && !self.isPairing {
-                                    // SetupChildren(isInitate:self.isInitate, isPairing: self.isPairing)
+                                    //SetupChildren(isInitate:self.isInitate, isPairing: self.isPairing)
                                     SetupPossession(isInitate:self.isInitate)
                                     //SetupHappySenior()
                                 }

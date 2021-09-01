@@ -17,6 +17,7 @@ class BlockData:InfinityData, ObservableObject{
     private(set) var subName:String = ""
     private(set) var isAdult:Bool = false
     private(set) var isSortAble:Bool = false
+  
     private(set) var menuId:String? = nil
     private(set) var cwCallId:String? = nil
     private(set) var cardType:CardType = .none

@@ -24,6 +24,9 @@ class AppObserver: ObservableObject, PageProtocol {
     func reset(){
         page = nil
     }
+    func resetDeeplink(){
+        deepLinkUrl = nil
+    }
     func resetApns(){
         alram = nil
         apns = nil
@@ -52,6 +55,8 @@ class AppObserver: ObservableObject, PageProtocol {
     @discardableResult
     func handleUniversalLink(_ deepLink: URL?)-> Bool{
         guard let url =  deepLink else { return false }
+        self.deepLinkUrl = url
+        
         return DynamicLinks.dynamicLinks().handleUniversalLink(url) { (dynamiclink, error) in
             self.deepLinkUrl = dynamiclink?.url
             if let query = dynamiclink?.url?.query{
@@ -59,6 +64,7 @@ class AppObserver: ObservableObject, PageProtocol {
                 self.page = WhereverYouCanGo.parseIwillGo(qurryString: query)
             }else{
                 PageLog.d("Deeplink dynamiclink : no query", tag: self.tag)
+                
             }
         }
     }
@@ -66,7 +72,7 @@ class AppObserver: ObservableObject, PageProtocol {
     @discardableResult
     func handleDynamicLink(_ deepLink: URL?)-> Bool{
         guard let url =  deepLink else { return false }
-    
+        PageLog.t("handleDynamicLink " + url.absoluteString)
         if let dynamiclink = DynamicLinks.dynamicLinks().dynamicLink(fromCustomSchemeURL: url) {
             if let query = dynamiclink.url?.query{
                 PageLog.d("Deeplink dynamiclink : \(query)", tag: self.tag)
@@ -116,6 +122,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
     
     func application( _ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any]) -> Bool {
         //[DL]
+        PageLog.t("Deeplink start open url", tag: self.tag)
         let dynamicLink = application(app, open: url,
                      sourceApplication: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String,
                      annotation: "")
@@ -125,12 +132,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
     // [Deeplink]
     func application(_ application: UIApplication, continue userActivity: NSUserActivity,
                      restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-        PageLog.d("Deeplink start", tag: self.tag)
+        PageLog.t("Deeplink start handleUniversalLink", tag: self.tag)
         return AppDelegate.appObserver.handleUniversalLink(userActivity.webpageURL)
     }
     
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-        PageLog.d("Deeplink start", tag: self.tag)
+        PageLog.t("Deeplink start handleDynamicLink", tag: self.tag)
         return AppDelegate.appObserver.handleDynamicLink(url)
     }
     

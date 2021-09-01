@@ -735,6 +735,7 @@ struct PageSynopsis: PageView {
             self.isPlayAble = self.purchasViewerData?.isPlayAble ?? true
             self.isPlayViewActive = true
         }
+        self.checkCornerPlay()
         
         guard let synopsisModel = self.synopsisModel else { return }
         if self.relationContentsModel.isReady {
@@ -916,6 +917,7 @@ struct PageSynopsis: PageView {
                 .setData(synopsisPlayData: self.playerData)
                 .setData(data: dataInfo, type: .preview(self.epsdRsluId))
             withAnimation{self.isPlayAble = true}
+
         }
     }
     
@@ -940,7 +942,36 @@ struct PageSynopsis: PageView {
                 .setData(synopsisPrerollData: prerollData)
                 .setData(synopsisPlayData: self.playerData)
                 .setData(data: dataInfo, type: .vod(self.epsdRsluId,self.title))
-            self.playerModel.continuousProgress = self.synopsisData?.progress
+            
+            if self.hasAuthority == true {
+                self.playerModel.continuousProgress = self.synopsisData?.progress
+                self.playerModel.continuousProgressTime = self.synopsisData?.progressTime
+            }
+        }
+       
+    }
+    
+    private func checkCornerPlay(){
+        if let progressTime = self.synopsisData?.progressTime {
+            if !self.isPlayAble {
+                self.appSceneObserver.alert = .alert(nil, String.pageText.synopsisCornerPlayNotNscreen)
+                return
+            }
+            if self.hasAuthority == true {
+                self.playerModel.continuousProgressTime = progressTime
+            } else {
+                if self.pairing.status == .pairing {
+                    if self.synopsisModel?.isOnlyPurchasedBtv == true {
+                        self.appSceneObserver.alert = .alert(nil, String.pageText.synopsisCornerPlayOnlyPurchasedBtv)
+                    } else {
+                        guard  let model = self.purchaseWebviewModel else { return }
+                        self.appSceneObserver.alert = .needPurchase(model, String.pageText.synopsisCornerPlayNeedPurchased)
+                    }
+                    
+                } else {
+                    self.appSceneObserver.alert = .needPairing()
+                }
+            }
         }
     }
     

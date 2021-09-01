@@ -13,7 +13,8 @@ protocol Log {
 }
 struct LogManager  {
     static fileprivate(set) var memoryLog:String = ""
-    static var isMemory = false
+    static fileprivate(set) var traceLog:String = ""
+    static var isMemory = SystemEnvironment.isLaunchTrace
     {
         didSet{
             if !isMemory {
@@ -31,6 +32,11 @@ extension Log {
         
     }
     
+    static func t(_ message: String, tag:String? = nil) {
+        if LogManager.isMemory {
+            LogManager.traceLog += ("\n" + (tag ?? "Log") + " : " + message)
+        }
+    }
     static func i(_ message: String, tag:String? = nil) {
         Self.log(message, tag:tag, log:.default, type:.info )
     }

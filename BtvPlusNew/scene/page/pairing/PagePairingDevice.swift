@@ -256,9 +256,8 @@ struct PagePairingDevice: PageView {
                 self.pagePresenter.closePopup(self.pageObject?.id)
                 break
             default:
-                self.appSceneObserver.alert = .notFoundDevice{ retry in
-                    if retry { self.findDevice() }
-                    else { self.pagePresenter.closePopup(self.pageObject?.id) }
+                self.appSceneObserver.alert = .notFoundDevice{
+                    self.pagePresenter.closePopup(self.pageObject?.id) 
                 }
             }
         }

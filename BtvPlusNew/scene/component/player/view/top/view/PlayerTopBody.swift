@@ -44,36 +44,36 @@ struct PlayerTopBody: PageView{
             alignment :.trailing,
             spacing:Dimen.margin.thin){
             HStack(spacing: self.isFullScreen ? PlayerUI.fullScreenSpacing : PlayerUI.spacing){
-                if !self.isSimple{
-                    Button(action: {
-                        
-                        self.viewModel.btvPlayerEvent = .close
-                        
-                    }) {
-                        Image(Asset.icon.back)
-                            .renderingMode(.original)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: Dimen.icon.regular,
-                                   height: Dimen.icon.regular)
-                    }
-                }
-                if self.isFullScreen && self.title != nil {
-                    VStack(alignment: .leading){
-                        Text(self.title!)
-                            .modifier(MediumTextStyle(
-                                    size: Font.size.mediumExtra,
-                                    color: Color.app.white)
-                            )
-                            .lineLimit(1)
-                        Spacer().modifier(MatchHorizontal(height: 0))
-                    }
-                    .modifier(MatchHorizontal(height: Font.size.mediumExtra))
-                } else{
-                    Spacer().modifier(MatchHorizontal(height: 1))
-                }
                 
                 if !self.isLock {
+                    if !self.isSimple || self.isFullScreen {
+                        Button(action: {
+                            
+                            self.viewModel.btvPlayerEvent = .close
+                            
+                        }) {
+                            Image(Asset.icon.back)
+                                .renderingMode(.original)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: Dimen.icon.regular,
+                                       height: Dimen.icon.regular)
+                        }
+                    }
+                    if self.isFullScreen && self.title != nil {
+                        VStack(alignment: .leading){
+                            Text(self.title!)
+                                .modifier(MediumTextStyle(
+                                        size: Font.size.mediumExtra,
+                                        color: Color.app.white)
+                                )
+                                .lineLimit(1)
+                            Spacer().modifier(MatchHorizontal(height: 0))
+                        }
+                        .modifier(MatchHorizontal(height: Font.size.mediumExtra))
+                    } else{
+                        Spacer().modifier(MatchHorizontal(height: 0))
+                    }
                     ImageButton(
                         defaultImage: Asset.player.volumeOn,
                         activeImage: Asset.player.volumeOff,
@@ -115,6 +115,8 @@ struct PlayerTopBody: PageView{
                             }
                         }
                     }
+                } else {
+                    Spacer().modifier(MatchHorizontal(height: 0))
                 }
                 if !self.isSimple{
                     ImageButton(

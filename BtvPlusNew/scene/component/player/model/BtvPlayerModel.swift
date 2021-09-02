@@ -44,7 +44,7 @@ enum SelectOptionType:String {
     case quality, rate, ratio
 }
 enum BtvUiEvent {
-    case more, guide, initate, closeList, clickInsideButton(NaviLog.Action,  String?)
+    case more, guide, initate, closeList, clickInsideButton(NaviLog.Action,  String?), prevPlay
 }
 
 enum BtvPlayerEvent {

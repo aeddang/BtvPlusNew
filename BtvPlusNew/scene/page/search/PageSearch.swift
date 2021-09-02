@@ -107,7 +107,7 @@ struct PageSearch: PageView {
                                     delete: { data in
                                         if data.isSection {
                                             self.appSceneObserver.alert =
-                                                .confirm(nil, String.pageText.searchDeleteAllConfirm, confirmText: String.button.remove) { isOk in
+                                                .confirm(String.button.remove, String.pageText.searchDeleteAllConfirm, confirmText: String.button.remove) { isOk in
                                                 if isOk {
                                                     self.viewModel.removeAllSearchKeyword()
                                                 }
@@ -125,7 +125,7 @@ struct PageSearch: PageView {
                                 .onReceive(self.searchScrollModel.$event){ evt in
                                     guard let evt = evt else { return }
                                     switch evt {
-                                    case .down : AppUtil.hideKeyboard()
+                                    case .down, .up : AppUtil.hideKeyboard()
                                     default : break
                                     }
                                     

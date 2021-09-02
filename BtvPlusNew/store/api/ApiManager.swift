@@ -296,6 +296,12 @@ class ApiManager :PageProtocol, ObservableObject{
             stbId:stbId, page: page, pageCnt: count,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        case .getHostNickname(let isAll, let anotherStbId): self.metv.getHostNickname(
+            isAll: isAll, anotherStbId:anotherStbId,
+            completion: {res in self.complated(id: apiID, type: type, res: res)},
+            error:error)
+            
+        //ME_EVENT
         case .postAttendance(let pcid, _): self.metvEvent.postAttendance(
             pcId: pcid,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
@@ -304,6 +310,7 @@ class ApiManager :PageProtocol, ObservableObject{
             pcId: pcid,
             completion: {res in self.complated(id: apiID, type: type, res: res)},
             error:error)
+        
         //NPS
         case .registHello : self.nps.postHello(
             completion: {res in self.complated(id: apiID, type: type, res: res)},

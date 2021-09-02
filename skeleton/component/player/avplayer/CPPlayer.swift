@@ -28,6 +28,7 @@ struct CPPlayer: PageComponent {
                         .background(Color.transparent.clearUi)
                         .onTapGesture(count: 2, perform: {
                             if self.viewModel.isLock { return }
+                            if self.isSimple { return }
                             self.viewModel.event = .seekBackword(self.viewModel.getSeekBackwordAmount(), false)
                         })
                         .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
@@ -38,6 +39,7 @@ struct CPPlayer: PageComponent {
                         .background(Color.transparent.clearUi)
                         .onTapGesture(count: 2, perform: {
                             if self.viewModel.isLock { return }
+                            if self.isSimple { return }
                             self.viewModel.event = .seekForward(self.viewModel.getSeekForwardAmount(), false)
                         })
                         .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {

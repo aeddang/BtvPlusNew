@@ -15,6 +15,7 @@ struct TableCell: Identifiable {
     var text:String = ""
     var idx:Int = -1
     var size:CGFloat? = nil
+    var isLeading:Bool = false
     var textModifier = TextModifier(
         family: Font.family.medium,
         size: Font.size.thin,
@@ -75,26 +76,23 @@ struct DivisionTable : PageComponent {
                                         .foregroundColor( cell.textModifier.color)
                                         .padding(.vertical, Dimen.margin.thin)
                                         .frame(width: size)
-                                        .background(
-                                            HStack{
-                                                Spacer()
-                                                if cell.idx != (set.cells.count - 1) {
-                                                    Spacer().modifier(MatchVertical(width: 1))
-                                                        .background(self.lineColor)
-                                                }
-                                            }
-                                        )
+                                        
                                     
                                 } else {
-                                    VStack(spacing:0){
+                                    VStack(alignment: cell.isLeading ? .leading : .center, spacing:0){
                                         Spacer().modifier(MatchHorizontal(height: 0))
                                         Text(cell.text)
                                             .font(.custom( cell.textModifier.family, size: cell.textModifier.size))
                                             .foregroundColor( cell.textModifier.color)
+                                            .multilineTextAlignment(cell.isLeading ? .leading : .center)
                                             .padding(.all, Dimen.margin.thin)
                                     }
                                     .background(
                                         HStack{
+                                            if cell.idx != 0 {
+                                                Spacer().modifier(MatchVertical(width: 1))
+                                                    .background(self.lineColor)
+                                            }
                                             Spacer()
                                             if cell.idx != (set.cells.count - 1) {
                                                 Spacer().modifier(MatchVertical(width: 1))

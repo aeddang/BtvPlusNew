@@ -105,12 +105,13 @@ struct PagePicker: PageView {
                     self.datas = zip(0...pickers.count, pickers).map{ idx , pic in
                         PickerData().setData(title: pic, idx: idx) 
                     }
-                }
-                if self.selectedIdx != -1 {
                     DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
-                        self.infinityScrollModel.uiEvent = .scrollMove(self.selectedIdx, .center)
+                        if self.selectedIdx > 0 && self.datas.count > self.selectedIdx {
+                            self.infinityScrollModel.uiEvent = .scrollMove(self.datas[self.selectedIdx].hashId, .center)
+                        }
                     }
                 }
+                
             }
             .onDisappear{
             }

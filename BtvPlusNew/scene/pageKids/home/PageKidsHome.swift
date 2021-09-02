@@ -51,6 +51,7 @@ struct PageKidsHome: PageView {
             .onReceive(self.pagePresenter.$currentTopPage){ topPage in
                 if self.pagePresenter.currentTopPage?.pageID != self.pageID {return}
                 if !self.isUiInit { return }
+                if self.pairing.status != .pairing { return }
                 self.pairing.requestPairing(.updateKids)
             }
             .onReceive(self.dataProvider.bands.$event){ evt in
@@ -63,10 +64,11 @@ struct PageKidsHome: PageView {
                 }
             }
             .onReceive(self.pairing.$kid){ kid in
+                
                 if let current = self.currentKid {
                     if current.id == kid?.id { return }
                 }
-                if kid != nil {
+                if kid != nil && self.pairing.status == .pairing {
                     if self.pairing.kidStudyData == nil {
                         self.pairing.requestPairing(.updateKidStudy)
                     }

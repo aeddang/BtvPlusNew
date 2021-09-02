@@ -12,6 +12,7 @@ class PlayData:InfinityData,ObservableObject{
     private(set) var image: String? = nil
     private(set) var title: String? = nil
     private(set) var watchLv:Int = 0
+    private(set) var isAdult:Bool = false
     private(set) var openDate: String? = nil
     private(set) var date: String? = nil
     private(set) var srisId: String? = nil
@@ -35,6 +36,9 @@ class PlayData:InfinityData,ObservableObject{
         summary = data.epsd_snss_cts
         epsdId = data.epsd_id
         epsdRsluId = data.epsd_rslu_id
+        watchLv = data.wat_lvl_cd?.toInt() ?? 0
+        isAdult = data.adlt_lvl_cd?.toBool() ?? false
+        if isAdult { watchLv = Setup.WatchLv.lv4.rawValue }
         restrictAgeIcon = Asset.age.getListIcon(age: data.wat_lvl_cd) 
         if let poster = data.poster_filename_h {
             image = ImagePath.thumbImagePath(filePath: poster, size: ListItem.play.size)
@@ -115,7 +119,10 @@ struct PlayList: PageComponent{
             useTracking: self.useTracking
         ){
             ForEach(self.datas) { data in
-                PlayItem(data: data)
+                PlayItem(
+                    pageObservable: PageObservable(),
+                    playerModel : BtvPlayerModel(),
+                    data: data)
             }
         }
         
@@ -128,13 +135,14 @@ struct PlayItem: PageView {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var setup:Setup
-    var pageObservable:PageObservable? = nil
-    var playerModel: BtvPlayerModel? = nil
+    var pageObservable:PageObservable
+    var playerModel: BtvPlayerModel
     var data:PlayData
     var isSelected:Bool = false
     @State var isPlay:Bool = false
+    @State var isAutoPlay:Bool = true
     @State var sceneOrientation: SceneOrientation = .portrait
-
+    var action:((_ data:PlayData) -> Void)? = nil
     var body: some View {
         ZStack{
             if self.sceneOrientation == .landscape {
@@ -144,10 +152,13 @@ struct PlayItem: PageView {
                         playerModel : self.playerModel,
                         data: self.data,
                         isSelected : self.isSelected,
+                        isAutoPlay : self.$isAutoPlay,
                         isPlay: self.$isPlay,
-                        isError: self.$isError){
+                        isError: self.$isError,
+                        action: self.action){
                         
                         self.loadPreview()
+                        
                     }
                     .frame(width: 520, height: 292)
                     .clipped()
@@ -179,8 +190,10 @@ struct PlayItem: PageView {
                         playerModel : self.playerModel,
                         data: self.data,
                         isSelected : self.isSelected,
+                        isAutoPlay : self.$isAutoPlay,
                         isPlay: self.$isPlay,
-                        isError: self.$isError){
+                        isError: self.$isError,
+                        action: self.action){
                         
                         self.loadPreview()
                     }
@@ -249,7 +262,7 @@ struct PlayItem: PageView {
             self.sceneOrientation = self.sceneObserver.sceneOrientation
             self.isLike = self.data.isLike
             self.isAlram = self.data.isAlram
-            self.isPlay = self.setup.autoPlay
+            self.isPlay = true
             self.isInit = true
         }
         .onDisappear{
@@ -263,10 +276,35 @@ struct PlayItem: PageView {
     @State var isError:Bool = false
      
     private func loadPreview(){
-        guard let epsdRsluId = data.epsdRsluId else { return }
-        self.playerModel?.currentIdx = self.data.index
-        self.playerModel?.currentEpsdRsluId = self.data.epsdRsluId
+        
+        guard let epsdRsluId = data.epsdRsluId else {
+            self.isError = true
+            return
+        }
+        let watchLv = self.data.watchLv
+        if watchLv >= 19 {
+            if self.pairing.status != .pairing {
+                self.isAutoPlay = false
+                return
+            }
+            if !SystemEnvironment.isAdultAuth {
+                self.isAutoPlay = false
+                return
+            }
+        }
+        if !SystemEnvironment.isAdultAuth ||
+            ( !SystemEnvironment.isWatchAuth && SystemEnvironment.watchLv != 0 )
+        {
+            if SystemEnvironment.watchLv != 0 && SystemEnvironment.watchLv <= watchLv {
+                self.isAutoPlay = false
+                return
+            }
+        }
+       
         self.isError = false
+        self.isAutoPlay = true
+        self.playerModel.currentIdx = self.data.index
+        self.playerModel.currentEpsdRsluId = self.data.epsdRsluId
         if pairing.status == .pairing {
             dataProvider.requestData(q: .init(id:epsdRsluId, type: .getPreview(epsdRsluId, self.pairing.hostDevice)))
         }
@@ -292,7 +330,10 @@ struct PlayItem: PageView {
             self.isError = true
             return
         }
-        self.playerModel?.setData(data: dataInfo, type: .preview(epsdRsluId), autoPlay: true, continuousTime: self.data.playTime)
+        self.playerModel.setData(data: dataInfo,
+                                 type: .preview(epsdRsluId),
+                                 autoPlay: self.isPlay,
+                                 continuousTime: self.data.playTime)
         
 
     }
@@ -305,61 +346,36 @@ struct PlayItemScreen: PageView {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var setup:Setup
-    var pageObservable:PageObservable?
-    var playerModel: BtvPlayerModel?
+    var pageObservable:PageObservable
+    @ObservedObject var playerModel: BtvPlayerModel
     var data:PlayData
     var isSelected:Bool
-    
+    @Binding var isAutoPlay:Bool
     @Binding var isPlay:Bool
     @Binding var isError:Bool
-    var action:() -> Void
+    var action:((_ data:PlayData) -> Void)? = nil
+    var load:() -> Void
     var body: some View {
         ZStack{
-            if self.data.image == nil {
-                Image(Asset.noImg16_9)
-                    .renderingMode(.original)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .modifier(MatchParent())
-            } else {
-                KFImage(URL(string: self.data.image!))
-                    .resizable()
-                    .placeholder {
-                        Image(Asset.noImg16_9)
-                            .resizable()
-                    }
-                    .cancelOnDisappear(true)
-                    .loadImmediately()
-                    .aspectRatio(contentMode: .fill)
-                    .modifier(MatchParent())
-            }
             if self.data.isPlayAble {
-                if self.isSelected {
-                    Button(action: {
-                        self.isPlay = true
-                    }) {
-                        Image(Asset.icon.thumbPlay)
-                            .renderingMode(.original).resizable()
-                            .scaledToFit()
-                            .frame(width: Dimen.icon.medium, height: Dimen.icon.medium)
-                    }
-                    .buttonStyle(BorderlessButtonStyle())
-                }
-                if self.isPlay && self.isSelected && self.playerModel != nil {
+                if self.isSelected && self.isAutoPlay ,
+                   let playerModel = self.playerModel {
+                    
                     if !self.isError {
                         SimplePlayer(
                             pageObservable:self.pageObservable,
-                            viewModel:self.playerModel!
+                            viewModel:playerModel
                         )
                         .modifier(MatchParent())
                         .onAppear{
                             if self.pagePresenter.isFullScreen { return }
-                            self.action()
+                            self.load()
                             self.pagePresenter.orientationLock(lockOrientation: .all)
                         }
                         .onDisappear{
-                            self.isPlay = self.setup.autoPlay
+                            self.isPlay = true //self.setup.autoPlay
                         }
+                        
                     } else {
                         Button(action: {
                             self.isError = false
@@ -370,6 +386,49 @@ struct PlayItemScreen: PageView {
                     }
                 }
             }
+            if !self.isAutoPlay || !self.isSelected {
+                if self.data.image == nil {
+                    Image(Asset.noImg16_9)
+                        .renderingMode(.original)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .modifier(MatchParent())
+                } else {
+                    KFImage(URL(string: self.data.image!))
+                        .resizable()
+                        .placeholder {
+                            Image(Asset.noImg16_9)
+                                .resizable()
+                        }
+                        .cancelOnDisappear(true)
+                        .loadImmediately()
+                        .aspectRatio(contentMode: .fill)
+                        .modifier(MatchParent())
+                }
+                Button(action: {
+                    self.isPlay = true
+                    self.isAutoPlay = true
+                    self.action?(self.data)
+                }) {
+                    Image(Asset.icon.thumbPlay)
+                        .renderingMode(.original).resizable()
+                        .scaledToFit()
+                        .frame(width: Dimen.icon.heavyExtra, height: Dimen.icon.heavyExtra)
+                }
+                .buttonStyle(BorderlessButtonStyle())
+            }
+            
+        }
+        .onReceive(self.playerModel.$btvUiEvent){ evt in
+            guard let evt = evt else {return}
+            if !self.isSelected { return }
+            switch evt {
+            case .prevPlay :
+                self.isPlay = true
+                self.isAutoPlay = true
+            default : break
+            }
+            
         }
     }
 }

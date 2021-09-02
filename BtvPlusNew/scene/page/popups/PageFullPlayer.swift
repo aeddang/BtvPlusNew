@@ -19,7 +19,7 @@ struct PageFullPlayer: PageView {
     @ObservedObject var playerModel: BtvPlayerModel = BtvPlayerModel(useFullScreenAction:false)
     @State var isInit:Bool = false
     var body: some View {
-        BtvPlayer(
+        SimplePlayer(
             pageObservable:self.pageObservable,
             viewModel:self.playerModel
         )
@@ -48,6 +48,13 @@ struct PageFullPlayer: PageView {
             case .portrait :
                 self.onClose()
             default : break
+            }
+        }
+        .onReceive(self.playerModel.$streamEvent){evt in
+            guard let evt = evt else { return }
+            switch evt {
+            case .completed:self.onClose()
+            default: break
             }
         }
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in

@@ -61,7 +61,7 @@ struct PageMyPurchaseTicketList: PageView {
                                     ){_ in
                                         
                                         self.pagePresenter.openPopup(
-                                            PageProvider.getPageObject(.multiBlock)
+                                            PageProvider.getPageObject(.monthlyTicket)
                                                 .addParam(key: .id, value: allData.menu_id)
                                                 .addParam(key: .title, value: allData.menu_nm)
                                                 .addParam(key: .data, value: allData.blocks)

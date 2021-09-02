@@ -40,14 +40,14 @@ enum SerisSortType {
 
 
 class RelationContentsModel:ObservableObject {
+    private(set) var serisSortType:SerisSortType? = nil
+    
     private(set) var isReady = false
     private(set) var serisTitle:String? = nil
     private(set) var relationTabs:[String] = []
-    
     private(set) var seasons:[SeasonData] = []
     private(set) var seris:[SerisData] = []
     private(set) var playList:[PlayerListData] = []
-    private(set) var serisSortType:SerisSortType? = nil
     private(set) var apiSortType:SerisSortType? = nil
     private(set) var relationContents:[[PosterData]] = []
     private(set) var synopsisRelationData:SynopsisRelationData? = nil

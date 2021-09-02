@@ -221,6 +221,9 @@ extension String{
     func toInt() -> Int {
         return Int(self) ?? -1
     }
+    func toDouble() -> Double {
+        return Double(self) ?? -1
+    }
     
     func toUrl()-> URL? {
         let temp = self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""

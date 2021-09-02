@@ -156,7 +156,7 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
         player?.usesExternalPlaybackWhileExternalScreenIsActive = true
         player?.preventsDisplaySleepDuringVideoPlayback = true
         player?.volume = currentVolume
-        player?.isClosedCaptionDisplayEnabled = true
+        //player?.isClosedCaptionDisplayEnabled = true
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
         }
@@ -258,9 +258,12 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
         return player
     }
     
-    func playInit(){
-        if self.initTime > 0 {
-            seek(initTime)
+    func playInit(duration:Double){
+        if self.initTime > 0  {
+            let diff = duration - self.initTime
+            if diff >= 5 {
+                seek(initTime)
+            }
         }
         guard let currentPlayer = player else { return }
         currentPlayer.rate = self.currentRate

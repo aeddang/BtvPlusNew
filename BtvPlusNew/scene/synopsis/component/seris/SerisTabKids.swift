@@ -68,7 +68,8 @@ struct SerisTabKids: PageComponent{
                 && self.data.seasons.count > self.data.currentSeasonIdx {
                 self.textSeason = self.data.seasons[data.currentSeasonIdx].title
             }
-            self.textSeasonCount = String.app.total + self.data.seris.count.description + String.pageText.synopsisSiris
+            self.textSeasonCount = String.app.total + " "
+                + self.data.seris.count.description + String.app.sesonCount
             self.sortIdx = self.sortOption.firstIndex(of: self.data.getCurrentSerisSortType()) ?? 0
         }
     }//body

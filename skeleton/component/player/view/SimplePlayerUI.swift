@@ -29,6 +29,7 @@ struct SimplePlayerUI: PageComponent {
     @State var isShowing: Bool = false
     var body: some View {
         ZStack{
+            /*
             HStack(spacing:0){
                 Spacer().modifier(MatchParent())
                     .background(Color.transparent.clearUi)
@@ -52,7 +53,7 @@ struct SimplePlayerUI: PageComponent {
             }
             .background(Color.transparent.black45)
             .opacity(self.isShowing ? 1 : 0)
-            
+            */
             if self.isLoading {
                 CircularSpinner(resorce: Asset.ani.loading)
             }
@@ -63,50 +64,63 @@ struct SimplePlayerUI: PageComponent {
             */
             VStack(spacing:0){
                 Spacer()
+               
                 HStack(alignment:.center, spacing:Dimen.margin.thin){
-                    Spacer()
-                    if self.useFullScreen {
-                        ImageButton(
-                            defaultImage: Asset.player.fullScreen,
-                            activeImage: Asset.player.fullScreenOff,
-                            isSelected: self.isFullScreen,
-                            size: CGSize(width:Dimen.icon.regular,height:Dimen.icon.regular)
-                        ){ _ in
-                            if self.viewModel.useFullScreenAction {
-                                let changeOrientation:UIInterfaceOrientationMask = SystemEnvironment.isTablet
-                                ? (self.sceneObserver.sceneOrientation == .portrait ? .portrait :.landscape)
-                                : (self.isFullScreen ? .portrait : .landscape)
+                    if self.isFullScreen {
+                        ProgressSlider(
+                            progress: self.progress,
+                            thumbSize: 0,
                                 
-                                self.isFullScreen
-                                    ? self.pagePresenter.fullScreenExit(changeOrientation: changeOrientation)
-                                    : self.pagePresenter.fullScreenEnter()
-                            } else{
-                                self.viewModel.event = .fullScreen(!self.isFullScreen)
-                            }
+                            onChange: { pct in
+                                let willTime = self.viewModel.duration * Double(pct)
+                                self.viewModel.event = .seeking(willTime)
+                            },
+                            onChanged:{ pct in
+                                self.viewModel.event = .seekProgress(pct)
+                            })
+                            .frame(height: Dimen.stroke.regular )
+                    } else {
+                        Spacer()
+                    }
+                    
+                    ImageButton(
+                        defaultImage: Asset.player.fullScreen,
+                        activeImage: Asset.player.fullScreenOff,
+                        isSelected: self.isFullScreen,
+                        size: CGSize(width:Dimen.icon.regular,height:Dimen.icon.regular)
+                    ){ _ in
+                        if self.viewModel.useFullScreenAction {
+                            let changeOrientation:UIInterfaceOrientationMask = SystemEnvironment.isTablet
+                            ? (self.sceneObserver.sceneOrientation == .portrait ? .portrait :.landscape)
+                            : (self.isFullScreen ? .portrait : .landscape)
+                            
+                            self.isFullScreen
+                                ? self.pagePresenter.fullScreenExit(changeOrientation: changeOrientation)
+                                : self.pagePresenter.fullScreenEnter()
+                        } else{
+                            self.viewModel.event = .fullScreen(!self.isFullScreen)
                         }
                     }
+                    
                 }
                 .padding(.all, self.isFullScreen ? PlayerUI.paddingFullScreen : PlayerUI.padding)
                 .opacity(self.isShowing  ? 1 : 0)
-                ProgressSlider(
-                    progress: self.progress,
-                    thumbSize: self.isFullScreen
-                        ? Dimen.icon.thinExtra
-                        : 0,
-                        
-                    onChange: { pct in
-                        let willTime = self.viewModel.duration * Double(pct)
-                        self.viewModel.event = .seeking(willTime)
-                    },
-                    onChanged:{ pct in
-                        self.viewModel.event = .seekProgress(pct)
-                    })
-                    .frame(height: self.isFullScreen
-                            ? PlayerUI.uiHeightFullScreen
-                            : Dimen.stroke.regular )
-                .padding(.all, self.isFullScreen
-                         ? PlayerUI.paddingFullScreen
-                         : 0)
+                 
+                if !self.isFullScreen {
+                    ProgressSlider(
+                        progress: self.progress,
+                        thumbSize: 0,
+                            
+                        onChange: { pct in
+                            let willTime = self.viewModel.duration * Double(pct)
+                            self.viewModel.event = .seeking(willTime)
+                        },
+                        onChanged:{ pct in
+                            self.viewModel.event = .seekProgress(pct)
+                        })
+                        .frame(height: Dimen.stroke.regular )
+                        .padding(.all, 0)
+                }
             }
             
             

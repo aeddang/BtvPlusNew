@@ -248,8 +248,11 @@ struct PageMultiBlock: PageView {
                         datas: self.originDatas, openId: openId,
                         themaType: self.themaType, isAdult:isAdult, title: title)
                 }
-                self.tabInfinityScrollModel.uiEvent = .scrollTo(self.selectedTabIdx)
-                
+                if let tabs = self.tabDatas {
+                    if self.selectedTabIdx > 0 && tabs.count > self.selectedTabIdx {
+                        self.tabInfinityScrollModel.uiEvent = .scrollTo(tabs[self.selectedTabIdx].hashId)
+                    }
+                }
                 self.naviLogManager.actionLog(
                     .pageShow,
                     actionBody: .init(menu_id: menuId, menu_name: title))

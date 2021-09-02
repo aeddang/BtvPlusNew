@@ -39,17 +39,10 @@ struct PlayerListKids: PageComponent{
         ){
             
             ForEach(self.datas) { data in
-                if data.index == -1 {
-                    PlayerListItemKids(viewModel: self.viewModel, data:data , isSelect: self.contentID == data.epsdId)
-                    .onTapGesture {
-                         action(data)
-                    }
-                } else {
-                    PlayerListItemKids(viewModel: self.viewModel, data:data , isSelect: self.contentID == data.epsdId)
-                    .id(data.index)
-                    .onTapGesture {
-                        action(data)
-                    }
+                PlayerListItemKids(viewModel: self.viewModel, data:data , isSelect: self.contentID == data.epsdId)
+                .id(data.hashId)
+                .onTapGesture {
+                    action(data)
                 }
             }
         }

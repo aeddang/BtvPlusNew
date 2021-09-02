@@ -127,7 +127,7 @@ struct ListRowInset: ViewModifier {
                 .init(
                     )
             )
-            .listRowBackground(bgColor)
+            //.listRowBackground(bgColor)
         
     }
 }

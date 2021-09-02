@@ -13,7 +13,7 @@ struct MonthlyInfo : Decodable {
     private(set) var page_tot: String? = nil   // 전체 페이지 개수
     private(set) var page_no: String? = nil    // 현재 페이지 번호
     private(set) var purchase_tot: String? = nil   // 월정액 전체 개수
-    private(set)  var purchase_no: String? = nil    // 현재 페이지의 월정액 개수
+    private(set) var purchase_no: String? = nil    // 현재 페이지의 월정액 개수
     private(set) var purchaseList: [MonthlyInfoItem]? = nil  // 집합의 이름
     private(set) var m_pidList: [String]? = nil  // 1. 가입한 월정액 복합상품 ID 리스트 - 월정액 메뉴리스트 제공시 복합VOD 상품인 경우, 개별상품으로 제공하는 시나리오반영으로 월정액 추천시 복합상품을 추천하는 것을 방지하기위해 가입한 월정액의 복합상품ID 리스트를 제공함. 2. 요청파라미터 yn_
 }

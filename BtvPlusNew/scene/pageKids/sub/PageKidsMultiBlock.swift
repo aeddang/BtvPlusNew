@@ -80,11 +80,12 @@ struct PageKidsMultiBlock: PageView {
                         .modifier(MatchParent())
                         .background(Color.kids.bg)
                     }
-                    if let float = self.floatRecommandData {
+                    if self.floatRecommandData?.text.isEmpty == false, let float = self.floatRecommandData{
                         VStack(){
                             Spacer()
                             FloatRecommand(
-                                isClose: self.$isFloatingClose, 
+                                isClose: self.$isFloatingClose,
+                                userControl: self.$userControl,
                                 data: float)
                         }
                         .modifier(MatchParent())
@@ -131,9 +132,9 @@ struct PageKidsMultiBlock: PageView {
                     case .down :
                         if self.isTop == false {return}
                         withAnimation{self.isTop = false}
-                        if !self.isFloatingClose {
-                            withAnimation{self.isFloatingClose = true}
-                        }
+                        self.scrollClose()
+                    case .up :
+                        self.scrollClose()
                     default : do{}
                     }
                     
@@ -223,12 +224,35 @@ struct PageKidsMultiBlock: PageView {
                         self.pairing.authority.requestAuth(.updateMonthlyPurchase(isPeriod: true))
                     }
                 }
-                
-                
+            }
+            .onDisappear(){
+                self.autoOpen?.cancel()
             }
             
         }//geo
     }//body
+    
+    @State private var autoOpen:AnyCancellable?
+    @State private var userControl:Bool = false
+    private func scrollClose(){
+        if self.userControl {return}
+        self.autoOpen?.cancel()
+        if !self.isFloatingClose {
+            withAnimation{self.isFloatingClose = true}
+        }
+        self.autoOpen = Timer.publish(
+            every: 0.5, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                self.autoOpen?.cancel()
+                self.autoOpen = nil
+                withAnimation{
+                    self.isFloatingClose = false
+                }
+            }
+    }
+    
+    
     @State var isUiInit:Bool = false
     @State var marginTop:CGFloat = 0
     @State var isTop:Bool = true

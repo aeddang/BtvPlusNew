@@ -418,7 +418,25 @@ class Metv: Rest{
         
         fetch(route: MetvPossessionPurchase(query: params), completion: completion, error:error)
     }
-    
+    /**
+    * STB 닉네임 리스트 조회 (IF-ME-051)
+    * @param nicknameSelectType STB 닉네임 조회 구분자 "ALL" "EACH"
+    */
+    func getHostNickname(
+        isAll:Bool = false, anotherStbId:String? = nil,
+        completion: @escaping (HostNickName) -> Void, error: ((_ e:Error) -> Void)? = nil){
+
+        let stbId = anotherStbId ?? ( NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId )
+        var params = [String:String]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["ver"] = MetvNetwork.VERSION
+        params["IF"] = "IF-ME-051"
+        params["stb_id"] = stbId
+        params["nickname_select_type"] = isAll ?  "ALL" : "EACH"
+        params["hash_id"] = ApiUtil.getHashId(stbId)
+        
+        fetch(route: MetvGetHostNickname(query: params), completion: completion, error:error)
+    }
     /**
     * 출석체크 저장 (IF-EVENT-001)
     */
@@ -451,6 +469,8 @@ class Metv: Rest{
        
         fetch(route: MetvGetAttendance(body: params), completion: completion, error:error)
     }
+    
+    
 }
 
 struct MetvPurchase:NetworkRoute{
@@ -553,6 +573,13 @@ struct MetvGetAttendance:NetworkRoute{
    var method: HTTPMethod = .post
    var path: String = "/metv/v5/vodcomments/getevent/mobilebtv"
    var body:[String: Any]? = nil
+    
+}
+
+struct MetvGetHostNickname:NetworkRoute{
+   var method: HTTPMethod = .get
+   var path: String = "/metv/v5/setting/stbnickname"
+   var query: [String : String]? = nil
     
 }
 

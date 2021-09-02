@@ -49,7 +49,6 @@ class AccountManager : PageProtocol{
                         
                    },notFound: {
                         self.pairing.notFoundDevice()
-                        
                    })
             
             case .user(let cid) :
@@ -86,7 +85,8 @@ class AccountManager : PageProtocol{
                 self.dataProvider.requestData(q: .init(type: .getDevicePairingStatus, isOptional: true))
             case .userInfo :
                 self.dataProvider.requestData(q: .init(type: .getPairingUserInfo(self.pairing.hostDevice?.apiMacAdress), isOptional: true))
-                
+            case .hostNickNameInfo(let isAll) : 
+                self.dataProvider.requestData(q: .init(type: .getHostNickname(isAll: isAll), isOptional: true))
             case .updateKids :
                 self.dataProvider.requestData(q: .init(type: .getKidsProfiles, isOptional: true))
             case .registKid(let kid) :
@@ -238,7 +238,10 @@ class AccountManager : PageProtocol{
                     return
                 }
                 self.pairing.syncPairingAgreement(agreement)
-                
+            case .getHostNickname(_, let anotherStbId):
+                if anotherStbId != nil { return }
+                guard let data = res.data as? HostNickName else { return }
+                self.pairing.updateHostNicknameInfo(data)
             case .getStbList :
                 guard let data = res.data as? StbListItem else {
                     self.pairing.notFoundDevice()

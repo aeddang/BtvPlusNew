@@ -120,15 +120,16 @@ struct ShareRecommand: PageComponent {
             switch res.type {
             case .getRecommendBenefit :
                 guard let benefit = res.data as? RecommandBenefit else { return }
-                if let benifitMe = benefit.bpoint {
-                    let str = benifitMe + String.share.synopsisRecommandVodTrailing
-                    Self.benifitMe = str
-                    self.benifitMe = str
-                }
-                if let benifitFriend = benefit.coupon_val{
-                    let str = benifitFriend + String.share.synopsisRecommandPurchaseTrailing
+                if let benifitFriend = benefit.bpoint {
+                    let str = benifitFriend + String.share.synopsisRecommandVodTrailing
                     Self.benifitFriend = str
                     self.benifitFriend = str
+                   
+                }
+                if let benifitMe = benefit.coupon_val{
+                    let str = benifitMe + String.share.synopsisRecommandPurchaseTrailing
+                    Self.benifitMe = str
+                    self.benifitMe = str
                 }
             case .registRecommend :
                 guard let recommandId = res.data as? RecommandId else {

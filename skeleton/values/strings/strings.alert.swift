@@ -159,6 +159,10 @@ extension String {
         public static var watchLvCanceled = "alertWatchLvCanceled".loaalized()
         public static var watchLvCanceledInfo = "alertWatchLvCanceledInfo".loaalized()
         
+        public static var vodUpdate = "alertVodUpdate".loaalized()
+        public static var vodUpdateText = "alertVodUpdateText".loaalized()
+        public static var vodUpdateButton = "alertVodUpdateButton".loaalized()
+        
         
         public static var kidsExitCompleted = "alertKidsExitCompleted".loaalized()
         public static var kidsExitCompletedInfo = "alertKidsExitCompletedInfo".loaalized()

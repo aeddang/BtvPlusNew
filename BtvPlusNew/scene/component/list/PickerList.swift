@@ -44,7 +44,7 @@ struct PickerList: PageComponent{
                 if !self.datas.isEmpty {
                     ForEach(self.datas) { data in
                         PickerItem( data:data, isSelected: self.selectedIdx == data.index )
-                            .id(data.index)
+                            .id(data.hashId)
                             .frame(height: self.selectedIdx == data.index ? Font.size.bold  : Font.size.mediumExtra )
                             .modifier(ListRowInset(
                                 spacing:Dimen.margin.medium

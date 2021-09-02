@@ -51,7 +51,21 @@ extension PageSynopsis {
                 : self.pagePresenter.fullScreenEnter(changeOrientation: changeOrientation)
         }
     }
-    
+    func onDrag(evt:PageDragingEvent) {
+        if !Self.useLayer {return}
+        if self.type == .kids  {return}
+        guard let page = self.pageObject  else { return }
+        switch evt {
+        case .dragInit :
+            self.pagePresenter.setLayerPopup(pageObject: page, isLayer: false)
+            withAnimation{
+                self.dragOffset = 0
+            }
+        case .drag(_, let dragOpacity) :
+            self.dragOpacity = dragOpacity
+        case .draged: break
+        }
+    }
     
     func onDragEndAction(isBottom: Bool, geometry:GeometryProxy) {
         if self.isBottom && isBottom {

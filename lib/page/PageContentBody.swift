@@ -75,11 +75,9 @@ struct PageContentBody: PageView  {
             if self.offsetX != 0 || self.offsetY != 0 { return }
             
             if pageObject == page {
-                //PageLog.log("currentTopPage",tag:self.pageID)
                 self.isTop = true
                 self.isBelow = false
                 withAnimation{
-                   
                     self.pageOffsetX = 0.0
                     self.pageOffsetY = 0.0
                     self.dragOpacity = 0
@@ -87,9 +85,7 @@ struct PageContentBody: PageView  {
                 
             } else {
                 self.isTop = false
-                
                 let below = self.pageChanger.getBelowPage(page: page)
-                
                 self.isBelow = below == pageObject
                 withAnimation{
                     self.dragOpacity = 1

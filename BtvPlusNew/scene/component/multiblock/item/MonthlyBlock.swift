@@ -46,7 +46,7 @@ struct MonthlyBlock: PageComponent {
                         textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
                     ){_ in
                         self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.multiBlock)
+                            PageProvider.getPageObject(.monthlyTicket)
                                 .addParam(key: .id, value: allData.menu_id)
                                 .addParam(key: .title, value: allData.menu_nm)
                                 .addParam(key: .data, value: allData.blocks)
@@ -110,8 +110,6 @@ struct MonthlyBlock: PageComponent {
                 if let data = self.monthlyDatas.first(where: { $0.isSelected }) {
                     self.selectedData(data: data)
                 }
-            } else {
-                self.moveScroll()
             }
             self.setupTipTab()
         }
@@ -133,16 +131,6 @@ struct MonthlyBlock: PageComponent {
         .onDisappear(){
             self.anyCancellable.forEach{$0.cancel()}
             self.anyCancellable.removeAll()
-        }
-    }
-    
-    private func moveScroll(){
-        if let data = self.currentData {
-            let idx  = self.monthlyDatas.firstIndex(of: data) ?? 0
-            ComponentLog.d("idx " + idx.description, tag: self.tag)
-            if idx > 0 {
-                self.viewModel.uiEvent = .scrollTo(max(0,idx), .none)
-            }
         }
     }
     
@@ -170,9 +158,6 @@ struct MonthlyBlock: PageComponent {
         }
         ComponentLog.d("New List" , tag: self.tag)
         self.listId = key
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.1){
-            self.moveScroll()
-        }
         return newList
     }
     

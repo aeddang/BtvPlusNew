@@ -16,6 +16,7 @@ extension PageID{
     static let home:PageID = "home"
     static let category:PageID = "category"
     static let synopsis:PageID = "synopsis"
+    static let monthlyTicket:PageID = "monthlyTicket"
     static let synopsisPackage:PageID = "synopsisPackage"
     static let synopsisPlayer:PageID = "synopsisPlayer"
     static let pairing:PageID = "pairing"
@@ -170,6 +171,7 @@ struct PageFactory{
         case .intro : return PageIntro()
         case .home : return PageHome()
         case .category : return PageCategory()
+        case .monthlyTicket : return PageMultiBlock()
         case .serviceError : return PageServiceError()
         case .my : return PageMy()
         case .myPurchase : return PageMyPurchase()

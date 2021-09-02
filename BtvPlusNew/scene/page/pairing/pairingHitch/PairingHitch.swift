@@ -12,6 +12,7 @@ import Combine
 struct PairingHitch: PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var repository:Repository
+    @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var networkObserver:NetworkObserver
@@ -195,6 +196,16 @@ struct PairingHitch: PageComponent {
             }
            
         }
+        .onReceive(self.dataProvider.$result){ res in
+            guard let res = res else { return }
+            switch res.type {
+            case .getHostNickname :
+                guard let data = res.data as? HostNickName else { return }
+                self.syncFindDeviceNickName(host: data)
+            default: break
+            }
+           
+        }
         .onReceive(self.pairing.$event){ evt in
             if !self.isHitching || self.hasPopup {return}
             guard let evt = evt else {return}
@@ -311,6 +322,14 @@ struct PairingHitch: PageComponent {
         self.pairing.requestPairing(.wifi(retryCount:0))
     }
     
+    private func syncFindDeviceNickName(host:HostNickName) {
+        guard let stbs = self.stbs else { return }
+        stbs.forEach{ stb in
+            if let find = host.stbList?.first(where: {$0.joined_stb_id == stb.stbid}) {
+                stb.stbNickName = find.joined_stb_id
+            }
+        }
+    }
     
     private func findDeviceCompleted(evt:PairingEvent){
         switch evt {
@@ -320,9 +339,15 @@ struct PairingHitch: PageComponent {
                 withAnimation{ self.isAutoPairing = false }
                 self.sendLog(action: .pageShow)
             } else {
-                self.stbs = findData.map{StbData().setData(data: $0)}
+                let stbs = findData.map{StbData().setData(data: $0)}
+                self.stbs = stbs
                 withAnimation{ self.isAutoPairing = true }
                 self.sendLog(action: .pageShow)
+                stbs.forEach { stb in
+                    self.dataProvider.requestData(
+                        q: .init(type: .getHostNickname(isAll:false, anotherStbId: stb.stbid), isOptional: true))
+                }
+                
             }
         
         case .notFoundDevice :

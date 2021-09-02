@@ -35,7 +35,7 @@ class VideoListData:InfinityData{
     }
     func setData(_ data:SampleVideo) -> VideoListData {
         subTitle = data.name ?? ""
-        ckcURL = data.drm_license_url
+        ckcURL = data.drm_license_url?.isEmpty == false ? data.drm_license_url : nil
         contentId = data.contentId
         videoPath = data.uri ?? ""
         return self
@@ -100,8 +100,8 @@ struct PagePlayerTestList: PageView {
             if let apiPath = obj.getParamValue(key: .data) as? String {
                 if !apiPath.isEmpty {
                     self.apiPath = apiPath
-                    load()
-                    return
+                    //load()
+                    //return
                 }
                 
             }
@@ -112,7 +112,7 @@ struct PagePlayerTestList: PageView {
     }//body
     
     private func loadAsset(){
-        let url = Bundle.main.url(forResource: "resource_fairplay_202107151800", withExtension: "json")!
+        let url = Bundle.main.url(forResource: "resource_fairplay", withExtension: "json")!
         let data = try! Data(contentsOf: url)
         let decoder = JSONDecoder()
         do {

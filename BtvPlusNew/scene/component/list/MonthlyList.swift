@@ -154,20 +154,11 @@ struct MonthlyList: PageComponent{
             useTracking: self.useTracking
             ){
             ForEach(self.datas) { data in
-                if data.posIdx == -1 {
-                    MonthlyItem( data:data )
-                    .onTapGesture {
-                        if let action = self.action {
-                            action(data)
-                        }
-                    }
-                }else{
-                    MonthlyItem( data:data )
-                        .id(data.posIdx)
-                    .onTapGesture {
-                        if let action = self.action {
-                            action(data)
-                        }
+                MonthlyItem( data:data )
+                    .id(data.hashId)
+                .onTapGesture {
+                    if let action = self.action {
+                        action(data)
                     }
                 }
             }

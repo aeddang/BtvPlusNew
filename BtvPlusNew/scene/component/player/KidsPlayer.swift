@@ -231,7 +231,7 @@ struct KidsPlayer: PageComponent{
             .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
                 self.isFullScreen = fullScreen
                 if let find = self.listData.datas.first(where: {self.contentID == $0.epsdId}) {
-                    self.listViewModel.uiEvent = .scrollTo(find.index, UnitPoint.center)
+                    self.listViewModel.uiEvent = .scrollTo(find.hashId, UnitPoint.center)
                 }
                 self.updatePlayListOffset()
             }

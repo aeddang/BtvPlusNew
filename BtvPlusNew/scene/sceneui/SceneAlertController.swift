@@ -14,7 +14,7 @@ enum SceneAlert:Equatable {
     case confirm(String?, String? = nil , String? = nil, confirmText:String? = nil, (Bool) -> Void),
          alert(String?, String? = nil, String? = nil, (() -> Void)? = nil),
          recivedApns(AlramData?), apiError(ApiResultError),
-         connectWifi , notFoundDevice((Bool) -> Void), requestLocation((Bool) -> Void),
+         connectWifi , notFoundDevice((() -> Void)? = nil), requestLocation((Bool) -> Void),
          
          limitedDevice(PairingInfo?), pairingError(NpsCommonHeader?), pairingUpdated(PairingUpdateData),
          pairingRecovery, needPairing(String? = nil, move:PageObject? = nil), pairingCheckFail,
@@ -86,7 +86,8 @@ struct SceneAlertController: PageComponent{
             case .confirm(_, _, _, _, let completionHandler) : self.selectedConfirm(idx, completionHandler:completionHandler)
             case .apiError(let data): self.selectedApi(idx, data:data)
             case .connectWifi: self.selectedConnectWifi(idx)
-            case .notFoundDevice(let completionHandler) : self.selectedNotFoundDevice(idx, completionHandler:completionHandler)
+            case .notFoundDevice(let completionHandler) :
+                if let handler = completionHandler { self.selectedNotFoundDevice(idx, completionHandler:handler)}
             case .recivedApns(let data): self.selectedRecivedApns(idx, alram:data)
             case .requestLocation(let completionHandler): self.selectedRequestLocation(idx, completionHandler:completionHandler)
             case .limitedDevice(_) : self.selectedLimitedDevice(idx)
@@ -314,12 +315,12 @@ struct SceneAlertController: PageComponent{
         self.text = String.alert.connectNotFound
         self.subText = String.alert.connectNotFoundSub
         self.buttons = [
-            AlertBtnData(title: String.app.retry, index: 0),
+            //AlertBtnData(title: String.app.retry, index: 0),
             AlertBtnData(title: String.app.confirm, index: 1)
         ]
     }
-    func selectedNotFoundDevice(_ idx:Int, completionHandler: @escaping (Bool) -> Void) {
-        completionHandler(idx == 0)
+    func selectedNotFoundDevice(_ idx:Int, completionHandler: @escaping () -> Void) {
+        completionHandler()
     }
     
     func setupRequestLocation() {

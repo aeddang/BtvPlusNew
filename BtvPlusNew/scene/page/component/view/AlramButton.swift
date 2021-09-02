@@ -64,7 +64,17 @@ struct AlramButton: PageView {
         if self.isAlram == true {
             dataProvider.requestData(q: .init( type: .deleteNotificationVod(self.data.srisId)))
         } else {
-            dataProvider.requestData(q: .init( type: .postNotificationVod(self.data)))
+            self.appSceneObserver.alert = .confirm(
+                String.alert.vodUpdate,
+                String.alert.vodUpdateText,
+                confirmText: String.alert.vodUpdateButton){ isOk in
+                
+                if isOk {
+                    self.dataProvider.requestData(q: .init( type: .postNotificationVod(self.data)))
+                }
+            }
+            
+            
         }
     }
     

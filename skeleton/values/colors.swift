@@ -86,6 +86,7 @@ extension Color {
     struct transparent {
         public static let clear = Color.black.opacity(0.0)
         public static let clearUi = Color.black.opacity(0.0001)
+        public static let black80 = Color.black.opacity(0.8)
         public static let black70 = Color.black.opacity(0.7)
         public static let black50 = Color.black.opacity(0.5)
         public static let black45 = Color.black.opacity(0.45)

@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class StbData:InfinityData{
+class StbData:InfinityData, ObservableObject{
     private(set) var image: String = Asset.noImg1_1
     private(set) var title: String? = nil
     private(set) var subTitle: String? = nil
@@ -26,7 +26,7 @@ class StbData:InfinityData{
     private(set) var address:String? = nil
     private(set) var isAdultSafetyMode:Bool? = nil
     private(set) var terminateDate:String? = nil
-    
+    @Published var stbNickName:String? = nil
     func setData(data:MdnsDevice) -> StbData {
         macAddress = data.stb_mac_address
         uiAppVer = data.ui_app_ver
@@ -98,7 +98,8 @@ struct StbList: PageComponent{
 }
 
 struct StbItem: PageView {
-    var data:StbData
+    @ObservedObject var data:StbData
+    @State var nickName:String? = nil
     var body: some View {
         VStack(alignment:.leading , spacing:0){
             HStack(spacing:Dimen.margin.light){
@@ -109,8 +110,11 @@ struct StbItem: PageView {
                     width: ListItem.stb.size.width,
                     height: ListItem.stb.size.height)
                 VStack( alignment:.leading , spacing:0){
-                    if self.data.title != nil {
-                        Text(self.data.title!)
+                    if let nick = self.nickName {
+                        Text(nick + "(" + String.app.defaultStb + ")")
+                            .modifier(MediumTextStyle(size: Font.size.regular))
+                    }else {
+                        Text(String.app.defaultStb)
                             .modifier(MediumTextStyle(size: Font.size.regular))
                     }
                     if self.data.subTitle != nil {
@@ -125,6 +129,9 @@ struct StbItem: PageView {
                 .modifier(MatchHorizontal(height: 1))
                 .background(Color.app.greyExtra)
                 .opacity(0.1)
+        }
+        .onReceive(self.data.$stbNickName){ nick in
+            self.nickName = nick
         }
     
     }

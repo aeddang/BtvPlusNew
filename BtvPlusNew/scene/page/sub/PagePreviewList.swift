@@ -45,7 +45,6 @@ struct PagePreviewList: PageView {
                         viewModel:self.viewModel,
                         pageObservable:self.pageObservable,
                         playerModel:self.playerModel,
-                        useTracking:true,
                         marginTop: Dimen.margin.thin,
                         marginBottom: self.marginBottom 
                     )

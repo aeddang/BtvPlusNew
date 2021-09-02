@@ -18,6 +18,7 @@ struct PagePairingManagement: PageView {
     @State var nick:String = ""
     @State var pairingDate:String = ""
     @State var macAdress:String = ""
+    @State var modelNickName:String? = nil
     @State var modelName:String = ""
     @State var modelImage:String = Asset.noImg1_1
     @State var sceneOrientation: SceneOrientation = .portrait
@@ -64,9 +65,17 @@ struct PagePairingManagement: PageView {
                                     width: ListItem.stb.size.width,
                                     height: ListItem.stb.size.height)
                                 VStack(alignment:.leading, spacing:Dimen.margin.thin){
-                                    Text(self.modelName)
-                                        .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.white))
-        
+                                    HStack(spacing:Dimen.margin.tiny){
+                                        if let nick = self.modelNickName {
+                                            Text(nick)
+                                                .modifier(BoldTextStyle(size: Font.size.lightExtra, color: Color.app.white))
+                                            Text("("+self.modelName+")")
+                                                .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.white))
+                                        } else {
+                                            Text(self.modelName)
+                                                .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.white))
+                                        }
+                                    }
                                     Text(String.app.macAdress + " : " + self.macAdress)
                                         .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
                                     
@@ -144,6 +153,11 @@ struct PagePairingManagement: PageView {
                     self.pairingDate =  date.count > 10 ? date.subString(start: 0, len: 10) : date
                 }
             }
+            .onReceive(self.pairing.$hostNickName){ host in
+                if host == nil {return}
+                self.modelNickName = self.pairing.currentHostInfoData?.joined_nickname
+                
+            }
             .onReceive(self.pairing.$hostDevice){ device in
                 guard let device = device else {return}
                 if let adress = device.macAdress {
@@ -151,7 +165,7 @@ struct PagePairingManagement: PageView {
                         forNps: adress,
                         npsKey: NpsNetwork.AES_KEY, npsIv: NpsNetwork.AES_IV)
                 }
-                self.modelName = device.modelViewName ?? device.modelName ?? String.app.defaultStb
+                self.modelName = device.modelViewName ?? String.app.defaultStb
                 self.modelImage = Pairing.getSTBImage(stbModel: self.modelName)
             }
             .onReceive(self.sceneObserver.$isUpdated){ update in
@@ -160,6 +174,9 @@ struct PagePairingManagement: PageView {
             }
             .onAppear{
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
+                if self.pairing.hostNickName == nil {
+                    self.pairing.requestPairing(.hostNickNameInfo())
+                }
             }
             
         }//geo

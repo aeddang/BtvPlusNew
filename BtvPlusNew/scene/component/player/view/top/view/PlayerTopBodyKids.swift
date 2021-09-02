@@ -30,36 +30,40 @@ struct PlayerTopBodyKids: PageView{
     
     var body: some View {
         HStack(alignment: .top,  spacing: self.isFullScreen ? KidsPlayerUI.fullScreenSpacing : KidsPlayerUI.spacing){
-            if !self.isSimple && self.isFullScreen {
-                Button(action: {
-                    self.viewModel.btvPlayerEvent = .close
-                    
-                }) {
-                    Image(AssetKids.player.back)
-                        .renderingMode(.original)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(
-                            width: self.isFullScreen
-                                ? KidsPlayerUI.iconFullScreen.width : KidsPlayerUI.icon.width,
-                            height: self.isFullScreen
-                                ? KidsPlayerUI.iconFullScreen.height : KidsPlayerUI.icon.height)
+            if !self.isLock {
+                if !self.isSimple && self.isFullScreen {
+                    Button(action: {
+                        self.viewModel.btvPlayerEvent = .close
+                        
+                    }) {
+                        Image(AssetKids.player.back)
+                            .renderingMode(.original)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(
+                                width: self.isFullScreen
+                                    ? KidsPlayerUI.iconFullScreen.width : KidsPlayerUI.icon.width,
+                                height: self.isFullScreen
+                                    ? KidsPlayerUI.iconFullScreen.height : KidsPlayerUI.icon.height)
+                    }
                 }
-            }
-            if self.isFullScreen, let title = self.title {
-                VStack(alignment: .leading){
-                    Text(title)
-                        .modifier(BoldTextStyleKids(
-                                size: Font.sizeKids.regular,
-                                color: Color.app.white)
-                        )
-                        .lineLimit(1)
+                if self.isFullScreen, let title = self.title {
+                    VStack(alignment: .leading){
+                        Text(title)
+                            .modifier(BoldTextStyleKids(
+                                    size: Font.sizeKids.regular,
+                                    color: Color.app.white)
+                            )
+                            .lineLimit(1)
+                        Spacer().modifier(MatchHorizontal(height: 0))
+                    }
+                    .modifier(MatchHorizontal(height: Font.sizeKids.regular))
+                    .padding(.top, DimenKids.margin.thin)
+                } else{
                     Spacer().modifier(MatchHorizontal(height: 0))
                 }
-                .modifier(MatchHorizontal(height: Font.sizeKids.regular))
-                .padding(.top, DimenKids.margin.thin)
-            } else{
-                Spacer().modifier(MatchHorizontal(height: 1))
+            } else {
+                Spacer().modifier(MatchHorizontal(height: 0))
             }
             PlayerMoreBoxKids( viewModel: self.viewModel, isLock:self.isLock )
             if self.isLock {

@@ -33,7 +33,7 @@ struct PlayerGuide: PageView{
         }
         .padding(.all,  PlayerUI.paddingFullScreen)
         .modifier(MatchParent())
-        .background(Color.transparent.black70)
+        .background(Color.transparent.black80)
         .opacity(self.isShowing ? 1 : 0)
         .onReceive(self.viewModel.$btvUiEvent) { evt in
             withAnimation{

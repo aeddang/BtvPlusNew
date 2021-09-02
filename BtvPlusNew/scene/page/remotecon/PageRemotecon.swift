@@ -380,7 +380,9 @@ struct PageRemotecon: PageView {
             }
         case .volumeMove(let v) :
             self.sendAction(npsMessage: NpsMessage().setMessage(type: v>0 ? .VOLUp : .VOLDown))
-            MPVolumeView.moveVolume(v>0 ? 0.1 : -0.1)
+            if self.isAudioMirroring {
+                MPVolumeView.moveVolume(v>0 ? 0.1 : -0.1)
+            }
             
         case .channelMove(let c) :
             self.sendAction(npsMessage: NpsMessage().setMessage(type: c>0 ? .CHUp : .CHDown))

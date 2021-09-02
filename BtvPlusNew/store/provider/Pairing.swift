@@ -7,7 +7,9 @@
 
 import Foundation
 enum PairingRequest:Equatable{
-    case wifi(retryCount:Int = 2) , btv, user(String?), cancel, hostInfo(auth:String?, device:String?, prevResult:NpsCommonHeader?),
+    case wifi(retryCount:Int = 2) , btv, user(String?), cancel,
+         hostInfo(auth:String?, device:String?, prevResult:NpsCommonHeader?),
+         hostNickNameInfo(isAll:Bool = false),
          recovery, device(StbData), auth(String) , token(String),
          unPairing, check,
          userInfo, updateKids, registKid(Kid), selectKid(Kid), modifyKid(Kid), deleteKid(Kid),
@@ -69,6 +71,7 @@ class Pairing:ObservableObject, PageProtocol {
     private(set) var isPairingAgreement:Bool = false
    
     @Published private(set) var hostDevice:HostDevice? = nil
+    @Published private(set) var hostNickName:HostNickName? = nil
     private(set) var stbId:String? = nil
     private(set) var phoneNumer:String = "01000000000"
     
@@ -83,6 +86,16 @@ class Pairing:ObservableObject, PageProtocol {
     let authority:Authority = Authority()
     var storage:Setup? = nil
     var naviLogManager:NaviLogManager? = nil
+    
+    var currentHostInfoData:HostNickNameItem? {
+        get {
+            guard let host = self.hostNickName else { return nil }
+            guard let find = self.stbId else { return nil }
+            guard let hosts = host.stbList else { return nil }
+            guard let curHost = hosts.first(where:{$0.joined_stb_id == find}) else { return nil } 
+            return curHost
+        }
+    }
     
     func requestPairing(_ request:PairingRequest){
         switch request {
@@ -135,6 +148,7 @@ class Pairing:ObservableObject, PageProtocol {
         self.isPairingAgreement = false
         self.isPairingUser = false
         self.hostDevice = nil
+        self.hostNickName = nil
         self.user = nil
         self.status = .disConnect
         self.event = .disConnected
@@ -142,6 +156,7 @@ class Pairing:ObservableObject, PageProtocol {
         self.kids = []
         self.kid = nil
         self.kidStudyData = nil
+        
     }
     
     
@@ -216,6 +231,11 @@ class Pairing:ObservableObject, PageProtocol {
     
     func updateUserAgreement(_ isAgree:Bool){
         self.user?.update(isAgree: isAgree)
+    }
+    
+    
+    func updateHostNicknameInfo(_ info:HostNickName){
+        self.hostNickName = info
     }
     
     func updatedKidsProfiles(_ data:KidsProfiles? = nil, updateType:KesNetwork.UpdateType? = nil){

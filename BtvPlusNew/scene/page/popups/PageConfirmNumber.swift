@@ -123,7 +123,7 @@ struct PageConfirmNumber: PageView {
             switch res.type {
             case .confirmPassword :
                 self.confirmPasswordRespond(res)
-            case .postCoupon, .getStbInfo, .certificationCoupon, .postBPoint :
+            case .postCoupon, .getStbInfo, .certificationCoupon, .postBPoint, .postBCash :
                 self.resigistCouponRespond(res)
             case .updateUser (let user):
                 self.modifyNickNameRespond(res, updateData:user)
@@ -138,7 +138,8 @@ struct PageConfirmNumber: PageView {
             guard let err = err else { return }
             if err.id != self.tag { return }
             switch err.type {
-            case .confirmPassword, .postCoupon, .updateUser, .postBPoint, .updateOkCashPoint, .certificationCoupon, .getStbInfo:
+            case .confirmPassword, .postCoupon, .updateUser,
+                 .postBPoint, .postBCash, .updateOkCashPoint, .certificationCoupon, .getStbInfo:
                 self.msg = String.alert.apiErrorClient
             default: break
             }

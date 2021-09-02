@@ -37,7 +37,7 @@ struct SimplePlayer: PageComponent{
                         pageObservable: self.pageObservable,
                         isSimple: true)
                     
-                    PlayerEffect(viewModel: self.viewModel)
+                    //PlayerEffect(viewModel: self.viewModel)
                     PlayerTop(viewModel: self.viewModel, title: self.title, isSimple: true)
                     PlayerOptionSelectBox(viewModel: self.viewModel)
                     PlayerGuide(viewModel: self.viewModel)

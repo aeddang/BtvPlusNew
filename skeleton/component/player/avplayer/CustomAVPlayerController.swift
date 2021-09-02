@@ -80,36 +80,14 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
     }
     
     private func update(_ player:PlayerScreenView, evt:PlayerUIEvent){
-        func onResume(){
-            if viewModel.playerStatus == .complete {
-                onSeek(time: 0, play:true)
-                return
-            }
-            
-            if !player.resume() {
-                viewModel.error = .illegalState(evt)
-                return
-            }
-            run(player)
-        }
-        func onPause(){
-            if !player.pause() { viewModel.error = .illegalState(evt) }
-        }
-        
-        func onSeek(time:Double, play:Bool){
-            if !player.seek(time) { viewModel.error = .illegalState(evt) }
-            var st = min(time, self.viewModel.limitedDuration ?? self.viewModel.duration)
-            st = max(st, 0)
-            //ComponentLog.d("onSeek time " + time.description, tag: self.tag)
-            //ComponentLog.d("onSeek st " + st.description, tag: self.tag)
-            //ComponentLog.d("onSeek " + self.viewModel.duration.description, tag: self.tag)
-            
-            self.onSeek(time: st)
-            if self.viewModel.isRunning {return}
-            if play { onResume() }
-            run(player)
-        }
         //ComponentLog.d("update evt" , tag: self.tag)
+        DispatchQueue.main.async {
+            self.updateExcute(player, evt:evt)
+        }
+        viewModel.event = nil
+    }
+    
+    private func updateExcute(_ player:PlayerScreenView, evt:PlayerUIEvent) {
         switch evt {
         case .load(let path, let isAutoPlay, let initTime, let header):
             viewModel.reload()
@@ -161,18 +139,41 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
         case .seekTime(let t, let play): onSeek(time:t, play: play)
         case .seekMove(let t, let play): onSeek(time:viewModel.time + t, play: play)
         case .seekForward(let t, let play): onSeek(time:viewModel.time + t - viewModel.seekMove, play: play)
-        case .seekBackword(let t, let play): onSeek(time:viewModel.time - t - viewModel.seekMove, play: play) 
+        case .seekBackword(let t, let play): onSeek(time:viewModel.time - t - viewModel.seekMove, play: play)
         case .seekProgress(let pct, let play):
             let t = viewModel.duration * Double(pct)
             onSeek(time:t, play: play)
-            
         case .neetLayoutUpdate :
             player.setNeedsLayout()
         default : break
         }
-        viewModel.event = nil
+        
+        func onResume(){
+            if viewModel.playerStatus == .complete {
+                onSeek(time: 0, play:true)
+                return
+            }
+            if !player.resume() {
+                viewModel.error = .illegalState(evt)
+                return
+            }
+            run(player)
+        }
+        func onPause(){
+            if !player.pause() { viewModel.error = .illegalState(evt) }
+        }
+        
+        func onSeek(time:Double, play:Bool){
+            var st = min(time, (self.viewModel.limitedDuration ?? self.viewModel.duration) - 1 )
+            st = max(st, 0)
+            if !player.seek(st) { viewModel.error = .illegalState(evt) }
+            self.onSeek(time: st)
+            if self.viewModel.isRunning {return}
+            if play { onResume() }
+            run(player)
+        }
     }
-    
+        
     private func run(_ player: PlayerScreenView){
         var job:AnyCancellable? = nil
         var timeControlStatus:AVPlayer.TimeControlStatus? = nil
@@ -254,7 +255,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
                                     if willDuration != viewModel.originDuration {
                                         DispatchQueue.main.async {
                                             self.onDurationChange(willDuration)
-                                            player.playInit()
+                                            player.playInit(duration: willDuration)
                                         }
                                        
                                     }
@@ -325,9 +326,20 @@ extension MPVolumeView {
         let slider = volumeView.subviews.first(where: { $0 is UISlider }) as? UISlider
        
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.01) {
-            let v = ( slider?.value ?? 0 ) + move
-            slider?.value = v
-            volumeView.showsVolumeSlider = false
+            guard let prev = slider else {return}
+            let preV = convertVolume(prev.value)
+            DataLog.d("preV " + preV.description, tag:"MPVolumeView")
+            DataLog.d("move " + move.description, tag:"MPVolumeView")
+            let v = preV + move
+            prev.value = v
+           
+        }
+        func convertVolume(_ value: Float) -> Float {
+            if value == 0.0 {
+                return 0.0
+            }
+            let convertValue: Int = Int((value * 10))
+            return Float(convertValue) * 0.1
         }
     }
     static func setVolume(_ volume: Float) -> Void {
@@ -335,7 +347,7 @@ extension MPVolumeView {
         let slider = volumeView.subviews.first(where: { $0 is UISlider }) as? UISlider
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.01) {
             slider?.value = volume
-            volumeView.showsVolumeSlider = false
+            
         }
         
     }

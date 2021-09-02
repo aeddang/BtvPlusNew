@@ -126,6 +126,7 @@ struct CateBlock: PageComponent{
                         viewModel: self.infinityScrollModel,
                         axes: .vertical,
                         scrollType : .reload(isDragEnd:false),
+                        showIndicators: true,
                         header:self.useTop ?
                             CateBlockHeader(
                                 pageType: self.viewModel.type,

@@ -31,6 +31,7 @@ struct FloatRecommand:PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
     @Binding var isClose:Bool
+    @Binding var userControl:Bool
     var data:FloatRecommandData
     var body :some View {
         VStack(alignment: .trailing, spacing:DimenKids.margin.micro){
@@ -66,6 +67,7 @@ struct FloatRecommand:PageComponent {
                 }
             } else {
                 Button(action: {
+                    self.userControl = true
                     withAnimation{ self.isClose = true}
                 }) {
                     Image(AssetKids.icon.closePop)
@@ -79,10 +81,12 @@ struct FloatRecommand:PageComponent {
             }
             if !self.isClose {
                 HStack(spacing:DimenKids.margin.thin){
-                    Text(data.text)
-                        .modifier(MediumTextStyleKids(size: Font.sizeKids.lightExtra, color: Color.app.brownDeep))
-                        .multilineTextAlignment(.leading)
-                    
+                    VStack(alignment: .leading, spacing:0){
+                        Spacer().modifier(MatchHorizontal(height:0))
+                        Text(data.text)
+                            .modifier(MediumTextStyleKids(size: Font.sizeKids.lightExtra, color: Color.app.brownDeep))
+                            .multilineTextAlignment(.leading)
+                    }
                     if self.data.isMonthlyReport || self.data.diagnosticReportType != nil {
                         Spacer().modifier(
                             LineVertical( width:DimenKids.stroke.light, color:Color.app.black)
@@ -158,12 +162,13 @@ struct FloatRecommand_Previews: PreviewProvider {
         Form{
             FloatRecommand(
                 isClose: .constant(true),
+                userControl: .constant(true),
                 data: FloatRecommandData(
-                            playType: .english,
-                            text: "testdcscdscsdcdsacdcac",
-                            isMonthlyReport: false,
-                            diagnosticReportType: .english,
-                            isDiagnosticReportCompleted:true))
+                    playType: .english,
+                    text: "testdcscdscsdcdsacdcac",
+                    isMonthlyReport: false,
+                    diagnosticReportType: .english,
+                    isDiagnosticReportCompleted:true))
                 .environmentObject(PagePresenter())
                 .environmentObject(Pairing())
                 .environmentObject(PageSceneObserver()).frame(width:320,height:200)

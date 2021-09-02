@@ -379,21 +379,12 @@ struct VideoList: PageComponent{
                 }
             }
             ForEach(self.datas) { data in
-                if data.index == -1 {
-                    VideoItem( data:data , isSelected: self.contentID == nil
-                                ? false
-                                : self.contentID == data.epsdId)
-                    .onTapGesture {
-                        self.onTap(data: data)
-                    }
-                } else {
-                    VideoItem( data:data , isSelected: self.contentID == nil
-                                ? false
-                                : self.contentID == data.epsdId)
-                    .id(data.index)
-                    .onTapGesture {
-                        self.onTap(data: data)
-                    }
+                VideoItem( data:data , isSelected: self.contentID == nil
+                            ? false
+                            : self.contentID == data.epsdId)
+                .id(data.hashId)
+                .onTapGesture {
+                    self.onTap(data: data)
                 }
             }
         }

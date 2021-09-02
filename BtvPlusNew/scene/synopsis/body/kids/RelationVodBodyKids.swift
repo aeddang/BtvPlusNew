@@ -46,7 +46,7 @@ struct RelationVodBodyKids: PageComponent{
                         relationContentsModel: self.relationContentsModel, 
                         data:data.setListType(.kids),
                         isSelected: self.epsdId == data.contentID )
-                        .id(data.index)
+                        .id(data.hashId)
                         .onTapGesture {
                             if data.hasLog {
                                 self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog)

@@ -79,22 +79,26 @@ final class PagePresenter:ObservableObject{
     
     func hasLayerPopup()->Bool{
         let result = PageSceneDelegate.instance?.popups.first{ $0.isLayer }
-        return result !== nil
+        return result != nil
     }
     
     func hasPopup(find:PageID)->Bool{
         let result = PageSceneDelegate.instance?.popups.first{ $0.pageID == find}
-        return result !== nil
+        return result != nil
     }
     func hasPopup(exception:PageID)->Bool{
         let result = PageSceneDelegate.instance?.popups.first{ $0.pageID != exception}
-        return result !== nil
+        return result != nil
     }
     
     
     func hasHistory()->Bool{
         let result = PageSceneDelegate.instance?.historys.first
-        return result !== nil
+        return result != nil
+    }
+    
+    func syncOrientation(){
+        PageSceneDelegate.instance?.syncOrientation(self.currentTopPage)
     }
     
     func orientationLock(lockOrientation:UIInterfaceOrientationMask){
@@ -226,7 +230,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     }
 
     final func changePage(_ newPage:PageObject, isBack:Bool = false, isCloseAllPopup:Bool = true){
-        PageLog.d("changePage" + newPage.pageID + " " + isBack.description, tag: self.tag)
+        PageLog.d("changePage " + newPage.pageID + " " + isBack.description, tag: self.tag)
         if pageModel.currentPageObject?.pageID == newPage.pageID {
             if( pageModel.currentPageObject?.params?.keys == newPage.params?.keys){
                 pageModel.currentPageObject?.params = newPage.params
@@ -283,6 +287,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                 self.changeSubscription = nil
                 PageLog.d("initAnimationComplete", tag: self.tag)
                 nextContent.initAnimationComplete()
+                self.syncOrientation(newPage)
         }
         pageModel.currentPageObject = newPage
     }
@@ -436,6 +441,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                     self.popupSubscriptions[key]?.cancel()
                     self.popupSubscriptions.removeValue(forKey: key)
                     self.contentController?.removeAllPopup(removePops:removePops)
+                   
             }
         popupSubscriptions.updateValue(subscription, forKey: key)
     }
@@ -484,6 +490,9 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                 ? nextPage
                 : pagePresenter.getBelowPage(page: nextPage) )
               else { return }
+        
+        PageLog.d("willChangePage " + willChangePage.pageID, tag:self.tag)
+        
         if willChangePage.isPopup {
             pagePresenter.currentPopup = willChangePage
         }else{
@@ -493,8 +502,12 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         pagePresenter.currentTopPage = willChangePage
         pageModel.topPageObject = willChangePage
        
-        let willChangeOrientationMask = pageModel.getPageOrientation(willChangePage)
-        AppDelegate.orientationLock = pageModel.getPageOrientationLock(willChangePage) ?? .all
+        self.syncOrientation(willChangePage)
+    }
+    
+    func syncOrientation(_ syncPage:PageObject? = nil) {
+        let willChangeOrientationMask = pageModel.getPageOrientation(syncPage)
+        AppDelegate.orientationLock = pageModel.getPageOrientationLock(syncPage) ?? .all
         guard let willChangeOrientation = willChangeOrientationMask else { return }
         if  willChangeOrientation == .all { return }
         self.requestDeviceOrientation(willChangeOrientation)
@@ -542,7 +555,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         AppDelegate.orientationLock = orientationLock
     }
     
-    final func  requestDeviceOrientation(_ mask:UIInterfaceOrientationMask){
+    final func requestDeviceOrientation(_ mask:UIInterfaceOrientationMask){
         let changeOrientation:UIInterfaceOrientation? = getChangeDeviceOrientation(mask: mask)
         if let controller = self.window?.rootViewController as? PageHostingController<AnyView> {
             switch changeOrientation {

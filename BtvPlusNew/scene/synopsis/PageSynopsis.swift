@@ -247,6 +247,27 @@ struct PageSynopsis: PageView {
                 case .top, .below : self.isUiActive = true
                 }
             }
+            .onReceive(self.infinityScrollModel.$scrollPosition){ pos in 
+                self.pageDragingModel.uiEvent = .dragCancel
+                
+            }
+            .onReceive(self.pageDragingModel.$event){ evt in
+                guard let evt = evt else {return}
+                switch evt {
+                case .dragInit :
+                    if !self.playerModel.isPrerollPlay {
+                        self.isPlayBeforeDraging = self.playerModel.isPlay
+                        self.playerModel.event = .pause
+                    }
+                case .draged:
+                    if self.isPlayBeforeDraging {
+                        self.playerModel.event = .resume
+                    }
+                default: break
+                }
+                self.onDrag(evt: evt)
+                
+            }
             .onReceive(self.pairing.$event){evt in
                 guard let _ = evt else {return}
                 self.isPageDataReady = true
@@ -254,9 +275,14 @@ struct PageSynopsis: PageView {
                 case .pairingCompleted : self.initPage()
                 case .disConnected : self.initPage()
                 case .pairingCheckCompleted(let isSuccess) :
-                    if isSuccess { self.initPage() }
+                    if isSuccess {
+                        let isPairing = self.pairing.status == .pairing
+                        if isPairing == self.isCheckdPairing {return}
+                        self.isCheckdPairing = isPairing
+                        self.initPage()
+                    }
                     else { self.appSceneObserver.alert = .pairingCheckFail }
-                default : do{}
+                default : break
                 }
             }
             .onReceive(self.pageDataProviderModel.$event){evt in
@@ -353,27 +379,6 @@ struct PageSynopsis: PageView {
             .onReceive(self.appSceneObserver.$safeBottomHeight) { _ in
                 self.updateBottomPos(geometry: geometry)
             }
-            .onReceive(self.self.pageDragingModel.$event){ evt in
-                guard let evt = evt else {return}
-                guard let page  = self.pageObject  else { return }
-                switch evt {
-                case .dragInit :
-                    if !self.playerModel.isPrerollPlay {
-                        self.isPlayBeforeDraging = self.playerModel.isPlay
-                        self.playerModel.event = .pause
-                    }
-                    self.pagePresenter.setLayerPopup(pageObject: page, isLayer: false)
-                    withAnimation{
-                        self.dragOffset = 0
-                    }
-                case .drag(_, let dragOpacity) :
-                    self.dragOpacity = dragOpacity
-                case .draged: if self.isPlayBeforeDraging {
-                    self.playerModel.event = .resume
-                    }
-                }
-                
-            }
             .onAppear{
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
                 self.onLayerPlayerAppear() 
@@ -400,6 +405,7 @@ struct PageSynopsis: PageView {
     }
     @State var historys:[SynopsisData] = []
     @State var isInitPage = false
+    @State var isCheckdPairing:Bool? = nil
     @State var progressError = false
     @State var progressCompleted = false
     @State var synopsisModel:SynopsisModel? = nil
@@ -1169,21 +1175,6 @@ struct PageSynopsis: PageView {
     }
     
     func watchBtv(){
-        guard let isPurchased = self.synopsisModel?.isPurchased else { return }
-        /*
-        if !isPurchased {
-            guard  let model = self.purchaseWebviewModel else { return }
-            self.appSceneObserver.alert = .needPurchase(model, String.alert.purchaseContinueBtv)
-            
-        } else {
-            let msg:NpsMessage = NpsMessage().setPlayVodMessage(
-                contentId: self.epsdRsluId ,
-                playTime: self.playerModel.time)
-            
-            self.pageDataProviderModel.request = .init(id : SingleRequestType.watchBtv.rawValue, type: .sendMessage( msg))
-            self.playerModel.event = .pause
-        }
-        */
         let msg:NpsMessage = NpsMessage().setPlayVodMessage(
             contentId: self.epsdRsluId ,
             playTime: self.playerModel.time)

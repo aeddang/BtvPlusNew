@@ -228,23 +228,36 @@ struct PageMyRecommand: PageView {
     @State var historys:[TableCellSet]? = nil
     
     private func setupHistory(_ data:RecommandHistory){
+        var pointTotal = ""
+        if let point = data.bpoint_total?.toDouble() {
+            pointTotal = point.formatted(style: .decimal) + String.app.point
+        }
         withAnimation{
             self.board = [.init(
                 idx:0,
                 cells: [
                     .init( text: data.rec_total_cnt ?? "-",idx:0),
                     .init( text: data.rec_succ_cnt ?? "-", idx:1),
-                    .init( text: (data.bpoint_total ?? "-") + String.app.point , idx:2, textModifier: Self.strongStyle)
+                    .init( text: pointTotal , idx:2, textModifier: Self.strongStyle)
                 ]
             )]
             if let datas = data.rec_succ_list {
                 self.historys = zip(0..<datas.count, datas).map{idx,  data in
-                    TableCellSet(
+                    let date = data.rec_date?
+                        .toDate(dateFormat: "yyyyMMddHHmmss")?
+                        .toDateFormatter(dateFormat: "yyyy.MM.dd") ?? "-"
+                    
+                    var pointStr = ""
+                    if let point = data.bpoint?.toDouble() {
+                        pointStr = point.formatted(style: .decimal) + String.app.point
+                    }
+                    let title = data.title ?? "-"
+                    return TableCellSet(
                         idx:idx,
                         cells: [
-                            .init( text: data.rec_date ?? "-",idx:0, size: Self.leftSize),
-                            .init( text: data.title ?? "-", idx:1),
-                            .init( text: data.bpoint ?? "-", idx:2, size: Self.rightSize)
+                            .init( text: date,idx:0, size: Self.leftSize),
+                            .init( text: title + title + title , idx:1, isLeading:true),
+                            .init( text: pointStr , idx:2, size: Self.rightSize)
                         ]
                     )
                 }

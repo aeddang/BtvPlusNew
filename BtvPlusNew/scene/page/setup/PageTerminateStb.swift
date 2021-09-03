@@ -39,7 +39,7 @@ struct PageTerminateStb: PageView {
                             infinityScrollModel: self.infinityScrollModel)
                         InfinityScrollView(
                             viewModel: self.infinityScrollModel,
-                            marginBottom:self.sceneObserver.safeAreaBottom,
+                            marginBottom:self.sceneObserver.safeAreaIgnoreKeyboardBottom,
                             useTracking:true
                             
                         ){

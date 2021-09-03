@@ -140,7 +140,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
                     .padding(.horizontal, Dimen.margin.regular)
                     .modifier(MatchHorizontal(height: Dimen.tab.medium))
                     .background(Color.app.blueLightExtra)
-                    .padding(.bottom, self.sceneObserver.safeAreaBottom)
+                    .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)
                 }
             }
             .background(Color.brand.bg)

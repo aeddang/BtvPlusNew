@@ -112,9 +112,10 @@ struct PageKidsHome: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    self.isUiInit = true
+                    if self.isUiInit { return }
                     DispatchQueue.main.async {
                         self.reload()
+                        self.isUiInit = true
                     }
                 }
             }

@@ -40,7 +40,14 @@ enum InfinityScrollType :Equatable{
 }
 
 class InfinityScrollModel:ComponentObservable, Identifiable{
-
+    static let onTopSize:CGSize = SystemEnvironment.isTablet
+        ? CGSize(width:72, height:72)
+        : CGSize(width:60, height:60)
+        
+    static let onTopSizeKids:CGSize = SystemEnvironment.isTablet
+        ? CGSize(width:178, height:146)
+        : CGSize(width:93, height:76)
+    
     static let PULL_RANGE:CGFloat = 40
     static let PULL_COMPLETED_RANGE:CGFloat = 40
     static let DRAG_RANGE:CGFloat = 70
@@ -321,6 +328,10 @@ open class InfinityData:Identifiable, Equatable{
     var declarationAble = false
     public static func == (l:InfinityData, r:InfinityData)-> Bool {
         return l.id == r.id
+    }
+    
+    func resetHashId(){
+        self.hashId = UUID().hashValue
     }
 }
 

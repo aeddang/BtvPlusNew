@@ -130,7 +130,7 @@ struct PageBody: ViewModifier {
         return content
             .frame(
                 width: self.sceneObserver.screenSize.width,
-                height: self.sceneObserver.screenSize.height - self.sceneObserver.safeAreaTop - Dimen.app.top - self.sceneObserver.safeAreaBottom)
+                height: self.sceneObserver.screenSize.height - self.sceneObserver.safeAreaTop - Dimen.app.top - self.sceneObserver.safeAreaIgnoreKeyboardBottom)
             .background(self.style.bgColor)
     }
 }
@@ -181,15 +181,21 @@ struct PageDraging: ViewModifier {
     var geometry:GeometryProxy
     var pageDragingModel:PageDragingModel
     var useGesture:Bool = true
+    @State var isInitDrag = true
     func body(content: Content) -> some View {
         return content
             .highPriorityGesture(
                 self.useGesture ?
                     DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
                         .onChanged({ value in
+                            if self.isInitDrag {
+                                AppUtil.hideKeyboard()
+                                self.isInitDrag = false
+                            }
                             self.pageDragingModel.uiEvent = .drag(geometry, value)
                         })
                         .onEnded({ value in
+                            self.isInitDrag = true
                             self.pageDragingModel.uiEvent = .draged(geometry, value)
                         })
                 : nil
@@ -197,31 +203,51 @@ struct PageDraging: ViewModifier {
             .gesture(
                 self.useGesture ?
                     self.pageDragingModel.cancelGesture
-                        .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
-                        .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                        .onChanged({_ in
+                                    self.isInitDrag = true
+                                    self.pageDragingModel.uiEvent = .dragCancel})
+                        .onEnded({_ in
+                                    self.isInitDrag = true
+                                    self.pageDragingModel.uiEvent = .dragCancel})
                 : nil
             )
+            
     }
 }
 
 struct PageDragingSecondPriority: ViewModifier {
     var geometry:GeometryProxy
     var pageDragingModel:PageDragingModel
+    var useGesture:Bool = true
+    @State var isInitDrag = true
     func body(content: Content) -> some View {
         return content
             .gesture(
-                DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
-                    .onChanged({ value in
-                       self.pageDragingModel.uiEvent = .drag(geometry, value)
-                    })
-                    .onEnded({ value in
-                        self.pageDragingModel.uiEvent = .draged(geometry, value)
-                    })
+                self.useGesture ?
+                    DragGesture(minimumDistance: PageDragingModel.MIN_DRAG_RANGE, coordinateSpace: .local)
+                        .onChanged({ value in
+                            if self.isInitDrag {
+                                AppUtil.hideKeyboard()
+                                self.isInitDrag = false
+                            }
+                            self.pageDragingModel.uiEvent = .drag(geometry, value)
+                        })
+                        .onEnded({ value in
+                            self.isInitDrag = true
+                            self.pageDragingModel.uiEvent = .draged(geometry, value)
+                        })
+                : nil
             )
             .gesture(
-                self.pageDragingModel.cancelGesture
-                    .onChanged({_ in self.pageDragingModel.uiEvent = .dragCancel})
-                    .onEnded({_ in self.pageDragingModel.uiEvent = .dragCancel})
+                self.useGesture ?
+                    self.pageDragingModel.cancelGesture
+                        .onChanged({_ in
+                                    self.isInitDrag = true
+                                    self.pageDragingModel.uiEvent = .dragCancel})
+                        .onEnded({_ in
+                                    self.isInitDrag = true
+                                    self.pageDragingModel.uiEvent = .dragCancel})
+                : nil
             )
     }
 }

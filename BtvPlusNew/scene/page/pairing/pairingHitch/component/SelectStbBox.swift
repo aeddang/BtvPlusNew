@@ -28,6 +28,7 @@ struct SelectStbBox: View {
                 .modifier(MatchHorizontal(height: SystemEnvironment.isTablet ? 33 : 27))
                 .padding(.top, Dimen.margin.medium)
             Text(self.datas.count == 1 ? String.pairingHitch.auto : String.pairingHitch.autoSelect)
+                .kerning(Font.kern.thin)
                 .modifier( MediumTextStyle(
                         size: Font.size.lightExtra,
                         color: Color.app.blackExtra)
@@ -118,7 +119,7 @@ struct SelectStbBox: View {
                 }
             }
             if !SystemEnvironment.isTablet {
-                Spacer().modifier(MatchHorizontal(height: self.sceneObserver.safeAreaBottom))
+                Spacer().modifier(MatchHorizontal(height: self.sceneObserver.safeAreaIgnoreKeyboardBottom))
                     .background(Color.brand.primary)
             }
         }

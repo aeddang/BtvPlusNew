@@ -101,7 +101,7 @@ struct CateBlock: PageComponent{
     var marginHorizontal:CGFloat = Self.listPadding
     var spacing: CGFloat = Self.listPadding
     var size: CGFloat? = nil
-    
+    var menuTitle:String? = nil
     @State var reloadDegree:Double = 0
     @State var needAdult:Bool = false
     @State var menus:[String]? = nil
@@ -133,7 +133,7 @@ struct CateBlock: PageComponent{
                                 totalCount: self.totalCount,
                                 isSortAble: self.isSortAble,
                                 info: self.viewModel.info,
-                                menuTitle: nil,
+                                menuTitle: self.menuTitle,
                                 selectedTitle: self.selectedTitle,
                                 selectedMenuIdx: self.selectedMenuIdx,
                                 menus: self.menus,
@@ -311,6 +311,7 @@ struct CateBlock: PageComponent{
                 .padding(.horizontal, marginHorizontal)
             } else {
                 SortTabKids(
+                    menuTitle: self.menuTitle,
                     count: self.totalCount,
                     isSortAble: self.isSortAble
                 ){ sort in

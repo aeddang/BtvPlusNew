@@ -492,6 +492,7 @@ struct PosterViewList: PageComponent{
     var episodeViewerData:EpisodeViewerData? = nil
     var useTracking:Bool = false
     var hasAuthority:Bool = false
+    var text:String = String.button.detail
     var isRecycle:Bool = true
     var margin:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.regular
     var spacing:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.tiny : DimenKids.margin.thinUltra
@@ -511,6 +512,7 @@ struct PosterViewList: PageComponent{
                     data:data ,
                     isSelected: self.contentID == nil ? false : self.contentID == data.epsdId,
                     hasAuthority: self.hasAuthority,
+                    text: self.text,
                     episodeViewerData: self.episodeViewerData
                 )
                 .modifier(HolizentalListRowInset(spacing: self.spacing))
@@ -703,6 +705,7 @@ struct PosterViewItem: PageView {
     var data:PosterData
     var isSelected:Bool = false
     var hasAuthority:Bool = false
+    var text:String = String.button.detail
     var episodeViewerData:EpisodeViewerData? = nil
     var spacing:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thin
     @State var isBookmark:Bool? = nil
@@ -731,20 +734,37 @@ struct PosterViewItem: PageView {
             }
             if self.isSelected {
                 if data.pageType == .btv {
-                    FillButton(
-                        text: self.hasAuthority ? String.button.directview : String.button.preview,
-                        strokeWidth: 1){ _ in
-                        if let synopsisData = data.synopsisData {
-                            self.pagePresenter.openPopup(
-                               data.moveSynopsis
-                                    .addParam(key: .data, value: synopsisData)
-                                    .addParam(key: .watchLv, value: data.watchLv)
-                            )
+                    if self.hasAuthority {
+                        FillButton(
+                            text: self.text,
+                            isSelected: true,
+                            size: Dimen.button.regular
+                            ){ _ in
+                            if let synopsisData = data.synopsisData {
+                                self.pagePresenter.openPopup(
+                                   data.moveSynopsis
+                                        .addParam(key: .data, value: synopsisData)
+                                        .addParam(key: .watchLv, value: data.watchLv)
+                                )
+                            }
+                        }
+                    } else {
+                        FillButton(
+                            text: self.text,
+                            strokeWidth: 1){ _ in
+                            if let synopsisData = data.synopsisData {
+                                self.pagePresenter.openPopup(
+                                   data.moveSynopsis
+                                        .addParam(key: .data, value: synopsisData)
+                                        .addParam(key: .watchLv, value: data.watchLv)
+                                )
+                            }
                         }
                     }
+                    
                 } else {
                     RectButtonKids(
-                        text: self.hasAuthority ? String.button.directview : String.button.preview,
+                        text: self.text,
                         size: CGSize(width: data.type.size.width, height: DimenKids.button.light),
                         isFixSize: true ){ _ in
                            if let synopsisData = data.synopsisData {

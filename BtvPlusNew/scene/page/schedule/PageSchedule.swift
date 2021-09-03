@@ -50,12 +50,12 @@ struct PageSchedule: PageView {
                                     self.webViewHeight = geometry.size.height
                                         - Dimen.app.top
                                         - self.sceneObserver.safeAreaTop
-                                        - self.sceneObserver.safeAreaBottom
+                                        - self.sceneObserver.safeAreaIgnoreKeyboardBottom
                                 }
                             
                         }
                     }
-                    .padding(.bottom, self.sceneObserver.safeAreaBottom)
+                    .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)
                     .modifier(MatchParent())
                     
                     .onReceive(self.infinityScrollModel.$event){evt in

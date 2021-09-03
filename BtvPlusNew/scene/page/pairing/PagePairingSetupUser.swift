@@ -59,18 +59,18 @@ struct PagePairingSetupUser: PageView {
                             useTracking: true
                             ){
                             VStack(alignment:.leading , spacing:0) {
-                                if self.editType != .nickName {
-                                    Text(String.pageText.pairingSetupUserText1)
-                                        .modifier(MediumTextStyle( size: Font.size.bold ))
-                                        .padding(.top, Dimen.margin.light)
-                                    
-                                    Text(SystemEnvironment.isTablet
-                                            ? String.pageText.pairingSetupUserText2Tablet : String.pageText.pairingSetupUserText2)
-                                        .modifier(
-                                            MediumTextStyle( size: Font.size.light, color: Color.app.greyLight))
-                                        .padding(.top, Dimen.margin.regular)
-                                        .fixedSize(horizontal: false, vertical:true)
-                                }
+                                //if self.editType != .nickName {
+                                Text(String.pageText.pairingSetupUserText1)
+                                    .modifier(MediumTextStyle( size: Font.size.bold ))
+                                    .padding(.top, Dimen.margin.light)
+                                
+                                Text(SystemEnvironment.isTablet
+                                        ? String.pageText.pairingSetupUserText2Tablet : String.pageText.pairingSetupUserText2)
+                                    .modifier(
+                                        MediumTextStyle( size: Font.size.light, color: Color.app.greyLight))
+                                    .padding(.top, Dimen.margin.regular)
+                                    .fixedSize(horizontal: false, vertical:true)
+                                //}
                                 InputCell(
                                     title: String.app.nickName,
                                     input: self.$nickName,
@@ -224,7 +224,7 @@ struct PagePairingSetupUser: PageView {
                 }
                 
             }
-            .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
+            .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ pos in
                 //if self.editType == .nickName {return}
                 withAnimation{
                     self.safeAreaBottom = pos
@@ -236,7 +236,7 @@ struct PagePairingSetupUser: PageView {
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
-                self.birth = self.birthList[20]
+                self.birth = self.birthList[30]
                 let type = obj.getParamValue(key: .type)
                 self.pairingType = type as? PairingRequest ?? self.pairingType
                 
@@ -269,8 +269,9 @@ struct PagePairingSetupUser: PageView {
             self.editType = on
                 ? .nickName
                 : self.editType == .nickName ? .none : self.editType
+            /*
             self.safeAreaBottom = on
-                ? self.keyboardObserver.keyboardHeight : self.sceneObserver.safeAreaBottom
+                ? self.keyboardObserver.keyboardHeight : self.sceneObserver.safeAreaBottom*/
         }
     }
 

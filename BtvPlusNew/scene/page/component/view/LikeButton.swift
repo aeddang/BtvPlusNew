@@ -122,7 +122,7 @@ struct LikeButton: PageView {
             self.appSceneObserver.event = .toast(String.alert.apiErrorServer)
             return
         }
-        if data.result != ApiCode.success {
+        if data.result != ApiCode.ok {
             self.appSceneObserver.event = .toast(String.alert.apiErrorServer)
             return
         }

@@ -61,7 +61,6 @@ struct PageSynopsisPackage: PageView {
                                     HStack(alignment: .center, spacing: 0){
                                         TopViewer( data:self.synopsisPackageModel!)
                                             .modifier(MatchParent())
-                                            .padding(.bottom, Dimen.app.bottom)
                                         PackageBody(
                                             infinityScrollModel: self.infinityScrollModel,
                                             synopsisListViewModel: self.synopsisListViewModel,
@@ -136,6 +135,9 @@ struct PageSynopsisPackage: PageView {
                         self.pageDragingModel.uiEvent = .pullCancel(geometry)
                     default : do{}
                     }
+                }
+                .onReceive(self.infinityScrollModel.$scrollPosition){ pos in
+                    self.pageDragingModel.uiEvent = .dragCancel
                 }
                 .onReceive(self.synopsisListViewModel.$pullPosition){ pos in
                     self.pageDragingModel.uiEvent = .pull(geometry, pos)
@@ -216,12 +218,18 @@ struct PageSynopsisPackage: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    self.isPageUiReady = true
-                    self.initPage()
+                    if self.isPageUiReady {return}
+                    DispatchQueue.main.async {
+                        self.isPageUiReady = true
+                        self.initPage()
+                    }
                 }
             }
             .onReceive(self.sceneObserver.$isUpdated){ _ in
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
+                if SystemEnvironment.isTablet && self.isPageUiReady {
+                    self.appSceneObserver.useBottom = self.sceneOrientation == .portrait
+                }
             }
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
                 withAnimation{ self.marginBottom = bottom }
@@ -328,7 +336,7 @@ struct PageSynopsisPackage: PageView {
             } else {
                 self.completedProgress()
             }
-        default : do{}
+        default : break
         }
     }
     
@@ -393,11 +401,7 @@ struct PageSynopsisPackage: PageView {
     
     private func onAllProgressCompleted(){
         PageLog.d("onAllProgressCompleted(", tag: self.tag)
-        if #available(iOS 14.0, *) {
-            withAnimation{ self.isUIView = true }
-        } else {
-            self.isUIView = true
-        }
+        withAnimation{ self.isUIView = true }
     }
     
     private func setupGatewaySynopsis (_ data:GatewaySynopsis){

@@ -38,7 +38,7 @@ struct RelationVodBody: PageComponent{
             InfinityScrollView(
                 viewModel: self.infinityScrollModel,
                 marginTop : 0,
-                marginBottom : self.sceneObserver.safeAreaBottom,
+                marginBottom : self.sceneObserver.safeAreaIgnoreKeyboardBottom,
                 spacing:0,
                 isRecycle:true,
                 useTracking:false
@@ -122,6 +122,7 @@ struct RelationVodHeader: PageComponent{
                 .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: RelationVodList.spacing))
             VStack(spacing:0){
                 EmptyAlert(text:String.pageText.synopsisNoRelationVod)
+                    .fixedSize(horizontal: false, vertical: true)
                 Spacer().modifier(MatchHorizontal(height: 0))
             }
             .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: RelationVodList.spacing))
@@ -144,7 +145,7 @@ struct RelationVodHeader: PageComponent{
                 data:self.relationContentsModel,
                 seris: self.$seris
             ){ season in
-                self.componentViewModel.uiEvent = .changeSynopsis(season.synopsisData)
+                self.componentViewModel.uiEvent = .changeSynopsis(season.synopsisData, isSrisChange:true)
             }
             .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.thin))
         }

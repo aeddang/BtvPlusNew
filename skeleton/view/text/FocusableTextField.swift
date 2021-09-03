@@ -101,7 +101,7 @@ struct FocusableTextField: UIViewRepresentable {
         func textFieldShouldReturn(_ textField: UITextField) -> Bool {
             guard let  inputCopmpleted = self.inputCopmpleted else { return true }
             inputCopmpleted(textField.text ?? "")
-            textField.text = ""
+            //textField.text = ""
             return false
         
         }

@@ -80,12 +80,12 @@ struct PageKidsMultiBlock: PageView {
                         .modifier(MatchParent())
                         .background(Color.kids.bg)
                     }
-                    if self.floatRecommandData?.text.isEmpty == false, let float = self.floatRecommandData{
+                    if self.floatRecommandData?.text.isEmpty == false && !self.userControl,
+                       let float = self.floatRecommandData{
                         VStack(){
                             Spacer()
                             FloatRecommand(
                                 isClose: self.$isFloatingClose,
-                                userControl: self.$userControl,
                                 data: float)
                         }
                         .modifier(MatchParent())
@@ -111,7 +111,7 @@ struct PageKidsMultiBlock: PageView {
                                 marginHorizontal: Self.tabMargin,
                                 isDivision: self.isDivisionTab
                             )
-                            .opacity(self.isTop ? 1 : 0)
+                            .padding(.top, self.isTop ? 0 : -Self.tabMargin)
                             .modifier(ContentHorizontalEdgesKids(margin:Self.tabMargin))
                             .frame( height: self.isTop ? MenuTab.height : 0)
                             .padding(.bottom, self.isTop ? DimenKids.margin.thin : 0)
@@ -119,9 +119,14 @@ struct PageKidsMultiBlock: PageView {
                                 if !self.isUiInit { return }
                                 self.setupOriginData(idx: idx)
                             }
+                            .clipped()
                         }
+                        
                     }
                     .background(Color.app.white)
+                }
+                .onReceive(self.infinityScrollModel.$scrollPosition){_ in
+                    self.scrollMove()
                 }
                 .onReceive(self.infinityScrollModel.$event){evt in
                     guard let evt = evt else {return}
@@ -132,10 +137,8 @@ struct PageKidsMultiBlock: PageView {
                     case .down :
                         if self.isTop == false {return}
                         withAnimation{self.isTop = false}
-                        self.scrollClose()
-                    case .up :
-                        self.scrollClose()
-                    default : do{}
+                       
+                    default : break
                     }
                     
                 }
@@ -146,8 +149,11 @@ struct PageKidsMultiBlock: PageView {
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 self.useTracking = ani
                 if ani {
-                    self.isUiInit = true
-                    self.setupOriginData()
+                    if self.isUiInit {return}
+                    DispatchQueue.main.async {
+                        self.isUiInit = true
+                        self.setupOriginData()
+                    }
                 }
             }
             .onReceive(self.pairing.$event){ evt in
@@ -234,11 +240,10 @@ struct PageKidsMultiBlock: PageView {
     
     @State private var autoOpen:AnyCancellable?
     @State private var userControl:Bool = false
-    private func scrollClose(){
-        if self.userControl {return}
+    private func scrollMove(){
         self.autoOpen?.cancel()
-        if !self.isFloatingClose {
-            withAnimation{self.isFloatingClose = true}
+        if !self.userControl {
+            withAnimation{self.userControl = true}
         }
         self.autoOpen = Timer.publish(
             every: 0.5, on: .current, in: .common)
@@ -247,7 +252,7 @@ struct PageKidsMultiBlock: PageView {
                 self.autoOpen?.cancel()
                 self.autoOpen = nil
                 withAnimation{
-                    self.isFloatingClose = false
+                    self.userControl = false
                 }
             }
     }

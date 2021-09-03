@@ -103,7 +103,7 @@ struct DisconnectView: PageComponent{
         
         .modifier(MatchParent())
         .background(Color.brand.bg)
-        .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
+        .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ pos in
             withAnimation{
                 self.safeAreaBottom = pos
             }

@@ -37,6 +37,8 @@ struct PackageBodyKids: PageComponent{
                     contentID: self.contentID,
                     episodeViewerData: self.episodeViewerData,
                     useTracking: self.useTracking,
+                    hasAuthority: self.synopsisPackageModel.hasAuthority,
+                    text: self.synopsisPackageModel.contentMoreText,
                     margin: DimenKids.margin.regular + sceneObserver.safeAreaStart
                 ) { data in
                     self.action?(data)

@@ -33,7 +33,7 @@ struct PackageBody: PageComponent{
             marginBottom : self.marginBottom,
             spacing:0,
             isRecycle:false,
-            useTracking:false
+            useTracking:true
             ){
             if self.useTop {
                 if SystemEnvironment.isTablet {
@@ -44,7 +44,8 @@ struct PackageBody: PageComponent{
                 } else {
                     TopViewer(
                         data: synopsisPackageModel)
-                        .frame(height:round(self.sceneObserver.screenSize.width * TopViewer.imgRatio) + TopViewer.bottomHeight)
+                        .frame(height:round(self.sceneObserver.screenSize.width * TopViewer.imgRatio)
+                                + (synopsisPackageModel.hasAuthority ? 0 : TopViewer.bottomHeight))
                         .modifier(ListRowInset(spacing: Dimen.margin.regular))
                 }
             }
@@ -58,7 +59,9 @@ struct PackageBody: PageComponent{
                         viewModel: self.synopsisListViewModel,
                         datas: self.synopsisPackageModel.posters,
                         contentID: self.contentID,
-                        useTracking: self.useTracking
+                        useTracking: self.useTracking,
+                        hasAuthority: self.synopsisPackageModel.hasAuthority,
+                        text: self.synopsisPackageModel.contentMoreText
                     ) { data in
                         self.action?(data)
                     }

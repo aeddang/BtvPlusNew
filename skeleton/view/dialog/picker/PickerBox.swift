@@ -84,7 +84,7 @@ struct PickerBox: PageComponent{
                     ){idx in
                         self.action()
                     }
-                    .padding(.bottom, self.sceneObserver.safeAreaBottom)
+                    .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)
                 }
                 .background(Color.app.blue)
                 

@@ -10,9 +10,12 @@ import Foundation
 import SwiftUI
 import Combine
 
+
+
+
 struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where Content: View {
     @EnvironmentObject var sceneObserver:PageSceneObserver
-    
+
     var viewModel: InfinityScrollModel
     let axes: Axis.Set 
     let showIndicators: Bool
@@ -160,8 +163,9 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                         ? SystemEnvironment.currentPageType == .btv ? Asset.icon.onTop : AssetKids.icon.onTop
                         : nil,
                     onTopButtonSize : SystemEnvironment.currentPageType == .btv
-                        ? CGSize(width:60, height:60)
-                        : CGSize(width:93, height:76),
+                        ? InfinityScrollModel.onTopSize
+                        : InfinityScrollModel.onTopSizeKids,
+                    
                     onTopButtonMargin : SystemEnvironment.currentPageType == .btv ? Dimen.margin.light : 0,
                     onReady: {self.onReady()},
                     onMove: {pos in self.onMove(pos:pos)},

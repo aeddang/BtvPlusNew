@@ -32,7 +32,7 @@ enum BtvPlayType {
 }
 
 struct Quality {
-    let name:String
+    var name:String
     let path:String
 }
 
@@ -79,7 +79,7 @@ class BtvPlayerModel:PlayerModel{
     private(set) var playData:PlayInfo? = nil
     private(set) var btvPlayType:BtvPlayType? = nil
     private(set) var qualitys:[Quality] = []
-    
+    var pageType:PageType = .btv
     var initPlay:Bool? = nil
     var isFirstPlay:Bool = true
     var isPlay80:Bool = false
@@ -88,6 +88,8 @@ class BtvPlayerModel:PlayerModel{
     var currentIdx:Int? = nil
     var selectedQuality:String? = nil
     static var isInitMute:Bool = true
+    
+   
     
     override func reset() {
         self.currentQuality = nil
@@ -176,10 +178,15 @@ class BtvPlayerModel:PlayerModel{
         }
         ComponentLog.d("setup continuousTime " + self.continuousTime.debugDescription , tag: self.tag)
         if let auto = data.CNT_URL_NS_AUTO { self.appendQuality(name: "AUTO", path: auto) }
-        if let fhd = data.CNT_URL_NS_FHD { self.appendQuality(name: "FHD", path: fhd) }
-        if let hd = data.CNT_URL_NS_HD  { self.appendQuality(name: "HD", path: hd) }
         if let sd = data.CNT_URL_NS_SD  { self.appendQuality(name: "SD", path: sd) }
+        if let hd = data.CNT_URL_NS_HD  { self.appendQuality(name: "HD", path: hd) }
+        if let fhd = data.CNT_URL_NS_FHD { self.appendQuality(name: "FHD", path: fhd) }
+       
         if !qualitys.isEmpty {
+            if qualitys.count == 1 && qualitys.first?.name == "SD"{
+                qualitys[0].name = "HD"
+            }
+            
             currentQuality = qualitys.first{$0.name == (self.selectedQuality ?? "AUTO")}
             if currentQuality == nil {
                 currentQuality = qualitys.first

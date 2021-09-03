@@ -253,7 +253,7 @@ extension String {
         public static var kidsChange = "alertKidChange".loaalized()
         public static var kidsChangeTip = "alertKidChangeTip".loaalized()
         
-
+        public static var kidsInvalidNickName = "alertKidInvalidNickName".loaalized()
         public static var kidsAddError = "alertKidAddError".loaalized()
         public static var kidsEditError = "alertKidEditError".loaalized()
         public static var kidsDeleteError = "alertKidDeleteError".loaalized()
@@ -266,6 +266,7 @@ extension String {
         public static var cashCharge = "alertCashCharge".loaalized()
         public static var cashChargeText = "alertCashChargeText".loaalized()
         public static var cashChargeButton = "alertCashChargeButton".loaalized()
+        public static var cashChargeDisable = "alertCashChargeDisable".loaalized()
         
         public static var needNickName = "alertNeedNickName".loaalized()
         public static var needAgreeTermsOfService = "alertNeedAgreeTermsOfService".loaalized()

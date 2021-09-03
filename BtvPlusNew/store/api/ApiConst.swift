@@ -101,6 +101,7 @@ struct ApiConst {
 }
 
 struct ApiCode {
+    static let ok = "OK"
     static let success = "0000"
     static let success2 = "000"
 }

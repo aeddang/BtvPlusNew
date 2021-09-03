@@ -587,7 +587,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
             switch mask {
                 case .landscape, .landscapeRight: return .landscapeRight
                 case .landscapeLeft: return .landscapeLeft
-                //case .portrait:return .portrait
+            case .portrait:return AppUtil.isPad() ? nil : .portrait
                 default:return nil
             }
         }

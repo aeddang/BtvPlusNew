@@ -31,6 +31,8 @@ struct PageRegistKid: PageView {
     @State var birth:String = String.app.birthKidsPlaceholder
     @State var boxPos:CGFloat = -100
     
+    @State var isFocus:Bool = false
+      
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -73,10 +75,12 @@ struct PageRegistKid: PageView {
                                 InputCellKids(
                                     title: String.app.nickNameKids,
                                     input: self.$nickName,
-                                    isFocus: self.editType == .nickName,
+                                    isFocus: self.isFocus,
                                     placeHolder: String.app.nickNameHolderKids,
                                     strokeColor: Color.transparent.clear
-                                )
+                                ){
+                                   
+                                }
                                 .frame(width: SystemEnvironment.isTablet ? 357 : 186)
                                 InputCellKids(
                                     title: String.app.birthKids,
@@ -86,7 +90,9 @@ struct PageRegistKid: PageView {
                                     strokeColor: Color.transparent.clear,
                                     isEditable : false,
                                     kern: Font.kern.thin
-                                )
+                                ){
+                                    
+                                }
                                 .frame(width: SystemEnvironment.isTablet ? 278 : 150)
                                 .onTapGesture {
                                     self.selectBirth()
@@ -135,12 +141,16 @@ struct PageRegistKid: PageView {
                     .frame(width: SystemEnvironment.isTablet ? 957 : 490)
                     .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.heavy))
                     .padding(.bottom, self.boxPos)
+                    
                 }
                 .modifier(MatchParent())
                 .padding(.horizontal, DimenKids.margin.heavy)
-                .background( Color.transparent.black50 )
+                .background( Color.transparent.black70 )
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }//draging
+            .onTapGesture {
+                AppUtil.hideKeyboard()
+            }
             .onReceive(dataProvider.$result) { res in
                 guard let res = res else { return }
                 if res.id != self.tag { return }
@@ -214,7 +224,7 @@ struct PageRegistKid: PageView {
     
     private func isInputCompleted() -> Bool {
         var complete = false
-        if self.nickName.isNickNameType() {
+        if !self.nickName.isEmpty {
             complete = true
         }
         return complete
@@ -228,6 +238,11 @@ struct PageRegistKid: PageView {
             self.boxPos = on
                 ? 100 : 0
         }
+        
+        if self.isFocus != on {
+            self.isFocus = on
+        }
+        
     }
     
     private func selectCharacter() {
@@ -278,6 +293,11 @@ struct PageRegistKid: PageView {
     
     private func registKid() {
         if !self.isInputCompleted() {return}
+        if !self.nickName.isNickNameType() {
+            self.appSceneObserver.alert = .alert(nil, String.alert.kidsInvalidNickName)
+            return
+        }
+        
         let kid = Kid(nickName: self.nickName, characterIdx: self.characterIdx, birthDate: self.birthDate)
         self.pairing.requestPairing(.registKid(kid))
         

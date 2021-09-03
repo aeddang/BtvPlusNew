@@ -137,7 +137,7 @@ struct ResultReadingListView: PageComponent{
             .modifier(ContentHorizontalEdgesKids())
         }
         .padding(.top, DimenKids.margin.thin)
-        .padding(.bottom, DimenKids.margin.thin + self.sceneObserver.safeAreaBottom)
+        .padding(.bottom, DimenKids.margin.thin + self.sceneObserver.safeAreaIgnoreKeyboardBottom)
         .modifier(MatchParent())
         .onReceive(dataProvider.$result) { res in
             guard let res = res else { return }

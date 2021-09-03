@@ -79,6 +79,11 @@ class SceneDelegate: PageSceneDelegate {
         
         switch willPage.pageID {
         case .cashCharge:
+            if SystemEnvironment.isTablet {
+                self.repository?.appSceneObserver?.alert = .alert(nil, String.alert.cashChargeDisable)
+                return false
+            }
+            
             if self.repository?.userSetup.isFirstCashCharge == true {
                 self.pagePresenter.openPopup(
                     PageProvider.getPageObject(.cashChargeGuide)
@@ -112,11 +117,19 @@ class SceneDelegate: PageSceneDelegate {
             ( !SystemEnvironment.isWatchAuth && SystemEnvironment.watchLv != 0 ),
             let watchLv = watchLv {
                 if SystemEnvironment.watchLv != 0 && SystemEnvironment.watchLv <= watchLv {
-                    self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.confirmNumber)
-                            .addParam(key: .data, value: page)
-                            .addParam(key: .type, value: ScsNetwork.ConfirmType.adult)
-                    )
+                    if SystemEnvironment.currentPageType == .btv {
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.confirmNumber)
+                                .addParam(key: .data, value: page)
+                                .addParam(key: .type, value: ScsNetwork.ConfirmType.adult)
+                        )
+                    } else {
+                        self.pagePresenter.openPopup(
+                            PageKidsProvider.getPageObject(.kidsConfirmNumber)
+                                .addParam(key: .data, value: page)
+                                .addParam(key: .type, value: PageKidsConfirmType.watchLv)
+                        )
+                    }
                     return false
                 }
             }
@@ -128,7 +141,7 @@ class SceneDelegate: PageSceneDelegate {
             
                 if willPage.pageID == .synopsis {
                     let synopData = layerPlayer.getSynopData(obj: willPage)
-                    layerPlayer.changeVod(synopsisData: synopData)
+                    layerPlayer.changeVod(synopsisData: synopData, isHistoryBack: true)
                     layerPlayer.activePlayer()
                     return false
                 } else {

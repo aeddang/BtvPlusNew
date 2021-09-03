@@ -26,7 +26,7 @@ struct RelationVodBodyKids: PageComponent{
         InfinityScrollView(
             viewModel: self.infinityScrollModel,
             marginTop : self.sceneObserver.safeAreaTop + DimenKids.margin.medium,
-            marginBottom : self.sceneObserver.safeAreaBottom,
+            marginBottom : self.sceneObserver.safeAreaIgnoreKeyboardBottom,
             isAlignCenter : true,
             spacing:0,
             isRecycle:true,
@@ -38,7 +38,7 @@ struct RelationVodBodyKids: PageComponent{
                     data:self.relationContentsModel,
                     seris: self.$seris
                 ){ season in
-                    self.componentViewModel.uiEvent = .changeSynopsis(season.synopsisData)
+                    self.componentViewModel.uiEvent = .changeSynopsis(season.synopsisData,isSrisChange:true)
                 }
                 .modifier(ListRowInset(spacing: DimenKids.margin.medium, bgColor: Color.app.white))
                 ForEach(self.seris) { data in

@@ -33,6 +33,7 @@ extension String{
         public static let synopsisNoRelationVod = "synopsisNoRelationVodKids".loaalized()
         
         public static let kidsMyNoProfile = "kidsMyNoProfile".loaalized()
+        public static let kidsMyWatch = "kidsMyWatch".loaalized()
         public static let kidsMyDiagnosticReport = "kidsMyDiagnosticReport".loaalized()
         public static let kidsMyDiagnosticReportText = "kidsMyDiagnosticReportText".loaalized()
         public static let kidsMyDiagnosticReportStart = "kidsMyDiagnosticReportStart".loaalized()

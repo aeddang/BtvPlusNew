@@ -96,8 +96,11 @@ struct PageKidsEnglishLvTestSelect: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    self.isInitPage = true
-                    self.initPage()
+                    if self.isInitPage {return}
+                    DispatchQueue.main.async {
+                        self.isInitPage = true
+                        self.initPage()
+                    }
                 }
             }
             .onAppear{

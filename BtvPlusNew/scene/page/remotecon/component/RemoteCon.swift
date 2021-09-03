@@ -100,9 +100,9 @@ struct RemoteCon: PageComponent {
                 .modifier(MatchHorizontal(height: RemoteStyle.ui.playBoxHeight))
                 HStack(alignment: .center, spacing: 0){
                     VStack(spacing: 0){
-                        EffectButton(defaultImage: Asset.remote.fastForward, effectImage: Asset.remote.fastForwardOn)
+                        EffectButton(defaultImage: Asset.remote.rewind, effectImage: Asset.remote.rewindOn)
                         { _ in
-                            self.action(.fastForward)
+                            self.action(.rewind)
                         }
                         .frame(width: RemoteStyle.button.medium, height: RemoteStyle.button.medium)
                         Spacer()
@@ -121,11 +121,12 @@ struct RemoteCon: PageComponent {
                     }
                     Spacer()
                     VStack(spacing: 0){
-                        EffectButton(defaultImage: Asset.remote.rewind, effectImage: Asset.remote.rewindOn)
+                        EffectButton(defaultImage: Asset.remote.fastForward, effectImage: Asset.remote.fastForwardOn)
                         { _ in
-                            self.action(.rewind)
+                            self.action(.fastForward)
                         }
                         .frame(width: RemoteStyle.button.medium, height: RemoteStyle.button.medium)
+                        
                         Spacer()
                         EffectButton(defaultImage: Asset.remote.previous, effectImage: Asset.remote.previousOn)
                         { _ in

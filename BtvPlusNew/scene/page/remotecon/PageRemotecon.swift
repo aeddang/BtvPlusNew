@@ -199,10 +199,13 @@ struct PageRemotecon: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    withAnimation{
-                        self.isUIReady = ani
+                    if self.isUIReady {return}
+                    DispatchQueue.main.async {
+                        withAnimation{
+                            self.isUIReady = ani
+                        }
+                        self.checkHostDeviceStatus()
                     }
-                    self.checkHostDeviceStatus()
                 }
             }
             .onReceive(self.locationObserver.$event){ evt in

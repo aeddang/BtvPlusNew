@@ -63,8 +63,11 @@ struct PageMyAlram: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    self.isInit = true
-                    self.update()
+                    if self.isInit {return}
+                    DispatchQueue.main.async {
+                        self.isInit = true
+                        self.update()
+                    }
                 }
             }
             .onAppear{

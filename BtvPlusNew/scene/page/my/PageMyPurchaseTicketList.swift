@@ -70,7 +70,7 @@ struct PageMyPurchaseTicketList: PageView {
                                         
                                     }
                                     Spacer()
-                                        .modifier(MatchHorizontal(height: self.sceneObserver.safeAreaBottom))
+                                        .modifier(MatchHorizontal(height: self.sceneObserver.safeAreaIgnoreKeyboardBottom))
                                         .background(Color.brand.bg)
                                 }
                             }

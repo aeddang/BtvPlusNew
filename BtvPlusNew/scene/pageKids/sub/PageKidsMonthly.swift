@@ -78,7 +78,11 @@ struct PageKidsMonthly: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    self.reload()
+                    if self.isUiInit {return}
+                    DispatchQueue.main.async {
+                        self.isUiInit = true
+                        self.reload()
+                    }
                 }
             }
             .onAppear{
@@ -91,7 +95,7 @@ struct PageKidsMonthly: PageView {
             }
         }//geo
     }//body
-    
+    @State var isUiInit:Bool = false
     @State var menuId:String = ""
     @State var openId:String? = nil
     private func reload(){

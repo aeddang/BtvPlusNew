@@ -78,7 +78,12 @@ class PageSearchModel :ObservableObject, PageProtocol {
     func updateCompleteKeywords (_ data:CompleteKeyword? = nil){
         guard let result = data?.data else {return}
         guard let datas = result.results else {return}
-        self.searchDatas = datas.filter{$0.title != nil}.map{SearchData().setData(keyword: $0.title!)}
+        let filterDatas = datas.filter{$0.title != nil}.map{SearchData().setData(keyword: $0.title!)}
+        if filterDatas.isEmpty {
+            self.updateSearchKeyword()
+        } else {
+            self.searchDatas = filterDatas
+        }
     }
     
     func updateSearchKeyword (_ keywords:[String]? = nil){
@@ -90,6 +95,7 @@ class PageSearchModel :ObservableObject, PageProtocol {
         } else {
             var datas = self.getLatestData()
             datas.append(contentsOf:  self.getPopularityData())
+            datas.first?.isSectionChange = false
             self.searchDatas = datas
         }
     }
@@ -102,71 +108,124 @@ class PageSearchModel :ObservableObject, PageProtocol {
     
     func updateSearchCategory (_ data:SearchCategory? = nil, keyword:String? = nil) ->[BlockData]{
         guard let result = data?.data else {return []}
+        var isEmpty = true
         var blocks:[BlockData] = []
-        
-        
         if let datas = result.results_vod {
-            var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
-            actionData.menu_name = String.app.vod + datas.count.description
-            let allPosters:[PosterData] = datas.map{ PosterData().setData(data: $0, searchType:.vod).setNaviLog(action: actionData)}
-           
-            let block = BlockData()
-                .setData(title: String.app.vod, datas: allPosters, searchType:.vod, keyword: keyword)
-                .setNaviLog(pageCloseActionLog: actionData)
-            blocks.append(block)
+            isEmpty = false
+            blocks.append(self.getResultsVod(datas: datas, keyword: keyword))
+        } else {
+            blocks.append(self.getResultsVod(datas: [], keyword: keyword))
         }
         if let datas = result.results_vod_tseq {
-            var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
-            actionData.menu_name = String.app.vod + datas.count.description
-            actionData.category = "회차"
-            let allPosters:[VideoData] = datas.map{ VideoData().setData(data: $0, searchType:.vodSeq).setNaviLog(action: actionData)}
-            let block = BlockData()
-                .setData(title: String.app.sris, datas: allPosters, searchType:.vodSeq, keyword: keyword)
-                .setNaviLog(pageCloseActionLog: actionData)
-            blocks.append(block)
+            isEmpty = false
+            blocks.append(self.getResultsSris(datas: datas, keyword: keyword))
+        } else {
+            blocks.append(self.getResultsSris(datas: [], keyword: keyword))
         }
         if let datas = result.results_clip {
-            var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
-            actionData.menu_name = String.app.clip + datas.count.description
-            actionData.category = "클립"
-            let allPosters:[VideoData] = datas.map{ VideoData(useTag:false).setData(data: $0, searchType:.clip).setNaviLog(action: actionData)}
-            let block = BlockData()
-                .setData(title: String.app.clip, datas: allPosters, searchType:.clip, keyword: keyword)
-                .setNaviLog(pageCloseActionLog: actionData)
-            blocks.append(block)
+            isEmpty = false
+            blocks.append(self.getResultsClip(datas: datas, keyword: keyword))
+        } else {
+            blocks.append(self.getResultsClip(datas: [], keyword: keyword))
         }
+        
         if let datas = result.results_corner {
-            var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
-            actionData.config = "코너"
-            actionData.menu_name = String.app.corner + datas.count.description
-            let allPosters:[VideoData] = datas.map{ VideoData().setData(data: $0, searchType:.demand).setNaviLog(action: actionData)}
-            let block = BlockData()
-                .setData(title: String.app.corner, datas: allPosters, searchType:.demand, keyword: keyword)
-                .setNaviLog(pageCloseActionLog: actionData)
-            blocks.append(block)
+            isEmpty = false
+            blocks.append(self.getResultsCorner(datas: datas, keyword: keyword))
+        } else {
+            blocks.append(self.getResultsCorner(datas:[], keyword: keyword))
         }
-        if let datas = result.results_people {
-            var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
-            actionData.menu_name = String.app.people + datas.count.description
-            let allPosters:[PosterData] = datas.map{ PosterData().setData(data: $0, searchType:.none).setNaviLog(action: actionData)}
-            let block = BlockData()
-                .setData(title: String.app.people, datas: allPosters, searchType:.none, keyword: keyword)
-                .setNaviLog(pageCloseActionLog: actionData)
-            blocks.append(block)
-        }
+        
         if let datas = result.results_tv {
-            var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
-            actionData.menu_name = String.app.liveTv + datas.count.description
-            let allTvs:[TvData] = datas.map{ TvData().setData(data: $0, searchType: .live).setNaviLog(action: actionData)}
-            let block = BlockData()
-                .setData(title: String.app.liveTv, datas: allTvs, searchType:.live, keyword: keyword)
-                .setNaviLog(pageCloseActionLog: actionData)
-            blocks.append(block)
+            isEmpty = false
+            blocks.append(self.getResultsTv(datas: datas, keyword: keyword))
+        } else {
+            blocks.append(self.getResultsTv(datas: [], keyword: keyword))
         }
+        
+        if let datas = result.results_people {
+            isEmpty = false
+            blocks.append(self.getResultsPeople(datas: datas, keyword: keyword))
+        } else {
+            blocks.append(self.getResultsPeople(datas: [], keyword: keyword))
+        }
+        if isEmpty {return []}
         return blocks
     }
     
+    private func getResultsVod(datas:[CategoryVodItem],keyword:String? = nil) -> BlockData{
+        var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
+        actionData.menu_name = String.app.vod + datas.count.description
+        let allPosters:[PosterData] = datas.map{
+            PosterData().setData(data: $0, searchType:.vod).setNaviLog(action: actionData)
+        }
+        let block = BlockData()
+            .setData(title: String.app.vod, datas: allPosters, searchType:.vod, keyword: keyword)
+            .setNaviLog(pageCloseActionLog: actionData)
+       return block
+    }
+    private func getResultsSris(datas:[CategorySrisItem],keyword:String? = nil) -> BlockData{
+        var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
+        actionData.menu_name = String.app.vod + datas.count.description
+        actionData.category = "회차"
+        let allPosters:[VideoData] = datas.map{
+            VideoData().setData(data: $0, searchType:.vodSeq).setNaviLog(action: actionData)
+        }
+        let block = BlockData()
+            .setData(title: String.app.sris, datas: allPosters, searchType:.vodSeq, keyword: keyword)
+            .setNaviLog(pageCloseActionLog: actionData)
+       return block
+    }
+    private func getResultsClip(datas:[CategoryClipItem],keyword:String? = nil) -> BlockData{
+        var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
+        actionData.menu_name = String.app.clip + datas.count.description
+        actionData.category = "클립"
+        let allPosters:[VideoData] = datas.map{
+            VideoData(useTag:false).setData(data: $0, searchType:.clip).setNaviLog(action: actionData)
+        }
+        let block = BlockData()
+            .setData(title: String.app.clip, datas: allPosters, searchType:.clip, keyword: keyword)
+            .setNaviLog(pageCloseActionLog: actionData)
+       return block
+    }
+    private func getResultsCorner(datas:[CategoryCornerItem],keyword:String? = nil) -> BlockData{
+        var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
+        actionData.config = "코너"
+        actionData.menu_name = String.app.corner + datas.count.description
+        let allPosters:[VideoData] = datas.map{
+            VideoData().setData(data: $0, searchType:.demand).setNaviLog(action: actionData)
+        }
+        let block = BlockData()
+            .setData(title: String.app.corner, datas: allPosters, searchType:.demand, keyword: keyword)
+            .setNaviLog(pageCloseActionLog: actionData)
+       return block
+    }
+    
+    private func getResultsPeople(datas:[CategoryPeopleItem],keyword:String? = nil) -> BlockData{
+        var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
+        actionData.menu_name = String.app.people + datas.count.description
+        let allPosters:[PosterData] = datas.map{ PosterData().setData(data: $0, searchType:.none).setNaviLog(action: actionData)}
+        let block = BlockData()
+            .setData(title: String.app.people, datas: allPosters, searchType:.none, keyword: keyword)
+            .setNaviLog(pageCloseActionLog: actionData)
+       return block
+    }
+    
+    private func getResultsTv(datas:[CategoryTvItem],keyword:String? = nil) -> BlockData{
+        var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
+        actionData.menu_name = String.app.liveTv + datas.count.description
+        let allTvs:[TvData] = datas.map{ TvData().setData(data: $0, searchType: .live).setNaviLog(action: actionData)}
+        let block = BlockData()
+            .setData(title: String.app.liveTv, datas: allTvs, searchType:.live, keyword: keyword)
+            .setNaviLog(pageCloseActionLog: actionData)
+       return block
+    }
+    
+    
     private func getLatestData() -> [SearchData] {
+        if self.localKeywords.isEmpty {
+            return []
+        }
         var datas:[SearchData] = [
             SearchData().setData(
                 keyword: String.pageText.searchLatest, isDeleteAble: true, isSection: true)

@@ -24,6 +24,7 @@ struct PageCouponList: PageView {
     @ObservedObject var viewModel:CouponBlockModel = CouponBlockModel()
     
     @State var marginBottom:CGFloat = 0
+    @State var isInit:Bool = false
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -52,7 +53,11 @@ struct PageCouponList: PageView {
             
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    self.viewModel.update(key:nil)
+                    if self.isInit {return}
+                    DispatchQueue.main.async {
+                        self.isInit = true
+                        self.viewModel.update(key:nil)
+                    }
                 }
             }
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in

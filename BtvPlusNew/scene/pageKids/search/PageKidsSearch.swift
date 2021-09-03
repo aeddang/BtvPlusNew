@@ -25,7 +25,9 @@ struct PageKidsSearch: PageView {
     @ObservedObject var resultScrollModel: InfinityScrollModel = InfinityScrollModel()
     @State var isKeyboardOn:Bool = false
     @State var isVoiceSearch:Bool = false
-    @State var isInputSearch:Bool = false
+    
+    @State var isFocus:Bool = false
+    @State var isInput:Bool = false
     
     @State var marginTop:CGFloat = 0
     
@@ -90,9 +92,14 @@ struct PageKidsSearch: PageView {
                     }
                     .padding(.top, self.marginTop + DimenKids.tab.medium)
                     .modifier(MatchParent())
-                    
+                    if self.isFocus {
+                        Spacer().modifier(MatchParent()).background(Color.transparent.clearUi)
+                        .onTapGesture {
+                            AppUtil.hideKeyboard()
+                        }
+                    }
                     SearchTabKids(
-                        isFocus:self.isInputSearch,
+                        isFocus:self.isFocus,
                         isVoiceSearch: self.isVoiceSearch,
                         keyword: self.$keyword,
                         datas:self.datas,
@@ -104,6 +111,10 @@ struct PageKidsSearch: PageView {
                             }
                         },
                         inputCopmpleted : { text in
+                            if self.keyword.isEmpty {
+                                self.appSceneObserver.alert = .alert(nil, String.kidsText.kidsSearchInput)
+                                return
+                            }
                             self.search(keyword: text)
                         },
                         inputVoice: {
@@ -116,12 +127,13 @@ struct PageKidsSearch: PageView {
                         },
                         goBack: {
                             self.sendLog(action: .clickSearchBack)
+                            AppUtil.hideKeyboard()
                             if self.isVoiceSearch {
                                 self.voiceSearchEnd()
                                 return
                             }
     
-                            if self.searchDatas != nil {
+                            if self.searchDatas?.isEmpty == false {
                                 self.searchDatas = nil
                                 self.updatedLogPage()
                                 return
@@ -131,7 +143,12 @@ struct PageKidsSearch: PageView {
                     )
                     .modifier(ContentHorizontalEdgesKids())
                     .padding(.top, self.marginTop)
-                }// vstack
+                    .onTapGesture {
+                        AppUtil.hideKeyboard()
+                    }
+                    
+                    
+                }// zstack
                 .background(
                     Image(AssetKids.image.homeBg)
                         .renderingMode(.original)
@@ -143,12 +160,18 @@ struct PageKidsSearch: PageView {
                 .modifier(PageFullScreen(style:.kids))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }//PageDragingBody
+            
             .onReceive(self.keyboardObserver.$isOn){ on in
                 if self.pageObservable.layer != .top { return }
-                if self.isKeyboardOn == on { return }
-                self.isKeyboardOn = on
-                if self.isInputSearch != on { self.isInputSearch = on}
                 
+                PageLog.d("updatekeyboardStatus " + on.description, tag:self.tag)
+                PageLog.d("updatekeyboardStatus isFocus " + isFocus.description, tag:self.tag)
+                PageLog.d("updatekeyboardStatus isInput " + isInput.description, tag:self.tag)
+                if self.isFocus != on { self.isFocus = on }
+                if self.isInput == on { return }
+                withAnimation{
+                    self.isInput = on
+                }
             }
             .onReceive(self.viewModel.$searchDatas){ datas in
                 self.datas = datas
@@ -169,8 +192,12 @@ struct PageKidsSearch: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    self.isInputSearch = true
-                    self.dataProvider.requestData(q: .init(id: self.tag, type: .getSearchKeywords, isOptional: true))
+                    if self.isInitPage {return}
+                    DispatchQueue.main.async {
+                        self.isInitPage = true
+                        self.isFocus = true
+                        self.dataProvider.requestData(q: .init(id: self.tag, type: .getSearchKeywords, isOptional: true))
+                    }
                 }
             }
             
@@ -180,10 +207,13 @@ struct PageKidsSearch: PageView {
             .onAppear{
                 
             }
+            .onDisappear{
+                self.isFocus = false
+            }
             
         }//geo
     }//body
-    
+    @State var isInitPage:Bool = false
     @State var keyword:String = ""
     @State var datas:[SearchData] = []
     @State var searchDatas:[BlockData]? = nil
@@ -207,6 +237,8 @@ struct PageKidsSearch: PageView {
     func search(keyword:String){
         AppUtil.hideKeyboard()
         self.voiceSearchEnd()
+        self.datas = []
+        self.searchDatas = []
         if keyword.isEmpty { return }
         self.keyword = keyword
         self.dataProvider.requestData(q: .init(id: self.tag, type: .getSeachVod(keyword, .kids), isOptional: false))

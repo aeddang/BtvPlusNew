@@ -27,7 +27,7 @@ struct SearchResultKids: PageComponent{
                 datas: self.datas,
                 useTracking:self.useTracking,
                 marginTop:DimenKids.margin.regular,
-                marginBottom: sceneObserver.safeAreaBottom + DimenKids.margin.thin,
+                marginBottom: sceneObserver.safeAreaIgnoreKeyboardBottom + DimenKids.margin.thin,
                 isRecycle:true,
                 isLegacy:false
                 )

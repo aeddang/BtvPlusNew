@@ -334,19 +334,16 @@ extension String{
     }
     
     func isNickNameType() -> Bool {
-        let n = self.count
-        if n < 1 { return false }
-        if n > 8 { return false }
-        /*
-        let ruleNum = "[0-9]"
-        let resultNum = self.getArrayAfterRegex(regex: ruleNum )
-        if resultNum.count == n { return false }
-    
-        let rule = "[0-9가-힣a-zA-Z]"
-        let result = self.getArrayAfterRegex(regex: rule )
-        if result.count == n { return true}
-        */
-        return true
+        do {
+            // 0~9, 한글, 영문, 8자 이내
+            let regex = try NSRegularExpression(pattern: "^[0-9a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ]{1,8}+$", options: .caseInsensitive)
+            if nil != regex.firstMatch(in: self, options: NSRegularExpression.MatchingOptions.reportCompletion, range: NSRange(location: 0, length: self.count)) {
+                return true
+            }
+        } catch {
+            return false
+        }
+        return false
     }
     func isPhoneNumberType() -> Bool {
         if self.count < 7 { return false }

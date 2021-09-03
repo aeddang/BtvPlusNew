@@ -71,7 +71,7 @@ struct Select<Presenting>: View where Presenting: View {
         //.transition(.slide)
         .opacity(self.isShowing ? 1 : 0)
         
-        .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
+        .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ pos in
             //if self.editType == .nickName {return}
             withAnimation{
                 self.safeAreaBottom = pos

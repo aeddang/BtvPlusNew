@@ -31,7 +31,7 @@ struct FloatRecommand:PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
     @Binding var isClose:Bool
-    @Binding var userControl:Bool
+    
     var data:FloatRecommandData
     var body :some View {
         VStack(alignment: .trailing, spacing:DimenKids.margin.micro){
@@ -65,9 +65,11 @@ struct FloatRecommand:PageComponent {
                         height: Self.openBtnSize.height)
                     .modifier(Grow())
                 }
+                .padding(.trailing,
+                         InfinityScrollModel.onTopSizeKids.width - self.sceneObserver.safeAreaEnd - DimenKids.margin.regular
+                )
             } else {
                 Button(action: {
-                    self.userControl = true
                     withAnimation{ self.isClose = true}
                 }) {
                     Image(AssetKids.icon.closePop)
@@ -149,7 +151,7 @@ struct FloatRecommand:PageComponent {
                 .modifier(Grow())
             }
         }
-        .padding(.bottom, self.isClose ? 0 : DimenKids.margin.thin + self.sceneObserver.safeAreaBottom)
+        .padding(.bottom, self.isClose ? 0 : DimenKids.margin.thin + self.sceneObserver.safeAreaIgnoreKeyboardBottom)
         .modifier(ContentHorizontalEdgesKids())
     }
 
@@ -162,7 +164,6 @@ struct FloatRecommand_Previews: PreviewProvider {
         Form{
             FloatRecommand(
                 isClose: .constant(true),
-                userControl: .constant(true),
                 data: FloatRecommandData(
                     playType: .english,
                     text: "testdcscdscsdcdsacdcac",

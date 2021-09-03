@@ -47,6 +47,10 @@ struct PageSearch: PageView {
                                 }
                             },
                             inputCopmpleted : { text in
+                                if self.keyword.isEmpty {
+                                    self.appSceneObserver.alert = .alert(nil, String.kidsText.kidsSearchInput)
+                                    return
+                                }
                                 self.search(keyword: text)
                             },
                             inputVoice: {
@@ -78,7 +82,7 @@ struct PageSearch: PageView {
                                     pageObservable: self.pageObservable,
                                     pageDragingModel: self.pageDragingModel,
                                     total:self.total,
-                                    keyword: self.keyword,
+                                    keyword: self.resultKeyword,
                                     datas: self.searchDatas,
                                     useTracking: true
                                     )
@@ -214,9 +218,12 @@ struct PageSearch: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    self.isInputSearch = true
-                    self.viewModel.onAppear()
-                    self.dataProvider.requestData(q: .init(id: self.tag, type: .getSearchKeywords, isOptional: true))
+                    if self.isInit {return}
+                    DispatchQueue.main.async {
+                        self.isInputSearch = true
+                        self.viewModel.onAppear()
+                        self.dataProvider.requestData(q: .init(id: self.tag, type: .getSearchKeywords, isOptional: true))
+                    }
                 }
             }
             .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
@@ -227,8 +234,9 @@ struct PageSearch: PageView {
             }
         }//geo
     }//body
-    
+    @State var isInit:Bool = false
     @State var keyword:String = ""
+    @State var resultKeyword:String = ""
     @State var datas:[SearchData] = []
     @State var emptyDatas:[PosterDataSet] = []
     @State var searchDatas:[BlockData] = []
@@ -255,6 +263,7 @@ struct PageSearch: PageView {
     }
     
     func search(keyword:String){
+        
         AppUtil.hideKeyboard()
         self.voiceSearchEnd()
         if keyword.isEmpty { return }
@@ -271,6 +280,7 @@ struct PageSearch: PageView {
                 self.dataProvider.requestData(q: .init(id: self.tag, type: .getSeachPopularityVod, isOptional: false))
             }
         } else {
+            self.resultKeyword = self.keyword
             self.total = self.searchDatas.reduce(0, { $0 + $1.allResultCount })
         }
         self.updatedLogPage()
@@ -286,6 +296,7 @@ struct PageSearch: PageView {
     
     @State var changeSearchSubscription:AnyCancellable?
     func changeSearch(word:String) {
+        self.searchDatas = []
         self.changeSearchSubscription?.cancel()
         self.changeSearchSubscription = Timer.publish(
             every: 0.1, on: .current, in: .common)

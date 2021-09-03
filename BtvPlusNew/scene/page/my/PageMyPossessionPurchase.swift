@@ -21,6 +21,7 @@ struct PageMyPossessionPurchase: PageView {
    
     @State var pages: [PageViewProtocol] = []
     @State var marginBottom:CGFloat = 0
+    @State var isInit:Bool = false
     let titles: [String] = [
         String.app.rent,
         String.app.owner
@@ -54,7 +55,11 @@ struct PageMyPossessionPurchase: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    self.collectionModel.initUpdate()
+                    if self.isInit {return}
+                    DispatchQueue.main.async {
+                        self.isInit = true
+                        self.collectionModel.initUpdate()
+                    }
                 }
             }
     

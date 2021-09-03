@@ -56,7 +56,7 @@ struct SynopsisBody: PageComponent{
             viewModel: self.infinityScrollModel,
             scrollType: .vertical(isDragEnd: false),
             marginTop : Self.spacing,
-            marginBottom : Self.spacing + Dimen.app.bottom + self.sceneObserver.safeAreaBottom,
+            marginBottom : Self.spacing + Dimen.app.bottom + self.sceneObserver.safeAreaIgnoreKeyboardBottom,
             spacing:0,
             isRecycle:false,
             useTracking:true

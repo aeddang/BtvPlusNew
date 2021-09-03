@@ -62,6 +62,7 @@
 		313F8D16269C60700055F775 /* resource_fairplay.json in Resources */ = {isa = PBXBuildFile; fileRef = 313F8D15269C60700055F775 /* resource_fairplay.json */; };
 		3144984E26DFFF23000D0ACD /* PrerollUi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3144984D26DFFF23000D0ACD /* PrerollUi.swift */; };
 		3144985026E0704A000D0ACD /* HostNickname.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3144984F26E0704A000D0ACD /* HostNickname.swift */; };
+		3144985226E26DDD000D0ACD /* PageSynopsisInside.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3144985126E26DDC000D0ACD /* PageSynopsisInside.swift */; };
 		314C7ECB25ABC32200C489FC /* Hello.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314C7ECA25ABC32200C489FC /* Hello.swift */; };
 		314C7EE125AC13C600C489FC /* HostDeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */; };
 		314D0E2B26DF973600BDCD5B /* PageDropBoxList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D0E2A26DF973600BDCD5B /* PageDropBoxList.swift */; };
@@ -763,6 +764,7 @@
 		313F8D15269C60700055F775 /* resource_fairplay.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = resource_fairplay.json; sourceTree = "<group>"; };
 		3144984D26DFFF23000D0ACD /* PrerollUi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrerollUi.swift; sourceTree = "<group>"; };
 		3144984F26E0704A000D0ACD /* HostNickname.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostNickname.swift; sourceTree = "<group>"; };
+		3144985126E26DDC000D0ACD /* PageSynopsisInside.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisInside.swift; sourceTree = "<group>"; };
 		314C7ECA25ABC32200C489FC /* Hello.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hello.swift; sourceTree = "<group>"; };
 		314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostDeviceInfo.swift; sourceTree = "<group>"; };
 		314D0E2A26DF973600BDCD5B /* PageDropBoxList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageDropBoxList.swift; sourceTree = "<group>"; };
@@ -1698,6 +1700,7 @@
 				3166CBA626115CC700282891 /* component */,
 				314D739125B501CC00907118 /* body */,
 				314D738925B4F8B100907118 /* PageSynopsis.swift */,
+				3144985126E26DDC000D0ACD /* PageSynopsisInside.swift */,
 				3194318B26B2578D00C20619 /* PageSynopsisLog.swift */,
 				31A3FAB926C49BAA00689E09 /* PageSynopsisLayer.swift */,
 				3198CF8626D917B200918217 /* PageSynopsisKids.swift */,
@@ -4224,6 +4227,7 @@
 				D56C6A37257DA0C700CF9AB8 /* CPCircularNavigation.swift in Sources */,
 				31AC66BF26B772BA00766995 /* EmptyCard.swift in Sources */,
 				3194D80426A99B0500BB765E /* MonthlyPurchaseTicket.swift in Sources */,
+				3144985226E26DDD000D0ACD /* PageSynopsisInside.swift in Sources */,
 				3195C1B42665E17A001F513E /* strings.kids.swift in Sources */,
 				31A38DFB2682A9EB0058287B /* PurchaseViewerData.swift in Sources */,
 				3174067725F709E600201850 /* NotificationVod.swift in Sources */,
@@ -5039,7 +5043,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7443;
+				CURRENT_PROJECT_VERSION = 7444;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
@@ -5122,7 +5126,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7443;
+				CURRENT_PROJECT_VERSION = 7444;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;

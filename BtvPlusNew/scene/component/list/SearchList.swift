@@ -21,7 +21,7 @@ class SearchData:InfinityData{
     private(set) var phrases: [SearchPhrase] = []
     private(set) var isDeleteAble: Bool = false
     private(set) var isSection: Bool = false
-    private(set) var isSectionChange = false
+    var isSectionChange = false
     func setData(keyword:String, isDeleteAble: Bool = false, isSection: Bool = false) -> SearchData {
         self.keyword = keyword
         if keyword == String.pageText.searchPopularity && isSection {

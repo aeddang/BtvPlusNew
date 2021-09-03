@@ -31,6 +31,7 @@ struct VideoBlockKids:BlockProtocol, PageComponent {
     @State var listId:String = ""
     @State var kidName:String? = nil
     @State var isListUpdated:Bool = true
+    @State var skeletonSize:CGSize = CGSize()
     private func getList() -> some View {
         let key = (self.datas.first?.epsdId ?? "") + self.datas.count.description
         if key == self.listId,  let list = self.list {
@@ -113,7 +114,7 @@ struct VideoBlockKids:BlockProtocol, PageComponent {
                     SkeletonBlockKids(
                         len:4,
                         spacing: DimenKids.margin.thinUltra,
-                        size:ListItemKids.video.type01
+                        size:self.skeletonSize
                     )
                     .modifier(MatchParent())
                 }
@@ -137,6 +138,9 @@ struct VideoBlockKids:BlockProtocol, PageComponent {
             if let _ = self.data.videos {
                 if data.allVideos?.isEmpty == true {
                     self.hasMore = false
+                }
+                if let size = datas.first?.type.size {
+                    self.skeletonSize = size
                 }
                 ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
                 self.creatDataBinding()

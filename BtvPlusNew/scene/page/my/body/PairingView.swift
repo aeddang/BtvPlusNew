@@ -262,7 +262,7 @@ struct PairingView: PageComponent{
             default : break
             }
         }
-        .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
+        .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ pos in
             withAnimation{
                 self.safeAreaBottom = pos
             }

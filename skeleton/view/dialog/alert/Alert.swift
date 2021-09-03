@@ -56,6 +56,7 @@ struct AlertBtnData:Identifiable, Equatable{
 
 
 struct Alert<Presenting>: View where Presenting: View {
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     let maxTextCount:Int = 200
     @Binding var isShowing: Bool
     let presenting: () -> Presenting
@@ -69,6 +70,7 @@ struct Alert<Presenting>: View where Presenting: View {
     var buttons: [AlertBtnData]
     let action: (_ idx:Int) -> Void
     
+    @State var safeAreaBottom:CGFloat = 0
     var body: some View {
         ZStack(alignment: .center) {
             if SystemEnvironment.currentPageType == .btv {
@@ -97,11 +99,17 @@ struct Alert<Presenting>: View where Presenting: View {
                     action: self.action)
             }
         }
+        .padding(.bottom, self.safeAreaBottom)
         .modifier(MatchParent())
         .background(SystemEnvironment.currentPageType == .btv
                         ? Color.transparent.black70
                         : Color.transparent.black50 )
         .opacity(self.isShowing ? 1 : 0)
+        .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
+            withAnimation{
+                self.safeAreaBottom = pos
+            }
+        }
         
     }
 }

@@ -29,7 +29,7 @@ class BuzzvilFeedHeaderV: BABFeedHeaderView {
     }
     
     override func availableRewardDidUpdate(_ reward: Double) {
-        mBcashLabel.text = "지금 받을 수 있는 B캐쉬 "
+        mBcashLabel.text = "지금 받을 수 있는 B포인트 "
         mPointLabel.text = String(DecimalWon(value: Int(reward))) + "P"
 
     }

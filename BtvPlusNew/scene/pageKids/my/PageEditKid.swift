@@ -12,6 +12,7 @@ struct PageEditKid: PageView {
     enum EditType {
         case nickName, birth, none
     }
+    @EnvironmentObject var keyboardObserver:KeyboardObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
@@ -26,7 +27,8 @@ struct PageEditKid: PageView {
     @State var isEdit:Bool = false
     @State var editKid:Kid? = nil
     @State var editType:EditType = .none
-   
+    @State var isFocus:Bool = false
+    @State var isInputReady:Bool = false
      
     var body: some View {
         GeometryReader { geometry in
@@ -36,117 +38,128 @@ struct PageEditKid: PageView {
                 axis:.horizontal
             ) {
                 
-                VStack (alignment: .center, spacing:0){
-                    PageKidsTab(
-                        title:self.isEdit ? String.kidsTitle.editKid : String.kidsTitle.registKid,
-                        isBack: true,
-                        isSetting: true)
-                        
-                    HStack(alignment: .center, spacing: 0) {
-                        VStack(spacing:DimenKids.margin.thin){
-                            Spacer()
-                            Text(String.kidsText.registKidCharacter)
-                                .multilineTextAlignment(.center)
-                                .modifier(BoldTextStyleKids(size: Font.sizeKids.lightExtra, color: Color.app.brown))
-                            Button(action: {
-                                self.selectCharacter()
-                            }) {
-                                Image(AssetKids.characterList[self.characterIdx])
-                                    .renderingMode(.original)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: DimenKids.item.profileRegist.width,
-                                           height: DimenKids.item.profileRegist.height)
-                            }
-                            Spacer()
+                ZStack{
+                    VStack (alignment: .center, spacing:0){
+                        if self.editType != .nickName {
+                            PageKidsTab(
+                                title:self.isEdit ? String.kidsTitle.editKid : String.kidsTitle.registKid,
+                                isBack: true,
+                                isSetting: true)
+                        } else {
+                            Spacer().modifier(MatchHorizontal(height: 0))
                         }
-                        .padding(.horizontal, DimenKids.margin.heavyUltra)
-                        
-                        Spacer().modifier(
-                            LineVertical(
-                                width: DimenKids.line.regular,
-                                color: Color.app.ivoryDeep, opacity: 1.0))
-                            .padding(.vertical, DimenKids.margin.light)
-                        
-                        VStack(alignment: .leading, spacing:DimenKids.margin.light){
-                            if self.isEdit {
-                                HStack{
-                                    Spacer()
-                                    Button(action: {
-                                        self.deleteKidCheck()
-                                    }) {
-                                        Image(AssetKids.icon.profileDelete)
-                                            .renderingMode(.original)
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(height:  DimenKids.icon.tinyExtra)
-                                    }
-                                    .padding(.top, DimenKids.margin.light)
-                                    .padding(.trailing, DimenKids.margin.light)
+                        HStack(alignment: .center, spacing: 0) {
+                            VStack(spacing:DimenKids.margin.thin){
+                                Spacer()
+                                Text(String.kidsText.registKidCharacter)
+                                    .multilineTextAlignment(.center)
+                                    .modifier(BoldTextStyleKids(size: Font.sizeKids.lightExtra, color: Color.app.brown))
+                                Button(action: {
+                                    self.selectCharacter()
+                                }) {
+                                    Image(AssetKids.characterList[self.characterIdx])
+                                        .renderingMode(.original)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: DimenKids.item.profileRegist.width,
+                                               height: DimenKids.item.profileRegist.height)
                                 }
+                                Spacer()
                             }
-                            Spacer()
-                            InputCellKids(
-                                title: String.app.nickNameKids,
-                                input: self.$nickName,
-                                isFocus: self.editType == .nickName,
-                                placeHolder: String.app.nickNameHolderKids
-                            )
-                            .frame(width: SystemEnvironment.isTablet ? 357 : 186)
+                            .padding(.horizontal, DimenKids.margin.heavyUltra)
                             
-                            VStack(alignment: .leading, spacing:DimenKids.margin.tinyExtra){
-                                Text(String.app.birthKids)
-                                    .modifier(BoldTextStyleKids(size: Font.sizeKids.thin, color:Color.app.brown))
-                                    .multilineTextAlignment(.leading)
-                                HStack(alignment: .center, spacing:DimenKids.margin.micro){
-                                    Text(self.birthYear)
-                                        .modifier(BoldTextStyleKids(size: Font.sizeKids.large, color:Color.kids.primary))
-                                        
-                                    Text(String.app.year)
-                                        .modifier(BoldTextStyleKids(size: Font.sizeKids.light, color:Color.app.sepia))
-                                     
-                                    Text(self.birthMonth)
-                                        .modifier(BoldTextStyleKids(size: Font.sizeKids.large, color:Color.kids.primary))
-                                       
-                                    Text(String.app.month)
-                                        .modifier(BoldTextStyleKids(size: Font.sizeKids.light, color:Color.app.sepia))
-                                        
+                            Spacer().modifier(
+                                LineVertical(
+                                    width: DimenKids.line.regular,
+                                    color: Color.app.ivoryDeep, opacity: 1.0))
+                                .padding(.vertical, DimenKids.margin.light)
+                            
+                            ZStack(alignment: .leading){
+                                if self.isEdit {
+                                    VStack{
+                                        HStack{
+                                            Spacer()
+                                            Button(action: {
+                                                self.deleteKidCheck()
+                                            }) {
+                                                Image(AssetKids.icon.profileDelete)
+                                                    .renderingMode(.original)
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(height:  DimenKids.icon.tinyExtra)
+                                            }
+                                            .padding(.top, DimenKids.margin.light)
+                                            .padding(.trailing, DimenKids.margin.light)
+                                        }
+                                        Spacer()
+                                    }
                                 }
-                                .onTapGesture {
-                                    self.selectBirth()
+                                VStack(alignment: .leading, spacing:DimenKids.margin.light){
+                                    InputCellKids(
+                                        title: String.app.nickNameKids,
+                                        input: self.$nickName,
+                                        isFocus: self.isFocus,
+                                        placeHolder: String.app.nickNameHolderKids
+                                    ){
+                                        AppUtil.hideKeyboard()
+                                    }
+                                    .frame(width: SystemEnvironment.isTablet ? 357 : 186)
+                                    
+                                    VStack(alignment: .leading, spacing:DimenKids.margin.tinyExtra){
+                                        Text(String.app.birthKids)
+                                            .modifier(BoldTextStyleKids(size: Font.sizeKids.thin, color:Color.app.brown))
+                                            .multilineTextAlignment(.leading)
+                                        HStack(alignment: .center, spacing:DimenKids.margin.micro){
+                                            Text(self.birthYear)
+                                                .modifier(BoldTextStyleKids(size: Font.sizeKids.large, color:Color.kids.primary))
+                                                
+                                            Text(String.app.year)
+                                                .modifier(BoldTextStyleKids(size: Font.sizeKids.light, color:Color.app.sepia))
+                                             
+                                            Text(self.birthMonth)
+                                                .modifier(BoldTextStyleKids(size: Font.sizeKids.large, color:Color.kids.primary))
+                                               
+                                            Text(String.app.month)
+                                                .modifier(BoldTextStyleKids(size: Font.sizeKids.light, color:Color.app.sepia))
+                                                
+                                        }
+                                        .onTapGesture {
+                                            self.selectBirth()
+                                        }
+                                    }
                                 }
                             }
-                            Spacer()
+                            .padding(.leading, DimenKids.margin.medium)
+                            .modifier(MatchParent())
                         }
-                        .padding(.leading, DimenKids.margin.medium)
-                        .modifier(MatchParent())
+                        .background(Color.app.white)
+                        .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.light))
+                        .modifier(MatchVertical(width: SystemEnvironment.isTablet ? 960 : 500))
+                        .padding(.top, DimenKids.margin.light)
+                       
+                        HStack(spacing:DimenKids.margin.thin){
+                            RectButtonKids(
+                                text: String.app.cancel,
+                                isSelected: false,
+                                size: DimenKids.button.mediumRectExtra
+                            ){idx in
+                                self.pagePresenter.closePopup(self.pageObject?.id)
+                            }
+                            RectButtonKids(
+                                text: self.isEdit ? String.button.modify : String.button.regist2,
+                                isSelected: true,
+                                size: DimenKids.button.mediumRectExtra
+                            ){idx in
+                                self.registKid()
+                            }
+                            .opacity(self.isInputCompleted() ? 1.0 : 0.3)
+                        }
+                        .padding(.top, Dimen.margin.light)
+                        .padding(.bottom, DimenKids.margin.light + self.sceneObserver.safeAreaIgnoreKeyboardBottom)
+                        
                     }
-                    .background(Color.app.white)
-                    .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.light))
-                    .modifier(MatchVertical(width: SystemEnvironment.isTablet ? 960 : 500))
-                    .padding(.top, DimenKids.margin.light)
-                   
-                    HStack(spacing:DimenKids.margin.thin){
-                        RectButtonKids(
-                            text: String.app.cancel,
-                            isSelected: false,
-                            size: DimenKids.button.mediumRectExtra
-                        ){idx in
-                            self.pagePresenter.closePopup(self.pageObject?.id)
-                        }
-                        RectButtonKids(
-                            text: self.isEdit ? String.button.modify : String.button.regist2,
-                            isSelected: true,
-                            size: DimenKids.button.mediumRectExtra
-                        ){idx in
-                            self.registKid()
-                        }
-                        .opacity(self.isInputCompleted() ? 1.0 : 0.3)
-                    }
-                    .padding(.top, Dimen.margin.light)
-                    .padding(.bottom, DimenKids.margin.light + self.sceneObserver.safeAreaBottom)
+                    
                 }
-               
                 .background(
                     Image(AssetKids.image.homeBg)
                         .renderingMode(.original)
@@ -159,6 +172,9 @@ struct PageEditKid: PageView {
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
               
             }//draging
+            .onTapGesture {
+                AppUtil.hideKeyboard()
+            }
             .onReceive(self.pagePresenter.$event){ evt in
                 guard let evt = evt else {return}
                 if evt.id != PageSelectKidCharacter.key {return}
@@ -221,6 +237,15 @@ struct PageEditKid: PageView {
                 default : break
                 }
             }
+            .onReceive(self.keyboardObserver.$isOn){ on in
+                if self.pageObservable.layer != .top { return }
+                self.updatekeyboardStatus(on:on)
+            }
+            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                if ani {
+                    //self.isFocus = true
+                }
+            }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
                
@@ -253,7 +278,7 @@ struct PageEditKid: PageView {
     
     private func isInputCompleted() -> Bool {
         var complete = false
-        if self.nickName.isNickNameType() && self.birthDate != nil {
+        if !self.nickName.isEmpty && self.birthDate != nil {
             complete = true
         }
         return complete
@@ -266,6 +291,18 @@ struct PageEditKid: PageView {
         AppUtil.hideKeyboard()
         self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.selectKidCharacter))
         
+    }
+    
+    private func updatekeyboardStatus(on:Bool) {
+        withAnimation{
+            self.editType = on
+                ? .nickName
+                : self.editType == .nickName ? .none : self.editType
+            
+        }
+        if self.isFocus != on {
+            self.isFocus = on
+        }
     }
     
     private let birthYearList = AppUtil.getYearRange(len: 13, offset:0).map{
@@ -317,6 +354,10 @@ struct PageEditKid: PageView {
     }
     private func registKid() {
         if !self.isInputCompleted() {return}
+        if !self.nickName.isNickNameType() {
+            self.appSceneObserver.alert = .alert(nil, String.alert.kidsInvalidNickName)
+            return
+        }
         if let kid = self.editKid {
             if let _ = self.pairing.kids.filter({ $0.id != kid.id }).first(where: {$0.nickName == self.nickName}){
                 self.appSceneObserver.event = .toast(String.alert.kidsDuplicationNickError)

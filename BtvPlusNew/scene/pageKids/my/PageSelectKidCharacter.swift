@@ -54,6 +54,7 @@ struct PageSelectKidCharacter: PageView {
 
     @State var characterIdx:Int = 0
     @State var boxPos:CGFloat = -300
+    @State var boxOpacity:Double = 0
     
     let characterSets:[CharacterRows] = CharacterRowData(
         datas: zip(0 ..< AssetKids.characterList.count, AssetKids.characterList)
@@ -115,11 +116,12 @@ struct PageSelectKidCharacter: PageView {
                 .background( Color.transparent.black50 )
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }//draging
-            
+            .opacity(self.boxOpacity)
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
                     withAnimation{
                         self.boxPos = 0
+                        self.boxOpacity = 1
                     }
                 }
             }

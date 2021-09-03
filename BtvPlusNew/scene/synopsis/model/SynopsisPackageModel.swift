@@ -19,6 +19,8 @@ class SynopsisPackageModel : PageProtocol {
     private(set) var salePrice: String? = nil
     private(set) var price: String? = nil
     private(set) var purchaseWebviewModel:PurchaseWebviewModel? = nil
+    private(set) var contentMoreText:String = String.button.preview
+    
     
     let type:PageType
     init(type:PageType = .btv) {
@@ -54,6 +56,9 @@ class SynopsisPackageModel : PageProtocol {
     
     func setData(data:DirectPackageView){
         self.hasAuthority = data.resp_directList?.first?.resp_direct_result?.toBool() ?? false
+        self.contentMoreText = self.hasAuthority
+            ? String.button.directview
+            : self.prdPrcId?.isEmpty == false ? String.button.preview : String.button.detail 
     }
 
 

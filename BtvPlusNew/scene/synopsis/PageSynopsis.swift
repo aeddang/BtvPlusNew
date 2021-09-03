@@ -8,7 +8,7 @@ import Foundation
 import SwiftUI
 extension PageSynopsis {
     enum ComponentEvent {
-        case changeVod(String?), changeSynopsis(SynopsisData?), changeOption(PurchaseModel?), purchase, watchBtv
+        case changeVod(String?), changeSynopsis(SynopsisData?, isSrisChange:Bool = false), changeOption(PurchaseModel?), purchase, watchBtv
     }
     class ComponentViewModel:ComponentObservable{
         @Published var uiEvent:ComponentEvent? = nil {didSet{ if uiEvent != nil { uiEvent = nil} }}
@@ -183,10 +183,9 @@ struct PageSynopsis: PageView {
                 .onReceive(self.playerModel.$btvPlayerEvent){evt in
                     guard let evt = evt else { return }
                     self.onEvent(btvPlayerEvent: evt)
+                    self.onEventInside(btvPlayerEvent: evt) 
                     switch evt {
                     case .close : self.historyBack()
-                    case .nextView : self.nextVod(auto: false)
-                    case .continueView: self.continueVod()
                     case .changeView(let epsdId) : self.changeVod(epsdId:epsdId)
                     default : break
                     }
@@ -232,7 +231,7 @@ struct PageSynopsis: PageView {
                     guard let evt = evt else { return }
                     switch evt {
                     case .changeVod(let epsdId) : self.changeVod(epsdId:epsdId)
-                    case .changeSynopsis(let data): self.changeVod(synopsisData: data)
+                    case .changeSynopsis(let data, let isSrisChange): self.changeVod(synopsisData: data, isRedirectPage: isSrisChange)
                     case .changeOption(let option) : self.changeOption(option)
                     case .purchase : self.purchase()
                     case .watchBtv : self.watchBtv()
@@ -325,8 +324,9 @@ struct PageSynopsis: PageView {
                 switch evt {
                 case .update(let type):
                     switch type {
-                    case .purchase(let pid, _, _) :
+                    case .purchaseCompleted(let pid) :
                         self.purchasedPid = pid
+                        self.isAfterPurchase = true
                         self.resetPage()
                     default : break
                     }
@@ -351,35 +351,47 @@ struct PageSynopsis: PageView {
             .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
                 self.isFullScreen = fullScreen
                 if self.type == .btv {
-                    self.appSceneObserver.useBottom = !fullScreen
+                    if SystemEnvironment.isTablet {
+                        self.appSceneObserver.useBottomImmediately = self.sceneOrientation == .portrait
+                    } else {
+                        self.appSceneObserver.useBottomImmediately = !fullScreen
+                    }
+                    
                 }
             }
             .onReceive(self.playerModel.$streamEvent){evt in
-                guard let _ = evt else {return}
+                guard let evt = evt else {return}
+                self.onEventInside(streamEvent:evt)
                 switch evt {
-                case .completed : self.playCompleted()
-                default : do{}
+                case .completed : break
+                default : break
                 }
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    self.isPageUiReady = true
-                    self.initPage()
+                    if self.isPageUiReady {return}
+                    DispatchQueue.main.async {
+                        self.isPageUiReady = true
+                        self.initPage()
+                    }
                 }
             }
             .onReceive(self.sceneObserver.$isUpdated){ _ in
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
-                
                 if self.relationDatas.isEmpty == false {
                     let relationDatas = self.relationContentsModel.getRelationContentSets(idx: self.selectedRelationTabIdx, row: self.relationRow)
                     self.relationDatas = relationDatas
                 }
-                
+               
+                if SystemEnvironment.isTablet && self.isPageUiReady{
+                    self.appSceneObserver.useBottom = self.sceneOrientation == .portrait
+                }
             }
             .onReceive(self.appSceneObserver.$safeBottomHeight) { _ in
                 self.updateBottomPos(geometry: geometry)
             }
             .onAppear{
+                self.playerModel.pageType = .kids
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
                 self.onLayerPlayerAppear() 
                 guard let obj = self.pageObject  else { return }
@@ -431,16 +443,19 @@ struct PageSynopsis: PageView {
     @State var relationDatas:[PosterDataSet] = []
     @State var hasRelationVod:Bool? = nil
     @State var isFinalPlaying:Bool = false
+    @State var isRedirectPage:Bool = false // 방영종료 시리즈진입시 시청가능한 페이지로 자동이동 여부
     @State var isPlayAble:Bool = false
     @State var isPlayViewActive = false
     @State var isPageUiReady = false
     @State var isPageDataReady = false
     @State var isUIView:Bool = false
+   
     
     /*동기화 value*/
     @State var epsdId:String? = nil
     @State var epsdRsluId:String = ""
     @State var purchasedPid:String? = nil
+    @State var isAfterPurchase:Bool = false
     @State var playStartTime:Int? = nil
     
     /*Layer*/
@@ -503,15 +518,25 @@ struct PageSynopsis: PageView {
         self.isInitPage = true
         self.pageDataProviderModel.initate()
     }
-    func setupHistory(synopsisData:SynopsisData){
-        if let currentSynop = self.synopsisData {
+    func setupHistory(synopsisData:SynopsisData, isHistoryBack:Bool=true){
+        if isHistoryBack , let currentSynop = self.synopsisData {
             if self.historys.last?.epsdId != currentSynop.epsdId {
+                if let find = self.historys.firstIndex(where: {$0.epsdId == currentSynop.epsdId}) {
+                    self.historys.remove(at: find)
+                }
                 self.historys.append(currentSynop)
             }
         }
         self.synopsisData = synopsisData
     }
     func historyBack(){
+        if self.isFullScreen {
+            DispatchQueue.main.async {
+                self.pagePresenter.requestDeviceOrientation(.portrait)
+            }
+            return
+        }
+        
         if !self.historys.isEmpty {
             let history = self.historys.removeLast()
             self.synopsisData = history
@@ -520,7 +545,7 @@ struct PageSynopsis: PageView {
             self.pagePresenter.closePopup(self.pageObject?.id)
         }
     }
-    private func resetPage(isAllReset:Bool = false){
+    func resetPage(isAllReset:Bool = false, isRedirectPage:Bool = false){
         PageLog.d("resetPage", tag: self.tag)
         self.playerModel.event = .stop
         self.isUIView = false
@@ -531,6 +556,7 @@ struct PageSynopsis: PageView {
         self.purchasViewerData = nil
         self.summaryViewerData = nil
         self.purchaseWebviewModel = nil
+        self.isRedirectPage = isRedirectPage
         self.playerData = nil
         self.title = nil
         self.imgBg = nil
@@ -787,6 +813,15 @@ struct PageSynopsis: PageView {
             self.isUIView = true
         }
         self.playStartLog()
+        if self.isAfterPurchase {
+            self.isAfterPurchase = false
+            if self.hasAuthority == true {
+                DispatchQueue.main.async {
+                    self.pagePresenter.requestDeviceOrientation(.landscape)
+                }
+            }
+        }
+        
         if self.pairing.status == .pairing && self.hasAuthority == true , let synopsisData = self.synopsisData {
             //동시시청체크
             self.pageDataProviderModel.request = .init(
@@ -983,9 +1018,9 @@ struct PageSynopsis: PageView {
     
     private func setupRelationContent (_ data:RelationContents?){
         self.relationContentsModel.setData(data: data)
-        if self.relationContentsModel.unavailableSeris,
-           let epsdId = self.relationContentsModel.getAvailableSeris()?.epsdId {
-            self.changeVod( epsdId: epsdId)
+        if self.relationContentsModel.unavailableSeris && self.isRedirectPage,
+            let epsdId = self.relationContentsModel.getAvailableSeris()?.epsdId {
+            self.changeVod( epsdId: epsdId)  // 방영종료 시리즈 자동 이동
             return
         }
         self.setupRelationContentCompleted ()
@@ -1049,93 +1084,6 @@ struct PageSynopsis: PageView {
     /*
      Player process
      */
-    private func playCompleted(){
-        switch playerData?.type {
-        case .preplay:
-            self.preplayCompleted()
-        case .preview(let count, _):
-            if !self.nextPreview(count: count) {
-                self.previewCompleted()
-            }
-        case .vod:
-            if !self.nextVod() {
-                self.vodCompleted()
-            }
-        default:do{}
-        }
-    }
-    
-    private func nextPreview(count:Int)->Bool{
-        guard let playData = self.playerData else { return false}
-        guard let previews = playData.previews else { return false}
-        if !self.setup.nextPlay { return false}
-        let next = count + 1
-        if previews.count <= next { return false}
-        self.synopsisPlayType = .preview(next)
-        if self.isPairing == true {
-            let item = previews[next]
-            self.epsdRsluId = item.epsd_rslu_id ?? ""
-            self.pageDataProviderModel.request = .init(
-                id: SingleRequestType.preview.rawValue,
-                type: .getPreview(item.epsd_rslu_id,  self.pairing.hostDevice))
-           
-        }else{
-            let item = previews[next]
-            self.epsdRsluId = item.epsd_rslu_id ?? ""
-            self.pageDataProviderModel.request = .init(
-                id: SingleRequestType.preview.rawValue,
-                type: .getPreplay(item.epsd_rslu_id,  false))
-        }
-        return true
-    }
-    
-    @discardableResult
-    private func nextVod(auto:Bool = true)->Bool{
-        guard let prevData = self.synopsisData else { return false}
-        guard let playData = self.playerData else { return false}
-        if !self.setup.nextPlay && auto { return false}
-        if !playData.hasNext { return false}
-        
-        self.epsdRsluId = ""
-        self.synopsisPlayType = .vodNext()
-        let nextSynopsisData = SynopsisData(
-            srisId: playData.nextSeason ?? prevData.srisId,
-            searchType: prevData.searchType,
-            epsdId: playData.nextEpisode,
-            epsdRsluId: nil,
-            prdPrcId: prevData.prdPrcId,
-            kidZone: prevData.kidZone,
-            synopType: prevData.synopType
-        )
-        
-        self.setupHistory(synopsisData:nextSynopsisData)
-        self.resetPage()
-        return true
-    }
-    
-    private func preplayCompleted(){
-        PageLog.d("prevplayCompleted", tag: self.tag)
-        self.continueVod()
-    }
-    
-    private func previewCompleted(){
-        PageLog.d("previewCompleted", tag: self.tag)
-    }
-    
-    private func vodCompleted(){
-        PageLog.d("vodCompleted", tag: self.tag)
-    }
-    
-    private func continueVod(){
-        if self.pairing.status != .pairing {
-            self.appSceneObserver.alert = .needPairing(String.alert.needConnectForView)
-            return
-        }
-        if self.hasAuthority == false {
-            guard  let model = self.purchaseWebviewModel else { return }
-            self.appSceneObserver.alert = .needPurchase(model)
-        }
-    }
     
     func changeOption(_ option:PurchaseModel?){
         guard let option = option else { return }
@@ -1146,13 +1094,13 @@ struct PageSynopsis: PageView {
             type: .getPlay(self.epsdRsluId,  self.pairing.hostDevice ))
     }
     
-    func changeVod(synopsisData:SynopsisData?, isHistoryBack:Bool=false){
+    func changeVod(synopsisData:SynopsisData?, isRedirectPage:Bool = true, isHistoryBack:Bool=false){
         guard let synopsisData = synopsisData else { return }
-        self.setupHistory(synopsisData:synopsisData)
-        self.resetPage(isAllReset: true)
+        self.setupHistory(synopsisData:synopsisData, isHistoryBack:isHistoryBack)
+        self.resetPage(isAllReset: true, isRedirectPage:isRedirectPage)
     }
     
-    func changeVod(epsdId:String?){
+    func changeVod(epsdId:String?, isHistoryBack:Bool=false){
         guard let epsdId = epsdId else { return }
         guard let cdata = self.synopsisData else { return }
         self.setupHistory(synopsisData:
@@ -1161,7 +1109,7 @@ struct PageSynopsis: PageView {
                 epsdId: epsdId, epsdRsluId: "",
                 prdPrcId: cdata.prdPrcId, kidZone:cdata.kidZone,
                 synopType: cdata.synopType
-            )
+            ), isHistoryBack:isHistoryBack
         )
         self.resetPage()
     }

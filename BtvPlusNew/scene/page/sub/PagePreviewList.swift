@@ -26,6 +26,7 @@ struct PagePreviewList: PageView {
     @State var menuId:String? = nil
     @State var safeAreaTop:CGFloat = 0
     @State var marginBottom:CGFloat = 0
+    @State var isInit:Bool = false
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -33,6 +34,7 @@ struct PagePreviewList: PageView {
                 viewModel:self.pageDragingModel,
                 axis:.horizontal
             ) {
+               
                 VStack(spacing:0){
                     PageTab(
                         title: self.title,
@@ -46,7 +48,7 @@ struct PagePreviewList: PageView {
                         pageObservable:self.pageObservable,
                         playerModel:self.playerModel,
                         marginTop: Dimen.margin.thin,
-                        marginBottom: self.marginBottom 
+                        marginBottom: self.marginBottom
                     )
                     
                 }
@@ -55,7 +57,11 @@ struct PagePreviewList: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    self.viewModel.update(menuId:self.menuId, key:nil)
+                    if self.isInit {return}
+                    DispatchQueue.main.async {
+                        self.isInit = true
+                        self.viewModel.update(menuId:self.menuId, key:nil)
+                    }
                 }
             }
             .onReceive(self.sceneObserver.$isUpdated){ update in

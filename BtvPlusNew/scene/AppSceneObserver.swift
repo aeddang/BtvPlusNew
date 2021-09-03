@@ -10,7 +10,10 @@ import Foundation
 import SwiftUI
 
 enum SceneUpdateType {
-    case purchase(String, String?, String?), identify(Bool), identifyAdult(Bool, Int)
+    case purchase(String, listPrice:String?, paymentPrice:String?),
+         purchaseCompleted(purchaseId:String? = nil),
+         identify(Bool),
+         identifyAdult(Bool, Int)
 }
 
 enum SceneEvent {

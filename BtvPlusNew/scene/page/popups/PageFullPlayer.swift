@@ -59,16 +59,19 @@ struct PageFullPlayer: PageView {
         }
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
             if ani {
-                if let obj = self.pageObject  {
-                    if let data = obj.getParamValue(key: .data) as? PlayInfo {
-                        let type = obj.getParamValue(key: .type) as? BtvPlayType ?? .preview("")
-                        let autoPlay = obj.getParamValue(key: .autoPlay) as? Bool
-                        let initTime = obj.getParamValue(key: .initTime) as? Double
-                        self.playerModel.setData(data: data, type: type, autoPlay: autoPlay, continuousTime: initTime)
-                        
+                if self.isInit {return}
+                DispatchQueue.main.async {
+                    if let obj = self.pageObject  {
+                        if let data = obj.getParamValue(key: .data) as? PlayInfo {
+                            let type = obj.getParamValue(key: .type) as? BtvPlayType ?? .preview("")
+                            let autoPlay = obj.getParamValue(key: .autoPlay) as? Bool
+                            let initTime = obj.getParamValue(key: .initTime) as? Double
+                            self.playerModel.setData(data: data, type: type, autoPlay: autoPlay, continuousTime: initTime)
+                            
+                        }
                     }
+                    self.isInit = true
                 }
-                self.isInit = true
             }
         }
         .onAppear{
@@ -77,8 +80,8 @@ struct PageFullPlayer: PageView {
             }
         }
     }//body
-   
     private func onClose(){
+        self.pagePresenter.fullScreenExit()
         self.playerModel.event = .pause
         self.pagePresenter.onPageEvent(self.pageObject, event: .init(type: .timeChange, data: self.playerModel.time))
         self.pagePresenter.closePopup(self.pageObject?.id)

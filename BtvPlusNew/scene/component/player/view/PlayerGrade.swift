@@ -31,6 +31,7 @@ extension PlayerGrade {
 struct PlayerGrade: PageView{
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
+    let viewTime:Double = 3
     var data:PlayGradeData
     @State var isFullScreen:Bool = false
     @State var isShowing:Bool = true
@@ -120,11 +121,11 @@ struct PlayerGrade: PageView{
         }
         .onReceive(self.viewModel.$time){ t in
             if self.isShowing {
-                if t >= self.viewModel.openingTime {
+                if t >= self.viewTime {
                     withAnimation { self.isShowing = false }
                 }
             } else {
-                if t < self.viewModel.openingTime {
+                if t < self.viewTime {
                     withAnimation { self.isShowing = true }
                 }
             }

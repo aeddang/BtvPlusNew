@@ -103,7 +103,7 @@ struct PageAdultCertification: PageView {
                         }
                         
                     }
-                    .padding(.bottom, self.sceneObserver.safeAreaBottom)
+                    .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)
                     .modifier(MatchParent())
                     
                     .onReceive(self.infinityScrollModel.$event){evt in

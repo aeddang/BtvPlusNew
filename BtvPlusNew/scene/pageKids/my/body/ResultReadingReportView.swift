@@ -160,7 +160,7 @@ struct ResultReadingReportView: PageComponent{
             .modifier(MatchHorizontal(height: DimenKids.button.regular))
         }
         .padding(.top, DimenKids.margin.thin)
-        .padding(.bottom, DimenKids.margin.thin + self.sceneObserver.safeAreaBottom)
+        .padding(.bottom, DimenKids.margin.thin + self.sceneObserver.safeAreaIgnoreKeyboardBottom)
         .modifier(ContentHorizontalEdgesKids())
         .onAppear(){
           

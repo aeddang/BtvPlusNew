@@ -51,7 +51,7 @@ struct SelectBox: PageComponent {
             .background(Color.app.blue)
             .offset(y:self.isShowing ? 0 : 200)
         }
-        .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
+        .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ pos in
             //if self.editType == .nickName {return}
             withAnimation{
                 self.safeAreaBottom = pos

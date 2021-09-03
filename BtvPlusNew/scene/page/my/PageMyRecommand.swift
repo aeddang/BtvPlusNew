@@ -215,7 +215,11 @@ struct PageMyRecommand: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    self.dataProvider.requestData(q: .init(type: .getRecommendHistory()))
+                    if self.isInit {return}
+                    DispatchQueue.main.async {
+                        self.isInit = true
+                        self.dataProvider.requestData(q: .init(type: .getRecommendHistory()))
+                    }
                 }
             }
             .onAppear{
@@ -226,7 +230,7 @@ struct PageMyRecommand: PageView {
     
     @State var board:[TableCellSet]? = nil
     @State var historys:[TableCellSet]? = nil
-    
+    @State var isInit:Bool = false
     private func setupHistory(_ data:RecommandHistory){
         var pointTotal = ""
         if let point = data.bpoint_total?.toDouble() {

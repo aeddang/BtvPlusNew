@@ -27,6 +27,7 @@ struct PageCategoryList: PageView {
     @State var menuId:String? = nil
     @State var blockData:BlockData? = nil
     @State var marginBottom:CGFloat = 0
+    @State var isInit:Bool = false
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -63,12 +64,16 @@ struct PageCategoryList: PageView {
             
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    if let data = self.blockData {
-                        self.viewModel.update(data: data, listType:self.listType,
-                                              cardType: self.cardType, isAdult:data.isAdult, key:nil)
-                    }else{
-                        self.viewModel.update(menuId:self.menuId, listType:self.listType,
-                                              cardType: self.cardType, isAdult:false, key:nil)
+                    if self.isInit {return}
+                    DispatchQueue.main.async {
+                        self.isInit = true
+                        if let data = self.blockData {
+                            self.viewModel.update(data: data, listType:self.listType,
+                                                  cardType: self.cardType, isAdult:data.isAdult, key:nil)
+                        }else{
+                            self.viewModel.update(menuId:self.menuId, listType:self.listType,
+                                                  cardType: self.cardType, isAdult:false, key:nil)
+                        }
                     }
                 }
             }

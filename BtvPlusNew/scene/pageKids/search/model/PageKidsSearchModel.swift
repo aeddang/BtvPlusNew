@@ -18,7 +18,6 @@ class PageKidsSearchModel :ObservableObject, PageProtocol {
         } else {
             self.searchDatas = datas.filter{$0.title != nil}.map{SearchData().setData(keyword: $0.title!)}
         }
-        
     }
     
     func updateSearchKeyword (_ keywords:[String]? = nil){
@@ -35,56 +34,44 @@ class PageKidsSearchModel :ObservableObject, PageProtocol {
     func updateSearchCategory (_ data:SearchCategory? = nil, keyword:String? = nil) ->[BlockData]{
         guard let result = data?.data else {return []}
         var blocks:[BlockData] = []
-        
+        var isEmpty = true
         if let datas = result.results_vod {
-            var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
-            actionData.menu_name = String.app.vod + datas.count.description
-            let allPosters:[PosterData] = datas.map{
-                PosterData(pageType: .kids).setData(data: $0, searchType:.vod).setNaviLog(action: actionData)}
-            let block = BlockData(pageType: .kids)
-                .setData(title: String.app.vod, datas: allPosters, searchType:.vod,  keyword: keyword)
-                .setNaviLog(pageCloseActionLog: actionData)
-            blocks.append(block)
+            isEmpty = false
+            blocks.append(self.getResultsVod(datas: datas, keyword: keyword))
+        } else {
+            blocks.append(self.getResultsVod(datas: [], keyword: keyword))
         }
         if let datas = result.results_vod_tseq {
-            var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
-            actionData.menu_name = String.app.vod + datas.count.description
-            actionData.category = "회차"
-            let allPosters:[VideoData] = datas.map{ VideoData(pageType: .kids).setData(data: $0, searchType:.vodSeq).setNaviLog(action: actionData)}
-            let block = BlockData(pageType: .kids)
-                .setData(title: String.app.sris, datas: allPosters, searchType:.vodSeq, keyword: keyword)
-                .setNaviLog(pageCloseActionLog: actionData)
-            blocks.append(block)
+            isEmpty = false
+            blocks.append(self.getResultsSris(datas: datas, keyword: keyword))
+        } else {
+            blocks.append(self.getResultsSris(datas: [], keyword: keyword))
         }
-        if let datas = result.results_clip {
-            var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
-            actionData.menu_name = String.app.clip + datas.count.description
-            actionData.category = "클립"
-            let allPosters:[VideoData] = datas.map{ VideoData(pageType: .kids, useTag:false).setData(data: $0, searchType:.clip).setNaviLog(action: actionData)}
-            let block = BlockData(pageType: .kids)
-                .setData(title: String.app.clip, datas: allPosters, searchType:.clip, keyword: keyword)
-                .setNaviLog(pageCloseActionLog: actionData)
-            blocks.append(block)
-        }
-        if let datas = result.results_corner {
-            var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
-            actionData.config = ""
-            actionData.menu_name = String.app.corner + datas.count.description
-            let allPosters:[VideoData] = datas.map{ VideoData(pageType: .kids).setData(data: $0, searchType:.demand).setNaviLog(action: actionData)}
-            let block = BlockData(pageType: .kids)
-                .setData(title: String.app.corner, datas: allPosters, searchType:.demand, keyword: keyword)
-                .setNaviLog(pageCloseActionLog: actionData)
-            blocks.append(block)
-        }
-        if let datas = result.results_people {
-            var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
-            actionData.menu_name = String.app.people + datas.count.description
-            let allPosters:[PosterData] = datas.map{ PosterData(pageType: .kids).setData(data: $0, searchType:.none).setNaviLog(action: actionData)}
-            let block = BlockData(pageType: .kids)
-                .setData(title: String.app.people, datas: allPosters, searchType:.none, keyword: keyword)
-                .setNaviLog(pageCloseActionLog: actionData)
-            blocks.append(block)
-        }
+        if isEmpty {return []}
         return blocks
+    }
+    
+    private func getResultsVod(datas:[CategoryVodItem],keyword:String? = nil) -> BlockData{
+        var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
+        actionData.menu_name = String.app.vod + datas.count.description
+        let allPosters:[PosterData] = datas.map{
+            PosterData(pageType: .kids).setData(data: $0, searchType:.vod).setNaviLog(action: actionData)
+        }
+        let block = BlockData(pageType: .kids)
+            .setData(title: String.app.vod, datas: allPosters, searchType:.vod, keyword: keyword)
+            .setNaviLog(pageCloseActionLog: actionData)
+       return block
+    }
+    private func getResultsSris(datas:[CategorySrisItem],keyword:String? = nil) -> BlockData{
+        var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
+        actionData.menu_name = String.app.vod + datas.count.description
+        actionData.category = "회차"
+        let allPosters:[VideoData] = datas.map{
+            VideoData(pageType: .kids).setData(data: $0, searchType:.vodSeq).setNaviLog(action: actionData)
+        }
+        let block = BlockData(pageType: .kids)
+            .setData(title: String.app.sris, datas: allPosters, searchType:.vodSeq, keyword: keyword)
+            .setNaviLog(pageCloseActionLog: actionData)
+       return block
     }
 }

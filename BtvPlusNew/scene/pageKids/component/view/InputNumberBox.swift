@@ -27,7 +27,7 @@ struct InputNumberBox: PageComponent {
     @State var input2:String = ""
     @State var input3:String = ""
     @State var input4:String = ""
-    
+    @State var isEdit:Bool = false
     var body: some View {
         ZStack(alignment: .center) {
             Spacer().modifier(MatchParent())
@@ -151,6 +151,10 @@ struct InputNumberBox: PageComponent {
                 minHeight: 0,
                 maxHeight:.infinity
             )
+            .offset(y:self.isEdit
+                        ? SystemEnvironment.isTablet
+                            ? -DimenKids.margin.medium : DimenKids.margin.heavyUltra
+                        : 0)
             
         }
         .modifier(MatchParent())
@@ -159,7 +163,9 @@ struct InputNumberBox: PageComponent {
             AppUtil.hideKeyboard()
         }
         .onReceive(self.keyboardObserver.$isOn) { isOn in
-            
+            withAnimation{
+                self.isEdit = isOn
+            }
         }
         .onAppear(){
             self.focusIdx = 0

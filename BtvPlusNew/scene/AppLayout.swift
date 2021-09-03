@@ -9,11 +9,13 @@
 import Foundation
 import Foundation
 import SwiftUI
+import Combine
 struct AppLayout: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appObserver:AppObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var networkObserver:NetworkObserver
     @EnvironmentObject var keyboardObserver:KeyboardObserver
@@ -137,17 +139,19 @@ struct AppLayout: PageComponent{
                 self.pagePresenter.bodyColor = Color.kids.bg
             }
             
-            
             if self.appSceneObserver.useTopFix != false {
                 self.appSceneObserver.useTop = PageSceneModel.needTopTab(cPage)
             }
-            self.appSceneObserver.useBottom = PageSceneModel.needBottomTab(cPage)
+            let useBottom = PageSceneModel.needBottomTab( cPage, sceneOrientation: self.sceneObserver.sceneOrientation)
+            self.appSceneObserver.useBottom = useBottom
+                
             AppUtil.hideKeyboard()
             if PageSceneModel.needKeyboard(cPage) {
                 self.keyboardObserver.start()
             }else{
                 self.keyboardObserver.cancel()
             }
+            self.syncOrientation()
         }
         .onReceive(self.pairing.$event){ evt in
             guard let evt = evt else {return}
@@ -221,6 +225,27 @@ struct AppLayout: PageComponent{
     @State var isPairingHitchShowing:Bool = true
     @State var pageType:PageType = .btv
     @State var hasPopup:Bool = false
+    
+    
+    
+    @State private var delaySyncOrientation:AnyCancellable?
+    func syncOrientation(){
+        self.delaySyncOrientation?.cancel()
+        self.delaySyncOrientation = Timer.publish(
+            every: 0.1, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                self.cancelSyncOrientation()
+                DispatchQueue.main.async {
+                    self.pagePresenter.syncOrientation()
+                }
+            }
+    }
+    func cancelSyncOrientation(){
+        self.delaySyncOrientation?.cancel()
+        self.delaySyncOrientation = nil
+    }
+    
     func onDataAlram(){
         if isInitDataAlram {return}
         self.isInitDataAlram = true

@@ -139,7 +139,7 @@ struct PairingHitch: PageComponent {
             }
             if self.isHitching && self.isAutoPairing == nil {
                 ActivityIndicator(isAnimating: .constant(true), style: .medium)
-                    .padding(.bottom, self.sceneObserver.safeAreaBottom + Dimen.margin.regular)
+                    .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.margin.regular)
             }
         }
         .opacity( !self.isHitching  || self.hasPopup ? 0 : 1)

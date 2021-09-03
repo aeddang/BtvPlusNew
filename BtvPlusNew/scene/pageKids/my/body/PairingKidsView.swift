@@ -36,8 +36,9 @@ struct PairingKidsView: PageComponent {
                     }
                     RectButtonKids(
                         text: String.kidsTitle.registKidManagement,
+                        kern: SystemEnvironment.isTablet ? Font.kern.thin :  Font.kern.regular ,
                         textModifier: BoldTextStyleKids(
-                            size: Font.sizeKids.tiny,
+                            size: SystemEnvironment.isTablet ? Font.sizeKids.tinyExtra : Font.sizeKids.tiny,
                             color: Color.app.sepia).textModifier,
                         bgColor: Color.app.ivoryLight,
                         size: CGSize(
@@ -50,6 +51,7 @@ struct PairingKidsView: PageComponent {
                         self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
                     }
                 }
+                //.padding(.top,SystemEnvironment.isTablet ? DimenKids.margin.medium : DimenKids.margin.mediumExtra)
                 .padding(.horizontal, DimenKids.margin.light)
             }
             .background(
@@ -62,12 +64,15 @@ struct PairingKidsView: PageComponent {
             .clipped()
             VStack(alignment: .leading, spacing:0){
                 if !self.tabs.isEmpty {
-                    MenuNavi(
-                        viewModel: self.tabNavigationModel,
-                        buttons: self.tabs,
-                        selectedIdx: self.tabIdx,
-                        isDivision: false)
-                        .padding(.leading, DimenKids.margin.thin)
+                    ScrollView(.horizontal, showsIndicators: false){
+                        MenuNavi(
+                            viewModel: self.tabNavigationModel,
+                            buttons: self.tabs,
+                            selectedIdx: self.tabIdx,
+                            isDivision: false)
+                            .padding(.horizontal, DimenKids.margin.thin)
+                    }
+                    
                 }
                 if self.isLoading {
                     Spacer()
@@ -81,10 +86,12 @@ struct PairingKidsView: PageComponent {
                     CateBlock(
                         pageObservable: self.pageObservable,
                         viewModel:cateBlockModel,
-                        marginBottom:self.sceneObserver.safeAreaBottom +  DimenKids.margin.thinUltra,
+                        headerSize: DimenKids.tab.thin,
+                        marginBottom:self.sceneObserver.safeAreaIgnoreKeyboardBottom +  DimenKids.margin.thinUltra,
                         marginHorizontal: DimenKids.margin.thin,
                         spacing: DimenKids.margin.thinUltra,
-                        size : self.cateSize
+                        size : self.cateSize,
+                        menuTitle: String.kidsText.kidsMyWatch
                     )
                     .modifier(MatchParent())
                     .padding(.trailing,  self.sceneObserver.safeAreaEnd)
@@ -117,6 +124,7 @@ struct PairingKidsView: PageComponent {
                         }
                     }
                     .modifier(MatchParent())
+                    .padding(.bottom, DimenKids.margin.thin)
                 }
 
             }
@@ -167,8 +175,11 @@ struct PairingKidsView: PageComponent {
         }
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
             if ani {
-                self.isUiInit = true
-                self.load()
+                if self.isUiInit {return}
+                DispatchQueue.main.async {
+                    self.isUiInit = true
+                    self.load()
+                }
             }
         }
         .onAppear{
@@ -224,17 +235,20 @@ struct PairingKidsView: PageComponent {
             if data.scn_mthd_cd == PageKidsMy.recentlyWatchCode {
                 let watcheBlockData:BlockData = BlockData(pageType: .kids).setDataKids(data)
                 self.cateBlockModel = CateBlockModel(pageType: .kids)
-                self.cateSize = (self.sceneObserver.screenSize.width
-                    - DimenKids.item.profileBox.width
-                    - self.sceneObserver.safeAreaStart
-                    - self.sceneObserver.safeAreaEnd)
+                self.cateSize = self.sceneObserver.screenSize.width
+                    - DimenKids.item.profileBox.width //프로필
+                    - (DimenKids.margin.light*2) // 마진
+                    - (DimenKids.margin.thin) // 마진
+                    - (DimenKids.margin.regular*2) // 메이지 마진
+                    //- self.sceneObserver.safeAreaStart
+                    //- self.sceneObserver.safeAreaEnd
                 self.onLoaded()
                 DispatchQueue.main.asyncAfter(deadline: .now()+0.1){
                     self.cateBlockModel?.update(data: watcheBlockData, listType:.video, cardType: watcheBlockData.cardType)
                 }
                 
             } else {
-                self.kidsCategoryListData = KidsCategoryListData().setData(data: data)
+                self.kidsCategoryListData = KidsCategoryListData().setData(data: data, useTitle: false)
                 self.onLoaded()
             }
         }

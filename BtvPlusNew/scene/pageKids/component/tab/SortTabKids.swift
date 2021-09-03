@@ -15,7 +15,7 @@ extension SortTabKids{
 
 struct SortTabKids: PageComponent{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
-    
+    var menuTitle:String? = nil
     var count:Int = 0
     var isSortAble:Bool = false
     
@@ -26,17 +26,30 @@ struct SortTabKids: PageComponent{
         .popularity,.latest,.title,.price
     ]
     
-    
     var body: some View {
         HStack(alignment:.center, spacing: Dimen.margin.thin){
-            Text(String.app.total + " " + self.count.description + String.app.count)
-                .modifier(BoldTextStyleKids(
-                    size: Font.sizeKids.thin,
-                    color: Color.app.sepia)
-                )
-                .opacity(0.5)
-            Spacer()
-           
+            VStack(alignment:.leading, spacing: 0){
+                Spacer().modifier(MatchHorizontal(height: 0))
+                if let title = self.menuTitle {
+                    HStack(alignment:.bottom, spacing: DimenKids.margin.tiny){
+                        Text(title)
+                            .modifier(BlockTitleKids())
+                        Text("(" + self.count.description + String.app.count + ")")
+                            .modifier(BoldTextStyleKids(
+                                size: Font.sizeKids.thin,
+                                color: Color.app.sepia)
+                            )
+                            .opacity(0.5)
+                    }
+                } else {
+                    Text(String.app.total + " " + self.count.description + String.app.count)
+                        .modifier(BoldTextStyleKids(
+                            size: Font.sizeKids.thin,
+                            color: Color.app.sepia)
+                        )
+                        .opacity(0.5)
+                }
+            }
             if self.isSortAble {
                 SortButtonKids(text: self.sortType.name){
                     let idx = sortOption.firstIndex(where: {$0 == self.sortType})

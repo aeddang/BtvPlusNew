@@ -129,6 +129,16 @@ struct PlayList: PageComponent{
     }//body
 }
 
+extension PlayItem{
+    static let listSize: CGSize = CGSize(width: 520, height: 292)
+    static func getListRange(width:CGFloat, sceneOrientation :SceneOrientation)->CGFloat{
+        if SystemEnvironment.isTablet && sceneOrientation == .landscape {
+            return listSize.height
+        }
+        return width * 12 / 16
+    }
+}
+
 struct PlayItem: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
@@ -160,7 +170,7 @@ struct PlayItem: PageView {
                         self.loadPreview()
                         
                     }
-                    .frame(width: 520, height: 292)
+                    .frame(width: Self.listSize.width, height: Self.listSize.height)
                     .clipped()
                     VStack(alignment: .leading, spacing:0){
                         Text(self.data.title!)

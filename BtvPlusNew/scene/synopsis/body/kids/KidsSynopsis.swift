@@ -18,7 +18,7 @@ extension KidsSynopsis {
         let h = sceneObserver.screenSize.height
             - Self.topHeight - Self.bottomHeight
             - (DimenKids.margin.regularExtra * 2) - DimenKids.margin.thin
-            - (sceneObserver.safeAreaTop + sceneObserver.safeAreaBottom)
+            - (sceneObserver.safeAreaTop + sceneObserver.safeAreaIgnoreKeyboardBottom)
         
         let limitW = sceneObserver.screenSize.width
             - Self.listWidth
@@ -205,11 +205,13 @@ struct KidsSynopsis: PageComponent{
                     }// vstack
                     if !self.isFullScreen {
                         VStack(alignment: .leading,spacing:0){
+                            Spacer().modifier(MatchHorizontal(height: 0))
                             if let episodeViewerData = self.episodeViewerData, let purchasViewerData = self.purchasViewerData {
                                 EpisodeViewerKids(
                                     episodeViewerData: episodeViewerData,
                                     purchaseViewerData: purchasViewerData)
-                                    .fixedSize(horizontal: true, vertical: false)
+                                    
+                                    //.fixedSize(horizontal: true, vertical: false)
                             }
                             if SystemEnvironment.isTablet {
                                 Spacer()
@@ -219,7 +221,7 @@ struct KidsSynopsis: PageComponent{
                                     summaryViewerData: self.summaryViewerData,
                                     isBookmark: self.$isBookmark
                                 )
-                                .fixedSize(horizontal: false, vertical: true)
+                                //.fixedSize(horizontal: false, vertical: true)
                             }
                         }
                         .frame(height:KidsSynopsis.topHeight)

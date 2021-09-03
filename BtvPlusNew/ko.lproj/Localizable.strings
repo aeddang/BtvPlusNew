@@ -184,7 +184,7 @@
 "btnSelectAll" = "전체 선택";
 "btnAllTicket" = "다른 이용권 보기";
 "btnPreview" = "미리보기";
-"btnDirectview" = "바로보기";
+"btnDirectview" = "시청하기";
 "btnLookup" = "조회하기";
 "btnAlramOn" = "알림 설정 켜기";
 "btnAgree" = "동의";
@@ -277,7 +277,7 @@
 "alertConnectNotFound" = "연결가능한\nB tv가 없습니다.";
 "alertConnectNotFoundSub" = "다시 조회를 시도하시거나\n다른연결방법을 이용해 주세요.";
 "alertNeedConnect" = "B tv와 연결이 필요합니다.\n연결하시겠습니까?";
-"alertNeedConnectForView" = "전체 영상은 B tv와 연결 후 시청 가능합니다.\n연결하시겠습니까?";
+"alertNeedConnectForView" = "전체 영상은 B tv와 연결 후\n시청 가능합니다. 연결하시겠습니까?";
 "alertNeedConnectStatus" = "B tv와 연결 상태 확인이 필요합니다.\n다시 시도 하시겠습니까?";
 "alertCheckConnectStatus" = "B tv와 연결 상태 확인 중 입니다.";
 "alertDataNetwork" = "데이터 네트워크로 연결되어 데이터가 소진됩니다.\n(Wi-Fi 연결 시 무료 이용 가능)";
@@ -461,6 +461,7 @@
 "alertKidEditCompleted" = "프로필이 수정 되었습니다.";
 "alertKidDeleteCompleted" = "프로필이 삭제 되었습니다.";
 
+"alertKidInvalidNickName" = "사용 불가한 특수문자가 포함되어 있습\n니다. 다시 입력해 주세요.";
 "alertKidAddError" = "프로필등록이 실패했습니다.\n다시시도해주세요";
 "alertKidEditError" = "프로필수정이 실패했습니다.\n다시시도해주세요";
 "alertKidDeleteError" = "프로필삭제가 실패했습니다.\n다시시도해주세요";
@@ -476,6 +477,7 @@
 "alertCashCharge" = "B포인트 충전소 이용 문의";
 "alertCashChargeText" = "B포인트 충전소 이용에 문제가 있다면 아래 문의하기를 선택해 주세요. B포인트 충전소 이용 문의 페이지로 연결 됩니다.";
 "alertCashChargeButton" = "문의하기";
+"alertCashChargeDisable" = "태블릿에서는 충전소를 이용하실 수 없습니다. 스마트폰 기기에서 이용해 주세요.";
 
 "alertNeedNickName" = "닉네임을 입력 해주셔야 합니다.";
 "alertNeedAgreeTermsOfService" = "이용약관에 동의 해주셔야 합니다.";
@@ -738,7 +740,7 @@
 "myBenefitsDiscountTvText2" = "사용 가능 포인트";
 
 "myBenefitsDiscountTInfo1" = "콘텐츠 구매 시, VIP 등급은 20%, Gold 및 Silver 등급은 10%가 할인됩니다. (교육 장르, 성인 장르, 부가서비스 상품 및 일부 제휴 이용권 상품은 제외)";
-"myBenefitsDiscountTInfo2" = "콘텐츠 구매 시 %s가 할인됩니다. (교육 장르, 성인 장르, 부가서비스 상품 및 일부 제휴 이용권 상품은 제외)";
+"myBenefitsDiscountTInfo2" = "콘텐츠 구매 시 %s%가 할인됩니다. (교육 장르, 성인 장르, 부가서비스 상품 및 일부 제휴 이용권 상품은 제외)";
 "myBenefitsDiscountOkInfo1" = "OK캐쉬백 카드는 최대 3개까지 등록 가능합니다.";
 "myBenefitsDiscountOkInfo2" = "콘텐츠 결제 시 할인과 함께 구매 금액의 1%가\nOK캐쉬백 포인트로 적립되며 할인 및 적립은\n대표 카드로만 가능합니다.";
 "myBenefitsDiscountOkSetup" = "대표 카드로 설정";
@@ -1127,6 +1129,7 @@
 "kidsHomeNoProfile" = "프로필을 등록하고 아이 연령에 맞는 잼키즈 홈을 만나보세요!";
 
 "kidsMyNoProfile" = "등록된 자녀\n프로필이 없어요";
+"kidsMyWatch" = "최근 시청 동영상";
 
 "kidsMyDiagnosticReport" = "진단 리포트";
 "kidsMyDiagnosticReportText" = "학습도 하고, 진단 결과도 받고!";
@@ -1153,6 +1156,7 @@
 "kidsMyEnglishReport" = "15만개 문항 데이터에서 엄선하여 추출한 레벨 테스트로 영어 실력을 확인하세요. \n레벨테스트를 연령별로 나누어 제공해, 보다 정확하게 실력을 분석해요";
 "kidsMyInfantDevelopmentReport" = "한솔 교육 연구원의 영유가 전문가가 개발한 검사로 \n발달 특성을 영역별로 진단하고 아이에게 맞는 동화책을 추천해 드려요";
 "kidsMyCreativeObservationReport" = "5대 창의 요소와 9가지 확산적 사고 요인을 통해 개발한 창의력 관찰검사로 \n아이의 창의 유형에 딱 맞는 콘텐츠를 추천해 드려요";
+
 
 "kidsMyResultDate" = "최근 응시일";
 "kidsMyResultRetryCount" = "재응시 횟수";

@@ -9,15 +9,17 @@ import Foundation
 import SwiftUI
 import struct Kingfisher.KFImage
 class KidsCategoryListData: KidsHomeBlockListData {
-    private(set) var title:String = " "
+    private(set) var title:String? = nil
     private(set) var svcPropCd:String? = nil
     private(set) var isTicket:Bool = false
     private(set) var datas:[KidsCategoryListItemData] = []
     private(set) var sets:[KidsCategoryListItemDataSet] = []
    
-    func setData(data:BlockItem, uiType:BlockData.UiType? = nil) -> KidsCategoryListData{
+    func setData(data:BlockItem, uiType:BlockData.UiType? = nil, useTitle:Bool = true) -> KidsCategoryListData{
         self.type = .cateList
-        self.title = data.menu_nm ?? " "
+        if useTitle {
+            self.title = data.menu_nm ?? " "
+        }
         let cardType = data.btm_bnr_blk_exps_cd
         self.isTicket = uiType == .kidsTicket
         switch cardType {
@@ -145,11 +147,13 @@ struct KidsCategoryList:PageView  {
     var data:KidsCategoryListData
     
     var body :some View {
-        VStack(alignment: .leading , spacing:DimenKids.margin.light){
-            Text(self.data.title)
-                .modifier(BlockTitleKids())
-                .lineLimit(1)
-                .fixedSize()
+        VStack(alignment: .leading , spacing:DimenKids.margin.thin){
+            if let title = self.data.title {
+                Text(title)
+                    .modifier(BlockTitleKids())
+                    .lineLimit(1)
+                    .fixedSize()
+            }
             HStack(alignment: .top, spacing: DimenKids.margin.thinExtra){
                 ForEach(self.data.datas) { data in
                     KidsCategoryListItem(data: data)

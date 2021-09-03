@@ -177,9 +177,13 @@ struct PageHome: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    self.reload(selectedMonthlyId: self.selectedMonthlyId)
-                    if self.pairing.status != .pairing {
-                        self.appSceneObserver.event = .pairingHitch(isOn: true)
+                    if self.isInit {return}
+                    DispatchQueue.main.async {
+                        self.isInit = true
+                        self.reload(selectedMonthlyId: self.selectedMonthlyId)
+                        if self.pairing.status != .pairing {
+                            self.appSceneObserver.event = .pairingHitch(isOn: true)
+                        }
                     }
                 }
             }
@@ -195,7 +199,7 @@ struct PageHome: PageView {
             }
         }//geo
     }//body
-    
+    @State var isInit:Bool = false
     @State var currentBand:Band? = nil
     @State var topDatas:Array<BannerData>? = nil
     @State var originMonthlyDatas:[String:MonthlyData]? = nil

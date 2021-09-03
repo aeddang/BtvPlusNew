@@ -87,11 +87,15 @@ struct PageCategory: PageView {
         }
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
             if ani {
-                guard let obj = self.pageObject  else { return }
-                let menuId = (obj.getParamValue(key: .id) as? String) ?? ""
-                let openId = (obj.getParamValue(key: .subId) as? String)
-                self.appSceneObserver.useTopFix = true
-                self.setupDatas(menuId:menuId, openId: openId)
+                if self.isInit {return}
+                DispatchQueue.main.async {
+                    self.isInit = true
+                    guard let obj = self.pageObject  else { return }
+                    let menuId = (obj.getParamValue(key: .id) as? String) ?? ""
+                    let openId = (obj.getParamValue(key: .subId) as? String)
+                    self.appSceneObserver.useTopFix = true
+                    self.setupDatas(menuId:menuId, openId: openId)
+                }
             }
         }
         .onAppear{
@@ -102,6 +106,7 @@ struct PageCategory: PageView {
         }
     }//body
     
+    @State var isInit:Bool = false
     @State var tabs:[NavigationButton] = []
     @State var originDatas:[CateData]? = nil
     @State var datas:[CateDataSet] = []

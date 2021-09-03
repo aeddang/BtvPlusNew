@@ -26,6 +26,7 @@ struct PageMultiBlock: PageView {
     @ObservedObject var tabInfinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     
     @State var marginBottom:CGFloat = 0
+    @State var isInit:Bool = false
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -109,7 +110,13 @@ struct PageMultiBlock: PageView {
             }
 
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                if ani { self.setupOriginData() }
+                if ani {
+                    if self.isInit {return}
+                    DispatchQueue.main.async {
+                        self.isInit = true
+                        self.setupOriginData()
+                    }
+                }
             }
             .onReceive(self.pairing.$event){ evt in
                 guard let evt = evt else {return}

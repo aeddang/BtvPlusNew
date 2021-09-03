@@ -41,7 +41,7 @@ struct ExamBody: PageComponent{
                         ProgressBox(viewModel: self.viewModel)
                     }
                 }
-                .padding(.bottom, self.sceneObserver.safeAreaBottom + DimenKids.margin.thin)
+                .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom + DimenKids.margin.thin)
                 ExamControl(
                     viewModel: self.viewModel,
                     soundBoxModel: self.soundBoxModel,

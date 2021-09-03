@@ -46,7 +46,7 @@ struct PagePerson: PageView {
                                 ComponentLog.d("webViewHeight " + webViewHeight.description)
                             }
                     }
-                    .padding(.bottom, self.sceneObserver.safeAreaBottom)
+                    .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)
                     .modifier(MatchParent())
 
                 }

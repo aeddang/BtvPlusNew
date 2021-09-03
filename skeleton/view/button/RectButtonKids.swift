@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 struct RectButtonKids: View, SelecterbleProtocol{
     var text:String
+    var kern:CGFloat = Font.kern.regular
     var icon:String? = nil
     var trailText:String? = nil
     var strikeText:String? = nil
@@ -40,6 +41,7 @@ struct RectButtonKids: View, SelecterbleProtocol{
                     HStack(spacing:0){
                         RectButtonKidsBody(
                             text: self.text,
+                            kern: self.kern,
                             icon: self.icon,
                             trailText: self.trailText,
                             strikeText: self.strikeText,
@@ -48,12 +50,13 @@ struct RectButtonKids: View, SelecterbleProtocol{
                             textModifier: self.textModifier,
                             isMore: self.isMore)
                     }
-                    .padding(.horizontal, DimenKids.margin.thin)
+                    .padding(.horizontal,SystemEnvironment.isTablet ? DimenKids.margin.tiny : DimenKids.margin.thin)
                     .frame(width:self.size.width)
                 } else {
                     
                     RectButtonKidsBody(
                         text: self.text,
+                        kern: self.kern,
                         icon: self.icon,
                         trailText: self.trailText,
                         strikeText: self.strikeText,
@@ -72,6 +75,7 @@ struct RectButtonKids: View, SelecterbleProtocol{
     }
     struct RectButtonKidsBody:View {
         var text:String
+        var kern:CGFloat
         var icon:String? = nil
         var trailText:String? = nil
         var strikeText:String? = nil
@@ -93,7 +97,7 @@ struct RectButtonKids: View, SelecterbleProtocol{
                     Spacer().modifier(MatchHorizontal(height: 0))
                 }
                 Text(self.text)
-                    .kerning(Font.kern.regular)
+                    .kerning(self.kern)
                     .font(.custom(textModifier.family, size: textModifier.size))
                     .lineLimit(1)
                     .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)

@@ -41,14 +41,20 @@ struct PageSceneModel: PageModel {
     var topPageObject: PageObject? = nil
     
     func getPageOrientation(_ pageObject:PageObject?) -> UIInterfaceOrientationMask? {
-        if SystemEnvironment.isTablet && pageObject?.pageGroupID == PageType.btv.rawValue { return UIInterfaceOrientationMask.all }
         guard let pageObject = pageObject ?? self.topPageObject else {
             return UIInterfaceOrientationMask.all
         }
+        
+        switch pageObject.pageID {
+        case .fullPlayer, .synopsisPlayer: return UIInterfaceOrientationMask.landscape
+        default : break
+        }
+        if SystemEnvironment.isTablet && pageObject.pageGroupID == PageType.btv.rawValue { return UIInterfaceOrientationMask.all }
+        
+        
         switch pageObject.pageID {
         case .categoryList, .multiBlock :
             return UIInterfaceOrientationMask.portrait
-        case .fullPlayer, .synopsisPlayer: return UIInterfaceOrientationMask.landscape
         default :
             switch pageObject.pageGroupID {
             case PageType.kids.rawValue :
@@ -101,11 +107,15 @@ struct PageSceneModel: PageModel {
         }
     }
     
-    static func needBottomTab(_ pageObject:PageObject) -> Bool{
+    static func needBottomTab(_ pageObject:PageObject, sceneOrientation:SceneOrientation) -> Bool{
         switch pageObject.pageID {
+        case .synopsisPackage, .synopsis :
+            return SystemEnvironment.isTablet ? sceneOrientation == .portrait : true
         case .home, .category, .multiBlock, .search, .my, .webviewList,
-             .categoryList, .synopsis, .synopsisPackage, .previewList, .setup: return true
-        default : return false
+             .categoryList, .previewList, .setup:
+            return true
+        default :
+            return false
         }
     }
     
@@ -119,9 +129,9 @@ struct PageSceneModel: PageModel {
     
     static func needKeyboard(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
-        case .pairingSetupUser, .pairingBtv, .search, .modifyProile, .webviewList,
+        case .pairingSetupUser, .pairingBtv, .search, .modifyProile, .webviewList, .confirmNumber,
              .confirmNumber, .pairingManagement, .setup, .remotecon , .myRegistCard: return true
-        case .registKid, .confirmNumber, .kidsSearch : return true
+        case .registKid,  .kidsSearch, .editKid , .kidsConfirmNumber: return true
         default : return false
         }
     }

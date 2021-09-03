@@ -34,7 +34,7 @@ struct SceneKidsTab: PageComponent{
                 Spacer()
                 if self.isLoading {
                     ActivityIndicator(isAnimating: self.$isLoading)
-                        .padding(.bottom, DimenKids.margin.thin + self.sceneObserver.safeAreaBottom)
+                        .padding(.bottom, DimenKids.margin.thin + self.sceneObserver.safeAreaIgnoreKeyboardBottom)
                 }
             }
             
@@ -61,7 +61,7 @@ struct SceneKidsTab: PageComponent{
                 self.updateTopPos()
             }
         }
-        .onReceive (self.sceneObserver.$safeAreaBottom){ pos in
+        .onReceive (self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ pos in
             if self.safeAreaBottom != pos {
                 self.safeAreaBottom = pos
             }

@@ -28,6 +28,7 @@ struct PageKidsCategoryList: PageView {
     
     @State var marginBottom:CGFloat = 0
     @State var marginHorizontal:CGFloat = 0
+    @State var isUiInit:Bool = false
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -63,12 +64,16 @@ struct PageKidsCategoryList: PageView {
             
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    if let data = self.blockData {
-                        self.viewModel.update(data: data, listType:self.listType,
-                                              cardType: self.cardType, isAdult:data.isAdult, key:nil)
-                    }else{
-                        self.viewModel.update(menuId:self.menuId, listType:self.listType, 
-                                              cardType: self.cardType, isAdult:false, key:nil)
+                    if self.isUiInit {return}
+                    DispatchQueue.main.async {
+                        self.isUiInit = true
+                        if let data = self.blockData {
+                            self.viewModel.update(data: data, listType:self.listType,
+                                                  cardType: self.cardType, isAdult:data.isAdult, key:nil)
+                        }else{
+                            self.viewModel.update(menuId:self.menuId, listType:self.listType,
+                                                  cardType: self.cardType, isAdult:false, key:nil)
+                        }
                     }
                 }
             }
@@ -103,7 +108,7 @@ struct PageKidsCategoryList: PageView {
             }
         }//geo
     }//body
-   
+        
     
 }
 

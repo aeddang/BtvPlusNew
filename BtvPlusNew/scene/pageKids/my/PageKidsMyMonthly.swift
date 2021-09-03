@@ -152,7 +152,7 @@ struct PageKidsMyMonthly: PageView {
                             }
                             .padding(.top, DimenKids.margin.regular)
                             Spacer()
-                                .padding(.bottom, self.sceneObserver.safeAreaBottom)
+                                .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)
                         } else {
                             Spacer()
                         }
@@ -206,11 +206,14 @@ struct PageKidsMyMonthly: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    self.isInitPage = true
-                    if self.viewModel.datas.isEmpty {
-                        self.loadResult()
-                    } else {
-                        self.setupResult()
+                    if self.isInitPage {return}
+                    DispatchQueue.main.async {
+                        self.isInitPage = true
+                        if self.viewModel.datas.isEmpty {
+                            self.loadResult()
+                        } else {
+                            self.setupResult()
+                        }
                     }
                 }
             }

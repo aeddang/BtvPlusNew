@@ -85,7 +85,7 @@ struct EmptyAlert: PageView {
                 .frame( width:  Dimen.button.regularHorizontal )
             }
         }
-        .padding(.all, Dimen.margin.medium)
+        .padding(.all, SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.medium)
     }//body
 }
 

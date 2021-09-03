@@ -26,6 +26,7 @@ struct PosterBlockKids:PageComponent, BlockProtocol {
     @State var isUiActive:Bool = true
     @State var hasMore:Bool = true
     @State var list: PosterList?
+    @State var skeletonSize:CGSize = CGSize()
     private func getList() -> some View {
         if let list = self.list { return list }
         let newList = PosterList(
@@ -86,7 +87,7 @@ struct PosterBlockKids:PageComponent, BlockProtocol {
                     SkeletonBlockKids(
                         len:7,
                         spacing: DimenKids.margin.thinUltra,
-                        size:ListItemKids.poster.type01
+                        size:self.skeletonSize
                     )
                     .modifier(MatchParent())
                 }
@@ -106,6 +107,9 @@ struct PosterBlockKids:PageComponent, BlockProtocol {
             if let _ = data.posters {
                 if data.allPosters?.isEmpty == true {
                     self.hasMore = false
+                }
+                if let size = datas.first?.type.size {
+                    self.skeletonSize = size
                 }
                 ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
                 self.creatDataBinding()

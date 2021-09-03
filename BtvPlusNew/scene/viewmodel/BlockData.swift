@@ -200,7 +200,7 @@ class BlockData:InfinityData, ObservableObject{
         return self
     }
     
-    func setData(title:String, datas:[PosterData], searchType:SearchType, keyword:String?, max:Int = 10) -> BlockData{
+    func setData(title:String, datas:[PosterData], searchType:SearchType, keyword:String?, max:Int = 30) -> BlockData{
         name = title
         uiType = .poster
         self.searchType = searchType
@@ -208,19 +208,18 @@ class BlockData:InfinityData, ObservableObject{
         let len = min(datas.count, max)
         self.posters = datas.isEmpty ? datas : datas[0..<len].map{$0}
         self.listHeight = (self.posters?.first?.type.size.height ?? 0) + MultiBlockBody.tabHeight
-       
-        self.subName = datas.count.description
+        self.setCountName(count: datas.count)
         return self
     }
     
-    func setData(title:String, datas:[VideoData], searchType:SearchType, keyword:String?, max:Int = 10) -> BlockData{
+    func setData(title:String, datas:[VideoData], searchType:SearchType, keyword:String?, max:Int = 30) -> BlockData{
         name = title
         uiType = .video
         self.searchType = searchType
         self.allVideos = datas
         let len = min(datas.count, max)
         self.videos = datas.isEmpty ? datas : datas[0..<len].map{$0}
-        self.subName = datas.count.description
+        self.setCountName(count: datas.count)
         if let video = self.videos?.first{
             listHeight = video.type.size.height + video.bottomHeight + MultiBlockBody.tabHeight
         } else {
@@ -229,7 +228,7 @@ class BlockData:InfinityData, ObservableObject{
         return self
     }
     
-    func setData(title:String, datas:[TvData], searchType:SearchType, keyword:String?, max:Int = 10) -> BlockData{
+    func setData(title:String, datas:[TvData], searchType:SearchType, keyword:String?, max:Int = 30) -> BlockData{
         name = title
         uiType = .tv
         self.allTvs = datas
@@ -237,9 +236,18 @@ class BlockData:InfinityData, ObservableObject{
         let len = min(datas.count, max)
         self.tvs = datas.isEmpty ? datas : datas[0..<len].map{$0}
         self.listHeight = (self.tvs?.first?.type.size.height ?? 0) + MultiBlockBody.tabHeight
-        self.subName = datas.count.description
+        self.setCountName(count: datas.count)
         return self
     }
+    
+    private func setCountName(count:Int){
+        if self.pageType == .btv {
+            self.subName = count.description
+        } else {
+            self.subName = "(" + count.description + String.app.count + ")"
+        }
+    }
+    
     /*
     func setData(title:String, datas:[CategoryCornerItem], searchType:SearchType, keyword:String?, max:Int = 10) -> BlockData{
         name = title

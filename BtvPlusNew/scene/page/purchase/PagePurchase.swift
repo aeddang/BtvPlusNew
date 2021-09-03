@@ -21,6 +21,7 @@ struct PagePurchase: PageView {
     @ObservedObject var webViewModel = WebViewModel()
     
     @State var webViewHeight:CGFloat = 0
+    @State var purchaseId:String? = nil
     @State var purchaseWebviewModel:PurchaseWebviewModel? = nil
     var body: some View {
         GeometryReader { geometry in
@@ -39,6 +40,12 @@ struct PagePurchase: PageView {
                         self.pagePresenter.goBack()
                     }
                     .padding(.top, self.sceneObserver.safeAreaTop)
+                    /*
+                    BtvWebView( viewModel: self.webViewModel, useNativeScroll:true )
+                        .modifier(MatchParent())
+                        .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)
+                        .modifier(MatchParent())
+                    */
                     ZStack(alignment: .topLeading){
                         DragDownArrow(
                             infinityScrollModel: self.infinityScrollModel)
@@ -54,12 +61,12 @@ struct PagePurchase: PageView {
                                     self.webViewHeight = geometry.size.height
                                         - Dimen.app.top
                                         - self.sceneObserver.safeAreaTop
-                                        - self.sceneObserver.safeAreaBottom
+                                        - self.sceneObserver.safeAreaIgnoreKeyboardBottom
                                 }
                             
                         }
                     }
-                    .padding(.bottom, self.sceneObserver.safeAreaBottom)
+                    .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)
                     .modifier(MatchParent())
                     
                     .onReceive(self.infinityScrollModel.$event){evt in
@@ -101,12 +108,15 @@ struct PagePurchase: PageView {
                             if !result { return }
                             let listPrice = param["listPrice"] as? String
                             let paymentPrice = param["paymentPrice"] as? String
+                            self.purchaseId = pid
                             self.pairing.authority.reset()
-                            self.appSceneObserver.event = .update(.purchase(pid, listPrice, paymentPrice))
+                            self.appSceneObserver.event =
+                                .update(.purchase(pid, listPrice:listPrice, paymentPrice:paymentPrice))
                         }
                         
                         break
                     case WebviewMethod.bpn_closeWebView.rawValue :
+                        self.appSceneObserver.event = .update(.purchaseCompleted(purchaseId: self.purchaseId))
                         self.pagePresenter.goBack()
                         break
                         

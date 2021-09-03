@@ -4,7 +4,7 @@ import SwiftUI
 
 struct InputCellKids: PageView {
     var title:String = ""
-    var lineLimited:Int = -1
+    var maxLength:Int = 8
     @Binding var input:String
     var inputFontSize = Font.size.tiny
     var isFocus:Bool = false
@@ -25,37 +25,25 @@ struct InputCellKids: PageView {
                
             HStack(alignment: .top, spacing:0){
                 if self.isEditable {
-                    if self.lineLimited == -1 {
-                        if self.isSecure{
-                            SecureField(self.placeHolder, text: self.$input)
-                                .keyboardType(self.keyboardType)
-                                .modifier(BoldTextStyleKids(
-                                            size: self.inputFontSize, color: Color.kids.primary))
-                        }else{
-                            TextField(self.placeHolder, text: self.$input)
-                                
-                                .keyboardType(self.keyboardType)
-                                .modifier(BoldTextStyleKids(
-                                            size: self.inputFontSize, color: Color.kids.primary))
-                        }
-                        
-                    } else {
-                        FocusableTextView(
-                            text:self.$input,
-                            placeholder: "",
-                            isfocus: true,
-                            textModifier:TextModifier(
-                                family:Font.familyKids.bold,
-                                size:self.inputFontSize,
-                                color: Color.kids.primary),
-                            usefocusAble: false,
-                            kern: self.kern,
-                            inputChanged: {text , size in
-                                //self.input = text
-                                //self.inputHeight = min(size.height, (Self.inputHeight * CGFloat(self.lineLimited)))
-                            }
-                        ).frame(height : self.inputFontSize * CGFloat(self.lineLimited))
-                    }
+                    FocusableTextField(
+                        text: self.$input,
+                        keyboardType: self.keyboardType,
+                        returnVal: .done,
+                        placeholder: self.placeHolder,
+                        placeholderColor: Color.kids.primaryExtra,
+                        textAlignment: .left,
+                        maxLength: self.maxLength,
+                        textModifier:TextModifier(
+                            family:Font.familyKids.bold,
+                            size:self.inputFontSize,
+                            color: Color.kids.primary),
+                        isfocus: self.isFocus,
+                        isSecureTextEntry: false,
+                        inputCopmpleted: { text in
+                            AppUtil.hideKeyboard()
+                            self.action?()
+                        })
+                    
                 }else{
                     Text(self.input)
                         .kerning(self.kern ?? Font.kern.regular)

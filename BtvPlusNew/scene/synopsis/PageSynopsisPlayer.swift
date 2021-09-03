@@ -141,9 +141,12 @@ struct PageSynopsisPlayer: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    self.pagePresenter.fullScreenEnter(isLock: true, changeOrientation: .landscape)
-                    self.isPageUiReady = true
-                    self.initPage()
+                    if self.isPageUiReady {return}
+                    DispatchQueue.main.async {
+                        self.pagePresenter.fullScreenEnter(isLock: true, changeOrientation: .landscape)
+                        self.isPageUiReady = true
+                        self.initPage()
+                    }
                 }
             }
             .onAppear{

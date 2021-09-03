@@ -11,6 +11,7 @@ import AVFoundation
 
 struct SearchTabKids: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var searchScrollModel: InfinityScrollModel = InfinityScrollModel()
     
     var isFocus:Bool = false
@@ -41,6 +42,28 @@ struct SearchTabKids: PageView {
             if !self.isVoiceSearch {
                 VStack(spacing:0){
                     HStack(spacing:DimenKids.margin.tiny){
+                        FocusableTextField(
+                            text: self.$keyword,
+                            returnVal: .done,
+                            placeholder: String.kidsText.kidsSearchInput,
+                            placeholderColor: Color.app.sepia.opacity(0.3),
+                            textAlignment: .left,
+                            textModifier: TextModifier(
+                                family: Font.familyKids.bold,
+                                size: Font.sizeKids.regular,
+                                color: Color.app.brownDeep
+                            ),
+                            isfocus: self.isFocus,
+                            inputChanged: {text in
+                                self.inputChanged?(text)
+                            },
+                            inputCopmpleted: {text in
+                                self.inputCopmpleted?(text)
+                            })
+                            .modifier(MatchHorizontal(height: DimenKids.tab.regular))
+                            .clipped()
+                            .padding(.top, 1)
+                        /*
                         FocusableTextView(
                             text: self.$keyword,
                             isfocus: self.isFocus,
@@ -56,9 +79,8 @@ struct SearchTabKids: PageView {
                                 self.inputCopmpleted?(text)
                             }
                         )
-                        .modifier(MatchHorizontal(height: DimenKids.tab.regular))
-                        .clipped()
-                        .padding(.top, 1)
+                        */
+                        
                         
                         
                         Button(action: {
@@ -74,6 +96,7 @@ struct SearchTabKids: PageView {
                         }
                         
                         Button(action: {
+
                             self.inputCopmpleted?(self.keyword)
                         }) {
                             Image(AssetKids.icon.search)
@@ -86,10 +109,10 @@ struct SearchTabKids: PageView {
                     }
                     .padding(.leading, DimenKids.margin.regular)
                     .padding(.trailing, DimenKids.margin.tiny)
-                    if !self.datas.isEmpty && self.isFocus {
+                    if !self.datas.isEmpty {
                         if datas.count > 6 {
                             ScrollView(.vertical, showsIndicators: false){
-                                VStack(alignment: .leading, spacing: 0){
+                                VStack(alignment: .leading, spacing: 1){
                                     Spacer().modifier(MatchHorizontal(height: 0))
                                     ForEach(self.datas) { data in
                                         SearchItemKids(data: data)
@@ -103,7 +126,7 @@ struct SearchTabKids: PageView {
                             .frame( height: ListItem.search.height * 6)
                         } else {
                             VStack(alignment: .leading, spacing: 0){
-                                Spacer().modifier(MatchHorizontal(height: 0))
+                                Spacer().modifier(MatchHorizontal(height: 1)).background(Color.app.sepia.opacity(0.3))
                                 ForEach(self.datas) { data in
                                     SearchItemKids(data: data)
                                     .onTapGesture {
@@ -125,9 +148,10 @@ struct SearchTabKids: PageView {
                 .padding(.leading, DimenKids.margin.mediumExtra)
                 
                 Button(action: {
+                    AppUtil.hideKeyboard()
                     self.inputVoice?()
                 }) {
-                    Image(AssetKids.icon.mic)
+                    Image(AssetKids.icon.micOn)
                         .renderingMode(.original)
                         .resizable()
                         .scaledToFit()
@@ -140,6 +164,6 @@ struct SearchTabKids: PageView {
                     .modifier(MatchHorizontal(height: DimenKids.icon.medium))
             }
         }
-        
     }
+    
 }

@@ -58,7 +58,7 @@ struct SelectPairingType: View {
         }
         .padding(.bottom, SystemEnvironment.isTablet
                     ?  Dimen.margin.thin
-                    : self.sceneObserver.safeAreaBottom + Dimen.margin.thin)
+                    : self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.margin.thin)
         
     }//body
     

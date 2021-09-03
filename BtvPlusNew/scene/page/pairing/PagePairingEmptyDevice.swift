@@ -57,7 +57,7 @@ struct PagePairingEmptyDevice: PageView {
                         ){_ in
                             self.pagePresenter.closePopup(self.pageObject?.id)
                         }
-                        .padding(.bottom, self.sceneObserver.safeAreaBottom)
+                        .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)
                     }
                     .modifier(MatchParent())
                 }

@@ -129,8 +129,11 @@ struct PageKidsExam: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    self.isInit = true
-                    self.initPage()
+                    if self.isInit {return}
+                    DispatchQueue.main.async {
+                        self.isInit = true
+                        self.initPage()
+                    }
                 }
             }
             .onReceive(dataProvider.$result) { res in

@@ -42,12 +42,15 @@ struct PageKidsIntro: PageView {
         .modifier(PageFull(style:self.isFirst ? .kidsPupple : .kidsClear ))
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
             if ani {
-                self.isPlay = ani
-                let duration = Double(Self.ani.count) * Self.fps
-                DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + duration) {
-                    DispatchQueue.main.async {
-                        self.isAnimationCompleted = true
-                        self.completed()
+                if self.isPlay {return}
+                DispatchQueue.main.async {
+                    self.isPlay = ani
+                    let duration = Double(Self.ani.count) * Self.fps
+                    DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + duration) {
+                        DispatchQueue.main.async {
+                            self.isAnimationCompleted = true
+                            self.completed()
+                        }
                     }
                 }
             }
@@ -120,10 +123,14 @@ struct PageKidsIntro: PageView {
     @State var isDataCompleted:Bool = false
     @State var isKidsProfileCompleted:Bool = false
     @State var kidsProfileEvent:PairingEvent? = nil
+    
+    @State var isCompleted:Bool = false
     func completed() {
         if !self.isAnimationCompleted {return}
         if !self.isDataCompleted {return}
         if !self.isKidsProfileCompleted {return}
+        if self.isCompleted {return}
+        self.isCompleted = true
         if let movePage = self.movePage {
             if movePage.isPopup {
                 self.pagePresenter.changePage(PageKidsProvider.getPageObject(.kidsHome))

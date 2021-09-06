@@ -169,6 +169,11 @@ struct FloatingBannerItem: PageComponent, Identifiable {
             actionBody.menu_name = data.menuNm
             self.naviLogManager.actionLog(.clickPopupContents, pageId: .popup, actionBody: actionBody)
             
+            BannerData.move(
+                pagePresenter: self.pagePresenter,
+                dataProvider: self.dataProvider,
+                data: self.data)
+            /*
             if let move = data.move {
                 switch move {
                 case .home, .category:
@@ -198,7 +203,7 @@ struct FloatingBannerItem: PageComponent, Identifiable {
                         .addParam(key: .data, value: link)
                         .addParam(key: .title , value: data.title)
                 )
-            }
+            }*/
             self.appSceneObserver.event = .floatingBanner(nil)
         }
     }

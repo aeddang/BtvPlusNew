@@ -444,22 +444,49 @@ class WebBridge :PageProtocol{
             let menuA = menus.split(separator: "/")
             if menuA.isEmpty {return}
             
+            let gnbTypeCd:String = String(menuA[0])
             
-            let gnbTypCd:String = String(menuA[0])
-            let menuOpenId:String? =
-                menuA.count > 1 ? menuA[1..<menuA.count].reduce("", {$0 + "|" + $1}) : nil
             
-            let page:PageID = gnbTypCd.hasPrefix(EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue)
-                ? .category : .home
-            let band = self.dataProvider.bands.getData(gnbTypCd: gnbTypCd)
+            if gnbTypeCd == EuxpNetwork.GnbTypeCode.GNB_KIDS.rawValue {
+                var menuCId:String? = nil
+                var menuOpenId:String? = nil
+                if menuA.count == 2 {
+                    menuOpenId = menuA[1..<menuA.count].reduce("", {$0 + "|" + $1})
+                }
+                else if menuA.count > 2 {
+                    menuCId = String(menuA[1])
+                    menuOpenId = menuA[2..<menuA.count].reduce("", {$0 + "|" + $1})
+                }
+                if menuCId == EuxpNetwork.KidsGnbCd.monthlyTicket.rawValue {
+                    self.pagePresenter?.changePage(
+                        PageKidsProvider
+                            .getPageObject(.kidsMonthly)
+                            .addParam(key: .subId, value: menuOpenId)
+                    )
+                    
+                } else {
+                    self.pagePresenter?.changePage(
+                        PageKidsProvider
+                            .getPageObject(.kidsHome)
+                            .addParam(key: .cid, value: menuCId)
+                            .addParam(key: .subId, value: menuOpenId)
+                    )
+                }
             
-            PageLog.t("callPage menu " + page)
-            self.pagePresenter?.changePage(PageProvider
-                                            .getPageObject(page)
-                                            .addParam(key: .id, value: band?.menuId)
-                                            .addParam(key: .subId, value: menuOpenId)
-                                            .addParam(key: UUID().uuidString, value: "")
-            )
+            } else {
+                let menuOpenId:String? = menuA[1..<menuA.count].reduce("", {$0 + "|" + $1})
+                let page:PageID = gnbTypeCd.hasPrefix(EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue)
+                    ? .category : .home
+                let band = self.dataProvider.bands.getData(gnbTypCd: gnbTypeCd)
+                
+                PageLog.t("callPage menu " + page)
+                self.pagePresenter?.changePage(PageProvider
+                                                .getPageObject(page)
+                                                .addParam(key: .id, value: band?.menuId)
+                                                .addParam(key: .subId, value: menuOpenId)
+                                                .addParam(key: UUID().uuidString, value: "")
+                )
+            }
             
         case "event":
              if let menuOpenId = param?.first(where: {$0.name == "menu_id"})?.value {

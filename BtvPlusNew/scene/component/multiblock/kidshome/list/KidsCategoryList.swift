@@ -25,13 +25,16 @@ class KidsCategoryListData: KidsHomeBlockListData {
         switch cardType {
         case "05":
             self.title = " "
+            self.blocks = data.blocks ?? []
             self.datas = [
                 KidsCategoryListItemData()
                     .setData(data: data, size: KidsCategoryList.size, isTicket: isTicket)
             ]
             
         case "08":
+            
             if let blocks = data.blocks {
+                self.blocks = blocks
                 var rows:[KidsCategoryListItemDataSet] = []
                 var cells:[KidsCategoryListItemData] = []
                 blocks
@@ -59,6 +62,7 @@ class KidsCategoryListData: KidsHomeBlockListData {
             }
             
         default:
+            self.blocks = data.blocks ?? []
             self.datas = data.blocks?
                 .map{
                     KidsCategoryListItemData()

@@ -148,14 +148,14 @@ struct PageMyPurchaseTicketList: PageView {
     
     
     private func updatedTickets(){
-        guard let monthlyPurchaseInfo = self.pairing.authority.monthlyPurchaseInfo else { return }
-        guard let periodMonthlyPurchaseInfo = self.pairing.authority.periodMonthlyPurchaseInfo else { return }
+        guard let monthlyPurchaseList = self.pairing.authority.monthlyPurchaseList else { return }
+        guard let periodMonthlyPurchaseList = self.pairing.authority.periodMonthlyPurchaseList else { return }
         
         var dataSets:[PurchaseTicketDataSet] = []
         self.isError = false
         
-        let mTickets:[PurchaseTicketData] = monthlyPurchaseInfo.purchaseList?.map{PurchaseTicketData().setData(data: $0)} ?? []
-        let pTickets:[PurchaseTicketData] = periodMonthlyPurchaseInfo.purchaseList?.map{PurchaseTicketData().setData(data: $0)} ?? []
+        let mTickets:[PurchaseTicketData] = monthlyPurchaseList.map{PurchaseTicketData().setData(data: $0)}
+        let pTickets:[PurchaseTicketData] = periodMonthlyPurchaseList.map{PurchaseTicketData().setData(data: $0)} 
         var allTickets:[PurchaseTicketData] = []
         allTickets.append(contentsOf: mTickets)
         allTickets.append(contentsOf: pTickets)

@@ -26,6 +26,7 @@ struct ApiPath {
             case .KMS: return isReleaseMode ? SystemEnvironment.KMS : SystemEnvironment.KMS_STG
             case .CBS: return isReleaseMode ? SystemEnvironment.CBS : SystemEnvironment.CBS_STG
             case .SMD: return isReleaseMode ? SystemEnvironment.SMD : SystemEnvironment.SMD_STG
+            case .KES: return isReleaseMode ? SystemEnvironment.KES : SystemEnvironment.KES_STG
             default: break
             }
         }
@@ -46,6 +47,7 @@ struct ApiGateway{
     
     static func setGatewayheader( request:URLRequest) -> URLRequest{
         var authorizationRequest = request
+       
         authorizationRequest.addValue("application/json", forHTTPHeaderField: "Accept")
         authorizationRequest.addValue(
             SystemEnvironment.isStage ?  Self.DEBUG_API_KEY : Self.API_KEY, forHTTPHeaderField: "Api_Key")

@@ -113,7 +113,7 @@ struct BannerItem: PageView {
     var body: some View {
         ZStack{
             switch self.data.type {
-            case .cell(let size, _) :
+            case .cell(let size, _), .cellKids(let size, _):
                 ImageView(
                     url: self.data.image,
                     contentMode: .fill,
@@ -142,39 +142,7 @@ struct BannerItem: PageView {
         .background(self.data.bgColor ?? Color.app.blueLight)
         .clipShape(RoundedRectangle(cornerRadius: self.data.type.radius)) 
         .onTapGesture {
-            if let move = data.move {
-                switch move {
-                case .home, .category:
-                    if let gnbTypCd = data.moveData?[PageParam.id] as? String {
-                        if let band = dataProvider.bands.getData(gnbTypCd: gnbTypCd) {
-                            self.pagePresenter.changePage(
-                                PageProvider
-                                    .getPageObject(move)
-                                    .addParam(params: data.moveData)
-                                    .addParam(key: .id, value: band.menuId)
-                                    .addParam(key: UUID().uuidString , value: "")
-                            )
-                        }
-                    }
-                    
-                default :
-                    let pageObj = PageProvider.getPageObject(move)
-                    pageObj.params = data.moveData
-                    self.pagePresenter.openPopup(pageObj)
-                }
-            }
-            else if let link = data.outLink {
-                AppUtil.openURL(link)
-            }
-            else if let link = data.inLink {
-                self.pagePresenter.openPopup(
-                    PageProvider
-                        .getPageObject(.webview)
-                        .addParam(key: .data, value: link)
-                        .addParam(key: .title , value: data.title)
-                )
-            }
-            
+            BannerData.move(pagePresenter: self.pagePresenter, dataProvider: self.dataProvider, data: self.data)
         }
     }
 }

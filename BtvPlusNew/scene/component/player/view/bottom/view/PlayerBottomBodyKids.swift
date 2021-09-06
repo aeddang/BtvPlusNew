@@ -33,7 +33,7 @@ struct PlayerBottomBodyKids: PageComponent{
                                     .font(.custom(
                                             Font.familyKids.bold,
                                             size:  Font.sizeKids.lightExtra ))
-                                    .foregroundColor(Color.kids.primary)
+                                    .foregroundColor(Color.app.white)
                                     
                                 + Text(String.app.min + " " + String.player.preplay)
                                     .font(.custom(
@@ -47,7 +47,7 @@ struct PlayerBottomBodyKids: PageComponent{
                                                 color: Color.app.white))
                             }
                         }
-                        RectButton(
+                        RectButtonKids(
                             text: String.player.continueView,
                             icon: Asset.icon.play
                             ){_ in

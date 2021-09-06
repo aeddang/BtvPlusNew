@@ -72,6 +72,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                                     .addParam(key: .data, value: data)
                                     .addParam(key: .type, value: CateBlock.ListType.video)
                                     .addParam(key: .subType, value:data.cardType)
+                                    .addParam(key: .isFree, value:!data.usePrice)
                             )
                         }
                     }

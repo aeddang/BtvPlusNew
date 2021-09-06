@@ -46,18 +46,18 @@ struct SystemEnvironment {
     }
     
     static let VMS = "http://mobilebtv.com:9080"
-    
     static let WEB = "http://mobilebtv.com:8080"
     static let CBS = "https://btvcpas.skbroadband.com:9090"
     static let SMD = "http://smd.hanafostv.com:8080"
     static let KMS = "http://mobilebtv.com:8080"
+    static let KES = "https://agw.sk-iptv.com:8443"
     
     static let VMS_STG = "http://58.123.205.82:9080"
     static let WEB_STG = "http://58.123.205.82:8080"
     static let CBS_STG = "https://1.255.102.229:9090"
     static let SMD_STG = "http://175.113.214.199:8080"
     static let KMS_STG = "http://58.123.205.82:8080"
-    
+    static let KES_STG = "https://agw-stg.sk-iptv.com:8443"
     static var isStage:Bool {
         get{
             return ApiPath.getRestApiPath(.VMS) != Self.VMS

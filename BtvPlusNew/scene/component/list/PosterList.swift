@@ -26,7 +26,7 @@ class PosterData:InfinityData{
     private(set) var type:PosterType = .small
     private(set) var synopsisData:SynopsisData? = nil
     private(set) var pageType:PageType = .btv
-    private(set) var useTag:Bool = true
+    private(set) var usePrice:Bool = true
     private(set) var isPeople:Bool = false
     private(set) var actionLog:MenuNaviActionBodyItem? = nil
     private(set) var contentLog:MenuNaviContentsBodyItem? = nil
@@ -34,9 +34,9 @@ class PosterData:InfinityData{
     var hasLog:Bool { get{ return actionLog != nil || contentLog != nil } }
     var hasLogKids:Bool { get{ return actionLogKids != nil }}
     
-    init(pageType:PageType = .btv, useTag:Bool = true) {
+    init(pageType:PageType = .btv, usePrice:Bool = true) {
         self.pageType = pageType
-        self.useTag = useTag
+        self.usePrice = usePrice
         super.init()
     }
     func setNaviLog(action:MenuNaviActionBodyItem?) -> PosterData {
@@ -539,7 +539,9 @@ extension PosterSet{
     
     static func listSize(data:PosterDataSet, screenWidth:CGFloat,
                          padding:CGFloat = Self.listPadding) -> CGSize {
+        
         let datas = data.datas
+        if datas.isEmpty {return CGSize()}
         let ratio = datas.first!.type.size.height / datas.first!.type.size.width
         let count = CGFloat(data.count)
         let w = screenWidth - ( padding * 2) 
@@ -654,11 +656,11 @@ struct PosterItem: PageView {
                     .modifier(MatchParent())
                     .opacity(self.data.pageType == .btv ? 1 : 0.3)
             }
-            if self.data.useTag, let tag = self.data.tagData {
+            if let tag = self.data.tagData {
                 if tag.pageType == .btv {
-                    Tag(data: tag, isBig: self.data.type.isBigTag).modifier(MatchParent())
+                    Tag(data: tag, isBig: self.data.type.isBigTag, usePrice:self.data.usePrice).modifier(MatchParent())
                 } else {
-                    TagKids(data: tag).modifier(MatchParent())
+                    TagKids(data: tag, usePrice:self.data.usePrice).modifier(MatchParent())
                 }
             }
             if self.isBookmark != nil , let synop = self.data.synopsisData  {

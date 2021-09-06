@@ -21,6 +21,7 @@ class SerisData:InfinityData{
     private(set) var isFree: Bool? = nil
     private(set) var isQuiz: Bool = false
     private(set) var quizTitle: String? = nil
+    private(set) var sortSeq: Int = 0
     private(set) var type: SerisType = .big
     private(set) var pageType:PageType = .btv
     private(set) var actionLog:MenuNaviActionBodyItem? = nil
@@ -52,7 +53,12 @@ class SerisData:InfinityData{
         if let thumb = data.poster_filename_h {
             image = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.video.size) ?? image
         }
-        self.title = data.sub_title
+        if data.cacbro_yn?.toBool() == true {
+            self.title = String.app.cancelBrodcast
+        } else {
+            self.title = data.sub_title
+        }
+       
         if data.brcast_tseq_nm?.isEmpty == false ,let count = data.brcast_tseq_nm {
             self.title = count + String.app.broCount + " " + (self.title ?? "")
             self.brcastTseqNm = count.toInt()
@@ -71,7 +77,7 @@ class SerisData:InfinityData{
         } else{
             subTitle = date
         }
-        
+        sortSeq = data.sort_seq ?? 0
         index = idx
         contentID = data.epsd_id ?? ""
         epsdId = data.epsd_id

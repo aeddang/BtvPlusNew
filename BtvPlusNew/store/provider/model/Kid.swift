@@ -8,7 +8,9 @@
 import Foundation
 
 class Kid:ObservableObject, PageProtocol, Identifiable{
+    static let LIMITED_AGE = 13
     private(set) var id:String = ""
+    
     @Published private(set) var nickName:String = ""
     @Published var characterIdx:Int = 0
     @Published private(set) var age:Int? = nil

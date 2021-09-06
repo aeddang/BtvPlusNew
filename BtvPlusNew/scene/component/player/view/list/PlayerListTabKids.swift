@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 extension PlayerListTabKids {
-    static let padding = DimenKids.margin.medium
+    static let padding = SystemEnvironment.isTablet ?  DimenKids.margin.regular : DimenKids.margin.medium
 }
 
 struct PlayerListTabKids: PageView{

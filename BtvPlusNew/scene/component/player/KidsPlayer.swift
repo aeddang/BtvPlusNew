@@ -38,6 +38,7 @@ struct KidsPlayer: PageComponent{
                     if let grade = self.playGradeData {
                         PlayerGrade(
                             viewModel: self.viewModel,
+                            pageType: .kids,
                             data:grade
                         )
                     }
@@ -141,7 +142,13 @@ struct KidsPlayer: PageComponent{
             }
             .modifier(MatchParent())
             .background(Color.app.black)
-            
+            .onReceive(self.viewModel.$streamEvent) { evt in
+                guard let evt = evt else { return }
+                switch evt {
+                case .seeked : self.viewModel.seeking = 0
+                default : break
+                }
+            }
             .onReceive(self.viewModel.$event) { evt in
                 guard let evt = evt else { return }
                 switch evt {

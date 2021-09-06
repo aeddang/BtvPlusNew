@@ -2,13 +2,14 @@ import Foundation
 import SwiftUI
 
 enum BannerType {
-    case top, list, kids, cell(CGSize, CGFloat), horizontalList, leading
+    case top, list, kids, horizontalList, cell(CGSize, CGFloat), cellKids(CGSize, CGFloat)
     var size:CGSize {
         get{
             switch self {
             case .list: return ListItem.banner.type01
             case .kids: return ListItemKids.banner.type01
             case .cell(let size, _ ): return size
+            case .cellKids(let size, _ ): return size
             case .horizontalList : return ListItem.banner.type04
             default : return CGSize()
             }
@@ -16,7 +17,9 @@ enum BannerType {
     }
     var radius:CGFloat {
         get{
+            
             switch self {
+            case .cellKids : return DimenKids.radius.light
             case .kids: return DimenKids.radius.light
             default : return 0
             }
@@ -26,8 +29,9 @@ enum BannerType {
     var noImage:String {
         get{
             switch self {
+            case .cellKids : return AssetKids.noImg16_9
             case .kids: return AssetKids.noImgBanner
-            case .horizontalList:return  Asset.noImg1_1
+            case .horizontalList:return  Asset.noImg4_3
             default : return  Asset.noImgBanner
             }
         }
@@ -42,6 +46,7 @@ class BannerData:InfinityData, PageProtocol{
     private(set) var title: String? = nil
     private(set) var outLink:String? = nil
     private(set) var inLink:String? = nil
+    private(set) var movePageType:PageType = .btv
     private(set) var move:PageID? = nil
     private(set) var moveData:[PageParam:Any]? = nil
     private(set) var bgColor:Color? = nil
@@ -54,13 +59,17 @@ class BannerData:InfinityData, PageProtocol{
     
     private(set) var subTitle3: String? = nil
     private(set) var subTitleColor3:Color = Color.app.grey
-    
-    
-    
+    private(set) var pageType:PageType = .btv
     private(set) var type:BannerType = .list
     
     private(set) var menuId:String? = nil
     private(set) var menuNm:String? = nil
+    
+    init(pageType:PageType = .btv) {
+        self.pageType = pageType
+        super.init()
+    }
+    
     func setPairing()-> BannerData {
         self.move = .pairing
         self.resourceImage = Asset.image.bannerTopPairing
@@ -89,10 +98,11 @@ class BannerData:InfinityData, PageProtocol{
         switch type {
         case .list:
             if  cardType == .bigPoster {
-                self.type = .leading
                 image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: ListItem.banner.type03)  ?? image
             } else {
-                self.type = cardType == .bannerList ? .horizontalList : .list
+                self.type = cardType == .bannerList
+                    ? .horizontalList
+                    : .list
                 image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size:  self.type.size)  ?? image
             }
         
@@ -144,7 +154,9 @@ class BannerData:InfinityData, PageProtocol{
     
     @discardableResult
     func setBannerSize(width:CGFloat, height:CGFloat, padding:CGFloat) -> BannerData {
-        self.type = .cell(CGSize(width: width, height: height), padding)
+        self.type = self.pageType == .kids
+            ? .cellKids(CGSize(width: width, height: height), padding)
+            : .cell(CGSize(width: width, height: height), padding)
         return self
     }
     private func parseAction(callUrl:String){
@@ -178,26 +190,29 @@ class BannerData:InfinityData, PageProtocol{
         case "501":
             let arrParam = callUrl.components(separatedBy: "/")
             if arrParam.count > 0 {
-                
                 let gnbTypeCd: String = arrParam[0]
-                var subMenu: String? = nil
-                var url: String? = nil
                 var param = [PageParam:Any]()
-                if arrParam.count > 2 {
-                    subMenu = arrParam[2]
-                    url = arrParam[1] + "/" + subMenu!.replace( "|", with: "/")
-                    DataLog.d("page link " + url!, tag:self.tag)
-                    
-                }
                 if gnbTypeCd == EuxpNetwork.GnbTypeCode.GNB_KIDS.rawValue {
-                    self.move = PageID.kidsHome
-                    param[.id] = subMenu
-                    param[.link] = url
-                   
+                    
+                    var cid: String? = nil
+                    var subMenu: String? = nil
+                    if arrParam.count > 1 { cid = arrParam[1] }
+                    if arrParam.count > 2 { subMenu = arrParam[2] }
+                    if cid == EuxpNetwork.KidsGnbCd.monthlyTicket.rawValue {
+                        self.move = PageID.kidsMonthly
+                        param[.subId] = subMenu
+                    } else {
+                        
+                        self.move = PageID.kidsHome
+                        param[.cid] = cid
+                        param[.subId] = subMenu
+                    }
+                    self.movePageType = .kids
+                    
                 } else {
+                    let subMenu: String? = (arrParam.count > 2) ? arrParam[2] : nil
                     self.move = gnbTypeCd == EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue ? PageID.category : PageID.home
                     param[.id] = gnbTypeCd
-                    param[.link] = url
                     param[.subId] = subMenu
                 }
                 self.moveData = param
@@ -220,5 +235,54 @@ class BannerData:InfinityData, PageProtocol{
             break
         }
         
+    }
+    
+    static func move(pagePresenter:PagePresenter, dataProvider:DataProvider ,data:BannerData?) {
+        guard let data = data else {
+            ComponentLog.e("not found data", tag: "BannerDataMove")
+            return
+        }
+        if let move = data.move {
+            switch move {
+            case .home, .category:
+                if let gnbTypCd = data.moveData?[PageParam.id] as? String {
+                    if let band = dataProvider.bands.getData(gnbTypCd: gnbTypCd) {
+                        pagePresenter.changePage(
+                            PageProvider
+                                .getPageObject(move)
+                                .addParam(params: data.moveData)
+                                .addParam(key: .id, value: band.menuId)
+                                .addParam(key: UUID().uuidString , value: "")
+                        )
+                    }
+                }
+            case .kidsHome:
+                let pageObj = PageKidsProvider.getPageObject(move)
+                pageObj.params = data.moveData
+                pagePresenter.changePage(pageObj.addParam(key: UUID().uuidString , value: ""))
+                
+            default :
+                if data.movePageType == .btv {
+                    let pageObj = PageProvider.getPageObject(move)
+                    pageObj.params = data.moveData
+                    pagePresenter.openPopup(pageObj)
+                } else {
+                    let pageObj = PageKidsProvider.getPageObject(move)
+                    pageObj.params = data.moveData
+                    pagePresenter.openPopup(pageObj)
+                }
+            }
+        }
+        else if let link = data.outLink {
+            AppUtil.openURL(link)
+        }
+        else if let link = data.inLink {
+            pagePresenter.openPopup(
+                PageProvider
+                    .getPageObject(.webview)
+                    .addParam(key: .data, value: link)
+                    .addParam(key: .title , value: data.title)
+            )
+        }
     }
 }

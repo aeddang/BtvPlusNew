@@ -41,16 +41,8 @@ struct KidsGnb: PageComponent{
                 }
             }
         }
-        .onReceive (self.pagePresenter.$currentPage) { page in
-            if page?.pageID != .kidsHome {
-                self.selectedMenuId = nil
-                return
-            }
-            if let id = page?.getParamValue(key: .id) as? String {
-                self.selectedMenuId = id
-            } else {
-                self.selectedMenuId = self.dataProvider.bands.kidsGnbModel.home?.menuId 
-            }
+        .onReceive(self.appSceneObserver.$kidsGnbMenuId) { id in
+            self.selectedMenuId = id
         }
         .onReceive (self.appSceneObserver.$useTop) { use in
             if !use {return}
@@ -134,7 +126,7 @@ struct KidsGnbItem: PageView {
                         if self.isSelected ,let subTitle = self.subTitle {
                             Text(subTitle)
                                 .modifier(BoldTextStyleKids(
-                                            size: SystemEnvironment.isTablet ? Font.sizeKids.micro : Font.sizeKids.tinyExtra,
+                                            size: Font.sizeKids.micro ,
                                             color: Color.app.white))
                                 .fixedSize(horizontal: true, vertical: true)
                                 .padding(.vertical, DimenKids.margin.micro)

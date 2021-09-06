@@ -58,7 +58,7 @@ struct PlayerTopBodyKids: PageView{
                         Spacer().modifier(MatchHorizontal(height: 0))
                     }
                     .modifier(MatchHorizontal(height: Font.sizeKids.regular))
-                    .padding(.top, DimenKids.margin.thin)
+                    .padding(.top, SystemEnvironment.isTablet ? 0 : DimenKids.margin.thin)
                 } else{
                     Spacer().modifier(MatchHorizontal(height: 0))
                 }

@@ -100,6 +100,7 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
                     self.isUiView = true
                 }
                 
+                
             } else {
                 let homeData = KidsHomeBlockData().setData(data: self.data)
                 self.homeBlockData = homeData
@@ -107,15 +108,19 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
                 withAnimation{
                     self.isUiView = true
                 }
-            }
-            if self.data.uiType == .kidsTicket && self.pairing.status == .pairing {
-                if let list = self.pairing.authority.purchaseTicketList {
-                    self.updatedMonthly(purchases: list, lowLevelPpm: false)
+                DispatchQueue.main.async{
+                    if self.data.uiType == .kidsTicket && self.pairing.status == .pairing {
+                        if let list = self.pairing.authority.purchaseTicketList {
+                            self.updatedMonthly(purchases: list, lowLevelPpm: false)
+                        }
+                        if let list = self.pairing.authority.purchaseLowLevelTicketList {
+                            self.updatedMonthly(purchases: list, lowLevelPpm: true)
+                        }
+                    }
+                    self.openPage()
                 }
-                if let list = self.pairing.authority.purchaseLowLevelTicketList {
-                    self.updatedMonthly(purchases: list, lowLevelPpm: true)
-                }
             }
+            
         }
         .onDisappear{}
     }
@@ -134,6 +139,34 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
             }
         }
     }
-   
+    private func openPage(){
+        guard let homeBlockData = self.homeBlockData else { return }
+        guard let openId = self.data.openId else { return }
+        var find:BlockItem? = nil
+        let _ = homeBlockData.blocks?.first(where: { data in
+            if let blocks = data.blocks {
+                return blocks
+                    .filter({$0.menu_id != nil})
+                    .first(where: {
+                        let search = openId.contains($0.menu_id!)
+                        if search { find = $0 }
+                        return search
+                }) != nil
+            } else {
+                let search = openId.contains(data.menu_id ?? "")
+                if search { find = data }
+                return search
+            }
+        })
+        
+        guard let data = find else { return }
+        
+        self.pagePresenter.openPopup(
+            PageKidsProvider.getPageObject(.kidsMultiBlock)
+                .addParam(key: .datas, value: data.blocks)
+                .addParam(key: .title, value: data.menu_nm)
+                .addParam(key: .subId, value: openId)
+        )
+    }
     
 }

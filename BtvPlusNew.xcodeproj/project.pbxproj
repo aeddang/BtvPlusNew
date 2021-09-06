@@ -63,6 +63,8 @@
 		3144984E26DFFF23000D0ACD /* PrerollUi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3144984D26DFFF23000D0ACD /* PrerollUi.swift */; };
 		3144985026E0704A000D0ACD /* HostNickname.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3144984F26E0704A000D0ACD /* HostNickname.swift */; };
 		3144985226E26DDD000D0ACD /* PageSynopsisInside.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3144985126E26DDC000D0ACD /* PageSynopsisInside.swift */; };
+		3144985A26E3B404000D0ACD /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3144985926E3B404000D0ACD /* NotificationService.swift */; };
+		3144985E26E3B404000D0ACD /* BtvPlusNewNotification.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 3144985726E3B404000D0ACD /* BtvPlusNewNotification.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		314C7ECB25ABC32200C489FC /* Hello.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314C7ECA25ABC32200C489FC /* Hello.swift */; };
 		314C7EE125AC13C600C489FC /* HostDeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */; };
 		314D0E2B26DF973600BDCD5B /* PageDropBoxList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D0E2A26DF973600BDCD5B /* PageDropBoxList.swift */; };
@@ -505,6 +507,8 @@
 		31D3F4EC25E3A7D4008FDFEC /* BannerList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4EB25E3A7D4008FDFEC /* BannerList.swift */; };
 		31D453DE2678631300E08CB2 /* CustomVTTResourceLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D453DD2678631300E08CB2 /* CustomVTTResourceLoader.swift */; };
 		31D453E2267886A100E08CB2 /* CustomVTTPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D453E1267886A100E08CB2 /* CustomVTTPlayer.swift */; };
+		31DD96D826E4FF5E00C52133 /* MultiBlockBodyDataBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DD96D726E4FF5E00C52133 /* MultiBlockBodyDataBinding.swift */; };
+		31DD96DA26E612BD00C52133 /* BtvInsideModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DD96D926E612BD00C52133 /* BtvInsideModel.swift */; };
 		31DF151E25F9A89A00F0A38D /* TicketList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DF151D25F9A89A00F0A38D /* TicketList.swift */; };
 		31DF152925F9AC4600F0A38D /* TicketBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DF152825F9AC4600F0A38D /* TicketBlock.swift */; };
 		31E3974225B5906E00CE6E21 /* RatingPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E3974125B5906E00CE6E21 /* RatingPoint.swift */; };
@@ -689,6 +693,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		3144985C26E3B404000D0ACD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D56C691B257D9EE500CF9AB8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3144985626E3B404000D0ACD;
+			remoteInfo = BtvPlusNewNotification;
+		};
 		D56C693A257D9EE600CF9AB8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D56C691B257D9EE500CF9AB8 /* Project object */;
@@ -704,6 +715,20 @@
 			remoteInfo = BtvPlusNew;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3144986226E3B404000D0ACD /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				3144985E26E3B404000D0ACD /* BtvPlusNewNotification.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		01E5590AFE81BD86D6657D56 /* Pods-BtvPlusNew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BtvPlusNew.release.xcconfig"; path = "Target Support Files/Pods-BtvPlusNew/Pods-BtvPlusNew.release.xcconfig"; sourceTree = "<group>"; };
@@ -765,6 +790,10 @@
 		3144984D26DFFF23000D0ACD /* PrerollUi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrerollUi.swift; sourceTree = "<group>"; };
 		3144984F26E0704A000D0ACD /* HostNickname.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostNickname.swift; sourceTree = "<group>"; };
 		3144985126E26DDC000D0ACD /* PageSynopsisInside.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisInside.swift; sourceTree = "<group>"; };
+		3144985726E3B404000D0ACD /* BtvPlusNewNotification.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = BtvPlusNewNotification.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		3144985926E3B404000D0ACD /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		3144985B26E3B404000D0ACD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3144986326E3B4E2000D0ACD /* BtvPlusNewNotification.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BtvPlusNewNotification.entitlements; sourceTree = "<group>"; };
 		314C7ECA25ABC32200C489FC /* Hello.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hello.swift; sourceTree = "<group>"; };
 		314C7EE025AC13C600C489FC /* HostDeviceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostDeviceInfo.swift; sourceTree = "<group>"; };
 		314D0E2A26DF973600BDCD5B /* PageDropBoxList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageDropBoxList.swift; sourceTree = "<group>"; };
@@ -1213,6 +1242,8 @@
 		31D3F4EB25E3A7D4008FDFEC /* BannerList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerList.swift; sourceTree = "<group>"; };
 		31D453DD2678631300E08CB2 /* CustomVTTResourceLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomVTTResourceLoader.swift; sourceTree = "<group>"; };
 		31D453E1267886A100E08CB2 /* CustomVTTPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomVTTPlayer.swift; sourceTree = "<group>"; };
+		31DD96D726E4FF5E00C52133 /* MultiBlockBodyDataBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiBlockBodyDataBinding.swift; sourceTree = "<group>"; };
+		31DD96D926E612BD00C52133 /* BtvInsideModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtvInsideModel.swift; sourceTree = "<group>"; };
 		31DF151D25F9A89A00F0A38D /* TicketList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketList.swift; sourceTree = "<group>"; };
 		31DF152825F9AC4600F0A38D /* TicketBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketBlock.swift; sourceTree = "<group>"; };
 		31E3974125B5906E00CE6E21 /* RatingPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingPoint.swift; sourceTree = "<group>"; };
@@ -1411,6 +1442,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		3144985426E3B404000D0ACD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D56C6920257D9EE500CF9AB8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1679,6 +1717,16 @@
 				3144984D26DFFF23000D0ACD /* PrerollUi.swift */,
 			);
 			path = preroll;
+			sourceTree = "<group>";
+		};
+		3144985826E3B404000D0ACD /* BtvPlusNewNotification */ = {
+			isa = PBXGroup;
+			children = (
+				3144986326E3B4E2000D0ACD /* BtvPlusNewNotification.entitlements */,
+				3144985926E3B404000D0ACD /* NotificationService.swift */,
+				3144985B26E3B404000D0ACD /* Info.plist */,
+			);
+			path = BtvPlusNewNotification;
 			sourceTree = "<group>";
 		};
 		314D6B1125D1070E0003C749 /* setup */ = {
@@ -2043,6 +2091,7 @@
 			isa = PBXGroup;
 			children = (
 				316A707A2670349900A93B83 /* BtvPlayerModel.swift */,
+				31DD96D926E612BD00C52133 /* BtvInsideModel.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -3267,6 +3316,7 @@
 				D56C6925257D9EE500CF9AB8 /* BtvPlusNew */,
 				D56C693C257D9EE600CF9AB8 /* BtvPlusNewTests */,
 				D56C6947257D9EE600CF9AB8 /* BtvPlusNewUITests */,
+				3144985826E3B404000D0ACD /* BtvPlusNewNotification */,
 				D56C6924257D9EE500CF9AB8 /* Products */,
 				D72C14BC4C1E0C3C48EC61AF /* Pods */,
 				309EBDAD795DF6595FE7C4A3 /* Frameworks */,
@@ -3279,6 +3329,7 @@
 				D56C6923257D9EE500CF9AB8 /* BtvPlusNew.app */,
 				D56C6939257D9EE600CF9AB8 /* BtvPlusNewTests.xctest */,
 				D56C6944257D9EE600CF9AB8 /* BtvPlusNewUITests.xctest */,
+				3144985726E3B404000D0ACD /* BtvPlusNewNotification.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3839,6 +3890,7 @@
 				318FC01525E4D7C100ABC241 /* item */,
 				D56CC2EE25902E6600CA1D54 /* MultiBlock.swift */,
 				31632FFA25EF386F00581FA7 /* MultiBlockBody.swift */,
+				31DD96D726E4FF5E00C52133 /* MultiBlockBodyDataBinding.swift */,
 				318FC00525E4CA5800ABC241 /* CateBlock.swift */,
 				D56CC3092590703200CA1D54 /* BlockProtocol.swift */,
 			);
@@ -3909,6 +3961,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		3144985626E3B404000D0ACD /* BtvPlusNewNotification */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3144985F26E3B404000D0ACD /* Build configuration list for PBXNativeTarget "BtvPlusNewNotification" */;
+			buildPhases = (
+				3144985326E3B404000D0ACD /* Sources */,
+				3144985426E3B404000D0ACD /* Frameworks */,
+				3144985526E3B404000D0ACD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BtvPlusNewNotification;
+			productName = BtvPlusNewNotification;
+			productReference = 3144985726E3B404000D0ACD /* BtvPlusNewNotification.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		D56C6922257D9EE500CF9AB8 /* BtvPlusNew */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D56C694D257D9EE600CF9AB8 /* Build configuration list for PBXNativeTarget "BtvPlusNew" */;
@@ -3919,10 +3988,12 @@
 				D56C6921257D9EE500CF9AB8 /* Resources */,
 				09C20F62D5408021A395E69D /* [CP] Embed Pods Frameworks */,
 				319D7BAE26DCA2AB00DFAA69 /* ShellScript */,
+				3144986226E3B404000D0ACD /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				3144985D26E3B404000D0ACD /* PBXTargetDependency */,
 			);
 			name = BtvPlusNew;
 			productName = BtvPlusNew;
@@ -3974,9 +4045,12 @@
 		D56C691B257D9EE500CF9AB8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1220;
+				LastSwiftUpdateCheck = 1250;
 				LastUpgradeCheck = 1220;
 				TargetAttributes = {
+					3144985626E3B404000D0ACD = {
+						CreatedOnToolsVersion = 12.5.1;
+					};
 					D56C6922257D9EE500CF9AB8 = {
 						CreatedOnToolsVersion = 12.2;
 						LastSwiftMigration = 1220;
@@ -4008,11 +4082,19 @@
 				D56C6922257D9EE500CF9AB8 /* BtvPlusNew */,
 				D56C6938257D9EE600CF9AB8 /* BtvPlusNewTests */,
 				D56C6943257D9EE600CF9AB8 /* BtvPlusNewUITests */,
+				3144985626E3B404000D0ACD /* BtvPlusNewNotification */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		3144985526E3B404000D0ACD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D56C6921257D9EE500CF9AB8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4183,6 +4265,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		3144985326E3B404000D0ACD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3144985A26E3B404000D0ACD /* NotificationService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D56C691F257D9EE500CF9AB8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4486,6 +4576,7 @@
 				D5E27EE42587115900B2CD5D /* ImageConst.swift in Sources */,
 				3190CAFA2685621300ACB465 /* RelationVodBodyKids.swift in Sources */,
 				317F990326A66BFC00016C09 /* SearchTabKids.swift in Sources */,
+				31DD96D826E4FF5E00C52133 /* MultiBlockBodyDataBinding.swift in Sources */,
 				31F2803826732D3000F40B09 /* FunctionViewerKids.swift in Sources */,
 				31C4D29426926A69000C7E83 /* MonthlyReportCard.swift in Sources */,
 				D56C6A29257DA0C700CF9AB8 /* colors.swift in Sources */,
@@ -4494,6 +4585,7 @@
 				D56C6B12257DAADE00CF9AB8 /* SceneDelegate.swift in Sources */,
 				D51AA9E72599A24A0035CD51 /* PagePairing.swift in Sources */,
 				D571785E2582DBF000BF2612 /* PageDataProviderContent.swift in Sources */,
+				31DD96DA26E612BD00C52133 /* BtvInsideModel.swift in Sources */,
 				3174067225F702CD00201850 /* Nf.swift in Sources */,
 				3193415425DDDAE8002F2000 /* SynopsisBody.swift in Sources */,
 				3190CB022689300700ACB465 /* TopViewerKids.swift in Sources */,
@@ -4850,6 +4942,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3144985D26E3B404000D0ACD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3144985626E3B404000D0ACD /* BtvPlusNewNotification */;
+			targetProxy = 3144985C26E3B404000D0ACD /* PBXContainerItemProxy */;
+		};
 		D56C693B257D9EE600CF9AB8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = D56C6922257D9EE500CF9AB8 /* BtvPlusNew */;
@@ -4875,6 +4972,56 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		3144986026E3B404000D0ACD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = BtvPlusNewNotification/BtvPlusNewNotification.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 7447;
+				DEVELOPMENT_TEAM = X2DM6728F2;
+				INFOPLIST_FILE = BtvPlusNewNotification/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 4.4.5;
+				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.notification;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = BtvplusNotification_development;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3144986126E3B404000D0ACD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = BtvPlusNewNotification/BtvPlusNewNotification.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 7447;
+				DEVELOPMENT_TEAM = X2DM6728F2;
+				INFOPLIST_FILE = BtvPlusNewNotification/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 4.4.5;
+				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.notification;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = BtvplusNotification_AppStore;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		D56C694B257D9EE600CF9AB8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -5000,6 +5147,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 82C464328C07082311FF19F2 /* Pods-BtvPlusNew.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				API_CBS = "https://1.255.102.229:9090";
 				API_EMS = "https://ems.hanafostv.com:8443";
 				API_EPS = "https://agw-stg.sk-iptv.com:8443";
@@ -5007,7 +5155,7 @@
 				API_EVENT = "http://58.123.205.82";
 				API_IIP = "http://stimageqa.hanafostv.com:8080";
 				API_IMAGE = "http://stimage.hanafostv.com:8080";
-				API_KES = "https://agw.sk-iptv.com:8443";
+				API_KES = "https://agw-stg.sk-iptv.com:8443";
 				API_KMS = "http://58.123.205.82:8080";
 				API_LGS = "https://175.113.214.77:8443";
 				API_ME = "http://58.123.205.82";
@@ -5043,7 +5191,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7444;
+				CURRENT_PROJECT_VERSION = 7447;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
@@ -5068,7 +5216,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 4.4.35;
+				MARKETING_VERSION = 4.4.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvplusDevelopment;
@@ -5083,6 +5231,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 01E5590AFE81BD86D6657D56 /* Pods-BtvPlusNew.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				API_CBS = "https://btvcpas.skbroadband.com:9090";
 				API_EMS = "https://ems.hanafostv.com:8443";
 				API_EPS = "https://agw.sk-iptv.com:8443";
@@ -5126,7 +5275,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7444;
+				CURRENT_PROJECT_VERSION = 7447;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
@@ -5146,7 +5295,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 4.4.35;
+				MARKETING_VERSION = 4.4.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvplusDistribution;
@@ -5247,6 +5396,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3144985F26E3B404000D0ACD /* Build configuration list for PBXNativeTarget "BtvPlusNewNotification" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3144986026E3B404000D0ACD /* Debug */,
+				3144986126E3B404000D0ACD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D56C691E257D9EE500CF9AB8 /* Build configuration list for PBXProject "BtvPlusNew" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

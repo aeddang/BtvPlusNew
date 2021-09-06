@@ -18,9 +18,12 @@ extension MultiBlock{
     static let spacing:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.medium
     static let headerSize:Int = 5
     static let headerSizeMin:Int = 3
+    static let footerIdx:Int = UUID().hashValue
 }
 struct MultiBlock:PageComponent {
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    
+    
     var viewModel:MultiBlockModel = MultiBlockModel()
     var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     var viewPagerModel:ViewPagerModel = ViewPagerModel()
@@ -44,7 +47,7 @@ struct MultiBlock:PageComponent {
     var isHorizontal:Bool = false
     var isRecycle = true
     var isLegacy:Bool = false
-
+    
     var action: ((_ data:MonthlyData) -> Void)? = nil
 
     @State var topBanner:TopBanner?
@@ -177,8 +180,12 @@ struct MultiBlock:PageComponent {
                                 }
                             }
                             if self.useFooter {
-                                Footer()
-                                    .modifier(ListRowInset(spacing: Dimen.margin.regular))
+                                Footer(){
+                                    self.infinityScrollModel.uiEvent = .scrollMove(Self.footerIdx)
+                                }
+                                .modifier(ListRowInset(spacing: Dimen.margin.medium))
+                                Spacer().modifier(MatchHorizontal(height:Dimen.margin.heavy))
+                                    .id(Self.footerIdx)
                             }
                         }
                     /*

@@ -24,6 +24,11 @@ extension String {
         public static var apnsMonthly = "alertApnsMonthly".loaalized()
         public static var apnsReserve = "alertApnsReserve".loaalized()
         
+        
+        public static var update = "alertUpdate".loaalized()
+        public static var updateForce = "alertUpdateForce".loaalized()
+        public static var updateRecommend = "alertUpdateRecommend".loaalized()
+        public static var updateAfter = "alertUpdateAfter".loaalized()
         public static var dataAlram = "alertDataAlram".loaalized()
         public static var api = "alertApi".loaalized()
         public static var apiErrorServer = "alertApiErrorServer".loaalized()
@@ -254,6 +259,7 @@ extension String {
         public static var kidsChangeTip = "alertKidChangeTip".loaalized()
         
         public static var kidsInvalidNickName = "alertKidInvalidNickName".loaalized()
+        public static var kidsInvalidBirth = "alertKidInvalidBirth".loaalized()
         public static var kidsAddError = "alertKidAddError".loaalized()
         public static var kidsEditError = "alertKidEditError".loaalized()
         public static var kidsDeleteError = "alertKidDeleteError".loaalized()

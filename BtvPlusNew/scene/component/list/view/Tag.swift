@@ -157,6 +157,7 @@ struct Tag: PageView {
     @EnvironmentObject var repository:Repository
     var data:TagData
     var isBig:Bool = false
+    var usePrice:Bool = true
     var body: some View {
         VStack(alignment: .leading, spacing: 0){
             HStack(alignment: .top, spacing: 0){
@@ -205,45 +206,47 @@ struct Tag: PageView {
             } else {
                 Spacer().modifier(MatchParent())
             }
-            
-            HStack(alignment: .bottom, spacing: 0){
-                if data.isFree == true {
-                    Text(String.app.free)
-                        .modifier(BoldTextStyle(size: self.isBig ? Font.size.thin : Font.size.tiny, color:Color.brand.primary))
-                        .lineLimit(1)
-                        .fixedSize()
-                        .padding(.bottom, -1)
-                }else if let price = data.price {
-                    Text(price)
-                        .modifier(BoldTextStyle(size:  self.isBig ? Font.size.thin : Font.size.tiny, color:Color.app.greyLight))
-                        .lineLimit(1)
-                        .fixedSize()
-                        .padding(.bottom, -1)
-                }
-                Spacer()
-                
-                if let icon = data.ppmIcon {
-                    KFImage(URL(string: icon))
-                        .resizable()
-                        .cancelOnDisappear(true)
-                        .loadImmediately()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: self.isBig ? Dimen.icon.light : Dimen.icon.tinyUltra, alignment: .trailing)
-                        .padding(.bottom, Dimen.margin.microExtra)
+            if self.usePrice {
+                HStack(alignment: .bottom, spacing: 0){
                     
+                    if data.isFree == true {
+                        Text(String.app.free)
+                            .modifier(BoldTextStyle(size: self.isBig ? Font.size.thin : Font.size.tiny, color:Color.brand.primary))
+                            .lineLimit(1)
+                            .fixedSize()
+                            .padding(.bottom, -1)
+                    }else if let price = data.price {
+                        Text(price)
+                            .modifier(BoldTextStyle(size:  self.isBig ? Font.size.thin : Font.size.tiny, color:Color.app.greyLight))
+                            .lineLimit(1)
+                            .fixedSize()
+                            .padding(.bottom, -1)
+                    }
+                    
+                    Spacer()
+                    
+                    if let icon = data.ppmIcon {
+                        KFImage(URL(string: icon))
+                            .resizable()
+                            .cancelOnDisappear(true)
+                            .loadImmediately()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(height: self.isBig ? Dimen.icon.light : Dimen.icon.tinyUltra, alignment: .trailing)
+                            .padding(.bottom, Dimen.margin.microExtra)
+                        
+                    }
                 }
+                .padding(.vertical, self.isBig ? Dimen.margin.tinyUltra : Dimen.margin.tinyExtra)
+                .padding(.horizontal, self.isBig ? Dimen.margin.thinExtra : Dimen.margin.tiny)
             }
-            .padding(.vertical, self.isBig ? Dimen.margin.tinyUltra : Dimen.margin.tinyExtra)
-            .padding(.horizontal, self.isBig ? Dimen.margin.thinExtra : Dimen.margin.tiny)
-            .onReceive(self.repository.$event){ evt in
-                guard let evt = evt else {return}
-                switch evt {
-                case .updatedWatchLv : self.data.updatedImage()
-                default : break
-                }
+            
+        }
+        .onReceive(self.repository.$event){ evt in
+            guard let evt = evt else {return}
+            switch evt {
+            case .updatedWatchLv : self.data.updatedImage()
+            default : break
             }
-                
-                
         }
     }
     
@@ -257,7 +260,7 @@ extension TagKids{
 struct TagKids: PageView {
     
     var data:TagData
-    
+    var usePrice:Bool = true
     var body: some View {
         VStack(alignment: .leading, spacing: 0){
             HStack(alignment: .top, spacing: 0){
@@ -292,34 +295,33 @@ struct TagKids: PageView {
             .padding(.trailing, DimenKids.margin.tiny)
             
             Spacer().modifier(MatchParent())
-            
-            HStack(alignment: .bottom, spacing: 0){
-                if data.isFree == true {
-                    Text(String.app.free)
-                        .modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color:Color.app.white))
-                        .lineLimit(1)
-                        .fixedSize()
-                }else if let price = data.price {
-                    Text(price)
-                        .modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color:Color.app.whiteDeep))
-                        .lineLimit(1)
-                        .fixedSize()
+            if self.usePrice {
+                HStack(alignment: .bottom, spacing: 0){
+                    if data.isFree == true {
+                        Text(String.app.free)
+                            .modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color:Color.app.white))
+                            .lineLimit(1)
+                            .fixedSize()
+                    }else if let price = data.price {
+                        Text(price)
+                            .modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color:Color.app.whiteDeep))
+                            .lineLimit(1)
+                            .fixedSize()
+                    }
+                    Spacer()
+                    if let icon = data.ppmIcon {
+                        KFImage(URL(string: icon))
+                            .resizable()
+                            .cancelOnDisappear(true)
+                            .loadImmediately()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(height: DimenKids.icon.tiny, alignment: .trailing)
+                    }
                 }
-                Spacer()
-                if let icon = data.ppmIcon {
-                    KFImage(URL(string: icon))
-                        .resizable()
-                        .cancelOnDisappear(true)
-                        .loadImmediately()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: DimenKids.icon.tiny, alignment: .trailing)
-                }
+                .padding(.all, DimenKids.margin.tiny)
+                .background(
+                    LinearGradient(gradient: Gradient(colors: [Color.transparent.clear, Color.transparent.black70]), startPoint: .top, endPoint: .bottom))
             }
-            .padding(.all, DimenKids.margin.tiny)
-            .background(
-                LinearGradient(gradient: Gradient(colors: [Color.transparent.clear, Color.transparent.black70]), startPoint: .top, endPoint: .bottom)
-                
-            )
         }
     }
     

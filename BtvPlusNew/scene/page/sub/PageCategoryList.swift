@@ -28,6 +28,7 @@ struct PageCategoryList: PageView {
     @State var blockData:BlockData? = nil
     @State var marginBottom:CGFloat = 0
     @State var isInit:Bool = false
+    @State var isFree:Bool = false
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -66,13 +67,16 @@ struct PageCategoryList: PageView {
                 if ani {
                     if self.isInit {return}
                     DispatchQueue.main.async {
+                        self.appSceneObserver.useTop = false
                         self.isInit = true
                         if let data = self.blockData {
                             self.viewModel.update(data: data, listType:self.listType,
-                                                  cardType: self.cardType, isAdult:data.isAdult, key:nil)
+                                                  cardType: self.cardType, isAdult:data.isAdult, isFree: self.isFree,
+                                                  key:nil)
                         }else{
                             self.viewModel.update(menuId:self.menuId, listType:self.listType,
-                                                  cardType: self.cardType, isAdult:false, key:nil)
+                                                  cardType: self.cardType, isAdult:false, isFree: self.isFree,
+                                                  key:nil)
                         }
                     }
                 }
@@ -94,7 +98,7 @@ struct PageCategoryList: PageView {
                 if let datas = obj.getParamValue(key: .datas) as? [BlockData] {
                     self.viewModel.setupDropDown(datas: datas)
                 }
-                
+                self.isFree = obj.getParamValue(key: .isFree) as? Bool ?? false
                 self.title = obj.getParamValue(key: .title) as? String ?? self.title 
                 self.listType = obj.getParamValue(key: .type) as? CateBlock.ListType ?? .poster
                 self.cardType = obj.getParamValue(key: .subType) as? BlockData.CardType

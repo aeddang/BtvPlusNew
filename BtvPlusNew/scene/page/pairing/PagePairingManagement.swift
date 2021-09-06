@@ -154,8 +154,8 @@ struct PagePairingManagement: PageView {
                 }
             }
             .onReceive(self.pairing.$hostNickName){ host in
-                if host == nil {return}
-                self.modelNickName = self.pairing.currentHostInfoData?.joined_nickname
+                guard let host = host else {return}
+                self.modelNickName = self.pairing.getCurrentHostInfoData(host)?.joined_nickname
                 
             }
             .onReceive(self.pairing.$hostDevice){ device in
@@ -172,11 +172,16 @@ struct PagePairingManagement: PageView {
                 if !update {return}
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
             }
+            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                if ani {
+                    if self.pairing.hostNickName == nil {
+                        self.pairing.requestPairing(.hostNickNameInfo())
+                    }
+                }
+            }
             .onAppear{
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
-                if self.pairing.hostNickName == nil {
-                    self.pairing.requestPairing(.hostNickNameInfo())
-                }
+                
             }
             
         }//geo

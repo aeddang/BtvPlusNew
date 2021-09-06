@@ -81,7 +81,7 @@ struct ListItem{
     }
     
     struct search {
-        static let height:CGFloat = isPad ? 60 : 45
+        static let height:CGFloat = isPad ? 60 : 46
     }
     struct purchaseTicket {
         static let size:CGSize =  CGSize(width: 355, height: 214)

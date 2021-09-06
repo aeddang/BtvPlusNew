@@ -63,38 +63,11 @@ struct HeaderBanner: PageComponent {
         .modifier(MatchHorizontal(height: Self.height))
         .background(Color.brand.primary)
         .onTapGesture {
-            if let move = data.move {
-                switch move {
-                case .home, .category:
-                    if let gnbTypCd = data.moveData?[PageParam.id] as? String {
-                        if let band = dataProvider.bands.getData(gnbTypCd: gnbTypCd) {
-                            self.pagePresenter.changePage(
-                                PageProvider
-                                    .getPageObject(move)
-                                    .addParam(params: data.moveData)
-                                    .addParam(key: .id, value: band.menuId)
-                                    .addParam(key: UUID().uuidString , value: "")
-                            )
-                        }
-                    }
-                    
-                default :
-                    let pageObj = PageProvider.getPageObject(move)
-                    pageObj.params = data.moveData
-                    self.pagePresenter.openPopup(pageObj)
-                }
-            }
-            else if let link = data.outLink {
-                AppUtil.openURL(link)
-            }
-            else if let link = data.inLink {
-                self.pagePresenter.openPopup(
-                    PageProvider
-                        .getPageObject(.webview)
-                        .addParam(key: .data, value: link)
-                        .addParam(key: .title , value: data.title)
-                )
-            }
+            BannerData.move(
+                pagePresenter: self.pagePresenter,
+                dataProvider: self.dataProvider,
+                data: self.data)
+            
         }
         
 

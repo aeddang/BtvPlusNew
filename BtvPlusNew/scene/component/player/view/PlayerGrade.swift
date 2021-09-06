@@ -15,8 +15,8 @@ extension PlayerGrade {
     static let marginFull:CGFloat  = SystemEnvironment.isTablet ? 10 : 4
     static let margin:CGFloat  = SystemEnvironment.isTablet ? 6 : 3
     
-    static let iconSizeFull:CGFloat  = SystemEnvironment.isTablet ? 80 : 48
-    static let iconSize:CGFloat  = SystemEnvironment.isTablet ? 56 : 26
+    static let iconSizeFull:CGFloat  = SystemEnvironment.isTablet ? 60 : 48
+    static let iconSize:CGFloat  = SystemEnvironment.isTablet ? 36 : 26
     
     static let iconMarginFull:CGFloat  = SystemEnvironment.isTablet ? 10 : 4
     static let iconMargin:CGFloat  = SystemEnvironment.isTablet ? 6 : 3
@@ -26,14 +26,17 @@ extension PlayerGrade {
     
     static let textSizeFull:CGFloat  = SystemEnvironment.isTablet ? Font.size.lightExtra : Font.size.thinExtra
     static let textSize:CGFloat  = SystemEnvironment.isTablet ? Font.size.tiny : Font.size.tinyExtra
+    
 }
 
 struct PlayerGrade: PageView{
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
-    let viewTime:Double = 3
+    var pageType:PageType = .btv
     var data:PlayGradeData
     @State var isFullScreen:Bool = false
+    
+    @State var isCompleted:Bool = false
     @State var isShowing:Bool = true
     @State var isUiShowing:Bool = false
     var body: some View {
@@ -69,11 +72,12 @@ struct PlayerGrade: PageView{
             }
             .padding(.top,
                      self.isUiShowing
-                        ? self.isFullScreen
-                            ? PlayerUI.uiRealHeightFullScreen : PlayerUI.uiRealHeight
+                        ? pageType == .btv
+                            ? (self.isFullScreen ? PlayerUI.uiRealHeightFullScreen : PlayerUI.uiRealHeight)
+                            : (self.isFullScreen ? KidsPlayerUI.uiRealHeightFullScreen : 0 )
                         : 0
                      )
-            .padding(.bottom, self.isFullScreen ? Dimen.margin.lightExtra : Dimen.margin.thinExtra)
+            
             if let text = self.data.text {
                 HStack(alignment :.top, spacing: 0){
                     Text(text).modifier(BoldTextStyle(
@@ -88,6 +92,7 @@ struct PlayerGrade: PageView{
                         Spacer()
                     }
                 )
+                .padding(.top, self.isFullScreen ? Dimen.margin.lightExtra : Dimen.margin.thinExtra)
             }
             Spacer()
             if let info = self.data.gradeInfo {
@@ -99,16 +104,19 @@ struct PlayerGrade: PageView{
                     .multilineTextAlignment(.leading)
                     .padding(.bottom,
                              self.isUiShowing
-                                ? self.isFullScreen
-                                    ? PlayerUI.uiRealHeightFullScreen : PlayerUI.uiRealHeight
+                                ? pageType == .btv
+                                    ? (self.isFullScreen ? PlayerUI.uiRealHeightFullScreen : PlayerUI.uiRealHeight)
+                                    : (self.isFullScreen ? KidsPlayerUI.uiRealHeightFullScreen : KidsPlayerUI.uiRealHeight)
                                 : 0
                              )
             }
             
         }
-        
         .modifier(MatchParent())
-        .padding(.all, self.isFullScreen ? PlayerUI.paddingFullScreen : PlayerUI.padding)
+        .padding(.all, self.pageType == .btv
+                 ? (self.isFullScreen ? PlayerUI.paddingFullScreen : PlayerUI.padding)
+                 : (self.isFullScreen ? KidsPlayerUI.paddingFullScreen : KidsPlayerUI.padding)
+        )
         .opacity(self.isShowing ? 1 : 0)
         .onReceive(self.viewModel.$playerUiStatus) { st in
             withAnimation{
@@ -119,24 +127,46 @@ struct PlayerGrade: PageView{
                 }
             }
         }
-        .onReceive(self.viewModel.$time){ t in
-            if self.isShowing {
-                if t >= self.viewTime {
-                    withAnimation { self.isShowing = false }
+        
+        .onReceive(self.viewModel.$streamEvent) { evt in
+            switch evt {
+            case .loaded : self.isCompleted = false
+            case .resumed :
+                if !self.isCompleted {
+                    self.isCompleted = true
+                    withAnimation{
+                        self.isShowing = true
+                    }
+                    self.autoClose()
                 }
-            } else {
-                if t < self.viewTime {
-                    withAnimation { self.isShowing = true }
-                }
+            default : break
             }
         }
         .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
             self.isFullScreen = fullScreen
         }
+        .onDisappear{
+            self.show?.cancel()
+            self.show = nil
+        }
             
     }//body
     
     
+    @State var show:AnyCancellable?
+    func autoClose(){
+        self.show?.cancel()
+        self.show = Timer.publish(
+            every: 3, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                withAnimation{
+                    self.show?.cancel()
+                    self.show = nil
+                    self.isShowing = false
+                }
+            }
+    }
    
     
 }

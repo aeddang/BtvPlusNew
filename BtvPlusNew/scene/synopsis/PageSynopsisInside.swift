@@ -12,7 +12,7 @@ extension PageSynopsis {
     func onEventInside(btvPlayerEvent:BtvPlayerEvent){
         switch btvPlayerEvent {
         case .continueView: self.continueVod()
-        case .nextView : self.nextVod(auto: false)
+        case .nextView(let isAuto) : self.nextVod(auto: isAuto)
         default : break
         }
     }
@@ -23,29 +23,65 @@ extension PageSynopsis {
         default : break
         }
     }
+    
+    func onInsideRespond(res:ApiResultResponds){
+        if res.id.hasPrefix( SingleRequestType.changeSeasonFirst.rawValue ) {
+            guard let data = res.data as? Synopsis else { return }
+            self.onChangeSeasonFirst(synopsis: data)
+        }
+    }
+    
+    func onInsideRespondErroe(err:ApiResultError){
+        if err.id.hasPrefix( SingleRequestType.changeSeasonFirst.rawValue ) {
+            PageLog.e("error changeSeasonFirst", tag: self.tag)
+            self.changeSeasonFirst(synopsisData: nil)
+        }
+    }
 
     @discardableResult
     func nextVod(auto:Bool = true)->Bool{
-        guard let prevData = self.synopsisData else { return false}
         guard let playData = self.playerData else { return false}
-        if !self.setup.nextPlay && auto { return false}
         if !playData.hasNext { return false}
-        
-        self.epsdRsluId = ""
-        self.synopsisPlayType = .vodNext()
-        let nextSynopsisData = SynopsisData(
-            srisId: playData.nextSeason ?? prevData.srisId,
-            searchType: prevData.searchType,
-            epsdId: playData.nextEpisode,
-            epsdRsluId: nil,
-            prdPrcId: prevData.prdPrcId,
-            kidZone: prevData.kidZone,
-            synopType: prevData.synopType
+        if !self.setup.nextPlay && auto {
+            self.appSceneObserver.alert = .confirm(nil, String.pageText.synopsisNextPlayConfirm) { isOk in
+                if isOk {
+                    nextVod(auto:false)
+                }
+            }
+            return false
+        }
+        if let find = playData.nextEpisode {
+            self.changeVod(epsdId: find.epsdId)
+            return true
+        }
+        if let season = playData.nextSeason {
+            self.changeSeasonFirst(synopsisData: season.synopsisData)
+            return true
+        }
+        return false
+    }
+    
+    func changeSeasonFirst(synopsisData:SynopsisData?){
+        guard let synopsisData = synopsisData else { return }
+        self.pageDataProviderModel.request = .init(
+            id: SingleRequestType.changeSeasonFirst.rawValue,
+            type: .getSynopsis(synopsisData)
         )
-        
-        self.setupHistory(synopsisData:nextSynopsisData, isHistoryBack: true)
-        self.resetPage() 
-        return true
+    }
+    func onChangeSeasonFirst(synopsis:Synopsis? = nil){
+        guard let synopsis = synopsis else {
+            self.appSceneObserver.event = .toast(String.pageText.synopsisNextPlayFail)
+            return
+        }
+        let model = SynopsisModel().setData(data: synopsis)
+        let relationContentsModel = RelationContentsModel()
+        relationContentsModel.setData(synopsis: model)
+        if relationContentsModel.playList.isEmpty {
+            self.appSceneObserver.event = .toast(String.pageText.synopsisNextPlayFail)
+            return
+        }
+        self.changeVod(epsdId:relationContentsModel.playList.first?.epsdId)
+       
     }
     
     func playCompleted(){
@@ -57,7 +93,7 @@ extension PageSynopsis {
                 self.previewCompleted()
             }
         case .vod:
-            if !self.nextVod() {
+            if !self.nextVod(auto: true) {
                 self.vodCompleted()
             }
         default:do{}
@@ -102,6 +138,12 @@ extension PageSynopsis {
     }
     
     private func continueVod(){
+        if self.hasAuthority == true {
+            return
+        }
+        if self.isFullScreen {
+            self.pagePresenter.fullScreenExit()
+        }
         if self.pairing.status != .pairing {
             self.appSceneObserver.alert = .needPairing(String.alert.needConnectForView)
             return

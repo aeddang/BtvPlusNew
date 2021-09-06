@@ -29,6 +29,7 @@ enum BtvPlayType {
         default: return ""
         }
     }
+    
 }
 
 struct Quality {
@@ -48,7 +49,8 @@ enum BtvUiEvent {
 }
 
 enum BtvPlayerEvent {
-    case nextView, continueView, changeView(String), close, stopAd, play80
+    case nextView(isAuto:Bool = false), nextViewCancel, continueView, changeView(String), cookieView,
+         close, stopAd, play80
 }
 
 enum BtvPlayerType {
@@ -70,6 +72,8 @@ class BtvPlayerModel:PlayerModel{
     private(set) var synopsisPlayerData:SynopsisPlayerData? = nil
     private(set) var synopsisPrerollData:SynopsisPrerollData? = nil
     private(set) var openingTime:Double = 0
+    private(set) var endingTime:Double = -1
+    private(set) var useInside:Bool = false
     var continuousTime:Double = 0
     var continuousProgress:Float? = nil
     var continuousProgressTime:Double? = nil
@@ -83,19 +87,19 @@ class BtvPlayerModel:PlayerModel{
     var initPlay:Bool? = nil
     var isFirstPlay:Bool = true
     var isPlay80:Bool = false
+   
     
     var currentEpsdRsluId:String? = nil
     var currentIdx:Int? = nil
     var selectedQuality:String? = nil
     static var isInitMute:Bool = true
     
-   
-    
     override func reset() {
         self.currentQuality = nil
         self.limitedDuration = nil
         self.continuousTime = 0
         self.openingTime = 0
+        self.endingTime = 0
         self.seeking = 0
         self.qualitys = []
         
@@ -147,14 +151,13 @@ class BtvPlayerModel:PlayerModel{
                 self.initPlay = autoPlay
             case .preview(_, let autoPlay):
                 self.initPlay = autoPlay
-            case .vodNext(let t, let autoPlay), .vodChange(let t, let autoPlay):
+            
+            case .vod(let t, let autoPlay), .vodNext(let t, let autoPlay), .vodChange(let t, let autoPlay):
                 self.openingTime = playData.openingTime ?? 0
+                self.endingTime = playData.endingTime ?? 0
                 self.continuousTime = t
                 self.initPlay = autoPlay
-            case .vod(let t, let autoPlay):
-                self.openingTime = playData.openingTime ?? 0
-                self.continuousTime = t
-                self.initPlay = autoPlay
+                self.useInside = true
             default: break
             }
         }

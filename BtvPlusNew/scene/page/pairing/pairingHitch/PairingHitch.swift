@@ -303,6 +303,8 @@ struct PairingHitch: PageComponent {
     }
     
     func findSSID() {
+        self.findDevice()
+        /*
         let status = self.locationObserver.status
         if status == .authorizedWhenInUse || status == .authorizedAlways {
             self.findDevice()
@@ -314,7 +316,7 @@ struct PairingHitch: PageComponent {
             }
         } else {
             self.locationObserver.requestWhenInUseAuthorization()
-        }
+        }*/
     }
     
     func findDevice() {

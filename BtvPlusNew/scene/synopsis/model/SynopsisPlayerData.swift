@@ -39,37 +39,46 @@ enum SynopsisPlayType {
 class SynopsisPlayerData {
     private(set) var type:SynopsisPlayType = .unknown
     private(set) var previews:[PreviewItem]? = nil
-    private(set) var siries:[SeriesItem]? = nil
-    
     private(set) var hasNext:Bool = false
-    private(set) var nextSeason:String? = nil
-    private(set) var nextEpisode:String? = nil
+    private(set) var nextEpisode:PlayerListData? = nil
+    private(set) var nextSeason:SeasonData? = nil
     private(set) var openingTime:Double? = nil
-    
-    func setData(type:SynopsisPlayType, synopsis:SynopsisModel) -> SynopsisPlayerData {
+    private(set) var endingTime:Double? = nil
+    func setData(type:SynopsisPlayType, synopsis:SynopsisModel, relationContentsModel:RelationContentsModel? = nil) -> SynopsisPlayerData {
         self.type = type
         switch type {
         case .preview:
             self.previews = synopsis.previews
         case .preplay:break
         case .vod, .vodChange, .vodNext:
-            if let srisId = synopsis.nextSrisId {
-                if !srisId.isEmpty { self.nextSeason = srisId }
-            }
-            if let epsdId = synopsis.nextEpsdId {
-                if !epsdId.isEmpty { self.nextEpisode = epsdId }
-            }
-            self.siries = synopsis.siries
-            self.hasNext = self.nextEpisode != nil || self.nextSeason != nil
+            
             if let list = synopsis.rsluInfoList {
                 if !list.isEmpty {
                     let rslu = list.first
                     self.openingTime = rslu?.openg_tmtag_tmsc?.number
+                    self.endingTime = rslu?.endg_tmtag_tmsc?.number ?? -1
+                }
+            }
+            guard let relationContentsModel = relationContentsModel else {return self}
+            if let find = relationContentsModel.playList.first(where: {$0.epsdId == synopsis.epsdId}) {
+                if find.index < (relationContentsModel.playList.count-1) {
+                    self.nextEpisode = relationContentsModel.playList[find.index+1]
+                    self.hasNext = true
+                    return self
+                }
+            }
+            let sortedSeason =  relationContentsModel.seasons.sorted(by: {$0.sortSeq < $1.sortSeq})
+            let seasonCount = sortedSeason.count
+            
+            if let find = zip(0...seasonCount, relationContentsModel.seasons)
+                .first(where: { idx, season in season.srisId == synopsis.srisId}) {
+                if find.0 < seasonCount-1 {
+                    self.nextSeason = sortedSeason[find.0+1]
+                    self.hasNext = true
                 }
             }
         default:break
         }
-    
         return self
     }
     
@@ -92,15 +101,8 @@ class SynopsisPlayerData {
         get{
             if self.nextEpisode != nil {
                 return String.player.next
-            }else if self.nextSeason != nil {
-                if self.siries != nil && self.siries?.isEmpty != true {
-                    let siris = self.siries![0]
-                    let leading = siris.sson_choic_nm ?? String.player.season
-                    let trailing = siris.sort_seq?.description ?? ""
-                    return leading + trailing + " 1" + String.app.sesonCount
-                }else{
-                    return String.player.season + " 1" + String.app.sesonCount
-                }
+            }else if let _ = self.nextSeason {
+                return String.player.nextSeason
             }
             return ""
         }

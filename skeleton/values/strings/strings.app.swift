@@ -66,6 +66,7 @@ extension String {
         public static let weekUnvisible = "weekUnvisible".loaalized()
         public static let watch = "watch".loaalized()
         public static let watchAble = "watchAble".loaalized()
+        public static let cancelBrodcast = "cancelBrodcast".loaalized()
         public static let cast = "cast".loaalized()
         
         public static let free = "free".loaalized()

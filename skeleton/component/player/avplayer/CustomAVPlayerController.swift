@@ -11,8 +11,11 @@ import SwiftUI
 import Combine
 import AVKit
 import MediaPlayer
-extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, PlayerScreenViewDelegate {
 
+extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, PlayerScreenViewDelegate {
+    fileprivate(set) static var currentPlayer:[String] = []
+    fileprivate(set) static var currentPlayerNum:Int  = 0
+    
     func makeUIViewController(context: UIViewControllerRepresentableContext<CustomAVPlayerController>) -> UIViewController {
         let playerScreenView = PlayerScreenView(frame: .infinite)
         playerScreenView.mute(self.viewModel.isMute)
@@ -406,15 +409,25 @@ protocol CustomPlayerController {
     var playerScreenView:PlayerScreenView  { get set }
     
 }
+
 extension CustomPlayerController {
+    
     func onViewDidAppear(_ animated: Bool) {
-        UIApplication.shared.beginReceivingRemoteControlEvents()
+        if CustomAVPlayerController.currentPlayerNum == 0 {
+            UIApplication.shared.beginReceivingRemoteControlEvents()
+        }
+        CustomAVPlayerController.currentPlayerNum += 1
+        ComponentLog.d("currentPlayerNum " + CustomAVPlayerController.currentPlayerNum.description, tag:"CustomAVPlayerController")
     }
 
     func onViewWillDisappear(_ animated: Bool) {
         self.playerScreenView.destory()
         UIApplication.shared.endReceivingRemoteControlEvents()
-        NotificationCenter.default.post(name: Notification.Name("avPlayerDidDismiss"), object: nil, userInfo: nil)
+        CustomAVPlayerController.currentPlayerNum -= 1
+        ComponentLog.d("currentPlayerNum " + CustomAVPlayerController.currentPlayerNum.description, tag:"CustomAVPlayerController")
+        if CustomAVPlayerController.currentPlayerNum == 0 {
+            NotificationCenter.default.post(name: Notification.Name("avPlayerDidDismiss"), object: nil, userInfo: nil)
+        }
     }
     
     func onRemoteControlReceived(with event: UIEvent?) {
@@ -446,13 +459,21 @@ open class CustomAVPlayerViewController: AVPlayerViewController, CustomPlayerCon
     open override var canBecomeFirstResponder: Bool { return true }
     open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.onViewDidAppear(animated)
+        let id = self.playerScreenView.playerId
+        if CustomAVPlayerController.currentPlayer.first(where: {$0 == id}) == nil {
+            CustomAVPlayerController.currentPlayer.append(id)
+            self.onViewDidAppear(animated)
+        }
         self.becomeFirstResponder()
     }
 
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.onViewWillDisappear(animated)
+        let id = self.playerScreenView.playerId
+        if let find = CustomAVPlayerController.currentPlayer.firstIndex(of:id) {
+            CustomAVPlayerController.currentPlayer.remove(at: find)
+            self.onViewWillDisappear(animated)
+        }
         self.resignFirstResponder()
     }
     

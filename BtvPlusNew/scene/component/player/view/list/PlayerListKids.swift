@@ -63,7 +63,7 @@ struct PlayerListItemKids: PageView {
             ImageView(url: self.data.image,contentMode: .fill, noImg: Asset.noImg16_9)
                 .modifier(MatchParent())
                 .background(Color.kids.bg)
-                .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.regular))
+                .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.regularUltra))
             
             Image(self.isSelected ? AssetKids.player.listBgOn : AssetKids.player.listBg)
                 .renderingMode(.original)

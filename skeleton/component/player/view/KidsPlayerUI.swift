@@ -17,10 +17,13 @@ extension KidsPlayerUI {
     static let uiHeight:CGFloat = SystemEnvironment.isTablet ? 74 : 54
     static let uiHeightFullScreen:CGFloat  = SystemEnvironment.isTablet ? 120 : 74
     
+    static let uiRealHeight:CGFloat = SystemEnvironment.isTablet ? 65 : 45
+    static let uiRealHeightFullScreen:CGFloat  = SystemEnvironment.isTablet ? 110 : 65
+    
     static let spacing:CGFloat = DimenKids.margin.thin
     static let fullScreenSpacing:CGFloat = DimenKids.margin.light
     
-    static let icon:CGSize = CGSize(width:DimenKids.icon.tiny,height:Dimen.icon.tiny)
+    static let icon:CGSize = CGSize(width:DimenKids.icon.thinExtra,height:Dimen.icon.thinExtra)
     static let iconFullScreen:CGSize = CGSize(width:DimenKids.icon.regular,height:Dimen.icon.regular)
     
     static let timeText:CGFloat = Font.sizeKids.micro
@@ -32,12 +35,14 @@ struct KidsPlayerUI: PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var viewModel:PlayerModel
     @ObservedObject var pageObservable:PageObservable
-    @State var time:String = ""
-    @State var duration:String = ""
+    @State var time:String = "00:00:00"
+    @State var duration:String = "00:00:00"
+    @State var completeTime:String = "00:00:00"
     @State var progress: Float = 0
     @State var isPlaying = false
     @State var isLoading = false
     @State var isSeeking = false
+    @State var isReplay = false
     @State var isError = false
     @State var errorMessage = ""
     
@@ -73,20 +78,31 @@ struct KidsPlayerUI: PageComponent {
                 CircularSpinner(resorce: Asset.ani.loading)
             }
             
-            VStack{
-                Spacer()
-                
+            VStack(alignment:.leading, spacing:0){
+                Spacer().modifier(MatchParent())
+                if self.isReplay {
+                    Text(String.player.replay)
+                        .kerning(Font.kern.thin)
+                        .modifier(BoldTextStyleKids(size: Font.sizeKids.thin, color: Color.app.white))
+                        .padding(.vertical, DimenKids.margin.thinExtra)
+                        .padding(.horizontal, DimenKids.margin.regular)
+                        .background(Color.app.white.opacity(0.2))
+                        .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.regularUltra))
+                        .padding(.leading, self.isFullScreen ? Self.paddingFullScreen : Self.padding)
+                }
                 HStack(alignment:.center, spacing:0){
                     ImageButton(
                         defaultImage: AssetKids.player.replay,
                         size: self.isFullScreen ? Self.iconFullScreen : Self.icon,
                         padding: Self.spacing
-                        
                     ){ _ in
-                        self.viewModel.event = .seekTime(0,true)
+                        self.viewModel.isReplay.toggle()
                     }
                     .buttonStyle(BorderlessButtonStyle())
-                    VStack(spacing:DimenKids.margin.micro){
+                    .padding(.top, -Self.spacing/2)
+                    .padding(.leading, -Self.spacing/2)
+                    .opacity(self.isReplay ? 1 : 0.6)
+                    VStack(spacing:DimenKids.margin.tiny){
                         ProgressSlider(
                             progress: self.progress,
                             progressHeight: self.isFullScreen ? DimenKids.stroke.heavy: DimenKids.stroke.medium,
@@ -99,6 +115,7 @@ struct KidsPlayerUI: PageComponent {
                             },
                             onChanged:{ pct in
                                 self.viewModel.event = .seekProgress(pct)
+                                
                             })
                             .fixedSize(horizontal: false, vertical: true)
                         HStack(alignment:.center, spacing:Dimen.margin.thin){
@@ -108,7 +125,7 @@ struct KidsPlayerUI: PageComponent {
                                 .fixedSize(horizontal: true, vertical: false)
                             
                             Spacer()
-                            Text(self.duration)
+                            Text(self.completeTime)
                                 .modifier(BoldTextStyleKids(size: self.isFullScreen ? Self.timeTextFullScreen : Self.timeText, color: Color.app.greyLightExtra))
                                 .fixedSize(horizontal: true, vertical: false)
 
@@ -131,9 +148,12 @@ struct KidsPlayerUI: PageComponent {
                         }
                     }
                     .buttonStyle(BorderlessButtonStyle())
+                    .padding(.top, -Self.spacing/2)
+                    .padding(.trailing, -Self.spacing/2)
                 }
                 .frame(height: self.isFullScreen ? Self.uiHeightFullScreen : Self.uiHeight)
-                .padding(.all, self.isFullScreen ? Self.paddingFullScreen : Self.padding)
+                .padding(.bottom, self.isFullScreen ? Self.paddingFullScreen : Self.padding)
+                .padding(.horizontal, self.isFullScreen ? Self.paddingFullScreen : Self.padding)
             }
             .opacity(self.isShowing && !self.viewModel.isLock ? 1 : 0)
             
@@ -151,13 +171,14 @@ struct KidsPlayerUI: PageComponent {
                         self.viewModel.event = .togglePlay
                         ComponentLog.d("BtvPlayerModel isUserPlay set " + self.viewModel.isUserPlay.description  , tag: self.tag)
                     }
+                    .opacity(self.isLoading ? 0 : 1)
                     if self.isFullScreen && ( self.viewModel.playInfo != nil ) && !self.isPlaying {
                         if let limited = self.viewModel.limitedDuration {
                             Text(limited.secToMin())
                                 .font(.custom(
                                         Font.familyKids.bold,
                                         size: self.isFullScreen ? Font.sizeKids.medium : Font.sizeKids.tiny))
-                                .foregroundColor(Color.kids.primary)
+                                .foregroundColor(Color.app.white)
                                 
                             + Text( String.app.min + " " + String.player.preplaying)
                                 .font(.custom(
@@ -179,6 +200,7 @@ struct KidsPlayerUI: PageComponent {
         .onReceive(self.viewModel.$time) { tm in
             if self.viewModel.duration <= 0 {return}
             self.time = tm.secToHourString()
+            self.completeTime = (self.viewModel.duration - tm).secToHourString()
             if !self.isSeeking {
                 self.progress = Float(self.viewModel.time / max(self.viewModel.duration,1))
             }
@@ -192,6 +214,11 @@ struct KidsPlayerUI: PageComponent {
                 self.viewModel.playerUiStatus = .hidden
             }else {
                 self.viewModel.playerUiStatus = .view
+            }
+        }
+        .onReceive(self.viewModel.$isReplay) { replay in
+            withAnimation{
+                self.isReplay = replay
             }
         }
         .onReceive(self.viewModel.$playerUiStatus) { st in
@@ -213,24 +240,25 @@ struct KidsPlayerUI: PageComponent {
                 if !self.isSeeking {
                     withAnimation{ self.isSeeking = true }
                 }
-            default : do{}
+            default : break
             }
         }
         .onReceive(self.viewModel.$streamEvent) { evt in
             guard let evt = evt else { return }
             switch evt {
-            case .seeked: withAnimation{
-                self.isSeeking = false
-            }
-            default : do{}
+            case .seeked: withAnimation{self.isSeeking = false}
+            case .completed:
+                if self.isReplay {
+                    self.viewModel.event = .resume
+                }
+            default : break
             }
         }
         .onReceive(self.viewModel.$streamStatus) { st in
             guard let status = st else { return }
             switch status {
-            case .buffering(_) : 
-                if self.viewModel.playerUiStatus == .hidden{ withAnimation{self.isLoading = true} }
-            default : self.isLoading = false
+            case .buffering(_) : withAnimation{self.isLoading = true}
+            default :  withAnimation{self.isLoading = false}
             }
         }
         .onReceive(self.viewModel.$error) { err in

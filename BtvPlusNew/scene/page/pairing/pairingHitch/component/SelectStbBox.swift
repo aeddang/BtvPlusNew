@@ -95,10 +95,7 @@ struct SelectStbBox: View {
             .padding(.top, Dimen.margin.regularExtra)
             FillButton(
                 text: String.app.confirm,
-                isSelected:
-                    self.datas.count > 1
-                    ? self.selected != nil && (self.isAgree1 && self.isAgree2)
-                    : (self.isAgree1 && self.isAgree2)
+                isSelected:self.isSelecteCompleted
             ){_ in
                 if !self.isAgree1 {
                     self.appSceneObserver.event = .toast(String.alert.needAgreeTermsOfService)
@@ -119,13 +116,26 @@ struct SelectStbBox: View {
                 }
             }
             if !SystemEnvironment.isTablet {
-                Spacer().modifier(MatchHorizontal(height: self.sceneObserver.safeAreaIgnoreKeyboardBottom))
-                    .background(Color.brand.primary)
+                ZStack{
+                    if !self.isSelecteCompleted {
+                        Spacer().modifier(MatchParent()).background(Color.transparent.black45)
+                    }
+                    Spacer().modifier(MatchParent()).background(Color.brand.primary)
+                }
+                .modifier(MatchHorizontal(height: self.sceneObserver.safeAreaIgnoreKeyboardBottom))
             }
         }
         //.padding(.bottom, SystemEnvironment.isTablet ? Dimen.margin.thin : 0)
         
     }//body
+    
+    private var isSelecteCompleted:Bool {
+        get{
+            return self.datas.count > 1
+            ? self.selected != nil && (self.isAgree1 && self.isAgree2)
+            : (self.isAgree1 && self.isAgree2)
+        }
+    }
 }
 
 

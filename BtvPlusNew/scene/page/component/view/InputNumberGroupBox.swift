@@ -96,6 +96,7 @@ struct InputNumberGroupItem: PageView {
     var focusIdx:Int
     var placeholder:String = ""
     var maxLength:Int  = 4
+    var isSecure:Bool = false
     var action: () -> Void
     
     let radius:CGFloat = DimenKids.radius.lightExtra
@@ -108,7 +109,7 @@ struct InputNumberGroupItem: PageView {
                 textAlignment: .left,
                 maxLength:self.maxLength,
                 isfocus: self.focusIdx == self.idx,
-                isSecureTextEntry:false,
+                isSecureTextEntry:self.isSecure,
                 inputChanged : { _ in
                     if self.input.isEmpty {return}
                     if self.input.count == 4 {

@@ -217,12 +217,12 @@ class Repository:ObservableObject, PageProtocol{
             guard let apiQ = req else { return }
             if apiQ.isLock {
                 self.pagePresenter?.isLoading = true
-            }else if !apiQ.isLog{
+            } else if !apiQ.isOptional && !apiQ.isLog {
                 self.appSceneObserver?.isApiLoading = true
             }
             if let coreDatakey = apiQ.type.coreDataKey(){
                 self.requestApi(apiQ, coreDatakey:coreDatakey)
-            }else{
+            } else{
                 self.apiManager.load(q: apiQ)
             }
         }).store(in: &anyCancellable)
@@ -237,9 +237,10 @@ class Repository:ObservableObject, PageProtocol{
             guard let res = res else { return }
             self.respondApi(res)
             self.dataProvider.result = res
-            self.appSceneObserver?.isApiLoading = false
-            self.pagePresenter?.isLoading = false
-        
+            if !res.isOptional && !res.isLog {
+                self.appSceneObserver?.isApiLoading = false
+                self.pagePresenter?.isLoading = false
+            }
         }).store(in: &dataCancellable)
         
         self.apiManager.$error.sink(receiveValue: { err in
@@ -249,9 +250,9 @@ class Repository:ObservableObject, PageProtocol{
             self.dataProvider.error = err
             if !err.isOptional && !err.isLog {
                 self.appSceneObserver?.alert = .apiError(err)
+                self.appSceneObserver?.isApiLoading = false
+                self.pagePresenter?.isLoading = false
             }
-            self.appSceneObserver?.isApiLoading = false
-            self.pagePresenter?.isLoading = false
             
         }).store(in: &dataCancellable)
         
@@ -268,8 +269,6 @@ class Repository:ObservableObject, PageProtocol{
         
         self.pagePresenter?.isLoading = true
         self.apiManager.$status.sink(receiveValue: { status in
-            self.pagePresenter?.isLoading = false
-            //self.appSceneObserver?.event = .toast("status " + status.rawValue)
             if status == .ready { self.onReadyApiManager() }
         }).store(in: &dataCancellable)
     }
@@ -293,7 +292,13 @@ class Repository:ObservableObject, PageProtocol{
             }
             DispatchQueue.main.async {
                 if let coreData = coreData {
-                    self.dataProvider.result = ApiResultResponds(id: apiQ.id, type: apiQ.type, data: coreData)
+                    self.dataProvider.result = ApiResultResponds(
+                        id: apiQ.id,
+                        type: apiQ.type,
+                        data: coreData,
+                        isOptional: apiQ.isOptional,
+                        isLog: apiQ.isLog
+                        )
                     self.appSceneObserver?.isApiLoading = false
                     self.pagePresenter?.isLoading = false
                 }else{

@@ -23,9 +23,13 @@ class Authority:ObservableObject, PageProtocol {
     
     @Published private(set) var purchaseTicketList: [MonthlyInfoItem]? = nil
     @Published private(set) var purchaseLowLevelTicketList: [MonthlyInfoItem]? = nil
+    
+    
     @Published private(set) var totalPointInfo:TotalPointInfo? = nil
     @Published private(set) var monthlyPurchaseInfo:MonthlyPurchaseInfo? = nil
     @Published private(set) var periodMonthlyPurchaseInfo:PeriodMonthlyPurchaseInfo? = nil
+    private(set) var monthlyPurchaseList:[PurchaseFixedChargeItem]? = nil
+    private(set) var periodMonthlyPurchaseList:[PurchaseFixedChargePeriodItem]? = nil
     
     @Published var useAbleTicket:Int = 0
     @Published var useAbleCoupon:Int = 0
@@ -40,6 +44,8 @@ class Authority:ObservableObject, PageProtocol {
         totalPointInfo = nil
         monthlyPurchaseInfo = nil
         periodMonthlyPurchaseInfo = nil
+        monthlyPurchaseList = nil
+        periodMonthlyPurchaseList = nil
     }
     
     func requestAuth(_ request:AuthRequest){
@@ -68,10 +74,21 @@ class Authority:ObservableObject, PageProtocol {
     
     func updatedPurchaseTicket(_ purchases: [MonthlyInfoItem], lowLevelPpm:Bool){
         if lowLevelPpm {
-            self.purchaseLowLevelTicketList = purchases
+            self.purchaseLowLevelTicketList = getFilteringPurchaseTicket(purchases)
         } else {
-            self.purchaseTicketList = purchases
+            self.purchaseTicketList = getFilteringPurchaseTicket(purchases)
         }
+    }
+    private func getFilteringPurchaseTicket(_ purchases: [MonthlyInfoItem])->[MonthlyInfoItem]{
+        return purchases.filter({ purchas in
+            if let pid = purchas.prod_id {
+                return MetvNetwork.exceptMonthlyIds.first(where: {$0 == pid}) == nil
+            } else {
+                return false
+            }
+        }).filter({ purchas in
+             !(purchas.flag_perd == "R" || purchas.flag_perd == "C")
+        })
     }
     
     func updatedTotalPointInfo(_ totalPointInfo:TotalPointInfo){
@@ -84,16 +101,46 @@ class Authority:ObservableObject, PageProtocol {
     }
     
     func updatedMonthlyPurchaseInfo(_ monthlyPurchaseInfo:MonthlyPurchaseInfo){
+        self.monthlyPurchaseList = self.getFilteringPurchaseTicket(monthlyPurchaseInfo.purchaseList ?? [])
         self.monthlyPurchaseInfo = monthlyPurchaseInfo
         self.updateTicketCount()
         self.checkMyInfoUpdate()
     }
     
-    func updatedMonthlyPurchaseInfo(_ monthlyPurchaseInfo:PeriodMonthlyPurchaseInfo){
+    func updatedPeriodMonthlyPurchaseInfo(_ monthlyPurchaseInfo:PeriodMonthlyPurchaseInfo){
+        self.periodMonthlyPurchaseList = self.getFilteringPurchaseTicket(monthlyPurchaseInfo.purchaseList ?? [])
         self.periodMonthlyPurchaseInfo = monthlyPurchaseInfo
         self.updateTicketCount()
         self.checkMyInfoUpdate()
     }
+    
+    private func getFilteringPurchaseTicket(_ purchases: [PurchaseFixedChargeItem])->[PurchaseFixedChargeItem]{
+        return purchases.filter({ purchas in
+            if let pid = purchas.prod_id {
+                return MetvNetwork.exceptMonthlyIds.first(where: {$0 == pid}) == nil
+            } else {
+                return false
+            }
+        }).filter({ purchas in
+            !(purchas.expired?.toBool() ?? false)
+        })
+    }
+    
+    private func getFilteringPurchaseTicket(_ purchases: [PurchaseFixedChargePeriodItem])->[PurchaseFixedChargePeriodItem]{
+        return purchases.filter({ purchas in
+            if let pid = purchas.prod_id {
+                return MetvNetwork.exceptMonthlyIds.first(where: {$0 == pid}) == nil
+            } else {
+                return false
+            }
+        }).filter({ purchas in
+            !(purchas.expired?.toBool() ?? false)
+        }).filter({ purchas in
+            !(purchas.flag_perd == "R" || purchas.flag_perd == "C")
+        })
+    }
+    
+    
     func errorMyInfo(_ err:ApiResultError?){
         if !self.isMyInfoUpdate { return }
         self.isMyInfoUpdate = false
@@ -107,11 +154,11 @@ class Authority:ObservableObject, PageProtocol {
     
     private func updateTicketCount(){
         var total:Int  = 0
-        if let data = self.monthlyPurchaseInfo {
-            total += (data.purchaseList?.count ?? 0)
+        if let data = self.monthlyPurchaseList {
+            total += data.count
         }
-        if let data = self.periodMonthlyPurchaseInfo {
-            total += (data.purchaseList?.count ?? 0)
+        if let data = self.periodMonthlyPurchaseList {
+            total += data.count
         }
         self.useAbleTicket = total
     }

@@ -334,6 +334,7 @@ extension String{
     }
     
     func isNickNameType() -> Bool {
+        if self.isNumric() {return false}
         do {
             // 0~9, 한글, 영문, 8자 이내
             let regex = try NSRegularExpression(pattern: "^[0-9a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ]{1,8}+$", options: .caseInsensitive)

@@ -12,7 +12,6 @@ class KidsCategoryItemData: KidsHomeBlockListData {
     private(set) var title:String? = nil
     private(set) var svcPropCd:String? = nil
     private(set) var playType:KidsPlayType = .unknown()
-    private(set) var blocks:[BlockItem] = []
     fileprivate(set) var poster:KidStudyRecommandData? = nil
     func setData(data:BlockItem) -> KidsCategoryItemData{
         self.playType = KidsPlayType.getType(data.svc_prop_cd)

@@ -179,7 +179,6 @@ struct TicketList: PageComponent{
                         ForEach(sets.datas) { data in
                             PosterItem( data:data )
                                 .frame(width:ListItem.poster.type01.width)
-                                
                                 .onTapGesture {
                                     self.onTap(data: data)
                                 }
@@ -323,16 +322,16 @@ struct TicketItem: PageView {
             }
            
         }
-        .onReceive(self.pairing.authority.$monthlyPurchaseInfo){ info in
-            guard let list = info?.purchaseList else { return }
+        .onReceive(self.pairing.authority.$monthlyPurchaseInfo){ _ in
+            guard let list = self.pairing.authority.periodMonthlyPurchaseList else { return }
             self.data.isSubJoin = (list.first(where: {$0.prod_id == self.data.prodId}) != nil)
             let willImage = self.data.getImage()
             if willImage != self.image {
                 self.image = willImage
             }
         }
-        .onReceive(self.pairing.authority.$periodMonthlyPurchaseInfo){ info in
-            guard let list = info?.purchaseList else { return }
+        .onReceive(self.pairing.authority.$periodMonthlyPurchaseInfo){ _ in
+            guard let list = self.pairing.authority.periodMonthlyPurchaseList else { return }
             self.data.isSubJoin = (list.first(where: {$0.prod_id == self.data.prodId}) != nil)
             let willImage = self.data.getImage()
             if willImage != self.image {

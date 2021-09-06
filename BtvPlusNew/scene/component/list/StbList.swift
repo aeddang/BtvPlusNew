@@ -73,6 +73,12 @@ class StbData:InfinityData, ObservableObject{
         return self
     }
     
+    func setData(data:HostNickName) {
+        guard let find = data.stbList?.first(where: {$0.joined_stb_id == self.stbid}) else {return}
+        self.stbNickName = find.joined_nickname
+      
+    }
+    
     func setDummy() -> StbData {
         title = "BHX-UX400"
         subTitle = "MAC 주소 : 00:00:00:00:00:00"
@@ -98,6 +104,7 @@ struct StbList: PageComponent{
 }
 
 struct StbItem: PageView {
+    @EnvironmentObject var dataProvider:DataProvider
     @ObservedObject var data:StbData
     @State var nickName:String? = nil
     var body: some View {
@@ -109,7 +116,7 @@ struct StbItem: PageView {
                 .frame(
                     width: ListItem.stb.size.width,
                     height: ListItem.stb.size.height)
-                VStack( alignment:.leading , spacing:0){
+                VStack( alignment:.leading , spacing:Dimen.margin.tiny){
                     if let nick = self.nickName {
                         Text(nick + "(" + String.app.defaultStb + ")")
                             .modifier(MediumTextStyle(size: Font.size.regular))
@@ -130,8 +137,30 @@ struct StbItem: PageView {
                 .background(Color.app.greyExtra)
                 .opacity(0.1)
         }
+        
         .onReceive(self.data.$stbNickName){ nick in
             self.nickName = nick
+        }
+        .onReceive(self.dataProvider.$result){ res in
+            guard let res = res else { return }
+            if !res.id.hasPrefix(self.data.stbid ?? "") {return}
+            switch res.type {
+            case .getHostNickname :
+                guard let data = res.data as? HostNickName else { return }
+                self.data.setData(data: data)
+            default: break
+            }
+           
+        }
+        .onAppear(){
+            if self.data.stbNickName == nil , let id = self.data.stbid{
+                self.dataProvider.requestData(
+                    q: .init(
+                        id: id,
+                        type: .getHostNickname(isAll:false, anotherStbId:id), isOptional: true))
+            } else {
+                self.nickName = self.data.stbNickName
+            }
         }
     
     }

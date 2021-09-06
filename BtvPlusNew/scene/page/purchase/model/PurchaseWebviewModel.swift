@@ -52,6 +52,58 @@ enum PurchasePType {
         }
     }
 }
+
+
+//시리즈 상품 하위가 상품유형코드인가
+/**
+ 상품유형코드
+ */
+public enum PrdTypCd: String {
+    case none = "00" // 없음
+    case ppv = "10" // 단편 v
+    case pps = "20" // 시리즈 s
+    case vodppm = "30" //vod ppm
+    case vodppmterm = "32" // vod ppm 기간권
+    case cbvodppm = "34" //복합 vod ppm. 구매 목록에는 뜨면안됨
+    case cbppm = "35" //복합 ppm
+    case relvodppm = "36" //vod ppm 관련상품 구매 목록에는 뜨면안됨
+    case omnipack = "38" //복합 vod ppm omni팩
+    case ppp = "41" //패키지 p
+    case relppp = "42" // ppm 커머스 상품. 플레이송스등. 구매했음 재생만가능. 구매 목록에는 뜨면안됨
+    
+    var name: String {
+        switch self {
+        case .ppv: return "ppv"
+        case .pps: return "pps"
+        case .vodppm: return "vod ppm"
+        case .vodppmterm: return "vod ppm 기간권"
+        case .cbvodppm: return "복합 vod ppm"
+        case .cbppm: return "복합 ppm"
+        case .relvodppm: return "vod ppm 관련상품"
+        case .omnipack: return "복함 VOD PPM OMNI팩" //복합 vod ppm omni팩
+        case .ppp: return "ppp"
+        case .relppp: return "관련상품 ppp"
+        default: return "없음.\(self)"
+        }
+    }
+    
+    static var ppms: [PrdTypCd] {
+        [.vodppm, .vodppmterm]
+    }
+    static var cbPpms: [PrdTypCd] {
+        [.relvodppm, .cbvodppm, .cbppm, omnipack]
+    }
+    static var allPpms: [PrdTypCd] {
+        ppms + cbPpms
+    }
+    /** all 기간권 / 복합 포함 */
+    static func isPPM(typCd: PrdTypCd, all: Bool = false) -> Bool {
+        return all ? allPpms.contains(typCd) : ppms.contains(typCd)
+    }
+
+}
+
+
     
 class PurchaseWebviewModel {
     var epsdIds:[String] = [] // 에피소드 ID    여러 개일 경우 입력 값 포맷: URL Encoding(<id>,<id>,<id>)
@@ -203,7 +255,7 @@ class PurchaseWebviewModel {
     func setParam(data: MonthlyData, seriesId: String? = nil , epsId: String? = nil) -> PurchaseWebviewModel{
         if let epsId = epsId { addEpsdId(epsdId: epsId) }
         if let seriesId = seriesId { self.srisId = seriesId }
-        ptype = PurchasePType.getType(data.prodTypeCd)
+        ptype = PurchasePType.getType(data.prodTypeCd.rawValue)
         synopsisType = .title
         conTitle = data.title ?? ""
         pid = data.prdPrcId

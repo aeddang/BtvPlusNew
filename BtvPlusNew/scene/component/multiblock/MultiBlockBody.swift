@@ -93,6 +93,7 @@ struct MultiBlockBody: PageComponent {
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
     var pageObservable:PageObservable
@@ -237,154 +238,7 @@ struct MultiBlockBody: PageComponent {
             }
         }
         .onReceive(dataProvider.$result) { res in
-            guard let data = self.loadingBlocks.first(where: { $0.id == res?.id}) else {return}
-            var leadingBanners:[BannerData]? = nil
-            var total:Int? = nil
-            let max = Self.maxCellCount
-            let useTag:Bool = !self.viewModel.isFree
-             
-            switch data.dataType {
-            case .cwGrid:
-                guard let resData = res?.data as? CWGrid else {return data.setBlank()}
-                guard let grid = resData.grid else {return data.setBlank()}
-                if grid.isEmpty {return data.setBlank()}
-                total = resData.total_count
-                data.setData(grids: grid)
-                
-            case .cwGridKids:
-                guard let resData = res?.data as? CWGridKids else {return data.setBlank()}
-                data.errorMassage = resData.status_reason
-                guard let grid = resData.grid else {return data.setBlank()}
-                if grid.isEmpty {return data.setBlank()}
-                total = resData.total_count
-                if grid.count == 1 {
-                    grid.forEach{ g in
-                        if let blocks = g.block {
-                            switch data.uiType {
-                            case .poster :
-                                data.posters = blocks[0...min(max, blocks.count-1)].map{ d in
-                                    PosterData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
-                                }
-                            case .video :
-                                data.videos = blocks[0...min(max, blocks.count-1)].map{ d in
-                                    VideoData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
-                                }
-                            default: break
-                            }
-                        }
-                    }
-                } else {
-                    data.setData(grids: grid)
-                }
-                
-            case .grid:
-                guard let resData = res?.data as? GridEvent else {return data.setBlank()}
-                guard let blocks = resData.contents else {return data.setBlank()}
-                if blocks.isEmpty {return data.setBlank()}
-                total = resData.total_content_count
-                switch data.uiType {
-                case .poster :
-                    data.posters = blocks[0...min(max, blocks.count-1)].map{ d in
-                        PosterData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
-                    }
-
-                case .video :
-                    data.videos = blocks[0...min(max, blocks.count-1)].map{ d in
-                        VideoData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
-                    }
-                    
-                case .theme :
-                    data.themas = blocks[0...min(max, blocks.count-1)].map{ d in
-                        ThemaData().setData(data: d, cardType: data.cardType)
-                    }
-                default: break
-                }
-                leadingBanners = resData.banners?.map{d in
-                    BannerData().setData(data: d, type: .list, cardType: .bigPoster)
-                }
-                
-            case .bookMark:
-                guard let resData = res?.data as? BookMark else {return data.setBlank()}
-                guard let blocks = resData.bookmarkList else {return data.setBlank()}
-                if blocks.isEmpty {return data.setBlank()}
-                total = resData.bookmark_tot?.toInt()
-                switch data.uiType {
-                case .poster :
-                    data.posters = blocks[0...min(max, blocks.count-1)].map{ d in
-                        PosterData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
-                    }
-                case .video :
-                    data.videos = blocks[0...min(max, blocks.count-1)].map{ d in
-                        VideoData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
-                    }
-                default: break
-                }
-               
-            case .watched:
-                guard let resData = res?.data as? Watch else {return data.setBlank()}
-                guard let originWatchBlocks = resData.watchList else {return data.setBlank()}
-                var watchBlocks:[WatchItem] = originWatchBlocks
-                if let ticketId = self.viewModel.selectedTicketId {
-                    watchBlocks = originWatchBlocks.filter{$0.prod_id == ticketId}
-                }
-                if watchBlocks.count < 1 {return data.setBlank()}
-                total = resData.watch_tot?.toInt()
-                switch data.uiType {
-                case .poster :
-                    data.posters = watchBlocks.map{ d in
-                        PosterData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
-                    }
-                    .filter{$0.isContinueWatch}
-                case .video :
-                    data.videos = watchBlocks.map{ d in
-                        VideoData(pageType: self.pageType, useTag:useTag).setData(data: d, cardType: data.cardType)
-                    }
-                    .filter{$0.isContinueWatch}
-                default: break
-                }
-            
-            case .banner:
-                guard let resData = res?.data as? EventBanner else {return data.setBlank()}
-                guard let banners = resData.banners else {return data.setBlank()}
-                if banners.isEmpty {return data.setBlank()}
-                    data.banners = banners.map{ d in
-                        BannerData().setData(data: d, cardType:data.cardType)
-                }
-            default: break
-            }
-            
-            var listHeight:CGFloat = 0
-            var blockHeight:CGFloat = 0
-            let tabHeight:CGFloat = self.viewModel.type == .btv ? Self.tabHeight : Self.tabHeightKids
-            var padding = self.viewModel.type == .btv ? Dimen.margin.thin : DimenKids.margin.thin
-            if let size = data.posters?.first?.type {
-                listHeight = size.size.height
-                blockHeight = listHeight + tabHeight
-            }
-            if let size = data.videos?.first{
-                listHeight = size.type.size.height + size.bottomHeight
-                blockHeight = listHeight + tabHeight
-            }
-            if let size = data.themas?.first?.type {
-                listHeight = size.size.height
-                blockHeight = listHeight + tabHeight
-                padding = size.spacing
-            }
-            
-            if let size = data.banners?.first?.type {
-                listHeight = size.size.height
-                blockHeight = listHeight
-            }
-            if blockHeight != 0 {
-                if let banner = leadingBanners {
-                    let ratio = ListItem.banner.type03
-                    let w = round(listHeight * ratio.width/ratio.height)
-                    banner.forEach{ $0.setBannerSize(width: w , height: listHeight, padding: padding) }
-                    data.leadingBanners = banner
-                }
-                data.listHeight = blockHeight
-            }
-            data.setDatabindingCompleted(total: total, parentTitle: self.viewModel.title)
+            self.onDataBinding(res: res)
         }
         .onReceive(dataProvider.$error) { err in
             guard let data = self.loadingBlocks.first(where: { $0.id == err?.id}) else {return}
@@ -419,7 +273,8 @@ struct MultiBlockBody: PageComponent {
     @State var isError:Bool = false
     @State var isLoading:Bool = false
     @State var errorMsg:String? = nil
-   
+    @State var currentOpenId:String? = nil
+    
     func reload(){
         if self.viewModel.isAdult && !SystemEnvironment.isAdultAuth {
             withAnimation {self.needAdult = true}
@@ -445,7 +300,8 @@ struct MultiBlockBody: PageComponent {
         if SystemEnvironment.isEvaluation {
             self.originBlocks = self.originBlocks.filter{!$0.isAdult}
         }
-        
+        self.currentOpenId = self.viewModel.openId
+        self.viewModel.openId = nil
         self.setupBlocks()
     }
 
@@ -535,22 +391,18 @@ struct MultiBlockBody: PageComponent {
         }
         self.blocks.append(contentsOf: addBlocks)
         self.isLoading = false
+        self.appSceneObserver.isApiLoading = false
         
-        if let openId = self.viewModel.openId {
+        if let openId = self.currentOpenId {
             let findIds = openId.split(separator: "|")
             if let find = addBlocks.first(where:  { block in
                 guard let menuId = block.menuId else {return false}
                 return findIds.first(where: {$0 == menuId}) != nil
             }) {
-                if let listType = find.uiType.listType {
-                    self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.categoryList)
-                            .addParam(key: .data, value: find)
-                            .addParam(key: .type, value: listType)
-                            .addParam(key: .subType, value:find.cardType)
-                    )
+                if self.openPage(opneBlock: find, openId: openId) {
+                    self.currentOpenId = nil
                 }
-                self.viewModel.openId = nil
+                
             } else {
                 self.delayAddBlock()
             }
@@ -572,6 +424,7 @@ struct MultiBlockBody: PageComponent {
         if set.isEmpty { return }
         self.requestNum = set.count
         self.isLoading = true
+        self.appSceneObserver.isApiLoading = true
         self.loadingBlocks.append(contentsOf: set)
         self.loadingBlocks.forEach{ block in
             if let apiQ = block.getRequestApi(pairing:self.pairing.status, kid:self.pairing.kid) {
@@ -579,7 +432,7 @@ struct MultiBlockBody: PageComponent {
             } else{
                 if block.uiType == .kidsHome || block.uiType == .kidsTicket {
                     block.listHeight = Self.kisHomeHeight
-                    block.setDatabindingCompleted(parentTitle: self.viewModel.title)
+                    block.setDatabindingCompleted(parentTitle: self.viewModel.title, openId: self.currentOpenId)
                     
                 }else if block.dataType == .theme , let blocks = block.blocks {
                     if block.uiType == .theme {
@@ -610,5 +463,70 @@ struct MultiBlockBody: PageComponent {
         }
     }
     
+    
+    private func openPage(opneBlock:BlockData, openId:String) -> Bool{
+        switch opneBlock.uiType {
+        case .banner :
+            BannerData.move(pagePresenter: self.pagePresenter, dataProvider: self.dataProvider, data:opneBlock.banners?.first)
+            
+        case .bannerList:
+            let data = opneBlock.banners?.filter{$0.menuId != nil}.first(where: { openId.contains($0.menuId!) })
+            BannerData.move(pagePresenter: self.pagePresenter, dataProvider: self.dataProvider, data:data)
+           
+        case .poster, .video:
+            if self.pageType == .btv {
+               self.pagePresenter.openPopup(
+                   PageProvider.getPageObject(.categoryList)
+                       .addParam(key: .data, value: opneBlock)
+                       .addParam(key: .type, value: opneBlock.uiType.listType ?? CateBlock.ListType.poster)
+                       .addParam(key: .subType, value:opneBlock.cardType)
+                       .addParam(key: .isFree, value:self.viewModel.isFree)
+               )
+           } else {
+               self.pagePresenter.openPopup(
+                   PageKidsProvider.getPageObject(.kidsCategoryList)
+                       .addParam(key: .data, value: opneBlock)
+                       .addParam(key: .type, value: opneBlock.uiType.listType ?? CateBlock.ListType.poster)
+                       .addParam(key: .subType, value:opneBlock.cardType)
+                       .addParam(key: .isFree, value:self.viewModel.isFree)
+               )
+           }
+           
+            
+        case .theme:
+            guard let data = opneBlock.themas?.filter({$0.menuId != nil}).first(where: { openId.contains($0.menuId!) }) else {
+                ComponentLog.e("not found data", tag: "ThemasDataMove")
+                return true
+            }
+            if data.blocks != nil && data.blocks?.isEmpty == false {
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.multiBlock)
+                        .addParam(key: .id, value: data.menuId)
+                        .addParam(key: .title, value: data.title)
+                        .addParam(key: .data, value: data.blocks)
+                        .addParam(key: .subId, value: openId)
+                        .addParam(key: .isFree, value:self.viewModel.isFree)
+                )
+            }else{
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.categoryList)
+                        .addParam(key: .title, value: data.title)
+                        .addParam(key: .id, value: data.menuId)
+                        .addParam(key: .type, value: data.cateType)
+                        .addParam(key: .isFree, value:self.viewModel.isFree)
+                )
+            }
+            
+        case .ticket, .kidsTicket:
+            //티캣 구매 이동없음
+            break
+        case .tv:
+            //검색 결과 이동없음
+            break
+        case .kidsHome:
+            return false // 키즈 홈블럭에서 처리
+        }
+        return true
+    }
 }
 

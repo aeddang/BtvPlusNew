@@ -18,12 +18,13 @@ struct KidsTop: PageComponent{
     var positionTop:CGFloat = 0
     @State var useGnb:Bool = true
     var body: some View {
-        VStack(alignment: .leading, spacing:0){
-            KidsTopTab()
-                .frame( height: DimenKids.app.top)
+        ZStack(alignment: .topLeading){
             KidsGnb()
                 .frame( height: self.useGnb ? DimenKids.app.gnbTop : 0)
+                .padding(.top, useGnb ? DimenKids.app.top : 0)
                 .opacity(self.useGnb ? 1 : 0)
+            KidsTopTab()
+                .frame( height: DimenKids.app.top)
         }
         .modifier(ContentHorizontalEdgesKids())
         .padding(.top, Self.marginTop + self.positionTop)

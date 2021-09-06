@@ -11,7 +11,7 @@ import SwiftUI
 import Combine
 
 enum SceneAlert:Equatable {
-    case confirm(String?, String? = nil , String? = nil, confirmText:String? = nil, (Bool) -> Void),
+    case confirm(String?, String? = nil , String? = nil, confirmText:String? = nil,cancelText:String? = nil, (Bool) -> Void),
          alert(String?, String? = nil, String? = nil, (() -> Void)? = nil),
          recivedApns(AlramData?), apiError(ApiResultError),
          connectWifi , notFoundDevice((() -> Void)? = nil), requestLocation((Bool) -> Void),
@@ -83,7 +83,7 @@ struct SceneAlertController: PageComponent{
             switch self.currentAlert {
             case .alert(_, _, _, let completionHandler) :
                 if let handler = completionHandler { self.selectedAlert(idx, completionHandler:handler) }
-            case .confirm(_, _, _, _, let completionHandler) : self.selectedConfirm(idx, completionHandler:completionHandler)
+            case .confirm(_, _, _, _, _, let completionHandler) : self.selectedConfirm(idx, completionHandler:completionHandler)
             case .apiError(let data): self.selectedApi(idx, data:data)
             case .connectWifi: self.selectedConnectWifi(idx)
             case .notFoundDevice(let completionHandler) :
@@ -119,8 +119,10 @@ struct SceneAlertController: PageComponent{
                     self.reset()
                 }
                 return
-            case .alert(let title,let text, let subText, _) : self.setupAlert(title:title, text:text, subText:subText)
-            case .confirm(let title,let text, let subText,let confirm,  _) : self.setupConfirm(title:title, text:text, subText:subText, confirmText:confirm)
+            case .alert(let title,let text, let subText, _) :
+                self.setupAlert(title:title, text:text, subText:subText)
+            case .confirm(let title,let text, let subText,let confirm, let cancel, _) :
+                self.setupConfirm(title:title, text:text, subText:subText, confirmText:confirm, cancleText: cancel)
             case .apiError(let data): self.setupApi(data:data)
             case .connectWifi: self.setupConnectWifi()
             case .notFoundDevice: self.setupNotFoundDevice()
@@ -562,12 +564,12 @@ struct SceneAlertController: PageComponent{
     }
     
     
-    func setupConfirm(title:String?, text:String?, subText:String? = nil, confirmText:String? = nil) {
+    func setupConfirm(title:String?, text:String?, subText:String? = nil, confirmText:String? = nil, cancleText:String? = nil) {
         self.title = title
         self.text = text ?? ""
         self.subText = subText
         self.buttons = [
-            AlertBtnData(title: String.app.cancel, index: 0),
+            AlertBtnData(title:  cancleText ?? String.app.cancel, index: 0),
             AlertBtnData(title: confirmText ?? String.app.confirm, index: 1)
         ]
     }

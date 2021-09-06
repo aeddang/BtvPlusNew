@@ -19,6 +19,9 @@ extension MetvNetwork{
     static let VERSION = "5.3.0"
     static let GROUP_VOD = "VOD"
     static let PAGE_COUNT = 30
+    
+    
+    static let exceptMonthlyIds = ["411211275"] //모비 무료관 없음
 
     enum SynopsisType{
         case none, title, seriesChange , seasonFirst
@@ -131,19 +134,8 @@ class Metv: Rest{
     func getPurchaseMonthly(
         page:Int?, pageCnt:Int?,
         completion: @escaping (MonthlyPurchaseInfo) -> Void, error: ((_ e:Error) -> Void)? = nil){
-
-        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
-        var params = [String:String]()
-        params["response_format"] = MetvNetwork.RESPONSE_FORMET
-        params["ver"] = MetvNetwork.VERSION
-        params["IF"] = "IF-ME-033"
-        
-        params["stb_id"] = stbId
-        params["page_no"] = page?.description ?? "1"
-        params["entry_no"] = pageCnt?.description ?? "999"
-        params["hash_id"] = ApiUtil.getHashId(stbId)
-        params["svc_code"] = MetvNetwork.SVC_CODE
-        params["req_perd"] = "Y"
+        var params = getPurchaseMonthlyParams(page: page, pageCnt: pageCnt)
+        params["req_perd"] = "N"
         fetch(route: MetvPurchaseMonthly(query: params), completion: completion, error:error)
     }
     
@@ -151,6 +143,11 @@ class Metv: Rest{
         page:Int?, pageCnt:Int?,
         completion: @escaping (PeriodMonthlyPurchaseInfo) -> Void, error: ((_ e:Error) -> Void)? = nil){
 
+        var params = getPurchaseMonthlyParams(page: page, pageCnt: pageCnt)
+        params["req_perd"] = "Y"
+        fetch(route: MetvPurchaseMonthly(query: params), completion: completion, error:error)
+    }
+    private func getPurchaseMonthlyParams( page:Int?, pageCnt:Int?)->[String:String]{
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:String]()
         params["response_format"] = MetvNetwork.RESPONSE_FORMET
@@ -162,9 +159,11 @@ class Metv: Rest{
         params["entry_no"] = pageCnt?.description ?? "999"
         params["hash_id"] = ApiUtil.getHashId(stbId)
         params["svc_code"] = MetvNetwork.SVC_CODE
-        params["req_perd"] = "Y"
-        fetch(route: MetvPurchaseMonthly(query: params), completion: completion, error:error)
+        return params
     }
+    
+    
+    
     /**
     * 월정액 메뉴 리스트 (IF-ME-036)
     * @param pageNo 요청할 페이지의 번호 (Default: 1)

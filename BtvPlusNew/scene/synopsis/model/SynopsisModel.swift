@@ -58,7 +58,7 @@ class SynopsisModel : PageProtocol {
     private(set) var menuId:String? = nil
     private(set) var brcastChnlNm:String? = nil
     private(set) var metaTypCd:String? = nil
-    
+    private(set) var watchLevel:Int = 0
     init(type:MetvNetwork.SynopsisType = .none ) {
         self.synopsisType = type
     }
@@ -80,6 +80,7 @@ class SynopsisModel : PageProtocol {
         if let contents = data.contents{
             self.title = contents.title
             self.menuId = contents.menu_id
+            self.watchLevel = contents.wat_lvl_cd?.toInt() ?? 0
             self.brcastChnlNm = contents.brcast_chnl_nm
             self.metaTypCd = contents.meta_typ_cd
             self.seasonTitle = contents.sson_choic_nm
@@ -100,7 +101,7 @@ class SynopsisModel : PageProtocol {
                 self.isLimitedWatch = !watchAble
             }
             self.nextSrisId = contents.next_sris_id
-            self.nextEpsdId = contents.next_epsd_id
+            self.nextEpsdId = contents.next_epsd_id == contents.prev_epsd_id ? nil : contents.next_epsd_id
             self.isSrisCompleted = contents.sris_cmpt_yn?.toBool() ?? false
             self.isRecommand = contents.rcmd_yn?.toBool() ?? false
             self.isGstn = contents.gstn_yn?.toBool() ?? false
@@ -194,7 +195,9 @@ class SynopsisModel : PageProtocol {
             && self.isRecommand
             && !self.isGstn
             && self.purchaseModels.filter({ $0.isUse && $0.isSalesPeriod }).contains(where: { $0.isFree  }) == false
-            && self.purchaseModels.contains(where: { $0.prdPrcId == "411211275" }) == false//모비 무료관 없음
+            && self.purchaseModels.contains(
+                where: { purchas in
+                    MetvNetwork.exceptMonthlyIds.first(where: {$0 == purchas.prdPrcId}) != nil}) == false//모비 무료관 없음
         
         return self
     }
@@ -233,7 +236,6 @@ class SynopsisModel : PageProtocol {
     private(set) var curSynopsisItem: PurchaseModel?
     private(set) var metvSeasonWatchAll:Bool = false
     private(set) var isBookmark:Bool = false
-
     private(set) var directViewData:DirectView? = nil
     private(set) var lastWatchInfo:LastWatchInfo? = nil
     var purchasedPid:String? = nil
@@ -267,7 +269,10 @@ class SynopsisModel : PageProtocol {
                     let rsluTypCd = RsluTypCd(value: rsluItem.rslu_typ_cd ?? "")
                     return model.isPossn == rsluItem.possn_yn?.toBool()
                         && model.lag_capt_typ_cd == rsluItem.lag_capt_typ_cd
+                        && model.prd_prc_fr_dt_raw == rsluItem.prd_prc_fr_dt
+                        && model.prd_prc_to_dt_raw == rsluItem.prd_prc_to_dt
                         && model.rsluTypCd == rsluTypCd}
+                                            
                 ){
                     //핑크퐁 바다동물동요(product 없음, purchase pps만 있음)
                     if !model.epsd_rslu_id.isEmpty , rsluItem.epsd_rslu_id != nil && model.epsd_rslu_id != rsluItem.epsd_rslu_id {
@@ -539,7 +544,8 @@ class SynopsisModel : PageProtocol {
     }
     
     var isFree: Bool {
-        curSynopsisItem?.isFree ?? false
+        if self.isGstn {return true}
+        return curSynopsisItem?.isFree ?? false
     }
     
     var isOnlyPurchasedBtv: Bool {

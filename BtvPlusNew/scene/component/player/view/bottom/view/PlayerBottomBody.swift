@@ -9,7 +9,13 @@ import Foundation
 import SwiftUI
 import Combine
 
-
+extension PlayerBottomBody {
+    static let nextBtnSize:CGFloat = SystemEnvironment.isTablet ? 136 : 80
+    static let nextBtnSizeFullScreen:CGFloat = SystemEnvironment.isTablet ? 142 : 91
+    
+    static let seasonBtnSize:CGFloat = SystemEnvironment.isTablet ? 161 : 96
+    static let seasonBtnSizeFullScreen:CGFloat = SystemEnvironment.isTablet ? 172 : 105
+}
 struct PlayerBottomBody: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     var viewModel: BtvPlayerModel = BtvPlayerModel()
@@ -19,12 +25,12 @@ struct PlayerBottomBody: PageComponent{
     var isPlaying:Bool = false
     var showDirectview = false
     var showPreplay = false
-    var showPreview = false
-    
+    var showCookie:String? = nil
     var showNext = false
+    var showNextCancel = false
     var nextProgress:Float = 0.0
     var nextBtnTitle:String = ""
-    var nextBtnSize:CGFloat = 0
+    var isSeasonNext:Bool = false
      
     var body: some View {
         
@@ -62,11 +68,12 @@ struct PlayerBottomBody: PageComponent{
                                                 color: Color.app.white))
                             }
                         }
+                        
                         RectButton(
                             text: String.player.continueView,
                             icon: Asset.icon.play
                             ){_ in
-                            self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , String.player.continueView)
+                            //self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , String.player.continueView)
                             self.viewModel.btvPlayerEvent = .continueView
                         }
                     }else{
@@ -90,27 +97,38 @@ struct PlayerBottomBody: PageComponent{
                         }
                     }
                 }
-                if self.showPreview {
+                if let cookie = self.showCookie {
                     RectButton(
                         text: String.player.cookie,
-                        textTrailing: self.viewModel.synopsisPlayerData?.previewCount ?? ""
+                        textTrailing: cookie
                         ){_ in
                         
-                        self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , String.player.cookie)
+                        self.viewModel.btvPlayerEvent = .cookieView
+                        //self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , String.player.cookie)
                     }
                 }
                 
                 if self.showNext{
+                    if self.showNextCancel {
+                        RectButton(
+                            text: String.player.continuePlay
+                            ){_ in
+                            //self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , String.player.directPlay)
+                            self.viewModel.btvPlayerEvent = .nextViewCancel
+                        }
+                    }
                     RectButton(
                         text: self.nextBtnTitle,
-                        fixSize: self.nextBtnSize,
+                        fixSize: self.isSeasonNext
+                        ? (self.isFullScreen ? Self.seasonBtnSizeFullScreen : Self.seasonBtnSize)
+                        : (self.isFullScreen ? Self.nextBtnSizeFullScreen : Self.nextBtnSize),
                         progress: self.nextProgress,
                         padding: 0,
                         icon: Asset.icon.play
                         ){_ in
                         
                         self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , self.nextBtnTitle)
-                        self.viewModel.btvPlayerEvent = .nextView
+                        self.viewModel.btvPlayerEvent = .nextView(isAuto:false)
                     }
                 }
             }

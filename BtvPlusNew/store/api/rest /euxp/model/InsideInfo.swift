@@ -29,9 +29,9 @@ struct InsidePeopleSceneItem : Codable {
 
 struct InsidePersonSceneItem : Codable {
     private(set) var scene_id:String? = nil   // 장면ID
-    private(set) var prs_scne_dts_seq:String? = nil   // 장면순번
-    private(set) var tmtag_fr_tmsc:String? = nil  // 장면시작시간
-    private(set) var tmtag_to_tmsc:String? = nil  // 장면종료시간
+    private(set) var prs_scne_dts_seq:Double? = nil   // 장면순번
+    private(set) var tmtag_fr_tmsc:Double? = nil  // 장면시작시간
+    private(set) var tmtag_to_tmsc:Double? = nil  // 장면종료시간
     private(set) var img_path:String? = nil   // 이미지 경로
     private(set) var img_file_nm:String? = nil    // 이미지 경로명
 }
@@ -39,9 +39,9 @@ struct InsidePersonSceneItem : Codable {
 
 struct InsideSceneItem : Codable {
     private(set) var scene_id:String? = nil       // 장면ID
-    private(set) var tmtag_to_tmsc:String? = nil  // 장면순번
-    private(set) var scne_dts_seq:String? = nil   // 장면시작시간
-    private(set) var tmtag_fr_tmsc:String? = nil  // 장면종료시간
+    private(set) var tmtag_to_tmsc:Double? = nil  // 장면순번
+    private(set) var scne_dts_seq:Double? = nil   // 장면시작시간
+    private(set) var tmtag_fr_tmsc:Double? = nil  // 장면종료시간
     private(set) var scne_typ_code:String? = nil  // 10:오프닝 20:본편 30:엔딩 50:쿠키(50번 쿠키영상만 사용 해야 함)
     private(set) var img_path:String? = nil       // 쿠키영상 이미지경로
     private(set) var img_file_nm:String? = nil    // 쿠키영상 이미지 명
@@ -62,9 +62,9 @@ struct InsideMusicInfoItem : Codable {
 
 struct InsideMusicSceneItem : Codable {
     private(set) var scene_id:String? = nil   // 장면ID
-    private(set) var music_scne_dts_seq:String? = nil // 장면 순번
-    private(set) var tmtag_fr_tmsc:String? = nil  // 장면시작시간
-    private(set) var tmtag_to_tmsc:String? = nil  // 장면종료시간
+    private(set) var music_scne_dts_seq:Double? = nil // 장면 순번
+    private(set) var tmtag_fr_tmsc:Double? = nil  // 장면시작시간
+    private(set) var tmtag_to_tmsc:Double? = nil  // 장면종료시간
     private(set) var img_path:String? = nil   // 이미지 경로
     private(set) var img_file_nm:String? = nil    // 이미지 파일명
 }

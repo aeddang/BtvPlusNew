@@ -25,7 +25,7 @@ class VideoData:InfinityData{
     private(set) var srisId:String? = nil
     private(set) var prodId:String? = nil
     private(set) var isClip:Bool = false
-    private(set) var useTag:Bool = true
+    private(set) var usePrice:Bool = true
     private(set) var tagData: TagData? = nil
     private(set) var playTime:String? = nil
     private(set) var pageType:PageType = .btv
@@ -48,9 +48,9 @@ class VideoData:InfinityData{
         }
     }
     
-    init(pageType:PageType = .btv, useTag:Bool = true) {
+    init(pageType:PageType = .btv, usePrice:Bool = true) {
         self.pageType = pageType
-        self.useTag = useTag
+        self.usePrice = usePrice
         super.init()
     }
     
@@ -547,8 +547,8 @@ struct VideoItemBody: PageView {
                     .frame(width: Dimen.icon.regularExtra, height: Dimen.icon.regularExtra)
             }
             VStack(alignment: .leading, spacing:0){
-                if self.data.useTag, let tag = self.data.tagData {
-                    Tag(data: tag).modifier(MatchParent())
+                if let tag = self.data.tagData {
+                    Tag(data: tag, usePrice:self.data.usePrice).modifier(MatchParent())
                 }else if let time = self.data.playTime {
                     ZStack(alignment:.bottomTrailing){
                         Spacer().modifier(MatchParent())
@@ -629,8 +629,8 @@ struct VideoItemBodyKids: PageView {
                         .frame(width: DimenKids.icon.regular, height: DimenKids.icon.regular)
                 }
                 VStack(alignment: .leading, spacing:0){
-                    if self.data.useTag, let tag = self.data.tagData {
-                        TagKids(data: tag).modifier(MatchParent())
+                    if  let tag = self.data.tagData {
+                        TagKids(data: tag, usePrice:self.data.usePrice).modifier(MatchParent())
                     }else {
                         Spacer().modifier(MatchParent())
                     }

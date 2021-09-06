@@ -5,6 +5,8 @@ import Combine
 let testPath = "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
 let testPath2 = "http://techslides.com/demos/sample-videos/small.mp4"
 
+
+
 struct CPPlayer: PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
@@ -15,6 +17,8 @@ struct CPPlayer: PageComponent {
     @State var screenRatio = CGSize(width:1, height:1)
     @State var bindUpdate:Bool = false //for ios13
    
+    
+    
     var body: some View {
         ZStack(alignment: .center){
             CustomAVPlayerController(
@@ -126,6 +130,7 @@ struct CPPlayer: PageComponent {
         .background(Color.black)
         .onDisappear(){
             self.clearWaitDuration()
+            self.clearAutoUiHidden()
         }
         
     }
@@ -151,8 +156,12 @@ struct CPPlayer: PageComponent {
             .autoconnect()
             .sink() {_ in
                 self.viewModel.playerUiStatus = .hidden
-                self.autoUiHidden?.cancel()
+                self.clearAutoUiHidden()
             }
+    }
+    func clearAutoUiHidden() {
+        self.autoUiHidden?.cancel()
+        self.autoUiHidden = nil
     }
     
     
@@ -160,7 +169,7 @@ struct CPPlayer: PageComponent {
     @State var waitDurationCount = 0
     func creatWaitDuration() {
         //ComponentLog.d("creatWaitDuration", tag:self.tag)
-        let retryCount = 3
+        let retryCount = 2
         self.waitDurationSubscription?.cancel()
         self.waitDurationCount = 0
         self.waitDurationSubscription = Timer.publish(

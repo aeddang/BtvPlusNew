@@ -153,7 +153,7 @@ struct InputNumberBox: PageComponent {
             )
             .offset(y:self.isEdit
                         ? SystemEnvironment.isTablet
-                            ? -DimenKids.margin.medium : DimenKids.margin.heavyUltra
+                            ? -DimenKids.margin.medium : -DimenKids.margin.heavyUltra
                         : 0)
             
         }

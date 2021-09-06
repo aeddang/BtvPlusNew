@@ -12,6 +12,7 @@ class KidsMyItemData: KidsHomeBlockListData {
     static let code :String = "519"
     func setData(data:BlockItem) -> KidsMyItemData{
         self.type = .myHeader
+        self.blocks = [data]
         return self
     }
 }

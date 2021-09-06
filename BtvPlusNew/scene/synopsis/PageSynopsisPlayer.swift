@@ -347,7 +347,8 @@ struct PageSynopsisPlayer: PageView {
         if let synopsis = self.synopsisModel {
             let prerollData = SynopsisPrerollData()
                 .setData(data: synopsis, playType: self.synopsisPlayType, epsdRsluId: self.epsdRsluId)
-            self.playerData = SynopsisPlayerData().setData(type: self.synopsisPlayType, synopsis: synopsis)
+            self.playerData = SynopsisPlayerData()
+                .setData(type: self.synopsisPlayType, synopsis: synopsis)
             self.playerModel
                 .setData(synopsisPrerollData: prerollData)
                 .setData(synopsisPlayData: self.playerData)

@@ -83,6 +83,7 @@ struct SynopsisBody: PageComponent{
                                     funtionLayout:self.funtionLayout,
                                     isBookmark: self.$isBookmark,
                                     isLike: self.$isLike,
+                                    isRecommandAble: self.synopsisModel?.isCancelProgram == false,
                                     isRecommand: self.isRecommand
                                 )
                             }
@@ -99,6 +100,7 @@ struct SynopsisBody: PageComponent{
                                 funtionLayout:self.funtionLayout,
                                 isBookmark: self.$isBookmark,
                                 isLike: self.$isLike,
+                                isRecommandAble: self.synopsisModel?.isCancelProgram == false,
                                 isRecommand: self.isRecommand
                             )
                             Spacer()
@@ -125,7 +127,7 @@ struct SynopsisBody: PageComponent{
                     .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: SynopsisBody.spacing))
                 }
                 
-                if self.summaryViewerData != nil {
+                if self.summaryViewerData != nil && self.synopsisModel?.isCancelProgram == false{
                     SummaryViewer(
                         peopleScrollModel:self.peopleScrollModel,
                         data: self.summaryViewerData!,
@@ -205,6 +207,7 @@ struct SynopsisBodyHeader: PageComponent{
                             synopsisData :self.synopsisData,
                             isBookmark: self.$isBookmark,
                             isLike: self.$isLike,
+                            isRecommandAble: self.synopsisModel?.isCancelProgram == false,
                             isRecommand: self.isRecommand
                         )
                     }
@@ -218,6 +221,7 @@ struct SynopsisBodyHeader: PageComponent{
                             synopsisData :self.synopsisData,
                             isBookmark: self.$isBookmark,
                             isLike: self.$isLike,
+                            isRecommandAble: self.synopsisModel?.isCancelProgram == false,
                             isRecommand: self.isRecommand
                         )
                         Spacer()

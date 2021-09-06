@@ -74,6 +74,8 @@
 "weekUnvisible" = "일주일 동안 보지 않기";
 "watch" = "시청";
 "watchAble" = "시청가능";
+"cancelBrodcast" = "결방";
+
 "cast" = "출연";
 
 "vod" = "VOD";
@@ -249,9 +251,13 @@
 "alertApnsMonthly" = "이용권 공개예정 알림";
 "alertApnsReserve" = "시청예약 알림";
 
+"alertUpdate"  = "업데이트 알림";
+"alertUpdateForce"  = "새로운 버전이 출시되었습니다. 서비스를 이용하기 위해서는 업데이트가 필요합니다.";
+"alertUpdateRecommend"  = "새로운 버전이 출시되었습니다. 업데이트 하시겠습니까?";
+"alertUpdateAfter" = "나중에 하기";
 
 "alertApi" = "알림";
-"alertApiErrorServer" = "접속이 지연되고 있습니다. 잠시 후 다시 이용해 주세요.";
+"alertApiErrorServer" = "일시적인 문제가 발생하였습니다.\n잠시 후 다시 이용해주세요.";
 "alertApiErrorClient" = "네트워크 연결 상태를 확인하시고 다시 시도해 주세요.";
 "alertNetworkError" = "네트워크 연결이 원활하지 않습니다.";
 "alertDataError" = "데이타가 없습니다.";
@@ -407,7 +413,7 @@
 
 "alertOkCashMaster" = "OK캐쉬백 대표카드등록";
 "alertOkCashMasterInput" = "OK캐쉬백 비밀번호를 입력해주세요.";
-"alertCardDeleteConfirm" = "삭제 하시겠습니까?";
+"alertCardDeleteConfirm" = "선택한 OK캐쉬백 카드를 삭제하시겠어요?";
 
 "alertCouponRegistSuccess" = "쿠폰 등록이 완료되었습니다.";
 "alertCouponRegistFail" = "알 수 없는 오류로 쿠폰 등록에 실패하였습니다.\n106 고객센터로 문의해주세요.";
@@ -461,7 +467,8 @@
 "alertKidEditCompleted" = "프로필이 수정 되었습니다.";
 "alertKidDeleteCompleted" = "프로필이 삭제 되었습니다.";
 
-"alertKidInvalidNickName" = "사용 불가한 특수문자가 포함되어 있습\n니다. 다시 입력해 주세요.";
+"alertKidInvalidNickName" = "사용 불가한 특수문자가 포함되어 있습니다.\n다시 입력해 주세요.";
+"alertKidInvalidBirth" = "자녀 프로필은 14세 미만인 경우에만\n등록이 가능합니다.";
 "alertKidAddError" = "프로필등록이 실패했습니다.\n다시시도해주세요";
 "alertKidEditError" = "프로필수정이 실패했습니다.\n다시시도해주세요";
 "alertKidDeleteError" = "프로필삭제가 실패했습니다.\n다시시도해주세요";
@@ -844,6 +851,9 @@
 "synopsisCornerPlayNotNscreen" = "선택하신 코너 영상은 모바일 시청을 지원하지 않습니다. B tv에서 시청해 주세요.";
 "synopsisCornerPlayOnlyPurchasedBtv" = "선택하신 코너 영상은 B tv에서 구매 후 시청 가능합니다. B tv에서 구매해 주세요.";
 
+"synopsisNextPlayConfirm" = "다음 회차를 시청하시겠습니까?";
+"synopsisNextPlayFail" = "다음 회차 보기에 실패했습니다.";
+
 /*
  PageAuth
 */
@@ -927,6 +937,7 @@
 "playerPreview" = "예고편";
 "playerCookie" = "쿠키 영상";
 "playerNext" = "다음 화";
+"playerNextSeason" = "다음 시즌 보기";
 "playerDirectPlay" = "도입부 건너뛰기";
 "playerSeason" = "시즌";
 "playerContinuePlay" = "계속 시청";
@@ -935,6 +946,7 @@
 "playerAdMore" = "광고 정보 더보기";
 "playerAdCancel" = "광고 건너뛰기";
 "playerMoveSec" = "초 이동";
+"playerReplay" = "지금 보는 영상이 반복 재생됩니다";
 
 /*
  Remote
@@ -967,8 +979,10 @@
 "monthlyTitle" = "B tv 이용권";
 "monthlyMore" = "전체 상품 보기";
 "monthlyTextRecommand" = "고객님을 위한 콘텐츠가 가득! 지금, 이용권에 구독해 보세요";
+"monthlyTextRecommandOmnipack" = "이용권 구독 후 보고싶은 콘텐츠를 골라 시청해 보세요.";
 "monthlyTextEnjoy" = "아래의 모든 콘텐츠를 마음껏 즐겨보세요!";
 "monthlyTextEnjoyPeriod" = "이용 기간 동안 마음껏 즐기세요!";
+"monthlyTextEnjoyOmnipack" = "아래에서 보고싶은 콘텐츠를 골라 OMNI팩으로 즐겨보세요!";
 
 "monthlyTextKidsLeading" = "아이를 위한";
 "monthlyTextKidsTrailing" = "키즈 화면에서 콘텐츠를 시청해 보세요!";
@@ -1044,6 +1058,7 @@
 "voiceSearchTitle" = "음성 검색";
 "voiceSearchText" = "검색어를 말해보세요.";
 "voiceSearchTextKids" = "듣는 중입니다";
+"voiceSearchingKids" = "인식중입니다.";
 /*
  Share
  */

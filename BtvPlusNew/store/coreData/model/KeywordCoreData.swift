@@ -20,7 +20,7 @@ class KeywordCoreData:PageProtocol {
         guard let entity = NSEntityDescription.entity(forEntityName: Self.model, in: container.viewContext) else { return }
         let item = NSManagedObject(entity: entity, insertInto: container.viewContext)
         item.setValue(word, forKey: Keys.itemId)
-        self.saveContext()
+        //self.saveContext()
     }
 
     func removeKeyword(_ word:String){
@@ -33,7 +33,7 @@ class KeywordCoreData:PageProtocol {
             for obj in objects {
                 container.viewContext.delete(obj)
             }
-            self.saveContext()
+            //self.saveContext()
         } catch {
             DataLog.e(error.localizedDescription, tag: self.tag)
         }
@@ -68,7 +68,7 @@ class KeywordCoreData:PageProtocol {
     }()
 
     // MARK: - Core Data Saving support
-    private func saveContext () {
+    func saveContext () {
         let context = persistentContainer.viewContext
         if context.hasChanges {
             do {

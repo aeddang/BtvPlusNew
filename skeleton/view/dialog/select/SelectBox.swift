@@ -9,7 +9,9 @@
 import Foundation
 import SwiftUI
 
-
+extension SelectBox {
+    static let scrollNum:Int = 5
+}
 struct SelectBox: PageComponent {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @Binding var isShowing: Bool
@@ -21,20 +23,14 @@ struct SelectBox: PageComponent {
     
     var body: some View {
         VStack{
-            
             VStack (alignment: .leading, spacing:0){
-                VStack(alignment: .leading, spacing:0){
-                    ForEach(self.buttons) { btn in
-                        SelectButton(
-                            text: btn.title ,
-                            tipA: btn.tipA, tipB: btn.tipB,
-                            index: btn.index,
-                            isSelected: btn.index == self.index){idx in
-                            
-                            self.index = idx
-                            self.action(idx)
-                        }
+                if self.buttons.count > Self.scrollNum {
+                    ScrollView(.vertical, showsIndicators: false){
+                        SelectBoxBody(index: self.$index, buttons: self.buttons, action: self.action)
                     }
+                    .modifier(MatchHorizontal(height: Dimen.button.medium * CGFloat(Self.scrollNum)))
+                } else {
+                    SelectBoxBody(index: self.$index, buttons: self.buttons, action: self.action)
                 }
                 FillButton(
                     text: String.app.close,
@@ -55,6 +51,27 @@ struct SelectBox: PageComponent {
             //if self.editType == .nickName {return}
             withAnimation{
                 self.safeAreaBottom = pos
+            }
+        }
+    }
+}
+
+struct SelectBoxBody: PageComponent{
+    @Binding var index: Int
+    var buttons: [SelectBtnData]
+    let action: (_ idx:Int) -> Void
+    var body: some View {
+        VStack(alignment: .leading, spacing:0){
+            ForEach(self.buttons) { btn in
+                SelectButton(
+                    text: btn.title ,
+                    tipA: btn.tipA, tipB: btn.tipB,
+                    index: btn.index,
+                    isSelected: btn.index == self.index){idx in
+                    
+                    self.index = idx
+                    self.action(idx)
+                }
             }
         }
     }

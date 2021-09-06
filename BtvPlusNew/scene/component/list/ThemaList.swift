@@ -18,9 +18,13 @@ class ThemaData:InfinityData{
     private(set) var count: String = "0"
     private(set) var type:ThemaType = .square
     private(set) var menuId: String? = nil
+    private(set) var usePrice:Bool = true
     private(set) var blocks:[BlockItem]? = nil
     private(set) var cateType:CateBlock.ListType = .poster
-    
+    init(usePrice:Bool = true) {
+        self.usePrice = usePrice
+        super.init()
+    }
     func setData(data:ContentItem, cardType:BlockData.CardType = .squareThema, idx:Int = -1) -> ThemaData {
         setCardType(cardType)
         isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
@@ -146,6 +150,7 @@ struct ThemaList: PageComponent{
                                     .addParam(key: .id, value: data.menuId)
                                     .addParam(key: .title, value: data.title)
                                     .addParam(key: .data, value: data.blocks)
+                                    .addParam(key: .isFree, value:!data.usePrice)
                             )
                         }else{
                             self.pagePresenter.openPopup(
@@ -153,6 +158,7 @@ struct ThemaList: PageComponent{
                                     .addParam(key: .title, value: data.title)
                                     .addParam(key: .id, value: data.menuId)
                                     .addParam(key: .type, value: data.cateType)
+                                    .addParam(key: .isFree, value:!data.usePrice)
                             )
                         }
                     }

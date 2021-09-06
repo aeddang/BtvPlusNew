@@ -23,6 +23,7 @@ struct BottomTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @State var pages:[PageSelecterble] = []
     @State var selectedPage:PageObject? = nil
     @State var selectedMenuId:String? = nil
@@ -56,11 +57,11 @@ struct BottomTab: PageComponent{
         .background(Color.brand.bg)
         
         .onReceive (self.pagePresenter.$currentPage) { page in
-            if let id = page?.getParamValue(key: .id) as? String {
-                self.selectedMenuId = id
-            }
             self.selectedPage = page
             
+        }
+        .onReceive(self.appSceneObserver.$gnbMenuId) { id in
+            self.selectedMenuId = id
         }
         .onReceive(self.dataProvider.bands.$event){ evt in
             guard let evt = evt else { return }

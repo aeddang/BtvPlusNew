@@ -113,6 +113,7 @@ struct PageMultiBlock: PageView {
                 if ani {
                     if self.isInit {return}
                     DispatchQueue.main.async {
+                        self.appSceneObserver.useTop = false
                         self.isInit = true
                         self.setupOriginData()
                     }
@@ -146,7 +147,7 @@ struct PageMultiBlock: PageView {
             .onAppear{
                 guard let obj = self.pageObject  else { return }
                 self.openId = obj.getParamValue(key: .subId) as? String
-                
+                self.isFree = obj.getParamValue(key: .isFree) as? Bool ?? false
                 if let data = obj.getParamValue(key: .data) as? CateData {
                     self.title = data.title
                     if let blocks = data.blocks?.filter({ $0.menu_id != nil }) {
@@ -160,6 +161,7 @@ struct PageMultiBlock: PageView {
                             self.isTop = true
                         }
                     }
+                    
                     
                 }else{
                     self.title = obj.getParamValue(key: .title) as? String
@@ -185,6 +187,7 @@ struct PageMultiBlock: PageView {
     @State var titleId:String? = nil
     @State var finalSelectedIndex:Int? = nil
     @State var openId:String? = nil
+    @State var isFree:Bool = false
     
     private func setupOriginData(idx:Int? = nil){
         var moveIdx:Int = idx ?? 0
@@ -235,12 +238,13 @@ struct PageMultiBlock: PageView {
                         self.cateBlockViewModel.setupDropDown(datas: dropMenus)
                         if let first = dropMenus.first {
                             self.cateBlockViewModel
-                                .update(data:first, listType: first.uiType.listType ?? .poster, idx: 0)
+                                .update(data:first, listType: first.uiType.listType ?? .poster,
+                                        idx: 0, isFree: self.isFree)
                         }
                     } else {
                         self.cateBlockViewModel.update(menuId:data.menuId,
                                                        listType:data.listType ?? .poster,
-                                                       isAdult:data.isAdult , key:nil)
+                                                       isAdult:data.isAdult, isFree: self.isFree)
                         
                     }
                     title = data.title
@@ -253,7 +257,7 @@ struct PageMultiBlock: PageView {
                     let isAdult = self.tabDatas?[selectedTabIdx].isAdult ?? false
                     self.multiBlockViewModel.update(
                         datas: self.originDatas, openId: openId,
-                        themaType: self.themaType, isAdult:isAdult, title: title)
+                        themaType: self.themaType, isAdult:isAdult, title: title, isFree: self.isFree)
                 }
                 if let tabs = self.tabDatas {
                     if self.selectedTabIdx > 0 && tabs.count > self.selectedTabIdx {

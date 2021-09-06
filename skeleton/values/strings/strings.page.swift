@@ -291,6 +291,8 @@ extension String{
         public static let synopsisCornerPlayNeedPurchased = "synopsisCornerPlayNeedPurchased".loaalized()
         public static let synopsisCornerPlayNotNscreen = "synopsisCornerPlayNotNscreen".loaalized()
         public static let synopsisCornerPlayOnlyPurchasedBtv = "synopsisCornerPlayOnlyPurchasedBtv".loaalized()
+        public static let synopsisNextPlayConfirm = "synopsisNextPlayConfirm".loaalized()
+        public static let synopsisNextPlayFail = "synopsisNextPlayFail".loaalized()
         
         public static let authTitle = "authTitle".loaalized()
         public static let authText = "authText".loaalized()

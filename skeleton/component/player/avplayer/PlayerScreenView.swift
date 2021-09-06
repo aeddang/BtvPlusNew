@@ -22,6 +22,7 @@ protocol PlayerScreenViewDelegate{
 }
 
 class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
+    let playerId:String = UUID().uuidString
     var delegate:PlayerScreenViewDelegate?
     var player:AVPlayer? = nil
     {
@@ -77,12 +78,12 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
     required init?(coder: NSCoder) {fatalError("init(coder:) has not been implemented")}
     
     deinit {
-        ComponentLog.d("deinit" , tag: self.tag)
+        ComponentLog.d("deinit " + playerId, tag: self.tag)
         destory()
     }
     
     func destory(){
-        ComponentLog.d("destory" , tag: self.tag)
+        ComponentLog.d("destory " + playerId , tag: self.tag)
         delegate = nil
         playerController = nil
         destoryPlayer()
@@ -190,7 +191,7 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
     }
     
     private func destoryPlayer(){
-        ComponentLog.d("destoryPlayer " + player.debugDescription, tag: self.tag)
+        ComponentLog.d("destoryPlayer " + playerId, tag: self.tag)
         guard let prevPlayer = player else { return }
         prevPlayer.pause()
         playerLayer?.player = nil
@@ -198,7 +199,9 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
             avPlayerViewController.player = nil
             avPlayerViewController.delegate = nil
         }
-        NotificationCenter.default.removeObserver(self)
+        if CustomAVPlayerController.currentPlayerNum == 0 {
+            NotificationCenter.default.removeObserver(self)
+        }
         
     }
     

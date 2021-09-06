@@ -9,7 +9,9 @@ import Foundation
 import SwiftUI
 
 struct HitchStbItem: PageView {
-    var data:StbData
+    @EnvironmentObject var dataProvider:DataProvider
+    @ObservedObject var data:StbData
+    @State var nickName:String? = nil
     var isSelected:Bool
     var body: some View {
         VStack(alignment:.center , spacing:SystemEnvironment.isTablet ? Dimen.margin.tinyExtra : Dimen.margin.tiny){
@@ -19,13 +21,20 @@ struct HitchStbItem: PageView {
             .frame(
                 width: SystemEnvironment.isTablet ? Dimen.icon.regular : Dimen.icon.medium,
                 height: SystemEnvironment.isTablet ? Dimen.icon.regular : Dimen.icon.medium)
-            if let stbName = self.data.stbName {
-                Text(stbName)
+            
+            if let nick = self.nickName {
+                Text(nick + "(" + String.app.defaultStb + ")")
                     .modifier(MediumTextStyle(
                                 size: SystemEnvironment.isTablet ? Font.size.tinyExtra : Font.size.lightExtra,
                                 color: Color.app.blackExtra))
-                    .lineLimit(1)
+            } else {
+                Text(String.app.defaultStb)
+                    .modifier(MediumTextStyle(
+                                size: SystemEnvironment.isTablet ? Font.size.tinyExtra : Font.size.lightExtra,
+                                color: Color.app.blackExtra))
             }
+            
+           
             if let macAddress = self.data.macAddress{
                 Text(macAddress)
                     .modifier(MediumTextStyle(
@@ -42,5 +51,29 @@ struct HitchStbItem: PageView {
             RoundedRectangle(cornerRadius: Dimen.radius.regularExtra)
                 .stroke( self.isSelected ? Color.brand.primary : Color.app.greyMedium ,lineWidth: self.isSelected ? 3 : 1 )
         )
+        .onReceive(self.data.$stbNickName){ nick in
+            self.nickName = nick
+        }
+        .onReceive(self.dataProvider.$result){ res in
+            guard let res = res else { return }
+            if !res.id.hasPrefix(self.data.stbid ?? "") {return}
+            switch res.type {
+            case .getHostNickname :
+                guard let data = res.data as? HostNickName else { return }
+                self.data.setData(data: data)
+            default: break
+            }
+           
+        }
+        .onAppear(){
+            if self.data.stbNickName == nil , let id = self.data.stbid{
+                self.dataProvider.requestData(
+                    q: .init(
+                        id: id,
+                        type: .getHostNickname(isAll:false, anotherStbId:id), isOptional: true))
+            } else {
+                self.nickName = self.data.stbNickName
+            }
+        }
     }
 }

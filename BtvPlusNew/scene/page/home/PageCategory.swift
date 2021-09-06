@@ -90,22 +90,25 @@ struct PageCategory: PageView {
                 if self.isInit {return}
                 DispatchQueue.main.async {
                     self.isInit = true
-                    guard let obj = self.pageObject  else { return }
-                    let menuId = (obj.getParamValue(key: .id) as? String) ?? ""
-                    let openId = (obj.getParamValue(key: .subId) as? String)
                     self.appSceneObserver.useTopFix = true
-                    self.setupDatas(menuId:menuId, openId: openId)
+                    self.setupDatas(menuId:self.menuId, openId: self.openId)
                 }
             }
         }
         .onAppear{
+            guard let obj = self.pageObject  else { return }
+            self.openId = obj.getParamValue(key: .subId) as? String
+            self.menuId = (obj.getParamValue(key: .id) as? String) ??  EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue
             self.marginBottom = self.appSceneObserver.safeBottomLayerHeight
+            self.appSceneObserver.gnbMenuId = menuId
         }
         .onDisappear{
             self.appSceneObserver.useTopFix = nil
         }
     }//body
     
+    @State var menuId:String = EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue
+    @State var openId:String? = nil
     @State var isInit:Bool = false
     @State var tabs:[NavigationButton] = []
     @State var originDatas:[CateData]? = nil

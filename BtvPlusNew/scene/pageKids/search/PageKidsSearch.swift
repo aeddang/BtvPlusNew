@@ -112,7 +112,7 @@ struct PageKidsSearch: PageView {
                         },
                         inputCopmpleted : { text in
                             if self.keyword.isEmpty {
-                                self.appSceneObserver.alert = .alert(nil, String.kidsText.kidsSearchInput)
+                                self.appSceneObserver.alert = .alert(String.alert.apns, String.kidsText.kidsSearchInput)
                                 return
                             }
                             self.search(keyword: text)

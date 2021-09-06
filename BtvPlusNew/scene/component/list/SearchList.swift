@@ -16,7 +16,6 @@ struct SearchPhrase:Identifiable{
 
 class SearchData:InfinityData{
     
-    
     private(set) var keyword: String = ""
     private(set) var phrases: [SearchPhrase] = []
     private(set) var isDeleteAble: Bool = false
@@ -75,7 +74,7 @@ struct SearchList: PageComponent{
                         .modifier(ListRowInset(
                             firstIndex: data.isSectionChange ? -1 : 1,
                             spacing: 0,
-                            marginTop: data.isSectionChange ? Dimen.margin.heavyExtra : 0
+                            marginTop: data.isSectionChange ? Dimen.margin.mediumUltra : 0
                         ))
                         .onTapGesture {
                             if data.isSection {return}

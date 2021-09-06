@@ -26,24 +26,31 @@ class PageSearchModel :ObservableObject, PageProtocol {
     }
     
     func addSearchKeyword (keyword:String){
-        let find = self.localKeywords.first(where: {$0 == keyword})
-        if find == nil {
-            self.localKeywords.append(keyword)
-            if self.localKeywords.count > 9 {
-                self.removeSearchKeyword(keyword: self.localKeywords.first!)
-                DispatchQueue.main.asyncAfter(deadline: .now()+0.1){
-                    self.updateSearchKeyword()
-                    DispatchQueue.global(qos: .background).async(){
-                        self.keywordCoreData.addKeyword(keyword)
-                    }
-                }
-            }
-            else {
+        let find = self.localKeywords.firstIndex(of: keyword)
+        
+        if let findIdx = find {
+            let removeKeyword = self.localKeywords.remove(at: findIdx)
+            self.keywordCoreData.removeKeyword(removeKeyword)
+            
+        }
+        self.localKeywords.append(keyword)
+        if self.localKeywords.count > 9 {
+            self.removeSearchKeyword(keyword: self.localKeywords.first!)
+            //DispatchQueue.main.asyncAfter(deadline: .now()+0.1){
                 self.updateSearchKeyword()
-                DispatchQueue.global(qos: .background).async(){
+                //DispatchQueue.global(qos: .background).async(){
                     self.keywordCoreData.addKeyword(keyword)
-                }
-            }
+                //}
+            //}
+        }
+        else {
+            self.updateSearchKeyword()
+            //DispatchQueue.global(qos: .background).async(){
+                self.keywordCoreData.addKeyword(keyword)
+            //}
+        }
+        DispatchQueue.global(qos: .background).async(){
+            self.keywordCoreData.saveContext()
         }
     }
     func removeSearchKeyword (keyword:String){
@@ -52,19 +59,23 @@ class PageSearchModel :ObservableObject, PageProtocol {
         }
         self.localKeywords.remove(at: find)
         self.updateSearchKeyword()
-        DispatchQueue.global(qos: .background).async(){
+        //DispatchQueue.global(qos: .background).async(){
             self.keywordCoreData.removeKeyword(keyword)
-        }
+        //}
     }
     func removeAllSearchKeyword (){
         let removeKeywords = self.localKeywords
-        DispatchQueue.global(qos: .background).async(){
+        //DispatchQueue.global(qos: .background).async(){
             removeKeywords.forEach{
                 self.keywordCoreData.removeKeyword($0)
             }
-        }
+        //}
+        
         self.localKeywords.removeAll()
         self.updateSearchKeyword()
+        DispatchQueue.global(qos: .background).async(){
+            self.keywordCoreData.saveContext()
+        }
        
     }
     
@@ -181,7 +192,7 @@ class PageSearchModel :ObservableObject, PageProtocol {
         actionData.menu_name = String.app.clip + datas.count.description
         actionData.category = "클립"
         let allPosters:[VideoData] = datas.map{
-            VideoData(useTag:false).setData(data: $0, searchType:.clip).setNaviLog(action: actionData)
+            VideoData(usePrice:false).setData(data: $0, searchType:.clip).setNaviLog(action: actionData)
         }
         let block = BlockData()
             .setData(title: String.app.clip, datas: allPosters, searchType:.clip, keyword: keyword)

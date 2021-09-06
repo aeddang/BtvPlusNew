@@ -13,6 +13,7 @@ struct KidsTopTab: PageComponent{
    
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var setup:Setup
     
@@ -47,20 +48,23 @@ struct KidsTopTab: PageComponent{
                            height: Dimen.icon.regular)
             }
             Button(action: {
-                if let home  = self.dataProvider.bands.getHome() {
-                    let move = PageProvider.getPageObject(.home).addParam(key: .id, value: home.menuId)
-                   
-                    if pairing.status == .pairing && self.setup.isKidsExitAuth {
-                        self.pagePresenter.openPopup(
-                            PageKidsProvider.getPageObject(.kidsConfirmNumber)
-                                .addParam(key: .type, value: PageKidsConfirmType.exit)
-                                .addParam(key: .data, value: move)
-                        )
-                    } else {
-                        self.pagePresenter.changePage(move)
-                    }
-                    
+                var move:PageObject? = nil
+                if let historyPage = self.appSceneObserver.finalBtvPage {
+                    move = historyPage
+                } else if let home  = self.dataProvider.bands.getHome() {
+                    move = PageProvider.getPageObject(.home).addParam(key: .id, value: home.menuId)
                 }
+                if pairing.status == .pairing && self.setup.isKidsExitAuth {
+                    self.pagePresenter.openPopup(
+                        PageKidsProvider.getPageObject(.kidsConfirmNumber)
+                            .addParam(key: .type, value: PageKidsConfirmType.exit)
+                            .addParam(key: .data, value: move)
+                    )
+                } else if let move = move {
+                    self.pagePresenter.changePage(move)
+                }
+                    
+                
             }) {
                 Image(AssetKids.gnbTop.exit)
                     .renderingMode(.original)

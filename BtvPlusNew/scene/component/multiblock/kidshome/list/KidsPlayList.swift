@@ -22,6 +22,7 @@ class KidsPlayListData: KidsHomeBlockListData {
         self.title = data.menu_nm
         self.menuId = data.menu_id
         self.cwCallId = data.cw_call_id_val
+        self.blocks = data.blocks ?? []
         self.datas = data.blocks?.map{KidsPlayListItemData().setData(data: $0)} ?? []
         return self
     }

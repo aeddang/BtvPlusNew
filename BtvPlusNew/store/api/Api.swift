@@ -31,6 +31,8 @@ struct ApiResultResponds:Identifiable{
     let id:String
     let type:ApiType
     let data:Any
+    let isOptional:Bool
+    let isLog:Bool
 }
 
 struct ApiResultError :Identifiable{
@@ -54,7 +56,7 @@ enum ApiType{
          getGridPreview(String?, Int? = nil, Int? = nil),
          getGatewaySynopsis(SynopsisData),
          getSynopsis(SynopsisData),
-         getInsideInfo(SynopsisData),
+         getInsideInfo(epsdId:String),
          getRelationContents(SynopsisRelationData),
          getEventBanner(String?, EuxpNetwork.BannerType = .page)
     

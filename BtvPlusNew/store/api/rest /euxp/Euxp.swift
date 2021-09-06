@@ -68,9 +68,7 @@ extension EuxpNetwork{
             }
         }
     }
-    
-    
-    
+
     enum MenuTypeCode: String {
         case MENU_KIDS = "NM2000002471"
         case MENU_KIDS_HOME = "NM2000031454"
@@ -78,6 +76,29 @@ extension EuxpNetwork{
         case MENU_KIDS_MY = "NM2000031458"
         case MENU_KIDS_MONTHLY = "NM2000032813"
     }
+    
+    enum KidsGnbCd: String, Codable {
+        case monthlyTicket = "01" // 이용권 // todo : euxp
+        case genre = "02" // 전체장르
+        case character = "03" // 캐릭터
+        case playLearning = "04" // 놀이학습
+        case watchHabit = "05" // 시청습관 관리
+        case tale = "06" // 살아있는 동화
+        case home = "07" // 홈(UI520)
+        case parentNotice = "08" // 부모알림장(UI520)
+        case englishSchool = "09" // 영어스쿨(UI520)
+        case nuriClass  = "11" // 누리교실(UI520)
+        case elementary = "12" // 초등학습(UI520)
+        case playSong = "13" // 플레이송스홈(UI520)
+        case Pororo = "14" // 뽀로로월드(UI520)
+        case superKids = "15" // 슈퍼키즈클럽월정액
+    }
+    
+    enum PrdPrcIdCode: String {
+        case OCEAN = "1017470"
+    }
+    
+    
     
     enum CwCallId: String {
         case CALL_KIDS_WATCH = "KESV50602"  // kids
@@ -214,13 +235,13 @@ class Euxp: Rest{
       * @param epsdId 에피소드아이디
      */
     func getInsideInfo(
-        data:SynopsisData,
+        epsdId:String,
         completion: @escaping (InsideInfo) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
         params["IF"] = "IF-EUXP-019"
-        params["epsd_id"] = data.epsdId
+        params["epsd_id"] = epsdId
         fetch(route: EuxpInsideInfo(query: params), completion: completion, error:error)
     }
     

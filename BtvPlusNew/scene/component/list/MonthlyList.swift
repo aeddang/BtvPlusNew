@@ -22,7 +22,7 @@ class MonthlyData:InfinityData,ObservableObject{
     private(set) var menuId: String? = nil
     private(set) var prdPrcId: String = ""
     private(set) var parentPrdPrcId: String? = nil
-    private(set) var prodTypeCd: String? = nil
+    private(set) var prodTypeCd: PrdTypCd = .none
     private(set) var isJoin: Bool = false
     private(set) var isSubJoin: Bool = false
     private(set) var isSelected: Bool = false
@@ -59,11 +59,21 @@ class MonthlyData:InfinityData,ObservableObject{
         }
         index = idx
         prdPrcId = data.prd_prc_id ?? ""
-        
-        prodTypeCd = data.prd_typ_cd
+        prodTypeCd = PrdTypCd.init(rawValue: data.prd_typ_cd ?? "") ?? .none
         menuId = data.menu_id
         blocks = data.blocks
         isUpdated = true
+        return self
+    }
+    
+    func setData(band:Band, prdPrcId:String?, blocks:[BlockItem], idx:Int = -1) -> MonthlyData {
+        self.title = band.name
+        self.index = idx
+        self.prdPrcId = prdPrcId ?? ""
+        self.prodTypeCd = .none
+        self.menuId = band.menuId
+        self.blocks = blocks
+        //isUpdated = true
         return self
     }
     
@@ -115,9 +125,9 @@ class MonthlyData:InfinityData,ObservableObject{
     
     func reset() {
         self.isSelected = false
-        self.isSubJoin = false
-        self.isJoin = false
-        self.sortIdx = 0
+        //self.isSubJoin = false
+        //self.isJoin = false
+        //self.sortIdx = 0
         self.isUpdated = true
         
     }

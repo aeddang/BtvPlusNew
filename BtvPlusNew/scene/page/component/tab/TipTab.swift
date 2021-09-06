@@ -66,15 +66,14 @@ struct TipTab: PageComponent{
                         .modifier(MediumTextStyle(size: Font.size.thin, color: self.textColor))
                 }
                 if self.isMore {
-                    Image(Asset.icon.more)
+                    Image(Asset.icon.moreSmall)
                     .renderingMode(.original).resizable()
                     .scaledToFit()
-                    .frame(width: Dimen.icon.thinExtra, height: Dimen.icon.thinExtra)
+                    .frame(width: Dimen.icon.microExtraUltra, height: Dimen.icon.thinExtra)
                 }
             }
             .padding(.horizontal, Dimen.margin.micro)
         }
-
         .modifier( MatchHorizontal(height: Dimen.button.regularExtra) )
         .background(self.bgColor)
         .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.heavy))

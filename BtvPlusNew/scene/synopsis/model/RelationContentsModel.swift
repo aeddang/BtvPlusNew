@@ -10,7 +10,9 @@ import Foundation
 struct SeasonData {
     var title:String? = nil
     var srisId:String? = nil
+    var sortSeq:Int = 0
     var synopsisData:SynopsisData? = nil
+    var index:Int = -1
 }
 
 struct SynopsisRelationData {
@@ -40,7 +42,7 @@ enum SerisSortType {
 
 
 class RelationContentsModel:ObservableObject {
-    private(set) var serisSortType:SerisSortType? = nil
+    var serisSortType:SerisSortType? = nil
     
     private(set) var isReady = false
     private(set) var serisTitle:String? = nil
@@ -71,9 +73,10 @@ class RelationContentsModel:ObservableObject {
         self.pageType = pageType
     }
     
-    func setData(synopsis:SynopsisModel) {
+    func setData(synopsis:SynopsisModel? = nil) {
+        guard let synopsis = synopsis else { return }
         self.unavailableSeris = false
-        self.isReady = true
+        //self.isReady = true
         self.serisTitle = synopsis.srisTitle
         if let list = synopsis.seriesInfoList {
             let filterList = synopsis.isTrstrs && !synopsis.isPurchasedPPM ? list.filter{ $0.sale_prc_vat != 0 } : list
@@ -99,7 +102,9 @@ class RelationContentsModel:ObservableObject {
                     synopType: .season
                 )
                 
-                return SeasonData(title: $0.sson_choic_nm, srisId:$0.sris_id, synopsisData: data)
+                return SeasonData(title: $0.sson_choic_nm,
+                                  srisId:$0.sris_id, sortSeq: $0.sort_seq ?? 0,
+                                  synopsisData: data)
             }
             self.currentSeasonIdx = self.seasons.firstIndex(where:{ $0.srisId == synopsis.srisId }) ?? -1
         }
@@ -134,6 +139,7 @@ class RelationContentsModel:ObservableObject {
     }
     
     func setData(data:RelationContents?) {
+        self.isReady = true
         guard let data = data else {
             createTab()
             return

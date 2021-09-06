@@ -36,6 +36,8 @@ class PurchaseModel {
         prdTypCd = PrdTypCd(rawValue: prd_typ_cd) ?? .none //isFree, psson_yn  사용중이라 뒤에 호출
         poc_det_typ_cd_list =  product.poc_det_typ_cd_list
         sale_tgt_fg_yn =  product.sale_tgt_fg_yn
+        prd_prc_fr_dt_raw = product.prd_prc_fr_dt
+        prd_prc_to_dt_raw = product.prd_prc_to_dt
         self.setupProductRank()
          
     }
@@ -67,6 +69,8 @@ class PurchaseModel {
         prdTypCd = PrdTypCd(rawValue: prd_typ_cd) ?? .none //isFree, psson_yn  사용중이라 뒤에 호출
         poc_det_typ_cd_list =  purchas.poc_det_typ_cd_list
         sale_tgt_fg_yn =  purchas.sale_tgt_fg_yn
+        prd_prc_fr_dt_raw = purchas.prd_prc_fr_dt
+        prd_prc_to_dt_raw = purchas.prd_prc_to_dt
         self.setupProductRank()
     }
     
@@ -170,7 +174,7 @@ class PurchaseModel {
     var isRentPeriod: Bool { period != -1 || period_hour != -1 || period_min != -1 }
     var purcWatDDay: String { purc_wat_dd_cnt.description + purcWatDdFgCd.name }
     var salePrice: String {
-        let price  = self.sale_prc_vat
+        let price  = self.sale_prc_vat 
         return price.formatted(style: .decimal) + String.app.cash
     }
     var hasAuthority: Bool { self.isFree || self.isDirectview }
@@ -214,6 +218,8 @@ class PurchaseModel {
     private(set) var purc_wat_dd_fg_cd: String = ""
     private(set) var purc_wat_dd_cnt: Int = -1
     private(set) var sale_tgt_fg_yn: String?
+    private(set) var prd_prc_fr_dt_raw: String?
+    private(set) var prd_prc_to_dt_raw: String?
     private(set) var poc_det_typ_cd_list: [String]?
     
     var debugString: String {
@@ -246,49 +252,3 @@ public enum PurchasDataType {
 }
 
 
-//시리즈 상품 하위가 상품유형코드인가
-/**
- 상품유형코드
- */
-public enum PrdTypCd: String {
-    case none = "00" // 없음
-    case ppv = "10" // 단편 v
-    case pps = "20" // 시리즈 s
-    case vodppm = "30" //vod ppm
-    case vodppmterm = "32" // vod ppm 기간권
-    case cbvodppm = "34" //복합 vod ppm. 구매 목록에는 뜨면안됨
-    case cbppm = "35" //복합 ppm
-    case relvodppm = "36" //vod ppm 관련상품 구매 목록에는 뜨면안됨
-    case ppp = "41" //패키지 p
-    case relppp = "42" // ppm 커머스 상품. 플레이송스등. 구매했음 재생만가능. 구매 목록에는 뜨면안됨
-    
-    var name: String {
-        switch self {
-        case .ppv: return "ppv"
-        case .pps: return "pps"
-        case .vodppm: return "vod ppm"
-        case .vodppmterm: return "vod ppm 기간권"
-        case .cbvodppm: return "복합 vod ppm"
-        case .cbppm: return "복합 ppm"
-        case .relvodppm: return "vod ppm 관련상품"
-        case .ppp: return "ppp"
-        case .relppp: return "관련상품 ppp"
-        default: return "없음.\(self)"
-        }
-    }
-    
-    static var ppms: [PrdTypCd] {
-        [.vodppm, .vodppmterm]
-    }
-    static var cbPpms: [PrdTypCd] {
-        [.relvodppm, .cbvodppm]
-    }
-    static var allPpms: [PrdTypCd] {
-        ppms + cbPpms
-    }
-    /** all 기간권 / 복합 포함 */
-    static func isPPM(typCd: PrdTypCd, all: Bool = false) -> Bool {
-        return all ? allPpms.contains(typCd) : ppms.contains(typCd)
-    }
-
-}

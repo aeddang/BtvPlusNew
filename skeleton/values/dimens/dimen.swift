@@ -15,7 +15,7 @@ struct Dimen{
         public static let heavyUltra:CGFloat = isPad ? 150 : 100 //*
         public static let heavy:CGFloat = isPad ? 100 : 46 //*
         public static let heavyExtra:CGFloat = isPad ? 76 : 40 //*
-        public static let mediumUltra:CGFloat = isPad ? 72 : 35 //*
+        public static let mediumUltra:CGFloat = isPad ? 72 : 36 //*
         public static let medium:CGFloat = isPad ? 69 : 30 //*
         public static let mediumExtra:CGFloat = isPad ? 45 : 24 //*
         public static let regularUltra:CGFloat = isPad ? 43 : 22 //*
@@ -35,7 +35,7 @@ struct Dimen{
     }
 
     struct icon {
-        public static let heavyUltra:CGFloat = isPad ? 198 : 157 //*
+        public static let heavyUltra:CGFloat = isPad ? 198 : 158 //*
         public static let heavy:CGFloat = isPad ? 123 : 69 //*
         public static let heavyExtra:CGFloat = isPad ? 98 : 58 //*
         public static let mediumUltra:CGFloat = isPad ? 84 : 48 //*
@@ -51,7 +51,8 @@ struct Dimen{
         public static let tiny:CGFloat = isPad ? 21 : 17//*
         public static let tinyExtra:CGFloat = isPad ? 18 : 14//*
         public static let micro:CGFloat = isPad ? 16 : 12//*
-        public static let microExtra:CGFloat = 6//*
+        public static let microExtraUltra:CGFloat = isPad ? 13 : 11//*
+        public static let microExtra:CGFloat = isPad ? 9 : 6//*
     }
     
     struct tab {
@@ -119,7 +120,7 @@ struct Dimen{
     }
     
     struct app {
-        public static let bottom:CGFloat = isPad ? 65 : 60 //*
+        public static let bottom:CGFloat = isPad ? 66 : 60 //*
         public static let top:CGFloat = isPad ? 86 : 80 //*
         public static let pageTop:CGFloat = isPad ? 64 : 62 //*
         public static let keyboard:CGFloat = isPad ? 400 : 300
@@ -131,7 +132,7 @@ struct Dimen{
     }
     
     struct popup {
-        public static let regular:CGFloat = isPad ? 346.0 : 247.0
+        public static let regular:CGFloat = isPad ? 346.0 : 248.0
     }
 }
 

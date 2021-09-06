@@ -229,8 +229,15 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             }
         }
         
+        private var forceRetryCount:Int = 0
+        private var isForceRetry:Bool = false
         func forceRetry(webView: WKWebView) {
+            if isForceRetry {return}
+            if forceRetryCount == 3 {return}
+            isForceRetry = true
+            forceRetryCount += 1
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                self.isForceRetry = false
                 if webView.isLoading { webView.reload() }
             }
         }

@@ -123,8 +123,27 @@ struct PageKidsHome: PageView {
                 self.marginTop = KidsTop.height + DimenKids.margin.regular + self.sceneObserver.safeAreaTop
                 self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
                 if let obj = self.pageObject {
-                    self.menuId = (obj.getParamValue(key: .id) as? String) ?? self.menuId
-                    self.openId = obj.getParamValue(key: .subId) as? String
+                    var menu:KidsGnbItemData? = nil
+                    var openId:String? = nil
+                    
+                    if let openLink = obj.getParamValue(key: .link) as? String {
+                        let links = openLink.components(separatedBy: "|")
+                        if let tuple = self.dataProvider.bands.kidsGnbModel.getGnbData(links:links) {
+                            menu = tuple.0
+                            openId = openLink.replace(tuple.1, with: "")
+                        }
+                    }
+                    if let cid = obj.getParamValue(key: .cid) as? String {
+                        if let findMenu = self.dataProvider.bands.kidsGnbModel.getGnbData(menuCode: cid) {
+                            menu = findMenu
+                        }
+                    }
+                    if let findMenu = menu {
+                        self.menuId = findMenu.menuId ?? ""
+                    } else {
+                        self.menuId = (obj.getParamValue(key: .id) as? String) ?? self.menuId
+                    }
+                    self.openId = openId ?? obj.getParamValue(key: .subId) as? String
                     self.openPage = obj.getParamValue(key: .data) as? PageObject
                 }
                 if self.menuId.isEmpty {
@@ -151,8 +170,8 @@ struct PageKidsHome: PageView {
             if !self.menuId.isEmpty { self.reload() }
             return
         }
-        let isHome  = self.menuId == EuxpNetwork.MenuTypeCode.MENU_KIDS_HOME.rawValue
-        if isHome {
+        self.appSceneObserver.kidsGnbMenuId = self.menuId
+        if blockData.isHome {
             self.viewModel.updateKids(datas: blockData.blocks ?? [] , openId: self.openId)
         } else {
             self.viewModel.updateKids(data: blockData , openId: self.openId)

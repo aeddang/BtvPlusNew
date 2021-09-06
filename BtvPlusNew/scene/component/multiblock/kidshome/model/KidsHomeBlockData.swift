@@ -11,9 +11,9 @@ class KidsHomeBlockData:Identifiable, ObservableObject{
     static let code = "03"
     let id:String = UUID().uuidString
     var datas:[KidsHomeBlockListData] = []
-    
+    var blocks:[BlockItem]? = nil
     func setData(data:BlockData) -> KidsHomeBlockData{
-       
+        self.blocks = data.blocks
         data.blocks?.forEach{ block in
             if let svcPropCd = block.svc_prop_cd {
                 switch svcPropCd {
@@ -47,6 +47,7 @@ enum KidsHomeBlockListType {
 open class KidsHomeBlockListData:Identifiable {
     public var id: String = UUID().uuidString
     var type:KidsHomeBlockListType = .none
+    var blocks:[BlockItem] = []
 }
 
 

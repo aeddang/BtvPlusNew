@@ -17,12 +17,12 @@ class KidsGnbModel:Identifiable, ObservableObject{
     func setData(gnb:GnbBlock) {
         if let gnbs = gnb.gnbs {
             self.datas = gnbs.map{ gnb in
-                switch gnb.menu_id {
-                case EuxpNetwork.MenuTypeCode.MENU_KIDS_HOME.rawValue:
+                switch gnb.kidsz_gnb_cd {
+                case EuxpNetwork.KidsGnbCd.home.rawValue:
                     let item = KidsGnbItemData().setHomeData(data: gnb)
                     self.home = item
                     return item
-                case EuxpNetwork.MenuTypeCode.MENU_KIDS_MONTHLY.rawValue:
+                case EuxpNetwork.KidsGnbCd.monthlyTicket.rawValue:
                     let item = KidsGnbItemData().setData(gnb)
                     self.monthly = item
                     return item
@@ -37,11 +37,41 @@ class KidsGnbModel:Identifiable, ObservableObject{
     func getGnbDatas() -> [KidsGnbItemData] {
        return datas
     }
+    func getGnbData(menuCode:String)-> KidsGnbItemData? {
+        guard let band = self.datas.first(
+                where: { $0.menuCode == menuCode }) else { return nil }
+        return band
+    }
     
     func getGnbData(menuId:String)-> KidsGnbItemData? {
         guard let band = self.datas.first(
                 where: { $0.menuId == menuId }) else { return nil }
         return band
+    }
+    
+    func getGnbData(linkId:String)-> KidsGnbItemData? {
+        guard let band = self.datas.first(
+                where: { data in
+                    data.blocks?.first(where: {
+                        $0.menu_id == linkId
+                    }) != nil
+                }) else { return nil }
+        return band
+    }
+    
+    func getGnbData(links:[String])-> (KidsGnbItemData , String)?{
+        var findId:String = ""
+        guard let band = self.datas.first(
+                where: { data in
+                    data.blocks?.first(where: { block in
+                        links.first(where: {
+                            let isFind = block.menu_id == $0
+                            if isFind {findId = $0 }
+                            return isFind
+                        }) != nil
+                    }) != nil
+                }) else { return nil }
+        return (band, findId)
     }
     
     func getMyDatas() -> [BlockItem]? {
@@ -54,6 +84,7 @@ class KidsGnbItemData:InfinityData, ObservableObject{
     private(set) var imageOff: String = Asset.noImg1_1
     private(set) var title: String? = nil
     private(set) var menuId: String? = nil
+    private(set) var menuCode: String? = nil
     private(set) var blocks: [BlockItem]? = nil
     private(set) var isHome:Bool = false
     fileprivate(set) var idx:Int = -1
@@ -62,6 +93,7 @@ class KidsGnbItemData:InfinityData, ObservableObject{
         self.isHome = true
         self.title = data.menu_nm
         self.menuId = data.menu_id
+        self.menuCode = data.kidsz_gnb_cd
         self.imageOn = AssetKids.gnbTop.homeOn
         self.imageOff = AssetKids.gnbTop.homeOff
         self.blocks = data.blocks?.map{$0}
@@ -71,6 +103,7 @@ class KidsGnbItemData:InfinityData, ObservableObject{
     func setData(_ data:GnbItem) -> KidsGnbItemData {
         self.title = data.menu_nm
         self.menuId = data.menu_id
+        self.menuCode = data.kidsz_gnb_cd
         self.blocks = data.blocks?.map{$0}
         let size = CGSize(width: DimenKids.icon.heavy, height: DimenKids.icon.heavy)
         

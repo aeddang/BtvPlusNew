@@ -20,7 +20,7 @@ class CateBlockModel: PageDataProviderModel {
     private(set) var datas:[BlockData]? = nil
     private(set) var selectIdx:Int = -1
     private(set) var isAdult:Bool = false
-    
+    private(set) var isFree:Bool = false
     @Published private(set) var isUpdate = false {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
@@ -34,24 +34,28 @@ class CateBlockModel: PageDataProviderModel {
     }
     
     func update(data:BlockData, listType:CateBlock.ListType, idx:Int = -1,
-                cardType:BlockData.CardType? = nil, isAdult:Bool = false, key:String? = nil) {
+                cardType:BlockData.CardType? = nil, isAdult:Bool = false, isFree:Bool = false,
+                key:String? = nil) {
         self.data = data
         self.selectIdx = idx
         self.listType = listType
         self.cardType = cardType
         self.key = key
+        self.isFree = isFree
         self.menuId = data.menuId
         self.isAdult = isAdult
         self.isUpdate = true
     }
     
     func update(menuId:String?, listType:CateBlock.ListType,
-                cardType:BlockData.CardType? = nil, isAdult:Bool = false, key:String? = nil) {
+                cardType:BlockData.CardType? = nil, isAdult:Bool = false, isFree:Bool = false,
+                key:String? = nil) {
         self.listType = listType
         self.menuId = menuId
         self.cardType = cardType
         self.key = key
         self.data = nil
+        self.isFree = isFree
         self.isAdult = isAdult
         self.isUpdate = true
     }
@@ -613,7 +617,8 @@ struct CateBlock: PageComponent{
         }
         let type = self.viewModel.type
         let loadedDatas:[PosterData] = datas.map { d in
-            return PosterData(pageType: type).setData(data: d, cardType: .bookmarkedPoster)
+            return PosterData(pageType: type, usePrice: !self.viewModel.isFree)
+                .setData(data: d, cardType: .bookmarkedPoster)
         }
         setPosterSets(loadedDatas: loadedDatas)
     }
@@ -623,8 +628,10 @@ struct CateBlock: PageComponent{
             if self.videos.isEmpty {  self.onError() }
             return
         }
+        let type = self.viewModel.type
         let loadedDatas:[VideoData] = datas.map{ d in
-            return VideoData().setData(data: d, cardType: self.viewModel.cardType ?? .video)
+            return VideoData(pageType: type, usePrice: !self.viewModel.isFree)
+                .setData(data: d, cardType: self.viewModel.cardType ?? .video)
         }
         setVideoSets(loadedDatas: loadedDatas)
     }
@@ -637,7 +644,7 @@ struct CateBlock: PageComponent{
         }
         let type = self.viewModel.type
         let loadedDatas:[PosterData] = datas.map { d in
-            return PosterData(pageType: type).setData(data: d)
+            return PosterData(pageType: type, usePrice: !self.viewModel.isFree).setData(data: d)
         }
         
         setPosterSets(loadedDatas: loadedDatas)
@@ -650,7 +657,8 @@ struct CateBlock: PageComponent{
         }
         let type = self.viewModel.type
         let loadedDatas:[VideoData] = datas.map{ d in
-            return VideoData(pageType: type).setData(data: d, cardType: self.viewModel.cardType ?? .watchedVideo)
+            return VideoData(pageType: type, usePrice: !self.viewModel.isFree)
+                .setData(data: d, cardType: self.viewModel.cardType ?? .watchedVideo)
         }
         setVideoSets(loadedDatas: loadedDatas)
     }
@@ -662,7 +670,8 @@ struct CateBlock: PageComponent{
         }
         let type = self.viewModel.type
         let loadedDatas:[PosterData] = datas.map { d in
-            return PosterData(pageType: type).setData(data: d)
+            return PosterData(pageType: type, usePrice: !self.viewModel.isFree)
+                .setData(data: d)
         }
         setPosterSets(loadedDatas: loadedDatas)
     }
@@ -674,7 +683,8 @@ struct CateBlock: PageComponent{
         }
         let type = self.viewModel.type
         let loadedDatas:[VideoData] = datas.map{ d in
-            return VideoData(pageType: type).setData(data: d, cardType: self.viewModel.cardType ?? .video)
+            return VideoData(pageType: type, usePrice: !self.viewModel.isFree)
+                .setData(data: d, cardType: self.viewModel.cardType ?? .video)
         }
         setVideoSets(loadedDatas: loadedDatas)
     }

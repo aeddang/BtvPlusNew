@@ -108,7 +108,8 @@ struct KidsPlayerBody: PageComponent{
                             componentViewModel: self.componentViewModel,
                             synopsisData: self.synopsisData,
                             summaryViewerData: self.summaryViewerData,
-                            isBookmark: self.$isBookmark
+                            isBookmark: self.$isBookmark,
+                            isRecommandAble: self.synopsisModel?.isCancelProgram == false
                         )
                         .padding(.horizontal, DimenKids.margin.regular)
                         .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
@@ -149,7 +150,8 @@ struct KidsPlayerBody: PageComponent{
                             componentViewModel: self.componentViewModel,
                             synopsisData: self.synopsisData,
                             summaryViewerData: self.summaryViewerData,
-                            isBookmark: self.$isBookmark
+                            isBookmark: self.$isBookmark,
+                            isRecommandAble: self.synopsisModel?.isCancelProgram == false
                         )
                         .fixedSize(horizontal: false, vertical: true)
                     }

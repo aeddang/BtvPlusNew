@@ -11,6 +11,8 @@ import AVKit
 import Combine
 open class PlayerModel: ComponentObservable {
     static let TIME_SCALE:Double = 600
+    
+    
     var useAvPlayerController:Bool = false
     var useFullScreenButton:Bool = true
     var useFullScreenAction:Bool = true
@@ -36,6 +38,7 @@ open class PlayerModel: ComponentObservable {
     
     @Published fileprivate(set) var time:Double = 0.0
     @Published var isRunning = false
+    @Published var isReplay = false
     @Published var updateType:PlayerUpdateType = .update
     @Published var event:PlayerUIEvent? = nil{
         willSet{

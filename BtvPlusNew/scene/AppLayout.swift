@@ -84,14 +84,6 @@ struct AppLayout: PageComponent{
         .onReceive(self.appSceneObserver.$useLogCollector){ logCollector in
             self.useLogCollector = logCollector
         }
-        .onReceive(self.networkObserver.$status){ status in
-            if !self.setup.dataAlram {return}
-            switch status {
-            case .cellular :
-                self.onDataAlram()
-            default : break
-            }
-        }
         .onReceive(self.appSceneObserver.$event){ evt in
             guard let evt = evt else { return }
             switch evt  {
@@ -131,14 +123,12 @@ struct AppLayout: PageComponent{
                 self.hasPopup = self.pagePresenter.hasPopup
             }
             PageLog.d("currentPageType " + self.pageType.rawValue, tag:self.tag)
-            
             switch self.pageType {
             case .btv :
                 self.pagePresenter.bodyColor = Color.brand.bg
             case .kids :
                 self.pagePresenter.bodyColor = Color.kids.bg
             }
-            
             if self.appSceneObserver.useTopFix != false {
                 self.appSceneObserver.useTop = PageSceneModel.needTopTab(cPage)
             }
@@ -164,6 +154,14 @@ struct AppLayout: PageComponent{
                         self.pagePresenter.changePage(movePage)
                     }
                 }
+            default : break
+            }
+        }
+        .onReceive(self.repository.apiManager.$event){ evt in
+            guard let evt = evt else {return}
+            switch evt {
+            case .needUpdate(let flag, let msg) :
+                self.onUpdateAlram(flag: flag, msg: msg)
             default : break
             }
         }
@@ -210,13 +208,14 @@ struct AppLayout: PageComponent{
                 let names = UIFont.fontNames(forFamilyName: family)
                 PageLog.d("Family: \(family) Font names: \(names)")
             }
-             */
+            */
         }
     }
     
     @State var loadingInfo:[String]? = nil
     @State var isLoading = false
     @State var isInit = false
+    @State var isReady = false
     @State var isInitDataAlram = false
     @State var useLogCollector = false
     @State var toastMsg:String = ""
@@ -225,8 +224,6 @@ struct AppLayout: PageComponent{
     @State var isPairingHitchShowing:Bool = true
     @State var pageType:PageType = .btv
     @State var hasPopup:Bool = false
-    
-    
     
     @State private var delaySyncOrientation:AnyCancellable?
     func syncOrientation(){
@@ -245,22 +242,46 @@ struct AppLayout: PageComponent{
         self.delaySyncOrientation?.cancel()
         self.delaySyncOrientation = nil
     }
-    
-    func onDataAlram(){
-        if isInitDataAlram {return}
-        self.isInitDataAlram = true
-        self.appSceneObserver.alert = .confirm(String.alert.apns, String.alert.dataAlram , confirmText: nil) { isOk in
-            if !isOk {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        exit(0)
-                    }
+    func onUpdateAlram(flag:UpdateFlag, msg:String? = nil){
+        if flag == .force {
+            self.appSceneObserver.alert = .alert(
+                String.alert.update, msg ?? flag.defaultMessage){
+                AppUtil.goAppStore()
+                self.suspand()
+            }
+        } else {
+            self.appSceneObserver.alert = .confirm(
+                String.alert.update,
+                msg ?? flag.defaultMessage,
+                cancelText: String.alert.updateAfter){ isOk in
+                if isOk {
+                    AppUtil.goAppStore()
+                    self.suspand()
+                } else {
+                    self.repository.apiManager.initApi()
                 }
-
             }
         }
     }
+    func onDataAlram(){
+        self.appSceneObserver.alert = .confirm(String.alert.apns, String.alert.dataAlram , confirmText: nil) { isOk in
+            if !isOk {
+                self.suspand()
+            } else {
+                self.onPageStart()
+            }
+        }
+    }
+    
+    private func suspand(){
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                exit(0)
+            }
+        }
+    }
+    
     
     func onStoreInit(){
         //self.appSceneObserver.event = .debug("onStoreInit")
@@ -274,6 +295,14 @@ struct AppLayout: PageComponent{
     }
     
     func onPageInit(){
+        if self.networkObserver.status == .cellular && self.setup.dataAlram {
+            self.onDataAlram()
+            return
+        }
+        self.onPageStart()
+    }
+    
+    func onPageStart(){
         self.isInit = true
         self.isLoading = false
          

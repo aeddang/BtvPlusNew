@@ -14,10 +14,12 @@ struct FunctionViewer: PageComponent{
     var componentViewModel:PageSynopsis.ComponentViewModel
     var synopsisData:SynopsisData? = nil
     var funtionLayout:Axis = .vertical
+    
     //var srisId:String?
     //var epsdId:String?
     @Binding var isBookmark:Bool?
     @Binding var isLike:LikeStatus?
+    var isRecommandAble:Bool
     var isRecommand:Bool?
     
     @State var isPairing:Bool = false
@@ -49,7 +51,7 @@ struct FunctionViewer: PageComponent{
                 }
                 .buttonStyle(BorderlessButtonStyle())
                 .fixedSize()
-                if let srisId = self.synopsisData?.srisId{
+                if self.isRecommandAble, let srisId = self.synopsisData?.srisId{
                     HStack(alignment: .top, spacing:0){
                         ShareButton(
                             srisId:srisId,
@@ -86,7 +88,7 @@ struct FunctionViewer_Previews: PreviewProvider {
                 componentViewModel: .init(),
                 synopsisData:SynopsisData(),
                 isBookmark: .constant(false),
-                isLike: .constant(.unlike)
+                isLike: .constant(.unlike), isRecommandAble: true
             )
             .environmentObject(DataProvider())
             .environmentObject(PagePresenter())

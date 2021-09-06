@@ -254,7 +254,7 @@ struct PageRegistKid: PageView {
         
     }
     
-    private let birthYearList = AppUtil.getYearRange(len: 13, offset:0).map{
+    private let birthYearList = AppUtil.getYearRange(len: 99, offset:0).map{
         $0.description + String.app.year
     }
     private let birthMonthList = (1...12).map{
@@ -297,7 +297,12 @@ struct PageRegistKid: PageView {
             self.appSceneObserver.alert = .alert(nil, String.alert.kidsInvalidNickName)
             return
         }
-        
+        let age = self.birthDate.toDateFormatter(dateFormat: "yyyy").toInt()
+        let current = Date().toDateFormatter(dateFormat: "yyyy").toInt()
+        if (current - age) >= Kid.LIMITED_AGE {
+            self.appSceneObserver.alert = .alert(nil, String.alert.kidsInvalidBirth)
+            return
+        }
         let kid = Kid(nickName: self.nickName, characterIdx: self.characterIdx, birthDate: self.birthDate)
         self.pairing.requestPairing(.registKid(kid))
         

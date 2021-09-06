@@ -305,7 +305,7 @@ struct PageEditKid: PageView {
         }
     }
     
-    private let birthYearList = AppUtil.getYearRange(len: 13, offset:0).map{
+    private let birthYearList = AppUtil.getYearRange(len: 99, offset:0).map{
         $0.description + String.app.year
     }
     
@@ -346,9 +346,7 @@ struct PageEditKid: PageView {
     }
     
     private func deleteKid() {
-        guard let kid = self.editKid else {
-            return
-        }
+        guard let kid = self.editKid else { return }
         self.pairing.requestPairing(.deleteKid(kid))
       
     }
@@ -356,6 +354,12 @@ struct PageEditKid: PageView {
         if !self.isInputCompleted() {return}
         if !self.nickName.isNickNameType() {
             self.appSceneObserver.alert = .alert(nil, String.alert.kidsInvalidNickName)
+            return
+        }
+        let age = self.birthDate?.toDateFormatter(dateFormat: "yyyy").toInt() ?? 0
+        let current = Date().toDateFormatter(dateFormat: "yyyy").toInt()
+        if (current - age) >= Kid.LIMITED_AGE {
+            self.appSceneObserver.alert = .alert(nil, String.alert.kidsInvalidBirth)
             return
         }
         if let kid = self.editKid {

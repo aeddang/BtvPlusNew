@@ -309,7 +309,7 @@ struct PageKidsMultiBlock: PageView {
             delay = 0.1
         }
         reload(delay: delay)
-        self.openId = nil
+        
         self.setupRecommandGuide(data: cdata)
         
         var actionBody = MenuNaviActionBodyItem()
@@ -359,6 +359,7 @@ struct PageKidsMultiBlock: PageView {
                 let title = self.tabs.count > 1 ?  self.tabs[self.selectedTabIdx] : nil
                 self.multiBlockViewModel.updateKids(
                     datas: self.originDatas, openId: self.openId, title: title)
+                self.openId = nil
             }
         }
        
@@ -366,7 +367,7 @@ struct PageKidsMultiBlock: PageView {
     
     private func updatedMonthlyPurchaseInfo( _ info:MonthlyPurchaseInfo){
         guard let monthlyData = self.monthlyData  else { return }
-        if let item = info.purchaseList?
+        if let item = self.pairing.authority.monthlyPurchaseList?
             .first(where: {$0.prod_id == (monthlyData.isSubJoin ? monthlyData.parentPrdPrcId : monthlyData.prdPrcId)}){
             self.setupMonthlyGuide(ticketData: PurchaseTicketData().setData(data: item))
         } else {
@@ -380,7 +381,7 @@ struct PageKidsMultiBlock: PageView {
     
     private func updatedPeriodMonthlyPurchaseInfo( _ info:PeriodMonthlyPurchaseInfo){
         guard let monthlyData = self.monthlyData else { return }
-        if let item = info.purchaseList?
+        if let item = self.pairing.authority.periodMonthlyPurchaseList?
             .first(where: {$0.prod_id == (monthlyData.isSubJoin ? monthlyData.parentPrdPrcId : monthlyData.prdPrcId)}){
             self.setupMonthlyGuide(ticketData: PurchaseTicketData().setData(data: item))
           

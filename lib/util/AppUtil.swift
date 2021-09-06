@@ -21,6 +21,7 @@ struct AppUtil{
             return v
     }
     
+    
     static var build: Int {
         guard let dictionary = Bundle.main.infoDictionary,
             let b = dictionary["CFBundleVersion"] as? Int else {return 1}
@@ -42,6 +43,11 @@ struct AppUtil{
             return identifier.uuidString
         }
         return ""
+    }
+    
+    static func goAppStore(){
+        let path = "https://itunes.apple.com/kr/app/apple-store/id1255487920?mt=8"
+        Self.openURL(path)
     }
     
     static func hideKeyboard() {

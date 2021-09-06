@@ -145,6 +145,11 @@ struct TopBannerItem: PageComponent, Identifiable {
             .modifier(MatchParent())
             .background(Color.transparent.clearUi)
             .onTapGesture {
+                BannerData.move(
+                    pagePresenter: self.pagePresenter,
+                    dataProvider: self.dataProvider,
+                    data: self.data)
+                /*
                 if let move = data.move {
                     switch move {
                     case .home, .category:
@@ -176,7 +181,7 @@ struct TopBannerItem: PageComponent, Identifiable {
                             .addParam(key: .data, value: link)
                             .addParam(key: .title , value: data.title)
                     )
-                }
+                }*/
             }
         //}
         //.modifier(MatchParent())

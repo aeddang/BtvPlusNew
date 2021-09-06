@@ -56,12 +56,12 @@ extension BtvWebView{
             guard let requestList = eventData.requestList else { return }
             guard let resData = res.data as? MonthlyPurchaseInfo else { return }
             var normalList:[PurchaseFixedChargeItem] = []
-            var periodList:[PurchaseFixedChargePeriodItem] = []
-            if let purchaseNormalList = resData.purchaseNormalList {
-                normalList = purchaseNormalList.filter{$0.expired?.toBool() == true}
+            var periodList:[PurchaseFixedChargeItem] = []
+            if let purchaseNormalList = resData.purchaseList {
+                normalList = purchaseNormalList.filter{$0.expired?.toBool() == false}
             }
-            if let purchasePredList = resData.purchasePredList {
-                periodList = purchasePredList.filter{$0.expired?.toBool() == true}
+            if let purchasePredList = resData.purchaseList {
+                periodList = purchasePredList.filter{$0.expired?.toBool() == false}
             }
             var pointpolicynumList: [String] = []
             requestList.forEach { list in

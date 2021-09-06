@@ -38,6 +38,9 @@ class AppSceneObserver:ObservableObject{
     @Published var safeBottomLayerHeight:CGFloat = 0 // layerPlayer 포함
     @Published var safeBottom:CGFloat = 0
     
+    @Published var gnbMenuId:String? = nil
+    @Published var kidsGnbMenuId:String? = nil
+    
     @Published var loadingInfo:[String]? = nil
     @Published var alert:SceneAlert? = nil
     @Published var alertResult:SceneAlertResult? = nil {didSet{ if alertResult != nil { alertResult = nil} }}
@@ -46,10 +49,10 @@ class AppSceneObserver:ObservableObject{
     @Published var select:SceneSelect? = nil
     @Published var selectResult:SceneSelectResult? = nil {didSet{ if selectResult != nil { selectResult = nil} }}
     @Published var event:SceneEvent? = nil {didSet{ if event != nil { event = nil} }}
-    
     @Published var useLayerPlayer:Bool = false
     
     var pairingCompletedMovePage:PageObject? = nil
+    var finalBtvPage:PageObject? = nil
     
     var currentPlayer:PageSynopsis? = nil
     func cancelAll(){

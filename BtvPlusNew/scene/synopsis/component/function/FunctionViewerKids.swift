@@ -14,7 +14,7 @@ struct FunctionViewerKids: PageComponent{
     var synopsisData:SynopsisData? = nil
     var summaryViewerData:SummaryViewerData? = nil
     @Binding var isBookmark:Bool?
-   
+    var isRecommandAble:Bool
     var body: some View {
         ZStack{
             if SystemEnvironment.isTablet {
@@ -23,7 +23,8 @@ struct FunctionViewerKids: PageComponent{
                         componentViewModel: self.componentViewModel,
                         synopsisData: self.synopsisData,
                         summaryViewerData:self.summaryViewerData,
-                        isBookmark: self.$isBookmark)
+                        isBookmark: self.$isBookmark,
+                        isRecommandAble: self.isRecommandAble)
                 }
             } else {
                 VStack(alignment:.center , spacing:DimenKids.margin.regularExtra) {
@@ -31,7 +32,8 @@ struct FunctionViewerKids: PageComponent{
                         componentViewModel: self.componentViewModel,
                         synopsisData: self.synopsisData,
                         summaryViewerData:self.summaryViewerData,
-                        isBookmark: self.$isBookmark)
+                        isBookmark: self.$isBookmark,
+                        isRecommandAble: self.isRecommandAble)
                 }
             }
         }
@@ -47,7 +49,7 @@ struct FunctionViewerKidsBody: PageComponent{
     var synopsisData:SynopsisData? = nil
     var summaryViewerData:SummaryViewerData? = nil
     @Binding var isBookmark:Bool?
-   
+    var isRecommandAble:Bool
     var body: some View {
         if let data = summaryViewerData {
             PlayInfoButton(data: data)
@@ -70,7 +72,7 @@ struct FunctionViewerKidsBody: PageComponent{
             Spacer().frame(width:DimenKids.icon.light, height:DimenKids.icon.light)
         }
         
-        if let srisId = self.synopsisData?.srisId{
+        if self.isRecommandAble ,let srisId = self.synopsisData?.srisId {
             ShareButton(
                 type: .kids,
                 srisId:srisId,
@@ -92,7 +94,8 @@ struct FunctionViewerKids_Previews: PreviewProvider {
             FunctionViewerKids(
                 componentViewModel: .init(),
                 synopsisData:SynopsisData(),
-                isBookmark: .constant(false)
+                isBookmark: .constant(false),
+                isRecommandAble: true
             )
             .environmentObject(DataProvider())
             .environmentObject(PagePresenter())

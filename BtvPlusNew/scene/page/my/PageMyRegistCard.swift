@@ -99,7 +99,7 @@ struct PageMyRegistCard: PageView {
                                             idx: 0,
                                             input: self.$password,
                                             focusIdx: self.editType == .pw ? 0  : -1,
-                                            placeholder: String.pageText.myRegistCardPasswordPlaceHolder) {
+                                            placeholder: String.pageText.myRegistCardPasswordPlaceHolder, isSecure: true) {
                                             
                                         }
                                         .onTapGesture {

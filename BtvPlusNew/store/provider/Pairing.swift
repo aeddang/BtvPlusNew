@@ -72,6 +72,7 @@ class Pairing:ObservableObject, PageProtocol {
    
     @Published private(set) var hostDevice:HostDevice? = nil
     @Published private(set) var hostNickName:HostNickName? = nil
+    
     private(set) var stbId:String? = nil
     private(set) var phoneNumer:String = "01000000000"
     
@@ -87,15 +88,7 @@ class Pairing:ObservableObject, PageProtocol {
     var storage:Setup? = nil
     var naviLogManager:NaviLogManager? = nil
     
-    var currentHostInfoData:HostNickNameItem? {
-        get {
-            guard let host = self.hostNickName else { return nil }
-            guard let find = self.stbId else { return nil }
-            guard let hosts = host.stbList else { return nil }
-            guard let curHost = hosts.first(where:{$0.joined_stb_id == find}) else { return nil } 
-            return curHost
-        }
-    }
+    
     
     func requestPairing(_ request:PairingRequest){
         switch request {
@@ -236,6 +229,12 @@ class Pairing:ObservableObject, PageProtocol {
     
     func updateHostNicknameInfo(_ info:HostNickName){
         self.hostNickName = info
+    }
+    func getCurrentHostInfoData(_ host:HostNickName) -> HostNickNameItem? {
+        guard let find = self.stbId else { return nil }
+        guard let hosts = host.stbList else { return nil }
+        guard let curHost = hosts.first(where:{$0.joined_stb_id == find}) else { return nil }
+        return curHost
     }
     
     func updatedKidsProfiles(_ data:KidsProfiles? = nil, updateType:KesNetwork.UpdateType? = nil){

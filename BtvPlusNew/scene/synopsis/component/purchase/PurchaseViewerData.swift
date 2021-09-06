@@ -69,7 +69,8 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
             default :
                 self.setupBtvWatchInfo(synopsisModel: synopsisModel, isPairing: isPairing, purchas: purchas)
                 if isPairing == true {
-                    self.setupOption(purchasableItems: synopsisModel.purchasableItems, purchas: purchas)
+                    self.setupOption(
+                        synopsisModel:synopsisModel, purchasableItems: synopsisModel.purchasableItems, purchas: purchas)
                 }
                 if purchas.hasAuthority == true{
                     self.setupOption(watchItems: synopsisModel.watchOptionItems, purchas: purchas)
@@ -97,7 +98,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
     
     private func setupBtvWatchInfo(synopsisModel:SynopsisModel, isPairing:Bool? , purchas:PurchaseModel){
         if isPairing == true || synopsisModel.isPossonVODMode {
-            if purchas.isFree {
+            if synopsisModel.isFree {
                 infoTrailing = String.pageText.synopsisFreeWatch
             }
             else if purchas.isDirectview {
@@ -126,7 +127,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
             }
         }
         else{
-            if purchas.isFree {
+            if synopsisModel.isFree {
                 infoTrailing = String.pageText.synopsisFreeWatchBtv
             } else {
                 if synopsisModel.isContainPPM {
@@ -168,7 +169,8 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
         self.options = watchItems.map({$0.purStateText})
         self.optionValues = watchItems.map({$0.prdPrcId})
     }
-    private func setupOption(purchasableItems: [PurchaseModel]?, purchas:PurchaseModel){
+    private func setupOption(synopsisModel:SynopsisModel, purchasableItems: [PurchaseModel]?, purchas:PurchaseModel){
+        if synopsisModel.isFree {return}
         guard let purchasableItems =  purchasableItems else { return }
         guard let purchasableItem =  purchasableItems.first else { return }
         let leading = purchas.hasAuthority ? String.button.purchasAnother : String.button.purchas

@@ -76,11 +76,9 @@ struct MonthlyBlock: PageComponent {
             .padding(.top, Dimen.margin.lightExtra)
             .onTapGesture {
                 if self.isKids {
-                    let move = PageKidsProvider.getPageObject(.kidsMonthly)
-                        .addParam(key: .subId, value: self.currentData?.menuId)
                     self.pagePresenter.changePage(
                         PageKidsProvider.getPageObject(.kidsHome)
-                            .addParam(key: .data, value: move)
+                            .addParam(key: .id, value: self.currentData?.menuId)
                     )
                     return
                 }
@@ -219,7 +217,9 @@ struct MonthlyBlock: PageComponent {
                         self.tipLeading = String.monthly.textEnjoyPeriod
                     }
                 } else {
-                    self.tipLeading = String.monthly.textEnjoy
+                   
+                    self.tipLeading = currentData.prodTypeCd == .omnipack
+                        ? String.monthly.textEnjoyOmnipack : String.monthly.textEnjoy
                 }
             }
             
@@ -230,7 +230,8 @@ struct MonthlyBlock: PageComponent {
                 self.tipStrong = String.monthly.textFirstFreeStrong
                 self.tipTrailing = String.monthly.textFirstFreeTrailing
             } else {
-                self.tipLeading = String.monthly.textRecommand
+                self.tipLeading = currentData.prodTypeCd == .omnipack
+                    ? String.monthly.textRecommand :String.monthly.textRecommandOmnipack
                 
                 if currentData.isFirstFree == nil && self.pairing.status == .pairing {
                     self.dataProvider.requestData(q: .init(type: .getMonthlyData(currentData.prdPrcId, isDetail: false), isOptional:true))

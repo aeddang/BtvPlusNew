@@ -70,6 +70,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
                                     .addParam(key: .data, value: data)
                                     .addParam(key: .type, value: CateBlock.ListType.poster)
                                     .addParam(key: .subType, value:data.cardType)
+                                    .addParam(key: .isFree, value:!data.usePrice)
                             )
                         }
                     }

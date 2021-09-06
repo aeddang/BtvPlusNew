@@ -81,25 +81,24 @@ struct PageHome: PageView {
             }
             .onReceive(self.infinityScrollModel.$event){evt in
                 guard let evt = evt else {return}
-                if self.pagePresenter.currentTopPage?.pageID == .home {
-                    switch evt {
-                    case .top :
-                        withAnimation { self.isTop = true }
-                        self.appSceneObserver.useTopFix = true
-                        if self.pageObservable.layer == .top {
-                            self.appSceneObserver.event = .pairingHitch(isOn: true)
-                        }
-                    case .down :
-                        withAnimation{ self.isTop = false }
-                        self.appSceneObserver.useTopFix = false
-                        self.appSceneObserver.event = .pairingHitch(isOn: false)
-                        
-                    case .up :
-                        self.appSceneObserver.useTopFix = true
-                        self.appSceneObserver.event = .pairingHitch(isOn: false)
-                    default : break
-                    }
+                if self.pagePresenter.currentTopPage?.pageID != .home { return }
+                switch evt {
+                case .top :
+                    withAnimation { self.isTop = true }
+                    self.appSceneObserver.useTopFix = true
+                    self.appSceneObserver.event = .pairingHitch(isOn: true)
+                    
+                case .down :
+                    withAnimation{ self.isTop = false }
+                    self.appSceneObserver.useTopFix = false
+                    self.appSceneObserver.event = .pairingHitch(isOn: false)
+                    
+                case .up :
+                    self.appSceneObserver.useTopFix = true
+                    self.appSceneObserver.event = .pairingHitch(isOn: false)
+                default : break
                 }
+                
             }
             
             .onReceive(self.pairing.authority.$purchaseLowLevelTicketList){ list in
@@ -192,6 +191,8 @@ struct PageHome: PageView {
                 self.menuId = (obj.getParamValue(key: .id) as? String) ?? self.menuId
                 self.openId = obj.getParamValue(key: .subId) as? String
                 self.selectedMonthlyId = obj.getParamValue(key: .type) as? String
+                
+                self.appSceneObserver.gnbMenuId = self.menuId
             }
             .onDisappear{
                 self.appSceneObserver.useTopFix = nil
@@ -215,7 +216,7 @@ struct PageHome: PageView {
     @State var useFooter:Bool = false
     @State var isFree:Bool = false
     @State var monthlyheader:MonthlyBlock? = nil
-    
+  
     private func reset(){
         /*
         self.currentBand  = nil
@@ -248,7 +249,9 @@ struct PageHome: PageView {
     
     private func reload(selectedMonthlyId:String? = nil){
         self.selectedMonthlyId = selectedMonthlyId ?? self.selectedMonthlyId
-        self.sortedMonthlyDatas?.forEach{$0.reset()}
+        self.monthlyDatas?.forEach{ data in
+            data.reset()
+        }
         self.requestTopBanner()
     }
     
@@ -292,15 +295,17 @@ struct PageHome: PageView {
     private func requestBand(){
         guard let band = self.dataProvider.bands.getData(menuId: self.menuId) else { return }
         self.currentBand = band
-        self.isFree = false
         switch band.gnbTypCd {
         case EuxpNetwork.GnbTypeCode.GNB_HOME.rawValue :
+            self.isFree = false
             self.useFooter = true
             self.setupBlocks()
         case EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue:
+            self.isFree = true
             self.setupOcean()
             self.setupBlocks()
         case EuxpNetwork.GnbTypeCode.GNB_MONTHLY.rawValue :
+            self.isFree = true
             self.setupOriginMonthly()
         case EuxpNetwork.GnbTypeCode.GNB_FREE.rawValue :
             self.isFree = true
@@ -308,11 +313,13 @@ struct PageHome: PageView {
         default: self.setupBlocks()
         }
     }
-    
     //Ocean
     private func setupOcean(){
-        guard let oceanBlock = self.dataProvider.bands.getMonthlyBlockData(name: self.currentBand?.name) else { return }
-        self.selectedMonthlyId = oceanBlock.prd_prc_id
+        if let oceanBlock = self.dataProvider.bands.getMonthlyBlockData(name: self.currentBand?.name) {
+            self.selectedMonthlyId = oceanBlock.prd_prc_id
+        } else {
+            self.selectedMonthlyId = EuxpNetwork.PrdPrcIdCode.OCEAN.rawValue
+        }
         if self.pairing.status == .pairing {
             self.pairing.authority.requestAuth(.updateMonthlyPurchase(isPeriod: false))
         } else {
@@ -323,7 +330,7 @@ struct PageHome: PageView {
     private func updatedMonthlyPurchaseInfo( _ info:MonthlyPurchaseInfo){
         guard let band = self.currentBand  else { return }
         if band.gnbTypCd != EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue {return}
-        if info.purchaseList?.first(where: {$0.prod_id == self.selectedMonthlyId}) != nil {
+        if self.pairing.authority.monthlyPurchaseList?.first(where: {$0.prod_id == self.selectedMonthlyId}) != nil {
             self.tipBlockData = TipBlockData()
                 .setupTip(
                     icon: Asset.icon.logoOcean,
@@ -340,7 +347,7 @@ struct PageHome: PageView {
     private func updatedPeriodMonthlyPurchaseInfo( _ info:PeriodMonthlyPurchaseInfo){
         guard let band = self.currentBand  else { return }
         if band.gnbTypCd != EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue {return}
-        if info.purchaseList?.first(where: {$0.prod_id == self.selectedMonthlyId}) != nil {
+        if self.pairing.authority.periodMonthlyPurchaseList?.first(where: {$0.prod_id == self.selectedMonthlyId}) != nil {
             self.tipBlockData = TipBlockData()
                 .setupTip(leading: String.monthly.oceanPeriodAuth)
             
@@ -355,8 +362,17 @@ struct PageHome: PageView {
     
     private func setupPurchaseTip (isFirstFree:Bool = false){
         guard let band = self.currentBand  else { return }
-        guard let oceanBlock = self.dataProvider.bands.getMonthlyBlockData(name: band.name) else { return }
-        let phaseData = MonthlyData().setData(data: oceanBlock)
+        guard let blocksData = self.dataProvider.bands.getData(menuId: self.menuId)?.blocks else {
+            self.tipBlockData = TipBlockData()
+                .setupTip(
+                    leading: String.monthly.oceanPurchaseLeading,
+                    icon: Asset.icon.logoOcean,
+                    trailing: String.monthly.oceanPurchaseTrailing)
+            return
+            
+        }
+        
+        let phaseData = MonthlyData().setData(band: band, prdPrcId: self.selectedMonthlyId, blocks: blocksData)
         if isFirstFree {
             self.tipBlockData = TipBlockData()
                 .setupPurchase(
@@ -373,14 +389,15 @@ struct PageHome: PageView {
                     trailing: String.monthly.oceanPurchaseTrailing,
                     data: phaseData)
         }
-        
     }
+    
+    
     
     
     //Monthly
     private func setupOriginMonthly(){
         if self.originMonthlyDatas == nil {
-            if self.selectedMonthlyId == nil { self.selectedMonthlyId = Self.finalSelectedMonthlyId }
+            //if self.selectedMonthlyId == nil { self.selectedMonthlyId = Self.finalSelectedMonthlyId }
             var originMonthlyDatas = [String:MonthlyData]()
             let maxCount = Self.maxMonthlyConty
             var idx = 0
@@ -396,6 +413,12 @@ struct PageHome: PageView {
                 return !blocks.isEmpty
             }
             .forEach{ data in
+                if self.selectedMonthlyId == nil, let openId = self.openId {
+                    let find = data.blocks?.filter({$0.menu_id != nil}).first(where: {openId.contains( $0.menu_id! )})
+                    if find != nil {
+                        self.selectedMonthlyId = data.prd_prc_id
+                    }
+                }
                 let monthly = MonthlyData().setData(data: data, idx: idx)
                 monthly.posIdx = idx
                 if monthly.prdPrcId == self.selectedMonthlyId { monthly.setSelected(true) }
@@ -412,11 +435,14 @@ struct PageHome: PageView {
     }
 
     private func requestMonthly(){
-        self.originMonthlyDatas?.forEach{$1.resetJoin()}
-        if self.pairing.status == .pairing {
-            self.pairing.authority.requestAuth(.updateTicket)
+        if self.monthlyheader == nil {
+            if self.pairing.status == .pairing {
+                self.pairing.authority.requestAuth(.updateTicket)
+            } else {
+                self.syncronizeMonthly()
+            }
         } else {
-            self.syncronizeMonthly()
+            self.setupMonthly()
         }
     }
     

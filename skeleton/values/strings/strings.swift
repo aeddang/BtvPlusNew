@@ -70,12 +70,14 @@ extension String {
         public static let preview = "playerPreview".loaalized()
         public static let cookie = "playerCookie".loaalized()
         public static let next = "playerNext".loaalized()
+        public static let nextSeason = "playerNextSeason".loaalized()
         public static let directPlay = "playerDirectPlay".loaalized()
         public static let season = "playerSeason".loaalized()
         public static let continuePlay = "playerContinuePlay".loaalized()
         public static let adTitlec = "playerAdTitle".loaalized()
         public static let adMore = "playerAdMore".loaalized()
         public static let adCancel = "playerAdCancel".loaalized()
+        public static let replay = "playerReplay".loaalized()
     }
     
     struct remote {
@@ -107,6 +109,9 @@ extension String {
         public static let textEnjoyPeriod = "monthlyTextEnjoyPeriod".loaalized()
         public static let textKidsLeading = "monthlyTextKidsLeading".loaalized()
         public static let textKidsTrailing = "monthlyTextKidsTrailing".loaalized()
+        
+        public static let textRecommandOmnipack = "monthlyTextRecommandOmnipack".loaalized()
+        public static let textEnjoyOmnipack = "monthlyTextEnjoyOmnipack".loaalized()
 
         public static let textFirstFreeStrong = "monthlyTextFirstFreeStrong".loaalized()
         public static let textFirstFreeTrailing = "monthlyTextFirstFreeTrailing".loaalized()
@@ -146,6 +151,7 @@ extension String {
         public static let searchTitle = "voiceSearchTitle".loaalized()
         public static let searchText = "voiceSearchText".loaalized()
         public static let searchTextKids = "voiceSearchTextKids".loaalized()
+        public static let searchingTextKids = "voiceSearchingKids".loaalized()
     }
 
     struct share {

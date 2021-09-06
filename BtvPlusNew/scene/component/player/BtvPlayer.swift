@@ -10,6 +10,7 @@ import SwiftUI
 
 struct BtvPlayer: PageComponent{
     @EnvironmentObject var repository:Repository
+    @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var pagePresenter:PagePresenter
@@ -20,6 +21,7 @@ struct BtvPlayer: PageComponent{
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel() 
     @ObservedObject var prerollModel: PrerollModel = PrerollModel()
     @ObservedObject var listViewModel: InfinityScrollModel = InfinityScrollModel()
+    @ObservedObject var insideModel: BtvInsideModel = BtvInsideModel()
     var playGradeData: PlayGradeData? = nil
     var title:String? = nil
     var thumbImage:String? = nil
@@ -27,6 +29,8 @@ struct BtvPlayer: PageComponent{
     var contentID:String? = nil
     var listData:PlayListData = PlayListData()
     var playerType:BtvPlayerType = .normal
+    
+   
     var body: some View { 
         GeometryReader { geometry in
             ZStack{
@@ -44,7 +48,7 @@ struct BtvPlayer: PageComponent{
                             )
                         }
                         PlayerEffect(viewModel: self.viewModel)
-                        PlayerBottom(viewModel: self.viewModel)
+                        PlayerBottom(viewModel: self.viewModel, insideModel: self.insideModel)
                         PlayerTop(viewModel: self.viewModel, title: self.title)
                         PlayerListTab( viewModel: self.viewModel, listTitle:self.listData.listTitle, title: self.listData.title,
                                       listOffset:self.playListOffset + ListItem.video.size.height)
@@ -160,7 +164,13 @@ struct BtvPlayer: PageComponent{
                 case .portrait : self.pagePresenter.fullScreenExit()
                 }
             }
-            
+            .onReceive(self.viewModel.$streamEvent) { evt in
+                guard let evt = evt else { return }
+                switch evt {
+                case .seeked : self.viewModel.seeking = 0
+                default : break
+                }
+            }
             .onReceive(self.viewModel.$event) { evt in
                 guard let evt = evt else { return }
                 switch evt {
@@ -169,7 +179,7 @@ struct BtvPlayer: PageComponent{
                 case .seeking(let willTime):
                     let diff =  willTime - self.viewModel.time
                     self.viewModel.seeking = diff
-                    
+               
                 case .resume :
                     if self.isPrerollPause {
                         ComponentLog.d("isPrerollPause retry" , tag: self.tag)
@@ -197,7 +207,7 @@ struct BtvPlayer: PageComponent{
             .onReceive(self.viewModel.$selectQuality){ quality in
                 self.setup.selectedQuality = quality?.name
                 self.viewModel.selectedQuality = quality?.name
-                self.viewModel.currentQuality = quality 
+                self.viewModel.currentQuality = quality
             }
             .onReceive(self.viewModel.$duration){ d in
                 if d < 10 { return }
@@ -235,7 +245,16 @@ struct BtvPlayer: PageComponent{
                 }
                 
             }
-            
+            .onReceive(self.dataProvider.$result) {res in
+                guard let res = res else {return}
+                switch res.type {
+                case .getInsideInfo(let cid) :
+                   // if cid != self.contentID {return}
+                    guard let data = res.data as? InsideInfo else { return }
+                    self.insideModel.setData(data: data)
+                default : break
+                }
+            }
             .onReceive(self.viewModel.$btvUiEvent) { evt in
                 guard let evt = evt else { return }
                     switch evt {
@@ -339,6 +358,13 @@ struct BtvPlayer: PageComponent{
         ComponentLog.d("continuousTime " + t.description, tag: self.tag)
         DispatchQueue.main.async {
             self.viewModel.event = .load(path, true , t, self.viewModel.header)
+           
+            if self.viewModel.useInside, let epsdId = self.contentID {
+                if self.insideModel.epsdId != epsdId  {
+                    self.insideModel.reset(epsdId: epsdId)
+                    self.dataProvider.requestData(q: .init(type: .getInsideInfo(epsdId: epsdId), isOptional:true))
+                }
+            }
         }
         
     }

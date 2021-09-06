@@ -410,7 +410,7 @@ struct PageSynopsis: PageView {
     Data process
     */
     enum SingleRequestType:String {
-        case preview, changeOption, relationContents, prohibitionSimultaneous, watchBtv
+        case preview, changeOption, changeSeasonFirst,  relationContents, prohibitionSimultaneous, watchBtv
     }
     enum UiType{
         case simple, normal
@@ -532,7 +532,11 @@ struct PageSynopsis: PageView {
     func historyBack(){
         if self.isFullScreen {
             DispatchQueue.main.async {
-                self.pagePresenter.requestDeviceOrientation(.portrait)
+                if self.type == .btv && !SystemEnvironment.isTablet {
+                    self.pagePresenter.requestDeviceOrientation(.portrait)
+                } else {
+                    self.pagePresenter.fullScreenExit()
+                }
             }
             return
         }
@@ -600,21 +604,9 @@ struct PageSynopsis: PageView {
         
         case Self.getAuth :
             guard let model = self.synopsisModel else {return}
-          
+            let isWatchAble = self.checkWatchLvAuth()
+            if !isWatchAble {return}
             if self.isPairing == true {
-                if self.episodeViewerData?.isAdult == true && !SystemEnvironment.isAdultAuth, let currentPage = self.pageObject{
-                    let redirectPage = PageProvider
-                        .getPageObject(currentPage.pageID)
-                        .addParam(key: .data, value: currentPage.getParamValue(key:.data))
-                        .addParam(key: .watchLv, value: 19)
-                    self.onLayerPlayerDisappear()
-                    self.pagePresenter.closePopup(currentPage.id)
-                    DispatchQueue.main.async {
-                        self.pagePresenter.openPopup(redirectPage)
-                    }
-                   
-                    return
-                }
                 if model.synopsisType == .seriesChange , let prevDirectView = self.prevDirectView {
                     self.setupDirectView(prevDirectView, isSeasonWatchAll:true) // 권한 대이타 재사용
                     self.pageDataProviderModel.requestProgressSkip()
@@ -622,11 +614,6 @@ struct PageSynopsis: PageView {
                     self.pageDataProviderModel.requestProgress(q: .init(type: .getDirectView(model)))
                 }
             }else{
-                if self.episodeViewerData?.isAdult == true {
-                    self.appSceneObserver.alert = .needPairing()
-                    self.pagePresenter.closePopup(self.pageObject?.id)
-                    return
-                }
                 self.pageDataProviderModel.requestProgressSkip()
                 
             }
@@ -653,7 +640,12 @@ struct PageSynopsis: PageView {
                 }
             }
             else {
-                self.synopsisPlayType = .vod()
+                switch self.synopsisPlayType {
+                case .unknown:
+                    self.synopsisPlayType = .vod()
+                default:
+                    break
+                }
                 self.pageDataProviderModel.requestProgress(q: .init(type: .getPlay(self.epsdRsluId,  self.pairing.hostDevice )))
             }
             self.progressCompleted = true
@@ -737,6 +729,8 @@ struct PageSynopsis: PageView {
             }else if res.id.hasPrefix( SingleRequestType.watchBtv.rawValue ) {
                 guard let data = res.data as? ResultMessage else { return }
                 self.watchBtvCompleted(isSuccess: data.header?.result == ApiCode.success)
+            } else {
+                self.onInsideRespond(res: res)
             }
         }
     }
@@ -747,16 +741,18 @@ struct PageSynopsis: PageView {
         case 1 : self.progressError = true
         default :
             if  err.id.hasPrefix( SingleRequestType.relationContents.rawValue ) {
-                PageLog.d("error relationContents", tag: self.tag)
+                PageLog.e("error relationContents", tag: self.tag)
                 self.setupRelationContent(nil)
             }else if  err.id.hasPrefix( SingleRequestType.preview.rawValue ) {
-                PageLog.d("error preview", tag: self.tag)
+                PageLog.e("error preview", tag: self.tag)
                 self.errorProgress()
             }else if  err.id.hasPrefix( SingleRequestType.changeOption.rawValue ) {
-                PageLog.d("error changeOption", tag: self.tag)
+                PageLog.e("error changeOption", tag: self.tag)
                 self.errorProgress()
             }else if err.id.hasPrefix( SingleRequestType.watchBtv.rawValue ) {
                 self.watchBtvCompleted(isSuccess: false)
+            } else {
+                self.onInsideRespondErroe(err: err)
             }
         }
     }
@@ -769,7 +765,7 @@ struct PageSynopsis: PageView {
         }
         self.checkCornerPlay()
         
-        guard let synopsisModel = self.synopsisModel else { return }
+        //guard let synopsisModel = self.synopsisModel else { return }
         if self.relationContentsModel.isReady {
             PageLog.d("already synopsisRelationData", tag: self.tag)
             self.setupRelationContentCompleted ()
@@ -777,7 +773,7 @@ struct PageSynopsis: PageView {
             return
         }
         
-        self.relationContentsModel.setData(synopsis: synopsisModel)
+        
         self.playListData = PlayListData(
             listTitle: String.pageText.synopsisSirisView,
             title: self.relationContentsModel.serisTitle,
@@ -816,9 +812,7 @@ struct PageSynopsis: PageView {
         if self.isAfterPurchase {
             self.isAfterPurchase = false
             if self.hasAuthority == true {
-                DispatchQueue.main.async {
-                    self.pagePresenter.requestDeviceOrientation(.landscape)
-                }
+                self.onFullScreenViewMode()
             }
         }
         
@@ -837,6 +831,7 @@ struct PageSynopsis: PageView {
     private func setupProhibitionSimultaneous(_ data:ProhibitionSimultaneous){
         if data.has_authority?.toBool() == false {
             let reason = VlsNetwork.ProhibitionReason.getType(data.has_authority_reason)
+            self.playerModel.event = .pause
             self.playerModel.event = .stop
             self.appSceneObserver.alert = .alert(String.alert.playProhibitionSimultaneous, reason.reason){
                 self.pagePresenter.closePopup(self.pageObject?.id)
@@ -910,6 +905,7 @@ struct PageSynopsis: PageView {
         PageLog.d("setupDirectView", tag: self.tag)
         self.purchaseWebviewModel?.setParam(directView: data, monthlyPid: nil)
         self.synopsisModel?.setData(directViewData: data, isSeasonWatchAll: isSeasonWatchAll)
+        self.relationContentsModel.setData(synopsis: self.synopsisModel)
         self.isBookmark = self.synopsisModel?.isBookmark
         PageLog.d("self.isBookmark " + (self.isBookmark?.description ?? "nil"), tag: self.tag)
         self.purchasViewerData = PurchaseViewerData(type: self.type).setData(
@@ -929,7 +925,7 @@ struct PageSynopsis: PageView {
         self.textInfo = self.purchasViewerData?.serviceInfo
         self.epsdRsluId = self.synopsisModel?.curSynopsisItem?.epsd_rslu_id ?? self.synopsisModel?.epsdRsluId ?? ""
         if self.purchasViewerData?.isPlayAble == true, let curSynopsisItem = self.synopsisModel?.curSynopsisItem {
-            self.hasAuthority = curSynopsisItem.hasAuthority
+            self.hasAuthority = curSynopsisItem.hasAuthority || (self.synopsisModel?.isFree ?? false)
         } else{
             self.hasAuthority = false
         }
@@ -938,6 +934,7 @@ struct PageSynopsis: PageView {
     }
     
     private func setupPreview (_ data:Preview){
+        self.relationContentsModel.setData(synopsis: self.synopsisModel)
         if data.result != ApiCode.success {
             PageLog.d("fail PreviewInfo", tag: self.tag)
             self.errorProgress()
@@ -952,7 +949,8 @@ struct PageSynopsis: PageView {
         if let synopsis = self.synopsisModel {
             let prerollData = SynopsisPrerollData()
                 .setData(data: synopsis, playType: self.synopsisPlayType, epsdRsluId: self.epsdRsluId)
-            self.playerData = SynopsisPlayerData().setData(type: self.synopsisPlayType, synopsis: synopsis)
+            self.playerData = SynopsisPlayerData()
+                .setData(type: self.synopsisPlayType, synopsis: synopsis, relationContentsModel: self.relationContentsModel)
             self.playerModel
                 .setData(synopsisPrerollData: prerollData)
                 .setData(synopsisPlayData: self.playerData)
@@ -978,7 +976,7 @@ struct PageSynopsis: PageView {
             let prerollData = SynopsisPrerollData()
                 .setData(data: synopsis, playType: self.synopsisPlayType, epsdRsluId: self.epsdRsluId)
             self.playerData = SynopsisPlayerData()
-                .setData(type: self.synopsisPlayType, synopsis: synopsis)
+                .setData(type: self.synopsisPlayType, synopsis: synopsis, relationContentsModel:self.relationContentsModel)
             self.playerModel
                 .setData(synopsisPrerollData: prerollData)
                 .setData(synopsisPlayData: self.playerData)
@@ -992,6 +990,45 @@ struct PageSynopsis: PageView {
        
     }
     
+    private func checkWatchLvAuth() -> Bool{
+        guard let model = self.synopsisModel else {return false}
+        if self.isPairing == true {
+            if self.episodeViewerData?.isAdult == true && !SystemEnvironment.isAdultAuth{
+                self.redirectPage(watchLv: 19)
+                return false
+            }
+            if !SystemEnvironment.isAdultAuth ||
+                ( !SystemEnvironment.isWatchAuth && SystemEnvironment.watchLv != 0 )
+            {
+                let watchLv = model.watchLevel
+                if SystemEnvironment.watchLv != 0 && SystemEnvironment.watchLv <= watchLv {
+                    self.redirectPage(watchLv: watchLv)
+                    return false
+                }
+            }
+        }else{
+            if self.episodeViewerData?.isAdult == true {
+                self.appSceneObserver.alert = .needPairing()
+                self.pagePresenter.closePopup(self.pageObject?.id)
+                return false
+            }
+        }
+        return true
+    }
+    
+    private func redirectPage(watchLv:Int){
+        guard let currentPage = self.pageObject else {return}
+        let redirectPage = PageProvider
+            .getPageObject(currentPage.pageID)
+            .addParam(key: .data, value: currentPage.getParamValue(key:.data))
+            .addParam(key: .watchLv, value: watchLv)
+        self.onLayerPlayerDisappear()
+        self.pagePresenter.closePopup(currentPage.id)
+        DispatchQueue.main.async {
+            self.pagePresenter.openPopup(redirectPage)
+        }
+    }
+    
     private func checkCornerPlay(){
         if let progressTime = self.synopsisData?.progressTime {
             if !self.isPlayAble {
@@ -1000,13 +1037,25 @@ struct PageSynopsis: PageView {
             }
             if self.hasAuthority == true {
                 self.playerModel.continuousProgressTime = progressTime
+                self.onFullScreenViewMode()
             } else {
                 if self.pairing.status == .pairing {
                     if self.synopsisModel?.isOnlyPurchasedBtv == true {
                         self.appSceneObserver.alert = .alert(nil, String.pageText.synopsisCornerPlayOnlyPurchasedBtv)
                     } else {
                         guard  let model = self.purchaseWebviewModel else { return }
-                        self.appSceneObserver.alert = .needPurchase(model, String.pageText.synopsisCornerPlayNeedPurchased)
+                        self.appSceneObserver.alert = .confirm( String.alert.purchase, String.pageText.synopsisCornerPlayNeedPurchased, confirmText: String.button.purchas){ isOk in
+                            if isOk {
+                                let ani:PageAnimationType = SystemEnvironment.currentPageType == .btv ? .horizontal : .opacity
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(.purchase, animationType: ani)
+                                        .addParam(key: .data, value: model)
+                                )
+                            } else {
+                                self.synopsisData?.progressTime = nil
+                            }
+                            
+                        }
                     }
                     
                 } else {
@@ -1049,6 +1098,7 @@ struct PageSynopsis: PageView {
        }
    }
     private func selectedRelationContent (idx:Int){
+        self.relationContentsModel.serisSortType = nil
         self.updateRelationTabButtons(idx: idx)
         self.tabNavigationModel.index = idx
         self.selectedRelationTabIdx = idx
@@ -1084,6 +1134,12 @@ struct PageSynopsis: PageView {
     /*
      Player process
      */
+    func onFullScreenViewMode(){
+        if SystemEnvironment.isTablet {return}
+        DispatchQueue.main.async {
+            self.pagePresenter.requestDeviceOrientation(.landscape)
+        }
+    }
     
     func changeOption(_ option:PurchaseModel?){
         guard let option = option else { return }
@@ -1099,6 +1155,8 @@ struct PageSynopsis: PageView {
         self.setupHistory(synopsisData:synopsisData, isHistoryBack:isHistoryBack)
         self.resetPage(isAllReset: true, isRedirectPage:isRedirectPage)
     }
+    
+    
     
     func changeVod(epsdId:String?, isHistoryBack:Bool=false){
         guard let epsdId = epsdId else { return }

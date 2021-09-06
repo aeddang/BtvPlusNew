@@ -63,6 +63,8 @@ class SceneDelegate: PageSceneDelegate {
        
         guard let willPage = page else { return false }
         if PageType.getType(willPage.pageGroupID) == .kids && SystemEnvironment.currentPageType != .kids {
+            
+            self.repository?.appSceneObserver?.finalBtvPage = self.pagePresenter.currentPage
             if page?.pageID != .kidsIntro && !SystemEnvironment.isInitKidsPage {
                 self.pagePresenter.changePage(
                     PageKidsProvider.getPageObject(.kidsIntro)
@@ -115,24 +117,25 @@ class SceneDelegate: PageSceneDelegate {
         //시청연령제한
         if !SystemEnvironment.isAdultAuth ||
             ( !SystemEnvironment.isWatchAuth && SystemEnvironment.watchLv != 0 ),
-            let watchLv = watchLv {
-                if SystemEnvironment.watchLv != 0 && SystemEnvironment.watchLv <= watchLv {
-                    if SystemEnvironment.currentPageType == .btv {
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.confirmNumber)
-                                .addParam(key: .data, value: page)
-                                .addParam(key: .type, value: ScsNetwork.ConfirmType.adult)
-                        )
-                    } else {
-                        self.pagePresenter.openPopup(
-                            PageKidsProvider.getPageObject(.kidsConfirmNumber)
-                                .addParam(key: .data, value: page)
-                                .addParam(key: .type, value: PageKidsConfirmType.watchLv)
-                        )
-                    }
-                    return false
+            let watchLv = watchLv
+        {
+            if SystemEnvironment.watchLv != 0 && SystemEnvironment.watchLv <= watchLv {
+                if SystemEnvironment.currentPageType == .btv {
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.confirmNumber)
+                            .addParam(key: .data, value: page)
+                            .addParam(key: .type, value: ScsNetwork.ConfirmType.adult)
+                    )
+                } else {
+                    self.pagePresenter.openPopup(
+                        PageKidsProvider.getPageObject(.kidsConfirmNumber)
+                            .addParam(key: .data, value: page)
+                            .addParam(key: .type, value: PageKidsConfirmType.watchLv)
+                    )
                 }
+                return false
             }
+        }
         
         if let layerPlayer = self.repository?.appSceneObserver?.currentPlayer  {
             if willPage.pageGroupID == PageType.kids.rawValue {

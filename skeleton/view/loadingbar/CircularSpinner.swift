@@ -35,19 +35,14 @@ struct CircularSpinner: View {
     @State private var ani:AnyCancellable?
     private func aniStart(){
         self.ani?.cancel()
-        let d:Double = 0.5
-        withAnimation(.easeInOut(duration: d)){
-            self.degree = 360
-        }
+        let d:Double = 0.03
+        self.degree = 0
+        
         self.ani = Timer.publish(
             every: d, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
-                self.degree = 0
-                withAnimation(.easeInOut(duration: d)){
-                    self.degree = 360
-                }
-                
+                self.degree += 10
             }
     }
 }

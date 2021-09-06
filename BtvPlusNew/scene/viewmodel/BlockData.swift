@@ -28,11 +28,14 @@ class BlockData:InfinityData, ObservableObject{
     private(set) var isCountView:Bool = false
     private(set) var childrenBlock:[BlockData] = []
     private(set) var searchType:SearchType = .none
+    private(set) var openId:String? = nil
+  
     var errorMassage:String? = nil
     
     @Published private(set) var status:BlockStatus = .initate
     
     var kid:Kid? = nil
+    var usePrice:Bool = true
     var kidsHomeBlockData:KidsHomeBlockData? = nil
     var leadingBanners:[BannerData]? = nil
     var posters:[PosterData]? = nil
@@ -87,21 +90,21 @@ class BlockData:InfinityData, ObservableObject{
     }
     
     @discardableResult
-    func setData(grids:[GridsItemKids]) -> BlockData{
+    func setData(grids:[GridsItemKids], usePrice:Bool = true) -> BlockData{
         childrenBlock = grids.map{ g in
-            BlockData(pageType: .kids).setData(parent:self, grid: g)
+            BlockData(pageType: .kids).setData(parent:self, grid: g, usePrice: usePrice)
         }
         return self
     }
     @discardableResult
-    func setData(grids:[GridsItem]) -> BlockData{
+    func setData(grids:[GridsItem], usePrice:Bool = true) -> BlockData{
         childrenBlock = grids.map{ g in
-            BlockData().setData(parent:self, grid: g)
+            BlockData().setData(parent:self, grid: g, usePrice: usePrice)
         }
         return self
     }
     
-    func setData(parent:BlockData, grid:GridsItemKids) -> BlockData{
+    func setData(parent:BlockData, grid:GridsItemKids, usePrice:Bool = true) -> BlockData{
         self.uiType = parent.uiType
         self.cardType = parent.cardType
         self.dataType = parent.dataType
@@ -113,11 +116,11 @@ class BlockData:InfinityData, ObservableObject{
             switch self.uiType {
             case .poster :
                 posters = blocks[0...min(max, blocks.count-1)].map{ d in
-                    PosterData(pageType: .kids).setData(data: d, cardType: cardType)
+                    PosterData(pageType: .kids, usePrice:usePrice).setData(data: d, cardType: cardType)
                 }
             case .video :
                 videos = blocks[0...min(max, blocks.count-1)].map{ d in
-                    VideoData(pageType: .kids).setData(data: d, cardType: cardType)
+                    VideoData(pageType: .kids, usePrice:usePrice).setData(data: d, cardType: cardType)
                 }
                 /* 전체 데이타 동일시 처리
                 allVideos = blocks.map{ d in
@@ -148,7 +151,7 @@ class BlockData:InfinityData, ObservableObject{
         return self
     }
     
-    func setData(parent:BlockData, grid:GridsItem) -> BlockData{
+    func setData(parent:BlockData, grid:GridsItem, usePrice:Bool = true) -> BlockData{
         self.uiType = parent.uiType
         self.cardType = parent.cardType
         self.dataType = parent.dataType
@@ -160,11 +163,11 @@ class BlockData:InfinityData, ObservableObject{
             switch self.uiType {
             case .poster :
                 posters = blocks[0...min(max, blocks.count-1)].map{ d in
-                    PosterData().setData(data: d, cardType: cardType)
+                    PosterData(usePrice:usePrice).setData(data: d, cardType: cardType)
                 }
             case .video :
                 videos = blocks[0...min(max, blocks.count-1)].map{ d in
-                    VideoData().setData(data: d, cardType: cardType)
+                    VideoData(usePrice:usePrice).setData(data: d, cardType: cardType)
                 }
             default: break
             }
@@ -207,7 +210,9 @@ class BlockData:InfinityData, ObservableObject{
         self.allPosters = datas
         let len = min(datas.count, max)
         self.posters = datas.isEmpty ? datas : datas[0..<len].map{$0}
-        self.listHeight = (self.posters?.first?.type.size.height ?? 0) + MultiBlockBody.tabHeight
+        let type = self.posters?.first?.pageType ?? .btv
+        self.listHeight = (self.posters?.first?.type.size.height ?? 0)
+            + ( type == .btv ? MultiBlockBody.tabHeight : MultiBlockBody.tabHeightKids  )
         self.setCountName(count: datas.count)
         return self
     }
@@ -220,8 +225,10 @@ class BlockData:InfinityData, ObservableObject{
         let len = min(datas.count, max)
         self.videos = datas.isEmpty ? datas : datas[0..<len].map{$0}
         self.setCountName(count: datas.count)
+        let type = self.videos?.first?.pageType ?? .btv
         if let video = self.videos?.first{
-            listHeight = video.type.size.height + video.bottomHeight + MultiBlockBody.tabHeight
+            listHeight = video.type.size.height + video.bottomHeight
+                + ( type == .btv ? MultiBlockBody.tabHeight : MultiBlockBody.tabHeightKids  )
         } else {
             listHeight = MultiBlockBody.tabHeight
         }
@@ -399,7 +406,13 @@ class BlockData:InfinityData, ObservableObject{
         status = .passive
     }
     
-    func setDatabindingCompleted(total:Int? = nil, parentTitle:String? = nil, modifyTitle:String? = nil, idx:Int = -1){
+    func setDatabindingCompleted(
+        total:Int? = nil,
+        parentTitle:String? = nil,
+        modifyTitle:String? = nil,
+        openId:String? = nil,
+        idx:Int = -1)
+    {
         if self.status != .initate { return }
         if isCountView, let count = total {
             self.subName = count.description
@@ -410,6 +423,7 @@ class BlockData:InfinityData, ObservableObject{
             }
         }
         if let modifyTitle = modifyTitle { self.name = modifyTitle }
+        self.openId = openId // 키즈홈에서 자동 메뉴이동
         self.parentTitle = parentTitle
         self.status = .active
         

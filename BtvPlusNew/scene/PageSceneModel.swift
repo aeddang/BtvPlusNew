@@ -25,6 +25,7 @@ extension PageParam {
     static let infinityScrollModel = "infinityScrollModel"
     static let needAdult = "needAdult"
     static let watchLv = "watchLv"
+    static let isFree = "isFree"
 }
 
 extension PageEventType {
@@ -44,7 +45,6 @@ struct PageSceneModel: PageModel {
         guard let pageObject = pageObject ?? self.topPageObject else {
             return UIInterfaceOrientationMask.all
         }
-        
         switch pageObject.pageID {
         case .fullPlayer, .synopsisPlayer: return UIInterfaceOrientationMask.landscape
         default : break
@@ -66,10 +66,14 @@ struct PageSceneModel: PageModel {
     }
     
     func getPageOrientationLock(_ pageObject:PageObject?) -> UIInterfaceOrientationMask? {
-        if SystemEnvironment.isTablet { return UIInterfaceOrientationMask.all }
         guard let pageObject = pageObject ?? self.topPageObject else {
             return UIInterfaceOrientationMask.all
         }
+        switch pageObject.pageID {
+        case .fullPlayer, .synopsisPlayer: return UIInterfaceOrientationMask.landscape
+        default : break
+        }
+        if SystemEnvironment.isTablet { return UIInterfaceOrientationMask.all }
         switch pageObject.pageID {
         case .fullPlayer, .synopsis:
             return UIInterfaceOrientationMask.all

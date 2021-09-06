@@ -287,7 +287,7 @@ class AccountManager : PageProtocol{
                     self.pairing.authority.errorMyInfo(nil)
                     return
                 }
-                self.pairing.authority.updatedMonthlyPurchaseInfo(resData)
+                self.pairing.authority.updatedPeriodMonthlyPurchaseInfo(resData)
             case .getKidsProfiles :
                 guard let resData = res.data as? KidsProfiles else {
                     self.pairing.updatedKidsProfiles(nil)

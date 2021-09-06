@@ -117,6 +117,7 @@ struct SimplePlayerUI: PageComponent {
                         },
                         onChanged:{ pct in
                             self.viewModel.event = .seekProgress(pct)
+                            
                         })
                         .frame(height: Dimen.stroke.regular )
                         .padding(.all, 0)

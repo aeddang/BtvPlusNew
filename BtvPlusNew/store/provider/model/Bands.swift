@@ -76,6 +76,7 @@ class Bands:ObservableObject, PageProtocol {
         let block = band.blocks.first(where: {$0.menu_nm == name })
         return block 
     }
+    
 }
 
 class Band {

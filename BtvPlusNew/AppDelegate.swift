@@ -86,7 +86,6 @@ class AppObserver: ObservableObject, PageProtocol {
             return false
         }
     }
-    
 }
 
 @UIApplicationMain

@@ -29,14 +29,15 @@ extension Footer{
     static let expandHeight:CGFloat = SystemEnvironment.isTablet ? 300 : 270
     static let privacy = "https://m.skbroadband.com/Page.do?menu_id=F02000000"
     static let businessRegistration = "https://www.ftc.go.kr/bizCommPop.do?wrkr_no=2148618758"
-    
     static let margin:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thinExtra
     
 }
 struct Footer: PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var pageObservable:PageObservable = PageObservable()
+    
     @State var isExpand = false
+    var open: ( () -> Void)? = nil
     var body: some View {
         VStack(alignment: .center,
                spacing: SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin){
@@ -66,6 +67,9 @@ struct Footer: PageComponent {
             Button(action: {
                 withAnimation{
                     self.isExpand.toggle()
+                    if self.isExpand {
+                        self.open?()
+                    }
                 }
             }) {
                 HStack( spacing: Dimen.margin.micro){

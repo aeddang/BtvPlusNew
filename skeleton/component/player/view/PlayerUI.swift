@@ -31,8 +31,9 @@ struct PlayerUI: PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var viewModel:PlayerModel
     @ObservedObject var pageObservable:PageObservable
-    @State var time:String = ""
-    @State var duration:String = ""
+    @State var time:String = "00:00:00"
+    @State var completeTime:String = "00:00:00"
+    @State var duration:String = "00:00:00"
     @State var progress: Float = 0
     @State var isPlaying = false
     @State var isLoading = false
@@ -90,11 +91,12 @@ struct PlayerUI: PageComponent {
                         },
                         onChanged:{ pct in
                             self.viewModel.event = .seekProgress(pct)
+                        
                         })
                         .frame(height: self.isFullScreen ? Self.uiHeightFullScreen : Self.uiHeight)
                         .fixedSize(horizontal: false, vertical: true)
                     
-                    Text(self.duration)
+                    Text(self.completeTime)
                         .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.greyLightExtra))
                         .frame(width:Self.timeTextWidth)
                         .fixedSize(horizontal: true, vertical: false)
@@ -137,6 +139,7 @@ struct PlayerUI: PageComponent {
                         ComponentLog.d("BtvPlayerModel isUserPlay set " + self.viewModel.isUserPlay.description  , tag: self.tag)
                        
                     }
+                    .opacity(self.isLoading ? 0 : 1)
                     if self.isFullScreen && ( self.viewModel.playInfo != nil ) && !self.isPlaying {
                         if let limited = self.viewModel.limitedDuration {
                             Text(limited.secToMin())
@@ -166,6 +169,7 @@ struct PlayerUI: PageComponent {
             if self.viewModel.duration <= 0 {return}
             if tm < 0 {return}
             self.time = tm.secToHourString()
+            self.completeTime = (self.viewModel.duration - tm).secToHourString()
             if !self.isSeeking {
                 self.progress = Float(tm / max(self.viewModel.duration,1))
             }
@@ -215,9 +219,8 @@ struct PlayerUI: PageComponent {
         .onReceive(self.viewModel.$streamStatus) { st in
             guard let status = st else { return }
             switch status {
-            case .buffering(_) :
-                if self.viewModel.playerUiStatus == .hidden{ self.isLoading = true }
-            default : self.isLoading = false
+            case .buffering(_) : withAnimation{ self.isLoading = true }
+            default : withAnimation{ self.isLoading = false }
             }
         }
         .onReceive(self.viewModel.$error) { err in

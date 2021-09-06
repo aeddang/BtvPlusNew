@@ -81,6 +81,7 @@ struct VoiceRecorderKids: PageComponent {
                 
             case .searching :
                 self.isRecording = true
+                self.statusText = String.voice.searchingTextKids
                 self.bottomImage = AssetKids.image.voiceMic
             }
         }

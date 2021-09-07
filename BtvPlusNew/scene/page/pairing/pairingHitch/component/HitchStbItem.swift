@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-
+import Combine
 struct HitchStbItem: PageView {
     @EnvironmentObject var dataProvider:DataProvider
     @ObservedObject var data:StbData
@@ -23,10 +23,11 @@ struct HitchStbItem: PageView {
                 height: SystemEnvironment.isTablet ? Dimen.icon.regular : Dimen.icon.medium)
             
             if let nick = self.nickName {
-                Text(nick + "(" + String.app.defaultStb + ")")
+                Text(nick)
                     .modifier(MediumTextStyle(
                                 size: SystemEnvironment.isTablet ? Font.size.tinyExtra : Font.size.lightExtra,
                                 color: Color.app.blackExtra))
+                
             } else {
                 Text(String.app.defaultStb)
                     .modifier(MediumTextStyle(
@@ -51,9 +52,7 @@ struct HitchStbItem: PageView {
             RoundedRectangle(cornerRadius: Dimen.radius.regularExtra)
                 .stroke( self.isSelected ? Color.brand.primary : Color.app.greyMedium ,lineWidth: self.isSelected ? 3 : 1 )
         )
-        .onReceive(self.data.$stbNickName){ nick in
-            self.nickName = nick
-        }
+        
         .onReceive(self.dataProvider.$result){ res in
             guard let res = res else { return }
             if !res.id.hasPrefix(self.data.stbid ?? "") {return}
@@ -61,19 +60,36 @@ struct HitchStbItem: PageView {
             case .getHostNickname :
                 guard let data = res.data as? HostNickName else { return }
                 self.data.setData(data: data)
+                self.nickName = self.data.stbNickName
             default: break
             }
            
         }
         .onAppear(){
-            if self.data.stbNickName == nil , let id = self.data.stbid{
-                self.dataProvider.requestData(
-                    q: .init(
-                        id: id,
-                        type: .getHostNickname(isAll:false, anotherStbId:id), isOptional: true))
+            if self.data.stbNickName == nil && self.data.stbid != nil{
+                self.searchNickName()
             } else {
                 self.nickName = self.data.stbNickName
             }
         }
+        .onDisappear(){
+            self.searcher?.cancel()
+            self.searcher = nil
+        }
+    }
+    
+    @State private var searcher:AnyCancellable?
+    private func searchNickName(){
+        self.searcher?.cancel()
+        self.searcher = Timer.publish(
+            every: 0.3, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                self.searcher?.cancel()
+                self.searcher = nil
+                self.dataProvider.requestData(
+                    q: .init(id: id,
+                        type: .getHostNickname(isAll:false, anotherStbId:id), isOptional: true))
+            }
     }
 }

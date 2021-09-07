@@ -75,6 +75,7 @@ struct PageSetup: PageView {
                                         SetupPossession(isInitate:self.isInitate)
                                         //SetupHappySenior()
                                     }
+                                    SetupGuideNVersion()
                                    
                                 }
                             }

@@ -53,7 +53,7 @@ class SynopsisModel : PageProtocol {
     private(set) var isLimitedWatch:Bool = false
     private(set) var isRecommandAble:Bool = false
     private(set) var seasonTitle:String? = nil
-    
+    private(set) var originEpsdId:String? = nil
     private(set) var title:String? = nil
     private(set) var menuId:String? = nil
     private(set) var brcastChnlNm:String? = nil
@@ -78,6 +78,7 @@ class SynopsisModel : PageProtocol {
         self.siries = data.series
         
         if let contents = data.contents{
+            self.originEpsdId = contents.orgn_epsd_id
             self.title = contents.title
             self.menuId = contents.menu_id
             self.watchLevel = contents.wat_lvl_cd?.toInt() ?? 0

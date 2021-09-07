@@ -11,6 +11,7 @@ import Combine
 
 extension PlayerBottom{
     static let nextProgressTime:Double = 5
+    static let previewLimit:Double = 5 * 60
 }
     
 struct PlayerBottom: PageView{
@@ -25,8 +26,8 @@ struct PlayerBottom: PageView{
     @State var isPlaying:Bool = false
     @State var showDirectview = false
     @State var showPreplay = false
-    
-    @State var isTimeCheck = false
+    @State var showFullVod = false
+    @State var isLock:Bool = false
     @State var durationTime:Double? = nil
     
     
@@ -42,17 +43,20 @@ struct PlayerBottom: PageView{
                     showPreplay: self.showPreplay,
                     showCookie: self.showCookie,
                     showNext: self.showNext,
+                    showFullVod: self.showFullVod,
                     showNextCancel: self.showNextCancel,
                     nextProgress: self.nextProgress,
                     nextBtnTitle: self.nextBtnTitle,
-                    isSeasonNext: self.isSeasonNext)
+                    isSeasonNext: self.isSeasonNext,
+                    isLock: self.isLock)
             } else {
                 PlayerBottomBodyKids(
                     viewModel: self.viewModel,
                     isFullScreen: self.isFullScreen,
                     isUiShowing: self.isUiShowing,
                     isPlaying: self.isPlaying,
-                    showPreplay: self.showPreplay)
+                    showPreplay: self.showPreplay,
+                    isLock: self.isLock)
             }
         }
         .modifier(MatchParent())
@@ -116,35 +120,34 @@ struct PlayerBottom: PageView{
         .onReceive(self.viewModel.$currentQuality){_ in
             self.durationTime = nil
             self.nextProgress = 0.0
-            self.isTimeCheck = false
-            guard let data = self.viewModel.synopsisPlayerData else {
-                withAnimation {
-                    self.showDirectview = false
-                    self.showPreplay = false
-                    self.showNext = false
-                }
-                return
-            }
             withAnimation {
-                self.showDirectview = false
-                self.showPreplay = false
-                self.showNext = false
+                self.resetShow()
+            }
+        }
+        .onReceive(self.viewModel.$isLock) { isLock in
+            withAnimation{
+                self.isLock = isLock
+            }
+            
+        }
+        .onReceive(self.viewModel.$duration){ t in
+            self.durationTime = t
+            
+            guard let data = self.viewModel.synopsisPlayerData else { return }
+            withAnimation {
                 switch data.type {
                 case .preview : break
                 case .preplay :
-                    self.showPreplay = true
+                    if self.viewModel.originDuration > Self.previewLimit {
+                        self.showPreplay = true
+                    }
                 case .vod :
                     self.showDirectview = true
-                    if !self.isTimeCheck {
-                        self.isTimeCheck = self.viewModel.synopsisPlayerData?.hasNext ?? false
-                    }
                     
                 default : break
                 }
             }
-        }
-        .onReceive(self.viewModel.$duration){ t in
-            self.durationTime = t
+            
             if self.viewModel.endingTime <= 0 {
                 self.endingTime = t-Self.nextProgressTime
                 self.showNextCancel = false
@@ -152,6 +155,10 @@ struct PlayerBottom: PageView{
                 self.endingTime = self.viewModel.endingTime
                 self.showNextCancel = true
             }
+            withAnimation {
+                self.showFullVod = self.viewModel.fullVod != nil
+            }
+            
         }
         .onReceive(self.viewModel.$isPlay) { play in
             self.isPlaying = play
@@ -166,7 +173,6 @@ struct PlayerBottom: PageView{
                     withAnimation { self.showDirectview = true }
                 }
             }
-            if !self.isTimeCheck { return }
             guard let d = self.durationTime else {return}
             if d <= 0 { return }
             if self.endingTime != -1 {
@@ -186,6 +192,13 @@ struct PlayerBottom: PageView{
             self.nextProgressCancel()
         }
     }//body
+    
+    private func resetShow(){
+        self.showDirectview = false
+        self.showPreplay = false
+        self.showNext = false
+        self.showFullVod = false
+    }
     
     @State var nextBtnTitle:String = ""
     @State var isSeasonNext:Bool = false
@@ -211,7 +224,6 @@ struct PlayerBottom: PageView{
         self.isSeasonNext = self.viewModel.synopsisPlayerData?.nextEpisode == nil
         ComponentLog.d("nextProgressStart", tag: self.tag)
         withAnimation { self.showNext = true }
-        
         let times:Float = Float(Self.nextProgressTime * 10)
         var time:Float = Float(min(t, Self.nextProgressTime) * 10)
         self.nextTimer?.cancel()
@@ -244,9 +256,6 @@ struct PlayerBottom: PageView{
     @State var showCookie:String? = nil
     @State var currentCookie:CookieInfo? = nil
     func resetInside(insideSearchTime:Double){
-        if !self.isTimeCheck {
-            self.isTimeCheck = insideSearchTime != -1
-        }
         self.insideSearchTime = insideSearchTime
         let cookies =  self.insideModel.cookies
         self.cookies = cookies
@@ -266,8 +275,6 @@ struct PlayerBottom: PageView{
             self.currentCookie = find
             self.showCookie = " " + find.index.description + "/" + cookies.count.description
         }
-        
-        
     }
 }
 

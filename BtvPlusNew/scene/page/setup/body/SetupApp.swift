@@ -34,14 +34,14 @@ struct SetupApp: PageView {
                         title: String.pageText.setupAppAutoRemocon ,
                         subTitle: String.pageText.setupAppAutoRemoconText
                     )
-                    if !SystemEnvironment.isTablet {
-                        Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
-                        SetupItem (
-                            isOn: self.$isRemoconVibration,
-                            title: String.pageText.setupAppRemoconVibration ,
-                            subTitle: String.pageText.setupAppRemoconVibrationText
-                        )
-                    }
+                    //if !SystemEnvironment.isTablet {
+                    Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
+                    SetupItem (
+                        isOn: self.$isRemoconVibration,
+                        title: String.pageText.setupAppRemoconVibration ,
+                        subTitle: String.pageText.setupAppRemoconVibrationText
+                    )
+                    //}
                 }
             }
             .background(Color.app.blueLight)
@@ -75,6 +75,12 @@ struct SetupApp: PageView {
         .onReceive( [self.isRemoconVibration].publisher ) { value in
             if !self.isInitate { return }
             if self.setup.remoconVibration == self.isRemoconVibration { return }
+            if SystemEnvironment.isTablet && value == true {
+                self.setup.remoconVibration = false
+                self.isRemoconVibration = false
+                self.appSceneObserver.event = .toast(String.alert.guideNotSupportedVibrate)
+                return
+            }
             if self.isPairing == false && value == true {
                 self.appSceneObserver.alert = .needPairing()
                 self.isRemoconVibration = false

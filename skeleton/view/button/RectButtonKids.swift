@@ -26,6 +26,7 @@ struct RectButtonKids: View, SelecterbleProtocol{
     var bgColor = Color.app.white
     var bgActiveColor = Color.kids.primary
     var size:CGSize = DimenKids.button.mediumRect
+    var trailIconSize:CGFloat = DimenKids.icon.tinyExtra
     var isFixSize:Bool = true
     var cornerRadius:CGFloat = DimenKids.radius.light
     var isMore: Bool = false
@@ -46,6 +47,7 @@ struct RectButtonKids: View, SelecterbleProtocol{
                             trailText: self.trailText,
                             strikeText: self.strikeText,
                             trailIcon: self.trailIcon,
+                            trailIconSize: self.trailIconSize,
                             isSelected: self.isSelected,
                             textModifier: self.textModifier,
                             isMore: self.isMore)
@@ -61,6 +63,7 @@ struct RectButtonKids: View, SelecterbleProtocol{
                         trailText: self.trailText,
                         strikeText: self.strikeText,
                         trailIcon: self.trailIcon,
+                        trailIconSize: self.trailIconSize,
                         isSelected: self.isSelected,
                         textModifier: self.textModifier,
                         isMore: self.isMore)
@@ -80,6 +83,7 @@ struct RectButtonKids: View, SelecterbleProtocol{
         var trailText:String? = nil
         var strikeText:String? = nil
         var trailIcon:String? = nil
+        var trailIconSize:CGFloat = DimenKids.icon.tinyExtra
         var isSelected: Bool = false
         var textModifier:TextModifierKids
         var isMore: Bool = false
@@ -123,8 +127,8 @@ struct RectButtonKids: View, SelecterbleProtocol{
                 Image(trailIcon)
                     .renderingMode(.original).resizable()
                     .scaledToFit()
-                    .frame(width: DimenKids.icon.tinyExtra, height: DimenKids.icon.tinyExtra)
-                    .padding(.leading, DimenKids.margin.thin)
+                    .frame(width: self.trailIconSize, height: self.trailIconSize)
+                    .padding(.leading, DimenKids.margin.tiny)
             }
             
             if self.isMore {

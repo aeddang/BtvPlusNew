@@ -151,7 +151,7 @@ struct PairingView: PageComponent{
                             data: data,
                             margin:SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.thin ,
                             useTracking:true,
-                            useEmpty:true
+                            useEmpty:self.isWatchedEmpty
                             )
                             .padding(.top, Dimen.margin.medium)
                     }

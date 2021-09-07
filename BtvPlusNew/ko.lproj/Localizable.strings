@@ -361,10 +361,12 @@
 "alertAutoRemoconOff" = "리모컨 자동 전환이 해제되었습니다.";
 "alertRemoconVibrationOn" = "리모컨 진동 효과가 설정되었습니다.";
 "alertRemoconVibrationOff" = "리모컨 진동 효과가 해제되었습니다.";
+
 "alertAutoPlayOn" = "플레이어 자동 재생이 설정되었습니다.";
 "alertAutoPlayOff" = "플레이어 자동 재생이 해제되었습니다.";
 "alertNextPlayOn" = "다음 영상 연속 재생이 설정되었습니다.";
 "alertNextPlayOff" = "다음 영상 연속 재생이 해제되었습니다.";
+
 
 "alertPushOn" = "알림 수신 동의 처리가 완료되었습니다.";
 "alertPushOff" = "알림 수신 거부 처리가 완료되었습니다.";
@@ -870,7 +872,7 @@
 /*
  PageIntro
  */
-"introTitle1" = "모바일과 태블릿으로\n즐기는 모바일 B tv.";
+"introTitle1" = "모바일과 태블릿으로\n즐기는 모바일 B tv";
 "introText1" = "B tv의 VOD 16만편과 모든 이용권 콘텐츠를\n모바일과 태블릿으로 시청해 보세요.\nB tv에서 보시던 VOD 이어보기는 물론,\n모바일 리모컨까지 이용하실 수 있습니다.";
 "introTitle2" = "B tv 즐거움이 모바일에 쏙!\n최대 4명까지!";
 "introText2" = "모바일과 태블릿에서도 B tv 콘텐츠를\n감상하실 수 있어요. 모바일 B tv에서\n온 가족 각자 취향대로 즐기세요.";
@@ -949,6 +951,7 @@
 "playerContinueView" = "계속 보기";
 "playerPreview" = "예고편";
 "playerCookie" = "쿠키 영상";
+"playerFullVod" = "본편 보러가기";
 "playerNext" = "다음 화";
 "playerNextSeason" = "다음 시즌 보기";
 "playerDirectPlay" = "도입부 건너뛰기";

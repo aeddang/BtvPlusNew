@@ -9,7 +9,7 @@ import Foundation
 
 
 enum SynopsisPlayType {
-    case unknown, preview(Int, Bool? = nil) , preplay(Bool? = nil),
+    case unknown, preview(Int, Bool? = nil) , preplay(Bool? = nil), clip(Bool? = nil , SynopsisData? = nil),
          vod(Double = 0, Bool? = nil), vodNext(Double = 0, Bool? = nil), vodChange(Double = 0, Bool? = nil)
     
     var name: String? {

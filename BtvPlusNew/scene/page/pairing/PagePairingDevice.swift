@@ -232,7 +232,7 @@ struct PagePairingDevice: PageView {
             self.datas = findData.map{StbData().setData(data: $0)}
             self.textAvailableDevice = String.pageText.pairingDeviceText3 + self.datas.count.description + String.pageText.pairingDeviceText4
             if self.datas.count == 1{
-                //self.selectePairingDevice(stb: self.datas.first!)
+                self.selectePairingDevice(stb: self.datas.first!)
             }
         }
         case .findStbInfoDevice(let findData) : do {
@@ -240,7 +240,7 @@ struct PagePairingDevice: PageView {
             self.textAvailableDevice = String.pageText.pairingDeviceText3 + self.datas.count.description + String.pageText.pairingDeviceText4
             
             if self.datas.count == 1{
-                //self.selectePairingDevice(stb: self.datas.first!)
+                self.selectePairingDevice(stb: self.datas.first!)
             }
         }
         case .notFoundDevice : do {

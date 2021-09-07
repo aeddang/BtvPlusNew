@@ -79,7 +79,7 @@ class Setup:ObservableObject, PageProtocol {
         self.nextPlay = true
         self.dataAlram = true
         self.autoRemocon = true
-        self.remoconVibration = true
+        self.remoconVibration = SystemEnvironment.isTablet ? false : true
         self.isPurchaseAuth = false
         self.watchLv = 0
         self.isFirstMemberAuth = false

@@ -84,6 +84,7 @@ struct VideoSetBlock:BlockProtocol, PageComponent {
     func setVideoSets() {
         self.datas = []
         guard let originVideos = data.videos else {return}
+        if originVideos.isEmpty {return}
         let count:Int = 3
         let max = originVideos.count
         var videos:ArraySlice<VideoData> = []

@@ -54,12 +54,7 @@ extension NetworkRoute {
         request.httpMethod = method.rawValue.uppercased()
         request.httpBody = getBody()
 
-        self.onRequestIntercepter(request: request)
-        if let override = overrideHeaders {
-            override.forEach{ set in
-                request.setValue(set.value, forHTTPHeaderField: set.key)
-            }
-        }
+        //self.onRequestIntercepter(request: request)
         DataLog.d("request : " + request.debugDescription , tag:self.tag)
         return request
     }
@@ -73,16 +68,11 @@ extension NetworkRoute {
         request.allHTTPHeaderFields = headers
         request.httpMethod = method.rawValue.uppercased()
         request.httpBody = Data()
-        self.onRequestIntercepter(request: request)
-        if let override = overrideHeaders {
-            override.forEach{ set in
-                request.addValue(set.value, forHTTPHeaderField: set.key)
-            }
-        }
+        //self.onRequestIntercepter(request: request)
         let formData = MultipartFormData(request: request, encoding:encoding)
         constructingBlock(formData)
         formData.finalize()
-        DataLog.d("request : " + request.debugDescription , tag:self.tag)
+        //DataLog.d("request : " + request.debugDescription , tag:self.tag)
         return formData.request
     }
     func onRequestIntercepter(request:URLRequest){}
@@ -170,6 +160,11 @@ extension Network {
     func fetch<T: Decodable>(route: NetworkRoute) -> AnyPublisher<T, Error> {
         var request:URLRequest = route.create(for: enviroment)
         request = self.onRequestIntercepter(request: request)
+        if let override =  route.overrideHeaders {
+            override.forEach{ set in
+                request.setValue(set.value, forHTTPHeaderField: set.key)
+            }
+        }
         self.debug(request: request)
         return self.sharedSession
             .dataTaskPublisher(for: request)
@@ -200,9 +195,14 @@ extension Network {
                             multipartFormData constructingBlock: @escaping (_ formData: MultipartFormData) -> Void
     ) -> AnyPublisher<T, Error> {
         var request:URLRequest = route.create(for: enviroment, multipartFormData: constructingBlock, encoding: encoding)
-        self.debug(request: request)
-        self.debug(data: request.httpBody)
         request = self.onRequestIntercepter(request: request)
+        if let override =  route.overrideHeaders {
+            override.forEach{ set in
+                request.setValue(set.value, forHTTPHeaderField: set.key)
+            }
+        }
+        self.debug(request: request)
+       
         return self.sharedSession
             .dataTaskPublisher(for: request)
             .tryCompactMap { result in
@@ -229,6 +229,11 @@ extension Network {
     func fetch(route: NetworkRoute) -> AnyPublisher<[String : Any], Error> {
         var request:URLRequest = route.create(for: enviroment)
         request = self.onRequestIntercepter(request: request)
+        if let override =  route.overrideHeaders {
+            override.forEach{ set in
+                request.setValue(set.value, forHTTPHeaderField: set.key)
+            }
+        }
         return self.sharedSession
             .dataTaskPublisher(for: request)
             .tryCompactMap { result in

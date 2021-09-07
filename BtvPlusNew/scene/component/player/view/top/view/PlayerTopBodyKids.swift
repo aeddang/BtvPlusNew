@@ -66,7 +66,8 @@ struct PlayerTopBodyKids: PageView{
                 Spacer().modifier(MatchHorizontal(height: 0))
             }
             PlayerMoreBoxKids( viewModel: self.viewModel, isLock:self.isLock )
-            if self.isLock {
+                .offset(x: SystemEnvironment.isTablet ? DimenKids.margin.light : DimenKids.margin.thin)
+            if self.showLockText {
                 Image(AssetKids.player.lockText)
                     .renderingMode(.original)
                     .resizable()
@@ -76,7 +77,7 @@ struct PlayerTopBodyKids: PageView{
                             ? Self.lockTextSizeFull.width : Self.lockTextSize.width,
                         height: self.isFullScreen
                             ? Self.lockTextSizeFull.height : Self.lockTextSize.height)
-                    .offset(x: DimenKids.margin.tiny)
+                    .offset(x: DimenKids.margin.light)
             }
             VStack( spacing:0){
                 if !self.isSimple{
@@ -126,8 +127,39 @@ struct PlayerTopBodyKids: PageView{
                 Spacer()
             }
         }
+        .onReceive(self.viewModel.$isLock) { isLock in
+            if isLock {
+                self.showLockTextStart()
+            } else {
+                self.showLockTextCancel()
+            }
+        }
+        .onDisappear{
+            self.showLockTextCancel()
+        }
     }//body
 
+    @State private var showLockText:Bool = false
+    @State private var showLockTextTimer:AnyCancellable?
+    private func showLockTextStart(){
+        withAnimation{
+            self.showLockText = true
+        }
+        self.showLockTextTimer?.cancel()
+        self.showLockTextTimer = Timer.publish(
+            every: 5, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                self.showLockTextCancel()
+            }
+    }
+    private func showLockTextCancel(){
+        self.showLockTextTimer?.cancel()
+        self.showLockTextTimer = nil
+        withAnimation{
+            self.showLockText = false
+        }
+    }
 }
 
 

@@ -49,7 +49,8 @@ enum BtvUiEvent {
 }
 
 enum BtvPlayerEvent {
-    case nextView(isAuto:Bool = false), nextViewCancel, continueView, changeView(String), cookieView,
+    case nextView(isAuto:Bool = false), nextViewCancel,
+         continueView, changeView(String), cookieView, fullVod(SynopsisData),
          close, stopAd, play80
 }
 
@@ -81,6 +82,7 @@ class BtvPlayerModel:PlayerModel{
     var isPrerollPlay = false
     
     private(set) var playData:PlayInfo? = nil
+    private(set) var fullVod:SynopsisData? = nil
     private(set) var btvPlayType:BtvPlayType? = nil
     private(set) var qualitys:[Quality] = []
     var pageType:PageType = .btv
@@ -151,6 +153,10 @@ class BtvPlayerModel:PlayerModel{
                 self.initPlay = autoPlay
             case .preview(_, let autoPlay):
                 self.initPlay = autoPlay
+                
+            case .clip( let autoPlay, let fullVod):
+                self.initPlay = autoPlay
+                self.fullVod = fullVod
             
             case .vod(let t, let autoPlay), .vodNext(let t, let autoPlay), .vodChange(let t, let autoPlay):
                 self.openingTime = playData.openingTime ?? 0

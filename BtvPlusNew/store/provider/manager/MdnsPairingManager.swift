@@ -63,7 +63,9 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
             ComponentLog.d("stbid :" + (findDevice.stbid ?? ""), tag: self.tag)
             ComponentLog.d("rcu_agent_ver :" + (findDevice.rcu_agent_ver ?? ""), tag: self.tag)
             DispatchQueue.main.async {
-                self.find.append(findDevice)
+                if self.find.first(where: {$0.stbid == findDevice.stbid}) == nil {
+                    self.find.append(findDevice)
+                }
                 self.delayFound()
             }
         } catch {

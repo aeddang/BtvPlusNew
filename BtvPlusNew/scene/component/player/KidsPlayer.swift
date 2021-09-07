@@ -66,6 +66,7 @@ struct KidsPlayer: PageComponent{
                     PlayerOptionSelectBox(viewModel: self.viewModel, type: .kids)
                 }
                 .opacity(self.isWaiting == false ? 1.0 : 0)
+                /*
                 .gesture(
                     DragGesture(minimumDistance: 5, coordinateSpace: .local)
                         .onChanged({ value in
@@ -117,6 +118,7 @@ struct KidsPlayer: PageComponent{
                             self.resetDragGesture()
                         })
                 )
+                
                 .gesture(
                     MagnificationGesture(minimumScaleDelta: 0).onChanged { val in
                         if self.viewModel.isLock { return }
@@ -126,7 +128,7 @@ struct KidsPlayer: PageComponent{
                         self.isChangeRatioCancel = false
                     }
                 )
-                
+                */
                 if self.isPreroll {
                     PrerollUi(
                         viewModel: self.viewModel,

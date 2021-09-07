@@ -53,7 +53,7 @@ class PushManager : PageProtocol {
         let registToken = storage.registPushToken
         let endpoint = storage.pushEndpoint
         if token == registToken && !endpoint.isEmpty {
-            DataLog.d("already endpoint", tag: self.tag)
+            DataLog.d("already endpoint " + token, tag: self.tag)
             self.updateUserAgreement(self.userAgreement)
             return
         }

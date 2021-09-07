@@ -49,7 +49,8 @@ struct PageSceneModel: PageModel {
         case .fullPlayer, .synopsisPlayer: return UIInterfaceOrientationMask.landscape
         default : break
         }
-        if SystemEnvironment.isTablet && pageObject.pageGroupID == PageType.btv.rawValue { return UIInterfaceOrientationMask.all }
+        if SystemEnvironment.isTablet && pageObject.pageGroupID == PageType.btv.rawValue {
+            return UIInterfaceOrientationMask.all }
         switch pageObject.pageID {
         case .categoryList, .multiBlock :
             return UIInterfaceOrientationMask.portrait
@@ -68,7 +69,8 @@ struct PageSceneModel: PageModel {
             return UIInterfaceOrientationMask.all
         }
     
-        if SystemEnvironment.isTablet { return UIInterfaceOrientationMask.all }
+        if SystemEnvironment.isTablet && pageObject.pageGroupID == PageType.btv.rawValue {
+            return UIInterfaceOrientationMask.all }
         switch pageObject.pageID {
         case .fullPlayer, .synopsis:
             return UIInterfaceOrientationMask.all

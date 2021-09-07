@@ -198,7 +198,8 @@ struct PlayerEffect: PageView{
         }
         .onReceive(self.viewModel.$time) { tm in
             if !self.showSeeking { return }
-            let targetT = tm + self.viewModel.seeking
+            var targetT = max(0,tm + self.viewModel.seeking)
+            targetT = min(self.viewModel.duration,targetT)
             self.textTime = targetT.secToHourString()
         }
         .onReceive(self.viewModel.$event) { evt in

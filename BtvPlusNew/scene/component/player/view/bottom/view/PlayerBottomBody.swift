@@ -27,11 +27,12 @@ struct PlayerBottomBody: PageComponent{
     var showPreplay = false
     var showCookie:String? = nil
     var showNext = false
+    var showFullVod = false
     var showNextCancel = false
     var nextProgress:Float = 0.0
     var nextBtnTitle:String = ""
     var isSeasonNext:Bool = false
-     
+    var isLock:Bool = false
     var body: some View {
         
         VStack(alignment :.trailing, spacing:0){
@@ -108,6 +109,16 @@ struct PlayerBottomBody: PageComponent{
                     }
                 }
                 
+                if self.showFullVod {
+                    RectButton(
+                        text: String.player.fullVod
+                        ){_ in
+                        guard let synop = self.viewModel.fullVod else { return }
+                        self.viewModel.btvPlayerEvent = .fullVod(synop)
+                        //self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , String.player.cookie)
+                    }
+                }
+                
                 if self.showNext{
                     if self.showNextCancel {
                         RectButton(
@@ -133,8 +144,9 @@ struct PlayerBottomBody: PageComponent{
                 }
             }
         }
+       
         .padding(.bottom,
-                 self.isUiShowing
+                 self.isUiShowing && !self.isLock
                     ? self.isFullScreen
                         ? PlayerUI.uiRealHeightFullScreen : PlayerUI.uiRealHeight
                     : 0

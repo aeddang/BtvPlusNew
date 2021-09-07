@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-
+import Combine
 class StbData:InfinityData, ObservableObject{
     private(set) var image: String = Asset.noImg1_1
     private(set) var title: String? = nil
@@ -153,16 +153,32 @@ struct StbItem: PageView {
            
         }
         .onAppear(){
-            if self.data.stbNickName == nil , let id = self.data.stbid{
-                self.dataProvider.requestData(
-                    q: .init(
-                        id: id,
-                        type: .getHostNickname(isAll:false, anotherStbId:id), isOptional: true))
+            if self.data.stbNickName == nil && self.data.stbid != nil{
+                self.searchNickName()
             } else {
                 self.nickName = self.data.stbNickName
             }
         }
+        .onDisappear(){
+            self.searcher?.cancel()
+            self.searcher = nil
+        }
     
+    }
+    
+    @State private var searcher:AnyCancellable?
+    private func searchNickName(){
+        self.searcher?.cancel()
+        self.searcher = Timer.publish(
+            every: 0.3, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                self.searcher?.cancel()
+                self.searcher = nil
+                self.dataProvider.requestData(
+                    q: .init(id: id,
+                        type: .getHostNickname(isAll:false, anotherStbId:id), isOptional: true))
+            }
     }
 }
 

@@ -1135,9 +1135,9 @@ struct PageSynopsis: PageView {
      Player process
      */
     func onFullScreenViewMode(){
-        if SystemEnvironment.isTablet {return}
+       
         DispatchQueue.main.async {
-            self.pagePresenter.requestDeviceOrientation(.landscape)
+            self.pagePresenter.fullScreenEnter(isLock: false, changeOrientation: .landscape)
         }
     }
     

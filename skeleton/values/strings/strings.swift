@@ -69,6 +69,7 @@ extension String {
         public static let continueView = "playerContinueView".loaalized()
         public static let preview = "playerPreview".loaalized()
         public static let cookie = "playerCookie".loaalized()
+        public static let fullVod = "playerFullVod".loaalized()
         public static let next = "playerNext".loaalized()
         public static let nextSeason = "playerNextSeason".loaalized()
         public static let directPlay = "playerDirectPlay".loaalized()

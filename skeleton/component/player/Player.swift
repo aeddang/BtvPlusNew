@@ -252,12 +252,12 @@ extension PlayBack {
     }
     func onDurationChange(_ t:Double){
         if t <= 0 { return }
+        viewModel.originDuration = t
         if let limit = viewModel.limitedDuration {
             viewModel.duration = min(t, limit)
         }else{
             viewModel.duration = t
         }
-        viewModel.originDuration = t
         viewModel.updateType = .update
     }
     func onLoad(){

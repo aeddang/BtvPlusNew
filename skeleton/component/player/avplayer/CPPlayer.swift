@@ -89,6 +89,10 @@ struct CPPlayer: PageComponent {
         .onReceive(self.viewModel.$streamEvent) { evt in
             guard let evt = evt else { return }
             switch evt {
+            case .completed :
+                if self.viewModel.isReplay {
+                    self.viewModel.event = .seekTime(0, true)
+                }
             case .loaded(_) :
                 if self.viewModel.duration <= 0 {
                     self.creatWaitDuration()

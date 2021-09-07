@@ -249,7 +249,7 @@ struct BtvPlayer: PageComponent{
                 guard let res = res else {return}
                 switch res.type {
                 case .getInsideInfo(let cid) :
-                   // if cid != self.contentID {return}
+                    if cid != self.contentID {return}
                     guard let data = res.data as? InsideInfo else { return }
                     self.insideModel.setData(data: data)
                 default : break

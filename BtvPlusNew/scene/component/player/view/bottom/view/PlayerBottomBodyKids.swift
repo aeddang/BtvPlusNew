@@ -10,6 +10,7 @@ import SwiftUI
 import Combine
 
 
+
 struct PlayerBottomBodyKids: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     var viewModel: BtvPlayerModel = BtvPlayerModel()
@@ -17,7 +18,7 @@ struct PlayerBottomBodyKids: PageComponent{
     var isUiShowing:Bool = false
     var isPlaying:Bool = false
     var showPreplay = false
-     
+    var isLock:Bool = false
     var body: some View {
         
         VStack(alignment :.trailing, spacing:0){
@@ -49,7 +50,9 @@ struct PlayerBottomBodyKids: PageComponent{
                         }
                         RectButtonKids(
                             text: String.player.continueView,
-                            icon: Asset.icon.play
+                            trailIcon: AssetKids.icon.play,
+                            size : DimenKids.button.mediumRectExtra,
+                            trailIconSize: DimenKids.icon.microUltra
                             ){_ in
                             self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , String.player.continueView)
                             self.viewModel.btvPlayerEvent = .continueView
@@ -78,7 +81,7 @@ struct PlayerBottomBodyKids: PageComponent{
             }
         }
         .padding(.bottom,
-                 self.isUiShowing
+                 self.isUiShowing && !self.isLock
                     ? self.isFullScreen
                         ? KidsPlayerUI.uiHeightFullScreen : KidsPlayerUI.uiHeight
                     : 0

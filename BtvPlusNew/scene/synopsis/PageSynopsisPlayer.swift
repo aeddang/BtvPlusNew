@@ -245,7 +245,6 @@ struct PageSynopsisPlayer: PageView {
             self.pageDataProviderModel.requestProgress( q: .init(type: .getSynopsis(data)))
         
         case 1 :
-            self.synopsisPlayType = .vod()
             self.pageDataProviderModel.requestProgress(q: .init(type: .getPlay(self.epsdRsluId,  self.pairing.hostDevice )))
             self.progressCompleted = true
         default : do{}
@@ -345,6 +344,17 @@ struct PageSynopsisPlayer: PageView {
             return
         }
         if let synopsis = self.synopsisModel {
+            if let fullVod = synopsis.originEpsdId {
+                self.synopsisPlayType = .clip(nil, SynopsisData(
+                    srisId: self.synopsisData?.srisId,
+                    searchType: .title,
+                    epsdId: fullVod,
+                    synopType: self.synopsisData?.synopType ?? .none
+                ))
+            } else {
+                self.synopsisPlayType = .clip()
+            }
+            
             let prerollData = SynopsisPrerollData()
                 .setData(data: synopsis, playType: self.synopsisPlayType, epsdRsluId: self.epsdRsluId)
             self.playerData = SynopsisPlayerData()
@@ -379,6 +389,13 @@ struct PageSynopsisPlayer: PageView {
     
     func onEvent(btvPlayerEvent:BtvPlayerEvent){
         switch btvPlayerEvent {
+        case .fullVod (let synopsisData):
+            self.pagePresenter.closePopup(self.pageObject?.id)
+            self.pagePresenter.openPopup(
+                PageProvider.getPageObject(.synopsis)
+                    .addParam(key: .data, value: synopsisData)
+                    .addParam(key: .watchLv, value: self.synopsisModel?.watchLevel)
+            )
         case .close :
             self.naviLog(
                 action: .clickPlayBackList,

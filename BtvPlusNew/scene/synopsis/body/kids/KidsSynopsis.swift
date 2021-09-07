@@ -132,6 +132,7 @@ struct KidsSynopsis: PageComponent{
                                         contentID: self.epsdId,
                                         listData: self.playListData
                                     )
+                                    .modifier(PageDragingSecondPriority(geometry: geometry, pageDragingModel: self.pageDragingModel))
                                     if !self.isPlayAble {
                                         PlayViewerKids(
                                             pageObservable:self.pageObservable,

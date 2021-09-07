@@ -79,6 +79,7 @@ extension AssetKids{
         public static let searchDelete = "zemkidsMBtnSearchCancleNor"
         public static let price = "zemkidsMIcSynopPrice"
         public static let onTop = "zemkidsMBtnTop"
+        public static let play = "zemkidsMPlayerBtnIcPlay"
         
     }
     

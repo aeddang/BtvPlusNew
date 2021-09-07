@@ -19,6 +19,9 @@ class PageHostingController<ContentView> : UIHostingController<ContentView> wher
         PageLog.d("prefersHomeIndicatorAutoHidden " + self.isIndicatorAutoHidden.description , tag: "PageHostingController")
         return self.sceneObserver?.willSceneOrientation == .landscape ? true : self.isIndicatorAutoHidden
     }
+    override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge {
+      return UIRectEdge.all
+    }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)

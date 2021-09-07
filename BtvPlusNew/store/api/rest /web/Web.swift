@@ -48,7 +48,6 @@ class Web: Rest{
             fetch(route: WebKidsSeachVod(query:params), completion: completion, error:error)
         }
     }
-    
     func getSeachPopularityVod(
         completion: @escaping (SearchPopularityVod) -> Void, error: ((_ e:Error) -> Void)? = nil){
         fetch(route: WebSeachPopularityVod(), completion: completion, error:error)

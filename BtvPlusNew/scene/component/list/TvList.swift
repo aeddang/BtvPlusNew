@@ -190,10 +190,13 @@ struct TvItem: PageView {
     var isSelected:Bool = false
     var body: some View {
         VStack(alignment: .leading, spacing:0){
-            Text(self.data.title ?? "")
-                .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.white))
-                .lineLimit(2)
-            Spacer().modifier(MatchParent())
+            Spacer().modifier(MatchHorizontal(height: 0))
+            HStack(alignment: .top, spacing: 0) {
+                Text(self.data.title ?? "")
+                    .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.white))
+                    .lineLimit(2)
+                Spacer().modifier(MatchVertical(width: 0))
+            }
             HStack(spacing:Dimen.margin.tiny){
                 if let channel = data.channel {
                     Text(channel)
@@ -210,9 +213,7 @@ struct TvItem: PageView {
                         .modifier(MediumTextStyle(size: Font.size.tiny, color: Color.app.greyMedium))
                         .lineLimit(1)
                 }
-                
             }
-            
         }
         .onTapGesture {
             if self.data.hasLog {

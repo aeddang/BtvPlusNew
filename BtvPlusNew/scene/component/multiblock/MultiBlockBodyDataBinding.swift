@@ -150,7 +150,8 @@ extension MultiBlockBody {
         }
         
         if let size = data.banners?.first?.type {
-            listHeight = size.size.height
+            let screenSize = self.sceneObserver.screenSize.width - (Dimen.margin.thin*2)
+            listHeight = round(screenSize * size.size.height/size.size.width)
             blockHeight = listHeight
         }
         if blockHeight != 0 {

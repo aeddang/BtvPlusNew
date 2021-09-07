@@ -84,7 +84,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                     self.getList()
                        
                 } else if self.useEmpty {
-                    EmptyAlert( text: self.data.dataType != .watched
+                    EmptyAlert( text: self.data.dataType == .watched
                                 ? String.pageText.myWatchedEmpty
                                 : String.alert.dataError)
                         .modifier(MatchParent())

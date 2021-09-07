@@ -156,6 +156,11 @@ struct PagePairingFamilyInvite: PageView {
                         self.appSceneObserver.alert = .alert(
                             String.alert.api,
                             String.pageText.pairingFamilyInviteErrorHost)
+                    case "1028":
+                        self.appSceneObserver.alert = .alert(
+                            String.pageText.pairingFamilyInviteErrorLimited,
+                            String.pageText.pairingFamilyInviteErrorLimitedText,
+                            String.pageText.pairingFamilyInviteErrorLimitedSub)
                     case "1033":
                         self.appSceneObserver.alert = .alert(
                             String.alert.api,

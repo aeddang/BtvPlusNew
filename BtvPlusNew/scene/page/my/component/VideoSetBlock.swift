@@ -61,7 +61,7 @@ struct VideoSetBlock:BlockProtocol, PageComponent {
                 }
                 .padding(.horizontal, SystemEnvironment.isTablet ? margin : 0)
             } else {
-                EmptyAlert( text: self.data.dataType != .watched
+                EmptyAlert( text: self.data.dataType == .watched
                             ? String.pageText.myWatchedEmpty
                             : String.alert.dataError)
                     .modifier(MatchParent())

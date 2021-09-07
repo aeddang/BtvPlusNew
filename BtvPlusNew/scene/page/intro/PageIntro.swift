@@ -12,6 +12,8 @@ struct IntroItem: PageComponent, Identifiable {
     let id = UUID().uuidString
     let title:String
     let text:String
+    let titleHorizontal:String
+    let textHorizontal:String
     let asset: String
     
     @State var sceneOrientation: SceneOrientation = .portrait
@@ -38,11 +40,11 @@ struct IntroItem: PageComponent, Identifiable {
             } else {
                 HStack(alignment: .top, spacing: 0){
                     VStack(alignment: .leading, spacing: 0){
-                        Text(self.title)
+                        Text(self.titleHorizontal)
                             .modifier(BoldTextStyle(size: Font.size.boldExtra, color: Color.app.white))
                             .padding(.top, Dimen.margin.heavyExtra)
                             .fixedSize(horizontal: false, vertical: true)
-                        Text(self.text)
+                        Text(self.textHorizontal)
                             .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.greyMedium))
                             .padding(.top, Dimen.margin.thin)
                             .fixedSize(horizontal: false, vertical: true)
@@ -73,10 +75,22 @@ struct PageIntro: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
     let pages: [PageViewProtocol] = SystemEnvironment.isTablet ? [
-        IntroItem(title: String.pageText.introTitle1, text: String.pageText.introText1, asset:  Asset.image.introT01),
-        IntroItem(title: String.pageText.introTitle2, text: String.pageText.introText2, asset:  Asset.image.introT02),
-        IntroItem(title: String.pageText.introTitle3, text: String.pageText.introText3, asset:  Asset.image.introT03),
-        IntroItem(title: String.pageText.introTitle4, text: String.pageText.introText4, asset:  Asset.image.introT04)
+        IntroItem(title: String.pageText.introTitle1, text: String.pageText.introText1,
+                  titleHorizontal: String.pageText.introTitleHorizontal1,
+                  textHorizontal: String.pageText.introTextHorizontal1,
+                  asset:  Asset.image.introT01),
+        IntroItem(title: String.pageText.introTitle2, text: String.pageText.introText2,
+                  titleHorizontal: String.pageText.introTitleHorizontal2,
+                  textHorizontal: String.pageText.introTextHorizontal2,
+                  asset:  Asset.image.introT02),
+        IntroItem(title: String.pageText.introTitle3, text: String.pageText.introText3,
+                  titleHorizontal: String.pageText.introTitleHorizontal3,
+                  textHorizontal: String.pageText.introTextHorizontal3,
+                  asset:  Asset.image.introT03),
+        IntroItem(title: String.pageText.introTitle4, text: String.pageText.introText4,
+                  titleHorizontal: String.pageText.introTitleHorizontal4,
+                  textHorizontal: String.pageText.introTextHorizontal4,
+                  asset:  Asset.image.introT04)
     ] :
     [
         ResourceItem(asset: Asset.image.intro01),

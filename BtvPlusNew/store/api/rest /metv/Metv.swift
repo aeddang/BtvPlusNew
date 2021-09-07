@@ -19,10 +19,8 @@ extension MetvNetwork{
     static let VERSION = "5.3.0"
     static let GROUP_VOD = "VOD"
     static let PAGE_COUNT = 30
-    
-    
     static let exceptMonthlyIds = ["411211275"] //모비 무료관 없음
-
+    
     enum SynopsisType{
         case none, title, seriesChange , seasonFirst
         var code:String {
@@ -434,7 +432,12 @@ class Metv: Rest{
         params["nickname_select_type"] = isAll ?  "ALL" : "EACH"
         params["hash_id"] = ApiUtil.getHashId(stbId)
         
-        fetch(route: MetvGetHostNickname(query: params), completion: completion, error:error)
+        var overrideHeaders:[String : String]? = nil
+        if let another = anotherStbId {
+            overrideHeaders = [String:String]()
+            overrideHeaders?["Client_ID"] = another
+        }
+        fetch(route: MetvGetHostNickname(query: params, overrideHeaders:overrideHeaders), completion: completion, error:error)
     }
     /**
     * 출석체크 저장 (IF-EVENT-001)
@@ -579,6 +582,7 @@ struct MetvGetHostNickname:NetworkRoute{
    var method: HTTPMethod = .get
    var path: String = "/metv/v5/setting/stbnickname"
    var query: [String : String]? = nil
+   var overrideHeaders: [String : String]? = nil
     
 }
 

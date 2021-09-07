@@ -23,6 +23,7 @@ protocol NetworkRoute:PageProtocol {
     var path: String { get }
     var method: HTTPMethod { get set }
     var headers: [String: String]? { get set }
+    var overrideHeaders: [String: String]? { get set }
     var query: [String: String]? { get set }
     var body: [String: Any]? { get set }
     var bodys: [Any]? { get set }
@@ -34,6 +35,7 @@ protocol NetworkRoute:PageProtocol {
 
 extension NetworkRoute {
     var headers: [String : String]?  { get{nil} set{headers=nil} }
+    var overrideHeaders: [String : String]?  { get{nil} set{overrideHeaders=nil} }
     var query: [String: String]?  { get{nil} set{query=nil} }
     var body: [String: Any]?  { get{nil} set{body=nil} }
     var bodys: [Any]?  { get{nil} set{bodys=nil} }
@@ -53,6 +55,11 @@ extension NetworkRoute {
         request.httpBody = getBody()
 
         self.onRequestIntercepter(request: request)
+        if let override = overrideHeaders {
+            override.forEach{ set in
+                request.setValue(set.value, forHTTPHeaderField: set.key)
+            }
+        }
         DataLog.d("request : " + request.debugDescription , tag:self.tag)
         return request
     }
@@ -67,6 +74,11 @@ extension NetworkRoute {
         request.httpMethod = method.rawValue.uppercased()
         request.httpBody = Data()
         self.onRequestIntercepter(request: request)
+        if let override = overrideHeaders {
+            override.forEach{ set in
+                request.addValue(set.value, forHTTPHeaderField: set.key)
+            }
+        }
         let formData = MultipartFormData(request: request, encoding:encoding)
         constructingBlock(formData)
         formData.finalize()

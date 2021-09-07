@@ -635,21 +635,26 @@
 /*
  PagePairingAppletv
 */
-"PagePairingAppletvText1" = "반가워요, 애플 TV 고객님!";
-"PagePairingAppletvText2" = "아래 확인 버튼을 누르시면 바로\n모바일 B tv를 이용하실 수 있습니다.";
+"pairingAppletvText1" = "반가워요, 애플 TV 고객님!";
+"pairingAppletvText2" = "아래 확인 버튼을 누르시면 바로\n모바일 B tv를 이용하실 수 있습니다.";
 
 /*
  PagePairingInvite
 */
-"PagePairingFamilyInviteText1" = "님의\n초대를 받으셨네요!";
-"PagePairingFamilyInviteText2" = "아래 확인 버튼을 누르시면 바로\n모바일 B tv를 이용하실 수 있습니다.";
-"PagePairingFamilyInviteError" = "B tv 연결에 실패하였습니다.\n계속 연결 불가한 경우\n고객센터(국번 없이 106)로\n문의해 주세요.";
-"PagePairingFamilyInviteErrorHost" = "초대자가 B tv 연결을 해제하여\nB tv 연결을 완료하실 수 없습니다.\n다시 초대를 요청하시거나\n모바일 B tv에서 직접 B tv를\n연결하실 수 있습니다.";
-"PagePairingFamilyInviteErrorAlreadyPairing" = "초대받은 B tv에\n이미 연결 중입니다.";
-"PagePairingFamilyInviteErrorAnotherPairing" = "다른 B tv에 연결 중에는\n초대받은 B tv 연결을\n완료하실 수 없습니다.";
-"PagePairingFamilyInviteErrorAnotherPairingSub" = "연결된 B tv를 연결 해제하고\n다시 시도해 주세요.";
+"pairingFamilyInviteText1" = "님의\n초대를 받으셨네요!";
+"pairingFamilyInviteText2" = "아래 확인 버튼을 누르시면 바로\n모바일 B tv를 이용하실 수 있습니다.";
+"pairingFamilyInviteError" = "B tv 연결에 실패하였습니다.\n계속 연결 불가한 경우\n고객센터(국번 없이 106)로\n문의해 주세요.";
+"pairingFamilyInviteErrorHost" = "초대자가 B tv 연결을 해제하여\nB tv 연결을 완료하실 수 없습니다.\n다시 초대를 요청하시거나\n모바일 B tv에서 직접 B tv를\n연결하실 수 있습니다.";
+"pairingFamilyInviteErrorAlreadyPairing" = "초대받은 B tv에\n이미 연결 중입니다.";
+"pairingFamilyInviteErrorAnotherPairing" = "다른 B tv에 연결 중에는\n초대받은 B tv 연결을\n완료하실 수 없습니다.";
+"pairingFamilyInviteErrorAnotherPairingSub" = "연결된 B tv를 연결 해제하고\n다시 시도해 주세요.";
 
-"PagePairingFamilyInviteErrorExpired" = "초대받은 링크의\n유효 시간이 초과되었습니다.\n다시 초대를 요청하시거나\n모바일 B tv에서 직접 B tv를\n연결하실 수 있습니다.";
+"pairingFamilyInviteErrorExpired" = "초대받은 링크의\n유효 시간이 초과되었습니다.\n다시 초대를 요청하시거나\n모바일 B tv에서 직접 B tv를\n연결하실 수 있습니다.";
+
+"pairingFamilyInviteErrorLimited" = "연결 기기 수 초과 안내";
+"pairingFamilyInviteErrorLimitedText" = "초대 받은 B tv에 이미 4대의\n기기가 연결되어 있습니다.\n연결된 기기 수 조정 후\n다시 시도해 주세요.";
+"pairingFamilyInviteErrorLimitedSub" = "[B tv에서 MY > 설정 > 모바일 B tv 연결 메뉴 선택]";
+
 
 
 /*
@@ -670,7 +675,7 @@
 "myWatchedInfo" = "최근 1개월 간 시청한 VOD 목록입니다.";
 "myTicketInfo" = "할인내역 및 구매 상품의 상세정보 확인, 변경은 B tv내 구매내역에서 확인하실 수 있습니다.";
 "myAlramInfo" = "최근 15일간 수신한 알림 메시지입니다.";
-"myWatchedEmpty" = "최근 시청 내역이 없습니다.";
+"myWatchedEmpty" = "시청 중인 콘텐츠가 없습니다.";
 "myPurchaseEmpty" = "구매 내역이 없습니다.";
 "myCollectedEmpty" = "구매하신 소장 VOD가 없습니다.";
 "myAlramEmpty" = "수신한 알림 메시지가 없습니다.";
@@ -867,13 +872,21 @@
  */
 "introTitle1" = "모바일과 태블릿으로\n즐기는 모바일 B tv.";
 "introText1" = "B tv의 VOD 16만편과 모든 이용권 콘텐츠를\n모바일과 태블릿으로 시청해 보세요.\nB tv에서 보시던 VOD 이어보기는 물론,\n모바일 리모컨까지 이용하실 수 있습니다.";
-"introTitle2" = "우리 가족 최대 4명까지\n온 가족 모두 즐기는 모바일 B tv";
-"introText2" = "가족별로 나만의 B tv를 만들어 보세요.";
+"introTitle2" = "B tv 즐거움이 모바일에 쏙!\n최대 4명까지!";
+"introText2" = "모바일과 태블릿에서도 B tv 콘텐츠를\n감상하실 수 있어요. 모바일 B tv에서\n온 가족 각자 취향대로 즐기세요.";
 "introTitle3" = "복잡한 가입 절차 없이\n간편하게 지금 모바일 B tv를 이용해 보세요.";
 "introText3" = "ID, Password 필요 없이\n나의 프로필을 만들고 간편하게 1~3번만 클릭하면\n바로 이용하실 수 있습니다.";
-"introTitle4" = "알림 설정과 클립 영상\n새롭게 만나보세요!";
-"introText4" = "나만을 위한 알림들!\n놓치지 않고 더 편리하게 확인하실 수 있어요.\n이동하는 차 안과 짧은 휴식 시간에는\n클립 영상으로 즐기세요.";
+"introTitle4" = "새로워진 ZEM 키즈와\n콘텐츠 추천 혜택을 만나보세요!";
+"introText4" = "키즈 전용 메뉴에서 우리 아이\n맞춤 콘텐츠로 유익하게 즐기세요!\n친구에게 VOD를 추천하면 친구는 할인쿠폰을!\n나는 B포인트를 받을 수 있어요!";
 
+"introTitleHorizontal1" = "모바일과 태블릿으로\n즐기는 모바일 B tv";
+"introTextHorizontal1" = "B tv의 VOD 16만편과 모든 월정액 콘텐츠를\n모바일과 태블릿으로 시청해 보세요.\nB tv에서 보시던 VOD 이어보기는 물론,\n모바일 리모컨까지 이용하실 수 있습니다.";
+"introTitleHorizontal2" = "B tv 즐거움이 모바일에 쏙!\n최대 4명까지!";
+"introTextHorizontal2" = "모바일과 태블릿에서도 B tv 콘텐츠를\n감상하실 수 있어요. 모바일 B tv에서\n온 가족 각자 취향대로 즐기세요.";
+"introTitleHorizontal3" = "복잡한 가입 절차 없이\n간편하게 지금 모바일 B tv를\n이용해 보세요.";
+"introTextHorizontal3" = "ID, Password 필요 없이\n나의 프로필 만들고 간편하게 1~3번만\n클릭하면 바로 이용하실 수 있습니다.";
+"introTitleHorizontal4" = "새로워진 ZEM 키즈와\n콘텐츠 추천 혜택을\n만나보세요!";
+"introTextHorizontal4" = "키즈 전용 메뉴에서 우리 아이\n맞춤 콘텐츠로 유익하게 즐기세요!\n친구에게 VOD를 추천하면 친구는 할인쿠폰을!\n나는 B포인트를 받을 수 있어요!";
 
 /*
  PageSearch

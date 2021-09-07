@@ -48,8 +48,8 @@ struct ApiGateway{
     static func setGatewayheader( request:URLRequest) -> URLRequest{
         var authorizationRequest = request
        
-        authorizationRequest.addValue("application/json", forHTTPHeaderField: "Accept")
-        authorizationRequest.addValue(
+        authorizationRequest.setValue("application/json", forHTTPHeaderField: "Accept")
+        authorizationRequest.setValue(
             SystemEnvironment.isStage ?  Self.DEBUG_API_KEY : Self.API_KEY, forHTTPHeaderField: "Api_Key")
         /*
         if let isReleaseMode = SystemEnvironment.isReleaseMode {
@@ -64,24 +64,27 @@ struct ApiGateway{
             #endif
         }*/
         let timestamp = Date().toDateFormatter(dateFormat: "yyyyMMddHHmmss.SSS", local: "en_US_POSIX")
-        authorizationRequest.addValue( timestamp, forHTTPHeaderField: "TimeStamp")
-        authorizationRequest.addValue( ApiUtil.getAuthVal(timestamp), forHTTPHeaderField: "Auth_Val")
-        authorizationRequest.addValue( NpsNetwork.hostDeviceId ?? SystemEnvironment.getGuestDeviceId() , forHTTPHeaderField: "Client_ID")
-        authorizationRequest.addValue( AppUtil.getIPAddress() ?? "" , forHTTPHeaderField: "Client_IP")
+        authorizationRequest.setValue( timestamp, forHTTPHeaderField: "TimeStamp")
+        authorizationRequest.setValue( ApiUtil.getAuthVal(timestamp), forHTTPHeaderField: "Auth_Val")
+        authorizationRequest.setValue(
+            NpsNetwork.hostDeviceId ?? SystemEnvironment.getGuestDeviceId() ,
+            forHTTPHeaderField: "Client_ID")
+        
+        authorizationRequest.setValue( AppUtil.getIPAddress() ?? "" , forHTTPHeaderField: "Client_IP")
         
         return authorizationRequest
     }
     
     static func setDefaultheader( request:URLRequest) -> URLRequest{
         var authorizationRequest = request
-        authorizationRequest.addValue("application/json", forHTTPHeaderField: "Accept")
-        authorizationRequest.addValue(
+        authorizationRequest.setValue("application/json", forHTTPHeaderField: "Accept")
+        authorizationRequest.setValue(
             SystemEnvironment.model+"/"+SystemEnvironment.model, forHTTPHeaderField: "x-device-info")
-        authorizationRequest.addValue(
+        authorizationRequest.setValue(
             ApiPrefix.iphone+"/"+SystemEnvironment.systemVersion, forHTTPHeaderField: "x-os-info")
-        authorizationRequest.addValue(
+        authorizationRequest.setValue(
             ApiPrefix.service+"/"+SystemEnvironment.bundleVersion , forHTTPHeaderField: "x-service-info")
-        authorizationRequest.addValue(
+        authorizationRequest.setValue(
             ApiPrefix.device + SystemEnvironment.getGuestDeviceId() , forHTTPHeaderField: "x-did-info")
         return authorizationRequest
     }

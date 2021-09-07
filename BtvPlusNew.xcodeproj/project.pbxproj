@@ -4978,7 +4978,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNewNotification/BtvPlusNewNotification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7447;
+				CURRENT_PROJECT_VERSION = 7449;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = BtvPlusNewNotification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
@@ -5003,7 +5003,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNewNotification/BtvPlusNewNotification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7447;
+				CURRENT_PROJECT_VERSION = 7449;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = BtvPlusNewNotification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
@@ -5191,7 +5191,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7447;
+				CURRENT_PROJECT_VERSION = 7449;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
@@ -5275,7 +5275,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7447;
+				CURRENT_PROJECT_VERSION = 7449;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;

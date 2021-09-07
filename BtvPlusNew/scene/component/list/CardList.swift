@@ -165,7 +165,7 @@ struct CardItem: PageView {
                             Spacer().modifier(MatchVertical(width: 1))
                                 .background(Color.app.blueLightExtra)
                                 .frame(height: Dimen.line.heavy)
-                        } else if self.cardCount > 2 {
+                        } else if self.cardCount > 2 && !self.data.isRepresent{
                             CheckBox(
                                 isChecked: (self.data.isRepresent),
                                 text: String.pageText.myBenefitsDiscountOkSetup,

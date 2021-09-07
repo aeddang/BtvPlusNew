@@ -101,6 +101,10 @@ final class PagePresenter:ObservableObject{
         PageSceneDelegate.instance?.syncOrientation(self.currentTopPage)
     }
     
+    func setIndicatorAutoHidden(_ isHidden:Bool){
+        PageSceneDelegate.instance?.setIndicatorAutoHidden(isHidden)
+    }
+    
     func orientationLock(lockOrientation:UIInterfaceOrientationMask){
         AppDelegate.orientationLock = lockOrientation
     }
@@ -287,7 +291,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                 self.changeSubscription = nil
                 PageLog.d("initAnimationComplete", tag: self.tag)
                 nextContent.initAnimationComplete()
-                self.syncOrientation(newPage)
+               
         }
         pageModel.currentPageObject = newPage
     }
@@ -513,10 +517,17 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         self.requestDeviceOrientation(willChangeOrientation)
     }
     
-    func onFullScreenEnter(isLock:Bool = false, changeOrientation:UIInterfaceOrientationMask? = .landscape){
+    func setIndicatorAutoHidden(_ isHidden:Bool){
         if let controller = self.window?.rootViewController as? PageHostingController<AnyView> {
-            controller.isIndicatorAutoHidden = true
+            controller.isIndicatorAutoHidden = isHidden
+            DispatchQueue.main.async {
+                controller.setNeedsUpdateOfHomeIndicatorAutoHidden()
+            }
         }
+    }
+    
+    func onFullScreenEnter(isLock:Bool = false, changeOrientation:UIInterfaceOrientationMask? = .landscape){
+        self.setIndicatorAutoHidden(true)
         guard let changeOrientation = changeOrientation else { return }
         if isLock { AppDelegate.orientationLock = changeOrientation }
         if self.needOrientationChange(changeOrientation: changeOrientation) {
@@ -524,9 +535,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         }
     }
     func onFullScreenExit(changeOrientation:UIInterfaceOrientationMask? = nil){
-        if let controller = self.window?.rootViewController as? PageHostingController<AnyView> {
-            controller.isIndicatorAutoHidden = false
-        }
+        self.setIndicatorAutoHidden(false)
         AppDelegate.orientationLock = pageModel.getPageOrientationLock(nil) ?? .all
         if let mask = changeOrientation, self.needOrientationChange(changeOrientation: changeOrientation) {
             self.requestDeviceOrientation(mask)
@@ -555,8 +564,9 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         AppDelegate.orientationLock = orientationLock
     }
     
-    final func requestDeviceOrientation(_ mask:UIInterfaceOrientationMask){
+    final func requestDeviceOrientation(_ mask:UIInterfaceOrientationMask, isForce:Bool = false){
         let changeOrientation:UIInterfaceOrientation? = getChangeDeviceOrientation(mask: mask)
+        /*
         if let controller = self.window?.rootViewController as? PageHostingController<AnyView> {
             switch changeOrientation {
                 case .landscapeLeft, .landscapeRight:
@@ -565,6 +575,11 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                     controller.isIndicatorAutoHidden = false
                 default:break
             }
+        }*/
+        if isForce {
+            PageLog.d("requestDeviceOrientation mask force" , tag: "PageScene")
+            UINavigationController.attemptRotationToDeviceOrientation()
+            return
         }
         
         guard let change = changeOrientation else { return }
@@ -574,8 +589,22 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     }
 
     final func getChangeDeviceOrientation(mask:UIInterfaceOrientationMask) -> UIInterfaceOrientation? {
-        if UIDevice.current.orientation == .portrait {
-           
+        
+        let sceneOrientation = sceneObserver.sceneOrientation
+        var current:UIDeviceOrientation? = UIDevice.current.orientation
+        if sceneOrientation == .portrait {
+            switch current {
+            case .landscapeLeft, .landscapeRight: current = nil
+            default:break
+            }
+        } else {
+            switch current {
+            case .portrait, .portraitUpsideDown: current = nil
+            default:break
+            }
+        }
+        
+        if current == .portrait {
             switch mask {
                 case .landscape, .landscapeRight: return .landscapeRight
                 case .landscapeLeft: return .landscapeLeft
@@ -583,7 +612,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                 default:return nil
             }
         }
-        else if UIDevice.current.orientation == .portraitUpsideDown {
+        else if current == .portraitUpsideDown {
             switch mask {
                 case .landscape, .landscapeRight: return .landscapeRight
                 case .landscapeLeft: return .landscapeLeft
@@ -591,7 +620,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                 default:return nil
             }
         }
-        else if UIDevice.current.orientation == .landscapeRight{
+        else if current == .landscapeRight{
             switch mask {
                 //case .landscapeLeft: return .landscapeLeft
                 case .portrait:return .portrait
@@ -599,7 +628,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                 default:return nil
             }
         }
-        else if UIDevice.current.orientation == .landscapeLeft{
+        else if current == .landscapeLeft{
             switch mask {
                 //case .landscapeRight: return .landscapeRight
                 case .portrait:return .portrait
@@ -608,7 +637,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
             }
         }
         else {
-            let sceneOrientation = sceneObserver.sceneOrientation
+            
             switch mask {
             case .landscape: return sceneOrientation == .landscape ? nil : .landscapeLeft
             case .portrait: return sceneOrientation == .portrait ? nil : .portrait

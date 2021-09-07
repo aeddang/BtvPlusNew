@@ -426,6 +426,8 @@ struct MultiBlockBody: PageComponent {
         self.isLoading = true
         self.appSceneObserver.isApiLoading = true
         self.loadingBlocks.append(contentsOf: set)
+        
+        let usePrice:Bool = !self.viewModel.isFree
         self.loadingBlocks.forEach{ block in
             if let apiQ = block.getRequestApi(pairing:self.pairing.status, kid:self.pairing.kid) {
                 dataProvider.requestData(q: apiQ)
@@ -437,7 +439,7 @@ struct MultiBlockBody: PageComponent {
                 }else if block.dataType == .theme , let blocks = block.blocks {
                     if block.uiType == .theme {
                         let themas = blocks.map{ data in
-                            ThemaData().setData(data: data, cardType: block.cardType)
+                            ThemaData(usePrice:usePrice).setData(data: data, cardType: block.cardType)
                         }
                         if let size = themas.first?.type {
                             block.listHeight = size.size.height + Self.tabHeight

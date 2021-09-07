@@ -151,7 +151,7 @@ struct PairingView: PageComponent{
                             data: data,
                             margin:SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.thin ,
                             useTracking:true,
-                            useEmpty:self.isEmpty
+                            useEmpty:true
                             )
                             .padding(.top, Dimen.margin.medium)
                     }
@@ -277,24 +277,25 @@ struct PairingView: PageComponent{
     }//body
    
     @State var isCompleted:Bool = false
-    @State var isEmpty:Bool = false
+    @State var isWatchedEmpty:Bool = false
     @State var watchedData:BlockData? = nil
     func onWatchedData(res:ApiResultResponds){
         guard let resData = res.data as? Watch else { return }
-        let blocks:[WatchItem] = resData.watchList ?? [] 
+        let blocks:[WatchItem] = resData.watchList ?? []
         //if blocks.isEmpty { return }
         var videos = blocks.map{ d in VideoData().setData(data: d) }.filter{$0.isContinueWatch}
+        self.isWatchedEmpty = videos.isEmpty
         let total = videos.count //resData.watch_tot?.toInt()
         if SystemEnvironment.isTablet && videos.count > 6 {
             videos = videos[ 0...6 ].map{$0}
         }
         let blockData = BlockData()
-            .setData(title: String.pageTitle.watched, cardType:.watchedVideo, dataType:.watched, uiType:.video, isCountView: true)
+            .setData(title: String.pageTitle.watched, cardType:.watchedVideo, dataType:.watched, uiType:.video, isCountView: !self.isWatchedEmpty)
         blockData.videos = videos
         blockData.setDatabindingCompleted(total: total)
         
         self.watchedData = blockData
-        self.isEmpty = self.watchedData?.blocks?.isEmpty == true
+        
         withAnimation{ self.isCompleted = true }
     
     }

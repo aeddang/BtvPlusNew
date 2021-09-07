@@ -36,7 +36,7 @@ struct ListItem{
     }
     
     struct banner {
-        static let type01:CGSize = isPad ? CGSize(width: 0, height: 100) : CGSize(width: 0, height: 80)
+        static let type01:CGSize = isPad ? CGSize(width: 770, height: 100) : CGSize(width: 355, height: 80)
         static let type02:CGSize = CGSize(width: 320, height: 120)
         static let type03:CGSize = CGSize(width: 224, height: 154)
         static let type04:CGSize = isPad ? CGSize(width: 243, height: 231) : CGSize(width: 165, height: 154)

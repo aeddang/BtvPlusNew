@@ -49,7 +49,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         viewModel: InfinityScrollModel,
         axes: Axis.Set = .vertical,
         scrollType:InfinityScrollType? = nil,
-        showIndicators: Bool = false,
+        showIndicators: Bool = true,
         contentSize : CGFloat = -1,
         contentNum :Int = -1,
         header:PageViewProtocol? = nil,

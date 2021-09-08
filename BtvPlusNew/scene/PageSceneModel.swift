@@ -110,10 +110,10 @@ struct PageSceneModel: PageModel {
     
     static func needBottomTab(_ pageObject:PageObject, sceneOrientation:SceneOrientation) -> Bool{
         switch pageObject.pageID {
-        case .synopsisPackage, .synopsis :
+        case .synopsis :
             return SystemEnvironment.isTablet ? sceneOrientation == .portrait : true
         case .home, .category, .multiBlock, .search, .my, .webviewList,
-             .categoryList, .previewList, .setup:
+             .categoryList, .previewList, .setup, .synopsisPackage:
             return true
         default :
             return false

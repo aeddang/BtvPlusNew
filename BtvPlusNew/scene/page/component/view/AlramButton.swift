@@ -13,9 +13,11 @@ import SwiftUI
 
 
 struct AlramButton: PageView {
+   
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var data:NotificationData
     @Binding var isAlram:Bool?
     var action: ((_ ac:Bool) -> Void)? = nil
@@ -46,13 +48,14 @@ struct AlramButton: PageView {
             switch res.type {
             case .postNotificationVod(let data): self.regist(data, res:res)
             case .deleteNotificationVod(let srisId): self.delete(srisId, res:res)
-            default: do{}
+            case .updateAgreement(let isAgree, _) : self.onUpdatedPush(res, isAgree: isAgree)
+            default: break
             }
             
         }
         .onReceive(self.dataProvider.$error){ err in
-            guard let err = err else { return }
-            self.error(err)
+            //guard let err = err else { return }
+            
         }
         .onAppear{
            
@@ -64,22 +67,46 @@ struct AlramButton: PageView {
         if self.isAlram == true {
             dataProvider.requestData(q: .init( type: .deleteNotificationVod(self.data.srisId)))
         } else {
+            if self.pairing.user?.isAgree3 == true {
+                self.requestrRegist()
+                return
+            }
+            
             self.appSceneObserver.alert = .confirm(
                 String.alert.vodUpdate,
                 String.alert.vodUpdateText,
                 confirmText: String.alert.vodUpdateButton){ isOk in
                 
                 if isOk {
-                    self.dataProvider.requestData(q: .init( type: .postNotificationVod(self.data)))
+                    self.dataProvider.requestData(q: .init(type: .updateAgreement(true)))
+                    self.sendLog(category: String.pageText.setupAlramMarketing, config: true)
                 }
             }
-            
-            
         }
     }
     
+    private func onUpdatedPush(_ res:ApiResultResponds, isAgree:Bool){
+        guard let data = res.data as? NpsResult  else { return onUpdatePushError() }
+        guard let resultCode = data.header?.result else { return onUpdatePushError() }
+        if resultCode == NpsNetwork.resultCode.success.code {
+            let today = Date().toDateFormatter(dateFormat: "yyyy.MM.dd")
+            self.appSceneObserver.event = .toast(
+                isAgree ? today+"\n"+String.alert.pushOn : today+"\n"+String.alert.pushOff
+            )
+            self.requestrRegist()
+        } else {
+            onUpdatePushError()
+        }
+    }
+    private func onUpdatePushError(){
+        self.appSceneObserver.event = .toast( String.alert.pushError )
+    }
+    
+    private func requestrRegist(){
+        self.dataProvider.requestData(q: .init( type: .postNotificationVod(self.data)))
+    }
         
-    func regist(_ data:NotificationData?, res:ApiResultResponds){
+    private func regist(_ data:NotificationData?, res:ApiResultResponds){
         if self.data.srisId == data?.srisId && self.data.epsdId == data?.epsdId {
             if !checkResult(res:res) { return }
             self.isAlram = true
@@ -87,7 +114,7 @@ struct AlramButton: PageView {
             self.appSceneObserver.event = .toast(String.alert.updateRegistAlram)
         }
     }
-    func delete(_ srisId:String?, res:ApiResultResponds){
+    private func delete(_ srisId:String?, res:ApiResultResponds){
         if self.data.srisId == srisId {
             if !checkResult(res:res) { return }
             self.isAlram = false
@@ -108,8 +135,11 @@ struct AlramButton: PageView {
         return true
     }
     
-    func error(_ err:ApiResultError){
-       
+    
+    
+    private func sendLog(category:String, config:Bool) {
+        let actionBody = MenuNaviActionBodyItem( config: config ? "on" : "off", category: category)
+        self.naviLogManager.actionLog(.clickCardRegister, actionBody: actionBody)
     }
 }
 

@@ -117,7 +117,7 @@ struct PageSetup: PageView {
                                 }
                                 SetupGuideNVersion()
                                 //#if DEBUG
-                                    SetupTest()
+                                    SetupLaboratory()
                                 //#endif
                                 
                             }

@@ -136,8 +136,8 @@ class Repository:ObservableObject, PageProtocol{
         self.dataCancellable.removeAll()
         self.apiManager.clear()
         self.apiManager = ApiManager()
-        self.setupNamedStorage()
         self.setupApiManager()
+        self.setupNamedStorage()
         self.status = .reset
         if isReleaseMode != nil {
             self.event = .reset
@@ -193,6 +193,7 @@ class Repository:ObservableObject, PageProtocol{
                 self.resetSystemEnvironment()
                 self.dataProvider.requestData(q: .init(type: .getGnb))
                 self.pushManager.updateUserAgreement(false)
+                self.pushManager.retryRegisterPushToken()
                 //NotificationCoreData().removeAllNotice()
                 
             case .pairingCompleted :
@@ -200,6 +201,7 @@ class Repository:ObservableObject, PageProtocol{
                 self.pairing.user?.pairingDate = self.userSetup.pairingDate
                 self.pairing.hostDevice?.modelName = self.userSetup.pairingModelName
                 self.dataProvider.requestData(q: .init(type: .getGnb))
+                self.pushManager.retryRegisterPushToken()
                 self.pushManager.updateUserAgreement(self.pairing.user?.isAgree3 ?? false)
                 if !NpsNetwork.isAutoPairing {
                     self.appSceneObserver?.event = .toast(String.alert.pairingCompleted)
@@ -396,11 +398,25 @@ class Repository:ObservableObject, PageProtocol{
         self.pairing.updateUser(data)
     }
     
-    private func updatePush(_ isAgree:Bool) {
+    func updatePush(_ isAgree:Bool) {
         self.pairing.updateUserAgreement(isAgree)
         self.pushManager.updateUserAgreement(isAgree)
     }
     
+    
+    func updateWatchLv(_ lv:Setup.WatchLv?){
+        SystemEnvironment.watchLv = lv?.rawValue ?? 0
+        self.userSetup.watchLv = SystemEnvironment.watchLv
+        self.appSceneObserver?.alert = .alert(
+            lv == nil ? String.alert.watchLvCanceled : String.alert.watchLvCompleted,
+            lv == nil ? String.alert.watchLvCanceledInfo :  String.alert.watchLvCompletedInfo)
+        self.event = .updatedWatchLv
+    }
+    
+    func resetAuth(){
+        self.updateAdultAuth(able: false)
+        self.updateFirstMemberAuth(able: false)
+    }
     func updateAdultAuth(able:Bool){
         self.userSetup.isAdultAuth = able
         SystemEnvironment.isAdultAuth = able
@@ -413,33 +429,23 @@ class Repository:ObservableObject, PageProtocol{
         } else {
             self.event = .updatedAdultAuth
         }
-        
-    }
-    func updateWatchLv(_ lv:Setup.WatchLv?){
-        SystemEnvironment.watchLv = lv?.rawValue ?? 0
-        self.userSetup.watchLv = SystemEnvironment.watchLv
-        self.appSceneObserver?.alert = .alert(
-            lv == nil ? String.alert.watchLvCanceled : String.alert.watchLvCompleted,
-            lv == nil ? String.alert.watchLvCanceledInfo :  String.alert.watchLvCompletedInfo)
-        self.event = .updatedWatchLv
     }
     
-    func updateFirstMemberAuth(){
-        self.userSetup.isFirstMemberAuth = true
-        SystemEnvironment.isFirstMemberAuth = true
+    func updateFirstMemberAuth(able:Bool = true){
+        self.userSetup.isFirstMemberAuth = able
+        SystemEnvironment.isFirstMemberAuth = able
     }
     
     func resetSystemEnvironment(){
         SystemEnvironment.watchLv = 0
-        SystemEnvironment.isAdultAuth = false
+        //SystemEnvironment.isAdultAuth = false
         SystemEnvironment.isImageLock = false
         if #available(iOS 14.0, *) { SystemEnvironment.isLegacy = false }
         else { SystemEnvironment.isLegacy = true }
         
         
         self.userSetup.watchLv = 0
-        self.userSetup.isAdultAuth = false
-        
+        //self.userSetup.isAdultAuth = false
         self.event = .updatedWatchLv
     }
     

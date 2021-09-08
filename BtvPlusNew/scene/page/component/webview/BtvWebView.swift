@@ -41,7 +41,7 @@ struct BtvWebView: PageComponent {
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     
     @State private var isLoading:Bool = false
-    var useNativeScroll:Bool = true
+    var useNativeScroll:Bool = false
     var scriptMessageHandler :WKScriptMessageHandler? = nil
     var scriptMessageHandlerName : String = ""
     var uiDelegate:WKUIDelegate? = nil

@@ -79,6 +79,7 @@ extension String {
         public static let adMore = "playerAdMore".loaalized()
         public static let adCancel = "playerAdCancel".loaalized()
         public static let replay = "playerReplay".loaalized()
+        public static let disable =  "playerDisable".loaalized()
     }
     
     struct remote {

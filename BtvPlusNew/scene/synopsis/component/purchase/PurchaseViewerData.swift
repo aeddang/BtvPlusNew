@@ -54,7 +54,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
             
         } else if synopsisModel.isOnlyPurchasedBtv && !purchas.hasAuthority {
             serviceInfo = String.pageText.synopsisOnlyPurchasBtv
-            isPlayAble = true
+            isPlayAble = false
             
         } else {
             switch synopsisModel.holdbackType {

@@ -80,7 +80,7 @@ struct SetupPossession: PageView {
                 case .info :
                     self.connectedInfoStb(result:data)
                 }
-            default: do{}
+            default: break
             }
         }
         .onReceive(self.dataProvider.$error){ err in

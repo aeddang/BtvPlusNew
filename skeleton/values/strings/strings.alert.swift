@@ -58,7 +58,8 @@ extension String {
         public static var checkConnectStatus = "alertCheckConnectStatus".loaalized()
         public static var connectNotFound = "alertConnectNotFound".loaalized()
         public static var connectNotFoundSub = "alertConnectNotFoundSub".loaalized()
-        
+        public static var connectCancel = "alertConnectCancel".loaalized()
+        public static var connectCancelText = "alertConnectCancelText".loaalized()
         public static var disConnect = "alertDisConnect".loaalized()
         public static var disConnectText = "alertDisConnectText".loaalized()
         public static var dataNetwork = "alertDataNetwork".loaalized()

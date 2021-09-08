@@ -111,7 +111,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
             let settings: UIUserNotificationSettings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
             application.registerUserNotificationSettings(settings)
         }
-        application.registerForRemoteNotifications()
+        UIApplication.shared.registerForRemoteNotifications()
+        //application.registerForRemoteNotifications()
         let queue = OperationQueue()
         queue.qualityOfService = .utility
         Self.appURLSession = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: queue)
@@ -181,6 +182,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
           }
         }
     }
+    
+   
+
+    
+    
 }
 
 extension AppDelegate : URLSessionDelegate {
@@ -198,7 +204,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         
         let userInfo = notification.request.content.userInfo
         AppDelegate.appObserver.handleApns(userInfo)
-        PageLog.d("userNotificationCenter []", tag: self.tag)
+        PageLog.d("userNotificationCenter[] " + userInfo.debugDescription, tag: self.tag)
         completionHandler([])
     }
     
@@ -207,7 +213,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
         AppDelegate.appObserver.handleApns(userInfo)
-        PageLog.d("userNotificationCenter {}", tag: self.tag)
+        PageLog.d("userNotificationCenter{} " + userInfo.debugDescription, tag: self.tag)
         completionHandler()
     }
 }

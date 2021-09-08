@@ -549,8 +549,15 @@ class SynopsisModel : PageProtocol {
         return curSynopsisItem?.isFree ?? false
     }
     
+    var isOnlyBtvPurchasable: Bool {
+        let useableItems = purchaseModels.filter({ $0.isUse && $0.isSalesPeriod })
+        return useableItems.contains(where: { $0.sale_tgt_fg_yn == "N" }) == false
+            && useableItems.filter({ $0.sale_tgt_fg_yn == "Y" })
+            .contains(where: { !($0.poc_det_typ_cd_list?.contains("102") ?? false) })
+    }
+    
     var isOnlyPurchasedBtv: Bool {
-        !isSingleTrstrs && isOnlyCommerce && !isSeasonWatchAll
+        isOnlyBtvPurchasable && !isSeasonWatchAll
     }
     
     // 현재 시놉시스 판매 상품 월정액 가입 여부. (filterSynopsisItem 에서 purchasedPPMItems yn_direct ppm 추가함.)

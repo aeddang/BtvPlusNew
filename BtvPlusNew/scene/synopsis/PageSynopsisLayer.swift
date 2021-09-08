@@ -43,12 +43,11 @@ extension PageSynopsis {
         if self.uiType == .simple {
             self.pageDragingModel.uiEvent = .dragEnd(false)
         } else {
-            let changeOrientation:UIInterfaceOrientationMask = SystemEnvironment.isTablet
-            ? (self.sceneObserver.sceneOrientation == .portrait ? .portrait :.landscape)
-            : (self.isFullScreen ? .portrait : .landscape)
-            self.isFullScreen
-                ? self.pagePresenter.fullScreenExit(changeOrientation: changeOrientation)
-                : self.pagePresenter.fullScreenEnter(changeOrientation: changeOrientation)
+            if self.isFullScreen {
+                self.onDefaultViewMode()
+            } else {
+                self.onFullScreenViewMode()
+            }
         }
     }
     func onDrag(evt:PageDragingEvent) {

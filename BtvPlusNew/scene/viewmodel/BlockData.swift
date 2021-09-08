@@ -91,6 +91,7 @@ class BlockData:InfinityData, ObservableObject{
     
     @discardableResult
     func setData(grids:[GridsItemKids], usePrice:Bool = true) -> BlockData{
+        self.usePrice = usePrice
         childrenBlock = grids.map{ g in
             BlockData(pageType: .kids).setData(parent:self, grid: g, usePrice: usePrice)
         }
@@ -98,6 +99,7 @@ class BlockData:InfinityData, ObservableObject{
     }
     @discardableResult
     func setData(grids:[GridsItem], usePrice:Bool = true) -> BlockData{
+        self.usePrice = usePrice
         childrenBlock = grids.map{ g in
             BlockData().setData(parent:self, grid: g, usePrice: usePrice)
         }
@@ -110,7 +112,7 @@ class BlockData:InfinityData, ObservableObject{
         self.dataType = parent.dataType
         self.name = grid.sub_title ?? parent.name
         self.cwCallId = parent.cwCallId
-        
+        self.usePrice = usePrice
         let max = MultiBlockBody.maxCellCount
         if let blocks = grid.block {
             switch self.uiType {
@@ -193,7 +195,8 @@ class BlockData:InfinityData, ObservableObject{
     }
     
     
-    func setData(title:String, cardType:CardType, dataType:DataType, uiType:UiType, menuId:String? = nil, isCountView:Bool = false) -> BlockData{
+    func setData(title:String, cardType:CardType, dataType:DataType, uiType:UiType, menuId:String? = nil, isCountView:Bool = false, usePrice:Bool = true) -> BlockData{
+        self.usePrice = usePrice
         self.name = title
         self.cardType = cardType
         self.dataType = dataType
@@ -203,9 +206,11 @@ class BlockData:InfinityData, ObservableObject{
         return self
     }
     
-    func setData(title:String, datas:[PosterData], searchType:SearchType, keyword:String?, max:Int = 30) -> BlockData{
+    func setData(title:String, datas:[PosterData], searchType:SearchType,
+                 keyword:String?, max:Int = 30, usePrice:Bool = true) -> BlockData{
         name = title
         uiType = .poster
+        self.usePrice = usePrice
         self.searchType = searchType
         self.allPosters = datas
         let len = min(datas.count, max)
@@ -217,9 +222,11 @@ class BlockData:InfinityData, ObservableObject{
         return self
     }
     
-    func setData(title:String, datas:[VideoData], searchType:SearchType, keyword:String?, max:Int = 30) -> BlockData{
+    func setData(title:String, datas:[VideoData], searchType:SearchType,
+                 keyword:String?, max:Int = 30, usePrice:Bool = true) -> BlockData{
         name = title
         uiType = .video
+        self.usePrice = usePrice
         self.searchType = searchType
         self.allVideos = datas
         let len = min(datas.count, max)
@@ -235,9 +242,11 @@ class BlockData:InfinityData, ObservableObject{
         return self
     }
     
-    func setData(title:String, datas:[TvData], searchType:SearchType, keyword:String?, max:Int = 30) -> BlockData{
+    func setData(title:String, datas:[TvData], searchType:SearchType,
+                 keyword:String?, max:Int = 30, usePrice:Bool = true) -> BlockData{
         name = title
         uiType = .tv
+        self.usePrice = usePrice
         self.allTvs = datas
         self.searchType = searchType
         let len = min(datas.count, max)

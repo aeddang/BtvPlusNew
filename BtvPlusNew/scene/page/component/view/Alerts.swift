@@ -39,7 +39,7 @@ struct EmptyMyData: PageView {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: Dimen.icon.heavyUltra, height: Dimen.icon.heavyUltra)
             Text(text)
-                    .modifier(BoldTextStyle(size: Font.size.regular, color: Color.app.greyLight))
+                .modifier(BoldTextStyle(size: SystemEnvironment.isTablet ? Font.size.thin : Font.size.regular, color: Color.app.greyLight))
                     .multilineTextAlignment(.center)
                     .padding(.top, Dimen.margin.mediumExtra)
             
@@ -58,9 +58,15 @@ struct EmptyMyData: PageView {
 
 
 struct EmptyAlert: PageView {
+    @EnvironmentObject var sceneObserver:PageSceneObserver
+    
     var icon:String = Asset.icon.alert
+    var title:String? = nil
     var text:String = String.alert.dataError
+    var textHorizontal:String? = nil
     var confirm:(() -> Void)? = nil
+    
+    @State var sceneOrientation: SceneOrientation = .portrait
     var body: some View {
         VStack(alignment: .center, spacing: 0){
             Image(icon)
@@ -68,11 +74,20 @@ struct EmptyAlert: PageView {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: Dimen.icon.mediumUltra, height: Dimen.icon.mediumUltra)
-            Text(text)
+                .padding(.bottom, Dimen.margin.regular)
+            if let title = self.title {
+                Text(title)
+                    .kerning(Font.kern.thin)
+                    .modifier(BoldTextStyle(size: SystemEnvironment.isTablet ? Font.size.regular : Font.size.mediumExtra, color: Color.app.white))
+                    .multilineTextAlignment(.center)
+                    .padding(.bottom, Dimen.margin.light)
+            }
+          
+            Text(self.sceneOrientation == .landscape ? self.textHorizontal ?? self.text : self.text)
                 .kerning(Font.kern.thin)
-                .modifier(MediumTextStyle(size: Font.size.regular, color: Color.app.greyLight))
+                .modifier(MediumTextStyle(size: SystemEnvironment.isTablet ? Font.size.thin : Font.size.regular, color: Color.app.greyLight))
                 .multilineTextAlignment(.center)
-                .padding(.top, Dimen.margin.mediumExtra)
+                .padding(.bottom, Dimen.margin.light)
             if let confirm = self.confirm {
                 FillButton(
                     text: String.app.confirm,
@@ -81,12 +96,17 @@ struct EmptyAlert: PageView {
                 ){_ in
                     confirm()
                 }
-                .padding(.top, Dimen.margin.regular)
+                
                 .frame( width:  Dimen.button.regularHorizontal )
             }
         }
         .padding(.all, SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.medium)
+        .onReceive(self.sceneObserver.$isUpdated){ update in
+            if !update {return}
+            self.sceneOrientation  = self.sceneObserver.sceneOrientation
+        }
     }//body
+    
 }
 
 struct AdultAlert: PageView {

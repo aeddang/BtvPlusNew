@@ -23,7 +23,7 @@ struct PageAdultCertification: PageView {
     @State var movePage:PageObject? = nil
     @State var isInfo:Bool = true
     @State var isfail:Bool = false
-    
+    @State var marginBottom:CGFloat = Dimen.app.bottom
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -47,13 +47,10 @@ struct PageAdultCertification: PageView {
                             isRecycle:false,
                             useTracking:true
                         ){
-                            BtvWebView( viewModel: self.webViewModel )
+                            BtvWebView( viewModel: self.webViewModel , useNativeScroll:false)
                                 .modifier(MatchHorizontal(height: self.webViewHeight))
                                 .onReceive(self.webViewModel.$screenHeight){height in
-                                    self.webViewHeight = geometry.size.height
-                                        - Dimen.app.top
-                                        - self.sceneObserver.safeAreaTop
-                                        - self.sceneObserver.safeAreaBottom
+                                    self.setWebviewSize(geometry: geometry)
                                 }
                         }
                         if isInfo {
@@ -165,7 +162,17 @@ struct PageAdultCertification: PageView {
                 default : break
                 }
             }
-            
+            .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    withAnimation{ self.marginBottom = bottom }
+                    self.setWebviewSize(geometry: geometry)
+                }
+            }
+            .onReceive(self.sceneObserver.$isUpdated){ isUpdated in
+                if isUpdated {
+                    self.setWebviewSize(geometry: geometry)
+                }
+            }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
                 if let data = obj.getParamValue(key: .data) as? PageObject {
@@ -178,7 +185,12 @@ struct PageAdultCertification: PageView {
         }//geo
     }//body
     
-   
+    private func setWebviewSize(geometry:GeometryProxy){
+        self.webViewHeight = geometry.size.height
+            - Dimen.app.top
+            - self.sceneObserver.safeAreaTop
+            - self.sceneObserver.safeAreaIgnoreKeyboardBottom
+    }
 }
 
 #if DEBUG

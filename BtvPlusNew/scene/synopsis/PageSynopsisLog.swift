@@ -103,6 +103,16 @@ extension PageSynopsis {
         default: break
         }
     }
+    
+    func onEvent(pageStatus:PageStatus){
+        switch pageStatus {
+        case .enterForeground : break
+            //self.log(type:.play )
+        case .enterBackground :
+            self.log(type:.stop)
+        default: break
+        }
+    }
 
     func onStatus(playerStatus:PlayerStatus){
     }

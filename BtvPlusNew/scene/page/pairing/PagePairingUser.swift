@@ -31,7 +31,11 @@ struct PagePairingUser: PageView {
                     PageTab(
                         title: String.pageTitle.certificationUser, //String.pageTitle.connectCertificationBtv,
                         isClose: true
-                    )
+                    ){
+                        self.appSceneObserver.alert = .confirm(String.alert.connectCancel, String.alert.connectCancelText,  confirmText: String.button.end) { isOk in
+                            if isOk { self.pagePresenter.closePopup(self.pageObject?.id) }
+                        }
+                    }
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     
                     ZStack(alignment: .topLeading){

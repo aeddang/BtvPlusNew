@@ -358,7 +358,7 @@ struct CateBlock: PageComponent{
     @State var banners:[BannerDataSet] = []
     @State var tvs:[TvDataSet] = []
     
-    @State var isPaging:Bool = true
+    @State var isPaging:Bool = false
     @State var isSortAble:Bool = false
     @State var useTop:Bool = false
     

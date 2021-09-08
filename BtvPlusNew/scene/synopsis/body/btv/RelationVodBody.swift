@@ -140,7 +140,7 @@ struct RelationVodHeader: PageComponent{
             .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: RelationVodList.spacing))
         }
         
-        if !self.seris.isEmpty {
+        if self.relationContentsModel.hasSris{
             SerisTab(
                 data:self.relationContentsModel,
                 seris: self.$seris
@@ -170,30 +170,7 @@ struct RelationVodListBody: PageComponent{
     var useIndex:Bool = false
     
     var body: some View {
-        if !self.seris.isEmpty {
-            ForEach(self.seris) { data in
-                SerisItem(
-                    relationContentsModel: self.relationContentsModel,
-                    data:data.setListType(self.serisType) )
-                    .onTapGesture {
-                        if data.hasLog {
-                            self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog)
-                        }
-                        self.componentViewModel.uiEvent = .changeVod(data.epsdId)
-                    }
-                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))
-            }
-            if let tip = self.relationContentsModel.serisTip {
-                VStack(alignment:.leading, spacing:0){
-                    Text(tip).modifier(LightTextStyle(size: Font.size.tiny, color: Color.app.greyExtra))
-                        .padding(.top, Dimen.margin.thin)
-                    Spacer()
-                }
-                .frame( height: self.seris.first?.type.size.height)
-                .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))
-            }
-        
-        } else if !self.relationDatas.isEmpty {
+        if !self.relationDatas.isEmpty {
             ForEach(self.relationDatas) { data in
                 PosterSet(
                     data:data,
@@ -204,10 +181,49 @@ struct RelationVodListBody: PageComponent{
                 .frame(height: PosterSet.listSize(data: data, screenWidth: self.screenSize).height)
                 .modifier(ListRowInset(spacing: Dimen.margin.thin))
             }
+        } else if self.relationContentsModel.hasSris {
+            if self.seris.isEmpty {
+                VStack(spacing:0){
+                    EmptyAlert(
+                        title: String.pageText.synopsisNoRelationSeries,
+                        text: String.pageText.synopsisNoRelationSeriesMessage,
+                        textHorizontal :String.pageText.synopsisNoRelationSeriesMessageHorizontal)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.top, Dimen.margin.regular)
+                        
+                    Spacer().modifier(MatchHorizontal(height: 0))
+                }
+                .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: RelationVodList.spacing))
+                
+            } else {
+                ForEach(self.seris) { data in
+                    SerisItem(
+                        relationContentsModel: self.relationContentsModel,
+                        data:data.setListType(self.serisType) )
+                        .onTapGesture {
+                            if data.hasLog {
+                                self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog)
+                            }
+                            self.componentViewModel.uiEvent = .changeVod(data.epsdId)
+                        }
+                        .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))
+                }
+                if let tip = self.relationContentsModel.serisTip?.replace("\n", with: "") {
+                    VStack(alignment:.leading, spacing:0){
+                        Text(tip).modifier(LightTextStyle(size: Font.size.tiny, color: Color.app.greyExtra))
+                            .padding(.top, Dimen.margin.thin)
+                        Spacer()
+                    }
+                    .frame( height: self.seris.first?.type.size.height)
+                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin, spacing: Dimen.margin.thin))
+                }
+            }
+            
+        
         } else {
             Spacer().modifier(MatchHorizontal(height: RelationVodList.spacing ))
         }
         
     }//body
-   
+    
 }

@@ -190,7 +190,7 @@ class Nps: Rest{
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-511")
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
-        params["guest_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["guest_deviceid"] = SystemEnvironment.deviceId
         params["include_tier"] = "1"
         params["initial_flag"] = NpsNetwork.isHelloInit ? "1" : "0"
         params["custom_param"] = customParam
@@ -212,7 +212,7 @@ class Nps: Rest{
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-546")
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
-        params["guest_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["guest_deviceid"] = SystemEnvironment.deviceId
         params["authcode"] = authcode
         params["host_deviceid"] = hostDeviceid
         params["custom_param"] = customParam
@@ -230,7 +230,7 @@ class Nps: Rest{
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-533")
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
-        params["pairing_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["pairing_deviceid"] = SystemEnvironment.deviceId
         params["pairing_device_type"] =  NpsNetwork.DEVICE_TYPE
         params["pairingid"] = NpsNetwork.pairingId
         params["userId"] = NpsNetwork.USER_ID
@@ -262,7 +262,7 @@ class Nps: Rest{
         }
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
-        params["guest_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["guest_deviceid"] = SystemEnvironment.deviceId
         params["user_name"] = NpsNetwork.getNpsUsername(userName: user?.nickName)
         params["muser_num"] = ""
         params["userid"] =  NpsNetwork.USER_ID
@@ -284,7 +284,7 @@ class Nps: Rest{
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-512")
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
-        params["guest_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["guest_deviceid"] = SystemEnvironment.deviceId
         params["user_name"] = NpsNetwork.getNpsUsername(userName: user?.nickName)
         params["sessionid"] = NpsNetwork.sessionId
         params["authcode"] = authcode
@@ -305,7 +305,7 @@ class Nps: Rest{
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-513")
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
-        params["guest_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["guest_deviceid"] = SystemEnvironment.deviceId
         params["sessionid"] = NpsNetwork.sessionId
         params["pairingid"] = NpsNetwork.pairingId
         params["muser_num"] = ""
@@ -329,7 +329,7 @@ class Nps: Rest{
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-544")
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
-        params["guest_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["guest_deviceid"] = SystemEnvironment.deviceId
         params["sessionid"] = NpsNetwork.sessionId
         params["pairingid"] = NpsNetwork.pairingId
         params["guest_deviceinfo"] = userInfo
@@ -349,7 +349,7 @@ class Nps: Rest{
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-542")
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
-        params["guest_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["guest_deviceid"] = SystemEnvironment.deviceId
         params["sessionid"] = NpsNetwork.sessionId
         params["pairingid"] = NpsNetwork.pairingId
         params["user_name"] = NpsNetwork.getNpsUsername(userName: name)
@@ -367,7 +367,7 @@ class Nps: Rest{
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-536")
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
-        params["pairing_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["pairing_deviceid"] = SystemEnvironment.deviceId
         params["pairing_device_type"] = NpsNetwork.DEVICE_TYPE
         params["pairingid"] = NpsNetwork.pairingId
         params["custom_param"] = customParam
@@ -389,7 +389,7 @@ class Nps: Rest{
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-535")
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
-        params["pairing_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["pairing_deviceid"] = SystemEnvironment.deviceId
         params["pairing_device_type"] = NpsNetwork.DEVICE_TYPE
         params["pairingid"] = NpsNetwork.pairingId
         params["agreement"] = agreement
@@ -407,7 +407,7 @@ class Nps: Rest{
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-534")
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
-        params["pairing_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["pairing_deviceid"] = SystemEnvironment.deviceId
         params["pairing_device_type"] = NpsNetwork.DEVICE_TYPE
         params["pairingid"] = NpsNetwork.pairingId
         params["custom_param"] = customParam
@@ -429,7 +429,7 @@ class Nps: Rest{
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-542")
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
-        params["pairing_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["pairing_deviceid"] = SystemEnvironment.deviceId
         params["pairing_device_type"] = NpsNetwork.DEVICE_TYPE
         params["pairingid"] = NpsNetwork.pairingId
         if let value = data?.nickName { params["user_name"] = value }
@@ -449,7 +449,7 @@ class Nps: Rest{
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-551")
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
-        params["guest_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["guest_deviceid"] = SystemEnvironment.deviceId
         params["host_deviceid"] = hostDeviceid
         params["custom_param"] = customParam
         
@@ -466,7 +466,7 @@ class Nps: Rest{
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-552")
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
-        params["guest_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["guest_deviceid"] = SystemEnvironment.deviceId
         params["pairing_token"] = pairingToken
         params["custom_param"] = customParam
         
@@ -483,7 +483,7 @@ class Nps: Rest{
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-553")
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
-        params["guest_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["guest_deviceid"] = SystemEnvironment.deviceId
         params["pairing_token"] = pairingToken
         params["user_name"] = user?.nickName
         params["custom_param"] = customParam
@@ -504,7 +504,7 @@ class Nps: Rest{
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE
         params["pairingid"] = NpsNetwork.pairingId
-        params["send_deviceid"] = SystemEnvironment.getGuestDeviceId()
+        params["send_deviceid"] = SystemEnvironment.deviceId
         params["sessionid"] = NpsNetwork.sessionId
         
         let msg = data?.messageString ?? ""

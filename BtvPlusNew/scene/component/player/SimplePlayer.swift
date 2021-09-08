@@ -201,7 +201,7 @@ struct SimplePlayer: PageComponent{
         let find = quality.path.contains("?")
         let leading = find ? "&" : "?"
         let path = quality.path + leading +
-            "device_id" + SystemEnvironment.getGuestDeviceId() +
+            "device_id" + SystemEnvironment.deviceId +
             "&token=" + (repository.getDrmId() ?? "")
        // ComponentLog.d("path : " + path, tag: self.tag)
         let t = self.viewModel.continuousTime

@@ -11,6 +11,7 @@ import Combine
 
 extension PlayerBottom{
     static let nextProgressTime:Double = 5
+    static let openProgressTime:Double = 10
     static let previewLimit:Double = 5 * 60
 }
     
@@ -140,20 +141,26 @@ struct PlayerBottom: PageView{
                 case .preplay :
                     if self.viewModel.originDuration > Self.previewLimit {
                         self.showPreplay = true
+                    } else {
+                        self.showPreplay = false
+                        self.viewModel.btvPlayerEvent = .disablePreview
+                        DispatchQueue.main.async {
+                            self.viewModel.event = .pause
+                            self.viewModel.event = .stop
+                        }
+                      
                     }
                 case .vod :
-                    self.showDirectview = true
-                    
+                    self.openingTime = min(self.viewModel.openingTime, Self.openProgressTime)
+                    if self.viewModel.endingTime <= 0 {
+                        self.endingTime = t-Self.nextProgressTime
+                        self.showNextCancel = false
+                    } else {
+                        self.endingTime = self.viewModel.endingTime
+                        self.showNextCancel = true
+                    }
                 default : break
                 }
-            }
-            
-            if self.viewModel.endingTime <= 0 {
-                self.endingTime = t-Self.nextProgressTime
-                self.showNextCancel = false
-            } else {
-                self.endingTime = self.viewModel.endingTime
-                self.showNextCancel = true
             }
             withAnimation {
                 self.showFullVod = self.viewModel.fullVod != nil
@@ -164,22 +171,18 @@ struct PlayerBottom: PageView{
             self.isPlaying = play
         }
         .onReceive(self.viewModel.$time){ t in
-            if self.showDirectview {
-                if t >= self.viewModel.openingTime {
-                    withAnimation { self.showDirectview = false }
-                }
-            } else {
-                if t < self.viewModel.openingTime {
-                    withAnimation { self.showDirectview = true }
-                }
-            }
             guard let d = self.durationTime else {return}
             if d <= 0 { return }
-            if self.endingTime != -1 {
+            if self.openingTime > 0 {
+                self.checkOpening(t: t)
+            }
+            if self.endingTime > 0 {
                 self.checkNext(t: t, d:d)
             }
-            if self.insideSearchTime != -1 {
+            if self.insideSearchTime > 0 {
                 self.checkInside(t: t)
+            } else {
+                self.removeInside()
             }
             if !self.viewModel.isPlay80 {
                 let rate = t/d
@@ -202,13 +205,28 @@ struct PlayerBottom: PageView{
     
     @State var nextBtnTitle:String = ""
     @State var isSeasonNext:Bool = false
+    @State var openingTime:Double = -1
     @State var endingTime:Double = -1
     @State var showNext = false
     @State var showNextCancel = false
     @State var nextTimer:AnyCancellable?
     @State var nextProgress:Float = 0.0
+    
+    func checkOpening(t:Double){
+        if self.showDirectview {
+            if t > self.openingTime {
+                withAnimation { self.showDirectview = false }
+            }
+        } else {
+            if t < self.openingTime {
+                withAnimation { self.showDirectview = true }
+            }
+        }
+    }
+    
     func checkNext(t:Double, d:Double){
         if t > self.endingTime {
+            if (t - self.endingTime) > 1 { return }
             if !self.showNext {
                 self.nextProgressStart(t: d-t)
             }
@@ -260,7 +278,12 @@ struct PlayerBottom: PageView{
         let cookies =  self.insideModel.cookies
         self.cookies = cookies
     }
-    
+    func removeInside(){
+        if self.currentCookie != nil {
+            self.showCookie = nil
+            self.currentCookie = nil
+        }
+    }
     func checkInside(t:Double){
         guard let cookies = self.cookies else {return}
         if t < self.insideSearchTime {return}

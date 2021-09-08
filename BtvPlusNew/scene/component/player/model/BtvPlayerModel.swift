@@ -51,7 +51,7 @@ enum BtvUiEvent {
 enum BtvPlayerEvent {
     case nextView(isAuto:Bool = false), nextViewCancel,
          continueView, changeView(String), cookieView, fullVod(SynopsisData),
-         close, stopAd, play80
+         close, stopAd, play80, disablePreview
 }
 
 enum BtvPlayerType {
@@ -158,10 +158,16 @@ class BtvPlayerModel:PlayerModel{
                 self.initPlay = autoPlay
                 self.fullVod = fullVod
             
-            case .vod(let t, let autoPlay), .vodNext(let t, let autoPlay), .vodChange(let t, let autoPlay):
-                self.openingTime = playData.openingTime ?? 0
-                self.endingTime = playData.endingTime ?? 0
+            case .vod(let t, let autoPlay), .vodChange(let t, let autoPlay):
+                self.openingTime = playData.openingTime ?? -1
+                self.endingTime = playData.endingTime ?? -1
                 self.continuousTime = t
+                self.initPlay = autoPlay
+                self.useInside = true
+            case .vodNext(let t, let autoPlay):
+                self.openingTime = playData.openingTime ?? -1
+                self.endingTime = playData.endingTime ?? -1
+                self.continuousTime = t == 0 ? self.openingTime : t
                 self.initPlay = autoPlay
                 self.useInside = true
             default: break

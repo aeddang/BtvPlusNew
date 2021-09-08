@@ -37,7 +37,7 @@ class Push: Rest{
         params["device_type"] = PushNetwork.DEVICE_TYPE
         params["app_id"] = PushNetwork.APP_ID
         params["sender_name"] = "btv plus,ios " + SystemEnvironment.systemVersion + "," + SystemEnvironment.bundleVersion
-        params["cuid"] = SystemEnvironment.deviceId
+        params["cuid"] = PushManager.currentCuid
         fetch(route: PushRegistEndpoint(body: params), completion: completion, error:error)
     }
     
@@ -55,7 +55,7 @@ class Push: Rest{
         params["agr_yn_push"] = isAgree ? "Y" : "N"
         params["device_type"] = PushNetwork.DEVICE_TYPE
         params["app_id"] = PushNetwork.APP_ID
-        params["cuid"] = SystemEnvironment.deviceId
+        params["cuid"] = PushManager.currentCuid
         fetch(route: PushUpdatePushUserAgreement(body: params), completion: completion, error:error)
     }
 }

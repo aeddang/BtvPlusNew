@@ -198,6 +198,7 @@
 "btnSubscribe" = "구독하기";
 "btnTestResult" = "진단 결과 보기";
 "btnCashCharge" = "B포인트 충전소";
+"btnEnd" = "종료하기";
 /*
  Sort
 */
@@ -288,6 +289,8 @@
 "alertCheckConnectStatus" = "B tv와 연결 상태 확인 중 입니다.";
 "alertDataNetwork" = "데이터 네트워크로 연결되어 데이터가 소진됩니다.\n(Wi-Fi 연결 시 무료 이용 가능)";
 
+"alertConnectCancel" = "B tv 연결 종료";
+"alertConnectCancelText" = "B tv와 연결이 완료되지 않았습니다.\n연결을 종료하시겠습니까?";
 "alertDisConnect" = "B tv 연결해제";
 "alertDisConnectText" = "휴대폰과 연결을 해제하시면\n휴대폰에 등록된 정보가 모두 삭제됩니다.\n해제하시겠습니까?";
 
@@ -842,6 +845,9 @@
 "synopsisSummry" = "제작/출연진 및 줄거리";
 "synopsisRelationVod" = "비슷한 영화";
 "synopsisNoRelationVod" = "이 작품과 비슷한 영화를\n찾을 수 없습니다.";
+"synopsisNoRelationSeries" = "시청 가능한 회차가 없습니다.";
+"synopsisNoRelationSeriesMessage" = "지상파 콘텐츠의 경우 B tv에서만 시청 가능한 회차는\n제공되지 않습니다. 지상파 이용권에 구독하시면\n모든 회차를 모바일로 즐기실 수 있습니다.";
+"synopsisNoRelationSeriesMessageHorizontal" = "지상파 콘텐츠의 경우 B tv에서만\n시청 가능한 회차는 제공되지 않습니다.\n지상파 이용권에 구독하시면\n모든 회차를 모바일로\n즐기실 수 있습니다.";
 
 "synopsisRelationVodKids" = "연관 콘텐츠";
 "synopsisNoRelationVodKids" = "이 영상의\n연관 콘텐츠를\n찾을 수 없습니다.";
@@ -851,13 +857,14 @@
 "synopsisDDay" = "편성 종료 D-";
 "synopsisPackageContent" = "구성 콘텐츠";
 
-"synopsisUnavailableSeriesMessage" = "지상파 콘텐츠의 경우 B tv에서만 시청 가능한 회차는 제공되지 않습니다. 지상파 이용권에 구독하시면 모든 회차를 모바일로 즐기실 수 있습니다.";
+
 "synopsisAward" = "수상이력";
 
 "synopsisCornerPlayNeedPurchased" = "선택하신 코너 영상은 구매 후 시청하실 수 있습니다. 구매하시겠습니까?";
 "synopsisCornerPlayNotNscreen" = "선택하신 코너 영상은 모바일 시청을 지원하지 않습니다. B tv에서 시청해 주세요.";
 "synopsisCornerPlayOnlyPurchasedBtv" = "선택하신 코너 영상은 B tv에서 구매 후 시청 가능합니다. B tv에서 구매해 주세요.";
 
+"synopsisNextPlay" = "연속 재생";
 "synopsisNextPlayConfirm" = "다음 회차를 시청하시겠습니까?";
 "synopsisNextPlayFail" = "다음 회차 보기에 실패했습니다.";
 
@@ -963,7 +970,7 @@
 "playerAdCancel" = "광고 건너뛰기";
 "playerMoveSec" = "초 이동";
 "playerReplay" = "지금 보는 영상이 반복 재생됩니다";
-
+"playerDisable" = "구매 후 시청 가능";
 /*
  Remote
 */

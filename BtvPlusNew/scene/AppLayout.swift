@@ -182,7 +182,7 @@ struct AppLayout: PageComponent{
         }
         .onReceive (self.appObserver.$apnsToken) { token in
             guard let token = token else { return }
-            self.repository.pushManager.registerPushToken(token)
+            self.repository.pushManager.initRegisterPushToken(token)
         }
         
         .onReceive(self.repository.$status){ status in
@@ -201,6 +201,7 @@ struct AppLayout: PageComponent{
         }
         .onAppear(){
             self.isLoading = true
+            UIScrollView.appearance().indicatorStyle = .white
             //UIScrollView.appearance().bounces = false
             //UITableView.appearance().separatorStyle = .none
             /*

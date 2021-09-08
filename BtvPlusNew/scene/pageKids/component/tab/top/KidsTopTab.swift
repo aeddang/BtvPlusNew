@@ -51,6 +51,7 @@ struct KidsTopTab: PageComponent{
                 var move:PageObject? = nil
                 if let historyPage = self.appSceneObserver.finalBtvPage {
                     move = historyPage
+                    move?.removeParam(key: .subId)
                 } else if let home  = self.dataProvider.bands.getHome() {
                     move = PageProvider.getPageObject(.home).addParam(key: .id, value: home.menuId)
                 }

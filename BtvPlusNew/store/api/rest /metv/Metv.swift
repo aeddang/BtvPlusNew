@@ -336,7 +336,6 @@ class Metv: Rest{
         if let deleteID = data.srisId {
             params["deleteList"] = [deleteID]
         }
-        
         var headers = [String : String]()
         headers["method"] = "delete"
         fetch(route: MetvDelBookMark(headers: headers, body: params), completion: completion, error:error)
@@ -413,7 +412,9 @@ class Metv: Rest{
         params["entry_no"] = pageCnt?.description ?? "999"
         params["hash_id"] = ApiUtil.getHashId(stbId)
         
-        fetch(route: MetvPossessionPurchase(query: params), completion: completion, error:error)
+        var overrideHeaders = [String:String]()
+        overrideHeaders["Client_ID"] = stbId
+        fetch(route: MetvPossessionPurchase(query: params, overrideHeaders:overrideHeaders), completion: completion, error:error)
     }
     /**
     * STB 닉네임 리스트 조회 (IF-ME-051)
@@ -562,6 +563,7 @@ struct MetvPossessionPurchase:NetworkRoute{
    var method: HTTPMethod = .get
    var path: String = "/metv/v5/purchase/closeduser-unlimited"
    var query: [String : String]? = nil
+   var overrideHeaders: [String : String]? = nil
 }
 
 struct MetvPostAttendance:NetworkRoute{

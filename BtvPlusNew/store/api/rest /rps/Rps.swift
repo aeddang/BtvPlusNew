@@ -30,7 +30,7 @@ class Rps: Rest{
         params["IF"] = "IF-MGMRPS-004"
         params["stb_id"] = stbId
         params["m"] = "recommendHistory"
-        params["device_id"] = SystemEnvironment.getGuestDeviceId()
+        params["device_id"] = SystemEnvironment.deviceId
         params["page_no"] = "1"
         params["page_cnt"] = "999"
         fetch(route: RpsRecommendHistory(query: params), completion: completion, error:error)

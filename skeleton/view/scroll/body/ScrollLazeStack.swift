@@ -94,7 +94,7 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
             
             ScrollViewReader{ reader in
                 ZStack(alignment:.bottomTrailing){
-                    ScrollView(self.isScroll ? self.axes : [], showsIndicators: self.showIndicators) {
+                    ScrollView(self.isScroll ? self.axes : [], showsIndicators: self.axes == .vertical ? self.showIndicators : false) {
                         if self.axes == .vertical {
                             ZStack(alignment: self.isAlignCenter ? .top : .topLeading){
                                 if self.useTracking {
@@ -166,7 +166,7 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
                             .frame(alignment: .topLeading)
                         }
                     }
-                   
+                    .preferredColorScheme(.light)
                     .modifier(MatchParent())
                     if !self.isTop && self.axes == .vertical && self.scrollType != .web(), let onTopButton = self.onTopButton {
                         VStack{

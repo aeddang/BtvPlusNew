@@ -71,7 +71,6 @@ struct PlayBlock: PageComponent{
                                     playerModel:self.playerModel,
                                     data: data,
                                     isSelected: data.index == self.focusIndex) { playData in
-                                        
                                         self.forcePlay(data: playData)
                                     }
                                     .id(data.hashId)
@@ -222,7 +221,7 @@ struct PlayBlock: PageComponent{
         }
         .onAppear(){
             self.sceneOrientation = self.sceneObserver.sceneOrientation
-            self.playerModel.isMute = true
+            //self.playerModel.isMute = true
         }
         .onDisappear(){
             self.delayUpdateCancel()
@@ -267,6 +266,7 @@ struct PlayBlock: PageComponent{
     @State var isHold:Bool = false
     private func openFullScreen(){
         if self.playerModel.playData == nil { return }
+        
         self.isHold = true
         self.isFullScreen = true
         self.finalIndex = self.focusIndex
@@ -283,38 +283,57 @@ struct PlayBlock: PageComponent{
     }
     
     private func closeFullScreen(){
+        
         self.isHold = true
         PageLog.d("onCloseFullScreen" + (self.finalIndex?.description ?? ""), tag:self.tag)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+        self.forceScrollReset()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.isFullScreen = false
             self.pagePresenter.orientationLock(lockOrientation: .all)
-            self.isHold = false
             if let posIdx = self.finalIndex {
-                if posIdx > 0 && posIdx < datas.count {
+                if posIdx >= 0 && posIdx < datas.count {
                     self.infinityScrollModel.uiEvent = .scrollTo(datas[posIdx].hashId)
-                    self.onFocusChange(willFocus: posIdx)
-                    PageLog.d("onCloseFullScreen " + (self.selectedData?.title ?? "no"), tag:self.tag)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        self.isHold = false
+                        self.onFocusChange(willFocus: posIdx)
+                        PageLog.d("onCloseFullScreen " + (self.selectedData?.title ?? "no"), tag:self.tag)
+                    }
                 }
             }
         }
     }
     
     private func sceneOrientationUpdate(){
-        if !SystemEnvironment.isTablet {return}
+        if !SystemEnvironment.isTablet {
+            if self.sceneObserver.sceneOrientation == .landscape {
+                self.pagePresenter.fullScreenEnter()
+            }
+            return
+        }
         if self.focusIndex == -1 {return}
+        if self.isHold {return}
         self.isHold = true
-        self.infinityScrollModel.uiEvent = .scrollTo(self.datas[0].hashId)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+        self.finalIndex = self.focusIndex
+        self.focusIndex = -1
+        self.forceScrollReset()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.isFullScreen = false
-            self.isHold = false
-            let posIdx = self.focusIndex
-            if posIdx > 0 && posIdx < self.datas.count {
-                self.infinityScrollModel.uiEvent = .scrollTo(self.datas[posIdx].hashId)
-                self.onFocusChange(willFocus: posIdx)
-                PageLog.d("onSceneOrientationUpdate " + (self.selectedData?.title ?? "no"), tag:self.tag)
+            if let posIdx = self.finalIndex {
+                if posIdx >= 0 && posIdx < self.datas.count {
+                    self.infinityScrollModel.uiEvent = .scrollTo(self.datas[posIdx].hashId)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        self.isHold = false
+                        self.onFocusChange(willFocus: posIdx)
+                        PageLog.d("onSceneOrientationUpdate " + (posIdx.description), tag:self.tag)
+                    }
+                }
             }
            
         }
+    }
+    private func forceScrollReset(){
+        let resetPos = self.finalIndex == 0 ? min(5,self.datas.count) : 0
+        self.infinityScrollModel.uiEvent = .scrollTo(self.datas[resetPos].hashId)
     }
     
     private func onPlaytimeChanged(t:Double){
@@ -449,15 +468,15 @@ struct PlayBlock: PageComponent{
     @State var prevPos:CGFloat = -1
     private func onUpdate(){
         if self.isHold { return }
-        //PageLog.d("onUpdate " + self.maxCount.description, tag: self.tag)
         if self.maxCount < 1 {return}
         let cPos = self.infinityScrollModel.scrollPosition
-        if prevPos == -1 {
+        //PageLog.d("onUpdate " + self.prevPos.description + "  " + cPos.description, tag: self.tag)
+        if prevPos == -1 || cPos >= 10 {
             self.onFocusChange(willFocus: 0)
             return
         }
         let range = self.getRange()
-        let modifyPos = abs(cPos - (range*0.3))
+        let modifyPos = abs(cPos - (range*0.5))
         let willPos:Int = Int( round(modifyPos / range) )
         
         PageLog.d("onUpdate range " + range.description, tag: self.tag)
@@ -475,7 +494,8 @@ struct PlayBlock: PageComponent{
     }
     
     private func onFocusChange(willFocus:Int){
-        
+        if self.isHold {return}
+        if self.datas.isEmpty {return}
         PageLog.d("onFocusChange " + willFocus.description, tag: self.tag)
         self.prevPos = self.infinityScrollModel.scrollPosition
           

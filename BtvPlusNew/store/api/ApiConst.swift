@@ -67,7 +67,7 @@ struct ApiGateway{
         authorizationRequest.setValue( timestamp, forHTTPHeaderField: "TimeStamp")
         authorizationRequest.setValue( ApiUtil.getAuthVal(timestamp), forHTTPHeaderField: "Auth_Val")
         authorizationRequest.setValue(
-            NpsNetwork.hostDeviceId ?? SystemEnvironment.getGuestDeviceId() ,
+            NpsNetwork.hostDeviceId ?? SystemEnvironment.deviceId ,
             forHTTPHeaderField: "Client_ID")
         
         authorizationRequest.setValue( AppUtil.getIPAddress() ?? "" , forHTTPHeaderField: "Client_IP")
@@ -85,7 +85,7 @@ struct ApiGateway{
         authorizationRequest.setValue(
             ApiPrefix.service+"/"+SystemEnvironment.bundleVersion , forHTTPHeaderField: "x-service-info")
         authorizationRequest.setValue(
-            ApiPrefix.device + SystemEnvironment.getGuestDeviceId() , forHTTPHeaderField: "x-did-info")
+            ApiPrefix.device + SystemEnvironment.deviceId , forHTTPHeaderField: "x-did-info")
         return authorizationRequest
     }
     

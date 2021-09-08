@@ -63,7 +63,7 @@ class Lgs: Rest{
        
         params["limit_flag"] = synopData.isLimitedWatch ? "Y" : "N"
         params["event_type"] = evt.rawValue
-        params["mobile_id"] = SystemEnvironment.getGuestDeviceId()
+        params["mobile_id"] = SystemEnvironment.deviceId
         params["mobile_ver"] = SystemEnvironment.bundleVersion
         params["profile_id"] = isKidZone ?  pairing.kid?.id : nil
         params["g_gubun"] = gubun?.isEmpty == false ? gubun : LgsNetwork.GUBUN_ETC

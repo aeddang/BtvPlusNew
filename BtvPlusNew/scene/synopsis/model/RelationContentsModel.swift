@@ -56,7 +56,7 @@ class RelationContentsModel:ObservableObject {
     private(set) var pageType:PageType = .btv
     private(set) var serisTip:String? = nil
     private(set) var unavailableSeris:Bool = false
-    
+    private(set) var hasSris:Bool = false
     @Published var selectedEpsdId:String? = nil
     
     var currentSeasonIdx:Int = -1
@@ -69,6 +69,7 @@ class RelationContentsModel:ObservableObject {
             self.serisTitle = nil
             self.isReady = false
         }
+        self.serisTip = nil
         self.unavailableSeris = false
         self.pageType = pageType
     }
@@ -86,13 +87,13 @@ class RelationContentsModel:ObservableObject {
                 PlayerListData().setData(data: data, title: self.serisTitle, idx: idx)}
             self.apiSortType = synopsis.isSrisCompleted ? .count : .latest
             if list.count != filterList.count {
-                self.serisTip = String.pageText.synopsisUnavailableSeriesMessage
+                self.serisTip = String.pageText.synopsisNoRelationSeriesMessage
             }
             if !self.seris.isEmpty && self.seris.first(where: {$0.epsdId == synopsis.epsdId}) == nil {
                 self.unavailableSeris = true
             }
         }
-        
+        self.hasSris = (!self.seris.isEmpty || self.serisTip != nil)
         if let list = synopsis.siries {
             self.seasons = list.map{
                 let data = SynopsisData(
@@ -213,7 +214,7 @@ class RelationContentsModel:ObservableObject {
 
     private func createTab(tabs:[String]? = nil){
         self.relationTabs = []
-        if  !self.seris.isEmpty {
+        if  self.hasSris {
             self.relationTabs.append(String.pageText.synopsisSiris)
             if self.pageType == .kids {return}
         }

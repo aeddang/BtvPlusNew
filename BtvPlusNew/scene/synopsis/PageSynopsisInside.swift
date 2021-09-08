@@ -43,7 +43,8 @@ extension PageSynopsis {
         guard let playData = self.playerData else { return false}
         if !playData.hasNext { return false}
         if !self.setup.nextPlay && auto {
-            self.appSceneObserver.alert = .confirm(nil, String.pageText.synopsisNextPlayConfirm) { isOk in
+            self.appSceneObserver.alert = .confirm(
+                String.pageText.synopsisNextPlay, String.pageText.synopsisNextPlayConfirm) { isOk in
                 if isOk {
                     nextVod(auto:false)
                 }
@@ -141,9 +142,7 @@ extension PageSynopsis {
         if self.hasAuthority == true {
             return
         }
-        if self.isFullScreen {
-            self.pagePresenter.fullScreenExit()
-        }
+        self.onDefaultViewMode()
         if self.pairing.status != .pairing {
             self.appSceneObserver.alert = .needPairing(String.alert.needConnectForView)
             return

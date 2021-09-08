@@ -67,5 +67,6 @@ extension String {
         public static let subscribe = "btnSubscribe".loaalized()
         public static let testResult = "btnTestResult".loaalized()
         public static let cashCharge = "btnCashCharge".loaalized()
+        public static let end = "btnEnd".loaalized()
     }
 }

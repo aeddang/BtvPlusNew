@@ -166,7 +166,7 @@ class Scs: Rest{
         params["ver"] = ScsNetwork.VERSION
         params["stb_id"] = stbId ?? "noStbId"
         params["mode"] = type.rawValue
-        params["mbtv_key"] = type == .info ? "noMbtvKey" : SystemEnvironment.getGuestDeviceId()
+        params["mbtv_key"] = type == .info ? "noMbtvKey" : SystemEnvironment.deviceId
         params["method"] = "post"
         fetch(route: ScsConnectTerminateStb(body: params), completion: completion, error:error)
     }

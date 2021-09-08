@@ -117,10 +117,10 @@ struct SelectStbBox: View {
             }
             if !SystemEnvironment.isTablet {
                 ZStack{
+                    Spacer().modifier(MatchParent()).background(Color.brand.primary)
                     if !self.isSelecteCompleted {
                         Spacer().modifier(MatchParent()).background(Color.transparent.black45)
                     }
-                    Spacer().modifier(MatchParent()).background(Color.brand.primary)
                 }
                 .modifier(MatchHorizontal(height: self.sceneObserver.safeAreaIgnoreKeyboardBottom))
             }

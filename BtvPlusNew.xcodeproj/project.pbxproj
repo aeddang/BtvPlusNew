@@ -128,6 +128,7 @@
 		31631C6D25D2895000E501F7 /* PlayerWaiting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31631C6C25D2895000E501F7 /* PlayerWaiting.swift */; };
 		31632FFB25EF386F00581FA7 /* MultiBlockBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31632FFA25EF386F00581FA7 /* MultiBlockBody.swift */; };
 		3163300325EF70B000581FA7 /* TextTabList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3163300225EF70B000581FA7 /* TextTabList.swift */; };
+		3163B41C26E8E740008A01B6 /* PlayerDisable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3163B41B26E8E740008A01B6 /* PlayerDisable.swift */; };
 		3166CBB72611639F00282891 /* PageModifyProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3166CBB62611639F00282891 /* PageModifyProfile.swift */; };
 		3166CBDB26119C1B00282891 /* MonthlyPurchaseInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3166CBDA26119C1B00282891 /* MonthlyPurchaseInfo.swift */; };
 		3166CBE42611A15900282891 /* Eps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3166CBE32611A15900282891 /* Eps.swift */; };
@@ -268,7 +269,7 @@
 		318AA043265DE83500C089EC /* SetupChildren.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318AA042265DE83500C089EC /* SetupChildren.swift */; };
 		318AA045265DE8D100C089EC /* SetupHappySenior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318AA044265DE8D100C089EC /* SetupHappySenior.swift */; };
 		318AA047265DE90B00C089EC /* SetupGuideNVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318AA046265DE90B00C089EC /* SetupGuideNVersion.swift */; };
-		318AA04A265DE96900C089EC /* SetupTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318AA049265DE96900C089EC /* SetupTest.swift */; };
+		318AA04A265DE96900C089EC /* SetupLaboratory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318AA049265DE96900C089EC /* SetupLaboratory.swift */; };
 		318AA04C265DFA4F00C089EC /* SetupPossession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318AA04B265DFA4F00C089EC /* SetupPossession.swift */; };
 		318AA04E265E3E3F00C089EC /* MySetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318AA04D265E3E3F00C089EC /* MySetup.swift */; };
 		318B537125F049DA0052E4E0 /* PlayList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318B537025F049DA0052E4E0 /* PlayList.swift */; };
@@ -859,6 +860,7 @@
 		31631C6C25D2895000E501F7 /* PlayerWaiting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerWaiting.swift; sourceTree = "<group>"; };
 		31632FFA25EF386F00581FA7 /* MultiBlockBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiBlockBody.swift; sourceTree = "<group>"; };
 		3163300225EF70B000581FA7 /* TextTabList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextTabList.swift; sourceTree = "<group>"; };
+		3163B41B26E8E740008A01B6 /* PlayerDisable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDisable.swift; sourceTree = "<group>"; };
 		3166CBB62611639F00282891 /* PageModifyProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageModifyProfile.swift; sourceTree = "<group>"; };
 		3166CBDA26119C1B00282891 /* MonthlyPurchaseInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyPurchaseInfo.swift; sourceTree = "<group>"; };
 		3166CBE32611A15900282891 /* Eps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Eps.swift; sourceTree = "<group>"; };
@@ -1001,7 +1003,7 @@
 		318AA042265DE83500C089EC /* SetupChildren.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupChildren.swift; sourceTree = "<group>"; };
 		318AA044265DE8D100C089EC /* SetupHappySenior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupHappySenior.swift; sourceTree = "<group>"; };
 		318AA046265DE90B00C089EC /* SetupGuideNVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupGuideNVersion.swift; sourceTree = "<group>"; };
-		318AA049265DE96900C089EC /* SetupTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupTest.swift; sourceTree = "<group>"; };
+		318AA049265DE96900C089EC /* SetupLaboratory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupLaboratory.swift; sourceTree = "<group>"; };
 		318AA04B265DFA4F00C089EC /* SetupPossession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupPossession.swift; sourceTree = "<group>"; };
 		318AA04D265E3E3F00C089EC /* MySetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySetup.swift; sourceTree = "<group>"; };
 		318B537025F049DA0052E4E0 /* PlayList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayList.swift; sourceTree = "<group>"; };
@@ -2158,6 +2160,7 @@
 			children = (
 				31631C6C25D2895000E501F7 /* PlayerWaiting.swift */,
 				316A709726706E7100A93B83 /* PlayerWaitingKids.swift */,
+				3163B41B26E8E740008A01B6 /* PlayerDisable.swift */,
 			);
 			path = waiting;
 			sourceTree = "<group>";
@@ -2376,7 +2379,7 @@
 				318AA046265DE90B00C089EC /* SetupGuideNVersion.swift */,
 				318AA044265DE8D100C089EC /* SetupHappySenior.swift */,
 				318AA04B265DFA4F00C089EC /* SetupPossession.swift */,
-				318AA049265DE96900C089EC /* SetupTest.swift */,
+				318AA049265DE96900C089EC /* SetupLaboratory.swift */,
 			);
 			path = body;
 			sourceTree = "<group>";
@@ -4760,11 +4763,12 @@
 				31C4D2962692A403000C7E83 /* MonthlyReport.swift in Sources */,
 				318B537625F050CC0052E4E0 /* AlramButton.swift in Sources */,
 				D56C6A4D257DA0C700CF9AB8 /* ProgressSlider.swift in Sources */,
+				3163B41C26E8E740008A01B6 /* PlayerDisable.swift in Sources */,
 				315A8FD425ADADD600498B03 /* GuestAgreementInfo.swift in Sources */,
 				3192EFD4266709E30012F238 /* SceneKidsTab.swift in Sources */,
 				3195C1A42665CCE8001F513E /* strings.alert.swift in Sources */,
 				31740C39261C3AE70052A9C2 /* PurchaseBlock.swift in Sources */,
-				318AA04A265DE96900C089EC /* SetupTest.swift in Sources */,
+				318AA04A265DE96900C089EC /* SetupLaboratory.swift in Sources */,
 				D56C6A34257DA0C700CF9AB8 /* Navigation.swift in Sources */,
 				314D73BF25B550F900907118 /* BtvButton.swift in Sources */,
 				318E7F0425E8990900B2AAAF /* MonthlyBlock.swift in Sources */,
@@ -4978,7 +4982,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNewNotification/BtvPlusNewNotification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7451;
+				CURRENT_PROJECT_VERSION = 7454;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = BtvPlusNewNotification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
@@ -5003,7 +5007,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNewNotification/BtvPlusNewNotification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7451;
+				CURRENT_PROJECT_VERSION = 7454;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = BtvPlusNewNotification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
@@ -5191,7 +5195,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7451;
+				CURRENT_PROJECT_VERSION = 7454;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
@@ -5275,7 +5279,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7451;
+				CURRENT_PROJECT_VERSION = 7454;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;

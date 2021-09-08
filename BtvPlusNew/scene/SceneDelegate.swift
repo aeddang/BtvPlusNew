@@ -62,7 +62,8 @@ class SceneDelegate: PageSceneDelegate {
     override func willChangeAblePage(_ page:PageObject?)->Bool{
        
         guard let willPage = page else { return false }
-        if PageType.getType(willPage.pageGroupID) == .kids && SystemEnvironment.currentPageType != .kids {
+        if PageType.getType(willPage.pageGroupID) == .kids
+            && PageType.getType(self.repository?.pagePresenter?.currentPage?.pageGroupID) == .btv {
             
             self.repository?.appSceneObserver?.finalBtvPage = self.pagePresenter.currentPage
             if page?.pageID != .kidsIntro && !SystemEnvironment.isInitKidsPage {

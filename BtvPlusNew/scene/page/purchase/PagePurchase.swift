@@ -23,6 +23,7 @@ struct PagePurchase: PageView {
     @State var webViewHeight:CGFloat = 0
     @State var purchaseId:String? = nil
     @State var purchaseWebviewModel:PurchaseWebviewModel? = nil
+    @State var marginBottom:CGFloat = Dimen.app.bottom
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -41,11 +42,18 @@ struct PagePurchase: PageView {
                     }
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     /*
-                    BtvWebView( viewModel: self.webViewModel, useNativeScroll:true )
+                    BtvWebView( viewModel: self.webViewModel )
+                        .modifier(MatchHorizontal(height: self.webViewHeight))
                         .modifier(MatchParent())
-                        .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)
-                        .modifier(MatchParent())
+                        .padding(.bottom, self.marginBottom)
+                        .onReceive(self.webViewModel.$screenHeight){height in
+                            self.webViewHeight = geometry.size.height
+                                - Dimen.app.top
+                                - self.sceneObserver.safeAreaTop
+                                - self.sceneObserver.safeAreaIgnoreKeyboardBottom
+                        }
                     */
+                    
                     ZStack(alignment: .topLeading){
                         DragDownArrow(
                             infinityScrollModel: self.infinityScrollModel)
@@ -58,10 +66,7 @@ struct PagePurchase: PageView {
                             BtvWebView( viewModel: self.webViewModel, useNativeScroll:false )
                                 .modifier(MatchHorizontal(height: self.webViewHeight))
                                 .onReceive(self.webViewModel.$screenHeight){height in
-                                    self.webViewHeight = geometry.size.height
-                                        - Dimen.app.top
-                                        - self.sceneObserver.safeAreaTop
-                                        - self.sceneObserver.safeAreaIgnoreKeyboardBottom
+                                    self.setWebviewSize(geometry: geometry)
                                 }
                             
                         }
@@ -142,6 +147,23 @@ struct PagePurchase: PageView {
                 if err?.id != self.tag { return }
                 
             }
+            .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    self.marginBottom = bottom
+                    self.setWebviewSize(geometry: geometry)
+                }
+            }
+            .onReceive(self.sceneObserver.$isUpdated){ isUpdated in
+                if isUpdated {
+                    self.setWebviewSize(geometry: geometry)
+                }
+            }
+            .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    withAnimation{ self.marginBottom = bottom }
+                    self.setWebviewSize(geometry: geometry)
+                }
+            }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
                 if let data = obj.getParamValue(key: .data) as? PurchaseWebviewModel {
@@ -184,7 +206,14 @@ struct PagePurchase: PageView {
         }//geo
     }//body
     
-   
+    private func setWebviewSize(geometry:GeometryProxy){
+        self.webViewHeight = geometry.size.height
+            - Dimen.app.top
+    
+            - self.sceneObserver.safeAreaTop
+            - self.sceneObserver.safeAreaIgnoreKeyboardBottom
+    }
+    
     private func sendLog(action:NaviLog.Action) {
         self.naviLogManager.contentsLog(pageId: .purchaseOrderCompleted, action: action)
     }

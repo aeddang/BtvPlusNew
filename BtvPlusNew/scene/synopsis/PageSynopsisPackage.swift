@@ -61,6 +61,8 @@ struct PageSynopsisPackage: PageView {
                                     HStack(alignment: .center, spacing: 0){
                                         TopViewer( data:self.synopsisPackageModel!)
                                             .modifier(MatchParent())
+                                            .padding(.bottom, self.marginBottom - Dimen.margin.regular)
+                                           
                                         PackageBody(
                                             infinityScrollModel: self.infinityScrollModel,
                                             synopsisListViewModel: self.synopsisListViewModel,
@@ -227,9 +229,6 @@ struct PageSynopsisPackage: PageView {
             }
             .onReceive(self.sceneObserver.$isUpdated){ _ in
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
-                if SystemEnvironment.isTablet && self.isPageUiReady {
-                    self.appSceneObserver.useBottom = self.sceneOrientation == .portrait
-                }
             }
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
                 withAnimation{ self.marginBottom = bottom }
@@ -258,7 +257,7 @@ struct PageSynopsisPackage: PageView {
         
         
     }//body
-
+   
     /*
      Data process
      */

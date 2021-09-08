@@ -142,7 +142,7 @@ class WebBridge :PageProtocol{
         info["isSupportSimplePairing"] = pairing.hostDevice?.isSupportSimplePairing() ?? false
         
         info["evaluation"] = SystemEnvironment.isEvaluation
-        info["clientId"] = SystemEnvironment.getGuestDeviceId()
+        info["clientId"] = SystemEnvironment.deviceId
         info["expiredSTB"] = false
         
         return info

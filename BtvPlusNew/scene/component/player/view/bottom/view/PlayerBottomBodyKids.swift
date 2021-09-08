@@ -57,7 +57,7 @@ struct PlayerBottomBodyKids: PageComponent{
                             self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , String.player.continueView)
                             self.viewModel.btvPlayerEvent = .continueView
                         }
-                    }else if SystemEnvironment.isTablet {
+                    }else {
                         if let limited = self.viewModel.limitedDuration {
                             Text(limited.secToMin())
                                 .font(.custom(

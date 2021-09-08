@@ -57,6 +57,12 @@ class PageObject : Equatable, Identifiable{
         return self
     }
     @discardableResult
+    func removeParam(key:PageParam)->PageObject{
+        if params == nil { return self }
+        params![key] = nil 
+        return self
+    }
+    @discardableResult
     func addParam(params:[PageParam:Any]?)->PageObject{
         guard let params = params else {
             return self

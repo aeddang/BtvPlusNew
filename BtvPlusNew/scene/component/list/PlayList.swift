@@ -24,6 +24,7 @@ class PlayData:InfinityData,ObservableObject{
     private(set) var isPlayAble:Bool = false
     private(set) var restrictAgeIcon:String? = nil
     private(set) var provider: String? = nil
+    private(set) var ppmIcon: String? = nil
     private(set) var notificationData: NotificationData? = nil
     private(set) var notiType: String? = nil
     var playTime:Double = 0
@@ -42,6 +43,12 @@ class PlayData:InfinityData,ObservableObject{
         restrictAgeIcon = Asset.age.getListIcon(age: data.wat_lvl_cd) 
         if let poster = data.poster_filename_h {
             image = ImagePath.thumbImagePath(filePath: poster, size: ListItem.play.size)
+        }
+        if data.ppm_grid_icon_img_path?.isEmpty == false, let icon = data.ppm_grid_icon_img_path {
+            self.ppmIcon = ImagePath.thumbImagePath(filePath: icon,
+                                               size:CGSize(width: 0, height: Dimen.icon.light),
+                                               convType: .alpha)
+       
         }
         index = idx
         let ppm: Bool = ("30" == data.prd_typ_cd || "34" == data.prd_typ_cd )
@@ -131,11 +138,12 @@ struct PlayList: PageComponent{
 
 extension PlayItem{
     static let listSize: CGSize = CGSize(width: 520, height: 292)
+    static let bottomSize: CGFloat = SystemEnvironment.isTablet ? 199 : 146
     static func getListRange(width:CGFloat, sceneOrientation :SceneOrientation)->CGFloat{
         if SystemEnvironment.isTablet && sceneOrientation == .landscape {
             return listSize.height
         }
-        return width * 12 / 16
+        return (width * 9 / 16) + self.bottomSize
     }
 }
 
@@ -181,7 +189,7 @@ struct PlayItem: PageView {
                             .lineLimit(1)
                         
                         PlayItemInfo(data: self.data)
-                        HStack(spacing:Dimen.margin.thin){
+                        HStack(spacing:SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin){
                             PlayItemFunction(
                                 data: self.data,
                                 isInit: self.isInit,
@@ -214,33 +222,37 @@ struct PlayItem: PageView {
                         )
                     )
                     .clipped()
-                    VStack(alignment: .leading, spacing:0){
-                        HStack(spacing:Dimen.margin.thin){
-                            if self.data.title != nil {
-                                VStack(alignment: .leading, spacing:0){
-                                    Text(self.data.title!)
-                                        .modifier(BoldTextStyle(
-                                                size: Font.size.large,
-                                                color: Color.app.white)
-                                        )
-                                        .lineLimit(1)
-                                    
-                                    Spacer().modifier(MatchHorizontal(height: 0))
+                    HStack(alignment: .top, spacing:0){
+                        Spacer().modifier(MatchVertical(width: 0))
+                        VStack(alignment: .leading, spacing:0){
+                            HStack(spacing:SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin){
+                                if self.data.title != nil {
+                                    VStack(alignment: .leading, spacing:0){
+                                        Text(self.data.title!)
+                                            .modifier(BoldTextStyle(
+                                                    size: Font.size.large,
+                                                    color: Color.app.white)
+                                            )
+                                            .lineLimit(1)
+                                        
+                                        Spacer().modifier(MatchHorizontal(height: 0))
+                                    }
+                                    .modifier(MatchHorizontal(height: Font.size.large))
+                                } else{
+                                    Spacer().modifier(MatchHorizontal(height: 1))
                                 }
-                                .modifier(MatchHorizontal(height: Font.size.large))
-                            } else{
-                                Spacer().modifier(MatchHorizontal(height: 1))
+                                PlayItemFunction(
+                                    data: self.data,
+                                    isInit: self.isInit,
+                                    isLike: self.$isLike,
+                                    isAlram: self.$isAlram)
                             }
-                            PlayItemFunction(
-                                data: self.data,
-                                isInit: self.isInit,
-                                isLike: self.$isLike,
-                                isAlram: self.$isAlram)
+                            PlayItemInfo(data: self.data)
                         }
-                        PlayItemInfo(data: self.data)
                     }
                     .padding(.top, SystemEnvironment.isTablet ? 0 : Dimen.margin.lightExtra)
                     .padding(.all, SystemEnvironment.isTablet ? Dimen.margin.thin : 0)
+                    .frame(height:Self.bottomSize)
                 }
             }
         }
@@ -446,7 +458,7 @@ struct PlayItemScreen: PageView {
 struct PlayItemInfo: PageView {
     var data:PlayData
     var body: some View {
-        HStack(spacing:Dimen.margin.thin){
+        HStack(spacing: SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin){
             if self.data.date != nil {
                 Text(self.data.date!)
                     .modifier(MediumTextStyle(
@@ -455,8 +467,15 @@ struct PlayItemInfo: PageView {
                     )
                     .lineLimit(1)
             }
-            
-            if self.data.provider != nil {
+            if let icon = data.ppmIcon {
+                KFImage(URL(string: icon))
+                    .resizable()
+                    .cancelOnDisappear(true)
+                    .loadImmediately()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: Dimen.icon.tinyUltra)
+                
+            }else if self.data.provider != nil {
                 Text(self.data.provider!)
                     .modifier(BoldTextStyle(
                             size: Font.size.lightExtra,
@@ -472,7 +491,7 @@ struct PlayItemInfo: PageView {
             }
             
         }
-        .padding(.top, SystemEnvironment.isTablet ? Dimen.margin.thin : Dimen.margin.light)
+        .padding(.top, SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.light)
         
         if self.data.summary != nil  {
             Text(self.data.summary!)

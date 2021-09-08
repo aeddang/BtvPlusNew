@@ -221,6 +221,7 @@ struct PageSynopsis: PageView {
                 }
                 .onReceive(self.tabNavigationModel.$index ){ idx in
                     if idx == self.selectedRelationTabIdx { return }
+                    self.relationContentsModel.serisSortType = nil
                     self.selectedRelationContent(idx:idx)
                 }
                 .onReceive(self.pairing.$event){evt in
@@ -346,18 +347,12 @@ struct PageSynopsis: PageView {
                         self.isFinalPlaying = false
                         //ComponentLog.d("isFinalPlaying resume" , tag: "PageSynopsis BtvPlayer")
                     }
+                    self.setupBottom()
                 }
             }
             .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
                 self.isFullScreen = fullScreen
-                if self.type == .btv {
-                    if SystemEnvironment.isTablet {
-                        self.appSceneObserver.useBottomImmediately = self.sceneOrientation == .portrait
-                    } else {
-                        self.appSceneObserver.useBottomImmediately = !fullScreen
-                    }
-                    
-                }
+                self.setupBottom()
             }
             .onReceive(self.playerModel.$streamEvent){evt in
                 guard let evt = evt else {return}
@@ -382,10 +377,20 @@ struct PageSynopsis: PageView {
                     let relationDatas = self.relationContentsModel.getRelationContentSets(idx: self.selectedRelationTabIdx, row: self.relationRow)
                     self.relationDatas = relationDatas
                 }
-               
-                if SystemEnvironment.isTablet && self.isPageUiReady{
-                    self.appSceneObserver.useBottom = self.sceneOrientation == .portrait
+                if !self.isPageUiReady {return}
+                
+                if SystemEnvironment.isTablet{
+                    if self.pagePresenter.currentTopPage != self.pageObject {return}
+                    self.setupBottom()
+                } else {
+                    if self.sceneOrientation == .landscape && !self.isFullScreen {
+                        self.pagePresenter.fullScreenEnter()
+                    }
                 }
+            }
+            .onReceive(self.pageObservable.$status) { status in
+                if !self.isPageUiReady {return}
+                self.onEvent(pageStatus: status)
             }
             .onReceive(self.appSceneObserver.$safeBottomHeight) { _ in
                 self.updateBottomPos(geometry: geometry)
@@ -406,6 +411,22 @@ struct PageSynopsis: PageView {
             }
         }//geo
     }//body
+    
+    private func setupBottom(){
+        if self.isFullScreen {
+            self.appSceneObserver.useBottomImmediately = false
+            return
+        }
+        if self.type == .btv {
+            if SystemEnvironment.isTablet {
+                self.appSceneObserver.useBottomImmediately = self.sceneOrientation == .portrait
+            } else {
+                self.appSceneObserver.useBottomImmediately = true
+            }
+        }
+    }
+
+
     /*
     Data process
     */
@@ -641,7 +662,7 @@ struct PageSynopsis: PageView {
             }
             else {
                 switch self.synopsisPlayType {
-                case .unknown:
+                case .unknown, .preview, .preplay:
                     self.synopsisPlayType = .vod()
                 default:
                     break
@@ -1098,7 +1119,7 @@ struct PageSynopsis: PageView {
        }
    }
     private func selectedRelationContent (idx:Int){
-        self.relationContentsModel.serisSortType = nil
+        
         self.updateRelationTabButtons(idx: idx)
         self.tabNavigationModel.index = idx
         self.selectedRelationTabIdx = idx
@@ -1107,7 +1128,7 @@ struct PageSynopsis: PageView {
         self.seris = []
         self.relationDatas = []
         var relationContentsIdx = self.selectedRelationTabIdx
-        if !self.relationContentsModel.seris.isEmpty {
+        if self.relationContentsModel.hasSris {
             if self.selectedRelationTabIdx == 0 {
                 let sorted = self.relationContentsModel.getSerisDatas()
                 self.seris = sorted
@@ -1135,9 +1156,15 @@ struct PageSynopsis: PageView {
      Player process
      */
     func onFullScreenViewMode(){
-       
+        if self.isFullScreen {return}
         DispatchQueue.main.async {
             self.pagePresenter.fullScreenEnter(isLock: false, changeOrientation: .landscape)
+        }
+    }
+    func onDefaultViewMode(){
+        if !self.isFullScreen {return}
+        DispatchQueue.main.async {
+            self.pagePresenter.fullScreenExit(changeOrientation: SystemEnvironment.isTablet ? nil : .portrait)
         }
     }
     
@@ -1173,6 +1200,7 @@ struct PageSynopsis: PageView {
     }
     
     func purchase(){
+        self.onDefaultViewMode()
         guard  let model = self.purchaseWebviewModel else { return }
         self.pagePresenter.openPopup(
             PageProvider.getPageObject(.purchase)
@@ -1181,6 +1209,7 @@ struct PageSynopsis: PageView {
     }
     
     func watchBtv(){
+        self.onDefaultViewMode()
         let msg:NpsMessage = NpsMessage().setPlayVodMessage(
             contentId: self.epsdRsluId ,
             playTime: self.playerModel.time)

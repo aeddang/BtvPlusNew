@@ -9,6 +9,15 @@ import Foundation
 import Combine
 
 class PushManager : PageProtocol {
+    static func getCurrentCuid()-> String{
+       return NpsNetwork.pairingId.isEmpty ? "btvplus" : SystemEnvironment.deviceId
+    }
+    static func setupCurrentCuid(){
+        Self.currentCuid = getCurrentCuid()
+    }
+    static private(set) var currentCuid:String = "btvplus"
+    
+    private(set) var currentToken:String = ""
     private(set) var endpointId:String = ""
     private(set) var apnsToken:String = ""
     private(set) var userAgreement:Bool = false
@@ -22,34 +31,61 @@ class PushManager : PageProtocol {
     }
     
     private func reset(){
-        endpointId = ""
-        apnsToken = ""
+        if let storage = namedStorage {
+            endpointId = storage.pushEndpoint
+            apnsToken = storage.registPushToken
+        }
         userAgreement = false
         isBusy = false
     }
     
     func setupStorage(storage:LocalNamedStorage){
         self.namedStorage = storage
-        self.endpointId = storage.pushEndpoint
-        self.apnsToken = storage.registPushToken
+        self.reset()
     }
     
     func retryRegisterPushToken(){
+        if self.currentToken.isEmpty {
+            //DataLog.d("not ready currentToken", tag: self.tag)
+            return
+        }
+        
         guard let storage = namedStorage else { return }
         if self.isBusy {
-            DataLog.d("already process retryRegisterPushToken", tag: self.tag)
+            //DataLog.d("already process retryRegisterPushToken", tag: self.tag)
             return
             
         }
         if !storage.retryPushToken.isEmpty {
-            DataLog.d("retryRegisterPushToken", tag: self.tag)
-            self.isBusy = true
-            self.registerPushToken(storage.retryPushToken)
+            DataLog.d("retry RegisterPushToken", tag: self.tag)
+            self.resetRegisterPushToken(storage.retryPushToken)
+        } else {
+            if storage.registPushCuid != Self.getCurrentCuid() {
+                DataLog.d("reset RegisterPushToken", tag: self.tag)
+                self.resetRegisterPushToken(self.currentToken)
+            } else {
+                //DataLog.d("already RegisterPushToken", tag: self.tag)
+            }
         }
     }
     
-    func registerPushToken(_ token:String) {
-        guard let storage = namedStorage else { return }
+    func resetRegisterPushToken(_ token:String) {
+        self.namedStorage?.registPushToken = ""
+        self.registerPushToken(token)
+    }
+    
+    func initRegisterPushToken(_ token:String) {
+        self.currentToken = token
+        self.registerPushToken(token)
+    }
+    
+    
+    private func registerPushToken(_ token:String) {
+        guard let storage = namedStorage else {
+            self.isBusy = false
+            return
+        }
+        Self.setupCurrentCuid()
         let registToken = storage.registPushToken
         let endpoint = storage.pushEndpoint
         if token == registToken && !endpoint.isEmpty {
@@ -57,28 +93,37 @@ class PushManager : PageProtocol {
             self.updateUserAgreement(self.userAgreement)
             return
         }
+        self.isBusy = true
         DataLog.d("create endpoint", tag: self.tag)
+        storage.registPushCuid = ""
         storage.registPushToken = ""
-        storage.retryPushToken = ""
         storage.pushEndpoint = ""
         storage.registEndpoint = ""
-        storage.registPushUserAgreement = false
+        storage.registPushUserAgreement = nil
         self.apnsToken = ""
         self.endpointId = ""
         self.apiManager?.load(.createEndpoint(token), isOptional: true)
     }
     
     func updateUserAgreement(_ isAgree:Bool) {
-        guard let storage = namedStorage else { return }
+        guard let storage = namedStorage else {
+            self.isBusy = false
+            return
+        }
         self.userAgreement = isAgree
+        if self.endpointId.isEmpty {
+            self.isBusy = false
+            return
+        }
         DataLog.d("updateUserAgreement : " + isAgree.description, tag: self.tag)
-        if self.endpointId.isEmpty { return }
         let registEndpoint = storage.registEndpoint
         if !registEndpoint.isEmpty {
             if storage.registPushUserAgreement == isAgree {
                 DataLog.d("already UserAgreement", tag: self.tag)
+                self.isBusy = false
             } else {
                 DataLog.d("update UserAgreement", tag: self.tag)
+                DataLog.d("updated " + Self.currentCuid, tag:self.tag)
                 self.apiManager?.load(.updatePushUserAgreement(isAgree), isOptional: true)
             }
         } else {
@@ -87,6 +132,15 @@ class PushManager : PageProtocol {
         }
     }
     
+    private func onRegistFail(token:String){
+        self.isBusy = false
+        guard let storage = namedStorage else { return }
+        storage.retryPushToken = token
+        storage.registPushToken = ""
+        storage.pushEndpoint = ""
+        DataLog.e("registerToken error", tag:self.tag)
+    }
+
     func recivePush(_ messageId:String?) {
         guard let messageId = messageId else { return }
         if self.endpointId.isEmpty { return }
@@ -99,15 +153,7 @@ class PushManager : PageProtocol {
         self.apiManager?.load(.confirmPush(endpointId, messageId: messageId),  isLog: true)
     }
     
-    private func onRegistFail(token:String){
-        self.isBusy = false
-        guard let storage = namedStorage else { return }
-        storage.retryPushToken = token
-        storage.registPushToken = ""
-        storage.pushEndpoint = ""
-        DataLog.e("registerToken error", tag:self.tag)
-    }
-
+    
     func setupApiManager(_ apiManager:ApiManager){
         self.reset()
         self.apiManager = apiManager
@@ -116,7 +162,7 @@ class PushManager : PageProtocol {
         apiManager.$result.sink(receiveValue: { res in
             guard let res = res else { return }
             switch res.type {
-            case .createEndpoint(let token) :
+            case .createEndpoint(let token) : 
                 guard let data = res.data as? EndPoint else { return self.onRegistFail(token: token) }
                 guard let endpoint = data.endpoint_id  else { return self.onRegistFail(token: token) }
                 DataLog.d("createEndpoint success", tag:self.tag)
@@ -124,21 +170,26 @@ class PushManager : PageProtocol {
                 
             case .registerToken(let endpoint, let token) :
                 self.namedStorage?.retryPushToken = ""
+                self.namedStorage?.registPushCuid = Self.currentCuid
                 self.namedStorage?.registPushToken = token
                 self.namedStorage?.pushEndpoint = endpoint
                 self.apnsToken = token
                 self.endpointId = endpoint
-                self.isBusy = false
-                DataLog.d("registerToken success", tag:self.tag)
+                DataLog.d("registerToken success " + endpoint, tag:self.tag)
+                DataLog.d("updated " + Self.currentCuid, tag:self.tag)
                 self.updateUserAgreement(self.userAgreement)
                 
             case .registEndpoint(let endpoint, let isAgree) :
                 self.namedStorage?.registEndpoint = endpoint
                 self.namedStorage?.registPushUserAgreement = isAgree
-                DataLog.d("registEndpoint success", tag:self.tag)
+                DataLog.d("registEndpoint success " + isAgree.description, tag:self.tag)
+                DataLog.d("updated " + Self.currentCuid, tag:self.tag)
+                self.isBusy = false
             case .updatePushUserAgreement(let isAgree) :
                 self.namedStorage?.registPushUserAgreement = isAgree
-                DataLog.d("updatePushUserAgreement success", tag:self.tag)
+                self.isBusy = false
+                DataLog.d("updatePushUserAgreement success " + isAgree.description, tag:self.tag)
+               
             default: break
             
             }
@@ -151,6 +202,7 @@ class PushManager : PageProtocol {
                 self.onRegistFail(token: token)
             case .updatePushUserAgreement :
                 DataLog.e("updatePushUserAgreement fail", tag:self.tag)
+                self.isBusy = false
             default: break
             }
         }).store(in: &dataCancellable)

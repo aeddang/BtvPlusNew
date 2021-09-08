@@ -287,13 +287,16 @@ extension String{
         public static let synopsisRelationVod = "synopsisRelationVod".loaalized()
         public static let synopsisNoRelationVod = "synopsisNoRelationVod".loaalized()
         public static let synopsisPackageContent = "synopsisPackageContent".loaalized()
-        public static let synopsisUnavailableSeriesMessage = "synopsisUnavailableSeriesMessage".loaalized()
+        public static let synopsisNoRelationSeries = "synopsisNoRelationSeries".loaalized()
+        public static let synopsisNoRelationSeriesMessage = "synopsisNoRelationSeriesMessage".loaalized()
+        public static let synopsisNoRelationSeriesMessageHorizontal = "synopsisNoRelationSeriesMessageHorizontal".loaalized()
         public static let synopsisAward = "synopsisAward".loaalized()
         
         
         public static let synopsisCornerPlayNeedPurchased = "synopsisCornerPlayNeedPurchased".loaalized()
         public static let synopsisCornerPlayNotNscreen = "synopsisCornerPlayNotNscreen".loaalized()
         public static let synopsisCornerPlayOnlyPurchasedBtv = "synopsisCornerPlayOnlyPurchasedBtv".loaalized()
+        public static let synopsisNextPlay = "synopsisNextPlay".loaalized()
         public static let synopsisNextPlayConfirm = "synopsisNextPlayConfirm".loaalized()
         public static let synopsisNextPlayFail = "synopsisNextPlayFail".loaalized()
         

@@ -56,7 +56,7 @@ class SynopsisPlayerData {
                 if !list.isEmpty {
                     let rslu = list.first
                     self.openingTime = rslu?.openg_tmtag_tmsc?.number
-                    self.endingTime = rslu?.endg_tmtag_tmsc?.number ?? -1
+                    self.endingTime = rslu?.endg_tmtag_tmsc?.number 
                 }
             }
             guard let relationContentsModel = relationContentsModel else {return self}

@@ -24,6 +24,7 @@ struct SimplePlayerUI: PageComponent {
     @State var isSeeking = false
     @State var isError = false
     @State var errorMessage = ""
+    @State var completeTime:String = "00:00:00"
     @State var useFullScreen:Bool = true
     @State var isFullScreen:Bool = false
     @State var isShowing: Bool = false
@@ -79,6 +80,10 @@ struct SimplePlayerUI: PageComponent {
                                 self.viewModel.event = .seekProgress(pct)
                             })
                             .frame(height: Dimen.stroke.regular )
+                        Text(self.completeTime)
+                            .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.greyLightExtra))
+                            .frame(width:PlayerUI.timeTextWidth)
+                            .fixedSize(horizontal: true, vertical: false)
                     } else {
                         Spacer()
                     }
@@ -148,6 +153,8 @@ struct SimplePlayerUI: PageComponent {
        //.toast(isShowing: self.$isError, text: self.errorMessage)
         .onReceive(self.viewModel.$time) { tm in
             if self.viewModel.duration <= 0 {return}
+            if tm < 0 {return}
+            self.completeTime = (self.viewModel.duration - tm).secToHourString()
             if !self.isSeeking {
                 self.progress = Float(self.viewModel.time / max(self.viewModel.duration,1))
             }

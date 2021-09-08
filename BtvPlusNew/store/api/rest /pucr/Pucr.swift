@@ -31,9 +31,11 @@ class Pucr: Rest{
     func createEndpoint(
         completion: @escaping (EndPoint) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
+        let cuid = PushManager.currentCuid
+        
         let qurryString =
             "device_type=" + ApiUtil.string(byUrlEncoding: PucrNetwork.DEVICE_TYPE) +
-            "&device_token=" + ApiUtil.string(byUrlEncoding:SystemEnvironment.deviceId) +
+            "&device_token=" + ApiUtil.string(byUrlEncoding:cuid) +
             "&sdk_version=" + ApiUtil.string(byUrlEncoding:PucrNetwork.SDK_VS) +
             "&os_version=" + ApiUtil.string(byUrlEncoding:SystemEnvironment.systemVersion) +
             "&manufacturer=" + ApiUtil.string(byUrlEncoding:PucrNetwork.MANYFACTURER) +

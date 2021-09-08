@@ -219,7 +219,9 @@ struct PairingHitch: PageComponent {
                 if header?.result == NpsNetwork.resultCode.pairingLimited.code {
                     self.pairing.requestPairing(.hostInfo(auth: nil, device:self.selectedDevice?.stbid, prevResult: header))
                 } else {
-                    self.appSceneObserver.alert = .pairingError(header)
+                    let msg = NpsNetwork.getConnectErrorMeassage(data: header)
+                    self.appSceneObserver.event =
+                        .toast(String.alert.limitedDeviceSimple.replace(msg))
                     self.closeHitch()
                 }
             case .connectErrorReason(let info) :
@@ -229,9 +231,17 @@ struct PairingHitch: PageComponent {
                         .toast(String.alert.limitedDeviceSimple.replace(info?.count?.description ?? ""))
                     return
                 }
-                self.fullConnectInfo = info
-                withAnimation{ self.isFullConnected = true }
-                self.sendLog(action: .pageShow)
+                if self.stbs?.count ?? 0  <= 1 {
+                    self.appSceneObserver.event =
+                        .toast(String.alert.limitedDeviceSimple.replace(info?.count?.description ?? ""))
+                    self.closeHitch()
+                    
+                } else {
+                    self.fullConnectInfo = info
+                    withAnimation{ self.isFullConnected = true }
+                    self.sendLog(action: .pageShow)
+                }
+               
             default : break
             }
         }

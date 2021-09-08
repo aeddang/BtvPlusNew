@@ -45,23 +45,27 @@ struct PageWebview: PageView {
                     ZStack(alignment: .topLeading){
                         DragDownArrow(
                             infinityScrollModel: self.infinityScrollModel)
-                           
+                        /*
+                        BtvWebView( viewModel: self.webViewModel )
+                            .modifier(MatchHorizontal(height: self.webViewHeight))
+                            .modifier(MatchParent())
+                            .padding(.bottom, self.marginBottom)
+                        */
+                        
                         InfinityScrollView(
                             viewModel: self.infinityScrollModel,
                             scrollType : .web(isDragEnd: true),
                             isRecycle:false,
                             useTracking:true ){
-                            BtvWebView( viewModel: self.webViewModel )
+                            BtvWebView( viewModel: self.webViewModel , useNativeScroll:false)
                                 .modifier(MatchHorizontal(height: self.webViewHeight))
                                 .onReceive(self.webViewModel.$screenHeight){height in
-                                    let min = geometry.size.height - self.sceneObserver.safeAreaTop - Dimen.app.top
-                                    self.webViewHeight = min //max( height, min)
-                                    ComponentLog.d("webViewHeight " + webViewHeight.description)
+                                    self.setWebviewSize(geometry: geometry)
                                 }
                         }
                         .padding(.bottom, self.marginBottom)
                         .modifier(MatchParent())
-        
+                        
                         .onReceive(self.infinityScrollModel.$event){evt in
                             guard let evt = evt else {return}
                             switch evt {
@@ -69,7 +73,7 @@ struct PageWebview: PageView {
                                 self.pageDragingModel.uiEvent = .pullCompleted(geometry)
                             case .pullCancel :
                                 self.pageDragingModel.uiEvent = .pullCancel(geometry)
-                            default : do{}
+                            default : break
                             }
                         }
                         .onReceive(self.infinityScrollModel.$pullPosition){ pos in
@@ -97,6 +101,12 @@ struct PageWebview: PageView {
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     withAnimation{ self.marginBottom = bottom }
+                    self.setWebviewSize(geometry: geometry)
+                }
+            }
+            .onReceive(self.sceneObserver.$isUpdated){ isUpdated in
+                if isUpdated {
+                    self.setWebviewSize(geometry: geometry)
                 }
             }
             .onAppear{
@@ -114,7 +124,13 @@ struct PageWebview: PageView {
         }//geo
     }//body
     
-   
+    private func setWebviewSize(geometry:GeometryProxy){
+        self.webViewHeight = geometry.size.height
+            - Dimen.app.top
+            - (self.appSceneObserver.useBottom ? Dimen.app.bottom : 0)
+            - self.sceneObserver.safeAreaTop
+            - self.sceneObserver.safeAreaIgnoreKeyboardBottom
+    }
 }
 
 #if DEBUG

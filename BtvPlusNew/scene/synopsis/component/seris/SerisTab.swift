@@ -62,23 +62,24 @@ struct SerisTab: PageComponent{
                         .opacity(0.5)
                 }
             }
-            
-            TextButton(
-                defaultText: self.sortType.name,
-                textModifier: TextModifier(
-                    family: Font.family.medium,
-                    size: Font.size.lightExtra,
-                    color: Color.app.white),
-                image: Asset.icon.sortList,
-                imageSize: Dimen.icon.thinExtra,
-                spacing: Dimen.margin.micro
-                ){_ in
-                let idx = sortOption.firstIndex(where: {$0 == self.sortType})
-                self.appSceneObserver.select =
-                    .select((self.tag + SelectType.sort.rawValue , self.sortOption.map{$0.name}), idx ?? -1)
-                
+            if !self.seris.isEmpty {
+                TextButton(
+                    defaultText: self.sortType.name,
+                    textModifier: TextModifier(
+                        family: Font.family.medium,
+                        size: Font.size.lightExtra,
+                        color: Color.app.white),
+                    image: Asset.icon.sortList,
+                    imageSize: Dimen.icon.thinExtra,
+                    spacing: Dimen.margin.micro
+                    ){_ in
+                    let idx = sortOption.firstIndex(where: {$0 == self.sortType})
+                    self.appSceneObserver.select =
+                        .select((self.tag + SelectType.sort.rawValue , self.sortOption.map{$0.name}), idx ?? -1)
+                    
+                }
+                .buttonStyle(BorderlessButtonStyle())
             }
-            .buttonStyle(BorderlessButtonStyle())
         }
         .onReceive(self.appSceneObserver.$selectResult){ result in
             guard let result = result else { return }

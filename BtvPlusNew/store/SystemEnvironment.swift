@@ -64,9 +64,6 @@ struct SystemEnvironment {
         }
     }
     
-    static func getGuestDeviceId() -> String{
-        return  SystemEnvironment.deviceId
-    }
     
     private static func getDeviceId() -> String{
         let wrapper = SkbKeychainItemWrapper(identifier: "UUID", accessGroup: nil)

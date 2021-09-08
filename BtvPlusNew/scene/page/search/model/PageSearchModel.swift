@@ -168,10 +168,10 @@ class PageSearchModel :ObservableObject, PageProtocol {
         var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
         actionData.menu_name = String.app.vod + datas.count.description
         let allPosters:[PosterData] = datas.map{
-            PosterData().setData(data: $0, searchType:.vod).setNaviLog(action: actionData)
+            PosterData( usePrice: true).setData(data: $0, searchType:.vod).setNaviLog(action: actionData)
         }
         let block = BlockData()
-            .setData(title: String.app.vod, datas: allPosters, searchType:.vod, keyword: keyword)
+            .setData(title: String.app.vod, datas: allPosters, searchType:.vod, keyword: keyword, usePrice: true)
             .setNaviLog(pageCloseActionLog: actionData)
        return block
     }
@@ -180,10 +180,10 @@ class PageSearchModel :ObservableObject, PageProtocol {
         actionData.menu_name = String.app.vod + datas.count.description
         actionData.category = "회차"
         let allPosters:[VideoData] = datas.map{
-            VideoData().setData(data: $0, searchType:.vodSeq).setNaviLog(action: actionData)
+            VideoData(usePrice: true).setData(data: $0, searchType:.vodSeq).setNaviLog(action: actionData)
         }
         let block = BlockData()
-            .setData(title: String.app.sris, datas: allPosters, searchType:.vodSeq, keyword: keyword)
+            .setData(title: String.app.sris, datas: allPosters, searchType:.vodSeq, keyword: keyword, usePrice: true)
             .setNaviLog(pageCloseActionLog: actionData)
        return block
     }
@@ -192,10 +192,10 @@ class PageSearchModel :ObservableObject, PageProtocol {
         actionData.menu_name = String.app.clip + datas.count.description
         actionData.category = "클립"
         let allPosters:[VideoData] = datas.map{
-            VideoData(usePrice:false).setData(data: $0, searchType:.clip).setNaviLog(action: actionData)
+            VideoData(usePrice:true).setData(data: $0, searchType:.clip).setNaviLog(action: actionData)
         }
         let block = BlockData()
-            .setData(title: String.app.clip, datas: allPosters, searchType:.clip, keyword: keyword)
+            .setData(title: String.app.clip, datas: allPosters, searchType:.clip, keyword: keyword, usePrice: true)
             .setNaviLog(pageCloseActionLog: actionData)
        return block
     }
@@ -204,10 +204,10 @@ class PageSearchModel :ObservableObject, PageProtocol {
         actionData.config = "코너"
         actionData.menu_name = String.app.corner + datas.count.description
         let allPosters:[VideoData] = datas.map{
-            VideoData().setData(data: $0, searchType:.demand).setNaviLog(action: actionData)
+            VideoData(usePrice: true).setData(data: $0, searchType:.demand).setNaviLog(action: actionData)
         }
         let block = BlockData()
-            .setData(title: String.app.corner, datas: allPosters, searchType:.demand, keyword: keyword)
+            .setData(title: String.app.corner, datas: allPosters, searchType:.demand, keyword: keyword, usePrice: true)
             .setNaviLog(pageCloseActionLog: actionData)
        return block
     }
@@ -215,9 +215,9 @@ class PageSearchModel :ObservableObject, PageProtocol {
     private func getResultsPeople(datas:[CategoryPeopleItem],keyword:String? = nil) -> BlockData{
         var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
         actionData.menu_name = String.app.people + datas.count.description
-        let allPosters:[PosterData] = datas.map{ PosterData().setData(data: $0, searchType:.none).setNaviLog(action: actionData)}
+        let allPosters:[PosterData] = datas.map{ PosterData(usePrice:true).setData(data: $0, searchType:.none).setNaviLog(action: actionData)}
         let block = BlockData()
-            .setData(title: String.app.people, datas: allPosters, searchType:.none, keyword: keyword)
+            .setData(title: String.app.people, datas: allPosters, searchType:.none, keyword: keyword, usePrice:true)
             .setNaviLog(pageCloseActionLog: actionData)
        return block
     }

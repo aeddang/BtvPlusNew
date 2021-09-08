@@ -94,7 +94,11 @@ struct PagePairingBtv: PageView {
                             title: String.pageTitle.connectCertificationBtv,
                             isClose: true,
                             style:.dark
-                        )
+                        ){
+                            self.appSceneObserver.alert = .confirm(String.alert.connectCancel, String.alert.connectCancelText,  confirmText: String.button.end) { isOk in
+                                if isOk { self.pagePresenter.closePopup(self.pageObject?.id) }
+                            }
+                        }
                         .padding(.top, self.sceneObserver.safeAreaTop)
                     }
                     if self.sceneOrientation == .portrait {

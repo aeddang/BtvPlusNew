@@ -11,16 +11,13 @@ import SwiftUI
 import Combine
 
 struct CircularSpinner: View {
-    static private let animation = Animation
-        .linear(duration: 4)
-        .repeatForever(autoreverses: false)
-    
+   
     var resorce:String
     var body: some View {
         Group{
             Image(resorce).renderingMode(.original)
                 .rotationEffect(.degrees(self.degree))
-                .animation(CircularSpinner.animation)
+                
         }
         .onAppear(){
             self.aniStart()

@@ -6,7 +6,8 @@
 //
 import Foundation
 import SwiftUI
-struct SetupTest: PageView {
+struct SetupLaboratory: PageView {
+   
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var repository:Repository
@@ -46,6 +47,51 @@ struct SetupTest: PageView {
                     }
                 )
             }
+            SetupItem (
+                isOn: .constant(true),
+                title: "Reset Auth",
+                subTitle: "성인인증 본인인증 리셋",
+                more:{
+                    self.repository.resetAuth()
+                    self.appSceneObserver.event = .toast("리셋 되었습니다")
+                }
+            )
+            SetupItem (
+                isOn: .constant(true),
+                title: "test push",
+                subTitle: self.repository.pushManager.apnsToken,
+                more:{
+                    let push = UNMutableNotificationContent()
+                    push.title = "test Title"
+                    push.subtitle = "test subTitle"
+                    push.body = "test body"
+                    push.badge = 1
+                    var userInfo = [String:Any]()
+                    var apns = [String:Any]()
+                    apns["alert"] = "알람이 오네요"
+                    apns["badge"] = 1
+                    apns["sound"] = "default"
+                    userInfo["aps"] = apns
+                    push.userInfo = userInfo
+                    
+                   
+                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+                    let request = UNNotificationRequest(identifier: "test", content: push, trigger: trigger)
+                    UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                }
+            )
+            
+
+           
+            SetupItem (
+                isOn: .constant(true),
+                title: "Device ID",
+                subTitle: SystemEnvironment.deviceId,
+                more:{
+                    UIPasteboard.general.string = SystemEnvironment.deviceId
+                    self.appSceneObserver.event = .toast("복사되었습니다")
+                }
+            )
             .background(Color.app.blueLight)
         }
     }//body
@@ -56,7 +102,7 @@ struct SetupTest: PageView {
 struct SetupTest_Previews: PreviewProvider {
     static var previews: some View {
         Form{
-            SetupTest()
+            SetupLaboratory()
             .frame(width: 375, height: 640, alignment: .center)
         }
     }

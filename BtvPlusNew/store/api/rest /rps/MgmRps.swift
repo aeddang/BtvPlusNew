@@ -86,7 +86,7 @@ class MgmRps: Rest{
         params["IF"] = "IF-MGMRPS-002"
         params["m"] = "recommendUrl"
         params["stb_id"] = stbId
-        params["device_id"] = SystemEnvironment.getGuestDeviceId()
+        params["device_id"] = SystemEnvironment.deviceId
         
         params["epsd_id"] = data.epsdId
         params["sris_id"] = data.srisId
@@ -108,7 +108,7 @@ class MgmRps: Rest{
         params["IF"] = "IF-MGMRPS-003"
         params["m"] = "couponPayment"
         params["tgt_stb_id"] = stbId
-        params["tgt_device_id"] = SystemEnvironment.getGuestDeviceId()
+        params["tgt_device_id"] = SystemEnvironment.deviceId
         params["mgm_id"] = mgmId
         params["sris_typ_cd"] = srisTypeCd ?? ""
        

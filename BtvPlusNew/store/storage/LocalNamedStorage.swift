@@ -11,7 +11,7 @@ import Foundation
 class LocalNamedStorage:PageProtocol {
     struct Keys {
         static let VS = "1.0"
-       
+        static let registPushCuid = "registPushCuid" + VS
         static let retryPushToken = "retryPushToken" + VS
         static let registPushToken = "registPushToken" + VS
         static let registEndpoint = "registEndpoint" + VS
@@ -34,6 +34,11 @@ class LocalNamedStorage:PageProtocol {
     var retryPushToken:String{
         set(newVal){ defaults.set(newVal, forKey: Keys.retryPushToken) }
         get{ return defaults.string(forKey: Keys.retryPushToken) ?? "" }
+    }
+    
+    var registPushCuid:String{
+        set(newVal){ defaults.set(newVal, forKey: Keys.registPushCuid) }
+        get{ return defaults.string(forKey: Keys.registPushCuid) ?? "" }
     }
     
     var registPushToken:String{

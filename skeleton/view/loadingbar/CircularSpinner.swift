@@ -39,7 +39,7 @@ struct CircularSpinner: View {
             every: d, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
-                self.degree += 10
+                self.degree += 5
             }
     }
 }

@@ -23,7 +23,7 @@ struct PageFullPlayer: PageView {
             pageObservable:self.pageObservable,
             viewModel:self.playerModel
         )
-        .modifier(PageFullScreen())
+        .modifier(PageFullScreen(style: .dark))
         .onReceive(self.playerModel.$event){evt in
             guard let evt = evt else {return}
             switch evt {
@@ -66,7 +66,13 @@ struct PageFullPlayer: PageView {
                             let type = obj.getParamValue(key: .type) as? BtvPlayType ?? .preview("")
                             let autoPlay = obj.getParamValue(key: .autoPlay) as? Bool
                             let initTime = obj.getParamValue(key: .initTime) as? Double
-                            self.playerModel.setData(data: data, type: type, autoPlay: autoPlay, continuousTime: initTime)
+                            var changeType = type
+                            switch type {
+                            case .preview(let value,_):
+                                changeType = .preview(value,isList:false)
+                            default: break
+                            }
+                            self.playerModel.setData(data: data, type: changeType, autoPlay: autoPlay, continuousTime: initTime)
                             
                         }
                     }

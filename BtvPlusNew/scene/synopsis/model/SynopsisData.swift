@@ -39,11 +39,12 @@ enum SynopsisType {
 
 struct SynopsisData{
     var srisId:String? = nil
-    var searchType:String? = nil
+    var searchType:EuxpNetwork.SearchType = .prd
     var epsdId:String? = nil
     var epsdRsluId:String? = nil
     var prdPrcId:String? = nil
     var kidZone:String? = nil
+    var isRecent:Bool? = nil
     //watchLog
     var pId:String? = nil
     var cpId:String? = nil

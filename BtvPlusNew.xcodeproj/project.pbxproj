@@ -56,6 +56,13 @@
 		31373F6225C7E726004353DA /* YTPlayerView-iframe-player.html in Resources */ = {isa = PBXBuildFile; fileRef = 31373F5D25C7E726004353DA /* YTPlayerView-iframe-player.html */; };
 		31373F6325C7E726004353DA /* YTPlayerView-iframe-playerIPAD.html in Resources */ = {isa = PBXBuildFile; fileRef = 31373F5E25C7E726004353DA /* YTPlayerView-iframe-playerIPAD.html */; };
 		31373F6425C7E726004353DA /* YTPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31373F5F25C7E726004353DA /* YTPlayerView.swift */; };
+		313E64D026E999FB00EBDE31 /* PageSynopsisCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313E64CF26E999FB00EBDE31 /* PageSynopsisCorner.swift */; };
+		313E64D226E99AAC00EBDE31 /* PageSynopsisProhibitionSimultaneous.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313E64D126E99AAC00EBDE31 /* PageSynopsisProhibitionSimultaneous.swift */; };
+		313E64D426E9A1F300EBDE31 /* PageSynopsisWatchLv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313E64D326E9A1F300EBDE31 /* PageSynopsisWatchLv.swift */; };
+		313E64D626E9A2A100EBDE31 /* PageSynopsisRelationContents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313E64D526E9A2A100EBDE31 /* PageSynopsisRelationContents.swift */; };
+		313E64D826E9AD8500EBDE31 /* PageSynopsisRedirect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313E64D726E9AD8500EBDE31 /* PageSynopsisRedirect.swift */; };
+		313E64DC26EA1EAF00EBDE31 /* PageSynopsisFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313E64DB26EA1EAF00EBDE31 /* PageSynopsisFunction.swift */; };
+		313E64DE26EA1F7800EBDE31 /* PageSynopsisHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313E64DD26EA1F7800EBDE31 /* PageSynopsisHistory.swift */; };
 		313F8D0E269BFDEE0055F775 /* CWGridKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313F8D0D269BFDEE0055F775 /* CWGridKids.swift */; };
 		313F8D11269C1A490055F775 /* PosterBlockKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313F8D10269C1A490055F775 /* PosterBlockKids.swift */; };
 		313F8D13269C3F8E0055F775 /* VideoBlockKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313F8D12269C3F8E0055F775 /* VideoBlockKids.swift */; };
@@ -784,6 +791,13 @@
 		31373F5D25C7E726004353DA /* YTPlayerView-iframe-player.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "YTPlayerView-iframe-player.html"; sourceTree = "<group>"; };
 		31373F5E25C7E726004353DA /* YTPlayerView-iframe-playerIPAD.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "YTPlayerView-iframe-playerIPAD.html"; sourceTree = "<group>"; };
 		31373F5F25C7E726004353DA /* YTPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YTPlayerView.swift; sourceTree = "<group>"; };
+		313E64CF26E999FB00EBDE31 /* PageSynopsisCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisCorner.swift; sourceTree = "<group>"; };
+		313E64D126E99AAC00EBDE31 /* PageSynopsisProhibitionSimultaneous.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisProhibitionSimultaneous.swift; sourceTree = "<group>"; };
+		313E64D326E9A1F300EBDE31 /* PageSynopsisWatchLv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisWatchLv.swift; sourceTree = "<group>"; };
+		313E64D526E9A2A100EBDE31 /* PageSynopsisRelationContents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisRelationContents.swift; sourceTree = "<group>"; };
+		313E64D726E9AD8500EBDE31 /* PageSynopsisRedirect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisRedirect.swift; sourceTree = "<group>"; };
+		313E64DB26EA1EAF00EBDE31 /* PageSynopsisFunction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisFunction.swift; sourceTree = "<group>"; };
+		313E64DD26EA1F7800EBDE31 /* PageSynopsisHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisHistory.swift; sourceTree = "<group>"; };
 		313F8D0D269BFDEE0055F775 /* CWGridKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CWGridKids.swift; sourceTree = "<group>"; };
 		313F8D10269C1A490055F775 /* PosterBlockKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterBlockKids.swift; sourceTree = "<group>"; };
 		313F8D12269C3F8E0055F775 /* VideoBlockKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoBlockKids.swift; sourceTree = "<group>"; };
@@ -1681,6 +1695,24 @@
 			path = Assets;
 			sourceTree = "<group>";
 		};
+		313E64D926EA137200EBDE31 /* synop */ = {
+			isa = PBXGroup;
+			children = (
+				314D738925B4F8B100907118 /* PageSynopsis.swift */,
+				313E64DD26EA1F7800EBDE31 /* PageSynopsisHistory.swift */,
+				313E64D726E9AD8500EBDE31 /* PageSynopsisRedirect.swift */,
+				313E64D326E9A1F300EBDE31 /* PageSynopsisWatchLv.swift */,
+				313E64D526E9A2A100EBDE31 /* PageSynopsisRelationContents.swift */,
+				313E64CF26E999FB00EBDE31 /* PageSynopsisCorner.swift */,
+				3144985126E26DDC000D0ACD /* PageSynopsisInside.swift */,
+				313E64D126E99AAC00EBDE31 /* PageSynopsisProhibitionSimultaneous.swift */,
+				3194318B26B2578D00C20619 /* PageSynopsisLog.swift */,
+				313E64DB26EA1EAF00EBDE31 /* PageSynopsisFunction.swift */,
+				31A3FAB926C49BAA00689E09 /* PageSynopsisLayer.swift */,
+			);
+			path = synop;
+			sourceTree = "<group>";
+		};
 		313F8D09269BB82F0055F775 /* viewmodel */ = {
 			isa = PBXGroup;
 			children = (
@@ -1749,10 +1781,7 @@
 				31626EEF25B908E600F4031D /* model */,
 				3166CBA626115CC700282891 /* component */,
 				314D739125B501CC00907118 /* body */,
-				314D738925B4F8B100907118 /* PageSynopsis.swift */,
-				3144985126E26DDC000D0ACD /* PageSynopsisInside.swift */,
-				3194318B26B2578D00C20619 /* PageSynopsisLog.swift */,
-				31A3FAB926C49BAA00689E09 /* PageSynopsisLayer.swift */,
+				313E64D926EA137200EBDE31 /* synop */,
 				3198CF8626D917B200918217 /* PageSynopsisKids.swift */,
 				31895AF92601C863002DE02E /* PageSynopsisPackage.swift */,
 				317335FE26130003009B211B /* PageSynopsisPlayer.swift */,
@@ -4362,6 +4391,7 @@
 				3152B46025D9DDE100147C86 /* SummaryViewer.swift in Sources */,
 				D573784A25A2983800EC571F /* CharacterSelectBox.swift in Sources */,
 				31C4D29C2692B43E000C7E83 /* KesModel.swift in Sources */,
+				313E64DC26EA1EAF00EBDE31 /* PageSynopsisFunction.swift in Sources */,
 				31CABB0026C28DCC00B4B3C3 /* Navilog.swift in Sources */,
 				D56C6A4B257DA0C700CF9AB8 /* LoopSwipperView.swift in Sources */,
 				312825C426B014D400A58DB9 /* PageCashChargePrivacyAndAgree.swift in Sources */,
@@ -4380,6 +4410,7 @@
 				31895B072601CEB8002DE02E /* SynopsisPackageModel.swift in Sources */,
 				319745C7262010F30072945D /* PageMyPurchaseTicketList.swift in Sources */,
 				D56C6A43257DA0C700CF9AB8 /* LayoutAlignment.swift in Sources */,
+				313E64D426E9A1F300EBDE31 /* PageSynopsisWatchLv.swift in Sources */,
 				316DF2D125C29EC500915B27 /* CustomAVPlayerController.swift in Sources */,
 				3190E6242674993D000CBCB9 /* SkeletonBlock.swift in Sources */,
 				319BAFDD2604A2FE0007273F /* SearchTab.swift in Sources */,
@@ -4456,6 +4487,7 @@
 				319C47E726A1743400C61EF8 /* PageKidsMultiBlock.swift in Sources */,
 				31895AFF2601CDDE002DE02E /* DirectPackageView.swift in Sources */,
 				31D3F4DE25E36625008FDFEC /* PageMultiBlock.swift in Sources */,
+				313E64D826E9AD8500EBDE31 /* PageSynopsisRedirect.swift in Sources */,
 				3190CB0E268ABD8400ACB465 /* PageKidsTab.swift in Sources */,
 				3190CB0A268987C400ACB465 /* KidsProfiles.swift in Sources */,
 				D50AB9042580772A00649C4A /* EventBanner.swift in Sources */,
@@ -4541,6 +4573,7 @@
 				312825BA26AFB09800A58DB9 /* SelectStbBox.swift in Sources */,
 				31E8D7C125CA85190034BBC4 /* PlayerOptionSelectBox.swift in Sources */,
 				3190CB13268ACC1E00ACB465 /* KidProfileListEmpty.swift in Sources */,
+				313E64D626E9A2A100EBDE31 /* PageSynopsisRelationContents.swift in Sources */,
 				3190CB24268D890500ACB465 /* MenuNavi.swift in Sources */,
 				318F7B582625798400774B17 /* TMembership.swift in Sources */,
 				31AC66D226BA1E5F00766995 /* ScrollLazeStack.swift in Sources */,
@@ -4565,6 +4598,7 @@
 				31A38DFD2682AA270058287B /* PurchaseViewerKids.swift in Sources */,
 				31863E08265B364A0086C40D /* Alram.swift in Sources */,
 				31AC66C526B78D0B00766995 /* RegistCardData.swift in Sources */,
+				313E64D226E99AAC00EBDE31 /* PageSynopsisProhibitionSimultaneous.swift in Sources */,
 				312825AD26AE7E8100A58DB9 /* BuzzvilFeedItemCpsV.swift in Sources */,
 				3190CB1A268C447C00ACB465 /* VerticalGraph.swift in Sources */,
 				3166CBE42611A15900282891 /* Eps.swift in Sources */,
@@ -4687,6 +4721,7 @@
 				317F990926A6BD9C00016C09 /* PageKidsMonthly.swift in Sources */,
 				319B378D26B1681B001501B1 /* RecommandBenefit.swift in Sources */,
 				3198CF8726D917B300918217 /* PageSynopsisKids.swift in Sources */,
+				313E64DE26EA1F7800EBDE31 /* PageSynopsisHistory.swift in Sources */,
 				D56C6A57257DA0C700CF9AB8 /* RadioButton.swift in Sources */,
 				D56C6A2C257DA0C700CF9AB8 /* CustomPHPicker.swift in Sources */,
 				316A706F266F05E300A93B83 /* SelectButtonKids.swift in Sources */,
@@ -4898,6 +4933,7 @@
 				318F7B502625739A00774B17 /* CardBlock.swift in Sources */,
 				31373F6425C7E726004353DA /* YTPlayerView.swift in Sources */,
 				318AA03F265DDB1D00C089EC /* SetupAlram.swift in Sources */,
+				313E64D026E999FB00EBDE31 /* PageSynopsisCorner.swift in Sources */,
 				D56C6A42257DA0C700CF9AB8 /* CustomToggleStyle.swift in Sources */,
 				D56C6A3E257DA0C700CF9AB8 /* CPPlayer.swift in Sources */,
 				318AA045265DE8D100C089EC /* SetupHappySenior.swift in Sources */,
@@ -4982,7 +5018,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNewNotification/BtvPlusNewNotification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7454;
+				CURRENT_PROJECT_VERSION = 7457;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = BtvPlusNewNotification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
@@ -5007,7 +5043,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNewNotification/BtvPlusNewNotification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7454;
+				CURRENT_PROJECT_VERSION = 7457;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = BtvPlusNewNotification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
@@ -5195,7 +5231,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7454;
+				CURRENT_PROJECT_VERSION = 7457;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
@@ -5279,7 +5315,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7454;
+				CURRENT_PROJECT_VERSION = 7457;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;

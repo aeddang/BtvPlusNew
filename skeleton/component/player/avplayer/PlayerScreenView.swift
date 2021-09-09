@@ -142,6 +142,7 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
     }
     
     private func startPlayer(_ url:URL, assetInfo:AssetPlayerInfo? = nil){
+    
         ComponentLog.d("DrmData " +  (drmData?.contentId ?? "none drm") , tag: self.tag)
         player = CustomAssetPlayer(m3u8URL: url, playerDelegate: self, assetInfo:assetInfo, drm: self.drmData)
         //player = FairplayPlayer(m3u8URL: url, playerDelegate: self, assetInfo:assetInfo, drm:self.drmData)

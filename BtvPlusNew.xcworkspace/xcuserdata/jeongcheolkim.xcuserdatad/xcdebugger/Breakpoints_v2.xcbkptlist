@@ -39,33 +39,33 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "046D00CB-0AA8-4AFE-B83C-15AA935EF0F1"
+            uuid = "C59B2962-3189-46D2-A331-A8A9EBDBAA5C"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BtvPlusNew/scene/pageKids/my/PageEditKid.swift"
+            filePath = "BtvPlusNew/scene/page/component/webview/component/BtvCustomWebView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "361"
-            endingLineNumber = "361"
-            landmarkName = "registKid()"
+            startingLineNumber = "259"
+            endingLineNumber = "259"
+            landmarkName = "webView(_:didFinish:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "C70CB4A6-2B49-4F8B-AEA6-EFE1A0AEB55D"
+            uuid = "8EA8F20F-47A1-4D22-A469-2E61225980F4"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BtvPlusNew/scene/component/list/StbList.swift"
+            filePath = "skeleton/component/player/avplayer/PlayerScreenView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "149"
-            endingLineNumber = "149"
-            landmarkName = "body"
-            landmarkType = "24">
+            startingLineNumber = "145"
+            endingLineNumber = "145"
+            landmarkName = "startPlayer(_:assetInfo:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

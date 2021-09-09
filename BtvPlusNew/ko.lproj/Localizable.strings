@@ -474,6 +474,7 @@
 
 "alertKidInvalidNickName" = "사용 불가한 특수문자가 포함되어 있습니다.\n다시 입력해 주세요.";
 "alertKidInvalidBirth" = "자녀 프로필은 14세 미만인 경우에만\n등록이 가능합니다.";
+"alertKidWrongBirth" = "아이의 생년월을 확인해주세요.";
 "alertKidAddError" = "프로필등록이 실패했습니다.\n다시시도해주세요";
 "alertKidEditError" = "프로필수정이 실패했습니다.\n다시시도해주세요";
 "alertKidDeleteError" = "프로필삭제가 실패했습니다.\n다시시도해주세요";

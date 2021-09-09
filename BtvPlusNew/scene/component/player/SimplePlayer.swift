@@ -147,7 +147,7 @@ struct SimplePlayer: PageComponent{
                 }
             }
             .onDisappear(){
-    
+                //self.viewModel.event = .stop
             }
         }//geo
     }//body

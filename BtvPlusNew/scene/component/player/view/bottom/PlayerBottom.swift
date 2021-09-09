@@ -120,7 +120,6 @@ struct PlayerBottom: PageView{
         }
         .onReceive(self.viewModel.$currentQuality){_ in
             self.durationTime = nil
-            self.nextProgress = 0.0
             withAnimation {
                 self.resetShow()
             }
@@ -129,37 +128,51 @@ struct PlayerBottom: PageView{
             withAnimation{
                 self.isLock = isLock
             }
-            
         }
+        
         .onReceive(self.viewModel.$duration){ t in
+            if t <= 0 {return}
             self.durationTime = t
-            
             guard let data = self.viewModel.synopsisPlayerData else { return }
-            withAnimation {
-                switch data.type {
-                case .preview : break
-                case .preplay :
-                    if self.viewModel.originDuration > Self.previewLimit {
-                        self.showPreplay = true
-                    } else {
+            
+            ComponentLog.d("duration " + t.description, tag:self.tag)
+            ComponentLog.d("originDuration " + self.viewModel.originDuration.description, tag:self.tag)
+            ComponentLog.d("previewLimit " + Self.previewLimit.description, tag:self.tag)
+            
+            switch data.type {
+            case .preview : break
+            case .preplay :
+                ComponentLog.d("preplay " + self.showPreplay.description, tag:self.tag)
+                if self.viewModel.originDuration > Self.previewLimit || self.type == .btv {
+                    withAnimation {self.showPreplay = true}
+                } else {
+                    withAnimation {
                         self.showPreplay = false
                         self.viewModel.btvPlayerEvent = .disablePreview
-                        DispatchQueue.main.async {
-                            self.viewModel.event = .pause
-                            self.viewModel.event = .stop
-                        }
-                      
                     }
-                case .vod :
-                    self.openingTime = min(self.viewModel.openingTime, Self.openProgressTime)
+                    DispatchQueue.main.async {
+                        self.viewModel.event = .pause
+                        self.viewModel.event = .stop
+                    }
+                  
+                }
+            case .clip : break
+            default :
+                self.openingTime = min(self.viewModel.openingTime, Self.openProgressTime)
+                ComponentLog.d("vod " + data.hasNext.description, tag:self.tag)
+                if data.hasNext {
+                    
+                    let defaultEndingTime =  t-Self.nextProgressTime
                     if self.viewModel.endingTime <= 0 {
-                        self.endingTime = t-Self.nextProgressTime
+                        self.endingTime = defaultEndingTime
                         self.showNextCancel = false
+                        ComponentLog.d("vod hasNext default " + self.endingTime.description, tag:self.tag)
                     } else {
                         self.endingTime = self.viewModel.endingTime
-                        self.showNextCancel = true
+                        self.showNextCancel = self.endingTime < defaultEndingTime
+                        ComponentLog.d("vod hasNext " + self.showNextCancel.description, tag:self.tag)
+                        ComponentLog.d("vod hasNext endingTime " + self.endingTime.description, tag:self.tag)
                     }
-                default : break
                 }
             }
             withAnimation {
@@ -169,6 +182,13 @@ struct PlayerBottom: PageView{
         }
         .onReceive(self.viewModel.$isPlay) { play in
             self.isPlaying = play
+        }
+        .onReceive(self.viewModel.$streamEvent) { evt in
+            guard let evt = evt else { return }
+            switch evt {
+            case .seeked: self.moveNext()
+            default : break
+            }
         }
         .onReceive(self.viewModel.$time){ t in
             guard let d = self.durationTime else {return}
@@ -199,14 +219,22 @@ struct PlayerBottom: PageView{
     private func resetShow(){
         self.showDirectview = false
         self.showPreplay = false
+        self.isShowNext = false
         self.showNext = false
         self.showFullVod = false
+        self.isSeasonNext = false
+        self.nextProgressCancel()
+        self.removeInside()
+        self.openingTime = -1
+        self.nextBtnTitle = ""
+        ComponentLog.d("resetShow", tag: self.tag)
     }
     
     @State var nextBtnTitle:String = ""
     @State var isSeasonNext:Bool = false
     @State var openingTime:Double = -1
     @State var endingTime:Double = -1
+    @State var isShowNext = false
     @State var showNext = false
     @State var showNextCancel = false
     @State var nextTimer:AnyCancellable?
@@ -224,49 +252,77 @@ struct PlayerBottom: PageView{
         }
     }
     
+    func moveNext(){
+        if !self.isShowNext {return}
+        let t = self.viewModel.time
+        let end = self.endingTime + Self.nextProgressTime
+        if t > end {
+            ComponentLog.d("nextProgress move", tag: self.tag)
+            self.nextProgressCancel()
+        }
+    }
+    
     func checkNext(t:Double, d:Double){
         if t > self.endingTime {
-            if (t - self.endingTime) > 1 { return }
-            if !self.showNext {
-                self.nextProgressStart(t: d-t)
+            if !self.isShowNext {
+                self.isShowNext = true
+                self.nextProgressStart(t:t, d:d)
             }
         } else {
-            if self.showNext {
+            if self.isShowNext {
+                self.isShowNext = false
                 self.nextProgressCancel()
             }
         }
     }
-    func nextProgressStart(t:Double = 5){
+    func nextProgressStart(t:Double, d:Double){
         if !self.setup.nextPlay { return }
         self.nextBtnTitle = self.viewModel.synopsisPlayerData?.nextString ?? ""
         self.isSeasonNext = self.viewModel.synopsisPlayerData?.nextEpisode == nil
+        
+        /*
+        if self.isSeasonNext {
+            withAnimation {
+                self.showNext = true
+                self.showNextCancel = false
+                self.nextProgress = 1
+            }
+            return
+        }*/
+        let end = self.endingTime + Self.nextProgressTime
+        if end > d {
+            ComponentLog.d("nextProgress over", tag: self.tag)
+            self.nextProgressCancel()
+            return
+        }
         ComponentLog.d("nextProgressStart", tag: self.tag)
         withAnimation { self.showNext = true }
-        let times:Float = Float(Self.nextProgressTime * 10)
-        var time:Float = Float(min(t, Self.nextProgressTime) * 10)
+        // let diff = Self.nextProgressTime - (Self.nextProgressTime - (t-self.endingTime))
+        // var time:Float = Float(diff / tick)
+        let tick:Double = 1/20
+        let times:Float = Float(Self.nextProgressTime / tick)
+        var time:Float = 0
         self.nextTimer?.cancel()
         self.nextTimer = Timer.publish(
-            every: 0.1, on: .current, in: .common)
+            every: tick , on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
-                withAnimation{
-                    time += 1
-                    self.nextProgress = min(1,time/times)
-                    if time == times {
-                        ComponentLog.d("nextProgressComplete", tag: self.tag)
-                        self.viewModel.btvPlayerEvent = .nextView(isAuto:true)
-                        self.nextProgressCancel()
-                    }
+                time += 1
+                self.nextProgress = min(1,time/times)
+                if self.nextProgress == 1 {
+                    ComponentLog.d("nextProgressComplete", tag: self.tag)
+                    self.viewModel.btvPlayerEvent = .nextView(isAuto:true)
+                    self.nextProgressCancel()
                 }
             }
     }
+    
     func nextProgressCancel(){
+        ComponentLog.d("nextProgressCancel", tag: self.tag)
         withAnimation { self.showNext = false }
-        self.endingTime = -1
         self.nextTimer?.cancel()
         self.nextTimer = nil
     }
-    
     
     
     @State var insideSearchTime:Double = -1
@@ -286,7 +342,10 @@ struct PlayerBottom: PageView{
     }
     func checkInside(t:Double){
         guard let cookies = self.cookies else {return}
-        if t < self.insideSearchTime {return}
+        if t < self.insideSearchTime {
+            self.removeInside()
+            return
+        }
         guard let find = cookies.first(where: {$0.startTime <= t && $0.endTime >= t}) else {
             if self.currentCookie != nil {
                 self.showCookie = nil

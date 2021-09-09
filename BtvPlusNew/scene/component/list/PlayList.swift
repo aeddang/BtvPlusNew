@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 import struct Kingfisher.KFImage
 class PlayData:InfinityData,ObservableObject{
     private(set) var image: String? = nil
@@ -153,11 +154,12 @@ struct PlayItem: PageView {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var setup:Setup
+   
     var pageObservable:PageObservable
     var playerModel: BtvPlayerModel
     var data:PlayData
+    var range:CGFloat = 0
     var isSelected:Bool = false
-    @State var isPlay:Bool = false
     @State var isAutoPlay:Bool = true
     @State var sceneOrientation: SceneOrientation = .portrait
     var action:((_ data:PlayData) -> Void)? = nil
@@ -171,23 +173,21 @@ struct PlayItem: PageView {
                         data: self.data,
                         isSelected : self.isSelected,
                         isAutoPlay : self.$isAutoPlay,
-                        isPlay: self.$isPlay,
                         isError: self.$isError,
                         action: self.action){
-                        
                         self.loadPreview()
-                        
                     }
                     .frame(width: Self.listSize.width, height: Self.listSize.height)
                     .clipped()
                     VStack(alignment: .leading, spacing:0){
-                        Text(self.data.title!)
-                            .modifier(BoldTextStyle(
-                                    size: Font.size.large,
-                                    color: Color.app.white)
-                            )
-                            .lineLimit(1)
-                        
+                        if let title = self.data.title {
+                            Text(title + " " + (CGFloat(self.data.index) * self.range).description)
+                                .modifier(BoldTextStyle(
+                                        size: Font.size.large,
+                                        color: Color.app.white)
+                                )
+                                .lineLimit(1)
+                        }
                         PlayItemInfo(data: self.data)
                         HStack(spacing:SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin){
                             PlayItemFunction(
@@ -209,7 +209,6 @@ struct PlayItem: PageView {
                         data: self.data,
                         isSelected : self.isSelected,
                         isAutoPlay : self.$isAutoPlay,
-                        isPlay: self.$isPlay,
                         isError: self.$isError,
                         action: self.action){
                         
@@ -226,9 +225,9 @@ struct PlayItem: PageView {
                         Spacer().modifier(MatchVertical(width: 0))
                         VStack(alignment: .leading, spacing:0){
                             HStack(spacing:SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin){
-                                if self.data.title != nil {
+                                if let title = self.data.title {
                                     VStack(alignment: .leading, spacing:0){
-                                        Text(self.data.title!)
+                                        Text(title + " " + (CGFloat(self.data.index) * self.range).description)
                                             .modifier(BoldTextStyle(
                                                     size: Font.size.large,
                                                     color: Color.app.white)
@@ -239,7 +238,7 @@ struct PlayItem: PageView {
                                     }
                                     .modifier(MatchHorizontal(height: Font.size.large))
                                 } else{
-                                    Spacer().modifier(MatchHorizontal(height: 1))
+                                    Spacer().modifier(MatchHorizontal(height: 0))
                                 }
                                 PlayItemFunction(
                                     data: self.data,
@@ -277,6 +276,7 @@ struct PlayItem: PageView {
                 self.isAlram = self.data.isAlram
             }
         }
+        
         .onReceive(self.sceneObserver.$isUpdated){ _ in
             self.sceneOrientation = self.sceneObserver.sceneOrientation
         }
@@ -284,7 +284,6 @@ struct PlayItem: PageView {
             self.sceneOrientation = self.sceneObserver.sceneOrientation
             self.isLike = self.data.isLike
             self.isAlram = self.data.isAlram
-            self.isPlay = true
             self.isInit = true
         }
         .onDisappear{
@@ -296,9 +295,10 @@ struct PlayItem: PageView {
     @State var isLike:LikeStatus? = nil
     @State var isAlram:Bool? = nil
     @State var isError:Bool = false
-     
+
     private func loadPreview(){
         
+        if !self.isSelected { return }
         guard let epsdRsluId = data.epsdRsluId else {
             self.isError = true
             return
@@ -352,9 +352,10 @@ struct PlayItem: PageView {
             self.isError = true
             return
         }
+        PageLog.d("load Preview", tag: self.tag)
         self.playerModel.setData(data: dataInfo,
-                                 type: .preview(epsdRsluId),
-                                 autoPlay: self.isPlay,
+                                 type: .preview(epsdRsluId, isList:true),
+                                 autoPlay: true,
                                  continuousTime: self.data.playTime)
         
 
@@ -373,10 +374,12 @@ struct PlayItemScreen: PageView {
     var data:PlayData
     var isSelected:Bool
     @Binding var isAutoPlay:Bool
-    @Binding var isPlay:Bool
     @Binding var isError:Bool
+    
     var action:((_ data:PlayData) -> Void)? = nil
     var load:() -> Void
+    @State var isPlay:Bool = false
+    
     var body: some View {
         ZStack{
             if self.data.isPlayAble {
@@ -391,11 +394,11 @@ struct PlayItemScreen: PageView {
                         .modifier(MatchParent())
                         .onAppear{
                             if self.pagePresenter.isFullScreen { return }
-                            self.load()
-                            self.pagePresenter.orientationLock(lockOrientation: .all)
+                            self.autoLoad()
+                           
                         }
                         .onDisappear{
-                            self.isPlay = true //self.setup.autoPlay
+                            self.isPlay = false //self.setup.autoPlay
                         }
                         
                     } else {
@@ -408,7 +411,7 @@ struct PlayItemScreen: PageView {
                     }
                 }
             }
-            if !self.isAutoPlay || !self.isSelected {
+            if !self.isPlay || !self.isSelected {
                 if self.data.image == nil {
                     Image(Asset.noImg16_9)
                         .renderingMode(.original)
@@ -428,6 +431,7 @@ struct PlayItemScreen: PageView {
                         .modifier(MatchParent())
                 }
                 Button(action: {
+                    self.cancelAutoLoad()
                     self.isPlay = true
                     self.isAutoPlay = true
                     self.action?(self.data)
@@ -446,12 +450,32 @@ struct PlayItemScreen: PageView {
             if !self.isSelected { return }
             switch evt {
             case .prevPlay :
-                self.isPlay = true
                 self.isAutoPlay = true
             default : break
             }
             
         }
+        .onDisappear{
+            self.cancelAutoLoad()
+        }
+    }
+    
+    @State private var autoPlayer:AnyCancellable?
+    private func autoLoad(){
+        self.autoPlayer?.cancel()
+        self.autoPlayer = Timer.publish(
+            every: 1.5, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                self.cancelAutoLoad()
+                self.isPlay = true
+                self.load()
+                self.pagePresenter.orientationLock(lockOrientation: .all)
+            }
+    }
+    private func cancelAutoLoad(){
+        self.autoPlayer?.cancel()
+        self.autoPlayer = nil
     }
 }
 

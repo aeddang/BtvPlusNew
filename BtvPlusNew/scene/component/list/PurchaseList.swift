@@ -60,7 +60,7 @@ class PurchaseData:InfinityData,ObservableObject{
         epsdId = data.epsd_id
         synopsisType = SynopsisType(value: data.prod_type_cd)
         synopsisData = .init(
-            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
         return self
     }

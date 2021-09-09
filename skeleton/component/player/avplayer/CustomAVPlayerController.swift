@@ -49,9 +49,9 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
             ComponentLog.d("updateUIView error " + e.localizedDescription , tag: self.tag)
         }
         switch viewModel.updateType {
-        case .recovery(let t):
+        case .recovery(let t, let count):
              ComponentLog.d("recovery" , tag: self.tag)
-             recovery(player, evt: evt, recoveryTime: t)
+             recovery(player, evt: evt, recoveryTime: t, retryCount: count)
         case .initate :
              ComponentLog.d("initate" , tag: self.tag)
              recovery(player, evt: evt, recoveryTime: 0)
@@ -60,7 +60,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
         }
     }
     
-    private func recovery(_ player: PlayerScreenView, evt:PlayerUIEvent, recoveryTime:Double){
+    private func recovery(_ player: PlayerScreenView, evt:PlayerUIEvent, recoveryTime:Double, retryCount:Int = -1){
         viewModel.updateType = .update
         var initTime = recoveryTime
         var isPlay = true
@@ -78,8 +78,10 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
             self.update(player, evt: evt)
             return
         }
-        ComponentLog.d("recovery " + viewModel.path , tag: self.tag)
-        viewModel.event = .load(viewModel.path, isPlay , initTime, viewModel.header)
+       
+        let path = retryCount > 1 ? viewModel.recoveryPath ?? viewModel.path : viewModel.path
+        ComponentLog.d("recovery " + path , tag: self.tag)
+        viewModel.event = .load(path, isPlay , initTime, viewModel.header)
     }
     
     private func update(_ player:PlayerScreenView, evt:PlayerUIEvent){
@@ -141,8 +143,8 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
             
         case .seekTime(let t, let play): onSeek(time:t, play: play)
         case .seekMove(let t, let play): onSeek(time:viewModel.time + t, play: play)
-        case .seekForward(let t, let play): onSeek(time:viewModel.time + t - viewModel.seekMove, play: play)
-        case .seekBackword(let t, let play): onSeek(time:viewModel.time - t - viewModel.seekMove, play: play)
+        case .seekForward(let t, let play): onSeek(time:viewModel.time + t , play: play)
+        case .seekBackword(let t, let play): onSeek(time:viewModel.time - t , play: play)
         case .seekProgress(let pct, let play):
             let t = viewModel.duration * Double(pct)
             onSeek(time:t, play: play)
@@ -167,7 +169,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
         }
         
         func onSeek(time:Double, play:Bool){
-            var st = min(time, (self.viewModel.limitedDuration ?? self.viewModel.duration) - 1 )
+            var st = min(time, (self.viewModel.limitedDuration ?? self.viewModel.duration) - 5 )
             st = max(st, 0)
             if !player.seek(st) { viewModel.error = .illegalState(evt) }
             self.onSeek(time: st)

@@ -122,7 +122,7 @@ struct SimplePlayerUI: PageComponent {
                         },
                         onChanged:{ pct in
                             self.viewModel.event = .seekProgress(pct)
-                            
+                            self.viewModel.seeking = 0
                         })
                         .frame(height: Dimen.stroke.regular )
                         .padding(.all, 0)
@@ -154,7 +154,7 @@ struct SimplePlayerUI: PageComponent {
         .onReceive(self.viewModel.$time) { tm in
             if self.viewModel.duration <= 0 {return}
             if tm < 0 {return}
-            self.completeTime = (self.viewModel.duration - tm).secToHourString()
+            self.completeTime = max(0,self.viewModel.duration - tm).secToHourString()
             if !self.isSeeking {
                 self.progress = Float(self.viewModel.time / max(self.viewModel.duration,1))
             }

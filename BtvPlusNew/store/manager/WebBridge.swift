@@ -365,7 +365,8 @@ class WebBridge :PageProtocol{
                         }
                         
                     case WebviewMethod.stopLoading.rawValue :
-                        deepLinkItem.isForceRetry = true
+                        break
+                        //deepLinkItem.isForceRetry = true
                         //self.forceRetry(webView: webView)
                     default :
                         deepLinkItem.isCallFuncion = true

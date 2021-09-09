@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 enum BtvPlayType {
-    case preview(String), ad, vod(String, String?)
+    case preview(String, isList:Bool = false), ad, vod(String, String?)
     var type: String {
         switch self {
         default: return "V"
@@ -24,7 +24,7 @@ enum BtvPlayType {
     }
     var cid: String {
         switch self {
-        case .preview(let epsdRsluId): return epsdRsluId
+        case .preview(let epsdRsluId, _): return epsdRsluId
         case .vod(let epsdRsluId , _): return epsdRsluId
         default: return ""
         }
@@ -48,6 +48,7 @@ enum BtvUiEvent {
     case more, guide, initate, closeList, clickInsideButton(NaviLog.Action,  String?), prevPlay
 }
 
+
 enum BtvPlayerEvent {
     case nextView(isAuto:Bool = false), nextViewCancel,
          continueView, changeView(String), cookieView, fullVod(SynopsisData),
@@ -60,16 +61,14 @@ enum BtvPlayerType {
 
 class BtvPlayerModel:PlayerModel{
     @Published var brightness:CGFloat = UIScreen.main.brightness
-    @Published var seeking:Double = 0
-    @Published private(set) var message:String? = nil
     
+    @Published private(set) var message:String? = nil
     @Published var selectQuality:Quality? = nil
     @Published var currentQuality:Quality? = nil
     
     @Published var selectFunctionType:SelectOptionType? = nil
     @Published var btvUiEvent:BtvUiEvent? = nil {didSet{ if btvUiEvent != nil { btvUiEvent = nil} }}
     @Published var btvPlayerEvent:BtvPlayerEvent? = nil {didSet{ if btvPlayerEvent != nil { btvPlayerEvent = nil} }}
-    
     private(set) var synopsisPlayerData:SynopsisPlayerData? = nil
     private(set) var synopsisPrerollData:SynopsisPrerollData? = nil
     private(set) var openingTime:Double = 0
@@ -168,6 +167,8 @@ class BtvPlayerModel:PlayerModel{
                 self.openingTime = playData.openingTime ?? -1
                 self.endingTime = playData.endingTime ?? -1
                 self.continuousTime = t == 0 ? self.openingTime : t
+                
+                ComponentLog.d("vodNext continuousTime " + self.continuousTime.description , tag: self.tag)
                 self.initPlay = autoPlay
                 self.useInside = true
             default: break
@@ -201,10 +202,21 @@ class BtvPlayerModel:PlayerModel{
             if qualitys.count == 1 && qualitys.first?.name == "SD"{
                 qualitys[0].name = "HD"
             }
-            
-            currentQuality = qualitys.first{$0.name == (self.selectedQuality ?? "AUTO")}
+            var selectQuality = self.selectedQuality ?? "AUTO"
+            switch self.btvPlayType {
+            case .preview(_, let isList) :
+                selectQuality = isList ? "SD" : selectQuality
+            default : break
+            }
+            currentQuality = qualitys.first{$0.name == selectQuality}
             if currentQuality == nil {
                 currentQuality = qualitys.first
+                ComponentLog.d("firstQuality " + selectQuality, tag:"CPPlayer")
+            } else {
+                ComponentLog.d("selectQuality " + selectQuality, tag:"CPPlayer")
+            }
+            if qualitys.count > 1 {
+                self.recoveryPath = qualitys.first(where: {$0.name != selectQuality})?.path
             }
         }
         return self

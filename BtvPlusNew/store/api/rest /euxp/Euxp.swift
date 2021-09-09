@@ -175,12 +175,26 @@ class Euxp: Rest{
         params["sris_id"] = data.srisId ?? ""
         params["epsd_id"] = data.epsdId ?? ""
         params["epsd_rslu_id"] = data.epsdRsluId ?? ""
+        
+        var ynRecent = "Y"
         if data.epsdId?.isEmpty != false && data.epsdRsluId?.isEmpty == false {
             params["search_type"] = EuxpNetwork.SearchType.prd.rawValue
+            ynRecent = "N"
         } else {
-            params["search_type"] = data.searchType ?? ""
+            
+            if let isRecent = data.isRecent {
+                ynRecent = isRecent ? "N" : "C"
+                params["search_type"] = data.searchType.rawValue
+            } else if data.synopType == .title {
+                ynRecent = "N"
+                params["search_type"] = data.searchType.rawValue
+            } else {
+                ynRecent = data.searchType == EuxpNetwork.SearchType.prd ? "N" : "C"
+                params["search_type"] = EuxpNetwork.SearchType.sris.rawValue
+            }
+           
         }
-       
+        params["yn_recent"] =  ynRecent
         params["app_typ_cd"] = "BTVPLUS"
         fetch(route: EuxpSynopsis(query: params), completion: completion, error:error)
         
@@ -203,7 +217,7 @@ class Euxp: Rest{
         params["sris_id"] = data.srisId ?? ""
         params["epsd_id"] = data.epsdId ?? ""
         params["prd_prc_id"] = data.prdPrcId ?? ""
-        params["search_type"] = data.searchType ?? ""
+        params["search_type"] = data.searchType.rawValue  
         fetch(route: EuxpGatewaySynopsis(query: params), completion: completion, error:error)
     }
     

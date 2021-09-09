@@ -41,7 +41,7 @@ struct RectButton: View, SelecterbleProtocol{
                             .background(self.bgActiveColor)
                     }
                 }
-                HStack{
+                HStack( spacing: Dimen.margin.micro ){
                     Text(self.text)
                         .font(.custom(textModifier.family, size: textModifier.size))
                         .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)

@@ -194,6 +194,21 @@ struct KidsPlayer: PageComponent{
                 self.viewModel.selectedQuality = quality?.name
                 self.viewModel.currentQuality = quality
             }
+            .onReceive(self.viewModel.$duration){ d in
+                if d < 10 { return }
+                if (self.viewModel.continuousProgress ?? 1) < MetvNetwork.maxWatchedProgress,
+                   let progress = self.viewModel.continuousProgress{
+                    let t = round(d * Double(progress))
+                    self.viewModel.event = .seekTime(t)
+                    self.viewModel.continuousProgress = nil
+                    ComponentLog.d("continuousProgress play" , tag: self.tag)
+                }
+                if let progressTime = self.viewModel.continuousProgressTime {
+                    self.viewModel.event = .seekTime(progressTime)
+                    self.viewModel.continuousProgressTime = nil
+                    ComponentLog.d("continuousProgressTime play" , tag: self.tag)
+                }
+            }
             .onReceive(self.viewModel.$currentQuality){ quality in
                 if self.isPreroll {
                     self.isPreroll = false

@@ -261,6 +261,7 @@ extension String {
         
         public static var kidsInvalidNickName = "alertKidInvalidNickName".loaalized()
         public static var kidsInvalidBirth = "alertKidInvalidBirth".loaalized()
+        public static var kidsWrongBirth = "alertKidWrongBirth".loaalized()
         public static var kidsAddError = "alertKidAddError".loaalized()
         public static var kidsEditError = "alertKidEditError".loaalized()
         public static var kidsDeleteError = "alertKidDeleteError".loaalized()

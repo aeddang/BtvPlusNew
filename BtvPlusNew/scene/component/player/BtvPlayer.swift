@@ -211,11 +211,14 @@ struct BtvPlayer: PageComponent{
             .onReceive(self.viewModel.$selectQuality){ quality in
                 self.setup.selectedQuality = quality?.name
                 self.viewModel.selectedQuality = quality?.name
+                self.viewModel.continuousTime = self.viewModel.time
                 self.viewModel.currentQuality = quality
+                
             }
             .onReceive(self.viewModel.$duration){ d in
                 if d < 10 { return }
-                if let progress = self.viewModel.continuousProgress {
+                if (self.viewModel.continuousProgress ?? 1) < MetvNetwork.maxWatchedProgress,
+                   let progress = self.viewModel.continuousProgress{
                     let t = round(d * Double(progress))
                     self.viewModel.event = .seekTime(t)
                     self.viewModel.continuousProgress = nil
@@ -238,8 +241,9 @@ struct BtvPlayer: PageComponent{
                 }
                 if quality == nil { return }
                 let autoPlay = self.viewModel.initPlay ?? self.setup.autoPlay
-                self.viewModel.continuousTime = self.viewModel.time
+                
                 ComponentLog.d("autoPlay " + autoPlay.description, tag: self.tag)
+                ComponentLog.d("continuousTime " + self.viewModel.continuousTime.description, tag: self.tag)
                 if autoPlay {
                     DispatchQueue.main.asyncAfter(deadline: .now()+0.05){
                         self.initPlayer()

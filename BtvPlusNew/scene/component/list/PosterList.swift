@@ -58,7 +58,7 @@ class PosterData:InfinityData{
         epsdId = data.epsd_id
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         synopsisData = .init(
-            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris,
             epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: data.prd_prc_id, kidZone:data.kids_yn)
         
         return self
@@ -78,7 +78,7 @@ class PosterData:InfinityData{
         index = idx
         epsdId = data.epsd_id
         synopsisData = .init(
-            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris,
             epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: prdPrcId , kidZone:nil)
         
         return self
@@ -97,7 +97,7 @@ class PosterData:InfinityData{
         index = idx
         
         synopsisData = .init(
-            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "", kidZone:data.yn_kzone)
         return self
     }
@@ -110,16 +110,18 @@ class PosterData:InfinityData{
         isAdult = data.adult?.toBool() ?? false
         watchLv = data.level?.toInt() ?? 0
         tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        
         if let rt = data.watch_rt?.toInt() {
             self.progress = Float(rt) / 100.0
             self.isContinueWatch = MetvNetwork.isWatchCardRateIn(data: data)
+            
         }
         originImage = data.thumbnail
         image = ImagePath.thumbImagePath(filePath: data.thumbnail, size: type.size, isAdult: self.isAdult)
         
         index = idx
         synopsisData = .init(
-            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id,
             prdPrcId: "", kidZone:nil, progress:self.progress)
         return self
@@ -139,7 +141,7 @@ class PosterData:InfinityData{
         
         index = idx
         synopsisData = .init(
-            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "", kidZone:nil)
         return self.setNaviLog(data: data)
     }
@@ -176,7 +178,7 @@ class PosterData:InfinityData{
         index = idx
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         synopsisData = .init(
-            srisId: nil, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            srisId: nil, searchType: EuxpNetwork.SearchType.sris,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "", kidZone:nil)
         return self.setNaviLog(searchType: searchType, data:nil)
     }
@@ -194,7 +196,7 @@ class PosterData:InfinityData{
         index = idx
         epsdId = data.epsd_id
         synopsisData = .init(
-            srisId: nil, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            srisId: nil, searchType: EuxpNetwork.SearchType.sris,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "", kidZone:nil)
         return self.setNaviLog(searchType: searchType, data:data)
     }

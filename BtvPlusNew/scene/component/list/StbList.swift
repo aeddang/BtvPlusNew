@@ -168,6 +168,7 @@ struct StbItem: PageView {
     
     @State private var searcher:AnyCancellable?
     private func searchNickName(){
+        guard let stbid = self.data.stbid else {return}
         self.searcher?.cancel()
         self.searcher = Timer.publish(
             every: 0.3, on: .current, in: .common)
@@ -176,8 +177,8 @@ struct StbItem: PageView {
                 self.searcher?.cancel()
                 self.searcher = nil
                 self.dataProvider.requestData(
-                    q: .init(id: id,
-                        type: .getHostNickname(isAll:false, anotherStbId:id), isOptional: true))
+                    q: .init(id: stbid,
+                        type: .getHostNickname(isAll:false, anotherStbId:stbid), isOptional: true))
             }
     }
 }

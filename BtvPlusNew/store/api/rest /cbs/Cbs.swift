@@ -76,7 +76,7 @@ class Cbs: Rest{
         params["fgCd"] =  ApiUtil.string(byUrlEncoding:ApiUtil.getCBSEncrypted("10", uuid: uuid))
         params["reqId"] = ApiUtil.string(byUrlEncoding:ApiUtil.getCBSEncrypted("MobileBtv", uuid: uuid))
         
-        fetch(route: CbsCertificationCoupon(headers:headers, bodys: qurryString ), completion: completion, error:error)
+        fetch(route: CbsCertificationCoupon(headers:headers, jsonString: qurryString ), completion: completion, error:error)
     }
     
     /**
@@ -117,7 +117,7 @@ struct CbsCertificationCoupon:NetworkRoute{
     var path: String = "/mpoc/v1/confirmCoupon"
     var headers: [String: String]?
     var body: [String : Any]?
-    var bodys: String?
+    var jsonString: String?
 }
 
 struct CbsRequestBPointIssuance:NetworkRoute{

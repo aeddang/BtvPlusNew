@@ -107,14 +107,14 @@ extension MultiBlockBody {
                 let posters = watchBlocks.map{ d in
                     PosterData(pageType: self.pageType, usePrice:usePrice).setData(data: d, cardType: data.cardType)
                 }
-                .filter{$0.isContinueWatch}
+                .filter{$0.isContinueWatch}.filter{$0.progress != 1}
                 if  posters.isEmpty == true { return data.setBlank() }
                 data.posters = posters
             case .video :
                 let videos = watchBlocks.map{ d in
                     VideoData(pageType: self.pageType, usePrice:usePrice).setData(data: d, cardType: data.cardType)
                 }
-                .filter{$0.isContinueWatch}
+                .filter{$0.isContinueWatch}.filter{$0.progress != 1}
                 if  videos.isEmpty == true { return data.setBlank() }
                 data.videos = videos
             default: break

@@ -40,6 +40,11 @@ open class PageDataProviderModel:ObservableObject{
         copy.isProcess = true
         self.requests = [copy]
     }
+    
+    func requestProgressResume(){
+        self.event = .willRequest(progress)
+    }
+    
     func requestProgressSkip(){
         self.completedCount = self.requests?.count ?? 0
         self.progress += 1

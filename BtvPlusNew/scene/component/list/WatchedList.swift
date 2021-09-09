@@ -73,7 +73,7 @@ class WatchedData:InfinityData{
         index = idx
         srisId = data.sris_id
         synopsisData = .init(
-            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id,
             prdPrcId: "",  kidZone:nil, progress:self.progress)
         

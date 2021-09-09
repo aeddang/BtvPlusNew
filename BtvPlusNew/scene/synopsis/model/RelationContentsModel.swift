@@ -98,7 +98,7 @@ class RelationContentsModel:ObservableObject {
             self.seasons = list.map{
                 let data = SynopsisData(
                     srisId: $0.sris_id,
-                    searchType: EuxpNetwork.SearchType.sris.rawValue,
+                    searchType: EuxpNetwork.SearchType.sris,
                     epsdId: $0.epsd_id, epsdRsluId: nil, prdPrcId: nil, kidZone: nil,
                     synopType: .season
                 )

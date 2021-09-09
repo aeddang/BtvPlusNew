@@ -155,12 +155,12 @@ struct PageSynopsisPlayer: PageView {
                 if self.synopsisData == nil {
                     if let json = obj.getParamValue(key: .data) as? SynopsisJson {
                         self.synopsisData = SynopsisData(
-                            srisId: json.srisId, searchType:EuxpNetwork.SearchType.sris.rawValue, epsdId: json.epsdId,
+                            srisId: json.srisId, searchType:EuxpNetwork.SearchType.prd, epsdId: json.epsdId,
                             epsdRsluId: json.episodeResolutionId, prdPrcId: json.pid, kidZone: nil, synopType: SynopsisType.none)
                     }
                     if let qurry = obj.getParamValue(key: .data) as? SynopsisQurry {
                         self.synopsisData = SynopsisData(
-                            srisId:  qurry.srisId, searchType:EuxpNetwork.SearchType.sris.rawValue, epsdId:  qurry.epsdId,
+                            srisId:  qurry.srisId, searchType:EuxpNetwork.SearchType.prd, epsdId:  qurry.epsdId,
                             epsdRsluId: nil, prdPrcId: nil, kidZone: nil, synopType: SynopsisType.none)
                     }
                 }
@@ -344,10 +344,10 @@ struct PageSynopsisPlayer: PageView {
             return
         }
         if let synopsis = self.synopsisModel {
-            if let fullVod = synopsis.originEpsdId {
+            if synopsis.originEpsdId?.isEmpty == false, let fullVod = synopsis.originEpsdId {
                 self.synopsisPlayType = .clip(nil, SynopsisData(
                     srisId: self.synopsisData?.srisId,
-                    searchType: .title,
+                    searchType: .prd,
                     epsdId: fullVod,
                     synopType: self.synopsisData?.synopType ?? .none
                 ))

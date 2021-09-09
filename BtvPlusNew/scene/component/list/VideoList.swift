@@ -109,7 +109,7 @@ class VideoData:InfinityData{
         srisId = data.sris_id
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         synopsisData = .init(
-            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris,
             epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: data.prd_prc_id ,kidZone:data.kids_yn)
         
         return self
@@ -133,7 +133,7 @@ class VideoData:InfinityData{
         epsdId = data.epsd_id
         srisId = data.sris_id
         synopsisData = .init(
-            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris,
             epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: prdPrcId , kidZone:nil)
         
         return self
@@ -153,7 +153,7 @@ class VideoData:InfinityData{
         srisId = data.sris_id
         
         synopsisData = .init(
-            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:data.yn_kzone)
         return self
     }
@@ -162,11 +162,14 @@ class VideoData:InfinityData{
         setCardType(cardType)
         isClip = cardType == .clip
         count = data.yn_series == "Y" ? data.series_no : nil
+        
         if !isClip {
             watchLv = data.level?.toInt() ?? 0
             isAdult = data.adult?.toBool() ?? false
         }
         tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+        
+       
         if let rt = data.watch_rt?.toInt() {
             self.progress = Float(rt) / 100.0
             self.isContinueWatch = MetvNetwork.isWatchCardRateIn(data: data)
@@ -179,7 +182,7 @@ class VideoData:InfinityData{
         srisId = data.sris_id
         prodId = data.prod_id
         synopsisData = .init(
-            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id,
             prdPrcId: "",  kidZone:nil, progress:self.progress)
         return self
@@ -198,7 +201,7 @@ class VideoData:InfinityData{
         image = ImagePath.thumbImagePath(filePath: data.thumb, size: ListItem.video.size, isAdult: self.isAdult)
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         synopsisData = .init(
-            srisId: nil, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            srisId: nil, searchType: EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
         return self.setNaviLog(searchType: searchType, data: nil)
     }
@@ -216,7 +219,7 @@ class VideoData:InfinityData{
     
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         synopsisData = .init(
-            srisId: nil, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            srisId: nil, searchType: EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
         return self.setNaviLog(searchType: searchType, data: data)
     }
@@ -237,7 +240,7 @@ class VideoData:InfinityData{
             progressTime = Double(startTime)
         }
         synopsisData = .init(
-            srisId: nil, searchType: EuxpNetwork.SearchType.sris.rawValue,
+            srisId: nil, searchType: EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil, progressTime:progressTime)
         
         return self.setNaviLog(searchType: searchType, data: nil)

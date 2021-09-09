@@ -19,11 +19,13 @@ open class PlayerModel: ComponentObservable {
     var drm:FairPlayDrm? = nil
     var header:[String:String]? = nil
     @Published var path:String = ""
+    var recoveryPath:String? = nil
     @Published var isMute:Bool = false
     @Published var isLock:Bool = false
     @Published var volume:Float = -1
     @Published var bitrate:Double? = nil
     @Published var screenRatio:CGFloat = 1.0
+    @Published var seeking:Double = 0
     @Published var rate:Float = 1.0
     @Published var playInfo:String? = nil
     @Published var assetInfo:AssetPlayerInfo? = nil
@@ -78,6 +80,7 @@ open class PlayerModel: ComponentObservable {
     
     open func reset(){
         time = 0
+        recoveryPath = nil
         limitedDuration = nil
         playInfo = nil
         header = nil
@@ -219,7 +222,7 @@ enum PlayerStreamError:Error{
 }
 
 enum PlayerUpdateType{
-    case initate, update, recovery(Double)
+    case initate, update, recovery(Double, count:Int = -1)
 }
 
 protocol PlayBack:PageProtocol {

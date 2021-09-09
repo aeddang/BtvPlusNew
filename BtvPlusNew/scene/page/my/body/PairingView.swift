@@ -283,7 +283,7 @@ struct PairingView: PageComponent{
         guard let resData = res.data as? Watch else { return }
         let blocks:[WatchItem] = resData.watchList ?? []
         //if blocks.isEmpty { return }
-        var videos = blocks.map{ d in VideoData().setData(data: d) }.filter{$0.isContinueWatch}
+        var videos = blocks.map{ d in VideoData().setData(data: d) }.filter{$0.isContinueWatch}.filter{$0.progress != 1}
         self.isWatchedEmpty = videos.isEmpty
         let total = videos.count //resData.watch_tot?.toInt()
         if SystemEnvironment.isTablet && videos.count > 6 {

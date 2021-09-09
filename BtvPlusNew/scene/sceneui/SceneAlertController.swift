@@ -17,7 +17,8 @@ enum SceneAlert:Equatable {
          connectWifi , notFoundDevice((() -> Void)? = nil), requestLocation((Bool) -> Void),
          
          limitedDevice(PairingInfo?), pairingError(NpsCommonHeader?), pairingUpdated(PairingUpdateData),
-         pairingRecovery, needPairing(String? = nil, move:PageObject? = nil), pairingCheckFail,
+         pairingRecovery, needPairing(String? = nil, move:PageObject? = nil, cancel:(() -> Void)? = nil),
+         pairingCheckFail,
         
          needPurchase( PurchaseWebviewModel , String? = nil), needCertification( String?, String?, String? = nil, () -> Void ),
          serviceUnavailable(String?), serviceSelect(String?, String? , (String?) -> Void),
@@ -94,7 +95,8 @@ struct SceneAlertController: PageComponent{
             case .pairingUpdated(_) : self.selectedPairingUpdated(idx)
             case .pairingError(_): self.selectedPairingError(idx)
             case .pairingRecovery: self.selectedPairingRecovery(idx)
-            case .needPairing(_, let move): self.selectedNeedPairing(idx, move: move)
+            case .needPairing(_, let move, let cancel):
+                self.selectedNeedPairing(idx, move: move){ cancel?() }
             case .needPurchase(let data, _): self.selectedNeedPurchase(idx, model: data)
             case .needCertification(_, _, _, let cancleHandler): self.selectedNeedCertification(idx, canclenHandler: cancleHandler) 
             case .serviceUnavailable(let path): self.selectedServiceUnavailable(idx, path: path)
@@ -135,7 +137,7 @@ struct SceneAlertController: PageComponent{
             case .limitedDevice(let data) : self.setupLimitedDevice(data: data)
             case .pairingError(let data): self.setupPairingError(data: data)
             case .pairingRecovery: self.setupPairingRecovery()
-            case .needPairing(let msg, _): self.setupNeedPairing(msg:msg)
+            case .needPairing(let msg, _, _): self.setupNeedPairing(msg:msg)
             case .needPurchase(_ , let msg): self.setupNeedPurchase(msg: msg)
             case .needCertification(let title,let text, let subText, _): self.setupNeedCertification(title: title, text: text, subText: subText)
             case .serviceUnavailable(let path): self.setupServiceUnavailable(path: path)
@@ -437,7 +439,7 @@ struct SceneAlertController: PageComponent{
         ]
     }
     
-    func selectedNeedPairing(_ idx:Int, move:PageObject? = nil) {
+    func selectedNeedPairing(_ idx:Int, move:PageObject? = nil, cancelHandler: @escaping () -> Void) {
         if idx == 1 {
             self.appSceneObserver.pairingCompletedMovePage = move
             let ani:PageAnimationType = SystemEnvironment.currentPageType == .btv ? .horizontal : .opacity
@@ -446,8 +448,10 @@ struct SceneAlertController: PageComponent{
             )
         } else {
             self.appSceneObserver.pairingCompletedMovePage = nil
+            cancelHandler()
         }
     }
+   
     
     func setupNeedPurchase(msg:String?) {
         self.title = String.alert.purchase

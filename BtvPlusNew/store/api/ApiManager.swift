@@ -665,7 +665,7 @@ class ApiManager :PageProtocol, ObservableObject{
         //NaviLog
         case .sendNaviLog(let log, let isAnonymous):
             if isAnonymous {
-                self.navilogNpi.sendLog(log: log, completion: {_ in}, error: nil)
+                self.navilogNpi.sendLogNpi(log: log, completion: {_ in}, error: nil)
             } else {
                 self.navilog.sendLog(log: log, completion: {_ in}, error: nil)
             }

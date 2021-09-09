@@ -27,7 +27,7 @@ struct PageKidsConfirmNumber: PageView {
     @State var pwType:ScsNetwork.ConfirmType = ScsNetwork.ConfirmType.adult
     @State var title:String = ""
     @State var text:String = ""
-
+    @State var eventId:String = ""
     @State var tip:String? = nil
     @State var msg:String? = nil 
     @State var isFocus:Bool = true
@@ -118,6 +118,9 @@ struct PageKidsConfirmNumber: PageView {
             if let data = obj.getParamValue(key: .data) as? PageObject {
                 self.movePage = data
             }
+            if let eventId = obj.getParamValue(key: .id) as? String {
+                self.eventId = eventId
+            }
           
             if let type = obj.getParamValue(key: .type) as? PageKidsConfirmType {
                 self.type = type
@@ -164,7 +167,8 @@ struct PageKidsConfirmNumber: PageView {
     }
     
     func closePage(){
-        self.pagePresenter.onPageEvent(self.pageObject, event: .init(type: .cancel, data:self.type))
+        self.pagePresenter.onPageEvent(self.pageObject,
+                                       event: .init( id: self.eventId, type: .cancel, data:self.type))
         self.pagePresenter.closePopup(self.pageObject?.id)
     }
     
@@ -190,8 +194,9 @@ struct PageKidsConfirmNumber: PageView {
                     self.pagePresenter.changePage(page)
                 }
             }
-            self.pagePresenter.onPageEvent(self.pageObject, event: .init(type: .completed, data:self.type))
-            self.closePage()
+            self.pagePresenter.onPageEvent(self.pageObject,
+                                           event: .init(id: self.eventId ,type: .completed, data:self.type))
+            self.pagePresenter.closePopup(self.pageObject?.id)
         } else{
             self.msg = String.alert.incorrecPassword
         }

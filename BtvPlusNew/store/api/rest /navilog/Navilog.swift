@@ -24,7 +24,13 @@ struct NavilogNpiNetwork : Network{
 class Navilog: Rest{
     func sendLog(
         log:String,
-        completion: @escaping (Any) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        completion: @escaping (NavilogResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        fetch(route: NavilogSendLog(jsonString: log), completion: completion, error:error)
+    }
+    
+    func sendLogNpi(
+        log:String,
+        completion: @escaping (Blank) -> Void, error: ((_ e:Error) -> Void)? = nil){
         fetch(route: NavilogSendLog(jsonString: log), completion: completion, error:error)
     }
 }
@@ -35,5 +41,8 @@ struct NavilogSendLog:NetworkRoute{
     var jsonString: String? = nil
 }
 
-
+struct NavilogResult : Decodable {
+    private(set) var result: String? = nil    // 요청 결과.
+    private(set) var reason: String? = nil
+}
 

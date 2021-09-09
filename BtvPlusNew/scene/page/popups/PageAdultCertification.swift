@@ -19,10 +19,11 @@ struct PageAdultCertification: PageView {
     @ObservedObject var webViewModel = WebViewModel()
     
     @State var webViewHeight:CGFloat = 0
-    
+    @State var eventId:String? = nil
     @State var movePage:PageObject? = nil
     @State var isInfo:Bool = true
     @State var isfail:Bool = false
+    @State var cid:String? = nil
     @State var marginBottom:CGFloat = Dimen.app.bottom
     var body: some View {
         GeometryReader { geometry in
@@ -127,10 +128,7 @@ struct PageAdultCertification: PageView {
                 case .callFuncion(let method, let json, _) :
                     if method == WebviewMethod.bpn_setIdentityVerfResult.rawValue {
                         if let jsonData = json?.parseJson() {
-                            if (jsonData["ci"] as? String) != nil {
-                                self.appSceneObserver.alert = .alert(
-                                    String.alert.identifySuccess, String.alert.identifySuccessMe, nil)
-                                
+                            if let cid = (jsonData["ci"] as? String) {
                                 withAnimation{
                                     if let isAdult = jsonData["adult"] as? Bool {
                                         self.isfail = !isAdult
@@ -139,6 +137,12 @@ struct PageAdultCertification: PageView {
                                     }
                                     self.isInfo = false
                                 }
+                                if self.isfail { return }
+                                
+                                self.cid = cid
+                                self.appSceneObserver.alert = .alert(
+                                    String.alert.identifySuccess, String.alert.identifySuccessMe, nil)
+                                
                                 self.repository.updateAdultAuth(able:true)
                                 if let page = self.movePage {
                                     if page.isPopup {
@@ -175,11 +179,18 @@ struct PageAdultCertification: PageView {
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
+                if let eventId = obj.getParamValue(key: .id) as? String {
+                    self.eventId = eventId
+                }
                 if let data = obj.getParamValue(key: .data) as? PageObject {
                     self.movePage = data
                 }
             }
             .onDisappear{
+                let result:PageEventType = self.cid == nil ? .cancel : .completed
+                self.pagePresenter.onPageEvent(
+                    self.pageObject, event: .init(id: self.eventId ?? "", type: result)
+                )
             }
             
         }//geo

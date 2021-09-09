@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 extension PageSynopsis {
    
-    func onEvent(btvUiEvent:BtvUiEvent){
+    func onEventLog(btvUiEvent:BtvUiEvent){
         switch btvUiEvent {
         case .guide :
             self.naviLog(pageID: .playTouchGuide, action: .pageShow , category:nil)
@@ -22,7 +22,7 @@ extension PageSynopsis {
         }
     }
     
-    func onEvent(btvPlayerEvent:BtvPlayerEvent){
+    func onEventLog(btvPlayerEvent:BtvPlayerEvent){
         
         switch btvPlayerEvent {
         case .close :
@@ -41,7 +41,7 @@ extension PageSynopsis {
         
     }
     
-    func onEvent(prerollEvent:PrerollEvent){
+    func onEventLog(prerollEvent:PrerollEvent){
         switch prerollEvent {
         case .moveAd :
             self.naviLog(pageID: .play, action: .clickAdButton, category: "광고정보더보기")
@@ -51,30 +51,25 @@ extension PageSynopsis {
         }
     }
     
-    func onEvent(event:PlayerUIEvent){
+    func onEventLog(event:PlayerUIEvent){
         switch event {
         case .pause :
-            self.playLog(isPlay: false)
             self.playNaviLog(action: .clickVodPause, watchType: .watchPause)
         case .resume :
-            self.playLog(isPlay: true)
             self.playNaviLog(action: .clickVodPlay, watchType: .watchStart)
         case .togglePlay :
             if self.playerModel.isPlay {
-                self.playLog(isPlay: false)
                 self.playNaviLog(action: .clickVodPause, watchType: .watchPause)
             } else {
-                self.playLog(isPlay: true)
                 self.playNaviLog(action: .clickVodPlay, watchType: .watchStart)
             }
         default: break
         }
     }
     
-    func onEvent(streamEvent:PlayerStreamEvent){
+    func onEventLog(streamEvent:PlayerStreamEvent){
         switch streamEvent {
         case .loaded:
-            self.playLog(isPlay: true)
             self.playNaviLog(action: .clickVodPlay, watchType: .watchStart)
             self.naviLogManager.contentsLog(
                 action: .clickContentsPreviewWatching,
@@ -94,7 +89,7 @@ extension PageSynopsis {
         }
     }
     
-    func onEvent(componentEvent:PageSynopsis.ComponentEvent){
+    func onEventLog(componentEvent:PageSynopsis.ComponentEvent){
         switch componentEvent {
         case .watchBtv:
             self.naviLogManager.contentsLog(action: .clickContentsWatchBtv)
@@ -104,20 +99,15 @@ extension PageSynopsis {
         }
     }
     
-    func onEvent(pageStatus:PageStatus){
-        switch pageStatus {
-        case .enterForeground : break
-            //self.log(type:.play )
-        case .enterBackground :
-            self.log(type:.stop)
-        default: break
-        }
-    }
 
-    func onStatus(playerStatus:PlayerStatus){
+    func onStatusLog(playerStatus:PlayerStatus){
     }
     
-    func onStatus(streamStatus:PlayerStreamStatus){
+    func onStatusLog(streamStatus:PlayerStreamStatus){
+    }
+    
+    func onDisappearLog(){
+        
     }
     
     func bindWatchingData(){
@@ -135,27 +125,6 @@ extension PageSynopsis {
         
     }
     
-   
-    func playLog(isPlay:Bool){
-        switch self.synopsisPlayType {
-        case .preplay : self.log(type: isPlay ? .playPreview : .stopPreview)
-        default : self.log(type: isPlay ? .play : .stop)
-        }
-        self.playStartTime = isPlay ? AppUtil.networkTime() : nil
-    }
-    
-    //page log
-    func prohibitionSimultaneousLog(reason:VlsNetwork.ProhibitionReason){
-        var actionBody = MenuNaviActionBodyItem()
-        actionBody.menu_id = synopsisModel?.menuId
-        actionBody.config = reason.config
-        self.naviLogManager.contentsLog(
-            pageId: .prohibitionSimultaneous,
-            action: .pageShow,
-            actionBody: actionBody
-        )
-    }
-    
     //page log
     func contentsListTabLog(idx:Int){
         if self.relationContentsModel.relationTabs.count <= idx {return}
@@ -168,33 +137,8 @@ extension PageSynopsis {
             self.naviLogManager.contentsLog(action: .clickContentsOrder, actionBody:.init(config:"relevance_contents"))
         }
     }
-   
     //player watch log
-    func log(type:LgsNetwork.PlayEventType){
-        
-       // self.appSceneObserver.event = .toast(type.rawValue)
-        guard let synopsisData = self.synopsisData else { return }
-        let d = self.playerModel.duration
-        let t = self.playerModel.time
-        let rate = d > 0 ? t/d*100 : 0
-        
-        let playData = SynopsisPlayData(
-            start: self.playStartTime == nil ? nil :  AppUtil.getTime(fromInt:self.playStartTime!),
-            end: nil,
-            position: self.playerModel.time.toTruncateDecimal(n: 0),
-            rate: rate.toTruncateDecimal(n: 0))
-        
-        self.dataProvider.requestData(
-            q: .init(type: .postWatchLog( type,
-                                          playData,
-                                          synopData: synopsisData,
-                                          self.pairing,
-                                          pcId: self.repository.namedStorage?.getPcid() ?? "",
-                                          isKidZone: self.type == .kids,
-                                          gubun: nil), isLog:true))
-    
-    }
-    
+
     func playStartLog(){
         if self.isPlayViewActive{
             self.naviLog(

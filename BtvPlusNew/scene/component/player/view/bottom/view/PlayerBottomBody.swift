@@ -11,10 +11,10 @@ import Combine
 
 extension PlayerBottomBody {
     static let nextBtnSize:CGFloat = SystemEnvironment.isTablet ? 136 : 80
-    static let nextBtnSizeFullScreen:CGFloat = SystemEnvironment.isTablet ? 142 : 91
+    static let nextBtnSizeFullScreen:CGFloat = SystemEnvironment.isTablet ? 142 : 92
     
-    static let seasonBtnSize:CGFloat = SystemEnvironment.isTablet ? 161 : 96
-    static let seasonBtnSizeFullScreen:CGFloat = SystemEnvironment.isTablet ? 172 : 105
+    static let seasonBtnSize:CGFloat = SystemEnvironment.isTablet ? 160 : 106
+    static let seasonBtnSizeFullScreen:CGFloat = SystemEnvironment.isTablet ? 172 : 116
 }
 struct PlayerBottomBody: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter

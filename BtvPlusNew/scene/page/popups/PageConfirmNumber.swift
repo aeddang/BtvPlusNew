@@ -38,6 +38,7 @@ struct PageConfirmNumber: PageView {
     @State var movePage:PageObject? = nil
     @State var pwType:ScsNetwork.ConfirmType = ScsNetwork.ConfirmType.adult
     @State var couponType:CouponBlock.ListType = CouponBlock.ListType.coupon
+    @State var eventId:String = ""
     @State var title:String = ""
     @State var text:String = ""
     @State var placeHolder:String = ""
@@ -163,6 +164,9 @@ struct PageConfirmNumber: PageView {
             if let data = obj.getParamValue(key: .data) as? PageObject {
                 self.movePage = data
             }
+            if let eventId = obj.getParamValue(key: .id) as? String {
+                self.eventId = eventId
+            }
             if let type = obj.getParamValue(key: .type) as? ScsNetwork.ConfirmType {
                 self.pwType = type
                 switch type {
@@ -252,7 +256,8 @@ struct PageConfirmNumber: PageView {
     
     func closePage(){
         self.isFocus = false
-        self.pagePresenter.onPageEvent(self.pageObject, event: .init(type: .cancel, data:self.pwType))
+        self.pagePresenter.onPageEvent(self.pageObject,
+                                       event: .init(id: self.eventId, type: .cancel, data:self.pwType))
     }
     
     func confirmPassword(_ pw:String){
@@ -277,8 +282,10 @@ struct PageConfirmNumber: PageView {
                     self.pagePresenter.changePage(page)
                 }
             }
-            self.pagePresenter.onPageEvent(self.pageObject, event: .init(type: .completed, data:self.pwType))
-            self.closePage()
+            self.pagePresenter.onPageEvent(self.pageObject,
+                                           event: .init(id: self.eventId ,type: .completed, data:self.pwType))
+            self.isFocus = false
+            self.pagePresenter.closePopup(self.pageObject?.id)
         } else{
             self.msg = String.alert.incorrecPassword
         }
@@ -331,7 +338,8 @@ struct PageConfirmNumber: PageView {
             }
         }
         self.appSceneObserver.event = .toast(String.alert.couponRegistSuccess)
-        self.pagePresenter.onPageEvent(self.pageObject, event: .init(type: .completed, data:self.couponType))
+        self.pagePresenter.onPageEvent(self.pageObject,
+                                       event: .init(id: self.eventId , type: .completed, data:self.couponType))
         self.closePage()
     }
     
@@ -348,7 +356,8 @@ struct PageConfirmNumber: PageView {
     func modifyNickNameRespond(_ res:ApiResultResponds, updateData:ModifyUserData?){
         guard let resData = res.data as? NpsResult else {return}
         if resData.header?.result == ApiCode.success {
-            self.pagePresenter.onPageEvent(self.pageObject, event: .init(type: .completed, data:self.type))
+            self.pagePresenter.onPageEvent(self.pageObject,
+                                           event: .init(id : self.eventId, type: .completed, data:self.type))
             if let data = updateData {
                 self.repository.updateUser(data)
             }
@@ -370,7 +379,8 @@ struct PageConfirmNumber: PageView {
     func confirmOkCashRespond(_ res:ApiResultResponds){
         guard let resData = res.data as? OkCashPoint else {return}
         if resData.result == ApiCode.success {
-            self.pagePresenter.onPageEvent(self.pageObject, event: .init(type: .completed, data:self.type))
+            self.pagePresenter.onPageEvent(self.pageObject,
+                                           event: .init(id : self.eventId, type: .completed, data:self.type))
             self.closePage()
             
         } else{

@@ -213,8 +213,9 @@ struct PageRegistKid: PageView {
                 }
             }
             .onAppear{
-                self.birth = self.birthDate.toDateFormatter(
-                    dateFormat: "yyyy" + String.app.year + "MM" + String.app.month)
+                self.birthYear = self.birthDate.toDateFormatter(dateFormat: "yyyy" + String.app.year)
+                self.birthMonth = self.birthDate.toDateFormatter(dateFormat: "MM" + String.app.month)
+                self.birth = self.birthYear + " " + self.birthMonth
                 
             }
            
@@ -254,7 +255,7 @@ struct PageRegistKid: PageView {
         
     }
     
-    private let birthYearList = AppUtil.getYearRange(len: 99, offset:0).map{
+    private let birthYearList = (1900...2100).map{
         $0.description + String.app.year
     }
     private let birthMonthList = (1...12).map{
@@ -299,8 +300,12 @@ struct PageRegistKid: PageView {
         }
         let age = self.birthDate.toDateFormatter(dateFormat: "yyyy").toInt()
         let current = Date().toDateFormatter(dateFormat: "yyyy").toInt()
-        if (current - age) >= Kid.LIMITED_AGE {
+        let ageCount = (current - age)
+        if ageCount >= Kid.LIMITED_AGE {
             self.appSceneObserver.alert = .alert(nil, String.alert.kidsInvalidBirth)
+            return
+        }else if ageCount < 0 {
+            self.appSceneObserver.alert = .alert(nil, String.alert.kidsWrongBirth)
             return
         }
         let kid = Kid(nickName: self.nickName, characterIdx: self.characterIdx, birthDate: self.birthDate)

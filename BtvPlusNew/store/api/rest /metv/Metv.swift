@@ -21,6 +21,8 @@ extension MetvNetwork{
     static let PAGE_COUNT = 30
     static let exceptMonthlyIds = ["411211275"] //모비 무료관 없음
     
+    static let maxWatchedProgress:Float = 0.9
+    
     enum SynopsisType{
         case none, title, seriesChange , seasonFirst
         var code:String {
@@ -44,11 +46,12 @@ extension MetvNetwork{
             •    단편 : 90% 이상 시청 시에는 시청 내역에서 제외
             •    시즌 : 공통 기준만 고려하며, 100% 시청 시에도 시청 내역에서 제외하지 않음 */
         let watch: Int = Int(data.watch_rt ?? "0") ?? 0
+        let limit = Int(round(Self.maxWatchedProgress * 100))
         let runTime: Int = (Int(data.running_time ?? "0") ?? 0) / 60
         let runningTimeCheck: Bool = (runTime < 5 && watch >= 15) ||
                 ((5...29).contains(runTime) && watch >= 10) ||
                 (runTime >= 30 && watch >= 5)
-        let genreCheck: Bool = ("N" == data.yn_series && watch < 90) || "Y" == data.yn_series
+        let genreCheck: Bool = ("N" == data.yn_series && watch < limit) || "Y" == data.yn_series
 
         return runningTimeCheck && genreCheck
     }

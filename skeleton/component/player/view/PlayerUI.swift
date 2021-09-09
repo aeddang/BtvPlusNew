@@ -91,6 +91,7 @@ struct PlayerUI: PageComponent {
                         },
                         onChanged:{ pct in
                             self.viewModel.event = .seekProgress(pct)
+                            self.viewModel.seeking = 0
                         
                         })
                         .frame(height: self.isFullScreen ? Self.uiHeightFullScreen : Self.uiHeight)
@@ -169,7 +170,7 @@ struct PlayerUI: PageComponent {
             if self.viewModel.duration <= 0 {return}
             if tm < 0 {return}
             self.time = tm.secToHourString()
-            self.completeTime = (self.viewModel.duration - tm).secToHourString()
+            self.completeTime = max(0,self.viewModel.duration - tm).secToHourString()
             if !self.isSeeking {
                 self.progress = Float(tm / max(self.viewModel.duration,1))
             }

@@ -305,7 +305,7 @@ struct PageEditKid: PageView {
         }
     }
     
-    private let birthYearList = AppUtil.getYearRange(len: 99, offset:0).map{
+    private let birthYearList = (1900...2100).map{
         $0.description + String.app.year
     }
     
@@ -318,8 +318,8 @@ struct PageEditKid: PageView {
             self.editType = .birth
         }
         AppUtil.hideKeyboard()
-        let picYear = self.birthYearList.firstIndex(of: self.birthYear) ?? 0
-        let picMonth = self.birthMonthList.firstIndex(of: self.birthMonth) ?? 0
+        let picYear = self.birthYearList.firstIndex(of: self.birthYear + String.app.year) ?? 0
+        let picMonth = self.birthMonthList.firstIndex(of: self.birthMonth + String.app.month) ?? 0
         self.appSceneObserver.select =
             .multiPicker((self.tag, [self.birthYearList, birthMonthList]), [picYear,picMonth])
             { idxYear, idxMonth, _, _ in
@@ -358,8 +358,12 @@ struct PageEditKid: PageView {
         }
         let age = self.birthDate?.toDateFormatter(dateFormat: "yyyy").toInt() ?? 0
         let current = Date().toDateFormatter(dateFormat: "yyyy").toInt()
-        if (current - age) >= Kid.LIMITED_AGE {
+        let ageCount = (current - age)
+        if ageCount >= Kid.LIMITED_AGE {
             self.appSceneObserver.alert = .alert(nil, String.alert.kidsInvalidBirth)
+            return
+        }else if ageCount < 0 {
+            self.appSceneObserver.alert = .alert(nil, String.alert.kidsWrongBirth)
             return
         }
         if let kid = self.editKid {

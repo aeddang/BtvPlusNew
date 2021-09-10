@@ -95,7 +95,25 @@ struct BtvWebView: PageComponent {
             return
         case WebviewMethod.bpn_reqSendEventpageLog.rawValue:
             guard let log = jsonParams else { return }
-            self.naviLogManager.send(logString: log)
+           
+            self.naviLogManager.send(
+                logString: log,
+                completion: { res in
+                    guard let callback = callback else {return}
+                    var dic:[String : Any] = [:]
+                    dic["result"] = res.result ?? ""
+                    dic["reason"] = res.reason ?? ""
+                    self.viewModel.request = .evaluateJavaScriptMethod( callback, dic)
+                    
+                },
+                error: { err in
+                    guard let callback = callback else {return}
+                    var dic:[String : Any] = [:]
+                    dic["result"] = ""
+                    dic["reason"] = ""
+                    self.viewModel.request = .evaluateJavaScriptMethod( callback, dic)
+                }
+            )
             return
         case WebviewMethod.setUserAgreementInfo.rawValue:
             if self.pairing.status != .pairing {

@@ -26,12 +26,14 @@ class SynopsisModel : PageProtocol {
     private(set) var isGstn = false
     private(set) var isPossonVODMode = false
     private(set) var isNScreen = false
+    
     private(set) var isCombineProduct = false
     private(set) var rsluInfoList: Array< EpsdRsluInfo >? = nil
     private(set) var seriesInfoList: Array< SeriesInfoItem >? = nil
     private(set) var ppvProducts: Array< [String:String] > = []
     private(set) var ppsProducts: Array< [String:String] > = []
     private(set) var purchaseModels: Array< PurchaseModel > = []
+    private(set) var purchaseOmnipack: Array< OmnipackData > = []
     private(set) var synopsisType:MetvNetwork.SynopsisType
     private(set) var isEmptyProducts = false
     private(set) var distStsCd:DistStsCd = .synced
@@ -233,6 +235,7 @@ class SynopsisModel : PageProtocol {
     private(set) var purchasedPPMItems: [PurchaseModel] = []
     private(set) var purchasedPPSItems: [PurchaseModel] = []
     private(set) var purchasableItems: [PurchaseModel] = []
+    private(set) var purchasOmniItems: [PurchaseModel] = []
     private(set) var watchOptionItems: [PurchaseModel]? = nil
     private(set) var curSynopsisItem: PurchaseModel?
     private(set) var metvSeasonWatchAll:Bool = false
@@ -492,10 +495,8 @@ class SynopsisModel : PageProtocol {
         if let curSynopsisItem = curSynopsisItem, !curSynopsisItem.isDirectview && !curSynopsisItem.isFree && !isGstn {
             purchasableItems.append(curSynopsisItem)
         }
-        
-        
+    
         if self.distStsCd == .expired { self.isDistProgram = curSynopsisItem?.isDirectview ?? false }
-       
         //아이템 nscreen 말고 시놉시스 nscreen 참조해야함.(덤앤더머2 다름.)
         let tempNextPurchaseItems = usableItems.filter({!$0.isDirectview && $0.isUse && $0.isSalesPeriod && !$0.isFree && isNScreen})
         tempNextPurchaseItems.forEach {
@@ -513,7 +514,18 @@ class SynopsisModel : PageProtocol {
                 }
             }
         }
-        
+        if let ppvs = directViewData?.ppv_products {
+            self.purchaseOmnipack = ppvs
+                .filter{$0.use_ppv_omni_ppm_info?.isEmpty == false}
+                .reduce([],{
+                    $0 + $1.use_ppv_omni_ppm_info!.map{ omni in
+                        let price = self.purchaseModels.first(where: {$0.prdPrcId == omni.omni_m_pid})?.salePrice
+                        return OmnipackData().setData(data: omni, price:price)
+                    }.filter{$0.restCount > 0}
+                })
+                .sorted()
+            
+        }
         if let info = directViewData?.ppv_products?.first?.use_ppv_omni_ppm_info?.first {
             DataLog.d("옴니팩 pid : " + (info.omni_m_pid ?? "") , tag: self.tag)
             DataLog.d("옴니팩 pname : " + (info.omni_m_pname ?? "") , tag: self.tag)
@@ -547,6 +559,11 @@ class SynopsisModel : PageProtocol {
     var isFree: Bool {
         if self.isGstn {return true}
         return curSynopsisItem?.isFree ?? false
+    }
+    
+    var hasOmnipack: Bool {
+        return purchaseModels.filter({ $0.isUse && $0.isSalesPeriod })
+            .first(where: { $0.prdTypCd == .omnipack }) != nil
     }
     
     var isOnlyBtvPurchasable: Bool {
@@ -630,7 +647,7 @@ class SynopsisModel : PageProtocol {
     
 
     // 현재 시놉의 시즌 전체 시청 가능 여부( 시리즈 아이디로 pps 캐싱된거있나 찾음)
-    private var isSeasonWatchAll: Bool {
+    var isSeasonWatchAll: Bool {
         purchaseModels.filter({$0.prdTypCd == .pps})
         .contains(where: { curPps in
             purchasedPPSItems.contains(where: {

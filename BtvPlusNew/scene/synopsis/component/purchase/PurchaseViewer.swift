@@ -58,10 +58,17 @@ struct PurchaseViewer: PageComponent{
                             .lineLimit(1)
                             
                     }
-                    else if self.data.infoTrailing != nil {
-                        Text(self.data.infoTrailing!)
+                    else if let infoTrailing = self.data.infoTrailing {
+                        Text(infoTrailing)
                             .modifier(BoldTextStyle( size: Font.size.light ))
                             .lineLimit(1)
+                    }
+                    if let sub = self.data.infoTrailingSub {
+                        Text(sub)
+                            .modifier(MediumTextStyle( size: Font.size.thin, color:Color.app.greyLight))
+                            .lineLimit(1)
+                        
+                       
                     }
                     if self.data.infoTip != nil {
                         if SystemEnvironment.isTablet {

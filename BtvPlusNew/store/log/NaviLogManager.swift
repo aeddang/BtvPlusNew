@@ -189,9 +189,12 @@ class NaviLogManager : ObservableObject, PageProtocol {
             self.send(anonymousData, isAnonymous: true)
         }
     }
-    func send(logString:String){
-        self.repository.apiManager.load(.sendNaviLog(logString, isAnonymous: true), isOptional: true)
-        self.repository.apiManager.load(.sendNaviLog(logString, isAnonymous: false), isOptional: true)
+    func send(logString:String, completion: @escaping (NavilogResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        self.repository.apiManager.navilog.sendLog(log: logString, completion: completion, error: error)
+    }
+    
+    func sendNpi(logString:String, completion: @escaping (Blank) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        self.repository.apiManager.navilogNpi.sendLogNpi(log: logString, completion: completion, error: error)
     }
     
     private func send(_ data:MenuNaviItem, isAnonymous:Bool){

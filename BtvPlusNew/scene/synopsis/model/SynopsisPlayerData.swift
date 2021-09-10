@@ -97,14 +97,14 @@ class SynopsisPlayerData {
         }
     }
     
-    var nextString:String {
+    var nextString:String? {
         get{
             if self.nextEpisode != nil {
                 return String.player.next
             }else if let _ = self.nextSeason {
                 return String.player.nextSeason
             }
-            return ""
+            return nil
         }
     }
 }

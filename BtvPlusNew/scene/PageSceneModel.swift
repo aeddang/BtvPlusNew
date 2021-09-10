@@ -26,6 +26,7 @@ extension PageParam {
     static let needAdult = "needAdult"
     static let watchLv = "watchLv"
     static let isFree = "isFree"
+    static let value = "value"
 }
 
 extension PageEventType {

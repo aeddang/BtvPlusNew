@@ -27,7 +27,6 @@ class Push: Rest{
     func registEndpoint(
         endpointId:String, isAgree:Bool,
         completion: @escaping (PushResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
-        
         var params = [String:Any]()
         params["if_id"] = "IF-PUSH-101"
         params["ver"] = PushNetwork.VERSION

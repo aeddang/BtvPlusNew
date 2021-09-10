@@ -63,7 +63,7 @@ struct PlayerBottomBodyKids: PageComponent{
                                 .font(.custom(
                                         Font.familyKids.bold,
                                         size:  Font.sizeKids.tiny ))
-                                .foregroundColor(Color.kids.primary)
+                                .foregroundColor(Color.app.white)
                                 
                             + Text(String.app.min + " " + String.player.preplay)
                                 .font(.custom(

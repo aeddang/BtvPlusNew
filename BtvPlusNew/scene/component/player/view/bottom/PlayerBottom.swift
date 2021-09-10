@@ -12,6 +12,7 @@ import Combine
 extension PlayerBottom{
     static let nextProgressTime:Double = 5
     static let openProgressTime:Double = 10
+    static let cookieProgressTime:Double = 5
     static let previewLimit:Double = 5 * 60
 }
     
@@ -43,13 +44,16 @@ struct PlayerBottom: PageView{
                     showDirectview: self.showDirectview,
                     showPreplay: self.showPreplay,
                     showCookie: self.showCookie,
+                    currentCookie: self.currentCookie,
+                    isSeasonNext: self.isSeasonNext,
                     showNext: self.showNext,
                     showFullVod: self.showFullVod,
                     showNextCancel: self.showNextCancel,
                     nextProgress: self.nextProgress,
                     nextBtnTitle: self.nextBtnTitle,
-                    isSeasonNext: self.isSeasonNext,
-                    isLock: self.isLock)
+                    isLock: self.isLock,
+                    endingTime : self.endingTime
+                )
             } else {
                 PlayerBottomBodyKids(
                     viewModel: self.viewModel,
@@ -81,10 +85,7 @@ struct PlayerBottom: PageView{
                 switch evt {
                 case .nextViewCancel :
                     self.nextProgressCancel()
-                case .cookieView :
-                    if let cookie = self.currentCookie {
-                        self.viewModel.event = .seekTime(cookie.startTime, true)
-                    }
+                
                 default : break
                 }
             }
@@ -158,22 +159,7 @@ struct PlayerBottom: PageView{
                 }
             case .clip : break
             default :
-                self.openingTime = min(self.viewModel.openingTime, Self.openProgressTime)
-                ComponentLog.d("vod " + data.hasNext.description, tag:self.tag)
-                if data.hasNext {
-                    
-                    let defaultEndingTime =  t-Self.nextProgressTime
-                    if self.viewModel.endingTime <= 0 {
-                        self.endingTime = defaultEndingTime
-                        self.showNextCancel = false
-                        ComponentLog.d("vod hasNext default " + self.endingTime.description, tag:self.tag)
-                    } else {
-                        self.endingTime = self.viewModel.endingTime
-                        self.showNextCancel = self.endingTime < defaultEndingTime
-                        ComponentLog.d("vod hasNext " + self.showNextCancel.description, tag:self.tag)
-                        ComponentLog.d("vod hasNext endingTime " + self.endingTime.description, tag:self.tag)
-                    }
-                }
+                self.setupInside(data: data, duration:t)
             }
             withAnimation {
                 self.showFullVod = self.viewModel.fullVod != nil
@@ -198,8 +184,6 @@ struct PlayerBottom: PageView{
             }
             if self.endingTime > 0 {
                 self.checkNext(t: t, d:d)
-            }
-            if self.insideSearchTime > 0 {
                 self.checkInside(t: t)
             } else {
                 self.removeInside()
@@ -226,19 +210,56 @@ struct PlayerBottom: PageView{
         self.nextProgressCancel()
         self.removeInside()
         self.openingTime = -1
-        self.nextBtnTitle = ""
+        self.nextBtnTitle = nil
         ComponentLog.d("resetShow", tag: self.tag)
     }
     
-    @State var nextBtnTitle:String = ""
+    @State var nextBtnTitle:String? = nil
     @State var isSeasonNext:Bool = false
     @State var openingTime:Double = -1
     @State var endingTime:Double = -1
+    
+    @State var nextTime:Double = -1
     @State var isShowNext = false
     @State var showNext = false
     @State var showNextCancel = false
     @State var nextTimer:AnyCancellable?
     @State var nextProgress:Float = 0.0
+    
+    func setupInside(data:SynopsisPlayerData, duration:Double){
+        self.openingTime = min(self.viewModel.openingTime, Self.openProgressTime)
+        if data.hasNext {
+            self.nextBtnTitle = self.viewModel.synopsisPlayerData?.nextString
+            self.isSeasonNext = self.viewModel.synopsisPlayerData?.nextEpisode == nil
+        }
+        ComponentLog.d("nextBtnTitle " + (self.nextBtnTitle ?? "none"), tag:self.tag)
+        ComponentLog.d("isSeasonNext " + self.isSeasonNext.description, tag:self.tag)
+        
+        let defaultEndingTime =  duration-Self.nextProgressTime
+        if self.viewModel.endingTime <= 0 {
+            if data.hasNext {
+                self.endingTime = defaultEndingTime
+                self.showNextCancel = false
+                ComponentLog.d("vod hasNext default " + self.endingTime.description, tag:self.tag)
+            } else if self.cookies?.isEmpty == false , let cookies = self.cookies {
+                self.endingTime = cookies.first?.startTime ?? defaultEndingTime
+                ComponentLog.d("vod cookies default " + self.endingTime.description, tag:self.tag)
+            } else {
+                self.endingTime = defaultEndingTime
+            }
+            
+        } else {
+            self.endingTime = self.viewModel.endingTime
+            if data.hasNext {
+                self.showNextCancel = self.endingTime < defaultEndingTime
+                ComponentLog.d("vod hasNext " + self.showNextCancel.description, tag:self.tag)
+                ComponentLog.d("vod hasNext endingTime " + self.endingTime.description, tag:self.tag)
+            }
+        }
+        self.syncEndingTime()
+        
+    }
+    
     
     func checkOpening(t:Double){
         if self.showDirectview {
@@ -255,7 +276,7 @@ struct PlayerBottom: PageView{
     func moveNext(){
         if !self.isShowNext {return}
         let t = self.viewModel.time
-        let end = self.endingTime + Self.nextProgressTime
+        let end = self.nextTime + Self.nextProgressTime
         if t > end {
             ComponentLog.d("nextProgress move", tag: self.tag)
             self.nextProgressCancel()
@@ -263,7 +284,8 @@ struct PlayerBottom: PageView{
     }
     
     func checkNext(t:Double, d:Double){
-        if t > self.endingTime {
+        if self.nextBtnTitle == nil {return}
+        if t > self.nextTime {
             if !self.isShowNext {
                 self.isShowNext = true
                 self.nextProgressStart(t:t, d:d)
@@ -277,19 +299,8 @@ struct PlayerBottom: PageView{
     }
     func nextProgressStart(t:Double, d:Double){
         if !self.setup.nextPlay { return }
-        self.nextBtnTitle = self.viewModel.synopsisPlayerData?.nextString ?? ""
-        self.isSeasonNext = self.viewModel.synopsisPlayerData?.nextEpisode == nil
         
-        /*
-        if self.isSeasonNext {
-            withAnimation {
-                self.showNext = true
-                self.showNextCancel = false
-                self.nextProgress = 1
-            }
-            return
-        }*/
-        let end = self.endingTime + Self.nextProgressTime
+        let end = self.nextTime + Self.nextProgressTime
         if end > d {
             ComponentLog.d("nextProgress over", tag: self.tag)
             self.nextProgressCancel()
@@ -297,8 +308,7 @@ struct PlayerBottom: PageView{
         }
         ComponentLog.d("nextProgressStart", tag: self.tag)
         withAnimation { self.showNext = true }
-        // let diff = Self.nextProgressTime - (Self.nextProgressTime - (t-self.endingTime))
-        // var time:Float = Float(diff / tick)
+       
         let tick:Double = 1/20
         let times:Float = Float(Self.nextProgressTime / tick)
         var time:Float = 0
@@ -324,15 +334,37 @@ struct PlayerBottom: PageView{
         self.nextTimer = nil
     }
     
+    func syncEndingTime(){
+        if let cookies = self.cookies {
+            if !cookies.isEmpty {
+                self.cookieTime = self.endingTime
+                self.nextTime = cookies.last?.endTime ?? self.endingTime
+                var startTime = self.cookieTime
+                cookies.forEach{ cookie in
+                    cookie.viewTime = startTime
+                    cookie.hiddenTime = startTime + Self.cookieProgressTime
+                    startTime = cookie.endTime - Self.cookieProgressTime
+                }
     
-    @State var insideSearchTime:Double = -1
+            } else {
+                self.nextTime = self.endingTime
+            }
+        } else {
+            self.nextTime = self.endingTime
+        }
+        ComponentLog.d("sync endingTime " + self.endingTime.description, tag: self.tag)
+        ComponentLog.d("sync cookieTime " + self.cookieTime.description, tag: self.tag)
+        ComponentLog.d("sync nextTime " + self.nextTime.description, tag: self.tag)
+    }
+    
+    @State var cookieTime:Double = -1
     @State var cookies:[CookieInfo]? = nil
     @State var showCookie:String? = nil
     @State var currentCookie:CookieInfo? = nil
     func resetInside(insideSearchTime:Double){
-        self.insideSearchTime = insideSearchTime
-        let cookies =  self.insideModel.cookies
+        guard let cookies =  self.insideModel.cookies else {return}
         self.cookies = cookies
+        self.syncEndingTime()
     }
     func removeInside(){
         if self.currentCookie != nil {
@@ -342,11 +374,12 @@ struct PlayerBottom: PageView{
     }
     func checkInside(t:Double){
         guard let cookies = self.cookies else {return}
-        if t < self.insideSearchTime {
+        if t < self.cookieTime || t > self.nextTime {
             self.removeInside()
             return
         }
-        guard let find = cookies.first(where: {$0.startTime <= t && $0.endTime >= t}) else {
+        
+        guard let find = cookies.first(where: {$0.viewTime <= t && $0.hiddenTime >= t}) else {
             if self.currentCookie != nil {
                 self.showCookie = nil
                 self.currentCookie = nil
@@ -355,7 +388,12 @@ struct PlayerBottom: PageView{
         } 
         if find.id != self.currentCookie?.id{
             self.currentCookie = find
-            self.showCookie = " " + find.index.description + "/" + cookies.count.description
+            if cookies.count == 1 {
+                self.showCookie = ""
+            } else {
+                self.showCookie = " " + find.index.description + "/" + cookies.count.description
+            }
+            ComponentLog.d("currentCookie " + find.index.description , tag:self.tag)
         }
     }
 }

@@ -29,6 +29,7 @@ struct RelationVodBody: PageComponent{
                 componentViewModel: self.componentViewModel,
                 relationContentsModel: self.relationContentsModel,
                 tabNavigationModel: self.tabNavigationModel,
+                relationDatas: self.relationDatas,
                 seris: self.$seris,
                 epsdId: self.epsdId,
                 relationTab: self.relationTab,
@@ -84,6 +85,7 @@ struct RelationVodList: PageComponent{
             componentViewModel: self.componentViewModel,
             relationContentsModel: self.relationContentsModel,
             tabNavigationModel: self.tabNavigationModel,
+            relationDatas: self.relationDatas,
             seris: self.$seris,
             epsdId: self.epsdId,
             relationTab: self.relationTab,
@@ -109,6 +111,7 @@ struct RelationVodHeader: PageComponent{
     var componentViewModel:PageSynopsis.ComponentViewModel
     var relationContentsModel:RelationContentsModel
     var tabNavigationModel:NavigationModel
+    var relationDatas:[PosterDataSet]
     @Binding var seris:[SerisData]
     var epsdId:String? = nil
     var relationTab:[NavigationButton]
@@ -140,7 +143,7 @@ struct RelationVodHeader: PageComponent{
             .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: RelationVodList.spacing))
         }
         
-        if self.relationContentsModel.hasSris{
+        if self.relationContentsModel.hasSris && self.relationDatas.isEmpty{
             SerisTab(
                 data:self.relationContentsModel,
                 seris: self.$seris

@@ -132,12 +132,16 @@ struct PageKidsHome: PageView {
                             menu = tuple.0
                             openId = openLink.replace(tuple.1, with: "")
                         }
-                    }
-                    if let cid = obj.getParamValue(key: .cid) as? String {
+                    } else if let cid = obj.getParamValue(key: .cid) as? String {
                         if let findMenu = self.dataProvider.bands.kidsGnbModel.getGnbData(menuCode: cid) {
                             menu = findMenu
                         }
+                    } else if let title = obj.getParamValue(key: .title) as? String {
+                        if let findMenu = self.dataProvider.bands.kidsGnbModel.getGnbData(title: title) {
+                            menu = findMenu
+                        }
                     }
+                    
                     if let findMenu = menu {
                         self.menuId = findMenu.menuId ?? ""
                     } else {

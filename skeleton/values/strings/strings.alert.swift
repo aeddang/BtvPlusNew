@@ -149,8 +149,8 @@ extension String {
         public static var adultCertificationNotAllowed = "alertAdultCertificationNotAllowed".loaalized()
         public static var needAdultCertification = "alertNeedAdultCertification".loaalized()
         
-        public static var couponRegistSuccess = "alertCouponRegistSuccess".loaalized()
-        public static var couponRegistFail = "alertCouponRegistFail".loaalized()
+        
+        
         
         
         public static var incorrectNumberOfCharacter = "alertIncorrectNumberOfCharacter".loaalized()
@@ -183,9 +183,13 @@ extension String {
         
         public static var okCashDiscount = "alertOkCashDiscount".loaalized()
         public static var okCashDiscountInput =  "alertOkCashDiscountInput".loaalized()
-        
+        public static var okCashIncorrecPassword =  "alertOkCashIncorrecPassword".loaalized()
         public static var okCashMaster = "alertOkCashMaster".loaalized()
         public static var okCashMasterInput = "alertOkCashMasterInput".loaalized()
+       
+        
+        public static var couponRegistSuccess = "alertCouponRegistSuccess".loaalized()
+        public static var couponRegistFail = "alertCouponRegistFail".loaalized()
         public static var cardDeleteConfirm = "alertCardDeleteConfirm".loaalized()
 
         public static var purchaseAuthCompleted = "alertPurchaseAuthCompleted".loaalized()

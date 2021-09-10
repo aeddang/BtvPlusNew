@@ -243,7 +243,7 @@ class BlockData:InfinityData, ObservableObject{
     }
     
     func setData(title:String, datas:[TvData], searchType:SearchType,
-                 keyword:String?, max:Int = 10, usePrice:Bool = true) -> BlockData{
+                 keyword:String?, max:Int = 20, usePrice:Bool = true) -> BlockData{
         name = title
         uiType = .tv
         self.usePrice = usePrice

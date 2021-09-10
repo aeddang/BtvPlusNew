@@ -37,6 +37,12 @@ class KidsGnbModel:Identifiable, ObservableObject{
     func getGnbDatas() -> [KidsGnbItemData] {
        return datas
     }
+    
+    func getGnbData(title:String)-> KidsGnbItemData? {
+        guard let band = self.datas.first(
+                where: { $0.title == title }) else { return nil }
+        return band
+    }
     func getGnbData(menuCode:String)-> KidsGnbItemData? {
         guard let band = self.datas.first(
                 where: { $0.menuCode == menuCode }) else { return nil }

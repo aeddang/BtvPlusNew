@@ -76,10 +76,7 @@ struct MonthlyBlock: PageComponent {
             .padding(.top, Dimen.margin.lightExtra)
             .onTapGesture {
                 if self.isKids {
-                    self.pagePresenter.changePage(
-                        PageKidsProvider.getPageObject(.kidsHome)
-                            .addParam(key: .id, value: self.currentData?.menuId)
-                    )
+                    self.moveKids()
                     return
                 }
                 if self.hasAuth {return}
@@ -159,9 +156,17 @@ struct MonthlyBlock: PageComponent {
         return newList
     }
     
+    private func moveKids(){
+        guard let current = self.currentData else { return }
+        self.pagePresenter.changePage(
+            PageKidsProvider.getPageObject(.kidsHome)
+                .addParam(key: .title, value: current.title)
+        )
+    }
+    
+    
     @State var anyCancellable = Set<AnyCancellable>()
     @State var currentData:MonthlyData? = nil
-    
     @State var hasAuth:Bool = false
     @State var isKids:Bool = false
     private func initSubscription(){

@@ -207,10 +207,12 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
                         return
                     }
                 }
+                //ComponentLog.d("Timer " + t.description , tag: self.tag)
                 self.onTimeChange(Double(t))
-                player.layer.setNeedsDisplay()
+                //player.layer.setNeedsDisplay()
                 if !isCheckTimeControlStatus {
                     DispatchQueue.global(qos: .background).async {
+                        //ComponentLog.d("isCheckTimeControlStatus" , tag: self.tag)
                         if currentPlayer.timeControlStatus != timeControlStatus {
                             switch currentPlayer.timeControlStatus{
                             case .paused:
@@ -245,6 +247,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
                 }
                 if !isCheckStatus {
                     DispatchQueue.global(qos: .background).async {
+                        //ComponentLog.d("isCheckStatus" , tag: self.tag)
                         if(status != currentPlayer.status){
                             isCheckStatus = true
                             switch currentPlayer.status {
@@ -424,10 +427,10 @@ extension CustomPlayerController {
 
     func onViewWillDisappear(_ animated: Bool) {
         self.playerScreenView.destory()
-        UIApplication.shared.endReceivingRemoteControlEvents()
         CustomAVPlayerController.currentPlayerNum -= 1
         ComponentLog.d("currentPlayerNum " + CustomAVPlayerController.currentPlayerNum.description, tag:"CustomAVPlayerController")
         if CustomAVPlayerController.currentPlayerNum == 0 {
+            UIApplication.shared.endReceivingRemoteControlEvents()
             NotificationCenter.default.post(name: Notification.Name("avPlayerDidDismiss"), object: nil, userInfo: nil)
         }
     }

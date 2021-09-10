@@ -364,6 +364,7 @@ class Metv: Rest{
         params["hash_id"] = ApiUtil.getHashId(stbId)
         params["sris_id"] = data.srisId ?? ""
         params["synopsis_type"] = data.synopsisType.code
+        params["omni_ppm_info_flag"] = data.hasOmnipack ? "Y" : "N"
         //params["muser_num"] = ""
         //params["version"] = ""
         if !data.ppsProducts.isEmpty {

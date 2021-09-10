@@ -91,11 +91,11 @@ class TagData{
         self.isAdult = isAdult
         self.isLock = !SystemEnvironment.isImageLock ? false : isAdult
         self.restrictAgeIcon = Asset.age.getListIcon(age: data.level)
-        /*
-        if let prc = data.price?.toInt() {
+        
+        if data.price_use_yn?.toBool() == true,  let prc = data.price?.toInt() {
             if prc == 0 { isFree = true }
             price = prc.formatted(style: .decimal) + String.app.cash
-        }*/
+        }
         self.ppmIcon = ImagePath.thumbImagePath(filePath: data.badge_img,
                                            size:CGSize(width: 0, height: Dimen.icon.light),
                                            convType: .alpha)

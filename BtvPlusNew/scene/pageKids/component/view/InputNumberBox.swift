@@ -41,7 +41,7 @@ struct InputNumberBox: PageComponent {
                                 .modifier(BoldTextStyleKids(size: Font.sizeKids.regular, color: Color.app.brown))
                                 .fixedSize(horizontal: false, vertical: true)
                         }
-                        HStack(spacing:DimenKids.margin.tiny){
+                        HStack(spacing:DimenKids.margin.thinExtra){
                             if self.isInit {
                                 ZStack{
                                     HStack(spacing:DimenKids.margin.lightExtra){
@@ -96,7 +96,12 @@ struct InputNumberBox: PageComponent {
                             
                         }
                         .padding(.vertical, DimenKids.margin.regularExtra)
-                        
+                        if let msg = self.msg{
+                            Text(msg)
+                                .modifier(MediumTextStyleKids(
+                                            size: Font.sizeKids.thin,color: Color.kids.primary))
+                                
+                        }
                         if let text = self.text{
                             Text(text)
                                 .kerning(Font.kern.thin)
@@ -111,12 +116,7 @@ struct InputNumberBox: PageComponent {
                                     size: Font.sizeKids.tiny,color:Color.app.brownLight ))
                                 
                         }
-                        if let msg = self.msg{
-                            Text(msg)
-                                .modifier(MediumTextStyleKids(
-                                            size: Font.sizeKids.tiny,color: Color.kids.primary))
-                                
-                        }
+                        
                     }
                    
                     HStack(spacing:DimenKids.margin.thin){

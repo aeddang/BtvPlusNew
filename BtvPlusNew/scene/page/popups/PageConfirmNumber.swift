@@ -18,6 +18,13 @@ extension PageConfirmNumber{
             default : return .numberPad
             }
         }
+        
+        var errorMsg:String {
+            switch self {
+            case .okcashMaster : return String.alert.okCashIncorrecPassword
+            default : return String.alert.incorrecPassword
+            }
+        }
     }
 }
 
@@ -42,7 +49,7 @@ struct PageConfirmNumber: PageView {
     @State var title:String = ""
     @State var text:String = ""
     @State var placeHolder:String = ""
-    @State var inputSize:Int = 0
+    @State var inputSize:Int = 4
     @State var inputSizeMin:Int? = nil
     @State var tip:String? = nil
     @State var msg:String? = nil // String.alert.watchLvInfoError
@@ -101,6 +108,11 @@ struct PageConfirmNumber: PageView {
                 if isSuccess { self.initPage() }
                 else { self.appSceneObserver.alert = .pairingCheckFail }
             default : do{}
+            }
+        }
+        .onReceive(self.pagePresenter.$currentTopPage){top in
+            if self.pageObject != top {
+                self.closePage()
             }
         }
         .onReceive(self.pageObservable.$status){status in
@@ -238,6 +250,9 @@ struct PageConfirmNumber: PageView {
             if let tip = obj.getParamValue(key: .subText) as? String {
                 self.tip  = tip 
             }
+            if let value = obj.getParamValue(key: .value) as? String {
+                self.input = value
+            }
             if self.placeHolder.isEmpty {
                 self.placeHolder = (1...self.inputSize).reduce("", { p, _ in p + "*"})
             }
@@ -287,7 +302,7 @@ struct PageConfirmNumber: PageView {
             self.isFocus = false
             self.pagePresenter.closePopup(self.pageObject?.id)
         } else{
-            self.msg = String.alert.incorrecPassword
+            self.msg = self.type.errorMsg
         }
     }
     
@@ -337,7 +352,7 @@ struct PageConfirmNumber: PageView {
                 self.pagePresenter.changePage(page)
             }
         }
-        self.appSceneObserver.event = .toast(String.alert.couponRegistSuccess)
+        self.appSceneObserver.event = .toast(String.alert.couponRegistSuccess.replace(self.title))
         self.pagePresenter.onPageEvent(self.pageObject,
                                        event: .init(id: self.eventId , type: .completed, data:self.couponType))
         self.closePage()
@@ -384,7 +399,7 @@ struct PageConfirmNumber: PageView {
             self.closePage()
             
         } else{
-            self.msg = String.alert.incorrecPassword
+            self.msg = self.type.errorMsg
         }
     }
     
@@ -403,7 +418,7 @@ struct PageConfirmNumber: PageView {
         if resData.result == ApiCode.success {
             self.closePage()
         } else{
-            self.msg = String.alert.incorrecPassword
+            self.msg = self.type.errorMsg
         }
     }
 }

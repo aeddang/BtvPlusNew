@@ -32,6 +32,15 @@ extension CouponBlock{
     enum ListType:String {
         case coupon, point, cash
         
+        static func getType(_ value:String)->CouponBlock.ListType{
+            switch value {
+                case "point": return .cash
+                case "coupon": return .coupon
+                case "bpoint": return .point
+            default : return .coupon
+            }
+        }
+        
         var text: String {
             switch self {
             case .coupon: return String.pageText.myBenefitsCouponText

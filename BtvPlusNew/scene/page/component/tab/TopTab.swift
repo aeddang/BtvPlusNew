@@ -116,6 +116,7 @@ struct TopTab: PageComponent{
             }
         }
         .onReceive(self.repository.alram.$newCount){ count in
+            if self.pairing.status != .pairing { return }
             withAnimation{self.showAlram = count>0}
         }
         .onReceive(self.repository.alram.$needUpdateNew){ update in

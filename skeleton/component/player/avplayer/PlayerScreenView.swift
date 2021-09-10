@@ -200,10 +200,7 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
             avPlayerViewController.player = nil
             avPlayerViewController.delegate = nil
         }
-        if CustomAVPlayerController.currentPlayerNum == 0 {
-            NotificationCenter.default.removeObserver(self)
-        }
-        
+        NotificationCenter.default.removeObserver(self)        
     }
     
     private func onError(_ e:PlayerStreamError){

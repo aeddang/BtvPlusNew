@@ -44,190 +44,191 @@ struct PlayBlock: PageComponent{
    
     @State var sceneOrientation: SceneOrientation = .portrait
     var body: some View {
-        PageDataProviderContent(
-            pageObservable:self.pageObservable,
-            viewModel : self.viewModel
-        ){
-            if !self.isError {
-                ZStack(alignment: .topLeading){
-                    ReflashSpinner(
-                        progress: self.$reloadDegree)
-                        .padding(.top, self.marginTop)
-                    InfinityScrollView(
-                        viewModel: self.infinityScrollModel,
-                        axes: .vertical,
-                        scrollType : .reload(isDragEnd:false),
-                        marginTop:self.marginTop,
-                        marginBottom :self.marginBottom,
-                        spacing: 0,
-                        isRecycle: true,
-                        useTracking: true){
-                        if self.datas.isEmpty{
-                            Spacer().modifier(ListRowInset())
-                        } else {
-                            ForEach(self.datas) { data in
-                                PlayItem(
-                                    pageObservable:self.pageObservable,
-                                    playerModel:self.playerModel,
-                                    data: data,
-                                    range: self.getRange(),
-                                    isSelected: data.index == self.focusIndex) { playData in
-                                        self.forcePlay(data: playData)
-                                    }
-                                    .id(data.hashId)
-                                    .modifier(
-                                        ListRowInset(
-                                            marginHorizontal: Dimen.margin.thin,
-                                            spacing: self.spacing,
-                                            marginTop: self.marginTop
+        GeometryReader { geometry in
+            PageDataProviderContent(
+                pageObservable:self.pageObservable,
+                viewModel : self.viewModel
+            ){
+                if !self.isError {
+                    ZStack(alignment: .topLeading){
+                        ReflashSpinner(
+                            progress: self.$reloadDegree)
+                            .padding(.top, self.marginTop)
+                        InfinityScrollView(
+                            viewModel: self.infinityScrollModel,
+                            axes: .vertical,
+                            scrollType : .reload(isDragEnd:false),
+                            marginTop:self.marginTop,
+                            marginBottom :self.marginBottom,
+                            spacing: 0,
+                            isRecycle: true,
+                            useTracking: true){
+                            if self.datas.isEmpty{
+                                Spacer().modifier(ListRowInset())
+                            } else {
+                                ForEach(self.datas) { data in
+                                    PlayItem(
+                                        pageObservable:self.pageObservable,
+                                        playerModel:self.playerModel,
+                                        data: data,
+                                        range: self.getRange(),
+                                        isSelected: data.index == self.focusIndex) { playData in
+                                            self.forcePlay(data: playData)
+                                        }
+                                        .id(data.hashId)
+                                        .modifier(
+                                            ListRowInset(
+                                                marginHorizontal: Dimen.margin.thin,
+                                                spacing: self.spacing,
+                                                marginTop: self.marginTop
+                                            )
                                         )
-                                    )
-                                    .onAppear{
-                                        if data.index == self.datas.last?.index {
-                                            self.load()
+                                        .onAppear{
+                                            if data.index == self.datas.last?.index {
+                                                self.load()
+                                            }
+                                            //self.onAppear(idx:data.index)
                                         }
-                                        //self.onAppear(idx:data.index)
-                                    }
-                                    .onDisappear{
-                                        //self.onDisappear(idx: data.index)
-                                    }
-                                    .onTapGesture {
-                                        if self.focusIndex != data.index {
-                                            self.onFocusChange(willFocus: data.index)
+                                        .onDisappear{
+                                            //self.onDisappear(idx: data.index)
                                         }
-                                        self.appSceneObserver.event = .toast((data.openDate ?? "") + " " + String.alert.updateAlramRecommand)
-                                    }
+                                        .onTapGesture {
+                                            if self.focusIndex != data.index {
+                                                self.onFocusChange(willFocus: data.index)
+                                            }
+                                            self.appSceneObserver.event = .toast((data.openDate ?? "") + " " + String.alert.updateAlramRecommand)
+                                        }
+                                }
                             }
                         }
-                    }
-                    .modifier(MatchParent())
+                        .modifier(MatchParent())
 
-                }
-               
-            } else {
-                EmptyAlert()
-                .modifier(MatchParent())
-            }
-            
-            
-        }
-        .onReceive(self.playerModel.$event){evt in
-            guard let evt = evt else {return}
-            switch evt {
-            case .fullScreen(let isFullScreen) :
-                if !isFullScreen { return }
-                self.openFullScreen()
-                
-            default : break
-            }
-        }
-        .onReceive(self.repository.$event){ evt in
-            guard let evt = evt else {return}
-            switch evt {
-            case .updatedWatchLv : self.playerModel.btvUiEvent = .prevPlay
-            default : break
-            }
-        }
-        .onReceive(self.pagePresenter.$event){ evt in
-            guard let evt = evt else {return}
-            switch evt.type {
-            case .completed :
-                guard let type = evt.data as? ScsNetwork.ConfirmType  else { return }
-                switch type {
-                case .adult: self.playerModel.btvUiEvent = .prevPlay
-                default : break
-                }
-            default : break
-            }
-        }
-        .onReceive(self.pagePresenter.$isFullScreen){ isFullScreen in
-            if self.pagePresenter.currentTopPage?.id != self.pageObject?.id {return}
-            if isFullScreen {
-                if self.isFullScreen {return}
-                self.openFullScreen()
-            }
-        }
-        .onReceive(self.pagePresenter.$currentTopPage){ page in
-            if !self.isFullScreen {return}
-            if self.pagePresenter.currentTopPage?.id != self.pageObject?.id {return}
-            self.closeFullScreen()
-        }
-        .onReceive(self.infinityScrollModel.$event){evt in
-            guard let evt = evt else {return}
-            switch evt {
-            case .pullCompleted :
-                if !self.infinityScrollModel.isLoading { self.reload() }
-                withAnimation{ self.reloadDegree = 0 }
-            case .pullCancel :
-                withAnimation{ self.reloadDegree = 0 }
-            default : break
-            }
-            
-        }
-        .onReceive(self.infinityScrollModel.$scrollPosition){_ in
-            self.onUpdate()
-        }
-        .onReceive(self.infinityScrollModel.$pullPosition){ pos in
-            if pos < InfinityScrollModel.PULL_RANGE { return }
-            self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
-        }
-        .onReceive(self.viewModel.$isUpdate){ update in
-            if update {
-                self.reload()
-            }
-        }
-        .onReceive(self.viewModel.$event){evt in
-            guard let evt = evt else { return }
-            switch evt {
-            case .onResult(_, let res, _):
-                switch res.type {
-                case .getNotificationVod(_, _, _ , let returnDatas) : self.loadedNoti(res, returnDatas:returnDatas)
-                case .getGridPreview : self.loaded(res)
-                default : break
-                }
-            case .onError(_,  let err, _):
-                switch err.type {
-                case .getGridPreview : self.onError()
-                case .getNotificationVod(_, _, _ , let returnDatas) : self.errorNoti(returnDatas:returnDatas)
-                default : break
+                    }
+                   
+                } else {
+                    EmptyAlert()
+                    .modifier(MatchParent())
                 }
                 
-            default : break
+                
             }
-        }
-        .onReceive(self.pairing.$event){evt in
-            guard let _ = evt else {return}
-            switch evt {
-            case .pairingCompleted : self.reload()
-            case .disConnected : self.reload()
-            case .pairingCheckCompleted(let isSuccess) :
+            .onReceive(self.playerModel.$event){evt in
+                guard let evt = evt else {return}
+                switch evt {
+                case .fullScreen(let isFullScreen) :
+                    if !isFullScreen { return }
+                    self.openFullScreen()
+                    
+                default : break
+                }
+            }
+            .onReceive(self.repository.$event){ evt in
+                guard let evt = evt else {return}
+                switch evt {
+                case .updatedWatchLv : self.playerModel.btvUiEvent = .prevPlay
+                default : break
+                }
+            }
+            .onReceive(self.pagePresenter.$event){ evt in
+                guard let evt = evt else {return}
+                switch evt.type {
+                case .completed :
+                    guard let type = evt.data as? ScsNetwork.ConfirmType  else { return }
+                    switch type {
+                    case .adult: self.playerModel.btvUiEvent = .prevPlay
+                    default : break
+                    }
+                default : break
+                }
+            }
+            .onReceive(self.pagePresenter.$isFullScreen){ isFullScreen in
                 if self.pagePresenter.currentTopPage?.id != self.pageObject?.id {return}
-                if isSuccess { self.reload() }
-                else { self.appSceneObserver.alert = .pairingCheckFail }
-            default : break
+                if isFullScreen {
+                    if self.isFullScreen {return}
+                    self.openFullScreen()
+                }
+            }
+            .onReceive(self.pagePresenter.$currentTopPage){ page in
+                if !self.isFullScreen {return}
+                if self.pagePresenter.currentTopPage?.id != self.pageObject?.id {return}
+                self.closeFullScreen(geometry: geometry)
+            }
+            .onReceive(self.infinityScrollModel.$event){evt in
+                guard let evt = evt else {return}
+                switch evt {
+                case .pullCompleted :
+                    if !self.infinityScrollModel.isLoading { self.reload() }
+                    withAnimation{ self.reloadDegree = 0 }
+                case .pullCancel :
+                    withAnimation{ self.reloadDegree = 0 }
+                default : break
+                }
+                
+            }
+            .onReceive(self.infinityScrollModel.$scrollPosition){_ in
+                self.onUpdate()
+            }
+            .onReceive(self.infinityScrollModel.$pullPosition){ pos in
+                if pos < InfinityScrollModel.PULL_RANGE { return }
+                self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
+            }
+            .onReceive(self.viewModel.$isUpdate){ update in
+                if update {
+                    self.reload()
+                }
+            }
+            .onReceive(self.viewModel.$event){evt in
+                guard let evt = evt else { return }
+                switch evt {
+                case .onResult(_, let res, _):
+                    switch res.type {
+                    case .getNotificationVod(_, _, _ , let returnDatas) : self.loadedNoti(res, returnDatas:returnDatas)
+                    case .getGridPreview : self.loaded(res)
+                    default : break
+                    }
+                case .onError(_,  let err, _):
+                    switch err.type {
+                    case .getGridPreview : self.onError()
+                    case .getNotificationVod(_, _, _ , let returnDatas) : self.errorNoti(returnDatas:returnDatas)
+                    default : break
+                    }
+                    
+                default : break
+                }
+            }
+            .onReceive(self.pairing.$event){evt in
+                guard let _ = evt else {return}
+                switch evt {
+                case .pairingCompleted : self.reload()
+                case .disConnected : self.reload()
+                case .pairingCheckCompleted(let isSuccess) :
+                    if self.pagePresenter.currentTopPage?.id != self.pageObject?.id {return}
+                    if isSuccess { self.reload() }
+                    else { self.appSceneObserver.alert = .pairingCheckFail }
+                default : break
+                }
+            }
+            .onReceive(self.pagePresenter.$event){ evt in
+                guard let evt = evt else {return}
+                switch evt.type {
+                case .timeChange :
+                    guard let t = evt.data as? Double else { return }
+                    self.onPlaytimeChanged(t:t)
+                default : break
+                }
+            }
+            .onReceive(self.sceneObserver.$isUpdated){ _ in
+                self.sceneOrientation = self.sceneObserver.sceneOrientation
+                self.sceneOrientationUpdate()
+            }
+            .onAppear(){
+                self.sceneOrientation = self.sceneObserver.sceneOrientation
+                //self.playerModel.isMute = true
+            }
+            .onDisappear(){
+                self.delayUpdateCancel()
             }
         }
-        .onReceive(self.pagePresenter.$event){ evt in
-            guard let evt = evt else {return}
-            switch evt.type {
-            case .timeChange :
-                guard let t = evt.data as? Double else { return }
-                self.onPlaytimeChanged(t:t)
-            default : break
-            }
-        }
-        .onReceive(self.sceneObserver.$isUpdated){ _ in
-            self.sceneOrientation = self.sceneObserver.sceneOrientation
-            self.sceneOrientationUpdate()
-        }
-        .onAppear(){
-            self.sceneOrientation = self.sceneObserver.sceneOrientation
-            //self.playerModel.isMute = true
-        }
-        .onDisappear(){
-            self.delayUpdateCancel()
-        }
-        
     }//body
     
     private func forcePlay(data:PlayData? = nil){
@@ -287,13 +288,13 @@ struct PlayBlock: PageComponent{
         )
     }
     
-    private func closeFullScreen(){
+    private func closeFullScreen(geometry:GeometryProxy? = nil){
         
         self.isHold = true
         PageLog.d("onCloseFullScreen" + (self.finalIndex?.description ?? ""), tag:self.tag)
         self.modifyPos = nil
-        self.forceScrollReset()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        //self.forceScrollReset()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.isFullScreen = false
             self.pagePresenter.orientationLock(lockOrientation: .all)
             if let posIdx = self.finalIndex {
@@ -301,7 +302,7 @@ struct PlayBlock: PageComponent{
                     self.infinityScrollModel.uiEvent = .scrollTo(datas[posIdx].hashId, .center)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         self.isHold = false
-                        self.onFocusChange(willFocus: posIdx)
+                        self.onFocusChange(willFocus: posIdx, geometry: geometry)
                         PageLog.d("onCloseFullScreen " + (self.selectedData?.title ?? "no"), tag:self.tag)
                     }
                 }
@@ -477,7 +478,6 @@ struct PlayBlock: PageComponent{
             return
         }
         cPos = cPos + (self.modifyPos ?? 0)
-        
         let range = self.getRange()
         let modifyPos = abs(cPos - (range*0.5))
         let willPos:Int = Int( round(modifyPos / range) )
@@ -499,15 +499,23 @@ struct PlayBlock: PageComponent{
     }
     
     @State var modifyPos:CGFloat? = 0
-    private func onFocusChange(willFocus:Int){
+    private func onFocusChange(willFocus:Int, geometry:GeometryProxy? = nil){
         if self.isHold {return}
         if self.datas.isEmpty {return}
         PageLog.d("onFocusChange " + willFocus.description, tag: self.tag)
-        if self.modifyPos == nil {
-            let me = -(self.getRange() * CGFloat(willFocus)) 
+        /*
+        if self.modifyPos == nil, let geometry = geometry {
+            let range = self.getRange()
+            let fullRange = range * CGFloat(self.datas.count)
+            let viewRange = geometry.size.height
+            let scrollRange = fullRange - viewRange
+            var me = -(range * CGFloat(willFocus)) + (viewRange/2)
+            me = max(me, 0)
+            me = min(me, -scrollRange)
             let scroll = self.infinityScrollModel.scrollPosition
-            self.modifyPos = me - scroll 
-        }
+            self.modifyPos = me - scroll
+            PageLog.d("onFocusChange " + (self.modifyPos?.description ?? ""), tag: self.tag)
+        }*/
 
         self.onPlaytimeChanged(t:self.playerModel.time)
         self.finalIndex = nil

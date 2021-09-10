@@ -241,7 +241,6 @@ extension String{
         public static let myBenefitsPointRegist = "myBenefitsPointRegist".loaalized()
         public static let myBenefitsPointEmpty = "myBenefitsPointEmpty".loaalized()
         public static let myBenefitsPointInput = "myBenefitsPointInput".loaalized()
-        
         public static let myBenefitsCash = "myBenefitsCash".loaalized()
         public static let myBenefitsCashText = "myBenefitsCashText".loaalized()
         public static let myBenefitsCashRegist = "myBenefitsCashRegist".loaalized()
@@ -280,6 +279,8 @@ extension String{
         public static let synopsisWatchRent = "synopsisWatchRent".loaalized()
         public static let synopsisWatchPeriod = "synopsisWatchPeriod".loaalized()
         public static let synopsisWatchPossn = "synopsisWatchPossn".loaalized()
+        public static let synopsisOmnipack = "synopsisOmnipack".loaalized()
+        public static let synopsisOmnipackTrailing = "synopsisOmnipackTrailing".loaalized()
         public static let synopsisSummry = "synopsisSummry".loaalized()
         public static let synopsisSiris = "synopsisSiris".loaalized()
         public static let synopsisSirisView = "synopsisSirisView".loaalized()

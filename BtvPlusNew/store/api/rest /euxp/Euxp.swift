@@ -183,7 +183,7 @@ class Euxp: Rest{
         } else {
             
             if let isRecent = data.isRecent {
-                ynRecent = isRecent ? "N" : "C"
+                ynRecent = isRecent ? "Y" : "C"
                 params["search_type"] = data.searchType.rawValue
             } else if data.synopType == .title {
                 ynRecent = "N"

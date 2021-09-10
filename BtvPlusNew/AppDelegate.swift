@@ -112,12 +112,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
             application.registerUserNotificationSettings(settings)
         }
         UIApplication.shared.registerForRemoteNotifications()
-        //application.registerForRemoteNotifications()
+       
+        
         let queue = OperationQueue()
         queue.qualityOfService = .utility
         Self.appURLSession = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: queue)
         let launchedURL = launchOptions?[UIApplication.LaunchOptionsKey.url] as? URL
         return AppDelegate.appObserver.handleDynamicLink(launchedURL)
+    }
+    
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        //application.applicationIconBadgeNumber = 0
     }
     
     func application( _ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any]) -> Bool {
@@ -174,19 +179,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
         AppDelegate.appObserver.apnsToken = deviceToken.toHexString()
         Messaging.messaging().apnsToken = deviceToken
         Messaging.messaging().token { token, error in
-          if let error = error {
-            PageLog.e("Error fetching FCM registration token: \(error)", tag: self.tag)
-          } else if let token = token {
-            PageLog.d("Firebase registration token: \(token)", tag: self.tag)
-            AppDelegate.appObserver.pushToken = token
-          }
+            if let error = error {
+                PageLog.e("Error fetching FCM registration token: \(error)", tag: self.tag)
+            } else if let token = token {
+                PageLog.d("Firebase registration token: \(token)", tag: self.tag)
+                AppDelegate.appObserver.pushToken = token
+            }
         }
     }
-    
-   
-
-    
-    
 }
 
 extension AppDelegate : URLSessionDelegate {
@@ -205,7 +205,12 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         let userInfo = notification.request.content.userInfo
         AppDelegate.appObserver.handleApns(userInfo)
         PageLog.d("userNotificationCenter[] " + userInfo.debugDescription, tag: self.tag)
-        completionHandler([])
+        DispatchQueue.main.async {
+            if let badgeNo = notification.request.content.badge as? Int {
+                UIApplication.shared.applicationIconBadgeNumber = badgeNo
+            }
+        }
+        completionHandler([.alert, .sound])
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter,

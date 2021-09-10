@@ -53,6 +53,7 @@ extension String {
         public static let sesonCount = "sesonCount".loaalized()
         public static let ageCount = "ageCount".loaalized()
         public static let point = "point".loaalized()
+        public static let untill = "untill".loaalized()
         public static let award = "award".loaalized()
         
         public static let ppmUpdate = "ppmUpdate".loaalized()

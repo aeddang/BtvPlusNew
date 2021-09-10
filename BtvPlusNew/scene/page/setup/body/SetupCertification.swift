@@ -103,7 +103,13 @@ struct SetupCertification: PageView {
                 self.isKidsExitAuth = false
                 return
             }
-            
+            if !SystemEnvironment.isAdultAuth && value == true {
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.adultCertification)
+                )
+                self.isKidsExitAuth = false
+                return
+            }
             self.setupKidsExitAuth(value)
             self.isKidsExitAuth = !value
             

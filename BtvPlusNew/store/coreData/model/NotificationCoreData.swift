@@ -26,12 +26,20 @@ class NotificationCoreData:PageProtocol {
         var title:String = ""
         var body:String = ""
         
+        NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UPDATE_ALARM_NEW")))
+        
+        DispatchQueue.main.async {
+            let count = self.getAllNotices().filter{!$0.isRead}.count
+            UIApplication.shared.applicationIconBadgeNumber = count
+        }
+        
         if let aps = userInfo["aps"] as? [String: Any] {
+            /*
             if let mutableContent = aps["mutable-content"] as? String {
                 if mutableContent == "1" { return nil }
             } else if let mutableContent = aps["mutable-content"] as? Int {
                 if mutableContent == 1 { return nil }
-            }
+            }*/
             if let value = aps["badge"] as? Int { badge = value }
             if let alert = aps["alert"] as? [String: Any] {
                 if let value = alert["title"] as? String { title = value }

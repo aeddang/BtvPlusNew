@@ -11,6 +11,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
     private(set) var infoIcon: String? = nil
     private(set) var infoLeading: String? = nil
     private(set) var infoTrailing: String? = nil
+    private(set) var infoTrailingSub: String? = nil
     private(set) var infoTip: String? = nil
     
     private(set) var serviceInfo: String? = nil
@@ -35,11 +36,14 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
     func setData(synopsisModel:SynopsisModel?, isPairing:Bool? ) -> PurchaseViewerData? {
         guard let synopsisModel = synopsisModel else { return nil }
         guard let purchas = synopsisModel.curSynopsisItem else { return nil }
+        
+        let watchAll = synopsisModel.isSeasonWatchAll
+        let isOnlyPurchasedBtv = synopsisModel.isOnlyPurchasedBtv
+        let isOnlyBtvPurchasable  = synopsisModel.isOnlyBtvPurchasable
         if !synopsisModel.isDistProgram {
             serviceInfo = String.alert.bs
             serviceInfoDesc = String.alert.bsText
             isPlayAble = false
-                       
         } else if synopsisModel.isCancelProgram {
             serviceInfo = String.alert.bc
             serviceInfoDesc = String.alert.bcText
@@ -52,11 +56,11 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                     ? String.pageText.synopsisOnlyBtvFree : String.pageText.synopsisOnlyBtv
             isPlayAble = false
             
-        } else if synopsisModel.isOnlyPurchasedBtv && !purchas.hasAuthority {
+        } else if synopsisModel.isOnlyPurchasedBtv {
             serviceInfo = String.pageText.synopsisOnlyPurchasBtv
             isPlayAble = false
             
-        } else {
+        }  else {
             switch synopsisModel.holdbackType {
             case .holdOut :
                 if purchas.hasAuthority == true{
@@ -66,6 +70,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                     serviceInfo = String.pageText.synopsisOnlyBtvFree
                 }
                 isPlayAble = true
+
             default :
                 self.setupBtvWatchInfo(synopsisModel: synopsisModel, isPairing: isPairing, purchas: purchas)
                 if isPairing == true {
@@ -75,21 +80,6 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                 if purchas.hasAuthority == true{
                     self.setupOption(watchItems: synopsisModel.watchOptionItems, purchas: purchas)
                 }
-                isPlayAble = true
-            /*
-            case .holdIn :
-                if purchas.hasAuthority == true{
-                    self.setupBtvWatchInfo(synopsisModel: synopsisModel, isPairing: isPairing, purchas: purchas)
-                    self.setupOption(watchItems: synopsisModel.watchOptionItems, purchas: purchas)
-                } else {
-                    serviceInfo = (purchas.isDirectview && purchas.isFree)
-                        ? String.pageText.synopsisWatchOnlyBtv
-                        : String.pageText.synopsisOnlyBtv
-    
-                }
-                isPlayAble = true
-            */
-           
             }
             
         }
@@ -100,6 +90,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
         if isPairing == true || synopsisModel.isPossonVODMode {
             if synopsisModel.isFree {
                 infoTrailing = String.pageText.synopsisFreeWatch
+                isPlayAble = true
             }
             else if purchas.isDirectview {
                 if let ppmItem = synopsisModel.purchasedPPMItem {
@@ -114,6 +105,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                         ? String.pageText.synopsisWatchPossn
                         : String.pageText.synopsisWatchRent
                 }
+                isPlayAble = true
             }
             else{
                 if synopsisModel.isPossonVODMode {
@@ -124,6 +116,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                         infoTrailing = String.pageText.synopsisFreeWatchMonthly
                     }
                 }
+                isPlayAble = true
             }
         }
         else{
@@ -135,6 +128,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                     infoTrailing = String.pageText.synopsisFreeWatchMonthly
                 }
             }
+            isPlayAble = true
         }
         if synopsisModel.isContainPPM {
             var enablePPMTooltip = false
@@ -171,8 +165,12 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
     }
     private func setupOption(synopsisModel:SynopsisModel, purchasableItems: [PurchaseModel]?, purchas:PurchaseModel){
         if synopsisModel.isFree {return}
+        if let omni = synopsisModel.purchaseOmnipack.first {
+            self.setupOmnipack(omniPack: omni)
+        }
         guard let purchasableItems =  purchasableItems else { return }
         guard let purchasableItem =  purchasableItems.first else { return }
+        
         let leading = purchas.hasAuthority ? String.button.purchasAnother : String.button.purchas
         if purchasableItems.count < 2  {
             if self.type == .btv {
@@ -189,6 +187,17 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                 self.purchasBtnTitle =  leading + "  |  " + purchasableItem.salePrice
             }
         }
+    }
+    
+    private func setupOmnipack(omniPack:OmnipackData){
+        self.infoTrailing = String.pageText.synopsisOmnipack
+        var leading:String = ""
+        if let data = omniPack.validDate?.toDateFormatter(dateFormat: "MM/dd") {
+            leading = data + String.app.untill + " "
+        }
+        let trailing:String = omniPack.restCount.description + String.pageText.synopsisOmnipackTrailing
+        self.infoTrailingSub = "(" + leading + trailing + ")"
+        
     }
     
     func setDummy() -> PurchaseViewerData {

@@ -14,6 +14,9 @@ class CookieInfo:Identifiable {
     private(set) var startTime:Double = -1
     private(set) var endTime:Double = -1
     
+    var viewTime:Double = -1
+    var hiddenTime:Double = -1
+    
     func setData(data:InsideSceneItem , idx:Int = -1) -> CookieInfo {
         startTime = data.tmtag_fr_tmsc ?? -1
         endTime = data.tmtag_to_tmsc ?? -1

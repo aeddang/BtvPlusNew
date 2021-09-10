@@ -26,20 +26,29 @@ struct PlayerBottomBody: PageComponent{
     var showDirectview = false
     var showPreplay = false
     var showCookie:String? = nil
+    var currentCookie:CookieInfo? = nil
+    var isSeasonNext:Bool = false
     var showNext = false
     var showFullVod = false
     var showNextCancel = false
     var nextProgress:Float = 0.0
-    var nextBtnTitle:String = ""
-    var isSeasonNext:Bool = false
+    var nextBtnTitle:String? = nil
     var isLock:Bool = false
+    var endingTime:Double = -1
     var body: some View {
         
         VStack(alignment :.trailing, spacing:0){
             Spacer()
             HStack(spacing:self.isFullScreen ? PlayerUI.fullScreenSpacing : PlayerUI.spacing){
+                
+                RectButton(
+                    text: "endpoint"
+                    ){_ in
+                   
+                    self.viewModel.event = .seekTime(self.endingTime, true)
+                }
                 Spacer()
-                if self.showDirectview {
+                if self.showDirectview && !self.isLock{
                     RectButton(
                         text: String.player.directPlay
                         ){_ in
@@ -98,18 +107,33 @@ struct PlayerBottomBody: PageComponent{
                         }
                     }
                 }
-                if let cookie = self.showCookie {
+                if  !self.isLock, let cookieText = self.showCookie, let cookie = self.currentCookie {
                     RectButton(
                         text: String.player.cookie,
-                        textTrailing: cookie
+                        textTrailing: cookieText
                         ){_ in
-                        
                         self.viewModel.btvPlayerEvent = .cookieView
+                        self.viewModel.event = .seekTime(cookie.startTime, true)
                         //self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , String.player.cookie)
+                    }
+                    if cookie.index == 1 , let next = self.nextBtnTitle {
+                        RectButton(
+                            text: next ,
+                            fixSize: self.isSeasonNext
+                            ? (self.isFullScreen ? Self.seasonBtnSizeFullScreen : Self.seasonBtnSize)
+                            : (self.isFullScreen ? Self.nextBtnSizeFullScreen : Self.nextBtnSize),
+                            progress: 1,
+                            padding: 0,
+                            icon: Asset.icon.play
+                            ){_ in
+                            
+                            //self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , self.nextBtnTitle)
+                            self.viewModel.btvPlayerEvent = .nextView(isAuto:false)
+                        }
                     }
                 }
                 
-                if self.showFullVod {
+                if self.showFullVod && !self.isLock{
                     RectButton(
                         text: String.player.fullVod
                         ){_ in
@@ -117,9 +141,10 @@ struct PlayerBottomBody: PageComponent{
                         self.viewModel.btvPlayerEvent = .fullVod(synop)
                         //self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , String.player.cookie)
                     }
+                    
                 }
                 
-                if self.showNext{
+                if self.showNext && !self.isLock{
                     if self.showNextCancel {
                         RectButton(
                             text: String.player.continuePlay
@@ -128,18 +153,20 @@ struct PlayerBottomBody: PageComponent{
                             self.viewModel.btvPlayerEvent = .nextViewCancel
                         }
                     }
-                    RectButton(
-                        text: self.nextBtnTitle,
-                        fixSize: self.isSeasonNext
-                        ? (self.isFullScreen ? Self.seasonBtnSizeFullScreen : Self.seasonBtnSize)
-                        : (self.isFullScreen ? Self.nextBtnSizeFullScreen : Self.nextBtnSize),
-                        progress: self.nextProgress,
-                        padding: 0,
-                        icon: Asset.icon.play
-                        ){_ in
-                        
-                        self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , self.nextBtnTitle)
-                        self.viewModel.btvPlayerEvent = .nextView(isAuto:false)
+                    if let next = self.nextBtnTitle {
+                        RectButton(
+                            text: next,
+                            fixSize: self.isSeasonNext
+                            ? (self.isFullScreen ? Self.seasonBtnSizeFullScreen : Self.seasonBtnSize)
+                            : (self.isFullScreen ? Self.nextBtnSizeFullScreen : Self.nextBtnSize),
+                            progress: self.nextProgress,
+                            padding: 0,
+                            icon: Asset.icon.play
+                            ){_ in
+                            
+                            //self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , self.nextBtnTitle)
+                            self.viewModel.btvPlayerEvent = .nextView(isAuto:false)
+                        }
                     }
                 }
             }

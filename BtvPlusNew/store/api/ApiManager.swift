@@ -86,8 +86,8 @@ class ApiManager :PageProtocol, ObservableObject{
     
     // 로그 서버 페이지이동시 켄슬 안함
     private lazy var lgs:Lgs = Lgs(network: LgsNetwork())
-    private lazy var navilog:Navilog = Navilog(network: NavilogNetwork())
-    private lazy var navilogNpi:Navilog = Navilog(network: NavilogNpiNetwork())
+    private(set) lazy var navilog:Navilog = Navilog(network: NavilogNetwork())
+    private(set) lazy var navilogNpi:Navilog = Navilog(network: NavilogNpiNetwork())
     private lazy var pucr:Pucr = Pucr(network: PucrNetwork())
     private lazy var push:Push = Push(network: PushNetwork())
     private lazy var metvEvent:Metv = Metv(network: MetvNetwork())
@@ -194,6 +194,7 @@ class ApiManager :PageProtocol, ObservableObject{
         self.load(q.type, resultId: q.id,
                   isOptional: q.isOptional, isLock: q.isLock, isLog:q.isLog, isProcess: q.isProcess)
     }
+    
     
 
     @discardableResult

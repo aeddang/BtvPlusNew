@@ -53,6 +53,7 @@ struct DeepLinkItem{
     //webview action
     var isForceRetry:Bool = false
     var isCallFuncion:Bool = false
+    var isStopLoading:Bool = false
     
     
 }
@@ -365,12 +366,9 @@ class WebBridge :PageProtocol{
                         }
                         
                     case WebviewMethod.stopLoading.rawValue :
-                        break
-                        //deepLinkItem.isForceRetry = true
-                        //self.forceRetry(webView: webView)
+                        deepLinkItem.isStopLoading = true
                     default :
                         deepLinkItem.isCallFuncion = true
-                        //self.parent.viewModel.event = .callFuncion(fn, jsonParam, cbName )
                     }
                     deepLinkItem.dic = dic
                     deepLinkItem.value = value
@@ -546,13 +544,15 @@ class WebBridge :PageProtocol{
                 PageProvider.getPageObject(.myBenefits)
                     .addParam(key: .id, value: menuType.rawValue)
             )
-           
-            self.pagePresenter?.openPopup(
-                PageProvider.getPageObject(.confirmNumber)
-                    .addParam(key: .type, value: menuType)
-                    .addParam(key: .data, value: num)
-                    
-            )
+            DispatchQueue.main.async{
+                let couponType:CouponBlock.ListType = CouponBlock.ListType.getType(path)
+                self.pagePresenter?.openPopup(
+                    PageProvider.getPageObject(.confirmNumber)
+                        .addParam(key: .type, value: couponType)
+                        .addParam(key: .value, value: num)
+                        
+                )
+            }
        
         case "family_invite":
             

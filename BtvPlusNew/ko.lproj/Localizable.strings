@@ -57,6 +57,7 @@
 "award" = "수상";
 "ageCount" = "세";
 "point" = "P";
+"untill" = "까지";
 
 "rent" = "대여";
 "owner" = "소장";
@@ -415,12 +416,12 @@
 
 "alertOkCashDiscount" = "OK캐쉬백 할인 적용";
 "alertOkCashDiscountInput" = "OK캐쉬백 비밀번호를 입력해주세요.";
-
+"alertOkCashIncorrecPassword" = "비밀번호가 일치하지 않습니다.";
 "alertOkCashMaster" = "OK캐쉬백 대표카드등록";
 "alertOkCashMasterInput" = "OK캐쉬백 비밀번호를 입력해주세요.";
 "alertCardDeleteConfirm" = "선택한 OK캐쉬백 카드를 삭제하시겠어요?";
 
-"alertCouponRegistSuccess" = "쿠폰 등록이 완료되었습니다.";
+"alertCouponRegistSuccess" = "%s 등록이 완료되었습니다.";
 "alertCouponRegistFail" = "알 수 없는 오류로 쿠폰 등록에 실패하였습니다.\n106 고객센터로 문의해주세요.";
 
 
@@ -733,19 +734,20 @@
 "myBenefitsCoupon" = "쿠폰";
 "myBenefitsCouponText" = "사용 가능한 쿠폰";
 "myBenefitsCouponRegist" = "쿠폰 등록";
-"myBenefitsCouponEmpty" = "보유한 쿠폰 내역이 없습니다.";
+"myBenefitsCouponEmpty" = "사용 가능한 쿠폰 내역이 없습니다.";
 "myBenefitsCouponInput" = "쿠폰 번호를 입력해주세요.";
 
 "myBenefitsPoint" = "B포인트";
 "myBenefitsPointText" = "사용 가능한 B포인트";
 "myBenefitsPointRegist" = "B포인트 등록";
-"myBenefitsPointEmpty" = "보유한 포인트 내역이 없습니다.";
+"myBenefitsPointEmpty" = "사용 가능한 B포인트 내역이 없습니다.";
 "myBenefitsPointInput" = "B포인트 번호를 입력해주세요.";
+
 
 "myBenefitsCash" = "B캐쉬";
 "myBenefitsCashText" = "사용 가능한 B캐쉬";
 "myBenefitsCashRegist" = "B캐쉬 등록";
-"myBenefitsCashEmpty" = "보유한 캐쉬 내역이 없습니다.";
+"myBenefitsCashEmpty" = "사용 가능한 B캐쉬 내역이 없습니다.";
 "myBenefitsCashInput" = "B캐쉬 번호를 입력해주세요.";
 
 "myBenefitsNumberTip" = "16자리 숫자를 입력하세요.";
@@ -843,6 +845,8 @@
 "synopsisWatchPeriod" = "이용 기간 동안 시청 가능";
 "synopsisWatchRent" = "대여 기간 내 시청 가능";
 "synopsisWatchPossn" = "B tv 해지 전 무제한 시청 가능";
+"synopsisOmnipack" = "OMNI 팩으로 구매 가능";
+"synopsisOmnipackTrailing" = "개 사용 가능";
 "synopsisSummry" = "제작/출연진 및 줄거리";
 "synopsisRelationVod" = "비슷한 영화";
 "synopsisNoRelationVod" = "이 작품과 비슷한 영화를\n찾을 수 없습니다.";
@@ -994,8 +998,6 @@
 "remoteErrorMirroring" = "이어폰 모드 설정 실패 안내";
 "remoteErrorMirroringText" = "B tv 이어폰 모드 설정에 실패하였습니다.\n아래 내용을 확인 후 다시 시도해 주세요.";
 "remoteErrorMirroringTextSub" = "- B tv 셋톱박스가 켜진 상태\n- B tv 셋톱박스와 SKB 공유기가 연결된 상태";
-
-
 
 /*
  Monthly

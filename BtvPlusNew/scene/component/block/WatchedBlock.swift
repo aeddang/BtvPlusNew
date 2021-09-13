@@ -208,9 +208,9 @@ struct WatchedBlock: PageComponent{
             let start = self.datas.count
             let end = start + datas.count
             let loadedDatas:[WatchedData] = zip(start...end, datas).map { idx, d in
-                return WatchedData().setData(data: d, idx: idx)
+                return WatchedData().setData(data: d, idx: idx, isAll:true)
             }
-            .filter{$0.isContinueWatch} 
+            .filter{$0.isContinueWatch}
             
             self.datas.append(contentsOf: loadedDatas)
             

@@ -82,6 +82,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                 
                 if !self.datas.isEmpty  && self.isListUpdated{
                     self.getList()
+                        .fixedSize(horizontal: false, vertical: true)
                        
                 } else if self.useEmpty {
                     EmptyAlert( text: self.data.dataType == .watched

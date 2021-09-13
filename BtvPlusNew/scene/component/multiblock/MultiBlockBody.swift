@@ -394,7 +394,7 @@ struct MultiBlockBody: PageComponent {
         self.appSceneObserver.isApiLoading = false
         
         if let openId = self.currentOpenId {
-            let findIds = openId.split(separator: "|")
+            let findIds = openId.contains("/") == true ? openId.split(separator: "/") :  openId.split(separator: "|")
             if let find = addBlocks.first(where:  { block in
                 guard let menuId = block.menuId else {return false}
                 return findIds.first(where: {$0 == menuId}) != nil

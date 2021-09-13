@@ -34,6 +34,8 @@ open class PlayerModel: ComponentObservable {
     @Published fileprivate(set) var initTime:Double? = nil
     @Published fileprivate(set) var isPlay = false
     var isUserPlay = false
+    var isSeekAfterPlay:Bool? = nil
+    
     @Published fileprivate(set) var duration:Double = 0.0
     fileprivate(set) var originDuration:Double = 0
     open var limitedDuration:Double? = nil
@@ -149,10 +151,10 @@ class FairPlayDrm{
 enum PlayerUIEvent {//input
     case load(String, Bool = true, Double = 0.0, Dictionary<String,String>? = nil),
          togglePlay, resume, pause, stop, volume(Float), rate(Float), mute(Bool),
-         seekTime(Double, Bool = true), seekProgress(Float, Bool = true),
-         seekMove(Double, Bool = true),
-         seeking(Double), seekForward(Double, Bool = false), seekBackword(Double, Bool = false),
-         addSeekForward(Double, Bool = false), addSeekBackword(Double, Bool = false),
+         seekTime(Double, Bool? = nil), seekProgress(Float, Bool? = nil),
+         seekMove(Double, Bool? = nil),
+         seeking(Double), seekForward(Double, Bool? = nil), seekBackword(Double, Bool? = nil),
+         addSeekForward(Double, Bool? = nil), addSeekBackword(Double, Bool? = nil),
          check, neetLayoutUpdate, fixUiStatus(Bool),
          screenGravity(AVLayerVideoGravity), screenRatio(CGFloat),
          fullScreen(Bool)
@@ -292,11 +294,17 @@ extension PlayBack {
     }
     
     func onSeeked(){
-        ComponentLog.d("onSeeked", tag: self.tag)
+        ComponentLog.d("onSeeked " + viewModel.isPlay.description, tag: self.tag)
         viewModel.seekTime = nil
         viewModel.streamEvent = .seeked
         viewModel.event = .check
         viewModel.playerStatus = viewModel.isPlay ? .resume : .pause
+        if let afterPlay = viewModel.isSeekAfterPlay {
+            DispatchQueue.main.async {
+                viewModel.event = afterPlay ? .resume : .pause
+                viewModel.isSeekAfterPlay = nil
+            }
+        }
     }
     func onResumed(){
         self.checkSeeked()

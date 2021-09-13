@@ -29,9 +29,6 @@ struct AppLayout: PageComponent{
         ZStack{
             SceneTab()
             SceneKidsTab()
-            if self.isInit && self.isPairingHitchShowing && self.pageType == .btv {
-                PairingHitch()
-            }
             if self.pageType == .btv && !self.hasPopup, let datas = self.floatBannerDatas {
                 FloatingBanner(datas:datas){ today in
                     if today {self.floatingBannerToDayUnvisible()}
@@ -39,6 +36,9 @@ struct AppLayout: PageComponent{
                         floatBannerDatas = nil
                     }
                 }
+            }
+            if self.isInit && self.isPairingHitchShowing && self.pageType == .btv {
+                PairingHitch()
             }
             if self.useLogCollector {
                 SceneLogCollector()
@@ -344,6 +344,8 @@ struct AppLayout: PageComponent{
              )
             */
         }
+        VSSubscriptionManager().registSubscription()
+        
         DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
             self.deepLinkMove(self.appObserver.deepLinkUrl)
             if let alram = self.appObserver.alram  {

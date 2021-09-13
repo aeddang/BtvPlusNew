@@ -166,7 +166,7 @@ class Euxp: Rest{
      * @param searchType 1 : epsd_id 기준 조회, 2 : epsd_rslu_id 기준 조회(con_id)
      */
     func getSynopsis(
-        data:SynopsisData,
+        data:SynopsisData, anotherStbId:String? = nil,
         completion: @escaping (Synopsis) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
@@ -174,20 +174,21 @@ class Euxp: Rest{
         params["IF"] = "IF-EUXP-010"
         params["sris_id"] = data.srisId ?? ""
         params["epsd_id"] = data.epsdId ?? ""
-        params["epsd_rslu_id"] = data.epsdRsluId ?? ""
+        
         
         var ynRecent = "Y"
         if data.epsdId?.isEmpty != false && data.epsdRsluId?.isEmpty == false {
             params["search_type"] = EuxpNetwork.SearchType.prd.rawValue
+            params["epsd_rslu_id"] = data.epsdRsluId ?? ""
             ynRecent = "N"
         } else {
             
             if let isRecent = data.isRecent {
                 ynRecent = isRecent ? "Y" : "C"
-                params["search_type"] = data.searchType.rawValue
+                params["search_type"] = EuxpNetwork.SearchType.sris.rawValue
             } else if data.synopType == .title {
                 ynRecent = "N"
-                params["search_type"] = data.searchType.rawValue
+                params["search_type"] = EuxpNetwork.SearchType.sris.rawValue
             } else {
                 ynRecent = data.searchType == EuxpNetwork.SearchType.prd ? "N" : "C"
                 params["search_type"] = EuxpNetwork.SearchType.sris.rawValue
@@ -196,7 +197,13 @@ class Euxp: Rest{
         }
         params["yn_recent"] =  ynRecent
         params["app_typ_cd"] = "BTVPLUS"
-        fetch(route: EuxpSynopsis(query: params), completion: completion, error:error)
+        
+        var overrideHeaders:[String : String]? = nil
+        if let another = anotherStbId {
+            overrideHeaders = [String:String]()
+            overrideHeaders?["Client_ID"] = another
+        }
+        fetch(route: EuxpSynopsis(query: params, overrideHeaders:overrideHeaders), completion: completion, error:error)
         
     }
     
@@ -208,7 +215,7 @@ class Euxp: Rest{
      * @param searchType 검색조건 1 : sris_id 조회, 2 : prd_prc_id 조회 (상품가격아이디)
      */
     func getGatewaySynopsis(
-        data:SynopsisData,
+        data:SynopsisData, anotherStbId:String? = nil,
         completion: @escaping (GatewaySynopsis) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
@@ -217,8 +224,13 @@ class Euxp: Rest{
         params["sris_id"] = data.srisId ?? ""
         params["epsd_id"] = data.epsdId ?? ""
         params["prd_prc_id"] = data.prdPrcId ?? ""
-        params["search_type"] = data.searchType.rawValue  
-        fetch(route: EuxpGatewaySynopsis(query: params), completion: completion, error:error)
+        params["search_type"] = data.searchType.rawValue
+        var overrideHeaders:[String : String]? = nil
+        if let another = anotherStbId {
+            overrideHeaders = [String:String]()
+            overrideHeaders?["Client_ID"] = another
+        }
+        fetch(route: EuxpGatewaySynopsis(query: params, overrideHeaders:overrideHeaders), completion: completion, error:error)
     }
     
     /**
@@ -229,7 +241,7 @@ class Euxp: Rest{
      * @param epsdRsluId 해상도아이디(CID)
      */
     func getRelationContents(
-        data:SynopsisRelationData,
+        data:SynopsisRelationData, anotherStbId:String? = nil,
         completion: @escaping (RelationContents) -> Void, error: ((_ e:Error) -> Void)? = nil){
         var params = [String:String]()
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
@@ -241,7 +253,12 @@ class Euxp: Rest{
         params["epsd_rslu_id"] = data.epsdRsluId
         params["type"] = "all"
         params["app_typ_cd"] = "BTVPLUS"
-        fetch(route: EuxpRelationContents(query: params), completion: completion, error:error)
+        var overrideHeaders:[String : String]? = nil
+        if let another = anotherStbId {
+            overrideHeaders = [String:String]()
+            overrideHeaders?["Client_ID"] = another
+        }
+        fetch(route: EuxpRelationContents(query: params,overrideHeaders:overrideHeaders), completion: completion, error:error)
     }
     
     /**
@@ -369,33 +386,36 @@ class Euxp: Rest{
 
 
 struct EuxpEventBanners:NetworkRoute{
-   var method: HTTPMethod = .get
-   var path: String = "/euxp/v5/grid/event/mobilebtv"
-   var query: [String : String]? = nil
+    var method: HTTPMethod = .get
+    var path: String = "/euxp/v5/grid/event/mobilebtv"
+    var query: [String : String]? = nil
 }
 
 struct EuxpSynopsis:NetworkRoute{
-   var method: HTTPMethod = .get
-   var path: String = "/euxp/v5/contents/synopsis/mobilebtv"
-   var query: [String : String]? = nil
+    var method: HTTPMethod = .get
+    var path: String = "/euxp/v5/contents/synopsis/mobilebtv"
+    var query: [String : String]? = nil
+    var overrideHeaders: [String : String]? = nil
 }
 
 struct EuxpRelationContents:NetworkRoute{
-   var method: HTTPMethod = .get
-   var path: String = "/euxp/v5/inter/cwrelation/mobilebtv"
-   var query: [String : String]? = nil
+    var method: HTTPMethod = .get
+    var path: String = "/euxp/v5/inter/cwrelation/mobilebtv"
+    var query: [String : String]? = nil
+    var overrideHeaders: [String : String]? = nil
 }
 
 struct EuxpGatewaySynopsis:NetworkRoute{
-   var method: HTTPMethod = .get
-   var path: String = "/euxp/v5/contents/gwsynop/mobilebtv"
-   var query: [String : String]? = nil
+    var method: HTTPMethod = .get
+    var path: String = "/euxp/v5/contents/gwsynop/mobilebtv"
+    var query: [String : String]? = nil
+    var overrideHeaders: [String : String]? = nil
 }
 
 struct EuxpInsideInfo:NetworkRoute{
-   var method: HTTPMethod = .get
-   var path: String = "/euxp/v5/inside/info/mobilebtv"
-   var query: [String : String]? = nil
+    var method: HTTPMethod = .get
+    var path: String = "/euxp/v5/inside/info/mobilebtv"
+    var query: [String : String]? = nil
 }
 
 struct EuxpGnbBlock:NetworkRoute{

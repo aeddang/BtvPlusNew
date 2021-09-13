@@ -144,6 +144,10 @@ struct PageMultiBlock: PageView {
                 default : break
                 }
             }
+            .onReceive(self.pagePresenter.$event){ evt in
+                guard let evt = evt else {return}
+                self.onEventWatchLv(evt: evt)
+            }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
                 self.openId = obj.getParamValue(key: .subId) as? String
@@ -189,6 +193,19 @@ struct PageMultiBlock: PageView {
     @State var openId:String? = nil
     @State var isFree:Bool = false
     
+    
+    func onEventWatchLv(evt :PageEvent){
+        if evt.id != self.tag { return }
+        switch evt.type {
+        case .completed :
+            setupOriginData(idx:finalSelectedIndex)
+        case .cancel :
+           break
+            
+        default : break
+        }
+    }
+    
     private func setupOriginData(idx:Int? = nil){
         var moveIdx:Int = idx ?? 0
         if idx == nil , let findIds = self.openId?.split(separator: "|") {
@@ -205,6 +222,17 @@ struct PageMultiBlock: PageView {
         if self.pairing.status != .pairing && isAdult {
             finalSelectedIndex = idx
             self.appSceneObserver.alert = .needPairing()
+            return
+        }
+        if !SystemEnvironment.isWatchAuth && SystemEnvironment.watchLv != 0 && isAdult {
+            finalSelectedIndex = idx
+            if SystemEnvironment.currentPageType == .btv {
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.confirmNumber)
+                        .addParam(key: .id, value: self.tag)
+                        .addParam(key: .type, value: ScsNetwork.ConfirmType.adult)
+                )
+            }
             return
         }
         finalSelectedIndex = nil

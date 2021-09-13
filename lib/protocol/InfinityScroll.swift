@@ -39,7 +39,7 @@ enum InfinityScrollType :Equatable{
     }
 }
 
-class InfinityScrollModel:ComponentObservable, Identifiable{
+class InfinityScrollModel:ComponentObservable{
     static let onTopSize:CGSize = SystemEnvironment.isTablet
         ? CGSize(width:72, height:72)
         : CGSize(width:60, height:60)

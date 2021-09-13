@@ -111,13 +111,7 @@ class BtvPlayerModel:PlayerModel{
         super.reset()
     }
     
-    func resetCurrentPlayer() {
-        self.currentEpsdRsluId = nil
-        self.currentIdx = nil
-        self.playData = nil
-        self.btvPlayType = nil
-    }
-    
+
     @discardableResult
     func setData(synopsisPrerollData:SynopsisPrerollData?) -> BtvPlayerModel {
         self.synopsisPrerollData = synopsisPrerollData

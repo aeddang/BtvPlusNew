@@ -474,6 +474,8 @@ struct PageSynopsis: PageView {
     @State var isPlayAble:Bool = false
     @State var isPlayViewActive = false
     @State var isPageUiReady = false
+    @State var isPosson:Bool = false
+    @State var anotherStb:String? = nil
     @State var isPageDataReady = false
     @State var isUIView:Bool = false
 
@@ -564,7 +566,7 @@ struct PageSynopsis: PageView {
                 self.errorProgress()
                 return
             }
-            self.pageDataProviderModel.requestProgress( q: .init(type: .getSynopsis(data)))
+            self.pageDataProviderModel.requestProgress( q: .init(type: .getSynopsis(data,anotherStbId:self.anotherStb)))
         
         case Self.getAuth :
             guard let model = self.synopsisModel else {return}
@@ -573,12 +575,14 @@ struct PageSynopsis: PageView {
                 self.fullScreenCancel()
                 return
             }
-            if self.isPairing == true {
-                if model.synopsisType == .seriesChange , let prevDirectView = self.prevDirectView {
+            if self.isPairing == true || self.isPosson {
+                if model.synopsisType == .seriesChange && model.isSeasonWatchAll && !self.isPosson,
+                   let prevDirectView = self.prevDirectView {
                     self.setupDirectView(prevDirectView, isSeasonWatchAll:true) // 권한 대이타 재사용
                     self.pageDataProviderModel.requestProgressSkip()
                 } else {
-                    self.pageDataProviderModel.requestProgress(q: .init(type: .getDirectView(model)))
+                    self.pageDataProviderModel.requestProgress(
+                        q: .init(type: .getDirectView(model, anotherStbId:self.anotherStb )))
                 }
             }else{
                 self.pageDataProviderModel.requestProgressSkip()
@@ -613,7 +617,8 @@ struct PageSynopsis: PageView {
                 default:
                     break
                 }
-                self.pageDataProviderModel.requestProgress(q: .init(type: .getPlay(self.epsdRsluId,  self.pairing.hostDevice )))
+                self.pageDataProviderModel.requestProgress( 
+                    q: .init(type: .getPlay(self.epsdRsluId, anotherStbId: self.anotherStb )))
             }
             self.progressCompleted = true
         //case 3 : self.pageDataProviderModel.requestProgress(q: .init(type: .getGnb))
@@ -634,7 +639,7 @@ struct PageSynopsis: PageView {
             self.setupSynopsis(data)
             
         case Self.getAuth :
-            if self.isPairing == true {
+            if self.isPairing == true || self.isPosson {
                 guard let data = res.data as? DirectView else {
                     PageLog.d("error DirectView", tag: self.tag)
                     self.progressError = true
@@ -749,7 +754,7 @@ struct PageSynopsis: PageView {
         if let synopsisRelationData = self.relationContentsModel.synopsisRelationData {
             self.pageDataProviderModel.request = .init(
                 id: SingleRequestType.relationContents.rawValue,
-                type: .getRelationContents(synopsisRelationData), isOptional:true
+                type: .getRelationContents(synopsisRelationData,anotherStbId:self.anotherStb), isOptional:true
             )
         } else {
             self.setupRelationContentCompleted ()
@@ -816,11 +821,11 @@ struct PageSynopsis: PageView {
             }
             if self.checkeRedirect() { return }
             self.epsdId = self.synopsisModel?.epsdId
-            if self.isPairing == false {
+            if self.isPairing == false && !self.isPosson {
                 self.synopsisModel?.setData(directViewData: nil)
                 self.purchasViewerData = PurchaseViewerData(type: self.type).setData(
                         synopsisModel: self.synopsisModel,
-                        isPairing: self.isPairing)
+                    isPairing: self.isPairing, isPosson: self.isPosson)
                 self.hasAuthority = false
             }
             
@@ -852,7 +857,8 @@ struct PageSynopsis: PageView {
         PageLog.d("self.isBookmark " + (self.isBookmark?.description ?? "nil"), tag: self.tag)
         self.purchasViewerData = PurchaseViewerData(type: self.type).setData(
                 synopsisModel: self.synopsisModel,
-                isPairing: self.isPairing)
+                isPairing: self.isPairing,
+                isPosson:self.isPosson)
         
         if !isSeasonWatchAll, let lastWatch = data.last_watch_info {
             if let t = lastWatch.watch_rt?.toInt() {
@@ -866,8 +872,8 @@ struct PageSynopsis: PageView {
         }
         self.textInfo = self.purchasViewerData?.serviceInfo
         self.epsdRsluId = self.synopsisModel?.curSynopsisItem?.epsd_rslu_id ?? self.synopsisModel?.epsdRsluId ?? ""
-        if self.purchasViewerData?.isPlayAble == true, let curSynopsisItem = self.synopsisModel?.curSynopsisItem {
-            self.hasAuthority = curSynopsisItem.hasAuthority || (self.synopsisModel?.isFree ?? false)
+        if self.purchasViewerData?.isPlayAble == true {
+            self.hasAuthority = self.purchasViewerData?.hasAuthority
         } else{
             self.hasAuthority = false
         }
@@ -932,13 +938,9 @@ struct PageSynopsis: PageView {
        
     }
     
-
-    
     /*
      Player process
      */
-    
-    
     
     func watchBtv(){
         self.onDefaultViewMode()

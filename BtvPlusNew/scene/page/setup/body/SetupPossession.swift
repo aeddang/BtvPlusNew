@@ -87,7 +87,7 @@ struct SetupPossession: PageView {
             guard let err = err else { return }
             switch err.type {
             case .getTerminateStbInfo : break
-            default: do{}
+            default: break
             }
         }
         .onAppear(){

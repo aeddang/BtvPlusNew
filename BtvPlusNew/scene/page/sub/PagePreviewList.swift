@@ -18,10 +18,13 @@ struct PagePreviewList: PageView {
     @EnvironmentObject var dataProvider:DataProvider
      
     @ObservedObject var pageObservable:PageObservable = PageObservable()
-    @ObservedObject var playerModel: BtvPlayerModel = BtvPlayerModel(useFullScreenAction:false)
+   
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var viewModel:PlayBlockModel = PlayBlockModel()
+    @ObservedObject var playerModel: BtvPlayerModel = BtvPlayerModel(useFullScreenAction:false)
+    @ObservedObject var prerollModel: PrerollModel = PrerollModel()
+    
     @State var title:String? = nil
     @State var menuId:String? = nil
     @State var safeAreaTop:CGFloat = 0
@@ -43,10 +46,11 @@ struct PagePreviewList: PageView {
                     )
                     .padding(.top, self.safeAreaTop)
                     PlayBlock(
-                        infinityScrollModel:self.infinityScrollModel,
-                        viewModel:self.viewModel,
                         pageObservable:self.pageObservable,
-                        playerModel:self.playerModel,
+                        viewModel:self.viewModel,
+                        infinityScrollModel:self.infinityScrollModel,
+                        playerModel: self.playerModel,
+                        prerollModel: self.prerollModel,
                         marginTop: Dimen.margin.thin,
                         marginBottom: self.marginBottom
                     )

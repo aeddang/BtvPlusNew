@@ -42,6 +42,7 @@ extension PageSynopsis {
 
     @discardableResult
     func nextVod(auto:Bool = true)->Bool{
+        if self.playerModel.isReplay && auto {return false}
         guard let playData = self.playerData else { return false}
         if !playData.hasNext { return false}
         if !self.setup.nextPlay && auto {
@@ -89,6 +90,7 @@ extension PageSynopsis {
     }
     
     func playCompleted(){
+        if self.playerModel.isReplay {return}
         switch playerData?.type {
         case .preplay:
             self.preplayCompleted()
@@ -162,10 +164,10 @@ extension PageSynopsis {
     func changeOption(_ option:PurchaseModel?){
         guard let option = option else { return }
         self.epsdRsluId = option.epsd_rslu_id
-        self.synopsisPlayType = .vodChange()
+        self.synopsisPlayType = .vodChange(self.playerModel.time)
         self.pageDataProviderModel.request = .init(
             id: SingleRequestType.changeOption.rawValue,
-            type: .getPlay(self.epsdRsluId,  self.pairing.hostDevice ))
+            type: .getPlay(self.epsdRsluId,  anotherStbId:self.anotherStb ))
     }
     
     func changeVod(synopsisData:SynopsisData?, isRedirectPage:Bool = true,

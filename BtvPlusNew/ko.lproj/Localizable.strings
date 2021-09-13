@@ -75,6 +75,7 @@
 "weekUnvisible" = "일주일 동안 보지 않기";
 "watch" = "시청";
 "watchAble" = "시청가능";
+
 "cancelBrodcast" = "결방";
 
 "cast" = "출연";
@@ -547,6 +548,7 @@
 "titlePrivacyAndAgree" = "개인정보 수집 및 이용동의";
 "titleSchedule" = "편성표";
 "titleModifyProfile" = "프로필 변경";
+"titleWatchedKids" = "키즈 시청 목록";
 "titleWatched" = "최근 시청 목록";
 "titleWatchHabit" = "시청 습관 관리";
 "titleBookmarkList" = "찜 목록";
@@ -839,6 +841,7 @@
 "synopsisWatchOnlyBtv" = "B tv에서만 시청 가능";
 "synopsisOnlyPurchasBtv" = "B tv에서 구매 시 시청 가능";
 "synopsisTerminationBtv" = "B tv 해지 후 시청 불가 콘텐츠";
+"synopsisPossonWatch" = "이전 B tv 소장 VOD로 시청 가능";
 "synopsisFreeWatch" = "무료 시청 가능";
 "synopsisFreeWatchBtv" = "B tv 연결 후 시청 가능";
 "synopsisFreeWatchMonthly" = "이용권 구독 시 무료로 이용하실 수 있어요!";

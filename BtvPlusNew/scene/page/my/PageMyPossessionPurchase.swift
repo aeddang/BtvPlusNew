@@ -11,6 +11,7 @@ struct PageMyPossessionPurchase: PageView {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var repository:Repository
+    @EnvironmentObject var setup:Setup
     @EnvironmentObject var dataProvider:DataProvider
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -62,12 +63,72 @@ struct PageMyPossessionPurchase: PageView {
                     }
                 }
             }
-    
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
                 withAnimation{ self.marginBottom = bottom }
             }
-            .onAppear{
+            
+            .onReceive(self.dataProvider.$result){ res in
+                guard let res = res else { return }
+                switch res.type {
                 
+                case .connectTerminateStb(let type, _) :
+                    if type == .delete {
+                        self.appSceneObserver.event = .toast( String.alert.possessionDelete )
+                        self.pagePresenter.closePopup(self.pageObject?.id)
+                    }
+                    
+                    guard let data = res.data as? ConnectTerminateStb  else {
+                        if type != .info {
+                            self.appSceneObserver.event = .toast( String.alert.apiErrorServer )
+                        }
+                        return
+                    }
+                    switch type {
+                    case .regist :
+                        self.appSceneObserver.event = .toast( String.alert.possessionComplete )
+                        self.collectionModel.update()
+                    case .info :
+                        if data.stb_id != self.setup.possession {
+                            self.appSceneObserver.alert = .confirm(
+                                String.alert.possession,
+                                String.alert.possessionDiableAlreadyChange ){ isOk in
+                                
+                                if isOk {
+                                    self.dataProvider.requestData(
+                                        q:.init(id: self.tag,
+                                                type: .connectTerminateStb(.regist, self.setup.possession)))
+                                } else {
+                                    self.setup.possession = ""
+                                    self.dataProvider.requestData(
+                                        q:.init(id: self.tag,
+                                                type: .connectTerminateStb(.delete, self.setup.possession),
+                                                isOptional: true))
+                                }
+                            }
+                        }
+                    default : break
+                    }
+                default: break
+                }
+            }
+            .onReceive(self.dataProvider.$error){ err in
+                guard let err = err else { return }
+                switch err.type {
+                case .connectTerminateStb(let type, _) :
+                    if type == .delete {
+                        self.pagePresenter.closePopup(self.pageObject?.id)
+                    }
+                default: break
+                }
+            }
+            .onAppear{
+                if self.setup.possession.isEmpty == false {
+                    self.dataProvider.requestData(
+                        q:.init(id: self.tag,
+                                type: .connectTerminateStb(.info, self.setup.possession), isOptional: true))
+                } else {
+                    
+                }
             }
             .onDisappear{
                

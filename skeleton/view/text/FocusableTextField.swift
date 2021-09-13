@@ -22,6 +22,7 @@ struct FocusableTextField: UIViewRepresentable {
     var isSecureTextEntry:Bool = false
     var inputChange: ((_ text:String) -> Void)? = nil
     var inputChanged: ((_ text:String) -> Void)? = nil
+    var inputClear: (() -> Void)? = nil
     var inputCopmpleted: ((_ text:String) -> Void)? = nil
     
     func makeUIView(context: Context) -> UITextField {
@@ -64,17 +65,14 @@ struct FocusableTextField: UIViewRepresentable {
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(self,inputChanged:inputChanged, inputCopmpleted:inputCopmpleted)
+        Coordinator(self)
     }
 
     class Coordinator: NSObject, UITextFieldDelegate {
         var parent: FocusableTextField
-        var inputChanged: ((_ text:String) -> Void)? = nil
-        var inputCopmpleted: ((_ text:String) -> Void)? = nil
-        init(_ textField: FocusableTextField, inputChanged: ((_ text:String) -> Void)?, inputCopmpleted:((_ text:String) -> Void)?) {
+      
+        init(_ textField: FocusableTextField) {
             self.parent = textField
-            self.inputChanged = inputChanged
-            self.inputCopmpleted = inputCopmpleted
         }
         
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -97,9 +95,18 @@ struct FocusableTextField: UIViewRepresentable {
                 }
             }
         }
+        func textFieldShouldClear(_ textField: UITextField) -> Bool {
+            guard let  inputClear = self.parent.inputClear else { return true }
+            if textField.text?.isEmpty == true {
+                inputClear()
+            }
+            //textField.text = ""
+            return false
+        
+        }
         
         func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-            guard let  inputCopmpleted = self.inputCopmpleted else { return true }
+            guard let  inputCopmpleted = self.parent.inputCopmpleted else { return true }
             inputCopmpleted(textField.text ?? "")
             //textField.text = ""
             return false

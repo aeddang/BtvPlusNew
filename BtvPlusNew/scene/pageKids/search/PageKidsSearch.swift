@@ -169,9 +169,13 @@ struct PageKidsSearch: PageView {
                 PageLog.d("updatekeyboardStatus isInput " + isInput.description, tag:self.tag)
                 if self.isFocus != on { self.isFocus = on }
                 if self.isInput == on { return }
+                if on {
+                    self.searchDatas = nil
+                }
                 withAnimation{
                     self.isInput = on
                 }
+                
             }
             .onReceive(self.viewModel.$searchDatas){ datas in
                 self.datas = datas

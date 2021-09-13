@@ -8,7 +8,7 @@
 import Foundation
 
 
-enum SynopsisPlayType {
+enum SynopsisPlayType:Equatable {
     case unknown, preview(Int, Bool? = nil) , preplay(Bool? = nil), clip(Bool? = nil , SynopsisData? = nil),
          vod(Double = 0, Bool? = nil), vodNext(Double = 0, Bool? = nil), vodChange(Double = 0, Bool? = nil)
     
@@ -32,6 +32,17 @@ enum SynopsisPlayType {
         case .preview: return "미리보기"
         case .preplay: return "미리보기"
         default: return "시청하기"
+        }
+    }
+    public static func == (l:SynopsisPlayType, r:SynopsisPlayType)-> Bool {
+        switch (l, r) {
+        case ( .preview, .preview):return true
+        case ( .preplay, .preplay):return true
+        case ( .clip, .clip):return true
+        case ( .vod, .vod):return true
+        case ( .vodNext, .vodNext):return true
+        case ( .vodChange, .vodChange):return true
+        default: return false
         }
     }
 }

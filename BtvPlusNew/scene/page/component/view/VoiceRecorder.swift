@@ -79,7 +79,7 @@ struct VoiceRecorder: PageComponent {
                 self.statusText = nil
                 self.repository.voiceRecognition.search()
                 
-            case .searching : self.isRecording = true
+            case .searching, .analysis : self.isRecording = true
             }
         }
         .onReceive(self.repository.voiceRecognition.$event){ evt in

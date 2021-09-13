@@ -95,9 +95,7 @@ struct PageKidsIntro: PageView {
             default : break
             }
         }
-        .onReceive(dataProvider.$error) { err in
-            if err?.id != self.tag { return }
-        }
+        
         .onAppear{
             self.isFirst = Self.isFirst
             if Self.isFirst {

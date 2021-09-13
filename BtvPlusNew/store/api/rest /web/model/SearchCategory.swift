@@ -40,6 +40,7 @@ struct CategoryVodItem : Decodable {
     private(set) var poster: String? = nil
     private(set) var price: String? = nil
     private(set) var title: String? = nil
+    private(set) var sris_id: String? = nil
     private(set) var price_use_yn: String? = nil
     private(set) var synon_typ_cd: String? = nil
     private(set) var epsd_rslu_id: String? = nil

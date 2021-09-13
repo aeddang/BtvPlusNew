@@ -74,6 +74,7 @@ struct PlayerBottom: PageView{
             withAnimation{
                 switch evt {
                 case .fixUiStatus(let isFix) :
+                    if SystemEnvironment.isTablet {return}
                     self.isFixUiStatus = isFix
                     if isFix { self.isUiShowing = false }
                 default : break
@@ -94,6 +95,10 @@ struct PlayerBottom: PageView{
             withAnimation{
                 switch st {
                 case .view :
+                    if SystemEnvironment.isTablet {
+                        self.isUiShowing = true
+                        return
+                    }
                     if !self.isFixUiStatus || self.isFullScreen{
                         self.isUiShowing = true
                     }
@@ -104,6 +109,7 @@ struct PlayerBottom: PageView{
         }
         .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
             self.isFullScreen = fullScreen
+            if SystemEnvironment.isTablet {return}
             if fullScreen {
                 if self.viewModel.playerUiStatus == .view {
                     self.isUiShowing = true
@@ -168,6 +174,11 @@ struct PlayerBottom: PageView{
         }
         .onReceive(self.viewModel.$isPlay) { play in
             self.isPlaying = play
+        }
+        .onReceive(self.viewModel.$isReplay) { replay in
+            if replay {
+                self.nextProgressCancel()
+            }
         }
         .onReceive(self.viewModel.$streamEvent) { evt in
             guard let evt = evt else { return }
@@ -298,6 +309,7 @@ struct PlayerBottom: PageView{
         }
     }
     func nextProgressStart(t:Double, d:Double){
+        if self.viewModel.isReplay { return }
         if !self.setup.nextPlay { return }
         
         let end = self.nextTime + Self.nextProgressTime

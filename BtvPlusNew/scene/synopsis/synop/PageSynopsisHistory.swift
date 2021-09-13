@@ -58,6 +58,9 @@ extension PageSynopsis {
             self.originHistorys.append(currentSynop)
         }
         self.synopsisData = synopsisData
+        self.isPosson = synopsisData.isPosson
+        self.anotherStb = self.isPosson ? synopsisData.anotherStbId : nil
+        
     }
     func historyCancel(){
         if !self.originHistorys.isEmpty {

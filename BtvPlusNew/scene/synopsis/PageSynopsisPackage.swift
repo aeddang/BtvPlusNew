@@ -48,6 +48,7 @@ struct PageSynopsisPackage: PageView {
                                         peopleScrollModel: self.peopleScrollModel,
                                         synopsisPackageModel: synopsisPackageModel,
                                         isPairing: self.isPairing,
+                                        isPosson: self.isPosson,
                                         contentID: self.synopsisModel?.epsdId,
                                         episodeViewerData: self.episodeViewerData,
                                         summaryViewerData: self.summaryViewerData,
@@ -69,6 +70,7 @@ struct PageSynopsisPackage: PageView {
                                             peopleScrollModel: self.peopleScrollModel,
                                             synopsisPackageModel: synopsisPackageModel,
                                             isPairing: self.isPairing,
+                                            isPosson: self.isPosson,
                                             contentID: self.synopsisModel?.epsdId,
                                             episodeViewerData: self.episodeViewerData,
                                             summaryViewerData: self.summaryViewerData,
@@ -276,6 +278,9 @@ struct PageSynopsisPackage: PageView {
 
     @State var isPageUiReady = false
     @State var isPageDataReady = false
+    
+    @State var isPosson:Bool = false
+    @State var anotherStb:String? = nil
     @State var isUIView:Bool = false
     
     func initPage(){
@@ -283,6 +288,8 @@ struct PageSynopsisPackage: PageView {
             self.progressError = true
             return
         }
+        self.isPosson = self.synopsisData?.isPosson ?? false
+        self.anotherStb = self.isPosson ? self.synopsisData?.anotherStbId : nil
         if !self.isPageDataReady || !self.isPageUiReady { return }
         if self.pageObservable.status == .initate { return }
         self.isPairing = self.pairing.status == .pairing
@@ -325,12 +332,14 @@ struct PageSynopsisPackage: PageView {
                 self.errorProgress()
                 return
             }
-            self.pageDataProviderModel.requestProgress( q:.init(type: .getGatewaySynopsis(data)))
+            self.pageDataProviderModel.requestProgress(
+                q:.init(type: .getGatewaySynopsis(data ,anotherStbId:self.anotherStb)))
         
         case 1 :
             guard let model = self.synopsisPackageModel else {return}
-            if self.isPairing == true {
-                self.pageDataProviderModel.requestProgress(q: .init(type: .getPackageDirectView(model, isPpm: false)))
+            if self.isPairing == true || self.isPosson {
+                self.pageDataProviderModel.requestProgress(
+                    q: .init(type: .getPackageDirectView(model, isPpm: false, anotherStbId: self.anotherStb)))
                 self.progressCompleted = true
             } else {
                 self.completedProgress()
@@ -404,7 +413,8 @@ struct PageSynopsisPackage: PageView {
     }
     
     private func setupGatewaySynopsis (_ data:GatewaySynopsis){
-        self.synopsisPackageModel = SynopsisPackageModel(type:self.type).setData(data:data) 
+        self.synopsisPackageModel = SynopsisPackageModel(type:self.type)
+            .setData(data:data, isPosson:self.isPosson, anotherStb:self.anotherStb)
         
     }
     

@@ -50,6 +50,7 @@ struct PageAdultCertification: PageView {
                         ){
                             BtvWebView( viewModel: self.webViewModel , useNativeScroll:false)
                                 .modifier(MatchHorizontal(height: self.webViewHeight))
+                                .background(Color.app.white)
                                 .onReceive(self.webViewModel.$screenHeight){height in
                                     self.setWebviewSize(geometry: geometry)
                                 }

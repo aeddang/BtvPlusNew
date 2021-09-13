@@ -21,6 +21,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
     @ObservedObject var viewModel:WebViewModel
     var useNativeScroll:Bool = true
     var path: String = ""
+    var viewHeight:CGFloat? = nil
     var request: URLRequest? {
         get{
             ComponentLog.log("origin request " + viewModel.path , tag:self.tag )
@@ -48,7 +49,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         #if DEBUG
             config.preferences.setValue(true, forKey: "developerExtrasEnabled")
         #endif
-        let uiView = creatWebView(config: config)
+        let uiView = creatWebView(config: config, viewHeight: self.viewHeight)
         uiView.navigationDelegate = context.coordinator
         uiView.uiDelegate = context.coordinator
         uiView.allowsLinkPreview = false

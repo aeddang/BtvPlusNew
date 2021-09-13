@@ -15,17 +15,12 @@ struct CPPlayer: PageComponent {
     var isSimple:Bool = false
     var type:PageType = .btv
     @State var screenRatio = CGSize(width:1, height:1)
-    @State var bindUpdate:Bool = false //for ios13
-   
-    
-    
+      
     var body: some View {
         ZStack(alignment: .center){
             CustomAVPlayerController(
                 viewModel : self.viewModel,
-                pageObservable : self.pageObservable,
-                bindUpdate: self.$bindUpdate
-                )
+                pageObservable : self.pageObservable)
             if !self.viewModel.useAvPlayerController{
                 HStack(spacing:0){
                     Spacer().modifier(MatchParent())
@@ -33,7 +28,7 @@ struct CPPlayer: PageComponent {
                         .onTapGesture(count: 2, perform: {
                             if self.viewModel.isLock { return }
                             if self.isSimple { return }
-                            self.viewModel.event = .seekBackword(self.viewModel.getSeekBackwordAmount(), false)
+                            self.viewModel.event = .seekBackword(self.viewModel.getSeekBackwordAmount())
                         })
                         .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
                             self.uiViewChange()
@@ -44,7 +39,7 @@ struct CPPlayer: PageComponent {
                         .onTapGesture(count: 2, perform: {
                             if self.viewModel.isLock { return }
                             if self.isSimple { return }
-                            self.viewModel.event = .seekForward(self.viewModel.getSeekForwardAmount(), false)
+                            self.viewModel.event = .seekForward(self.viewModel.getSeekForwardAmount())
                         })
                         .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
                             self.uiViewChange()
@@ -67,13 +62,15 @@ struct CPPlayer: PageComponent {
             self.autoUiHidden?.cancel()
         }
         .onReceive(self.viewModel.$duration) { d in
-            if d == 0 {
+            if d == 0 && self.viewModel.path.isEmpty == false{
                 if self.waitDurationSubscription == nil {
                     self.creatWaitDuration()
                 }
                 return
+            } else {
+                self.clearWaitDuration()
             }
-            self.clearWaitDuration()
+            
         }
         
         .onReceive(self.viewModel.$event) { evt in
@@ -89,7 +86,7 @@ struct CPPlayer: PageComponent {
         
         .onReceive(self.viewModel.$status) { stat in
             if #available(iOS 14.0, *) { return }
-            self.bindUpdate.toggle()
+           // self.bindUpdate.toggle()
         }
         .onReceive(self.viewModel.$streamEvent) { evt in
             guard let evt = evt else { return }
@@ -194,14 +191,14 @@ struct CPPlayer: PageComponent {
                     if self.viewModel.duration > 0 {
                         self.clearWaitDuration()
                         return
-                    } else {
+                    }
+                    if retryCount == (self.waitDurationCount-1){
                         ComponentLog.d("waitDuration Recovery " + waitDurationCount.description, tag:self.tag)
                         DispatchQueue.main.async {
                             self.viewModel.updateType = .recovery(self.viewModel.initTime ?? 0, count:retryCount )
                         }
                     }
-                }
-                if self.waitDurationCount == retryCount {
+                }else if self.waitDurationCount == retryCount {
                     if self.viewModel.duration == 0 {
                         self.viewModel.event = .pause
                         self.viewModel.error = .stream(.playback("wait Duration"))

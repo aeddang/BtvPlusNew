@@ -65,7 +65,9 @@ class PosterData:InfinityData{
     }
     
     
-    func setData(data:PackageContentsItem, prdPrcId:String, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
+    func setData(data:PackageContentsItem, prdPrcId:String, cardType:BlockData.CardType = .smallPoster ,
+                 isPosson:Bool, anotherStb:String?,
+                 idx:Int = -1) -> PosterData {
         setCardType(cardType)
         title = data.title
         synopsisType = SynopsisType(value: data.synon_typ_cd)
@@ -79,7 +81,9 @@ class PosterData:InfinityData{
         epsdId = data.epsd_id
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris,
-            epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: prdPrcId , kidZone:nil)
+            epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: prdPrcId , kidZone:nil,
+            isPosson: isPosson, anotherStbId: isPosson ? anotherStb : nil
+            )
         
         return self
     }
@@ -195,8 +199,9 @@ class PosterData:InfinityData{
         
         index = idx
         epsdId = data.epsd_id
+    
         synopsisData = .init(
-            srisId: nil, searchType: EuxpNetwork.SearchType.sris,
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "", kidZone:nil)
         return self.setNaviLog(searchType: searchType, data:data)
     }

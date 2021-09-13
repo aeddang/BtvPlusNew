@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import SwiftUI
 import Combine
-
+import VideoSubscriberAccount
 enum RepositoryStatus:Equatable{
     case initate, ready, reset, error(ApiResultError?)
     
@@ -118,6 +118,7 @@ class Repository:ObservableObject, PageProtocol{
         self.setupApiManager()
         self.setupPairing()
         self.broadcastManager.setup()
+       
     }
     
     deinit {
@@ -151,6 +152,7 @@ class Repository:ObservableObject, PageProtocol{
             self.userSetup.initateSetup()
             return true
         }
+        //self.userSetup.possession = "{FA795887-5C31-11E9-B4BF-A911074387AC}"
         if  SystemEnvironment.isReleaseMode == nil {
             SystemEnvironment.isReleaseMode = storage.isReleaseMode
         }

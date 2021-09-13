@@ -216,11 +216,10 @@ class Nps: Rest{
         params["authcode"] = authcode
         params["host_deviceid"] = hostDeviceid
         params["custom_param"] = customParam
-        
+
         var body = [String: Any]()
         body["header"] = headers
-        body["body"] = params
-        
+        body["body"] = params        
         fetch(route: NpsDevicePairingInfo(body: body), completion: completion, error:error)
     }
     
@@ -511,7 +510,9 @@ class Nps: Rest{
         let n = ApiUtil.getNValue()
         params["message"] = data?.messageObj
         params["nvalue"] = n
-        params["sc"] = ApiUtil.getEncrypedSCValue(msg, nValue: n, npsPw: NpsNetwork.AES_PW)
+        if !msg.isEmpty {
+            params["sc"] = ApiUtil.getEncrypedSCValue(msg, nValue: n, npsPw: NpsNetwork.AES_PW)
+        }
        // params["custom_param"] = customParam
         var body = [String: Any]()
         body["header"] = headers

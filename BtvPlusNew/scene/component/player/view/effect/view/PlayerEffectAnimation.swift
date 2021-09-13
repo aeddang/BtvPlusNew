@@ -52,7 +52,7 @@ struct PlayerEffectAnimation: PageComponent{
                                 gradient:Gradient(colors: [Color.transparent.white45, Color.transparent.clear]), startPoint: .leading, endPoint: .trailing))
                         .onTapGesture(count: 2, perform: {
                             if self.viewModel.isLock { return }
-                            self.viewModel.event = .seekBackword(self.viewModel.getSeekBackwordAmount(), false)
+                            self.viewModel.event = .seekBackword(self.viewModel.getSeekBackwordAmount())
                         })
                     }
                     if self.showBrightness {

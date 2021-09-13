@@ -147,7 +147,7 @@ struct CustomYTPlayer: UIViewRepresentable, PlayBack, YTPlayerViewDelegate {
             player.pauseVideo()
         }
         
-        func onSeek(time:Double, play:Bool){
+        func onSeek(time:Double, play:Bool?){
             player.seek(seekToSeconds: Float(time), allowSeekAhead: true)
             self.onSeek(time: time)
         }

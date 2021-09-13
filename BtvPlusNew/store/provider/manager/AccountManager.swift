@@ -70,12 +70,19 @@ class AccountManager : PageProtocol{
                 
             case .recovery :
                 if let user = self.pairing.user {
-                    if !self.pairing.isPairingUser { self.dataProvider.requestData(q: .init(type: .postGuestInfo(user), isOptional: true))}
-                    if !self.pairing.isPairingAgreement {
-                        if user.postAgreement { self.dataProvider.requestData(q: .init(type: .postGuestAgreement(user), isOptional: true)) }
-                        else { self.dataProvider.requestData(q: .init(type: .getGuestAgreement, isOptional: true)) }
+                    if !self.pairing.isPairingUser {
+                        self.dataProvider.requestData(q: .init(type: .postGuestInfo(user), isOptional: true))
                     }
-                    if self.pairing.hostDevice == nil { self.dataProvider.requestData(q: .init(type: .getHostDeviceInfo, isOptional: true)) }
+                    if !self.pairing.isPairingAgreement {
+                        if user.postAgreement {
+                            self.dataProvider.requestData(q: .init(type: .postGuestAgreement(user), isOptional: true)) }
+                        else {
+                            self.dataProvider.requestData(q: .init(type: .getGuestAgreement, isOptional: true))
+                        }
+                    }
+                    if self.pairing.hostDevice == nil {
+                        self.dataProvider.requestData(q: .init(type: .getHostDeviceInfo, isOptional: true))
+                    }
                 } else {
                     
                 }
@@ -172,7 +179,7 @@ class AccountManager : PageProtocol{
                 if NpsNetwork.isPairing { self.pairing.connected(stbData:self.requestDevice) }
                 else { self.pairing.disconnected() }
                 
-            default: do{}
+            default: break
             }
         }).store(in: &dataCancellable)
         

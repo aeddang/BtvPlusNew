@@ -53,7 +53,6 @@ class AppSceneObserver:ObservableObject{
     
     var pairingCompletedMovePage:PageObject? = nil
     var finalBtvPage:PageObject? = nil
-    
     var currentPlayer:PageSynopsis? = nil
     func cancelAll(){
 

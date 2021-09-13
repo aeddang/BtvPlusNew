@@ -23,6 +23,7 @@ struct PageSearch: PageView {
     @ObservedObject var pageDataProviderModel:PageDataProviderModel = PageDataProviderModel()
     @ObservedObject var searchScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var resultScrollModel: InfinityScrollModel = InfinityScrollModel()
+    @ObservedObject var emptyScrollModel: InfinityScrollModel = InfinityScrollModel()
     @State var isKeyboardOn:Bool = false
     @State var isVoiceSearch:Bool = false
     @State var isInputSearch:Bool = false
@@ -101,9 +102,12 @@ struct PageSearch: PageView {
                                     }
                                     
                             } else if !self.emptyDatas.isEmpty {
-                                EmptySearchResult(keyword: self.keyword, datas: self.emptyDatas)
+                                EmptySearchResult(
+                                    viewModel:self.emptyScrollModel,
+                                    keyword: self.keyword,
+                                    datas: self.emptyDatas)
                                     .modifier(MatchParent())
-                                    
+            
                             } else {
                                 SearchList(
                                     viewModel:self.searchScrollModel,
@@ -185,7 +189,7 @@ struct PageSearch: PageView {
                 self.isKeyboardOn = on
                 if self.isInputSearch != on { self.isInputSearch = on}
                 if on {
-                    self.emptyDatas = []
+                    self.clearSearchData()
                 }
                 if !self.isVoiceSearch {
                     if on {
@@ -241,13 +245,17 @@ struct PageSearch: PageView {
     @State var emptyDatas:[PosterDataSet] = []
     @State var searchDatas:[BlockData] = []
     @State var total:Int = 0
-    func resetSearchData() {
+    
+    func clearSearchData() {
         if !self.emptyDatas.isEmpty {
             self.emptyDatas = []
         }
         if !self.searchDatas.isEmpty {
             self.searchDatas = []
         }
+    }
+    func resetSearchData() {
+        self.clearSearchData()
         self.viewModel.updateSearchKeyword()
         self.updatedLogPage()
     }

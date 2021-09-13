@@ -9,19 +9,52 @@ import Foundation
 import SwiftUI
 
 struct InfoAlert: PageView {
-    
+    @EnvironmentObject var pagePresenter:PagePresenter
     let text:String
     var horizontalMargin:CGFloat = 0
+    var actionIcon:String? = nil
+    var actionText:String? = nil
+    var action: (() -> Void)? = nil
     var body: some View {
-       HStack(alignment: .top, spacing: Dimen.margin.tinyExtra){
-            Image(Asset.icon.alertInfo)
-                .renderingMode(.original)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
-                .padding(.top, -Dimen.margin.micro)
-            Text(text)
-                .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
+       HStack(alignment: .center, spacing: Dimen.margin.tinyExtra){
+            HStack(alignment: .top, spacing: Dimen.margin.tinyExtra){
+                Image(Asset.icon.alertInfo)
+                    .renderingMode(.original)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
+                    .padding(.top, -Dimen.margin.micro)
+                VStack(alignment: .leading, spacing: 0) {
+                    Spacer().modifier(MatchHorizontal(height: 0))
+                    Text(text)
+                        .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
+                }
+            }
+            if let action = self.action {
+                Button(action: {
+                    action()
+                }) {
+                    HStack(spacing: Dimen.margin.microUltra){
+                        if let icon = self.actionIcon{
+                            Image(icon)
+                                .renderingMode(.original)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: Dimen.icon.regularExtra)
+                        }
+                        if let text = self.actionText{
+                            Text(text)
+                                .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
+                        }
+                    }
+                    .padding(.horizontal, Dimen.margin.tiny)
+                    .frame(height: Dimen.button.thinUltra)
+                    .background(Color.app.indigo)
+                    .clipShape(RoundedRectangle(cornerRadius: SystemEnvironment.isTablet
+                                                    ? Dimen.radius.regularExtra : Dimen.radius.medium))
+                }
+                
+            }
         }
        .padding(.horizontal, self.horizontalMargin )
     }//body

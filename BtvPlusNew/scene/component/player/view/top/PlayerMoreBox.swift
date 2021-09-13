@@ -21,31 +21,26 @@ struct PlayerMoreBox: PageView{
     @State var isFullScreen:Bool = false
     @State var isShowing:Bool = false
     var body: some View {
-        ZStack{
-            Image(self.isFullScreen ? Asset.player.popupBgFull : Asset.player.popupBg)
-                .renderingMode(.original)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-            
-            VStack(spacing:self.isFullScreen ? Dimen.margin.regularExtra : Dimen.margin.light){
-                Button(action: {
-                    self.viewModel.isLock = true
-                    self.hideBox()
-                }) {
-                    Text( String.button.screenLock )
-                        .modifier(
-                            MediumTextStyle(size: self.isFullScreen ? Self.textSizeFull : Self.textSize))
-                }
-                
-                Button(action: {
-                    self.viewModel.selectFunctionType = .ratio
-                    self.hideBox()
-                }) {
-                    Text( String.button.screenRatio )
-                        .modifier(
-                            MediumTextStyle(size: self.isFullScreen ? Self.textSizeFull : Self.textSize))
-                }
-                
+       
+        VStack(spacing:self.isFullScreen ? Dimen.margin.regularExtra : Dimen.margin.light){
+            Button(action: {
+                self.viewModel.isLock = true
+                self.hideBox()
+            }) {
+                Text( String.button.screenLock )
+                    .modifier(
+                        MediumTextStyle(size: self.isFullScreen ? Self.textSizeFull : Self.textSize))
+            }
+            .padding(.top, Dimen.margin.thin)
+            Button(action: {
+                self.viewModel.selectFunctionType = .ratio
+                self.hideBox()
+            }) {
+                Text( String.button.screenRatio )
+                    .modifier(
+                        MediumTextStyle(size: self.isFullScreen ? Self.textSizeFull : Self.textSize))
+            }
+            if self.viewModel.synopsisPlayerData?.type != .clip() {
                 Button(action: {
                     self.hideBox()
                     
@@ -54,29 +49,41 @@ struct PlayerMoreBox: PageView{
                         .modifier(
                             MediumTextStyle(size: self.isFullScreen ? Self.textSizeFull : Self.textSize))
                 }
-                
-                if self.isFullScreen {
-                    Button(action: {
-                        self.viewModel.btvUiEvent = .guide
-                        self.hideBox()
-                        
-                    }) {
-                        Text( String.button.guide )
-                            .modifier(
-                                MediumTextStyle(size: self.isFullScreen ? Self.textSizeFull : Self.textSize))
-                    }
+            }
+            
+            if self.isFullScreen {
+                Button(action: {
+                    self.viewModel.btvUiEvent = .guide
+                    self.hideBox()
+                    
+                }) {
+                    Text( String.button.guide )
+                        .modifier(
+                            MediumTextStyle(size: self.isFullScreen ? Self.textSizeFull : Self.textSize))
                 }
             }
-            .padding(.top, Dimen.margin.tiny)
         }
+        .padding(.all, Dimen.margin.thin)
+        .background(
+            Image( SystemEnvironment.isTablet ? Asset.player.popupBgFull : Asset.player.popupBg)
+                .renderingMode(.original)
+                .resizable(capInsets:
+                            .init(top: Dimen.margin.regular, leading: Dimen.margin.thin,
+                                  bottom: Dimen.margin.thin, trailing: Dimen.margin.medium),
+                           resizingMode: .stretch)
+                .scaledToFill()
+        )
+        /*
         .frame(
             width: self.isFullScreen
                 ? SystemEnvironment.isTablet ? 215 : 120
-                : SystemEnvironment.isTablet ? 174 :  81,
+                : SystemEnvironment.isTablet ? 174 :  81
+            /*
             height: self.isFullScreen
                 ? SystemEnvironment.isTablet ? 302 : 169
                 : SystemEnvironment.isTablet ? 214 : 102
-        )
+            */
+        )*/
         .opacity(self.isShowing ? 1 : 0)
         .onReceive(self.viewModel.$btvUiEvent) { evt in
             withAnimation{

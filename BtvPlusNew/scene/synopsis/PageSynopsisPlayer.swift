@@ -245,7 +245,8 @@ struct PageSynopsisPlayer: PageView {
             self.pageDataProviderModel.requestProgress( q: .init(type: .getSynopsis(data)))
         
         case 1 :
-            self.pageDataProviderModel.requestProgress(q: .init(type: .getPlay(self.epsdRsluId,  self.pairing.hostDevice )))
+            self.pageDataProviderModel.requestProgress(
+                q: .init(type: .getPlay(self.epsdRsluId )))
             self.progressCompleted = true
         default : do{}
         }

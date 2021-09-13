@@ -227,16 +227,20 @@ struct AlramItem: PageView {
                             .lineLimit(self.isExpand ? 999 : Self.textLineNum)
                     }
                 }
-                if self.isExpand , let image = self.data.image  {
-                    KFImage(URL(string: image))
-                        .resizable()
-                        .placeholder {
-                            Image(Asset.noImg9_16).resizable()
+                if self.isExpand , let images = self.data.images  {
+                    HStack(spacing:Dimen.margin.thin){
+                        ForEach(images, id: \.self) { image in
+                            KFImage(URL(string: image))
+                                .resizable()
+                                .placeholder {
+                                    Image(Asset.noImg9_16).resizable()
+                                }
+                                .cancelOnDisappear(true)
+                                .loadImmediately()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: ListItem.alram.height, alignment:.topLeading)
                         }
-                        .cancelOnDisappear(true)
-                        .loadImmediately()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: ListItem.alram.height, alignment:.topLeading)
+                    }
                 }
                 if let date = self.data.date {
                     Text(date)
@@ -331,7 +335,7 @@ struct AlramItem: PageView {
     }
     
     private func checkExpand() {
-        if self.data.image != nil {
+        if self.data.images?.isEmpty == false {
             self.needExpand = true
             return
         }

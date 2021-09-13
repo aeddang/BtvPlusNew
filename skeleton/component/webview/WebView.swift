@@ -63,7 +63,7 @@ extension WebViewProtocol{
     var scriptMessageHandlerName : String { get{""} set{} }
     var uiDelegate:WKUIDelegate? { get{nil} set{} }
     
-    func creatWebView(config:WKWebViewConfiguration? = nil) -> WKWebView  {
+    func creatWebView(config:WKWebViewConfiguration? = nil, viewHeight:CGFloat? = nil) -> WKWebView  {
         let webView:WKWebView
         if let configuration = config {
             webView = WKWebView(frame: .zero, configuration: configuration)
@@ -80,8 +80,14 @@ extension WebViewProtocol{
         }
         
         webView.uiDelegate = uiDelegate
-        webView.frame.size.height = 1
-        webView.frame.size = webView.sizeThatFits(.zero)
+        if let hei = viewHeight {
+            webView.frame.size.height = hei
+            webView.frame.size.width = .zero
+        } else {
+            webView.frame.size = webView.sizeThatFits(.zero)
+        }
+        
+        
         let source = "function captureLog(msg) { window.webkit.messageHandlers.logHandler.postMessage(msg); } window.console.log = captureLog;"
         let script = WKUserScript(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
         webView.configuration.userContentController.addUserScript(script)

@@ -284,7 +284,8 @@ struct PageKidsMultiBlock: PageView {
     @State var isFloatingClose:Bool = false
     private func setupOriginData(idx:Int? = nil){
         var moveIdx:Int = idx ?? 0
-        if idx == nil , let findIds = self.openId?.split(separator: "|") {
+        let replaceOpenId = self.openId?.replace("/", with: "|")
+        if idx == nil , let findIds = replaceOpenId?.split(separator: "|") {
             let tab = zip(0...self.tabDatas.count, self.tabDatas).first(
                 where: { idx, t in
                     guard let menuId = t.cw_call_id_val else {return false}

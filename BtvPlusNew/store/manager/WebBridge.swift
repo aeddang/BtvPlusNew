@@ -11,7 +11,7 @@ import Combine
 
 enum WebviewMethod:String {
     case getSTBInfo, getNetworkState, getLogInfo, stopLoading,
-         setUserAgreementInfo, requestRemoconFunction
+         setUserAgreementInfo, requestRemoconFunction, requestLimitTV, requestSendMessage
     case requestVoiceSearch, requestSTBViewInfo
     case externalBrowser
     case bpn_showSynopsis,
@@ -272,6 +272,9 @@ class WebBridge :PageProtocol{
                     ComponentLog.d("cbName " + (cbName ?? ""), tag: self.tag)
                     var dic:[String: Any]? = nil
                     var value:String? = nil
+                    if self.callPage(fn, param: nil, query: query, jsonParam: jsonParam, cbName: cbName) {
+                        return DeepLinkItem(path: path, querys: nil)
+                    }
                     
                     switch fn {
                     case WebviewMethod.getNetworkState.rawValue :
@@ -421,8 +424,10 @@ class WebBridge :PageProtocol{
         }
     }
    
-    func callPage(_ path:String, param:[URLQueryItem]? = nil) {
-        
+    @discardableResult
+    func callPage(_ path:String, param:[URLQueryItem]? = nil,
+                  query:String? = nil, jsonParam:String? = nil, cbName:String? = nil) -> Bool {
+    
         switch path {
         case "synopsis":
             let id = param?.first(where: {$0.name == "id"})?.value
@@ -437,11 +442,12 @@ class WebBridge :PageProtocol{
                     .addParam(key: .data, value: SynopsisQurry(srisId: srisId, epsdId: epsdId))
                     .addParam(key: .datas, value: param)
             )
+            return true
         case "menu":
-            guard let menus = param?.first(where: {$0.name == "menus"})?.value else {return}
-            if menus.isEmpty {return}
+            guard let menus = param?.first(where: {$0.name == "menus"})?.value else {return true}
+            if menus.isEmpty {return true}
             let menuA = menus.split(separator: "/")
-            if menuA.isEmpty {return}
+            if menuA.isEmpty {return true}
             
             let gnbTypeCd:String = String(menuA[0])
             
@@ -486,7 +492,7 @@ class WebBridge :PageProtocol{
                                                 .addParam(key: UUID().uuidString, value: "")
                 )
             }
-            
+            return true
         case "event":
              if let menuOpenId = param?.first(where: {$0.name == "menu_id"})?.value {
                 let band = self.dataProvider.bands.getData(gnbTypCd: EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue)
@@ -531,12 +537,12 @@ class WebBridge :PageProtocol{
                     )
                 }
              }
-            
+            return true
             
         case "point", "coupon", "bpoint":
             if self.pairing.status != .pairing {
                 self.appSceneObserver?.alert = .needPairing()
-                return
+                return true
             }
             let num:String? = param?.first(where: {$0.name == "extra"})?.value
             let menuType:PageMyBenefits.MenuType = PageMyBenefits.getType(path)
@@ -553,10 +559,12 @@ class WebBridge :PageProtocol{
                         
                 )
             }
-       
+            return true
         case "family_invite":
             
-            guard let token:String = param?.first(where: {$0.name == "pairing_token"})?.value else {return}
+            guard let token:String = param?.first(where: {$0.name == "pairing_token"})?.value else {
+                return true
+            }
             let name:String? = param?.first(where: {$0.name == "nickname"})?.value
             self.pagePresenter?.openPopup(
                 PageProvider
@@ -564,10 +572,25 @@ class WebBridge :PageProtocol{
                     .addParam(key: .id, value: token)
                     .addParam(key: .title , value: name)
             )
-            
-        default: break
-        }
+            return true
+        case "requestPairing":
+            self.pagePresenter?.openPopup(
+                PageProvider.getPageObject(.pairing)
+            )
+            return true
         
+        case "showRemocon":
+            self.pagePresenter?.openPopup(
+                PageProvider.getPageObject(.remotecon)
+            )
+            return true
+        case "showSettingMenu":
+            self.pagePresenter?.openPopup(
+                PageProvider.getPageObject(.setup)
+            )
+            return true
+        default: return false
+        }
     }
 
 }

@@ -23,7 +23,7 @@ struct PagePurchase: PageView {
     @State var webViewHeight:CGFloat = 0
     @State var purchaseId:String? = nil
     @State var purchaseWebviewModel:PurchaseWebviewModel? = nil
-    @State var marginBottom:CGFloat = Dimen.app.bottom
+   
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -57,21 +57,19 @@ struct PagePurchase: PageView {
                     ZStack(alignment: .topLeading){
                         DragDownArrow(
                             infinityScrollModel: self.infinityScrollModel)
-                        InfinityScrollView(
-                            viewModel: self.infinityScrollModel,
-                            scrollType : .web(isDragEnd: true),
-                            isRecycle:false,
-                            useTracking:true
-                        ){
-                            BtvWebView( viewModel: self.webViewModel, useNativeScroll:false )
-                                .modifier(MatchHorizontal(height: self.webViewHeight))
-                                .onReceive(self.webViewModel.$screenHeight){height in
-                                    self.setWebviewSize(geometry: geometry)
-                                }
-                            
+                        if self.webViewHeight > 0{
+                            InfinityScrollView(
+                                viewModel: self.infinityScrollModel,
+                                scrollType : .web(isDragEnd: true),
+                                isRecycle:false,
+                                useTracking:true
+                            ){
+                                BtvWebView( viewModel: self.webViewModel, viewHeight:self.webViewHeight)
+                                    .modifier(MatchHorizontal(height: self.webViewHeight))
+                            }
                         }
                     }
-                    .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)
+                    //.padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)
                     .modifier(MatchParent())
                     
                     .onReceive(self.infinityScrollModel.$event){evt in
@@ -147,24 +145,16 @@ struct PagePurchase: PageView {
                 if err?.id != self.tag { return }
                 
             }
-            .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    self.marginBottom = bottom
-                    self.setWebviewSize(geometry: geometry)
-                }
-            }
             .onReceive(self.sceneObserver.$isUpdated){ isUpdated in
                 if isUpdated {
                     self.setWebviewSize(geometry: geometry)
                 }
             }
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    withAnimation{ self.marginBottom = bottom }
-                    self.setWebviewSize(geometry: geometry)
-                }
+                self.setWebviewSize(geometry: geometry)
             }
             .onAppear{
+                self.setWebviewSize(geometry: geometry)
                 guard let obj = self.pageObject  else { return }
                 if let data = obj.getParamValue(key: .data) as? PurchaseWebviewModel {
                     self.purchaseWebviewModel = data
@@ -209,7 +199,6 @@ struct PagePurchase: PageView {
     private func setWebviewSize(geometry:GeometryProxy){
         self.webViewHeight = geometry.size.height
             - Dimen.app.top
-    
             - self.sceneObserver.safeAreaTop
             - self.sceneObserver.safeAreaIgnoreKeyboardBottom
     }

@@ -12,6 +12,7 @@ struct PageWatchHabit: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -40,13 +41,8 @@ struct PageWatchHabit: PageView {
                             useTracking:true ){
                             BtvWebView( viewModel: self.webViewModel )
                                 .modifier(MatchHorizontal(height: self.webViewHeight))
-                                .onReceive(self.webViewModel.$screenHeight){height in
-                                    let min = geometry.size.height - self.sceneObserver.safeAreaTop - Dimen.app.top
-                                    self.webViewHeight = min //max( height, min)
-                                    ComponentLog.d("webViewHeight " + webViewHeight.description)
-                                }
+            
                         }
-                        .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)
                         .modifier(MatchParent())
     
                         .onReceive(self.infinityScrollModel.$event){evt in
@@ -79,10 +75,11 @@ struct PageWatchHabit: PageView {
                     case WebviewMethod.requestSTBViewInfo.rawValue :
                         self.checkHostDeviceStatus()
                         break
+                    
                     default : break
                     }
                     
-                default : do{}
+                default : break
                 }
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
@@ -124,6 +121,14 @@ struct PageWatchHabit: PageView {
                 let js = BtvWebView.callJsPrefix + WebviewRespond.responseSTBViewInfo.rawValue
                 self.webViewModel.request = .evaluateJavaScriptMethod(js, dic)
             }
+            .onReceive(self.sceneObserver.$isUpdated){ isUpdated in
+                if isUpdated {
+                    self.setWebviewSize(geometry: geometry)
+                }
+            }
+            .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
+                self.setWebviewSize(geometry: geometry)
+            }
             .onAppear{
                 
                 
@@ -134,6 +139,13 @@ struct PageWatchHabit: PageView {
         }//geo
     }//body
     
+    private func setWebviewSize(geometry:GeometryProxy){
+        self.webViewHeight = geometry.size.height
+            - Dimen.app.top
+            - self.sceneObserver.safeAreaTop
+            - self.sceneObserver.safeAreaIgnoreKeyboardBottom
+    }
+    
     @State var message:ResultMessage? = nil
     func checkHostDeviceStatus(){
         self.message = nil
@@ -141,6 +153,7 @@ struct PageWatchHabit: PageView {
             q: .init(id: self.tag, type: .sendMessage(NpsMessage().setMessage(type: .Refresh)), isOptional: true)
         )
     }
+    
 }
 
 #if DEBUG

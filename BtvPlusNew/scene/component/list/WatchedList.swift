@@ -20,7 +20,7 @@ class WatchedData:InfinityData{
     private(set) var isContinueWatch:Bool = false
     private(set) var progress:Float? = nil
     private(set) var synopsisData:SynopsisData? = nil
-
+    private(set) var restrictAgeIcon: String? = nil
     private(set) var srisId:String? = nil
     private(set) var actionLog:MenuNaviActionBodyItem? = nil
     private(set) var contentLog:MenuNaviContentsBodyItem? = nil
@@ -51,13 +51,14 @@ class WatchedData:InfinityData{
         )
         return self
     }
-    func setData(data:WatchItem, idx:Int = -1) -> WatchedData {
+    func setData(data:WatchItem, idx:Int = -1, isAll:Bool) -> WatchedData {
         if let rt = data.watch_rt?.toInt() {
             self.progress = Float(rt) / 100.0
             self.subTitle = rt.description + "% " + String.app.watch
-            self.isContinueWatch = MetvNetwork.isWatchCardRateIn(data: data)
+            self.isContinueWatch = MetvNetwork.isWatchCardRateIn(data: data, isAll:isAll)
         }
         watchLv = data.level?.toInt() ?? 0
+        restrictAgeIcon = Asset.age.getListIcon(age: data.level)
         isAdult = data.adult?.toBool() ?? false
         isLock = !SystemEnvironment.isImageLock ? false : isAdult
         title = data.title
@@ -111,8 +112,20 @@ struct WatchedList: PageComponent{
                 viewModel: self.viewModel,
                 axes: .vertical,
                 scrollType : .reload(isDragEnd:false),
-                header: InfoAlert(text: String.pageText.myWatchedInfo, horizontalMargin: self.horizontalMargin),
-                headerSize: Dimen.tab.lightExtra + Dimen.margin.tinyExtra,
+                header: InfoAlert(
+                    text: String.pageText.myWatchedInfo,
+                    horizontalMargin: self.horizontalMargin,
+                    actionIcon: Asset.gnbTop.zemkids,
+                    actionText: String.pageTitle.watchedKids,
+                    action: {
+                        self.pagePresenter.openPopup(
+                            PageKidsProvider.getPageObject( .kidsMy)
+                                .addParam(key: .subId, value: PageKidsMy.recentlyWatchCode)
+                               
+                        )
+                    }
+                ),
+                headerSize: Dimen.button.thinUltra + Dimen.margin.tinyExtra,
                 marginTop: Dimen.margin.regular ,
                 marginBottom: self.marginBottom,
                 spacing:0,
@@ -197,7 +210,16 @@ struct WatchedItem: PageView {
                     */
                 }
                 VStack(alignment: .leading, spacing:0){
-                    HStack(spacing:0){}
+                    HStack(spacing:0){
+                        Spacer()
+                        if let icon = data.restrictAgeIcon {
+                            Image(icon)
+                                .renderingMode(.original)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width:Dimen.icon.light, height: Dimen.icon.light)
+                        }
+                    }
                     Spacer().modifier(MatchParent())
                     if self.data.progress != nil {
                         Spacer().frame(

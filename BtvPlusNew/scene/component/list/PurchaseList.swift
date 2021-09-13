@@ -23,15 +23,17 @@ class PurchaseData:InfinityData,ObservableObject{
     private(set) var purchaseId:String? = nil
     private(set) var isAdult:Bool = false
     private(set) var isLock:Bool = false
+    private(set) var isPosson:Bool = false
     private(set) var watchLv:Int = 0
     private(set) var synopsisData:SynopsisData? = nil
     private(set) var synopsisType:SynopsisType = .title
     @Published fileprivate(set) var isEdit:Bool = false
     @Published fileprivate(set) var isSelected:Bool = false
     
-    func setData(data:PurchaseListItem, idx:Int = -1) -> PurchaseData {
+    func setData(data:PurchaseListItem, idx:Int = -1, type:PurchaseBlock.ListType, anotherStb:String) -> PurchaseData {
         watchLv = data.level?.toInt() ?? 0
         isAdult = data.adult?.toBool() ?? false
+        isPosson = type == .possession
         isLock = !SystemEnvironment.isImageLock ? false : isAdult
         originImage = data.poster
         image = ImagePath.thumbImagePath(filePath: data.poster, size: ListItem.purchase.size, isAdult:isAdult)
@@ -60,8 +62,10 @@ class PurchaseData:InfinityData,ObservableObject{
         epsdId = data.epsd_id
         synopsisType = SynopsisType(value: data.prod_type_cd)
         synopsisData = .init(
-            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
-            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
+            srisId: data.sris_id,
+            searchType: synopsisType == .package ? .sris : EuxpNetwork.SearchType.prd,
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil,
+            isPosson:self.isPosson, anotherStbId: self.isPosson ? anotherStb : nil)
         return self
     }
     

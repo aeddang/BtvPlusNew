@@ -41,7 +41,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
     }
     
     func updateUIViewController(_ uiViewController: UIViewController, context: UIViewControllerRepresentableContext<CustomAVPlayerController>) {
-        //ComponentLog.d("updateUIView status " + viewModel.status.rawValue , tag: self.tag)
+        //ComponentLog.d("updateUIView status " + viewModel.id , tag: self.tag)
         if viewModel.status != .update { return }
         guard let evt = viewModel.event else { return }
         guard let player = (uiViewController as? CustomPlayerController)?.playerScreenView else { return }
@@ -69,10 +69,10 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
         case .resume: break
         case .seekTime(let t, let play):
             initTime = t
-            isPlay = play
+            isPlay = play ?? true
         case .seekProgress(let pct, let play):
             let t = viewModel.duration * Double(pct)
-            isPlay = play
+            isPlay = play ?? true
             initTime = t
         default :
             self.update(player, evt: evt)
@@ -91,6 +91,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
         }
         viewModel.event = nil
     }
+    
     
     private func updateExcute(_ player:PlayerScreenView, evt:PlayerUIEvent) {
         switch evt {
@@ -168,13 +169,14 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
             if !player.pause() { viewModel.error = .illegalState(evt) }
         }
         
-        func onSeek(time:Double, play:Bool){
+        func onSeek(time:Double, play:Bool?){
             var st = min(time, (self.viewModel.limitedDuration ?? self.viewModel.duration) - 5 )
             st = max(st, 0)
+            viewModel.isSeekAfterPlay = play
             if !player.seek(st) { viewModel.error = .illegalState(evt) }
             self.onSeek(time: st)
             if self.viewModel.isRunning {return}
-            if play { onResume() }
+            //if play { onResume() }
             run(player)
         }
     }
@@ -187,8 +189,8 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
         var isCheckTimeControlStatus:Bool = false
         viewModel.isRunning = true
         
-       
-        job = Timer.publish(every: 0.1, on:.current, in: .common)
+        
+        job = Timer.publish(every: 1, on:.current, in: .common)
             .autoconnect()
             .sink{_ in
                 guard let currentPlayer = player.player else {
@@ -197,14 +199,21 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
                     return
                 }
                 let t = CMTimeGetSeconds(currentPlayer.currentTime())
-                if t >= viewModel.duration && viewModel.duration > 0 {
-                    if viewModel.playerStatus != .seek && viewModel.playerStatus != .pause {
-                        self.cancel(job, reason: "duration completed")
-                        player.pause()
-                        self.onTimeChange(viewModel.duration)
-                        self.onPaused()
-                        self.onCompleted()
-                        return
+                let d = viewModel.duration
+                if d > 0 {
+                    
+                    if viewModel.isReplay && t >= (d - 1) {
+                        self.viewModel.event = .seekTime(0, true)
+                    }
+                    if t >= d {
+                        if viewModel.playerStatus != .seek && viewModel.playerStatus != .pause {
+                            self.cancel(job, reason: "duration completed")
+                            player.pause()
+                            self.onTimeChange(viewModel.duration)
+                            self.onPaused()
+                            self.onCompleted()
+                            return
+                        }
                     }
                 }
                 //ComponentLog.d("Timer " + t.description , tag: self.tag)
@@ -364,7 +373,6 @@ extension MPVolumeView {
 struct CustomAVPlayerController {
     @ObservedObject var viewModel:PlayerModel
     @ObservedObject var pageObservable:PageObservable
-    @Binding var bindUpdate:Bool 
     func makeCoordinator() -> Coordinator { return Coordinator(viewModel:self.viewModel) }
     
     class Coordinator:NSObject, AVPlayerViewControllerDelegate, PageProtocol {

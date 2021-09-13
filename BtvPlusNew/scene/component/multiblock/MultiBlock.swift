@@ -144,66 +144,35 @@ struct MultiBlock:PageComponent {
                                             : TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange
                     ))
                 }
-                /*
-                if let datas = self.monthlyDatas  {
-                   MonthlyBlock(
-                        viewModel:self.monthlyViewModel ?? MonthlyBlockModel(),
-                        pageDragingModel:self.pageDragingModel,
-                        monthlyDatas:datas,
-                        allData: self.monthlyAllData,
-                        useTracking:self.useTracking
-                   ){ data in
-                        self.headerCount = 999
-                        self.action?(data)
-                   }
-                   .modifier(MatchHorizontal(height:  MonthlyBlock.height))
-                   .modifier(ListRowInset(spacing: Self.spacing))
-                }
-                */
+               
                 if !self.datas.isEmpty {
-                    //if self.viewModel.type == .btv {
-                        if let headerBlock = self.getHeaderBlock() {
-                            headerBlock
-                            if headerCount < self.datas.count {
-                                ForEach( self.datas[headerCount..<self.datas.count]) { data in
-                                    MultiBlockCell(
-                                        pageObservable:self.pageObservable,
-                                        pageDragingModel: self.pageDragingModel,
-                                        data: data ,
-                                        useTracking: self.useTracking)
-                                        .modifier(ListRowInset(spacing: Self.spacing))
-                                        .onAppear(){
-                                            if data.index == self.datas.last?.index {
-                                                self.infinityScrollModel.event = .bottom
-                                            }
+                    if let headerBlock = self.getHeaderBlock() {
+                        headerBlock
+                        if headerCount < self.datas.count {
+                            ForEach( self.datas[headerCount..<self.datas.count]) { data in
+                                MultiBlockCell(
+                                    pageObservable:self.pageObservable,
+                                    pageDragingModel: self.pageDragingModel,
+                                    data: data ,
+                                    useTracking: self.useTracking)
+                                    .modifier(ListRowInset(spacing: Self.spacing))
+                                    .onAppear(){
+                                        if data.index == self.datas.last?.index {
+                                            self.infinityScrollModel.event = .bottom
                                         }
-                                }
-                            }
-                            if self.useFooter {
-                                Footer(){
-                                    self.infinityScrollModel.uiEvent = .scrollMove(Self.footerIdx)
-                                }
-                                .modifier(ListRowInset(spacing: Dimen.margin.medium))
-                                Spacer().modifier(MatchHorizontal(height:Dimen.margin.heavy))
-                                    .id(Self.footerIdx)
-                            }
-                        }
-                    /*
-                    } else {
-                        ForEach( self.datas) { data in
-                            MultiBlockCell(
-                                pageObservable:self.pageObservable,
-                                pageDragingModel: self.pageDragingModel,
-                                data: data ,
-                                useTracking: self.useTracking)
-                                .modifier(ListRowInset(spacing: Self.spacing))
-                                .onAppear(){
-                                    if data.index == self.datas.last?.index {
-                                        self.infinityScrollModel.event = .bottom
                                     }
-                                }
+                            }
                         }
-                    }*/
+                        if self.useFooter {
+                            Footer(){
+                                self.infinityScrollModel.uiEvent = .scrollMove(Self.footerIdx)
+                            }
+                            .modifier(ListRowInset(spacing: Dimen.margin.medium))
+                            Spacer().modifier(MatchHorizontal(height:Dimen.margin.heavy))
+                                .id(Self.footerIdx)
+                        }
+                    }
+                    
                 }
             }
             

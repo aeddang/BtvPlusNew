@@ -38,7 +38,7 @@ struct EmptySearchResult: PageComponent{
                 marginHorizontal : 0,
                 spacing:0,
                 isRecycle: true,
-                useTracking:false
+                useTracking:true
             ){
                 Text(String.pageText.searchEmptyTitle)
                     .modifier(BlockTitle())

@@ -11,7 +11,6 @@ extension PageKidsMy {
     static let recentlyWatchCode:String = "514"
 }
 
-
 struct PageKidsMy: PageView {
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
@@ -40,22 +39,24 @@ struct PageKidsMy: PageView {
                         title:String.kidsTitle.kidsMy,
                         isBack: true,
                         isSetting: true)
-                    
-                    if self.isPairing {
-                        PairingKidsView(
-                            pageObservable: self.pageObservable,
-                            pageDragingModel: self.pageDragingModel,
-                            tabNavigationModel: self.tabNavigationModel,
-                            infinityScrollModel: self.infinityScrollModel,
-                            diagnosticReportModel: self.diagnosticReportModel,
-                            monthlyReportModel: self.monthlyReportModel)
+                    if self.isDataReady {
+                        if self.isPairing {
+                            PairingKidsView(
+                                pageObservable: self.pageObservable,
+                                pageDragingModel: self.pageDragingModel,
+                                tabNavigationModel: self.tabNavigationModel,
+                                infinityScrollModel: self.infinityScrollModel,
+                                diagnosticReportModel: self.diagnosticReportModel,
+                                monthlyReportModel: self.monthlyReportModel)
+                        } else {
+                            NeedPairingInfo(
+                                title: String.kidsText.kidsMyNeedPairing,
+                                text: String.kidsText.kidsMyNeedPairingSub)
+                                .modifier(MatchParent())
+                        }
                     } else {
-                        NeedPairingInfo(
-                            title: String.kidsText.kidsMyNeedPairing,
-                            text: String.kidsText.kidsMyNeedPairingSub)
-                            .modifier(MatchParent())
+                        Spacer()
                     }
-                    
                 }
                 .background(
                     Image(AssetKids.image.homeBg)
@@ -114,11 +115,44 @@ struct PageKidsMy: PageView {
                     
                 }
             }
+            .onReceive(dataProvider.$result) { res in
+                guard let res = res else { return }
+                if res.id != self.tag { return }
+                switch res.type {
+                case .getGnbKids :
+                    guard let data = res.data as? GnbBlock  else {
+                        self.error()
+                        return
+                    }
+                    self.dataProvider.bands.setDataKids(data)
+                    self.isDataReady = true
+                default : break
+                }
+            }
+            .onReceive(dataProvider.$error) { err in
+                guard let err = err else { return }
+                if err.id != self.tag { return }
+                switch err.type {
+                case .getGnbKids : self.error()
+                default : break
+                }
+            }
             .onAppear{
-                
+                if self.dataProvider.bands.kidsGnbModel.getMyDatas() == nil {
+                    self.dataProvider.requestData(q: .init(id:self.tag, type: .getGnbKids))
+                } else {
+                    self.isDataReady = true
+                }
             }
         }//geo
     }//body
+
+    @State var isDataReady:Bool = false
+    private func error() {
+        self.appSceneObserver.alert = .alert(nil,  String.alert.kidsDisable, String.alert.kidsDisableTip){
+            self.pagePresenter.goBack()
+        }
+    }
     
     private func registKid(){
         if self.pairing.kid != nil {return}

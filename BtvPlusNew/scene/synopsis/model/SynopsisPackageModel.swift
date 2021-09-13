@@ -27,7 +27,7 @@ class SynopsisPackageModel : PageProtocol {
         self.type = type
     }
     
-    func setData(data:GatewaySynopsis) -> SynopsisPackageModel {
+    func setData(data:GatewaySynopsis, isPosson:Bool, anotherStb:String?) -> SynopsisPackageModel {
         guard let contents = data.package else { return self}
         self.purchaseWebviewModel = PurchaseWebviewModel().setParam(data: data) 
         self.srisId = contents.sris_id
@@ -50,7 +50,9 @@ class SynopsisPackageModel : PageProtocol {
             self.distStsCd = dist
         }
         self.posters = zip(0...self.packages.count, self.packages).map{ idx, d in
-            PosterData(pageType: self.type).setData(data: d, prdPrcId: self.prdPrcId ?? "", idx: idx)
+            PosterData(pageType: self.type).setData(data: d, prdPrcId: self.prdPrcId ?? "",
+                                                    isPosson: isPosson, anotherStb : anotherStb,
+                                                    idx: idx)
         }
         return self
     }

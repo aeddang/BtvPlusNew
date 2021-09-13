@@ -17,7 +17,7 @@ struct SearchResult: PageComponent{
     var total:Int = 0
     var keyword:String? = nil
     var datas:[BlockData] = []
-    var useTracking:Bool = false
+    var useTracking:Bool = true
     var body: some View {
         VStack(alignment: .leading, spacing:0){
             if let keyword = self.keyword {

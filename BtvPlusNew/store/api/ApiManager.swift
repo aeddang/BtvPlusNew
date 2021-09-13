@@ -236,16 +236,16 @@ class ApiManager :PageProtocol, ObservableObject{
             menuId: menuId, page: page, pageCnt: count, version: nil,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
-        case .getGatewaySynopsis(let data) : self.euxp.getGatewaySynopsis(
-            data:data,
+        case .getGatewaySynopsis(let data, let anotherStb) : self.euxp.getGatewaySynopsis(
+            data:data, anotherStbId: anotherStb,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
-        case .getSynopsis(let data) : self.euxp.getSynopsis(
-            data:data,
+        case .getSynopsis(let data, let anotherStb) : self.euxp.getSynopsis(
+            data:data, anotherStbId: anotherStb,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
-        case .getRelationContents(let data) : self.euxp.getRelationContents(
-            data:data,
+        case .getRelationContents(let data, let anotherStb) : self.euxp.getRelationContents(
+            data:data, anotherStbId: anotherStb,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
         case .getInsideInfo(let epsdId) : self.euxp.getInsideInfo(
@@ -305,14 +305,7 @@ class ApiManager :PageProtocol, ObservableObject{
             data: data,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
-        case .getDirectView(let data): self.metv.getDirectView(
-            data: data,
-            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
-            error:error)
-        case .getPackageDirectView(let data, let isPpm, let pidList): self.metv.getPackageDirectView(
-            data: data, isPpm:isPpm, pidList: pidList,
-            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
-            error:error)
+        
         case .getPossessionPurchase(let stbId ,let page, let count) : self.metv.getPossessionPurchase(
             stbId:stbId, page: page, pageCnt: count,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
@@ -409,6 +402,14 @@ class ApiManager :PageProtocol, ObservableObject{
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
         //SCS
+        case .getDirectView(let data, let anotherStb): self.scs.getDirectView(
+            data: data, anotherStbId: anotherStb,
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
+        case .getPackageDirectView(let data, let isPpm, let pidList, let anotherStb): self.scs.getPackageDirectView(
+            data: data, isPpm:isPpm, pidList: pidList, anotherStbId: anotherStb,
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
         case .getPreview(let epsdRsluId, let device) : self.scs.getPreview(
             epsdRsluId: epsdRsluId, hostDevice: device,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
@@ -417,8 +418,8 @@ class ApiManager :PageProtocol, ObservableObject{
             epsdRsluId: epsdRsluId, isPreview: isPreview,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
-        case .getPlay(let epsdRsluId, let device) : self.scs.getPlay(
-            epsdRsluId: epsdRsluId, hostDevice: device,
+        case .getPlay(let epsdRsluId, let anotherStb) : self.scs.getPlay(
+            epsdRsluId: epsdRsluId, anotherStbId: anotherStb, 
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
         case .confirmPassword(let pw, let device, let pwType) : self.scs.confirmPassword(
@@ -717,10 +718,10 @@ class ApiManager :PageProtocol, ObservableObject{
             NpsNetwork.unpairing(res: result)
         case .getDevicePairingStatus :
             NpsNetwork.checkPairing(res: result) 
-        default: do{}
+        default: break
         }
-        
-        if prevHost != NpsNetwork.hostDeviceId{
+        let currentHost = NpsNetwork.hostDeviceId
+        if prevHost != currentHost{
             self.event = .pairingHostChanged
         }
         if let trans = transition[result.id] {

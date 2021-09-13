@@ -109,7 +109,7 @@ class VideoData:InfinityData{
         srisId = data.sris_id
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         synopsisData = .init(
-            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris,
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: data.prd_prc_id ,kidZone:data.kids_yn)
         
         return self
@@ -133,7 +133,7 @@ class VideoData:InfinityData{
         epsdId = data.epsd_id
         srisId = data.sris_id
         synopsisData = .init(
-            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris,
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: prdPrcId , kidZone:nil)
         
         return self
@@ -153,7 +153,7 @@ class VideoData:InfinityData{
         srisId = data.sris_id
         
         synopsisData = .init(
-            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris,
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:data.yn_kzone)
         return self
     }
@@ -673,13 +673,11 @@ struct VideoItemBodyKids: PageView {
                 }
                 .padding(.horizontal, DimenKids.margin.thin)
                 .modifier(MatchParent())
-                
             }
         }
         .frame(
             width: self.data.type.size.width,
             height: self.data.type.size.height)
-        
     }
     
     

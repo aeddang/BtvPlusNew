@@ -24,7 +24,6 @@ class SynopsisModel : PageProtocol {
     private(set) var srisTypCd:SrisTypCd = .none
     private(set) var isSrisCompleted:Bool = false
     private(set) var isGstn = false
-    private(set) var isPossonVODMode = false
     private(set) var isNScreen = false
     
     private(set) var isCombineProduct = false
@@ -421,9 +420,10 @@ class SynopsisModel : PageProtocol {
         }
         
         //0804 지워야할지 확인
+        /*
         if isPossonVODMode {
             tempUsableItems = tempUsableItems.filter({ $0.isPossn && $0.epsdId == self.epsdId })
-        }
+        }*/
         
         var tempDic = Dictionary(grouping: tempUsableItems) { $0.epsdId }
         //"자막/더빙/xx더빙 최신순 필터링")
@@ -628,12 +628,12 @@ class SynopsisModel : PageProtocol {
             SynopsisModel.singleTrstrsPidList.contains($0.prdPrcId)
         })
     }
-    
+    /*
     private var isOnlyCommerce: Bool {
         srisTypCd == .season
             && purchaseModels.filter({ $0.sale_tgt_fg_yn == "Y" })
             .contains(where: { !($0.poc_det_typ_cd_list?.contains("102") ?? false) })
-    }
+    }*/
     
     
     var isTrstrs: Bool {

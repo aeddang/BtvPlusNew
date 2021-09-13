@@ -131,10 +131,12 @@ struct PageCategory: PageView {
         }
         
         let openData:CateData? = self.resetSize(openId: openId)
+        self.openId = nil
         guard let open = openData else { return }
         DispatchQueue.main.async{
             self.openPopup(data: open, openId: openId)
         }
+        
     }
     
     @discardableResult
@@ -154,11 +156,16 @@ struct PageCategory: PageView {
         var cells:[CateData] = []
         var total = cateDatas.count
         var openData:CateData? = nil
-        let findIds = openId?.split(separator: "|")
+        
+        let findIds = openId?.contains("/") == true
+            ? openId?.split(separator: "/")
+            :  openId?.split(separator: "|")
         cateDatas.forEach{ d in
             d.isRowFirst = false
             if let menuId = d.menuId, let fids = findIds{
-                if fids.first(where: {$0 == menuId}) != nil { openData = d }
+                if fids.first(where: {$0 == menuId}) != nil {
+                    openData = d
+                }
             }
             switch d.subType{
             case .tip :

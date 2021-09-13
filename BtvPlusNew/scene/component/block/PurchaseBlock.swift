@@ -267,7 +267,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
         case .possession:
             self.viewModel.request = .init(
                 id: self.tag,
-                type: .getPossessionPurchase( self.setup.possession , self.infinityScrollModel.page + 1 )
+                type: .getPossessionPurchase( anotherStbId:self.setup.possession , self.infinityScrollModel.page + 1 )
             )
         }
         
@@ -316,6 +316,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
     }
     
     private func setDatas(datas:[PurchaseListItem]?) {
+        
         guard let datas = datas else {
             withAnimation{ self.isError = false }
             return
@@ -323,8 +324,9 @@ struct PurchaseBlock: PageComponent, Identifiable{
         if !datas.isEmpty {
             let start = self.datas.count
             let end = start + datas.count
+            let anotherStb = self.setup.possession 
             let loadedDatas:[PurchaseData] = zip(start...end, datas).map { idx, d in
-                return PurchaseData().setData(data: d, idx: idx)
+                return PurchaseData().setData(data: d, idx: idx, type: self.type, anotherStb:anotherStb)
             }
             self.datas.append(contentsOf: loadedDatas)
         }

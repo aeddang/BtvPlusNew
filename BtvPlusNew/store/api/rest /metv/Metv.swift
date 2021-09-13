@@ -16,6 +16,8 @@ struct MetvNetwork : Network{
 extension MetvNetwork{
     static let RESPONSE_FORMET = "json"
     static let SVC_CODE = "BTV"
+    static let SVC_SENIOR = "SENIOR"
+  
     static let VERSION = "5.3.0"
     static let GROUP_VOD = "VOD"
     static let PAGE_COUNT = 30
@@ -37,7 +39,9 @@ extension MetvNetwork{
         }
     }
     
-    static func isWatchCardRateIn(data:WatchItem) -> Bool {
+    
+    static func isWatchCardRateIn(data:WatchItem, isAll:Bool = false) -> Bool {
+        
         /* [러닝 타임별 기준]
             •    러닝 타임 5분 미만 : 러닝 타임의 15% 이상 시청 시 시청 내역 표시
             •    러닝 타임 5-30분 미만 : 러닝 타임의 10% 이상 시청 시 시청 내역 표시
@@ -46,6 +50,10 @@ extension MetvNetwork{
             •    단편 : 90% 이상 시청 시에는 시청 내역에서 제외
             •    시즌 : 공통 기준만 고려하며, 100% 시청 시에도 시청 내역에서 제외하지 않음 */
         let watch: Int = Int(data.watch_rt ?? "0") ?? 0
+        if isAll {
+            return watch >= 1 ? true : false
+        }
+        
         let limit = Int(round(Self.maxWatchedProgress * 100))
         let runTime: Int = (Int(data.running_time ?? "0") ?? 0) / 60
         let runningTimeCheck: Bool = (runTime < 5 && watch >= 15) ||
@@ -234,7 +242,7 @@ class Metv: Rest{
         params["page_no"] = page?.description ?? "1"
         params["entry_no"] = pageCnt?.description ?? "9999"
         params["hash_id"] = ApiUtil.getHashId(stbId)
-        params["svc_code"] = MetvNetwork.SVC_CODE
+        params["svc_code"] = MetvNetwork.SVC_SENIOR
         params["yn_ppm"] = isPpm ? "Y" : "N"
         fetch(route: MetvWatch(query: params), completion: completion, error:error)
     }
@@ -344,58 +352,7 @@ class Metv: Rest{
         fetch(route: MetvDelBookMark(headers: headers, body: params), completion: completion, error:error)
     }
     
-    /** 0804 -> SCS -002 synopsisType 2번 사용 안함 빼기
-    * 바로보기 (IF-ME-061)
-    * @param srisId 최근본회차 시청정보, 즐겨찾기 확인  + 컨텐츠의 sris_id + 필수
-    * @param synopsisType 시놉시스 확인 식별자 값 설명 - 1 : 단편시놉 진입시  - 2 : 시즌시놉 회차이동시 - 3. : 시즌시놉 최초진입 또는 시즌변경시
-    * @param ppvProducts 단편 또는 시즌 회차별 바로보기 여부 확인시의 요청 상품리스트
-    * @param ppsProducts 시즌시놉의 바로보기 여부 확인 요청 상품리스트
-    */
-    func getDirectView(
-        data:SynopsisModel,
-        completion: @escaping (DirectView) -> Void, error: ((_ e:Error) -> Void)? = nil){
-
-        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
-        var params = [String:Any]()
-        params["response_format"] = MetvNetwork.RESPONSE_FORMET
-        params["ver"] = MetvNetwork.VERSION
-        params["IF"] = "IF-ME-061"
-        params["stb_id"] = stbId
-        params["hash_id"] = ApiUtil.getHashId(stbId)
-        params["sris_id"] = data.srisId ?? ""
-        params["synopsis_type"] = data.synopsisType.code
-        params["omni_ppm_info_flag"] = data.hasOmnipack ? "Y" : "N"
-        //params["muser_num"] = ""
-        //params["version"] = ""
-        if !data.ppsProducts.isEmpty {
-            params["pps_products"] = data.ppsProducts
-        }
-        params["ppv_products"] = data.ppvProducts
-        fetch(route: MetvDirectview( body: params), completion: completion, error:error)
-    }
     
-    /** 0804 -> SCS -002
-    * 게이트웨이시놉 바로보기 (IF-ME-062)
-    * @param reqPidList 바로보기 확인용 상품ID 리스트 집합
-    * @param isPPM 월정액 전용 게이트웨이 시놉 바로보기 확인여부 체크(Y/N)
-    */
-    func getPackageDirectView(
-        data:SynopsisPackageModel? = nil, isPpm:Bool = false , pidList:[String]? = nil,
-        completion: @escaping (DirectPackageView) -> Void, error: ((_ e:Error) -> Void)? = nil){
-        
-        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
-        
-        var params = [String:Any]()
-        params["response_format"] = MetvNetwork.RESPONSE_FORMET
-        params["ver"] = MetvNetwork.VERSION
-        params["IF"] = "IF-ME-062"
-        
-        params["stb_id"] = stbId
-        params["hash_id"] = ApiUtil.getHashId(stbId)
-        params["req_pidList"] = pidList ?? [ data?.prdPrcId ?? "" ]
-        params["yn_ppm"] = isPpm ? "Y": "N"
-        fetch(route: MetvPackageDirectview( body: params), completion: completion, error:error)
-    }
     
     /**
     * 해지고객 소장용 구매내역 조회 (IF-ME-932)
@@ -418,7 +375,8 @@ class Metv: Rest{
         
         var overrideHeaders = [String:String]()
         overrideHeaders["Client_ID"] = stbId
-        fetch(route: MetvPossessionPurchase(query: params, overrideHeaders:overrideHeaders), completion: completion, error:error)
+        fetch(route: MetvPossessionPurchase(query: params,
+                                            overrideHeaders:overrideHeaders), completion: completion, error:error)
     }
     /**
     * STB 닉네임 리스트 조회 (IF-ME-051)
@@ -551,17 +509,7 @@ struct MetvDelBookMark:NetworkRoute{
    var body: [String : Any]? = nil
 }
 
-struct MetvDirectview:NetworkRoute{
-   var method: HTTPMethod = .post
-   var path: String = "/metv/v5/datamart/directview/mobilebtv"
-   var body: [String : Any]? = nil
-}
 
-struct MetvPackageDirectview:NetworkRoute{
-   var method: HTTPMethod = .post
-   var path: String = "/metv/v5/datamart/directviewgateway/mobilebtv"
-   var body: [String : Any]? = nil
-}
 
 struct MetvPossessionPurchase:NetworkRoute{
    var method: HTTPMethod = .get

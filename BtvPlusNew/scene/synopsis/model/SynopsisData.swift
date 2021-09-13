@@ -45,7 +45,8 @@ struct SynopsisData{
     var prdPrcId:String? = nil
     var kidZone:String? = nil
     var isRecent:Bool? = nil
-    //watchLog
+    var isPosson:Bool = false
+    var anotherStbId:String? = nil
     var pId:String? = nil
     var cpId:String? = nil
     var contentId:String? = nil
@@ -55,7 +56,7 @@ struct SynopsisData{
     var progressTime:Double? = nil
     //naviLog
     var synopType:SynopsisType = SynopsisType.none
-   
+    
 }
 
 struct SynopsisPlayData{

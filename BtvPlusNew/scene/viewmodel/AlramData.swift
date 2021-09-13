@@ -138,7 +138,8 @@ class AlramData:InfinityData,ObservableObject{
     private(set) var text: String? = nil
     private(set) var date:String? = nil
     private(set) var remain:String? = nil
-    private(set) var image: String? = nil
+    private(set) var images:[String]? = nil
+    private(set) var icon: String? = nil
     private(set) var location: String? = nil
     private(set) var limitTime: String? = nil
     private(set) var isCoreData: Bool = false
@@ -208,36 +209,46 @@ class AlramData:InfinityData,ObservableObject{
     }
     
     private func setUserData(_ userData:[String: Any]){
-        if let value = userData["notiType"] as? String {
+        guard let userInfo = userData["user_data"] as? [String: Any] else {return}
+        
+        if let value = userInfo ["notiType"] as? String {
             self.type = AlramType.getType(value.uppercased())
         }
        
-        if let value = userData["msgType"] as? String {
+        if let value = userInfo ["msgType"] as? String {
             self.msgType = AlramMsgType.getType(value)
         }
         
-        if let value = userData["landingPath"] as? String {
+        if let value = userInfo ["landingPath"] as? String {
             self.landingType = AlramLandingType.getType(value.uppercased())
         }
         
-        if let value = userData["imgType"] as? String {
+        if let value = userInfo ["imgType"] as? String {
             self.imageType = AlramImageType.getType(value)
         }
         
-        if let value = userData["posterUrl "] as? String {
-            self.image = value
-        } else if let value = userData["iconUrl"] as? String {
-            self.image = value
+        if let value = userInfo ["posterUrl"] as? String {
+            if !value.isEmpty {
+                self.images = value == "PIMG"
+                    ? nil
+                    : value.split(separator: ",").map{String($0)}
+            }
         }
         
-        if let value = userData["limitTime"] as? String {
+        if let value = userInfo ["iconUrl"] as? String {
+            if !value.isEmpty {
+                self.icon = value == "IIMG" ? nil : value
+            }
+        }
+        
+        if let value = userInfo ["limitTime"] as? String {
             self.limitTime = value
         }
-        if let value = userData["title"] as? String {
+        if let value = userInfo ["title"] as? String {
             self.moveTitle = value
         }
         
-        if let location = userData["destPos"] as? String {
+        if let location = userInfo ["destPos"] as? String {
             self.location = location.replace("\n", with: "")
             if let components = URLComponents(string: self.location!) {
                 // Coupon 만료 알림|0|0|0|4|http://58.123.205.55/mybtvCouponPoint.do?type=coupon&state=E

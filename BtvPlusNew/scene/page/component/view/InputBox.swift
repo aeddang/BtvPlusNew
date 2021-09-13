@@ -108,7 +108,14 @@ struct InputBox: PageComponent {
                     .modifier(MatchHorizontal(height: Dimen.tab.light))
                     .background(Color.app.blueLight)
                     .padding(.top, Dimen.margin.thin)
-                    
+                    if let msg = self.msg{
+                        Text(msg)
+                            .modifier(MediumTextStyle(
+                                        size: Font.size.tiny,color: Color.brand.primary))
+                            .multilineTextAlignment(.center)
+                            .padding(.top, Dimen.margin.thin)
+                            
+                    }
                     if let tip = self.tip{
                         Text(tip)
                             .modifier(MediumTextStyle(
@@ -118,15 +125,6 @@ struct InputBox: PageComponent {
                             
                             
                     }
-                    if let msg = self.msg{
-                        Text(msg)
-                            .modifier(MediumTextStyle(
-                                        size: Font.size.tiny,color: Color.brand.primary))
-                            .multilineTextAlignment(.center)
-                            .padding(.top, Dimen.margin.thin)
-                            
-                    }
-                    
                 }
                 .padding(.horizontal, Dimen.margin.regular)
                 HStack(spacing:0){

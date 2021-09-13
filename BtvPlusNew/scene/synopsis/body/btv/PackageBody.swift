@@ -19,6 +19,7 @@ struct PackageBody: PageComponent{
     
     var synopsisPackageModel:SynopsisPackageModel
     var isPairing:Bool? = nil
+    var isPosson:Bool 
     var contentID:String? = nil
     var episodeViewerData:EpisodeViewerData? = nil
     var summaryViewerData:SummaryViewerData? = nil

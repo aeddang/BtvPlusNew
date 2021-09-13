@@ -8,7 +8,7 @@
 import Foundation
 
 enum NpsCtrlType:String{
-    case SeamlessLive, SeamlessVod, SendMsg,
+    case SeamlessLive, SeamlessVod, SendMsg, LimitTV,
          Refresh, PlayCtrl, PowerCtrl,
          VOLUp, VOLDown,
          CHUp, CHDown,

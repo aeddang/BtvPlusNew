@@ -35,7 +35,6 @@ struct PageKidsConfirmNumber: PageView {
     var body: some View {
         ZStack{
             InputNumberBox(
-            
                 isInit:self.isFocus,
                 title: self.title,
                 text: self.text,

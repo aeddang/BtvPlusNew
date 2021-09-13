@@ -79,7 +79,7 @@ class VoiceRecognition:  NSObject, ObservableObject, RecognitionListener , PageP
     }
     func onSpeechEnd() {
         ComponentLog.d("onSpeechEnd", tag: self.tag)
-        self.status = .ready
+        self.status = .analysis
     }
     func onResult() {
         ComponentLog.d("onResult", tag: self.tag)
@@ -91,6 +91,7 @@ class VoiceRecognition:  NSObject, ObservableObject, RecognitionListener , PageP
         } else {
             ComponentLog.d("onResult none", tag: self.tag)
         }
+        //self.status = .ready
     }
     func onRecognitionError(_ error: Int32) {
         self.event = .error
@@ -104,6 +105,7 @@ class VoiceRecognition:  NSObject, ObservableObject, RecognitionListener , PageP
             self.onError()
             return
         }
+        //self.status = .ready
     }
     func onCancel() {
         if self.status == .initate {return}

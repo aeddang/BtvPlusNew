@@ -115,7 +115,7 @@ struct BtvPlayer: PageComponent{
                             .onEnded({ value in
                                 switch self.dragGestureType {
                                 case .progress:
-                                    self.viewModel.event = .seekMove(self.viewModel.seeking, false)
+                                    self.viewModel.event = .seekMove(self.viewModel.seeking)
                                     self.viewModel.seeking = 0
                                 case .playList:
                                     self.onPlaylistChangeCompleted()

@@ -202,14 +202,17 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         
+        
         let userInfo = notification.request.content.userInfo
         AppDelegate.appObserver.handleApns(userInfo)
         PageLog.d("userNotificationCenter[] " + userInfo.debugDescription, tag: self.tag)
+        /*
         DispatchQueue.main.async {
             if let badgeNo = notification.request.content.badge as? Int {
                 UIApplication.shared.applicationIconBadgeNumber = badgeNo
             }
         }
+         */
         completionHandler([.alert, .sound])
     }
     

@@ -36,6 +36,7 @@ struct BtvWebView: PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var repository:Repository
+    @EnvironmentObject var setup:Setup
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var viewModel:WebViewModel = WebViewModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -44,11 +45,14 @@ struct BtvWebView: PageComponent {
     var useNativeScroll:Bool = false
     var scriptMessageHandler :WKScriptMessageHandler? = nil
     var scriptMessageHandlerName : String = ""
+    var viewHeight:CGFloat? = nil
     var uiDelegate:WKUIDelegate? = nil
     
     var body: some View {
         ZStack{
-            BtvCustomWebView( viewModel: self.viewModel , useNativeScroll:self.useNativeScroll)
+            BtvCustomWebView( viewModel: self.viewModel ,
+                              useNativeScroll:self.useNativeScroll,
+                              viewHeight:self.viewHeight)
                 .opacity(self.isLoading ? 0 : 1)
             
             ActivityIndicator( isAnimating: self.$isLoading,
@@ -93,6 +97,7 @@ struct BtvWebView: PageComponent {
             if self.pairing.status != .pairing {return}
             self.dataProvider.requestData(q: .init(id:self.tag, type: .getRecommendHistory(callback:callback)))
             return
+        
         case WebviewMethod.bpn_reqSendEventpageLog.rawValue:
             guard let log = jsonParams else { return }
            
@@ -128,6 +133,7 @@ struct BtvWebView: PageComponent {
         self.callFuncionEventAttendance(fn: fn, jsonParams: jsonParams, callback: callback)
         self.callFuncionEventMonthlyPoint(fn: fn, jsonParams: jsonParams, callback: callback)
         self.callFuncionEventCommerce(fn: fn, jsonParams: jsonParams, callback: callback)
+        self.callFuncionRemocon(fn: fn, jsonParams: jsonParams, callback: callback)
     }
     
     func respondCallFuncion(res:ApiResultResponds){
@@ -147,12 +153,13 @@ struct BtvWebView: PageComponent {
             let code = result?.header?.result ?? ""
             let jsonString = code == ApiCode.success ? "0" : code
             self.viewModel.request = .evaluateJavaScript(callback + "(\'" + jsonString + "\')")
-            
+        
         default: break
         }
         self.respondCallFuncionEventAttendance(res: res)
         self.respondCallFuncionEventMonthlyPoint(res: res)
         self.respondCallFuncionEventCommerce(res: res)
+        self.respondCallFuncionRemocon(res: res)
         
     }
     
@@ -160,6 +167,7 @@ struct BtvWebView: PageComponent {
         self.errorCallFuncionEventAttendance(err:err)
         self.errorCallFuncionEventMonthlyPoint(err:err)
         self.errorCallFuncionEventCommerce(err:err)
+        self.errorCallFuncionRemocon(err:err)
     }
 }
 

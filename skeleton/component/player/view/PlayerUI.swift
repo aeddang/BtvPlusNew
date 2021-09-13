@@ -50,7 +50,7 @@ struct PlayerUI: PageComponent {
                     .background(Color.transparent.clearUi)
                     .onTapGesture(count: 2, perform: {
                         if self.viewModel.isLock { return }
-                        self.viewModel.event = .seekBackword(self.viewModel.getSeekBackwordAmount(), false)
+                        self.viewModel.event = .seekBackword(self.viewModel.getSeekBackwordAmount())
                     })
                     .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
                         self.viewModel.playerUiStatus = .hidden
@@ -60,7 +60,7 @@ struct PlayerUI: PageComponent {
                     .background(Color.transparent.clearUi)
                     .onTapGesture(count: 2, perform: {
                         if self.viewModel.isLock { return }
-                        self.viewModel.event = .seekForward(self.viewModel.getSeekForwardAmount(), false)
+                        self.viewModel.event = .seekForward(self.viewModel.getSeekForwardAmount())
                     })
                     .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
                         self.viewModel.playerUiStatus = .hidden

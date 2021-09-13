@@ -11,5 +11,5 @@ enum VoiceEvent{
 }
 
 enum VoiceStatus:String{
-    case initate, ready, searching
+    case initate, ready, searching, analysis
 }

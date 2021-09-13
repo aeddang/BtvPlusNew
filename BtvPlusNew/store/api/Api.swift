@@ -54,10 +54,10 @@ enum ApiType{
          getCWGridKids(Kid? , String?, EuxpNetwork.SortType?),
          getGridEvent(String?, EuxpNetwork.SortType? = nil, Int? = nil, Int? = nil),
          getGridPreview(String?, Int? = nil, Int? = nil),
-         getGatewaySynopsis(SynopsisData),
-         getSynopsis(SynopsisData),
+         getGatewaySynopsis(SynopsisData, anotherStbId:String? = nil),
+         getSynopsis(SynopsisData, anotherStbId:String? = nil),
          getInsideInfo(epsdId:String),
-         getRelationContents(SynopsisRelationData),
+         getRelationContents(SynopsisRelationData, anotherStbId:String? = nil),
          getEventBanner(String?, EuxpNetwork.BannerType = .page)
     
     
@@ -74,13 +74,23 @@ enum ApiType{
          getBookMark(Int? = nil , Int? = nil),
          postBookMark(SynopsisData),
          deleteBookMark(SynopsisData),
-         getDirectView(SynopsisModel),
-         getPackageDirectView(SynopsisPackageModel? = nil, isPpm:Bool = false, pidList:[String]? = nil),
-         getPossessionPurchase(String, Int? = nil , Int? = nil),
+         
+         getPossessionPurchase(anotherStbId:String, Int? = nil , Int? = nil),
          getHostNickname(isAll:Bool = false, anotherStbId:String? = nil)
     //METV event
     case postAttendance(pcid:String,callback:String? = nil),
          getAttendance(pcid:String,callback:String? = nil)
+    
+    //SCS
+    case getDirectView(SynopsisModel,anotherStbId:String? = nil),
+         getPackageDirectView(SynopsisPackageModel? = nil, isPpm:Bool = false,
+                              pidList:[String]? = nil,anotherStbId:String? = nil),
+         getPreview(String?, HostDevice?),
+         getPreplay(String?, Bool?),
+         getPlay(String?, anotherStbId:String? = nil),
+         confirmPassword(String?, HostDevice?, ScsNetwork.ConfirmType),
+         connectTerminateStb(ScsNetwork.ConnectType, String?),
+         getStbInfo(HostDevice?)
     
     //NPS
     case registHello,
@@ -106,13 +116,7 @@ enum ApiType{
     case getLike(String?, HostDevice?),
          registLike(Bool?, String?, HostDevice?)
     
-    //SCS
-    case getPreview(String?, HostDevice?),
-         getPreplay(String?, Bool?),
-         getPlay(String?, HostDevice?),
-         confirmPassword(String?, HostDevice?, ScsNetwork.ConfirmType),
-         connectTerminateStb(ScsNetwork.ConnectType, String?),
-         getStbInfo(HostDevice?)
+    
     //PSS
     case getPairingUserInfo(String?, String? = nil),
          getPairingUserInfoByPackageID(String?)

@@ -113,7 +113,7 @@ struct PageSceneModel: PageModel {
         switch pageObject.pageID {
         case .synopsis :
             return SystemEnvironment.isTablet ? sceneOrientation == .portrait : true
-        case .home, .category, .multiBlock, .search, .my, .webviewList,
+        case .home, .category, .multiBlock, .search, .my, .webviewList, .watchedList,
              .categoryList, .previewList, .setup, .synopsisPackage:
             return true
         default :

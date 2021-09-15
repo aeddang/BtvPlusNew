@@ -28,9 +28,18 @@ class PlayData:InfinityData,ObservableObject{
     private(set) var ppmIcon: String? = nil
     private(set) var notificationData: NotificationData? = nil
     private(set) var notiType: String? = nil
+    private(set) var isCompleted:Bool = false
     var playTime:Double = 0
     @Published private(set) var isUpdated: Bool = false
         {didSet{ if isUpdated { isUpdated = false} }}
+    
+    func completed(){
+        self.isCompleted = true
+        self.playTime = 0
+    }
+    func reset(){
+        self.isCompleted = false
+    }
     
     func setData(data:PreviewContentsItem,idx:Int = -1) -> PlayData {
         title = data.title
@@ -138,6 +147,7 @@ extension PlayItem{
         }
         return (width * 9 / 16) + self.bottomSize
     }
+    
 }
 
 struct PlayItem: PageView {
@@ -149,13 +159,11 @@ struct PlayItem: PageView {
     @ObservedObject var pageObservable:PageObservable
     @ObservedObject var playerModel: BtvPlayerModel
     @ObservedObject var viewModel:PlayBlockModel
-    @ObservedObject var prerollModel: PrerollModel
+   
     var data:PlayData
     var range:CGFloat = 0
-    var onFullScreen:()->Void
     var onPlay:(PlayData)->Void
     @State var isSelected:Bool = false
-    @State var isPlayer:Bool = false
     @State var isPlay:Bool = false
     @State var sceneOrientation: SceneOrientation = .portrait
     var body: some View {
@@ -165,13 +173,9 @@ struct PlayItem: PageView {
                     PlayItemScreen(
                         pageObservable: self.pageObservable,
                         playerModel : self.playerModel,
-                        prerollModel: self.prerollModel,
                         data: self.data,
-                        isSelected : self.isPlayer,
+                        isSelected : self.isSelected,
                         isPlay : self.isPlay,
-                        ready:{
-                            self.autoLoad()
-                        },
                         action:{
                             self.onPlay(self.data)
                         })
@@ -179,7 +183,7 @@ struct PlayItem: PageView {
                     .clipped()
                     VStack(alignment: .leading, spacing:0){
                         if let title = self.data.title {
-                            Text(title + " " + (CGFloat(self.data.index) * self.range).description)
+                            Text(title)
                                 .modifier(BoldTextStyle(
                                         size: Font.size.large,
                                         color: Color.app.white)
@@ -205,14 +209,11 @@ struct PlayItem: PageView {
                     PlayItemScreen(
                         pageObservable: self.pageObservable,
                         playerModel : self.playerModel,
-                        prerollModel: self.prerollModel,
                         data: self.data,
                         isSelected : self.isSelected,
                         isPlay : self.isPlay,
-                        ready :{
-                            self.autoLoad()
-                        },
                         action:{
+                            if data.isCompleted {return}
                             self.onPlay(self.data)
                         })
                     .modifier(
@@ -228,7 +229,7 @@ struct PlayItem: PageView {
                             HStack(spacing:SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin){
                                 if let title = self.data.title {
                                     VStack(alignment: .leading, spacing:0){
-                                        Text(title + " " + (CGFloat(self.data.index) * self.range).description)
+                                        Text(title)
                                             .modifier(BoldTextStyle(
                                                     size: Font.size.large,
                                                     color: Color.app.white)
@@ -261,30 +262,21 @@ struct PlayItem: PageView {
         .onReceive(self.viewModel.$currentPlayData){ selectData in
             guard let selectData = selectData else {return}
             let isSelect = selectData == self.data
-            self.isPlayer = isSelect
+            
             withAnimation{
                 self.isSelected = isSelect
             }
-            if !isSelect {
+            let isAuto = !data.isCompleted && self.setup.autoPlay && isSelect
+            if isAuto {
+                self.autoLoad()
+            } else {
+                self.playerModel.event = .pause
                 self.cancelAutoLoad()
             }
-            
-            
         }
         .onReceive(self.viewModel.$isPlayStatusUpdate){ update in
             if self.isSelected && update {
                 self.load()
-            }
-            
-        }
-        .onReceive(self.playerModel.$event){evt in
-            guard let evt = evt else {return}
-            switch evt {
-            case .fullScreen(let isFullScreen) :
-                if !isFullScreen { return }
-                self.onFullScreen()
-                
-            default : break
             }
         }
         .onReceive(self.playerModel.$streamStatus){stat in
@@ -400,12 +392,12 @@ struct PlayItem: PageView {
     private func autoLoad(){
         self.autoPlayer?.cancel()
         self.autoPlayer = Timer.publish(
-            every: 1.5, on: .current, in: .common)
+            every: 0.5, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
                 self.cancelAutoLoad()
                 self.load()
-                self.pagePresenter.orientationLock(lockOrientation: .all)
+                //self.pagePresenter.orientationLock(lockOrientation: .all)
             }
     }
     private func cancelAutoLoad(){
@@ -423,26 +415,21 @@ struct PlayItemScreen: PageView {
     @EnvironmentObject var setup:Setup
     @ObservedObject var pageObservable:PageObservable 
     @ObservedObject var playerModel: BtvPlayerModel
-    @ObservedObject var prerollModel: PrerollModel
     var data:PlayData
     var isSelected:Bool
     var isPlay:Bool = false
-    
-    var ready:()->Void
+
     var action:()->Void
     
     var body: some View {
         ZStack{
-            if self.isSelected {
+            if self.isSelected{
                 SimplePlayer(
                     pageObservable:self.pageObservable,
-                    viewModel:self.playerModel,
-                    prerollModel:self.prerollModel
+                    viewModel:self.playerModel
                 )
                 .modifier(MatchParent())
-                .onAppear(){
-                    self.ready()
-                }
+                
             }
             if !self.isPlay || !self.isSelected {
                 if self.data.image == nil {

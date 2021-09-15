@@ -106,6 +106,16 @@
 				<string>btvplus</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.skb.btvplus</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>btvona</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
@@ -130,6 +140,8 @@
 	<string>애플의 정책에 따라 공유기 이름 정보를 확인하기 위해서 위치 접근 권한을 허용하셔야 이용이 가능합니다.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>음성 검색 요청</string>
+	<key>NSVideoSubscriberAccountUsageDescription</key>
+	<string>TV프로바이더 연동</string>
 	<key>SKAdNetworkIdentifier</key>
 	<string>67369282zy.skadnetwork</string>
 	<key>UIAppFonts</key>

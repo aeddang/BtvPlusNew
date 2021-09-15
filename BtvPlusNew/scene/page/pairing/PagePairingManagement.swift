@@ -11,6 +11,7 @@ struct PagePairingManagement: PageView {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var vsManager:VSManager
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
    
@@ -90,6 +91,10 @@ struct PagePairingManagement: PageView {
                                     ) 
                                 }
                                 FillButton(text: String.button.disConnectBtv, strokeWidth: 1){ _ in
+                                    if self.pairing.user?.pairingDeviceType == .apple {
+                                        self.vsManager.accountUnPairingAlert()
+                                        return
+                                    }
                                     self.appSceneObserver.alert = .confirm(String.alert.disConnect, String.alert.disConnectText){ isOk in
                                         if isOk {
                                             self.pairing.requestPairing(.unPairing)

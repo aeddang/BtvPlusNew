@@ -87,8 +87,9 @@ struct PageFullPlayer: PageView {
         }
     }//body
     private func onClose(){
-        self.pagePresenter.fullScreenExit()
-        self.playerModel.event = .pause
+        if self.pagePresenter.isFullScreen {
+            self.pagePresenter.fullScreenExit()
+        }
         self.pagePresenter.onPageEvent(self.pageObject, event: .init(type: .timeChange, data: self.playerModel.time))
         self.pagePresenter.closePopup(self.pageObject?.id)
     }

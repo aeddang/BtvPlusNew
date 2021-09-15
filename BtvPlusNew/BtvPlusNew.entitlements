@@ -10,6 +10,8 @@
 	<true/>
 	<key>com.apple.smoot.subscriptionservice</key>
 	<true/>
+	<key>com.apple.developer.video-subscriber-single-sign-on</key>
+	<true/>
 	<key>com.apple.security.application-groups</key>
 	<array>
 		<string>group.com.skb.btvplus</string>

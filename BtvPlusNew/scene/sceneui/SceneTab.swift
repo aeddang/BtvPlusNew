@@ -190,6 +190,7 @@ struct SceneTab: PageComponent{
         
     }
     func updateBottomPos(){
+        
         withAnimation{
             self.positionBottom = self.appSceneObserver.useBottom
                 ? 0
@@ -203,6 +204,8 @@ struct SceneTab: PageComponent{
         let layer = self.appSceneObserver.useLayerPlayer ? Dimen.app.layerPlayerSize.height : 0
         self.appSceneObserver.safeBottomLayerHeight =
             self.appSceneObserver.safeBottomHeight + layer + Dimen.margin.regular
+        
+       
     }
     
     

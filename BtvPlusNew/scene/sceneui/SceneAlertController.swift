@@ -12,7 +12,7 @@ import Combine
 
 enum SceneAlert:Equatable {
     case confirm(String?, String? = nil , String? = nil, confirmText:String? = nil,cancelText:String? = nil, (Bool) -> Void),
-         alert(String?, String? = nil, String? = nil, (() -> Void)? = nil),
+         alert(String?, String? = nil, String? = nil, confirmText:String? = nil, (() -> Void)? = nil),
          recivedApns(AlramData?), apiError(ApiResultError),
          connectWifi , notFoundDevice((() -> Void)? = nil), requestLocation((Bool) -> Void),
          
@@ -82,7 +82,7 @@ struct SceneAlertController: PageComponent{
             buttons: self.buttons
         ){ idx in
             switch self.currentAlert {
-            case .alert(_, _, _, let completionHandler) :
+            case .alert(_, _, _, _, let completionHandler) :
                 if let handler = completionHandler { self.selectedAlert(idx, completionHandler:handler) }
             case .confirm(_, _, _, _, _, let completionHandler) : self.selectedConfirm(idx, completionHandler:completionHandler)
             case .apiError(let data): self.selectedApi(idx, data:data)
@@ -121,8 +121,8 @@ struct SceneAlertController: PageComponent{
                     self.reset()
                 }
                 return
-            case .alert(let title,let text, let subText, _) :
-                self.setupAlert(title:title, text:text, subText:subText)
+            case .alert(let title,let text, let subText, let confirmText,  _) :
+                self.setupAlert(title:title, text:text, subText:subText, confirmText:confirmText)
             case .confirm(let title,let text, let subText,let confirm, let cancel, _) :
                 self.setupConfirm(title:title, text:text, subText:subText, confirmText:confirm, cancleText: cancel)
             case .apiError(let data): self.setupApi(data:data)
@@ -581,12 +581,12 @@ struct SceneAlertController: PageComponent{
         completionHandler(idx == 1)
     }
     
-    func setupAlert(title:String?, text:String?, subText:String? = nil) {
+    func setupAlert(title:String?, text:String?, subText:String? = nil, confirmText:String? = nil) {
         self.title = title
         self.text = text ?? ""
         self.subText = subText
         self.buttons = [
-            AlertBtnData(title: String.app.confirm, index: 0)
+            AlertBtnData(title: confirmText ?? String.app.confirm, index: 0)
         ]
     }
     func selectedAlert(_ idx:Int, completionHandler: @escaping () -> Void) {

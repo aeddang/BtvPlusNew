@@ -69,7 +69,11 @@ struct PageSceneModel: PageModel {
         guard let pageObject = pageObject ?? self.topPageObject else {
             return UIInterfaceOrientationMask.all
         }
-    
+        switch pageObject.pageID {
+        case .fullPlayer, .synopsisPlayer: return UIInterfaceOrientationMask.landscape
+        default : break
+        }
+        
         if SystemEnvironment.isTablet && pageObject.pageGroupID == PageType.btv.rawValue {
             return UIInterfaceOrientationMask.all }
         switch pageObject.pageID {

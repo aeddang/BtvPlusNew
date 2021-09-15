@@ -182,6 +182,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
     }
         
     private func run(_ player: PlayerScreenView){
+        self.playJob?.cancel()
         var job:AnyCancellable? = nil
         var timeControlStatus:AVPlayer.TimeControlStatus? = nil
         var status:AVPlayer.Status? = nil
@@ -216,7 +217,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
                         }
                     }
                 }
-                //ComponentLog.d("Timer " + t.description , tag: self.tag)
+                ComponentLog.d("Timer " + t.description , tag: self.tag)
                 self.onTimeChange(Double(t))
                 //player.layer.setNeedsDisplay()
                 if !isCheckTimeControlStatus {
@@ -290,6 +291,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
                     }
                 }
         }
+        self.playJob = job
     }
     
     private func cancel(_ job:AnyCancellable?, reason:String? = nil){
@@ -298,6 +300,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable, PlayBack, Pla
             ComponentLog.d("cancel reason " + msg , tag: self.tag)
         }
         job?.cancel()
+        self.playJob = nil
     }
     
     func onPlayerAssetInfo(_ info:AssetPlayerInfo) {
@@ -364,7 +367,6 @@ extension MPVolumeView {
         let slider = volumeView.subviews.first(where: { $0 is UISlider }) as? UISlider
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.01) {
             slider?.value = volume
-            
         }
         
     }
@@ -373,6 +375,7 @@ extension MPVolumeView {
 struct CustomAVPlayerController {
     @ObservedObject var viewModel:PlayerModel
     @ObservedObject var pageObservable:PageObservable
+    @State fileprivate var playJob:AnyCancellable? = nil
     func makeCoordinator() -> Coordinator { return Coordinator(viewModel:self.viewModel) }
     
     class Coordinator:NSObject, AVPlayerViewControllerDelegate, PageProtocol {
@@ -430,17 +433,23 @@ extension CustomPlayerController {
             UIApplication.shared.beginReceivingRemoteControlEvents()
         }
         CustomAVPlayerController.currentPlayerNum += 1
-        ComponentLog.d("currentPlayerNum " + CustomAVPlayerController.currentPlayerNum.description, tag:"CustomAVPlayerController")
+        ComponentLog.d("currentPlayerNum " + CustomAVPlayerController.currentPlayerNum.description, tag:"CustomAVPlayerController2")
     }
+    
+    
 
     func onViewWillDisappear(_ animated: Bool) {
-        self.playerScreenView.destory()
+       
         CustomAVPlayerController.currentPlayerNum -= 1
-        ComponentLog.d("currentPlayerNum " + CustomAVPlayerController.currentPlayerNum.description, tag:"CustomAVPlayerController")
+        ComponentLog.d("currentPlayerNum " + CustomAVPlayerController.currentPlayerNum.description, tag:"CustomAVPlayerController2")
         if CustomAVPlayerController.currentPlayerNum == 0 {
+            self.playerScreenView.destory()
             UIApplication.shared.endReceivingRemoteControlEvents()
             NotificationCenter.default.post(name: Notification.Name("avPlayerDidDismiss"), object: nil, userInfo: nil)
+        } else {
+            self.playerScreenView.destoryScreenview()
         }
+
     }
     
     func onRemoteControlReceived(with event: UIEvent?) {

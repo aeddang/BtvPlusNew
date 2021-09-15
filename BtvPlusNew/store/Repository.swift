@@ -20,6 +20,7 @@ enum RepositoryStatus:Equatable{
         case .ready: return "ready"
         case .reset: return "reset"
         case .error: return "error"
+            
         }
     }
     
@@ -47,6 +48,7 @@ class Repository:ObservableObject, PageProtocol{
     let pairing:Pairing
     let webBridge:WebBridge
     let alram:Alram = Alram()
+    let vsManager:VSManager?
     let networkObserver:NetworkObserver
     let voiceRecognition:VoiceRecognition
     let shareManager:ShareManager
@@ -67,21 +69,24 @@ class Repository:ObservableObject, PageProtocol{
     private(set) var isFirstLaunch = false
     
     init(
+        vsManager:VSManager? = nil,
         dataProvider:DataProvider? = nil,
         pairing:Pairing? = nil,
         networkObserver:NetworkObserver? = nil,
         pagePresenter:PagePresenter? = nil,
-        sceneObserver:AppSceneObserver? = nil,
+        appSceneObserver:AppSceneObserver? = nil,
         setup:Setup? = nil
+      
     ) {
+        self.vsManager = vsManager
         self.dataProvider = dataProvider ?? DataProvider()
         self.pairing = pairing ?? Pairing()
         self.networkObserver = networkObserver ?? NetworkObserver()
         self.apiManager = ApiManager()
-        self.appSceneObserver = sceneObserver
+        self.appSceneObserver = appSceneObserver
         self.pagePresenter = pagePresenter
         self.userSetup = setup ?? Setup()
-        self.voiceRecognition = VoiceRecognition(appSceneObserver: sceneObserver)
+        self.voiceRecognition = VoiceRecognition(appSceneObserver: appSceneObserver)
         self.shareManager = ShareManager(pagePresenter: pagePresenter)
         self.audioMirrorManager = AudioMirroring(pairing: self.pairing)
         self.pushManager = PushManager(storage: self.storage)
@@ -133,16 +138,15 @@ class Repository:ObservableObject, PageProtocol{
         SystemEnvironment.isReleaseMode = isReleaseMode
         SystemEnvironment.isEvaluation = isEvaluation
         self.storage.isReleaseMode = isReleaseMode
+        self.pairing.reset()
         self.dataCancellable.forEach{$0.cancel()}
         self.dataCancellable.removeAll()
         self.apiManager.clear()
         self.apiManager = ApiManager()
-        self.setupApiManager()
         self.setupNamedStorage()
+        self.setupApiManager()
         self.status = .reset
-        if isReleaseMode != nil {
-            self.event = .reset
-        }
+        
         //self.appSceneObserver?.event = .toast("reset " + (isReleaseMode?.description ?? ""))
     }
     private func setupSetting()->Bool{
@@ -166,6 +170,9 @@ class Repository:ObservableObject, PageProtocol{
     private func setupNamedStorage(){
         let storage = LocalNamedStorage(name:  SystemEnvironment.isStage ? "Stage" : "Release")
         self.namedStorage = storage
+        if SystemEnvironment.tvUserId == nil && self.vsManager?.currentAccountId == nil{
+            SystemEnvironment.tvUserId = storage.tvUserId
+        }
         self.webBridge.namedStorage = storage
         self.pushManager.setupStorage(storage: storage)
     }
@@ -196,6 +203,7 @@ class Repository:ObservableObject, PageProtocol{
                 self.dataProvider.requestData(q: .init(type: .getGnb))
                 self.pushManager.updateUserAgreement(false)
                 self.pushManager.retryRegisterPushToken()
+                self.namedStorage?.tvUserId = nil
                 //NotificationCoreData().removeAllNotice()
                 
             case .pairingCompleted :
@@ -205,13 +213,16 @@ class Repository:ObservableObject, PageProtocol{
                 self.dataProvider.requestData(q: .init(type: .getGnb))
                 self.pushManager.retryRegisterPushToken()
                 self.pushManager.updateUserAgreement(self.pairing.user?.isAgree3 ?? false)
+                self.namedStorage?.tvUserId = self.vsManager?.currentAccountId
                 if !NpsNetwork.isAutoPairing {
                     self.appSceneObserver?.event = .toast(String.alert.pairingCompleted)
                 }
                 
             case .syncError :
                 self.appSceneObserver?.alert = .pairingRecovery
-            default: do{}
+            case .syncFail :
+                self.appSceneObserver?.alert = .alert(String.alert.connect, String.alert.pairingError)
+            default: break
             }
         }).store(in: &anyCancellable)
     }
@@ -368,7 +379,7 @@ class Repository:ObservableObject, PageProtocol{
             }
         }
         if self.isFirstLaunch {
-            self.apiManager.load(.postUnPairing, isOptional: true)
+            self.apiManager.load(.postUnPairing, isLog:true)
         }
         //self.appSceneObserver?.event = .toast("onReadyApiManager")
         self.dataProvider.requestData(q: .init(type: .getGnb))

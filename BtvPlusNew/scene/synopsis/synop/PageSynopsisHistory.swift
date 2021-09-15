@@ -8,6 +8,7 @@
 import Foundation
 extension PageSynopsis {
     func getSynopData(obj:PageObject)->SynopsisData {
+        self.isAutoPlay = obj.getParamValue(key: .autoPlay) as? Bool
         if let params = obj.getParamValue(key: .datas) as? [URLQueryItem] {
             if let rcmdid = params.first(where: {$0.name == "rcmd_id"})?.value,
                let type = params.first(where: {$0.name == "type"})?.value,
@@ -42,6 +43,7 @@ extension PageSynopsis {
                 )
             }
         }
+       
         return SynopsisData()
     }
     

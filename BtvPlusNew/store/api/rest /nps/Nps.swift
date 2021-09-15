@@ -86,11 +86,14 @@ extension NpsNetwork{
     
     static func unpairing(res:ApiResultResponds) {
         guard let resData = res.data as? NpsResult  else { return }
-        if resData.header?.result != NpsNetwork.resultCode.success.code { return }
-        Self.pairingId = ""
-        Self.hostDeviceId = nil
-        Self.pairingStatus = ""
-        Self.isAutoPairing = false
+        let resultCode = resData.header?.result
+        if resultCode == NpsNetwork.resultCode.unexistPairing.code
+            || resultCode == NpsNetwork.resultCode.success.code {
+            Self.pairingId = ""
+            Self.hostDeviceId = nil
+            Self.pairingStatus = ""
+            Self.isAutoPairing = false
+        }
     }
     static func checkPairing(res:ApiResultResponds) {
         guard let resData = res.data as? DevicePairingStatus  else { return }
@@ -143,7 +146,7 @@ extension NpsNetwork{
     
     enum resultCode:String{
         case success, pairingRetry, pairingLimited,
-             authcodeInvalid, authcodeWrong, authcodeTimeout, existPairing
+             authcodeInvalid, authcodeWrong, authcodeTimeout, existPairing, unexistPairing
         
         var code:String {
             get {
@@ -154,7 +157,8 @@ extension NpsNetwork{
                 case .authcodeInvalid: return "1005"
                 case .authcodeWrong: return "1011"
                 case .authcodeTimeout: return "1012"
-                case .existPairing: return  "1019"
+                case .existPairing: return "1019"
+                case .unexistPairing: return "1004"
                 //default: return ""
                 }
             }

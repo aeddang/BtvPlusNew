@@ -700,8 +700,7 @@ class ApiManager :PageProtocol, ObservableObject{
     
     private func complated<T:Decodable>(id:String, type:ApiType, res:T, isOptional:Bool = false, isLog:Bool = false){
         let result:ApiResultResponds = .init(id: id, type:type, data: res, isOptional: isOptional, isLog: isLog)
-        let prevHost = NpsNetwork.hostDeviceId
-        
+        let prevHost = (NpsNetwork.hostDeviceId ?? "") + NpsNetwork.pairingId
         switch type {
         case .registHello :
             if let path = NpsNetwork.hello(res: result) {
@@ -715,12 +714,12 @@ class ApiManager :PageProtocol, ObservableObject{
         case .postAuthPairing, .postDevicePairing, .postPairingByToken :
             NpsNetwork.pairing(res: result)
         case .postUnPairing :
-            NpsNetwork.unpairing(res: result)
+            if !isLog { NpsNetwork.unpairing(res: result) }
         case .getDevicePairingStatus :
             NpsNetwork.checkPairing(res: result) 
         default: break
         }
-        let currentHost = NpsNetwork.hostDeviceId
+        let currentHost = (NpsNetwork.hostDeviceId ?? "") + NpsNetwork.pairingId
         if prevHost != currentHost{
             self.event = .pairingHostChanged
         }

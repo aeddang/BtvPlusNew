@@ -241,6 +241,21 @@ class WebBridge :PageProtocol{
             }
             return DeepLinkItem()
         }
+        if (url?.hasPrefix("btvona://"))! {
+            if let urlStr = url {
+                if let components = URLComponents(string: urlStr) {
+                    if let path = components.host {
+                        let param = components.queryItems
+                        ComponentLog.d("path " + path, tag: self.tag)
+                        ComponentLog.d("param " + (param?.debugDescription ?? ""), tag: self.tag)
+                        self.callPage(path, param: param)
+                        return DeepLinkItem(path: path, querys: param)
+                    }
+                }
+            }
+            return DeepLinkItem()
+        }
+        
         if (url?.hasPrefix("btvplusapp://"))! {
             var deepLinkItem = DeepLinkItem()
             var funcName:String? = nil
@@ -429,6 +444,16 @@ class WebBridge :PageProtocol{
                   query:String? = nil, jsonParam:String? = nil, cbName:String? = nil) -> Bool {
     
         switch path {
+        case "synop":
+            
+            let contentId = param?.first(where: {$0.name == "episodeId"})?.value
+            let action = param?.first(where: {$0.name == "action"})?.value
+            self.pagePresenter?.openPopup(
+                PageProvider.getPageObject(.synopsis)
+                    .addParam(key: .data, value: SynopsisQurry(srisId: nil, epsdId: contentId))
+                    .addParam(key: .autoPlay, value: action == "play" ? true : false)
+            )
+            return true
         case "synopsis":
             let id = param?.first(where: {$0.name == "id"})?.value
             let contentId = param?.first(where: {$0.name == "contentId"})?.value

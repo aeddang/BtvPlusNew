@@ -44,14 +44,17 @@ enum PairingType{
 }
 
 enum PairingStatus{
-    case disConnect , connect , pairing, unstablePairing
+    case initate, disConnect , connect , pairing, unstablePairing, recovery
 }
 
 enum PairingEvent{
-    case connected(StbData?), disConnected,
+    case ready, pairingRequest,
+         connected(StbData?), disConnected,
          connectError(NpsCommonHeader?), disConnectError(NpsCommonHeader?), connectErrorReason(PairingInfo?),
          findMdnsDevice([MdnsDevice]), findStbInfoDevice([StbListInfoDataItem]),  notFoundDevice,
+         syncPairingUser,
          syncError(NpsCommonHeader?),
+         syncFail,
          pairingCompleted, pairingCheckCompleted(Bool),
          
          updatedKids(KesNetwork.UpdateType?), notFoundKid, editedKids,
@@ -63,7 +66,7 @@ class Pairing:ObservableObject, PageProtocol {
     
     @Published private(set) var request:PairingRequest? = nil
     @Published private(set) var event:PairingEvent? = nil {didSet{ if event != nil { event = nil} }}
-    @Published private(set) var status:PairingStatus = .disConnect
+    @Published private(set) var status:PairingStatus = .initate
     @Published var user:User? = nil
     private(set) var pairingDeviceType:PairingDeviceType = .btv
     private(set) var pairingType:PairingType? = nil
@@ -93,9 +96,10 @@ class Pairing:ObservableObject, PageProtocol {
     func requestPairing(_ request:PairingRequest){
         switch request {
         case .recovery :
-            self.status = .connect
+            self.status = .recovery
         case .selectKid(let kid) :
             self.selectKid(kid)
+            
         
         case .registKid(let kid) :
             kid.updateType = .post
@@ -104,7 +108,6 @@ class Pairing:ObservableObject, PageProtocol {
                 self.isFirstKidRegist = true
             }
         case .modifyKid(let kid) :
-            
             kid.updateType = .put
         case .updateKids :
             if isKidsSearch {return}
@@ -114,11 +117,18 @@ class Pairing:ObservableObject, PageProtocol {
             kid.modifyUserData = nil
         case .updateKidStudy :
             if self.kid == nil { return }
+            
+        //case .unPairing :
+    
+            
         case .wifi :
+            self.event = .pairingRequest
             self.pairingType = .wifi
         case .btv :
+            self.event = .pairingRequest
             self.pairingType = .btv
         case .user :
+            self.event = .pairingRequest
             self.pairingType = .user
         /*
         case .token :
@@ -129,7 +139,15 @@ class Pairing:ObservableObject, PageProtocol {
         self.request = request
         
     }
-   
+    func reset(){
+        self.status = .initate
+    }
+    func ready(){
+        let status = self.status
+        if status == .disConnect {
+            self.event = .ready
+        }
+    }
     func connected(stbData:StbData?){
         self.stbId = NpsNetwork.hostDeviceId 
         self.status = self.stbId != "" ? .connect : .disConnect
@@ -190,13 +208,18 @@ class Pairing:ObservableObject, PageProtocol {
     
     func syncError(header:NpsCommonHeader? = nil) {
         if self.status == .unstablePairing {return}
-        self.status = .unstablePairing
-        self.event = .syncError(header)
+        if self.status == .recovery {
+            self.status = .unstablePairing
+            self.event = .syncFail
+        } else {
+            self.status = .unstablePairing
+            self.event = .syncError(header)
+        }
     }
     
     func syncPairingUserData(){
         self.isPairingUser = true
-        self.checkComple()
+        self.event = .syncPairingUser
     }
 
     func syncPairingAgreement(_ guestAgreement:GuestAgreement){
@@ -318,6 +341,7 @@ class Pairing:ObservableObject, PageProtocol {
             self.naviLog(pageID: .pairingCompleted)
             self.status = .pairing
             self.event = .pairingCompleted
+            self.pairingDeviceType = self.user?.pairingDeviceType ?? .btv
         }
     }
     

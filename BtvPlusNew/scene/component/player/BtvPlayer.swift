@@ -311,7 +311,7 @@ struct BtvPlayer: PageComponent{
                 }
             }
             .onDisappear(){
-                self.pagePresenter.fullScreenExit()
+                //self.pagePresenter.fullScreenExit()
                 self.viewModel.event = .stop
             }
         }//geo

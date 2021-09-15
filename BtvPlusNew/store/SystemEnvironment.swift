@@ -15,7 +15,16 @@ struct SystemEnvironment {
     static let bundleVersion:String = "4.4.4" //AppUtil.version
     static let bundleVersionKey:String = AppUtil.version
     static let buildNumber:String = AppUtil.build.description
-    static let deviceId:String = Self.getDeviceId()
+    
+    static let originDeviceId = Self.getDeviceId()
+    static var tvUserId:String? = nil
+    static var deviceId:String {
+        get{
+            let tvUser = Self.tvUserId
+            let id = Self.tvUserId?.isEmpty == false ? Self.tvUserId! : Self.originDeviceId
+            return id
+        }
+    }
     static var firstLaunch :Bool = false
     static var serverConfig: [String:String] = [String:String]()
     static var isReleaseMode:Bool? = nil

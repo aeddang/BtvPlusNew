@@ -24,6 +24,7 @@ class AccountManager : PageProtocol{
     var requestToken:String? = nil
     var requestKid:Kid? = nil
     
+    
     private func resetRequest(){
         requestDevice = nil
         requestAuthcode = nil
@@ -72,12 +73,13 @@ class AccountManager : PageProtocol{
                 if let user = self.pairing.user {
                     if !self.pairing.isPairingUser {
                         self.dataProvider.requestData(q: .init(type: .postGuestInfo(user), isOptional: true))
-                    }
-                    if !self.pairing.isPairingAgreement {
-                        if user.postAgreement {
-                            self.dataProvider.requestData(q: .init(type: .postGuestAgreement(user), isOptional: true)) }
-                        else {
-                            self.dataProvider.requestData(q: .init(type: .getGuestAgreement, isOptional: true))
+                    } else {
+                        if !self.pairing.isPairingAgreement {
+                            if user.postAgreement {
+                                self.dataProvider.requestData(q: .init(type: .postGuestAgreement(user), isOptional: true)) }
+                            else {
+                                self.dataProvider.requestData(q: .init(type: .getGuestAgreement, isOptional: true))
+                            }
                         }
                     }
                     if self.pairing.hostDevice == nil {
@@ -110,7 +112,7 @@ class AccountManager : PageProtocol{
                     self.dataProvider.requestData(q: .init(type: .getKidStudy(kid), isOptional: false))
                 }
                 
-            default: do{}
+            default: break
             }
         }).store(in: &anyCancellable)
         
@@ -141,25 +143,31 @@ class AccountManager : PageProtocol{
             switch evt{
             case .connected :
                 self.dataProvider.requestData(q: .init(type: .getHostDeviceInfo, isOptional: true))
+                if SystemEnvironment.tvUserId != nil {
+                    self.pairing.user =  User().setTvProvider(isAgree: true, savedUser: savedUser)
+                    self.pairing.user?.pairingDeviceType = .apple
+                }
                 if let user = self.pairing.user {
                     self.dataProvider.requestData(q: .init(type: .postGuestInfo(user), isOptional: true))
+                    
+                }else{
+                    if savedUser == nil {
+                        self.pairing.syncError()
+                    } else {
+                        self.pairing.user = savedUser
+                        self.pairing.syncPairingUserData()
+                    }
+                }
+            case .syncPairingUser :
+                if let user = self.pairing.user {
                     if user.postAgreement {
                         self.dataProvider.requestData(q: .init(type: .postGuestAgreement(user), isOptional: true))
                     }
                     else {
                         self.dataProvider.requestData(q: .init(type: .getGuestAgreement, isOptional: true))
                     }
-                }else{
-                    if savedUser == nil {
-                        self.pairing.syncError()
-                    }
-                    else{
-                        self.pairing.user = savedUser
-                        self.pairing.syncPairingUserData()
-                        self.dataProvider.requestData(q: .init(type: .getGuestAgreement, isOptional: true))
-                    }
                 }
-            case .disConnected : do{}
+            case .disConnected : break
             case .pairingCompleted :
                 self.pairing.requestPairing(.userInfo)
         
@@ -178,7 +186,6 @@ class AccountManager : PageProtocol{
             case .pairingHostChanged :
                 if NpsNetwork.isPairing { self.pairing.connected(stbData:self.requestDevice) }
                 else { self.pairing.disconnected() }
-                
             default: break
             }
         }).store(in: &dataCancellable)

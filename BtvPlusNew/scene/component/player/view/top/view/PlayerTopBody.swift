@@ -30,7 +30,6 @@ struct PlayerTopBody: PageView{
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
     var title:String? = nil
-    var isSimple:Bool = false
     
     var isFullScreen:Bool = false
     var isShowing:Bool = false
@@ -44,9 +43,8 @@ struct PlayerTopBody: PageView{
             alignment :.trailing,
             spacing:Dimen.margin.thin){
             HStack(spacing: self.isFullScreen ? PlayerUI.fullScreenSpacing : PlayerUI.spacing){
-                
                 if !self.isLock {
-                    if !self.isSimple || self.isFullScreen {
+                    if self.isFullScreen {
                         Button(action: {
                             
                             self.viewModel.btvPlayerEvent = .close
@@ -90,48 +88,49 @@ struct PlayerTopBody: PageView{
                             self.viewModel.event = .mute(true)
                         }
                     }
-                    if !self.isSimple{
-                        if self.textQuality != nil {
-                            StrokeRectButton(
-                                text: self.textQuality!,
-                                isSelected: false,
-                                textModifier: self.isFullScreen ? Self.strokeButtonTextFull :  Self.strokeButtonText,
-                                size: self.isFullScreen ? Dimen.button.regularRect : Dimen.button.lightRect
-                                ){ _ in
-                                
-                                self.viewModel.selectFunctionType = .quality
-                            }
-                        }
-                        if self.textRate != nil {
-                            StrokeRectButton(
-                                text: self.textRate!,
-                                isSelected: false,
-                                textModifier: self.isFullScreen ? Self.strokeButtonTextFull :  Self.strokeButtonText,
-                                size: self.isFullScreen ? Dimen.button.regularRect : Dimen.button.lightRect
-                                ){ _ in
-                                
-                                self.viewModel.selectFunctionType = .rate
-                                
-                            }
+                    .fixedSize()
+                   
+                    if self.textQuality != nil {
+                        StrokeRectButton(
+                            text: self.textQuality!,
+                            isSelected: false,
+                            textModifier: self.isFullScreen ? Self.strokeButtonTextFull :  Self.strokeButtonText,
+                            size: self.isFullScreen ? Dimen.button.regularRect : Dimen.button.lightRect
+                            ){ _ in
+                            
+                            self.viewModel.selectFunctionType = .quality
                         }
                     }
+                    if self.textRate != nil {
+                        StrokeRectButton(
+                            text: self.textRate!,
+                            isSelected: false,
+                            textModifier: self.isFullScreen ? Self.strokeButtonTextFull :  Self.strokeButtonText,
+                            size: self.isFullScreen ? Dimen.button.regularRect : Dimen.button.lightRect
+                            ){ _ in
+                            
+                            self.viewModel.selectFunctionType = .rate
+                            
+                        }
+                    }
+                    
                 } else {
                     Spacer().modifier(MatchHorizontal(height: 0))
                 }
-                if !self.isSimple{
-                    ImageButton(
-                        defaultImage: Asset.player.more,
-                        activeImage: Asset.player.lock,
-                        isSelected: self.isLock,
-                        size: CGSize(width:Dimen.icon.light,height:Dimen.icon.light)
-                    ){ _ in
-                        if self.isLock {
-                            self.viewModel.isLock = false
-                        } else {
-                            self.viewModel.btvUiEvent = .more
-                        }
+               
+                ImageButton(
+                    defaultImage: Asset.player.more,
+                    activeImage: Asset.player.lock,
+                    isSelected: self.isLock,
+                    size: CGSize(width:Dimen.icon.light,height:Dimen.icon.light)
+                ){ _ in
+                    if self.isLock {
+                        self.viewModel.isLock = false
+                    } else {
+                        self.viewModel.btvUiEvent = .more
                     }
                 }
+                
             }
             PlayerMoreBox( viewModel: self.viewModel )
             Spacer()

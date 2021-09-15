@@ -41,6 +41,7 @@ class User {
     }
     
     var pairingDate:String? = nil
+    var pairingDeviceType:PairingDeviceType = .btv
     private(set) var gender:Gender = .mail
     private(set) var birth:String = ""
     private(set) var isAgree1:Bool = true
@@ -82,7 +83,19 @@ class User {
     init(isAgree:Bool){
         self.isAgree3 = isAgree
     }
-    
+    func setTvProvider(isAgree:Bool, savedUser:User?) -> User{
+        self.isAutoPairing = true
+        self.nickName = savedUser?.nickName ?? "Apple Tv provider"
+        self.characterIdx = savedUser?.characterIdx ?? 0
+        self.gender = savedUser?.gender ?? .femail
+        self.birth = savedUser?.birth ?? "2021"
+        self.isAgree1 = true
+        self.isAgree2 = true
+        self.isAgree3 = isAgree
+        self.postAgreement = true
+        self.pairingDeviceType = .apple
+        return self
+    }
     func setDefault(isAgree:Bool) -> User{
         self.isAutoPairing = true
         self.nickName = "0000"

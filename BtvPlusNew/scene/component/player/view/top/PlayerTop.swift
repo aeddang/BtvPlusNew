@@ -27,26 +27,33 @@ struct PlayerTop: PageView{
     
     var body: some View {
         ZStack(alignment: .topLeading){
-            if self.type == .btv{
-                PlayerTopBody(
+            if self.isSimple{
+                PlayerSimpleTopBody(
                     viewModel: self.viewModel,
-                    title: self.title,
-                    isSimple: self.isSimple,
                     isFullScreen: self.isFullScreen,
                     isShowing: self.isShowing,
-                    isMute: self.isMute,
-                    isLock: self.isLock,
-                    textQuality: self.textQuality,
-                    textRate: self.textRate)
+                    isMute: self.isMute)
+                    
             } else {
-                PlayerTopBodyKids(
-                    viewModel: self.viewModel,
-                    title: self.title,
-                    isSimple: self.isSimple,
-                    isFullScreen: self.isFullScreen,
-                    isShowing: self.isShowing,
-                    isMute: self.isMute,
-                    isLock: self.isLock)
+                if self.type == .btv{
+                    PlayerTopBody(
+                        viewModel: self.viewModel,
+                        title: self.title,
+                        isFullScreen: self.isFullScreen,
+                        isShowing: self.isShowing,
+                        isMute: self.isMute,
+                        isLock: self.isLock,
+                        textQuality: self.textQuality,
+                        textRate: self.textRate)
+                } else {
+                    PlayerTopBodyKids(
+                        viewModel: self.viewModel,
+                        title: self.title,
+                        isFullScreen: self.isFullScreen,
+                        isShowing: self.isShowing,
+                        isMute: self.isMute,
+                        isLock: self.isLock)
+                }
             }
         }
         .modifier(MatchParent())

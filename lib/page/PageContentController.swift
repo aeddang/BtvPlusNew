@@ -96,7 +96,7 @@ struct PageContentController: View{
             }
             .edgesIgnoringSafeArea(.all)
             .statusBar(hidden: self.isFullScreen)
-            .background(backgroundBody)
+            //.background(Color.brand.bg)
             .onReceive(self.keyboardObserver.$isOn){ _ in
                 delaySafeAreaUpdate(geometry: geometry)
             }

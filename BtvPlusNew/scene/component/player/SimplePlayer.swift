@@ -20,7 +20,6 @@ struct SimplePlayer: PageComponent{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
-    @ObservedObject var prerollModel: PrerollModel = PrerollModel()
     
     var title:String? = nil
     var thumbImage:String? = nil
@@ -39,13 +38,10 @@ struct SimplePlayer: PageComponent{
                     
                     //PlayerEffect(viewModel: self.viewModel)
                     PlayerTop(viewModel: self.viewModel, title: self.title, isSimple: true)
-                    PlayerOptionSelectBox(viewModel: self.viewModel)
-                    PlayerGuide(viewModel: self.viewModel)
+                    //PlayerOptionSelectBox(viewModel: self.viewModel)
+                    //PlayerGuide(viewModel: self.viewModel)
                 }
                 .opacity(self.isWaiting == false ? 1.0 : 0)
-                if self.isPreroll {
-                    Preroll(viewModel: self.prerollModel)
-                }
                 PlayerWaiting(
                     pageObservable:self.pageObservable,
                     viewModel: self.viewModel, imgBg: self.thumbImage, contentMode: self.thumbContentMode)
@@ -70,24 +66,12 @@ struct SimplePlayer: PageComponent{
                 case .mute(let isMute) : BtvPlayerModel.isInitMute = isMute
                 case .volume : BtvPlayerModel.isInitMute = false
                 case .resume :
-                    if self.isPrerollPause {
-                        self.isPrerollPause = false
-                        self.initPlayer()
-                    }
                     if self.isWaiting != false {
                         self.continuousPlay()
                     }
                     
                 case .pause :
-                    if self.isPreroll {
-                        self.isPrerollPause = true
-                        self.isPreroll = false
-                        self.viewModel.isPrerollPlay = false
-                        self.viewModel.btvPlayerEvent = .stopAd
-                        withAnimation{ self.isWaiting = true }
-                    }else{
-                        self.recoveryTime = self.viewModel.time
-                    }
+                    self.recoveryTime = self.viewModel.time
                 default : break
                 }
             }
@@ -97,14 +81,6 @@ struct SimplePlayer: PageComponent{
                 self.viewModel.currentQuality = quality
             }
             .onReceive(self.viewModel.$currentQuality){ quality in
-                if self.isPreroll {
-                    self.isPreroll = false
-                    self.viewModel.isPrerollPlay = false
-                    if self.viewModel.initPlay == nil {
-                        ComponentLog.d("auto setup initPlay preroll" , tag: self.tag)
-                        self.viewModel.initPlay = true
-                    }
-                }
                 if quality == nil { return }
                 let autoPlay = self.viewModel.initPlay ?? self.setup.autoPlay
                 if self.viewModel.time > 1 { //화질전환 이어보기
@@ -131,30 +107,21 @@ struct SimplePlayer: PageComponent{
             .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
                 self.isFullScreen = fullScreen
             }
-            .onReceive(self.prerollModel.$event){ evt in
-                guard let evt = evt else {return}
-                switch evt {
-                //case .start : self.viewModel.event = .pause
-                case .finish, .skipAd : self.initPlay()
-                default : break
-                }
-            }
+            
             .onAppear(){
-                if !Preroll.isInit { Preroll.initate() }
                 self.viewModel.selectedQuality = self.setup.selectedQuality
                 if BtvPlayerModel.isInitMute {
                     self.viewModel.isMute = true
                 }
             }
             .onDisappear(){
-                //self.viewModel.event = .stop
+               // self.viewModel.event = .stop
             }
         }//geo
     }//body
     
     
     @State var isWaiting:Bool? = nil
-    @State var isPrerollPause:Bool = false
     @State var recoveryTime:Double = 0
     @State var isPreroll:Bool = false
     @State var isFullScreen:Bool = false
@@ -165,19 +132,6 @@ struct SimplePlayer: PageComponent{
         }
         ComponentLog.d("initPlayer", tag: self.tag)
         withAnimation{ self.isWaiting = false }
-        if self.viewModel.checkPreroll {
-            self.viewModel.checkPreroll = false
-            if let data = self.viewModel.synopsisPrerollData {
-                if !self.isPreroll {
-                    self.isPreroll = true
-                    self.viewModel.isPrerollPlay = true
-                }
-                ComponentLog.d("initPreroll", tag: self.tag)
-                self.prerollModel.request = .load(data)
-                return
-            }
-        }
-       
         self.initPlay()
     }
     

@@ -137,7 +137,7 @@ final class PagePresenter:ObservableObject{
     @Published fileprivate(set) var currentTopPage:PageObject? = nil
    
     @Published var isLoading:Bool = false
-    @Published var bodyColor:Color = Color.black
+    @Published var bodyColor:Color = Color.brand.bg
     @Published var dragOpercity:Double = 0.0
     @Published fileprivate(set) var isBusy:Bool = false
     @Published fileprivate(set) var isFullScreen:Bool = false
@@ -197,7 +197,9 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         
         let rootViewController = PageHostingController(rootView: adjustEnvironmentObjects(view))
         rootViewController.sceneObserver = sceneObserver
+        rootViewController.view.backgroundColor = Color.brand.bg.uiColor()
         window.rootViewController = rootViewController
+        window.backgroundColor = Color.brand.bg.uiColor()
         window.overrideUserInterfaceStyle = .light
        
     }
@@ -583,9 +585,12 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         }
         
         guard let change = changeOrientation else { return }
-        UIDevice.current.setValue(change.rawValue, forKey: "orientation")
-        PageLog.d("requestDeviceOrientation mask" , tag: "PageScene")
-        UINavigationController.attemptRotationToDeviceOrientation()
+        DispatchQueue.main.async {
+            UIDevice.current.setValue(change.rawValue, forKey: "orientation")
+            PageLog.d("requestDeviceOrientation mask" , tag: "PageScene")
+            UINavigationController.attemptRotationToDeviceOrientation()
+        }
+       
     }
 
     final func getChangeDeviceOrientation(mask:UIInterfaceOrientationMask) -> UIInterfaceOrientation? {

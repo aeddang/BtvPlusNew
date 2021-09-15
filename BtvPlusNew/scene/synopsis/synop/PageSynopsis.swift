@@ -6,6 +6,8 @@
 //
 import Foundation
 import SwiftUI
+import Intents
+
 extension PageSynopsis {
     enum ComponentEvent {
         case changeVod(String?), changeSynopsis(SynopsisData?, isSrisChange:Bool = false), changeOption(PurchaseModel?), purchase, watchBtv
@@ -18,6 +20,7 @@ extension PageSynopsis {
     static let getSynopData:Int = 0
     static let getAuth:Int = 1
     static let getPlay:Int = 2
+    static let shortcutType = "com.skb.episode-search"
 }
 
 struct PageSynopsis: PageView {
@@ -41,6 +44,7 @@ struct PageSynopsis: PageView {
     @ObservedObject var playerListViewModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var relationBodyModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var tabNavigationModel:NavigationModel = NavigationModel()
+    let universalSearchManager:UniversalSearchManager = UniversalSearchManager()
     
     @State var synopsisData:SynopsisData? = nil
     @State var isPairing:Bool? = nil
@@ -198,6 +202,9 @@ struct PageSynopsis: PageView {
                     guard let evt = evt else { return }
                     self.onEventLog(btvUiEvent: evt)
                 }
+                .onReceive(self.playerModel.$duration){duration in
+                    self.onDurationSiri(duration: duration)
+                }
                 .onReceive(self.playerModel.$event){evt in
                     guard let evt = evt else { return }
                     switch evt {
@@ -207,11 +214,13 @@ struct PageSynopsis: PageView {
                     }
                     self.onEventLog(event: evt)
                     self.onEventProhibition(event: evt)
+                    
                 }
                 .onReceive(self.playerModel.$streamEvent){evt in
                     guard let evt = evt else { return }
                     self.onEventLog(streamEvent: evt)
                     self.onEventProhibition(streamEvent: evt)
+                    self.onEventSiri(streamEvent: evt)
                 }
                 .onReceive(self.playerModel.$playerStatus){status in
                     guard let status = status else { return }
@@ -242,7 +251,10 @@ struct PageSynopsis: PageView {
                     self.onEventLog(componentEvent: evt)
                 }
             }//PageDataProviderContent
-            
+            .userActivity(Self.shortcutType) { userActivity in
+                self.onSiri(userActivity:userActivity)
+            }
+           
             .onReceive(self.pageObservable.$layer ){ layer  in
                 switch layer {
                 case .bottom : self.isUiActive = false
@@ -444,6 +456,7 @@ struct PageSynopsis: PageView {
     @State var originHistorys:[SynopsisData] = []
     @State var historys:[SynopsisData] = []
     @State var isInitPage = false
+    @State var isAutoPlay:Bool? = nil
     @State var isCheckdPairing:Bool? = nil
     @State var progressError = false
     @State var progressCompleted = false
@@ -773,6 +786,8 @@ struct PageSynopsis: PageView {
     
     func onAllProgressCompleted(){
         PageLog.d("onAllProgressCompleted", tag: self.tag)
+        self.onAllProgressCompletedSiri()
+         
         if #available(iOS 14.0, *) {
             withAnimation{ self.isUIView = true }
         } else {
@@ -898,11 +913,14 @@ struct PageSynopsis: PageView {
             let prerollData = SynopsisPrerollData()
                 .setData(data: synopsis, playType: self.synopsisPlayType, epsdRsluId: self.epsdRsluId)
             self.playerData = SynopsisPlayerData()
-                .setData(type: self.synopsisPlayType, synopsis: synopsis, relationContentsModel: self.relationContentsModel)
+                .setData(type: self.synopsisPlayType,
+                         synopsis: synopsis, relationContentsModel: self.relationContentsModel)
             self.playerModel
                 .setData(synopsisPrerollData: prerollData)
                 .setData(synopsisPlayData: self.playerData)
-                .setData(data: dataInfo, type: .preview(self.epsdRsluId))
+                .setData(data: dataInfo,
+                         type: .preview(self.epsdRsluId),
+                         autoPlay: self.isAutoPlay)
             withAnimation{self.isPlayAble = true}
 
         }
@@ -923,12 +941,15 @@ struct PageSynopsis: PageView {
             self.bindWatchingData()
             let prerollData = SynopsisPrerollData()
                 .setData(data: synopsis, playType: self.synopsisPlayType, epsdRsluId: self.epsdRsluId)
+            
             self.playerData = SynopsisPlayerData()
                 .setData(type: self.synopsisPlayType, synopsis: synopsis, relationContentsModel:self.relationContentsModel)
+            
             self.playerModel
                 .setData(synopsisPrerollData: prerollData)
                 .setData(synopsisPlayData: self.playerData)
-                .setData(data: dataInfo, type: .vod(self.epsdRsluId,self.title))
+                .setData(data: dataInfo, type: .vod(self.epsdRsluId,self.title),
+                         autoPlay: self.isAutoPlay)
             
             if self.hasAuthority == true {
                 self.playerModel.continuousProgress = self.synopsisData?.progress
@@ -964,6 +985,9 @@ struct PageSynopsis: PageView {
             self.appSceneObserver.event = .toast(String.alert.btvplayFail)
         }
     }
+    
+    
+   
     
 }
 

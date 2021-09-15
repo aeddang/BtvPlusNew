@@ -19,20 +19,26 @@ class SceneDelegate: PageSceneDelegate {
     override func getPageModel() -> PageModel { return PageSceneModel()}
     override func adjustEnvironmentObjects<T>(_ view: T) -> AnyView where T : View
     {
-        let sceneObserver = AppSceneObserver()
+        self.pagePresenter.bodyColor = Color.brand.bg
+        
+        let appSceneObserver = AppSceneObserver()
         let dataProvider = DataProvider()
         let pairing = Pairing()
         let networkObserver = NetworkObserver()
         let setup = Setup()
-        
-        
-        self.pagePresenter.bodyColor = Color.brand.bg
+        let vsManager: VSManager = VSManager(
+            pairing:pairing,
+            dataProvider: dataProvider,
+            appSceneObserver: appSceneObserver
+        )
+    
         let res = Repository(
+            vsManager: vsManager,
             dataProvider:dataProvider,
             pairing:pairing,
             networkObserver:networkObserver,
             pagePresenter: self.pagePresenter,
-            sceneObserver:sceneObserver,
+            appSceneObserver:appSceneObserver,
             setup:setup
         )
         self.repository = res
@@ -47,15 +53,17 @@ class SceneDelegate: PageSceneDelegate {
        
         let environmentView = view
             .environmentObject(AppDelegate.appObserver)
+            .environmentObject(vsManager)
             .environmentObject(res)
             .environmentObject(dataProvider)
             .environmentObject(pairing)
             .environmentObject(networkObserver)
-            .environmentObject(sceneObserver)
+            .environmentObject(appSceneObserver)
             .environmentObject(keyboardObserver)
             .environmentObject(locationObserver)
             .environmentObject(setup) 
             .environmentObject(naviLogManager)
+            .background(Color.brand.bg)
         return AnyView(environmentView)
     }
     

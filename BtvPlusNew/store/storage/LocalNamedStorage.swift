@@ -11,6 +11,8 @@ import Foundation
 class LocalNamedStorage:PageProtocol {
     struct Keys {
         static let VS = "1.0"
+        static let tvUserId = "tvUserId" + VS
+        
         static let registPushCuid = "registPushCuid" + VS
         static let retryPushToken = "retryPushToken" + VS
         static let registPushToken = "registPushToken" + VS
@@ -31,6 +33,10 @@ class LocalNamedStorage:PageProtocol {
         }
     }
     
+    var tvUserId:String?{
+        set(newVal){ defaults.set(newVal, forKey: Keys.tvUserId) }
+        get{ return defaults.string(forKey: Keys.tvUserId)}
+    }
     var retryPushToken:String{
         set(newVal){ defaults.set(newVal, forKey: Keys.retryPushToken) }
         get{ return defaults.string(forKey: Keys.retryPushToken) ?? "" }

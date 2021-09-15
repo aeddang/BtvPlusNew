@@ -5,8 +5,6 @@ import Combine
 let testPath = "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
 let testPath2 = "http://techslides.com/demos/sample-videos/small.mp4"
 
-
-
 struct CPPlayer: PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
@@ -86,7 +84,7 @@ struct CPPlayer: PageComponent {
         
         .onReceive(self.viewModel.$status) { stat in
             if #available(iOS 14.0, *) { return }
-           // self.bindUpdate.toggle()
+            // self.bindUpdate.toggle()
         }
         .onReceive(self.viewModel.$streamEvent) { evt in
             guard let evt = evt else { return }
@@ -131,8 +129,11 @@ struct CPPlayer: PageComponent {
         }
         .background(Color.black)
         .onDisappear(){
+            self.viewModel.event = .pause
             self.clearWaitDuration()
             self.clearAutoUiHidden()
+            
+            ComponentLog.d("CPPlayer onDisappear " + CustomAVPlayerController.currentPlayerNum.description, tag:"CustomAVPlayerController2")
         }
         
     }
@@ -171,6 +172,7 @@ struct CPPlayer: PageComponent {
     @State var waitDurationCount = 0
     func creatWaitDuration() {
         ComponentLog.d("creatWaitDuration", tag:self.tag)
+        /*
         let retryCount = 3
         let retryPath = self.viewModel.path
         self.waitDurationSubscription?.cancel()
@@ -205,7 +207,7 @@ struct CPPlayer: PageComponent {
                     }
                     self.clearWaitDuration()
                 }
-            }
+            }*/
     }
     func clearWaitDuration() {
         if self.waitDurationSubscription == nil {return}

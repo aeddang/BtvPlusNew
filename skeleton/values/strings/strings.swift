@@ -233,4 +233,26 @@ extension String {
         public static let btv = "pairingHitchBtv".loaalized()
         public static let user = "pairingHitchUser".loaalized()
     }
+    
+    struct vs {
+        public static let account = "vsAccount".loaalized()
+        public static let accountExpirationDate = "vsAccountExpirationDate".loaalized()
+        public static let accountAutoPairing = "vsAccountAutoPairing".loaalized()
+        public static let accountUnPairing = "vsAccountUnPairing".loaalized()
+        public static let accountAutoPairingError = "vsAccountAutoPairingError".loaalized()
+        public static let accountAutoPairingFail = "vsAccountAutoPairingFail".loaalized()
+        public static let accountSynchronizationDenied = "vsAccountSynchronizationDenied".loaalized()
+        public static let accountSynchronizationFail = "vsAccountSynchronizationFail".loaalized()
+        public static let accountSynchronizationFailDifferentStb = "vsAccountSynchronizationFailDifferentStb".loaalized()
+        public static let accounttUnpairing = "vsAccountUnpairing".loaalized()
+        public static let accountAutoPairingConfirm = "vsAccountAutoPairingConfirm".loaalized()
+        public static let accountForbiddenUnpairing = "vsAccountForbiddenUnpairing".loaalized()
+        public static let pairingMaintain = "vsPairingMaintain".loaalized()
+        public static let pairingDisconnect = "vsPairingDisconnect".loaalized()
+        public static let pairingRequestTvProvider = "vsPairingRequestTvProvider".loaalized()
+        public static let accountTip = "vsAccountTip".loaalized()
+        public static let accountTipError = "vsAccountTipError".loaalized()
+        public static let accountTipRetry = "vsAccountTipRetry".loaalized()
+        public static let accountTipDenied = "vsAccountTipDenied".loaalized()
+    }
 }

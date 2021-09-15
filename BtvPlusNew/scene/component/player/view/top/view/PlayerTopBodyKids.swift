@@ -21,7 +21,7 @@ struct PlayerTopBodyKids: PageView{
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
     var title:String? = nil
-    var isSimple:Bool = false
+    
     var isFullScreen:Bool = false
     var isShowing:Bool = false
     var isMute:Bool = false
@@ -31,7 +31,7 @@ struct PlayerTopBodyKids: PageView{
     var body: some View {
         HStack(alignment: .top,  spacing: self.isFullScreen ? KidsPlayerUI.fullScreenSpacing : KidsPlayerUI.spacing){
             if !self.isLock {
-                if !self.isSimple && self.isFullScreen {
+                if self.isFullScreen {
                     Button(action: {
                         self.viewModel.btvPlayerEvent = .close
                         
@@ -80,20 +80,19 @@ struct PlayerTopBodyKids: PageView{
                     .offset(x: DimenKids.margin.light)
             }
             VStack( spacing:0){
-                if !self.isSimple{
-                    ImageButton(
-                        defaultImage: AssetKids.player.more,
-                        activeImage: AssetKids.player.lock,
-                        isSelected: self.isLock,
-                        size: self.isFullScreen ? KidsPlayerUI.iconFullScreen : KidsPlayerUI.icon,
-                        padding: self.isFullScreen ? KidsPlayerUI.fullScreenSpacing : KidsPlayerUI.spacing
-                    ){ _ in
-                        if self.isLock {
-                            self.viewModel.isLock = false
-                
-                        } else {
-                            self.viewModel.btvUiEvent = .more
-                        }
+               
+                ImageButton(
+                    defaultImage: AssetKids.player.more,
+                    activeImage: AssetKids.player.lock,
+                    isSelected: self.isLock,
+                    size: self.isFullScreen ? KidsPlayerUI.iconFullScreen : KidsPlayerUI.icon,
+                    padding: self.isFullScreen ? KidsPlayerUI.fullScreenSpacing : KidsPlayerUI.spacing
+                ){ _ in
+                    if self.isLock {
+                        self.viewModel.isLock = false
+            
+                    } else {
+                        self.viewModel.btvUiEvent = .more
                     }
                 }
                 
@@ -123,7 +122,6 @@ struct PlayerTopBodyKids: PageView{
                         self.viewModel.isLock = true
                     }
                 }
-                
                 Spacer()
             }
         }

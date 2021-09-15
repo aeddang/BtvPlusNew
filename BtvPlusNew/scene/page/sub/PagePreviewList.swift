@@ -23,13 +23,13 @@ struct PagePreviewList: PageView {
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var viewModel:PlayBlockModel = PlayBlockModel()
     @ObservedObject var playerModel: BtvPlayerModel = BtvPlayerModel(useFullScreenAction:false)
-    @ObservedObject var prerollModel: PrerollModel = PrerollModel()
     
     @State var title:String? = nil
     @State var menuId:String? = nil
     @State var safeAreaTop:CGFloat = 0
     @State var marginBottom:CGFloat = 0
     @State var isInit:Bool = false
+    @State var isFullScreen:Bool = false
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -50,7 +50,6 @@ struct PagePreviewList: PageView {
                         viewModel:self.viewModel,
                         infinityScrollModel:self.infinityScrollModel,
                         playerModel: self.playerModel,
-                        prerollModel: self.prerollModel,
                         marginTop: Dimen.margin.thin,
                         marginBottom: self.marginBottom
                     )
@@ -58,6 +57,13 @@ struct PagePreviewList: PageView {
                 }
                 .modifier(PageFull(style:.dark))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                if isFullScreen {
+                    SimplePlayer(
+                        pageObservable: self.pageObservable,
+                        viewModel : self.playerModel)
+                        .modifier(MatchParent())
+                        .background(Color.app.black)
+                }
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
@@ -76,6 +82,46 @@ struct PagePreviewList: PageView {
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
                 withAnimation{ self.marginBottom = bottom }
             }
+            .onReceive(self.viewModel.$fullPlayData){ data in
+                guard let data = data else {
+                    if !self.isFullScreen {return}
+                    self.isFullScreen = false
+                    if !SystemEnvironment.isTablet {
+                        self.pagePresenter.orientationLock(lockOrientation: .portrait)
+                        self.pagePresenter.fullScreenExit(changeOrientation:.portrait)
+                    } else {
+                        self.pagePresenter.orientationLock(lockOrientation: .all)
+                        self.pagePresenter.fullScreenExit()
+                    }
+                    self.appSceneObserver.useBottomImmediately = true
+                    
+                    return
+                }
+                if self.isFullScreen {return}
+                self.appSceneObserver.useBottomImmediately  = false
+                self.pagePresenter.orientationLock(lockOrientation: .landscape)
+                self.pagePresenter.fullScreenEnter(changeOrientation:.landscape)
+                self.isFullScreen = true
+                let type = self.playerModel.btvPlayType
+                let time = self.viewModel.continuousTime
+                var changeType = type
+                switch type {
+                case .preview(let value,_):
+                    changeType = .preview(value,isList:false)
+                default: break
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    self.playerModel.setData(
+                        data: data,
+                        type: changeType ?? .preview("", isList: false),
+                        autoPlay: true,
+                        continuousTime: time)
+                }
+                
+                
+                
+            }
+            
             .onAppear{
                 self.safeAreaTop = self.sceneObserver.safeAreaTop
                 guard let obj = self.pageObject  else { return }

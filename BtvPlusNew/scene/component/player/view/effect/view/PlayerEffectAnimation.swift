@@ -100,7 +100,7 @@ struct PlayerEffectAnimation: PageComponent{
                             LinearGradient(gradient:Gradient(colors: [Color.transparent.white45, Color.transparent.clear]), startPoint: .trailing, endPoint: .leading))
                         .onTapGesture(count: 2, perform: {
                             if self.viewModel.isLock { return }
-                            self.viewModel.event = .seekForward(self.viewModel.getSeekForwardAmount(), false)
+                            self.viewModel.event = .seekForward(self.viewModel.getSeekForwardAmount())
                         })
                     }
                     if self.showVolume {

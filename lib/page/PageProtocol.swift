@@ -316,7 +316,7 @@ extension PageContentProtocol {
     func sceneDidBecomeActive(_ scene: UIScene){
         childViews.forEach{ $0.sceneDidBecomeActive( scene ) }
         pageObservable.status = .becomeActive
-        pageObservable.isBackground = false
+       
         onSceneDidBecomeActive()
     }
     func sceneDidDisconnect(_ scene: UIScene){
@@ -332,6 +332,7 @@ extension PageContentProtocol {
     func sceneWillEnterForeground(_ scene: UIScene){
         childViews.forEach{ $0.sceneWillEnterForeground( scene ) }
         pageObservable.status = .enterForeground
+        pageObservable.isBackground = false
         onSceneWillEnterForeground()
     }
     func sceneDidEnterBackground(_ scene: UIScene){

@@ -11,6 +11,7 @@ import Foundation
 import SwiftUI
 import Combine
 struct AppLayout: PageComponent{
+    @EnvironmentObject var vsManager:VSManager
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
@@ -22,8 +23,6 @@ struct AppLayout: PageComponent{
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
-    
-   
     
     var body: some View {
         ZStack{
@@ -141,6 +140,7 @@ struct AppLayout: PageComponent{
             }else{
                 self.keyboardObserver.cancel()
             }
+            //self.pagePresenter.syncOrientation()
             self.syncOrientation()
         }
         .onReceive(self.pairing.$event){ evt in
@@ -187,16 +187,31 @@ struct AppLayout: PageComponent{
         
         .onReceive(self.repository.$status){ status in
             switch status {
+            case .reset: self.isInit = false
             case .ready: self.onStoreInit()
             case .error(let err): self.onPageError(err)
+            default: break
+            }
+        }
+        .onReceive(self.appSceneObserver.$event){ evt in
+            guard let evt = evt else { return }
+            switch evt {
+            case .appReset :
+                self.repository.reset(isReleaseMode: SystemEnvironment.isReleaseMode)
             default: break
             }
         }
         .onReceive(self.repository.$event){ evt in
             guard let evt = evt else { return }
             switch evt {
-            case .reset : self.onPageReset()
+            case .reset :
+                self.onPageStart()
             default: break
+            }
+        }
+        .onReceive(self.pageObservable.$isBackground){isBack in
+            if !isBack && self.isInit{
+                self.vsManager.checkAccess()
             }
         }
         .onAppear(){
@@ -215,8 +230,9 @@ struct AppLayout: PageComponent{
     
     @State var loadingInfo:[String]? = nil
     @State var isLoading = false
+    @State var isStoreInit = false
     @State var isInit = false
-    @State var isReady = false
+  
     @State var isInitDataAlram = false
     @State var useLogCollector = false
     @State var toastMsg:String = ""
@@ -225,6 +241,7 @@ struct AppLayout: PageComponent{
     @State var isPairingHitchShowing:Bool = true
     @State var pageType:PageType = .btv
     @State var hasPopup:Bool = false
+    
     
     @State private var delaySyncOrientation:AnyCancellable?
     func syncOrientation(){
@@ -243,6 +260,7 @@ struct AppLayout: PageComponent{
         self.delaySyncOrientation?.cancel()
         self.delaySyncOrientation = nil
     }
+    
     func onUpdateAlram(flag:UpdateFlag, msg:String? = nil){
         if flag == .force {
             self.appSceneObserver.alert = .alert(
@@ -285,6 +303,8 @@ struct AppLayout: PageComponent{
     
     
     func onStoreInit(){
+        if self.isStoreInit {return}
+        self.isStoreInit = true
         //self.appSceneObserver.event = .debug("onStoreInit")
         if SystemEnvironment.firstLaunch {
             self.pagePresenter.changePage(
@@ -301,12 +321,14 @@ struct AppLayout: PageComponent{
             return
         }
         self.onPageStart()
+        self.checkAppleTv()
     }
     
     func onPageStart(){
+        if self.isInit {return}
         self.isInit = true
         self.isLoading = false
-         
+        self.pairing.ready()
         if !self.appObserverMove(self.appObserver.page) {
             let initMenuId = self.dataProvider.bands.datas.first?.menuId
             self.pagePresenter.changePage(PageProvider.getPageObject(.home).addParam(key: .id, value: initMenuId))
@@ -344,14 +366,14 @@ struct AppLayout: PageComponent{
              )
             */
         }
-        VSSubscriptionManager().registSubscription()
-        
+         
         DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
             self.deepLinkMove(self.appObserver.deepLinkUrl)
             if let alram = self.appObserver.alram  {
                 self.appSceneObserver.alert = .recivedApns(alram)
             }
         }
+       
     }
     
     func onPageReset(){
@@ -410,6 +432,11 @@ struct AppLayout: PageComponent{
         guard let link = link else { return false }
         self.appObserver.resetDeeplink()
         return self.repository.webBridge.parseUrl(link.absoluteString) != nil
+    }
+    
+    func checkAppleTv(){
+        if !self.isInit {return}
+        self.vsManager.checkAccessStatus()
     }
     
 }

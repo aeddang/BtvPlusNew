@@ -146,10 +146,11 @@ struct MonthlyBlock: PageComponent {
             useTracking:self.useTracking
         ){ data in
             
+            self.selectedData(data: data)
             if let action = self.action {
                 action(data)
             }
-            self.selectedData(data: data)
+           
         }
         ComponentLog.d("New List" , tag: self.tag)
         self.listId = key

@@ -119,7 +119,7 @@ struct WatchedList: PageComponent{
                     actionText: String.pageTitle.watchedKids,
                     action: {
                         self.pagePresenter.openPopup(
-                            PageKidsProvider.getPageObject( .kidsMy)
+                            PageKidsProvider.getPageObject( .kidsMy, animationType: .opacity)
                                 .addParam(key: .subId, value: PageKidsMy.recentlyWatchCode)
                                
                         )

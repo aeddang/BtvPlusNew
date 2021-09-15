@@ -109,6 +109,7 @@ struct PagePurchase: PageView {
                         guard let param = AppUtil.getJsonParam(jsonString: json) else { return }
                         if let result = param["result"] as? Bool,let pid = param["pid"] as? String {
                             if !result { return }
+                            if pid.isEmpty { return }
                             let listPrice = param["listPrice"] as? String
                             let paymentPrice = param["paymentPrice"] as? String
                             self.purchaseId = pid

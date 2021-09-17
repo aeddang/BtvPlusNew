@@ -78,7 +78,7 @@ class LocalNamedStorage:PageProtocol {
     
     func getPcid()->String {
         if let id = self.pcId {return id}
-        let dateId = Date().toDateFormatter(dateFormat: "yyyyMMddHHmmssSSS", local: "en_US_POSIX")
+        let dateId = Date().toDateFormatter(dateFormat: "yyyyMMddHHmmssSSS", local: "en_US_POSIX") 
         var t = time_t(0)
         srand48( time(&t))
         let randNum = drand48() * 1000000

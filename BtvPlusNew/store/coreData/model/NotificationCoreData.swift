@@ -20,26 +20,11 @@ class NotificationCoreData:PageProtocol {
         static let isRead = "isRead"
     }
     
-    @discardableResult
-    func addNotice(_ userInfo: [AnyHashable: Any])->AlramData?{
+    func addNotice(_ userInfo: [AnyHashable: Any]){
         var badge:Int = 0
         var title:String = ""
         var body:String = ""
-        
-        NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: "UPDATE_ALARM_NEW")))
-        
-        DispatchQueue.main.async {
-            let count = self.getAllNotices().filter{!$0.isRead}.count
-            UIApplication.shared.applicationIconBadgeNumber = count
-        }
-        
         if let aps = userInfo["aps"] as? [String: Any] {
-            /*
-            if let mutableContent = aps["mutable-content"] as? String {
-                if mutableContent == "1" { return nil }
-            } else if let mutableContent = aps["mutable-content"] as? Int {
-                if mutableContent == 1 { return nil }
-            }*/
             if let value = aps["badge"] as? Int { badge = value }
             if let alert = aps["alert"] as? [String: Any] {
                 if let value = alert["title"] as? String { title = value }
@@ -49,19 +34,18 @@ class NotificationCoreData:PageProtocol {
             }
         }
         
-        let alram = AlramData().setData(title: title, text: body, userData: userInfo as? [String: Any])
         let container = self.persistentContainer
-        guard let entity = NSEntityDescription.entity(forEntityName: Self.model, in: container.viewContext) else { return alram }
-        let item = NSManagedObject(entity: entity, insertInto: container.viewContext)
-        item.setValue(title, forKey: Self.Keys.title)
-        item.setValue(badge, forKey: Self.Keys.badge)
-        item.setValue(body, forKey: Self.Keys.body)
-        item.setValue(Date(), forKey: Self.Keys.date)
-        item.setValue(false, forKey: Self.Keys.isRead)
-        item.setValue(userInfo, forKey: Self.Keys.userInfo)
-        self.saveContext()
-        return alram
-        
+        container.performBackgroundTask { context in
+            guard let entity = NSEntityDescription.entity(forEntityName: Self.model, in: container.viewContext) else { return }
+            let item = NSManagedObject(entity: entity, insertInto: container.viewContext)
+            item.setValue(title, forKey: Self.Keys.title)
+            item.setValue(badge, forKey: Self.Keys.badge)
+            item.setValue(body, forKey: Self.Keys.body)
+            item.setValue(Date(), forKey: Self.Keys.date)
+            item.setValue(false, forKey: Self.Keys.isRead)
+            item.setValue(userInfo, forKey: Self.Keys.userInfo)
+            self.saveContext()
+        }
     }
 
     func removeNotice(_ noti:NotificationEntity){

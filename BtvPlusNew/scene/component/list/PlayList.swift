@@ -38,6 +38,7 @@ class PlayData:InfinityData,ObservableObject{
         self.playTime = 0
     }
     func reset(){
+        self.playTime = 0
         self.isCompleted = false
     }
     
@@ -147,10 +148,13 @@ extension PlayItem{
         }
         return (width * 9 / 16) + self.bottomSize
     }
-    
 }
 
+
+
+
 struct PlayItem: PageView {
+    
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
@@ -165,7 +169,10 @@ struct PlayItem: PageView {
     var onPlay:(PlayData)->Void
     @State var isSelected:Bool = false
     @State var isPlay:Bool = false
+    @State var isRecovery:Bool = false
     @State var sceneOrientation: SceneOrientation = .portrait
+    
+    
     var body: some View {
         ZStack{
             if self.sceneOrientation == .landscape {
@@ -175,7 +182,9 @@ struct PlayItem: PageView {
                         playerModel : self.playerModel,
                         data: self.data,
                         isSelected : self.isSelected,
+                        isRecovery: self.isRecovery,
                         isPlay : self.isPlay,
+                        isLoading: self.isLoading,
                         action:{
                             self.onPlay(self.data)
                         })
@@ -211,9 +220,10 @@ struct PlayItem: PageView {
                         playerModel : self.playerModel,
                         data: self.data,
                         isSelected : self.isSelected,
+                        isRecovery: self.isRecovery,
                         isPlay : self.isPlay,
+                        isLoading: self.isLoading,
                         action:{
-                            if data.isCompleted {return}
                             self.onPlay(self.data)
                         })
                     .modifier(
@@ -257,20 +267,29 @@ struct PlayItem: PageView {
                 }
             }
         }
+        
         .background(SystemEnvironment.isTablet ? Color.app.blueLight : Color.transparent.clear)
-        .opacity(self.isSelected ? 1.0 : 0.4)
+        .opacity(self.isSelected ? 1.0 : 0.5)
         .onReceive(self.viewModel.$currentPlayData){ selectData in
-            guard let selectData = selectData else {return}
+            guard let selectData = selectData else {
+                self.isSelected = false
+                return
+            }
             let isSelect = selectData == self.data
-            
+            if self.isSelected == isSelect { return }
             withAnimation{
                 self.isSelected = isSelect
             }
             let isAuto = !data.isCompleted && self.setup.autoPlay && isSelect
             if isAuto {
+                PageLog.d("currentPlayData autoLoad " + (selectData.title ?? ""), tag: self.tag)
                 self.autoLoad()
             } else {
+                PageLog.d("currentPlayData cancelAutoLoad " + (selectData.title ?? ""), tag: self.tag)
                 self.playerModel.event = .pause
+                self.isPlay = false
+                self.isLoading = false
+                self.isRecovery = false
                 self.cancelAutoLoad()
             }
         }
@@ -279,10 +298,23 @@ struct PlayItem: PageView {
                 self.load()
             }
         }
+        
+        .onReceive(self.playerModel.$streamEvent){stat in
+            if !self.isSelected {return}
+            switch stat {
+            case .recovery :
+                PageLog.d("recovery " + (self.data.title ?? ""), tag: self.tag)
+                self.isRecovery = true
+                self.autoLoad()
+            default : break
+            }
+        }
         .onReceive(self.playerModel.$streamStatus){stat in
+            if !self.isSelected {return}
             switch stat {
             case .playing :
                 self.isPlay = true
+                withAnimation{ self.isLoading = false }
             case .stop :
                 self.isPlay = false
             default : break
@@ -300,7 +332,6 @@ struct PlayItem: PageView {
             if !self.isSelected {return}
             guard let epsdRsluId = data.epsdRsluId else { return }
             if !err.id.hasPrefix(epsdRsluId) { return }
-            self.isError = true
         }
         .onReceive(self.data.$isUpdated){ updated in
             if updated {
@@ -308,10 +339,7 @@ struct PlayItem: PageView {
             }
         }
         .onReceive(self.sceneObserver.$isUpdated){ _ in
-            DispatchQueue.main.async {
-                self.sceneOrientation = self.sceneObserver.sceneOrientation
-            }
-            
+            self.sceneOrientation = self.sceneObserver.sceneOrientation
         }
         .onAppear{
             self.sceneOrientation = self.sceneObserver.sceneOrientation
@@ -324,21 +352,24 @@ struct PlayItem: PageView {
             self.cancelAutoLoad()
         }
     }
-    
+    @State var isLoading:Bool = false
     @State var isInit:Bool = false
     @State var isLike:LikeStatus? = nil
     @State var isAlram:Bool? = nil
-    @State var isError:Bool = false
+    
 
     private func load(){
+        self.isRecovery = false
         if !self.isSelected { return }
         guard let epsdRsluId = data.epsdRsluId else { return }
         let watchLv = self.data.watchLv
         if watchLv >= 19 {
             if self.pairing.status != .pairing {
+                self.isPlay = false
                 return
             }
             if !SystemEnvironment.isAdultAuth {
+                self.isPlay = false
                 return
             }
         }
@@ -346,10 +377,11 @@ struct PlayItem: PageView {
             ( !SystemEnvironment.isWatchAuth && SystemEnvironment.watchLv != 0 )
         {
             if SystemEnvironment.watchLv != 0 && SystemEnvironment.watchLv <= watchLv {
+                self.isPlay = false
                 return
             }
         }
-       
+        withAnimation{ self.isLoading = true }
         self.playerModel.currentIdx = self.data.index
         self.playerModel.currentEpsdRsluId = self.data.epsdRsluId
         if pairing.status == .pairing {
@@ -364,17 +396,17 @@ struct PlayItem: PageView {
         guard let epsdRsluId = data.epsdRsluId else { return }
         guard let data = res.data as? Preview else {
             PageLog.d("error Preview", tag: self.tag)
-            self.isError = true
+            self.isPlay = false
             return
         }
         if data.result != ApiCode.success {
             PageLog.d("fail PreviewInfo", tag: self.tag)
-            self.isError = true
+            self.isPlay = false
             return
         }
         guard let dataInfo = data.CTS_INFO else {
             PageLog.d("error PreviewInfo", tag: self.tag)
-            self.isError = true
+            self.isPlay = false
             return
         }
         PageLog.d("load Preview", tag: self.tag)
@@ -390,14 +422,14 @@ struct PlayItem: PageView {
     
     @State private var autoPlayer:AnyCancellable?
     private func autoLoad(){
+        self.isPlay = false
         self.autoPlayer?.cancel()
         self.autoPlayer = Timer.publish(
-            every: 0.5, on: .current, in: .common)
+            every: self.isRecovery ? 1.0 : 0.5, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
                 self.cancelAutoLoad()
                 self.load()
-                //self.pagePresenter.orientationLock(lockOrientation: .all)
             }
     }
     private func cancelAutoLoad(){
@@ -417,13 +449,14 @@ struct PlayItemScreen: PageView {
     @ObservedObject var playerModel: BtvPlayerModel
     var data:PlayData
     var isSelected:Bool
+    var isRecovery:Bool
     var isPlay:Bool = false
-
+    var isLoading:Bool = false
     var action:()->Void
     
     var body: some View {
         ZStack{
-            if self.isSelected{
+            if self.isSelected && !self.isRecovery{
                 SimplePlayer(
                     pageObservable:self.pageObservable,
                     viewModel:self.playerModel
@@ -431,7 +464,7 @@ struct PlayItemScreen: PageView {
                 .modifier(MatchParent())
                 
             }
-            if !self.isPlay || !self.isSelected {
+            if !self.isPlay || !self.isSelected || self.isLoading || self.isRecovery {
                 if self.data.image == nil {
                     Image(Asset.noImg16_9)
                         .renderingMode(.original)
@@ -450,15 +483,21 @@ struct PlayItemScreen: PageView {
                         .aspectRatio(contentMode: .fill)
                         .modifier(MatchParent())
                 }
-                Button(action: {
-                   self.action()
-                }) {
-                    Image(Asset.icon.thumbPlay)
-                        .renderingMode(.original).resizable()
-                        .scaledToFit()
-                        .frame(width: Dimen.icon.heavyExtra, height: Dimen.icon.heavyExtra)
+                
+                if (self.isLoading || self.isRecovery) && self.isSelected{
+                    CircularSpinner(resorce: Asset.ani.loading)
+                } else {
+                    Button(action: {
+                        self.data.reset()
+                        self.action()
+                    }) {
+                        Image(Asset.icon.thumbPlay)
+                            .renderingMode(.original).resizable()
+                            .scaledToFit()
+                            .frame(width: Dimen.icon.heavyExtra, height: Dimen.icon.heavyExtra)
+                    }
+                    .buttonStyle(BorderlessButtonStyle())
                 }
-                .buttonStyle(BorderlessButtonStyle())
             }
             
         }

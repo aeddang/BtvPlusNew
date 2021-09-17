@@ -26,12 +26,24 @@ extension PageSynopsis {
     
     func checkWatchLvAuth() -> Bool{
         guard let model = self.synopsisModel else {return false}
+        guard let episodeViewerData = self.episodeViewerData else { return false}
         if self.isPairing == true {
-            if self.episodeViewerData?.isAdult == true && !SystemEnvironment.isAdultAuth{
-                self.pagePresenter.openPopup(
-                    PageProvider.getPageObject(.adultCertification)
-                        .addParam(key: .id, value: self.tag)
-                )
+            
+            if episodeViewerData.isAdult == true && !SystemEnvironment.isAdultAuth{
+                if self.historys.isEmpty {
+                    self.historyCancel()
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.adultCertification)
+                            .addParam(key: .id, value: self.tag)
+                            .addParam(key: .data, value: self.pageObject)
+                    )
+                } else {
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.adultCertification)
+                            .addParam(key: .id, value: self.tag)
+                    )
+                }
+                
                 return false
             }
             if !SystemEnvironment.isAdultAuth ||
@@ -56,9 +68,14 @@ extension PageSynopsis {
                 }
             }
         }else{
-            if self.episodeViewerData?.isAdult == true {
-                self.appSceneObserver.alert = .needPairing(){
+            if episodeViewerData.isAdult == true {
+                if self.historys.isEmpty {
                     self.historyCancel()
+                    self.appSceneObserver.alert = .needPairing(nil, move: self.pageObject)
+                } else {
+                    self.appSceneObserver.alert = .needPairing(){
+                        self.historyCancel()
+                    }
                 }
                 return false
             }

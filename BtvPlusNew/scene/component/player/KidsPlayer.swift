@@ -66,7 +66,7 @@ struct KidsPlayer: PageComponent{
                     PlayerOptionSelectBox(viewModel: self.viewModel, type: .kids)
                 }
                 .opacity(self.isWaiting == false ? 1.0 : 0)
-                /*
+            
                 .gesture(
                     DragGesture(minimumDistance: 5, coordinateSpace: .local)
                         .onChanged({ value in
@@ -74,33 +74,23 @@ struct KidsPlayer: PageComponent{
                             if self.isFullScreen
                                 && (self.isUiShowing || self.isPlayListShowing)
                                 && !self.listData.datas.isEmpty {
-                                
                                 let range = geometry.size.height/2
                                 if value.startLocation.y > range {
                                     self.dragGestureType = .playList
                                 }
                             }
-                            
+
                             if let type = dragGestureType {
                                 switch type {
-                                case .brightness: self.onBrightnessChange(value: value)
-                                case .volume: self.onVolumeChange(value: value)
-                                case .progress: self.onProgressChange(value: value)
                                 case .playList: self.onPlaylistChange(value: value)
+                                default : break
                                 }
                             }else {
                                 let diffX = value.translation.width
                                 let diffY = value.translation.height
-                                if abs(diffX) > abs(diffY) {
-                                    self.dragGestureType = .progress
-                                }else{
+                                if abs(diffX) < abs(diffY) {
                                     if self.isPlayListShowing {
                                         self.dragGestureType = .playList
-                                    }else{
-                                        let half = geometry.size.width/2
-                                        let posX = value.startLocation.x
-                                        if posX > half {self.dragGestureType = .volume}
-                                        else {self.dragGestureType = .brightness}
                                     }
                                 }
                                 self.viewModel.playerUiStatus = .hidden
@@ -108,9 +98,6 @@ struct KidsPlayer: PageComponent{
                         })
                         .onEnded({ value in
                             switch self.dragGestureType {
-                            case .progress:
-                                self.viewModel.event = .seekMove(self.viewModel.seeking, false)
-                                self.viewModel.seeking = 0
                             case .playList:
                                 self.onPlaylistChangeCompleted()
                             default:break
@@ -128,7 +115,7 @@ struct KidsPlayer: PageComponent{
                         self.isChangeRatioCancel = false
                     }
                 )
-                */
+            
                 if self.isPreroll {
                     PrerollUi(
                         viewModel: self.viewModel,
@@ -190,8 +177,9 @@ struct KidsPlayer: PageComponent{
                 }
             }
             .onReceive(self.viewModel.$selectQuality){ quality in
-                self.setup.selectedQuality = quality?.name
-                self.viewModel.selectedQuality = quality?.name
+                guard let quality = quality else {return}
+                self.setup.selectedQuality = quality.name
+                self.viewModel.selectedQuality = quality.name
                 self.viewModel.currentQuality = quality
             }
             .onReceive(self.viewModel.$duration){ d in

@@ -17,7 +17,6 @@ enum VSFlag {
          unpairingTvProvider // TV프로바이더 로그인 해재 요청 -> 사용자직접
 }
 
-
 class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDelegate{
     private let pairing:Pairing
     private let dataProvider:DataProvider

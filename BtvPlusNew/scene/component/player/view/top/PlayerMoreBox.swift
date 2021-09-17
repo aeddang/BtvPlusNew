@@ -42,6 +42,7 @@ struct PlayerMoreBox: PageView{
             }
             if self.viewModel.synopsisPlayerData?.type != .clip() {
                 Button(action: {
+                    self.viewModel.btvUiEvent = .watchBtv
                     self.hideBox()
                     
                 }) {

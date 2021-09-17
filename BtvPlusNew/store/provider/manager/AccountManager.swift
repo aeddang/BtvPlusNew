@@ -225,12 +225,13 @@ class AccountManager : PageProtocol{
                 }
                 self.pairing.syncHostDevice(HostDevice().setData(deviceData: hostData))
            
-            case .getDevicePairingInfo(_, _, let prevResult) :
+            case .getDevicePairingInfo(_, _, _ /*let prevResult*/) :
+                let defaultReason = PairingInfo()
                 guard let data = res.data as? DevicePairingInfo else {
-                    return self.pairing.connectError(header: prevResult)
+                    return self.pairing.connectErrorReason(defaultReason)
                 }
                 guard let info = data.body?.pairing_info else {
-                    return self.pairing.connectError(header: prevResult)
+                    return self.pairing.connectErrorReason(defaultReason)
                 }
                 self.pairing.connectErrorReason(info)
                 

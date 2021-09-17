@@ -60,6 +60,7 @@ struct CPPlayer: PageComponent {
             self.autoUiHidden?.cancel()
         }
         .onReceive(self.viewModel.$duration) { d in
+            /*
             if d == 0 && self.viewModel.path.isEmpty == false{
                 if self.waitDurationSubscription == nil {
                     self.creatWaitDuration()
@@ -68,14 +69,14 @@ struct CPPlayer: PageComponent {
             } else {
                 self.clearWaitDuration()
             }
-            
+            */
         }
         
         .onReceive(self.viewModel.$event) { evt in
             guard let evt = evt else { return }
             switch evt {
-            case .load : self.clearWaitDuration()
-            case .stop, .pause :  self.clearWaitDuration()
+            //case .load : self.clearWaitDuration()
+            //case .stop, .pause :  self.clearWaitDuration()
             case .seeking(_): self.autoUiHidden?.cancel()
             case .fixUiStatus(let isFix): if isFix { self.autoUiHidden?.cancel()}
             default : break
@@ -118,22 +119,21 @@ struct CPPlayer: PageComponent {
                 code = "#asset error"
             }
             ComponentLog.e(code + " : " + msg, tag:self.tag)
-            self.appSceneObserver.alert = .confirm(
-                String.alert.playError, String.alert.playErrorPlayback, code,
-                confirmText: String.button.btnRetry){retry in
-                if retry {
-                    self.viewModel.updateType = .recovery(self.viewModel.initTime ?? 0)
-                    self.viewModel.event = .resume
+            if self.viewModel.recoveryCount > 1 || !self.viewModel.useRecovery{
+                self.appSceneObserver.alert = .confirm(
+                    String.alert.playError, String.alert.playErrorPlayback, code,
+                    confirmText: String.button.btnRetry){retry in
+                    if retry {
+                        self.viewModel.updateType = .recovery(self.viewModel.initTime ?? 0)
+                        self.viewModel.event = .resume
+                    }
                 }
             }
         }
         .background(Color.black)
         .onDisappear(){
             self.viewModel.event = .pause
-            self.clearWaitDuration()
             self.clearAutoUiHidden()
-            
-            ComponentLog.d("CPPlayer onDisappear " + CustomAVPlayerController.currentPlayerNum.description, tag:"CustomAVPlayerController2")
         }
         
     }
@@ -165,55 +165,6 @@ struct CPPlayer: PageComponent {
     func clearAutoUiHidden() {
         self.autoUiHidden?.cancel()
         self.autoUiHidden = nil
-    }
-    
-    
-    @State var waitDurationSubscription:AnyCancellable?
-    @State var waitDurationCount = 0
-    func creatWaitDuration() {
-        ComponentLog.d("creatWaitDuration", tag:self.tag)
-        /*
-        let retryCount = 3
-        let retryPath = self.viewModel.path
-        self.waitDurationSubscription?.cancel()
-        self.waitDurationCount = 0
-        self.waitDurationSubscription = Timer.publish(
-            every: 2, on: .current, in: .common)
-            .autoconnect()
-            .sink() {_ in
-                self.waitDurationCount += 1
-                if self.viewModel.path != retryPath {
-                    ComponentLog.d("waitDuration path change cancel", tag:self.tag)
-                    self.clearWaitDuration()
-                    return
-                }
-                
-                ComponentLog.d("waitDurationCount " + waitDurationCount.description, tag:self.tag)
-                if self.waitDurationCount < retryCount{
-                    if self.viewModel.duration > 0 {
-                        self.clearWaitDuration()
-                        return
-                    }
-                    if retryCount == (self.waitDurationCount-1){
-                        ComponentLog.d("waitDuration Recovery " + waitDurationCount.description, tag:self.tag)
-                        DispatchQueue.main.async {
-                            self.viewModel.updateType = .recovery(self.viewModel.initTime ?? 0, count:retryCount )
-                        }
-                    }
-                }else if self.waitDurationCount == retryCount {
-                    if self.viewModel.duration == 0 {
-                        self.viewModel.event = .pause
-                        self.viewModel.error = .stream(.playback("wait Duration"))
-                    }
-                    self.clearWaitDuration()
-                }
-            }*/
-    }
-    func clearWaitDuration() {
-        if self.waitDurationSubscription == nil {return}
-        ComponentLog.d("clearWaitDuration", tag:self.tag)
-        self.waitDurationSubscription?.cancel()
-        self.waitDurationSubscription = nil
     }
 }
 

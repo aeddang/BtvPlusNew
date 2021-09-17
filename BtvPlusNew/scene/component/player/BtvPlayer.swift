@@ -8,7 +8,10 @@
 import Foundation
 import SwiftUI
 
+
 struct BtvPlayer: PageComponent{
+    static var screenGravity:AVLayerVideoGravity? = nil
+    static var playRate:Float? = nil
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var sceneObserver:PageSceneObserver
@@ -209,8 +212,9 @@ struct BtvPlayer: PageComponent{
                 }
             }
             .onReceive(self.viewModel.$selectQuality){ quality in
-                self.setup.selectedQuality = quality?.name
-                self.viewModel.selectedQuality = quality?.name
+                guard let quality = quality else {return}
+                self.setup.selectedQuality = quality.name
+                self.viewModel.selectedQuality = quality.name
                 self.viewModel.continuousTime = self.viewModel.time
                 self.viewModel.currentQuality = quality
                 
@@ -302,10 +306,25 @@ struct BtvPlayer: PageComponent{
                 default : break
                 }
             }
+            .onReceive(self.viewModel.$rate) { rate in
+                if !self.isInit {return}
+                Self.playRate = rate
+            }
+            .onReceive(self.viewModel.$screenGravity) { gravity in
+                if !self.isInit {return}
+                Self.screenGravity = gravity
+            }
             .onAppear(){
                 if !Preroll.isInit { Preroll.initate() }
                 self.viewModel.isUserPlay = self.setup.autoPlay
+        
                 self.viewModel.selectedQuality = self.setup.selectedQuality
+                if let gravity = Self.screenGravity {
+                    self.viewModel.screenGravity = gravity
+                }
+                if let playRate = Self.playRate {
+                    self.viewModel.rate = playRate
+                }
                 if BtvPlayerModel.isInitMute {
                     self.viewModel.isMute = true
                 }
@@ -346,6 +365,7 @@ struct BtvPlayer: PageComponent{
     }
     
     func initPlay(){
+        self.isInit = true
         ComponentLog.d("initPlay", tag: self.tag)
         if self.isPreroll {
             self.isPreroll = false
@@ -366,7 +386,6 @@ struct BtvPlayer: PageComponent{
         ComponentLog.d("continuousTime " + t.description, tag: self.tag)
         DispatchQueue.main.async {
             self.viewModel.event = .load(path, true , t, self.viewModel.header)
-           
             if self.viewModel.useInside, let epsdId = self.contentID {
                 if self.insideModel.epsdId != epsdId  {
                     self.insideModel.reset(epsdId: epsdId)
@@ -376,7 +395,7 @@ struct BtvPlayer: PageComponent{
         }
         
     }
-    
+    @State var isInit:Bool = false
     @State var isWaiting:Bool? = nil
     @State var isPrerollPause:Bool = false
     @State var recoveryTime:Double = 0

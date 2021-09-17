@@ -14,6 +14,7 @@ class LocalStorage {
         static let initate = "isFirst"
         static let serverConfig = "serverConfig" + VS
         static let isReleaseMode = "isReleaseMode" + VS
+        static let isPush = "isPush" + VS
     }
     let defaults = UserDefaults.standard
     
@@ -44,6 +45,15 @@ class LocalStorage {
         get{
             guard let isRelease = defaults.object(forKey: Keys.isReleaseMode) as? Bool else {return nil}
             return isRelease
+        }
+    }
+    
+    var isPush:Bool{
+        set(newVal){
+            defaults.set(newVal, forKey: Keys.isPush)
+        }
+        get{
+            return defaults.bool(forKey: Keys.isPush)
         }
     }
     

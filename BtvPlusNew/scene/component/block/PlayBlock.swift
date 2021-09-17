@@ -108,7 +108,7 @@ struct PlayBlock: PageComponent{
                                         self.appSceneObserver.event = .toast((data.openDate ?? "") + " " + String.alert.updateAlramRecommand)
                                     }
                                 }
-                                Spacer().modifier(MatchHorizontal(height: 5))
+                                Spacer().modifier(MatchHorizontal(height: Dimen.margin.medium))
                                     .onAppear{
                                         self.onAppear(idx:self.maxCount)
                                     }
@@ -182,7 +182,7 @@ struct PlayBlock: PageComponent{
                 
             }
             .onReceive(self.infinityScrollModel.$scrollPosition){_ in
-                self.onUpdate()
+                self.delayUpdate()
             }
             .onReceive(self.infinityScrollModel.$pullPosition){ pos in
                 if pos < InfinityScrollModel.PULL_RANGE { return }
@@ -224,7 +224,16 @@ struct PlayBlock: PageComponent{
                 default : break
                 }
             }
-            
+            .onReceive(self.playerModel.$btvPlayerEvent){ evt in
+                guard let evt = evt else {return}
+                switch evt {
+                case .close :
+                    if self.isFullScreen {
+                        self.closeFullScreen()
+                    }
+                default : break
+                }
+            }
             .onReceive(self.playerModel.$streamEvent){ evt in
                 guard let evt = evt else {return}
                 switch evt {
@@ -237,6 +246,7 @@ struct PlayBlock: PageComponent{
                 }
             }
             .onReceive(self.sceneObserver.$isUpdated){ _ in
+                if self.sceneOrientation == self.sceneObserver.sceneOrientation {return}
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
                 self.sceneOrientationUpdate()
             }
@@ -251,12 +261,12 @@ struct PlayBlock: PageComponent{
     
     private func forcePlay(data:PlayData? = nil){
         guard let current:PlayData = data ?? self.selectedData else {return}
-        current.reset()
         if self.focusIndex != current.index {
             self.onFocusChange(willFocus: current.index)
+        } else {
             self.viewModel.isPlayStatusUpdate = true
         }
-       
+        
         let watchLv = current.watchLv
         if watchLv >= 19 {
             if self.pairing.status != .pairing {
@@ -288,21 +298,20 @@ struct PlayBlock: PageComponent{
     @State var isFullScreen:Bool = false
    
     @State var isHold:Bool = false
-    @State var isHoldFocus:Bool = false
-    @State var isHoldList:Bool = false
+     
     private func openFullScreen(){
         if self.focusIndex == -1 {return}
         if self.isHold {return}
         self.isHold = true
-        self.isHoldFocus = true
         self.isFullScreen = true
-        self.isHoldList = SystemEnvironment.isTablet ? true : false
         self.finalIndex = self.focusIndex
+        self.delayUpdateCancel()
         PageLog.d("onOpenFullScreen " + (self.finalIndex?.description ?? ""), tag:self.tag)
         self.playerModel.event = .pause
         self.viewModel.currentPlayData = nil
         self.onPlaytimeChanged(t:self.playerModel.time)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+        self.pagePresenter.fullScreenEnter(isLock: true, changeOrientation: .landscape)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             let playTime = self.selectedData?.playTime
             self.viewModel.continuousTime =  playTime
             self.viewModel.fullPlayData = self.playerModel.playData
@@ -314,22 +323,20 @@ struct PlayBlock: PageComponent{
         if self.focusIndex == -1 {return}
         if self.isHold {return}
         self.isHold = true
-        self.isHoldFocus = true
-        self.isHoldList = SystemEnvironment.isTablet ? true : false
+        self.delayUpdateCancel()
+        self.onPlaytimeChanged(t:self.playerModel.time)
         self.playerModel.event = .pause
         self.viewModel.fullPlayData = nil
         self.playerModel.reset()
-        self.onPlaytimeChanged(t: 0)
+       // self.selectedData?.completed()
         PageLog.d("onCloseFullScreen " + (self.finalIndex?.description ?? "nil"), tag:self.tag)
-       
+        self.pagePresenter.fullScreenExit(changeOrientation: SystemEnvironment.isTablet ? nil : .portrait)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.isFullScreen = false
-            //self.pagePresenter.orientationLock(lockOrientation: .all)
-            self.isHold = false
             if let posIdx = self.finalIndex {
                 if posIdx >= 0 && posIdx < datas.count {
                     self.infinityScrollModel.uiEvent = .scrollTo(datas[posIdx].hashId)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                         self.onFocusChange(willFocus: posIdx)
                         PageLog.d("onCloseFullScreenUpdate " + (posIdx.description), tag:self.tag)
                     }
@@ -352,18 +359,15 @@ struct PlayBlock: PageComponent{
         
         if self.isHold {return}
         self.isHold = true
-        self.isHoldFocus = true
-        self.isHoldList = SystemEnvironment.isTablet ? true : false
+        self.onPlaytimeChanged(t: self.playerModel.time)
         self.playerModel.event = .pause
         self.finalIndex = self.focusIndex
-       
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.isFullScreen = false
             if let posIdx = self.finalIndex {
-                self.isHold = false
                 if posIdx >= 0 && posIdx < self.datas.count {
                     self.infinityScrollModel.uiEvent = .scrollTo(self.datas[posIdx].hashId)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                         self.onFocusChange(willFocus: posIdx)
                         PageLog.d("onSceneOrientationUpdate " + (posIdx.description), tag:self.tag)
                     }
@@ -372,15 +376,7 @@ struct PlayBlock: PageComponent{
            
         }
     }
-    /*
-    private func forceScrollReset(){
-        let isReverse = self.finalIndex == 0
-        let endPos = self.datas.count-1
-        self.infinityScrollModel.uiEvent = .scrollTo(self.datas[isReverse ? endPos : 0].hashId, .center)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-            self.infinityScrollModel.uiEvent = .scrollTo(self.datas[isReverse ? 0 : endPos].hashId, .center)
-        }
-    }*/
+    
     
     private func onPlaytimeChanged(t:Double){
         guard let data = self.selectedData else { return }
@@ -486,7 +482,7 @@ struct PlayBlock: PageComponent{
     func delayUpdate(){
         self.delayUpdateSubscription?.cancel()
         self.delayUpdateSubscription = Timer.publish(
-            every: 0.2, on: .current, in: .common)
+            every: 0.3, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
                 self.delayUpdateCancel()
@@ -512,20 +508,20 @@ struct PlayBlock: PageComponent{
    
     @State var prevHalf:Int = 0
     private func onUpdate(){
-        if self.isHoldFocus { return }
+        if self.isHold { return }
         if self.maxCount < 1 {return}
         let cPos = self.infinityScrollModel.scrollPosition
         
         //PageLog.d("onUpdate origin " + cPos.description, tag: self.tag)
-        if cPos >= 0 {
-            self.onFocusChange(willFocus: 0)
+        if cPos >= 0 && self.focusIndex != 0{
+            self.onResetFocusChange(willFocus: 0)
             return
         }
+        if self.focusPos == cPos {return}
+        
         let full = viewIdx.reduce(0, {$0+$1})
         //PageLog.d("onUpdate " + viewIdx.debugDescription, tag: self.tag)
         let half = Int(floor(Float(full)/Float(viewIdx.count)))
-        //PageLog.d("onUpdate full  " + full.description, tag: self.tag)
-        //PageLog.d("onUpdate half  " + half.description, tag: self.tag)
         var willPos = self.focusIndex
         if half != self.focusIndex && half != self.prevHalf {
             willPos = half
@@ -544,12 +540,11 @@ struct PlayBlock: PageComponent{
                 }
             }
         }
-        //PageLog.d("onUpdate willPos  " + willPos.description, tag: self.tag)
+       
         willPos = min(willPos,  self.maxCount-1)
         willPos = max(willPos,  0)
         if willPos != self.focusIndex {
-            self.onPlaytimeChanged(t:0)
-            self.onFocusChange(willFocus: willPos)
+            self.onResetFocusChange(willFocus: willPos)
         }
     }
     
@@ -559,19 +554,22 @@ struct PlayBlock: PageComponent{
             sceneOrientation: self.sceneOrientation)
             + self.spacing
     }
-    
-    @State var focusPos:CGFloat = 0
-    private func onFocusChange(willFocus:Int, geometry:GeometryProxy? = nil){
-        self.isHoldFocus = false
-        self.isHoldList = false
+    private func onResetFocusChange(willFocus:Int){
+        PageLog.d("onUpdate willFocus  " + willFocus.description, tag: self.tag)
+        //self.selectedData?.reset()
+        self.onPlaytimeChanged(t:self.playerModel.time)
+        self.playerModel.reset()
+        self.onFocusChange(willFocus: willFocus)
+    }
+    @State var focusPos:CGFloat = -1
+    private func onFocusChange(willFocus:Int){
+        self.isHold = false
         if self.datas.isEmpty {return}
-        PageLog.d("onFocusChange " + willFocus.description, tag: self.tag)
         self.finalIndex = nil
         self.selectedData = self.datas[willFocus]
-        //self.pagePresenter.orientationLock(isLock: false)
-        self.playerModel.reset()
         self.focusIndex = willFocus
         self.focusPos = self.infinityScrollModel.scrollPosition
+        PageLog.d("onFocusChange " + (self.selectedData?.playTime.description ?? "0"), tag: self.tag)
         DispatchQueue.main.async {
             self.viewModel.currentPlayData = self.selectedData
         }

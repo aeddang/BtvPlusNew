@@ -16,8 +16,8 @@ class BlockDataSet:Identifiable {
 
 extension MultiBlock{
     static let spacing:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.medium
-    static let headerSize:Int = 5
-    static let headerSizeMin:Int = 3
+    static let headerSize:Int = SystemEnvironment.isTablet ? 6 : 5
+    static let headerSizeMin:Int = SystemEnvironment.isTablet ? 4 : 3
     static let footerIdx:Int = UUID().hashValue
 }
 struct MultiBlock:PageComponent {
@@ -88,21 +88,22 @@ struct MultiBlock:PageComponent {
     
      
     @State var headerBlock:HeaderBlockCell?
-    @State var headerCount:Int = 0
     @State var headerId:String = ""
+    
+    
+    var headerCount:Int {
+        let count = min((self.topDatas?.isEmpty == false ? Self.headerSizeMin : Self.headerSize ), self.datas.count)
+        return count
+    }
+    
     @discardableResult
     private func getHeaderBlock() -> HeaderBlockCell{
-        let count = min((self.topDatas?.isEmpty == false ? Self.headerSizeMin : Self.headerSize), self.datas.count)
+        let count = headerCount
         var key:String = self.datas[0..<count].reduce("", {$0 + "|" + ($1.menuId ?? "")}) 
         key = key + (self.tipBlock?.id ?? "")
         if key == self.headerId, let header = self.headerBlock {
-            //ComponentLog.d("Recycle Header " + key , tag: self.tag + "Header")
-            DispatchQueue.main.async {
-                self.headerCount = count
-            }
             return header
         }
-        
         let newHeader =
             HeaderBlockCell(
                 pageObservable: self.pageObservable,
@@ -114,7 +115,6 @@ struct MultiBlock:PageComponent {
         ComponentLog.d("New Header " + key , tag: self.tag + "Header")
         DispatchQueue.main.async {
             self.headerId = key
-            self.headerCount = count
             self.headerBlock = newHeader
         }
 
@@ -148,6 +148,7 @@ struct MultiBlock:PageComponent {
                 if !self.datas.isEmpty {
                     if let headerBlock = self.getHeaderBlock() {
                         headerBlock
+                            
                         if headerCount < self.datas.count {
                             ForEach( self.datas[headerCount..<self.datas.count]) { data in
                                 MultiBlockCell(

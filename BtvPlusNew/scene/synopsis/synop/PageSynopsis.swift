@@ -103,6 +103,7 @@ struct PageSynopsis: PageView {
                             textInfo: self.textInfo,
                             hasAuthority: self.hasAuthority,
                             isPlayAble: self.isPlayAble,
+                            isPosson:self.isPosson,
                             progressError: self.progressError,
                             
                             isPairing: self.isPairing,
@@ -170,6 +171,7 @@ struct PageSynopsis: PageView {
                             textInfo: self.textInfo,
                             hasAuthority: self.hasAuthority,
                             isPlayAble: self.isPlayAble,
+                            isPosson:self.isPosson,
                             progressError: self.progressError,
                             
                             isPairing: self.isPairing,
@@ -191,6 +193,7 @@ struct PageSynopsis: PageView {
                     switch evt {
                     case .close : self.historyBack()
                     case .changeView(let epsdId) : self.changeVod(epsdId:epsdId)
+                   
                     default : break
                     }
                 }
@@ -200,6 +203,11 @@ struct PageSynopsis: PageView {
                 }
                 .onReceive(self.playerModel.$btvUiEvent){evt in
                     guard let evt = evt else { return }
+                    switch evt {
+                    case .watchBtv : self.watchBtv()
+                    default : break
+                    }
+                    
                     self.onEventLog(btvUiEvent: evt)
                 }
                 .onReceive(self.playerModel.$duration){duration in
@@ -251,9 +259,10 @@ struct PageSynopsis: PageView {
                     self.onEventLog(componentEvent: evt)
                 }
             }//PageDataProviderContent
+            /*
             .userActivity(Self.shortcutType) { userActivity in
                 self.onSiri(userActivity:userActivity)
-            }
+            }*/
            
             .onReceive(self.pageObservable.$layer ){ layer  in
                 switch layer {
@@ -534,7 +543,7 @@ struct PageSynopsis: PageView {
     
     func resetPage(isAllReset:Bool = false, isRedirectPage:Bool = false){
         PageLog.d("resetPage", tag: self.tag)
-        self.playerModel.event = .stop
+        self.playerModel.event = .pause
         self.isUIView = false
         self.hasAuthority = nil
         self.progressError = false
@@ -583,6 +592,7 @@ struct PageSynopsis: PageView {
         
         case Self.getAuth :
             guard let model = self.synopsisModel else {return}
+            
             let isWatchAble = self.checkWatchLvAuth()
             if !isWatchAble {
                 self.fullScreenCancel()
@@ -780,7 +790,7 @@ struct PageSynopsis: PageView {
             self.isPlayAble = false
             self.isPlayViewActive = true
         }
-        self.playerModel.event = .stop
+        self.playerModel.event = .pause
         self.onAllProgressCompleted()
     }
     
@@ -964,6 +974,10 @@ struct PageSynopsis: PageView {
      */
     
     func watchBtv(){
+        if self.isPairing != true {
+            self.appSceneObserver.alert = .needPairing()
+            return
+        }
         self.onDefaultViewMode()
         let msg:NpsMessage = NpsMessage().setPlayVodMessage(
             contentId: self.epsdRsluId ,

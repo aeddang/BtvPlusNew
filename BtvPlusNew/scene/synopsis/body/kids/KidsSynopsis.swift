@@ -70,6 +70,7 @@ struct KidsSynopsis: PageComponent{
     var textInfo:String?
     var hasAuthority:Bool?
     var isPlayAble:Bool
+    var isPosson:Bool
     var progressError:Bool
     
     var isPairing:Bool?
@@ -177,7 +178,8 @@ struct KidsSynopsis: PageComponent{
                                     synopsisData: self.synopsisData,
                                     summaryViewerData: self.summaryViewerData,
                                     isBookmark: self.$isBookmark, 
-                                    isRecommandAble: self.synopsisModel?.isCancelProgram == false
+                                    isRecommandAble: self.synopsisModel?.isCancelProgram == false,
+                                    isPosson: self.isPosson
                                 )
                                 .padding(.horizontal, DimenKids.margin.regular)
                                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
@@ -223,7 +225,8 @@ struct KidsSynopsis: PageComponent{
                                     synopsisData: self.synopsisData,
                                     summaryViewerData: self.summaryViewerData,
                                     isBookmark: self.$isBookmark,
-                                    isRecommandAble: self.synopsisModel?.isCancelProgram == false
+                                    isRecommandAble: self.synopsisModel?.isCancelProgram == false,
+                                    isPosson:self.isPosson
                                 )
                                 //.fixedSize(horizontal: false, vertical: true)
                             }

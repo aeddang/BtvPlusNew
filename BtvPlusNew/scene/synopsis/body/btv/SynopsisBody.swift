@@ -25,6 +25,7 @@ struct SynopsisBody: PageComponent{
     @Binding var isBookmark:Bool?
     @Binding var isLike:LikeStatus?
     var isRecommand:Bool?
+    var isPosson:Bool
     @Binding var seris:[SerisData]
     var synopsisData:SynopsisData? = nil
     var synopsisModel:SynopsisModel? = nil
@@ -93,29 +94,33 @@ struct SynopsisBody: PageComponent{
                     } else {
                         EpisodeViewer(data:episodeViewerData)
                             .modifier(ListRowInset(spacing: SynopsisBody.spacing))
-                        HStack(spacing:0){
-                            FunctionViewer(
-                                componentViewModel: self.componentViewModel,
-                                synopsisData :self.synopsisData,
-                                funtionLayout:self.funtionLayout,
-                                isBookmark: self.$isBookmark,
-                                isLike: self.$isLike,
-                                isRecommandAble: self.synopsisModel?.isCancelProgram == false,
-                                isRecommand: self.isRecommand
-                            )
-                            Spacer()
+                        if !self.isPosson {
+                            HStack(spacing:0){
+                                FunctionViewer(
+                                    componentViewModel: self.componentViewModel,
+                                    synopsisData :self.synopsisData,
+                                    funtionLayout:self.funtionLayout,
+                                    isBookmark: self.$isBookmark,
+                                    isLike: self.$isLike,
+                                    isRecommandAble: self.synopsisModel?.isCancelProgram == false,
+                                    isRecommand: self.isRecommand
+                                )
+                                Spacer()
+                            }
+                            .modifier(ListRowInset(spacing: SynopsisBody.spacing))
                         }
-                        .modifier(ListRowInset(spacing: SynopsisBody.spacing))
                     }
                 }
                 
                 if self.hasAuthority != nil , let purchasViewerData = self.purchasViewerData {
                     PurchaseViewer(
                         componentViewModel: self.componentViewModel,
-                        data: purchasViewerData )
-                        .modifier(ListRowInset(spacing: SynopsisBody.spacing))
+                        data: purchasViewerData,
+                        isPosson:self.isPosson
+                    )
+                    .modifier(ListRowInset(spacing: SynopsisBody.spacing))
                 }
-                if self.hasAuthority == false && self.isPairing == false {
+                if self.hasAuthority == false && self.isPairing == false && !self.isPosson {
                     FillButton(
                         text: String.button.connectBtv
                     ){_ in
@@ -178,6 +183,7 @@ struct SynopsisBodyHeader: PageComponent{
     @Binding var isBookmark:Bool?
     @Binding var isLike:LikeStatus?
     var isRecommand:Bool?
+    var isPosson:Bool
     var synopsisData:SynopsisData?
     var synopsisModel:SynopsisModel?
     var isPairing:Bool? = nil
@@ -233,7 +239,7 @@ struct SynopsisBodyHeader: PageComponent{
             if self.hasAuthority != nil , let purchasViewerData = self.purchasViewerData {
                 PurchaseViewer(
                     componentViewModel: self.componentViewModel,
-                    data: purchasViewerData )
+                    data: purchasViewerData, isPosson:self.isPosson)
                     .modifier(ListRowInset(spacing: SynopsisBody.spacing))
             }
             if self.hasAuthority == false && self.isPairing == false {

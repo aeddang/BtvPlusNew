@@ -45,7 +45,8 @@ enum SelectOptionType:String {
     case quality, rate, ratio
 }
 enum BtvUiEvent {
-    case more, guide, initate, closeList, clickInsideButton(NaviLog.Action,  String?), prevPlay
+    case more, guide, initate, closeList, watchBtv,
+         clickInsideButton(NaviLog.Action,  String?), prevPlay
 }
 
 
@@ -60,8 +61,9 @@ enum BtvPlayerType {
 }
 
 class BtvPlayerModel:PlayerModel{
-    @Published var brightness:CGFloat = UIScreen.main.brightness
+   
     
+    @Published var brightness:CGFloat = UIScreen.main.brightness
     @Published private(set) var message:String? = nil
     @Published var selectQuality:Quality? = nil
     @Published var currentQuality:Quality? = nil
@@ -193,13 +195,15 @@ class BtvPlayerModel:PlayerModel{
         if let fhd = data.CNT_URL_NS_FHD { self.appendQuality(name: "FHD", path: fhd) }
        
         if !qualitys.isEmpty {
+            var lowQuality = "SD"
             if qualitys.count == 1 && qualitys.first?.name == "SD"{
                 qualitys[0].name = "HD"
+                lowQuality = "HD"
             }
             var selectQuality = self.selectedQuality ?? "AUTO"
             switch self.btvPlayType {
             case .preview(_, let isList) :
-                selectQuality = isList ? "SD" : selectQuality
+                selectQuality = isList ? lowQuality : selectQuality
             default : break
             }
             currentQuality = qualitys.first{$0.name == selectQuality}
@@ -209,9 +213,10 @@ class BtvPlayerModel:PlayerModel{
             } else {
                 ComponentLog.d("selectQuality " + selectQuality, tag:"CPPlayer")
             }
+            /*
             if qualitys.count > 1 {
                 self.recoveryPath = qualitys.first(where: {$0.name != selectQuality})?.path
-            }
+            }*/
         }
         return self
     }

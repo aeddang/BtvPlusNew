@@ -9,12 +9,14 @@
 import os.log
 
 protocol Log {
+    
     static var tag:String { get }
 }
 struct LogManager  {
+    static var isLaunchTrace = false
     static fileprivate(set) var memoryLog:String = ""
     static fileprivate(set) var traceLog:String = ""
-    static var isMemory = SystemEnvironment.isLaunchTrace
+    static var isMemory = Self.isLaunchTrace
     {
         didSet{
             if !isMemory {

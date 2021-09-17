@@ -38,9 +38,10 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
         guard let synopsisModel = synopsisModel else { return nil }
         guard let purchas = synopsisModel.curSynopsisItem else { return nil }
         
-        //let watchAll = synopsisModel.isSeasonWatchAll
-        //let isOnlyPurchasedBtv = synopsisModel.isOnlyPurchasedBtv
-        //let isOnlyBtvPurchasable  = synopsisModel.isOnlyBtvPurchasable
+        let isFree = synopsisModel.isFree
+        let watchAll = synopsisModel.isSeasonWatchAll
+        let isOnlyPurchasedBtv = synopsisModel.isOnlyPurchasedBtv
+        let isOnlyBtvPurchasable  = synopsisModel.isOnlyBtvPurchasable
         self.hasAuthority = false
         if !synopsisModel.isDistProgram {
             serviceInfo = String.alert.bs
@@ -72,10 +73,12 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                                            isPairing: isPairing, isPosson: isPosson, purchas: purchas)
                     self.setupOption(watchItems: synopsisModel.watchOptionItems, purchas: purchas)
                     self.hasAuthority = true
+                    isPlayAble = true
                 } else {
                     serviceInfo = String.pageText.synopsisOnlyBtvFree
+                    isPlayAble = false
                 }
-                isPlayAble = true
+                
 
             default :
                 self.setupBtvWatchInfo(synopsisModel: synopsisModel,
@@ -90,6 +93,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                 }
             }
             
+            
         }
         return self
     }
@@ -100,6 +104,10 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
             if synopsisModel.isFree {
                 infoTrailing = String.pageText.synopsisFreeWatch
                 isPlayAble = true
+                if synopsisModel.isGstn {
+                    hasAuthority = true
+                }
+                
             }
             else if purchas.isDirectview {
                 if isPosson {

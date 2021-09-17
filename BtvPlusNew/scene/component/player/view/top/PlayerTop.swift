@@ -75,6 +75,7 @@ struct PlayerTop: PageView{
             self.isMute = mute
         }
         .onReceive(self.viewModel.$isLock) { lock in
+            if lock == self.isLock {return}
             withAnimation{ self.isLock = lock }
             self.pagePresenter.orientationLock(isLock: lock)
         }

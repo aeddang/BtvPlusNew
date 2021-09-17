@@ -52,12 +52,15 @@ struct SimplePlayer: PageComponent{
             .background(Color.app.black)
             .onReceive(self.sceneObserver.$isUpdated){ update in
                 if !update {return}
+                if !self.viewModel.useFullScreenAction { return }
                 if self.viewModel.isLock { return }
                 if SystemEnvironment.isTablet  { return }
+                
                 switch self.sceneObserver.sceneOrientation {
-                case .landscape : self.pagePresenter.fullScreenEnter()
-                case .portrait : self.pagePresenter.fullScreenExit()
+                case .landscape : self.pagePresenter.fullScreenEnter(isLock: true, changeOrientation: .landscape)
+                case .portrait : self.pagePresenter.fullScreenExit(changeOrientation: .portrait)
                 }
+            
             }
             
             .onReceive(self.viewModel.$event) { evt in
@@ -76,8 +79,8 @@ struct SimplePlayer: PageComponent{
                 }
             }
             .onReceive(self.viewModel.$selectQuality){ quality in
-                self.setup.selectedQuality = quality?.name
-                self.viewModel.selectedQuality = quality?.name
+                guard let quality = quality else {return}
+                self.viewModel.selectedQuality = quality.name
                 self.viewModel.currentQuality = quality
             }
             .onReceive(self.viewModel.$currentQuality){ quality in
@@ -109,7 +112,6 @@ struct SimplePlayer: PageComponent{
             }
             
             .onAppear(){
-                self.viewModel.selectedQuality = self.setup.selectedQuality
                 if BtvPlayerModel.isInitMute {
                     self.viewModel.isMute = true
                 }

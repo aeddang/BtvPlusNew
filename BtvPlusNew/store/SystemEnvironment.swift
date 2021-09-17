@@ -20,7 +20,6 @@ struct SystemEnvironment {
     static var tvUserId:String? = nil
     static var deviceId:String {
         get{
-            let tvUser = Self.tvUserId
             let id = Self.tvUserId?.isEmpty == false ? Self.tvUserId! : Self.originDeviceId
             return id
         }
@@ -29,7 +28,6 @@ struct SystemEnvironment {
     static var serverConfig: [String:String] = [String:String]()
     static var isReleaseMode:Bool? = nil
     static var isEvaluation = false
-    static var isLaunchTrace = false
     static var needUpdate = false
     static var isTablet = AppUtil.isPad()
     static var isPurchaseAuth = false

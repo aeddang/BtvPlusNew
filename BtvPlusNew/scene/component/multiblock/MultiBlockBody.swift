@@ -115,7 +115,7 @@ struct MultiBlockBody: PageComponent {
     var header:PageViewProtocol? = nil
     var headerSize:CGFloat = 0
     var useFooter:Bool = false
-     
+    var isRecycle = true
     var action: ((_ data:MonthlyData) -> Void)? = nil
     
     @State var reloadDegree:Double = 0
@@ -157,7 +157,7 @@ struct MultiBlockBody: PageComponent {
                                     ? (TopBanner.heightHorizontal + self.marginHeader)
                                     : (TopBanner.height + self.marginHeader)
                                 : self.marginTop)
-                             
+                    
                     MultiBlock(
                         viewModel: self.viewModel,
                         infinityScrollModel: self.infinityScrollModel,
@@ -180,7 +180,7 @@ struct MultiBlockBody: PageComponent {
                         headerSize:self.headerSize,
                         useFooter:self.useFooter,
                         isHorizontal: self.isHorizontal,
-                        isRecycle:true,
+                        isRecycle:self.isRecycle,
                         action:self.action)
                     
                     if self.isError {

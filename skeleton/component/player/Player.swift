@@ -16,6 +16,7 @@ open class PlayerModel: ComponentObservable {
     var useAvPlayerController:Bool = false
     var useFullScreenButton:Bool = true
     var useFullScreenAction:Bool = true
+    var useRecovery:Bool = false
     var drm:FairPlayDrm? = nil
     var header:[String:String]? = nil
     @Published var path:String = ""
@@ -38,6 +39,8 @@ open class PlayerModel: ComponentObservable {
     
     @Published fileprivate(set) var duration:Double = 0.0
     fileprivate(set) var originDuration:Double = 0
+    fileprivate(set) var recoveryCount:Int = 0
+    fileprivate(set) var toMinimizeStallsCount:Int = 0
     open var limitedDuration:Double? = nil
     
     @Published fileprivate(set) var time:Double = 0.0
@@ -74,8 +77,9 @@ open class PlayerModel: ComponentObservable {
         self.init()
         self.path = path
     }
-    convenience init(useFullScreenAction: Bool, useFullScreenButton: Bool = true) {
+    convenience init(useFullScreenAction: Bool, useFullScreenButton: Bool = true, useRecovery:Bool = false) {
         self.init()
+        self.useRecovery = useRecovery
         self.useFullScreenButton = useFullScreenButton
         self.useFullScreenAction = useFullScreenAction
     }
@@ -86,7 +90,7 @@ open class PlayerModel: ComponentObservable {
         limitedDuration = nil
         playInfo = nil
         header = nil
-        event = .pause
+        path = ""
         reload()
     }
     
@@ -180,7 +184,7 @@ enum PlayerRemoteEvent {//input
 }
 
 enum PlayerStreamEvent {//output
-    case resumed, paused, loaded(String), buffer, stoped, seeked, completed
+    case resumed, paused, loaded(String), buffer, stoped, seeked, completed, recovery
 }
 
 enum PlayerStatus:String {
@@ -238,6 +242,7 @@ protocol PlayBack:PageProtocol {
     func onResumed()
     func onPaused()
     func onReadyToPlay()
+    func onToMinimizeStalls()
     func onBuffering(rate:Double)
     func onBufferCompleted()
     func onStoped()
@@ -325,10 +330,16 @@ extension PlayBack {
         ComponentLog.d("onPaused", tag: self.tag)
         viewModel.streamEvent = .paused
         viewModel.playerStatus = .pause
-        onBufferCompleted()
+        if self.viewModel.toMinimizeStallsCount > 1 {
+            onError(.playback("toMinimizeStalls"))
+            onBufferCompleted()
+        } else {
+            onBufferCompleted()
+        }
     }
     func onReadyToPlay(){
         ComponentLog.d("onReadyToPlay", tag: self.tag)
+        self.viewModel.recoveryCount = 0
         onBufferCompleted()
         switch self.viewModel.playerStatus {
         case .load: onLoaded()
@@ -336,7 +347,11 @@ extension PlayBack {
         default: break
         }
     }
-    
+    func onToMinimizeStalls(){
+        self.viewModel.toMinimizeStallsCount += 1
+        onBuffering(rate:0)
+        ComponentLog.d("onToMinimizeStalls " + self.viewModel.toMinimizeStallsCount.description, tag: self.tag)
+    }
     func onBuffering(rate:Double = 0){
         ComponentLog.d("onBuffering", tag: self.tag)
         viewModel.streamEvent = .buffer
@@ -346,6 +361,7 @@ extension PlayBack {
     func onBufferCompleted(){
         self.checkSeeked()
         ComponentLog.d("onBufferCompleted", tag: self.tag)
+        viewModel.toMinimizeStallsCount = 0
         viewModel.streamStatus = .playing
     }
     
@@ -372,7 +388,10 @@ extension PlayBack {
         viewModel.streamEvent = .stoped
         viewModel.streamStatus = .stop
         viewModel.playerStatus = .error
-        viewModel.updateType = .recovery(viewModel.time)
+        if self.viewModel.useRecovery {
+            viewModel.streamEvent = .recovery
+            self.viewModel.recoveryCount += 1
+        }
     }
     
     func onError(playerError:PlayerError){

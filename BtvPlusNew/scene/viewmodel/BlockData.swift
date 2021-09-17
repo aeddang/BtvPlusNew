@@ -346,6 +346,18 @@ class BlockData:InfinityData, ObservableObject{
     
     func getRequestApi(apiId:String? = nil, pairing:PairingStatus, kid:Kid? = nil, sortType:EuxpNetwork.SortType? = nil, page:Int = 1, isOption:Bool = true) -> ApiQ? {
         self.kid = kid
+        if self.uiType == .ticket && self.blocks?.count == 1,
+           let ticket = self.blocks?.first {
+            
+            let ticketData = TicketData().setData(data: ticket)
+            return ticketData.type == .big
+                ? .init(id:apiId ?? self.id,
+                             type:
+                                .getGridEvent(ticket.menu_id),
+                             isOptional: isOption)
+                : nil
+        }
+         
         
         switch self.dataType {
         case .cwGrid:

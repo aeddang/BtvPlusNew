@@ -42,6 +42,7 @@ struct AppLayout: PageComponent{
             if self.useLogCollector {
                 SceneLogCollector()
             }
+            
             Group {
                 SceneRadioController()
                 SceneSelectController()

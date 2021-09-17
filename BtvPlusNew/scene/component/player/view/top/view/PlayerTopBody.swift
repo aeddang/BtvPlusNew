@@ -44,19 +44,16 @@ struct PlayerTopBody: PageView{
             spacing:Dimen.margin.thin){
             HStack(spacing: self.isFullScreen ? PlayerUI.fullScreenSpacing : PlayerUI.spacing){
                 if !self.isLock {
-                    if self.isFullScreen {
-                        Button(action: {
-                            
-                            self.viewModel.btvPlayerEvent = .close
-                            
-                        }) {
-                            Image(Asset.icon.back)
-                                .renderingMode(.original)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: Dimen.icon.regular,
-                                       height: Dimen.icon.regular)
-                        }
+                    Button(action: {
+                        self.viewModel.btvPlayerEvent = .close
+                        
+                    }) {
+                        Image(Asset.icon.back)
+                            .renderingMode(.original)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: Dimen.icon.regular,
+                                   height: Dimen.icon.regular)
                     }
                     if self.isFullScreen && self.title != nil {
                         VStack(alignment: .leading){

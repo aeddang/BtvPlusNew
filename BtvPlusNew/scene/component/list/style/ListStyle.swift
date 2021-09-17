@@ -20,26 +20,26 @@ struct ListItem{
     
     struct video {
         static let size:CGSize = isPad ? CGSize(width: 248, height: 162) : CGSize(width: 164, height: 92)
-        static let type01:CGFloat = isPad ? 53 : 35
+        static let type01:CGFloat = isPad ? 54 : 36
         static let type02:CGFloat = isPad ? 80 : 52
     }
     
     struct ticket {
-        static let type01:CGSize = isPad ? CGSize(width: 197, height: 110) : CGSize(width: 164, height: 92)
+        static let type01:CGSize = isPad ? CGSize(width: 196, height: 110) : CGSize(width: 164, height: 92)
         static let type02:CGSize =  isPad ? CGSize(width: 326, height: 224) : CGSize(width: 224, height: 154)
     }
     
     struct thema {
-        static let type01:CGSize = isPad ? CGSize(width: 113, height: 113) : CGSize(width: 75, height: 75)
-        static let type02:CGSize = isPad ? CGSize(width: 151, height: 174) : CGSize(width: 100, height: 115)
-        static let type03:CGSize = isPad ? CGSize(width: 151, height: 151) : CGSize(width: 100, height: 100)
+        static let type01:CGSize = isPad ? CGSize(width: 114, height: 114) : CGSize(width: 76, height: 76)
+        static let type02:CGSize = isPad ? CGSize(width: 152, height: 174) : CGSize(width: 100, height: 115)
+        static let type03:CGSize = isPad ? CGSize(width: 152, height: 152) : CGSize(width: 100, height: 100)
     }
     
     struct banner {
-        static let type01:CGSize = isPad ? CGSize(width: 770, height: 100) : CGSize(width: 355, height: 80)
+        static let type01:CGSize = isPad ? CGSize(width: 770, height: 100) : CGSize(width: 356, height: 80)
         static let type02:CGSize = CGSize(width: 320, height: 120)
         static let type03:CGSize = CGSize(width: 224, height: 154)
-        static let type04:CGSize = isPad ? CGSize(width: 243, height: 231) : CGSize(width: 165, height: 154)
+        static let type04:CGSize = isPad ? CGSize(width: 243, height: 230) : CGSize(width: 166, height: 154)
     }
     
     struct character {
@@ -47,16 +47,16 @@ struct ListItem{
     }
     
     struct people {
-        static let size:CGSize = isPad ? CGSize(width: 99, height: 99) : CGSize(width: 78, height: 78)
+        static let size:CGSize = isPad ? CGSize(width: 98, height: 98) : CGSize(width: 78, height: 78)
     }
     
     struct seris {
-        static let type01:CGSize = CGSize(width: 159, height: 89)
-        static let type02:CGSize = isPad ? CGSize(width: 247, height: 139) : CGSize(width: 164, height: 92)
+        static let type01:CGSize = CGSize(width: 158, height: 88)
+        static let type02:CGSize = isPad ? CGSize(width: 246, height: 138) : CGSize(width: 164, height: 92)
     }
     
     struct purchase {
-        static let size:CGSize = isPad ?  CGSize(width: 136, height: 194) : CGSize(width: 78, height: 111)
+        static let size:CGSize = isPad ?  CGSize(width: 136, height: 194) : CGSize(width: 78, height: 112)
     }
     
     struct stb {
@@ -77,18 +77,18 @@ struct ListItem{
     }
     
     struct watched {
-        static let size:CGSize = isPad ? CGSize(width: 176, height: 101) : CGSize(width: 112, height: 64)
+        static let size:CGSize = isPad ? CGSize(width: 176, height: 100) : CGSize(width: 112, height: 64)
     }
     
     struct search {
         static let height:CGFloat = isPad ? 60 : 46
     }
     struct purchaseTicket {
-        static let size:CGSize =  CGSize(width: 355, height: 214)
+        static let size:CGSize =  CGSize(width: 356, height: 214)
     }
     
     struct card {
-        static let size:CGSize =  isPad ? CGSize(width: 374, height: 232) : CGSize(width: 267, height: 166)
+        static let size:CGSize =  isPad ? CGSize(width: 374, height: 232) : CGSize(width: 268, height: 166)
         static let bottom:CGFloat = isPad ? 70 : 50
     }
     struct alram {
@@ -100,7 +100,7 @@ struct ListItem{
     }
     
     struct tv {
-        static let size:CGSize =  isPad ? CGSize(width: 248, height: 111) : CGSize(width: 174, height: 76)
+        static let size:CGSize =  isPad ? CGSize(width: 248, height: 112) : CGSize(width: 174, height: 76)
     }
    
 }

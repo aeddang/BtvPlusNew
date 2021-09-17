@@ -57,6 +57,7 @@ struct PageContentController: View{
     @EnvironmentObject var sceneObserver:PageSceneObserver
     
     @State var isFullScreen:Bool = false
+    @State var pageType:PageType = .btv
     var currnetPage:PageViewProtocol?{
         get{
             return pageControllerObservable.pages.first
@@ -88,6 +89,7 @@ struct PageContentController: View{
                 ForEach(self.pageControllerObservable.popups, id: \.id) { popup in popup.contentBody }
                 self.pageControllerObservable.overlayView?.contentBody
             }
+            .background(self.pageType == .btv ? Color.brand.bg : Color.kids.bg)
             .onAppear(){
                 sceneObserver.update(geometry: geometry)
             }
@@ -96,7 +98,7 @@ struct PageContentController: View{
             }
             .edgesIgnoringSafeArea(.all)
             .statusBar(hidden: self.isFullScreen)
-            //.background(Color.brand.bg)
+            
             .onReceive(self.keyboardObserver.$isOn){ _ in
                 delaySafeAreaUpdate(geometry: geometry)
             }
@@ -108,6 +110,10 @@ struct PageContentController: View{
             }
             .onReceive(self.pagePresenter.$isFullScreen){ isFullScreen in
                 self.isFullScreen = isFullScreen
+            }
+            .onReceive(self.pagePresenter.$currentTopPage){ page in
+                guard let page = page else {return}
+                self.pageType = PageType.getType(page.pageGroupID)
             }
         }
     }

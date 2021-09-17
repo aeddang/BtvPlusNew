@@ -342,15 +342,16 @@ struct SceneAlertController: PageComponent{
     
     func setupLimitedDevice(data:PairingInfo?) {
         self.title = String.alert.connect
-        if let count = data?.count {
+        if let count = data?.count, let max = data?.max_count {
             self.text = String.alert.limitedDevice.replace(count.description)
-        }
-        self.subText = String.alert.limitedDeviceSub.replace(data?.max_count?.description ?? Pairing.LIMITED_DEVICE_NUM.description)
-        if let max = data?.max_count {
+            self.subText = String.alert.limitedDeviceSub.replace(max.description)
             if Int(max) ?? 0 < Pairing.LIMITED_DEVICE_NUM {
                 self.tipText = String.alert.limitedDeviceTip.replace(Pairing.LIMITED_DEVICE_NUM.description)
                 self.referenceText = String.alert.limitedDeviceReference
             }
+        } else {
+            self.title = String.alert.connect
+            self.text = String.alert.limitedConnect
         }
         self.buttons = [
             AlertBtnData(title: String.app.confirm, index: 0)

@@ -16,6 +16,19 @@ extension MultiBlockBody {
         let max = Self.maxCellCount
         let usePrice:Bool = !self.viewModel.isFree
         data.usePrice = usePrice
+        
+        if data.uiType == .ticket {
+            guard let resData = res?.data as? GridEvent else { return }
+            guard let first = data.blocks?.first else { return }
+            
+            let posters = resData.contents?.map{PosterData().setData(data: $0)}
+            let ticket = TicketData().setData(data: first, cardType: data.cardType, posters:posters)
+            data.listHeight = ticket.type.size.height + Self.tabHeight
+            data.tickets = [ticket]
+            data.setDatabindingCompleted(parentTitle: self.viewModel.title)
+        }
+    
+        
         switch data.dataType {
         case .cwGrid:
             guard let resData = res?.data as? CWGrid else {return data.setBlank()}

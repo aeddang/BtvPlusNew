@@ -16,6 +16,7 @@ struct TopTab: PageComponent{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @State var showAlram:Bool = false
+    @State var newCount:Int = 0
     @State var pairingType:PairingDeviceType = .btv
     var body: some View {
         HStack(alignment: .bottom ,spacing:Dimen.margin.tiny){
@@ -32,11 +33,22 @@ struct TopTab: PageComponent{
                         .frame(width: Dimen.icon.regular,
                                height: Dimen.icon.regular)
                     if self.showAlram {
+                        Text(self.newCount.description)
+                            .modifier(BoldTextStyle(
+                                size: Font.size.micro,
+                                color: Color.app.white
+                            ))
+                            .frame(width: Dimen.icon.tinyExtra, height: Dimen.icon.tinyExtra)
+                            .background(Color.brand.primary)
+                            .clipShape(Circle())
+                            .padding(.leading, Dimen.icon.regular - (Dimen.icon.tinyExtra/2))
+                        /*
                         Image(Asset.icon.new)
                             .renderingMode(.original).resizable()
                             .scaledToFit()
                             .frame(width: Dimen.icon.tinyExtra, height: Dimen.icon.tinyExtra)
                             .padding(.leading, Dimen.icon.regular - (Dimen.icon.tinyExtra/2))
+                        */
                     }
                 }
                 .frame(width: Dimen.icon.regular,
@@ -117,6 +129,7 @@ struct TopTab: PageComponent{
         }
         .onReceive(self.repository.alram.$newCount){ count in
             if self.pairing.status != .pairing { return }
+            self.newCount = min(99, count)
             withAnimation{self.showAlram = count>0}
         }
         .onReceive(self.repository.alram.$needUpdateNew){ update in

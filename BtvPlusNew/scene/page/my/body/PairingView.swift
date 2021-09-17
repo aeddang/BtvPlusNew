@@ -71,7 +71,7 @@ struct PairingView: PageComponent{
                     imageAni: self.newAlramCount > 0 ? Asset.ani.alarm : nil,
                     image: Asset.icon.alarm,
                     isNew: self.newAlramCount > 0,
-                    count: self.newAlramCount
+                    count: min(99,self.newAlramCount)
                 ){_ in
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.myAlram)

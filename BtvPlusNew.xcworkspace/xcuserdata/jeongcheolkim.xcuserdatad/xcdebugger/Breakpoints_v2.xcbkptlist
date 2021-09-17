@@ -62,8 +62,8 @@
             filePath = "BtvPlusNew/scene/sceneui/SceneAlertController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "546"
-            endingLineNumber = "546"
+            startingLineNumber = "547"
+            endingLineNumber = "547"
             landmarkName = "selectedUpdateAlram(_:id:isAlram:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -183,16 +183,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A2C6CCBF-0C11-4D69-81D6-413312CC01CA"
+            uuid = "15EBB39B-B013-469F-9578-5768833C83B9"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BtvPlusNew/scene/synopsis/synop/PageSynopsis.swift"
+            filePath = "skeleton/component/player/view/SimplePlayerUI.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "867"
-            endingLineNumber = "867"
-            landmarkName = "setupDirectView(_:isSeasonWatchAll:)"
+            startingLineNumber = "103"
+            endingLineNumber = "103"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6A2D1D22-A1A8-4D5E-81D0-CF58DE407729"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BtvPlusNew/scene/synopsis/synop/PageSynopsisRelationContents.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "25"
+            endingLineNumber = "25"
+            landmarkName = "setupRelationContent(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

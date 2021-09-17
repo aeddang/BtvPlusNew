@@ -80,7 +80,10 @@ class RelationContentsModel:ObservableObject {
         //self.isReady = true
         self.serisTitle = synopsis.srisTitle
         if let list = synopsis.seriesInfoList {
-            let filterList = synopsis.isTrstrs && !synopsis.isPurchasedPPM ? list.filter{ $0.sale_prc_vat != 0 } : list
+            let filterList = synopsis.isTrstrs && !synopsis.isPurchasedPPM
+                ? list.filter{ $0.sale_prc_vat != 0 }
+                : list
+            
             self.seris = zip(filterList, 0...filterList.count).map{data, idx in
                 SerisData(pageType: self.pageType).setData(data: data, title: self.serisTitle, idx: idx)}
             self.playList = zip(filterList, 0...filterList.count).map{ data, idx in

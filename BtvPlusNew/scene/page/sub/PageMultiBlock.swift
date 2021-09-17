@@ -54,7 +54,8 @@ struct PageMultiBlock: PageView {
                             useBodyTracking: self.themaType == .ticket ? false : true,
                             useTracking:true,
                             marginTop: self.marginTop  + Dimen.margin.thin + self.sceneObserver.safeAreaTop + Dimen.app.top,
-                            marginBottom: self.marginBottom
+                            marginBottom: self.marginBottom,
+                            isRecycle : self.themaType == .ticket ? false : true
                         )
                         .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
                             guard let evt = evt else {return}

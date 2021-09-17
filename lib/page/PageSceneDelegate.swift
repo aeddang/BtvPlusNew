@@ -118,13 +118,13 @@ final class PagePresenter:ObservableObject{
         if self.isFullScreen {return}
         self.isFullScreen = true
         PageSceneDelegate.instance?.onFullScreenEnter(isLock: isLock, changeOrientation:changeOrientation)
-        PageLog.d("fullScreenEnter", tag: "PagePresenter")
+        PageLog.d("fullScreenEnter " + isLock.description, tag: "PagePresenter")
     }
-    func fullScreenExit(changeOrientation:UIInterfaceOrientationMask? = nil){
+    func fullScreenExit(isLock:Bool = false, changeOrientation:UIInterfaceOrientationMask? = nil){
         if !self.isFullScreen {return}
         self.isFullScreen = false
-        PageSceneDelegate.instance?.onFullScreenExit(changeOrientation: changeOrientation)
-        PageLog.d("fullScreenExit", tag: "PagePresenter")
+        PageSceneDelegate.instance?.onFullScreenExit(isLock : isLock, changeOrientation: changeOrientation)
+        PageLog.d("fullScreenExit " + isLock.description, tag: "PagePresenter")
     }
     
     func requestDeviceOrientation(_ mask:UIInterfaceOrientationMask){
@@ -531,14 +531,22 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     func onFullScreenEnter(isLock:Bool = false, changeOrientation:UIInterfaceOrientationMask? = .landscape){
         self.setIndicatorAutoHidden(true)
         guard let changeOrientation = changeOrientation else { return }
-        if isLock { AppDelegate.orientationLock = changeOrientation }
+        if isLock {
+            AppDelegate.orientationLock = changeOrientation
+            
+        }
         if self.needOrientationChange(changeOrientation: changeOrientation) {
             self.requestDeviceOrientation(changeOrientation)
         }
     }
-    func onFullScreenExit(changeOrientation:UIInterfaceOrientationMask? = nil){
+    func onFullScreenExit(isLock:Bool = false, changeOrientation:UIInterfaceOrientationMask? = nil){
         self.setIndicatorAutoHidden(false)
-        AppDelegate.orientationLock = pageModel.getPageOrientationLock(nil) ?? .all
+        if isLock , let orientation = changeOrientation{
+            AppDelegate.orientationLock = orientation
+        } else {
+            AppDelegate.orientationLock = pageModel.getPageOrientationLock(nil) ?? .all
+        }
+        
         if let mask = changeOrientation, self.needOrientationChange(changeOrientation: changeOrientation) {
             self.requestDeviceOrientation(mask)
         }

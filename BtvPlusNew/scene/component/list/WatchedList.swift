@@ -146,6 +146,7 @@ struct WatchedList: PageComponent{
                                 self.pagePresenter.openPopup(
                                     PageProvider.getPageObject(.synopsis)
                                         .addParam(key: .data, value: synopsisData)
+                                        .addParam(key: .watchLv, value: data.watchLv)
                                 )
                             }
                             .onAppear{

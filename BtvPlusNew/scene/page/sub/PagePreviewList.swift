@@ -22,7 +22,7 @@ struct PagePreviewList: PageView {
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var viewModel:PlayBlockModel = PlayBlockModel()
-    @ObservedObject var playerModel: BtvPlayerModel = BtvPlayerModel(useFullScreenAction:false)
+    @ObservedObject var playerModel: BtvPlayerModel = BtvPlayerModel(useFullScreenAction:false, useRecovery: false)
     
     @State var title:String? = nil
     @State var menuId:String? = nil
@@ -79,6 +79,10 @@ struct PagePreviewList: PageView {
                     self.safeAreaTop = self.sceneObserver.safeAreaTop
                 }
             }
+            .onReceive(self.infinityScrollModel.$scrollPosition){ pos in
+                self.pageDragingModel.uiEvent = .dragCancel
+                
+            }
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
                 withAnimation{ self.marginBottom = bottom }
             }
@@ -86,40 +90,29 @@ struct PagePreviewList: PageView {
                 guard let data = data else {
                     if !self.isFullScreen {return}
                     self.isFullScreen = false
-                    if !SystemEnvironment.isTablet {
-                        self.pagePresenter.orientationLock(lockOrientation: .portrait)
-                        self.pagePresenter.fullScreenExit(changeOrientation:.portrait)
-                    } else {
-                        self.pagePresenter.orientationLock(lockOrientation: .all)
-                        self.pagePresenter.fullScreenExit()
-                    }
-                    self.appSceneObserver.useBottomImmediately = true
-                    
                     return
                 }
                 if self.isFullScreen {return}
-                self.appSceneObserver.useBottomImmediately  = false
-                self.pagePresenter.orientationLock(lockOrientation: .landscape)
-                self.pagePresenter.fullScreenEnter(changeOrientation:.landscape)
-                self.isFullScreen = true
                 let type = self.playerModel.btvPlayType
                 let time = self.viewModel.continuousTime
                 var changeType = type
+                self.playerModel.reset()
+                self.appSceneObserver.useBottomImmediately  = false
+                self.pagePresenter.orientationLock(lockOrientation: .landscape)
+                self.isFullScreen = true
                 switch type {
                 case .preview(let value,_):
                     changeType = .preview(value,isList:false)
                 default: break
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     self.playerModel.setData(
                         data: data,
                         type: changeType ?? .preview("", isList: false),
                         autoPlay: true,
                         continuousTime: time)
+                    
                 }
-                
-                
-                
             }
             
             .onAppear{

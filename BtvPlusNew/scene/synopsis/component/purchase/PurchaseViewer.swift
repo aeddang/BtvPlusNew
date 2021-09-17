@@ -13,6 +13,7 @@ struct PurchaseViewer: PageComponent{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     var componentViewModel:PageSynopsis.ComponentViewModel = PageSynopsis.ComponentViewModel()
     var data:PurchaseViewerData
+    var isPosson:Bool
     @State var option:String = ""
     @State var showInfo:Bool = false
     var body: some View {
@@ -145,7 +146,7 @@ struct PurchaseViewer: PageComponent{
                 Spacer().modifier(LineHorizontal())
             }
             
-            if self.data.purchasBtnTitle != nil {
+            if self.data.purchasBtnTitle != nil && !self.isPosson {
                 FillButton(
                     text: self.data.purchasBtnTitle!,
                     subText : self.data.purchasBtnSubTitle
@@ -172,7 +173,7 @@ struct PurchaseViewer_Previews: PreviewProvider {
     static var previews: some View {
         VStack{
             PurchaseViewer(
-                data:PurchaseViewerData(type: .btv).setDummy()
+                data:PurchaseViewerData(type: .btv).setDummy(), isPosson: false
             )
             .environmentObject(DataProvider())
             .environmentObject(PagePresenter())

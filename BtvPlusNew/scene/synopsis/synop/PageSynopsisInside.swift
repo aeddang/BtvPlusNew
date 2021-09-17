@@ -182,11 +182,14 @@ extension PageSynopsis {
         guard let epsdId = epsdId else { return }
         guard let cdata = self.synopsisData else { return }
         self.synopsisPlayType = isNext ? .vodNext() : .unknown
+        
+        // 
         self.setupHistory(synopsisData:
             SynopsisData(
                 srisId: cdata.srisId, searchType: .prd,
                 epsdId: epsdId, epsdRsluId: "",
                 prdPrcId: cdata.prdPrcId, kidZone:cdata.kidZone,
+                isPosson: self.isPosson, anotherStbId: self.anotherStb,
                 synopType: cdata.synopType
             ), isHistoryBack:isHistoryBack
         )

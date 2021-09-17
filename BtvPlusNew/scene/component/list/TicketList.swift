@@ -173,7 +173,6 @@ struct TicketList: PageComponent{
                 }
             }
             if let subDataSets = self.subDataSets {
-
                 ForEach(subDataSets) {sets in
                     HStack(spacing:Self.spacing){
                         ForEach(sets.datas) { data in
@@ -274,8 +273,8 @@ struct TicketList: PageComponent{
                 PosterDataSet( count: count, datas: cells,isFull: cells.count == count, index: total)
             )
         }
+        
         self.subDataSets = rows
-        //self.subDatas = first.subDatas
         self.data?.posters = datas
     }
 }

@@ -62,17 +62,49 @@ struct SetupLaboratory: PageView {
                 subTitle: self.repository.pushManager.apnsToken,
                 more:{
                     let push = UNMutableNotificationContent()
-                    push.title = "test Title"
+                    push.title = "test Title" + UUID().uuidString
                     push.subtitle = "test subTitle"
-                    push.body = "test body"
+                    push.body = "test body" + UUID().uuidString
                     push.badge = 1
                     var userInfo = [String:Any]()
                     var apns = [String:Any]()
-                    apns["alert"] = "알람이 오네요"
-                    apns["badge"] = 1
+                    var system_data = [String:Any]()
+                    system_data["messageId"] = "pixunptufh3uncbogyadn"
+                    system_data["type"] = "message"
+                    apns["mutable-content"] = 1
+                    apns["alert"] = "알람이 오네요" + UUID().uuidString
+                    apns["badge"] = 10
                     apns["sound"] = "default"
                     userInfo["aps"] = apns
                     push.userInfo = userInfo
+                    
+                    //"aps":{
+                    //      "alert":{
+                    //         "title":"시놉 바로가기",
+                    //         "body":"push 메시지입니다."
+                    //      },
+                    //      "mutable-content":1
+                    //   },
+                    //    "system_data":{
+                    //      "messageId":"pixunptufh3uncbogyadn",
+                    //      "ackUrl":"",
+                    //      "blob":null,
+                    //      "hasMore":false,
+                    //      "type":"message"
+                    //   },
+                    //   "user_data":{
+                    //      "msgType":"content",
+                    //      "sysType":"Admin",
+                    //      "imgType":"icon",
+                    //      "landingPath":"SYNOP",
+                    //      "posterUrl":"PIMG",
+                    //      "title":"시놉 바로가기",
+                    //      "iconUrl":"IIMG",
+                    //      "receiveLimit":"",
+                    //      "destPos":"http:\\/\\/m.btvplus.co.kr?type=30&id=CE0001166079",
+                    //      "timestamp":"20201111180000",
+                    //      "notiType":"ALL"
+                    //   }
                     
                    
                     let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)

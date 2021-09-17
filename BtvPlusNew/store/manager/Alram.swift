@@ -29,4 +29,6 @@ class Alram : ObservableObject, PageProtocol{
     func updatedNotification(){
         self.needUpdateNew = true
     }
+    
+   
 }

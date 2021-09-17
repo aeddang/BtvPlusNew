@@ -48,7 +48,7 @@ struct PlayerBottomBody: PageComponent{
                     self.viewModel.event = .seekTime(self.endingTime, true)
                 }
                 Spacer()
-                if self.showDirectview && !self.isLock{
+                if self.showDirectview {
                     RectButton(
                         text: String.player.directPlay
                         ){_ in
@@ -107,7 +107,7 @@ struct PlayerBottomBody: PageComponent{
                         }
                     }
                 }
-                if  !self.isLock, let cookieText = self.showCookie, let cookie = self.currentCookie {
+                if  let cookieText = self.showCookie, let cookie = self.currentCookie {
                     RectButton(
                         text: String.player.cookie,
                         textTrailing: cookieText
@@ -133,7 +133,7 @@ struct PlayerBottomBody: PageComponent{
                     }
                 }
                 
-                if self.showFullVod && !self.isLock{
+                if self.showFullVod {
                     RectButton(
                         text: String.player.fullVod
                         ){_ in
@@ -144,7 +144,7 @@ struct PlayerBottomBody: PageComponent{
                     
                 }
                 
-                if self.showNext && !self.isLock{
+                if self.showNext {
                     if self.showNextCancel {
                         RectButton(
                             text: String.player.continuePlay
@@ -173,13 +173,13 @@ struct PlayerBottomBody: PageComponent{
         }
        
         .padding(.bottom,
-                 self.isUiShowing && !self.isLock
+                 self.isUiShowing
                     ? self.isFullScreen
                         ? PlayerUI.uiRealHeightFullScreen : PlayerUI.uiRealHeight
                     : 0
                  )
         
-        .opacity(!self.isUiShowing && self.showPreplay ? 0.0 : 1.0)
+        .opacity((!self.isUiShowing && self.showPreplay) || self.isLock ? 0.0 : 1.0)
     }//body
 }
 

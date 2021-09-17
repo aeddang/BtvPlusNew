@@ -208,12 +208,8 @@ struct PagePairingBtv: PageView {
                 case .connected : 
                     self.pagePresenter.closePopup(self.pageObject?.id)
                 case .connectError(let header) :
-                    if header?.result == NpsNetwork.resultCode.pairingLimited.code {
-                        self.pairing.requestPairing(.hostInfo(auth: self.input, device: nil, prevResult: header))
-                    } else {
-                        self.errorMsg = NpsNetwork.getConnectErrorMeassage(data: header)
-                       // self.appSceneObserver.alert = .pairingError(header)
-                    }
+                    self.appSceneObserver.alert = .pairingError(header)
+                    
                 case .connectErrorReason(let info) :
                     self.appSceneObserver.alert = .limitedDevice(info)
                 default : do{}

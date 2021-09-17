@@ -37,7 +37,7 @@ struct PageKidsHome: PageView {
                     useTracking:false,
                     marginTop:self.marginTop,
                     marginBottom: self.marginBottom
-                    )
+                )
             }
             .background(
                 Image(AssetKids.image.homeBg)

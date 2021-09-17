@@ -43,7 +43,7 @@ class AppObserver: ObservableObject, PageProtocol {
         if let aps = userInfo[apnsKey] as? [String: Any] {
             PageLog.d("aps: \(aps)" , tag: self.tag)
             self.apns = userInfo
-            self.alram = NotificationCoreData().addNotice(userInfo)
+            self.alram = NotificationReceiver.shareInstance().didReceiveRemoteNotification(userInfo: userInfo)
         }
         
         if let pageJson = userInfo[pageKey] as? [String: Any] {
@@ -51,7 +51,32 @@ class AppObserver: ObservableObject, PageProtocol {
             self.page = WhereverYouCanGo.parseIwillGo(json: pageJson)
         }
     }
-    
+    /*
+    @discardableResult
+    func addNotice(_ userInfo: [AnyHashable: Any])->AlramData?{
+        var title:String = ""
+        var body:String = ""
+        //var needSave:Bool = true
+        if let aps = userInfo["aps"] as? [String: Any] {
+            if let mutableContent = aps["mutable-content"] as? String {
+                if mutableContent == "1" { return nil}
+            } else if let mutableContent = aps["mutable-content"] as? Int {
+                if mutableContent == 1 { return nil}
+            }
+            if let alert = aps["alert"] as? [String: Any] {
+                if let value = alert["title"] as? String { title = value }
+                if let value = alert["body"] as? String { body = value }
+            } else {
+                if let value = aps["alert"] as? String { body = value }
+            }
+        }
+        let alram = AlramData().setData(title: title, text: body, userData: userInfo as? [String: Any])
+        NotificationCoreData().addNotice(userInfo)
+        
+        return alram
+        
+    }
+    */
     @discardableResult
     func handleUniversalLink(_ deepLink: URL?)-> Bool{
         guard let url =  deepLink else { return false }
@@ -101,18 +126,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
         DynamicLinks.performDiagnostics(completion: nil)
-        if #available(iOS 10.0, *) {
-            UNUserNotificationCenter.current().delegate = self
-            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-            UNUserNotificationCenter.current().requestAuthorization(
-                options: authOptions,
-                completionHandler: {_, _ in })
-        } else {
-            let settings: UIUserNotificationSettings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-            application.registerUserNotificationSettings(settings)
+        
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: authOptions){ _ , error in
+            DispatchQueue.main.async {
+                UNUserNotificationCenter.current().delegate = NotificationReceiver.shareInstance()
+                UIApplication.shared.registerForRemoteNotifications()
+            }
         }
-        UIApplication.shared.registerForRemoteNotifications()
-       
         
         let queue = OperationQueue()
         queue.qualityOfService = .utility
@@ -155,28 +177,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
     }
 
     
-    
-    
     // [START receive_message]
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
         AppDelegate.appObserver.handleApns(userInfo)
         PageLog.d("didReceiveRemoteNotification", tag: self.tag)
+        
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
                      fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         AppDelegate.appObserver.handleApns(userInfo)
         PageLog.d("didReceiveRemoteNotification fetchCompletionHandler", tag: self.tag)
-        
         completionHandler(UIBackgroundFetchResult.newData)
     }
     // [END receive_message]
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         PageLog.d("Unable to register for remote notifications: \(error.localizedDescription)", tag: self.tag)
     }
+    
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         PageLog.d("APNs token retrieved: \(deviceToken.base64EncodedString())", tag: self.tag)
         AppDelegate.appObserver.apnsToken = deviceToken.toHexString()
+        /*
         Messaging.messaging().apnsToken = deviceToken
         Messaging.messaging().token { token, error in
             if let error = error {
@@ -185,8 +207,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
                 PageLog.d("Firebase registration token: \(token)", tag: self.tag)
                 AppDelegate.appObserver.pushToken = token
             }
-        }
+        }*/
     }
+    
 }
 
 extension AppDelegate : URLSessionDelegate {
@@ -196,6 +219,8 @@ extension AppDelegate : URLSessionDelegate {
     }
 }
 
+
+/*
 extension AppDelegate : UNUserNotificationCenterDelegate {
     // Receive displayed notifications for iOS 10 devices.
     func userNotificationCenter(_ center: UNUserNotificationCenter,
@@ -206,16 +231,16 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         let userInfo = notification.request.content.userInfo
         AppDelegate.appObserver.handleApns(userInfo)
         PageLog.d("userNotificationCenter[] " + userInfo.debugDescription, tag: self.tag)
-        /*
+        
         DispatchQueue.main.async {
             if let badgeNo = notification.request.content.badge as? Int {
                 UIApplication.shared.applicationIconBadgeNumber = badgeNo
             }
+            completionHandler([.badge, .sound])
         }
-         */
-        completionHandler([.alert, .sound])
+        
     }
-    
+   
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
@@ -224,7 +249,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         PageLog.d("userNotificationCenter{} " + userInfo.debugDescription, tag: self.tag)
         completionHandler()
     }
-}
+}*/
 
 /*
 // [END ios_10_message_handling]

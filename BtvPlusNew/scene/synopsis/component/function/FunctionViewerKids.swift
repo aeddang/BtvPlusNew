@@ -15,6 +15,7 @@ struct FunctionViewerKids: PageComponent{
     var summaryViewerData:SummaryViewerData? = nil
     @Binding var isBookmark:Bool?
     var isRecommandAble:Bool
+    var isPosson:Bool
     var body: some View {
         ZStack{
             if SystemEnvironment.isTablet {
@@ -24,7 +25,9 @@ struct FunctionViewerKids: PageComponent{
                         synopsisData: self.synopsisData,
                         summaryViewerData:self.summaryViewerData,
                         isBookmark: self.$isBookmark,
-                        isRecommandAble: self.isRecommandAble)
+                        isRecommandAble: self.isRecommandAble,
+                        isPosson:self.isPosson
+                    )
                 }
             } else {
                 VStack(alignment:.center , spacing:DimenKids.margin.regularExtra) {
@@ -33,7 +36,9 @@ struct FunctionViewerKids: PageComponent{
                         synopsisData: self.synopsisData,
                         summaryViewerData:self.summaryViewerData,
                         isBookmark: self.$isBookmark,
-                        isRecommandAble: self.isRecommandAble)
+                        isRecommandAble: self.isRecommandAble,
+                        isPosson:self.isPosson
+                    )
                 }
             }
         }
@@ -50,6 +55,7 @@ struct FunctionViewerKidsBody: PageComponent{
     var summaryViewerData:SummaryViewerData? = nil
     @Binding var isBookmark:Bool?
     var isRecommandAble:Bool
+    var isPosson:Bool
     var body: some View {
         if let data = summaryViewerData {
             PlayInfoButton(data: data)
@@ -57,11 +63,14 @@ struct FunctionViewerKidsBody: PageComponent{
         } else {
             Spacer().frame(width:DimenKids.icon.light, height:DimenKids.icon.light)
         }
-        BtvButton(type: .kids){
-            self.componentViewModel.uiEvent = .watchBtv
+        if !self.isPosson {
+            BtvButton(type: .kids){
+                self.componentViewModel.uiEvent = .watchBtv
+            }
+            .buttonStyle(BorderlessButtonStyle())
         }
-        .buttonStyle(BorderlessButtonStyle())
-        if let synopsisData = self.synopsisData {
+        
+        if !self.isPosson ,let synopsisData = self.synopsisData {
             BookMarkButton(
                 type: .kids,
                 data:synopsisData,
@@ -72,7 +81,7 @@ struct FunctionViewerKidsBody: PageComponent{
             Spacer().frame(width:DimenKids.icon.light, height:DimenKids.icon.light)
         }
         
-        if self.isRecommandAble ,let srisId = self.synopsisData?.srisId {
+        if self.isRecommandAble && !self.isPosson ,let srisId = self.synopsisData?.srisId {
             ShareButton(
                 type: .kids,
                 srisId:srisId,
@@ -95,7 +104,7 @@ struct FunctionViewerKids_Previews: PreviewProvider {
                 componentViewModel: .init(),
                 synopsisData:SynopsisData(),
                 isBookmark: .constant(false),
-                isRecommandAble: true
+                isRecommandAble: true, isPosson: false
             )
             .environmentObject(DataProvider())
             .environmentObject(PagePresenter())

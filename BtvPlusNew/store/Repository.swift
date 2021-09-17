@@ -173,6 +173,8 @@ class Repository:ObservableObject, PageProtocol{
         if SystemEnvironment.tvUserId == nil && self.vsManager?.currentAccountId == nil{
             SystemEnvironment.tvUserId = storage.tvUserId
         }
+        let currentPush = self.namedStorage?.registPushUserAgreement
+        self.storage.isPush = currentPush ?? true
         self.webBridge.namedStorage = storage
         self.pushManager.setupStorage(storage: storage)
     }
@@ -372,7 +374,7 @@ class Repository:ObservableObject, PageProtocol{
                 if savedPath == config.value { return }
                 DataLog.d("reset Server " + server.rawValue , tag:self.tag)
                 self.storage.setServerConfig(configKey: config.key, path: config.value)
-                self.apiCoreDataManager.clearData(server: server)
+                //self.apiCoreDataManager.clearData(server: server)
             } else {
                 DataLog.d("init Server " + server.rawValue , tag:self.tag)
                 self.storage.setServerConfig(configKey: config.key, path: config.value)
@@ -413,6 +415,7 @@ class Repository:ObservableObject, PageProtocol{
     
     func updatePush(_ isAgree:Bool) {
         self.pairing.updateUserAgreement(isAgree)
+        self.storage.isPush = isAgree
         self.pushManager.updateUserAgreement(isAgree)
     }
     

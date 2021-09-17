@@ -53,6 +53,7 @@ extension MetvNetwork{
         if isAll {
             return watch >= 1 ? true : false
         }
+        if data.adult?.toBool() == true {return false}
         
         let limit = Int(round(Self.maxWatchedProgress * 100))
         let runTime: Int = (Int(data.running_time ?? "0") ?? 0) / 60
@@ -60,7 +61,7 @@ extension MetvNetwork{
                 ((5...29).contains(runTime) && watch >= 10) ||
                 (runTime >= 30 && watch >= 5)
         let genreCheck: Bool = ("N" == data.yn_series && watch < limit) || "Y" == data.yn_series
-
+        
         return runningTimeCheck && genreCheck
     }
 }

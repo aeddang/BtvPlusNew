@@ -21,10 +21,20 @@ protocol PlayerScreenViewDelegate{
     func onPlayerBitrateChanged(_ bitrate:Double)
 }
 
-class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
-    let playerId:String = UUID().uuidString
-    var delegate:PlayerScreenViewDelegate?
-    var player:AVPlayer? = nil
+protocol PlayerScreenPlayerDelegate{
+    func onPlayerReady()
+    func onPlayerDestory()
+}
+
+class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate , Identifiable{
+    let id:String = UUID.init().uuidString
+    var delegate:PlayerScreenViewDelegate? = nil
+    var playerDelegate:PlayerScreenPlayerDelegate? = nil
+    var drmData:FairPlayDrm? = nil
+    var playerController : UIViewController? = nil
+    var playerLayer:AVPlayerLayer? = nil
+    
+    private(set) var player:AVPlayer? = nil
     {
         didSet{
             if player != nil {
@@ -34,80 +44,63 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
             }
         }
     }
-    
-    var currentRatio:CGFloat = 1.0
-    {
-        didSet{
-            ComponentLog.d("onCurrentRatio " + currentRatio.description, tag: self.tag)
-            if let layer = playerLayer {
-                layer.contentsScale = currentRatio
-                self.setNeedsLayout()
-            }
-        }
-    }
-    
-    var currentVideoGravity:AVLayerVideoGravity = .resizeAspectFill
-    {
-        didSet{
-             playerLayer?.videoGravity = currentVideoGravity
-             if let avPlayerViewController = playerController as? AVPlayerViewController {
-                 avPlayerViewController.videoGravity = currentVideoGravity
-             }
-        }
-    }
-    
-    var currentRate:Float = 1.0
-    {
-        didSet{
-            player?.rate = currentRate
-        }
-    }
-    
-    
-    private var recoveryTime:Double = -1
-    var drmData:FairPlayDrm? = nil
-    var playerLayer:AVPlayerLayer? = nil
-    var playerController : UIViewController? = nil
-   
+
+    private var currentTimeObservser:Any? = nil
     private var currentVolume:Float = 1.0
     private var isAutoPlay:Bool = false
     private var initTime:Double = 0
+    private var recoveryTime:Double = -1
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        ComponentLog.d("init " + id, tag: self.tag)
     }
     
     required init?(coder: NSCoder) {fatalError("init(coder:) has not been implemented")}
     
     deinit {
-        ComponentLog.d("deinit " + playerId, tag: self.tag)
+        ComponentLog.d("deinit " + id, tag: self.tag)
         self.destoryScreenview()
     }
     
     func destory(){
-        ComponentLog.d("destory " + playerId , tag: self.tag)
-        self.destoryScreenview()
+        ComponentLog.d("destory " + id , tag: self.tag)
         self.destoryPlayer()
-        
+        self.destoryScreenview()
     }
     func destoryScreenview(){
-        guard let player = self.player else {return}
-        player.pause()
         delegate = nil
         playerController = nil
-        playerLayer?.player = nil
-        self.player = nil
-        ComponentLog.d("PlayerScreenView destoryScreenview " + CustomAVPlayerController.currentPlayerNum.description, tag:"CustomAVPlayerController2")
+        ComponentLog.d("destoryScreenview " + id, tag: self.tag)
     }
     private func destoryPlayer(){
-        ComponentLog.d("destoryPlayer " + playerId, tag: self.tag)
+        guard let player = self.player else {return}
+        player.pause()
+        player.replaceCurrentItem(with: nil)
+        playerLayer?.player = nil
         if let avPlayerViewController = playerController as? AVPlayerViewController {
             avPlayerViewController.player = nil
             avPlayerViewController.delegate = nil
         }
         NotificationCenter.default.removeObserver(self)
-        ComponentLog.d("PlayerScreenView destoryPlayer " + CustomAVPlayerController.currentPlayerNum.description, tag:"CustomAVPlayerController2")
+        self.playerDelegate?.onPlayerDestory()
+        self.player = nil
+        ComponentLog.d("destoryPlayer " + id, tag: self.tag)
     }
+    
+    private func createdPlayer(){
+        self.playerDelegate?.onPlayerReady()
+        let center = NotificationCenter.default
+        //center.addObserver(self, selector:#selector(newErrorLogEntry), name: .AVPlayerItemNewErrorLogEntry, object: nil)
+        center.addObserver(self, selector:#selector(failedToPlayToEndTime), name: .AVPlayerItemFailedToPlayToEndTime, object: nil)
+        center.addObserver(self, selector: #selector(playerItemDidReachEnd), name: .AVPlayerItemDidPlayToEndTime, object: nil)
+        center.addObserver(self, selector: #selector(playerDidBecomeActive), name: UIApplication.didBecomeActiveNotification , object: nil)
+        center.addObserver(self, selector: #selector(systemVolumeChange), name: NSNotification.Name(rawValue: Self.VOLUME_NOTIFY_KEY) , object: nil)
+        center.addObserver(self, selector: #selector(playerItemBitrateChange), name: .AVPlayerItemNewAccessLogEntry , object: nil)
+        
+    }
+    
+
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -119,7 +112,7 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
     }
     
     private func createPlayer(_ url:URL, buffer:Double = 2.0, header:[String:String]? = nil, assetInfo:AssetPlayerInfo? = nil) -> AVPlayer?{
-        destoryPlayer()
+        self.destoryPlayer()
         var player:AVPlayer? = nil
         if let header = header {
             player = startPlayer(url, header: header)
@@ -149,7 +142,7 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
                         self.onError(.certification(status.rawValue.description))
                     }
                 default:
-                    ComponentLog.d("certification success " + url.absoluteString , tag: self.tag)
+                    //ComponentLog.d("certification success " + url.absoluteString , tag: self.tag)
                     DispatchQueue.main.async {
                         let item = AVPlayerItem(asset: asset)
                         player.replaceCurrentItem(with: item )
@@ -184,6 +177,7 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
         player.usesExternalPlaybackWhileExternalScreenIsActive = true
         player.preventsDisplaySleepDuringVideoPlayback = true
         player.volume = currentVolume
+        //player.rate = currentRate
         //player?.isClosedCaptionDisplayEnabled = true
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
@@ -191,30 +185,21 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
         catch {
             ComponentLog.e("Setting category to AVAudioSessionCategoryPlayback failed." , tag: self.tag)
         }
-        
-        if let avPlayerViewController = playerController as? AVPlayerViewController {
-            avPlayerViewController.player = player
-            avPlayerViewController.updatesNowPlayingInfoCenter = false
-            avPlayerViewController.videoGravity = currentVideoGravity
-        }else{
-            playerLayer?.player = player
-            playerLayer?.contentsScale = currentRatio
-            playerLayer?.videoGravity = currentVideoGravity
+        DispatchQueue.global(qos: .background).async {
+            if let avPlayerViewController = self.playerController as? AVPlayerViewController {
+                avPlayerViewController.player = player
+                avPlayerViewController.updatesNowPlayingInfoCenter = false
+                avPlayerViewController.videoGravity = self.currentVideoGravity
+            }else{
+                self.playerLayer?.player = player
+                self.playerLayer?.contentsScale = self.currentRatio
+                self.playerLayer?.videoGravity = self.currentVideoGravity
+            }
         }
-        //player?.addPeriodicTimeObserver(forInterval: <#T##CMTime#>, queue: <#T##DispatchQueue?#>, using: <#T##(CMTime) -> Void#>)
         ComponentLog.d("startPlayer currentVolume " + currentVolume.description , tag: self.tag)
         ComponentLog.d("startPlayer currentRate " + currentRate.description , tag: self.tag)
         ComponentLog.d("startPlayer videoGravity " + currentVideoGravity.rawValue , tag: self.tag)
-        //player?.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.new, .initial], context: nil)
-        //player?.addObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status), options:[.new, .initial], context: nil)
-        let center = NotificationCenter.default
-        NotificationCenter.default.removeObserver(self)
-        center.addObserver(self, selector:#selector(newErrorLogEntry), name: .AVPlayerItemNewErrorLogEntry, object: nil)
-        center.addObserver(self, selector:#selector(failedToPlayToEndTime), name: .AVPlayerItemFailedToPlayToEndTime, object: nil)
-        center.addObserver(self, selector: #selector(playerItemDidReachEnd), name: .AVPlayerItemDidPlayToEndTime, object: nil)
-        center.addObserver(self, selector: #selector(playerDidBecomeActive), name: UIApplication.didBecomeActiveNotification , object: nil)
-        center.addObserver(self, selector: #selector(systemVolumeChange), name: NSNotification.Name(rawValue: Self.VOLUME_NOTIFY_KEY) , object: nil)
-        center.addObserver(self, selector: #selector(playerItemBitrateChange), name: .AVPlayerItemNewAccessLogEntry , object: nil)
+        self.createdPlayer()
         
         DispatchQueue.main.async {
             if self.isAutoPlay { self.resume() }
@@ -222,8 +207,7 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
         }
     }
     
-   
-    
+
     private func onError(_ e:PlayerStreamError){
         delegate?.onPlayerError(e)
         ComponentLog.e("onError " + e.getDescription(), tag: self.tag)
@@ -234,6 +218,8 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
         guard let object = notification.object, let playerItem = object as? AVPlayerItem else { return}
         guard let errorLog: AVPlayerItemErrorLog = playerItem.errorLog() else { return }
         ComponentLog.d("errorLog " + errorLog.description , tag: self.tag)
+        //delegate?.onPlayerError(.playback(notification.description))
+        //destoryScreenview()
         
     }
 
@@ -259,9 +245,14 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
     }
     
     @objc func playerItemBitrateChange(notification: NSNotification) {
-        guard let item = notification.object as? AVPlayerItem else {return}
-        guard let bitrate = item.accessLog()?.events.last?.indicatedBitrate else {return}
-        delegate?.onPlayerBitrateChanged(bitrate)
+        DispatchQueue.global(qos: .background).async {
+            guard let item = notification.object as? AVPlayerItem else {return}
+            guard let bitrate = item.accessLog()?.events.last?.indicatedBitrate else {return}
+            DispatchQueue.main.async {
+                self.delegate?.onPlayerBitrateChanged(bitrate)
+            }
+        }
+       
     }
     
     @discardableResult
@@ -283,30 +274,31 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
     func playInit(duration:Double){
         if self.initTime > 0  {
             let diff = duration - self.initTime
-            if diff >= 5 {
+            if diff >= 1 {
                 seek(initTime)
             }
         }
         guard let currentPlayer = player else { return }
-        currentPlayer.rate = self.currentRate
-        if !self.isAutoPlay { pause() }
-        
-        guard let currentItem = currentPlayer.currentItem else { return }
-        currentItem.asset.allMediaSelections.forEach{ item in
-            
-            DataLog.d("MediaSelection " + item.description, tag: self.tag)
+        if self.currentRate != 1 {
+            currentPlayer.rate = self.currentRate
         }
-        currentItem.asset.availableMediaCharacteristicsWithMediaSelectionOptions.forEach{ item in
-            DataLog.d("MediaCharacteristics " + item.rawValue, tag: self.tag)
+        if !self.isAutoPlay { pause() }
+        /*
+        guard let currentItem = currentPlayer.currentItem else { return }
+        
+        currentItem.asset.allMediaSelections.forEach{ item in
+            //DataLog.d("MediaSelection " + item.description, tag: self.tag)
+        }
+        currentItem.asset.availableMediaCharacteristicsWithMediaSelectionOptions.forEach{ item in// DataLog.d("MediaCharacteristics " + item.rawValue, tag: self.tag)
         }
         currentItem.asset.availableMetadataFormats.forEach{ item in
-            DataLog.d("MetadataFormat " + item.rawValue, tag: self.tag)
-        }
+            //DataLog.d("MetadataFormat " + item.rawValue, tag: self.tag)
+        }*/
     }
     
     func stop() {
         ComponentLog.d("on Stop", tag: self.tag)
-        destoryPlayer()
+        destory()
     }
     
     @discardableResult
@@ -356,6 +348,34 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate {
         switch evt {
         case .ready:
             self.resume()
+        }
+    }
+    
+    var currentRatio:CGFloat = 1.0
+    {
+        didSet{
+            ComponentLog.d("onCurrentRatio " + currentRatio.description, tag: self.tag)
+            if let layer = playerLayer {
+                layer.contentsScale = currentRatio
+                self.setNeedsLayout()
+            }
+        }
+    }
+    
+    var currentVideoGravity:AVLayerVideoGravity = .resizeAspectFill
+    {
+        didSet{
+             playerLayer?.videoGravity = currentVideoGravity
+             if let avPlayerViewController = playerController as? AVPlayerViewController {
+                 avPlayerViewController.videoGravity = currentVideoGravity
+             }
+        }
+    }
+    
+    var currentRate:Float = 1.0
+    {
+        didSet{
+            player?.rate = currentRate
         }
     }
 }

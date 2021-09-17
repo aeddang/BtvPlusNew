@@ -19,13 +19,13 @@ class ApiCoreDataManager:PageProtocol {
         static let itemJson = "jsonString"
     }
     
+    /*
     func clearData(server:ApiServer) {
         switch server {
         case .VMS:do{}
         default: do{}
         }
-        
-    }
+    }*/
 
     func setData<T:Encodable>(key:String, data:T?){
         guard let data = data else { return }
@@ -60,8 +60,8 @@ class ApiCoreDataManager:PageProtocol {
 
     
     // MARK: - Core Data stack
-    private lazy var persistentContainer: NSPersistentCloudKitContainer = {
-        let container = NSPersistentCloudKitContainer(name: Self.name)
+    private lazy var persistentContainer: NSPersistentContainer = {
+        let container = BtvPlusPersistentContainer(name: Self.name)
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")

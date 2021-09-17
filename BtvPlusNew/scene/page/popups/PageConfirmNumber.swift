@@ -73,6 +73,7 @@ struct PageConfirmNumber: PageView {
                 keyboardType: self.type.keyboardType(),
                 isSecure : self.isSecure
             ){ input, _ in
+                
                 guard let input = input else {
                     self.closePage()
                     return
@@ -154,6 +155,9 @@ struct PageConfirmNumber: PageView {
             case .confirmPassword, .postCoupon, .updateUser,
                  .postBPoint, .postBCash, .updateOkCashPoint, .certificationCoupon, .getStbInfo:
                 self.msg = String.alert.apiErrorClient
+                //self.input = ""
+              
+               
             default: break
             }
         }
@@ -302,7 +306,9 @@ struct PageConfirmNumber: PageView {
             self.isFocus = false
             self.pagePresenter.closePopup(self.pageObject?.id)
         } else{
+            self.input = ""
             self.msg = self.type.errorMsg
+            
         }
     }
     
@@ -327,18 +333,21 @@ struct PageConfirmNumber: PageView {
             if resData.result == ApiCode.success {
                 self.registCouponSuccess()
             } else{
+                self.input = ""
                 self.msg = resData.reason
             }
         } else if let  resData = res.data as? StbInfo {
             if resData.result == ApiCode.success {
                 self.dataProvider.requestData(q: .init(id:self.tag, type: .certificationCoupon(self.input, resData) ))
             } else{
+                self.input = ""
                 self.msg = resData.reason
             }
         } else if let resData = res.data as? CertificationCoupon {
             if resData.result == ApiCode.success2 {
                 self.registCouponSuccess()
             } else{
+                self.input = ""
                 self.msg = CbsNetwork.getCertificationErrorMeassage(resData.result , reason: resData.reason)
             }
         }
@@ -378,6 +387,7 @@ struct PageConfirmNumber: PageView {
             }
             self.closePage()
         } else{
+            self.input = ""
             self.msg = resData.header?.reason ?? String.alert.apiErrorServer
         }
     }
@@ -399,6 +409,7 @@ struct PageConfirmNumber: PageView {
             self.closePage()
             
         } else{
+            self.input = ""
             self.msg = self.type.errorMsg
         }
     }
@@ -418,6 +429,7 @@ struct PageConfirmNumber: PageView {
         if resData.result == ApiCode.success {
             self.closePage()
         } else{
+            self.input = ""
             self.msg = self.type.errorMsg
         }
     }

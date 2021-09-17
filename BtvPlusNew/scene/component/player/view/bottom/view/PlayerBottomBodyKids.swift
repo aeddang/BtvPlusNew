@@ -81,12 +81,12 @@ struct PlayerBottomBodyKids: PageComponent{
             }
         }
         .padding(.bottom,
-                 self.isUiShowing && !self.isLock
+                 self.isUiShowing
                     ? self.isFullScreen
                         ? KidsPlayerUI.uiHeightFullScreen : KidsPlayerUI.uiHeight
                     : 0
                  )
-        .opacity(self.isUiShowing ? 1.0 : 0)
+        .opacity(self.isUiShowing && !self.isLock ? 1.0 : 0)
         
         
     }//body

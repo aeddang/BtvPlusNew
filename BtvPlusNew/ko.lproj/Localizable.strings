@@ -266,7 +266,7 @@
 "alertDataError" = "데이타가 없습니다.";
 
 "alertPlayError" = "재생오류";
-"alertPlayErrorPlayback" = "재생중 문제가 발생하였습니다. 다시 시도해 주세요.";
+"alertPlayErrorPlayback" = "재생중 문제가 발생하였습니다.\n다시 시도해 주세요.";
 "alertPlayProhibitionSimultaneous" = "동시 시청 제한 안내";
 "alertPlayProhibitionSimultaneous1" = "현재 지상파 방송사의 영상을 다른 기기에서 시청 중입니다.\n\n콘텐츠 제공사의 요청으로 지상파 이용권에 포함된 영상은 동시 시청이 불가하오니 다른 기기의 시청 종료 후 이용해 주세요.";
 "alertPlayProhibitionSimultaneous2" = "현재 선택하신 영상과 동일한 제공사의 영상을 다른 기기에서 시청 중입니다.\n\n콘텐츠 제공사의 요청으로 일부 제공사의 영상은 동시 시청이 불가하오니 다른 기기의 시청 종료 후 이용해 주세요.";

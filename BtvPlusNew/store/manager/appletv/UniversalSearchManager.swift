@@ -11,7 +11,6 @@ import VideoSubscriberAccount
 import AVKit
 import MediaPlayer
 
-
 class UniversalSearchManager: NSObject, PageProtocol {
     private var contentId: String = ""
     private var title: String = ""
@@ -64,6 +63,7 @@ class UniversalSearchManager: NSObject, PageProtocol {
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
         DataLog.d("[updateStop]", tag:self.tag)
     }
+    
     /*
     func updatePairing(_ id: String?) {
         guard let id = id else {
@@ -85,7 +85,7 @@ class UniversalSearchManager: NSObject, PageProtocol {
             DataLog.d("[UniversalSearch already subscription] " + (self.pairingID ?? "nil"))
         }
     }
-   
+ 
     private func subscription() {
         self.isConnected = true
         UserDefaults.standard.set(self.pairingID, forKey: Self.PAIRING_KEY)
@@ -105,5 +105,4 @@ class UniversalSearchManager: NSObject, PageProtocol {
         DataLog.d("[UniversalSearch unsubscription]")
     }
      */
-    
 }

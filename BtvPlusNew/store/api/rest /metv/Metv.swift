@@ -24,6 +24,7 @@ extension MetvNetwork{
     static let exceptMonthlyIds = ["411211275"] //모비 무료관 없음
     
     static let maxWatchedProgress:Float = 0.9
+    static let maxWatchedCount:Int = 30
     
     enum SynopsisType{
         case none, title, seriesChange , seasonFirst
@@ -67,6 +68,25 @@ extension MetvNetwork{
 }
 
 class Metv: Rest{
+    /**
+    * VOD 재생정보 조회(이어보기) (IF-ME-024)
+    * @param epsdId 에피소드ID
+    */
+    func getPlayTime(
+        epsdId:String?,
+        completion: @escaping (PlayTime) -> Void, error: ((_ e:Error) -> Void)? = nil){
+
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:String]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["ver"] = MetvNetwork.VERSION
+        params["IF"] = "IF-ME-024"
+        params["stb_id"] = stbId
+        params["epsd_id"] = epsdId ?? ""
+        params["hash_id"] = ApiUtil.getHashId(stbId)
+        fetch(route: MetvPlayTime(query: params), completion: completion, error:error)
+    }
+    
     /**
     * 일반 구매내역 조회 (IF-ME-031)
     * @param pageNo 요청할 페이지의 번호 (Default: 1)
@@ -438,6 +458,13 @@ class Metv: Rest{
     
     
 }
+struct MetvPlayTime:NetworkRoute{
+    var method: HTTPMethod = .get
+    var path: String = "/metv/v5/watch/lastplaytime/mobilebtv"
+    var query: [String : String]? = nil
+}
+
+
 
 struct MetvPurchase:NetworkRoute{
     var method: HTTPMethod = .get

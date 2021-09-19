@@ -66,17 +66,8 @@ struct PageKidsTab: PageComponent{
                 
                 if self.isSetting {
                     Button(action: {
-                        let move = PageProvider.getPageObject(.setup, animationType: .opacity)
-                        move.isPopup = true
-                        if pairing.status == .pairing && self.setup.isKidsExitAuth { 
-                            self.pagePresenter.openPopup(
-                                PageKidsProvider.getPageObject(.kidsConfirmNumber)
-                                    .addParam(key: .type, value: PageKidsConfirmType.exitSetup)
-                                    .addParam(key: .data, value: move)
-                            )
-                        } else {
-                            self.pagePresenter.openPopup(move)
-                        }
+                        
+                        self.moveSetupCheck()
                         
                     }) { 
                         Image(AssetKids.icon.setting)
@@ -108,6 +99,39 @@ struct PageKidsTab: PageComponent{
         .modifier(ContentHorizontalEdgesKids())
         .modifier(MatchHorizontal(height: DimenKids.app.pageTop))
         .background(self.style.bgColor)
+        .onReceive(self.pagePresenter.$event){ evt in
+            guard let evt = evt else {return}
+            if evt.id != self.tag { return }
+            switch evt.type {
+            case .completed :
+                let type = evt.data as? PageKidsConfirmType
+                switch type {
+                case .exitSetup: self.moveSetup()
+                default : self.moveSetupCheck()
+                }
+            default : break
+            }
+        }
+    }
+    
+    func moveSetupCheck() {
+        if !SystemEnvironment.isAdultAuth {
+            self.pagePresenter.openPopup(
+                PageProvider.getPageObject(.adultCertification, animationType: .opacity)
+                    .addParam(key: .id, value: self.tag)
+            )
+            return
+        }
+        self.pagePresenter.openPopup(
+            PageKidsProvider.getPageObject(.kidsConfirmNumber)
+                .addParam(key: .type, value: PageKidsConfirmType.exitSetup)
+                .addParam(key: .id, value: self.tag)
+        )
+    }
+    func moveSetup() {
+        let move = PageProvider.getPageObject(.setup, animationType: .opacity)
+        move.isPopup = true
+        self.pagePresenter.openPopup(move)
     }
 }
 

@@ -36,6 +36,7 @@ struct TopViewerKids: PageComponent{
                     .aspectRatio(contentMode: .fit)
                     .modifier(MatchParent())
                 VStack(alignment: .leading, spacing:0){
+                    Spacer().modifier(MatchHorizontal(height:0))
                     Button(action: {
                         self.pagePresenter.goBack()
                     }) {

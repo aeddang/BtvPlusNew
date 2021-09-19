@@ -66,6 +66,7 @@ class BtvPlayerModel:PlayerModel{
     @Published var brightness:CGFloat = UIScreen.main.brightness
     @Published private(set) var message:String? = nil
     @Published var selectQuality:Quality? = nil
+    @Published var willCurrentQuality:Quality? = nil
     @Published var currentQuality:Quality? = nil
     
     @Published var selectFunctionType:SelectOptionType? = nil
@@ -79,6 +80,13 @@ class BtvPlayerModel:PlayerModel{
     var continuousTime:Double = 0
     var continuousProgress:Float? = nil
     var continuousProgressTime:Double? = nil
+    var isContinuous:Bool {
+        if continuousTime > 0 {return true}
+        if continuousProgress != nil {return true}
+        if continuousProgressTime != nil {return true}
+        return false
+    }
+    
     var checkPreroll = true
     var isPrerollPlay = false
     
@@ -98,6 +106,7 @@ class BtvPlayerModel:PlayerModel{
     static var isInitMute:Bool = true
     
     override func reset() {
+        self.willCurrentQuality = nil
         self.currentQuality = nil
         self.limitedDuration = nil
         self.continuousTime = 0
@@ -127,7 +136,13 @@ class BtvPlayerModel:PlayerModel{
         return self
     }
     @discardableResult
-    func setData(data:PlayInfo, type:BtvPlayType, autoPlay:Bool? = nil, continuousTime:Double? = nil) -> BtvPlayerModel {
+    func setData(data:PlayInfo,
+                 type:BtvPlayType,
+                 autoPlay:Bool? = nil,
+                 continuousTime:Double? = nil,
+                 isAutoStart:Bool = true
+    ) -> BtvPlayerModel {
+        
         let isPrevPlay = self.isUserPlay
         ComponentLog.d("isUserPlay " + self.isUserPlay.description  , tag: self.tag)
         self.reset()
@@ -206,12 +221,16 @@ class BtvPlayerModel:PlayerModel{
                 selectQuality = isList ? lowQuality : selectQuality
             default : break
             }
-            currentQuality = qualitys.first{$0.name == selectQuality}
-            if currentQuality == nil {
-                currentQuality = qualitys.first
-                ComponentLog.d("firstQuality " + selectQuality, tag:"CPPlayer")
+            willCurrentQuality = qualitys.first{$0.name == selectQuality}
+            if willCurrentQuality == nil {
+                willCurrentQuality = qualitys.first
+                ComponentLog.d("firstQuality " + selectQuality, tag:self.tag)
             } else {
-                ComponentLog.d("selectQuality " + selectQuality, tag:"CPPlayer")
+                ComponentLog.d("selectQuality " + selectQuality, tag:self.tag)
+            }
+            
+            if isAutoStart {
+                self.currentQuality = willCurrentQuality
             }
             /*
             if qualitys.count > 1 {
@@ -220,6 +239,15 @@ class BtvPlayerModel:PlayerModel{
         }
         return self
     }
+    func start(){
+        if let q = willCurrentQuality {
+            self.currentQuality = q
+        } else{
+            ComponentLog.e("willCurrentQuality nil", tag:self.tag)
+        }
+        
+    }
+    
     private func appendQuality(name:String, path:String){
         if path.isEmpty {return}
         let quality = Quality(name: name, path: path)

@@ -224,16 +224,14 @@ struct PageEditKid: PageView {
             }
             .onReceive(self.pagePresenter.$event){ evt in
                 guard let evt = evt else {return}
-                
+                if evt.id != self.tag { return }
                 switch evt.type {
                 case .completed :
-                    guard let type = evt.data as? PageKidsConfirmType else { return }
+                    let type = evt.data as? PageKidsConfirmType
                     switch type {
-                    case .deleteKid:
-                        self.deleteKid()
-                    default : break
+                    case .deleteKid: self.deleteKid()
+                    default : deleteKidCheck()
                     }
-               
                 default : break
                 }
             }
@@ -338,9 +336,18 @@ struct PageEditKid: PageView {
     private func deleteKidCheck() {
         self.appSceneObserver.alert = .confirm(nil, String.alert.kidsDeleteConfirm, String.alert.kidsDeleteConfirmTip){ isOk in
             if !isOk { return }
+            
+            if !SystemEnvironment.isAdultAuth {
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.adultCertification, animationType: .opacity)
+                        .addParam(key: .id, value: self.tag)
+                )
+                return
+            }
             self.pagePresenter.openPopup(
                 PageKidsProvider.getPageObject(.kidsConfirmNumber)
                     .addParam(key: .type, value: PageKidsConfirmType.deleteKid)
+                    .addParam(key: .id, value: self.tag)
             )
         }
     }

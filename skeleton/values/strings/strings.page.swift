@@ -264,6 +264,10 @@ extension String{
         public static let myBenefitsDiscountOkSetup = "myBenefitsDiscountOkSetup".loaalized()
         public static let myBenefitsDiscountOkDelete = "myBenefitsDiscountOkDelete".loaalized()
         public static let myBenefitsDiscountTvInfo1 = "myBenefitsDiscountTvInfo1".loaalized()
+        
+        
+        public static var myBenefitsDiscountOkDeleteConfirm = "myBenefitsDiscountOkDeleteConfirm".loaalized()
+        public static var myBenefitsDiscountTDeleteConfirm = "myBenefitsDiscountTDeleteConfirm".loaalized()
 
         public static let myBenefitsCardEmpty = "myBenefitsCardEmpty".loaalized()
         public static let myBenefitsDiscountTvEmpty = "myBenefitsDiscountTvEmpty".loaalized()

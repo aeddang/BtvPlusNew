@@ -239,6 +239,7 @@ struct PageKidsMyDiagnostic: PageView {
     
     @State var resultSentence:String? = nil
     @State var readingArea:String? = nil
+    @State var isResetProfile:Bool = false
     
     @State var resultEnglishReportViewData:ResultEnglishReportViewData? = nil
     @State var resultReadingReportViewData:ResultReadingReportViewData? = nil
@@ -254,7 +255,6 @@ struct PageKidsMyDiagnostic: PageView {
     
     private func loadResult(_ type:DiagnosticReportType){
         guard let kid = self.kid else { return }
-       
         self.resetPage()
         withAnimation{ self.type = type }
         self.result = nil
@@ -275,6 +275,12 @@ struct PageKidsMyDiagnostic: PageView {
         case .creativeObservation:
             self.dataProvider.requestData(q: .init(type: .getCreativeReportResult(kid)))
         default : break
+        }
+        
+        if self.isResetProfile {
+            self.isResetProfile = false
+            self.pagePresenter.closePopup(pageId: .kidsProfileManagement)
+            self.moveExamPage(moveType: .creativeObservation)
         }
     }
     
@@ -379,6 +385,7 @@ struct PageKidsMyDiagnostic: PageView {
     }
     
     private func moveExamPage(moveType: DiagnosticReportType, moveId:String? = nil, moveTitle:String? = nil){
+        guard let kid = self.kid else { return }
         switch moveType {
         case .english:
             self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsEnglishLvTestSelect))
@@ -391,6 +398,22 @@ struct PageKidsMyDiagnostic: PageView {
             )
            
         case .creativeObservation:
+            if (kid.ageMonth ?? 0) > KidsPlayType.limitedLv2 {
+                self.appSceneObserver.alert = .confirm(
+                    nil ,
+                    String.kidsText.kidsExamCreativeObservationDisable,
+                    confirmText: String.app.close,
+                    cancelText: String.pageTitle.modifyProfile
+                ){ isOk in
+                    if !isOk {
+                        self.isResetProfile = true
+                        self.pagePresenter.openPopup(
+                            PageKidsProvider.getPageObject(.kidsProfileManagement)
+                        )
+                    }
+                }
+                return
+            }
             
             self.appSceneObserver.alert = .confirm( nil , String.kidsText.kidsExamCreativeObservationConfirm ){ isOk in
                 if isOk {

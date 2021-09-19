@@ -29,15 +29,20 @@ struct InputBox: PageComponent {
     var placeHolder:String = ""
     var inputSize:Int = 4
     var inputSizeMin:Int? = nil
+    var isInputNickName:Bool = false
+    var isInputDivision:Bool = false
+    var inputDivisionSize:Int = 4
     var keyboardType:UIKeyboardType = .default
     var isSecure:Bool = false
     var radios: [InputBox.Data]? = nil
     var size:CGFloat = SystemEnvironment.isTablet ? 370 : 275
+    var changed: ((_ input:String?, _ idx:Int?) -> Void)? = nil
     var action: ((_ input:String?, _ idx:Int?) -> Void)
     
     @State var selectedText:String? = nil
     @State var selectedIdx:Int? = nil
     @State var selectedInputSize:Int? = nil
+    @State var prevText:String = ""
     var body: some View {
         ZStack(alignment: .center) {
             Button(action: {
@@ -95,11 +100,34 @@ struct InputBox: PageComponent {
                                 text: self.$input,
                                 keyboardType: self.keyboardType,
                                 placeholder: self.placeHolder,
-                                maxLength: self.selectedInputSize ?? self.inputSize,
+                                maxLength: self.getInputSize(),
                                 kern: 1,
                                 textModifier: BoldTextStyle(size: Font.size.regular).textModifier,
                                 isfocus: self.isFocus,
                                 isSecureTextEntry:self.isSecure,
+                                inputChanged: { text in
+                                    self.changed?(self.input, self.selectedIdx)
+                                    if !isInputDivision {
+                                        self.prevText = text
+                                        return
+                                    }
+                                    let cinput = text.replace("-", with: "")
+                                    if (cinput.count % self.inputDivisionSize) != 0 {
+                                        self.prevText = text
+                                        return
+                                    }
+                                    if text.last?.isNumber != true {
+                                        self.prevText = text
+                                        return
+                                    }
+                                    if prevText.count > text.count {
+                                        self.input.removeLast()
+                                    } else if text.count < self.getInputSize(){
+                                        self.input = text + "-"
+                                    }
+                                    self.prevText = self.input
+                                    
+                                },
                                 inputCopmpleted: { text in
                                     self.action(self.input, self.selectedIdx)
                                 })
@@ -110,6 +138,7 @@ struct InputBox: PageComponent {
                     .padding(.top, Dimen.margin.thin)
                     if let msg = self.msg{
                         Text(msg)
+                            .kerning(Font.kern.thin)
                             .modifier(MediumTextStyle(
                                         size: Font.size.tiny,color: Color.brand.primary))
                             .multilineTextAlignment(.center)
@@ -118,6 +147,7 @@ struct InputBox: PageComponent {
                     }
                     if let tip = self.tip{
                         Text(tip)
+                            .kerning(Font.kern.thin)
                             .modifier(MediumTextStyle(
                                 size: Font.size.tiny,color:Color.app.grey ))
                             .multilineTextAlignment(.center)
@@ -182,12 +212,27 @@ struct InputBox: PageComponent {
     }//body
     
     
+    func getInputSize() -> Int {
+        let size = self.selectedInputSize ?? self.inputSize
+        if !self.isInputDivision {
+            return size
+        }
+        let divNum = Int(size/self.inputDivisionSize) - 1
+        return size + divNum
+        
+    }
+    
     func isInputCompleted() -> Bool {
+        if self.isInputNickName {
+            return  self.input.isNickNameType()
+        }
+        let currentInput = self.isInputDivision ? self.input.replace("-", with: "") : self.input
+        
         let size = self.selectedInputSize ?? self.inputSize
         if let min = self.inputSizeMin {
-            return min < self.input.count && self.input.count <= size
+            return min < currentInput.count && currentInput.count <= size
         } else{
-            return self.input.count == size
+            return currentInput.count == size
         }
     }
 }

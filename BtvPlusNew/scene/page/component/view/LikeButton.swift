@@ -68,7 +68,7 @@ struct LikeButton: PageView {
             switch res.type {
             case .registLike: self.regist(res)
             case .getLike: self.setup(res)
-            default: do{}
+            default: break
             }
             
         }

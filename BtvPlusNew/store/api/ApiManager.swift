@@ -257,6 +257,10 @@ class ApiManager :PageProtocol, ObservableObject{
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
         //METV
+        case .getPlayTime(let epsdId) : self.metv.getPlayTime(
+            epsdId: epsdId,
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
         case .getPurchase(let page, let count) : self.metv.getPurchase(
             page: page, pageCnt: count,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
@@ -393,8 +397,8 @@ class ApiManager :PageProtocol, ObservableObject{
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
         //SMD
-        case .getLike(let seriesId, let device) : self.smd.getLike(
-            seriesId: seriesId, hostDevice: device,
+        case .getLike(let seriesId, let device, let isTotal) : self.smd.getLike(
+            seriesId: seriesId, hostDevice: device, isTotal: isTotal,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
         case .registLike(let isLike, let seriesId, let device) : self.smd.postLike(

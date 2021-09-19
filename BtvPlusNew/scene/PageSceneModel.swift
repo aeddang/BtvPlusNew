@@ -134,12 +134,15 @@ struct PageSceneModel: PageModel {
     }
     
     static func needKeyboard(_ pageObject:PageObject) -> Bool{
+        return true
+        /*
         switch pageObject.pageID {
         case .pairingSetupUser, .pairingBtv, .search, .modifyProile, .webviewList, .confirmNumber,
              .confirmNumber, .pairingManagement, .setup, .remotecon , .myRegistCard: return true
         case .registKid,  .kidsSearch, .editKid , .kidsConfirmNumber: return true
         default : return false
         }
+        */
     }
     
 }

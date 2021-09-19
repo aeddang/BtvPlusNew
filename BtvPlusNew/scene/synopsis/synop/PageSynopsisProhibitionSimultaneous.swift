@@ -9,7 +9,7 @@ import Foundation
 
 extension PageSynopsis {
     static let ProhibitionSimultaneous = "ProhibitionSimultaneous"
-    func onResetPageProhibitionSimultaneous(isAllReset:Bool = false, isRedirectPage:Bool = false){
+    func onResetPageProhibitionSimultaneous(){
         self.isProhibitionCheckComplete = false
     }
     func onProhibitionSimultaneous(_ data:ProhibitionSimultaneous){

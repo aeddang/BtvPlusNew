@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		31061E6625C8CF5800543FC0 /* BtvWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31061E6525C8CF5800543FC0 /* BtvWebView.swift */; };
 		31061E7725C934B600543FC0 /* PlayerEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31061E7625C934B600543FC0 /* PlayerEffect.swift */; };
+		310755DE26F6F325000228D2 /* PlayTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310755DD26F6F325000228D2 /* PlayTime.swift */; };
 		310D7E2425A42B72000BE173 /* PagePairingDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310D7E2325A42B72000BE173 /* PagePairingDevice.swift */; };
 		310D7E2C25A42D05000BE173 /* StbList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310D7E2B25A42D05000BE173 /* StbList.swift */; };
 		310F6FAC25C0FE53005718B0 /* Watch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F6FAB25C0FE53005718B0 /* Watch.swift */; };
@@ -753,6 +754,7 @@
 		01E5590AFE81BD86D6657D56 /* Pods-BtvPlusNew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BtvPlusNew.release.xcconfig"; path = "Target Support Files/Pods-BtvPlusNew/Pods-BtvPlusNew.release.xcconfig"; sourceTree = "<group>"; };
 		31061E6525C8CF5800543FC0 /* BtvWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtvWebView.swift; sourceTree = "<group>"; };
 		31061E7625C934B600543FC0 /* PlayerEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerEffect.swift; sourceTree = "<group>"; };
+		310755DD26F6F325000228D2 /* PlayTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayTime.swift; sourceTree = "<group>"; };
 		310D7E2325A42B72000BE173 /* PagePairingDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePairingDevice.swift; sourceTree = "<group>"; };
 		310D7E2B25A42D05000BE173 /* StbList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StbList.swift; sourceTree = "<group>"; };
 		310F6FAB25C0FE53005718B0 /* Watch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Watch.swift; sourceTree = "<group>"; };
@@ -1937,6 +1939,7 @@
 				31740C3D261C3F6C0052A9C2 /* Purchase.swift */,
 				314E755F26DB4F2400A8C924 /* Attendance.swift */,
 				3144984F26E0704A000D0ACD /* HostNickname.swift */,
+				310755DD26F6F325000228D2 /* PlayTime.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -4875,6 +4878,7 @@
 				3195C1A62665CD35001F513E /* strings.button.swift in Sources */,
 				317C974A26240945008F267D /* CouponBlock.swift in Sources */,
 				314E756026DB4F2400A8C924 /* Attendance.swift in Sources */,
+				310755DE26F6F325000228D2 /* PlayTime.swift in Sources */,
 				D56C6A38257DA0C700CF9AB8 /* ImageItem.swift in Sources */,
 				314F75FF26F211B40039E7ED /* PlayerSimpleTopBody.swift in Sources */,
 				317C975C262433F9008F267D /* EpsModel.swift in Sources */,

@@ -83,6 +83,7 @@ class KidsGnbModel:Identifiable, ObservableObject{
     func getMyDatas() -> [BlockItem]? {
         return self.home?.getMyData() 
     }
+    
 }
 
 class KidsGnbItemData:InfinityData, ObservableObject{
@@ -132,6 +133,9 @@ class KidsGnbItemData:InfinityData, ObservableObject{
 //svc_prop_cd
 enum KidsPlayType:Equatable{
     case play, english , tale, create, subject, unknown(String? = nil)
+    static let limitedLv1 :Int = 48
+    static let limitedLv2 :Int = 72
+    
     static func getType(_ value:String?)->KidsPlayType{
         switch value {
         case "512": return .play
@@ -142,6 +146,19 @@ enum KidsPlayType:Equatable{
         default : return .unknown(value)
         }
     }
+    var sortIdx:Int {
+        get{
+            switch self {
+            case .play: return 0
+            case .english: return 1
+            case .tale: return 2
+            case .create: return 3
+            case .subject: return 4
+            default : return  100
+            }
+        }
+    }
+    
     var noImage:String {
         get{
             switch self {

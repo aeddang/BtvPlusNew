@@ -133,7 +133,8 @@ struct EmptyAlert: PageView {
                 .frame( width:  Dimen.button.regularHorizontal )
             }
         }
-        .padding(.all, SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.medium)
+        .padding(.vertical, SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.medium)
+        .padding(.horizontal,  Dimen.margin.thin)
         .onReceive(self.sceneObserver.$isUpdated){ update in
             if !update {return}
             self.sceneOrientation  = self.sceneObserver.sceneOrientation

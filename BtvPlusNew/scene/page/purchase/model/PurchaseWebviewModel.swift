@@ -97,7 +97,7 @@ public enum PrdTypCd: String {
         ppms + cbPpms
     }
     /** all 기간권 / 복합 포함 */
-    static func isPPM(typCd: PrdTypCd, all: Bool = false) -> Bool {
+    static func isPPM(typCd: PrdTypCd, all: Bool = true) -> Bool {
         return all ? allPpms.contains(typCd) : ppms.contains(typCd)
     }
 

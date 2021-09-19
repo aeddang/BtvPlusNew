@@ -54,6 +54,7 @@ struct SceneAlertController: PageComponent{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var appObserver:AppObserver
     @EnvironmentObject var naviLogManager:NaviLogManager
+    @EnvironmentObject var setup:Setup
     
     @State var isShow = false
     @State var title:String? = nil
@@ -392,6 +393,7 @@ struct SceneAlertController: PageComponent{
     func setupPairingCheckFail() {
         self.title = String.alert.connect
         self.text = String.alert.needConnectStatus
+        
         self.buttons = [
             AlertBtnData(title: String.app.close, index: 0),
             AlertBtnData(title: String.app.confirm, index: 1)
@@ -433,7 +435,9 @@ struct SceneAlertController: PageComponent{
         
         self.title = String.alert.connect
         self.text = msg ?? String.alert.needConnect
-        
+        if self.setup.possession.isEmpty == false {
+            self.subText = String.alert.needConnectSubPossession
+        }
         self.buttons = [
             AlertBtnData(title: String.app.cancel, index: 0),
             AlertBtnData(title: String.button.connectBtv, index: 1)
@@ -465,7 +469,7 @@ struct SceneAlertController: PageComponent{
     }
     func selectedNeedPurchase(_ idx:Int,  model:PurchaseWebviewModel) {
         if idx == 1 {
-            let ani:PageAnimationType = SystemEnvironment.currentPageType == .btv ? .horizontal : .opacity
+            let ani:PageAnimationType = SystemEnvironment.currentPageType == .btv ? .vertical : .opacity
             self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.purchase, animationType: ani)
                     .addParam(key: .data, value: model)

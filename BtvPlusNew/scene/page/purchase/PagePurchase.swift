@@ -64,7 +64,10 @@ struct PagePurchase: PageView {
                                 isRecycle:false,
                                 useTracking:true
                             ){
-                                BtvWebView( viewModel: self.webViewModel, viewHeight:self.webViewHeight)
+                                BtvWebView(
+                                    viewModel: self.webViewModel,
+                                    pageObservable:self.pageObservable,
+                                    viewHeight:self.webViewHeight)
                                     .modifier(MatchHorizontal(height: self.webViewHeight))
                             }
                         }
@@ -130,7 +133,6 @@ struct PagePurchase: PageView {
                 default : break
                 }
             }
-
             .onReceive(dataProvider.$result) { res in
                 guard let res = res else { return }
                 if res.id != self.tag { return }
@@ -154,42 +156,44 @@ struct PagePurchase: PageView {
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
                 self.setWebviewSize(geometry: geometry)
             }
+            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                if ani {
+                    guard let obj = self.pageObject  else { return }
+                    if let data = obj.getParamValue(key: .data) as? PurchaseWebviewModel {
+                        self.purchaseWebviewModel = data
+                        let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.purchase + (data.gurry)
+                        self.webViewModel.request = .link(linkUrl)
+                    }
+                    if let data = obj.getParamValue(key: .data) as? BlockItem {
+                        self.purchaseWebviewModel = PurchaseWebviewModel().setParam(data:data)
+                        self.dataProvider.requestData(
+                            q:.init(
+                                id: self.tag,
+                                type: .getGridEvent(data.menu_id , .popularity , 1, 1)))
+                    }
+                    
+                    if let data = obj.getParamValue(key: .data) as? TicketData {
+                        self.purchaseWebviewModel = PurchaseWebviewModel().setParam(data:data)
+                        let menuId = data.blocks?.first?.menu_id ?? data.menuId
+                        self.dataProvider.requestData(
+                            q:.init(
+                                id: self.tag,
+                                type: .getGridEvent(menuId , .popularity , 1, 1)))
+                    }
+                    
+                    if let data = obj.getParamValue(key: .data) as? MonthlyData {
+                        self.purchaseWebviewModel = PurchaseWebviewModel().setParam(data:data)
+                        guard let block = data.blocks?.first( where: { BlockData().setData($0).dataType == .grid }) else {return}
+                        let menuId = block.menu_id ?? data.menuId
+                        self.dataProvider.requestData(
+                            q:.init(
+                                id: self.tag,
+                                type: .getGridEvent(menuId , .popularity , 1, 1)))
+                    }
+                }
+            }
             .onAppear{
                 self.setWebviewSize(geometry: geometry)
-                guard let obj = self.pageObject  else { return }
-                if let data = obj.getParamValue(key: .data) as? PurchaseWebviewModel {
-                    self.purchaseWebviewModel = data
-                    let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.purchase + (data.gurry)
-                    self.webViewModel.request = .link(linkUrl)
-                }
-                if let data = obj.getParamValue(key: .data) as? BlockItem {
-                    self.purchaseWebviewModel = PurchaseWebviewModel().setParam(data:data)
-                    self.dataProvider.requestData(
-                        q:.init(
-                            id: self.tag,
-                            type: .getGridEvent(data.menu_id , .popularity , 1, 1)))
-                }
-                
-                if let data = obj.getParamValue(key: .data) as? TicketData {
-                    self.purchaseWebviewModel = PurchaseWebviewModel().setParam(data:data)
-                    let menuId = data.blocks?.first?.menu_id ?? data.menuId
-                    self.dataProvider.requestData(
-                        q:.init(
-                            id: self.tag,
-                            type: .getGridEvent(menuId , .popularity , 1, 1)))
-                }
-                
-                if let data = obj.getParamValue(key: .data) as? MonthlyData {
-                    self.purchaseWebviewModel = PurchaseWebviewModel().setParam(data:data)
-                    guard let block = data.blocks?.first( where: { BlockData().setData($0).dataType == .grid }) else {return}
-                    let menuId = block.menu_id ?? data.menuId
-                    self.dataProvider.requestData(
-                        q:.init(
-                            id: self.tag,
-                            type: .getGridEvent(menuId , .popularity , 1, 1)))
-                }
-                
-                //self.sendLog(action: .pageShow)   웹뷰에서 할듯
             }
             .onDisappear{
             }

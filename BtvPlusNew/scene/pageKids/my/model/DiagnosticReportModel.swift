@@ -18,6 +18,15 @@ enum DiagnosticReportType:String, CaseIterable{
         }
     }
     
+    var playType: KidsPlayType {
+        switch self {
+        case .english: return .english
+        case .infantDevelopment: return .tale
+        case .creativeObservation: return .create
+        default : return .unknown("")
+        }
+    }
+    
     var startImage: String {
         switch self {
         case .english: return AssetKids.image.englishReport

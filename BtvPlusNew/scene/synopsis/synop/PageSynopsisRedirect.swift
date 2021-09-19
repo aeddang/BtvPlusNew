@@ -23,9 +23,7 @@ extension PageSynopsis {
         
         if model.srisTypCd == .season {
             self.currentRedirectSris = model.srisId
-            let relationContentsModel = RelationContentsModel()
-            relationContentsModel.setData(synopsis: model)
-            let playList = relationContentsModel.playList
+            let playList = self.relationContentsModel.playList
             if playList.count < 2 { return false }
             guard  let redirectEpsdId = model.isSrisCompleted ? playList.first?.epsdId : playList.last?.epsdId else {return false}
             if synopsisEpsdId == redirectEpsdId { return false }

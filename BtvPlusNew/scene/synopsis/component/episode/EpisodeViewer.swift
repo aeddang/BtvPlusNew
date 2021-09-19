@@ -12,13 +12,17 @@ import SwiftUI
 struct EpisodeViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var pairing:Pairing
     var data:EpisodeViewerData 
     var isSimple:Bool = false
+    
+    @State var ratingPct:Double? = nil
     var body: some View {
         VStack(alignment:.leading , spacing:0) {
             Spacer().modifier(MatchHorizontal(height: 0))
             HStack(alignment: .center, spacing: SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin){
-                if let ratingPct = self.data.ratingPct {
+                if let ratingPct = self.ratingPct {
                     RatingInfo(
                         rating: ratingPct
                     )
@@ -84,10 +88,38 @@ struct EpisodeViewer: PageComponent{
             
         }
         .modifier(ContentHorizontalEdges())
-        .onAppear{
+        .onReceive(self.dataProvider.$result){ res in
+            guard let srisId = self.data.srisId else { return }
+            guard let res = res else { return }
+            if !res.id.hasPrefix(srisId) { return }
+            switch res.type {
+            case .registLike:
+                self.dataProvider.requestData(
+                    q: .init(
+                        id: srisId,
+                        type: .getLike(srisId, self.pairing.hostDevice, isTotal: true),
+                    isOptional: true)
+                )
+            case .getLike:
+                guard let data = res.data as? Like else { return }
+                guard let like = data.like_total?.toDouble() else { return }
+                guard let dislike = data.dislike_total?.toDouble() else { return }
+                let total = like+dislike
+                if total == 0 {
+                    self.ratingPct = nil
+                    return
+                }
+                self.ratingPct = min(like / total * 100, 99)
+            default: break
+            }
             
         }
+        .onAppear{
+            self.ratingPct = self.data.ratingPct
+        }
     }//body
+    
+    
 }
 
 

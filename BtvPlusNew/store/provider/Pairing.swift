@@ -112,11 +112,12 @@ class Pairing:ObservableObject, PageProtocol {
         case .updateKids :
             if isKidsSearch {return}
             self.isKidsSearch = true
+           
         case .deleteKid(let kid) :
             kid.updateType = .del
             kid.modifyUserData = nil
-        case .updateKidStudy :
-            if self.kid == nil { return }
+        //case .updateKidStudy :
+            //if self.kid == nil { return }
             
         //case .unPairing :
     

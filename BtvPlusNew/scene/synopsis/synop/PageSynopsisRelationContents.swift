@@ -7,7 +7,7 @@
 
 import Foundation
 extension PageSynopsis {
-    func onResetPageRelationContent(isAllReset:Bool = false, isRedirectPage:Bool = false){
+    func onResetPageRelationContent(isAllReset:Bool = false){
         if isAllReset { self.resetRelationVod() }
     }
     

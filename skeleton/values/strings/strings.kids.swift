@@ -34,6 +34,7 @@ extension String{
         
         public static let kidsMyNoProfile = "kidsMyNoProfile".loaalized()
         public static let kidsMyWatch = "kidsMyWatch".loaalized()
+        public static let kidsMyWatchedEmpty = "kidsMyWatchedEmpty".loaalized()
         public static let kidsMyDiagnosticReport = "kidsMyDiagnosticReport".loaalized()
         public static let kidsMyDiagnosticReportText = "kidsMyDiagnosticReportText".loaalized()
         public static let kidsMyDiagnosticReportStart = "kidsMyDiagnosticReportStart".loaalized()
@@ -99,6 +100,7 @@ extension String{
         public static let kidsExamForkid = "kidsExamForkid".loaalized()
         public static let kidsExamForParent = "kidsExamForParent".loaalized()
         public static let kidsExamInfantDevelopmentCompleted = "kidsExamInfantDevelopmentCompleted".loaalized()
+        public static let kidsExamCreativeObservationDisable = "kidsExamCreativeObservationDisable".loaalized()
         public static let kidsExamCreativeObservationConfirm = "kidsExamCreativeObservationConfirm".loaalized()
         public static let kidsExamCloseConfirm = "kidsExamCloseConfirm".loaalized()
         public static let kidsExamCloseConfirmTip = "kidsExamCloseConfirmTip".loaalized()

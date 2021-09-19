@@ -11,7 +11,8 @@ import Combine
 
 enum WebviewMethod:String {
     case getSTBInfo, getNetworkState, getLogInfo, stopLoading,
-         setUserAgreementInfo, requestRemoconFunction, requestLimitTV, requestSendMessage
+         setUserAgreementInfo,
+         setAutoRemoconInfo, requestRemoconFunction, requestLimitTV, requestSendMessage
     case requestVoiceSearch, requestSTBViewInfo
     case externalBrowser
     case bpn_showSynopsis,
@@ -586,7 +587,6 @@ class WebBridge :PageProtocol{
             }
             return true
         case "family_invite":
-            
             guard let token:String = param?.first(where: {$0.name == "pairing_token"})?.value else {
                 return true
             }
@@ -599,12 +599,19 @@ class WebBridge :PageProtocol{
             )
             return true
         case "requestPairing":
+            if self.pairing.status == .pairing {
+                return true
+            }
             self.pagePresenter?.openPopup(
                 PageProvider.getPageObject(.pairing)
             )
             return true
         
         case "showRemocon":
+            if self.pairing.status != .pairing {
+                self.appSceneObserver?.alert = .needPairing()
+                return true
+            }
             self.pagePresenter?.openPopup(
                 PageProvider.getPageObject(.remotecon)
             )

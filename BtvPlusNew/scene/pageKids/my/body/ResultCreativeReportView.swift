@@ -125,6 +125,7 @@ struct ResultCreativeReportView: PageComponent{
             
             ResultReportBottom(
                 date:self.data.date,
+                type: .creativeObservation,
                 retryCount:self.data.retryCountStr
             )
             .modifier(MatchHorizontal(height: DimenKids.button.regular))

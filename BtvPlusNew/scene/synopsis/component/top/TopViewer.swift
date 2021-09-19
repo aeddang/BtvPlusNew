@@ -54,7 +54,7 @@ struct TopViewer: PageComponent{
                                 : SystemEnvironment.isTablet ? Dimen.button.regular : Self.bottomHeight)
                     
                 VStack(alignment: .leading, spacing:0){
-                   
+                    Spacer().modifier(MatchHorizontal(height:0))
                     Button(action: {
                         self.pagePresenter.goBack()
                     }) {

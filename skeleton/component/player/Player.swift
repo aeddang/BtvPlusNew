@@ -88,6 +88,7 @@ open class PlayerModel: ComponentObservable {
         time = 0
         recoveryPath = nil
         limitedDuration = nil
+        screenRatio = 1.0
         playInfo = nil
         header = nil
         path = ""

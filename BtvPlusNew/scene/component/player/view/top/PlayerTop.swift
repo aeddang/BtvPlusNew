@@ -89,7 +89,9 @@ struct PlayerTop: PageView{
         .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
             self.isFullScreen = fullScreen
         }
-            
+        .onAppear(){
+            self.isFullScreen = self.pagePresenter.isFullScreen
+        }
     }//body
     
     

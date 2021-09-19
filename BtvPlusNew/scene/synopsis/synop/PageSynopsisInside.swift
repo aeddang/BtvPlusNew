@@ -155,8 +155,7 @@ extension PageSynopsis {
         if self.hasAuthority == false {
             if self.firstPurchase { return }
             self.firstPurchase = true
-            guard  let model = self.purchaseWebviewModel else { return }
-            self.appSceneObserver.alert = .needPurchase(model)
+            self.purchaseConfirm()
         }
     }
     
@@ -196,6 +195,12 @@ extension PageSynopsis {
         self.resetPage()
     }
     
+    func purchaseConfirm(msg:String? = nil){
+        self.onDefaultViewMode()
+        guard  let model = self.purchaseWebviewModel else { return }
+        self.appSceneObserver.alert = .needPurchase(model, msg)
+    }
+    
     func purchase(){
         self.onDefaultViewMode()
         guard  let model = self.purchaseWebviewModel else { return }
@@ -204,4 +209,47 @@ extension PageSynopsis {
                 .addParam(key: .data, value: model)
         )
     }
+    
+    func watchBtv(){
+        if self.isPairing != true {
+            self.onDefaultViewMode()
+            self.appSceneObserver.alert = .needPairing()
+            return
+        }
+        let playAble = self.purchasViewerData?.isPlayAble ?? false
+        let playAbleBtv = self.purchasViewerData?.isPlayAbleBtv ?? false
+        if !playAble && !playAbleBtv{
+            self.appSceneObserver.alert = .alert(
+                self.purchasViewerData?.serviceInfo,
+                self.purchasViewerData?.serviceInfoDesc, nil
+            )
+            return
+        }
+        if !(!playAble && playAbleBtv) && self.hasAuthority != true{
+            //btv에서만 가능한 컨텐츠 권한없어도 비티로 보기 지원
+            self.purchaseConfirm(msg: String.alert.purchaseContinueBtv)
+            return
+        }
+        self.onDefaultViewMode()
+        let msg:NpsMessage = NpsMessage().setPlayVodMessage(
+            contentId: self.epsdRsluId ,
+            playTime: self.playerModel.time)
+        
+        self.pageDataProviderModel.request = .init(id : SingleRequestType.watchBtv.rawValue, type: .sendMessage( msg))
+        self.playerModel.event = .pause
+    }
+    
+    func watchBtvCompleted(isSuccess:Bool){
+        if isSuccess {
+            if self.setup.autoRemocon {
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.remotecon)
+                )
+            }
+            self.appSceneObserver.event = .toast(String.alert.btvplaySuccess)
+        } else {
+            self.appSceneObserver.event = .toast(String.alert.btvplayFail)
+        }
+    }
+    
 }

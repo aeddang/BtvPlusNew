@@ -89,26 +89,38 @@ struct FloatRecommand:PageComponent {
                             .modifier(MediumTextStyleKids(size: Font.sizeKids.lightExtra, color: Color.app.brownDeep))
                             .multilineTextAlignment(.leading)
                     }
-                    if self.data.isMonthlyReport || self.data.diagnosticReportType != nil {
+                    if self.pairing.kid == nil {
                         Spacer().modifier(
                             LineVertical( width:DimenKids.stroke.light, color:Color.app.black)
                         )
                         .frame(height:Self.btnSize.height)
                         
-                        if self.pairing.kid == nil {
-                            Button(action: {
+                        Button(action: {
+                            if self.pairing.status == .pairing {
+                                self.pagePresenter.openPopup(
+                                    PageKidsProvider.getPageObject(.editKid)
+                                )
+                            } else {
                                 self.pagePresenter.openPopup(
                                     PageProvider.getPageObject(.pairing, animationType: .opacity)
                                 )
-                            }) {
-                                Image(AssetKids.image.goRegistProfile)
-                                .renderingMode(.original).resizable()
-                                .scaledToFit()
-                                .frame(
-                                    width: Self.btnSize.width,
-                                    height: Self.btnSize.height)
                             }
-                        }else if self.data.isMonthlyReport {
+                            
+                        }) {
+                            Image(AssetKids.image.goRegistProfile)
+                            .renderingMode(.original).resizable()
+                            .scaledToFit()
+                            .frame(
+                                width: Self.btnSize.width,
+                                height: Self.btnSize.height)
+                        }
+                    } else if self.data.isMonthlyReport || self.data.diagnosticReportType != nil {
+                        Spacer().modifier(
+                            LineVertical( width:DimenKids.stroke.light, color:Color.app.black)
+                        )
+                        .frame(height:Self.btnSize.height)
+                        
+                        if self.data.isMonthlyReport {
                             Button(action: {
                                 self.pagePresenter.openPopup(
                                     PageKidsProvider

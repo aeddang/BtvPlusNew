@@ -144,29 +144,19 @@ struct PageKidsIntro: PageView {
         if self.pairing.kid == nil {
             switch self.kidsProfileEvent {
             case .notFoundKid:
-                self.appSceneObserver.alert = .confirm(nil, String.alert.kidsProfileNotfound ,nil) { isOk in
-                    if isOk {
-                        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
+                if pairing.kids.isEmpty {
+                    self.emptyKids()
+                } else {
+                    self.appSceneObserver.alert = .confirm(nil, String.alert.kidsProfileNotfound ,nil) { isOk in
+                        if isOk {
+                            self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
+                        }
                     }
                 }
             case .updatedKids:
                 if pairing.kids.isEmpty {
-                    
-                    let prevDateKey = self.setup.kidsRegistUnvisibleDate
-                    if !prevDateKey.isEmpty,
-                       let prevDate = prevDateKey.toDate(dateFormat: Setup.dateFormat)
-                    {
-                        let diffTime = abs(prevDate.timeIntervalSinceNow)
-                        let diffDay = diffTime / (24 * 60 * 60 * 1000)
-                        if diffDay < 7 {
-                            return
-                        }
-                    }
-                    self.appSceneObserver.alert = .confirm(nil, String.alert.kidsProfileEmpty,nil) { isOk in
-                        if isOk {
-                            self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.registKid))
-                        }
-                    }
+                    self.emptyKids()
+                
                 } else {
                     self.appSceneObserver.alert = .confirm(nil, String.alert.kidsProfileSelect ,nil) { isOk in
                         if isOk {
@@ -183,6 +173,20 @@ struct PageKidsIntro: PageView {
         self.appSceneObserver.alert = .alert(nil,  String.alert.kidsDisable, String.alert.kidsDisableTip){
             self.pagePresenter.goBack()
         }
+    }
+    
+    func emptyKids(){
+        let prevDateKey = self.setup.kidsRegistUnvisibleDate
+        if !prevDateKey.isEmpty,
+           let prevDate = prevDateKey.toDate(dateFormat: Setup.dateFormat)
+        {
+            let diffTime = abs(prevDate.timeIntervalSinceNow)
+            let diffDay = diffTime / (24 * 60 * 60 * 1000)
+            if diffDay < 7 {
+                return
+            }
+        }
+        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.registKid))
     }
     
 

@@ -22,7 +22,7 @@ class Smd: Rest{
      * @param seriesId 시리즈 아이디
      */
     func getLike(
-        seriesId:String?, hostDevice:HostDevice?, 
+        seriesId:String?, hostDevice:HostDevice?, isTotal:Bool = false,
         completion: @escaping (Like) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         var params = [String:String]()
@@ -31,7 +31,7 @@ class Smd: Rest{
         params["m"] = "getLikeHate"
         params["stb_id"] = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         params["version_sw"] = hostDevice?.agentVersion ?? ""
-        params["total_yn"] = "N"
+        params["total_yn"] = isTotal ? "Y" : "N"
         params["series_id"] = seriesId ?? ""
         
         fetch(route: SmdLike(query: params), completion: completion, error:error)

@@ -32,7 +32,7 @@ struct PageRegistKid: PageView {
     @State var boxPos:CGFloat = -100
     
     @State var isFocus:Bool = false
-      
+    @State var isRegistUnvisible:Bool = false
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -102,9 +102,12 @@ struct PageRegistKid: PageView {
                         .padding(.top, DimenKids.margin.light)
                         HStack(spacing:DimenKids.margin.thin){
                             Button(action: {
-                                self.selectWeek()
+                                self.toggleRegistUnvisible()
                             }) {
-                                Image(AssetKids.shape.checkBoxOn2)
+                                Image(
+                                    self.isRegistUnvisible
+                                        ? AssetKids.shape.checkBoxOn2
+                                        :AssetKids.shape.checkBoxOff2)
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
@@ -287,9 +290,14 @@ struct PageRegistKid: PageView {
     }
     
     
-    private func selectWeek() {
-        self.setup.kidsRegistUnvisibleDate = Setup.getDateKey()
-        self.pagePresenter.closePopup(self.pageObject?.id)
+    private func toggleRegistUnvisible() {
+        self.isRegistUnvisible.toggle()
+        if self.isRegistUnvisible {
+            self.setup.kidsRegistUnvisibleDate = Setup.getDateKey()
+        } else {
+            self.setup.kidsRegistUnvisibleDate = ""
+        }
+        
     }
     
     private func registKid() {

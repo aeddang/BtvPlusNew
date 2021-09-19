@@ -14,6 +14,7 @@ class Kid:ObservableObject, PageProtocol, Identifiable{
     @Published private(set) var nickName:String = ""
     @Published var characterIdx:Int = 0
     @Published private(set) var age:Int? = nil
+    @Published private(set) var ageMonth:Int? = nil
     
     private(set) var birth:String = ""
     private(set) var gender:String = ""
@@ -59,9 +60,19 @@ class Kid:ObservableObject, PageProtocol, Identifiable{
     
     private func setupAge(){
         if self.birth.count < 4 {return}
-        let nowYear  = Date().toDateFormatter(dateFormat: "yyyy")
+        let now = Date()
+        let nowYear  = now.toDateFormatter(dateFormat: "yyyy")
+        let nowMonth  = now.toDateFormatter(dateFormat: "MM")
         let birthYear  = self.birth.subString(start: 0, len: 4)
-        self.age = nowYear.toInt() - birthYear.toInt() + 1
+        let birthMonth  = self.birth.count >= 6 ? self.birth.subString(start: 4, len: 2) : "01"
+        let age = nowYear.toInt() - birthYear.toInt() + 1
+        self.age = age
+        
+        let nowM = nowYear.toInt() * 12 + nowMonth.toInt()
+        let birthM = birthYear.toInt() * 12 + birthMonth.toInt()
+        let ageMonth = nowM - birthM
+        self.ageMonth = ageMonth
+        
     }
     
     private func setupCharacterIdx(id:String?){

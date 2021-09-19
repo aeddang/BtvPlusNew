@@ -162,7 +162,7 @@ extension AssetKids{
         public static let checkBoxOn = "zemkidsMProfileImgSel"
         public static let checkBoxOn2 = "zemkidsMPopupCheckSel"
         public static let checkBoxOff = "zemkidsMProfileImgNor"
-        
+        public static let checkBoxOff2 = "zemkidsMPopupCheckDef"
         public static let checkOption = "zemkidsMToggleOptionIcSel"
         
         public static let profileBgOff = "zemkidsMMyProfileCardNor"

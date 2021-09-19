@@ -8,7 +8,7 @@ import Foundation
 import SwiftUI
 
 extension PageConfirmNumber{
-    enum InputType {
+    enum InputType:Equatable{
         case password, coupon, nickname,
              okcash(OcbItem?), okcashMaster(RegistCardData)
         
@@ -21,8 +21,19 @@ extension PageConfirmNumber{
         
         var errorMsg:String {
             switch self {
-            case .okcashMaster : return String.alert.okCashIncorrecPassword
+           // case .coupon : return 서버메시지
+            case .okcashMaster, .okcash: return String.alert.okCashIncorrecPassword
             default : return String.alert.incorrecPassword
+            }
+        }
+        static func == (lhs: InputType, rhs: InputType) -> Bool {
+            switch (lhs, rhs) {
+            case ( .password, .password):return true
+            case ( .coupon, .coupon):return true
+            case ( .nickname, .nickname):return true
+            case ( .okcash, .okcash):return true
+            case ( .okcashMaster, .okcashMaster):return true
+            default: return false
             }
         }
     }
@@ -70,22 +81,37 @@ struct PageConfirmNumber: PageView {
                 placeHolder: self.placeHolder,
                 inputSize: self.inputSize,
                 inputSizeMin: self.inputSizeMin,
+                isInputNickName: self.type == .nickname,
+                isInputDivision: self.type == .coupon,
                 keyboardType: self.type.keyboardType(),
-                isSecure : self.isSecure
-            ){ input, _ in
-                
-                guard let input = input else {
-                    self.closePage()
-                    return
+                isSecure : self.isSecure,
+                changed:{ input, _ in
+                    guard let input = input else { return }
+                    switch self.type {
+                    case .nickname :
+                        if !input.isNickNameType() {
+                            self.msg = String.app.nickNameInvalidation
+                        } else {
+                            self.msg = nil
+                        }
+                    default: break
+                    }
+                },
+                action :{ input, _ in
+                    
+                    guard let input = input else {
+                        self.closePage()
+                        return
+                    }
+                    switch self.type {
+                    case .password : self.confirmPassword(input)
+                    case .coupon : self.resigistCoupon(input)
+                    case .nickname : self.modifyNickName(input)
+                    case .okcash(let data) : self.confirmOkCash(input, card:data)
+                    case .okcashMaster(let data) : self.confirmOkCashMaster(input, card: data)
+                    }
                 }
-                switch self.type {
-                case .password : self.confirmPassword(input)
-                case .coupon : self.resigistCoupon(input)
-                case .nickname : self.modifyNickName(input)
-                case .okcash(let data) : self.confirmOkCash(input, card:data)
-                case .okcashMaster(let data) : self.confirmOkCashMaster(input, card: data)
-                }
-            }
+            )
             .padding(.bottom, self.safeAreaBottom)
             .modifier(MatchParent())
         }
@@ -97,7 +123,7 @@ struct PageConfirmNumber: PageView {
                 self.initPage()
             case .connectError(let header) :
                 self.appSceneObserver.alert = .pairingError(header)
-            default : do{}
+            default : break
             }
         }
         .onReceive(self.pairing.$event){evt in
@@ -156,8 +182,6 @@ struct PageConfirmNumber: PageView {
                  .postBPoint, .postBCash, .updateOkCashPoint, .certificationCoupon, .getStbInfo:
                 self.msg = String.alert.apiErrorClient
                 //self.input = ""
-              
-               
             default: break
             }
         }
@@ -264,7 +288,7 @@ struct PageConfirmNumber: PageView {
         }
         
         .onDisappear{
-            
+           
         }
     }//body
     
@@ -274,7 +298,14 @@ struct PageConfirmNumber: PageView {
     }
     
     func closePage(){
-        self.isFocus = false
+        self.isFocus = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.closePageImmediately()
+        }
+    }
+    func closePageImmediately(){
+        //self.isFocus = false
+        AppUtil.hideKeyboard()
         self.pagePresenter.onPageEvent(self.pageObject,
                                        event: .init(id: self.eventId, type: .cancel, data:self.pwType))
     }

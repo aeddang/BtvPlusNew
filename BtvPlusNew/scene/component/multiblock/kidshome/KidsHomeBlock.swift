@@ -22,6 +22,8 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
     @State var homeBlockData:KidsHomeBlockData? = nil
     @State var isUiView:Bool = false
     @State var isUiActive:Bool = true
+    @State var kid:Kid? = nil
+    @State var useCreateHeader:Bool = true
     var body :some View {
         VStack(alignment: .leading , spacing: DimenKids.margin.thinExtra) {
             InfinityScrollView(
@@ -34,7 +36,7 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
                 useTracking: self.useTracking
                 ){
                     HStack(alignment: .top, spacing:Dimen.margin.regular){
-                        if self.isUiView && isUiActive, let homeBlockData = self.homeBlockData {
+                        if self.isUiView, let homeBlockData = self.homeBlockData {
                             ForEach(homeBlockData.datas) { data in
                                 switch data.type {
                                 case .myHeader :
@@ -47,8 +49,10 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
                                     }
                                 case .cateHeader:
                                     if let cateData = data as? KidsCategoryItemData {
-                                        KidsCategoryItem(data:cateData)
-                                            .padding(.top, DimenKids.margin.medium)
+                                        if !(cateData.playType == .create && !self.useCreateHeader){
+                                            KidsCategoryItem(data:cateData)
+                                                .padding(.top, DimenKids.margin.medium)
+                                        }
                                     }
                                 case .cateList:
                                     if let listData = data as? KidsCategoryListData {
@@ -76,9 +80,16 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
         )
         .onReceive(self.pageObservable.$layer ){ layer  in
             switch layer {
-            case .bottom : self.isUiActive = false
-            case .top, .below : self.isUiActive = true
+            case .bottom :
+                self.isUiActive = false
+            case .top, .below :
+                self.isUiActive = true
+                
             }
+        }
+        .onReceive(self.pairing.$kid){ kid in
+            self.kid = kid
+            self.useCreateHeader = (kid?.ageMonth ?? 0) <= KidsPlayType.limitedLv2
         }
         .onReceive(self.pairing.authority.$purchaseLowLevelTicketList){ list in
             if let list = list {

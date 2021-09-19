@@ -12,6 +12,7 @@ import SwiftUI
 enum SceneUpdateType {
     case purchase(String, listPrice:String?, paymentPrice:String?),
          purchaseCompleted(purchaseId:String? = nil),
+         registCard(type:CardBlock.ListType),
          identify(Bool),
          identifyAdult(Bool, Int)
 }

@@ -251,8 +251,8 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
             DispatchQueue.main.async {
                 self.onResumed()
             }
-        //case .waitingToPlayAtSpecifiedRate:
-          // DispatchQueue.main.async {self.onBuffering(rate: 0.0)}
+        case .waitingToPlayAtSpecifiedRate:
+            DispatchQueue.main.async {self.onBuffering(rate: 0.0)}
         default:break
         }
     }

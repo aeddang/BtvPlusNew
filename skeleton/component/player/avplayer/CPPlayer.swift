@@ -12,8 +12,7 @@ struct CPPlayer: PageComponent {
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     var isSimple:Bool = false
     var type:PageType = .btv
-    @State var screenRatio = CGSize(width:1, height:1)
-      
+       
     var body: some View {
         ZStack(alignment: .center){
             CustomAVPlayerController(

@@ -80,10 +80,10 @@ struct KidsPlayList:PageView  {
                 self.title = String.kidsText.kidsHomeNoProfile
             }
             
-            if let age = kid?.age {
-                if age <= 5 {
+            if let age = kid?.ageMonth {
+                if age <= KidsPlayType.limitedLv1 {
                     self.filterList = self.data.datas.filter{$0.playType != .subject}
-                } else if age <= 7 {
+                } else if age <= KidsPlayType.limitedLv2 {
                     self.filterList = self.data.datas
                 }  else {
                     self.filterList = self.data.datas.filter{$0.playType != .create}

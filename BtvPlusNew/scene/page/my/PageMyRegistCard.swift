@@ -241,6 +241,8 @@ struct PageMyRegistCard: PageView {
                     if !res.id.hasPrefix(self.tag) { return }
                     guard let result = res.data as? RegistEps else { return }
                     if result.result == ApiCode.success {
+                        self.appSceneObserver.event =
+                            .update(.registCard(type: self.cardType))
                         self.pagePresenter.closePopup(self.pageObject?.id)
                     } else {
                         let msg = result.reason?.replace("\\n", with: "\n") ?? String.alert.apiErrorServer
@@ -283,7 +285,7 @@ struct PageMyRegistCard: PageView {
 
             }
             .onDisappear{
-            
+        
             }
         }//geo
     }//body

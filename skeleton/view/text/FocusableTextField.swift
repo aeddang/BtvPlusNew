@@ -57,11 +57,11 @@ struct FocusableTextField: UIViewRepresentable {
                 uiView.becomeFirstResponder()
             }
         } else {
-            //if uiView.isFocused {
+            if uiView.isFocused {
                 uiView.resignFirstResponder()
-            //}
+            }
         }
-        //if uiView.text != self.text { uiView.text = self.text }
+        if uiView.text != self.text { uiView.text = self.text }
     }
 
     func makeCoordinator() -> Coordinator {

@@ -22,7 +22,7 @@ struct PageWatchedList: PageView {
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var viewModel:WatchedBlockModel = WatchedBlockModel()
-    @State var title:String? = nil
+    @State var title:String = String.pageTitle.watched
     @State var menuId:String? = nil
     @State var marginBottom:CGFloat = 0
     @State var isInit:Bool = false
@@ -68,7 +68,7 @@ struct PageWatchedList: PageView {
                 guard let obj = self.pageObject  else { return }
                 
                 if let data = obj.getParamValue(key: .data) as? BlockData {
-                    self.title = data.name
+                    //self.title = data.name
                     self.menuId = data.menuId
                 } else {
                     self.menuId = obj.getParamValue(key: .id) as? String

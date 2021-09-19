@@ -53,6 +53,7 @@ extension String {
         public static var guideNotSupportedVibrate = "alertGuideNotSupportedVibrate".loaalized()
     
         public static var needConnect = "alertNeedConnect".loaalized()
+        public static var needConnectSubPossession = "alertNeedConnectSubPossession".loaalized()
         public static var needConnectForView = "alertNeedConnectForView".loaalized()
         public static var needConnectStatus = "alertNeedConnectStatus".loaalized()
         public static var checkConnectStatus = "alertCheckConnectStatus".loaalized()
@@ -190,7 +191,7 @@ extension String {
         
         public static var couponRegistSuccess = "alertCouponRegistSuccess".loaalized()
         public static var couponRegistFail = "alertCouponRegistFail".loaalized()
-        public static var cardDeleteConfirm = "alertCardDeleteConfirm".loaalized()
+        
 
         public static var purchaseAuthCompleted = "alertPurchaseAuthCompleted".loaalized()
         public static var purchaseAuthCompletedInfo = "alertPurchaseAuthCompletedInfo".loaalized()

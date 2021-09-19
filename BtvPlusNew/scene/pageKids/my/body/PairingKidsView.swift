@@ -255,13 +255,15 @@ struct PairingKidsView: PageComponent {
     }
     
     private func loadMyKidData (){
-        guard let kid = self.kid else {
-            self.monthlyReportModel?.reset()
-            self.diagnosticReportModel?.reset()
-            return
-        }
         self.diagnosticReportModel = DiagnosticReportModel()
         self.monthlyReportModel = MonthlyReportModel()
+        guard let kid = self.kid else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.monthlyReportModel?.reset()
+                self.diagnosticReportModel?.reset()
+            }
+            return
+        }
         self.dataProvider.requestData(q: .init(type: .getKidStudy(kid), isOptional: false))
         self.dataProvider.requestData(q: .init(type: .getMonthlyReport(kid, self.currentDate), isOptional: false))
     }

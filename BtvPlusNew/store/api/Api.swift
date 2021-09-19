@@ -62,7 +62,8 @@ enum ApiType{
     
     
     //METV
-    case getPurchase(Int? = nil , Int? = nil),
+    case getPlayTime(String?),
+         getPurchase(Int? = nil , Int? = nil),
          deletePurchase([String]),
          getCollectiblePurchase(Int? = nil , Int? = nil),
          getPurchaseMonthly(Int? = nil , Int? = nil),
@@ -113,7 +114,7 @@ enum ApiType{
     case getStbList(String?),
          getTerminateStbInfo(String?)
     //SMD
-    case getLike(String?, HostDevice?),
+    case getLike(String?, HostDevice?, isTotal:Bool = false),
          registLike(Bool?, String?, HostDevice?)
     
     
@@ -156,7 +157,7 @@ enum ApiType{
     //KES
     case getKidsProfiles,
          updateKidsProfiles([Kid]),
-         getKidStudy(Kid),
+         getKidStudy(Kid?),
          getEnglishReport(Kid),
          getReadingReport(Kid),
          getMonthlyReport(Kid, Date? = nil),

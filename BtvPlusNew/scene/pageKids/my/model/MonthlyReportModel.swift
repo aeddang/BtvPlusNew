@@ -23,6 +23,7 @@ enum MonthlyReportType:String, CaseIterable{
  */
 class MonthlyReportData:Identifiable, Equatable{
     let id:String = UUID().uuidString
+    private(set) var type:KidsPlayType = .unknown("")
     private(set) var review:String? = nil
     private(set) var svcPropCd:String? = nil
     private(set) var title:String = ""
@@ -35,6 +36,7 @@ class MonthlyReportData:Identifiable, Equatable{
     private(set) var recommendCount:Int = 0
     
     func setData(_ data:MonthlyReportItem) -> MonthlyReportData{
+        self.type = KidsPlayType.getType(data.svc_prop_cd)
         self.review = data.total_cn
         self.svcPropCd = data.svc_prop_cd
         self.title = data.svc_prop_nm ?? ""
@@ -48,7 +50,7 @@ class MonthlyReportData:Identifiable, Equatable{
     }
     
     func copy(data:MonthlyReportData) -> MonthlyReportData{
-        
+        self.type = data.type
         self.review = data.review
         self.svcPropCd = data.svcPropCd
         self.title = data.title
@@ -94,10 +96,10 @@ class MonthlyReportModel:ObservableObject, PageProtocol{
         self.date = date ?? Date()
         if let infos = data.contents?.infos {
             
-            if let age = kid?.age {
-                if age <= 5 {
+            if let age = kid?.ageMonth {
+                if age <= KidsPlayType.limitedLv1 {
                     self.datas = infos.filter{KidsPlayType.getType($0.svc_prop_cd) != .subject}.map{ MonthlyReportData().setData($0)}
-                } else if age <= 7 {
+                } else if age <= KidsPlayType.limitedLv2 {
                     self.datas = infos.map{ MonthlyReportData().setData($0) }
                 }  else {
                     self.datas = infos.filter{KidsPlayType.getType($0.svc_prop_cd) != .create}.map{ MonthlyReportData().setData($0)}
@@ -107,6 +109,7 @@ class MonthlyReportModel:ObservableObject, PageProtocol{
                 self.datas = infos.map{ MonthlyReportData().setData($0) }
             }
         }
+        self.datas.sort{$0.type.sortIdx < $1.type.sortIdx}
         self.isUpdated = true
     }
     func setData(colon:MonthlyReportModel){

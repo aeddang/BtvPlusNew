@@ -186,7 +186,7 @@ class SynopsisModel : PageProtocol {
             if self.ppvProducts.count == 0 { self.ppvProducts.append(defaultSet) }
             if self.ppsProducts.count == 0 { self.ppsProducts.append(defaultSet) }
         case .seriesChange :
-            self.ppvProducts = productsPpv
+           self.ppvProducts = productsPpv
         case .title :
             self.ppvProducts = purchasPpv
         case .none: do{}
@@ -245,9 +245,7 @@ class SynopsisModel : PageProtocol {
     func setData(directViewData:DirectView?, isSeasonWatchAll:Bool = false){
         self.directViewData = directViewData
         self.lastWatchInfo = isSeasonWatchAll ? directViewData?.last_watch_info : nil
-        if !isSeasonWatchAll {
-            self.isBookmark = directViewData?.is_bookmark?.toBool() ?? false
-        }
+        self.isBookmark = directViewData?.is_bookmark?.toBool() ?? false
         self.metvSeasonWatchAll = directViewData?.yn_season_watch_all?.toBool() ?? false
         self.purchaseModels.forEach({ model in
             if isSeasonWatchAll {//시리즈 권한 재사용시 권한있는 상품 강제 매핑

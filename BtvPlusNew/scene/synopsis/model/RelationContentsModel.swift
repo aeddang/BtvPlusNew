@@ -80,7 +80,10 @@ class RelationContentsModel:ObservableObject {
         //self.isReady = true
         self.serisTitle = synopsis.srisTitle
         if let list = synopsis.seriesInfoList {
-            let filterList = synopsis.isTrstrs && !synopsis.isPurchasedPPM
+            let isTrstrs = synopsis.isTrstrs
+            let isPurchasedPPM = synopsis.isPurchasedPPM
+            let metvSeasonWatchAll = synopsis.metvSeasonWatchAll
+            let filterList = isTrstrs && !isPurchasedPPM
                 ? list.filter{ $0.sale_prc_vat != 0 }
                 : list
             

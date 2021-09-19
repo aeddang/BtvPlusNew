@@ -62,6 +62,7 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
     }
     
     func checkAccessStatus(){
+        /*
         self.currentAccountManager.checkAccessStatus(
             options: [VSCheckAccessOption.prompt: true],
             completionHandler: { (status, error) in
@@ -78,7 +79,7 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
                     }
                 }
                 
-        })
+        })*/
     }
     func checkAccess(){
         self.checkAccessStatus()

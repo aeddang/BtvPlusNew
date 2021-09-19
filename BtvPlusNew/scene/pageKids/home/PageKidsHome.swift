@@ -68,7 +68,7 @@ struct PageKidsHome: PageView {
                 if let current = self.currentKid {
                     if current.id == kid?.id { return }
                 }
-                if kid != nil && self.pairing.status == .pairing {
+                if self.pairing.status == .pairing {
                     if self.pairing.kidStudyData == nil {
                         self.pairing.requestPairing(.updateKidStudy)
                     }

@@ -90,7 +90,7 @@ class Kes: Rest{
     }
     
     func getKidStudy(
-        profile:Kid,
+        profile:Kid?,
         completion: @escaping (KidStudy) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
@@ -100,7 +100,7 @@ class Kes: Rest{
         params["IF"] = "IF-KES-003"
         params["stb_id"] = stbId
         
-        params["profile_id"] = profile.id
+        params["profile_id"] = profile?.id ?? "0"
         fetch(route: KesKidStudy(body: params), completion: completion, error:error)
     }
     

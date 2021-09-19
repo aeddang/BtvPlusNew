@@ -72,6 +72,7 @@ extension ResultReadingReportView{
 }
 struct ResultReadingReportView: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    
     var data:ResultReadingReportViewData
     
     var action: ((_ isRetry:Bool) -> Void)? = nil
@@ -155,6 +156,7 @@ struct ResultReadingReportView: PageComponent{
             
             ResultReportBottom(
                 date:self.data.date,
+                type: .infantDevelopment,
                 retryCount:self.data.retryCountStr
             )
             .modifier(MatchHorizontal(height: DimenKids.button.regular))

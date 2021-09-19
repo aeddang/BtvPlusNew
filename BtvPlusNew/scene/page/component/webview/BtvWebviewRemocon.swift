@@ -11,10 +11,21 @@ extension BtvWebView{
 
     func callFuncionRemocon(fn:String, jsonParams:String?, callback:String? ){
         switch fn {
+        case WebviewMethod.setAutoRemoconInfo.rawValue :
+            guard let jsonData = getRemoteData(jsonParams:jsonParams) else { return }
+            let isShowAutoRemocon = jsonData["isShowAutoRemocon"] as? String ?? ""
+            //let isShowRemoconSelectPopup = jsonData["isShowRemoconSelectPopup"] as? String ?? ""
+            if isShowAutoRemocon.toBool() == true {
+                self.setup.autoRemocon = true
+            } else {
+                self.setup.autoRemocon = false
+            }
+            
+            
         
         case WebviewMethod.requestRemoconFunction.rawValue :
             guard let jsonData = getRemoteData(jsonParams:jsonParams) else { return }
-            let transactionId = jsonData["transactionId"] as? String ?? ""
+            //let transactionId = jsonData["transactionId"] as? String ?? ""
             let contentId = jsonData["contentId"] as? String ?? ""
             let playTime = jsonData["playTime"] as? Double ?? 0
             let isShowRemocon = jsonData["isShowRemocon"] as? Bool ?? false

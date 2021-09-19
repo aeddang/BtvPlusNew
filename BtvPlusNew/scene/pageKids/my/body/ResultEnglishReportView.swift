@@ -114,6 +114,7 @@ class ResultEnglishReportViewData{
 struct ResultEnglishReportView: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+   
     var data:ResultEnglishReportViewData
     var action: (() -> Void)? = nil
    
@@ -190,6 +191,7 @@ struct ResultEnglishReportView: PageComponent{
             
             ResultReportBottom(
                 date:self.data.date,
+                type: .english,
                 retryCount:self.data.retryCountStr
             )
             .modifier(MatchHorizontal(height: DimenKids.button.regular))

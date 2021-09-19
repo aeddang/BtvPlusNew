@@ -212,7 +212,14 @@ struct WatchedBlock: PageComponent{
             }
             .filter{$0.isContinueWatch}
             
-            self.datas.append(contentsOf: loadedDatas)
+            let total = loadedDatas.count //resData.watch_tot?.toInt()
+            if  total > MetvNetwork.maxWatchedCount {
+                self.datas.append(contentsOf: loadedDatas[ 0...30 ].map{$0})
+            } else {
+                self.datas.append(contentsOf: loadedDatas)
+            }
+            
+            
             
         }
         self.infinityScrollModel.onComplete(itemCount: datas.count)

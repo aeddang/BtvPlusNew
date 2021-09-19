@@ -96,7 +96,7 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate , Identi
         center.addObserver(self, selector: #selector(playerItemDidReachEnd), name: .AVPlayerItemDidPlayToEndTime, object: nil)
         center.addObserver(self, selector: #selector(playerDidBecomeActive), name: UIApplication.didBecomeActiveNotification , object: nil)
         center.addObserver(self, selector: #selector(systemVolumeChange), name: NSNotification.Name(rawValue: Self.VOLUME_NOTIFY_KEY) , object: nil)
-        center.addObserver(self, selector: #selector(playerItemBitrateChange), name: .AVPlayerItemNewAccessLogEntry , object: nil)
+        //center.addObserver(self, selector: #selector(playerItemBitrateChange), name: .AVPlayerItemNewAccessLogEntry , object: nil)
         
     }
     

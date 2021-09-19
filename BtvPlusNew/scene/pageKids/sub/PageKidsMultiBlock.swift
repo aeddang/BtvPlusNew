@@ -328,13 +328,20 @@ struct PageKidsMultiBlock: PageView {
         guard let cwId = data.cw_call_id_val else { return }
         guard let studyData = self.pairing.kidStudyData else { return }
         
-        guard let find = studyData
-                .recomm_menus?.first(where: {KidsPlayType.getType($0.svc_prop_cd)  == type})?
+        var findStudy:RecommendMenuItem? = nil
+        if self.selectedTabIdx == 0 { //cwId 로 못찾음 하드코딩..
+            findStudy = studyData
+                .recomm_menus?.first(where: {KidsPlayType.getType($0.svc_prop_cd) == type})?
+                .items?.first(where: {$0.scn_mthd_cd == "518"})
+           
+        } else {
+            findStudy = studyData
+                .recomm_menus?.first(where: {KidsPlayType.getType($0.svc_prop_cd) == type})?
                 .items?.first(where: {$0.cw_id == cwId})
-        else { return }
-        
+        }
+        guard let find = findStudy else { return }
         guard let text = find.guidance_sentence else {return}
-        if text.isEmpty {return}
+        if text.replace(" ", with:"").isEmpty {return}
         let isTextCompleted = find.recent_test_date?.isEmpty == false
         
         let recommandData = FloatRecommandData(

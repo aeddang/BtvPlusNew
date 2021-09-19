@@ -231,7 +231,11 @@ struct CateBlock: PageComponent{
                         EmptyAlert().modifier(MatchParent())
                     }
                 } else {
-                    ErrorKidsData( text: String.alert.dataError).modifier(MatchParent())
+                    ErrorKidsData(
+                        text: self.viewModel.data?.dataType == .watched
+                            ? String.alert.dataError
+                            : String.kidsText.kidsMyWatchedEmpty
+                        ).modifier(MatchParent())
                 }
                 
             }

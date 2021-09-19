@@ -11,8 +11,9 @@ class EpisodeViewerData {
     private(set) var image: String = Asset.noImg16_9
     private(set) var seasonTitle: String? = nil
     private(set) var title: String = ""
-    private(set) var subTitle: String = ""
+    private(set) var subTitle: String? = nil
     private(set) var info: String = ""
+    private(set) var srisId: String? = nil
     private(set) var count: String? = nil
     private(set) var ratingPct: Double? = nil
     private(set) var ratingPoint: Double? = nil
@@ -34,19 +35,20 @@ class EpisodeViewerData {
     }
     
     var episodeSubTitle:String {
-        guard let count = self.count else { return self.subTitle }
-        if count.isEmpty { return self.subTitle }
-        return self.subTitle + " " + count + String.app.broCount
+        guard let count = self.count else { return self.subTitle ?? self.title }
+        if count.isEmpty { return self.subTitle ?? self.title}
+        return (self.subTitle ?? self.title) + " " + count + String.app.broCount
     }
     
     var episodeTitleKids:String {
-        guard let count = self.count else { return self.title }
-        if count.isEmpty { return self.title }
-        return count + String.app.broCount + ") " + self.title
+        guard let count = self.count else { return  self.subTitle ?? self.title }
+        if count.isEmpty { return self.subTitle ?? self.title }
+        return count + String.app.broCount + ") " + (self.subTitle ?? self.title)
     }
     
     func setData(data:SynopsisContentsItem) -> EpisodeViewerData {
         self.title = data.title ?? ""
+        self.srisId = data.sris_id
         self.subTitle = data.epsd_snss_cts ?? data.title ?? ""
         self.seasonTitle = data.sson_choic_nm
         self.date = data.brcast_exps_dy?.isEmpty == false ? data.brcast_exps_dy : nil

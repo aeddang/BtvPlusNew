@@ -19,12 +19,8 @@ struct BtvButton: PageView {
     var action: () -> Void
     var body: some View {
         Button(action: {
-            if self.pairing.status != .pairing {
-                self.appSceneObserver.alert = .needPairing()
-            }
-            else{
-                action()
-            }
+            action()
+            
         }) {
             if self.type == .btv {
                 VStack(spacing:0){

@@ -59,6 +59,18 @@ struct BtvWebView: PageComponent {
                                style: .large,
                                color: Color.app.white )
         }
+        .onReceive(self.appSceneObserver.$event){ evt in
+            guard let evt = evt else { return }
+            switch evt {
+            case .update(let type):
+                switch type {
+                case .registCard(_) :
+                    self.viewModel.request = .link(viewModel.path)
+                default : break
+                }
+            default : break
+            }
+        }
         .onReceive(dataProvider.$result) { res in
             guard let res = res else { return }
             if !res.id.hasPrefix(self.tag) { return }
@@ -127,7 +139,19 @@ struct BtvWebView: PageComponent {
             }
             self.dataProvider.requestData(q: .init(id:self.tag, type: .updateAgreement(true, callback:callback)))
             return
-                   
+        case WebviewMethod.bpn_registPaymentMethod.rawValue :
+            if self.pairing.status == .pairing ,  let jsonString = jsonParams  {
+                let jsonData = AppUtil.getJsonParam(jsonString: jsonString)
+                if let type = jsonData?["type"] as? String {
+                    //let purchaseUrl = jsonData?["purchaseUrl"] as? String
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.myRegistCard)
+                            .addParam(key: PageParam.type, value: CardBlock.ListType.getType(type))
+                    )
+                } else {
+                    ComponentLog.e("type notfound", tag:"WebviewMethod.bpn_registPaymentMethod")
+                }
+            }
         default : break
         }
         self.callFuncionEventAttendance(fn: fn, jsonParams: jsonParams, callback: callback)

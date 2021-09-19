@@ -95,7 +95,7 @@ struct PageWebview: PageView {
                     default : break
                     }
                     
-                default : do{}
+                default : break
                 }
             }
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in

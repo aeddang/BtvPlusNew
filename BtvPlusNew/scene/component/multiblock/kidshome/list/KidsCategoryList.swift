@@ -99,13 +99,14 @@ class KidsCategoryListItemData:Identifiable, ObservableObject{
     @Published private(set) var isActive: Bool = false
     func setData(data:BlockItem, size:CGSize? = nil, isTicket:Bool = false) -> KidsCategoryListItemData {
         
-        var size = size ?? (isTicket ? KidsCategoryList.sizeLong : KidsCategoryList.size)
-        let cardType = data.btm_bnr_blk_exps_cd
+        let size = size ?? (isTicket ? KidsCategoryList.sizeLong : KidsCategoryList.size)
+        //let cardType = data.btm_bnr_blk_exps_cd
+        /*
         switch cardType {
         case "07":
             size = KidsCategoryList.sizeRound
         default: break
-        }
+        }*/
         self.isTicket = isTicket
         self.prdPrcId = data.prd_prc_id
         self.title = data.menu_nm

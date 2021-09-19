@@ -29,7 +29,8 @@ struct PageEditKid: PageView {
     @State var editType:EditType = .none
     @State var isFocus:Bool = false
     @State var isInputReady:Bool = false
-     
+    @State var isInitBirthSelect:Bool = false
+    
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -110,13 +111,13 @@ struct PageEditKid: PageView {
                                             .modifier(BoldTextStyleKids(size: Font.sizeKids.thin, color:Color.app.brown))
                                             .multilineTextAlignment(.leading)
                                         HStack(alignment: .center, spacing:DimenKids.margin.micro){
-                                            Text(self.birthYear)
+                                            Text(self.isInitBirthSelect ? self.birthYear : "0000")
                                                 .modifier(BoldTextStyleKids(size: Font.sizeKids.large, color:Color.kids.primary))
                                                 
                                             Text(String.app.year)
                                                 .modifier(BoldTextStyleKids(size: Font.sizeKids.light, color:Color.app.sepia))
                                              
-                                            Text(self.birthMonth)
+                                            Text(self.isInitBirthSelect ? self.birthMonth : "00")
                                                 .modifier(BoldTextStyleKids(size: Font.sizeKids.large, color:Color.kids.primary))
                                                
                                             Text(String.app.month)
@@ -257,12 +258,14 @@ struct PageEditKid: PageView {
                         self.birthYear = birthDate.toDateFormatter(dateFormat: "yyyy")
                         self.birthMonth = birthDate.toDateFormatter(dateFormat: "MM")
                     }
+                    self.isInitBirthSelect = true
                 } else {
                     self.birthDate = Date()
                     if let birthDate = self.birthDate {
                         self.birthYear = birthDate.toDateFormatter(dateFormat: "yyyy")
                         self.birthMonth = birthDate.toDateFormatter(dateFormat: "MM")
                     }
+                    self.isInitBirthSelect = false
                 }
             }
         }//geo
@@ -326,7 +329,7 @@ struct PageEditKid: PageView {
                 let birth = self.birthYear + self.birthMonth
                 self.birthDate = birth.toDate(
                     dateFormat: "yyyyMM")
-                
+                self.isInitBirthSelect = true
                 withAnimation{
                     self.editType = .none
                 }

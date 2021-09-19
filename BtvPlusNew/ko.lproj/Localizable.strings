@@ -359,7 +359,8 @@
 "alertPurchase" = "구매 안내";
 "alertPurchaseContinue" = "전체 영상은 구매 후 시청 가능합니다.\n구매 후 계속 시청하시겠습니까?";
 "alertPurchaseContinueBtv" = "구매 후 이용 가능합니다.\n구매 화면으로 이동하시겠습니까?";
-
+"alertPurchaseDisable" = "구매 불가";
+"alertPurchaseDisableService" = "일시적으로 서비스가 중단되어\n구매하실 수 없는 상품입니다.";
 
 "alertDataAlramOn" = "데이타 연결 알림이 설정되었습니다.";
 "alertDataAlramOff" = "데이타 연결 알림이 해제되었습니다.";
@@ -771,6 +772,9 @@
 
 "myBenefitsDiscountOkDeleteConfirm" = "선택한 OK캐쉬백 카드를 삭제하시겠어요?";
 "myBenefitsDiscountTDeleteConfirm"  = " 등록된 T멤버십 카드를 삭제하시겠어요?";
+
+"myBenefitsRegistOk" = "OK캐쉬백 카드가 등록되었어요.";
+"myBenefitsRegistT"  = "T멤버십 카드가 등록되었어요.";
 
 "myBenefitsCardEmpty" = "등록된 카드가 없습니다.";
 "myBenefitsDiscountTvEmpty" = "TV포인트 등록 정보가 없습니다.";

@@ -619,7 +619,7 @@ struct PageSynopsis: PageView {
                     self.completedProgress()
                     return
                 }
-                if model.hasExamPreview{
+                if model.hasExamPreview {
                     self.synopsisPlayType = .preplay()
                     self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.epsdRsluId,  true )))
                 }
@@ -766,6 +766,7 @@ struct PageSynopsis: PageView {
     }
     
     private func completedProgress(){
+        if self.progressError {return}
         PageLog.d("completedProgress", tag: self.tag)
         withAnimation{
             self.isPlayAble = self.purchasViewerData?.isPlayAble ?? true
@@ -800,6 +801,7 @@ struct PageSynopsis: PageView {
     }
     func errorProgress(){
         PageLog.d("errorProgress", tag: self.tag)
+        self.progressError = true
         withAnimation{
             self.isPlayAble = false
             self.isPlayViewActive = true
@@ -836,7 +838,7 @@ struct PageSynopsis: PageView {
          
         self.purchaseWebviewModel = PurchaseWebviewModel().setParam(synopsisData: data)
         if let content = data.contents {
-            self.episodeViewerData = EpisodeViewerData().setData(data: content)
+            self.episodeViewerData = EpisodeViewerData(type: self.type).setData(data: content)
             self.summaryViewerData = SummaryViewerData().setData(data: content)
             if let prev = self.synopsisModel { //페이지 변경
                 if self.synopsisData?.srisId != self.prevSrisId { // 시리즈변경
@@ -902,7 +904,7 @@ struct PageSynopsis: PageView {
         
         self.textInfo = self.purchasViewerData?.serviceInfo
         self.epsdRsluId = self.synopsisModel?.curSynopsisItem?.epsd_rslu_id ?? self.synopsisModel?.epsdRsluId ?? ""
-        if self.purchasViewerData?.isPlayAble == true {
+        if self.purchasViewerData?.isPlayAble == true && (self.isPairing == true || self.isPosson) {
             self.hasAuthority = self.purchasViewerData?.hasAuthority
         } else{
             self.hasAuthority = false

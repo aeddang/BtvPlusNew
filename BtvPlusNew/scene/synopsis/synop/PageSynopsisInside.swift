@@ -219,10 +219,18 @@ extension PageSynopsis {
         let playAble = self.purchasViewerData?.isPlayAble ?? false
         let playAbleBtv = self.purchasViewerData?.isPlayAbleBtv ?? false
         if !playAble && !playAbleBtv{
-            self.appSceneObserver.alert = .alert(
-                self.purchasViewerData?.serviceInfo,
-                self.purchasViewerData?.serviceInfoDesc, nil
-            )
+            if self.synopsisModel?.isCancelProgram == true {
+                self.appSceneObserver.alert = .alert(
+                    String.alert.purchaseDisable,
+                    String.alert.purchaseDisableService
+                )
+            } else {
+                self.appSceneObserver.alert = .alert(
+                    String.alert.purchaseDisable,
+                    self.purchasViewerData?.serviceInfoDesc
+                )
+            }
+            
             return
         }
         if !(!playAble && playAbleBtv) && self.hasAuthority != true{

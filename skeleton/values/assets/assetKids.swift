@@ -36,6 +36,7 @@ extension AssetKids{
     
     struct icon {
         public static let delete = "zemkidsMPopupInputDelNor"
+        public static let deleteOn = "zemkidsMPopupInputDelPre"
         public static let back = "zemkidsMBackBtn"
         public static let close = "zemkidsMQuizBtnClose"
         public static let closePop =  "zemkidsMBtnNotiPopupClose"

@@ -98,10 +98,14 @@ struct PageMyRegistCard: PageView {
                                         InputNumberGroupItem(
                                             idx: 0,
                                             input: self.$password,
-                                            focusIdx: self.editType == .pw ? 0  : -1,
-                                            placeholder: String.pageText.myRegistCardPasswordPlaceHolder, isSecure: true) {
-                                            
-                                        }
+                                            focusIdx: (self.cardNoFocus == -1)
+                                                ? (self.editType == .pw ? 0  : -1)
+                                                : -1,
+                                            placeholder: String.pageText.myRegistCardPasswordPlaceHolder,
+                                            isSecure: true,
+                                            prev: {
+                                                self.cardNoFocus = 3
+                                            })
                                         .onTapGesture {
                                             self.cardNoFocus = -1
                                             withAnimation{
@@ -241,12 +245,16 @@ struct PageMyRegistCard: PageView {
                     if !res.id.hasPrefix(self.tag) { return }
                     guard let result = res.data as? RegistEps else { return }
                     if result.result == ApiCode.success {
+                        self.appSceneObserver.event = .toast(self.cardType == .member
+                            ? String.pageText.myBenefitsRegistT
+                            : String.pageText.myBenefitsRegistOk)
+                        
                         self.appSceneObserver.event =
                             .update(.registCard(type: self.cardType))
                         self.pagePresenter.closePopup(self.pageObject?.id)
                     } else {
                         let msg = result.reason?.replace("\\n", with: "\n") ?? String.alert.apiErrorServer
-                        self.appSceneObserver.alert = .alert(String.alert.api, msg)
+                        self.appSceneObserver.event = .toast(msg)
                     }
                     
                 default: break
@@ -305,7 +313,7 @@ struct PageMyRegistCard: PageView {
         let find = self.useEdit.first(where:{ edit in
             switch edit {
             case .pw :
-                if self.password.isEmpty != false{
+                if self.password.count != 4{
                     return true
                 }
             case .birth :
@@ -328,7 +336,7 @@ struct PageMyRegistCard: PageView {
         self.useEdit.forEach{ edit in
             switch edit {
             case .pw :
-                if self.password.isEmpty != false{
+                if self.password.count != 4{
                     self.appSceneObserver.event = .toast(String.pageText.myRegistCardEmptyPassword)
                 }
             case .birth :

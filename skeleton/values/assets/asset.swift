@@ -182,6 +182,7 @@ extension Asset{
         public static let stb = "icPopupPairingDefault"
         public static let recommendPoint = "icMyRecommendPoint"
         public static let addCard = "btnMyAddCard"
+        public static let lookupCard = "btnMyOkcashbagCheck"
         public static let searchOnlyBtv = "icTagSearchOnlybtv"
         
         public static let onTop = "icBtnTop"

@@ -146,7 +146,7 @@ struct CardBlock: PageComponent, Identifiable{
                         )
                         .frame(height: ListItem.card.size.height + ListItem.card.bottom )
                     }
-                    //if self.type != .tvPoint {
+                    if !(self.type == .tvPoint && self.datas.isEmpty)  {
                         VStack(alignment: .leading, spacing:Dimen.margin.micro){
                             ForEach(self.tips, id: \.self) { tip in
                                 HStack(alignment: .top, spacing: 0){
@@ -164,7 +164,7 @@ struct CardBlock: PageComponent, Identifiable{
                             Spacer().modifier(MatchHorizontal(height: 0))
                         }
                         .frame(width: ListItem.card.size.width)
-                    //}
+                    }
                     Spacer()
                 }
                 .padding(.top, Dimen.margin.medium)

@@ -29,11 +29,33 @@ struct PageKidsConfirmNumber: PageView {
     @State var text:String = ""
     @State var eventId:String = ""
     @State var tip:String? = nil
-    @State var msg:String? = nil 
+    @State var msg:String? = nil
+    @State var isInit:Bool = true
     @State var isFocus:Bool = true
     
     var body: some View {
         ZStack{
+            InputNumberField(
+                isInit:self.isInit,
+                isFocus: self.isFocus,
+                title: self.title,
+                text: self.text,
+                tip: self.tip,
+                msg: self.msg
+            ){ input in
+                guard let input = input else {
+                    self.closePage()
+                    return
+                }
+                switch self.type {
+                default : self.confirmPassword(input)
+                }
+            }
+            .modifier(MatchParent())
+            .onTapGesture {
+                AppUtil.hideKeyboard()
+            }
+            /*
             InputNumberBox(
                 isInit:self.isFocus,
                 title: self.title,
@@ -51,6 +73,7 @@ struct PageKidsConfirmNumber: PageView {
                 }
             }
             .modifier(MatchParent())
+            */
         }
         .modifier(MatchParent())
         .onReceive(self.pairing.$event){ evt in
@@ -86,7 +109,7 @@ struct PageKidsConfirmNumber: PageView {
                         self.closePage()
                     }
                 }
-            default : do{}
+            default :break
             }
         }
         .onReceive(dataProvider.$result) { res in
@@ -107,9 +130,17 @@ struct PageKidsConfirmNumber: PageView {
             default: break
             }
         }
-        
+        .onReceive(self.keyboardObserver.$isOn){ on in
+            if self.pageObservable.layer != .top { return }
+            
+            PageLog.d("updatekeyboardStatus " + on.description, tag:self.tag)
+            PageLog.d("updatekeyboardStatus isFocus " + isFocus.description, tag:self.tag)
+            if self.isFocus != on { self.isFocus = on }
+            
+        }
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-            if ani { self.isFocus = true }
+            self.isFocus = true
+            if ani { self.isInit = true }
         }
        
         .onAppear{

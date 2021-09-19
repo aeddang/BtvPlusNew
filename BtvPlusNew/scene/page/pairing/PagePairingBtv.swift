@@ -212,7 +212,7 @@ struct PagePairingBtv: PageView {
                     
                 case .connectErrorReason(let info) :
                     self.appSceneObserver.alert = .limitedDevice(info)
-                default : do{}
+                default : break
                 }
             }
             .onAppear{

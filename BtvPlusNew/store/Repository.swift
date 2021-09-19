@@ -403,9 +403,8 @@ class Repository:ObservableObject, PageProtocol{
     
     func retryRepository()
     {
-        //self.appSceneObserver?.event = .debug("retryRepository")
         self.status = .reset
-        self.apiManager.retryApi()
+        self.reset()
     }
     
     func updateUser(_ data:ModifyUserData) {

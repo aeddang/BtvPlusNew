@@ -313,7 +313,7 @@ struct PageSynopsisPlayer: PageView {
         PageLog.d("srisId " + (self.synopsisData?.srisId ?? "nil"), tag: self.tag)
         PageLog.d("epsdId " + (self.synopsisData?.epsdId ?? "nil"), tag: self.tag)
         if let content = data.contents {
-            self.episodeViewerData = EpisodeViewerData().setData(data: content)
+            self.episodeViewerData = EpisodeViewerData(type: .btv).setData(data: content)
             self.synopsisModel = SynopsisModel(type: .seasonFirst).setData(data: data)
             self.epsdRsluId = self.synopsisModel?.epsdRsluId ?? self.epsdRsluId
             self.synopsisData?.epsdRsluId = self.epsdRsluId

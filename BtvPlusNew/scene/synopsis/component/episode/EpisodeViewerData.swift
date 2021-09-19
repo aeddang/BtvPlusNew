@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 class EpisodeViewerData {
+    private(set) var type: PageType = .btv
     private(set) var image: String = Asset.noImg16_9
     private(set) var seasonTitle: String? = nil
     private(set) var title: String = ""
@@ -28,6 +29,10 @@ class EpisodeViewerData {
     private(set) var award: String? = nil
     private(set) var awardDetail: String? = nil
     private(set) var onAir: String? = nil
+    init(type:PageType = .btv) {
+        self.type = type
+    }
+    
     var episodeTitle:String {
         guard let count = self.count else { return self.title }
         if count.isEmpty { return self.title }
@@ -41,16 +46,22 @@ class EpisodeViewerData {
     }
     
     var episodeTitleKids:String {
-        guard let count = self.count else { return  self.subTitle ?? self.title }
-        if count.isEmpty { return self.subTitle ?? self.title }
-        return count + String.app.broCount + ") " + (self.subTitle ?? self.title)
+        guard let count = self.count else { return  self.title }
+        if count.isEmpty { return self.title }
+        return count + String.app.broCount + ") " + (self.title)
     }
     
     func setData(data:SynopsisContentsItem) -> EpisodeViewerData {
-        self.title = data.title ?? ""
+        if self.type == .btv {
+            self.title = data.title ?? ""
+            self.subTitle = data.epsd_snss_cts
+            self.seasonTitle = data.sson_choic_nm
+        } else {
+            self.title = data.sub_title ?? ""
+            self.subTitle = data.epsd_snss_cts
+            self.seasonTitle = data.title
+        }
         self.srisId = data.sris_id
-        self.subTitle = data.epsd_snss_cts ?? data.title ?? ""
-        self.seasonTitle = data.sson_choic_nm
         self.date = data.brcast_exps_dy?.isEmpty == false ? data.brcast_exps_dy : nil
         self.serviceYear = data.svc_fr_dt?.isEmpty == false ? data.svc_fr_dt?.subString(start: 0, len: 4) : nil
         self.provider = data.brcast_chnl_nm?.isEmpty == false ? data.brcast_chnl_nm : nil

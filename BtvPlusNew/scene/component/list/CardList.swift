@@ -301,6 +301,7 @@ struct CardItemBody: PageView {
                             .modifier(MediumTextStyle(size: Font.size.large))
                             .padding(.top, Dimen.margin.heavy)
                     }
+                    
                     if let point = (self.data.point ?? self.point) {
                         Text(String.pageText.myBenefitsDiscountTvText2)
                             .modifier(MediumTextStyle(size: Font.size.regular, color:Color.app.blackLight))
@@ -308,17 +309,22 @@ struct CardItemBody: PageView {
                             .modifier(BoldTextStyle(size: Font.size.black, color:Color.app.blackRegular))
                             
                     } else if self.data.requestPoint {
-                        RectButton(
-                            text: String.button.lookup,
-                            padding: Dimen.margin.regular
-                            ){_ in
-                            
+                        Text(String.pageText.myBenefitsDiscountTvText2)
+                            .modifier(MediumTextStyle(size: Font.size.regular, color:Color.app.blackLight))
+                        Button(action: {
                             self.pagePresenter.openPopup(
                                 PageProvider.getPageObject(.confirmNumber)
                                     .addParam(key: .type, value: PageConfirmNumber.InputType.okcash(self.data.ocb))
                                    
                             )
+                        }) {
+                            Image(Asset.icon.lookupCard)
+                                .renderingMode(.original)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: Dimen.icon.regularExtra)
                         }
+                         
                     }
                 }
                 Spacer()

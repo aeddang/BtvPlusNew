@@ -30,6 +30,7 @@ struct PageRegistKid: PageView {
     @State var birthDate:Date = Date()
     @State var birth:String = String.app.birthKidsPlaceholder
     @State var boxPos:CGFloat = -100
+    @State var isInitBirthSelect:Bool = false
     
     @State var isFocus:Bool = false
     @State var isRegistUnvisible:Bool = false
@@ -83,7 +84,9 @@ struct PageRegistKid: PageView {
                                 }
                                 .frame(width: SystemEnvironment.isTablet ? 357 : 186)
                                 InputCellKids(
-                                    title: String.app.birthKids,
+                                    title: self.isInitBirthSelect
+                                        ? String.app.birthKids
+                                        : String.app.birthKidsPlaceholder,
                                     input: self.$birth,
                                     inputFontSize:Font.sizeKids.large,
                                     isFocus: self.editType == .birth,
@@ -277,6 +280,7 @@ struct PageRegistKid: PageView {
         self.appSceneObserver.select =
             .multiPicker((self.tag, [self.birthYearList, birthMonthList]), [picYear,picMonth])
             { idxYear, idxMonth, _, _ in
+                self.isInitBirthSelect = true
                 self.birthYear = self.birthYearList[idxYear]
                 self.birthMonth = self.birthMonthList[idxMonth]
                 self.birth = self.birthYear + " " + self.birthMonth

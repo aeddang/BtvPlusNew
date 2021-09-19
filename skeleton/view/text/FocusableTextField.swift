@@ -21,6 +21,7 @@ struct FocusableTextField: UIViewRepresentable {
     var isfocus:Bool
     var isSecureTextEntry:Bool = false
     var inputChange: ((_ text:String) -> Void)? = nil
+    var inputChangedNext: ((_ char:String) -> Void)? = nil
     var inputChanged: ((_ text:String) -> Void)? = nil
     var inputClear: (() -> Void)? = nil
     var inputCopmpleted: ((_ text:String) -> Void)? = nil
@@ -34,6 +35,7 @@ struct FocusableTextField: UIViewRepresentable {
         textField.delegate = context.coordinator
         textField.placeholder = self.placeholder
         textField.autocorrectionType = .no
+        //textField.clearButtonMode = .whileEditing
         textField.adjustsFontSizeToFitWidth = true
         textField.textAlignment = self.textAlignment
         let color = textModifier.color == Color.app.white ? UIColor.white : textModifier.color.uiColor()
@@ -80,7 +82,10 @@ struct FocusableTextField: UIViewRepresentable {
                 let textRange = Range(range, in: text) {
                 let updatedText = text.replacingCharacters(in: textRange, with: string)
                 if parent.maxLength != -1 {
-                    if updatedText.count > parent.maxLength {return false}
+                    if updatedText.count > parent.maxLength {
+                        self.parent.inputChangedNext?(string)
+                        return false
+                    }
                 }
                 parent.inputChange?(updatedText)
             }

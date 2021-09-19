@@ -77,7 +77,7 @@ struct PageSelectKidCharacter: PageView {
                         VStack (alignment: .center, spacing: Self.spacing){
                             ForEach(self.characterSets) { set in
                                 HStack(alignment: .top, spacing: Self.spacing) {
-                                    ForEach( set.cells) { data in
+                                    ForEach( set.cells.reversed()) { data in
                                         CharacterKidItem(
                                             isSelected: self.characterIdx == data.idx,
                                             data: data)

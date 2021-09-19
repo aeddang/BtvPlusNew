@@ -49,42 +49,43 @@ struct InputNumberBox: PageComponent {
                                             idx: 0,
                                             input: self.$input1,
                                             focusIdx: self.focusIdx,
-                                            clear: {
-                                                self.focusIdx = self.delete()
-                                            },
-                                            action:{
+                                            next:{ char in
+                                                self.input2 = char
                                                 self.focusIdx = 1
                                             })
                                         InputNumberItem(
                                             idx: 1,
                                             input: self.$input2,
                                             focusIdx: self.focusIdx,
-                                            clear: {
-                                                self.focusIdx = self.delete()
+                                            prev: {
+                                                self.focusIdx = 0
                                             },
-                                            action:{
+                                            next:{ char in
+                                                self.input3 = char
                                                 self.focusIdx = 2
                                             })
                                         InputNumberItem(
                                             idx: 2,
                                             input: self.$input3,
                                             focusIdx: self.focusIdx,
-                                            clear: {
-                                                self.focusIdx = self.delete()
+                                            prev: {
+                                                self.focusIdx = 1
                                             },
-                                            action:{
+                                            next:{ char in
+                                                self.input4 = char
                                                 self.focusIdx = 3
                                             })
                                         InputNumberItem(
                                             idx: 3,
                                             input: self.$input4,
                                             focusIdx: self.focusIdx,
-                                            clear: {
-                                                self.focusIdx = self.delete()
+                                            prev: {
+                                                self.focusIdx = 2
                                             },
                                             action:{
-                                                self.focusIdx = -1
                                                 AppUtil.hideKeyboard()
+                                                self.focusIdx = -1
+                                                
                                             })
                                     }
                                     Spacer().frame(
@@ -97,10 +98,10 @@ struct InputNumberBox: PageComponent {
                                         }
                                 }
                                 Button(action: {
-                                    self.focusIdx = self.delete()
+                                    self.focusIdx = self.delete(isAll: true)
                                     
                                 }) {
-                                    Image(AssetKids.icon.delete)
+                                    Image(self.isDeleteable() ? AssetKids.icon.deleteOn : AssetKids.icon.delete)
                                         .renderingMode(.original)
                                         .resizable()
                                         .scaledToFit()
@@ -229,6 +230,14 @@ struct InputNumberBox: PageComponent {
         if self.input4.isEmpty {return false}
         return true
     }
+    
+    private func isDeleteable() -> Bool {
+        if !self.input1.isEmpty {return true}
+        if !self.input2.isEmpty {return true}
+        if !self.input3.isEmpty {return true}
+        if !self.input4.isEmpty {return true}
+        return false
+    }
 }
 
 struct InputNumberItem: PageView {
@@ -236,8 +245,9 @@ struct InputNumberItem: PageView {
     @Binding var input:String
     var focusIdx:Int
     var placeholder:String = "●"
-    var clear: (() -> Void)? = nil
-    var action: () -> Void
+    var prev: (() -> Void)? = nil
+    var next: ((String) -> Void)? = nil
+    var action: (() -> Void)? = nil
     
     let radius:CGFloat = DimenKids.radius.lightExtra
     var body: some View {
@@ -254,12 +264,18 @@ struct InputNumberItem: PageView {
                     color: Color.app.brownDeep),
                 isfocus: self.focusIdx == self.idx,
                 isSecureTextEntry:true,
-                inputChanged : { _ in
-                    if self.input.isEmpty {return}
-                    self.action()
+                inputChangedNext :{ char  in
+                    self.next?(char)
                 },
-                inputClear : self.clear
-                )
+                inputChanged : { _ in
+                    if self.input.isEmpty {
+                        self.prev?()
+                        return
+                    }
+                    if self.input.count == 4 {
+                        self.action?()
+                    }
+                })
         }
         .frame(width: DimenKids.item.inputNum.width, height: DimenKids.item.inputNum.height)
         .background(Color.app.white)

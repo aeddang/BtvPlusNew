@@ -30,9 +30,14 @@ struct InputNumberGroupBox: PageComponent {
             InputNumberGroupItem(
                 idx: 0,
                 input: self.$input1,
-                focusIdx: self.focusIdx){
+                focusIdx: self.focusIdx,
+                prev: {
+                    
+                },
+                next:{ char in
+                    self.input2 = char
                     self.focusIdx = 1
-                }
+                })
             .onTapGesture {
                 self.focusIdx = 0
                 self.onChanged()
@@ -40,9 +45,14 @@ struct InputNumberGroupBox: PageComponent {
             InputNumberGroupItem(
                 idx: 1,
                 input: self.$input2,
-                focusIdx: self.focusIdx){
+                focusIdx: self.focusIdx,
+                prev: {
+                    self.focusIdx = 0
+                },
+                next:{ char in
+                    self.input3 = char
                     self.focusIdx = 2
-                }
+                })
             .onTapGesture {
                 self.focusIdx = 1
                 self.onChanged()
@@ -50,9 +60,14 @@ struct InputNumberGroupBox: PageComponent {
             InputNumberGroupItem(
                 idx: 2,
                 input: self.$input3,
-                focusIdx: self.focusIdx){
+                focusIdx: self.focusIdx,
+                prev: {
+                    self.focusIdx = 1
+                },
+                next:{ char in
+                    self.input4 = char
                     self.focusIdx = 3
-                }
+                })
             .onTapGesture {
                 self.focusIdx = 2
                 self.onChanged()
@@ -60,14 +75,18 @@ struct InputNumberGroupBox: PageComponent {
             InputNumberGroupItem(
                 idx: 3,
                 input: self.$input4,
-                focusIdx: self.focusIdx){
-                self.focusIdx = self.findFocus()
-                self.onChanged()
-                if self.focusIdx == -1 {
-                    AppUtil.hideKeyboard()
-                    self.completed?()
-                }
-            }
+                focusIdx: self.focusIdx,
+                prev: {
+                    self.focusIdx = 2
+                },
+                action: {
+                    self.focusIdx = self.findFocus()
+                    self.onChanged()
+                    if self.focusIdx == -1 {
+                        AppUtil.hideKeyboard()
+                        self.completed?()
+                    }
+                })
             .onTapGesture {
                 self.focusIdx = 3
             }
@@ -97,7 +116,9 @@ struct InputNumberGroupItem: PageView {
     var placeholder:String = ""
     var maxLength:Int  = 4
     var isSecure:Bool = false
-    var action: () -> Void
+    var prev: (() -> Void)? = nil
+    var next: ((String) -> Void)? = nil
+    var action: (() -> Void)? = nil
     
     let radius:CGFloat = DimenKids.radius.lightExtra
     var body: some View {
@@ -110,10 +131,16 @@ struct InputNumberGroupItem: PageView {
                 maxLength:self.maxLength,
                 isfocus: self.focusIdx == self.idx,
                 isSecureTextEntry:self.isSecure,
+                inputChangedNext :{ char  in
+                    self.next?(char)
+                },
                 inputChanged : { _ in
-                    if self.input.isEmpty {return}
+                    if self.input.isEmpty {
+                        self.prev?()
+                        return
+                    }
                     if self.input.count == 4 {
-                        self.action()
+                        self.action?()
                     }
                 })
         }

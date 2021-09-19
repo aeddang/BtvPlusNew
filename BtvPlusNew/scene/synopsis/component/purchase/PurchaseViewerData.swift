@@ -213,7 +213,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                 self.purchasBtnTitle =  leading 
                 self.purchasBtnSubTitle = "(" + purchasableItem.salePrice + "~)"
             } else {
-                self.purchasBtnTitle =  leading + "  |  " + purchasableItem.salePrice
+                self.purchasBtnTitle =  leading + "  |  " + purchasableItem.salePrice + "~"
             }
         }
     }

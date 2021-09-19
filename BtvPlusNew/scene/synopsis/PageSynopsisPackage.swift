@@ -435,7 +435,7 @@ struct PageSynopsisPackage: PageView {
     
     private func setupSynopsis (_ data:Synopsis) {
         if let content = data.contents {
-            self.episodeViewerData = EpisodeViewerData().setData(data: content)
+            self.episodeViewerData = EpisodeViewerData(type: self.type).setData(data: content)
             self.summaryViewerData = SummaryViewerData().setData(data: content)
             self.synopsisModel = SynopsisModel(type: .title).setData(data: data)
         } else {

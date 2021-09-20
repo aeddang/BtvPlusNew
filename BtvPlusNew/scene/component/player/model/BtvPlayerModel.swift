@@ -100,8 +100,8 @@ class BtvPlayerModel:PlayerModel{
     var isPlay80:Bool = false
    
     
-    var currentEpsdRsluId:String? = nil
-    var currentIdx:Int? = nil
+    //var currentEpsdRsluId:String? = nil
+    //var currentIdx:Int? = nil
     var selectedQuality:String? = nil
     static var isInitMute:Bool = true
     

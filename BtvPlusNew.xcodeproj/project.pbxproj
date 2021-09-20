@@ -450,6 +450,8 @@
 		319C47E726A1743400C61EF8 /* PageKidsMultiBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319C47E626A1743400C61EF8 /* PageKidsMultiBlock.swift */; };
 		319C47E926A1946400C61EF8 /* ScrollMenuTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319C47E826A1946400C61EF8 /* ScrollMenuTab.swift */; };
 		319C47EB26A1C06100C61EF8 /* SkeletonBlockKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319C47EA26A1C06100C61EF8 /* SkeletonBlockKids.swift */; };
+		319C76AB26F8AE0A00452F17 /* PlayBlockDataBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319C76AA26F8AE0A00452F17 /* PlayBlockDataBinding.swift */; };
+		319C76AF26F8BDC300452F17 /* PlayItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319C76AE26F8BDC300452F17 /* PlayItems.swift */; };
 		319CF658269522DB00159575 /* LvGraphBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF657269522DB00159575 /* LvGraphBox.swift */; };
 		319CF65A269545D400159575 /* CreativeGraphBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF659269545D400159575 /* CreativeGraphBox.swift */; };
 		319CF65C2695662500159575 /* PageKidsMyDiagnostic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319CF65B2695662500159575 /* PageKidsMyDiagnostic.swift */; };
@@ -1205,6 +1207,8 @@
 		319C47E626A1743400C61EF8 /* PageKidsMultiBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageKidsMultiBlock.swift; sourceTree = "<group>"; };
 		319C47E826A1946400C61EF8 /* ScrollMenuTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollMenuTab.swift; sourceTree = "<group>"; };
 		319C47EA26A1C06100C61EF8 /* SkeletonBlockKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonBlockKids.swift; sourceTree = "<group>"; };
+		319C76AA26F8AE0A00452F17 /* PlayBlockDataBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayBlockDataBinding.swift; sourceTree = "<group>"; };
+		319C76AE26F8BDC300452F17 /* PlayItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayItems.swift; sourceTree = "<group>"; };
 		319CF657269522DB00159575 /* LvGraphBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LvGraphBox.swift; sourceTree = "<group>"; };
 		319CF659269545D400159575 /* CreativeGraphBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreativeGraphBox.swift; sourceTree = "<group>"; };
 		319CF65B2695662500159575 /* PageKidsMyDiagnostic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageKidsMyDiagnostic.swift; sourceTree = "<group>"; };
@@ -2146,6 +2150,7 @@
 				31061E6A25C8D21A00543FC0 /* player */,
 				3128259626AE74AA00A58DB9 /* buzz */,
 				D56CC2ED25902E5400CA1D54 /* multiblock */,
+				319C76AC26F8AE1500452F17 /* playblock */,
 				31AC66C026B780A000766995 /* block */,
 				D506D715258C8FCD00F27C00 /* list */,
 				31F2803A26732E0F00F40B09 /* view */,
@@ -2982,6 +2987,17 @@
 			path = sub;
 			sourceTree = "<group>";
 		};
+		319C76AC26F8AE1500452F17 /* playblock */ = {
+			isa = PBXGroup;
+			children = (
+				318B53AA25F20A350052E4E0 /* PlayBlock.swift */,
+				319C76AA26F8AE0A00452F17 /* PlayBlockDataBinding.swift */,
+				318B537025F049DA0052E4E0 /* PlayList.swift */,
+				319C76AE26F8BDC300452F17 /* PlayItems.swift */,
+			);
+			path = playblock;
+			sourceTree = "<group>";
+		};
 		319CF65F2695C32600159575 /* model */ = {
 			isa = PBXGroup;
 			children = (
@@ -3064,7 +3080,6 @@
 			children = (
 				31AC66C126B780E800766995 /* item */,
 				3167198325FF42A8005AC3D2 /* WatchedBlock.swift */,
-				318B53AA25F20A350052E4E0 /* PlayBlock.swift */,
 				317C974926240945008F267D /* CouponBlock.swift */,
 				31740C38261C3AE70052A9C2 /* PurchaseBlock.swift */,
 				318F7B4F2625739A00774B17 /* CardBlock.swift */,
@@ -3288,7 +3303,6 @@
 				318E7EFD25E8814C00B2AAAF /* MonthlyList.swift */,
 				3185FE1825EF017A005074AA /* CateList.swift */,
 				3163300225EF70B000581FA7 /* TextTabList.swift */,
-				318B537025F049DA0052E4E0 /* PlayList.swift */,
 				31A3E8772605F3F800BF044B /* SearchList.swift */,
 				317C97432623EEF7008F267D /* CouponList.swift */,
 				318F7B402625444C00774B17 /* CardList.swift */,
@@ -4384,6 +4398,7 @@
 				D56C6A59257DA0C700CF9AB8 /* TextButton.swift in Sources */,
 				319B378B26B1675C001501B1 /* MgmRps.swift in Sources */,
 				3190CB1C268C4B3B00ACB465 /* HorizontalGraph.swift in Sources */,
+				319C76AB26F8AE0A00452F17 /* PlayBlockDataBinding.swift in Sources */,
 				D56CC31225907F3700CA1D54 /* ThemaBlock.swift in Sources */,
 				D56C5FE32592F693009AE769 /* Metv.swift in Sources */,
 				312825C026AFE90100A58DB9 /* HitchPairingItem.swift in Sources */,
@@ -4598,6 +4613,7 @@
 				319462A6269F00910074FE79 /* KidsBanner.swift in Sources */,
 				316ECDF9264B4676008D2544 /* VerticalButtonBox.swift in Sources */,
 				D56C6A41257DA0C700CF9AB8 /* Player.swift in Sources */,
+				319C76AF26F8BDC300452F17 /* PlayItems.swift in Sources */,
 				318BA3872608B8C50093BC7D /* EmptySearchResult.swift in Sources */,
 				31A3E8782605F3F800BF044B /* SearchList.swift in Sources */,
 				318AA03B265DD99200C089EC /* SetupApp.swift in Sources */,

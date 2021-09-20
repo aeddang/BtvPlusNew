@@ -25,7 +25,9 @@ struct PagePreviewList: PageView {
     @ObservedObject var playerModel: BtvPlayerModel = BtvPlayerModel(useFullScreenAction:false, useRecovery: false)
     
     @State var title:String? = nil
+    @State var playerTitle:String? = nil
     @State var menuId:String? = nil
+    @State var block:BlockData? = nil
     @State var safeAreaTop:CGFloat = 0
     @State var marginBottom:CGFloat = 0
     @State var isInit:Bool = false
@@ -58,22 +60,23 @@ struct PagePreviewList: PageView {
                 .modifier(PageFull(style:.dark))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                 if isFullScreen {
-                    SimplePlayer(
-                        pageObservable: self.pageObservable,
-                        viewModel : self.playerModel)
-                        .modifier(MatchParent())
-                        .background(Color.app.black)
-                }
-            }
-            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                if ani {
-                    if self.isInit {return}
-                    DispatchQueue.main.async {
-                        self.isInit = true
-                        self.viewModel.update(menuId:self.menuId, key:nil)
+                    if self.block != nil {
+                        BtvPlayer(
+                            pageObservable:self.pageObservable,
+                            viewModel:self.playerModel,
+                            title: self.playerTitle,
+                            playerType: .normal
+                        )
+                    } else {
+                        SimplePlayer(
+                            pageObservable: self.pageObservable,
+                            viewModel : self.playerModel)
+                            .modifier(MatchParent())
+                            .background(Color.app.black)
                     }
                 }
             }
+            
             .onReceive(self.sceneObserver.$isUpdated){ update in
                 if update {
                     self.safeAreaTop = self.sceneObserver.safeAreaTop
@@ -93,15 +96,19 @@ struct PagePreviewList: PageView {
                     return
                 }
                 if self.isFullScreen {return}
-                let type = self.playerModel.btvPlayType
+                let type = self.viewModel.btvPlayType
                 let time = self.viewModel.continuousTime
-                var changeType = type
+               
                 self.appSceneObserver.useBottomImmediately  = false
                 self.pagePresenter.orientationLock(lockOrientation: .landscape)
                 self.isFullScreen = true
+                var changeType:BtvPlayType? = nil
                 switch type {
                 case .preview(let value,_):
                     changeType = .preview(value,isList:false)
+                case .vod(let value, let title):
+                    changeType = .vod(value,title)
+                    self.playerTitle = title
                 default: break
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
@@ -110,9 +117,22 @@ struct PagePreviewList: PageView {
                         type: changeType ?? .preview("", isList: false),
                         autoPlay: true,
                         continuousTime: time)
+                    
                 }
             }
-            
+            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                if ani {
+                    if self.isInit {return}
+                    DispatchQueue.main.async {
+                        self.isInit = true
+                        if let block = self.block {
+                            self.viewModel.update(data: block, key: nil)
+                        } else {
+                            self.viewModel.update(menuId:self.menuId, key:nil)
+                        }
+                    }
+                }
+            }
             .onAppear{
                 self.safeAreaTop = self.sceneObserver.safeAreaTop
                 guard let obj = self.pageObject  else { return }
@@ -126,7 +146,7 @@ struct PagePreviewList: PageView {
                 }
                 if let data = obj.getParamValue(key: .data) as? BlockData {
                     self.title = data.name
-                    self.menuId = data.menuId
+                    self.block = data
                 } else {
                     self.menuId = obj.getParamValue(key: .id) as? String
                     

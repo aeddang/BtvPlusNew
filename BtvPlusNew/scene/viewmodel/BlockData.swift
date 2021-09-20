@@ -226,6 +226,7 @@ class BlockData:InfinityData, ObservableObject{
                  keyword:String?, max:Int = 30, usePrice:Bool = true) -> BlockData{
         name = title
         uiType = .video
+        cardType = (searchType == .clip) ? .clip : .video
         self.usePrice = usePrice
         self.searchType = searchType
         self.allVideos = datas

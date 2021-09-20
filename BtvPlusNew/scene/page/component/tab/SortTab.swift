@@ -25,12 +25,15 @@ struct SortTab: PageComponent{
     var selectedMenuIdx:Int = -1
     var menus:[String]? = nil
     var menuAction: ((_ menuIdx:Int) -> Void)? = nil
+    
+    var sortOption:[EuxpNetwork.SortType] = [
+        .popularity,.latest,.title,.price
+    ]
+    
     let action: (_ type:EuxpNetwork.SortType) -> Void
     
     @State var sortType:EuxpNetwork.SortType = Self.finalSortType
-    let sortOption:[EuxpNetwork.SortType] = [
-        .popularity,.latest,.title,.price
-    ]
+    
     
     
     var body: some View {
@@ -89,7 +92,9 @@ struct SortTab: PageComponent{
             }
         }
         .onAppear{
-            
+            self.sortType = sortOption.first(where: {$0 == Self.finalSortType}) == nil
+                ?  sortOption.first ?? .popularity
+                : Self.finalSortType
         }
     }//body
 }

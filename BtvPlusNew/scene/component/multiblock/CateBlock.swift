@@ -363,6 +363,8 @@ struct CateBlock: PageComponent{
     @State var tvs:[TvDataSet] = []
     
     @State var isPaging:Bool = false
+    
+    @State var isInitSortAble:Bool = true
     @State var isSortAble:Bool = false
     @State var useTop:Bool = false
     
@@ -400,7 +402,7 @@ struct CateBlock: PageComponent{
         if datas.isEmpty {return nil}
         let type = self.sortType
         switch type {
-        case .latest, .title, .price: return nil
+        //case .latest, .title, .price: return nil
         default :
             self.totalCount = datas.count
             self.isSortAble = false
@@ -415,7 +417,7 @@ struct CateBlock: PageComponent{
         guard let datas = data.allVideos else {return nil}
         if datas.isEmpty {return nil}
         switch self.sortType {
-        case .latest , .title, .price: return nil
+        //case .latest , .title, .price: return nil
         default :
             self.totalCount = datas.count
             self.isSortAble = false
@@ -440,18 +442,21 @@ struct CateBlock: PageComponent{
         self.resetSize()
         withAnimation{ self.isError = false }
         self.infinityScrollModel.onLoad()
-        if let datas = self.setupSortAble(poster:self.viewModel.data) {
-            self.setPosterSets(loadedDatas: datas)
-            return
-        }
-        if let datas = self.setupSortAble(video:self.viewModel.data) {
-            self.setVideoSets(loadedDatas: datas)
-            return
-        }
-        
-        if let datas = self.setupSortAble(tv:self.viewModel.data)  {
-            self.setTvSets(loadedDatas: datas)
-            return
+        if self.isInitSortAble {
+            if let datas = self.setupSortAble(poster:self.viewModel.data) {
+                self.setPosterSets(loadedDatas: datas)
+                return
+            }
+            if let datas = self.setupSortAble(video:self.viewModel.data) {
+                self.setVideoSets(loadedDatas: datas)
+                return
+            }
+            
+            if let datas = self.setupSortAble(tv:self.viewModel.data)  {
+                self.setTvSets(loadedDatas: datas)
+                return
+            }
+            self.isInitSortAble = false
         }
        
         if let api = self.viewModel.data?.getRequestApi(

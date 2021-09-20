@@ -19,10 +19,10 @@ class PlayData:InfinityData,ObservableObject{
     private(set) var date: String? = nil
     private(set) var srisId: String? = nil
     private(set) var epsdId: String? = nil
-    private(set) var epsdRsluId: String? = nil
+    fileprivate(set) var epsdRsluId: String? = nil
     private(set) var summary: String? = nil
-    fileprivate(set) var isLike:LikeStatus? = nil
-    fileprivate(set) var isAlram:Bool = false
+    var isLike:LikeStatus? = nil
+    var isAlram:Bool = false
     private(set) var isPlayAble:Bool = false
     private(set) var restrictAgeIcon:String? = nil
     private(set) var provider: String? = nil
@@ -36,6 +36,8 @@ class PlayData:InfinityData,ObservableObject{
     private(set) var count: String? = nil
     private(set) var synopsisType:SynopsisType = .title
     private(set) var synopsisData:SynopsisData? = nil
+    fileprivate(set) var synopsisModel:SynopsisModel? = nil
+    fileprivate(set) var episodeViewerData:EpisodeViewerData? = nil
     var playTime:Double = 0
     @Published private(set) var isUpdated: Bool = false
         {didSet{ if isUpdated { isUpdated = false} }}
@@ -103,7 +105,7 @@ class PlayData:InfinityData,ObservableObject{
         return self
     }
     
-    func setData(data:ContentItem, cardType:BlockData.CardType = .video, idx:Int = -1) -> PlayData {
+    func setData(data:ContentItem, idx:Int = -1) -> PlayData {
         isClip = true
         count = data.brcast_tseq_nm
         title = data.title
@@ -122,37 +124,17 @@ class PlayData:InfinityData,ObservableObject{
         return self
     }
     
-    func setData(data:PackageContentsItem, prdPrcId:String, cardType:BlockData.CardType = .video ,idx:Int = -1) -> PlayData {
+    func setData(data:VideoData, idx:Int = -1) -> PlayData {
         isClip = true
+        count = data.count
         title = data.title
         subTitle = data.title
-        watchLv = data.wat_lvl_cd?.toInt() ?? 0
-        isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
-        synopsisType = SynopsisType(value: data.synon_typ_cd)
-        image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: ListItem.video.size, isAdult: self.isAdult)
         index = idx
-        epsdId = data.epsd_id
-        srisId = data.sris_id
-        synopsisData = .init(
-            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
-            epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: prdPrcId , kidZone:nil)
-        
-        return self
-    }
-    
-    func setData(data:CategoryClipItem, searchType:BlockData.SearchType, idx:Int = -1) -> PlayData {
-        isClip = true
-        count = data.no_epsd
-        title = data.title
-        subTitle = data.title_sris
-        index = idx
-        epsdId = data.epsd_id
-        watchLv = data.level?.toInt() ?? 0
-        image = ImagePath.thumbImagePath(filePath: data.thumb, size: ListItem.video.size, isAdult: self.isAdult)
-        synopsisType = SynopsisType(value: data.synon_typ_cd)
-        synopsisData = .init(
-            srisId: nil, searchType: EuxpNetwork.SearchType.prd,
-            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
+        epsdId = data.epsdId
+        watchLv = data.watchLv
+        image = data.image
+        synopsisType =  data.synopsisType
+        synopsisData = data.synopsisData
         return self
     }
     
@@ -222,8 +204,6 @@ extension PlayItem{
         return (width * 9 / 16) + (isClip ? self.bottomSizeClip : self.bottomSize)
     }
 }
-
-
 
 
 struct PlayItem: PageView {
@@ -338,14 +318,13 @@ struct PlayItem: PageView {
                             PlayItemInfo(data: self.data)
                         }
                     }
-                    .padding(.top, SystemEnvironment.isTablet ? 0 : Dimen.margin.lightExtra)
-                    .padding(.all, SystemEnvironment.isTablet ? Dimen.margin.thin : 0)
+                    .padding(.top, (SystemEnvironment.isTablet || self.data.isClip) ? 0 : Dimen.margin.lightExtra)
+                    .padding(.all, (SystemEnvironment.isTablet || self.data.isClip) ? Dimen.margin.thin : 0)
                     .frame(height:self.data.isClip ? Self.bottomSizeClip : Self.bottomSize)
                 }
             }
         }
-        
-        .background(SystemEnvironment.isTablet ? Color.app.blueLight : Color.transparent.clear)
+        .background((SystemEnvironment.isTablet || self.data.isClip) ? Color.app.blueLight : Color.transparent.clear)
         .opacity(self.isSelected ? 1.0 : 0.5)
         .onReceive(self.viewModel.$currentPlayData){ selectData in
             guard let selectData = selectData else {
@@ -400,15 +379,13 @@ struct PlayItem: PageView {
         .onReceive(self.dataProvider.$result){ res in
             guard let res = res else { return }
             if !self.isSelected {return}
-            guard let epsdRsluId = data.epsdRsluId else { return }
-            if !res.id.hasPrefix(epsdRsluId) { return }
-            self.setupPreview(res: res)
+            if !res.id.hasPrefix( data.id) { return }
+            self.loaded(res: res)
         }
         .onReceive(self.dataProvider.$error){ err in
             guard let err = err else { return }
             if !self.isSelected {return}
-            guard let epsdRsluId = data.epsdRsluId else { return }
-            if !err.id.hasPrefix(epsdRsluId) { return }
+            if !err.id.hasPrefix(data.id) { return }
         }
         .onReceive(self.data.$isUpdated){ updated in
             if updated {
@@ -438,7 +415,10 @@ struct PlayItem: PageView {
     private func load(){
         self.isRecovery = false
         if !self.isSelected { return }
-        guard let epsdRsluId = data.epsdRsluId else { return }
+        if self.pairing.status != .pairing && self.data.isClip {
+            self.isPlay = false
+            return
+        }
         let watchLv = self.data.watchLv
         if watchLv >= 19 {
             if self.pairing.status != .pairing {
@@ -459,18 +439,40 @@ struct PlayItem: PageView {
             }
         }
         withAnimation{ self.isLoading = true }
-        self.playerModel.currentIdx = self.data.index
-        self.playerModel.currentEpsdRsluId = self.data.epsdRsluId
-        if pairing.status == .pairing {
-            dataProvider.requestData(q: .init(id:epsdRsluId, type: .getPreview(epsdRsluId, self.pairing.hostDevice)))
+        if self.data.isClip {
+            self.loadClip()
+        } else {
+            self.loadPreview()
         }
-        else {
-            dataProvider.requestData(q: .init(id:epsdRsluId, type: .getPreplay(epsdRsluId, false)))
+    }
+    private func loaded(res:ApiResultResponds){
+        if self.data.isClip {
+            self.setupClip(res: res)
+        } else {
+            self.setupPreview(res: res)
         }
     }
     
-    private func setupPreview(res:ApiResultResponds){
+    
+    private func loadPreview(){
         guard let epsdRsluId = data.epsdRsluId else { return }
+        //self.playerModel.currentIdx = self.data.index
+        //self.playerModel.currentEpsdRsluId = self.data.epsdRsluId
+        if pairing.status == .pairing {
+            dataProvider.requestData(q: .init(id:data.id, type: .getPreview(epsdRsluId, self.pairing.hostDevice)))
+        }
+        else {
+            dataProvider.requestData(q: .init(id:data.id, type: .getPreplay(epsdRsluId, false)))
+        }
+    }
+    
+    
+    private func setupPreview(res:ApiResultResponds){
+        guard let epsdRsluId = data.epsdRsluId else {
+            PageLog.d("error epsdRsluId", tag: self.tag)
+            self.isPlay = false
+            return
+        }
         guard let data = res.data as? Preview else {
             PageLog.d("error Preview", tag: self.tag)
             self.isPlay = false
@@ -497,6 +499,99 @@ struct PlayItem: PageView {
     }
     
     
+    private func loadClip(){
+        
+        guard let synop = data.synopsisData else {
+            self.isPlay = false
+            return
+        }
+        if data.synopsisModel == nil {
+            dataProvider.requestData(q: .init(id:data.id, type: .getSynopsis(synop)))
+        } else {
+            loadClipPlay()
+        }
+    }
+    
+    private func loadClipPlay(){
+        guard let epsdRsluId = data.epsdRsluId else {
+            self.isPlay = false
+            return
+        }
+        dataProvider.requestData(q: .init(id:data.id, type: .getPlay(epsdRsluId)))
+    }
+    
+    private func setupClip(res:ApiResultResponds){
+        switch res.type {
+        case .getSynopsis:
+            guard let data = res.data as? Synopsis else { return }
+            self.setupSynopsis(data)
+            loadClipPlay()
+        case .getPlay:
+            guard let data = res.data as? Play else { return }
+            self.setupPlay(data)
+        default: break
+        }
+    }
+    
+    private func setupSynopsis (_ data:Synopsis) {
+        let model = SynopsisModel(type: .seasonFirst).setData(data: data)
+        self.data.synopsisModel = model
+        self.data.epsdRsluId = model.epsdRsluId
+        if let content = data.contents {
+            self.data.episodeViewerData = EpisodeViewerData().setData(data: content )
+        }
+    }
+    
+    private func setupPlay (_ data:Play){
+        if data.result != ApiCode.success {
+            PageLog.d("fail Play", tag: self.tag)
+            self.isPlay = false
+            return
+        }
+        guard let dataInfo = data.CTS_INFO else {
+            PageLog.d("error PlayInfo", tag: self.tag)
+            self.isPlay = false
+            return
+        }
+        if let synopsis = self.data.synopsisModel {
+            guard let epsdRsluId = synopsis.epsdRsluId else {
+                PageLog.d("error epsdRsluId", tag: self.tag)
+                self.isPlay = false
+                return
+            }
+            var synopsisPlayType:SynopsisPlayType = .unknown
+            if synopsis.originEpsdId?.isEmpty == false, let fullVod = synopsis.originEpsdId {
+                synopsisPlayType = .clip(nil, SynopsisData(
+                    srisId: self.data.synopsisData?.srisId,
+                    searchType: .prd,
+                    epsdId: fullVod,
+                    synopType: self.data.synopsisData?.synopType ?? .none
+                ))
+            } else {
+                synopsisPlayType = .clip()
+            }
+           
+            //let prerollData = SynopsisPrerollData()
+                //.setData(data: synopsis, playType: self.synopsisPlayType, epsdRsluId: self.epsdRsluId)
+            let playerData = SynopsisPlayerData()
+                .setData(type: synopsisPlayType, synopsis: synopsis)
+            
+            DispatchQueue.main.async {
+                self.playerModel
+                    .setData(synopsisPlayData: playerData)
+                    .setData(data: dataInfo,
+                             type: .vod(epsdRsluId,self.data.episodeViewerData?.episodeSubTitle),
+                             autoPlay: true,
+                             continuousTime: self.data.playTime)
+            }
+        } else {
+            PageLog.d("error synopsisModel", tag: self.tag)
+            self.isPlay = false
+        }
+    }
+    
+    
+    
     @State private var autoPlayer:AnyCancellable?
     private func autoLoad(){
         self.isPlay = false
@@ -516,158 +611,7 @@ struct PlayItem: PageView {
 }
 
 
-struct PlayItemScreen: PageView {
-    @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var sceneObserver:PageSceneObserver
-    @EnvironmentObject var dataProvider:DataProvider
-    @EnvironmentObject var pairing:Pairing
-    @EnvironmentObject var setup:Setup
-    @ObservedObject var pageObservable:PageObservable 
-    @ObservedObject var playerModel: BtvPlayerModel
-    var data:PlayData
-    var isSelected:Bool
-    var isRecovery:Bool
-    var isPlay:Bool = false
-    var isLoading:Bool = false
-    var action:()->Void
-    
-    var body: some View {
-        ZStack{
-            if self.isSelected && !self.isRecovery{
-                SimplePlayer(
-                    pageObservable:self.pageObservable,
-                    viewModel:self.playerModel
-                )
-                .modifier(MatchParent())
-                
-            }
-            if !self.isPlay || !self.isSelected || self.isLoading || self.isRecovery {
-                if self.data.image == nil {
-                    Image(Asset.noImg16_9)
-                        .renderingMode(.original)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .modifier(MatchParent())
-                } else {
-                    KFImage(URL(string: self.data.image!))
-                        .resizable()
-                        .placeholder {
-                            Image(Asset.noImg16_9)
-                                .resizable()
-                        }
-                        .cancelOnDisappear(true)
-                        .loadImmediately()
-                        .aspectRatio(contentMode: .fill)
-                        .modifier(MatchParent())
-                }
-                
-                if (self.isLoading || self.isRecovery) && self.isSelected{
-                    CircularSpinner(resorce: Asset.ani.loading)
-                } else {
-                    Button(action: {
-                        self.data.reset()
-                        self.action()
-                    }) {
-                        Image(Asset.icon.thumbPlay)
-                            .renderingMode(.original).resizable()
-                            .scaledToFit()
-                            .frame(width: Dimen.icon.heavyExtra, height: Dimen.icon.heavyExtra)
-                    }
-                    .buttonStyle(BorderlessButtonStyle())
-                }
-            }
-            
-        }
-    }
-}
 
-struct PlayItemInfo: PageView {
-    var data:PlayData
-    var body: some View {
-        if !data.isClip {
-            HStack(spacing: SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin){
-                if self.data.date != nil {
-                    Text(self.data.date!)
-                        .modifier(MediumTextStyle(
-                                size: Font.size.lightExtra,
-                                color: Color.brand.primary)
-                        )
-                        .lineLimit(1)
-                }
-                if let icon = data.ppmIcon {
-                    KFImage(URL(string: icon))
-                        .resizable()
-                        .cancelOnDisappear(true)
-                        .loadImmediately()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: Dimen.icon.tinyUltra)
-                    
-                }else if self.data.provider != nil {
-                    Text(self.data.provider!)
-                        .modifier(BoldTextStyle(
-                                size: Font.size.lightExtra,
-                                    color: Color.app.white)
-                        )
-                        .lineLimit(1)
-                }
-                if self.data.restrictAgeIcon != nil {
-                    Image( self.data.restrictAgeIcon! )
-                        .renderingMode(.original).resizable()
-                        .scaledToFit()
-                        .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
-                }
-                
-            }
-            .padding(.top, SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.light)
-            if let summary = self.data.summary {
-                Text(summary)
-                    .modifier(MediumTextStyle(size: Font.size.thin, color: Color.app.greyMedium))
-                    .lineLimit(3)
-                    .multilineTextAlignment(.leading)
-                    .padding(.top, Dimen.margin.thin)
-            }
-        } else {
-            Text(self.data.fullTitle)
-                .modifier(BoldTextStyle(
-                        size: Font.size.regular,
-                            color: Color.app.white)
-                )
-                .lineLimit(2)
-                .padding(.top, SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.light)
-            if let subTitle = self.data.subTitle {
-                Text(subTitle)
-                    .modifier(MediumTextStyle(
-                            size: Font.size.lightExtra,
-                            color: Color.brand.primary)
-                    )
-                    .lineLimit(1)
-            }
-        }
-        
-    }
-}
-
-struct PlayItemFunction: PageView {
-    var data:PlayData
-    var isInit:Bool
-    @Binding var isLike:LikeStatus?
-    @Binding var isAlram:Bool?
-  
-    var body: some View {
-        if self.data.srisId != nil && self.isInit {
-            LikeButton(srisId: self.data.srisId!, isLike: self.$isLike, useText:false, isThin:true){ value in
-                self.data.isLike = value
-            }
-            .buttonStyle(BorderlessButtonStyle())
-            if self.data.notificationData != nil {
-                AlramButton(data: self.data.notificationData!, isAlram: self.$isAlram){ value in
-                    self.data.isAlram = value
-                }
-                .buttonStyle(BorderlessButtonStyle())
-            }
-        }
-    }
-}
 
 
 

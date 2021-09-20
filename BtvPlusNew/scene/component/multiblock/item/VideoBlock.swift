@@ -67,13 +67,20 @@ struct VideoBlock:BlockProtocol, PageComponent {
                             textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
                         ){_ in
                             self.sendLog(self.naviLogManager)
-                            self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(data.dataType == .watched ? .watchedList : .categoryList)
-                                    .addParam(key: .data, value: data)
-                                    .addParam(key: .type, value: CateBlock.ListType.video)
-                                    .addParam(key: .subType, value:data.cardType)
-                                    .addParam(key: .isFree, value:!data.usePrice)
-                            )
+                            if data.cardType == .clip || data.videos?.first?.isClip == true{
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(.previewList)
+                                        .addParam(key: .data, value: data)
+                                )
+                            } else {
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(data.dataType == .watched ? .watchedList : .categoryList)
+                                        .addParam(key: .data, value: data)
+                                        .addParam(key: .type, value: CateBlock.ListType.video)
+                                        .addParam(key: .subType, value:data.cardType)
+                                        .addParam(key: .isFree, value:!data.usePrice)
+                                )
+                            }
                         }
                     }
                 }

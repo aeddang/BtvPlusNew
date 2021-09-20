@@ -272,9 +272,9 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate , Identi
     }
     
     func playInit(duration:Double){
-        if self.initTime > 0  {
-            let diff = duration - self.initTime
-            if diff >= 1 {
+        if self.initTime > 0 && duration > 0 {
+            let pct = self.initTime / duration
+            if pct < Double(MetvNetwork.maxWatchedProgress) {
                 seek(initTime)
             }
         }

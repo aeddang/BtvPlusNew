@@ -132,6 +132,8 @@ extension PageSynopsis {
     
     private func preplayCompleted(){
         PageLog.d("prevplayCompleted", tag: self.tag)
+        if self.firstPurchase { return }
+        self.firstPurchase = true
         self.continueVod()
     }
     
@@ -153,8 +155,6 @@ extension PageSynopsis {
             return
         }
         if self.hasAuthority == false {
-            if self.firstPurchase { return }
-            self.firstPurchase = true
             self.purchaseConfirm()
         }
     }

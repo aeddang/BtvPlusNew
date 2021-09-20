@@ -229,6 +229,8 @@ struct BtvPlayer: PageComponent{
                     ComponentLog.d("continuousProgress play" , tag: self.tag)
                 }
                 if let progressTime = self.viewModel.continuousProgressTime {
+                    let pct = progressTime/d
+                    if pct > Double(MetvNetwork.maxWatchedProgress) {return}
                     self.viewModel.event = .seekTime(progressTime)
                     self.viewModel.continuousProgressTime = nil
                     ComponentLog.d("continuousProgressTime play" , tag: self.tag)

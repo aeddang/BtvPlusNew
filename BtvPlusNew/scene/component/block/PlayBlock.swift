@@ -13,6 +13,7 @@ class PlayBlockModel: PageDataProviderModel {
     private(set) var dataType:BlockData.DataType = .grid
     private(set) var key:String? = nil
     private(set) var menuId:String? = nil
+    private(set) var isClip:Bool = false
     fileprivate(set) var continuousTime:Double? = nil
     
     
@@ -310,11 +311,14 @@ struct PlayBlock: PageComponent{
         self.playerModel.event = .pause
         self.viewModel.currentPlayData = nil
         self.onPlaytimeChanged(t:self.playerModel.time)
+        let playTime = self.selectedData?.playTime
+        let playData = self.playerModel.playData
+        self.playerModel.reset()
+        self.viewModel.continuousTime =  playTime
+        self.viewModel.fullPlayData = playData
         self.pagePresenter.fullScreenEnter(isLock: true, changeOrientation: .landscape)
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            let playTime = self.selectedData?.playTime
-            self.viewModel.continuousTime =  playTime
-            self.viewModel.fullPlayData = self.playerModel.playData
             self.isHold = false
         }
     }
@@ -551,7 +555,8 @@ struct PlayBlock: PageComponent{
     private func getRange()-> CGFloat {
         return PlayItem.getListRange(
             width: self.sceneObserver.screenSize.width,
-            sceneOrientation: self.sceneOrientation)
+            sceneOrientation: self.sceneOrientation,
+            isClip: self.viewModel.isClip)
             + self.spacing
     }
     private func onResetFocusChange(willFocus:Int){

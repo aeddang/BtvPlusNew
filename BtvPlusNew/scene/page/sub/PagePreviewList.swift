@@ -96,7 +96,6 @@ struct PagePreviewList: PageView {
                 let type = self.playerModel.btvPlayType
                 let time = self.viewModel.continuousTime
                 var changeType = type
-                self.playerModel.reset()
                 self.appSceneObserver.useBottomImmediately  = false
                 self.pagePresenter.orientationLock(lockOrientation: .landscape)
                 self.isFullScreen = true
@@ -111,7 +110,6 @@ struct PagePreviewList: PageView {
                         type: changeType ?? .preview("", isList: false),
                         autoPlay: true,
                         continuousTime: time)
-                    
                 }
             }
             

@@ -172,7 +172,7 @@ struct CardItem: PageView {
                                 isStrong : true,
                                 isFill: false,
                                 action:{ ck in
-                                    if !ck {
+                                    if ck {
                                         self.sendLog(action: .clickOkPointCheck)
                                         let card = RegistCardData( 
                                             no: self.data.ocb?.cardNo ?? "",
@@ -184,7 +184,6 @@ struct CardItem: PageView {
                                                 .addParam(key: .type, value: PageConfirmNumber.InputType.okcashMaster(card))
                                                
                                         )
-                                        
                                     }
                                 }
                             )

@@ -12,6 +12,7 @@ import struct Kingfisher.KFImage
 class PlayData:InfinityData,ObservableObject{
     private(set) var image: String? = nil
     private(set) var title: String? = nil
+    
     private(set) var watchLv:Int = 0
     private(set) var isAdult:Bool = false
     private(set) var openDate: String? = nil
@@ -29,6 +30,12 @@ class PlayData:InfinityData,ObservableObject{
     private(set) var notificationData: NotificationData? = nil
     private(set) var notiType: String? = nil
     private(set) var isCompleted:Bool = false
+    
+    private(set) var isClip:Bool = false
+    private(set) var subTitle: String? = nil
+    private(set) var count: String? = nil
+    private(set) var synopsisType:SynopsisType = .title
+    private(set) var synopsisData:SynopsisData? = nil
     var playTime:Double = 0
     @Published private(set) var isUpdated: Bool = false
         {didSet{ if isUpdated { isUpdated = false} }}
@@ -96,6 +103,59 @@ class PlayData:InfinityData,ObservableObject{
         return self
     }
     
+    func setData(data:ContentItem, cardType:BlockData.CardType = .video, idx:Int = -1) -> PlayData {
+        isClip = true
+        count = data.brcast_tseq_nm
+        title = data.title
+        subTitle = data.title
+        image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: ListItem.video.size, isAdult: self.isAdult)
+        watchLv = data.wat_lvl_cd?.toInt() ?? 0
+        isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
+        index = idx
+        epsdId = data.epsd_id
+        //epsdRsluId = data.epsd_rslu_id
+        srisId = data.sris_id
+        synopsisType = SynopsisType(value: data.synon_typ_cd)
+        synopsisData = .init(
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
+            epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: data.prd_prc_id ,kidZone:data.kids_yn)
+        return self
+    }
+    
+    func setData(data:PackageContentsItem, prdPrcId:String, cardType:BlockData.CardType = .video ,idx:Int = -1) -> PlayData {
+        isClip = true
+        title = data.title
+        subTitle = data.title
+        watchLv = data.wat_lvl_cd?.toInt() ?? 0
+        isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
+        synopsisType = SynopsisType(value: data.synon_typ_cd)
+        image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: ListItem.video.size, isAdult: self.isAdult)
+        index = idx
+        epsdId = data.epsd_id
+        srisId = data.sris_id
+        synopsisData = .init(
+            srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
+            epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: prdPrcId , kidZone:nil)
+        
+        return self
+    }
+    
+    func setData(data:CategoryClipItem, searchType:BlockData.SearchType, idx:Int = -1) -> PlayData {
+        isClip = true
+        count = data.no_epsd
+        title = data.title
+        subTitle = data.title_sris
+        index = idx
+        epsdId = data.epsd_id
+        watchLv = data.level?.toInt() ?? 0
+        image = ImagePath.thumbImagePath(filePath: data.thumb, size: ListItem.video.size, isAdult: self.isAdult)
+        synopsisType = SynopsisType(value: data.synon_typ_cd)
+        synopsisData = .init(
+            srisId: nil, searchType: EuxpNetwork.SearchType.prd,
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
+        return self
+    }
+    
     @discardableResult
     func setData(data:NotificationVodItem?) -> PlayData {
         if let noti = data {
@@ -109,6 +169,18 @@ class PlayData:InfinityData,ObservableObject{
         }
         self.isUpdated = true
         return self
+    }
+    
+    var fullTitle:String {
+        get{
+            guard let title = self.title else {return ""}
+            if let count = self.count {
+                if count.isEmpty {return title}
+                return count + String.app.broCount + " " + title
+            } else {
+                return title
+            }
+        }
     }
    
     
@@ -142,11 +214,12 @@ struct PlayList: PageComponent{
 extension PlayItem{
     static let listSize: CGSize = CGSize(width: 520, height: 292)
     static let bottomSize: CGFloat = SystemEnvironment.isTablet ? 199 : 146
-    static func getListRange(width:CGFloat, sceneOrientation :SceneOrientation)->CGFloat{
+    static let bottomSizeClip: CGFloat = SystemEnvironment.isTablet ? 140 : 102
+    static func getListRange(width:CGFloat, sceneOrientation :SceneOrientation, isClip:Bool)->CGFloat{
         if SystemEnvironment.isTablet && sceneOrientation == .landscape {
             return listSize.height
         }
-        return (width * 9 / 16) + self.bottomSize
+        return (width * 9 / 16) + (isClip ? self.bottomSizeClip : self.bottomSize)
     }
 }
 
@@ -191,7 +264,7 @@ struct PlayItem: PageView {
                     .frame(width: Self.listSize.width, height: Self.listSize.height)
                     .clipped()
                     VStack(alignment: .leading, spacing:0){
-                        if let title = self.data.title {
+                        if !self.data.isClip , let title = self.data.title {
                             Text(title)
                                 .modifier(BoldTextStyle(
                                         size: Font.size.large,
@@ -200,14 +273,16 @@ struct PlayItem: PageView {
                                 .lineLimit(1)
                         }
                         PlayItemInfo(data: self.data)
-                        HStack(spacing:SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin){
-                            PlayItemFunction(
-                                data: self.data,
-                                isInit: self.isInit,
-                                isLike: self.$isLike,
-                                isAlram: self.$isAlram)
+                        if !self.data.isClip {
+                            HStack(spacing:SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin){
+                                PlayItemFunction(
+                                    data: self.data,
+                                    isInit: self.isInit,
+                                    isLike: self.$isLike,
+                                    isAlram: self.$isAlram)
+                            }
+                            .padding(.top, Dimen.margin.light)
                         }
-                        .padding(.top, Dimen.margin.light)
                     }
                     .padding(.all, Dimen.margin.thin)
                     .modifier(MatchParent())
@@ -236,34 +311,36 @@ struct PlayItem: PageView {
                     HStack(alignment: .top, spacing:0){
                         Spacer().modifier(MatchVertical(width: 0))
                         VStack(alignment: .leading, spacing:0){
-                            HStack(spacing:SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin){
-                                if let title = self.data.title {
-                                    VStack(alignment: .leading, spacing:0){
-                                        Text(title)
-                                            .modifier(BoldTextStyle(
-                                                    size: Font.size.large,
-                                                    color: Color.app.white)
-                                            )
-                                            .lineLimit(1)
-                                        
+                            if !self.data.isClip {
+                                HStack(spacing:SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin){
+                                    if let title = self.data.title {
+                                        VStack(alignment: .leading, spacing:0){
+                                            Text(title)
+                                                .modifier(BoldTextStyle(
+                                                        size: Font.size.large,
+                                                        color: Color.app.white)
+                                                )
+                                                .lineLimit(1)
+                                            
+                                            Spacer().modifier(MatchHorizontal(height: 0))
+                                        }
+                                        .modifier(MatchHorizontal(height: Font.size.large))
+                                    } else{
                                         Spacer().modifier(MatchHorizontal(height: 0))
                                     }
-                                    .modifier(MatchHorizontal(height: Font.size.large))
-                                } else{
-                                    Spacer().modifier(MatchHorizontal(height: 0))
+                                    PlayItemFunction(
+                                        data: self.data,
+                                        isInit: self.isInit,
+                                        isLike: self.$isLike,
+                                        isAlram: self.$isAlram)
                                 }
-                                PlayItemFunction(
-                                    data: self.data,
-                                    isInit: self.isInit,
-                                    isLike: self.$isLike,
-                                    isAlram: self.$isAlram)
                             }
                             PlayItemInfo(data: self.data)
                         }
                     }
                     .padding(.top, SystemEnvironment.isTablet ? 0 : Dimen.margin.lightExtra)
                     .padding(.all, SystemEnvironment.isTablet ? Dimen.margin.thin : 0)
-                    .frame(height:Self.bottomSize)
+                    .frame(height:self.data.isClip ? Self.bottomSizeClip : Self.bottomSize)
                 }
             }
         }
@@ -507,48 +584,66 @@ struct PlayItemScreen: PageView {
 struct PlayItemInfo: PageView {
     var data:PlayData
     var body: some View {
-        HStack(spacing: SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin){
-            if self.data.date != nil {
-                Text(self.data.date!)
+        if !data.isClip {
+            HStack(spacing: SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin){
+                if self.data.date != nil {
+                    Text(self.data.date!)
+                        .modifier(MediumTextStyle(
+                                size: Font.size.lightExtra,
+                                color: Color.brand.primary)
+                        )
+                        .lineLimit(1)
+                }
+                if let icon = data.ppmIcon {
+                    KFImage(URL(string: icon))
+                        .resizable()
+                        .cancelOnDisappear(true)
+                        .loadImmediately()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: Dimen.icon.tinyUltra)
+                    
+                }else if self.data.provider != nil {
+                    Text(self.data.provider!)
+                        .modifier(BoldTextStyle(
+                                size: Font.size.lightExtra,
+                                    color: Color.app.white)
+                        )
+                        .lineLimit(1)
+                }
+                if self.data.restrictAgeIcon != nil {
+                    Image( self.data.restrictAgeIcon! )
+                        .renderingMode(.original).resizable()
+                        .scaledToFit()
+                        .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
+                }
+                
+            }
+            .padding(.top, SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.light)
+            if let summary = self.data.summary {
+                Text(summary)
+                    .modifier(MediumTextStyle(size: Font.size.thin, color: Color.app.greyMedium))
+                    .lineLimit(3)
+                    .multilineTextAlignment(.leading)
+                    .padding(.top, Dimen.margin.thin)
+            }
+        } else {
+            Text(self.data.fullTitle)
+                .modifier(BoldTextStyle(
+                        size: Font.size.regular,
+                            color: Color.app.white)
+                )
+                .lineLimit(2)
+                .padding(.top, SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.light)
+            if let subTitle = self.data.subTitle {
+                Text(subTitle)
                     .modifier(MediumTextStyle(
                             size: Font.size.lightExtra,
                             color: Color.brand.primary)
                     )
                     .lineLimit(1)
             }
-            if let icon = data.ppmIcon {
-                KFImage(URL(string: icon))
-                    .resizable()
-                    .cancelOnDisappear(true)
-                    .loadImmediately()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(height: Dimen.icon.tinyUltra)
-                
-            }else if self.data.provider != nil {
-                Text(self.data.provider!)
-                    .modifier(BoldTextStyle(
-                            size: Font.size.lightExtra,
-                                color: Color.app.white)
-                    )
-                    .lineLimit(1)
-            }
-            if self.data.restrictAgeIcon != nil {
-                Image( self.data.restrictAgeIcon! )
-                    .renderingMode(.original).resizable()
-                    .scaledToFit()
-                    .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
-            }
-            
         }
-        .padding(.top, SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.light)
         
-        if self.data.summary != nil  {
-            Text(self.data.summary!)
-                .modifier(MediumTextStyle(size: Font.size.thin, color: Color.app.greyMedium))
-                .lineLimit(3)
-                .multilineTextAlignment(.leading)
-                .padding(.top, Dimen.margin.thin)
-        }
     }
 }
 

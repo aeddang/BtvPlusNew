@@ -433,7 +433,7 @@ open class CustomPlayerViewController: UIViewController, CustomPlayerController 
             CustomAVPlayerController.currentPlayer.append(id)
             self.onViewDidAppear(animated)
         }
-        //self.becomeFirstResponder()
+        self.becomeFirstResponder()
     }
 
     open override func viewWillDisappear(_ animated: Bool) {
@@ -443,7 +443,7 @@ open class CustomPlayerViewController: UIViewController, CustomPlayerController 
             CustomAVPlayerController.currentPlayer.remove(at: find)
             self.onViewWillDisappear(animated)
         }
-        // self.resignFirstResponder()
+         self.resignFirstResponder()
     }
     
     open override func remoteControlReceived(with event: UIEvent?) {
@@ -460,13 +460,13 @@ open class CustomPlayerViewController: UIViewController, CustomPlayerController 
     
     func run(){
         guard let player = self.playerScreenView.player else {return}
-        //DispatchQueue.global(qos: .background).async {
-        self.currentTimeObservser = player.addPeriodicTimeObserver(
-            forInterval: CMTimeMakeWithSeconds(1,preferredTimescale: Int32(NSEC_PER_SEC)),
-            queue: nil){ time in
-            self.playerDelegate?.onPlayerTimeChange(self, t:time)
+        DispatchQueue.global(qos: .background).async {
+            self.currentTimeObservser = player.addPeriodicTimeObserver(
+                forInterval: CMTimeMakeWithSeconds(1,preferredTimescale: Int32(NSEC_PER_SEC)),
+                queue: .main){ time in
+                self.playerDelegate?.onPlayerTimeChange(self, t:time)
+            }
         }
-    
         player.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.new], context: nil)
         //player.addObserver(self, forKeyPath: #keyPath(AVPlayer.reasonForWaitingToPlay), options: [.new], context: nil)
         //player.addObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status), options:[.new], context: nil)

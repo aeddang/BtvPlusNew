@@ -196,6 +196,7 @@ class VideoData:InfinityData{
         title = data.title
         index = idx
         epsdId = data.epsd_id
+        watchLv = data.level?.toInt() ?? 0
         tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         originImage = data.thumb
         image = ImagePath.thumbImagePath(filePath: data.thumb, size: ListItem.video.size, isAdult: self.isAdult)

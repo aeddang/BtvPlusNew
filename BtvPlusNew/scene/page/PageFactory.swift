@@ -117,7 +117,7 @@ struct PageProvider {
              .pairingDevice, .pairingUser, .pairingManagement, .pairingEmptyDevice, .pairingGuide,
              .purchase , .webview, .webviewList, .schedule, .modifyProile,
              .adultCertification, .userCertification, .terminateStb,
-             .watchHabit, .myPurchaseTicketList, .remotecon, .playerTest,
+             .myPurchaseTicketList, .remotecon, .playerTest,
              .myRecommand, .myRegistCard, .picker:
             return  .vertical
         case .fullPlayer, .synopsisPlayer :

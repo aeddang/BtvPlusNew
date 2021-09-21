@@ -523,6 +523,7 @@
 		31CABAFB26C2022D00B4B3C3 /* NaviLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CABAFA26C2022D00B4B3C3 /* NaviLog.swift */; };
 		31CABAFD26C2043F00B4B3C3 /* NaviLogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CABAFC26C2043F00B4B3C3 /* NaviLogManager.swift */; };
 		31CABB0026C28DCC00B4B3C3 /* Navilog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CABAFF26C28DCC00B4B3C3 /* Navilog.swift */; };
+		31CC340E26F972FE00F76F0B /* QuickTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC340D26F972FE00F76F0B /* QuickTab.swift */; };
 		31D3F4CB25E3368A008FDFEC /* WebBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4CA25E3368A008FDFEC /* WebBridge.swift */; };
 		31D3F4DE25E36625008FDFEC /* PageMultiBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */; };
 		31D3F4E625E3A57A008FDFEC /* BannerBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */; };
@@ -1283,6 +1284,7 @@
 		31CABAFA26C2022D00B4B3C3 /* NaviLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaviLog.swift; sourceTree = "<group>"; };
 		31CABAFC26C2043F00B4B3C3 /* NaviLogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaviLogManager.swift; sourceTree = "<group>"; };
 		31CABAFF26C28DCC00B4B3C3 /* Navilog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navilog.swift; sourceTree = "<group>"; };
+		31CC340D26F972FE00F76F0B /* QuickTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickTab.swift; sourceTree = "<group>"; };
 		31D3F4CA25E3368A008FDFEC /* WebBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebBridge.swift; sourceTree = "<group>"; };
 		31D3F4DD25E36625008FDFEC /* PageMultiBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMultiBlock.swift; sourceTree = "<group>"; };
 		31D3F4E525E3A57A008FDFEC /* BannerBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerBlock.swift; sourceTree = "<group>"; };
@@ -2077,8 +2079,8 @@
 		3167196625FEF699005AC3D2 /* banner */ = {
 			isa = PBXGroup;
 			children = (
-				318B53A025F1DA8E0052E4E0 /* TopBannerBg.swift */,
 				318C874C25E64AA400ADDFE0 /* TopBanner.swift */,
+				318B53A025F1DA8E0052E4E0 /* TopBannerBg.swift */,
 				3167196725FEF6BE005AC3D2 /* FloatingBanner.swift */,
 				3167199A260039C8005AC3D2 /* HeaderBanner.swift */,
 			);
@@ -2917,8 +2919,6 @@
 		319B378E26B1793D001501B1 /* recommand */ = {
 			isa = PBXGroup;
 			children = (
-				31E50C6B261AA05400D0762C /* PageWatchHabit.swift */,
-				318C36B5265F216D009B7EC3 /* PageTerminateStb.swift */,
 				319B379126B17E1C001501B1 /* component */,
 				319B378F26B17958001501B1 /* PageRecommand.swift */,
 				319B379A26B19FAC001501B1 /* PageRecommandRecieve.swift */,
@@ -3344,6 +3344,8 @@
 				D51AA9E62599A24A0035CD51 /* PagePairing.swift */,
 				D568892D259C592000F2F67A /* PagePairingSetupUser.swift */,
 				310D7E2325A42B72000BE173 /* PagePairingDevice.swift */,
+				31E50C6B261AA05400D0762C /* PageWatchHabit.swift */,
+				318C36B5265F216D009B7EC3 /* PageTerminateStb.swift */,
 				D573785725A2D70B00EC571F /* PagePairingBtv.swift */,
 				315730F225B01FFF00D9A693 /* PagePairingUser.swift */,
 				31740C23261BFB310052A9C2 /* PagePairingEmptyDevice.swift */,
@@ -3975,6 +3977,7 @@
 				D56C6B68257DBAC800CF9AB8 /* BottomTab.swift */,
 				D51AA9F72599BAFB0035CD51 /* PageTab.swift */,
 				31A4A0072627F0A90065E6C6 /* TipTab.swift */,
+				31CC340D26F972FE00F76F0B /* QuickTab.swift */,
 			);
 			path = tab;
 			sourceTree = "<group>";
@@ -4684,6 +4687,7 @@
 				319C47EB26A1C06100C61EF8 /* SkeletonBlockKids.swift in Sources */,
 				31956F59269D1EE10044CF1D /* KidsCategoryList.swift in Sources */,
 				D56C6B12257DAADE00CF9AB8 /* SceneDelegate.swift in Sources */,
+				31CC340E26F972FE00F76F0B /* QuickTab.swift in Sources */,
 				D51AA9E72599A24A0035CD51 /* PagePairing.swift in Sources */,
 				D571785E2582DBF000BF2612 /* PageDataProviderContent.swift in Sources */,
 				31DD96DA26E612BD00C52133 /* BtvInsideModel.swift in Sources */,

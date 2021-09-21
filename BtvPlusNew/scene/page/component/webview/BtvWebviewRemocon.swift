@@ -59,10 +59,18 @@ extension BtvWebView{
         case WebviewMethod.requestSendMessage.rawValue :
             guard let jsonData = getRemoteData(jsonParams:jsonParams) else { return }
             let msg = jsonData["msg"] as? String ?? ""
-            let npsMessage:NpsMessage = NpsMessage().setMessage(type: .SendMsg, value: msg)
+            let phone = "01000000000"
+            let value = "mob_no=" + phone + ";msg=" + ApiUtil.string(byUrlEncoding:msg)
+            let npsMessage:NpsMessage = NpsMessage().setMessage(type: .SendMsg, value: value)
             self.dataProvider.requestData(
                 q: .init(id: self.tag, type: .sendMessage(npsMessage))
             )
+            
+        case WebviewMethod.requestNPSPush.rawValue :
+            self.dataProvider.requestData(
+                q: .init(id: self.tag, type: .pushMessage(NpsMessage()))
+            )
+            
         case WebviewMethod.requestLimitTV.rawValue :
             if self.pairing.status != .pairing {
                 self.appSceneObserver.alert = .needPairing()
@@ -100,10 +108,17 @@ extension BtvWebView{
             switch msg?.ctrlType {
             case .CHNumInput :
                 self.watchBtvCompleted(isSuccess: isSuccess )
-            case .StrInput :
+            case .SendMsg :
                 self.sendMsgBtvCompleted(isSuccess: isSuccess )
             default : break
             }
+        case .pushMessage (_) :
+            guard let data = res.data as? ResultMessage else { return }
+            //let isSuccess = data.header?.result == ApiCode.success
+            var dic:[String : Any] = [:]
+            dic["result"] = data.header?.result?.toInt() ?? ""
+            self.viewModel.request = .evaluateJavaScriptMethod("responseNPSPush", dic)
+            
         default: break
         }
     }
@@ -114,10 +129,14 @@ extension BtvWebView{
             switch msg?.ctrlType {
             case .CHNumInput :
                 self.watchBtvCompleted(isSuccess: false)
-            case .StrInput :
+            case .SendMsg :
                 self.sendMsgBtvCompleted(isSuccess: false)
             default : break
             }
+        case .pushMessage (_) :
+            var dic:[String : Any] = [:]
+            dic["result"] = ""
+            self.viewModel.request = .evaluateJavaScriptMethod("responseNPSPush", dic)
         default: break
         }
     }

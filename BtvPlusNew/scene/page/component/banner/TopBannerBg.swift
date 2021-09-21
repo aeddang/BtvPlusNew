@@ -17,7 +17,7 @@ struct TopBannerBg: PageComponent {
     var viewModel:ViewPagerModel = ViewPagerModel()
     var datas: [BannerData]
     var ratio:CGFloat = 1.0
-    
+    var useQuickMenu:Bool = false
     @State var pages: [PageViewProtocol] = []
     @State var index: Int = 0
     @State var leading:CGFloat = 0
@@ -32,31 +32,42 @@ struct TopBannerBg: PageComponent {
                 isForground : false,
                 ratio: self.ratio
                 )
+            .padding(.bottom, self.useQuickMenu ?  TopBanner.quickMenuHeight : 0)
             .modifier(MatchParent())
                 
             if self.pages.count > 1 {
-                HStack(spacing: Dimen.margin.tiny) {
-                    Spacer()
-                        .modifier(MatchVertical(width:self.leading))
-                        .background(Color.transparent.white20)
-                        .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
-                    Spacer()
-                        .modifier(MatchVertical(width: TopBanner.barWidth))
-                        .background(Color.app.white)
-                        .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
-                    Spacer()
-                        .modifier(MatchVertical(width:self.trailing))
-                        .background(Color.transparent.white20)
-                        .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
+                VStack(alignment: SystemEnvironment.isTablet ? .leading : /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 0){
+                    Spacer().modifier(MatchHorizontal(height: 0))
+                    HStack(spacing: Dimen.margin.tiny) {
+                        Spacer()
+                            .modifier(MatchVertical(width:self.leading))
+                            .background(Color.transparent.white20)
+                            .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
+                        Spacer()
+                            .modifier(MatchVertical(width: TopBanner.barWidth))
+                            .background(Color.app.white)
+                            .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
+                        Spacer()
+                            .modifier(MatchVertical(width:self.trailing))
+                            .background(Color.transparent.white20)
+                            .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
+                    }
+                    .modifier(MatchHorizontal( height:TopBanner.barHeight))
+                    if self.useQuickMenu {
+                        QuickTab()
+                            .padding(.top, TopBanner.quickMenuMarginTop)
+                    }
+                
                 }
-                .frame( height:TopBanner.barHeight)
+                .padding(.horizontal, SystemEnvironment.isTablet ? Dimen.margin.thin : 0)
                 .padding(.bottom, isHorizontal
                             ? TopBanner.marginBottomBarHorizontal
                             : TopBanner.marginBottomBarVertical
                 )
             }
         }
-        .modifier(MatchHorizontal(height: isHorizontal ?  TopBanner.imageHeightHorizontal : TopBanner.imageHeight))
+        .modifier(MatchHorizontal(height: (isHorizontal ?  TopBanner.imageHeightHorizontal : TopBanner.imageHeight)
+                                            + (self.useQuickMenu ?  TopBanner.quickMenuHeight : 0 )))
         .onReceive( self.viewModel.$index ){ idx in
             self.setBar(idx:idx)
         }

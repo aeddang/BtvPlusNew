@@ -23,12 +23,12 @@ struct PageWatchHabit: PageView {
             PageDragingBody(
                 pageObservable: self.pageObservable, 
                 viewModel:self.pageDragingModel,
-                axis:.vertical
+                axis:.horizontal
             ) {
                 VStack(spacing:0){
                     PageTab(
                         title: String.pageTitle.watchHabit,
-                        isClose: true
+                        isBack: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     ZStack(alignment: .topLeading){

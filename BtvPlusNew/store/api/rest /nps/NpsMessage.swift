@@ -39,7 +39,9 @@ class NpsMessage{
     }
     func setMessage(type:NpsCtrlType, value:String? = nil, query:NpsQuery? = nil) -> NpsMessage {
         self.ctrlType = type
-        self.ctrlValue = value ?? ""
+        var ctrlValue =  value ?? ""
+        ctrlValue = type == .SendMsg ? ApiUtil.getEncyptedDataForNps(ctrlValue) : ctrlValue
+        self.ctrlValue = ctrlValue 
         self.RCStatusQuery = query ?? NpsQuery.StatusQuery
         self.count = NpsNetwork.controlMessageCount
         return self
@@ -82,6 +84,21 @@ class NpsMessage{
             dic["CtrlValue"] = ctrlValue
             dic["RCStatusQuery"] = RCStatusQuery.rawValue
             dic["count"] = count.description
+            return dic
+        }
+    }
+    
+    var pushString:String {
+        get{
+            var dic = [String:Any]()
+            dic["service_type"] = "B"
+            return AppUtil.getJsonString(dic: dic) ?? ""
+        }
+    }
+    var pushObj:[String:Any] {
+        get{
+            var dic = [String:Any]()
+            dic["service_type"] = "B"
             return dic
         }
     }

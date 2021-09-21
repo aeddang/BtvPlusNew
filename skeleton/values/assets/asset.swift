@@ -50,6 +50,16 @@ extension Asset{
         public static let oceanOff =  "icGnbNorOcean"
     }
     
+    struct quickMenu {
+        public static let icon1 =  "icQuickmenu01"
+        public static let icon2 =  "icQuickmenu02"
+        public static let icon3 =  "icQuickmenu03"
+        public static let icon4 =  "icQuickmenu04"
+        public static let icon5 =  "icQuickmenu05"
+    }
+    
+    
+    
     struct icon {
         public static let new =  "tagMyNewS"
         public static let sort = "icArrowDownG"

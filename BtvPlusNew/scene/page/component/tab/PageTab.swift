@@ -20,8 +20,8 @@ struct PageTab: PageComponent{
     var close: (() -> Void)? = nil
     var body: some View {
         ZStack(alignment: .leading){
-            if self.title != nil {
-                Text(self.title!)
+            if let title = self.title {
+                Text(title)
                     .modifier(BoldTextStyle(
                                 size: SystemEnvironment.isTablet ?  Font.size.light : Font.size.mediumExtra,
                                 color: self.style.textColor))

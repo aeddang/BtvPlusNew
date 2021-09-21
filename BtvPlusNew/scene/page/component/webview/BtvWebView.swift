@@ -102,7 +102,7 @@ struct BtvWebView: PageComponent {
     }
     
     @State var eventData:Any? = nil
-    
+   
     func callFuncion(fn:String, jsonParams:String?, callback:String? ){
         switch fn {
         case WebviewMethod.bpn_getRecomCntNPoint.rawValue :

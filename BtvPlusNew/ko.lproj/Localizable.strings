@@ -1034,7 +1034,14 @@
 "monthlyOceanFirstFreeLeading" = "첫 달 무료! 지금";
 "monthlyOceanFirstFreeTrailing" = "에 가입하고 마음껏 즐기세요";
 
-
+/*
+ QuickMenu
+ */
+"quickMenu1" = "공개예정";
+"quickMenu2" = "이벤트";
+"quickMenu3" = "이용꿀팁";
+"quickMenu4" = "충전소";
+"quickMenu5" = "가입센터";
 
 /*
  Footer

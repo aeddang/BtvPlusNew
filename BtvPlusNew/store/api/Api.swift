@@ -107,6 +107,7 @@ enum ApiType{
          updateUser(ModifyUserData?),
          getPairingToken(String?),
          sendMessage(NpsMessage?),
+         pushMessage(NpsMessage?),
          validatePairingToken(pairingToken:String),
          postPairingByToken(User?, pairingToken:String)
          

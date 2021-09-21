@@ -127,6 +127,13 @@ extension String {
         public static let oceanFirstFreeLeading = "monthlyOceanFirstFreeLeading".loaalized()
         public static let oceanFirstFreeTrailing = "monthlyOceanFirstFreeTrailing".loaalized()
     }
+    struct quickMenu {
+        public static let menu1 = "quickMenu1".loaalized()
+        public static let menu2 = "quickMenu2".loaalized()
+        public static let menu3 = "quickMenu3".loaalized()
+        public static let menu4 = "quickMenu4".loaalized()
+        public static let menu5 = "quickMenu5".loaalized()
+    }
     
     struct footer {
         public static let title1 = "footerTitle1".loaalized()

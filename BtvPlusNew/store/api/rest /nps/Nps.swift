@@ -517,12 +517,39 @@ class Nps: Rest{
         if !msg.isEmpty {
             params["sc"] = ApiUtil.getEncrypedSCValue(msg, nValue: n, npsPw: NpsNetwork.AES_PW)
         }
-       // params["custom_param"] = customParam
+        // params["custom_param"] = customParam
         var body = [String: Any]()
         body["header"] = headers
         body["body"] = params
         fetch(route: NpsSendMessage(body: body), completion: completion, error:error)
     }
+    
+    func pushMessage(data:NpsMessage?,
+        customParam:[String: Any] = [String: Any](),
+        completion: @escaping (ResultMessage) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-523")
+        
+        var params = [String: Any]()
+        params["service_type"] = NpsNetwork.SERVICE_TYPE
+        params["send_deviceid"] = SystemEnvironment.deviceId
+        params["receive_pairingid"] = [NpsNetwork.pairingId]
+        params["send_if_no"] = "NPS_000"
+        params["send_time"] = Date().toDateFormatter(dateFormat:"yyyyMMddHHmmssSSS")
+       
+         
+        let msg = data?.pushString ?? ""
+        let n = ApiUtil.getNValue()
+        params["message"] = data?.pushObj
+        params["nvalue"] = n
+        if !msg.isEmpty {
+            params["sc"] = ApiUtil.getEncrypedSCValue(msg, nValue: n, npsPw: NpsNetwork.AES_PW)
+        }
+        var body = [String: Any]()
+        body["header"] = headers
+        body["body"] = params
+        fetch(route: NpsPushMessage(body: body), completion: completion, error:error)
+    }
+    
 }
 
 
@@ -610,14 +637,15 @@ struct NpsPairingByToken:NetworkRoute{
    var body: [String : Any]? = nil
 }
 
-
-
-
 struct NpsSendMessage:NetworkRoute{
    var method: HTTPMethod = .post
    var path: String = "/nps/v5/reqSendMessage"
    var body: [String : Any]? = nil
 }
-
+struct NpsPushMessage:NetworkRoute{
+   var method: HTTPMethod = .post
+   var path: String = "/nps/v5/reqSendPushMessage"
+   var body: [String : Any]? = nil
+}
 
 

@@ -43,6 +43,7 @@ struct MultiBlock:PageComponent {
     var tipBlock:TipBlockData? = nil
     var header:PageViewProtocol? = nil
     var headerSize: CGFloat = 0
+    var useQuickMenu:Bool = false
     var useFooter:Bool = false
     var isHorizontal:Bool = false
     var isRecycle = true
@@ -69,6 +70,7 @@ struct MultiBlock:PageComponent {
         return newTop
     }
     
+    /*
     @State var topBannerBg:TopBannerBg?
     private func getTopBannerBg() -> TopBannerBg {
         if let top = self.topBannerBg {
@@ -78,14 +80,16 @@ struct MultiBlock:PageComponent {
         let newTop = TopBannerBg(
             pageObservable : self.pageObservable,
             viewModel:self.viewPagerModel,
-            datas: self.topDatas! )
+            datas: self.topDatas!,
+            useQuickMenu: self.useQuickMenu
+        )
         ComponentLog.d("New TopBg" , tag: self.tag + "Top")
         DispatchQueue.main.async {
             self.topBannerBg = newTop
         }
         return newTop
     }
-    
+    */
      
     @State var headerBlock:HeaderBlockCell?
     @State var headerId:String = ""
@@ -139,9 +143,10 @@ struct MultiBlock:PageComponent {
                 if let topDatas = self.topDatas ,!topDatas.isEmpty {
                     self.getTopBanner()
                         .modifier(MatchHorizontal(height: isHorizontal ? TopBanner.uiRangeHorizontal : TopBanner.uiRange))
-                    .modifier(ListRowInset(spacing: isHorizontal
+                        .modifier(ListRowInset(spacing: (isHorizontal
                                             ? TopBanner.heightHorizontal - self.marginTop + self.marginHeader - TopBanner.uiRangeHorizontal
-                                            : TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange
+                                            : TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange)
+                                                + (self.useQuickMenu ?  TopBanner.quickMenuHeight : 0 )
                     ))
                 }
                

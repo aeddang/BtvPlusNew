@@ -114,6 +114,7 @@ struct MultiBlockBody: PageComponent {
     var tipBlock:TipBlockData? = nil
     var header:PageViewProtocol? = nil
     var headerSize:CGFloat = 0
+    var useQuickMenu:Bool = false
     var useFooter:Bool = false
     var isRecycle = true
     var action: ((_ data:MonthlyData) -> Void)? = nil
@@ -139,7 +140,8 @@ struct MultiBlockBody: PageComponent {
                             pageObservable : self.pageObservable,
                             viewModel:self.viewPagerModel,
                             datas: self.topDatas!,
-                            ratio: 1.0 + (CGFloat(self.reloadDegree/self.reloadDegreeMax)/5)
+                            ratio: 1.0 + (CGFloat(self.reloadDegree/self.reloadDegreeMax)/5),
+                            useQuickMenu: self.useQuickMenu
                         )
                         .padding(.top, isHorizontal
                                     ? max(self.headerOffset, -TopBanner.imageHeightHorizontal)
@@ -178,6 +180,7 @@ struct MultiBlockBody: PageComponent {
                         tipBlock:self.tipBlock,
                         header:self.header,
                         headerSize:self.headerSize,
+                        useQuickMenu:self.useQuickMenu,
                         useFooter:self.useFooter,
                         isHorizontal: self.isHorizontal,
                         isRecycle:self.isRecycle,

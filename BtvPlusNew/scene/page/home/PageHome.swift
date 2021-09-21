@@ -56,6 +56,7 @@ struct PageHome: PageView {
                     tipBlock: self.tipBlockData,
                     header: self.monthlyheader,
                     headerSize: MonthlyBlock.height + MultiBlock.spacing,
+                    useQuickMenu: self.useQuickMenu,
                     useFooter: self.useFooter)
             }
             .modifier(PageFull())
@@ -214,6 +215,7 @@ struct PageHome: PageView {
     @State var openId:String? = nil
     @State var prcPrdId:String? = nil
     @State var useFooter:Bool = false
+    @State var useQuickMenu:Bool = false
     @State var isFree:Bool = false
     @State var monthlyheader:MonthlyBlock? = nil
   
@@ -299,6 +301,7 @@ struct PageHome: PageView {
         case EuxpNetwork.GnbTypeCode.GNB_HOME.rawValue :
             self.isFree = false
             self.useFooter = true
+            self.useQuickMenu = true
             self.setupBlocks()
         case EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue:
             self.isFree = true

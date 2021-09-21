@@ -389,6 +389,9 @@ class ApiManager :PageProtocol, ObservableObject{
         case .sendMessage(let data) : self.nps.sendMessage(data: data,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
+        case .pushMessage(let data) : self.nps.pushMessage(data: data,
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
         //KMS
         case .getStbList(let cid): self.kms.getStbList(ci: cid,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},

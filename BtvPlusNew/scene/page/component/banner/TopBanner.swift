@@ -18,6 +18,8 @@ extension TopBanner{
     static let imageHeight:CGFloat = SystemEnvironment.isTablet ? 500 : 750
     static let imageHeightHorizontal:CGFloat = 667
     static let barHeight = Dimen.line.medium
+    static let quickMenuMarginTop =  SystemEnvironment.isTablet ?  Dimen.margin.regular :  Dimen.margin.heavyExtra
+    static let quickMenuHeight = (SystemEnvironment.isTablet ? 52 : 46) +  quickMenuMarginTop
     static let marginBottom = SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.medium
     static let marginBottomBar = SystemEnvironment.isTablet ? Dimen.margin.mediumExtra : Dimen.margin.heavy
     static let marginBottomBarVertical = Self.marginBottomBar + Self.imageHeight - Self.height
@@ -32,7 +34,7 @@ struct TopBanner: PageComponent {
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     var datas: [BannerData]
-     
+   
     @State var pages: [PageViewProtocol] = []
     @State var isHorizontal:Bool = false
    

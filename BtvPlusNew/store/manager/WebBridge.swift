@@ -12,7 +12,8 @@ import Combine
 enum WebviewMethod:String {
     case getSTBInfo, getNetworkState, getLogInfo, stopLoading,
          setUserAgreementInfo,
-         setAutoRemoconInfo, requestRemoconFunction, requestLimitTV, requestSendMessage
+         setAutoRemoconInfo, requestRemoconFunction, requestLimitTV,
+         requestSendMessage, requestNPSPush
     case requestVoiceSearch, requestSTBViewInfo
     case externalBrowser
     case bpn_showSynopsis,
@@ -522,7 +523,7 @@ class WebBridge :PageProtocol{
         case "event":
              if let menuOpenId = param?.first(where: {$0.name == "menu_id"})?.value {
                 let band = self.dataProvider.bands.getData(gnbTypCd: EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue)
-                self.pagePresenter?.openPopup(
+                self.pagePresenter?.changePage(
                     PageProvider
                         .getPageObject(.category)
                         .addParam(key: .id, value: band?.menuId)

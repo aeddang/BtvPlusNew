@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol SelecterbleProtocol {
+protocol SelecterbleProtocol{
     var isSelected:Bool { get set }
     var index:Int { get set }
 }

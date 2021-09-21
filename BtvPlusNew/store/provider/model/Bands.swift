@@ -70,6 +70,22 @@ class Bands:ObservableObject, PageProtocol {
         )
     }
     
+    func getEventBlockData()->  BlockItem?  {
+        guard let band = self.datas.first(
+                where: { $0.gnbTypCd == EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue }) else { return nil }
+        return band.blocks.first(
+            where: { CateSubType.getType(id:$0.gnb_sub_typ_cd) == .event}
+        )
+    }
+    
+    func getTipBlockData()->  BlockItem?  {
+        guard let band = self.datas.first(
+                where: { $0.gnbTypCd == EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue }) else { return nil }
+        return band.blocks.first(
+            where: { CateSubType.getType(id:$0.gnb_sub_typ_cd) == .tip}
+        )
+    }
+    
     func getMonthlyBlockData(name:String?)-> BlockItem? {
         guard let name = name else { return nil }
         guard let band = getData(gnbTypCd: EuxpNetwork.GnbTypeCode.GNB_MONTHLY.rawValue) else {return nil}

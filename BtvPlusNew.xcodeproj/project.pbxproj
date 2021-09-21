@@ -557,6 +557,14 @@
 		31F2803C2673305A00F40B09 /* PlayInfoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F2803B2673305A00F40B09 /* PlayInfoButton.swift */; };
 		31F2803F2673331300F40B09 /* EpisodeViewerKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F2803E2673331300F40B09 /* EpisodeViewerKids.swift */; };
 		31F28041267336FD00F40B09 /* EpisodeViewerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F28040267336FD00F40B09 /* EpisodeViewerData.swift */; };
+		31F42A0026FA129F00EE6934 /* LocalStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56C6B1D257DACD800CF9AB8 /* LocalStorage.swift */; };
+		31F42A0226FA12BC00EE6934 /* BtvPlusPersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BDEFE026F3FAD500E3E5FC /* BtvPlusPersistentContainer.swift */; };
+		31F42A0326FA12BF00EE6934 /* ApiCoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DABD782589746400DF5701 /* ApiCoreDataManager.swift */; };
+		31F42A0426FA132600EE6934 /* PageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56C6982257DA09E00CF9AB8 /* PageProtocol.swift */; };
+		31F42A0526FA132B00EE6934 /* UnitUtil_group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314F760626F333ED0039E7ED /* UnitUtil_group.swift */; };
+		31F42A0626FA132F00EE6934 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56C6985257DA09E00CF9AB8 /* Log.swift */; };
+		31F42A0726FA144800EE6934 /* BtvPlus.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D56C6931257D9EE600CF9AB8 /* BtvPlus.xcdatamodeld */; };
+		31F42A0826FA194200EE6934 /* NotificationCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BC96262D2D8600BB2167 /* NotificationCoreData.swift */; };
 		4624169650CBC1A8EF5A5678 /* Pods_BtvPlusNewTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 422A939031A7D25F7E469FCB /* Pods_BtvPlusNewTests.framework */; };
 		D4D8529D19DCDC8D8370F889 /* Pods_BtvPlusNew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 562032BFA89FA1AD38D16D26 /* Pods_BtvPlusNew.framework */; };
 		D506D717258C8FFB00F27C00 /* PosterList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D506D716258C8FFB00F27C00 /* PosterList.swift */; };
@@ -4363,6 +4371,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				31BDEFD726F3F74F00E3E5FC /* NotificationService.swift in Sources */,
+				31F42A0026FA129F00EE6934 /* LocalStorage.swift in Sources */,
+				31F42A0326FA12BF00EE6934 /* ApiCoreDataManager.swift in Sources */,
+				31F42A0526FA132B00EE6934 /* UnitUtil_group.swift in Sources */,
+				31F42A0726FA144800EE6934 /* BtvPlus.xcdatamodeld in Sources */,
+				31F42A0826FA194200EE6934 /* NotificationCoreData.swift in Sources */,
+				31F42A0226FA12BC00EE6934 /* BtvPlusPersistentContainer.swift in Sources */,
+				31F42A0426FA132600EE6934 /* PageProtocol.swift in Sources */,
+				31F42A0626FA132F00EE6934 /* Log.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

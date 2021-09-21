@@ -12,7 +12,7 @@ enum RemoteConEvent{
          fastForward, rewind, exit, previous,
          home, volumeMove(Int), mute(Bool),
          channelMove(Int),
-         inputChannel, inputMessage, close,
+         inputChannel, inputMessage,  inputSearch, close,
          control(ControlBox.Event), playControl(PlayControlBox.Event)
 }
 
@@ -28,7 +28,7 @@ struct RemotePlayData{
     var isNoInfo:Bool = false
 }
 enum RemoteInputType{
-    case number, text
+    case number, text, search
 }
 
 struct RemoteCon: PageComponent {
@@ -219,7 +219,14 @@ struct RemoteCon: PageComponent {
                         self.action(.inputChannel)
                     }
                     .frame(width: RemoteStyle.button.medium, height: RemoteStyle.button.medium)
-                    
+                    Spacer()
+                    EffectButton(
+                        defaultImage: Asset.remote.search,
+                        effectImage: Asset.remote.searchOn)
+                    { _ in
+                        self.action(.inputSearch)
+                    }
+                    .frame(width: RemoteStyle.button.medium, height: RemoteStyle.button.medium)
                 }
                 
             }

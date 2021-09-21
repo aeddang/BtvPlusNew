@@ -112,8 +112,7 @@ struct ListRowInset: ViewModifier {
     var marginHorizontal:CGFloat = 0
     var spacing:CGFloat =  SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.thinUltra
     var marginTop:CGFloat = 0
-    var bgColor:Color = SystemEnvironment.currentPageType == .btv ? Color.brand.bg : Color.kids.bg
-    
+     
     func body(content: Content) -> some View {
         return content
             .padding(
@@ -127,7 +126,6 @@ struct ListRowInset: ViewModifier {
                 .init(
                     )
             )
-            //.listRowBackground(bgColor)
         
     }
 }
@@ -154,8 +152,6 @@ struct HolizentalListRowInset: ViewModifier {
                     top: 0, leading: 0, bottom: 0, trailing: 0
                 )
             )
-
-            .listRowBackground(bgColor)
         
     }
 }

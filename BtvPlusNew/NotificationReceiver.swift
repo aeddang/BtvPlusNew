@@ -46,7 +46,7 @@ class NotificationReceiver: NSObject, UNUserNotificationCenterDelegate {
                         UIApplication.shared.applicationIconBadgeNumber = badgeNo
                     }
                 }
-                completionHandler([.alert, .sound])
+            completionHandler([.badge, .sound])
             //}
         //}
     }

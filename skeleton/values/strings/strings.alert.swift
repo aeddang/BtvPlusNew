@@ -289,5 +289,8 @@ extension String {
         public static var notAvailable = "alertNotAvailable".loaalized()
         public static var notAvailableAppleTv = "alertNotAvailableAppleTv".loaalized()
         public static var notAvailableAppleTvTip = "alertNotAvailableAppleTvTip".loaalized()
+        
+        public static var earphoneClose = "alertEarphoneClose".loaalized()
+        public static var earphoneCloseText = "alertEarphoneCloseText".loaalized()
     }
 }

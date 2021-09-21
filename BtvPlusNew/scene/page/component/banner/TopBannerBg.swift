@@ -32,7 +32,6 @@ struct TopBannerBg: PageComponent {
                 isForground : false,
                 ratio: self.ratio
                 )
-            .padding(.bottom, self.useQuickMenu ?  TopBanner.quickMenuHeight : 0)
             .modifier(MatchParent())
                 
             if self.pages.count > 1 {
@@ -53,11 +52,7 @@ struct TopBannerBg: PageComponent {
                             .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
                     }
                     .modifier(MatchHorizontal( height:TopBanner.barHeight))
-                    if self.useQuickMenu {
-                        QuickTab()
-                            .padding(.top, TopBanner.quickMenuMarginTop)
-                    }
-                
+                    
                 }
                 .padding(.horizontal, SystemEnvironment.isTablet ? Dimen.margin.thin : 0)
                 .padding(.bottom, isHorizontal
@@ -66,8 +61,7 @@ struct TopBannerBg: PageComponent {
                 )
             }
         }
-        .modifier(MatchHorizontal(height: (isHorizontal ?  TopBanner.imageHeightHorizontal : TopBanner.imageHeight)
-                                            + (self.useQuickMenu ?  TopBanner.quickMenuHeight : 0 )))
+        .modifier(MatchHorizontal(height: isHorizontal ?  TopBanner.imageHeightHorizontal : TopBanner.imageHeight))
         .onReceive( self.viewModel.$index ){ idx in
             self.setBar(idx:idx)
         }

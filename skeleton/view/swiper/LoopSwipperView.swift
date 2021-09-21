@@ -22,7 +22,7 @@ struct LoopSwipperView : View , PageProtocol, Swipper {
     var action:(() -> Void)? = nil
     
     @State var index: Int = 0
-    var body: some View {
+    var body: some View { 
         GeometryReader { geometry in
             if self.pages.count <= 1 {
                 self.pages.first?.contentBody
@@ -37,9 +37,19 @@ struct LoopSwipperView : View , PageProtocol, Swipper {
                     .clipped()
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
-                    if #available(iOS 14.0, *) {
-                        LazyHStack(alignment: .center, spacing: 0) {
-                            self.pages.last?.contentBody
+                    LazyHStack(alignment: .center, spacing: 0) {
+                        self.pages.last?.contentBody
+                            .frame(
+                                width: geometry.size.width * ratio,
+                                height: geometry.size.height * ratio
+                            )
+                            .frame(
+                                width: geometry.size.width ,
+                                height: geometry.size.height
+                            )
+                            .clipped()
+                        ForEach(self.pages, id:\.id) { page in
+                            page.contentBody
                                 .frame(
                                     width: geometry.size.width * ratio,
                                     height: geometry.size.height * ratio
@@ -48,53 +58,18 @@ struct LoopSwipperView : View , PageProtocol, Swipper {
                                     width: geometry.size.width ,
                                     height: geometry.size.height
                                 )
-                                .clipped()
-                            ForEach(self.pages, id:\.id) { page in
-                                page.contentBody
-                                    .frame(
-                                        width: geometry.size.width * ratio,
-                                        height: geometry.size.height * ratio
-                                    )
-                                    .frame(
-                                        width: geometry.size.width ,
-                                        height: geometry.size.height
-                                    )
-                                .clipped()
-                            }
-                            self.pages.first?.contentBody
-                                .frame(
-                                    width: geometry.size.width * ratio,
-                                    height: geometry.size.height * ratio
-                                )
-                                .frame(
-                                    width: geometry.size.width ,
-                                    height: geometry.size.height
-                                )
-                                .clipped()
+                            .clipped()
                         }
-                    } else {
-                        HStack(alignment: .center, spacing: 0) {
-                            self.pages.last?.contentBody
-                                .frame(
-                                    width: geometry.size.width,
-                                    height: geometry.size.height
-                                )
-                                .clipped()
-                            ForEach(self.pages, id:\.id) { page in
-                                page.contentBody
-                                .frame(
-                                    width: geometry.size.width,
-                                    height: geometry.size.height
-                                )
-                                .clipped()
-                            }
-                            self.pages.first?.contentBody
-                                .frame(
-                                    width: geometry.size.width,
-                                    height: geometry.size.height
-                                )
-                                .clipped()
-                        }
+                        self.pages.first?.contentBody
+                            .frame(
+                                width: geometry.size.width * ratio,
+                                height: geometry.size.height * ratio
+                            )
+                            .frame(
+                                width: geometry.size.width ,
+                                height: geometry.size.height
+                            )
+                            .clipped()
                     }
                 }
                 .content

@@ -150,12 +150,12 @@ extension BtvWebView{
     }
     
     func sendMsgBtvCompleted(isSuccess:Bool){
-        /*
+        
         if isSuccess {
-            self.appSceneObserver.event = .toast(String.alert.btvplaySuccess)
-        } else {
-            self.appSceneObserver.event = .toast(String.alert.btvplayFail)
-        }*/
+            self.dataProvider.requestData(
+                q: .init(id: self.tag, type: .pushMessage(NpsMessage()))
+            )
+        } 
     }
     
 }

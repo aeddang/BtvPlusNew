@@ -102,6 +102,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
         let player = playerController.playerScreenView
         switch evt {
         case .load(let path, let isAutoPlay, let initTime, let header):
+            let autoPlay = self.audioMirroring.isConnected ? false : isAutoPlay
             viewModel.reload()
             if path == "" {return}
             viewModel.path = path
@@ -110,7 +111,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
             player.currentVideoGravity = self.viewModel.screenGravity
             player.currentRatio = self.viewModel.screenRatio
             player.mute(viewModel.isMute)
-            player.load(path, isAutoPlay: isAutoPlay, initTime: initTime, header:header, assetInfo: self.viewModel.assetInfo, drmData: viewModel.drm)
+            player.load(path, isAutoPlay:autoPlay, initTime: initTime, header:header, assetInfo: self.viewModel.assetInfo, drmData: viewModel.drm)
         case .check:
             if self.viewModel.isRunning {return}
         case .togglePlay:
@@ -162,6 +163,18 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
         }
         
         func onResume(){
+            if self.audioMirroring.isConnected {
+                self.appSceneObserver.alert = .confirm(
+                    String.alert.earphoneClose, String.alert.earphoneCloseText){ isOk in
+                        if isOk {
+                            self.audioMirroring.close()
+                            self.appSceneObserver.event = .toast(String.remote.closeMirroring)
+                            onResume()
+                        }
+                    }
+                return
+            }
+            
             if viewModel.playerStatus == .complete {
                 onSeek(time: 0, play:true)
                 return
@@ -178,7 +191,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
         func onSeek(time:Double, play:Bool?){
             var st = min(time, (self.viewModel.limitedDuration ?? self.viewModel.duration) - 5 )
             st = max(st, 0)
-            viewModel.isSeekAfterPlay = play
+            viewModel.isSeekAfterPlay = self.audioMirroring.isConnected ? false : play
             if !player.seek(st) { viewModel.error = .illegalState(evt) }
             self.onSeek(time: st)
             if self.viewModel.isRunning {return}
@@ -309,9 +322,12 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
 
 
 struct CustomAVPlayerController {
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var audioMirroring:AudioMirroring
     @ObservedObject var viewModel:PlayerModel
     @ObservedObject var pageObservable:PageObservable
-     
+   
+    
     func makeCoordinator() -> Coordinator { return Coordinator(viewModel:self.viewModel) }
     
     class Coordinator:NSObject, AVPlayerViewControllerDelegate, PageProtocol {
@@ -471,7 +487,7 @@ open class CustomPlayerViewController: UIViewController, CustomPlayerController 
         //player.addObserver(self, forKeyPath: #keyPath(AVPlayer.reasonForWaitingToPlay), options: [.new], context: nil)
         //player.addObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status), options:[.new], context: nil)
         player.addObserver(self, forKeyPath: #keyPath(AVPlayer.timeControlStatus), options:[.new], context: nil)
-        //}
+        
     }
     func cancel() {
         guard let player = self.playerScreenView.player else {return}
@@ -527,28 +543,27 @@ extension MPVolumeView {
         let volumeView = MPVolumeView(frame: .zero)
         let slider = volumeView.subviews.first(where: { $0 is UISlider }) as? UISlider
        
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.01) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) {
             guard let prev = slider else {return}
-            let preV = convertVolume(prev.value)
+            let preV = prev.value
             DataLog.d("preV " + preV.description, tag:"MPVolumeView")
             DataLog.d("move " + move.description, tag:"MPVolumeView")
             let v = preV + move
             prev.value = v
-           
         }
+        /*
         func convertVolume(_ value: Float) -> Float {
-            if value == 0.0 {
-                return 0.0
-            }
             let convertValue: Int = Int((value * 10))
-            return Float(convertValue) * 0.1
-        }
+            Float(convertValue) * 0.1
+            return
+        }*/
     }
     static func setVolume(_ volume: Float) -> Void {
         let volumeView = MPVolumeView(frame: .zero)
         let slider = volumeView.subviews.first(where: { $0 is UISlider }) as? UISlider
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.01) {
             slider?.value = volume
+            DataLog.d("slider " + volume.description, tag:"MPVolumeView")
         }
         
     }

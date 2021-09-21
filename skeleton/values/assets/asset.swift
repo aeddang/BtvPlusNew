@@ -276,6 +276,8 @@ extension Asset{
         public static let volume = "icRemoteVolumeNor"
         public static let volumeUp = "icRemoteVolumePlusPre"
         public static let volumeDown = "icRemoteVolumeMinusPre"
+        public static let search =  "icRemoteSearchNor"
+        public static let searchOn = "icRemoteSearchPre"
         public static let bg = isPad ? "imgRemoteBg01" : "imgRemoteBg02"
     }
     

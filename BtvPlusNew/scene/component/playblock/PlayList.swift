@@ -458,6 +458,7 @@ struct PlayItem: PageView {
         guard let epsdRsluId = data.epsdRsluId else { return }
         //self.playerModel.currentIdx = self.data.index
         //self.playerModel.currentEpsdRsluId = self.data.epsdRsluId
+       
         if pairing.status == .pairing {
             dataProvider.requestData(q: .init(id:data.id, type: .getPreview(epsdRsluId, self.pairing.hostDevice)))
         }

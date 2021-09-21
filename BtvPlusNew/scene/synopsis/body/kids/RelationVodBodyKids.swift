@@ -40,7 +40,7 @@ struct RelationVodBodyKids: PageComponent{
                 ){ season in
                     self.componentViewModel.uiEvent = .changeSynopsis(season.synopsisData,isSrisChange:true)
                 }
-                .modifier(ListRowInset(spacing: DimenKids.margin.medium, bgColor: Color.app.white))
+                .modifier(ListRowInset(spacing: DimenKids.margin.medium))
                 ForEach(self.seris) { data in
                     SerisItemKids(
                         relationContentsModel: self.relationContentsModel, 
@@ -65,7 +65,7 @@ struct RelationVodBodyKids: PageComponent{
                            
                             
                         }
-                        .modifier(ListRowInset(spacing: DimenKids.margin.thinExtra, bgColor: Color.app.white))
+                        .modifier(ListRowInset(spacing: DimenKids.margin.thinExtra))
                 }
                 .onAppear(){
                    // guard let find = self.seris.first(where: {self.epsdId == $0.contentID}) else {return}
@@ -74,7 +74,7 @@ struct RelationVodBodyKids: PageComponent{
             } else if !self.relationDatas.isEmpty {
                 Text(String.kidsText.synopsisRelationVod)
                     .modifier(BoldTextStyleKids(size: Font.sizeKids.regularExtra, color: Color.app.brownDeep))
-                    .modifier(ListRowInset( spacing: DimenKids.margin.light, bgColor: Color.app.white))
+                    .modifier(ListRowInset( spacing: DimenKids.margin.light))
                 
                 ForEach(self.relationDatas) { dataSet in
                     if let data = dataSet.datas.first {
@@ -83,7 +83,7 @@ struct RelationVodBodyKids: PageComponent{
                             self.componentViewModel.uiEvent = .changeSynopsis(data.synopsisData)
                         }
                         .frame(height: data.type.size.height)
-                        .modifier(ListRowInset( spacing: DimenKids.margin.thin, bgColor: Color.app.white))
+                        .modifier(ListRowInset( spacing: DimenKids.margin.thin))
                     }
                 }
             } else {

@@ -84,7 +84,7 @@ struct PlayerBottom: PageView{
         .onReceive(self.viewModel.$btvPlayerEvent) { evt in
             withAnimation{
                 switch evt {
-                case .nextViewCancel :
+                case .nextViewCancel, .nextView:
                     self.nextProgressCancel()
                 
                 default : break

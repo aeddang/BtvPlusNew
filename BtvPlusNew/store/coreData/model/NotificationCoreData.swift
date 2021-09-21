@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 
 
-class NotificationCoreData:PageProtocol {
+class NotificationCoreData:PageProtocol { 
     static let model = "NotificationEntity"
     struct Keys {
         static let badge = "badge"
@@ -96,7 +96,7 @@ class NotificationCoreData:PageProtocol {
     func getAllNotices()->[NotificationEntity]{
         let container = self.persistentContainer
         do {
-            let items = try container.viewContext.fetch(NotificationEntity.fetchRequest()) as! [NotificationEntity]
+            let items = try container.viewContext.fetch(NotificationEntity.fetchRequest())
             let now:Double = Date().timeIntervalSince1970 - (15 * 24 * 60 * 60)
             var notices:[NotificationEntity] = []
             items.forEach{

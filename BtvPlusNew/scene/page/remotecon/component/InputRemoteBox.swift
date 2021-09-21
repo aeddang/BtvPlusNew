@@ -14,17 +14,19 @@ struct InputRemoteBox: PageComponent {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var setup:Setup
 
-    var isFocus:Bool = true
+    
     var isInit:Bool = false
     var title:String = ""
     var type:RemoteInputType = .text
     var placeHolder:String = ""
+    var tip:String? = nil
     var inputSize:Int = 10
     var inputSizeMin:Int? = nil
     var keyboardType:UIKeyboardType = .default
 
     var action: (_ input:String?, _ type:RemoteInputType) -> Void
     @State var input:String = ""
+    @State var isFocus:Bool = true
     @State var selectedText:String? = nil
     @State var selectedInputSize:Int? = nil
     @State var safeAreaBottom:CGFloat = Dimen.app.keyboard
@@ -86,7 +88,7 @@ struct InputRemoteBox: PageComponent {
                         color: Color.app.white,
                         activeColor: Color.app.white
                     ),
-                    size: Dimen.button.regular,
+                    size: Dimen.button.medium,
                     bgColor:Color.brand.primary
                 ){_ in
                     
@@ -104,6 +106,13 @@ struct InputRemoteBox: PageComponent {
                 }
                 .frame( width:  Dimen.button.regularHorizontal )
                 .padding(.top, SystemEnvironment.isTablet ? Dimen.margin.mediumExtra : Dimen.margin.medium)
+                
+                if let tip = self.tip {
+                    Text(tip)
+                        .modifier(MediumTextStyle(
+                            size: SystemEnvironment.isTablet ? Font.size.thin : Font.size.lightExtra))
+                        .padding(.top, SystemEnvironment.isTablet ? Dimen.margin.tinyUltra : Dimen.margin.thin)
+                }
             }
             .frame(
                  height: CGFloat(SystemEnvironment.isTablet ? 253 : 205)
@@ -122,6 +131,10 @@ struct InputRemoteBox: PageComponent {
         .onAppear(){
             
         }
+        .onTapGesture {
+            self.isFocus = false
+        }
+        
     }//body
     
     

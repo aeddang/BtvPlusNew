@@ -90,6 +90,11 @@ extension String {
         public static let inputText = "remoteInputText".loaalized()
         public static let inputChannelHolder = "remoteInputChannelHolder".loaalized()
         public static let inputTextHolder = "remoteInputTextHolder".loaalized()
+        
+        public static let inputSearch = "remoteInputSearch".loaalized()
+        public static let inputSearchHolder = "remoteInputSearchHolder".loaalized()
+        public static let inputSearchTip = "remoteInputSearchTip".loaalized()
+        
         public static let titleMusicBroadcast = "remoteTitleMusicBroadcast".loaalized()
         public static let titleMirroring = "remoteTitleMirroring".loaalized()
         public static let searchLock = "remoteSearchLock".loaalized()

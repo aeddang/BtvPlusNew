@@ -39,8 +39,10 @@ class NpsMessage{
     }
     func setMessage(type:NpsCtrlType, value:String? = nil, query:NpsQuery? = nil) -> NpsMessage {
         self.ctrlType = type
-        var ctrlValue =  value ?? ""
-        ctrlValue = type == .SendMsg ? ApiUtil.getEncyptedDataForNps(ctrlValue) : ctrlValue
+        var ctrlValue =  value ?? "" 
+        ctrlValue = type == .SendMsg
+            ? ApiUtil.getEncyptedData(forNps: ctrlValue, npsKey: NpsNetwork.AES_KEY, npsIv: NpsNetwork.AES_IV)
+            : ctrlValue
         self.ctrlValue = ctrlValue 
         self.RCStatusQuery = query ?? NpsQuery.StatusQuery
         self.count = NpsNetwork.controlMessageCount

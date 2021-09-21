@@ -46,6 +46,7 @@ class Repository:ObservableObject, PageProtocol{
     let pagePresenter:PagePresenter?
     let dataProvider:DataProvider
     let pairing:Pairing
+    let audioMirroring:AudioMirroring?
     let webBridge:WebBridge
     let alram:Alram = Alram()
     let vsManager:VSManager?
@@ -53,7 +54,7 @@ class Repository:ObservableObject, PageProtocol{
     let voiceRecognition:VoiceRecognition
     let shareManager:ShareManager
     let apiCoreDataManager = ApiCoreDataManager()
-    let audioMirrorManager:AudioMirroring
+  
     let pushManager:PushManager
     let userSetup:Setup
     let storage = LocalStorage()
@@ -72,6 +73,7 @@ class Repository:ObservableObject, PageProtocol{
         vsManager:VSManager? = nil,
         dataProvider:DataProvider? = nil,
         pairing:Pairing? = nil,
+        audioMirroring:AudioMirroring? = nil,
         networkObserver:NetworkObserver? = nil,
         pagePresenter:PagePresenter? = nil,
         appSceneObserver:AppSceneObserver? = nil,
@@ -81,6 +83,7 @@ class Repository:ObservableObject, PageProtocol{
         self.vsManager = vsManager
         self.dataProvider = dataProvider ?? DataProvider()
         self.pairing = pairing ?? Pairing()
+        self.audioMirroring = audioMirroring
         self.networkObserver = networkObserver ?? NetworkObserver()
         self.apiManager = ApiManager()
         self.appSceneObserver = appSceneObserver
@@ -88,7 +91,7 @@ class Repository:ObservableObject, PageProtocol{
         self.userSetup = setup ?? Setup()
         self.voiceRecognition = VoiceRecognition(appSceneObserver: appSceneObserver)
         self.shareManager = ShareManager(pagePresenter: pagePresenter)
-        self.audioMirrorManager = AudioMirroring(pairing: self.pairing)
+       
         self.pushManager = PushManager(storage: self.storage)
         self.accountManager =  AccountManager(
             pairing: self.pairing,
@@ -206,6 +209,7 @@ class Repository:ObservableObject, PageProtocol{
                 self.pushManager.updateUserAgreement(false)
                 self.pushManager.retryRegisterPushToken()
                 self.namedStorage?.tvUserId = nil
+                self.audioMirroring?.close()
                 //NotificationCoreData().removeAllNotice()
                 
             case .pairingCompleted :

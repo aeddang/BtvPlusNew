@@ -24,6 +24,7 @@ class SceneDelegate: PageSceneDelegate {
         let appSceneObserver = AppSceneObserver()
         let dataProvider = DataProvider()
         let pairing = Pairing()
+        let audioMirroring = AudioMirroring(pairing: pairing)
         let networkObserver = NetworkObserver()
         let setup = Setup()
         let vsManager: VSManager = VSManager(
@@ -36,6 +37,7 @@ class SceneDelegate: PageSceneDelegate {
             vsManager: vsManager,
             dataProvider:dataProvider,
             pairing:pairing,
+            audioMirroring:audioMirroring,
             networkObserver:networkObserver,
             pagePresenter: self.pagePresenter,
             appSceneObserver:appSceneObserver,
@@ -57,6 +59,7 @@ class SceneDelegate: PageSceneDelegate {
             .environmentObject(res)
             .environmentObject(dataProvider)
             .environmentObject(pairing)
+            .environmentObject(audioMirroring)
             .environmentObject(networkObserver)
             .environmentObject(appSceneObserver)
             .environmentObject(keyboardObserver)

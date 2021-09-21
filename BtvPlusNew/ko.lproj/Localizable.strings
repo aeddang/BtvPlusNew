@@ -528,6 +528,10 @@
 "alertVodUpdate" = "작품 업데이트 알림";
 "alertVodUpdateText" = "알림을 설정하시면\n본편 업데이트 시 알려 드립니다.\n설정을 변경하여 알림을 받으시겠습니까?";
 "alertVodUpdateButton" = "알림 받기";
+
+"alertEarphoneClose" = "B tv 이어폰 모드 종료";
+"alertEarphoneCloseText" = "B tv 이어폰 모드를 종료하고\n모바일 B tv 콘텐츠를 시청하시겠습니까?";
+
 /*
  PageTitle
 */
@@ -996,6 +1000,13 @@
 "remoteInputText" = "문자 입력";
 "remoteInputChannelHolder" = "000";
 "remoteInputTextHolder" = "문자 입력";
+
+"remoteInputSearch" = "검색어 입력";
+"remoteInputSearchHolder" = "검색어 입력";
+"remoteInputSearchTip" = "검색어 입력 후 확인 선택 시,\nB tv에서 검색결과를 확인하실 수 있습니다.";
+
+
+
 "remoteTitleMusicBroadcast" = "24시간 음악방송";
 "remoteTitleMirroring" = "B tv 이어폰 모드 이용 중입니다.";
 

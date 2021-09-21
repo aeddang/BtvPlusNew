@@ -63,7 +63,8 @@ struct PageMy: PageView {
                         DisconnectView(
                             pageObservable:self.pageObservable
                         )
-                        .padding(.bottom, self.marginBottom)
+                        .padding(.bottom,
+                                 self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.app.bottom)
                     }
                 }
                 .modifier(PageFull())

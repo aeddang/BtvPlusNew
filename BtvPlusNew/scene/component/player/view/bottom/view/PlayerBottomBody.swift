@@ -165,6 +165,7 @@ struct PlayerBottomBody: PageComponent{
                             ){_ in
                             
                             //self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , self.nextBtnTitle)
+                                
                             self.viewModel.btvPlayerEvent = .nextView(isAuto:false)
                         }
                     }

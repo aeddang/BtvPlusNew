@@ -62,20 +62,21 @@ struct SetupLaboratory: PageView {
                 subTitle: self.repository.pushManager.apnsToken,
                 more:{
                     let push = UNMutableNotificationContent()
-                    push.title = "test Title" + UUID().uuidString
+                    push.title = "test Title"
                     push.subtitle = "test subTitle"
-                    push.body = "test body" + UUID().uuidString
+                    push.body = "test body"
                     push.badge = 1
                     var userInfo = [String:Any]()
-                    var apns = [String:Any]()
+                    var aps = [String:Any]()
                     var system_data = [String:Any]()
                     system_data["messageId"] = "pixunptufh3uncbogyadn"
                     system_data["type"] = "message"
-                    apns["mutable-content"] = 1
-                    apns["alert"] = "알람이 오네요" + UUID().uuidString
-                    apns["badge"] = 10
-                    apns["sound"] = "default"
-                    userInfo["aps"] = apns
+                    //system_data["mutable-content"] = 1
+                    //aps["mutable-content"] = 1
+                    aps["alert"] = "알람이 오네요" + UUID().uuidString
+                    aps["badge"] = 10
+                    aps["sound"] = "default"
+                    userInfo["aps"] = aps
                     push.userInfo = userInfo
                     
                     //"aps":{
@@ -106,9 +107,10 @@ struct SetupLaboratory: PageView {
                     //      "notiType":"ALL"
                     //   }
                     
-                   
                     let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
-                    let request = UNNotificationRequest(identifier: "test", content: push, trigger: trigger)
+                    let request = UNNotificationRequest(
+                        identifier: UUID().uuidString,
+                        content: push.copy() as! UNNotificationContent , trigger: trigger)
                     UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
                 }
             )

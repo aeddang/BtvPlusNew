@@ -49,11 +49,11 @@ struct QuickTab: PageComponent{
             ForEach(self.menus) {menu in
                 if SystemEnvironment.isTablet {
                     QuickTabItemTablet(data: menu){
-                        
+                        self.move(data: menu)
                     }
                 } else {
                     QuickTabItem(data: menu){
-                        
+                        self.move(data: menu)
                     }
                     if !menu.isLast {
                         Spacer().modifier(MatchVertical(width: 1))
@@ -149,6 +149,7 @@ struct QuickTabItem: PageComponent{
                         size: Font.size.tinyExtra,
                         color: Color.app.greyLight
                     ))
+                    .fixedSize(horizontal: true, vertical: false)
             }
         }
     }
@@ -173,6 +174,7 @@ struct QuickTabItemTablet: PageComponent{
                         size: Font.size.tinyExtra,
                         color: Color.app.greyLight
                     ))
+                    .fixedSize(horizontal: true, vertical: false)
             }
             .frame(width: 140, height: 52)
             .background(Color.app.blueLight)

@@ -61,7 +61,8 @@ struct MultiBlock:PageComponent {
             pageObservable: self.pageObservable,
             viewModel:self.viewPagerModel,
             infinityScrollModel:self.infinityScrollModel,
-            datas: self.topDatas ?? []
+            datas: self.topDatas ?? [],
+            useQuickMenu: self.useQuickMenu
         )
         ComponentLog.d("New Top" , tag: self.tag + "Top")
         DispatchQueue.main.async {
@@ -142,11 +143,14 @@ struct MultiBlock:PageComponent {
                 
                 if let topDatas = self.topDatas ,!topDatas.isEmpty {
                     self.getTopBanner()
-                        .modifier(MatchHorizontal(height: isHorizontal ? TopBanner.uiRangeHorizontal : TopBanner.uiRange))
-                        .modifier(ListRowInset(spacing: (isHorizontal
+                        .modifier(MatchHorizontal(height:
+                                                    (isHorizontal ? TopBanner.uiRangeHorizontal : TopBanner.uiRange)
+                                                    + (self.useQuickMenu ?  TopBanner.quickMenuHeight : 0 )
+                                                 ))
+                        .modifier(ListRowInset(spacing: isHorizontal
                                             ? TopBanner.heightHorizontal - self.marginTop + self.marginHeader - TopBanner.uiRangeHorizontal
-                                            : TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange)
-                                                + (self.useQuickMenu ?  TopBanner.quickMenuHeight : 0 )
+                                            : TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange
+                                                
                     ))
                 }
                

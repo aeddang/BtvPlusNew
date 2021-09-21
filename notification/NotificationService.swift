@@ -16,12 +16,36 @@ class NotificationService: UNNotificationServiceExtension {
         self.contentHandler = contentHandler
         bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
         
-        if let bestAttemptContent = bestAttemptContent {
+        if let content = bestAttemptContent {
             // Modify the notification content here...
-            bestAttemptContent.title = "\(bestAttemptContent.title) [modified]"
+             if isPushOn() {
+                let num = NotificationCoreData().getAllNotices().filter{!$0.isRead}.count
+                content.badge = NSNumber(value: num )
+            } else {
+                content.badge = NSNumber(value: 0)
+                content.sound = nil
+            }
+            NotificationCoreData().addNotice(content.userInfo)
+            //content.badge = NSNumber(value: 10 )
+            //contentHandler(content)
             
-            contentHandler(bestAttemptContent)
+            contentHandler(content)
         }
+        /*
+                    content.subtitle = "iam modify"
+                    
+                    if isPushOn() {
+                        let num = NotificationCoreData().getAllNotices().filter{!$0.isRead}.count
+                        content.badge = NSNumber(value: num )
+                    } else {
+                        content.badge = NSNumber(value: 0)
+                        content.sound = nil
+                    }
+                    NotificationCoreData().addNotice(content.userInfo)
+                    content.badge = NSNumber(value: 10 )
+                    contentHandler(content)
+        
+        */
     }
     
     override func serviceExtensionTimeWillExpire() {
@@ -30,6 +54,11 @@ class NotificationService: UNNotificationServiceExtension {
         if let contentHandler = contentHandler, let bestAttemptContent =  bestAttemptContent {
             contentHandler(bestAttemptContent)
         }
+    }
+
+    
+    func isPushOn() -> Bool {
+        return LocalStorage().isPush
     }
 
 }

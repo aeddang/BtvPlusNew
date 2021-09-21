@@ -8,8 +8,8 @@ import Foundation
 import SwiftUI
 import MediaPlayer
 extension PageRemotecon {
-    static let delayLock:Double = 0.1
-    static let delayUpdate:Double = 0.2
+    static let delayLock:Double = 0.2
+    static let delayUpdate:Double = 0.3
 }
 
 struct PageRemotecon: PageView {
@@ -18,6 +18,7 @@ struct PageRemotecon: PageView {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var audioMirroring:AudioMirroring
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var networkObserver:NetworkObserver
     @EnvironmentObject var locationObserver:LocationObserver
@@ -116,6 +117,22 @@ struct PageRemotecon: PageView {
                                 self.remoconInput(type: type, string: input)
                             }
                         }
+                        
+                        if self.isInputSearch {
+                            InputRemoteBox(
+                                isInit: true,
+                                title: String.remote.inputSearch,
+                                type: .search,
+                                placeHolder:String.remote.inputSearchHolder,
+                                inputSize: 99,
+                                inputSizeMin: 1
+                            ){ input, type in
+                                withAnimation{
+                                    self.isInputSearch = false
+                                }
+                                self.remoconInput(type: type, string: input)
+                            }
+                        }
                     }
                 }
                 .modifier(MatchParent())
@@ -152,7 +169,7 @@ struct PageRemotecon: PageView {
                 default: break
                 }
             }
-            .onReceive(self.repository.audioMirrorManager.$event){evt in
+            .onReceive(self.audioMirroring.$event){evt in
                 guard let evt = evt  else {return}
                 switch evt {
                 case .dicconnected :
@@ -171,7 +188,7 @@ struct PageRemotecon: PageView {
                 default: break
                 }
             }
-            .onReceive(self.repository.audioMirrorManager.$status){status in
+            .onReceive(self.audioMirroring.$status){status in
                 if !self.isAudioAble {return}
                 switch status {
                 case .mirroring : self.isAudioMirroring = true
@@ -219,19 +236,16 @@ struct PageRemotecon: PageView {
                 self.pairing.requestPairing(.check)
                 self.dataProvider.broadcasting.reset()
                
-                if self.repository.audioMirrorManager.isAudioMirrorSupported {
+                if self.audioMirroring.isAudioMirrorSupported {
                     self.isAudioAble = true
-                    self.isAudioMirroring = self.repository.audioMirrorManager.isConnected
+                    self.isAudioMirroring = self.audioMirroring.isConnected
                 } else {
                     self.isAudioMirroring = false
                 }
                 
             }
             .onDisappear{
-                if self.repository.audioMirrorManager.isConnected {
-                    self.repository.audioMirrorManager.close()
-                    self.appSceneObserver.event = .toast(String.remote.closeMirroring)
-                }
+                
             }
             
         }//geo
@@ -240,7 +254,9 @@ struct PageRemotecon: PageView {
     @State var isPairing:Bool? = nil
     @State var isInputText:Bool = false
     @State var isInputChannel:Bool = false
+    @State var isInputSearch:Bool = false
     @State var isUIReady:Bool = false
+    @State var isHostReady:Bool = true
     @State var isEar:Bool? = nil
     @State var isAudioAble:Bool = false
     @State var isAudioMirroring:Bool = false
@@ -304,7 +320,7 @@ struct PageRemotecon: PageView {
     
     @State var isActionLock:Bool = false
     private func action(evt:RemoteConEvent) {
-        if isActionLock {
+        if isActionLock || !isHostReady {
             self.appSceneObserver.event = .toast(String.remote.searchLock)
             return
         }
@@ -315,7 +331,7 @@ struct PageRemotecon: PageView {
         }
         self.isActionLock = true
         var needUpdate:Bool = false
-        switch evt {
+        switch evt { 
         case .close:
             self.sendLog(action: .clickRemoteconExit)
             self.pagePresenter.closePopup(self.pageObject?.id)
@@ -328,6 +344,9 @@ struct PageRemotecon: PageView {
         case .inputChannel:
             self.sendLog(action: .clickRemoteconFunction, actionBody: .init(category: "channel_number"))
             withAnimation{ self.isInputChannel = true }
+        case .inputSearch:
+            self.sendLog(action: .clickRemoteconFunction, actionBody: .init(category: "search")) // 확인필요
+            withAnimation{ self.isInputSearch = true }
         case .earphone:
             self.connectEarphone()
         case .toggleOn:
@@ -382,9 +401,10 @@ struct PageRemotecon: PageView {
                 self.sendAction(npsMessage: NpsMessage().setMessage(type: .Down))
             }
         case .volumeMove(let v) :
-            self.sendAction(npsMessage: NpsMessage().setMessage(type: v>0 ? .VOLUp : .VOLDown))
             if self.isAudioMirroring {
                 MPVolumeView.moveVolume(v>0 ? 0.1 : -0.1)
+            } else {
+                self.sendAction(npsMessage: NpsMessage().setMessage(type: v>0 ? .VOLUp : .VOLDown))
             }
             
         case .channelMove(let c) :
@@ -432,7 +452,6 @@ struct PageRemotecon: PageView {
         }
         var ctrl:NpsCtrlType = .NumInput
         var value = string
-        
         switch type {
         case .number:
             value = String(Int(string) ?? 0)
@@ -446,18 +465,24 @@ struct PageRemotecon: PageView {
             if host.isEnableStringInput() {
                 ctrl = .StrInput
             }
+        case .search:
+            if host.isEnableStringInput() {
+                ctrl = .StrInput
+            }
         }
         self.sendAction(npsMessage: NpsMessage().setMessage(type: ctrl, value: value))
         
     }
     
     private func sendAction(npsMessage:NpsMessage) {
+        self.isHostReady = false
         self.dataProvider.requestData(
             q: .init(id: self.tag, type: .sendMessage(npsMessage))
         )
     }
     private func actionResult(npsMessage:NpsMessage?, res:ApiResultResponds) {
         guard let npsMessage = npsMessage else { return }
+        self.isHostReady = true
         switch npsMessage.ctrlType {
         case .Refresh:
             self.checkBroadcast(res: res)
@@ -468,6 +493,7 @@ struct PageRemotecon: PageView {
     
     private func actionError(npsMessage:NpsMessage?, err:ApiResultError) {
         guard let npsMessage = npsMessage else { return }
+        self.isHostReady = true
         switch npsMessage.ctrlType {
         case .Refresh:
             self.remotePlayData =  RemotePlayData(isError: true)
@@ -478,9 +504,9 @@ struct PageRemotecon: PageView {
     
     
     private func connectEarphone(){
-        if self.repository.audioMirrorManager.isConnected {
+        if self.audioMirroring.isConnected {
             self.sendLog(action: .clickFamilyEarphone, actionBody: .init(config:  "off"))
-            self.repository.audioMirrorManager.close()
+            self.audioMirroring.close()
             return
         }
         
@@ -490,7 +516,7 @@ struct PageRemotecon: PageView {
         }
         let status = self.locationObserver.status
         if status == .authorizedWhenInUse || status == .authorizedAlways {
-            let manager = self.repository.audioMirrorManager
+            let manager = self.audioMirroring
             if manager.isSkWifi && manager.isAudioMirrorSupported {
                 self.appSceneObserver.loadingInfo = [
                     String.remote.searchMirroring

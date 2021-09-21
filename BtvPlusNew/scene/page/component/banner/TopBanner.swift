@@ -34,18 +34,24 @@ struct TopBanner: PageComponent {
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     var datas: [BannerData]
-   
+    var useQuickMenu:Bool = false
     @State var pages: [PageViewProtocol] = []
     @State var isHorizontal:Bool = false
    
     var action:((_ idx:Int) -> Void)? = nil
     var body: some View {
-        LoopSwipperView(
-            viewModel : self.viewModel,
-            pages: self.pages
-            )
-        .modifier(MatchHorizontal(height: isHorizontal ? TopBanner.uiRangeHorizontal : TopBanner.uiRange))
-       
+        VStack{
+            LoopSwipperView(
+                viewModel : self.viewModel,
+                pages: self.pages
+                )
+            .modifier(MatchHorizontal(height: isHorizontal ? TopBanner.uiRangeHorizontal : TopBanner.uiRange))
+            if self.useQuickMenu {
+                QuickTab()
+                    .padding(.top, TopBanner.quickMenuMarginTop + TopBanner.barHeight)
+            }
+        }
+        
         .onReceive(self.pagePresenter.$currentTopPage){ page in
             self.isTop = self.pageObservable.pageObject?.id == page?.id
             self.isTop ? self.autoChange() : self.autoChangeCancel()

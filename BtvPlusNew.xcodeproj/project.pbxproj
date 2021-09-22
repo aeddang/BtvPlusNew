@@ -480,6 +480,7 @@
 		319D7BAD26DC442F00DFAA69 /* LocalNamedStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319D7BAC26DC442F00DFAA69 /* LocalNamedStorage.swift */; };
 		319D7BB026DCF8C500DFAA69 /* BtvWebViewEventMonthlyPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319D7BAF26DCF8C500DFAA69 /* BtvWebViewEventMonthlyPoint.swift */; };
 		319D7BB226DD116800DFAA69 /* BtvWebViewEventCommerce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319D7BB126DD116800DFAA69 /* BtvWebViewEventCommerce.swift */; };
+		31A0056226FAFB84007CDE89 /* PageSynopsisRecommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A0056126FAFB84007CDE89 /* PageSynopsisRecommand.swift */; };
 		31A38DF92682A1BE0058287B /* TabSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A38DF82682A1BE0058287B /* TabSwitch.swift */; };
 		31A38DFB2682A9EB0058287B /* PurchaseViewerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A38DFA2682A9EB0058287B /* PurchaseViewerData.swift */; };
 		31A38DFD2682AA270058287B /* PurchaseViewerKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A38DFC2682AA270058287B /* PurchaseViewerKids.swift */; };
@@ -1246,6 +1247,7 @@
 		319D7BAC26DC442F00DFAA69 /* LocalNamedStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNamedStorage.swift; sourceTree = "<group>"; };
 		319D7BAF26DCF8C500DFAA69 /* BtvWebViewEventMonthlyPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtvWebViewEventMonthlyPoint.swift; sourceTree = "<group>"; };
 		319D7BB126DD116800DFAA69 /* BtvWebViewEventCommerce.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtvWebViewEventCommerce.swift; sourceTree = "<group>"; };
+		31A0056126FAFB84007CDE89 /* PageSynopsisRecommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisRecommand.swift; sourceTree = "<group>"; };
 		31A38DF82682A1BE0058287B /* TabSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabSwitch.swift; sourceTree = "<group>"; };
 		31A38DFA2682A9EB0058287B /* PurchaseViewerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseViewerData.swift; sourceTree = "<group>"; };
 		31A38DFC2682AA270058287B /* PurchaseViewerKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseViewerKids.swift; sourceTree = "<group>"; };
@@ -1758,6 +1760,7 @@
 			children = (
 				314D738925B4F8B100907118 /* PageSynopsis.swift */,
 				313E64DD26EA1F7800EBDE31 /* PageSynopsisHistory.swift */,
+				31A0056126FAFB84007CDE89 /* PageSynopsisRecommand.swift */,
 				313E64D726E9AD8500EBDE31 /* PageSynopsisRedirect.swift */,
 				313E64D326E9A1F300EBDE31 /* PageSynopsisWatchLv.swift */,
 				3198CF8626D917B200918217 /* PageSynopsisKids.swift */,
@@ -5035,6 +5038,7 @@
 				D56C6A52257DA0C700CF9AB8 /* Toast.swift in Sources */,
 				312D2D7C26D5F3FD002EE783 /* EndPoint.swift in Sources */,
 				316A708D26705E4A00A93B83 /* PlayerOptionSelectListKids.swift in Sources */,
+				31A0056226FAFB84007CDE89 /* PageSynopsisRecommand.swift in Sources */,
 				D56C6B35257DACD800CF9AB8 /* DataProvider.swift in Sources */,
 				D56C6A4F257DA0C700CF9AB8 /* Alert.swift in Sources */,
 				319B379D26B1A64F001501B1 /* RecommandCoupon.swift in Sources */,

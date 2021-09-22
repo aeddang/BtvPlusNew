@@ -207,57 +207,13 @@ struct SceneAlertController: PageComponent{
     }
     
     func selectedRecivedApns(_ idx:Int, alram:AlramData?) {
-        if idx == 1 {
-            if let data = alram {
-                if let move = data.move {
-                    switch move {
-                    case .home, .category:
-                        var findBand:Band? = nil
-                        if let gnbTypCd = data.moveData?[PageParam.id] as? String {
-                            findBand = dataProvider.bands.getData(gnbTypCd: gnbTypCd)
-                        }else if let menuId = data.moveData?[PageParam.data] as? String {
-                            findBand = dataProvider.bands.getData(menuId: menuId)
-                        }
-                        guard let band = findBand else { return }
-                        self.pagePresenter.changePage(
-                            PageProvider
-                                .getPageObject(move)
-                                .addParam(params: data.moveData)
-                                .addParam(key: .id, value: band.menuId)
-                                .addParam(key: UUID().uuidString , value: "")
-                        )
-                        
-                    default :
-                        let pageObj = PageProvider.getPageObject(move)
-                        pageObj.params = data.moveData
-                        self.pagePresenter.openPopup(pageObj)
-                    }
-                }
-                else if let link = data.outLink {
-                    AppUtil.openURL(link)
-                }
-                
-                if let link = data.inLink {
-                    self.pagePresenter.openPopup(
-                        PageProvider
-                            .getPageObject(.webview)
-                            .addParam(key: .data, value: link)
-                            .addParam(key: .title , value: data.title)
-                    )
-                }
-                NotificationCoreData().readNotice(title: data.title ?? "", body: data.text ?? "")
-                self.repository.pushManager.confirmPush(data.messageId) 
-                
-            } else{
-                
-                guard let page = self.appObserver.page?.page else { return }
-                if page.isPopup {
-                    self.pagePresenter.openPopup(page)
-                }else{
-                    self.pagePresenter.changePage(page)
-                }
-            }
-            
+        if idx == 1 , let data = alram {
+            AlramData.move(
+                pagePresenter: self.pagePresenter,
+                dataProvider: self.dataProvider,
+                data: alram)
+            NotificationCoreData().readNotice(title: data.title ?? "", body: data.text ?? "")
+            self.repository.pushManager.confirmPush(data.messageId)
         }
         self.repository.alram.changedNotification()
         DispatchQueue.main.async {

@@ -91,7 +91,8 @@ struct PageKidsMyDiagnostic: PageView {
                                     Spacer()
                                 }
                             }
-                            .padding(.vertical, SystemEnvironment.isTablet ? DimenKids.margin.heavy : 0)
+                            .modifier(MatchParent())
+                            .padding(.vertical, SystemEnvironment.isTablet ? DimenKids.margin.medium : 0)
                         }
                     } else {
                         NeedPairingInfo(
@@ -224,6 +225,7 @@ struct PageKidsMyDiagnostic: PageView {
                 if let sentence = obj.getParamValue(key: .id) as? String {
                     self.resultSentence = sentence
                 }
+                
             }
         }//geo
     }//body
@@ -320,6 +322,7 @@ struct PageKidsMyDiagnostic: PageView {
             case .english :
                 self.resultEnglishReportViewData = ResultEnglishReportViewData().setData(contents, kid: self.kid)
             case .infantDevelopment :
+                self.isReadingSelect = true
                 self.resultReadingReportViewData = ResultReadingReportViewData().setData(contents, kid: self.kid)
             case .creativeObservation :
                 self.resultCreativeReportViewData = ResultCreativeReportViewData().setData(contents, kid: self.kid)

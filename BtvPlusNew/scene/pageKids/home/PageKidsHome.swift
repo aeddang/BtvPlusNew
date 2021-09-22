@@ -127,7 +127,10 @@ struct PageKidsHome: PageView {
                     var openId:String? = nil
                     
                     if let openLink = obj.getParamValue(key: .link) as? String {
-                        let links = openLink.components(separatedBy: "|")
+                        let links = openLink.contains("/") == true
+                            ? openLink.components(separatedBy: "/")
+                            : openLink.components(separatedBy: "|")
+                        
                         if let tuple = self.dataProvider.bands.kidsGnbModel.getGnbData(links:links) {
                             menu = tuple.0
                             openId = openLink.replace(tuple.1, with: "")

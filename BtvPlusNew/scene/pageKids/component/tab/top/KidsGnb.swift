@@ -82,7 +82,7 @@ struct KidsGnbList: PageComponent{
 }
 
 extension KidsGnbItem{
-    static let size:CGFloat = SystemEnvironment.isTablet ? 76 : 48
+    static let size:CGFloat = SystemEnvironment.isTablet ? 110 : 70
 }
 
 struct KidsGnbItem: PageView {
@@ -103,54 +103,61 @@ struct KidsGnbItem: PageView {
                         .modifier(MatchParent())
                         .opacity(self.isSelected ? 1.0 : 0.0)
                     
-                    VStack(spacing:DimenKids.margin.microExtra){
+                    VStack(spacing:DimenKids.margin.micro){
                         Image(self.isSelected ? profileImg : Asset.gnbTop.zemkids)
                             .renderingMode(.original)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: DimenKids.item.profileGnb.width,
-                                   height: DimenKids.item.profileGnb.height)
+                            .frame(width: DimenKids.item.profileGnb.width)
+                            .padding(.top, DimenKids.margin.micro)
                         HStack(spacing:DimenKids.margin.microExtra){
                             if let title = self.title {
                                 Text(title)
                                     .modifier(BoldTextStyleKids(
-                                                size: SystemEnvironment.isTablet ? Font.sizeKids.micro : Font.sizeKids.tinyExtra,
+                                                size: SystemEnvironment.isTablet
+                                                ? Font.sizeKids.tinyExtraExtra
+                                                : Font.sizeKids.tinyExtra,
                                                 color: self.isSelected ? Color.app.white : Color.app.brownDeep))
                             }
                             Text(String.app.home)
                                 .modifier(BoldTextStyleKids(
-                                            size: SystemEnvironment.isTablet ? Font.sizeKids.micro : Font.sizeKids.tinyExtra,
+                                            size: SystemEnvironment.isTablet
+                                            ? Font.sizeKids.tinyExtraExtra
+                                            : Font.sizeKids.tinyExtra ,
                                             color: self.isSelected ? Color.app.white : Color.app.brownDeep))
                                 .fixedSize(horizontal: true, vertical: true)
                         }
+                        .padding(.top, SystemEnvironment.isTablet ? 1 : 3)
                         if self.isSelected ,let subTitle = self.subTitle {
                             Text(subTitle)
                                 .modifier(BoldTextStyleKids(
                                             size: Font.sizeKids.micro ,
                                             color: Color.app.white))
                                 .fixedSize(horizontal: true, vertical: true)
-                                .padding(.vertical, DimenKids.margin.micro)
+                                .padding(.vertical, DimenKids.margin.microExtra)
                                 .padding(.horizontal, DimenKids.margin.thin)
                                 .background(Color.kids.secondary)
                                 .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.lightExtra))
                                 
                         } else {
-                            Spacer()
+                           Spacer()
                         }
                     }
-                    .padding(.all, DimenKids.margin.tinyExtra)
+                    
                 } else {
+                    
                     Image(self.data.imageOff)
                         .renderingMode(.original)
                         .resizable()
-                        .scaledToFit()
+                        .aspectRatio(contentMode: .fill)
                         .modifier(MatchParent())
                     Image(self.data.imageOn)
                         .renderingMode(.original)
                         .resizable()
-                        .scaledToFit()
+                        .aspectRatio(contentMode: .fill)
                         .modifier(MatchParent())
                         .opacity(self.isSelected ? 1.0 : 0.0)
+                    
                 }
             } else {
                 KFImage(URL(string: self.data.imageOff))
@@ -169,7 +176,7 @@ struct KidsGnbItem: PageView {
                     .opacity(self.isSelected ? 1.0 : 0.0)
             }
         }
-        .frame(height: Self.size)
+        .frame(width:Self.size,  height: Self.size)
         /*
         .frame(
             minWidth: SystemEnvironment.isTablet ? DimenKids.icon.medium : DimenKids.icon.medium,

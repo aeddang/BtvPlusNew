@@ -93,7 +93,7 @@ struct DiagnosticReportCard: PageComponent{
                     if let lvGraphBoxData = self.lvGraphBoxData {
                         LvGraphBox(thumb: self.profile, data: lvGraphBoxData)
                             .padding(.horizontal, DimenKids.margin.light)
-                            .padding(.vertical, DimenKids.margin.thin)
+                            .padding(.bottom, DimenKids.margin.thin)
                             .onTapGesture {
                                 self.moveResultPage()
                             }

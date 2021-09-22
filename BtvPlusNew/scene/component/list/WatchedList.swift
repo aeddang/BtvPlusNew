@@ -125,7 +125,7 @@ struct WatchedList: PageComponent{
                         )
                     }
                 ),
-                headerSize: Dimen.button.thinUltra + Dimen.margin.tinyExtra,
+                headerSize: Dimen.button.thinUltra + Dimen.margin.thin,
                 marginTop: Dimen.margin.regular ,
                 marginBottom: self.marginBottom,
                 spacing:0,

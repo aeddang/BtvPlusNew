@@ -40,7 +40,9 @@ struct VerticalGraph: PageView {
                                 .padding(.bottom, DimenKids.margin.micro)
                             
                             Text(thumbText)
-                                .modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color: Color.app.white))
+                                .modifier(BoldTextStyleKids(
+                                    size: SystemEnvironment.isTablet ? Font.sizeKids.microUltra : Font.sizeKids.tinyExtra,
+                                    color: Color.app.white))
                                 .lineLimit(1)
                                 .padding(.bottom, self.size.width/3)
                                 .fixedSize()

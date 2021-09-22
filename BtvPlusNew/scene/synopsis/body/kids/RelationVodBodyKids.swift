@@ -30,7 +30,8 @@ struct RelationVodBodyKids: PageComponent{
             isAlignCenter : true,
             spacing:0,
             isRecycle:true,
-            useTracking:false,
+            useTracking:true,
+        
             bgColor:Color.app.white){
             
             if !self.seris.isEmpty {

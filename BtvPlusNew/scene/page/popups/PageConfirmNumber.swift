@@ -288,7 +288,7 @@ struct PageConfirmNumber: PageView {
         }
         
         .onDisappear{
-           
+            
         }
     }//body
     
@@ -298,8 +298,10 @@ struct PageConfirmNumber: PageView {
     }
     
     func closePage(){
+        closePageImmediately()
+        
         self.isFocus = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             self.closePageImmediately()
         }
     }

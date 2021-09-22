@@ -478,6 +478,7 @@
 "alertKidInvalidNickName" = "사용 불가한 특수문자가 포함되어 있습니다.\n다시 입력해 주세요.";
 "alertKidInvalidBirth" = "자녀 프로필은 14세 미만인 경우에만\n등록이 가능합니다.";
 "alertKidWrongBirth" = "아이의 생년월을 확인해주세요.";
+"alertKidOverAge" = "잼키즈 서비스 권장 연령은 14세 미만으로, 13세 기준 콘텐츠가 추천됩니다.";
 "alertKidAddError" = "프로필등록이 실패했습니다.\n다시시도해주세요";
 "alertKidEditError" = "프로필수정이 실패했습니다.\n다시시도해주세요";
 "alertKidDeleteError" = "프로필삭제가 실패했습니다.\n다시시도해주세요";
@@ -1200,6 +1201,9 @@
 "kidsMyNoProfile" = "등록된 자녀\n프로필이 없어요";
 "kidsMyWatch" = "최근 시청 동영상";
 "kidsMyWatchedEmpty" = "최근에 본 동영상이 없어요.";
+"kidsMyPlayWatchedEmpty" = "최근에 시청한 콘텐츠가 없어요.";
+"kidsMyPlayFavoriteEmpty" = "3편이상의 콘텐츠를 시청하신 후 아이의 관심 주제와 장르에 맞는 콘텐츠를 추천받으세요!";
+
 
 "kidsMyDiagnosticReport" = "진단 리포트";
 "kidsMyDiagnosticReportText" = "학습도 하고, 진단 결과도 받고!";

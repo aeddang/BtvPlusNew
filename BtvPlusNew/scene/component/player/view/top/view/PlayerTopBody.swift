@@ -75,6 +75,8 @@ struct PlayerTopBody: PageView{
                         isSelected: self.isMute,
                         size: CGSize(width:Dimen.icon.regular,height:Dimen.icon.regular)
                     ){ _ in
+                        self.viewModel.event = .mute(!self.isMute)
+                        /*
                         if self.isMute {
                             if self.viewModel.volume == 0 {
                                 self.viewModel.event = .volume(0.5)
@@ -83,7 +85,7 @@ struct PlayerTopBody: PageView{
                             }
                         } else {
                             self.viewModel.event = .mute(true)
-                        }
+                        }*/
                     }
                     .fixedSize()
                    

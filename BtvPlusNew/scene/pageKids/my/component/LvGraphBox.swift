@@ -44,7 +44,8 @@ class LvGraphBoxData{
             let max = Float(count)
             self.avgPct = Float(self.avgLv)/max
             self.mePct = Float(self.meLv)/max
-            
+            //self.avgPct = 1
+            //self.mePct = 1
         }
         return self
     }
@@ -77,6 +78,9 @@ class LvGraphBoxData{
        
         self.avgPct = Float(self.avgLv)/Float(max)
         self.mePct = Float(self.meLv)/Float(max)
+        
+        //self.avgPct = 1
+        //self.mePct = 1
         return self
     }
 }
@@ -102,7 +106,7 @@ struct LvGraphBox: PageComponent{
                         Spacer().modifier(LineHorizontal(height: 1.0,  color: Color.app.ivory, opacity: 0.4))
                     }
                 }
-                .modifier(MatchHorizontal(height: DimenKids.item.graphVertical.height))
+                .modifier(MatchHorizontal(height: size.height))
                 HStack(spacing:0){
                     VerticalGraph(
                         value: self.avgPct,

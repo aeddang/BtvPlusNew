@@ -331,7 +331,6 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate , Identi
         currentVolume = isMute ? 0.0 : 1.0
         guard let currentPlayer = player else { return false }
         currentPlayer.volume = currentVolume
-
         return true
     }
     

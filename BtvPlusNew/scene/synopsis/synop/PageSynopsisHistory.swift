@@ -9,21 +9,7 @@ import Foundation
 extension PageSynopsis {
     func getSynopData(obj:PageObject)->SynopsisData {
         self.isAutoPlay = obj.getParamValue(key: .autoPlay) as? Bool
-        if let params = obj.getParamValue(key: .datas) as? [URLQueryItem] {
-            if let rcmdid = params.first(where: {$0.name == "rcmd_id"})?.value,
-               let type = params.first(where: {$0.name == "type"})?.value,
-               //let created = params.first(where: {$0.name == "created"})?.value,
-               //let from = params.first(where: {$0.name == "from"})?.value,
-               let nickname = params.first(where: {$0.name == "rcmd_nickname"})?.value
-            {
-                self.pagePresenter.openPopup(
-                    PageProvider.getPageObject(.recommandReceive)
-                        .addParam(key: .title, value: nickname)
-                        .addParam(key: .id, value: rcmdid)
-                        .addParam(key: .type, value: type)
-                )
-            }
-        }
+        
         
         if let synopsisData = obj.getParamValue(key: .data) as? SynopsisData {
             return synopsisData

@@ -371,7 +371,17 @@ struct AppLayout: PageComponent{
         DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
             self.deepLinkMove(self.appObserver.deepLinkUrl)
             if let alram = self.appObserver.alram  {
-                self.appSceneObserver.alert = .recivedApns(alram)
+                AlramData.move(
+                    pagePresenter: self.pagePresenter,
+                    dataProvider: self.dataProvider,
+                    data: alram)
+                NotificationCoreData().readNotice(title: alram.title ?? "", body: alram.text ?? "")
+                self.repository.pushManager.confirmPush(alram.messageId)
+                self.repository.alram.changedNotification()
+                DispatchQueue.main.async {
+                    self.repository.alram.updatedNotification()
+                }
+                self.appObserver.resetApns()
             }
         }
        

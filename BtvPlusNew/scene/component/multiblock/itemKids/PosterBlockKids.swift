@@ -80,8 +80,8 @@ struct PosterBlockKids:PageComponent, BlockProtocol {
                         
                 } else if self.useEmpty {
                     ErrorKidsData( text: self.data.cardType != .watchedVideo
-                                ? String.pageText.myWatchedEmpty
-                                : String.alert.dataError)
+                                   ? String.kidsText.kidsMyWatchedEmpty
+                                   : String.alert.dataError)
                         .modifier(MatchParent())
                 } else {
                     SkeletonBlockKids(

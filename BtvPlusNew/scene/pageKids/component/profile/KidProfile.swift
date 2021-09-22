@@ -84,6 +84,11 @@ struct KidProfile: PageComponent{
             } else {
                 self.title = kid.nickName
             }
+            if (kid.age ?? 0) > 13 {
+                self.appSceneObserver.event = .toast(String.alert.kidsOverAge)
+            }
+            
+            
         } else {
             self.profileImg = AssetKids.image.noProfile
             self.title = nil

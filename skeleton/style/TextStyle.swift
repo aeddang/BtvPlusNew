@@ -37,11 +37,10 @@ struct BlackTextStyle: ViewModifier {
     }
     func body(content: Content) -> some View {
         return content
+            .truncationMode(.tail)
             .font(.custom(textModifier.family, size: textModifier.size))
             .foregroundColor(textModifier.color)
             .lineSpacing(Font.spacing.regular)
-            .truncationMode(.tail)
-            
     }
 }
 
@@ -60,9 +59,9 @@ struct BoldTextStyle: ViewModifier {
     }
     func body(content: Content) -> some View {
         return content
+            .truncationMode(.tail)
             .font(.custom(textModifier.family, size: textModifier.size))
             .foregroundColor(textModifier.color)
-            .truncationMode(.tail)
             .lineSpacing(Font.spacing.regular)
             
     }
@@ -82,9 +81,9 @@ struct MediumTextStyle: ViewModifier {
     }
     func body(content: Content) -> some View {
         return content
+            .truncationMode(.tail)
             .font(.custom(textModifier.family, size: textModifier.size))
             .foregroundColor(textModifier.color)
-            .truncationMode(.tail)
             .lineSpacing(Font.spacing.regular)
             
     }
@@ -105,10 +104,11 @@ struct RegularTextStyle: ViewModifier {
     }
     func body(content: Content) -> some View {
         return content
+            .truncationMode(.tail)
             .font(.custom(textModifier.family, size: textModifier.size))
             .foregroundColor(textModifier.color)
             .lineSpacing(Font.spacing.regular)
-            .truncationMode(.tail)
+            
     }
 }
 
@@ -127,10 +127,10 @@ struct LightTextStyle: ViewModifier {
     }
     func body(content: Content) -> some View {
         return content
+            .truncationMode(.tail)
             .font(.custom(textModifier.family, size: textModifier.size))
             .foregroundColor(textModifier.color)
             .lineSpacing(Font.spacing.regular)
-            .truncationMode(.tail)
     }
 }
 
@@ -150,10 +150,10 @@ struct NumberBoldTextStyle: ViewModifier {
     }
     func body(content: Content) -> some View {
         return content
+            .truncationMode(.tail)
             .font(.custom(textModifier.family, size: textModifier.size))
             .foregroundColor(textModifier.color)
             .lineSpacing(Font.spacing.regular)
-            .truncationMode(.tail)
     }
 }
 
@@ -172,10 +172,11 @@ struct NumberMediumTextStyle: ViewModifier {
     }
     func body(content: Content) -> some View {
         return content
+            .truncationMode(.tail)
             .font(.custom(textModifier.family, size: textModifier.size))
             .foregroundColor(textModifier.color)
             .lineSpacing(Font.spacing.regular)
-            .truncationMode(.tail)
+            
     }
 }
 
@@ -194,10 +195,11 @@ struct NumberLightTextStyle: ViewModifier {
     }
     func body(content: Content) -> some View {
         return content
+            .truncationMode(.tail)
             .font(.custom(textModifier.family, size: textModifier.size))
             .foregroundColor(textModifier.color)
             .lineSpacing(Font.spacing.regular)
-            .truncationMode(.tail)
+           
     }
 }
 
@@ -208,6 +210,7 @@ struct CustomTextStyle: ViewModifier {
     init(textModifier:TextModifier) {self.textModifier = textModifier}
     func body(content: Content) -> some View {
         return content
+            .truncationMode(.tail)
             .font(.custom(textModifier.family, size: textModifier.size))
             .foregroundColor(textModifier.color)
             .lineSpacing(Font.spacing.regular)

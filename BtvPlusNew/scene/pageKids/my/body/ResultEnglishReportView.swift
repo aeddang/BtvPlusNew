@@ -77,7 +77,7 @@ class ResultEnglishReportViewData{
         self.date = content.subm_dtm?.replace("-", with: ".") ?? ""
         self.retryCount = content.retry_cnt ?? 0
         self.retryCountStr =  self.retryCount == 0
-            ? String.app.empty
+            ? ""
             : self.retryCount.description + String.app.broCount
         
         var idx:Int = 0
@@ -95,6 +95,7 @@ class ResultEnglishReportViewData{
                 thumbText: avg ? String.app.peerAverage : nil,
                 valueText: data.1,
                 value: data.0,
+                //value: 1,
                 color:
                     me
                     ? Color.app.yellow
@@ -121,25 +122,28 @@ struct ResultEnglishReportView: PageComponent{
     var body: some View {
         VStack(spacing:DimenKids.margin.thin){
             HStack(spacing:0){
+                Spacer().modifier(MatchVertical(width: 0))
                 VStack(spacing:DimenKids.margin.thin){
                     HStack(spacing:0){
                         TrophyBox(
                             trophyText: self.data.lvCode,
                             title: String.kidsText.kidsMyEnglishResultLv,
                             subTitle: self.data.lvDescription)
+                            .fixedSize(horizontal: true, vertical: false)
                         Spacer()
                         LvGraphList(datas: self.data.lvGraphs)
-                        
+                            .fixedSize(horizontal: true, vertical: false)
+                        Spacer()
                     }
                     Spacer().modifier(
                         LineHorizontal(height: DimenKids.line.light,
                                      color: Color.app.ivoryDeep,
                                      opacity: 0.5))
-                    HStack(spacing:DimenKids.margin.thin){
+                    HStack(spacing:SystemEnvironment.isTablet ? DimenKids.margin.tiny : DimenKids.margin.thin){
                         RectButtonKids(
                             text: String.kidsText.kidsMyEnglishResultRetry,
                             textModifier: BoldTextStyleKids(
-                                size: Font.sizeKids.tiny,
+                                size: SystemEnvironment.isTablet ? Font.sizeKids.tinyExtra : Font.sizeKids.tiny,
                                 color: Color.app.sepia).textModifier,
                             bgColor: Color.app.ivoryLight,
                             size: DimenKids.button.lightRectExtra,
@@ -151,7 +155,7 @@ struct ResultEnglishReportView: PageComponent{
                         RectButtonKids(
                             text: String.kidsText.kidsMyEnglishResultAnswerView,
                             textModifier: BoldTextStyleKids(
-                                size: Font.sizeKids.tiny,
+                                size: SystemEnvironment.isTablet ? Font.sizeKids.tinyExtra : Font.sizeKids.tiny,
                                 color: Color.app.sepia).textModifier,
                             bgColor: Color.app.ivoryLight,
                             size: DimenKids.button.lightRectExtra,
@@ -182,7 +186,7 @@ struct ResultEnglishReportView: PageComponent{
                     icon: AssetKids.image.resultEnglish,
                     text: String.kidsText.kidsMyEnglishResultCommentText,
                     comments: self.data.comments)
-                    .modifier(MatchVertical(width: SystemEnvironment.isTablet ? 320 : 178))
+                    .modifier(MatchVertical(width: SystemEnvironment.isTablet ? 288 : 178))
                     .background(Color.app.whiteExtra)
             }
             .modifier(MatchParent())
@@ -196,11 +200,13 @@ struct ResultEnglishReportView: PageComponent{
             )
             .modifier(MatchHorizontal(height: DimenKids.button.regular))
         }
+        
         .padding(.top, DimenKids.margin.thin)
         .padding(.bottom, DimenKids.margin.thin + self.sceneObserver.safeAreaIgnoreKeyboardBottom)
         .modifier(ContentHorizontalEdgesKids())
         .onAppear(){
           
         }
+        .modifier(MatchParent())
     }
 }

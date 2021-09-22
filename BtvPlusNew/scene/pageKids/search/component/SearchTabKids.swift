@@ -82,17 +82,18 @@ struct SearchTabKids: PageView {
                         */
                         
                         
-                        
-                        Button(action: {
-                            self.keyword = ""
-                            self.inputChanged?("")
-                        }) {
-                            Image(AssetKids.icon.searchDelete)
-                                .renderingMode(.original)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: DimenKids.icon.light,
-                                       height: DimenKids.icon.light)
+                        if !self.keyword.isEmpty {
+                            Button(action: {
+                                self.keyword = ""
+                                self.inputChanged?("")
+                            }) {
+                                Image(AssetKids.icon.searchDelete)
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: DimenKids.icon.light,
+                                           height: DimenKids.icon.light)
+                            }
                         }
                         
                         Button(action: {

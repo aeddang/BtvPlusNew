@@ -25,12 +25,14 @@ struct LvGraphData:Identifiable{
 struct LvGraphList: PageComponent{
     var datas:[LvGraphData]
     var body: some View {
-        HStack(spacing:DimenKids.margin.thin){
+        HStack(spacing :  0){
             ForEach(self.datas) { data in
                 LvGraphListItem(
                     data: data
                 )
-                .frame(width: DimenKids.item.graphVertical.width)
+                .frame(width: DimenKids.item.graphVerticalExtra.width)
+                .fixedSize(horizontal: true, vertical: false)
+                Spacer()
             }
         }
     }
@@ -48,7 +50,8 @@ struct LvGraphListItem: PageComponent{
             thumbImg: self.data.thumb,
             title: self.data.title,
             titleColor: self.data.titleColor,
-            size: DimenKids.item.graphVerticalExtra,
+            size: SystemEnvironment.isTablet
+            ? DimenKids.item.graphVerticalExtra :  DimenKids.item.graphVerticalExtraLong,
             color: self.data.color)
              
         .onAppear(){

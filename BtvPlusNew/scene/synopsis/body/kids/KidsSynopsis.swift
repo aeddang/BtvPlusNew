@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 extension KidsSynopsis {
     static let topHeight:CGFloat = SystemEnvironment.isTablet ? 192 : 40
-    static let bottomHeight:CGFloat = DimenKids.button.mediumRect.height
+    static let bottomHeight:CGFloat = SystemEnvironment.isTablet ? 74 : 38
     static let listWidth:CGFloat = SystemEnvironment.isTablet ? 260 : 150
     //static let playerAreaWidth:CGFloat = SystemEnvironment.isTablet ? 705 : 440
     //static let playerSize:CGSize = SystemEnvironment.isTablet ? CGSize(width: 705, height: 394) : CGSize(width: 368, height: 206)

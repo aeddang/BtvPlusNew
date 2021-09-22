@@ -9,58 +9,11 @@
 import Foundation
 import UserNotifications
 
-class NotificationReceiver: NSObject, UNUserNotificationCenterDelegate {
+class NotificationReceiver{
     private static let notiReceiver = NotificationReceiver()
-
-    private var isShownRemoteNoti = false
-    private var isShownReservation = false
-    //옥수수는 idReceiveUserNotification 에서 로컬노티 추가하면 반응없는데
-    //얘는 추가하면 receiveLocalNoti 가 호출되서 플래그 설정.
-    private var fromDidReceiveUserNotification = false
-    
-    class func shareInstance() -> NotificationReceiver {
+    static func shareInstance() -> NotificationReceiver {
         return notiReceiver
     }
-    
-
-    override init() {
-        super.init()
-        
-    }
-
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                willPresent notification: UNNotification,
-                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        //if Global.sharedInstance.isAgreementInfoPush {
-            // 수신 제한 시간인지 체크
-            //if !isLimitTime(userInfo: notification.request.content.userInfo) {
-                // 키즈 모드 진입 상태이면서 수신 가능한 PUSH가 아니면 처리 안함
-                /*
-                if isKidsModeEnabled
-                    && !PushUtil.isKidsAvailablePush(userInfo: notification.request.content.userInfo) {
-                    return
-                }*/
-                self.didReceiveRemoteNotification(userInfo: notification.request.content.userInfo)
-                DispatchQueue.main.async {
-                    if let badgeNo = notification.request.content.badge as? Int {
-                        UIApplication.shared.applicationIconBadgeNumber = badgeNo
-                    }
-                }
-            completionHandler([.badge, .sound])
-            //}
-        //}
-    }
-    
-   
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                didReceive response: UNNotificationResponse,
-                                withCompletionHandler completionHandler: @escaping () -> Void) {
-        if let userInfo = response.notification.request.content.userInfo as? [String: Any] {
-            NotificationCoreData().addNotice(userInfo)
-        }
-        completionHandler()
-    }
-    
     /*
     func didReceiveLocalNotification(_ application: UIApplication, notification: UILocalNotification) {
         
@@ -85,14 +38,14 @@ class NotificationReceiver: NSObject, UNUserNotificationCenterDelegate {
         DispatchQueue.main.async {
             UIApplication.shared.applicationIconBadgeNumber = num
         }
-        
         var title:String = ""
         var body:String = ""
+        var isSave:Bool = true
         if let aps = info["aps"] as? [String: Any] {
             if let mutableContent = aps["mutable-content"] as? String {
-                if mutableContent == "1" { return nil }
+                if mutableContent == "1" { isSave = false }
             } else if let mutableContent = aps["mutable-content"] as? Int {
-                if mutableContent == 1 { return nil}
+                if mutableContent == 1 { isSave = false }
             }
             if let alert = aps["alert"] as? [String: Any] {
                 if let value = alert["title"] as? String { title = value }
@@ -102,7 +55,7 @@ class NotificationReceiver: NSObject, UNUserNotificationCenterDelegate {
             }
         }
         let alram = AlramData().setData(title: title, text: body, userData: info)
-        NotificationCoreData().addNotice(info)
+        if isSave { NotificationCoreData().addNotice(info) }
         return alram
     }
     

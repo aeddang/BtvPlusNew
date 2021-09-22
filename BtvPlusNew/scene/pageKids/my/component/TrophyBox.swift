@@ -30,14 +30,14 @@ struct TrophyBox: PageComponent{
             if let title = self.title {
                 Text(title)
                     .modifier(BoldTextStyleKids(
-                                size: Font.sizeKids.thin,
+                        size: SystemEnvironment.isTablet ? Font.sizeKids.tiny : Font.sizeKids.thin,
                                 color:  Color.app.brownDeep))
             }
             
             if let subTitle = self.subTitle {
                 Text(subTitle)
                     .modifier(BoldTextStyleKids(
-                                size: Font.sizeKids.thin,
+                                size:  SystemEnvironment.isTablet ? Font.sizeKids.tiny : Font.sizeKids.thin,
                                 color:  Color.app.sepia))
             }
             

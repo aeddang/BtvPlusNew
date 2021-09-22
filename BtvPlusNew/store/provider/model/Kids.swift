@@ -103,6 +103,11 @@ class KidsGnbItemData:InfinityData, ObservableObject{
         self.menuCode = data.kidsz_gnb_cd
         self.imageOn = AssetKids.gnbTop.homeOn
         self.imageOff = AssetKids.gnbTop.homeOff
+        /*
+        let size = CGSize(width: KidsGnbItem.size, height: KidsGnbItem.size)
+        self.imageOff = ImagePath.thumbImagePath(filePath: data.menu_off_img_path, size: size, convType: .alpha) ?? self.imageOn
+        self.imageOn = ImagePath.thumbImagePath(filePath: data.menu_on_img_path, size: size, convType: .alpha) ?? self.imageOff
+        */
         self.blocks = data.blocks?.map{$0}
         return self
     }
@@ -112,7 +117,7 @@ class KidsGnbItemData:InfinityData, ObservableObject{
         self.menuId = data.menu_id
         self.menuCode = data.kidsz_gnb_cd
         self.blocks = data.blocks?.map{$0}
-        let size = CGSize(width: DimenKids.icon.heavy, height: DimenKids.icon.heavy)
+        let size = CGSize(width: KidsGnbItem.size, height: KidsGnbItem.size)
         
         self.imageOff = ImagePath.thumbImagePath(filePath: data.menu_off_img_path, size: size, convType: .alpha) ?? self.imageOn
         self.imageOn = ImagePath.thumbImagePath(filePath: data.menu_on_img_path, size: size, convType: .alpha) ?? self.imageOff

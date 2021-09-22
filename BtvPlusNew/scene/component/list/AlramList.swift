@@ -272,43 +272,11 @@ struct AlramItem: PageView {
         .background(Color.app.blueLight)
         .onTapGesture {
             if !self.isRead { self.read() }
+            AlramData.move(
+                pagePresenter: self.pagePresenter,
+                dataProvider: self.dataProvider,
+                data: self.data)
             
-            if let move = data.move {
-                switch move {
-                case .home, .category:
-                    var findBand:Band? = nil
-                    if let gnbTypCd = data.moveData?[PageParam.id] as? String {
-                        findBand = dataProvider.bands.getData(gnbTypCd: gnbTypCd)
-                    }else if let menuId = data.moveData?[PageParam.data] as? String {
-                        findBand = dataProvider.bands.getData(menuId: menuId)
-                    }
-                    guard let band = findBand else { return }
-                    self.pagePresenter.changePage(
-                        PageProvider
-                            .getPageObject(move)
-                            .addParam(params: data.moveData)
-                            .addParam(key: .id, value: band.menuId)
-                            .addParam(key: UUID().uuidString , value: "")
-                    )
-                    
-                default :
-                    let pageObj = PageProvider.getPageObject(move)
-                    pageObj.params = data.moveData
-                    self.pagePresenter.openPopup(pageObj)
-                }
-            }
-            else if let link = data.outLink {
-                AppUtil.openURL(link)
-            }
-            
-            if let link = data.inLink {
-                self.pagePresenter.openPopup(
-                    PageProvider
-                        .getPageObject(.webview)
-                        .addParam(key: .data, value: link)
-                        .addParam(key: .title , value: data.title)
-                )
-            }
         }
         .onReceive(self.data.$isRead) { isRead in
             self.isRead = isRead

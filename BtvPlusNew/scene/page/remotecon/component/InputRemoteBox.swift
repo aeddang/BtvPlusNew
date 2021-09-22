@@ -76,7 +76,7 @@ struct InputRemoteBox: PageComponent {
                     }
                     .padding(.top, SystemEnvironment.isTablet ? Dimen.margin.regular :  Dimen.margin.heavyExtra)
                     .frame(
-                        width:  Font.size.black * CGFloat(self.inputSize)
+                        width: min( Dimen.button.regularHorizontal , Font.size.black * CGFloat(self.inputSize))
                     )
                 }
                 FillButton(

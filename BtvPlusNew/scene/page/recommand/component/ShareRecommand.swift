@@ -182,7 +182,7 @@ struct ShareRecommand: PageComponent {
             + "?from=mgm&created="
             + self.getCreated()
             + "&rcmd_id=" + mgmId
-            + "&rcmd_nickname=" + (self.pairing.user?.nickName ?? "")
+        + "&rcmd_nickname=" + (self.pairing.user?.nickName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")
         self.repository.shareManager.share(
             Shareable(
                 link:link,

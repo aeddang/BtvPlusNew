@@ -168,7 +168,7 @@ extension String{
 
         #endif
         text.font = UXFont.init(name: fontName, size: fontSize)
-        text.lineBreakMode = .byWordWrapping
+        text.lineBreakMode = .byTruncatingTail
         return text.sizeThatFits(CGSize.init(width: width, height: .infinity)).height
     }
     

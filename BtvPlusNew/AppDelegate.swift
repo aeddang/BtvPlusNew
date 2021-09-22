@@ -36,10 +36,6 @@ class AppObserver: ObservableObject, PageProtocol {
     let apnsKey = "aps"
 
     func handleApns(_ userInfo: [AnyHashable: Any]){
-        if let messageID = userInfo[gcmMessageIDKey] {
-             PageLog.d("Message ID: \(messageID)", tag: self.tag)
-        }
-        
         if let aps = userInfo[apnsKey] as? [String: Any] {
             PageLog.d("aps: \(aps)" , tag: self.tag)
             self.apns = userInfo
@@ -114,7 +110,7 @@ class AppObserver: ObservableObject, PageProtocol {
 }
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, PageProtocol {
     static var orientationLock = UIInterfaceOrientationMask.all
     static let appObserver = AppObserver()
     static private(set) var appURLSession:URLSession? = nil
@@ -127,18 +123,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
         FirebaseApp.configure()
         DynamicLinks.performDiagnostics(completion: nil)
         
+        
+        UNUserNotificationCenter.current().delegate = self
         let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
         UNUserNotificationCenter.current().requestAuthorization(
             options: authOptions){ _ , error in
             DispatchQueue.main.async {
-                UNUserNotificationCenter.current().delegate = NotificationReceiver.shareInstance()
                 UIApplication.shared.registerForRemoteNotifications()
             }
         }
         
         let queue = OperationQueue()
         queue.qualityOfService = .utility
-        Self.appURLSession = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: queue)
+        Self.appURLSession = URLSession(
+            configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: queue)
         let launchedURL = launchOptions?[UIApplication.LaunchOptionsKey.url] as? URL
         return AppDelegate.appObserver.handleDynamicLink(launchedURL)
     }
@@ -198,7 +196,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         PageLog.d("APNs token retrieved: \(deviceToken.base64EncodedString())", tag: self.tag)
         AppDelegate.appObserver.apnsToken = deviceToken.toHexString()
-        /*
+        /*FB
         Messaging.messaging().apnsToken = deviceToken
         Messaging.messaging().token { token, error in
             if let error = error {
@@ -210,6 +208,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PageProtocol {
         }*/
     }
     
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        //if Global.sharedInstance.isAgreementInfoPush {
+            // 수신 제한 시간인지 체크
+            //if !isLimitTime(userInfo: notification.request.content.userInfo) {
+                // 키즈 모드 진입 상태이면서 수신 가능한 PUSH가 아니면 처리 안함
+                /*
+                if isKidsModeEnabled
+                    && !PushUtil.isKidsAvailablePush(userInfo: notification.request.content.userInfo) {
+                    return
+                }*/
+                AppDelegate.appObserver.handleApns(notification.request.content.userInfo)
+                DispatchQueue.main.async {
+                    if let badgeNo = notification.request.content.badge as? Int {
+                        UIApplication.shared.applicationIconBadgeNumber = badgeNo
+                    }
+                }
+                completionHandler([.badge, .sound])
+            //}
+        //}
+    }
+    
+   
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+        if let userInfo = response.notification.request.content.userInfo as? [String: Any] {
+            AppDelegate.appObserver.handleApns(userInfo)
+        }
+        completionHandler()
+    }
+    
 }
 
 extension AppDelegate : URLSessionDelegate {
@@ -219,53 +250,3 @@ extension AppDelegate : URLSessionDelegate {
     }
 }
 
-
-/*
-extension AppDelegate : UNUserNotificationCenterDelegate {
-    // Receive displayed notifications for iOS 10 devices.
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                willPresent notification: UNNotification,
-                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        
-        
-        let userInfo = notification.request.content.userInfo
-        AppDelegate.appObserver.handleApns(userInfo)
-        PageLog.d("userNotificationCenter[] " + userInfo.debugDescription, tag: self.tag)
-        
-        DispatchQueue.main.async {
-            if let badgeNo = notification.request.content.badge as? Int {
-                UIApplication.shared.applicationIconBadgeNumber = badgeNo
-            }
-            completionHandler([.badge, .sound])
-        }
-        
-    }
-   
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                didReceive response: UNNotificationResponse,
-                                withCompletionHandler completionHandler: @escaping () -> Void) {
-        let userInfo = response.notification.request.content.userInfo
-        AppDelegate.appObserver.handleApns(userInfo)
-        PageLog.d("userNotificationCenter{} " + userInfo.debugDescription, tag: self.tag)
-        completionHandler()
-    }
-}*/
-
-/*
-// [END ios_10_message_handling]
-extension AppDelegate : MessagingDelegate {
-    // [START refresh_token]
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        PageLog.d("Firebase registration token: \(fcmToken)", tag: self.tag)
-        let dataDict:[String: String] = ["token": fcmToken]
-        NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
-    }
-    // [END refresh_token]
-    // [START ios_10_data_message]
-    func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
-         PageLog.d("Received data message: \(remoteMessage.appData)", tag: self.tag)
-    }
-    // [END ios_10_data_message]
-}
-
-*/

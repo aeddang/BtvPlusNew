@@ -126,8 +126,8 @@ struct PageKidsSearch: PageView {
                             self.search(keyword: keyword)
                         },
                         goBack: {
+                            self.isFocus = false
                             self.sendLog(action: .clickSearchBack)
-                            AppUtil.hideKeyboard()
                             if self.isVoiceSearch {
                                 self.voiceSearchEnd()
                                 return
@@ -212,7 +212,10 @@ struct PageKidsSearch: PageView {
                 
             }
             .onDisappear{
-                self.isFocus = false
+                self.isFocus = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    AppUtil.hideKeyboard()
+                }
             }
             
         }//geo

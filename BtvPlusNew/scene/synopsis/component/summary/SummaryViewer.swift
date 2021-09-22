@@ -44,6 +44,7 @@ struct SummaryViewer: PageComponent{
     var data:SummaryViewerData
     var useTracking:Bool = false
     var isSimple:Bool = false
+    var viewLineNum:Int = 4
     @State var isExpand = false
     @State var needExpand = false
     var body: some View {
@@ -76,7 +77,7 @@ struct SummaryViewer: PageComponent{
                             .lineSpacing(Font.spacing.large)
                             .modifier(MediumTextStyle( size: Font.size.light ))
                             .fixedSize(horizontal: false, vertical: true)
-                            .lineLimit(self.isExpand ? 999 : 4)
+                            .lineLimit(self.isExpand ? 999 : self.viewLineNum)
                             
                         if self.needExpand {
                             HStack{
@@ -116,7 +117,7 @@ struct SummaryViewer: PageComponent{
         let h = summry.textHeightFrom(
             width: self.sceneObserver.screenSize.width - (Dimen.margin.thin * 2),
             fontSize: Font.size.light )
-        if h > ((Font.size.light + Dimen.margin.micro) * 3) {
+        if h > ((Font.size.light + Dimen.margin.micro) * CGFloat(self.viewLineNum)) {
             self.needExpand = true
         }
     }

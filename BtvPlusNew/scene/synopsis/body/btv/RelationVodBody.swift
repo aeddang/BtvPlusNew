@@ -42,7 +42,7 @@ struct RelationVodBody: PageComponent{
                 marginBottom : self.sceneObserver.safeAreaIgnoreKeyboardBottom,
                 spacing:0,
                 isRecycle:true,
-                useTracking:false
+                useTracking:true
                 ){
                 
                 RelationVodListBody(

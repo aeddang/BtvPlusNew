@@ -23,10 +23,13 @@ enum AlramMsgType: Int {
     case none = -1
     case event
     case contentUpdate
+    case marketKids
+    
     static func getType(_ value:String)->AlramMsgType{
         switch value {
         case "market": return .event
         case "content": return .contentUpdate
+        case "market_kids": return .marketKids
         case "reservation": return .event
         case "service": return .event
         case "inform": return .event
@@ -41,6 +44,9 @@ enum AlramMsgType: Int {
     case "inform" : config = "A5.inform"
     */
 }
+
+
+
 
 enum AlramImageType:String {
     case none, local, poster
@@ -372,6 +378,7 @@ class AlramData:InfinityData,ObservableObject{
             // 메뉴 이동 (PUSH/외부진입)
             // http://m.btvplus.co.kr?menus=BP_03_04/NM2000002159/NM2000002444/NM2000004860/NM2000004861
             // http://m.btvplus.co.kr?menus=NM2000002159/NM2000002444
+            
             guard var url = self.location else { return }
             guard let menus = AppUtil.getQurry(url: url, key: "menus") else { return }
             if menus.starts(with: "NM2000002159") == true {
@@ -381,24 +388,41 @@ class AlramData:InfinityData,ObservableObject{
             }
             let arrParam = url.components(separatedBy: "/")
             guard let menuId = arrParam.first(where: {!$0.isEmpty}) else { return }
-            var param = [PageParam:Any]()
-            let gnbType = EuxpNetwork.GnbTypeCode.getType(menuId)
-            if gnbType != nil {
-                param[.id] = gnbType!.rawValue
-                self.move = gnbType == EuxpNetwork.GnbTypeCode.GNB_CATEGORY ? .category : .home
-                if arrParam.count >= 1 {
-                    param[.subId] = url.replace(menuId, with: "")
+            if self.msgType == .marketKids {
+                self.move = .kidsHome
+                var param = [PageParam:Any]()
+                if menuId == EuxpNetwork.KidsGnbCd.monthlyTicket.rawValue {
+                    let popup = PageKidsProvider
+                        .getPageObject(.kidsMonthly)
+                        .addParam(key: .subId, value: url)
+                    param[.data] = popup
+                } else {
+                    param[.link] = url
                 }
-            } else {
-                param[.data] = menuId
-                self.move = .home
-                if arrParam.count >= 1 {
-                    param[.subId] = url
-                }
-            }
-            self.actionLog.menu_name = "B4.MENU"
-            self.moveData = param
+                self.actionLog.menu_name = "B4.MENU"
+                self.moveData = param
                 
+            } else {
+                
+                var param = [PageParam:Any]()
+                let gnbType = EuxpNetwork.GnbTypeCode.getType(menuId)
+                if gnbType != nil {
+                    param[.id] = gnbType!.rawValue
+                    self.move = gnbType == EuxpNetwork.GnbTypeCode.GNB_CATEGORY ? .category : .home
+                    if arrParam.count >= 1 {
+                        param[.subId] = url.replace(menuId, with: "")
+                    }
+                } else {
+                    param[.data] = menuId
+                    self.move = .home
+                    if arrParam.count >= 1 {
+                        param[.subId] = url
+                    }
+                }
+                self.actionLog.menu_name = "B4.MENU"
+                self.moveData = param
+            }
+            
         case .synop:
             guard let url = self.location else { return }
             guard let type = AppUtil.getQurry(url: url, key: "type") else { return }
@@ -468,6 +492,52 @@ class AlramData:InfinityData,ObservableObject{
         text = "(광고) 좀비는 무섭고 사람은 더 무섭다!! 부산행 이후 돌아온 K-좀비 무비. 강동원 주연의 <반도>! 오늘 하루만 모바일 B tv 로 무료로 감상해 보세요."
         date = "2020.08.31 18:30"
         return self
+    }
+    
+    
+    static func move(pagePresenter:PagePresenter, dataProvider:DataProvider ,data:AlramData?) {
+        guard let data = data  else {return}
+        if let move = data.move {
+            switch move {
+            case .home, .category:
+                var findBand:Band? = nil
+                if let gnbTypCd = data.moveData?[PageParam.id] as? String {
+                    findBand = dataProvider.bands.getData(gnbTypCd: gnbTypCd)
+                }else if let menuId = data.moveData?[PageParam.data] as? String {
+                    findBand = dataProvider.bands.getData(menuId: menuId)
+                }
+                guard let band = findBand else { return }
+                pagePresenter.changePage(
+                    PageProvider
+                        .getPageObject(move)
+                        .addParam(params: data.moveData)
+                        .addParam(key: .id, value: band.menuId)
+                        .addParam(key: UUID().uuidString , value: "")
+                )
+                
+            case .kidsHome:
+                let pageObj = PageProvider.getPageObject(move)
+                                .addParam(params: data.moveData)
+                pagePresenter.changePage(pageObj)
+                
+            default :
+                let pageObj = PageProvider.getPageObject(move)
+                pageObj.params = data.moveData
+                pagePresenter.openPopup(pageObj)
+            }
+        }
+        else if let link = data.outLink {
+            AppUtil.openURL(link)
+        }
+        
+        if let link = data.inLink {
+            pagePresenter.openPopup(
+                PageProvider
+                    .getPageObject(.webview)
+                    .addParam(key: .data, value: link)
+                    .addParam(key: .title , value: data.title)
+            )
+        }
     }
 
 }

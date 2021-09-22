@@ -66,17 +66,18 @@ struct DimenKids{
     struct button {
         public static let heavy:CGFloat =  80
         public static let medium:CGFloat = isPad ? 60 : 50
-        public static let regular:CGFloat = isPad ? 67 : 32 //*
-        public static let regularExtra:CGFloat = isPad ? 49 : 30 //*
+        public static let regular:CGFloat = isPad ? 68 : 32 //*
+        public static let regularExtra:CGFloat = isPad ? 48 : 30 //*
         public static let lightUltra:CGFloat = isPad ? 46 : 28 //*
         public static let light:CGFloat = isPad ? 46 : 24 //*
         public static let thin:CGFloat = isPad ? 40 : 20
         
         public static let heavyRect:CGSize = isPad ? CGSize(width: 258, height: 73) : CGSize(width: 159, height: 38)//*
         
-        public static let mediumRectUltra:CGSize = isPad ? CGSize(width: 282, height:51) : CGSize(width: 178, height: 31) //*
-        public static let mediumRect:CGSize = isPad ? CGSize(width: 221, height: 73) : CGSize(width: 115, height: 38) //*
+        public static let mediumRectUltra:CGSize = isPad ? CGSize(width: 282, height:51) : CGSize(width: 178, height: 32) //*
+        public static let mediumRect:CGSize = isPad ? CGSize(width: 221, height: 74) : CGSize(width: 115, height: 38) //*
         public static let mediumRectExtra:CGSize = isPad ? CGSize(width: 192, height: 61) : CGSize(width: 100, height: 32) //*
+        public static let regularUltra:CGSize = isPad ? CGSize(width: 208, height: 51) : CGSize(width: 90, height: 60) //*
         public static let regularRect:CGSize = isPad ? CGSize(width: 173, height: 115) : CGSize(width: 90, height: 60) //*
         public static let lightRect:CGSize = isPad ? CGSize(width: 90, height: 60) : CGSize(width: 50, height: 34) //*
         public static let lightRectExtra:CGSize = isPad ? CGSize(width: 194, height: 45) : CGSize(width: 130, height: 28) //*
@@ -132,7 +133,7 @@ struct DimenKids{
     struct item {
         
         static let profileRegist:CGSize =  isPad ? CGSize(width: 150, height: 150) : CGSize(width: 78, height:  78)//*
-        static let profileGnb:CGSize =  isPad ? CGSize(width: 42, height:  42) : CGSize(width: 34, height:  34)//*
+        static let profileGnb:CGSize =  isPad ? CGSize(width: 60, height:  60) : CGSize(width: 36, height:  36)//*
         static let profile:CGSize =  isPad ? CGSize(width: 58, height:  58) : CGSize(width: 30, height:  30)//*
         static let profileList:CGSize =  isPad ? CGSize(width: 259, height:  326) : CGSize(width: 160, height:  201)//*
         
@@ -142,8 +143,10 @@ struct DimenKids{
         
         static let reportComment:CGSize =  isPad ? CGSize(width: 102, height: 102) : CGSize(width: 63, height: 63)//*
         static let graphHorizontal:CGSize =  isPad ? CGSize(width: 199, height: 30) : CGSize(width: 100, height: 15)//*
-        static let graphVertical:CGSize =  isPad ? CGSize(width: 49, height: 160) : CGSize(width: 28, height: 90)//*
-        static let graphVerticalExtra:CGSize =  isPad ? CGSize(width: 49, height: 300) : CGSize(width: 23, height: 69)//*
+        static let graphVertical:CGSize =  isPad ? CGSize(width: 49, height: 130) : CGSize(width: 28, height: 66)//*
+        static let graphVerticalLong:CGSize =  isPad ? CGSize(width: 49, height: 138) : CGSize(width: 28, height: 80)//*
+        static let graphVerticalExtra:CGSize =  isPad ? CGSize(width: 38, height: 108) : CGSize(width: 23, height: 74)//*
+        static let graphVerticalExtraLong:CGSize =  isPad ? CGSize(width: 38, height: 108) : CGSize(width: 23, height: 80)//*
         
     }
 }

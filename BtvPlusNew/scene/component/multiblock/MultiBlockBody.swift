@@ -334,8 +334,15 @@ struct MultiBlockBody: PageComponent {
                     if !msg.isEmpty {
                         self.errorMsg = msg
                     }
-                }else if data.dataType == .watched || data.cardType == .watchedVideo {
-                    self.errorMsg = String.pageText.myWatchedEmpty
+                } else if data.dataType == .watched || data.cardType == .watchedVideo {
+                    self.errorMsg = self.pageType == .btv
+                        ? String.pageText.myWatchedEmpty
+                        : String.kidsText.kidsMyPlayWatchedEmpty
+                    
+                } else {
+                    self.errorMsg = self.pageType == .btv
+                        ? nil
+                        : String.kidsText.kidsMyPlayFavoriteEmpty
                 }
             }
             withAnimation {

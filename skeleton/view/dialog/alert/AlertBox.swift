@@ -37,7 +37,7 @@ struct AlertBox: PageComponent {
                     AlertBody(title: self.title, image: self.image, text: self.text, subText: self.subText, tipText: self.tipText, referenceText: self.referenceText)
                         .padding(.top, Dimen.margin.regular)
                         .padding(.bottom, Dimen.margin.medium)
-                        .padding(.horizontal, Dimen.margin.regular)
+                        .padding(.horizontal, Dimen.margin.light)
                 }
                 if self.imgButtons != nil {
                     HStack(spacing:Dimen.margin.regular){
@@ -147,6 +147,7 @@ struct AlertBody: PageComponent{
             }
             if self.tipText != nil{
                 Text(self.tipText!)
+                    .kerning(Font.kern.thin)
                     .multilineTextAlignment(.center)
                     .modifier(MediumTextStyle(size: Font.size.tiny, color: Color.brand.primary))
                     .lineLimit(nil)
@@ -155,6 +156,7 @@ struct AlertBody: PageComponent{
             }
             if self.referenceText != nil{
                 Text(self.referenceText!)
+                    .kerning(Font.kern.thin)
                     .multilineTextAlignment(.center)
                     .modifier(MediumTextStyle(size: Font.size.tiny, color: Color.app.greyLight))
                     .lineLimit(nil)

@@ -91,6 +91,8 @@ struct PageRecommandReceive: PageView {
         .onAppear(){
             guard let obj = self.pageObject  else { return }
             self.mgmId = obj.getParamValue(key: .id) as? String
+            self.recommandFriend = obj.getParamValue(key: .text) as? String ?? ""
+            self.recommandTitle = obj.getParamValue(key: .title) as? String ?? ""
             self.srisTypeCd = obj.getParamValue(key: .type) as? String
         }
         
@@ -119,7 +121,7 @@ struct PageRecommandReceive: PageView {
             self.error = .etc
             return
         }
-        if result == ApiCode.success {
+        if result == ApiCode.ok {
             self.isCompleted = true
         } else {
             self.error = MgmRpsNetwork.MgmError.getType(result)

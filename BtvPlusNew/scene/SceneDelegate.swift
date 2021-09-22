@@ -151,6 +151,9 @@ class SceneDelegate: PageSceneDelegate {
                 return false
             }
         }
+        if self.repository?.appSceneObserver?.pairingCompletedMovePage?.pageID == willPage.pageID {
+            self.repository?.appSceneObserver?.pairingCompletedMovePage = nil
+        }
         
         if let layerPlayer = self.repository?.appSceneObserver?.currentPlayer  {
             if willPage.pageGroupID == PageType.kids.rawValue {
@@ -168,9 +171,7 @@ class SceneDelegate: PageSceneDelegate {
             }
         
         }
-        if self.repository?.appSceneObserver?.pairingCompletedMovePage?.pageID == willPage.pageID {
-            self.repository?.appSceneObserver?.pairingCompletedMovePage = nil
-        }
+        
         return true
     }
     

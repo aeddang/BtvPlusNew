@@ -31,6 +31,7 @@ class CreativeGraphBoxData{
         if let labels = content.labels, let children = content.childs, let parents = content.parents {
             let max:Float = 100
             self.compares = zip(labels, zip(children, parents)).map{ title, data in
+                //CompareData(title: title, valueA: Float(100)/max , valueB:  Float(100)/max)
                 CompareData(title: title, valueA: Float(data.0)/max , valueB:  Float(data.1)/max)
             }
         }
@@ -120,7 +121,7 @@ struct CreativeGraph: PageComponent{
                         Spacer().modifier(LineHorizontal(height: 1.0,  color: Color.app.ivory, opacity: 0.4))
                     }
                 }
-                .modifier(MatchHorizontal(height: DimenKids.item.graphVertical.height))
+                .modifier(MatchHorizontal(height: size.height))
                 HStack(spacing:DimenKids.margin.thin){
                     VerticalGraph(
                         value: self.valueAPct,

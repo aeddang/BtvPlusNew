@@ -71,8 +71,8 @@ struct SetupLaboratory: PageView {
                     var system_data = [String:Any]()
                     system_data["messageId"] = "pixunptufh3uncbogyadn"
                     system_data["type"] = "message"
-                    //system_data["mutable-content"] = 1
-                    //aps["mutable-content"] = 1
+                
+                    aps["mutable-content"] = 1
                     aps["alert"] = "알람이 오네요" + UUID().uuidString
                     aps["badge"] = 10
                     aps["sound"] = "default"

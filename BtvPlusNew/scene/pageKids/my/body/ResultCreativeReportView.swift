@@ -58,7 +58,7 @@ class ResultCreativeReportViewData{
         self.date = content.subm_dtm?.replace("-", with: ".") ?? ""
         self.retryCount = content.retry_cnt ?? 0
         self.retryCountStr =  self.retryCount == 0
-            ? String.app.empty
+            ? ""
             : self.retryCount.description + String.app.broCount
         
         return self
@@ -80,7 +80,7 @@ struct ResultCreativeReportView: PageComponent{
                         data: self.data.creativeGraphBoxData,
                         sortSize: SystemEnvironment.isTablet ? CGSize(width: 28, height: 16) : CGSize(width: 17, height: 10),
                         size: SystemEnvironment.isTablet ?  DimenKids.item.graphVerticalExtra :  DimenKids.item.graphVertical,
-                        colorKid: Color.app.yellow, 
+                        colorKid: Color.app.yellow,
                         colorParent: Color.app.green
                     )
                     .padding(.horizontal, DimenKids.margin.regular)
@@ -130,11 +130,13 @@ struct ResultCreativeReportView: PageComponent{
             )
             .modifier(MatchHorizontal(height: DimenKids.button.regular))
         }
+        
         .padding(.top, DimenKids.margin.thin)
         .padding(.bottom, DimenKids.margin.thin + self.sceneObserver.safeAreaIgnoreKeyboardBottom)
         .modifier(ContentHorizontalEdgesKids())
         .onAppear(){
           
         }
+        .modifier(MatchParent())
     }
 }

@@ -233,8 +233,8 @@ struct CateBlock: PageComponent{
                 } else {
                     ErrorKidsData(
                         text: self.viewModel.data?.dataType == .watched
-                            ? String.alert.dataError
-                            : String.kidsText.kidsMyWatchedEmpty
+                            ? String.kidsText.kidsMyWatchedEmpty
+                            : String.alert.dataError
                         ).modifier(MatchParent())
                 }
                 

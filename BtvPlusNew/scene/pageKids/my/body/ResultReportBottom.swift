@@ -7,6 +7,10 @@
 
 import Foundation
 import SwiftUI
+extension ResultReportBottom {
+    static let textSize:CGFloat = SystemEnvironment.isTablet ? Font.sizeKids.tiny : Font.sizeKids.thin
+}
+
 struct ResultReportBottom: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
@@ -19,29 +23,35 @@ struct ResultReportBottom: PageComponent{
         HStack(spacing:DimenKids.margin.tiny){
             Text(String.kidsText.kidsMyDiagnosticReportDate)
                 .modifier(BoldTextStyleKids(
-                            size: Font.sizeKids.thin,
-                            color:  Color.app.brownDeep))
+                            size: Self.textSize,
+                            color: Color.app.brownDeep))
             Text(self.date)
                 .modifier(BoldTextStyleKids(
-                            size: Font.sizeKids.thin,
-                            color:  Color.kids.primaryLight))
-            Spacer().modifier(LineVertical(width: 1, color: Color.app.brownDeep, opacity: 0.6))
-                .frame(height:Font.sizeKids.thin)
+                            size: Self.textSize,
+                            color: Color.kids.primaryLight))
+            if !self.retryCount.isEmpty {
+                Spacer().modifier(LineVertical(width: 1, color: Color.app.brownDeep, opacity: 0.6))
+                    .frame(height:Font.sizeKids.thin)
             
-            Text(String.kidsText.kidsMyResultRetryCount)
-                .modifier(BoldTextStyleKids(
-                            size: Font.sizeKids.thin,
-                            color:  Color.app.brownDeep))
-            Text(self.retryCount)
-                .modifier(BoldTextStyleKids(
-                            size: Font.sizeKids.thin,
-                            color:  Color.kids.primaryLight))
+                Text(String.kidsText.kidsMyResultRetryCount)
+                    .modifier(BoldTextStyleKids(
+                                size: Self.textSize,
+                                color: Color.app.brownDeep))
+                Text(self.retryCount)
+                    .modifier(BoldTextStyleKids(
+                                size: Self.textSize,
+                                color: Color.kids.primaryLight))
+            }
             Spacer()
             RectButtonKids(
                 text: String.kidsText.kidsMyResultRecommandView,
                 icon: AssetKids.icon.medal,
                 isSelected: false,
-                size: CGSize(width: 0, height: DimenKids.button.regular),
+                textModifier: BoldTextStyleKids(
+                    size: SystemEnvironment.isTablet ? Font.sizeKids.thinExtra : Font.sizeKids.lightExtra,
+                    color: Color.app.sepia).textModifier,
+                size: CGSize(width: 0,
+                             height: SystemEnvironment.isTablet ? DimenKids.button.regularExtra : DimenKids.button.regular),
                 isFixSize: false){_ in
                 
                 guard let datas = self.dataProvider.bands.kidsGnbModel.home?.blocks else {return}

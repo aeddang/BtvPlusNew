@@ -44,9 +44,12 @@ struct InfoAlert: PageView {
                         }
                         if let text = self.actionText{
                             Text(text)
-                                .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
+                                .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.whiteDeep))
+                                .padding(.trailing, Dimen.margin.tinyExtra)
+                                .padding(.top, Dimen.margin.micro)
                         }
                     }
+                    .padding(.top, -Dimen.margin.micro)
                     .padding(.horizontal, Dimen.margin.tiny)
                     .frame(height: Dimen.button.thinUltra)
                     .background(Color.app.indigo)

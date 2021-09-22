@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 extension PageHome{
     static fileprivate(set) var finalSelectedMonthlyId:String? = nil //현제 기획요청으로 사용안함
-    static let maxMonthlyConty = 8
+    static let maxMonthlyCount = 8
 }
 
 struct PageHome: PageView {
@@ -163,6 +163,7 @@ struct PageHome: PageView {
             .onReceive(self.appSceneObserver.$headerHeight){ hei in
                 self.headerHeight = hei
             }
+            
             .onReceive(self.appSceneObserver.$safeHeaderHeight){ hei in
                 var margin:CGFloat = self.topDatas == nil ? 0 : hei
                 if self.monthlyDatas != nil {
@@ -203,11 +204,11 @@ struct PageHome: PageView {
     }//body
     @State var isInit:Bool = false
     @State var currentBand:Band? = nil
-    @State var topDatas:Array<BannerData>? = nil
+    @State var topDatas:[BannerData]? = nil
     @State var originMonthlyDatas:[String:MonthlyData]? = nil
     @State var monthlyAllData:BlockItem? = nil
-    @State var monthlyDatas:Array<MonthlyData>? = nil
-    @State var sortedMonthlyDatas:Array<MonthlyData>? = nil
+    @State var monthlyDatas:[MonthlyData]? = nil
+    @State var sortedMonthlyDatas:[MonthlyData]? = nil
     @State var tipBlockData:TipBlockData? = nil
     @State var selectedMonthlyId:String? = nil
     @State var menuId:String = ""
@@ -402,7 +403,7 @@ struct PageHome: PageView {
         if self.originMonthlyDatas == nil {
             //if self.selectedMonthlyId == nil { self.selectedMonthlyId = Self.finalSelectedMonthlyId }
             var originMonthlyDatas = [String:MonthlyData]()
-            let maxCount = Self.maxMonthlyConty
+            let maxCount = Self.maxMonthlyCount
             var idx = 0
             var monthlyDatas = Array<MonthlyData>()
             guard let blocksData = self.dataProvider.bands.getData(menuId: self.menuId)?.blocks else {return}
@@ -461,21 +462,37 @@ struct PageHome: PageView {
                 }
             }
         }
+        
+        self.syncronizeMonthly()
+    }
+
+    private func syncronizeMonthly(){
+        guard let monthlyDatas = self.monthlyDatas else {return}
+        let joins = monthlyDatas.filter{$0.isJoin}
+        let subJoins = monthlyDatas.filter{$0.isSubJoin}
+        //let dupleJoins:[MonthlyData] = []
+        
+        let dupleJoins = subJoins.filter{ sub in
+            joins.first(where: {sub.subJoinId == $0.subJoinId}) != nil
+        }
+        dupleJoins.forEach{
+            $0.resetJoin()
+        }
+         
         self.monthlyDatas?.sort(by: {$0.sortIdx > $1.sortIdx})
         var idx = 0
         self.monthlyDatas?.forEach{
             $0.posIdx = idx
             idx += 1
         }
-        self.syncronizeMonthly()
-    }
-
-    private func syncronizeMonthly(){
-        if (self.monthlyDatas?.count ?? 0) > Self.maxMonthlyConty, let monthlyDatas = self.monthlyDatas {
-            self.sortedMonthlyDatas = monthlyDatas[0..<Self.maxMonthlyConty].map{$0} 
+        let maxCount =  max(Self.maxMonthlyCount, joins.count + subJoins.count - dupleJoins.count)
+        
+        if (self.monthlyDatas?.count ?? 0) > maxCount, let monthlyDatas = self.monthlyDatas {
+            self.sortedMonthlyDatas = monthlyDatas[0..<maxCount].map{$0}
         } else {
             self.sortedMonthlyDatas = self.monthlyDatas
         }
+        
         if self.sortedMonthlyDatas?.isEmpty == false, let datas = self.sortedMonthlyDatas {
            self.monthlyheader =  MonthlyBlock(
                 viewModel:self.monthlyViewModel ,

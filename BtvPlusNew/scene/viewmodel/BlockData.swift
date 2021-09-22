@@ -299,6 +299,11 @@ class BlockData:InfinityData, ObservableObject{
         cardType = findType(data)
         dataType = findDataType(data)
         blocks = data.blocks
+        if isAdult {
+            if blocks?.first(where: {($0.lim_lvl_yn?.toBool() ?? false) == false}) != nil {
+                isAdult = false
+            }
+        }
         switch dataType {
         case .banner : self.originData = data
         default: break

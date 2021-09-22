@@ -826,7 +826,7 @@ struct PageSynopsis: PageView {
                 self.onFullScreenViewMode()
             }
         }
-        
+        self.checkRecommand(obj: self.pageObject)
     }
     
     

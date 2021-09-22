@@ -376,7 +376,10 @@ struct PageKidsMultiBlock: PageView {
     private func updatedMonthlyPurchaseInfo( _ info:MonthlyPurchaseInfo){
         guard let monthlyData = self.monthlyData  else { return }
         if let item = self.pairing.authority.monthlyPurchaseList?
-            .first(where: {$0.prod_id == (monthlyData.isSubJoin ? monthlyData.parentPrdPrcId : monthlyData.prdPrcId)}){
+            .first(where: {
+                monthlyData.isSubJoin ? $0.subs_id == monthlyData.subJoinId
+                : $0.prod_id == monthlyData.prdPrcId })
+            {
             self.setupMonthlyGuide(ticketData: PurchaseTicketData().setData(data: item))
         } else {
             if monthlyData.hasAuth {
@@ -390,7 +393,10 @@ struct PageKidsMultiBlock: PageView {
     private func updatedPeriodMonthlyPurchaseInfo( _ info:PeriodMonthlyPurchaseInfo){
         guard let monthlyData = self.monthlyData else { return }
         if let item = self.pairing.authority.periodMonthlyPurchaseList?
-            .first(where: {$0.prod_id == (monthlyData.isSubJoin ? monthlyData.parentPrdPrcId : monthlyData.prdPrcId)}){
+            .first(where: { 
+                monthlyData.isSubJoin ? $0.subs_id == monthlyData.subJoinId
+                : $0.prod_id == monthlyData.prdPrcId })
+            {
             self.setupMonthlyGuide(ticketData: PurchaseTicketData().setData(data: item))
           
         } else {
@@ -404,7 +410,7 @@ struct PageKidsMultiBlock: PageView {
     
     private func setupMonthlyGuide(ticketData:PurchaseTicketData){
         self.monthlyGuide = MonthlyGuide(data:ticketData)
-        self.monthlyHeaderSize = DimenKids.tab.heavy + DimenKids.margin.light
+        self.monthlyHeaderSize = DimenKids.tab.regular + DimenKids.margin.light
     }
     
     private func setupMonthlyPurchaseTicket(monthlyData:MonthlyData){

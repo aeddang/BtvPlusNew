@@ -35,6 +35,8 @@ extension String{
         public static let kidsMyNoProfile = "kidsMyNoProfile".loaalized()
         public static let kidsMyWatch = "kidsMyWatch".loaalized()
         public static let kidsMyWatchedEmpty = "kidsMyWatchedEmpty".loaalized()
+        public static let kidsMyPlayWatchedEmpty = "kidsMyPlayWatchedEmpty".loaalized()
+        public static let kidsMyPlayFavoriteEmpty = "kidsMyPlayFavoriteEmpty".loaalized()
         public static let kidsMyDiagnosticReport = "kidsMyDiagnosticReport".loaalized()
         public static let kidsMyDiagnosticReportText = "kidsMyDiagnosticReportText".loaalized()
         public static let kidsMyDiagnosticReportStart = "kidsMyDiagnosticReportStart".loaalized()

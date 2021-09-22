@@ -26,25 +26,29 @@ struct CommentBox: PageComponent{
             if let text = self.text {
                 Text(text)
                     .modifier(BoldTextStyleKids(
-                                size: Font.sizeKids.tiny,
-                                color:  Color.app.brownDeep))
+                        size: SystemEnvironment.isTablet ? Font.sizeKids.tinyExtra : Font.sizeKids.tiny,
+                        color:  Color.app.brownDeep))
                     .padding(.top, DimenKids.margin.tiny)
             } else if let text = self.comment {
                 Text(text)
                     .modifier(BoldTextStyleKids(
-                                size: Font.sizeKids.lightExtra,
-                                color:  Color.app.brownDeep))
+                        size: SystemEnvironment.isTablet ? Font.sizeKids.thinExtra : Font.sizeKids.lightExtra,
+                        color:  Color.app.brownDeep))
                     .padding(.top, DimenKids.margin.tiny)
             } else if let text = self.comments.first?.text {
                 Text(text)
                     .modifier(BoldTextStyleKids(
-                                size: Font.sizeKids.lightExtra,
-                                color:  Color.app.brownDeep))
+                        size: SystemEnvironment.isTablet ? Font.sizeKids.thinExtra : Font.sizeKids.lightExtra,
+                        color:  Color.app.brownDeep))
                     .padding(.top, DimenKids.margin.tiny)
             }
             RectButtonKids(
                 text: String.kidsText.kidsMyResultCommentView,
                 isSelected: true,
+                textModifier: BoldTextStyleKids(
+                    size: SystemEnvironment.isTablet ? Font.sizeKids.tiny : Font.sizeKids.lightExtra,
+                    color: Color.app.white).textModifier,
+                size: SystemEnvironment.isTablet ? DimenKids.button.regularUltra : DimenKids.button.mediumRect,
                 isFixSize: false){_ in
                 
                 let datas:[TabInfoData] = comments.map{
@@ -54,7 +58,7 @@ struct CommentBox: PageComponent{
                     PageKidsProvider
                         .getPageObject(.tabInfo)
                         .addParam(key: .datas, value: datas)
-                        .addParam(key: .selected, value: 1)
+                        .addParam(key: .selected, value: 0)
                 )
                 
             }

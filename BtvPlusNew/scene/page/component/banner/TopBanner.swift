@@ -12,20 +12,21 @@ import Combine
 extension TopBanner{
     static let height:CGFloat = SystemEnvironment.isTablet ? 456 : 528
     static let heightHorizontal:CGFloat = 532
-    static let uiRange:CGFloat = 350
-    static let uiRangeHorizontal:CGFloat = 400
+    static let uiRange:CGFloat = SystemEnvironment.isTablet ? 304 : 382
+    static let uiRangeHorizontal:CGFloat = 378
     static let barWidth:CGFloat = Dimen.bar.medium
     static let imageHeight:CGFloat = SystemEnvironment.isTablet ? 500 : 750
     static let imageHeightHorizontal:CGFloat = 667
-    static let barHeight = Dimen.line.medium
-    static let quickMenuMarginTop =  SystemEnvironment.isTablet ?  Dimen.margin.regular :  Dimen.margin.heavyExtra
-    static let quickMenuHeight = (SystemEnvironment.isTablet ? 52 : 46) +  quickMenuMarginTop
-    static let marginBottom = SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.medium
-    static let marginBottomBar = SystemEnvironment.isTablet ? Dimen.margin.mediumExtra : Dimen.margin.heavy
-    static let marginBottomBarVertical = Self.marginBottomBar + Self.imageHeight - Self.height
-    static let marginBottomBarHorizontal = Self.marginBottomBar + Self.imageHeightHorizontal - Self.heightHorizontal
-    static let maginBottomLogo = Self.marginBottomBarVertical + Dimen.margin.medium
-    static let maginBottomLogoHorizontal = Self.marginBottomBarHorizontal + Dimen.margin.medium
+    static let barHeight:CGFloat = Dimen.line.medium
+    
+    static let quickMenuTopMargin:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.regular : Dimen.margin.heavyExtra
+    static let quickMenuHeight:CGFloat = (SystemEnvironment.isTablet ? 52 : 46) 
+    static let marginBottom:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.medium
+    static let marginBottomBar:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.mediumExtra : Dimen.margin.heavy
+    static let marginBottomBarVertical:CGFloat = Self.marginBottomBar + Self.imageHeight - Self.height
+    static let marginBottomBarHorizontal:CGFloat = Self.marginBottomBar + Self.imageHeightHorizontal - Self.heightHorizontal
+    static let maginBottomLogo:CGFloat = Self.marginBottomBarVertical + Dimen.margin.medium
+    static let maginBottomLogoHorizontal:CGFloat = Self.marginBottomBarHorizontal + Dimen.margin.medium
 }
 struct TopBanner: PageComponent {
     @EnvironmentObject var sceneObserver:PageSceneObserver
@@ -40,15 +41,18 @@ struct TopBanner: PageComponent {
    
     var action:((_ idx:Int) -> Void)? = nil
     var body: some View {
-        VStack{
+        VStack(alignment: SystemEnvironment.isTablet ? .leading : .center, spacing: Self.quickMenuTopMargin){
             LoopSwipperView(
                 viewModel : self.viewModel,
                 pages: self.pages
                 )
             .modifier(MatchHorizontal(height: isHorizontal ? TopBanner.uiRangeHorizontal : TopBanner.uiRange))
+            //.background(Color.app.red.opacity(0.4))
             if self.useQuickMenu {
                 QuickTab()
-                    .padding(.top, TopBanner.quickMenuMarginTop + TopBanner.barHeight)
+                    .padding(.leading, Dimen.margin.thin)
+                    //.background(Color.app.white.opacity(0.4))
+                    
             }
         }
         
@@ -157,39 +161,6 @@ struct TopBannerItem: PageComponent, Identifiable {
                     pagePresenter: self.pagePresenter,
                     dataProvider: self.dataProvider,
                     data: self.data)
-                /*
-                if let move = data.move {
-                    switch move {
-                    case .home, .category:
-                        if let gnbTypCd = data.moveData?[PageParam.id] as? String {
-                            if let band = dataProvider.bands.getData(gnbTypCd: gnbTypCd) {
-                                self.pagePresenter.changePage(
-                                    PageProvider
-                                        .getPageObject(move)
-                                        .addParam(params: data.moveData)
-                                        .addParam(key: .id, value: band.menuId)
-                                        .addParam(key: UUID().uuidString , value: "")
-                                )
-                            }
-                        }
-                        
-                    default :
-                        let pageObj = PageProvider.getPageObject(move)
-                        pageObj.params = data.moveData
-                        self.pagePresenter.openPopup(pageObj)
-                    }
-                }
-                else if let link = data.outLink {
-                    AppUtil.openURL(link)
-                }
-                else if let link = data.inLink {
-                    self.pagePresenter.openPopup(
-                        PageProvider
-                            .getPageObject(.webview)
-                            .addParam(key: .data, value: link)
-                            .addParam(key: .title , value: data.title)
-                    )
-                }*/
             }
         //}
         //.modifier(MatchParent())

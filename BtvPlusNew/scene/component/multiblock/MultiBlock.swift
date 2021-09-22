@@ -71,27 +71,6 @@ struct MultiBlock:PageComponent {
         return newTop
     }
     
-    /*
-    @State var topBannerBg:TopBannerBg?
-    private func getTopBannerBg() -> TopBannerBg {
-        if let top = self.topBannerBg {
-           // ComponentLog.d("Recycle TopBg", tag: self.tag + "Top")
-            return top
-        }
-        let newTop = TopBannerBg(
-            pageObservable : self.pageObservable,
-            viewModel:self.viewPagerModel,
-            datas: self.topDatas!,
-            useQuickMenu: self.useQuickMenu
-        )
-        ComponentLog.d("New TopBg" , tag: self.tag + "Top")
-        DispatchQueue.main.async {
-            self.topBannerBg = newTop
-        }
-        return newTop
-    }
-    */
-     
     @State var headerBlock:HeaderBlockCell?
     @State var headerId:String = ""
     
@@ -126,68 +105,67 @@ struct MultiBlock:PageComponent {
         return newHeader
     }
     var body :some View {
-        if !self.isLegacy  { //#
-            InfinityScrollView(
-                viewModel: self.infinityScrollModel,
-                axes: .vertical,
-                scrollType : .reload(isDragEnd: false),
-                contentNum: self.datas.count,
-                header : self.header,
-                headerSize : self.headerSize,
-                marginTop : self.marginTop,
-                marginBottom : self.marginBottom,
-                marginHorizontal: self.marginHorizontal,
-                spacing: 0,
-                isRecycle : self.isRecycle,
-                useTracking:self.useBodyTracking){
-                
-                if let topDatas = self.topDatas ,!topDatas.isEmpty {
-                    self.getTopBanner()
-                        .modifier(MatchHorizontal(height:
-                                                    (isHorizontal ? TopBanner.uiRangeHorizontal : TopBanner.uiRange)
-                                                    + (self.useQuickMenu ?  TopBanner.quickMenuHeight : 0 )
-                                                 ))
-                        .modifier(ListRowInset(spacing: isHorizontal
-                                            ? TopBanner.heightHorizontal - self.marginTop + self.marginHeader - TopBanner.uiRangeHorizontal
-                                            : TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange
-                                                
-                    ))
-                }
-               
-                if !self.datas.isEmpty {
-                    if let headerBlock = self.getHeaderBlock() {
-                        headerBlock
-                            
-                        if headerCount < self.datas.count {
-                            ForEach( self.datas[headerCount..<self.datas.count]) { data in
-                                MultiBlockCell(
-                                    pageObservable:self.pageObservable,
-                                    pageDragingModel: self.pageDragingModel,
-                                    data: data ,
-                                    useTracking: self.useTracking)
-                                    .modifier(ListRowInset(spacing: Self.spacing))
-                                    .onAppear(){
-                                        if data.index == self.datas.last?.index {
-                                            self.infinityScrollModel.event = .bottom
-                                        }
+       
+        InfinityScrollView(
+            viewModel: self.infinityScrollModel,
+            axes: .vertical,
+            scrollType : .reload(isDragEnd: false),
+            contentNum: self.datas.count,
+            header : self.header,
+            headerSize : self.headerSize,
+            marginTop : self.marginTop,
+            marginBottom : self.marginBottom,
+            marginHorizontal: self.marginHorizontal,
+            spacing: 0,
+            isRecycle : self.isRecycle,
+            useTracking:self.useBodyTracking){
+            
+            if let topDatas = self.topDatas ,!topDatas.isEmpty {
+                self.getTopBanner()
+                    .modifier(MatchHorizontal(height:
+                                                (isHorizontal ? TopBanner.uiRangeHorizontal : TopBanner.uiRange)
+                                                + (self.useQuickMenu ?  (TopBanner.quickMenuHeight + TopBanner.quickMenuTopMargin) : 0 )
+                                                - self.sceneObserver.safeAreaTop
+                                             ))
+                    //.background(Color.app.white.opacity(0.3))
+                    .modifier(ListRowInset(spacing: (isHorizontal
+                                        ? TopBanner.heightHorizontal - self.marginTop + self.marginHeader - TopBanner.uiRangeHorizontal
+                                        : TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange)
+                                        + self.sceneObserver.safeAreaTop
+                                            
+                ))
+            }
+           
+            if !self.datas.isEmpty {
+                if let headerBlock = self.getHeaderBlock() {
+                    headerBlock
+                        
+                    if headerCount < self.datas.count {
+                        ForEach( self.datas[headerCount..<self.datas.count]) { data in
+                            MultiBlockCell(
+                                pageObservable:self.pageObservable,
+                                pageDragingModel: self.pageDragingModel,
+                                data: data ,
+                                useTracking: self.useTracking)
+                                .modifier(ListRowInset(spacing: Self.spacing))
+                                .onAppear(){
+                                    if data.index == self.datas.last?.index {
+                                        self.infinityScrollModel.event = .bottom
                                     }
-                            }
-                        }
-                        if self.useFooter {
-                            Footer(){
-                                self.infinityScrollModel.uiEvent = .scrollMove(Self.footerIdx)
-                            }
-                            .modifier(ListRowInset(spacing: Dimen.margin.medium))
-                            Spacer().modifier(MatchHorizontal(height:Dimen.margin.heavy))
-                                .id(Self.footerIdx)
+                                }
                         }
                     }
-                    
+                    if self.useFooter {
+                        Footer(){
+                            self.infinityScrollModel.uiEvent = .scrollMove(Self.footerIdx)
+                        }
+                        .modifier(ListRowInset(spacing: Dimen.margin.medium))
+                        Spacer().modifier(MatchHorizontal(height:Dimen.margin.heavy))
+                            .id(Self.footerIdx)
+                    }
                 }
+                
             }
-            
-        } else {
-            
         }
     }
     

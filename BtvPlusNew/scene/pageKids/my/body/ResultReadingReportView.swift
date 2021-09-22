@@ -57,7 +57,7 @@ class ResultReadingReportViewData{
         self.date = content.subm_dtm?.replace("-", with: ".") ?? ""
         self.retryCount = content.retry_cnt ?? 0
         self.retryCountStr =  self.retryCount == 0
-            ? String.app.empty
+            ? ""
             : self.retryCount.description + String.app.broCount
         
         return self
@@ -80,8 +80,9 @@ struct ResultReadingReportView: PageComponent{
     var body: some View {
         VStack(spacing:DimenKids.margin.thin){
             HStack(spacing:0){
+                Spacer().modifier(MatchVertical(width: 0))
                 VStack(spacing:DimenKids.margin.light){
-                    HStack(alignment:.bottom, spacing:DimenKids.margin.thin){
+                    HStack(alignment:.bottom, spacing:0){
                         VStack(alignment: .trailing, spacing:0){
                             ForEach(self.data.lvTitles, id: \.self) {title in
                                 Text(title )
@@ -92,15 +93,19 @@ struct ResultReadingReportView: PageComponent{
                             }
                         }
                         .padding(.top, DimenKids.margin.micro)
-                        .frame(height: DimenKids.item.graphVertical.height)
+                        .frame(height:  SystemEnvironment.isTablet
+                               ? DimenKids.item.graphVertical.height
+                               : DimenKids.item.graphVerticalLong.height
+                        )
                         LvGraphBox(
                             thumb: self.data.profile,
                             data: self.data.lvGraphBoxData,
                             width: Self.graphWidth,
-                            size: SystemEnvironment.isTablet ?  DimenKids.item.graphVerticalExtra :  DimenKids.item.graphVertical,
+                            size: SystemEnvironment.isTablet ? DimenKids.item.graphVertical  : DimenKids.item.graphVerticalLong,
                             colorAvg: Color.app.green,
                             colorMe: Color.app.yellow)
                             .frame(width: Self.graphWidth)
+                            .padding(.leading, DimenKids.margin.thin)
                     }
                     Spacer().modifier(
                         LineHorizontal(height: DimenKids.line.light,
@@ -110,7 +115,7 @@ struct ResultReadingReportView: PageComponent{
                         RectButtonKids(
                             text: String.kidsText.kidsMyResultRetryStart,
                             textModifier: BoldTextStyleKids(
-                                size: Font.sizeKids.tiny,
+                                size: SystemEnvironment.isTablet ? Font.sizeKids.tinyExtra : Font.sizeKids.tiny,
                                 color: Color.app.sepia).textModifier,
                             bgColor: Color.app.ivoryLight,
                             size: DimenKids.button.lightRectExtra,
@@ -122,7 +127,7 @@ struct ResultReadingReportView: PageComponent{
                         RectButtonKids(
                             text: String.kidsText.kidsMyInfantDevelopmentResultAnother,
                             textModifier: BoldTextStyleKids(
-                                size: Font.sizeKids.tiny,
+                                size: SystemEnvironment.isTablet ? Font.sizeKids.tinyExtra : Font.sizeKids.tiny,
                                 color: Color.app.sepia).textModifier,
                             bgColor: Color.app.ivoryLight,
                             size: DimenKids.button.lightRectExtra,
@@ -161,11 +166,13 @@ struct ResultReadingReportView: PageComponent{
             )
             .modifier(MatchHorizontal(height: DimenKids.button.regular))
         }
+        
         .padding(.top, DimenKids.margin.thin)
         .padding(.bottom, DimenKids.margin.thin + self.sceneObserver.safeAreaIgnoreKeyboardBottom)
         .modifier(ContentHorizontalEdgesKids())
         .onAppear(){
           
         }
+        .modifier(MatchParent())
     }
 }

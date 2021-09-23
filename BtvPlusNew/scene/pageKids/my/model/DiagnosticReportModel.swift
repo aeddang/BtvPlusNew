@@ -17,6 +17,14 @@ enum DiagnosticReportType:String, CaseIterable{
         default : return nil
         }
     }
+    var nameTab: String? {
+        switch self {
+        case .english: return String.sort.englishTab
+        case .infantDevelopment: return String.sort.infantDevelopment
+        case .creativeObservation: return String.sort.creativeObservation
+        default : return nil
+        }
+    }
     
     var playType: KidsPlayType {
         switch self {

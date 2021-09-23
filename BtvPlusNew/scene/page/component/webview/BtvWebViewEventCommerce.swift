@@ -148,18 +148,16 @@ extension BtvWebView{
             ?? eventData.conTitle.removingPercentEncoding
             ?? eventData.conTitle
         let msg = leading + " " + String.alert.eventJoinAndPurchase
-        self.appSceneObserver.alert = .confirm(nil, msg, confirmText: String.alert.eventMonthlyView){ isOk in
-            if isOk {
-                
-                let band = self.dataProvider.bands.getData(gnbTypCd: EuxpNetwork.GnbTypeCode.GNB_MONTHLY.rawValue )
-                //let findBlock = band?.blocks.first{$0.prd_prc_id == eventData.pid}
-                self.pagePresenter.changePage(PageProvider
-                                                .getPageObject(.home)
-                                                .addParam(key: .id, value: band?.menuId)
-                                                .addParam(key: .type, value: eventData.pid)
-                                                .addParam(key: UUID().uuidString, value: "")
-                )
-            }
+        self.appSceneObserver.alert = .alert(nil, msg, confirmText: String.alert.eventMonthlyView){
+            let band = self.dataProvider.bands.getData(gnbTypCd: EuxpNetwork.GnbTypeCode.GNB_MONTHLY.rawValue )
+            //let findBlock = band?.blocks.first{$0.prd_prc_id == eventData.pid}
+            self.pagePresenter.changePage(PageProvider
+                                            .getPageObject(.home)
+                                            .addParam(key: .id, value: band?.menuId)
+                                            .addParam(key: .type, value: eventData.pid)
+                                            .addParam(key: UUID().uuidString, value: "")
+            )
+            
         }
     }
 }

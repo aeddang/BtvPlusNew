@@ -490,14 +490,11 @@ class WebBridge :PageProtocol{
                     menuOpenId = menuA[2..<menuA.count].reduce("", {$0 + "|" + $1})
                 }
                 if menuCId == EuxpNetwork.KidsGnbCd.monthlyTicket.rawValue {
-                    let popup = PageKidsProvider
-                        .getPageObject(.kidsMonthly)
-                        .addParam(key: .subId, value: menuOpenId)
-                    
-                    self.pagePresenter?.changePage(
+                    // 키즈페이지 이동시 홈이 없으면 인트로에서 홈깔아줌 그냥 팝업호출
+                    self.pagePresenter?.openPopup(
                         PageKidsProvider
-                            .getPageObject(.kidsHome)
-                            .addParam(key: .data, value: popup)
+                            .getPageObject(.kidsMonthly)
+                            .addParam(key: .subId, value: menuOpenId)
                     )
                     
                 } else {

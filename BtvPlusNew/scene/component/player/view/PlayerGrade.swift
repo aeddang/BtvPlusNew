@@ -35,9 +35,8 @@ struct PlayerGrade: PageView{
     var pageType:PageType = .btv
     var data:PlayGradeData
     @State var isFullScreen:Bool = false
-    
     @State var isCompleted:Bool = false
-    @State var isShowing:Bool = true
+    @State var isShowing:Bool = false
     @State var isUiShowing:Bool = false
     var body: some View {
         VStack( alignment :.leading,spacing:0){
@@ -134,10 +133,16 @@ struct PlayerGrade: PageView{
             case .resumed :
                 if !self.isCompleted {
                     self.isCompleted = true
-                    withAnimation{
-                        self.isShowing = true
+                    if self.viewModel.isFullVod {
+                        withAnimation{
+                            self.isShowing = true
+                        }
+                        self.autoClose()
+                    } else {
+                        withAnimation{
+                            self.isShowing = false
+                        }
                     }
-                    self.autoClose()
                 }
             default : break
             }

@@ -203,6 +203,7 @@ struct RelationVodListBody: PageComponent{
                     SerisItem(
                         relationContentsModel: self.relationContentsModel,
                         data:data.setListType(self.serisType) )
+                        .id(data.hashId)
                         .onTapGesture {
                             if data.hasLog {
                                 self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog)

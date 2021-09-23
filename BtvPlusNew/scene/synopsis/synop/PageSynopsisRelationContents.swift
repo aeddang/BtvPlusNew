@@ -65,6 +65,14 @@ extension PageSynopsis {
             if self.selectedRelationTabIdx == 0 {
                 let sorted = self.relationContentsModel.getSerisDatas()
                 self.seris = sorted
+                if self.sceneOrientation == .landscape {
+                    if let find = self.seris.first(where: {$0.epsdId == self.relationContentsModel.selectedEpsdId }) {
+                        self.relationBodyModel.uiEvent = .scrollTo(find.hashId)
+                    } else {
+                        self.relationBodyModel.uiEvent = .scrollTo(self.relationBodyModel.topIdx, .top)
+                    }
+                }
+                
                 return
             }else{
                 relationContentsIdx = self.selectedRelationTabIdx-1
@@ -75,6 +83,9 @@ extension PageSynopsis {
         
         let relationDatas = self.relationContentsModel.getRelationContentSets(idx: relationContentsIdx, row: self.relationRow)
         self.relationDatas = relationDatas
+        if self.sceneOrientation == .landscape {
+            self.relationBodyModel.uiEvent = .scrollTo(self.relationBodyModel.topIdx, .top)
+        }
         self.contentsListTabLog(idx: idx)
     }
     

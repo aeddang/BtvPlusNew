@@ -102,6 +102,7 @@ extension String{
         public static let kidsExamForkid = "kidsExamForkid".loaalized()
         public static let kidsExamForParent = "kidsExamForParent".loaalized()
         public static let kidsExamInfantDevelopmentCompleted = "kidsExamInfantDevelopmentCompleted".loaalized()
+        public static let kidsExamInfantDevelopmentDisable = "kidsExamInfantDevelopmentDisable".loaalized()
         public static let kidsExamCreativeObservationDisable = "kidsExamCreativeObservationDisable".loaalized()
         public static let kidsExamCreativeObservationConfirm = "kidsExamCreativeObservationConfirm".loaalized()
         public static let kidsExamCloseConfirm = "kidsExamCloseConfirm".loaalized()

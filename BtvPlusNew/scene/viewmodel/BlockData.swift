@@ -223,7 +223,7 @@ class BlockData:InfinityData, ObservableObject{
     }
     
     func setData(title:String, datas:[VideoData], searchType:SearchType,
-                 keyword:String?, max:Int = 30, usePrice:Bool = true) -> BlockData{
+                 keyword:String?, max:Int = 20, usePrice:Bool = true) -> BlockData{
         name = title
         uiType = .video
         cardType = (searchType == .clip) ? .clip : .video
@@ -398,7 +398,7 @@ class BlockData:InfinityData, ObservableObject{
             DataLog.d("Request bookMark " + self.name, tag: "BlockProtocol")
             return .init(
                 id: apiId ?? self.id,
-                type: .getBookMark(),
+                type: .getBookMark(0, 60),
                 isOptional: isOption)
         case .watched:
             if pairing != .pairing {

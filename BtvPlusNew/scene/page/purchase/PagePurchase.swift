@@ -153,11 +153,9 @@ struct PagePurchase: PageView {
                     self.setWebviewSize(geometry: geometry)
                 }
             }
-            .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
-                self.setWebviewSize(geometry: geometry)
-            }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
+                    self.setWebviewSize(geometry: geometry)
                     guard let obj = self.pageObject  else { return }
                     if let data = obj.getParamValue(key: .data) as? PurchaseWebviewModel {
                         self.purchaseWebviewModel = data

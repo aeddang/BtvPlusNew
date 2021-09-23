@@ -29,16 +29,12 @@ struct ExamBody: PageComponent{
                         .aspectRatio(contentMode: .fit)
                         .modifier(MatchParent())
                         .padding(.bottom, SystemEnvironment.isTablet ? 106 : 48)
-                    if isView {
-                        ProgressBox(viewModel: self.viewModel){ move in
-                            self.naviLogManager.actionLog(
-                                .clickNextButton,
-                                actionBody:
-                                    .init(config:move == -1 ? "이전문제" : "다음문제" ))
-                            self.viewModel.move(move)
-                        }
-                    } else {
-                        ProgressBox(viewModel: self.viewModel)
+                    ProgressBox(viewModel: self.viewModel){ move in
+                        self.naviLogManager.actionLog(
+                            .clickNextButton,
+                            actionBody:
+                                .init(config:move == -1 ? "이전문제" : "다음문제" ))
+                        self.viewModel.move(move)
                     }
                 }
                 .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom + DimenKids.margin.thin)

@@ -89,6 +89,9 @@ extension String {
         public static let vat = "vat".loaalized()
         public static let expirePeriod = "expirePeriod".loaalized()
         public static let ticketPrice = "ticketPrice".loaalized()
+        public static let ticketStatus = "ticketStatus".loaalized()
+        public static let ticketStatusDescription1 = "ticketStatusDescription1".loaalized()
+        public static let ticketStatusDescription2 = "ticketStatusDescription2".loaalized()
         public static let paymentMethod = "paymentMethod".loaalized()
         public static let joinDate = "joinDate".loaalized()
         public static let contractInfo = "contractInfo".loaalized()
@@ -126,5 +129,6 @@ extension String {
         public static let cardno = "cardno".loaalized()
         public static let local = "local".loaalized()
         public static let foreigner = "foreigner".loaalized()
+        public static let regist = "regist".loaalized()
     }
 }

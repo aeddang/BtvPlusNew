@@ -128,6 +128,7 @@ struct DimenKids{
     struct loading {
         static let large:CGSize = isPad ? CGSize(width: 436, height: 530) : CGSize(width: 227, height:  276)//*
         static let small:CGSize = isPad ?  CGSize(width: 120, height: 144) : CGSize(width: 80, height:  96) //*
+       
     }
     
     struct item {

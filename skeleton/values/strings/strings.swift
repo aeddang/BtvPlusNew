@@ -53,6 +53,7 @@ extension String {
         public static let price = "sortPrice".loaalized()
         
         public static let english = "sortEnglish".loaalized()
+        public static let englishTab = "sortEnglishTab".loaalized()
         public static let infantDevelopment = "sortInfantDevelopment".loaalized()
         public static let creativeObservation = "sortCreativeObservation".loaalized()
 

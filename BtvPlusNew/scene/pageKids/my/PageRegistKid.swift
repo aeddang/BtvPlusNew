@@ -197,13 +197,16 @@ struct PageRegistKid: PageView {
                 switch evt {
                 case .updatedKids(let updateType) :
                     guard let type = updateType else {return}
-                    var msg:String = ""
+                    var msg:String? = nil
                     switch type {
-                    case .post : msg = String.alert.kidsAddCompleted
+                    //case .post : msg = String.alert.kidsAddCompleted
                     case .put : msg = String.alert.kidsEditCompleted
-                    case .del : msg = String.alert.kidsDeleteCompleted
+                    //case .del : msg = String.alert.kidsDeleteCompleted
+                    default : break
                     }
-                    self.appSceneObserver.event = .toast(msg) 
+                    if let msg = msg {
+                        self.appSceneObserver.event = .toast(msg)
+                    }
                     self.pagePresenter.closePopup(self.pageObject?.id)
                     break
                 case .notFoundKid :
@@ -230,6 +233,9 @@ struct PageRegistKid: PageView {
     }//body
     
     private func isInputCompleted() -> Bool {
+        if !self.isInitBirthSelect {
+            return false
+        }
         var complete = false
         if !self.nickName.isEmpty {
             complete = true
@@ -271,10 +277,11 @@ struct PageRegistKid: PageView {
     @State private var birthYear:String = ""
     @State private var birthMonth:String = ""
     private func selectBirth() {
+        AppUtil.hideKeyboard()
         withAnimation{
             self.editType = .birth
         }
-        AppUtil.hideKeyboard()
+        
         let picYear = self.birthYearList.firstIndex(of: self.birthYear) ?? 0
         let picMonth = self.birthMonthList.firstIndex(of: self.birthMonth) ?? 0
         self.appSceneObserver.select =

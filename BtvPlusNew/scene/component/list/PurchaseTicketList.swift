@@ -14,11 +14,13 @@ class PurchaseTicketData:InfinityData{
     private(set) var isMonthly : Bool = false
     private(set) var joinImage: String? = nil
     private(set) var title: String? = nil
+    private(set) var subTitleUntil: String? = nil
     private(set) var price: String? = nil
     private(set) var period:String? = nil
     private(set) var originPrice: String? = nil
     private(set) var joinDate:String? = nil
     private(set) var payment : String? = nil
+    private(set) var statusInfo : String? = nil
     private(set) var contractInfo : String? = nil
     private(set) var contractPeriod: String? = nil
     private(set) var prodId: String? = nil
@@ -31,6 +33,32 @@ class PurchaseTicketData:InfinityData{
         joinDate = data.reg_date?.subString(start: 2, len: 8)
         period = data.period
         payment = data.method_pay_nm
+        
+        if data.ncms_prod_code == "38" {
+            var counts:Int? = nil
+            if let total = data.omni_total_cnt, let used = data.omni_use_cnt {
+                self.statusInfo = String.app.ticketStatusDescription2.replace(
+                    first: total.description, second: used.description)
+                counts = (Int(total) ?? 0) - (Int(used) ?? 0)
+            }
+            
+            var renewalDate:String? = nil
+            if data.omni_renewal_date?.isEmpty == false, let renewal = data.omni_renewal_date {
+                renewalDate = renewal
+            } else if data.period?.isEmpty == false, let period = data.period {
+                let date = period.components(separatedBy: "~")
+                let renewal = date[1].components(separatedBy: ")")
+                renewalDate = renewal.first
+            }
+            if let counts = counts, let renewalDate = renewalDate {
+                let dateArr = renewalDate.components(separatedBy: ".")
+                if dateArr.count > 2 {
+                    self.subTitleUntil = dateArr[1] + "/" + dateArr[2] + String.app.untill
+                    + " " + counts.description + String.app.count
+                }
+            }
+        }
+        
         if let p = data.price {
             originPrice = String.app.month + p
         }
@@ -225,12 +253,38 @@ struct PurchaseTicketItem: PageView {
                          SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.regularExtra)
             
             if let title = self.data.title {
-                Text(title)
-                    .modifier(BoldTextStyle(
-                                size: SystemEnvironment.isTablet ? Font.size.lightExtra : Font.size.medium,
-                                color: Color.app.black))
-                    .padding(.horizontal,
-                             SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.regularExtra)
+                HStack(alignment:.center , spacing: SystemEnvironment.isTablet ? Dimen.margin.microUltra :Dimen.margin.tiny){
+
+                    Text(title)
+                        .modifier(BoldTextStyle(
+                                    size: SystemEnvironment.isTablet ? Font.size.lightExtra : Font.size.medium,
+                                    color: Color.app.black))
+                        .lineLimit(1)
+                    if let sub = self.data.subTitleUntil {
+                        
+                        Text("(")
+                        .font(.custom(
+                                Font.family.bold,
+                                size: SystemEnvironment.isTablet ? Font.size.microUltra : Font.size.lightExtra ))
+                        .foregroundColor(Color.app.blackExtra)
+                        //.kerning(Font.kern.thin)
+                        + Text(sub)
+                        .font(.custom(
+                                Font.family.bold,
+                                size: SystemEnvironment.isTablet ? Font.size.microUltra : Font.size.lightExtra ))
+                        .foregroundColor(Color.brand.primary)
+                        //.kerning(Font.kern.thin)
+                        + Text(String.app.ticketStatusDescription1 + ")")
+                        .font(.custom(
+                                Font.family.bold,
+                                size: SystemEnvironment.isTablet ? Font.size.microUltra : Font.size.lightExtra ))
+                        .foregroundColor(Color.app.blackExtra)
+                        //.kerning(Font.kern.thin)
+                    }
+                    
+                }
+                .padding(.horizontal,
+                         SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.regularExtra)
             }
             
             if let price = self.data.price {
@@ -273,6 +327,9 @@ struct PurchaseTicketItem: PageView {
                        spacing: SystemEnvironment.isTablet ? Dimen.margin.tinyExtra : Dimen.margin.tiny){
                     if let value = self.data.period {
                         PurchaseTicketValue(title: String.app.purchasePeriod, value: value)
+                    }
+                    if let value = self.data.statusInfo {
+                        PurchaseTicketValue(title: String.app.ticketStatus, value: value)
                     }
                     if let value = self.data.contractInfo {
                         PurchaseTicketValue(title: String.app.contractInfo, value: value)

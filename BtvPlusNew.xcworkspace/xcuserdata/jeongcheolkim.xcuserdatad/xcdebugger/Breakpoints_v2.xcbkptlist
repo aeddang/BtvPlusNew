@@ -46,8 +46,8 @@
             filePath = "BtvPlusNew/scene/sceneui/SceneAlertController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "507"
-            endingLineNumber = "507"
+            startingLineNumber = "518"
+            endingLineNumber = "518"
             landmarkName = "selectedUpdateAlram(_:id:isAlram:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -210,22 +210,6 @@
             endingLineNumber = "109"
             landmarkName = "callFuncion(fn:jsonParams:callback:)"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "F0161BF5-0D9F-46AF-A509-D63C0A3CEBEC"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "BtvPlusNew/scene/component/multiblock/kidshome/list/KidsCategoryItem.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "118"
-            endingLineNumber = "118"
-            landmarkName = "body"
-            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

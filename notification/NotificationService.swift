@@ -31,21 +31,6 @@ class NotificationService: UNNotificationServiceExtension {
             
             contentHandler(content)
         }
-        /*
-                    content.subtitle = "iam modify"
-                    
-                    if isPushOn() {
-                        let num = NotificationCoreData().getAllNotices().filter{!$0.isRead}.count
-                        content.badge = NSNumber(value: num )
-                    } else {
-                        content.badge = NSNumber(value: 0)
-                        content.sound = nil
-                    }
-                    NotificationCoreData().addNotice(content.userInfo)
-                    content.badge = NSNumber(value: 10 )
-                    contentHandler(content)
-        
-        */
     }
     
     override func serviceExtensionTimeWillExpire() {

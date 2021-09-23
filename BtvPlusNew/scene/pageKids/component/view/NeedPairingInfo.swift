@@ -10,6 +10,7 @@ import SwiftUI
 
 struct NeedPairingInfo: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     var title:String? = nil
     var text:String? = nil
     var body: some View {
@@ -36,9 +37,12 @@ struct NeedPairingInfo: PageView {
             RectButtonKids(
                 text: String.button.connectBtv,  isFixSize: true
             ){ _ in
-                self.pagePresenter.openPopup(
-                    PageProvider.getPageObject(.pairing, animationType: .opacity)
-                )
+                self.appSceneObserver.event = .toast(String.alert.moveBtvPairing)
+                DispatchQueue.main.asyncAfter(deadline: .now()+1) {
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.pairing, animationType: .opacity)
+                    )
+                }
             }
             .padding(.top, DimenKids.margin.thin)
         }

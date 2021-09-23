@@ -85,25 +85,43 @@ struct AnswerItem: PageComponent{
                     self.submit == -1
                         ? 1.0
                         : self.submit == index ? 1.0 : 0.5)
-            if index == self.answer {
-                Image(self.right == self.answer ? AssetKids.exam.answerRight : AssetKids.exam.answerWrong)
-                        .renderingMode(.original).resizable()
-                        .scaledToFit()
-                    .modifier(MatchParent())
-            } else if self.right == index {
-                Image(AssetKids.exam.answerRight)
-                        .renderingMode(.original).resizable()
-                        .scaledToFit()
-                    .modifier(MatchParent())
+            if self.right == -1 {
+                if self.index == self.answer {
+                    Image(AssetKids.exam.answerRight)
+                            .renderingMode(.original).resizable()
+                            .scaledToFit()
+                        .modifier(MatchParent())
+                } else {
+                    Spacer()
+                        .frame(width: Self.size.width, height: Self.size.height)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: DimenKids.radius.light)
+                                .stroke(Color.app.ivoryLight, lineWidth: Self.stroke)
+                        )
+                        .padding(.all, Self.stroke)
+                }
             } else {
-                Spacer()
-                    .frame(width: Self.size.width, height: Self.size.height)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: DimenKids.radius.light)
-                            .stroke(Color.app.ivoryLight, lineWidth: Self.stroke)
-                    )
-                    .padding(.all, Self.stroke)
+                if self.index == self.answer {
+                    Image(self.right == self.answer ? AssetKids.exam.answerRight : AssetKids.exam.answerWrong)
+                            .renderingMode(.original).resizable()
+                            .scaledToFit()
+                        .modifier(MatchParent())
+                } else if self.right == self.index {
+                    Image(AssetKids.exam.answerRight)
+                            .renderingMode(.original).resizable()
+                            .scaledToFit()
+                        .modifier(MatchParent())
+                } else {
+                    Spacer()
+                        .frame(width: Self.size.width, height: Self.size.height)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: DimenKids.radius.light)
+                                .stroke(Color.app.ivoryLight, lineWidth: Self.stroke)
+                        )
+                        .padding(.all, Self.stroke)
+                }
             }
+            
             Spacer().modifier(MatchParent())
         }
         .frame(width: Self.boxSize.width, height: Self.boxSize.height)

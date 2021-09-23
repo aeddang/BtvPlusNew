@@ -43,7 +43,8 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
         let isFree = synopsisModel.isFree
         let watchAll = synopsisModel.isSeasonWatchAll
         let isOnlyPurchasedBtv = synopsisModel.isOnlyPurchasedBtv
-        let isOnlyBtvPurchasable  = synopsisModel.isOnlyBtvPurchasable
+        let isOnlyBtvPurchasable = synopsisModel.isOnlyBtvPurchasable
+        let holdbackType = synopsisModel.holdbackType
         self.hasAuthority = false
         if !synopsisModel.isDistProgram {
             serviceInfo = String.alert.bs

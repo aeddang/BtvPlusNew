@@ -23,7 +23,7 @@ class KidsGnbModel:Identifiable, ObservableObject{
                     self.home = item
                     return item
                 case EuxpNetwork.KidsGnbCd.monthlyTicket.rawValue:
-                    let item = KidsGnbItemData().setData(gnb)
+                    let item = KidsGnbItemData().setData(gnb, isMonthly:true)
                     self.monthly = item
                     return item
                 default :
@@ -94,6 +94,7 @@ class KidsGnbItemData:InfinityData, ObservableObject{
     private(set) var menuCode: String? = nil
     private(set) var blocks: [BlockItem]? = nil
     private(set) var isHome:Bool = false
+    private(set) var isMonthly:Bool = false
     fileprivate(set) var idx:Int = -1
 
     func setHomeData(data:GnbItem) -> KidsGnbItemData {
@@ -112,9 +113,10 @@ class KidsGnbItemData:InfinityData, ObservableObject{
         return self
     }
     
-    func setData(_ data:GnbItem) -> KidsGnbItemData {
+    func setData(_ data:GnbItem, isMonthly:Bool = false) -> KidsGnbItemData {
         self.title = data.menu_nm
         self.menuId = data.menu_id
+        self.isMonthly = isMonthly
         self.menuCode = data.kidsz_gnb_cd
         self.blocks = data.blocks?.map{$0}
         let size = CGSize(width: KidsGnbItem.size, height: KidsGnbItem.size)
@@ -138,6 +140,7 @@ class KidsGnbItemData:InfinityData, ObservableObject{
 //svc_prop_cd
 enum KidsPlayType:Equatable{
     case play, english , tale, create, subject, unknown(String? = nil)
+    static let limitedLv0 :Int = 25
     static let limitedLv1 :Int = 48
     static let limitedLv2 :Int = 72
     

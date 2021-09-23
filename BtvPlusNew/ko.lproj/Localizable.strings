@@ -100,6 +100,9 @@
 "vat" = "부가세 포함";
 "expirePeriod" = "만료";
 "ticketPrice" = "상품 금액";
+"ticketStatus" = "이용 현황";
+"ticketStatusDescription1" = "VOD 시청 가능";
+"ticketStatusDescription2" = "%s1개 중 %s2개 사용 완료";
 "paymentMethod" = "결제 방식";
 "joinDate" = "가입 일자";
 "contractInfo" = "약정 정보";
@@ -136,7 +139,7 @@
 "cardno" = "카드 번호";
 "local" = "내국인";
 "foreigner" = "외국인";
-
+"regist" = "등록하기";
 /*
   Button
 */
@@ -228,6 +231,7 @@
 "sortPrice" = "가격순";
 
 "sortEnglish" = "영어";
+"sortEnglishTab" = "영어레벨";
 "sortInfantDevelopment" = "유아발달";
 "sortCreativeObservation" = "창의력 관찰";
 
@@ -434,7 +438,8 @@
 "alertPurchaseHiddenLimit" = "구매내역 삭제 건수 제한 안내";
 "alertPurchaseHiddenLimitText" = "구매 내역은 한 번에 최대 100건까지 삭제 가능합니다. 구매 내역을 100건 이하로 선택 후 다시 시도해주세요.";
 "alertNewAlram" = "새로운 알림을 확인해보세요.";
-"alertNewAlramAllRead" = "모든 신규 알림을 읽은 상태로 표시하시겠습니까?";
+"alertNewAlramAllRead" = "알림 전체 읽기";
+"alertNewAlramAllReadText" = "모든 신규 알림을 읽은 상태로 표시하시겠습니까?";
 
 "alertPossession" = "해지 후 소장 VOD 이용 안내";
 "alertPossessionText" = "해지한 B tv의 가입자 본인 확인 후 해지 전 B tv에서 구매한 소장 VOD를 가져오실 수 있습니다.";
@@ -459,9 +464,8 @@
 "alertKidsExitSetupText" = "모바일 Btv '설정'으로 이동하려면 성인인증번호를 입력해주세요.";
 
 "alertKidsProfileNotfound" = "현재 이용 중인 프로필이\n삭제 되었습니다.\n프로필을 다시 설정해주세요.";
-"alertKidsProfileSelect" = "현재 이용 중인 프로필이\n없습니다.\n프로필을 설정해주세요.";
-"alertKidsProfileEmpty" = "등록된 자녀 \n프로필이 없어요";
-"alertKidsProfileEmpty" = "등록된 자녀 \n프로필이 없어요";
+"alertKidsProfileSelect" = "현재 이용 중인 프로필이 없습니다.\n프로필을 설정해주세요.";
+"alertKidsProfileEmpty" = "등록된 자녀\n프로필이 없어요";
 
 "alertKidsDeleteConfirm" = "선택하신 프로필을 삭제하시겠습니까?";
 "alertKidsDeleteConfirmTip" =  "※ 삭제 시, 프로필의 시청과 학습 이력이 Btv와 모바일Btv에서 모두 삭제되며, 다시 복구할 수 없습니다.";
@@ -532,7 +536,7 @@
 
 "alertEarphoneClose" = "B tv 이어폰 모드 종료";
 "alertEarphoneCloseText" = "B tv 이어폰 모드를 종료하고\n모바일 B tv 콘텐츠를 시청하시겠습니까?";
-
+"alertBtvPairing" = "모바일 Btv 연결하기 화면으로 이동합니다.";
 /*
  PageTitle
 */
@@ -1275,6 +1279,8 @@
 "kidsExamForkid" = "자녀용";
 "kidsExamForParent" = "부모용";
 "kidsExamInfantDevelopmentCompleted" = "유아 발달 진단 테스트 종료! (%s)";
+
+"kidsExamInfantDevelopmentDisable" = "'유아발달 진단 검사'는 25개월~72개월\n 아이가 대상이므로, 등록된 프로필은\n 검사 대상에 포함되지 않습니다.";
 "kidsExamCreativeObservationDisable" = "'창의력 관찰진단'은 48개월~72개월\n 아이가 대상이므로, 등록된 프로필은\n 검사 대상에 포함되지 않습니다.";
 
 "kidsExamCreativeObservationConfirm" = "PDM 창의력 관찰 검사를 시작합니다.\n창의력 검사는 부모와 아이가\n함께 받는 검사입니다. 지금, 아이와\n함께 있다면 시작해 주세요";

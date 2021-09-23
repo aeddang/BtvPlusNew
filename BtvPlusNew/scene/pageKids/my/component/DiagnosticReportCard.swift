@@ -32,7 +32,7 @@ struct DiagnosticReportCard: PageComponent{
                 }
             }
             .padding(.all, DimenKids.margin.tiny)
-            Image( self.selectedType == .creativeObservation ? AssetKids.shape.cardFolderWide : AssetKids.shape.cardFolder)
+            Image( self.cardWidth == Self.cardWidthWide ? AssetKids.shape.cardFolderWide : AssetKids.shape.cardFolder)
                 .renderingMode(.original)
                 .resizable()
                 .scaledToFill()
@@ -108,6 +108,9 @@ struct DiagnosticReportCard: PageComponent{
                     }
                 }
                 Spacer()
+            }
+            if self.isLoading {
+                ActivityIndicator(isAnimating: self.$isLoading, style: .medium)
             }
         }
         .frame(
@@ -219,7 +222,7 @@ struct DiagnosticReportCard: PageComponent{
         guard let kid = self.kid else { return }
         withAnimation{
             self.selectedType = select
-            self.cardWidth = select == .creativeObservation ? Self.cardWidthWide : Self.cardWidth
+            self.cardWidth = Self.cardWidth
         }
         self.isLoading = true
         self.resetPage()
@@ -298,6 +301,7 @@ struct DiagnosticReportCard: PageComponent{
             self.isEmptyResult = false
             self.reportContents = report.contents
             withAnimation{
+                self.cardWidth = Self.cardWidthWide
                 self.creativeGraphBoxData = CreativeGraphBoxData().setData(report)
             }
         } else {
@@ -309,7 +313,8 @@ struct DiagnosticReportCard: PageComponent{
         if self.kid == nil {
             self.appSceneObserver.alert = .confirm(
                 nil ,
-                String.kidsText.kidsMyReportNeedProfile
+                String.kidsText.kidsMyReportNeedProfile,
+                confirmText: String.app.regist
                 ){ isOk in
                 if isOk {
                     if self.pairing.kids.isEmpty {

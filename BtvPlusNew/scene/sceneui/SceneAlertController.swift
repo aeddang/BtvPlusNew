@@ -403,10 +403,21 @@ struct SceneAlertController: PageComponent{
     func selectedNeedPairing(_ idx:Int, move:PageObject? = nil, cancelHandler: @escaping () -> Void) {
         if idx == 1 {
             self.appSceneObserver.pairingCompletedMovePage = move
-            let ani:PageAnimationType = SystemEnvironment.currentPageType == .btv ? .horizontal : .opacity
-            self.pagePresenter.openPopup(
-                PageProvider.getPageObject(.pairing, animationType: ani)
-            )
+            if SystemEnvironment.currentPageType == .kids {
+                self.appSceneObserver.event = .toast(String.alert.moveBtvPairing)
+                DispatchQueue.main.asyncAfter(deadline: .now()+1) {
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.pairing, animationType: .opacity)
+                    )
+                }
+            } else {
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.pairing)
+                )
+            }
+           
+           
+            
         } else {
             self.appSceneObserver.pairingCompletedMovePage = nil
             cancelHandler()

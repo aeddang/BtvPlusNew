@@ -48,13 +48,15 @@ class PurchaseData:InfinityData,ObservableObject{
         if let dat = data.reg_date {
             date = String.app.purchaseDate + " : " + dat
         }
-        if data.period == "-1" {
-            period = String.app.purchasePeriod + " : " + String.app.expirePeriod
-            isUseable = false
-        } else if let prd = data.period_detail {
-            period = String.app.purchasePeriod + " : " + prd
+        if !self.isPosson {
+            if data.period == "-1" {
+                period = String.app.purchasePeriod + " : " + String.app.expirePeriod
+                isUseable = false
+            } else if let prd = data.period_detail {
+                period = String.app.purchasePeriod + " : " + prd
+            }
+            isImminent = data.period == "0"
         }
-        isImminent = data.period == "0"
         
         index = idx
         purchaseId = data.purchase_idx
@@ -113,7 +115,9 @@ struct PurchaseList: PageComponent{
             }
             if !self.datas.isEmpty {
                 ForEach(self.datas) { data in
-                    PurchaseItem( data:data )
+                    PurchaseItem(
+                        purchaseBlockModel:self.purchaseBlockModel,
+                        data:data )
                     .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.tinyExtra))
                     .onTapGesture {
                         if let synopsisData = data.synopsisData {
@@ -148,6 +152,7 @@ struct PurchaseList: PageComponent{
 
 struct PurchaseItem: PageView {
     @EnvironmentObject var repository:Repository
+    var purchaseBlockModel:PurchaseBlockModel
     @ObservedObject var data:PurchaseData
     
     @State var isEdit:Bool = false
@@ -163,6 +168,7 @@ struct PurchaseItem: PageView {
                         action:{ ck in
                             self.isSelected = ck
                             self.data.isSelected = ck
+                            self.purchaseBlockModel.isSelectChanged = isSelected
                         }
                     )
                     .padding(.trailing, Dimen.margin.thin)
@@ -244,6 +250,7 @@ struct PurchaseItem: PageView {
         }
         .onReceive(self.data.$isSelected) { isSelected in
             self.isSelected = isSelected
+            
         }
         .onReceive(self.repository.$event){ evt in
             guard let evt = evt else {return}

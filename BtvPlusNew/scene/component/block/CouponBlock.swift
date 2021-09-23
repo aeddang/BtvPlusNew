@@ -235,9 +235,12 @@ struct CouponBlock: PageComponent, Identifiable{
     
     private func loadedCoupon(_ res:ApiResultResponds){
         guard let data = res.data as? Coupons else { return }
+        
         if let count = data.usableCount {
             self.pairing.authority.useAbleCoupon = count
             self.title = count.description + String.app.count
+        } else {
+            self.title = "0" + String.app.count
         }
         setDatas(datas: data.coupons?.coupon)
     }
@@ -246,6 +249,8 @@ struct CouponBlock: PageComponent, Identifiable{
         if let point = data.usableNewBpoint {
             self.pairing.authority.useAbleBPoint = point
             self.title = point.formatted(style: .decimal) + String.app.point
+        }else {
+            self.title = "0" + String.app.point
         }
         setDatas(datas: data.newBpoints?.newBpoint)
         
@@ -255,6 +260,8 @@ struct CouponBlock: PageComponent, Identifiable{
         if let cash = data.usableBcash?.totalBalance {
             self.pairing.authority.useAbleBCash = cash
             self.title = cash.formatted(style: .decimal) + String.app.point
+        }else {
+            self.title = "0" + String.app.point
         }
         setDatas(datas: data.bcashList?.bcash)
     }

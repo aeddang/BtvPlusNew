@@ -77,6 +77,7 @@ class BtvPlayerModel:PlayerModel{
     private(set) var openingTime:Double = 0
     private(set) var endingTime:Double = -1
     private(set) var useInside:Bool = false
+    
     var continuousTime:Double = 0
     var continuousProgress:Float? = nil
     var continuousProgressTime:Double? = nil
@@ -87,22 +88,22 @@ class BtvPlayerModel:PlayerModel{
         return false
     }
     
-    var checkPreroll = true
-    var isPrerollPlay = false
+    
     
     private(set) var playData:PlayInfo? = nil
     private(set) var fullVod:SynopsisData? = nil
     private(set) var btvPlayType:BtvPlayType? = nil
     private(set) var qualitys:[Quality] = []
+    private(set) var isFullVod:Bool = false
+    
+    var checkPreroll = true
+    var isPrerollPlay = false
     var pageType:PageType = .btv
     var initPlay:Bool? = nil
     var isFirstPlay:Bool = true
     var isPlay80:Bool = false
-   
-    
-    //var currentEpsdRsluId:String? = nil
-    //var currentIdx:Int? = nil
     var selectedQuality:String? = nil
+    
     static var isInitMute:Bool = true
     
     override func reset() {
@@ -167,24 +168,25 @@ class BtvPlayerModel:PlayerModel{
             case .clip( let autoPlay, let fullVod):
                 self.initPlay = autoPlay
                 self.fullVod = fullVod
-            
+                //self.useInside = true
             case .vod(let t, let autoPlay), .vodChange(let t, let autoPlay):
                 self.openingTime = playData.openingTime ?? -1
                 self.endingTime = playData.endingTime ?? -1
                 self.continuousTime = t
                 self.initPlay = autoPlay
                 self.useInside = true
+                self.isFullVod = true
             case .vodNext(let t, let autoPlay):
                 self.openingTime = playData.openingTime ?? -1
                 self.endingTime = playData.endingTime ?? -1
                 self.continuousTime = t == 0 ? self.openingTime : t
-                
-                ComponentLog.d("vodNext continuousTime " + self.continuousTime.description , tag: self.tag)
+                self.isFullVod = true
                 self.initPlay = autoPlay
                 self.useInside = true
             default: break
             }
         }
+        
         if let autoPlay = autoPlay {
             ComponentLog.d("force setup initPlay " + autoPlay.description , tag: self.tag)
             self.initPlay = autoPlay

@@ -20,6 +20,7 @@ struct MonthlyInfo : Decodable {
 
 struct MonthlyInfoItem : Decodable {
     private(set) var prod_code: String? = nil  // "상품의 구분 코드 - 30 : 일반 및 결합 상품(일반 월정액) - 32 : 월정액 기간권 상품 - 36 : 월정액+커머스 상품 - 60 : 부가서비스 상품(VAS 월정액) - 80 : 채널패키지 상품(IPTV 월정액)"
+    private(set) var ncms_prod_code: String? = nil // "NCMS 상품의 구분 코드 - 30 : VOD PPM - 32 : VOD PPM 기간권 - 34 : 복합 VOD PPM - 35 : 복합 PPM - 36 : VOD PPM 관련상품 - 60 : VAS PPM - 80 : 채널 PPM"
     private(set) var kzone_yn: String? = nil
     private(set) var prod_id: String? = nil    // 상품 식별자
     private(set) var subs_id: String? = nil   // "계약 식별자.월정액 해지 시 사용"

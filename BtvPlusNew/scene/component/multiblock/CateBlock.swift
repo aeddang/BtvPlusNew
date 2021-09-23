@@ -69,6 +69,7 @@ class CateBlockModel: PageDataProviderModel {
             }
         }
     }
+    
 }
 
 extension CateBlock{
@@ -93,6 +94,7 @@ struct CateBlock: PageComponent{
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -232,7 +234,7 @@ struct CateBlock: PageComponent{
                     }
                 } else {
                     ErrorKidsData(
-                        text: self.viewModel.data?.dataType == .watched
+                        text: self.viewModel.data?.dataType == .watched || self.viewModel.data?.cardType == .watchedVideo
                             ? String.kidsText.kidsMyWatchedEmpty
                             : String.alert.dataError
                         ).modifier(MatchParent())
@@ -282,6 +284,25 @@ struct CateBlock: PageComponent{
             case .onError(_,  _, _):
                 self.onError()
             default : break
+            }
+        }
+        .onReceive(self.dataProvider.$result){ res in
+            guard let res = res else { return }
+            guard let posterDatas = self.loadedPosterDatas else { return }
+            switch res.type {
+            case .postBookMark, .deleteBookMark :
+                guard let result = res.data as? UpdateMetv else { return }
+                if result.result != ApiCode.success { return }
+                if posterDatas.first(where: {res.id.hasPrefix($0.epsdId ?? "")}) != nil {
+                    switch res.type {
+                    case .postBookMark:
+                        self.totalCount += 1
+                    case .deleteBookMark :
+                        self.totalCount -= 1
+                    default: break
+                    }
+                }
+            default: break
             }
         }
         .onAppear(){
@@ -727,6 +748,13 @@ struct CateBlock: PageComponent{
     
     
     private func modifyCount(_ count:Int) -> Int{
+        if !SystemEnvironment.isTablet && self.viewModel.type == .kids {
+            switch  self.viewModel.data?.uiType {
+            case .poster :  return 5
+            case .video :  return 3
+            default: break
+            }
+        }
         if count <= 3 {return count} //123
         if count == 4 {return count}
         if count <= 6 {return 5} //56

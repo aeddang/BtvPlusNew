@@ -220,6 +220,7 @@ class Repository:ObservableObject, PageProtocol{
                 self.pushManager.retryRegisterPushToken()
                 self.pushManager.updateUserAgreement(self.pairing.user?.isAgree3 ?? false)
                 self.namedStorage?.tvUserId = self.vsManager?.currentAccountId
+                self.userSetup.isPurchaseAuth = true
                 if !NpsNetwork.isAutoPairing {
                     self.appSceneObserver?.event = .toast(String.alert.pairingCompleted)
                 }

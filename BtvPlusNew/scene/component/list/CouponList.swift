@@ -46,6 +46,7 @@ class CouponData:InfinityData{
         return self
     }
     private func setupBalance(_ balance:Double?){
+        if self.isExpire {return}
         guard let balance = balance else {
             return
         }

@@ -260,7 +260,7 @@ struct PageMyRecommand: PageView {
                         idx:idx,
                         cells: [
                             .init( text: date,idx:0, size: Self.leftSize),
-                            .init( text: title + title + title , idx:1, isLeading:true),
+                            .init( text: title  , idx:1, isLeading:true),
                             .init( text: pointStr , idx:2, size: Self.rightSize)
                         ]
                     )

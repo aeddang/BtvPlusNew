@@ -89,6 +89,7 @@ struct PagePairingFamilyInvite: PageView {
                     ){_ in
                         
                         self.sendLog(action: .clickPopupButton, category: String.app.confirm)
+                        /* 페어링 중이라 안될거알지만 오류 문구를 보여주기 위해서 시도를 해봐야하는 상황.....
                         if self.pairing.status == .pairing {
                             if self.pairing.stbId == self.inviteHostDeviceid {
                                 self.appSceneObserver.alert = .alert(
@@ -101,7 +102,7 @@ struct PagePairingFamilyInvite: PageView {
                                     String.pageText.pairingFamilyInviteErrorAnotherPairingSub)
                             }
                             return
-                        }
+                        }*/
                         
                         if !self.isAgree1 {
                             self.appSceneObserver.event = .toast(String.alert.needAgreeTermsOfService)
@@ -156,6 +157,15 @@ struct PagePairingFamilyInvite: PageView {
                         self.appSceneObserver.alert = .alert(
                             String.alert.api,
                             String.pageText.pairingFamilyInviteErrorHost)
+                    case "1019":
+                        self.appSceneObserver.alert = .alert(
+                            String.alert.api,
+                            String.pageText.pairingFamilyInviteErrorAlreadyPairing)
+                    case "1029":
+                        self.appSceneObserver.alert = .alert(
+                            String.alert.api,
+                            String.pageText.pairingFamilyInviteErrorAnotherPairing,
+                            String.pageText.pairingFamilyInviteErrorAnotherPairingSub)
                     case "1028":
                         self.appSceneObserver.alert = .alert(
                             String.pageText.pairingFamilyInviteErrorLimited,

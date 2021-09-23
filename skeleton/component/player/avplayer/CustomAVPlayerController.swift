@@ -242,7 +242,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
             if viewModel.isReplay && t >= (d - 1) {
                 self.viewModel.event = .seekTime(0, true)
             }
-            if t == d {
+            if t >= d {
                 if viewModel.playerStatus != .seek && viewModel.playerStatus != .pause {
                     playerController.playerScreenView.player?.pause()
                     self.onTimeChange(viewModel.duration)

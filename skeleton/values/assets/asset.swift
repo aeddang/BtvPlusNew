@@ -171,7 +171,7 @@ extension Asset{
         public static let edit = "icMyEdit"
         
         public static let ticketMonthly = "tagMySubscribe"
-        public static let ticketPeriod = "tagMySubscribe02"
+        public static let ticketPeriod = "tagMySubscribe02T"
         public static let represent = "tagMyRepresent"
         public static let logoOcean = "logoOcean"
         public static let logoZem = "icZem"

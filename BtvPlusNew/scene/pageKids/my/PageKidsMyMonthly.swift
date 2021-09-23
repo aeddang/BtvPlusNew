@@ -34,7 +34,7 @@ struct PageKidsMyMonthly: PageView {
                 
                 VStack (alignment: .center, spacing:0){
                     PageKidsTab(
-                        title:String.kidsTitle.kidsMyDiagnostic,
+                        title:String.kidsText.kidsMyMonthlyReport,
                         isBack: true)
                     
                     if self.isPairing {

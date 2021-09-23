@@ -44,7 +44,7 @@ struct PageKidsMyDiagnostic: PageView {
                             Spacer().modifier(MatchHorizontal(height: 0))
                             MenuTab(
                                 viewModel: self.tabNavigationModel,
-                                buttons: DiagnosticReportType.allCases.filter{$0.name != nil}.map{$0.name!},
+                                buttons: DiagnosticReportType.allCases.filter{$0.nameTab != nil}.map{$0.nameTab!},
                                 selectedIdx: DiagnosticReportType.allCases.firstIndex(of: self.type) ?? 0,
                                 isDivision: true)
                                 .frame(width: Self.tabWidth * CGFloat(DiagnosticReportType.allCases.count))
@@ -55,6 +55,7 @@ struct PageKidsMyDiagnostic: PageView {
                             ResultReadingListView(
                                 infinityScrollModel: self.readingListScrollModel,
                                 kid: self.kid ?? Kid() ){ data in
+                                    
                                 self.selectReadingArea(data: data)
                             }
                             .modifier(MatchParent())
@@ -139,6 +140,17 @@ struct PageKidsMyDiagnostic: PageView {
                 self.kid = kid
                 if !self.isInitPage {return}
                 self.loadResult(self.type)
+                self.moveResetProfile()
+            }
+            .onReceive(self.pairing.$event){ evt in
+                if !self.isInitPage {return}
+                switch evt {
+                case .updatedKids(let updateType) :
+                    if updateType == .put {
+                        self.moveResetProfile()
+                    }
+                default : break
+                }
             }
             .onReceive(dataProvider.$result) { res in
                 guard let res = res else { return }
@@ -237,12 +249,14 @@ struct PageKidsMyDiagnostic: PageView {
     @State var isError:Bool = false
     @State var isEmpty:Bool = true
     @State var isEmptyResult:Bool = false
+    
+    @State var isInitReadingResult:Bool = true
     @State var isReadingSelect:Bool = false
     
     @State var resultSentence:String? = nil
     @State var readingArea:String? = nil
-    @State var isResetProfile:Bool = false
-    
+    @State var moveResetProfileType:DiagnosticReportType? = nil
+    @State var moveResetProfileId:String? = nil
     @State var resultEnglishReportViewData:ResultEnglishReportViewData? = nil
     @State var resultReadingReportViewData:ResultReadingReportViewData? = nil
     @State var resultCreativeReportViewData:ResultCreativeReportViewData? = nil
@@ -279,13 +293,17 @@ struct PageKidsMyDiagnostic: PageView {
         default : break
         }
         
-        if self.isResetProfile {
-            self.isResetProfile = false
+        
+    }
+    private func moveResetProfile(){
+        if self.kid == nil {return}
+        if let moveType = self.moveResetProfileType {
             self.pagePresenter.closePopup(pageId: .kidsProfileManagement)
-            self.moveExamPage(moveType: .creativeObservation)
+            self.moveExamPage(moveType: moveType , moveId:self.moveResetProfileId)
+            self.moveResetProfileType = nil
+            self.moveResetProfileId = nil
         }
     }
-    
     private func setupEmptyResult(){
         self.isLoading = false
         withAnimation{
@@ -322,7 +340,9 @@ struct PageKidsMyDiagnostic: PageView {
             case .english :
                 self.resultEnglishReportViewData = ResultEnglishReportViewData().setData(contents, kid: self.kid)
             case .infantDevelopment :
-                self.isReadingSelect = true
+                if self.isInitReadingResult {
+                    self.isReadingSelect = true
+                }
                 self.resultReadingReportViewData = ResultReadingReportViewData().setData(contents, kid: self.kid)
             case .creativeObservation :
                 self.resultCreativeReportViewData = ResultCreativeReportViewData().setData(contents, kid: self.kid)
@@ -363,6 +383,7 @@ struct PageKidsMyDiagnostic: PageView {
     private func startReport(startType: DiagnosticReportType){
         switch startType {
         case .infantDevelopment:
+            self.isInitReadingResult = true
             self.isReadingSelect = true
         default:
             self.moveExamPage(moveType: startType)
@@ -370,6 +391,7 @@ struct PageKidsMyDiagnostic: PageView {
     }
     
     private func selectReadingArea(data: ReadingListData){
+        self.isInitReadingResult = false
         self.type = .infantDevelopment
         if data.isComplete {
             if data.area == self.readingArea {
@@ -393,6 +415,25 @@ struct PageKidsMyDiagnostic: PageView {
         case .english:
             self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsEnglishLvTestSelect))
         case .infantDevelopment:
+            let ageM = kid.ageMonth ?? 0
+            if ageM > KidsPlayType.limitedLv2 || ageM < KidsPlayType.limitedLv0{
+                self.appSceneObserver.alert = .confirm(
+                    nil ,
+                    String.kidsText.kidsExamInfantDevelopmentDisable,
+                    confirmText: String.app.close,
+                    cancelText: String.pageTitle.modifyProfile
+                ){ isOk in
+                    if !isOk {
+                        self.moveResetProfileType = .infantDevelopment
+                        self.moveResetProfileId = moveId
+                        self.pagePresenter.openPopup(
+                            PageKidsProvider.getPageObject(.kidsProfileManagement)
+                        )
+                    }
+                }
+                return
+            }
+            self.isInitReadingResult = false
             self.pagePresenter.openPopup(
                 PageKidsProvider.getPageObject(.kidsExam)
                     .addParam(key: .type, value: DiagnosticReportType.infantDevelopment)
@@ -401,7 +442,8 @@ struct PageKidsMyDiagnostic: PageView {
             )
            
         case .creativeObservation:
-            if (kid.ageMonth ?? 0) > KidsPlayType.limitedLv2 {
+            let ageM = kid.ageMonth ?? 0
+            if ageM > KidsPlayType.limitedLv2 || ageM < KidsPlayType.limitedLv1{
                 self.appSceneObserver.alert = .confirm(
                     nil ,
                     String.kidsText.kidsExamCreativeObservationDisable,
@@ -409,7 +451,7 @@ struct PageKidsMyDiagnostic: PageView {
                     cancelText: String.pageTitle.modifyProfile
                 ){ isOk in
                     if !isOk {
-                        self.isResetProfile = true
+                        self.moveResetProfileType = .creativeObservation
                         self.pagePresenter.openPopup(
                             PageKidsProvider.getPageObject(.kidsProfileManagement)
                         )

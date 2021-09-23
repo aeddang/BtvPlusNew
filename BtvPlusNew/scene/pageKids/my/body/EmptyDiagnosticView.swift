@@ -30,7 +30,7 @@ struct EmptyDiagnosticView: PageView {
                 }
             }
             RectButtonKids(
-                text: (self.type.name ?? "") + " " + String.kidsText.kidsMyReportStart,
+                text: (self.type.nameTab ?? "") + " " + String.kidsText.kidsMyReportStart,
                 isSelected: true,
                 textModifier: TextModifierKids(
                     family:Font.familyKids.bold,

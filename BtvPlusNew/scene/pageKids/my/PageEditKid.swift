@@ -191,13 +191,16 @@ struct PageEditKid: PageView {
                 switch evt {
                 case .updatedKids(let updateType) :
                     guard let type = updateType else {return}
-                    var msg:String = ""
+                    var msg:String? = nil
                     switch type {
-                    case .post : msg = String.alert.kidsAddCompleted
+                    //case .post : msg = String.alert.kidsAddCompleted
                     case .put : msg = String.alert.kidsEditCompleted
-                    case .del : msg = String.alert.kidsDeleteCompleted
+                    //case .del : msg = String.alert.kidsDeleteCompleted
+                    default : break
                     }
-                    self.appSceneObserver.event = .toast(msg)
+                    if let msg = msg {
+                        self.appSceneObserver.event = .toast(msg)
+                    }
                     self.pagePresenter.closePopup(self.pageObject?.id)
                     break
                 case .editedKids :
@@ -278,6 +281,9 @@ struct PageEditKid: PageView {
     @State private var birthMonth:String = "00"
     
     private func isInputCompleted() -> Bool {
+        if !self.isInitBirthSelect {
+            return false
+        }
         var complete = false
         if !self.nickName.isEmpty && self.birthDate != nil {
             complete = true
@@ -378,7 +384,7 @@ struct PageEditKid: PageView {
         }
         if let kid = self.editKid {
             if let _ = self.pairing.kids.filter({ $0.id != kid.id }).first(where: {$0.nickName == self.nickName}){
-                self.appSceneObserver.event = .toast(String.alert.kidsDuplicationNickError)
+                self.appSceneObserver.alert = .alert(nil, String.alert.kidsDuplicationNickError)
                 return
             }
             kid.update(

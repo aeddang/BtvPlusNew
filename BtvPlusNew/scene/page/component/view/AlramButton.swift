@@ -89,7 +89,7 @@ struct AlramButton: PageView {
         guard let data = res.data as? NpsResult  else { return onUpdatePushError() }
         guard let resultCode = data.header?.result else { return onUpdatePushError() }
         if resultCode == NpsNetwork.resultCode.success.code {
-            let today = Date().toDateFormatter(dateFormat: "yyyy.MM.dd")
+            let today = Date().toDateFormatter(dateFormat: "yy.MM.dd")
             self.appSceneObserver.event = .toast(
                 isAgree ? today+"\n"+String.alert.pushOn : today+"\n"+String.alert.pushOff
             )

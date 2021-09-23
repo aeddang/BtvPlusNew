@@ -127,7 +127,7 @@ struct AlramList: PageComponent{
     private func readAll(){
         if !self.hasNew {return}
         
-        self.appSceneObserver.alert = .confirm(nil,  String.alert.newAlramAllRead){ isOk in
+        self.appSceneObserver.alert = .confirm(String.alert.newAlramAllRead,  String.alert.newAlramAllReadText){ isOk in
             self.sendLog(action: .clickNotificationPopUp, config: isOk ? "확인": "취소")
             if !isOk {return}
             self.hasNew = false
@@ -146,7 +146,7 @@ struct AlramList: PageComponent{
         if resultCode == NpsNetwork.resultCode.success.code {
             
             self.isPush = isAgree
-            let today = Date().toDateFormatter(dateFormat: "yyyy.MM.dd")
+            let today = Date().toDateFormatter(dateFormat: "yy.MM.dd")
             self.appSceneObserver.event = .toast(
                 isAgree ? today+"\n"+String.alert.pushOn : today+"\n"+String.alert.pushOff
             )

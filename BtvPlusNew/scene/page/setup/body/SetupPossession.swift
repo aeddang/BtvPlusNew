@@ -124,25 +124,29 @@ struct SetupPossession: PageView {
         #endif
         */
         guard let data = res.data as? StbListItem  else {
-            self.appSceneObserver.event = .toast( String.alert.possessionStbNone )
+            self.appSceneObserver.alert = .alert(String.alert.possessionVodNone, String.alert.possessionStbNone)
             self.setupPossessionCancel()
             return
         }
         guard let stbs = data.data?.stb_infos else {
-            self.appSceneObserver.event = .toast( String.alert.possessionStbNone )
+            self.appSceneObserver.alert = .alert(String.alert.possessionVodNone, String.alert.possessionStbNone)
             self.setupPossessionCancel()
             return
         }
         if stbs.isEmpty {
-            self.appSceneObserver.event = .toast( String.alert.possessionStbNone )
+            self.appSceneObserver.alert = .alert(String.alert.possessionVodNone, String.alert.possessionStbNone)
             self.setupPossessionCancel()
             return
         }
-        self.pagePresenter.openPopup(
-            PageProvider
-                .getPageObject(.terminateStb)
-                .addParam(key: .data, value: stbs)
-        )
+        if stbs.count == 1 {
+            self.selectedStb(StbData().setData(data: stbs.first!))
+        } else {
+            self.pagePresenter.openPopup(
+                PageProvider
+                    .getPageObject(.terminateStb)
+                    .addParam(key: .data, value: stbs)
+            )
+        }
     }
     
     private func selectedStb(_ stb:StbData){

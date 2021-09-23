@@ -30,6 +30,7 @@ struct MonthlyReportCard: PageComponent{
                 .resizable()
                 .scaledToFill()
                 .modifier(MatchParent())
+            
             VStack(alignment: .center ,spacing:0){
                 HStack(spacing:0){
                     Text(String.kidsText.kidsMyMonthlyReport)
@@ -66,7 +67,6 @@ struct MonthlyReportCard: PageComponent{
                 Spacer()
                 if self.isLoading {
                     Spacer()
-                    
                 }else if self.currentReport != nil {
                     HStack(spacing:DimenKids.margin.mediumExtra){
                         MonthlyGraph(
@@ -125,6 +125,9 @@ struct MonthlyReportCard: PageComponent{
                         .padding(.top, DimenKids.margin.tinyExtra)
                 }
                 Spacer()
+            }
+            if self.isLoading {
+                ActivityIndicator(isAnimating: self.$isLoading, style: .medium)
             }
         }
         .frame(

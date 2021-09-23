@@ -593,8 +593,7 @@ struct PageSynopsis: PageView {
         case Self.getAuth :
             guard let model = self.synopsisModel else {return}
             
-            let isWatchAble = self.checkWatchLvAuth()
-            if !isWatchAble {
+            if !self.checkWatchLvAuth() {
                 self.fullScreenCancel()
                 return
             }
@@ -613,6 +612,10 @@ struct PageSynopsis: PageView {
             
         case Self.getPlay :
             guard let model = self.synopsisModel else {return}
+            if self.checkeRedirect() {
+                self.fullScreenCancel()
+                return
+            }
             if self.hasAuthority == false{
                 if self.purchasViewerData?.isPlayAble == false {
                     PageLog.d("play unAble ", tag: self.tag)
@@ -894,7 +897,6 @@ struct PageSynopsis: PageView {
         self.purchaseWebviewModel?.setParam(directView: data, monthlyPid: nil)
         self.synopsisModel?.setData(directViewData: data, isSeasonWatchAll: isSeasonWatchAll)
         self.relationContentsModel.setData(synopsis: self.synopsisModel)
-        if self.checkeRedirect() { return }
         self.isBookmark = self.synopsisModel?.isBookmark
         PageLog.d("self.isBookmark " + (self.isBookmark?.description ?? "nil"), tag: self.tag)
         self.purchasViewerData = PurchaseViewerData(type: self.type).setData(

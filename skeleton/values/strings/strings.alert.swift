@@ -206,7 +206,7 @@ extension String {
         
         public static var newAlram = "alertNewAlram".loaalized()
         public static var newAlramAllRead = "alertNewAlramAllRead".loaalized()
-
+        public static var newAlramAllReadText = "alertNewAlramAllReadText".loaalized()
         public static var possession = "alertPossession".loaalized()
         public static var possessionText = "alertPossessionText".loaalized()
         public static var possessionInfo = "alertPossessionInfo".loaalized()
@@ -293,5 +293,6 @@ extension String {
         
         public static var earphoneClose = "alertEarphoneClose".loaalized()
         public static var earphoneCloseText = "alertEarphoneCloseText".loaalized()
+        public static var moveBtvPairing = "alertMoveBtvPairing".loaalized()
     }
 }

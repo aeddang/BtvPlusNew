@@ -32,9 +32,9 @@ struct ProgressBox: PageComponent{
             }
             .padding(.horizontal, DimenKids.margin.regular)
             HStack(spacing: DimenKids.margin.thin){
-                if let move = self.move {
+                if self.viewModel.type != .solve , let move = self.move {
                     Button(action: {
-                        if self.progress == 0 {return}
+                        if !self.prevActive {return}
                         move(-1)
                         
                     }) {
@@ -44,7 +44,7 @@ struct ProgressBox: PageComponent{
                             .frame(
                                 width: DimenKids.icon.mediumExtra,
                                 height: DimenKids.icon.mediumExtra)
-                            .opacity(self.progress == 0 ? 0.5 : 1.0 )
+                            .opacity(self.prevActive ? 1.0 : 0.5 )
                            
                     }
                 }
@@ -64,8 +64,9 @@ struct ProgressBox: PageComponent{
                                 size: Font.sizeKids.tinyExtra,
                                 color:  Color.app.brownDeep.opacity(0.7)))
                    
-                if let move = self.move {
+                if self.viewModel.type != .solve , let move = self.move {
                     Button(action: {
+                        if !self.nextActive {return}
                         move(1)
                     }) {
                         Image(self.progress == self.max ?  AssetKids.exam.exit : AssetKids.exam.next)
@@ -74,7 +75,7 @@ struct ProgressBox: PageComponent{
                             .frame(
                                 width: DimenKids.icon.mediumExtra,
                                 height: DimenKids.icon.mediumExtra)
-                           
+                            .opacity(self.nextActive ? 1.0 : 0.5 )
                     }
                 } else {
                     if self.hold >= 0 {
@@ -103,10 +104,16 @@ struct ProgressBox: PageComponent{
             switch evt {
             case .ready(let max):
                 self.max = max
-            case .quest(let step, _ ) :
+            case .quest(let step, _) :
                 withAnimation{
                     self.hold = -1
                     self.progress = step
+                    let prev = step-1
+                    let next = step
+                    let prevQ:QuestionData? = prev > 0 ? self.viewModel.questions[prev] : nil
+                    let nextQ:QuestionData? = next < self.viewModel.questions.count ? self.viewModel.questions[next] : nil
+                    self.prevActive = prevQ?.submit != nil
+                    self.nextActive = nextQ?.submit != nil
                 }
             case .hold(let count) :
                 withAnimation{
@@ -119,6 +126,8 @@ struct ProgressBox: PageComponent{
     @State var progress:Int = 0
     @State var max:Int = 0
     @State var hold:Int = -1
+    @State var prevActive:Bool = false
+    @State var nextActive:Bool = false
 }
 
 #if DEBUG

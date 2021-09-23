@@ -39,6 +39,7 @@ struct PeriodMonthlyPurchaseInfo : Decodable {
 struct PurchaseFixedChargeItem : Decodable {
     private(set) var prod_type: String? // "상품의 구성 종류 - 일반 및 결합 상품 : 일반 월정액 상품 - 월정액 결합 상품 : 월정액+커머스 상품 - 부가서비스 상품 : VAS 월정액 상품 - 채널패키지 상품 : IPTV 월정액 상품"
     private(set) var prod_code: String? // "상품의 구분 코드 - 30 : 일반 및 결합 상품(일반 월정액) - 36 : 월정액+커머스 상품 - 60 : 부가서비스 상품(VAS 월정액) - 80 : 채널패키지 상품(IPTV 월정액)"
+    private(set) var ncms_prod_code: String? // "NCMS 상품의 구분 코드 - 30 : VOD PPM - 32 : VOD PPM 기간권 - 34 : 복합 VOD PPM - 35 : 복합 PPM - 36 : VOD PPM 관련상품 - 37 : 복합 VOD PPM 기간권 - 60 : VAS PPM - 80 : 채널 PPM"
     private(set) var prod_id: String? // 상품 식별자
     private(set) var subs_id: String? // "계약 식별자.월정액 해지 시 사용"
     private(set) var calculation: String? // "월정액 정산(현재 매월 1일~7일)이 완료되었는지 여부.T멤버쉽과 B포인트 등의 사용을 판단하여 계산하므로 정산 이전의 계산 내용을 보여줄 수 없다. - Y: 정산 완료, N: 정산 중"
@@ -73,12 +74,20 @@ struct PurchaseFixedChargeItem : Decodable {
     private(set) var agmt_dd_end: String? // "약정종료일 - 약정종료 알림시 활용 - agmt_yn = Y 인 경우 제공"
     private(set) var ppm_rltn_prd_id: String? // "월정액 관련상품(커머스) ID - 관련상품인 경우, 값이 존재 - 기존 상품인 경우, null 또는 빈값으로 제공"
     private(set) var ppm_rltn_prd_poster: String? // "월정액 관련상품(커머스) 포스터 - 관련상품인 경우,  관련상품 포스터 정보 제공- 기존 상품인 경우 null 또는 빈값으로 제공"
+    
+    private(set) var free_ppm_use_yn: String?
+    private(set) var free_ppm_use_month: String?
+
+    private(set) var omni_total_cnt: String? // OMNI팩으로 사용 가능한 컨텐츠 총시청가능횟수, OMNI팩 정보 조회 불가일 경우 0
+    private(set) var omni_use_cnt: String? // OMNI팩으로 사용 가능한 컨텐츠 사용횟수, 이용 개수 없을 경우 0
+    private(set) var omni_renewal_date: String? // OMNI팩 갱신 예정일
 }
 
 
 struct PurchaseFixedChargePeriodItem : Decodable {
     private(set) var prod_type: String?  // "상품의 구성 종류 - 기간 제한 상품 : 월정액기간권 상품"
     private(set) var prod_code: String?  // "상품의 구분 코드 - 32 : 기간 제한 상품(VOD PPM 기간권)"
+    private(set) var ncms_prod_code: String? // "NCMS 상품의 구분 코드 - 30 : VOD PPM - 32 : VOD PPM 기간권 - 34 : 복합 VOD PPM - 35 : 복합 PPM - 36 : VOD PPM 관련상품 - 37 : 복합 VOD PPM 기간권 - 60 : VAS PPM - 80 : 채널 PPM"
     private(set) var prod_id: String?    // 상품 식별자
     private(set) var subs_id: String?    // "계약 식별자. - 기간권 해지 시 사용"
     private(set) var title: String?  // 기간권의 이름

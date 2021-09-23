@@ -389,18 +389,17 @@ class AlramData:InfinityData,ObservableObject{
             let arrParam = url.components(separatedBy: "/")
             guard let menuId = arrParam.first(where: {!$0.isEmpty}) else { return }
             if self.msgType == .marketKids {
-                self.move = .kidsHome
+                // 키즈페이지 이동시 홈이 없으면 인트로에서 홈깔아줌 그냥 팝업호출
                 var param = [PageParam:Any]()
                 if menuId == EuxpNetwork.KidsGnbCd.monthlyTicket.rawValue {
-                    let popup = PageKidsProvider
-                        .getPageObject(.kidsMonthly)
-                        .addParam(key: .subId, value: url)
-                    param[.data] = popup
+                    self.move = .kidsMonthly
+                    param[.subId] =  url
                 } else {
+                    self.move = .kidsHome
                     param[.link] = url
+                   
                 }
                 self.actionLog.menu_name = "B4.MENU"
-                self.moveData = param
                 
             } else {
                 

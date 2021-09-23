@@ -25,18 +25,20 @@ struct KidsGnb: PageComponent{
         VStack(alignment: .leading){
             HStack(spacing:0){
                 ForEach(self.datas) { data in
-                    KidsGnbItem(
-                        data:data,
-                        isSelected:self.selectedMenuId == data.menuId
-                    )
-                    .onTapGesture {
-                        self.pagePresenter.changePage(
-                            PageKidsProvider
-                                .getPageObject(.kidsHome)
-                                .addParam(key: .id, value: data.menuId)
-                                .addParam(key: UUID().uuidString , value: "")
+                    if !data.isMonthly {
+                        KidsGnbItem(
+                            data:data,
+                            isSelected:self.selectedMenuId == data.menuId
                         )
-                        self.selectedMenuId = data.menuId
+                        .onTapGesture {
+                            self.pagePresenter.changePage(
+                                PageKidsProvider
+                                    .getPageObject(.kidsHome)
+                                    .addParam(key: .id, value: data.menuId)
+                                    .addParam(key: UUID().uuidString , value: "")
+                            )
+                            self.selectedMenuId = data.menuId
+                        }
                     }
                 }
             }

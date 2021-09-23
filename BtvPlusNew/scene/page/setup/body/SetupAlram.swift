@@ -82,7 +82,7 @@ struct SetupAlram: PageView {
         if resultCode == NpsNetwork.resultCode.success.code {
             //self.repository.updatePush(isAgree)
             self.isPush = isAgree
-            let today = Date().toDateFormatter(dateFormat: "yyyy.MM.dd")
+            let today = Date().toDateFormatter(dateFormat: "yy.MM.dd")
             self.appSceneObserver.event = .toast(
                 isAgree ? today+"\n"+String.alert.pushOn : today+"\n"+String.alert.pushOff
             )

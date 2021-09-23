@@ -92,23 +92,15 @@ struct PageKidsMy: PageView {
             .onReceive(pairing.$event) { evt in
                 guard let evt = evt else { return }
                 if self.pairing.kid != nil {return}
+                self.checkProfileStatus(evt: evt)
                 switch evt {
-                case .updatedKids :
-                    self.registKid()
-                    
-                case .notFoundKid :
-                    self.appSceneObserver.alert = .confirm(nil, String.alert.kidsProfileNotfound ,nil) { isOk in
-                        if isOk {
-                            if self.pagePresenter.currentTopPage?.pageID == .kidsProfileManagement { return }
-                            self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
-                        }
-                    }
                 case .updatedKidsError :
                     self.appSceneObserver.alert = .alert(nil,  String.alert.kidsDisable, String.alert.kidsDisableTip){
                         self.pagePresenter.goBack()
                     }
                 default : break
                 }
+                
             }
             .onReceive(self.pairing.$kid){kid in
                 if kid == nil {
@@ -154,18 +146,32 @@ struct PageKidsMy: PageView {
         }
     }
     
-    private func registKid(){
-        if self.pairing.kid != nil {return}
-        if pairing.kids.isEmpty {
-            self.appSceneObserver.alert = .confirm(nil, String.alert.kidsProfileEmpty,nil) { isOk in
-                if isOk {
-                    self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.registKid))
+    private func checkProfileStatus(evt:PairingEvent){
+        if self.pairing.status != .pairing {return}
+        if self.pairing.kid == nil {
+            if pairing.kids.isEmpty {
+                switch evt {
+                case .notFoundKid:
+                    self.appSceneObserver.alert = .alert(nil, String.alert.kidsProfileNotfound ,nil) {
+                        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.editKid))
+                    }
+                case .updatedKids:
+                    self.appSceneObserver.alert = .alert(nil, String.alert.kidsProfileSelect ,nil) {
+                        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.editKid))
+                    }
+                default: break
                 }
-            }
-        } else {
-            self.appSceneObserver.alert = .confirm(nil, String.alert.kidsProfileSelect ,nil) { isOk in
-                if isOk {
-                    self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
+            } else {
+                switch evt {
+                case .notFoundKid:
+                    self.appSceneObserver.alert = .alert(nil, String.alert.kidsProfileNotfound ,nil) {
+                        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
+                    }
+                case .updatedKids:
+                    self.appSceneObserver.alert = .alert(nil, String.alert.kidsProfileSelect ,nil) {
+                        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
+                    }
+                default: break
                 }
             }
         }

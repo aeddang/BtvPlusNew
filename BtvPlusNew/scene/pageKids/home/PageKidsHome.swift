@@ -51,8 +51,8 @@ struct PageKidsHome: PageView {
             .onReceive(self.pagePresenter.$currentTopPage){ topPage in
                 if self.pagePresenter.currentTopPage?.pageID != self.pageID {return}
                 if !self.isUiInit { return }
-                if self.pairing.status != .pairing { return }
-                self.pairing.requestPairing(.updateKids)
+                //if self.pairing.status != .pairing { return }
+                //self.pairing.requestPairing(.updateKids)
             }
             .onReceive(self.dataProvider.bands.$event){ evt in
                 guard let evt = evt else { return }
@@ -85,20 +85,11 @@ struct PageKidsHome: PageView {
                 }
             }
             .onReceive(self.pairing.$event){evt in
+                if !self.isUiInit  {return}
                 guard let evt = evt else {return}
-                switch evt {
-                case .pairingCompleted : self.pairing.requestPairing(.updateKids)
-                case .notFoundKid :
-                    if self.pagePresenter.currentTopPage?.pageID != self.pageID {return}
-                    self.appSceneObserver.alert = .confirm(nil, String.alert.kidsProfileNotfound ,nil) { isOk in
-                        if isOk {
-                            if self.pagePresenter.currentTopPage?.pageID == .kidsProfileManagement { return }
-                            self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
-                        }
-                    }
-                default : break
-                }
+                self.checkProfileStatus(evt:evt)
             }
+            
            
             .onReceive(self.infinityScrollModel.$event){evt in
                 guard let evt = evt else {return}
@@ -116,6 +107,10 @@ struct PageKidsHome: PageView {
                     DispatchQueue.main.async {
                         self.reload()
                         self.isUiInit = true
+                        if self.pagePresenter.currentTopPage == self.pageObject {
+                            if self.pairing.status != .pairing { return }
+                            self.pairing.requestPairing(.updateKids)
+                        }
                     }
                 }
             }
@@ -190,6 +185,36 @@ struct PageKidsHome: PageView {
     }
     //Block init
     
+    private func checkProfileStatus(evt:PairingEvent){
+        if self.pairing.status != .pairing {return}
+        if self.pairing.kid == nil {
+            if pairing.kids.isEmpty {
+                switch evt {
+                case .notFoundKid:
+                    self.appSceneObserver.alert = .alert(nil, String.alert.kidsProfileNotfound ,nil) {
+                        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.editKid))
+                    }
+                case .updatedKids:
+                    self.appSceneObserver.alert = .alert(nil, String.alert.kidsProfileSelect ,nil) {
+                        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.editKid))
+                    }
+                default: break
+                }
+            } else {
+                switch evt {
+                case .notFoundKid:
+                    self.appSceneObserver.alert = .alert(nil, String.alert.kidsProfileNotfound ,nil) {
+                        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
+                    }
+                case .updatedKids:
+                    self.appSceneObserver.alert = .alert(nil, String.alert.kidsProfileSelect ,nil) {
+                        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
+                    }
+                default: break
+                }
+            }
+        }
+    }
 }
 
 

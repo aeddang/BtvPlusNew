@@ -80,7 +80,6 @@ struct PageKidsIntro: PageView {
         }
         .onReceive(pairing.$event) { evt in
             guard let evt = evt else { return }
-            
             switch evt {
             case .updatedKids :
                 self.isKidsProfileCompleted = true
@@ -158,10 +157,8 @@ struct PageKidsIntro: PageView {
                     self.emptyKids()
                 
                 } else {
-                    self.appSceneObserver.alert = .confirm(nil, String.alert.kidsProfileSelect ,nil) { isOk in
-                        if isOk {
-                            self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
-                        }
+                    self.appSceneObserver.alert = .alert(nil, String.alert.kidsProfileSelect ,nil) { 
+                        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
                     }
                 }
             default: break

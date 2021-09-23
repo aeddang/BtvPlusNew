@@ -17,6 +17,9 @@ class PurchaseBlockModel: PageDataProviderModel {
     
     @Published var isEditmode = false
     @Published var isSelectAll = false
+    @Published var isSelectChanged:Bool? = nil  {
+        didSet{ if self.isSelectChanged != nil { self.isSelectChanged = nil} }
+    }
     private var isInit = true
     func initUpdate(key:String? = nil) {
         if !self.isInit {return}
@@ -54,6 +57,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
     var type:ListType = .normal
     @State var isEdit:Bool = false
     @State var isSelectAll:Bool = false
+    @State var isDeletAble:Bool = false
     @State var reloadDegree:Double = 0
     
     var body: some View {
@@ -134,13 +138,16 @@ struct PurchaseBlock: PageComponent, Identifiable{
                         EditButton(
                             icon: Asset.icon.delete,
                             text: String.button.remove){
-                            self.delete()
-                        }
+                                if !self.isDeletAble {return}
+                                self.delete()
+                            }
+                            .opacity(self.isDeletAble ? 1.0 : 0.5)
                     }
                     .padding(.horizontal, Dimen.margin.regular)
                     .modifier(MatchHorizontal(height: Dimen.tab.medium))
                     .background(Color.app.blueLightExtra)
                     .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)
+                    
                 }
             }
             .background(Color.brand.bg)
@@ -150,6 +157,41 @@ struct PurchaseBlock: PageComponent, Identifiable{
         }
         .onReceive(self.viewModel.$isSelectAll) { isSelect in
             self.isSelectAll = isSelect
+            if isSelect {
+                self.isDeletAble = isSelect
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                    if self.datas.first(where: {$0.isSelected}) == nil {
+                        self.isDeletAble = false
+                    } else {
+                        self.isDeletAble = true
+                    }
+                }
+            }
+        }
+        .onReceive(self.viewModel.$isSelectChanged) { isSelect in
+            guard let change = isSelect else { return }
+            if !self.isEdit {return}
+            if !change && self.isSelectAll {
+                self.isSelectAll = false
+                return
+                
+            }else if !self.isSelectAll && change {
+                if self.datas.first(where: {!$0.isSelected}) == nil {
+                    self.isSelectAll = true
+                    return
+                }
+            }
+            if change {
+                self.isDeletAble = true
+            } else {
+                if self.datas.first(where: {$0.isSelected}) == nil {
+                    self.isDeletAble = false
+                } else {
+                    self.isDeletAble = true
+                }
+            }
+            
         }
         .onReceive(self.viewModel.$isUpdate){ update in
             if update {

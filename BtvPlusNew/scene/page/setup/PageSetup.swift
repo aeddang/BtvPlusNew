@@ -176,8 +176,8 @@ struct PageSetup: PageView {
         default : self.isPairing = false
         }
         self.isDataAlram = self.setup.dataAlram
-        self.isAutoRemocon = self.isPairing ? self.setup.autoRemocon : false
-        self.isRemoconVibration = self.isPairing ? self.setup.remoconVibration : false
+        self.isAutoRemocon = self.setup.autoRemocon  //self.isPairing ? self.setup.autoRemocon : false
+        self.isRemoconVibration = self.setup.remoconVibration //self.isPairing ? self.setup.remoconVibration : false
         self.isAutoPlay = self.setup.autoPlay
         self.isNextPlay = self.setup.nextPlay
         self.isKidsExitAuth = self.isPairing ? self.setup.isKidsExitAuth : false

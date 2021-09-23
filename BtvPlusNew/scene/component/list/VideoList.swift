@@ -26,6 +26,7 @@ class VideoData:InfinityData{
     private(set) var prodId:String? = nil
     private(set) var isClip:Bool = false
     private(set) var usePrice:Bool = true
+    private(set) var useAge:Bool = true
     private(set) var tagData: TagData? = nil
     private(set) var playTime:String? = nil
     private(set) var pageType:PageType = .btv
@@ -166,6 +167,7 @@ class VideoData:InfinityData{
         if !isClip {
             watchLv = data.level?.toInt() ?? 0
             isAdult = data.adult?.toBool() ?? false
+            useAge = false
         }
         tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         
@@ -552,7 +554,7 @@ struct VideoItemBody: PageView {
             }
             VStack(alignment: .leading, spacing:0){
                 if let tag = self.data.tagData {
-                    Tag(data: tag, usePrice:self.data.usePrice).modifier(MatchParent())
+                    Tag(data: tag, usePrice:self.data.usePrice, useAge: self.data.useAge).modifier(MatchParent())
                 }else if let time = self.data.playTime {
                     ZStack(alignment:.bottomTrailing){
                         Spacer().modifier(MatchParent())
@@ -647,12 +649,12 @@ struct VideoItemBodyKids: PageView {
                 }
             }
             .frame(
-                width: self.data.type.size.width - (DimenKids.margin.thinExtra*2),
-                height: (self.data.type.size.width - (DimenKids.margin.thinExtra*2)) * 9 / 16
+                width: self.data.type.size.width - (DimenKids.margin.microUltra*2),
+                height: (self.data.type.size.width - (DimenKids.margin.microUltra*2)) * 9 / 16
             )
             .clipShape(RoundedRectangle(cornerRadius:  DimenKids.radius.light))
-            .padding(.top, DimenKids.margin.thinExtra)
-            .padding(.horizontal, DimenKids.margin.thinExtra)
+            .padding(.top, DimenKids.margin.microUltra)
+            .padding(.horizontal, DimenKids.margin.microUltra)
             
             
             if self.data.title != nil {

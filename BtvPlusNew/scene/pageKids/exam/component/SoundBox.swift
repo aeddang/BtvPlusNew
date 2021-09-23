@@ -31,7 +31,7 @@ struct SoundBox: PageComponent{
                     Button(action: {
         
                         guard let path = self.currentPath else {return}
-                        self.playSound(soundUrl: path)
+                        self.playSound(soundUrl: path, isAutoPlay: true)
                         
                     }) {
                         HStack( spacing: DimenKids.margin.tiny ){
@@ -42,7 +42,7 @@ struct SoundBox: PageComponent{
                                     width: DimenKids.icon.regular,
                                     height: DimenKids.icon.regular)
                                 .opacity(self.isPlay ? 1.0 : 0.7)
-                            Text(self.isView
+                            Text(self.isView || self.isRepeat
                                     ? String.kidsText.kidsExamRepeat
                                     : String.kidsText.kidsExamListen)
                                 .kerning(Font.kern.thin)
@@ -65,7 +65,9 @@ struct SoundBox: PageComponent{
             case .quest(_ , let question ) :
                 if let path = question.audioPath {
                     self.currentPath = path
-                    self.playSound(soundUrl: path)
+                    self.isRepeat = false
+                    self.playSound(soundUrl: path, isAutoPlay: !self.isView)
+                    
                 } else {
                     unableSound()
                     self.currentPath = nil
@@ -78,6 +80,7 @@ struct SoundBox: PageComponent{
         }
         .onReceive(self.soundBoxModel.$isCompleted){isCompleted in
             self.isPlay = !isCompleted
+            self.isRepeat = true
         }
         .onReceive(self.soundBoxModel.$isRight){isRight in
             switch isRight {
@@ -88,7 +91,7 @@ struct SoundBox: PageComponent{
             }
         }
         .onAppear(){
-            self.audioDelegate.parent = self
+            
         }
         .onDisappear(){
             self.stopSound()
@@ -97,14 +100,14 @@ struct SoundBox: PageComponent{
     }
     @State var currentPath:String? = nil
     @State var isPlay:Bool = false
+    @State var isRepeat:Bool = false
     @State var isPlayAble:Bool = false
     @State var audioPlayer:AVAudioPlayer? = nil
-    private let audioDelegate = AudioDelegate()
+    @State var audioDelegate:AudioDelegate? = nil
     
-    private func playSound(soundUrl: String)
+    private func playSound(soundUrl: String, isAutoPlay:Bool)
     {
         self.stopSound()
-       
         ComponentLog.d("playSound path: \(soundUrl)", tag: self.tag)
         if let url = URL(string:soundUrl) {
             self.setAudioSession(isActive: true)
@@ -115,9 +118,9 @@ struct SoundBox: PageComponent{
                     self.audioPlayer = audioPlayer
                     audioPlayer.prepareToPlay()
                     audioPlayer.delegate = self.audioDelegate
-                    if !self.isView {
+                    if isAutoPlay {
                         audioPlayer.play()
-                    } 
+                    }
                     DispatchQueue.main.async {
                         ableSound()
                     }
@@ -139,17 +142,20 @@ struct SoundBox: PageComponent{
         self.stopSound()
         if let asset = NSDataAsset(name: asset) {
             self.setAudioSession(isActive: true)
+            self.audioDelegate?.sndBox = nil
+            self.audioDelegate = AudioDelegate()
+            self.audioDelegate?.sndBox = self
+            
             DispatchQueue.global(qos: .background).async {
                 do{
-                    
                     let audioPlayer = try AVAudioPlayer(data: asset.data)
                     self.audioPlayer = audioPlayer
                     audioPlayer.prepareToPlay()
-                    audioPlayer.delegate = self.audioDelegate
                     audioPlayer.volume = 1.5
                     audioPlayer.play()
-                    
+                
                     DispatchQueue.main.async {
+                        audioPlayer.delegate = self.audioDelegate
                         ableSound()
                     }
                 } catch let error {
@@ -193,6 +199,8 @@ struct SoundBox: PageComponent{
     
     private func stopSound()
     {
+        self.audioDelegate?.sndBox = nil
+        self.audioDelegate = nil
         self.audioPlayer?.delegate = nil
         self.audioPlayer?.stop()
         self.audioPlayer = nil
@@ -206,10 +214,15 @@ class SoundBoxModel:ObservableObject, PageProtocol{
     
     @Published var isRight:Bool? = nil
 }
-class  AudioDelegate:NSObject, AVAudioPlayerDelegate {
-    fileprivate var parent: SoundBox? = nil
+class AudioDelegate:UIViewController ,AVAudioPlayerDelegate {
+    fileprivate var sndBox: SoundBox? = nil
+    
+    func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int){
+        self.sndBox?.soundBoxModel.isCompleted = true
+    }
+    
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        self.parent?.soundBoxModel.isCompleted = true
+        self.sndBox?.soundBoxModel.isCompleted = true
     }
 }
 

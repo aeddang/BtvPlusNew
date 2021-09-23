@@ -47,10 +47,7 @@ struct PageSchedule: PageView {
                             BtvWebView( viewModel: self.webViewModel, useNativeScroll:false )
                                 .modifier(MatchHorizontal(height: self.webViewHeight))
                                 .onReceive(self.webViewModel.$screenHeight){height in
-                                    self.webViewHeight = geometry.size.height
-                                        - Dimen.app.top
-                                        - self.sceneObserver.safeAreaTop
-                                        - self.sceneObserver.safeAreaIgnoreKeyboardBottom
+                                    self.setWebviewSize(geometry: geometry)
                                 }
                             
                         }
@@ -91,6 +88,17 @@ struct PageSchedule: PageView {
                 default : break
                 }
             }
+            
+            .onReceive(self.sceneObserver.$isUpdated){ isUpdated in
+                if isUpdated {
+                    self.setWebviewSize(geometry: geometry)
+                }
+            }
+            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                if ani {
+                    self.setWebviewSize(geometry: geometry)
+                }
+            }
             .onAppear{
                 var link = BtvWebView.schedule
                 if let obj = self.pageObject {
@@ -107,7 +115,12 @@ struct PageSchedule: PageView {
         }//geo
     }//body
     
-   
+    private func setWebviewSize(geometry:GeometryProxy){
+        self.webViewHeight = geometry.size.height
+            - Dimen.app.top
+            - self.sceneObserver.safeAreaTop
+            - self.sceneObserver.safeAreaIgnoreKeyboardBottom
+    }
 }
 
 #if DEBUG

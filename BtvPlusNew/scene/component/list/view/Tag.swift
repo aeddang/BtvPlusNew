@@ -163,6 +163,7 @@ struct Tag: PageView {
     var data:TagData
     var isBig:Bool = false
     var usePrice:Bool = true
+    var useAge:Bool = true
     var body: some View {
         VStack(alignment: .leading, spacing: 0){
             HStack(alignment: .top, spacing: 0){
@@ -187,7 +188,7 @@ struct Tag: PageView {
                         .frame(width:Dimen.icon.light, height: Dimen.icon.light)
                 }
                 Spacer()
-                if let icon = data.restrictAgeIcon {
+                if self.useAge, let icon = data.restrictAgeIcon {
                     Image(icon)
                         .renderingMode(.original)
                         .resizable()

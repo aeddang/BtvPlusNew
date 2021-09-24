@@ -56,7 +56,6 @@ struct PageSynopsis: PageView {
     @State var playerWidth: CGFloat  = 0
     @State var isPlayBeforeDraging:Bool = false
     
-    
     var body: some View {
         GeometryReader { geometry in
             PageDataProviderContent(
@@ -87,7 +86,7 @@ struct PageSynopsis: PageView {
                             
                             peopleScrollModel: self.peopleScrollModel,
                             episodeViewerData: self.episodeViewerData,
-                            purchasViewerData: self.purchasViewerData,
+                            purchaseViewerData: self.purchaseViewerData,
                             summaryViewerData: self.summaryViewerData,
                             
                             tabNavigationModel: self.tabNavigationModel,
@@ -155,7 +154,7 @@ struct PageSynopsis: PageView {
                             
                             peopleScrollModel: self.peopleScrollModel,
                             episodeViewerData: self.episodeViewerData,
-                            purchasViewerData: self.purchasViewerData,
+                            purchaseViewerData: self.purchaseViewerData,
                             summaryViewerData: self.summaryViewerData,
                             
                             tabNavigationModel: self.tabNavigationModel,
@@ -397,6 +396,7 @@ struct PageSynopsis: PageView {
             }
             .onReceive(self.sceneObserver.$isUpdated){ _ in
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
+                if self.type == .kids {return}
                 if self.relationDatas.isEmpty == false {
                     let relationDatas = self.relationContentsModel.getRelationContentSets(idx: self.selectedRelationTabIdx, row: self.relationRow)
                     self.relationDatas = relationDatas
@@ -469,7 +469,7 @@ struct PageSynopsis: PageView {
     @State var progressCompleted = false
     @State var synopsisModel:SynopsisModel? = nil
     @State var episodeViewerData:EpisodeViewerData? = nil
-    @State var purchasViewerData:PurchaseViewerData? = nil
+    @State var purchaseViewerData:PurchaseViewerData? = nil
     @State var playerData:SynopsisPlayerData? = nil
     @State var summaryViewerData:SummaryViewerData? = nil
     @State var purchaseWebviewModel:PurchaseWebviewModel? = nil
@@ -547,7 +547,7 @@ struct PageSynopsis: PageView {
         self.progressError = false
         self.progressCompleted = false
         self.episodeViewerData = nil
-        self.purchasViewerData = nil
+        self.purchaseViewerData = nil
         self.summaryViewerData = nil
         self.purchaseWebviewModel = nil
         self.isRedirectPage = isRedirectPage
@@ -613,7 +613,7 @@ struct PageSynopsis: PageView {
                 return
             }
             if self.hasAuthority == false{
-                if self.purchasViewerData?.isPlayAble == false {
+                if self.purchaseViewerData?.isPlayAble == false {
                     PageLog.d("play unAble ", tag: self.tag)
                     self.completedProgress()
                     return
@@ -768,7 +768,7 @@ struct PageSynopsis: PageView {
         if self.progressError {return}
         PageLog.d("completedProgress", tag: self.tag)
         withAnimation{
-            self.isPlayAble = self.purchasViewerData?.isPlayAble ?? true
+            self.isPlayAble = self.purchaseViewerData?.isPlayAble ?? true
             self.isPlayViewActive = true
         }
         self.playerModel.start()
@@ -863,7 +863,7 @@ struct PageSynopsis: PageView {
             self.epsdId = self.synopsisModel?.epsdId
             if self.isPairing == false && !self.isPosson {
                 self.synopsisModel?.setData(directViewData: nil)
-                self.purchasViewerData = PurchaseViewerData(type: self.type).setData(
+                self.purchaseViewerData = PurchaseViewerData(type: self.type).setData(
                         synopsisModel: self.synopsisModel,
                     isPairing: self.isPairing, isPosson: self.isPosson)
                 self.hasAuthority = false
@@ -895,15 +895,15 @@ struct PageSynopsis: PageView {
         self.relationContentsModel.setData(synopsis: self.synopsisModel)
         self.isBookmark = self.synopsisModel?.isBookmark
         PageLog.d("self.isBookmark " + (self.isBookmark?.description ?? "nil"), tag: self.tag)
-        self.purchasViewerData = PurchaseViewerData(type: self.type).setData(
+        self.purchaseViewerData = PurchaseViewerData(type: self.type).setData(
                 synopsisModel: self.synopsisModel,
                 isPairing: self.isPairing,
                 isPosson:self.isPosson)
         
-        self.textInfo = self.purchasViewerData?.serviceInfo
+        self.textInfo = self.purchaseViewerData?.serviceInfo
         self.epsdRsluId = self.synopsisModel?.curSynopsisItem?.epsd_rslu_id ?? self.synopsisModel?.epsdRsluId ?? ""
-        if self.purchasViewerData?.isPlayAble == true && (self.isPairing == true || self.isPosson) {
-            self.hasAuthority = self.purchasViewerData?.hasAuthority
+        if self.purchaseViewerData?.isPlayAble == true && (self.isPairing == true || self.isPosson) {
+            self.hasAuthority = self.purchaseViewerData?.hasAuthority
         } else{
             self.hasAuthority = false
         }

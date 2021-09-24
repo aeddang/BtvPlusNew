@@ -53,7 +53,7 @@ struct KidsSynopsis: PageComponent{
     
     var peopleScrollModel: InfinityScrollModel
     var episodeViewerData:EpisodeViewerData?
-    var purchasViewerData:PurchaseViewerData?
+    var purchaseViewerData:PurchaseViewerData?
     var summaryViewerData:SummaryViewerData?
     
     var tabNavigationModel:NavigationModel
@@ -176,6 +176,7 @@ struct KidsSynopsis: PageComponent{
                                 FunctionViewerKids(
                                     componentViewModel: self.componentViewModel,
                                     synopsisData: self.synopsisData,
+                                    purchaseViewerData:self.purchaseViewerData,
                                     summaryViewerData: self.summaryViewerData,
                                     isBookmark: self.$isBookmark, 
                                     isRecommandAble: self.synopsisModel?.isCancelProgram == false,
@@ -190,10 +191,11 @@ struct KidsSynopsis: PageComponent{
                                     : KidsSynopsis.topHeight + (SystemEnvironment.isTablet ?  DimenKids.margin.regularExtra : DimenKids.margin.medium ) )
                         
                         if !self.isFullScreen{
-                            if self.hasAuthority != nil, let purchasViewerData = self.purchasViewerData {
+                            if self.hasAuthority != nil, let purchaseViewerData = self.purchaseViewerData {
                                 PurchaseViewerKids(
                                     componentViewModel: self.componentViewModel,
-                                    data: purchasViewerData)
+                                    data: purchaseViewerData,
+                                    isPairing: self.isPairing)
                                     .padding(.top, DimenKids.margin.light)
                                     .frame(width:
                                             SystemEnvironment.isTablet
@@ -211,10 +213,10 @@ struct KidsSynopsis: PageComponent{
                     if !self.isFullScreen {
                         VStack(alignment: .leading,spacing:0){
                             Spacer().modifier(MatchHorizontal(height: 0))
-                            if let episodeViewerData = self.episodeViewerData, let purchasViewerData = self.purchasViewerData {
+                            if let episodeViewerData = self.episodeViewerData, let purchaseViewerData = self.purchaseViewerData {
                                 EpisodeViewerKids(
                                     episodeViewerData: episodeViewerData,
-                                    purchaseViewerData: purchasViewerData)
+                                    purchaseViewerData: purchaseViewerData)
                                     
                                     //.fixedSize(horizontal: true, vertical: false)
                             }
@@ -223,6 +225,7 @@ struct KidsSynopsis: PageComponent{
                                 FunctionViewerKids(
                                     componentViewModel: self.componentViewModel,
                                     synopsisData: self.synopsisData,
+                                    purchaseViewerData:self.purchaseViewerData,
                                     summaryViewerData: self.summaryViewerData,
                                     isBookmark: self.$isBookmark,
                                     isRecommandAble: self.synopsisModel?.isCancelProgram == false,

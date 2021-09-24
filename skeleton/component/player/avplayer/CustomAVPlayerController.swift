@@ -15,6 +15,7 @@ import MediaPlayer
 extension CustomAVPlayerController: UIViewControllerRepresentable,
                                     PlayBack, PlayerScreenViewDelegate , CustomPlayerControllerDelegate{
     
+    fileprivate static let systemVolume = "outputVolume"
     fileprivate(set) static var currentPlayer:[String] = []
     fileprivate(set) static var currentPlayerNum:Int  = 0
     
@@ -375,6 +376,7 @@ protocol CustomPlayerControllerDelegate{
     func onPlayerStatusChange(_ playerController: CustomPlayerController, status:AVPlayer.Status)
     func onPlayerItemStatusChange(_ playerController: CustomPlayerController, status:AVPlayerItem.Status)
     func onReasonForWaitingToPlay(_ playerController: CustomPlayerController, reason:AVPlayer.WaitingReason)
+    func onPlayerVolumeChanged(_ v:Float)
 }
 
 protocol CustomPlayerController {
@@ -388,6 +390,8 @@ protocol CustomPlayerController {
 }
 
 extension CustomPlayerController {
+    
+    
     func onViewDidAppear(_ animated: Bool) {
         if CustomAVPlayerController.currentPlayerNum == 0 {
             UIApplication.shared.beginReceivingRemoteControlEvents()
@@ -484,7 +488,9 @@ open class CustomPlayerViewController: UIViewController, CustomPlayerController 
         //player.addObserver(self, forKeyPath: #keyPath(AVPlayer.reasonForWaitingToPlay), options: [.new], context: nil)
         //player.addObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status), options:[.new], context: nil)
         player.addObserver(self, forKeyPath: #keyPath(AVPlayer.timeControlStatus), options:[.new], context: nil)
-        
+        AVAudioSession.sharedInstance()
+            .addObserver(self, forKeyPath: CustomAVPlayerController.systemVolume, options: NSKeyValueObservingOptions.new, context: nil)
+         
     }
     func cancel() {
         guard let player = self.playerScreenView.player else {return}
@@ -494,6 +500,7 @@ open class CustomPlayerViewController: UIViewController, CustomPlayerController 
         //player.removeObserver(self, forKeyPath: #keyPath(AVPlayer.reasonForWaitingToPlay))
         //player.removeObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status))
         player.removeObserver(self, forKeyPath: #keyPath(AVPlayer.timeControlStatus))
+        AVAudioSession.sharedInstance().removeObserver(self, forKeyPath: CustomAVPlayerController.systemVolume)
         self.currentTimeObservser = nil
     }
     
@@ -527,6 +534,10 @@ open class CustomPlayerViewController: UIViewController, CustomPlayerController 
                 let reason = AVPlayer.WaitingReason(rawValue: str)
                 self.playerDelegate?.onReasonForWaitingToPlay(self, reason: reason)
             }
+        case CustomAVPlayerController.systemVolume :
+            let audioSession = AVAudioSession.sharedInstance()
+            let volume = audioSession.outputVolume
+            self.playerDelegate?.onPlayerVolumeChanged(volume)
         default : break
         
         }
@@ -548,12 +559,6 @@ extension MPVolumeView {
             let v = preV + move
             prev.value = v
         }
-        /*
-        func convertVolume(_ value: Float) -> Float {
-            let convertValue: Int = Int((value * 10))
-            Float(convertValue) * 0.1
-            return
-        }*/
     }
     static func setVolume(_ volume: Float) -> Void {
         let volumeView = MPVolumeView(frame: .zero)
@@ -569,10 +574,13 @@ extension MPVolumeView {
 //기본UI
 
 open class CustomAVPlayerViewController: AVPlayerViewController, CustomPlayerController, PlayerScreenPlayerDelegate {
+   
+    
     var viewModel:PlayerModel
     var playerScreenView: PlayerScreenView
     var playerDelegate:CustomPlayerControllerDelegate?
     var currentTimeObservser:Any? = nil
+    
     init(viewModel:PlayerModel, playerScreenView:PlayerScreenView) {
         self.viewModel = viewModel
         self.playerScreenView = playerScreenView
@@ -626,6 +634,8 @@ open class CustomAVPlayerViewController: AVPlayerViewController, CustomPlayerCon
         player.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.new], context: nil)
         player.addObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status), options:[.new], context: nil)
         player.addObserver(self, forKeyPath: #keyPath(AVPlayer.timeControlStatus), options:[.new], context: nil)
+        AVAudioSession.sharedInstance()
+            .addObserver(self, forKeyPath: CustomAVPlayerController.systemVolume, options: NSKeyValueObservingOptions.new, context: nil)
          
     }
     func cancel() {
@@ -637,6 +647,7 @@ open class CustomAVPlayerViewController: AVPlayerViewController, CustomPlayerCon
         player.removeObserver(self, forKeyPath: #keyPath(AVPlayer.status))
         player.removeObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status))
         player.removeObserver(self, forKeyPath: #keyPath(AVPlayer.timeControlStatus))
+        AVAudioSession.sharedInstance().removeObserver(self, forKeyPath: CustomAVPlayerController.systemVolume)
     }
     
     open override func observeValue(
@@ -663,9 +674,13 @@ open class CustomAVPlayerViewController: AVPlayerViewController, CustomPlayerCon
                let status = AVPlayer.TimeControlStatus(rawValue: num) {
                 self.playerDelegate?.onPlayerTimeControlChange(self, status: status)
             }
+        case CustomAVPlayerController.systemVolume :
+            let audioSession = AVAudioSession.sharedInstance()
+            let volume = audioSession.outputVolume
+            self.playerDelegate?.onPlayerVolumeChanged(volume)
         default : break
         
         }
     }
-    
+
 }

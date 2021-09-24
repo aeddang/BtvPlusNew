@@ -216,8 +216,8 @@ extension PageSynopsis {
             self.appSceneObserver.alert = .needPairing()
             return
         }
-        let playAble = self.purchasViewerData?.isPlayAble ?? false
-        let playAbleBtv = self.purchasViewerData?.isPlayAbleBtv ?? false
+        let playAble = self.purchaseViewerData?.isPlayAble ?? false
+        let playAbleBtv = self.purchaseViewerData?.isPlayAbleBtv ?? false
         if !playAble && !playAbleBtv{
             if self.synopsisModel?.isCancelProgram == true {
                 self.appSceneObserver.alert = .alert(
@@ -227,7 +227,7 @@ extension PageSynopsis {
             } else {
                 self.appSceneObserver.alert = .alert(
                     String.alert.purchaseDisable,
-                    self.purchasViewerData?.serviceInfoDesc
+                    self.purchaseViewerData?.serviceInfoDesc
                 )
             }
             

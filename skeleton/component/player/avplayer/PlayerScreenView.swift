@@ -17,7 +17,7 @@ protocol PlayerScreenViewDelegate{
     func onPlayerError(playerError:PlayerError)
     func onPlayerCompleted()
     func onPlayerBecomeActive()
-    func onPlayerVolumeChanged(_ v:Float)
+    //func onPlayerVolumeChanged(_ v:Float)
     func onPlayerBitrateChanged(_ bitrate:Double)
 }
 
@@ -95,7 +95,10 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate , Identi
         center.addObserver(self, selector:#selector(failedToPlayToEndTime), name: .AVPlayerItemFailedToPlayToEndTime, object: nil)
         center.addObserver(self, selector: #selector(playerItemDidReachEnd), name: .AVPlayerItemDidPlayToEndTime, object: nil)
         center.addObserver(self, selector: #selector(playerDidBecomeActive), name: UIApplication.didBecomeActiveNotification , object: nil)
-        center.addObserver(self, selector: #selector(systemVolumeChange), name: NSNotification.Name(rawValue: Self.VOLUME_NOTIFY_KEY) , object: nil)
+        
+        
+        /*
+        center.addObserver(self, selector: #selector(systemVolumeChange), name: NSNotification.Name(rawValue: Self.VOLUME_NOTIFY_KEY) , object: nil)*/
         //center.addObserver(self, selector: #selector(playerItemBitrateChange), name: .AVPlayerItemNewAccessLogEntry , object: nil)
         
     }
@@ -239,10 +242,11 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate , Identi
     @objc func playerDidBecomeActive(notification: NSNotification) {
         delegate?.onPlayerBecomeActive()
     }
+    /*
     @objc func systemVolumeChange(notification: NSNotification) {
         guard let volume = notification.userInfo?[Self.VOLUME_PARAM_KEY] as? Float else { return }
         delegate?.onPlayerVolumeChanged(volume)
-    }
+    }*/
     
     @objc func playerItemBitrateChange(notification: NSNotification) {
         DispatchQueue.global(qos: .background).async {

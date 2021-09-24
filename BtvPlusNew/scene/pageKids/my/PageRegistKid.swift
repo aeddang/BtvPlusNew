@@ -57,7 +57,6 @@ struct PageRegistKid: PageView {
                         HStack(alignment: .top, spacing: DimenKids.margin.heavy) {
                             VStack(spacing:DimenKids.margin.thin){
                                 Text(String.kidsText.registKidCharacter)
-                                    .multilineTextAlignment(.center)
                                     .modifier(BoldTextStyleKids(size: Font.sizeKids.lightExtra, color: Color.app.brown))
                                     .fixedSize(horizontal: false, vertical: true)
 

@@ -12,6 +12,7 @@ struct FunctionViewerKids: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     var componentViewModel:PageSynopsis.ComponentViewModel
     var synopsisData:SynopsisData? = nil
+    var purchaseViewerData:PurchaseViewerData? = nil
     var summaryViewerData:SummaryViewerData? = nil
     @Binding var isBookmark:Bool?
     var isRecommandAble:Bool
@@ -23,6 +24,7 @@ struct FunctionViewerKids: PageComponent{
                     FunctionViewerKidsBody(
                         componentViewModel: self.componentViewModel,
                         synopsisData: self.synopsisData,
+                        purchaseViewerData:self.purchaseViewerData,
                         summaryViewerData:self.summaryViewerData,
                         isBookmark: self.$isBookmark,
                         isRecommandAble: self.isRecommandAble,
@@ -34,6 +36,7 @@ struct FunctionViewerKids: PageComponent{
                     FunctionViewerKidsBody(
                         componentViewModel: self.componentViewModel,
                         synopsisData: self.synopsisData,
+                        purchaseViewerData:self.purchaseViewerData,
                         summaryViewerData:self.summaryViewerData,
                         isBookmark: self.$isBookmark,
                         isRecommandAble: self.isRecommandAble,
@@ -52,7 +55,9 @@ struct FunctionViewerKidsBody: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     var componentViewModel:PageSynopsis.ComponentViewModel
     var synopsisData:SynopsisData? = nil
+    var purchaseViewerData:PurchaseViewerData? = nil
     var summaryViewerData:SummaryViewerData? = nil
+    
     @Binding var isBookmark:Bool?
     var isRecommandAble:Bool
     var isPosson:Bool
@@ -81,7 +86,7 @@ struct FunctionViewerKidsBody: PageComponent{
             Spacer().frame(width:DimenKids.icon.light, height:DimenKids.icon.light)
         }
         
-        if self.isRecommandAble && !self.isPosson ,let srisId = self.synopsisData?.srisId {
+        if self.purchaseViewerData?.isService == true && self.isRecommandAble && !self.isPosson ,let srisId = self.synopsisData?.srisId {
             ShareButton(
                 type: .kids,
                 srisId:srisId,

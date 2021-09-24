@@ -103,6 +103,7 @@ struct SimplePlayer: PageComponent{
                 guard let evt = evt else { return }
                     switch evt {
                     case .initate :
+                        self.viewModel.initPlay = true
                         self.initPlayer()
                     default : break
                 }

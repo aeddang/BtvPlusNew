@@ -51,10 +51,10 @@ struct PageEditKid: PageView {
                         }
                         HStack(alignment: .center, spacing: 0) {
                             VStack(spacing:DimenKids.margin.thin){
-                                Spacer()
+                                Spacer().modifier(MatchParent())
                                 Text(String.kidsText.registKidCharacter)
-                                    .multilineTextAlignment(.center)
                                     .modifier(BoldTextStyleKids(size: Font.sizeKids.lightExtra, color: Color.app.brown))
+                                    .fixedSize(horizontal: false, vertical: true)
                                 Button(action: {
                                     self.selectCharacter()
                                 }) {
@@ -65,7 +65,7 @@ struct PageEditKid: PageView {
                                         .frame(width: DimenKids.item.profileRegist.width,
                                                height: DimenKids.item.profileRegist.height)
                                 }
-                                Spacer()
+                                Spacer().modifier(MatchParent())
                             }
                             .padding(.horizontal, DimenKids.margin.heavyUltra)
                             

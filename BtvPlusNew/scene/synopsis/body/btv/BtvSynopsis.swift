@@ -31,7 +31,7 @@ struct BtvSynopsis: PageComponent{
     
     var peopleScrollModel:InfinityScrollModel
     var episodeViewerData:EpisodeViewerData?
-    var purchasViewerData:PurchaseViewerData?
+    var purchaseViewerData:PurchaseViewerData?
     var summaryViewerData:SummaryViewerData?
     
     var tabNavigationModel:NavigationModel
@@ -132,7 +132,7 @@ struct BtvSynopsis: PageComponent{
                             synopsisModel: self.synopsisModel,
                             isPairing: self.isPairing,
                             episodeViewerData: self.episodeViewerData,
-                            purchasViewerData: self.purchasViewerData,
+                            purchaseViewerData: self.purchaseViewerData,
                             summaryViewerData: self.summaryViewerData,
                             epsdId: self.epsdId,
                             hasAuthority: self.hasAuthority,

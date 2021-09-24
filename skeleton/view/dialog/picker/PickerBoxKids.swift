@@ -22,6 +22,15 @@ struct PickerBoxKids: PageComponent{
     @Binding var selectedB:Int
     @Binding var selectedC:Int
     @Binding var selectedD:Int
+    var infinityScrollModelA: InfinityScrollModel = InfinityScrollModel()
+    var infinityScrollModelB: InfinityScrollModel = InfinityScrollModel()
+    var infinityScrollModelC: InfinityScrollModel = InfinityScrollModel()
+    var infinityScrollModelD: InfinityScrollModel = InfinityScrollModel()
+    var textModifier:TextModifier = BoldTextStyle(
+        size: Font.sizeKids.regular,
+        color: Color.app.brownLight).textModifier 
+    
+    
     let action: () -> Void
     
     var body: some View {
@@ -29,72 +38,174 @@ struct PickerBoxKids: PageComponent{
             VStack{
                 HStack(spacing: 0){
                     if self.sets.count > 0,  let set = self.sets[0] {
-                        Picker(selection: self.$selectedA.onChange(self.onSelectedA),label: Text("")) {
-                            ForEach(set.datas) { btn in
-                                Text(btn.title).modifier(BoldTextStyleKids(
-                                    size: Font.sizeKids.regular,
-                                    color: Color.app.brownLight)
-                                ).tag(btn.index)
+                        if #available(iOS 15.0, *) {
+                            CustomPicker(
+                                infinityScrollModel: self.infinityScrollModelA,
+                                set: set,
+                                selected: self.selectedA,
+                                textModifier: self.textModifier,
+                                bgColor: Color.kids.bg,
+                                selectBgColor: Color.app.ivoryDeep,
+                                tabHeight: DimenKids.tab.light){ select in
+                                    self.selectedA = select
+                                }
+                                .frame(width: set.size)
+                                .modifier(PickMask(size: set.size, eage: .leading))
+                                .onAppear(){
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                        let select = set.datas[self.selectedA]
+                                        self.infinityScrollModelA.uiEvent = .scrollTo(select.hashId, .center)
+                                    }
+                                }
+                        } else {
+                            Picker(selection: self.$selectedA.onChange(self.onSelectedA),label: Text("")) {
+                                ForEach(set.datas) { btn in
+                                    Text(btn.title)
+                                        .font(.custom(textModifier.family, size: textModifier.size))
+                                        .foregroundColor(textModifier.color)
+                                        .tag(btn.index)
+                                    
+                                }
                             }
+                            .labelsHidden()
+                            .frame(width: set.size)
+                            .modifier(PickMask(size: set.size, eage: .leading))
                         }
-                        .labelsHidden()
-                        .frame(width: set.size)
-                        .modifier(PickMask(size: set.size, eage: .leading))
                         
                     }
                     if self.sets.count > 1,let set = self.sets[1] {
-                        Picker(selection: self.$selectedB.onChange(self.onSelectedB),label: Text("")) {
-                            ForEach(set.datas) { btn in
-                                Text(btn.title).modifier(BoldTextStyleKids(
-                                    size: Font.sizeKids.regular,
-                                    color: Color.app.brownLight)
-                                ).tag(btn.index)
+                        if #available(iOS 15.0, *) {
+                            CustomPicker(
+                                infinityScrollModel: self.infinityScrollModelB,
+                                set: set,
+                                selected: self.selectedB,
+                                textModifier: self.textModifier,
+                                bgColor: Color.kids.bg,
+                                selectBgColor: Color.app.ivoryDeep,
+                                tabHeight: DimenKids.tab.light){ select in
+                                    self.selectedB = select
+                                }
+                                .frame(width: set.size)
+                                .modifier(
+                                    PickMask(
+                                        size: set.size,
+                                        eage: self.sets.count-1 == set.idx ? .trailing : nil
+                                    )
+                                )
+                                .onAppear(){
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                        let select = set.datas[self.selectedB]
+                                        self.infinityScrollModelB.uiEvent = .scrollTo(select.hashId, .center)
+                                    }
+                                }
+                        } else {
+                            Picker(selection: self.$selectedB.onChange(self.onSelectedB),label: Text("")) {
+                                ForEach(set.datas) { btn in
+                                    Text(btn.title)
+                                        .font(.custom(textModifier.family, size: textModifier.size))
+                                        .foregroundColor(textModifier.color)
+                                        .tag(btn.index)
+                                    
+                                }
                             }
-                        }
-                        .labelsHidden()
-                        .frame(width: set.size)
-                        .modifier(
-                            PickMask(
-                                size: set.size,
-                                eage: self.sets.count-1 == set.idx ? .trailing : nil
+                            .labelsHidden()
+                            .frame(width: set.size)
+                            .modifier(
+                                PickMask(
+                                    size: set.size,
+                                    eage: self.sets.count-1 == set.idx ? .trailing : nil
+                                )
                             )
-                        )
+                        }
                     }
                     if self.sets.count > 2,let set = self.sets[2]  {
-                        Picker(selection: self.$selectedC.onChange(self.onSelectedC),label: Text("")) {
-                            ForEach(set.datas) { btn in
-                                Text(btn.title).modifier(BoldTextStyleKids(
-                                    size: Font.sizeKids.regular,
-                                    color: Color.app.brownLight)
-                                ).tag(btn.index)
+                        if #available(iOS 15.0, *) {
+                            CustomPicker(
+                                infinityScrollModel: self.infinityScrollModelC,
+                                set: set,
+                                selected: self.selectedC,
+                                textModifier: self.textModifier,
+                                bgColor: Color.kids.bg,
+                                selectBgColor: Color.app.ivoryDeep,
+                                tabHeight: DimenKids.tab.light){ select in
+                                    self.selectedC = select
+                                }
+                                .frame(width: set.size)
+                                .modifier(
+                                    PickMask(
+                                        size: set.size,
+                                        eage: self.sets.count-1 == set.idx ? .trailing : nil
+                                    )
+                                )
+                                .onAppear(){
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                        let select = set.datas[self.selectedC]
+                                        self.infinityScrollModelC.uiEvent = .scrollTo(select.hashId, .center)
+                                    }
+                                }
+                        } else {
+                            Picker(selection: self.$selectedC.onChange(self.onSelectedC),label: Text("")) {
+                                ForEach(set.datas) { btn in
+                                    Text(btn.title)
+                                        .font(.custom(textModifier.family, size: textModifier.size))
+                                        .foregroundColor(textModifier.color)
+                                        .tag(btn.index)
+                                   
+                                }
                             }
-                        }
-                        .labelsHidden()
-                        .frame(width: set.size)
-                        .modifier(
-                            PickMask(
-                                size: set.size,
-                                eage: self.sets.count-1 == set.idx ? .trailing : nil
+                            .labelsHidden()
+                            .frame(width: set.size)
+                            .modifier(
+                                PickMask(
+                                    size: set.size,
+                                    eage: self.sets.count-1 == set.idx ? .trailing : nil
+                                )
                             )
-                        )
+                        }
                     }
                     if self.sets.count > 3,let set = self.sets[3]  {
-                        Picker(selection: self.$selectedD.onChange(self.onSelectedD),label: Text("")) {
-                            ForEach(set.datas) { btn in
-                                Text(btn.title).modifier(BoldTextStyleKids(
-                                    size: Font.sizeKids.regular,
-                                    color: Color.app.brownLight)
-                                ).tag(btn.index)
+                        if #available(iOS 15.0, *) {
+                            CustomPicker(
+                                infinityScrollModel: self.infinityScrollModelD,
+                                set: set,
+                                selected: self.selectedD,
+                                textModifier: self.textModifier,
+                                bgColor: Color.kids.bg,
+                                selectBgColor: Color.app.ivoryDeep,
+                                tabHeight: DimenKids.tab.light){ select in
+                                    self.selectedD = select
+                                }
+                                .frame(width: set.size)
+                                .modifier(
+                                    PickMask(
+                                        size: set.size,
+                                        eage: self.sets.count-1 == set.idx ? .trailing : nil
+                                    )
+                                )
+                                .onAppear(){
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                        let select = set.datas[self.selectedD]
+                                        self.infinityScrollModelD.uiEvent = .scrollTo(select.hashId, .center)
+                                    }
+                                }
+                        } else {
+                            Picker(selection: self.$selectedD.onChange(self.onSelectedD),label: Text("")) {
+                                ForEach(set.datas) { btn in
+                                    Text(btn.title)
+                                        .font(.custom(textModifier.family, size: textModifier.size))
+                                        .foregroundColor(textModifier.color)
+                                        .tag(btn.index)
+                                }
                             }
-                        }
-                        .labelsHidden()
-                        .frame(width: set.size)
-                        .modifier(
-                            PickMask(
-                                size: set.size,
-                                eage: self.sets.count-1 == set.idx ? .trailing : nil
+                            .labelsHidden()
+                            .frame(width: set.size)
+                            .modifier(
+                                PickMask(
+                                    size: set.size,
+                                    eage: self.sets.count-1 == set.idx ? .trailing : nil
+                                )
                             )
-                        )
+                        }
                     }
                     
                 }

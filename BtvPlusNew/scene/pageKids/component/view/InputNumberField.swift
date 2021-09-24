@@ -24,6 +24,37 @@ struct InputNumberField: PageComponent {
     let inputSize:Int = 4
     let placeholder:String = "●●●●"
     @State var input:String = ""
+    
+    func getTextStype()-> TextModifier {
+        if #available(iOS 15.0, *) {
+            return TextModifier(
+                family: Font.familyKids.bold,
+                size: Font.sizeKids.regular,
+                color: Color.app.brownDeep)
+        }
+        return TextModifier(
+            family: Font.familyKids.medium,
+            size: Font.sizeKids.regular,
+            color: Color.app.brownDeep)
+    }
+    
+    func getTextSpacing()-> CGFloat {
+        if #available(iOS 15.0, *) {
+            return DimenKids.item.inputNum.width + Dimen.margin.microUltra
+        }
+        return DimenKids.item.inputNum.width - Dimen.margin.microUltra
+    }
+    
+    func getHolderSpacing()-> CGFloat {
+        return DimenKids.item.inputNum.width - Dimen.margin.microUltra
+    }
+    
+    func getTextLeading()-> CGFloat {
+        return (DimenKids.item.inputNum.width)/2 + Font.sizeKids.regular
+    }
+    
+    
+    
   
     var body: some View {
         ZStack(alignment: .center) {
@@ -49,18 +80,16 @@ struct InputNumberField: PageComponent {
                                     }
                                     if self.isInit {
                                         ZStack(alignment: .leading){
-                                            FocusableTextField(
+                                            FocusableTextField( 
                                                 text: self.$input,
                                                 keyboardType: .numberPad,
                                                 placeholder: self.placeholder,
                                                 placeholderColor : Color.app.grey,
                                                 textAlignment : .left,
                                                 maxLength: self.inputSize,
-                                                kern: DimenKids.item.inputNum.width - Dimen.margin.microUltra,
-                                                textModifier: TextModifier(
-                                                    family: Font.familyKids.medium,
-                                                    size: Font.sizeKids.regular,
-                                                    color: Color.app.brownDeep),
+                                                kern: self.getTextSpacing(),
+                                                kernHolder: self.getHolderSpacing(),
+                                                textModifier: self.getTextStype(),
                                                 isfocus: self.isFocus,
                                                 isSecureTextEntry:true,
                                                 inputChanged: { text in
@@ -70,7 +99,7 @@ struct InputNumberField: PageComponent {
                                                     
                                                 })
                                                 .frame( height: DimenKids.item.inputNum.height)
-                                                .padding(.leading, (DimenKids.item.inputNum.width)/2 + Font.sizeKids.regular )
+                                                .padding(.leading, self.getTextLeading() )
                                         }
                                         .frame(
                                             width: (DimenKids.item.inputNum.width * CGFloat(self.inputSize))

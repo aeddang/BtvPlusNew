@@ -13,7 +13,7 @@ struct PurchaseViewerKids: PageComponent{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     var componentViewModel:PageSynopsis.ComponentViewModel = PageSynopsis.ComponentViewModel()
     var data:PurchaseViewerData
-    
+    var isPairing:Bool?
     @State var optionIdx:Int = 0
     var body: some View {
         HStack(alignment:.center , spacing:DimenKids.margin.light) {
@@ -45,11 +45,27 @@ struct PurchaseViewerKids: PageComponent{
                 .frame(width: SystemEnvironment.isTablet ? 242 : 134)
             }//option
             Spacer()
-            
+                .frame( height: DimenKids.button.mediumRect.height)
             if let title = self.data.purchasBtnTitle{
                 RectButtonKids(
-                    text: title,  isSelected: true, isFixSize: false){_ in
+                    text: title,
+                    isSelected: true,
+                    isFixSize: false){_ in
                     self.componentViewModel.uiEvent = .purchase
+                }
+                .buttonStyle(BorderlessButtonStyle())
+            } else  if self.isPairing == false {
+                RectButtonKids(
+                    text: String.button.connectBtv,
+                    isSelected: true,
+                    isFixSize: false
+                ){_ in
+                    self.appSceneObserver.event = .toast(String.alert.moveBtvPairing)
+                    DispatchQueue.main.asyncAfter(deadline: .now()+1) {
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.pairing, animationType: .opacity)
+                        )
+                    }
                 }
                 .buttonStyle(BorderlessButtonStyle())
             }

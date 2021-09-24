@@ -31,7 +31,7 @@ struct SynopsisBody: PageComponent{
     var synopsisModel:SynopsisModel? = nil
     var isPairing:Bool? = nil
     var episodeViewerData:EpisodeViewerData? = nil
-    var purchasViewerData:PurchaseViewerData? = nil
+    var purchaseViewerData:PurchaseViewerData? = nil
     var summaryViewerData:SummaryViewerData? = nil
     //var srisId:String? = nil
     var epsdId:String?
@@ -112,10 +112,10 @@ struct SynopsisBody: PageComponent{
                     }
                 }
                 
-                if self.hasAuthority != nil , let purchasViewerData = self.purchasViewerData {
+                if self.hasAuthority != nil , let purchaseViewerData = self.purchaseViewerData {
                     PurchaseViewer(
                         componentViewModel: self.componentViewModel,
-                        data: purchasViewerData,
+                        data: purchaseViewerData,
                         isPosson:self.isPosson
                     )
                     .modifier(ListRowInset(spacing: SynopsisBody.spacing))
@@ -188,7 +188,7 @@ struct SynopsisBodyHeader: PageComponent{
     var synopsisModel:SynopsisModel?
     var isPairing:Bool? = nil
     var episodeViewerData:EpisodeViewerData?
-    var purchasViewerData:PurchaseViewerData?
+    var purchaseViewerData:PurchaseViewerData?
     var summaryViewerData:SummaryViewerData?
     var epsdId:String?
     var hasAuthority:Bool?
@@ -211,6 +211,7 @@ struct SynopsisBodyHeader: PageComponent{
                         FunctionViewer(
                             componentViewModel: self.componentViewModel,
                             synopsisData :self.synopsisData,
+                            purchaseViewerData: self.purchaseViewerData,
                             isBookmark: self.$isBookmark,
                             isLike: self.$isLike,
                             isRecommandAble: self.synopsisModel?.isCancelProgram == false,
@@ -225,6 +226,7 @@ struct SynopsisBodyHeader: PageComponent{
                         FunctionViewer(
                             componentViewModel: self.componentViewModel,
                             synopsisData :self.synopsisData,
+                            purchaseViewerData: self.purchaseViewerData,
                             isBookmark: self.$isBookmark,
                             isLike: self.$isLike,
                             isRecommandAble: self.synopsisModel?.isCancelProgram == false,
@@ -236,10 +238,10 @@ struct SynopsisBodyHeader: PageComponent{
                 }
             }
             
-            if self.hasAuthority != nil , let purchasViewerData = self.purchasViewerData {
+            if self.hasAuthority != nil , let purchaseViewerData = self.purchaseViewerData {
                 PurchaseViewer(
                     componentViewModel: self.componentViewModel,
-                    data: purchasViewerData, isPosson:self.isPosson)
+                    data: purchaseViewerData, isPosson:self.isPosson)
                     .modifier(ListRowInset(spacing: SynopsisBody.spacing))
             }
             if self.hasAuthority == false && self.isPairing == false {

@@ -25,6 +25,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
     private(set) var purchasBtnSubTitle:String? = nil
     private(set) var watchOptions:[PurchaseModel]? = nil
     private(set) var isPlayAble:Bool = false
+    private(set) var isService:Bool = true
     private(set) var isPlayAbleBtv:Bool = false
     private(set) var hasAuthority :Bool = false
     
@@ -50,10 +51,12 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
             serviceInfo = String.alert.bs
             serviceInfoDesc = String.alert.bsText
             isPlayAble = false
+            isService = false
         } else if synopsisModel.isCancelProgram {
             serviceInfo = String.alert.bc
             serviceInfoDesc = String.alert.bcText
             isPlayAble = false
+            isService = false
             
         } else if !synopsisModel.isNScreen {
             if isPosson {

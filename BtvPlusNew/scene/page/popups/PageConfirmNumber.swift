@@ -67,6 +67,8 @@ struct PageConfirmNumber: PageView {
     @State var safeAreaBottom:CGFloat = Dimen.app.keyboard
     @State var isFocus:Bool = false
     @State var isSecure:Bool = false
+    @State var isComplete:Bool = false
+    @State var isCancel:Bool = false
     @State var input:String = ""
     var body: some View {
         ZStack{
@@ -298,8 +300,6 @@ struct PageConfirmNumber: PageView {
     }
     
     func closePage(){
-        closePageImmediately()
-        
         self.isFocus = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             self.closePageImmediately()
@@ -308,8 +308,11 @@ struct PageConfirmNumber: PageView {
     func closePageImmediately(){
         //self.isFocus = false
         AppUtil.hideKeyboard()
-        self.pagePresenter.onPageEvent(self.pageObject,
-                                       event: .init(id: self.eventId, type: .cancel, data:self.pwType))
+        if !self.isComplete && !self.isCancel {
+            self.isCancel = true
+            self.pagePresenter.onPageEvent(self.pageObject,
+                                           event: .init(id: self.eventId, type: .cancel, data:self.pwType))
+        }
     }
     
     func confirmPassword(_ pw:String){
@@ -336,8 +339,8 @@ struct PageConfirmNumber: PageView {
             }
             self.pagePresenter.onPageEvent(self.pageObject,
                                            event: .init(id: self.eventId ,type: .completed, data:self.pwType))
-            self.isFocus = false
-            self.pagePresenter.closePopup(self.pageObject?.id)
+            self.isComplete = true
+            self.closePage()
         } else{
             self.input = ""
             self.msg = self.type.errorMsg
@@ -397,6 +400,7 @@ struct PageConfirmNumber: PageView {
         self.appSceneObserver.event = .toast(String.alert.couponRegistSuccess.replace(self.title))
         self.pagePresenter.onPageEvent(self.pageObject,
                                        event: .init(id: self.eventId , type: .completed, data:self.couponType))
+        self.isComplete = true
         self.closePage()
     }
     
@@ -418,6 +422,7 @@ struct PageConfirmNumber: PageView {
             if let data = updateData {
                 self.repository.updateUser(data)
             }
+            self.isComplete = true
             self.closePage()
         } else{
             self.input = ""
@@ -439,6 +444,7 @@ struct PageConfirmNumber: PageView {
         if resData.result == ApiCode.success {
             self.pagePresenter.onPageEvent(self.pageObject,
                                            event: .init(id : self.eventId, type: .completed, data:self.type))
+            self.isComplete = true
             self.closePage()
             
         } else{

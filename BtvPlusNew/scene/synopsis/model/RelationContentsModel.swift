@@ -62,7 +62,7 @@ class RelationContentsModel:ObservableObject {
     var currentSeasonIdx:Int = -1
     
     func reset(synopsisType:MetvNetwork.SynopsisType?, pageType:PageType = .btv){
-        if synopsisType != .title {
+        if synopsisType != .seriesChange {
             self.relationContents = []
             self.relationTabs = []
             self.seris = []

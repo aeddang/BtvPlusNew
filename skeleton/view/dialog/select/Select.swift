@@ -27,6 +27,7 @@ extension View {
 }
 struct SelectBtnData:Identifiable, Equatable{
     let id = UUID.init()
+    let hashId:Int = UUID().hashValue
     let title:String
     let index:Int
     var tipA:String? = nil

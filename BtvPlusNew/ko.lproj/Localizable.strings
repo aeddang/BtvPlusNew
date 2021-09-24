@@ -536,7 +536,7 @@
 
 "alertEarphoneClose" = "B tv 이어폰 모드 종료";
 "alertEarphoneCloseText" = "B tv 이어폰 모드를 종료하고\n모바일 B tv 콘텐츠를 시청하시겠습니까?";
-"alertBtvPairing" = "모바일 Btv 연결하기 화면으로 이동합니다.";
+"alertMoveBtvPairing" = "모바일 Btv 연결하기 화면으로 이동합니다.";
 /*
  PageTitle
 */

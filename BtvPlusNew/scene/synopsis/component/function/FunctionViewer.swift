@@ -13,6 +13,7 @@ struct FunctionViewer: PageComponent{
     @EnvironmentObject var pairing:Pairing
     var componentViewModel:PageSynopsis.ComponentViewModel
     var synopsisData:SynopsisData? = nil
+    var purchaseViewerData:PurchaseViewerData? = nil
     var funtionLayout:Axis = .vertical
     
     //var srisId:String?
@@ -51,7 +52,7 @@ struct FunctionViewer: PageComponent{
                 }
                 .buttonStyle(BorderlessButtonStyle())
                 .fixedSize()
-                if self.isRecommandAble, let srisId = self.synopsisData?.srisId{
+                if self.purchaseViewerData?.isService == true && self.isRecommandAble, let srisId = self.synopsisData?.srisId {
                     HStack(alignment: .top, spacing:0){
                         ShareButton(
                             srisId:srisId,

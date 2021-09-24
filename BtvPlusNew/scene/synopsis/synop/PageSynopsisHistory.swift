@@ -23,7 +23,7 @@ extension PageSynopsis {
             }
             if let qurry = obj.getParamValue(key: .data) as? SynopsisQurry {
                 return SynopsisData(
-                    srisId:  qurry.srisId, searchType:EuxpNetwork.SearchType.sris, epsdId:  qurry.epsdId,
+                    srisId:  qurry.srisId, searchType:EuxpNetwork.SearchType.prd, epsdId:  qurry.epsdId,
                     epsdRsluId: nil, prdPrcId: nil, kidZone: nil,
                     synopType: SynopsisType.none
                 )

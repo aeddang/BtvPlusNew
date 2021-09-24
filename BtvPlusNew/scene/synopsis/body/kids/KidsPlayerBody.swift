@@ -26,7 +26,7 @@ struct KidsPlayerBody: PageComponent{
     var playListData:PlayListData
     
     var episodeViewerData:EpisodeViewerData?
-    var purchasViewerData:PurchaseViewerData?
+    var purchaseViewerData:PurchaseViewerData?
     var summaryViewerData:SummaryViewerData?
 
     var title:String?
@@ -122,10 +122,11 @@ struct KidsPlayerBody: PageComponent{
                             : KidsSynopsis.topHeight + (SystemEnvironment.isTablet ?  DimenKids.margin.regularExtra : DimenKids.margin.medium ) )
                 
                 if !self.isFullScreen{
-                    if self.hasAuthority != nil, let purchasViewerData = self.purchasViewerData {
+                    if self.hasAuthority != nil, let purchaseViewerData = self.purchaseViewerData {
                         PurchaseViewerKids(
                             componentViewModel: self.componentViewModel,
-                            data: purchasViewerData)
+                            data: purchaseViewerData,
+                            isPairing: self.isPairing)
                             .padding(.top, DimenKids.margin.light)
                             //.padding(.trailing, DimenKids.margin.regular)
                             .frame(width:self.playerWidth + DimenKids.icon.light + DimenKids.margin.regular)
@@ -140,10 +141,10 @@ struct KidsPlayerBody: PageComponent{
             }// vstack
             if !self.isFullScreen {
                 VStack(alignment: .leading,spacing:0){
-                    if let episodeViewerData = self.episodeViewerData, let purchasViewerData = self.purchasViewerData {
+                    if let episodeViewerData = self.episodeViewerData, let purchaseViewerData = self.purchaseViewerData {
                         EpisodeViewerKids(
                             episodeViewerData: episodeViewerData,
-                            purchaseViewerData: purchasViewerData)
+                            purchaseViewerData: purchaseViewerData)
                             .fixedSize(horizontal: true, vertical: false)
                     }
                     if SystemEnvironment.isTablet {

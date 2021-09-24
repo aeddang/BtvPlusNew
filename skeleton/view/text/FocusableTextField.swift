@@ -17,6 +17,7 @@ struct FocusableTextField: UIViewRepresentable {
     var textAlignment:NSTextAlignment = .center
     var maxLength: Int = -1
     var kern: CGFloat = 1
+    var kernHolder: CGFloat? = nil
     var textModifier:TextModifier = RegularTextStyle().textModifier
     var isfocus:Bool
     var isSecureTextEntry:Bool = false
@@ -45,7 +46,7 @@ struct FocusableTextField: UIViewRepresentable {
         textField.attributedPlaceholder = NSAttributedString(
             string: self.placeholder ,
             attributes: [
-                NSAttributedString.Key.kern: self.kern,
+                NSAttributedString.Key.kern: self.kernHolder ?? self.kern,
                 NSAttributedString.Key.font: font ?? UIFont.init(),
                 NSAttributedString.Key.foregroundColor: placeholderColor.uiColor()
             ])

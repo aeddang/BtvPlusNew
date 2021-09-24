@@ -30,7 +30,12 @@ extension PageSynopsis {
         if self.isPairing == true {
             
             if episodeViewerData.isAdult == true && !SystemEnvironment.isAdultAuth{
-                if self.historys.isEmpty {
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.adultCertification)
+                        .addParam(key: .id, value: self.tag)
+                )
+                /*
+                if self.originHistorys.isEmpty {
                     self.historyCancel()
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.adultCertification)
@@ -42,8 +47,7 @@ extension PageSynopsis {
                         PageProvider.getPageObject(.adultCertification)
                             .addParam(key: .id, value: self.tag)
                     )
-                }
-                
+                }*/
                 return false
             }
             if !SystemEnvironment.isAdultAuth ||
@@ -69,7 +73,7 @@ extension PageSynopsis {
             }
         }else{
             if episodeViewerData.isAdult == true {
-                if self.historys.isEmpty {
+                if self.originHistorys.isEmpty {
                     self.historyCancel()
                     self.appSceneObserver.alert = .needPairing(nil, move: self.pageObject)
                 } else {

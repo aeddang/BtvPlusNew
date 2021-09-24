@@ -236,7 +236,6 @@ struct AlramItem: PageView {
                                     Image(Asset.noImg9_16).resizable()
                                 }
                                 .cancelOnDisappear(true)
-                                .loadImmediately()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(height: ListItem.alram.height, alignment:.topLeading)
                         }

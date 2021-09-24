@@ -34,7 +34,6 @@ struct TopViewer: PageComponent{
                                 .resizable()
                         }
                         .cancelOnDisappear(true)
-                        .loadImmediately()
                         .aspectRatio(contentMode: .fill)
                         .modifier(MatchParent())
                         .clipped()
@@ -46,7 +45,6 @@ struct TopViewer: PageComponent{
                             .resizable()
                     }
                     .cancelOnDisappear(true)
-                    .loadImmediately()
                     .aspectRatio(contentMode: SystemEnvironment.isTablet ? .fit : .fill)
                     .modifier(MatchParent())
                     .padding(.bottom, self.data.hasAuthority

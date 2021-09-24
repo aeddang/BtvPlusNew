@@ -235,7 +235,6 @@ struct Tag: PageView {
                         KFImage(URL(string: icon))
                             .resizable()
                             .cancelOnDisappear(true)
-                            .loadImmediately()
                             .aspectRatio(contentMode: .fit)
                             .frame(height: self.isBig ? Dimen.icon.light : Dimen.icon.tinyUltra, alignment: .trailing)
                             .padding(.bottom, Dimen.margin.microExtra)
@@ -319,7 +318,6 @@ struct TagKids: PageView {
                         KFImage(URL(string: icon))
                             .resizable()
                             .cancelOnDisappear(true)
-                            .loadImmediately()
                             .aspectRatio(contentMode: .fit)
                             .frame(height: DimenKids.icon.tiny, alignment: .trailing)
                     }

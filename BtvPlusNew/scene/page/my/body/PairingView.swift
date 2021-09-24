@@ -288,7 +288,7 @@ struct PairingView: PageComponent{
         
         var videos = blocks.map{ d in VideoData().setData(data: d) }.filter{$0.isContinueWatch}.filter{$0.progress != 1}
         self.isWatchedEmpty = videos.isEmpty
-        let total = min(allVideos.count, MetvNetwork.maxWatchedCount) //resData.watch_tot?.toInt()
+        let total = allVideos.count //resData.watch_tot?.toInt()
         if SystemEnvironment.isTablet && videos.count > 6 {
             videos = videos[ 0...6 ].map{$0}
         }

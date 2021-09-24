@@ -124,14 +124,10 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
         case .volume(let v):
             MPVolumeView.setVolume(v)
             viewModel.volume = v
-            /* 볼률을 키워도 음소거 해재하지말라는 이상한 요구사항으로....
-            if v == 0{
-                viewModel.isMute = true
-                player.mute(true)
-            }else if viewModel.isMute {
+            if v > 0 && viewModel.isMute {
                 viewModel.isMute = false
                 player.mute(false)
-            }*/
+            }
             
         case .mute(let isMute):
             viewModel.isMute = isMute
@@ -227,10 +223,9 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
         }
         if self.viewModel.volume == v {return}
         self.viewModel.volume = v
-        /* 볼률을 키워도 음소거 해재하지말라는 이상한 요구사항으로.... 볼륨 음소거 따로 놀고 있음
         if viewModel.isMute {
             self.viewModel.event = .volume(v)
-        }*/
+        }
     }
     func onPlayerBitrateChanged(_ bitrate: Double) {
         self.viewModel.bitrate = bitrate

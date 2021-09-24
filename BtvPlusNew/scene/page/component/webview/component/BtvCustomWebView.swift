@@ -22,6 +22,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
     var useNativeScroll:Bool = true
     var path: String = ""
     var viewHeight:CGFloat? = nil
+    @State var backState = NSMutableArray()
     var request: URLRequest? {
         get{
             ComponentLog.log("origin request " + viewModel.path , tag:self.tag )
@@ -55,6 +56,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         uiView.allowsLinkPreview = false
         uiView.scrollView.bounces = false
         uiView.isOpaque = false
+        uiView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         return uiView
     }
     func updateUIView(_ uiView: WKWebView, context: Context) {
@@ -141,6 +143,24 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         self.callJS(uiView, jsStr: jsStr)
     }
     
+    func pushBackState(state: String) {
+        ComponentLog.d("pushBackState: \(state)", tag: self.tag)
+        backState.add(state)
+        for idx in 0..<backState.count {
+            ComponentLog.d("backState \(idx) : \(backState[idx])", tag: self.tag)
+        }
+    }
+    
+    func popBackState(_ uiView: WKWebView) {
+        if backState.count > 0 {
+            if let state = backState.lastObject as? String {
+                callJS(uiView, jsStr: state)
+                ComponentLog.d("popBackState: \(state)", tag: self.tag)
+                backState.removeLastObject()
+            }
+        }
+    }
+    
     private func update(_ uiView: WKWebView, evt:WebViewRequest){
         switch evt {
         case .home:
@@ -205,6 +225,13 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                 if let path = deepLinkItem.path {
                     self.parent.viewModel.event = .callPage(path, deepLinkItem.querys)
                 } else {
+                    if deepLinkItem.isPopBackState {
+                        self.parent.popBackState(webView)
+                    }
+                    if let pushBackState = deepLinkItem.pushBackState {
+                        self.parent.pushBackState(state: pushBackState)
+                    }
+                    
                     if deepLinkItem.isForceRetry {
                         self.forceRetry(webView: webView)
                     } else if deepLinkItem.isCallFuncion, let funcName = deepLinkItem.funcName {
@@ -269,8 +296,10 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             //하이라이트 제거
             let disabledHightlight = "document.documentElement.style.webkitTapHighlightColor='rgba(0,0,0,0)';"
             //let disabledScroll = "document.body.style.overflow = 'hidden';"
-            let disabledScroll = "document.querySelectorAll('*[style]').forEach(el => el.style.overflow = 'scroll');"
+            //let disabledScroll = "document.querySelectorAll('*[style]').forEach(el => el.style.overflow = 'scroll');"
             // 자동 완성 제거
+            
+            /*
             let disableAutocompleteScript: String = """
                 var textFields = document.getElementsByTagName('textarea');
                 if (textFields) {
@@ -286,7 +315,8 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                     }
                 }
             """
-            [disabledSelect, disabledOptionBubble, disabledHightlight, disableAutocompleteScript, disabledScroll ].forEach { option in
+            */
+            [disabledSelect, disabledOptionBubble, disabledHightlight ].forEach { option in
                 self.parent.callJS(webView, jsStr: option)
             }
             

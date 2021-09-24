@@ -21,7 +21,7 @@ extension PageSynopsis {
     static let getAuth:Int = 1
     static let getPlay:Int = 2
     static let getContinuous:Int = 3
-    static let shortcutType = "com.skb.episode-search"
+    static let shortcutType = "com.skb.episode.search"
 }
 
 struct PageSynopsis: PageView {
@@ -259,11 +259,7 @@ struct PageSynopsis: PageView {
                     }
                     self.onEventLog(componentEvent: evt)
                 }
-            }//PageDataProviderContent
-            /*
-            .userActivity(Self.shortcutType) { userActivity in
-                self.onSiri(userActivity:userActivity)
-            }*/
+            }
            
             .onReceive(self.pageObservable.$layer ){ layer  in
                 switch layer {

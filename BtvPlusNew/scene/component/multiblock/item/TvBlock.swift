@@ -128,7 +128,8 @@ struct TvBlock:PageComponent, BlockProtocol {
     
     @State var dataBindingSubscription:AnyCancellable?
     func creatDataBinding() {
-    
+        withAnimation{ self.datas = datas }
+        
         self.dataBindingSubscription?.cancel()
         self.dataBindingSubscription = Timer.publish(
             every: SkeletonBlock.dataBindingDelay , on: .current, in: .common)
@@ -136,9 +137,9 @@ struct TvBlock:PageComponent, BlockProtocol {
             .sink() {_ in
                 self.clearDataBinding()
                 if let datas = data.tvs {
-                    DispatchQueue.global(qos: .background).async {
+                    //DispatchQueue.global(qos: .userInteractive).async {
                         withAnimation{ self.datas = datas }
-                    }
+                    //}
                 }
             }
     }

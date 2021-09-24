@@ -193,7 +193,6 @@ struct MonthlyItem: PageView {
                         .resizable()
                 }
                 .cancelOnDisappear(true)
-                .loadImmediately()
                 .aspectRatio(contentMode: .fill)
                 .modifier(MatchParent())
         }

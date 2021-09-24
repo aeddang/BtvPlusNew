@@ -211,13 +211,15 @@ struct WatchedBlock: PageComponent{
                 return WatchedData().setData(data: d, idx: idx, isAll:true)
             }
             .filter{$0.isContinueWatch}
+            self.datas.append(contentsOf: loadedDatas)
             
-            let total = loadedDatas.count //resData.watch_tot?.toInt()
+           //let total = loadedDatas.count //resData.watch_tot?.toInt()
+            /*
             if  total > MetvNetwork.maxWatchedCount {
                 self.datas.append(contentsOf: loadedDatas[ 0...30 ].map{$0})
             } else {
                 self.datas.append(contentsOf: loadedDatas)
-            }
+            }*/
             
             
             

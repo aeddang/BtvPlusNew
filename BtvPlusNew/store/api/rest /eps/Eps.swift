@@ -347,7 +347,7 @@ class Eps: Rest{
         params["ver"] = EpsNetwork.VERSION
         params["client_name"] = EpsNetwork.CLIENT_NAME
         params["ui_name"] = EpsNetwork.UI_NAME
-        params["IF"] = "IF-EPS-560"
+        params["IF"] = "IF-EPS-570"
         params["stb_id"] = stbId
         params["mac"] = macAdress
         params["requestDateTime"] = reqDate

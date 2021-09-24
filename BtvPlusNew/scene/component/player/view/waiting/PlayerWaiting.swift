@@ -47,8 +47,8 @@ struct PlayerWaiting: PageComponent{
                     self.viewModel.btvUiEvent = .initate
                     self.viewModel.isUserPlay = true
                 }
-                if self.viewModel.playInfo != nil  {
-                    Text(self.viewModel.playInfo!)
+                if let info = self.viewModel.playInfo {
+                    Text(info.replace(String.player.preplaying, with:String.player.preplay))
                         .modifier(BoldTextStyle(size: Font.size.lightExtra, color: Color.app.white))
                 }
             }

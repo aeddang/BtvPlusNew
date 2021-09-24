@@ -10,7 +10,9 @@ import Foundation
 extension MultiBlockBody {
     
     func onDataBinding(res:ApiResultResponds?){
-        guard let data = self.loadingBlocks.first(where: { $0.id == res?.id}) else {return}
+        guard let res = res else {return}
+        guard let data = self.loadingBlocks.first(where: { $0.id == res.id}) else {return}
+        PageLog.d("request onDataBinding", tag: "BlockProtocolB")
         var leadingBanners:[BannerData]? = nil
         var total:Int? = nil
         let max = Self.maxCellCount
@@ -18,7 +20,7 @@ extension MultiBlockBody {
         data.usePrice = usePrice
         
         if data.uiType == .ticket {
-            guard let resData = res?.data as? GridEvent else { return }
+            guard let resData = res.data as? GridEvent else { return }
             guard let first = data.blocks?.first else { return }
             
             let posters = resData.contents?.map{PosterData().setData(data: $0)}
@@ -31,14 +33,14 @@ extension MultiBlockBody {
         
         switch data.dataType {
         case .cwGrid:
-            guard let resData = res?.data as? CWGrid else {return data.setBlank()}
+            guard let resData = res.data as? CWGrid else {return data.setBlank()}
             guard let grid = resData.grid else {return data.setBlank()}
             if grid.isEmpty {return data.setBlank()}
             total = resData.total_count
             data.setData(grids: grid, usePrice: usePrice)
             
         case .cwGridKids:
-            guard let resData = res?.data as? CWGridKids else {return data.setBlank()}
+            guard let resData = res.data as? CWGridKids else {return data.setBlank()}
             data.errorMassage = resData.status_reason
             guard let grid = resData.grid else {return data.setBlank()}
             if grid.isEmpty {return data.setBlank()}
@@ -64,7 +66,7 @@ extension MultiBlockBody {
             }
             
         case .grid:
-            guard let resData = res?.data as? GridEvent else {return data.setBlank()}
+            guard let resData = res.data as? GridEvent else {return data.setBlank()}
             guard let blocks = resData.contents else {return data.setBlank()}
             if blocks.isEmpty {return data.setBlank()}
             total = resData.total_content_count
@@ -90,7 +92,7 @@ extension MultiBlockBody {
             }
             
         case .bookMark:
-            guard let resData = res?.data as? BookMark else {return data.setBlank()}
+            guard let resData = res.data as? BookMark else {return data.setBlank()}
             guard let blocks = resData.bookmarkList else {return data.setBlank()}
             if blocks.isEmpty {return data.setBlank()}
             total = resData.bookmark_tot?.toInt()
@@ -107,14 +109,17 @@ extension MultiBlockBody {
             }
            
         case .watched:
-            guard let resData = res?.data as? Watch else {return data.setBlank()}
+            guard let resData = res.data as? Watch else {return data.setBlank()}
             guard let originWatchBlocks = resData.watchList else {return data.setBlank()}
             var watchBlocks:[WatchItem] = originWatchBlocks
             if let ticketId = self.viewModel.selectedTicketId {
                 watchBlocks = originWatchBlocks.filter{$0.prod_id == ticketId}
             }
+            
             if watchBlocks.count < 1 {return data.setBlank()}
             total = resData.watch_tot?.toInt()
+           
+           
             switch data.uiType {
             case .poster :
                 let posters = watchBlocks.map{ d in
@@ -122,19 +127,30 @@ extension MultiBlockBody {
                 }
                 .filter{$0.isContinueWatch}.filter{$0.progress != 1}
                 if  posters.isEmpty == true { return data.setBlank() }
-                data.posters = posters
+                 let count = posters.count
+                if count > MetvNetwork.maxWatchedCount {
+                    data.posters = posters[ 0...MetvNetwork.maxWatchedCount ].map{$0}
+                } else {
+                    data.posters = posters
+                }
             case .video :
                 let videos = watchBlocks.map{ d in
                     VideoData(pageType: self.pageType, usePrice:usePrice).setData(data: d, cardType: data.cardType)
                 }
                 .filter{$0.isContinueWatch}.filter{$0.progress != 1}
                 if  videos.isEmpty == true { return data.setBlank() }
-                data.videos = videos
+                let count = videos.count
+                if count > MetvNetwork.maxWatchedCount {
+                    data.videos = videos[ 0...MetvNetwork.maxWatchedCount ].map{$0}
+                } else {
+                    data.videos = videos
+                }
+                
             default: break
             }
         
         case .banner:
-            guard let resData = res?.data as? EventBanner else {return data.setBlank()}
+            guard let resData = res.data as? EventBanner else {return data.setBlank()}
             guard let banners = resData.banners else {return data.setBlank()}
             if banners.isEmpty {return data.setBlank()}
                 data.banners = banners.map{ d in
@@ -145,7 +161,7 @@ extension MultiBlockBody {
         
         var listHeight:CGFloat = 0
         var blockHeight:CGFloat = 0
-        let tabHeight:CGFloat = self.viewModel.type == .btv ? Self.tabHeight : Self.tabHeightKids
+        let tabHeight = self.viewModel.type == .btv ? Self.tabHeight : Self.tabHeightKids
         var padding = self.viewModel.type == .btv ? Dimen.margin.thin : DimenKids.margin.thin
         
         if let size = data.posters?.first?.type {
@@ -182,6 +198,7 @@ extension MultiBlockBody {
             data.listHeight = blockHeight
         }
         data.setDatabindingCompleted(total: total, parentTitle: self.viewModel.title)
+        
 
     }
     

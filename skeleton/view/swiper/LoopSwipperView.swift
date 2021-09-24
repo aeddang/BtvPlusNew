@@ -48,6 +48,8 @@ struct LoopSwipperView : View , PageProtocol, Swipper {
                                 height: geometry.size.height
                             )
                             .clipped()
+                            
+                            
                         ForEach(self.pages, id:\.id) { page in
                             page.contentBody
                                 .frame(
@@ -59,6 +61,7 @@ struct LoopSwipperView : View , PageProtocol, Swipper {
                                     height: geometry.size.height
                                 )
                             .clipped()
+                            
                         }
                         self.pages.first?.contentBody
                             .frame(
@@ -70,6 +73,8 @@ struct LoopSwipperView : View , PageProtocol, Swipper {
                                 height: geometry.size.height
                             )
                             .clipped()
+                            
+                           
                     }
                 }
                 .content

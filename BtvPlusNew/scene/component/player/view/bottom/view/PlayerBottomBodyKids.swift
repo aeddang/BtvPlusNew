@@ -29,19 +29,7 @@ struct PlayerBottomBodyKids: PageComponent{
                 if self.showPreplay {
                     if self.isFullScreen {
                         if self.isPlaying {
-                            if let limited = self.viewModel.limitedDuration {
-                                Text(limited.secToMin())
-                                    .font(.custom(
-                                            Font.familyKids.bold,
-                                            size:  Font.sizeKids.lightExtra ))
-                                    .foregroundColor(Color.app.white)
-                                    
-                                + Text(String.app.min + " " + String.player.preplay)
-                                    .font(.custom(
-                                            Font.familyKids.bold,
-                                            size:  Font.sizeKids.lightExtra ))
-                                        .foregroundColor(Color.app.white)
-                            } else if let info = self.viewModel.playInfo{
+                            if let info = self.viewModel.playInfo {
                                 Text(info)
                                     .modifier(BoldTextStyleKids(
                                                 size:  Font.sizeKids.lightExtra ,
@@ -58,19 +46,7 @@ struct PlayerBottomBodyKids: PageComponent{
                             self.viewModel.btvPlayerEvent = .continueView
                         }
                     }else {
-                        if let limited = self.viewModel.limitedDuration {
-                            Text(limited.secToMin())
-                                .font(.custom(
-                                        Font.familyKids.bold,
-                                        size:  Font.sizeKids.tiny ))
-                                .foregroundColor(Color.app.white)
-                                
-                            + Text(String.app.min + " " + String.player.preplay)
-                                .font(.custom(
-                                        Font.familyKids.bold,
-                                        size:  Font.sizeKids.tiny ))
-                                    .foregroundColor(Color.app.white)
-                        } else if let info = self.viewModel.playInfo{
+                        if let info = self.viewModel.playInfo {
                             Text(info)
                                 .modifier(BoldTextStyleKids(
                                             size:  Font.sizeKids.tiny,

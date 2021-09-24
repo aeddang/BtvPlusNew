@@ -38,6 +38,9 @@ class PlayData:InfinityData,ObservableObject{
     private(set) var synopsisData:SynopsisData? = nil
     fileprivate(set) var synopsisModel:SynopsisModel? = nil
     fileprivate(set) var episodeViewerData:EpisodeViewerData? = nil
+    
+    fileprivate(set) var playRespond:ApiResultResponds? = nil
+    fileprivate(set) var playData:Play? = nil
     var playTime:Double = 0
     @Published private(set) var isUpdated: Bool = false
         {didSet{ if isUpdated { isUpdated = false} }}
@@ -354,10 +357,22 @@ struct PlayItem: PageView {
                 self.load()
             }
         }
-        
+        .onReceive(self.playerModel.$error){err in
+            if !self.isSelected {return}
+            switch err {
+            case .illegalState :
+                break
+            default :
+                PageLog.d("error " + (self.data.title ?? ""), tag: self.tag)
+                self.data.playRespond = nil
+                self.data.playData = nil
+                break
+            }
+        }
         .onReceive(self.playerModel.$streamEvent){stat in
             if !self.isSelected {return}
             switch stat {
+                
             case .recovery :
                 PageLog.d("recovery " + (self.data.title ?? ""), tag: self.tag)
                 self.isRecovery = true
@@ -458,13 +473,18 @@ struct PlayItem: PageView {
         guard let epsdRsluId = data.epsdRsluId else { return }
         //self.playerModel.currentIdx = self.data.index
         //self.playerModel.currentEpsdRsluId = self.data.epsdRsluId
-       
-        if pairing.status == .pairing {
-            dataProvider.requestData(q: .init(id:data.id, type: .getPreview(epsdRsluId, self.pairing.hostDevice)))
+        if let res = self.data.playRespond {
+            setupPreview(res:res)
+        } else {
+            if pairing.status == .pairing {
+                dataProvider.requestData(q: .init(id:data.id, type: .getPreview(epsdRsluId, self.pairing.hostDevice)))
+            }
+            else {
+                dataProvider.requestData(q: .init(id:data.id, type: .getPreplay(epsdRsluId, false)))
+            }
         }
-        else {
-            dataProvider.requestData(q: .init(id:data.id, type: .getPreplay(epsdRsluId, false)))
-        }
+        
+        
     }
     
     
@@ -489,6 +509,7 @@ struct PlayItem: PageView {
             self.isPlay = false
             return
         }
+        self.data.playRespond = res
         PageLog.d("load Preview", tag: self.tag)
         DispatchQueue.main.async {
             self.playerModel.setData(data: dataInfo,
@@ -501,7 +522,6 @@ struct PlayItem: PageView {
     
     
     private func loadClip(){
-        
         guard let synop = data.synopsisData else {
             self.isPlay = false
             return
@@ -518,7 +538,12 @@ struct PlayItem: PageView {
             self.isPlay = false
             return
         }
-        dataProvider.requestData(q: .init(id:data.id, type: .getPlay(epsdRsluId)))
+        if let data = self.data.playData {
+            setupPlay(data)
+        } else {
+            dataProvider.requestData(q: .init(id:data.id, type: .getPlay(epsdRsluId)))
+        }
+       
     }
     
     private func setupClip(res:ApiResultResponds){
@@ -572,11 +597,10 @@ struct PlayItem: PageView {
                 synopsisPlayType = .clip()
             }
            
-            //let prerollData = SynopsisPrerollData()
-                //.setData(data: synopsis, playType: self.synopsisPlayType, epsdRsluId: self.epsdRsluId)
             let playerData = SynopsisPlayerData()
                 .setData(type: synopsisPlayType, synopsis: synopsis)
             
+            self.data.playData = data
             DispatchQueue.main.async {
                 self.playerModel
                     .setData(synopsisPlayData: playerData)

@@ -25,7 +25,6 @@ struct ExamBody: PageComponent{
                     KFImage(URL(string: self.image ?? ""))
                         .resizable()
                         .cancelOnDisappear(true)
-                        .loadImmediately()
                         .aspectRatio(contentMode: .fit)
                         .modifier(MatchParent())
                         .padding(.bottom, SystemEnvironment.isTablet ? 106 : 48)

@@ -84,10 +84,11 @@ struct PageRegistKid: PageView {
                                 }
                                 .frame(width: SystemEnvironment.isTablet ? 357 : 186)
                                 InputCellKids(
-                                    title: self.isInitBirthSelect
-                                        ? String.app.birthKids
-                                        : String.app.birthKidsPlaceholder,
-                                    input: self.$birth,
+                                    title: String.app.birthKids,
+                                    input: .constant(
+                                        self.isInitBirthSelect
+                                        ? self.birth
+                                        : String.app.birthKidsPlaceholder),
                                     inputFontSize:Font.sizeKids.large,
                                     isFocus: self.editType == .birth,
                                     strokeColor: Color.transparent.clear,

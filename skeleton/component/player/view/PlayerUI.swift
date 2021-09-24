@@ -142,24 +142,12 @@ struct PlayerUI: PageComponent {
                     }
                     .opacity(self.isLoading ? 0 : 1)
                     if self.isFullScreen && ( self.viewModel.playInfo != nil ) && !self.isPlaying {
-                        if let limited = self.viewModel.limitedDuration {
-                            Text(limited.secToMin())
-                                .font(.custom(
-                                        Font.family.bold,
-                                        size: Font.size.lightExtra ))
-                                .foregroundColor(Color.app.white)
-                                
-                            + Text(String.app.min + " " + String.player.preplaying)
-                                .font(.custom(
-                                        Font.family.bold,
-                                        size:  Font.size.lightExtra))
-                                .foregroundColor(Color.app.white)
-                        } else if let info = self.viewModel.playInfo{
-                            Text(info)
-                                .modifier(BoldTextStyle(
-                                            size:  Font.size.lightExtra,
-                                            color: Color.app.white))
-                        }
+                        if let info = self.viewModel.playInfo{
+                           Text(info)
+                               .modifier(BoldTextStyle(
+                                           size:  Font.size.lightExtra,
+                                           color: Color.app.white))
+                       }
                     }
                 }
                 .opacity( (self.isShowing && !self.isLoading  && !self.viewModel.isLock) ? 1 : 0 )

@@ -50,7 +50,6 @@ struct PlayItemScreen: PageView {
                                 .resizable()
                         }
                         .cancelOnDisappear(true)
-                        .loadImmediately()
                         .aspectRatio(contentMode: .fill)
                         .modifier(MatchParent())
                 }
@@ -95,7 +94,6 @@ struct PlayItemInfo: PageView {
                     KFImage(URL(string: icon))
                         .resizable()
                         .cancelOnDisappear(true)
-                        .loadImmediately()
                         .aspectRatio(contentMode: .fit)
                         .frame(height: Dimen.icon.tinyUltra)
                     

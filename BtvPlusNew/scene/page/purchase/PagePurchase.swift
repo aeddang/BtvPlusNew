@@ -67,8 +67,11 @@ struct PagePurchase: PageView {
                                 BtvWebView(
                                     viewModel: self.webViewModel,
                                     pageObservable:self.pageObservable,
-                                    viewHeight:self.webViewHeight)
-                                    .modifier(MatchHorizontal(height: self.webViewHeight))
+                                    useNativeScroll:false )
+                                        .modifier(MatchHorizontal(height: self.webViewHeight))
+                                        .onReceive(self.webViewModel.$screenHeight){height in
+                                            self.setWebviewSize(geometry: geometry)
+                                        }
                             }
                         }
                     }

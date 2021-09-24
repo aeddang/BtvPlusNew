@@ -137,7 +137,7 @@ struct ThemaBlock:BlockProtocol, PageComponent {
     
     @State var dataBindingSubscription:AnyCancellable?
     func creatDataBinding() {
-    
+       
         self.dataBindingSubscription?.cancel()
         self.dataBindingSubscription = Timer.publish(
             every: SkeletonBlock.dataBindingDelay, on: .current, in: .common)
@@ -145,9 +145,9 @@ struct ThemaBlock:BlockProtocol, PageComponent {
             .sink() {_ in
                 self.clearDataBinding()
                 if let datas = data.themas {
-                    DispatchQueue.global(qos: .background).async {
+                    //DispatchQueue.global(qos: .userInteractive).async {
                         withAnimation{ self.datas = datas }
-                    }
+                    //}
                 }
             }
     }

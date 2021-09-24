@@ -180,8 +180,6 @@ class SceneDelegate: PageSceneDelegate {
         case .btv: return PageFactory.getPage(page)
         case .kids: return PageKidsFactory.getPage(page)
         }
-        
-        
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
@@ -200,16 +198,15 @@ class SceneDelegate: PageSceneDelegate {
         //PageLog.t("Deeplink willConnectTo link " + (link?.absoluteString ?? ""))
         AppDelegate.appObserver.handleDynamicLink(url)
         AppDelegate.appObserver.handleUniversalLink(link)
+        
         super.scene(scene, willConnectTo: session, options: connectionOptions)
     }
     
     
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-        
         PageLog.d("Deeplink continue userActivity", tag: self.tag)
         //AppDelegate.appObserver.handleUniversalLink(userActivity.webpageURL)
     }
-    
     
     func scene(_ scene: UIScene, didUpdate userActivity: NSUserActivity) {
         PageLog.d("Deeplink didUpdate userActivity", tag: self.tag)
@@ -220,5 +217,8 @@ class SceneDelegate: PageSceneDelegate {
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
-    
 }
+
+
+
+

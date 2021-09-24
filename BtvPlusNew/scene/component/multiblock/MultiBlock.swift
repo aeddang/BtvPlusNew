@@ -121,6 +121,7 @@ struct MultiBlock:PageComponent {
             useTracking:self.useBodyTracking){
             
             if let topDatas = self.topDatas ,!topDatas.isEmpty {
+                
                 self.getTopBanner()
                     .modifier(MatchHorizontal(height:
                                                 (isHorizontal ? TopBanner.uiRangeHorizontal : TopBanner.uiRange)
@@ -135,7 +136,7 @@ struct MultiBlock:PageComponent {
                                             
                 ))
             }
-           
+            
             if !self.datas.isEmpty {
                 if let headerBlock = self.getHeaderBlock() {
                     headerBlock
@@ -245,6 +246,7 @@ struct MultiBlockCell:PageComponent {
                     useTracking:self.useTracking
                     )
                 .frame(height:data.listHeight)
+                 
             }
             
         case .theme :

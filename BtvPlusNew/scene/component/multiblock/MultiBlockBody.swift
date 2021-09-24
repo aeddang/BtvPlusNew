@@ -81,7 +81,6 @@ class MultiBlockModel: PageDataProviderModel {
 }
 
 extension MultiBlockBody {
- 
     static let maxCellCount:Int = 100
     static let tabHeight:CGFloat = Dimen.tab.thin + Dimen.margin.thinExtra
     static let tabHeightKids:CGFloat = DimenKids.tab.thin + DimenKids.margin.thinExtra
@@ -135,7 +134,9 @@ struct MultiBlockBody: PageComponent {
                     .modifier(MatchParent())
             } else {
                 ZStack(alignment: .topLeading){
+                    
                     if self.topDatas != nil && self.topDatas?.isEmpty == false {
+                        
                         TopBannerBg(
                             pageObservable : self.pageObservable,
                             viewModel:self.viewPagerModel,
@@ -199,6 +200,7 @@ struct MultiBlockBody: PageComponent {
                     }
                 }
             }
+             
         }
         .modifier(MatchParent())
         
@@ -245,6 +247,7 @@ struct MultiBlockBody: PageComponent {
         }
         .onReceive(dataProvider.$error) { err in
             guard let data = self.loadingBlocks.first(where: { $0.id == err?.id}) else {return}
+            PageLog.d("request onDataBinding error", tag: "BlockProtocolB")
             data.setError(err)
         }
         .onReceive(self.sceneObserver.$isUpdated){update in

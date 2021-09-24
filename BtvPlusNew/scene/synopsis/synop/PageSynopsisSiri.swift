@@ -38,11 +38,8 @@ extension PageSynopsis {
     func onAllProgressCompletedSiri(){
         guard let epsdId = self.epsdId else {return}
         if !self.setup.autoPlay || !self.isPlayAble {
-            let shortcut: INShortcut = {
-                let activity = NSUserActivity(activityType: Self.shortcutType)
-                activity.externalMediaContentIdentifier = epsdId
-                return INShortcut(userActivity: activity)
-            }()
+            let activity = NSUserActivity(activityType: Self.shortcutType)
+            activity.externalMediaContentIdentifier = epsdId 
         }
     }
     func onDurationSiri(duration:Double){

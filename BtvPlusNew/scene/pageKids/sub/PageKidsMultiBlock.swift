@@ -72,7 +72,6 @@ struct PageKidsMultiBlock: PageView {
                                         .resizable()
                                 }
                                 .cancelOnDisappear(true)
-                                .loadImmediately()
                                 .aspectRatio(contentMode: .fit)
                                 .modifier(MatchParent())
                         }

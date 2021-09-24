@@ -120,7 +120,6 @@ struct TopBannerBgItem: PageComponent, Identifiable {
                         .resizable()
                 }
                 .cancelOnDisappear(true)
-                .loadImmediately()
                 .aspectRatio(contentMode:  .fill)
                 .modifier(MatchHorizontal(height:isHorizontal ? TopBanner.imageHeightHorizontal : TopBanner.imageHeight))
               
@@ -144,7 +143,6 @@ struct TopBannerBgItem: PageComponent, Identifiable {
                         KFImage(URL(string: logo))
                             .resizable()
                             .cancelOnDisappear(true)
-                            .loadImmediately()
                             .aspectRatio(contentMode: .fit)
                             .frame(
                                 minWidth: 0,
@@ -189,7 +187,6 @@ struct TopBannerBgItem: PageComponent, Identifiable {
                         KFImage(URL(string: logo))
                             .resizable()
                             .cancelOnDisappear(true)
-                            .loadImmediately()
                             .aspectRatio(contentMode: .fit)
                             .frame(
                                 minWidth: 0,

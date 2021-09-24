@@ -35,6 +35,8 @@ enum WebviewMethod:String {
          bpn_getRecomCntNPoint,
          bpn_eventMonthlyPoint,
          bpn_eventCommerce
+    case pushBackState, popBackState
+    
 }
 enum WebviewRespond:String {
     case responseVoiceSearch, responseSTBViewInfo
@@ -56,8 +58,8 @@ struct DeepLinkItem{
     var isForceRetry:Bool = false
     var isCallFuncion:Bool = false
     var isStopLoading:Bool = false
-    
-    
+    var pushBackState:String? = nil
+    var isPopBackState:Bool = false
 }
 
 
@@ -146,7 +148,7 @@ class WebBridge :PageProtocol{
         
         info["evaluation"] = SystemEnvironment.isEvaluation
         info["clientId"] = SystemEnvironment.deviceId
-        info["expiredSTB"] = false
+        info["expiredSTB"] = setup.possession.isEmpty == false ? 1 : 0
         
         return info
     }
@@ -304,7 +306,18 @@ class WebBridge :PageProtocol{
                         value = self.getPassAge()
                     case WebviewMethod.bpn_getNickName.rawValue :
                         value = self.getNickname()
-                        
+                    case WebviewMethod.pushBackState.rawValue :
+                        if let jsonString = jsonParam {
+                            let jsonData = AppUtil.getJsonParam(jsonString: jsonString)
+                            if let backState = jsonData?["backState"] as? String {
+                                deepLinkItem.pushBackState = backState
+                            } else {
+                                ComponentLog.e("json parse error", tag:"WebviewMethod.pushBackState")
+                            }
+                        }
+                       
+                    case WebviewMethod.popBackState.rawValue :
+                        deepLinkItem.isPopBackState = true
                     case WebviewMethod.bpn_showSynopsis.rawValue :
                         if let jsonString = jsonParam {
                             let jsonData = jsonString.data(using: .utf8)!

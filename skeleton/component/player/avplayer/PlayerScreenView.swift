@@ -173,7 +173,7 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate , Identi
     }
     private func startPlayer(player:AVPlayer){
         self.player = player
-        player.allowsExternalPlayback = true
+        player.allowsExternalPlayback = false
         player.usesExternalPlaybackWhileExternalScreenIsActive = true
         player.preventsDisplaySleepDuringVideoPlayback = true
         player.volume = currentVolume

@@ -15,7 +15,7 @@ enum SynopsisPlayType:Equatable {
     var name: String? {
         switch self {
         case .preview: return String.player.preview
-        case .preplay: return String.player.preplay
+        case .preplay: return String.player.preplaying
         default: return nil
         }
     }

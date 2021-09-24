@@ -179,11 +179,19 @@ struct CardItem: PageView {
                                             masterSequence: self.data.ocb?.sequence ?? 1,
                                             isMaster: true
                                         )
+                                            
+                                        self.appSceneObserver.alert = .confirm(
+                                            String.pageText.myBenefitsDiscountOkSetup, String.pageText.myBenefitsDiscountOkSetupText) { isOk in
+                                                if isOk {
+                                                    self.dataProvider.requestData(q: .init(id:self.tag, type: .updateOkCashPoint(self.pairing.hostDevice,card)))
+                                                }
+                                            }
+                                        /*
                                         self.pagePresenter.openPopup(
                                             PageProvider.getPageObject(.confirmNumber)
                                                 .addParam(key: .type, value: PageConfirmNumber.InputType.okcashMaster(card))
                                                
-                                        )
+                                        )*/
                                     }
                                 }
                             )
@@ -263,7 +271,6 @@ struct CardItemBody: PageView {
                             .resizable()
                     }
                     .cancelOnDisappear(true)
-                    .loadImmediately()
                     .aspectRatio(contentMode: .fill)
                     .modifier(MatchParent())
             } else {

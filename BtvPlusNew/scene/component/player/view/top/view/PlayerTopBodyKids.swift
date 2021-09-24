@@ -106,7 +106,7 @@ struct PlayerTopBodyKids: PageView{
                     ){ _ in
                         
                         self.viewModel.event = .mute(!self.isMute)
-                        /*
+                        
                         if self.isMute {
                             if self.viewModel.volume == 0 {
                                 self.viewModel.event = .volume(0.5)
@@ -115,7 +115,7 @@ struct PlayerTopBodyKids: PageView{
                             }
                         } else {
                             self.viewModel.event = .mute(true)
-                        }*/
+                        }
                     }
                     ImageButton(
                         defaultImage: AssetKids.player.lockOn,

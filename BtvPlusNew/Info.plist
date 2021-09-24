@@ -206,5 +206,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>com.skb.episode.search</string>
+	</array>
 </dict>
 </plist>

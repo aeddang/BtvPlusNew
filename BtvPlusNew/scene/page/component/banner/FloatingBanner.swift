@@ -29,6 +29,7 @@ struct FloatingBanner: PageComponent {
                 }
             VStack(spacing: 0){
                 ZStack(alignment: .bottom) {
+                    
                     LoopSwipperView(
                         viewModel : self.viewModel,
                         pages: self.pages
@@ -151,6 +152,10 @@ struct FloatingBannerItem: PageComponent, Identifiable {
     let data: BannerData
    
     var body: some View {
+        ImageView(url: self.data.image,contentMode: .fill, noImg: Asset.noImg9_16)
+            .modifier(MatchParent())
+            .clipped()
+        /*
         KFImage(URL(string: self.data.image))
             .resizable()
             .placeholder {
@@ -158,11 +163,11 @@ struct FloatingBannerItem: PageComponent, Identifiable {
                     .resizable()
             }
             .cancelOnDisappear(true)
-            .loadImmediately()
             .aspectRatio(contentMode: .fill)
             .modifier(MatchParent())
         .clipped()
-        .onTapGesture {
+        */
+         .onTapGesture {
             
             var actionBody = MenuNaviActionBodyItem()
             actionBody.menu_id = data.menuId
@@ -173,37 +178,6 @@ struct FloatingBannerItem: PageComponent, Identifiable {
                 pagePresenter: self.pagePresenter,
                 dataProvider: self.dataProvider,
                 data: self.data)
-            /*
-            if let move = data.move {
-                switch move {
-                case .home, .category:
-                    if let gnbTypCd = data.moveData?[PageParam.id] as? String {
-                        if let band = dataProvider.bands.getData(gnbTypCd: gnbTypCd) {
-                            self.pagePresenter.changePage(
-                                PageProvider
-                                    .getPageObject(move)
-                                    .addParam(params: data.moveData)
-                                    .addParam(key: .id, value: band.menuId)
-                                    .addParam(key: UUID().uuidString , value: "")
-                            )
-                        }
-                    }
-                    
-                default :
-                    let pageObj = PageProvider.getPageObject(move)
-                    pageObj.params = data.moveData
-                    self.pagePresenter.openPopup(pageObj)
-                }
-            }else if let link = data.outLink {
-                AppUtil.openURL(link)
-            }else if let link = data.inLink {
-                self.pagePresenter.openPopup(
-                    PageProvider
-                        .getPageObject(.webview)
-                        .addParam(key: .data, value: link)
-                        .addParam(key: .title , value: data.title)
-                )
-            }*/
             self.appSceneObserver.event = .floatingBanner(nil)
         }
     }

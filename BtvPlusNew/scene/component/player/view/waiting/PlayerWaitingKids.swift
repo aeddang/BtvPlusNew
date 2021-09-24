@@ -54,8 +54,8 @@ struct PlayerWaitingKids: PageComponent{
                     self.viewModel.btvUiEvent = .initate
                     self.viewModel.isUserPlay = true
                 }
-                if self.viewModel.playInfo != nil  {
-                    Text(self.viewModel.playInfo!)
+                if let info = self.viewModel.playInfo {
+                    Text(info.replace(String.player.preplaying, with:String.player.preplay))
                         .modifier(BoldTextStyleKids(
                                     size: self.isFullScreen ? Font.sizeKids.medium : Font.sizeKids.tiny,
                                     color: Color.app.white))

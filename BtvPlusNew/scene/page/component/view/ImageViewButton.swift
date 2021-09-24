@@ -37,7 +37,6 @@ struct ImageViewButton: PageView{
                                 Image(self.noImgAc)
                                     .resizable()
                             }
-                            .loadImmediately()
                             .frame(width: size.width, height: size.height)
                     }else{
                         KFImage(URL(string: self.defaultImage))
@@ -47,7 +46,6 @@ struct ImageViewButton: PageView{
                                 Image(self.noImg)
                                     .resizable()
                             }
-                            .loadImmediately()
                             .frame(width: size.width, height: size.height)
                     }
                     
@@ -70,7 +68,6 @@ struct ImageViewButton: PageView{
                                 Image(self.noImgAc)
                                     .resizable()
                             }
-                            .loadImmediately()
                             .frame(width: size.width, height: size.height)
                     }else{
                         KFImage(URL(string: self.defaultImage))
@@ -80,7 +77,6 @@ struct ImageViewButton: PageView{
                                 Image(self.noImg)
                                     .resizable()
                             }
-                            .loadImmediately()
                             .frame(width: size.width, height: size.height)
                     }
                     

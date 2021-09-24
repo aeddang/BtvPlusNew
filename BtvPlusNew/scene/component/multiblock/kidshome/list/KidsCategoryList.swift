@@ -191,7 +191,6 @@ struct KidsCategoryListItem:PageView  {
                             .resizable()
                     }
                     .cancelOnDisappear(true)
-                    .loadImmediately()
                     .aspectRatio(contentMode: .fit)
                     .modifier(MatchParent())
             }

@@ -169,6 +169,6 @@ class VoiceRecognition:  NSObject, ObservableObject, RecognitionListener , PageP
     private func destroyRecognizer() {
         ComponentLog.d("destroy Recognizer", tag: self.tag)
         self.recognizer?.destroy()
-        self.recognizer = nil
+        self.recognizer = nil 
     }
 }

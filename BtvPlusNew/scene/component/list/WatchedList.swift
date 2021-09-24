@@ -192,7 +192,6 @@ struct WatchedItem: PageView {
                             .resizable()
                     }
                     .cancelOnDisappear(true)
-                    .loadImmediately()
                     .aspectRatio(contentMode: .fill)
                     .modifier(MatchParent())
                 

@@ -211,7 +211,6 @@ struct CateItem: PageView {
                         .resizable()
                         .placeholder { Image(Asset.noImg1_1).resizable() }
                         .cancelOnDisappear(true)
-                        .loadImmediately()
                         .aspectRatio(contentMode: .fit)
                         .modifier(MatchParent())
                 }

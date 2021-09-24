@@ -59,19 +59,7 @@ struct PlayerBottomBody: PageComponent{
                 if self.showPreplay {
                     if self.isFullScreen {
                         if self.isPlaying {
-                            if let limited = self.viewModel.limitedDuration {
-                                Text(limited.secToMin())
-                                    .font(.custom(
-                                            Font.family.bold,
-                                            size: Font.size.thin ))
-                                    .foregroundColor(Color.app.white)
-                                    
-                                + Text(String.app.min + " " + String.player.preplay)
-                                    .font(.custom(
-                                            Font.family.bold,
-                                            size:  Font.size.thin))
-                                        .foregroundColor(Color.app.white)
-                            } else if let info = self.viewModel.playInfo{
+                             if let info = self.viewModel.playInfo{
                                 Text(info)
                                     .modifier(BoldTextStyle(
                                                 size:  Font.size.thin,
@@ -87,19 +75,7 @@ struct PlayerBottomBody: PageComponent{
                             self.viewModel.btvPlayerEvent = .continueView
                         }
                     }else{
-                        if let limited = self.viewModel.limitedDuration {
-                            Text(limited.secToMin())
-                                .font(.custom(
-                                        Font.family.bold,
-                                        size: Font.size.thin ))
-                                .foregroundColor(Color.app.white)
-                                
-                            + Text(String.app.min + " " + String.player.preplay)
-                                .font(.custom(
-                                        Font.family.bold,
-                                        size:  Font.size.thin))
-                                .foregroundColor(Color.app.white)
-                        } else if let info = self.viewModel.playInfo{
+                        if let info = self.viewModel.playInfo{
                             Text(info)
                                 .modifier(BoldTextStyle(
                                             size:  Font.size.thin,

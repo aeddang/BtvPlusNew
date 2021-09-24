@@ -135,6 +135,9 @@ struct PlayerBottom: PageView{
             withAnimation{
                 self.isLock = isLock
             }
+            if isLock {
+                self.nextProgressCancel()
+            }
         }
         
         .onReceive(self.viewModel.$duration){ t in
@@ -296,6 +299,7 @@ struct PlayerBottom: PageView{
     
     func checkNext(t:Double, d:Double){
         if self.nextBtnTitle == nil {return}
+        if self.isLock {return}
         if t > self.nextTime {
             if !self.isShowNext {
                 self.isShowNext = true
@@ -333,7 +337,9 @@ struct PlayerBottom: PageView{
                 self.nextProgress = min(1,time/times)
                 if self.nextProgress == 1 {
                     ComponentLog.d("nextProgressComplete", tag: self.tag)
-                    self.viewModel.btvPlayerEvent = .nextView(isAuto:true)
+                    if !self.isLock {
+                        self.viewModel.btvPlayerEvent = .nextView(isAuto:true)
+                    }
                     self.nextProgressCancel()
                 }
             }

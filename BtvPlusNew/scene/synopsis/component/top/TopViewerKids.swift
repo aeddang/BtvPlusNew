@@ -32,7 +32,6 @@ struct TopViewerKids: PageComponent{
                             .resizable()
                     }
                     .cancelOnDisappear(true)
-                    .loadImmediately()
                     .aspectRatio(contentMode: .fit)
                     .modifier(MatchParent())
                 VStack(alignment: .leading, spacing:0){

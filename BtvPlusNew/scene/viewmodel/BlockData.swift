@@ -368,12 +368,14 @@ class BlockData:InfinityData, ObservableObject{
         switch self.dataType {
         case .cwGrid:
             DataLog.d("Request cwGrid " + self.name, tag: "BlockProtocol")
+            return nil
+            /*
             return .init(
                 id: apiId ?? self.id,
                 type: .getCWGrid(
                     self.menuId,
                     self.cwCallId),
-                isOptional: isOption)
+                isOptional: isOption)*/
         case .cwGridKids:
             DataLog.d("Request cwGridKids " + self.name, tag: "BlockProtocol")
             return .init(

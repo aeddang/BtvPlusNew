@@ -29,6 +29,7 @@ enum BannerType {
     var noImage:String {
         get{
             switch self {
+            case .cell : return Asset.noImg4_3
             case .cellKids : return AssetKids.noImg16_9
             case .kids: return AssetKids.noImgBanner
             case .horizontalList:return  Asset.noImg4_3

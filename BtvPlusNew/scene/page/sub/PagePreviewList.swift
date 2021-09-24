@@ -93,6 +93,7 @@ struct PagePreviewList: PageView {
                 guard let data = data else {
                     if !self.isFullScreen {return}
                     self.isFullScreen = false
+                    self.appSceneObserver.useBottomImmediately  = true
                     return
                 }
                 if self.isFullScreen {return}

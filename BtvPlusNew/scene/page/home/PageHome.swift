@@ -37,6 +37,7 @@ struct PageHome: PageView {
                 pageObservable:self.pageObservable,
                 viewModel : self.viewModel
             ){
+            
                 MultiBlockBody (
                     pageObservable: self.pageObservable,
                     viewModel: self.viewModel,
@@ -58,6 +59,7 @@ struct PageHome: PageView {
                     headerSize: MonthlyBlock.height + MultiBlock.spacing,
                     useQuickMenu: self.useQuickMenu,
                     useFooter: self.useFooter)
+                 
             }
             .modifier(PageFull())
             
@@ -255,6 +257,7 @@ struct PageHome: PageView {
         self.monthlyDatas?.forEach{ data in
             data.reset()
         }
+        //self.requestBand()
         self.requestTopBanner()
     }
     
@@ -271,10 +274,11 @@ struct PageHome: PageView {
         }
     }
     
-    private func respondTopBanner(res:ApiResultResponds?){
-        guard let resData = res?.data as? EventBanner else {return}
+    private func respondTopBanner(res:ApiResultResponds){
+        guard let resData = res.data as? EventBanner else {return}
         guard let banners = resData.banners else { return }
         if banners.isEmpty { return }
+       
         let topDatas = banners.filter{$0.bbnr_exps_mthd_cd == "01"}.map{ d in
             BannerData().setData(data: d, type: .page, isFloat: false)
         }
@@ -287,6 +291,7 @@ struct PageHome: PageView {
         if self.pagePresenter.currentTopPage?.pageID == PageID.home {
             self.appSceneObserver.useTopFix = true
         }
+        
         if topDatas.isEmpty == false {
             self.topDatas = topDatas
             withAnimation{

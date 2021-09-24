@@ -39,7 +39,6 @@ struct HeaderBanner: PageComponent {
                             .resizable()
                     }
                     .cancelOnDisappear(true)
-                    .loadImmediately()
                     .aspectRatio(contentMode: .fit)
                     .modifier(MatchParent())
                     

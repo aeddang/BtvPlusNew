@@ -19,8 +19,8 @@ struct PurchaseViewer: PageComponent{
     var body: some View {
         VStack(alignment:.leading , spacing:Dimen.margin.light) { 
             if self.data.serviceInfo != nil {
-                if self.data.serviceInfoDesc != nil {
-                    Text(self.data.serviceInfoDesc!)
+                if let desc = self.data.serviceInfoDesc{
+                    Text(desc )
                         .modifier(MediumTextStyle( size: Font.size.light, color:Color.app.white ))
                 }
                 HStack{
@@ -32,6 +32,11 @@ struct PurchaseViewer: PageComponent{
                 .padding(.horizontal,  Dimen.margin.thin)
                 .modifier( MatchHorizontal(height:Dimen.button.medium))
                 .overlay(Rectangle().strokeBorder( Color.app.greyExtra , lineWidth: 1 ))
+                
+                if let desc = self.data.serviceInfoDescBottom{
+                    Text(desc )
+                        .modifier(MediumTextStyle( size: Font.size.light, color:Color.app.white ))
+                }
                
             }
             if self.data.isInfo || self.data.isOption {

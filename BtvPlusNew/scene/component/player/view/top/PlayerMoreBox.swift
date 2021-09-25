@@ -110,6 +110,7 @@ struct PlayerMoreBox: PageView{
     
     
     func hideBox(){
+        self.viewModel.event = .fixUiStatus(false)
         self.viewModel.playerUiStatus = .hidden
         withAnimation{ self.isShowing = false }
     }

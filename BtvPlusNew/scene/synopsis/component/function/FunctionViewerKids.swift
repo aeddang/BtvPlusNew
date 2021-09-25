@@ -12,10 +12,10 @@ struct FunctionViewerKids: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     var componentViewModel:PageSynopsis.ComponentViewModel
     var synopsisData:SynopsisData? = nil
+    var synopsisModel:SynopsisModel? = nil
     var purchaseViewerData:PurchaseViewerData? = nil
     var summaryViewerData:SummaryViewerData? = nil
     @Binding var isBookmark:Bool?
-    var isRecommandAble:Bool
     var isPosson:Bool
     var body: some View {
         ZStack{
@@ -24,10 +24,10 @@ struct FunctionViewerKids: PageComponent{
                     FunctionViewerKidsBody(
                         componentViewModel: self.componentViewModel,
                         synopsisData: self.synopsisData,
+                        synopsisModel: self.synopsisModel,
                         purchaseViewerData:self.purchaseViewerData,
                         summaryViewerData:self.summaryViewerData,
                         isBookmark: self.$isBookmark,
-                        isRecommandAble: self.isRecommandAble,
                         isPosson:self.isPosson
                     )
                 }
@@ -36,10 +36,10 @@ struct FunctionViewerKids: PageComponent{
                     FunctionViewerKidsBody(
                         componentViewModel: self.componentViewModel,
                         synopsisData: self.synopsisData,
+                        synopsisModel: self.synopsisModel,
                         purchaseViewerData:self.purchaseViewerData,
                         summaryViewerData:self.summaryViewerData,
                         isBookmark: self.$isBookmark,
-                        isRecommandAble: self.isRecommandAble,
                         isPosson:self.isPosson
                     )
                 }
@@ -55,11 +55,12 @@ struct FunctionViewerKidsBody: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     var componentViewModel:PageSynopsis.ComponentViewModel
     var synopsisData:SynopsisData? = nil
+    var synopsisModel:SynopsisModel? = nil
     var purchaseViewerData:PurchaseViewerData? = nil
     var summaryViewerData:SummaryViewerData? = nil
     
     @Binding var isBookmark:Bool?
-    var isRecommandAble:Bool
+
     var isPosson:Bool
     var body: some View {
         if let data = summaryViewerData {
@@ -86,7 +87,7 @@ struct FunctionViewerKidsBody: PageComponent{
             Spacer().frame(width:DimenKids.icon.light, height:DimenKids.icon.light)
         }
         
-        if self.purchaseViewerData?.isService == true && self.isRecommandAble && !self.isPosson ,let srisId = self.synopsisData?.srisId {
+        if self.synopsisModel?.isRecommandAble == true && !self.isPosson ,let srisId = self.synopsisData?.srisId {
             ShareButton(
                 type: .kids,
                 srisId:srisId,
@@ -109,7 +110,7 @@ struct FunctionViewerKids_Previews: PreviewProvider {
                 componentViewModel: .init(),
                 synopsisData:SynopsisData(),
                 isBookmark: .constant(false),
-                isRecommandAble: true, isPosson: false
+                isPosson: false
             )
             .environmentObject(DataProvider())
             .environmentObject(PagePresenter())

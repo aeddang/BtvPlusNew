@@ -123,8 +123,8 @@ struct PageConfirmNumber: PageView {
             switch evt {
             case .connected :
                 self.initPage()
-            case .connectError(let header) :
-                self.appSceneObserver.alert = .pairingError(header)
+            case .connectError :
+                self.closePage()
             default : break
             }
         }

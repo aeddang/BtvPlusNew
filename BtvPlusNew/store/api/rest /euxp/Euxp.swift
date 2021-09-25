@@ -374,7 +374,7 @@ class Euxp: Rest{
         
         params["stb_id"] = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         
-        params["profile_id"] = kid?.id
+        params["profile_id"] = kid?.id ?? "0"
         params["sort_typ_cd"] = sortType?.rawValue ?? EuxpNetwork.SortType.popularity.rawValue
         
         params["inspect_yn"] = "N"

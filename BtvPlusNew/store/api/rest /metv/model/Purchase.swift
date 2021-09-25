@@ -61,6 +61,10 @@ struct PurchaseListItem : Decodable {
     private(set) var material_cd: String? = nil // "구매한 컨텐츠의 소재상태코드(65:배포승인, 80:배포만료 등) - 구매한 시점의 컨텐츠ID 기준"
     private(set) var method_pay_cd: String? = nil // 결재방식 코드값 (null 또는 빈값: 청구서, 10: 핸드폰, 85: 신용카드, , 80: TV포인트
     private(set) var method_pay_nm: String? = nil // 결재방식 코드명 (null 또는 빈값: 청구서, 10: 핸드폰, 85: 신용카드, , 80: TV포인트
+    
+    private(set) var omni_use_flag: String? = nil // 옵니팩 이용해서 구매한 컨텐츠 여부
+    private(set) var omni_prod_nm: String? = nil // omni_use_flag = Y 일떄 필수(옵니팩 상품명)
+    private(set) var omni_price: String? = nil // omni_use_flag = Y 일떄 필수(옵니팩 금액)
 }
 
 

@@ -98,6 +98,7 @@
 "purchaseDate" = "구매 일자";
 "purchasePeriod" = "이용 기간";
 "vat" = "부가세 포함";
+"useOmnipack" = "OMNI 팩 차감으로 구매";
 "expirePeriod" = "만료";
 "ticketPrice" = "상품 금액";
 "ticketStatus" = "이용 현황";
@@ -333,6 +334,7 @@
 
 "alertPairingError" = "B tv 연결에 실패하였습니다.\n계속 연결 불가한 경우\n고객센터(국번 없이 106)로\n문의해 주세요.";
 "alertPairingCompleted" = "B tv 연결이 완료되었습니다.\nUI 4.0 버전에서는 B tv에서\n[확인]버튼을 누르셔야 연결이 완료됩니다.";
+"alertPairingCompletedAuto" = "B tv 연결이 완료되었습니다. My 메뉴에서 나만의 닉네임과 캐릭터를 설정하고 모바일 B tv를 이용해보세요!";
 "alertPairingRecovery" = "완료되지않은  B tv 연결이 있습니다.\n연결을 완료 하시겠습니까?";
 "alertPairingDisconnected" = "B tv 연결이 해제되었습니다.";
 
@@ -348,7 +350,10 @@
 
 "alertIdentifySuccess" = "인증 성공";
 "alertIdentifyFail" = "인증 실패";
-"alertIdentifySuccessAdult" = "성인인증이 성공하였습니다.";
+
+"alertIdentifyAdultConfirm" = "성인인증이 필요합니다.\n인증하시겠습니까?";
+
+"alertIdentifySuccessAdult" = "성인인증이 완료되었습니다.";
 "alertIdentifyFailAdult" = "성인인증이 실패하였습니다.";
 "alertIdentifySuccessMe" = "본인 인증이 완료되었습니다.";
 "alertIdentifyFailMe" = "본인 인증에 실패하였습니다.";
@@ -448,7 +453,7 @@
 "alertPossessionDelete" = "소장 VOD 가져오기 설정을 해제했습니다.";
 "alertPossessionComplete" = "소장 VOD 가져오기를 완료했습니다.\n가져온 소장 VOD는 MY > 이전 구매/소장\n목록에서 이용하실 수 있습니다.";
 
-"alertPossessionStbNone" = "소장 VOD를 시청할 수 있는\n이전 B tv가 없습니다.";
+"alertPossessionStbNone" = "소장 VOD를 시청할 수 있는\n이전 B tv가 없습니다.\n*이용 문의 : 국번 없이 106";
 "alertPossessionVodNone" = "소장 VOD 시청 가능 B tv 없음";
 
 "alertPossessionDiableAlready" = "선택하신 B tv의 소장 VOD를\n다른 기기에서 이용 중입니다.\n동일한 B tv의 소장 VOD는 한 대의 기기에서만\n가져올 수 있습니다.\n다른 기기의 가져오기 해제 후 이용해 주세요.";
@@ -693,6 +698,7 @@
 "myRegistPictureFammly" = "B tv에 가족사진 등록하기";
 "myWatchedInfo" = "최근 1개월 간 시청한 VOD 목록입니다.";
 "myTicketInfo" = "할인내역 및 구매 상품의 상세정보 확인, 변경은 B tv내 구매내역에서 확인하실 수 있습니다.";
+"myTicketMore" = "둘러보기";
 "myAlramInfo" = "최근 15일간 수신한 알림 메시지입니다.";
 "myWatchedEmpty" = "시청 중인 콘텐츠가 없습니다.";
 "myPurchaseEmpty" = "구매 내역이 없습니다.";
@@ -746,20 +752,20 @@
 "myBenefitsCoupon" = "쿠폰";
 "myBenefitsCouponText" = "사용 가능한 쿠폰";
 "myBenefitsCouponRegist" = "쿠폰 등록";
-"myBenefitsCouponEmpty" = "사용 가능한 쿠폰 내역이 없습니다.";
+"myBenefitsCouponEmpty" = "보유한 쿠폰 내역이 없습니다.";
 "myBenefitsCouponInput" = "쿠폰 번호를 입력해주세요.";
 
 "myBenefitsPoint" = "B포인트";
 "myBenefitsPointText" = "사용 가능한 B포인트";
 "myBenefitsPointRegist" = "B포인트 등록";
-"myBenefitsPointEmpty" = "사용 가능한 B포인트 내역이 없습니다.";
+"myBenefitsPointEmpty" = "보유한 B포인트 내역이 없습니다.";
 "myBenefitsPointInput" = "B포인트 번호를 입력해주세요.";
 
 
 "myBenefitsCash" = "B캐쉬";
 "myBenefitsCashText" = "사용 가능한 B캐쉬";
 "myBenefitsCashRegist" = "B캐쉬 등록";
-"myBenefitsCashEmpty" = "사용 가능한 B캐쉬 내역이 없습니다.";
+"myBenefitsCashEmpty" = "보유한 B캐쉬 내역이 없습니다.";
 "myBenefitsCashInput" = "B캐쉬 번호를 입력해주세요.";
 
 "myBenefitsNumberTip" = "16자리 숫자를 입력하세요.";
@@ -780,8 +786,10 @@
 "myBenefitsDiscountOkDelete" = "카드 삭제";
 "myBenefitsDiscountTvInfo1" = "TV포인트 등록 정보 변경 및 충전은\nB tv에서 하실 수 있습니다.";
 
-"myBenefitsDiscountOkDeleteConfirm" = "선택한 OK캐쉬백 카드를 삭제하시겠어요?";
-"myBenefitsDiscountTDeleteConfirm"  = " 등록된 T멤버십 카드를 삭제하시겠어요?";
+"myBenefitsDiscountOkDeleteConfirm" = "OK캐쉬백 카드 삭제";
+"myBenefitsDiscountOkDeleteConfirmText" = "선택한 OK캐쉬백 카드를 삭제하시겠어요?";
+"myBenefitsDiscountTDeleteConfirm" = "T멤버십 카드 삭제";
+"myBenefitsDiscountTDeleteConfirmText"  = " 등록된 T멤버십 카드를 삭제하시겠어요?";
 
 "myBenefitsRegistOk" = "OK캐쉬백 카드가 등록되었어요.";
 "myBenefitsRegistT"  = "T멤버십 카드가 등록되었어요.";
@@ -1050,6 +1058,8 @@
 "monthlyOceanPeriodAuth" = "OCEAN 주말패스 이용중!  아래의 콘텐츠를 즐겨보세요";
 "monthlyOceanFirstFreeLeading" = "첫 달 무료! 지금";
 "monthlyOceanFirstFreeTrailing" = "에 가입하고 마음껏 즐기세요";
+"monthlyDDay" = "만료 %s일 전";
+"monthlyExpiry" = "만료임박";
 
 /*
  QuickMenu

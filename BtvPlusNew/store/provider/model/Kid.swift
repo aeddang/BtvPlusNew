@@ -9,7 +9,9 @@ import Foundation
 
 class Kid:ObservableObject, PageProtocol, Identifiable{
     static let LIMITED_AGE = 13
-    private(set) var id:String = ""
+    static let defaultCharacterIdx = 2
+    
+    private(set) var id:String = "0"
     
     @Published private(set) var nickName:String = ""
     @Published var characterIdx:Int = 0
@@ -27,12 +29,12 @@ class Kid:ObservableObject, PageProtocol, Identifiable{
     init(nickName:String?,characterIdx:Int?,birth:String?){
         self.nickName = nickName ?? ""
         self.birth = birth ?? ""
-        self.setupGender(idx: characterIdx ?? 0)
+        self.setupGender(idx: characterIdx ?? Self.defaultCharacterIdx)
         self.setupAge()
     }
     init(nickName:String?,characterIdx:Int?,birthDate:Date?){
         self.nickName = nickName ?? ""
-        self.setupGender(idx: characterIdx ?? 0)
+        self.setupGender(idx: characterIdx ?? Self.defaultCharacterIdx)
         self.birth = birthDate?.toDateFormatter(dateFormat: Setup.dateFormat) ?? ""
         self.setupAge()
     }

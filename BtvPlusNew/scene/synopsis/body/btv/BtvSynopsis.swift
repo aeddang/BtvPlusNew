@@ -60,7 +60,6 @@ struct BtvSynopsis: PageComponent{
     
     @Binding var isBookmark:Bool?
     @Binding var isLike:LikeStatus?
-    var isRecommand:Bool?
     @Binding var seris:[SerisData]
   
     var infinityScrollModel: InfinityScrollModel
@@ -125,7 +124,6 @@ struct BtvSynopsis: PageComponent{
                             tabNavigationModel: self.tabNavigationModel,
                             isBookmark: self.$isBookmark,
                             isLike: self.$isLike,
-                            isRecommand: self.isRecommand,
                             isPosson:self.isPosson,
                             seris: self.$seris,
                             synopsisData: self.synopsisData,

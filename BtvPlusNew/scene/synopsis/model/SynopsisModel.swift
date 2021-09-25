@@ -192,8 +192,8 @@ class SynopsisModel : PageProtocol {
         case .none: do{}
         }
         
-        self.isRecommandAble = self.distStsCd == .synced
-            && !self.isCancelProgram
+        self.isRecommandAble = !self.isCancelProgram && self.distStsCd == .synced //공유가능
+        self.isRecommand = self.isRecommandAble //추천가능
             && self.isRecommand
             && !self.isGstn
             && self.purchaseModels.filter({ $0.isUse && $0.isSalesPeriod }).contains(where: { $0.isFree  }) == false

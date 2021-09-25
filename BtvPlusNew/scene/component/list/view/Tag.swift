@@ -143,11 +143,12 @@ class TagData{
     }
     
     private func setTranslation(code:String?){
+        /*
         switch code {
         case "01" : translation = String.sort.dubbingKor
         case "02" : translation = String.sort.subtitleKor
         default : break
-        }
+        }*/
     }
     
     fileprivate func updatedImage(){

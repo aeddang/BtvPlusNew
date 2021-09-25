@@ -50,17 +50,18 @@ struct SearchTab: PageView {
                 .clipped()
                 .padding(.top, 1)
                 
-                
-                Button(action: {
-                    self.keyword = ""
-                    self.inputChanged?("")
-                }) {
-                    Image(Asset.icon.searchDelete)
-                        .renderingMode(.original)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: Dimen.icon.tiny,
-                               height: Dimen.icon.tiny)
+                if self.keyword.isEmpty == false {
+                    Button(action: {
+                        self.keyword = ""
+                        self.inputChanged?("")
+                    }) {
+                        Image(Asset.icon.searchDelete)
+                            .renderingMode(.original)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: Dimen.icon.tiny,
+                                   height: Dimen.icon.tiny)
+                    }
                 }
                 Button(action: {
                     self.inputVoice?()

@@ -35,6 +35,7 @@ struct PlayerTopBody: PageView{
     var isShowing:Bool = false
     var isMute:Bool = false
     var isLock:Bool = false
+    var isPreroll:Bool = false
     var textQuality:String? = nil
     var textRate:String? = nil
     

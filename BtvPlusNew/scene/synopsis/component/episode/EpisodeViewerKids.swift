@@ -84,11 +84,12 @@ struct EpisodeViewerKidsBody: PageComponent{
     var data:PurchaseViewerData
     
     var body: some View {
-        if data.infoIcon != nil {
-            Image( data.infoIcon! )
+        if let icon = data.infoIcon {
+            Image( icon )
                 .renderingMode(.original).resizable()
                 .scaledToFit()
                 .frame(width: DimenKids.icon.light)
+                .fixedSize()
         }
         if data.infoLeading != nil && data.infoTrailing != nil{
             Text(data.infoLeading!)

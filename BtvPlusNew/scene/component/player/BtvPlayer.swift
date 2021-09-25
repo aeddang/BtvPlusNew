@@ -305,7 +305,9 @@ struct BtvPlayer: PageComponent{
             .onReceive(self.prerollModel.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
-                //case .start : 
+                case .start :
+                    self.viewModel.isPrerollPlay = true
+                    self.viewModel.event = .mute(false)
                 case .finish, .skipAd : self.initPlay()
                 default : break
                 }
@@ -352,7 +354,6 @@ struct BtvPlayer: PageComponent{
             if let data = self.viewModel.synopsisPrerollData {
                 if !self.isPreroll {
                     self.isPreroll = true
-                    self.viewModel.isPrerollPlay = true
                 }
                 ComponentLog.d("initPreroll", tag: self.tag)
                 self.prerollModel.request = .load(data)

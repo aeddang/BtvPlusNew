@@ -19,7 +19,7 @@ struct CustomPicker: PageComponent{
     var selectBgColor:Color = Color.app.blueLight
     
     var tabHeight:CGFloat = Dimen.tab.regular
-    
+    var spacing:CGFloat = Dimen.tab.light
    
     let action: (Int) -> Void
 
@@ -43,13 +43,16 @@ struct CustomPicker: PageComponent{
             ){
 
                 Spacer()
-                    .modifier(MatchHorizontal(height: self.tabHeight))
+                    .modifier(MatchHorizontal(height: self.spacing))
                     .id(UUID().hashValue)
                     
                 Spacer()
-                    .modifier(MatchHorizontal(height: self.tabHeight))
+                    .modifier(MatchHorizontal(height: self.spacing))
                     .id(UUID().hashValue)
-                   
+                
+                Spacer()
+                    .modifier(MatchHorizontal(height: self.spacing))
+                    .id(UUID().hashValue)
                 
                 ForEach(set.datas) { btn in
                     
@@ -57,19 +60,12 @@ struct CustomPicker: PageComponent{
                         .font(.custom(textModifier.family, size: textModifier.size))
                         .foregroundColor(textModifier.color)
                     .id(btn.hashId)
-                    .modifier(MatchHorizontal(height: self.tabHeight))
+                    .modifier(MatchHorizontal(height: self.spacing))
                     
                 }
-                
                 Spacer()
-                    .modifier(MatchHorizontal(height: self.tabHeight))
+                    .modifier(MatchHorizontal(height: self.spacing))
                     .id(UUID().hashValue)
-                   
-                Spacer()
-                    .modifier(MatchHorizontal(height: self.tabHeight))
-                    .id(UUID().hashValue)
-                    
-                
                
             }
             VStack(spacing:0){
@@ -109,11 +105,13 @@ struct CustomPicker: PageComponent{
 
     private func onUpdate(){
         if !self.isReady {return}
-        let pos = self.infinityScrollModel.scrollPosition
-        var cpos = -Int(round(pos/self.tabHeight))
+        let pos = self.infinityScrollModel.scrollPosition  + (self.spacing*0.5)
+        //ComponentLog.d("onUpdate pos " + pos.description, tag: self.tag)
+        var cpos = -Int(round(pos/self.spacing))
+        //ComponentLog.d("onUpdate origin " + cpos.description, tag: self.tag)
         cpos = max(0, cpos)
         cpos = min(self.set.datas.count-1, cpos)
-        ComponentLog.d("onUpdate " + cpos.description, tag: self.tag)
+        //ComponentLog.d("onUpdate " + cpos.description, tag: self.tag)
         if cpos != self.currentIdx {
             withAnimation{
                 self.currentIdx  = cpos

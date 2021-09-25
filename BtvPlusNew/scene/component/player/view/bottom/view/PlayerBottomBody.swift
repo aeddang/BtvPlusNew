@@ -25,6 +25,9 @@ struct PlayerBottomBody: PageComponent{
     var isPlaying:Bool = false
     var showDirectview = false
     var showPreplay = false
+    var showPreview = false
+    var previewText:String? = nil
+   
     var showCookie:String? = nil
     var currentCookie:CookieInfo? = nil
     var isSeasonNext:Bool = false
@@ -106,6 +109,15 @@ struct PlayerBottomBody: PageComponent{
                             //self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , self.nextBtnTitle)
                             self.viewModel.btvPlayerEvent = .nextView(isAuto:false)
                         }
+                    }
+                }
+                
+                if  self.showPreview {
+                    RectButton(
+                        text: String.player.preview,
+                        textTrailing: self.previewText ?? ""
+                        ){_ in
+                           
                     }
                 }
                 

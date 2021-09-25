@@ -76,7 +76,7 @@ extension String {
         public static let directPlay = "playerDirectPlay".loaalized()
         public static let season = "playerSeason".loaalized()
         public static let continuePlay = "playerContinuePlay".loaalized()
-        public static let adTitlec = "playerAdTitle".loaalized()
+        public static let adTitle = "playerAdTitle".loaalized()
         public static let adMore = "playerAdMore".loaalized()
         public static let adCancel = "playerAdCancel".loaalized()
         public static let replay = "playerReplay".loaalized()
@@ -132,6 +132,9 @@ extension String {
         
         public static let oceanFirstFreeLeading = "monthlyOceanFirstFreeLeading".loaalized()
         public static let oceanFirstFreeTrailing = "monthlyOceanFirstFreeTrailing".loaalized()
+        
+        public static let dDay = "monthlyDDay".loaalized()
+        public static let expiry = "monthlyExpiry".loaalized()
     }
     struct quickMenu {
         public static let menu1 = "quickMenu1".loaalized()

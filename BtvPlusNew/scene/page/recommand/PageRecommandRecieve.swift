@@ -121,7 +121,7 @@ struct PageRecommandReceive: PageView {
             self.error = .etc
             return
         }
-        if result == ApiCode.ok {
+        if result == ApiCode.ok || result == ApiCode.success || result == ApiCode.success2{
             self.isCompleted = true
         } else {
             self.error = MgmRpsNetwork.MgmError.getType(result)

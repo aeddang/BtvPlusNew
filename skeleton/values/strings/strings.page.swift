@@ -195,6 +195,7 @@ extension String{
         public static let myBookMarkedEmpty =  "myBookMarkedEmpty".loaalized()
         public static let myBookMarkedInfo = "myBookMarkedInfo".loaalized()
         public static let myTicketInfo = "myTicketInfo".loaalized()
+        public static let myTicketMore = "myTicketMore".loaalized()
         public static let myAlramInfo = "myAlramInfo".loaalized()
         public static let myAlramEmpty = "myAlramEmpty".loaalized()
         public static let myAlramEmptyPushOn = "myAlramEmptyPushOn".loaalized()
@@ -240,6 +241,7 @@ extension String{
         public static let myBenefitsPoint = "myBenefitsPoint".loaalized()
         public static let myBenefitsPointText = "myBenefitsPointText".loaalized()
         public static let myBenefitsPointRegist = "myBenefitsPointRegist".loaalized()
+       
         public static let myBenefitsPointEmpty = "myBenefitsPointEmpty".loaalized()
         public static let myBenefitsPointInput = "myBenefitsPointInput".loaalized()
         public static let myBenefitsCash = "myBenefitsCash".loaalized()
@@ -269,9 +271,10 @@ extension String{
         public static let myBenefitsRegistOk = "myBenefitsRegistOk".loaalized()
         public static let myBenefitsRegistT = "myBenefitsRegistT".loaalized()
         
-        
         public static var myBenefitsDiscountOkDeleteConfirm = "myBenefitsDiscountOkDeleteConfirm".loaalized()
+        public static var myBenefitsDiscountOkDeleteConfirmText = "myBenefitsDiscountOkDeleteConfirmText".loaalized()
         public static var myBenefitsDiscountTDeleteConfirm = "myBenefitsDiscountTDeleteConfirm".loaalized()
+        public static var myBenefitsDiscountTDeleteConfirmText = "myBenefitsDiscountTDeleteConfirmText".loaalized()
 
         public static let myBenefitsCardEmpty = "myBenefitsCardEmpty".loaalized()
         public static let myBenefitsDiscountTvEmpty = "myBenefitsDiscountTvEmpty".loaalized()

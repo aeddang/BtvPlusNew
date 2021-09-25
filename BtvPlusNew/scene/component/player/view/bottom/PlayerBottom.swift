@@ -43,6 +43,8 @@ struct PlayerBottom: PageView{
                     isPlaying: self.isPlaying,
                     showDirectview: self.showDirectview,
                     showPreplay: self.showPreplay,
+                    showPreview: self.showPreview,
+                    previewText: self.previewText,
                     showCookie: self.showCookie,
                     currentCookie: self.currentCookie,
                     isSeasonNext: self.isSeasonNext,
@@ -74,7 +76,7 @@ struct PlayerBottom: PageView{
             withAnimation{
                 switch evt {
                 case .fixUiStatus(let isFix) :
-                    if SystemEnvironment.isTablet {return}
+                    if SystemEnvironment.isTablet || self.isFullScreen {return}
                     self.isFixUiStatus = isFix
                     if isFix { self.isUiShowing = false }
                 default : break
@@ -150,7 +152,9 @@ struct PlayerBottom: PageView{
             ComponentLog.d("previewLimit " + Self.previewLimit.description, tag:self.tag)
             
             switch data.type {
-            case .preview : break
+            case .preview(let idx, _):
+                self.setupPreview(idx: idx)
+               
             case .preplay :
                 ComponentLog.d("preplay " + self.showPreplay.description, tag:self.tag)
                 if self.viewModel.originDuration > Self.previewLimit || self.type == .btv {
@@ -219,13 +223,29 @@ struct PlayerBottom: PageView{
         self.showPreplay = false
         self.isShowNext = false
         self.showNext = false
+        self.showPreview = false
+        self.previewText = nil
         self.showFullVod = false
+      
         self.isSeasonNext = false
         self.nextProgressCancel()
         self.removeInside()
         self.openingTime = -1
         self.nextBtnTitle = nil
         ComponentLog.d("resetShow", tag: self.tag)
+    }
+    
+    @State var showPreview = false
+    @State var previewText:String? = nil
+   
+    func setupPreview(idx:Int){
+        let count = self.viewModel.synopsisPlayerData?.previews?.count ?? 0
+        if count > 1 {
+            self.previewText = " " + (idx+1).description + "/" + count.description
+        }
+        withAnimation {
+            self.showPreview = true
+        }
     }
     
     @State var nextBtnTitle:String? = nil

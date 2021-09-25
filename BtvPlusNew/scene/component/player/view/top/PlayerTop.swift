@@ -22,6 +22,7 @@ struct PlayerTop: PageView{
     @State var isShowing:Bool = false
     @State var isMute:Bool = false
     @State var isLock:Bool = false
+    
     @State var textQuality:String? = nil
     @State var textRate:String? = nil
     
@@ -71,6 +72,7 @@ struct PlayerTop: PageView{
         .onReceive(self.viewModel.$rate) { r in
             self.textRate = "x" + r.description
         }
+        
         .onReceive(self.viewModel.$isMute) { mute in
             self.isMute = mute
         }

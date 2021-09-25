@@ -222,6 +222,8 @@ struct MonthlyReportCard: PageComponent{
     
     private func moveResultPage(){
         if self.viewModel.kid == nil {
+           
+            /*
             self.appSceneObserver.alert = .confirm(
                 nil ,
                 String.kidsText.kidsMyReportNeedProfile
@@ -234,6 +236,7 @@ struct MonthlyReportCard: PageComponent{
                     }
                 }
             }
+             */
             return
         }
         self.pagePresenter.openPopup(

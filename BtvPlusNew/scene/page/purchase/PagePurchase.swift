@@ -94,17 +94,7 @@ struct PagePurchase: PageView {
                 }
                 .modifier(PageFull(style:.white))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
-            }//draging
-            .onReceive(self.pairing.$event){ evt in
-                guard let evt = evt else {return}
-                switch evt {
-                case .connected :
-                    self.pagePresenter.closePopup(self.pageObject?.id)
-                case .connectError(let header) :
-                    self.appSceneObserver.alert = .pairingError(header)
-                default : break
-                }
-            }
+            }//dragin
             .onReceive(self.webViewModel.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {

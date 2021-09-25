@@ -431,7 +431,7 @@ struct SceneAlertController: PageComponent{
         
         self.buttons = [
             AlertBtnData(title: String.app.cancel, index: 0),
-            AlertBtnData(title: String.button.purchas, index: 1)
+            AlertBtnData(title: String.app.confirm, index: 1)
         ]
     }
     func selectedNeedPurchase(_ idx:Int,  model:PurchaseWebviewModel) {

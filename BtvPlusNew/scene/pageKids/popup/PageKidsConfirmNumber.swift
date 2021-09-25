@@ -81,9 +81,9 @@ struct PageKidsConfirmNumber: PageView {
             switch evt {
             case .connected :
                 self.initPage()
-            case .connectError(let header) :
-                self.appSceneObserver.alert = .pairingError(header)
-            default : do{}
+            case .connectError :
+                self.closePage()
+            default : break
             }
         }
         .onReceive(self.pairing.$event){evt in

@@ -114,7 +114,6 @@ struct PageSynopsis: PageView {
                             sceneOrientation: self.sceneOrientation,
                             isBookmark: self.$isBookmark,
                             isLike: self.$isLike,
-                            isRecommand : self.isRecommand,
                             seris: self.$seris,
                             
                             infinityScrollModel: self.infinityScrollModel,
@@ -481,7 +480,6 @@ struct PageSynopsis: PageView {
     @State var playListData:PlayListData = PlayListData()
     @State var synopsisPlayType:SynopsisPlayType = .unknown
     @State var isBookmark:Bool? = nil
-    @State var isRecommand:Bool? = nil
     @State var isLike:LikeStatus? = nil
     @State var hasAuthority:Bool? = nil
     @State var relationTab:[NavigationButton] = []
@@ -618,18 +616,29 @@ struct PageSynopsis: PageView {
                     self.completedProgress()
                     return
                 }
-                if model.hasExamPreview {
-                    self.synopsisPlayType = .preplay()
-                    self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.epsdRsluId,  true )))
-                }
-                else if model.hasPreview{
-                    self.synopsisPlayType = .preview(0)
-                    let item = model.previews[0]
-                    self.pageDataProviderModel.requestProgress(q: .init(type: .getPreview(item.epsd_rslu_id,  self.pairing.hostDevice )))
+                if self.isPairing == true {
+                    if model.hasPreview{
+                        self.synopsisPlayType = .preview(0)
+                        let item = model.previews[0]
+                        self.pageDataProviderModel.requestProgress(q: .init(type: .getPreview(item.epsd_rslu_id,  self.pairing.hostDevice )))
+                    } else if model.hasExamPreview {
+                        self.synopsisPlayType = .preplay()
+                        self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.epsdRsluId,  true )))
+                    } else {
+                        PageLog.d("no preview", tag: self.tag)
+                        self.errorProgress()
+                    }
+                
                 } else {
-                    PageLog.d("no preview", tag: self.tag)
-                    self.errorProgress()
+                    if model.hasExamPreview {
+                        self.synopsisPlayType = .preplay()
+                        self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.epsdRsluId,  true )))
+                    } else {
+                        PageLog.d("no preview", tag: self.tag)
+                        self.errorProgress()
+                    }
                 }
+                
             }
             else {
                 switch self.synopsisPlayType {
@@ -684,7 +693,7 @@ struct PageSynopsis: PageView {
             }
         
         case Self.getPlay :
-            if self.hasAuthority == false{
+            if self.hasAuthority == false {
                 guard let data = res.data as? Preview else {
                     PageLog.d("error Preview", tag: self.tag)
                     self.progressError = true
@@ -870,7 +879,7 @@ struct PageSynopsis: PageView {
             }
             
             if let kidYn = self.synopsisModel?.kidsYn {self.synopsisData?.kidZone = kidYn }
-            self.isRecommand = self.synopsisModel?.isRecommandAble
+           
             self.epsdRsluId = self.synopsisModel?.epsdRsluId ?? self.epsdRsluId
             self.synopsisData?.epsdRsluId = self.epsdRsluId
             self.synopsisModel?.purchasedPid = self.purchasedPid
@@ -881,7 +890,7 @@ struct PageSynopsis: PageView {
             self.relationContentsModel.selectedEpsdId = self.epsdId
             DataLog.d("PageSynopsis epsdId  : " + (self.epsdId ?? "nil"), tag: self.tag)
             DataLog.d("PageSynopsis epsdRsluId  : " + self.epsdRsluId, tag: self.tag)
-            DataLog.d("PageSynopsis isRecommand  : " + (self.isRecommand.debugDescription), tag: self.tag)
+            
         } else {
             self.progressError = true
             PageLog.d("setupSynopsis error", tag: self.tag)
@@ -899,8 +908,9 @@ struct PageSynopsis: PageView {
                 synopsisModel: self.synopsisModel,
                 isPairing: self.isPairing,
                 isPosson:self.isPosson)
-        
-        self.textInfo = self.purchaseViewerData?.serviceInfo
+        withAnimation{
+            self.textInfo = self.purchaseViewerData?.serviceInfo
+        }
         self.epsdRsluId = self.synopsisModel?.curSynopsisItem?.epsd_rslu_id ?? self.synopsisModel?.epsdRsluId ?? ""
         if self.purchaseViewerData?.isPlayAble == true && (self.isPairing == true || self.isPosson) {
             self.hasAuthority = self.purchaseViewerData?.hasAuthority
@@ -927,14 +937,27 @@ struct PageSynopsis: PageView {
         if let synopsis = self.synopsisModel {
             let prerollData = SynopsisPrerollData()
                 .setData(data: synopsis, playType: self.synopsisPlayType, epsdRsluId: self.epsdRsluId)
+            let playType = self.synopsisPlayType
+            var epsdRsluId = self.epsdRsluId
+            switch playType {
+            case .preview(let idx, _):
+                let max = self.synopsisModel?.previews.count ?? 0
+                epsdRsluId = max > idx
+                ? self.synopsisModel?.previews[idx].epsd_rslu_id ?? self.epsdRsluId
+                    : self.epsdRsluId
+            default : break
+            }
+            
             self.playerData = SynopsisPlayerData()
                 .setData(type: self.synopsisPlayType,
                          synopsis: synopsis, relationContentsModel: self.relationContentsModel)
+            
+            
             self.playerModel
                 .setData(synopsisPrerollData: prerollData)
                 .setData(synopsisPlayData: self.playerData)
                 .setData(data: dataInfo,
-                         type: .preview(self.epsdRsluId),
+                         type: .preview(epsdRsluId),
                          autoPlay: self.isAutoPlay)
             withAnimation{self.isPlayAble = true}
 

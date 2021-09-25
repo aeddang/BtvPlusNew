@@ -13,6 +13,7 @@ struct FunctionViewer: PageComponent{
     @EnvironmentObject var pairing:Pairing
     var componentViewModel:PageSynopsis.ComponentViewModel
     var synopsisData:SynopsisData? = nil
+    var synopsisModel:SynopsisModel? = nil
     var purchaseViewerData:PurchaseViewerData? = nil
     var funtionLayout:Axis = .vertical
     
@@ -20,13 +21,11 @@ struct FunctionViewer: PageComponent{
     //var epsdId:String?
     @Binding var isBookmark:Bool?
     @Binding var isLike:LikeStatus?
-    var isRecommandAble:Bool
-    var isRecommand:Bool?
-    
+     
     @State var isPairing:Bool = false
     var body: some View {
         VStack(alignment:.trailing , spacing:0) {
-            if self.isPairing && self.isRecommand == true && self.funtionLayout == .horizontal {
+            if self.isPairing && self.synopsisModel?.isRecommand == true && self.funtionLayout == .horizontal {
                 RecommandTip(funtionLayout: self.funtionLayout)
             }
             HStack(alignment: .center, spacing:SystemEnvironment.isTablet ?  Dimen.margin.thinExtra : Dimen.margin.regularUltra){
@@ -52,16 +51,16 @@ struct FunctionViewer: PageComponent{
                 }
                 .buttonStyle(BorderlessButtonStyle())
                 .fixedSize()
-                if self.purchaseViewerData?.isService == true && self.isRecommandAble, let srisId = self.synopsisData?.srisId {
+                if  self.synopsisModel?.isRecommandAble == true , let srisId = self.synopsisData?.srisId {
                     HStack(alignment: .top, spacing:0){
                         ShareButton(
                             srisId:srisId,
                             epsdId:self.synopsisData?.epsdId,
-                            isRecommand: self.isPairing ? self.isRecommand : false
+                            isRecommand: self.isPairing ? self.synopsisModel?.isRecommand : false
                         )
                         .buttonStyle(BorderlessButtonStyle())
                         .fixedSize()
-                        if self.isPairing && self.isRecommand == true && self.funtionLayout == .vertical  {
+                        if self.isPairing &&  self.synopsisModel?.isRecommand == true && self.funtionLayout == .vertical  {
                             RecommandTip(funtionLayout: self.funtionLayout)
                         }
                     }
@@ -89,7 +88,7 @@ struct FunctionViewer_Previews: PreviewProvider {
                 componentViewModel: .init(),
                 synopsisData:SynopsisData(),
                 isBookmark: .constant(false),
-                isLike: .constant(.unlike), isRecommandAble: true
+                isLike: .constant(.unlike)
             )
             .environmentObject(DataProvider())
             .environmentObject(PagePresenter())

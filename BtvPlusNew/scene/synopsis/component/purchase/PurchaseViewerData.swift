@@ -16,7 +16,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
     
     private(set) var serviceInfo: String? = nil
     private(set) var serviceInfoDesc: String? = nil
-    
+    private(set) var serviceInfoDescBottom: String? = nil
     private(set) var isOption:Bool = false
     private(set) var optionTitle: String? = nil
     private(set) var options: [String] = []
@@ -25,7 +25,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
     private(set) var purchasBtnSubTitle:String? = nil
     private(set) var watchOptions:[PurchaseModel]? = nil
     private(set) var isPlayAble:Bool = false
-    private(set) var isService:Bool = true
+   
     private(set) var isPlayAbleBtv:Bool = false
     private(set) var hasAuthority :Bool = false
     
@@ -51,12 +51,13 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
             serviceInfo = String.alert.bs
             serviceInfoDesc = String.alert.bsText
             isPlayAble = false
-            isService = false
+           
+           
         } else if synopsisModel.isCancelProgram {
             serviceInfo = String.alert.bc
-            serviceInfoDesc = String.alert.bcText
+            serviceInfoDescBottom = String.alert.bcText
             isPlayAble = false
-            isService = false
+            
             
         } else if !synopsisModel.isNScreen {
             if isPosson {
@@ -114,15 +115,8 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
     private func setupBtvWatchInfo(synopsisModel:SynopsisModel,
                                    isPairing:Bool? , isPosson:Bool , purchas:PurchaseModel?){
         if isPairing == true || isPosson {
-            if synopsisModel.isFree {
-                infoTrailing = String.pageText.synopsisFreeWatch
-                isPlayAble = true
-                if synopsisModel.isGstn {
-                    hasAuthority = true
-                }
-                
-            }
-            else if (purchas?.isDirectview ?? false) {
+            
+            if (purchas?.isDirectview ?? false) {
                 if isPosson {
                     infoTrailing = String.pageText.synopsisPossonWatch
                 } else if let ppmItem = synopsisModel.purchasedPPMItem {
@@ -138,7 +132,14 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                         : String.pageText.synopsisWatchRent
                 }
                 isPlayAble = true
+            } else if synopsisModel.isFree {
+                infoTrailing = String.pageText.synopsisFreeWatch
+                isPlayAble = true
+                if synopsisModel.isGstn {
+                    hasAuthority = true
+                }
             }
+            
             else{
                 if isPosson {
                     infoTrailing = String.pageText.synopsisTerminationBtv
@@ -153,7 +154,8 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
         }
         else{
             if synopsisModel.isFree {
-                infoTrailing = String.pageText.synopsisFreeWatchBtv
+                infoTrailing = String.pageText.synopsisFreeWatch
+                //infoTrailing = String.pageText.synopsisFreeWatchBtv. 연결후 시청이 가능한대 그냥무료로 노출해달라고해서 3분보여주면서 문구는 무료....
             } else {
                 if synopsisModel.isContainPPM {
                     infoIcon = self.type == .btv ? Asset.icon.tip : AssetKids.icon.tip

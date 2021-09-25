@@ -262,6 +262,10 @@ struct PageEditKid: PageView {
                         self.birthMonth = birthDate.toDateFormatter(dateFormat: "MM")
                     }
                     self.isInitBirthSelect = true
+                    
+                    self.originNickName = self.nickName
+                    self.originCharacterIdx = self.characterIdx
+                    self.originBirthDate = self.birthDate
                 } else {
                     self.birthDate = Date()
                     if let birthDate = self.birthDate {
@@ -273,15 +277,24 @@ struct PageEditKid: PageView {
             }
         }//geo
     }//body
-    
+    @State var originNickName:String? = ""
+    @State var originCharacterIdx:Int? = 0
+    @State var originBirthDate:Date? = nil
     @State var nickName:String = ""
-    @State var characterIdx:Int = 0
+    @State var characterIdx:Int = Kid.defaultCharacterIdx
     @State var birthDate:Date? = nil
     @State private var birthYear:String = "0000"
     @State private var birthMonth:String = "00"
     
     private func isInputCompleted() -> Bool {
-        if !self.isInitBirthSelect {
+        var modify = true
+        
+        if self.originNickName != nil {
+            modify = self.originNickName != self.nickName
+            || self.originCharacterIdx != self.characterIdx
+            || self.originBirthDate != self.birthDate
+        }
+        if !self.isInitBirthSelect || !modify {
             return false
         }
         var complete = false
@@ -296,7 +309,10 @@ struct PageEditKid: PageView {
             self.editType = .none
         }
         AppUtil.hideKeyboard()
-        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.selectKidCharacter))
+        self.pagePresenter.openPopup(
+            PageKidsProvider.getPageObject(.selectKidCharacter)
+                .addParam(key: .index, value: self.characterIdx)
+        )
         
     }
     
@@ -333,6 +349,7 @@ struct PageEditKid: PageView {
                 self.birthYear = self.birthYearList[idxYear].replace(String.app.year, with: "")
                 self.birthMonth = self.birthMonthList[idxMonth].replace(String.app.month, with: "")
                 let birth = self.birthYear + self.birthMonth
+            
                 self.birthDate = birth.toDate(
                     dateFormat: "yyyyMM")
                 self.isInitBirthSelect = true

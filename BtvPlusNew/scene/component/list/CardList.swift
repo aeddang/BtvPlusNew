@@ -206,9 +206,12 @@ struct CardItem: PageView {
                             text: self.data.type == .member ? String.button.remove :  String.pageText.myBenefitsDiscountOkDelete){
                             self.sendLog(action: .clickCouponPointOption)
                             self.appSceneObserver.alert =
-                                .confirm(nil, self.data.type == .member
-                                            ? String.pageText.myBenefitsDiscountTDeleteConfirm
-                                            : String.pageText.myBenefitsDiscountOkDeleteConfirm,
+                                .confirm(self.data.type == .member
+                                             ? String.pageText.myBenefitsDiscountTDeleteConfirm
+                                             : String.pageText.myBenefitsDiscountOkDeleteConfirm,
+                                         self.data.type == .member
+                                            ? String.pageText.myBenefitsDiscountTDeleteConfirmText
+                                            : String.pageText.myBenefitsDiscountOkDeleteConfirmText,
                                          nil, confirmText: String.button.remove){ isOk in
                                     if isOk {
                                         switch self.data.type {

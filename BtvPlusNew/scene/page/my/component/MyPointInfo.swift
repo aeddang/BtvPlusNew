@@ -10,6 +10,7 @@ import SwiftUI
 struct MyPointInfo: View {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
     
     var body: some View {
@@ -17,9 +18,23 @@ struct MyPointInfo: View {
             ValueInfo(key: String.app.ticket, value: self.ticket)
                 .modifier(MatchParent())
                 .onTapGesture {
-                    self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.myPurchaseTicketList)
-                    )
+                    if self.pairing.authority.useAbleTicket == 0 {
+                        guard let blocksData = self.dataProvider.bands.getData(gnbTypCd: EuxpNetwork.GnbTypeCode.GNB_MONTHLY.rawValue)?.blocks else {return}
+                        guard let allData = blocksData.first(where: {$0.prd_prc_id == nil}) else {return}
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.monthlyTicket)
+                                .addParam(key: .id, value: allData.menu_id)
+                                .addParam(key: .title, value: allData.menu_nm)
+                                .addParam(key: .data, value: allData.blocks)
+                                .addParam(key: .type, value: BlockData.ThemaType.ticket)
+                        )
+                        
+                    } else {
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.myPurchaseTicketList)
+                        )
+                    }
+                    
                 }
             Spacer().modifier(LineVertical())
                 .frame(height:Dimen.button.lightExtra)
@@ -73,7 +88,9 @@ struct MyPointInfo: View {
             self.coupon = coupon.description + String.app.count
         }
         .onReceive(self.pairing.authority.$useAbleTicket){ ticket in
-            self.ticket = ticket.description + String.app.count
+            self.ticket = ticket > 0
+            ? ticket.description + String.app.count
+            : String.pageText.myTicketMore
         }
         .onAppear(){
             self.pairing.authority.requestAuth(.updateMyinfo(isReset:true))

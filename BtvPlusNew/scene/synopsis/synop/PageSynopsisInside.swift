@@ -109,24 +109,20 @@ extension PageSynopsis {
     func nextPreview(count:Int)->Bool{
         guard let playData = self.playerData else { return false}
         guard let previews = playData.previews else { return false}
-        if !self.setup.nextPlay { return false}
+        if !self.setup.nextPlay { return false }
         let next = count + 1
-        if previews.count <= next { return false}
-        self.synopsisPlayType = .preview(next)
-        if self.isPairing == true {
+        if previews.count <= next { return false }
+        DispatchQueue.main.async {
+            self.synopsisPlayType = .unknown // 메모리에서 동일타입을 같은값으로 보기때문에 리샛후 설정
+            let type:SynopsisPlayType = .preview(next, true)
+            self.synopsisPlayType = type
             let item = previews[next]
             self.epsdRsluId = item.epsd_rslu_id ?? ""
             self.pageDataProviderModel.request = .init(
                 id: SingleRequestType.preview.rawValue,
                 type: .getPreview(item.epsd_rslu_id,  self.pairing.hostDevice))
-           
-        }else{
-            let item = previews[next]
-            self.epsdRsluId = item.epsd_rslu_id ?? ""
-            self.pageDataProviderModel.request = .init(
-                id: SingleRequestType.preview.rawValue,
-                type: .getPreplay(item.epsd_rslu_id,  false))
         }
+        
         return true
     }
     
@@ -224,14 +220,8 @@ extension PageSynopsis {
                     String.alert.purchaseDisable,
                     String.alert.purchaseDisableService
                 )
-            } else {
-                self.appSceneObserver.alert = .alert(
-                    String.alert.purchaseDisable,
-                    self.purchaseViewerData?.serviceInfoDesc
-                )
+                return
             }
-            
-            return
         }
         if !(!playAble && playAbleBtv) && self.hasAuthority != true{
             //btv에서만 가능한 컨텐츠 권한없어도 비티로 보기 지원

@@ -257,7 +257,7 @@ struct KidsPlayer: PageComponent{
             .onReceive(self.prerollModel.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
-                //case .start : self.viewModel.event = .pause
+                case .start : self.viewModel.event = .mute(false)
                 case .finish, .skipAd : self.initPlay()
                 default : do{}
                 }

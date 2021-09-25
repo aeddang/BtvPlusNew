@@ -30,6 +30,7 @@ struct ModifyUserData {
 }
 
 class User {
+    static let defaultNickName:String = "0000"
     private(set) var nickName:String = ""
     var characterIdx:Int = 0
     
@@ -53,6 +54,7 @@ class User {
     
     init(){}
     init(nickName:String?,character:String?,gender:String?,birth:String?){
+        self.isAutoPairing = false
         self.nickName = nickName ?? ""
         if let character = character {
             let key = character.replace(".png", with: "").replace(".jpg", with: "").replace(".jpeg", with: "")
@@ -66,7 +68,7 @@ class User {
     
     init(nickName:String,pairingDate:String?,characterIdx:Int,gender:Gender,birth:String,
          isAgree1:Bool = false,isAgree2:Bool = false,isAgree3:Bool = false){
-        
+        self.isAutoPairing = false
         self.nickName = nickName
         self.pairingDate = pairingDate
         self.characterIdx = characterIdx
@@ -98,7 +100,7 @@ class User {
     }
     func setDefault(isAgree:Bool) -> User{
         self.isAutoPairing = true
-        self.nickName = "0000"
+        self.nickName = User.defaultNickName
         self.characterIdx = 0
         self.gender = .mail
         self.birth = "1990"

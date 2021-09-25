@@ -26,7 +26,7 @@ struct PageRegistKid: PageView {
 
     @State var editType:EditType = .none
     @State var nickName:String = ""
-    @State var characterIdx:Int = 0
+    @State var characterIdx:Int = Kid.defaultCharacterIdx
     @State var birthDate:Date = Date()
     @State var birth:String = String.app.birthKidsPlaceholder
     @State var boxPos:CGFloat = -100
@@ -263,7 +263,10 @@ struct PageRegistKid: PageView {
             self.editType = .none
         }
         AppUtil.hideKeyboard()
-        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.selectKidCharacter))
+        self.pagePresenter.openPopup(
+            PageKidsProvider.getPageObject(.selectKidCharacter)
+                .addParam(key: .index, value: self.characterIdx)
+        )
         
     }
     

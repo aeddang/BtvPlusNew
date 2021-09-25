@@ -52,7 +52,7 @@ struct PageSelectKidCharacter: PageView {
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
 
-    @State var characterIdx:Int = 0
+    @State var characterIdx:Int = Kid.defaultCharacterIdx
     @State var boxPos:CGFloat = -300
     @State var boxOpacity:Double = 0
     
@@ -127,7 +127,11 @@ struct PageSelectKidCharacter: PageView {
             }
             
             .onAppear{
-                
+                guard let obj = self.pageObject  else { return }
+               
+                if let idx = obj.getParamValue(key: .index) as? Int{
+                    self.characterIdx = idx
+                }
             }
            
             

@@ -124,7 +124,7 @@ extension NpsNetwork{
     }
 
     static func getNpsUsername(userName:String?) -> String{
-        guard let name = userName else { return "0000" }
+        guard let name = userName else { return User.defaultNickName }
         if name.count < 4 {
             let diff = 4 - name.count
             return name + ( 0...diff).reduce(""){ str, _ in str + " " }

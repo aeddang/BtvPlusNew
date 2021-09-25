@@ -176,10 +176,10 @@ struct KidsSynopsis: PageComponent{
                                 FunctionViewerKids(
                                     componentViewModel: self.componentViewModel,
                                     synopsisData: self.synopsisData,
+                                    synopsisModel:self.synopsisModel,
                                     purchaseViewerData:self.purchaseViewerData,
                                     summaryViewerData: self.summaryViewerData,
-                                    isBookmark: self.$isBookmark, 
-                                    isRecommandAble: self.synopsisModel?.isCancelProgram == false,
+                                    isBookmark: self.$isBookmark,
                                     isPosson: self.isPosson
                                 )
                                 .padding(.horizontal, DimenKids.margin.regular)
@@ -225,10 +225,10 @@ struct KidsSynopsis: PageComponent{
                                 FunctionViewerKids(
                                     componentViewModel: self.componentViewModel,
                                     synopsisData: self.synopsisData,
+                                    synopsisModel:self.synopsisModel,
                                     purchaseViewerData:self.purchaseViewerData,
                                     summaryViewerData: self.summaryViewerData,
                                     isBookmark: self.$isBookmark,
-                                    isRecommandAble: self.synopsisModel?.isCancelProgram == false,
                                     isPosson:self.isPosson
                                 )
                                 //.fixedSize(horizontal: false, vertical: true)

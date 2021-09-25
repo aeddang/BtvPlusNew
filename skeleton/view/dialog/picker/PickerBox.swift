@@ -44,7 +44,12 @@ struct PickerBox: PageComponent{
                                 ){ select in
                                         self.selectedA = select
                                     }
-                                
+                                .onAppear(){
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                        let select = set.datas[self.selectedA]
+                                        self.infinityScrollModelA.uiEvent = .scrollTo(select.hashId, .center)
+                                    }
+                                }
                             } else {
                                 Picker(selection: self.$selectedA.onChange(self.onSelectedA),label: Text("")) {
                                     ForEach(set.datas) { btn in
@@ -69,6 +74,12 @@ struct PickerBox: PageComponent{
                                     textModifier: self.textModifier){ select in
                                         self.selectedB = select
                                     }
+                                    .onAppear(){
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                            let select = set.datas[self.selectedB]
+                                            self.infinityScrollModelB.uiEvent = .scrollTo(select.hashId, .center)
+                                        }
+                                    }
                             } else {
                                 Picker(selection: self.$selectedB.onChange(self.onSelectedB),label: Text("")) {
                                     ForEach(set.datas) { btn in
@@ -92,6 +103,12 @@ struct PickerBox: PageComponent{
                                     textModifier: self.textModifier){ select in
                                         self.selectedC = select
                                     }
+                                    .onAppear(){
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                            let select = set.datas[self.selectedC]
+                                            self.infinityScrollModelC.uiEvent = .scrollTo(select.hashId, .center)
+                                        }
+                                    }
                             } else {
                                 Picker(selection: self.$selectedC.onChange(self.onSelectedC),label: Text("")) {
                                     ForEach(set.datas) { btn in
@@ -114,6 +131,12 @@ struct PickerBox: PageComponent{
                                     selected: self.selectedD,
                                     textModifier: self.textModifier){ select in
                                         self.selectedD = select
+                                    }
+                                    .onAppear(){
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                            let select = set.datas[self.selectedD]
+                                            self.infinityScrollModelD.uiEvent = .scrollTo(select.hashId, .center)
+                                        }
                                     }
                             } else {
                                 Picker(selection: self.$selectedD.onChange(self.onSelectedD),label: Text("")) {

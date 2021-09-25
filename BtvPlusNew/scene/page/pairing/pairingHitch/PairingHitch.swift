@@ -215,9 +215,9 @@ struct PairingHitch: PageComponent {
                     self.findDeviceCompleted(evt: evt)
                 }
             
-            case .connectError(let header) :
+            case .connectError(let header, let failStbId) :
                 if header?.result == NpsNetwork.resultCode.pairingLimited.code {
-                    self.pairing.requestPairing(.hostInfo(auth: nil, device:self.selectedDevice?.stbid, prevResult: header))
+                    self.pairing.requestPairing(.hostInfo(auth: nil, device:failStbId ?? self.selectedDevice?.stbid, prevResult: header))
                 } else {
                     let msg = NpsNetwork.getConnectErrorMeassage(data: header)
                     self.appSceneObserver.event =

@@ -383,7 +383,8 @@ class AccountManager : PageProtocol{
             return false
         }
         if resultCode != NpsNetwork.resultCode.success.code {
-            self.pairing.connectError(header: data.header)
+            let stb = data.body?.host_deviceid
+            self.pairing.connectError(header: data.header, failStbId: stb)
             self.resetRequest()
             return false
         }

@@ -26,6 +26,7 @@ extension PageParam {
     static let needAdult = "needAdult"
     static let watchLv = "watchLv"
     static let isFree = "isFree"
+    static let isAlert = "isAlert"
     static let value = "value"
 }
 
@@ -108,7 +109,7 @@ struct PageSceneModel: PageModel {
     static func needPairing(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
         case .kidsExam: return true
-        case .cashCharge, .synopsisPlayer, .snsShare: return true
+        case .cashCharge, .synopsisPlayer, .snsShare, .pairingManagement: return true
         default : return false
         }
     }

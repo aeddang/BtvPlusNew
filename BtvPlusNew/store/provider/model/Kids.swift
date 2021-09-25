@@ -157,10 +157,10 @@ enum KidsPlayType:Equatable{
     var sortIdx:Int {
         get{
             switch self {
-            case .play: return 0
-            case .english: return 1
-            case .tale: return 2
-            case .create: return 3
+            case .play: return 3
+            case .english: return 0
+            case .tale: return 1
+            case .create: return 2
             case .subject: return 4
             default : return  100
             }

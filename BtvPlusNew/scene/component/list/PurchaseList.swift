@@ -40,9 +40,12 @@ class PurchaseData:InfinityData,ObservableObject{
         originTitle = data.title
         title = data.title
         
-        if let prc = data.selling_price {
+        if data.omni_use_flag?.toBool() == true {
+            price = String.app.purchasePrice + " : 0" + String.app.cash + " (" + String.app.useOmnipack + ")"
+        } else if let prc = data.selling_price {
+            price = String.app.purchasePrice + " : " + prc + " (" + String.app.vat + ")"
+        } else {
             price = String.app.purchasePrice + " : "
-                + prc + " (" + String.app.vat + ")"
         }
         
         if let dat = data.reg_date {

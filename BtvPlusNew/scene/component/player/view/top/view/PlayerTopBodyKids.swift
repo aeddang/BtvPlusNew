@@ -27,7 +27,6 @@ struct PlayerTopBodyKids: PageView{
     var isMute:Bool = false
     var isLock:Bool = false
     
-    
     var body: some View {
         HStack(alignment: .top,  spacing: self.isFullScreen ? KidsPlayerUI.fullScreenSpacing : KidsPlayerUI.spacing){
             if !self.isLock {

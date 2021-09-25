@@ -50,7 +50,7 @@ enum PairingStatus{
 enum PairingEvent{
     case ready, pairingRequest,
          connected(StbData?), disConnected,
-         connectError(NpsCommonHeader?), disConnectError(NpsCommonHeader?), connectErrorReason(PairingInfo?),
+         connectError(NpsCommonHeader?, failStbId:String? = nil), disConnectError(NpsCommonHeader?), connectErrorReason(PairingInfo?),
          findMdnsDevice([MdnsDevice]), findStbInfoDevice([StbListInfoDataItem]),  notFoundDevice,
          syncPairingUser,
          syncError(NpsCommonHeader?),
@@ -177,7 +177,7 @@ class Pairing:ObservableObject, PageProtocol {
         self.event = .disConnectError(header)
     }
     
-    func connectError(header:NpsCommonHeader? = nil) {
+    func connectError(header:NpsCommonHeader? = nil, failStbId:String? = nil) {
         switch header?.result {
         case NpsNetwork.resultCode.pairingLimited.code :
             self.naviLog(pageID: .pairingLimited)
@@ -186,7 +186,7 @@ class Pairing:ObservableObject, PageProtocol {
            
         }
         self.status = .disConnect
-        self.event = .connectError(header)
+        self.event = .connectError(header, failStbId: failStbId)
     }
     func connectErrorReason(_ reason:PairingInfo? = nil) {
         self.event = .connectErrorReason(reason)

@@ -166,7 +166,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     
     private var changeSubscription:AnyCancellable?
     private var popupSubscriptions:[String:AnyCancellable] = [String:AnyCancellable]()
-   
+    private var isRock:Bool = false
     deinit {
         changeSubscription?.cancel()
         changeSubscription = nil
@@ -236,7 +236,12 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     }
 
     final func changePage(_ newPage:PageObject, isBack:Bool = false, isCloseAllPopup:Bool = true){
+        if isRock {
+            PageLog.d("changePage rock " + newPage.pageID + " " + isBack.description, tag: self.tag)
+            return
+        }
         PageLog.d("changePage " + newPage.pageID + " " + isBack.description, tag: self.tag)
+        self.isRock = true
         if pageModel.currentPageObject?.pageID == newPage.pageID {
             if( pageModel.currentPageObject?.params?.keys == newPage.params?.keys){
                 pageModel.currentPageObject?.params = newPage.params
@@ -293,6 +298,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                 self.changeSubscription = nil
                 PageLog.d("initAnimationComplete", tag: self.tag)
                 nextContent.initAnimationComplete()
+                self.isRock = false
                
         }
         pageModel.currentPageObject = newPage

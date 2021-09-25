@@ -121,9 +121,12 @@ class SceneDelegate: PageSceneDelegate {
                 return false
             }
             if !SystemEnvironment.isAdultAuth {
+                let isAlertMode = willPage.pageID == .synopsis || willPage.pageID == .synopsisPlayer || willPage.pageID == .synopsisPackage
                 self.pagePresenter.openPopup(
-                    PageProvider.getPageObject(.adultCertification)
+                    PageProvider.getPageObject(.adultCertification, animationType: isAlertMode ? .opacity : nil)
                         .addParam(key: .data, value: page)
+                        .addParam(key: .isAlert,
+                                  value: isAlertMode)
                 )
                 return false
             }

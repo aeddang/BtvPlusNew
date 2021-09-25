@@ -68,7 +68,7 @@ struct PagePairingUser: PageView {
                             self.pageDragingModel.uiEvent = .pullCompleted(geometry)
                         case .pullCancel :
                             self.pageDragingModel.uiEvent = .pullCancel(geometry)
-                        default : do{}
+                        default : break
                         }
                     }
                     .onReceive(self.infinityScrollModel.$pullPosition){ pos in
@@ -83,8 +83,12 @@ struct PagePairingUser: PageView {
                 switch evt {
                 case .connected :
                     self.pagePresenter.closePopup(self.pageObject?.id)
-                case .connectError(let header) :
-                    self.appSceneObserver.alert = .pairingError(header)
+                case .connectError(let header, let failStbId) :
+                    if header?.result == NpsNetwork.resultCode.pairingLimited.code ,let failStbId = failStbId {
+                        self.pairing.requestPairing(.hostInfo(auth: nil, device:failStbId, prevResult: header))
+                    } else {
+                        self.appSceneObserver.alert = .pairingError(header)
+                    }
                 default : do{}
                 }
             }

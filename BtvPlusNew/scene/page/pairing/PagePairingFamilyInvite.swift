@@ -129,7 +129,7 @@ struct PagePairingFamilyInvite: PageView {
             switch evt {
             case .pairingCompleted :
                 self.pagePresenter.closePopup(self.pageObject?.id)
-            case .connectError(let header) :
+            case .connectError(let header, _ ) :
                 if header?.result == NpsNetwork.resultCode.pairingLimited.code {
                     self.pairing.requestPairing(.hostInfo(auth: nil, device:inviteHostDeviceid, prevResult: header))
                 } else {

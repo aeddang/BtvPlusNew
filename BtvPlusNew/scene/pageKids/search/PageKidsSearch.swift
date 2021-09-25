@@ -199,7 +199,7 @@ struct PageKidsSearch: PageView {
                     if self.isInitPage {return}
                     DispatchQueue.main.async {
                         self.isInitPage = true
-                        self.isFocus = true
+                        
                         self.dataProvider.requestData(q: .init(id: self.tag, type: .getSearchKeywords, isOptional: true))
                     }
                 }

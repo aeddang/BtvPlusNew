@@ -222,7 +222,10 @@ class Repository:ObservableObject, PageProtocol{
                 self.namedStorage?.tvUserId = self.vsManager?.currentAccountId
                 self.userSetup.isPurchaseAuth = true
                 if !NpsNetwork.isAutoPairing {
-                    self.appSceneObserver?.event = .toast(String.alert.pairingCompleted)
+                    self.appSceneObserver?.event = .toast(  self.pairing.user?.isAutoPairing == true
+                        ? String.alert.pairingCompletedAuto
+                        : String.alert.pairingCompleted
+                    )
                 }
                 
             case .syncError :
@@ -434,6 +437,7 @@ class Repository:ObservableObject, PageProtocol{
     }
     
     func resetAuth(){
+        SystemEnvironment.isWatchAuth = false
         self.updateAdultAuth(able: false)
         self.updateFirstMemberAuth(able: false)
     }

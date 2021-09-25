@@ -17,6 +17,8 @@ class PurchaseTicketData:InfinityData{
     private(set) var subTitleUntil: String? = nil
     private(set) var price: String? = nil
     private(set) var period:String? = nil
+    private(set) var periodLeading:String? = nil
+    private(set) var periodTrailing:String? = nil
     private(set) var originPrice: String? = nil
     private(set) var joinDate:String? = nil
     private(set) var payment : String? = nil
@@ -90,12 +92,26 @@ class PurchaseTicketData:InfinityData{
         prodId = data.prod_id
         joinDate = data.reg_date?.subString(start: 2, len: 8)
         period = data.period
+        if let dDay = getDDay(date: data.dd_end_perd) {
+            periodLeading = dDay > 2 ? String.monthly.dDay.replace(dDay.description) : String.monthly.expiry
+            if let endDate = data.dd_end_perd {
+                let convertDate = endDate.count == 10 ? endDate.subString(2) : endDate
+                periodTrailing = "(" + convertDate + String.app.untill + ")"
+            }
+        }
         payment = data.method_pay_nm
         if let p = data.price {
             originPrice = String.app.month + p
         }
         index = idx
         return self
+    }
+    
+    private func getDDay(date: String?) -> Int? {
+        if let endDate = date?.toDate(dateFormat: "yyyy.MM.dd HH:mm:ss") {
+            return endDate.getDDay()
+        }
+        return nil
     }
     
     func setDummy(_ idx:Int = -1) -> PurchaseTicketData {
@@ -325,7 +341,9 @@ struct PurchaseTicketItem: PageView {
                 .frame(width: 130)
                 VStack(alignment: .leading ,
                        spacing: SystemEnvironment.isTablet ? Dimen.margin.tinyExtra : Dimen.margin.tiny){
-                    if let value = self.data.period {
+                    if let leading = self.data.periodLeading , let trailing = self.data.periodTrailing {
+                        PurchaseTicketValue(title: String.app.purchasePeriod, value: leading + "\n" + trailing , lineLimit:2)
+                    }else if let value = self.data.period {
                         PurchaseTicketValue(title: String.app.purchasePeriod, value: value)
                     }
                     if let value = self.data.statusInfo {
@@ -351,6 +369,7 @@ struct PurchaseTicketItem: PageView {
 struct PurchaseTicketValue: View{
     var title:String
     var value:String
+    var lineLimit:Int = 1
     var body: some View {
         HStack(alignment: .top, spacing: Dimen.margin.micro){
             Text("・ " + title + " ")
@@ -361,7 +380,7 @@ struct PurchaseTicketValue: View{
                 .modifier(MediumTextStyle(
                             size: SystemEnvironment.isTablet ? Font.size.micro : Font.size.thinExtra,
                             color: Color.app.black))
-                .lineLimit(1)
+                .lineLimit(lineLimit)
         }
     }//body
 }

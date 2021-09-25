@@ -99,6 +99,7 @@ extension String {
         
         public static var pairingError = "alertPairingError".loaalized()
         public static var pairingCompleted = "alertPairingCompleted".loaalized()
+        public static var pairingCompletedAuto = "alertPairingCompletedAuto".loaalized()
         public static var pairingRecovery = "alertPairingRecovery".loaalized()
         public static var pairingDisconnected = "alertPairingDisconnected".loaalized()
         public static var notPairing = "alertNotPairing".loaalized()
@@ -110,6 +111,7 @@ extension String {
         public static var serviceUnavailableText2 = "alertServiceUnavailableText2".loaalized()
         public static var identifySuccess = "alertIdentifySuccess".loaalized()
         public static var identifyFail = "alertIdentifyFail".loaalized()
+        public static var identifyAdultConfirm = "alertIdentifyAdultConfirm".loaalized()
         public static var identifySuccessAdult = "alertIdentifySuccessAdult".loaalized()
         public static var identifyFailAdult = "alertIdentifyFailAdult".loaalized()
         public static var identifySuccessMe = "alertIdentifySuccessMe".loaalized()

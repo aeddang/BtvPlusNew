@@ -91,9 +91,9 @@ struct PageProvider {
     static func getPageId(skimlink:String?)-> PageID? {
         guard let skimlink = skimlink else { return nil }
         if let _ = skimlink.range(of: "btvplusapp/MyPairgingManager", options: .caseInsensitive) { return .pairingManagement }
-        if let _ = skimlink.range(of: "btvplusapp/Pairing", options: .caseInsensitive) { return .pairing }
         if let _ = skimlink.range(of: "btvplusapp/PairingManager", options: .caseInsensitive) { return .pairingManagement }
-        if let _ = skimlink.range(of: "btvplusapp/Settings", options: .caseInsensitive) { return .my }
+        if let _ = skimlink.range(of: "btvplusapp/Pairing", options: .caseInsensitive) { return .pairing }
+        if let _ = skimlink.range(of: "btvplusapp/Settings", options: .caseInsensitive) { return .setup }
         if let _ = skimlink.range(of: "btvplusapp/chargeStation", options: .caseInsensitive) { return .cashCharge }
         if let _ = skimlink.range(of: "btvplusapp/FamilyInvite", options: .caseInsensitive) { return .snsShare }
 

@@ -87,6 +87,7 @@ extension String {
         public static let purchaseDate = "purchaseDate".loaalized()
         public static let purchasePeriod = "purchasePeriod".loaalized()
         public static let vat = "vat".loaalized()
+        public static let useOmnipack = "useOmnipack".loaalized()
         public static let expirePeriod = "expirePeriod".loaalized()
         public static let ticketPrice = "ticketPrice".loaalized()
         public static let ticketStatus = "ticketStatus".loaalized()

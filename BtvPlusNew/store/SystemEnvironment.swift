@@ -45,6 +45,11 @@ struct SystemEnvironment {
     static var isImageLock = false
     
     static func setImageLock(){
+        if !isAdultAuth {
+            isImageLock = true
+            return
+        }
+        
         if (watchLv == 0 && isAdultAuth) || isWatchAuth  {
             isImageLock = false
         } else {

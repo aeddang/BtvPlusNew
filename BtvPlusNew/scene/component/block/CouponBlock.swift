@@ -56,7 +56,7 @@ extension CouponBlock{
             case .cash: return String.pageText.myBenefitsCashRegist
             }
         }
-        
+       
         var empty: String {
             switch self {
             case .coupon: return String.pageText.myBenefitsCouponEmpty

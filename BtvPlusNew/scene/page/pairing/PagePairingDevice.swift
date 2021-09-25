@@ -142,7 +142,7 @@ struct PagePairingDevice: PageView {
                     self.findDeviceCompleted(evt: evt)
                 case .connected :
                     self.pagePresenter.closePopup(self.pageObject?.id)
-                case .connectError(let header) :
+                case .connectError(let header, _ ) : 
                     if header?.result == NpsNetwork.resultCode.pairingLimited.code {
                         self.pairing.requestPairing(.hostInfo(auth: nil, device:self.selectedDevice?.stbid, prevResult: header))
                     } else {

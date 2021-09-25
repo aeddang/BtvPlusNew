@@ -24,7 +24,6 @@ struct SynopsisBody: PageComponent{
     var tabNavigationModel:NavigationModel
     @Binding var isBookmark:Bool?
     @Binding var isLike:LikeStatus?
-    var isRecommand:Bool?
     var isPosson:Bool
     @Binding var seris:[SerisData]
     var synopsisData:SynopsisData? = nil
@@ -81,14 +80,14 @@ struct SynopsisBody: PageComponent{
                                 FunctionViewer(
                                     componentViewModel: self.componentViewModel,
                                     synopsisData :self.synopsisData,
+                                    synopsisModel:self.synopsisModel,
+                                    purchaseViewerData: self.purchaseViewerData,
                                     funtionLayout:self.funtionLayout,
                                     isBookmark: self.$isBookmark,
-                                    isLike: self.$isLike,
-                                    isRecommandAble: self.synopsisModel?.isCancelProgram == false,
-                                    isRecommand: self.isRecommand
+                                    isLike: self.$isLike
                                 )
                             }
-                            .padding(.top, self.isRecommand == true ? -RecommandTip.height : 0)
+                            .padding(.top, self.synopsisModel?.isRecommand == true ? -RecommandTip.height : 0)
                         }
                         .modifier(ListRowInset(spacing: SynopsisBody.spacing))
                     } else {
@@ -99,11 +98,11 @@ struct SynopsisBody: PageComponent{
                                 FunctionViewer(
                                     componentViewModel: self.componentViewModel,
                                     synopsisData :self.synopsisData,
+                                    synopsisModel:self.synopsisModel,
+                                    purchaseViewerData: self.purchaseViewerData,
                                     funtionLayout:self.funtionLayout,
                                     isBookmark: self.$isBookmark,
-                                    isLike: self.$isLike,
-                                    isRecommandAble: self.synopsisModel?.isCancelProgram == false,
-                                    isRecommand: self.isRecommand
+                                    isLike: self.$isLike
                                 )
                                 Spacer()
                             }
@@ -211,11 +210,10 @@ struct SynopsisBodyHeader: PageComponent{
                         FunctionViewer(
                             componentViewModel: self.componentViewModel,
                             synopsisData :self.synopsisData,
+                            synopsisModel:self.synopsisModel,
                             purchaseViewerData: self.purchaseViewerData,
                             isBookmark: self.$isBookmark,
-                            isLike: self.$isLike,
-                            isRecommandAble: self.synopsisModel?.isCancelProgram == false,
-                            isRecommand: self.isRecommand
+                            isLike: self.$isLike
                         )
                     }
                     .modifier(ListRowInset(spacing: SynopsisBody.spacing))
@@ -226,11 +224,10 @@ struct SynopsisBodyHeader: PageComponent{
                         FunctionViewer(
                             componentViewModel: self.componentViewModel,
                             synopsisData :self.synopsisData,
+                            synopsisModel:self.synopsisModel,
                             purchaseViewerData: self.purchaseViewerData,
                             isBookmark: self.$isBookmark,
-                            isLike: self.$isLike,
-                            isRecommandAble: self.synopsisModel?.isCancelProgram == false,
-                            isRecommand: self.isRecommand
+                            isLike: self.$isLike
                         )
                         Spacer()
                     }

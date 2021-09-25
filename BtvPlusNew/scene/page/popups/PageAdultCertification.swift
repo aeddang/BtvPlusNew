@@ -8,6 +8,8 @@ import Foundation
 import SwiftUI
 
 struct PageAdultCertification: PageView {
+    
+    
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
@@ -21,6 +23,7 @@ struct PageAdultCertification: PageView {
     @State var webViewHeight:CGFloat = 0
     @State var eventId:String? = nil
     @State var movePage:PageObject? = nil
+    @State var isAlert:Bool = false
     @State var isInfo:Bool = true
     @State var isfail:Bool = false
     @State var cid:String? = nil
@@ -32,7 +35,9 @@ struct PageAdultCertification: PageView {
                 viewModel:self.pageDragingModel,
                 axis:.vertical
             ) {
+                
                 VStack(spacing:0){
+                    
                     PageTab(
                         title: isfail ? String.alert.adultCertificationFail : String.alert.adultCertification,
                         isClose: true
@@ -78,8 +83,7 @@ struct PageAdultCertification: PageView {
                                     withAnimation{
                                         self.isInfo = false
                                     }
-                                    let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.identity
-                                    self.webViewModel.request = .link(linkUrl)
+                                    self.moveAdultCertification()
                                 }
                             }
                             .background(Color.brand.bg)
@@ -98,9 +102,10 @@ struct PageAdultCertification: PageView {
                                 }
                             }
                             .background(Color.brand.bg)
-                           
-                        }
                         
+                        }
+            
+                    
                     }
                     .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)
                     .modifier(MatchParent())
@@ -118,9 +123,12 @@ struct PageAdultCertification: PageView {
                     .onReceive(self.infinityScrollModel.$pullPosition){ pos in
                         self.pageDragingModel.uiEvent = .pull(geometry, pos)
                     }
-                }
+                    
+                   
+                }//vstack
                 .modifier(PageFull())
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                .opacity(self.isAlert ? 0.01 : 1)
             }//draging
             
             .onReceive(self.webViewModel.$event){ evt in
@@ -142,7 +150,7 @@ struct PageAdultCertification: PageView {
                                 
                                 self.cid = cid
                                 self.appSceneObserver.alert = .alert(
-                                    String.alert.identifySuccess, String.alert.identifySuccessMe, nil)
+                                    String.alert.identifySuccess, String.alert.identifySuccessAdult, nil)
                                 
                                 self.repository.updateAdultAuth(able:true)
                                 if let page = self.movePage {
@@ -186,6 +194,21 @@ struct PageAdultCertification: PageView {
                 if let data = obj.getParamValue(key: .data) as? PageObject {
                     self.movePage = data
                 }
+                if let isAlert = obj.getParamValue(key: .isAlert) as? Bool {
+                    self.isAlert = isAlert
+                    if isAlert {
+                        self.isInfo = false
+                        self.appSceneObserver.alert = .confirm(
+                            String.pageTitle.certificationAdult, String.alert.identifyAdultConfirm){ isOk in
+                                if isOk {
+                                    withAnimation{self.isAlert = false}
+                                    self.moveAdultCertification()
+                                } else {
+                                    self.pagePresenter.closePopup(self.pageObject?.id)
+                                }
+                            }
+                    }
+                }
             }
             .onDisappear{
                 let result:PageEventType = self.cid == nil ? .cancel : .completed
@@ -196,6 +219,11 @@ struct PageAdultCertification: PageView {
             
         }//geo
     }//body
+    private func moveAdultCertification(){
+        let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.identity
+        self.webViewModel.request = .link(linkUrl)
+    }
+    
     
     private func setWebviewSize(geometry:GeometryProxy){
         self.webViewHeight = geometry.size.height

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 enum BtvPlayType {
-    case preview(String, isList:Bool = false), ad, vod(String, String?)
+    case preview(String, isList:Bool = false),  vod(String, String?)
     var type: String {
         switch self {
         default: return "V"
@@ -19,14 +19,12 @@ enum BtvPlayType {
         switch self {
         case .preview: return "예고편"
         case .vod( _ , let title): return title ?? ""
-        default: return ""
         }
     }
     var cid: String {
         switch self {
         case .preview(let epsdRsluId, _): return epsdRsluId
         case .vod(let epsdRsluId , _): return epsdRsluId
-        default: return ""
         }
     }
     
@@ -72,6 +70,8 @@ class BtvPlayerModel:PlayerModel{
     @Published var selectFunctionType:SelectOptionType? = nil
     @Published var btvUiEvent:BtvUiEvent? = nil {didSet{ if btvUiEvent != nil { btvUiEvent = nil} }}
     @Published var btvPlayerEvent:BtvPlayerEvent? = nil {didSet{ if btvPlayerEvent != nil { btvPlayerEvent = nil} }}
+    @Published var isPrerollPlay = false
+    
     private(set) var synopsisPlayerData:SynopsisPlayerData? = nil
     private(set) var synopsisPrerollData:SynopsisPrerollData? = nil
     private(set) var openingTime:Double = 0
@@ -97,7 +97,7 @@ class BtvPlayerModel:PlayerModel{
     private(set) var isFullVod:Bool = false
     
     var checkPreroll = true
-    var isPrerollPlay = false
+   
     var pageType:PageType = .btv
     var initPlay:Bool? = nil
     var isFirstPlay:Bool = true

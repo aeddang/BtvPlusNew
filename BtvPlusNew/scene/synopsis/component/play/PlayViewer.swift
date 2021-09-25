@@ -27,9 +27,7 @@ struct PlayViewer: PageComponent{
                 VStack(spacing:0){
                     HStack(spacing:self.isFullScreen ? Dimen.margin.regular : Dimen.margin.light){
                         Button(action: {
-                            
                             self.viewModel?.btvPlayerEvent = .close
-                           
                         }) {
                             Image(Asset.icon.back)
                                 .renderingMode(.original)
@@ -58,8 +56,8 @@ struct PlayViewer: PageComponent{
                     .scaledToFit()
                     .frame(width: 87,
                            height: 52)
-                if self.textInfo != nil {
-                    Text(self.textInfo!)
+                if let info = self.textInfo {
+                    Text(info)
                         .modifier(BoldTextStyle(
                             size: self.isFullScreen ? Font.size.lightExtra :Font.size.thin ))
                 }
